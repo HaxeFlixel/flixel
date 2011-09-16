@@ -477,6 +477,7 @@ class FlxCamera extends FlxBasic
 				helper = FlxU.max(width,height)/8;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
 			case STYLE_LOCKON:
+				deadzone = null;
 			default:
 				deadzone = null;
 		}

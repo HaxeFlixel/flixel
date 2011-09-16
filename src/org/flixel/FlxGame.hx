@@ -318,31 +318,33 @@ class FlxGame extends Sprite
 			{
 				var c:Int = FlashEvent.keyCode;
 				var code:String = String.fromCharCode(FlashEvent.charCode);
-				switch(c)
+				if (c == 48 || c == 96)
 				{
-					case 48:
-					case 96:
-						FlxG.mute = !FlxG.mute;
-						if (FlxG.volumeHandler != null)
-						{
-							FlxG.volumeHandler(FlxG.mute?0:FlxG.volume);
-						}
-						showSoundTray();
-						return;
-					case 109:
-					case 189:
-						FlxG.mute = false;
-						FlxG.volume = FlxG.volume - 0.1;
-						showSoundTray();
-						return;
-					case 107:
-					case 187:
-						FlxG.mute = false;
-						FlxG.volume = FlxG.volume + 0.1;
-						showSoundTray();
-						return;
-					default:
-						//break;
+					FlxG.mute = !FlxG.mute;
+					if (FlxG.volumeHandler != null)
+					{
+						FlxG.volumeHandler(FlxG.mute?0:FlxG.volume);
+					}
+					showSoundTray();
+					return;
+				}
+				else if (c == 109 || c == 189)
+				{
+					FlxG.mute = false;
+					FlxG.volume = FlxG.volume - 0.1;
+					showSoundTray();
+					return;
+				}
+				else if (c == 107 || c == 187)
+				{
+					FlxG.mute = false;
+					FlxG.volume = FlxG.volume + 0.1;
+					showSoundTray();
+					return;
+				}
+				else
+				{
+					//default:
 				}
 			}
 		}
