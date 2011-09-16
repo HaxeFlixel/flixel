@@ -1095,7 +1095,7 @@ class FlxSprite extends FlxObject
 		_flashPoint.x = (Point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (Point.y - Camera.scroll.y) - _point.y;
 		//return framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
-		#if flash9
+		#if flash
 		return framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
 		#else
 		//TODO: get it working in cpp
@@ -1131,7 +1131,7 @@ class FlxSprite extends FlxObject
 		framePixels.copyPixels(_pixels,_flashRect,_flashPointZero);
 		_flashRect.x = _flashRect.y = 0;
 		
-		#if flash9  //TODO: get color transform working in cpp
+		#if flash  //TODO: get color transform working in cpp
 		if (_colorTransform != null) 
 		{
 			framePixels.colorTransform(_flashRect, _colorTransform);

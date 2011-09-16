@@ -38,11 +38,7 @@ class FlxSave implements Dynamic
 	 * The local shared object itself.
 	 * @default null
 	 */
-	#if flash9
 	private var _sharedObject:SharedObject;
-	#else
-	private var _sharedObject:Dynamic;
-	#end
 	
 	/**
 	 * Internal tracker for callback function in case save takes too long.
@@ -84,11 +80,7 @@ class FlxSave implements Dynamic
 		name = Name;
 		try
 		{
-			//#if flash9
 			_sharedObject = SharedObject.getLocal(name);
-			//#else
-			//return false;
-			//#end
 		}
 		catch(e:Error)
 		{

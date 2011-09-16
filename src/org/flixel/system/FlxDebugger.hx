@@ -230,6 +230,11 @@ class FlxDebugger extends Sprite
 				watch.reposition(_screen.x,_screen.y);
 				perf.reposition(0,0);
 			case FlxG.DEBUGGER_STANDARD:
+				log.resize((_screen.x-_gutter*3)/2,_screen.y/4);
+				log.reposition(0,_screen.y);
+				watch.resize((_screen.x-_gutter*3)/2,_screen.y/4);
+				watch.reposition(_screen.x,_screen.y);
+				perf.reposition(_screen.x,0);
 			default:
 				log.resize((_screen.x-_gutter*3)/2,_screen.y/4);
 				log.reposition(0,_screen.y);

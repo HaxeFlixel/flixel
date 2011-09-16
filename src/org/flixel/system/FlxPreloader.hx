@@ -244,7 +244,7 @@ class FlxPreloader extends MovieClip
 		_buffer.addChild(_bmpBar);
 		_text = new TextField();
 		_text.defaultTextFormat = new TextFormat("system",8,0x5f6aff);
-		#if flash9
+		#if flash
 		_text.embedFonts = true;
 		#end
 		_text.selectable = false;

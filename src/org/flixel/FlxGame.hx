@@ -236,7 +236,7 @@ class FlxGame extends Sprite
 		useSystemCursor = UseSystemCursor;
 		if (!useSystemCursor)
 		{
-			#if flash9
+			#if flash
 			flash.ui.Mouse.hide();
 			#end
 		}
@@ -301,13 +301,13 @@ class FlxGame extends Sprite
 				_debuggerUp = _debugger.visible;
 				if (_debugger.visible)
 				{
-					#if flash9
+					#if flash
 					flash.ui.Mouse.show();
 					#end
 				}
 				else if (!useSystemCursor)
 				{
-					#if flash9
+					#if flash
 					flash.ui.Mouse.hide();
 					#end
 				}
@@ -469,7 +469,7 @@ class FlxGame extends Sprite
 	{
 		if (!_debuggerUp && !useSystemCursor)
 		{
-			#if flash9
+			#if flash
 			flash.ui.Mouse.hide();
 			#end
 		}
@@ -490,7 +490,7 @@ class FlxGame extends Sprite
 			x = 0;
 			y = 0;
 		}
-		#if flash9
+		#if flash
 		flash.ui.Mouse.show();
 		#end
 		_lostFocus = _focus.visible = true;
@@ -826,7 +826,7 @@ class FlxGame extends Sprite
 		text.multiline = true;
 		text.wordWrap = true;
 		text.selectable = false;
-		#if flash9
+		#if flash
 		text.embedFonts = true;
 		text.antiAliasType = AntiAliasType.NORMAL;
 		text.gridFitType = GridFitType.PIXEL;
