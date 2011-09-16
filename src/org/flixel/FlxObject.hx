@@ -319,19 +319,11 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
 	 */
-	#if flash
-	private var _pathMode:UInt;
-	#else
 	private var _pathMode:Int;
-	#end
 	/**
 	 * Internal helper for node navigation, specifically yo-yo and backwards movement.
 	 */
-	#if flash
-	private var _pathInc:UInt;
-	#else
 	private var _pathInc:Int;
-	#end
 	/**
 	 * Internal flag for whether hte object's angle should be adjusted to the path angle during path follow behavior.
 	 */
@@ -601,7 +593,7 @@ class FlxObject extends FlxBasic
 		_pathRotate = AutoRotate;
 		
 		//get starting node
-		if((_pathMode == PATH_BACKWARD) || (_pathMode == PATH_LOOP_BACKWARD))
+		if((_pathMode == Std.int(PATH_BACKWARD)) || (_pathMode == Std.int(PATH_LOOP_BACKWARD)))
 		{
 			_pathNodeIndex = path.nodes.length - 1;
 			_pathInc = -1;
