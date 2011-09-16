@@ -307,17 +307,7 @@ class FlxText extends FlxSprite
 		if(_regen)
 		{
 			//Need to generate a new buffer to store the text graphic
-			var i:Int = 0;
-			height = 0;
-			#if flash
-			var nl:Int = _textField.numLines;
-			for (i in 0 ... nl)
-			{
-				height = height + _textField.getLineMetrics(i).height;
-			}
-			#else
-			var nl:Int = 1;
-			#end
+			height = _textField.textHeight;
 			height += 4; //account for 2px gutter on top and bottom
 			_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
 			frameHeight = Std.int(height);
