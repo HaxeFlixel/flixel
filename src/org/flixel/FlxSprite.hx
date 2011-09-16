@@ -255,8 +255,6 @@ class FlxSprite extends FlxObject
 		
 		if (SimpleGraphic == null)
 		{
-			makeGraphic(8,8);
-			// TODO: Fix this
 			SimpleGraphic = ImgDefault;
 		} 
 		else 
@@ -401,7 +399,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		var max:Int = brush.width;
-		if (brush.height > Std.int(max))
+		if (brush.height > Math.floor(max))
 		{
 			max = brush.height;
 		}
@@ -502,7 +500,7 @@ class FlxSprite extends FlxObject
 		}
 		origin.make(frameWidth * 0.5, frameHeight * 0.5);
 		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
-		frames = Math.floor(_flashRect2.width / _flashRect.width) * Math.floor(_flashRect2.height / _flashRect.height);
+		frames = Math.floor(_flashRect2.width / _flashRect.width * _flashRect2.height / _flashRect.height);
 		if (_colorTransform != null) framePixels.colorTransform(_flashRect, _colorTransform);
 		_curIndex = 0;
 	}
@@ -550,8 +548,8 @@ class FlxSprite extends FlxObject
 			{
 				continue;
 			}
-			_point.x = x - Std.int(camera.scroll.x*scrollFactor.x) - offset.x;
-			_point.y = y - Std.int(camera.scroll.y*scrollFactor.y) - offset.y;
+			_point.x = x - Math.floor(camera.scroll.x*scrollFactor.x) - offset.x;
+			_point.y = y - Math.floor(camera.scroll.y*scrollFactor.y) - offset.y;
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001:-0.0000001;
 			if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
@@ -692,7 +690,7 @@ class FlxSprite extends FlxObject
 				angleHelper += 360;
 			}
 			_curIndex = Math.floor(angleHelper / _bakedRotation + 0.5);
-			if (oldIndex != Std.int(_curIndex))
+			if (oldIndex != Math.floor(_curIndex))
 			{
 				dirty = true;
 			}
@@ -703,7 +701,7 @@ class FlxSprite extends FlxObject
 			while(_frameTimer > _curAnim.delay)
 			{
 				_frameTimer = _frameTimer - _curAnim.delay;
-				if(Std.int(_curFrame) == _curAnim.frames.length-1)
+				if(Math.floor(_curFrame) == _curAnim.frames.length-1)
 				{
 					if (_curAnim.looped)
 					{
@@ -809,7 +807,7 @@ class FlxSprite extends FlxObject
 	public function randomFrame():Void
 	{
 		_curAnim = null;
-		_curIndex = Std.int(FlxG.random() * (_pixels.width / frameWidth));
+		_curIndex = Math.floor(FlxG.random() * (_pixels.width / frameWidth));
 		dirty = true;
 	}
 	

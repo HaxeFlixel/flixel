@@ -184,7 +184,7 @@ class FlxEmitter extends FlxGroup
 		if(Multiple)
 		{ 
 			var sprite:FlxSprite = new FlxSprite();
-			sprite.loadGraphic(Graphics,true);
+			sprite.loadGraphic(Graphics, true);
 			totalFrames = sprite.frames;
 			sprite.destroy();
 		}
@@ -205,7 +205,7 @@ class FlxEmitter extends FlxGroup
 			}
 			if(Multiple)
 			{
-				randomFrame = Std.int(FlxG.random() * totalFrames);
+				randomFrame = Math.floor(FlxG.random() * totalFrames); 
 				if (BakedRotations > 0)
 				{
 					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame);
@@ -330,7 +330,7 @@ class FlxEmitter extends FlxGroup
 		var particle:FlxParticle = cast(recycle(FlxParticle), FlxParticle);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
-		particle.reset(x - (Std.int(particle.width)>>1) + FlxG.random()*width, y - (Std.int(particle.height)>>1) + FlxG.random()*height);
+		particle.reset(x - (Math.floor(particle.width)>>1) + FlxG.random()*width, y - (Math.floor(particle.height)>>1) + FlxG.random()*height);
 		particle.visible = true;
 		
 		if (minParticleSpeed.x != maxParticleSpeed.x)

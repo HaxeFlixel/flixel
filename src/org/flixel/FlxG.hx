@@ -444,7 +444,9 @@ class FlxG
 	 */
 	static public function random():Float
 	{
-		return globalSeed = FlxU.srand(globalSeed);
+		globalSeed = FlxU.srand(globalSeed);
+		if (globalSeed <= 0) globalSeed += 1;
+		return globalSeed;
 	}
 		
 	/**

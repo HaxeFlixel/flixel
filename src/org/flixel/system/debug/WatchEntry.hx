@@ -84,7 +84,7 @@ class WatchEntry
 		valueDisplay.backgroundColor = 0xffffff;
 		valueDisplay.defaultTextFormat = _whiteText;
 		
-		updateWidth(NameWidth,ValueWidth);
+		updateWidth(NameWidth, ValueWidth);
 	}
 	
 	/**
@@ -151,7 +151,7 @@ class WatchEntry
 			return false;
 		}
 		//valueDisplay.text = object[field]..toString();
-		valueDisplay.text = Reflect.field(object, field).toString();
+		valueDisplay.text = Std.string(Reflect.field(object, field));
 		return true;
 	}
 	
