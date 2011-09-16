@@ -14,8 +14,13 @@ import org.flixel.system.FlxWindow;
  */
 class Watch extends FlxWindow
 {
+	#if flash
 	static private var MAX_LOG_LINES:UInt = 1024;
 	static private var LINE_HEIGHT:UInt = 15;
+	#else
+	static private var MAX_LOG_LINES:Int = 1024;
+	static private var LINE_HEIGHT:Int = 15;
+	#end
 	
 	/**
 	 * Whether a watch entry is currently being edited or not. 
@@ -36,7 +41,13 @@ class Watch extends FlxWindow
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
+	public function new(	Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, 
+							#if flash
+							?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000
+							#else
+							?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000
+							#end
+							)
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		
@@ -67,8 +78,8 @@ class Watch extends FlxWindow
 		removeChild(_values);
 		_values = null;
 		var i:Int = 0;
-		var l:UInt = _watching.length;
-		while (i < Std.int(l))
+		var l:Int = _watching.length;
+		while (i < l)
 		{
 			cast(_watching[i++], WatchEntry).destroy();
 		}
@@ -89,8 +100,8 @@ class Watch extends FlxWindow
 		//Don't add repeats
 		var watchEntry:WatchEntry;
 		var i:Int = 0;
-		var l:UInt = _watching.length;
-		while(i < Std.int(l))
+		var l:Int = _watching.length;
+		while(i < l)
 		{
 			watchEntry = cast(_watching[i++], WatchEntry);
 			if ((watchEntry.object == AnyObject) && (watchEntry.field == VariableName))
@@ -132,8 +143,8 @@ class Watch extends FlxWindow
 		
 		//reset the display heights of the remaining objects
 		i = 0;
-		var l:UInt = _watching.length;
-		while(i < Std.int(l))
+		var l:Int = _watching.length;
+		while(i < l)
 		{
 			cast(_watching[i], WatchEntry).setY(i*LINE_HEIGHT);
 			i++;
@@ -147,8 +158,8 @@ class Watch extends FlxWindow
 	{
 		var watchEntry:WatchEntry;
 		var i:Int = 0;
-		var l:UInt = _watching.length;
-		while(i < Std.int(l))
+		var l:Int = _watching.length;
+		while(i < l)
 		{
 			watchEntry = _watching.pop();
 			_names.removeChild(watchEntry.nameDisplay);
@@ -166,8 +177,8 @@ class Watch extends FlxWindow
 	public function update():Void
 	{
 		editing = false;
-		var i:UInt = 0;
-		var l:UInt = _watching.length;
+		var i:Int = 0;
+		var l:Int = _watching.length;
 		while(i < l)
 		{
 			if (!cast(_watching[i++], WatchEntry).updateValue())
@@ -182,8 +193,8 @@ class Watch extends FlxWindow
 	 */
 	public function submit():Void
 	{
-		var i:UInt = 0;
-		var l:UInt = _watching.length;
+		var i:Int = 0;
+		var l:Int = _watching.length;
 		var watchEntry:WatchEntry;
 		while(i < l)
 		{
@@ -212,8 +223,8 @@ class Watch extends FlxWindow
 		_values.x = _width/2 + 2;
 
 		var i:Int = 0;
-		var l:UInt = _watching.length;
-		while (i < Std.int(l))
+		var l:Int = _watching.length;
+		while (i < l)
 		{
 			cast(_watching[i++], WatchEntry).updateWidth(_width/2,_width/2-10);
 		}

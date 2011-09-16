@@ -20,7 +20,11 @@ class FlxPath
 	/**
 	 * Specify a debug display color for the path.  Default is white.
 	 */
+	#if flash
 	public var debugColor:UInt;
+	#else
+	public var debugColor:Int;
+	#end
 	/**
 	 * Specify a debug display scroll factor for the path.  Default is (1,1).
 	 * NOTE: does not affect world movement!  Object scroll factors take care of that.
@@ -97,7 +101,13 @@ class FlxPath
 	 * @param	Y		Y position of the new path point in world coordinates.
 	 * @param	Index	Where within the list of path nodes to insert this new point.
 	 */
-	public function addAt(X:Float, Y:Float, Index:UInt):Void
+	public function addAt(	X:Float, Y:Float, 
+							#if flash
+							Index:UInt
+							#else
+							Index:Int
+							#end
+							):Void
 	{
 		if (Std.int(Index) > nodes.length)
 		{
@@ -134,7 +144,11 @@ class FlxPath
 	 * @param	Index			Where within the list of path nodes to insert this new point.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
 	 */
+	#if flash
 	public function addPointAt(Node:FlxPoint, Index:UInt, ?AsReference:Bool = false):Void
+	#else
+	public function addPointAt(Node:FlxPoint, Index:Int, ?AsReference:Bool = false):Void
+	#end
 	{
 		if (Std.int(Index) > nodes.length)
 		{
@@ -177,7 +191,11 @@ class FlxPath
 	 * @param	Index	Where within the list of path nodes you want to remove a node.
 	 * @return	The node that was excised.  Returns null if there were no nodes in the path.
 	 */
+	#if flash
 	public function removeAt(Index:UInt):FlxPoint
+	#else
+	public function removeAt(Index:Int):FlxPoint
+	#end
 	{
 		if (nodes.length <= 0)
 		{
@@ -241,8 +259,8 @@ class FlxPath
 		//Then fill up the object with node and path graphics
 		var node:FlxPoint;
 		var nextNode:FlxPoint;
-		var i:UInt = 0;
-		var l:UInt = nodes.length;
+		var i:Int = 0;
+		var l:Int = nodes.length;
 		while(i < l)
 		{
 			//get a reference to the current node
@@ -255,12 +273,16 @@ class FlxPath
 			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001:-0.0000001));
 			
 			//decide what color this node should be
-			var nodeSize:UInt = 2;
+			var nodeSize:Int = 2;
 			if ((i == 0) || (Std.int(i) == l - 1))
 			{
 				nodeSize *= 2;
 			}
+			#if flash
 			var nodeColor:UInt = debugColor;
+			#else
+			var nodeColor:Int = debugColor;
+			#end
 			if(l > 1)
 			{
 				if (i == 0)

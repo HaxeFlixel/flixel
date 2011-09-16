@@ -17,17 +17,27 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Flag for specifying that you want to add an object to the A list.
 	 */
+	#if flash
 	static public var A_LIST:UInt = 0;
+	#else
+	static public var A_LIST:Int = 0;
+	#end
 	/**
 	 * Flag for specifying that you want to add an object to the B list.
 	 */
+	#if flash
 	static public var B_LIST:UInt = 1;
-	
+	#else
+	static public var B_LIST:Int = 1;
+	#end
 	/**
 	 * Controls the granularity of the quad tree.  Default is 6 (decent performance on large and small worlds).
 	 */
+	#if flash
 	static public var divisions:UInt;
-	
+	#else
+	static public var divisions:Int;
+	#end
 	/**
 	 * Whether this branch of the tree can be subdivided or not.
 	 */
@@ -57,7 +67,11 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Internal, governs and assists with the formation of the tree.
 	 */
+	#if flash
 	static private var _min:UInt;
+	#else
+	static private var _min:Int;
+	#end
 	/**
 	 * Internal, governs and assists with the formation of the tree.
 	 */
@@ -131,7 +145,11 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
+	#if flash
 	static private var _list:UInt;
+	#else
+	static private var _list:Int;
+	#end
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
@@ -324,15 +342,21 @@ class FlxQuadTree extends FlxRect
 	 * @param	ObjectOrGroup	FlxObjects are just added, FlxGroups are recursed and their applicable members added accordingly.
 	 * @param	List			A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>A_LIST</code> and <code>B_LIST</code>.
 	 */
-	public function add(ObjectOrGroup:FlxBasic, List:UInt):Void
+	public function add(	ObjectOrGroup:FlxBasic, 
+							#if flash
+							List:UInt
+							#else
+							List:Int
+							#end
+							):Void
 	{
 		_list = List;
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
-			var i:UInt = 0;
+			var i:Int = 0;
 			var basic:FlxBasic;
 			var members:Array<FlxBasic> = cast(ObjectOrGroup, FlxGroup).members;
-			var l:UInt = cast(ObjectOrGroup, FlxGroup).length;
+			var l:Int = cast(ObjectOrGroup, FlxGroup).length;
 			while(i < l)
 			{
 				basic = cast(members[i++], FlxBasic);

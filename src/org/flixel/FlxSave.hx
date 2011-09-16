@@ -1,12 +1,12 @@
 package org.flixel;
 
 import flash.errors.Error;
+#if flash
 import flash.events.NetStatusEvent;
-#if flash9
-import flash.net.SharedObject;
 import flash.net.SharedObjectFlushStatus;
-#else
 #end
+
+import flash.net.SharedObject;
 
 /**
  * A class to help automate and simplify save game functionality.
@@ -15,9 +15,15 @@ import flash.net.SharedObjectFlushStatus;
  */
 class FlxSave implements Dynamic
 {
+	#if flash
 	static private var SUCCESS:UInt = 0;
 	static private var PENDING:UInt = 1;
 	static private var ERROR:UInt = 2;
+	#else
+	static private var SUCCESS:Int = 0;
+	static private var PENDING:Int = 1;
+	static private var ERROR:Int = 2;
+	#end
 	/**
 	 * Allows you to directly access the data container in the local shared object.
 	 * @default null
@@ -41,7 +47,7 @@ class FlxSave implements Dynamic
 	/**
 	 * Internal tracker for callback function in case save takes too long.
 	 */
-	private var _onComplete:Bool->Void;
+	private var _onComplete:Dynamic;
 	/**
 	 * Internal tracker for save object close request.
 	 */
@@ -78,11 +84,11 @@ class FlxSave implements Dynamic
 		name = Name;
 		try
 		{
-			#if flash9
+			//#if flash9
 			_sharedObject = SharedObject.getLocal(name);
-			#else
-			return false;
-			#end
+			//#else
+			//return false;
+			//#end
 		}
 		catch(e:Error)
 		{
@@ -102,7 +108,13 @@ class FlxSave implements Dynamic
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	The result of result of the <code>flush()</code> call (see below for more details).
 	 */
-	public function close(?MinFileSize:UInt = 0, ?OnComplete:Bool->Void = null):Bool
+	public function close(	
+							#if flash
+							?MinFileSize:UInt = 0, 
+							#else
+							?MinFileSize:Int = 0, 
+							#end
+							?OnComplete:Dynamic = null):Bool
 	{
 		_closeRequested = true;
 		return flush(MinFileSize, OnComplete);
@@ -114,21 +126,35 @@ class FlxSave implements Dynamic
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	Whether or not the data was written immediately.  False could be an error OR a storage request popup.
 	 */
-	public function flush(?MinFileSize:UInt = 0, ?OnComplete:Bool->Void = null):Bool
+	public function flush(	
+							#if flash
+							?MinFileSize:UInt = 0, 
+							#else
+							?MinFileSize:Int = 0, 
+							#end
+							?OnComplete:Dynamic = null):Bool
 	{
 		if (!checkBinding())
 		{
 			return false;
 		}
 		_onComplete = OnComplete;
-		var result:SharedObjectFlushStatus = null;
+		var result:String = null;
 		try { result = _sharedObject.flush(MinFileSize); }
 		catch (e:Error) { return onDone(ERROR); }
+		#if flash
 		if (result == SharedObjectFlushStatus.PENDING)
 		{
 			_sharedObject.addEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
 		}
-		return onDone((result == SharedObjectFlushStatus.FLUSHED) ? SUCCESS : PENDING);
+		#end
+		return onDone((
+						#if flash
+						result == SharedObjectFlushStatus.FLUSHED
+						#else
+						result == "flushed"
+						#end
+						) ? SUCCESS : PENDING);
 	}
 	
 	/**
@@ -151,11 +177,13 @@ class FlxSave implements Dynamic
 	 * Event handler for special case storage requests.
 	 * @param	E	Flash net status event.
 	 */
+	#if flash
 	private function onFlushStatus(E:NetStatusEvent):Void
 	{
 		_sharedObject.removeEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
 		onDone((E.info.code == "SharedObject.Flush.Success")?SUCCESS:ERROR);
 	}
+	#end
 	
 	/**
 	 * Event handler for special case storage requests.
@@ -163,7 +191,13 @@ class FlxSave implements Dynamic
 	 * @param	Result		One of the result codes (PENDING, ERROR, or SUCCESS).
 	 * @return	Whether the operation was a success or not.
 	 */
-	private function onDone(Result:UInt):Bool
+	private function onDone(
+								#if flash
+								Result:UInt
+								#else
+								Result:Int
+								#end
+								):Bool
 	{
 		switch(Result)
 		{

@@ -15,7 +15,7 @@ class FlxTile extends FlxObject
 	 * This function should take the form <code>myFunction(Tile:FlxTile,Object:FlxObject):void</code>.
 	 * Defaults to null, set through <code>FlxTilemap.setTileProperties()</code>.
 	 */
-	public var callbackFunction:FlxTile->FlxObject->Void;
+	public var callbackFunction:Dynamic/*FlxTile->FlxObject->Void*/;
 	/**
 	 * Each tile can store its own filter class for their callback functions.
 	 * That is, the callback will only be triggered if an object with a class
@@ -32,13 +32,21 @@ class FlxTile extends FlxObject
 	 * For example, if your map only has 16 kinds of tiles in it,
 	 * this number is usually between 0 and 15.
 	 */
+	#if flash
 	public var index:UInt;
+	#else
+	public var index:Int;
+	#end
 	/**
 	 * The current map index of this tile object at this moment.
 	 * You can think of tile objects as moving around the tilemap helping with collisions.
 	 * This value is only reliable and useful if used from the callback function.
 	 */
+	#if flash
 	public var mapIndex:UInt;
+	#else
+	public var mapIndex:Int;
+	#end
 	
 	/**
 	 * Instantiate this new tile object.  This is usually called from <code>FlxTilemap.loadMap()</code>.
@@ -49,7 +57,19 @@ class FlxTile extends FlxObject
 	 * @param Visible			Whether the tile is visible or not.
 	 * @param AllowCollisions	The collision flags for the object.  By default this value is ANY or NONE depending on the parameters sent to loadMap().
 	 */
-	public function new(Tilemap:FlxTilemap, Index:UInt, Width:Float, Height:Float, Visible:Bool, AllowCollisions:UInt)
+	public function new(	Tilemap:FlxTilemap, 
+							#if flash
+							Index:UInt, 
+							#else
+							Index:Int, 
+							#end
+							Width:Float, Height:Float, Visible:Bool, 
+							#if flash
+							AllowCollisions:UInt
+							#else
+							AllowCollisions:Int
+							#end
+							)
 	{
 		super(0, 0, Width, Height);
 		immovable = true;

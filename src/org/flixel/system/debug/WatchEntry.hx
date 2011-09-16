@@ -127,9 +127,17 @@ class WatchEntry
 			nameDisplay.text = "";
 			if (NameWidth > 120)
 			{
-				nameDisplay.appendText(FlxU.getClassName(object,(NameWidth < 240)) + ".");
+				#if flash
+				nameDisplay.appendText(FlxU.getClassName(object, (NameWidth < 240)) + ".");
+				#else
+				nameDisplay.text = nameDisplay.text + FlxU.getClassName(object, (NameWidth < 240)) + ".";
+				#end
 			}
+			#if flash
 			nameDisplay.appendText(field);
+			#else
+			nameDisplay.text = nameDisplay.text + field;
+			#end
 		}
 	}
 	

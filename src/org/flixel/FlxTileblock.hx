@@ -17,7 +17,11 @@ class FlxTileblock extends FlxSprite
 	 * @param	Width		The width of the block.
 	 * @param	Height		The height of the block.
 	 */
+	#if flash
 	public function new(X:Int, Y:Int, Width:UInt, Height:UInt)
+	#else
+	public function new(X:Int, Y:Int, Width:Int, Height:Int)
+	#end
 	{
 		super(X, Y);
 		makeGraphic(Width, Height, 0, true);
@@ -32,7 +36,11 @@ class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
+	#if flash
 	public function loadTiles(TileGraphic:Class<Bitmap>, ?TileWidth:UInt = 0, ?TileHeight:UInt = 0, ?Empties:UInt = 0):FlxTileblock
+	#else
+	public function loadTiles(TileGraphic:Class<Bitmap>, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?Empties:Int = 0):FlxTileblock
+	#end
 	{
 		if (TileGraphic == null)
 		{
@@ -41,25 +49,25 @@ class FlxTileblock extends FlxSprite
 		
 		//First create a tile brush
 		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
-		var spriteWidth:UInt = cast(sprite.width, UInt);
-		var spriteHeight:UInt = cast(sprite.height, UInt);
-		var total:UInt = sprite.frames + Empties;
+		var spriteWidth:Int = Std.int(sprite.width);
+		var spriteHeight:Int = Std.int(sprite.height);
+		var total:Int = sprite.frames + Empties;
 		
 		//Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		var regen:Bool = false;
 		if(width % sprite.width != 0)
 		{
-			width = cast((width/spriteWidth+1), UInt)*spriteWidth;
+			width = Std.int((width/spriteWidth+1)) * spriteWidth;
 			regen = true;
 		}
 		if(height % sprite.height != 0)
 		{
-			height = cast((height/spriteHeight+1), UInt)*spriteHeight;
+			height = Std.int((height/spriteHeight+1))*spriteHeight;
 			regen = true;
 		}
 		if (regen)
 		{
-			makeGraphic(cast(width, UInt), cast(height, UInt), 0, true);
+			makeGraphic(Std.int(width), Std.int(height), 0, true);
 		}
 		else
 		{
@@ -67,12 +75,12 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		//Stamp random tiles onto the canvas
-		var row:UInt = 0;
-		var column:UInt;
-		var destinationX:UInt;
-		var destinationY:UInt = 0;
-		var widthInTiles:UInt = cast(width / spriteWidth, UInt);
-		var heightInTiles:UInt = cast(height / spriteHeight, UInt);
+		var row:Int = 0;
+		var column:Int;
+		var destinationX:Int;
+		var destinationY:Int = 0;
+		var widthInTiles:Int = Std.int(width / spriteWidth);
+		var heightInTiles:Int = Std.int(height / spriteHeight);
 		while(row < heightInTiles)
 		{
 			destinationX = 0;

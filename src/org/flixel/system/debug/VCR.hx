@@ -6,8 +6,10 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.MouseEvent;
+#if flash
 import flash.net.FileFilter;
 import flash.net.FileReference;
+#end
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
@@ -19,22 +21,105 @@ import org.flixel.system.FlxReplay;
 import org.flixel.system.replay.FrameRecord;
 import org.flixel.system.replay.MouseRecord;
 
+class OpenPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgOpen extends Bitmap 
+{
+	public function new() { super(new OpenPNG()); }
+}
+
+class RecordOffPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgRecordOff extends Bitmap 
+{
+	public function new() { super(new RecordOffPNG()); }
+}
+
+class RecordOnPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgRecordOn extends Bitmap 
+{
+	public function new() { super(new RecordOnPNG()); }
+}
+
+class StopPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgStop extends Bitmap 
+{
+	public function new() { super(new StopPNG()); }
+}
+
+class FlixelPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgFlixel extends Bitmap 
+{
+	public function new() { super(new FlixelPNG()); }
+}
+
+class RestartPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgRestart extends Bitmap 
+{
+	public function new() { super(new RestartPNG()); }
+}
+
+class PausePNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgPause extends Bitmap 
+{
+	public function new() { super(new PausePNG()); }
+}
+
+class PlayPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgPlay extends Bitmap 
+{
+	public function new() { super(new PlayPNG()); }
+}
+
+class StepPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgStep extends Bitmap 
+{
+	public function new() { super(new StepPNG()); }
+}
+
 /**
  * This class contains the record, stop, play, and step 1 frame buttons seen on the top edge of the debugger overlay.
  */
 class VCR extends Sprite
 {
-	/*[Embed(source="../../data/vcr/open.png")]*/ private var ImgOpen:Class<Bitmap>;
-	/*[Embed(source="../../data/vcr/record_off.png")]*/ private var ImgRecordOff:Class<Bitmap>;
-	/*[Embed(source="../../data/vcr/record_on.png")]*/ private var ImgRecordOn:Class<Bitmap>;
-	/*[Embed(source="../../data/vcr/stop.png")]*/ private var ImgStop:Class<Bitmap>;
-	/*[Embed(source="../../data/vcr/flixel.png")]*/ private var ImgFlixel:Class<Bitmap>;
-	/*[Embed(source="../../data/vcr/restart.png")]*/ private var ImgRestart:Class<Bitmap>;
-	/*[Embed(source="../../data/vcr/pause.png")]*/ private var ImgPause:Class<Bitmap>;
-	/*[Embed(source="../../data/vcr/play.png")]*/ private var ImgPlay:Class<Bitmap>;
-	/*[Embed(source="../../data/vcr/step.png")]*/ private var ImgStep:Class<Bitmap>;
+	/*[Embed(source="../../data/vcr/open.png")] private var ImgOpen:Class<Bitmap>;*/
+	/*[Embed(source="../../data/vcr/record_off.png")] private var ImgRecordOff:Class<Bitmap>;*/
+	/*[Embed(source="../../data/vcr/record_on.png")] private var ImgRecordOn:Class<Bitmap>;*/
+	/*[Embed(source="../../data/vcr/stop.png")] private var ImgStop:Class<Bitmap>;*/
+	/*[Embed(source="../../data/vcr/flixel.png")] private var ImgFlixel:Class<Bitmap>;*/
+	/*[Embed(source="../../data/vcr/restart.png")] private var ImgRestart:Class<Bitmap>;*/
+	/*[Embed(source="../../data/vcr/pause.png")] private var ImgPause:Class<Bitmap>;*/
+	/*[Embed(source="../../data/vcr/play.png")] private var ImgPlay:Class<Bitmap>;*/
+	/*[Embed(source="../../data/vcr/step.png")] private var ImgStep:Class<Bitmap>;*/
 	
+	#if flash
 	static private var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
+	#end
 	static private var DEFAULT_FILE_NAME:String = "replay.fgr";
 	
 	/**
@@ -68,10 +153,18 @@ class VCR extends Sprite
 	private var _pressingPause:Bool;
 	private var _pressingStep:Bool;
 	
+	#if flash
 	private var _file:FileReference;
+	#end
 	
 	private var _runtimeDisplay:TextField;
+	
+	#if flash
 	private var _runtime:UInt;
+	#else
+	private var _runtime:Int;
+	#end
+	
 	
 	/**
 	 * Creates the "VCR" control panel for debugger pausing, stepping, and recording.
@@ -80,43 +173,43 @@ class VCR extends Sprite
 	{
 		super();
 		
-		var spacing:UInt = 7;
+		var spacing:Int = 7;
 		
-		_open = Type.createInstance(ImgOpen, []);
+		_open = new ImgOpen(); // Type.createInstance(ImgOpen, []);
 		addChild(_open);
 		
-		_recordOff = Type.createInstance(ImgRecordOff, []);
+		_recordOff = new ImgRecordOff(); // Type.createInstance(ImgRecordOff, []);
 		_recordOff.x = _open.x + _open.width + spacing;
 		addChild(_recordOff);
 		
-		_recordOn = Type.createInstance(ImgRecordOn, []);
+		_recordOn = new ImgRecordOn(); // Type.createInstance(ImgRecordOn, []);
 		_recordOn.x = _recordOff.x;
 		_recordOn.visible = false;
 		addChild(_recordOn);
 		
-		_stop = Type.createInstance(ImgStop, []);
+		_stop = new ImgStop(); // Type.createInstance(ImgStop, []);
 		_stop.x = _recordOff.x;
 		_stop.visible = false;
 		addChild(_stop);
 		
-		_flixel = Type.createInstance(ImgFlixel, []);
+		_flixel = new ImgFlixel(); // Type.createInstance(ImgFlixel, []);
 		_flixel.x = _recordOff.x + _recordOff.width + spacing;
 		addChild(_flixel);
 		
-		_restart = Type.createInstance(ImgRestart, []);
+		_restart = new ImgRestart(); // Type.createInstance(ImgRestart, []);
 		_restart.x = _flixel.x + _flixel.width + spacing;
 		addChild(_restart);
 		
-		_pause = Type.createInstance(ImgPause, []);
+		_pause = new ImgPause(); // Type.createInstance(ImgPause, []);
 		_pause.x = _restart.x + _restart.width + spacing;
 		addChild(_pause);
 		
-		_play = Type.createInstance(ImgPlay, []);
+		_play = new ImgPlay(); // Type.createInstance(ImgPlay, []);
 		_play.x = _pause.x;
 		_play.visible = false;
 		addChild(_play);
 		
-		_step = Type.createInstance(ImgStep, []);
+		_step = new ImgStep(); // Type.createInstance(ImgStep, []);
 		_step.x = _pause.x + _pause.width + spacing;
 		addChild(_step);
 		
@@ -136,8 +229,10 @@ class VCR extends Sprite
 		_runtime = 0;
 		
 		stepRequested = false;
+		#if flash
 		_file = null;
-
+		#end
+		
 		unpress();
 		checkOver();
 		updateGUI();
@@ -150,7 +245,9 @@ class VCR extends Sprite
 	 */
 	public function destroy():Void
 	{
+		#if flash
 		_file = null;
+		#end
 		
 		removeChild(_open);
 		_open = null;
@@ -212,7 +309,11 @@ class VCR extends Sprite
 	/**
 	 * Just updates the VCR GUI so the runtime displays roughly the right thing.
 	 */
+	#if flash
 	public function updateRuntime(Time:UInt):Void
+	#else
+	public function updateRuntime(Time:Int):Void
+	#end
 	{
 		_runtime += Time;
 		_runtimeDisplay.text = FlxU.formatTime(Std.int(_runtime / 1000), true);
@@ -230,10 +331,12 @@ class VCR extends Sprite
 	 */
 	public function onOpen():Void
 	{
+		#if flash
 		_file = new FileReference();
 		_file.addEventListener(Event.SELECT, onOpenSelect);
 		_file.addEventListener(Event.CANCEL, onOpenCancel);
 		_file.browse(FILE_TYPES);
+		#end
 	}
 	
 	/**
@@ -243,12 +346,14 @@ class VCR extends Sprite
 	 */
 	private function onOpenSelect(?E:Event = null):Void
 	{
+		#if flash
 		_file.removeEventListener(Event.SELECT, onOpenSelect);
 		_file.removeEventListener(Event.CANCEL, onOpenCancel);
 		
 		_file.addEventListener(Event.COMPLETE, onOpenComplete);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onOpenError);
 		_file.load();
+		#end
 	}
 	
 	/**
@@ -258,6 +363,7 @@ class VCR extends Sprite
 	 */
 	private function onOpenComplete(?E:Event = null):Void
 	{
+		#if flash
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onOpenError);
 		
@@ -276,6 +382,7 @@ class VCR extends Sprite
 		}
 		
 		FlxG.loadReplay(fileContents);
+		#end
 	}
 	
 	/**
@@ -284,9 +391,11 @@ class VCR extends Sprite
 	 */
 	private function onOpenCancel(?E:Event = null):Void
 	{
+		#if flash
 		_file.removeEventListener(Event.SELECT, onOpenSelect);
 		_file.removeEventListener(Event.CANCEL, onOpenCancel);
 		_file = null;
+		#end
 	}
 	
 	/**
@@ -295,10 +404,12 @@ class VCR extends Sprite
 	 */
 	private function onOpenError(?E:Event=null):Void
 	{
+		#if flash
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onOpenError);
 		_file = null;
 		FlxG.log("ERROR: Unable to open flixel gameplay record.");
+		#end
 	}
 	
 	/**
@@ -325,11 +436,13 @@ class VCR extends Sprite
 		var data:String = FlxG.stopRecording();
 		if((data != null) && (data.length > 0))
 		{
+			#if flash
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL,onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, DEFAULT_FILE_NAME);
+			#end
 		}
 	}
 	
@@ -339,11 +452,13 @@ class VCR extends Sprite
 	 */
 	private function onSaveComplete(?E:Event = null):Void
 	{
+		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log("FLIXEL: successfully saved flixel gameplay record.");
+		#end
 	}
 	
 	/**
@@ -352,10 +467,12 @@ class VCR extends Sprite
 	 */
 	private function onSaveCancel(?E:Event = null):Void
 	{
+		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
+		#end
 	}
 	
 	/**
@@ -364,11 +481,13 @@ class VCR extends Sprite
 	 */
 	private function onSaveError(?E:Event = null):Void
 	{
+		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log("ERROR: problem saving flixel gameplay record.");
+		#end
 	}
 	
 	/**
@@ -445,7 +564,11 @@ class VCR extends Sprite
 	 */
 	private function init(?E:Event = null):Void
 	{
+		#if flash
 		if (root == null)
+		#else
+		if (stage == null)
+		#end
 		{
 			return;
 		}

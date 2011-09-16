@@ -10,7 +10,11 @@ import org.flixel.system.FlxWindow;
  */
 class Log extends FlxWindow
 {
+	#if flash
 	static private var MAX_LOG_LINES:UInt = 200;
+	#else
+	static private var MAX_LOG_LINES:Int = 200;
+	#end
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -25,7 +29,13 @@ class Log extends FlxWindow
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */	
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
+	public function new(	Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, 
+							#if flash
+							?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000
+							#else
+							?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000
+							#end
+							)
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		
@@ -75,7 +85,11 @@ class Log extends FlxWindow
 		}
 		else
 		{
-			_text.appendText(Text+"\n");
+			#if flash
+			_text.appendText(Text + "\n");
+			#else
+			_text.text = _text.text + Text + "\n";
+			#end
 		}
 		_text.scrollV = Math.floor(_text.height);
 	}

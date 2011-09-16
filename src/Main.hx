@@ -19,6 +19,6 @@ class Main extends Sprite
 	public function new() 
 	{
 		super();
-		flash.Lib.current.addChild(new TestGame());
+		flash.Lib.current.addChild(new ParticlesDemo());
 	}
 }

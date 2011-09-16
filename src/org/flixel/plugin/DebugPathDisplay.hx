@@ -48,8 +48,8 @@ class DebugPathDisplay extends FlxBasic
 		{
 			cameras = FlxG.cameras;
 		}
-		var i:UInt = 0;
-		var l:UInt = cameras.length;
+		var i:Int = 0;
+		var l:Int = cameras.length;
 		while (i < l)
 		{
 			drawDebug(cameras[i++]);

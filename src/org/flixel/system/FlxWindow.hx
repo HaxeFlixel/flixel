@@ -12,6 +12,15 @@ import flash.text.TextFormat;
 
 import org.flixel.FlxU;
 
+class HandlePNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgHandle extends Bitmap 
+{
+	public function new() { super(new HandlePNG()); }
+}
+
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
  */
@@ -31,11 +40,19 @@ class FlxWindow extends Sprite
 	/**
 	 * Width of the window.  Using Sprite.width is super unreliable for some reason!
 	 */
+	#if flash
 	private var _width:UInt;
+	#else
+	private var _width:Int;
+	#end
 	/**
 	 * Height of the window.  Using Sprite.height is super unreliable for some reason!
 	 */
+	#if flash
 	private var _height:UInt;
+	#else
+	private var _height:Int;
+	#end
 	/**
 	 * Controls where the window is allowed to be positioned.
 	 */
@@ -97,7 +114,13 @@ class FlxWindow extends Sprite
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, 
+						#if flash
+						?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000
+						#else
+						?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000
+						#end
+						)
 	{
 		super();
 		_width = Math.floor(Width);
@@ -136,7 +159,7 @@ class FlxWindow extends Sprite
 		
 		if(_resizable)
 		{
-			_handle = Type.createInstance(ImgHandle, []);
+			_handle = new ImgHandle(); // Type.createInstance(ImgHandle, []);
 			addChild(_handle);
 		}
 		
@@ -203,7 +226,11 @@ class FlxWindow extends Sprite
 	 */
 	private function init(?E:Event = null):Void
 	{
+		#if flash
 		if (root == null)
+		#else
+		if (stage == null)
+		#end
 		{
 			return;
 		}

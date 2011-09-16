@@ -103,7 +103,7 @@ class Keyboard extends Input
 	{
 		super();
 		
-		var i:UInt;
+		var i:Int;
 		
 		//LETTERS
 		i = 65;

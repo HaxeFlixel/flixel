@@ -37,11 +37,19 @@ class FlxTilemapBuffer
 	/**
 	 * How many rows of tiles fit in this buffer.
 	 */
+	#if flash
 	public var rows:UInt;
+	#else
+	public var rows:Int;
+	#end
 	/**
 	 * How many columns of tiles fit in this buffer.
 	 */
+	#if flash
 	public var columns:UInt;
+	#else
+	public var columns:Int;
+	#end
 
 	private var _pixels:BitmapData;	
 	private var _flashRect:Rectangle;
@@ -54,7 +62,13 @@ class FlxTilemapBuffer
 	 * @param HeightInTiles	How many tiles tall the tilemap is.
 	 * @param Camera		Which camera this buffer relates to.
 	 */
-	public function new(TileWidth:Float, TileHeight:Float, WidthInTiles:UInt, HeightInTiles:UInt, ?Camera:FlxCamera = null)
+	public function new(	TileWidth:Float, TileHeight:Float, 
+							#if flash
+							WidthInTiles:UInt, HeightInTiles:UInt, 
+							#else
+							WidthInTiles:Int, HeightInTiles:Int, 
+							#end
+							?Camera:FlxCamera = null)
 	{
 		if (Camera == null)
 		{
@@ -92,7 +106,13 @@ class FlxTilemapBuffer
 	 * Default value is transparent.
 	 * @param	Color	What color to fill with, in 0xAARRGGBB hex format.
 	 */
-	public function fill(?Color:UInt = 0):Void
+	public function fill(	
+							#if flash
+							?Color:UInt = 0
+							#else
+							?Color:Int = 0
+							#end
+							):Void
 	{
 		_pixels.fillRect(_flashRect,Color);
 	}

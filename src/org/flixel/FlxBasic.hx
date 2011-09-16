@@ -1,4 +1,5 @@
 package org.flixel;
+
 /**
  * This is a useful "generic" Flixel object.
  * Both <code>FlxObject</code> and <code>FlxGroup</code> extend this class,
@@ -6,8 +7,15 @@ package org.flixel;
  */
 class FlxBasic
 {
+	
+	#if flash
 	static public var _ACTIVECOUNT:UInt;
 	static public var _VISIBLECOUNT:UInt;
+	#else
+	static public var _ACTIVECOUNT:Int;
+	static public var _VISIBLECOUNT:Int;
+	#end
+	
 
 	/**
 	 * IDs seem like they could be pretty useful, huh?
@@ -94,8 +102,8 @@ class FlxBasic
 			cameras = FlxG.cameras;
 		}
 		var camera:FlxCamera;
-		var i:UInt = 0;
-		var l:UInt = cameras.length;
+		var i:Int = 0;
+		var l:Int = cameras.length;
 		while(i < l)
 		{
 			camera = cameras[i++];

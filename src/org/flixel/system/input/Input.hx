@@ -1,4 +1,5 @@
 package org.flixel.system.input;
+
 import org.flixel.FlxU;
 
 /**
@@ -18,7 +19,11 @@ class Input
 	/**
 	 * @private
 	 */
+	#if flash
 	private var _total:UInt;
+	#else
+	private var _total:Int;
+	#end
 	
 	/**
 	 * Constructor
@@ -37,7 +42,11 @@ class Input
 	 */
 	public function update():Void
 	{
+		#if flash
 		var i:UInt = 0;
+		#else
+		var i:Int = 0;
+		#end
 		while(i < _total)
 		{
 			var o:Dynamic = _map[i++];
@@ -94,7 +103,11 @@ class Input
 	public function record():Array<Dynamic>
 	{
 		var data:Array<Dynamic> = null;
+		#if flash
 		var i:UInt = 0;
+		#else
+		var i:Int = 0;
+		#end
 		while(i < _total)
 		{
 			var o:Dynamic = _map[i++];
@@ -119,8 +132,8 @@ class Input
 	 */
 	public function playback(Record:Array<Dynamic>):Void
 	{
-		var i:UInt = 0;
-		var l:UInt = Record.length;
+		var i:Int = 0;
+		var l:Int = Record.length;
 		var o:Dynamic;
 		var o2:Dynamic;
 		while(i < l)
@@ -153,7 +166,11 @@ class Input
 	 */
 	public function any():Bool
 	{
+		#if flash
 		var i:UInt = 0;
+		#else
+		var i:Int = 0;
+		#end
 		while(i < _total)
 		{
 			var o:Dynamic = _map[i++];
@@ -170,7 +187,13 @@ class Input
 	 * @param	KeyName		String name of the key (e.g. "LEFT" or "A")
 	 * @param	KeyCode		The numeric Flash code for this key.
 	 */
-	private function addKey(KeyName:String, KeyCode:UInt):Void
+	private function addKey(	KeyName:String, 
+								#if flash
+								KeyCode:UInt
+								#else
+								KeyCode:Int
+								#end
+								):Void
 	{
 		//_lookup[KeyName] = KeyCode;
 		Reflect.setField(_lookup, KeyName, KeyCode);

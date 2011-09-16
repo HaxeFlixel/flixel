@@ -20,16 +20,27 @@ class Perf extends FlxWindow
 	private var _lastTime:Int;
 	private var _updateTimer:Int;
 	
+	#if flash
 	private var _flixelUpdate:Array<UInt>;
 	private var _flixelUpdateMarker:UInt;
 	private var _flixelDraw:Array<UInt>;
 	private var _flixelDrawMarker:UInt;
-	private var _flash:Array <Float>;
-	private var _flashMarker:UInt;
-	private var _activeObject:Array<Int>;
-	private var _objectMarker:UInt;
-	private var _visibleObject:Array<Int>;
 	private var _visibleObjectMarker:UInt;
+	private var _objectMarker:UInt;
+	private var _flashMarker:UInt;
+	#else
+	private var _flixelUpdate:Array<Int>;
+	private var _flixelUpdateMarker:Int;
+	private var _flixelDraw:Array<Int>;
+	private var _flixelDrawMarker:Int;
+	private var _visibleObjectMarker:Int;
+	private var _objectMarker:Int;
+	private var _flashMarker:Int;
+	#end
+	private var _activeObject:Array<Int>;
+	private var _flash:Array <Float>;
+	private var _visibleObject:Array<Int>;
+	
 	
 	/**
 	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
@@ -41,7 +52,13 @@ class Perf extends FlxWindow
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt=0x7f000000)
+	public function new(	Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, 
+							#if flash 
+							?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt=0x7f000000
+							#else
+							?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000
+							#end
+							)
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		resize(90,66);
@@ -99,8 +116,8 @@ class Perf extends FlxWindow
 	{
 		var time:Int = Lib.getTimer();
 		var elapsed:Int = time - _lastTime;
-		var updateEvery:UInt = 500;
-		if (elapsed > Std.int(updateEvery))
+		var updateEvery:Int = 500;
+		if (elapsed > updateEvery)
 		{
 			elapsed = updateEvery;
 		}
@@ -109,61 +126,61 @@ class Perf extends FlxWindow
 		_updateTimer += elapsed;
 		if(_updateTimer > Std.int(updateEvery))
 		{
-			var i:UInt;
+			var i:Int;
 			var output:String = "";
 
 			var flashPlayerFramerate:Float = 0;
 			i = 0;
-			while (i < _flashMarker)
+			while (i < Std.int(_flashMarker))
 			{
 				flashPlayerFramerate += _flash[i++];
 			}
 			flashPlayerFramerate /= _flashMarker;
-			output += cast(1/(flashPlayerFramerate/1000), UInt) + "/" + FlxG.flashFramerate + "fps\n";
+			output += Std.int(1/(flashPlayerFramerate/1000)) + "/" + FlxG.flashFramerate + "fps\n";
 			
 			output += Math.round(System.totalMemory * 0.000000954 * 100) / 100 + "MB\n";
 
-			var updateTime:UInt = 0;
+			var updateTime:Int = 0;
 			i = 0;
-			while (i < _flixelUpdateMarker)
+			while (i < Std.int(_flixelUpdateMarker))
 			{
 				updateTime += _flixelUpdate[i++];
 			}
 			
-			var activeCount:UInt = 0;
+			var activeCount:Int = 0;
 			/* TODO: Check this place. 
 			 * This is very strange. see source .as file 
 			 */
-			var visibleCount:UInt = 0;
+			var visibleCount:Int = 0;
 			/*  */
-			var te:UInt = 0;
+			var te:Int = 0;
 			i = 0;
-			while(i < _objectMarker)
+			while(i < Std.int(_objectMarker))
 			{
 				activeCount += _activeObject[i];
 				visibleCount += _visibleObject[i++];
 			}
 			activeCount = Math.floor(activeCount / _objectMarker);
 			
-			output += "U:" + activeCount + " " + cast(updateTime/_flixelDrawMarker, UInt) + "ms\n";
+			output += "U:" + activeCount + " " + Std.int(updateTime/_flixelDrawMarker) + "ms\n";
 			
-			var drawTime:UInt = 0;
+			var drawTime:Int = 0;
 			i = 0;
-			while (i < _flixelDrawMarker)
+			while (i < Std.int(_flixelDrawMarker))
 			{
-				drawTime += _flixelDraw[i++];
+				drawTime += Std.int(_flixelDraw[i++]);
 			}
 			
 			//var visibleCount:UInt = 0;
 			visibleCount = 0;
 			i = 0;
-			while (i < _visibleObjectMarker)
+			while (i < Std.int(_visibleObjectMarker))
 			{
 				visibleCount += _visibleObject[i++];
 			}
 			visibleCount = Math.floor(visibleCount/_visibleObjectMarker);
 
-			output += "D:" + visibleCount + " " + cast(drawTime/_flixelDrawMarker, UInt) + "ms";
+			output += "D:" + visibleCount + " " + Std.int(drawTime/_flixelDrawMarker) + "ms";
 
 			_text.text = output;
 			

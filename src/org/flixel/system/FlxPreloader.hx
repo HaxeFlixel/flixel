@@ -20,14 +20,41 @@ import flash.Lib;
 
 import org.flixel.FlxG;
 
+class LogoPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgLogo extends Bitmap 
+{
+	public function new() { super(new LogoPNG()); }
+}
+
+class LogoCornersPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgLogoCorners extends Bitmap 
+{
+	public function new() { super(new LogoCornersPNG()); }
+}
+
+class LogoLightPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgLogoLight extends Bitmap 
+{
+	public function new() { super(new LogoLightPNG()); }
+}
+
 /**
  * This class handles the 8-bit style preloader.
  */
 class FlxPreloader extends MovieClip
 {
-	[Embed(source="../data/logo.png")] private var ImgLogo:Class<Bitmap>;
-	[Embed(source="../data/logo_corners.png")] private var ImgLogoCorners:Class<Bitmap>;
-	[Embed(source="../data/logo_light.png")] private var ImgLogoLight:Class<Bitmap>;
+	/*[Embed(source="../data/logo.png")] private var ImgLogo:Class<Bitmap>*/;
+	/*[Embed(source="../data/logo_corners.png")] private var ImgLogoCorners:Class<Bitmap>*/;
+	/*[Embed(source="../data/logo_light.png")] private var ImgLogoLight:Class<Bitmap>*/;
 
 	/**
 	 * @private
@@ -48,11 +75,19 @@ class FlxPreloader extends MovieClip
 	/**
 	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
 	 */
+	#if flash
 	private var _width:UInt;
+	#else
+	private var _width:Int;
+	#end
 	/**
 	 * Useful for storing "real" stage height if you're scaling your preloader graphics.
 	 */
+	#if flash
 	private var _height:UInt;
+	#else
+	private var _height:Int;
+	#end
 	/**
 	 * @private
 	 */
@@ -64,7 +99,11 @@ class FlxPreloader extends MovieClip
 	/**
 	 * @private
 	 */
+	#if flash
 	private var _min:UInt;
+	#else
+	private var _min:Int;
+	#end
 
 	/**
 	 * This should always be the name of your main project/document class (e.g. GravityHook).
@@ -152,7 +191,7 @@ class FlxPreloader extends MovieClip
 			this._init = true;
 		}
 		graphics.clear();
-		var time:UInt = Lib.getTimer();
+		var time:Int = Lib.getTimer();
 		if((framesLoaded >= totalFrames) && (time > _min))
 		{
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -232,12 +271,12 @@ class FlxPreloader extends MovieClip
 		bitmap.height = _height;
 		_buffer.addChild(bitmap);
 		bitmap = new Bitmap(new BitmapData(_width,_height,false,0xffffff));
-		var i:UInt = 0;
-		var j:UInt = 0;
-		while(i < _height)
+		var i:Int = 0;
+		var j:Int = 0;
+		while(i < Std.int(_height))
 		{
 			j = 0;
-			while (j < _width)
+			while (j < Std.int(_width))
 			{
 				bitmap.bitmapData.setPixel(j++,i,0);
 			}

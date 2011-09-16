@@ -51,7 +51,11 @@ class FlxDebugger extends Sprite
 	/**
 	 * Internal, tracks what debugger window layout user has currently selected.
 	 */
+	#if flash
 	private var _layout:UInt;
+	#else
+	private var _layout:Int;
+	#end
 	/**
 	 * Internal, stores width and height of the Flash Player window.
 	 */
@@ -59,7 +63,12 @@ class FlxDebugger extends Sprite
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
+	#if flash
 	private var _gutter:UInt;
+	#else
+	private var _gutter:Int;
+	#end
+	
 	
 	/**
 	 * Instantiates the debugger overlay.
@@ -172,7 +181,11 @@ class FlxDebugger extends Sprite
 	 * Rearrange the debugger windows using one of the constants specified in FlxG.
 	 * @param	Layout		The layout style for the debugger windows, e.g. <code>FlxG.DEBUGGER_MICRO</code>.
 	 */
+	#if flash
 	public function setLayout(Layout:UInt):Void
+	#else
+	public function setLayout(Layout:Int):Void
+	#end
 	{
 		_layout = Layout;
 		resetLayout();

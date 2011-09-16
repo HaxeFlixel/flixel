@@ -1,30 +1,52 @@
 package org.flixel;
 
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flash.media.Sound;
+import flash.media.Sound;
 
+class ButtonPNG extends BitmapData 
+{ 
+	public function new() { super(0, 0); } 
+}
+class ImgDefaultButton extends Bitmap
+{
+	public function new() { super(new ButtonPNG()); }
+}
+    
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
 class FlxButton extends FlxSprite
 {
-	[Embed(source="data/button.png")] private var ImgDefaultButton:Class<Bitmap>;
-	[Embed(source="data/beep.mp3")] private var SndBeep:Class<Bitmap>;
+	/*[Embed(source="data/button.png")] private var ImgDefaultButton:Class<Bitmap>;*/
+	/*[Embed(source="data/beep.mp3")] private var SndBeep:Class<Bitmap>;*/
 	
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */
+	#if flash
 	static public var NORMAL:UInt = 0;
+	#else
+	static public var NORMAL:Int = 0;
+	#end
 	/**
 	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
 	 */
+	#if flash
 	static public var HIGHLIGHT:UInt = 1;
+	#else
+	static public var HIGHLIGHT:Int = 1;
+	#end
 	/**
 	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
 	 */
+	#if flash
 	static public var PRESSED:UInt = 2;
-	
+	#else
+	static public var PRESSED:Int = 2;
+	#end
 	/**
 	 * The text that appears on the button.
 	 */
@@ -38,23 +60,27 @@ class FlxButton extends FlxSprite
 	 * We recommend assigning your main button behavior to this function
 	 * via the <code>FlxButton</code> constructor.
 	 */
-	public var onUp:Void->Void;
+	public var onUp:Dynamic;
 	/**
 	 * This function is called when the button is pressed down.
 	 */
-	public var onDown:Void->Void;
+	public var onDown:Dynamic;
 	/**
 	 * This function is called when the mouse goes over the button.
 	 */
-	public var onOver:Void->Void;
+	public var onOver:Dynamic;
 	/**
 	 * This function is called when the mouse leaves the button area.
 	 */
-	public var onOut:Void->Void;
+	public var onOut:Dynamic;
 	/**
 	 * Shows the current state of the button.
 	 */
+	#if flash
 	public var status:UInt;
+	#else
+	public var status:Int;
+	#end
 	/**
 	 * Set this to play a sound when the mouse goes over the button.
 	 * We recommend using the helper function setSounds()!
@@ -98,7 +124,7 @@ class FlxButton extends FlxSprite
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Label:String = null, ?OnClick:Void->Void = null)
+	public function new(?X:Float = 0, ?Y:Float = 0, ?Label:String = null, ?OnClick:Dynamic = null)
 	{
 		super(X, Y);
 		if(Label != null)
@@ -198,22 +224,19 @@ class FlxButton extends FlxSprite
 		{
 			case HIGHLIGHT:	//Extra behavior to accomodate checkbox logic.
 				label.alpha = 1.0;
-				break;
 			case PRESSED:
 				label.alpha = 0.5;
 				label.y++;
-				break;
-			case NORMAL:
+			//case NORMAL:
 			default:
 				label.alpha = 0.8;
-				break;
 		}
 	}
 	
 	/**
 	 * Basic button update logic
 	 */
-	protected function updateButton():Void
+	function updateButton():Void
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
@@ -224,8 +247,8 @@ class FlxButton extends FlxSprite
 				cameras = FlxG.cameras;
 			}
 			var camera:FlxCamera;
-			var i:UInt = 0;
-			var l:UInt = cameras.length;
+			var i:Int = 0;
+			var l:Int = cameras.length;
 			var offAll:Bool = true;
 			while(i < l)
 			{

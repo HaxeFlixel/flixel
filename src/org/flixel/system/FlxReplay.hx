@@ -103,8 +103,8 @@ class FlxReplay
 		seed = Std.parseFloat(lines[0]);
 		
 		var line:String;
-		var i:UInt = 1;
-		var l:UInt = lines.length;
+		var i:Int = 1;
+		var l:Int = lines.length;
 		while(i < l)
 		{
 			line = lines[i++];
@@ -146,7 +146,7 @@ class FlxReplay
 			return null;
 		}
 		var output:String = seed+"\n";
-		var i:UInt = 0;
+		var i:Int = 0;
 		while (Std.int(i) < frameCount)
 		{
 			output += _frames[i++].save() + "\n";

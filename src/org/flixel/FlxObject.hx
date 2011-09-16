@@ -17,41 +17,75 @@ class FlxObject extends FlxBasic
 	/**
 	 * Generic value for "left" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
+	#if flash
 	static public var LEFT:UInt	= 0x0001;
+	#else
+	static public var LEFT:Int	= 0x0001;
+	#end
 	/**
 	 * Generic value for "right" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
+	#if flash
 	static public var RIGHT:UInt	= 0x0010;
+	#else
+	static public var RIGHT:Int	= 0x0010;
+	#end
 	/**
 	 * Generic value for "up" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
+	#if flash
 	static public var UP:UInt		= 0x0100;
+	#else
+	static public var UP:Int		= 0x0100;
+	#end
 	/**
 	 * Generic value for "down" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
+	#if flash
 	static public var DOWN:UInt	= 0x1000;
-	
+	#else
+	static public var DOWN:Int	= 0x1000;
+	#end
 	/**
 	 * Special-case constant meaning no collisions, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
+	#if flash
 	static public var NONE:UInt	= 0;
+	#else
+	static public var NONE:Int	= 0;
+	#end
 	/**
 	 * Special-case constant meaning up, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
+	#if flash
 	static public var CEILING:UInt= UP;
+	#else
+	static public var CEILING:Int= UP;
+	#end
 	/**
 	 * Special-case constant meaning down, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
+	#if flash
 	static public var FLOOR:UInt	= DOWN;
+	#else
+	static public var FLOOR:Int	= DOWN;
+	#end
 	/**
 	 * Special-case constant meaning only the left and right sides, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
+	#if flash
 	static public var WALL:UInt	= LEFT | RIGHT;
+	#else
+	static public var WALL:Int	= LEFT | RIGHT;
+	#end
 	/**
 	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
+	#if flash
 	static public var ANY:UInt	= LEFT | RIGHT | UP | DOWN;
-	
+	#else
+	static public var ANY:Int	= LEFT | RIGHT | UP | DOWN;
+	#end
 	/**
 	 * Handy constant used during collision resolution (see <code>separateX()</code> and <code>separateY()</code>).
 	 */
@@ -60,32 +94,59 @@ class FlxObject extends FlxBasic
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
+	#if flash
 	static public var PATH_FORWARD:UInt			= 0x000000;
+	#else
+	static public var PATH_FORWARD:Int			= 0x000000;
+	#end
 	/**
 	 * Path behavior controls: move from the end of the path to the start then stop.
 	 */
+	#if flash
 	static public var PATH_BACKWARD:UInt			= 0x000001;
+	#else
+	static public var PATH_BACKWARD:Int			= 0x000001;
+	#end
 	/**
 	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
 	 */
+	#if flash
 	static public var PATH_LOOP_FORWARD:UInt		= 0x000010;
+	#else
+	static public var PATH_LOOP_FORWARD:Int		= 0x000010;
+	#end
 	/**
 	 * Path behavior controls: move from the end of the path to the start then directly back to the end, and start over.
 	 */
+	#if flash
 	static public var PATH_LOOP_BACKWARD:UInt		= 0x000100;
+	#else
+	static public var PATH_LOOP_BACKWARD:Int		= 0x000100;
+	#end
 	/**
 	 * Path behavior controls: move from the start of the path to the end then turn around and go back to the start, over and over.
 	 */
+	#if flash
 	static public var PATH_YOYO:UInt				= 0x001000;
+	#else
+	static public var PATH_YOYO:Int				= 0x001000;
+	#end
 	/**
 	 * Path behavior controls: ignores any vertical component to the path data, only follows side to side.
 	 */
+	#if flash
 	static public var PATH_HORIZONTAL_ONLY:UInt	= 0x010000;
+	#else
+	static public var PATH_HORIZONTAL_ONLY:Int	= 0x010000;
+	#end
 	/**
 	 * Path behavior controls: ignores any horizontal component to the path data, only follows up and down.
 	 */
+	#if flash
 	static public var PATH_VERTICAL_ONLY:UInt		= 0x100000;
-	
+	#else
+	static public var PATH_VERTICAL_ONLY:Int		= 0x100000;
+	#end
 	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
@@ -203,21 +264,32 @@ class FlxObject extends FlxBasic
 	 * Use bitwise operators to check the values stored here, or use touching(), justStartedTouching(), etc.
 	 * You can even use them broadly as boolean values if you're feeling saucy!
 	 */
+	#if flash
 	public var touching:UInt;
+	#else
+	public var touching:Int;
+	#end
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step.
 	 * Use bitwise operators to check the values stored here, or use touching(), justStartedTouching(), etc.
 	 * You can even use them broadly as boolean values if you're feeling saucy!
 	 */
+	#if flash
 	public var wasTouching:UInt;
+	#else
+	public var wasTouching:Int;
+	#end
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions.
 	 * Use bitwise operators to check the values stored here.
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;)
 	 * The accessor "solid" just flips this variable between NONE and ANY.
 	 */
+	#if flash
 	public var allowCollisions:UInt;
-	
+	#else
+	public var allowCollisions:Int;
+	#end
 	/**
 	 * Important variable for collision processing.
 	 * By default this value is set automatically during <code>preUpdate()</code>.
@@ -247,11 +319,19 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
 	 */
+	#if flash
 	private var _pathMode:UInt;
+	#else
+	private var _pathMode:Int;
+	#end
 	/**
 	 * Internal helper for node navigation, specifically yo-yo and backwards movement.
 	 */
+	#if flash
 	private var _pathInc:UInt;
+	#else
+	private var _pathInc:Int;
+	#end
 	/**
 	 * Internal flag for whether hte object's angle should be adjusted to the path angle during path follow behavior.
 	 */
@@ -416,8 +496,8 @@ class FlxObject extends FlxBasic
 			cameras = FlxG.cameras;
 		}
 		var camera:FlxCamera;
-		var i:UInt = 0;
-		var l:UInt = cameras.length;
+		var i:Int = 0;
+		var l:Int = cameras.length;
 		while(i < l)
 		{
 			camera = cameras[i++];
@@ -458,7 +538,11 @@ class FlxObject extends FlxBasic
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		gfx.moveTo(boundingBoxX, boundingBoxY);
+		#if flash
 		var boundingBoxColor:UInt;
+		#else
+		var boundingBoxColor:Int;
+		#end
 		if(allowCollisions != FlxObject.NONE)
 		{
 			if (allowCollisions != ANY)
@@ -497,7 +581,13 @@ class FlxObject extends FlxBasic
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
 	 */
-	public function followPath(Path:FlxPath, ?Speed:Float = 100, ?Mode:UInt = 0x000000, ?AutoRotate:Bool = false):Void
+	public function followPath(	Path:FlxPath, ?Speed:Float = 100, 
+								#if flash
+								?Mode:UInt = 0x000000, 
+								#else
+								?Mode:Int = 0x000000, 
+								#end
+								?AutoRotate:Bool = false):Void
 	{
 		if(Path.nodes.length <= 0)
 		{
@@ -731,11 +821,11 @@ class FlxObject extends FlxBasic
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
 			var results:Bool = false;
-			var i:UInt = 0;
+			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
 			//while(i < length)
-			while(i < grp.length)
+			while(i < Std.int(grp.length))
 			{
 				if (overlaps(members[i++], InScreenSpace, Camera))
 				{
@@ -786,11 +876,11 @@ class FlxObject extends FlxBasic
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
-			var i:UInt = 0;
+			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
 			//while(i < length)
-			while(i < grp.length)
+			while(i < Std.int(grp.length))
 			{
 				if (overlapsAt(X, Y, members[i++], InScreenSpace, Camera))
 				{
@@ -926,7 +1016,11 @@ class FlxObject extends FlxBasic
 	 */
 	public function getSolid():Bool
 	{
+		#if flash
 		return cast((allowCollisions & ANY), UInt) > NONE;
+		#else
+		return Std.int(allowCollisions & ANY) > NONE;
+		#end
 	}
 	
 	/**
@@ -987,20 +1081,34 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
+	#if flash
 	public function isTouching(Direction:UInt):Bool
 	{
 		return cast((touching & Direction), UInt) > NONE;
 	}
+	#else
+	public function isTouching(Direction:Int):Bool
+	{
+		return Std.int(touching & Direction) > NONE;
+	}
+	#end
 	
 	/**
 	 * Handy function for checking if this object is just landed on a particular surface.
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
+	#if flash
 	public function justTouched(Direction:UInt):Bool
 	{
 		return (cast((touching & Direction), UInt) > NONE) && (cast((wasTouching & Direction), UInt) <= NONE);
 	}
+	#else
+	public function justTouched(Direction:Int):Bool
+	{
+		return (Std.int(touching & Direction) > NONE) && (Std.int(wasTouching & Direction) <= NONE);
+	}
+	#end
 	
 	/**
 	 * Reduces the "health" variable of this sprite by the amount specified in Damage.
@@ -1074,7 +1182,11 @@ class FlxObject extends FlxBasic
 				if(obj1delta > obj2delta)
 				{
 					overlap = Object1.x + Object1.width - Object2.x;
+					#if flash
 					if ((overlap > maxOverlap) || !(Object1.allowCollisions != cast((FlxObject.NONE & RIGHT), UInt)) || !(Object2.allowCollisions != cast((FlxObject.NONE & LEFT), UInt)))
+					#else
+					if ((overlap > maxOverlap) || !(Object1.allowCollisions != Std.int(FlxObject.NONE & RIGHT)) || !(Object2.allowCollisions != Std.int(FlxObject.NONE & LEFT)))
+					#end
 					{
 						overlap = 0;
 					}
@@ -1087,7 +1199,11 @@ class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.x - Object2.width - Object2.x;
+					#if flash
 					if (( -overlap > maxOverlap) || !(Object1.allowCollisions != cast((FlxObject.NONE & LEFT), UInt)) || !(Object2.allowCollisions != cast((FlxObject.NONE & RIGHT), UInt)))
+					#else
+					if (( -overlap > maxOverlap) || !(Object1.allowCollisions != Std.int(FlxObject.NONE & LEFT)) || !(Object2.allowCollisions != Std.int(FlxObject.NONE & RIGHT)))
+					#end
 					{
 						overlap = 0;
 					}
@@ -1183,7 +1299,11 @@ class FlxObject extends FlxBasic
 				if(obj1delta > obj2delta)
 				{
 					overlap = Object1.y + Object1.height - Object2.y;
+					#if flash
 					if ((overlap > maxOverlap) || !(Object1.allowCollisions != cast((FlxObject.NONE & DOWN), UInt)) || !(Object2.allowCollisions != cast((FlxObject.NONE & UP), UInt)))
+					#else
+					if ((overlap > maxOverlap) || !(Object1.allowCollisions != Std.int(FlxObject.NONE & DOWN)) || !(Object2.allowCollisions != Std.int(FlxObject.NONE & UP)))
+					#end
 					{
 						overlap = 0;
 					}
@@ -1196,7 +1316,11 @@ class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.y - Object2.height - Object2.y;
+					#if flash
 					if (( -overlap > maxOverlap) || !(Object1.allowCollisions != cast((FlxObject.NONE & UP), UInt)) || !(Object2.allowCollisions != cast((FlxObject.NONE & DOWN), UInt)))
+					#else
+					if (( -overlap > maxOverlap) || !(Object1.allowCollisions != Std.int(FlxObject.NONE & UP)) || !(Object2.allowCollisions != Std.int(FlxObject.NONE & DOWN)))
+					#end
 					{
 						overlap = 0;
 					}

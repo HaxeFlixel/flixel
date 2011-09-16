@@ -1,6 +1,7 @@
 package org.flixel.system.input;
 
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
 
@@ -11,13 +12,22 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxU;
 import org.flixel.system.replay.MouseRecord;
 
+class CursorPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgDefaultCursor extends Bitmap 
+{
+	public function new() { super(new CursorPNG()); }
+}
+
 /**
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
 class Mouse extends FlxPoint
 {
-	/*[Embed(source="../../data/cursor.png")]*/ private var ImgDefaultCursor:Class<Bitmap>;
+	/*[Embed(source="../../data/cursor.png")] private var ImgDefaultCursor:Class<Bitmap>;*/
 
 	/**
 	 * Current "delta" value of mouse wheel.  If the wheel was just scrolled up, it will have a positive value.  If it was just scrolled down, it will have a negative value.  If it wasn't just scroll this frame, it will be 0.

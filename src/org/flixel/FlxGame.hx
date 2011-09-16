@@ -16,16 +16,30 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flash.Lib;
 
-#if flash9
+#if flash
 import flash.text.AntiAliasType;
 import flash.text.GridFitType;
 import flash.ui.Mouse;
-import flash.utils.Timer;
+//import flash.utils.Timer;
 #end
 
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxReplay;
+
+class LogoPNG extends BitmapData 
+{ 
+	public function new() { super(0, 0); } 
+}
+class ImgLogo extends Bitmap
+{
+	public function new() { super(new LogoPNG()); }
+}
+
+class SndBeep extends Sound 
+{ 
+	public function new() { super(); } 
+}
 
 /**
  * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
@@ -36,8 +50,8 @@ import org.flixel.system.FlxReplay;
 class FlxGame extends Sprite
 {
 	/*[Embed(source="data/nokiafc22.ttf",fontFamily="system",embedAsCFF="false")]*/ private var junk:String;
-	/*[Embed(source="data/beep.mp3")]*/ private var SndBeep:Class<Sound>;
-	/*[Embed(source="data/logo.png")]*/ private var ImgLogo:Class<Bitmap>;
+	/*[Embed(source="data/beep.mp3")] private var SndBeep:Class<Sound>;*/
+	/*[Embed(source="data/logo.png")] private var ImgLogo:Class<Bitmap>;*/
 
 	/**
 	 * Sets 0, -, and + to control the global volume sound volume.
@@ -77,7 +91,11 @@ class FlxGame extends Sprite
 	/**
 	 * Total number of milliseconds elapsed since game start.
 	 */
+	#if flash
 	private var _total:UInt;
+	#else
+	private var _total:Int;
+	#end
 	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
@@ -90,16 +108,28 @@ class FlxGame extends Sprite
 	/**
 	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms. Supposed to be internal
 	 */
+	#if flash
 	public var _step:UInt;
+	#else
+	public var _step:Int;
+	#end
 	/**
 	 * Framerate of the Flash player (NOT the game loop). Default = 30.
 	 */
+	#if flash
 	public var _flashFramerate:UInt;
+	#else
+	public var _flashFramerate:Int;
+	#end
 	/**
 	 * Max allowable accumulation (see _accumulator).
 	 * Should always (and automatically) be set to roughly 2x the flash player framerate.
 	 */
+	#if flash
 	public var _maxAccumulation:UInt;
+	#else
+	public var _maxAccumulation:Int;
+	#end
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
@@ -166,7 +196,7 @@ class FlxGame extends Sprite
 	/**
 	 * This function, if set, is triggered when the callback stops playing.
 	 */
-	public var _replayCallback:Void->Void;
+	public var _replayCallback:Dynamic;
 
 	/**
 	 * Instantiate a new game object.
@@ -178,7 +208,13 @@ class FlxGame extends Sprite
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public function new(GameSizeX:UInt, GameSizeY:UInt, InitialState:Class<FlxState>, ?Zoom:Float = 1, GameFramerate:UInt = 60,?FlashFramerate:UInt = 30, ?UseSystemCursor:Bool = false)
+	public function new(	
+							#if flash 
+							GameSizeX:UInt, GameSizeY:UInt, InitialState:Class<FlxState>, ?Zoom:Float = 1, GameFramerate:UInt = 60, ?FlashFramerate:UInt = 30, ?UseSystemCursor:Bool = false
+							#else
+							GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, ?Zoom:Float = 1, GameFramerate:Int = 60, ?FlashFramerate:Int = 30, ?UseSystemCursor:Bool = false
+							#end
+							)
 	{
 		super();
 		
@@ -235,7 +271,7 @@ class FlxGame extends Sprite
 		_soundTrayTimer = 1;
 		_soundTray.y = 0;
 		_soundTray.visible = true;
-		var globalVolume:UInt = Math.round(FlxG.volume*10);
+		var globalVolume:Int = Math.round(FlxG.volume*10);
 		if (FlxG.mute)
 		{
 			globalVolume = 0;
@@ -331,8 +367,8 @@ class FlxGame extends Sprite
 		{
 			var cancel:Bool = false;
 			var replayCancelKey:String;
-			var i:UInt = 0;
-			var l:UInt = _replayCancelKeys.length;
+			var i:Int = 0;
+			var l:Int = _replayCancelKeys.length;
 			while(i < l)
 			{
 				replayCancelKey = _replayCancelKeys[i++];
@@ -375,8 +411,8 @@ class FlxGame extends Sprite
 		if(_replaying && (_replayCancelKeys != null))
 		{
 			var replayCancelKey:String;
-			var i:UInt = 0;
-			var l:UInt = _replayCancelKeys.length;
+			var i:Int = 0;
+			var l:Int = _replayCancelKeys.length;
 			while(i < l)
 			{
 				replayCancelKey = cast(_replayCancelKeys[i++], String);
@@ -468,8 +504,8 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(?FlashEvent:Event = null):Void
 	{			
-		var mark:UInt = Lib.getTimer();
-		var elapsedMS:UInt = mark-_total;
+		var mark:Int = Lib.getTimer();
+		var elapsedMS:Int = mark-_total;
 		_total = mark;
 		updateSoundTray(elapsedMS);
 		if(!_lostFocus)
@@ -516,7 +552,6 @@ class FlxGame extends Sprite
 	 */
 	private function switchState():Void
 	{ 
-		trace("Hello from switch state");
 		//Basic reset stuff
 		FlxG.resetCameras();
 		FlxG.resetInput();
@@ -694,7 +729,7 @@ class FlxGame extends Sprite
 	 */
 	private function update():Void
 	{			
-		var mark:UInt = Lib.getTimer();
+		var mark:Int = Lib.getTimer();
 		
 		FlxG.elapsed = FlxG.timeScale*(_step/1000);
 		FlxG.updateSounds();
@@ -713,7 +748,7 @@ class FlxGame extends Sprite
 	 */
 	private function draw():Void
 	{
-		var mark:UInt = Lib.getTimer();
+		var mark:Int = Lib.getTimer();
 		FlxG.lockCameras();
 		_state.draw();
 		FlxG.drawPlugins();
@@ -737,7 +772,6 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ENTER_FRAME, create);
 		_total = Lib.getTimer();
-		trace("HeLLo");
 		//Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
@@ -805,10 +839,10 @@ class FlxGame extends Sprite
 		text.text = "VOLUME";
 		text.y = 16;
 		
-		var bx:UInt = 10;
-		var by:UInt = 14;
+		var bx:Int = 10;
+		var by:Int = 14;
 		_soundTrayBars = new Array();
-		var i:UInt = 0;
+		var i:Int = 0;
 		while(i < 10)
 		{
 			tmp = new Bitmap(new BitmapData(4,++i,false,0xffffff));
@@ -846,8 +880,8 @@ class FlxGame extends Sprite
 	private function createFocusScreen():Void
 	{
 		var gfx:Graphics = _focus.graphics;
-		var screenWidth:UInt = Math.floor(FlxG.width * FlxCamera.defaultZoom);
-		var screenHeight:UInt = Math.floor(FlxG.height * FlxCamera.defaultZoom);
+		var screenWidth:Int = Math.floor(FlxG.width * FlxCamera.defaultZoom);
+		var screenHeight:Int = Math.floor(FlxG.height * FlxCamera.defaultZoom);
 		
 		//draw transparent black backdrop
 		gfx.moveTo(0, 0);
@@ -859,9 +893,9 @@ class FlxGame extends Sprite
 		gfx.endFill();
 		
 		//draw white arrow
-		var halfWidth:UInt = Math.floor(screenWidth / 2);
-		var halfHeight:UInt = Math.floor(screenHeight / 2);
-		var helper:UInt = Math.floor(FlxU.min(halfWidth, halfHeight) / 3);
+		var halfWidth:Int = Math.floor(screenWidth / 2);
+		var halfHeight:Int = Math.floor(screenHeight / 2);
+		var helper:Int = Math.floor(FlxU.min(halfWidth, halfHeight) / 3);
 		gfx.moveTo(halfWidth - helper, halfHeight - helper);
 		gfx.beginFill(0xffffff,0.65);
 		gfx.lineTo(halfWidth+helper,halfHeight);
@@ -870,7 +904,7 @@ class FlxGame extends Sprite
 		gfx.endFill();
 		
 		// TODO: Fix this
-		/*var logo:Bitmap = Type.createInstance(ImgLogo, []); //new ImgLogo();
+		var logo:Bitmap = new ImgLogo(); //Type.createInstance(ImgLogo, []);
 		logo.scaleX = Math.floor(helper/10);
 		if (logo.scaleX < 1)
 		{
@@ -879,7 +913,7 @@ class FlxGame extends Sprite
 		logo.scaleY = logo.scaleX;
 		logo.x -= logo.scaleX;
 		logo.alpha = 0.35;
-		_focus.addChild(logo);*/
+		_focus.addChild(logo);
 		
 		addChild(_focus);
 	}

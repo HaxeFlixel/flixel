@@ -84,7 +84,11 @@ class FlxEmitter extends FlxGroup
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
+	#if flash
 	private var _quantity:UInt;
+	#else
+	private var _quantity:Int;
+	#end
 	/**
 	 * Internal helper for the style of particle emission (all at once, or one at a time).
 	 */
@@ -96,7 +100,11 @@ class FlxEmitter extends FlxGroup
 	/**
 	 * Internal counter for figuring out how many particles to launch.
 	 */
+	#if flash
 	private var _counter:UInt;
+	#else
+	private var _counter:Int;
+	#end
 	/**
 	 * Internal point object, handy for reusing for memory mgmt purposes.
 	 */
@@ -109,7 +117,13 @@ class FlxEmitter extends FlxGroup
 	 * @param	Y		The Y position of the emitter.
 	 * @param	Size	Optional, specifies a maximum capacity for this emitter.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Size:UInt = 0)
+	public function new(	?X:Float = 0, ?Y:Float = 0, 
+							#if flash
+							?Size:UInt = 0
+							#else
+							?Size:Int = 0
+							#end
+							)
 	{
 		super(Size);
 		x = X;
@@ -155,10 +169,18 @@ class FlxEmitter extends FlxGroup
 	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Class<Bitmap>, ?Quantity:UInt = 50, ?BakedRotations:UInt = 16, ?Multiple:Bool = false, ?Collide:Float = 0.8):FlxEmitter
+	public function makeParticles(	Graphics:Class<Bitmap>, 
+									#if flash
+									?Quantity:UInt = 50, 
+									?BakedRotations:UInt = 16,
+									#else
+									?Quantity:Int = 50, 
+									?BakedRotations:Int = 16,
+									#end
+									?Multiple:Bool = false, ?Collide:Float = 0.8):FlxEmitter
 	{
 		maxSize = Quantity;
-		var totalFrames:UInt = 1;
+		var totalFrames:Int = 1;
 		if(Multiple)
 		{ 
 			var sprite:FlxSprite = new FlxSprite();
@@ -167,10 +189,10 @@ class FlxEmitter extends FlxGroup
 			sprite.destroy();
 		}
 		
-		var randomFrame:UInt;
+		var randomFrame:Int;
 		var particle:FlxParticle;
-		var i:UInt = 0;
-		while(i < Quantity)
+		var i:Int = 0;
+		while(i < Std.int(Quantity))
 		{
 			if (particleClass == null)
 			{
@@ -183,7 +205,7 @@ class FlxEmitter extends FlxGroup
 			}
 			if(Multiple)
 			{
-				randomFrame = cast(FlxG.random() * totalFrames, UInt);
+				randomFrame = Std.int(FlxG.random() * totalFrames);
 				if (BakedRotations > 0)
 				{
 					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame);
@@ -232,9 +254,9 @@ class FlxEmitter extends FlxGroup
 			if(_explode)
 			{
 				on = false;
-				var i:UInt = 0;
-				var l:UInt = _quantity;
-				if ((l <= 0) || (l > length))
+				var i:Int = 0;
+				var l:Int = _quantity;
+				if ((l <= 0) || (l > Std.int(length)))
 				{
 					l = length;
 				}
@@ -252,7 +274,7 @@ class FlxEmitter extends FlxGroup
 				{
 					_timer -= frequency;
 					emitParticle();
-					if((_quantity > 0) && (++_counter >= _quantity))
+					if((_quantity > 0) && (++_counter >= Std.int(_quantity)))
 					{
 						on = false;
 						_quantity = 0;
@@ -279,7 +301,13 @@ class FlxEmitter extends FlxGroup
 	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
 	 */
-	public function start(?Explode:Bool = true, ?Lifespan:Float = 0, ?Frequency:Float = 0.1, ?Quantity:UInt = 0):Void
+	public function start(	?Explode:Bool = true, ?Lifespan:Float = 0, ?Frequency:Float = 0.1, 
+							#if flash
+							?Quantity:UInt = 0
+							#else
+							?Quantity:Int = 0
+							#end
+							):Void
 	{
 		revive();
 		visible = true;
@@ -302,7 +330,7 @@ class FlxEmitter extends FlxGroup
 		var particle:FlxParticle = cast(recycle(FlxParticle), FlxParticle);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
-		particle.reset(x - (particle.width>>1) + FlxG.random()*width, y - (particle.height>>1) + FlxG.random()*height);
+		particle.reset(x - (Std.int(particle.width)>>1) + FlxG.random()*width, y - (Std.int(particle.height)>>1) + FlxG.random()*height);
 		particle.visible = true;
 		
 		if (minParticleSpeed.x != maxParticleSpeed.x)
@@ -346,7 +374,11 @@ class FlxEmitter extends FlxGroup
 	 * @param	Width	The desired width of the emitter (particles are spawned randomly within these dimensions).
 	 * @param	Height	The desired height of the emitter.
 	 */
+	#if flash
 	public function setSize(Width:UInt, Height:UInt):Void
+	#else
+	public function setSize(Width:Int, Height:Int):Void
+	#end
 	{
 		width = Width;
 		height = Height;
@@ -392,7 +424,7 @@ class FlxEmitter extends FlxGroup
 	public function at(Object:FlxObject):Void
 	{
 		Object.getMidpoint(_point);
-		x = _point.x - (width>>1);
-		y = _point.y - (height >> 1);
+		x = _point.x - (Std.int(width)>>1);
+		y = _point.y - (Std.int(height) >> 1);
 	}
 }

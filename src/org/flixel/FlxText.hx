@@ -14,6 +14,15 @@ import flash.text.TextFormatAlign;
  */
 class FlxText extends FlxSprite
 {
+	
+	#if flash
+	override public var color(getColor, setColor):UInt;
+	public var shadow(getShadow, setShadow):UInt;
+	#else
+	override public var color(getColor, setColor):Int;
+	public var shadow(getShadow, setShadow):Int;
+	#end
+	
 	/**
 	 * Internal reference to a Flash <code>TextField</code> object.
 	 */
@@ -26,7 +35,11 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal tracker for the text shadow color, default is clear/transparent.
 	 */
+	#if flash
 	private var _shadow:UInt;
+	#else
+	private var _shadow:Int;
+	#end
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -36,7 +49,13 @@ class FlxText extends FlxSprite
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or nto
 	 */
-	public function new(X:Float, Y:Float, Width:UInt, ?Text:String = null, ?EmbeddedFont:Bool = true)
+	public function new(	X:Float, Y:Float, 
+							#if flash
+							Width:UInt, 
+							#else
+							Width:Int, 
+							#end
+							?Text:String = null, ?EmbeddedFont:Bool = true)
 	{
 		super(X,Y);
 		makeGraphic(Width,1,0);
@@ -47,18 +66,18 @@ class FlxText extends FlxSprite
 		}
 		_textField = new TextField();
 		_textField.width = Width;
-		#if flash9
-		_textField.embedFonts = EmbeddedFont;
-		_textField.sharpness = 100;
-		#else
-		#end
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
 		_textField.text = Text;
-		var format:TextFormat = new TextFormat("system", 8, 0xffffffff);
+		//var format:TextFormat = new TextFormat("system", 8, 0xffffffff);
+		var format:TextFormat = new TextFormat("Nokia", 8, 0xffffffff);
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
+		#if flash
+		_textField.embedFonts = EmbeddedFont;
+		_textField.sharpness = 100;
+		#end
 		if (Text.length <= 0)
 		{
 			_textField.height = 1;
@@ -93,7 +112,19 @@ class FlxText extends FlxSprite
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String = null, ?Size:Float = 8, ?Color:UInt = 0xffffff, ?Alignment:String = null, ?ShadowColor:UInt = 0):FlxText
+	public function setFormat(	?Font:String = null, ?Size:Float = 8, 
+								#if flash
+								?Color:UInt = 0xffffff, 
+								#else
+								?Color:Int = 0xffffff, 
+								#end
+								?Alignment:String = null, 
+								#if flash
+								?ShadowColor:UInt = 0
+								#else
+								?ShadowColor:Int = 0
+								#end
+								):FlxText
 	{
 		if (Font == null)
 		{
@@ -161,20 +192,30 @@ class FlxText extends FlxSprite
 		return Size;
 	}
 	
-	override public var color(getColor, setColor):UInt;
-	
 	/**
 	 * The color of the text being displayed.
 	 */
+	#if flash
 	override public function getColor():UInt
 	{
 		return cast(_textField.defaultTextFormat.color, UInt);
 	}
+	#else
+	override public function getColor():Int
+	{
+		return _textField.defaultTextFormat.color;
+	}
+	#end
+	
 	
 	/**
 	 * @private
 	 */
+	#if flash
 	override public function setColor(Color:UInt):UInt
+	#else
+	override public function setColor(Color:Int):Int
+	#end
 	{
 		var format:TextFormat = dtfCopy();
 		format.color = Color;
@@ -232,12 +273,14 @@ class FlxText extends FlxSprite
 		return Alignment;
 	}
 	
-	public var shadow(getShadow, setShadow):UInt;
-	
 	/**
 	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
+	#if flash
 	public function getShadow():UInt
+	#else
+	public function getShadow():Int
+	#end
 	{
 		return _shadow;
 	}
@@ -245,7 +288,11 @@ class FlxText extends FlxSprite
 	/**
 	 * @private
 	 */
+	#if flash
 	public function setShadow(Color:UInt):UInt
+	#else
+	public function setShadow(Color:Int):Int
+	#end
 	{
 		_shadow = Color;
 		calcFrame();
@@ -260,20 +307,20 @@ class FlxText extends FlxSprite
 		if(_regen)
 		{
 			//Need to generate a new buffer to store the text graphic
-			var i:UInt = 0;
+			var i:Int = 0;
 			height = 0;
-			#if flash9
+			#if flash
 			var nl:Int = _textField.numLines;
 			for (i in 0 ... nl)
 			{
-				height += _textField.getLineMetrics(i).height;
+				height = height + _textField.getLineMetrics(i).height;
 			}
 			#else
 			var nl:Int = 1;
 			#end
 			height += 4; //account for 2px gutter on top and bottom
-			_pixels = new BitmapData(Math.floor(width), Math.floor(height), true, 0);
-			frameHeight = cast(height, UInt);
+			_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
+			frameHeight = Std.int(height);
 			_textField.height = height * 1.2;
 			_flashRect.x = 0;
 			_flashRect.y = 0;
@@ -294,16 +341,12 @@ class FlxText extends FlxSprite
 			_matrix.identity();
 			//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 			//if ((format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
-			#if flash9
 			if((format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
-			#else
-			if(format.align == TextFormatAlign.CENTER)
-			#end
 			{
 				formatAdjusted = new TextFormat(format.font, format.size, format.color);
 				formatAdjusted.align = TextFormatAlign.LEFT;
 				_textField.setTextFormat(formatAdjusted);				
-				#if flash9
+				#if flash
 				_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
 				#else
 				_matrix.translate(Math.floor((width - 0) / 2), 0);

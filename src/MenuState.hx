@@ -1,48 +1,49 @@
 package;
 
+import flash.ui.Mouse;
 import org.flixel.FlxG;
-import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 
-/**
- * ...
- * @author Zaphod
- */
 class MenuState extends FlxState
 {
 	
-	public function new() 
+	public function new()
 	{
-		super();	
+		super();
 	}
 	
-	override public function create():Void 
+	override public function create():Void
 	{
-		FlxG.framerate = 30;
-		FlxG.flashFramerate = 30;
-		FlxG.bgColor = 0xffffffff;
-		var back:FlxSprite = new FlxSprite(0, 0);
-		back.makeGraphic(320, 240, 0xffffffff);
-		//add(back);
-		trace("Hello");
-		var logo:FlxText = new FlxText(FlxG.width * 0.5 - 200, 250, 400, "INVADERS", false);
-		logo.setFormat(null, 40, 0xff000000, "center");
-		add(logo);
-		trace(logo.color);
+		//For the purposes of the demo we'll have the framerate ultra low
+		//so that we don't eat processor power away from any other SWF's on the page.
+		FlxG.framerate = 10;
+		FlxG.flashFramerate = 10;
 		
-		var instruct:FlxText = new FlxText(FlxG.width * 0.5 - 200, 320, 400, "PRESS [x] TO START", false);
-		//instruct.setFormat(null, 20, 0xff000000, "center");
-		add(instruct);
+		var t:FlxText;
+		t = new FlxText(0,FlxG.height/2-20,FlxG.width,"Particle Demo");
+		t.size = 32;
+		t.alignment = "center";
+		add(t);
+		t = new FlxText(FlxG.width / 2 - 100, FlxG.height - 30, 200, "click to test");
+		t.size = 16;
+		t.alignment = "center";
+		add(t);
+		
+		//The Flixel mouse cursor looks awfully laggy with the framerate
+		//so low, so we'll hide it away.
+		FlxG.mouse.hide();
+		Mouse.show();
 	}
-	
-	override public function update():Void 
+
+	override public function update():Void
 	{
-		if (FlxG.keys.X)
-		{
-			FlxG.switchState(new MainState());
-		}
 		super.update();
+		
+		if(FlxG.mouse.justPressed())
+		{
+			FlxG.switchState(new PlayState());
+		}
 	}
-	
 }
+

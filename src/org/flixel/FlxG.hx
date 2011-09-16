@@ -28,6 +28,14 @@ import org.flixel.system.FlxQuadTree;
 class FlxG 
 {
 
+	#if flash
+	public static var bgColor(getBgColor, setBgColor):UInt;
+	#else
+	public static var bgColor(getBgColor, setBgColor):Int;
+	#end
+	
+	public static var flashFramerate(getFlashFramerate, setFlashFramerate):Int;
+	
 	public function new() { }
 	
 	/**
@@ -40,70 +48,126 @@ class FlxG
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
+	#if flash
 	static public var LIBRARY_MAJOR_VERSION:UInt = 2;
+	#else
+	static public var LIBRARY_MAJOR_VERSION:Int = 2;
+	#end
 	
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
+	#if flash
 	static public var LIBRARY_MINOR_VERSION:UInt = 55;
+	#else
+	static public var LIBRARY_MINOR_VERSION:Int = 55;
+	#end
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
 	 */
+	#if flash
 	static public var DEBUGGER_STANDARD:UInt = 0;
+	#else
+	static public var DEBUGGER_STANDARD:Int = 0;
+	#end
 	
 	/**
 	 * Debugger overlay layout preset: Tiny windows in the screen corners.
 	 */
+	#if flash
 	static public var DEBUGGER_MICRO:UInt = 1;
+	#else
+	static public var DEBUGGER_MICRO:Int = 1;
+	#end
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up bottom half of screen.
 	 */
+	#if flash
 	static public var DEBUGGER_BIG:UInt = 2;
+	#else
+	static public var DEBUGGER_BIG:Int = 2;
+	#end
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the top of the screen.
 	 */
+	#if flash
 	static public var DEBUGGER_TOP:UInt = 3;
+	#else
+	static public var DEBUGGER_TOP:Int = 3;
+	#end
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up left third of screen.
 	 */
+	#if flash
 	static public var DEBUGGER_LEFT:UInt = 4;
+	#else
+	static public var DEBUGGER_LEFT:Int = 4;
+	#end
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up right third of screen.
 	 */
+	#if flash
 	static public var DEBUGGER_RIGHT:UInt = 5;
+	#else
+	static public var DEBUGGER_RIGHT:Int = 5;
+	#end
 	
 	/**
 	 * Some handy color presets.  Less glaring than pure RGB full values.
 	 * Primarily used in the visual debugger mode for bounding box displays.
 	 * Red is used to indicate an active, movable, solid object.
 	 */
+	#if flash
 	static public var RED:UInt = 0xffff0012;
+	#else
+	static public var RED:Int = 0xffff0012;
+	#end
 	/**
 	 * Green is used to indicate solid but immovable objects.
 	 */
+	#if flash
 	static public var GREEN:UInt = 0xff00f225;
+	#else
+	static public var GREEN:Int = 0xff00f225;
+	#end
 	/**
 	 * Blue is used to indicate non-solid objects.
 	 */
+	#if flash
 	static public var BLUE:UInt = 0xff0090e9;
+	#else
+	static public var BLUE:Int = 0xff0090e9;
+	#end
 	/**
 	 * Pink is used to indicate objects that are only partially solid, like one-way platforms.
 	 */
+	#if flash
 	static public var PINK:UInt = 0xfff01eff;
+	#else
+	static public var PINK:Int = 0xfff01eff;
+	#end
 	/**
 	 * White... for white stuff.
 	 */
+	#if flash
 	static public var WHITE:UInt = 0xffffffff;
+	#else
+	static public var WHITE:Int = 0xffffffff;
+	#end
 	/**
 	 * And black too.
 	 */
+	#if flash
 	static public var BLACK:UInt = 0xff000000;
+	#else
+	static public var BLACK:Int = 0xff000000;
+	#end
 
 	/**
 	 * Internal tracker for game object.
@@ -130,11 +194,19 @@ class FlxG
 	/**
 	 * The width of the screen in game pixels.
 	 */
+	#if flash
 	static public var width:UInt;
+	#else
+	static public var width:Int;
+	#end
 	/**
 	 * The height of the screen in game pixels.
 	 */
+	#if flash
 	static public var height:UInt;
+	#else
+	static public var height:Int;
+	#end
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 */
@@ -145,7 +217,11 @@ class FlxG
 	 * while denser collision activity usually profits from more.
 	 * Default value is 6.
 	 */
+	#if flash
 	static public var worldDivisions:UInt;
+	#else
+	static public var worldDivisions:Int;
+	#end
 	/**
 	 * Whether to show visual debug displays or not.
 	 * Default = false.
@@ -233,7 +309,7 @@ class FlxG
 	 * Function should take the form <code>myVolumeHandler(Volume:Number)</code>.
 	 */
 	//static public var volumeHandler:Function;
-	static public var volumeHandler:Float->Void;
+	static public var volumeHandler:Dynamic;
 	
 	/**
 	 * Useful helper objects for doing Flash-specific rendering.
@@ -317,8 +393,6 @@ class FlxG
 		}
 		return Framerate;
 	}
-		
-	public static var flashFramerate(getFlashFramerate, setFlashFramerate):Int;
 	
 	/**
 	 * How many times you want your game to update each second.
@@ -327,7 +401,11 @@ class FlxG
 	 */
 	static public function getFlashFramerate():Int
 	{
+		#if flash
 		if (_game.root != null)
+		#else
+		if (_game.stage != null)
+		#end
 		{
 			return Math.floor(_game.stage.frameRate);
 		}
@@ -343,7 +421,11 @@ class FlxG
 	static public function setFlashFramerate(Framerate:Int):Int
 	{
 		_game._flashFramerate = Framerate;
+		#if flash
 		if (_game.root != null)
+		#else
+		if (_game.stage != null)
+		#end
 		{
 			_game.stage.frameRate = _game._flashFramerate;
 		}
@@ -373,13 +455,19 @@ class FlxG
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
 	 */
-	static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:UInt):Array<Dynamic>
+	static public function shuffle(	Objects:Array<Dynamic>, 
+									#if flash
+									HowManyTimes:UInt
+									#else
+									HowManyTimes:Int
+									#end
+									):Array<Dynamic>
 	{
-		var i:UInt = 0;
-		var index1:UInt;
-		var index2:UInt;
+		var i:Int = 0;
+		var index1:Int;
+		var index2:Int;
 		var object:Dynamic;
-		while(i < HowManyTimes)
+		while(i < Std.int(HowManyTimes))
 		{
 			index1 = Math.floor(FlxG.random() * Objects.length);
 			index2 = Math.floor(FlxG.random() * Objects.length);
@@ -401,18 +489,24 @@ class FlxG
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:UInt = 0, ?Length:UInt = 0):Dynamic
+	static public function getRandom(	Objects:Array<Dynamic>, 
+										#if flash
+										?StartIndex:UInt = 0, ?Length:UInt = 0
+										#else
+										?StartIndex:Int = 0, ?Length:Int = 0
+										#end
+										):Dynamic
 	{
 		if(Objects != null)
 		{
-			var l:UInt = Length;
+			var l:Int = Length;
 			if ((l == 0) || (Std.int(l) > Objects.length - StartIndex))
 			{
 				l = Objects.length - StartIndex;
 			}
 			if (l > 0)
 			{
-				return Objects[StartIndex + cast(FlxG.random() * l, UInt)];
+				return Objects[StartIndex + Std.int(FlxG.random() * l)];
 			}
 		}
 		return null;
@@ -426,7 +520,7 @@ class FlxG
 	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
 	 * @param	Callback	Optional parameter: if set, called when the replay finishes.  Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
 	 */
-	static public function loadReplay(Data:String, ?State:FlxState = null, ?CancelKeys:Array<String> = null, ?Timeout:Float = 0, ?Callback:Void->Void = null):Void
+	static public function loadReplay(Data:String, ?State:FlxState = null, ?CancelKeys:Array<String> = null, ?Timeout:Float = 0, ?Callback:Dynamic = null):Void
 	{
 		_game._replay.load(Data);
 		if (State == null)
@@ -516,7 +610,7 @@ class FlxG
 	}
 	
 	/**
-	 * Like hitting the reset button on a game console, this will re-launch the game as if it just started.
+	 * Like hitting the reset button a game console, this will re-launch the game as if it just started.
 	 */
 	static public function resetGame():Void
 	{
@@ -660,9 +754,9 @@ class FlxG
 			music.destroy();
 			music = null;
 		}
-		var i:UInt = 0;
+		var i:Int = 0;
 		var sound:FlxSound;
-		var l:UInt = sounds.members.length;
+		var l:Int = sounds.members.length;
 		while(i < l)
 		{
 			sound = cast(sounds.members[i++], FlxSound);
@@ -697,9 +791,9 @@ class FlxG
 		{
 			music.pause();
 		}
-		var i:UInt = 0;
+		var i:Int = 0;
 		var sound:FlxSound;
-		var l:UInt = sounds.length;
+		var l:Int = sounds.length;
 		while(i < l)
 		{
 			sound = cast(sounds.members[i++], FlxSound);
@@ -719,9 +813,9 @@ class FlxG
 		{
 			music.play();
 		}
-		var i:UInt = 0;
+		var i:Int = 0;
 		var sound:FlxSound;
-		var l:UInt = sounds.length;
+		var l:Int = sounds.length;
 		while(i < l)
 		{
 			sound = cast(sounds.members[i++], FlxSound);
@@ -751,7 +845,13 @@ class FlxG
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, ?Unique:Bool = false, ?Key:String = null):BitmapData
+	static public function createBitmap(	
+											#if flash
+											Width:UInt, Height:UInt, Color:UInt, 
+											#else
+											Width:Int, Height:Int, Color:Int, 
+											#end
+											?Unique:Bool = false, ?Key:String = null):BitmapData
 	{
 		var key:String = Key;
 		if(key == null)
@@ -759,7 +859,7 @@ class FlxG
 			key = Width + "x" + Height + ":" + Color;
 			if(Unique && checkBitmapCache(key))
 			{
-				var inc:UInt = 0;
+				var inc:Int = 0;
 				var ukey:String;
 				do
 				{
@@ -793,7 +893,7 @@ class FlxG
 			key = Type.getClassName(Graphic) + (Reverse ? "_REVERSE_" : "");
 			if(Unique && checkBitmapCache(key))
 			{
-				var inc:UInt = 0;
+				var inc:Int = 0;
 				var ukey:String;
 				do
 				{
@@ -851,7 +951,11 @@ class FlxG
 	 */
 	static public function getStage():Stage
 	{
+		#if flash
 		if (_game.root != null)
+		#else
+		if (_game.stage != null)
+		#end
 		{
 			return _game.stage;
 		}
@@ -880,7 +984,11 @@ class FlxG
 	 * Change the way the debugger's windows are laid out.
 	 * @param	Layout		See the presets above (e.g. <code>DEBUGGER_MICRO</code>, etc).
 	 */
+	#if flash
 	static public function setDebuggerLayout(Layout:UInt):Void
+	#else
+	static public function setDebuggerLayout(Layout:Int):Void
+	#end
 	{
 		if (_game._debugger != null)
 		{
@@ -942,8 +1050,8 @@ class FlxG
 	static public function resetCameras(?NewCamera:FlxCamera = null):Void
 	{
 		var cam:FlxCamera;
-		var i:UInt = 0;
-		var l:UInt = cameras.length;
+		var i:Int = 0;
+		var l:Int = cameras.length;
 		while(i < l)
 		{
 			cam = cast(FlxG.cameras[i++], FlxCamera);
@@ -967,10 +1075,16 @@ class FlxG
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	static public function flash(
+									#if flash
+									?Color:UInt = 0xffffffff, 
+									#else
+									?Color:Int = 0xffffffff, 
+									#end
+									?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	{
-		var i:UInt = 0;
-		var l:UInt = FlxG.cameras.length;
+		var i:Int = 0;
+		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
 			cast(FlxG.cameras[i++], FlxCamera).flash(Color, Duration, OnComplete, Force);
@@ -984,10 +1098,16 @@ class FlxG
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?OnComplete:Void->Void = null, Force:Bool = false):Void
+	static public function fade(
+									#if flash
+									?Color:UInt = 0xff000000, 
+									#else
+									?Color:Int = 0xff000000, 
+									#end
+									?Duration:Float = 1, ?OnComplete:Dynamic = null, Force:Bool = false):Void
 	{
-		var i:UInt = 0;
-		var l:UInt = FlxG.cameras.length;
+		var i:Int = 0;
+		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
 			cast(FlxG.cameras[i++], FlxCamera).fade(Color, Duration, OnComplete, Force);
@@ -1002,24 +1122,32 @@ class FlxG
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).  Default value is SHAKE_BOTH_AXES (0).
 	 */
-	static public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Void->Void = null, ?Force:Bool = true, ?Direction:UInt = 0):Void
+	static public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, 
+									#if flash
+									?Direction:UInt = 0
+									#else
+									?Direction:Int = 0
+									#end
+									):Void
 	{
-		var i:UInt = 0;
-		var l:UInt = FlxG.cameras.length;
+		var i:Int = 0;
+		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
 			cast(FlxG.cameras[i++], FlxCamera).shake(Intensity, Duration, OnComplete, Force, Direction);
 		}
 	}
 	
-	public static var bgColor(getBgColor, setBgColor):UInt;
-	
 	/**
 	 * Get and set the background color of the game.
 	 * Get functionality is equivalent to FlxG.camera.bgColor.
 	 * Set functionality sets the background color of all the current cameras.
 	 */
+	#if flash
 	static public function getBgColor():UInt
+	#else
+	static public function getBgColor():Int
+	#end
 	{
 		if (FlxG.camera == null)
 		{
@@ -1031,10 +1159,14 @@ class FlxG
 		}
 	}
 	
+	#if flash
 	static public function setBgColor(Color:UInt):UInt
+	#else
+	static public function setBgColor(Color:Int):Int
+	#end
 	{
-		var i:UInt = 0;
-		var l:UInt = FlxG.cameras.length;
+		var i:Int = 0;
+		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
 			cast(FlxG.cameras[i++], FlxCamera).bgColor = Color;
@@ -1100,7 +1232,7 @@ class FlxG
 		//Don't add repeats
 		var pluginList:Array<FlxBasic> = FlxG.plugins;
 		//var i:UInt = 0;
-		var l:UInt = pluginList.length;
+		var l:Int = pluginList.length;
 		//while(i < l)
 		for (i in 0...l)
 		{
@@ -1123,8 +1255,8 @@ class FlxG
 	static public function getPlugin(ClassType:Class<FlxBasic>):FlxBasic
 	{
 		var pluginList:Array<FlxBasic> = FlxG.plugins;
-		var i:UInt = 0;
-		var l:UInt = pluginList.length;
+		var i:Int = 0;
+		var l:Int = pluginList.length;
 		while(i < l)
 		{
 			//if(pluginList[i] is ClassType)
@@ -1185,7 +1317,13 @@ class FlxG
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
-	static public function init(Game:FlxGame, Width:UInt, Height:UInt, Zoom:Float):Void
+	static public function init(	Game:FlxGame, 
+									#if flash
+									Width:UInt, Height:UInt, 
+									#else
+									Width:Int, Height:Int,
+									#end
+									Zoom:Float):Void
 	{
 		FlxG._game = Game;
 		FlxG.width = Width;
@@ -1268,8 +1406,8 @@ class FlxG
 	{
 		var cam:FlxCamera;
 		var cams:Array<FlxCamera> = FlxG.cameras;
-		var i:UInt = 0;
-		var l:UInt = cams.length;
+		var i:Int = 0;
+		var l:Int = cams.length;
 		while(i < l)
 		{
 			cam = cams[i++]; //as FlxCamera;
@@ -1293,8 +1431,8 @@ class FlxG
 	{
 		var cam:FlxCamera;
 		var cams:Array<FlxCamera> = FlxG.cameras;
-		var i:UInt = 0;
-		var l:UInt = cams.length;
+		var i:Int = 0;
+		var l:Int = cams.length;
 		while(i < l)
 		{
 			cam = cast(cams[i++], FlxCamera);
@@ -1317,8 +1455,8 @@ class FlxG
 	{
 		var cam:FlxCamera;
 		var cams:Array<FlxCamera> = FlxG.cameras;
-		var i:UInt = 0;
-		var l:UInt = cams.length;
+		var i:Int = 0;
+		var l:Int = cams.length;
 		while(i < l)
 		{
 			cam = cast(cams[i++], FlxCamera);
@@ -1342,8 +1480,8 @@ class FlxG
 	{
 		var plugin:FlxBasic;
 		var pluginList:Array<FlxBasic> = FlxG.plugins;
-		var i:UInt = 0;
-		var l:UInt = pluginList.length;
+		var i:Int = 0;
+		var l:Int = pluginList.length;
 		while(i < l)
 		{
 			plugin = cast(pluginList[i++], FlxBasic);
@@ -1361,8 +1499,8 @@ class FlxG
 	{
 		var plugin:FlxBasic;
 		var pluginList:Array<FlxBasic> = FlxG.plugins;
-		var i:UInt = 0;
-		var l:UInt = pluginList.length;
+		var i:Int = 0;
+		var l:Int = pluginList.length;
 		while(i < l)
 		{
 			plugin = cast(pluginList[i++], FlxBasic);

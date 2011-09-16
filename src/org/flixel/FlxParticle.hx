@@ -1,4 +1,4 @@
-package org.flixel
+package org.flixel;
 	
 /**
  * This is a simple particle class that extends the default behavior
@@ -54,7 +54,7 @@ class FlxParticle extends FlxSprite
 		}
 		
 		//simpler bounce/spin behavior for now
-		if(touching)
+		if(touching > 0)
 		{
 			if (angularVelocity != 0)
 			{
@@ -63,11 +63,13 @@ class FlxParticle extends FlxSprite
 		}
 		if(acceleration.y > 0) //special behavior for particles with gravity
 		{
-			if(touching & FLOOR)
+			//if (touching & FlxObject.FLOOR)
+			if ((touching & FlxObject.FLOOR) > 0)
 			{
 				drag.x = friction;
 				
-				if(!(wasTouching & FLOOR))
+				//if(!(wasTouching & FlxObject.FLOOR))
+				if((wasTouching & FlxObject.FLOOR) > 0)
 				{
 					if(velocity.y < -elasticity*10)
 					{

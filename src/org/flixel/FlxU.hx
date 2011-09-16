@@ -124,11 +124,11 @@ class FlxU
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
 	 */
-	static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:UInt):Array<Dynamic>
+	static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
 	{
-		var i:UInt = 0;
-		var index1:UInt;
-		var index2:UInt;
+		var i:Int = 0;
+		var index1:Int;
+		var index2:Int;
 		var object:Dynamic;
 		while(i < HowManyTimes)
 		{
@@ -152,18 +152,32 @@ class FlxU
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:UInt = 0, ?Length:UInt = 0):Dynamic
+	static public function getRandom(	Objects:Array<Dynamic>, 
+										#if flash
+										?StartIndex:UInt = 0, ?Length:UInt = 0
+										#else
+										?StartIndex:Int = 0, ?Length:Int = 0
+										#end
+										):Dynamic
 	{
 		if(Objects != null)
 		{
+			#if flash
 			var l:UInt = Length;
+			#else
+			var l:Int = Length;
+			#end
 			if ((l == 0) || (Std.int(l) > Objects.length - StartIndex))
 			{
 				l = Objects.length - StartIndex;
 			}
 			if (l > 0)
 			{
+				#if flash
 				return Objects[StartIndex + cast(Math.random() * l, UInt)];
+				#else
+				return Objects[StartIndex + Std.int(Math.random())];
+				#end
 			}
 		}
 		return null;
@@ -174,7 +188,11 @@ class FlxU
 	 * Useful for finding out how long it takes to execute specific blocks of code.
 	 * @return	A <code>uint</code> to be passed to <code>FlxU.endProfile()</code>.
 	 */
+	#if flash
 	static public function getTicks():UInt
+	#else
+	static public function getTicks():Int
+	#end
 	{
 		return Lib.getTimer();
 	}
@@ -186,7 +204,11 @@ class FlxU
 	 * @param	EndTicks	The second timestamp from the system.
 	 * @return	A <code>String</code> containing the formatted time elapsed information.
 	 */
+	#if flash
 	static public function formatTicks(StartTicks:UInt, EndTicks:UInt):String
+	#else
+	static public function formatTicks(StartTicks:Int, EndTicks:Int):String
+	#end
 	{
 		return ((EndTicks - StartTicks) / 1000) + "s";
 	}
@@ -201,7 +223,11 @@ class FlxU
 	 * 
 	 * @return  The color as a <code>uint</code>.
 	 */
+	#if flash
 	static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, ?Alpha:Float = 1.0):UInt
+	#else
+	static public function makeColor(Red:Int, Green:Int, Blue:Int, ?Alpha:Float = 1.0):Int
+	#end
 	{
 		return (Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
 	}
@@ -215,7 +241,11 @@ class FlxU
 	 * @param   Alpha   	How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * @return	The color as a <code>uint</code>.
 	 */
+	#if flash
 	static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, ?Alpha:Float = 1.0):UInt
+	#else
+	static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, ?Alpha:Float = 1.0):Int
+	#end
 	{
 		var red:Float;
 		var green:Float;
@@ -269,8 +299,11 @@ class FlxU
 					blue = 0;
 			}
 		}
-		
+		#if flash
 		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | cast(red * 255, UInt) << 16 | cast(green * 255, UInt) << 8 | cast(blue * 255, UInt);
+		#else
+		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255);
+		#end
 	}
 	
 	/**
@@ -280,7 +313,13 @@ class FlxU
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public function getRGBA(Color:UInt, ?Results:Array<Float> = null):Array<Float>
+	static public function getRGBA(
+									#if flash
+									Color:UInt, 
+									#else
+									Color:Int,
+									#end
+									?Results:Array<Float> = null):Array<Float>
 	{
 		if (Results == null)
 		{
@@ -301,7 +340,13 @@ class FlxU
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public function getHSB(Color:UInt, ?Results:Array<Float> = null):Array<Float>
+	static public function getHSB(
+									#if flash
+									Color:UInt, 
+									#else
+									Color:Int,
+									#end
+									?Results:Array<Float> = null):Array<Float>
 	{
 		if (Results == null)
 		{
@@ -357,7 +402,13 @@ class FlxU
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted <code>String</code>, like "1:03".
 	 */
-	static public function formatTime(Seconds:UInt, ?ShowMS:Bool = false):String
+	static public function formatTime(
+										#if flash
+										Seconds:UInt, 
+										#else
+										Seconds:Int, 
+										#end
+										?ShowMS:Bool = false):String
 	{
 		var timeString:String = Std.int(Seconds/60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;
@@ -393,8 +444,8 @@ class FlxU
 			return "";
 		}
 		var string:String = AnyArray[0].toString();
-		var i:UInt = 0;
-		var l:UInt = AnyArray.length;
+		var i:Int = 0;
+		var l:Int = AnyArray.length;
 		while (i < l)
 		{
 			string += ", " + AnyArray[i++].toString();
@@ -698,9 +749,10 @@ class FlxU
 		return -1;
 	}
 	
-	static public function SetArrayLength(array:Array<Dynamic>, newLength:UInt):Void
+	static public function SetArrayLength(array:Array<Dynamic>, newLength:Int):Void
 	{
-		var oldLength:UInt = array.length;
+		if (newLength < 0) return;
+		var oldLength:Int = array.length;
 		var diff:Int = newLength - oldLength;
 		if (diff > 0)
 		{

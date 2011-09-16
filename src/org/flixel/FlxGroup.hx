@@ -7,6 +7,13 @@ package org.flixel;
  */
 class FlxGroup extends FlxBasic
 {
+	
+	#if flash
+	public var maxSize(getMaxSize, setMaxSize):UInt;
+	#else
+	public var maxSize(getMaxSize, setMaxSize):Int;
+	#end
+	
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.
 	 */
@@ -25,17 +32,29 @@ class FlxGroup extends FlxBasic
 	 * For performance and safety you should check this variable
 	 * instead of members.length unless you really know what you're doing!
 	 */
+	#if flash
 	public var length:UInt;
+	#else
+	public var length:Int;
+	#end
 
 	/**
 	 * Internal tracker for the maximum capacity of the group.
 	 * Default is 0, or no max capacity.
 	 */
+	#if flash
 	private var _maxSize:UInt;
+	#else
+	private var _maxSize:Int;
+	#end
 	/**
 	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
+	#if flash
 	private var _marker:UInt;
+	#else
+	private var _marker:Int;
+	#end
 	
 	/**
 	 * Helper for sort.
@@ -49,7 +68,13 @@ class FlxGroup extends FlxBasic
 	/**
 	 * Constructor
 	 */
-	public function new(?MaxSize:UInt = 0)
+	public function new(	
+							#if flash
+							?MaxSize:UInt = 0
+							#else
+							?MaxSize:Int = 0
+							#end
+							)
 	{
 		super();
 		members = new Array<FlxBasic>();
@@ -68,8 +93,8 @@ class FlxGroup extends FlxBasic
 		if(members != null)
 		{
 			var basic:FlxBasic;
-			var i:UInt = 0;
-			while(i < length)
+			var i:Int = 0;
+			while(i < Std.int(length))
 			{
 				basic = cast(members[i++], FlxBasic);
 				if (basic != null)
@@ -95,8 +120,8 @@ class FlxGroup extends FlxBasic
 	override public function update():Void
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if((basic != null) && basic.exists && basic.active)
@@ -114,8 +139,8 @@ class FlxGroup extends FlxBasic
 	override public function draw():Void
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if ((basic != null) && basic.exists && basic.visible)
@@ -125,12 +150,14 @@ class FlxGroup extends FlxBasic
 		}
 	}
 	
-	public var maxSize(getMaxSize, setMaxSize):UInt;
-	
 	/**
 	 * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
 	 */
+	#if flash
 	public function getMaxSize():UInt
+	#else
+	public function getMaxSize():Int
+	#end
 	{
 		return _maxSize;
 	}
@@ -138,7 +165,11 @@ class FlxGroup extends FlxBasic
 	/**
 	 * @private
 	 */
+	#if flash
 	public function setMaxSize(Size:UInt):UInt
+	#else
+	public function setMaxSize(Size:Int):Int
+	#end
 	{
 		_maxSize = Size;
 		if (_marker >= _maxSize)
@@ -152,8 +183,8 @@ class FlxGroup extends FlxBasic
 		
 		//If the max size has shrunk, we need to get rid of some objects
 		var basic:FlxBasic;
-		var i:UInt = _maxSize;
-		var l:UInt = members.length;
+		var i:Int = Std.int(_maxSize);
+		var l:Int = Std.int(members.length);
 		while(i < l)
 		{
 			basic = cast(members[i++], FlxBasic);
@@ -186,14 +217,14 @@ class FlxGroup extends FlxBasic
 		}
 		
 		//First, look for a null entry where we can add the object.
-		var i:UInt = 0;
-		var l:UInt = members.length;
+		var i:Int = 0;
+		var l:Int = members.length;
 		while(i < l)
 		{
 			if(members[i] == null)
 			{
 				members[i] = Object;
-				if (i >= length)
+				if (i >= Std.int(length))
 				{
 					length = i+1;
 				}
@@ -359,8 +390,8 @@ class FlxGroup extends FlxBasic
 	public function setAll(VariableName:String, Value:Dynamic, ?Recurse:Bool = true):Void
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if(basic != null)
@@ -387,8 +418,8 @@ class FlxGroup extends FlxBasic
 	public function callAll(FunctionName:String, Recurse:Bool = true):Void
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if(basic != null)
@@ -415,8 +446,8 @@ class FlxGroup extends FlxBasic
 	public function getFirstAvailable(?ObjectClass:Class<FlxBasic> = null):FlxBasic
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if ((basic != null) && !basic.exists && ((ObjectClass == null) || Std.is(basic, ObjectClass)))
@@ -435,8 +466,8 @@ class FlxGroup extends FlxBasic
 	public function getFirstNull():Int
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		var l:UInt = members.length;
+		var i:Int = 0;
+		var l:Int = members.length;
 		while(i < l)
 		{
 			if (members[i] == null)
@@ -459,8 +490,8 @@ class FlxGroup extends FlxBasic
 	public function getFirstExtant():FlxBasic
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if ((basic != null) && basic.exists)
@@ -480,8 +511,8 @@ class FlxGroup extends FlxBasic
 	public function getFirstAlive():FlxBasic
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if ((basic != null) && basic.exists && basic.alive)
@@ -501,8 +532,8 @@ class FlxGroup extends FlxBasic
 	public function getFirstDead():FlxBasic
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if ((basic != null) && !basic.alive)
@@ -521,8 +552,8 @@ class FlxGroup extends FlxBasic
 	{
 		var count:Int = -1;
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if(basic != null)
@@ -548,8 +579,8 @@ class FlxGroup extends FlxBasic
 	{
 		var count:Int = -1;
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if(basic != null)
@@ -575,7 +606,11 @@ class FlxGroup extends FlxBasic
 	 * 
 	 * @return	A <code>FlxBasic</code> from the members list.
 	 */
+	#if flash
 	public function getRandom(?StartIndex:UInt = 0, ?Length:UInt = 0):FlxBasic
+	#else
+	public function getRandom(?StartIndex:Int = 0, ?Length:Int = 0):FlxBasic
+	#end
 	{
 		if (Length == 0)
 		{
@@ -601,8 +636,8 @@ class FlxGroup extends FlxBasic
 	override public function kill():Void
 	{
 		var basic:FlxBasic;
-		var i:UInt = 0;
-		while(i < length)
+		var i:Int = 0;
+		while(i < Std.int(length))
 		{
 			basic = cast(members[i++], FlxBasic);
 			if ((basic != null) && basic.exists)

@@ -17,33 +17,59 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
 	 */
+	#if flash
 	static public var STYLE_LOCKON:UInt = 0;
+	#else
+	static public var STYLE_LOCKON:Int = 0;
+	#end
 	/**
 	 * Camera "follow" style preset: camera deadzone is narrow but tall.
 	 */
+	#if flash
 	static public var STYLE_PLATFORMER:UInt = 1;
+	#else
+	static public var STYLE_PLATFORMER:Int = 1;
+	#end
 	/**
 	 * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
 	 */
+	#if flash
 	static public var STYLE_TOPDOWN:UInt = 2;
+	#else
+	static public var STYLE_TOPDOWN:Int = 2;
+	#end
 	/**
 	 * Camera "follow" style preset: camera deadzone is a small square around the focus object.
 	 */
+	#if flash
 	static public var STYLE_TOPDOWN_TIGHT:UInt = 3;
-	
+	#else
+	static public var STYLE_TOPDOWN_TIGHT:Int = 3;
+	#end
 	/**
 	 * Camera "shake" effect preset: shake camera on both the X and Y axes.
 	 */
+	#if flash
 	static public var SHAKE_BOTH_AXES:UInt = 0;
+	#else
+	static public var SHAKE_BOTH_AXES:Int = 0;
+	#end
 	/**
 	 * Camera "shake" effect preset: shake camera on the X axis only.
 	 */
+	#if flash
 	static public var SHAKE_HORIZONTAL_ONLY:UInt = 1;
+	#else
+	static public var SHAKE_HORIZONTAL_ONLY:Int = 1;
+	#end
 	/**
 	 * Camera "shake" effect preset: shake camera on the Y axis only.
 	 */
+	#if flash
 	static public var SHAKE_VERTICAL_ONLY:UInt = 2;
-	
+	#else
+	static public var SHAKE_VERTICAL_ONLY:Int = 2;
+	#end
 	/**
 	 * While you can alter the zoom of each camera after the fact,
 	 * this variable determines what value the camera will start at when created.
@@ -63,11 +89,19 @@ class FlxCamera extends FlxBasic
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
+	#if flash
 	public var width:UInt;
+	#else
+	public var width:Int;
+	#end
 	/**
 	 * How tall the camera display is, in game pixels.
 	 */
+	#if flash
 	public var height:UInt;
+	#else
+	public var height:Int;
+	#end
 	/**
 	 * Tells the camera to follow this <code>FlxObject</code> object around.
 	 */
@@ -98,7 +132,11 @@ class FlxCamera extends FlxBasic
 	 * The natural background color of the camera. Defaults to FlxG.bgColor.
 	 * NOTE: can be transparent for crazy FX!
 	 */
+	#if flash
 	public var bgColor:UInt;
+	#else
+	public var bgColor:Int;
+	#end
 	/**
 	 * Sometimes it's easier to just work with a <code>FlxSprite</code> than it is to work
 	 * directly with the <code>BitmapData</code> buffer.  This sprite reference will
@@ -117,8 +155,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, help with color transforming the flash bitmap.
 	 */
+	#if flash
 	private var _color:UInt;
-	
+	#else
+	private var _color:Int;
+	#end
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
@@ -146,7 +187,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
+	#if flash
 	private var _fxFlashColor:UInt;
+	#else
+	private var _fxFlashColor:Int;
+	#end
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -154,7 +199,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashComplete:Void->Void;
+	private var _fxFlashComplete:Dynamic;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -162,7 +207,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
+	#if flash
 	private var _fxFadeColor:UInt;
+	#else
+	private var _fxFadeColor:Int;
+	#end
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -170,7 +219,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeComplete:Void->Void;
+	private var _fxFadeComplete:Dynamic;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -186,7 +235,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeComplete:Void->Void;
+	private var _fxShakeComplete:Dynamic;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
@@ -194,7 +243,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
+	#if flash
 	private var _fxShakeDirection:UInt;
+	#else
+	private var _fxShakeDirection:Int;
+	#end
 	/**
 	 * Internal helper variable for doing better wipes/fills between renders.
 	 */
@@ -401,7 +454,13 @@ class FlxCamera extends FlxBasic
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
 	 */
-	public function follow(Target:FlxObject, Style:UInt = 0/*STYLE_LOCKON*/):Void
+	public function follow(	Target:FlxObject, 
+							#if flash 
+							Style:UInt = 0/*STYLE_LOCKON*/
+							#else
+							Style:Int = 0
+							#end
+							):Void
 	{
 		target = Target;
 		var helper:Float;
@@ -463,7 +522,13 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	public function flash(	
+							#if flash
+							?Color:UInt = 0xffffffff,
+							#else
+							?Color:Int = 0xffffffff,
+							#end
+							?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -486,7 +551,13 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	public function fade(
+							#if flash
+							?Color:UInt = 0xff000000,
+							#else
+							?Color:Int = 0xff000000,
+							#end
+							?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -510,7 +581,13 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
 	 */
-	public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Void->Void = null, ?Force:Bool = true, ?Direction:UInt = 0/*SHAKE_BOTH_AXES*/):Void
+	public function shake(	?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, 
+							#if flash
+							?Direction:UInt = 0/*SHAKE_BOTH_AXES*/
+							#else
+							?Direction:Int = 0
+							#end
+							):Void
 	{
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
@@ -640,12 +717,20 @@ class FlxCamera extends FlxBasic
 		return Angle;
 	}
 	
+	#if flash
 	public var color(getColor, setColor):UInt;
+	#else
+	public var color(getColor, setColor):Int;
+	#end
 	
 	/**
 	 * The color tint of the camera display.
 	 */
+	#if flash
 	public function getColor():UInt
+	#else
+	public function getColor():Int
+	#end
 	{
 		return _color;
 	}
@@ -653,7 +738,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * @private
 	 */
+	#if flash
 	public function setColor(Color:UInt):UInt
+	#else
+	public function setColor(Color:Int):Int
+	#end
 	{
 		_color = Color;
 		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
@@ -724,7 +813,13 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	public function fill(Color:UInt, ?BlendAlpha:Bool = true):Void
+	public function fill(
+							#if flash
+							Color:UInt, 
+							#else
+							Color:Int, 
+							#end
+							?BlendAlpha:Bool = true):Void
 	{
 		_fill.fillRect(_flashRect, Color);
 		buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
@@ -741,14 +836,14 @@ class FlxCamera extends FlxBasic
 		if(_fxFlashAlpha > 0.0)
 		{
 			alphaComponent = _fxFlashColor >> 24;
-			fill((cast((((alphaComponent <= 0)?0xff:alphaComponent) * _fxFlashAlpha), UInt) << 24) + (_fxFlashColor & 0x00ffffff));
+			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
 		}
 		
 		//Draw the "fade" special effect onto the buffer
 		if(_fxFadeAlpha > 0.0)
 		{
-			alphaComponent = _fxFadeColor>>24;
-			fill((cast((((alphaComponent <= 0)?0xff:alphaComponent) * _fxFadeAlpha), UInt) << 24) + (_fxFadeColor & 0x00ffffff));
+			alphaComponent = _fxFadeColor >> 24;
+			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
 		}
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))

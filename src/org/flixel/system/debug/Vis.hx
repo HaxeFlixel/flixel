@@ -1,11 +1,21 @@
 package org.flixel.system.debug;
 
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
 import org.flixel.FlxG;
+
+class BoundsPNG extends BitmapData 
+{  
+	public function new() { super(0, 0); } 
+}
+class ImgBounds extends Bitmap 
+{
+	public function new() { super(new BoundsPNG()); }
+}
 
 /**
  * This control panel has all the visual debugger toggles in it, in the debugger overlay.
@@ -14,7 +24,7 @@ import org.flixel.FlxG;
  */
 class Vis extends Sprite
 {
-	/*[Embed(source="../../data/vis/bounds.png")]*/ private var ImgBounds:Class<Bitmap>;
+	/*[Embed(source="../../data/vis/bounds.png")] private var ImgBounds:Class<Bitmap>;*/
 
 	private var _bounds:Bitmap;
 	private var _overBounds:Bool;
@@ -27,9 +37,9 @@ class Vis extends Sprite
 	{
 		super();
 		
-		var spacing:UInt = 7;
+		var spacing:Int = 7;
 		
-		_bounds = Type.createInstance(ImgBounds, []);
+		_bounds = new ImgBounds(); // Type.createInstance(ImgBounds, []);
 		addChild(_bounds);
 		
 		unpress();
@@ -70,7 +80,11 @@ class Vis extends Sprite
 	 */
 	private function init(?E:Event = null):Void
 	{
+		#if flash
 		if (root == null)
+		#else
+		if (stage == null)
+		#end
 		{
 			return;
 		}

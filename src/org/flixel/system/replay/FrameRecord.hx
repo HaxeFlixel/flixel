@@ -63,8 +63,8 @@ class FrameRecord
 		if(keys != null)
 		{
 			var object:Dynamic;
-			var i:UInt = 0;
-			var l:UInt = keys.length;
+			var i:Int = 0;
+			var l:Int = keys.length;
 			while(i < l)
 			{
 				if (i > 0)
@@ -91,8 +91,8 @@ class FrameRecord
 	 */
 	public function load(Data:String):FrameRecord
 	{
-		var i:UInt;
-		var l:UInt;
+		var i:Int;
+		var l:Int;
 		
 		//get frame number
 		var array:Array<String> = Data.split("k");

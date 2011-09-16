@@ -8,11 +8,21 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-#if flash9
+#if flash
 import flash.display.BlendMode;
 #end
-
 import org.flixel.system.FlxAnim;
+
+
+class DefaultPNG extends BitmapData 
+{ 
+	public function new() { super(0, 0); } 
+}
+
+class ImgDefault extends Bitmap 
+{
+	public function new() { super(new DefaultPNG()); }
+}
 
 /**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
@@ -20,7 +30,18 @@ import org.flixel.system.FlxAnim;
  */
 class FlxSprite extends FlxObject
 {
-	/*[Embed(source="data/default.png")]*/ private var ImgDefault:Class<Bitmap>;
+	
+	#if flash
+	public var facing(getFacing, setFacing):UInt;
+	public var color(getColor, setColor):UInt;
+	public var frame(getFrame, setFrame):UInt;
+	#else
+	public var facing(getFacing, setFacing):Int;
+	public var color(getColor, setColor):Int;
+	public var frame(getFrame, setFrame):Int;
+	#end
+	
+	/*[Embed(source="data/default.png")] private var ImgDefault:Class<Bitmap>;*/
 	
 	/**
 	 * WARNING: The origin of the sprite will default to its center.
@@ -46,7 +67,11 @@ class FlxSprite extends FlxObject
 	 * E.g. "multiply", "screen", etc.
 	 * @default null
 	 */
-	public var blend:Class<String>;
+	#if flash
+	public var blend:BlendMode;
+	#else
+	public var blend:String;
+	#end
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
@@ -60,16 +85,28 @@ class FlxSprite extends FlxObject
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 * NOTE: Edit at your own risk!!  This is intended to be read-only.
 	 */
+	#if flash
 	public var frameWidth:UInt;
+	#else
+	public var frameWidth:Int;
+	#end
 	/**
 	 * The height of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 * NOTE: Edit at your own risk!!  This is intended to be read-only.
 	 */
+	#if flash
 	public var frameHeight:UInt;
+	#else
+	public var frameHeight:Int;
+	#end
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
+	#if flash
 	public var frames:UInt;
+	#else
+	public var frames:Int;
+	#end
 	/**
 	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
 	 */
@@ -87,7 +124,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal, keeps track of whether the sprite was loaded with support for automatic reverse/mirroring.
 	 */
+	#if flash
 	private var _flipped:UInt;
+	#else
+	private var _flipped:Int;
+	#end
 	/**
 	 * Internal, keeps track of the current animation being played.
 	 */
@@ -96,11 +137,19 @@ class FlxSprite extends FlxObject
 	 * Internal, keeps track of the current frame of animation.
 	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
 	 */
+	#if flash
 	private var _curFrame:UInt;
+	#else
+	private var _curFrame:Int;
+	#end
 	/**
 	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
 	 */
+	#if flash
 	private var _curIndex:UInt;
+	#else
+	private var _curIndex:Int;
+	#end
 	/**
 	 * Internal, used to time each frame of animation.
 	 */
@@ -114,7 +163,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal tracker for what direction the sprite is currently facing, used with Flash getter/setter.
 	 */
+	#if flash
 	private var _facing:UInt;
+	#else
+	private var _facing:Int;
+	#end
 	/**
 	 * Internal tracker for opacity, used with Flash getter/setter.
 	 */
@@ -122,7 +175,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal tracker for color tint, used with Flash getter/setter.
 	 */
+	#if flash
 	private var _color:UInt;
+	#else
+	private var _color:Int;
+	#end
 	/**
 	 * Internal tracker for how many frames of "baked" rotation there are (if any).
 	 */
@@ -200,7 +257,7 @@ class FlxSprite extends FlxObject
 		{
 			makeGraphic(8,8);
 			// TODO: Fix this
-			//SimpleGraphic = ImgDefault;
+			SimpleGraphic = ImgDefault;
 		} 
 		else 
 		{
@@ -216,8 +273,8 @@ class FlxSprite extends FlxObject
 		if(_animations != null)
 		{
 			var a:FlxAnim;
-			var i:UInt = 0;
-			var l:UInt = _animations.length;
+			var i:Int = 0;
+			var l:Int = _animations.length;
 			while(i < l)
 			{
 				a = _animations[i++];
@@ -252,7 +309,13 @@ class FlxSprite extends FlxObject
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphic(Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, Width:UInt = 0, ?Height:UInt = 0, ?Unique:Bool = false):FlxSprite
+	public function loadGraphic(	Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, 
+									#if flash 
+									Width:UInt = 0, ?Height:UInt = 0, 
+									#else
+									Width:Int = 0, ?Height:Int = 0,
+									#end
+									?Unique:Bool = false):FlxSprite
 	{
 		_bakedRotation = 0;
 		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
@@ -306,19 +369,25 @@ class FlxSprite extends FlxObject
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedGraphic(Graphic:Class<Bitmap>, ?Rotations:UInt = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
+	public function loadRotatedGraphic(	Graphic:Class<Bitmap>, 
+										#if flash
+										?Rotations:UInt = 16, 
+										#else
+										?Rotations:Int = 16, 
+										#end
+										?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
 	{
 		//Create the brush and canvas
-		var rows:UInt = Math.floor(Math.sqrt(Rotations));
+		var rows:Int = Math.floor(Math.sqrt(Rotations));
 		var brush:BitmapData = FlxG.addBitmap(Graphic);
 		if(Frame >= 0)
 		{
 			//Using just a segment of the graphic - find the right bit here
 			var full:BitmapData = brush;
 			brush = new BitmapData(full.height,full.height);
-			var rx:UInt = Frame*brush.width;
-			var ry:UInt = 0;
-			var fw:UInt = full.width;
+			var rx:Int = Frame*brush.width;
+			var ry:Int = 0;
+			var fw:Int = full.width;
 			if(rx >= fw)
 			{
 				ry = Math.floor(rx / fw) * brush.height;
@@ -331,7 +400,7 @@ class FlxSprite extends FlxObject
 			brush.copyPixels(full, _flashRect, _flashPointZero);
 		}
 		
-		var max:UInt = brush.width;
+		var max:Int = brush.width;
 		if (brush.height > Std.int(max))
 		{
 			max = brush.height;
@@ -340,7 +409,7 @@ class FlxSprite extends FlxObject
 		{
 			max = Math.floor(max * 1.5);
 		}
-		var columns:UInt = FlxU.ceil(Rotations / rows);
+		var columns:Int = FlxU.ceil(Rotations / rows);
 		width = max * columns;
 		height = max * rows;
 		var key:String = Type.getClassName(Graphic) + ":" + Frame + ":" + width + "x" + height;
@@ -353,13 +422,13 @@ class FlxSprite extends FlxObject
 		//Generate a new sheet if necessary, then fix up the width and height
 		if(!skipGen)
 		{
-			var row:UInt = 0;
-			var column:UInt;
+			var row:Int = 0;
+			var column:Int;
 			var bakedAngle:Float = 0;
-			var halfBrushWidth:UInt = Math.floor(brush.width*0.5);
-			var halfBrushHeight:UInt = Math.floor(brush.height*0.5);
-			var midpointX:UInt = Math.floor(max * 0.5);
-			var midpointY:UInt = Math.floor(max * 0.5);
+			var halfBrushWidth:Int = Math.floor(brush.width*0.5);
+			var halfBrushHeight:Int = Math.floor(brush.height*0.5);
+			var midpointX:Int = Math.floor(max * 0.5);
+			var midpointY:Int = Math.floor(max * 0.5);
 			while(row < rows)
 			{
 				column = 0;
@@ -398,7 +467,13 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeGraphic(Width:UInt, Height:UInt, Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
+	public function makeGraphic(	
+									#if flash 
+									Width:UInt, Height:UInt, Color:UInt = 0xffffffff, 
+									#else
+									Width:Int, Height:Int, Color:Int = 0xffffffff, 
+									#end
+									Unique:Bool = false, Key:String = null):FlxSprite
 	{
 		_bakedRotation = 0;
 		_pixels = FlxG.createBitmap(Width, Height, Color, Unique, Key);
@@ -466,8 +541,8 @@ class FlxSprite extends FlxObject
 			cameras = FlxG.cameras;
 		}
 		var camera:FlxCamera;
-		var i:UInt = 0;
-		var l:UInt = cameras.length;
+		var i:Int = 0;
+		var l:Int = cameras.length;
 		while(i < l)
 		{
 			camera = cameras[i++];
@@ -495,12 +570,7 @@ class FlxSprite extends FlxObject
 					_matrix.rotate(angle * 0.017453293);
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
-				#if flash9
-				var brushBlend:BlendMode = cast(blend, BlendMode);
-				#else
-				var brushBlend:String = blend;
-				#end
-				camera.buffer.draw(framePixels, _matrix, null, brushBlend, null, antialiasing);
+				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 			}
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -545,7 +615,7 @@ class FlxSprite extends FlxObject
 			_matrix.rotate(Brush.angle * 0.017453293);
 		}
 		_matrix.translate(X + Brush.origin.x, Y + Brush.origin.y);
-		#if flash9
+		#if flash
 		var brushBlend:BlendMode = cast(Brush.blend, BlendMode);
 		#else
 		var brushBlend:String = Brush.blend;
@@ -564,7 +634,13 @@ class FlxSprite extends FlxObject
 	 * @param	Color		The line's color.
 	 * @param	Thickness	How thick the line is in pixels (default value is 1).
 	 */
-	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:UInt, ?Thickness:UInt = 1):Void
+	public function drawLine(	StartX:Float, StartY:Float, EndX:Float, EndY:Float, 
+								#if flash
+								Color:UInt, ?Thickness:UInt = 1
+								#else
+								Color:Int, ?Thickness:Int = 1
+								#end
+								):Void
 	{
 		//Draw line
 		var gfx:Graphics = FlxG.flashGfx;
@@ -587,7 +663,11 @@ class FlxSprite extends FlxObject
 	 * Fills this sprite's graphic with a specific color.
 	 * @param	Color		The color with which to fill the graphic, format 0xAARRGGBB.
 	 */
+	#if flash
 	public function fill(Color:UInt):Void
+	#else
+	public function fill(Color:Int):Void
+	#end
 	{
 		_pixels.fillRect(_flashRect2,Color);
 		if (_pixels != framePixels)
@@ -605,14 +685,14 @@ class FlxSprite extends FlxObject
 	{
 		if(_bakedRotation > 0)
 		{
-			var oldIndex:UInt = _curIndex;
+			var oldIndex:Int = _curIndex;
 			var angleHelper:Int = Math.floor(angle % 360);
 			if (angleHelper < 0)
 			{
 				angleHelper += 360;
 			}
 			_curIndex = Math.floor(angleHelper / _bakedRotation + 0.5);
-			if (oldIndex != _curIndex)
+			if (oldIndex != Std.int(_curIndex))
 			{
 				dirty = true;
 			}
@@ -666,7 +746,13 @@ class FlxSprite extends FlxObject
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
 	 * @param	Looped		Whether or not the animation is looped or just plays once.
 	 */
-	public function addAnimation(Name:String, Frames:Array<UInt>, ?FrameRate:UInt = 0, ?Looped:Bool = true):Void
+	public function addAnimation(	Name:String, 
+									#if flash
+									Frames:Array<UInt>, ?FrameRate:UInt = 0, 
+									#else
+									Frames:Array<Int>, ?FrameRate:Int = 0, 
+									#end
+									?Looped:Bool = true):Void
 	{
 		_animations.push(new FlxAnim(Name, Frames, FrameRate, Looped));
 	}
@@ -692,8 +778,8 @@ class FlxSprite extends FlxObject
 		_curFrame = 0;
 		_curIndex = 0;
 		_frameTimer = 0;
-		var i:UInt = 0;
-		var l:UInt = _animations.length;
+		var i:Int = 0;
+		var l:Int = _animations.length;
 		while(i < l)
 		{
 			if(_animations[i].name == AnimName)
@@ -750,7 +836,11 @@ class FlxSprite extends FlxObject
 		}
 	}
 	
+	#if flash
 	public function replaceColor(Color:UInt, NewColor:UInt, ?FetchPositions:Bool = false):Array<FlxPoint>
+	#else
+	public function replaceColor(Color:Int, NewColor:Int, ?FetchPositions:Bool = false):Array<FlxPoint>
+	#end
 	{
 		var positions:Array<FlxPoint> = null;
 		if (FetchPositions)
@@ -758,10 +848,10 @@ class FlxSprite extends FlxObject
 			positions = new Array<FlxPoint>();
 		}
 		
-		var row:UInt = 0;
-		var column:UInt;
-		var rows:UInt = _pixels.height;
-		var columns:UInt = _pixels.width;
+		var row:Int = 0;
+		var column:Int;
+		var rows:Int = _pixels.height;
+		var columns:Int = _pixels.width;
 		while(row < rows)
 		{
 			column = 0;
@@ -807,14 +897,16 @@ class FlxSprite extends FlxObject
 		return _pixels;
 	}
 	
-	public var facing(getFacing, setFacing):UInt;
-	
 	/**
 	 * Set <code>facing</code> using <code>FlxSprite.LEFT</code>,<code>RIGHT</code>,
 	 * <code>UP</code>, and <code>DOWN</code> to take advantage of
 	 * flipped sprites and/or just track player orientation more easily.
 	 */
+	#if flash
 	public function getFacing():UInt
+	#else
+	public function getFacing():Int
+	#end
 	{
 		return _facing;
 	}
@@ -822,7 +914,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * @private
 	 */
+	#if flash
 	public function setFacing(Direction:UInt):UInt
+	#else
+	public function setFacing(Direction:Int):Int
+	#end
 	{
 		if (_facing != Direction)
 		{
@@ -872,14 +968,16 @@ class FlxSprite extends FlxObject
 		return _alpha;
 	}
 	
-	public var color(getColor, setColor):UInt;
-	
 	/**
 	 * Set <code>color</code> to a number in this format: 0xRRGGBB.
 	 * <code>color</code> IGNORES ALPHA.  To change the opacity use <code>alpha</code>.
 	 * Tints the whole sprite to be this color (similar to OpenGL vertex colors).
 	 */
+	#if flash
 	public function getColor():UInt
+	#else
+	public function getColor():Int
+	#end
 	{
 		return _color;
 	}
@@ -887,7 +985,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * @private
 	 */
+	#if flash
 	public function setColor(Color:UInt):UInt
+	#else
+	public function setColor(Color:Int):Int
+	#end
 	{
 		Color &= 0x00ffffff;
 		if (_color == Color)
@@ -907,14 +1009,16 @@ class FlxSprite extends FlxObject
 		return _color;
 	}
 	
-	public var frame(getFrame, setFrame):UInt;
-	
 	/**
 	 * Tell the sprite to change to a specific frame of animation.
 	 * 
 	 * @param	Frame	The frame you want to display.
 	 */
+	#if flash
 	public function getFrame():UInt
+	#else
+	public function getFrame():Int
+	#end
 	{
 		return _curIndex;
 	}
@@ -922,7 +1026,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * @private
 	 */
+	#if flash
 	public function setFrame(Frame:UInt):UInt
+	#else
+	public function setFrame(Frame:Int):Int
+	#end
 	{
 		_curAnim = null;
 		_curIndex = Frame;
@@ -971,7 +1079,13 @@ class FlxSprite extends FlxObject
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
-	public function pixelsOverlapPoint(Point:FlxPoint, ?Mask:UInt = 0xFF, ?Camera:FlxCamera = null):Bool
+	public function pixelsOverlapPoint(	Point:FlxPoint, 
+										#if flash
+										?Mask:UInt = 0xFF, 
+										#else
+										?Mask:Int = 0xFF, 
+										#end
+										?Camera:FlxCamera = null):Bool
 	{
 		if (Camera == null)
 		{
@@ -996,11 +1110,11 @@ class FlxSprite extends FlxObject
 	 */
 	private function calcFrame():Void
 	{
-		var indexX:UInt = _curIndex * frameWidth;
-		var indexY:UInt = 0;
+		var indexX:Int = _curIndex * frameWidth;
+		var indexY:Int = 0;
 
 		//Handle sprite sheets
-		var widthHelper:UInt = (_flipped != 0) ? _flipped : _pixels.width;
+		var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
 		if(indexX >= widthHelper)
 		{
 			indexY = Math.floor(indexX/widthHelper)*frameHeight;
