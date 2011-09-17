@@ -307,13 +307,11 @@ class FlxSprite extends FlxObject
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphic(	Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, 
-									#if flash 
-									Width:UInt = 0, ?Height:UInt = 0, 
-									#else
-									Width:Int = 0, ?Height:Int = 0,
-									#end
-									?Unique:Bool = false):FlxSprite
+	#if flash 
+	public function loadGraphic(Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, Width:UInt = 0, ?Height:UInt = 0, ?Unique:Bool = false):FlxSprite
+	#else
+	public function loadGraphic(Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite
+	#end
 	{
 		_bakedRotation = 0;
 		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
@@ -367,13 +365,11 @@ class FlxSprite extends FlxObject
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedGraphic(	Graphic:Class<Bitmap>, 
-										#if flash
-										?Rotations:UInt = 16, 
-										#else
-										?Rotations:Int = 16, 
-										#end
-										?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
+	#if flash
+	public function loadRotatedGraphic(Graphic:Class<Bitmap>,?Rotations:UInt = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
+	#else
+	public function loadRotatedGraphic(Graphic:Class<Bitmap>, ?Rotations:Int = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
+	#end
 	{
 		//Create the brush and canvas
 		var rows:Int = Math.floor(Math.sqrt(Rotations));
@@ -465,13 +461,11 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeGraphic(	
-									#if flash 
-									Width:UInt, Height:UInt, Color:UInt = 0xffffffff, 
-									#else
-									Width:Int, Height:Int, Color:Int = 0xffffffff, 
-									#end
-									Unique:Bool = false, Key:String = null):FlxSprite
+	#if flash 
+	public function makeGraphic(Width:UInt, Height:UInt, Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
+	#else
+	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
+	#end
 	{
 		_bakedRotation = 0;
 		_pixels = FlxG.createBitmap(Width, Height, Color, Unique, Key);
@@ -632,13 +626,11 @@ class FlxSprite extends FlxObject
 	 * @param	Color		The line's color.
 	 * @param	Thickness	How thick the line is in pixels (default value is 1).
 	 */
-	public function drawLine(	StartX:Float, StartY:Float, EndX:Float, EndY:Float, 
-								#if flash
-								Color:UInt, ?Thickness:UInt = 1
-								#else
-								Color:Int, ?Thickness:Int = 1
-								#end
-								):Void
+	#if flash
+	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:UInt, ?Thickness:UInt = 1):Void
+	#else
+	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, ?Thickness:Int = 1):Void
+	#end
 	{
 		//Draw line
 		var gfx:Graphics = FlxG.flashGfx;
@@ -744,13 +736,11 @@ class FlxSprite extends FlxObject
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
 	 * @param	Looped		Whether or not the animation is looped or just plays once.
 	 */
-	public function addAnimation(	Name:String, 
-									#if flash
-									Frames:Array<UInt>, ?FrameRate:UInt = 0, 
-									#else
-									Frames:Array<Int>, ?FrameRate:Int = 0, 
-									#end
-									?Looped:Bool = true):Void
+	#if flash
+	public function addAnimation(Name:String, Frames:Array<UInt>, ?FrameRate:UInt = 0, ?Looped:Bool = true):Void
+	#else
+	public function addAnimation(Name:String, Frames:Array<Int>, ?FrameRate:Int = 0, ?Looped:Bool = true):Void
+	#end
 	{
 		_animations.push(new FlxAnim(Name, Frames, FrameRate, Looped));
 	}
@@ -1077,13 +1067,11 @@ class FlxSprite extends FlxObject
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
-	public function pixelsOverlapPoint(	Point:FlxPoint, 
-										#if flash
-										?Mask:UInt = 0xFF, 
-										#else
-										?Mask:Int = 0xFF, 
-										#end
-										?Camera:FlxCamera = null):Bool
+	#if flash
+	public function pixelsOverlapPoint(Point:FlxPoint, ?Mask:UInt = 0xFF, ?Camera:FlxCamera = null):Bool
+	#else
+	public function pixelsOverlapPoint(Point:FlxPoint, ?Mask:Int = 0xFF, ?Camera:FlxCamera = null):Bool
+	#end
 	{
 		if (Camera == null)
 		{

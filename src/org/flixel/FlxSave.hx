@@ -100,13 +100,11 @@ class FlxSave implements Dynamic
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	The result of result of the <code>flush()</code> call (see below for more details).
 	 */
-	public function close(	
-							#if flash
-							?MinFileSize:UInt = 0, 
-							#else
-							?MinFileSize:Int = 0, 
-							#end
-							?OnComplete:Dynamic = null):Bool
+	#if flash
+	public function close(?MinFileSize:UInt = 0, ?OnComplete:Dynamic = null):Bool
+	#else
+	public function close(?MinFileSize:Int = 0, ?OnComplete:Dynamic = null):Bool
+	#end
 	{
 		_closeRequested = true;
 		return flush(MinFileSize, OnComplete);
@@ -118,13 +116,11 @@ class FlxSave implements Dynamic
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	Whether or not the data was written immediately.  False could be an error OR a storage request popup.
 	 */
-	public function flush(	
-							#if flash
-							?MinFileSize:UInt = 0, 
-							#else
-							?MinFileSize:Int = 0, 
-							#end
-							?OnComplete:Dynamic = null):Bool
+	#if flash
+	public function flush(?MinFileSize:UInt = 0, ?OnComplete:Dynamic = null):Bool
+	#else
+	public function flush(?MinFileSize:Int = 0, ?OnComplete:Dynamic = null):Bool
+	#end
 	{
 		if (!checkBinding())
 		{
@@ -183,13 +179,11 @@ class FlxSave implements Dynamic
 	 * @param	Result		One of the result codes (PENDING, ERROR, or SUCCESS).
 	 * @return	Whether the operation was a success or not.
 	 */
-	private function onDone(
-								#if flash
-								Result:UInt
-								#else
-								Result:Int
-								#end
-								):Bool
+	#if flash
+	private function onDone(Result:UInt):Bool
+	#else
+	private function onDone(Result:Int):Bool
+	#end
 	{
 		switch(Result)
 		{

@@ -187,13 +187,11 @@ class Input
 	 * @param	KeyName		String name of the key (e.g. "LEFT" or "A")
 	 * @param	KeyCode		The numeric Flash code for this key.
 	 */
-	private function addKey(	KeyName:String, 
-								#if flash
-								KeyCode:UInt
-								#else
-								KeyCode:Int
-								#end
-								):Void
+	#if flash
+	private function addKey(KeyName:String, KeyCode:UInt):Void
+	#else
+	private function addKey(KeyName:String, KeyCode:Int):Void
+	#end
 	{
 		//_lookup[KeyName] = KeyCode;
 		Reflect.setField(_lookup, KeyName, KeyCode);

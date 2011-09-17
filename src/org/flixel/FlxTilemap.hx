@@ -253,13 +253,11 @@ class FlxTilemap extends FlxObject
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.	
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(	MapData:String, TileGraphic:Class<Bitmap>, 
-								#if flash
-								?TileWidth:UInt = 0, ?TileHeight:UInt = 0, ?AutoTile:UInt = 0, ?StartingIndex:UInt = 0, ?DrawIndex:UInt = 1, ?CollideIndex:UInt = 1
-								#else
-								?TileWidth:Int = 0, ?TileHeight:Int = 0, ?AutoTile:Int = 0, ?StartingIndex:Int = 0, ?DrawIndex:Int = 1, ?CollideIndex:Int = 1
-								#end
-								):FlxTilemap
+	#if flash
+	public function loadMap(MapData:String, TileGraphic:Class<Bitmap>, ?TileWidth:UInt = 0, ?TileHeight:UInt = 0, ?AutoTile:UInt = 0, ?StartingIndex:UInt = 0, ?DrawIndex:UInt = 1, ?CollideIndex:UInt = 1):FlxTilemap
+	#else
+	public function loadMap(MapData:String, TileGraphic:Class<Bitmap>, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?AutoTile:Int = 0, ?StartingIndex:Int = 0, ?DrawIndex:Int = 1, ?CollideIndex:Int = 1):FlxTilemap
+	#end
 	{
 		auto = AutoTile;
 		_startingIndex = StartingIndex;
@@ -368,13 +366,11 @@ class FlxTilemap extends FlxObject
 	 * Internal function to clean up the map loading code.
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
-	private function makeDebugTile(
-									#if flash
-									Color:UInt
-									#else
-									Color:Int
-									#end
-									):BitmapData
+	#if flash
+	private function makeDebugTile(Color:UInt):BitmapData
+	#else
+	private function makeDebugTile(Color:Int):BitmapData
+	#end
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
@@ -717,13 +713,11 @@ class FlxTilemap extends FlxObject
 	 * @param	EndIndex	The ending tile's map index.
 	 * @return	A Flash <code>Array</code> of <code>FlxPoint</code> nodes.  If the end tile could not be found, then a null <code>Array</code> is returned instead.
 	 */
-	private function computePathDistance(	
-											#if flash
-											StartIndex:UInt, EndIndex:UInt
-											#else
-											StartIndex:Int, EndIndex:Int
-											#end
-											):Array<Int>
+	#if flash
+	private function computePathDistance(StartIndex:UInt, EndIndex:UInt):Array<Int>
+	#else
+	private function computePathDistance(StartIndex:Int, EndIndex:Int):Array<Int>
+	#end
 	{
 		//Create a distance-based representation of the tilemap.
 		//All walls are flagged as -2, all open areas as -1.
@@ -867,13 +861,11 @@ class FlxTilemap extends FlxObject
 	 * @param	Start	The tile we're on in our walk backward.
 	 * @param	Points	A Flash <code>Array</code> of <code>FlxPoint</code> nodes composing the path from the start to the end, compiled in reverse order.
 	 */
-	private function walkPath(	Data:Array<Int>, 
-								#if flash 
-								Start:UInt, 
-								#else
-								Start:Int, 
-								#end
-								Points:Array<FlxPoint>):Void
+	#if flash
+	private function walkPath(Data:Array<Int>, Start:UInt, Points:Array<FlxPoint>):Void
+	#else
+	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
+	#end
 	{
 		Points.push(new FlxPoint(x + Std.int(Start % widthInTiles) * _tileWidth + _tileWidth * 0.5, y + Std.int(Start / widthInTiles) * _tileHeight + _tileHeight * 0.5));
 		if (Data[Start] == 0)
@@ -1266,13 +1258,11 @@ class FlxTilemap extends FlxObject
 	 * @param	Midpoint	Whether to return the coordinates of the tile midpoint, or upper left corner. Default is true, return midpoint.
 	 * @return	An <code>Array</code> with a list of all the coordinates of that tile type.
 	 */
-	public function getTileCoords(	
-									#if flash
-									Index:UInt, 
-									#else
-									Index:Int, 
-									#end
-									Midpoint:Bool = true):Array<FlxPoint>
+	#if flash
+	public function getTileCoords(Index:UInt, Midpoint:Bool = true):Array<FlxPoint>
+	#else
+	public function getTileCoords(Index:Int, Midpoint:Bool = true):Array<FlxPoint>
+	#end
 	{
 		var array:Array<FlxPoint> = null;
 		
@@ -1606,13 +1596,11 @@ class FlxTilemap extends FlxObject
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function bitmapToCSV(	bitmapData:BitmapData, ?Invert:Bool = false, 
-										#if flash
-										?Scale:UInt = 1
-										#else
-										?Scale:Int = 1
-										#end
-										):String
+	#if flash
+	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:UInt = 1):String
+	#else
+	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1):String
+	#end
 	{
 		//Import and scale image if necessary
 		if(Scale > 1)
@@ -1684,13 +1672,11 @@ class FlxTilemap extends FlxObject
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function imageToCSV(	ImageFile:Class<Bitmap>, ?Invert:Bool = false, 
-										#if flash
-										?Scale:UInt = 1
-										#else
-										?Scale:Int = 1
-										#end
-										):String
+	#if flash
+	static public function imageToCSV(ImageFile:Class<Bitmap>, ?Invert:Bool = false, ?Scale:UInt = 1):String
+	#else
+	static public function imageToCSV(ImageFile:Class<Bitmap>, ?Invert:Bool = false, ?Scale:Int = 1):String
+	#end
 	{
 		//return bitmapToCSV((new ImageFile).bitmapData, Invert, Scale);
 		return bitmapToCSV((Type.createInstance(ImageFile, [])).bitmapData, Invert, Scale);

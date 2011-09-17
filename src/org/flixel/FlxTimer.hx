@@ -108,13 +108,11 @@ class FlxTimer
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop.  Callback should be formed "onTimer(Timer:FlxTimer);"
 	 * @return	A reference to itself (handy for chaining or whatever).
 	 */
-	public function start(	?Time:Float = 1, 
-							#if flash
-							?Loops:UInt = 1, 
-							#else
-							?Loops:Int = 1, 
-							#end
-							?Callback:Dynamic/*FlxTimer->Void*/ = null):FlxTimer
+	#if flash
+	public function start(?Time:Float = 1, ?Loops:UInt = 1, ?Callback:Dynamic/*FlxTimer->Void*/ = null):FlxTimer
+	#else
+	public function start(?Time:Float = 1, ?Loops:Int = 1, ?Callback:Dynamic = null):FlxTimer
+	#end
 	{
 		var timerManager:TimerManager = manager;
 		if (timerManager != null)

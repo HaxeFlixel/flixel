@@ -49,13 +49,11 @@ class FlxText extends FlxSprite
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or nto
 	 */
-	public function new(	X:Float, Y:Float, 
-							#if flash
-							Width:UInt, 
-							#else
-							Width:Int, 
-							#end
-							?Text:String = null, ?EmbeddedFont:Bool = true)
+	#if flash
+	public function new(X:Float, Y:Float, Width:UInt, ?Text:String = null, ?EmbeddedFont:Bool = true)
+	#else
+	public function new(X:Float, Y:Float, Width:Int, ?Text:String = null, ?EmbeddedFont:Bool = true)
+	#end
 	{
 		super(X,Y);
 		makeGraphic(Width,1,0);
@@ -112,19 +110,11 @@ class FlxText extends FlxSprite
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(	?Font:String = null, ?Size:Float = 8, 
-								#if flash
-								?Color:UInt = 0xffffff, 
-								#else
-								?Color:Int = 0xffffff, 
-								#end
-								?Alignment:String = null, 
-								#if flash
-								?ShadowColor:UInt = 0
-								#else
-								?ShadowColor:Int = 0
-								#end
-								):FlxText
+	#if flash
+	public function setFormat(?Font:String = null, ?Size:Float = 8, ?Color:UInt = 0xffffff, ?Alignment:String = null, ?ShadowColor:UInt = 0):FlxText
+	#else
+	public function setFormat(?Font:String = null, ?Size:Float = 8, ?Color:Int = 0xffffff, ?Alignment:String = null, ?ShadowColor:Int = 0):FlxText
+	#end
 	{
 		if (Font == null)
 		{

@@ -454,13 +454,11 @@ class FlxCamera extends FlxBasic
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
 	 */
-	public function follow(	Target:FlxObject, 
-							#if flash 
-							Style:UInt = 0/*STYLE_LOCKON*/
-							#else
-							Style:Int = 0
-							#end
-							):Void
+	#if flash
+	public function follow(Target:FlxObject, Style:UInt = 0/*STYLE_LOCKON*/):Void
+	#else
+	public function follow(Target:FlxObject, Style:Int = 0):Void
+	#end
 	{
 		target = Target;
 		var helper:Float;
@@ -523,13 +521,11 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(	
-							#if flash
-							?Color:UInt = 0xffffffff,
-							#else
-							?Color:Int = 0xffffffff,
-							#end
-							?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#if flash
+	public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#else
+	public function flash(?Color:Int = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#end
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -552,13 +548,11 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(
-							#if flash
-							?Color:UInt = 0xff000000,
-							#else
-							?Color:Int = 0xff000000,
-							#end
-							?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#if flash
+	public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#else
+	public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#end
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -582,13 +576,11 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
 	 */
-	public function shake(	?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, 
-							#if flash
-							?Direction:UInt = 0/*SHAKE_BOTH_AXES*/
-							#else
-							?Direction:Int = 0
-							#end
-							):Void
+	#if flash
+	public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, ?Direction:UInt = 0/*SHAKE_BOTH_AXES*/):Void
+	#else
+	public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, ?Direction:Int = 0):Void
+	#end
 	{
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
@@ -814,13 +806,11 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	public function fill(
-							#if flash
-							Color:UInt, 
-							#else
-							Color:Int, 
-							#end
-							?BlendAlpha:Bool = true):Void
+	#if flash
+	public function fill(Color:UInt, ?BlendAlpha:Bool = true):Void
+	#else
+	public function fill(Color:Int, ?BlendAlpha:Bool = true):Void
+	#end
 	{
 		_fill.fillRect(_flashRect, Color);
 		buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);

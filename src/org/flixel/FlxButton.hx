@@ -20,8 +20,8 @@ class ImgDefaultButton extends Bitmap
  */
 class FlxButton extends FlxSprite
 {
-	/*[Embed(source="data/button.png")] private var ImgDefaultButton:Class<Bitmap>;*/
-	/*[Embed(source="data/beep.mp3")] private var SndBeep:Class<Bitmap>;*/
+	
+	public var on(getOn, setOn):Bool;
 	
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
@@ -252,7 +252,7 @@ class FlxButton extends FlxSprite
 			var offAll:Bool = true;
 			while(i < l)
 			{
-				camera = cast(cameras[i++], FlxCamera);
+				camera = cameras[i++];
 				FlxG.mouse.getWorldPosition(camera, _point);
 				if(overlapsPoint(_point,true,camera))
 				{
@@ -383,8 +383,6 @@ class FlxButton extends FlxSprite
 			soundUp = FlxG.loadSound(SoundUp, SoundUpVolume);
 		}
 	}
-	
-	public var on(getOn, setOn):Bool;
 	
 	/**
 	 * Use this to toggle checkbox-style behavior.

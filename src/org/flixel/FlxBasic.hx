@@ -16,7 +16,6 @@ class FlxBasic
 	static public var _VISIBLECOUNT:Int;
 	#end
 	
-
 	/**
 	 * IDs seem like they could be pretty useful, huh?
 	 * They're not actually used for anything yet though.

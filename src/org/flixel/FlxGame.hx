@@ -208,13 +208,11 @@ class FlxGame extends Sprite
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public function new(	
-							#if flash 
-							GameSizeX:UInt, GameSizeY:UInt, InitialState:Class<FlxState>, ?Zoom:Float = 1, GameFramerate:UInt = 60, ?FlashFramerate:UInt = 30, ?UseSystemCursor:Bool = false
-							#else
-							GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, ?Zoom:Float = 1, GameFramerate:Int = 60, ?FlashFramerate:Int = 30, ?UseSystemCursor:Bool = false
-							#end
-							)
+	#if flash
+	public function new(GameSizeX:UInt, GameSizeY:UInt, InitialState:Class<FlxState>, ?Zoom:Float = 1, GameFramerate:UInt = 60, ?FlashFramerate:UInt = 30, ?UseSystemCursor:Bool = false)
+	#else
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, ?Zoom:Float = 1, GameFramerate:Int = 60, ?FlashFramerate:Int = 30, ?UseSystemCursor:Bool = false)
+	#end
 	{
 		super();
 		

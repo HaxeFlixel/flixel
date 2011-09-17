@@ -101,13 +101,11 @@ class FlxPath
 	 * @param	Y		Y position of the new path point in world coordinates.
 	 * @param	Index	Where within the list of path nodes to insert this new point.
 	 */
-	public function addAt(	X:Float, Y:Float, 
-							#if flash
-							Index:UInt
-							#else
-							Index:Int
-							#end
-							):Void
+	#if flash
+	public function addAt(X:Float, Y:Float,Index:UInt):Void
+	#else
+	public function addAt(X:Float, Y:Float, Index:Int):Void
+	#end
 	{
 		if (Std.int(Index) > nodes.length)
 		{

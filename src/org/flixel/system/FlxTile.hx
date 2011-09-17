@@ -57,19 +57,11 @@ class FlxTile extends FlxObject
 	 * @param Visible			Whether the tile is visible or not.
 	 * @param AllowCollisions	The collision flags for the object.  By default this value is ANY or NONE depending on the parameters sent to loadMap().
 	 */
-	public function new(	Tilemap:FlxTilemap, 
-							#if flash
-							Index:UInt, 
-							#else
-							Index:Int, 
-							#end
-							Width:Float, Height:Float, Visible:Bool, 
-							#if flash
-							AllowCollisions:UInt
-							#else
-							AllowCollisions:Int
-							#end
-							)
+	#if flash
+	public function new(Tilemap:FlxTilemap, Index:UInt, Width:Float, Height:Float, Visible:Bool, AllowCollisions:UInt)
+	#else
+	public function new(Tilemap:FlxTilemap, Index:Int, Width:Float, Height:Float, Visible:Bool, AllowCollisions:Int)
+	#end
 	{
 		super(0, 0, Width, Height);
 		immovable = true;

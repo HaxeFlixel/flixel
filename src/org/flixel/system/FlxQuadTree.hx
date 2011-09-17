@@ -342,13 +342,11 @@ class FlxQuadTree extends FlxRect
 	 * @param	ObjectOrGroup	FlxObjects are just added, FlxGroups are recursed and their applicable members added accordingly.
 	 * @param	List			A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>A_LIST</code> and <code>B_LIST</code>.
 	 */
-	public function add(	ObjectOrGroup:FlxBasic, 
-							#if flash
-							List:UInt
-							#else
-							List:Int
-							#end
-							):Void
+	#if flash
+	public function add(ObjectOrGroup:FlxBasic, List:UInt):Void
+	#else
+	public function add(ObjectOrGroup:FlxBasic, List:Int):Void
+	#end
 	{
 		_list = List;
 		if(Std.is(ObjectOrGroup, FlxGroup))

@@ -117,13 +117,11 @@ class FlxEmitter extends FlxGroup
 	 * @param	Y		The Y position of the emitter.
 	 * @param	Size	Optional, specifies a maximum capacity for this emitter.
 	 */
-	public function new(	?X:Float = 0, ?Y:Float = 0, 
-							#if flash
-							?Size:UInt = 0
-							#else
-							?Size:Int = 0
-							#end
-							)
+	#if flash
+	public function new(?X:Float = 0, ?Y:Float = 0, ?Size:UInt = 0)
+	#else
+	public function new(?X:Float = 0, ?Y:Float = 0, ?Size:Int = 0)
+	#end
 	{
 		super(Size);
 		x = X;
@@ -169,15 +167,11 @@ class FlxEmitter extends FlxGroup
 	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(	Graphics:Class<Bitmap>, 
-									#if flash
-									?Quantity:UInt = 50, 
-									?BakedRotations:UInt = 16,
-									#else
-									?Quantity:Int = 50, 
-									?BakedRotations:Int = 16,
-									#end
-									?Multiple:Bool = false, ?Collide:Float = 0.8):FlxEmitter
+	#if flash
+	public function makeParticles(Graphics:Class<Bitmap>, ?Quantity:UInt = 50, ?BakedRotations:UInt = 16, ?Multiple:Bool = false, ?Collide:Float = 0.8):FlxEmitter
+	#else
+	public function makeParticles(Graphics:Class<Bitmap>, ?Quantity:Int = 50, ?BakedRotations:Int = 16, ?Multiple:Bool = false, ?Collide:Float = 0.8):FlxEmitter
+	#end
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -301,13 +295,11 @@ class FlxEmitter extends FlxGroup
 	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
 	 */
-	public function start(	?Explode:Bool = true, ?Lifespan:Float = 0, ?Frequency:Float = 0.1, 
-							#if flash
-							?Quantity:UInt = 0
-							#else
-							?Quantity:Int = 0
-							#end
-							):Void
+	#if flash
+	public function start(?Explode:Bool = true, ?Lifespan:Float = 0, ?Frequency:Float = 0.1, ?Quantity:UInt = 0):Void
+	#else
+	public function start(?Explode:Bool = true, ?Lifespan:Float = 0, ?Frequency:Float = 0.1, ?Quantity:Int = 0):Void
+	#end
 	{
 		revive();
 		visible = true;

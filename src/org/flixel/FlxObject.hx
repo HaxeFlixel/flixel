@@ -573,13 +573,11 @@ class FlxObject extends FlxBasic
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
 	 */
-	public function followPath(	Path:FlxPath, ?Speed:Float = 100, 
-								#if flash
-								?Mode:UInt = 0x000000, 
-								#else
-								?Mode:Int = 0x000000, 
-								#end
-								?AutoRotate:Bool = false):Void
+	#if flash
+	public function followPath(Path:FlxPath, ?Speed:Float = 100, ?Mode:UInt = 0x000000, ?AutoRotate:Bool = false):Void
+	#else
+	public function followPath(Path:FlxPath, ?Speed:Float = 100, ?Mode:Int = 0x000000, ?AutoRotate:Bool = false):Void
+	#end
 	{
 		if(Path.nodes.length <= 0)
 		{

@@ -152,32 +152,22 @@ class FlxU
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	static public function getRandom(	Objects:Array<Dynamic>, 
-										#if flash
-										?StartIndex:UInt = 0, ?Length:UInt = 0
-										#else
-										?StartIndex:Int = 0, ?Length:Int = 0
-										#end
-										):Dynamic
+	#if flash
+	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:UInt = 0, ?Length:UInt = 0):Dynamic
+	#else
+	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:Int = 0, ?Length:Int = 0):Dynamic
+	#end
 	{
 		if(Objects != null)
 		{
-			#if flash
-			var l:UInt = Length;
-			#else
 			var l:Int = Length;
-			#end
-			if ((l == 0) || (Std.int(l) > Objects.length - StartIndex))
+			if ((l == 0) || (l > Objects.length - StartIndex))
 			{
 				l = Objects.length - StartIndex;
 			}
 			if (l > 0)
 			{
-				#if flash
-				return Objects[StartIndex + cast(Math.random() * l, UInt)];
-				#else
-				return Objects[StartIndex + Std.int(Math.random())];
-				#end
+				return Objects[StartIndex + Std.int(Math.random() * l)];
 			}
 		}
 		return null;
@@ -313,13 +303,11 @@ class FlxU
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public function getRGBA(
-									#if flash
-									Color:UInt, 
-									#else
-									Color:Int,
-									#end
-									?Results:Array<Float> = null):Array<Float>
+	#if flash
+	static public function getRGBA(Color:UInt, ?Results:Array<Float> = null):Array<Float>
+	#else
+	static public function getRGBA(Color:Int, ?Results:Array<Float> = null):Array<Float>
+	#end
 	{
 		if (Results == null)
 		{
@@ -340,13 +328,11 @@ class FlxU
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public function getHSB(
-									#if flash
-									Color:UInt, 
-									#else
-									Color:Int,
-									#end
-									?Results:Array<Float> = null):Array<Float>
+	#if flash
+	static public function getHSB(Color:UInt, ?Results:Array<Float> = null):Array<Float>
+	#else
+	static public function getHSB(Color:Int, ?Results:Array<Float> = null):Array<Float>
+	#end
 	{
 		if (Results == null)
 		{
@@ -402,13 +388,11 @@ class FlxU
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted <code>String</code>, like "1:03".
 	 */
-	static public function formatTime(
-										#if flash
-										Seconds:UInt, 
-										#else
-										Seconds:Int, 
-										#end
-										?ShowMS:Bool = false):String
+	#if flash
+	static public function formatTime(Seconds:UInt, ?ShowMS:Bool = false):String
+	#else
+	static public function formatTime(Seconds:Int, ?ShowMS:Bool = false):String
+	#end
 	{
 		var timeString:String = Std.int(Seconds/60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;

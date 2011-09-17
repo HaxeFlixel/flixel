@@ -17,7 +17,6 @@ import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxQuadTree;
-//import org.flixel.system.input.*;
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -457,13 +456,11 @@ class FlxG
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
 	 */
-	static public function shuffle(	Objects:Array<Dynamic>, 
-									#if flash
-									HowManyTimes:UInt
-									#else
-									HowManyTimes:Int
-									#end
-									):Array<Dynamic>
+	#if flash
+	static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:UInt):Array<Dynamic>
+	#else
+	static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
+	#end
 	{
 		var i:Int = 0;
 		var index1:Int;
@@ -491,13 +488,11 @@ class FlxG
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	static public function getRandom(	Objects:Array<Dynamic>, 
-										#if flash
-										?StartIndex:UInt = 0, ?Length:UInt = 0
-										#else
-										?StartIndex:Int = 0, ?Length:Int = 0
-										#end
-										):Dynamic
+	#if flash
+	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:UInt = 0, ?Length:UInt = 0):Dynamic
+	#else
+	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:Int = 0, ?Length:Int = 0):Dynamic
+	#end
 	{
 		if(Objects != null)
 		{
@@ -847,13 +842,11 @@ class FlxG
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	static public function createBitmap(	
-											#if flash
-											Width:UInt, Height:UInt, Color:UInt, 
-											#else
-											Width:Int, Height:Int, Color:Int, 
-											#end
-											?Unique:Bool = false, ?Key:String = null):BitmapData
+	#if flash
+	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, ?Unique:Bool = false, ?Key:String = null):BitmapData
+	#else
+	static public function createBitmap(Width:Int, Height:Int, Color:Int, ?Unique:Bool = false, ?Key:String = null):BitmapData
+	#end
 	{
 		var key:String = Key;
 		if(key == null)
@@ -1077,13 +1070,11 @@ class FlxG
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public function flash(
-									#if flash
-									?Color:UInt = 0xffffffff, 
-									#else
-									?Color:Int = 0xffffffff, 
-									#end
-									?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#if flash
+	static public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#else
+	static public function flash(?Color:Int = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	#end
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
@@ -1100,13 +1091,11 @@ class FlxG
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	static public function fade(
-									#if flash
-									?Color:UInt = 0xff000000, 
-									#else
-									?Color:Int = 0xff000000, 
-									#end
-									?Duration:Float = 1, ?OnComplete:Dynamic = null, Force:Bool = false):Void
+	#if flash
+	static public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?OnComplete:Dynamic = null, Force:Bool = false):Void
+	#else
+	static public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?OnComplete:Dynamic = null, Force:Bool = false):Void
+	#end
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
@@ -1124,13 +1113,11 @@ class FlxG
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).  Default value is SHAKE_BOTH_AXES (0).
 	 */
-	static public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, 
-									#if flash
-									?Direction:UInt = 0
-									#else
-									?Direction:Int = 0
-									#end
-									):Void
+	#if flash
+	static public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, ?Direction:UInt = 0):Void
+	#else
+	static public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, ?Direction:Int = 0):Void
+	#end
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
@@ -1319,13 +1306,11 @@ class FlxG
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
-	static public function init(	Game:FlxGame, 
-									#if flash
-									Width:UInt, Height:UInt, 
-									#else
-									Width:Int, Height:Int,
-									#end
-									Zoom:Float):Void
+	#if flash
+	static public function init(Game:FlxGame, Width:UInt, Height:UInt, Zoom:Float):Void
+	#else
+	static public function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	#end
 	{
 		FlxG._game = Game;
 		FlxG.width = Width;

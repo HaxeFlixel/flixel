@@ -68,13 +68,11 @@ class FlxGroup extends FlxBasic
 	/**
 	 * Constructor
 	 */
-	public function new(	
-							#if flash
-							?MaxSize:UInt = 0
-							#else
-							?MaxSize:Int = 0
-							#end
-							)
+	#if flash
+	public function new(?MaxSize:UInt = 0)
+	#else
+	public function new(?MaxSize:Int = 0)
+	#end
 	{
 		super();
 		members = new Array<FlxBasic>();
