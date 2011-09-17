@@ -67,10 +67,10 @@ class FlxReplay
 		{
 			return;
 		}
-		var i:Int = frameCount-1;
+		var i:Int = frameCount - 1;
 		while (i >= 0)
 		{
-			cast(_frames[i--], FrameRecord).destroy();
+			_frames[i--].destroy();
 		}
 		_frames = null;
 	}
@@ -147,7 +147,7 @@ class FlxReplay
 		}
 		var output:String = seed+"\n";
 		var i:Int = 0;
-		while (Std.int(i) < frameCount)
+		while (i < frameCount)
 		{
 			output += _frames[i++].save() + "\n";
 		}
@@ -187,7 +187,7 @@ class FlxReplay
 			finished = true;
 			return;
 		}
-		if (cast(_frames[_marker], FrameRecord).frame != frame++)
+		if (_frames[_marker].frame != frame++)
 		{
 			return;
 		}

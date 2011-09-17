@@ -72,7 +72,7 @@ class FrameRecord
 					output += ",";
 				}
 				object = keys[i++];
-				output += object.code + ":" + object.value;
+				output += Reflect.field(object, "code") + ":" + Reflect.field(object, "value");
 			}
 		}
 		
@@ -96,10 +96,10 @@ class FrameRecord
 		
 		//get frame number
 		var array:Array<String> = Data.split("k");
-		frame = Std.parseInt(cast(array[0], String));
+		frame = Std.parseInt(array[0]);
 		
 		//split up keyboard and mouse data
-		array = cast(array[1], String).split("m");
+		array = array[1].split("m");
 		var keyData:String = array[0];
 		var mouseData:String = array[1];
 		
@@ -115,7 +115,7 @@ class FrameRecord
 			l = array.length;
 			while(i < l)
 			{
-				keyPair = cast(array[i++], String).split(":");
+				keyPair = array[i++].split(":");
 				if(keyPair.length == 2)
 				{
 					if (keys == null)

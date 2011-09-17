@@ -37,8 +37,8 @@ class ImgAutoAlt extends Bitmap
  */
 class FlxTilemap extends FlxObject
 {
-	/*[Embed(source="data/autotiles.png")] static public var ImgAuto:Class<Bitmap>;*/
-	/*[Embed(source="data/autotiles_alt.png")] static public var ImgAutoAlt:Class<Bitmap>;*/
+	public static inline var imgAuto:Class<Bitmap> = ImgAuto;
+	public static inline var imgAutoAlt:Class<Bitmap> = ImgAutoAlt;
 	
 	/**
 	 * No auto-tiling.
