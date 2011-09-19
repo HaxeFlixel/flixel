@@ -35,7 +35,7 @@ class FlxAnim
 		delay = 0;
 		if (FrameRate > 0)
 		{
-			delay = 1.0/FrameRate;
+			delay = 1.0 / FrameRate;
 		}
 		frames = Frames;
 		looped = Looped;

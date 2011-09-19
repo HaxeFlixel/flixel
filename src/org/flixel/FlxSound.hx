@@ -196,7 +196,7 @@ class FlxSound extends FlxBasic
 			
 			if(_pan)
 			{
-				var d:Float = (_target.x-x)/_radius;
+				var d:Float = (_target.x - x) / _radius;
 				if(d < -1) d = -1;
 				else if(d > 1) d = 1;
 				_transform.pan = d;
@@ -218,25 +218,25 @@ class FlxSound extends FlxBasic
 					stop();
 				}
 			}
-			fade = _fadeOutTimer/_fadeOutTotal;
+			fade = _fadeOutTimer / _fadeOutTotal;
 			if(fade < 0) fade = 0;
 		}
 		else if(_fadeInTimer > 0)
 		{
 			_fadeInTimer -= FlxG.elapsed;
-			fade = _fadeInTimer/_fadeInTotal;
+			fade = _fadeInTimer / _fadeInTotal;
 			if(fade < 0) fade = 0;
 			fade = 1 - fade;
 		}
 		
-		_volumeAdjust = radial*fade;
+		_volumeAdjust = radial * fade;
 		updateTransform();
 		
 		if((_transform.volume > 0) && (_channel != null))
 		{
-			amplitudeLeft = _channel.leftPeak/_transform.volume;
-			amplitudeRight = _channel.rightPeak/_transform.volume;
-			amplitude = (amplitudeLeft+amplitudeRight)*0.5;
+			amplitudeLeft = _channel.leftPeak / _transform.volume;
+			amplitudeRight = _channel.rightPeak / _transform.volume;
+			amplitude = (amplitudeLeft + amplitudeRight) * 0.5;
 		}
 	}
 	
@@ -332,7 +332,7 @@ class FlxSound extends FlxBasic
 			{
 				if (_channel == null)
 				{
-					_channel = _sound.play(0,9999,_transform);
+					_channel = _sound.play(0, 9999, _transform);
 				}
 				if (_channel == null)
 				{
@@ -341,7 +341,7 @@ class FlxSound extends FlxBasic
 			}
 			else
 			{
-				_channel = _sound.play(_position,0,_transform);
+				_channel = _sound.play(_position, 0, _transform);
 				if (_channel == null)
 				{
 					exists = false;
@@ -393,7 +393,7 @@ class FlxSound extends FlxBasic
 		}
 		if(_looped)
 		{
-			_channel = _sound.play(_position,0,_transform);
+			_channel = _sound.play(_position, 0, _transform);
 			if (_channel == null)
 			{
 				exists = false;
@@ -403,7 +403,7 @@ class FlxSound extends FlxBasic
 		}
 		else
 		{
-			_channel = _sound.play(_position,0,_transform);
+			_channel = _sound.play(_position, 0, _transform);
 			if (_channel == null)
 			{
 				exists = false;
@@ -512,7 +512,7 @@ class FlxSound extends FlxBasic
 	 */
 	public function getActualVolume():Float
 	{
-		return _volume*_volumeAdjust;
+		return _volume * _volumeAdjust;
 	}
 	
 	/**

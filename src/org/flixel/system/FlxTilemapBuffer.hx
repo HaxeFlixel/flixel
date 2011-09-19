@@ -73,12 +73,12 @@ class FlxTilemapBuffer
 			Camera = FlxG.camera;
 		}
 
-		columns = FlxU.ceil(Camera.width/TileWidth)+1;
+		columns = FlxU.ceil(Camera.width / TileWidth) + 1;
 		if (columns > WidthInTiles)
 		{
 			columns = WidthInTiles;
 		}
-		rows = FlxU.ceil(Camera.height/TileHeight)+1;
+		rows = FlxU.ceil(Camera.height / TileHeight) + 1;
 		if (rows > HeightInTiles)
 		{
 			rows = HeightInTiles;
@@ -110,7 +110,7 @@ class FlxTilemapBuffer
 	public function fill(?Color:Int = 0):Void
 	#end
 	{
-		_pixels.fillRect(_flashRect,Color);
+		_pixels.fillRect(_flashRect, Color);
 	}
 	
 	public var pixels(getPixels, null):BitmapData;

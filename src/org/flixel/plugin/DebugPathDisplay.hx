@@ -73,7 +73,7 @@ class DebugPathDisplay extends FlxBasic
 		var path:FlxPath;
 		while(i >= 0)
 		{
-			path = cast(_paths[i--], FlxPath);
+			path = _paths[i--];
 			if ((path != null) && !path.ignoreDrawDebug)
 			{
 				path.drawDebug(Camera);
@@ -115,7 +115,7 @@ class DebugPathDisplay extends FlxBasic
 		var path:FlxPath;
 		while(i >= 0)
 		{
-			path = cast(_paths[i--], FlxPath);
+			path = _paths[i--];
 			if (path != null)
 			{
 				path.destroy();

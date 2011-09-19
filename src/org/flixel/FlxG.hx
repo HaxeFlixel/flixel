@@ -7,7 +7,6 @@ import flash.display.Sprite;
 import flash.display.Stage;
 import flash.errors.Error;
 import flash.geom.Matrix;
-import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.media.Sound;
 import org.flixel.system.input.Keyboard;
@@ -41,80 +40,72 @@ class FlxG
 	 * If you build and maintain your own version of flixel,
 	 * you can give it your own name here.
 	 */
-	static public var LIBRARY_NAME:String = "flixel";
+	static public inline var LIBRARY_NAME:String = "flixel";
 	
 	/**
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
-	#if flash
-	static public var LIBRARY_MAJOR_VERSION:UInt = 2;
-	#else
-	static public var LIBRARY_MAJOR_VERSION:Int = 2;
-	#end
+	static public inline var LIBRARY_MAJOR_VERSION:Int = 2;
 	
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	#if flash
-	static public var LIBRARY_MINOR_VERSION:UInt = 55;
-	#else
-	static public var LIBRARY_MINOR_VERSION:Int = 55;
-	#end
+	static public inline var LIBRARY_MINOR_VERSION:Int = 55;
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
 	 */
 	#if flash
-	static public var DEBUGGER_STANDARD:UInt = 0;
+	static public inline var DEBUGGER_STANDARD:UInt = 0;
 	#else
-	static public var DEBUGGER_STANDARD:Int = 0;
+	static public inline var DEBUGGER_STANDARD:Int = 0;
 	#end
 	
 	/**
 	 * Debugger overlay layout preset: Tiny windows in the screen corners.
 	 */
 	#if flash
-	static public var DEBUGGER_MICRO:UInt = 1;
+	static public inline var DEBUGGER_MICRO:UInt = 1;
 	#else
-	static public var DEBUGGER_MICRO:Int = 1;
+	static public inline var DEBUGGER_MICRO:Int = 1;
 	#end
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up bottom half of screen.
 	 */
 	#if flash
-	static public var DEBUGGER_BIG:UInt = 2;
+	static public inline var DEBUGGER_BIG:UInt = 2;
 	#else
-	static public var DEBUGGER_BIG:Int = 2;
+	static public inline var DEBUGGER_BIG:Int = 2;
 	#end
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the top of the screen.
 	 */
 	#if flash
-	static public var DEBUGGER_TOP:UInt = 3;
+	static public inline var DEBUGGER_TOP:UInt = 3;
 	#else
-	static public var DEBUGGER_TOP:Int = 3;
+	static public inline var DEBUGGER_TOP:Int = 3;
 	#end
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up left third of screen.
 	 */
 	#if flash
-	static public var DEBUGGER_LEFT:UInt = 4;
+	static public inline var DEBUGGER_LEFT:UInt = 4;
 	#else
-	static public var DEBUGGER_LEFT:Int = 4;
+	static public inline var DEBUGGER_LEFT:Int = 4;
 	#end
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up right third of screen.
 	 */
 	#if flash
-	static public var DEBUGGER_RIGHT:UInt = 5;
+	static public inline var DEBUGGER_RIGHT:UInt = 5;
 	#else
-	static public var DEBUGGER_RIGHT:Int = 5;
+	static public inline var DEBUGGER_RIGHT:Int = 5;
 	#end
 	
 	/**
@@ -123,49 +114,49 @@ class FlxG
 	 * Red is used to indicate an active, movable, solid object.
 	 */
 	#if flash
-	static public var RED:UInt = 0xffff0012;
+	static public inline var RED:UInt = 0xffff0012;
 	#else
-	static public var RED:Int = 0xffff0012;
+	static public inline var RED:Int = 0xffff0012;
 	#end
 	/**
 	 * Green is used to indicate solid but immovable objects.
 	 */
 	#if flash
-	static public var GREEN:UInt = 0xff00f225;
+	static public inline var GREEN:UInt = 0xff00f225;
 	#else
-	static public var GREEN:Int = 0xff00f225;
+	static public inline var GREEN:Int = 0xff00f225;
 	#end
 	/**
 	 * Blue is used to indicate non-solid objects.
 	 */
 	#if flash
-	static public var BLUE:UInt = 0xff0090e9;
+	static public inline var BLUE:UInt = 0xff0090e9;
 	#else
-	static public var BLUE:Int = 0xff0090e9;
+	static public inline var BLUE:Int = 0xff0090e9;
 	#end
 	/**
 	 * Pink is used to indicate objects that are only partially solid, like one-way platforms.
 	 */
 	#if flash
-	static public var PINK:UInt = 0xfff01eff;
+	static public inline var PINK:UInt = 0xfff01eff;
 	#else
-	static public var PINK:Int = 0xfff01eff;
+	static public inline var PINK:Int = 0xfff01eff;
 	#end
 	/**
 	 * White... for white stuff.
 	 */
 	#if flash
-	static public var WHITE:UInt = 0xffffffff;
+	static public inline var WHITE:UInt = 0xffffffff;
 	#else
-	static public var WHITE:Int = 0xffffffff;
+	static public inline var WHITE:Int = 0xffffffff;
 	#end
 	/**
 	 * And black too.
 	 */
 	#if flash
-	static public var BLACK:UInt = 0xff000000;
+	static public inline var BLACK:UInt = 0xff000000;
 	#else
-	static public var BLACK:Int = 0xff000000;
+	static public inline var BLACK:Int = 0xff000000;
 	#end
 
 	/**
@@ -346,7 +337,7 @@ class FlxG
 	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
 	 * @param	DisplayName		Optional, display your own string instead of the class name + variable name: e.g. "enemy count".
 	 */
-	static public function watch(AnyObject:Dynamic, VariableName:String, ?DisplayName:String=null):Void
+	static public function watch(AnyObject:Dynamic, VariableName:String, ?DisplayName:String = null):Void
 	{
 		if ((_game != null) && (_game._debugger != null))
 		{
@@ -360,7 +351,7 @@ class FlxG
 	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
 	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
 	 */
-	static public function unwatch(AnyObject:Dynamic, ?VariableName:String=null):Void
+	static public function unwatch(AnyObject:Dynamic, ?VariableName:String = null):Void
 	{
 		if ((_game != null) && (_game._debugger != null))
 		{
@@ -497,7 +488,7 @@ class FlxG
 		if(Objects != null)
 		{
 			var l:Int = Length;
-			if ((l == 0) || (Std.int(l) > Objects.length - StartIndex))
+			if ((l == 0) || (l > Objects.length - StartIndex))
 			{
 				l = Objects.length - StartIndex;
 			}
@@ -668,7 +659,7 @@ class FlxG
 		}
 		else
 		{
-			sound.loadStream(URL,Looped,AutoDestroy);
+			sound.loadStream(URL, Looped, AutoDestroy);
 		}
 		sound.volume = Volume;
 		if (AutoPlay)
@@ -1049,7 +1040,7 @@ class FlxG
 		var l:Int = cameras.length;
 		while(i < l)
 		{
-			cam = cast(FlxG.cameras[i++], FlxCamera);
+			cam = FlxG.cameras[i++];
 			FlxG._game.removeChild(cam._flashSprite);
 			cam.destroy();
 		}
@@ -1080,7 +1071,7 @@ class FlxG
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
-			cast(FlxG.cameras[i++], FlxCamera).flash(Color, Duration, OnComplete, Force);
+			FlxG.cameras[i++].flash(Color, Duration, OnComplete, Force);
 		}
 	}
 	
@@ -1101,7 +1092,7 @@ class FlxG
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
-			cast(FlxG.cameras[i++], FlxCamera).fade(Color, Duration, OnComplete, Force);
+			FlxG.cameras[i++].fade(Color, Duration, OnComplete, Force);
 		}
 	}
 	
@@ -1123,7 +1114,7 @@ class FlxG
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
-			cast(FlxG.cameras[i++], FlxCamera).shake(Intensity, Duration, OnComplete, Force, Direction);
+			FlxG.cameras[i++].shake(Intensity, Duration, OnComplete, Force, Direction);
 		}
 	}
 	
@@ -1158,7 +1149,7 @@ class FlxG
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
-			cast(FlxG.cameras[i++], FlxCamera).bgColor = Color;
+			FlxG.cameras[i++].bgColor = Color;
 		}
 		return Color;
 	}
@@ -1422,7 +1413,7 @@ class FlxG
 		var l:Int = cams.length;
 		while(i < l)
 		{
-			cam = cast(cams[i++], FlxCamera);
+			cam = cams[i++];
 			if ((cam == null) || !cam.exists || !cam.visible)
 			{
 				continue;
@@ -1446,7 +1437,7 @@ class FlxG
 		var l:Int = cams.length;
 		while(i < l)
 		{
-			cam = cast(cams[i++], FlxCamera);
+			cam = cams[i++];
 			if((cam != null) && cam.exists)
 			{
 				if (cam.active)
@@ -1471,7 +1462,7 @@ class FlxG
 		var l:Int = pluginList.length;
 		while(i < l)
 		{
-			plugin = cast(pluginList[i++], FlxBasic);
+			plugin = pluginList[i++];
 			if (plugin.exists && plugin.active)
 			{
 				plugin.update();
@@ -1490,7 +1481,7 @@ class FlxG
 		var l:Int = pluginList.length;
 		while(i < l)
 		{
-			plugin = cast(pluginList[i++], FlxBasic);
+			plugin = pluginList[i++];
 			if (plugin.exists && plugin.visible)
 			{
 				plugin.draw();

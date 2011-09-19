@@ -124,7 +124,7 @@ class FlxWindow extends Sprite
 		_width = Math.floor(Width);
 		_height = Math.floor(Height);
 		_bounds = Bounds;
-		minSize = new Point(50,30);
+		minSize = new Point(50, 30);
 		if (_bounds != null)
 		{
 			maxSize = new Point(_bounds.width,_bounds.height);
@@ -136,7 +136,7 @@ class FlxWindow extends Sprite
 		_drag = new Point();
 		
 		_resizable = Resizable;
-		_resizable = false;
+		//_resizable = false;
 		
 		_shadow = new Bitmap(new BitmapData(1,2,true,0xff000000));
 		addChild(_shadow);

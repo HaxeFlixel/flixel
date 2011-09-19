@@ -17,11 +17,11 @@ class FlxGroup extends FlxBasic
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.
 	 */
-	static public var ASCENDING:Int = -1;
+	static public inline var ASCENDING:Int = -1;
 	/**
 	 * Use with <code>sort()</code> to sort in descending order.
 	 */
-	static public var DESCENDING:Int = 1;
+	static public inline var DESCENDING:Int = 1;
 	
 	/**
 	 * Array of all the <code>FlxBasic</code>s that exist in this group.
@@ -94,7 +94,7 @@ class FlxGroup extends FlxBasic
 			var i:Int = 0;
 			while(i < Std.int(length))
 			{
-				basic = cast(members[i++], FlxBasic);
+				basic = members[i++];
 				if (basic != null)
 				{
 					basic.destroy();
@@ -121,7 +121,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if((basic != null) && basic.exists && basic.active)
 			{
 				basic.preUpdate();
@@ -140,7 +140,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if ((basic != null) && basic.exists && basic.visible)
 			{
 				basic.draw();
@@ -185,7 +185,7 @@ class FlxGroup extends FlxBasic
 		var l:Int = Std.int(members.length);
 		while(i < l)
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if (basic != null)
 			{
 				basic.destroy();
@@ -224,7 +224,7 @@ class FlxGroup extends FlxBasic
 				members[i] = Object;
 				if (i >= Std.int(length))
 				{
-					length = i+1;
+					length = i + 1;
 				}
 				return Object;
 			}
@@ -258,7 +258,7 @@ class FlxGroup extends FlxBasic
 		//If we made it this far, then we successfully grew the group,
 		//and we can go ahead and add the object at the first open slot.
 		members[i] = Object;
-		length = i+1;
+		length = i + 1;
 		return Object;
 	}
 	
@@ -391,7 +391,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if(basic != null)
 			{
 				if (Recurse && Std.is(basic, FlxGroup))
@@ -419,7 +419,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if(basic != null)
 			{
 				if (Recurse && Std.is(basic, FlxGroup))
@@ -447,7 +447,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if ((basic != null) && !basic.exists && ((ObjectClass == null) || Std.is(basic, ObjectClass)))
 			{
 				return basic;
@@ -491,7 +491,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if ((basic != null) && basic.exists)
 			{
 				return basic;
@@ -512,7 +512,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if ((basic != null) && basic.exists && basic.alive)
 			{
 				return basic;
@@ -533,7 +533,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if ((basic != null) && !basic.alive)
 			{
 				return basic;
@@ -553,7 +553,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if(basic != null)
 			{
 				if (count < 0)
@@ -580,7 +580,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if(basic != null)
 			{
 				if (count < 0)
@@ -637,7 +637,7 @@ class FlxGroup extends FlxBasic
 		var i:Int = 0;
 		while(i < Std.int(length))
 		{
-			basic = cast(members[i++], FlxBasic);
+			basic = members[i++];
 			if ((basic != null) && basic.exists)
 			{
 				basic.kill();

@@ -81,7 +81,7 @@ class FlxDebugger extends Sprite
 		super();
 		visible = false;
 		hasMouse = false;
-		_screen = new Point(Width,Height);
+		_screen = new Point(Width, Height);
 
 		addChild(new Bitmap(new BitmapData(Math.floor(Width), 15, true, 0x7f000000)));
 		
@@ -105,32 +105,32 @@ class FlxDebugger extends Sprite
 		addChild(txt);
 		
 		_gutter = 8;
-		var screenBounds:Rectangle = new Rectangle(_gutter,15+_gutter/2,_screen.x-_gutter*2,_screen.y-_gutter*1.5-15);
+		var screenBounds:Rectangle = new Rectangle(_gutter, 15 + _gutter / 2, _screen.x - _gutter * 2, _screen.y - _gutter * 1.5 - 15);
 		
-		log = new Log("log",0,0,true,screenBounds);
+		log = new Log("log", 0, 0, true, screenBounds);
 		addChild(log);
 		
-		watch = new Watch("watch",0,0,true,screenBounds);
+		watch = new Watch("watch", 0, 0, true, screenBounds);
 		addChild(watch);
 		
-		perf = new Perf("stats",0,0,false,screenBounds);
+		perf = new Perf("stats", 0, 0, false, screenBounds);
 		addChild(perf);
 		
 		vcr = new VCR();
-		vcr.x = (Width - vcr.width/2)/2;
+		vcr.x = (Width - vcr.width / 2) / 2;
 		vcr.y = 2;
 		addChild(vcr);
 		
 		vis = new Vis();
-		vis.x = Width-vis.width - 4;
+		vis.x = Width - vis.width - 4;
 		vis.y = 2;
 		addChild(vis);
 		
 		setLayout(FlxG.DEBUGGER_STANDARD);
 		
 		//Should help with fake mouse focus type behavior
-		addEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
-		addEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 	}
 	
 	/**
@@ -155,8 +155,8 @@ class FlxDebugger extends Sprite
 		vis.destroy();
 		vis = null;
 		
-		removeEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
-		removeEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 	}
 	
 	/**
@@ -200,17 +200,17 @@ class FlxDebugger extends Sprite
 		switch(_layout)
 		{
 			case FlxG.DEBUGGER_MICRO:
-				log.resize(_screen.x/4,68);
+				log.resize(_screen.x / 4, 68);
 				log.reposition(0,_screen.y);
-				watch.resize(_screen.x/4,68);
+				watch.resize(_screen.x / 4, 68);
 				watch.reposition(_screen.x,_screen.y);
-				perf.reposition(_screen.x,0);
+				perf.reposition(_screen.x, 0);
 			case FlxG.DEBUGGER_BIG:
-				log.resize((_screen.x-_gutter*3)/2,_screen.y/2);
-				log.reposition(0,_screen.y);
-				watch.resize((_screen.x-_gutter*3)/2,_screen.y/2);
-				watch.reposition(_screen.x,_screen.y);
-				perf.reposition(_screen.x,0);
+				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
+				log.reposition(0, _screen.y);
+				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
+				watch.reposition(_screen.x, _screen.y);
+				perf.reposition(_screen.x, 0);
 			case FlxG.DEBUGGER_TOP:
 				log.resize((_screen.x-_gutter*3)/2,_screen.y/4);
 				log.reposition(0,0);

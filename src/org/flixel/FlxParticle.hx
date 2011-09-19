@@ -54,7 +54,7 @@ class FlxParticle extends FlxSprite
 		}
 		
 		//simpler bounce/spin behavior for now
-		if(touching > 0)
+		if(touching != 0)
 		{
 			if (angularVelocity != 0)
 			{
@@ -64,14 +64,14 @@ class FlxParticle extends FlxSprite
 		if(acceleration.y > 0) //special behavior for particles with gravity
 		{
 			//if (touching & FlxObject.FLOOR)
-			if ((touching & FlxObject.FLOOR) > 0)
+			if ((touching & FlxObject.FLOOR) != 0)
 			{
 				drag.x = friction;
 				
 				//if(!(wasTouching & FlxObject.FLOOR))
-				if((wasTouching & FlxObject.FLOOR) > 0)
+				if((wasTouching & FlxObject.FLOOR) == 0)
 				{
-					if(velocity.y < -elasticity*10)
+					if (velocity.y < -elasticity * 10)
 					{
 						if (angularVelocity != 0)
 						{

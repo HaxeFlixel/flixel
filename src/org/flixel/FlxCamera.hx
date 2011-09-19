@@ -18,57 +18,57 @@ class FlxCamera extends FlxBasic
 	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
 	 */
 	#if flash
-	static public var STYLE_LOCKON:UInt = 0;
+	static public inline var STYLE_LOCKON:UInt = 0;
 	#else
-	static public var STYLE_LOCKON:Int = 0;
+	static public inline var STYLE_LOCKON:Int = 0;
 	#end
 	/**
 	 * Camera "follow" style preset: camera deadzone is narrow but tall.
 	 */
 	#if flash
-	static public var STYLE_PLATFORMER:UInt = 1;
+	static public inline var STYLE_PLATFORMER:UInt = 1;
 	#else
-	static public var STYLE_PLATFORMER:Int = 1;
+	static public inline var STYLE_PLATFORMER:Int = 1;
 	#end
 	/**
 	 * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
 	 */
 	#if flash
-	static public var STYLE_TOPDOWN:UInt = 2;
+	static public inline var STYLE_TOPDOWN:UInt = 2;
 	#else
-	static public var STYLE_TOPDOWN:Int = 2;
+	static public inline var STYLE_TOPDOWN:Int = 2;
 	#end
 	/**
 	 * Camera "follow" style preset: camera deadzone is a small square around the focus object.
 	 */
 	#if flash
-	static public var STYLE_TOPDOWN_TIGHT:UInt = 3;
+	static public inline var STYLE_TOPDOWN_TIGHT:UInt = 3;
 	#else
-	static public var STYLE_TOPDOWN_TIGHT:Int = 3;
+	static public inline var STYLE_TOPDOWN_TIGHT:Int = 3;
 	#end
 	/**
 	 * Camera "shake" effect preset: shake camera on both the X and Y axes.
 	 */
 	#if flash
-	static public var SHAKE_BOTH_AXES:UInt = 0;
+	static public inline var SHAKE_BOTH_AXES:UInt = 0;
 	#else
-	static public var SHAKE_BOTH_AXES:Int = 0;
+	static public inline var SHAKE_BOTH_AXES:Int = 0;
 	#end
 	/**
 	 * Camera "shake" effect preset: shake camera on the X axis only.
 	 */
 	#if flash
-	static public var SHAKE_HORIZONTAL_ONLY:UInt = 1;
+	static public inline var SHAKE_HORIZONTAL_ONLY:UInt = 1;
 	#else
-	static public var SHAKE_HORIZONTAL_ONLY:Int = 1;
+	static public inline var SHAKE_HORIZONTAL_ONLY:Int = 1;
 	#end
 	/**
 	 * Camera "shake" effect preset: shake camera on the Y axis only.
 	 */
 	#if flash
-	static public var SHAKE_VERTICAL_ONLY:UInt = 2;
+	static public inline var SHAKE_VERTICAL_ONLY:UInt = 2;
 	#else
-	static public var SHAKE_VERTICAL_ONLY:Int = 2;
+	static public inline var SHAKE_VERTICAL_ONLY:Int = 2;
 	#end
 	/**
 	 * While you can alter the zoom of each camera after the fact,
@@ -275,19 +275,19 @@ class FlxCamera extends FlxBasic
 		_point = new FlxPoint();
 		bounds = null;
 		screen = new FlxSprite();
-		screen.makeGraphic(width,height,0,true);
+		screen.makeGraphic(width, height, 0, true);
 		screen.setOriginToCorner();
 		buffer = screen.pixels;
 		bgColor = FlxG.bgColor;
 		_color = 0xffffff;
 		
 		_flashBitmap = new Bitmap(buffer);
-		_flashBitmap.x = -width*0.5;
-		_flashBitmap.y = -height*0.5;
+		_flashBitmap.x = -width * 0.5;
+		_flashBitmap.y = -height * 0.5;
 		_flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
-		_flashOffsetX = width*0.5*zoom;
-		_flashOffsetY = height*0.5*zoom;
+		_flashOffsetX = width * 0.5 * zoom;
+		_flashOffsetY = height * 0.5 * zoom;
 		_flashSprite.x = x + _flashOffsetX;
 		_flashSprite.y = y + _flashOffsetY;
 		_flashSprite.addChild(_flashBitmap);
@@ -402,7 +402,7 @@ class FlxCamera extends FlxBasic
 		//Update the "flash" special effect
 		if(_fxFlashAlpha > 0.0)
 		{
-			_fxFlashAlpha -= FlxG.elapsed/_fxFlashDuration;
+			_fxFlashAlpha -= FlxG.elapsed / _fxFlashDuration;
 			if ((_fxFlashAlpha <= 0) && (_fxFlashComplete != null))
 			{
 				_fxFlashComplete();
@@ -412,7 +412,7 @@ class FlxCamera extends FlxBasic
 		//Update the "fade" special effect
 		if((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
 		{
-			_fxFadeAlpha += FlxG.elapsed/_fxFadeDuration;
+			_fxFadeAlpha += FlxG.elapsed / _fxFadeDuration;
 			if(_fxFadeAlpha >= 1.0)
 			{
 				_fxFadeAlpha = 1.0;
@@ -439,11 +439,11 @@ class FlxCamera extends FlxBasic
 			{
 				if ((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_HORIZONTAL_ONLY))
 				{
-					_fxShakeOffset.x = (FlxG.random()*_fxShakeIntensity*width*2-_fxShakeIntensity*width)*_zoom;
+					_fxShakeOffset.x = (FlxG.random() * _fxShakeIntensity * width * 2 - _fxShakeIntensity * width) * _zoom;
 				}
 				if ((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_VERTICAL_ONLY))
 				{
-					_fxShakeOffset.y = (FlxG.random()*_fxShakeIntensity*height*2-_fxShakeIntensity*height)*_zoom;
+					_fxShakeOffset.y = (FlxG.random() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * _zoom;
 				}
 			}
 		}
@@ -465,14 +465,14 @@ class FlxCamera extends FlxBasic
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
-				var w:Float = width/8;
-				var h:Float = height/3;
+				var w:Float = width / 8;
+				var h:Float = height / 3;
 				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 			case STYLE_TOPDOWN:
-				helper = FlxU.max(width,height)/4;
+				helper = FlxU.max(width, height) / 4;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
 			case STYLE_TOPDOWN_TIGHT:
-				helper = FlxU.max(width,height)/8;
+				helper = FlxU.max(width, height) / 8;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
 			case STYLE_LOCKON:
 				deadzone = null;
@@ -485,11 +485,11 @@ class FlxCamera extends FlxBasic
 	 * Move the camera focus to this location instantly.
 	 * @param	Point		Where you want the camera to focus.
 	 */
-	public function focusOn(Point:FlxPoint):Void
+	public function focusOn(point:FlxPoint):Void
 	{
-		Point.x += (Point.x > 0)?0.0000001: -0.0000001;
-		Point.y += (Point.y > 0)?0.0000001: -0.0000001;
-		scroll.make(Point.x - width * 0.5, Point.y - height * 0.5);
+		point.x += (point.x > 0)?0.0000001: -0.0000001;
+		point.y += (point.y > 0)?0.0000001: -0.0000001;
+		scroll.make(point.x - width * 0.5, point.y - height * 0.5);
 	}
 	
 	/**
@@ -506,7 +506,7 @@ class FlxCamera extends FlxBasic
 		{
 			bounds = new FlxRect();
 		}
-		bounds.make(X,Y,Width,Height);
+		bounds.make(X, Y, Width, Height);
 		if (UpdateWorld)
 		{
 			FlxG.worldBounds.copyFrom(bounds);
@@ -739,9 +739,9 @@ class FlxCamera extends FlxBasic
 	{
 		_color = Color;
 		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
-		colorTransform.redMultiplier = (_color>>16)*0.00392;
-		colorTransform.greenMultiplier = (_color>>8&0xff)*0.00392;
-		colorTransform.blueMultiplier = (_color&0xff)*0.00392;
+		colorTransform.redMultiplier = (_color >> 16) * 0.00392;
+		colorTransform.greenMultiplier = (_color >> 8 & 0xff) * 0.0039;
+		colorTransform.blueMultiplier = (_color & 0xff) * 0.00392;
 		_flashBitmap.transform.colorTransform = colorTransform;
 		return _color;
 	}

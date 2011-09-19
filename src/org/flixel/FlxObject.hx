@@ -18,134 +18,134 @@ class FlxObject extends FlxBasic
 	 * Generic value for "left" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
 	#if flash
-	static public var LEFT:UInt	= 0x0001;
+	static public inline var LEFT:UInt	= 0x0001;
 	#else
-	static public var LEFT:Int	= 0x0001;
+	static public inline var LEFT:Int	= 0x0001;
 	#end
 	/**
 	 * Generic value for "right" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
 	#if flash
-	static public var RIGHT:UInt	= 0x0010;
+	static public inline var RIGHT:UInt	= 0x0010;
 	#else
-	static public var RIGHT:Int	= 0x0010;
+	static public inline var RIGHT:Int	= 0x0010;
 	#end
 	/**
 	 * Generic value for "up" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
 	#if flash
-	static public var UP:UInt		= 0x0100;
+	static public inline var UP:UInt		= 0x0100;
 	#else
-	static public var UP:Int		= 0x0100;
+	static public inline var UP:Int		= 0x0100;
 	#end
 	/**
 	 * Generic value for "down" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
 	#if flash
-	static public var DOWN:UInt	= 0x1000;
+	static public inline var DOWN:UInt	= 0x1000;
 	#else
-	static public var DOWN:Int	= 0x1000;
+	static public inline var DOWN:Int	= 0x1000;
 	#end
 	/**
 	 * Special-case constant meaning no collisions, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	#if flash
-	static public var NONE:UInt	= 0;
+	static public inline var NONE:UInt	= 0;
 	#else
-	static public var NONE:Int	= 0;
+	static public inline var NONE:Int	= 0;
 	#end
 	/**
 	 * Special-case constant meaning up, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	#if flash
-	static public var CEILING:UInt= UP;
+	static public inline var CEILING:UInt= UP;
 	#else
-	static public var CEILING:Int= UP;
+	static public inline var CEILING:Int= UP;
 	#end
 	/**
 	 * Special-case constant meaning down, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	#if flash
-	static public var FLOOR:UInt	= DOWN;
+	static public inline var FLOOR:UInt	= DOWN;
 	#else
-	static public var FLOOR:Int	= DOWN;
+	static public inline var FLOOR:Int	= DOWN;
 	#end
 	/**
 	 * Special-case constant meaning only the left and right sides, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	#if flash
-	static public var WALL:UInt	= LEFT | RIGHT;
+	static public inline var WALL:UInt	= LEFT | RIGHT;
 	#else
-	static public var WALL:Int	= LEFT | RIGHT;
+	static public inline var WALL:Int	= LEFT | RIGHT;
 	#end
 	/**
 	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	#if flash
-	static public var ANY:UInt	= LEFT | RIGHT | UP | DOWN;
+	static public inline var ANY:UInt	= LEFT | RIGHT | UP | DOWN;
 	#else
-	static public var ANY:Int	= LEFT | RIGHT | UP | DOWN;
+	static public inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
 	#end
 	/**
 	 * Handy constant used during collision resolution (see <code>separateX()</code> and <code>separateY()</code>).
 	 */
-	static public var OVERLAP_BIAS:Float = 4;
+	static public inline var OVERLAP_BIAS:Float = 4;
 	
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
 	#if flash
-	static public var PATH_FORWARD:UInt			= 0x000000;
+	static public inline var PATH_FORWARD:UInt			= 0x000000;
 	#else
-	static public var PATH_FORWARD:Int			= 0x000000;
+	static public inline var PATH_FORWARD:Int			= 0x000000;
 	#end
 	/**
 	 * Path behavior controls: move from the end of the path to the start then stop.
 	 */
 	#if flash
-	static public var PATH_BACKWARD:UInt			= 0x000001;
+	static public inline var PATH_BACKWARD:UInt			= 0x000001;
 	#else
-	static public var PATH_BACKWARD:Int			= 0x000001;
+	static public inline var PATH_BACKWARD:Int			= 0x000001;
 	#end
 	/**
 	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
 	 */
 	#if flash
-	static public var PATH_LOOP_FORWARD:UInt		= 0x000010;
+	static public inline var PATH_LOOP_FORWARD:UInt		= 0x000010;
 	#else
-	static public var PATH_LOOP_FORWARD:Int		= 0x000010;
+	static public inline var PATH_LOOP_FORWARD:Int		= 0x000010;
 	#end
 	/**
 	 * Path behavior controls: move from the end of the path to the start then directly back to the end, and start over.
 	 */
 	#if flash
-	static public var PATH_LOOP_BACKWARD:UInt		= 0x000100;
+	static public inline var PATH_LOOP_BACKWARD:UInt		= 0x000100;
 	#else
-	static public var PATH_LOOP_BACKWARD:Int		= 0x000100;
+	static public inline var PATH_LOOP_BACKWARD:Int		= 0x000100;
 	#end
 	/**
 	 * Path behavior controls: move from the start of the path to the end then turn around and go back to the start, over and over.
 	 */
 	#if flash
-	static public var PATH_YOYO:UInt				= 0x001000;
+	static public inline var PATH_YOYO:UInt				= 0x001000;
 	#else
-	static public var PATH_YOYO:Int				= 0x001000;
+	static public inline var PATH_YOYO:Int				= 0x001000;
 	#end
 	/**
 	 * Path behavior controls: ignores any vertical component to the path data, only follows side to side.
 	 */
 	#if flash
-	static public var PATH_HORIZONTAL_ONLY:UInt	= 0x010000;
+	static public inline var PATH_HORIZONTAL_ONLY:UInt	= 0x010000;
 	#else
-	static public var PATH_HORIZONTAL_ONLY:Int	= 0x010000;
+	static public inline var PATH_HORIZONTAL_ONLY:Int	= 0x010000;
 	#end
 	/**
 	 * Path behavior controls: ignores any horizontal component to the path data, only follows up and down.
 	 */
 	#if flash
-	static public var PATH_VERTICAL_ONLY:UInt		= 0x100000;
+	static public inline var PATH_VERTICAL_ONLY:UInt		= 0x100000;
 	#else
-	static public var PATH_VERTICAL_ONLY:Int		= 0x100000;
+	static public inline var PATH_VERTICAL_ONLY:Int		= 0x100000;
 	#end
 	/**
 	 * X position of the upper left corner of this object in world space.
@@ -223,7 +223,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Should always represent (0,0) - useful for different things, for avoiding unnecessary <code>new</code> calls.
 	 */
-	static private var _pZero:FlxPoint = new FlxPoint();
+	static private inline var _pZero:FlxPoint = new FlxPoint();
 	
 	/**
 	 * A point that can store numbers from 0 to 1 (for X and Y independently)
@@ -319,7 +319,11 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
 	 */
+	#if flash
+	private var _pathMode:UInt;
+	#else
 	private var _pathMode:Int;
+	#end
 	/**
 	 * Internal helper for node navigation, specifically yo-yo and backwards movement.
 	 */
@@ -359,7 +363,7 @@ class FlxObject extends FlxBasic
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
 		drag = new FlxPoint();
-		maxVelocity = new FlxPoint(10000,10000);
+		maxVelocity = new FlxPoint(10000, 10000);
 		
 		angle = 0;
 		angularVelocity = 0;
@@ -367,7 +371,7 @@ class FlxObject extends FlxBasic
 		angularDrag = 0;
 		maxAngular = 10000;
 		
-		scrollFactor = new FlxPoint(1.0,1.0);
+		scrollFactor = new FlxPoint(1.0, 1.0);
 		_flicker = false;
 		_flickerTimer = 0;
 		
@@ -467,7 +471,7 @@ class FlxObject extends FlxBasic
 		
 		velocityDelta = (FlxU.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x) / 2;
 		velocity.x += velocityDelta;
-		delta = velocity.x*FlxG.elapsed;
+		delta = velocity.x * FlxG.elapsed;
 		velocity.x += velocityDelta;
 		x += delta;
 		
@@ -591,7 +595,7 @@ class FlxObject extends FlxBasic
 		_pathRotate = AutoRotate;
 		
 		//get starting node
-		if((_pathMode == Std.int(PATH_BACKWARD)) || (_pathMode == Std.int(PATH_LOOP_BACKWARD)))
+		if((_pathMode == PATH_BACKWARD) || (_pathMode == PATH_LOOP_BACKWARD))
 		{
 			_pathNodeIndex = path.nodes.length - 1;
 			_pathInc = -1;
@@ -634,7 +638,7 @@ class FlxObject extends FlxBasic
 				}
 				if ((_pathMode & PATH_HORIZONTAL_ONLY) == 0)
 				{
-					y = oldNode.y - height*0.5;
+					y = oldNode.y - height * 0.5;
 				}
 			}
 		}
@@ -658,7 +662,7 @@ class FlxObject extends FlxBasic
 		{
 			if(_pathNodeIndex < 0)
 			{
-				_pathNodeIndex = path.nodes.length-1;
+				_pathNodeIndex = path.nodes.length - 1;
 				if(_pathNodeIndex < 0)
 					_pathNodeIndex = 0;
 			}
@@ -917,19 +921,19 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
-	public function overlapsPoint(Point:FlxPoint, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	public function overlapsPoint(point:FlxPoint, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
 	{
 		if (!InScreenSpace)
 		{
-			return (Point.x > x) && (Point.x < x + width) && (Point.y > y) && (Point.y < y + height);
+			return (point.x > x) && (point.x < x + width) && (point.y > y) && (point.y < y + height);
 		}
 
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
 		}
-		var X:Float = Point.x - Camera.scroll.x;
-		var Y:Float = Point.y - Camera.scroll.y;
+		var X:Float = point.x - Camera.scroll.x;
+		var Y:Float = point.y - Camera.scroll.y;
 		getScreenXY(_point, Camera);
 		return (X > _point.x) && (X < _point.x + width) && (Y > _point.y) && (Y < _point.y + height);
 	}
@@ -955,21 +959,21 @@ class FlxObject extends FlxBasic
 	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	public function getScreenXY(?Point:FlxPoint = null, ?Camera:FlxCamera = null):FlxPoint
+	public function getScreenXY(?point:FlxPoint = null, ?Camera:FlxCamera = null):FlxPoint
 	{
-		if (Point == null)
+		if (point == null)
 		{
-			Point = new FlxPoint();
+			point = new FlxPoint();
 		}
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
 		}
-		Point.x = x - Std.int(Camera.scroll.x * scrollFactor.x);
-		Point.y = y - Std.int(Camera.scroll.y * scrollFactor.y);
-		Point.x += (Point.x > 0)?0.0000001: -0.0000001;
-		Point.y += (Point.y > 0)?0.0000001: -0.0000001;
-		return Point;
+		point.x = x - Std.int(Camera.scroll.x * scrollFactor.x);
+		point.y = y - Std.int(Camera.scroll.y * scrollFactor.y);
+		point.x += (point.x > 0)?0.0000001: -0.0000001;
+		point.y += (point.y > 0)?0.0000001: -0.0000001;
+		return point;
 	}
 	
 	/**
@@ -1006,11 +1010,7 @@ class FlxObject extends FlxBasic
 	 */
 	public function getSolid():Bool
 	{
-		#if flash
-		return cast((allowCollisions & ANY), UInt) > NONE;
-		#else
-		return Std.int(allowCollisions & ANY) > NONE;
-		#end
+		return (allowCollisions & ANY) > NONE;
 	}
 	
 	/**
@@ -1034,15 +1034,15 @@ class FlxObject extends FlxBasic
 	 * @Point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined.  Otherwise a new one is created.
 	 * @return	A <code>FlxPoint</code> object containing the midpoint of this object in world coordinates.
 	 */
-	public function getMidpoint(?Point:FlxPoint = null):FlxPoint
+	public function getMidpoint(?point:FlxPoint = null):FlxPoint
 	{
-		if (Point == null)
+		if (point == null)
 		{
-			Point = new FlxPoint();
+			point = new FlxPoint();
 		}
-		Point.x = x + width * 0.5;
-		Point.y = y + height * 0.5;
-		return Point;
+		point.x = x + width * 0.5;
+		point.y = y + height * 0.5;
+		return point;
 	}
 	
 	/**
@@ -1074,12 +1074,12 @@ class FlxObject extends FlxBasic
 	#if flash
 	public function isTouching(Direction:UInt):Bool
 	{
-		return cast((touching & Direction), UInt) > NONE;
+		return (touching & Direction) > NONE;
 	}
 	#else
 	public function isTouching(Direction:Int):Bool
 	{
-		return Std.int(touching & Direction) > NONE;
+		return (touching & Direction) > NONE;
 	}
 	#end
 	
@@ -1091,12 +1091,12 @@ class FlxObject extends FlxBasic
 	#if flash
 	public function justTouched(Direction:UInt):Bool
 	{
-		return (cast((touching & Direction), UInt) > NONE) && (cast((wasTouching & Direction), UInt) <= NONE);
+		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
 	#else
 	public function justTouched(Direction:Int):Bool
 	{
-		return (Std.int(touching & Direction) > NONE) && (Std.int(wasTouching & Direction) <= NONE);
+		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
 	#end
 	
@@ -1172,11 +1172,7 @@ class FlxObject extends FlxBasic
 				if(obj1delta > obj2delta)
 				{
 					overlap = Object1.x + Object1.width - Object2.x;
-					#if flash
-					if ((overlap > maxOverlap) || !(Object1.allowCollisions != cast((FlxObject.NONE & RIGHT), UInt)) || !(Object2.allowCollisions != cast((FlxObject.NONE & LEFT), UInt)))
-					#else
-					if ((overlap > maxOverlap) || !(Object1.allowCollisions != Std.int(FlxObject.NONE & RIGHT)) || !(Object2.allowCollisions != Std.int(FlxObject.NONE & LEFT)))
-					#end
+					if ((overlap > maxOverlap) || ((Object1.allowCollisions & RIGHT) == 0) || ((Object2.allowCollisions & LEFT) == 0))
 					{
 						overlap = 0;
 					}
@@ -1189,11 +1185,7 @@ class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.x - Object2.width - Object2.x;
-					#if flash
-					if (( -overlap > maxOverlap) || !(Object1.allowCollisions != cast((FlxObject.NONE & LEFT), UInt)) || !(Object2.allowCollisions != cast((FlxObject.NONE & RIGHT), UInt)))
-					#else
-					if (( -overlap > maxOverlap) || !(Object1.allowCollisions != Std.int(FlxObject.NONE & LEFT)) || !(Object2.allowCollisions != Std.int(FlxObject.NONE & RIGHT)))
-					#end
+					if((-overlap > maxOverlap) || ((Object1.allowCollisions & LEFT) == 0) || ((Object2.allowCollisions & RIGHT) == 0))
 					{
 						overlap = 0;
 					}
@@ -1229,12 +1221,12 @@ class FlxObject extends FlxBasic
 			else if(!obj1immovable)
 			{
 				Object1.x = Object1.x - overlap;
-				Object1.velocity.x = obj2v - obj1v*Object1.elasticity;
+				Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
 			}
 			else if(!obj2immovable)
 			{
 				Object2.x += overlap;
-				Object2.velocity.x = obj1v - obj2v*Object2.elasticity;
+				Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
 			}
 			return true;
 		}
@@ -1289,11 +1281,7 @@ class FlxObject extends FlxBasic
 				if(obj1delta > obj2delta)
 				{
 					overlap = Object1.y + Object1.height - Object2.y;
-					#if flash
-					if ((overlap > maxOverlap) || !(Object1.allowCollisions != cast((FlxObject.NONE & DOWN), UInt)) || !(Object2.allowCollisions != cast((FlxObject.NONE & UP), UInt)))
-					#else
-					if ((overlap > maxOverlap) || !(Object1.allowCollisions != Std.int(FlxObject.NONE & DOWN)) || !(Object2.allowCollisions != Std.int(FlxObject.NONE & UP)))
-					#end
+					if ((overlap > maxOverlap) || ((Object1.allowCollisions & DOWN) == 0) || ((Object2.allowCollisions & UP) == 0))
 					{
 						overlap = 0;
 					}
@@ -1306,11 +1294,7 @@ class FlxObject extends FlxBasic
 				else if(obj1delta < obj2delta)
 				{
 					overlap = Object1.y - Object2.height - Object2.y;
-					#if flash
-					if (( -overlap > maxOverlap) || !(Object1.allowCollisions != cast((FlxObject.NONE & UP), UInt)) || !(Object2.allowCollisions != cast((FlxObject.NONE & DOWN), UInt)))
-					#else
-					if (( -overlap > maxOverlap) || !(Object1.allowCollisions != Std.int(FlxObject.NONE & UP)) || !(Object2.allowCollisions != Std.int(FlxObject.NONE & DOWN)))
-					#end
+					if ((-overlap > maxOverlap) || ((Object1.allowCollisions & UP) == 0) || ((Object2.allowCollisions & DOWN) == 0))
 					{
 						overlap = 0;
 					}
@@ -1337,7 +1321,7 @@ class FlxObject extends FlxBasic
 
 				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass)/Object1.mass) * ((obj2v > 0)?1:-1);
 				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass)/Object2.mass) * ((obj1v > 0)?1:-1);
-				var average:Float = (obj1velocity + obj2velocity)*0.5;
+				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
 				Object1.velocity.y = average + obj1velocity * Object1.elasticity;

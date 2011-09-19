@@ -166,7 +166,7 @@ class FlxReplay
 			frame++;
 			return;
 		}
-		_frames[frameCount++] = new FrameRecord().create(frame++,keysRecord,mouseRecord);
+		_frames[frameCount++] = new FrameRecord().create(frame++, keysRecord, mouseRecord);
 		if(frameCount >= _capacity)
 		{
 			_capacity *= 2;

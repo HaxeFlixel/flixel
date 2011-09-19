@@ -218,8 +218,8 @@ class Mouse extends FlxPoint
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
 		var camera:FlxCamera = FlxG.camera;
-		screenX = Std.int((_globalScreenPosition.x - camera.x)/camera.zoom);
-		screenY = Std.int((_globalScreenPosition.y - camera.y)/camera.zoom);
+		screenX = Math.floor((_globalScreenPosition.x - camera.x)/camera.zoom);
+		screenY = Math.floor((_globalScreenPosition.y - camera.y)/camera.zoom);
 		x = screenX + camera.scroll.x;
 		y = screenY + camera.scroll.y;
 	}
@@ -228,45 +228,45 @@ class Mouse extends FlxPoint
 	 * Fetch the world position of the mouse on any given camera.
 	 * NOTE: Mouse.x and Mouse.y also store the world position of the mouse cursor on the main camera.
 	 * @param Camera	If unspecified, first/main global camera is used instead.
-	 * @param Point		An existing point object to store the results (if you don't want a new one created). 
+	 * @param point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return The mouse's location in world space.
 	 */
-	public function getWorldPosition(?Camera:FlxCamera = null, ?Point:FlxPoint = null):FlxPoint
+	public function getWorldPosition(?Camera:FlxCamera = null, ?point:FlxPoint = null):FlxPoint
 	{
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
 		}
-		if (Point == null)
+		if (point == null)
 		{
-			Point = new FlxPoint();
+			point = new FlxPoint();
 		}
 		getScreenPosition(Camera,_point);
-		Point.x = _point.x + Camera.scroll.x;
-		Point.y = _point.y + Camera.scroll.y;
-		return Point;
+		point.x = _point.x + Camera.scroll.x;
+		point.y = _point.y + Camera.scroll.y;
+		return point;
 	}
 	
 	/**
 	 * Fetch the screen position of the mouse on any given camera.
 	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of the mouse cursor on the main camera.
 	 * @param Camera	If unspecified, first/main global camera is used instead.
-	 * @param Point		An existing point object to store the results (if you don't want a new one created). 
+	 * @param point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return The mouse's location in screen space.
 	 */
-	public function getScreenPosition(?Camera:FlxCamera = null, ?Point:FlxPoint = null):FlxPoint
+	public function getScreenPosition(?Camera:FlxCamera = null, ?point:FlxPoint = null):FlxPoint
 	{
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
 		}
-		if (Point == null)
+		if (point == null)
 		{
-			Point = new FlxPoint();
+			point = new FlxPoint();
 		}
-		Point.x = (_globalScreenPosition.x - Camera.x)/Camera.zoom;
-		Point.y = (_globalScreenPosition.y - Camera.y)/Camera.zoom;
-		return Point;
+		point.x = (_globalScreenPosition.x - Camera.x)/Camera.zoom;
+		point.y = (_globalScreenPosition.y - Camera.y)/Camera.zoom;
+		return point;
 	}
 	
 	/**
@@ -336,8 +336,8 @@ class Mouse extends FlxPoint
 		{
 			return null;
 		}
-		_lastX = Std.int(_globalScreenPosition.x);
-		_lastY = Std.int(_globalScreenPosition.y);
+		_lastX = Math.floor(_globalScreenPosition.x);
+		_lastY = Math.floor(_globalScreenPosition.y);
 		_lastWheel = wheel;
 		return new MouseRecord(_lastX,_lastY,_current,_lastWheel);
 	}

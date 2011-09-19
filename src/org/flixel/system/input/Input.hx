@@ -30,11 +30,11 @@ class Input
 	 */
 	public function new()
 	{
+		_total = 256;
+		
 		_lookup = {};
 		_map = new Array<Dynamic>(/*_total*/);
 		FlxU.SetArrayLength(_map, _total);
-		
-		_total = 256;
 	}
 	
 	/**

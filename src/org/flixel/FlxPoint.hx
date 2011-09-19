@@ -50,10 +50,10 @@ class FlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to itself.
 	 */
-	public function copyFrom(Point:FlxPoint):FlxPoint
+	public function copyFrom(point:FlxPoint):FlxPoint
 	{
-		x = Point.x;
-		y = Point.y;
+		x = point.x;
+		y = point.y;
 		return this;
 	}
 	
@@ -62,11 +62,11 @@ class FlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyTo(Point:FlxPoint):FlxPoint
+	public function copyTo(point:FlxPoint):FlxPoint
 	{
-		Point.x = x;
-		Point.y = y;
-		return Point;
+		point.x = x;
+		point.y = y;
+		return point;
 	}
 	
 	/**
@@ -98,7 +98,7 @@ class FlxPoint
 	 */
 	public function toString():String
 	{
-		return FlxU.getClassName(this,true);
+		return FlxU.getClassName(this, true);
 	}
 	
 }

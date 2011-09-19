@@ -62,7 +62,7 @@ class FlxTileblock extends FlxSprite
 		}
 		if(height % sprite.height != 0)
 		{
-			height = Std.int((height/spriteHeight+1))*spriteHeight;
+			height = Std.int((height / spriteHeight + 1)) * spriteHeight;
 			regen = true;
 		}
 		if (regen)
@@ -91,7 +91,7 @@ class FlxTileblock extends FlxSprite
 				{
 					sprite.randomFrame();
 					sprite.drawFrame();
-					stamp(sprite,destinationX,destinationY);
+					stamp(sprite, destinationX, destinationY);
 				}
 				destinationX += spriteWidth;
 				column++;

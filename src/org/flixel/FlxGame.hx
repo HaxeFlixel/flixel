@@ -9,7 +9,6 @@ import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
-import flash.geom.Point;
 import flash.media.Sound;
 import flash.text.TextField;
 import flash.text.TextFormat;
@@ -20,7 +19,6 @@ import flash.Lib;
 import flash.text.AntiAliasType;
 import flash.text.GridFitType;
 import flash.ui.Mouse;
-//import flash.utils.Timer;
 #end
 
 import org.flixel.plugin.TimerManager;
@@ -269,7 +267,7 @@ class FlxGame extends Sprite
 		_soundTrayTimer = 1;
 		_soundTray.y = 0;
 		_soundTray.visible = true;
-		var globalVolume:Int = Math.round(FlxG.volume*10);
+		var globalVolume:Int = Math.round(FlxG.volume * 10);
 		if (FlxG.mute)
 		{
 			globalVolume = 0;
@@ -415,7 +413,7 @@ class FlxGame extends Sprite
 			var l:Int = _replayCancelKeys.length;
 			while(i < l)
 			{
-				replayCancelKey = cast(_replayCancelKeys[i++], String);
+				replayCancelKey = _replayCancelKeys[i++];
 				if((replayCancelKey == "MOUSE") || (replayCancelKey == "ANY"))
 				{
 					if(_replayCallback != null)
@@ -525,11 +523,12 @@ class FlxGame extends Sprite
 				{
 					_accumulator = _maxAccumulation;
 				}
-				while(_accumulator >= Std.int(_step))
-				{
+				// TODO: You may uncomment following lines
+			//	while(_accumulator >= Std.int(_step))
+			//	{
 					step();
 					_accumulator = _accumulator - _step; 
-				}
+			//	}
 			}
 			
 			FlxBasic._VISIBLECOUNT = 0;
@@ -731,7 +730,7 @@ class FlxGame extends Sprite
 	{			
 		var mark:Int = Lib.getTimer();
 		
-		FlxG.elapsed = FlxG.timeScale*(_step/1000);
+		FlxG.elapsed = FlxG.timeScale * (_step / 1000);
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		_state.update();
@@ -739,7 +738,7 @@ class FlxGame extends Sprite
 		
 		if (_debuggerUp)
 		{
-			_debugger.perf.flixelUpdate(Lib.getTimer()-mark);
+			_debugger.perf.flixelUpdate(Lib.getTimer() - mark);
 		}
 	}
 	
@@ -755,7 +754,7 @@ class FlxGame extends Sprite
 		FlxG.unlockCameras();
 		if (_debuggerUp)
 		{
-			_debugger.perf.flixelDraw(Lib.getTimer()-mark);
+			_debugger.perf.flixelDraw(Lib.getTimer() - mark);
 		}
 	}
 	
@@ -791,7 +790,7 @@ class FlxGame extends Sprite
 			//Debugger overlay
 			if(FlxG.debug || forceDebugger)
 			{
-				_debugger = new FlxDebugger(FlxG.width*FlxCamera.defaultZoom,FlxG.height*FlxCamera.defaultZoom);
+				_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
 				addChild(_debugger);
 			}
 			
@@ -845,7 +844,7 @@ class FlxGame extends Sprite
 		var i:Int = 0;
 		while(i < 10)
 		{
-			tmp = new Bitmap(new BitmapData(4,++i,false,0xffffff));
+			tmp = new Bitmap(new BitmapData(4,++i, false, 0xffffff));
 			tmp.x = bx;
 			tmp.y = by;
 			_soundTray.addChild(tmp);
@@ -903,7 +902,6 @@ class FlxGame extends Sprite
 		gfx.lineTo(halfWidth-helper,halfHeight-helper);
 		gfx.endFill();
 		
-		// TODO: Fix this
 		var logo:Bitmap = new ImgLogo(); //Type.createInstance(ImgLogo, []);
 		logo.scaleX = Math.floor(helper/10);
 		if (logo.scaleX < 1)

@@ -11,6 +11,7 @@ import flash.geom.Rectangle;
 #if flash
 import flash.display.BlendMode;
 #end
+
 import org.flixel.system.FlxAnim;
 
 
@@ -234,7 +235,7 @@ class FlxSprite extends FlxObject
 		offset = new FlxPoint();
 		origin = new FlxPoint();
 		
-		scale = new FlxPoint(1.0,1.0);
+		scale = new FlxPoint(1.0, 1.0);
 		_alpha = 1;
 		_color = 0x00ffffff;
 		blend = null;
@@ -317,7 +318,7 @@ class FlxSprite extends FlxObject
 		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
 		if (Reverse)
 		{
-			_flipped = _pixels.width>>1;
+			_flipped = _pixels.width >> 1;
 		}
 		else
 		{
@@ -331,7 +332,7 @@ class FlxSprite extends FlxObject
 			}
 			else if (_flipped > 0)
 			{
-				Width = Math.floor(_pixels.width*0.5);
+				Width = Math.floor(_pixels.width * 0.5);
 			}
 			else
 			{
@@ -379,7 +380,7 @@ class FlxSprite extends FlxObject
 			//Using just a segment of the graphic - find the right bit here
 			var full:BitmapData = brush;
 			brush = new BitmapData(full.height,full.height);
-			var rx:Int = Frame*brush.width;
+			var rx:Int = Frame * brush.width;
 			var ry:Int = 0;
 			var fw:Int = full.width;
 			if(rx >= fw)
@@ -395,7 +396,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		var max:Int = brush.width;
-		if (brush.height > Math.floor(max))
+		if (brush.height > max)
 		{
 			max = brush.height;
 		}
@@ -411,7 +412,7 @@ class FlxSprite extends FlxObject
 		_pixels = FlxG.createBitmap(Math.floor(width), Math.floor(height), 0, true, key);
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
-		_bakedRotation = 360/Rotations;
+		_bakedRotation = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
 		if(!skipGen)
@@ -419,8 +420,8 @@ class FlxSprite extends FlxObject
 			var row:Int = 0;
 			var column:Int;
 			var bakedAngle:Float = 0;
-			var halfBrushWidth:Int = Math.floor(brush.width*0.5);
-			var halfBrushHeight:Int = Math.floor(brush.height*0.5);
+			var halfBrushWidth:Int = Math.floor(brush.width * 0.5);
+			var halfBrushHeight:Int = Math.floor(brush.height * 0.5);
 			var midpointX:Int = Math.floor(max * 0.5);
 			var midpointY:Int = Math.floor(max * 0.5);
 			while(row < rows)
@@ -429,11 +430,11 @@ class FlxSprite extends FlxObject
 				while(column < columns)
 				{
 					_matrix.identity();
-					_matrix.translate(-halfBrushWidth,-halfBrushHeight);
-					_matrix.rotate(bakedAngle*0.017453293);
+					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
+					_matrix.rotate(bakedAngle * 0.017453293);
 					_matrix.translate(max*column+midpointX, midpointY);
 					bakedAngle += _bakedRotation;
-					_pixels.draw(brush,_matrix,null,null,null,AntiAliasing);
+					_pixels.draw(brush, _matrix, null, null, null, AntiAliasing);
 					column++;
 				}
 				midpointY += max;
@@ -542,8 +543,8 @@ class FlxSprite extends FlxObject
 			{
 				continue;
 			}
-			_point.x = x - Math.floor(camera.scroll.x*scrollFactor.x) - offset.x;
-			_point.y = y - Math.floor(camera.scroll.y*scrollFactor.y) - offset.y;
+			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - offset.x;
+			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - offset.y;
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001:-0.0000001;
 			if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
@@ -601,7 +602,7 @@ class FlxSprite extends FlxObject
 		//Advanced draw
 		_matrix.identity();
 		_matrix.translate(-Brush.origin.x, -Brush.origin.y);
-		_matrix.scale(Brush.scale.x,Brush.scale.y);
+		_matrix.scale(Brush.scale.x, Brush.scale.y);
 		if (Brush.angle != 0)
 		{
 			_matrix.rotate(Brush.angle * 0.017453293);
@@ -850,7 +851,7 @@ class FlxSprite extends FlxObject
 					_pixels.setPixel32(column,row,NewColor);
 					if (FetchPositions)
 					{
-						positions.push(new FlxPoint(column,row));
+						positions.push(new FlxPoint(column, row));
 					}
 					dirty = true;
 				}
@@ -946,7 +947,7 @@ class FlxSprite extends FlxObject
 		_alpha = Alpha;
 		if ((_alpha != 1) || (_color != 0x00ffffff))
 		{
-			_colorTransform = new ColorTransform((_color>>16)*0.00392,(_color>>8&0xff)*0.00392,(_color&0xff)*0.00392,_alpha);
+			_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, _alpha);
 		}
 		else
 		{
@@ -987,7 +988,7 @@ class FlxSprite extends FlxObject
 		_color = Color;
 		if ((_alpha != 1) || (_color != 0x00ffffff))
 		{
-			_colorTransform = new ColorTransform((_color>>16)*0.00392,(_color>>8&0xff)*0.00392,(_color&0xff)*0.00392,_alpha);
+			_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, _alpha);
 		}
 		else
 		{
@@ -1049,11 +1050,11 @@ class FlxSprite extends FlxObject
 			return ((_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height));
 		}
 		
-		var halfWidth:Float = frameWidth/2;
-		var halfHeight:Float = frameHeight/2;
-		var absScaleX:Float = (scale.x>0)?scale.x:-scale.x;
-		var absScaleY:Float = (scale.y>0)?scale.y:-scale.y;
-		var radius:Float = Math.sqrt(halfWidth*halfWidth+halfHeight*halfHeight)*((absScaleX >= absScaleY)?absScaleX:absScaleY);
+		var halfWidth:Float = frameWidth / 2;
+		var halfHeight:Float = frameHeight / 2;
+		var absScaleX:Float = (scale.x > 0)?scale.x: -scale.x;
+		var absScaleY:Float = (scale.y > 0)?scale.y: -scale.y;
+		var radius:Float = Math.sqrt(halfWidth * halfWidth + halfHeight * halfHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
 		_point.x += halfWidth;
 		_point.y += halfHeight;
 		return ((_point.x + radius > 0) && (_point.x - radius < Camera.width) && (_point.y + radius > 0) && (_point.y - radius < Camera.height));
@@ -1068,9 +1069,9 @@ class FlxSprite extends FlxObject
 	 * @return	Whether or not the point overlaps this object.
 	 */
 	#if flash
-	public function pixelsOverlapPoint(Point:FlxPoint, ?Mask:UInt = 0xFF, ?Camera:FlxCamera = null):Bool
+	public function pixelsOverlapPoint(point:FlxPoint, ?Mask:UInt = 0xFF, ?Camera:FlxCamera = null):Bool
 	#else
-	public function pixelsOverlapPoint(Point:FlxPoint, ?Mask:Int = 0xFF, ?Camera:FlxCamera = null):Bool
+	public function pixelsOverlapPoint(point:FlxPoint, ?Mask:Int = 0xFF, ?Camera:FlxCamera = null):Bool
 	#end
 	{
 		if (Camera == null)
@@ -1080,9 +1081,8 @@ class FlxSprite extends FlxObject
 		getScreenXY(_point, Camera);
 		_point.x = _point.x - offset.x;
 		_point.y = _point.y - offset.y;
-		_flashPoint.x = (Point.x - Camera.scroll.x) - _point.x;
-		_flashPoint.y = (Point.y - Camera.scroll.y) - _point.y;
-		//return framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
+		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
+		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
 		#if flash
 		return framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
 		#else
@@ -1103,14 +1103,14 @@ class FlxSprite extends FlxObject
 		var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
 		if(indexX >= widthHelper)
 		{
-			indexY = Math.floor(indexX/widthHelper)*frameHeight;
+			indexY = Math.floor(indexX / widthHelper) * frameHeight;
 			indexX %= widthHelper;
 		}
 		
 		//handle reversed sprites
 		if ((_flipped != 0) && (_facing == FlxObject.LEFT))
 		{
-			indexX = (_flipped<<1)-indexX-frameWidth;
+			indexX = (_flipped << 1) - indexX - frameWidth;
 		}
 		
 		//Update display bitmap

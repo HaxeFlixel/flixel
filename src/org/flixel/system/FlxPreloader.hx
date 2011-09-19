@@ -224,14 +224,14 @@ class FlxPreloader extends MovieClip
 		_min = 0;
 		if (!FlxG.debug)
 		{
-			_min = minDisplayTime*1000;
+			_min = minDisplayTime * 1000;
 		}
 		_buffer = new Sprite();
 		_buffer.scaleX = 2;
 		_buffer.scaleY = 2;
 		addChild(_buffer);
-		_width = stage.stageWidth/_buffer.scaleX;
-		_height = stage.stageHeight/_buffer.scaleY;
+		_width = stage.stageWidth / _buffer.scaleX;
+		_height = stage.stageHeight / _buffer.scaleY;
 		_buffer.addChild(new Bitmap(new BitmapData(_width,_height,false,0x00345e)));
 		var bitmap:Bitmap = new ImgLogoLight();
 		bitmap.smoothing = true;

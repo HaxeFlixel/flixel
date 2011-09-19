@@ -165,7 +165,7 @@ class FlxText extends FlxSprite
 	 */
 	 public function getSize():Float
 	{
-		return cast(_textField.defaultTextFormat.size, Float);
+		return _textField.defaultTextFormat.size;
 	}
 	
 	/**
@@ -188,7 +188,7 @@ class FlxText extends FlxSprite
 	#if flash
 	override public function getColor():UInt
 	{
-		return cast(_textField.defaultTextFormat.color, UInt);
+		return _textField.defaultTextFormat.color;
 	}
 	#else
 	override public function getColor():Int
@@ -310,7 +310,7 @@ class FlxText extends FlxSprite
 		}
 		else	//Else just clear the old buffer before redrawing the text
 		{
-			_pixels.fillRect(_flashRect,0);
+			_pixels.fillRect(_flashRect, 0);
 		}
 		
 		if((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))

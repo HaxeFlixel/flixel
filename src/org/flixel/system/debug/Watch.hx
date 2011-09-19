@@ -15,11 +15,11 @@ import org.flixel.system.FlxWindow;
 class Watch extends FlxWindow
 {
 	#if flash
-	static private var MAX_LOG_LINES:UInt = 1024;
-	static private var LINE_HEIGHT:UInt = 15;
+	static private inline var MAX_LOG_LINES:UInt = 1024;
+	static private inline var LINE_HEIGHT:UInt = 15;
 	#else
-	static private var MAX_LOG_LINES:Int = 1024;
-	static private var LINE_HEIGHT:Int = 15;
+	static private inline var MAX_LOG_LINES:Int = 1024;
+	static private inline var LINE_HEIGHT:Int = 15;
 	#end
 	
 	/**
@@ -79,7 +79,7 @@ class Watch extends FlxWindow
 		var l:Int = _watching.length;
 		while (i < l)
 		{
-			cast(_watching[i++], WatchEntry).destroy();
+			_watching[i++].destroy();
 		}
 		_watching = null;
 		super.destroy();
@@ -101,7 +101,7 @@ class Watch extends FlxWindow
 		var l:Int = _watching.length;
 		while(i < l)
 		{
-			watchEntry = cast(_watching[i++], WatchEntry);
+			watchEntry = _watching[i++];
 			if ((watchEntry.object == AnyObject) && (watchEntry.field == VariableName))
 			{
 				return;
@@ -144,7 +144,7 @@ class Watch extends FlxWindow
 		var l:Int = _watching.length;
 		while(i < l)
 		{
-			cast(_watching[i], WatchEntry).setY(i*LINE_HEIGHT);
+			_watching[i].setY(i * LINE_HEIGHT);
 			i++;
 		}
 	}
@@ -179,7 +179,7 @@ class Watch extends FlxWindow
 		var l:Int = _watching.length;
 		while(i < l)
 		{
-			if (!cast(_watching[i++], WatchEntry).updateValue())
+			if (!_watching[i++].updateValue())
 			{
 				editing = true;
 			}
@@ -196,7 +196,7 @@ class Watch extends FlxWindow
 		var watchEntry:WatchEntry;
 		while(i < l)
 		{
-			watchEntry = cast(_watching[i++], WatchEntry);
+			watchEntry = _watching[i++];
 			if (watchEntry.editing)
 			{
 				watchEntry.submit();
@@ -224,7 +224,7 @@ class Watch extends FlxWindow
 		var l:Int = _watching.length;
 		while (i < l)
 		{
-			cast(_watching[i++], WatchEntry).updateWidth(_width/2,_width/2-10);
+			_watching[i++].updateWidth(_width / 2, _width / 2 - 10);
 		}
 	}
 }

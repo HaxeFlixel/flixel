@@ -58,7 +58,7 @@ class FrameRecord
 	 */
 	public function save():String
 	{
-		var output:String = frame+"k";
+		var output:String = frame + "k";
 		
 		if(keys != null)
 		{

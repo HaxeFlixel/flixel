@@ -201,7 +201,7 @@ class FlxPath
 		}
 		if (Std.int(Index) >= nodes.length)
 		{
-			Index = nodes.length-1;
+			Index = nodes.length - 1;
 		}
 		return nodes.splice(Index, 1)[0];
 	}
@@ -262,7 +262,7 @@ class FlxPath
 		while(i < l)
 		{
 			//get a reference to the current node
-			node = cast(nodes[i], FlxPoint);
+			node = nodes[i];
 			
 			//find the screen position of the node on this camera
 			_point.x = node.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
@@ -272,7 +272,7 @@ class FlxPath
 			
 			//decide what color this node should be
 			var nodeSize:Int = 2;
-			if ((i == 0) || (Std.int(i) == l - 1))
+			if ((i == 0) || (i == l - 1))
 			{
 				nodeSize *= 2;
 			}
@@ -287,23 +287,23 @@ class FlxPath
 				{
 					nodeColor = FlxG.GREEN;
 				}
-				else if (Std.int(i) == l - 1)
+				else if (i == l - 1)
 				{
 					nodeColor = FlxG.RED;
 				}
 			}
 			
 			//draw a box for the node
-			gfx.beginFill(nodeColor,0.5);
+			gfx.beginFill(nodeColor, 0.5);
 			gfx.lineStyle();
-			gfx.drawRect(_point.x-nodeSize*0.5,_point.y-nodeSize*0.5,nodeSize,nodeSize);
+			gfx.drawRect(_point.x - nodeSize * 0.5, _point.y - nodeSize * 0.5, nodeSize, nodeSize);
 			gfx.endFill();
 
 			//then find the next node in the path
 			var linealpha:Float = 0.3;
-			if (Std.int(i) < l - 1)
+			if (i < l - 1)
 			{
-				nextNode = nodes[i+1];
+				nextNode = nodes[i + 1];
 			}
 			else
 			{

@@ -18,17 +18,17 @@ class FlxQuadTree extends FlxRect
 	 * Flag for specifying that you want to add an object to the A list.
 	 */
 	#if flash
-	static public var A_LIST:UInt = 0;
+	static public inline var A_LIST:UInt = 0;
 	#else
-	static public var A_LIST:Int = 0;
+	static public inline var A_LIST:Int = 0;
 	#end
 	/**
 	 * Flag for specifying that you want to add an object to the B list.
 	 */
 	#if flash
-	static public var B_LIST:UInt = 1;
+	static public inline var B_LIST:UInt = 1;
 	#else
-	static public var B_LIST:Int = 1;
+	static public inline var B_LIST:Int = 1;
 	#end
 	/**
 	 * Controls the granularity of the quad tree.  Default is 6 (decent performance on large and small worlds).
@@ -211,7 +211,7 @@ class FlxQuadTree extends FlxRect
 	 */
 	public function new(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null)
 	{
-		super(X,Y,Width,Height);
+		super(X, Y, Width, Height);
 		_headA = _tailA = new FlxList();
 		_headB = _tailB = new FlxList();
 		
@@ -253,7 +253,7 @@ class FlxQuadTree extends FlxRect
 		}
 		else
 		{
-			_min = Math.floor((width + height)/(2*divisions));
+			_min = Math.floor((width + height) / (2 * divisions));
 		}
 		_canSubdivide = (width > _min) || (height > _min);
 		
@@ -263,13 +263,13 @@ class FlxQuadTree extends FlxRect
 		_southEastTree = null;
 		_southWestTree = null;
 		_leftEdge = x;
-		_rightEdge = x+width;
-		_halfWidth = width/2;
-		_midpointX = _leftEdge+_halfWidth;
+		_rightEdge = x + width;
+		_halfWidth = width / 2;
+		_midpointX = _leftEdge + _halfWidth;
 		_topEdge = y;
-		_bottomEdge = y+height;
-		_halfHeight = height/2;
-		_midpointY = _topEdge+_halfHeight;
+		_bottomEdge = y + height;
+		_halfHeight = height / 2;
+		_midpointY = _topEdge + _halfHeight;
 	}
 	
 	/**
@@ -343,12 +343,12 @@ class FlxQuadTree extends FlxRect
 	 * @param	List			A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>A_LIST</code> and <code>B_LIST</code>.
 	 */
 	#if flash
-	public function add(ObjectOrGroup:FlxBasic, List:UInt):Void
+	public function add(ObjectOrGroup:FlxBasic, list:UInt):Void
 	#else
-	public function add(ObjectOrGroup:FlxBasic, List:Int):Void
+	public function add(ObjectOrGroup:FlxBasic, list:Int):Void
 	#end
 	{
-		_list = List;
+		_list = list;
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
 			var i:Int = 0;
@@ -357,12 +357,12 @@ class FlxQuadTree extends FlxRect
 			var l:Int = cast(ObjectOrGroup, FlxGroup).length;
 			while(i < l)
 			{
-				basic = cast(members[i++], FlxBasic);
+				basic = members[i++];
 				if((basic != null) && basic.exists)
 				{
 					if (Std.is(basic, FlxGroup))
 					{
-						add(basic,List);
+						add(basic, list);
 					}
 					else if(Std.is(basic, FlxObject))
 					{
@@ -557,7 +557,7 @@ class FlxQuadTree extends FlxRect
 				}
 				if(	_object.exists && (_object.allowCollisions > 0) &&
 					(_iterator != null) && (_iterator.object != null) &&
-					_iterator.object.exists &&overlapNode())
+					_iterator.object.exists && overlapNode())
 				{
 					overlapProcessed = true;
 				}

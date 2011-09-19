@@ -253,10 +253,10 @@ class FlxU
 				Hue = 0;
 			}
 			var slice:Int = Math.floor(Hue / 60);
-			var hf:Float = Hue/60 - slice;
+			var hf:Float = Hue / 60 - slice;
 			var aa:Float = Brightness*(1 - Saturation);
-			var bb:Float = Brightness*(1 - Saturation*hf);
-			var cc:Float = Brightness*(1 - Saturation*(1.0 - hf));
+			var bb:Float = Brightness * (1 - Saturation * hf);
+			var cc:Float = Brightness * (1 - Saturation * (1.0 - hf));
 			switch (slice)
 			{
 				case 0: 
@@ -339,9 +339,9 @@ class FlxU
 			Results = new Array<Float>();
 		}
 		
-		var red:Float = /*Number*/((Color >> 16) & 0xFF) / 255;
-		var green:Float = /*Number*/((Color >> 8) & 0xFF) / 255;
-		var blue:Float = /*Number*/((Color) & 0xFF) / 255;
+		var red:Float = ((Color >> 16) & 0xFF) / 255;
+		var green:Float = ((Color >> 8) & 0xFF) / 255;
+		var blue:Float = ((Color) & 0xFF) / 255;
 		
 		var m:Float = (red > green) ? red : green;
 		var dmax:Float = (m > blue) ? m : blue;
@@ -378,7 +378,7 @@ class FlxU
 			}
 		}
 		
-		Results[3] = /*Number*/((Color >> 24) & 0xFF) / 255;
+		Results[3] = ((Color >> 24) & 0xFF) / 255;
 		return Results;
 	}
 	
@@ -394,7 +394,7 @@ class FlxU
 	static public function formatTime(Seconds:Int, ?ShowMS:Bool = false):String
 	#end
 	{
-		var timeString:String = Std.int(Seconds/60) + ":";
+		var timeString:String = Std.int(Seconds / 60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;
 		if (timeStringHelper < 10)
 		{
@@ -468,7 +468,7 @@ class FlxU
 				}
 			}
 			zeroes = "";
-			helper = amount - Std.int(amount / 1000) * 1000;
+			helper = amount - Math.floor(amount / 1000) * 1000;
 			amount = Math.floor(amount / 1000);
 			if(amount > 0)
 			{
@@ -591,7 +591,7 @@ class FlxU
 	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
 	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
 	 */
-	static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?Point:FlxPoint = null):FlxPoint
+	static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint = null):FlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
@@ -662,13 +662,13 @@ class FlxU
 		
 		var dx:Float = X - PivotX;
 		var dy:Float = PivotY + Y; //Y axis is inverted in flash, normally this would be a subtract operation
-		if (Point == null)
+		if (point == null)
 		{
-			Point = new FlxPoint();
+			point = new FlxPoint();
 		}
-		Point.x = PivotX + cos * dx - sin * dy;
-		Point.y = PivotY - sin * dx - cos * dy;
-		return Point;
+		point.x = PivotX + cos * dx - sin * dy;
+		point.y = PivotY - sin * dx - cos * dy;
+		return point;
 	}
 	
 	/**
@@ -697,7 +697,7 @@ class FlxU
 		{
 			angle = c2 - c1 * ((x + ay) / (ay - x));
 		}
-		angle = ((y < 0)?-angle:angle)*57.2957796;
+		angle = ((y < 0)? -angle:angle) * 57.2957796;
 		if (angle > 90)
 		{
 			angle = angle - 270;
@@ -756,7 +756,7 @@ class FlxU
 		
 	}
 	
-	public static var MIN_VALUE:Float = 0.0000000000001;
-	public static var MAX_VALUE:Float = 1000000000000;
+	public static var MIN_VALUE:Float = 5e-324;
+	public static var MAX_VALUE:Float = 1.79e+308;
 	
 }

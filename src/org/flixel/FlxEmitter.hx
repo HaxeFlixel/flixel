@@ -128,8 +128,8 @@ class FlxEmitter extends FlxGroup
 		y = Y;
 		width = 0;
 		height = 0;
-		minParticleSpeed = new FlxPoint(-100,-100);
-		maxParticleSpeed = new FlxPoint(100,100);
+		minParticleSpeed = new FlxPoint( -100, -100);
+		maxParticleSpeed = new FlxPoint(100, 100);
 		minRotation = -360;
 		maxRotation = 360;
 		gravity = 0;
@@ -206,7 +206,7 @@ class FlxEmitter extends FlxGroup
 				}
 				else
 				{
-					particle.loadGraphic(Graphics,true);
+					particle.loadGraphic(Graphics, true);
 					particle.frame = randomFrame;
 				}
 			}
@@ -214,7 +214,7 @@ class FlxEmitter extends FlxGroup
 			{
 				if (BakedRotations > 0)
 				{
-					particle.loadRotatedGraphic(Graphics,BakedRotations);
+					particle.loadRotatedGraphic(Graphics, BakedRotations);
 				}
 				else
 				{
@@ -322,12 +322,12 @@ class FlxEmitter extends FlxGroup
 		var particle:FlxParticle = cast(recycle(FlxParticle), FlxParticle);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
-		particle.reset(x - (Math.floor(particle.width)>>1) + FlxG.random()*width, y - (Math.floor(particle.height)>>1) + FlxG.random()*height);
+		particle.reset(x - (Math.floor(particle.width) >> 1) + FlxG.random() * width, y - (Math.floor(particle.height) >> 1) + FlxG.random() * height);
 		particle.visible = true;
 		
 		if (minParticleSpeed.x != maxParticleSpeed.x)
 		{
-			particle.velocity.x = minParticleSpeed.x + FlxG.random()*(maxParticleSpeed.x-minParticleSpeed.x);
+			particle.velocity.x = minParticleSpeed.x + FlxG.random() * (maxParticleSpeed.x - minParticleSpeed.x);
 		}
 		else
 		{
@@ -335,7 +335,7 @@ class FlxEmitter extends FlxGroup
 		}
 		if (minParticleSpeed.y != maxParticleSpeed.y)
 		{
-			particle.velocity.y = minParticleSpeed.y + FlxG.random()*(maxParticleSpeed.y-minParticleSpeed.y);
+			particle.velocity.y = minParticleSpeed.y + FlxG.random() * (maxParticleSpeed.y - minParticleSpeed.y);
 		}
 		else
 		{
@@ -345,7 +345,7 @@ class FlxEmitter extends FlxGroup
 		
 		if (minRotation != maxRotation)
 		{
-			particle.angularVelocity = minRotation + FlxG.random()*(maxRotation-minRotation);
+			particle.angularVelocity = minRotation + FlxG.random() * (maxRotation - minRotation);
 		}
 		else
 		{
@@ -353,7 +353,7 @@ class FlxEmitter extends FlxGroup
 		}
 		if (particle.angularVelocity != 0)
 		{
-			particle.angle = FlxG.random()*360-180;
+			particle.angle = FlxG.random() * 360 - 180;
 		}
 		
 		particle.drag.x = particleDrag.x;
@@ -416,7 +416,7 @@ class FlxEmitter extends FlxGroup
 	public function at(Object:FlxObject):Void
 	{
 		Object.getMidpoint(_point);
-		x = _point.x - (Std.int(width)>>1);
+		x = _point.x - (Std.int(width) >> 1);
 		y = _point.y - (Std.int(height) >> 1);
 	}
 }

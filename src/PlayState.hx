@@ -195,6 +195,7 @@ class PlayState extends FlxState
 		}
 		topText.alpha = 1;
 		FlxG.log("Toggle Gravity");
+		FlxG.shake();
 	}
 	
 	//This just quits - state.destroy() is automatically called upon state changing

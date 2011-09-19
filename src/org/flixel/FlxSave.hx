@@ -1,12 +1,12 @@
 package org.flixel;
 
 import flash.errors.Error;
+import flash.net.SharedObject;
+
 #if flash
 import flash.events.NetStatusEvent;
 import flash.net.SharedObjectFlushStatus;
 #end
-
-import flash.net.SharedObject;
 
 /**
  * A class to help automate and simplify save game functionality.

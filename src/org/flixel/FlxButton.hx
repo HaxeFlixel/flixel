@@ -27,25 +27,25 @@ class FlxButton extends FlxSprite
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */
 	#if flash
-	static public var NORMAL:UInt = 0;
+	static public inline var NORMAL:UInt = 0;
 	#else
-	static public var NORMAL:Int = 0;
+	static public inline var NORMAL:Int = 0;
 	#end
 	/**
 	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
 	 */
 	#if flash
-	static public var HIGHLIGHT:UInt = 1;
+	static public inline var HIGHLIGHT:UInt = 1;
 	#else
-	static public var HIGHLIGHT:Int = 1;
+	static public inline var HIGHLIGHT:Int = 1;
 	#end
 	/**
 	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
 	 */
 	#if flash
-	static public var PRESSED:UInt = 2;
+	static public inline var PRESSED:UInt = 2;
 	#else
-	static public var PRESSED:Int = 2;
+	static public inline var PRESSED:Int = 2;
 	#end
 	/**
 	 * The text that appears on the button.
@@ -254,7 +254,7 @@ class FlxButton extends FlxSprite
 			{
 				camera = cameras[i++];
 				FlxG.mouse.getWorldPosition(camera, _point);
-				if(overlapsPoint(_point,true,camera))
+				if (overlapsPoint(_point, true, camera))
 				{
 					offAll = false;
 					if(FlxG.mouse.justPressed())
