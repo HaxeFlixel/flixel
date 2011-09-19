@@ -3,6 +3,15 @@
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.Lib;
+import org.flixel.FlxSprite;
+import org.flixel.plugin.photonstorm.baseTypes.MouseSpring;
+import org.flixel.plugin.photonstorm.FlxDelay;
+import org.flixel.plugin.photonstorm.FlxDisplay;
+import org.flixel.plugin.photonstorm.FlxExplode;
+import org.flixel.plugin.photonstorm.FlxExtendedSprite;
+import org.flixel.plugin.photonstorm.FlxLinkedGroup;
+import org.flixel.plugin.photonstorm.FlxMath;
+import org.flixel.plugin.photonstorm.FlxVelocity;
 
 /**
  * ...
@@ -29,6 +38,29 @@ class Main extends Sprite
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, init);
 		// entry point
-		flash.Lib.current.addChild(new ParticlesDemo());
+		//flash.Lib.current.addChild(new ParticlesDemo());
+		trace(FlxMath.rand());
+		
+		var spr:FlxSprite = new FlxSprite();
+		var grp:FlxLinkedGroup = new FlxLinkedGroup();
+		grp.add(spr);
+		var expl:FlxExplode = new FlxExplode();
+		var delay:FlxDelay = new FlxDelay(500);
+		flash.Lib.current.addChild(delay);
+		delay.callbackFunction = onDelay;
+		delay.start();
+		
+		var disp:FlxDisplay = new FlxDisplay();
+		var vel:FlxVelocity = new FlxVelocity();
+		
+		var mouseSpring:MouseSpring = new MouseSpring(new FlxExtendedSprite());
+		//var extSpr:FlxExtendedSprite = new FlxExtendedSprite();
+		
 	}
+	
+	public function onDelay():Void
+	{
+		trace("On delay");
+	}
+	
 }
