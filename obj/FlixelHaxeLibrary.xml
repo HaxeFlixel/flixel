@@ -22,8 +22,8 @@
       <bitmap id="org.flixel.system.debug.PlayPNG" name="org.flixel.system.debug.PlayPNG" import="src\org\flixel\data\vcr\play.png" size="156" modified="31.05.2011 3:58:14" />
       <bitmap id="org.flixel.system.debug.StepPNG" name="org.flixel.system.debug.StepPNG" import="src\org\flixel\data\vcr\step.png" size="163" modified="31.05.2011 3:58:14" />
       <bitmap id="org.flixel.system.debug.BoundsPNG" name="org.flixel.system.debug.BoundsPNG" import="src\org\flixel\data\vis\bounds.png" size="173" modified="31.05.2011 3:58:14" />
-      <bitmap id="LogoCornersPNG" name="LogoCornersPNG" import="src\org\flixel\data\logo_corners.png" size="1515" modified="31.05.2011 3:58:14" />
-      <bitmap id="LogoLightPNG" name="LogoLightPNG" import="src\org\flixel\data\logo_light.png" size="1804" modified="31.05.2011 3:58:14" />
+      <bitmap id="org.flixel.system.LogoCornersPNG" name="org.flixel.system.LogoCornersPNG" import="src\org\flixel\data\logo_corners.png" size="1515" modified="31.05.2011 3:58:14" />
+      <bitmap id="org.flixel.system.LogoLightPNG" name="org.flixel.system.LogoLightPNG" import="src\org\flixel\data\logo_light.png" size="1804" modified="31.05.2011 3:58:14" />
       <bitmap id="org.flixel.system.HandlePNG" name="org.flixel.system.HandlePNG" import="src\org\flixel\data\handle.png" size="174" modified="31.05.2011 3:58:14" />
       <bitmap id="org.flixel.system.input.CursorPNG" name="org.flixel.system.input.CursorPNG" import="src\org\flixel\data\cursor.png" size="706" modified="31.05.2011 3:58:14" />
       <font id="Nokia" name="Nokia" import="src\org\flixel\data\nokiafc22.ttf" glyphs="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `~!@#$%^&amp;*()-_=+[]{}\|;:'&quot;,./&lt;&gt;?" size="16272" modified="31.05.2011 3:58:14" />

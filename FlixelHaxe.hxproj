@@ -51,8 +51,8 @@
     <asset path="src\org\flixel\data\vcr\play.png" bitmap="True" id="org.flixel.system.debug.PlayPNG" />
     <asset path="src\org\flixel\data\vcr\step.png" bitmap="True" id="org.flixel.system.debug.StepPNG" />
     <asset path="src\org\flixel\data\vis\bounds.png" bitmap="True" id="org.flixel.system.debug.BoundsPNG" />
-    <asset path="src\org\flixel\data\logo_corners.png" bitmap="True" id="LogoCornersPNG" />
-    <asset path="src\org\flixel\data\logo_light.png" bitmap="True" id="LogoLightPNG" />
+    <asset path="src\org\flixel\data\logo_corners.png" bitmap="True" id="org.flixel.system.LogoCornersPNG" />
+    <asset path="src\org\flixel\data\logo_light.png" bitmap="True" id="org.flixel.system.LogoLightPNG" />
     <asset path="src\org\flixel\data\handle.png" bitmap="True" id="org.flixel.system.HandlePNG" />
     <asset path="src\org\flixel\data\cursor.png" bitmap="True" id="org.flixel.system.input.CursorPNG" />
     <asset path="src\assets\bot.png" bitmap="True" id="BotPNG" />
