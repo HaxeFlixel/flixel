@@ -17,7 +17,6 @@ package org.flixel.plugin.photonstorm;
 
 
 import flash.display.Bitmap;
-import flash.errors.Error;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxRect;
@@ -243,7 +242,7 @@ class FlxExtendedSprite extends FlxSprite
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
 		{
-			throw Error("FlxExtendedSprite.enableMouseClicks called but FlxMouseControl plugin not activated");
+			throw "FlxExtendedSprite.enableMouseClicks called but FlxMouseControl plugin not activated";
 		}
 		
 		clickable = true;
@@ -317,7 +316,7 @@ class FlxExtendedSprite extends FlxSprite
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
 		{
-			throw Error("FlxExtendedSprite.enableMouseDrag called but FlxMouseControl plugin not activated");
+			throw "FlxExtendedSprite.enableMouseDrag called but FlxMouseControl plugin not activated";
 		}
 		
 		draggable = true;
@@ -377,7 +376,7 @@ class FlxExtendedSprite extends FlxSprite
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
 		{
-			throw Error("FlxExtendedSprite.enableMouseThrow called but FlxMouseControl plugin not activated");
+			throw "FlxExtendedSprite.enableMouseThrow called but FlxMouseControl plugin not activated";
 		}
 		
 		throwable = true;
@@ -440,7 +439,7 @@ class FlxExtendedSprite extends FlxSprite
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
 		{
-			throw Error("FlxExtendedSprite.enableMouseSpring called but FlxMouseControl plugin not activated");
+			throw "FlxExtendedSprite.enableMouseSpring called but FlxMouseControl plugin not activated";
 		}
 		
 		hasMouseSpring = true;
@@ -691,13 +690,13 @@ class FlxExtendedSprite extends FlxSprite
 				return;
 			}
 			
-			if (clickPixelPerfect && FlxCollision.pixelPerfectPointCheck(FlxG.mouse.x, FlxG.mouse.y, this, clickPixelPerfectAlpha))
+			if (clickPixelPerfect && FlxCollision.pixelPerfectPointCheck(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), this, clickPixelPerfectAlpha))
 			{
 				FlxMouseControl.addToStack(this);
 				return;
 			}
 			
-			if (dragPixelPerfect && FlxCollision.pixelPerfectPointCheck(FlxG.mouse.x, FlxG.mouse.y, this, dragPixelPerfectAlpha))
+			if (dragPixelPerfect && FlxCollision.pixelPerfectPointCheck(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), this, dragPixelPerfectAlpha))
 			{
 				FlxMouseControl.addToStack(this);
 				return;

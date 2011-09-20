@@ -169,7 +169,7 @@ class FlxMouseControl extends FlxBasic
 			
 			if (FlxG.mouse.justPressed())
 			{
-				clickStack.length = 0;
+				clickStack = [];
 			}
 			
 			//	If you are wondering how the brand new array can have anything in it by now, it's because FlxExtendedSprite
@@ -216,7 +216,7 @@ class FlxMouseControl extends FlxBasic
 		
 		clickTarget.mousePressedHandler();
 		
-		clickStack.length = 0;
+		clickStack = [];
 	}
 	
 	/**
@@ -248,7 +248,7 @@ class FlxMouseControl extends FlxBasic
 	{
 		hasClickTarget = false;
 		
-		if (clickTarget)
+		if (clickTarget != null)
 		{
 			clickTarget.mouseReleasedHandler();
 		}
@@ -257,7 +257,7 @@ class FlxMouseControl extends FlxBasic
 		
 		isDragging = false;
 		
-		if (dragTarget)
+		if (dragTarget != null)
 		{
 			dragTarget.stopDrag();
 		}

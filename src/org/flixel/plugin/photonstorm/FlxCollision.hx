@@ -89,7 +89,7 @@ class FlxCollision
 		
 		var testA:BitmapData = contact.framePixels;
 		var testB:BitmapData = target.framePixels;
-		var overlapArea:BitmapData = new BitmapData(intersect.width, intersect.height, false);
+		var overlapArea:BitmapData = new BitmapData(Math.floor(intersect.width), Math.floor(intersect.height), false);
 		
 		overlapArea.draw(testA, matrixA, new ColorTransform(1, 1, 1, 1, 255, -255, -255, alphaTolerance), BlendMode.NORMAL);
 		overlapArea.draw(testB, matrixB, new ColorTransform(1, 1, 1, 1, 255, 255, 255, alphaTolerance), BlendMode.DIFFERENCE);
@@ -127,7 +127,7 @@ class FlxCollision
 	#end
 	{
 		//	Intersect check
-		if (FlxMath.pointInCoordinates(pointX, pointY, target.x, target.y, target.width, target.height) == false)
+		if (FlxMath.pointInCoordinates(pointX, pointY, Math.floor(target.x), Math.floor(target.y), Math.floor(target.width), Math.floor(target.height)) == false)
 		{
 			return false;
 		}
@@ -135,7 +135,7 @@ class FlxCollision
 		//	How deep is pointX/Y within the rect?
 		var test:BitmapData = target.framePixels;
 		
-		if (FlxColor.getAlpha(test.getPixel32(pointX - target.x, pointY - target.y)) >= alphaTolerance)
+		if (Std.int(FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)))) >= alphaTolerance)
 		{
 			return true;
 		}
@@ -161,18 +161,18 @@ class FlxCollision
 	public static function createCameraWall(camera:FlxCamera, placement:Int, thickness:Int, ?adjustWorldBounds:Bool = false):FlxGroup
 	#end
 	{
-		var left:FlxTileblock;
-		var right:FlxTileblock;
-		var top:FlxTileblock;
-		var bottom:FlxTileblock;
+		var left:FlxTileblock = null;
+		var right:FlxTileblock = null;
+		var top:FlxTileblock = null;
+		var bottom:FlxTileblock = null;
 		
 		switch (placement)
 		{
 			case CAMERA_WALL_OUTSIDE:
-				left = new FlxTileblock(camera.x - thickness, camera.y + thickness, thickness, camera.height - (thickness * 2));
-				right = new FlxTileblock(camera.x + camera.width, camera.y + thickness, thickness, camera.height - (thickness * 2));
-				top = new FlxTileblock(camera.x - thickness, camera.y - thickness, camera.width + thickness * 2, thickness);
-				bottom = new FlxTileblock(camera.x - thickness, camera.height, camera.width + thickness * 2, thickness);
+				left = new FlxTileblock(Math.floor(camera.x - thickness), Math.floor(camera.y + thickness), thickness, camera.height - (thickness * 2));
+				right = new FlxTileblock(Math.floor(camera.x + camera.width), Math.floor(camera.y + thickness), thickness, camera.height - (thickness * 2));
+				top = new FlxTileblock(Math.floor(camera.x - thickness), Math.floor(camera.y - thickness), camera.width + thickness * 2, thickness);
+				bottom = new FlxTileblock(Math.floor(camera.x - thickness), camera.height, camera.width + thickness * 2, thickness);
 				
 				if (adjustWorldBounds)
 				{
@@ -180,10 +180,10 @@ class FlxCollision
 				}
 				
 			case CAMERA_WALL_INSIDE:
-				left = new FlxTileblock(camera.x, camera.y + thickness, thickness, camera.height - (thickness * 2));
-				right = new FlxTileblock(camera.x + camera.width - thickness, camera.y + thickness, thickness, camera.height - (thickness * 2));
-				top = new FlxTileblock(camera.x, camera.y, camera.width, thickness);
-				bottom = new FlxTileblock(camera.x, camera.height - thickness, camera.width, thickness);
+				left = new FlxTileblock(Math.floor(camera.x), Math.floor(camera.y + thickness), thickness, camera.height - (thickness * 2));
+				right = new FlxTileblock(Math.floor(camera.x + camera.width - thickness), Math.floor(camera.y + thickness), thickness, camera.height - (thickness * 2));
+				top = new FlxTileblock(Math.floor(camera.x), Math.floor(camera.y), camera.width, thickness);
+				bottom = new FlxTileblock(Math.floor(camera.x), camera.height - thickness, camera.width, thickness);
 				
 				if (adjustWorldBounds)
 				{

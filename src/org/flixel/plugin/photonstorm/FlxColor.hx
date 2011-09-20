@@ -70,7 +70,7 @@ class FlxColor
 	public static function getComplementHarmony(color:Int):Int
 	#end
 	{
-		var hsv:Object = RGBtoHSV(color);
+		var hsv:Dynamic = RGBtoHSV(color);
 		
 		var opposite:Int = FlxMath.wrapValue(hsv.hue, 180, 359);
 		
@@ -97,7 +97,7 @@ class FlxColor
 		
 		if (threshold > 359 || threshold < 0)
 		{
-			throw Error("FlxColor Warning: Invalid threshold given to getAnalogousHarmony()");
+			throw "FlxColor Warning: Invalid threshold given to getAnalogousHarmony()";
 		}
 		
 		var warmer:Int = FlxMath.wrapValue(hsv.hue, 359 - threshold, 359);
@@ -126,7 +126,7 @@ class FlxColor
 		
 		if (threshold >= 359 || threshold <= 0)
 		{
-			throw Error("FlxColor Warning: Invalid threshold given to getSplitComplementHarmony()");
+			throw "FlxColor Warning: Invalid threshold given to getSplitComplementHarmony()";
 		}
 		
 		var opposite:Int = FlxMath.wrapValue(hsv.hue, 180, 359);
@@ -185,10 +185,10 @@ class FlxColor
 		var result:String = RGBtoHexString(color) + "\n";
 		
 		//	RGB format
-		result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
+		result += "Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue + "\n";
 		
 		//	HSL info
-		result = result.concat("Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness);
+		result += "Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness;
 		
 		return result;
 	}
@@ -229,7 +229,7 @@ class FlxColor
 		var lsd:Float = color % 16;
 		var msd:Float = (color - lsd) / 16;
 		
-		var hexified:String = digits.charAt(msd) + digits.charAt(lsd);
+		var hexified:String = digits.charAt(Math.floor(msd)) + digits.charAt(Math.floor(lsd));
 		
 		return hexified;
 	}
@@ -251,42 +251,42 @@ class FlxColor
 	#end
 	{
 		#if flash
-		var result:UInt;
+		var result:UInt = 0;
 		#else
-		var result:Int;
+		var result:Int = 0;
 		#end
 		
 		if (s == 0.0)
 		{
-			result = getColor32(alpha, v * 255, v * 255, v * 255);
+			result = getColor32(alpha, Math.floor(v * 255), Math.floor(v * 255), Math.floor(v * 255));
 		}
 		else
 		{
 			h = h / 60.0;
-			var f:Float = h - int(h);
+			var f:Float = h - Std.int(h);
 			var p:Float = v * (1.0 - s);
 			var q:Float = v * (1.0 - s * f);
 			var t:Float = v * (1.0 - s * (1.0 - f));
 			
-			switch (int(h))
+			switch (Std.int(h))
 			{
 				case 0:
-					result = getColor32(alpha, v * 255, t * 255, p * 255);
+					result = getColor32(alpha, Math.floor(v * 255), Math.floor(t * 255), Math.floor(p * 255));
 					
 				case 1:
-					result = getColor32(alpha, q * 255, v * 255, p * 255);
+					result = getColor32(alpha, Math.floor(q * 255), Math.floor(v * 255), Math.floor(p * 255));
 					
 				case 2:
-					result = getColor32(alpha, p * 255, v * 255, t * 255);
+					result = getColor32(alpha, Math.floor(p * 255), Math.floor(v * 255), Math.floor(t * 255));
 					
 				case 3:
-					result = getColor32(alpha, p * 255, q * 255, v * 255);
+					result = getColor32(alpha, Math.floor(p * 255), Math.floor(q * 255), Math.floor(v * 255));
 					
 				case 4:
-					result = getColor32(alpha, t * 255, p * 255, v * 255);
+					result = getColor32(alpha, Math.floor(t * 255), Math.floor(p * 255), Math.floor(v * 255));
 					
 				case 5:
-					result = getColor32(alpha, v * 255, p * 255, q * 255);
+					result = getColor32(alpha, Math.floor(v * 255), Math.floor(p * 255), Math.floor(q * 255));
 					
 				default:
 					FlxG.log("FlxColor Error: HSVtoRGB : Unknown color");
@@ -315,11 +315,11 @@ class FlxColor
 		var green:Float = rgb.green / 255;
 		var blue:Float = rgb.blue / 255;
 		
-		var min:Float = Math.min(red, green, blue);
-		var max:Float = Math.max(red, green, blue);
+		var min:Float = Math.min(red, Math.min(green, blue));
+		var max:Float = Math.max(red, Math.max(green, blue));
 		var delta:Float = max - min;
 		var lightness:Float = (max + min) / 2;
-		var hue:Float;
+		var hue:Float = 0;
 		var saturation:Float;
 		
 		//  Grey color, no chroma
@@ -385,9 +385,9 @@ class FlxColor
 		var src1:Dynamic = getRGB(color1);
 		var src2:Dynamic = getRGB(color2);
 		
-		var r:UInt = (((src2.red - src1.red) * currentStep) / steps) + src1.red;
-		var g:UInt = (((src2.green - src1.green) * currentStep) / steps) + src1.green;
-		var b:UInt = (((src2.blue - src1.blue) * currentStep) / steps) + src1.blue;
+		var r:UInt = cast((((src2.red - src1.red) * currentStep) / steps) + src1.red, UInt);
+		var g:UInt = cast((((src2.green - src1.green) * currentStep) / steps) + src1.green, UInt);
+		var b:UInt = cast((((src2.blue - src1.blue) * currentStep) / steps) + src1.blue, UInt);
 
 		return getColor32(alpha, r, g, b);
 	}
@@ -396,18 +396,18 @@ class FlxColor
 	{
 		var src:Dynamic = getRGB(color);
 		
-		var r:UInt = (((r2 - src.red) * currentStep) / steps) + src.red;
-		var g:UInt = (((g2 - src.green) * currentStep) / steps) + src.green;
-		var b:UInt = (((b2 - src.blue) * currentStep) / steps) + src.blue;
+		var r:UInt = cast((((r2 - src.red) * currentStep) / steps) + src.red, UInt);
+		var g:UInt = cast((((g2 - src.green) * currentStep) / steps) + src.green, UInt);
+		var b:UInt = cast((((b2 - src.blue) * currentStep) / steps) + src.blue, UInt);
 	
 		return getColor24(r, g, b);
 	}
 	
 	public static function interpolateRGB(r1:UInt, g1:UInt, b1:UInt, r2:UInt, g2:UInt, b2:UInt, steps:UInt, currentStep:UInt):UInt
 	{
-		var r:UInt = (((r2 - r1) * currentStep) / steps) + r1;
-		var g:UInt = (((g2 - g1) * currentStep) / steps) + g1;
-		var b:UInt = (((b2 - b1) * currentStep) / steps) + b1;
+		var r:UInt = cast((((r2 - r1) * currentStep) / steps) + r1, UInt);
+		var g:UInt = cast((((g2 - g1) * currentStep) / steps) + g1, UInt);
+		var b:UInt = cast((((b2 - b1) * currentStep) / steps) + b1, UInt);
 	
 		return getColor24(r, g, b);
 	}
@@ -417,9 +417,9 @@ class FlxColor
 		var src1:Dynamic = getRGB(color1);
 		var src2:Dynamic = getRGB(color2);
 		
-		var r:Int = (((src2.red - src1.red) * currentStep) / steps) + src1.red;
-		var g:Int = (((src2.green - src1.green) * currentStep) / steps) + src1.green;
-		var b:Int = (((src2.blue - src1.blue) * currentStep) / steps) + src1.blue;
+		var r:Int = Math.floor((((src2.red - src1.red) * currentStep) / steps) + src1.red);
+		var g:Int = Math.floor((((src2.green - src1.green) * currentStep) / steps) + src1.green);
+		var b:Int = Math.floor((((src2.blue - src1.blue) * currentStep) / steps) + src1.blue);
 
 		return getColor32(alpha, r, g, b);
 	}
@@ -428,18 +428,18 @@ class FlxColor
 	{
 		var src:Dynamic = getRGB(color);
 		
-		var r:Int = (((r2 - src.red) * currentStep) / steps) + src.red;
-		var g:Int = (((g2 - src.green) * currentStep) / steps) + src.green;
-		var b:Int = (((b2 - src.blue) * currentStep) / steps) + src.blue;
+		var r:Int = Math.floor((((r2 - src.red) * currentStep) / steps) + src.red);
+		var g:Int = Math.floor((((g2 - src.green) * currentStep) / steps) + src.green);
+		var b:Int = Math.floor((((b2 - src.blue) * currentStep) / steps) + src.blue);
 	
 		return getColor24(r, g, b);
 	}
 	
 	public static function interpolateRGB(r1:Int, g1:Int, b1:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):Int
 	{
-		var r:Int = (((r2 - r1) * currentStep) / steps) + r1;
-		var g:Int = (((g2 - g1) * currentStep) / steps) + g1;
-		var b:Int = (((b2 - b1) * currentStep) / steps) + b1;
+		var r:Int = Math.floor((((r2 - r1) * currentStep) / steps) + r1);
+		var g:Int = Math.floor((((g2 - g1) * currentStep) / steps) + g1);
+		var b:Int = Math.floor((((b2 - b1) * currentStep) / steps) + b1);
 	
 		return getColor24(r, g, b);
 	}
@@ -456,7 +456,8 @@ class FlxColor
 	 * 
 	 * @return 32-bit color value with alpha
 	 */
-	public static function getRandomColor(?min:uint = 0, ?max:uint = 255, ?alpha:uint = 255):uint
+	#if flash
+	public static function getRandomColor(?min:UInt = 0, ?max:UInt = 255, ?alpha:UInt = 255):UInt
 	{
 		//	Sanity checks
 		if (max > 255)
@@ -471,12 +472,35 @@ class FlxColor
 			return getColor24(255, 255, 255);
 		}
 		
-		var red:uint = min + int(Math.random() * (max - min));
-		var green:uint = min + int(Math.random() * (max - min));
-		var blue:uint = min + int(Math.random() * (max - min));
+		var red:UInt = min + Std.int(Math.random() * (max - min));
+		var green:UInt = min + Std.int(Math.random() * (max - min));
+		var blue:UInt = min + Std.int(Math.random() * (max - min));
 		
 		return getColor32(alpha, red, green, blue);
 	}
+	#else
+	public static function getRandomColor(?min:Int = 0, ?max:Int = 255, ?alpha:Int = 255):Int
+	{
+		//	Sanity checks
+		if (max > 255)
+		{
+			FlxG.log("FlxColor Warning: getRandomColor - max value too high");
+			return getColor24(255, 255, 255);
+		}
+		
+		if (min > max)
+		{
+			FlxG.log("FlxColor Warning: getRandomColor - min value higher than max");
+			return getColor24(255, 255, 255);
+		}
+		
+		var red:Int = min + Std.int(Math.random() * (max - min));
+		var green:Int = min + Std.int(Math.random() * (max - min));
+		var blue:Int = min + Std.int(Math.random() * (max - min));
+		
+		return getColor32(alpha, red, green, blue);
+	}
+	#end
 	
 	/**
 	 * Given an alpha and 3 color values this will return an integer representation of it
@@ -488,10 +512,17 @@ class FlxColor
 	 * 
 	 * @return	A native color value integer (format: 0xAARRGGBB)
 	 */
-	public static function getColor32(alpha:uint, red:uint, green:uint, blue:uint):uint
+	#if flash
+	public static function getColor32(alpha:UInt, red:UInt, green:UInt, blue:UInt):UInt
 	{
 		return alpha << 24 | red << 16 | green << 8 | blue;
 	}
+	#else
+	public static function getColor32(alpha:Int, red:Int, green:Int, blue:Int):Int
+	{
+		return alpha << 24 | red << 16 | green << 8 | blue;
+	}
+	#end
 	
 	/**
 	 * Given 3 color values this will return an integer representation of it
@@ -502,10 +533,17 @@ class FlxColor
 	 * 
 	 * @return	A native color value integer (format: 0xRRGGBB)
 	 */
-	public static function getColor24(red:uint, green:uint, blue:uint):uint
+	#if flash
+	public static function getColor24(red:UInt, green:UInt, blue:UInt):UInt
 	{
 		return red << 16 | green << 8 | blue;
 	}
+	#else
+	public static function getColor24(red:Int, green:Int, blue:Int):Int
+	{
+		return red << 16 | green << 8 | blue;
+	}
+	#end
 	
 	/**
 	 * Return the component parts of a color as an Object with the properties alpha, red, green, blue
@@ -516,15 +554,27 @@ class FlxColor
 	 * 
 	 * @return Object with properties: alpha, red, green, blue
 	 */
-	public static function getRGB(color:uint):Object
+	#if flash
+	public static function getRGB(color:UInt):Dynamic
 	{
-		var alpha:uint = color >>> 24;
-		var red:uint = color >> 16 & 0xFF;
-		var green:uint = color >> 8 & 0xFF;
-		var blue:uint = color & 0xFF;
+		var alpha:UInt = color >>> 24;
+		var red:UInt = color >> 16 & 0xFF;
+		var green:UInt = color >> 8 & 0xFF;
+		var blue:UInt = color & 0xFF;
 		
 		return { alpha: alpha, red: red, green: green, blue: blue };
 	}
+	#else
+	public static function getRGB(color:Int):Dynamic
+	{
+		var alpha:Int = color >>> 24;
+		var red:Int = color >> 16 & 0xFF;
+		var green:Int = color >> 8 & 0xFF;
+		var blue:Int = color & 0xFF;
+		
+		return { alpha: alpha, red: red, green: green, blue: blue };
+	}
+	#end
 	
 	/**
 	 * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
@@ -533,7 +583,11 @@ class FlxColor
 	 * 
 	 * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
 	 */
-	public static function getAlpha(color:uint):uint
+	#if flash
+	public static function getAlpha(color:UInt):UInt
+	#else
+	public static function getAlpha(color:Int):Int
+	#end
 	{
 		return color >>> 24;
 	}
@@ -545,9 +599,15 @@ class FlxColor
 	 * 
 	 * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
 	 */
-	public static function getAlphaFloat(color:uint):Float
+	#if flash
+	public static function getAlphaFloat(color:UInt):Float
 	{
-		var f:uint = color >>> 24;
+		var f:UInt = color >>> 24;
+	#else
+	public static function getAlphaFloat(color:Int):Float
+	{
+		var f:Int = color >>> 24;
+	#end
 		
 		return f / 255;
 	}
@@ -559,7 +619,11 @@ class FlxColor
 	 * 
 	 * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
 	 */
-	public static function getRed(color:uint):uint
+	#if flash
+	public static function getRed(color:UInt):UInt
+	#else
+	public static function getRed(color:Int):Int
+	#end
 	{
 		return color >> 16 & 0xFF;
 	}
@@ -571,7 +635,11 @@ class FlxColor
 	 * 
 	 * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
 	 */
-	public static function getGreen(color:uint):uint
+	#if flash
+	public static function getGreen(color:UInt):UInt
+	#else
+	public static function getGreen(color:Int):Int
+	#end
 	{
 		return color >> 8 & 0xFF;
 	}
@@ -583,7 +651,11 @@ class FlxColor
 	 * 
 	 * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
 	 */
-	public static function getBlue(color:uint):uint
+	#if flash
+	public static function getBlue(color:UInt):UInt
+	#else
+	public static function getBlue(color:Int):Int
+	#end
 	{
 		return color & 0xFF;
 	}
