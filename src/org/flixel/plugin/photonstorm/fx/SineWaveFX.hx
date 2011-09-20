@@ -9,37 +9,57 @@
  * @author Richard Davey / Photon Storm
 */
 
-package org.flixel.plugin.photonstorm.FX 
-{
+package org.flixel.plugin.photonstorm.fx;
+
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import org.flixel.FlxSprite;
+	import org.flixel.plugin.photonstorm.FlxMath;
 	
-	import org.flixel.*;
-	import org.flixel.plugin.photonstorm.*;
 	
 	/**
 	 * Creates a sine-wave effect through an FlxSprite which can be applied vertically or horizontally
 	 */
-	public class SineWaveFX extends BaseFX
+	class SineWaveFX extends BaseFX
 	{
-		private var waveType:uint;
-		private var waveVertical:Boolean;
-		private var waveLength:uint;
-		private var waveSize:uint;
-		private var waveFrequency:Number;
-		private var wavePixelChunk:uint;
-		private var waveData:Array;
-		private var waveDataCounter:uint = 0;
-		private var waveLoopCallback:Function;
+		#if flash
+		private var waveType:UInt;
+		private var waveLength:UInt;
+		private var waveSize:UInt;
+		private var wavePixelChunk:UInt;
+		private var waveDataCounter:UInt;
+		#else
+		private var waveType:Int;
+		private var waveLength:Int;
+		private var waveSize:Int;
+		private var wavePixelChunk:Int;
+		private var waveDataCounter:Int;
+		#end
 		
-		public static const WAVETYPE_VERTICAL_SINE:uint = 0;
-		public static const WAVETYPE_VERTICAL_COSINE:uint = 1;
-		public static const WAVETYPE_HORIZONTAL_SINE:uint = 2;
-		public static const WAVETYPE_HORIZONTAL_COSINE:uint = 3;
+		private var waveVertical:Bool;
+		private var waveFrequency:Float;
+		private var waveData:Array<Float>;
+		private var waveLoopCallback:Dynamic;
 		
-		public function SineWaveFX() 
+		#if flash
+		public static inline var WAVETYPE_VERTICAL_SINE:UInt = 0;
+		public static inline var WAVETYPE_VERTICAL_COSINE:UInt = 1;
+		public static inline var WAVETYPE_HORIZONTAL_SINE:UInt = 2;
+		public static inline var WAVETYPE_HORIZONTAL_COSINE:UInt = 3;
+		#else
+		public static inline var WAVETYPE_VERTICAL_SINE:Int = 0;
+		public static inline var WAVETYPE_VERTICAL_COSINE:Int = 1;
+		public static inline var WAVETYPE_HORIZONTAL_SINE:Int = 2;
+		public static inline var WAVETYPE_HORIZONTAL_COSINE:Int = 3;
+		#end
+		
+		public function new() 
 		{
+			waveDataCounter = 0;
+			
+			super();
 		}
 		
 		/**
@@ -57,9 +77,13 @@ package org.flixel.plugin.photonstorm.FX
 		 * @param	backgroundColor		The background color (0xAARRGGBB format) to draw behind the effect (default 0x0 = transparent)
 		 * @return	An FlxSprite with the effect running through it, which should be started with a call to SineWaveFX.start()
 		 */
-		public function createFromFlxSprite(source:FlxSprite, type:uint, size:uint, length:uint, frequency:uint = 2, pixelsPerChunk:uint = 1, updateFrame:Boolean = false, backgroundColor:uint = 0x0):FlxSprite
+		#if flash
+		public function createFromFlxSprite(source:FlxSprite, type:UInt, size:UInt, length:UInt, ?frequency:UInt = 2, ?pixelsPerChunk:UInt = 1, updateFrame:Bool = false, ?backgroundColor:UInt = 0x0):FlxSprite
+		#else
+		public function createFromFlxSprite(source:FlxSprite, type:Int, size:Int, length:Int, ?frequency:Unt = 2, ?pixelsPerChunk:Int = 1, updateFrame:Bool = false, ?backgroundColor:Int = 0x0):FlxSprite
+		#end
 		{
-			var result:FlxSprite = create(source.pixels, source.x, source.y, type, size, length, frequency, pixelsPerChunk, backgroundColor);
+			var result:FlxSprite = create(source.pixels, Math.floor(source.x), Math.floor(source.y), type, size, length, frequency, pixelsPerChunk, backgroundColor);
 			
 			updateFromSource = updateFrame;
 			
@@ -86,9 +110,13 @@ package org.flixel.plugin.photonstorm.FX
 		 * @param	backgroundColor		The background color in 0xAARRGGBB format to draw behind the effect (default 0x0 = transparent)
 		 * @return	An FlxSprite with the effect running through it, which should be started with a call to SineWaveFX.start()
 		 */
-		public function createFromClass(source:Class, x:int, y:int, type:uint, size:uint, length:uint, frequency:uint = 2, pixelsPerChunk:uint = 1, backgroundColor:uint = 0x0):FlxSprite
+		#if flash
+		public function createFromClass(source:Class<Bitmap>, x:Int, y:Int, type:UInt, size:UInt, length:UInt, ?frequency:UInt = 2, ?pixelsPerChunk:UInt = 1, ?backgroundColor:UInt = 0x0):FlxSprite
+		#else
+		public function createFromClass(source:Class<Bitmap>, x:Int, y:Int, type:Int, size:Int, length:Int, ?frequency:Int = 2, ?pixelsPerChunk:Int = 1, ?backgroundColor:Int = 0x0):FlxSprite
+		#end
 		{
-			var result:FlxSprite = create((new source).bitmapData, x, y, type, size, length, frequency, pixelsPerChunk, backgroundColor);
+			var result:FlxSprite = create((Type.createInstance(source, [])).bitmapData, x, y, type, size, length, frequency, pixelsPerChunk, backgroundColor);
 			
 			updateFromSource = false;
 			
@@ -110,7 +138,11 @@ package org.flixel.plugin.photonstorm.FX
 		 * @param	backgroundColor		The background color in 0xAARRGGBB format to draw behind the effect (default 0x0 = transparent)
 		 * @return	An FlxSprite with the effect running through it, which should be started with a call to SineWaveFX.start()
 		 */
-		public function createFromBitmapData(source:BitmapData, x:int, y:int, type:uint, size:uint, length:uint, frequency:uint = 2, pixelsPerChunk:uint = 1, backgroundColor:uint = 0x0):FlxSprite
+		#if flash
+		public function createFromBitmapData(source:BitmapData, x:Int, y:Int, type:UInt, size:UInt, length:UInt, ?frequency:UInt = 2, ?pixelsPerChunk:UInt = 1, ?backgroundColor:UInt = 0x0):FlxSprite
+		#else
+		public function createFromBitmapData(source:BitmapData, x:Int, y:Int, type:Int, size:Int, length:Int, ?frequency:Int = 2, ?pixelsPerChunk:Int = 1, ?backgroundColor:Int = 0x0):FlxSprite
+		#end
 		{
 			var result:FlxSprite = create(source, x, y, type, size, length, frequency, pixelsPerChunk, backgroundColor);
 			
@@ -133,24 +165,28 @@ package org.flixel.plugin.photonstorm.FX
 		 * @param	backgroundColor		The background color in 0xAARRGGBB format to draw behind the effect (default 0x0 = transparent)
 		 * @return	An FlxSprite with the effect running through it, which should be started with a call to SineWaveFX.start()
 		 */
-		private function create(source:BitmapData, x:int, y:int, type:uint, size:uint, length:uint, frequency:uint = 2, pixelsPerChunk:uint = 1, backgroundColor:uint = 0x0):FlxSprite
+		#if flash
+		private function create(source:BitmapData, x:Int, y:Int, type:UInt, size:UInt, length:UInt, ?frequency:UInt = 2, ?pixelsPerChunk:UInt = 1, ?backgroundColor:UInt = 0x0):FlxSprite
+		#else
+		private function create(source:BitmapData, x:Int, y:Int, type:Int, size:Int, length:Int, ?frequency:Int = 2, ?pixelsPerChunk:Int = 1, ?backgroundColor:Int = 0x0):FlxSprite
+		#end
 		{
 			if (type == WAVETYPE_VERTICAL_SINE || type == WAVETYPE_VERTICAL_COSINE)
 			{
 				waveVertical = true;
 				
-				if (pixelsPerChunk >= source.width)
+				if (Std.int(pixelsPerChunk) >= source.width)
 				{
-					throw new Error("SineWaveFX: pixelsPerChunk cannot be >= source.width with WAVETYPE_VERTICAL");
+					throw "SineWaveFX: pixelsPerChunk cannot be >= source.width with WAVETYPE_VERTICAL";
 				}
 			}
 			else if (type == WAVETYPE_HORIZONTAL_SINE || type == WAVETYPE_HORIZONTAL_COSINE)
 			{
 				waveVertical = false;
 				
-				if (pixelsPerChunk >= source.height)
+				if (Std.int(pixelsPerChunk) >= source.height)
 				{
-					throw new Error("SineWaveFX: pixelsPerChunk cannot be >= source.height with WAVETYPE_HORIZONTAL");
+					throw "SineWaveFX: pixelsPerChunk cannot be >= source.height with WAVETYPE_HORIZONTAL";
 				}
 			}
 			
@@ -168,7 +204,7 @@ package org.flixel.plugin.photonstorm.FX
 			}
 			
 			//	The scratch bitmapData where we prepare the final sine-waved image
-			canvas = new BitmapData(sprite.width, sprite.height, true, backgroundColor);
+			canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
 			
 			//	Our local copy of the sprite image data
 			image = source.clone();
@@ -202,21 +238,25 @@ package org.flixel.plugin.photonstorm.FX
 		 * @param	frequency			The frequency of the peaks in the wave. MUST BE AN EVEN NUMBER! 2, 4, 6, 8, etc.
 		 * @param	pixelsPerChunk		How many pixels to use per step. Higher numbers make a more chunky but faster effect. Make sure source.width/height divides by this value evenly.
 		 */
-		public function updateWaveData(type:uint, size:uint, length:uint, frequency:uint = 2, pixelsPerChunk:uint = 1):void
+		#if flash
+		public function updateWaveData(type:UInt, size:UInt, length:UInt, ?frequency:UInt = 2, ?pixelsPerChunk:UInt = 1):Void
+		#else
+		public function updateWaveData(type:UInt, size:UInt, length:UInt, ?frequency:UInt = 2, ?pixelsPerChunk:UInt = 1):Void
+		#end
 		{
 			if (type > WAVETYPE_HORIZONTAL_COSINE)
 			{
-				throw new Error("SineWaveFX: Invalid WAVETYPE");
+				throw "SineWaveFX: Invalid WAVETYPE";
 			}
 			
 			if (FlxMath.isOdd(frequency))
 			{
-				throw new Error("SineWaveFX: frequency must be an even number");
+				throw "SineWaveFX: frequency must be an even number";
 			}
 			
 			waveType = type;
-			waveSize = uint(size * 0.5);
-			waveLength = uint(length / pixelsPerChunk);
+			waveSize = cast(Math.floor(size * 0.5), UInt);
+			waveLength = cast(Math.floor(length / pixelsPerChunk), UInt);
 			waveFrequency = frequency;
 			wavePixelChunk = pixelsPerChunk;
 			waveData = FlxMath.sinCosGenerator(waveLength, waveSize, waveSize, waveFrequency);
@@ -233,15 +273,15 @@ package org.flixel.plugin.photonstorm.FX
 		 * 
 		 * @param	callback		The function to call every time the wave completes a full cycle (duration will vary based on waveLength)
 		 */
-		public function setLoopCompleteCallback(callback:Function):void
+		public function setLoopCompleteCallback(callbackFunc:Dynamic):Void
 		{
-			waveLoopCallback = callback;
+			waveLoopCallback = callbackFunc;
 		}
 		
 		/**
 		 * Called by the FlxSpecialFX plugin. Should not be called directly.
 		 */
-		public function draw():void
+		public function draw():Void
 		{
 			if (ready)
 			{
@@ -260,14 +300,15 @@ package org.flixel.plugin.photonstorm.FX
 				canvas.lock();
 				canvas.fillRect(clsRect, clsColor);
 				
-				var s:uint = 0;
+				var s:UInt = 0;
 				
 				copyRect.x = 0;
 				copyRect.y = 0;
 				
 				if (waveVertical)
 				{
-					for (var x:int = 0; x < image.width; x += wavePixelChunk)
+					var x:Int = 0;
+					while (x < image.width)
 					{
 						copyPoint.x = x;
 						copyPoint.y = waveSize + (waveSize / 2) + waveData[s];
@@ -277,11 +318,13 @@ package org.flixel.plugin.photonstorm.FX
 						copyRect.x += wavePixelChunk;
 						
 						s++;
+						x += wavePixelChunk;
 					}
 				}
 				else
 				{
-					for (var y:int = 0; y < image.height; y += wavePixelChunk)
+					var y:Int = 0;
+					while (y < image.height)
 					{
 						copyPoint.x = waveSize + (waveSize / 2) + waveData[s];
 						copyPoint.y = y;
@@ -291,22 +334,24 @@ package org.flixel.plugin.photonstorm.FX
 						copyRect.y += wavePixelChunk;
 						
 						s++;
+						y += wavePixelChunk;
 					}
 				}
 				
 				//	Cycle through the wave data - this is what causes the image to "undulate"
-				var t:Number = waveData.shift();
+				var t:Float = waveData.shift();
 				waveData.push(t);
 				
 				waveDataCounter++;
 				
-				if (waveDataCounter == waveData.length)
+				if (Std.int(waveDataCounter) == waveData.length)
 				{
 					waveDataCounter = 0;
 					
-					if (waveLoopCallback is Function)
+					if (waveLoopCallback != null)
 					{
-						waveLoopCallback.call();
+						Reflect.callMethod(this, waveLoopCallback, []);
+						//waveLoopCallback.call();
 					}
 				}
 				
@@ -321,11 +366,9 @@ package org.flixel.plugin.photonstorm.FX
 		
 		public function toString():String
 		{
-			var output:Array = [ "Type: " + waveType, "Size: " + waveSize, "Length: " + waveLength, "Frequency: " + waveFrequency, "Chunks: " + wavePixelChunk, "clsRect: " + clsRect ];
+			var output:Array<String> = [ "Type: " + waveType, "Size: " + waveSize, "Length: " + waveLength, "Frequency: " + waveFrequency, "Chunks: " + wavePixelChunk, "clsRect: " + clsRect ];
 			
 			return output.join(",");
 		}
 		
 	}
-
-}

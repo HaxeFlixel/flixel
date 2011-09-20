@@ -15,6 +15,16 @@ import org.flixel.plugin.photonstorm.FlxGridOverlay;
 import org.flixel.plugin.photonstorm.FlxLinkedGroup;
 import org.flixel.plugin.photonstorm.FlxMath;
 import org.flixel.plugin.photonstorm.FlxVelocity;
+import org.flixel.plugin.photonstorm.fx.BaseFX;
+import org.flixel.plugin.photonstorm.fx.BlurFX;
+import org.flixel.plugin.photonstorm.fx.CenterSlideFX;
+import org.flixel.plugin.photonstorm.fx.FloodFillFX;
+import org.flixel.plugin.photonstorm.fx.GlitchFX;
+import org.flixel.plugin.photonstorm.fx.PlasmaFX;
+import org.flixel.plugin.photonstorm.fx.RainbowLineFX;
+import org.flixel.plugin.photonstorm.fx.RevealFX;
+import org.flixel.plugin.photonstorm.fx.SineWaveFX;
+import org.flixel.plugin.photonstorm.fx.StarfieldFX;
 
 /**
  * ...
@@ -61,6 +71,8 @@ class Main extends Sprite
 		var ctrlHandler:FlxControlHandler = new FlxControlHandler(new FlxSprite(), FlxControlHandler.MOVEMENT_INSTANT, FlxControlHandler.STOPPING_INSTANT);
 		var flxCtrl:FlxControl = new FlxControl();
 		var flxGrid:FlxGridOverlay = new FlxGridOverlay();
+		
+		var fx:StarfieldFX = new StarfieldFX();
 	}
 	
 	public function onDelay():Void
