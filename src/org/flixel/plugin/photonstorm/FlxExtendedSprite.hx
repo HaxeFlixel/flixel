@@ -874,13 +874,13 @@ class FlxExtendedSprite extends FlxSprite
 	 */
 	public function flipGravity():Void
 	{
-		if (gravityX != 0)
+		if (!Math.isNaN(gravityX) && gravityX != 0)
 		{
 			gravityX = -gravityX;
 			acceleration.x = gravityX;
 		}
 		
-		if (gravityY != 0)
+		if (!Math.isNaN(gravityY) && gravityY != 0)
 		{
 			gravityY = -gravityY;
 			acceleration.y = gravityY;

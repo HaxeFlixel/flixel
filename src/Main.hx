@@ -5,10 +5,13 @@ import flash.events.Event;
 import flash.Lib;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.baseTypes.MouseSpring;
+import org.flixel.plugin.photonstorm.FlxControl;
+import org.flixel.plugin.photonstorm.FlxControlHandler;
 import org.flixel.plugin.photonstorm.FlxDelay;
 import org.flixel.plugin.photonstorm.FlxDisplay;
 import org.flixel.plugin.photonstorm.FlxExplode;
 import org.flixel.plugin.photonstorm.FlxExtendedSprite;
+import org.flixel.plugin.photonstorm.FlxGridOverlay;
 import org.flixel.plugin.photonstorm.FlxLinkedGroup;
 import org.flixel.plugin.photonstorm.FlxMath;
 import org.flixel.plugin.photonstorm.FlxVelocity;
@@ -55,7 +58,9 @@ class Main extends Sprite
 		
 		var mouseSpring:MouseSpring = new MouseSpring(new FlxExtendedSprite());
 		//var extSpr:FlxExtendedSprite = new FlxExtendedSprite();
-		
+		var ctrlHandler:FlxControlHandler = new FlxControlHandler(new FlxSprite(), FlxControlHandler.MOVEMENT_INSTANT, FlxControlHandler.STOPPING_INSTANT);
+		var flxCtrl:FlxControl = new FlxControl();
+		var flxGrid:FlxGridOverlay = new FlxGridOverlay();
 	}
 	
 	public function onDelay():Void
