@@ -14,29 +14,31 @@
  * @author Richard Davey / Photon Storm
 */
 
-package org.flixel.plugin.photonstorm 
-{
+package org.flixel.plugin.photonstorm;
+
 	import flash.utils.Dictionary;
-	import org.flixel.*;
-	import org.flixel.plugin.photonstorm.FX.BlurFX;
-	import org.flixel.plugin.photonstorm.FX.CenterSlideFX;
-	import org.flixel.plugin.photonstorm.FX.FloodFillFX;
-	import org.flixel.plugin.photonstorm.FX.GlitchFX;
-	import org.flixel.plugin.photonstorm.FX.PlasmaFX;
-	import org.flixel.plugin.photonstorm.FX.RainbowLineFX;
-	import org.flixel.plugin.photonstorm.FX.RevealFX;
-	import org.flixel.plugin.photonstorm.FX.SineWaveFX;
-	import org.flixel.plugin.photonstorm.FX.StarfieldFX;
+	import org.flixel.FlxBasic;
+	import org.flixel.plugin.photonstorm.fx.BaseFX;
+	import org.flixel.plugin.photonstorm.fx.BlurFX;
+	import org.flixel.plugin.photonstorm.fx.CenterSlideFX;
+	import org.flixel.plugin.photonstorm.fx.FloodFillFX;
+	import org.flixel.plugin.photonstorm.fx.GlitchFX;
+	import org.flixel.plugin.photonstorm.fx.PlasmaFX;
+	import org.flixel.plugin.photonstorm.fx.RainbowLineFX;
+	import org.flixel.plugin.photonstorm.fx.RevealFX;
+	import org.flixel.plugin.photonstorm.fx.SineWaveFX;
+	import org.flixel.plugin.photonstorm.fx.StarfieldFX;
 	
 	/**
 	 * FlxSpecialFX is a single point of access to all of the FX Plugins available in the Flixel Power Tools
 	 */
-	public class FlxSpecialFX extends FlxBasic
+	class FlxSpecialFX extends FlxBasic
 	{
 		private static var members:Dictionary = new Dictionary(true);
 		
 		public function FlxSpecialFX() 
 		{
+			super();
 		}
 		
 		//	THE SPECIAL FX PLUGINS AVAILABLE
@@ -48,7 +50,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function plasma():PlasmaFX
 		{
-			var temp:PlasmaFX = new PlasmaFX;
+			var temp:PlasmaFX = new PlasmaFX();
 			
 			members[temp] = temp;
 			
@@ -62,7 +64,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function rainbowLine():RainbowLineFX
 		{
-			var temp:RainbowLineFX = new RainbowLineFX;
+			var temp:RainbowLineFX = new RainbowLineFX();
 			
 			members[temp] = temp;
 			
@@ -76,7 +78,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function floodFill():FloodFillFX
 		{
-			var temp:FloodFillFX = new FloodFillFX;
+			var temp:FloodFillFX = new FloodFillFX();
 			
 			members[temp] = temp;
 			
@@ -90,7 +92,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function sineWave():SineWaveFX
 		{
-			var temp:SineWaveFX = new SineWaveFX;
+			var temp:SineWaveFX = new SineWaveFX();
 			
 			members[temp] = temp;
 			
@@ -104,7 +106,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function glitch():GlitchFX
 		{
-			var temp:GlitchFX = new GlitchFX;
+			var temp:GlitchFX = new GlitchFX();
 			
 			members[temp] = temp;
 			
@@ -118,7 +120,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function starfield():StarfieldFX
 		{
-			var temp:StarfieldFX = new StarfieldFX;
+			var temp:StarfieldFX = new StarfieldFX();
 			
 			members[temp] = temp;
 			
@@ -132,7 +134,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function blur():BlurFX
 		{
-			var temp:BlurFX = new BlurFX;
+			var temp:BlurFX = new BlurFX();
 			
 			members[temp] = temp;
 			
@@ -146,7 +148,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function centerSlide():CenterSlideFX
 		{
-			var temp:CenterSlideFX = new CenterSlideFX
+			var temp:CenterSlideFX = new CenterSlideFX();
 			
 			members[temp] = temp;
 			
@@ -160,7 +162,7 @@ package org.flixel.plugin.photonstorm
 		 */
 		public static function reveal():RevealFX
 		{
-			var temp:RevealFX = new RevealFX
+			var temp:RevealFX = new RevealFX();
 			
 			members[temp] = temp;
 			
@@ -179,7 +181,7 @@ package org.flixel.plugin.photonstorm
 		 * 
 		 * @param	source	A reference to the FX Plugin you wish to run. If null it will start all currently added FX Plugins
 		 */
-		public static function startFX(source:Class = null):void
+		public static function startFX(source:Class<BaseFX> = null):Void
 		{
 			if (source)
 			{
@@ -199,7 +201,7 @@ package org.flixel.plugin.photonstorm
 		 * 
 		 * @param	source	A reference to the FX Plugin you wish to stop. If null it will stop all currently added FX Plugins
 		 */
-		public static function stopFX(source:Class = null):void
+		public static function stopFX(source:Class<BaseFX> = null):Void
 		{
 			if (source)
 			{
@@ -220,7 +222,7 @@ package org.flixel.plugin.photonstorm
 		 * @param	source	A reference to the FX Plugin you wish to run. If null it will start all currently added FX Plugins
 		 * @return	Boolean	true if the FX Plugin is active, false if not
 		 */
-		public static function isActive(source:Class):Boolean
+		public static function isActive(source:Class<BaseFX>):Bool
 		{
 			if (members[source])
 			{
@@ -233,7 +235,7 @@ package org.flixel.plugin.photonstorm
 		/**
 		 * Called automatically by Flixels Plugin handler
 		 */
-		override public function draw():void
+		override public function draw():Void
 		{
 			if (FlxG.paused)
 			{
@@ -255,7 +257,7 @@ package org.flixel.plugin.photonstorm
 		 * @param	source	The FX Plugin to remove
 		 * @return	Boolean	true if the plugin was removed, otherwise false.
 		 */
-		public static function remove(source:Object):Boolean
+		public static function remove(source:BaseFX):Bool
 		{
 			if (members[source])
 			{
@@ -273,7 +275,7 @@ package org.flixel.plugin.photonstorm
 		 * Removes all FX Plugins<br>
 		 * This is called automatically if the plugin is destroyed, but should be called manually by you if you change States
 		 */
-		public static function clear():void
+		public static function clear():Void
 		{
 			for each (var obj:Object in members)
 			{
@@ -284,7 +286,7 @@ package org.flixel.plugin.photonstorm
 		/**
 		 * Destroys all FX Plugins currently added and then destroys this instance of the FlxSpecialFX Plugin
 		 */
-		override public function destroy():void
+		override public function destroy():Void
 		{
 			clear();
 		}

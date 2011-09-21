@@ -27,7 +27,7 @@ package org.flixel.plugin.photonstorm
 	public class FlxScrollZone extends FlxBasic
 	{
 		private static var members:Dictionary = new Dictionary(true);
-		private static var zeroPoint:Point = new Point;
+		private static var zeroPoint:Point = new Point();
 		
 		public function FlxScrollZone() 
 		{

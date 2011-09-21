@@ -15,6 +15,7 @@ import org.flixel.plugin.photonstorm.FlxGridOverlay;
 import org.flixel.plugin.photonstorm.FlxLinkedGroup;
 import org.flixel.plugin.photonstorm.FlxMath;
 import org.flixel.plugin.photonstorm.FlxVelocity;
+import org.flixel.plugin.photonstorm.FlxWeapon;
 import org.flixel.plugin.photonstorm.fx.BaseFX;
 import org.flixel.plugin.photonstorm.fx.BlurFX;
 import org.flixel.plugin.photonstorm.fx.CenterSlideFX;
@@ -51,10 +52,10 @@ class Main extends Sprite
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, init);
 		// entry point
-		//flash.Lib.current.addChild(new ParticlesDemo());
+		flash.Lib.current.addChild(new ParticlesDemo());
 		trace(FlxMath.rand());
 		
-		var spr:FlxSprite = new FlxSprite();
+		/*var spr:FlxSprite = new FlxSprite();
 		var grp:FlxLinkedGroup = new FlxLinkedGroup();
 		grp.add(spr);
 		var expl:FlxExplode = new FlxExplode();
@@ -73,6 +74,9 @@ class Main extends Sprite
 		var flxGrid:FlxGridOverlay = new FlxGridOverlay();
 		
 		var fx:StarfieldFX = new StarfieldFX();
+		var weapon:FlxWeapon = new FlxWeapon("myWeapon");*/
+		
+		
 	}
 	
 	public function onDelay():Void
