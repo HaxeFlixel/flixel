@@ -25,11 +25,10 @@ class FlxControl extends FlxBasic
 	public static var player4:FlxControlHandler;
 	
 	//	Additional control handlers
-	private static var members:Array<FlxControlHandler>;
+	private static var members:Array<FlxControlHandler> = new Array();
 	
 	public function new() 
 	{
-		members = [];
 		super();
 	}
 	
@@ -48,11 +47,6 @@ class FlxControl extends FlxBasic
 	 */
 	public static function create(source:FlxSprite, movementType:Int, stoppingType:Int, ?player:Int = 1, ?updateFacing:Bool = false, ?enableArrowKeys:Bool = true):FlxControlHandler
 	{
-		if (members == null)
-		{
-			members = [];
-		}
-		
 		var result:FlxControlHandler;
 		
 		if (player == 1)

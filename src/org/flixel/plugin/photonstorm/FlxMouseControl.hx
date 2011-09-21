@@ -33,17 +33,17 @@ class FlxMouseControl extends FlxBasic
 	/**
 	 * The value that the FlxExtendedSprites are sorted by before deciding which is "on-top" for click select
 	 */
-	public static var sortIndex:String;
+	public static var sortIndex:String = "y";
 	
 	/**
 	 * The sorting order. If the sortIndex is "y" and the order is ASCENDING then a sprite with a Y value of 200 would be "on-top" of one with a Y value of 100.
 	 */
-	public static var sortOrder:Int;
+	public static var sortOrder:Int = ASCENDING;
 	
 	/**
 	 * Is the mouse currently dragging a sprite? If you have just clicked but NOT yet moved the mouse then this might return false.
 	 */
-	public static var isDragging:Bool;
+	public static var isDragging:Bool = false;
 	
 	/**
 	 * The FlxExtendedSprite that is currently being dragged, if any.
@@ -54,9 +54,9 @@ class FlxMouseControl extends FlxBasic
 	 * The FlxExtendedSprite that currently has the mouse button pressed on it
 	 */
 	public static var clickTarget:FlxExtendedSprite;
-	private static var clickStack:Array<FlxExtendedSprite>;
+	private static var clickStack:Array<FlxExtendedSprite> = new Array<FlxExtendedSprite>();
 	private static var clickCoords:FlxPoint;
-	private static var hasClickTarget:Bool;
+	private static var hasClickTarget:Bool = false;
 	
 	private static var oldX:Int;
 	private static var oldY:Int;
@@ -88,12 +88,6 @@ class FlxMouseControl extends FlxBasic
 	
 	public function new() 
 	{
-		sortIndex = "y";
-		sortOrder = ASCENDING;
-		isDragging = false;
-		clickStack = new Array<FlxExtendedSprite>();
-		hasClickTarget = false;
-		
 		super();
 	}
 	

@@ -33,8 +33,8 @@ class FlxMath
 	private static var mr:Int = 0;
 	#end
 	
-	private static var cosTable:Array<Float>;
-	private static var sinTable:Array<Float>;
+	private static var cosTable:Array<Float> = new Array<Float>();
+	private static var sinTable:Array<Float> = new Array<Float>();
 	
 	private static var coefficient1:Float = Math.PI / 4;
 	private static inline var RADTODEG:Float = 180 / Math.PI;
@@ -42,10 +42,7 @@ class FlxMath
 	
 	public function new() 
 	{ 
-		mr = 0;
-		cosTable = new Array<Float>();
-		sinTable = new Array<Float>();
-		coefficient1 = Math.PI / 4;
+		
 	}
 	
 	/**

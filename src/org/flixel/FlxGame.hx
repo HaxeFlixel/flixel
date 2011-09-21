@@ -14,7 +14,6 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flash.Lib;
-import org.flixel.plugin.photonstorm.FlxMath;
 
 #if flash
 import flash.text.AntiAliasType;
@@ -214,9 +213,6 @@ class FlxGame extends Sprite
 	#end
 	{
 		super();
-		
-		// Init Math constants
-		new FlxMath();
 		
 		//super high priority init stuff (focus, mouse, etc)
 		_lostFocus = false;
