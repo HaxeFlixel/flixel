@@ -292,7 +292,7 @@ class FlxBar extends FlxSprite
 			pxPerPercent = barHeight / (max - min);
 		}
 		
-		trace("setRange pct:", pct, "pxPerPercent", pxPerPercent);
+		//trace("setRange pct:", pct, "pxPerPercent", pxPerPercent);
 	}
 	
 	/**

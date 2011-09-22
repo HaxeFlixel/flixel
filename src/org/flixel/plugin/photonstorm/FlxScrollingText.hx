@@ -24,7 +24,7 @@ import org.flixel.FlxSprite;
  */
 class FlxScrollingText extends FlxBasic
 {
-	private static var members:TypedDictionary<FlxSprite, Dynamic> = new TypedDictionary(true);
+	private static var members:TypedDictionary<FlxSprite, FlxScrollingTextData> = new TypedDictionary(true);
 	private static var zeroPoint:Point = new Point();
 
 	public function new() 
@@ -53,7 +53,7 @@ class FlxScrollingText extends FlxBasic
 	public static function add(bitmapFont:FlxBitmapFont, region:Rectangle, ?pixels:Int = 1, ?steps:Int = 0, ?text:String = "FLIXEL ROCKS!", ?onlyScrollOnscreen:Bool = true, ?loopOnWrap:Bool = true):FlxSprite
 	#end
 	{
-		var data:Dynamic = {};
+		var data:FlxScrollingTextData = new FlxScrollingTextData();
 		
 		//	Sanity checks
 		if (pixels > bitmapFont.characterWidth)
@@ -135,12 +135,12 @@ class FlxScrollingText extends FlxBasic
 		{
 			if (obj != null && (members.get(obj).onScreenScroller == true && obj.onScreen()) && members.get(obj).scrolling == true && obj.exists)
 			{
-				scroll(obj);
+				scroll(members.get(obj));
 			}
 		}
 	}
 	
-	private static function scroll(data:Dynamic):Void
+	private static function scroll(data:FlxScrollingTextData):Void
 	{
 		//	Have we reached enough steps?
 		
@@ -170,7 +170,7 @@ class FlxScrollingText extends FlxBasic
 			//	Update
 			data.x += data.pixels;
 			
-			if (data.x >= data.charWidth)
+			if (data.x >= Std.int(data.charWidth))
 			{
 				//	Get the next character
 				data.currentChar++;
@@ -311,5 +311,45 @@ class FlxScrollingText extends FlxBasic
 	{
 		clear();
 	}
+	
+}
+
+class FlxScrollingTextData
+{
+	
+	public var bitmapFont:FlxBitmapFont;
+	public var bitmapChar:BitmapData;
+	#if flash
+	public var charWidth:UInt;
+	public var charHeight:UInt;
+	public var step:UInt;
+	public var maxStep:UInt;
+	public var pixels:UInt;
+	#else
+	public var charWidth:Int;
+	public var charHeight:Int;
+	public var step:Int;
+	public var maxStep:Int;
+	public var pixels:Int;
+	#end
+	public var shiftRect:Rectangle;
+	public var bufferRect:Rectangle;
+	public var slice:Rectangle;
+	public var endPoint:Point;
+	public var x:Int;
+	public var sprite:FlxSprite;
+	public var buffer:BitmapData;
+	public var region:Rectangle;
+	public var clearCount:Int;
+	public var clearDistance:Float;
+	public var text:String;
+	public var currentChar:Int;
+	public var maxChar:Int;
+	public var wrap:Bool;
+	public var complete:Bool;
+	public var scrolling:Bool;
+	public var onScreenScroller:Bool;
+	
+	public function new() { }
 	
 }

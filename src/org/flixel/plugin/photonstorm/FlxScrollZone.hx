@@ -27,7 +27,7 @@ import org.flixel.FlxSprite;
  */
 class FlxScrollZone extends FlxBasic
 {
-	private static var members:TypedDictionary<FlxSprite, Dynamic> = new TypedDictionary(true);
+	private static var members:TypedDictionary<FlxSprite, FlxScrollZoneData> = new TypedDictionary(true);
 	private static var zeroPoint:Point = new Point();
 	
 	public function new() 
@@ -54,12 +54,12 @@ class FlxScrollZone extends FlxBasic
 			throw "FlxSprite already exists in FlxScrollZone, use addZone to add a new scrolling region to an already added FlxSprite";
 		}
 		
-		var data:Dynamic = {};
+		var data:FlxScrollZoneData = new FlxScrollZoneData();
 		
 		data.source = source;
 		data.scrolling = true;
 		data.onlyScrollOnscreen = onlyScrollOnscreen;
-		data.zones = new Array<Dynamic>();
+		data.zones = new Array<ZoneData>();
 		
 		members.set(source, data);
 		
@@ -80,7 +80,7 @@ class FlxScrollZone extends FlxBasic
 		var texture:BitmapData = new BitmapData(Math.floor(region.width), Math.floor(region.height), true, 0x00000000);
 		texture.copyPixels(source.framePixels, region, zeroPoint, null, null, true);
 		
-		var data:Dynamic = {};
+		var data:ZoneData = new ZoneData();
 		
 		data.buffer = new Sprite();
 		data.texture = texture;
@@ -222,15 +222,15 @@ class FlxScrollZone extends FlxBasic
 		{
 			if ((members.get(obj).onlyScrollOnscreen == true && obj.onScreen()) && members.get(obj).scrolling == true && obj.exists)
 			{
-				scroll(obj);
+				scroll(members.get(obj));
 			}
 		}
 	}
 	
-	private function scroll(data:Dynamic):Void
+	private function scroll(data:FlxScrollZoneData):Void
 	{
 		//	Loop through the scroll zones defined in this object
-		for (zone in cast(data.zones, Array<Dynamic>))
+		for (zone in data.zones)
 		{
 			zone.scrollMatrix.tx += zone.distanceX;
 			zone.scrollMatrix.ty += zone.distanceY;
@@ -247,7 +247,7 @@ class FlxScrollZone extends FlxBasic
 			
 			data.source.pixels.draw(zone.buffer, zone.drawMatrix);
 		}
-		
+	
 		data.source.dirty = true;
 	}
 	
@@ -256,4 +256,28 @@ class FlxScrollZone extends FlxBasic
 		clear();
 	}
 	
+}
+
+class FlxScrollZoneData
+{
+	public var source:FlxSprite;
+	public var scrolling:Bool;
+	public var onlyScrollOnscreen:Bool;
+	public var zones:Array<ZoneData>;
+	
+	public function new () { }
+}
+
+class ZoneData
+{
+	public var buffer:Sprite;
+	public var texture:BitmapData;
+	public var region:Rectangle;
+	public var clearRegion:Bool;
+	public var distanceX:Float;
+	public var distanceY:Float;
+	public var scrollMatrix:Matrix;
+	public var drawMatrix:Matrix;
+	
+	public function new () { }
 }
