@@ -311,7 +311,7 @@ class FlxG
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	static private var _cache:Dynamic;
+	static private var _cache:Hash<BitmapData>;
 	
 	static public function getLibraryName():String
 	{
@@ -821,7 +821,7 @@ class FlxG
 	 */
 	static public function checkBitmapCache(Key:String):Bool
 	{
-		return ((Reflect.hasField(_cache, Key)) && (Reflect.field(_cache, Key) != null));
+		return (_cache.exists(Key) && _cache.get(Key) != null);
 	}
 		
 	/**
@@ -857,9 +857,9 @@ class FlxG
 		if (!checkBitmapCache(key))
 		{
 			//_cache[Key] = new BitmapData(Width,Height,true,Color);
-			Reflect.setField(_cache, key, new BitmapData(Width, Height, true, Color));
+			_cache.set(key, new BitmapData(Width, Height, true, Color));
 		}
-		return Reflect.field(_cache, key);
+		return _cache.get(key);
 	}
 	
 	/**
@@ -894,14 +894,14 @@ class FlxG
 		{
 			//_cache[Key] = (new Graphic()).bitmapData;
 			var bd:BitmapData = Type.createInstance(Graphic, []).bitmapData;
-			Reflect.setField(_cache, key, bd);
+			_cache.set(key, bd);
 			if (Reverse)
 			{
 				needReverse = true;
 			}
 		}
 		//var pixels:BitmapData = _cache[Key];
-		var pixels:BitmapData = Reflect.field(_cache, key);
+		var pixels:BitmapData = _cache.get(key);
 		if (!needReverse && Reverse && (pixels.width == Type.createInstance(Graphic, []).bitmapData.width/*(new Graphic()).bitmapData.width)*/))
 		{
 			needReverse = true;
@@ -916,7 +916,7 @@ class FlxG
 			newPixels.draw(pixels, mtx);
 			pixels = newPixels;
 			//_cache[Key] = pixels;
-			Reflect.setField(_cache, key, pixels);
+			_cache.set(key, pixels);
 		}
 		return pixels;
 	}
@@ -926,7 +926,7 @@ class FlxG
 	 */
 	static public function clearBitmapCache():Void
 	{
-		_cache = {};
+		_cache = new Hash();
 	}
 	
 	public static var stage(getStage, null):Stage;
