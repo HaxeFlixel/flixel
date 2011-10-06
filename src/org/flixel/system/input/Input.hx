@@ -1,6 +1,7 @@
 package org.flixel.system.input;
 
 import org.flixel.FlxU;
+import org.flixel.system.replay.CodeValuePair;
 
 /**
  * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
@@ -11,11 +12,11 @@ class Input
 	/**
 	 * @private
 	 */
-	private var _lookup:Dynamic;
+	private var _lookup:Hash<Int>;
 	/**
 	 * @private
 	 */
-	private var _map:Array<Dynamic>;
+	private var _map:Array<MapObject>;
 	/**
 	 * @private
 	 */
@@ -32,8 +33,8 @@ class Input
 	{
 		_total = 256;
 		
-		_lookup = {};
-		_map = new Array<Dynamic>(/*_total*/);
+		_lookup = new Hash<Int>();
+		_map = new Array<MapObject>(/*_total*/);
 		FlxU.SetArrayLength(_map, _total);
 	}
 	
@@ -49,7 +50,7 @@ class Input
 		#end
 		while(i < _total)
 		{
-			var o:Dynamic = _map[i++];
+			var o:MapObject = _map[i++];
 			if(o == null) continue;
 			if((o.last == -1) && (o.current == -1)) o.current = 0;
 			else if((o.last == 2) && (o.current == 2)) o.current = 1;
@@ -65,7 +66,7 @@ class Input
 		for(i in 0..._total)
 		{
 			if(_map[i] == null) continue;
-			var o:Dynamic = _map[i];
+			var o:MapObject = _map[i];
 			Reflect.setField(this, o.name, false);
 			o.current = 0;
 			o.last = 0;
@@ -78,21 +79,30 @@ class Input
 	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
 	 * @return	Whether the key is pressed
 	 */
-	public function pressed(Key:String):Bool { return Reflect.field(this, Key); }
+	public function pressed(Key:String):Bool 
+	{ 
+		return Reflect.field(this, Key); 
+	}
 	
 	/**
 	 * Check to see if this key was just pressed.
 	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
 	 * @return	Whether the key was just pressed
 	 */
-	public function justPressed(Key:String):Bool { return _map[Reflect.field(_lookup, Key)].current == 2; }
+	public function justPressed(Key:String):Bool 
+	{ 
+		return _map[_lookup.get(Key)].current == 2;
+	}
 	
 	/**
 	 * Check to see if this key is just released.
 	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
 	 * @return	Whether the key is just released.
 	 */
-	public function justReleased(Key:String):Bool { return _map[Reflect.field(_lookup, Key)].current == -1; }
+	public function justReleased(Key:String):Bool 
+	{ 
+		return _map[_lookup.get(Key)].current == -1; 
+	}
 	
 	/**
 	 * If any keys are not "released" (0),
@@ -100,9 +110,9 @@ class Input
 	 * which keys are pressed and what state they are in.
 	 * @return	An array of key state data.  Null if there is no data.
 	 */
-	public function record():Array<Dynamic>
+	public function record():Array<CodeValuePair>
 	{
-		var data:Array<Dynamic> = null;
+		var data:Array<CodeValuePair> = null;
 		#if flash
 		var i:UInt = 0;
 		#else
@@ -110,16 +120,16 @@ class Input
 		#end
 		while(i < _total)
 		{
-			var o:Dynamic = _map[i++];
+			var o:MapObject = _map[i++];
 			if ((o == null) || (o.current == 0))
 			{
 				continue;
 			}
 			if (data == null)
 			{
-				data = new Array<Dynamic>();
+				data = new Array<CodeValuePair>();
 			}
-			data.push( { code:i - 1, value:o.current } );
+			data.push(new CodeValuePair(i - 1, o.current));
 		}
 		return data;
 	}
@@ -130,12 +140,12 @@ class Input
 	 * 
 	 * @param	Record	Array of data about key states.
 	 */
-	public function playback(Record:Array<Dynamic>):Void
+	public function playback(Record:Array<CodeValuePair>):Void
 	{
 		var i:Int = 0;
 		var l:Int = Record.length;
-		var o:Dynamic;
-		var o2:Dynamic;
+		var o:CodeValuePair;
+		var o2:MapObject;
 		while(i < l)
 		{
 			o = Record[i++];
@@ -157,7 +167,7 @@ class Input
 	public function getKeyCode(KeyName:String):Int
 	{
 		//return _lookup[KeyName];
-		return Reflect.field(_lookup, KeyName);
+		return _lookup.get(KeyName);
 	}
 	
 	/**
@@ -173,7 +183,7 @@ class Input
 		#end
 		while(i < _total)
 		{
-			var o:Dynamic = _map[i++];
+			var o:MapObject = _map[i++];
 			if ((o != null) && (o.current > 0))
 			{
 				return true;
@@ -194,8 +204,8 @@ class Input
 	#end
 	{
 		//_lookup[KeyName] = KeyCode;
-		Reflect.setField(_lookup, KeyName, KeyCode);
-		_map[KeyCode] = { name: KeyName, current: 0, last: 0 };
+		_lookup.set(KeyName, KeyCode);
+		_map[KeyCode] = new MapObject(KeyName, 0, 0);
 	}
 	
 	/**

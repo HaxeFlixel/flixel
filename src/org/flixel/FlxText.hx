@@ -124,7 +124,7 @@ class FlxText extends FlxSprite
 		format.font = Font;
 		format.size = Size;
 		format.color = Color;
-		Reflect.setField(format, "align", Alignment);
+		format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_shadow = ShadowColor;
@@ -256,7 +256,7 @@ class FlxText extends FlxSprite
 	public function setAlignment(Alignment:String):String
 	{
 		var format:TextFormat = dtfCopy();
-		Reflect.setField(format, "align", Alignment);
+		format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		calcFrame();
@@ -363,4 +363,28 @@ class FlxText extends FlxSprite
 		var defaultTextFormat:TextFormat = _textField.defaultTextFormat;
 		return new TextFormat(defaultTextFormat.font, defaultTextFormat.size, defaultTextFormat.color, defaultTextFormat.bold, defaultTextFormat.italic, defaultTextFormat.underline, defaultTextFormat.url, defaultTextFormat.target, defaultTextFormat.align);
 	}
+	
+	/**
+	 * Method for converting string to TextFormatAlign
+	 */
+	private function convertTextAlignmentFromString(strAlign:String):TextFormatAlign
+	{
+		if (strAlign == "right")
+		{
+			return TextFormatAlign.RIGHT;
+		}
+		else if (strAlign == "center")
+		{
+			return TextFormatAlign.CENTER;
+		}
+		else if (strAlign == "justify")
+		{
+			return TextFormatAlign.JUSTIFY;
+		}
+		else
+		{
+			return TextFormatAlign.LEFT;
+		}
+	}
+	
 }

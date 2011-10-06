@@ -98,7 +98,7 @@ class Keyboard extends Input
 	public var DOWN:Bool;
 	public var LEFT:Bool;
 	public var RIGHT:Bool;
-
+	
 	public function new()
 	{
 		super();
@@ -176,7 +176,7 @@ class Keyboard extends Input
 		addKey("DOWN",40);
 		addKey("LEFT",37);
 		addKey("RIGHT",39);
-		addKey("TAB",9);
+		addKey("TAB", 9);		
 	}
 	
 	/**
@@ -185,7 +185,7 @@ class Keyboard extends Input
 	 */
 	public function handleKeyDown(FlashEvent:KeyboardEvent):Void
 	{
-		var o:Dynamic = _map[FlashEvent.keyCode];
+		var o:MapObject = _map[FlashEvent.keyCode];
 		if(o == null) return;
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
@@ -198,7 +198,7 @@ class Keyboard extends Input
 	 */
 	public function handleKeyUp(FlashEvent:KeyboardEvent):Void
 	{
-		var object:Dynamic = _map[FlashEvent.keyCode];
+		var object:MapObject = _map[FlashEvent.keyCode];
 		if(object == null) return;
 		if(object.current > 0) object.current = -1;
 		else object.current = 0;

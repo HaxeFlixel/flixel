@@ -2,6 +2,7 @@ package org.flixel.system;
 
 import org.flixel.FlxG;
 import org.flixel.FlxU;
+import org.flixel.system.replay.CodeValuePair;
 import org.flixel.system.replay.FrameRecord;
 import org.flixel.system.replay.MouseRecord;
 
@@ -159,7 +160,7 @@ class FlxReplay
 	 */
 	public function recordFrame():Void
 	{
-		var keysRecord:Array<Dynamic> = FlxG.keys.record();
+		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
 		var mouseRecord:MouseRecord = FlxG.mouse.record();
 		if((keysRecord == null) && (mouseRecord == null))
 		{

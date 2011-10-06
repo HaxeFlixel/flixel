@@ -5,12 +5,14 @@ import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.MovieClip;
 import flash.display.Sprite;
+import flash.display.Stage;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.errors.Error;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.net.URLRequest;
+import org.flixel.FlxGame;
 //import flash.net.navigateToURL;
 import flash.text.TextField;
 import flash.text.TextFormat;
@@ -18,11 +20,16 @@ import flash.text.TextFormat;
 //import flash.utils.getTimer;
 import flash.Lib;
 
+#if flash
+import flash.text.TextFormatAlign;
+import flash.display.BlendMode;
+#end
+
 import org.flixel.FlxG;
 
 class LogoPNG extends BitmapData 
 {  
-	public function new() { super(0, 0); } 
+	public function new() { super(6, 6); } 
 }
 class ImgLogo extends Bitmap 
 {
@@ -52,9 +59,9 @@ class ImgLogoLight extends Bitmap
  */
 class FlxPreloader extends MovieClip
 {
-	/*[Embed(source="../data/logo.png")] private var ImgLogo:Class<Bitmap>*/;
-	/*[Embed(source="../data/logo_corners.png")] private var ImgLogoCorners:Class<Bitmap>*/;
-	/*[Embed(source="../data/logo_light.png")] private var ImgLogoLight:Class<Bitmap>*/;
+	/*[Embed(source="../data/logo.png")] private var ImgLogo:Class<Bitmap>;*/
+	/*[Embed(source="../data/logo_corners.png")] private var ImgLogoCorners:Class<Bitmap>;*/
+	/*[Embed(source="../data/logo_light.png")] private var ImgLogoLight:Class<Bitmap>*;/;
 
 	/**
 	 * @private
@@ -104,6 +111,8 @@ class FlxPreloader extends MovieClip
 	#else
 	private var _min:Int;
 	#end
+	
+	private var _stage:Stage;
 
 	/**
 	 * This should always be the name of your main project/document class (e.g. GravityHook).
@@ -128,8 +137,8 @@ class FlxPreloader extends MovieClip
 		minDisplayTime = 0;
 		
 		stop();
-		stage.scaleMode = StageScaleMode.NO_SCALE;
-		stage.align = StageAlign.TOP_LEFT;
+		_stage.scaleMode = StageScaleMode.NO_SCALE;
+		_stage.align = StageAlign.TOP_LEFT;
 		
 		//Check if we are on debug or release mode and set _DEBUG accordingly
 		try
@@ -139,19 +148,23 @@ class FlxPreloader extends MovieClip
 		catch(E:Error)
 		{
 			var re:EReg = ~/\[.*:[0-9]+\]/;
-			FlxG.debug = re.test(E.getStackTrace());
+			FlxG.debug = re.match(E.getStackTrace());
 		}
 		
 		var tmp:Bitmap;
 		if(!FlxG.debug && (myURL != null) && (root.loaderInfo.url.indexOf(myURL) < 0))
 		{
-			tmp = new Bitmap(new BitmapData(stage.stageWidth, stage.stageHeight, true, 0xFFFFFFFF));
+			tmp = new Bitmap(new BitmapData(_stage.stageWidth, _stage.stageHeight, true, 0xFFFFFFFF));
 			addChild(tmp);
 			
 			var format:TextFormat = new TextFormat();
 			format.color = 0x000000;
 			format.size = 16;
+			#if flash
+			format.align = TextFormatAlign.CENTER;
+			#else
 			format.align = "center";
+			#end
 			format.bold = true;
 			format.font = "system";
 			
@@ -183,7 +196,7 @@ class FlxPreloader extends MovieClip
 	{
 		if(!this._init)
 		{
-			if ((stage.stageWidth <= 0) || (stage.stageHeight <= 0))
+			if ((_stage.stageWidth <= 0) || (_stage.stageHeight <= 0))
 			{
 				return;
 			}
@@ -192,12 +205,12 @@ class FlxPreloader extends MovieClip
 		}
 		graphics.clear();
 		var time:Int = Lib.getTimer();
-		if((framesLoaded >= totalFrames) && (time > _min))
+		if((framesLoaded >= totalFrames) && (time > Std.int(_min)))
 		{
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			nextFrame();
-			var mainClass:Class = Class(getDefinitionByName(className));
-			if(mainClass)
+			var mainClass:Class<Dynamic> = Type.resolveClass(className); // Class(getDefinitionByName(className));
+			if(mainClass != null)
 			{
 				var app:Dynamic = Type.createInstance(mainClass, []);
 				addChild(cast(app, DisplayObject));
@@ -224,14 +237,14 @@ class FlxPreloader extends MovieClip
 		_min = 0;
 		if (!FlxG.debug)
 		{
-			_min = minDisplayTime * 1000;
+			_min = Math.floor(minDisplayTime * 1000);
 		}
 		_buffer = new Sprite();
 		_buffer.scaleX = 2;
 		_buffer.scaleY = 2;
 		addChild(_buffer);
-		_width = stage.stageWidth / _buffer.scaleX;
-		_height = stage.stageHeight / _buffer.scaleY;
+		_width = Math.floor(_stage.stageWidth / _buffer.scaleX);
+		_height = Math.floor(_stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width,_height,false,0x00345e)));
 		var bitmap:Bitmap = new ImgLogoLight();
 		bitmap.smoothing = true;
@@ -260,7 +273,11 @@ class FlxPreloader extends MovieClip
 		_buffer.addChild(_logo);
 		_logoGlow = new ImgLogo();
 		_logoGlow.smoothing = true;
+		#if flash
+		_logoGlow.blendMode = BlendMode.SCREEN;
+		#else
 		_logoGlow.blendMode = "screen";
+		#end
 		_logoGlow.scaleX = _logoGlow.scaleY = _height/8;
 		_logoGlow.x = (_width-_logoGlow.width)/2;
 		_logoGlow.y = (_height-_logoGlow.height)/2;
@@ -282,7 +299,11 @@ class FlxPreloader extends MovieClip
 			}
 			i+=2;
 		}
+		#if flash
+		bitmap.blendMode = BlendMode.OVERLAY;
+		#else
 		bitmap.blendMode = "overlay";
+		#end
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
 	}

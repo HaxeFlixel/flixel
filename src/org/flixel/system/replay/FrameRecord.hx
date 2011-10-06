@@ -12,7 +12,7 @@ class FrameRecord
 	/**
 	 * An array of simple integer pairs referring to what key is pressed, and what state its in.
 	 */
-	public var keys:Array<Dynamic>;
+	public var keys:Array<CodeValuePair>;
 	/**
 	 * A container for the 4 mouse state integers.
 	 */
@@ -35,7 +35,7 @@ class FrameRecord
 	 * @param Mouse		Mouse data from the mouse manager.
 	 * @return A reference to this <code>FrameRecord</code> object.
 	 */
-	public function create(Frame:Float, ?Keys:Array<Dynamic> = null, ?Mouse:MouseRecord = null):FrameRecord
+	public function create(Frame:Float, ?Keys:Array<CodeValuePair> = null, ?Mouse:MouseRecord = null):FrameRecord
 	{
 		frame = Math.floor(Frame);
 		keys = Keys;
@@ -62,7 +62,7 @@ class FrameRecord
 		
 		if(keys != null)
 		{
-			var object:Dynamic;
+			var object:CodeValuePair;
 			var i:Int = 0;
 			var l:Int = keys.length;
 			while(i < l)
@@ -72,7 +72,7 @@ class FrameRecord
 					output += ",";
 				}
 				object = keys[i++];
-				output += Reflect.field(object, "code") + ":" + Reflect.field(object, "value");
+				output += object.code + ":" + object.value;
 			}
 		}
 		
@@ -120,9 +120,9 @@ class FrameRecord
 				{
 					if (keys == null)
 					{
-						keys = new Array<Dynamic>();
+						keys = new Array<CodeValuePair>();
 					}
-					keys.push({code:Std.parseInt(keyPair[0]), value:Std.parseInt(keyPair[1])});
+					keys.push(new CodeValuePair(Std.parseInt(keyPair[0]), Std.parseInt(keyPair[1])));
 				}
 			}
 		}
