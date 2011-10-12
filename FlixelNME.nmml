@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<app title="FlixelNME Test" file="FlixelNMETest" main="Test" version="0.0.1" company="Zaphod" />
+	
+	<window width="400" height="300" fps="30" orientation="portrait" resizable="true" if="target_flash" />
+	<window width="400" height="300" fps="30" orientation="portrait" resizable="true" unless="target_flash" />
+ 	
+	<set name="BUILD_DIR" value="Export" />
+	
+	<classpath name="Source" />
+	
+	<haxelib name="nme" />
+	
+	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />
+	
+	<!-- <icon name="Assets/nme.svg" /> -->
+	
+	<ndll name="std" />
+	<ndll name="regexp" />
+	<ndll name="zlib" />
+	<ndll name="nme" haxelib="nme" />
+	
+</project>
