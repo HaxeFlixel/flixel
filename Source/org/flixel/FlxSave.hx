@@ -2,10 +2,10 @@ package org.flixel;
 
 import flash.errors.Error;
 import flash.net.SharedObject;
+import flash.net.SharedObjectFlushStatus;
 
 #if flash
 import flash.events.NetStatusEvent;
-import flash.net.SharedObjectFlushStatus;
 #end
 
 /**
@@ -15,15 +15,10 @@ import flash.net.SharedObjectFlushStatus;
  */
 class FlxSave /*implements Dynamic*/
 {
-	#if flash
-	static private var SUCCESS:UInt = 0;
-	static private var PENDING:UInt = 1;
-	static private var ERROR:UInt = 2;
-	#else
 	static private var SUCCESS:Int = 0;
 	static private var PENDING:Int = 1;
 	static private var ERROR:Int = 2;
-	#end
+	
 	/**
 	 * Allows you to directly access the data container in the local shared object.
 	 * @default null
@@ -127,22 +122,28 @@ class FlxSave /*implements Dynamic*/
 			return false;
 		}
 		_onComplete = OnComplete;
-		var result:String = null;
 		#if flash
+		var result:String = null;
+		#else
+		var result:SharedObjectFlushStatus;
+		#end
 		try { result = _sharedObject.flush(MinFileSize); }
 		catch (e:Error) { return onDone(ERROR); }
+		#if flash
+		if (result == "pending"/*SharedObjectFlushStatus.PENDING*/)
+		#else
 		if (result == SharedObjectFlushStatus.PENDING)
-		{
-			_sharedObject.addEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
-		}
 		#end
-		return onDone((
-						#if flash
-						result == SharedObjectFlushStatus.FLUSHED
-						#else
-						result == "flushed"
-						#end
-						) ? SUCCESS : PENDING);
+		{
+			#if flash
+			_sharedObject.addEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
+			#end
+		}
+		#if flash
+		return onDone((result == "flushed"/*SharedObjectFlushStatus.FLUSHED*/) ? SUCCESS : PENDING);
+		#else
+		return onDone((result == SharedObjectFlushStatus.FLUSHED) ? SUCCESS : PENDING);
+		#end
 	}
 	
 	/**
@@ -179,11 +180,7 @@ class FlxSave /*implements Dynamic*/
 	 * @param	Result		One of the result codes (PENDING, ERROR, or SUCCESS).
 	 * @return	Whether the operation was a success or not.
 	 */
-	#if flash
-	private function onDone(Result:UInt):Bool
-	#else
 	private function onDone(Result:Int):Bool
-	#end
 	{
 		switch(Result)
 		{
