@@ -21,9 +21,7 @@ class FlxU
 	 */
 	public static function openURL(URL:String):Void
 	{
-		#if flash
-		flash.Lib.getURL(new URLRequest(URL), "_blank");
-		#end
+		Lib.getURL(new URLRequest(URL), "_blank");
 	}
 	
 	/**

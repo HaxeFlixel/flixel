@@ -15,16 +15,6 @@ import flash.display.BlendMode;
 import org.flixel.system.FlxAnim;
 
 
-/*class DefaultPNG extends BitmapData 
-{ 
-	public function new() { super(0, 0); } 
-}
-
-class ImgDefault extends Bitmap 
-{
-	public function new() { super(new DefaultPNG()); }
-}*/
-
 /**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
  * with a bunch of graphics options and abilities, like animation and stamping.
@@ -40,8 +30,6 @@ class FlxSprite extends FlxObject
 	public var color(getColor, setColor):Int;
 	public var frame(getFrame, setFrame):Int;
 	#end
-	
-	/*[Embed(source="data/default.png")] private var ImgDefault:Class<Bitmap>;*/
 	
 	/**
 	 * WARNING: The origin of the sprite will default to its center.
@@ -1106,13 +1094,10 @@ class FlxSprite extends FlxObject
 		framePixels.copyPixels(_pixels,_flashRect,_flashPointZero);
 		_flashRect.x = _flashRect.y = 0;
 		
-		#if flash  //TODO: get color transform working in cpp
 		if (_colorTransform != null) 
 		{
 			framePixels.colorTransform(_flashRect, _colorTransform);
 		}
-		#else
-		#end
 		
 		if (_callback != null)
 		{

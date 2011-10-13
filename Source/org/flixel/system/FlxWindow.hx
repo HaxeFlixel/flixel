@@ -13,22 +13,11 @@ import org.flixel.FlxAssets;
 
 import org.flixel.FlxU;
 
-/*class HandlePNG extends BitmapData 
-{  
-	public function new() { super(0, 0); } 
-}
-class ImgHandle extends Bitmap 
-{
-	public function new() { super(new HandlePNG()); }
-}*/
-
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
  */
 class FlxWindow extends Sprite
 {
-	/*[Embed(source="../data/handle.png")] private var ImgHandle:Class<Bitmap>;*/
-
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
 	 */

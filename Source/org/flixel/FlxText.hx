@@ -258,9 +258,9 @@ class FlxText extends FlxSprite
 		format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
-		#if cpp
-		_regen = true;
-		#end
+		//#if cpp
+		//_regen = true;
+		//#end
 		calcFrame();
 		return Alignment;
 	}
