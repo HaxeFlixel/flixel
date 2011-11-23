@@ -1091,7 +1091,7 @@ class FlxSprite extends FlxObject
 		//Update display bitmap
 		_flashRect.x = indexX;
 		_flashRect.y = indexY;
-		framePixels.copyPixels(_pixels,_flashRect,_flashPointZero);
+		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 		_flashRect.x = _flashRect.y = 0;
 		
 		if (_colorTransform != null) 
@@ -1101,7 +1101,7 @@ class FlxSprite extends FlxObject
 		
 		if (_callback != null)
 		{
-			_callback(((_curAnim != null)?(_curAnim.name):null), _curFrame, _curIndex);
+			Reflect.callMethod(this, Reflect.field(this, "_callback"), [((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex]);
 		}
 		dirty = false;
 	}

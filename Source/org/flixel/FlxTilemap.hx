@@ -10,24 +10,6 @@ import flash.geom.Rectangle;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
-/*class AutotilesPNG extends BitmapData 
-{  
-	public function new() { super(0, 0); } 
-}
-class ImgAuto extends Bitmap 
-{
-	public function new() { super(new AutotilesPNG()); }
-}
-
-class AutotilesAltPNG extends BitmapData 
-{  
-	public function new() { super(0, 0); } 
-}
-class ImgAutoAlt extends Bitmap 
-{
-	public function new() { super(new AutotilesAltPNG()); }
-}*/
-
 /**
  * This is a traditional tilemap display and collision class.
  * It takes a string of comma-separated numbers and then associates
@@ -800,92 +782,84 @@ class FlxTilemap extends FlxObject
 	 */
 	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
 	{
-		Points.push(new FlxPoint(x + Std.int(Start % widthInTiles) * _tileWidth + _tileWidth * 0.5, y + Std.int(Start / widthInTiles) * _tileHeight + _tileHeight * 0.5));
+		Points.push(new FlxPoint(x + Math.floor(Start % widthInTiles) * _tileWidth + _tileWidth * 0.5, y + Math.floor(Start / widthInTiles) * _tileHeight + _tileHeight * 0.5));
 		if (Data[Start] == 0)
 		{
 			return;
 		}
-		
 		//basic map bounds
-		var left:Bool = Start%widthInTiles > 0;
-		var right:Bool = Start % widthInTiles < widthInTiles - 1;
-		var up:Bool = Start / widthInTiles > 0;
-		var down:Bool = Start / widthInTiles < heightInTiles - 1;
+		var left:Bool = (Start % widthInTiles) > 0;
+		var right:Bool = (Start % widthInTiles) < (widthInTiles - 1);
+		var up:Bool = (Start / widthInTiles) > 0;
+		var down:Bool = (Start / widthInTiles) < (heightInTiles - 1);
 		
 		var current:Int = Data[Start];
 		var i:Int;
 		if(up)
 		{
 			i = Start - widthInTiles;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(right)
 		{
 			i = Start + 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(down)
 		{
 			i = Start + widthInTiles;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(left)
 		{
 			i = Start - 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(up && right)
 		{
 			i = Start - widthInTiles + 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(right && down)
 		{
 			i = Start + widthInTiles + 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(left && down)
 		{
 			i = Start + widthInTiles - 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(up && left)
 		{
 			i = Start - widthInTiles - 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
+		return;
 	}
 	
 	/**
