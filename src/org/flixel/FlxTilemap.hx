@@ -858,98 +858,86 @@ class FlxTilemap extends FlxObject
 	 * @param	Start	The tile we're on in our walk backward.
 	 * @param	Points	A Flash <code>Array</code> of <code>FlxPoint</code> nodes composing the path from the start to the end, compiled in reverse order.
 	 */
-	#if flash
-	private function walkPath(Data:Array<Int>, Start:UInt, Points:Array<FlxPoint>):Void
-	#else
 	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
-	#end
 	{
-		Points.push(new FlxPoint(x + Std.int(Start % widthInTiles) * _tileWidth + _tileWidth * 0.5, y + Std.int(Start / widthInTiles) * _tileHeight + _tileHeight * 0.5));
+		Points.push(new FlxPoint(x + Math.floor(Start % widthInTiles) * _tileWidth + _tileWidth * 0.5, y + Math.floor(Start / widthInTiles) * _tileHeight + _tileHeight * 0.5));
 		if (Data[Start] == 0)
 		{
 			return;
 		}
-		
 		//basic map bounds
-		var left:Bool = Start%widthInTiles > 0;
-		var right:Bool = Start % widthInTiles < widthInTiles - 1;
-		var up:Bool = Start / widthInTiles > 0;
-		var down:Bool = Start / widthInTiles < heightInTiles - 1;
+		var left:Bool = (Start % widthInTiles) > 0;
+		var right:Bool = (Start % widthInTiles) < (widthInTiles - 1);
+		var up:Bool = (Start / widthInTiles) > 0;
+		var down:Bool = (Start / widthInTiles) < (heightInTiles - 1);
 		
 		var current:Int = Data[Start];
 		var i:Int;
 		if(up)
 		{
 			i = Start - widthInTiles;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(right)
 		{
 			i = Start + 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(down)
 		{
 			i = Start + widthInTiles;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(left)
 		{
 			i = Start - 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(up && right)
 		{
 			i = Start - widthInTiles + 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(right && down)
 		{
 			i = Start + widthInTiles + 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(left && down)
 		{
 			i = Start + widthInTiles - 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
 		if(up && left)
 		{
 			i = Start - widthInTiles - 1;
-			if((Data[i] >= 0) && (Data[i] < current))
+			if(i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				walkPath(Data, i, Points);
-				return;
+				return walkPath(Data, i, Points);
 			}
 		}
+		return;
 	}
 	
 	/**
