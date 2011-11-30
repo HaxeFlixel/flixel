@@ -94,7 +94,7 @@ class TileSheetManager
 			dataObject.destroy();
 		}
 		
-		tileSheetData = null;
+		tileSheetData = [];
 	}
 	
 }
