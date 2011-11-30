@@ -4,6 +4,7 @@ import nme.display.BitmapData;
 import nme.display.Tilesheet;
 import nme.geom.Rectangle;
 import nme.geom.Point;
+import org.flixel.FlxG;
 
 /**
  * ...
@@ -13,38 +14,54 @@ import nme.geom.Point;
 class TileSheetManager 
 {
 	
-	public var tileSheetData:Array<TileSheetData>;
+	public static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
 	
-	public function new() 
-	{
-		tileSheetData = new Array<TileSheetData>();
-	}
+	public function new() {  }
 	
 	/**
 	 * Adds new tileSheet to manager and returns its ID (index in tileSheetData array)
 	 * If manager already contains tileSheet with the same bitmapData then it return ID of this tileSheetData object 
 	 */
-	public function addTileSheet(bitmapData:BitmapData):Int
+	public static function addTileSheet(bitmapData:BitmapData):Int
 	{
 		if (containsTileSheet(bitmapData))
 		{
 			return getTileSheetID(bitmapData);
 		}
 		
-		// TODO: continue here
+		var tempTileSheetData:TileSheetData = new TileSheetData(new Tilesheet(bitmapData));
+		tileSheetData.push(tempTileSheetData);
+		return (tileSheetData.length - 1);
 	}
 	
-	public function addTileRectToTileSheet(tileSheetID:Int, rect:Rectangle, ?point:Point = null):Int
+	/**
+	 * Clears drawData arrays of all tileSheets
+	 */
+	public static function clearAllDrawData():Void
 	{
-		if (tileSheetID >= tileSheetData.length) return -1;
+		var numCameras:Int = FlxG.cameras.length;
 		
-		// TODO: continue here
-		
+		for (dataObject in tileSheetData)
+		{
+			dataObject.clearDrawData();
+			if (dataObject.drawData.length < numCameras)
+			{
+				dataObject.drawData.push(new Array<Float>());
+			}
+		}
 	}
 	
-	// Какие еще методы добавить в данный класс ???????????????????????????????????
+	public static function renderAll():Void
+	{
+		var numCameras:Int = FlxG.cameras.length;
+		
+		for (dataObject in tileSheetData)
+		{
+			dataObject.render(numCameras);
+		}
+	}
 	
-	public function containsTileSheet(bitmapData:BitmapData):Bool
+	public static function containsTileSheet(bitmapData:BitmapData):Bool
 	{
 		for (tsd in tileSheetData)
 		{
@@ -57,9 +74,8 @@ class TileSheetManager
 		return false;
 	}
 	
-	public function getTileSheetID(bitmapData:BitmapData):Int
+	public static function getTileSheetID(bitmapData:BitmapData):Int
 	{
-		var tileSheet:Tilesheet;
 		for (i in 0...(tileSheetData.length))
 		{
 			if (tileSheetData[i].tileSheet.nmeBitmap == bitmapData)
@@ -71,14 +87,14 @@ class TileSheetManager
 		return -1;
 	}
 	
-	public function clear():Void
+	public static function clear():Void
 	{
-		// TODO: continue here
-	}
-	
-	public function destroy():Void
-	{
-		// TODO: continue here
+		for (dataObject in tileSheetData)
+		{
+			dataObject.destroy();
+		}
+		
+		tileSheetData = null;
 	}
 	
 }

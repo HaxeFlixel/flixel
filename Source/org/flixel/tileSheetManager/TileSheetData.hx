@@ -1,8 +1,10 @@
 package org.flixel.tileSheetManager;
 
+import nme.display.Graphics;
 import nme.display.Tilesheet;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.FlxG;
 
 /**
  * Object of this class holds information about single Tilesheet
@@ -13,12 +15,14 @@ class TileSheetData
 	public var tileSheet:Tilesheet;
 	public var pairsData:Array<RectanglePointPair>;
 	public var drawData:Array<Array<Float>>;
+	public var flags:Int;
 	
 	public function new(tileSheet:Tilesheet)
 	{
 		this.tileSheet = tileSheet;
 		pairsData = new Array<RectanglePointPair>();
 		drawData = new Array<Array<Float>>();
+		flags = Graphics.TILE_SCALE | Graphics.TILE_ROTATION | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
 	}
 	
 	/**
@@ -26,7 +30,20 @@ class TileSheetData
 	 */
 	public function clearDrawData():Void
 	{
-		drawData = [];
+		for (dataArray in drawData)
+		{
+			dataArray = [];
+		}
+	}
+	
+	public function render(numCameras:Int):Void
+	{
+		var cameraGraphics:Graphics;
+		for (i in 0...(numCameras))
+		{
+			cameraGraphics = FlxG.cameras[i]._flashSprite.graphics;
+			cameraGraphics.drawTiles(tileSheet, drawData[i], false, flags);
+		}
 	}
 	
 	/**
@@ -103,6 +120,7 @@ class TileSheetData
 			pair.destroy();
 		}
 		pairsData = null;
+		drawData = null;
 	}
 	
 }
