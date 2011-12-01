@@ -8,6 +8,10 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+#if cpp
+import org.flixel.tileSheetManager.TileSheetData;
+#end
+
 #if flash
 import flash.display.BlendMode;
 #end
@@ -198,6 +202,11 @@ class FlxSprite extends FlxObject
 	 */
 	private var _matrix:Matrix;
 	
+	#if cpp
+	private var _frameIDs:Array<Int>;
+	private var _tileSheetData:TileSheetData;
+	#end
+	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
 	 * Optionally can load a simple, one-frame graphic instead.
@@ -236,6 +245,10 @@ class FlxSprite extends FlxObject
 
 		_matrix = new Matrix();
 		_callback = null;
+		
+		#if cpp
+		_frameIDs = new Array<Int>();
+		#end
 		
 		if (SimpleGraphic == null)
 		{
@@ -279,6 +292,11 @@ class FlxSprite extends FlxObject
 		_matrix = null;
 		_callback = null;
 		framePixels = null;
+		
+		#if cpp
+		_frameIDs = null;
+		_tileSheetData = null;
+		#end
 	}
 	
 	/**
