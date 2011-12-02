@@ -203,8 +203,8 @@ class FlxSprite extends FlxObject
 	private var _matrix:Matrix;
 	
 	#if cpp
-	private var _frameIDs:Array<Int>;
 	private var _tileSheetData:TileSheetData;
+	private var _frameIDs:Array<Int>;
 	#end
 	
 	/**
@@ -245,10 +245,6 @@ class FlxSprite extends FlxObject
 
 		_matrix = new Matrix();
 		_callback = null;
-		
-		#if cpp
-		_frameIDs = new Array<Int>();
-		#end
 		
 		if (SimpleGraphic == null)
 		{

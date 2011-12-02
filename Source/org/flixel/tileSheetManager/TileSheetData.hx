@@ -1,5 +1,6 @@
 package org.flixel.tileSheetManager;
 
+#if cpp
 import nme.display.Graphics;
 import nme.display.Tilesheet;
 import nme.geom.Point;
@@ -13,9 +14,26 @@ class TileSheetData
 {
 	
 	public var tileSheet:Tilesheet;
+	
+	/**
+	 * array to hold data about tiles in the tileSheet object
+	 */
 	public var pairsData:Array<RectanglePointPair>;
+	
+	/**
+	 * special array to hold data for sprite drawing to different cameras
+	 */
 	public var drawData:Array<Array<Float>>;
+	
+	/**
+	 * drawing flags
+	 */
 	public var flags:Int;
+	
+	/**
+	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
+	 */
+	public var flxSpriteFrames:Array<FlxSpriteFrames>;
 	
 	public function new(tileSheet:Tilesheet)
 	{
@@ -23,6 +41,8 @@ class TileSheetData
 		pairsData = new Array<RectanglePointPair>();
 		drawData = new Array<Array<Float>>();
 		flags = Graphics.TILE_SCALE | Graphics.TILE_ROTATION | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
+		
+		flxSpriteFrames = new Array<FlxSpriteFrames>();
 	}
 	
 	/**
@@ -121,6 +141,33 @@ class TileSheetData
 		}
 		pairsData = null;
 		drawData = null;
+		
+		for (spriteData in flxSpriteFrames)
+		{
+			spriteData.destroy();
+		}
+		flxSpriteFrames = null;
+	}
+	
+}
+
+class FlxSpriteFrames
+{
+	
+	public var width:Int;
+	public var height:Int;
+	public var frameIDs:Array<Int>;
+	
+	public function new(width:Int, height:Int)
+	{
+		this.width = width;
+		this.height = height;
+		frameIDs = [];
+	}
+	
+	public function destroy():Void
+	{
+		frameIDs = null;
 	}
 	
 }
@@ -147,3 +194,4 @@ class RectanglePointPair
 	}
 	
 }
+#end

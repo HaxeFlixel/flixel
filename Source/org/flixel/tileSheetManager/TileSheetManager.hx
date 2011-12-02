@@ -1,4 +1,5 @@
 package org.flixel.tileSheetManager;
+#if cpp
 
 import nme.display.BitmapData;
 import nme.display.Tilesheet;
@@ -19,19 +20,21 @@ class TileSheetManager
 	public function new() {  }
 	
 	/**
-	 * Adds new tileSheet to manager and returns its ID (index in tileSheetData array)
-	 * If manager already contains tileSheet with the same bitmapData then it return ID of this tileSheetData object 
+	 * Adds new tileSheet to manager and returns it
+	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
 	 */
-	public static function addTileSheet(bitmapData:BitmapData):Int
+	public static function addTileSheet(bitmapData:BitmapData):TileSheetData
 	{
 		if (containsTileSheet(bitmapData))
 		{
-			return getTileSheetID(bitmapData);
+			//return getTileSheetID(bitmapData);
+			return getTileSheet(bitmapData);
 		}
 		
 		var tempTileSheetData:TileSheetData = new TileSheetData(new Tilesheet(bitmapData));
 		tileSheetData.push(tempTileSheetData);
-		return (tileSheetData.length - 1);
+		//return (tileSheetData.length - 1);
+		return (tileSheetData[tileSheetData.length - 1]);
 	}
 	
 	/**
@@ -87,6 +90,19 @@ class TileSheetManager
 		return -1;
 	}
 	
+	public static function getTileSheet(bitmapData:BitmapData):TileSheetData
+	{
+		for (tsd in tileSheetData)
+		{
+			if (tsd.tileSheet.nmeBitmap == bitmapData)
+			{
+				return tsd;
+			}
+		}
+		
+		return null;
+	}
+	
 	public static function clear():Void
 	{
 		for (dataObject in tileSheetData)
@@ -98,3 +114,4 @@ class TileSheetManager
 	}
 	
 }
+#end
