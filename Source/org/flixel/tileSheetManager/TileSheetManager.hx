@@ -49,7 +49,11 @@ class TileSheetManager
 			dataObject.clearDrawData();
 			if (dataObject.drawData.length < numCameras)
 			{
-				dataObject.drawData.push(new Array<Float>());
+				var diff:Int = numCameras - dataObject.drawData.length;
+				for (i in 0...(diff))
+				{
+					dataObject.drawData.push(new Array<Float>());
+				}
 			}
 		}
 	}
