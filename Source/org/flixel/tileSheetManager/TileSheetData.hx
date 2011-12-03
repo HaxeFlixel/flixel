@@ -46,6 +46,72 @@ class TileSheetData
 	}
 	
 	/**
+	 * Adds new ID array for FlxSprite with specific dimensions
+	 * @param	width	sprite width
+	 * @param	height	sprite height
+	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
+	 */
+	public function addSpriteFramesData(width:Int, height:Int):Array<Int>
+	{
+		if (containsSpriteFrameData(width, height))
+		{
+			var id:Int = getIDforSpriteFrameData(width, height);
+			return flxSpriteFrames[id].frameIDs;
+		}
+		
+		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
+		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
+		var numRows:Int = Math.floor(bitmapHeight / height);
+		var numCols:Int = Math.floor(bitmapWidth / width);
+		
+		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height);
+		var tempPoint:Point;
+		var tempRect:Rectangle;
+		var tileID:Int;
+		for (i in 0...(numCols))
+		{
+			for (j in 0...(numRows))
+			{
+				tempRect = new Rectangle(i * width, j * height, width, height);
+				tempPoint = new Point(0.5 * width, 0.5 * height);
+				tileID = addTileRect(tempRect, tempPoint);
+				spriteData.frameIDs.push(tileID);
+			}
+		}
+		flxSpriteFrames.push(spriteData);
+		
+		return spriteData.frameIDs;
+	}
+	
+	public function containsSpriteFrameData(width:Int, height:Int):Bool
+	{
+		for (spriteData in flxSpriteFrames)
+		{
+			if (spriteData.width == width && spriteData.height == height)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public function getIDforSpriteFrameData(width:Int, height:Int):Int
+	{
+		var spriteData:FlxSpriteFrames;
+		for (i in 0...(flxSpriteFrames.length))
+		{
+			spriteData = flxSpriteFrames[i];
+			if (spriteData.width == width && spriteData.height == height)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
 	 * Clears data array for next frame
 	 */
 	public function clearDrawData():Void
