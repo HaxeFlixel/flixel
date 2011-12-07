@@ -15,6 +15,7 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flash.Lib;
 import flash.ui.Mouse;
+import org.flixel.tileSheetManager.TileSheetManager;
 
 #if flash
 import flash.text.AntiAliasType;
@@ -708,8 +709,18 @@ class FlxGame extends Sprite
 	private function draw():Void
 	{
 		var mark:Int = Lib.getTimer();
+		
+		#if cpp
+		TileSheetManager.clearAllDrawData();
+		#end
+		
 		FlxG.lockCameras();
 		_state.draw();
+		
+		#if cpp
+		TileSheetManager.renderAll();
+		#end
+		
 		FlxG.drawPlugins();
 		FlxG.unlockCameras();
 		if (_debuggerUp)

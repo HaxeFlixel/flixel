@@ -51,12 +51,14 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	public function addSpriteFramesData(width:Int, height:Int):Array<Int>
+	//public function addSpriteFramesData(width:Int, height:Int):Array<Int>
+	public function addSpriteFramesData(width:Int, height:Int):FlxSpriteFrames
 	{
 		if (containsSpriteFrameData(width, height))
 		{
 			var id:Int = getIDforSpriteFrameData(width, height);
-			return flxSpriteFrames[id].frameIDs;
+			//return flxSpriteFrames[id].frameIDs;
+			return flxSpriteFrames[id];
 		}
 		
 		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
@@ -80,7 +82,8 @@ class TileSheetData
 		}
 		flxSpriteFrames.push(spriteData);
 		
-		return spriteData.frameIDs;
+		//return spriteData.frameIDs;
+		return spriteData;
 	}
 	
 	public function containsSpriteFrameData(width:Int, height:Int):Bool
@@ -118,7 +121,7 @@ class TileSheetData
 	{
 		for (dataArray in drawData)
 		{
-			dataArray = [];
+			dataArray.splice(0, dataArray.length);
 		}
 	}
 	

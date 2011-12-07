@@ -10,6 +10,7 @@ import flash.geom.Rectangle;
 
 #if cpp
 import org.flixel.tileSheetManager.TileSheetData;
+import org.flixel.tileSheetManager.TileSheetManager;
 #end
 
 #if flash
@@ -204,6 +205,7 @@ class FlxSprite extends FlxObject
 	
 	#if cpp
 	private var _tileSheetData:TileSheetData;
+	private var _framesData:FlxSpriteFrames;
 	private var _frameIDs:Array<Int>;
 	#end
 	
@@ -291,6 +293,7 @@ class FlxSprite extends FlxObject
 		
 		#if cpp
 		_frameIDs = null;
+		_framesData = null;
 		_tileSheetData = null;
 		#end
 	}
@@ -470,6 +473,13 @@ class FlxSprite extends FlxObject
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
 		resetHelpers();
+		
+		#if cpp
+		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
+		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
+		_frameIDs = _framesData.frameIDs;
+		#end
+		
 		return this;
 	}
 	
@@ -533,6 +543,11 @@ class FlxSprite extends FlxObject
 		var camera:FlxCamera;
 		var i:Int = 0;
 		var l:Int = cameras.length;
+		
+		#if cpp
+		var prevI:Int;
+		#end
+		
 		while(i < l)
 		{
 			camera = cameras[i++];
@@ -548,7 +563,23 @@ class FlxSprite extends FlxObject
 			{	//Simple render
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
+				#if flash
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
+				#else
+				prevI = i - 1;
+				if (_tileSheetData != null) // TODO: remove this if statement later
+				{
+					_tileSheetData.drawData[prevI].push(_point.x - 0.5 * (camera.width - _framesData.width));
+					_tileSheetData.drawData[prevI].push(_point.y - 0.5 * (camera.height - _framesData.height));
+					_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
+					_tileSheetData.drawData[prevI].push(width / _framesData.width);
+					_tileSheetData.drawData[prevI].push(0.0);
+					_tileSheetData.drawData[prevI].push(1.0);
+					_tileSheetData.drawData[prevI].push(1.0);
+					_tileSheetData.drawData[prevI].push(1.0);
+					_tileSheetData.drawData[prevI].push(1.0);
+				}
+				#end
 			}
 			else
 			{	//Advanced render
