@@ -353,6 +353,13 @@ class FlxSprite extends FlxObject
 		}
 		height = frameHeight = Height;
 		resetHelpers();
+		
+		#if cpp
+		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
+		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height), Reverse);
+		_frameIDs = _framesData.frameIDs;
+		#end
+		
 		return this;
 	}
 	
@@ -571,7 +578,17 @@ class FlxSprite extends FlxObject
 				{
 					_tileSheetData.drawData[prevI].push(_point.x - 0.5 * (camera.width - _framesData.width));
 					_tileSheetData.drawData[prevI].push(_point.y - 0.5 * (camera.height - _framesData.height));
-					_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
+					
+					//handle reversed sprites
+					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+					{
+						_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex + Math.floor(_framesData.frameIDs.length * 0.5)]);
+					}
+					else
+					{
+						_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
+					}
+					
 					_tileSheetData.drawData[prevI].push(width / _framesData.width);
 					_tileSheetData.drawData[prevI].push(0.0);
 					_tileSheetData.drawData[prevI].push(1.0);

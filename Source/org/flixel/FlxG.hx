@@ -890,7 +890,7 @@ class FlxG
 				{
 					pixelColor = pixels.getPixel32(i, j);
 					newPixels.setPixel32(i, j, pixelColor);
-					newPixels.setPixel32(2 * pixels.width - i, j, pixelColor);
+					newPixels.setPixel32(2 * pixels.width - i - 1, j, pixelColor);
 				}
 			}
 		#end

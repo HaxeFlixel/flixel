@@ -52,7 +52,7 @@ class TileSheetData
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
 	//public function addSpriteFramesData(width:Int, height:Int):Array<Int>
-	public function addSpriteFramesData(width:Int, height:Int):FlxSpriteFrames
+	public function addSpriteFramesData(width:Int, height:Int, ?reversed:Bool = false):FlxSpriteFrames
 	{
 		if (containsSpriteFrameData(width, height))
 		{
@@ -70,18 +70,46 @@ class TileSheetData
 		var tempPoint:Point;
 		var tempRect:Rectangle;
 		var tileID:Int;
-		for (i in 0...(numCols))
+		
+		if (reversed == false)
 		{
 			for (j in 0...(numRows))
 			{
-				tempRect = new Rectangle(i * width, j * height, width, height);
-				tempPoint = new Point(0.5 * width, 0.5 * height);
-				tileID = addTileRect(tempRect, tempPoint);
-				spriteData.frameIDs.push(tileID);
+				for (i in 0...(numCols))
+				{
+					tempRect = new Rectangle(i * width, j * height, width, height);
+					tempPoint = new Point(0.5 * width, 0.5 * height);
+					tileID = addTileRect(tempRect, tempPoint);
+					spriteData.frameIDs.push(tileID);
+				}
 			}
 		}
-		flxSpriteFrames.push(spriteData);
+		else
+		{
+			for (j in 0...(numRows))
+			{
+				for (i in 0...(Math.floor(0.5 * numCols)))
+				{
+					tempRect = new Rectangle(i * width, j * height, width, height);
+					tempPoint = new Point(0.5 * width, 0.5 * height);
+					tileID = addTileRect(tempRect, tempPoint);
+					spriteData.frameIDs.push(tileID);
+				}
+			}
+			
+			for (j in 0...(numRows))
+			{
+				for (i in 0...(Math.floor(0.5 * numCols)))
+				{
+					tempRect = new Rectangle(width * (numCols - i - 1), j * height, width, height);
+					tempPoint = new Point(0.5 * width, 0.5 * height);
+					tileID = addTileRect(tempRect, tempPoint);
+					spriteData.frameIDs.push(tileID);
+				}
+			}
+		}
 		
+		flxSpriteFrames.push(spriteData);
 		//return spriteData.frameIDs;
 		return spriteData;
 	}
