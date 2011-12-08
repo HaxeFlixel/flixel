@@ -457,6 +457,13 @@ class FlxSprite extends FlxObject
 			height = brush.height;
 			centerOffsets();
 		}
+		
+		#if cpp
+		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
+		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
+		_frameIDs = _framesData.frameIDs;
+		#end
+		
 		return this;
 	}
 	
@@ -723,11 +730,21 @@ class FlxSprite extends FlxObject
 		{
 			var oldIndex:Int = _curIndex;
 			var angleHelper:Int = Math.floor(angle % 360);
+			
+			#if flash
 			if (angleHelper < 0)
 			{
 				angleHelper += 360;
 			}
+			#else 
+			while (angleHelper < 0)
+			{
+				angleHelper += 360;
+			}
+			#end
+			
 			_curIndex = Math.floor(angleHelper / _bakedRotation + 0.5);
+			
 			if (oldIndex != Math.floor(_curIndex))
 			{
 				dirty = true;
@@ -1133,6 +1150,7 @@ class FlxSprite extends FlxObject
 	 */
 	private function calcFrame():Void
 	{
+		#if flash
 		var indexX:Int = _curIndex * frameWidth;
 		var indexY:Int = 0;
 
@@ -1166,5 +1184,6 @@ class FlxSprite extends FlxObject
 			Reflect.callMethod(this, Reflect.field(this, "_callback"), [((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex]);
 		}
 		dirty = false;
+		#end
 	}
 }
