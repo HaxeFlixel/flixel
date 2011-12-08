@@ -207,6 +207,9 @@ class FlxSprite extends FlxObject
 	private var _tileSheetData:TileSheetData;
 	private var _framesData:FlxSpriteFrames;
 	private var _frameIDs:Array<Int>;
+	private var _red:Float;
+	private var _green:Float;
+	private var _blue:Float;
 	#end
 	
 	/**
@@ -247,6 +250,12 @@ class FlxSprite extends FlxObject
 
 		_matrix = new Matrix();
 		_callback = null;
+		
+		#if cpp
+		_red = 1.0;
+		_green = 1.0;
+		_blue = 1.0;
+		#end
 		
 		if (SimpleGraphic == null)
 		{
@@ -597,11 +606,11 @@ class FlxSprite extends FlxObject
 					}
 					
 					_tileSheetData.drawData[prevI].push(width / _framesData.width);
-					_tileSheetData.drawData[prevI].push(0.0);
-					_tileSheetData.drawData[prevI].push(1.0);
-					_tileSheetData.drawData[prevI].push(1.0);
-					_tileSheetData.drawData[prevI].push(1.0);
-					_tileSheetData.drawData[prevI].push(1.0);
+					_tileSheetData.drawData[prevI].push(0.0); 
+					_tileSheetData.drawData[prevI].push(_red); 
+					_tileSheetData.drawData[prevI].push(_green);
+					_tileSheetData.drawData[prevI].push(_blue);
+					_tileSheetData.drawData[prevI].push(_alpha);
 				}
 				#end
 			}
@@ -999,6 +1008,7 @@ class FlxSprite extends FlxObject
 			return _alpha;
 		}
 		_alpha = Alpha;
+		#if flash
 		if ((_alpha != 1) || (_color != 0x00ffffff))
 		{
 			_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, _alpha);
@@ -1008,6 +1018,7 @@ class FlxSprite extends FlxObject
 			_colorTransform = null;
 		}
 		dirty = true;
+		#end
 		return _alpha;
 	}
 	
@@ -1040,6 +1051,7 @@ class FlxSprite extends FlxObject
 			return _color;
 		}
 		_color = Color;
+		#if flash
 		if ((_alpha != 1) || (_color != 0x00ffffff))
 		{
 			_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, _alpha);
@@ -1049,6 +1061,11 @@ class FlxSprite extends FlxObject
 			_colorTransform = null;
 		}
 		dirty = true;
+		#else
+		_red = (_color >> 16) * 0.00392;
+		_green = (_color >> 8 & 0xff) * 0.00392;
+		_blue = (_color & 0xff) * 0.00392;
+		#end
 		return _color;
 	}
 	
