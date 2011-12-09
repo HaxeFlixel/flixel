@@ -574,6 +574,11 @@ class FlxSprite extends FlxObject
 		while(i < l)
 		{
 			camera = cameras[i++];
+			
+			#if cpp
+			prevI = i - 1;
+			#end
+			
 			if (!onScreen(camera))
 			{
 				continue;
@@ -589,7 +594,6 @@ class FlxSprite extends FlxObject
 				#if flash
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 				#else
-				prevI = i - 1;
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
 					_tileSheetData.drawData[prevI].push(_point.x - 0.5 * (camera.width - _framesData.width));
@@ -605,8 +609,9 @@ class FlxSprite extends FlxObject
 						_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
 					}
 					
-					_tileSheetData.drawData[prevI].push(width / _framesData.width);
-					_tileSheetData.drawData[prevI].push(0.0); 
+					//_tileSheetData.drawData[prevI].push(width / _framesData.width); // scale
+					_tileSheetData.drawData[prevI].push(1.0); // scale
+					_tileSheetData.drawData[prevI].push(0.0); // rotation
 					_tileSheetData.drawData[prevI].push(_red); 
 					_tileSheetData.drawData[prevI].push(_green);
 					_tileSheetData.drawData[prevI].push(_blue);
@@ -616,6 +621,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{	//Advanced render
+				#if flash
 				_matrix.identity();
 				_matrix.translate( -origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
@@ -625,6 +631,22 @@ class FlxSprite extends FlxObject
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
+				#else
+				if (_tileSheetData != null) // TODO: remove this if statement later
+				{
+					_tileSheetData.drawData[prevI].push(_point.x - 0.5 * (camera.width - _framesData.width));
+					_tileSheetData.drawData[prevI].push(_point.y - 0.5 * (camera.height - _framesData.height));
+					
+					_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
+					
+					_tileSheetData.drawData[prevI].push(scale.x); // scale
+					_tileSheetData.drawData[prevI].push(angle * 0.017453293); // rotation
+					_tileSheetData.drawData[prevI].push(_red); 
+					_tileSheetData.drawData[prevI].push(_green);
+					_tileSheetData.drawData[prevI].push(_blue);
+					_tileSheetData.drawData[prevI].push(_alpha);
+				}
+				#end
 			}
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
