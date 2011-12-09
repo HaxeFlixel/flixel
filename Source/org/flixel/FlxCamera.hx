@@ -240,7 +240,6 @@ class FlxCamera extends FlxBasic
 		buffer = screen.pixels;
 		bgColor = FlxG.bgColor;
 		_color = 0xffffff;
-		
 		_flashBitmap = new Bitmap(buffer);
 		_flashBitmap.x = -width * 0.5;
 		_flashBitmap.y = -height * 0.5;
@@ -248,8 +247,17 @@ class FlxCamera extends FlxBasic
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		_flashOffsetX = width * 0.5 * zoom;
 		_flashOffsetY = height * 0.5 * zoom;
+		#if flash
 		_flashSprite.x = x + _flashOffsetX;
 		_flashSprite.y = y + _flashOffsetY;
+		#else
+		_flashSprite.x = x;
+		_flashSprite.y = x;
+		
+		_flashBitmap.x = 0;
+		_flashBitmap.y = 0;
+		
+		#end
 		_flashSprite.addChild(_flashBitmap);
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
@@ -271,6 +279,10 @@ class FlxCamera extends FlxBasic
 		_fxShakeDirection = 0;
 		
 		_fill = new BitmapData(width, height, true, 0);
+		
+		#if cpp
+		_flashSprite.scrollRect = new Rectangle(0, 0, width, height);
+		#end
 	}
 	
 	/**
@@ -553,8 +565,13 @@ class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
+		#if flash
 		_flashSprite.x = x + width * 0.5;
 		_flashSprite.y = y + height * 0.5;
+		#else
+		_flashSprite.x = x;
+		_flashSprite.y = y;
+		#end
 	}
 	
 	/**
@@ -790,7 +807,8 @@ class FlxCamera extends FlxBasic
 		#else
 		_flashSprite.graphics.clear();
 		_flashSprite.graphics.beginFill(Color);
-		_flashSprite.graphics.drawRect(-0.5 * width, -0.5 * height, width, height);
+		//_flashSprite.graphics.drawRect(-0.5 * width, -0.5 * height, width, height);
+		_flashSprite.graphics.drawRect(0, 0, width, height);
 		_flashSprite.graphics.endFill();
 		#end
 	}
@@ -818,8 +836,13 @@ class FlxCamera extends FlxBasic
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
+			#if flash
 			_flashSprite.x = x + _flashOffsetX + _fxShakeOffset.x;
 			_flashSprite.y = y + _flashOffsetY + _fxShakeOffset.y;
+			#else
+			_flashSprite.x = x + _fxShakeOffset.x;
+			_flashSprite.y = y + _fxShakeOffset.y;
+			#end
 		}
 	}
 }
