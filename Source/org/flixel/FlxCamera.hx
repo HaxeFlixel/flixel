@@ -798,15 +798,14 @@ class FlxCamera extends FlxBasic
 	#if flash
 	public function fill(Color:UInt, ?BlendAlpha:Bool = true):Void
 	#else
-	public function fill(Color:Int, ?BlendAlpha:Bool = true):Void
+	public function fill(Color:Int, ?BlendAlpha:Bool = true, ?FxAlpha:Float = 1.0):Void
 	#end
 	{
 		#if flash
 		_fill.fillRect(_flashRect, Color);
 		buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
 		#else
-		_flashSprite.graphics.clear();
-		_flashSprite.graphics.beginFill(Color);
+		_flashSprite.graphics.beginFill(Color, FxAlpha);
 		//_flashSprite.graphics.drawRect(-0.5 * width, -0.5 * height, width, height);
 		_flashSprite.graphics.drawRect(0, 0, width, height);
 		_flashSprite.graphics.endFill();
@@ -824,14 +823,22 @@ class FlxCamera extends FlxBasic
 		if(_fxFlashAlpha > 0.0)
 		{
 			alphaComponent = _fxFlashColor >> 24;
+			#if flash
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
+			#else
+			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255);
+			#end
 		}
 		
 		//Draw the "fade" special effect onto the buffer
 		if(_fxFadeAlpha > 0.0)
 		{
 			alphaComponent = _fxFadeColor >> 24;
+			#if flash
 			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
+			#else
+			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255);
+			#end
 		}
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))

@@ -741,7 +741,11 @@ class FlxU
 		
 	}
 	
+	#if flash
+	public static var MIN_VALUE:Float = 0.0000000000000001;
+	#else
 	public static var MIN_VALUE:Float = 5e-324;
+	#end
 	public static var MAX_VALUE:Float = 1.79e+308;
 	
 }

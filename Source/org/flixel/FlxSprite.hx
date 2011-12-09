@@ -206,7 +206,6 @@ class FlxSprite extends FlxObject
 	#if cpp
 	private var _tileSheetData:TileSheetData;
 	private var _framesData:FlxSpriteFrames;
-	private var _frameIDs:Array<Int>;
 	private var _red:Float;
 	private var _green:Float;
 	private var _blue:Float;
@@ -301,7 +300,6 @@ class FlxSprite extends FlxObject
 		framePixels = null;
 		
 		#if cpp
-		_frameIDs = null;
 		_framesData = null;
 		_tileSheetData = null;
 		#end
@@ -366,7 +364,6 @@ class FlxSprite extends FlxObject
 		#if cpp
 		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height), Reverse);
-		_frameIDs = _framesData.frameIDs;
 		#end
 		
 		return this;
@@ -470,7 +467,6 @@ class FlxSprite extends FlxObject
 		#if cpp
 		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
-		_frameIDs = _framesData.frameIDs;
 		#end
 		
 		return this;
@@ -500,7 +496,6 @@ class FlxSprite extends FlxObject
 		#if cpp
 		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
-		_frameIDs = _framesData.frameIDs;
 		#end
 		
 		return this;
@@ -749,7 +744,7 @@ class FlxSprite extends FlxObject
 	public function fill(Color:Int):Void
 	#end
 	{
-		_pixels.fillRect(_flashRect2,Color);
+		_pixels.fillRect(_flashRect2, Color);
 		if (_pixels != framePixels)
 		{
 			dirty = true;
@@ -982,6 +977,12 @@ class FlxSprite extends FlxObject
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
 		resetHelpers();
+		
+		#if cpp
+		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
+		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
+		#end
+		
 		return _pixels;
 	}
 	
