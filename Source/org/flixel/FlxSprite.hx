@@ -1061,8 +1061,34 @@ class FlxSprite extends FlxObject
 		#if flash
 		return framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
 		#else
-		//TODO: get it working in cpp
-		return true;
+		// 1. Check to see if the point is outside of framePixels rectangle
+		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
+		{
+			return false;
+		}
+		else // 2. Check pixel at (_flashPoint.x, _flashPoint.y)
+		{
+			// this code is from calcFrame() method
+			var indexX:Int = _curIndex * frameWidth;
+			var indexY:Int = 0;
+
+			//Handle sprite sheets
+			var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
+			if(indexX >= widthHelper)
+			{
+				indexY = Math.floor(indexX / widthHelper) * frameHeight;
+				indexX %= widthHelper;
+			}
+			
+			//handle reversed sprites
+			if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+			{
+				indexX = (_flipped << 1) - indexX - frameWidth;
+			}
+			// end of code from calcFrame() method
+			var pixelColor:Int = _pixels.getPixel(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
+			return (pixelColor >= Mask);
+		}
 		#end
 	}
 	
