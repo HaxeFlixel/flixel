@@ -35,9 +35,15 @@ class TileSheetData
 	 */
 	public var flxSpriteFrames:Array<FlxSpriteFrames>;
 	
+	/**
+	 * smoothing for tileSheet
+	 */
+	public var antialiasing:Bool;
+	
 	public function new(tileSheet:Tilesheet)
 	{
 		this.tileSheet = tileSheet;
+		antialiasing = false;
 		pairsData = new Array<RectanglePointPair>();
 		drawData = new Array<Array<Float>>();
 		flags = Graphics.TILE_SCALE | Graphics.TILE_ROTATION | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
@@ -159,7 +165,7 @@ class TileSheetData
 		for (i in 0...(numCameras))
 		{
 			cameraGraphics = FlxG.cameras[i]._flashSprite.graphics;
-			cameraGraphics.drawTiles(tileSheet, drawData[i], false, flags);
+			cameraGraphics.drawTiles(tileSheet, drawData[i], (antialiasing || FlxG.cameras[i].antialiasing), flags);
 		}
 	}
 	

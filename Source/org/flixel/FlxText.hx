@@ -294,7 +294,11 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal function to update the current animation frame.
 	 */
+	#if flash
 	override private function calcFrame():Void
+	#else
+	override private function calcFrame(?AreYouSure:Bool = false):Void
+	#end
 	{
 		if(_regen)
 		{

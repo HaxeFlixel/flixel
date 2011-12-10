@@ -213,6 +213,10 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _fill:BitmapData;
 	
+	#if cpp
+	private var _antialiasing:Bool;
+	#end
+	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
 	 * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
@@ -282,6 +286,7 @@ class FlxCamera extends FlxBasic
 		
 		#if cpp
 		_flashSprite.scrollRect = new Rectangle(0, 0, width, height);
+		_antialiasing = false;
 		#end
 	}
 	
@@ -738,7 +743,7 @@ class FlxCamera extends FlxBasic
 		#if flash
 		return _flashBitmap.smoothing;
 		#else
-		return false;
+		return _antialiasing;
 		#end
 	}
 	
@@ -749,10 +754,11 @@ class FlxCamera extends FlxBasic
 	{
 		#if flash
 		_flashBitmap.smoothing = Antialiasing;
-		return Antialiasing;
 		#else
-		return false;
+		_antialiasing = Antialiasing;
 		#end
+		
+		return Antialiasing;
 	}
 	
 	

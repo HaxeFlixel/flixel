@@ -69,7 +69,11 @@ class FlxSprite extends FlxObject
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
 	 */
+	#if flash
 	public var antialiasing:Bool;
+	#else
+	private var _antialiasing:Bool;
+	#end
 	/**
 	 * Whether the current animation has finished its first (or only) loop.
 	 */
@@ -466,6 +470,8 @@ class FlxSprite extends FlxObject
 		
 		#if cpp
 		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
+		_tileSheetData.antialiasing = AntiAliasing;
+		_antialiasing = AntiAliasing;
 		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
 		#end
 		
@@ -679,7 +685,9 @@ class FlxSprite extends FlxObject
 			_pixels.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
 			_flashRect2.width = _pixels.width;
 			_flashRect2.height = _pixels.height;
+			#if flash
 			calcFrame();
+			#end
 			return;
 		}
 		
@@ -698,7 +706,9 @@ class FlxSprite extends FlxObject
 		var brushBlend:String = Brush.blend;
 		#end
 		_pixels.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
+		#if flash
 		calcFrame();
+		#end
 	}
 	
 	/**
@@ -818,10 +828,14 @@ class FlxSprite extends FlxObject
 	 */
 	public function drawFrame(?Force:Bool = false):Void
 	{
+		#if flash
 		if (Force || dirty)
 		{
 			calcFrame();
 		}
+		#else
+		calcFrame(true);
+		#end
 	}
 	
 	/**
@@ -1080,7 +1094,6 @@ class FlxSprite extends FlxObject
 			return _color;
 		}
 		_color = Color;
-		#if flash
 		if ((_alpha != 1) || (_color != 0x00ffffff))
 		{
 			_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, _alpha);
@@ -1090,7 +1103,7 @@ class FlxSprite extends FlxObject
 			_colorTransform = null;
 		}
 		dirty = true;
-		#else
+		#if cpp
 		_red = (_color >> 16) * 0.00392;
 		_green = (_color >> 8 & 0xff) * 0.00392;
 		_blue = (_color & 0xff) * 0.00392;
@@ -1186,50 +1199,106 @@ class FlxSprite extends FlxObject
 		#if flash
 		return framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
 		#else
-		//TODO: get it working in cpp
-		return true;
+		// 1. Check to see if the point is outside of framePixels rectangle
+		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
+		{
+			return false;
+		}
+		else // 2. Check pixel at (_flashPoint.x, _flashPoint.y)
+		{
+			// this code is from calcFrame() method
+			var indexX:Int = _curIndex * frameWidth;
+			var indexY:Int = 0;
+
+			//Handle sprite sheets
+			var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
+			if(indexX >= widthHelper)
+			{
+				indexY = Math.floor(indexX / widthHelper) * frameHeight;
+				indexX %= widthHelper;
+			}
+			
+			//handle reversed sprites
+			if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+			{
+				indexX = (_flipped << 1) - indexX - frameWidth;
+			}
+			// end of code from calcFrame() method
+			var pixelColor:Int = _pixels.getPixel(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
+			return (pixelColor >= Mask);
+		}
 		#end
 	}
 	
 	/**
 	 * Internal function to update the current animation frame.
 	 */
+	#if flash
 	private function calcFrame():Void
+	#else
+	private function calcFrame(?AreYouSure:Bool = false):Void
+	#end
 	{
-		#if flash
-		var indexX:Int = _curIndex * frameWidth;
-		var indexY:Int = 0;
+		#if cpp
+		if (AreYouSure)
+		{
+		#end
+		
+			var indexX:Int = _curIndex * frameWidth;
+			var indexY:Int = 0;
 
-		//Handle sprite sheets
-		var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
-		if(indexX >= widthHelper)
-		{
-			indexY = Math.floor(indexX / widthHelper) * frameHeight;
-			indexX %= widthHelper;
+			//Handle sprite sheets
+			var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
+			if(indexX >= widthHelper)
+			{
+				indexY = Math.floor(indexX / widthHelper) * frameHeight;
+				indexX %= widthHelper;
+			}
+			
+			//handle reversed sprites
+			if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+			{
+				indexX = (_flipped << 1) - indexX - frameWidth;
+			}
+			
+			//Update display bitmap
+			_flashRect.x = indexX;
+			_flashRect.y = indexY;
+			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
+			_flashRect.x = _flashRect.y = 0;
+			
+			if (_colorTransform != null) 
+			{
+				framePixels.colorTransform(_flashRect, _colorTransform);
+			}
+		#if cpp	
 		}
-		
-		//handle reversed sprites
-		if ((_flipped != 0) && (_facing == FlxObject.LEFT))
-		{
-			indexX = (_flipped << 1) - indexX - frameWidth;
-		}
-		
-		//Update display bitmap
-		_flashRect.x = indexX;
-		_flashRect.y = indexY;
-		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
-		_flashRect.x = _flashRect.y = 0;
-		
-		if (_colorTransform != null) 
-		{
-			framePixels.colorTransform(_flashRect, _colorTransform);
-		}
+		#end
 		
 		if (_callback != null)
 		{
 			Reflect.callMethod(this, Reflect.field(this, "_callback"), [((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex]);
 		}
 		dirty = false;
-		#end
 	}
+	
+	#if cpp
+	public var antialiasing(getAntialiasing, setAntialiasing):Bool;
+	
+	public function getAntialiasing():Bool
+	{
+		return _antialiasing;
+	}
+	
+	public function setAntialiasing(val:Bool):Bool
+	{
+		_antialiasing = val;
+		if (_tileSheetData != null)
+		{
+			_tileSheetData.antialiasing = val;
+		}
+		return val;
+	}
+	#end
+	
 }
