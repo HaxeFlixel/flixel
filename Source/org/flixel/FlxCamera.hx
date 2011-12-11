@@ -52,20 +52,36 @@ class FlxCamera extends FlxBasic
 	 * The X position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the left side of the flash window.
 	 */
+	#if flash
 	public var x:Float;
+	#else
+	private var _x:Float;
+	#end
 	/**
 	 * The Y position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the top of the flash window.
 	 */
-	public var y:Float;
+	#if flash
+	 public var y:Float;
+	#else
+	private var _y:Float;
+	#end
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
+	#if flash
 	public var width:Int;
+	#else
+	private var _width:Int;
+	#end
 	/**
 	 * How tall the camera display is, in game pixels.
 	 */
+	#if flash
 	public var height:Int;
+	#else
+	private var _height:Int;
+	#end
 	/**
 	 * Tells the camera to follow this <code>FlxObject</code> object around.
 	 */
@@ -858,4 +874,81 @@ class FlxCamera extends FlxBasic
 			#end
 		}
 	}
+	
+	#if cpp
+	public var x(getX, setX):Float;
+	public var y(getY, setY):Float;
+	public var width(getWidth, setWidth):Int;
+	public var height(getHeight, setHeight):Int;
+	
+	public function getX():Float
+	{
+		return _x;
+	}
+	
+	public function setX(val:Float):Float
+	{
+		_x = val;
+		if (_flashSprite != null)
+		{
+			_flashSprite.x = val;
+		}
+		return val;
+	}
+	
+	public function getY():Float
+	{
+		return _y;
+	}
+	
+	public function setY(val:Float):Float
+	{
+		_y = val;
+		if (_flashSprite != null)
+		{
+			_flashSprite.y = val;
+		}
+		return val;
+	}
+	
+	public function getWidth():Int
+	{
+		return _width;
+	}
+	
+	public function setWidth(val:Int):Int
+	{
+		if (val > 0)
+		{
+			_width = val;
+			if (_flashSprite != null)
+			{
+				var rect:Rectangle = _flashSprite.scrollRect;
+				rect.width = val;
+				_flashSprite.scrollRect = rect;
+			}
+		}
+		return val;
+	}
+	
+	public function getHeight():Int
+	{
+		return _height;
+	}
+	
+	public function setHeight(val:Int):Int
+	{
+		if (val > 0)
+		{
+			_height = val;
+			if (_flashSprite != null)
+			{
+				var rect:Rectangle = _flashSprite.scrollRect;
+				rect.height = val;
+				_flashSprite.scrollRect = rect;
+			}
+		}
+		return val;
+	}
+	#end
 }
