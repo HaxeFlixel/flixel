@@ -1,3 +1,3 @@
 Flixel v2.55 is finally ported!!!
 
-Added new branch 'flixelNME' which currently targets flash and cpp platforms
+This branch is for new render system for cpp target. I hope it will be faster than standart bitmap renderer
