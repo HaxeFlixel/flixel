@@ -126,7 +126,7 @@ class TileSheetManager
 			dataObject.destroy();
 		}
 		
-		tileSheetData = [];
+		tileSheetData = new Array<TileSheetData>();
 	}
 	
 }

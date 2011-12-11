@@ -538,6 +538,10 @@ class FlxGame extends Sprite
 			_state.destroy();
 		}
 		
+		#if cpp
+		TileSheetManager.clear();
+		#end
+		
 		//Finally assign and create the new state
 		_state = _requestedState;
 		_state.create();
