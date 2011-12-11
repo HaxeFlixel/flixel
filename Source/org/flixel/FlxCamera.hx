@@ -62,7 +62,7 @@ class FlxCamera extends FlxBasic
 	 * Measured in pixels from the top of the flash window.
 	 */
 	#if flash
-	 public var y:Float;
+	public var y:Float;
 	#else
 	private var _y:Float;
 	#end

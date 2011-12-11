@@ -107,6 +107,18 @@ class TileSheetManager
 		return null;
 	}
 	
+	public static function removeTileSheet(tileSheetObj:TileSheetData):Void
+	{
+		for (i in 0...(tileSheetData.length))
+		{
+			if (tileSheetData[i] == tileSheetObj)
+			{
+				tileSheetData.splice(i, 1);
+				tileSheetObj.destroy();
+			}
+		}
+	}
+	
 	public static function clear():Void
 	{
 		for (dataObject in tileSheetData)

@@ -366,6 +366,10 @@ class FlxSprite extends FlxObject
 		resetHelpers();
 		
 		#if cpp
+		if (_tileSheetData != null)
+		{
+			TileSheetManager.removeTileSheet(_tileSheetData);
+		}
 		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height), Reverse);
 		#end
@@ -469,6 +473,10 @@ class FlxSprite extends FlxObject
 		}
 		
 		#if cpp
+		if (_tileSheetData != null)
+		{
+			TileSheetManager.removeTileSheet(_tileSheetData);
+		}
 		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 		_tileSheetData.antialiasing = AntiAliasing;
 		_antialiasing = AntiAliasing;
@@ -500,6 +508,10 @@ class FlxSprite extends FlxObject
 		resetHelpers();
 		
 		#if cpp
+		if (_tileSheetData != null)
+		{
+			TileSheetManager.removeTileSheet(_tileSheetData);
+		}
 		_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
 		#end

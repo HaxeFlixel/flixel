@@ -5,6 +5,11 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
+#if cpp
+import nme.Assets;
+import org.flixel.tileSheetManager.TileSheetManager;
+#end
+
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
@@ -67,10 +72,11 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_textField.text = Text;
 		var format:TextFormat = new TextFormat("assets/data/nokiafc22", 8, 0xffffffff);
 		_textField.defaultTextFormat = format;
-		_textField.setTextFormat(format);
+		//_textField.setTextFormat(format);
+		_textField.defaultTextFormat = format;
+		_textField.text = Text;
 		#if flash
 		_textField.embedFonts = EmbeddedFont;
 		_textField.sharpness = 100;
@@ -87,7 +93,14 @@ class FlxText extends FlxSprite
 		_regen = true;
 		_shadow = 0;
 		allowCollisions = FlxObject.NONE;
+		#if flash
 		calcFrame();
+		#else
+		if (Text != "")
+		{
+			calcFrame(true);
+		}
+		#end
 	}
 	
 	/**
@@ -117,7 +130,11 @@ class FlxText extends FlxSprite
 	{
 		if (Font == null)
 		{
+			#if flash
 			Font = "";
+			#else
+			Font = "assets/data/nokiafc22";
+			#end
 		}
 		var format:TextFormat = dtfCopy();
 		format.font = Font;
@@ -128,7 +145,11 @@ class FlxText extends FlxSprite
 		_textField.setTextFormat(format);
 		_shadow = ShadowColor;
 		_regen = true;
+		#if flash
 		calcFrame();
+		#else
+		calcFrame(true);
+		#end
 		return this;
 	}
 	
@@ -152,7 +173,11 @@ class FlxText extends FlxSprite
 		if(_textField.text != ot)
 		{
 			_regen = true;
+			#if flash
 			calcFrame();
+			#else
+			calcFrame(true);
+			#end
 		}
 		return _textField.text;
 	}
@@ -177,7 +202,11 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
+		#if flash
 		calcFrame();
+		#else
+		calcFrame(true);
+		#end
 		return Size;
 	}
 	
@@ -211,7 +240,11 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
+		#if flash
 		calcFrame();
+		#else
+		calcFrame(true);
+		#end
 		return Color;
 	}
 	
@@ -235,7 +268,11 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
+		#if flash
 		calcFrame();
+		#else
+		calcFrame(true);
+		#end
 		return Font;
 	}
 	
@@ -261,7 +298,11 @@ class FlxText extends FlxSprite
 		//#if cpp
 		//_regen = true;
 		//#end
+		#if flash
 		calcFrame();
+		#else
+		calcFrame(true);
+		#end
 		return Alignment;
 	}
 	
@@ -287,7 +328,11 @@ class FlxText extends FlxSprite
 	#end
 	{
 		_shadow = Color;
+		#if flash
 		calcFrame();
+		#else
+		calcFrame(true);
+		#end
 		return Color;
 	}
 	
@@ -300,63 +345,81 @@ class FlxText extends FlxSprite
 	override private function calcFrame(?AreYouSure:Bool = false):Void
 	#end
 	{
-		if(_regen)
+		#if cpp
+		if (AreYouSure)
 		{
-			//Need to generate a new buffer to store the text graphic
-			height = _textField.textHeight;
-			height += 4; //account for 2px gutter on top and bottom
-			_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
-			frameHeight = Std.int(height);
-			_textField.height = height * 1.2;
-			_flashRect.x = 0;
-			_flashRect.y = 0;
-			_flashRect.width = width;
-			_flashRect.height = height;
-			_regen = false;
-		}
-		else	//Else just clear the old buffer before redrawing the text
-		{
-			_pixels.fillRect(_flashRect, 0);
-		}
+		#end
 		
-		if((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
-		{
-			//Now that we've cleared a buffer, we need to actually render the text to it
-			var format:TextFormat = _textField.defaultTextFormat;
-			var formatAdjusted:TextFormat = format;
-			_matrix.identity();
-			//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-			if ((format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
+			if(_regen)
 			{
-				formatAdjusted = new TextFormat(format.font, format.size, format.color);
-				formatAdjusted.align = TextFormatAlign.LEFT;
-				_textField.setTextFormat(formatAdjusted);				
-				#if flash
-				_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
-				#else
-				_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
-				#end
+				//Need to generate a new buffer to store the text graphic
+				height = _textField.textHeight;
+				height += 4; //account for 2px gutter on top and bottom
+				_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
+				frameHeight = Std.int(height);
+				_textField.height = height * 1.2;
+				_flashRect.x = 0;
+				_flashRect.y = 0;
+				_flashRect.width = width;
+				_flashRect.height = height;
+				_regen = false;
 			}
-			//Render a single pixel shadow beneath the text
-			if(_shadow > 0)
+			else	//Else just clear the old buffer before redrawing the text
 			{
-				_textField.setTextFormat(new TextFormat(formatAdjusted.font, formatAdjusted.size, _shadow, null, null, null, null, null, formatAdjusted.align));
-				_matrix.translate(1, 1);
-				_pixels.draw(_textField,_matrix,_colorTransform);
-				_matrix.translate( -1, -1);
-				_textField.setTextFormat(new TextFormat(formatAdjusted.font, formatAdjusted.size, formatAdjusted.color, null, null, null, null, null, formatAdjusted.align));
+				_pixels.fillRect(_flashRect, 0);
 			}
-			//Actually draw the text onto the buffer
-			_pixels.draw(_textField, _matrix, _colorTransform);
-			_textField.setTextFormat(new TextFormat(format.font, format.size, format.color, null, null, null, null, null, format.align));
+			
+			if((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
+			{
+				//Now that we've cleared a buffer, we need to actually render the text to it
+				var format:TextFormat = _textField.defaultTextFormat;
+				var formatAdjusted:TextFormat = format;
+				_matrix.identity();
+				//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
+				if ((format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
+				{
+					formatAdjusted = new TextFormat(format.font, format.size, format.color);
+					formatAdjusted.align = TextFormatAlign.LEFT;
+					_textField.setTextFormat(formatAdjusted);				
+					#if flash
+					_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
+					#else
+					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
+					#end
+				}
+				//Render a single pixel shadow beneath the text
+				if(_shadow > 0)
+				{
+					_textField.setTextFormat(new TextFormat(formatAdjusted.font, formatAdjusted.size, _shadow, null, null, null, null, null, formatAdjusted.align));
+					_matrix.translate(1, 1);
+					_pixels.draw(_textField,_matrix,_colorTransform);
+					_matrix.translate( -1, -1);
+					_textField.setTextFormat(new TextFormat(formatAdjusted.font, formatAdjusted.size, formatAdjusted.color, null, null, null, null, null, formatAdjusted.align));
+				}
+				//Actually draw the text onto the buffer
+				_pixels.draw(_textField, _matrix, _colorTransform);
+				_textField.setTextFormat(new TextFormat(format.font, format.size, format.color, null, null, null, null, null, format.align));
+			}
+			
+			#if cpp
+			if (_tileSheetData != null)
+			{
+				TileSheetManager.removeTileSheet(_tileSheetData);
+			}
+			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
+			_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
+			#end
+			
+			//Finally, update the visible pixels
+			if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
+			{
+				framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
+			}
+			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
+			
+		#if cpp
 		}
-		
-		//Finally, update the visible pixels
-		if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
-		{
-			framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
-		}
-		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
+		#end
 	}
 	
 	/**
