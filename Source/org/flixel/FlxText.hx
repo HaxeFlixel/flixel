@@ -117,7 +117,11 @@ class FlxText extends FlxSprite
 	{
 		if (Font == null)
 		{
+			#if flash
 			Font = "";
+			#else
+			Font = "assets/data/nokiafc22";
+			#end
 		}
 		var format:TextFormat = dtfCopy();
 		format.font = Font;
