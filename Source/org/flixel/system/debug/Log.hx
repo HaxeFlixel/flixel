@@ -3,6 +3,7 @@ package org.flixel.system.debug;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import nme.Assets;
 import org.flixel.system.FlxWindow;
 
 /**
@@ -39,7 +40,7 @@ class Log extends FlxWindow
 		_text.multiline = true;
 		_text.wordWrap = true;
 		_text.selectable = true;
-		_text.defaultTextFormat = new TextFormat("assets/data/courier",12,0xffffff);
+		_text.defaultTextFormat = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName, 12, 0xffffff);
 		addChild(_text);
 		
 		_lines = new Array<String>();

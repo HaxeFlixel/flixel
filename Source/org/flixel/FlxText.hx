@@ -5,8 +5,9 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
-#if cpp
 import nme.Assets;
+
+#if cpp
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
 
@@ -72,7 +73,7 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		var format:TextFormat = new TextFormat("assets/data/nokiafc22", 8, 0xffffffff);
+		var format:TextFormat = new TextFormat(Assets.getFont("assets/data/nokiafc22.ttf").fontName, 8, 0xffffffff);
 		_textField.defaultTextFormat = format;
 		//_textField.setTextFormat(format);
 		_textField.defaultTextFormat = format;
@@ -133,7 +134,7 @@ class FlxText extends FlxSprite
 			#if flash
 			Font = "";
 			#else
-			Font = "assets/data/nokiafc22";
+			Font = Assets.getFont("assets/data/nokiafc22.ttf").fontName;
 			#end
 		}
 		var format:TextFormat = dtfCopy();

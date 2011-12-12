@@ -5,6 +5,7 @@ import flash.system.System;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.Lib;
+import nme.Assets;
 import org.flixel.FlxU;
 
 import org.flixel.FlxG;
@@ -61,7 +62,7 @@ class Perf extends FlxWindow
 		_text.multiline = true;
 		_text.wordWrap = true;
 		_text.selectable = true;
-		_text.defaultTextFormat = new TextFormat("assets/data/COURIER",12,0xffffff);
+		_text.defaultTextFormat = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName,12,0xffffff);
 		addChild(_text);
 		
 		_flixelUpdate = new Array(/*32*/);

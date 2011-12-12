@@ -15,6 +15,7 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flash.Lib;
 import flash.ui.Mouse;
+import nme.Assets;
 import org.flixel.tileSheetManager.TileSheetManager;
 
 #if flash
@@ -486,11 +487,12 @@ class FlxGame extends Sprite
 					_accumulator = _maxAccumulation;
 				}
 				// TODO: You may uncomment following lines
-			//	while(_accumulator >= Std.int(_step))
-			//	{
+				//while(_accumulator >= Std.int(_step))
+				while(_accumulator > Std.int(_step))
+				{
 					step();
 					_accumulator = _accumulator - _step; 
-			//	}
+				}
 			}
 			
 			FlxBasic._VISIBLECOUNT = 0;
@@ -824,7 +826,7 @@ class FlxGame extends Sprite
 		text.gridFitType = GridFitType.PIXEL;
 		#else
 		#end
-		var dtf:TextFormat = new TextFormat("assets/data/nokiafc22", 8, 0xffffff);
+		var dtf:TextFormat = new TextFormat(Assets.getFont("assets/data/nokiafc22.ttf").fontName, 8, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		text.defaultTextFormat = dtf; //new TextFormat("system",8,0xffffff,null,null,null,null,null,"center");
 		_soundTray.addChild(text);

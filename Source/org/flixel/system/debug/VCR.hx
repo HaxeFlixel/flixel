@@ -6,6 +6,7 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.MouseEvent;
+import nme.Assets;
 import org.flixel.FlxAssets;
 #if flash
 import flash.net.FileFilter;
@@ -126,7 +127,7 @@ class VCR extends Sprite
 		_runtimeDisplay.multiline = false;
 		_runtimeDisplay.wordWrap = false;
 		_runtimeDisplay.selectable = false;
-		var dtf:TextFormat = new TextFormat("assets/data/COURIER", 12, 0xffffff);
+		var dtf:TextFormat = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName, 12, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		//_runtimeDisplay.defaultTextFormat = new TextFormat("Courier", 12, 0xffffff, null, null, null, null, null, "center");
 		_runtimeDisplay.defaultTextFormat = dtf;

@@ -1,6 +1,8 @@
 package org.flixel;
-import flash.display.Bitmap;
-import flash.media.Sound;
+
+import nme.display.Bitmap;
+import nme.media.Sound;
+import nme.Assets;
 
 /**
  * ...
@@ -33,19 +35,19 @@ class FlxAssets
 	public static var sndBeep(getSndBeep, null):Sound;
 	public static function getSndBeep():Sound
 	{
-		return ApplicationMain.getAsset("assets/data/beep.mp3");
+		return Assets.getSound("assets/data/beep.mp3");
 	}
 	
 }
 
 class ImgDefaultButton extends Bitmap
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/button.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/button.png")); }
 }
 
 class ImgLogo extends Bitmap
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/logo.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/logo.png")); }
 }
 
 /*class SndBeep extends Sound 
@@ -55,85 +57,85 @@ class ImgLogo extends Bitmap
 
 class ImgDefault extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/default.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/default.png")); }
 }
 //
 class ImgAuto extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/autotiles.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/autotiles.png")); }
 }
 
 class ImgAutoAlt extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/autotiles_alt.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/autotiles_alt.png")); }
 }
 
 class ImgLogoCorners extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/logo_corners.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/logo_corners.png")); }
 }
 
 class ImgLogoLight extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/logo_light.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/logo_light.png")); }
 }
 
 class ImgHandle extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/handle.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/handle.png")); }
 }
 
 class ImgDefaultCursor extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/cursor.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/cursor.png")); }
 }
 
 class ImgBounds extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vis/bounds.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vis/bounds.png")); }
 }
 
 class ImgOpen extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/open.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/open.png")); }
 }
 
 class ImgRecordOff extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/record_off.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/record_off.png")); }
 }
 
 class ImgRecordOn extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/record_on.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/record_on.png")); }
 }
 
 class ImgStop extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/stop.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/stop.png")); }
 }
 
 class ImgFlixel extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/flixel.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/flixel.png")); }
 }
 
 class ImgRestart extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/restart.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/restart.png")); }
 }
 
 class ImgPause extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/pause.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/pause.png")); }
 }
 
 class ImgPlay extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/play.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/play.png")); }
 }
 
 class ImgStep extends Bitmap 
 {
-	public function new() { super(ApplicationMain.getAsset("assets/data/vcr/step.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/vcr/step.png")); }
 }

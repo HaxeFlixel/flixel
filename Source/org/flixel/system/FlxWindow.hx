@@ -9,6 +9,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import nme.Assets;
 import org.flixel.FlxAssets;
 
 import org.flixel.FlxU;
@@ -133,7 +134,7 @@ class FlxWindow extends Sprite
 		_title.height = 16;
 		_title.selectable = false;
 		_title.multiline = false;
-		_title.defaultTextFormat = new TextFormat("assets/data/COURIER", 12, 0xffffff);
+		_title.defaultTextFormat = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName, 12, 0xffffff);
 		_title.text = Title;
 		addChild(_title);
 		

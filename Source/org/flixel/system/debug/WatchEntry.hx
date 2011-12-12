@@ -5,6 +5,7 @@ import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.text.TextFieldType;
 import flash.text.TextFormat;
+import nme.Assets;
 
 import org.flixel.FlxU;
 
@@ -63,8 +64,8 @@ class WatchEntry
 		field = Field;
 		custom = Custom;
 		
-		_whiteText = new TextFormat("assets/data/COURIER",12,0xffffff);
-		_blackText = new TextFormat("assets/data/COURIER",12,0);
+		_whiteText = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName,12,0xffffff);
+		_blackText = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName,12,0);
 		
 		nameDisplay = new TextField();
 		nameDisplay.y = Y;

@@ -8,6 +8,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import nme.Assets;
 
 import org.flixel.FlxG;
 import org.flixel.system.debug.Log;
@@ -91,7 +92,7 @@ class FlxDebugger extends Sprite
 		txt.height = 16;
 		txt.selectable = false;
 		txt.multiline = false;
-		txt.defaultTextFormat = new TextFormat("assets/data/courier", 12, 0xffffff);
+		txt.defaultTextFormat = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName, 12, 0xffffff);
 		var str:String = FlxG.getLibraryName();
 		if (FlxG.debug)
 		{
