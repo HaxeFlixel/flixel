@@ -73,7 +73,8 @@ class TileSheetData
 		var numCols:Int = Math.floor(bitmapWidth / width);
 		
 		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height);
-		var tempPoint:Point;
+		// TODO: there is no need is multiple instanciation of tempPoint. It must be created only 1 time
+		var tempPoint:Point = new Point(0.5 * width, 0.5 * height);
 		var tempRect:Rectangle;
 		var tileID:Int;
 		
@@ -84,7 +85,7 @@ class TileSheetData
 				for (i in 0...(numCols))
 				{
 					tempRect = new Rectangle(i * width, j * height, width, height);
-					tempPoint = new Point(0.5 * width, 0.5 * height);
+				//	tempPoint = new Point(0.5 * width, 0.5 * height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}
@@ -97,7 +98,7 @@ class TileSheetData
 				for (i in 0...(Math.floor(0.5 * numCols)))
 				{
 					tempRect = new Rectangle(i * width, j * height, width, height);
-					tempPoint = new Point(0.5 * width, 0.5 * height);
+				//	tempPoint = new Point(0.5 * width, 0.5 * height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}
@@ -108,13 +109,14 @@ class TileSheetData
 				for (i in 0...(Math.floor(0.5 * numCols)))
 				{
 					tempRect = new Rectangle(width * (numCols - i - 1), j * height, width, height);
-					tempPoint = new Point(0.5 * width, 0.5 * height);
+				//	tempPoint = new Point(0.5 * width, 0.5 * height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}
 			}
 		}
 		
+		spriteData.halfFrameNumber = Math.floor(0.5 * spriteData.frameIDs.length);
 		flxSpriteFrames.push(spriteData);
 		//return spriteData.frameIDs;
 		return spriteData;
@@ -259,13 +261,19 @@ class FlxSpriteFrames
 	
 	public var width:Int;
 	public var height:Int;
+	public var halfWidth:Float;
+	public var halfHeight:Float;
 	public var frameIDs:Array<Int>;
+	public var halfFrameNumber:Int;
 	
 	public function new(width:Int, height:Int)
 	{
 		this.width = width;
 		this.height = height;
+		halfWidth = 0.5 * width;
+		halfHeight = 0.5 * height;
 		frameIDs = [];
+		halfFrameNumber = 0;
 	}
 	
 	public function destroy():Void

@@ -609,16 +609,13 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					/*_tileSheetData.drawData[prevI].push(_point.x - 0.5 * (camera.width - _framesData.width));
-					_tileSheetData.drawData[prevI].push(_point.y - 0.5 * (camera.height - _framesData.height));*/
-					
-					_tileSheetData.drawData[prevI].push(_point.x + 0.5 * _framesData.width);
-					_tileSheetData.drawData[prevI].push(_point.y + 0.5 * _framesData.height);
+					_tileSheetData.drawData[prevI].push(_point.x + _framesData.halfWidth);
+					_tileSheetData.drawData[prevI].push(_point.y + _framesData.halfHeight);
 					
 					//handle reversed sprites
 					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
 					{
-						_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex + Math.floor(_framesData.frameIDs.length * 0.5)]);
+						_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex + _framesData.halfFrameNumber]);
 					}
 					else
 					{
@@ -650,11 +647,8 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					/*_tileSheetData.drawData[prevI].push(_point.x - 0.5 * (camera.width - _framesData.width));
-					_tileSheetData.drawData[prevI].push(_point.y - 0.5 * (camera.height - _framesData.height));*/
-					
-					_tileSheetData.drawData[prevI].push(_point.x + 0.5 * _framesData.width);
-					_tileSheetData.drawData[prevI].push(_point.y + 0.5 * _framesData.height);
+					_tileSheetData.drawData[prevI].push(_point.x + _framesData.halfWidth);
+					_tileSheetData.drawData[prevI].push(_point.y + _framesData.halfHeight);
 					
 					_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
 					
