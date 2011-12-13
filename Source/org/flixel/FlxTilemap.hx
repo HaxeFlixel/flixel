@@ -1,11 +1,13 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Graphics;
+import nme.geom.Matrix;
+import nme.geom.Point;
+import nme.geom.Rectangle;
+import org.flixel.tileSheetManager.TileSheetData;
+import org.flixel.tileSheetManager.TileSheetManager;
 
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
@@ -114,6 +116,11 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _startingIndex:Int;
 	
+	#if cpp
+	private var _tileSheetData:TileSheetData;
+	private var _framesData:FlxSpriteFrames;
+	#end
+	
 	/**
 	 * The tilemap constructor just initializes some basic variables.
 	 */
@@ -153,7 +160,6 @@ class FlxTilemap extends FlxObject
 		_tiles = null;
 		var i:Int = 0;
 		var l:Int = _tileObjects.length;
-		//while (i < l)
 		for (i in 0...l)
 		{
 			_tileObjects[i].destroy();
@@ -161,7 +167,6 @@ class FlxTilemap extends FlxObject
 		_tileObjects = null;
 		i = 0;
 		l = _buffers.length;
-		//while (i < l)
 		for (i in 0...l)
 		{
 			_buffers[i].destroy();
@@ -173,6 +178,11 @@ class FlxTilemap extends FlxObject
 		_debugTilePartial = null;
 		_debugTileSolid = null;
 		_debugRect = null;
+		
+		#if cpp
+		_framesData = null;
+		_tileSheetData = null;
+		#end
 
 		super.destroy();
 	}
@@ -197,7 +207,6 @@ class FlxTilemap extends FlxObject
 		//Figure out the map dimensions based on the data string
 		var columns:Array<String>;
 		_data = new Array<Int>();
-		// TODO: Check this variable type
 		var rows:Array<String> = MapData.split("\n");
 		heightInTiles = rows.length;
 		var row:Int = 0;
@@ -264,6 +273,15 @@ class FlxTilemap extends FlxObject
 			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= DrawIndex), (i >= CollideIndex) ? allowCollisions : FlxObject.NONE);
 			i++;
 		}
+		
+		#if cpp
+		/*if (_tileSheetData != null)
+		{
+			TileSheetManager.removeTileSheet(_tileSheetData);
+		}*/
+		_tileSheetData = TileSheetManager.addTileSheet(_tiles);
+		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height), false, new Point(0, 0));
+		#end
 		
 		//create debug tiles for rendering bounding boxes on demand
 		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
@@ -350,7 +368,7 @@ class FlxTilemap extends FlxObject
 		}
 		if (screenXInTiles > widthInTiles - screenColumns)
 		{
-			screenXInTiles = widthInTiles-screenColumns;
+			screenXInTiles = widthInTiles - screenColumns;
 		}
 		if (screenYInTiles < 0)
 		{
@@ -358,7 +376,7 @@ class FlxTilemap extends FlxObject
 		}
 		if (screenYInTiles > heightInTiles - screenRows)
 		{
-			screenYInTiles = heightInTiles-screenRows;
+			screenYInTiles = heightInTiles - screenRows;
 		}
 		
 		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
@@ -410,6 +428,15 @@ class FlxTilemap extends FlxObject
 		}
 		Buffer.x = screenXInTiles * _tileWidth;
 		Buffer.y = screenYInTiles * _tileHeight;
+		
+		/*
+		// code from draw() method
+		_flashPoint.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
+		_flashPoint.y = y - Std.int(camera.scroll.y * scrollFactor.y) + buffer.y;
+		_flashPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
+		_flashPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
+		buffer.draw(camera, _flashPoint);
+		*/
 	}
 	
 	/**
@@ -442,6 +469,7 @@ class FlxTilemap extends FlxObject
 				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera);
 			}
 			buffer = _buffers[i++];
+			#if flash
 			if(!buffer.dirty)
 			{
 				_point.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
@@ -458,6 +486,11 @@ class FlxTilemap extends FlxObject
 			_flashPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
 			_flashPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
 			buffer.draw(camera, _flashPoint);
+			
+			#else
+			drawTilemap(buffer, camera);
+			#end
+			
 			FlxBasic._VISIBLECOUNT++;
 		}
 	}

@@ -50,11 +50,6 @@ class ImgLogo extends Bitmap
 	public function new() { super(Assets.getBitmapData("assets/data/logo.png")); }
 }
 
-/*class SndBeep extends Sound 
-{ 
-	public function new() { super(ApplicationMain.getAsset("assets/data/beep.mp3")); } 
-}*/
-
 class ImgDefault extends Bitmap 
 {
 	public function new() { super(Assets.getBitmapData("assets/data/default.png")); }

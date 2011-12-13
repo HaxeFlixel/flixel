@@ -57,8 +57,7 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	//public function addSpriteFramesData(width:Int, height:Int):Array<Int>
-	public function addSpriteFramesData(width:Int, height:Int, ?reversed:Bool = false):FlxSpriteFrames
+	public function addSpriteFramesData(width:Int, height:Int, ?reversed:Bool = false, ?origin:Point = null):FlxSpriteFrames
 	{
 		if (containsSpriteFrameData(width, height))
 		{
@@ -74,7 +73,12 @@ class TileSheetData
 		
 		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height);
 		// TODO: there is no need is multiple instanciation of tempPoint. It must be created only 1 time
-		var tempPoint:Point = new Point(0.5 * width, 0.5 * height);
+		var tempPoint:Point = origin;
+		if (origin == null)
+		{
+			tempPoint = new Point(0.5 * width, 0.5 * height);
+		}
+		
 		var tempRect:Rectangle;
 		var tileID:Int;
 		
