@@ -102,13 +102,14 @@ class FlxButton extends FlxSprite
 	public function new(?X:Float = 0, ?Y:Float = 0, ?Label:String = null, ?OnClick:Dynamic = null)
 	{
 		super(X, Y);
+		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
+		
 		if(Label != null)
 		{
 			label = new FlxText(0, 0, 80, Label);
 			label.setFormat(null, 8, 0x333333, "center");
 			labelOffset = new FlxPoint( -1, 3);
 		}
-		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
 		
 		onUp = OnClick;
 		onDown = null;
