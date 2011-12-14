@@ -5,6 +5,7 @@ import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flash.media.Sound;
 import flash.media.Sound;
+import org.flixel.FlxSprite;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -102,14 +103,13 @@ class FlxButton extends FlxSprite
 	public function new(?X:Float = 0, ?Y:Float = 0, ?Label:String = null, ?OnClick:Dynamic = null)
 	{
 		super(X, Y);
-		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
-		
 		if(Label != null)
 		{
 			label = new FlxText(0, 0, 80, Label);
-			label.setFormat(null, 8, 0x333333, "center");
+		//	label.setFormat(null, 8, 0x333333, "center");
 			labelOffset = new FlxPoint( -1, 3);
 		}
+		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
 		
 		onUp = OnClick;
 		onDown = null;
@@ -125,6 +125,17 @@ class FlxButton extends FlxSprite
 		_onToggle = false;
 		_pressed = false;
 		_initialized = false;
+	}
+	
+	#if flash
+	override public function loadGraphic(Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, Width:UInt = 0, ?Height:UInt = 0, ?Unique:Bool = false):FlxSprite 
+	#else
+	override public function loadGraphic(Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite 
+	#end
+	{
+		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, Width, Height, Unique);
+		label.setFormat(null, 8, 0x333333, "center");
+		return tempSprite;
 	}
 	
 	/**
