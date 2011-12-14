@@ -1,14 +1,14 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.display.Stage;
-import flash.errors.Error;
-import flash.geom.Matrix;
-import flash.geom.Rectangle;
-import flash.media.Sound;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Graphics;
+import nme.display.Sprite;
+import nme.display.Stage;
+import nme.errors.Error;
+import nme.geom.Matrix;
+import nme.geom.Rectangle;
+import nme.media.Sound;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 

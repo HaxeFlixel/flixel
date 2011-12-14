@@ -3,6 +3,7 @@ package org.flixel;
 import nme.display.Bitmap;
 import nme.media.Sound;
 import nme.Assets;
+import nme.text.Font;
 
 /**
  * ...
@@ -36,6 +37,18 @@ class FlxAssets
 	public static function getSndBeep():Sound
 	{
 		return Assets.getSound("assets/data/beep.mp3");
+	}
+	
+	public static var nokiaFont(getNokiaFont, null):String;
+	public static function getNokiaFont():String
+	{
+		return Assets.getFont("assets/data/nokiafc22.ttf").fontName;
+	}
+	
+	public static var courierFont(getCourierFont, null):String;
+	public static function getCourierFont():String
+	{
+		return Assets.getFont("assets/data/courier.ttf").fontName;
 	}
 	
 }

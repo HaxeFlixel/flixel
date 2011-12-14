@@ -1,22 +1,24 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
-import flash.events.Event;
-import flash.events.KeyboardEvent;
-import flash.events.MouseEvent;
-import flash.media.Sound;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
-import flash.Lib;
-import flash.ui.Mouse;
-import nme.Assets;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Graphics;
+import nme.display.Sprite;
+import nme.display.StageAlign;
+import nme.display.StageScaleMode;
+import nme.events.Event;
+import nme.events.KeyboardEvent;
+import nme.events.MouseEvent;
+import nme.media.Sound;
+import nme.text.TextField;
+import nme.text.TextFormat;
+import nme.text.TextFormatAlign;
+import nme.Lib;
+import nme.ui.Mouse;
+
+#if cpp
 import org.flixel.tileSheetManager.TileSheetManager;
+#end
 
 #if flash
 import flash.text.AntiAliasType;
@@ -826,7 +828,7 @@ class FlxGame extends Sprite
 		text.gridFitType = GridFitType.PIXEL;
 		#else
 		#end
-		var dtf:TextFormat = new TextFormat(Assets.getFont("assets/data/nokiafc22.ttf").fontName, 8, 0xffffff);
+		var dtf:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		text.defaultTextFormat = dtf; //new TextFormat("system",8,0xffffff,null,null,null,null,null,"center");
 		_soundTray.addChild(text);

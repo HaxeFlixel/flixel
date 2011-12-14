@@ -1,13 +1,12 @@
 package org.flixel.system.debug;
 
-import flash.geom.Rectangle;
-import flash.system.System;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.Lib;
-import nme.Assets;
-import org.flixel.FlxU;
+import nme.geom.Rectangle;
+import nme.system.System;
+import nme.text.TextField;
+import nme.text.TextFormat;
+import nme.Lib;
 
+import org.flixel.FlxU;
 import org.flixel.FlxG;
 import org.flixel.system.FlxWindow;
 
@@ -62,7 +61,7 @@ class Perf extends FlxWindow
 		_text.multiline = true;
 		_text.wordWrap = true;
 		_text.selectable = true;
-		_text.defaultTextFormat = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName,12,0xffffff);
+		_text.defaultTextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
 		addChild(_text);
 		
 		_flixelUpdate = new Array(/*32*/);

@@ -1,17 +1,16 @@
 package org.flixel.system;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import nme.Assets;
-import org.flixel.FlxAssets;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Sprite;
+import nme.events.Event;
+import nme.events.MouseEvent;
+import nme.geom.Point;
+import nme.geom.Rectangle;
+import nme.text.TextField;
+import nme.text.TextFormat;
 
+import org.flixel.FlxAssets;
 import org.flixel.FlxU;
 
 /**
@@ -134,7 +133,7 @@ class FlxWindow extends Sprite
 		_title.height = 16;
 		_title.selectable = false;
 		_title.multiline = false;
-		_title.defaultTextFormat = new TextFormat(Assets.getFont("assets/data/courier.ttf").fontName, 12, 0xffffff);
+		_title.defaultTextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
 		_title.text = Title;
 		addChild(_title);
 		

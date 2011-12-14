@@ -484,11 +484,6 @@ class FlxTilemap extends FlxObject
 		}
 		Buffer.x = screenXInTiles * _tileWidth;
 		Buffer.y = screenYInTiles * _tileHeight;
-		
-		/*
-		// code from draw() method
-		//buffer.draw(Camera, _helperPoint);
-		*/
 	}
 	
 	/**

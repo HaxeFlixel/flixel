@@ -1,11 +1,9 @@
 package org.flixel;
 
-import flash.display.BitmapData;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
-
-import nme.Assets;
+import nme.display.BitmapData;
+import nme.text.TextField;
+import nme.text.TextFormat;
+import nme.text.TextFormatAlign;
 
 #if cpp
 import org.flixel.tileSheetManager.TileSheetManager;
@@ -73,7 +71,7 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		var format:TextFormat = new TextFormat(Assets.getFont("assets/data/nokiafc22.ttf").fontName, 8, 0xffffffff);
+		var format:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffffff);
 		_textField.defaultTextFormat = format;
 		//_textField.setTextFormat(format);
 		_textField.defaultTextFormat = format;
@@ -134,7 +132,7 @@ class FlxText extends FlxSprite
 			#if flash
 			Font = "";
 			#else
-			Font = Assets.getFont("assets/data/nokiafc22.ttf").fontName;
+			Font = FlxAssets.nokiaFont;
 			#end
 		}
 		var format:TextFormat = dtfCopy();
