@@ -6,11 +6,14 @@ import nme.display.Graphics;
 import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
-import org.flixel.tileSheetManager.TileSheetData;
-import org.flixel.tileSheetManager.TileSheetManager;
 
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
+
+#if cpp
+import org.flixel.tileSheetManager.TileSheetData;
+import org.flixel.tileSheetManager.TileSheetManager;
+#end
 
 /**
  * This is a traditional tilemap display and collision class.
@@ -76,7 +79,9 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Internal representation of rectangles, one for each tile in the entire tilemap, used to speed up drawing.
 	 */
+	#if flash
 	private var _rects:Array<Rectangle>;
+	#end
 	/**
 	 * Internal, the width of a single tile.
 	 */
@@ -105,7 +110,9 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
+	#if flash
 	private var _debugRect:Rectangle;
+	#end
 	/**
 	 * Internal flag for checking to see if we need to refresh
 	 * the tilemap display to show or hide the bounding boxes.
@@ -119,6 +126,14 @@ class FlxTilemap extends FlxObject
 	#if cpp
 	private var _tileSheetData:TileSheetData;
 	private var _framesData:FlxSpriteFrames;
+	/**
+	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
+	 */
+	private var _helperPoint:Point;
+	/**
+	 * Internal representation of rectangles (actually id of rectangle in tileSheet), one for each tile in the entire tilemap, used to speed up drawing.
+	 */
+	private var _rectIDs:Array<Int>;
 	#end
 	
 	/**
@@ -137,7 +152,12 @@ class FlxTilemap extends FlxObject
 		_data = null;
 		_tileWidth = 0;
 		_tileHeight = 0;
+		#if flash
 		_rects = null;
+		_debugRect = null;
+		#else
+		_rectIDs = null;
+		#end
 		_tiles = null;
 		_tileObjects = null;
 		immovable = true;
@@ -145,9 +165,12 @@ class FlxTilemap extends FlxObject
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
-		_debugRect = null;
 		_lastVisualDebug = FlxG.visualDebug;
 		_startingIndex = 0;
+		
+		#if cpp
+		_helperPoint = new Point();
+		#end
 	}
 	
 	/**
@@ -173,15 +196,19 @@ class FlxTilemap extends FlxObject
 		}
 		_buffers = null;
 		_data = null;
+		#if flash
 		_rects = null;
+		_debugRect = null;
+		#end
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
-		_debugRect = null;
 		
 		#if cpp
 		_framesData = null;
 		_tileSheetData = null;
+		_helperPoint = null;
+		_rectIDs = null;
 		#end
 
 		super.destroy();
@@ -280,20 +307,25 @@ class FlxTilemap extends FlxObject
 			TileSheetManager.removeTileSheet(_tileSheetData);
 		}*/
 		_tileSheetData = TileSheetManager.addTileSheet(_tiles);
-		_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height), false, new Point(0, 0));
+		_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, false, new Point(0, 0));
 		#end
 		
 		//create debug tiles for rendering bounding boxes on demand
 		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
 		_debugTilePartial = makeDebugTile(FlxG.PINK);
 		_debugTileSolid = makeDebugTile(FlxG.GREEN);
-		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		
 		//Then go through and create the actual map
 		width = widthInTiles * _tileWidth;
 		height = heightInTiles * _tileHeight;
+		#if flash
+		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		_rects = new Array<Rectangle>(/*totalTiles*/);
 		FlxU.SetArrayLength(_rects, totalTiles);
+		#else
+		_rectIDs = new Array<Int>();
+		FlxU.SetArrayLength(_rectIDs, totalTiles);
+		#end
 		i = 0;
 		while (i < totalTiles)
 		{
@@ -349,9 +381,17 @@ class FlxTilemap extends FlxObject
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
 	 * @param	Camera		The related <code>FlxCamera</code>, mainly for scroll values.
 	 */
-	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
+	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera, ?CameraID:Int = 0):Void
 	{
+		#if flash
 		Buffer.fill();
+		#else
+		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x) + Buffer.x; //copied from getScreenXY()
+		_helperPoint.y = y - Std.int(Camera.scroll.y * scrollFactor.y) + Buffer.y;
+		_helperPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
+		_helperPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
+		var tileID:Int;
+		#end
 		
 		//Copy tile images into the tile buffer
 		_point.x = Std.int(Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
@@ -393,6 +433,7 @@ class FlxTilemap extends FlxObject
 			_flashPoint.x = 0;
 			while(column < screenColumns)
 			{
+				#if flash
 				_flashRect = _rects[columnIndex];
 				if(_flashRect != null)
 				{
@@ -418,6 +459,21 @@ class FlxTilemap extends FlxObject
 						}
 					}
 				}
+				#else
+				tileID = _rectIDs[columnIndex];
+				if (tileID != -1)
+				{
+					_tileSheetData.drawData[CameraID].push(_flashPoint.x + _helperPoint.x);
+					_tileSheetData.drawData[CameraID].push(_flashPoint.y + _helperPoint.y);
+					_tileSheetData.drawData[CameraID].push(tileID);
+					_tileSheetData.drawData[CameraID].push(1.0); // scale
+					_tileSheetData.drawData[CameraID].push(0.0); // rotation
+					_tileSheetData.drawData[CameraID].push(1.0); // red
+					_tileSheetData.drawData[CameraID].push(1.0); //	green
+					_tileSheetData.drawData[CameraID].push(1.0); //	blue
+					_tileSheetData.drawData[CameraID].push(1.0); // alpha
+				}
+				#end
 				_flashPoint.x += _tileWidth;
 				column++;
 				columnIndex++;
@@ -431,11 +487,7 @@ class FlxTilemap extends FlxObject
 		
 		/*
 		// code from draw() method
-		_flashPoint.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
-		_flashPoint.y = y - Std.int(camera.scroll.y * scrollFactor.y) + buffer.y;
-		_flashPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
-		_flashPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
-		buffer.draw(camera, _flashPoint);
+		//buffer.draw(Camera, _helperPoint);
 		*/
 	}
 	
@@ -488,7 +540,7 @@ class FlxTilemap extends FlxObject
 			buffer.draw(camera, _flashPoint);
 			
 			#else
-			drawTilemap(buffer, camera);
+			drawTilemap(buffer, camera, i - 1);
 			#end
 			
 			FlxBasic._VISIBLECOUNT++;
@@ -1618,9 +1670,14 @@ class FlxTilemap extends FlxObject
 		var tile:FlxTile = _tileObjects[_data[Index]];
 		if((tile == null) || !tile.visible)
 		{
+			#if flash
 			_rects[Index] = null;
+			#else
+			_rectIDs[Index] = -1;
+			#end
 			return;
 		}
+		#if flash
 		var rx:Int = (_data[Index] - _startingIndex) * _tileWidth;
 		var ry:Int = 0;
 		if(Std.int(rx) >= _tiles.width)
@@ -1629,5 +1686,8 @@ class FlxTilemap extends FlxObject
 			rx %= _tiles.width;
 		}
 		_rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
+		#else
+		_rectIDs[Index] = _framesData.frameIDs[_data[Index] - _startingIndex];
+		#end
 	}
 }
