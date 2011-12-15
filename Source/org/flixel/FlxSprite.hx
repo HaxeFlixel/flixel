@@ -609,8 +609,8 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					_tileSheetData.drawData[prevI].push(_point.x + _framesData.halfWidth);
-					_tileSheetData.drawData[prevI].push(_point.y + _framesData.halfHeight);
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.x + _framesData.halfWidth));
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.y + _framesData.halfHeight));
 					
 					//handle reversed sprites
 					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
@@ -647,8 +647,8 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					_tileSheetData.drawData[prevI].push(_point.x + _framesData.halfWidth);
-					_tileSheetData.drawData[prevI].push(_point.y + _framesData.halfHeight);
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.x + _framesData.halfWidth));
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.y + _framesData.halfHeight));
 					
 					_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
 					
@@ -1306,5 +1306,15 @@ class FlxSprite extends FlxObject
 		return val;
 	}
 	#end
+	
+	/**
+	 * If the Sprite is beeing rendered in simple mode.
+	 */
+	public var simpleRender(getSimpleRender, null):Bool;
+	
+	public function getSimpleRender():Bool
+	{ 
+		return (((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null));
+	}
 	
 }

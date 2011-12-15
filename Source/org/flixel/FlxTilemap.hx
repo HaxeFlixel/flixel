@@ -386,8 +386,8 @@ class FlxTilemap extends FlxObject
 		#if flash
 		Buffer.fill();
 		#else
-		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x) + Buffer.x; //copied from getScreenXY()
-		_helperPoint.y = y - Std.int(Camera.scroll.y * scrollFactor.y) + Buffer.y;
+		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x) /*+ Buffer.x*/; //copied from getScreenXY()
+		_helperPoint.y = y - Std.int(Camera.scroll.y * scrollFactor.y) /*+ Buffer.y*/;
 		_helperPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
 		_helperPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
 		var tileID:Int;
@@ -463,8 +463,8 @@ class FlxTilemap extends FlxObject
 				tileID = _rectIDs[columnIndex];
 				if (tileID != -1)
 				{
-					_tileSheetData.drawData[CameraID].push(_flashPoint.x + _helperPoint.x);
-					_tileSheetData.drawData[CameraID].push(_flashPoint.y + _helperPoint.y);
+					_tileSheetData.drawData[CameraID].push(_helperPoint.x + (columnIndex % widthInTiles) * _tileWidth);
+					_tileSheetData.drawData[CameraID].push(_helperPoint.y + Math.floor(rowIndex / heightInTiles) * _tileHeight);
 					_tileSheetData.drawData[CameraID].push(tileID);
 					_tileSheetData.drawData[CameraID].push(1.0); // scale
 					_tileSheetData.drawData[CameraID].push(0.0); // rotation

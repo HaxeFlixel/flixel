@@ -31,6 +31,10 @@ class FlxCamera extends FlxBasic
 	 */
 	static public inline var STYLE_TOPDOWN_TIGHT:Int = 3;
 	/**
+	 * Camera "follow" style preset: camera will move screenwise.
+	 */
+	static public inline var STYLE_SCREEN_BY_SCREEN:Int = 4;
+	/**
 	 * Camera "shake" effect preset: shake camera on both the X and Y axes.
 	 */
 	static public inline var SHAKE_BOTH_AXES:Int = 0;
@@ -82,6 +86,12 @@ class FlxCamera extends FlxBasic
 	#else
 	private var _height:Int;
 	#end
+	
+	/**
+	 * Tells the camera to use this following style.
+	 */
+	public var style:Int;
+	
 	/**
 	 * Tells the camera to follow this <code>FlxObject</code> object around.
 	 */
@@ -269,19 +279,21 @@ class FlxCamera extends FlxBasic
 		_flashBitmap.y = -height * 0.5;
 		_flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
+		#if flash
 		_flashOffsetX = width * 0.5 * zoom;
 		_flashOffsetY = height * 0.5 * zoom;
-		#if flash
-		_flashSprite.x = x + _flashOffsetX;
-		_flashSprite.y = y + _flashOffsetY;
 		#else
-		_flashSprite.x = x;
-		_flashSprite.y = x;
+		_flashOffsetX = 0;
+		_flashOffsetY = 0;
 		
-		_flashBitmap.x = 0;
-		_flashBitmap.y = 0;
+		/*_flashBitmap.x = 0;
+		_flashBitmap.y = 0;*/
 		
 		#end
+		
+		_flashSprite.x = x + _flashOffsetX;
+		_flashSprite.y = y + _flashOffsetY;
+		
 		_flashSprite.addChild(_flashBitmap);
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
@@ -354,7 +366,7 @@ class FlxCamera extends FlxBasic
 				var edge:Float;
 				var targetX:Float = target.x + ((target.x > 0)?0.0000001:-0.0000001);
 				var targetY:Float = target.y + ((target.y > 0)?0.0000001:-0.0000001);
-				
+
 				edge = targetX - deadzone.x;
 				if (scroll.x > edge)
 				{
@@ -365,7 +377,7 @@ class FlxCamera extends FlxBasic
 				{
 					scroll.x = edge;
 				}
-				
+
 				edge = targetY - deadzone.y;
 				if (scroll.y > edge)
 				{
@@ -457,8 +469,11 @@ class FlxCamera extends FlxBasic
 	 */
 	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/):Void
 	{
+		style = Style;
 		target = Target;
 		var helper:Float;
+		var w:Float = 0;
+		var h:Float = 0;
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
@@ -473,6 +488,8 @@ class FlxCamera extends FlxBasic
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
 			case STYLE_LOCKON:
 				deadzone = null;
+			case STYLE_SCREEN_BY_SCREEN:
+				deadzone = new FlxRect(0, 0, width, height);
 			default:
 				deadzone = null;
 		}
@@ -594,13 +611,13 @@ class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
-		#if flash
-		_flashSprite.x = x + width * 0.5;
-		_flashSprite.y = y + height * 0.5;
-		#else
+		//#if flash
+		_flashSprite.x = x + _flashOffsetX;
+		_flashSprite.y = y + _flashOffsetY;
+/*		#else
 		_flashSprite.x = x;
 		_flashSprite.y = y;
-		#end
+		#end*/
 	}
 	
 	/**
@@ -890,13 +907,13 @@ class FlxCamera extends FlxBasic
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			#if flash
+			//#if flash
 			_flashSprite.x = x + _flashOffsetX + _fxShakeOffset.x;
 			_flashSprite.y = y + _flashOffsetY + _fxShakeOffset.y;
-			#else
-			_flashSprite.x = x + _fxShakeOffset.x;
-			_flashSprite.y = y + _fxShakeOffset.y;
-			#end
+			//#else
+			//_flashSprite.x = x + _fxShakeOffset.x;
+			//_flashSprite.y = y + _fxShakeOffset.y;
+			//#end
 		}
 	}
 	
