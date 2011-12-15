@@ -231,6 +231,10 @@ class FlxCamera extends FlxBasic
 	
 	#if cpp
 	private var _antialiasing:Bool;
+	
+	public var red:Float;
+	public var green:Float;
+	public var blue:Float;
 	#end
 	
 	/**
@@ -303,6 +307,10 @@ class FlxCamera extends FlxBasic
 		#if cpp
 		_flashSprite.scrollRect = new Rectangle(0, 0, width, height);
 		_antialiasing = false;
+		
+		red = 1.0;
+		green = 1.0;
+		blue = 1.0;
 		#end
 	}
 	
@@ -736,14 +744,21 @@ class FlxCamera extends FlxBasic
 	#end
 	{
 		_color = Color;
+		#if flash
 		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
+		#else
+		//var colorTransform:ColorTransform = _flashSprite.transform.colorTransform;
+		#end
+		#if flash
 		colorTransform.redMultiplier = (_color >> 16) * 0.00392;
 		colorTransform.greenMultiplier = (_color >> 8 & 0xff) * 0.0039;
 		colorTransform.blueMultiplier = (_color & 0xff) * 0.00392;
-		#if flash
 		_flashBitmap.transform.colorTransform = colorTransform;
 		#else
-		_flashSprite.transform.colorTransform = colorTransform;
+		//_flashSprite.transform.colorTransform = colorTransform;
+		red = (_color >> 16) * 0.00392;
+		green = (_color >> 8 & 0xff) * 0.0039;
+		blue = (_color & 0xff) * 0.00392;
 		#end
 		return _color;
 	}
@@ -827,8 +842,18 @@ class FlxCamera extends FlxBasic
 		_fill.fillRect(_flashRect, Color);
 		buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
 		#else
+		// This is temporal fix for camera's color
+		Color = Color & 0x00ffffff;
+		if (red != 1.0 || green != 1.0 || blue != 1.0)
+		{
+			var redComponent:Int = Math.floor((Color >> 16) * red);
+			var greenComponent:Int = Math.floor((Color >> 8 & 0xff) * green);
+			var blueComponent:Int = Math.floor((Color & 0xff) * blue);
+			Color = redComponent << 16 | greenComponent << 8 | blueComponent;
+		}
+		// end of fix
+		
 		_flashSprite.graphics.beginFill(Color, FxAlpha);
-		//_flashSprite.graphics.drawRect(-0.5 * width, -0.5 * height, width, height);
 		_flashSprite.graphics.drawRect(0, 0, width, height);
 		_flashSprite.graphics.endFill();
 		#end

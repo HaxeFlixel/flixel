@@ -625,9 +625,9 @@ class FlxSprite extends FlxObject
 					//_tileSheetData.drawData[prevI].push(width / _framesData.width); // scale
 					_tileSheetData.drawData[prevI].push(1.0); // scale
 					_tileSheetData.drawData[prevI].push(0.0); // rotation
-					_tileSheetData.drawData[prevI].push(_red); 
-					_tileSheetData.drawData[prevI].push(_green);
-					_tileSheetData.drawData[prevI].push(_blue);
+					_tileSheetData.drawData[prevI].push(_red * camera.red); 
+					_tileSheetData.drawData[prevI].push(_green * camera.green);
+					_tileSheetData.drawData[prevI].push(_blue * camera.blue);
 					_tileSheetData.drawData[prevI].push(_alpha);
 				}
 				#end
@@ -654,9 +654,9 @@ class FlxSprite extends FlxObject
 					
 					_tileSheetData.drawData[prevI].push(scale.x); // scale
 					_tileSheetData.drawData[prevI].push(angle * 0.017453293); // rotation
-					_tileSheetData.drawData[prevI].push(_red); 
-					_tileSheetData.drawData[prevI].push(_green);
-					_tileSheetData.drawData[prevI].push(_blue);
+					_tileSheetData.drawData[prevI].push(_red * camera.red); 
+					_tileSheetData.drawData[prevI].push(_green * camera.green);
+					_tileSheetData.drawData[prevI].push(_blue * camera.blue);
 					_tileSheetData.drawData[prevI].push(_alpha);
 				}
 				#end

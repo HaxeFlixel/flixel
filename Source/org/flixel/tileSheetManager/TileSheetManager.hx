@@ -16,6 +16,7 @@ class TileSheetManager
 {
 	
 	public static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
+	public static var debugTileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
 	
 	public function new() {  }
 	
@@ -23,8 +24,13 @@ class TileSheetManager
 	 * Adds new tileSheet to manager and returns it
 	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
 	 */
-	public static function addTileSheet(bitmapData:BitmapData):TileSheetData
+	public static function addTileSheet(bitmapData:BitmapData, ?isDebug:Bool = false):TileSheetData
 	{
+		if (isDebug)
+		{
+			
+		}
+		
 		if (containsTileSheet(bitmapData))
 		{
 			//return getTileSheetID(bitmapData);
@@ -61,7 +67,6 @@ class TileSheetManager
 	public static function renderAll():Void
 	{
 		var numCameras:Int = FlxG.cameras.length;
-		
 		for (dataObject in tileSheetData)
 		{
 			dataObject.render(numCameras);
@@ -107,6 +112,34 @@ class TileSheetManager
 		return null;
 	}
 	
+	/**
+	 * Method for changing draw order of two tileSheets
+	 * @param	id1		id of the first tileSheet
+	 * @param	id2		id of the second tileSheet
+	 */
+	public static function swapTileSheets(id1:Int, id2:Int):Void
+	{
+		
+	}
+	
+	/**
+	 * Method for setting draw order of the tileSheet with given id
+	 * @param	id			id of the tileSheet
+	 * @param	index		drawing index (less - earlier or lower, more - later or higher)
+	 */
+	public static function setTileSheetIndex(id:Int, index:Int):Void
+	{
+		
+	}
+	
+	/**
+	 * Gets the maximum drawing index
+	 */
+	public static function getMaxIndex():Int
+	{
+		return (tileSheetData.length - 1);
+	}
+	
 	public static function removeTileSheet(tileSheetObj:TileSheetData):Void
 	{
 		for (i in 0...(tileSheetData.length))
@@ -125,8 +158,13 @@ class TileSheetManager
 		{
 			dataObject.destroy();
 		}
-		
 		tileSheetData = new Array<TileSheetData>();
+		
+		for (dataObject in debugTileSheetData)
+		{
+			dataObject.destroy();
+		}
+		debugTileSheetData = new Array<TileSheetData>();
 	}
 	
 }

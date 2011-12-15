@@ -1,8 +1,8 @@
 package org.flixel;
 
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.geom.Point;
+import nme.display.Graphics;
+import nme.display.Sprite;
+import nme.geom.Point;
 
 import org.flixel.FlxBasic;
 
@@ -450,10 +450,6 @@ class FlxObject extends FlxBasic
 		var boundingBoxWidth:Int = (width != Std.int(width)) ? Math.floor(width) : Math.floor(width - 1);
 		var boundingBoxHeight:Int = (height != Std.int(height)) ? Math.floor(height) : Math.floor(height - 1);
 
-		//fill static graphics object with square shape
-		var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.moveTo(boundingBoxX, boundingBoxY);
 		#if flash
 		var boundingBoxColor:UInt;
 		#else
@@ -478,6 +474,11 @@ class FlxObject extends FlxBasic
 		{
 			boundingBoxColor = FlxG.BLUE;
 		}
+		
+		//fill static graphics object with square shape
+		var gfx:Graphics = FlxG.flashGfx;
+		gfx.clear();
+		gfx.moveTo(boundingBoxX, boundingBoxY);
 		gfx.lineStyle(1, boundingBoxColor, 0.5);
 		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY);
 		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY + boundingBoxHeight);

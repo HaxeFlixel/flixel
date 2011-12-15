@@ -468,10 +468,31 @@ class FlxTilemap extends FlxObject
 					_tileSheetData.drawData[CameraID].push(tileID);
 					_tileSheetData.drawData[CameraID].push(1.0); // scale
 					_tileSheetData.drawData[CameraID].push(0.0); // rotation
-					_tileSheetData.drawData[CameraID].push(1.0); // red
-					_tileSheetData.drawData[CameraID].push(1.0); //	green
-					_tileSheetData.drawData[CameraID].push(1.0); //	blue
+					_tileSheetData.drawData[CameraID].push(Camera.red); // red
+					_tileSheetData.drawData[CameraID].push(Camera.green); //	green
+					_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
 					_tileSheetData.drawData[CameraID].push(1.0); // alpha
+					
+					if(FlxG.visualDebug && !ignoreDrawDebug)
+					{
+						tile = _tileObjects[_data[columnIndex]];
+						if(tile != null)
+						{
+							if (tile.allowCollisions <= FlxObject.NONE)
+							{
+								//debugTile = _debugTileNotSolid; //blue
+							}
+							else if (tile.allowCollisions != FlxObject.ANY)
+							{
+								//debugTile = _debugTilePartial; //pink
+							}
+							else
+							{
+								//debugTile = _debugTileSolid; //green
+							}
+							//Buffer.pixels.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
+						}
+					}
 				}
 				#end
 				_flashPoint.x += _tileWidth;
