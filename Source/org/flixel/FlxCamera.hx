@@ -288,7 +288,6 @@ class FlxCamera extends FlxBasic
 		
 		/*_flashBitmap.x = 0;
 		_flashBitmap.y = 0;*/
-		
 		#end
 		
 		_flashSprite.x = x + _flashOffsetX;
@@ -317,7 +316,7 @@ class FlxCamera extends FlxBasic
 		_fill = new BitmapData(width, height, true, 0);
 		
 		#if cpp
-		_flashSprite.scrollRect = new Rectangle(0, 0, width, height);
+		_flashSprite.scrollRect = new Rectangle(1, 1, width - 1, height - 1);
 		_antialiasing = false;
 		
 		red = 1.0;
@@ -1006,7 +1005,7 @@ class FlxCamera extends FlxBasic
 			if (_flashSprite != null)
 			{
 				var rect:Rectangle = _flashSprite.scrollRect;
-				rect.width = val;
+				rect.width = val - 1;
 				_flashSprite.scrollRect = rect;
 			}
 		}
@@ -1026,7 +1025,7 @@ class FlxCamera extends FlxBasic
 			if (_flashSprite != null)
 			{
 				var rect:Rectangle = _flashSprite.scrollRect;
-				rect.height = val;
+				rect.height = val - 1;
 				_flashSprite.scrollRect = rect;
 			}
 		}

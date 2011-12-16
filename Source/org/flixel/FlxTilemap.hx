@@ -463,8 +463,8 @@ class FlxTilemap extends FlxObject
 				tileID = _rectIDs[columnIndex];
 				if (tileID != -1)
 				{
-					_tileSheetData.drawData[CameraID].push(_helperPoint.x + (columnIndex % widthInTiles) * _tileWidth);
-					_tileSheetData.drawData[CameraID].push(_helperPoint.y + Math.floor(rowIndex / heightInTiles) * _tileHeight);
+					_tileSheetData.drawData[CameraID].push(Math.floor(_helperPoint.x) + (columnIndex % widthInTiles) * _tileWidth + 1);
+					_tileSheetData.drawData[CameraID].push(Math.floor(_helperPoint.y) + Math.floor(rowIndex / heightInTiles) * _tileHeight + 1);
 					_tileSheetData.drawData[CameraID].push(tileID);
 					_tileSheetData.drawData[CameraID].push(1.0); // scale
 					_tileSheetData.drawData[CameraID].push(0.0); // rotation
