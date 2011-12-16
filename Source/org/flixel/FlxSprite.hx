@@ -1,12 +1,12 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.geom.ColorTransform;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Graphics;
+import nme.geom.ColorTransform;
+import nme.geom.Matrix;
+import nme.geom.Point;
+import nme.geom.Rectangle;
 
 #if cpp
 import org.flixel.tileSheetManager.TileSheetData;
@@ -226,8 +226,6 @@ class FlxSprite extends FlxObject
 	{
 		super(X, Y);
 		
-		health = 1;
-		
 		_flashPoint = new Point();
 		_flashRect = new Rectangle();
 		_flashRect2 = new Rectangle();
@@ -263,8 +261,8 @@ class FlxSprite extends FlxObject
 		if (SimpleGraphic == null)
 		{
 			SimpleGraphic = FlxAssets.imgDefault;
-		} 
-		else 
+		}
+		else  
 		{
 			loadGraphic(SimpleGraphic);
 		}
@@ -596,11 +594,11 @@ class FlxSprite extends FlxObject
 			{
 				continue;
 			}
-			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - offset.x;
-			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - offset.y;
+			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
+			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
-			_point.y += (_point.y > 0)?0.0000001:-0.0000001;
-			if(((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null))
+			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
+			if (simpleRender)
 			{	//Simple render
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
@@ -609,8 +607,8 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					_tileSheetData.drawData[prevI].push(Math.floor(_point.x + _framesData.halfWidth));
-					_tileSheetData.drawData[prevI].push(Math.floor(_point.y + _framesData.halfHeight));
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.x) + _framesData.halfWidth);
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.y) + _framesData.halfHeight);
 					
 					//handle reversed sprites
 					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
@@ -622,7 +620,6 @@ class FlxSprite extends FlxObject
 						_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
 					}
 					
-					//_tileSheetData.drawData[prevI].push(width / _framesData.width); // scale
 					_tileSheetData.drawData[prevI].push(1.0); // scale
 					_tileSheetData.drawData[prevI].push(0.0); // rotation
 					_tileSheetData.drawData[prevI].push(_red * camera.red); 

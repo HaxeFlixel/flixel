@@ -65,7 +65,7 @@ class ImgLogo extends Bitmap
 
 class ImgDefault extends Bitmap 
 {
-	public function new() { super(Assets.getBitmapData("assets/data/default.png")); }
+	public function new() { super(Assets.getBitmapData("assets/data/defaultGraphics.png")); }
 }
 //
 class ImgAuto extends Bitmap 

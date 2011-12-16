@@ -357,39 +357,74 @@ class FlxCamera extends FlxBasic
 		//or doublecheck our deadzone and update accordingly.
 		if(target != null)
 		{
-			if (deadzone == null)
+			if(deadzone == null)
 			{
 				focusOn(target.getMidpoint(_point));
 			}
 			else
 			{
 				var edge:Float;
-				var targetX:Float = target.x + ((target.x > 0)?0.0000001:-0.0000001);
-				var targetY:Float = target.y + ((target.y > 0)?0.0000001:-0.0000001);
+				var targetX:Float;
+				var targetY:Float;
 
-				edge = targetX - deadzone.x;
-				if (scroll.x > edge)
+				if (Std.is(target, FlxSprite) && cast(target, FlxSprite).simpleRender)
 				{
-					scroll.x = edge;
+					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001:-0.0000001));
+					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001:-0.0000001));
 				}
-				edge = targetX + target.width - deadzone.x - deadzone.width;
-				if (scroll.x < edge)
+				else
 				{
-					scroll.x = edge;
+					targetX = target.x + ((target.x > 0)?0.0000001:-0.0000001);
+					targetY = target.y + ((target.y > 0)?0.0000001: -0.0000001);
 				}
 
-				edge = targetY - deadzone.y;
-				if (scroll.y > edge)
+				if (style == STYLE_SCREEN_BY_SCREEN) 
 				{
-					scroll.y = edge;
+					if (targetX > scroll.x + width)
+					{
+						scroll.x += width;
+					}
+					else if (targetX < scroll.x)
+					{
+						scroll.x -= width;
+					}
+
+					if (targetY > scroll.y + height)
+					{
+						scroll.y += height;
+					}
+					else if (targetY < scroll.y)
+					{
+						scroll.y -= height;
+					}
 				}
-				edge = targetY + target.height - deadzone.y - deadzone.height;
-				if (scroll.y < edge)
+				else
 				{
-					scroll.y = edge;
+					edge = targetX - deadzone.x;
+					if(scroll.x > edge)
+					{
+						scroll.x = edge;
+					}
+					edge = targetX + target.width - deadzone.x - deadzone.width;
+					if(scroll.x < edge)
+					{
+						scroll.x = edge;
+					}
+
+					edge = targetY - deadzone.y;
+					if(scroll.y > edge)
+					{
+						scroll.y = edge;
+					}
+					edge = targetY + target.height - deadzone.y - deadzone.height;
+					if(scroll.y < edge)
+					{
+						scroll.y = edge;
+					}
 				}
 			}
 		}
+
 		
 		//Make sure we didn't go outside the camera's bounds
 		if(bounds != null)
@@ -487,7 +522,12 @@ class FlxCamera extends FlxBasic
 				helper = FlxU.max(width, height) / 8;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
 			case STYLE_LOCKON:
-				deadzone = null;
+				if (target != null) 
+				{	
+					w = target.width;
+					h = target.height;
+				}
+				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 			case STYLE_SCREEN_BY_SCREEN:
 				deadzone = new FlxRect(0, 0, width, height);
 			default:

@@ -1,10 +1,11 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.events.MouseEvent;
-import flash.media.Sound;
-import flash.media.Sound;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.events.MouseEvent;
+import nme.media.Sound;
+import nme.media.Sound;
+
 import org.flixel.FlxSprite;
 
 /**

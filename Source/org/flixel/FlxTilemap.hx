@@ -1561,9 +1561,14 @@ class FlxTilemap extends FlxObject
 	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param  ColorMap  An array of color values (uint 0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1):String
+	#if flash
+	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1, ?ColorMap:Array<UInt> = null):String
+	#else
+	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1, ?ColorMap:Array<Int> = null):String
+	#end
 	{
 		if (Scale < 1) Scale = 1;
 		
@@ -1595,7 +1600,11 @@ class FlxTilemap extends FlxObject
 			{
 				//Decide if this pixel/tile is solid (1) or not (0)
 				pixel = bitmapData.getPixel(column, row);
-				if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
+				if (ColorMap != null)
+				{
+					pixel = FlxU.ArrayIndexOf(ColorMap, pixel);
+				}
+				else if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
 				{
 					pixel = 1;
 				}
