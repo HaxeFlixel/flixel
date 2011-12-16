@@ -607,8 +607,8 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					_tileSheetData.drawData[prevI].push(Math.floor(_point.x) + _framesData.halfWidth + 1);
-					_tileSheetData.drawData[prevI].push(Math.floor(_point.y) + _framesData.halfHeight + 1);
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.x) + _framesData.halfWidth);
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.y) + _framesData.halfHeight);
 					
 					//handle reversed sprites
 					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
@@ -644,8 +644,8 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					_tileSheetData.drawData[prevI].push(Math.floor(_point.x) + _framesData.halfWidth + 1);
-					_tileSheetData.drawData[prevI].push(Math.floor(_point.y) + _framesData.halfHeight + 1);
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.x) + _framesData.halfWidth);
+					_tileSheetData.drawData[prevI].push(Math.floor(_point.y) + _framesData.halfHeight);
 					
 					_tileSheetData.drawData[prevI].push(_framesData.frameIDs[_curIndex]);
 					
