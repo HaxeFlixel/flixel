@@ -501,12 +501,8 @@ class FlxTilemap extends FlxObject
 							
 							// Copied from makeDebugTile
 							var gfx:Graphics = Camera._debugLayer.graphics;
-							gfx.moveTo(drawX, drawY);
 							gfx.lineStyle(1, debugColor, 0.5);
-							gfx.lineTo(drawX + _tileWidth - 1, drawY);
-							gfx.lineTo(drawX + _tileWidth - 1, drawY + _tileHeight - 1);
-							gfx.lineTo(drawX, drawY + _tileHeight - 1);
-							gfx.lineTo(drawX, drawY);
+							gfx.drawRect(drawX, drawY, _tileWidth, _tileHeight);
 						}
 					}
 				}

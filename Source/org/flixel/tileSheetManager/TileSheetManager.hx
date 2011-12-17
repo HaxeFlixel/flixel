@@ -23,7 +23,7 @@ class TileSheetManager
 	 * Adds new tileSheet to manager and returns it
 	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
 	 */
-	public static function addTileSheet(bitmapData:BitmapData):TileSheetData
+	public static function addTileSheet(bitmapData:BitmapData, ?isTilemap:Bool = false):TileSheetData
 	{
 		if (containsTileSheet(bitmapData))
 		{

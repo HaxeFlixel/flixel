@@ -40,6 +40,12 @@ class TileSheetData
 	 */
 	public var antialiasing:Bool;
 	
+	/**
+	 * logical flag showing what draw mode use for the tileSheet 
+	 * if it is true then tileSheet is drawn with rotation, alpha and scale 
+	 */
+	public var isTilemap:Bool;
+	
 	public function new(tileSheet:Tilesheet)
 	{
 		this.tileSheet = tileSheet;

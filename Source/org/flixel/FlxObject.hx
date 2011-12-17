@@ -447,16 +447,16 @@ class FlxObject extends FlxBasic
 		//get bounding box coordinates
 		var boundingBoxX:Float = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		var boundingBoxY:Float = y - Std.int(Camera.scroll.y * scrollFactor.y);
+		#if flash
 		boundingBoxX = Std.int(boundingBoxX + ((boundingBoxX > 0)?0.0000001: -0.0000001));
 		boundingBoxY = Std.int(boundingBoxY + ((boundingBoxY > 0)?0.0000001: -0.0000001));
 		var boundingBoxWidth:Int = (width != Std.int(width)) ? Math.floor(width) : Math.floor(width - 1);
 		var boundingBoxHeight:Int = (height != Std.int(height)) ? Math.floor(height) : Math.floor(height - 1);
-
-		#if flash
 		var boundingBoxColor:UInt;
 		#else
 		var boundingBoxColor:Int;
 		#end
+		
 		if(allowCollisions != FlxObject.NONE)
 		{
 			if (allowCollisions != ANY)
@@ -491,12 +491,8 @@ class FlxObject extends FlxBasic
 		Camera.buffer.draw(FlxG.flashGfxSprite);
 		#else
 		var gfx:Graphics = Camera._debugLayer.graphics;
-		gfx.moveTo(boundingBoxX, boundingBoxY);
 		gfx.lineStyle(1, boundingBoxColor, 0.5);
-		gfx.lineTo(boundingBoxX + boundingBoxWidth - 1, boundingBoxY);
-		gfx.lineTo(boundingBoxX + boundingBoxWidth - 1, boundingBoxY + boundingBoxHeight - 1);
-		gfx.lineTo(boundingBoxX, boundingBoxY + boundingBoxHeight - 1);
-		gfx.lineTo(boundingBoxX, boundingBoxY);
+		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
 		#end
 	}
 	

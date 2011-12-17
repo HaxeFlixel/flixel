@@ -370,9 +370,9 @@ class FlxCamera extends FlxBasic
 		
 		#if cpp
 		_flashSprite.removeChild(_debugLayer);
-		_debugLayer = null;
+		//_debugLayer = null;
 		#end
-		_flashSprite = null;
+		//_flashSprite = null;
 	}
 	
 	/**
