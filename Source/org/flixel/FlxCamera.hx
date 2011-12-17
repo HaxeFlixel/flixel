@@ -257,6 +257,11 @@ class FlxCamera extends FlxBasic
 	public var red:Float;
 	public var green:Float;
 	public var blue:Float;
+	
+	/**
+	 * "Fog" intensity, changes between 0 and 1. 0 means no fog, 1 - complete "fog" (camera is white) 
+	 */
+	private var _fog:Float;
 	#end
 	
 	/**
@@ -340,6 +345,8 @@ class FlxCamera extends FlxBasic
 		red = 1.0;
 		green = 1.0;
 		blue = 1.0;
+		
+		_fog = 0.0;
 		#end
 	}
 	
@@ -940,6 +947,13 @@ class FlxCamera extends FlxBasic
 		_flashSprite.graphics.beginFill(Color, FxAlpha);
 		_flashSprite.graphics.drawRect(0, 0, width, height);
 		_flashSprite.graphics.endFill();
+		
+		if (_fog > 0)
+		{
+			_debugLayer.graphics.beginFill(0xffffff, _fog);
+			_debugLayer.graphics.drawRect(0, 0, width, height);
+			_debugLayer.graphics.endFill();
+		}
 		#end
 	}
 	
@@ -984,6 +998,18 @@ class FlxCamera extends FlxBasic
 	public var y(getY, setY):Float;
 	public var width(getWidth, setWidth):Int;
 	public var height(getHeight, setHeight):Int;
+	
+	public var fog(getFog, setFog):Float;
+	
+	private function getFog():Float 
+	{
+		return _fog;
+	}
+	
+	private function setFog(value:Float):Float 
+	{
+		return _fog = value;
+	}
 	
 	public function getX():Float
 	{

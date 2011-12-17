@@ -141,6 +141,8 @@ class TileSheetManager
 	 */
 	public static function swapTileSheets(id1:Int, id2:Int):Void
 	{
+		if (id1 == id2) return;
+		
 		var tempTileSheetData:TileSheetData = tileSheetData[id1];
 		tileSheetData[id1] = tileSheetData[id2];
 		tileSheetData[id2] = tempTileSheetData;
