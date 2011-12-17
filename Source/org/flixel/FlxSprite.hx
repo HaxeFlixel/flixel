@@ -600,9 +600,9 @@ class FlxSprite extends FlxObject
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
 			if (simpleRender)
 			{	//Simple render
+				#if flash
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
-				#if flash
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later

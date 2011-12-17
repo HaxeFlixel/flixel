@@ -478,6 +478,7 @@ class FlxObject extends FlxBasic
 		}
 		
 		//fill static graphics object with square shape
+		#if flash
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		gfx.moveTo(boundingBoxX, boundingBoxY);
@@ -486,9 +487,17 @@ class FlxObject extends FlxBasic
 		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY + boundingBoxHeight);
 		gfx.lineTo(boundingBoxX, boundingBoxY + boundingBoxHeight);
 		gfx.lineTo(boundingBoxX, boundingBoxY);
-		
 		//draw graphics shape to camera buffer
 		Camera.buffer.draw(FlxG.flashGfxSprite);
+		#else
+		var gfx:Graphics = Camera._debugLayer.graphics;
+		gfx.moveTo(boundingBoxX, boundingBoxY);
+		gfx.lineStyle(1, boundingBoxColor, 0.5);
+		gfx.lineTo(boundingBoxX + boundingBoxWidth - 1, boundingBoxY);
+		gfx.lineTo(boundingBoxX + boundingBoxWidth - 1, boundingBoxY + boundingBoxHeight - 1);
+		gfx.lineTo(boundingBoxX, boundingBoxY + boundingBoxHeight - 1);
+		gfx.lineTo(boundingBoxX, boundingBoxY);
+		#end
 	}
 	
 	/**

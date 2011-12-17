@@ -240,6 +240,8 @@ class FlxCamera extends FlxBasic
 	private var _fill:BitmapData;
 	
 	#if cpp
+	public var _debugLayer:Sprite;
+	
 	private var _antialiasing:Bool;
 	
 	public var red:Float;
@@ -316,6 +318,9 @@ class FlxCamera extends FlxBasic
 		_flashSprite.scrollRect = new Rectangle(0, 0, width, height);
 		_antialiasing = false;
 		
+		_debugLayer = new Sprite();
+		_flashSprite.addChild(_debugLayer);
+		
 		red = 1.0;
 		green = 1.0;
 		blue = 1.0;
@@ -342,6 +347,12 @@ class FlxCamera extends FlxBasic
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
 		_fill = null;
+		
+		#if cpp
+		_flashSprite.removeChild(_debugLayer);
+		_debugLayer = null;
+		#end
+		_flashSprite = null;
 	}
 	
 	/**
@@ -909,6 +920,9 @@ class FlxCamera extends FlxBasic
 		_flashSprite.graphics.beginFill(Color, FxAlpha);
 		_flashSprite.graphics.drawRect(0, 0, width, height);
 		_flashSprite.graphics.endFill();
+		
+		// clearing camera's debug sprite
+		_debugLayer.graphics.clear();
 		#end
 	}
 	

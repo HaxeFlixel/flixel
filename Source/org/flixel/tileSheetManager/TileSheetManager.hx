@@ -16,7 +16,6 @@ class TileSheetManager
 {
 	
 	public static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
-	public static var debugTileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
 	
 	public function new() {  }
 	
@@ -24,13 +23,8 @@ class TileSheetManager
 	 * Adds new tileSheet to manager and returns it
 	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
 	 */
-	public static function addTileSheet(bitmapData:BitmapData, ?isDebug:Bool = false):TileSheetData
+	public static function addTileSheet(bitmapData:BitmapData):TileSheetData
 	{
-		if (isDebug)
-		{
-			
-		}
-		
 		if (containsTileSheet(bitmapData))
 		{
 			//return getTileSheetID(bitmapData);
@@ -159,12 +153,6 @@ class TileSheetManager
 			dataObject.destroy();
 		}
 		tileSheetData = new Array<TileSheetData>();
-		
-		for (dataObject in debugTileSheetData)
-		{
-			dataObject.destroy();
-		}
-		debugTileSheetData = new Array<TileSheetData>();
 	}
 	
 }

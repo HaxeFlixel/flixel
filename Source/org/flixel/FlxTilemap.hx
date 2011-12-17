@@ -311,9 +311,11 @@ class FlxTilemap extends FlxObject
 		#end
 		
 		//create debug tiles for rendering bounding boxes on demand
+		#if flash
 		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
 		_debugTilePartial = makeDebugTile(FlxG.PINK);
 		_debugTileSolid = makeDebugTile(FlxG.GREEN);
+		#end
 		
 		//Then go through and create the actual map
 		width = widthInTiles * _tileWidth;
@@ -341,9 +343,6 @@ class FlxTilemap extends FlxObject
 	 */
 	#if flash
 	private function makeDebugTile(Color:UInt):BitmapData
-	#else
-	private function makeDebugTile(Color:Int):BitmapData
-	#end
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
@@ -360,6 +359,7 @@ class FlxTilemap extends FlxObject
 		debugTile.draw(FlxG.flashGfxSprite);
 		return debugTile;
 	}
+	#end
 	
 	/**
 	 * Main logic loop for tilemap is pretty simple,
@@ -386,11 +386,14 @@ class FlxTilemap extends FlxObject
 		#if flash
 		Buffer.fill();
 		#else
-		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x) /*+ Buffer.x*/; //copied from getScreenXY()
-		_helperPoint.y = y - Std.int(Camera.scroll.y * scrollFactor.y) /*+ Buffer.y*/;
+		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
+		_helperPoint.y = y - Std.int(Camera.scroll.y * scrollFactor.y);
 		_helperPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
 		_helperPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
 		var tileID:Int;
+		var debugColor:Int;
+		var drawX:Float;
+		var drawY:Float;
 		#end
 		
 		//Copy tile images into the tile buffer
@@ -463,8 +466,10 @@ class FlxTilemap extends FlxObject
 				tileID = _rectIDs[columnIndex];
 				if (tileID != -1)
 				{
-					_tileSheetData.drawData[CameraID].push(Math.floor(_helperPoint.x) + (columnIndex % widthInTiles) * _tileWidth);
-					_tileSheetData.drawData[CameraID].push(Math.floor(_helperPoint.y) + Math.floor(rowIndex / heightInTiles) * _tileHeight);
+					drawX = Math.floor(_helperPoint.x) + (columnIndex % widthInTiles) * _tileWidth;
+					drawY = Math.floor(_helperPoint.y) + Math.floor(columnIndex / widthInTiles) * _tileHeight;
+					_tileSheetData.drawData[CameraID].push(drawX);
+					_tileSheetData.drawData[CameraID].push(drawY);
 					_tileSheetData.drawData[CameraID].push(tileID);
 					_tileSheetData.drawData[CameraID].push(1.0); // scale
 					_tileSheetData.drawData[CameraID].push(0.0); // rotation
@@ -480,17 +485,25 @@ class FlxTilemap extends FlxObject
 						{
 							if (tile.allowCollisions <= FlxObject.NONE)
 							{
-								//debugTile = _debugTileNotSolid; //blue
+								debugColor = FlxG.BLUE;
 							}
 							else if (tile.allowCollisions != FlxObject.ANY)
 							{
-								//debugTile = _debugTilePartial; //pink
+								debugColor = FlxG.PINK;
 							}
 							else
 							{
-								//debugTile = _debugTileSolid; //green
+								debugColor = FlxG.GREEN;
 							}
-							//Buffer.pixels.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
+							
+							// Copied from makeDebugTile
+							var gfx:Graphics = Camera._debugLayer.graphics;
+							gfx.moveTo(drawX, drawY);
+							gfx.lineStyle(1, debugColor, 0.5);
+							gfx.lineTo(drawX + _tileWidth - 1, drawY);
+							gfx.lineTo(drawX + _tileWidth - 1, drawY + _tileHeight - 1);
+							gfx.lineTo(drawX, drawY + _tileHeight - 1);
+							gfx.lineTo(drawX, drawY);
 						}
 					}
 				}
