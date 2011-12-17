@@ -596,8 +596,10 @@ class FlxSprite extends FlxObject
 			}
 			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			#if flash
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
+			#end
 			if (simpleRender)
 			{	//Simple render
 				#if flash

@@ -393,7 +393,7 @@ class FlxCamera extends FlxBasic
 				var edge:Float;
 				var targetX:Float;
 				var targetY:Float;
-
+				
 				if (Std.is(target, FlxSprite) && cast(target, FlxSprite).simpleRender)
 				{
 					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001:-0.0000001));

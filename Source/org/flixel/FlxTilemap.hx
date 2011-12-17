@@ -391,8 +391,8 @@ class FlxTilemap extends FlxObject
 		#else
 		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		_helperPoint.y = y - Std.int(Camera.scroll.y * scrollFactor.y);
-		_helperPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
-		_helperPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
+		/*_helperPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
+		_helperPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;*/
 		var tileID:Int;
 		var debugColor:Int;
 		var drawX:Float;
@@ -1045,8 +1045,7 @@ class FlxTilemap extends FlxObject
 			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
-			//while(i < length)
-			while(i < Std.int(grp.length))
+			while(i < grp.length)
 			{
 				basic = members[i++];
 				if(Std.is(basic, FlxObject))
