@@ -241,8 +241,12 @@ class FlxPath
 		}
 		
 		//Set up our global flash graphics object to draw out the path
+		#if flash
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
+		#else
+		var gfx:Graphics = Camera._debugLayer.graphics;
+		#end
 		
 		//Then fill up the object with node and path graphics
 		var node:FlxPoint;
@@ -313,8 +317,10 @@ class FlxPath
 			i++;
 		}
 		
+		#if flash
 		//then stamp the path down onto the game buffer
 		Camera.buffer.draw(FlxG.flashGfxSprite);
+		#end
 	}
 	
 	public static var manager(getManager, null):DebugPathDisplay;
