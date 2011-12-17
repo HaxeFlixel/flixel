@@ -234,7 +234,7 @@ class FlxSprite extends FlxObject
 		origin = new FlxPoint();
 		
 		scale = new FlxPoint(1.0, 1.0);
-		_alpha = 1;
+		_alpha = 1.0;
 		_color = 0x00ffffff;
 		blend = null;
 		antialiasing = false;

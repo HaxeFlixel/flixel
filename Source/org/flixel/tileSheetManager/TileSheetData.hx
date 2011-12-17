@@ -44,15 +44,16 @@ class TileSheetData
 	 * logical flag showing what draw mode use for the tileSheet 
 	 * if it is true then tileSheet is drawn with rotation, alpha and scale 
 	 */
-	public var isTilemap:Bool;
+	private var _isTilemap:Bool;
 	
-	public function new(tileSheet:Tilesheet)
+	public function new(tileSheet:Tilesheet, ?isTilemap:Bool = false)
 	{
 		this.tileSheet = tileSheet;
 		antialiasing = false;
 		pairsData = new Array<RectanglePointPair>();
 		drawData = new Array<Array<Float>>();
-		flags = Graphics.TILE_SCALE | Graphics.TILE_ROTATION | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
+		//flags = Graphics.TILE_SCALE | Graphics.TILE_ROTATION | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
+		this.isTilemap = isTilemap;
 		
 		flxSpriteFrames = new Array<FlxSpriteFrames>();
 	}
@@ -263,6 +264,28 @@ class TileSheetData
 		}
 		flxSpriteFrames = null;
 	}
+	
+	private function get_isTilemap():Bool 
+	{
+		return _isTilemap;
+	}
+	
+	private function set_isTilemap(value:Bool):Bool 
+	{
+		if (value == true)
+		{
+			flags = Graphics.TILE_RGB;
+		}
+		else
+		{
+			flags = Graphics.TILE_SCALE | Graphics.TILE_ROTATION | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
+		}
+		_isTilemap = value;
+		
+		return value;
+	}
+	
+	public var isTilemap(get_isTilemap, set_isTilemap):Bool;
 	
 }
 

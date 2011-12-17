@@ -309,7 +309,7 @@ class FlxTilemap extends FlxObject
 		{
 			TileSheetManager.removeTileSheet(_tileSheetData);
 		}*/
-		_tileSheetData = TileSheetManager.addTileSheet(_tiles);
+		_tileSheetData = TileSheetManager.addTileSheet(_tiles, true);
 		_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, false, new Point(0, 0));
 		#end
 		
@@ -474,12 +474,22 @@ class FlxTilemap extends FlxObject
 					_tileSheetData.drawData[CameraID].push(drawX);
 					_tileSheetData.drawData[CameraID].push(drawY);
 					_tileSheetData.drawData[CameraID].push(tileID);
-					_tileSheetData.drawData[CameraID].push(1.0); // scale
-					_tileSheetData.drawData[CameraID].push(0.0); // rotation
-					_tileSheetData.drawData[CameraID].push(Camera.red); // red
-					_tileSheetData.drawData[CameraID].push(Camera.green); //	green
-					_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
-					_tileSheetData.drawData[CameraID].push(1.0); // alpha
+					
+					if (_tileSheetData.isTilemap)
+					{
+						_tileSheetData.drawData[CameraID].push(Camera.red); // red
+						_tileSheetData.drawData[CameraID].push(Camera.green); //	green
+						_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
+					}
+					else
+					{
+						_tileSheetData.drawData[CameraID].push(1.0); // scale
+						_tileSheetData.drawData[CameraID].push(0.0); // rotation
+						_tileSheetData.drawData[CameraID].push(Camera.red); // red
+						_tileSheetData.drawData[CameraID].push(Camera.green); //	green
+						_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
+						_tileSheetData.drawData[CameraID].push(1.0); // alpha
+					}
 					
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{

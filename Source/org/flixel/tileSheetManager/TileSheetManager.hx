@@ -25,13 +25,20 @@ class TileSheetManager
 	 */
 	public static function addTileSheet(bitmapData:BitmapData, ?isTilemap:Bool = false):TileSheetData
 	{
+		var tempTileSheetData:TileSheetData;
+		
 		if (containsTileSheet(bitmapData))
 		{
+			tempTileSheetData = getTileSheet(bitmapData);
+			if (tempTileSheetData.isTilemap != isTilemap)
+			{
+				tempTileSheetData.isTilemap = false;
+			}
 			//return getTileSheetID(bitmapData);
 			return getTileSheet(bitmapData);
 		}
 		
-		var tempTileSheetData:TileSheetData = new TileSheetData(new Tilesheet(bitmapData));
+		tempTileSheetData = new TileSheetData(new Tilesheet(bitmapData), isTilemap);
 		tileSheetData.push(tempTileSheetData);
 		//return (tileSheetData.length - 1);
 		return (tileSheetData[tileSheetData.length - 1]);
