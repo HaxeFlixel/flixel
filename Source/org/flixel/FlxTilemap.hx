@@ -95,6 +95,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _tileObjects:Array<FlxTile>;
 	
+	#if flash
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
@@ -110,7 +111,7 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
-	#if flash
+	
 	private var _debugRect:Rectangle;
 	#end
 	/**
@@ -162,9 +163,11 @@ class FlxTilemap extends FlxObject
 		_tileObjects = null;
 		immovable = true;
 		cameras = null;
+		#if flash
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
+		#end
 		_lastVisualDebug = FlxG.visualDebug;
 		_startingIndex = 0;
 		
@@ -199,10 +202,10 @@ class FlxTilemap extends FlxObject
 		#if flash
 		_rects = null;
 		_debugRect = null;
-		#end
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
+		#end
 		
 		#if cpp
 		_framesData = null;

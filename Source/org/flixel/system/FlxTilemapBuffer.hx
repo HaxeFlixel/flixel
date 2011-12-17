@@ -42,9 +42,11 @@ class FlxTilemapBuffer
 	 * How many columns of tiles fit in this buffer.
 	 */
 	public var columns:Int;
-
+	
+	#if flash
 	private var _pixels:BitmapData;	
 	private var _flashRect:Rectangle;
+	#end
 
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
@@ -103,13 +105,8 @@ class FlxTilemapBuffer
 	 */
 	#if flash
 	public function fill(?Color:UInt = 0):Void
-	#else
-	public function fill(?Color:Int = 0):Void
-	#end
 	{
-		#if flash
 		_pixels.fillRect(_flashRect, Color);
-		#end
 	}
 	
 	public var pixels(getPixels, null):BitmapData;
@@ -130,8 +127,7 @@ class FlxTilemapBuffer
 	 */
 	public function draw(Camera:FlxCamera, FlashPoint:Point):Void
 	{
-		#if flash
 		Camera.buffer.copyPixels(_pixels, _flashRect, FlashPoint, null, null, true);
-		#end
 	}
+	#end
 }

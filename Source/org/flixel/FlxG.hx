@@ -1361,17 +1361,24 @@ class FlxG
 			{
 				continue;
 			}
+			
+			#if flash
 			if (useBufferLocking)
 			{
 				cam.buffer.lock();
 			}
+			#end
 			
 			#if cpp
 			cam._flashSprite.graphics.clear();
+			// clearing camera's debug sprite
+			cam._debugLayer.graphics.clear();
 			#end
 			
 			cam.fill(cam.bgColor);
+			#if flash
 			cam.screen.dirty = true;
+			#end
 		}
 	}
 	
@@ -1392,10 +1399,13 @@ class FlxG
 				continue;
 			}
 			cam.drawFX();
+			
+			#if flash
 			if (useBufferLocking)
 			{
 				cam.buffer.unlock();
 			}
+			#end
 		}
 	}
 	

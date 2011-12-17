@@ -114,10 +114,14 @@ class FlxCamera extends FlxBasic
 	 * Stores the basic parallax scrolling values.
 	 */
 	public var scroll:FlxPoint;
+	
+	#if flash
 	/**
 	 * The actual bitmap data of the camera display itself.
 	 */
 	public var buffer:BitmapData;
+	#end
+	
 	/**
 	 * The natural background color of the camera. Defaults to FlxG.bgColor.
 	 * NOTE: can be transparent for crazy FX!
@@ -127,12 +131,15 @@ class FlxCamera extends FlxBasic
 	#else
 	public var bgColor:Int;
 	#end
+	
+	#if flash
 	/**
 	 * Sometimes it's easier to just work with a <code>FlxSprite</code> than it is to work
 	 * directly with the <code>BitmapData</code> buffer.  This sprite reference will
 	 * allow you to do exactly that.
 	 */
 	public var screen:FlxSprite;
+	#end
 	
 	/**
 	 * Indicates how far the camera is zoomed in.
@@ -150,10 +157,13 @@ class FlxCamera extends FlxBasic
 	#else
 	private var _color:Int;
 	#end
+	
+	#if flash
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
 	private var _flashBitmap:Bitmap;
+	#end
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
@@ -270,15 +280,19 @@ class FlxCamera extends FlxBasic
 		scroll = new FlxPoint();
 		_point = new FlxPoint();
 		bounds = null;
+		#if flash
 		screen = new FlxSprite();
 		screen.makeGraphic(width, height, 0, true);
 		screen.setOriginToCorner();
 		buffer = screen.pixels;
+		#end
 		bgColor = FlxG.bgColor;
 		_color = 0xffffff;
+		#if flash
 		_flashBitmap = new Bitmap(buffer);
 		_flashBitmap.x = -width * 0.5;
 		_flashBitmap.y = -height * 0.5;
+		#end
 		_flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		#if flash
@@ -292,7 +306,9 @@ class FlxCamera extends FlxBasic
 		_flashSprite.x = x + _flashOffsetX;
 		_flashSprite.y = y + _flashOffsetY;
 		
+		#if flash
 		_flashSprite.addChild(_flashBitmap);
+		#end
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
@@ -332,14 +348,18 @@ class FlxCamera extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
+		#if flash
 		screen.destroy();
 		screen = null;
+		#end
 		target = null;
 		scroll = null;
 		deadzone = null;
 		bounds = null;
+		#if flash
 		buffer = null;
 		_flashBitmap = null;
+		#end
 		_flashRect = null;
 		_flashPoint = null;
 		_fxFlashComplete = null;
@@ -920,9 +940,6 @@ class FlxCamera extends FlxBasic
 		_flashSprite.graphics.beginFill(Color, FxAlpha);
 		_flashSprite.graphics.drawRect(0, 0, width, height);
 		_flashSprite.graphics.endFill();
-		
-		// clearing camera's debug sprite
-		_debugLayer.graphics.clear();
 		#end
 	}
 	
