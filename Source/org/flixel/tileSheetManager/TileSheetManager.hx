@@ -6,6 +6,9 @@ import nme.display.Tilesheet;
 import nme.geom.Rectangle;
 import nme.geom.Point;
 import org.flixel.FlxG;
+import org.flixel.FlxObject;
+import org.flixel.FlxSprite;
+import org.flixel.FlxTilemap;
 
 /**
  * ...
@@ -34,13 +37,11 @@ class TileSheetManager
 			{
 				tempTileSheetData.isTilemap = false;
 			}
-			//return getTileSheetID(bitmapData);
 			return getTileSheet(bitmapData);
 		}
 		
 		tempTileSheetData = new TileSheetData(new Tilesheet(bitmapData), isTilemap);
 		tileSheetData.push(tempTileSheetData);
-		//return (tileSheetData.length - 1);
 		return (tileSheetData[tileSheetData.length - 1]);
 	}
 	
@@ -87,19 +88,6 @@ class TileSheetManager
 		return false;
 	}
 	
-	public static function getTileSheetID(bitmapData:BitmapData):Int
-	{
-		for (i in 0...(tileSheetData.length))
-		{
-			if (tileSheetData[i].tileSheet.nmeBitmap == bitmapData)
-			{
-				return i;
-			}
-		}
-		
-		return -1;
-	}
-	
 	public static function getTileSheet(bitmapData:BitmapData):TileSheetData
 	{
 		for (tsd in tileSheetData)
@@ -114,13 +102,48 @@ class TileSheetManager
 	}
 	
 	/**
+	 * Method for changing draw order of two objects (FlxSprite, FlxText, FlxTilemap etc.)
+	 */
+	public static function swapDrawableObjects(obj1:FlxObject, obj2:FlxObject):Void
+	{
+		if (obj1 == obj2) return;
+		
+		var id1:Int = -1;
+		var id2:Int = -1;
+		
+		if (Std.is(obj1, FlxSprite))
+		{
+			id1 = cast(obj1, FlxSprite).getTileSheetIndex();
+		}
+		else if (Std.is(obj1, FlxTilemap))
+		{
+			id1 = cast(obj1, FlxTilemap).getTileSheetIndex();
+		}
+		
+		if (Std.is(obj2, FlxSprite))
+		{
+			id2 = cast(obj2, FlxSprite).getTileSheetIndex();
+		}
+		else if (Std.is(obj2, FlxTilemap))
+		{
+			id2 = cast(obj2, FlxTilemap).getTileSheetIndex();
+		}
+		
+		if (id1 < 0 || id2 < 0) return;
+		
+		swapTileSheets(id1, id2);
+	}
+	
+	/**
 	 * Method for changing draw order of two tileSheets
 	 * @param	id1		id of the first tileSheet
 	 * @param	id2		id of the second tileSheet
 	 */
 	public static function swapTileSheets(id1:Int, id2:Int):Void
 	{
-		
+		var tempTileSheetData:TileSheetData = tileSheetData[id1];
+		tileSheetData[id1] = tileSheetData[id2];
+		tileSheetData[id2] = tempTileSheetData;
 	}
 	
 	/**
@@ -130,7 +153,33 @@ class TileSheetManager
 	 */
 	public static function setTileSheetIndex(id:Int, index:Int):Void
 	{
+		if (id < 0 || id > getMaxIndex() || id == index)
+		{
+			// This tileSheet doesn't exist or we try to set it's index to the same value as it is already
+			return;
+		}
 		
+		trace("id = " + id + ", index = " + index);
+		
+		var tsd:TileSheetData = tileSheetData[id];
+		tileSheetData.remove(tsd);
+		tileSheetData.insert(index, tsd);
+	}
+	
+	/**
+	 * Gets tileSheetData's index. This is internal method
+	 */
+	public static function getTileSheetIndex(tileSheet:TileSheetData):Int
+	{
+		for (i in 0...(tileSheetData.length))
+		{
+			if (tileSheetData[i] == tileSheet)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 	
 	/**

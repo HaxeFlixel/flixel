@@ -1304,6 +1304,19 @@ class FlxSprite extends FlxObject
 		}
 		return val;
 	}
+	
+	/**
+	 * Gets FlxSprite's TileSheetData index in TileSheetManager
+	 */
+	public function getTileSheetIndex():Int
+	{
+		if (_tileSheetData != null)
+		{
+			return TileSheetManager.getTileSheetIndex(_tileSheetData);
+		}
+		
+		return -1;
+	}
 	#end
 	
 	/**

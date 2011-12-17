@@ -52,7 +52,6 @@ class TileSheetData
 		antialiasing = false;
 		pairsData = new Array<RectanglePointPair>();
 		drawData = new Array<Array<Float>>();
-		//flags = Graphics.TILE_SCALE | Graphics.TILE_ROTATION | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
 		this.isTilemap = isTilemap;
 		
 		flxSpriteFrames = new Array<FlxSpriteFrames>();
@@ -79,7 +78,6 @@ class TileSheetData
 		var numCols:Int = Math.floor(bitmapWidth / width);
 		
 		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height);
-		// TODO: there is no need is multiple instanciation of tempPoint. It must be created only 1 time
 		var tempPoint:Point = origin;
 		if (origin == null)
 		{

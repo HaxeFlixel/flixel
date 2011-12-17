@@ -1736,4 +1736,20 @@ class FlxTilemap extends FlxObject
 		_rectIDs[Index] = _framesData.frameIDs[_data[Index] - _startingIndex];
 		#end
 	}
+	
+	#if cpp
+	/**
+	 * Gets FlxSprite's TileSheetData index in TileSheetManager
+	 */
+	public function getTileSheetIndex():Int
+	{
+		if (_tileSheetData != null)
+		{
+			return TileSheetManager.getTileSheetIndex(_tileSheetData);
+		}
+		
+		return -1;
+	}
+	#end
+	
 }
