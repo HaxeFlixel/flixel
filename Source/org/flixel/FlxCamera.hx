@@ -56,20 +56,14 @@ class FlxCamera extends FlxBasic
 	 * The X position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the left side of the flash window.
 	 */
-	#if flash
 	public var x:Float;
-	#else
-	private var _x:Float;
-	#end
+	
 	/**
 	 * The Y position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the top of the flash window.
 	 */
-	#if flash
 	public var y:Float;
-	#else
-	private var _y:Float;
-	#end
+	
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
@@ -1001,8 +995,6 @@ class FlxCamera extends FlxBasic
 	}
 	
 	#if cpp
-	public var x(getX, setX):Float;
-	public var y(getY, setY):Float;
 	public var width(getWidth, setWidth):Int;
 	public var height(getHeight, setHeight):Int;
 	
@@ -1016,28 +1008,6 @@ class FlxCamera extends FlxBasic
 	private function setFog(value:Float):Float 
 	{
 		return _fog = value;
-	}
-	
-	public function getX():Float
-	{
-		return _x;
-	}
-	
-	public function setX(val:Float):Float
-	{
-		_x = val;
-		return val;
-	}
-	
-	public function getY():Float
-	{
-		return _y;
-	}
-	
-	public function setY(val:Float):Float
-	{
-		_y = val;
-		return val;
 	}
 	
 	public function getWidth():Int
