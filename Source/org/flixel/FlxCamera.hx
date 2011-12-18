@@ -1025,6 +1025,9 @@ class FlxCamera extends FlxBasic
 				var rect:Rectangle = _canvas.scrollRect;
 				rect.width = val;
 				_canvas.scrollRect = rect;
+				
+				_flashOffsetX = _width * 0.5 * zoom;
+				_debugLayer.x = _canvas.x = -_width * 0.5;
 			}
 		}
 		return val;
@@ -1045,6 +1048,9 @@ class FlxCamera extends FlxBasic
 				var rect:Rectangle = _canvas.scrollRect;
 				rect.height = val;
 				_canvas.scrollRect = rect;
+				
+				_flashOffsetY = _height * 0.5 * zoom;
+				_debugLayer.y = _canvas.y = -_height * 0.5;
 			}
 		}
 		return val;

@@ -13,15 +13,6 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxU;
 import org.flixel.system.replay.MouseRecord;
 
-/*class CursorPNG extends BitmapData 
-{  
-	public function new() { super(0, 0); } 
-}
-class ImgDefaultCursor extends Bitmap 
-{
-	public function new() { super(new CursorPNG()); }
-}*/
-
 /**
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
