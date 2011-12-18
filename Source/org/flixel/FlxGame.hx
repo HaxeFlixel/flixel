@@ -205,9 +205,7 @@ class FlxGame extends Sprite
 		useSystemCursor = UseSystemCursor;
 		if (!useSystemCursor)
 		{
-			//#if flash
 			Mouse.hide();
-			//#end
 		}
 		forceDebugger = false;
 		_debuggerUp = false;
@@ -827,6 +825,7 @@ class FlxGame extends Sprite
 		text.antiAliasType = AntiAliasType.NORMAL;
 		text.gridFitType = GridFitType.PIXEL;
 		#else
+		
 		#end
 		var dtf:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;

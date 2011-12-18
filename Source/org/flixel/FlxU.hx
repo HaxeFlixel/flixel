@@ -5,8 +5,8 @@
 
 package org.flixel;
 
-import flash.net.URLRequest;
-import flash.Lib;
+import nme.net.URLRequest;
+import nme.Lib;
 import org.flixel.FlxPoint;
 
 class FlxU 

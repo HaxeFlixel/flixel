@@ -1,9 +1,9 @@
 package org.flixel.system.input;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Sprite;
+import nme.events.MouseEvent;
 import org.flixel.FlxAssets;
 
 import org.flixel.FlxCamera;

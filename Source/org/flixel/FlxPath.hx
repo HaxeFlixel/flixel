@@ -1,6 +1,6 @@
 package org.flixel;
 
-import flash.display.Graphics;
+import nme.display.Graphics;
 
 import org.flixel.plugin.DebugPathDisplay;
 

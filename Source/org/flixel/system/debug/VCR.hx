@@ -12,10 +12,10 @@ import org.flixel.FlxAssets;
 import flash.net.FileFilter;
 import flash.net.FileReference;
 #end
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
-import flash.utils.ByteArray;
+import nme.text.TextField;
+import nme.text.TextFormat;
+import nme.text.TextFormatAlign;
+import nme.utils.ByteArray;
 
 import org.flixel.FlxG;
 import org.flixel.FlxU;

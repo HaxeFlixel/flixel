@@ -344,6 +344,8 @@ class FlxCamera extends FlxBasic
 		_antialiasing = false;
 		
 		_debugLayer = new Sprite();
+		_debugLayer.x = -width * 0.5;
+		_debugLayer.y = -height * 0.5;
 		_flashSprite.addChild(_debugLayer);
 		
 		red = 1.0;
@@ -838,20 +840,18 @@ class FlxCamera extends FlxBasic
 		_color = Color;
 		#if flash
 		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
-		#else
-		//var colorTransform:ColorTransform = _canvas.transform.colorTransform;
-		#end
-		#if flash
 		colorTransform.redMultiplier = (_color >> 16) * 0.00392;
 		colorTransform.greenMultiplier = (_color >> 8 & 0xff) * 0.0039;
 		colorTransform.blueMultiplier = (_color & 0xff) * 0.00392;
 		_flashBitmap.transform.colorTransform = colorTransform;
 		#else
+		//var colorTransform:ColorTransform = _canvas.transform.colorTransform;
 		//_canvas.transform.colorTransform = colorTransform;
 		red = (_color >> 16) * 0.00392;
 		green = (_color >> 8 & 0xff) * 0.0039;
 		blue = (_color & 0xff) * 0.00392;
 		#end
+		
 		return _color;
 	}
 	

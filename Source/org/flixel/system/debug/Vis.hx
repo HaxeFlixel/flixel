@@ -1,22 +1,13 @@
 package org.flixel.system.debug;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Sprite;
+import nme.events.Event;
+import nme.events.MouseEvent;
 import org.flixel.FlxAssets;
 
 import org.flixel.FlxG;
-
-/*class BoundsPNG extends BitmapData 
-{  
-	public function new() { super(0, 0); } 
-}
-class ImgBounds extends Bitmap 
-{
-	public function new() { super(new BoundsPNG()); }
-}*/
 
 /**
  * This control panel has all the visual debugger toggles in it, in the debugger overlay.

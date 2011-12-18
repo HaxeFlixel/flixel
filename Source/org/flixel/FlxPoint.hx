@@ -4,7 +4,7 @@
  */
 
 package org.flixel;
-import flash.geom.Point;
+import nme.geom.Point;
 
 /**
  * Stores a 2D floating point coordinate.
