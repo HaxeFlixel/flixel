@@ -175,7 +175,7 @@ class TileSheetData
 		var cameraGraphics:Graphics;
 		for (i in 0...(numCameras))
 		{
-			cameraGraphics = FlxG.cameras[i]._flashSprite.graphics;
+			cameraGraphics = FlxG.cameras[i]._canvas.graphics;
 			cameraGraphics.drawTiles(tileSheet, drawData[i], (antialiasing || FlxG.cameras[i].antialiasing), flags);
 		}
 	}

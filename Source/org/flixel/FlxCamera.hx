@@ -250,6 +250,14 @@ class FlxCamera extends FlxBasic
 	private var _fill:BitmapData;
 	
 	#if cpp
+	/**
+	 * sprite for drawing (instead of _flashBitmap in flash)
+	 */
+	public var _canvas:Sprite;
+	
+	/**
+	 * sprite for visual debug information (bounding boxes are drawn on it)
+	 */
 	public var _debugLayer:Sprite;
 	
 	private var _antialiasing:Bool;
@@ -297,22 +305,24 @@ class FlxCamera extends FlxBasic
 		_flashBitmap = new Bitmap(buffer);
 		_flashBitmap.x = -width * 0.5;
 		_flashBitmap.y = -height * 0.5;
+		#else
+		_canvas = new Sprite();
+		_canvas.x = -width * 0.5;
+		_canvas.y = -height * 0.5;
 		#end
 		_flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
-		#if flash
+	
 		_flashOffsetX = width * 0.5 * zoom;
 		_flashOffsetY = height * 0.5 * zoom;
-		#else
-		_flashOffsetX = 0;
-		_flashOffsetY = 0;
-		#end
 		
 		_flashSprite.x = x + _flashOffsetX;
 		_flashSprite.y = y + _flashOffsetY;
 		
 		#if flash
 		_flashSprite.addChild(_flashBitmap);
+		#else
+		_flashSprite.addChild(_canvas);
 		#end
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
@@ -336,7 +346,7 @@ class FlxCamera extends FlxBasic
 		_fill = new BitmapData(width, height, true, 0);
 		
 		#if cpp
-		_flashSprite.scrollRect = new Rectangle(0, 0, width, height);
+		_canvas.scrollRect = new Rectangle(0, 0, width, height);
 		_antialiasing = false;
 		
 		_debugLayer = new Sprite();
@@ -377,7 +387,9 @@ class FlxCamera extends FlxBasic
 		
 		#if cpp
 		_flashSprite.removeChild(_debugLayer);
+		_flashSprite.removeChild(_canvas);
 		_debugLayer = null;
+		_canvas = null;
 		#end
 		_flashSprite = null;
 	}
@@ -685,13 +697,8 @@ class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
-		//#if flash
 		_flashSprite.x = x + _flashOffsetX;
 		_flashSprite.y = y + _flashOffsetY;
-/*		#else
-		_flashSprite.x = x;
-		_flashSprite.y = y;
-		#end*/
 	}
 	
 	/**
@@ -769,7 +776,7 @@ class FlxCamera extends FlxBasic
 		#if flash
 		return _flashBitmap.alpha;
 		#else
-		return _flashSprite.alpha;
+		return _canvas.alpha;
 		#end
 	}
 	
@@ -781,7 +788,7 @@ class FlxCamera extends FlxBasic
 		#if flash
 		_flashBitmap.alpha = Alpha;
 		#else
-		_flashSprite.alpha = Alpha;
+		_canvas.alpha = Alpha;
 		#end
 		return Alpha;
 	}
@@ -838,7 +845,7 @@ class FlxCamera extends FlxBasic
 		#if flash
 		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
 		#else
-		//var colorTransform:ColorTransform = _flashSprite.transform.colorTransform;
+		//var colorTransform:ColorTransform = _canvas.transform.colorTransform;
 		#end
 		#if flash
 		colorTransform.redMultiplier = (_color >> 16) * 0.00392;
@@ -846,7 +853,7 @@ class FlxCamera extends FlxBasic
 		colorTransform.blueMultiplier = (_color & 0xff) * 0.00392;
 		_flashBitmap.transform.colorTransform = colorTransform;
 		#else
-		//_flashSprite.transform.colorTransform = colorTransform;
+		//_canvas.transform.colorTransform = colorTransform;
 		red = (_color >> 16) * 0.00392;
 		green = (_color >> 8 & 0xff) * 0.0039;
 		blue = (_color & 0xff) * 0.00392;
@@ -944,9 +951,9 @@ class FlxCamera extends FlxBasic
 		}
 		// end of fix
 		
-		_flashSprite.graphics.beginFill(Color, FxAlpha);
-		_flashSprite.graphics.drawRect(0, 0, width, height);
-		_flashSprite.graphics.endFill();
+		_canvas.graphics.beginFill(Color, FxAlpha);
+		_canvas.graphics.drawRect(0, 0, width, height);
+		_canvas.graphics.endFill();
 		
 		if (_fog > 0)
 		{
@@ -1019,10 +1026,6 @@ class FlxCamera extends FlxBasic
 	public function setX(val:Float):Float
 	{
 		_x = val;
-		if (_flashSprite != null)
-		{
-			_flashSprite.x = val;
-		}
 		return val;
 	}
 	
@@ -1034,10 +1037,6 @@ class FlxCamera extends FlxBasic
 	public function setY(val:Float):Float
 	{
 		_y = val;
-		if (_flashSprite != null)
-		{
-			_flashSprite.y = val;
-		}
 		return val;
 	}
 	
@@ -1051,11 +1050,11 @@ class FlxCamera extends FlxBasic
 		if (val > 0)
 		{
 			_width = val;
-			if (_flashSprite != null)
+			if (_canvas != null)
 			{
-				var rect:Rectangle = _flashSprite.scrollRect;
+				var rect:Rectangle = _canvas.scrollRect;
 				rect.width = val;
-				_flashSprite.scrollRect = rect;
+				_canvas.scrollRect = rect;
 			}
 		}
 		return val;
@@ -1071,11 +1070,11 @@ class FlxCamera extends FlxBasic
 		if (val > 0)
 		{
 			_height = val;
-			if (_flashSprite != null)
+			if (_canvas != null)
 			{
-				var rect:Rectangle = _flashSprite.scrollRect;
+				var rect:Rectangle = _canvas.scrollRect;
 				rect.height = val;
-				_flashSprite.scrollRect = rect;
+				_canvas.scrollRect = rect;
 			}
 		}
 		return val;

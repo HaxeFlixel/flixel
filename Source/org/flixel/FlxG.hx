@@ -1021,7 +1021,7 @@ class FlxG
 			cam.destroy();
 		}
 		//FlxG.cameras.length = 0;
-		FlxG.cameras = [];
+		FlxG.cameras.splice(0, FlxG.cameras.length);
 		
 		if (NewCamera == null)
 		{
@@ -1370,7 +1370,7 @@ class FlxG
 			#end
 			
 			#if cpp
-			cam._flashSprite.graphics.clear();
+			cam._canvas.graphics.clear();
 			// clearing camera's debug sprite
 			cam._debugLayer.graphics.clear();
 			#end
