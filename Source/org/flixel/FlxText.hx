@@ -72,7 +72,6 @@ class FlxText extends FlxSprite
 		_textField.multiline = true;
 		_textField.wordWrap = true;
 		var format:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffffff);
-		_textField.defaultTextFormat = format;
 		//_textField.setTextFormat(format);
 		_textField.defaultTextFormat = format;
 		_textField.text = Text;
@@ -294,9 +293,6 @@ class FlxText extends FlxSprite
 		format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
-		//#if cpp
-		//_regen = true;
-		//#end
 		#if flash
 		calcFrame();
 		#else

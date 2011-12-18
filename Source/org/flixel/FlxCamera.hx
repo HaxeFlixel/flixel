@@ -384,6 +384,11 @@ class FlxCamera extends FlxBasic
 		#if cpp
 		_flashSprite.removeChild(_debugLayer);
 		_flashSprite.removeChild(_canvas);
+		var canvasNumChildren:Int = _canvas.numChildren;
+		for (i in 0...(canvasNumChildren))
+		{
+			_canvas.removeChildAt(0);
+		}
 		_debugLayer = null;
 		_canvas = null;
 		#end
