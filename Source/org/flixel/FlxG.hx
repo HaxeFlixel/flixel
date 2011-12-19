@@ -1,14 +1,14 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.display.Stage;
-import flash.errors.Error;
-import flash.geom.Matrix;
-import flash.geom.Rectangle;
-import flash.media.Sound;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Graphics;
+import nme.display.Sprite;
+import nme.display.Stage;
+import nme.errors.Error;
+import nme.geom.Matrix;
+import nme.geom.Rectangle;
+import nme.media.Sound;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 
@@ -712,10 +712,17 @@ class FlxG
 		var l:Int = sounds.members.length;
 		while(i < l)
 		{
-			sound = cast(sounds.members[i++], FlxSound);
-			if ((sound != null) && (ForceDestroy || !sound.survive))
+			if (Std.is(sounds.members[i], FlxSound))
 			{
-				sound.destroy();
+				sound = cast(sounds.members[i++], FlxSound);
+				if ((sound != null) && (ForceDestroy || !sound.survive))
+				{
+					sound.destroy();
+				}
+			}
+			else
+			{
+				i++;
 			}
 		}
 	}
@@ -874,11 +881,26 @@ class FlxG
 		if(needReverse)
 		{
 			var newPixels:BitmapData = new BitmapData(pixels.width << 1, pixels.height, true, 0x00000000);
+			
+		#if flash
 			newPixels.draw(pixels);
 			var mtx:Matrix = new Matrix();
 			mtx.scale(-1,1);
 			mtx.translate(newPixels.width, 0);
 			newPixels.draw(pixels, mtx);
+		#else
+			var pixelColor:Int;
+			for (i in 0...(pixels.width + 1))
+			{
+				for (j in 0...(pixels.height + 1))
+				{
+					pixelColor = pixels.getPixel32(i, j);
+					newPixels.setPixel32(i, j, pixelColor);
+					newPixels.setPixel32(2 * pixels.width - i - 1, j, pixelColor);
+				}
+			}
+		#end
+			
 			pixels = newPixels;
 			//_cache[Key] = pixels;
 			_cache.set(key, pixels);
@@ -1006,7 +1028,7 @@ class FlxG
 			cam.destroy();
 		}
 		//FlxG.cameras.length = 0;
-		FlxG.cameras = [];
+		FlxG.cameras.splice(0, FlxG.cameras.length);
 		
 		if (NewCamera == null)
 		{
@@ -1346,12 +1368,24 @@ class FlxG
 			{
 				continue;
 			}
+			
+			#if flash
 			if (useBufferLocking)
 			{
 				cam.buffer.lock();
 			}
+			#end
+			
+			#if cpp
+			cam._canvas.graphics.clear();
+			// clearing camera's debug sprite
+			cam._debugLayer.graphics.clear();
+			#end
+			
 			cam.fill(cam.bgColor);
+			#if flash
 			cam.screen.dirty = true;
+			#end
 		}
 	}
 	
@@ -1372,10 +1406,13 @@ class FlxG
 				continue;
 			}
 			cam.drawFX();
+			
+			#if flash
 			if (useBufferLocking)
 			{
 				cam.buffer.unlock();
 			}
+			#end
 		}
 	}
 	
@@ -1399,6 +1436,7 @@ class FlxG
 				}
 				cam._flashSprite.x = cam.x + cam._flashOffsetX;
 				cam._flashSprite.y = cam.y + cam._flashOffsetY;
+				
 				cam._flashSprite.visible = cam.visible;
 			}
 		}

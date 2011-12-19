@@ -597,7 +597,7 @@ class FlxGroup extends FlxBasic
 	{
 		//length = members.length = 0;
 		length = 0;
-		members = [];
+		members.splice(0, members.length);
 	}
 	
 	/**

@@ -1,8 +1,9 @@
 package org.flixel.system.debug;
 
-import flash.geom.Rectangle;
-import flash.text.TextField;
-import flash.text.TextFormat;
+import nme.geom.Rectangle;
+import nme.text.TextField;
+import nme.text.TextFormat;
+
 import org.flixel.system.FlxWindow;
 
 /**
@@ -39,7 +40,11 @@ class Log extends FlxWindow
 		_text.multiline = true;
 		_text.wordWrap = true;
 		_text.selectable = true;
+<<<<<<< HEAD
 		_text.defaultTextFormat = new TextFormat("assets/data/courier",12,0xffffff);
+=======
+		_text.defaultTextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
+>>>>>>> dev
 		addChild(_text);
 		
 		_lines = new Array<String>();

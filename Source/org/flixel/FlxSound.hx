@@ -1,10 +1,10 @@
 package org.flixel;
 
-import flash.events.Event;
-import flash.media.Sound;
-import flash.media.SoundChannel;
-import flash.media.SoundTransform;
-import flash.net.URLRequest;
+import nme.events.Event;
+import nme.media.Sound;
+import nme.media.SoundChannel;
+import nme.media.SoundTransform;
+import nme.net.URLRequest;
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
@@ -400,7 +400,9 @@ class FlxSound extends FlxBasic
 				exists = false;
 			}
 			else
+			{
 				_channel.addEventListener(Event.SOUND_COMPLETE, looped);
+			}
 		}
 		else
 		{
@@ -538,7 +540,7 @@ class FlxSound extends FlxBasic
 		{
 			return;
 		}
-		_channel.removeEventListener(Event.SOUND_COMPLETE,looped);
+		_channel.removeEventListener(Event.SOUND_COMPLETE, looped);
 		_channel = null;
 		play();
 	}

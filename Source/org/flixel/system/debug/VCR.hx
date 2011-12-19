@@ -1,20 +1,30 @@
 package org.flixel.system.debug;
 
+<<<<<<< HEAD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.MouseEvent;
+=======
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Sprite;
+import nme.events.Event;
+import nme.events.IOErrorEvent;
+import nme.events.MouseEvent;
+
+>>>>>>> dev
 import org.flixel.FlxAssets;
 #if flash
 import flash.net.FileFilter;
 import flash.net.FileReference;
 #end
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
-import flash.utils.ByteArray;
+import nme.text.TextField;
+import nme.text.TextFormat;
+import nme.text.TextFormatAlign;
+import nme.utils.ByteArray;
 
 import org.flixel.FlxG;
 import org.flixel.FlxU;
@@ -126,7 +136,11 @@ class VCR extends Sprite
 		_runtimeDisplay.multiline = false;
 		_runtimeDisplay.wordWrap = false;
 		_runtimeDisplay.selectable = false;
+<<<<<<< HEAD
 		var dtf:TextFormat = new TextFormat("assets/data/COURIER", 12, 0xffffff);
+=======
+		var dtf:TextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
+>>>>>>> dev
 		dtf.align = TextFormatAlign.CENTER;
 		//_runtimeDisplay.defaultTextFormat = new TextFormat("Courier", 12, 0xffffff, null, null, null, null, null, "center");
 		_runtimeDisplay.defaultTextFormat = dtf;

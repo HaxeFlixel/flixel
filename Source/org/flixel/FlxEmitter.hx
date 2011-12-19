@@ -1,6 +1,6 @@
 package org.flixel;
 
-import flash.display.Bitmap;
+import nme.display.Bitmap;
 
 /**
  * <code>FlxEmitter</code> is a lightweight particle emitter.

@@ -1,8 +1,14 @@
 package org.flixel;
 
+<<<<<<< HEAD
 import flash.errors.Error;
 import flash.net.SharedObject;
 import flash.net.SharedObjectFlushStatus;
+=======
+import nme.errors.Error;
+import nme.net.SharedObject;
+import nme.net.SharedObjectFlushStatus;
+>>>>>>> dev
 
 #if flash
 import flash.events.NetStatusEvent;

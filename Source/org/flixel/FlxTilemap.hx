@@ -1,15 +1,23 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Graphics;
+import nme.geom.Matrix;
+import nme.geom.Point;
+import nme.geom.Rectangle;
 
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
+<<<<<<< HEAD
+=======
+#if cpp
+import org.flixel.tileSheetManager.TileSheetData;
+import org.flixel.tileSheetManager.TileSheetManager;
+#end
+
+>>>>>>> dev
 /**
  * This is a traditional tilemap display and collision class.
  * It takes a string of comma-separated numbers and then associates
@@ -74,7 +82,9 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Internal representation of rectangles, one for each tile in the entire tilemap, used to speed up drawing.
 	 */
+	#if flash
 	private var _rects:Array<Rectangle>;
+	#end
 	/**
 	 * Internal, the width of a single tile.
 	 */
@@ -88,6 +98,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _tileObjects:Array<FlxTile>;
 	
+	#if flash
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
@@ -103,7 +114,9 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
+	
 	private var _debugRect:Rectangle;
+	#end
 	/**
 	 * Internal flag for checking to see if we need to refresh
 	 * the tilemap display to show or hide the bounding boxes.
@@ -113,6 +126,22 @@ class FlxTilemap extends FlxObject
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
 	private var _startingIndex:Int;
+<<<<<<< HEAD
+=======
+	
+	#if cpp
+	private var _tileSheetData:TileSheetData;
+	private var _framesData:FlxSpriteFrames;
+	/**
+	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
+	 */
+	private var _helperPoint:Point;
+	/**
+	 * Internal representation of rectangles (actually id of rectangle in tileSheet), one for each tile in the entire tilemap, used to speed up drawing.
+	 */
+	private var _rectIDs:Array<Int>;
+	#end
+>>>>>>> dev
 	
 	/**
 	 * The tilemap constructor just initializes some basic variables.
@@ -130,17 +159,27 @@ class FlxTilemap extends FlxObject
 		_data = null;
 		_tileWidth = 0;
 		_tileHeight = 0;
+		#if flash
 		_rects = null;
+		_debugRect = null;
+		#else
+		_rectIDs = null;
+		#end
 		_tiles = null;
 		_tileObjects = null;
 		immovable = true;
 		cameras = null;
+		#if flash
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
-		_debugRect = null;
+		#end
 		_lastVisualDebug = FlxG.visualDebug;
 		_startingIndex = 0;
+		
+		#if cpp
+		_helperPoint = new Point();
+		#end
 	}
 	
 	/**
@@ -153,7 +192,6 @@ class FlxTilemap extends FlxObject
 		_tiles = null;
 		var i:Int = 0;
 		var l:Int = _tileObjects.length;
-		//while (i < l)
 		for (i in 0...l)
 		{
 			_tileObjects[i].destroy();
@@ -161,18 +199,26 @@ class FlxTilemap extends FlxObject
 		_tileObjects = null;
 		i = 0;
 		l = _buffers.length;
-		//while (i < l)
 		for (i in 0...l)
 		{
 			_buffers[i].destroy();
 		}
 		_buffers = null;
 		_data = null;
+		#if flash
 		_rects = null;
+		_debugRect = null;
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
-		_debugRect = null;
+		#end
+		
+		#if cpp
+		_framesData = null;
+		_tileSheetData = null;
+		_helperPoint = null;
+		_rectIDs = null;
+		#end
 
 		super.destroy();
 	}
@@ -197,7 +243,10 @@ class FlxTilemap extends FlxObject
 		//Figure out the map dimensions based on the data string
 		var columns:Array<String>;
 		_data = new Array<Int>();
+<<<<<<< HEAD
 		// TODO: Check this variable type
+=======
+>>>>>>> dev
 		var rows:Array<String> = MapData.split("\n");
 		heightInTiles = rows.length;
 		var row:Int = 0;
@@ -265,17 +314,33 @@ class FlxTilemap extends FlxObject
 			i++;
 		}
 		
+		#if cpp
+		/*if (_tileSheetData != null)
+		{
+			TileSheetManager.removeTileSheet(_tileSheetData);
+		}*/
+		_tileSheetData = TileSheetManager.addTileSheet(_tiles, true);
+		_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, false, new Point(0, 0));
+		#end
+		
 		//create debug tiles for rendering bounding boxes on demand
+		#if flash
 		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
 		_debugTilePartial = makeDebugTile(FlxG.PINK);
 		_debugTileSolid = makeDebugTile(FlxG.GREEN);
-		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
+		#end
 		
 		//Then go through and create the actual map
 		width = widthInTiles * _tileWidth;
 		height = heightInTiles * _tileHeight;
+		#if flash
+		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		_rects = new Array<Rectangle>(/*totalTiles*/);
 		FlxU.SetArrayLength(_rects, totalTiles);
+		#else
+		_rectIDs = new Array<Int>();
+		FlxU.SetArrayLength(_rectIDs, totalTiles);
+		#end
 		i = 0;
 		while (i < totalTiles)
 		{
@@ -291,9 +356,6 @@ class FlxTilemap extends FlxObject
 	 */
 	#if flash
 	private function makeDebugTile(Color:UInt):BitmapData
-	#else
-	private function makeDebugTile(Color:Int):BitmapData
-	#end
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
@@ -310,6 +372,7 @@ class FlxTilemap extends FlxObject
 		debugTile.draw(FlxG.flashGfxSprite);
 		return debugTile;
 	}
+	#end
 	
 	/**
 	 * Main logic loop for tilemap is pretty simple,
@@ -331,9 +394,20 @@ class FlxTilemap extends FlxObject
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
 	 * @param	Camera		The related <code>FlxCamera</code>, mainly for scroll values.
 	 */
-	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
+	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera, ?CameraID:Int = 0):Void
 	{
+		#if flash
 		Buffer.fill();
+		#else
+		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
+		_helperPoint.y = y - Std.int(Camera.scroll.y * scrollFactor.y);
+		/*_helperPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
+		_helperPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;*/
+		var tileID:Int;
+		var debugColor:Int;
+		var drawX:Float;
+		var drawY:Float;
+		#end
 		
 		//Copy tile images into the tile buffer
 		_point.x = Std.int(Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
@@ -350,7 +424,7 @@ class FlxTilemap extends FlxObject
 		}
 		if (screenXInTiles > widthInTiles - screenColumns)
 		{
-			screenXInTiles = widthInTiles-screenColumns;
+			screenXInTiles = widthInTiles - screenColumns;
 		}
 		if (screenYInTiles < 0)
 		{
@@ -358,7 +432,7 @@ class FlxTilemap extends FlxObject
 		}
 		if (screenYInTiles > heightInTiles - screenRows)
 		{
-			screenYInTiles = heightInTiles-screenRows;
+			screenYInTiles = heightInTiles - screenRows;
 		}
 		
 		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
@@ -375,6 +449,7 @@ class FlxTilemap extends FlxObject
 			_flashPoint.x = 0;
 			while(column < screenColumns)
 			{
+				#if flash
 				_flashRect = _rects[columnIndex];
 				if(_flashRect != null)
 				{
@@ -400,6 +475,58 @@ class FlxTilemap extends FlxObject
 						}
 					}
 				}
+				#else
+				tileID = _rectIDs[columnIndex];
+				if (tileID != -1)
+				{
+					drawX = Math.floor(_helperPoint.x) + (columnIndex % widthInTiles) * _tileWidth;
+					drawY = Math.floor(_helperPoint.y) + Math.floor(columnIndex / widthInTiles) * _tileHeight;
+					_tileSheetData.drawData[CameraID].push(drawX);
+					_tileSheetData.drawData[CameraID].push(drawY);
+					_tileSheetData.drawData[CameraID].push(tileID);
+					
+					if (_tileSheetData.isTilemap)
+					{
+						_tileSheetData.drawData[CameraID].push(Camera.red); // red
+						_tileSheetData.drawData[CameraID].push(Camera.green); //	green
+						_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
+					}
+					else
+					{
+						_tileSheetData.drawData[CameraID].push(1.0); // scale
+						_tileSheetData.drawData[CameraID].push(0.0); // rotation
+						_tileSheetData.drawData[CameraID].push(Camera.red); // red
+						_tileSheetData.drawData[CameraID].push(Camera.green); //	green
+						_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
+						_tileSheetData.drawData[CameraID].push(1.0); // alpha
+					}
+					
+					if(FlxG.visualDebug && !ignoreDrawDebug)
+					{
+						tile = _tileObjects[_data[columnIndex]];
+						if(tile != null)
+						{
+							if (tile.allowCollisions <= FlxObject.NONE)
+							{
+								debugColor = FlxG.BLUE;
+							}
+							else if (tile.allowCollisions != FlxObject.ANY)
+							{
+								debugColor = FlxG.PINK;
+							}
+							else
+							{
+								debugColor = FlxG.GREEN;
+							}
+							
+							// Copied from makeDebugTile
+							var gfx:Graphics = Camera._debugLayer.graphics;
+							gfx.lineStyle(1, debugColor, 0.5);
+							gfx.drawRect(drawX, drawY, _tileWidth, _tileHeight);
+						}
+					}
+				}
+				#end
 				_flashPoint.x += _tileWidth;
 				column++;
 				columnIndex++;
@@ -442,6 +569,7 @@ class FlxTilemap extends FlxObject
 				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera);
 			}
 			buffer = _buffers[i++];
+			#if flash
 			if(!buffer.dirty)
 			{
 				_point.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
@@ -458,6 +586,11 @@ class FlxTilemap extends FlxObject
 			_flashPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
 			_flashPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
 			buffer.draw(camera, _flashPoint);
+			
+			#else
+			drawTilemap(buffer, camera, i - 1);
+			#end
+			
 			FlxBasic._VISIBLECOUNT++;
 		}
 	}
@@ -928,8 +1061,7 @@ class FlxTilemap extends FlxObject
 			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
-			//while(i < length)
-			while(i < Std.int(grp.length))
+			while(i < grp.length)
 			{
 				basic = members[i++];
 				if(Std.is(basic, FlxObject))
@@ -1460,9 +1592,18 @@ class FlxTilemap extends FlxObject
 	 * @param	bitmapData	A Flash <code>BitmapData</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param  ColorMap  An array of color values (uint 0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
+<<<<<<< HEAD
 	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1):String
+=======
+	#if flash
+	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1, ?ColorMap:Array<UInt> = null):String
+	#else
+	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1, ?ColorMap:Array<Int> = null):String
+	#end
+>>>>>>> dev
 	{
 		if (Scale < 1) Scale = 1;
 		
@@ -1494,7 +1635,11 @@ class FlxTilemap extends FlxObject
 			{
 				//Decide if this pixel/tile is solid (1) or not (0)
 				pixel = bitmapData.getPixel(column, row);
-				if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
+				if (ColorMap != null)
+				{
+					pixel = FlxU.ArrayIndexOf(ColorMap, pixel);
+				}
+				else if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
 				{
 					pixel = 1;
 				}
@@ -1585,9 +1730,14 @@ class FlxTilemap extends FlxObject
 		var tile:FlxTile = _tileObjects[_data[Index]];
 		if((tile == null) || !tile.visible)
 		{
+			#if flash
 			_rects[Index] = null;
+			#else
+			_rectIDs[Index] = -1;
+			#end
 			return;
 		}
+		#if flash
 		var rx:Int = (_data[Index] - _startingIndex) * _tileWidth;
 		var ry:Int = 0;
 		if(Std.int(rx) >= _tiles.width)
@@ -1596,5 +1746,24 @@ class FlxTilemap extends FlxObject
 			rx %= _tiles.width;
 		}
 		_rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
+		#else
+		_rectIDs[Index] = _framesData.frameIDs[_data[Index] - _startingIndex];
+		#end
 	}
+	
+	#if cpp
+	/**
+	 * Gets FlxSprite's TileSheetData index in TileSheetManager
+	 */
+	public function getTileSheetIndex():Int
+	{
+		if (_tileSheetData != null)
+		{
+			return TileSheetManager.getTileSheetIndex(_tileSheetData);
+		}
+		
+		return -1;
+	}
+	#end
+	
 }

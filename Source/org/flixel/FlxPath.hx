@@ -1,6 +1,6 @@
 package org.flixel;
 
-import flash.display.Graphics;
+import nme.display.Graphics;
 
 import org.flixel.plugin.DebugPathDisplay;
 
@@ -241,8 +241,12 @@ class FlxPath
 		}
 		
 		//Set up our global flash graphics object to draw out the path
+		#if flash
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
+		#else
+		var gfx:Graphics = Camera._debugLayer.graphics;
+		#end
 		
 		//Then fill up the object with node and path graphics
 		var node:FlxPoint;
@@ -257,8 +261,10 @@ class FlxPath
 			//find the screen position of the node on this camera
 			_point.x = node.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
 			_point.y = node.y - Std.int(Camera.scroll.y * debugScrollFactor.y);
+			#if flash
 			_point.x = Std.int(_point.x + ((_point.x > 0)?0.0000001:-0.0000001));
-			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001:-0.0000001));
+			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001: -0.0000001));
+			#end
 			
 			//decide what color this node should be
 			var nodeSize:Int = 2;
@@ -303,18 +309,22 @@ class FlxPath
 			
 			//then draw a line to the next node
 			gfx.moveTo(_point.x, _point.y);
-			gfx.lineStyle(1,debugColor,linealpha);
+			gfx.lineStyle(1, debugColor, linealpha);
 			_point.x = nextNode.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
 			_point.y = nextNode.y - Std.int(Camera.scroll.y * debugScrollFactor.y);
+			#if flash
 			_point.x = Std.int(_point.x + ((_point.x > 0)?0.0000001: -0.0000001));
 			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001: -0.0000001));
+			#end
 			gfx.lineTo(_point.x, _point.y);
 
 			i++;
 		}
 		
+		#if flash
 		//then stamp the path down onto the game buffer
 		Camera.buffer.draw(FlxG.flashGfxSprite);
+		#end
 	}
 	
 	public static var manager(getManager, null):DebugPathDisplay;

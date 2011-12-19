@@ -1,13 +1,13 @@
 package org.flixel.system;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.text.TextField;
-import flash.text.TextFormat;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Sprite;
+import nme.events.MouseEvent;
+import nme.geom.Point;
+import nme.geom.Rectangle;
+import nme.text.TextField;
+import nme.text.TextFormat;
 
 import org.flixel.FlxG;
 import org.flixel.system.debug.Log;
@@ -91,7 +91,11 @@ class FlxDebugger extends Sprite
 		txt.height = 16;
 		txt.selectable = false;
 		txt.multiline = false;
+<<<<<<< HEAD
 		txt.defaultTextFormat = new TextFormat("assets/data/courier", 12, 0xffffff);
+=======
+		txt.defaultTextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
+>>>>>>> dev
 		var str:String = FlxG.getLibraryName();
 		if (FlxG.debug)
 		{

@@ -1,8 +1,8 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.geom.Rectangle;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.geom.Rectangle;
 
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.

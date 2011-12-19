@@ -1,10 +1,10 @@
 package org.flixel.system.debug;
 
-import flash.events.KeyboardEvent;
-import flash.events.MouseEvent;
-import flash.text.TextField;
-import flash.text.TextFieldType;
-import flash.text.TextFormat;
+import nme.events.KeyboardEvent;
+import nme.events.MouseEvent;
+import nme.text.TextField;
+import nme.text.TextFieldType;
+import nme.text.TextFormat;
 
 import org.flixel.FlxU;
 
@@ -63,8 +63,13 @@ class WatchEntry
 		field = Field;
 		custom = Custom;
 		
+<<<<<<< HEAD
 		_whiteText = new TextFormat("assets/data/COURIER",12,0xffffff);
 		_blackText = new TextFormat("assets/data/COURIER",12,0);
+=======
+		_whiteText = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
+		_blackText = new TextFormat(FlxAssets.courierFont, 12, 0);
+>>>>>>> dev
 		
 		nameDisplay = new TextField();
 		nameDisplay.y = Y;

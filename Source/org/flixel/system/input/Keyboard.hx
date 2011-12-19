@@ -1,6 +1,6 @@
 package org.flixel.system.input;
 
-import flash.events.KeyboardEvent;
+import nme.events.KeyboardEvent;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
@@ -106,11 +106,40 @@ class Keyboard extends Input
 		var i:Int;
 		
 		//LETTERS
+		#if flash
 		i = 65;
 		while (i <= 90)
 		{
-			addKey(String.fromCharCode(i),i++);
+			addKey(String.fromCharCode(i), i++);
 		}
+		#else
+		addKey("A", 97);
+		addKey("B", 98);
+		addKey("C", 99);
+		addKey("D", 100);
+		addKey("E", 101);
+		addKey("F", 102);
+		addKey("G", 103);
+		addKey("H", 104);
+		addKey("I", 105);
+		addKey("J", 106);
+		addKey("K", 107);
+		addKey("L", 108);
+		addKey("M", 109);
+		addKey("N", 110);
+		addKey("O", 111);
+		addKey("P", 112);
+		addKey("Q", 113);
+		addKey("R", 114);
+		addKey("S", 115);
+		addKey("T", 116);
+		addKey("U", 117);
+		addKey("V", 118);
+		addKey("W", 119);
+		addKey("X", 120);
+		addKey("Y", 121);
+		addKey("Z", 122);
+		#end
 		
 		//NUMBERS
 		i = 48;
@@ -124,6 +153,7 @@ class Keyboard extends Input
 		addKey("SEVEN",i++);
 		addKey("EIGHT",i++);
 		addKey("NINE",i++);
+		#if flash
 		i = 96;
 		addKey("NUMPADZERO",i++);
 		addKey("NUMPADONE",i++);
@@ -134,7 +164,8 @@ class Keyboard extends Input
 		addKey("NUMPADSIX",i++);
 		addKey("NUMPADSEVEN",i++);
 		addKey("NUMPADEIGHT",i++);
-		addKey("NUMPADNINE",i++);
+		addKey("NUMPADNINE", i++);
+		#end
 		addKey("PAGEUP", 33);
 		addKey("PAGEDOWN", 34);
 		addKey("HOME", 36);
@@ -142,18 +173,18 @@ class Keyboard extends Input
 		addKey("INSERT", 45);
 		
 		//FUNCTION KEYS
+		#if flash
 		i = 1;
 		while (i <= 12)
 		{
 			addKey("F"+i,111+(i++));
 		}
+		#end
 		
 		//SPECIAL KEYS + PUNCTUATION
 		addKey("ESCAPE",27);
 		addKey("MINUS",189);
-		addKey("NUMPADMINUS",109);
 		addKey("PLUS",187);
-		addKey("NUMPADPLUS",107);
 		addKey("DELETE",46);
 		addKey("BACKSPACE",8);
 		addKey("LBRACKET",219);
@@ -166,7 +197,6 @@ class Keyboard extends Input
 		addKey("SHIFT",16);
 		addKey("COMMA",188);
 		addKey("PERIOD",190);
-		addKey("NUMPADPERIOD",110);
 		addKey("SLASH",191);
 		addKey("NUMPADSLASH",191);
 		addKey("CONTROL",17);
@@ -176,7 +206,17 @@ class Keyboard extends Input
 		addKey("DOWN",40);
 		addKey("LEFT",37);
 		addKey("RIGHT",39);
+<<<<<<< HEAD
 		addKey("TAB", 9);		
+=======
+		addKey("TAB", 9);	
+		
+		#if flash
+		addKey("NUMPADMINUS", 109);
+		addKey("NUMPADPLUS", 107);
+		addKey("NUMPADPERIOD", 110);
+		#end
+>>>>>>> dev
 	}
 	
 	/**
@@ -186,7 +226,11 @@ class Keyboard extends Input
 	public function handleKeyDown(FlashEvent:KeyboardEvent):Void
 	{
 		var o:MapObject = _map[FlashEvent.keyCode];
+<<<<<<< HEAD
 		if(o == null) return;
+=======
+		if (o == null) return;
+>>>>>>> dev
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
 		Reflect.setField(this, o.name, true);
@@ -205,6 +249,7 @@ class Keyboard extends Input
 		//this[object.name] = false;
 		Reflect.setField(this, object.name, false);
 	}
+<<<<<<< HEAD
 	
 	/*override public function reset():Void
 	{
@@ -217,4 +262,7 @@ class Keyboard extends Input
 			o.last = 0;
 		}
 	}*/
+=======
+
+>>>>>>> dev
 }

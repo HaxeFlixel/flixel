@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
+<<<<<<< HEAD
 	<app title="FlixelNME Test" file="FlixelNMETest" main="Test" version="0.0.1" company="Zaphod" />
 	
 	<window width="400" height="300" fps="30" orientation="portrait" resizable="true" if="target_flash" />
@@ -8,6 +9,17 @@
  	
 	<set name="BUILD_DIR" value="Export" />
 	
+=======
+	<app title="Mode Demo" file="ModeDemo" main="Test" version="0.0.1" company="Zaphod" />
+	
+	<window width="640" height="480" fps="30" orientation="portrait" resizable="true" if="target_flash" />
+	<window width="640" height="480" fps="30" orientation="portrait" resizable="true" unless="target_flash" />
+ 	
+	<set name="BUILD_DIR" value="Export" />
+	
+	<!--<setenv name="no_console" value="1" />-->
+	
+>>>>>>> dev
 	<classpath name="Source" />
 	
 	<haxelib name="nme" />

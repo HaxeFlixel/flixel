@@ -1,8 +1,8 @@
 package org.flixel.system;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import nme.display.BitmapData;
+import nme.geom.Point;
+import nme.geom.Rectangle;
 
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
@@ -42,9 +42,15 @@ class FlxTilemapBuffer
 	 * How many columns of tiles fit in this buffer.
 	 */
 	public var columns:Int;
+<<<<<<< HEAD
 
+=======
+	
+	#if flash
+>>>>>>> dev
 	private var _pixels:BitmapData;	
 	private var _flashRect:Rectangle;
+	#end
 
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
@@ -74,11 +80,15 @@ class FlxTilemapBuffer
 		{
 			rows = HeightInTiles;
 		}
-		
+		#if flash
 		_pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
 		width = _pixels.width;
 		height = _pixels.height;	
 		_flashRect = new Rectangle(0, 0, width, height);
+		#else
+		width = Std.int(columns * TileWidth);
+		height = Std.int(rows * TileHeight);
+		#end
 		dirty = true;
 	}
 	
@@ -87,7 +97,9 @@ class FlxTilemapBuffer
 	 */
 	public function destroy():Void
 	{
+		#if flash
 		_pixels = null;
+		#end
 	}
 	
 	/**
@@ -97,9 +109,6 @@ class FlxTilemapBuffer
 	 */
 	#if flash
 	public function fill(?Color:UInt = 0):Void
-	#else
-	public function fill(?Color:Int = 0):Void
-	#end
 	{
 		_pixels.fillRect(_flashRect, Color);
 	}
@@ -124,4 +133,5 @@ class FlxTilemapBuffer
 	{
 		Camera.buffer.copyPixels(_pixels, _flashRect, FlashPoint, null, null, true);
 	}
+	#end
 }

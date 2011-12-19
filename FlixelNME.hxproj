@@ -31,7 +31,11 @@
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
+<<<<<<< HEAD
     <!-- example: <compile path="..." /> -->
+=======
+    <compile path="Source\TestDrawRect.hx" />
+>>>>>>> dev
   </compileTargets>
   <!-- Assets to embed into the output SWF -->
   <library>
@@ -42,7 +46,11 @@
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
+<<<<<<< HEAD
   <preBuildCommand />
+=======
+  <preBuildCommand>haxelib run nme test "FlixelNME.nmml" flash</preBuildCommand>
+>>>>>>> dev
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

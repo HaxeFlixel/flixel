@@ -1,5 +1,6 @@
 package org.flixel;
 
+<<<<<<< HEAD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
@@ -15,6 +16,27 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flash.Lib;
 import flash.ui.Mouse;
+=======
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.display.Graphics;
+import nme.display.Sprite;
+import nme.display.StageAlign;
+import nme.display.StageScaleMode;
+import nme.events.Event;
+import nme.events.KeyboardEvent;
+import nme.events.MouseEvent;
+import nme.media.Sound;
+import nme.text.TextField;
+import nme.text.TextFormat;
+import nme.text.TextFormatAlign;
+import nme.Lib;
+import nme.ui.Mouse;
+
+#if cpp
+import org.flixel.tileSheetManager.TileSheetManager;
+#end
+>>>>>>> dev
 
 #if flash
 import flash.text.AntiAliasType;
@@ -201,9 +223,13 @@ class FlxGame extends Sprite
 		useSystemCursor = UseSystemCursor;
 		if (!useSystemCursor)
 		{
+<<<<<<< HEAD
 			//#if flash
 			Mouse.hide();
 			//#end
+=======
+			Mouse.hide();
+>>>>>>> dev
 		}
 		forceDebugger = false;
 		_debuggerUp = false;
@@ -485,11 +511,12 @@ class FlxGame extends Sprite
 					_accumulator = _maxAccumulation;
 				}
 				// TODO: You may uncomment following lines
-			//	while(_accumulator >= Std.int(_step))
-			//	{
+				//while(_accumulator >= Std.int(_step))
+				while(_accumulator > Std.int(_step))
+				{
 					step();
 					_accumulator = _accumulator - _step; 
-			//	}
+				}
 			}
 			
 			FlxBasic._VISIBLECOUNT = 0;
@@ -536,6 +563,10 @@ class FlxGame extends Sprite
 		{
 			_state.destroy();
 		}
+		
+		#if cpp
+		TileSheetManager.clear();
+		#end
 		
 		//Finally assign and create the new state
 		_state = _requestedState;
@@ -708,8 +739,18 @@ class FlxGame extends Sprite
 	private function draw():Void
 	{
 		var mark:Int = Lib.getTimer();
+		
+		#if cpp
+		TileSheetManager.clearAllDrawData();
+		#end
+		
 		FlxG.lockCameras();
 		_state.draw();
+		
+		#if cpp
+		TileSheetManager.renderAll();
+		#end
+		
 		FlxG.drawPlugins();
 		FlxG.unlockCameras();
 		if (_debuggerUp)
@@ -808,8 +849,13 @@ class FlxGame extends Sprite
 		text.antiAliasType = AntiAliasType.NORMAL;
 		text.gridFitType = GridFitType.PIXEL;
 		#else
+		
 		#end
+<<<<<<< HEAD
 		var dtf:TextFormat = new TextFormat("assets/data/nokiafc22", 8, 0xffffff);
+=======
+		var dtf:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
+>>>>>>> dev
 		dtf.align = TextFormatAlign.CENTER;
 		text.defaultTextFormat = dtf; //new TextFormat("system",8,0xffffff,null,null,null,null,null,"center");
 		_soundTray.addChild(text);
