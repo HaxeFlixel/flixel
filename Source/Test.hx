@@ -1,25 +1,32 @@
 package;
 
-import nme.display.Sprite;
 import nme.display.StageAlign;
 import nme.display.StageScaleMode;
+import nme.display.FPS;
+import nme.display.Sprite;
 import nme.Lib;
-import org.flixel.FlxGame;
 
+import org.flixel.FlxGame;
 
 /**
  * @author Joshua Granick
  */
 class Test extends Sprite 
 {
-	
+		
 	public function new () 
 	{
 		super();
 		initialize();
 		
-		var demo:FlxGame = new ParticlesDemo();
+		var demo:FlxGame = new Mode();
 		addChild(demo);
+		
+		var fps:FPS = new FPS();
+		fps.textColor = 0xffffff;
+		addChild(fps);
+		fps.x = 20;
+		fps.y = 20;
 	}
 	
 	private function initialize():Void 

@@ -173,11 +173,13 @@ class Keyboard extends Input
 		addKey("INSERT", 45);
 		
 		//FUNCTION KEYS
+		#if flash
 		i = 1;
 		while (i <= 12)
 		{
 			addKey("F"+i,111+(i++));
 		}
+		#end
 		
 		//SPECIAL KEYS + PUNCTUATION
 		addKey("ESCAPE",27);
@@ -220,7 +222,7 @@ class Keyboard extends Input
 	public function handleKeyDown(FlashEvent:KeyboardEvent):Void
 	{
 		var o:MapObject = _map[FlashEvent.keyCode];
-		if(o == null) return;
+		if (o == null) return;
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
 		Reflect.setField(this, o.name, true);

@@ -35,6 +35,10 @@ class FlxCamera extends FlxBasic
 	 */
 	static public inline var STYLE_SCREEN_BY_SCREEN:Int = 4;
 	/**
+	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly and centers it.
+	 */
+	static public inline var STYLE_NO_DEAD_ZONE:Int = 5;
+	/**
 	 * Camera "shake" effect preset: shake camera on both the X and Y axes.
 	 */
 	static public inline var SHAKE_BOTH_AXES:Int = 0;

@@ -106,6 +106,7 @@ class TileSheetManager
 	 */
 	public static function swapDrawableObjects(obj1:FlxObject, obj2:FlxObject):Void
 	{
+		if (obj1 == null || obj2 == null) return;
 		if (obj1 == obj2) return;
 		
 		var id1:Int = -1;
@@ -160,8 +161,6 @@ class TileSheetManager
 			// This tileSheet doesn't exist or we try to set it's index to the same value as it is already
 			return;
 		}
-		
-		trace("id = " + id + ", index = " + index);
 		
 		var tsd:TileSheetData = tileSheetData[id];
 		tileSheetData.remove(tsd);

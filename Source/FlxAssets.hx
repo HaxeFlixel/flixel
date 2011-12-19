@@ -1,7 +1,7 @@
 package ;
-import flash.display.Bitmap;
-import flash.media.Sound;
-import nme.installer.Assets;
+import nme.display.Bitmap;
+import nme.media.Sound;
+import nme.Assets;
 
 /**
  * ...
@@ -11,30 +11,83 @@ import nme.installer.Assets;
 class FlxAssets 
 {
 
-	public static var imgAltTiles:Class<Bitmap> = ImgAltTiles;
-	public static var imgAutoTiles:Class<Bitmap> = ImgAutoTiles;
-	public static var imgEmptyTiles:Class<Bitmap> = ImgEmptyTiles;
+	public static var imgBullet:Class<Bitmap> = ImgBullet;
+	public static var imgSpawnerGibs:Class<Bitmap> = ImgSpawnerGibs;
+	public static var imgSpawner:Class<Bitmap> = ImgSpawner;
 	public static var imgSpaceman:Class<Bitmap> = ImgSpaceman;
-
+	public static var imgBot:Class<Bitmap> = ImgBot;
+	public static var imgJet:Class<Bitmap> = ImgJet;
+	public static var imgBotBullet:Class<Bitmap> = ImgBotBullet;
+	public static var imgTechTiles:Class<Bitmap> = ImgTechTiles;
+	public static var imgDirtTop:Class<Bitmap> = ImgDirtTop;
+	public static var imgDirt:Class<Bitmap> = ImgDirt;
+	public static var imgGibs:Class<Bitmap> = ImgGibs;
+	public static var imgMiniFrame:Class<Bitmap> = ImgMiniFrame;
+	public static var imgCursor:Class<Bitmap> = ImgCursor;
 	
 }
 
-class ImgAltTiles extends Bitmap
+class ImgBullet extends Bitmap
 {
-	public function new() { super(ApplicationMain.getAsset("assets/alt_tiles.png")); }
+	public function new() { super(Assets.getBitmapData("assets/bullet.png")); }
 }
 
-class ImgAutoTiles extends Bitmap
+class ImgSpawnerGibs extends Bitmap
 {
-	public function new() { super(ApplicationMain.getAsset("assets/auto_tiles.png")); }
+	public function new() { super(Assets.getBitmapData("assets/spawner_gibs.png")); }
 }
 
-class ImgEmptyTiles extends Bitmap
+class ImgSpawner extends Bitmap
 {
-	public function new() { super(ApplicationMain.getAsset("assets/empty_tiles.png")); }
+	public function new() { super(Assets.getBitmapData("assets/spawner.png")); }
 }
 
 class ImgSpaceman extends Bitmap
 {
-	public function new() { super(ApplicationMain.getAsset("assets/spaceman.png")); }
+	public function new() { super(Assets.getBitmapData("assets/spaceman.png")); }
+}
+
+class ImgBot extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/bot.png")); }
+}
+
+class ImgJet extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/jet.png")); }
+}
+
+class ImgBotBullet extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/bot_bullet.png")); }
+}
+
+class ImgTechTiles extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/tech_tiles.png")); }
+}
+
+class ImgDirtTop extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/dirt_top.png")); }
+}
+
+class ImgDirt extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/dirt.png")); }
+}
+
+class ImgGibs extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/gibs.png")); }
+}
+
+class ImgMiniFrame extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/miniframe.png")); }
+}
+
+class ImgCursor extends Bitmap
+{
+	public function new() { super(Assets.getBitmapData("assets/cursor.png")); }
 }

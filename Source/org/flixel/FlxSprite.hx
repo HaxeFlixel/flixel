@@ -419,10 +419,14 @@ class FlxSprite extends FlxObject
 		{
 			max = brush.height;
 		}
+		
+		#if flash
 		if (AutoBuffer)
 		{
 			max = Math.floor(max * 1.5);
 		}
+		#end
+		
 		var columns:Int = FlxU.ceil(Rotations / rows);
 		width = max * columns;
 		height = max * rows;

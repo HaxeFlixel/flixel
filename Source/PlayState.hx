@@ -1,233 +1,433 @@
 package;
 
-import org.flixel.FlxButton;
+import nme.Assets;
+import org.flixel.FlxCamera;
+import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
+import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
+import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxTilemap;
-
-
+import org.flixel.FlxTileblock;
+import org.flixel.tileSheetManager.TileSheetData;
+import org.flixel.tileSheetManager.TileSheetManager;
 
 class PlayState extends FlxState
 {
-	// Some static constants for the size of the tilemap tiles
-	private var TILE_WIDTH:Int;
-	private var TILE_HEIGHT:Int;
+	//major game object storage
+	private var _blocks:FlxGroup;
+	private var _decorations:FlxGroup;
+	private var _bullets:FlxGroup;
+	private var _player:Player;
+	private var _enemies:FlxGroup;
+	private var _spawners:FlxGroup;
+	private var _enemyBullets:FlxGroup;
+	private var _littleGibs:FlxEmitter;
+	private var _bigGibs:FlxEmitter;
+	private var _hud:FlxGroup;
+	private var _gunjam:FlxGroup;
 	
-	// The FlxTilemap we're using
-	private var collisionMap:FlxTilemap;
+	//meta groups, to help speed up collisions
+	private var _objects:FlxGroup;
+	private var _hazards:FlxGroup;
 	
-	// Box to show the user where they're placing stuff
-	private var highlightBox:FlxObject;
+	//HUD/User Interface stuff
+	private var _score:FlxText;
+	private var _score2:FlxText;
+	private var _scoreTimer:Float;
+	private var _jamTimer:Float;
 	
-	// Player modified from "Mode" demo
-	private var player:FlxSprite;
-	
-	// Some interface buttons and text
-	private var autoAltBtn:FlxButton;
-	private var resetBtn:FlxButton;
-	private var quitBtn:FlxButton;
-	private var helperTxt:FlxText;
+	//just to prevent weirdness during level transition
+	private var _fading:Bool;
 	
 	public function new()
 	{
-		TILE_WIDTH = 16;
-		TILE_HEIGHT = 16;
-		
 		super();
 	}
 	
 	override public function create():Void
 	{
-		FlxG.framerate = 50;
-		FlxG.flashFramerate = 50;
+		FlxG.mouse.hide();
 		
-		// Creates a new tilemap with no arguments
-		collisionMap = new FlxTilemap();
+		//Here we are creating a pool of 100 little metal bits that can be exploded.
+		//We will recycle the crap out of these!
+		_littleGibs = new FlxEmitter();
+		_littleGibs.setXSpeed( -150, 150);
+		_littleGibs.setYSpeed( -200, 0);
+		_littleGibs.setRotation( -720, -720);
+		_littleGibs.gravity = 350;
+		_littleGibs.bounce = 0.5;
+		_littleGibs.makeParticles(FlxAssets.imgGibs, 100, 10, true, 0.5);
 		
-		/*
-		 * FlxTilemaps are created using strings of comma seperated values (csv)
-		 * This string ends up looking something like this:
-		 *
-		 * 0,0,0,0,0,0,0,0,0,0,
-		 * 0,0,0,0,0,0,0,0,0,0,
-		 * 0,0,0,0,0,0,1,1,1,0,
-		 * 0,0,1,1,1,0,0,0,0,0,
-		 * ...
-		 *
-		 * Each '0' stands for an empty tile, and each '1' stands for
-		 * a solid tile
-		 *
-		 * When using the auto map generation, the '1's are converted into the corresponding frame
-		 * in the tileset.
-		 */
+		//Next we create a smaller pool of larger metal bits for exploding.
+		_bigGibs = new FlxEmitter();
+		_bigGibs.setXSpeed( -200, 200);
+		_bigGibs.setYSpeed( -300, 0);
+		_bigGibs.setRotation( -720, -720);
+		_bigGibs.gravity = 350;
+		_bigGibs.bounce = 0.35;
+		_bigGibs.makeParticles(FlxAssets.imgSpawnerGibs, 50, 20, true, 0.5);
 		
-		// Initializes the map using the generated string, the tile images, and the tile size
-		var textBytes = ApplicationMain.getAsset("assets/default_auto.txt");
-		var testing:String = textBytes.readUTFBytes(textBytes.length);
-		collisionMap.loadMap(testing, FlxAssets.imgAutoTiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-		add(collisionMap);
+		//Then we'll set up the rest of our object groups or pools
+		_blocks = new FlxGroup();
+		_decorations = new FlxGroup();
+		_enemies = new FlxGroup();
+		_spawners = new FlxGroup();
+		_hud = new FlxGroup();
+		_enemyBullets = new FlxGroup();
+		_bullets = new FlxGroup();
 		
-		highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
+		//Now that we have references to the bullets and metal bits,
+		//we can create the player object.
+		_player = new Player(316, 300, _bullets, _littleGibs);
+
+		//This refers to a custom function down at the bottom of the file
+		//that creates all our level geometry with a total size of 640x480.
+		//This in turn calls buildRoom() a bunch of times, which in turn
+		//is responsible for adding the spawners and spawn-cameras.
+		generateLevel();
 		
-		setupPlayer();
+		//Add bots and spawners after we add blocks to the state,
+		//so that they're drawn on top of the level, and so that
+		//the bots are drawn on top of both the blocks + the spawners.
+		add(_spawners);
+		add(_littleGibs);
+		add(_bigGibs);
+		add(_blocks);
+		add(_decorations);
+		add(_enemies);
+
+		//Then we add the player and set up the scrolling camera,
+		//which will automatically set the boundaries of the world.
+		add(_player);
+		FlxG.camera.setBounds(0, 0, 640, 640, true);
+		FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
 		
-		// When switching between modes here, the map is reloaded with it's own data, so the positions of tiles are kept the same
-		// Notice that different tilesets are used when the auto mode is switched
-		autoAltBtn = new FlxButton(4, FlxG.height - 24, "AUTO", function():Void
+		//We add the bullets to the scene here,
+		//so they're drawn on top of pretty much everything
+		add(_enemyBullets);
+		add(_bullets);
+		add(_hud);
+		
+		//Finally we are going to sort things into a couple of helper groups.
+		//We don't add these groups to the state, we just use them for collisions later!
+		_hazards = new FlxGroup();
+		_hazards.add(_enemyBullets);
+		_hazards.add(_spawners);
+		_hazards.add(_enemies);
+		_objects = new FlxGroup();
+		_objects.add(_enemyBullets);
+		_objects.add(_bullets);
+		_objects.add(_enemies);
+		_objects.add(_player);
+		_objects.add(_littleGibs);
+		_objects.add(_bigGibs);
+		
+		//From here on out we are making objects for the HUD,
+		//that is, the player score, number of spawners left, etc.
+		//First, we'll create a text field for the current score
+		_score = new FlxText(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
+		_score.setFormat(null, 16, 0xd8eba2, "center", 0x131c1b);
+		_hud.add(_score);
+		if(FlxG.scores.length < 2)
 		{
-			switch(collisionMap.auto)
-			{
-				case FlxTilemap.AUTO:
-					collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-						FlxAssets.imgAltTiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
-					autoAltBtn.label.text = "ALT";
-					
-				case FlxTilemap.ALT:
-					collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-						FlxAssets.imgEmptyTiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
-					autoAltBtn.label.text = "OFF";
-					
-				case FlxTilemap.OFF:
-					collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-						FlxAssets.imgAutoTiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					autoAltBtn.label.text = "AUTO";
-			}
-			
-		});
-		add(autoAltBtn);
+			FlxG.scores.push(0);
+			FlxG.scores.push(0);
+		}
 		
-		resetBtn = new FlxButton(8 + autoAltBtn.width, FlxG.height - 24, "Reset", function():Void
+		//Then for the player's highest and last scores
+		if(FlxG.score > FlxG.scores[0])
 		{
-			var textBytes = ApplicationMain.getAsset("assets/default_auto.txt");
-			var testing:String = textBytes.readUTFBytes(textBytes.length);
-			
-			switch(collisionMap.auto)
-			{
-				case FlxTilemap.AUTO:
-					collisionMap.loadMap(testing, FlxAssets.imgAutoTiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					player.x = 64;
-					player.y = 220;
-					
-				case FlxTilemap.ALT:
-					textBytes = ApplicationMain.getAsset("assets/default_alt.txt");
-					testing = textBytes.readUTFBytes(textBytes.length);
-					collisionMap.loadMap(testing, FlxAssets.imgAltTiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
-					player.x = 64;
-					player.y = 128;
-					
-				case FlxTilemap.OFF:
-					textBytes = ApplicationMain.getAsset("assets/default_empty.txt");
-					testing = textBytes.readUTFBytes(textBytes.length);
-					collisionMap.loadMap(testing, FlxAssets.imgEmptyTiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
-					player.x = 64;
-					player.y = 64;
-			}
-		});
-		add(resetBtn);
+			FlxG.scores[0] = FlxG.score;
+		}
+		if(FlxG.scores[0] != 0)
+		{
+			_score2 = new FlxText(FlxG.width / 2, 0, Math.floor(FlxG.width / 2));
+			_score2.setFormat(null,8,0xd8eba2,"right",_score.shadow);
+			_hud.add(_score2);
+			_score2.text = "HIGHEST: "+FlxG.scores[0]+"\nLAST: "+FlxG.score;
+		}
+		FlxG.score = 0;
+		_scoreTimer = 0;
 		
-		quitBtn = new FlxButton(FlxG.width - resetBtn.width - 4, FlxG.height - 24, "Quit",
-			function():Void { FlxG.fade(0xff000000, 0.22, function():Void { FlxG.switchState(new MenuState()); } ); } );
-		add(quitBtn);
+		//Then we create the "gun jammed" notification
+		_gunjam = new FlxGroup();
+		_gunjam.add(new FlxSprite(0, FlxG.height - 22).makeGraphic(FlxG.width, 24, 0xff131c1b));
+		_gunjam.add(new FlxText(0, FlxG.height - 22, FlxG.width, "GUN IS JAMMED").setFormat(null, 16, 0xd8eba2, "center"));
+		_gunjam.visible = false;
+		_hud.add(_gunjam);
 		
-		helperTxt = new FlxText(12 + autoAltBtn.width * 2, FlxG.height - 30, 150, "Click to place tiles\nShift-Click to remove tiles\nArrow keys to move");
-		add(helperTxt);
+		//After we add all the objects to the HUD, we can go through
+		//and set any property we want on all the objects we added
+		//with this sweet function.  In this case, we want to set
+		//the scroll factors to zero, to make sure the HUD doesn't
+		//wiggle around while we play.
+		_hud.setAll("scrollFactor", new FlxPoint(0, 0));
+		_hud.setAll("cameras", [FlxG.camera]);
+		
+		FlxG.playMusic(Assets.getSound("assets/mode.wav"));
+		FlxG.flash(0xff131c1b);
+		_fading = false;
+		
+		//Debugger Watch examples
+		FlxG.watch(_player, "x");
+		FlxG.watch(_player, "y");
+		
+		#if cpp
+		TileSheetManager.setTileSheetIndex(_player.getTileSheetIndex(), TileSheetManager.getMaxIndex());
+		TileSheetManager.setTileSheetIndex(cast(_hud.getFirstAlive(), FlxSprite).getTileSheetIndex(), TileSheetManager.getMaxIndex());
+		#end
 	}
 	
+	override public function destroy():Void
+	{
+		super.destroy();
+		
+		_blocks = null;
+		_decorations = null;
+		_bullets = null;
+		_player = null;
+		_enemies = null;
+		_spawners = null;
+		_enemyBullets = null;
+		_littleGibs = null;
+		_bigGibs = null;
+		_hud = null;
+		_gunjam = null;
+		
+		//meta groups, to help speed up collisions
+		_objects = null;
+		_hazards = null;
+		
+		//HUD/User Interface stuff
+		_score = null;
+		_score2 = null;
+	}
+
 	override public function update():Void
-	{
-		// Tilemaps can be collided just like any other FlxObject, and flixel
-		// automatically collides each individual tile with the object.
-		FlxG.collide(player, collisionMap);
-		
-		highlightBox.x = Math.floor(FlxG.mouse.x / TILE_WIDTH) * TILE_WIDTH;
-		highlightBox.y = Math.floor(FlxG.mouse.y / TILE_HEIGHT) * TILE_HEIGHT;
-		
-		if (FlxG.mouse.pressed())
-		{
-			// FlxTilemaps can be manually edited at runtime as well.
-			// Setting a tile to 0 removes it, and setting it to anything else will place a tile.
-			// If auto map is on, the map will automatically update all surrounding tiles.
-			collisionMap.setTile(Std.int(FlxG.mouse.x / TILE_WIDTH), Std.int(FlxG.mouse.y / TILE_HEIGHT), FlxG.keys.SHIFT?0:1);
-		}
-		
-		updatePlayer();
+	{			
+		//save off the current score and update the game state
+		var oldScore:Int = FlxG.score;
 		super.update();
+		
+		//collisions with environment
+		FlxG.collide(_blocks, _objects);
+		FlxG.overlap(_hazards, _player, overlapped);
+		FlxG.overlap(_bullets, _hazards, overlapped);
+		
+		//check to see if the player scored any points this frame
+		var scoreChanged:Bool = oldScore != FlxG.score;
+		
+		//Jammed message
+		if(FlxG.keys.justPressed("C") && _player.flickering)
+		{
+			_jamTimer = 1;
+			_gunjam.visible = true;
+		}
+		if(_jamTimer > 0)
+		{
+			if(!_player.flickering)
+			{
+				_jamTimer = 0;
+			}
+			_jamTimer -= FlxG.elapsed;
+			if(_jamTimer < 0)
+			{
+				_gunjam.visible = false;
+			}
+		}
+
+		if(!_fading)
+		{
+			//Score + countdown stuffs
+			if(scoreChanged)
+			{
+				_scoreTimer = 2;
+			}
+			_scoreTimer -= FlxG.elapsed;
+			if(_scoreTimer < 0)
+			{
+				if(FlxG.score > 0)
+				{
+					if(FlxG.score > 100)
+					{
+						FlxG.score -= 100;
+					}
+					else
+					{
+						FlxG.score = 0;
+						_player.kill();
+					}
+					_scoreTimer = 1;
+					scoreChanged = true;
+					
+					//Play loud beeps if your score is low
+					var volume:Float = 0.35;
+					if(FlxG.score < 600)
+					{
+						volume = 1.0;
+					}
+					FlxG.play(Assets.getSound("assets/countdown.wav"), volume);
+				}
+			}
+		
+			//Fade out to victory screen stuffs
+			if(_spawners.countLiving() <= 0)
+			{
+				_fading = true;
+				FlxG.fade(0xffd8eba2, 3, onVictory);
+			}
+		}
+		
+		//actually update score text if it changed
+		if(scoreChanged)
+		{
+			if(!_player.alive) FlxG.score = 0;
+			_score.text = Std.string(FlxG.score);
+		}
+	}
+
+	//This is an overlap callback function, triggered by the calls to FlxU.overlap().
+	private function overlapped(Sprite1:FlxSprite, Sprite2:FlxSprite):Void
+	{
+		if(Std.is(Sprite1, EnemyBullet) || Std.is(Sprite1, Bullet))
+		{
+			Sprite1.kill();
+		}
+		Sprite2.hurt(1);
 	}
 	
-	public override function draw():Void
+	//A FlxG.fade callback, like in MenuState.
+	private function onVictory():Void
 	{
-		super.draw();
-		highlightBox.drawDebug();
+		FlxG.music.stop();
+		FlxG.switchState(new VictoryState());
 	}
 	
-	private function setupPlayer():Void
+	//These next two functions look crazy, but all they're doing is generating
+	//the level structure and placing the enemy spawners.
+	private function generateLevel():Void
 	{
-		player = new FlxSprite(64, 220);
-		player.loadGraphic(FlxAssets.imgSpaceman, true, true, 16);
+		var r:Int = 160;
+		var b:FlxTileblock;
+	
+		//First, we create the walls, ceiling and floors:
+		b = new FlxTileblock(0,0,640,16);
+		b.loadTiles(FlxAssets.imgTechTiles);
+		_blocks.add(b);
 		
-		//bounding box tweaks
-		player.width = 14;
-		player.height = 14;
-		player.offset.x = 1;
-		player.offset.y = 1;
+		b = new FlxTileblock(0,16,16,640-16);
+		b.loadTiles(FlxAssets.imgTechTiles);
+		_blocks.add(b);
 		
-		//basic player physics
-		player.drag.x = 640;
-		player.acceleration.y = 420;
-		player.maxVelocity.x = 80;
-		player.maxVelocity.y = 200;
+		b = new FlxTileblock(640-16,16,16,640-16);
+		b.loadTiles(FlxAssets.imgTechTiles);
+		_blocks.add(b);
 		
-		//animations
-		player.addAnimation("idle", [0]);
-		player.addAnimation("run", [1, 2, 3, 0], 12);
-		player.addAnimation("jump", [4]);
+		b = new FlxTileblock(16,640-24,640-32,8);
+		b.loadTiles(FlxAssets.imgDirtTop);
+		_blocks.add(b);
 		
-		add(player);
+		b = new FlxTileblock(16,640-16,640-32,16);
+		b.loadTiles(FlxAssets.imgDirt);
+		_blocks.add(b);
+		
+		//Then we split the game world up into a 4x4 grid,
+		//and generate some blocks in each area.  Some grid spaces
+		//also get a spawner!
+		buildRoom(r * 0, r * 0, true);
+		buildRoom(r * 1, r * 0);
+		buildRoom(r * 2, r * 0);
+		buildRoom(r * 3, r * 0, true);
+		buildRoom(r * 0, r * 1, true);
+		buildRoom(r * 1, r * 1);
+		buildRoom(r * 2, r * 1);
+		buildRoom(r * 3, r * 1, true);
+		buildRoom(r * 0, r * 2);
+		buildRoom(r * 1, r * 2);
+		buildRoom(r * 2, r * 2);
+		buildRoom(r * 3, r * 2);
+		buildRoom(r * 0, r * 3, true);
+		buildRoom(r * 1, r * 3);
+		buildRoom(r * 2, r * 3);
+		buildRoom(r * 3, r * 3, true);
 	}
 	
-	private function updatePlayer():Void
+	//Just plops down a spawner and some blocks - haphazard and crappy atm but functional!
+	private function buildRoom(RX:Int, RY:Int, ?Spawners:Bool = false):Void
 	{
-		wrap(player);
-		
-		//MOVEMENT
-		player.acceleration.x = 0;
-		if(FlxG.keys.LEFT)
+		//first place the spawn point (if necessary)
+		var rw:Int = 20;
+		var sx:Int = 0;
+		var sy:Int = 0;
+		if(Spawners)
 		{
-			player.facing = FlxObject.LEFT;
-			player.acceleration.x -= player.drag.x;
-		}
-		else if(FlxG.keys.RIGHT)
-		{
-			player.facing = FlxObject.RIGHT;
-			player.acceleration.x += player.drag.x;
-		}
-		if(FlxG.keys.justPressed("UP") && player.velocity.y == 0)
-		{
-			player.y -= 1;
-			player.velocity.y = -200;
+			sx = Math.floor(2 + FlxG.random() * (rw - 7));
+			sy = Math.floor(2 + FlxG.random() * (rw - 7));
 		}
 		
-		//ANIMATION
-		if(player.velocity.y != 0)
+		//then place a bunch of blocks
+		var numBlocks:Int = Math.floor(3 + FlxG.random() * 4);
+		if(!Spawners) numBlocks++;
+		var maxW:Int = 10;
+		var minW:Int = 2;
+		var maxH:Int = 8;
+		var minH:Int = 1;
+		var bx:Int;
+		var by:Int;
+		var bw:Int;
+		var bh:Int;
+		var check:Bool;
+		for(i in 0...(numBlocks))
 		{
-			player.play("jump");
+			do
+			{
+				//keep generating different specs if they overlap the spawner
+				bw = Math.floor(minW + FlxG.random() * (maxW - minW));
+				bh = Math.floor(minH + FlxG.random() * (maxH - minH));
+				bx = Math.floor( -1 + FlxG.random() * (rw + 1 - bw));
+				by = Math.floor( -1 + FlxG.random() * (rw + 1 - bh));
+				if(Spawners)
+				{
+					check = ((sx>bx+bw) || (sx+3<bx) || (sy>by+bh) || (sy+3<by));
+				}
+				else
+				{
+					check = true;
+				}
+			} while(!check);
+			
+			var b:FlxTileblock;
+			b = new FlxTileblock(RX + bx * 8, RY + by * 8, bw * 8, bh * 8);
+			b.loadTiles(FlxAssets.imgTechTiles);
+			_blocks.add(b);
+			
+			//If the block has room, add some non-colliding "dirt" graphics for variety
+			if((bw >= 4) && (bh >= 5))
+			{
+				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8, bw * 8 - 16, 8);
+				b.loadTiles(FlxAssets.imgDirtTop);
+				_decorations.add(b);
+				
+				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8 + 8, bw * 8 - 16, bh * 8 - 24);
+				b.loadTiles(FlxAssets.imgDirt);
+				_decorations.add(b);
+			}
 		}
-		else if(player.velocity.x == 0)
+
+		if(Spawners)
 		{
-			player.play("idle");
+			//Finally actually add the spawner
+			var sp:Spawner = new Spawner(RX + sx * 8, RY + sy * 8, _bigGibs, _enemies, _enemyBullets, _littleGibs, _player);
+			_spawners.add(sp);
+			
+			//Then create a dedicated camera to watch the spawner
+			_hud.add(new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame));
+			var camera:FlxCamera = new FlxCamera(10 + (_spawners.length - 1) * 32, 10, 24, 24, 1);
+			camera.follow(sp, FlxCamera.STYLE_NO_DEAD_ZONE);
+			FlxG.addCamera(camera);
 		}
-		else
-		{
-			player.play("run");
-		}
-	}
-	
-	private function wrap(obj:FlxObject):Void
-	{
-		obj.x = (obj.x + obj.width / 2 + FlxG.width) % FlxG.width - obj.width / 2;
-		obj.y = (obj.y + obj.height / 2) % FlxG.height - obj.height / 2;
 	}
 }

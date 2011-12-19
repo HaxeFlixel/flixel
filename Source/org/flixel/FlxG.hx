@@ -712,10 +712,17 @@ class FlxG
 		var l:Int = sounds.members.length;
 		while(i < l)
 		{
-			sound = cast(sounds.members[i++], FlxSound);
-			if ((sound != null) && (ForceDestroy || !sound.survive))
+			if (Std.is(sounds.members[i], FlxSound))
 			{
-				sound.destroy();
+				sound = cast(sounds.members[i++], FlxSound);
+				if ((sound != null) && (ForceDestroy || !sound.survive))
+				{
+					sound.destroy();
+				}
+			}
+			else
+			{
+				i++;
 			}
 		}
 	}

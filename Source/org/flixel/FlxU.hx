@@ -490,11 +490,15 @@ class FlxU
 	{
 		var s:String = Type.getClassName(Type.getClass(Obj));
 		//trace("TODO: makes sure the class name is being parsed correctly.");
-		s = StringTools.replace(s, "::", ".");
-		if (Simple)
+		if (s != null)
 		{
-			s = s.substr(s.lastIndexOf(".")+1);
+			s = StringTools.replace(s, "::", ".");
+			if (Simple)
+			{
+				s = s.substr(s.lastIndexOf(".") + 1);
+			}
 		}
+		
 		return s;
 	}
 	

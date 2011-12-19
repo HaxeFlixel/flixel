@@ -400,7 +400,9 @@ class FlxSound extends FlxBasic
 				exists = false;
 			}
 			else
+			{
 				_channel.addEventListener(Event.SOUND_COMPLETE, looped);
+			}
 		}
 		else
 		{
@@ -538,7 +540,7 @@ class FlxSound extends FlxBasic
 		{
 			return;
 		}
-		_channel.removeEventListener(Event.SOUND_COMPLETE,looped);
+		_channel.removeEventListener(Event.SOUND_COMPLETE, looped);
 		_channel = null;
 		play();
 	}
