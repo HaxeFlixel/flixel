@@ -10,14 +10,11 @@ import nme.geom.Rectangle;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
-<<<<<<< HEAD
-=======
 #if cpp
 import org.flixel.tileSheetManager.TileSheetData;
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
 
->>>>>>> dev
 /**
  * This is a traditional tilemap display and collision class.
  * It takes a string of comma-separated numbers and then associates
@@ -126,8 +123,6 @@ class FlxTilemap extends FlxObject
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
 	private var _startingIndex:Int;
-<<<<<<< HEAD
-=======
 	
 	#if cpp
 	private var _tileSheetData:TileSheetData;
@@ -141,7 +136,6 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _rectIDs:Array<Int>;
 	#end
->>>>>>> dev
 	
 	/**
 	 * The tilemap constructor just initializes some basic variables.
@@ -243,10 +237,6 @@ class FlxTilemap extends FlxObject
 		//Figure out the map dimensions based on the data string
 		var columns:Array<String>;
 		_data = new Array<Int>();
-<<<<<<< HEAD
-		// TODO: Check this variable type
-=======
->>>>>>> dev
 		var rows:Array<String> = MapData.split("\n");
 		heightInTiles = rows.length;
 		var row:Int = 0;
@@ -1595,15 +1585,11 @@ class FlxTilemap extends FlxObject
 	 * @param  ColorMap  An array of color values (uint 0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-<<<<<<< HEAD
-	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1):String
-=======
 	#if flash
 	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1, ?ColorMap:Array<UInt> = null):String
 	#else
 	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1, ?ColorMap:Array<Int> = null):String
 	#end
->>>>>>> dev
 	{
 		if (Scale < 1) Scale = 1;
 		

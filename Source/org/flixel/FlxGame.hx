@@ -1,22 +1,5 @@
 package org.flixel;
 
-<<<<<<< HEAD
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
-import flash.events.Event;
-import flash.events.KeyboardEvent;
-import flash.events.MouseEvent;
-import flash.media.Sound;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
-import flash.Lib;
-import flash.ui.Mouse;
-=======
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Graphics;
@@ -36,7 +19,6 @@ import nme.ui.Mouse;
 #if cpp
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
->>>>>>> dev
 
 #if flash
 import flash.text.AntiAliasType;
@@ -223,13 +205,7 @@ class FlxGame extends Sprite
 		useSystemCursor = UseSystemCursor;
 		if (!useSystemCursor)
 		{
-<<<<<<< HEAD
-			//#if flash
 			Mouse.hide();
-			//#end
-=======
-			Mouse.hide();
->>>>>>> dev
 		}
 		forceDebugger = false;
 		_debuggerUp = false;
@@ -851,11 +827,7 @@ class FlxGame extends Sprite
 		#else
 		
 		#end
-<<<<<<< HEAD
-		var dtf:TextFormat = new TextFormat("assets/data/nokiafc22", 8, 0xffffff);
-=======
 		var dtf:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
->>>>>>> dev
 		dtf.align = TextFormatAlign.CENTER;
 		text.defaultTextFormat = dtf; //new TextFormat("system",8,0xffffff,null,null,null,null,null,"center");
 		_soundTray.addChild(text);

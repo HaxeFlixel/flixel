@@ -42,12 +42,8 @@ class FlxTilemapBuffer
 	 * How many columns of tiles fit in this buffer.
 	 */
 	public var columns:Int;
-<<<<<<< HEAD
-
-=======
 	
 	#if flash
->>>>>>> dev
 	private var _pixels:BitmapData;	
 	private var _flashRect:Rectangle;
 	#end

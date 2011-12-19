@@ -225,11 +225,6 @@ class FlxSprite extends FlxObject
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:Class<Bitmap> = null)
 	{
 		super(X, Y);
-<<<<<<< HEAD
-		
-		health = 1;
-=======
->>>>>>> dev
 		
 		_flashPoint = new Point();
 		_flashRect = new Rectangle();
@@ -266,13 +261,8 @@ class FlxSprite extends FlxObject
 		if (SimpleGraphic == null)
 		{
 			SimpleGraphic = FlxAssets.imgDefault;
-<<<<<<< HEAD
-		} 
-		else 
-=======
 		}
 		else  
->>>>>>> dev
 		{
 			loadGraphic(SimpleGraphic);
 		}
@@ -1261,28 +1251,6 @@ class FlxSprite extends FlxObject
 		#if cpp
 		if (AreYouSure)
 		{
-<<<<<<< HEAD
-			indexY = Math.floor(indexX / widthHelper) * frameHeight;
-			indexX %= widthHelper;
-		}
-		
-		//handle reversed sprites
-		if ((_flipped != 0) && (_facing == FlxObject.LEFT))
-		{
-			indexX = (_flipped << 1) - indexX - frameWidth;
-		}
-		
-		//Update display bitmap
-		_flashRect.x = indexX;
-		_flashRect.y = indexY;
-		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
-		_flashRect.x = _flashRect.y = 0;
-		
-		if (_colorTransform != null) 
-		{
-			framePixels.colorTransform(_flashRect, _colorTransform);
-		}
-=======
 		#end
 		
 			var indexX:Int = _curIndex * frameWidth;
@@ -1315,7 +1283,6 @@ class FlxSprite extends FlxObject
 		#if cpp	
 		}
 		#end
->>>>>>> dev
 		
 		if (_callback != null)
 		{

@@ -71,13 +71,8 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-<<<<<<< HEAD
-		_textField.text = Text;
-		var format:TextFormat = new TextFormat("assets/data/nokiafc22", 8, 0xffffffff);
-=======
 		var format:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffffff);
 		//_textField.setTextFormat(format);
->>>>>>> dev
 		_textField.defaultTextFormat = format;
 		_textField.text = Text;
 		#if flash
@@ -136,11 +131,7 @@ class FlxText extends FlxSprite
 			#if flash
 			Font = "";
 			#else
-<<<<<<< HEAD
-			Font = "assets/data/nokiafc22";
-=======
 			Font = FlxAssets.nokiaFont;
->>>>>>> dev
 			#end
 		}
 		var format:TextFormat = dtfCopy();
@@ -302,13 +293,7 @@ class FlxText extends FlxSprite
 		format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
-<<<<<<< HEAD
-		//#if cpp
-		//_regen = true;
-		//#end
-=======
 		#if flash
->>>>>>> dev
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -360,25 +345,6 @@ class FlxText extends FlxSprite
 		{
 		#end
 		
-<<<<<<< HEAD
-		if((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
-		{
-			//Now that we've cleared a buffer, we need to actually render the text to it
-			var format:TextFormat = _textField.defaultTextFormat;
-			var formatAdjusted:TextFormat = format;
-			_matrix.identity();
-			//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-			if ((format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
-			{
-				formatAdjusted = new TextFormat(format.font, format.size, format.color);
-				formatAdjusted.align = TextFormatAlign.LEFT;
-				_textField.setTextFormat(formatAdjusted);				
-				#if flash
-				_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
-				#else
-				_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
-				#end
-=======
 			if(_regen)
 			{
 				//Need to generate a new buffer to store the text graphic
@@ -392,23 +358,11 @@ class FlxText extends FlxSprite
 				_flashRect.width = width;
 				_flashRect.height = height;
 				_regen = false;
->>>>>>> dev
 			}
 			else	//Else just clear the old buffer before redrawing the text
 			{
 				_pixels.fillRect(_flashRect, 0);
 			}
-<<<<<<< HEAD
-			//Actually draw the text onto the buffer
-			_pixels.draw(_textField, _matrix, _colorTransform);
-			_textField.setTextFormat(new TextFormat(format.font, format.size, format.color, null, null, null, null, null, format.align));
-		}
-		
-		//Finally, update the visible pixels
-		if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
-		{
-			framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
-=======
 			
 			if((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
 			{
@@ -459,7 +413,6 @@ class FlxText extends FlxSprite
 			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 			
 		#if cpp
->>>>>>> dev
 		}
 		#end
 	}

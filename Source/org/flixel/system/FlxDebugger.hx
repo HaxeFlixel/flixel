@@ -91,11 +91,7 @@ class FlxDebugger extends Sprite
 		txt.height = 16;
 		txt.selectable = false;
 		txt.multiline = false;
-<<<<<<< HEAD
-		txt.defaultTextFormat = new TextFormat("assets/data/courier", 12, 0xffffff);
-=======
 		txt.defaultTextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
->>>>>>> dev
 		var str:String = FlxG.getLibraryName();
 		if (FlxG.debug)
 		{

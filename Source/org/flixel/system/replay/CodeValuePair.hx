@@ -15,8 +15,6 @@ class CodeValuePair
 		this.code = code;
 		this.value = value;
 	}
-<<<<<<< HEAD
-=======
 	
 	public static function convertFromFlashToCpp(pair:CodeValuePair):CodeValuePair
 	{
@@ -82,5 +80,4 @@ class CodeValuePair
 		return pair;
 	}
 	
->>>>>>> dev
 }

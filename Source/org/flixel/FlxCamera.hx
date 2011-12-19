@@ -30,8 +30,6 @@ class FlxCamera extends FlxBasic
 	 * Camera "follow" style preset: camera deadzone is a small square around the focus object.
 	 */
 	static public inline var STYLE_TOPDOWN_TIGHT:Int = 3;
-<<<<<<< HEAD
-=======
 	/**
 	 * Camera "follow" style preset: camera will move screenwise.
 	 */
@@ -40,7 +38,6 @@ class FlxCamera extends FlxBasic
 	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly and centers it.
 	 */
 	static public inline var STYLE_NO_DEAD_ZONE:Int = 5;
->>>>>>> dev
 	/**
 	 * Camera "shake" effect preset: shake camera on both the X and Y axes.
 	 */
@@ -74,13 +71,6 @@ class FlxCamera extends FlxBasic
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
-<<<<<<< HEAD
-	public var width:Int;
-	/**
-	 * How tall the camera display is, in game pixels.
-	 */
-	public var height:Int;
-=======
 	#if flash
 	public var width:Int;
 	#else
@@ -100,7 +90,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public var style:Int;
 	
->>>>>>> dev
 	/**
 	 * Tells the camera to follow this <code>FlxObject</code> object around.
 	 */

@@ -1,16 +1,9 @@
 package org.flixel.system.input;
 
-<<<<<<< HEAD
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
-=======
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Sprite;
 import nme.events.MouseEvent;
->>>>>>> dev
 import org.flixel.FlxAssets;
 
 import org.flixel.FlxCamera;
@@ -20,18 +13,6 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxU;
 import org.flixel.system.replay.MouseRecord;
 
-<<<<<<< HEAD
-/*class CursorPNG extends BitmapData 
-{  
-	public function new() { super(0, 0); } 
-}
-class ImgDefaultCursor extends Bitmap 
-{
-	public function new() { super(new CursorPNG()); }
-}*/
-
-=======
->>>>>>> dev
 /**
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.

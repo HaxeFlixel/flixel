@@ -206,9 +206,6 @@ class Keyboard extends Input
 		addKey("DOWN",40);
 		addKey("LEFT",37);
 		addKey("RIGHT",39);
-<<<<<<< HEAD
-		addKey("TAB", 9);		
-=======
 		addKey("TAB", 9);	
 		
 		#if flash
@@ -216,7 +213,6 @@ class Keyboard extends Input
 		addKey("NUMPADPLUS", 107);
 		addKey("NUMPADPERIOD", 110);
 		#end
->>>>>>> dev
 	}
 	
 	/**
@@ -226,11 +222,7 @@ class Keyboard extends Input
 	public function handleKeyDown(FlashEvent:KeyboardEvent):Void
 	{
 		var o:MapObject = _map[FlashEvent.keyCode];
-<<<<<<< HEAD
-		if(o == null) return;
-=======
 		if (o == null) return;
->>>>>>> dev
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
 		Reflect.setField(this, o.name, true);
@@ -249,20 +241,5 @@ class Keyboard extends Input
 		//this[object.name] = false;
 		Reflect.setField(this, object.name, false);
 	}
-<<<<<<< HEAD
-	
-	/*override public function reset():Void
-	{
-		for(i in 0...(_total))
-		{
-			if(_map[i] == null) continue;
-			var o:MapObject = _map[i];
-			Reflect.setField(this, o.name, false);
-			o.current = 0;
-			o.last = 0;
-		}
-	}*/
-=======
 
->>>>>>> dev
 }
