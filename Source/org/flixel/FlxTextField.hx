@@ -297,6 +297,7 @@ class FlxTextField extends FlxText
 	
 	private function updateTextFields():Void
 	{
+		
 		for (tf in _textFields)
 		{
 			if (tf != null)
@@ -331,6 +332,18 @@ class FlxTextField extends FlxText
 	public function getVisibility():Bool
 	{
 		return visible;
+	}
+	
+	override public function kill():Void 
+	{
+		setVisibility(false);
+		super.kill();
+	}
+	
+	override public function revive():Void 
+	{
+		setVisibility(true);
+		super.revive();
 	}
 	
 	/**
@@ -461,6 +474,5 @@ class FlxTextField extends FlxText
 			}
 		}
 	}
-	
 }
 #end
