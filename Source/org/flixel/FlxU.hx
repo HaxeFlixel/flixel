@@ -729,10 +729,10 @@ class FlxU
 		var diff:Int = newLength - oldLength;
 		if (diff > 0)
 		{
-			for (i in 0...diff)
+			/*for (i in 0...diff)
 			{
 				array.push(null);
-			}
+			}*/
 		}
 		else if (diff < 0)
 		{
