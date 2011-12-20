@@ -74,9 +74,11 @@ class PlayState extends FlxState
 		_blocks = new FlxGroup();
 		_decorations = new FlxGroup();
 		_enemies = new FlxGroup();
+		_enemies.maxSize = 50;
 		_spawners = new FlxGroup();
 		_hud = new FlxGroup();
 		_enemyBullets = new FlxGroup();
+		_enemyBullets.maxSize = 100;
 		_bullets = new FlxGroup();
 		
 		//Now that we have references to the bullets and metal bits,
@@ -171,9 +173,13 @@ class PlayState extends FlxState
 		FlxG.flash(0xff131c1b);
 		_fading = false;
 		
+		FlxG.sounds.maxSize = 30;
+		
 		//Debugger Watch examples
 		FlxG.watch(_player, "x");
 		FlxG.watch(_player, "y");
+		FlxG.watch(_enemies, "length", "numEnemies");
+		FlxG.watch(_enemyBullets, "length", "numEnemyBullets");
 		
 		#if cpp
 		TileSheetManager.setTileSheetIndex(_player.getTileSheetIndex(), TileSheetManager.getMaxIndex());
