@@ -299,6 +299,10 @@ class FlxSprite extends FlxObject
 		_curAnim = null;
 		_matrix = null;
 		_callback = null;
+		if (framePixels != null)
+		{
+			framePixels.dispose();
+		}
 		framePixels = null;
 		
 		#if cpp

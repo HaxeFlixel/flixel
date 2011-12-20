@@ -231,10 +231,6 @@ class Enemy extends FlxSprite
 	//the Enemy's midpoint and the player's midpoint.
 	private function angleTowardPlayer():Float
 	{
-		#if flash
 		return FlxU.getAngle(getMidpoint(_point), _player.getMidpoint(_playerMidpoint));
-		#else
-		return FlxU.getAngle(getMidpoint(_point), _player.getMidpoint(_playerMidpoint)) + 180;
-		#end
 	}
 }

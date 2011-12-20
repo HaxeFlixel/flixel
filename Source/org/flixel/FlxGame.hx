@@ -516,10 +516,13 @@ class FlxGame extends Sprite
 	private function switchState():Void
 	{ 
 		//Basic reset stuff
+		#if cpp
+		TileSheetManager.clear();
+		#end
+		FlxG.clearBitmapCache();
 		FlxG.resetCameras();
 		FlxG.resetInput();
 		FlxG.destroySounds();
-		FlxG.clearBitmapCache();
 		
 		//Clear the debugger overlay's Watch window
 		if (_debugger != null)
@@ -539,10 +542,6 @@ class FlxGame extends Sprite
 		{
 			_state.destroy();
 		}
-		
-		#if cpp
-		TileSheetManager.clear();
-		#end
 		
 		//Finally assign and create the new state
 		_state = _requestedState;

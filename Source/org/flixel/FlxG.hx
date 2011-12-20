@@ -11,6 +11,7 @@ import nme.geom.Rectangle;
 import nme.media.Sound;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
+import org.flixel.tileSheetManager.TileSheetManager;
 
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
@@ -913,6 +914,18 @@ class FlxG
 	 */
 	static public function clearBitmapCache():Void
 	{
+		if (_cache != null)
+		{
+			for (bmd in _cache)
+			{
+				if (bmd != null)
+				{
+					bmd.dispose();
+					bmd = null;
+				}
+			}
+		}
+		
 		_cache = new Hash();
 	}
 	
@@ -1318,6 +1331,9 @@ class FlxG
 	 */
 	static public function reset():Void
 	{
+		#if cpp
+		TileSheetManager.clear();
+		#end
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
