@@ -176,7 +176,7 @@ class TileSheetData
 		for (i in 0...(numCameras))
 		{
 			cameraGraphics = FlxG.cameras[i]._canvas.graphics;
-			cameraGraphics.drawTiles(tileSheet, drawData[i], (antialiasing || FlxG.cameras[i].antialiasing), flags);
+			tileSheet.drawTiles(cameraGraphics, drawData[i], (antialiasing || FlxG.cameras[i].antialiasing), flags);
 		}
 	}
 	
@@ -272,11 +272,11 @@ class TileSheetData
 	{
 		if (value == true)
 		{
-			flags = Graphics.TILE_RGB;
+			flags = Tilesheet.TILE_RGB;
 		}
 		else
 		{
-			flags = Graphics.TILE_SCALE | Graphics.TILE_ROTATION | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
+			flags = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RGB;
 		}
 		_isTilemap = value;
 		
