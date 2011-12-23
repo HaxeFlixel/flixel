@@ -14,6 +14,7 @@ class EnemyBullet extends FlxSprite
 	{
 		super();
 		loadGraphic(FlxAssets.imgBotBullet, true);
+		updateTileSheet();
 		addAnimation("idle",[0, 1], 50);
 		addAnimation("poof",[2, 3, 4], 50, false);
 		speed = 120;

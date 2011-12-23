@@ -20,6 +20,7 @@ class Spawner extends FlxSprite
 	{
 		super(X, Y);
 		loadGraphic(FlxAssets.imgSpawner, true);
+		updateTileSheet();
 		_gibs = Gibs;
 		_bots = Bots;
 		_botBullets = BotBullets;

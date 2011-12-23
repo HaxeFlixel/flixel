@@ -135,6 +135,7 @@ class FlxButton extends FlxSprite
 	#end
 	{
 		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, Width, Height, Unique);
+		tempSprite.updateTileSheet();
 		if (label != null)
 		{
 			label.setFormat(null, 8, 0x333333, "center");

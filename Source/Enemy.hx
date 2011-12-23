@@ -40,6 +40,7 @@ class Enemy extends FlxSprite
 	{
 		super();
 		loadRotatedGraphic(FlxAssets.imgBot, 64, 0, false, true);
+		updateTileSheet();
 
 		//We want the enemy's "hit box" or actual size to be
 		//smaller than the enemy graphic itself, just by a few pixels.

@@ -60,7 +60,7 @@ class FlxText extends FlxSprite
 	#end
 	{
 		super(X, Y);
-		makeGraphic(Width,1,0);
+		makeGraphic(Width, 1, 0);
 		
 		if (Text == null)
 		{

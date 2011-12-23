@@ -276,7 +276,8 @@ class FlxG
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	static private var _cache:Hash<BitmapData>;
+	//static private var _cache:Hash<BitmapData>;
+	static public var _cache:Hash<BitmapData>;
 	
 	static public function getLibraryName():String
 	{

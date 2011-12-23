@@ -25,6 +25,7 @@ class Player extends FlxSprite
 	{
 		super(X,Y);
 		loadGraphic(FlxAssets.imgSpaceman, true, true, 8);
+		updateTileSheet();
 		_restart = 0;
 		
 		//bounding box tweaks

@@ -377,24 +377,29 @@ class PlayState extends FlxState
 		var b:FlxTileblock;
 	
 		//First, we create the walls, ceiling and floors:
-		b = new FlxTileblock(0,0,640,16);
+		b = new FlxTileblock(0, 0, 640, 16);
 		b.loadTiles(FlxAssets.imgTechTiles);
+		b.updateTileSheet();
 		_blocks.add(b);
 		
-		b = new FlxTileblock(0,16,16,640-16);
+		b = new FlxTileblock(0, 16, 16, 640 - 16);
 		b.loadTiles(FlxAssets.imgTechTiles);
+		b.updateTileSheet();
 		_blocks.add(b);
 		
-		b = new FlxTileblock(640-16,16,16,640-16);
+		b = new FlxTileblock(640 - 16, 16, 16, 640 - 16);
 		b.loadTiles(FlxAssets.imgTechTiles);
+		b.updateTileSheet();
 		_blocks.add(b);
 		
-		b = new FlxTileblock(16,640-24,640-32,8);
+		b = new FlxTileblock(16, 640 - 24, 640 - 32, 8);
 		b.loadTiles(FlxAssets.imgDirtTop);
+		b.updateTileSheet();
 		_blocks.add(b);
 		
-		b = new FlxTileblock(16,640-16,640-32,16);
+		b = new FlxTileblock(16, 640 - 16, 640 - 32, 16);
 		b.loadTiles(FlxAssets.imgDirt);
+		b.updateTileSheet();
 		_blocks.add(b);
 		
 		//Then we split the game world up into a 4x4 grid,
@@ -465,6 +470,7 @@ class PlayState extends FlxState
 			var b:FlxTileblock;
 			b = new FlxTileblock(RX + bx * 8, RY + by * 8, bw * 8, bh * 8);
 			b.loadTiles(FlxAssets.imgTechTiles);
+			b.updateTileSheet();
 			_blocks.add(b);
 			
 			//If the block has room, add some non-colliding "dirt" graphics for variety
@@ -472,10 +478,12 @@ class PlayState extends FlxState
 			{
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8, bw * 8 - 16, 8);
 				b.loadTiles(FlxAssets.imgDirtTop);
+				b.updateTileSheet();
 				_decorations.add(b);
 				
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8 + 8, bw * 8 - 16, bh * 8 - 24);
 				b.loadTiles(FlxAssets.imgDirt);
+				b.updateTileSheet();
 				_decorations.add(b);
 			}
 		}
@@ -487,7 +495,9 @@ class PlayState extends FlxState
 			_spawners.add(sp);
 			
 			//Then create a dedicated camera to watch the spawner
-			_hud.add(new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame));
+			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame);
+			miniFrame.updateTileSheet();
+			_hud.add(miniFrame);
 			var camera:FlxCamera = new FlxCamera(10 + (_spawners.length - 1) * 32, 10, 24, 24, 1);
 			camera.follow(sp, FlxCamera.STYLE_NO_DEAD_ZONE);
 			FlxG.addCamera(camera);

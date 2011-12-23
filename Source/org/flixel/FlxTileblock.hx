@@ -57,7 +57,7 @@ class FlxTileblock extends FlxSprite
 		var regen:Bool = false;
 		if(width % sprite.width != 0)
 		{
-			width = Std.int((width/spriteWidth+1)) * spriteWidth;
+			width = Std.int((width / spriteWidth + 1)) * spriteWidth;
 			regen = true;
 		}
 		if(height % sprite.height != 0)
@@ -81,13 +81,13 @@ class FlxTileblock extends FlxSprite
 		var destinationY:Int = 0;
 		var widthInTiles:Int = Std.int(width / spriteWidth);
 		var heightInTiles:Int = Std.int(height / spriteHeight);
-		while(row < heightInTiles)
+		while (row < heightInTiles)
 		{
 			destinationX = 0;
 			column = 0;
 			while(column < widthInTiles)
 			{
-				if(FlxG.random()*total > Empties)
+				if (FlxG.random() * total > Empties)
 				{
 					sprite.randomFrame();
 					sprite.drawFrame();

@@ -170,7 +170,7 @@ class FlxEmitter extends FlxGroup
 		var randomFrame:Int;
 		var particle:FlxParticle;
 		var i:Int = 0;
-		while(i < Std.int(Quantity))
+		while (i < Quantity)
 		{
 			if (particleClass == null)
 			{
@@ -178,10 +178,9 @@ class FlxEmitter extends FlxGroup
 			}
 			else
 			{
-				//particle = new particleClass();
 				particle = Type.createInstance(particleClass, []);
 			}
-			if(Multiple)
+			if (Multiple)
 			{
 				randomFrame = Math.floor(FlxG.random() * totalFrames); 
 				if (BakedRotations > 0)
@@ -217,6 +216,7 @@ class FlxEmitter extends FlxGroup
 			}
 			particle.exists = false;
 			add(particle);
+			particle.updateTileSheet();
 			i++;
 		}
 		return this;

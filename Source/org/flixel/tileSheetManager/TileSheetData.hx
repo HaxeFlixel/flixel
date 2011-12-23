@@ -173,10 +173,15 @@ class TileSheetData
 	public function render(numCameras:Int):Void
 	{
 		var cameraGraphics:Graphics;
+		var data:Array<Float>;
 		for (i in 0...(numCameras))
 		{
 			cameraGraphics = FlxG.cameras[i]._canvas.graphics;
-			tileSheet.drawTiles(cameraGraphics, drawData[i], (antialiasing || FlxG.cameras[i].antialiasing), flags);
+			data = drawData[i];
+			if (data.length > 0)
+			{
+				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || FlxG.cameras[i].antialiasing), flags);
+			}
 		}
 	}
 	
