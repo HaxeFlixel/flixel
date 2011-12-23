@@ -1,6 +1,8 @@
 package;
 
 import nme.Assets;
+import nme.events.MouseEvent;
+import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
@@ -42,6 +44,11 @@ class PlayState extends FlxState
 	//just to prevent weirdness during level transition
 	private var _fading:Bool;
 	
+	// touch interface
+	public static var LeftButton:FlxButton;
+	public static var RightButton:FlxButton;
+	public static var JumpButton:FlxButton;
+	
 	public function new()
 	{
 		super();
@@ -49,7 +56,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.mouse.hide();
+		//FlxG.mouse.hide();
 		
 		//Here we are creating a pool of 100 little metal bits that can be exploded.
 		//We will recycle the crap out of these!
@@ -169,7 +176,11 @@ class PlayState extends FlxState
 		_hud.setAll("scrollFactor", new FlxPoint(0, 0));
 		_hud.setAll("cameras", [FlxG.camera]);
 		
-		FlxG.playMusic(Assets.getSound("assets/mode.wav"));
+		if (Mode.SoundOn)
+		{
+			FlxG.playMusic(Assets.getSound("assets/mode" + Mode.SoundExtension));
+		}
+		
 		FlxG.flash(0xff131c1b);
 		_fading = false;
 		
@@ -185,6 +196,36 @@ class PlayState extends FlxState
 		TileSheetManager.setTileSheetIndex(_player.getTileSheetIndex(), TileSheetManager.getMaxIndex());
 		TileSheetManager.setTileSheetIndex(cast(_hud.getFirstAlive(), FlxSprite).getTileSheetIndex(), TileSheetManager.getMaxIndex());
 		#end
+		
+		LeftButton = new FlxButton(1000, 0, "Left");
+		LeftButton.scrollFactor = new FlxPoint(1.0, 1.0);
+		LeftButton.color = 0xff729954;
+		LeftButton.label.color = 0xffd8eba2;
+		add(LeftButton);
+		
+		var leftCam:FlxCamera = new FlxCamera(Math.floor(10 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
+		leftCam.follow(LeftButton, FlxCamera.STYLE_NO_DEAD_ZONE);
+		FlxG.addCamera(leftCam);
+		
+		RightButton = new FlxButton(1000, 100, "Right");
+		RightButton.scrollFactor = new FlxPoint(1.0, 1.0);
+		RightButton.color = 0xff729954;
+		RightButton.label.color = 0xffd8eba2;
+		add(RightButton);
+		
+		var rightCam:FlxCamera = new FlxCamera(Math.floor(100 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
+		rightCam.follow(RightButton, FlxCamera.STYLE_NO_DEAD_ZONE);
+		FlxG.addCamera(rightCam);
+		
+		JumpButton = new FlxButton(1000, 200, "Jump");
+		JumpButton.scrollFactor = new FlxPoint(1.0, 1.0);
+		JumpButton.color = 0xff729954;
+		JumpButton.label.color = 0xffd8eba2;
+		add(JumpButton);
+		
+		var jumpCam:FlxCamera = new FlxCamera(Math.floor((FlxG.width - 90) * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
+		jumpCam.follow(JumpButton, FlxCamera.STYLE_NO_DEAD_ZONE);
+		FlxG.addCamera(jumpCam);
 	}
 	
 	override public function destroy():Void
@@ -210,6 +251,10 @@ class PlayState extends FlxState
 		//HUD/User Interface stuff
 		_score = null;
 		_score2 = null;
+		
+		LeftButton = null;
+		RightButton = null;
+		JumpButton = null;
 	}
 
 	override public function update():Void
@@ -230,7 +275,7 @@ class PlayState extends FlxState
 		if(FlxG.keys.justPressed("C") && _player.flickering)
 		{
 			_jamTimer = 1;
-			_gunjam.visible = true;
+			//_gunjam.visible = true;
 		}
 		if(_jamTimer > 0)
 		{
@@ -241,7 +286,7 @@ class PlayState extends FlxState
 			_jamTimer -= FlxG.elapsed;
 			if(_jamTimer < 0)
 			{
-				_gunjam.visible = false;
+				//_gunjam.visible = false;
 			}
 		}
 
@@ -275,7 +320,10 @@ class PlayState extends FlxState
 					{
 						volume = 1.0;
 					}
-					FlxG.play(Assets.getSound("assets/countdown.wav"), volume);
+					if (Mode.SoundOn)
+					{
+						FlxG.play(Assets.getSound("assets/countdown" + Mode.SoundExtension), volume);
+					}
 				}
 			}
 		
@@ -308,7 +356,7 @@ class PlayState extends FlxState
 	//A FlxG.fade callback, like in MenuState.
 	private function onVictory():Void
 	{
-		FlxG.music.stop();
+		//FlxG.music.stop();
 		FlxG.switchState(new VictoryState());
 	}
 	

@@ -1,6 +1,7 @@
 package;
 
 import nme.Assets;
+import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -14,6 +15,8 @@ class Player extends FlxSprite
 	private var _aim:Int;
 	private var _restart:Float;
 	private var _gibs:FlxEmitter;
+	
+	public var isReadyToJump:Bool;
 	
 	//This is the player object class.  Most of the comments I would put in here
 	//would be near duplicates of the Enemy class, so if you're confused at all
@@ -50,6 +53,8 @@ class Player extends FlxSprite
 		//bullet stuff
 		_bullets = Bullets;
 		_gibs = Gibs;
+		
+		isReadyToJump = true;
 	}
 	
 	override public function destroy():Void
@@ -75,25 +80,41 @@ class Player extends FlxSprite
 		//make a little noise if you just touched the floor
 		if(justTouched(FlxObject.FLOOR) && (velocity.y > 50))
 		{
-			FlxG.play(Assets.getSound("assets/land.wav"));
+			if (Mode.SoundOn)
+			{
+				FlxG.play(Assets.getSound("assets/land" + Mode.SoundExtension));
+			}
 		}
 		
 		//MOVEMENT
 		acceleration.x = 0;
-		if(FlxG.keys.LEFT)
+		if(FlxG.keys.LEFT || PlayState.LeftButton.status == FlxButton.PRESSED)
 		{
 			facing = FlxObject.LEFT;
 			acceleration.x -= drag.x;
 		}
-		else if(FlxG.keys.RIGHT)
+		else if(FlxG.keys.RIGHT || PlayState.RightButton.status == FlxButton.PRESSED)
 		{
 			facing = FlxObject.RIGHT;
 			acceleration.x += drag.x;
 		}
-		if(FlxG.keys.justPressed("X") && velocity.y == 0)
+		
+		if((FlxG.keys.justPressed("X") || (PlayState.JumpButton.status == FlxButton.PRESSED && isReadyToJump)) && velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
-			FlxG.play(Assets.getSound("assets/jump.wav"));
+			if (Mode.SoundOn)
+			{
+				FlxG.play(Assets.getSound("assets/jump" + Mode.SoundExtension));
+			}
+		}
+		
+		if (PlayState.JumpButton.status == FlxButton.PRESSED && isReadyToJump)
+		{
+			isReadyToJump = false;
+		}
+		else if (PlayState.JumpButton.status == FlxButton.NORMAL)
+		{
+			isReadyToJump = true;
 		}
 		
 		//AIMING
@@ -131,7 +152,10 @@ class Player extends FlxSprite
 		{
 			if(flickering)
 			{
-				FlxG.play(Assets.getSound("assets/jam.wav"));
+				if (Mode.SoundOn)
+				{
+					FlxG.play(Assets.getSound("assets/jam" + Mode.SoundExtension));
+				}
 			}
 			else
 			{
@@ -152,7 +176,11 @@ class Player extends FlxSprite
 		{
 			return;
 		}
-		FlxG.play(Assets.getSound("assets/hurt.wav"));
+		if (Mode.SoundOn)
+		{
+			FlxG.play(Assets.getSound("assets/hurt" + Mode.SoundExtension));
+		}
+		
 		flicker(1.3);
 		if(FlxG.score > 1000) FlxG.score -= 1000;
 		if(velocity.x > 0)
@@ -173,8 +201,12 @@ class Player extends FlxSprite
 			return;
 		}
 		solid = false;
-		FlxG.play(Assets.getSound("assets/asplode.wav"));
-		FlxG.play(Assets.getSound("assets/menu_hit_2.wav"));
+		if (Mode.SoundOn)
+		{
+			FlxG.play(Assets.getSound("assets/asplode" + Mode.SoundExtension));
+			FlxG.play(Assets.getSound("assets/menu_hit_2" + Mode.SoundExtension));
+		}
+		
 		super.kill();
 		flicker(0);
 		exists = true;

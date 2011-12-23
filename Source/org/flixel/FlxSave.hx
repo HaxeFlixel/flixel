@@ -13,7 +13,7 @@ import flash.events.NetStatusEvent;
  * Basicaly a wrapper for the Flash SharedObject thing, but
  * handles some annoying storage request stuff too.
  */
-class FlxSave /*implements Dynamic*/
+class FlxSave
 {
 	static private var SUCCESS:Int = 0;
 	static private var PENDING:Int = 1;
@@ -130,7 +130,7 @@ class FlxSave /*implements Dynamic*/
 		try { result = _sharedObject.flush(MinFileSize); }
 		catch (e:Error) { return onDone(ERROR); }
 		#if flash
-		if (result == "pending"/*SharedObjectFlushStatus.PENDING*/)
+		if (result == "pending")
 		#else
 		if (result == SharedObjectFlushStatus.PENDING)
 		#end
@@ -140,7 +140,7 @@ class FlxSave /*implements Dynamic*/
 			#end
 		}
 		#if flash
-		return onDone((result == "flushed"/*SharedObjectFlushStatus.FLUSHED*/) ? SUCCESS : PENDING);
+		return onDone((result == "flushed") ? SUCCESS : PENDING);
 		#else
 		return onDone((result == SharedObjectFlushStatus.FLUSHED) ? SUCCESS : PENDING);
 		#end
