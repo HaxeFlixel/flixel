@@ -39,7 +39,11 @@ class Enemy extends FlxSprite
 	public function new()
 	{
 		super();
+		#if flash
 		loadRotatedGraphic(FlxAssets.imgBot, 64, 0, false, true);
+		#else
+		loadGraphic(FlxAssets.imgBot);
+		#end
 		updateTileSheet();
 
 		//We want the enemy's "hit box" or actual size to be

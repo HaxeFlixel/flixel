@@ -635,7 +635,7 @@ class FlxSprite extends FlxObject
 					_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex]);
 					
 					_tileSheetData.drawData[camID].push(scale.x); // scale
-					_tileSheetData.drawData[camID].push(angle * 0.017453293); // rotation
+					_tileSheetData.drawData[camID].push(-angle * 0.017453293); // rotation
 					_tileSheetData.drawData[camID].push(_red * camera.red); 
 					_tileSheetData.drawData[camID].push(_green * camera.green);
 					_tileSheetData.drawData[camID].push(_blue * camera.blue);
