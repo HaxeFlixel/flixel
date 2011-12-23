@@ -14,9 +14,10 @@
 	
 	<haxelib name="nme" />
 	
-	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />
+	<assets path="Assets" rename="assets" include="*" exclude="*.svg" unless="target_flash" />
+	<assets path="Assets" rename="assets" include="*" exclude="*.svg|*.wav|*.ogg" if="target_flash" />
 	
-	<!-- <icon name="Assets/nme.svg" /> -->
+	<!--<icon name="Assets/nme.svg" /> -->
 	
 	<ndll name="std" />
 	<ndll name="regexp" />
