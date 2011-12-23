@@ -12,6 +12,7 @@ import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
+import org.flixel.FlxTextField;
 import org.flixel.FlxTileblock;
 import org.flixel.tileSheetManager.TileSheetData;
 import org.flixel.tileSheetManager.TileSheetManager;
@@ -36,7 +37,11 @@ class PlayState extends FlxState
 	private var _hazards:FlxGroup;
 	
 	//HUD/User Interface stuff
+	#if flash
 	private var _score:FlxText;
+	#else
+	private var _score:FlxTextField;
+	#end
 	private var _score2:FlxText;
 	private var _scoreTimer:Float;
 	private var _jamTimer:Float;
@@ -137,7 +142,11 @@ class PlayState extends FlxState
 		//From here on out we are making objects for the HUD,
 		//that is, the player score, number of spawners left, etc.
 		//First, we'll create a text field for the current score
+		#if flash
 		_score = new FlxText(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
+		#else
+		_score = new FlxTextField(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
+		#end
 		_score.setFormat(null, 16, 0xd8eba2, "center", 0x131c1b);
 		_hud.add(_score);
 		if(FlxG.scores.length < 2)
