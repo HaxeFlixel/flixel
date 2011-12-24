@@ -868,7 +868,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function play(AnimName:String, ?Force:Bool = false):Void
 	{
-		if(!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) return;
+		if(!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (!_curAnim.looped || !finished)) return;
 		_curFrame = 0;
 		_curIndex = 0;
 		_frameTimer = 0;

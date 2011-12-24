@@ -745,6 +745,11 @@ class FlxU
 		
 	}
 	
+	static public function fromIntToUInt(number:Int):Int
+	{
+		return ((number < 0) ? -number : number);
+	}
+	
 	#if flash
 	public static var MIN_VALUE:Float = 0.0000000000000001;
 	#else
