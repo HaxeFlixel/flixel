@@ -378,27 +378,27 @@ class PlayState extends FlxState
 	
 		//First, we create the walls, ceiling and floors:
 		b = new FlxTileblock(0, 0, 640, 16);
-		b.loadTiles(FlxAssets.imgTechTiles);
+		b.loadTiles("assets/tech_tiles.png");
 		b.updateTileSheet();
 		_blocks.add(b);
 		
 		b = new FlxTileblock(0, 16, 16, 640 - 16);
-		b.loadTiles(FlxAssets.imgTechTiles);
+		b.loadTiles("assets/tech_tiles.png");
 		b.updateTileSheet();
 		_blocks.add(b);
 		
 		b = new FlxTileblock(640 - 16, 16, 16, 640 - 16);
-		b.loadTiles(FlxAssets.imgTechTiles);
+		b.loadTiles("assets/tech_tiles.png");
 		b.updateTileSheet();
 		_blocks.add(b);
 		
 		b = new FlxTileblock(16, 640 - 24, 640 - 32, 8);
-		b.loadTiles(FlxAssets.imgDirtTop);
+		b.loadTiles("assets/dirt_top.png");
 		b.updateTileSheet();
 		_blocks.add(b);
 		
 		b = new FlxTileblock(16, 640 - 16, 640 - 32, 16);
-		b.loadTiles(FlxAssets.imgDirt);
+		b.loadTiles("assets/dirt.png");
 		b.updateTileSheet();
 		_blocks.add(b);
 		
@@ -469,7 +469,7 @@ class PlayState extends FlxState
 			
 			var b:FlxTileblock;
 			b = new FlxTileblock(RX + bx * 8, RY + by * 8, bw * 8, bh * 8);
-			b.loadTiles(FlxAssets.imgTechTiles);
+			b.loadTiles("assets/tech_tiles.png");
 			b.updateTileSheet();
 			_blocks.add(b);
 			
@@ -477,12 +477,12 @@ class PlayState extends FlxState
 			if((bw >= 4) && (bh >= 5))
 			{
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8, bw * 8 - 16, 8);
-				b.loadTiles(FlxAssets.imgDirtTop);
+				b.loadTiles("assets/dirt_top.png");
 				b.updateTileSheet();
 				_decorations.add(b);
 				
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8 + 8, bw * 8 - 16, bh * 8 - 24);
-				b.loadTiles(FlxAssets.imgDirt);
+				b.loadTiles("assets/dirt.png");
 				b.updateTileSheet();
 				_decorations.add(b);
 			}

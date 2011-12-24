@@ -37,9 +37,9 @@ class FlxTileblock extends FlxSprite
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
 	#if flash
-	public function loadTiles(TileGraphic:Class<Bitmap>, ?TileWidth:UInt = 0, ?TileHeight:UInt = 0, ?Empties:UInt = 0):FlxTileblock
+	public function loadTiles(TileGraphic:Dynamic, ?TileWidth:UInt = 0, ?TileHeight:UInt = 0, ?Empties:UInt = 0):FlxTileblock
 	#else
-	public function loadTiles(TileGraphic:Class<Bitmap>, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?Empties:Int = 0):FlxTileblock
+	public function loadTiles(TileGraphic:Dynamic, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?Empties:Int = 0):FlxTileblock
 	#end
 	{
 		if (TileGraphic == null)

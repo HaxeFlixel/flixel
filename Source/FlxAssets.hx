@@ -16,7 +16,6 @@ class FlxAssets
 	public static var imgSpawner:Class<Bitmap> = ImgSpawner;
 	public static var imgSpaceman:Class<Bitmap> = ImgSpaceman;
 	public static var imgBot:Class<Bitmap> = ImgBot;
-	public static var imgBot2:Class<Bitmap> = ImgBot2;
 	public static var imgJet:Class<Bitmap> = ImgJet;
 	public static var imgBotBullet:Class<Bitmap> = ImgBotBullet;
 	public static var imgTechTiles:Class<Bitmap> = ImgTechTiles;
@@ -51,11 +50,6 @@ class ImgSpaceman extends Bitmap
 class ImgBot extends Bitmap
 {
 	public function new() { super(Assets.getBitmapData("assets/bot.png")); }
-}
-
-class ImgBot2 extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/bot2.png")); }
 }
 
 class ImgJet extends Bitmap

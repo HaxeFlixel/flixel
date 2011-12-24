@@ -40,9 +40,9 @@ class Enemy extends FlxSprite
 	{
 		super();
 		#if flash
-		loadRotatedGraphic(FlxAssets.imgBot, 64, 0, false, true);
+		loadRotatedGraphic("assets/bot.png", 64, 0, false, true);
 		#else
-		loadGraphic(FlxAssets.imgBot);
+		loadGraphic("assets/bot.png");
 		#end
 		updateTileSheet();
 

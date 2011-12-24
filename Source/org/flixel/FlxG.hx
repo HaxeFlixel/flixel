@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Graphics;
@@ -844,13 +845,37 @@ class FlxG
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	static public function addBitmap(Graphic:Class<Bitmap>, ?Reverse:Bool = false, ?Unique:Bool = false, ?Key:String = null):BitmapData
+	//static public function addBitmap(Graphic:Class<Bitmap>, ?Reverse:Bool = false, ?Unique:Bool = false, ?Key:String = null):BitmapData
+	static public function addBitmap(Graphic:Dynamic, ?Reverse:Bool = false, ?Unique:Bool = false, ?Key:String = null):BitmapData
 	{
+		var isClass:Bool = true;
+		if (Std.is(Graphic, Class))
+		{
+			isClass = true;
+		}
+		else if (Std.is(Graphic, String))
+		{
+			isClass = false;
+		}
+		else
+		{
+			return null;
+		}
+		
 		var needReverse:Bool = false;
 		var key:String = Key;
-		if(key == null)
+		if (key == null)
 		{
-			key = Type.getClassName(Graphic) + (Reverse ? "_REVERSE_" : "");
+			if (isClass)
+			{
+				key = Type.getClassName(cast(Graphic, Class<Dynamic>));
+			}
+			else
+			{
+				key = Graphic;
+			}
+			key += (Reverse ? "_REVERSE_" : "");
+			
 			if(Unique && checkBitmapCache(key))
 			{
 				var inc:Int = 0;
@@ -866,8 +891,16 @@ class FlxG
 		//If there is no data for this key, generate the requested graphic
 		if(!checkBitmapCache(key))
 		{
-			//_cache[Key] = (new Graphic()).bitmapData;
-			var bd:BitmapData = Type.createInstance(Graphic, []).bitmapData;
+			var bd:BitmapData = null;
+			if (isClass)
+			{
+				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), []).bitmapData;
+			}
+			else
+			{
+				bd = Assets.getBitmapData(Graphic);
+			}
+			
 			_cache.set(key, bd);
 			if (Reverse)
 			{

@@ -24,7 +24,7 @@ class Player extends FlxSprite
 	public function new(X:Int, Y:Int, Bullets:FlxGroup, Gibs:FlxEmitter)
 	{
 		super(X,Y);
-		loadGraphic(FlxAssets.imgSpaceman, true, true, 8);
+		loadGraphic("assets/spaceman.png", true, true, 8);
 		updateTileSheet();
 		_restart = 0;
 		

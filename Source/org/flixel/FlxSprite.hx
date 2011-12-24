@@ -222,7 +222,7 @@ class FlxSprite extends FlxObject
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:Class<Bitmap> = null)
+	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:Dynamic = null)
 	{
 		super(X, Y);
 		
@@ -319,9 +319,9 @@ class FlxSprite extends FlxObject
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	#if flash 
-	public function loadGraphic(Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, Width:UInt = 0, ?Height:UInt = 0, ?Unique:Bool = false):FlxSprite
+	public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:UInt = 0, ?Height:UInt = 0, ?Unique:Bool = false):FlxSprite
 	#else
-	public function loadGraphic(Graphic:Class<Bitmap>, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite
+	public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite
 	#end
 	{
 		_bakedRotation = 0;
@@ -378,9 +378,9 @@ class FlxSprite extends FlxObject
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	#if flash
-	public function loadRotatedGraphic(Graphic:Class<Bitmap>,?Rotations:UInt = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
+	public function loadRotatedGraphic(Graphic:Dynamic,?Rotations:UInt = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
 	#else
-	public function loadRotatedGraphic(Graphic:Class<Bitmap>, ?Rotations:Int = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
+	public function loadRotatedGraphic(Graphic:Dynamic, ?Rotations:Int = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
 	#end
 	{
 		//Create the brush and canvas
@@ -422,10 +422,19 @@ class FlxSprite extends FlxObject
 		var columns:Int = FlxU.ceil(Rotations / rows);
 		width = max * columns;
 		height = max * rows;
+		var key:String = "";
+		if (Std.is(Graphic, String))
+		{
+			key = Graphic;
+		}
+		else if (Std.is(Graphic, Class))
+		{
+			key = Type.getClassName(Graphic);
+		}
 	#if flash
-		var key:String = Type.getClassName(Graphic) + ":" + Frame + ":" + width + "x" + height;
+		key += ":" + Frame + ":" + width + "x" + height;
 	#else
-		var key:String = Type.getClassName(Graphic) + ":" + Frame + ":" + width + "x" + height + ":" + Rotations;
+		key += ":" + Frame + ":" + width + "x" + height + ":" + Rotations;
 	#end
 		var skipGen:Bool = FlxG.checkBitmapCache(key);
 		_pixels = FlxG.createBitmap(Math.floor(width), Math.floor(height), 0, true, key);
