@@ -229,7 +229,7 @@ class FlxTilemap extends FlxObject
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.	
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:String, TileGraphic:Class<Bitmap>, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?AutoTile:Int = 0, ?StartingIndex:Int = 0, ?DrawIndex:Int = 1, ?CollideIndex:Int = 1):FlxTilemap
+	public function loadMap(MapData:String, TileGraphic:Dynamic, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?AutoTile:Int = 0, ?StartingIndex:Int = 0, ?DrawIndex:Int = 1, ?CollideIndex:Int = 1):FlxTilemap
 	{
 		auto = AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
