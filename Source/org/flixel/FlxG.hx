@@ -909,7 +909,18 @@ class FlxG
 		}
 		//var pixels:BitmapData = _cache[Key];
 		var pixels:BitmapData = _cache.get(key);
-		if (!needReverse && Reverse && (pixels.width == Type.createInstance(Graphic, []).bitmapData.width/*(new Graphic()).bitmapData.width)*/))
+		
+		var tempBitmap:BitmapData;
+		if (isClass)
+		{
+			tempBitmap = Type.createInstance(Graphic, []).bitmapData;
+		}
+		else
+		{
+			tempBitmap = Assets.getBitmapData(Graphic);
+		}
+		
+		if (!needReverse && Reverse && (pixels.width == tempBitmap.width))
 		{
 			needReverse = true;
 		}
