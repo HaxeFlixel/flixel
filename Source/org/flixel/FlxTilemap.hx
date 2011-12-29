@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Graphics;
@@ -1659,10 +1660,18 @@ class FlxTilemap extends FlxObject
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function imageToCSV(ImageFile:Class<Bitmap>, ?Invert:Bool = false, ?Scale:Int = 1):String
+	static public function imageToCSV(ImageFile:Dynamic, ?Invert:Bool = false, ?Scale:Int = 1):String
 	{
-		//return bitmapToCSV((new ImageFile).bitmapData, Invert, Scale);
-		return bitmapToCSV((Type.createInstance(ImageFile, [])).bitmapData, Invert, Scale);
+		var tempBitmapData:BitmapData;
+		if (Std.is(ImageFile, String))
+		{
+			tempBitmapData = nme.Assets.getBitmapData(ImageFile);
+		}
+		else
+		{
+			tempBitmapData = (Type.createInstance(ImageFile, [])).bitmapData;
+		}
+		return bitmapToCSV(tempBitmapData, Invert, Scale);
 	}
 	
 	/**
