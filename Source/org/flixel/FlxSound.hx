@@ -264,7 +264,8 @@ class FlxSound extends FlxBasic
 		//_sound = new EmbeddedSound();
 		_sound = EmbeddedSound/*Type.createInstance(EmbeddedSound, [])*/;
 		//NOTE: can't pull ID3 info from embedded sound currently
-		_looped = Looped;
+		_looped = Looped; 
+		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
 		return this;
@@ -285,6 +286,7 @@ class FlxSound extends FlxBasic
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.load(new URLRequest(SoundURL));
 		_looped = Looped;
+		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
 		return this;
@@ -376,6 +378,10 @@ class FlxSound extends FlxBasic
 				if (_channel == null)
 				{
 					exists = false;
+				}
+				else
+				{
+					_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
 				}
 			}
 		}

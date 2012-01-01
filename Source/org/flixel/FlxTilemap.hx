@@ -624,9 +624,10 @@ class FlxTilemap extends FlxObject
 	 * @param	End			The end point in world coordinates.
 	 * @param	Simplify	Whether to run a basic simplification algorithm over the path data, removing extra points that are on the same line.  Default value is true.
 	 * @param	RaySimplify	Whether to run an extra raycasting simplification algorithm over the remaining path data.  This can result in some close corners being cut, and should be used with care if at all (yet).  Default value is false.
+	 * @param   WideDiagonal   Whether to require an additional tile to make diagonal movement. Default value is true;
 	 * @return	A <code>FlxPath</code> from the start to the end.  If no path could be found, then a null reference is returned.
 	 */
-	public function findPath(Start:FlxPoint, End:FlxPoint, ?Simplify:Bool = true, ?RaySimplify:Bool = false):FlxPath
+	public function findPath(Start:FlxPoint, End:FlxPoint, ?Simplify:Bool = true, ?RaySimplify:Bool = false, ?WideDiagonal:Bool = true):FlxPath
 	{
 		//figure out what tile we are starting and ending on.
 		var startIndex:Int = Std.int((Start.y - y) / _tileHeight) * widthInTiles + Std.int((Start.x - x) / _tileWidth);
@@ -640,7 +641,7 @@ class FlxTilemap extends FlxObject
 		}
 		
 		//figure out how far each of the tiles is from the starting tile
-		var distances:Array<Int> = computePathDistance(startIndex, endIndex);
+		var distances:Array<Int> = computePathDistance(startIndex, endIndex, WideDiagonal);
 		if (distances == null)
 		{
 			return null;
@@ -741,7 +742,7 @@ class FlxTilemap extends FlxObject
 			{
 				source = Points[lastIndex];
 			}
-			lastIndex = i-1;
+			lastIndex = i - 1;
 		}
 	}
 	
@@ -750,9 +751,10 @@ class FlxTilemap extends FlxObject
 	 * NOTE: Currently this process does NOT use any kind of fancy heuristic!  It's pretty brute.
 	 * @param	StartIndex	The starting tile's map index.
 	 * @param	EndIndex	The ending tile's map index.
+	 * @param   WideDiagonal Whether to require an additional tile to make diagonal movement. Default value is true.
 	 * @return	A Flash <code>Array</code> of <code>FlxPoint</code> nodes.  If the end tile could not be found, then a null <code>Array</code> is returned instead.
 	 */
-	private function computePathDistance(StartIndex:Int, EndIndex:Int):Array<Int>
+	private function computePathDistance(StartIndex:Int, EndIndex:Int, WideDiagonal:Bool):Array<Int>
 	{
 		//Create a distance-based representation of the tilemap.
 		//All walls are flagged as -2, all open areas as -1.
@@ -802,7 +804,7 @@ class FlxTilemap extends FlxObject
 				}
 				
 				//basic map bounds
-				left = currentIndex%widthInTiles > 0;
+				left = currentIndex % widthInTiles > 0;
 				right = currentIndex % widthInTiles < widthInTiles - 1;
 				up = currentIndex / widthInTiles > 0;
 				down = currentIndex / widthInTiles < heightInTiles - 1;
@@ -847,7 +849,12 @@ class FlxTilemap extends FlxObject
 				if(up && right)
 				{
 					index = currentIndex - widthInTiles + 1;
-					if((distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+					if(WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+					{
+						distances[index] = distance;
+						neighbors.push(index);
+					}
+					else if (!WideDiagonal && (distances[index] == -1))
 					{
 						distances[index] = distance;
 						neighbors.push(index);
@@ -856,7 +863,12 @@ class FlxTilemap extends FlxObject
 				if(right && down)
 				{
 					index = currentIndex + widthInTiles + 1;
-					if((distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+					if(WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+					{
+						distances[index] = distance;
+						neighbors.push(index);
+					}
+					else if (!WideDiagonal && (distances[index] == -1))
 					{
 						distances[index] = distance;
 						neighbors.push(index);
@@ -865,7 +877,12 @@ class FlxTilemap extends FlxObject
 				if(left && down)
 				{
 					index = currentIndex + widthInTiles - 1;
-					if((distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+					if(WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+					{
+						distances[index] = distance;
+						neighbors.push(index);
+					}
+					else if (!WideDiagonal && (distances[index] == -1))
 					{
 						distances[index] = distance;
 						neighbors.push(index);
@@ -874,7 +891,12 @@ class FlxTilemap extends FlxObject
 				if(up && left)
 				{
 					index = currentIndex - widthInTiles - 1;
-					if((distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+					if(WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+					{
+						distances[index] = distance;
+						neighbors.push(index);
+					}
+					else if (!WideDiagonal && (distances[index] == -1))
 					{
 						distances[index] = distance;
 						neighbors.push(index);
@@ -1766,6 +1788,54 @@ class FlxTilemap extends FlxObject
 			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, false, new Point(0, 0));
 		}
 	#end
+	}
+	
+	/**
+	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to mapdata itself.
+	 * @link http://forums.flixel.org/index.php/topic,5398.0.html
+	 * @param	X		The X coordinate of the tile (in tiles, not pixels).
+	 * @param	Y		The Y coordinate of the tile (in tiles, not pixels).
+	 * @param	NewTile	New tile to the mapdata. Use -1 if you dont want any changes. Default = 0 (empty)
+	 * @return	FlxSprite.
+	 */
+	public function tileToFlxSprite(X:Int, Y:Int, ?NewTile:Int = 0):FlxSprite
+	{
+		var rowIndex:Int = X + (Y * widthInTiles);
+		
+		var rect:Rectangle = null;
+		#if flash
+		rect = _rects[rowIndex];
+		#else
+		var tile:FlxTile = _tileObjects[_data[rowIndex]];
+		if((tile == null) || !tile.visible)
+		{
+			// Nothing to do here: rect object should stay null.
+		}
+		else
+		{
+			var rx:Int = (_data[rowIndex] - _startingIndex) * _tileWidth;
+			var ry:Int = 0;
+			if(Std.int(rx) >= _tiles.width)
+			{
+				ry = Std.int(rx / _tiles.width) * _tileHeight;
+				rx %= _tiles.width;
+			}
+			rect = new Rectangle(rx, ry, _tileWidth, _tileHeight);
+		}
+		#end
+		
+		var pt:Point = new Point(0, 0);
+		var tileSprite:FlxSprite = new FlxSprite();
+		tileSprite.makeGraphic(_tileWidth, _tileHeight, 0x00000000, true);
+		tileSprite.x = X * _tileWidth + x;
+		tileSprite.y = Y * _tileHeight + y;
+		if (rect != null) tileSprite.pixels.copyPixels(_tiles, rect, pt);
+		tileSprite.dirty = true;
+		tileSprite.updateTileSheet();
+
+		if (NewTile >= 0) setTile(X, Y, NewTile);
+		
+		return tileSprite;
 	}
 	
 }

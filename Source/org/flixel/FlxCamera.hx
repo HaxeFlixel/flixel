@@ -271,6 +271,11 @@ class FlxCamera extends FlxBasic
 	#end
 	
 	/**
+     * Internal, used to control the "fade" special effect.
+     */
+    private var _fxFadeIn:Bool;
+	
+	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
 	 * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
@@ -360,6 +365,8 @@ class FlxCamera extends FlxBasic
 		
 		_fog = 0.0;
 		#end
+		
+		_fxFadeIn = false;
 	}
 	
 	/**
@@ -513,13 +520,28 @@ class FlxCamera extends FlxBasic
 		//Update the "fade" special effect
 		if((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
 		{
-			_fxFadeAlpha += FlxG.elapsed / _fxFadeDuration;
-			if(_fxFadeAlpha >= 1.0)
+			if (_fxFadeIn)
 			{
-				_fxFadeAlpha = 1.0;
-				if (_fxFadeComplete != null)
+				_fxFadeAlpha -= FlxG.elapsed /_fxFadeDuration;
+                if(_fxFadeAlpha <= 0.0)
+                {
+                    _fxFadeAlpha = 0.0;
+                    if(_fxFadeComplete != null)
+                    {
+						_fxFadeComplete();
+					}
+                }
+			}
+			else
+			{
+				_fxFadeAlpha += FlxG.elapsed / _fxFadeDuration;
+				if(_fxFadeAlpha >= 1.0)
 				{
-					_fxFadeComplete();
+					_fxFadeAlpha = 1.0;
+					if (_fxFadeComplete != null)
+					{
+						_fxFadeComplete();
+					}
 				}
 			}
 		}
@@ -652,13 +674,14 @@ class FlxCamera extends FlxBasic
 	 * The screen is gradually filled with this color.
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the fade to finish.
+	 * @param   FadeIn      True fades from a color, false fades to it.
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	#else
-	public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	#end
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
@@ -670,9 +693,19 @@ class FlxCamera extends FlxBasic
 		{
 			Duration = FlxU.MIN_VALUE;
 		}
+		
+		_fxFadeIn = FadeIn;
 		_fxFadeDuration = Duration;
 		_fxFadeComplete = OnComplete;
-		_fxFadeAlpha = FlxU.MIN_VALUE;
+		
+		if (_fxFadeIn)
+		{
+			_fxFadeAlpha = 0.999999;
+		}
+		else
+		{
+			_fxFadeAlpha = FlxU.MIN_VALUE;
+		}
 	}
 	
 	/**

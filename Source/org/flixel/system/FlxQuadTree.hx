@@ -607,6 +607,10 @@ class FlxQuadTree extends FlxRect
 				(_objectHullY + _objectHullHeight > _checkObjectHullY) &&
 				(_objectHullY < _checkObjectHullY + _checkObjectHullHeight) )
 			{
+				
+				// TODO: Comment this line if there will be problems
+				overlapProcessed = false ; // bugfix, this should be set to false on every iterative check
+				
 				//Execute callback functions if they exist
 				if ((_processingCallback == null) || _processingCallback(_object, checkObject))
 				{

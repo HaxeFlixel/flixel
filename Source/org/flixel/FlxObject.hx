@@ -249,9 +249,13 @@ class FlxObject extends FlxBasic
 	 */
 	private var _pathInc:Int;
 	/**
-	 * Internal flag for whether hte object's angle should be adjusted to the path angle during path follow behavior.
+	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
 	 */
 	private var _pathRotate:Bool;
+	/**
+	 * Internal flag for whether the object's should stop once it has reached the end of the path.
+	 */
+	private var _pathAutoStop:Bool;
 	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
@@ -504,8 +508,9 @@ class FlxObject extends FlxBasic
 	 * @param	Speed		How fast to travel along the path in pixels per second.
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
+	 * @param  	StopWhenFinished  Automatically stop the player from moving once they have reached the final node in the path. Default is "false" just so it won't conflict with code written for previous versions.
 	 */
-	public function followPath(Path:FlxPath, ?Speed:Float = 100, ?Mode:Int = 0x000000, ?AutoRotate:Bool = false):Void
+	public function followPath(Path:FlxPath, ?Speed:Float = 100, ?Mode:Int = 0x000000, ?AutoRotate:Bool = false, ?StopWhenFinished:Bool = false):Void
 	{
 		if(Path.nodes.length <= 0)
 		{
@@ -517,6 +522,7 @@ class FlxObject extends FlxBasic
 		pathSpeed = FlxU.abs(Speed);
 		_pathMode = Mode;
 		_pathRotate = AutoRotate;
+		_pathAutoStop = StopWhenFinished;
 		
 		//get starting node
 		if((_pathMode == PATH_BACKWARD) || (_pathMode == PATH_LOOP_BACKWARD))
@@ -535,9 +541,16 @@ class FlxObject extends FlxBasic
 	 * Tells this object to stop following the path its on.
 	 * @param	DestroyPath		Tells this function whether to call destroy on the path object.  Default value is false.
 	 */
-	public function stopFollowingPath(?DestroyPath:Bool = false):Void
+	public function stopFollowingPath(?DestroyPath:Bool = false, ?StopMoving:Bool = false):Void
 	{
 		pathSpeed = 0;
+		
+		if (StopMoving)	
+		{	
+			velocity.x = 0;
+			velocity.y = 0;
+		}
+		
 		if(DestroyPath && (path != null))
 		{
 			path.destroy();
@@ -574,13 +587,16 @@ class FlxObject extends FlxBasic
 			if(_pathNodeIndex < 0)
 			{
 				_pathNodeIndex = 0;
-				pathSpeed = 0;
+				//pathSpeed = 0;
+				stopFollowingPath(false, _pathAutoStop);
 			}
 		}
 		else if((_pathMode & PATH_LOOP_FORWARD) > 0)
 		{
 			if(_pathNodeIndex >= path.nodes.length)
+			{
 				_pathNodeIndex = 0;
+			}
 		}
 		else if((_pathMode & PATH_LOOP_BACKWARD) > 0)
 		{
@@ -588,7 +604,9 @@ class FlxObject extends FlxBasic
 			{
 				_pathNodeIndex = path.nodes.length - 1;
 				if(_pathNodeIndex < 0)
+				{
 					_pathNodeIndex = 0;
+				}
 			}
 		}
 		else if((_pathMode & PATH_YOYO) > 0)
@@ -624,7 +642,8 @@ class FlxObject extends FlxBasic
 			if(_pathNodeIndex >= path.nodes.length)
 			{
 				_pathNodeIndex = path.nodes.length - 1;
-				pathSpeed = 0;
+				//pathSpeed = 0;
+				stopFollowingPath(false, _pathAutoStop);
 			}
 		}
 

@@ -1120,20 +1120,21 @@ class FlxG
 	 * The screen is gradually filled with this color.
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the fade to finish.
+	 * @param 	FadeIn 		True fades from a color, false fades to it.
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	static public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?OnComplete:Dynamic = null, Force:Bool = false):Void
+	static public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, Force:Bool = false):Void
 	#else
-	static public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?OnComplete:Dynamic = null, Force:Bool = false):Void
+	static public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, Force:Bool = false):Void
 	#end
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
 		{
-			FlxG.cameras[i++].fade(Color, Duration, OnComplete, Force);
+			FlxG.cameras[i++].fade(Color, Duration, FadeIn, OnComplete, Force);
 		}
 	}
 	
