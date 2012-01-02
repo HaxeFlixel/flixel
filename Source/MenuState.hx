@@ -163,7 +163,7 @@ class MenuState extends FlxState
 			}
 			
 			FlxG.flash(0xffd8eba2, 0.5);
-			FlxG.fade(0xff131c1b, 1, onFade);
+			FlxG.fade(0xff131c1b, 1, false, onFade);
 		}
 	}
 	
@@ -209,7 +209,7 @@ class MenuState extends FlxState
 	//Here, we initiate another fade effect.
 	private function onDemoComplete():Void
 	{
-		FlxG.fade(0xff131c1b,1,onDemoFaded);
+		FlxG.fade(0xff131c1b, 1, false, onDemoFaded);
 	}
 	
 	//Finally, we have another function called by FlxG.fade(), this time

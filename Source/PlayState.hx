@@ -340,7 +340,7 @@ class PlayState extends FlxState
 			if(_spawners.countLiving() <= 0)
 			{
 				_fading = true;
-				FlxG.fade(0xffd8eba2, 3, onVictory);
+				FlxG.fade(0xffd8eba2, 3, false, onVictory);
 			}
 		}
 		
