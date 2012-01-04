@@ -17,14 +17,10 @@ class FlxTileblock extends FlxSprite
 	 * @param	Width		The width of the block.
 	 * @param	Height		The height of the block.
 	 */
-	#if flash
-	public function new(X:Int, Y:Int, Width:UInt, Height:UInt)
-	#else
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
-	#end
 	{
 		super(X, Y);
-		makeGraphic(Width, Height, 0, true);
+		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), 0, true);
 		active = false;
 		immovable = true;
 	}
@@ -36,12 +32,12 @@ class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	#if flash
-	public function loadTiles(TileGraphic:Dynamic, ?TileWidth:UInt = 0, ?TileHeight:UInt = 0, ?Empties:UInt = 0):FlxTileblock
-	#else
 	public function loadTiles(TileGraphic:Dynamic, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?Empties:Int = 0):FlxTileblock
-	#end
 	{
+		TileWidth = FlxU.fromIntToUInt(TileWidth);
+		TileHeight = FlxU.fromIntToUInt(TileHeight);
+		Empties = FlxU.fromIntToUInt(Empties);
+		
 		if (TileGraphic == null)
 		{
 			return this;

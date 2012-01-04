@@ -128,13 +128,9 @@ class FlxButton extends FlxSprite
 		_initialized = false;
 	}
 	
-	#if flash
-	override public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:UInt = 0, ?Height:UInt = 0, ?Unique:Bool = false):FlxSprite 
-	#else
 	override public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite 
-	#end
 	{
-		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, Width, Height, Unique);
+		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique);
 		tempSprite.updateTileSheet();
 		if (label != null)
 		{

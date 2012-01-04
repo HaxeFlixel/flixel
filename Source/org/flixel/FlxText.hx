@@ -53,12 +53,10 @@ class FlxText extends FlxSprite
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or nto
 	 */
-	#if flash
-	public function new(X:Float, Y:Float, Width:UInt, ?Text:String = null, ?EmbeddedFont:Bool = true)
-	#else
 	public function new(X:Float, Y:Float, Width:Int, ?Text:String = null, ?EmbeddedFont:Bool = true)
-	#end
 	{
+		Width = FlxU.fromIntToUInt(Width);
+		
 		super(X, Y);
 		makeGraphic(Width, 1, 0);
 		

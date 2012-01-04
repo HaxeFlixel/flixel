@@ -320,12 +320,11 @@ class FlxSprite extends FlxObject
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	#if flash 
-	public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:UInt = 0, ?Height:UInt = 0, ?Unique:Bool = false):FlxSprite
-	#else
 	public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite
-	#end
 	{
+		Width = FlxU.fromIntToUInt(Width);
+		Height = FlxU.fromIntToUInt(Height);
+		
 		_bakedRotation = 0;
 		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
 		if (Reverse)
@@ -379,12 +378,10 @@ class FlxSprite extends FlxObject
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	#if flash
-	public function loadRotatedGraphic(Graphic:Dynamic,?Rotations:UInt = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
-	#else
 	public function loadRotatedGraphic(Graphic:Dynamic, ?Rotations:Int = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
-	#end
 	{
+		Rotations = FlxU.fromIntToUInt(Rotations);
+		
 		//Create the brush and canvas
 		var rows:Int = Math.floor(Math.sqrt(Rotations));
 		var brush:BitmapData = FlxG.addBitmap(Graphic);

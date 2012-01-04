@@ -95,14 +95,10 @@ class FlxSave
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	The result of result of the <code>flush()</code> call (see below for more details).
 	 */
-	#if flash
-	public function close(?MinFileSize:UInt = 0, ?OnComplete:Dynamic = null):Bool
-	#else
 	public function close(?MinFileSize:Int = 0, ?OnComplete:Dynamic = null):Bool
-	#end
 	{
 		_closeRequested = true;
-		return flush(MinFileSize, OnComplete);
+		return flush(FlxU.fromIntToUInt(MinFileSize), OnComplete);
 	}
 
 	/**
@@ -111,11 +107,7 @@ class FlxSave
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	Whether or not the data was written immediately.  False could be an error OR a storage request popup.
 	 */
-	#if flash
-	public function flush(?MinFileSize:UInt = 0, ?OnComplete:Dynamic = null):Bool
-	#else
 	public function flush(?MinFileSize:Int = 0, ?OnComplete:Dynamic = null):Bool
-	#end
 	{
 		if (!checkBinding())
 		{
@@ -127,7 +119,7 @@ class FlxSave
 		#else
 		var result:SharedObjectFlushStatus;
 		#end
-		try { result = _sharedObject.flush(MinFileSize); }
+		try { result = _sharedObject.flush(FlxU.fromIntToUInt(MinFileSize)); }
 		catch (e:Error) { return onDone(ERROR); }
 		#if flash
 		if (result == "pending")
