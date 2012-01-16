@@ -13,19 +13,14 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxTextField;
-import org.flixel.FlxTilemap;
+import org.flixel.FlxTileblock;
 import org.flixel.tileSheetManager.TileSheetData;
 import org.flixel.tileSheetManager.TileSheetManager;
 
 class PlayState extends FlxState
 {
-	public static inline var TILE_SIZE:Int = 8;
-	public static inline var MAP_WIDTH_IN_TILES:Int = 80;
-	public static inline var MAP_HEIGHT_IN_TILES:Int = 80;
-	private var map:Array<Int>;
-	private var tileMap:FlxTilemap;
-	
 	//major game object storage
+	private var _blocks:FlxGroup;
 	private var _decorations:FlxGroup;
 	private var _bullets:FlxGroup;
 	private var _player:Player;
@@ -88,23 +83,15 @@ class PlayState extends FlxState
 		_bigGibs.makeParticles(FlxAssets.imgSpawnerGibs, 50, 20, true, 0.5);
 		
 		//Then we'll set up the rest of our object groups or pools
+		_blocks = new FlxGroup();
 		_decorations = new FlxGroup();
 		_enemies = new FlxGroup();
-		#if flash
 		_enemies.maxSize = 50;
-		#else
-		_enemies.maxSize = 25;
-		#end
 		_spawners = new FlxGroup();
 		_hud = new FlxGroup();
 		_enemyBullets = new FlxGroup();
-		#if flash
 		_enemyBullets.maxSize = 100;
-		#else
-		_enemyBullets.maxSize = 50;
-		#end
 		_bullets = new FlxGroup();
-		_bullets.maxSize = 20;
 		
 		//Now that we have references to the bullets and metal bits,
 		//we can create the player object.
@@ -122,6 +109,7 @@ class PlayState extends FlxState
 		add(_spawners);
 		add(_littleGibs);
 		add(_bigGibs);
+		add(_blocks);
 		add(_decorations);
 		add(_enemies);
 
@@ -205,7 +193,7 @@ class PlayState extends FlxState
 		FlxG.flash(0xff131c1b);
 		_fading = false;
 		
-		FlxG.sounds.maxSize = 20;
+		FlxG.sounds.maxSize = 30;
 		
 		//Debugger Watch examples
 		FlxG.watch(_player, "x");
@@ -253,6 +241,7 @@ class PlayState extends FlxState
 	{
 		super.destroy();
 		
+		_blocks = null;
 		_decorations = null;
 		_bullets = null;
 		_player = null;
@@ -275,9 +264,6 @@ class PlayState extends FlxState
 		LeftButton = null;
 		RightButton = null;
 		JumpButton = null;
-		
-		map = null;
-		tileMap = null;
 	}
 
 	override public function update():Void
@@ -287,7 +273,7 @@ class PlayState extends FlxState
 		super.update();
 		
 		//collisions with environment
-		FlxG.collide(tileMap, _objects);
+		FlxG.collide(_blocks, _objects);
 		FlxG.overlap(_hazards, _player, overlapped);
 		FlxG.overlap(_bullets, _hazards, overlapped);
 		
@@ -388,20 +374,33 @@ class PlayState extends FlxState
 	private function generateLevel():Void
 	{
 		var r:Int = 160;
-		
-		map = new Array<Int>();
-		var numTilesTotal:Int = MAP_HEIGHT_IN_TILES * MAP_WIDTH_IN_TILES;
-		for (i in 0...(numTilesTotal))
-		{
-			map[i] = 0;
-		}
-		
+		var b:FlxTileblock;
+	
 		//First, we create the walls, ceiling and floors:
-		fillTileMapRectWithRandomTiles(0, 0, 640, 16, 1, 6, map, MAP_WIDTH_IN_TILES);
-		fillTileMapRectWithRandomTiles(0, 16, 16, 640 - 16, 1, 6, map, MAP_WIDTH_IN_TILES);
-		fillTileMapRectWithRandomTiles(640 - 16, 16, 16, 640 - 16, 1, 6, map, MAP_WIDTH_IN_TILES);
-		fillTileMapRectWithRandomTiles(16, 640 - 24, 640 - 32, 8, 16, 17, map, MAP_WIDTH_IN_TILES);
-		fillTileMapRectWithRandomTiles(16, 640 - 16, 640 - 32, 16, 32, 47, map, MAP_WIDTH_IN_TILES);
+		b = new FlxTileblock(0, 0, 640, 16);
+		b.loadTiles("assets/tech_tiles.png");
+		b.updateTileSheet();
+		_blocks.add(b);
+		
+		b = new FlxTileblock(0, 16, 16, 640 - 16);
+		b.loadTiles("assets/tech_tiles.png");
+		b.updateTileSheet();
+		_blocks.add(b);
+		
+		b = new FlxTileblock(640 - 16, 16, 16, 640 - 16);
+		b.loadTiles("assets/tech_tiles.png");
+		b.updateTileSheet();
+		_blocks.add(b);
+		
+		b = new FlxTileblock(16, 640 - 24, 640 - 32, 8);
+		b.loadTiles("assets/dirt_top.png");
+		b.updateTileSheet();
+		_blocks.add(b);
+		
+		b = new FlxTileblock(16, 640 - 16, 640 - 32, 16);
+		b.loadTiles("assets/dirt.png");
+		b.updateTileSheet();
+		_blocks.add(b);
 		
 		//Then we split the game world up into a 4x4 grid,
 		//and generate some blocks in each area.  Some grid spaces
@@ -422,11 +421,6 @@ class PlayState extends FlxState
 		buildRoom(r * 1, r * 3);
 		buildRoom(r * 2, r * 3);
 		buildRoom(r * 3, r * 3, true);
-		
-		tileMap = new FlxTilemap();
-		tileMap.loadMap(FlxTilemap.arrayToCSV(map, MAP_WIDTH_IN_TILES), "assets/img_tiles.png", 8, 8, FlxTilemap.OFF);
-		tileMap.updateTileSheet();
-		add(tileMap);
 	}
 	
 	//Just plops down a spawner and some blocks - haphazard and crappy atm but functional!
@@ -473,13 +467,24 @@ class PlayState extends FlxState
 				}
 			} while(!check);
 			
-			fillTileMapRectWithRandomTiles(RX + bx * 8, RY + by * 8, bw * 8, bh * 8, 1, 6, map, MAP_WIDTH_IN_TILES);
+			var b:FlxTileblock;
+			b = new FlxTileblock(RX + bx * 8, RY + by * 8, bw * 8, bh * 8);
+			b.loadTiles("assets/tech_tiles.png");
+			b.updateTileSheet();
+			_blocks.add(b);
 			
 			//If the block has room, add some non-colliding "dirt" graphics for variety
 			if((bw >= 4) && (bh >= 5))
 			{
-				fillTileMapRectWithRandomTiles(RX + bx * 8 + 8, RY + by * 8, bw * 8 - 16, 8, 16, 17, map, MAP_WIDTH_IN_TILES);
-				fillTileMapRectWithRandomTiles(RX + bx * 8 + 8, RY + by * 8 + 8, bw * 8 - 16, bh * 8 - 24, 32, 47, map, MAP_WIDTH_IN_TILES);
+				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8, bw * 8 - 16, 8);
+				b.loadTiles("assets/dirt_top.png");
+				b.updateTileSheet();
+				_decorations.add(b);
+				
+				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8 + 8, bw * 8 - 16, bh * 8 - 24);
+				b.loadTiles("assets/dirt.png");
+				b.updateTileSheet();
+				_decorations.add(b);
 			}
 		}
 
@@ -497,29 +502,5 @@ class PlayState extends FlxState
 			camera.follow(sp, FlxCamera.STYLE_NO_DEAD_ZONE);
 			FlxG.addCamera(camera);
 		}
-	}
-	
-	private function fillTileMapRectWithRandomTiles(x:Int, y:Int, width:Int, height:Int, startTile:Int, endTile:Int, map:Array<Int>, mapWidth:Int):Array<Int>
-	{
-		var numColsToPush:Int = Math.floor(width / TILE_SIZE);
-		var numRowsToPush:Int = Math.floor(height / TILE_SIZE);
-		var xStartIndex:Int = Math.floor(x / TILE_SIZE);
-		var yStartIndex:Int = Math.floor(y / TILE_SIZE);
-		var startColToPush:Int = Math.floor(x / TILE_SIZE);
-		var startRowToPush:Int = Math.floor(y / TILE_SIZE);
-		var randomTile:Int;
-		var currentTileIndex:Int;
-		
-		for (i in 0...(numRowsToPush))
-		{
-			for (j in 0...(numColsToPush))
-			{
-				randomTile = startTile + Math.floor(Math.random() * (endTile - startTile));
-				currentTileIndex = (xStartIndex + j) + (yStartIndex + i) * mapWidth;
-				map[currentTileIndex] = randomTile;
-			}
-		}
-		
-		return map;
 	}
 }

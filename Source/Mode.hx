@@ -16,8 +16,12 @@ class Mode extends FlxGame
 	
 	public function new()
 	{
+		#if flash
 		super(320, 240, MenuState, 2, 60, 60);
+		#else
+		super(320, 240, MenuState, 2, 60, 30);
+		#end
 		//super(320, 240, CaveGeneratorTest, 2, 50, 50);
-		forceDebugger = true;
+		//forceDebugger = true;
 	}
 }

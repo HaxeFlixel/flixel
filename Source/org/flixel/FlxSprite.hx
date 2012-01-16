@@ -615,9 +615,18 @@ class FlxSprite extends FlxObject
 					
 					_tileSheetData.drawData[camID].push(1.0); // scale
 					_tileSheetData.drawData[camID].push(0.0); // rotation
-					_tileSheetData.drawData[camID].push(_red * camera.red); 
-					_tileSheetData.drawData[camID].push(_green * camera.green);
-					_tileSheetData.drawData[camID].push(_blue * camera.blue);
+					if (camera.color < 0xffffff)
+					{
+						_tileSheetData.drawData[camID].push(_red * camera.red); 
+						_tileSheetData.drawData[camID].push(_green * camera.green);
+						_tileSheetData.drawData[camID].push(_blue * camera.blue);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(_red); 
+						_tileSheetData.drawData[camID].push(_green);
+						_tileSheetData.drawData[camID].push(_blue);
+					}
 					_tileSheetData.drawData[camID].push(_alpha);
 				}
 				#end
@@ -644,9 +653,18 @@ class FlxSprite extends FlxObject
 					
 					_tileSheetData.drawData[camID].push(scale.x); // scale
 					_tileSheetData.drawData[camID].push(-angle * 0.017453293); // rotation
-					_tileSheetData.drawData[camID].push(_red * camera.red); 
-					_tileSheetData.drawData[camID].push(_green * camera.green);
-					_tileSheetData.drawData[camID].push(_blue * camera.blue);
+					if (camera.color < 0xffffff)
+					{
+						_tileSheetData.drawData[camID].push(_red * camera.red); 
+						_tileSheetData.drawData[camID].push(_green * camera.green);
+						_tileSheetData.drawData[camID].push(_blue * camera.blue);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(_red); 
+						_tileSheetData.drawData[camID].push(_green);
+						_tileSheetData.drawData[camID].push(_blue);
+					}
 					_tileSheetData.drawData[camID].push(_alpha);
 				}
 				#end

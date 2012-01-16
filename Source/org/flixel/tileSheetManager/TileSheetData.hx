@@ -5,6 +5,7 @@ import nme.display.Graphics;
 import nme.display.Tilesheet;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 
 /**
@@ -166,7 +167,8 @@ class TileSheetData
 	{
 		for (dataArray in drawData)
 		{
-			dataArray.splice(0, dataArray.length);
+			var len:Int = dataArray.length;
+			if (len > 0) dataArray.splice(0, len);
 		}
 	}
 	
@@ -174,13 +176,15 @@ class TileSheetData
 	{
 		var cameraGraphics:Graphics;
 		var data:Array<Float>;
+		var camera:FlxCamera;
 		for (i in 0...(numCameras))
 		{
-			cameraGraphics = FlxG.cameras[i]._canvas.graphics;
 			data = drawData[i];
 			if (data.length > 0)
 			{
-				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || FlxG.cameras[i].antialiasing), flags);
+				camera = FlxG.cameras[i];
+				cameraGraphics = camera._canvas.graphics;
+				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), flags);
 			}
 		}
 	}
