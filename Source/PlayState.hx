@@ -493,7 +493,9 @@ class PlayState extends FlxState
 			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame);
 			miniFrame.updateTileSheet();
 			_hud.add(miniFrame);
-			var camera:FlxCamera = new FlxCamera(10 + (_spawners.length - 1) * 32, 10, 24, 24, 1);
+			
+			var ratio:Float = FlxCamera.defaultZoom / 2;
+			var camera:FlxCamera = new FlxCamera(Math.floor(ratio * (10 + (_spawners.length - 1) * 32)), Math.floor(ratio * 10), 24, 24, ratio);
 			camera.follow(sp, FlxCamera.STYLE_NO_DEAD_ZONE);
 			FlxG.addCamera(camera);
 		}
