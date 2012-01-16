@@ -126,7 +126,7 @@ class MenuState extends FlxState
 			text.color = 0x3a5c39;
 			add(text);
 			
-			text = new FlxText(FlxG.width / 2 - 40, FlxG.height / 3 + 139, 80, "X+C TO PLAY");
+			text = new FlxText(FlxG.width / 2 - 40, FlxG.height / 3 + 119, 80, "X+C TO PLAY");
 			text.color = 0x729954;
 			text.alignment = "center";
 			add(text);
@@ -141,7 +141,8 @@ class MenuState extends FlxState
 			dannyButton.label.color = flixelButton.label.color;
 			add(dannyButton);
 			
-			playButton = new FlxButton(flixelButton.x, flixelButton.y + 82, "CLICK HERE", onPlay);
+			//playButton = new FlxButton(flixelButton.x, flixelButton.y + 62, "CLICK HERE", onPlay);
+			playButton = new FlxButton(flixelButton.x, text.y - 2, "CLICK HERE", onPlay);
 			playButton.color = flixelButton.color;
 			playButton.label.color = flixelButton.label.color;
 			add(playButton);
