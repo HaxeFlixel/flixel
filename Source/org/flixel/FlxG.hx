@@ -959,7 +959,7 @@ class FlxG
 	 */
 	static public function clearBitmapCache():Void
 	{
-		if (_cache != null)
+		/*if (_cache != null)
 		{
 			for (bmd in _cache)
 			{
@@ -969,7 +969,7 @@ class FlxG
 					bmd = null;
 				}
 			}
-		}
+		}*/
 		
 		_cache = new Hash();
 	}

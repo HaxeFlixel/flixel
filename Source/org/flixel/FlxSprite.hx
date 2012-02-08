@@ -327,6 +327,7 @@ class FlxSprite extends FlxObject
 		
 		_bakedRotation = 0;
 		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
+		
 		if (Reverse)
 		{
 			_flipped = _pixels.width >> 1;
