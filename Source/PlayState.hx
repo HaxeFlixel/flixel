@@ -175,7 +175,7 @@ class PlayState extends FlxState
 		if(FlxG.scores[0] != 0)
 		{
 			_score2 = new FlxText(FlxG.width / 2, 0, Math.floor(FlxG.width / 2));
-			_score2.setFormat(null,8,0xd8eba2,"right",_score.shadow);
+			_score2.setFormat(null, 8, 0xd8eba2, "right", _score.shadow);
 			_hud.add(_score2);
 			_score2.text = "HIGHEST: "+FlxG.scores[0]+"\nLAST: "+FlxG.score;
 		}
@@ -205,13 +205,14 @@ class PlayState extends FlxState
 		FlxG.flash(0xff131c1b);
 		_fading = false;
 		
-		FlxG.sounds.maxSize = 20;
+		FlxG.sounds.maxSize = 16;
 		
 		//Debugger Watch examples
-		FlxG.watch(_player, "x");
-		FlxG.watch(_player, "y");
+		//FlxG.watch(_player, "x");
+		//FlxG.watch(_player, "y");
 		FlxG.watch(_enemies, "length", "numEnemies");
 		FlxG.watch(_enemyBullets, "length", "numEnemyBullets");
+		FlxG.watch(FlxG.sounds, "length", "numSounds");
 		
 		#if cpp
 		TileSheetManager.setTileSheetIndex(_player.getTileSheetIndex(), TileSheetManager.getMaxIndex());

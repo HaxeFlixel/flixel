@@ -23,7 +23,7 @@ class Mode extends FlxGame
 		var ratioY:Float = stageHeight / 240;
 		var ratio:Float = Math.min(ratioX, ratioY);
 		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), MenuState, ratio, 60, 30);
-		//super(320, 240, CaveGeneratorTest, 2, 50, 50);
-		//forceDebugger = true;
+	//	super(320, 240, CaveGeneratorTest, 2, 50, 50);
+		forceDebugger = true;
 	}
 }

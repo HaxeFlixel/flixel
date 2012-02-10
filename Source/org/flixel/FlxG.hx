@@ -1318,7 +1318,7 @@ class FlxG
 		//Don't add repeats
 		var results:Bool = false;
 		var pluginList:Array<FlxBasic> = FlxG.plugins;
-		var i:Int = pluginList.length-1;
+		var i:Int = pluginList.length - 1;
 		while(i >= 0)
 		{
 			//if(pluginList[i] is ClassType)

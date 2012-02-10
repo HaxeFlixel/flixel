@@ -759,7 +759,7 @@ class FlxGame extends Sprite
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		#else
 		clickableArea = new Sprite();
-		clickableArea.graphics.beginFill(0);
+		clickableArea.graphics.beginFill(0xff0000);
 		clickableArea.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 		clickableArea.graphics.endFill();
 		Lib.current.stage.addChild(clickableArea);

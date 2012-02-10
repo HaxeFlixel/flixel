@@ -95,7 +95,6 @@ class TileSheetData
 				for (i in 0...(numCols))
 				{
 					tempRect = new Rectangle(i * width, j * height, width, height);
-				//	tempPoint = new Point(0.5 * width, 0.5 * height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}
@@ -108,7 +107,6 @@ class TileSheetData
 				for (i in 0...(Math.floor(0.5 * numCols)))
 				{
 					tempRect = new Rectangle(i * width, j * height, width, height);
-				//	tempPoint = new Point(0.5 * width, 0.5 * height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}
@@ -119,7 +117,6 @@ class TileSheetData
 				for (i in 0...(Math.floor(0.5 * numCols)))
 				{
 					tempRect = new Rectangle(width * (numCols - i - 1), j * height, width, height);
-				//	tempPoint = new Point(0.5 * width, 0.5 * height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}

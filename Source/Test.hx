@@ -27,11 +27,11 @@ class Test extends Sprite
 		var demo:FlxGame = new Mode();
 		addChild(demo);
 		
-		var fps:FPS = new FPS();
+		/*var fps:FPS = new FPS();
 		fps.textColor = 0xffffff;
 		addChild(fps);
 		fps.x = 20;
-		fps.y = 20;
+		fps.y = 20;*/
 	}
 	
 	private function initialize():Void 
