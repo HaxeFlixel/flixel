@@ -1125,9 +1125,9 @@ class FlxG
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	static public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, Force:Bool = false):Void
+	static public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	#else
-	static public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, Force:Bool = false):Void
+	static public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	#end
 	{
 		var i:Int = 0;

@@ -281,7 +281,7 @@ class FlxU
 		#if flash
 		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | cast(red * 255, UInt) << 16 | cast(green * 255, UInt) << 8 | cast(blue * 255, UInt);
 		#else
-		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255);
+		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Math.floor(red * 255) << 16 | Math.floor(green * 255) << 8 | Math.floor(blue * 255);
 		#end
 	}
 	

@@ -263,8 +263,7 @@ class FlxGroup extends FlxBasic
 				{
 					return null;
 				}
-				//return add(cast(new ObjectClass(), FlxBasic));
-				return add(cast(Type.createInstance(ObjectClass, []), FlxBasic));
+				return add(Type.createInstance(ObjectClass, []));
 			}
 			else
 			{
@@ -287,7 +286,7 @@ class FlxGroup extends FlxBasic
 			{
 				return null;
 			}
-			return add(cast(Type.createInstance(ObjectClass, []), FlxBasic));
+			return add(Type.createInstance(ObjectClass, []));
 		}
 	}
 	

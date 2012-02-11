@@ -329,8 +329,9 @@ class FlxQuadTree extends FlxRect
 		{
 			var i:Int = 0;
 			var basic:FlxBasic;
-			var members:Array<FlxBasic> = cast(ObjectOrGroup, FlxGroup).members;
-			var l:Int = cast(ObjectOrGroup, FlxGroup).length;
+			var group:FlxGroup = cast(ObjectOrGroup, FlxGroup);
+			var members:Array<FlxBasic> = group.members;
+			var l:Int = group.length;
 			while(i < l)
 			{
 				basic = members[i++];
