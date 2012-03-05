@@ -746,13 +746,13 @@ class FlxSprite extends FlxObject
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		gfx.moveTo(StartX, StartY);
-		var alphaComponent:Float = cast(((Color >> 24) & 0xFF), Float) / 255;
+		var alphaComponent:Float = ((Color >> 24) & 255) / 255;
 		if (alphaComponent <= 0)
 		{
 			alphaComponent = 1;
 		}
-		gfx.lineStyle(Thickness,Color,alphaComponent);
-		gfx.lineTo(EndX,EndY);
+		gfx.lineStyle(Thickness, Color, alphaComponent);
+		gfx.lineTo(EndX, EndY);
 		
 		//Cache line to bitmap
 		_pixels.draw(FlxG.flashGfxSprite);
@@ -1233,7 +1233,8 @@ class FlxSprite extends FlxObject
 			}
 			// end of code from calcFrame() method
 			var pixelColor:Int = _pixels.getPixel(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
-			return (pixelColor >= Mask);
+			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
+			return (pixelAlpha >= Mask);
 		}
 		#end
 	}
@@ -1339,7 +1340,7 @@ class FlxSprite extends FlxObject
 	public function updateTileSheet():Void
 	{
 	#if cpp
-		if (_pixels != null && frameWidth > 1 && frameHeight > 1)
+		if (_pixels != null && frameWidth >= 1 && frameHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 			_tileSheetData.antialiasing = _antialiasing;

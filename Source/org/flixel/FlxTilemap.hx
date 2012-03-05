@@ -1782,7 +1782,7 @@ class FlxTilemap extends FlxObject
 	public function updateTileSheet():Void
 	{
 	#if cpp
-		if (_tiles != null && _tileWidth > 1 && _tileHeight > 1)
+		if (_tiles != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_tiles, true);
 			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, false, new Point(0, 0));
