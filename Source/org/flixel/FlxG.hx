@@ -845,7 +845,6 @@ class FlxG
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	//static public function addBitmap(Graphic:Class<Bitmap>, ?Reverse:Bool = false, ?Unique:Bool = false, ?Key:String = null):BitmapData
 	static public function addBitmap(Graphic:Dynamic, ?Reverse:Bool = false, ?Unique:Bool = false, ?Key:String = null):BitmapData
 	{
 		var isClass:Bool = true;

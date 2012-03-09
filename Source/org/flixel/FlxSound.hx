@@ -559,11 +559,11 @@ class FlxSound extends FlxBasic
 	{
 		if (!_looped)
 		{
-			_channel.removeEventListener(Event.SOUND_COMPLETE,stopped);
+			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
 		}
 		else
 		{
-			_channel.removeEventListener(Event.SOUND_COMPLETE,looped);
+			_channel.removeEventListener(Event.SOUND_COMPLETE, looped);
 		}
 		_channel = null;
 		active = false;

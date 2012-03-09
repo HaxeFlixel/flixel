@@ -813,7 +813,7 @@ class FlxSprite extends FlxObject
 			while(_frameTimer > _curAnim.delay)
 			{
 				_frameTimer = _frameTimer - _curAnim.delay;
-				if(Math.floor(_curFrame) == _curAnim.frames.length-1)
+				if(Math.floor(_curFrame) == _curAnim.frames.length - 1)
 				{
 					if (_curAnim.looped)
 					{
@@ -1143,7 +1143,7 @@ class FlxSprite extends FlxObject
 	#end
 	{
 		_curAnim = null;
-		_curIndex = Frame;
+		_curIndex = Frame % frames;
 		dirty = true;
 		return Frame;
 	}
@@ -1232,7 +1232,7 @@ class FlxSprite extends FlxObject
 				indexX = (_flipped << 1) - indexX - frameWidth;
 			}
 			// end of code from calcFrame() method
-			var pixelColor:Int = _pixels.getPixel(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
+			var pixelColor:Int = _pixels.getPixel32(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			return (pixelAlpha >= Mask);
 		}
@@ -1320,6 +1320,13 @@ class FlxSprite extends FlxObject
 		}
 		
 		return -1;
+	}
+	
+	public var flipped(getFlipped, null):Int;
+	
+	public function getFlipped():Int
+	{
+		return _flipped;
 	}
 	#end
 	
