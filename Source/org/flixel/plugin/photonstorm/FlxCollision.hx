@@ -137,12 +137,12 @@ class FlxCollision
 		for (i in 0...(maxX))
 		{
 			targetX = Math.floor(i + matrixA.tx);
-			if (targetX < maxX)
+			if (targetX >= 0 && targetX < maxX)
 			{
 				for (j in 0...(maxY))
 				{
 					targetY = Math.floor(j + matrixA.ty);
-					if (targetY < maxY)
+					if (targetY >= 0 && targetY < maxY)
 					{
 						pixelColor = testA.getPixel32(i, j);
 						pixelAlpha = (pixelColor >> 24) & 0xFF;
@@ -165,12 +165,12 @@ class FlxCollision
 		for (i in 0...(maxX))
 		{
 			targetX = Math.floor(i + matrixB.tx);
-			if (targetX < maxX)
+			if (targetX >= 0 && targetX < maxX)
 			{
 				for (j in 0...(maxY))
 				{
 					targetY = Math.floor(j + matrixB.ty);
-					if (targetY < maxY)
+					if (targetY >= 0 && targetY < maxY)
 					{
 						pixelColor = testB.getPixel32(i, j);
 						pixelAlpha = (pixelColor >> 24) & 0xFF;
@@ -183,7 +183,7 @@ class FlxCollision
 							}
 							else
 							{
-								overlapArea.setPixel32(targetX, targetY, 0xffffffff - secondColor);
+								overlapArea.setPixel32(targetX, targetY, 0x00000000);
 							}
 						}
 					}
