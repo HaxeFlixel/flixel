@@ -125,8 +125,71 @@ class FlxCollision
 		overlapArea.draw(testA, matrixA, new ColorTransform(1, 1, 1, 1, 255, -255, -255, alphaTolerance), BlendMode.NORMAL);
 		overlapArea.draw(testB, matrixB, new ColorTransform(1, 1, 1, 1, 255, 255, 255, alphaTolerance), BlendMode.DIFFERENCE);
 		#else
-		overlapArea.draw(testA, matrixA, new ColorTransform(1, 1, 1, 1, 255, -255, -255, alphaTolerance), "normal");
-		overlapArea.draw(testB, matrixB, new ColorTransform(1, 1, 1, 1, 255, 255, 255, alphaTolerance), "difference");
+		var overlapWidth:Int = overlapArea.width;
+		var overlapHeight:Int = overlapArea.height;
+		var targetX:Int;
+		var targetY:Int;
+		var pixelColor:Int;
+		var pixelAlpha:Int;
+		var transformedAlpha:Int;
+		var maxX:Int = testA.width + 1;
+		var maxY:Int = testA.height + 1;
+		for (i in 0...(maxX))
+		{
+			targetX = Math.floor(i + matrixA.tx);
+			if (targetX < maxX)
+			{
+				for (j in 0...(maxY))
+				{
+					targetY = Math.floor(j + matrixA.ty);
+					if (targetY < maxY)
+					{
+						pixelColor = testA.getPixel32(i, j);
+						pixelAlpha = (pixelColor >> 24) & 0xFF;
+						if (pixelAlpha >= alphaTolerance)
+						{
+							overlapArea.setPixel32(targetX, targetY, 0xffff0000);
+						}
+						else
+						{
+							overlapArea.setPixel32(targetX, targetY, 0xffffffff);
+						}
+					}
+				}
+			}
+		}
+		
+		maxX = testB.width + 1;
+		maxY = testB.height + 1;
+		var secondColor:Int;
+		for (i in 0...(maxX))
+		{
+			targetX = Math.floor(i + matrixB.tx);
+			if (targetX < maxX)
+			{
+				for (j in 0...(maxY))
+				{
+					targetY = Math.floor(j + matrixB.ty);
+					if (targetY < maxY)
+					{
+						pixelColor = testB.getPixel32(i, j);
+						pixelAlpha = (pixelColor >> 24) & 0xFF;
+						if (pixelAlpha >= alphaTolerance)
+						{
+							secondColor = overlapArea.getPixel32(targetX, targetY);
+							if (secondColor == 0xffff0000)
+							{
+								overlapArea.setPixel32(targetX, targetY, 0xff00ffff);
+							}
+							else
+							{
+								overlapArea.setPixel32(targetX, targetY, 0xffffffff - secondColor);
+							}
+						}
+					}
+				}
+			}
+		}
 		#end
 		
 		//	Developers: If you'd like to see how this works, display it in your game somewhere. Or you can comment it out to save a tiny bit of performance
