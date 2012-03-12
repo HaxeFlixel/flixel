@@ -528,6 +528,7 @@ class FlxSprite extends FlxObject
 			framePixels = new BitmapData(Math.floor(width), Math.floor(height));
 		}
 		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+		
 		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 		frames = Math.floor(_flashRect2.width / _flashRect.width * _flashRect2.height / _flashRect.height);
 		if (_colorTransform != null) framePixels.colorTransform(_flashRect, _colorTransform);
@@ -601,8 +602,8 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + _framesData.halfWidth);
-					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + _framesData.halfHeight);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x/*_framesData.halfWidth*/);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y/*_framesData.halfHeight*/);
 					
 					//handle reversed sprites
 					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
@@ -647,8 +648,8 @@ class FlxSprite extends FlxObject
 				#else
 				if (_tileSheetData != null) // TODO: remove this if statement later
 				{
-					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + _framesData.halfWidth);
-					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + _framesData.halfHeight);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x/*_framesData.halfWidth*/);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y/*_framesData.halfHeight*/);
 					
 					_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex]);
 					
