@@ -231,6 +231,7 @@ class FlxWeapon
 		{
 			var tempBullet:Bullet = new Bullet(this, b);
 			
+			#if flash
 			if (autoRotate)
 			{
 				tempBullet.loadRotatedGraphic(image, rotations, frame, antiAliasing, autoBuffer);
@@ -239,6 +240,11 @@ class FlxWeapon
 			{
 				tempBullet.loadGraphic(image);
 			}
+			#else
+			tempBullet.loadGraphic(image);
+			tempBullet.frame = frame;
+			tempBullet.antialiasing = antiAliasing;
+			#end
 			
 			tempBullet.updateTileSheet();
 			group.add(tempBullet);

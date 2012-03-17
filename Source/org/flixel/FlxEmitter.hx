@@ -185,7 +185,12 @@ class FlxEmitter extends FlxGroup
 				randomFrame = Math.floor(FlxG.random() * totalFrames); 
 				if (BakedRotations > 0)
 				{
+					#if flash
 					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame);
+					#else
+					particle.loadGraphic(Graphics, true);
+					particle.frame = randomFrame;
+					#end
 				}
 				else
 				{
@@ -197,7 +202,11 @@ class FlxEmitter extends FlxGroup
 			{
 				if (BakedRotations > 0)
 				{
+					#if flash
 					particle.loadRotatedGraphic(Graphics, BakedRotations);
+					#else
+					particle.loadGraphic(Graphics);
+					#end
 				}
 				else
 				{

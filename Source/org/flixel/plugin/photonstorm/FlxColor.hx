@@ -573,7 +573,8 @@ class FlxColor
 	#if flash
 	public static function getRGB(color:UInt):Dynamic
 	{
-		var alpha:UInt = color >>> 24;
+		//var alpha:UInt = color >>> 24;
+		var alpha:UInt = (color >> 24) & 0xFF;
 		var red:UInt = color >> 16 & 0xFF;
 		var green:UInt = color >> 8 & 0xFF;
 		var blue:UInt = color & 0xFF;
@@ -583,7 +584,8 @@ class FlxColor
 	#else
 	public static function getRGB(color:Int):Dynamic
 	{
-		var alpha:Int = color >>> 24;
+		//var alpha:Int = color >>> 24;
+		var alpha:Int = (color >> 24) & 0xFF;
 		var red:Int = color >> 16 & 0xFF;
 		var green:Int = color >> 8 & 0xFF;
 		var blue:Int = color & 0xFF;
@@ -605,7 +607,8 @@ class FlxColor
 	public static function getAlpha(color:Int):Int
 	#end
 	{
-		return color >>> 24;
+		//return color >>> 24;
+		return (color >> 24) & 0xFF;
 	}
 	
 	/**
@@ -618,11 +621,13 @@ class FlxColor
 	#if flash
 	public static function getAlphaFloat(color:UInt):Float
 	{
-		var f:UInt = color >>> 24;
+		//var f:UInt = color >>> 24;
+		var f:UInt = (color >> 24) & 0xFF;
 	#else
 	public static function getAlphaFloat(color:Int):Float
 	{
-		var f:Int = color >>> 24;
+		//var f:Int = color >>> 24;
+		var f:Int = (color >> 24) & 0xFF;
 	#end
 		
 		return f / 255;

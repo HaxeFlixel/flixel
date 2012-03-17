@@ -415,6 +415,7 @@ class FlxText extends FlxSprite
 			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 			
 		#if cpp
+			origin.make(frameWidth * 0.5, frameHeight * 0.5);
 		}
 		#end
 	}

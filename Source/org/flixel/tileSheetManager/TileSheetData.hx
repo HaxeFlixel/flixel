@@ -64,21 +64,30 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	public function addSpriteFramesData(width:Int, height:Int, ?reversed:Bool = false, ?origin:Point = null):FlxSpriteFrames
+	public function addSpriteFramesData(width:Int, height:Int, ?reversed:Bool = false, ?origin:Point = null, ?startX:Int = 0, ?startY:Int = 0, ?endX:Int = 0, ?endY:Int = 0, ?xSpacing:Int = 0, ?ySpacing:Int = 0):FlxSpriteFrames
 	{
-		if (containsSpriteFrameData(width, height))
+		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
+		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
+		
+		if (endX == 0)
 		{
-			var id:Int = getIDforSpriteFrameData(width, height);
-			//return flxSpriteFrames[id].frameIDs;
+			endX = bitmapWidth;
+		}
+		if (endY == 0)
+		{
+			endY = bitmapHeight;
+		}
+		
+		if (containsSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing))
+		{
+			var id:Int = getIDforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing);
 			return flxSpriteFrames[id];
 		}
 		
-		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
-		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
-		var numRows:Int = Math.floor(bitmapHeight / height);
-		var numCols:Int = Math.floor(bitmapWidth / width);
+		var numRows:Int = Math.floor((endY - startY) / (height + ySpacing));
+		var numCols:Int = Math.floor((endX - startX) / (width + xSpacing));
 		
-		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height);
+		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing);
 		var tempPoint:Point = origin;
 		if (origin == null)
 		{
@@ -88,13 +97,16 @@ class TileSheetData
 		var tempRect:Rectangle;
 		var tileID:Int;
 		
+		var spacedWidth:Int = width + xSpacing;
+		var spacedHeight:Int = height + ySpacing;
+		
 		if (reversed == false)
 		{
 			for (j in 0...(numRows))
 			{
 				for (i in 0...(numCols))
 				{
-					tempRect = new Rectangle(i * width, j * height, width, height);
+					tempRect = new Rectangle(i * spacedWidth, j * spacedHeight, width, height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}
@@ -106,7 +118,7 @@ class TileSheetData
 			{
 				for (i in 0...(Math.floor(0.5 * numCols)))
 				{
-					tempRect = new Rectangle(i * width, j * height, width, height);
+					tempRect = new Rectangle(i * spacedWidth, j * spacedHeight, width, height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}
@@ -116,7 +128,7 @@ class TileSheetData
 			{
 				for (i in 0...(Math.floor(0.5 * numCols)))
 				{
-					tempRect = new Rectangle(width * (numCols - i - 1), j * height, width, height);
+					tempRect = new Rectangle(spacedWidth * (numCols - i - 1), j * spacedHeight, width, height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}
@@ -129,11 +141,11 @@ class TileSheetData
 		return spriteData;
 	}
 	
-	public function containsSpriteFrameData(width:Int, height:Int):Bool
+	public function containsSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int):Bool
 	{
 		for (spriteData in flxSpriteFrames)
 		{
-			if (spriteData.width == width && spriteData.height == height)
+			if ((spriteData.width == width) && (spriteData.height == height) && (spriteData.startX == startX) && (spriteData.startY == startY) && (spriteData.endX == endX) && (spriteData.endY == endY) && (spriteData.xSpacing == xSpacing) && (spriteData.ySpacing == ySpacing))
 			{
 				return true;
 			}
@@ -142,13 +154,13 @@ class TileSheetData
 		return false;
 	}
 	
-	public function getIDforSpriteFrameData(width:Int, height:Int):Int
+	public function getIDforSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int):Int
 	{
 		var spriteData:FlxSpriteFrames;
 		for (i in 0...(flxSpriteFrames.length))
 		{
 			spriteData = flxSpriteFrames[i];
-			if (spriteData.width == width && spriteData.height == height)
+			if ((spriteData.width == width) && (spriteData.height == height) && (spriteData.startX == startX) && (spriteData.startY == startY) && (spriteData.endX == endX) && (spriteData.endY == endY) && (spriteData.xSpacing == xSpacing) && (spriteData.ySpacing == ySpacing))
 			{
 				return i;
 			}
@@ -298,17 +310,28 @@ class FlxSpriteFrames
 	
 	public var width:Int;
 	public var height:Int;
-	public var halfWidth:Float;
-	public var halfHeight:Float;
 	public var frameIDs:Array<Int>;
 	public var halfFrameNumber:Int;
 	
-	public function new(width:Int, height:Int)
+	public var startX:Int;
+	public var startY:Int;
+	public var endX:Int;
+	public var endY:Int;
+	public var xSpacing:Int;
+	public var ySpacing:Int;
+	
+	public function new(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int)
 	{
 		this.width = width;
 		this.height = height;
-		halfWidth = 0.5 * width;
-		halfHeight = 0.5 * height;
+		
+		this.startX = startX;
+		this.startY = startY;
+		this.endX = endX;
+		this.endY = endY;
+		this.xSpacing = xSpacing;
+		this.ySpacing = ySpacing;
+		
 		frameIDs = [];
 		halfFrameNumber = 0;
 	}
