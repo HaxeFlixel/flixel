@@ -1018,7 +1018,7 @@ class FlxTilemap extends FlxObject
 			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
-			//while(i < length)
+			
 			while(i < grp.length)
 			{
 				basic = members[i++];

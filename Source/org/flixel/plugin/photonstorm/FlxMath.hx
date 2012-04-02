@@ -322,11 +322,11 @@ class FlxMath
 			do {
 				if (min < max)
 				{
-					result = Math.floor(min + (Math.random() * (max - min)));
+					result = Math.floor(min + (Math.random() * (max + 1 - min)));
 				}
 				else
 				{
-					result = Math.floor(max + (Math.random() * (min - max)));
+					result = Math.floor(max + (Math.random() * (min + 1 - max)));
 				}
 			}
 			while (FlxU.ArrayIndexOf(excludes, result) >= 0);
@@ -338,11 +338,11 @@ class FlxMath
 			//	Reverse check
 			if (min < max)
 			{
-				return Math.floor(min + (Math.random() * (max - min)));
+				return Math.floor(min + (Math.random() * (max + 1 - min)));
 			}
 			else
 			{
-				return Math.floor(max + (Math.random() * (min - max)));
+				return Math.floor(max + (Math.random() * (min + 1 - max)));
 			}
 		}
 	}
