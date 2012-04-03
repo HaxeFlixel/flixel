@@ -1,5 +1,6 @@
 package org.flixel.system.debug;
 
+import nme.display.BitmapInt32;
 import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
@@ -29,9 +30,28 @@ class Log extends FlxWindow
 	#if flash
 	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
 	#else
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
 	#end
 	{
+		#if (cpp || neko)
+		if (BGColor == null)
+		{
+			#if !neko
+			BGColor = 0x7f7f7f7f;
+			#else
+			BGColor = { rgb: 0x7f7f7f, a: 0x7f };
+			#end
+		}
+		if (TopColor == null)
+		{
+			#if !neko
+			TopColor = 0x7f000000;
+			#else
+			TopColor = { rgb: 0x000000, a: 0x7f };
+			#end
+		}
+		#end
+		
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		
 		_text = new TextField();

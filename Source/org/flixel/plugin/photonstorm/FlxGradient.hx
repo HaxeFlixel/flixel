@@ -14,6 +14,7 @@
 
 package org.flixel.plugin.photonstorm;
 
+import nme.display.BitmapInt32;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import org.flixel.FlxSprite;
@@ -37,7 +38,7 @@ class FlxGradient
 	#if flash
 	public static function createGradientMatrix(width:Int, height:Int, colors:Array<UInt>, ?chunkSize:Int = 1, ?rotation:Int = 90):Dynamic
 	#else
-	public static function createGradientMatrix(width:Int, height:Int, colors:Array<Int>, ?chunkSize:Int = 1, ?rotation:Int = 90):Dynamic
+	public static function createGradientMatrix(width:Int, height:Int, colors:Array<BitmapInt32>, ?chunkSize:Int = 1, ?rotation:Int = 90):Dynamic
 	#end
 	{
 		var gradientMatrix:Matrix = new Matrix();
@@ -92,7 +93,7 @@ class FlxGradient
 	#if flash
 	public static function createGradientArray(width:Int, height:Int, colors:Array<UInt>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):Array<UInt>
 	#else
-	public static function createGradientArray(width:Int, height:Int, colors:Array<Int>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):Array<Int>
+	public static function createGradientArray(width:Int, height:Int, colors:Array<BitmapInt32>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):Array<BitmapInt32>
 	#end
 	{
 		var data:BitmapData = createGradientBitmapData(width, height, colors, chunkSize, rotation, interpolate);
@@ -100,7 +101,7 @@ class FlxGradient
 		#if flash
 		var result:Array<UInt> = new Array();
 		#else
-		var result:Array<Int> = new Array();
+		var result:Array<BitmapInt32> = new Array();
 		#end
 		
 		for (y in 0...(data.height))
@@ -126,7 +127,7 @@ class FlxGradient
 	#if flash
 	public static function createGradientFlxSprite(width:Int, height:Int, colors:Array<UInt>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):FlxSprite
 	#else
-	public static function createGradientFlxSprite(width:Int, height:Int, colors:Array<Int>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):FlxSprite
+	public static function createGradientFlxSprite(width:Int, height:Int, colors:Array<BitmapInt32>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):FlxSprite
 	#end
 	{
 		var data:BitmapData = createGradientBitmapData(width, height, colors, chunkSize, rotation, interpolate);
@@ -142,7 +143,7 @@ class FlxGradient
 	#if flash
 	public static function createGradientBitmapData(width:Int, height:Int, colors:Array<UInt>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):BitmapData
 	#else
-	public static function createGradientBitmapData(width:Int, height:Int, colors:Array<Int>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):BitmapData
+	public static function createGradientBitmapData(width:Int, height:Int, colors:Array<BitmapInt32>, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):BitmapData
 	#end
 	{
 		//	Sanity checks
@@ -177,8 +178,12 @@ class FlxGradient
 		{
 			s.graphics.drawRect(0, 0, width, height / chunkSize);
 		}
-
+		
+		#if !neko
 		var data:BitmapData = new BitmapData(width, height, true, 0x0);
+		#else
+		var data:BitmapData = new BitmapData(width, height, true, {rgb: 0, a: 0});
+		#end
 		
 		if (chunkSize == 1)
 		{
@@ -186,7 +191,11 @@ class FlxGradient
 		}
 		else
 		{
+			#if !neko
 			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Math.floor(height / chunkSize), true, 0x0));
+			#else
+			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Math.floor(height / chunkSize), true, {rgb: 0, a: 0}));
+			#end
 			tempBitmap.bitmapData.draw(s);
 			tempBitmap.scaleY = chunkSize;
 			
@@ -217,7 +226,7 @@ class FlxGradient
 	#if flash
 	public static function overlayGradientOnFlxSprite(dest:FlxSprite, width:Int, height:Int, colors:Array<UInt>, ?destX:Int = 0, ?destY:Int = 0, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):FlxSprite
 	#else
-	public static function overlayGradientOnFlxSprite(dest:FlxSprite, width:Int, height:Int, colors:Array<Int>, ?destX:Int = 0, ?destY:Int = 0, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):FlxSprite
+	public static function overlayGradientOnFlxSprite(dest:FlxSprite, width:Int, height:Int, colors:Array<BitmapInt32>, ?destX:Int = 0, ?destY:Int = 0, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):FlxSprite
 	#end
 	{
 		if (width > dest.width)
@@ -256,7 +265,7 @@ class FlxGradient
 	#if flash
 	public static function overlayGradientOnBitmapData(dest:BitmapData, width:Int, height:Int, colors:Array<UInt>, ?destX:Int = 0, ?destY:Int = 0, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):BitmapData
 	#else
-	public static function overlayGradientOnBitmapData(dest:BitmapData, width:Int, height:Int, colors:Array<Int>, ?destX:Int = 0, ?destY:Int = 0, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):BitmapData
+	public static function overlayGradientOnBitmapData(dest:BitmapData, width:Int, height:Int, colors:Array<BitmapInt32>, ?destX:Int = 0, ?destY:Int = 0, ?chunkSize:Int = 1, ?rotation:Int = 90, ?interpolate:Bool = true):BitmapData
 	#end
 	{
 		if (width > dest.width)

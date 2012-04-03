@@ -108,8 +108,12 @@ class Spawner extends FlxSprite
 		solid = false;
 		flicker(0);
 		play("dead");
-		FlxG.camera.shake(0.007,0.25);
+		FlxG.camera.shake(0.007, 0.25);
+		#if !neko
 		FlxG.camera.flash(0xffd8eba2, 0.65, turnOffSlowMo);
+		#else
+		FlxG.camera.flash({rgb:0xd8eba2, a:0xff}, 0.65, turnOffSlowMo);
+		#end
 		FlxG.timeScale = 0.35;
 		makeBot();
 		_gibs.at(this);

@@ -52,7 +52,11 @@ class VictoryState extends FlxState
 					FlxG.play(Assets.getSound("assets/menu_hit_2" + Mode.SoundExtension));
 				}
 				
+				#if (flash || cpp)
 				FlxG.fade(0xff131c1b, 2, false, onPlay);
+				#elseif neko
+				FlxG.fade({rgb:0x131c1b, a:0xff}, 2, false, onPlay);
+				#end
 			}
 		}
 	}

@@ -206,6 +206,8 @@ class FlxControlHandler
 	 */
 	public function new(source:FlxSprite, movementType:Int, stoppingType:Int, ?updateFacing:Bool = false, ?enableArrowKeys:Bool = true)
 	{
+		nextFireTime = 0;
+		
 		isPressedUp = false;
 		isPressedDown = false;
 		isPressedLeft = false;

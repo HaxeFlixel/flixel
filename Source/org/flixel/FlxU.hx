@@ -111,7 +111,11 @@ class FlxU
 	 */
 	static public function srand(Seed:Float):Float
 	{
+		#if !neko
 		return ((69621 * Std.int(Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
+		#else
+		return Math.random();
+		#end
 	}
 	
 	/**

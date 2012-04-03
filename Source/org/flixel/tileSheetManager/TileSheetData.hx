@@ -1,6 +1,6 @@
 package org.flixel.tileSheetManager;
 
-#if cpp
+#if (cpp || neko)
 import nme.display.Graphics;
 import nme.display.Tilesheet;
 import nme.geom.Point;

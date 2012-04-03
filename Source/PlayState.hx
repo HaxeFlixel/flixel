@@ -184,7 +184,11 @@ class PlayState extends FlxState
 		
 		//Then we create the "gun jammed" notification
 		_gunjam = new FlxGroup();
+		#if !neko
 		_gunjam.add(new FlxSprite(0, FlxG.height - 22).makeGraphic(FlxG.width, 24, 0xff131c1b));
+		#else
+		_gunjam.add(new FlxSprite(0, FlxG.height - 22).makeGraphic(FlxG.width, 24, {rgb: 0x131c1b, a: 0xff }));
+		#end
 		_gunjam.add(new FlxText(0, FlxG.height - 22, FlxG.width, "GUN IS JAMMED").setFormat(null, 16, 0xd8eba2, "center"));
 		_gunjam.visible = false;
 		_hud.add(_gunjam);
@@ -205,7 +209,7 @@ class PlayState extends FlxState
 		FlxG.flash(0xff131c1b);
 		_fading = false;
 		
-		FlxG.sounds.maxSize = 16;
+		FlxG.sounds.maxSize = 20;
 		
 		//Debugger Watch examples
 		//FlxG.watch(_player, "x");
@@ -214,15 +218,20 @@ class PlayState extends FlxState
 		FlxG.watch(_enemyBullets, "length", "numEnemyBullets");
 		FlxG.watch(FlxG.sounds, "length", "numSounds");
 		
-		#if cpp
+		#if (cpp || neko)
 		TileSheetManager.setTileSheetIndex(_player.getTileSheetIndex(), TileSheetManager.getMaxIndex());
 		TileSheetManager.setTileSheetIndex(cast(_hud.getFirstAlive(), FlxSprite).getTileSheetIndex(), TileSheetManager.getMaxIndex());
 		#end
 		
 		LeftButton = new FlxButton(1000, 0, "Left");
 		LeftButton.scrollFactor = new FlxPoint(1.0, 1.0);
+		#if neko
+		LeftButton.color = { rgb: 0x729954, a: 0xff };
+		LeftButton.label.color = { rgb: 0xd8eba2, a: 0xff };
+		#else
 		LeftButton.color = 0xff729954;
 		LeftButton.label.color = 0xffd8eba2;
+		#end
 		add(LeftButton);
 		
 		var leftCam:FlxCamera = new FlxCamera(Math.floor(10 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
@@ -231,8 +240,13 @@ class PlayState extends FlxState
 		
 		RightButton = new FlxButton(1000, 100, "Right");
 		RightButton.scrollFactor = new FlxPoint(1.0, 1.0);
+		#if neko
+		RightButton.color = { rgb: 0x729954, a: 0xff };
+		RightButton.label.color = { rgb: 0xd8eba2, a: 0xff };
+		#else
 		RightButton.color = 0xff729954;
 		RightButton.label.color = 0xffd8eba2;
+		#end
 		add(RightButton);
 		
 		var rightCam:FlxCamera = new FlxCamera(Math.floor(100 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
@@ -241,8 +255,13 @@ class PlayState extends FlxState
 		
 		JumpButton = new FlxButton(1000, 200, "Jump");
 		JumpButton.scrollFactor = new FlxPoint(1.0, 1.0);
+		#if neko
+		JumpButton.color = { rgb: 0x729954, a: 0xff };
+		JumpButton.label.color = { rgb: 0xd8eba2, a: 0xff };
+		#else
 		JumpButton.color = 0xff729954;
 		JumpButton.label.color = 0xffd8eba2;
+		#end
 		add(JumpButton);
 		
 		var jumpCam:FlxCamera = new FlxCamera(Math.floor((FlxG.width - 90) * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
@@ -355,7 +374,11 @@ class PlayState extends FlxState
 			if(_spawners.countLiving() <= 0)
 			{
 				_fading = true;
+				#if !neko
 				FlxG.fade(0xffd8eba2, 3, false, onVictory);
+				#else
+				FlxG.fade({rgb:0xd8eba2, a:0xff}, 3, false, onVictory);
+				#end
 			}
 		}
 		

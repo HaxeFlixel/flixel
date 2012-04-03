@@ -2,6 +2,7 @@ package org.flixel.system;
 
 import nme.display.Bitmap;
 import nme.display.BitmapData;
+import nme.display.BitmapInt32;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.MouseEvent;
@@ -99,9 +100,28 @@ class FlxWindow extends Sprite
 	#if flash
 	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
 	#else
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
 	#end
 	{
+		#if (cpp || neko)
+		if (BGColor == null)
+		{
+			#if !neko
+			BGColor = 0x7f7f7f7f;
+			#else
+			BGColor = { rgb: 0x7f7f7f, a: 0x7f };
+			#end
+		}
+		if (TopColor == null)
+		{
+			#if !neko
+			TopColor = 0x7f000000;
+			#else
+			TopColor = { rgb: 0x000000, a: 0x7f };
+			#end
+		}
+		#end
+		
 		super();
 		_width = Math.floor(Math.abs(Width));
 		_height = Math.floor(Math.abs(Height));
@@ -120,7 +140,11 @@ class FlxWindow extends Sprite
 		_resizable = Resizable;
 		//_resizable = false;
 		
-		_shadow = new Bitmap(new BitmapData(1,2,true,0xff000000));
+		#if !neko
+		_shadow = new Bitmap(new BitmapData(1, 2, true, 0xff000000));
+		#else
+		_shadow = new Bitmap(new BitmapData(1, 2, true, { rgb: 0x000000, a: 0xff }));
+		#end
 		addChild(_shadow);
 		_background = new Bitmap(new BitmapData(1, 1, true, BGColor));
 		_background.y = 15;

@@ -22,7 +22,7 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 
-#if cpp
+#if (cpp || neko)
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
 
@@ -158,7 +158,7 @@ class FlxBitmapFont extends FlxSprite
 	private var fixedWidth:Int;
 	#end
 	
-	#if cpp
+	#if (cpp || neko)
 	/**
 	 * offsets for each letter in the sprite (not affected by scale and rotation)
 	 */
@@ -236,7 +236,7 @@ class FlxBitmapFont extends FlxSprite
 			//	The rect is hooked to the ASCII value of the character
 			grabData[chars.charCodeAt(c)] = new Rectangle(currentX, currentY, characterWidth, characterHeight);
 			
-		#if cpp
+		#if (cpp || neko)
 			charFrameIDs[chars.charCodeAt(c)] = _framesData.frameIDs[frameID];
 		#end
 			
@@ -248,7 +248,7 @@ class FlxBitmapFont extends FlxSprite
 				currentX = offsetX;
 				currentY += characterHeight + characterSpacingY;
 				
-				#if cpp
+				#if (cpp || neko)
 				rowNumber++;
 				frameID = maxPossibleCharsPerRow * rowNumber;
 				#end
@@ -257,7 +257,7 @@ class FlxBitmapFont extends FlxSprite
 			{
 				currentX += characterWidth + characterSpacingX;
 				
-				#if cpp
+				#if (cpp || neko)
 				frameID++;
 				#end
 			}
@@ -266,7 +266,7 @@ class FlxBitmapFont extends FlxSprite
 	
 	override public function updateTileSheet():Void 
 	{
-	#if cpp
+	#if (cpp || neko)
 		if (fontSet != null)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(fontSet);
@@ -282,7 +282,7 @@ class FlxBitmapFont extends FlxSprite
 		fontSet = null;
 		grabData = null;
 		
-	#if cpp
+	#if (cpp || neko)
 		for (point in points)
 		{
 			point.destroy();
@@ -293,7 +293,7 @@ class FlxBitmapFont extends FlxSprite
 		super.destroy();
 	}
 	
-	#if cpp
+	#if (cpp || neko)
 	override public function draw():Void 
 	{
 		if(_flickerTimer != 0)
@@ -354,7 +354,11 @@ class FlxBitmapFont extends FlxSprite
 						
 						_tileSheetData.drawData[camID].push(1.0); // scale
 						_tileSheetData.drawData[camID].push(0.0); // rotation
+						#if !neko
 						if (camera.color < 0xffffff)
+						#else
+						if (camera.color.rgb < 0xffffff)
+						#end
 						{
 							_tileSheetData.drawData[camID].push(_red * camera.red); 
 							_tileSheetData.drawData[camID].push(_green * camera.green);
@@ -394,7 +398,11 @@ class FlxBitmapFont extends FlxSprite
 						
 						_tileSheetData.drawData[camID].push(scale.x); // scale
 						_tileSheetData.drawData[camID].push(-radians); // rotation
+						#if !neko
 						if (camera.color < 0xffffff)
+						#else
+						if (camera.color.rgb < 0xffffff)
+						#end
 						{
 							_tileSheetData.drawData[camID].push(_red * camera.red); 
 							_tileSheetData.drawData[camID].push(_green * camera.green);
@@ -519,7 +527,7 @@ class FlxBitmapFont extends FlxSprite
 		var cx:Int = 0;
 		var cy:Int = 0;
 		
-	#if cpp
+	#if (cpp || neko)
 		points = new Array<CharPointTileID>();
 	#end
 		
@@ -635,7 +643,11 @@ class FlxBitmapFont extends FlxSprite
 	public function getCharacter(char:String):FlxSprite
 	{
 		var output:FlxSprite = new FlxSprite();
+		#if !neko
 		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, 0xf);
+		#else
+		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, {rgb: 0, a: 0});
+		#end
 
 		if (grabData[char.charCodeAt(0)] != null && char.charCodeAt(0) != 32)
 		{
@@ -655,7 +667,11 @@ class FlxBitmapFont extends FlxSprite
 	 */
 	public function getCharacterAsBitmapData(char:String):BitmapData
 	{
+		#if !neko
 		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, 0xf);
+		#else
+		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, {rgb: 0, a: 0});
+		#end
 
 		//if (grabData[char.charCodeAt(0)] is Rectangle && char.charCodeAt(0) != 32)
 		if (grabData[char.charCodeAt(0)] != null)

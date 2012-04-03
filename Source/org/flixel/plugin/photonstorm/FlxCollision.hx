@@ -16,6 +16,7 @@
 package org.flixel.plugin.photonstorm;
 
 import nme.display.BitmapData;
+import nme.display.BitmapInt32;
 import nme.display.Sprite;
 import nme.geom.ColorTransform;
 import nme.geom.Matrix;
@@ -83,6 +84,17 @@ class FlxCollision
 			pointB.y = target.y - Std.int(FlxG.camera.scroll.y * target.scrollFactor.y) - target.offset.y;
 		}
 		
+		#if (cpp || neko)
+		if (contact.framePixels == null)
+		{
+			contact.drawFrame();
+		}
+		if (target.framePixels == null)
+		{
+			target.drawFrame();
+		}
+		#end
+		
 		var boundsA:Rectangle = new Rectangle(pointA.x, pointA.y, contact.framePixels.width, contact.framePixels.height);
 		var boundsB:Rectangle = new Rectangle(pointB.x, pointB.y, target.framePixels.width, target.framePixels.height);
 		
@@ -112,7 +124,7 @@ class FlxCollision
 		var matrixB:Matrix = new Matrix();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
-		#if cpp
+		#if (cpp || neko)
 		contact.drawFrame();
 		target.drawFrame();
 		#end
@@ -129,7 +141,11 @@ class FlxCollision
 		var overlapHeight:Int = overlapArea.height;
 		var targetX:Int;
 		var targetY:Int;
+		#if !neko
 		var pixelColor:Int;
+		#else
+		var pixelColor:BitmapInt32;
+		#end
 		var pixelAlpha:Int;
 		var transformedAlpha:Int;
 		var maxX:Int = testA.width + 1;
@@ -145,14 +161,26 @@ class FlxCollision
 					if (targetY >= 0 && targetY < maxY)
 					{
 						pixelColor = testA.getPixel32(i, j);
+						#if !neko
 						pixelAlpha = (pixelColor >> 24) & 0xFF;
+						#else
+						pixelAlpha = pixelColor.a;
+						#end
 						if (pixelAlpha >= alphaTolerance)
 						{
+							#if !neko
 							overlapArea.setPixel32(targetX, targetY, 0xffff0000);
+							#else
+							overlapArea.setPixel32(targetX, targetY, {rgb: 0xff0000, a: 0xff});
+							#end
 						}
 						else
 						{
+							#if !neko
 							overlapArea.setPixel32(targetX, targetY, 0xffffffff);
+							#else
+							overlapArea.setPixel32(targetX, targetY, {rgb: 0xffffff, a: 0xff});
+							#end
 						}
 					}
 				}
@@ -161,7 +189,7 @@ class FlxCollision
 		
 		maxX = testB.width + 1;
 		maxY = testB.height + 1;
-		var secondColor:Int;
+		var secondColor:BitmapInt32;
 		for (i in 0...(maxX))
 		{
 			targetX = Math.floor(i + matrixB.tx);
@@ -173,10 +201,15 @@ class FlxCollision
 					if (targetY >= 0 && targetY < maxY)
 					{
 						pixelColor = testB.getPixel32(i, j);
+						#if !neko
 						pixelAlpha = (pixelColor >> 24) & 0xFF;
+						#else
+						pixelAlpha = pixelColor.a;
+						#end
 						if (pixelAlpha >= alphaTolerance)
 						{
 							secondColor = overlapArea.getPixel32(targetX, targetY);
+							#if !neko
 							if (secondColor == 0xffff0000)
 							{
 								overlapArea.setPixel32(targetX, targetY, 0xff00ffff);
@@ -185,6 +218,16 @@ class FlxCollision
 							{
 								overlapArea.setPixel32(targetX, targetY, 0x00000000);
 							}
+							#else
+							if (secondColor.rgb == 0xff0000 && secondColor.a == 0xff)
+							{
+								overlapArea.setPixel32(targetX, targetY, {rgb: 0x00ffff, a: 0xff});
+							}
+							else
+							{
+								overlapArea.setPixel32(targetX, targetY, {rgb: 0x000000, a: 0xff});
+							}
+							#end
 						}
 					}
 				}
@@ -195,7 +238,11 @@ class FlxCollision
 		//	Developers: If you'd like to see how this works, display it in your game somewhere. Or you can comment it out to save a tiny bit of performance
 		debug = overlapArea;
 		
+		#if !neko
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
+		#else
+		var overlap:Rectangle = overlapArea.getColorBoundsRect({rgb: 0xffffff, a: 0xff}, {rgb: 0x00ffff, a: 0xff});
+		#end
 		overlap.offset(intersect.x, intersect.y);
 		
 		if (overlap.isEmpty())
@@ -259,8 +306,13 @@ class FlxCollision
 			indexX = (target.flipped << 1) - indexX - target.frameWidth;
 		}
 		
+		#if !neko
 		var pixelColor:Int = target.pixels.getPixel32(Math.floor(indexX + pointX - target.x), Math.floor(indexY + pointY - target.y));
 		var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
+		#else
+		var pixelColor:BitmapInt32 = target.pixels.getPixel32(Math.floor(indexX + pointX - target.x), Math.floor(indexY + pointY - target.y));
+		var pixelAlpha:Int = pixelColor.a;
+		#end
 		return (pixelAlpha >= alphaTolerance);
 		#end
 	}

@@ -2,13 +2,14 @@ package org.flixel;
 
 import nme.display.Bitmap;
 import nme.display.BitmapData;
+import nme.display.BitmapInt32;
 import nme.display.Graphics;
 import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 
-#if cpp
+#if (cpp || neko)
 import org.flixel.tileSheetManager.TileSheetData;
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
@@ -32,7 +33,7 @@ class FlxSprite extends FlxObject
 	public var color(getColor, setColor):UInt;
 	public var frame(getFrame, setFrame):UInt;
 	#else
-	public var color(getColor, setColor):Int;
+	public var color(getColor, setColor):BitmapInt32;
 	public var frame(getFrame, setFrame):Int;
 	#end
 	
@@ -171,7 +172,7 @@ class FlxSprite extends FlxObject
 	#if flash
 	private var _color:UInt;
 	#else
-	private var _color:Int;
+	private var _color:BitmapInt32;
 	#end
 	/**
 	 * Internal tracker for how many frames of "baked" rotation there are (if any).
@@ -207,7 +208,7 @@ class FlxSprite extends FlxObject
 	 */
 	private var _matrix:Matrix;
 	
-	#if cpp
+	#if (cpp || neko)
 	private var _tileSheetData:TileSheetData;
 	private var _framesData:FlxSpriteFrames;
 	private var _red:Float;
@@ -235,7 +236,11 @@ class FlxSprite extends FlxObject
 		
 		scale = new FlxPoint(1.0, 1.0);
 		_alpha = 1.0;
+		#if neko
+		_color = { rgb: 0xffffff, a:0x00 };
+		#else
 		_color = 0x00ffffff;
+		#end
 		blend = null;
 		antialiasing = false;
 		cameras = null;
@@ -252,7 +257,7 @@ class FlxSprite extends FlxObject
 		_matrix = new Matrix();
 		_callback = null;
 		
-		#if cpp
+		#if (cpp || neko)
 		_red = 1.0;
 		_green = 1.0;
 		_blue = 1.0;
@@ -302,7 +307,7 @@ class FlxSprite extends FlxObject
 		}
 		framePixels = null;
 		
-		#if cpp
+		#if (cpp || neko)
 		_framesData = null;
 		_tileSheetData = null;
 		#end
@@ -437,7 +442,13 @@ class FlxSprite extends FlxObject
 		key += ":" + Frame + ":" + width + "x" + height + ":" + Rotations;
 	#end
 		var skipGen:Bool = FlxG.checkBitmapCache(key);
+		
+		#if !neko
 		_pixels = FlxG.createBitmap(Math.floor(width), Math.floor(height), 0, true, key);
+		#elseif neko
+		_pixels = FlxG.createBitmap(Math.floor(width), Math.floor(height), {rgb: 0, a: 0}, true, key);
+		#end
+		
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
 		_bakedRotation = 360 / Rotations;
@@ -479,7 +490,7 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
-		#if cpp
+		#if (cpp || neko)
 		_antialiasing = AntiAliasing;
 		#end
 		
@@ -498,9 +509,20 @@ class FlxSprite extends FlxObject
 	#if flash 
 	public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, ?Unique:Bool = false, ?Key:String = null):FlxSprite
 	#else
-	public function makeGraphic(Width:Int, Height:Int, ?Color:Int = 0xffffffff, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):FlxSprite
 	#end
 	{
+		#if (cpp || neko)
+		if (Color == null)
+		{
+			#if cpp
+			Color = 0xffffffff;
+			#elseif neko
+			Color = { rgb: 0xffffff, a: 0xff };
+			#end
+		}
+		#end
+		
 		_bakedRotation = 0;
 		_pixels = FlxG.createBitmap(Width, Height, Color, Unique, Key);
 		width = frameWidth = _pixels.width;
@@ -575,14 +597,14 @@ class FlxSprite extends FlxObject
 		var i:Int = 0;
 		var l:Int = cameras.length;
 		
-		#if cpp
+		#if (cpp || neko)
 		var camID:Int;
 		#end
 		
 		while(i < l)
 		{
 			camera = cameras[i++];
-			#if cpp
+			#if (cpp || neko)
 			camID = camera.ID;
 			#end
 			
@@ -620,7 +642,11 @@ class FlxSprite extends FlxObject
 					
 					_tileSheetData.drawData[camID].push(1.0); // scale
 					_tileSheetData.drawData[camID].push(0.0); // rotation
+					#if neko
+					if (camera.color.rgb < 0xffffff)
+					#else
 					if (camera.color < 0xffffff)
+					#end
 					{
 						_tileSheetData.drawData[camID].push(_red * camera.red); 
 						_tileSheetData.drawData[camID].push(_green * camera.green);
@@ -658,7 +684,11 @@ class FlxSprite extends FlxObject
 					
 					_tileSheetData.drawData[camID].push(scale.x); // scale
 					_tileSheetData.drawData[camID].push(-angle * 0.017453293); // rotation
+					#if neko
+					if (camera.color.rgb < 0xffffff)
+					#else
 					if (camera.color < 0xffffff)
+					#end
 					{
 						_tileSheetData.drawData[camID].push(_red * camera.red); 
 						_tileSheetData.drawData[camID].push(_green * camera.green);
@@ -743,19 +773,27 @@ class FlxSprite extends FlxObject
 	#if flash
 	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:UInt, ?Thickness:UInt = 1):Void
 	#else
-	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, ?Thickness:Int = 1):Void
+	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:BitmapInt32, ?Thickness:Int = 1):Void
 	#end
 	{
 		//Draw line
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		gfx.moveTo(StartX, StartY);
+		#if !neko
 		var alphaComponent:Float = ((Color >> 24) & 255) / 255;
+		#else
+		var alphaComponent:Float = Color.a / 255;
+		#end
 		if (alphaComponent <= 0)
 		{
 			alphaComponent = 1;
 		}
+		#if neko
+		gfx.lineStyle(Thickness, Color.rgb, alphaComponent);
+		#else
 		gfx.lineStyle(Thickness, Color, alphaComponent);
+		#end
 		gfx.lineTo(EndX, EndY);
 		
 		//Cache line to bitmap
@@ -770,7 +808,7 @@ class FlxSprite extends FlxObject
 	#if flash
 	public function fill(Color:UInt):Void
 	#else
-	public function fill(Color:Int):Void
+	public function fill(Color:BitmapInt32):Void
 	#end
 	{
 		_pixels.fillRect(_flashRect2, Color);
@@ -951,7 +989,7 @@ class FlxSprite extends FlxObject
 	#if flash
 	public function replaceColor(Color:UInt, NewColor:UInt, ?FetchPositions:Bool = false):Array<FlxPoint>
 	#else
-	public function replaceColor(Color:Int, NewColor:Int, ?FetchPositions:Bool = false):Array<FlxPoint>
+	public function replaceColor(Color:BitmapInt32, NewColor:BitmapInt32, ?FetchPositions:Bool = false):Array<FlxPoint>
 	#end
 	{
 		var positions:Array<FlxPoint> = null;
@@ -1085,7 +1123,7 @@ class FlxSprite extends FlxObject
 	#if flash
 	public function getColor():UInt
 	#else
-	public function getColor():Int
+	public function getColor():BitmapInt32
 	#end
 	{
 		return _color;
@@ -1097,9 +1135,24 @@ class FlxSprite extends FlxObject
 	#if flash
 	public function setColor(Color:UInt):UInt
 	#else
-	public function setColor(Color:Int):Int
+	public function setColor(Color:BitmapInt32):BitmapInt32
 	#end
 	{
+		#if neko
+		if (_color.rgb == Color.rgb)
+		{
+			return _color;
+		}
+		_color = Color;
+		if ((_alpha != 1) || (_color.rgb != 0xffffff))
+		{
+			_colorTransform = new ColorTransform((_color.rgb >> 16) * 0.00392, (_color.rgb >> 8 & 0xff) * 0.00392, (_color.rgb & 0xff) * 0.00392, _alpha);
+		}
+		else
+		{
+			_colorTransform = null;
+		}
+		#else
 		Color &= 0x00ffffff;
 		if (_color == Color)
 		{
@@ -1114,11 +1167,18 @@ class FlxSprite extends FlxObject
 		{
 			_colorTransform = null;
 		}
+		#end
+		
 		dirty = true;
+		
 		#if cpp
 		_red = (_color >> 16) * 0.00392;
 		_green = (_color >> 8 & 0xff) * 0.00392;
 		_blue = (_color & 0xff) * 0.00392;
+		#elseif neko
+		_red = (_color.rgb >> 16) * 0.00392;
+		_green = (_color.rgb >> 8 & 0xff) * 0.00392;
+		_blue = (_color.rgb & 0xff) * 0.00392;
 		#end
 		return _color;
 	}
@@ -1236,8 +1296,12 @@ class FlxSprite extends FlxObject
 				indexX = (_flipped << 1) - indexX - frameWidth;
 			}
 			// end of code from calcFrame() method
-			var pixelColor:Int = _pixels.getPixel32(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
+			var pixelColor:BitmapInt32 = _pixels.getPixel32(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
+			#if cpp
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
+			#else
+			var pixelAlpha:Int = pixelColor.a * 255;
+			#end
 			return (pixelAlpha >= Mask);
 		}
 		#end
@@ -1252,7 +1316,7 @@ class FlxSprite extends FlxObject
 	private function calcFrame(?AreYouSure:Bool = false):Void
 	#end
 	{
-		#if cpp
+		#if (cpp || neko)
 		if (AreYouSure)
 		{
 			if ((framePixels == null) || (framePixels.width != width) || (framePixels.height != height))
@@ -1288,7 +1352,7 @@ class FlxSprite extends FlxObject
 			{
 				framePixels.colorTransform(_flashRect, _colorTransform);
 			}
-		#if cpp	
+		#if (cpp || neko)	
 		}
 		#end
 		
@@ -1299,7 +1363,7 @@ class FlxSprite extends FlxObject
 		dirty = false;
 	}
 	
-	#if cpp
+	#if (cpp || neko)
 	public var antialiasing(getAntialiasing, setAntialiasing):Bool;
 	
 	public function getAntialiasing():Bool
@@ -1354,7 +1418,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function updateTileSheet():Void
 	{
-	#if cpp
+	#if (cpp || neko)
 		if (_pixels != null && frameWidth >= 1 && frameHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);

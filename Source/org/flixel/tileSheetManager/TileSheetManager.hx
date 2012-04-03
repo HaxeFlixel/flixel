@@ -1,5 +1,5 @@
 package org.flixel.tileSheetManager;
-#if cpp
+#if (cpp || neko)
 
 import nme.display.BitmapData;
 import nme.display.Tilesheet;

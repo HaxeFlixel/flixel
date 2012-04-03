@@ -11,7 +11,7 @@ import nme.geom.Rectangle;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
-#if cpp
+#if (cpp || neko)
 import org.flixel.tileSheetManager.TileSheetData;
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
@@ -125,7 +125,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _startingIndex:Int;
 	
-	#if cpp
+	#if (cpp || neko)
 	private var _tileSheetData:TileSheetData;
 	private var _framesData:FlxSpriteFrames;
 	/**
@@ -172,7 +172,7 @@ class FlxTilemap extends FlxObject
 		_lastVisualDebug = FlxG.visualDebug;
 		_startingIndex = 0;
 		
-		#if cpp
+		#if (cpp || neko)
 		_helperPoint = new Point();
 		#end
 	}
@@ -208,7 +208,7 @@ class FlxTilemap extends FlxObject
 		_debugTileSolid = null;
 		#end
 		
-		#if cpp
+		#if (cpp || neko)
 		_framesData = null;
 		_tileSheetData = null;
 		_helperPoint = null;
@@ -492,15 +492,27 @@ class FlxTilemap extends FlxObject
 						{
 							if (tile.allowCollisions <= FlxObject.NONE)
 							{
+								#if !neko
 								debugColor = FlxG.BLUE;
+								#else
+								debugColor = FlxG.BLUE.rgb;
+								#end
 							}
 							else if (tile.allowCollisions != FlxObject.ANY)
 							{
+								#if !neko
 								debugColor = FlxG.PINK;
+								#else
+								debugColor = FlxG.PINK.rgb;
+								#end
 							}
 							else
 							{
+								#if !neko
 								debugColor = FlxG.GREEN;
+								#else
+								debugColor = FlxG.GREEN.rgb;
+								#end
 							}
 							
 							// Copied from makeDebugTile
@@ -1760,7 +1772,7 @@ class FlxTilemap extends FlxObject
 		#end
 	}
 	
-	#if cpp
+	#if (cpp || neko)
 	/**
 	 * Gets FlxTilemap's TileSheetData index in TileSheetManager
 	 */
@@ -1781,7 +1793,7 @@ class FlxTilemap extends FlxObject
 	 */
 	public function updateTileSheet():Void
 	{
-	#if cpp
+	#if (cpp || neko)
 		if (_tiles != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_tiles, true);
@@ -1826,7 +1838,11 @@ class FlxTilemap extends FlxObject
 		
 		var pt:Point = new Point(0, 0);
 		var tileSprite:FlxSprite = new FlxSprite();
+		#if !neko
 		tileSprite.makeGraphic(_tileWidth, _tileHeight, 0x00000000, true);
+		#else
+		tileSprite.makeGraphic(_tileWidth, _tileHeight, {rgb: 0x000000, a: 0x00}, true);
+		#end
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
 		if (rect != null) tileSprite.pixels.copyPixels(_tiles, rect, pt);

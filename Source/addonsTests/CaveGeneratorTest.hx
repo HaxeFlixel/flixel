@@ -21,7 +21,11 @@ class CaveGeneratorTest extends FlxState
 	
 	override public function create():Void 
 	{
+		#if !neko
 		FlxG.bgColor = 0xffffffff;
+		#else
+		FlxG.bgColor = {rgb:0xffffff, a:0xff};
+		#end
 		
 		// Create cave of size 200x100 tiles
 		var cave:FlxCaveGenerator = new FlxCaveGenerator(40, 30);

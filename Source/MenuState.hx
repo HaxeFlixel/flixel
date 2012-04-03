@@ -30,7 +30,11 @@ class MenuState extends FlxState
 	
 	override public function create():Void
 	{
+		#if !neko
 		FlxG.bgColor = 0xff131c1b;
+		#else
+		FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
+		#end
 		
 		//Simple use of flixel save game object.
 		//Tracks number of times the game has been played.
@@ -63,7 +67,11 @@ class MenuState extends FlxState
 		//the letters "mo"
 		title1 = new FlxText(FlxG.width + 16, FlxG.height / 3, 64, "mo");
 		title1.size = 32;
+		#if neko
+		title1.color = { rgb: 0x3a5c39, a: 0xff };
+		#else
 		title1.color = 0x3a5c39;
+		#end
 		title1.antialiasing = true;
 		title1.velocity.x = -FlxG.width;
 		add(title1);
@@ -109,10 +117,19 @@ class MenuState extends FlxState
 				FlxG.play(Assets.getSound("assets/menu_hit" + Mode.SoundExtension));
 			}
 			
+			#if neko
+			FlxG.flash({rgb: 0xd8eba2, a: 0xff}, 0.5);
+			#else
 			FlxG.flash(0xffd8eba2, 0.5);
+			#end
 			FlxG.shake(0.035, 0.5);
+			#if neko
+			title1.color = { rgb:0xd8eba2, a:0xff };
+			title2.color = { rgb:0xd8eba2, a:0xff };
+			#else
 			title1.color = 0xd8eba2;
 			title2.color = 0xd8eba2;
+			#end
 			gibs.start(true, 5);
 			title1.angle = FlxG.random() * 30 - 15;
 			title2.angle = FlxG.random() * 30 - 15;
@@ -123,17 +140,30 @@ class MenuState extends FlxState
 			var text:FlxText;
 			text = new FlxText(FlxG.width / 2 - 50, FlxG.height / 3 + 39, 100, "by Adam Atomic");
 			text.alignment = "center";
+			#if neko
+			text.color = { rgb: 0x3a5c39, a: 0xff };
+			#else
 			text.color = 0x3a5c39;
+			#end
 			add(text);
 			
 			text = new FlxText(FlxG.width / 2 - 40, FlxG.height / 3 + 119, 80, "X+C TO PLAY");
+			#if neko
+			text.color = { rgb: 0x729954, a: 0xff };
+			#else
 			text.color = 0x729954;
+			#end
 			text.alignment = "center";
 			add(text);
 			
 			var flixelButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "flixel.org", onFlixel);
+			#if !neko
 			flixelButton.color = 0xff729954;
 			flixelButton.label.color = 0xffd8eba2;
+			#else
+			flixelButton.color = { rgb:0x729954, a:0xff };
+			flixelButton.label.color = { rgb:0xd8eba2, a:0xff };
+			#end
 			add(flixelButton);
 			
 			var dannyButton:FlxButton = new FlxButton(flixelButton.x, flixelButton.y + 22, "music: dannyB", onDanny);
@@ -163,8 +193,13 @@ class MenuState extends FlxState
 				FlxG.play(Assets.getSound("assets/menu_hit_2" + Mode.SoundExtension));
 			}
 			
+			#if !neko
 			FlxG.flash(0xffd8eba2, 0.5);
 			FlxG.fade(0xff131c1b, 1, false, onFade);
+			#else
+			FlxG.flash({rgb:0xd8eba2, a:0xff}, 0.5);
+			FlxG.fade({rgb:0x131c1b, a:0xff}, 1, false, onFade);
+			#end
 		}
 	}
 	
@@ -210,7 +245,11 @@ class MenuState extends FlxState
 	//Here, we initiate another fade effect.
 	private function onDemoComplete():Void
 	{
+		#if !neko
 		FlxG.fade(0xff131c1b, 1, false, onDemoFaded);
+		#else
+		FlxG.fade({rgb:0x131c1b, a:0xff}, 1, false, onDemoFaded);
+		#end
 	}
 	
 	//Finally, we have another function called by FlxG.fade(), this time

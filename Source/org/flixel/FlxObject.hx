@@ -465,20 +465,36 @@ class FlxObject extends FlxBasic
 		{
 			if (allowCollisions != ANY)
 			{
+				#if !neko
 				boundingBoxColor = FlxG.PINK;
+				#else
+				boundingBoxColor = FlxG.PINK.rgb;
+				#end
 			}
 			if (immovable)
 			{
+				#if !neko
 				boundingBoxColor = FlxG.GREEN;
+				#else
+				boundingBoxColor = FlxG.GREEN.rgb;
+				#end
 			}
 			else
 			{
+				#if !neko
 				boundingBoxColor = FlxG.RED;
+				#else
+				boundingBoxColor = FlxG.RED.rgb;
+				#end
 			}
 		}
 		else
 		{
+			#if !neko
 			boundingBoxColor = FlxG.BLUE;
+			#else
+			boundingBoxColor = FlxG.BLUE.rgb;
+			#end
 		}
 		
 		//fill static graphics object with square shape

@@ -20,7 +20,11 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
+		#if !neko
 		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), 0, true);
+		#else
+		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), {rgb: 0, a: 0}, true);
+		#end
 		active = false;
 		immovable = true;
 	}
@@ -63,11 +67,19 @@ class FlxTileblock extends FlxSprite
 		}
 		if (regen)
 		{
+			#if !neko
 			makeGraphic(Std.int(width), Std.int(height), 0, true);
+			#else
+			makeGraphic(Std.int(width), Std.int(height), { rgb: 0, a: 0 }, true);
+			#end
 		}
 		else
 		{
+			#if !neko
 			this.fill(0);
+			#else
+			this.fill({ rgb: 0, a: 0 });
+			#end
 		}
 		
 		//Stamp random tiles onto the canvas

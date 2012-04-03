@@ -3,6 +3,7 @@ package org.flixel;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
+import nme.display.BitmapInt32;
 import nme.display.Graphics;
 import nme.display.Sprite;
 import nme.display.Stage;
@@ -31,7 +32,7 @@ class FlxG
 	#if flash
 	public static var bgColor(getBgColor, setBgColor):UInt;
 	#else
-	public static var bgColor(getBgColor, setBgColor):Int;
+	public static var bgColor(getBgColor, setBgColor):BitmapInt32;
 	#end
 	
 	public static var flashFramerate(getFlashFramerate, setFlashFramerate):Int;
@@ -93,48 +94,60 @@ class FlxG
 	 */
 	#if flash
 	static public inline var RED:UInt = 0xffff0012;
-	#else
-	static public inline var RED:Int = 0xffff0012;
+	#elseif cpp
+	static public inline var RED:BitmapInt32 = 0xffff0012;
+	#elseif neko
+	static public inline var RED:BitmapInt32 = {rgb: 0xff0012, a: 0xff};
 	#end
 	/**
 	 * Green is used to indicate solid but immovable objects.
 	 */
 	#if flash
 	static public inline var GREEN:UInt = 0xff00f225;
-	#else
-	static public inline var GREEN:Int = 0xff00f225;
+	#elseif cpp
+	static public inline var GREEN:BitmapInt32 = 0xff00f225;
+	#elseif neko
+	static public inline var GREEN:BitmapInt32 = {rgb: 0x00f225, a: 0xff};
 	#end
 	/**
 	 * Blue is used to indicate non-solid objects.
 	 */
 	#if flash
 	static public inline var BLUE:UInt = 0xff0090e9;
-	#else
-	static public inline var BLUE:Int = 0xff0090e9;
+	#elseif cpp
+	static public inline var BLUE:BitmapInt32 = 0xff0090e9;
+	#elseif neko
+	static public inline var BLUE:BitmapInt32 = {rgb: 0x0090e9, a: 0xff};
 	#end
 	/**
 	 * Pink is used to indicate objects that are only partially solid, like one-way platforms.
 	 */
 	#if flash
 	static public inline var PINK:UInt = 0xfff01eff;
-	#else
-	static public inline var PINK:Int = 0xfff01eff;
+	#elseif cpp
+	static public inline var PINK:BitmapInt32 = 0xfff01eff;
+	#elseif neko
+	static public inline var PINK:BitmapInt32 = {rgb: 0xf01eff, a: 0xff};
 	#end
 	/**
 	 * White... for white stuff.
 	 */
 	#if flash
 	static public inline var WHITE:UInt = 0xffffffff;
-	#else
-	static public inline var WHITE:Int = 0xffffffff;
+	#elseif cpp
+	static public inline var WHITE:BitmapInt32 = 0xffffffff;
+	#elseif neko
+	static public inline var WHITE:BitmapInt32 = {rgb: 0xffffff, a: 0xff};
 	#end
 	/**
 	 * And black too.
 	 */
 	#if flash
 	static public inline var BLACK:UInt = 0xff000000;
-	#else
-	static public inline var BLACK:Int = 0xff000000;
+	#elseif cpp
+	static public inline var BLACK:BitmapInt32 = 0xff000000;
+	#elseif neko
+	static public inline var BLACK:BitmapInt32 = {rgb: 0x000000, a: 0xff};
 	#end
 
 	/**
@@ -811,7 +824,7 @@ class FlxG
 	#if flash
 	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, ?Unique:Bool = false, ?Key:String = null):BitmapData
 	#else
-	static public function createBitmap(Width:Int, Height:Int, Color:Int, ?Unique:Bool = false, ?Key:String = null):BitmapData
+	static public function createBitmap(Width:Int, Height:Int, Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):BitmapData
 	#end
 	{
 		var key:String = Key;
@@ -925,7 +938,11 @@ class FlxG
 		}
 		if(needReverse)
 		{
+			#if !neko
 			var newPixels:BitmapData = new BitmapData(pixels.width << 1, pixels.height, true, 0x00000000);
+			#else
+			var newPixels:BitmapData = new BitmapData(pixels.width << 1, pixels.height, true, {rgb: 0x000000, a: 0x00});
+			#end
 			
 		#if flash
 			newPixels.draw(pixels);
@@ -934,7 +951,7 @@ class FlxG
 			mtx.translate(newPixels.width, 0);
 			newPixels.draw(pixels, mtx);
 		#else
-			var pixelColor:Int;
+			var pixelColor:BitmapInt32;
 			for (i in 0...(pixels.width + 1))
 			{
 				for (j in 0...(pixels.height + 1))
@@ -1104,9 +1121,16 @@ class FlxG
 	#if flash
 	static public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	#else
-	static public function flash(?Color:Int = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	static public function flash(?Color:BitmapInt32, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	#end
 	{
+		#if !flash
+		if (Color == null)
+		{
+			Color = WHITE;
+		}
+		#end
+		
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
@@ -1126,9 +1150,16 @@ class FlxG
 	#if flash
 	static public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	#else
-	static public function fade(?Color:Int = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	static public function fade(?Color:BitmapInt32, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
 	#end
 	{
+		#if !flash
+		if (Color == null)
+		{
+			Color = BLACK;
+		}
+		#end
+		
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
@@ -1163,12 +1194,16 @@ class FlxG
 	#if flash
 	static public function getBgColor():UInt
 	#else
-	static public function getBgColor():Int
+	static public function getBgColor():BitmapInt32
 	#end
 	{
 		if (FlxG.camera == null)
 		{
+			#if !neko
 			return 0xff000000;
+			#else
+			return BLACK;
+			#end
 		}
 		else
 		{
@@ -1179,7 +1214,7 @@ class FlxG
 	#if flash
 	static public function setBgColor(Color:UInt):UInt
 	#else
-	static public function setBgColor(Color:Int):Int
+	static public function setBgColor(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		var i:Int = 0;
@@ -1376,7 +1411,7 @@ class FlxG
 	 */
 	static public function reset():Void
 	{
-		#if cpp
+		#if (cpp || neko)
 		TileSheetManager.clear();
 		#end
 		FlxG.clearBitmapCache();
@@ -1437,7 +1472,7 @@ class FlxG
 			}
 			#end
 			
-			#if cpp
+			#if (cpp || neko)
 			cam._canvas.graphics.clear();
 			// clearing camera's debug sprite
 			cam._debugLayer.graphics.clear();

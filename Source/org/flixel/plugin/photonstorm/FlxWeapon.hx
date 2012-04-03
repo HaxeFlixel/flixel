@@ -15,6 +15,7 @@
 package org.flixel.plugin.photonstorm;
 
 import nme.display.Bitmap;
+import nme.display.BitmapInt32;
 import nme.Lib;
 import org.flixel.FlxGroup;
 import org.flixel.FlxPoint;
@@ -147,6 +148,8 @@ class FlxWeapon
 	 */
 	public function new(name:String, ?parentRef:Dynamic = null, ?xVariable:String = "x", ?yVariable:String = "y")
 	{
+		bulletsFired = 0;
+		
 		rndFactorAngle = 0;
 		rndFactorLifeSpan = 0;
 		rndFactorSpeed = 0;
@@ -186,9 +189,20 @@ class FlxWeapon
 	#if flash
 	public function makePixelBullet(quantity:UInt, ?width:Int = 2, ?height:Int = 2, ?color:UInt = 0xffffffff, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
 	#else
-	public function makePixelBullet(quantity:Int, ?width:Int = 2, ?height:Int = 2, ?color:Int = 0xffffffff, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
+	public function makePixelBullet(quantity:Int, ?width:Int = 2, ?height:Int = 2, ?color:BitmapInt32, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
 	#end
 	{
+		#if (cpp || neko)
+		if (color == null)
+		{
+			#if !neko
+			color = 0xffffffff;
+			#else
+			color = { rgb: 0xffffff, a: 0xff };
+			#end
+		}
+		#end
+		
 		group = new FlxGroup(quantity);
 		
 		for (b in 0...(quantity))
@@ -468,7 +482,6 @@ class FlxWeapon
 		if (parentRef != null)
 		{
 			fireFromParent = true;
-			trace("fireFromParent = " + fireFromParent);
 			
 			parent = parentRef;
 			

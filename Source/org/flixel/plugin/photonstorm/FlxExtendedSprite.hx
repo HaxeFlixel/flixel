@@ -223,6 +223,8 @@ class FlxExtendedSprite extends FlxSprite
 		hasMouseSpring = false;
 		springOnPressed = true;
 		
+		clickCounter = 0;
+		
 		super(X, Y, SimpleGraphic);
 	}
 	

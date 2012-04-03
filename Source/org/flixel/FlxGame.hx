@@ -16,7 +16,7 @@ import nme.text.TextFormatAlign;
 import nme.Lib;
 import nme.ui.Mouse;
 
-#if cpp
+#if (cpp || neko)
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
 
@@ -516,7 +516,7 @@ class FlxGame extends Sprite
 	private function switchState():Void
 	{ 
 		//Basic reset stuff
-		#if cpp
+		#if (cpp || neko)
 		TileSheetManager.clear();
 		#end
 		FlxG.clearBitmapCache();
@@ -715,14 +715,14 @@ class FlxGame extends Sprite
 	{
 		var mark:Int = Lib.getTimer();
 		
-		#if cpp
+		#if (cpp || neko)
 		TileSheetManager.clearAllDrawData();
 		#end
 		
 		FlxG.lockCameras();
 		_state.draw();
 		
-		#if cpp
+		#if (cpp || neko)
 		TileSheetManager.renderAll();
 		#end
 		
@@ -809,7 +809,11 @@ class FlxGame extends Sprite
 		_soundTray.visible = false;
 		_soundTray.scaleX = 2;
 		_soundTray.scaleY = 2;
+		#if !neko
 		var tmp:Bitmap = new Bitmap(new BitmapData(80, 30, true, 0x7F000000));
+		#else
+		var tmp:Bitmap = new Bitmap(new BitmapData(80, 30, true, {rgb: 0x000000, a: 0x7F}));
+		#end
 		_soundTray.x = (FlxG.width / 2) * FlxCamera.defaultZoom - (tmp.width / 2) * _soundTray.scaleX;
 		_soundTray.addChild(tmp);
 		
@@ -839,7 +843,11 @@ class FlxGame extends Sprite
 		var i:Int = 0;
 		while(i < 10)
 		{
+			#if !neko
 			tmp = new Bitmap(new BitmapData(4,++i, false, 0xffffff));
+			#else
+			tmp = new Bitmap(new BitmapData(4,++i, false, {rgb: 0xffffff, a: 0xff}));
+			#end
 			tmp.x = bx;
 			tmp.y = by;
 			_soundTray.addChild(tmp);

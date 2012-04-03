@@ -13,6 +13,7 @@
 
 package org.flixel.plugin.photonstorm;
 import org.flixel.FlxBasic;
+import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxRect;
 
@@ -56,8 +57,8 @@ class FlxMouseControl extends FlxBasic
 	private static var clickCoords:FlxPoint;
 	private static var hasClickTarget:Bool = false;
 	
-	private static var oldX:Int;
-	private static var oldY:Int;
+	private static var oldX:Int = 0;
+	private static var oldY:Int = 0;
 	
 	/**
 	 * The speed the mouse is moving on the X axis in pixels per frame

@@ -1,8 +1,9 @@
 package org.flixel;
 
-#if cpp
+#if (cpp || neko)
 
 import nme.display.BitmapData;
+import nme.display.BitmapInt32;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
@@ -18,7 +19,7 @@ import org.flixel.FlxSprite;
 class FlxTextField extends FlxText
 {
 	
-	override public var color(getColor, setColor):Int;
+	override public var color(getColor, setColor):BitmapInt32;
 	override public var shadow(getShadow, setShadow):Int;
 	
 	/**
@@ -58,7 +59,11 @@ class FlxTextField extends FlxText
 		_selectable = false;
 		_multiline = true;
 		_wordWrap = true;
+		#if neko
+		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
+		#else
 		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffffff);
+		#end
 		
 		allowCollisions = FlxObject.NONE;
 	}
@@ -150,17 +155,25 @@ class FlxTextField extends FlxText
 	/**
 	 * The color of the text being displayed.
 	 */
-	override public function getColor():Int
+	override public function getColor():BitmapInt32
 	{
+		#if neko
+		return { rgb: Std.int(_textFormat.color), a: 0xff };
+		#else
 		return Std.int(_textFormat.color);
+		#end
 	}
 	
 	/**
 	 * @private
 	 */
-	override public function setColor(Color:Int):Int
+	override public function setColor(Color:BitmapInt32):BitmapInt32
 	{
+		#if neko
+		_textFormat.color = Color.rgb;
+		#else
 		_textFormat.color = Color;
+		#end
 		updateTextFields();
 		return Color;
 	}
@@ -228,7 +241,7 @@ class FlxTextField extends FlxText
 		// this class doesn't support this operation
 	}
 	
-	override public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, ?Thickness:Int = 1):Void 
+	override public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:BitmapInt32, ?Thickness:Int = 1):Void 
 	{
 		// this class doesn't support this operation
 	}
@@ -418,7 +431,11 @@ class FlxTextField extends FlxText
 			var tf:TextField = _textFields[0];
 			if (tf != null)
 			{
+				#if !neko
 				_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
+				#else
+				_pixels = new BitmapData(Std.int(width), Std.int(height), true, {rgb: 0, a:0});
+				#end
 				frameHeight = Std.int(height);
 				_flashRect.x = 0;
 				_flashRect.y = 0;
@@ -467,7 +484,11 @@ class FlxTextField extends FlxText
 				//Finally, update the visible pixels
 				if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
 				{
+					#if !neko
 					framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
+					#else
+					framePixels = new BitmapData(_pixels.width, _pixels.height, true, { rgb: 0, a:0 } );
+					#end
 				}
 				framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 				
