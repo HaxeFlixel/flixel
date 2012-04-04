@@ -214,12 +214,16 @@ class Player extends FlxSprite
 		visible = false;
 		velocity.make();
 		acceleration.make();
-		FlxG.camera.shake(0.005,0.35);
-		FlxG.camera.flash(0xffd8eba2,0.35);
+		FlxG.camera.shake(0.005, 0.35);
+		#if !neko
+		FlxG.camera.flash(0xffd8eba2, 0.35);
+		#else
+		FlxG.camera.flash({rgb: 0xd8eba2, a: 0xff}, 0.35);
+		#end
 		if(_gibs != null)
 		{
 			_gibs.at(this);
-			_gibs.start(true,5,0,50);
+			_gibs.start(true, 5, 0, 50);
 		}
 	}
 }
