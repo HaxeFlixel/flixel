@@ -314,8 +314,6 @@ class FlxBitmapFont extends FlxSprite
 		var l:Int = cameras.length;
 		
 		var j:Int = 0;
-		var currCharFrameID:Int;
-		var currLine:String;
 		var textLength:Int = points.length;
 		var currPointTileID:CharPointTileID;
 		

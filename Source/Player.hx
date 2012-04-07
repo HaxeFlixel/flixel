@@ -90,17 +90,20 @@ class Player extends FlxSprite
 		//MOVEMENT
 		acceleration.x = 0;
 		if(FlxG.keys.LEFT || PlayState.LeftButton.status == FlxButton.PRESSED)
+	//	if(FlxG.keys.LEFT || PlayStateOld.LeftButton.status == FlxButton.PRESSED)
 		{
 			facing = FlxObject.LEFT;
 			acceleration.x -= drag.x;
 		}
 		else if(FlxG.keys.RIGHT || PlayState.RightButton.status == FlxButton.PRESSED)
+	//	else if(FlxG.keys.RIGHT || PlayStateOld.RightButton.status == FlxButton.PRESSED)
 		{
 			facing = FlxObject.RIGHT;
 			acceleration.x += drag.x;
 		}
 		
 		if((FlxG.keys.justPressed("X") || (PlayState.JumpButton.status == FlxButton.PRESSED && isReadyToJump)) && velocity.y == 0)
+	//	if((FlxG.keys.justPressed("X") || (PlayStateOld.JumpButton.status == FlxButton.PRESSED && isReadyToJump)) && velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
 			if (Mode.SoundOn)
@@ -110,10 +113,12 @@ class Player extends FlxSprite
 		}
 		
 		if (PlayState.JumpButton.status == FlxButton.PRESSED && isReadyToJump)
+	//	if (PlayStateOld.JumpButton.status == FlxButton.PRESSED && isReadyToJump)
 		{
 			isReadyToJump = false;
 		}
 		else if (PlayState.JumpButton.status == FlxButton.NORMAL)
+	//	else if (PlayStateOld.JumpButton.status == FlxButton.NORMAL)
 		{
 			isReadyToJump = true;
 		}

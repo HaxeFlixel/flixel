@@ -2,7 +2,12 @@ package org.flixel;
 
 import nme.display.Bitmap;
 import nme.display.BitmapData;
+import nme.geom.Point;
 import nme.geom.Rectangle;
+
+#if (cpp || neko)
+import org.flixel.tileSheetManager.TileSheetManager;
+#end
 
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.
@@ -10,6 +15,13 @@ import nme.geom.Rectangle;
  */
 class FlxTileblock extends FlxSprite
 {		
+	
+	#if (cpp || neko)
+	private var _tileWidth:Int;
+	private var _tileHeight:Int;
+	private var _tilePointIDs:Array<TilePointID>;
+	#end
+	
 	/**
 	 * Creates a new <code>FlxBlock</code> object with the specified position and size.
 	 * @param	X			The X position of the block.
@@ -20,10 +32,14 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
-		#if !neko
+		#if flash
 		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), 0, true);
 		#else
-		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), {rgb: 0, a: 0}, true);
+		_bakedRotation = 0;
+		width = frameWidth = Width;
+		height = frameHeight = Height;
+		resetHelpers();
+		_tilePointIDs = null;
 		#end
 		active = false;
 		immovable = true;
@@ -65,22 +81,17 @@ class FlxTileblock extends FlxSprite
 			height = Std.int((height / spriteHeight + 1)) * spriteHeight;
 			regen = true;
 		}
+		
+		#if flash
 		if (regen)
 		{
-			#if !neko
 			makeGraphic(Std.int(width), Std.int(height), 0, true);
-			#else
-			makeGraphic(Std.int(width), Std.int(height), { rgb: 0, a: 0 }, true);
-			#end
 		}
 		else
 		{
-			#if !neko
 			this.fill(0);
-			#else
-			this.fill({ rgb: 0, a: 0 });
-			#end
 		}
+		#end
 		
 		//Stamp random tiles onto the canvas
 		var row:Int = 0;
@@ -89,6 +100,23 @@ class FlxTileblock extends FlxSprite
 		var destinationY:Int = 0;
 		var widthInTiles:Int = Std.int(width / spriteWidth);
 		var heightInTiles:Int = Std.int(height / spriteHeight);
+		#if !flash
+		if (_tilePointIDs != null)
+		{
+			for (point in _tilePointIDs)
+			{
+				point.destroy();
+			}
+		}
+		_tilePointIDs = new Array<TilePointID>();
+		_tileWidth = sprite.frameWidth;
+		_tileHeight = sprite.frameHeight;
+		_pixels = sprite.pixels;
+		frameWidth = Math.floor(width);
+		frameHeight = Math.floor(height);
+		resetHelpers();
+		updateTileSheet();
+		#end
 		while (row < heightInTiles)
 		{
 			destinationX = 0;
@@ -97,10 +125,17 @@ class FlxTileblock extends FlxSprite
 			{
 				if (FlxG.random() * total > Empties)
 				{
+					#if flash
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
+					#else
+					_tilePointIDs.push(new TilePointID(new Point(destinationX - origin.x + 0.5 * _tileWidth, destinationY - origin.y + 0.5 * _tileHeight), Math.floor(FlxG.random() * _framesData.frameIDs.length)));
+					#end
 				}
+				#if !flash
+				_tilePointIDs.push(new TilePointID(new Point(destinationX - origin.x + 0.5 * _tileWidth, destinationY - origin.y + 0.5 * _tileHeight), -1));
+				#end
 				destinationX += spriteWidth;
 				column++;
 			}
@@ -109,5 +144,183 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		return this;
+	}
+	
+	#if (cpp || neko)
+	override public function draw():Void 
+	{
+		if(_flickerTimer != 0)
+		{
+			_flicker = !_flicker;
+			if (_flicker)
+			{
+				return;
+			}
+		}
+		
+		if (cameras == null)
+		{
+			cameras = FlxG.cameras;
+		}
+		var camera:FlxCamera;
+		var i:Int = 0;
+		var camID:Int;
+		var l:Int = cameras.length;
+		
+		var j:Int = 0;
+		var numTiles:Int = 0;
+		if (_tilePointIDs != null)
+		{
+			numTiles = _tilePointIDs.length;
+		}
+		var currTileID:TilePointID;
+		
+		var radians:Float;
+		var cos:Float;
+		var sin:Float;
+		var relativeX:Float;
+		var relativeY:Float;
+		
+		while(i < l)
+		{
+			camera = cameras[i++];
+			camID = camera.ID;
+			
+			if (!onScreen(camera))
+			{
+				continue;
+			}
+			
+			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
+			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			
+			if (_tilePointIDs != null && _tileSheetData != null)
+			{
+				if (simpleRender)
+				{	//Simple render
+					while (j < numTiles)
+					{
+						currTileID = _tilePointIDs[j];
+						
+						if (currTileID.tileID != -1)
+						{
+							_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + currTileID.point.x);
+							_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + currTileID.point.y);
+							_tileSheetData.drawData[camID].push(_framesData.frameIDs[currTileID.tileID]);
+							_tileSheetData.drawData[camID].push(1.0); // scale
+							_tileSheetData.drawData[camID].push(0.0); // rotation
+							#if neko
+							if (camera.color.rgb < 0xffffff)
+							#else
+							if (camera.color < 0xffffff)
+							#end
+							{
+								_tileSheetData.drawData[camID].push(_red * camera.red); 
+								_tileSheetData.drawData[camID].push(_green * camera.green);
+								_tileSheetData.drawData[camID].push(_blue * camera.blue);
+							}
+							else
+							{
+								_tileSheetData.drawData[camID].push(_red); 
+								_tileSheetData.drawData[camID].push(_green);
+								_tileSheetData.drawData[camID].push(_blue);
+							}
+							_tileSheetData.drawData[camID].push(_alpha);
+						}
+						
+						j++;
+					}
+				}
+				else
+				{	
+					//Advanced render
+					radians = angle * 0.017453293;
+					cos = Math.cos(radians);
+					sin = Math.sin(radians);
+					
+					while (j < numTiles)
+					{
+						currTileID = _tilePointIDs[j];
+						
+						if (currTileID.tileID != -1)
+						{
+							relativeX = (currTileID.point.x * cos - currTileID.point.y * sin) * scale.x;
+							relativeY = (currTileID.point.x * sin + currTileID.point.y * cos) * scale.x;
+							
+							_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + relativeX);
+							_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + relativeY);
+							
+							_tileSheetData.drawData[camID].push(_framesData.frameIDs[currTileID.tileID]);
+							
+							_tileSheetData.drawData[camID].push(scale.x); // scale
+							_tileSheetData.drawData[camID].push(-radians); // rotation
+							#if neko
+							if (camera.color.rgb < 0xffffff)
+							#else
+							if (camera.color < 0xffffff)
+							#end
+							{
+								_tileSheetData.drawData[camID].push(_red * camera.red); 
+								_tileSheetData.drawData[camID].push(_green * camera.green);
+								_tileSheetData.drawData[camID].push(_blue * camera.blue);
+							}
+							else
+							{
+								_tileSheetData.drawData[camID].push(_red); 
+								_tileSheetData.drawData[camID].push(_green);
+								_tileSheetData.drawData[camID].push(_blue);
+							}
+							_tileSheetData.drawData[camID].push(_alpha);
+						}
+						
+						j++;
+					}
+				}
+			}
+			
+			FlxBasic._VISIBLECOUNT++;
+			if (FlxG.visualDebug && !ignoreDrawDebug)
+			{
+				drawDebug(camera);
+			}
+		}
+	}
+	
+	override public function destroy():Void 
+	{
+		for (point in _tilePointIDs)
+		{
+			point.destroy();
+		}
+		_tilePointIDs = null;
+		super.destroy();
+	}
+	
+	override public function updateTileSheet():Void
+	{
+		if (_pixels != null && _tileWidth >= 1 && _tileHeight >= 1)
+		{
+			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
+			_tileSheetData.antialiasing = _antialiasing;
+			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight);
+		}
+	}
+	#end
+}
+
+class TilePointID
+{
+	public var point:Point;
+	public var tileID:Int;
+	
+	public function new(point:Point, tileID:Int)
+	{
+		this.point = point;
+		this.tileID = tileID;
+	}
+	
+	public function destroy():Void
+	{
+		point = null;
 	}
 }

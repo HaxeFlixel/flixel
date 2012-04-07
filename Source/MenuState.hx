@@ -234,10 +234,12 @@ class MenuState extends FlxState
 		if(attractMode)
 		{
 			FlxG.loadReplay((FlxG.random() < 0.5)?(Assets.getText("assets/attract1.fgr")):(Assets.getText("assets/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
+		//	FlxG.loadReplay((FlxG.random() < 0.5)?(Assets.getText("assets/attract1.fgr")):(Assets.getText("assets/attract2.fgr")), new PlayStateOld(), ["ANY"], 22, onDemoComplete);
 		}
 		else
 		{
 			FlxG.switchState(new PlayState());
+		//	FlxG.switchState(new PlayStateOld());
 		}
 	}
 	

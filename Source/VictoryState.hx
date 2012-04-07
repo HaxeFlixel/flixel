@@ -64,6 +64,7 @@ class VictoryState extends FlxState
 	private function onPlay():Void 
 	{
 		FlxG.switchState(new PlayState());
+		//FlxG.switchState(new PlayStateOld());
 	}
 	
 }
