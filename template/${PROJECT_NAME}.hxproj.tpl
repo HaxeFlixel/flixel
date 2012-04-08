@@ -28,6 +28,7 @@
   <!-- haxelib libraries -->
   <haxelib>
     <library name="nme" />
+    <library name="flixel" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
