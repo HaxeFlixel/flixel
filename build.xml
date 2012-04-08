@@ -1,14 +1,29 @@
 <project default="all" basedir=".">
 
+	<property name="VERSION" value="0.1"/>
+	<property name="PACKAGE_NAME" value="haxeflixel"/>
+
 	<target name="Project Template">
 		<zip destfile="template.zip" basedir="template" />
 	</target>
+	
+	<target name="Run.n">
+		<exec executable="haxe" dir="./tools/run">
+			<arg line="build.hxml"/>
+		</exec>
+	</target>
 
-	<target name="Haxelib Package" depends="Project Template">
-		<zip destfile="haxepunk.zip">
-			<zipfileset dir="" prefix="haxeflixel" includes="haxelib.xml,template.zip" />
-			<zipfileset dir="src" prefix="haxeflixel" />
+	<target name="Haxelib Package" depends="Run.n, Project Template">
+		<zip destfile="${PACKAGE_NAME}-${VERSION}.zip">
+			<zipfileset dir="" prefix="${PACKAGE_NAME}" includes="run.n,haxelib.xml,template.zip" />
+			<zipfileset dir="src" prefix="${PACKAGE_NAME}" />
 		</zip>
+	</target>
+	
+	<target name="test" depends="all">
+		<exec executable="haxelib" dir=".">
+			<arg line="test ${PACKAGE_NAME}-${VERSION}.zip" />
+		</exec>
 	</target>
 
 	<target name="clean">
