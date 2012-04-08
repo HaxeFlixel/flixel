@@ -1,0 +1,8 @@
+<project name="HaxeFlixel" url="http://haxeflixel.org" license="GPL">
+	<user name="mylogin"/>
+	<tag v="nme"/>
+	<tag v="flixel"/>
+	<depends name="nme"/>	
+	<description>Haxe port of Flixel v. 2.55</description>
+	<version name="1.0">https://github.com/Werdn/HaxeFlixel#readme</version>
+</project>
