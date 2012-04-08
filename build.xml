@@ -1,6 +1,6 @@
 <project default="all" basedir=".">
 
-	<property name="VERSION" value="0.9.0a"/>
+	<property name="VERSION" value="1.00"/>
 	<property name="PACKAGE_NAME" value="haxeflixel"/>
 
 	<target name="Project Template">
