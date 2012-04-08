@@ -1,5 +1,5 @@
 <project name="HaxeFlixel" url="http://haxeflixel.org" license="GPL">
-	<user name="mylogin"/>
+	<user name="werdn"/>
 	<tag v="nme"/>
 	<tag v="flixel"/>
 	<depends name="nme"/>	
