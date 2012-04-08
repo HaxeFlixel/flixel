@@ -42,11 +42,7 @@ class ProjectCreator
 		
 		var cmd = parseCommandLine(args);
 
-		if(args.length < 1)
-		{
-			neko.Lib.println("Error in command line, try to use help:\n\nhaxelib run HaxeFlixel help");
-		}
-		else if(cmd.help)
+		if(args.length < 2 || cmd.help)
 		{
 			neko.Lib.println("haxeFlixel project template creation tool.\n");
 			neko.Lib.println("haxelib run HaxeFlixel [help] [-name \"Your Project Name\"] [-class MainProjectClass] [-screen WIDTH HEIGHT]\n");

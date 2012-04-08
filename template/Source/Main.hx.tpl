@@ -1,16 +1,10 @@
 package;
 
-import nme.Assets;
-import nme.display.BitmapData;
 import nme.display.StageAlign;
 import nme.display.StageScaleMode;
-import nme.display.FPS;
 import nme.display.Sprite;
-import nme.display.Tilesheet;
 import nme.events.Event;
 import nme.events.KeyboardEvent;
-import nme.geom.Point;
-import nme.geom.Rectangle;
 import nme.Lib;
 import nme.ui.Keyboard;
 import org.flixel.FlxGame;
@@ -43,12 +37,6 @@ class Main extends Sprite
 		var demo:FlxGame = new ${PROJECT_CLASS}();
 		addChild(demo);
 		
-		// var fps:FPS = new FPS();
-		// addChild(fps);
-		// fps.x = 20;
-		// fps.y = 20;
-		// fps.textColor = 0xffffff;
-		
 		#if (cpp || neko)
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUP);
 		#end
@@ -66,8 +54,8 @@ class Main extends Sprite
 	
 	private function initialize():Void 
 	{
-		//Lib.current.stage.align = StageAlign.TOP_LEFT;
-		//Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		Lib.current.stage.align = StageAlign.TOP_LEFT;
+		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 	}
 	
 	// Entry point
