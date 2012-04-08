@@ -210,7 +210,7 @@ class FlxWeapon
 			var tempBullet:Bullet = new Bullet(this, b);
 			
 			tempBullet.makeGraphic(width, height, color);
-			tempBullet.updateTileSheet();
+		//	tempBullet.updateTileSheet();
 			
 			group.add(tempBullet);
 		}
@@ -291,7 +291,7 @@ class FlxWeapon
 			var tempBullet:Bullet = new Bullet(this, b);
 			
 			tempBullet.loadGraphic(imageSequence, true, false, frameWidth, frameHeight);
-			tempBullet.updateTileSheet();
+		//	tempBullet.updateTileSheet();
 			tempBullet.addAnimation("fire", frames, frameRate, looped);
 			
 			group.add(tempBullet);

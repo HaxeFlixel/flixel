@@ -44,7 +44,7 @@ class Enemy extends FlxSprite
 		#else
 		loadGraphic("assets/bot.png");
 		#end
-		updateTileSheet();
+	//	updateTileSheet();
 
 		//We want the enemy's "hit box" or actual size to be
 		//smaller than the enemy graphic itself, just by a few pixels.

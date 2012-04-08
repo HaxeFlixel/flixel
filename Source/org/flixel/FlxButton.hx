@@ -131,7 +131,7 @@ class FlxButton extends FlxSprite
 	override public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite 
 	{
 		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique);
-		tempSprite.updateTileSheet();
+		//tempSprite.updateTileSheet();
 		if (label != null)
 		{
 			label.setFormat(null, 8, 0x333333, "center");

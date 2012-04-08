@@ -225,7 +225,7 @@ class FlxEmitter extends FlxGroup
 			}
 			particle.exists = false;
 			add(particle);
-			particle.updateTileSheet();
+			//particle.updateTileSheet();
 			i++;
 		}
 		return this;

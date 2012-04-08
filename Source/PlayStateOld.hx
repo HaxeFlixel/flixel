@@ -414,27 +414,27 @@ class PlayStateOld extends FlxState
 		//First, we create the walls, ceiling and floors:
 		b = new FlxTileblock(0, 0, 640, 16);
 		b.loadTiles("assets/tech_tiles.png");
-		b.updateTileSheet();
+	//	b.updateTileSheet();
 		_blocks.add(b);
 		
 		b = new FlxTileblock(0, 16, 16, 640 - 16);
 		b.loadTiles("assets/tech_tiles.png");
-		b.updateTileSheet();
+	//	b.updateTileSheet();
 		_blocks.add(b);
 		
 		b = new FlxTileblock(640 - 16, 16, 16, 640 - 16);
 		b.loadTiles("assets/tech_tiles.png");
-		b.updateTileSheet();
+	//	b.updateTileSheet();
 		_blocks.add(b);
 		
 		b = new FlxTileblock(16, 640 - 24, 640 - 32, 8);
 		b.loadTiles("assets/dirt_top.png");
-		b.updateTileSheet();
+	//	b.updateTileSheet();
 		_blocks.add(b);
 		
 		b = new FlxTileblock(16, 640 - 16, 640 - 32, 16);
 		b.loadTiles("assets/dirt.png");
-		b.updateTileSheet();
+	//	b.updateTileSheet();
 		_blocks.add(b);
 		
 		//Then we split the game world up into a 4x4 grid,
@@ -505,7 +505,7 @@ class PlayStateOld extends FlxState
 			var b:FlxTileblock;
 			b = new FlxTileblock(RX + bx * 8, RY + by * 8, bw * 8, bh * 8);
 			b.loadTiles("assets/tech_tiles.png");
-			b.updateTileSheet();
+		//	b.updateTileSheet();
 			_blocks.add(b);
 			
 			//If the block has room, add some non-colliding "dirt" graphics for variety
@@ -513,12 +513,12 @@ class PlayStateOld extends FlxState
 			{
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8, bw * 8 - 16, 8);
 				b.loadTiles("assets/dirt_top.png");
-				b.updateTileSheet();
+			//	b.updateTileSheet();
 				_decorations.add(b);
 				
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8 + 8, bw * 8 - 16, bh * 8 - 24);
 				b.loadTiles("assets/dirt.png");
-				b.updateTileSheet();
+			//	b.updateTileSheet();
 				_decorations.add(b);
 			}
 		}
@@ -531,7 +531,7 @@ class PlayStateOld extends FlxState
 			
 			//Then create a dedicated camera to watch the spawner
 			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame);
-			miniFrame.updateTileSheet();
+		//	miniFrame.updateTileSheet();
 			_hud.add(miniFrame);
 			var ratio:Float = FlxCamera.defaultZoom / 2;
 			var camera:FlxCamera = new FlxCamera(Math.floor(ratio * (10 + (_spawners.length - 1) * 32)), Math.floor(ratio * 10), 24, 24, ratio);

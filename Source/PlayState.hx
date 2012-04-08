@@ -453,7 +453,7 @@ class PlayState extends FlxState
 		
 		tileMap = new FlxTilemap();
 		tileMap.loadMap(FlxTilemap.arrayToCSV(map, MAP_WIDTH_IN_TILES), "assets/img_tiles.png", 8, 8, FlxTilemap.OFF);
-		tileMap.updateTileSheet();
+	//	tileMap.updateTileSheet();
 		add(tileMap);
 	}
 	
@@ -519,7 +519,7 @@ class PlayState extends FlxState
 			
 			//Then create a dedicated camera to watch the spawner
 			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame);
-			miniFrame.updateTileSheet();
+		//	miniFrame.updateTileSheet();
 			_hud.add(miniFrame);
 			
 			var ratio:Float = FlxCamera.defaultZoom / 2;

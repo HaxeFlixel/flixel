@@ -80,7 +80,7 @@ class ParticleState extends FlxState
 			#else
 			whitePixel.makeGraphic(2, 2, {rgb: 0xFFFFFF, a: 0xFF});
 			#end
-			whitePixel.updateTileSheet();
+		//	whitePixel.updateTileSheet();
 			whitePixel.visible = false; //Make sure the particle doesn't show up at (0, 0)
 			theEmitter.add(whitePixel);
 			whitePixel = new FlxParticle();
@@ -89,7 +89,7 @@ class ParticleState extends FlxState
 			#else
 			whitePixel.makeGraphic(1, 1, {rgb: 0xFFFFFF, a: 0xFF});
 			#end
-			whitePixel.updateTileSheet();
+		//	whitePixel.updateTileSheet();
 			whitePixel.visible = false;
 			theEmitter.add(whitePixel);
 		}
@@ -113,7 +113,7 @@ class ParticleState extends FlxState
 		#else
 		wall.makeGraphic(10, 100, {rgb: 0xFFFFFF, a: 0x50});
 		#end
-		wall.updateTileSheet();
+	//	wall.updateTileSheet();
 		wall.visible = wall.solid = false;//Set both the visibility AND the solidity to false, in one go
 		wall.immovable = true;//Lets make sure the pixels don't push out wall away! (though it does look funny)
 		collisionGroup.add(wall);
@@ -124,7 +124,7 @@ class ParticleState extends FlxState
 		#else
 		floor.makeGraphic(FlxG.width - 20, 10, {rgb: 0xFFFFFF, a: 0x50});
 		#end
-		floor.updateTileSheet();
+	//	floor.updateTileSheet();
 		floor.visible = floor.solid = false;
 		floor.immovable = true;
 		collisionGroup.add(floor);

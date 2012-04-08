@@ -371,6 +371,8 @@ class FlxSprite extends FlxObject
 		height = frameHeight = Height;
 		resetHelpers();
 		
+		updateTileSheet();
+		
 		return this;
 	}
 	
@@ -494,6 +496,8 @@ class FlxSprite extends FlxObject
 		_antialiasing = AntiAliasing;
 		#end
 		
+		updateTileSheet();
+		
 		return this;
 	}
 	
@@ -528,6 +532,8 @@ class FlxSprite extends FlxObject
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
 		resetHelpers();
+		
+		updateTileSheet();
 		
 		return this;
 	}
@@ -758,6 +764,8 @@ class FlxSprite extends FlxObject
 		#if flash
 		calcFrame();
 		#end
+		
+		updateTileSheet();
 	}
 	
 	/**
@@ -799,6 +807,8 @@ class FlxSprite extends FlxObject
 		//Cache line to bitmap
 		_pixels.draw(FlxG.flashGfxSprite);
 		dirty = true;
+		
+		updateTileSheet();
 	}
 	
 	/**
@@ -816,6 +826,8 @@ class FlxSprite extends FlxObject
 		{
 			dirty = true;
 		}
+		
+		updateTileSheet();
 	}
 	
 	/**
@@ -1020,6 +1032,8 @@ class FlxSprite extends FlxObject
 			}
 			row++;
 		}
+		
+		updateTileSheet();
 		
 		return positions;
 	}

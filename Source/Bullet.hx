@@ -15,7 +15,7 @@ class Bullet extends FlxSprite
 	{
 		super();
 		loadGraphic("assets/bullet.png", true);
-		updateTileSheet();
+	//	updateTileSheet();
 		width = 6;
 		height = 6;
 		offset.x = 1;
