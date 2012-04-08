@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<app title="Mode Demo" file="ModeDemo" main="Test" version="0.0.1" company="Zaphod" />
+	<app title="${PROJECT_NAME}" file="${PROJECT_NAME}" main="${PROJECT_CLASS}" version="0.0.1" company="Zaphod" />
 	
-	<window width="640" height="480" fps="30" orientation="portrait" resizable="true" if="target_flash" />
+	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="portrait" resizable="true" if="target_flash" />
 	<window width="0" height="0" fps="30" orientation="landscape" fullscreen="true" unless="target_flash" />
  	
 	<set name="BUILD_DIR" value="Export" />

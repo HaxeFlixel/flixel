@@ -4,10 +4,10 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="FlixelNME.nmml" />
+    <movie path="${PROJECT_NAME}.nmml" />
     <movie fps="30" />
-    <movie width="800" />
-    <movie height="600" />
+    <movie width="${WIDTH}" />
+    <movie height="${HEIGHT}" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
@@ -31,7 +31,7 @@
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="Source\TestDrawRect.hx" />
+    <compile path="Source\${PROJECT_CLASS}.hx" />
   </compileTargets>
   <!-- Assets to embed into the output SWF -->
   <library>
@@ -42,7 +42,7 @@
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxelib run nme test "FlixelNME.nmml" flash</preBuildCommand>
+  <preBuildCommand>haxelib run nme test "${PROJECT_NAME}.nmml" flash</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

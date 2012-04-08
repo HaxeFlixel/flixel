@@ -1,10 +1,9 @@
 package;
 
-import addonsTests.CaveGeneratorTest;
 import nme.Lib;
 import org.flixel.FlxGame;
 	
-class Mode extends FlxGame
+class ${PROJECT_CLASS} extends FlxGame
 {
 	
 	#if flash
@@ -25,16 +24,14 @@ class Mode extends FlxGame
 	{
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
-		var ratioX:Float = stageWidth / 320;
-		var ratioY:Float = stageHeight / 240;
+		var ratioX:Float = stageWidth / ${WIDTH};
+		var ratioY:Float = stageHeight / ${HEIGHT};
 		var ratio:Float = Math.min(ratioX, ratioY);
 		#if (flash || desktop || neko)
 		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), MenuState, ratio, 60, 60);
 		#else
 		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), MenuState, ratio, 60, 30);
 		#end
-		//super(320, 240, ParticleState, 2, 50, 50);
-		//super(320, 240, CaveGeneratorTest, 2, 50, 50);
 		forceDebugger = true;
 	}
 }

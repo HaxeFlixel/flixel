@@ -18,7 +18,7 @@ import org.flixel.FlxGame;
 /**
  * @author Joshua Granick
  */
-class Test extends Sprite 
+class Main extends Sprite 
 {
 	
 	public function new () 
@@ -40,14 +40,14 @@ class Test extends Sprite
 		
 		initialize();
 		
-		var demo:FlxGame = new Mode();
+		var demo:FlxGame = new ${PROJECT_CLASS}();
 		addChild(demo);
 		
-		var fps:FPS = new FPS();
-		addChild(fps);
-		fps.x = 20;
-		fps.y = 20;
-		fps.textColor = 0xffffff;
+		// var fps:FPS = new FPS();
+		// addChild(fps);
+		// fps.x = 20;
+		// fps.y = 20;
+		// fps.textColor = 0xffffff;
 		
 		#if (cpp || neko)
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUP);
@@ -73,7 +73,7 @@ class Test extends Sprite
 	// Entry point
 	public static function main() {
 		
-		Lib.current.addChild(new Test());
+		Lib.current.addChild(new Main());
 	}
 	
 }
