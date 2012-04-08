@@ -28,7 +28,6 @@ class CommandLine
 /**
  * Project manager stub
  * @author Werdn
- * based on https://github.com/MattTuttle/HaxePunk/blob/master/tools/SetupTool.hx
  */
 class ProjectCreator
 {
@@ -43,19 +42,18 @@ class ProjectCreator
 		
 		var cmd = parseCommandLine(args);
 
-		// neko.Lib.println(neko.Sys.getCwd());		
-		// neko.Lib.println(args);
-		// neko.Lib.println(cmd.projectDir);
-		// neko.Lib.println(cmd.projectName);
-
 		if(args.length < 1)
 		{
 			neko.Lib.println("Error in command line, try to use help:\n\nhaxelib run HaxeFlixel help");
 		}
 		else if(cmd.help)
 		{
-			neko.Lib.println("haxeFlixel project template creation tool.");
-			neko.Lib.println("haxelib run HaxeFlixel [help] [-name \"Your Project Name\"] [-class MainProjectClass] [-screen WIDTH HEIGHT]");
+			neko.Lib.println("haxeFlixel project template creation tool.\n");
+			neko.Lib.println("haxelib run HaxeFlixel [help] [-name \"Your Project Name\"] [-class MainProjectClass] [-screen WIDTH HEIGHT]\n");
+			neko.Lib.println("\thelp - this screen");
+			neko.Lib.println("\t-name \"Your Project Name\"");
+			neko.Lib.println("\t-class MainProjectClass");
+			neko.Lib.println("\t-screen WIDTH HEIGHT");
 		}
 		else
 		{
@@ -122,30 +120,37 @@ class ProjectCreator
 		for(entry in data)
 		{
 			var fileName = entry.fileName;
-			
-			var bytes:Bytes = Reader.unzip(entry);
 
-			if(StringTools.endsWith(fileName, ".tpl"))
+			if(StringTools.endsWith(fileName, "\\") || StringTools.endsWith(fileName, "/"))
 			{
-				//TODO make some template magic
-				var text:String = new haxe.io.BytesInput(bytes).readString(bytes.length);
-				
-				text = replaceAll(text, cmd);
-				
-				bytes = Bytes.ofString(text);
-				
-				fileName = replaceAll(fileName.substr(0, -4), cmd);
-
-				neko.Lib.println(text);
-
-				neko.Lib.print("Template ");
+				fileName = fileName.substr(0, -1);
+				neko.Lib.println("Directory: " + fileName);
+				if(!neko.FileSystem.exists(cmd.projectDir + "/" +fileName))
+				{
+					neko.FileSystem.createDirectory(cmd.projectDir + "/" +fileName);
+				}
 			}
+			else
+			{
+				var bytes:Bytes = Reader.unzip(entry);
+				if(StringTools.endsWith(fileName, ".tpl"))
+				{
+					//TODO make some template magic
+					var text:String = new haxe.io.BytesInput(bytes).readString(bytes.length);
+					
+					text = replaceAll(text, cmd);
+					
+					bytes = Bytes.ofString(text);
+					
+					fileName = replaceAll(fileName.substr(0, -4), cmd);
+				}
 
-			neko.Lib.println("File output: " + fileName);
-				
-			//var fout:FileOutput = File.write(path + "/" + fileName, true);
-			//fout.writeBytes(bytes, 0, bytes.length);
-			//fout.close();
+				neko.Lib.println("File output: " + fileName);
+
+				var fout:FileOutput = File.write(cmd.projectDir + "/" + fileName, true);
+				fout.writeBytes(bytes, 0, bytes.length);
+				fout.close();
+			}				
 		}
 	}
 
