@@ -13,6 +13,7 @@
 	<classpath name="Source" />
 	
 	<haxelib name="nme" />
+	<haxelib name="HaxeFlixel"/>
 	
 	<assets path="Assets" rename="assets" include="*" exclude="*.svg" unless="target_flash" />
 	<assets path="Assets" rename="assets" include="*" exclude="*.svg|*.wav|*.ogg" if="target_flash" />
