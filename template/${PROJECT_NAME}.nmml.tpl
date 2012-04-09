@@ -19,6 +19,7 @@
 	<assets path="Assets" rename="assets" include="*" exclude="*.svg|*.wav|*.ogg" if="target_flash" />
 	
 	<!--<icon name="Assets/nme.svg" /> -->
+	<set name="PRELOADER_NAME" value="org.flixel.system.FlxPreloader" />
 	
 	<ndll name="std" />
 	<ndll name="regexp" />
