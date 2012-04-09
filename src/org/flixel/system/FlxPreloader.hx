@@ -90,7 +90,7 @@ class FlxPreloader extends NMEPreloader
 		removeChild(outline);
 		removeChild(progress);
 		
-		minDisplayTime = 5;
+		minDisplayTime = 0;
 		
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
