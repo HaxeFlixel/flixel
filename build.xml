@@ -1,7 +1,7 @@
 <project default="all" basedir=".">
 
 	<property name="VERSION" value="1.00"/>
-	<property name="PACKAGE_NAME" value="haxeflixel"/>
+	<property name="PACKAGE_NAME" value="flixel"/>
 
 	<target name="Project Template">
 		<zip destfile="template.zip" basedir="template" />
