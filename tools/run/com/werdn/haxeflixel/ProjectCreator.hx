@@ -44,8 +44,8 @@ class ProjectCreator
 
 		if(args.length < 2 || cmd.help)
 		{
-			neko.Lib.println("haxeFlixel project template creation tool.\n");
-			neko.Lib.println("haxelib run HaxeFlixel [help] [-name \"Your Project Name\"] [-class MainProjectClass] [-screen WIDTH HEIGHT]\n");
+			neko.Lib.println("Flixel project template creation tool.\n");
+			neko.Lib.println("haxelib run flixel [help] [-name \"Your Project Name\"] [-class MainProjectClass] [-screen WIDTH HEIGHT]\n");
 			neko.Lib.println("\thelp - this screen");
 			neko.Lib.println("\t-name \"Your Project Name\"");
 			neko.Lib.println("\t-class MainProjectClass");
