@@ -19,9 +19,6 @@ import org.flixel.FlxSprite;
 class FlxTextField extends FlxText
 {
 	
-	override public var color(getColor, setColor):BitmapInt32;
-	override public var shadow(getShadow, setShadow):Int;
-	
 	/**
 	 * Internal reference to array of Flash <code>TextField</code> objects.
 	 */
