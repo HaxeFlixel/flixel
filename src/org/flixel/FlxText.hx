@@ -21,10 +21,8 @@ class FlxText extends FlxSprite
 {
 	
 	#if flash
-	override public var color(getColor, setColor):UInt;
 	public var shadow(getShadow, setShadow):UInt;
 	#else
-	override public var color(getColor, setColor):BitmapInt32;
 	public var shadow(getShadow, setShadow):Int;
 	#end
 	
@@ -74,7 +72,7 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		var format:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffffff);
+		var format:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
 		//_textField.setTextFormat(format);
 		_textField.defaultTextFormat = format;
 		_textField.text = Text;
