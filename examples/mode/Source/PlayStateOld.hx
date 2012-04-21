@@ -199,7 +199,7 @@ class PlayStateOld extends FlxState
 		
 		if (Mode.SoundOn)
 		{
-			FlxG.playMusic(Assets.getSound("assets/mode" + Mode.SoundExtension));
+			FlxG.playMusic(Assets.getSound("assets/mode.mp3"));
 		}
 		
 		FlxG.flash(0xff131c1b);
