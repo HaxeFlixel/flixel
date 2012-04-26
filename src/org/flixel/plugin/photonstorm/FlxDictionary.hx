@@ -55,7 +55,7 @@ class FlxDictionary<T>
 		if (key.___id___ == null) 
 		{
 			key.___id___ = nextObjectID++;
-			if (nextObjectID == 2147483647) 
+			if (nextObjectID == 0x3FFFFFFF) 
 			{
 				nextObjectID = 0;
 			}

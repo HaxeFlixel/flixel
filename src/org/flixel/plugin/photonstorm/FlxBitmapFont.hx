@@ -162,7 +162,7 @@ class FlxBitmapFont extends FlxSprite
 	/**
 	 * offsets for each letter in the sprite (not affected by scale and rotation)
 	 */
-	private var points:Array<CharPointTileID>;
+	private var points:Array<Float>;
 	/**
 	 * frame IDs for each letter in the font set bitmapData
 	 */
@@ -283,10 +283,6 @@ class FlxBitmapFont extends FlxSprite
 		grabData = null;
 		
 	#if (cpp || neko)
-		for (point in points)
-		{
-			point.destroy();
-		}
 		points = null;
 		charFrameIDs = null;
 	#end
@@ -314,8 +310,11 @@ class FlxBitmapFont extends FlxSprite
 		var l:Int = cameras.length;
 		
 		var j:Int = 0;
-		var textLength:Int = points.length;
-		var currPointTileID:CharPointTileID;
+		var textLength:Int = Math.floor(points.length / 3);
+		var currPosInArr:Int;
+		var currTileID:Float;
+		var currTileX:Float;
+		var currTileY:Float;
 		
 		var radians:Float;
 		var cos:Float;
@@ -343,12 +342,15 @@ class FlxBitmapFont extends FlxSprite
 				{
 					if (_tileSheetData != null)
 					{
-						currPointTileID = points[j];
+						currPosInArr = j * 3;
+						currTileID = points[currPosInArr];
+						currTileX = points[currPosInArr + 1];
+						currTileY = points[currPosInArr + 2];
 						
-						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + currPointTileID.point.x);
-						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + currPointTileID.point.y);
+						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + currTileX);
+						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + currTileY);
 						
-						_tileSheetData.drawData[camID].push(currPointTileID.tileID);
+						_tileSheetData.drawData[camID].push(currTileID);
 						
 						_tileSheetData.drawData[camID].push(1.0); // scale
 						_tileSheetData.drawData[camID].push(0.0); // rotation
@@ -384,15 +386,18 @@ class FlxBitmapFont extends FlxSprite
 				{
 					if (_tileSheetData != null)
 					{
-						currPointTileID = points[j];
+						currPosInArr = j * 3;
+						currTileID = points[currPosInArr];
+						currTileX = points[currPosInArr + 1];
+						currTileY = points[currPosInArr + 2];
 						
-						relativeX = (currPointTileID.point.x * cos - currPointTileID.point.y * sin) * scale.x;
-						relativeY = (currPointTileID.point.x * sin + currPointTileID.point.y * cos) * scale.x;
+						relativeX = (currTileX * cos - currTileY * sin) * scale.x;
+						relativeY = (currTileX * sin + currTileY * cos) * scale.x;
 						
 						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + relativeX);
 						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + relativeY);
 						
-						_tileSheetData.drawData[camID].push(currPointTileID.tileID);
+						_tileSheetData.drawData[camID].push(currTileID);
 						
 						_tileSheetData.drawData[camID].push(scale.x); // scale
 						_tileSheetData.drawData[camID].push(-radians); // rotation
@@ -526,7 +531,14 @@ class FlxBitmapFont extends FlxSprite
 		var cy:Int = 0;
 		
 	#if (cpp || neko)
-		points = new Array<CharPointTileID>();
+		if (points == null)
+		{
+			points = new Array<Float>();
+		}
+		else
+		{
+			points.splice(0, points.length);
+		}
 	#end
 		
 		if (multiLine)
@@ -711,7 +723,9 @@ class FlxBitmapFont extends FlxSprite
 				#if flash
 					output.copyPixels(fontSet, grabData[line.charCodeAt(c)], new Point(x, y));
 				#else
-					points.push(new CharPointTileID(new Point(x - origin.x, y - origin.y), charFrameIDs[line.charCodeAt(c)]));
+					points.push(charFrameIDs[line.charCodeAt(c)]);
+					points.push(x - origin.x);
+					points.push(y - origin.y);
 				#end
 					
 					x += characterWidth + customSpacingX;
@@ -779,24 +793,6 @@ class FlxBitmapFont extends FlxSprite
 		}
 		
 		return newString;
-	}
-	
-}
-
-class CharPointTileID
-{
-	public var point:Point;
-	public var tileID:Int;
-	
-	public function new(point:Point, tileID:Int)
-	{
-		this.point = point;
-		this.tileID = tileID;
-	}
-	
-	public function destroy():Void
-	{
-		point = null;
 	}
 	
 }
