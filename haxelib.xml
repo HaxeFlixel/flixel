@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <project name="flixel" url="https://github.com/Beeblerox/HaxeFlixel" license="MIT">
 	<user name="zaphod"/>
 	<tag v="nme"/>
@@ -9,16 +8,4 @@
 	<depends name="nme"/>	
 	<description>Flixel is a popular free game engine. This is a port of Flixel 2.55.</description>
 	<version name="1.00">https://github.com/Beeblerox/HaxeFlixel</version>
-=======
-<project name="flixel" url="https://github.com/Beeblerox/HaxeFlixel" license="MIT">
-	<user name="zaphod"/>
-	<tag v="nme"/>
-	<tag v="flash"/>
-	<tag v="cpp"/>
-	<tag v="neko"/>
-	<tag v="flixel"/>
-	<depends name="nme"/>	
-	<description>Flixel is a popular free game engine. This is a port of Flixel 2.55.</description>
-	<version name="1.00">https://github.com/Beeblerox/HaxeFlixel</version>
->>>>>>> ab199a2cae73240758fb70eed945f1213a6ec270
 </project>
