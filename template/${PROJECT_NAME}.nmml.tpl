@@ -8,6 +8,8 @@
  	
 	<set name="BUILD_DIR" value="Export" />
 	
+	<app preloader="org.flixel.system.FlxPreloader" />
+	
 	<!--<setenv name="no_console" value="1" />-->
 	
 	<classpath name="Source" />
