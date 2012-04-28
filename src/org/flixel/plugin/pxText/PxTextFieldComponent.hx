@@ -35,6 +35,10 @@ class PxTextFieldComponent extends Sprite
 	#if (flash || js)
 	public var bitmapData:BitmapData;
 	private var _bitmap:Bitmap;
+	
+	private var _preparedTextGlyphs:Array<BitmapData>;
+	private var _preparedShadowGlyphs:Array<BitmapData>;
+	private var _preparedOutlineGlyphs:Array<BitmapData>;
 	#else
 	private var _drawData:Array<Float>;
 	#end
@@ -78,6 +82,8 @@ class PxTextFieldComponent extends Sprite
 		}
 		
 		#if (flash || js)
+		updateGlyphs(true, _shadow, _outline);
+		
 		bitmapData = new BitmapData(1, 1, true);
 		_bitmap = new Bitmap(bitmapData);
 		this.addChild(_bitmap);
@@ -97,6 +103,10 @@ class PxTextFieldComponent extends Sprite
 		_bitmap = null;
 		bitmapData.dispose();
 		bitmapData = null;
+		
+		clearPreparedGlyphs(_preparedTextGlyphs);
+		clearPreparedGlyphs(_preparedShadowGlyphs);
+		clearPreparedGlyphs(_preparedOutlineGlyphs);
 		#end
 	}
 	
@@ -128,7 +138,11 @@ class PxTextFieldComponent extends Sprite
 		
 		var calcFieldWidth:Int = _fieldWidth;
 		var rows:Array<String> = [];
+		#if (flash || js)
+		var fontHeight:Int = Math.floor(_font.getFontHeight() * _fontScale);
+		#else
 		var fontHeight:Int = _font.getFontHeight();
+		#end
 		var alignment:Int = _alignment;
 		
 		// cut text into pices
@@ -169,7 +183,7 @@ class PxTextFieldComponent extends Sprite
 						if (!changed) 
 						{
 							var subText:String = txt.substr(0, txt.length - 1);
-							calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(subText)));
+							calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(subText) * _fontScale));
 							rows.push(subText);
 						}
 						lineComplete = true;
@@ -179,7 +193,11 @@ class PxTextFieldComponent extends Sprite
 		}
 		
 		var finalWidth:Int = calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
-		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0)) * _fontScale) + _lineSpacing * (rows.length - 1);
+		#if (flash || js)
+		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + _lineSpacing * (rows.length - 1);
+		#else
+		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight * _fontScale + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + _lineSpacing * (rows.length - 1);
+		#end
 		
 		#if (flash || js)
 		if (bitmapData != null) 
@@ -233,7 +251,7 @@ class PxTextFieldComponent extends Sprite
 					for (px in 0...(2 + 1)) 
 					{
 						#if (flash || js)
-						_font.render(bitmapData, t, _outlineColor, px + ox + _padding, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
+						_font.render(bitmapData, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _fontScale);
 						#else
 						_font.render(_drawData, t, _outlineColor, _alpha, px + ox + _padding, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
 						#end
@@ -245,13 +263,13 @@ class PxTextFieldComponent extends Sprite
 			if (_shadow) 
 			{
 				#if (flash || js)
-				_font.render(bitmapData, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
+				_font.render(bitmapData, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _fontScale);
 				#else
 				_font.render(_drawData, t, _shadowColor, _alpha, 1 + ox + _padding, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
 				#end
 			}
 			#if (flash || js)
-			_font.render(bitmapData, t, _color, ox + _padding, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
+			_font.render(bitmapData, _preparedTextGlyphs, t, _color, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _fontScale);
 			#else
 			_font.render(_drawData, t, _color, _alpha, ox + _padding, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
 			#end
@@ -322,6 +340,7 @@ class PxTextFieldComponent extends Sprite
 		if (_shadow) 
 		{
 			_outline = false;
+			updateGlyphs(false, _shadow, false);
 		}
 		
 		_pendingTextChange = true;
@@ -338,6 +357,7 @@ class PxTextFieldComponent extends Sprite
 	public function set_shadowColor(value:Int):Int 
 	{
 		_shadowColor = value;
+		updateGlyphs(false, _shadow, false);
 		_pendingTextChange = true;
 		update();
 		return value;
@@ -360,12 +380,12 @@ class PxTextFieldComponent extends Sprite
 	/**
 	 * Sets the color of the text.
 	 */
-	
 	public var color(null, set_color):Int;
 	
 	public function set_color(value:Int):Int 
 	{
 		_color = value;
+		updateGlyphs(true, false, false);
 		_pendingTextChange = true;
 		update();
 		return value;
@@ -427,6 +447,7 @@ class PxTextFieldComponent extends Sprite
 		if (_outline) 
 		{
 			_shadow = false;
+			updateGlyphs(false, false, true);
 		}
 		_pendingTextChange = true;
 		update();
@@ -442,6 +463,7 @@ class PxTextFieldComponent extends Sprite
 	public function set_outlineColor(value:Int):Int 
 	{
 		_outlineColor = value;
+		updateGlyphs(false, false, _outline);
 		_pendingTextChange = true;
 		update();
 		return value;
@@ -456,6 +478,7 @@ class PxTextFieldComponent extends Sprite
 	public function set_font(pFont:PxBitmapFont):PxBitmapFont 
 	{
 		_font = pFont;
+		updateGlyphs(true, _shadow, _outline);
 		_pendingTextChange = true;
 		update();
 		return pFont;
@@ -503,9 +526,50 @@ class PxTextFieldComponent extends Sprite
 	public function set_fontScale(pScale:Float):Float
 	{
 		_fontScale = Math.abs(pScale);
+		updateGlyphs(true, _shadow, _outline);
 		_pendingTextChange = true;
 		update();
 		return pScale;
 	}
+	
+	private function updateGlyphs(?textGlyphs:Bool = false, ?shadowGlyphs:Bool = false, ?outlineGlyphs:Bool = false):Void
+	{
+		#if (flash || js)
+		if (textGlyphs)
+		{
+			clearPreparedGlyphs(_preparedTextGlyphs);
+			_preparedTextGlyphs = _font.getPreparedGlyphs(_fontScale, _color);
+		}
+		
+		if (shadowGlyphs)
+		{
+			clearPreparedGlyphs(_preparedShadowGlyphs);
+			_preparedShadowGlyphs = _font.getPreparedGlyphs(_fontScale, _shadowColor);
+		}
+		
+		if (outlineGlyphs)
+		{
+			clearPreparedGlyphs(_preparedOutlineGlyphs);
+			_preparedOutlineGlyphs = _font.getPreparedGlyphs(_fontScale, _outlineColor);
+		}
+		#end
+	}
+	
+	#if (flash || js)
+	private function clearPreparedGlyphs(pGlyphs:Array<BitmapData>):Void
+	{
+		if (pGlyphs != null)
+		{
+			for (bmd in pGlyphs)
+			{
+				if (bmd != null)
+				{
+					bmd.dispose();
+				}
+			}
+			pGlyphs = null;
+		}
+	}
+	#end
 
 }
