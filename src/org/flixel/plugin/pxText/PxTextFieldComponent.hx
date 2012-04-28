@@ -24,7 +24,9 @@ class PxTextFieldComponent extends Sprite
 	private var _padding:Int;
 	
 	private var _lineSpacing:Int;
+	private var _letterSpacing:Int;
 	private var _fontScale:Float;
+	private var _autoUpperCase:Bool;
 	
 	private var _pendingTextChange:Bool;
 	private var _fieldWidth:Int;
@@ -63,7 +65,9 @@ class PxTextFieldComponent extends Sprite
 		_multiLine = false;
 		
 		_lineSpacing = 0;
+		_letterSpacing = 0;
 		_fontScale = 1;
+		_autoUpperCase = false;
 		_alpha = 1;
 		
 		super();
@@ -114,14 +118,28 @@ class PxTextFieldComponent extends Sprite
 	 * Sets which text to display.
 	 * @param pText	Text to display.
 	 */
-	public var text(null, set_text):String;
+	public var text(get_text, set_text):String;
+	
+	public function get_text():String
+	{
+		return _text;
+	}
 	
 	public function set_text(pText:String):String 
 	{
-		_text = pText;
-		_text = _text.split("\\n").join("\n");
-		_pendingTextChange = true;
-		update();
+		var tmp:String = pText;
+		tmp = tmp.split("\\n").join("\n");
+		if (tmp != _text)
+		{
+			_text = pText;
+			_text = _text.split("\\n").join("\n");
+			if (_autoUpperCase)
+			{
+				_text = _text.toUpperCase();
+			}
+			_pendingTextChange = true;
+			update();
+		}
 		return _text;
 	}
 	
@@ -145,6 +163,9 @@ class PxTextFieldComponent extends Sprite
 		#end
 		var alignment:Int = _alignment;
 		
+		var letterSpacingDividedByFontScale:Int = Math.floor(_letterSpacing / _fontScale);
+		//var letterSpacingDividedByFontScale:Int = Math.floor(_letterSpacing);
+		
 		// cut text into pices
 		var lineComplete:Bool;
 		
@@ -167,7 +188,7 @@ class PxTextFieldComponent extends Sprite
 					
 					if (_multiLine) 
 					{
-						if (_font.getTextWidth(currentRow) * _fontScale > _fieldWidth) 
+						if (_font.getTextWidth(currentRow, letterSpacingDividedByFontScale) * _fontScale > _fieldWidth) 
 						{
 							rows.push(txt.substr(0, txt.length - 1));
 							txt = "";
@@ -183,7 +204,7 @@ class PxTextFieldComponent extends Sprite
 						if (!changed) 
 						{
 							var subText:String = txt.substr(0, txt.length - 1);
-							calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(subText) * _fontScale));
+							calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(subText, letterSpacingDividedByFontScale) * _fontScale));
 							rows.push(subText);
 						}
 						lineComplete = true;
@@ -238,11 +259,11 @@ class PxTextFieldComponent extends Sprite
 			var oy:Int = 0;
 			if (alignment == PxTextAlign.CENTER) 
 			{
-				ox = Math.floor((_fieldWidth - _font.getTextWidth(t) * _fontScale / 2) - _fieldWidth / 2);
+				ox = Math.floor((_fieldWidth - _font.getTextWidth(t, letterSpacingDividedByFontScale) * _fontScale / 2) - _fieldWidth / 2);
 			}
 			if (alignment == PxTextAlign.RIGHT) 
 			{
-				ox = _fieldWidth - Math.floor(_font.getTextWidth(t) * _fontScale / 2);
+				ox = _fieldWidth - Math.floor(_font.getTextWidth(t, letterSpacingDividedByFontScale) * _fontScale / 2);
 			}
 			if (_outline) 
 			{
@@ -251,9 +272,9 @@ class PxTextFieldComponent extends Sprite
 					for (px in 0...(2 + 1)) 
 					{
 						#if (flash || js)
-						_font.render(bitmapData, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _fontScale);
+						_font.render(bitmapData, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing, _fontScale);
 						#else
-						_font.render(_drawData, t, _outlineColor, _alpha, px + ox + _padding, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
+						_font.render(_drawData, t, _outlineColor, _alpha, px + ox + _padding, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _letterSpacing, _fontScale);
 						#end
 					}
 				}
@@ -263,15 +284,15 @@ class PxTextFieldComponent extends Sprite
 			if (_shadow) 
 			{
 				#if (flash || js)
-				_font.render(bitmapData, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _fontScale);
+				_font.render(bitmapData, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing, _fontScale);
 				#else
-				_font.render(_drawData, t, _shadowColor, _alpha, 1 + ox + _padding, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
+				_font.render(_drawData, t, _shadowColor, _alpha, 1 + ox + _padding, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _letterSpacing, _fontScale);
 				#end
 			}
 			#if (flash || js)
-			_font.render(bitmapData, _preparedTextGlyphs, t, _color, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _fontScale);
+			_font.render(bitmapData, _preparedTextGlyphs, t, _color, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing, _fontScale);
 			#else
-			_font.render(_drawData, t, _color, _alpha, ox + _padding, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _fontScale);
+			_font.render(_drawData, t, _color, _alpha, ox + _padding, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _letterSpacing, _fontScale);
 			#end
 			row++;
 		}
@@ -303,13 +324,21 @@ class PxTextFieldComponent extends Sprite
 	 * Specifies whether the text field should have a filled background.
 	 */
 	
-	public var background(null, set_background):Bool;
+	public var background(get_background, set_background):Bool;
+	
+	public function get_background():Bool
+	{
+		return _background;
+	}
 	
 	public function set_background(value:Bool):Bool 
 	{
-		_background = value;
-		_pendingTextChange = true;
-		update();
+		if (_background != value)
+		{
+			_background = value;
+			_pendingTextChange = true;
+			update();
+		}
 		return value;
 	}
 	
@@ -317,13 +346,24 @@ class PxTextFieldComponent extends Sprite
 	 * Specifies the color of the text field background.
 	 */
 	
-	public var backgroundColor(null, set_backgroundColor):Int;
+	public var backgroundColor(get_backgroundColor, set_backgroundColor):Int;
+	
+	public function get_backgroundColor():Int
+	{
+		return _backgroundColor;
+	}
 	
 	public function set_backgroundColor(value:Int):Int
 	{
-		_backgroundColor = value;
-		_pendingTextChange = true;
-		update();
+		if (_backgroundColor != value)
+		{
+			_backgroundColor = value;
+			if (_background)
+			{
+				_pendingTextChange = true;
+				update();
+			}
+		}
 		return value;
 	}
 	
@@ -331,20 +371,24 @@ class PxTextFieldComponent extends Sprite
 	 * Specifies whether the text should have a shadow.
 	 */
 	
-	public var shadow(null, set_shadow):Bool;
+	public var shadow(get_shadow, set_shadow):Bool;
+	
+	public function get_shadow():Bool
+	{
+		return _shadow;
+	}
 	
 	public function set_shadow(value:Bool):Bool
 	{
-		_shadow = value;
-		
-		if (_shadow) 
+		if (_shadow != value)
 		{
+			_shadow = value;
 			_outline = false;
 			updateGlyphs(false, _shadow, false);
+			_pendingTextChange = true;
+			update();
 		}
 		
-		_pendingTextChange = true;
-		update();
 		return value;
 	}
 	
@@ -352,14 +396,23 @@ class PxTextFieldComponent extends Sprite
 	 * Specifies the color of the text field shadow.
 	 */
 	
-	public var shadowColor(null, set_shadowColor):Int;
+	public var shadowColor(get_shadowColor, set_shadowColor):Int;
+	
+	public function get_shadowColor():Int
+	{
+		return _shadowColor;
+	}
 	
 	public function set_shadowColor(value:Int):Int 
 	{
-		_shadowColor = value;
-		updateGlyphs(false, _shadow, false);
-		_pendingTextChange = true;
-		update();
+		if (_shadowColor != value)
+		{
+			_shadowColor = value;
+			updateGlyphs(false, _shadow, false);
+			_pendingTextChange = true;
+			update();
+		}
+		
 		return value;
 	}
 	
@@ -367,27 +420,43 @@ class PxTextFieldComponent extends Sprite
 	 * Sets the padding of the text field. This is the distance between the text and the border of the background (if any).
 	 */
 	
-	public var padding(null, set_padding):Int;
+	public var padding(get_padding, set_padding):Int;
+	
+	public function get_padding():Int
+	{
+		return _padding;
+	}
 	
 	public function set_padding(value:Int):Int 
 	{
-		_padding = value;
-		_pendingTextChange = true;
-		update();
+		if (_padding != value)
+		{
+			_padding = value;
+			_pendingTextChange = true;
+			update();
+		}
 		return value;
 	}
 	
 	/**
 	 * Sets the color of the text.
 	 */
-	public var color(null, set_color):Int;
+	public var color(get_color, set_color):Int;
+	
+	public function get_color():Int
+	{
+		return _color;
+	}
 	
 	public function set_color(value:Int):Int 
 	{
-		_color = value;
-		updateGlyphs(true, false, false);
-		_pendingTextChange = true;
-		update();
+		if (_color != value)
+		{
+			_color = value;
+			updateGlyphs(true, false, false);
+			_pendingTextChange = true;
+			update();
+		}
 		return value;
 	}
 	
@@ -396,13 +465,17 @@ class PxTextFieldComponent extends Sprite
 	 */
 	public function setWidth(pWidth:Int):Int 
 	{
-		_fieldWidth = pWidth;
-		if (_fieldWidth < 1) 
+		if (pWidth < 1) 
 		{
-			_fieldWidth = 1;
+			pWidth = 1;
 		}
-		_pendingTextChange = true;
-		update();
+		if (pWidth != _fieldWidth)
+		{
+			_fieldWidth = pWidth;
+			_pendingTextChange = true;
+			update();
+		}
+		
 		return pWidth;
 	}
 	
@@ -411,13 +484,21 @@ class PxTextFieldComponent extends Sprite
 	 * LEFT, RIGHT, CENTER.
 	 */
 	
-	public var alignment(null, set_alignment):Int;
+	public var alignment(get_alignment, set_alignment):Int;
+	
+	public function get_alignment():Int
+	{
+		return _alignment;
+	}
 	
 	public function set_alignment(pAlignment:Int):Int 
 	{
-		_alignment = pAlignment;
-		_pendingTextChange = true;
-		update();
+		if (_alignment != pAlignment)
+		{
+			_alignment = pAlignment;
+			_pendingTextChange = true;
+			update();
+		}
 		return pAlignment;
 	}
 	
@@ -425,13 +506,21 @@ class PxTextFieldComponent extends Sprite
 	 * Specifies whether the text field will break into multiple lines or not on overflow.
 	 */
 	
-	public var multiLine(null, set_multiLine):Bool;
+	public var multiLine(get_multiLine, set_multiLine):Bool;
+	
+	public function get_multiLine():Bool
+	{
+		return _multiLine;
+	}
 	
 	public function set_multiLine(pMultiLine:Bool):Bool 
 	{
-		_multiLine = pMultiLine;
-		_pendingTextChange = true;
-		update();
+		if (_multiLine != pMultiLine)
+		{
+			_multiLine = pMultiLine;
+			_pendingTextChange = true;
+			update();
+		}
 		return pMultiLine;
 	}
 	
@@ -439,18 +528,23 @@ class PxTextFieldComponent extends Sprite
 	 * Specifies whether the text should have an outline.
 	 */
 	
-	public var outline(null, set_outline):Bool;
+	public var outline(get_outline, set_outline):Bool;
+	
+	public function get_outline():Bool
+	{
+		return _outline;
+	}
 	
 	public function set_outline(value:Bool):Bool 
 	{
-		_outline = value;
-		if (_outline) 
+		if (_outline != value)
 		{
+			_outline = value;
 			_shadow = false;
 			updateGlyphs(false, false, true);
+			_pendingTextChange = true;
+			update();
 		}
-		_pendingTextChange = true;
-		update();
 		return value;
 	}
 	
@@ -458,14 +552,22 @@ class PxTextFieldComponent extends Sprite
 	 * Specifies whether color of the text outline.
 	 */
 	
-	public var outlineColor(null, set_outlineColor):Int;
+	public var outlineColor(get_outlineColor, set_outlineColor):Int;
+	
+	public function get_outlineColor():Int
+	{
+		return _outlineColor;
+	}
 	
 	public function set_outlineColor(value:Int):Int 
 	{
-		_outlineColor = value;
-		updateGlyphs(false, false, _outline);
-		_pendingTextChange = true;
-		update();
+		if (_outlineColor != value)
+		{
+			_outlineColor = value;
+			updateGlyphs(false, false, _outline);
+			_pendingTextChange = true;
+			update();
+		}
 		return value;
 	}
 	
@@ -473,14 +575,22 @@ class PxTextFieldComponent extends Sprite
 	 * Sets which font to use for rendering.
 	 */
 	
-	public var font(null, set_font):PxBitmapFont;
+	public var font(get_font, set_font):PxBitmapFont;
+	
+	public function get_font():PxBitmapFont
+	{
+		return _font;
+	}
 	
 	public function set_font(pFont:PxBitmapFont):PxBitmapFont 
 	{
-		_font = pFont;
-		updateGlyphs(true, _shadow, _outline);
-		_pendingTextChange = true;
-		update();
+		if (_font != pFont)
+		{
+			_font = pFont;
+			updateGlyphs(true, _shadow, _outline);
+			_pendingTextChange = true;
+			update();
+		}
 		return pFont;
 	}
 	
@@ -493,9 +603,12 @@ class PxTextFieldComponent extends Sprite
 	
 	public function set_lineSpacing(pSpacing:Int):Int
 	{
-		_lineSpacing = Math.floor(Math.abs(pSpacing));
-		_pendingTextChange = true;
-		update();
+		if (_lineSpacing != pSpacing)
+		{
+			_lineSpacing = Math.floor(Math.abs(pSpacing));
+			_pendingTextChange = true;
+			update();
+		}
 		return pSpacing;
 	}
 	
@@ -525,11 +638,54 @@ class PxTextFieldComponent extends Sprite
 	
 	public function set_fontScale(pScale:Float):Float
 	{
-		_fontScale = Math.abs(pScale);
-		updateGlyphs(true, _shadow, _outline);
-		_pendingTextChange = true;
-		update();
+		var tmp:Float = Math.abs(pScale);
+		if (tmp != _fontScale)
+		{
+			_fontScale = tmp;
+			updateGlyphs(true, _shadow, _outline);
+			_pendingTextChange = true;
+			update();
+		}
 		return pScale;
+	}
+	
+	public var letterSpacing(get_letterSpacing, set_letterSpacing):Int;
+	
+	public function get_letterSpacing():Int
+	{
+		return _letterSpacing;
+	}
+	
+	public function set_letterSpacing(pSpacing:Int):Int
+	{
+		var tmp:Int = Math.floor(Math.abs(pSpacing));
+		if (tmp != _letterSpacing)
+		{
+			_letterSpacing = tmp;
+			_pendingTextChange = true;
+			update();
+		}
+		return _letterSpacing;
+	}
+	
+	public var autoUpperCase(get_autoUpperCase, set_autoUpperCase):Bool;
+	
+	private function get_autoUpperCase():Bool 
+	{
+		return _autoUpperCase;
+	}
+	
+	private function set_autoUpperCase(value:Bool):Bool 
+	{
+		if (_autoUpperCase != value)
+		{
+			_autoUpperCase = value;
+			if (_autoUpperCase)
+			{
+				text = _text.toUpperCase();
+			}
+		}
+		return _autoUpperCase;
 	}
 	
 	private function updateGlyphs(?textGlyphs:Bool = false, ?shadowGlyphs:Bool = false, ?outlineGlyphs:Bool = false):Void

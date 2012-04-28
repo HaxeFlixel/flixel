@@ -300,11 +300,11 @@ class PxBitmapFont
 	 * @param	pOffsetY	Y position of thext output.
 	 */
 	#if flash 
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pScale:Float, ?pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int,  pScale:Float, ?pAngle:Float = 0):Void 
 	#elseif js
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pScale:Float, ?pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pAngle:Float = 0):Void 
 	#else
-	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pScale:Float, ?pAngle:Float = 0):Void 
+	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pAngle:Float = 0):Void 
 	#end
 	{
 		_point.x = pOffsetX;
@@ -328,7 +328,7 @@ class PxBitmapFont
 			{
 				#if (flash || js)
 				pBitmapData.copyPixels(glyph, glyph.rect, _point, null, null, true);
-				_point.x += glyph.width;
+				_point.x += glyph.width + pLetterSpacing;
 				#else
 				glyphWidth = _glyphWidthData[charCode];
 				var red:Float = (pColor >> 16 & 0xFF) / 255;
@@ -344,7 +344,7 @@ class PxBitmapFont
 				drawData.push(green);
 				drawData.push(blue);
 				drawData.push(pAlpha);		// alpha
-				_point.x += glyphWidth * pScale;
+				_point.x += glyphWidth * pScale + pLetterSpacing;
 				#end
 			}
 		}
@@ -362,11 +362,12 @@ class PxBitmapFont
 	 * @param	pText	String to measure.
 	 * @return	Width in pixels.
 	 */
-	public function getTextWidth(pText:String):Int 
+	public function getTextWidth(pText:String, ?pLetterSpacing:Int = 0):Int 
 	{
 		var w:Int = 0;
 		
-		for (i in 0...(pText.length)) 
+		var textLength:Int = pText.length;
+		for (i in 0...(textLength)) 
 		{
 			var charCode:Int = pText.charCodeAt(i);
 			#if (flash || js)
@@ -385,6 +386,11 @@ class PxBitmapFont
 			}
 			#end
 			
+		}
+		
+		if (textLength > 1)
+		{
+			w += (textLength - 1) * pLetterSpacing;
 		}
 		
 		return w;
