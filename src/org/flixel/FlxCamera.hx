@@ -3,6 +3,7 @@ package org.flixel;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
+import nme.display.Graphics;
 import nme.display.Sprite;
 import nme.geom.ColorTransform;
 import nme.geom.Point;
@@ -1016,7 +1017,7 @@ class FlxCamera extends FlxBasic
 	#if flash
 	public function fill(Color:UInt, ?BlendAlpha:Bool = true):Void
 	#else
-	public function fill(Color:BitmapInt32, ?BlendAlpha:Bool = true, ?FxAlpha:Float = 1.0):Void
+	public function fill(Color:BitmapInt32, ?BlendAlpha:Bool = true, ?FxAlpha:Float = 1.0, graphics:Graphics = null):Void
 	#end
 	{
 		#if flash
@@ -1025,6 +1026,7 @@ class FlxCamera extends FlxBasic
 		#else
 		// This is temporal fix for camera's color
 		#if cpp
+		var targetGraphics:Graphics = (graphics == null) ? _canvas.graphics : graphics;
 		Color = Color & 0x00ffffff;
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
@@ -1035,7 +1037,7 @@ class FlxCamera extends FlxBasic
 		}
 		// end of fix
 		
-		_canvas.graphics.beginFill(Color, FxAlpha);
+		targetGraphics.beginFill(Color, FxAlpha);
 		#elseif neko
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
@@ -1045,18 +1047,11 @@ class FlxCamera extends FlxBasic
 			Color.rgb = redComponent << 16 | greenComponent << 8 | blueComponent;
 		}
 		
-		_canvas.graphics.beginFill(Color.rgb, FxAlpha);
+		targetGraphics.beginFill(Color.rgb, FxAlpha);
 		#end
 		
-		_canvas.graphics.drawRect(0, 0, width, height);
-		_canvas.graphics.endFill();
-		
-		if (_fog > 0)
-		{
-			_debugLayer.graphics.beginFill(0xffffff, _fog);
-			_debugLayer.graphics.drawRect(0, 0, width, height);
-			_debugLayer.graphics.endFill();
-		}
+		targetGraphics.drawRect(0, 0, width, height);
+		targetGraphics.endFill();
 		#end
 	}
 	
@@ -1079,9 +1074,9 @@ class FlxCamera extends FlxBasic
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
 			#elseif cpp
-			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255);
+			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _debugLayer.graphics);
 			#elseif neko
-			fill(_fxFlashColor, true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255);
+			fill(_fxFlashColor, true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _debugLayer.graphics);
 			#end
 		}
 		
@@ -1097,9 +1092,9 @@ class FlxCamera extends FlxBasic
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
 			#elseif cpp
-			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255);
+			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _debugLayer.graphics);
 			#elseif neko
-			fill(_fxFadeColor, true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255);
+			fill(_fxFadeColor, true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _debugLayer.graphics);
 			#end
 		}
 		
@@ -1108,6 +1103,15 @@ class FlxCamera extends FlxBasic
 			_flashSprite.x = x + _flashOffsetX + _fxShakeOffset.x;
 			_flashSprite.y = y + _flashOffsetY + _fxShakeOffset.y;
 		}
+		
+		#if (cpp || neko)
+		if (_fog > 0)
+		{
+			_debugLayer.graphics.beginFill(0xffffff, _fog);
+			_debugLayer.graphics.drawRect(0, 0, width, height);
+			_debugLayer.graphics.endFill();
+		}
+		#end
 	}
 	
 	#if (cpp || neko)
