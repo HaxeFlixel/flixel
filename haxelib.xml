@@ -7,5 +7,5 @@
 	<tag v="flixel"/>
 	<depends name="nme"/>	
 	<description>Flixel is a popular free game engine. This is a port of Flixel 2.55.</description>
-	<version name="1.00">https://github.com/Beeblerox/HaxeFlixel</version>
+	<version name="1.01">See CHANGELOG</version>
 </project>

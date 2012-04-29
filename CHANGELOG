@@ -1,0 +1,13 @@
+flixel CHANGELOG
+
+v1.01
+------------------------------
+* Finally ported FlxPreloader class
+* Fixed issue with FlxTextFieldClass when it wasn't affected by fade() and flash() effects (on cpp and neko targets)
+* Improvements in memory consumption for FlxTileBlock and FlxBitmapFont classes
+* Updated lib to work with haxe 2.09
+* Ported FlxGridOverlay from Flixel-Power-Tools
+
+v1.00
+------------------------------
+* Initial haxelib release
