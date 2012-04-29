@@ -300,9 +300,9 @@ class PxBitmapFont
 	 * @param	pOffsetY	Y position of thext output.
 	 */
 	#if flash 
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int,  pScale:Float, ?pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, ?pAngle:Float = 0):Void 
 	#elseif js
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, ?pAngle:Float = 0):Void 
 	#else
 	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pAngle:Float = 0):Void 
 	#end
@@ -351,6 +351,11 @@ class PxBitmapFont
 	}
 	
 	#if (cpp || neko)
+	/**
+	 * Internal method for actually drawing text on cpp and neko targets
+	 * @param	graphics
+	 * @param	drawData
+	 */
 	public function drawText(graphics:Graphics, drawData:Array<Float>):Void
 	{
 		_tileSheet.drawTiles(graphics, drawData, false, _flags);
@@ -360,9 +365,11 @@ class PxBitmapFont
 	/**
 	 * Returns the width of a certain test string.
 	 * @param	pText	String to measure.
+	 * @param	pLetterSpacing	distance between letters
+	 * @param	pFontScale	"size" of the font
 	 * @return	Width in pixels.
 	 */
-	public function getTextWidth(pText:String, ?pLetterSpacing:Int = 0):Int 
+	public function getTextWidth(pText:String, ?pLetterSpacing:Int = 0, ?pFontScale:Float = 1.0):Int 
 	{
 		var w:Int = 0;
 		
@@ -385,8 +392,9 @@ class PxBitmapFont
 				w += glyphWidth;
 			}
 			#end
-			
 		}
+		
+		w = Math.round(w * pFontScale);
 		
 		if (textLength > 1)
 		{
@@ -409,7 +417,6 @@ class PxBitmapFont
 	 * Returns number of letters available in this font.
 	 * @return Number of letters available in this font.
 	 */
-	
 	public var numLetters(get_numLetters, null):Int;
 	
 	public function get_numLetters():Int 
