@@ -1,12 +1,10 @@
-<project name="flixel" url="https://github.com/Beeblerox/HaxeFlixel" license="GPL">
-	<user name="elyon"/>
-	<tag v="nme"/>
+<project name="flixel" url="https://github.com/Beeblerox/HaxeFlixel" license="MIT">
+    <user name="elyon"/>
+	<user name="haxeflixel"/>
+    <tag v="game"/>
+	<tag v="engine"/>
 	<tag v="flash"/>
-	<tag v="cpp"/>
-	<tag v="neko"/>
-	<tag v="flixel"/>
-	<tag v="game"/>
-	<depends name="nme"/>	
+    <tag v="cpp"/>	
 	<description>Flixel is a popular free game engine. This is a port of Flixel 2.55.</description>
 	<version name="1.01">See CHANGELOG</version>
 </project>
