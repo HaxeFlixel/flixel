@@ -596,7 +596,7 @@ class FlxG
 	 * @param	Music		The sound file you want to loop in the background.
 	 * @param	Volume		How loud the sound should be, from 0 to 1.
 	 */
-	static public function playMusic(Music:Sound, ?Volume:Float = 1.0):Void
+	static public function playMusic(Music:Dynamic, ?Volume:Float = 1.0):Void
 	{
 		if (music == null)
 		{
@@ -623,7 +623,7 @@ class FlxG
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public function loadSound(?EmbeddedSound:Sound = null, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = false, ?AutoPlay:Bool = false, ?URL:String = null):FlxSound
+	static public function loadSound(?EmbeddedSound:Dynamic = null, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = false, ?AutoPlay:Bool = false, ?URL:String = null):FlxSound
 	{
 		if((EmbeddedSound == null) && (URL == null))
 		{
@@ -657,7 +657,7 @@ class FlxG
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public function play(EmbeddedSound:Sound, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = true):FlxSound
+	static public function play(EmbeddedSound:Dynamic, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = true):FlxSound
 	{
 		return FlxG.loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, true);
 	}
@@ -861,13 +861,21 @@ class FlxG
 	static public function addBitmap(Graphic:Dynamic, ?Reverse:Bool = false, ?Unique:Bool = false, ?Key:String = null):BitmapData
 	{
 		var isClass:Bool = true;
+		var isBitmap:Bool = true;
 		if (Std.is(Graphic, Class))
 		{
 			isClass = true;
+			isBitmap = false;
 		}
 		else if (Std.is(Graphic, String))
 		{
 			isClass = false;
+			isBitmap = false;
+		}
+		else if (Std.is(Graphic, BitmapData) && Key != null)
+		{
+			isClass = false;
+			isBitmap = true;
 		}
 		else
 		{
@@ -888,7 +896,7 @@ class FlxG
 			}
 			key += (Reverse ? "_REVERSE_" : "");
 			
-			if(Unique && checkBitmapCache(key))
+			if (Unique && checkBitmapCache(key))
 			{
 				var inc:Int = 0;
 				var ukey:String;
@@ -908,6 +916,10 @@ class FlxG
 			{
 				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), []).bitmapData;
 			}
+			else if (isBitmap)
+			{
+				bd = cast(Graphic, BitmapData);
+			}
 			else
 			{
 				bd = Assets.getBitmapData(Graphic);
@@ -919,13 +931,17 @@ class FlxG
 				needReverse = true;
 			}
 		}
-		//var pixels:BitmapData = _cache[Key];
+		
 		var pixels:BitmapData = _cache.get(key);
 		
 		var tempBitmap:BitmapData;
 		if (isClass)
 		{
 			tempBitmap = Type.createInstance(Graphic, []).bitmapData;
+		}
+		else if (isBitmap)
+		{
+			tempBitmap = cast(Graphic, BitmapData);
 		}
 		else
 		{
@@ -936,7 +952,7 @@ class FlxG
 		{
 			needReverse = true;
 		}
-		if(needReverse)
+		if (needReverse)
 		{
 			#if !neko
 			var newPixels:BitmapData = new BitmapData(pixels.width << 1, pixels.height, true, 0x00000000);

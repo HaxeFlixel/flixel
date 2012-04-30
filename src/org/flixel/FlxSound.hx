@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Assets;
 import nme.events.Event;
 import nme.media.Sound;
 import nme.media.SoundChannel;
@@ -257,12 +258,24 @@ class FlxSound extends FlxBasic
 	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadEmbedded(EmbeddedSound:Sound, ?Looped:Bool = false, ?AutoDestroy:Bool = false):FlxSound
+	public function loadEmbedded(EmbeddedSound:Dynamic, ?Looped:Bool = false, ?AutoDestroy:Bool = false):FlxSound
 	{
 		stop();
 		createSound();
 		//_sound = new EmbeddedSound();
-		_sound = EmbeddedSound/*Type.createInstance(EmbeddedSound, [])*/;
+		if (Std.is(EmbeddedSound, Sound))
+		{
+			_sound = EmbeddedSound;
+		}
+		else if (Std.is(EmbeddedSound, Class))
+		{
+			_sound = Type.createInstance(EmbeddedSound, []);
+		}
+		else if (Std.is(EmbeddedSound, String))
+		{
+			_sound = Assets.getSound(EmbeddedSound);
+		}
+		
 		//NOTE: can't pull ID3 info from embedded sound currently
 		_looped = Looped; 
 		autoDestroy = AutoDestroy;
