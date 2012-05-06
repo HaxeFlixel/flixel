@@ -201,7 +201,6 @@ class FlxBitmapFont extends FlxSprite
 		fixedWidth = 0;
 		
 		//	Take a copy of the font for internal use
-		//fontSet = (Type.createInstance(font, [])).bitmapData;
 		fontSet = FlxG.addBitmap(font);
 		
 		this.characterWidth = characterWidth;

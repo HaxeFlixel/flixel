@@ -37,7 +37,7 @@ class FlxDelay extends Sprite
 	/**
 	 * If you wish to call a function once the timer completes, set it here
 	 */
-	public var callbackFunction:Dynamic;
+	public var callbackFunction:Void->Void;
 	
 	/**
 	 * The duration of the Delay in milliseconds

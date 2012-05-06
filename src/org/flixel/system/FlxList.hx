@@ -18,6 +18,8 @@ class FlxList
 	 */
 	public var next:FlxList;
 	
+	public var exists:Bool;
+	
 	/**
 	 * Creates a new link, and sets <code>object</code> and <code>next</code> to <code>null</code>.
 	 */
@@ -25,6 +27,7 @@ class FlxList
 	{
 		object = null;
 		next = null;
+		exists = true;
 	}
 	
 	/**
@@ -38,5 +41,6 @@ class FlxList
 			next.destroy();
 		}
 		next = null;
+		exists = false;
 	}
 }

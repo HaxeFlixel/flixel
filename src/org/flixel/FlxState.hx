@@ -1,7 +1,5 @@
 package org.flixel;
 
-import org.flixel.system.FlxQuadTree;
-
 /**
  * This is the basic game "state" object - e.g. in a simple game
  * you might have a menu state and a play state.

@@ -15,7 +15,7 @@ class PxDefaultFontGenerator
 	/**
 	 * Creates and stores the default font for later use.
 	 */
-	public static function generateAndStoreDefaultFont():Void 
+	public static function generateAndStoreDefaultFont(?isFlixel:Bool = false):Void 
 	{
 		var letters:String = "";
 		#if neko
@@ -60,7 +60,7 @@ class PxDefaultFontGenerator
 			letterPos++;
 		}
 		
-		PxBitmapFont.store("default", new PxBitmapFont(bd, letters));
+		PxBitmapFont.store("default", new PxBitmapFont(bd, letters, isFlixel));
 		bd.dispose();
 	}
 }

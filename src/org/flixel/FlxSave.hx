@@ -38,7 +38,7 @@ class FlxSave
 	/**
 	 * Internal tracker for callback function in case save takes too long.
 	 */
-	private var _onComplete:Dynamic;
+	private var _onComplete:Bool->Void;
 	/**
 	 * Internal tracker for save object close request.
 	 */
@@ -95,7 +95,7 @@ class FlxSave
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	The result of result of the <code>flush()</code> call (see below for more details).
 	 */
-	public function close(?MinFileSize:Int = 0, ?OnComplete:Dynamic = null):Bool
+	public function close(?MinFileSize:Int = 0, ?OnComplete:Bool->Void = null):Bool
 	{
 		_closeRequested = true;
 		return flush(FlxU.fromIntToUInt(MinFileSize), OnComplete);
@@ -107,7 +107,7 @@ class FlxSave
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	Whether or not the data was written immediately.  False could be an error OR a storage request popup.
 	 */
-	public function flush(?MinFileSize:Int = 0, ?OnComplete:Dynamic = null):Bool
+	public function flush(?MinFileSize:Int = 0, ?OnComplete:Bool->Void = null):Bool
 	{
 		if (!checkBinding())
 		{

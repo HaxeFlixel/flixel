@@ -20,7 +20,7 @@ import nme.utils.ByteArray;
 import org.flixel.FlxU;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.plugin.pxText.PxTextAlign;
-import org.flixel.plugin.pxText.PxTextFieldComponent;
+import org.flixel.plugin.pxText.PxTextField;
 
 import org.flixel.FlxG;
 
@@ -77,7 +77,7 @@ class FlxPreloader extends NMEPreloader
 	/**
 	 * @private
 	 */
-	private var _text:PxTextFieldComponent;
+	private var _text:PxTextField;
 	/**
 	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
 	 */
@@ -174,13 +174,14 @@ class FlxPreloader extends NMEPreloader
 		_bmpBar.x = 4;
 		_bmpBar.y = _height - 11;
 		_buffer.addChild(_bmpBar);
-		_text = new PxTextFieldComponent(_font);
+		_text = new PxTextField(_font);
 		_text.alignment = PxTextAlign.LEFT;
 		_text.scaleX = _text.scaleY = 0.8;
 		_text.color = 0x5f6aff;
 		_text.x = 2;
 		_text.y = _bmpBar.y - 11;
-		_text.setWidth(80);
+		_text.setWidth(120);
+		_text.wordWrap = false;
 		_buffer.addChild(_text);
 		_logo = new Bitmap(createBitmapFromData(LogoData, LogoWidth, LogoHeight));
 		_logo.scaleX = _logo.scaleY = _height / 8;

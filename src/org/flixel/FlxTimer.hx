@@ -31,7 +31,7 @@ class FlxTimer
 	 * Internal tracker for the time's-up callback function.
 	 * Callback should be formed "onTimer(Timer:FlxTimer);"
 	 */
-	private var _callback:Dynamic/*FlxTimer->Void*/;
+	private var _callback:FlxTimer->Void;
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
@@ -100,7 +100,7 @@ class FlxTimer
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop.  Callback should be formed "onTimer(Timer:FlxTimer);"
 	 * @return	A reference to itself (handy for chaining or whatever).
 	 */
-	public function start(?Time:Float = 1, ?Loops:Int = 1, ?Callback:Dynamic/*FlxTimer->Void*/ = null):FlxTimer
+	public function start(?Time:Float = 1, ?Loops:Int = 1, ?Callback:FlxTimer->Void = null):FlxTimer
 	{
 		var timerManager:TimerManager = manager;
 		if (timerManager != null)

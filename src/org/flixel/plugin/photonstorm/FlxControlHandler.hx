@@ -90,7 +90,7 @@ class FlxControlHandler
 	private var nextFireTime:Int; 		// The internal time when they can next fire
 	private var lastFiredTime:Int; 		// The internal time of when when they last fired
 	private var fireKeyMode:Int;		// The fire key mode
-	private var fireCallback:Dynamic;	// A function to call every time they fire
+	private var fireCallback:Void->Void;	// A function to call every time they fire
 	
 	private var jumpHeight:Int; 		// The pixel height amount they jump (drag and gravity also both influence this)
 	private var jumpRate:Int; 			// The ms delay between jumping when the key is held down
@@ -100,7 +100,7 @@ class FlxControlHandler
 	private var jumpFromFallTime:Int; 	// A short window of opportunity for them to jump having just fallen off the edge of a surface
 	private var extraSurfaceTime:Int; 	// Internal time of when they last collided with a valid jumpSurface
 	private var jumpSurface:Int; 		// The surfaces from FlxObject they can jump from (i.e. FlxObject.FLOOR)
-	private var jumpCallback:Dynamic;	// A function to call every time they jump
+	private var jumpCallback:Void->Void;	// A function to call every time they jump
 	
 	private var movement:Int;
 	private var stopping:Int;
@@ -629,7 +629,7 @@ class FlxControlHandler
 	 * @param	callback		A user defined function to call when it fires
 	 * @param	altKey			Specify an alternative fire key that works AS WELL AS the primary fire key (TODO)
 	 */
-	public function setFireButton(key:String, keymode:Int, repeatDelay:Int, callbackFunc:Dynamic, ?altKey:String = ""):Void
+	public function setFireButton(key:String, keymode:Int, repeatDelay:Int, callbackFunc:Void->Void, ?altKey:String = ""):Void
 	{
 		fireKey = key;
 		fireKeyMode = keymode;
@@ -656,7 +656,7 @@ class FlxControlHandler
 	 * @param	callback		A user defined function to call when the Sprite jumps
 	 * @param	altKey			Specify an alternative jump key that works AS WELL AS the primary jump key (TODO)
 	 */
-	public function setJumpButton(key:String, keymode:Int, height:Int, surface:Int, ?repeatDelay:Int = 250, ?jumpFromFall:Int = 0, ?callbackFunc:Dynamic = null, ?altKey:String = ""):Void
+	public function setJumpButton(key:String, keymode:Int, height:Int, surface:Int, ?repeatDelay:Int = 250, ?jumpFromFall:Int = 0, ?callbackFunc:Void->Void = null, ?altKey:String = ""):Void
 	{
 		jumpKey = key;
 		jumpKeyMode = keymode;

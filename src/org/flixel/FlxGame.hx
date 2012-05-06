@@ -166,7 +166,7 @@ class FlxGame extends Sprite
 	/**
 	 * This function, if set, is triggered when the callback stops playing.
 	 */
-	public var _replayCallback:Dynamic;
+	public var _replayCallback:Void->Void;
 	
 	/**
 	 * This sprite is needed in c++ version of games.

@@ -41,19 +41,19 @@ class FlxButton extends FlxSprite
 	 * We recommend assigning your main button behavior to this function
 	 * via the <code>FlxButton</code> constructor.
 	 */
-	public var onUp:Dynamic;
+	public var onUp:Void->Void;
 	/**
 	 * This function is called when the button is pressed down.
 	 */
-	public var onDown:Dynamic;
+	public var onDown:Void->Void;
 	/**
 	 * This function is called when the mouse goes over the button.
 	 */
-	public var onOver:Dynamic;
+	public var onOver:Void->Void;
 	/**
 	 * This function is called when the mouse leaves the button area.
 	 */
-	public var onOut:Dynamic;
+	public var onOut:Void->Void;
 	/**
 	 * Shows the current state of the button.
 	 */
@@ -101,7 +101,7 @@ class FlxButton extends FlxSprite
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Label:String = null, ?OnClick:Dynamic = null)
+	public function new(?X:Float = 0, ?Y:Float = 0, ?Label:String = null, ?OnClick:Void->Void = null)
 	{
 		super(X, Y);
 		if(Label != null)

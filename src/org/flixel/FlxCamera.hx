@@ -199,7 +199,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashComplete:Dynamic;
+	private var _fxFlashComplete:Void->Void;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -219,7 +219,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeComplete:Dynamic;
+	private var _fxFadeComplete:Void->Void;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -235,7 +235,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeComplete:Dynamic;
+	private var _fxShakeComplete:Void->Void;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
@@ -671,9 +671,9 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
 	#else
-	public function flash(?Color:BitmapInt32, ?Duration:Float = 1, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	public function flash(?Color:BitmapInt32, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
 	#end
 	{
 		#if cpp
@@ -711,9 +711,9 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
 	#else
-	public function fade(?Color:BitmapInt32, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Dynamic = null, ?Force:Bool = false):Void
+	public function fade(?Color:BitmapInt32, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
 	#end
 	{
 		#if cpp
@@ -760,7 +760,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
 	 */
-	public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Dynamic = null, ?Force:Bool = true, ?Direction:Int = 0/*SHAKE_BOTH_AXES*/):Void
+	public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Void->Void = null, ?Force:Bool = true, ?Direction:Int = 0/*SHAKE_BOTH_AXES*/):Void
 	{
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{

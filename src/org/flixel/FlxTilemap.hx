@@ -1170,13 +1170,13 @@ class FlxTilemap extends FlxObject
 			{
 				overlapFound = false;
 				tile = _tileObjects[_data[rowStart + column]];
-				if(tile.allowCollisions != FlxObject.NONE)
+				if (tile.allowCollisions != FlxObject.NONE)
 				{
 					tile.x = X + column * _tileWidth;
 					tile.y = Y + row * _tileHeight;
 					tile.last.x = tile.x - deltaX;
 					tile.last.y = tile.y - deltaY;
-					if(Callback != null)
+					if (Callback != null)
 					{
 						if (FlipCallbackParams)
 						{

@@ -10,6 +10,8 @@ import nme.geom.Rectangle;
 
 #if (cpp || neko)
 import nme.display.Tilesheet;
+import org.flixel.tileSheetManager.TileSheetData;
+import org.flixel.tileSheetManager.TileSheetManager;
 #end
 
 /**
@@ -27,8 +29,10 @@ class PxBitmapFont
 	#else
 	private var _glyphs:Array<Int>;
 	private var _tileSheet:Tilesheet;
+	private var _tileSheetData:TileSheetData;
 	private static var _flags = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RGB;
 	private var _glyphWidthData:Array<Int>;
+	private var _isFlixel:Bool;
 	#end
 	private var _glyphString:String;
 	private var _maxHeight:Int;
@@ -45,7 +49,7 @@ class PxBitmapFont
 	 * @param	pBitmapData	The bitmap data to copy letters from.
 	 * @param	pLetters	String of letters available in the bitmap data.
 	 */
-	public function new(pBitmapData:BitmapData, pLetters:String) 
+	public function new(pBitmapData:BitmapData, pLetters:String, ?isFlixel:Bool = false) 
 	{
 		_maxHeight = 0;
 		_point = new Point();
@@ -54,6 +58,7 @@ class PxBitmapFont
 		_colorTransform = new ColorTransform();
 		#else
 		_glyphWidthData = [];
+		_isFlixel = isFlixel;
 		#end
 		
 		_glyphs = [];
@@ -72,7 +77,14 @@ class PxBitmapFont
 			var currRect:Rectangle;
 			
 			#if (cpp || neko)
-			_tileSheet = new Tilesheet(result);
+			if (!_isFlixel)
+			{
+				_tileSheet = new Tilesheet(result);
+			}
+			else
+			{
+				_tileSheetData = TileSheetManager.addTileSheet(result);
+			}
 			#end
 			
 			for (letterID in 0...(tileRects.length))
@@ -230,7 +242,11 @@ class PxBitmapFont
 			}
 		}
 		#else
-		_tileSheet = null;
+		if (_tileSheet != null)
+		{
+			_tileSheet = null;
+		}
+		_tileSheetData = null;
 		#end
 		_glyphs = null;
 	}
@@ -280,8 +296,16 @@ class PxBitmapFont
 	#else
 	private function setGlyph(pCharID:Int, pRect:Rectangle, pGlyphID:Int):Void 
 	{
-		_tileSheet.addTileRect(pRect);
-		_glyphs[pCharID] = pGlyphID;
+		if (!_isFlixel)
+		{
+			_glyphs[pCharID] = _tileSheetData.addTileRect(pRect, ZERO_POINT);
+		}
+		else
+		{
+			_tileSheet.addTileRect(pRect);
+			_glyphs[pCharID] = pGlyphID;
+		}
+		
 		_glyphWidthData[pCharID] = Math.floor(pRect.width);
 		
 		if (Math.floor(pRect.height) > _maxHeight) 
@@ -418,6 +442,15 @@ class PxBitmapFont
 	 * @return Number of letters available in this font.
 	 */
 	public var numLetters(get_numLetters, null):Int;
+	
+	#if (cpp || neko)
+	private function get_tileSheetData():TileSheetData 
+	{
+		return _tileSheetData;
+	}
+	
+	public var tileSheetData(get_tileSheetData, null):TileSheetData;
+	#end
 	
 	public function get_numLetters():Int 
 	{

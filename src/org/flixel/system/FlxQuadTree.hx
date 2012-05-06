@@ -4,6 +4,7 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxRect;
+import org.flixel.system.FlxQuadTree;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.
@@ -26,6 +27,9 @@ class FlxQuadTree extends FlxRect
 	 * Controls the granularity of the quad tree.  Default is 6 (decent performance on large and small worlds).
 	 */
 	static public var divisions:Int;
+	
+	public var exists:Bool;
+	
 	/**
 	 * Whether this branch of the tree can be subdivided or not.
 	 */
@@ -105,6 +109,8 @@ class FlxQuadTree extends FlxRect
 	 */
 	private var _midpointY:Float;
 	
+	private var _listsCache:FlxListsCache;
+	
 	/**
 	 * Internal, used to reduce recursive method parameters during object placement and tree formation.
 	 */
@@ -137,11 +143,11 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static private var _processingCallback:Dynamic;
+	static private var _processingCallback:FlxObject->FlxObject->Bool;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static private var _notifyCallback:Dynamic;
+	static private var _notifyCallback:FlxObject->FlxObject->Void;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
@@ -181,6 +187,8 @@ class FlxQuadTree extends FlxRect
 	 */
 	static private var _checkObjectHullHeight:Float;
 	
+	static private var _treesCache:FlxQuadTreesCache = new FlxQuadTreesCache();
+	
 	/**
 	 * Instantiate a new Quad Tree node.
 	 * @param	X			The X-coordinate of the point in space.
@@ -191,9 +199,26 @@ class FlxQuadTree extends FlxRect
 	 */
 	public function new(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null)
 	{
+		_listsCache = new FlxListsCache();
+		
 		super(X, Y, Width, Height);
-		_headA = _tailA = new FlxList();
-		_headB = _tailB = new FlxList();
+		
+		reset(X, Y, Width, Height, Parent);
+	}
+	
+	public static function recycle(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null):FlxQuadTree
+	{
+		return _treesCache.recycle(X, Y, Width, Height, Parent);
+	}
+	
+	public function reset(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null):Void
+	{
+		exists = true;
+		
+		make(X, Y, Width, Height);
+		
+		_headA = _tailA = _listsCache.recycle();
+		_headB = _tailB = _listsCache.recycle();
 		
 		//Copy the parent's children (if there are any)
 		if(Parent != null)
@@ -208,7 +233,7 @@ class FlxQuadTree extends FlxRect
 					if(_tailA.object != null)
 					{
 						ot = _tailA;
-						_tailA = new FlxList();
+						_tailA = _listsCache.recycle();
 						ot.next = _tailA;
 					}
 					_tailA.object = iterator.object;
@@ -223,7 +248,7 @@ class FlxQuadTree extends FlxRect
 					if(_tailB.object != null)
 					{
 						ot = _tailB;
-						_tailB = new FlxList();
+						_tailB = _listsCache.recycle();
 						ot.next = _tailB;
 					}
 					_tailB.object = iterator.object;
@@ -290,6 +315,8 @@ class FlxQuadTree extends FlxRect
 		_object = null;
 		_processingCallback = null;
 		_notifyCallback = null;
+		
+		exists = false;
 	}
 
 	/**
@@ -299,7 +326,7 @@ class FlxQuadTree extends FlxRect
 	 * @param NotifyCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
 	 * @param ProcessCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):Boolean</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
 	 */
-	public function load(ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:Dynamic = null, ?ProcessCallback:Dynamic = null):Void
+	public function load(ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:FlxObject->FlxObject->Void = null, ?ProcessCallback:FlxObject->FlxObject->Bool = null):Void
 	{
 		add(ObjectOrGroup1, A_LIST);
 		if(ObjectOrGroup2 != null)
@@ -389,7 +416,9 @@ class FlxQuadTree extends FlxRect
 			if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
 			{
 				if(_northWestTree == null)
-					_northWestTree = new FlxQuadTree(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
+				{
+					_northWestTree = _treesCache.recycle(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
+				}
 				_northWestTree.addObject();
 				return;
 			}
@@ -397,7 +426,7 @@ class FlxQuadTree extends FlxRect
 			{
 				if (_southWestTree == null)
 				{
-					_southWestTree = new FlxQuadTree(_leftEdge,_midpointY,_halfWidth,_halfHeight,this);
+					_southWestTree = _treesCache.recycle(_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
 				}
 				_southWestTree.addObject();
 				return;
@@ -409,7 +438,7 @@ class FlxQuadTree extends FlxRect
 			{
 				if (_northEastTree == null)
 				{
-					_northEastTree = new FlxQuadTree(_midpointX,_topEdge,_halfWidth,_halfHeight,this);
+					_northEastTree = _treesCache.recycle(_midpointX, _topEdge, _halfWidth, _halfHeight, this);
 				}
 				_northEastTree.addObject();
 				return;
@@ -418,7 +447,7 @@ class FlxQuadTree extends FlxRect
 			{
 				if (_southEastTree == null)
 				{
-					_southEastTree = new FlxQuadTree(_midpointX,_midpointY,_halfWidth,_halfHeight,this);
+					_southEastTree = _treesCache.recycle(_midpointX, _midpointY, _halfWidth, _halfHeight, this);
 				}
 				_southEastTree.addObject();
 				return;
@@ -430,7 +459,7 @@ class FlxQuadTree extends FlxRect
 		{
 			if (_northWestTree == null)
 			{
-				_northWestTree = new FlxQuadTree(_leftEdge,_topEdge,_halfWidth,_halfHeight,this);
+				_northWestTree = _treesCache.recycle(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
 			}
 			_northWestTree.addObject();
 		}
@@ -438,7 +467,7 @@ class FlxQuadTree extends FlxRect
 		{
 			if (_northEastTree == null)
 			{
-				_northEastTree = new FlxQuadTree(_midpointX,_topEdge,_halfWidth,_halfHeight,this);
+				_northEastTree = _treesCache.recycle(_midpointX, _topEdge, _halfWidth, _halfHeight, this);
 			}
 			_northEastTree.addObject();
 		}
@@ -446,7 +475,7 @@ class FlxQuadTree extends FlxRect
 		{
 			if (_southEastTree == null)
 			{
-				_southEastTree = new FlxQuadTree(_midpointX,_midpointY,_halfWidth,_halfHeight,this);
+				_southEastTree = _treesCache.recycle(_midpointX, _midpointY, _halfWidth, _halfHeight, this);
 			}
 			_southEastTree.addObject();
 		}
@@ -454,7 +483,7 @@ class FlxQuadTree extends FlxRect
 		{
 			if (_southWestTree == null)
 			{
-				_southWestTree = new FlxQuadTree(_leftEdge,_midpointY,_halfWidth,_halfHeight,this);
+				_southWestTree = _treesCache.recycle(_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
 			}
 			_southWestTree.addObject();
 		}
@@ -471,7 +500,7 @@ class FlxQuadTree extends FlxRect
 			if(_tailA.object != null)
 			{
 				ot = _tailA;
-				_tailA = new FlxList();
+				_tailA = _listsCache.recycle();
 				ot.next = _tailA;
 			}
 			_tailA.object = _object;
@@ -481,7 +510,7 @@ class FlxQuadTree extends FlxRect
 			if(_tailB.object != null)
 			{
 				ot = _tailB;
-				_tailB = new FlxList();
+				_tailB = _listsCache.recycle();
 				ot.next = _tailB;
 			}
 			_tailB.object = _object;
@@ -627,4 +656,86 @@ class FlxQuadTree extends FlxRect
 		
 		return overlapProcessed;
 	}
+}
+
+class FlxListsCache
+{
+	
+	private var _lists:Array<FlxList>;
+	
+	private var _length:Int;
+	
+	public function new()
+	{
+		_lists = [];
+		_length = 0;
+	}
+	
+	public function add(list:FlxList):FlxList
+	{
+		_lists[_length] = list;
+		_length++;
+		
+		return list;
+	}
+	
+	public function recycle():FlxList
+	{
+		var list:FlxList;
+		var i:Int = 0;
+		
+		while (i < _length)
+		{
+			list = _lists[i];
+			if (list.exists == false)
+			{
+				list.exists = true;
+				return list;
+			}
+			
+			i++;
+		}
+		
+		return add(new FlxList());
+	}
+	
+}
+
+class FlxQuadTreesCache
+{
+	private var _trees:Array<FlxQuadTree>;
+	private var _length:Int;
+	
+	public function new()
+	{
+		_length = 0;
+		_trees = [];
+	}
+	
+	public function add(tree:FlxQuadTree):FlxQuadTree
+	{
+		_trees[_length] = tree;
+		_length++;
+		return tree;
+	}
+	
+	public function recycle(x:Float, y:Float, width:Float, height:Float, ?parent:FlxQuadTree = null):FlxQuadTree
+	{
+		var tree:FlxQuadTree;
+		var i:Int = 0;
+		
+		while (i < _length)
+		{
+			tree = _trees[i];
+			if (tree.exists == false)
+			{
+				tree.reset(x, y, width, height, parent);
+				return tree;
+			}
+			i++;
+		}
+		
+		return add(new FlxQuadTree(x, y, width, height, parent));
+	}
+	
 }

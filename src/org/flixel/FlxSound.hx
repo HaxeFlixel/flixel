@@ -250,7 +250,6 @@ class FlxSound extends FlxBasic
 		}
 	}
 	
-	// TODO: Return from Sound -> Class<Sound>
 	/**
 	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
@@ -262,7 +261,6 @@ class FlxSound extends FlxBasic
 	{
 		stop();
 		createSound();
-		//_sound = new EmbeddedSound();
 		if (Std.is(EmbeddedSound, Sound))
 		{
 			_sound = EmbeddedSound;
