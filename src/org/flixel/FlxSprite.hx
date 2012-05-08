@@ -157,7 +157,11 @@ class FlxSprite extends FlxObject
 	 * If assigned, will be called each time the current frame changes.
 	 * A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
 	 */
-	private var _callback:Dynamic;
+	#if flash
+	private var _callback:String->UInt->UInt->Void;
+	#else
+	private var _callback:String->Int->Int->Void;
+	#end
 	/**
 	 * Internal tracker for what direction the sprite is currently facing, used with Flash getter/setter.
 	 */
@@ -923,7 +927,11 @@ class FlxSprite extends FlxObject
 	 * Pass in a function to be called whenever this sprite's animation changes.
 	 * @param	AnimationCallback		A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
 	 */
-	public function addAnimationCallback(AnimationCallback:Dynamic):Void
+	#if flash
+	public function addAnimationCallback(AnimationCallback:String->UInt->UInt->Void):Void
+	#else
+	public function addAnimationCallback(AnimationCallback:String->Int->Int->Void):Void
+	#end
 	{
 		_callback = AnimationCallback;
 	}

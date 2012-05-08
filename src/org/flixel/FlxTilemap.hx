@@ -1119,7 +1119,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Position			Optional, specify a custom position for the tilemap (useful for overlapsAt()-type funcitonality).
 	 * @return	Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	public function overlapsWithCallback(Object:FlxObject, ?Callback:/*FlxObject->FlxObject->Bool*/Dynamic = null, ?FlipCallbackParams:Bool = false, ?Position:FlxPoint = null):Bool
+	public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool = null, ?FlipCallbackParams:Bool = false, ?Position:FlxPoint = null):Bool
 	{
 		var results:Bool = false;
 		
@@ -1204,7 +1204,7 @@ class FlxTilemap extends FlxObject
 				else if((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
 				{
 					tile.mapIndex = rowStart + column;
-					tile.callbackFunction(tile,Object);
+					tile.callbackFunction(tile, Object);
 				}
 				column++;
 			}
@@ -1404,7 +1404,7 @@ class FlxTilemap extends FlxObject
 	 * @param	CallbackFilter	If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
 	 * @param	Range			If you want this callback to work for a bunch of different tiles, input the range here.  Default value is 1.
 	 */
-	public function setTileProperties(Tile:Int, ?AllowCollisions:Int = 0x1111, ?Callback:Dynamic = null, CallbackFilter:Class<Dynamic> = null, Range:Int = 1):Void
+	public function setTileProperties(Tile:Int, ?AllowCollisions:Int = 0x1111, ?Callback:FlxObject->FlxObject->Void = null, CallbackFilter:Class<Dynamic> = null, Range:Int = 1):Void
 	{
 		if (Range <= 0)
 		{

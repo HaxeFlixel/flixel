@@ -36,9 +36,9 @@ class FlxGradient
 	public function new() { }
 	
 	#if flash
-	public static function createGradientMatrix(width:Int, height:Int, colors:Array<UInt>, ?chunkSize:Int = 1, ?rotation:Int = 90):Dynamic
+	public static function createGradientMatrix(width:Int, height:Int, colors:Array<UInt>, ?chunkSize:Int = 1, ?rotation:Int = 90):GradientMatrix
 	#else
-	public static function createGradientMatrix(width:Int, height:Int, colors:Array<BitmapInt32>, ?chunkSize:Int = 1, ?rotation:Int = 90):Dynamic
+	public static function createGradientMatrix(width:Int, height:Int, colors:Array<BitmapInt32>, ?chunkSize:Int = 1, ?rotation:Int = 90):GradientMatrix
 	#end
 	{
 		var gradientMatrix:Matrix = new Matrix();
@@ -154,7 +154,7 @@ class FlxGradient
 			height = 1;
 		}
 		
-		var gradient:Dynamic = createGradientMatrix(width, height, colors, chunkSize, rotation);
+		var gradient:GradientMatrix = createGradientMatrix(width, height, colors, chunkSize, rotation);
 		
 		var s:Shape = new Shape();
 		
@@ -282,4 +282,10 @@ class FlxGradient
 		return dest;
 	}
 	
+}
+
+typedef GradientMatrix = {
+    var matrix:Matrix;
+    var alpha:Array<Float>;
+    var ratio:Array<Int>;
 }

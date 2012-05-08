@@ -14,6 +14,7 @@
 */
 
 package org.flixel.plugin.photonstorm;
+
 import flash.errors.Error;
 import nme.display.BitmapInt32;
 import org.flixel.FlxG;
@@ -69,9 +70,9 @@ class FlxColor
 	public static function getComplementHarmony(color:BitmapInt32):BitmapInt32
 	#end
 	{
-		var hsv:Dynamic = RGBtoHSV(color);
+		var hsv:HSV = RGBtoHSV(color);
 		
-		var opposite:Int = FlxMath.wrapValue(hsv.hue, 180, 359);
+		var opposite:Int = FlxMath.wrapValue(Math.floor(hsv.hue), 180, 359);
 		
 		return HSVtoRGB(opposite, 1.0, 1.0);
 	}
@@ -87,22 +88,22 @@ class FlxColor
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
 	#if flash
-	public static function getAnalogousHarmony(color:UInt, ?threshold:Int = 30):Dynamic
+	public static function getAnalogousHarmony(color:UInt, ?threshold:Int = 30):Harmony
 	#else
-	public static function getAnalogousHarmony(color:BitmapInt32, ?threshold:Int = 30):Dynamic
+	public static function getAnalogousHarmony(color:BitmapInt32, ?threshold:Int = 30):Harmony
 	#end
 	{
-		var hsv:Dynamic = RGBtoHSV(color);
+		var hsv:HSV = RGBtoHSV(color);
 		
 		if (threshold > 359 || threshold < 0)
 		{
 			throw "FlxColor Warning: Invalid threshold given to getAnalogousHarmony()";
 		}
 		
-		var warmer:Int = FlxMath.wrapValue(hsv.hue, 359 - threshold, 359);
-		var colder:Int = FlxMath.wrapValue(hsv.hue, threshold, 359);
+		var warmer:Int = FlxMath.wrapValue(Math.floor(hsv.hue), 359 - threshold, 359);
+		var colder:Int = FlxMath.wrapValue(Math.floor(hsv.hue), threshold, 359);
 		
-		return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
+		return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: Math.floor(hsv.hue), hue2: warmer, hue3: colder };
 	}
 	
 	/**
@@ -116,28 +117,28 @@ class FlxColor
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
 	#if flash
-	public static function getSplitComplementHarmony(color:UInt, ?threshold:Int = 30):Dynamic
+	public static function getSplitComplementHarmony(color:UInt, ?threshold:Int = 30):Harmony
 	#else
-	public static function getSplitComplementHarmony(color:BitmapInt32, ?threshold:Int = 30):Dynamic
+	public static function getSplitComplementHarmony(color:BitmapInt32, ?threshold:Int = 30):Harmony
 	#end
 	{
-		var hsv:Dynamic = RGBtoHSV(color);
+		var hsv:HSV = RGBtoHSV(color);
 		
 		if (threshold >= 359 || threshold <= 0)
 		{
 			throw "FlxColor Warning: Invalid threshold given to getSplitComplementHarmony()";
 		}
 		
-		var opposite:Int = FlxMath.wrapValue(hsv.hue, 180, 359);
+		var opposite:Int = FlxMath.wrapValue(Math.floor(hsv.hue), 180, 359);
 		
-		var warmer:Int = FlxMath.wrapValue(hsv.hue, opposite - threshold, 359);
-		var colder:Int = FlxMath.wrapValue(hsv.hue, opposite + threshold, 359);
+		var warmer:Int = FlxMath.wrapValue(Math.floor(hsv.hue), opposite - threshold, 359);
+		var colder:Int = FlxMath.wrapValue(Math.floor(hsv.hue), opposite + threshold, 359);
 		
 		FlxG.log("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
 		//return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
 		
-		return { color1: color, color2: HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: hsv.hue, hue2: warmer, hue3: colder }
+		return { color1: color, color2: HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: Math.floor(hsv.hue), hue2: warmer, hue3: colder };
 	}
 	
 	/**
@@ -150,17 +151,17 @@ class FlxColor
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
 	 */
 	#if flash
-	public static function getTriadicHarmony(color:UInt):Dynamic
+	public static function getTriadicHarmony(color:UInt):TriadicHarmony
 	#else
-	public static function getTriadicHarmony(color:BitmapInt32):Dynamic
+	public static function getTriadicHarmony(color:BitmapInt32):TriadicHarmony
 	#end
 	{
-		var hsv:Dynamic = RGBtoHSV(color);
+		var hsv:HSV = RGBtoHSV(color);
 		
-		var triadic1:Int = FlxMath.wrapValue(hsv.hue, 120, 359);
+		var triadic1:Int = FlxMath.wrapValue(Math.floor(hsv.hue), 120, 359);
 		var triadic2:Int = FlxMath.wrapValue(triadic1, 120, 359);
 		
-		return { color1: color, color2: HSVtoRGB(triadic1, 1.0, 1.0), color3: HSVtoRGB(triadic2, 1.0, 1.0) }
+		return { color1: color, color2: HSVtoRGB(triadic1, 1.0, 1.0), color3: HSVtoRGB(triadic2, 1.0, 1.0) };
 	}
 	
 	/**
@@ -177,8 +178,8 @@ class FlxColor
 	public static function getColorInfo(color:BitmapInt32):String
 	#end
 	{
-		var argb:Dynamic = getRGB(color);
-		var hsl:Dynamic = RGBtoHSV(color);
+		var argb:RGBA = getRGB(color);
+		var hsl:HSV = RGBtoHSV(color);
 		
 		//	Hex format
 		var result:String = RGBtoHexString(color) + "\n";
@@ -205,7 +206,7 @@ class FlxColor
 	public static function RGBtoHexString(color:BitmapInt32):String
 	#end
 	{
-		var argb:Dynamic = getRGB(color);
+		var argb:RGBA = getRGB(color);
 		
 		return "0x" + colorToHexString(argb.alpha) + colorToHexString(argb.red) + colorToHexString(argb.green) + colorToHexString(argb.blue);
 	}
@@ -223,7 +224,7 @@ class FlxColor
 	public static function RGBtoWebString(color:BitmapInt32):String
 	#end
 	{
-		var argb:Dynamic = getRGB(color);
+		var argb:RGBA = getRGB(color);
 		
 		return "#" + colorToHexString(argb.red) + colorToHexString(argb.green) + colorToHexString(argb.blue);
 	}
@@ -323,12 +324,12 @@ class FlxColor
 	 * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
 	 */
 	#if flash
-	public static function RGBtoHSV(color:UInt):Dynamic
+	public static function RGBtoHSV(color:UInt):HSV
 	#else
-	public static function RGBtoHSV(color:BitmapInt32):Dynamic
+	public static function RGBtoHSV(color:BitmapInt32):HSV
 	#end
 	{
-		var rgb:Dynamic = getRGB(color);
+		var rgb:RGBA = getRGB(color);
 		
 		var red:Float = rgb.red / 255;
 		var green:Float = rgb.green / 255;
@@ -401,8 +402,8 @@ class FlxColor
 	#if flash
 	public static function interpolateColor(color1:UInt, color2:UInt, steps:UInt, currentStep:UInt, ?alpha:UInt = 255):UInt
 	{
-		var src1:Dynamic = getRGB(color1);
-		var src2:Dynamic = getRGB(color2);
+		var src1:RGBA = getRGB(color1);
+		var src2:RGBA = getRGB(color2);
 		
 		var r:UInt = cast((((src2.red - src1.red) * currentStep) / steps) + src1.red, UInt);
 		var g:UInt = cast((((src2.green - src1.green) * currentStep) / steps) + src1.green, UInt);
@@ -413,7 +414,7 @@ class FlxColor
 	
 	public static function interpolateColorWithRGB(color:UInt, r2:UInt, g2:UInt, b2:UInt, steps:UInt, currentStep:UInt):UInt
 	{
-		var src:Dynamic = getRGB(color);
+		var src:RGBA = getRGB(color);
 		
 		var r:UInt = cast((((r2 - src.red) * currentStep) / steps) + src.red, UInt);
 		var g:UInt = cast((((g2 - src.green) * currentStep) / steps) + src.green, UInt);
@@ -433,8 +434,8 @@ class FlxColor
 	#else
 	public static function interpolateColor(color1:BitmapInt32, color2:BitmapInt32, steps:Int, currentStep:Int, ?alpha:Int = 255):BitmapInt32
 	{
-		var src1:Dynamic = getRGB(color1);
-		var src2:Dynamic = getRGB(color2);
+		var src1:RGBA = getRGB(color1);
+		var src2:RGBA = getRGB(color2);
 		
 		var r:Int = Math.floor((((src2.red - src1.red) * currentStep) / steps) + src1.red);
 		var g:Int = Math.floor((((src2.green - src1.green) * currentStep) / steps) + src1.green);
@@ -445,7 +446,7 @@ class FlxColor
 	
 	public static function interpolateColorWithRGB(color:BitmapInt32, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):BitmapInt32
 	{
-		var src:Dynamic = getRGB(color);
+		var src:RGBA = getRGB(color);
 		
 		var r:Int = Math.floor((((r2 - src.red) * currentStep) / steps) + src.red);
 		var g:Int = Math.floor((((g2 - src.green) * currentStep) / steps) + src.green);
@@ -582,7 +583,7 @@ class FlxColor
 	 * @return Object with properties: alpha, red, green, blue
 	 */
 	#if flash
-	public static function getRGB(color:UInt):Dynamic
+	public static function getRGB(color:UInt):RGBA
 	{
 		//var alpha:UInt = color >>> 24;
 		var alpha:UInt = (color >> 24) & 0xFF;
@@ -593,7 +594,7 @@ class FlxColor
 		return { alpha: alpha, red: red, green: green, blue: blue };
 	}
 	#else
-	public static function getRGB(color:BitmapInt32):Dynamic
+	public static function getRGB(color:BitmapInt32):RGBA
 	{
 		//var alpha:Int = color >>> 24;
 		#if !neko
@@ -707,4 +708,52 @@ class FlxColor
 		return color & 0xFF;
 	}
 	
+}
+
+typedef HSV = {
+    var hue:Float;
+    var saturation:Float;
+    var lightness:Float;
+    var value:Float;
+}
+
+typedef RGBA = {
+    #if flash
+	var alpha:UInt;
+    var red:UInt;
+    var green:UInt;
+    var blue:UInt;
+	#else
+	var alpha:Int;
+    var red:Int;
+    var green:Int;
+    var blue:Int;
+	#end
+}
+
+typedef Harmony = {
+    #if flash
+	var color1:UInt;
+    var color2:UInt;
+    var color3:UInt;
+	#else
+	var color1:BitmapInt32;
+    var color2:BitmapInt32;
+    var color3:BitmapInt32;
+	#end
+    var hue1:Int;
+    var hue2:Int;
+    var hue3:Int;
+}
+
+typedef TriadicHarmony = {
+    #if flash
+	var color1:UInt;
+    var color2:UInt;
+    var color3:UInt;
+	#else
+	var color1:BitmapInt32;
+    var color2:BitmapInt32;
+    var color3:BitmapInt32;
+	#end
 }

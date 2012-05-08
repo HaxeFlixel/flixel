@@ -63,6 +63,10 @@ class FlxDisplay
 		{
 			data = Type.createInstance(source, []).bitmapData;
 		}
+		else if (Std.is(source, BitmapData))
+		{
+			data = cast(source, BitmapData).clone();
+		}
 		else
 		{
 			return null;
@@ -75,6 +79,10 @@ class FlxDisplay
 		else if (Std.is(mask, Class))
 		{
 			maskData = Type.createInstance(mask, []).bitmapData;
+		}
+		else if (Std.is(mask, BitmapData))
+		{
+			maskData = mask;
 		}
 		else
 		{

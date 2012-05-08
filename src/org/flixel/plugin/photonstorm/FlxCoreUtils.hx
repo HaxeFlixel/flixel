@@ -64,7 +64,7 @@ class FlxCoreUtils
 	 */
 	public static function getGameContainer():Sprite
 	{
-		return Sprite(FlxG.camera.getContainerSprite().parent);
+		return cast(FlxG.camera.getContainerSprite().parent, Sprite);
 	}
 	
 }

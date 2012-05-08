@@ -15,7 +15,7 @@ class FlxTile extends FlxObject
 	 * This function should take the form <code>myFunction(Tile:FlxTile,Object:FlxObject):void</code>.
 	 * Defaults to null, set through <code>FlxTilemap.setTileProperties()</code>.
 	 */
-	public var callbackFunction:Dynamic/*FlxTile->FlxObject->Void*/;
+	public var callbackFunction:FlxObject->FlxObject->Void;
 	/**
 	 * Each tile can store its own filter class for their callback functions.
 	 * That is, the callback will only be triggered if an object with a class

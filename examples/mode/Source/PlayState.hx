@@ -395,7 +395,7 @@ class PlayState extends FlxState
 	}
 
 	//This is an overlap callback function, triggered by the calls to FlxU.overlap().
-	private function overlapped(Sprite1:FlxSprite, Sprite2:FlxSprite):Void
+	private function overlapped(Sprite1:FlxObject, Sprite2:FlxObject):Void
 	{
 		if(Std.is(Sprite1, EnemyBullet) || Std.is(Sprite1, Bullet))
 		{

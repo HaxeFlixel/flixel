@@ -18,6 +18,7 @@ import nme.display.Bitmap;
 import nme.display.BitmapInt32;
 import nme.Lib;
 import org.flixel.FlxGroup;
+import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxRect;
 import org.flixel.FlxSound;
@@ -96,9 +97,9 @@ class FlxWeapon
 	public var currentBullet:Bullet;
 	
 	//	Callbacks
-	public var onPreFireCallback:Dynamic;
-	public var onFireCallback:Dynamic;
-	public var onPostFireCallback:Dynamic;
+	public var onPreFireCallback:Void->Void;
+	public var onFireCallback:Void->Void;
+	public var onPostFireCallback:Void->Void;
 	
 	//	Sounds
 	public var onPreFireSound:FlxSound;
@@ -698,7 +699,7 @@ class FlxWeapon
 	 * @param	callback	The function to call
 	 * @param	sound		An FlxSound to play
 	 */
-	public function setPreFireCallback(?callbackFunc:Dynamic = null, ?sound:FlxSound = null):Void
+	public function setPreFireCallback(?callbackFunc:Void->Void = null, ?sound:FlxSound = null):Void
 	{
 		onPreFireCallback = callbackFunc;
 		onPreFireSound = sound;
@@ -710,7 +711,7 @@ class FlxWeapon
 	 * @param	callback	The function to call
 	 * @param	sound		An FlxSound to play
 	 */
-	public function setFireCallback(?callbackFunc:Dynamic = null, ?sound:FlxSound = null):Void
+	public function setFireCallback(?callbackFunc:Void->Void = null, ?sound:FlxSound = null):Void
 	{
 		onFireCallback = callbackFunc;
 		onFireSound = sound;
@@ -722,7 +723,7 @@ class FlxWeapon
 	 * @param	callback	The function to call
 	 * @param	sound		An FlxSound to play
 	 */
-	public function setPostFireCallback(?callbackFunc:Dynamic = null, ?sound:FlxSound = null):Void
+	public function setPostFireCallback(?callbackFunc:Void->Void = null, ?sound:FlxSound = null):Void
 	{
 		onPostFireCallback = callbackFunc;
 		onPostFireSound = sound;

@@ -62,13 +62,13 @@ class FlxExtendedSprite extends FlxSprite
 	 * Function called when the mouse is pressed down on this sprite. Function is passed these parameters: obj:FlxExtendedSprite, x:int, y:int
 	 * @default null
 	 */
-	public var mousePressedCallback:Dynamic;
+	public var mousePressedCallback:FlxExtendedSprite->Int->Int->Void;
 	
 	/**
 	 * Function called when the mouse is released from this sprite. Function is passed these parameters: obj:FlxExtendedSprite, x:int, y:int
 	 * @default null
 	 */
-	public var mouseReleasedCallback:Dynamic;
+	public var mouseReleasedCallback:FlxExtendedSprite->Int->Int->Void;
 	
 	/**
 	 * Is this sprite allowed to be thrown?
