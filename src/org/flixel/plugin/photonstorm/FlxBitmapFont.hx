@@ -200,9 +200,6 @@ class FlxBitmapFont extends FlxSprite
 		customSpacingY = 0;
 		fixedWidth = 0;
 		
-		//	Take a copy of the font for internal use
-		fontSet = FlxG.addBitmap(font);
-		
 		this.characterWidth = characterWidth;
 		this.characterHeight = characterHeight;
 		characterSpacingX = xSpacing;
@@ -210,6 +207,13 @@ class FlxBitmapFont extends FlxSprite
 		characterPerRow = charsPerRow;
 		offsetX = xOffset;
 		offsetY = yOffset;
+		
+		//	Take a copy of the font for internal use
+		#if flash
+		fontSet = FlxG.addBitmap(font);
+		#else
+		fontSet = FlxG.addBitmap(font, false, false, null, (characterSpacingX == 0) ? characterWidth : (characterWidth * charsPerRow), (characterSpacingY == 0) ? characterHeight : Math.floor((chars.length / charsPerRow) * characterHeight));
+		#end
 		
 		grabData = new Array();
 		
@@ -271,7 +275,8 @@ class FlxBitmapFont extends FlxSprite
 			_tileSheetData = TileSheetManager.addTileSheet(fontSet);
 			_tileSheetData.antialiasing = false;
 			var reverse:Bool = (_flipped > 0);
-			_framesData = _tileSheetData.addSpriteFramesData(characterWidth, characterHeight, false, new Point(0, 0), offsetX, offsetY, fontSet.width, fontSet.height, characterSpacingX, characterSpacingY);
+			
+			_framesData = _tileSheetData.addSpriteFramesData(characterWidth, characterHeight, false, new Point(0, 0), offsetX, offsetY, fontSet.width, fontSet.height, (characterSpacingX == 0) ? 1 : characterSpacingX, (characterSpacingY == 0) ? 1 : characterSpacingY);
 		}
 	#end
 	}

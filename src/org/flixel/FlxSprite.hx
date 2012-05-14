@@ -345,7 +345,7 @@ class FlxSprite extends FlxObject
 		{
 			_flipped = 0;
 		}
-		if(Width == 0)
+		if (Width == 0)
 		{
 			if (Animated)
 			{
@@ -361,7 +361,7 @@ class FlxSprite extends FlxObject
 			}
 		}
 		width = frameWidth = Width;
-		if(Height == 0)
+		if (Height == 0)
 		{
 			if (Animated)
 			{
@@ -372,6 +372,11 @@ class FlxSprite extends FlxObject
 				Height = _pixels.height;
 			}
 		}
+		
+		#if !flash
+		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique, null, Width, Height);
+		#end
+		
 		height = frameHeight = Height;
 		resetHelpers();
 		
@@ -449,10 +454,12 @@ class FlxSprite extends FlxObject
 	#end
 		var skipGen:Bool = FlxG.checkBitmapCache(key);
 		
-		#if !neko
+		#if flash
 		_pixels = FlxG.createBitmap(Math.floor(width), Math.floor(height), 0, true, key);
+		#elseif cpp
+		_pixels = FlxG.createBitmap(Math.floor(width) + columns, Math.floor(height) + rows, 0, true, key);
 		#elseif neko
-		_pixels = FlxG.createBitmap(Math.floor(width), Math.floor(height), {rgb: 0, a: 0}, true, key);
+		_pixels = FlxG.createBitmap(Math.floor(width) + columns, Math.floor(height) + rows, {rgb: 0, a: 0}, true, key);
 		#end
 		
 		width = frameWidth = _pixels.width;
@@ -477,7 +484,11 @@ class FlxSprite extends FlxObject
 					_matrix.identity();
 					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
 					_matrix.rotate(bakedAngle * 0.017453293);
+					#if flash
 					_matrix.translate(max * column + midpointX, midpointY);
+					#else
+					_matrix.translate(max * column + midpointX + column, midpointY + row);
+					#end
 					bakedAngle += _bakedRotation;
 					_pixels.draw(brush, _matrix, null, null, null, AntiAliasing);
 					column++;
@@ -565,8 +576,11 @@ class FlxSprite extends FlxObject
 		}
 		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 		if (_colorTransform != null) framePixels.colorTransform(_flashRect, _colorTransform);
-	#end
+		
 		frames = Math.floor(_flashRect2.width / _flashRect.width * _flashRect2.height / _flashRect.height);
+	#else
+		frames = Math.floor(_flashRect2.width / (_flashRect.width + 1) * _flashRect2.height / (_flashRect.height + 1));
+	#end
 		_curIndex = 0;
 	}
 	
@@ -1446,7 +1460,14 @@ class FlxSprite extends FlxObject
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 			_tileSheetData.antialiasing = _antialiasing;
 			var reverse:Bool = (_flipped > 0);
-			_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), reverse);
+			if (frames > 1)
+			{
+				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), reverse, null, 0, 0, 0, 0, 1, 1);
+			}
+			else
+			{
+				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), reverse);
+			}
 		}
 	#end
 	}
