@@ -128,7 +128,7 @@ class TileSheetData
 			{
 				for (i in 0...(Math.floor(0.5 * numCols)))
 				{
-					tempRect = new Rectangle(spacedWidth * (numCols - i - 1), j * spacedHeight, width, height);
+					tempRect = new Rectangle(spacedWidth * (numCols - i - 1) + 1, j * spacedHeight, width, height);
 					tileID = addTileRect(tempRect, tempPoint);
 					spriteData.frameIDs.push(tileID);
 				}

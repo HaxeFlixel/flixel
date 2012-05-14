@@ -281,7 +281,7 @@ class PxBitmapFont
 		}
 	}
 	#else
-	private function setGlyph(pCharID:Int, pRect:Rectangle, pGlyphID:Int):Void 
+	private function setGlyph(pCharID:Int, pRect:Rectangle, pGlyphID:Int):Void
 	{
 		_glyphs[pCharID] = _tileSheetData.addTileRect(pRect, ZERO_POINT);
 		_glyphWidthData[pCharID] = Math.floor(pRect.width);
