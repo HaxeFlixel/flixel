@@ -50,18 +50,6 @@ class FlxBitmapTextField extends FlxSprite
 	private var _preparedOutlineGlyphs:Array<BitmapData>;
 	#else
 	private var _drawData:Array<Float>;
-	
-	private var _textColorRed:Float;
-	private var _textColorGreen:Float;
-	private var _textColorBlue:Float;
-	
-	private var _shadowRed:Float;
-	private var _shadowGreen:Float;
-	private var _shadowBlue:Float;
-	
-	private var _outlineRed:Float;
-	private var _outlineGreen:Float;
-	private var _outlineBlue:Float;
 	#end
 	
 	/**
@@ -213,7 +201,7 @@ class FlxBitmapTextField extends FlxSprite
 						
 						_tileSheetData.drawData[camID].push(currTileID);
 						
-						_tileSheetData.drawData[camID].push(1.0); // scale
+						_tileSheetData.drawData[camID].push(_fontScale); // scale
 						_tileSheetData.drawData[camID].push(0.0); // rotation
 						#if !neko
 						if (camera.color < 0xffffff)
@@ -263,7 +251,7 @@ class FlxBitmapTextField extends FlxSprite
 						
 						_tileSheetData.drawData[camID].push(currTileID);
 						
-						_tileSheetData.drawData[camID].push(scale.x); // scale
+						_tileSheetData.drawData[camID].push(_fontScale * scale.x); // scale
 						_tileSheetData.drawData[camID].push(-radians); // rotation
 						#if !neko
 						if (camera.color < 0xffffff)
@@ -644,6 +632,7 @@ class FlxBitmapTextField extends FlxSprite
 		height = frameHeight = finalHeight;
 		frames = 1;
 		centerOffsets();
+		setOriginToCorner();
 		#end
 		
 		_pendingTextChange = false;
