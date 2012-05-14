@@ -18,9 +18,9 @@ import nme.text.TextFormat;
 import nme.Lib;
 import nme.utils.ByteArray;
 import org.flixel.FlxU;
-import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.plugin.pxText.PxTextAlign;
-import org.flixel.plugin.pxText.PxTextField;
+import org.flixel.system.preloaderHelpers.PxBitmapFont;
+import org.flixel.system.preloaderHelpers.PxTextField;
 
 import org.flixel.FlxG;
 

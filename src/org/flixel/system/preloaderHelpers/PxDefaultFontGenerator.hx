@@ -1,7 +1,7 @@
-package org.flixel.plugin.pxText;
+package org.flixel.system.preloaderHelpers;
 
 import nme.display.BitmapData;
-import org.flixel.plugin.pxText.PxBitmapFont;
+import org.flixel.system.preloaderHelpers.PxBitmapFont;
 
 /**
  * Creates a default font. This is done automatically when intializing Pixelizer.

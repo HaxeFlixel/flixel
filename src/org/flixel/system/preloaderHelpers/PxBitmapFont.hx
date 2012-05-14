@@ -1,4 +1,4 @@
-package org.flixel.plugin.pxText;
+package org.flixel.system.preloaderHelpers;
 
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
@@ -10,8 +10,6 @@ import nme.geom.Rectangle;
 
 #if (cpp || neko)
 import nme.display.Tilesheet;
-import org.flixel.tileSheetManager.TileSheetData;
-import org.flixel.tileSheetManager.TileSheetManager;
 #end
 
 /**
@@ -28,9 +26,9 @@ class PxBitmapFont
 	private var _glyphs:Array<BitmapData>;
 	#else
 	private var _glyphs:Array<Int>;
-	private var _tileSheetData:TileSheetData;
+	private var _tileSheet:Tilesheet;
+	private static var _flags = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RGB;
 	private var _glyphWidthData:Array<Int>;
-	private var _antialiasing:Bool;
 	#end
 	private var _glyphString:String;
 	private var _maxHeight:Int;
@@ -56,7 +54,6 @@ class PxBitmapFont
 		_colorTransform = new ColorTransform();
 		#else
 		_glyphWidthData = [];
-		_antialiasing = false;
 		#end
 		
 		_glyphs = [];
@@ -75,7 +72,7 @@ class PxBitmapFont
 			var currRect:Rectangle;
 			
 			#if (cpp || neko)
-			_tileSheetData = TileSheetManager.addTileSheet(result);
+			_tileSheet = new Tilesheet(result);
 			#end
 			
 			for (letterID in 0...(tileRects.length))
@@ -233,7 +230,10 @@ class PxBitmapFont
 			}
 		}
 		#else
-		_tileSheetData = null;
+		if (_tileSheet != null)
+		{
+			_tileSheet = null;
+		}
 		#end
 		_glyphs = null;
 	}
@@ -283,7 +283,8 @@ class PxBitmapFont
 	#else
 	private function setGlyph(pCharID:Int, pRect:Rectangle, pGlyphID:Int):Void 
 	{
-		_glyphs[pCharID] = _tileSheetData.addTileRect(pRect, ZERO_POINT);
+		_tileSheet.addTileRect(pRect);
+		_glyphs[pCharID] = pGlyphID;
 		_glyphWidthData[pCharID] = Math.floor(pRect.width);
 		
 		if (Math.floor(pRect.height) > _maxHeight) 
@@ -306,27 +307,9 @@ class PxBitmapFont
 	#elseif js
 	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, ?pAngle:Float = 0):Void 
 	#else
-	public function render(drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pAngle:Float = 0):Void 
+	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pAngle:Float = 0):Void 
 	#end
 	{
-		#if (cpp || neko)
-		var colorMultiplier:Float = 0.00392 * 0.00392;
-		
-		var red:Float = (pColor >> 16) * colorMultiplier;
-		var green:Float = (pColor >> 8 & 0xff) * colorMultiplier;
-		var blue:Float = (pColor & 0xff) * colorMultiplier;
-		#end
-		
-		#if cpp
-		red *= (pSecondColor >> 16);
-		green *= (pSecondColor >> 8 & 0xff);
-		blue *= (pSecondColor & 0xff);
-		#elseif neko
-		red *= (pSecondColor.rgb >> 16);
-		green *= (pSecondColor.rgb >> 8 & 0xff);
-		blue *= (pSecondColor.rgb & 0xff);
-		#end
-		
 		_point.x = pOffsetX;
 		_point.y = pOffsetY;
 		#if (flash || js)
@@ -351,19 +334,36 @@ class PxBitmapFont
 				_point.x += glyph.width + pLetterSpacing;
 				#else
 				glyphWidth = _glyphWidthData[charCode];
-				
-				drawData.push(glyph);		// tile_ID
+				var red:Float = (pColor >> 16 & 0xFF) / 255;
+				var green:Float = (pColor >> 8 & 0xFF) / 255;
+				var blue:Float = (pColor & 0xFF) / 255;
+				// x, y, tile_ID, scale, rotation, red, green, blue, alpha
 				drawData.push(_point.x);	// x
 				drawData.push(_point.y);	// y
-				drawData.push(red);
+				drawData.push(glyph);		// tile_ID
+				drawData.push(pScale);		// scale
+				drawData.push(0);			// rotation
+				drawData.push(red);			
 				drawData.push(green);
 				drawData.push(blue);
-				
+				drawData.push(pAlpha);		// alpha
 				_point.x += glyphWidth * pScale + pLetterSpacing;
 				#end
 			}
 		}
 	}
+	
+	#if (cpp || neko)
+	/**
+	 * Internal method for actually drawing text on cpp and neko targets
+	 * @param	graphics
+	 * @param	drawData
+	 */
+	public function drawText(graphics:Graphics, drawData:Array<Float>):Void
+	{
+		_tileSheet.drawTiles(graphics, drawData, false, _flags);
+	}
+	#end
 	
 	/**
 	 * Returns the width of a certain test string.
@@ -421,42 +421,6 @@ class PxBitmapFont
 	 * @return Number of letters available in this font.
 	 */
 	public var numLetters(get_numLetters, null):Int;
-	
-	#if (cpp || neko)
-	public var tileSheetData(get_tileSheetData, null):TileSheetData;
-	
-	private function get_tileSheetData():TileSheetData 
-	{
-		return _tileSheetData;
-	}
-	
-	public function getTileSheetIndex():Int
-	{
-		if (_tileSheetData != null)
-		{
-			return TileSheetManager.getTileSheetIndex(_tileSheetData);
-		}
-		
-		return -1;
-	}
-	
-	public var antialiasing(getAntialiasing, setAntialiasing):Bool;
-	
-	public function getAntialiasing():Bool
-	{
-		return _antialiasing;
-	}
-	
-	public function setAntialiasing(val:Bool):Bool
-	{
-		_antialiasing = val;
-		if (_tileSheetData != null)
-		{
-			_tileSheetData.antialiasing = val;
-		}
-		return val;
-	}
-	#end
 	
 	public function get_numLetters():Int 
 	{

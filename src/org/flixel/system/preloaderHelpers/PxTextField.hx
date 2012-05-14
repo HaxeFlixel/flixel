@@ -1,9 +1,10 @@
-package org.flixel.plugin.pxText;
+package org.flixel.system.preloaderHelpers;
 
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Sprite;
-import org.flixel.plugin.pxText.PxBitmapFont;
+import org.flixel.system.preloaderHelpers.PxBitmapFont;
+import org.flixel.plugin.pxText.PxTextAlign;
 
 /**
  * Renders a text field.
@@ -119,6 +120,8 @@ class PxTextField extends Sprite
 		clearPreparedGlyphs(_preparedTextGlyphs);
 		clearPreparedGlyphs(_preparedShadowGlyphs);
 		clearPreparedGlyphs(_preparedOutlineGlyphs);
+		#else
+		_drawData = null;
 		#end
 	}
 	
