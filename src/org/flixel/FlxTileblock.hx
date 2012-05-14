@@ -302,7 +302,7 @@ class FlxTileblock extends FlxSprite
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 			_tileSheetData.antialiasing = _antialiasing;
-			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight);
+			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, false, null, 0, 0, 0, 0, 1, 1);
 		}
 	}
 	#end
