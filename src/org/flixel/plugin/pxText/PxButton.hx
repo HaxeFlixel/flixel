@@ -114,7 +114,7 @@ class PxButton extends FlxSprite
 			// TODO: redo this
 			if (PxBitmapFont.fetch("nokiafc22") == null)
 			{
-				PxBitmapFont.store("nokiafc22", new PxBitmapFont(Assets.getBitmapData("assets/data/fontData10pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\"));
+				PxBitmapFont.store("nokiafc22", new PxBitmapFont(Assets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
 			}
 			
 			//label = new FlxText(0, 0, 80, Label);
@@ -124,7 +124,7 @@ class PxButton extends FlxSprite
 			{
 				label.text = Label;
 			}
-			labelOffset = new FlxPoint(0, 6);
+			labelOffset = new FlxPoint(0, 5);
 		}
 		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
 		
@@ -150,7 +150,7 @@ class PxButton extends FlxSprite
 		//tempSprite.updateTileSheet();
 		if (label != null)
 		{
-			label.fontScale = 0.7;
+			label.fontScale = 0.7 * 10 / 11;
 			label.textColor = 0x333333;
 			label.alignment = PxTextAlign.CENTER;
 			

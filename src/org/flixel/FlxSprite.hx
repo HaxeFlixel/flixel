@@ -741,10 +741,25 @@ class FlxSprite extends FlxObject
 					var cos:Float = Math.cos(radians);
 					var sin:Float = Math.sin(radians);
 					
-					_tileSheetData.drawData[camID].push(cos * scale.x);
-					_tileSheetData.drawData[camID].push(sin * scale.y);
-					_tileSheetData.drawData[camID].push( -sin * scale.x);
-					_tileSheetData.drawData[camID].push(cos * scale.y);
+					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+					{
+						/*_tileSheetData.drawData[camID].push(-1);
+						_tileSheetData.drawData[camID].push(0);
+						_tileSheetData.drawData[camID].push(0);
+						_tileSheetData.drawData[camID].push(1);*/
+						
+						_tileSheetData.drawData[camID].push( -cos * scale.x);
+						_tileSheetData.drawData[camID].push(sin * scale.y);
+						_tileSheetData.drawData[camID].push( -sin * scale.x);
+						_tileSheetData.drawData[camID].push(cos * scale.y);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(cos * scale.x);
+						_tileSheetData.drawData[camID].push(sin * scale.y);
+						_tileSheetData.drawData[camID].push( -sin * scale.x);
+						_tileSheetData.drawData[camID].push(cos * scale.y);
+					}
 					
 					#if neko
 					if (camera.color.rgb < 0xffffff)
