@@ -31,6 +31,7 @@ class PxBitmapFont
 	private var _tileSheetData:TileSheetData;
 	private var _glyphWidthData:Array<Int>;
 	private var _antialiasing:Bool;
+	private var _bgTileID:Int;
 	#end
 	private var _glyphString:String;
 	private var _maxHeight:Int;
@@ -57,6 +58,8 @@ class PxBitmapFont
 		#else
 		_glyphWidthData = [];
 		_antialiasing = false;
+		
+		_bgTileID = -1;
 		#end
 		
 		_glyphs = [];
@@ -93,6 +96,10 @@ class PxBitmapFont
 				setGlyph(_glyphString.charCodeAt(letterID), currRect, letterID);
 				#end
 			}
+			
+			#if (cpp || neko)
+			_bgTileID = _tileSheetData.addTileRect(new Rectangle(result.width - 1, result.height - 1, 1, 1), ZERO_POINT);
+			#end
 		}
 	}
 	
@@ -149,10 +156,13 @@ class PxBitmapFont
 		}
 		
 		#if neko
-		var resultBitmapData:BitmapData = pBitmapData.clone();
+		//var resultBitmapData:BitmapData = pBitmapData.clone();
+		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, { rgb: 0x000000, a: 0x00 } );
 		#else
-		var resultBitmapData:BitmapData = pBitmapData.clone();
+		//var resultBitmapData:BitmapData = pBitmapData.clone();
+		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, 0x00000000);
 		#end
+		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
 		
 		#if flash
 		var pixelColor:UInt;
@@ -187,6 +197,12 @@ class PxBitmapFont
 			}
 			cy++;
 		}
+		
+		#if !neko
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, 0xffffffff);
+		#else
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, {rgb: 0xffffff, a: 0xff});
+		#end
 		
 		return resultBitmapData;
 	}
@@ -441,6 +457,13 @@ class PxBitmapFont
 	}
 	
 	public var antialiasing(getAntialiasing, setAntialiasing):Bool;
+	
+	public var bgTileID(get_bgTileID, null):Int;
+	
+	private function get_bgTileID():Int 
+	{
+		return _bgTileID;
+	}
 	
 	public function getAntialiasing():Bool
 	{

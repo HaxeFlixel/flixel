@@ -50,6 +50,7 @@ class FlxBitmapTextField extends FlxSprite
 	private var _preparedOutlineGlyphs:Array<BitmapData>;
 	#else
 	private var _drawData:Array<Float>;
+	private var _bgDrawData:Array<Float>;
 	#end
 	
 	/**
@@ -101,6 +102,7 @@ class FlxBitmapTextField extends FlxSprite
 		#else
 		_tileSheetData = _font.tileSheetData;
 		_drawData = [];
+		_bgDrawData = [];
 		#end
 		
 		_pendingTextChange = true;
@@ -117,6 +119,9 @@ class FlxBitmapTextField extends FlxSprite
 		clearPreparedGlyphs(_preparedTextGlyphs);
 		clearPreparedGlyphs(_preparedShadowGlyphs);
 		clearPreparedGlyphs(_preparedOutlineGlyphs);
+		#else
+		_drawData = null;
+		_bgDrawData = null;
 		#end
 		
 		super.destroy();
@@ -183,7 +188,27 @@ class FlxBitmapTextField extends FlxSprite
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
 			
 			if (simpleRender)
-			{	//Simple render
+			{	
+				if (_background)
+				{
+					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + _bgDrawData[1]);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + _bgDrawData[2]);
+					
+					_tileSheetData.drawData[camID].push(_bgDrawData[0]);
+					
+					_tileSheetData.drawData[camID].push(width);
+					_tileSheetData.drawData[camID].push(0);
+					_tileSheetData.drawData[camID].push(0);
+					_tileSheetData.drawData[camID].push(height);
+					
+					_tileSheetData.drawData[camID].push(_bgDrawData[3] * camera.red); 
+					_tileSheetData.drawData[camID].push(_bgDrawData[4] * camera.green);
+					_tileSheetData.drawData[camID].push(_bgDrawData[5] * camera.blue);
+					
+					_tileSheetData.drawData[camID].push(_alpha);
+				}
+				
+				//Simple render
 				while (j < textLength)
 				{
 					if (_tileSheetData != null)
@@ -203,7 +228,7 @@ class FlxBitmapTextField extends FlxSprite
 						
 					//	_tileSheetData.drawData[camID].push(_fontScale); // scale
 					//	_tileSheetData.drawData[camID].push(0.0); // rotation
-					
+						
 						_tileSheetData.drawData[camID].push(_fontScale);
 						_tileSheetData.drawData[camID].push(0);
 						_tileSheetData.drawData[camID].push(0);
@@ -236,6 +261,31 @@ class FlxBitmapTextField extends FlxSprite
 				radians = angle * 0.017453293;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
+				
+				if (_background)
+				{
+					currTileX = _bgDrawData[1];
+					currTileY = _bgDrawData[2];
+					
+					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
+					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
+					
+					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + relativeX);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + relativeY);
+					
+					_tileSheetData.drawData[camID].push(_bgDrawData[0]);
+					
+					_tileSheetData.drawData[camID].push(cos * scale.x * width * _fontScale);
+					_tileSheetData.drawData[camID].push( -sin * scale.y * height * _fontScale);
+					_tileSheetData.drawData[camID].push(sin * scale.x * width * _fontScale);
+					_tileSheetData.drawData[camID].push(cos * scale.y * height * _fontScale);
+					
+					_tileSheetData.drawData[camID].push(_bgDrawData[3] * camera.red); 
+					_tileSheetData.drawData[camID].push(_bgDrawData[4] * camera.green);
+					_tileSheetData.drawData[camID].push(_bgDrawData[5] * camera.blue);
+					
+					_tileSheetData.drawData[camID].push(_alpha);
+				}
 				
 				while (j < textLength)
 				{
@@ -584,8 +634,38 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		_pixels.lock();
 		#else
-		// TODO: draw background
 		_drawData.splice(0, _drawData.length);
+		_bgDrawData.splice(0, _bgDrawData.length);
+		
+		// TODO: draw background
+		if (_background)
+		{
+			_bgDrawData.push(_font.bgTileID);		// tile_ID
+			_bgDrawData.push( -halfWidth);
+			_bgDrawData.push( -halfHeight);
+			
+			#if (cpp || neko)
+			var colorMultiplier:Float = 0.00392 * 0.00392;
+			
+			var red:Float = (_backgroundColor >> 16) * colorMultiplier;
+			var green:Float = (_backgroundColor >> 8 & 0xff) * colorMultiplier;
+			var blue:Float = (_backgroundColor & 0xff) * colorMultiplier;
+			#end
+			
+			#if cpp
+			red *= (_color >> 16);
+			green *= (_color >> 8 & 0xff);
+			blue *= (_color & 0xff);
+			#elseif neko
+			red *= (_color.rgb >> 16);
+			green *= (_color.rgb >> 8 & 0xff);
+			blue *= (_color.rgb & 0xff);
+			#end
+			
+			_bgDrawData.push(red);
+			_bgDrawData.push(green);
+			_bgDrawData.push(blue);
+		}
 		#end
 		
 		// render text
