@@ -979,6 +979,7 @@ class FlxG
 		
 		var pixels:BitmapData = _cache.get(key);
 		
+		#if flash
 		if (isClass)
 		{
 			tempBitmap = Type.createInstance(Graphic, []).bitmapData;
@@ -996,36 +997,20 @@ class FlxG
 		{
 			needReverse = true;
 		}
+		
 		if (needReverse)
 		{
-			#if !neko
 			var newPixels:BitmapData = new BitmapData(pixels.width * 2, pixels.height, true, 0x00000000);
-			#else
-			var newPixels:BitmapData = new BitmapData(pixels.width * 2, pixels.height, true, {rgb: 0x000000, a: 0x00});
-			#end
 			
-		#if flash
 			newPixels.draw(pixels);
 			var mtx:Matrix = new Matrix();
 			mtx.scale(-1,1);
 			mtx.translate(newPixels.width, 0);
 			newPixels.draw(pixels, mtx);
-		#else
-			var pixelColor:BitmapInt32;
-			for (i in 0...(pixels.width + 1))
-			{
-				for (j in 0...(pixels.height + 1))
-				{
-					pixelColor = pixels.getPixel32(i, j);
-					newPixels.setPixel32(i, j, pixelColor);
-					newPixels.setPixel32(2 * pixels.width - i - 1, j, pixelColor);
-				}
-			}
-		#end
-			
 			pixels = newPixels;
 			_cache.set(key, pixels);
 		}
+		#end
 		
 		return pixels;
 	}

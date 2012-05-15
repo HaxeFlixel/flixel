@@ -64,7 +64,7 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	public function addSpriteFramesData(width:Int, height:Int, ?reversed:Bool = false, ?origin:Point = null, ?startX:Int = 0, ?startY:Int = 0, ?endX:Int = 0, ?endY:Int = 0, ?xSpacing:Int = 0, ?ySpacing:Int = 0):FlxSpriteFrames
+	public function addSpriteFramesData(width:Int, height:Int, ?origin:Point = null, ?startX:Int = 0, ?startY:Int = 0, ?endX:Int = 0, ?endY:Int = 0, ?xSpacing:Int = 0, ?ySpacing:Int = 0):FlxSpriteFrames
 	{
 		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
 		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
@@ -100,38 +100,13 @@ class TileSheetData
 		var spacedWidth:Int = width + xSpacing;
 		var spacedHeight:Int = height + ySpacing;
 		
-		if (reversed == false)
+		for (j in 0...(numRows))
 		{
-			for (j in 0...(numRows))
+			for (i in 0...(numCols))
 			{
-				for (i in 0...(numCols))
-				{
-					tempRect = new Rectangle(i * spacedWidth, j * spacedHeight, width, height);
-					tileID = addTileRect(tempRect, tempPoint);
-					spriteData.frameIDs.push(tileID);
-				}
-			}
-		}
-		else
-		{
-			for (j in 0...(numRows))
-			{
-				for (i in 0...(Math.floor(0.5 * numCols)))
-				{
-					tempRect = new Rectangle(i * spacedWidth, j * spacedHeight, width, height);
-					tileID = addTileRect(tempRect, tempPoint);
-					spriteData.frameIDs.push(tileID);
-				}
-			}
-			
-			for (j in 0...(numRows))
-			{
-				for (i in 0...(Math.floor(0.5 * numCols)))
-				{
-					tempRect = new Rectangle(spacedWidth * (numCols - i - 1) + 1, j * spacedHeight, width, height);
-					tileID = addTileRect(tempRect, tempPoint);
-					spriteData.frameIDs.push(tileID);
-				}
+				tempRect = new Rectangle(i * spacedWidth, j * spacedHeight, width, height);
+				tileID = addTileRect(tempRect, tempPoint);
+				spriteData.frameIDs.push(tileID);
 			}
 		}
 		
@@ -193,7 +168,7 @@ class TileSheetData
 			{
 				camera = FlxG.cameras[i];
 				cameraGraphics = camera._canvas.graphics;
-				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), flags);
+				cameraGraphics.drawTiles(tileSheet, data, (antialiasing || camera.antialiasing), flags);
 			}
 		}
 	}
@@ -290,11 +265,11 @@ class TileSheetData
 	{
 		if (value == true)
 		{
-			flags = Tilesheet.TILE_RGB;
+			flags = Graphics.TILE_RGB;
 		}
 		else
 		{
-			flags = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RGB;
+			flags = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
 		}
 		_isTilemap = value;
 		

@@ -477,8 +477,14 @@ class FlxTilemap extends FlxObject
 					}
 					else
 					{
-						_tileSheetData.drawData[CameraID].push(1.0); // scale
-						_tileSheetData.drawData[CameraID].push(0.0); // rotation
+					//	_tileSheetData.drawData[CameraID].push(1.0); // scale
+					//	_tileSheetData.drawData[CameraID].push(0.0); // rotation
+					
+						_tileSheetData.drawData[CameraID].push(1);
+						_tileSheetData.drawData[CameraID].push(0);
+						_tileSheetData.drawData[CameraID].push(0);
+						_tileSheetData.drawData[CameraID].push(1);
+					
 						_tileSheetData.drawData[CameraID].push(Camera.red); // red
 						_tileSheetData.drawData[CameraID].push(Camera.green); //	green
 						_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
@@ -1797,7 +1803,7 @@ class FlxTilemap extends FlxObject
 		if (_tiles != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_tiles, true);
-			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, false, new Point(0, 0));
+			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, new Point(0, 0));
 		}
 	#end
 	}

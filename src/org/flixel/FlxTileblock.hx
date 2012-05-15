@@ -216,8 +216,15 @@ class FlxTileblock extends FlxSprite
 						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + currTileX);
 						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + currTileY);
 						_tileSheetData.drawData[camID].push(currTileID);
-						_tileSheetData.drawData[camID].push(1.0); // scale
-						_tileSheetData.drawData[camID].push(0.0); // rotation
+						
+						//_tileSheetData.drawData[camID].push(1.0); // scale
+						//_tileSheetData.drawData[camID].push(0.0); // rotation
+						
+						_tileSheetData.drawData[camID].push(1);
+						_tileSheetData.drawData[camID].push(0);
+						_tileSheetData.drawData[camID].push(0);
+						_tileSheetData.drawData[camID].push(1);
+						
 						#if neko
 						if (camera.color.rgb < 0xffffff)
 						#else
@@ -253,16 +260,30 @@ class FlxTileblock extends FlxSprite
 						currTileX = _tileData[currPosInArr + 1];
 						currTileY = _tileData[currPosInArr + 2];
 						
-						relativeX = (currTileX * cos - currTileY * sin) * scale.x;
-						relativeY = (currTileX * sin + currTileY * cos) * scale.x;
+					//	relativeX = (currTileX * cos - currTileY * sin) * scale.x;
+					//	relativeY = (currTileX * sin + currTileY * cos) * scale.x;
+						
+						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
+						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 						
 						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + relativeX);
 						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + relativeY);
 						
 						_tileSheetData.drawData[camID].push(currTileID);
 						
-						_tileSheetData.drawData[camID].push(scale.x); // scale
-						_tileSheetData.drawData[camID].push(-radians); // rotation
+					//	_tileSheetData.drawData[camID].push(scale.x); // scale
+					//	_tileSheetData.drawData[camID].push( -radians); // rotation
+						
+						_tileSheetData.drawData[camID].push(cos * scale.x);
+						_tileSheetData.drawData[camID].push( -sin * scale.y);
+						_tileSheetData.drawData[camID].push( sin * scale.x);
+						_tileSheetData.drawData[camID].push(cos * scale.y);
+						
+						/*_transform[0] = dirX * cos * scaleX;
+						_transform[1] = dirX * sin * scaleY;
+						_transform[2] = -dirY * sin * scaleX;
+						_transform[3] = dirY * cos * _scaleY;*/
+						
 						#if neko
 						if (camera.color.rgb < 0xffffff)
 						#else

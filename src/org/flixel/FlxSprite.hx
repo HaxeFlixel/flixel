@@ -335,7 +335,11 @@ class FlxSprite extends FlxObject
 		Height = FlxU.fromIntToUInt(Height);
 		
 		_bakedRotation = 0;
+		#if (cpp || neko)
+		_pixels = FlxG.addBitmap(Graphic, false, Unique);
+		#else
 		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
+		#end
 		
 		if (Reverse)
 		{
@@ -374,7 +378,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		#if !flash
-		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique, null, Width, Height);
+		_pixels = FlxG.addBitmap(Graphic, false, Unique, null, Width, Height);
 		#end
 		
 		height = frameHeight = Height;
@@ -655,17 +659,41 @@ class FlxSprite extends FlxObject
 					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y);
 					
 					//handle reversed sprites
-					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+					/*if ((_flipped != 0) && (_facing == FlxObject.LEFT))
 					{
 						_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex + _framesData.halfFrameNumber]);
 					}
 					else
 					{
 						_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex]);
+					}*/
+					
+					_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex]);
+					
+					//_tileSheetData.drawData[camID].push(1.0); // scale
+					//_tileSheetData.drawData[camID].push(0.0); // rotation
+					
+					// handle reversed sprites
+					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+					{
+						_tileSheetData.drawData[camID].push(-1);
+						_tileSheetData.drawData[camID].push(0);
+						_tileSheetData.drawData[camID].push(0);
+						_tileSheetData.drawData[camID].push(1);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(1);
+						_tileSheetData.drawData[camID].push(0);
+						_tileSheetData.drawData[camID].push(0);
+						_tileSheetData.drawData[camID].push(1);
 					}
 					
-					_tileSheetData.drawData[camID].push(1.0); // scale
-					_tileSheetData.drawData[camID].push(0.0); // rotation
+					/*_transform[0] = dirX * cos * scaleX;
+					_transform[1] = dirX * sin * scaleY;
+					_transform[2] = -dirY * sin * scaleX;
+					_transform[3] = dirY * cos * _scaleY;*/
+					
 					#if neko
 					if (camera.color.rgb < 0xffffff)
 					#else
@@ -706,8 +734,18 @@ class FlxSprite extends FlxObject
 					
 					_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex]);
 					
-					_tileSheetData.drawData[camID].push(scale.x); // scale
-					_tileSheetData.drawData[camID].push(-angle * 0.017453293); // rotation
+					/*_tileSheetData.drawData[camID].push(scale.x); // scale
+					_tileSheetData.drawData[camID].push(-angle * 0.017453293); // rotation*/
+					
+					var radians:Float = -angle * 0.017453293;
+					var cos:Float = Math.cos(radians);
+					var sin:Float = Math.sin(radians);
+					
+					_tileSheetData.drawData[camID].push(cos * scale.x);
+					_tileSheetData.drawData[camID].push(sin * scale.y);
+					_tileSheetData.drawData[camID].push( -sin * scale.x);
+					_tileSheetData.drawData[camID].push(cos * scale.y);
+					
 					#if neko
 					if (camera.color.rgb < 0xffffff)
 					#else
@@ -1459,14 +1497,13 @@ class FlxSprite extends FlxObject
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 			_tileSheetData.antialiasing = _antialiasing;
-			var reverse:Bool = (_flipped > 0);
 			if (frames > 1)
 			{
-				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), reverse, null, 0, 0, 0, 0, 1, 1);
+				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), null, 0, 0, 0, 0, 1, 1);
 			}
 			else
 			{
-				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), reverse);
+				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
 			}
 		}
 	#end
