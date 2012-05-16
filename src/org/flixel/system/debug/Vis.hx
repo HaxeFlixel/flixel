@@ -1,5 +1,6 @@
 package org.flixel.system.debug;
 
+import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Sprite;
@@ -16,8 +17,6 @@ import org.flixel.FlxG;
  */
 class Vis extends Sprite
 {
-	/*[Embed(source="../../data/vis/bounds.png")] private var ImgBounds:Class<Bitmap>;*/
-
 	private var _bounds:Bitmap;
 	private var _overBounds:Bool;
 	private var _pressingBounds:Bool;
@@ -31,8 +30,7 @@ class Vis extends Sprite
 		
 		var spacing:Int = 7;
 		
-		//_bounds = new ImgBounds(); 
-		_bounds = Type.createInstance(FlxAssets.imgBounds, []);
+		_bounds = new Bitmap(Assets.getBitmapData(FlxAssets.imgBounds));
 		addChild(_bounds);
 		
 		unpress();

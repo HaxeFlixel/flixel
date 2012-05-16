@@ -1,5 +1,6 @@
 package org.flixel.system;
 
+import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
@@ -163,8 +164,7 @@ class FlxWindow extends Sprite
 		
 		if(_resizable)
 		{
-			//_handle = new ImgHandle(); 
-			_handle = Type.createInstance(FlxAssets.imgHandle, []);
+			_handle = new Bitmap(Assets.getBitmapData(FlxAssets.imgHandle));
 			addChild(_handle);
 		}
 		

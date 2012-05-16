@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Graphics;
@@ -905,8 +906,7 @@ class FlxGame extends Sprite
 		gfx.lineTo(halfWidth - helper, halfHeight - helper);
 		gfx.endFill();
 		
-		//var logo:Bitmap = new ImgLogo(); 
-		var logo:Bitmap = Type.createInstance(FlxAssets.imgLogo, []);
+		var logo:Bitmap = new Bitmap(Assets.getBitmapData(FlxAssets.imgLogo));
 		logo.scaleX = Math.floor(helper/10);
 		if (logo.scaleX < 1)
 		{

@@ -1,5 +1,6 @@
 package org.flixel.system.input;
 
+import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Sprite;
@@ -19,7 +20,6 @@ import org.flixel.system.replay.MouseRecord;
  */
 class Mouse extends FlxPoint
 {
-	/*[Embed(source="../../data/cursor.png")] private var ImgDefaultCursor:Class<Bitmap>;*/
 
 	/**
 	 * Current "delta" value of mouse wheel.  If the wheel was just scrolled up, it will have a positive value.  If it was just scrolled down, it will have a negative value.  If it wasn't just scroll this frame, it will be 0.
@@ -133,7 +133,7 @@ class Mouse extends FlxPoint
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
 	 */
-	public function load(?Graphic:Class<Bitmap> = null, ?Scale:Float = 1, ?XOffset:Int=0, ?YOffset:Int=0):Void
+	public function load(?Graphic:Dynamic = null, ?Scale:Float = 1, ?XOffset:Int=0, ?YOffset:Int=0):Void
 	{
 		if (_cursor != null)
 		{
@@ -142,11 +142,26 @@ class Mouse extends FlxPoint
 		
 		if (Graphic == null)
 		{
-			//Graphic = ImgDefaultCursor;
 			Graphic = FlxAssets.imgDefaultCursor;
 		}
-		//_cursor = new Graphic();
-		_cursor = Type.createInstance(Graphic, []);
+		
+		if (Std.is(Graphic, Class))
+		{
+			_cursor = Type.createInstance(Graphic, []);
+		}
+		else if (Std.is(Graphic, BitmapData))
+		{
+			_cursor = new Bitmap(cast(Graphic, BitmapData));
+		}
+		else if (Std.is(Graphic, String))
+		{
+			_cursor = new Bitmap(Assets.getBitmapData(Graphic));
+		}
+		else
+		{
+			_cursor = new Bitmap(Assets.getBitmapData(FlxAssets.imgDefaultCursor));
+		}
+		
 		_cursor.x = XOffset;
 		_cursor.y = YOffset;
 		_cursor.scaleX = Scale;

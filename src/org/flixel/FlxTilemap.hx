@@ -25,8 +25,8 @@ import org.flixel.tileSheetManager.TileSheetManager;
  */
 class FlxTilemap extends FlxObject
 {
-	public static inline var imgAuto:Class<Bitmap> = FlxAssets.imgAuto;
-	public static inline var imgAutoAlt:Class<Bitmap> = FlxAssets.imgAutoAlt;
+	public static inline var imgAuto:String = FlxAssets.imgAuto;
+	public static inline var imgAutoAlt:String = FlxAssets.imgAutoAlt;
 	
 	/**
 	 * No auto-tiling.
