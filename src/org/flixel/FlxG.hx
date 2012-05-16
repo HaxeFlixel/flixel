@@ -865,15 +865,15 @@ class FlxG
 			isClass = true;
 			isBitmap = false;
 		}
-		else if (Std.is(Graphic, String))
-		{
-			isClass = false;
-			isBitmap = false;
-		}
 		else if (Std.is(Graphic, BitmapData) && Key != null)
 		{
 			isClass = false;
 			isBitmap = true;
+		}
+		else if (Std.is(Graphic, String))
+		{
+			isClass = false;
+			isBitmap = false;
 		}
 		else
 		{

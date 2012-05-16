@@ -584,6 +584,10 @@ class FlxSprite extends FlxObject
 		frames = Math.floor(_flashRect2.width / _flashRect.width * _flashRect2.height / _flashRect.height);
 	#else
 		frames = Math.floor(_flashRect2.width / (_flashRect.width + 1) * _flashRect2.height / (_flashRect.height + 1));
+		if (_flipped > 0)
+		{
+			frames *= 2;
+		}
 	#end
 		_curIndex = 0;
 	}
@@ -1379,13 +1383,21 @@ class FlxSprite extends FlxObject
 				indexX %= widthHelper;
 			}
 			
-			//handle reversed sprites
+			#if cpp
+			var pixelColor:BitmapInt32 = 0x00000000;
+			#else
+			var pixelColor:BitmapInt32 = {rgb: 0x000000, a: 0x00};
+			#end
+			// handle reversed sprites
 			if ((_flipped != 0) && (_facing == FlxObject.LEFT))
 			{
-				indexX = (_flipped << 1) - indexX - frameWidth;
+				pixelColor = _pixels.getPixel32(Math.floor(indexX + frameWidth - _flashPoint.x), Math.floor(indexY + _flashPoint.y));
+			}
+			else
+			{
+				pixelColor = _pixels.getPixel32(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
 			}
 			// end of code from calcFrame() method
-			var pixelColor:BitmapInt32 = _pixels.getPixel32(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
 			#if cpp
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			#else

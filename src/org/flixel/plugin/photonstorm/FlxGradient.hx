@@ -17,6 +17,7 @@ package org.flixel.plugin.photonstorm;
 import nme.display.BitmapInt32;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 
 import nme.display.Bitmap;
@@ -154,6 +155,24 @@ class FlxGradient
 			height = 1;
 		}
 		
+		#if !flash
+		var key:String = "Gradient: " + width + " x " + height + ", colors: [";
+		for (col in colors)
+		{
+			#if cpp
+			key = key + col + ", ";
+			#elseif neko
+			key = key + col.rgb + "_" + col.a + ", ";
+			#end
+		}
+		key = key + "], chunkSize: " + chunkSize + ", rotation: " + rotation;
+		
+		if (FlxG._cache.exists(key))
+		{
+			return FlxG._cache.get(key);
+		}
+		#end
+		
 		var gradient:GradientMatrix = createGradientMatrix(width, height, colors, chunkSize, rotation);
 		
 		var s:Shape = new Shape();
@@ -201,6 +220,10 @@ class FlxGradient
 			
 			data.draw(tempBitmap, sM);
 		}
+		
+		#if !flash
+		FlxG._cache.set(key, data);
+		#end
 		
 		return data;
 	}

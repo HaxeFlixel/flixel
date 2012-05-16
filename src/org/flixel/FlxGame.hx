@@ -243,7 +243,7 @@ class FlxGame extends Sprite
 		{
 			globalVolume = 0;
 		}
-		for (i in 0..._soundTrayBars.length)
+		for (i in 0...(_soundTrayBars.length))
 		{
 			if (i < Std.int(globalVolume)) _soundTrayBars[i].alpha = 1;
 			else _soundTrayBars[i].alpha = 0.5;
