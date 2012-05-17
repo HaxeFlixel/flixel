@@ -828,7 +828,11 @@ class FlxG
 		var key:String = Key;
 		if(key == null)
 		{
+			#if !neko
 			key = Width + "x" + Height + ":" + Color;
+			#else
+			key = Width + "x" + Height + ":" + Color.a + "." + Color.rgb;
+			#end
 			if(Unique && checkBitmapCache(key))
 			{
 				var inc:Int = 0;
@@ -842,7 +846,6 @@ class FlxG
 		}
 		if (!checkBitmapCache(key))
 		{
-			//_cache[Key] = new BitmapData(Width,Height,true,Color);
 			_cache.set(key, new BitmapData(Width, Height, true, Color));
 		}
 		return _cache.get(key);
@@ -858,6 +861,11 @@ class FlxG
 	 */
 	static public function addBitmap(Graphic:Dynamic, ?Reverse:Bool = false, ?Unique:Bool = false, ?Key:String = null, ?FrameWidth:Int = 0, ?FrameHeight:Int = 0):BitmapData
 	{
+		if (Graphic == null)
+		{
+			return null;
+		}
+		
 		var isClass:Bool = true;
 		var isBitmap:Bool = true;
 		if (Std.is(Graphic, Class))
