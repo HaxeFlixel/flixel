@@ -28,6 +28,7 @@ import org.flixel.FlxSprite;
 
 #if (cpp || neko)
 import org.flixel.tileSheetManager.TileSheetData;
+import org.flixel.tileSheetManager.TileSheetManager;
 #end
 
 /**
@@ -139,11 +140,13 @@ class FlxBar extends FlxSprite
 	private static inline var BAR_IMAGE:Int = 3;
 	
 	private var _emptyBarFrameID:Int;
-	private var _filledBarFrames:Array<Int>;
+	private var _filledBarFrames:Array<Float>;
 	
 	private var _framesPosition:String;
 	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
 	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
+	
+	private var _needToUpdateTileSheet:Bool;
 	#end
 	
 	/**
@@ -182,6 +185,7 @@ class FlxBar extends FlxSprite
 		origin.make(frameWidth * 0.5, frameHeight * 0.5);
 		
 		_framesPosition = FRAMES_POSITION_HORIZONTAL;
+		_needToUpdateTileSheet = false;
 		#end
 		
 		filledBarPoint = new Point(0, 0);
@@ -204,6 +208,10 @@ class FlxBar extends FlxSprite
 		createFilledBar(0xff005100, 0xff00F400, border);
 		#else
 		createFilledBar({rgb: 0x005100, a: 0xff}, {rgb: 0x00F400, a: 0xff}, border);
+		#end
+		
+		#if !flash
+		_needToUpdateTileSheet = true;
 		#end
 		
 		emptyKill = false;
@@ -357,6 +365,13 @@ class FlxBar extends FlxSprite
 		{
 			value = min;
 		}
+		
+		#if !flash
+		if (_needToUpdateTileSheet)
+		{
+			updateTileSheet();
+		}
+		#end
 	}
 	
 	public function debug():Void
@@ -955,7 +970,10 @@ class FlxBar extends FlxSprite
 		}
 		
 		#if !flash
-		
+		if (_needToUpdateTileSheet)
+		{
+			updateTileSheet();
+		}
 		#end
 	}
 	
@@ -1132,7 +1150,196 @@ class FlxBar extends FlxSprite
 	#if !flash
 	override public function draw():Void 
 	{
-		super.draw();
+		if (_flickerTimer != 0)
+		{
+			_flicker = !_flicker;
+			if (_flicker)
+			{
+				return;
+			}
+		}
+		
+		if (cameras == null)
+		{
+			cameras = FlxG.cameras;
+		}
+		var camera:FlxCamera;
+		var i:Int = 0;
+		var l:Int = cameras.length;
+		
+		var percentFrame:Int = 2 * (Math.floor(percent) - 1);
+		
+		var camID:Int;
+		
+		while(i < l)
+		{
+			camera = cameras[i++];
+			camID = camera.ID;
+			
+			if (!onScreen(camera))
+			{
+				continue;
+			}
+			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
+			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			
+			if (simpleRender)
+			{	//Simple render
+				if (_tileSheetData != null && percentFrame >= 0) // TODO: remove this if statement later
+				{
+					// Draw empty bar
+					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y);
+					
+					_tileSheetData.drawData[camID].push(_emptyBarFrameID);
+					
+					_tileSheetData.drawData[camID].push(1);
+					_tileSheetData.drawData[camID].push(0);
+					_tileSheetData.drawData[camID].push(0);
+					_tileSheetData.drawData[camID].push(1);
+					
+					#if neko
+					if (camera.color.rgb < 0xffffff)
+					#else
+					if (camera.color < 0xffffff)
+					#end
+					{
+						_tileSheetData.drawData[camID].push(_red * camera.red); 
+						_tileSheetData.drawData[camID].push(_green * camera.green);
+						_tileSheetData.drawData[camID].push(_blue * camera.blue);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(_red); 
+						_tileSheetData.drawData[camID].push(_green);
+						_tileSheetData.drawData[camID].push(_blue);
+					}
+					_tileSheetData.drawData[camID].push(_alpha);
+					
+					// Draw filled bar
+					if (fillHorizontal)
+					{
+						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + _filledBarFrames[percentFrame]);
+						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x);
+						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + _filledBarFrames[percentFrame]);
+					}
+					
+					_tileSheetData.drawData[camID].push(_filledBarFrames[percentFrame + 1]);
+					
+					_tileSheetData.drawData[camID].push(1);
+					_tileSheetData.drawData[camID].push(0);
+					_tileSheetData.drawData[camID].push(0);
+					_tileSheetData.drawData[camID].push(1);
+					
+					#if neko
+					if (camera.color.rgb < 0xffffff)
+					#else
+					if (camera.color < 0xffffff)
+					#end
+					{
+						_tileSheetData.drawData[camID].push(_red * camera.red); 
+						_tileSheetData.drawData[camID].push(_green * camera.green);
+						_tileSheetData.drawData[camID].push(_blue * camera.blue);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(_red); 
+						_tileSheetData.drawData[camID].push(_green);
+						_tileSheetData.drawData[camID].push(_blue);
+					}
+					_tileSheetData.drawData[camID].push(_alpha);
+				}
+			}
+			else
+			{	
+				//Advanced render
+				if (_tileSheetData != null && percentFrame >= 0) // TODO: remove this if statement later
+				{
+					var radians:Float = -angle * 0.017453293;
+					var cos:Float = Math.cos(radians);
+					var sin:Float = Math.sin(radians);
+					
+					// Draw empty bar
+					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y);
+					
+					_tileSheetData.drawData[camID].push(_emptyBarFrameID);
+					
+					_tileSheetData.drawData[camID].push(cos * scale.x);
+					_tileSheetData.drawData[camID].push(sin * scale.y);
+					_tileSheetData.drawData[camID].push( -sin * scale.x);
+					_tileSheetData.drawData[camID].push(cos * scale.y);
+					
+					#if neko
+					if (camera.color.rgb < 0xffffff)
+					#else
+					if (camera.color < 0xffffff)
+					#end
+					{
+						_tileSheetData.drawData[camID].push(_red * camera.red); 
+						_tileSheetData.drawData[camID].push(_green * camera.green);
+						_tileSheetData.drawData[camID].push(_blue * camera.blue);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(_red); 
+						_tileSheetData.drawData[camID].push(_green);
+						_tileSheetData.drawData[camID].push(_blue);
+					}
+					_tileSheetData.drawData[camID].push(_alpha);
+					
+					// Draw filled bar
+					var relativeX:Float = 0;
+					var relativeY:Float = 0;
+					
+					if (fillHorizontal)
+					{
+						relativeX = _filledBarFrames[percentFrame] * cos * scale.x;
+					}
+					else
+					{
+						relativeY = _filledBarFrames[percentFrame] * cos * scale.y;
+					}
+					
+					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + relativeX);
+					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + relativeY);
+					
+					_tileSheetData.drawData[camID].push(_filledBarFrames[percentFrame + 1]);
+					
+					_tileSheetData.drawData[camID].push(cos * scale.x);
+					_tileSheetData.drawData[camID].push(sin * scale.y);
+					_tileSheetData.drawData[camID].push( -sin * scale.x);
+					_tileSheetData.drawData[camID].push(cos * scale.y);
+					
+					#if neko
+					if (camera.color.rgb < 0xffffff)
+					#else
+					if (camera.color < 0xffffff)
+					#end
+					{
+						_tileSheetData.drawData[camID].push(_red * camera.red); 
+						_tileSheetData.drawData[camID].push(_green * camera.green);
+						_tileSheetData.drawData[camID].push(_blue * camera.blue);
+					}
+					else
+					{
+						_tileSheetData.drawData[camID].push(_red); 
+						_tileSheetData.drawData[camID].push(_green);
+						_tileSheetData.drawData[camID].push(_blue);
+					}
+					_tileSheetData.drawData[camID].push(_alpha);
+				}
+			}
+			FlxBasic._VISIBLECOUNT++;
+			if (FlxG.visualDebug && !ignoreDrawDebug)
+			{
+				drawDebug(camera);
+			}
+		}
 	}
 	
 	override public function setPixels(Pixels:BitmapData):BitmapData
@@ -1155,38 +1362,105 @@ class FlxBar extends FlxSprite
 		return _pixels;
 	}
 	#end
-	/*
+	
 	override public function updateTileSheet():Void 
-	{
-		//private var _emptyBarFrameID:Int;
-		//private var _filledBarFrames:Array<Int>;
+	{	
 	#if (cpp || neko)
-		
-		if (_pixels != null && frameWidth >= 1 && frameHeight >= 1)
+		if (_pixels != null && barWidth >= 1 && barHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 			_tileSheetData.antialiasing = _antialiasing;
 			
-			if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
+			_emptyBarFrameID = _tileSheetData.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
+			_filledBarFrames = [];
+			
+			var frameRelativePosition:Float;
+			var frameX:Float;
+			var frameY:Float;
+			var frameWidth:Float = 0;
+			var frameHeight:Float = 0;
+			
+			var startX:Int = 0;
+			var startY:Int = barHeight + 1;
+			
+			if (_framesPosition != FRAMES_POSITION_HORIZONTAL)
 			{
-				
-			}
-			else
-			{
-				
+				startX = barWidth + 1;
+				startY = 0;
 			}
 			
-			if (frames > 1)
+			for (i in 1...(100 + 1))
 			{
-				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), null, 0, 0, 0, 0, 1, 1);
-			}
-			else
-			{
-				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
+				frameX = startX;
+				frameY = startY;
+				
+				if (fillDirection == FILL_LEFT_TO_RIGHT)
+				{
+					frameWidth = barWidth * i / 100;
+					frameHeight = barHeight;
+					
+					_filledBarFrames.push(0);
+				}
+				else if (fillDirection == FILL_TOP_TO_BOTTOM)
+				{
+					frameWidth = barWidth;
+					frameHeight = barHeight * i / 100;
+					
+					_filledBarFrames.push(0);
+				}
+				else if (fillDirection == FILL_BOTTOM_TO_TOP)
+				{
+					frameWidth = barWidth;
+					frameHeight = barHeight * i / 100;
+					frameY += (barHeight - frameHeight);
+					
+					_filledBarFrames.push(barHeight - frameHeight);
+				}
+				else if (fillDirection == FILL_RIGHT_TO_LEFT)
+				{
+					frameWidth = barWidth * i / 100;
+					frameHeight = barHeight;
+					frameX += (barWidth - frameWidth);
+					
+					_filledBarFrames.push(barWidth - frameWidth);
+				}
+				else if (fillDirection == FILL_HORIZONTAL_INSIDE_OUT)
+				{
+					frameWidth = barWidth * i / 100;
+					frameHeight = barHeight;
+					frameX += (0.5 * (barWidth - frameWidth));
+					
+					_filledBarFrames.push(0.5 * (barWidth - frameWidth));
+				}
+				else if (fillDirection == FILL_HORIZONTAL_OUTSIDE_IN)
+				{
+					frameWidth = barWidth * (100 - i) / 100;
+					frameHeight = barHeight;
+					frameX += 0.5 * (barWidth - frameWidth);
+					
+					_filledBarFrames.push(0.5 * (barWidth - frameWidth));
+				}
+				else if (fillDirection == FILL_VERTICAL_INSIDE_OUT)
+				{
+					frameWidth = barWidth;
+					frameHeight = barHeight * i / 100;
+					frameY += (0.5 * (barHeight - frameHeight));
+					
+					_filledBarFrames.push(0.5 * (barHeight - frameHeight));
+				}
+				else if (fillDirection == FILL_VERTICAL_OUTSIDE_IN)
+				{
+					frameWidth = barWidth;
+					frameHeight = barHeight * (100 - i) / 100;
+					frameY += (0.5 * (barHeight - frameHeight));
+					
+					_filledBarFrames.push(0.5 * (barHeight - frameHeight));
+				}
+				
+				_filledBarFrames.push(_tileSheetData.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * barWidth, 0.5 * barHeight)));
 			}
 		}
-		
 	#end
 	}
-	*/
+	
 }
