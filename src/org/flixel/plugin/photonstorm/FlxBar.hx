@@ -217,6 +217,40 @@ class FlxBar extends FlxSprite
 		emptyKill = false;
 	}
 	
+	override public function destroy():Void 
+	{
+		#if flash
+		canvas.dispose();
+		canvas = null;
+		#else
+		_filledBarFrames = null;
+		#end
+		
+		parent = null;
+		positionOffset = null;
+		emptyCallback = null;
+		emptyBarRect = null;
+		emptyBarPoint = null;
+		zeroOffset = null;
+		filledCallback = null;
+		filledBarRect = null;
+		filledBarPoint = null;
+		
+		if (emptyBar != null)
+		{
+			emptyBar.dispose();
+			emptyBar = null;
+		}
+		
+		if (filledBar != null)
+		{
+			filledBar.dispose();
+			filledBar = null;
+		}
+		
+		super.destroy();
+	}
+	
 	/**
 	 * Track the parent FlxSprites x/y coordinates. For example if you wanted your sprite to have a floating health-bar above their head.<br />
 	 * If your health bar is 10px tall and you wanted it to appear above your sprite, then set offsetY to be -10<br />
@@ -1141,11 +1175,6 @@ class FlxBar extends FlxSprite
 	{
 		return value;
 	}
-	
-	// TODO: use only one tilesheet with two images in it
-	// TODO: override these and other similar methods
-	// TODO: implement _framesPosition prop
-	// TODO: call updateTileSheet() after setting fill direction
 	
 	#if !flash
 	override public function draw():Void 

@@ -1,5 +1,15 @@
 flixel CHANGELOG
 
+v1.02
+------------------------------
+* Ported FlxBar class
+* Added FlxBitmapFont class
+* Added PxButton class which uses FlxBitmapFont for text rendering
+* Replaced Dynamic with appropriate types (where it was possible)
+* Improvements in FlxQuadTree and FlxObject (less garbage)
+* Changed rendering system for cpp target so it uses 2d tile transformations now (which means non-uniform scaling is working now)
+* Changed TileSheet creation process to insert gaps between frames. This should solve 'pixel bleeding' problem
+
 v1.01
 ------------------------------
 * Finally ported FlxPreloader class
