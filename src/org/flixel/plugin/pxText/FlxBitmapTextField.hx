@@ -226,9 +226,6 @@ class FlxBitmapTextField extends FlxSprite
 						
 						_tileSheetData.drawData[camID].push(currTileID);
 						
-					//	_tileSheetData.drawData[camID].push(_fontScale); // scale
-					//	_tileSheetData.drawData[camID].push(0.0); // rotation
-						
 						_tileSheetData.drawData[camID].push(_fontScale);
 						_tileSheetData.drawData[camID].push(0);
 						_tileSheetData.drawData[camID].push(0);
@@ -299,9 +296,6 @@ class FlxBitmapTextField extends FlxSprite
 						currTileGreen = _drawData[currPosInArr + 4];
 						currTileBlue = _drawData[currPosInArr + 5];
 						
-					//	relativeX = (currTileX * cos - currTileY * sin) * scale.x;
-					//	relativeY = (currTileX * sin + currTileY * cos) * scale.x;
-						
 						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
 						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 						
@@ -309,9 +303,6 @@ class FlxBitmapTextField extends FlxSprite
 						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + relativeY);
 						
 						_tileSheetData.drawData[camID].push(currTileID);
-						
-					//	_tileSheetData.drawData[camID].push(_fontScale * scale.x); // scale
-					//	_tileSheetData.drawData[camID].push(-radians); // rotation
 						
 						_tileSheetData.drawData[camID].push(cos * scale.x * _fontScale);
 						_tileSheetData.drawData[camID].push( -sin * scale.y * _fontScale);

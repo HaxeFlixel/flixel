@@ -356,9 +356,6 @@ class FlxBitmapFont extends FlxSprite
 						
 						_tileSheetData.drawData[camID].push(currTileID);
 						
-					//	_tileSheetData.drawData[camID].push(1.0); // scale
-					//	_tileSheetData.drawData[camID].push(0.0); // rotation
-						
 						_tileSheetData.drawData[camID].push(1);
 						_tileSheetData.drawData[camID].push(0);
 						_tileSheetData.drawData[camID].push(0);
@@ -401,9 +398,6 @@ class FlxBitmapFont extends FlxSprite
 						currTileX = points[currPosInArr + 1];
 						currTileY = points[currPosInArr + 2];
 						
-					//	relativeX = (currTileX * cos - currTileY * sin) * scale.x;
-					//	relativeY = (currTileX * sin + currTileY * cos) * scale.x;
-						
 						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
 						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 						
@@ -411,9 +405,6 @@ class FlxBitmapFont extends FlxSprite
 						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + relativeY);
 						
 						_tileSheetData.drawData[camID].push(currTileID);
-						
-					//	_tileSheetData.drawData[camID].push(scale.x); // scale
-					//	_tileSheetData.drawData[camID].push(-radians); // rotation
 					
 						_tileSheetData.drawData[camID].push(cos * scale.x);
 						_tileSheetData.drawData[camID].push( -sin * scale.y);
