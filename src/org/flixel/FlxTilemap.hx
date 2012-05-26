@@ -390,7 +390,8 @@ class FlxTilemap extends FlxObject
 		var drawX:Float;
 		var drawY:Float;
 		
-		var CameraID:Int = Camera.ID;
+		var currDrawData:Array<Float> = _tileSheetData.drawData[Camera.ID];
+		var currIndex:Int = currDrawData.length;
 		#end
 		
 		//Copy tile images into the tile buffer
@@ -465,30 +466,27 @@ class FlxTilemap extends FlxObject
 				{
 					drawX = Math.floor(_helperPoint.x) + (columnIndex % widthInTiles) * _tileWidth;
 					drawY = Math.floor(_helperPoint.y) + Math.floor(columnIndex / widthInTiles) * _tileHeight;
-					_tileSheetData.drawData[CameraID].push(drawX);
-					_tileSheetData.drawData[CameraID].push(drawY);
-					_tileSheetData.drawData[CameraID].push(tileID);
+					currDrawData[currIndex++] = drawX;
+					currDrawData[currIndex++] = drawY;
+					currDrawData[currIndex++] = tileID;
 					
 					if (_tileSheetData.isTilemap)
 					{
-						_tileSheetData.drawData[CameraID].push(Camera.red); // red
-						_tileSheetData.drawData[CameraID].push(Camera.green); //	green
-						_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
+						currDrawData[currIndex++] = Camera.red; // red
+						currDrawData[currIndex++] = Camera.green; //	green
+						currDrawData[currIndex++] = Camera.blue; //	blue
 					}
 					else
 					{
-					//	_tileSheetData.drawData[CameraID].push(1.0); // scale
-					//	_tileSheetData.drawData[CameraID].push(0.0); // rotation
+						currDrawData[currIndex++] = 1;
+						currDrawData[currIndex++] = 0;
+						currDrawData[currIndex++] = 0;
+						currDrawData[currIndex++] = 1;
 					
-						_tileSheetData.drawData[CameraID].push(1);
-						_tileSheetData.drawData[CameraID].push(0);
-						_tileSheetData.drawData[CameraID].push(0);
-						_tileSheetData.drawData[CameraID].push(1);
-					
-						_tileSheetData.drawData[CameraID].push(Camera.red); // red
-						_tileSheetData.drawData[CameraID].push(Camera.green); //	green
-						_tileSheetData.drawData[CameraID].push(Camera.blue); //	blue
-						_tileSheetData.drawData[CameraID].push(1.0); // alpha
+						currDrawData[currIndex++] = Camera.red; // red
+						currDrawData[currIndex++] = Camera.green; //	green
+						currDrawData[currIndex++] = Camera.blue; //	blue
+						currDrawData[currIndex++] = 1.0; // alpha
 					}
 					
 					if(FlxG.visualDebug && !ignoreDrawDebug)

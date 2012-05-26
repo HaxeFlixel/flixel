@@ -393,21 +393,23 @@ class FlxObject extends FlxBasic
 	{
 		var delta:Float;
 		var velocityDelta:Float;
+		
+		var dt:Float = FlxG.elapsed;
 
-		velocityDelta = (FlxU.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity) / 2;
+		velocityDelta = 0.5 * (FlxU.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
 		angularVelocity += velocityDelta; 
-		angle += angularVelocity * FlxG.elapsed;
+		angle += angularVelocity * dt;
 		angularVelocity += velocityDelta;
 		
-		velocityDelta = (FlxU.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x) / 2;
+		velocityDelta = 0.5 * (FlxU.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
 		velocity.x += velocityDelta;
-		delta = velocity.x * FlxG.elapsed;
+		delta = velocity.x * dt;
 		velocity.x += velocityDelta;
 		x += delta;
 		
-		velocityDelta = (FlxU.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y) / 2;
+		velocityDelta = 0.5 * (FlxU.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
 		velocity.y += velocityDelta;
-		delta = velocity.y * FlxG.elapsed;
+		delta = velocity.y * dt;
 		velocity.y += velocityDelta;
 		y += delta;
 	}
@@ -932,8 +934,8 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		point.x = x - Std.int(Camera.scroll.x * scrollFactor.x);
-		point.y = y - Std.int(Camera.scroll.y * scrollFactor.y);
+		point.x = x - Math.floor(Camera.scroll.x * scrollFactor.x);
+		point.y = y - Math.floor(Camera.scroll.y * scrollFactor.y);
 		point.x += (point.x > 0)?0.0000001: -0.0000001;
 		point.y += (point.y > 0)?0.0000001: -0.0000001;
 		return point;

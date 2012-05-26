@@ -215,6 +215,7 @@ class FlxSprite extends FlxObject
 	#if (cpp || neko)
 	private var _tileSheetData:TileSheetData;
 	private var _framesData:FlxSpriteFrames;
+	private var _frameID:Int;
 	private var _red:Float;
 	private var _green:Float;
 	private var _blue:Float;
@@ -265,6 +266,8 @@ class FlxSprite extends FlxObject
 		_red = 1.0;
 		_green = 1.0;
 		_blue = 1.0;
+		
+		_frameID = 0;
 		#end
 		
 		if (SimpleGraphic == null)
@@ -590,6 +593,12 @@ class FlxSprite extends FlxObject
 		}
 	#end
 		_curIndex = 0;
+		#if (cpp || neko)
+		if (_framesData != null)
+		{
+			_frameID = _framesData.frameIDs[_curIndex];
+		}
+		#end
 	}
 	
 	/**
@@ -616,10 +625,12 @@ class FlxSprite extends FlxObject
 			}
 		}
 		
+		#if flash
 		if(dirty)	//rarely 
 		{
 			calcFrame();
 		}
+		#end
 		
 		if (cameras == null)
 		{
@@ -630,14 +641,16 @@ class FlxSprite extends FlxObject
 		var l:Int = cameras.length;
 		
 		#if (cpp || neko)
-		var camID:Int;
+		var currDrawData:Array<Float>;
+		var currIndex:Int;
 		#end
 		
 		while(i < l)
 		{
 			camera = cameras[i++];
 			#if (cpp || neko)
-			camID = camera.ID;
+			currDrawData = _tileSheetData.drawData[camera.ID];
+			currIndex = currDrawData.length;
 			#end
 			
 			if (!onScreen(camera))
@@ -646,6 +659,7 @@ class FlxSprite extends FlxObject
 			}
 			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			
 			#if flash
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
@@ -657,65 +671,44 @@ class FlxSprite extends FlxObject
 				_flashPoint.y = _point.y;
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 				#else
-				if (_tileSheetData != null) // TODO: remove this if statement later
+				currDrawData[currIndex++] = Math.floor(_point.x) + origin.x;
+				currDrawData[currIndex++] = Math.floor(_point.y) + origin.y;
+				
+				currDrawData[currIndex++] = _frameID;
+				
+				// handle reversed sprites
+				if ((_flipped != 0) && (_facing == FlxObject.LEFT))
 				{
-					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x);
-					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y);
-					
-					//handle reversed sprites
-					/*if ((_flipped != 0) && (_facing == FlxObject.LEFT))
-					{
-						_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex + _framesData.halfFrameNumber]);
-					}
-					else
-					{
-						_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex]);
-					}*/
-					
-					_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex]);
-					
-					//_tileSheetData.drawData[camID].push(1.0); // scale
-					//_tileSheetData.drawData[camID].push(0.0); // rotation
-					
-					// handle reversed sprites
-					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
-					{
-						_tileSheetData.drawData[camID].push(-1);
-						_tileSheetData.drawData[camID].push(0);
-						_tileSheetData.drawData[camID].push(0);
-						_tileSheetData.drawData[camID].push(1);
-					}
-					else
-					{
-						_tileSheetData.drawData[camID].push(1);
-						_tileSheetData.drawData[camID].push(0);
-						_tileSheetData.drawData[camID].push(0);
-						_tileSheetData.drawData[camID].push(1);
-					}
-					
-					/*_transform[0] = dirX * cos * scaleX;
-					_transform[1] = dirX * sin * scaleY;
-					_transform[2] = -dirY * sin * scaleX;
-					_transform[3] = dirY * cos * _scaleY;*/
-					
-					#if neko
-					if (camera.color.rgb < 0xffffff)
-					#else
-					if (camera.color < 0xffffff)
-					#end
-					{
-						_tileSheetData.drawData[camID].push(_red * camera.red); 
-						_tileSheetData.drawData[camID].push(_green * camera.green);
-						_tileSheetData.drawData[camID].push(_blue * camera.blue);
-					}
-					else
-					{
-						_tileSheetData.drawData[camID].push(_red); 
-						_tileSheetData.drawData[camID].push(_green);
-						_tileSheetData.drawData[camID].push(_blue);
-					}
-					_tileSheetData.drawData[camID].push(_alpha);
+					currDrawData[currIndex++] = -1;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 1;
 				}
+				else
+				{
+					currDrawData[currIndex++] = 1;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 1;
+				}
+				
+				#if neko
+				if (camera.color.rgb != 0xffffff)
+				#else
+				if (camera.color != 0xffffff)
+				#end
+				{
+					currDrawData[currIndex++] = _red * camera.red; 
+					currDrawData[currIndex++] = _green * camera.green;
+					currDrawData[currIndex++] = _blue * camera.blue;
+				}
+				else
+				{
+					currDrawData[currIndex++] = _red; 
+					currDrawData[currIndex++] = _green;
+					currDrawData[currIndex++] = _blue;
+				}
+				currDrawData[currIndex++] = _alpha;
 				#end
 			}
 			else
@@ -731,58 +724,47 @@ class FlxSprite extends FlxObject
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 				#else
-				if (_tileSheetData != null) // TODO: remove this if statement later
+				var radians:Float = -angle * 0.017453293;
+				var cos:Float = Math.cos(radians);
+				var sin:Float = Math.sin(radians);
+				
+				currDrawData[currIndex++] = Math.floor(_point.x) + origin.x;
+				currDrawData[currIndex++] = Math.floor(_point.y) + origin.y;
+				
+				currDrawData[currIndex++] = _frameID;
+				
+				if ((_flipped != 0) && (_facing == FlxObject.LEFT))
 				{
-					_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x);
-					_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y);
-					
-					_tileSheetData.drawData[camID].push(_framesData.frameIDs[_curIndex]);
-					
-					/*_tileSheetData.drawData[camID].push(scale.x); // scale
-					_tileSheetData.drawData[camID].push(-angle * 0.017453293); // rotation*/
-					
-					var radians:Float = -angle * 0.017453293;
-					var cos:Float = Math.cos(radians);
-					var sin:Float = Math.sin(radians);
-					
-					if ((_flipped != 0) && (_facing == FlxObject.LEFT))
-					{
-						/*_tileSheetData.drawData[camID].push(-1);
-						_tileSheetData.drawData[camID].push(0);
-						_tileSheetData.drawData[camID].push(0);
-						_tileSheetData.drawData[camID].push(1);*/
-						
-						_tileSheetData.drawData[camID].push( -cos * scale.x);
-						_tileSheetData.drawData[camID].push(sin * scale.y);
-						_tileSheetData.drawData[camID].push( -sin * scale.x);
-						_tileSheetData.drawData[camID].push(cos * scale.y);
-					}
-					else
-					{
-						_tileSheetData.drawData[camID].push(cos * scale.x);
-						_tileSheetData.drawData[camID].push(sin * scale.y);
-						_tileSheetData.drawData[camID].push( -sin * scale.x);
-						_tileSheetData.drawData[camID].push(cos * scale.y);
-					}
-					
-					#if neko
-					if (camera.color.rgb < 0xffffff)
-					#else
-					if (camera.color < 0xffffff)
-					#end
-					{
-						_tileSheetData.drawData[camID].push(_red * camera.red); 
-						_tileSheetData.drawData[camID].push(_green * camera.green);
-						_tileSheetData.drawData[camID].push(_blue * camera.blue);
-					}
-					else
-					{
-						_tileSheetData.drawData[camID].push(_red); 
-						_tileSheetData.drawData[camID].push(_green);
-						_tileSheetData.drawData[camID].push(_blue);
-					}
-					_tileSheetData.drawData[camID].push(_alpha);
+					currDrawData[currIndex++] = -cos * scale.x;
+					currDrawData[currIndex++] = sin * scale.y;
+					currDrawData[currIndex++] = -sin * scale.x;
+					currDrawData[currIndex++] = cos * scale.y;
 				}
+				else
+				{
+					currDrawData[currIndex++] = cos * scale.x;
+					currDrawData[currIndex++] = sin * scale.y;
+					currDrawData[currIndex++] = -sin * scale.x;
+					currDrawData[currIndex++] = cos * scale.y;
+				}
+				
+				#if neko
+				if (camera.color.rgb != 0xffffff)
+				#else
+				if (camera.color != 0xffffff)
+				#end
+				{
+					currDrawData[currIndex++] = _red * camera.red;
+					currDrawData[currIndex++] = _green * camera.green;
+					currDrawData[currIndex++] = _blue * camera.blue;
+				}
+				else
+				{
+					currDrawData[currIndex++] = _red; 
+					currDrawData[currIndex++] = _green;
+					currDrawData[currIndex++] = _blue;
+				}
+				currDrawData[currIndex++] = _alpha;
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;
@@ -931,10 +913,17 @@ class FlxSprite extends FlxObject
 			
 			_curIndex = Math.floor(angleHelper / _bakedRotation + 0.5);
 			
+			#if (cpp || neko)
+			if (_framesData != null)
+			{
+				_frameID = _framesData.frameIDs[_curIndex];
+			}
+			#else			
 			if (oldIndex != Math.floor(_curIndex))
 			{
 				dirty = true;
 			}
+			#end
 		}
 		else if((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished))
 		{
@@ -955,14 +944,23 @@ class FlxSprite extends FlxObject
 					_curFrame++;
 				}
 				_curIndex = _curAnim.frames[_curFrame];
+				#if (cpp || neko)
+				if (_framesData != null)
+				{
+					_frameID = _framesData.frameIDs[_curIndex];
+				}
+				#else
 				dirty = true;
+				#end
 			}
 		}
 		
+		#if flash
 		if (dirty)
 		{
 			calcFrame();
 		}
+		#end
 	}
 	
 	/**
@@ -1018,6 +1016,12 @@ class FlxSprite extends FlxObject
 		if(!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (!_curAnim.looped || !finished)) return;
 		_curFrame = 0;
 		_curIndex = 0;
+		#if (cpp || neko)
+		if (_framesData != null)
+		{
+			_frameID = _framesData.frameIDs[_curIndex];
+		}
+		#end
 		_frameTimer = 0;
 		var i:Int = 0;
 		var l:Int = _animations.length;
@@ -1035,6 +1039,12 @@ class FlxSprite extends FlxObject
 					finished = false;
 				}
 				_curIndex = _curAnim.frames[_curFrame];
+				#if (cpp || neko)
+				if (_framesData != null)
+				{
+					_frameID = _framesData.frameIDs[_curIndex];
+				}
+				#end
 				dirty = true;
 				return;
 			}
@@ -1051,6 +1061,12 @@ class FlxSprite extends FlxObject
 	{
 		_curAnim = null;
 		_curIndex = Math.floor(FlxG.random() * (_pixels.width / frameWidth));
+		#if (cpp || neko)
+		if (_framesData != null)
+		{
+			_frameID = _framesData.frameIDs[_curIndex];
+		}
+		#end
 		dirty = true;
 	}
 	
@@ -1301,6 +1317,12 @@ class FlxSprite extends FlxObject
 	{
 		_curAnim = null;
 		_curIndex = Frame % frames;
+		#if (cpp || neko)
+		if (_framesData != null)
+		{
+			_frameID = _framesData.frameIDs[_curIndex];
+		}
+		#end
 		dirty = true;
 		return Frame;
 	}
@@ -1328,8 +1350,8 @@ class FlxSprite extends FlxObject
 			return ((_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height));
 		}
 		
-		var halfWidth:Float = frameWidth / 2;
-		var halfHeight:Float = frameHeight / 2;
+		var halfWidth:Float = 0.5 * frameWidth;
+		var halfHeight:Float = 0.5 * frameHeight;
 		var absScaleX:Float = (scale.x > 0)?scale.x: -scale.x;
 		var absScaleY:Float = (scale.y > 0)?scale.y: -scale.y;
 		var radius:Float = Math.sqrt(halfWidth * halfWidth + halfHeight * halfHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);

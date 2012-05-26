@@ -326,12 +326,14 @@ class FlxBitmapFont extends FlxSprite
 		var relativeX:Float;
 		var relativeY:Float;
 		
-		var camID:Int;
+		var currDrawData:Array<Float>;
+		var currIndex:Int;
 		
 		while(i < l)
 		{
 			camera = cameras[i++];
-			camID = camera.ID;
+			currDrawData = _tileSheetData.drawData[camera.ID];
+			currIndex = currDrawData.length;
 			
 			if (!onScreen(camera))
 			{
@@ -351,15 +353,15 @@ class FlxBitmapFont extends FlxSprite
 						currTileX = points[currPosInArr + 1];
 						currTileY = points[currPosInArr + 2];
 						
-						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + currTileX);
-						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + currTileY);
+						currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + currTileX;
+						currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + currTileY;
 						
-						_tileSheetData.drawData[camID].push(currTileID);
+						currDrawData[currIndex++] = currTileID;
 						
-						_tileSheetData.drawData[camID].push(1);
-						_tileSheetData.drawData[camID].push(0);
-						_tileSheetData.drawData[camID].push(0);
-						_tileSheetData.drawData[camID].push(1);
+						currDrawData[currIndex++] = 1;
+						currDrawData[currIndex++] = 0;
+						currDrawData[currIndex++] = 0;
+						currDrawData[currIndex++] = 1;
 						
 						#if !neko
 						if (camera.color < 0xffffff)
@@ -367,17 +369,17 @@ class FlxBitmapFont extends FlxSprite
 						if (camera.color.rgb < 0xffffff)
 						#end
 						{
-							_tileSheetData.drawData[camID].push(_red * camera.red); 
-							_tileSheetData.drawData[camID].push(_green * camera.green);
-							_tileSheetData.drawData[camID].push(_blue * camera.blue);
+							currDrawData[currIndex++] = _red * camera.red; 
+							currDrawData[currIndex++] = _green * camera.green;
+							currDrawData[currIndex++] = _blue * camera.blue;
 						}
 						else
 						{
-							_tileSheetData.drawData[camID].push(_red); 
-							_tileSheetData.drawData[camID].push(_green);
-							_tileSheetData.drawData[camID].push(_blue);
+							currDrawData[currIndex++] = _red; 
+							currDrawData[currIndex++] = _green;
+							currDrawData[currIndex++] = _blue;
 						}
-						_tileSheetData.drawData[camID].push(_alpha);
+						currDrawData[currIndex++] = _alpha;
 					}
 					
 					j++;
@@ -401,15 +403,15 @@ class FlxBitmapFont extends FlxSprite
 						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
 						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 						
-						_tileSheetData.drawData[camID].push(Math.floor(_point.x) + origin.x + relativeX);
-						_tileSheetData.drawData[camID].push(Math.floor(_point.y) + origin.y + relativeY);
+						currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + relativeX;
+						currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + relativeY;
 						
-						_tileSheetData.drawData[camID].push(currTileID);
+						currDrawData[currIndex++] = currTileID;
 					
-						_tileSheetData.drawData[camID].push(cos * scale.x);
-						_tileSheetData.drawData[camID].push( -sin * scale.y);
-						_tileSheetData.drawData[camID].push(sin * scale.x);
-						_tileSheetData.drawData[camID].push(cos * scale.y);
+						currDrawData[currIndex++] = cos * scale.x;
+						currDrawData[currIndex++] =  -sin * scale.y;
+						currDrawData[currIndex++] = sin * scale.x;
+						currDrawData[currIndex++] = cos * scale.y;
 						
 						#if !neko
 						if (camera.color < 0xffffff)
@@ -417,17 +419,17 @@ class FlxBitmapFont extends FlxSprite
 						if (camera.color.rgb < 0xffffff)
 						#end
 						{
-							_tileSheetData.drawData[camID].push(_red * camera.red); 
-							_tileSheetData.drawData[camID].push(_green * camera.green);
-							_tileSheetData.drawData[camID].push(_blue * camera.blue);
+							currDrawData[currIndex++] = _red * camera.red; 
+							currDrawData[currIndex++] = _green * camera.green;
+							currDrawData[currIndex++] = _blue * camera.blue;
 						}
 						else
 						{
-							_tileSheetData.drawData[camID].push(_red); 
-							_tileSheetData.drawData[camID].push(_green);
-							_tileSheetData.drawData[camID].push(_blue);
+							currDrawData[currIndex++] = _red; 
+							currDrawData[currIndex++] = _green;
+							currDrawData[currIndex++] = _blue;
 						}
-						_tileSheetData.drawData[camID].push(_alpha);
+						currDrawData[currIndex++] = _alpha;
 					}
 					
 					j++;
