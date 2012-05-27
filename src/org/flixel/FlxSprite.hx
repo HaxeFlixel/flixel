@@ -643,15 +643,15 @@ class FlxSprite extends FlxObject
 		#if (cpp || neko)
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
+		
+		var radians:Float;
+		var cos:Float;
+		var sin:Float;
 		#end
 		
 		while(i < l)
 		{
 			camera = cameras[i++];
-			#if (cpp || neko)
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = currDrawData.length;
-			#end
 			
 			if (!onScreen(camera))
 			{
@@ -660,7 +660,13 @@ class FlxSprite extends FlxObject
 			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
 			
-			#if flash
+			#if (cpp || neko)
+			currDrawData = _tileSheetData.drawData[camera.ID];
+			currIndex = currDrawData.length;
+			
+			_point.x = Math.floor(_point.x) + origin.x;
+			_point.y = Math.floor(_point.y) + origin.y;
+			#else
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
 			#end
@@ -671,8 +677,8 @@ class FlxSprite extends FlxObject
 				_flashPoint.y = _point.y;
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 				#else
-				currDrawData[currIndex++] = Math.floor(_point.x) + origin.x;
-				currDrawData[currIndex++] = Math.floor(_point.y) + origin.y;
+				currDrawData[currIndex++] = _point.x;
+				currDrawData[currIndex++] = _point.y;
 				
 				currDrawData[currIndex++] = _frameID;
 				
@@ -724,12 +730,12 @@ class FlxSprite extends FlxObject
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 				#else
-				var radians:Float = -angle * 0.017453293;
-				var cos:Float = Math.cos(radians);
-				var sin:Float = Math.sin(radians);
+				radians = -angle * 0.017453293;
+				cos = Math.cos(radians);
+				sin = Math.sin(radians);
 				
-				currDrawData[currIndex++] = Math.floor(_point.x) + origin.x;
-				currDrawData[currIndex++] = Math.floor(_point.y) + origin.y;
+				currDrawData[currIndex++] = _point.x;
+				currDrawData[currIndex++] = _point.y;
 				
 				currDrawData[currIndex++] = _frameID;
 				
@@ -764,6 +770,7 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = _green;
 					currDrawData[currIndex++] = _blue;
 				}
+				
 				currDrawData[currIndex++] = _alpha;
 				#end
 			}

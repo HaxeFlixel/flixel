@@ -168,7 +168,7 @@ class TileSheetData
 			{
 				camera = FlxG.cameras[i];
 				cameraGraphics = camera._canvas.graphics;
-				cameraGraphics.drawTiles(tileSheet, data, (antialiasing || camera.antialiasing), flags);
+				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), flags);
 			}
 		}
 	}

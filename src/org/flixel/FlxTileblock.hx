@@ -204,6 +204,27 @@ class FlxTileblock extends FlxSprite
 			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
 			
+			var redMult:Float = 1;
+			var greenMult:Float = 1;
+			var blueMult:Float = 1;
+			
+			#if neko
+			if (camera.color.rgb != 0xffffff)
+			#else
+			if (camera.color != 0xffffff)
+			#end
+			{
+				redMult = _red * camera.red; 
+				greenMult = _green * camera.green;
+				blueMult = _blue * camera.blue;
+			}
+			else
+			{
+				redMult = _red; 
+				greenMult = _green;
+				blueMult = _blue;
+			}
+			
 			if (_tileData != null && _tileSheetData != null)
 			{
 				if (simpleRender)
@@ -224,22 +245,9 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = 0;
 						currDrawData[currIndex++] = 1;
 						
-						#if neko
-						if (camera.color.rgb < 0xffffff)
-						#else
-						if (camera.color < 0xffffff)
-						#end
-						{
-							currDrawData[currIndex++] = _red * camera.red; 
-							currDrawData[currIndex++] = _green * camera.green;
-							currDrawData[currIndex++] = _blue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = _red; 
-							currDrawData[currIndex++] = _green;
-							currDrawData[currIndex++] = _blue;
-						}
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 						currDrawData[currIndex++] = _alpha;
 						
 						j++;
@@ -255,7 +263,7 @@ class FlxTileblock extends FlxSprite
 					while (j < numTiles)
 					{
 						currPosInArr = j * 3;
-						currTileID = Math.floor(_tileData[currPosInArr]);
+						currTileID = _tileData[currPosInArr];
 						currTileX = _tileData[currPosInArr + 1];
 						currTileY = _tileData[currPosInArr + 2];
 						
@@ -272,22 +280,9 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = sin * scale.x;
 						currDrawData[currIndex++] = cos * scale.y;
 						
-						#if neko
-						if (camera.color.rgb < 0xffffff)
-						#else
-						if (camera.color < 0xffffff)
-						#end
-						{
-							currDrawData[currIndex++] = _red * camera.red; 
-							currDrawData[currIndex++] = _green * camera.green;
-							currDrawData[currIndex++] = _blue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = _red; 
-							currDrawData[currIndex++] = _green;
-							currDrawData[currIndex++] = _blue;
-						}
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 						currDrawData[currIndex++] = _alpha;
 						
 						j++;

@@ -235,9 +235,9 @@ class FlxBitmapTextField extends FlxSprite
 						currDrawData[currIndex++] = _fontScale;
 						
 						#if !neko
-						if (camera.color < 0xffffff)
+						if (camera.color != 0xffffff)
 						#else
-						if (camera.color.rgb < 0xffffff)
+						if (camera.color.rgb != 0xffffff)
 						#end
 						{
 							currDrawData[currIndex++] = currTileRed * camera.red; 
@@ -313,9 +313,9 @@ class FlxBitmapTextField extends FlxSprite
 						currDrawData[currIndex++] = cos * scale.y * _fontScale;
 						
 						#if !neko
-						if (camera.color < 0xffffff)
+						if (camera.color != 0xffffff)
 						#else
-						if (camera.color.rgb < 0xffffff)
+						if (camera.color.rgb != 0xffffff)
 						#end
 						{
 							currDrawData[currIndex++] = currTileRed * camera.red; 
