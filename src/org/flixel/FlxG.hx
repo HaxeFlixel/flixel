@@ -12,6 +12,7 @@ import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.media.Sound;
+import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.tileSheetManager.TileSheetManager;
@@ -1473,6 +1474,7 @@ class FlxG
 	static public function reset():Void
 	{
 		#if (cpp || neko)
+		PxBitmapFont.clearStorage();
 		TileSheetManager.clear();
 		#end
 		FlxG.clearBitmapCache();

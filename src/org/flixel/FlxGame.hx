@@ -16,6 +16,7 @@ import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
 import nme.Lib;
 import nme.ui.Mouse;
+import org.flixel.plugin.pxText.PxBitmapFont;
 
 #if (cpp || neko)
 import org.flixel.tileSheetManager.TileSheetManager;
@@ -518,6 +519,7 @@ class FlxGame extends Sprite
 	{ 
 		//Basic reset stuff
 		#if (cpp || neko)
+		PxBitmapFont.clearStorage();
 		TileSheetManager.clear();
 		#end
 		FlxG.clearBitmapCache();
