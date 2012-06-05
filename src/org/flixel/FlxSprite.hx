@@ -1361,7 +1361,11 @@ class FlxSprite extends FlxObject
 		var halfHeight:Float = 0.5 * frameHeight;
 		var absScaleX:Float = (scale.x > 0)?scale.x: -scale.x;
 		var absScaleY:Float = (scale.y > 0)?scale.y: -scale.y;
+		#if flash
 		var radius:Float = Math.sqrt(halfWidth * halfWidth + halfHeight * halfHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
+		#else
+		var radius:Float = ((frameWidth >= frameHeight) ? frameWidth : frameHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
+		#end
 		_point.x += halfWidth;
 		_point.y += halfHeight;
 		return ((_point.x + radius > 0) && (_point.x - radius < Camera.width) && (_point.y + radius > 0) && (_point.y - radius < Camera.height));

@@ -1024,9 +1024,13 @@ class FlxCamera extends FlxBasic
 		_fill.fillRect(_flashRect, Color);
 		buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
 		#else
+		
 		// This is temporal fix for camera's color
-		#if cpp
+		#if (cpp || neko)
 		var targetGraphics:Graphics = (graphics == null) ? _canvas.graphics : graphics;
+		#end
+		
+		#if cpp
 		Color = Color & 0x00ffffff;
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
