@@ -718,10 +718,10 @@ class FlxU
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 	
-	static public function ArrayIndexOf(array:Array<Dynamic>, whatToFind:Dynamic):Int
+	static public function ArrayIndexOf(array:Array<Dynamic>, whatToFind:Dynamic, ?fromIndex:Int = 0):Int
 	{
 		var len:Int = array.length;
-		for (i in 0...len)
+		for (i in fromIndex...len)
 		{
 			if (array[i] == whatToFind) return i;
 		}

@@ -506,5 +506,15 @@ class PxBitmapFont
 		var f:PxBitmapFont = _storedFonts.get(pHandle);
 		return f;
 	}
+	
+	public static function clearStorage():Void
+	{
+		for (font in _storedFonts)
+		{
+			font.dispose();
+		}
+		
+		_storedFonts = new Hash<PxBitmapFont>();
+	}
 
 }

@@ -360,7 +360,11 @@ class FlxSprite extends FlxObject
 			}
 			else if (_flipped > 0)
 			{
+				#if flash
 				Width = Math.floor(_pixels.width * 0.5);
+				#else
+				Width = _pixels.width;
+				#end
 			}
 			else
 			{
@@ -1181,10 +1185,12 @@ class FlxSprite extends FlxObject
 	 */
 	public function setFacing(Direction:Int):Int
 	{
+		#if flash
 		if (_facing != Direction)
 		{
 			dirty = true;
 		}
+		#end
 		_facing = Direction;
 		return _facing;
 	}
