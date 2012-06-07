@@ -992,6 +992,10 @@ class FlxCamera extends FlxBasic
 	{
 		_flashSprite.scaleX = X;
 		_flashSprite.scaleY = Y;
+		
+		// camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
+		_flashOffsetX = width * 0.5 * X;
+		_flashOffsetY = height * 0.5 * Y;
 	}
 	
 	/**
