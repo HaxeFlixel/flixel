@@ -1141,7 +1141,11 @@ class FlxCamera extends FlxBasic
 		{
 			_width = val;
 			#if flash
-			_flashOffsetX = _width * 0.5 * zoom;
+			if ( _flashBitmap != null )
+			{
+				_flashOffsetX = _width * 0.5 * zoom;
+				_flashBitmap.x = -_width * 0.5;
+			}
 			#else
 			if (_canvas != null)
 			{
@@ -1168,7 +1172,11 @@ class FlxCamera extends FlxBasic
 		{
 			_height = val;
 			#if flash
-			_flashOffsetY = _height * 0.5 * zoom;
+			if ( _flashBitmap != null )
+			{
+				_flashOffsetY = _height * 0.5 * zoom;
+				_flashBitmap.y = -_height * 0.5;
+			}
 			#else
 			if (_canvas != null)
 			{
