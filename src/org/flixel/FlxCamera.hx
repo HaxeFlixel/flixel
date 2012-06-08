@@ -73,19 +73,13 @@ class FlxCamera extends FlxBasic
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
-	#if flash
-	public var width:Int;
-	#else
+	public var width(getWidth, setWidth):Int;
 	private var _width:Int;
-	#end
 	/**
 	 * How tall the camera display is, in game pixels.
 	 */
-	#if flash
-	public var height:Int;
-	#else
+	public var height(getHeight, setHeight):Int;
 	private var _height:Int;
-	#end
 	
 	/**
 	 * Tells the camera to use this following style.
@@ -302,7 +296,7 @@ class FlxCamera extends FlxBasic
 		bounds = null;
 		#if flash
 		screen = new FlxSprite();
-		screen.makeGraphic(width, height, 0, true);
+		screen.makeGraphic(_width, _height, 0, true);
 		screen.setOriginToCorner();
 		buffer = screen.pixels;
 		#end
@@ -316,18 +310,18 @@ class FlxCamera extends FlxBasic
 		
 		#if flash
 		_flashBitmap = new Bitmap(buffer);
-		_flashBitmap.x = -width * 0.5;
-		_flashBitmap.y = -height * 0.5;
+		_flashBitmap.x = -_width * 0.5;
+		_flashBitmap.y = -_height * 0.5;
 		#else
 		_canvas = new Sprite();
-		_canvas.x = -width * 0.5;
-		_canvas.y = -height * 0.5;
+		_canvas.x = -_width * 0.5;
+		_canvas.y = -_height * 0.5;
 		#end
 		_flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 	
-		_flashOffsetX = width * 0.5 * zoom;
-		_flashOffsetY = height * 0.5 * zoom;
+		_flashOffsetX = _width * 0.5 * zoom;
+		_flashOffsetY = _height * 0.5 * zoom;
 		
 		_flashSprite.x = x + _flashOffsetX;
 		_flashSprite.y = y + _flashOffsetY;
@@ -337,7 +331,7 @@ class FlxCamera extends FlxBasic
 		#else
 		_flashSprite.addChild(_canvas);
 		#end
-		_flashRect = new Rectangle(0, 0, width, height);
+		_flashRect = new Rectangle(0, 0, _width, _height);
 		_flashPoint = new Point();
 		
 		#if !neko
@@ -365,18 +359,18 @@ class FlxCamera extends FlxBasic
 		_fxShakeDirection = 0;
 		
 		#if !neko
-		_fill = new BitmapData(width, height, true, 0);
+		_fill = new BitmapData(_width, _height, true, 0);
 		#else
-		_fill = new BitmapData(width, height, true, {rgb: 0, a: 0});
+		_fill = new BitmapData(_width, _height, true, {rgb: 0, a: 0});
 		#end
 		
 		#if (cpp || neko)
-		_canvas.scrollRect = new Rectangle(0, 0, width, height);
+		_canvas.scrollRect = new Rectangle(0, 0, _width, _height);
 		_antialiasing = false;
 		
 		_debugLayer = new Sprite();
-		_debugLayer.x = -width * 0.5;
-		_debugLayer.y = -height * 0.5;
+		_debugLayer.x = -_width * 0.5;
+		_debugLayer.y = -_height * 0.5;
 		_flashSprite.addChild(_debugLayer);
 		
 		red = 1.0;
@@ -460,22 +454,22 @@ class FlxCamera extends FlxBasic
 
 				if (style == STYLE_SCREEN_BY_SCREEN) 
 				{
-					if (targetX > scroll.x + width)
+					if (targetX > scroll.x + _width)
 					{
 						scroll.x += width;
 					}
 					else if (targetX < scroll.x)
 					{
-						scroll.x -= width;
+						scroll.x -= _width;
 					}
 
-					if (targetY > scroll.y + height)
+					if (targetY > scroll.y + _height)
 					{
-						scroll.y += height;
+						scroll.y += _height;
 					}
 					else if (targetY < scroll.y)
 					{
-						scroll.y -= height;
+						scroll.y -= _height;
 					}
 				}
 				else
@@ -513,17 +507,17 @@ class FlxCamera extends FlxBasic
 			{
 				scroll.x = bounds.left;
 			}
-			if (scroll.x > bounds.right - width)
+			if (scroll.x > bounds.right - _width)
 			{
-				scroll.x = bounds.right - width;
+				scroll.x = bounds.right - _width;
 			}
 			if (scroll.y < bounds.top)
 			{
 				scroll.y = bounds.top;
 			}
-			if (scroll.y > bounds.bottom - height)
+			if (scroll.y > bounds.bottom - _height)
 			{
-				scroll.y = bounds.bottom - height;
+				scroll.y = bounds.bottom - _height;
 			}
 		}
 		
@@ -582,11 +576,11 @@ class FlxCamera extends FlxBasic
 			{
 				if ((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_HORIZONTAL_ONLY))
 				{
-					_fxShakeOffset.x = (FlxG.random() * _fxShakeIntensity * width * 2 - _fxShakeIntensity * width) * _zoom;
+					_fxShakeOffset.x = (FlxG.random() * _fxShakeIntensity * _width * 2 - _fxShakeIntensity * _width) * _zoom;
 				}
 				if ((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_VERTICAL_ONLY))
 				{
-					_fxShakeOffset.y = (FlxG.random() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * _zoom;
+					_fxShakeOffset.y = (FlxG.random() * _fxShakeIntensity * _height * 2 - _fxShakeIntensity * _height) * _zoom;
 				}
 			}
 		}
@@ -607,24 +601,24 @@ class FlxCamera extends FlxBasic
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
-				var w:Float = width / 8;
-				var h:Float = height / 3;
-				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				var w:Float = _width / 8;
+				var h:Float = _height / 3;
+				deadzone = new FlxRect((_width - w) / 2, (_height - h) / 2 - h * 0.25, w, h);
 			case STYLE_TOPDOWN:
-				helper = FlxU.max(width, height) / 4;
-				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				helper = FlxU.max(_width, _height) / 4;
+				deadzone = new FlxRect((_width - helper) / 2, (_height - helper) / 2, helper, helper);
 			case STYLE_TOPDOWN_TIGHT:
-				helper = FlxU.max(width, height) / 8;
-				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				helper = FlxU.max(_width, _height) / 8;
+				deadzone = new FlxRect((_width - helper) / 2, (_height - helper) / 2, helper, helper);
 			case STYLE_LOCKON:
 				if (target != null) 
 				{	
 					w = target.width;
 					h = target.height;
 				}
-				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				deadzone = new FlxRect((_width - w) / 2, (_height - h) / 2 - h * 0.25, w, h);
 			case STYLE_SCREEN_BY_SCREEN:
-				deadzone = new FlxRect(0, 0, width, height);
+				deadzone = new FlxRect(0, 0, _width, _height);
 			default:
 				deadzone = null;
 		}
@@ -638,7 +632,7 @@ class FlxCamera extends FlxBasic
 	{
 		point.x += (point.x > 0)?0.0000001: -0.0000001;
 		point.y += (point.y > 0)?0.0000001: -0.0000001;
-		scroll.make(point.x - width * 0.5, point.y - height * 0.5);
+		scroll.make(point.x - _width * 0.5, point.y - _height * 0.5);
 	}
 	
 	/**
@@ -994,8 +988,8 @@ class FlxCamera extends FlxBasic
 		_flashSprite.scaleY = Y;
 		
 		// camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
-		_flashOffsetX = width * 0.5 * X;
-		_flashOffsetY = height * 0.5 * Y;
+		_flashOffsetX = _width * 0.5 * X;
+		_flashOffsetY = _height * 0.5 * Y;
 	}
 	
 	/**
@@ -1058,7 +1052,7 @@ class FlxCamera extends FlxBasic
 		targetGraphics.beginFill(Color.rgb, FxAlpha);
 		#end
 		
-		targetGraphics.drawRect(0, 0, width, height);
+		targetGraphics.drawRect(0, 0, _width, _height);
 		targetGraphics.endFill();
 		#end
 	}
@@ -1116,16 +1110,13 @@ class FlxCamera extends FlxBasic
 		if (_fog > 0)
 		{
 			_debugLayer.graphics.beginFill(0xffffff, _fog);
-			_debugLayer.graphics.drawRect(0, 0, width, height);
+			_debugLayer.graphics.drawRect(0, 0, _width, _height);
 			_debugLayer.graphics.endFill();
 		}
 		#end
 	}
 	
 	#if (cpp || neko)
-	public var width(getWidth, setWidth):Int;
-	public var height(getHeight, setHeight):Int;
-	
 	public var fog(getFog, setFog):Float;
 	
 	private function getFog():Float 
@@ -1137,6 +1128,7 @@ class FlxCamera extends FlxBasic
 	{
 		return _fog = value;
 	}
+	#end
 	
 	public function getWidth():Int
 	{
@@ -1148,6 +1140,9 @@ class FlxCamera extends FlxBasic
 		if (val > 0)
 		{
 			_width = val;
+			#if flash
+			_flashOffsetX = _width * 0.5 * zoom;
+			#else
 			if (_canvas != null)
 			{
 				var rect:Rectangle = _canvas.scrollRect;
@@ -1157,6 +1152,7 @@ class FlxCamera extends FlxBasic
 				_flashOffsetX = _width * 0.5 * zoom;
 				_debugLayer.x = _canvas.x = -_width * 0.5;
 			}
+			#end
 		}
 		return val;
 	}
@@ -1171,6 +1167,9 @@ class FlxCamera extends FlxBasic
 		if (val > 0)
 		{
 			_height = val;
+			#if flash
+			_flashOffsetY = _height * 0.5 * zoom;
+			#else
 			if (_canvas != null)
 			{
 				var rect:Rectangle = _canvas.scrollRect;
@@ -1180,8 +1179,8 @@ class FlxCamera extends FlxBasic
 				_flashOffsetY = _height * 0.5 * zoom;
 				_debugLayer.y = _canvas.y = -_height * 0.5;
 			}
+			#end
 		}
 		return val;
 	}
-	#end
 }
