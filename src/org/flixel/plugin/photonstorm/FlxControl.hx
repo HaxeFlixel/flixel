@@ -12,6 +12,8 @@
 
 package org.flixel.plugin.photonstorm;
 
+import nme.ObjectHash;
+
 import org.flixel.FlxBasic;
 import org.flixel.FlxSprite;
 import org.flixel.FlxU;
@@ -25,7 +27,7 @@ class FlxControl extends FlxBasic
 	public static var player4:FlxControlHandler;
 	
 	//	Additional control handlers
-	private static var members:FlxDictionary<FlxControlHandler> = new FlxDictionary<FlxControlHandler>();
+	private static var members:ObjectHash<FlxControlHandler, FlxControlHandler> = new ObjectHash<FlxControlHandler, FlxControlHandler>();
 	
 	public function new() 
 	{
@@ -91,9 +93,9 @@ class FlxControl extends FlxBasic
 	 */
 	public static function remove(source:FlxControlHandler):Bool
 	{
-		if (members.get(source) != null)
+		if (members.exists(source))
 		{
-			members.delete(source);
+			members.remove(source);
 			return true;
 		}
 		
@@ -108,7 +110,7 @@ class FlxControl extends FlxBasic
 	{
 		for (handler in members)
 		{
-			members.delete(handler);
+			members.remove(handler);
 		}
 	}
 	
