@@ -1,19 +1,32 @@
 flixel CHANGELOG
 
+v1.03
+------------------------------
+* Updated rendering system for cpp target so it uses 2d tile transformations now (which means non-uniform scaling is working now)
+* FlxBitmapTextField's background property is working on cpp target now
+* Replaced FlxDictionary with ObjectHash (for FlxControlHandler plugin)
+* Added BTNTileMap class (which can be found in addons package) from http://bullettimeninja.blogspot.com/2012/01/lasers-and-ray-casting.html
+* Added ZoomCamera class (also in addons package) from http://bullettimeninja.blogspot.com/2011/09/zoom-camera.html
+* Made a little optimization for FlxSprite's onScreen() method for cpp target (not using Math.sqrt() now)
+* Added width and height getters/setters for FlxCamera on flash target
+* Made small optimizations in rendering for cpp target (the way it pushes and splices draw data)
+* Fixed pixelPerfectPointCheck() method from FlxCollision plugin
+* Made pixelPerfectCheck() method from FlxCollision plugin work on flash only. It's always returns false on other targets. Sorry:(
+* Fixed FlxCamera's bug with changing it's size (width, height and zoom)
+
 v1.02
 ------------------------------
 * Ported FlxBar class
-* Added FlxBitmapFont class
-* Added PxButton class which uses FlxBitmapFont for text rendering
+* Added FlxBitmapTextField class (background property isn't working on cpp for now)
+* Added PxButton class which uses FlxBitmapTextField for text rendering
 * Replaced Dynamic with appropriate types (where it was possible)
 * Improvements in FlxQuadTree and FlxObject (less garbage)
-* Changed rendering system for cpp target so it uses 2d tile transformations now (which means non-uniform scaling is working now)
 * Changed TileSheet creation process to insert gaps between frames. This should solve 'pixel bleeding' problem
 
 v1.01
 ------------------------------
 * Finally ported FlxPreloader class
-* Fixed issue with FlxTextFieldClass when it wasn't affected by fade() and flash() effects (on cpp and neko targets)
+* Fixed issue with FlxTextField class when it wasn't affected by fade() and flash() effects (on cpp and neko targets)
 * Improvements in memory consumption for FlxTileBlock and FlxBitmapFont classes
 * Updated lib to work with haxe 2.09
 * Ported FlxGridOverlay from Flixel-Power-Tools
