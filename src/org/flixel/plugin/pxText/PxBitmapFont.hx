@@ -79,6 +79,7 @@ class PxBitmapFont
 			
 			#if (cpp || neko)
 			_tileSheetData = TileSheetManager.addTileSheet(result);
+			_tileSheetData.isColored = true;
 			#end
 			
 			for (letterID in 0...(tileRects.length))

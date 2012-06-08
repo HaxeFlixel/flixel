@@ -51,16 +51,19 @@ class TileSheetManager
 	public static function clearAllDrawData():Void
 	{
 		var numCameras:Int = FlxG.cameras.length;
+		var numPositions:Int;
 		
 		for (dataObject in tileSheetData)
 		{
 			dataObject.clearDrawData();
-			if (dataObject.drawData.length < numCameras)
+			numPositions = dataObject.positionData.length;
+			if (numPositions < numCameras)
 			{
-				var diff:Int = numCameras - dataObject.drawData.length;
+				var diff:Int = numCameras - numPositions;
 				for (i in 0...(diff))
 				{
 					dataObject.drawData.push(new Array<Float>());
+					dataObject.positionData.push(0);
 				}
 			}
 		}

@@ -391,7 +391,11 @@ class FlxTilemap extends FlxObject
 		var drawY:Float;
 		
 		var currDrawData:Array<Float> = _tileSheetData.drawData[Camera.ID];
-		var currIndex:Int = currDrawData.length;
+		var currIndex:Int = _tileSheetData.positionData[Camera.ID];
+		
+		var isTilemapFlag:Bool = _tileSheetData.isTilemap;
+		var isColored:Bool = _tileSheetData.isColored;
+		var isColoredCamera:Bool = Camera.isColored;
 		#end
 		
 		//Copy tile images into the tile buffer
@@ -470,11 +474,14 @@ class FlxTilemap extends FlxObject
 					currDrawData[currIndex++] = drawY;
 					currDrawData[currIndex++] = tileID;
 					
-					if (_tileSheetData.isTilemap)
+					if (isTilemapFlag)
 					{
-						currDrawData[currIndex++] = Camera.red; // red
-						currDrawData[currIndex++] = Camera.green; //	green
-						currDrawData[currIndex++] = Camera.blue; //	blue
+						if (isColoredCamera)
+						{
+							currDrawData[currIndex++] = Camera.red; // red
+							currDrawData[currIndex++] = Camera.green; //	green
+							currDrawData[currIndex++] = Camera.blue; //	blue
+						}
 					}
 					else
 					{
@@ -482,10 +489,13 @@ class FlxTilemap extends FlxObject
 						currDrawData[currIndex++] = 0;
 						currDrawData[currIndex++] = 0;
 						currDrawData[currIndex++] = 1;
-					
-						currDrawData[currIndex++] = Camera.red; // red
-						currDrawData[currIndex++] = Camera.green; //	green
-						currDrawData[currIndex++] = Camera.blue; //	blue
+						
+						if (isColoredCamera)
+						{
+							currDrawData[currIndex++] = Camera.red; // red
+							currDrawData[currIndex++] = Camera.green; //	green
+							currDrawData[currIndex++] = Camera.blue; //	blue
+						}
 						currDrawData[currIndex++] = 1.0; // alpha
 					}
 					
@@ -535,6 +545,11 @@ class FlxTilemap extends FlxObject
 			_flashPoint.y += _tileHeight;
 			row++;
 		}
+		
+		#if !flash
+		_tileSheetData.positionData[Camera.ID] = currIndex;
+		#end
+		
 		Buffer.x = screenXInTiles * _tileWidth;
 		Buffer.y = screenYInTiles * _tileHeight;
 	}

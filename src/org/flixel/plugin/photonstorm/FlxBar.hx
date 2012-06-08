@@ -1201,11 +1201,15 @@ class FlxBar extends FlxSprite
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		
+		var isColored:Bool = _tileSheetData.isColored;
+		
 		while(i < l)
 		{
 			camera = cameras[i++];
 			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = currDrawData.length;
+			currIndex = _tileSheetData.positionData[camera.ID];
+			
+			var isColoredCamera:Bool = camera.isColored;
 			
 			if (!onScreen(camera))
 			{
@@ -1229,22 +1233,22 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
 					
-					#if neko
-					if (camera.color.rgb < 0xffffff)
-					#else
-					if (camera.color < 0xffffff)
-					#end
+					if (isColored || isColoredCamera)
 					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
+						if (isColoredCamera)
+						{
+							currDrawData[currIndex++] = _red * camera.red; 
+							currDrawData[currIndex++] = _green * camera.green;
+							currDrawData[currIndex++] = _blue * camera.blue;
+						}
+						else
+						{
+							currDrawData[currIndex++] = _red; 
+							currDrawData[currIndex++] = _green;
+							currDrawData[currIndex++] = _blue;
+						}
 					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
+					
 					currDrawData[currIndex++] = _alpha;
 					
 					// Draw filled bar
@@ -1266,22 +1270,22 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
 					
-					#if neko
-					if (camera.color.rgb < 0xffffff)
-					#else
-					if (camera.color < 0xffffff)
-					#end
+					if (isColored || isColoredCamera)
 					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
+						if (isColoredCamera)
+						{
+							currDrawData[currIndex++] = _red * camera.red; 
+							currDrawData[currIndex++] = _green * camera.green;
+							currDrawData[currIndex++] = _blue * camera.blue;
+						}
+						else
+						{
+							currDrawData[currIndex++] = _red; 
+							currDrawData[currIndex++] = _green;
+							currDrawData[currIndex++] = _blue;
+						}
 					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
+					
 					currDrawData[currIndex++] = _alpha;
 				}
 			}
@@ -1305,11 +1309,7 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = -sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
 					
-					#if neko
-					if (camera.color.rgb < 0xffffff)
-					#else
-					if (camera.color < 0xffffff)
-					#end
+					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;
@@ -1346,11 +1346,7 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = -sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
 					
-					#if neko
-					if (camera.color.rgb < 0xffffff)
-					#else
-					if (camera.color < 0xffffff)
-					#end
+					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;
@@ -1365,6 +1361,9 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = _alpha;
 				}
 			}
+			
+			_tileSheetData.positionData[camera.ID] = currIndex;
+			
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{

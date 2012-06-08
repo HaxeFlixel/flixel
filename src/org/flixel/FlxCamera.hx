@@ -1128,6 +1128,17 @@ class FlxCamera extends FlxBasic
 	{
 		return _fog = value;
 	}
+	
+	public var isColored(get_isColored, null):Bool;
+	
+	private function get_isColored():Bool
+	{
+		#if neko
+		return (_color.rgb != 0xffffff);
+		#else
+		return (_color != 0xffffff);
+		#end
+	}
 	#end
 	
 	public function getWidth():Int

@@ -666,7 +666,7 @@ class FlxSprite extends FlxObject
 			
 			#if (cpp || neko)
 			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = currDrawData.length;
+			currIndex = _tileSheetData.positionData[camera.ID];
 			
 			_point.x = Math.floor(_point.x) + origin.x;
 			_point.y = Math.floor(_point.y) + origin.y;
@@ -702,23 +702,25 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = 1;
 				}
 				
-				#if neko
-				if (camera.color.rgb != 0xffffff)
-				#else
-				if (camera.color != 0xffffff)
-				#end
+				if (_tileSheetData.isColored || camera.isColored)
 				{
-					currDrawData[currIndex++] = _red * camera.red; 
-					currDrawData[currIndex++] = _green * camera.green;
-					currDrawData[currIndex++] = _blue * camera.blue;
+					if (camera.isColored)
+					{
+						currDrawData[currIndex++] = _red * camera.red; 
+						currDrawData[currIndex++] = _green * camera.green;
+						currDrawData[currIndex++] = _blue * camera.blue;
+					}
+					else
+					{
+						currDrawData[currIndex++] = _red; 
+						currDrawData[currIndex++] = _green;
+						currDrawData[currIndex++] = _blue;
+					}
 				}
-				else
-				{
-					currDrawData[currIndex++] = _red; 
-					currDrawData[currIndex++] = _green;
-					currDrawData[currIndex++] = _blue;
-				}
+				
 				currDrawData[currIndex++] = _alpha;
+				
+				_tileSheetData.positionData[camera.ID] = currIndex;
 				#end
 			}
 			else
@@ -758,24 +760,25 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = cos * scale.y;
 				}
 				
-				#if neko
-				if (camera.color.rgb != 0xffffff)
-				#else
-				if (camera.color != 0xffffff)
-				#end
+				if (_tileSheetData.isColored || camera.isColored)
 				{
-					currDrawData[currIndex++] = _red * camera.red;
-					currDrawData[currIndex++] = _green * camera.green;
-					currDrawData[currIndex++] = _blue * camera.blue;
-				}
-				else
-				{
-					currDrawData[currIndex++] = _red; 
-					currDrawData[currIndex++] = _green;
-					currDrawData[currIndex++] = _blue;
+					if (camera.isColored)
+					{
+						currDrawData[currIndex++] = _red * camera.red; 
+						currDrawData[currIndex++] = _green * camera.green;
+						currDrawData[currIndex++] = _blue * camera.blue;
+					}
+					else
+					{
+						currDrawData[currIndex++] = _red; 
+						currDrawData[currIndex++] = _green;
+						currDrawData[currIndex++] = _blue;
+					}
 				}
 				
 				currDrawData[currIndex++] = _alpha;
+				
+				_tileSheetData.positionData[camera.ID] = currIndex;
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;
@@ -1302,6 +1305,22 @@ class FlxSprite extends FlxObject
 		_green = (_color.rgb >> 8 & 0xff) * 0.00392;
 		_blue = (_color.rgb & 0xff) * 0.00392;
 		#end
+		
+		#if (cpp || neko)
+		
+		#if cpp
+		if (_color != 0x00ffffff)
+		#else
+		if (_color.rgb != 0xffffff)
+		#end
+		{
+			if (_tileSheetData != null)
+			{
+				_tileSheetData.isColored = true;
+			}
+		}
+		#end
+		
 		return _color;
 	}
 	

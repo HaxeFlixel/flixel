@@ -47,13 +47,22 @@ class TileSheetData
 	 */
 	private var _isTilemap:Bool;
 	
+	private var _isColored:Bool;
+	
+	public var positionData:Array<Int>;
+	
 	public function new(tileSheet:Tilesheet, ?isTilemap:Bool = false)
 	{
 		this.tileSheet = tileSheet;
 		antialiasing = false;
 		pairsData = new Array<RectanglePointPair>();
 		drawData = new Array<Array<Float>>();
-		this.isTilemap = isTilemap;
+		
+		_isTilemap = isTilemap;
+		_isColored = false;
+		updateFlags();
+		
+		positionData = [];
 		
 		flxSpriteFrames = new Array<FlxSpriteFrames>();
 	}
@@ -149,10 +158,15 @@ class TileSheetData
 	 */
 	public function clearDrawData():Void
 	{
-		for (dataArray in drawData)
+		/*for (dataArray in drawData)
 		{
 			var len:Int = dataArray.length;
 			if (len > 0) dataArray.splice(0, len);
+		}*/
+		
+		for (i in 0...(positionData.length))
+		{
+			positionData[i] = 0;
 		}
 	}
 	
@@ -160,12 +174,21 @@ class TileSheetData
 	{
 		var cameraGraphics:Graphics;
 		var data:Array<Float>;
+		var dataLen:Int;
+		var position:Int;
 		var camera:FlxCamera;
 		for (i in 0...(numCameras))
 		{
 			data = drawData[i];
-			if (data.length > 0)
+			dataLen = data.length;
+			position = positionData[i];
+			if (dataLen > 0)
 			{
+				if (dataLen != position)
+				{
+					data.splice(position, (dataLen - position));
+				}
+				
 				camera = FlxG.cameras[i];
 				cameraGraphics = camera._canvas.graphics;
 				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), flags);
@@ -248,6 +271,7 @@ class TileSheetData
 		}
 		pairsData = null;
 		drawData = null;
+		positionData = null;
 		
 		for (spriteData in flxSpriteFrames)
 		{
@@ -256,6 +280,8 @@ class TileSheetData
 		flxSpriteFrames = null;
 	}
 	
+	public var isTilemap(get_isTilemap, set_isTilemap):Bool;
+	
 	private function get_isTilemap():Bool 
 	{
 		return _isTilemap;
@@ -263,20 +289,43 @@ class TileSheetData
 	
 	private function set_isTilemap(value:Bool):Bool 
 	{
-		if (value == true)
-		{
-			flags = Graphics.TILE_RGB;
-		}
-		else
-		{
-			flags = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
-		}
 		_isTilemap = value;
-		
+		updateFlags();
 		return value;
 	}
 	
-	public var isTilemap(get_isTilemap, set_isTilemap):Bool;
+	public var isColored(get_isColored, set_isColored):Bool;
+	
+	private function get_isColored():Bool
+	{
+		return _isColored;
+	}
+	
+	private function set_isColored(value:Bool):Bool
+	{
+		_isColored = value;
+		updateFlags();
+		return value;
+	}
+	
+	// TODO: Check this method
+	private function updateFlags():Void
+	{
+		flags = 0;
+		
+		if (_isTilemap == true && _isColored == true)
+		{
+			flags = Graphics.TILE_RGB;
+		}
+		else if (_isTilemap == false && _isColored == true)
+		{
+			flags = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
+		}
+		else if (_isTilemap == false && _isColored == false)
+		{
+			flags = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA;
+		}
+	}
 	
 }
 

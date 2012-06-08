@@ -194,7 +194,7 @@ class FlxTileblock extends FlxSprite
 		{
 			camera = cameras[i++];
 			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = currDrawData.length;
+			currIndex = _tileSheetData.positionData[camera.ID];
 			
 			if (!onScreen(camera))
 			{
@@ -208,11 +208,8 @@ class FlxTileblock extends FlxSprite
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
 			
-			#if neko
-			if (camera.color.rgb != 0xffffff)
-			#else
-			if (camera.color != 0xffffff)
-			#end
+			var isColoredCamera:Bool = camera.isColored;
+			if (isColoredCamera)
 			{
 				redMult = _red * camera.red; 
 				greenMult = _green * camera.green;
@@ -245,11 +242,14 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = 0;
 						currDrawData[currIndex++] = 1;
 						
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
-						currDrawData[currIndex++] = _alpha;
+						if (_tileSheetData.isColored || isColoredCamera)
+						{
+							currDrawData[currIndex++] = redMult; 
+							currDrawData[currIndex++] = greenMult;
+							currDrawData[currIndex++] = blueMult;
+						}
 						
+						currDrawData[currIndex++] = _alpha;
 						j++;
 					}
 				}
@@ -280,14 +280,19 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = sin * scale.x;
 						currDrawData[currIndex++] = cos * scale.y;
 						
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
-						currDrawData[currIndex++] = _alpha;
+						if (_tileSheetData.isColored || isColoredCamera)
+						{
+							currDrawData[currIndex++] = redMult; 
+							currDrawData[currIndex++] = greenMult;
+							currDrawData[currIndex++] = blueMult;
+						}
 						
+						currDrawData[currIndex++] = _alpha;
 						j++;
 					}
 				}
+				
+				_tileSheetData.positionData[camera.ID] = currIndex;
 			}
 			
 			FlxBasic._VISIBLECOUNT++;
