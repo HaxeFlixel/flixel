@@ -1,5 +1,9 @@
 flixel CHANGELOG
 
+v1.04
+------------------------------
+* Fixed bug with FlxCamera's color property on cpp target. Sorry for it
+
 v1.03
 ------------------------------
 * Updated rendering system for cpp target so it uses 2d tile transformations now (which means non-uniform scaling is working now)

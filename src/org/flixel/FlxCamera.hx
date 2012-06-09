@@ -1134,9 +1134,9 @@ class FlxCamera extends FlxBasic
 	private function get_isColored():Bool
 	{
 		#if neko
-		return (_color.rgb != 0xffffff);
+		return (_color.rgb < 0xffffff);
 		#else
-		return (_color != 0xffffff);
+		return (_color < 0xffffff);
 		#end
 	}
 	#end

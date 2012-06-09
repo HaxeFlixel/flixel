@@ -177,8 +177,11 @@ class TileSheetData
 		var dataLen:Int;
 		var position:Int;
 		var camera:FlxCamera;
+		var tempFlags:Int;
 		for (i in 0...(numCameras))
 		{
+			tempFlags = flags;
+			
 			data = drawData[i];
 			dataLen = data.length;
 			position = positionData[i];
@@ -190,8 +193,14 @@ class TileSheetData
 				}
 				
 				camera = FlxG.cameras[i];
+				
+				if (camera.isColored)
+				{
+					tempFlags |= Graphics.TILE_RGB;
+				}
+				
 				cameraGraphics = camera._canvas.graphics;
-				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), flags);
+				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), tempFlags);
 			}
 		}
 	}
