@@ -629,12 +629,10 @@ class FlxSprite extends FlxObject
 			}
 		}
 		
-		#if flash
-		if(dirty)	//rarely 
+		if (dirty)	//rarely 
 		{
 			calcFrame();
 		}
-		#end
 		
 		if (cameras == null)
 		{
@@ -908,7 +906,7 @@ class FlxSprite extends FlxObject
 	 */
 	private function updateAnimation():Void
 	{
-		if(_bakedRotation > 0)
+		if (_bakedRotation > 0)
 		{
 			var oldIndex:Int = _curIndex;
 			var angleHelper:Int = Math.floor(angle % 360);
@@ -932,20 +930,19 @@ class FlxSprite extends FlxObject
 			{
 				_frameID = _framesData.frameIDs[_curIndex];
 			}
-			#else			
+			#end		
 			if (oldIndex != Math.floor(_curIndex))
 			{
 				dirty = true;
 			}
-			#end
 		}
-		else if((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished))
+		else if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished))
 		{
 			_frameTimer += FlxG.elapsed;
-			while(_frameTimer > _curAnim.delay)
+			while (_frameTimer > _curAnim.delay)
 			{
 				_frameTimer = _frameTimer - _curAnim.delay;
-				if(Math.floor(_curFrame) == _curAnim.frames.length - 1)
+				if (Math.floor(_curFrame) == _curAnim.frames.length - 1)
 				{
 					if (_curAnim.looped)
 					{
@@ -963,18 +960,15 @@ class FlxSprite extends FlxObject
 				{
 					_frameID = _framesData.frameIDs[_curIndex];
 				}
-				#else
-				dirty = true;
 				#end
+				dirty = true;
 			}
 		}
 		
-		#if flash
 		if (dirty)
 		{
 			calcFrame();
 		}
-		#end
 	}
 	
 	/**
@@ -1027,7 +1021,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function play(AnimName:String, ?Force:Bool = false):Void
 	{
-		if(!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (!_curAnim.looped || !finished)) return;
+		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (!_curAnim.looped || !finished)) return;
 		_curFrame = 0;
 		_curIndex = 0;
 		#if (cpp || neko)
@@ -1188,12 +1182,10 @@ class FlxSprite extends FlxObject
 	 */
 	public function setFacing(Direction:Int):Int
 	{
-		#if flash
 		if (_facing != Direction)
 		{
 			dirty = true;
 		}
-		#end
 		_facing = Direction;
 		return _facing;
 	}
@@ -1475,14 +1467,14 @@ class FlxSprite extends FlxObject
 	private function calcFrame(?AreYouSure:Bool = false):Void
 	#end
 	{
-		#if (cpp || neko)
+	#if (cpp || neko)
 		if (AreYouSure)
 		{
 			if ((framePixels == null) || (framePixels.width != width) || (framePixels.height != height))
 			{
 				framePixels = new BitmapData(Math.floor(width), Math.floor(height));
 			}
-		#end
+	#end
 		
 			var indexX:Int = _curIndex * frameWidth;
 			var indexY:Int = 0;
@@ -1511,9 +1503,9 @@ class FlxSprite extends FlxObject
 			{
 				framePixels.colorTransform(_flashRect, _colorTransform);
 			}
-		#if (cpp || neko)	
+	#if (cpp || neko)	
 		}
-		#end
+	#end
 		
 		if (_callback != null)
 		{
