@@ -457,24 +457,30 @@ class FlxBar extends FlxSprite
 		barType = BAR_FILLED;
 		
 		#if cpp
-		var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + empty + "showBorder: " + showBorder;
-		var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fill + "showBorder: " + showBorder;
-		if (showBorder)
-		{
-			emptyKey = emptyKey + "border: " + border;
-			filledKey = filledKey + "border: " + border;
-		}
+		var emptyA:Int = (empty >> 24) & 255;
+		var emptyRGB:Int = empty & 0x00ffffff;
+		var fillA:Int = (fill >> 24) & 255;
+		var fillRGB:Int = fill & 0x00ffffff;
+		var borderA:Int = (border >> 24) & 255;
+		var borderRGB:Int = border & 0x00ffffff;
 		#elseif neko
-		var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + empty.a + "." + empty.rgb + "showBorder: " + showBorder;
-		var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fill.a + "." + fill.rgb + "showBorder: " + showBorder;
-		if (showBorder)
-		{
-			emptyKey = emptyKey + "border: " + border.a + "." + border.rgb;
-			filledKey = filledKey + "border: " + border.a + "." + border.rgb;
-		}
+		var emptyA:Int = empty.a;
+		var emptyRGB:Int = empty.rgb;
+		var fillA:Int = fill.a;
+		var fillRGB:Int = fill.rgb;
+		var borderA:Int = border.a;
+		var borderRGB:Int = border.rgb;
 		#end
 		
-		#if !flash
+		#if (cpp || neko)
+		var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + emptyA + "." + emptyRGB + "showBorder: " + showBorder;
+		var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fillA + "." + fillRGB + "showBorder: " + showBorder;
+		if (showBorder)
+		{
+			emptyKey = emptyKey + "border: " + borderA + "." + borderRGB;
+			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
+		}
+		
 		var key:String = emptyKey + "_" + filledKey;
 		
 		if (barWidth >= barHeight)
@@ -598,14 +604,21 @@ class FlxBar extends FlxSprite
 		barType = BAR_GRADIENT;
 		
 		#if !flash
+		var colA:Int;
+		var colRGB:Int;
+		
 		var emptyKey:String = "Gradient: " + barWidth + " x " + barHeight + ", colors: [";
 		for (col in empty)
 		{
 			#if cpp
-			emptyKey = emptyKey + col + ", ";
+			colA = (col >> 24) & 255;
+			colRGB = col & 0x00ffffff;
 			#elseif neko
-			emptyKey = emptyKey + col.rgb + "_" + col.a + ", ";
+			colA = col.a;
+			colRGB = col.rgb;
 			#end
+			
+			emptyKey = emptyKey + colRGB + "_" + colA + ", ";
 		}
 		emptyKey = emptyKey + "], chunkSize: " + chunkSize + ", rotation: " + rotation + "showBorder: " + showBorder;
 		
@@ -613,22 +626,29 @@ class FlxBar extends FlxSprite
 		for (col in fill)
 		{
 			#if cpp
-			filledKey = filledKey + col + ", ";
+			colA = (col >> 24) & 255;
+			colRGB = col & 0x00ffffff;
 			#elseif neko
-			filledKey = filledKey + col.rgb + "_" + col.a + ", ";
+			colA = col.a;
+			colRGB = col.rgb;
 			#end
+			
+			filledKey = filledKey + colRGB + "_" + colA + ", ";
 		}
 		filledKey = filledKey + "], chunkSize: " + chunkSize + ", rotation: " + rotation + "showBorder: " + showBorder;
 		
 		if (showBorder)
 		{
 			#if cpp
-			emptyKey = emptyKey + "border: " + border;
-			filledKey = filledKey + "border: " + border;
+			var borderA:Int = (border >> 24) & 255;
+			var borderRGB:Int = border & 0x00ffffff;
 			#elseif neko
-			emptyKey = emptyKey + "border: " + border.a + "." + border.rgb;
-			filledKey = filledKey + "border: " + border.a + "." + border.rgb;
+			var borderA:Int = border.a;
+			var borderRGB:Int = border.rgb;
 			#end
+			
+			emptyKey = emptyKey + "border: " + borderA + "." + borderRGB;
+			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
 		}
 		
 		var key:String = emptyKey + "_" + filledKey;
@@ -790,12 +810,21 @@ class FlxBar extends FlxSprite
 			}
 		}
 		
-		#if neko
-		key = key + "emptyBackground: " + emptyBackground.a + "." + emptyBackground.rgb;
-		key = key + "fillBackground: " + fillBackground.a + "." + fillBackground.rgb;
-		#else
-		key = key + "emptyBackground: " + emptyBackground;
-		key = key + "fillBackground: " + fillBackground;
+		#if cpp
+		var emptyBackgroundA:Int = (emptyBackground >> 24) & 255;
+		var emptyBackgroundRGB:Int = emptyBackground & 0x00ffffff;
+		var fillBackgroundA:Int = (fillBackground >> 24) & 255;
+		var fillBackgroundRGB:Int = fillBackground & 0x00ffffff;
+		#elseif neko
+		var emptyBackgroundA:Int = emptyBackground.a;
+		var emptyBackgroundRGB:Int = emptyBackground.rgb;
+		var fillBackgroundA:Int = fillBackground.a;
+		var fillBackgroundRGB:Int = fillBackground.rgb;
+		#end
+		
+		#if (cpp || neko)
+		key = key + "emptyBackground: " + emptyBackgroundA + "." + emptyBackgroundRGB;
+		key = key + "fillBackground: " + fillBackgroundA + "." + fillBackgroundRGB;
 		#end
 	#end
 		

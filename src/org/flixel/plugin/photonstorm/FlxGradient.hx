@@ -157,13 +157,19 @@ class FlxGradient
 		
 		#if !flash
 		var key:String = "Gradient: " + width + " x " + height + ", colors: [";
+		var a:Int;
+		var rgb:Int;
 		for (col in colors)
 		{
 			#if cpp
-			key = key + col + ", ";
-			#elseif neko
-			key = key + col.rgb + "_" + col.a + ", ";
+			a = (col >> 24) & 255;
+			rgb = col & 0x00ffffff;
+			#else
+			a = col.a;
+			rgb = col.rgb;
 			#end
+			
+			key = key + rgb + "_" + a + ", ";
 		}
 		key = key + "], chunkSize: " + chunkSize + ", rotation: " + rotation;
 		
