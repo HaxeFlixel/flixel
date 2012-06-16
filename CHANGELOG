@@ -1,5 +1,10 @@
 flixel CHANGELOG
 
+v1.05
+------------------------------
+* Fixed bug with animation callback for FlxSprite on cpp target
+* Ported FlxButtonPlus class from FlixelPowerTools
+
 v1.04
 ------------------------------
 * Fixed bug with FlxCamera's color property on cpp target. Sorry for it
