@@ -3,6 +3,7 @@ import nme.geom.Matrix;
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
+import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
@@ -144,8 +145,9 @@ class FlxSkewedSprite extends FlxSprite
 			}
 			else
 			{	//Advanced render
-				#if flash
 				_matrix.identity();
+				
+				#if flash
 				_matrix.translate( -origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (_bakedRotation <= 0))
@@ -174,20 +176,33 @@ class FlxSkewedSprite extends FlxSprite
 				
 				currDrawData[currIndex++] = _frameID;
 				
+				_matrix.a = cos;
+				_matrix.b = sin;
+				_matrix.c = -sin;
+				_matrix.d = cos;
+				
 				if ((_flipped != 0) && (_facing == FlxObject.LEFT))
 				{
-					currDrawData[currIndex++] = -cos * scale.x;
-					currDrawData[currIndex++] = sin * scale.y;
-					currDrawData[currIndex++] = -sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
+					_matrix.scale( -scale.x, scale.y);
 				}
 				else
 				{
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = sin * scale.y;
-					currDrawData[currIndex++] = -sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
+					_matrix.scale(scale.x, scale.y);
 				}
+				
+				if (skew.x != 0 || skew.y != 0)
+				{
+					_skewMatrix.identity();
+					_skewMatrix.b = Math.tan(-skew.x * 0.017453293);
+					_skewMatrix.c = Math.tan(-skew.y * 0.017453293);
+					
+					_matrix.concat(_skewMatrix);
+				}
+				
+				currDrawData[currIndex++] = _matrix.a;
+				currDrawData[currIndex++] = _matrix.b;
+				currDrawData[currIndex++] = _matrix.c;
+				currDrawData[currIndex++] = _matrix.d;
 				
 				if (_tileSheetData.isColored || camera.isColored)
 				{
