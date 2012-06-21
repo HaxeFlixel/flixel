@@ -15,8 +15,68 @@
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>
 	
-	<assets path="Assets" rename="assets" include="*" exclude="*.svg" unless="target_flash" />
-	<assets path="Assets" rename="assets" include="*" exclude="*.svg|*.wav|*.ogg" if="target_flash" />
+	<assets path="Assets" rename="assets" if="android" >
+		<sound path="data/beep.wav" id="Beep" />
+		<sound path="asplode.wav" id="Asplode" />
+		<sound path="button.wav" id="Button" />
+		<sound path="countdown.wav" id="Countdown" />
+		<sound path="enemy.wav" id="Enemy" />
+		<sound path="hit.wav" id="Hit" />
+		<sound path="hurt.wav" id="Hurt" />
+		<sound path="jam.wav" id="Jam" />
+		<sound path="jet.wav" id="Jet" />
+		<sound path="jump.wav" id="Jump" />
+		<sound path="land.wav" id="Land" />
+		<sound path="menu_hit.wav" id="MenuHit" />
+		<sound path="menu_hit_2.wav" id="MenuHit2" />
+		<sound path="shoot.wav" id="Shoot" />
+		<music path="mode.mp3" id="Mode" />
+	</assets>
+	
+	<assets path="Assets" rename="assets" if="desktop" >
+		<sound path="data/beep.wav" id="Beep" />
+		<sound path="asplode.wav" id="Asplode" />
+		<sound path="button.wav" id="Button" />
+		<sound path="countdown.wav" id="Countdown" />
+		<sound path="enemy.wav" id="Enemy" />
+		<sound path="hit.wav" id="Hit" />
+		<sound path="hurt.wav" id="Hurt" />
+		<sound path="jam.wav" id="Jam" />
+		<sound path="jet.wav" id="Jet" />
+		<sound path="jump.wav" id="Jump" />
+		<sound path="land.wav" id="Land" />
+		<sound path="menu_hit.wav" id="MenuHit" />
+		<sound path="menu_hit_2.wav" id="MenuHit2" />
+		<sound path="shoot.wav" id="Shoot" />
+		<music path="mode.wav" id="Mode" />
+	</assets>
+	
+	<assets path="Assets" rename="assets" if="target_flash" >
+		<sound path="data/beep.mp3" id="Beep" />
+		<sound path="asplode.mp3" id="Asplode" />
+		<sound path="button.mp3" id="Button" />
+		<sound path="countdown.mp3" id="Countdown" />
+		<sound path="enemy.mp3" id="Enemy" />
+		<sound path="hit.mp3" id="Hit" />
+		<sound path="hurt.mp3" id="Hurt" />
+		<sound path="jam.mp3" id="Jam" />
+		<sound path="jet.mp3" id="Jet" />
+		<sound path="jump.mp3" id="Jump" />
+		<sound path="land.mp3" id="Land" />
+		<sound path="menu_hit.mp3" id="MenuHit" />
+		<sound path="menu_hit_2.mp3" id="MenuHit2" />
+		<sound path="shoot.mp3" id="Shoot" />
+		<music path="mode.mp3" id="Mode" />
+	</assets>
+	
+	<assets path="assets/data" include="*.ttf" type="font" />
+	<assets path="assets" include="*.fgr" type="text" />
+	<assets path="assets" include="*.csv" type="text" />
+	<assets path="assets" include="*.txt" type="text" />
+	<assets path="assets" include="*.png" type="image" />
+	<assets path="assets/data" include="*.png" type="image" />
+	<assets path="assets/data/vcr" include="*.png" type="image" />
+	<assets path="assets/data/vis" include="*.png" type="image" />
 	
 	<!--<icon name="Assets/nme.svg" /> -->
 	

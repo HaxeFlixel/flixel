@@ -80,10 +80,7 @@ class Spawner extends FlxSprite
 	
 	override public function hurt(Damage:Float):Void
 	{
-		if (Mode.SoundOn)
-		{
-			FlxG.play(Assets.getSound("assets/hit" + Mode.SoundExtension));
-		}
+		FlxG.play("Hit");
 		
 		flicker(0.2);
 		FlxG.score += 50;
@@ -96,11 +93,8 @@ class Spawner extends FlxSprite
 		{
 			return;
 		}
-		if (Mode.SoundOn)
-		{
-			FlxG.play(Assets.getSound("assets/asplode" + Mode.SoundExtension));
-			FlxG.play(Assets.getSound("assets/menu_hit_2" + Mode.SoundExtension));
-		}
+		FlxG.play("Asplode");
+		FlxG.play("MenuHit2");
 		
 		super.kill();
 		active = false;

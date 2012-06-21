@@ -45,10 +45,7 @@ class EnemyBullet extends FlxSprite
 		velocity.y = 0;
 		if(onScreen())
 		{
-			if (Mode.SoundOn)
-			{
-				FlxG.play(Assets.getSound("assets/jump" + Mode.SoundExtension));
-			}
+			FlxG.play("Jump");
 		}
 		alive = false;
 		solid = false;
@@ -57,10 +54,7 @@ class EnemyBullet extends FlxSprite
 	
 	public function shoot(Location:FlxPoint, Angle:Float):Void
 	{
-		if (Mode.SoundOn)
-		{
-			FlxG.play(Assets.getSound("assets/enemy" + Mode.SoundExtension), 0.5);
-		}
+		FlxG.play("Enemy", 0.5);
 		
 		super.reset(Location.x - width / 2, Location.y - height / 2);
 		FlxU.rotatePoint(0, speed, 0, 0, Angle, _point);

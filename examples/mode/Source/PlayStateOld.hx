@@ -197,10 +197,7 @@ class PlayStateOld extends FlxState
 		_hud.setAll("scrollFactor", new FlxPoint(0, 0));
 		_hud.setAll("cameras", [FlxG.camera]);
 		
-		if (Mode.SoundOn)
-		{
-			FlxG.playMusic(Assets.getSound("assets/mode.mp3"));
-		}
+		FlxG.playMusic("Mode");
 		
 		FlxG.flash(0xff131c1b);
 		_fading = false;
@@ -360,10 +357,7 @@ class PlayStateOld extends FlxState
 					{
 						volume = 1.0;
 					}
-					if (Mode.SoundOn)
-					{
-						FlxG.play(Assets.getSound("assets/countdown" + Mode.SoundExtension), volume);
-					}
+					FlxG.play("Countdown", volume);
 				}
 			}
 		

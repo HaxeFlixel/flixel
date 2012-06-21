@@ -179,10 +179,7 @@ class Enemy extends FlxSprite
 				_jets.start(false, 0.5, 0.01);
 				if(onScreen())
 				{
-					if (Mode.SoundOn)
-					{
-						FlxG.play(Assets.getSound("assets/jet" + Mode.SoundExtension));
-					}
+					FlxG.play("Jet");
 				}
 			}
 			//Then, position the jets at the center of the Enemy,
@@ -212,10 +209,7 @@ class Enemy extends FlxSprite
 	//and damage is dealt to the Enemy.
 	override public function hurt(Damage:Float):Void
 	{
-		if (Mode.SoundOn)
-		{
-			FlxG.play(Assets.getSound("assets/hit" + Mode.SoundExtension));
-		}
+		FlxG.play("Hit");
 		
 		flicker(0.2);
 		FlxG.score += 10;
@@ -230,10 +224,7 @@ class Enemy extends FlxSprite
 		{
 			return;
 		}
-		if (Mode.SoundOn)
-		{
-			FlxG.play(Assets.getSound("assets/asplode" + Mode.SoundExtension));
-		}
+		FlxG.play("Asplode");
 		
 		super.kill();
 		flicker(0);

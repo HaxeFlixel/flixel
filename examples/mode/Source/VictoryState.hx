@@ -47,10 +47,7 @@ class VictoryState extends FlxState
 			if((_timer > 0.35) && ((_timer > 10) || FlxG.keys.justPressed("X") || FlxG.keys.justPressed("C")))
 			{
 				_fading = true;
-				if (Mode.SoundOn)
-				{
-					FlxG.play(Assets.getSound("assets/menu_hit_2" + Mode.SoundExtension));
-				}
+				FlxG.play("MenuHit2");
 				
 				#if (flash || cpp)
 				FlxG.fade(0xff131c1b, 2, false, onPlay);

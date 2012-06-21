@@ -55,10 +55,7 @@ class Bullet extends FlxSprite
 		velocity.y = 0;
 		if(onScreen())
 		{
-			if (Mode.SoundOn)
-			{
-				FlxG.play(Assets.getSound("assets/jump" + Mode.SoundExtension));
-			}
+			FlxG.play("Jump");
 		}
 		alive = false;
 		solid = false;
@@ -67,10 +64,7 @@ class Bullet extends FlxSprite
 	
 	public function shoot(Location:FlxPoint, Aim:Int):Void
 	{
-		if (Mode.SoundOn)
-		{
-			FlxG.play(Assets.getSound("assets/shoot" + Mode.SoundExtension));
-		}
+		FlxG.play("Shoot");
 		
 		super.reset(Location.x - width / 2, Location.y - height / 2);
 		solid = true;

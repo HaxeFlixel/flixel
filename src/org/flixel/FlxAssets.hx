@@ -42,9 +42,5 @@ class FlxAssets
 		return Assets.getFont("assets/data/courier.ttf").fontName;
 	}
 	
-	#if flash
-	public static var sndBeep:String = "assets/data/beep.mp3";
-	#else
-	public static var sndBeep:String = "assets/data/beep.wav";
-	#end
+	public static var sndBeep:String = "Beep";
 }

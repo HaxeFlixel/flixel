@@ -17,8 +17,35 @@
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>
 	
-	<assets path="Assets" rename="assets" include="*" exclude="*.svg" unless="target_flash" />
-	<assets path="Assets" rename="assets" include="*" exclude="*.svg|*.wav|*.ogg" if="target_flash" />
+	<assets path="Assets" rename="assets" if="android" >
+		<sound path="data/beep.wav" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		
+	</assets>
+	
+	<assets path="Assets" rename="assets" if="desktop" >
+		<sound path="data/beep.wav" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		
+	</assets>
+	
+	<assets path="Assets" rename="assets" if="target_flash" >
+		<sound path="data/beep.mp3" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		
+	</assets>
+	
+	<assets path="assets/data" include="*.ttf" type="font" />
+	<assets path="assets" include="*.fgr" type="text" />
+	<assets path="assets" include="*.csv" type="text" />
+	<assets path="assets" include="*.txt" type="text" />
+	<assets path="assets" include="*.png" type="image" />
+	<assets path="assets/data" include="*.png" type="image" />
+	<assets path="assets/data/vcr" include="*.png" type="image" />
+	<assets path="assets/data/vis" include="*.png" type="image" />
 	
 	<!--<icon name="Assets/nme.svg" /> -->
 	

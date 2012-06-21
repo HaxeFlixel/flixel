@@ -12,6 +12,7 @@ import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.media.Sound;
+import nme.media.SoundTransform;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
@@ -656,10 +657,68 @@ class FlxG
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A <code>FlxSound</code> object.
 	 */
+	#if android
+	private static var _soundCache:Hash<Sound> = new Hash<Sound>();
+	private static var _soundTransform:SoundTransform = new SoundTransform();
+	
+	static public function play(EmbeddedSound:Dynamic, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = true):FlxSound
+	{
+		var key:String = "";
+		var isClass:Bool = true;
+		
+		var sound:Sound = null;
+		if (Std.is(EmbeddedSound, Class))
+		{
+			key = Type.getClassName(cast(EmbeddedSound, Class<Dynamic>));
+		}
+		else if (Std.is(EmbeddedSound, Sound))
+		{
+			isClass = false;
+		}
+		else if (Std.is(EmbeddedSound, String))
+		{
+			key = EmbeddedSound;
+			isClass = false;
+		}
+		
+		_soundTransform.volume = Volume;
+		_soundTransform.pan = 0;
+		
+		if (key != "")
+		{
+			if (_soundCache.exists(key))
+			{
+				_soundCache.get(key).play(0, 0, _soundTransform);
+			}
+			else
+			{
+				if (isClass)
+				{
+					sound = Type.createInstance(EmbeddedSound, []);
+				}
+				else
+				{
+					sound = Assets.getSound(EmbeddedSound);
+				}
+				
+				_soundCache.set(key, sound);
+				sound.play(0, 0, _soundTransform);
+			}
+		}
+		else
+		{
+			cast(EmbeddedSound, Sound).play(0, 0, _soundTransform);
+		}
+		
+		return null;
+	}
+	
+	#else
 	static public function play(EmbeddedSound:Dynamic, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = true):FlxSound
 	{
 		return FlxG.loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, true);
 	}
+	#end
 		
 	/**
 	 * Creates a new sound object from a URL.

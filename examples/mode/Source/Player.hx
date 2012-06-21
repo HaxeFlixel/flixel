@@ -81,10 +81,7 @@ class Player extends FlxSprite
 		//make a little noise if you just touched the floor
 		if(justTouched(FlxObject.FLOOR) && (velocity.y > 50))
 		{
-			if (Mode.SoundOn)
-			{
-				FlxG.play(Assets.getSound("assets/land" + Mode.SoundExtension));
-			}
+			FlxG.play("Land");
 		}
 		
 		//MOVEMENT
@@ -106,10 +103,7 @@ class Player extends FlxSprite
 	//	if((FlxG.keys.justPressed("X") || (PlayStateOld.JumpButton.status == FlxButton.PRESSED && isReadyToJump)) && velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
-			if (Mode.SoundOn)
-			{
-				FlxG.play(Assets.getSound("assets/jump" + Mode.SoundExtension));
-			}
+			FlxG.play("Jump");
 		}
 		
 		if (PlayState.JumpButton.status == FlxButton.PRESSED && isReadyToJump)
@@ -158,10 +152,7 @@ class Player extends FlxSprite
 		{
 			if(flickering)
 			{
-				if (Mode.SoundOn)
-				{
-					FlxG.play(Assets.getSound("assets/jam" + Mode.SoundExtension));
-				}
+				FlxG.play("Jam");
 			}
 			else
 			{
@@ -182,10 +173,7 @@ class Player extends FlxSprite
 		{
 			return;
 		}
-		if (Mode.SoundOn)
-		{
-			FlxG.play(Assets.getSound("assets/hurt" + Mode.SoundExtension));
-		}
+		FlxG.play("Hurt");
 		
 		flicker(1.3);
 		if(FlxG.score > 1000) FlxG.score -= 1000;
@@ -207,11 +195,8 @@ class Player extends FlxSprite
 			return;
 		}
 		solid = false;
-		if (Mode.SoundOn)
-		{
-			FlxG.play(Assets.getSound("assets/asplode" + Mode.SoundExtension));
-			FlxG.play(Assets.getSound("assets/menu_hit_2" + Mode.SoundExtension));
-		}
+		FlxG.play("Asplode");
+		FlxG.play("MenuHit2");
 		
 		super.kill();
 		flicker(0);
