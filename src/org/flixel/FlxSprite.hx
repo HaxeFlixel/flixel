@@ -323,6 +323,36 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Load graphic from another FlxSprite and copy it's tileSheet data. This method usefull for not flash targets
+	 * @param	Sprite			The FlxSprite from which you want to load graphic data
+	 * @param	AutoBuffer		Use this parameter when loading graphic from FlxSprite with "rotated" graphic (graphic loaded with loadRotatedGraphic() method). It should have the same value as you passed to loadRotatedGraphic() method for original FlxSprite.
+	 * @return					This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
+	public function loadFrom(Sprite:FlxSprite, ?AutoBuffer:Bool = false):FlxSprite
+	{
+		_pixels = Sprite.pixels;
+		_flipped = Sprite.flipped;
+		_bakedRotation = Sprite._bakedRotation;
+		
+		width = frameWidth = Sprite.frameWidth;
+		height = frameHeight = Sprite.frameHeight;
+		resetHelpers();
+		if (_bakedRotation > 0 && AutoBuffer == true)
+		{
+			width = Sprite.width;
+			height = Sprite.height;
+			centerOffsets();
+		}
+		
+		#if (cpp || neko)
+		_antialiasing = Sprite.antialiasing;
+		updateTileSheet();
+		#end
+		
+		return this;
+	}
+	
+	/**
 	 * Load an image from an embedded graphic file.
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
@@ -413,7 +443,7 @@ class FlxSprite extends FlxObject
 		//Create the brush and canvas
 		var rows:Int = Math.floor(Math.sqrt(Rotations));
 		var brush:BitmapData = FlxG.addBitmap(Graphic);
-		if(Frame >= 0)
+		if (Frame >= 0)
 		{
 			//Using just a segment of the graphic - find the right bit here
 			var full:BitmapData = brush;
@@ -421,7 +451,7 @@ class FlxSprite extends FlxObject
 			var rx:Int = Frame * brush.width;
 			var ry:Int = 0;
 			var fw:Int = full.width;
-			if(rx >= fw)
+			if (rx >= fw)
 			{
 				ry = Math.floor(rx / fw) * brush.height;
 				rx %= fw;
@@ -439,12 +469,10 @@ class FlxSprite extends FlxObject
 			max = brush.height;
 		}
 		
-	//#if flash
 		if (AutoBuffer)
 		{
 			max = Math.floor(max * 1.5);
 		}
-	//#end
 		
 		var columns:Int = FlxU.ceil(Rotations / rows);
 		width = max * columns;
@@ -478,7 +506,7 @@ class FlxSprite extends FlxObject
 		_bakedRotation = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
-		if(!skipGen)
+		if (!skipGen)
 		{
 			var row:Int = 0;
 			var column:Int;
@@ -511,7 +539,7 @@ class FlxSprite extends FlxObject
 		frameWidth = frameHeight = max;
 		width = height = max;
 		resetHelpers();
-		if(AutoBuffer)
+		if (AutoBuffer)
 		{
 			width = brush.width;
 			height = brush.height;
@@ -1094,7 +1122,7 @@ class FlxSprite extends FlxObject
 	{
 		offset.x = (frameWidth - width) * 0.5;
 		offset.y = (frameHeight - height) * 0.5;
-		if(AdjustPosition)
+		if (AdjustPosition)
 		{
 			x += offset.x;
 			y += offset.y;
