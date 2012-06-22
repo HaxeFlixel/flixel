@@ -18,9 +18,9 @@ class FlxSkewedSprite extends FlxSprite
 	public var skew:FlxPoint;
 	private var _skewMatrix:Matrix;
 	
-	public function new() 
+	public function new(?X:Float = 0, ?Y:Float = 0) 
 	{
-		super();
+		super(X, Y);
 		
 		skew = new FlxPoint();
 		_skewMatrix = new Matrix();
@@ -39,7 +39,7 @@ class FlxSkewedSprite extends FlxSprite
 		return (((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (skew.x == 0) && (skew.y == 0));
 	}
 	
-	// TODO: Implement skewing
+	// TODO: Implement skewing for flash target
 	override public function draw():Void 
 	{
 		if(_flickerTimer != 0)
