@@ -39,7 +39,6 @@ class FlxSkewedSprite extends FlxSprite
 		return (((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (skew.x == 0) && (skew.y == 0));
 	}
 	
-	// TODO: Implement skewing for flash target
 	override public function draw():Void 
 	{
 		if(_flickerTimer != 0)
@@ -67,11 +66,11 @@ class FlxSkewedSprite extends FlxSprite
 		#if (cpp || neko)
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
+		#end
 		
 		var radians:Float;
 		var cos:Float;
 		var sin:Float;
-		#end
 		
 		while(i < l)
 		{
@@ -149,17 +148,16 @@ class FlxSkewedSprite extends FlxSprite
 				
 				#if flash
 				_matrix.translate( -origin.x, -origin.y);
-				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (_bakedRotation <= 0))
 				{
 					_matrix.rotate(angle * 0.017453293);
 				}
-				
+				_matrix.scale(scale.x, scale.y);
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(skew.x * 0.017453293);
-					_skewMatrix.c = Math.tan(skew.y * 0.017453293);
+					_skewMatrix.b = Math.tan(skew.y * 0.017453293);
+					_skewMatrix.c = Math.tan(skew.x * 0.017453293);
 					
 					_matrix.concat(_skewMatrix);
 				}
