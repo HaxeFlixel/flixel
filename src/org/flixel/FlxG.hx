@@ -670,7 +670,7 @@ class FlxG
 	{
 		var sound:Sound = null;
 		
-		_soundTransform.volume = Volume;
+		_soundTransform.volume = (FlxG.mute ? 0 : 1) * FlxG.volume * Volume;
 		_soundTransform.pan = 0;
 		
 		if (_soundCache.exists(EmbeddedSound))

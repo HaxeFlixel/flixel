@@ -323,7 +323,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Load graphic from another FlxSprite and copy it's tileSheet data. This method usefull for not flash targets
+	 * Load graphic from another FlxSprite and copy it's tileSheet data. This method usefull for non-flash targets
 	 * @param	Sprite			The FlxSprite from which you want to load graphic data
 	 * @param	AutoBuffer		Use this parameter when loading graphic from FlxSprite with "rotated" graphic (graphic loaded with loadRotatedGraphic() method). It should have the same value as you passed to loadRotatedGraphic() method for original FlxSprite.
 	 * @return					This FlxSprite instance (nice for chaining stuff together, if you're into that).
