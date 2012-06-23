@@ -332,7 +332,7 @@ class FlxSprite extends FlxObject
 	{
 		_pixels = Sprite.pixels;
 		_flipped = Sprite.flipped;
-		_bakedRotation = Sprite._bakedRotation;
+		_bakedRotation = Sprite.bakedRotation;
 		
 		width = frameWidth = Sprite.frameWidth;
 		height = frameHeight = Sprite.frameHeight;
@@ -1572,14 +1572,27 @@ class FlxSprite extends FlxObject
 		
 		return -1;
 	}
+	#end
 	
+	/**
+	 * If the Sprite is flipped.
+	 */
 	public var flipped(getFlipped, null):Int;
 	
 	public function getFlipped():Int
 	{
 		return _flipped;
 	}
-	#end
+	
+	/**
+	 * If the Sprite has baked rotation.
+	 */
+	public var bakedRotation(get_bakedRotation, null):Float;
+	
+	private function get_bakedRotation():Float 
+	{
+		return _bakedRotation;
+	}
 	
 	/**
 	 * If the Sprite is beeing rendered in simple mode.
