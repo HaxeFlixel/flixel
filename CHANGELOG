@@ -4,6 +4,9 @@ v1.05
 ------------------------------
 * Fixed bug with animation callback for FlxSprite on cpp target
 * Ported FlxButtonPlus class from FlixelPowerTools
+* Fixed Android sound issue. Thanks to Adrian K. (@goshki) for testing
+* Added FlxSkewedSprite class (see skewedSprite example on github repo)
+* Added loadFrom() method for FlxSprite. So you can easily copy graphics from one FlxSprite to another. This is especially usefull for cpp target
 
 v1.04
 ------------------------------
