@@ -8,7 +8,7 @@ import nme.text.Font;
  * @author Zaphod
  */
 
-class FlxAssets 
+class FlxAssets //extends Assets
 {
 	public static var imgDefaultButton:String = "assets/data/button.png";
 	public static var imgLogo:String = "assets/data/logo.png";
@@ -43,4 +43,21 @@ class FlxAssets
 	}
 	
 	public static var sndBeep:String = "Beep";
+	
+	// TODO: write code for automatic sound caching for android target
+	public static function cacheSounds():Void
+	{
+		#if android
+		/*var resourseType:String;
+		for (key in Assets.resourceTypes.keys())
+		{
+			resourseType = Assets.resourceTypes.get(key);
+			
+			if (resourseType != null && resourseType == "sound")
+			{
+				FlxG.addSound(key);
+			}
+		}*/
+		#end
+	}
 }

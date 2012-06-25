@@ -1484,6 +1484,8 @@ class FlxG
 	 */
 	static public function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{
+		//FlxAssets.cacheSounds();
+		
 		FlxG._game = Game;
 		FlxG.width = Math.floor(Math.abs(Width));
 		FlxG.height = Math.floor(Math.abs(Height));
