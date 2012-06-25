@@ -1,13 +1,13 @@
 ﻿package org.flixel.tweens.misc;
 
 import org.flixel.FlxU;
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
 /**
  * Tweens from one angle to another.
  */
-class AngleTween extends Tween
+class AngleTween extends FlxTween
 {
 	/**
 	 * The current value.

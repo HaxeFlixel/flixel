@@ -17,11 +17,15 @@ import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
 import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.tweens.misc.MultiVarTween;
 
 import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxQuadTree;
+
+import org.flixel.tweens.FlxTween;
+import org.flixel.tweens.util.Ease;
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -31,7 +35,12 @@ import org.flixel.system.FlxQuadTree;
  */
 class FlxG 
 {
-
+	
+	/**
+	 * Global tweener for tweening between multiple worlds
+	 */
+	public static var tweener:FlxBasic = new FlxBasic();
+	
 	#if flash
 	public static var bgColor(getBgColor, setBgColor):UInt;
 	#else
@@ -1679,6 +1688,43 @@ class FlxG
 				plugin.draw();
 			}
 		}
+	}
+	
+	/**
+	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.
+	 * @param	object		The object containing the properties to tween.
+	 * @param	values		An object containing key/value pairs of properties and target values.
+	 * @param	duration	Duration of the tween.
+	 * @param	options		An object containing key/value pairs of the following optional parameters:
+	 * 						type		Tween type.
+	 * 						complete	Optional completion callback function.
+	 * 						ease		Optional easer function.
+	 * 						tweener		The Tweener to add this Tween to.
+	 * @return	The added MultiVarTween object.
+	 *
+	 * Example: FlxG.tween(object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete } );
+	 */
+	public static function tween(object:Dynamic, values:Dynamic, duration:Float, ?options:Dynamic = null):MultiVarTween
+	{
+		var type:TweenType = TweenType.OneShot,
+			complete:CompleteCallback = null,
+			ease:EaseFunction = null,
+			tweener:FlxBasic = FlxG.tweener;
+		if (Std.is(object, FlxBasic)) 
+		{
+			tweener = cast(object, FlxBasic);
+		}
+		if (options)
+		{
+			if (Reflect.hasField(options, "type")) type = options.type;
+			if (Reflect.hasField(options, "complete")) complete = options.complete;
+			if (Reflect.hasField(options, "ease")) ease = options.ease;
+			if (Reflect.hasField(options, "tweener")) tweener = options.tweener;
+		}
+		var tween:MultiVarTween = new MultiVarTween(complete, type);
+		tween.tween(object, values, duration, ease);
+		tweener.addTween(tween);
+		return tween;
 	}
 	
 }

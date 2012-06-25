@@ -68,7 +68,7 @@ class FlxGroup extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
-		if(members != null)
+		if (members != null)
 		{
 			var basic:FlxBasic;
 			var i:Int = 0;
@@ -310,7 +310,7 @@ class FlxGroup extends FlxBasic
 		{
 			return null;
 		}
-		if(Splice)
+		if (Splice)
 		{
 			members.splice(index, 1);
 			length--;

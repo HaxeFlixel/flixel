@@ -1,12 +1,12 @@
 ﻿package org.flixel.tweens.misc;
 
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
 /**
  * Tweens a numeric public property of an Object.
  */
-class VarTween extends Tween
+class VarTween extends FlxTween
 {
 	/**
 	 * Constructor.

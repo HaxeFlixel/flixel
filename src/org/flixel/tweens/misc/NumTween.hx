@@ -1,12 +1,12 @@
 ﻿package org.flixel.tweens.misc;
 
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
 /**
  * Tweens a numeric value.
  */
-class NumTween extends Tween
+class NumTween extends FlxTween
 {
 	/**
 	 * The current value.

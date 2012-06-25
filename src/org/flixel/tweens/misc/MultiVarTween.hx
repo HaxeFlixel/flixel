@@ -1,13 +1,13 @@
 package org.flixel.tweens.misc;
 
 import org.flixel.FlxU;
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
  */
-class MultiVarTween extends Tween
+class MultiVarTween extends FlxTween
 {
 	/**
 	 * Constructor.

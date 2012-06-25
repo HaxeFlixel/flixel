@@ -1,11 +1,11 @@
 ﻿package org.flixel.tweens.misc;
 
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 
 /**
  * A simple alarm, useful for timed events, etc.
  */
-class Alarm extends Tween
+class Alarm extends FlxTween
 {
 	/**
 	 * Constructor.

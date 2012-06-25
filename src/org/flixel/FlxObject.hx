@@ -320,6 +320,8 @@ class FlxObject extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
+		super.destroy();
+		
 		velocity = null;
 		acceleration = null;
 		drag = null;

@@ -1,13 +1,13 @@
 ﻿package org.flixel.tweens.sound;
 
 import org.flixel.FlxSound;
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
 /**
  * Sound effect fader.
  */
-class SfxFader extends Tween
+class SfxFader extends FlxTween
 {
 	/**
 	 * Constructor.

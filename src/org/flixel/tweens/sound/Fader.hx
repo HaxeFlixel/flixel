@@ -1,13 +1,13 @@
 ﻿package org.flixel.tweens.sound;
 
 import org.flixel.FlxG;
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
 /**
  * Global volume fader.
  */
-class Fader extends Tween
+class Fader extends FlxTween
 {
 	/**
 	 * Constructor.

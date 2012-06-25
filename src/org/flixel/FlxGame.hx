@@ -703,6 +703,12 @@ class FlxGame extends Sprite
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		_state.update();
+		
+		if (FlxG.tweener.active && FlxG.tweener.hasTween) 
+		{
+			FlxG.tweener.updateTweens();
+		}
+		
 		FlxG.updateCameras();
 		
 		if (_debuggerUp)

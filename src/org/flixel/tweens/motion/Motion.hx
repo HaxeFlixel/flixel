@@ -1,12 +1,12 @@
 ﻿package org.flixel.tweens.motion;
 
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
 /**
  * Base class for motion Tweens.
  */
-class Motion extends Tween
+class Motion extends FlxTween
 {
 	/**
 	 * Current x position of the Tween.

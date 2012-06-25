@@ -1,6 +1,6 @@
 package org.flixel;
 
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 
 /**
  * This is a useful "generic" Flixel object.
@@ -48,6 +48,10 @@ class FlxBasic
 	 */
 	public var ignoreDrawDebug:Bool;
 	
+	/**
+	 * If the Tweener should clear on removal. For Entities, this is when they are
+	 * removed from a World, and for World this is when the active World is switched.
+	 */
 	public var autoClear:Bool;
 	
 	/**
@@ -62,7 +66,8 @@ class FlxBasic
 		alive = true;
 		ignoreDrawDebug = false;
 		
-		autoClear = false;
+		//autoClear = false;
+		autoClear = true;
 	}
 
 	/**
@@ -70,7 +75,14 @@ class FlxBasic
 	 * <code>destroy()</code> on class members if necessary.
 	 * Don't forget to call <code>super.destroy()</code>!
 	 */
-	public function destroy():Void {}
+	public function destroy():Void 
+	{
+		if (autoClear && hasTween) 
+		{
+			clearTweens();
+			_tween = null;
+		}
+	}
 	
 	/**
 	 * Pre-update is called right before <code>update()</code> on each object in the game loop.
@@ -153,12 +165,12 @@ class FlxBasic
 		return FlxU.getClassName(this, true);
 	}
 	
-	public function addTween(t:Tween, ?start:Bool = false):Tween
+	public function addTween(t:FlxTween, ?start:Bool = false):FlxTween
 	{
 		var ft:FriendTween = t;
 		if (ft._parent != null) 
 		{
-			throw "Cannot add a Tween object more than once.";
+			throw "Cannot add a FlxTween object more than once.";
 		}
 		ft._parent = this;
 		ft._next = _tween;
@@ -175,12 +187,12 @@ class FlxBasic
 		return t;
 	}
 
-	public function removeTween(t:Tween):Tween
+	public function removeTween(t:FlxTween):FlxTween
 	{
 		var ft:FriendTween = t;
 		if (ft._parent != this) 
 		{
-			throw "Core object does not contain Tween.";
+			throw "Core object does not contain FlxTween.";
 		}
 		if (ft._next != null) 
 		{
@@ -194,7 +206,7 @@ class FlxBasic
 		{
 			if (ft._next != null)
 			{
-				_tween = cast(ft._next, Tween);
+				_tween = cast(ft._next, FlxTween);
 			}
 		}
 		ft._next = ft._prev = null;
@@ -205,24 +217,24 @@ class FlxBasic
 
 	public function clearTweens():Void
 	{
-		var t:Tween;
+		var t:FlxTween;
 		var ft:FriendTween = _tween;
 		var fn:FriendTween;
 		while (ft != null)
 		{
 			fn = ft._next;
-			removeTween(cast(ft, Tween));
+			removeTween(cast(ft, FlxTween));
 			ft = fn;
 		}
 	}
 
 	public function updateTweens():Void
 	{
-		var t:Tween;
+		var t:FlxTween;
 		var	ft:FriendTween = _tween;
 		while (ft != null)
 		{
-			t = cast(ft, Tween);
+			t = cast(ft, FlxTween);
 			if (t.active)
 			{
 				t.update();
@@ -242,5 +254,5 @@ class FlxBasic
 		return (_tween != null); 
 	}
 
-	private var _tween:Tween;
+	private var _tween:FlxTween;
 }

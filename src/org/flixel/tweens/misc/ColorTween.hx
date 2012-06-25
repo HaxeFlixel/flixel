@@ -1,13 +1,13 @@
 ﻿package org.flixel.tweens.misc;
 
-import org.flixel.Tween;
+import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
 /**
  * Tweens a color's red, green, and blue properties
  * independently. Can also tween an alpha value.
  */
-class ColorTween extends Tween
+class ColorTween extends FlxTween
 {
 	/**
 	 * The current color.
