@@ -1329,9 +1329,9 @@ class FlxSprite extends FlxObject
 		#if (cpp || neko)
 		
 		#if cpp
-		if (_color != 0x00ffffff)
+		if (_color < 0xffffff)
 		#else
-		if (_color.rgb != 0xffffff)
+		if (_color.rgb < 0xffffff)
 		#end
 		{
 			if (_tileSheetData != null)
