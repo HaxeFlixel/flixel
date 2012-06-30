@@ -109,8 +109,6 @@ class FlxTextField extends FlxText
 		return this;
 	}
 	
-	override public var text(getText, setText):String;
-	
 	/**
 	 * The text being displayed.
 	 */
@@ -128,8 +126,6 @@ class FlxTextField extends FlxText
 		updateTextFields();
 		return text;
 	}
-	
-	override public var size(getSize, setSize):Float;
 	
 	/**
 	 * The size of the text being displayed.
@@ -175,8 +171,6 @@ class FlxTextField extends FlxText
 		return Color;
 	}
 	
-	override public var font(getFont, setFont):String;
-	
 	/**
 	 * The font used for this text.
 	 */
@@ -194,8 +188,6 @@ class FlxTextField extends FlxText
 		updateTextFields();
 		return Font;
 	}
-	
-	override public var alignment(getAlignment, setAlignment):String;
 	
 	/**
 	 * The alignment of the font ("left", "right", or "center").
@@ -243,8 +235,6 @@ class FlxTextField extends FlxText
 		// this class doesn't support this operation
 	}
 	
-	override public var simpleRender(getSimpleRender, null):Bool;
-	
 	override public function getSimpleRender():Bool
 	{ 
 		return true;
@@ -255,8 +245,6 @@ class FlxTextField extends FlxText
 		// this class doesn't support this operation
 		return false;
 	}
-	
-	override public var pixels(getPixels, setPixels):BitmapData;
 	
 	/**
 	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
@@ -276,8 +264,6 @@ class FlxTextField extends FlxText
 		// this class doesn't support this operation
 		return _pixels;
 	}
-	
-	override public var alpha(getAlpha, setAlpha):Float;
 	
 	/**
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
