@@ -111,11 +111,7 @@ class FlxTileblock extends FlxSprite
 		}
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
-		#if flash
-		_pixels = sprite.pixels;
-		#else
-		_pixels = FlxG.addBitmap(TileGraphic);
-		#end
+		_pixels = FlxG.addBitmap(TileGraphic, false, false, null, _tileWidth, _tileHeight);
 		frameWidth = Math.floor(width);
 		frameHeight = Math.floor(height);
 		resetHelpers();
@@ -315,8 +311,8 @@ class FlxTileblock extends FlxSprite
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 			_tileSheetData.antialiasing = _antialiasing;
-			//_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, false, null, 0, 0, 0, 0, 1, 1);
-			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight);
+			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
+			//_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight);
 		}
 	}
 	#end
