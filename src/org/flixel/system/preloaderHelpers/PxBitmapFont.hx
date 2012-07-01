@@ -25,7 +25,8 @@ class PxBitmapFont
 	#if (flash || js)
 	private var _glyphs:Array<BitmapData>;
 	#else
-	private var _glyphs:Array<Int>;
+	private var _glyphs:IntHash<Int>;
+	private var _num_letters:Int;
 	private var _tileSheet:Tilesheet;
 	private static var _flags = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RGB;
 	private var _glyphWidthData:Array<Int>;
@@ -52,18 +53,22 @@ class PxBitmapFont
 		#if (flash || js)
 		_matrix = new Matrix();
 		_colorTransform = new ColorTransform();
+		_glyphs = [];
 		#else
 		_glyphWidthData = [];
+		_glyphs = new IntHash<Int>();
+		_num_letters = 0;
 		#end
 		
-		_glyphs = [];
 		_glyphString = pLetters;
 		
+		#if (flash || js)
 		// fill array with nulls
 		for (i in 0...(256)) 
 		{
 			_glyphs.push(null);
 		}
+		#end
 		
 		if (pBitmapData != null) 
 		{
@@ -238,7 +243,7 @@ class PxBitmapFont
 		_glyphs = null;
 	}
 	
-	#if flash
+	#if (flash || js)
 	/**
 	 * Serializes font data to cryptic bit string.
 	 * @return	Cryptic string with font as bits.
@@ -284,7 +289,8 @@ class PxBitmapFont
 	private function setGlyph(pCharID:Int, pRect:Rectangle, pGlyphID:Int):Void 
 	{
 		_tileSheet.addTileRect(pRect);
-		_glyphs[pCharID] = pGlyphID;
+		_glyphs.set(pCharID, pGlyphID);
+		_num_letters++;
 		_glyphWidthData[pCharID] = Math.floor(pRect.width);
 		
 		if (Math.floor(pRect.height) > _maxHeight) 
@@ -324,10 +330,11 @@ class PxBitmapFont
 			var charCode:Int = pText.charCodeAt(i);
 			#if (flash || js)
 			glyph = pFontData[charCode];
-			#else
-			glyph = _glyphs[charCode];
-			#end
 			if (glyph != null) 
+			#else
+			glyph = _glyphs.get(charCode);
+			if (_glyphs.exists(charCode))
+			#end
 			{
 				#if (flash || js)
 				pBitmapData.copyPixels(glyph, glyph.rect, _point, null, null, true);
@@ -389,7 +396,7 @@ class PxBitmapFont
 			}
 			#else
 			var glyphWidth:Int = _glyphWidthData[charCode];
-			if (glyphWidth != null) 
+			if (_glyphs.exists(charCode)) 
 			{
 				
 				w += glyphWidth;
@@ -424,7 +431,11 @@ class PxBitmapFont
 	
 	public function get_numLetters():Int 
 	{
+		#if (flash || js)
 		return _glyphs.length;
+		#else
+		return _num_letters;
+		#end
 	}
 	
 	/**
