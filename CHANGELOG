@@ -5,8 +5,12 @@ v1.05
 * Fixed bug with animation callback for FlxSprite on cpp target
 * Ported FlxButtonPlus class from FlixelPowerTools
 * Fixed Android sound issue. Thanks to Adrian K. (@goshki) for testing
-* Added FlxSkewedSprite class (see skewedSprite example on github repo)
-* Added loadFrom() method for FlxSprite. So you can easily copy graphics from one FlxSprite to another. This is especially usefull for cpp target
+* Added FlxSkewedSprite class (see skewedSprite example on github repo). This class isn't optimized for flash target
+* Added loadFrom() method for FlxSprite. So you can easily copy graphics from one FlxSprite to another. This is especially usefull for cpp target. Thanks to Phoenity for this idea
+* Initial support for Haxe 2.10
+* Added basic support for multitouch (see FlxG.touchManager and multitouch example on github repo). Flash version requires Flash Player 10.1 now.
+* Compile fix for FlxPreloader. Thanks to Tali for it.
+* Integrated tweening system from HaxePunk (Thank you, Matt Tuttle). All FlxBasic's subclasses have this functionality now. See addTween(), removeTween(), clearTweens() methods of FlxBasic instances and 'org.flixel.tweens' package.
 
 v1.04
 ------------------------------

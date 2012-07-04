@@ -16,11 +16,15 @@ import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
 import nme.Lib;
 import nme.ui.Mouse;
+import nme.ui.Multitouch;
 import org.flixel.plugin.pxText.PxBitmapFont;
+import org.flixel.system.input.TouchManager;
 
 #if (cpp || neko)
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
+
+import nme.events.TouchEvent;
 
 #if flash
 import flash.text.AntiAliasType;
@@ -428,6 +432,21 @@ class FlxGame extends Sprite
 		FlxG.mouse.handleMouseWheel(FlashEvent);
 	}
 	
+	private function onTouchBegin(FlashEvent:TouchEvent):Void
+	{
+		FlxG.touchManager.handleTouchBegin(FlashEvent);
+	}
+	
+	private function onTouchEnd(FlashEvent:TouchEvent):Void
+	{
+		FlxG.touchManager.handleTouchEnd(FlashEvent);
+	}
+	
+	private function onTouchMove(FlashEvent:TouchEvent):Void
+	{
+		FlxG.touchManager.handleTouchMove(FlashEvent);
+	}
+	
 	/**
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
@@ -761,11 +780,25 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = _flashFramerate;
 		
+		FlxG.supportsTouchEvents = Multitouch.supportsTouchEvents;
+		if (FlxG.supportsTouchEvents)
+		{
+			FlxG.maxTouchPoints = Multitouch.maxTouchPoints;
+		}
+		FlxG.touchManager = new TouchManager();
+		
 		//Add basic input event listeners and mouse container
 		#if flash
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		
+		if (FlxG.supportsTouchEvents)
+		{
+			Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN , onTouchBegin);
+			Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			Lib.current.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+		}
 		#else
 		clickableArea = new Sprite();
 		clickableArea.graphics.beginFill(0xff0000);
@@ -776,6 +809,13 @@ class FlxGame extends Sprite
 		clickableArea.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		clickableArea.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		
+		if (FlxG.supportsTouchEvents)
+		{
+			clickableArea.addEventListener(TouchEvent.TOUCH_BEGIN , onTouchBegin);
+			clickableArea.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			clickableArea.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+		}
 		#end
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);

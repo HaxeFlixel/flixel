@@ -13,6 +13,10 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.media.Sound;
 import nme.media.SoundTransform;
+
+import org.flixel.system.input.TouchManager;
+import nme.ui.Multitouch;
+
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
@@ -35,6 +39,17 @@ import org.flixel.tweens.util.Ease;
  */
 class FlxG 
 {
+	
+	/**
+	 * The maximum number of concurrent touch points supported by the current device.
+	 */
+	public static var maxTouchPoints:Int = 0;
+	/**
+	 * Indicates whether the current environment supports basic touch input, such as a single finger tap.
+	 */
+	public static var supportsTouchEvents:Bool = false;
+	
+	public static var touchManager:TouchManager;
 	
 	/**
 	 * Global tweener for tweening between multiple worlds
@@ -165,7 +180,7 @@ class FlxG
 	/**
 	 * Internal tracker for game object.
 	 */
-	static private var _game:FlxGame;
+	static public var _game:FlxGame;
 	/**
 	 * Handy shared variable for implementing your own pause behavior.
 	 */
@@ -1561,6 +1576,11 @@ class FlxG
 		if (!_game._debuggerUp || !_game._debugger.hasMouse)
 		{
 			FlxG.mouse.update(Math.floor(FlxG._game.mouseX), Math.floor(FlxG._game.mouseY));
+		}
+		
+		if (FlxG.supportsTouchEvents)
+		{
+			FlxG.touchManager.update();
 		}
 	}
 	

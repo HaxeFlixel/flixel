@@ -49,13 +49,18 @@ class FlxAssets //extends Assets
 	{
 		#if android
 		/*var resourseType:String;
-		for (key in Assets.resourceTypes.keys())
+		var resourseTypes:Hash<String> = cast Reflect.field(Assets, "resourceTypes");
+		
+		if (resourseTypes != null)
 		{
-			resourseType = Assets.resourceTypes.get(key);
-			
-			if (resourseType != null && resourseType == "sound")
+			for (key in resourseTypes.keys())
 			{
-				FlxG.addSound(key);
+				resourseType = resourseTypes.get(key);
+				
+				if (resourseType != null && resourseType == "sound")
+				{
+					FlxG.addSound(key);
+				}
 			}
 		}*/
 		#end

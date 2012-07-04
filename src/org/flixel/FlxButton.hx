@@ -236,7 +236,7 @@ class FlxButton extends FlxSprite
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		if(FlxG.mouse.visible)
+		if (FlxG.mouse.visible)
 		{
 			if (cameras == null)
 			{
@@ -265,7 +265,7 @@ class FlxButton extends FlxSprite
 							soundDown.play(true);
 						}
 					}
-					if(status == NORMAL)
+					if (status == NORMAL)
 					{
 						status = HIGHLIGHT;
 						if (onOver != null)
@@ -279,7 +279,7 @@ class FlxButton extends FlxSprite
 					}
 				}
 			}
-			if(offAll)
+			if (offAll)
 			{
 				if(status != NORMAL)
 				{

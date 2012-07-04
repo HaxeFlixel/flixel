@@ -8,6 +8,8 @@
  	
 	<set name="BUILD_DIR" value="Export" />
 	
+	<set name="SWF_VERSION" value="10.1" />
+	
 	<app preloader="org.flixel.system.FlxPreloader" />
 	
 	<!--<setenv name="no_console" value="1" />-->

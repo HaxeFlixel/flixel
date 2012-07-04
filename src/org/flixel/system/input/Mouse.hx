@@ -195,8 +195,6 @@ class Mouse extends FlxPoint
 	 * Also updates the just pressed/just released flags.
 	 * @param	X			The current X position of the mouse in the window.
 	 * @param	Y			The current Y position of the mouse in the window.
-	 * @param	XScroll		The amount the game world has scrolled horizontally.
-	 * @param	YScroll		The amount the game world has scrolled vertically.
 	 */
 	public function update(X:Int,Y:Int):Void
 	{
