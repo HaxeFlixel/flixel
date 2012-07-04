@@ -29,6 +29,7 @@
   <!-- haxelib libraries -->
   <haxelib>
     <library name="nme" />
+    <library name="flixel" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
@@ -44,6 +45,7 @@
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand>haxelib run nme test "FlixelNME.nmml" android
+
 haxelib run nme test "FlixelNME.nmml" windows</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
