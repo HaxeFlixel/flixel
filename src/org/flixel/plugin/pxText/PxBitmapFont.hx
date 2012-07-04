@@ -9,7 +9,6 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 
 #if (cpp || neko)
-import nme.display.Tilesheet;
 import org.flixel.tileSheetManager.TileSheetData;
 import org.flixel.tileSheetManager.TileSheetManager;
 #end
@@ -27,11 +26,10 @@ class PxBitmapFont
 	#if (flash || js)
 	private var _glyphs:Array<BitmapData>;
 	#else
-	private var _glyphs:IntHash<Int>;
+	private var _glyphs:IntHash<PxFontSymbol>;
 	private var _num_letters:Int;
 	
 	private var _tileSheetData:TileSheetData;
-	private var _glyphWidthData:Array<Int>;
 	private var _antialiasing:Bool;
 	private var _bgTileID:Int;
 	#end
@@ -50,26 +48,31 @@ class PxBitmapFont
 	 * @param	pBitmapData	The bitmap data to copy letters from.
 	 * @param	pLetters	String of letters available in the bitmap data.
 	 */
-	public function new(pBitmapData:BitmapData, pLetters:String) 
+	public function new() 
 	{
 		_maxHeight = 0;
 		_point = new Point();
 		#if (flash || js)
 		_matrix = new Matrix();
 		_colorTransform = new ColorTransform();
-		#else
-		_glyphWidthData = [];
-		_antialiasing = false;
-		
-		_bgTileID = -1;
-		#end
-		
-		#if (flash || js)
 		_glyphs = [];
 		#else
-		_glyphs = new IntHash<Int>();
+		_antialiasing = false;
+		_bgTileID = -1;
+		_glyphs = new IntHash<PxFontSymbol>();
 		_num_letters = 0;
 		#end
+	}
+	
+	/**
+	 * Loads font data in Pixelizer's format
+	 * @param	pBitmapData	font source image
+	 * @param	pLetters	all letters contained in this font
+	 * @return				this font
+	 */
+	public function loadPixelizer(pBitmapData:BitmapData, pLetters:String):PxBitmapFont
+	{
+		reset();
 		
 		_glyphString = pLetters;
 		
@@ -84,7 +87,7 @@ class PxBitmapFont
 		if (pBitmapData != null) 
 		{
 			var tileRects:Array<Rectangle> = [];
-			var result:BitmapData = prepareBitmapData(pBitmapData, tileRects);
+			var result:BitmapData = preparePixelizerBitmapData(pBitmapData, tileRects);
 			var currRect:Rectangle;
 			
 			#if (cpp || neko)
@@ -104,7 +107,7 @@ class PxBitmapFont
 				// store glyph
 				setGlyph(_glyphString.charCodeAt(letterID), bd);
 				#else
-				setGlyph(_glyphString.charCodeAt(letterID), currRect, letterID);
+				setGlyph(_glyphString.charCodeAt(letterID), currRect, 0, 0, Math.floor(currRect.width));
 				#end
 			}
 			
@@ -112,9 +115,84 @@ class PxBitmapFont
 			_bgTileID = _tileSheetData.addTileRect(new Rectangle(result.width - 1, result.height - 1, 1, 1), ZERO_POINT);
 			#end
 		}
+		
+		return this;
 	}
 	
-	public function prepareBitmapData(pBitmapData:BitmapData, pRects:Array<Rectangle>):BitmapData
+	/**
+	 * Loads font data in AngelCode's format
+	 * @param	pBitmapData	font image source
+	 * @param	pXMLData	font data in XML format
+	 * @return				this font
+	 */
+	public function loadAngelCode(pBitmapData:BitmapData, pXMLData:Xml):PxBitmapFont
+	{
+		reset();
+		
+		if (pBitmapData != null && pXMLData != null) 
+		{
+			var symbols:Array<HelperSymbol> = new Array<HelperSymbol>();
+			var result:BitmapData = prepareAngelCodeBitmapData(pBitmapData, pXMLData, symbols);
+			_glyphString = "";
+			var rect:Rectangle;
+			var point:Point = new Point();
+			var bd:BitmapData;
+			
+			#if (cpp || neko)
+			_tileSheetData = TileSheetManager.addTileSheet(result);
+			_tileSheetData.isColored = true;
+			#end
+			
+			for (symbol in symbols)
+			{
+				rect = new Rectangle();
+				rect.x = symbol.x;
+				rect.y = symbol.y;
+				rect.width = symbol.width;
+				rect.height = symbol.height;
+				
+				point.x = symbol.xoffset;
+				point.y = symbol.yoffset;
+				
+				_glyphString += String.fromCharCode(symbol.charCode);
+				
+				// create glyph
+				#if (flash || js)
+				bd = new BitmapData(symbol.xadvance, symbol.height + symbol.yoffset, true, 0x0);
+				bd.copyPixels(result, rect, point, null, null, true);
+				
+				// store glyph
+				setGlyph(symbol.charCode, bd);
+				#else
+				setGlyph(symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), symbol.xadvance);
+				#end
+			}
+			
+			#if (cpp || neko)
+			_bgTileID = _tileSheetData.addTileRect(new Rectangle(result.width - 1, result.height - 1, 1, 1), ZERO_POINT);
+			#end
+		}
+		
+		return this;
+	}
+	
+	/**
+	 * internal function. Resets current font
+	 */
+	private function reset():Void
+	{
+		dispose();
+		_maxHeight = 0;
+		#if (flash || js)
+		_glyphs = [];
+		#else
+		_glyphs = new IntHash<PxFontSymbol>();
+		_bgTileID = -1;
+		#end
+		_glyphString = "";
+	}
+	
+	public function preparePixelizerBitmapData(pBitmapData:BitmapData, pRects:Array<Rectangle>):BitmapData
 	{
 		var bgColor:Int = pBitmapData.getPixel(0, 0);
 		var cy:Int = 0;
@@ -167,10 +245,8 @@ class PxBitmapFont
 		}
 		
 		#if neko
-		//var resultBitmapData:BitmapData = pBitmapData.clone();
 		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, { rgb: 0x000000, a: 0x00 } );
 		#else
-		//var resultBitmapData:BitmapData = pBitmapData.clone();
 		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, 0x00000000);
 		#end
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
@@ -213,6 +289,81 @@ class PxBitmapFont
 		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, 0xffffffff);
 		#else
 		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, {rgb: 0xffffff, a: 0xff});
+		#end
+		
+		return resultBitmapData;
+	}
+	
+	public function prepareAngelCodeBitmapData(pBitmapData:BitmapData, pXMLData:Xml, pSymbols:Array<HelperSymbol>):BitmapData
+	{
+		var chars:Xml = null;
+		for (node in pXMLData.elements())
+		{
+			if (node.nodeName == "font")
+			{
+				for (nodeChild in node.elements())
+				{
+					if (nodeChild.nodeName == "chars")
+					{
+						chars = nodeChild;
+						break;
+					}
+				}
+			}
+		}
+		
+		var symbol:HelperSymbol;
+		var maxX:Int = 0;
+		var maxY:Int = 0;
+		
+		if (chars != null)
+		{
+			for (node in chars.elements())
+			{
+				if (node.nodeName == "char")
+				{
+					symbol = new HelperSymbol();
+					symbol.x = Std.parseInt(node.get("x"));
+					symbol.y = Std.parseInt(node.get("y"));
+					symbol.width = Std.parseInt(node.get("width"));
+					symbol.height = Std.parseInt(node.get("height"));
+					symbol.xoffset = Std.parseInt(node.get("xoffset"));
+					symbol.yoffset = Std.parseInt(node.get("yoffset"));
+					symbol.xadvance = Std.parseInt(node.get("xadvance"));
+					symbol.charCode = Std.parseInt(node.get("id"));
+					
+					pSymbols.push(symbol);
+					
+					maxX = symbol.x + symbol.width;
+					maxY = symbol.y + symbol.height;
+				}
+			}
+		}
+		
+		var newWidth:Int = pBitmapData.width;
+		var newHeight:Int = pBitmapData.height;
+		
+		if ((pBitmapData.width - 2) < maxX)
+		{
+			newWidth += 2; 
+		}
+		else if ((pBitmapData.height - 2) < maxY)
+		{
+			newHeight += 2;
+		}
+		
+		#if neko
+		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, { rgb: 0x000000, a: 0x00 } );
+		#else
+		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, 0x00000000);
+		#end
+		
+		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
+		
+		#if neko
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, {rgb: 0xffffff, a: 0xff});
+		#else
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, 0xffffffff);
 		#end
 		
 		return resultBitmapData;
@@ -262,6 +413,7 @@ class PxBitmapFont
 		#else
 		_tileSheetData = null;
 		#end
+		
 		_glyphs = null;
 	}
 	
@@ -308,15 +460,22 @@ class PxBitmapFont
 		}
 	}
 	#else
-	private function setGlyph(pCharID:Int, pRect:Rectangle, pGlyphID:Int):Void
+	private function setGlyph(pCharID:Int, pRect:Rectangle, ?pOffsetX:Int = 0, ?pOffsetY:Int = 0, ?pAdvanceX:Int = 0):Void
 	{
-		_glyphs.set(pCharID, _tileSheetData.addTileRect(pRect, ZERO_POINT));
-		_num_letters++;
-		_glyphWidthData[pCharID] = Math.floor(pRect.width);
+		var tileID:Int = _tileSheetData.addTileRect(pRect, ZERO_POINT);
 		
-		if (Math.floor(pRect.height) > _maxHeight) 
+		var symbol:PxFontSymbol = new PxFontSymbol();
+		symbol.tileID = tileID;
+		symbol.xoffset = pOffsetX;
+		symbol.yoffset = pOffsetY;
+		symbol.xadvance = pAdvanceX;
+		
+		_glyphs.set(pCharID, symbol);
+		_num_letters++;
+		
+		if ((Math.floor(pRect.height) + pOffsetY) > _maxHeight) 
 		{
-			_maxHeight = Math.floor(pRect.height);
+			_maxHeight = Math.floor(pRect.height) + pOffsetY;
 		}
 	}
 	#end
@@ -360,7 +519,7 @@ class PxBitmapFont
 		#if (flash || js)
 		var glyph:BitmapData;
 		#else
-		var glyph:Int;
+		var glyph:PxFontSymbol;
 		var glyphWidth:Int;
 		#end
 		
@@ -379,11 +538,11 @@ class PxBitmapFont
 				pBitmapData.copyPixels(glyph, glyph.rect, _point, null, null, true);
 				_point.x += glyph.width + pLetterSpacing;
 				#else
-				glyphWidth = _glyphWidthData[charCode];
+				glyphWidth = glyph.xadvance;
 				
-				drawData.push(glyph);		// tile_ID
-				drawData.push(_point.x);	// x
-				drawData.push(_point.y);	// y
+				drawData.push(glyph.tileID);		// tile_ID
+				drawData.push(_point.x + glyph.xoffset * pScale);	// x
+				drawData.push(_point.y + glyph.yoffset * pScale);	// y
 				drawData.push(red);
 				drawData.push(green);
 				drawData.push(blue);
@@ -417,11 +576,10 @@ class PxBitmapFont
 				w += glyph.width;
 			}
 			#else
-			var glyphWidth:Int = _glyphWidthData[charCode];
 			if (_glyphs.exists(charCode)) 
 			{
 				
-				w += glyphWidth;
+				w += _glyphs.get(charCode).xadvance;
 			}
 			#end
 		}
@@ -534,4 +692,18 @@ class PxBitmapFont
 		_storedFonts = new Hash<PxBitmapFont>();
 	}
 
+}
+
+class HelperSymbol
+{
+	public var x:Int;
+	public var y:Int;
+	public var width:Int;
+	public var height:Int;
+	public var xoffset:Int;
+	public var yoffset:Int;
+	public var xadvance:Int;
+	public var charCode:Int;
+	
+	public function new () {  }
 }

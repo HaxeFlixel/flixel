@@ -114,7 +114,7 @@ class PxButton extends FlxSprite
 			// TODO: redo this
 			if (PxBitmapFont.fetch("nokiafc22") == null)
 			{
-				PxBitmapFont.store("nokiafc22", new PxBitmapFont(Assets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
+				PxBitmapFont.store("nokiafc22", new PxBitmapFont().loadPixelizer(Assets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
 			}
 			
 			//label = new FlxText(0, 0, 80, Label);
