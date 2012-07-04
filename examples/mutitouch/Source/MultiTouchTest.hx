@@ -21,19 +21,6 @@ class MultiTouchTest extends FlxGame
 		
 		#if android
 		FlxG.addSound("Beep");
-		FlxG.addSound("Asplode");
-		FlxG.addSound("Button");
-		FlxG.addSound("Countdown");
-		FlxG.addSound("Enemy");
-		FlxG.addSound("Hit");
-		FlxG.addSound("Hurt");
-		FlxG.addSound("Jam");
-		FlxG.addSound("Jet");
-		FlxG.addSound("Jump");
-		FlxG.addSound("Land");
-		FlxG.addSound("MenuHit");
-		FlxG.addSound("MenuHit2");
-		FlxG.addSound("Shoot");
 		#end
 		
 		forceDebugger = true;
