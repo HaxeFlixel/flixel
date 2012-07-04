@@ -771,7 +771,7 @@ class FlxG
 		{
 			// volumeHandler(FlxG.mute ? 0 : _volume);
 			var param:Float = FlxG.mute ? 0 : _volume;
-			Reflect.callMethod(FlxG, Reflect.field(FlxG, "volumeHandler"), [param]);
+			Reflect.callMethod(FlxG, Reflect.getProperty(FlxG, "volumeHandler"), [param]);
 		}
 		return Volume;
 	}

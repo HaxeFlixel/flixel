@@ -378,7 +378,7 @@ class FlxGroup extends FlxBasic
 				else
 				{
 					//basic[VariableName] = Value;
-					Reflect.setField(basic, VariableName, Value);
+					Reflect.setProperty(basic, VariableName, Value);
 				}
 			}
 		}
@@ -406,7 +406,7 @@ class FlxGroup extends FlxBasic
 				else
 				{
 					//basic[FunctionName]();
-					Reflect.callMethod(basic, Reflect.field(basic, FunctionName), []);
+					Reflect.callMethod(basic, Reflect.getProperty(basic, FunctionName), []);
 				}
 			}
 		}
@@ -631,13 +631,16 @@ class FlxGroup extends FlxBasic
 	 */
 	private function sortHandler(Obj1:FlxBasic, Obj2:FlxBasic):Int
 	{
+		var prop1 = Reflect.getProperty(Obj1, _sortIndex);
+		var prop2 = Reflect.getProperty(Obj2, _sortIndex);
+		
 		//if (Obj1[_sortIndex] < Obj2[_sortIndex])
-		if (Reflect.field(Obj1, _sortIndex) < Reflect.field(Obj2, _sortIndex))
+		if (prop1 < prop2)
 		{
 			return _sortOrder;
 		}
 		//else if (Obj1[_sortIndex] > Obj2[_sortIndex])
-		else if (Reflect.field(Obj1, _sortIndex) > Reflect.field(Obj2, _sortIndex))
+		else if (prop1 > prop2)
 		{
 			return -_sortOrder;
 		}

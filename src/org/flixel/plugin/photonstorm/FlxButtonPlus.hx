@@ -434,7 +434,7 @@ class FlxButtonPlus extends FlxGroup
 		if (exists && visible && active && (_status == PRESSED) && (_onClick != null) && (pauseProof || !FlxG.paused))
 		{
 			//_onClick.apply(null, onClickParams);
-			Reflect.callMethod(this, Reflect.field(this, "_onClick"), onClickParams);
+			Reflect.callMethod(this, Reflect.getProperty(this, "_onClick"), onClickParams);
 		}
 	}
 	

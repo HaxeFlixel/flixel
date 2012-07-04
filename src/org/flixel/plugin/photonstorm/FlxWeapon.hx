@@ -328,7 +328,7 @@ class FlxWeapon
 		if (onPreFireCallback != null)
 		{
 			//onPreFireCallback.apply();
-			Reflect.callMethod(this, Reflect.field(this, "onPreFireCallback"), []);
+			Reflect.callMethod(this, Reflect.getProperty(this, "onPreFireCallback"), []);
 		}
 		
 		if (onPreFireSound != null)
@@ -348,8 +348,8 @@ class FlxWeapon
 		
 		if (fireFromParent)
 		{
-			launchX += Math.floor(Reflect.field(parent, parentXVariable));
-			launchY += Math.floor(Reflect.field(parent, parentYVariable));
+			launchX += Math.floor(Reflect.getProperty(parent, parentXVariable));
+			launchY += Math.floor(Reflect.getProperty(parent, parentYVariable));
 		}
 		else if (fireFromPosition)
 		{
@@ -391,7 +391,7 @@ class FlxWeapon
 		if (onPostFireCallback != null)
 		{
 			//onPostFireCallback.apply();
-			Reflect.callMethod(this, Reflect.field(this, "onPostFireCallback"), []);
+			Reflect.callMethod(this, Reflect.getProperty(this, "onPostFireCallback"), []);
 		}
 		
 		if (onPostFireSound != null)

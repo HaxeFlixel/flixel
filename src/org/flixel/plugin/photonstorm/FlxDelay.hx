@@ -166,7 +166,7 @@ class FlxDelay extends Sprite
 		
 		if (callbackFunction != null && runCallback == true)
 		{
-			Reflect.callMethod(this, Reflect.field(this, "callbackFunction"), []);
+			Reflect.callMethod(this, Reflect.getProperty(this, "callbackFunction"), []);
 		}
 		
 	}

@@ -225,7 +225,7 @@ class Keyboard extends Input
 		if (o == null) return;
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
-		Reflect.setField(this, o.name, true);
+		Reflect.setProperty(this, o.name, true);
 	}
 	
 	/**
@@ -239,7 +239,7 @@ class Keyboard extends Input
 		if(object.current > 0) object.current = -1;
 		else object.current = 0;
 		//this[object.name] = false;
-		Reflect.setField(this, object.name, false);
+		Reflect.setProperty(this, object.name, false);
 	}
 
 }

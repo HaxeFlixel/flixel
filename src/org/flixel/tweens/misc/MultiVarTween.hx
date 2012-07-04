@@ -46,14 +46,14 @@ class MultiVarTween extends FlxTween
 			{
 				throw "The Object does not have the property\"" + p + "\", or it is not accessible.";
 			}
-			var a:Float = Reflect.field(object, p);
+			var a:Float = Reflect.getProperty(object, p);
 			if (Math.isNaN(a)) 
 			{
 				throw "The property \"" + p + "\" is not numeric.";
 			}
 			_vars.push(p);
 			_start.push(a);
-			_range.push(Reflect.field(values, p) - a);
+			_range.push(Reflect.getProperty(values, p) - a);
 		}
 		start();
 	}
@@ -65,7 +65,7 @@ class MultiVarTween extends FlxTween
 		var i:Int = _vars.length;
 		while (i-- > 0) 
 		{
-			Reflect.setField(_object, _vars[i], _start[i] + _range[i] * _t);
+			Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
 		}
 	}
 

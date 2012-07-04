@@ -222,11 +222,14 @@ class FlxMouseControl extends FlxBasic
 	 */
 	private function sortHandler(item1:FlxExtendedSprite, item2:FlxExtendedSprite):Int
 	{
-		if (Reflect.field(item1, sortIndex) < Reflect.field(item2, sortIndex))
+		var prop1 = Reflect.getProperty(item1, sortIndex);
+		var prop2 = Reflect.getProperty(item2, sortIndex)
+		
+		if (prop1 < prop2)
 		{
 			return sortOrder;
 		}
-		else if (Reflect.field(item1, sortIndex) > Reflect.field(item2, sortIndex))
+		else if (prop1 > prop2)
 		{
 			return -sortOrder;
 		}

@@ -1042,7 +1042,7 @@ class FlxBar extends FlxSprite
 	
 	private function updateValueFromParent():Void
 	{
-		updateValue(Reflect.field(parent, parentVariable));
+		updateValue(Reflect.getProperty(parent, parentVariable));
 	}
 	
 	private function updateValue(newValue:Float):Void
@@ -1062,13 +1062,13 @@ class FlxBar extends FlxSprite
 		if (value == min && emptyCallback != null)
 		{
 			//emptyCallback.call();
-			Reflect.callMethod(this, Reflect.field(this, "emptyCallback"), []);
+			Reflect.callMethod(this, Reflect.getProperty(this, "emptyCallback"), []);
 		}
 		
 		if (value == max && filledCallback != null)
 		{
 			//filledCallback.call();
-			Reflect.callMethod(this, Reflect.field(this, "filledCallback"), []);
+			Reflect.callMethod(this, Reflect.getProperty(this, "filledCallback"), []);
 		}
 		
 		if (value == min && emptyKill)
@@ -1143,7 +1143,7 @@ class FlxBar extends FlxSprite
 	{
 		if (parent != null)
 		{
-			if (Reflect.field(parent, parentVariable) != value)
+			if (Reflect.getProperty(parent, parentVariable) != value)
 			{
 				updateValueFromParent();
 				updateBar();

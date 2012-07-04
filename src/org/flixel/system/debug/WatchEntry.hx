@@ -151,7 +151,7 @@ class WatchEntry
 			return false;
 		}
 		//valueDisplay.text = object[field]..toString();
-		valueDisplay.text = Std.string(Reflect.field(object, field));
+		valueDisplay.text = Std.string(Reflect.getProperty(object, field));
 		return true;
 	}
 	
@@ -163,7 +163,7 @@ class WatchEntry
 	{
 		editing = true;
 		//oldValue = object[field];
-		oldValue = Reflect.field(object, field);
+		oldValue = Reflect.getProperty(object, field);
 		valueDisplay.type = TextFieldType.INPUT;
 		valueDisplay.setTextFormat(_blackText);
 		valueDisplay.background = true;
@@ -205,7 +205,7 @@ class WatchEntry
 	public function submit():Void
 	{
 		//object[field] = valueDisplay.text;
-		Reflect.setField(object, field, valueDisplay.text);
+		Reflect.setProperty(object, field, valueDisplay.text);
 		doneEditing();
 	}
 	

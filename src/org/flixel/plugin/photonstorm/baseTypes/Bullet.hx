@@ -186,7 +186,7 @@ class Bullet extends FlxSprite
 		if (weapon.onFireCallback != null)
 		{
 			//weapon.onFireCallback.apply();
-			Reflect.callMethod(weapon, Reflect.field(weapon, "onFireCallback"), []);
+			Reflect.callMethod(weapon, Reflect.getProperty(weapon, "onFireCallback"), []);
 		}
 		
 		if (weapon.onFireSound != null)

@@ -1537,7 +1537,7 @@ class FlxSprite extends FlxObject
 		
 		if (_callback != null)
 		{
-			Reflect.callMethod(this, Reflect.field(this, "_callback"), [((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex]);
+			Reflect.callMethod(this, Reflect.getProperty(this, "_callback"), [((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex]);
 		}
 		dirty = false;
 	}

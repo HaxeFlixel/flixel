@@ -960,7 +960,7 @@ class FlxControlHandler
 					lastFiredTime = Lib.getTimer();
 					
 					//fireCallback.call();
-					Reflect.callMethod(this, Reflect.field(this, "fireCallback"), []);
+					Reflect.callMethod(this, Reflect.getProperty(this, "fireCallback"), []);
 					
 					fired = true;
 					
@@ -972,7 +972,7 @@ class FlxControlHandler
 				lastFiredTime = Lib.getTimer();
 				
 				//fireCallback.call();
-				Reflect.callMethod(this, Reflect.field(this, "fireCallback"), []);
+				Reflect.callMethod(this, Reflect.getProperty(this, "fireCallback"), []);
 				
 				fired = true;
 			}
@@ -1044,7 +1044,7 @@ class FlxControlHandler
 			if (jumpCallback != null)
 			{
 				//jumpCallback.call();
-				Reflect.callMethod(this, Reflect.field(this, "jumpCallback"), []);
+				Reflect.callMethod(this, Reflect.getProperty(this, "jumpCallback"), []);
 			}
 			
 			lastJumpTime = Lib.getTimer();

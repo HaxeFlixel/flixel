@@ -44,7 +44,7 @@ class VarTween extends FlxTween
 		#end
 		_property = property;
 		_method = false;
-		var a:Float = Reflect.field(_object, property);
+		var a:Float = Reflect.getProperty(_object, property);
 		
 		// Check if we need to use a getter/setter method
 		if (Math.isNaN(a))
@@ -74,7 +74,7 @@ class VarTween extends FlxTween
 	{
 		if (Reflect.hasField(_object, funcName))
 		{
-			var method:Dynamic = Reflect.field(_object, funcName);
+			var method:Dynamic = Reflect.getProperty(_object, funcName);
 			if (Reflect.isFunction(method))
 			{
 				return method;
@@ -92,7 +92,7 @@ class VarTween extends FlxTween
 		var val:Float = _start + _range * _t;
 		if (_property != "")
 		{
-			Reflect.setField(_object, _property, val);
+			Reflect.setProperty(_object, _property, val);
 		}
 		else
 		{

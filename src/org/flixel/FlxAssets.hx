@@ -49,7 +49,7 @@ class FlxAssets //extends Assets
 	{
 		#if android
 		/*var resourseType:String;
-		var resourseTypes:Hash<String> = cast Reflect.field(Assets, "resourceTypes");
+		var resourseTypes:Hash<String> = cast Reflect.getProperty(Assets, "resourceTypes");
 		
 		if (resourseTypes != null)
 		{

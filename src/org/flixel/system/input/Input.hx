@@ -59,7 +59,7 @@ class Input implements Dynamic
 		{
 			if(_map[i] == null) continue;
 			var o:MapObject = _map[i];
-			Reflect.setField(this, o.name, false);
+			Reflect.setProperty(this, o.name, false);
 			o.current = 0;
 			o.last = 0;
 		}
@@ -72,7 +72,7 @@ class Input implements Dynamic
 	 */
 	public function pressed(Key:String):Bool 
 	{ 
-		return Reflect.field(this, Key); 
+		return Reflect.getProperty(this, Key); 
 	}
 	
 	/**
@@ -144,7 +144,7 @@ class Input implements Dynamic
 			if (o.value > 0)
 			{
 				//this[o2.name] = true;
-				Reflect.setField(this, o2.name, true);
+				Reflect.setProperty(this, o2.name, true);
 			}
 		}
 	}
