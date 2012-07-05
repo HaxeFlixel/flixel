@@ -59,6 +59,8 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public function new(?pFont:PxBitmapFont = null) 
 	{
+		super();
+		
 		_text = "";
 		_textColor = 0x0;
 		_outline = false;
@@ -80,8 +82,6 @@ class FlxBitmapTextField extends FlxSprite
 		_fixedWidth = true;
 		_wordWrap = true;
 		_alpha = 1;
-		
-		super();
 		
 		if (pFont == null)
 		{

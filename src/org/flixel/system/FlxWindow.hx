@@ -104,6 +104,8 @@ class FlxWindow extends Sprite
 	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
 	#end
 	{
+		super();
+		
 		#if (cpp || neko)
 		if (BGColor == null)
 		{
@@ -123,7 +125,6 @@ class FlxWindow extends Sprite
 		}
 		#end
 		
-		super();
 		_width = Math.floor(Math.abs(Width));
 		_height = Math.floor(Math.abs(Height));
 		_bounds = Bounds;

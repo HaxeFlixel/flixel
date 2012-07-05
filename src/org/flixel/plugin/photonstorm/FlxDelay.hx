@@ -57,10 +57,10 @@ class FlxDelay extends Sprite
 	 */
 	public function new(runFor:Int)
 	{
-		expires = 0;
 		super();
-		duration = runFor;
 		
+		expires = 0;
+		duration = runFor;
 		complete = false;
 	}
 	

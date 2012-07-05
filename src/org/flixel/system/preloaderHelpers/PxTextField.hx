@@ -54,6 +54,8 @@ class PxTextField extends Sprite
 	 */
 	public function new(?pFont:PxBitmapFont = null) 
 	{
+		super();
+		
 		_text = "";
 		_color = 0x0;
 		_outline = false;
@@ -75,8 +77,6 @@ class PxTextField extends Sprite
 		_fixedWidth = true;
 		_wordWrap = true;
 		_alpha = 1;
-		
-		super();
 		
 		if (pFont == null)
 		{

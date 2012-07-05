@@ -31,6 +31,8 @@ class FlxTilemapExt extends FlxTilemap
 	
 	public function new()
 	{
+		super();
+		
 		_snapping = 2;
 		_slopePoint = new FlxPoint();
 		_objPoint = new FlxPoint();
@@ -39,8 +41,6 @@ class FlxTilemapExt extends FlxTilemap
 		slopeFloorRight = new Array<Int>();
 		slopeCeilLeft = new Array<Int>();
 		slopeCeilRight = new Array<Int>();
-		
-		super();
 	}
 	
 	override public function destroy():Void 
