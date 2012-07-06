@@ -4,6 +4,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.system.replay.CodeValuePair;
 import org.flixel.system.replay.FrameRecord;
+import org.flixel.system.replay.JoystickRecord;
 import org.flixel.system.replay.MouseRecord;
 
 /**
@@ -162,12 +163,22 @@ class FlxReplay
 	{
 		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
 		var mouseRecord:MouseRecord = FlxG.mouse.record();
-		if((keysRecord == null) && (mouseRecord == null))
+		
+		#if (cpp || neko)
+		var joysRecord:Array<JoystickRecord> = FlxG.joystickManager.record();
+		if((keysRecord == null) && (mouseRecord == null) && (joysRecord == null))
+		#else
+		if ((keysRecord == null) && (mouseRecord == null))
+		#end
 		{
 			frame++;
 			return;
 		}
+		#if (cpp || neko)
+		_frames[frameCount++] = new FrameRecord().create(frame++, keysRecord, mouseRecord, joysRecord);
+		#else
 		_frames[frameCount++] = new FrameRecord().create(frame++, keysRecord, mouseRecord);
+		#end
 		if(frameCount >= _capacity)
 		{
 			_capacity *= 2;
@@ -202,6 +213,13 @@ class FlxReplay
 		{
 			FlxG.mouse.playback(fr.mouse);
 		}
+		
+		#if (cpp || neko)
+		if (fr.joys != null)
+		{
+			FlxG.joystickManager.playback(fr.joys);
+		}
+		#end
 	}
 	
 	/**

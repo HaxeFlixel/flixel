@@ -139,6 +139,8 @@ class Joystick
 	 */
 	/*public function record():Array<CodeValuePair>
 	{
+		// TODO: implement joystick record
+	
 		var data:Array<CodeValuePair> = null;
 		var i:Int = 0;
 		while(i < _total)
@@ -165,6 +167,8 @@ class Joystick
 	 */
 	/*public function playback(Record:Array<CodeValuePair>):Void
 	{
+		// TODO: implement joystick playback
+	
 		var i:Int = 0;
 		var l:Int = Record.length;
 		var o:CodeValuePair;

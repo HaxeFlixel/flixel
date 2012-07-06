@@ -3,6 +3,7 @@ package org.flixel.system.input;
 #if (cpp || neko)
 import nme.events.JoystickEvent;
 import org.flixel.system.input.Joystick;
+import org.flixel.system.replay.JoystickRecord;
 
 /**
  * ...
@@ -142,6 +143,61 @@ class JoystickManager
 		joy.connected = true;
 		joy.hat.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
 		joy.hat.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
+	}
+	
+	/**
+	 * Record current state of all joysticks.
+	 * @return	An array of joystick state data.  Null if there is no data.
+	 */
+	public function record():Array<JoystickRecord>
+	{
+		// TODO: implement joysticks record
+		
+		var data:Array<JoystickRecord> = null;
+		/*var i:Int = 0;
+		while(i < _total)
+		{
+			var o:MapObject = _map[i++];
+			if ((o == null) || (o.current == 0))
+			{
+				continue;
+			}
+			if (data == null)
+			{
+				data = new Array<CodeValuePair>();
+			}
+			data.push(new CodeValuePair(i - 1, o.current));
+		}*/
+		return data;
+	}
+	
+	/**
+	 * Part of the joystick state recording system.
+	 * 
+	 * @param	Record	Array of data about joystick state.
+	 */
+	public function playback(Record:Array<JoystickRecord>):Void
+	{
+		// TODO: implement joysticks playback
+		
+		/*var i:Int = 0;
+		var l:Int = Record.length;
+		var o:CodeValuePair;
+		var o2:MapObject;
+		while(i < l)
+		{
+			o = Record[i++];
+			#if cpp
+			o = CodeValuePair.convertFromFlashToCpp(o);
+			#end
+			o2 = _map[o.code];
+			o2.current = o.value;
+			if (o.value > 0)
+			{
+				//this[o2.name] = true;
+				Reflect.setProperty(this, o2.name, true);
+			}
+		}*/
 	}
 	
 }
