@@ -13,10 +13,12 @@ class Joystick
 	public var connected:Bool;
 	public var id:Int;
 	
+	public static inline var NUM_BUTTONS:Int = 8;
+	
 	public function new(id:Int) 
 	{
 		buttons = new IntHash<JoyButton>();
-		for (i in 0...8)
+		for (i in 0...(Joystick.NUM_BUTTONS))
 		{
 			buttons.set(i, new JoyButton(i));
 		}

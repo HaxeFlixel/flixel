@@ -24,6 +24,7 @@ class FlxBitmapTextField extends FlxSprite
 	private var _font:PxBitmapFont;
 	private var _text:String;
 	private var _textColor:Int;
+	private var _useTextColor:Bool;
 	private var _outline:Bool;
 	private var _outlineColor:Int;
 	private var _shadow:Bool;
@@ -63,6 +64,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		_text = "";
 		_textColor = 0x0;
+		_useTextColor = true;
 		_outline = false;
 		_outlineColor = 0x0;
 		_shadow = false;
@@ -420,6 +422,25 @@ class FlxBitmapTextField extends FlxSprite
 		return value;
 	}
 	
+	public var useTextColor(get_useTextColor, set_useTextColor):Bool;
+	
+	private function get_useTextColor():Bool 
+	{
+		return _useTextColor;
+	}
+	
+	private function set_useTextColor(value:Bool):Bool 
+	{
+		if (_useTextColor != value)
+		{
+			_useTextColor = value;
+			updateGlyphs(true, false, false);
+			_pendingTextChange = true;
+			updateBitmapData();
+		}
+		return value;
+	}
+	
 	override public function setAlpha(pAlpha:Float):Float
 	{
 		#if (flash || js)
@@ -733,7 +754,7 @@ class FlxBitmapTextField extends FlxSprite
 			#if (flash || js)
 			_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 			#else
-			_font.render(_drawData, t, _textColor, _color, _alpha, ox + _padding - halfWidth, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+			_font.render(_drawData, t, _textColor, _color, _alpha, ox + _padding - halfWidth, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
 			#end
 			row++;
 		}
@@ -1116,7 +1137,7 @@ class FlxBitmapTextField extends FlxSprite
 		if (textGlyphs)
 		{
 			clearPreparedGlyphs(_preparedTextGlyphs);
-			_preparedTextGlyphs = _font.getPreparedGlyphs(_fontScale, _textColor);
+			_preparedTextGlyphs = _font.getPreparedGlyphs(_fontScale, _textColor, _useTextColor);
 		}
 		
 		if (shadowGlyphs)

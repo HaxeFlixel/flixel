@@ -137,6 +137,7 @@ class PxBitmapFont
 			var rect:Rectangle;
 			var point:Point = new Point();
 			var bd:BitmapData;
+			var charString:String;
 			
 			#if (cpp || neko)
 			_tileSheetData = TileSheetManager.addTileSheet(result);
@@ -154,17 +155,33 @@ class PxBitmapFont
 				point.x = symbol.xoffset;
 				point.y = symbol.yoffset;
 				
-				_glyphString += String.fromCharCode(symbol.charCode);
+				charString = String.fromCharCode(symbol.charCode);
+				_glyphString += charString;
 				
 				// create glyph
 				#if (flash || js)
-				bd = new BitmapData(symbol.xadvance, symbol.height + symbol.yoffset, true, 0x0);
+				bd = null;
+				if (charString != " " && charString != "")
+				{
+					bd = new BitmapData(symbol.xadvance, symbol.height + symbol.yoffset, true, 0x0);
+				}
+				else
+				{
+					bd = new BitmapData(symbol.xadvance, 1, true, 0x0);
+				}
 				bd.copyPixels(result, rect, point, null, null, true);
 				
 				// store glyph
 				setGlyph(symbol.charCode, bd);
 				#else
-				setGlyph(symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), symbol.xadvance);
+				if (charString != " " && charString != "")
+				{
+					setGlyph(symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), symbol.xadvance);
+				}
+				else
+				{
+					setGlyph(symbol.charCode, rect, Math.floor(point.x), 1, symbol.xadvance);
+				}
 				#end
 			}
 			
@@ -370,7 +387,7 @@ class PxBitmapFont
 	}
 	
 	#if (flash || js)
-	public function getPreparedGlyphs(pScale:Float, pColor:Int):Array<BitmapData>
+	public function getPreparedGlyphs(pScale:Float, pColor:Int, ?pUseColorTransform:Bool = true):Array<BitmapData>
 	{
 		var result:Array<BitmapData> = [];
 		
@@ -386,7 +403,14 @@ class PxBitmapFont
 			if (glyph != null)
 			{
 				preparedGlyph = new BitmapData(Math.floor(glyph.width * pScale), Math.floor(glyph.height * pScale), true, 0x00000000);
-				preparedGlyph.draw(glyph,  _matrix, _colorTransform);
+				if (pUseColorTransform)
+				{
+					preparedGlyph.draw(glyph,  _matrix, _colorTransform);
+				}
+				else
+				{
+					preparedGlyph.draw(glyph,  _matrix);
+				}
 				result[i] = preparedGlyph;
 			}
 		}
@@ -493,16 +517,24 @@ class PxBitmapFont
 	#elseif js
 	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int):Void 
 	#else
-	public function render(drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float):Void 
+	public function render(drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pUseColor:Bool = true):Void 
 	#end
 	{
-		#if (cpp || neko)
-		var colorMultiplier:Float = 0.00392 * 0.00392;
+	#if (cpp || neko)
 		
-		var red:Float = (pColor >> 16) * colorMultiplier;
-		var green:Float = (pColor >> 8 & 0xff) * colorMultiplier;
-		var blue:Float = (pColor & 0xff) * colorMultiplier;
-		#end
+		var colorMultiplier:Float = 0.00392;
+		var red:Float = 1;
+		var green:Float = 1;
+		var blue:Float = 1;
+		
+		if (pUseColor)
+		{
+			colorMultiplier *= 0.00392;
+			
+			red = (pColor >> 16) * colorMultiplier;
+			green = (pColor >> 8 & 0xff) * colorMultiplier;
+			blue = (pColor & 0xff) * colorMultiplier;
+		}
 		
 		#if cpp
 		red *= (pSecondColor >> 16);
@@ -513,6 +545,8 @@ class PxBitmapFont
 		green *= (pSecondColor.rgb >> 8 & 0xff);
 		blue *= (pSecondColor.rgb & 0xff);
 		#end
+		
+	#end
 		
 		_point.x = pOffsetX;
 		_point.y = pOffsetY;
