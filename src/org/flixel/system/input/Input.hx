@@ -156,7 +156,6 @@ class Input implements Dynamic
 	 */
 	public function getKeyCode(KeyName:String):Int
 	{
-		//return _lookup[KeyName];
 		return _lookup.get(KeyName);
 	}
 	
@@ -185,7 +184,6 @@ class Input implements Dynamic
 	 */
 	private function addKey(KeyName:String, KeyCode:Int):Void
 	{
-		//_lookup[KeyName] = KeyCode;
 		_lookup.set(KeyName, KeyCode);
 		_map[KeyCode] = new MapObject(KeyName, 0, 0);
 	}

@@ -393,7 +393,14 @@ class PxBitmapFont
 		
 		_matrix.identity();
 		_matrix.scale(pScale, pScale);
-		_colorTransform.color = pColor;
+		
+		var colorMultiplier:Float = 0.00392;
+		_colorTransform.redOffset = 0;
+		_colorTransform.greenOffset = 0;
+		_colorTransform.blueOffset = 0;
+		_colorTransform.redMultiplier = (pColor >> 16) * colorMultiplier;
+		_colorTransform.greenMultiplier = (pColor >> 8 & 0xff) * colorMultiplier;
+		_colorTransform.blueMultiplier = (pColor & 0xff) * colorMultiplier;
 		
 		var glyph:BitmapData;
 		var preparedGlyph:BitmapData;

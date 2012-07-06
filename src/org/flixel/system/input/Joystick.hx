@@ -1,7 +1,6 @@
 package org.flixel.system.input;
 
 import org.flixel.FlxPoint;
-import org.flixel.system.replay.JoystickRecord;
 
 class Joystick 
 {
@@ -119,7 +118,7 @@ class Joystick
 	 * Check to see if any buttons are pressed right now.
 	 * @return	Whether any buttons are currently pressed.
 	 */
-	public function any():Bool
+	public function anyButton():Bool
 	{
 		for (button in buttons)
 		{
@@ -134,7 +133,6 @@ class Joystick
 	
 	/**
 	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved now.
-	 * Useful for inpurt recording stuff.
 	 * @return	Whether any buttons are currently pressed.
 	 */
 	public function anyInput():Bool
@@ -163,65 +161,6 @@ class Joystick
 		}
 		
 		return false;
-	}
-	
-	// TODO: implement recording and replaying joystick input functionality
-	
-	/**
-	 * Records current state of this Joystick object.
-	 * Returns null if there is no any input.
-	 * @return	JoystickRecord object indicating current joystick status.
-	 */
-	public function record():JoystickRecord
-	{
-		// TODO: implement joystick record
-		
-		var data:JoystickRecord = null;
-		/*var i:Int = 0;
-		while(i < _total)
-		{
-			var o:MapObject = _map[i++];
-			if ((o == null) || (o.current == 0))
-			{
-				continue;
-			}
-			if (data == null)
-			{
-				data = new Array<CodeValuePair>();
-			}
-			data.push(new CodeValuePair(i - 1, o.current));
-		}*/
-		return data;
-	}
-	
-	/**
-	 * Part of the joystick input recording system.
-	 * Takes data about joystick state and sets it into this Joystick object.
-	 * 
-	 * @param	Record	data about joystick state.
-	 */
-	public function playback(Record:JoystickRecord):Void
-	{
-		// TODO: implement joystick playback
-	
-		/*var i:Int = 0;
-		var l:Int = Record.length;
-		var o:CodeValuePair;
-		var o2:MapObject;
-		while(i < l)
-		{
-			o = Record[i++];
-			#if cpp
-			o = CodeValuePair.convertFromFlashToCpp(o);
-			#end
-			o2 = _map[o.code];
-			o2.current = o.value;
-			if (o.value > 0)
-			{
-				//this[o2.name] = true;
-				Reflect.setProperty(this, o2.name, true);
-			}
-		}*/
 	}
 	
 }

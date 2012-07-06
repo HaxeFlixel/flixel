@@ -18,13 +18,6 @@ class FrameRecord
 	 */
 	public var mouse:MouseRecord;
 	
-	#if (cpp || neko)
-	/**
-	 * An array of simple integer pairs referring to what joystick buttons are pressed, and what state its in.
-	 */
-	public var joys:Array<JoystickRecord>;
-	#end
-	
 	/**
 	 * Instantiate array new frame record.
 	 */
@@ -33,10 +26,6 @@ class FrameRecord
 		frame = 0;
 		keys = null;
 		mouse = null;
-		
-		#if (cpp || neko)
-		joys = null;
-		#end
 	}
 	
 	/**
@@ -46,19 +35,11 @@ class FrameRecord
 	 * @param Mouse		Mouse data from the mouse manager.
 	 * @return A reference to this <code>FrameRecord</code> object.
 	 */
-	#if (cpp || neko)
-	public function create(Frame:Float, ?Keys:Array<CodeValuePair> = null, ?Mouse:MouseRecord = null, ?Joys:Array<JoystickRecord> = null):FrameRecord
-	#else
 	public function create(Frame:Float, ?Keys:Array<CodeValuePair> = null, ?Mouse:MouseRecord = null):FrameRecord
-	#end
 	{
 		frame = Math.floor(Frame);
 		keys = Keys;
 		mouse = Mouse;
-		
-		#if (cpp || neko)
-		joys = Joys;
-		#end
 		
 		return this;
 	}
@@ -70,10 +51,6 @@ class FrameRecord
 	{
 		keys = null;
 		mouse = null;
-		
-		#if (cpp || neko)
-		joys = null;
-		#end
 	}
 	
 	/**
@@ -106,14 +83,6 @@ class FrameRecord
 			output += mouse.x + "," + mouse.y + "," + mouse.button + "," + mouse.wheel;
 		}
 		
-		#if (cpp || neko)
-		//output += "j";
-		if (joys != null)
-		{
-			// TODO: implement saving joystick input
-		}
-		#end
-		
 		return output;
 	}
 	
@@ -134,8 +103,6 @@ class FrameRecord
 		array = array[1].split("m");
 		var keyData:String = array[0];
 		var mouseData:String = array[1];
-		
-		// TODO: implement loading joystick input
 		
 		//parse keyboard data
 		if(keyData.length > 0)
