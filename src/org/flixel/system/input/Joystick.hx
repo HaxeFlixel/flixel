@@ -1,6 +1,7 @@
 package org.flixel.system.input;
 
 import org.flixel.FlxPoint;
+import org.flixel.system.replay.JoystickRecord;
 
 class Joystick 
 {
@@ -129,20 +130,52 @@ class Joystick
 		return false;
 	}
 	
+	/**
+	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved now.
+	 * Useful for inpurt recording stuff.
+	 * @return	Whether any buttons are currently pressed.
+	 */
+	public function anyInput():Bool
+	{
+		for (button in buttons)
+		{
+			if (button.current > 0)
+			{
+				return true;
+			}
+		}
+		
+		if (axis.x != 0 || axis.y != 0)
+		{
+			return true;
+		}
+		
+		if (ball.x != 0 || ball.y != 0)
+		{
+			return true;
+		}
+		
+		if (hat.x != 0 || hat.y != 0)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
 	// TODO: implement recording and replaying joystick input functionality
 	
 	/**
-	 * If any keys are not "released" (0),
-	 * this function will return an array indicating
-	 * which keys are pressed and what state they are in.
-	 * @return	An array of key state data.  Null if there is no data.
+	 * Records current state of this Joystick object.
+	 * Returns null if there is no any input.
+	 * @return	JoystickRecord object indicating current joystick status.
 	 */
-	/*public function record():Array<CodeValuePair>
+	public function record():JoystickRecord
 	{
 		// TODO: implement joystick record
-	
-		var data:Array<CodeValuePair> = null;
-		var i:Int = 0;
+		
+		var data:JoystickRecord = null;
+		/*var i:Int = 0;
 		while(i < _total)
 		{
 			var o:MapObject = _map[i++];
@@ -155,21 +188,21 @@ class Joystick
 				data = new Array<CodeValuePair>();
 			}
 			data.push(new CodeValuePair(i - 1, o.current));
-		}
+		}*/
 		return data;
-	}*/
+	}
 	
 	/**
-	 * Part of the keystroke recording system.
-	 * Takes data about key presses and sets it into array.
+	 * Part of the joystick input recording system.
+	 * Takes data about joystick state and sets it into this Joystick object.
 	 * 
-	 * @param	Record	Array of data about key states.
+	 * @param	Record	data about joystick state.
 	 */
-	/*public function playback(Record:Array<CodeValuePair>):Void
+	public function playback(Record:JoystickRecord):Void
 	{
 		// TODO: implement joystick playback
 	
-		var i:Int = 0;
+		/*var i:Int = 0;
 		var l:Int = Record.length;
 		var o:CodeValuePair;
 		var o2:MapObject;
@@ -186,8 +219,8 @@ class Joystick
 				//this[o2.name] = true;
 				Reflect.setProperty(this, o2.name, true);
 			}
-		}
-	}*/
+		}*/
+	}
 	
 }
 

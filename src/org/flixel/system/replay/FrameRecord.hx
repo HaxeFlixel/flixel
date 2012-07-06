@@ -107,6 +107,7 @@ class FrameRecord
 		}
 		
 		#if (cpp || neko)
+		//output += "j";
 		if (joys != null)
 		{
 			// TODO: implement saving joystick input
