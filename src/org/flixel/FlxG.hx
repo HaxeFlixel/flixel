@@ -14,6 +14,11 @@ import nme.geom.Rectangle;
 import nme.media.Sound;
 import nme.media.SoundTransform;
 
+#if (cpp || neko)
+import org.flixel.system.input.JoystickManager;
+import nme.events.JoystickEvent;
+#end
+
 import org.flixel.system.input.TouchManager;
 import nme.ui.Multitouch;
 
@@ -44,12 +49,23 @@ class FlxG
 	 * The maximum number of concurrent touch points supported by the current device.
 	 */
 	public static var maxTouchPoints:Int = 0;
+	
 	/**
 	 * Indicates whether the current environment supports basic touch input, such as a single finger tap.
 	 */
 	public static var supportsTouchEvents:Bool = false;
 	
+	/**
+	 * A reference to a <code>TouchManager</code> object. Useful for devices with multitouch support
+	 */
 	public static var touchManager:TouchManager;
+	
+	#if (cpp || neko)
+	/**
+	 * A reference to a <code>JoystickManager</code> object. Important for input!
+	 */
+	public static var joystickManager:JoystickManager;
+	#end
 	
 	/**
 	 * Global tweener for tweening between multiple worlds
@@ -614,6 +630,10 @@ class FlxG
 	{
 		keys.reset();
 		mouse.reset();
+		
+		#if (cpp || neko)
+		joystickManager.reset();
+		#end
 	}
 	
 	// TODO: Return from Sound -> Class<Sound>
@@ -1530,6 +1550,10 @@ class FlxG
 		FlxG.mouse = new Mouse(FlxG._game._mouse);
 		FlxG.keys = new Keyboard();
 		FlxG.mobile = false;
+		
+		#if (cpp || neko)
+		FlxG.joystickManager = new JoystickManager();
+		#end
 
 		FlxG.levels = new Array();
 		FlxG.scores = new Array();
@@ -1582,6 +1606,10 @@ class FlxG
 		{
 			FlxG.touchManager.update();
 		}
+		
+		#if (cpp || neko)
+		FlxG.joystickManager.update();
+		#end
 	}
 	
 	/**

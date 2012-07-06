@@ -22,6 +22,7 @@ import org.flixel.system.input.TouchManager;
 
 #if (cpp || neko)
 import org.flixel.tileSheetManager.TileSheetManager;
+import nme.events.JoystickEvent;
 #end
 
 import nme.events.TouchEvent;
@@ -432,20 +433,79 @@ class FlxGame extends Sprite
 		FlxG.mouse.handleMouseWheel(FlashEvent);
 	}
 	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	Flash touch event.
+	 */
 	private function onTouchBegin(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchBegin(FlashEvent);
 	}
 	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	Flash touch event.
+	 */
 	private function onTouchEnd(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchEnd(FlashEvent);
 	}
 	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	Flash touch event.
+	 */
 	private function onTouchMove(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchMove(FlashEvent);
 	}
+	
+#if (cpp || neko)
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	NME joystick event.
+	 */
+	private function onJoyAxisMove(FlashEvent:JoystickEvent):Void
+	{
+		FlxG.joystickManager.handleAxisMove(FlashEvent);
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	NME joystick event.
+	 */
+	private function onJoyBallMove(FlashEvent:JoystickEvent):Void
+	{
+		FlxG.joystickManager.handleBallMove(FlashEvent);
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	NME joystick event.
+	 */
+	private function onJoyButtonDown(FlashEvent:JoystickEvent):Void
+	{
+		FlxG.joystickManager.handleButtonDown(FlashEvent);
+	}
+
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	NME joystick event.
+	 */
+	private function onJoyButtonUp(FlashEvent:JoystickEvent):Void
+	{
+		FlxG.joystickManager.handleButtonUp(FlashEvent);
+	}
+
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	NME joystick event.
+	 */
+	private function onJoyHatMove(FlashEvent:JoystickEvent):Void
+	{
+		FlxG.joystickManager.handleHatMove(FlashEvent);
+	}
+#end
 	
 	/**
 	 * Internal event handler for input and focus.
@@ -816,6 +876,14 @@ class FlxGame extends Sprite
 			clickableArea.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			clickableArea.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 		}
+		#end
+		
+		#if (cpp || neko)
+		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, onJoyAxisMove);
+		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, onJoyBallMove);
+		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, onJoyButtonDown);
+		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, onJoyButtonUp);
+		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, onJoyHatMove);
 		#end
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);

@@ -97,71 +97,41 @@ class JoystickManager
 		else object.current = 0;
 	}
 	
+	/**
+	 * Event handler so FlxGame can update joystick.
+	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
+	 */
+	public function handleAxisMove(FlashEvent:JoystickEvent):Void
+	{
+		var joy:Joystick = joystick(FlashEvent.device);
+		joy.connected = true;
+		joy.axis.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
+		joy.axis.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
+	}
+	
+	/**
+	 * Event handler so FlxGame can update joystick.
+	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
+	 */
+	public function handleBallMove(FlashEvent:JoystickEvent):Void
+	{
+		var joy:Joystick = joystick(FlashEvent.device);
+		joy.connected = true;
+		joy.ball.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
+		joy.ball.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
+	}
+	
+	/**
+	 * Event handler so FlxGame can update joystick.
+	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
+	 */
+	public function handleHatMove(FlashEvent:JoystickEvent):Void
+	{
+		var joy:Joystick = joystick(FlashEvent.device);
+		joy.connected = true;
+		joy.hat.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
+		joy.hat.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
+	}
+	
 }
 #end
-
-// This code should be moved to FlxG and FlxGame classes
-
-/*
-#if (cpp || neko)
-import nme.events.JoystickEvent;
-#end
-*/
-
-/*
-#if (cpp || neko)
-FlxG.stage.addEventListener(JoystickEvent.AXIS_MOVE, onJoyAxisMove);
-FlxG.stage.addEventListener(JoystickEvent.BALL_MOVE, onJoyBallMove);
-FlxG.stage.addEventListener(JoystickEvent.BUTTON_DOWN, onJoyButtonDown);
-FlxG.stage.addEventListener(JoystickEvent.BUTTON_UP, onJoyButtonUp);
-FlxG.stage.addEventListener(JoystickEvent.HAT_MOVE, onJoyHatMove);
-#end
-*/
-
-/*
-#if (cpp || neko)
-	private static function onJoyAxisMove(e:JoystickEvent):Void
-	{
-		var joy:Joystick = joystick(e.device);
-		joy.connected = true;
-		joy.axis.x = (Math.abs(e.x) < deadZone) ? 0 : e.x;
-		joy.axis.y = (Math.abs(e.y) < deadZone) ? 0 : e.y;
-	}
-
-	private static function onJoyBallMove(e:JoystickEvent):Void
-	{
-		var joy:Joystick = joystick(e.device);
-		joy.connected = true;
-		joy.ball.x = (Math.abs(e.x) < deadZone) ? 0 : e.x;
-		joy.ball.y = (Math.abs(e.y) < deadZone) ? 0 : e.y;
-	}
-
-	private static function onJoyButtonDown(e:JoystickEvent):Void
-	{
-		var joy:Joystick = joystick(e.device);
-		joy.connected = true;
-		if (e.id < 8)
-		{
-			joy.buttons[e.id] = true;
-		}
-	}
-
-	private static function onJoyButtonUp(e:JoystickEvent):Void
-	{
-		var joy:Joystick = joystick(e.device);
-		joy.connected = true;
-		if (e.id < 8)
-		{
-			joy.buttons[e.id] = false;
-		}
-	}
-
-	private static function onJoyHatMove(e:JoystickEvent):Void
-	{
-		var joy:Joystick = joystick(e.device);
-		joy.connected = true;
-		joy.hat.x = (Math.abs(e.x) < deadZone) ? 0 : e.x;
-		joy.hat.y = (Math.abs(e.y) < deadZone) ? 0 : e.y;
-	}
-#end
-*/
