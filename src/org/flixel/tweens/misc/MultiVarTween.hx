@@ -26,11 +26,11 @@ class MultiVarTween extends FlxTween
 	/**
 	 * Tweens multiple numeric public properties.
 	 * @param	object		The object containing the properties.
-	 * @param	values		An object containing key/value pairs of properties and target values.
+	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, values:Dynamic, duration:Float, ?ease:EaseFunction = null):Void
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ?ease:EaseFunction = null):Void
 	{
 		_object = object;
 		FlxU.SetArrayLength(_vars, 0);
@@ -39,21 +39,35 @@ class MultiVarTween extends FlxTween
 		_target = duration;
 		_ease = ease;
 		var p:String;
-		var fields:Array<String> = Reflect.fields(values);
+		
+		var fields:Array<String> = null;
+		if (Reflect.isObject(properties))
+		{
+			fields = Reflect.fields(properties);
+		}
+		else
+		{
+			throw "Unsupported MultiVar properties container - use Object containing key/value pairs.";
+		}
+
 		for (p in fields)
 		{
-			if (!Reflect.hasField(object, p)) 
-			{
-				throw "The Object does not have the property\"" + p + "\", or it is not accessible.";
-			}
 			var a:Float = Reflect.getProperty(object, p);
+			
+		#if (cpp || neko)
+			if (a == null)
+			{
+				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
+			}
+		#end
+			
 			if (Math.isNaN(a)) 
 			{
 				throw "The property \"" + p + "\" is not numeric.";
 			}
 			_vars.push(p);
 			_start.push(a);
-			_range.push(Reflect.getProperty(values, p) - a);
+			_range.push(Reflect.getProperty(properties, p) - a);
 		}
 		start();
 	}

@@ -54,7 +54,7 @@ class FlxTween
 	 */
 	public function update():Void
 	{
-		_time += /*HXP.fixed ? 1 : */FlxG.elapsed;
+		_time += FlxG.elapsed;
 		_t = _time / _target;
 		if (_ease != null && _t > 0 && _t < 1) 
 		{
