@@ -53,6 +53,10 @@ class Joystick
 			button.current = 0;
 			button.last = 0;
 		}
+		
+		axis.x = axis.y = 0;
+		hat.x = hat.y = 0;
+		ball.x = ball.y = 0;
 	}
 	
 	public function destroy():Void
@@ -98,7 +102,7 @@ class Joystick
 	 * @param	buttonID		button id (from 0 to 7).
 	 * @return	Whether the button is just released.
 	 */
-	public function justReleased(Key:String):Bool 
+	public function justReleased(buttonID:Int):Bool 
 	{ 
 		if (buttons.exists(buttonID))
 		{

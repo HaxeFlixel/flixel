@@ -19,8 +19,19 @@ class JoystickManager
 	 */
 	public static var deadZone:Float = 0.0;
 	
+	/**
+	 * Storage for all connected joysticks
+	 */
 	public static var joysticks:IntHash<Joystick> = new IntHash<Joystick>();
 	
+	/**
+	 * Constructor
+	 */
+	public function new() {  }
+	
+	/**
+	 * Get a particular Joystick object
+	 */
 	public static function joystick(joystickID:Int):Joystick
 	{
 		var joy:Joystick = joysticks.get(joystickID);

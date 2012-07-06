@@ -16,7 +16,6 @@ import nme.media.SoundTransform;
 
 #if (cpp || neko)
 import org.flixel.system.input.JoystickManager;
-import nme.events.JoystickEvent;
 #end
 
 import org.flixel.system.input.TouchManager;
