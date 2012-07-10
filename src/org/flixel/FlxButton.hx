@@ -2,9 +2,11 @@ package org.flixel;
 
 import nme.display.Bitmap;
 import nme.display.BitmapData;
+import nme.display.BitmapInt32;
 import nme.events.MouseEvent;
 import nme.media.Sound;
 import nme.media.Sound;
+import org.flixel.tileSheetManager.TileSheetManager;
 
 import org.flixel.FlxSprite;
 
@@ -334,6 +336,42 @@ class FlxButton extends FlxSprite
 		}
 	}
 	
+	#if flash 
+	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	#else
+	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	#end
+	{
+		#if (cpp || neko)
+		if (Color == null)
+		{
+			#if cpp
+			Color = 0xffffffff;
+			#elseif neko
+			Color = { rgb: 0xffffff, a: 0xff };
+			#end
+		}
+		#end
+		
+		var result:FlxSprite = super.makeGraphic(Width, Height, Color, Unique, Key);
+		
+		#if (cpp || neko)
+		if (label != null)
+		{
+			var labelIndex:Int = label.getTileSheetIndex();
+			var bgIndex:Int = this.getTileSheetIndex();
+			if (bgIndex > labelIndex)
+			{
+				TileSheetManager.swapTileSheets(labelIndex, bgIndex);
+			}
+		}
+		#end
+		
+		return result;
+	}
+	
+	
+	
 	/**
 	 * Updates the size of the text field to match the button.
 	 */
@@ -342,7 +380,8 @@ class FlxButton extends FlxSprite
 		super.resetHelpers();
 		if (label != null)
 		{
-			label.width = width;
+			label.width = label.frameWidth = Std.int(width);
+			label.size = label.size;
 		}
 	}
 	
