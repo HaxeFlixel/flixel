@@ -3,6 +3,7 @@ flixel CHANGELOG
 v1.06
 ------------------------------
 * Added FlxKongregate plugin. Thanks to goldengrave for porting this class.
+* Fixed bug with FlxButton's makeGraphic() crashing on cpp and neko targets.
 
 v1.05
 ------------------------------
