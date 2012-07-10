@@ -619,6 +619,7 @@ class FlxSprite extends FlxObject
 		frames = Math.floor(_flashRect2.width / _flashRect.width * _flashRect2.height / _flashRect.height);
 	#else
 		frames = Math.floor(_flashRect2.width / (_flashRect.width + 1) * _flashRect2.height / (_flashRect.height + 1));
+		if (frames == 0) frames = 1;
 		if (_flipped > 0)
 		{
 			frames *= 2;
