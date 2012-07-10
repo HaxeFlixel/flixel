@@ -933,7 +933,9 @@ class FlxCamera extends FlxBasic
 		green = (_color >> 8 & 0xff) * 0.0039;
 		blue = (_color & 0xff) * 0.00392;
 		#elseif neko
-		
+		red = (_color.rgb >> 16) * 0.00392;
+		green = (_color.rgb >> 8 & 0xff) * 0.0039;
+		blue = (_color.rgb & 0xff) * 0.00392;
 		#end
 		
 		return _color;
