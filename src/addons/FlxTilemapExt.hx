@@ -69,7 +69,7 @@ class FlxTilemapExt extends FlxTilemap
 	 *
 	 * @return Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	override public function overlapsWithCallback(Object:FlxObject, ?Callback:Dynamic = null, ?FlipCallbackParams:Bool = false, ?Position:FlxPoint = null):Bool
+	override public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool = null, ?FlipCallbackParams:Bool = false, ?Position:FlxPoint = null):Bool
 	{
 		var results:Bool = false;
 		
@@ -187,7 +187,7 @@ class FlxTilemapExt extends FlxTilemap
 	 * @param slope the floor slope
 	 * @param obj the object that collides with that slope
 	 */
-	private function onCollideFloorSlope(slope:FlxTile, obj:FlxObject):Void
+	private function onCollideFloorSlope(slope:FlxObject, obj:FlxObject):Void
 	{
 		//set the object's touching flag
 		obj.touching = FlxObject.FLOOR;
@@ -205,7 +205,7 @@ class FlxTilemapExt extends FlxTilemap
 	 * @param slope the ceiling slope
 	 * @param obj the object that collides with that slope
 	 */
-	private function onCollideCeilSlope(slope:FlxTile, obj:FlxObject):Void
+	private function onCollideCeilSlope(slope:FlxObject, obj:FlxObject):Void
 	{
 		//set the object's touching flag
 		obj.touching = FlxObject.CEILING;
@@ -223,7 +223,7 @@ class FlxTilemapExt extends FlxTilemap
 	 * @param slope the slope to check against
 	 * @param obj the object that collides with the slope
 	 */
-	private function solveCollisionSlopeFloorLeft(slope:FlxTile, obj:FlxObject):Void
+	private function solveCollisionSlopeFloorLeft(slope:FlxObject, obj:FlxObject):Void
 	{
 		//calculate the corner point of the object
 		_objPoint.x = FlxU.floor(obj.x + obj.width + _snapping);
@@ -235,7 +235,7 @@ class FlxTilemapExt extends FlxTilemap
 		_slopePoint.y = (slope.y + _tileHeight) - (_slopePoint.x - slope.x);
 		
 		//fix the slope point to the slope tile
-		fixSlopePoint(slope);
+		fixSlopePoint(cast(slope, FlxTile));
 		
 		//check if the object is inside the slope
 		if (_objPoint.x > slope.x + _snapping && _objPoint.x < slope.x + _tileWidth + obj.width + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= slope.y + _tileHeight)
@@ -250,7 +250,7 @@ class FlxTilemapExt extends FlxTilemap
 	 * @param slope the slope to check against
 	 * @param obj the object that collides with the slope
 	 */
-	private function solveCollisionSlopeFloorRight(slope:FlxTile, obj:FlxObject):Void
+	private function solveCollisionSlopeFloorRight(slope:FlxObject, obj:FlxObject):Void
 	{
 		//calculate the corner point of the object
 		_objPoint.x = FlxU.floor(obj.x - _snapping);
@@ -262,7 +262,7 @@ class FlxTilemapExt extends FlxTilemap
 		_slopePoint.y = (slope.y + _tileHeight) - (slope.x - _slopePoint.x + _tileWidth);
 		
 		//fix the slope point to the slope tile
-		fixSlopePoint(slope);
+		fixSlopePoint(cast(slope, FlxTile));
 		
 		//check if the object is inside the slope
 		if (_objPoint.x > slope.x - obj.width - _snapping && _objPoint.x < slope.x + _tileWidth + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= slope.y + _tileHeight)
@@ -277,7 +277,7 @@ class FlxTilemapExt extends FlxTilemap
 	 * @param slope the slope to check against
 	 * @param obj the object that collides with the slope
 	 */
-	private function solveCollisionSlopeCeilLeft(slope:FlxTile, obj:FlxObject):Void
+	private function solveCollisionSlopeCeilLeft(slope:FlxObject, obj:FlxObject):Void
 	{
 		//calculate the corner point of the object
 		_objPoint.x = FlxU.floor(obj.x + obj.width + _snapping);
@@ -289,7 +289,7 @@ class FlxTilemapExt extends FlxTilemap
 		_slopePoint.y = (slope.y) + (_slopePoint.x - slope.x);
 		
 		//fix the slope point to the slope tile
-		fixSlopePoint(slope);
+		fixSlopePoint(cast(slope, FlxTile));
 		
 		//check if the object is inside the slope
 		if (_objPoint.x > slope.x + _snapping && _objPoint.x < slope.x + _tileWidth + obj.width + _snapping && _objPoint.y <= _slopePoint.y && _objPoint.y >= slope.y)
@@ -304,7 +304,7 @@ class FlxTilemapExt extends FlxTilemap
 	 * @param slope the slope to check against
 	 * @param obj the object that collides with the slope
 	 */
-	private function solveCollisionSlopeCeilRight(slope:FlxTile, obj:FlxObject):Void
+	private function solveCollisionSlopeCeilRight(slope:FlxObject, obj:FlxObject):Void
 	{
 		//calculate the corner point of the object
 		_objPoint.x = FlxU.floor(obj.x - _snapping);
@@ -316,7 +316,7 @@ class FlxTilemapExt extends FlxTilemap
 		_slopePoint.y = (slope.y) + (slope.x - _slopePoint.x + _tileWidth);
 		
 		//fix the slope point to the slope tile
-		fixSlopePoint(slope);
+		fixSlopePoint(cast(slope, FlxTile));
 		
 		//check if the object is inside the slope
 		if (_objPoint.x > slope.x - obj.width - _snapping && _objPoint.x < slope.x + _tileWidth + _snapping && _objPoint.y <= _slopePoint.y && _objPoint.y >= slope.y)

@@ -95,7 +95,7 @@ class Mouse extends FlxPoint
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
 	 */
-	public function show(?Graphic:Class<Bitmap> = null, ?Scale:Float = 1, ?XOffset:Int = 0, ?YOffset:Int=0):Void
+	public function show(?Graphic:Dynamic = null, ?Scale:Float = 1, ?XOffset:Int = 0, ?YOffset:Int=0):Void
 	{
 		_cursorContainer.visible = true;
 		if (Graphic != null)
