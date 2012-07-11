@@ -42,7 +42,8 @@ class VarTween extends FlxTween
 		
 		// Check if the variable is a number
 	#if (cpp || neko)
-		if (a == null)
+		//if (a == null)
+		if (Reflect.getProperty(_object, property) == null)
 		{
 			throw "The Object does not have the property\"" + property + "\", or it is not accessible.";
 		}

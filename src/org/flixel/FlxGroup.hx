@@ -115,6 +115,11 @@ class FlxGroup extends FlxBasic
 				basic.postUpdate();
 			}
 		}
+		
+		if (hasTween)
+		{
+			updateTweens();
+		}
 	}
 	
 	/**
