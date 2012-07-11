@@ -52,16 +52,19 @@ class MultiVarTween extends FlxTween
 
 		for (p in fields)
 		{
-			var a:Float = Reflect.getProperty(object, p);
 			
 		#if (cpp || neko)
-			//if (a == null)
 			if (Reflect.getProperty(object, p) == null)
+		#else
+			if (!Reflect.hasField(object, p) == null)
+		#end
 			{
 				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
 			}
 		#end
 			
+			var a:Float = Reflect.getProperty(object, p);
+		
 			if (Math.isNaN(a)) 
 			{
 				throw "The property \"" + p + "\" is not numeric.";
