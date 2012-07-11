@@ -61,7 +61,6 @@ class MultiVarTween extends FlxTween
 			{
 				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
 			}
-		#end
 			
 			var a:Float = Reflect.getProperty(object, p);
 		
