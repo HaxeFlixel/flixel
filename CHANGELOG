@@ -4,6 +4,8 @@ v1.06
 ------------------------------
 * Added FlxKongregate plugin. Thanks to goldengrave for porting this class.
 * Fixed bug with FlxButton's makeGraphic() crashing on cpp and neko targets.
+* Fixed bug with VarTween and MultivarTween on Haxe 2.10
+* Fixed bug when FlxGroup's tweens weren's updated
 
 v1.05
 ------------------------------
