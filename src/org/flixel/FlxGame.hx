@@ -229,7 +229,12 @@ class FlxGame extends Sprite
 		_requestedState = null;
 		_requestedReset = true;
 		_created = false;
-		addEventListener(Event.ENTER_FRAME, create);
+		
+		#if iphone
+		Lib.current.stage.addEventListener(Event.RESIZE, create);
+		#else
+		addEventListener(Event.ADDED_TO_STAGE, create);
+		#end
 	}
 	
 	/**
@@ -833,7 +838,13 @@ class FlxGame extends Sprite
 		{
 			return;
 		}
-		removeEventListener(Event.ENTER_FRAME, create);
+		
+		#if iphone
+		Lib.current.stage.removeEventListener(Event.RESIZE, create);
+		#else
+		removeEventListener(Event.ADDED_TO_STAGE, create);
+		#end
+		
 		_total = Lib.getTimer();
 		//Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -855,7 +866,7 @@ class FlxGame extends Sprite
 		
 		if (FlxG.supportsTouchEvents)
 		{
-			Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN , onTouchBegin);
+			Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			Lib.current.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 		}
