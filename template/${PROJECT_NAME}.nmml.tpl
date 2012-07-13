@@ -49,7 +49,7 @@
 	<assets path="assets/data/vcr" include="*.png" type="image" />
 	<assets path="assets/data/vis" include="*.png" type="image" />
 	
-	<!--<icon name="Assets/nme.svg" /> -->
+	<icon name="Assets/HaxeFlixel.svg" />
 	
 	<ndll name="std" />
 	<ndll name="regexp" />

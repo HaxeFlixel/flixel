@@ -1027,20 +1027,21 @@ class FlxGame extends Sprite
 		var halfHeight:Int = Math.floor(screenHeight / 2);
 		var helper:Int = Math.floor(FlxU.min(halfWidth, halfHeight) / 3);
 		gfx.moveTo(halfWidth - helper, halfHeight - helper);
-		gfx.beginFill(0xffffff,0.65);
+		gfx.beginFill(0xffffff, 0.65);
 		gfx.lineTo(halfWidth + helper, halfHeight);
 		gfx.lineTo(halfWidth - helper, halfHeight + helper);
 		gfx.lineTo(halfWidth - helper, halfHeight - helper);
 		gfx.endFill();
 		
-		var logo:Bitmap = new Bitmap(Assets.getBitmapData(FlxAssets.imgLogo));
-		logo.scaleX = Math.floor(helper/10);
-		if (logo.scaleX < 1)
+		var logo:Sprite = new Sprite();
+		FlxAssets.drawLogo(logo.graphics);
+		logo.scaleX = helper / 1000;
+		if (logo.scaleX < 0.2)
 		{
-			logo.scaleX = 1;
+			logo.scaleX = 0.2;
 		}
 		logo.scaleY = logo.scaleX;
-		logo.x -= logo.scaleX;
+		logo.x = logo.y = 5;
 		logo.alpha = 0.35;
 		_focus.addChild(logo);
 		
