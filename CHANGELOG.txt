@@ -6,6 +6,7 @@ v1.06
 * Fixed bug with FlxButton's makeGraphic() crashing on cpp and neko targets.
 * Fixed bug with VarTween and MultivarTween on Haxe 2.10
 * Fixed bug when FlxGroup's tweens weren't updated
+* Added new logo. Huge thanks to Impaler!!!
 
 v1.05
 ------------------------------
