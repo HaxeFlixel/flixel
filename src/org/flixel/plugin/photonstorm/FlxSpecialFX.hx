@@ -2,14 +2,6 @@
  * FlxSpecialFX
  * -- Part of the Flixel Power Tools set
  * 
- * v1.6 Added WowCopperFX
- * v1.5 Added RevealFX
- * v1.4 Added BlurFX and CenterSlideFX
- * v1.3 Renamed DropDown to FloodFill
- * v1.2 Added GlitchFX and StarfieldFX
- * v1.1 Added SineWaveFX
- * v1.0 First release of the new FlxSpecialFX system
- * 
  * @version 1.6 - September 19th 2011
  * @link http://www.photonstorm.com
  * @author Richard Davey / Photon Storm
