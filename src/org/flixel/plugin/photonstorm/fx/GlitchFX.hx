@@ -99,12 +99,17 @@ class GlitchFX extends BaseFX
 				return;
 			}
 			
-			#if flash
 			if (updateFromSource && sourceRef.exists)
 			{
+				#if flash
 				image = sourceRef.framePixels;
+				#else
+				// TODO: update glitch sprite graphics
+				
+				#end
 			}
 			
+			#if flash
 			canvas.lock();
 			canvas.fillRect(clsRect, clsColor);
 			#end
