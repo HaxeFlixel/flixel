@@ -30,6 +30,7 @@ class BaseFX
 	 */
 	public var sprite:FlxSprite;
 	
+	#if flash
 	/**
 	 * A scratch bitmapData used to build-up the effect before passing to sprite.pixels
 	 */
@@ -39,6 +40,7 @@ class BaseFX
 	 * TODO A snapshot of the sprite background before the effect is applied
 	 */
 	var back:BitmapData;
+	#end
 	
 	var image:BitmapData;
 	var sourceRef:FlxSprite;
@@ -64,7 +66,6 @@ class BaseFX
 		updateLimit = 0;
 		lastUpdate = 0;
 		ready = false;
-		
 		active = false;
 	}
 	
@@ -101,6 +102,7 @@ class BaseFX
 			sprite.kill();
 		}
 		
+		#if flash
 		if (canvas != null)
 		{
 			canvas.dispose();
@@ -110,6 +112,7 @@ class BaseFX
 		{
 			back.dispose();
 		}
+		#end
 		
 		if (image != null)
 		{

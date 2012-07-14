@@ -117,7 +117,7 @@ class StarfieldFX extends BaseFX
 		
 		for (i in 0...(quantity))
 		{
-			var star = {};
+			var star:StarObject = new StarObject();
 			
 			star.index = i;
 			star.x = Std.int(Math.random() * width);
@@ -259,13 +259,13 @@ class StarfieldFX extends BaseFX
 	{
 		for (star in stars)
 		{
-			star.x += (starXOffset * star.speed);
-			star.y += (starYOffset * star.speed);
+			star.x += Math.floor(starXOffset * star.speed);
+			star.y += Math.floor(starYOffset * star.speed);
 			
 			#if flash
 			canvas.setPixel32(star.x, star.y, depthColours[Math.floor(star.speed - 1)]);
 			#else
-			var starColor:BitmapInt32 = Math.floor(star.speed - 1)];
+			var starColor:BitmapInt32 = depthColours[Math.floor(star.speed - 1)];
 			// TODO: update 2D starfield on cpp and neko targets
 			
 			
@@ -277,7 +277,7 @@ class StarfieldFX extends BaseFX
 			}
 			else if (star.x < 0)
 			{
-				star.x = sprite.width;
+				star.x = Math.floor(sprite.width);
 			}
 			
 			if (star.y > sprite.height)
@@ -286,7 +286,7 @@ class StarfieldFX extends BaseFX
 			}
 			else if (star.y < 0)
 			{
-				star.y = sprite.height;
+				star.y = Math.floor(sprite.height);
 			}
 		}
 	}
@@ -296,8 +296,8 @@ class StarfieldFX extends BaseFX
 		for (star in stars)
 		{
 			star.d *= 1.1;
-			star.x = centerX + ((Math.cos(star.r) * star.d) * star.speed);
-			star.y = centerY + ((Math.sin(star.r) * star.d) * star.speed);
+			star.x = Math.floor(centerX + ((Math.cos(star.r) * star.d) * star.speed));
+			star.y = Math.floor(centerY + ((Math.sin(star.r) * star.d) * star.speed));
 			
 			star.alpha = star.d * 2;
 			
@@ -396,7 +396,7 @@ class StarSprite extends FlxSprite
 		
 		starfieldWidth = Width;
 		starfieldHeight = Height;
-		starData = new Array<Float>();
+		starData = new Array<Star>();
 	}
 	
 	override public function destroy():Void 
@@ -563,8 +563,7 @@ class StarSprite extends FlxSprite
 	
 }
 
-typedef Star
-{
+typedef Star = {
 	var x:Float;
 	var y:Float;
 	var red:Float;
@@ -573,13 +572,15 @@ typedef Star
 }
 #end
 
-typedef StarObject
+class StarObject 
 {
-	var index:Int;
-	var x:Int;
-	var y:Int;
-	var d:Float;
-	var speed:Float;
-	var r:Float;
-	var alpha:Float;
+	public var index:Int;
+	public var x:Int;
+	public var y:Int;
+	public var d:Float;
+	public var speed:Float;
+	public var r:Float;
+	public var alpha:Float;
+	
+	public function new() {  }
 }
