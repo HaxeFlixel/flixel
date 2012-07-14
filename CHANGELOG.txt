@@ -7,6 +7,7 @@ v1.06
 * Fixed bug with VarTween and MultivarTween on Haxe 2.10
 * Fixed bug when FlxGroup's tweens weren't updated
 * Added new logo. Huge thanks to Impaler!!!
+* Added StarfieldFX class from FlixelPowerTools.
 
 v1.05
 ------------------------------
