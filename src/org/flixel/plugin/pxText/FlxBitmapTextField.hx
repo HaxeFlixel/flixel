@@ -191,15 +191,15 @@ class FlxBitmapTextField extends FlxSprite
 			{
 				continue;
 			}
-			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
-			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			_point.x = Math.floor(x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x)) + origin.x;
+			_point.y = Math.floor(y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y)) + origin.y;
 			
 			if (simpleRender)
 			{	
 				if (_background)
 				{
-					currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + _bgDrawData[1];
-					currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + _bgDrawData[2];
+					currDrawData[currIndex++] = _point.x + _bgDrawData[1];
+					currDrawData[currIndex++] = _point.y + _bgDrawData[2];
 					
 					currDrawData[currIndex++] = _bgDrawData[0];
 					
@@ -238,8 +238,8 @@ class FlxBitmapTextField extends FlxSprite
 						currTileGreen = _drawData[currPosInArr + 4];
 						currTileBlue = _drawData[currPosInArr + 5];
 						
-						currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + currTileX;
-						currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + currTileY;
+						currDrawData[currIndex++] = _point.x + currTileX;
+						currDrawData[currIndex++] = _point.y + currTileY;
 						
 						currDrawData[currIndex++] = currTileID;
 						
@@ -280,8 +280,8 @@ class FlxBitmapTextField extends FlxSprite
 					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
 					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 					
-					currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + relativeX;
-					currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + relativeY;
+					currDrawData[currIndex++] = _point.x + relativeX;
+					currDrawData[currIndex++] = _point.y + relativeY;
 					
 					currDrawData[currIndex++] = _bgDrawData[0];
 					
@@ -321,8 +321,8 @@ class FlxBitmapTextField extends FlxSprite
 						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
 						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 						
-						currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + relativeX;
-						currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + relativeY;
+						currDrawData[currIndex++] = _point.x + relativeX;
+						currDrawData[currIndex++] = _point.y + relativeY;
 						
 						currDrawData[currIndex++] = currTileID;
 						
