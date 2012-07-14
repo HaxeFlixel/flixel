@@ -14,6 +14,7 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.plugin.photonstorm.fx.BaseFX;
+import org.flixel.plugin.photonstorm.fx.GlitchFX;
 import org.flixel.plugin.photonstorm.fx.StarfieldFX;
 
 /**
@@ -29,6 +30,18 @@ class FlxSpecialFX extends FlxBasic
 	}
 	
 	//	THE SPECIAL FX PLUGINS AVAILABLE
+	
+	/**
+	 * Creates a Glitch Effect
+	 * 
+	 * @return	GlitchFX
+	 */
+	public static function glitch():GlitchFX
+	{
+		var temp:GlitchFX = new GlitchFX();
+		members.set(temp, temp);
+		return temp;
+	}
 	
 	/**
 	 * Creates a 2D or 3D Starfield Effect
