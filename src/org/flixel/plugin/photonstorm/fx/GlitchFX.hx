@@ -151,13 +151,27 @@ class GlitchFX extends BaseFX
 #if (cpp || neko)
 class GlitchSprite extends FlxSprite
 {
+	/**
+	 * Information about each line in glitched sprite
+	 */
+	public var imageLines:Array<ImageLine>;
+	
 	// TODO: make all necessary properties
 	
 	public function new()
 	{
 		super();
 		
+		imageLines = new Array<ImageLine>();
 		// TODO: initialize all additional properties
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		
+		imageLines = null;
+		// TODO: destroy all additional properties
 	}
 	
 	override public function draw():Void
@@ -172,5 +186,11 @@ class GlitchSprite extends FlxSprite
 		
 	}
 	
+}
+
+typedef ImageLine = {
+	var x:Float;
+	var y:Float;
+	var tileID:Int;
 }
 #end
