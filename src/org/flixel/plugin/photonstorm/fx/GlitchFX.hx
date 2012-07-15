@@ -18,6 +18,9 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import nme.display.BitmapInt32;
 import org.flixel.FlxSprite;
+import org.flixel.plugin.photonstorm.FlxColor;
+import org.flixel.tileSheetManager.TileSheetData;
+import org.flixel.tileSheetManager.TileSheetManager;
 
 /**
  * Creates a static / glitch / monitor-corruption style effect on an FlxSprite
@@ -48,7 +51,7 @@ class GlitchFX extends BaseFX
 		if (backgroundColor == null)
 		{
 			#if neko
-			backgroundColor = { rgb: 0x000000, a: 0x00);
+			backgroundColor = { rgb: 0x000000, a: 0x00 };
 			#else
 			backgroundColor = 0x00000000;
 			#end
@@ -60,9 +63,7 @@ class GlitchFX extends BaseFX
 		canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
 		image = source.pixels;
 		#else
-		sprite = new GlitchSprite();
-		// TODO: initialize glitch sprite
-		
+		sprite = new GlitchSprite(source, maxGlitch, backgroundColor);
 		#end
 		
 		updateFromSource = autoUpdate;
@@ -87,6 +88,11 @@ class GlitchFX extends BaseFX
 	{
 		glitchSize = maxGlitch;
 		glitchSkip = maxSkip;
+		
+		// TODO: update glitch sprite
+		#if (cpp || neko)
+		
+		#end
 	}
 	
 	override public function draw():Void
@@ -109,16 +115,16 @@ class GlitchFX extends BaseFX
 				#end
 			}
 			
+			var rndSkip:Int = 1 + Std.int(Math.random() * glitchSkip);
+			
 			#if flash
 			canvas.lock();
 			canvas.fillRect(clsRect, clsColor);
-			#end
-			
-			var rndSkip:Int = 1 + Std.int(Math.random() * glitchSkip);
 			
 			copyRect.y = 0;
 			copyPoint.y = 0;
 			copyRect.height = rndSkip;
+			#end
 			
 			var y:Int = 0;
 			
@@ -156,14 +162,59 @@ class GlitchSprite extends FlxSprite
 	 */
 	public var imageLines:Array<ImageLine>;
 	
+	private var _sourceSprite:FlxSprite;
+	
+	/**
+	 * link to source image tilesheet data
+	 */
+	private var _imageTileSheetData:TileSheetData;
+	
+	/**
+	 * storage for each frame's lines tile IDs
+	 */
+	private var _imageTileIDs:IntHash<Array<Int>>;
+	
+	private var _bgRed:Float;
+	private var _bgGreen:Float;
+	private var _bgBlue:Float;
+	private var _bgAlpha:Float;
+	
 	// TODO: make all necessary properties
 	
-	public function new()
+	
+	public function new(Source:FlxSprite, MaxGlitch:Int, BgColor:BitmapInt32)
 	{
 		super();
 		
+		_sourceSprite = Source;
+		
+		_imageTileIDs = new IntHash<Array<Int>>();
 		imageLines = new Array<ImageLine>();
+		
+		#if !neko
+		makeGraphic(1, 1, 0xffffffff);
+		#else
+		makeGraphic(1, 1, {rgb: 0xffffff, a: 0xff});
+		#end
+		
+		_frameID = _framesData.frameIDs[0];
+		
+		var rgba:RGBA = FlxColor.getRGB(BgColor);
+		_bgRed = rgba.red / 255;
+		_bgGreen = rgba.green / 255;
+		_bgBlue = rgba.blue / 255;
+		_bgAlpha = rgba.alpha / 255;
+		
+		this.x = _sourceSprite.x;
+		this.y = _sourceSprite.y;
+		
+		this.width = _sourceSprite.width + MaxGlitch;
+		this.height = _sourceSprite.height;
+		
+		
+		
 		// TODO: initialize all additional properties
+		
 	}
 	
 	override public function destroy():Void 
@@ -171,7 +222,11 @@ class GlitchSprite extends FlxSprite
 		super.destroy();
 		
 		imageLines = null;
+		_sourceSprite = null;
+		_imageTileSheetData = null;
+		_imageTileIDs = null;
 		// TODO: destroy all additional properties
+		
 	}
 	
 	override public function draw():Void
@@ -182,8 +237,16 @@ class GlitchSprite extends FlxSprite
 	
 	override public function updateTileSheet():Void 
 	{
-		// TODO: implement adding frames to tilesheet
+		if (_sourceSprite != null)
+		{
+			// TODO: fill _imageTileIDs and imageLines with appropriate data
+			
+		}
 		
+		if (_tileSheetData == null)
+		{
+			super.updateTileSheet();
+		}
 	}
 	
 }
