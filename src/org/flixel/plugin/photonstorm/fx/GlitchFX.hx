@@ -89,9 +89,11 @@ class GlitchFX extends BaseFX
 		glitchSize = maxGlitch;
 		glitchSkip = maxSkip;
 		
-		// TODO: update glitch sprite
 		#if (cpp || neko)
-		
+		if (sprite != null)
+		{
+			sprite.frameWidth = Math.floor(sourceRef.frameWidth + maxGlitch);
+		}
 		#end
 	}
 	
@@ -211,10 +213,8 @@ class GlitchSprite extends FlxSprite
 		this.width = _sourceSprite.width + MaxGlitch;
 		this.height = _sourceSprite.height;
 		
-		
-		
-		// TODO: initialize all additional properties
-		
+		this.frameWidth = Math.floor(this.width);
+		this.frameHeight = Math.floor(this.height);
 	}
 	
 	override public function destroy():Void 
@@ -225,28 +225,255 @@ class GlitchSprite extends FlxSprite
 		_sourceSprite = null;
 		_imageTileSheetData = null;
 		_imageTileIDs = null;
-		// TODO: destroy all additional properties
-		
 	}
 	
 	override public function draw():Void
 	{
 		// TODO: implement sprite drawing
 		
+		if(_flickerTimer != 0)
+		{
+			_flicker = !_flicker;
+			if (_flicker)
+			{
+				return;
+			}
+		}
+		
+		if (cameras == null)
+		{
+			cameras = FlxG.cameras;
+		}
+		var camera:FlxCamera;
+		var i:Int = 0;
+		var l:Int = cameras.length;
+		
+		var currDrawData:Array<Float>;
+		var currIndex:Int;
+		
+		var radians:Float;
+		var cos:Float;
+		var sin:Float;
+		
+		var starRed:Float;
+		var starGreen:Float;
+		var starBlue:Float;
+		
+		var starDef:StarDef;
+		
+		while(i < l)
+		{
+			camera = cameras[i++];
+			
+			if (!onScreen(camera))
+			{
+				continue;
+			}
+			
+			currDrawData = _tileSheetData.drawData[camera.ID];
+			currIndex = _tileSheetData.positionData[camera.ID];
+			/*
+			_point.x = Math.floor(x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x)) + origin.x;
+			_point.y = Math.floor(y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y)) + origin.y;
+			
+			if (simpleRender)
+			{	//Simple render
+				
+				// draw background
+				currDrawData[currIndex++] = _point.x + halfWidth;
+				currDrawData[currIndex++] = _point.y + halfHeight;
+				
+				currDrawData[currIndex++] = _frameID;
+				
+				currDrawData[currIndex++] = width;
+				currDrawData[currIndex++] = 0;
+				currDrawData[currIndex++] = 0;
+				currDrawData[currIndex++] = height;
+				
+				if (camera.isColored)
+				{
+					currDrawData[currIndex++] = bgRed * camera.red; 
+					currDrawData[currIndex++] = bgGreen * camera.green;
+					currDrawData[currIndex++] = bgBlue * camera.blue;
+				}
+				else
+				{
+					currDrawData[currIndex++] = bgRed; 
+					currDrawData[currIndex++] = bgGreen;
+					currDrawData[currIndex++] = bgBlue;
+				}
+				
+				currDrawData[currIndex++] = bgAlpha * _alpha;
+				
+				// draw stars
+				for (j in 0...(starData.length))
+				{
+					starDef = starData[j];
+					
+					currDrawData[currIndex++] = _point.x + starDef.x + 0.5;
+					currDrawData[currIndex++] = _point.y + starDef.y + 0.5;
+					
+					currDrawData[currIndex++] = _frameID;
+					
+					currDrawData[currIndex++] = 1;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 1;
+					
+					starRed = starDef.red;
+					starGreen = starDef.green;
+					starBlue = starDef.blue;
+					
+					if (camera.isColored)
+					{
+						starRed *= camera.red;
+						starGreen *= camera.green;
+						starBlue *= camera.blue;
+					}
+					
+					#if cpp
+					if (_color < 0xffffff)
+					#else
+					if (_color.rgb < 0xffffff)
+					#end
+					{
+						starRed *= _red;
+						starGreen *= _green;
+						starBlue *= _blue;
+					}
+					
+					currDrawData[currIndex++] = starRed; 
+					currDrawData[currIndex++] = starGreen;
+					currDrawData[currIndex++] = starBlue;
+					
+					currDrawData[currIndex++] = _alpha * starDef.alpha;
+				}
+				
+				_tileSheetData.positionData[camera.ID] = currIndex;
+			}
+			else
+			{	//Advanced render
+				radians = angle * 0.017453293;
+				cos = Math.cos(radians);
+				sin = Math.sin(radians);
+				
+				_point.x += halfWidth;
+				_point.y += halfHeight;
+				
+				// draw background
+				currDrawData[currIndex++] = _point.x;
+				currDrawData[currIndex++] = _point.y;
+				
+				currDrawData[currIndex++] = _frameID;
+				
+				currDrawData[currIndex++] = cos * scale.x * width;
+				currDrawData[currIndex++] = -sin * scale.y * height;
+				currDrawData[currIndex++] = sin * scale.x * width;
+				currDrawData[currIndex++] = cos * scale.y * height;
+				
+				if (camera.isColored)
+				{
+					currDrawData[currIndex++] = bgRed * camera.red; 
+					currDrawData[currIndex++] = bgGreen * camera.green;
+					currDrawData[currIndex++] = bgBlue * camera.blue;
+				}
+				else
+				{
+					currDrawData[currIndex++] = bgRed; 
+					currDrawData[currIndex++] = bgGreen;
+					currDrawData[currIndex++] = bgBlue;
+				}
+				
+				currDrawData[currIndex++] = bgAlpha * _alpha;
+				
+				// draw stars
+				for (j in 0...(starData.length))
+				{
+					starDef = starData[j];
+					
+					var localX:Float = starDef.x;
+					var localY:Float = starDef.y;
+					
+					var relativeX:Float = (localX * cos * scale.x - localY * sin * scale.y);
+					var relativeY:Float = (localX * sin * scale.x + localY * cos * scale.y);
+					
+					currDrawData[currIndex++] = _point.x + relativeX;
+					currDrawData[currIndex++] = _point.y + relativeY;
+					
+					currDrawData[currIndex++] = _frameID;
+					
+					currDrawData[currIndex++] = cos * scale.x;
+					currDrawData[currIndex++] = -sin * scale.y;
+					currDrawData[currIndex++] = sin * scale.x;
+					currDrawData[currIndex++] = cos * scale.y;
+					
+					starRed = starDef.red;
+					starGreen = starDef.green;
+					starBlue = starDef.blue;
+					
+					if (camera.isColored)
+					{
+						starRed *= camera.red;
+						starGreen *= camera.green;
+						starBlue *= camera.blue;
+					}
+					
+					#if cpp
+					if (_color < 0xffffff)
+					#else
+					if (_color.rgb < 0xffffff)
+					#end
+					{
+						starRed *= _red;
+						starGreen *= _green;
+						starBlue *= _blue;
+					}
+					
+					currDrawData[currIndex++] = starRed; 
+					currDrawData[currIndex++] = starGreen;
+					currDrawData[currIndex++] = starBlue;
+					
+					currDrawData[currIndex++] = _alpha * starDef.alpha;
+				}
+				
+				_tileSheetData.positionData[camera.ID] = currIndex;
+			}
+			
+			*/
+			FlxBasic._VISIBLECOUNT++;
+			if (FlxG.visualDebug && !ignoreDrawDebug)
+			{
+				drawDebug(camera);
+			}
+		} 
 	}
 	
 	override public function updateTileSheet():Void 
 	{
+		if (_tileSheetData == null)
+		{
+			if (_pixels != null)
+			{
+				_tileSheetData = TileSheetManager.addTileSheet(_pixels);
+				_tileSheetData.antialiasing = _antialiasing;
+				_framesData = _tileSheetData.addSpriteFramesData(1, 1);
+			}
+		}
+		
 		if (_sourceSprite != null)
 		{
-			// TODO: fill _imageTileIDs and imageLines with appropriate data
+			_imageTileSheetData = TileSheetManager.addTileSheet(_sourceSprite.pixels);
+			
+			var imageX:Int = 0;
+			var imageY:Int = 0;
+			var imageIndex:Int = 0;
+			
+			// TODO: fill _imageTileIDs and imageLines with appropriate data. And not forget to remove unnecessary data 
+			// (maybe clean these data containers first).
 			
 		}
 		
-		if (_tileSheetData == null)
-		{
-			super.updateTileSheet();
-		}
+		// TODO: swap tilesheets if there is such need
 	}
 	
 }

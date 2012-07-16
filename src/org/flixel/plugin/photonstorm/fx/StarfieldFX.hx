@@ -472,7 +472,6 @@ class StarSprite extends FlxSprite
 		super.destroy();
 	}
 	
-	// TODO: implement this method
 	override public function draw():Void 
 	{
 		if(_flickerTimer != 0)
@@ -688,7 +687,6 @@ class StarSprite extends FlxSprite
 				drawDebug(camera);
 			}
 		}
-		
 	}
 	
 	override public function updateTileSheet():Void

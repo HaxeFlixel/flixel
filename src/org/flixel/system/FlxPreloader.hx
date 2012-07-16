@@ -120,12 +120,23 @@ class FlxPreloader extends NMEPreloader
 		
 		minDisplayTime = 5;
 		this._init = false;
+		
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		
+		#if iphone
+		Lib.current.stage.addEventListener(Event.RESIZE, onAddedToStage);
+		#else
+		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		#end
 	}
 	
 	private function onAddedToStage(e:Event):Void 
 	{
+		#if iphone
+		Lib.current.stage.removeEventListener(Event.RESIZE, onAddedToStage);
+		#else
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		#end
 		
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		Lib.current.stage.align = StageAlign.TOP_LEFT;
