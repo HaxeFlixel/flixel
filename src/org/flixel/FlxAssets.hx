@@ -1,6 +1,7 @@
 package org.flixel;
 
 import nme.Assets;
+import nme.display.Graphics;
 import nme.text.Font;
 
 /**
@@ -43,6 +44,62 @@ class FlxAssets //extends Assets
 	}
 	
 	public static var sndBeep:String = "Beep";
+	
+	public static function drawLogo(graph:Graphics):Void
+	{
+		// draw green area
+		graph.beginFill(0x00b922);
+		graph.moveTo(50, 13);
+		graph.lineTo(51, 13);
+		graph.lineTo(87, 50);
+		graph.lineTo(87, 51);
+		graph.lineTo(51, 87);
+		graph.lineTo(50, 87);
+		graph.lineTo(13, 51);
+		graph.lineTo(13, 50);
+		graph.lineTo(50, 13);
+		graph.endFill();
+		
+		// draw yellow area
+		graph.beginFill(0xffc132);
+		graph.moveTo(0, 0);
+		graph.lineTo(25, 0);
+		graph.lineTo(50, 13);
+		graph.lineTo(13, 50);
+		graph.lineTo(0, 25);
+		graph.lineTo(0, 0);
+		graph.endFill();
+		
+		// draw red area
+		graph.beginFill(0xf5274e);
+		graph.moveTo(100, 0);
+		graph.lineTo(75, 0);
+		graph.lineTo(51, 13);
+		graph.lineTo(87, 50);
+		graph.lineTo(100, 25);
+		graph.lineTo(100, 0);
+		graph.endFill();
+		
+		// draw blue area
+		graph.beginFill(0x3641ff);
+		graph.moveTo(0, 100);
+		graph.lineTo(25, 100);
+		graph.lineTo(50, 87);
+		graph.lineTo(13, 51);
+		graph.lineTo(0, 75);
+		graph.lineTo(0, 100);
+		graph.endFill();
+		
+		// draw light-blue area
+		graph.beginFill(0x04cdfb);
+		graph.moveTo(100, 100);
+		graph.lineTo(75, 100);
+		graph.lineTo(51, 87);
+		graph.lineTo(87, 51);
+		graph.lineTo(100, 75);
+		graph.lineTo(100, 100);
+		graph.endFill();
+	}
 	
 	// TODO: write code for automatic sound caching for android target
 	public static function cacheSounds():Void
