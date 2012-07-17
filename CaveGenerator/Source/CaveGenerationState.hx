@@ -24,7 +24,7 @@ class CaveGenerationState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xffffffff;
 		#else
-		FlxG.bgColor = {rgb:0xffffff, a:0xff};
+		FlxG.camera.bgColor = {rgb:0xffffff, a:0xff};
 		#end
 		
 		// Create cave of size 200x100 tiles

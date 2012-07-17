@@ -6,25 +6,26 @@
     <movie input="" />
     <movie path="FlixelNME.nmml" />
     <movie fps="30" />
-    <movie width="400" />
-    <movie height="300" />
+    <movie width="640" />
+    <movie height="480" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="000000" />
+    <movie background="#000000" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="Source" />
-    <class path="Export/flash/haxe" />
+    <class path="Export/cpp/windows/haxe" />
+    <class path="Export/cpp/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme_install_tool&#xA;web" />
+    <option directives="nme_install_tool&#xA;desktop&#xA;windows&#xA;code_completion" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--connect 6000&#xA;-swf-version 10.1" />
+    <option additional="--connect 6000&#xA;--remap flash:nme" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

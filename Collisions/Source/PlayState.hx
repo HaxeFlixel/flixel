@@ -27,7 +27,7 @@ class PlayState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xffacbcd7;
 		#else
-		FlxG.bgColor = {rgb: 0xacbcd7, a: 0xff};
+		FlxG.camera.bgColor = {rgb: 0xacbcd7, a: 0xff};
 		#end
 		var decoration:FlxSprite = new FlxSprite(256, 159, "assets/bg.png");
 		decoration.moves = false;

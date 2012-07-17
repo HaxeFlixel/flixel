@@ -24,8 +24,11 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 	//Inside this function we will create and orient all the important game objects.
 	override public function create():Void
 	{
-		var i:Int;
+		#if neko
+		FlxG.camera.bgColor = { rgb: 0x000000, a: 0xff };
+		#end
 		
+		var i:Int;
 		//We're using the global scores array to store a basic, state-independent status string.
 		//If there is no status string (the scores array is empty) then make a new welcome message.
 		if(FlxG.scores.length <= 0)
@@ -126,7 +129,7 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 	
 	//This is the main game loop function, where all the logic is done.
 	override public function update():Void
-	{
+	{	
 		//This just says if the user clicked on the game to hide the cursor
 		if(FlxG.mouse.justPressed())
 			FlxG.mouse.hide();

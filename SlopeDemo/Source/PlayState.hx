@@ -45,7 +45,7 @@ class PlayState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xff050509;
 		#else
-		FlxG.bgColor = {rgb: 0x050509, a: 0xff};
+		FlxG.camera.bgColor = {rgb: 0x050509, a: 0xff};
 		#end
 		
 		//Simple Version

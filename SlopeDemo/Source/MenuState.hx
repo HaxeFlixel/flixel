@@ -16,7 +16,7 @@ class MenuState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xff050510;
 		#else
-		FlxG.bgColor = {rgb: 0x050510, a: 0xff};
+		FlxG.camera.bgColor = {rgb: 0x050510, a: 0xff};
 		#end
 		
 		var text:FlxText;

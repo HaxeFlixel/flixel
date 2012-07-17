@@ -24,7 +24,7 @@ class TestState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xFF333333;
 		#else
-		FlxG.bgColor = {rgb: 0x333333, a: 0xFF};
+		FlxG.camera.bgColor = {rgb: 0x333333, a: 0xFF};
 		#end
 		FlxG.mouse.show();
 		
@@ -40,7 +40,7 @@ class TestState extends FlxState
 		_infoText = new FlxText (0, FlxG.height - 20, FlxG.width);
 		_infoText.alignment = "center";
 		add(_infoText);
-					
+		
 		//add exlposion emitter
 		_explosion = new FlxEmitterExt();
 		_explosion.setRotation(0, 0);

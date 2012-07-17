@@ -28,7 +28,7 @@ class PlayState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xffffffff;
 		#else
-		FlxG.bgColor = {rgb: 0xffffff, a: 0xff};
+		FlxG.camera.bgColor = {rgb: 0xffffff, a: 0xff};
 		#end
 		
 		//Setup the level (40 x 40 tiles) Addapted from Adam Atomic's EZPlatformer

@@ -16,7 +16,7 @@ class MenuState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xFF000000;
 		#else
-		FlxG.bgColor = {rgb: 0x000000, a: 0xFF};
+		FlxG.camera.bgColor = {rgb: 0x000000, a: 0xFF};
 		#end
 		var t:FlxText;
 		t = new FlxText(0, FlxG.height / 2 - 20, FlxG.width, "Split Screen Demo");

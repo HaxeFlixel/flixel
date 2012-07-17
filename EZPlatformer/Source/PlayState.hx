@@ -28,7 +28,7 @@ class PlayState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xffaaaaaa;
 		#else
-		FlxG.bgColor = {rgb: 0xaaaaaa, a: 0xff};
+		FlxG.camera.bgColor = {rgb: 0xaaaaaa, a: 0xff};
 		#end
 		
 		var data:Array<Int> = [
