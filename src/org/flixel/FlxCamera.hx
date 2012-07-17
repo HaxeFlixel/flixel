@@ -305,7 +305,7 @@ class FlxCamera extends FlxBasic
 		#if !neko
 		_color = 0xffffff;
 		#else
-		_color = { rgb:0xffffff, a: 0 };
+		_color = { rgb:0xffffff, a: 0xff };
 		#end
 		
 		#if flash

@@ -1303,7 +1303,7 @@ class FlxG
 		#if !flash
 		if (Color == null)
 		{
-			Color = BLACK;
+			Color = FlxG.BLACK;
 		}
 		#end
 		
@@ -1346,11 +1346,7 @@ class FlxG
 	{
 		if (FlxG.camera == null)
 		{
-			#if !neko
-			return 0xff000000;
-			#else
-			return BLACK;
-			#end
+			return FlxG.BLACK;
 		}
 		else
 		{
