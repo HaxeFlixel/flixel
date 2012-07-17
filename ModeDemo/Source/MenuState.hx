@@ -31,7 +31,7 @@ class MenuState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xff131c1b;
 		#else
-		FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
+		FlxG.camera.bgColor = { rgb: 0x131c1b, a: 0xff };
 		#end
 		
 		//Simple use of flixel save game object.
