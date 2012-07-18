@@ -1,5 +1,9 @@
 flixel CHANGELOG
 
+v1.07
+------------------------------
+* Added GlitchFX class from FlixelPowerTools. It doesn't work with 'complex' sprites (such as FlxTileblock, FlxBitmapFont and FlxButtonPlus) on cpp and neko targets.
+
 v1.06
 ------------------------------
 * Added FlxKongregate plugin (flash only). Thanks to goldengrave for porting this class.
