@@ -80,7 +80,7 @@ class StarfieldFX extends BaseFX
 		#if !neko
 		backgroundColor = 0xff000000;
 		#else
-		backgroundColor = {rgd: 0x000000, a: 0xff};
+		backgroundColor = {rgb: 0x000000, a: 0xff};
 		#end
 	}
 	
