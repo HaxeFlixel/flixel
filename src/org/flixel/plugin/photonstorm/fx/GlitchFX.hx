@@ -63,8 +63,10 @@ class GlitchFX extends BaseFX
 		canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
 		image = source.pixels;
 		#else
-		sprite = new GlitchSprite(source, maxGlitch, backgroundColor);
+		sprite = new GlitchSprite(source, maxGlitch, maxSkip, backgroundColor);
 		#end
+		
+		sourceRef = source;
 		
 		updateFromSource = autoUpdate;
 		
@@ -90,10 +92,12 @@ class GlitchFX extends BaseFX
 		glitchSkip = maxSkip;
 		
 		#if (cpp || neko)
-		if (sprite != null)
+		if (sprite != null && sourceRef != null)
 		{
-			sprite.frameWidth = Math.floor(sourceRef.frameWidth + maxGlitch);
-			cast(sprite, GlitchSprite).maxGlitch = maxGlitch;
+			var glitch:GlitchSprite = cast(sprite, GlitchSprite);
+			glitch.frameWidth = Math.floor(sourceRef.frameWidth + maxGlitch);
+			glitch.maxGlitch = maxGlitch;
+			glitch.glitchSkip = maxSkip;
 		}
 		#end
 	}
@@ -126,11 +130,9 @@ class GlitchFX extends BaseFX
 			copyRect.y = 0;
 			copyPoint.y = 0;
 			copyRect.height = rndSkip;
-			#end
 			
 			var y:Int = 0;
 			
-			#if flash
 			while (y < sprite.height)
 			{
 				copyPoint.x = Std.int(Math.random() * glitchSize);
@@ -142,14 +144,13 @@ class GlitchFX extends BaseFX
 			}
 			
 			canvas.unlock();
-			
-			lastUpdate = 0;
-			
 			sprite.pixels = canvas;
 			sprite.dirty = true;
 			#else
 			cast(sprite, GlitchSprite).updateLinePositions();
 			#end
+			
+			lastUpdate = 0;
 		}
 	}
 	
@@ -181,12 +182,19 @@ class GlitchSprite extends FlxSprite
 	private var _bgAlpha:Float;
 	
 	public var maxGlitch:Float;
+	public var glitchSkip:Float;
 	
-	public function new(Source:FlxSprite, MaxGlitch:Int, BgColor:BitmapInt32)
+	public var sourceFrame:Int;
+	
+	public function new(Source:FlxSprite, MaxGlitch:Int, GlitchSkip:Int, BgColor:BitmapInt32)
 	{
 		super();
 		
 		_sourceSprite = Source;
+		sourceFrame = -1;
+		
+		this.maxGlitch = MaxGlitch;
+		this.glitchSkip = GlitchSkip;
 		
 		_imageTileIDs = new IntHash<Array<Int>>();
 		imageLines = new Array<ImageLine>();
@@ -198,6 +206,7 @@ class GlitchSprite extends FlxSprite
 		#end
 		
 		_frameID = _framesData.frameIDs[0];
+		_tileSheetData.isColored = true;
 		
 		var rgba:RGBA = FlxColor.getRGB(BgColor);
 		_bgRed = rgba.red / 255;
@@ -207,34 +216,73 @@ class GlitchSprite extends FlxSprite
 		
 		this.x = _sourceSprite.x;
 		this.y = _sourceSprite.y;
-		
-		this.width = _sourceSprite.width + MaxGlitch;
-		this.height = _sourceSprite.height;
-		
-		this.frameWidth = Math.floor(this.width);
-		this.frameHeight = Math.floor(this.height);
-		
-		this.maxGlitch = MaxGlitch;
 	}
 	
-	// TODO: update imageLines content from _sourceSprite
 	public function updateFromSourceSprite():Void
 	{
-		
+		if (_sourceSprite.pixels != _imageTileSheetData.tileSheet.nmeBitmap)
+		{
+			updateTileSheet();
+		}
+		else
+		{
+			updateLineIDs();
+		}
 	}
 	
-	// TODO: update imageLines positions
+	private function updateLineIDs():Void
+	{
+		if (sourceFrame != _sourceSprite.frame)
+		{
+			var sourceFrameHeight:Int = _sourceSprite.frameHeight;
+			var halfFrameWidth:Float = _sourceSprite.frameWidth * 0.5;
+			
+			sourceFrame = _sourceSprite.frame;
+			var frameLines:Array<Int> = _imageTileIDs.get(sourceFrame);
+			var halfFrameHeight:Float = sourceFrameHeight * 0.5;
+			
+			var imageLine:ImageLine;
+			
+			for (i in 0...(sourceFrameHeight))
+			{
+				imageLine = imageLines[i];
+				if (imageLine == null)
+				{
+					imageLines[i] = { x: 0, y: i + 0.5, tileID: frameLines[i] };
+				}
+				else
+				{
+					imageLine.x = halfFrameWidth;
+					imageLine.y = i - sourceFrameHeight + 0.5;
+					imageLine.tileID = frameLines[i];
+				}
+			}
+			
+			if (imageLines.length > _sourceSprite.frameHeight)
+			{
+				imageLines.splice(_sourceSprite.frameHeight, (imageLines.length - _sourceSprite.frameHeight));
+			}
+		}
+	}
+	
 	public function updateLinePositions():Void
 	{
-		/*while (y < sprite.height)
+		var sourceFrameHeight:Int = _sourceSprite.frameHeight;
+		
+		var rndSkip:Int = 1 + Std.int(Math.random() * glitchSkip);
+		var y:Int = 0;
+		var rndX:Float = 0;
+		
+		for (i in 0...(sourceFrameHeight))
 		{
-			copyPoint.x = Std.int(Math.random() * glitchSize);
-			canvas.copyPixels(image, copyRect, copyPoint);
+			if (i == y)
+			{
+				rndX = Std.int(Math.random() * maxGlitch);
+				y += rndSkip;
+			}
 			
-			copyRect.y += rndSkip;
-			copyPoint.y += rndSkip;
-			y += rndSkip;
-		}*/
+			imageLines[i].x = rndX;
+		}
 	}
 	
 	override public function destroy():Void 
@@ -247,7 +295,25 @@ class GlitchSprite extends FlxSprite
 		_imageTileIDs = null;
 	}
 	
-	// TODO: implement sprite drawing
+	override public function setColor(Color:BitmapInt32):BitmapInt32 
+	{
+		var col = super.setColor(Color);
+		
+		#if cpp
+		if (_color < 0xffffff)
+		#else
+		if (_color.rgb < 0xffffff)
+		#end
+		{
+			if (_imageTileSheetData != null)
+			{
+				_imageTileSheetData.isColored = true;
+			}
+		}
+		
+		return col;
+	}
+	
 	override public function draw():Void
 	{
 		if(_flickerTimer != 0)
@@ -274,6 +340,30 @@ class GlitchSprite extends FlxSprite
 		var cos:Float;
 		var sin:Float;
 		
+		var halfWidth:Float = frameWidth * 0.5;
+		var halfHeight:Float = frameHeight * 0.5;
+		
+		var lineDef:ImageLine;
+		
+		var lineRed:Float = 1;
+		var lineGreen:Float = 1;
+		var lineBlue:Float = 1;
+		
+		#if cpp
+		if (_color < 0xffffff)
+		#else
+		if (_color.rgb < 0xffffff)
+		#end
+		{
+			lineRed = _red;
+			lineGreen = _green;
+			lineBlue = _blue;
+		}
+		
+		var onCamRed:Float;
+		var onCamGreen:Float;
+		var onCamBlue:Float;
+		
 		while (i < l)
 		{
 			camera = cameras[i++];
@@ -283,9 +373,22 @@ class GlitchSprite extends FlxSprite
 				continue;
 			}
 			
+			var onCamRed:Float = lineRed;
+			var onCamGreen:Float = lineGreen;
+			var onCamBlue:Float = lineBlue;
+			
+			if (camera.isColored)
+			{
+				onCamRed = camera.red;
+				onCamGreen = camera.green;
+				onCamBlue = camera.blue;
+			}
+			
+			var useColor:Bool = (_imageTileSheetData.isColored || camera.isColored);
+			
 			currDrawData = _tileSheetData.drawData[camera.ID];
 			currIndex = _tileSheetData.positionData[camera.ID];
-			/*
+			
 			_point.x = Math.floor(x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x)) + origin.x;
 			_point.y = Math.floor(y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y)) + origin.y;
 			
@@ -300,72 +403,58 @@ class GlitchSprite extends FlxSprite
 					
 					currDrawData[currIndex++] = _frameID;
 					
-					currDrawData[currIndex++] = width;
+					currDrawData[currIndex++] = frameWidth;
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = height;
+					currDrawData[currIndex++] = frameHeight;
 					
 					if (camera.isColored)
 					{
-						currDrawData[currIndex++] = bgRed * camera.red; 
-						currDrawData[currIndex++] = bgGreen * camera.green;
-						currDrawData[currIndex++] = bgBlue * camera.blue;
+						currDrawData[currIndex++] = _bgRed * camera.red; 
+						currDrawData[currIndex++] = _bgGreen * camera.green;
+						currDrawData[currIndex++] = _bgBlue * camera.blue;
 					}
 					else
 					{
-						currDrawData[currIndex++] = bgRed; 
-						currDrawData[currIndex++] = bgGreen;
-						currDrawData[currIndex++] = bgBlue;
+						currDrawData[currIndex++] = _bgRed; 
+						currDrawData[currIndex++] = _bgGreen;
+						currDrawData[currIndex++] = _bgBlue;
+						
 					}
 					
-					currDrawData[currIndex++] = bgAlpha * _alpha;
+					currDrawData[currIndex++] = _bgAlpha * _alpha;
+					_tileSheetData.positionData[camera.ID] = currIndex;
 				}
 				
-				// draw stars
-				for (j in 0...(starData.length))
+				// draw lines
+				currDrawData = _imageTileSheetData.drawData[camera.ID];
+				currIndex = _imageTileSheetData.positionData[camera.ID];
+				
+				for (j in 0...(imageLines.length))
 				{
-					starDef = starData[j];
+					lineDef = imageLines[j];
 					
-					currDrawData[currIndex++] = _point.x + starDef.x + 0.5;
-					currDrawData[currIndex++] = _point.y + starDef.y + 0.5;
+					currDrawData[currIndex++] = _point.x + lineDef.x;
+					currDrawData[currIndex++] = _point.y + lineDef.y;
 					
-					currDrawData[currIndex++] = _frameID;
+					currDrawData[currIndex++] = lineDef.tileID;
 					
 					currDrawData[currIndex++] = 1;
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
 					
-					starRed = starDef.red;
-					starGreen = starDef.green;
-					starBlue = starDef.blue;
-					
-					if (camera.isColored)
+					if (useColor)
 					{
-						starRed *= camera.red;
-						starGreen *= camera.green;
-						starBlue *= camera.blue;
+						currDrawData[currIndex++] = onCamRed; 
+						currDrawData[currIndex++] = onCamGreen;
+						currDrawData[currIndex++] = onCamBlue;
 					}
 					
-					#if cpp
-					if (_color < 0xffffff)
-					#else
-					if (_color.rgb < 0xffffff)
-					#end
-					{
-						starRed *= _red;
-						starGreen *= _green;
-						starBlue *= _blue;
-					}
-					
-					currDrawData[currIndex++] = starRed; 
-					currDrawData[currIndex++] = starGreen;
-					currDrawData[currIndex++] = starBlue;
-					
-					currDrawData[currIndex++] = _alpha * starDef.alpha;
+					currDrawData[currIndex++] = _alpha;
 				}
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_imageTileSheetData.positionData[camera.ID] = currIndex;
 			}
 			else
 			{	//Advanced render
@@ -384,35 +473,38 @@ class GlitchSprite extends FlxSprite
 					
 					currDrawData[currIndex++] = _frameID;
 					
-					currDrawData[currIndex++] = cos * scale.x * width;
-					currDrawData[currIndex++] = -sin * scale.y * height;
-					currDrawData[currIndex++] = sin * scale.x * width;
-					currDrawData[currIndex++] = cos * scale.y * height;
+					currDrawData[currIndex++] = cos * scale.x * frameWidth;
+					currDrawData[currIndex++] = -sin * scale.y * frameHeight;
+					currDrawData[currIndex++] = sin * scale.x * frameWidth;
+					currDrawData[currIndex++] = cos * scale.y * frameHeight;
 					
 					if (camera.isColored)
 					{
-						currDrawData[currIndex++] = bgRed * camera.red; 
-						currDrawData[currIndex++] = bgGreen * camera.green;
-						currDrawData[currIndex++] = bgBlue * camera.blue;
+						currDrawData[currIndex++] = _bgRed * camera.red; 
+						currDrawData[currIndex++] = _bgGreen * camera.green;
+						currDrawData[currIndex++] = _bgBlue * camera.blue;
 					}
 					else
 					{
-						currDrawData[currIndex++] = bgRed; 
-						currDrawData[currIndex++] = bgGreen;
-						currDrawData[currIndex++] = bgBlue;
+						currDrawData[currIndex++] = _bgRed; 
+						currDrawData[currIndex++] = _bgGreen;
+						currDrawData[currIndex++] = _bgBlue;
 					}
 					
-					currDrawData[currIndex++] = bgAlpha * _alpha;
+					currDrawData[currIndex++] = _bgAlpha * _alpha;
+					_tileSheetData.positionData[camera.ID] = currIndex;
 				}
 				
+				// draw lines
+				currDrawData = _imageTileSheetData.drawData[camera.ID];
+				currIndex = _imageTileSheetData.positionData[camera.ID];
 				
-				// draw stars
-				for (j in 0...(starData.length))
+				for (j in 0...(imageLines.length))
 				{
-					starDef = starData[j];
+					lineDef = imageLines[j];
 					
-					var localX:Float = starDef.x;
-					var localY:Float = starDef.y;
+					var localX:Float = lineDef.x - halfWidth;
+					var localY:Float = lineDef.y - halfHeight;
 					
 					var relativeX:Float = (localX * cos * scale.x - localY * sin * scale.y);
 					var relativeY:Float = (localX * sin * scale.x + localY * cos * scale.y);
@@ -420,46 +512,26 @@ class GlitchSprite extends FlxSprite
 					currDrawData[currIndex++] = _point.x + relativeX;
 					currDrawData[currIndex++] = _point.y + relativeY;
 					
-					currDrawData[currIndex++] = _frameID;
+					currDrawData[currIndex++] = lineDef.tileID;
 					
 					currDrawData[currIndex++] = cos * scale.x;
 					currDrawData[currIndex++] = -sin * scale.y;
 					currDrawData[currIndex++] = sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
 					
-					starRed = starDef.red;
-					starGreen = starDef.green;
-					starBlue = starDef.blue;
-					
-					if (camera.isColored)
+					if (useColor)
 					{
-						starRed *= camera.red;
-						starGreen *= camera.green;
-						starBlue *= camera.blue;
+						currDrawData[currIndex++] = onCamRed; 
+						currDrawData[currIndex++] = onCamGreen;
+						currDrawData[currIndex++] = onCamBlue;
 					}
 					
-					#if cpp
-					if (_color < 0xffffff)
-					#else
-					if (_color.rgb < 0xffffff)
-					#end
-					{
-						starRed *= _red;
-						starGreen *= _green;
-						starBlue *= _blue;
-					}
-					
-					currDrawData[currIndex++] = starRed; 
-					currDrawData[currIndex++] = starGreen;
-					currDrawData[currIndex++] = starBlue;
-					
-					currDrawData[currIndex++] = _alpha * starDef.alpha;
+					currDrawData[currIndex++] = _alpha;
 				}
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_imageTileSheetData.positionData[camera.ID] = currIndex;
 			}
 			
-			*/
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
@@ -490,12 +562,19 @@ class GlitchSprite extends FlxSprite
 			{
 				_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 				_tileSheetData.antialiasing = _antialiasing;
+				_tileSheetData.isTilemap = false;
 				_framesData = _tileSheetData.addSpriteFramesData(1, 1);
 			}
 		}
 		
 		if (_sourceSprite != null)
 		{
+			this.width = _sourceSprite.width + maxGlitch;
+			this.height = _sourceSprite.height;
+			
+			this.frameWidth = Math.floor(this.width);
+			this.frameHeight = Math.floor(this.height);
+			
 			_imageTileSheetData = TileSheetManager.addTileSheet(_sourceSprite.pixels);
 			
 			var frameLines:Array<Int>;
@@ -513,19 +592,19 @@ class GlitchSprite extends FlxSprite
 			for (i in 0...(_sourceSprite.frames))
 			{
 				frameX = (sourceFrameWidth + 1) * i;
-				if (((frameX + sourceFrameWidth) >= sourcePixelsWidth) || (i == 0))
+				if (((frameX + sourceFrameWidth) >= sourcePixelsWidth) && (i != 0))
 				{
 					frameX = 0;
 					frameY += sourceFrameHeight;
 				}
 				
-				if (((frameY + sourceFrameHeight) <= sourcePixelsHeight) || (i == 0))
+				if (((frameY + sourceFrameHeight) <= sourcePixelsHeight))
 				{
 					frameLines = [];
 					
 					for (j in 0...(sourceFrameHeight))
 					{
-						sourceRect = new Rectangle(frameX, frameY, sourceFrameWidth, 1);
+						sourceRect = new Rectangle(frameX, frameY + j, sourceFrameWidth, 1);
 						tileID = _imageTileSheetData.addTileRect(sourceRect);
 						frameLines.push(tileID);
 					}
@@ -534,19 +613,7 @@ class GlitchSprite extends FlxSprite
 				}
 			}
 			
-			frameLines = _imageTileIDs.get(_sourceSprite.frame);
-			var halfFrame:Float = sourceFrameWidth * 0.5;
-			
-			for (i in 0...(_sourceSprite.frameHeight))
-			{
-				imageLines[i] = { x: halfFrame, y: i, tileID: frameLines[i] };
-			}
-			
-			if (imageLines.length > _sourceSprite.frameHeight)
-			{
-				imageLines.splice(_sourceSprite.frameHeight, (imageLines.length - _sourceSprite.frameHeight));
-			}
-			
+			updateLineIDs();
 		}
 		
 		swapTileSheets();
