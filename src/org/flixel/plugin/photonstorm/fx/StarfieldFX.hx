@@ -522,9 +522,12 @@ class StarSprite extends FlxSprite
 			if (simpleRender)
 			{	//Simple render
 				
+				_point.x += halfWidth;
+				_point.y += halfHeight;
+				
 				// draw background
-				currDrawData[currIndex++] = _point.x + halfWidth;
-				currDrawData[currIndex++] = _point.y + halfHeight;
+				currDrawData[currIndex++] = _point.x;
+				currDrawData[currIndex++] = _point.y;
 				
 				currDrawData[currIndex++] = _frameID;
 				
