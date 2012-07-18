@@ -93,6 +93,7 @@ class GlitchFX extends BaseFX
 		if (sprite != null)
 		{
 			sprite.frameWidth = Math.floor(sourceRef.frameWidth + maxGlitch);
+			cast(sprite, GlitchSprite).maxGlitch = maxGlitch;
 		}
 		#end
 	}
@@ -112,8 +113,7 @@ class GlitchFX extends BaseFX
 				#if flash
 				image = sourceRef.framePixels;
 				#else
-				// TODO: update glitch sprite graphics
-				
+				cast(sprite, GlitchSprite).updateFromSourceSprite();
 				#end
 			}
 			
@@ -148,8 +148,7 @@ class GlitchFX extends BaseFX
 			sprite.pixels = canvas;
 			sprite.dirty = true;
 			#else
-			// TODO: implement drawing for cpp and neko targets
-			
+			cast(sprite, GlitchSprite).updateLinePositions();
 			#end
 		}
 	}
@@ -181,8 +180,7 @@ class GlitchSprite extends FlxSprite
 	private var _bgBlue:Float;
 	private var _bgAlpha:Float;
 	
-	// TODO: make all necessary properties
-	
+	public var maxGlitch:Float;
 	
 	public function new(Source:FlxSprite, MaxGlitch:Int, BgColor:BitmapInt32)
 	{
@@ -215,11 +213,28 @@ class GlitchSprite extends FlxSprite
 		
 		this.frameWidth = Math.floor(this.width);
 		this.frameHeight = Math.floor(this.height);
+		
+		this.maxGlitch = MaxGlitch;
 	}
 	
+	// TODO: update imageLines content from _sourceSprite
 	public function updateFromSourceSprite():Void
 	{
 		
+	}
+	
+	// TODO: update imageLines positions
+	public function updateLinePositions():Void
+	{
+		/*while (y < sprite.height)
+		{
+			copyPoint.x = Std.int(Math.random() * glitchSize);
+			canvas.copyPixels(image, copyRect, copyPoint);
+			
+			copyRect.y += rndSkip;
+			copyPoint.y += rndSkip;
+			y += rndSkip;
+		}*/
 	}
 	
 	override public function destroy():Void 
@@ -232,10 +247,9 @@ class GlitchSprite extends FlxSprite
 		_imageTileIDs = null;
 	}
 	
+	// TODO: implement sprite drawing
 	override public function draw():Void
 	{
-		// TODO: implement sprite drawing
-		
 		if(_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -458,9 +472,13 @@ class GlitchSprite extends FlxSprite
 	{
 		if (_tileSheetData != null && _imageTileSheetData != null)
 		{
-			// TODO: swap tilesheets if there is such need
+			var bgIndex:Int = TileSheetManager.getTileSheetIndex(_tileSheetData);
+			var imgIndex:Int = TileSheetManager.getTileSheetIndex(_imageTileSheetData);
 			
-			
+			if (bgIndex > imgIndex)
+			{
+				TileSheetManager.swapTileSheets(bgIndex, imgIndex);
+			}
 		}
 	}
 	
@@ -479,9 +497,6 @@ class GlitchSprite extends FlxSprite
 		if (_sourceSprite != null)
 		{
 			_imageTileSheetData = TileSheetManager.addTileSheet(_sourceSprite.pixels);
-			
-			// TODO: fill _imageTileIDs and imageLines with appropriate data. And not forget to remove unnecessary data 
-			// (maybe clean these data containers first).
 			
 			var frameLines:Array<Int>;
 			var frameX:Int = 0;
