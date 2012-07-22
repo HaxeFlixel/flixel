@@ -8,7 +8,7 @@ import nme.geom.Rectangle;
  * @author Zaphod
  */
  
-class Tree
+class Atlas
 {
 	public var tempStorage:Array<TempAtlasObj>;
 	
