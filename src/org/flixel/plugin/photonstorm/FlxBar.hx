@@ -27,8 +27,8 @@ import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
 #if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetData;
-import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.system.tileSheet.TileSheetData;
+import org.flixel.system.tileSheet.TileSheetManager;
 #end
 
 /**

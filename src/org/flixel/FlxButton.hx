@@ -6,7 +6,7 @@ import nme.display.BitmapInt32;
 import nme.events.MouseEvent;
 import nme.media.Sound;
 import nme.media.Sound;
-import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.system.tileSheet.TileSheetManager;
 
 import org.flixel.FlxSprite;
 

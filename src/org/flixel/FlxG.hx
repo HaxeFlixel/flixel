@@ -24,7 +24,7 @@ import nme.ui.Multitouch;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
-import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.system.tileSheet.TileSheetManager;
 import org.flixel.tweens.misc.MultiVarTween;
 
 import org.flixel.plugin.DebugPathDisplay;

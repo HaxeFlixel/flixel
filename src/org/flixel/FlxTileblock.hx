@@ -6,7 +6,7 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 
 #if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.system.tileSheet.TileSheetManager;
 #end
 
 /**

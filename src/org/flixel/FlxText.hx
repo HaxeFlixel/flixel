@@ -7,7 +7,7 @@ import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
 
 #if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.system.tileSheet.TileSheetManager;
 #end
 
 /**

@@ -20,7 +20,7 @@ import nme.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.plugin.photonstorm.FlxColor;
-import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.system.tileSheet.TileSheetManager;
 
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxGradient;

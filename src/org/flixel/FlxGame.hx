@@ -21,7 +21,7 @@ import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.TouchManager;
 
 #if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.system.tileSheet.TileSheetManager;
 import nme.events.JoystickEvent;
 #end
 

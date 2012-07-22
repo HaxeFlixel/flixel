@@ -10,8 +10,8 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 
 #if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetData;
-import org.flixel.tileSheetManager.TileSheetManager;
+import org.flixel.system.tileSheet.TileSheetData;
+import org.flixel.system.tileSheet.TileSheetManager;
 #end
 
 #if flash

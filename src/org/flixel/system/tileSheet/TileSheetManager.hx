@@ -1,4 +1,4 @@
-package org.flixel.tileSheetManager;
+package org.flixel.system.tileSheet;
 #if (cpp || neko)
 
 import nme.display.BitmapData;
