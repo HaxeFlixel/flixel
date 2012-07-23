@@ -10,7 +10,7 @@ class FlxLayer extends FlxGroup
 	
 	#if (cpp || neko)
 	private var _atlas:Atlas;
-	#else
+	#end
 	
 	public function new(?MaxSize:Int = 0)
 	{
@@ -46,7 +46,7 @@ class FlxLayer extends FlxGroup
 	
 	override public function recycle(?ObjectClass:Class<FlxBasic> = null):FlxBasic 
 	{
-		return super.recycle(?ObjectClass);
+		return super.recycle(ObjectClass);
 	}
 	
 	public function addWithBaking(Object:FlxBasic):FlxBasic
