@@ -6,7 +6,7 @@ package org.flixel;
  * It is for all intents and purpose a fancy FlxGroup.
  * And really, it's not even that fancy.
  */
-class FlxState extends FlxGroup
+class FlxState extends FlxLayer
 {
 	
 	public function new()

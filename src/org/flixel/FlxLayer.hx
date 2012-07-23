@@ -12,12 +12,15 @@ class FlxLayer extends FlxGroup
 	private var _atlas:Atlas;
 	#else
 	
-	public function new(?TextureWidth:Int = 0, ?TextureHeight:Int = 0, ?MaxSize:Int = 0)
+	public function new(?MaxSize:Int = 0)
 	{
 		super(MaxSize);
-		
+	}
+	
+	public function createAtlas(TextureWidth:Int, TextureHeight:Int):Void
+	{
 		#if (cpp || neko)
-		if (TextureWidth != 0 && TextureHeight != 0)
+		if (TextureWidth > 0 && TextureHeight > 0)
 		{
 			_atlas = new Atlas(TextureWidth, TextureHeight, 1, 1);
 		}
@@ -38,16 +41,22 @@ class FlxLayer extends FlxGroup
 	
 	override public function add(Object:FlxBasic):FlxBasic 
 	{
-		var basic:FlxBasic = super.add(Object);
+		return super.add(Object);
+	}
+	
+	override public function recycle(?ObjectClass:Class<FlxBasic> = null):FlxBasic 
+	{
+		return super.recycle(?ObjectClass);
+	}
+	
+	public function addWithBaking(Object:FlxBasic):FlxBasic
+	{
 		
-		#if (cpp || neko)
-		if (_atlas != null)
-		{
-			
-		}
-		#end
+	}
+	
+	public function recycleWithBaking(?ObjectClass:Class<FlxBasic> = null):FlxBasic
+	{
 		
-		return basic;
 	}
 	
 }
