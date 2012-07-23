@@ -39,7 +39,7 @@ class FlxLayer extends FlxGroup
 		#end
 	}
 	
-	override public function add(Object:FlxBasic):FlxBasic 
+	override public function add(Object:FlxBasic):FlxBasic
 	{
 		return super.add(Object);
 	}
@@ -51,12 +51,12 @@ class FlxLayer extends FlxGroup
 	
 	public function addWithBaking(Object:FlxBasic):FlxBasic
 	{
-		
+		return add(Object);
 	}
 	
 	public function recycleWithBaking(?ObjectClass:Class<FlxBasic> = null):FlxBasic
 	{
-		
+		return recycle(ObjectClass);
 	}
 	
 }
