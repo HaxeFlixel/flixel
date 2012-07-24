@@ -80,6 +80,18 @@ class FlxTween
 		}
 		active = true;
 	}
+	
+	/**
+	 * Immediately stops the Tween and removes it from its Tweener without calling the complete callback.
+	 */
+	public function cancel():Void
+	{
+		active = false;
+		if (_parent != null)
+		{
+			_parent.removeTween(this);
+		}
+	}
 
 	/** @private Called when the Tween completes. */
 	private function finish():Void
