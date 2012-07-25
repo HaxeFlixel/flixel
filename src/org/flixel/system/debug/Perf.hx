@@ -156,17 +156,10 @@ class Perf extends FlxWindow
 			}
 			
 			var activeCount:Int = 0;
-			/* TODO: Check this place. 
-			 * This is very strange. see source .as file 
-			 */
-			var visibleCount:Int = 0;
-			/*  */
-			var te:Int = 0;
 			i = 0;
 			while(i < _objectMarker)
 			{
-				activeCount += _activeObject[i];
-				visibleCount += _visibleObject[i++];
+				activeCount += _activeObject[i++];
 			}
 			activeCount = Math.floor(activeCount / _objectMarker);
 			
@@ -179,8 +172,7 @@ class Perf extends FlxWindow
 				drawTime += _flixelDraw[i++];
 			}
 			
-			//var visibleCount:UInt = 0;
-			visibleCount = 0;
+			var visibleCount:Int = 0;
 			i = 0;
 			while (i < _visibleObjectMarker)
 			{
