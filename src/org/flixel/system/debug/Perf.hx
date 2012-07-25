@@ -32,6 +32,10 @@ class Perf extends FlxWindow
 	private var _flash:Array <Float>;
 	private var _visibleObject:Array<Int>;
 	
+	#if (cpp || neko)
+	private var _drawCalls:Array<Int>;
+	private var _drawCallsMarker:Int;
+	#end
 	
 	/**
 	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
@@ -69,7 +73,7 @@ class Perf extends FlxWindow
 		#end
 		
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
-		resize(90,66);
+		resize(90, 80);
 		
 		_lastTime = 0;
 		_updateTimer = 0;
@@ -84,21 +88,26 @@ class Perf extends FlxWindow
 		_text.defaultTextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
 		addChild(_text);
 		
-		_flixelUpdate = new Array(/*32*/);
+		_flixelUpdate = new Array();
 		FlxU.SetArrayLength(_flixelUpdate, 32);
 		_flixelUpdateMarker = 0;
-		_flixelDraw = new Array(/*32*/);
+		_flixelDraw = new Array();
 		FlxU.SetArrayLength(_flixelDraw, 32);
 		_flixelDrawMarker = 0;
-		_flash = new Array(/*32*/);
+		_flash = new Array();
 		FlxU.SetArrayLength(_flash, 32);
 		_flashMarker = 0;
-		_activeObject = new Array(/*32*/);
+		_activeObject = new Array();
 		FlxU.SetArrayLength(_activeObject, 32);
 		_objectMarker = 0;
-		_visibleObject = new Array(/*32*/);
+		_visibleObject = new Array();
 		FlxU.SetArrayLength(_visibleObject, 32);
 		_visibleObjectMarker = 0;
+		
+		#if (cpp || neko)
+		_drawCalls = [];
+		_drawCallsMarker = 0;
+		#end
 	}
 	
 	/**
@@ -113,6 +122,11 @@ class Perf extends FlxWindow
 		_flash = null;
 		_activeObject = null;
 		_visibleObject = null;
+		
+		#if (cpp || neko)
+		_drawCalls = null;
+		#end
+		
 		super.destroy();
 	}
 	
@@ -147,7 +161,7 @@ class Perf extends FlxWindow
 			output += Std.int(1 / (flashPlayerFramerate / 1000)) + "/" + FlxG.flashFramerate + "fps\n";
 			
 			output += Math.round(System.totalMemory * 0.000000954 * 100) / 100 + "MB\n";
-
+			
 			var updateTime:Int = 0;
 			i = 0;
 			while (i < _flixelUpdateMarker)
@@ -181,7 +195,19 @@ class Perf extends FlxWindow
 			visibleCount = Math.floor(visibleCount / _visibleObjectMarker);
 
 			output += "D:" + visibleCount + " " + Std.int(drawTime / _flixelDrawMarker) + "ms";
-
+			
+			#if (cpp || neko)
+			var drawCallsCount:Int = 0;
+			i = 0;
+			while (i < _drawCallsMarker)
+			{
+				drawCallsCount += _drawCalls[i++];
+			}
+			drawCallsCount = Math.floor(drawCallsCount / _drawCallsMarker);
+			output += "\nDrTls:" + drawCallsCount;
+			_drawCallsMarker = 0;
+			#end
+			
 			_text.text = output;
 			
 			_flixelUpdateMarker = 0;
@@ -237,4 +263,15 @@ class Perf extends FlxWindow
 	{
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
+	
+	#if (cpp || neko)
+	/**
+	 * Keep track of how many times drawTiles() method was called.
+	 * @param Count	How many times drawTiles() method was called.
+	 */
+	public function drawCalls(Drawcalls:Int) 
+	{
+		_drawCalls[_drawCallsMarker++] = Drawcalls;
+	}
+	#end
 }

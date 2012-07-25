@@ -817,6 +817,7 @@ class FlxGame extends Sprite
 		
 		#if (cpp || neko)
 		TileSheetManager.renderAll();
+		_debugger.perf.drawCalls(TileSheetManager._DRAWCALLS);
 		#end
 		
 		FlxG.drawPlugins();

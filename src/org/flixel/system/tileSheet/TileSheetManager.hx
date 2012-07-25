@@ -20,6 +20,8 @@ class TileSheetManager
 	
 	public static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
 	
+	public static var _DRAWCALLS:Int = 0;
+	
 	public function new() {  }
 	
 	/**
@@ -71,6 +73,7 @@ class TileSheetManager
 	
 	public static function renderAll():Void
 	{
+		TileSheetManager._DRAWCALLS = 0;
 		var numCameras:Int = FlxG.cameras.length;
 		for (dataObject in tileSheetData)
 		{

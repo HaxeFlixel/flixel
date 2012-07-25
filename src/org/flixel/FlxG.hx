@@ -91,13 +91,13 @@ class FlxG
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
-	static public inline var LIBRARY_MAJOR_VERSION:Int = 1;
+	static public inline var LIBRARY_MAJOR_VERSION:String = "1";
 	
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:Int = 06;
+	static public inline var LIBRARY_MINOR_VERSION:String = "06";
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.

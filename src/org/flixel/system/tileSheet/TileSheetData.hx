@@ -201,6 +201,7 @@ class TileSheetData
 				
 				cameraGraphics = camera._canvas.graphics;
 				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), tempFlags);
+				TileSheetManager._DRAWCALLS++;
 			}
 		}
 	}
