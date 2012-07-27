@@ -47,7 +47,7 @@ class GlitchFX extends BaseFX
 	public function createFromFlxSprite(source:FlxSprite, maxGlitch:Int, maxSkip:Int, ?autoUpdate:Bool = false, ?backgroundColor:BitmapInt32 = null):FlxSprite
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (backgroundColor == null)
 		{
 			#if neko
@@ -58,7 +58,7 @@ class GlitchFX extends BaseFX
 		}
 		#end
 		
-		#if flash
+		#if (flash || js)
 		sprite = new FlxSprite(source.x, source.y).makeGraphic(Math.floor(source.width + maxGlitch), Math.floor(source.height), backgroundColor);
 		canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
 		image = source.pixels;
@@ -77,7 +77,7 @@ class GlitchFX extends BaseFX
 		
 		copyPoint = new Point(0, 0);
 		
-		#if flash
+		#if (flash || js)
 		clsRect = new Rectangle(0, 0, canvas.width, canvas.height);
 		copyRect = new Rectangle(0, 0, image.width, 1);
 		#end
@@ -114,7 +114,7 @@ class GlitchFX extends BaseFX
 			
 			if (updateFromSource && sourceRef.exists)
 			{
-				#if flash
+				#if (flash || js)
 				image = sourceRef.framePixels;
 				#else
 				cast(sprite, GlitchSprite).updateFromSourceSprite();
@@ -123,7 +123,7 @@ class GlitchFX extends BaseFX
 			
 			var rndSkip:Int = 1 + Std.int(Math.random() * glitchSkip);
 			
-			#if flash
+			#if (flash || js)
 			canvas.lock();
 			canvas.fillRect(clsRect, clsColor);
 			

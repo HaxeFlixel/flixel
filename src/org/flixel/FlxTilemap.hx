@@ -80,7 +80,7 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Internal representation of rectangles, one for each tile in the entire tilemap, used to speed up drawing.
 	 */
-	#if flash
+	#if (flash || js)
 	private var _rects:Array<Rectangle>;
 	#end
 	/**
@@ -96,7 +96,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _tileObjects:Array<FlxTile>;
 	
-	#if flash
+	#if (flash || js)
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
@@ -154,7 +154,7 @@ class FlxTilemap extends FlxObject
 		_data = null;
 		_tileWidth = 0;
 		_tileHeight = 0;
-		#if flash
+		#if (flash || js)
 		_rects = null;
 		_debugRect = null;
 		#else
@@ -164,7 +164,7 @@ class FlxTilemap extends FlxObject
 		_tileObjects = null;
 		immovable = true;
 		cameras = null;
-		#if flash
+		#if (flash || js)
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
@@ -200,7 +200,7 @@ class FlxTilemap extends FlxObject
 		}
 		_buffers = null;
 		_data = null;
-		#if flash
+		#if (flash || js)
 		_rects = null;
 		_debugRect = null;
 		_debugTileNotSolid = null;
@@ -308,7 +308,7 @@ class FlxTilemap extends FlxObject
 		updateTileSheet();
 		
 		//create debug tiles for rendering bounding boxes on demand
-		#if flash
+		#if (flash || js)
 		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
 		_debugTilePartial = makeDebugTile(FlxG.PINK);
 		_debugTileSolid = makeDebugTile(FlxG.GREEN);
@@ -317,7 +317,7 @@ class FlxTilemap extends FlxObject
 		//Then go through and create the actual map
 		width = widthInTiles * _tileWidth;
 		height = heightInTiles * _tileHeight;
-		#if flash
+		#if (flash || js)
 		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		_rects = new Array<Rectangle>(/*totalTiles*/);
 		FlxU.SetArrayLength(_rects, totalTiles);
@@ -340,6 +340,10 @@ class FlxTilemap extends FlxObject
 	 */
 	#if flash
 	private function makeDebugTile(Color:UInt):BitmapData
+	#elseif js
+	private function makeDebugTile(Color:Int):BitmapData
+	#end
+	#if (flash || js)
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
@@ -380,7 +384,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
-		#if flash
+		#if (flash || js)
 		Buffer.fill();
 		#else
 		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
@@ -438,7 +442,7 @@ class FlxTilemap extends FlxObject
 			_flashPoint.x = 0;
 			while(column < screenColumns)
 			{
-				#if flash
+				#if (flash || js)
 				_flashRect = _rects[columnIndex];
 				if(_flashRect != null)
 				{
@@ -546,7 +550,7 @@ class FlxTilemap extends FlxObject
 			row++;
 		}
 		
-		#if !flash
+		#if (cpp || neko)
 		_tileSheetData.positionData[Camera.ID] = currIndex;
 		#end
 		
@@ -584,7 +588,7 @@ class FlxTilemap extends FlxObject
 				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera);
 			}
 			buffer = _buffers[i++];
-			#if flash
+			#if (flash || js)
 			if(!buffer.dirty)
 			{
 				_point.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
@@ -1872,14 +1876,14 @@ class FlxTilemap extends FlxObject
 		var tile:FlxTile = _tileObjects[_data[Index]];
 		if((tile == null) || !tile.visible)
 		{
-			#if flash
+			#if (flash || js)
 			_rects[Index] = null;
 			#else
 			_rectIDs[Index] = -1;
 			#end
 			return;
 		}
-		#if flash
+		#if (flash || js)
 		var rx:Int = (_data[Index] - _startingIndex) * _tileWidth;
 		var ry:Int = 0;
 		if(Std.int(rx) >= _tiles.width)
@@ -1936,7 +1940,7 @@ class FlxTilemap extends FlxObject
 		var rowIndex:Int = X + (Y * widthInTiles);
 		
 		var rect:Rectangle = null;
-		#if flash
+		#if (flash || js)
 		rect = _rects[rowIndex];
 		#else
 		var tile:FlxTile = _tileObjects[_data[rowIndex]];

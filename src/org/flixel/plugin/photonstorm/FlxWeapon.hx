@@ -193,7 +193,7 @@ class FlxWeapon
 	public function makePixelBullet(quantity:Int, ?width:Int = 2, ?height:Int = 2, ?color:BitmapInt32, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (color == null)
 		{
 			#if !neko
@@ -243,7 +243,7 @@ class FlxWeapon
 		{
 			var tempBullet:Bullet = new Bullet(this, b);
 			
-			#if flash
+			#if (flash || js)
 			if (autoRotate)
 			{
 				tempBullet.loadRotatedGraphic(image, rotations, frame, antiAliasing, autoBuffer);

@@ -36,7 +36,7 @@ class FlxCollision
 {
 	public static var debug:BitmapData = new BitmapData(1, 1, false);
 	
-	#if flash
+	#if (flash || js)
 	public static var CAMERA_WALL_OUTSIDE:UInt = 0;
 	public static var CAMERA_WALL_INSIDE:UInt = 1;
 	#else
@@ -64,7 +64,7 @@ class FlxCollision
 	 */
 	public static function pixelPerfectCheck(contact:FlxSprite, target:FlxSprite, ?alphaTolerance:Int = 255, ?camera:FlxCamera = null):Bool
 	{
-		#if flash
+		#if (flash || js)
 		var pointA:Point = new Point();
 		var pointB:Point = new Point();
 		
@@ -162,7 +162,7 @@ class FlxCollision
 			return false;
 		}
 		
-		#if flash
+	#if (flash || js)
 		//	How deep is pointX/Y within the rect?
 		var test:BitmapData = target.framePixels;
 		if (Std.int(FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)))) >= alphaTolerance)
@@ -173,7 +173,7 @@ class FlxCollision
 		{
 			return false;
 		}
-		#else
+	#else
 		var indexX:Int = target.frame * target.frameWidth;
 		var indexY:Int = 0;
 
@@ -208,7 +208,7 @@ class FlxCollision
 		#end
 		
 		return (pixelAlpha >= alphaTolerance);
-		#end
+	#end
 	}
 	
 	/**

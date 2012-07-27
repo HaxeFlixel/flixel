@@ -75,7 +75,7 @@ class FlxDebugger extends Sprite
 		hasMouse = false;
 		_screen = new Point(Width, Height);
 		
-		#if flash
+		#if (flash || js)
 		addChild(new Bitmap(new BitmapData(Math.floor(Width), 15, true, 0x7f000000)));
 		#else
 		var bg:Sprite = new Sprite();

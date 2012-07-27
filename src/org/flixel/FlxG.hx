@@ -136,7 +136,7 @@ class FlxG
 	 */
 	#if flash
 	static public inline var RED:UInt = 0xffff0012;
-	#elseif cpp
+	#elseif (cpp || js)
 	static public inline var RED:BitmapInt32 = 0xffff0012;
 	#elseif neko
 	static public inline var RED:BitmapInt32 = {rgb: 0xff0012, a: 0xff};
@@ -146,7 +146,7 @@ class FlxG
 	 */
 	#if flash
 	static public inline var GREEN:UInt = 0xff00f225;
-	#elseif cpp
+	#elseif (cpp || js)
 	static public inline var GREEN:BitmapInt32 = 0xff00f225;
 	#elseif neko
 	static public inline var GREEN:BitmapInt32 = {rgb: 0x00f225, a: 0xff};
@@ -156,7 +156,7 @@ class FlxG
 	 */
 	#if flash
 	static public inline var BLUE:UInt = 0xff0090e9;
-	#elseif cpp
+	#elseif (cpp || js)
 	static public inline var BLUE:BitmapInt32 = 0xff0090e9;
 	#elseif neko
 	static public inline var BLUE:BitmapInt32 = {rgb: 0x0090e9, a: 0xff};
@@ -166,7 +166,7 @@ class FlxG
 	 */
 	#if flash
 	static public inline var PINK:UInt = 0xfff01eff;
-	#elseif cpp
+	#elseif (cpp || js)
 	static public inline var PINK:BitmapInt32 = 0xfff01eff;
 	#elseif neko
 	static public inline var PINK:BitmapInt32 = {rgb: 0xf01eff, a: 0xff};
@@ -176,7 +176,7 @@ class FlxG
 	 */
 	#if flash
 	static public inline var WHITE:UInt = 0xffffffff;
-	#elseif cpp
+	#elseif (cpp || js)
 	static public inline var WHITE:BitmapInt32 = 0xffffffff;
 	#elseif neko
 	static public inline var WHITE:BitmapInt32 = {rgb: 0xffffff, a: 0xff};
@@ -186,7 +186,7 @@ class FlxG
 	 */
 	#if flash
 	static public inline var BLACK:UInt = 0xff000000;
-	#elseif cpp
+	#elseif (cpp || js)
 	static public inline var BLACK:BitmapInt32 = 0xff000000;
 	#elseif neko
 	static public inline var BLACK:BitmapInt32 = {rgb: 0x000000, a: 0xff};
@@ -975,7 +975,7 @@ class FlxG
 		}
 		
 		var additionalKey:String = "";
-		#if !flash
+		#if !(flash || js)
 		if (FrameWidth != 0 || FrameHeight != 0)
 		{
 			additionalKey = "FrameSize:" + FrameWidth + "_" + FrameHeight;
@@ -1028,7 +1028,7 @@ class FlxG
 				bd = Assets.getBitmapData(Graphic);
 			}
 			
-			#if !flash
+			#if !(flash || js)
 			if (additionalKey != "")
 			{
 				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Math.floor(bd.width / FrameWidth);
@@ -1073,7 +1073,7 @@ class FlxG
 		
 		var pixels:BitmapData = _cache.get(key);
 		
-		#if flash
+		#if (flash || js)
 		if (isClass)
 		{
 			tempBitmap = Type.createInstance(Graphic, []).bitmapData;
@@ -1624,7 +1624,7 @@ class FlxG
 				continue;
 			}
 			
-			#if flash
+			#if (flash || js)
 			if (useBufferLocking)
 			{
 				cam.buffer.lock();
@@ -1638,7 +1638,7 @@ class FlxG
 			#end
 			
 			cam.fill(cam.bgColor);
-			#if flash
+			#if (flash || js)
 			cam.screen.dirty = true;
 			#end
 		}
@@ -1662,7 +1662,7 @@ class FlxG
 			}
 			cam.drawFX();
 			
-			#if flash
+			#if (flash || js)
 			if (useBufferLocking)
 			{
 				cam.buffer.unlock();

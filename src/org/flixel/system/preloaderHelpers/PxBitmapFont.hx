@@ -150,11 +150,7 @@ class PxBitmapFont
 			cy += (rowHeight + 1);
 		}
 		
-		#if neko
 		var resultBitmapData:BitmapData = pBitmapData.clone();
-		#else
-		var resultBitmapData:BitmapData = pBitmapData.clone();
-		#end
 		
 		#if flash
 		var pixelColor:UInt;

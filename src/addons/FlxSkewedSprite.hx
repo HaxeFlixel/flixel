@@ -95,7 +95,7 @@ class FlxSkewedSprite extends FlxSprite
 			#end
 			if (simpleRender)
 			{	//Simple render
-				#if flash
+				#if (flash || js)
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
@@ -146,7 +146,7 @@ class FlxSkewedSprite extends FlxSprite
 			{	//Advanced render
 				_matrix.identity();
 				
-				#if flash
+				#if (flash || js)
 				_matrix.translate( -origin.x, -origin.y);
 				if ((angle != 0) && (_bakedRotation <= 0))
 				{

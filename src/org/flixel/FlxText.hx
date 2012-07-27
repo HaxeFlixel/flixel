@@ -57,9 +57,9 @@ class FlxText extends FlxSprite
 		Width = FlxU.fromIntToUInt(Width);
 		
 		super(X, Y);
-		#if (flash || cpp)
+		#if !neko
 		makeGraphic(Width, 1, 0);
-		#elseif neko
+		#else
 		makeGraphic(Width, 1, {rgb: 0, a: 0});
 		#end
 		
@@ -92,7 +92,7 @@ class FlxText extends FlxSprite
 		_regen = true;
 		_shadow = 0;
 		allowCollisions = FlxObject.NONE;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		if (Text != "")
@@ -133,7 +133,7 @@ class FlxText extends FlxSprite
 	{
 		if (Font == null)
 		{
-			#if flash
+			#if (flash || js)
 			Font = "";
 			#else
 			Font = FlxAssets.nokiaFont;
@@ -148,7 +148,7 @@ class FlxText extends FlxSprite
 		_textField.setTextFormat(format);
 		_shadow = ShadowColor;
 		_regen = true;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -176,7 +176,7 @@ class FlxText extends FlxSprite
 		if(_textField.text != ot)
 		{
 			_regen = true;
-			#if flash
+			#if (flash || js)
 			calcFrame();
 			#else
 			calcFrame(true);
@@ -205,7 +205,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -224,7 +224,7 @@ class FlxText extends FlxSprite
 	#else
 	override public function getColor():BitmapInt32
 	{
-		#if cpp
+		#if (cpp || js)
 		return _textField.defaultTextFormat.color;
 		#elseif neko
 		return { rgb: _textField.defaultTextFormat.color, a: 0xff };
@@ -251,7 +251,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -279,7 +279,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -306,7 +306,7 @@ class FlxText extends FlxSprite
 		format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -336,7 +336,7 @@ class FlxText extends FlxSprite
 	#end
 	{
 		_shadow = Color;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -347,7 +347,7 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal function to update the current animation frame.
 	 */
-	#if flash
+	#if (flash || js)
 	override private function calcFrame():Void
 	#else
 	override private function calcFrame(?AreYouSure:Bool = false):Void
@@ -392,7 +392,11 @@ class FlxText extends FlxSprite
 				var formatAdjusted:TextFormat = format;
 				_matrix.identity();
 				//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
+				#if js
+				if (format.align == TextFormatAlign.CENTER)
+				#else
 				if ((format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
+				#end
 				{
 					formatAdjusted = new TextFormat(format.font, format.size, format.color);
 					formatAdjusted.align = TextFormatAlign.LEFT;
@@ -429,9 +433,9 @@ class FlxText extends FlxSprite
 			//Finally, update the visible pixels
 			if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
 			{
-				#if (flash || cpp)
+				#if !neko
 				framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
-				#elseif neko
+				#else
 				framePixels = new BitmapData(_pixels.width, _pixels.height, true, {rgb: 0, a: 0});
 				#end
 			}
@@ -456,7 +460,7 @@ class FlxText extends FlxSprite
 	/**
 	 * Method for converting string to TextFormatAlign
 	 */
-	#if flash
+	#if (flash || js)
 	private function convertTextAlignmentFromString(strAlign:String):TextFormatAlign
 	{
 		if (strAlign == "right")

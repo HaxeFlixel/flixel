@@ -106,7 +106,7 @@ class Keyboard extends Input
 		var i:Int;
 		
 		//LETTERS
-		#if flash
+		#if (flash || js)
 		i = 65;
 		while (i <= 90)
 		{
@@ -153,7 +153,7 @@ class Keyboard extends Input
 		addKey("SEVEN",i++);
 		addKey("EIGHT",i++);
 		addKey("NINE",i++);
-		#if flash
+		#if (flash || js)
 		i = 96;
 		addKey("NUMPADZERO",i++);
 		addKey("NUMPADONE",i++);
@@ -173,7 +173,7 @@ class Keyboard extends Input
 		addKey("INSERT", 45);
 		
 		//FUNCTION KEYS
-		#if flash
+		#if (flash || js)
 		i = 1;
 		while (i <= 12)
 		{
@@ -208,7 +208,7 @@ class Keyboard extends Input
 		addKey("RIGHT",39);
 		addKey("TAB", 9);	
 		
-		#if flash
+		#if (flash || js)
 		addKey("NUMPADMINUS", 109);
 		addKey("NUMPADPLUS", 107);
 		addKey("NUMPADPERIOD", 110);

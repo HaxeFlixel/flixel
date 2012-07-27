@@ -33,7 +33,7 @@ class Log extends FlxWindow
 	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (BGColor == null)
 		{
 			#if !neko
@@ -106,7 +106,9 @@ class Log extends FlxWindow
 			_text.text = _text.text + Text + "\n";
 			#end
 		}
+		#if !js
 		_text.scrollV = Math.floor(_text.height);
+		#end
 	}
 	
 	/**

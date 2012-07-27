@@ -155,7 +155,7 @@ class FlxGradient
 			height = 1;
 		}
 		
-		#if !flash
+		#if (cpp || neko)
 		var key:String = "Gradient: " + width + " x " + height + ", colors: [";
 		var a:Int;
 		var rgb:Int;
@@ -227,7 +227,7 @@ class FlxGradient
 			data.draw(tempBitmap, sM);
 		}
 		
-		#if !flash
+		#if (cpp || neko)
 		FlxG._cache.set(key, data);
 		#end
 		

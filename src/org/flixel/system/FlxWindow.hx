@@ -106,7 +106,7 @@ class FlxWindow extends Sprite
 	{
 		super();
 		
-		#if (cpp || neko)
+		#if !flash
 		if (BGColor == null)
 		{
 			#if !neko

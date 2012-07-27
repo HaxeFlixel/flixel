@@ -45,10 +45,10 @@ class FlxGridOverlay
 	public static function create(cellWidth:Int, cellHeight:Int, ?width:Int = -1, ?height:Int = -1, ?addLegend:Bool = false, ?alternate:Bool = true, ?color1:BitmapInt32, ?color2:BitmapInt32):FlxSprite
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (color1 == null)
 		{
-			#if cpp
+			#if !neko
 			color1 = 0xffe7e6e6;
 			#else
 			color1 = { rgb: 0xe7e6e6, a: 0xff };
@@ -56,7 +56,7 @@ class FlxGridOverlay
 		}
 		if (color2 == null)
 		{
-			#if cpp
+			#if !neko
 			color2 = 0xffd9d5d5;
 			#else
 			color2 = { rgb: 0xd9d5d5, a: 0xff };
@@ -114,10 +114,10 @@ class FlxGridOverlay
 	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, ?width:Int = -1, ?height:Int = -1, ?addLegend:Bool = false, ?alternate:Bool = true, ?color1:BitmapInt32, ?color2:BitmapInt32):FlxSprite
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (color1 == null)
 		{
-			#if cpp
+			#if !neko
 			color1 = 0x88e7e6e6;
 			#else
 			color1 = { rgb: 0xe7e6e6, a: 0x88 };
@@ -125,7 +125,7 @@ class FlxGridOverlay
 		}
 		if (color2 == null)
 		{
-			#if cpp
+			#if !neko
 			color2 = 0x88d9d5d5;
 			#else
 			color2 = { rgb: 0xd9d5d5, a: 0x88 };

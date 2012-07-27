@@ -161,12 +161,12 @@ class PxButton extends FlxSprite
 	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):FlxSprite
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (Color == null)
 		{
-			#if cpp
+			#if !neko
 			Color = 0xffffffff;
-			#elseif neko
+			#else
 			Color = { rgb: 0xffffff, a: 0xff };
 			#end
 		}
@@ -202,7 +202,7 @@ class PxButton extends FlxSprite
 	{
 		if (FlxG.stage != null)
 		{
-			#if flash
+			#if (flash || js)
 			FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			#else
 			FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -249,7 +249,7 @@ class PxButton extends FlxSprite
 		{
 			if(FlxG.stage != null)
 			{
-				#if flash
+				#if (flash || js)
 				FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				#else
 				FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);

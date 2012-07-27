@@ -860,7 +860,7 @@ class FlxGame extends Sprite
 		FlxG.touchManager = new TouchManager();
 		
 		//Add basic input event listeners and mouse container
-		#if flash
+		#if (flash || js)
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -910,7 +910,7 @@ class FlxGame extends Sprite
 			if(FlxG.debug || forceDebugger)
 			{
 				_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
-				#if flash
+				#if (flash || js)
 				addChild(_debugger);
 				#else
 				Lib.current.stage.addChild(_debugger);

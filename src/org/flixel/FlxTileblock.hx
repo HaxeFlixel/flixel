@@ -32,7 +32,7 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
-		#if flash
+		#if (flash || js)
 		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), 0, true);
 		#else
 		_bakedRotation = 0;
@@ -82,7 +82,7 @@ class FlxTileblock extends FlxSprite
 			regen = true;
 		}
 		
-		#if flash
+		#if (flash || js)
 		if (regen)
 		{
 			makeGraphic(Std.int(width), Std.int(height), 0, true);
@@ -100,7 +100,7 @@ class FlxTileblock extends FlxSprite
 		var destinationY:Int = 0;
 		var widthInTiles:Int = Std.int(width / spriteWidth);
 		var heightInTiles:Int = Std.int(height / spriteHeight);
-		#if !flash
+		#if (cpp || neko)
 		if (_tileData != null)
 		{
 			_tileData.splice(0, _tileData.length);
@@ -125,7 +125,7 @@ class FlxTileblock extends FlxSprite
 			{
 				if (FlxG.random() * total > Empties)
 				{
-					#if flash
+					#if (flash || js)
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);

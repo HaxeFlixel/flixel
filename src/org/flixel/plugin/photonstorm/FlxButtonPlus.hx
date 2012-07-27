@@ -156,7 +156,7 @@ class FlxButtonPlus extends FlxGroup
 		_onClick = Callback;
 		
 		buttonNormal = new FlxExtendedSprite(X, Y);
-		#if flash
+		#if (flash || js)
 		buttonNormal.makeGraphic(Width, Height, borderColor);
 		#end
 		
@@ -167,7 +167,7 @@ class FlxButtonPlus extends FlxGroup
 		buttonNormal.scrollFactor.y = 0;
 		
 		buttonHighlight = new FlxExtendedSprite(X, Y);
-		#if flash
+		#if (flash || js)
 		buttonHighlight.makeGraphic(Width, Height, borderColor);
 		#end
 		
@@ -451,7 +451,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		offColor = colors;
 		
-		#if flash
+		#if (flash || js)
 		buttonNormal.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, offColor), 1, 1);
 		#else
 		var colA:Int;
@@ -504,7 +504,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		onColor = colors;
 		
-		#if flash
+		#if (flash || js)
 		buttonHighlight.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, onColor), 1, 1);
 		#else
 		var colA:Int;

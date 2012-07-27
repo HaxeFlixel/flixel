@@ -14,8 +14,8 @@ import org.flixel.system.tileSheet.TileSheetData;
 import org.flixel.system.tileSheet.TileSheetManager;
 #end
 
-#if flash
-import flash.display.BlendMode;
+#if (flash || js)
+import nme.display.BlendMode;
 #end
 
 import org.flixel.system.FlxAnim;
@@ -61,7 +61,7 @@ class FlxSprite extends FlxObject
 	 * E.g. "multiply", "screen", etc.
 	 * @default null
 	 */
-	#if flash
+	#if (flash || js)
 	public var blend:BlendMode;
 	#else
 	public var blend:String;
@@ -70,7 +70,7 @@ class FlxSprite extends FlxObject
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
 	 */
-	#if flash
+	#if (flash || js)
 	public var antialiasing:Bool;
 	#else
 	private var _antialiasing:Bool;
@@ -390,7 +390,7 @@ class FlxSprite extends FlxObject
 			}
 			else if (_flipped > 0)
 			{
-				#if flash
+				#if (flash || js)
 				Width = Math.floor(_pixels.width * 0.5);
 				#else
 				Width = _pixels.width;
@@ -414,7 +414,7 @@ class FlxSprite extends FlxObject
 			}
 		}
 		
-		#if !flash
+		#if !(flash || js)
 		_pixels = FlxG.addBitmap(Graphic, false, Unique, null, Width, Height);
 		#end
 		
@@ -486,14 +486,14 @@ class FlxSprite extends FlxObject
 		{
 			key = Type.getClassName(Graphic);
 		}
-	#if flash
+	#if (flash || js)
 		key += ":" + Frame + ":" + width + "x" + height;
 	#else
 		key += ":" + Frame + ":" + width + "x" + height + ":" + Rotations;
 	#end
 		var skipGen:Bool = FlxG.checkBitmapCache(key);
 		
-		#if flash
+		#if (flash || js)
 		_pixels = FlxG.createBitmap(Math.floor(width), Math.floor(height), 0, true, key);
 		#elseif cpp
 		_pixels = FlxG.createBitmap(Math.floor(width) + columns, Math.floor(height) + rows, 0, true, key);
@@ -523,7 +523,7 @@ class FlxSprite extends FlxObject
 					_matrix.identity();
 					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
 					_matrix.rotate(bakedAngle * 0.017453293);
-					#if flash
+					#if (flash || js)
 					_matrix.translate(max * column + midpointX, midpointY);
 					#else
 					_matrix.translate(max * column + midpointX + column, midpointY + row);
@@ -570,10 +570,10 @@ class FlxSprite extends FlxObject
 	public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):FlxSprite
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (Color == null)
 		{
-			#if cpp
+			#if (cpp || js)
 			Color = 0xffffffff;
 			#elseif neko
 			Color = { rgb: 0xffffff, a: 0xff };
@@ -608,7 +608,7 @@ class FlxSprite extends FlxObject
 		
 		origin.make(frameWidth * 0.5, frameHeight * 0.5);
 		
-	#if flash
+	#if (flash || js)
 		if ((framePixels == null) || (framePixels.width != width) || (framePixels.height != height))
 		{
 			framePixels = new BitmapData(Math.floor(width), Math.floor(height));
@@ -703,7 +703,7 @@ class FlxSprite extends FlxObject
 			#end
 			if (simpleRender)
 			{	//Simple render
-				#if flash
+				#if (flash || js)
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
@@ -752,7 +752,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{	//Advanced render
-				#if flash
+				#if (flash || js)
 				_matrix.identity();
 				_matrix.translate( -origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
@@ -838,7 +838,7 @@ class FlxSprite extends FlxObject
 			_pixels.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
 			_flashRect2.width = _pixels.width;
 			_flashRect2.height = _pixels.height;
-			#if flash
+			#if (flash || js)
 			calcFrame();
 			#end
 			return;
@@ -853,13 +853,13 @@ class FlxSprite extends FlxObject
 			_matrix.rotate(Brush.angle * 0.017453293);
 		}
 		_matrix.translate(X + Brush.origin.x, Y + Brush.origin.y);
-		#if flash
+		#if (flash || js)
 		var brushBlend:BlendMode = cast(Brush.blend, BlendMode);
 		#else
 		var brushBlend:String = Brush.blend;
 		#end
 		_pixels.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#end
 		
@@ -940,7 +940,7 @@ class FlxSprite extends FlxObject
 			var oldIndex:Int = _curIndex;
 			var angleHelper:Int = Math.floor(angle % 360);
 			
-			#if flash
+			#if (flash || js)
 			if (angleHelper < 0)
 			{
 				angleHelper += 360;
@@ -1007,7 +1007,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function drawFrame(?Force:Bool = false):Void
 	{
-		#if flash
+		#if (flash || js)
 		if (Force || dirty)
 		{
 			calcFrame();
@@ -1247,7 +1247,7 @@ class FlxSprite extends FlxObject
 			return _alpha;
 		}
 		_alpha = Alpha;
-		#if flash
+		#if (flash || js)
 		if ((_alpha != 1) || (_color != 0x00ffffff))
 		{
 			_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, _alpha);
@@ -1407,7 +1407,7 @@ class FlxSprite extends FlxObject
 		var halfHeight:Float = 0.5 * frameHeight;
 		var absScaleX:Float = (scale.x > 0)?scale.x: -scale.x;
 		var absScaleY:Float = (scale.y > 0)?scale.y: -scale.y;
-		#if flash
+		#if (flash || js)
 		var radius:Float = Math.sqrt(halfWidth * halfWidth + halfHeight * halfHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
 		#else
 		var radius:Float = ((frameWidth >= frameHeight) ? frameWidth : frameHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
@@ -1440,7 +1440,7 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
-		#if flash
+		#if (flash || js)
 		return framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
 		#else
 		// 1. Check to see if the point is outside of framePixels rectangle
@@ -1490,7 +1490,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal function to update the current animation frame.
 	 */
-	#if flash
+	#if (flash || js)
 	private function calcFrame():Void
 	#else
 	private function calcFrame(?AreYouSure:Bool = false):Void

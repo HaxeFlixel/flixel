@@ -2,7 +2,10 @@ package org.flixel;
 
 import nme.errors.Error;
 import nme.net.SharedObject;
+
+#if !js
 import nme.net.SharedObjectFlushStatus;
+#end
 
 #if flash
 import flash.events.NetStatusEvent;
@@ -114,14 +117,21 @@ class FlxSave
 			return false;
 		}
 		_onComplete = OnComplete;
-		#if flash
+		#if (flash || js)
 		var result:String = null;
 		#else
 		var result:SharedObjectFlushStatus;
 		#end
-		try { result = _sharedObject.flush(FlxU.fromIntToUInt(MinFileSize)); }
+		try 
+		{ 
+			#if !js
+			result = _sharedObject.flush(FlxU.fromIntToUInt(MinFileSize)); 
+			#else
+			result = _sharedObject.flush(); 
+			#end
+		}
 		catch (e:Error) { return onDone(ERROR); }
-		#if flash
+		#if (flash || js)
 		if (result == "pending")
 		#else
 		if (result == SharedObjectFlushStatus.PENDING)
@@ -131,7 +141,7 @@ class FlxSave
 			_sharedObject.addEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
 			#end
 		}
-		#if flash
+		#if (flash || js)
 		return onDone((result == "flushed") ? SUCCESS : PENDING);
 		#else
 		return onDone((result == SharedObjectFlushStatus.FLUSHED) ? SUCCESS : PENDING);

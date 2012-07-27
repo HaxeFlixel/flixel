@@ -97,7 +97,7 @@ class StarfieldFX extends BaseFX
 	 */
 	public function create(x:Int, y:Int, width:Int, height:Int, ?quantity:Int = 200, ?type:Int = 1, ?updateInterval:Int = 20):FlxSprite
 	{
-		#if flash
+		#if (flash || js)
 		sprite = new FlxSprite(x, y).makeGraphic(width, height, backgroundColor);
 		canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
 		#else
@@ -202,10 +202,10 @@ class StarfieldFX extends BaseFX
 	public function setStarDepthColors(depth:Int, ?lowestColor:BitmapInt32 = null, ?highestColor:BitmapInt32 = null):Void
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (lowestColor == null)
 		{
-			#if cpp
+			#if !neko
 			lowestColor = 0xff585858;
 			#else
 			lowestColor = {rgb: 0x585858, a: 0xff};
@@ -214,7 +214,7 @@ class StarfieldFX extends BaseFX
 		
 		if (highestColor == null)
 		{
-			#if cpp
+			#if !neko
 			highestColor = 0xffF4F4F4;
 			#else
 			highestColor = {rgb: 0xF4F4F4, a: 0xff};
@@ -279,7 +279,7 @@ class StarfieldFX extends BaseFX
 			star.x += Math.floor(starXOffset * star.speed);
 			star.y += Math.floor(starYOffset * star.speed);
 			
-			#if flash
+			#if (flash || js)
 			canvas.setPixel32(star.x, star.y, depthColours[Math.floor(star.speed - 1)]);
 			#else
 			var starColor:BitmapInt32 = depthColours[Math.floor(star.speed - 1)];
@@ -340,7 +340,7 @@ class StarfieldFX extends BaseFX
 				star.alpha = 255;
 			}
 			
-			#if flash
+			#if (flash || js)
 			canvas.setPixel32(star.x, star.y, 0xffffffff);
 			#elseif neko
 			var rgba:RGBA = FlxColor.getRGB( { rgb: 0xffffff, a: 0xff } );
@@ -385,7 +385,7 @@ class StarfieldFX extends BaseFX
 	{
 		if (Lib.getTimer() > tick)
 		{
-			#if flash
+			#if (flash || js)
 			canvas.lock();
 			canvas.fillRect(clsRect, clsColor);
 			#end
@@ -399,7 +399,7 @@ class StarfieldFX extends BaseFX
 				update3DStarfield();
 			}
 			
-			#if flash
+			#if (flash || js)
 			canvas.unlock();
 			sprite.pixels = canvas;
 			#end

@@ -43,7 +43,7 @@ class Watch extends FlxWindow
 	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (BGColor == null)
 		{
 			#if !neko

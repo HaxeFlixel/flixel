@@ -756,7 +756,7 @@ class FlxU
 		return ((number < 0) ? -number : number);
 	}
 	
-	#if flash
+	#if (flash || js)
 	public static var MIN_VALUE:Float = 0.0000000000000001;
 	#else
 	public static var MIN_VALUE:Float = 5e-324;
