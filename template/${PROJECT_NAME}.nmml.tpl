@@ -3,14 +3,14 @@
 	
 	<app title="${PROJECT_NAME}" file="${PROJECT_NAME}" main="Main" version="0.0.1" company="Zaphod" />
 	
-	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="portrait" resizable="true" if="target_flash" />
-	<window width="0" height="0" fps="30" orientation="landscape" fullscreen="true" unless="target_flash" />
+	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="portrait" resizable="true" if="web" />
+	<window width="0" height="0" fps="30" orientation="landscape" fullscreen="true" unless="web" />
  	
 	<set name="BUILD_DIR" value="Export" />
 	
 	<set name="SWF_VERSION" value="10.1" />
 	
-	<app preloader="org.flixel.system.FlxPreloader" />
+	<app preloader="org.flixel.system.FlxPreloader" unless="html5" />
 	
 	<!--<setenv name="no_console" value="1" />-->
 	
@@ -34,6 +34,13 @@
 	</assets>
 	
 	<assets path="Assets" rename="assets" if="target_flash" >
+		<sound path="data/beep.mp3" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		
+	</assets>
+	
+	<assets path="Assets" rename="assets" if="target_js" >
 		<sound path="data/beep.mp3" id="Beep" />
 		
 		<!-- Your sound embedding code here... -->

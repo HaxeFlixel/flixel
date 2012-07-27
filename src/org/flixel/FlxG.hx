@@ -1544,7 +1544,11 @@ class FlxG
 		
 		FlxG.mouse = new Mouse(FlxG._game._mouse);
 		FlxG.keys = new Keyboard();
+		#if js
+		FlxG.mobile = true;
+		#else
 		FlxG.mobile = false;
+		#end
 		
 		#if (cpp || neko)
 		FlxG.joystickManager = new JoystickManager();

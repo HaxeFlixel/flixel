@@ -839,7 +839,6 @@ class FlxGame extends Sprite
 		{
 			return;
 		}
-		
 		#if iphone
 		Lib.current.stage.removeEventListener(Event.RESIZE, create);
 		#else
@@ -910,7 +909,7 @@ class FlxGame extends Sprite
 			if(FlxG.debug || forceDebugger)
 			{
 				_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
-				#if (flash || js)
+				#if (flash)
 				addChild(_debugger);
 				#else
 				Lib.current.stage.addChild(_debugger);
@@ -925,9 +924,8 @@ class FlxGame extends Sprite
 			stage.addEventListener(Event.ACTIVATE, onFocus);
 			createFocusScreen();
 		}
-		
 		//Finally, set up an event for the actual game loop stuff.
-		addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 	}
 	
 	/**

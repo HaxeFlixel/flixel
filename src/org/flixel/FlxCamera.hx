@@ -1187,7 +1187,7 @@ class FlxCamera extends FlxBasic
 		{
 			_height = val;
 			#if (flash || js)
-			if ( _flashBitmap != null )
+			if (_flashBitmap != null)
 			{
 				_flashOffsetY = _height * 0.5 * zoom;
 				_flashBitmap.y = -_height * 0.5;
