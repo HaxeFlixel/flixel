@@ -13,9 +13,12 @@ ______________________________________________________
 Currently targets being used are;
 <ul>
 <li>Flash</li>
-<li>IOS</li>
+<li>iOS</li>
 <li>Android</li>
 <li>NEKO</li>
+<li>Desktop platforms (Windows, MacOSX, Linux)</li>
+<li>BlackBerry</li>
+<li>WebOS</li>
 </ul>
 
 There are differencies between the render systems of the original As3 Flixel version [discussed here](https://github.com/Beeblerox/HaxeFlixel/wiki/Differences-between-Flash-and-CPP-render-systems).  

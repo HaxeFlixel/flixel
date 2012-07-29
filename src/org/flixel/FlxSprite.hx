@@ -706,6 +706,7 @@ class FlxSprite extends FlxObject
 				#if (flash || js)
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
+				
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 				#else
 				currDrawData[currIndex++] = _point.x;

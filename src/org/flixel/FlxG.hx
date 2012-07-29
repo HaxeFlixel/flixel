@@ -1642,6 +1642,7 @@ class FlxG
 			#end
 			
 			cam.fill(cam.bgColor);
+			
 			#if (flash || js)
 			cam.screen.dirty = true;
 			#end

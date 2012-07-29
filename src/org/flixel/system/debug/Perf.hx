@@ -204,7 +204,7 @@ class Perf extends FlxWindow
 				drawCallsCount += _drawCalls[i++];
 			}
 			drawCallsCount = Math.floor(drawCallsCount / _drawCallsMarker);
-			output += "\nDrTls:" + drawCallsCount;
+			output += "\nDrwTls:" + drawCallsCount;
 			_drawCallsMarker = 0;
 			#end
 			
@@ -269,7 +269,7 @@ class Perf extends FlxWindow
 	 * Keep track of how many times drawTiles() method was called.
 	 * @param Count	How many times drawTiles() method was called.
 	 */
-	public function drawCalls(Drawcalls:Int) 
+	public function drawCalls(Drawcalls:Int):Void
 	{
 		_drawCalls[_drawCallsMarker++] = Drawcalls;
 	}
