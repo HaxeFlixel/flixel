@@ -1764,7 +1764,7 @@ class FlxG
 		{
 			tweener = cast(object, FlxBasic);
 		}
-		if (options)
+		if (options != null)
 		{
 			if (Reflect.hasField(options, "type")) type = options.type;
 			if (Reflect.hasField(options, "complete")) complete = options.complete;
