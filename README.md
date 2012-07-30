@@ -1,37 +1,48 @@
 About
 =
+HaxeFlixel is an open source 2d game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Haxe NME](http://www.haxenme.org/).
 ______________________________________________________
-HaxeFlixel is an open source 2d game library written in the [Haxe Language](http://www.haxe.org/) that is completely free for personal or commercial use.
-This library features integration with the [Haxe NME](http://www.haxenme.org/) framework to make multiple targets possible such as Android and IOS. 
-Haxe also presents various other benefits such as having a more flexible opensource language.
+HaxeFlixel is based largely on the As3 version of Flixel written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) , [Flixel Github](https://github.com/AdamAtomic/flixel).
 
-HaxeFlixel is based on the As3 version of Flixel written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) , [Flixel Github](https://github.com/AdamAtomic/flixel).
+Haxe and NME present substantial enhancements from the original Flixel as3 code. For example, 
+Haxe offers a more robust and powerful opensource language and NME easily enables multiple runtime targets. 
 
-Runtime Targets
-=
-______________________________________________________
-Currently targets being used are;
+##Runtime Targets
+The current targets possible are;
+
+#Mobile
 <ul>
-<li>Flash</li>
-<li>iOS</li>
+<li>IOS</li>
+<li>WEBOS</li>
+<li>Blackberry</li>
 <li>Android</li>
-<li>NEKO</li>
-<li>Desktop platforms (Windows, MacOSX, Linux)</li>
-<li>BlackBerry</li>
-<li>WebOS</li>
 </ul>
 
+#Desktop
+<ul>
+<li>Linux</li>
+<li>Windows</li>
+<li>Mac</li>
+<li>Neko</li>
+</ul>
+
+#Web
+<ul>
+<li>Flash</li>
+</ul>
+
+##Note
+
 There are differencies between the render systems of the original As3 Flixel version [discussed here](https://github.com/Beeblerox/HaxeFlixel/wiki/Differences-between-Flash-and-CPP-render-systems).  
+
 ______________________________________________________
 
-Demos for HaxeFlixel
-=
+###Demos for HaxeFlixel
 https://github.com/Beeblerox/HaxeFlixelDemoes
 ______________________________________________________
 
-Basic Features
-=
-______________________________________________________
+###Basic Features
+
 <ul>
 <li>Display thousands of moving objects</li>
 <li>Basic collisions between objects</li>
@@ -49,9 +60,13 @@ ______________________________________________________
 </ul>
 ______________________________________________________
 
+###Community Code and Plugins
+
 Progress has been made on ports of the Flixel Power Tools and additional community input.
-https://github.com/Beeblerox/HaxeFlixel/wiki/Additional-classes-from-the-flixel-community
+[Community Code](https://github.com/Beeblerox/HaxeFlixel/wiki/Additional-classes-from-the-flixel-community) 
 
-Future plans on this port: https://github.com/Beeblerox/HaxeFlixel/wiki/What-additional-classes-should-be-integrated-in-my-port%3F
+______________________________________________________
 
-If you have questions about this port you can ask them here: http://www.haxenme.org/community/forums/programming-with-haxe/flixel-for-nme/
+Future plans on this port: [Draft](https://github.com/Beeblerox/HaxeFlixel/wiki/What-additional-classes-should-be-integrated-in-my-port%3F)
+
+If you are after support for Haxe NME and Flixel please join the wonderful people in the [HaxeNME Forum](http://www.haxenme.org/community/forums/programming-with-haxe/flixel-for-nme/) 
