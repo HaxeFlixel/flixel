@@ -383,8 +383,8 @@ class FlxTilemap extends FlxObject
 		#if flash
 		Buffer.fill();
 		#else
-		_helperPoint.x = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
-		_helperPoint.y = y - Std.int(Camera.scroll.y * scrollFactor.y);
+		_helperPoint.x = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
+		_helperPoint.y = y - (Camera.scroll.y * scrollFactor.y);
 		var tileID:Int;
 		var debugColor:Int;
 		var drawX:Float;
@@ -468,8 +468,8 @@ class FlxTilemap extends FlxObject
 				tileID = _rectIDs[columnIndex];
 				if (tileID != -1)
 				{
-					drawX = Math.floor(_helperPoint.x) + (columnIndex % widthInTiles) * _tileWidth;
-					drawY = Math.floor(_helperPoint.y) + Math.floor(columnIndex / widthInTiles) * _tileHeight;
+					drawX = (_helperPoint.x) + (columnIndex % widthInTiles) * _tileWidth;
+					drawY = (_helperPoint.y) + Math.floor(columnIndex / widthInTiles) * _tileHeight;
 					currDrawData[currIndex++] = drawX;
 					currDrawData[currIndex++] = drawY;
 					currDrawData[currIndex++] = tileID;

@@ -80,16 +80,20 @@ class FlxSkewedSprite extends FlxSprite
 			{
 				continue;
 			}
-			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
-			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
 			
 			#if (cpp || neko)
 			currDrawData = _tileSheetData.drawData[camera.ID];
 			currIndex = _tileSheetData.positionData[camera.ID];
 			
-			_point.x = Math.floor(_point.x) + origin.x;
-			_point.y = Math.floor(_point.y) + origin.y;
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
+			
+			_point.x = (_point.x) + origin.x;
+			_point.y = (_point.y) + origin.y;
 			#else
+			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
+			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
 			#end

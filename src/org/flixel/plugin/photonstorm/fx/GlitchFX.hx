@@ -389,8 +389,8 @@ class GlitchSprite extends FlxSprite
 			currDrawData = _tileSheetData.drawData[camera.ID];
 			currIndex = _tileSheetData.positionData[camera.ID];
 			
-			_point.x = Math.floor(x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x)) + origin.x;
-			_point.y = Math.floor(y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y)) + origin.y;
+			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
+			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
 			
 			if (simpleRender)
 			{	//Simple render

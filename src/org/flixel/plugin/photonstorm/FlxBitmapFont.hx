@@ -342,8 +342,8 @@ class FlxBitmapFont extends FlxSprite
 				continue;
 			}
 			
-			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
-			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 			
 			var redMult:Float = 1;
 			var greenMult:Float = 1;
@@ -374,8 +374,8 @@ class FlxBitmapFont extends FlxSprite
 						currTileX = points[currPosInArr + 1];
 						currTileY = points[currPosInArr + 2];
 						
-						currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + currTileX;
-						currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + currTileY;
+						currDrawData[currIndex++] = (_point.x) + origin.x + currTileX;
+						currDrawData[currIndex++] = (_point.y) + origin.y + currTileY;
 						
 						currDrawData[currIndex++] = currTileID;
 						
@@ -415,8 +415,8 @@ class FlxBitmapFont extends FlxSprite
 						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
 						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 						
-						currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + relativeX;
-						currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + relativeY;
+						currDrawData[currIndex++] = (_point.x) + origin.x + relativeX;
+						currDrawData[currIndex++] = (_point.y) + origin.y + relativeY;
 						
 						currDrawData[currIndex++] = currTileID;
 					
