@@ -197,8 +197,8 @@ class FlxTileblock extends FlxSprite
 				continue;
 			}
 			
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
 			var redMult:Float = 1;
 			var greenMult:Float = 1;
@@ -229,8 +229,8 @@ class FlxTileblock extends FlxSprite
 						currTileX = _tileData[currPosInArr + 1];
 						currTileY = _tileData[currPosInArr + 2];
 						
-						currDrawData[currIndex++] = (_point.x) + origin.x + currTileX;
-						currDrawData[currIndex++] = (_point.y) + origin.y + currTileY;
+						currDrawData[currIndex++] = (_point.x) + currTileX;
+						currDrawData[currIndex++] = (_point.y) + currTileY;
 						currDrawData[currIndex++] = currTileID;
 						
 						currDrawData[currIndex++] = 1;
@@ -266,8 +266,8 @@ class FlxTileblock extends FlxSprite
 						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
 						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 						
-						currDrawData[currIndex++] = (_point.x) + origin.x + relativeX;
-						currDrawData[currIndex++] = (_point.y) + origin.y + relativeY;
+						currDrawData[currIndex++] = (_point.x) + relativeX;
+						currDrawData[currIndex++] = (_point.y) + relativeY;
 						
 						currDrawData[currIndex++] = currTileID;
 						
