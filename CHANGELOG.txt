@@ -3,6 +3,7 @@ flixel CHANGELOG
 v1.07
 ------------------------------
 * Added GlitchFX class from FlixelPowerTools. It doesn't work with 'complex' sprites (such as FlxTileblock, FlxBitmapFont and FlxButtonPlus) on cpp and neko targets.
+* Fixed draw position round issue for cpp and neko targets. It uses less math methods and more accurate now.
 
 v1.06
 ------------------------------

@@ -389,8 +389,8 @@ class FlxTextField extends FlxText
 				tf.visible = true;
 			}
 			
-			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
-			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 			
 			// Simple render
 			tf.x = _point.x;

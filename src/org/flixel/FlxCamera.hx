@@ -441,16 +441,21 @@ class FlxCamera extends FlxBasic
 				var targetX:Float;
 				var targetY:Float;
 				
+				#if (flash || js)
 				if (Std.is(target, FlxSprite) && cast(target, FlxSprite).simpleRender)
 				{
 					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001:-0.0000001));
-					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001:-0.0000001));
+					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001: -0.0000001));
 				}
 				else
 				{
 					targetX = target.x + ((target.x > 0)?0.0000001:-0.0000001);
 					targetY = target.y + ((target.y > 0)?0.0000001: -0.0000001);
 				}
+				#else
+				targetX = target.x;
+				targetY = target.y;
+				#end
 
 				if (style == STYLE_SCREEN_BY_SCREEN) 
 				{

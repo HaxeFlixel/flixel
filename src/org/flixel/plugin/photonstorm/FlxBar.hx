@@ -1223,16 +1223,16 @@ class FlxBar extends FlxSprite
 			{
 				continue;
 			}
-			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
-			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 			
 			if (simpleRender)
 			{	//Simple render
 				if (_tileSheetData != null && percentFrame >= 0) // TODO: remove this if statement later
 				{
 					// Draw empty bar
-					currDrawData[currIndex++] = Math.floor(_point.x) + origin.x;
-					currDrawData[currIndex++] = Math.floor(_point.y) + origin.y;
+					currDrawData[currIndex++] = (_point.x) + origin.x;
+					currDrawData[currIndex++] = (_point.y) + origin.y;
 					
 					currDrawData[currIndex++] = _emptyBarFrameID;
 					
@@ -1262,13 +1262,13 @@ class FlxBar extends FlxSprite
 					// Draw filled bar
 					if (fillHorizontal)
 					{
-						currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + _filledBarFrames[percentFrame];
-						currDrawData[currIndex++] = Math.floor(_point.y) + origin.y;
+						currDrawData[currIndex++] = (_point.x) + origin.x + _filledBarFrames[percentFrame];
+						currDrawData[currIndex++] = (_point.y) + origin.y;
 					}
 					else
 					{
-						currDrawData[currIndex++] = Math.floor(_point.x) + origin.x;
-						currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + _filledBarFrames[percentFrame];
+						currDrawData[currIndex++] = (_point.x) + origin.x;
+						currDrawData[currIndex++] = (_point.y) + origin.y + _filledBarFrames[percentFrame];
 					}
 					
 					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
@@ -1307,8 +1307,8 @@ class FlxBar extends FlxSprite
 					var sin:Float = Math.sin(radians);
 					
 					// Draw empty bar
-					currDrawData[currIndex++] = Math.floor(_point.x) + origin.x;
-					currDrawData[currIndex++] = Math.floor(_point.y) + origin.y;
+					currDrawData[currIndex++] = (_point.x) + origin.x;
+					currDrawData[currIndex++] = (_point.y) + origin.y;
 					
 					currDrawData[currIndex++] = _emptyBarFrameID;
 					
@@ -1344,8 +1344,8 @@ class FlxBar extends FlxSprite
 						relativeY = _filledBarFrames[percentFrame] * cos * scale.y;
 					}
 					
-					currDrawData[currIndex++] = Math.floor(_point.x) + origin.x + relativeX;
-					currDrawData[currIndex++] = Math.floor(_point.y) + origin.y + relativeY;
+					currDrawData[currIndex++] = (_point.x) + origin.x + relativeX;
+					currDrawData[currIndex++] = (_point.y) + origin.y + relativeY;
 					
 					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
 					
