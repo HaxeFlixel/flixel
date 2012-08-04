@@ -1,11 +1,14 @@
 package addons;
 
+import nme.display.BitmapInt32;
+import nme.geom.ColorTransform;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxU;
 
 /**
- * ...
+ * Some sort of DisplayObjectContainer but very limited.
+ * It can contain only other NestedSprites.
  * @author Zaphod
  */
 
@@ -50,6 +53,11 @@ class NestedSprite extends FlxSprite
 	public var relativeAccelerationY:Float;
 	public var relativeAngularAcceleration:Float;
 	
+	public var _parentAlpha:Float;
+	public var _parentRed:Float;
+	public var _parentGreen:Float;
+	public var _parentBlue:Float;
+	
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:Dynamic = null) 
 	{
 		super(X, Y, SimpleGraphic);
@@ -68,6 +76,11 @@ class NestedSprite extends FlxSprite
 		relativeAccelerationX = 0;
 		relativeAccelerationY = 0;
 		relativeAngularAcceleration = 0;
+		
+		_parentAlpha = 1;
+		_parentRed = 1;
+		_parentGreen = 1;
+		_parentBlue = 1;
 	}
 	
 	override public function destroy():Void
@@ -96,6 +109,24 @@ class NestedSprite extends FlxSprite
 			Child.acceleration.x = Child.acceleration.y = 0;
 			Child.scrollFactor.x = this.scrollFactor.x;
 			Child.scrollFactor.y = this.scrollFactor.y;
+			
+			Child._parentAlpha = this._alpha;
+			Child.alpha = Child.alpha;
+			
+			#if !neko
+			var thisRed:Float = (_color >> 16) / 255;
+			var thisGreen:Float = (_color >> 8 & 0xff) / 255;
+			var thisBlue:Float = (_color & 0xff) / 255;
+			#else
+			var thisRed:Float = (_color.rgb >> 16) / 255;
+			var thisGreen:Float = (_color.rgb >> 8 & 0xff) / 255;
+			var thisBlue:Float = (_color.rgb & 0xff) / 255;
+			#end
+			
+			Child._parentRed = thisRed;
+			Child._parentGreen = thisGreen;
+			Child._parentBlue = thisBlue;
+			Child.color = Child.color;
 		}
 		
 		return Child;
@@ -262,6 +293,150 @@ class NestedSprite extends FlxSprite
 		{
 			child.draw();
 		}
+	}
+	
+	override public function setAlpha(Alpha:Float):Float
+	{
+		if (Alpha > 1)
+		{
+			Alpha = 1;
+		}
+		if (Alpha < 0)
+		{
+			Alpha = 0;
+		}
+		if (Alpha == _alpha)
+		{
+			return _alpha;
+		}
+		_alpha = Alpha;
+		_alpha *= _parentAlpha;
+		#if (flash || js)
+		if ((_alpha != 1) || (_color != 0x00ffffff))
+		{
+			var red:Float = (_color >> 16) * 0.00392 * _parentRed;
+			var green:Float = (_color >> 8 & 0xff) * 0.00392 * _parentGreen;
+			var blue:Float = (_color & 0xff) * 0.00392 * _parentBlue;
+			_colorTransform = new ColorTransform(red, green, blue, _alpha);
+		}
+		else
+		{
+			_colorTransform = null;
+		}
+		dirty = true;
+		#end
+		
+		for (child in _children)
+		{
+			child.alpha *= _alpha;
+			child._parentAlpha = _alpha;
+		}
+		
+		return _alpha;
+	}
+	
+	#if flash
+	override public function setColor(Color:UInt):UInt
+	#else
+	override public function setColor(Color:BitmapInt32):BitmapInt32
+	#end
+	{
+		#if neko
+		var combinedRed:Float = (Color.rgb >> 16) * _parentRed / 255;
+		var combinedGreen:Float = (Color.rgb >> 8 & 0xff) * _parentGreen / 255;
+		var combinedBlue:Float = (Color.rgb & 0xff) * _parentBlue / 255;
+		#else
+		Color &= 0x00ffffff;
+		
+		var combinedRed:Float = (Color >> 16) * _parentRed / 255;
+		var combinedGreen:Float = (Color >> 8 & 0xff) * _parentGreen / 255;
+		var combinedBlue:Float = (Color & 0xff) * _parentBlue / 255;
+		#end
+		
+		var combinedColor:Int = Std.int(combinedRed * 255) << 16 | Std.int(combinedGreen * 255) << 8 | Std.int(combinedBlue * 255);
+		
+	#if neko
+		if (_color.rgb == combinedColor)
+		{
+			return _color;
+		}
+		_color = {rgb: combinedColor, a: 255};
+		if ((_alpha != 1) || (_color.rgb != 0xffffff))
+		{
+			_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, _alpha);
+		}
+		else
+		{
+			_colorTransform = null;
+		}
+	#else
+		#if flash
+		if (_color == cast(combinedColor, UInt))
+		#else
+		if (_color == combinedColor)
+		#end
+		{
+			return _color;
+		}
+		_color = combinedColor;
+		if ((_alpha != 1) || (_color != 0x00ffffff))
+		{
+			_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, _alpha);
+		}
+		else
+		{
+			_colorTransform = null;
+		}
+	#end
+		
+		dirty = true;
+		
+		#if (cpp || neko)
+		_red = combinedRed;
+		_green = combinedGreen;
+		_blue = combinedBlue;
+		#end
+		
+	#if (cpp || neko)	
+		#if cpp
+		if (_color < 0xffffff)
+		#else
+		if (_color.rgb < 0xffffff)
+		#end
+		{
+			if (_tileSheetData != null)
+			{
+				_tileSheetData.isColored = true;
+			}
+		}
+	#end
+		
+		for (child in _children)
+		{
+			#if !neko
+			var childColor:Int = child.color;
+			#else
+			var childColor:Int = child.color.rgb;
+			#end
+			
+			var childRed:Float = (childColor >> 16) / (255 * child._parentRed);
+			var childGreen:Float = (childColor >> 8 & 0xff) / (255 * child._parentGreen);
+			var childBlue:Float = (childColor & 0xff) / (255 * child._parentBlue);
+			
+			combinedColor = Std.int(childRed * combinedRed * 255) << 16 | Std.int(childGreen * combinedGreen * 255) << 8 | Std.int(childBlue * combinedBlue * 255);
+			
+			#if !neko
+			child.color = combinedColor;
+			#else
+			child.color = {rgb: combinedColor, a: 255};
+			#end
+			
+			child._parentRed = combinedRed;
+			child._parentGreen = combinedGreen;
+			child._parentBlue = combinedBlue;
+		}
+		
+		return _color;
 	}
 	
 }
