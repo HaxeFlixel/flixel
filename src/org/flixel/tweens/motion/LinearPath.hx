@@ -14,7 +14,7 @@ class LinearPath extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:TweenType)
+	public function new(?complete:CompleteCallback, ?type:Int = 0)
 	{
 		_points = new Array<Point>();
 		_pointD = new Array<Float>();

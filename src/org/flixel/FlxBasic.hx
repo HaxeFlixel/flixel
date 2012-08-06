@@ -66,7 +66,6 @@ class FlxBasic
 		alive = true;
 		ignoreDrawDebug = false;
 		
-		//autoClear = false;
 		autoClear = true;
 	}
 
@@ -79,7 +78,7 @@ class FlxBasic
 	{
 		if (autoClear && hasTween) 
 		{
-			clearTweens();
+			clearTweens(true);
 			_tween = null;
 		}
 	}
@@ -187,7 +186,7 @@ class FlxBasic
 		return t;
 	}
 
-	public function removeTween(t:FlxTween):FlxTween
+	public function removeTween(t:FlxTween, ?destroy:Bool = false):FlxTween
 	{
 		var ft:FriendTween = t;
 		if (ft._parent != this) 
@@ -211,11 +210,12 @@ class FlxBasic
 		}
 		ft._next = ft._prev = null;
 		ft._parent = null;
+		if (destroy) t.destroy();
 		t.active = false;
 		return t;
 	}
 
-	public function clearTweens():Void
+	public function clearTweens(?destroy:Bool = false):Void
 	{
 		var t:FlxTween;
 		var ft:FriendTween = _tween;
@@ -223,7 +223,7 @@ class FlxBasic
 		while (ft != null)
 		{
 			fn = ft._next;
-			removeTween(cast(ft, FlxTween));
+			removeTween(cast(ft, FlxTween), destroy);
 			ft = fn;
 		}
 	}

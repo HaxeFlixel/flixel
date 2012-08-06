@@ -19,7 +19,7 @@ class AngleTween extends FlxTween
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:TweenType) 
+	public function new(?complete:CompleteCallback, ?type:Int = 0) 
 	{
 		angle = 0;
 		super(0, type, complete);

@@ -18,7 +18,7 @@ class QuadMotion extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, type:TweenType)
+	public function new(?complete:CompleteCallback, ?type:Int = 0)
 	{
 		_distance = -1;
 		_fromX = _fromY = _toX = _toY = 0;
