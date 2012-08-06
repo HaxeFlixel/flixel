@@ -22,6 +22,14 @@ class SfxFader extends FlxTween
 		_complete = complete;
 		_sfx = sfx;
 	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		_sfx = null;
+		_crossSfx = null;
+		_complete = null;
+	}
 
 	/**
 	 * Fades the Sfx to the target volume.

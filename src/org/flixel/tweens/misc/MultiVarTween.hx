@@ -23,6 +23,12 @@ class MultiVarTween extends FlxTween
 		super(0, type, complete);
 	}
 	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		_object = null;
+	}
+	
 	/**
 	 * Tweens multiple numeric public properties.
 	 * @param	object		The object containing the properties.
