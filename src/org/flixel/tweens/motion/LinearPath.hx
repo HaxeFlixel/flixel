@@ -1,8 +1,8 @@
 package org.flixel.tweens.motion;
 
+import org.flixel.FlxPoint;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
-import nme.geom.Point;
 
 /**
  * Determines linear motion along a set of points.
@@ -16,14 +16,25 @@ class LinearPath extends Motion
 	 */
 	public function new(?complete:CompleteCallback, ?type:Int = 0)
 	{
-		_points = new Array<Point>();
+		super(0, complete, type, null);
+		_points = new Array<FlxPoint>();
 		_pointD = new Array<Float>();
 		_pointT = new Array<Float>();
 
 		distance = _speed = _index = 0;
-
-		super(0, complete, type, null);
+		
 		_pointD[0] = _pointT[0] = 0;
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		_points = null;
+		_pointD = null;
+		_pointT = null;
+		_last = null;
+		_prevPoint = null;
+		_nextPoint = null;
 	}
 
 	/**
@@ -67,7 +78,7 @@ class LinearPath extends Motion
 			distance += Math.sqrt((x - _last.x) * (x - _last.x) + (y - _last.y) * (y - _last.y));
 			_pointD[_points.length] = distance;
 		}
-		_points[_points.length] = _last = new Point(x, y);
+		_points[_points.length] = _last = new FlxPoint(x, y);
 	}
 
 	/**
@@ -75,7 +86,7 @@ class LinearPath extends Motion
 	 * @param	index		Index of the point.
 	 * @return	The Point object.
 	 */
-	public function getPoint(?index:Int = 0):Point
+	public function getPoint(?index:Int = 0):FlxPoint
 	{
 		if (_points.length == 0) 
 		{
@@ -87,7 +98,15 @@ class LinearPath extends Motion
 	/** @private Starts the Tween. */
 	override public function start():Void
 	{
-		_index = 0;
+		if (!_backward)
+		{
+			_index = 0;
+		}
+		else
+		{
+			_index = _points.length;
+		}
+		
 		super.start();
 	}
 
@@ -95,17 +114,42 @@ class LinearPath extends Motion
 	override public function update():Void
 	{
 		super.update();
-		if (_index < _points.length - 1)
+		var td:Float;
+		var	tt:Float;
+		
+		if (!_backward)
 		{
-			while (_t > _pointT[_index + 1]) _index ++;
+			if (_index < _points.length - 1)
+			{
+				while (_t > _pointT[_index + 1]) _index ++;
+			}
+			td = _pointT[_index];
+			tt = _pointT[_index + 1] - td;
+			td = (_t - td) / tt;
+			_prevPoint = _points[_index];
+			_nextPoint = _points[_index + 1];
+			x = _prevPoint.x + (_nextPoint.x - _prevPoint.x) * td;
+			y = _prevPoint.y + (_nextPoint.y - _prevPoint.y) * td;
 		}
-		var td:Float = _pointT[_index];
-		var	tt:Float = _pointT[_index + 1] - td;
-		td = (_t - td) / tt;
-		_prevPoint = _points[_index];
-		_nextPoint = _points[_index + 1];
-		x = _prevPoint.x + (_nextPoint.x - _prevPoint.x) * td;
-		y = _prevPoint.y + (_nextPoint.y - _prevPoint.y) * td;
+		else
+		{
+			if (_index > 0) 
+			{
+				while (_t < _pointT[_index - 1])
+				{
+					_index -= 1;
+				}
+			}
+			td = _pointT[_index];
+			tt = _pointT[_index - 1] - td;
+			td = (_t - td) / tt;
+			_prevPoint = _points[_index];
+			_nextPoint = _points[_index - 1];
+			x = _prevPoint.x + (_nextPoint.x - _prevPoint.x) * td;
+			y = _prevPoint.y + (_nextPoint.y - _prevPoint.y) * td;
+		}
+		
+		super.postUpdate();
 	}
 
 	/** @private Updates the path, preparing it for motion. */
@@ -117,7 +161,7 @@ class LinearPath extends Motion
 		var i:Int = 0;
 		while (i < _points.length) 
 		{
-			_pointT[i] = _pointD[i ++] / distance;
+			_pointT[i] = _pointD[i++] / distance;
 		}
 	}
 
@@ -133,14 +177,14 @@ class LinearPath extends Motion
 	private function getPointCount():Float { return _points.length; }
 
 	// Path information.
-	private var _points:Array<Point>;
+	private var _points:Array<FlxPoint>;
 	private var _pointD:Array<Float>;
 	private var _pointT:Array<Float>;
 	private var _speed:Float;
 	private var _index:Int;
 
 	// Line information.
-	private var _last:Point;
-	private var _prevPoint:Point;
-	private var _nextPoint:Point;
+	private var _last:FlxPoint;
+	private var _prevPoint:FlxPoint;
+	private var _nextPoint:FlxPoint;
 }

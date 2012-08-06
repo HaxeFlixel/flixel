@@ -2,7 +2,6 @@
 
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
-import nme.geom.Point;
 
 /**
  * Determines motion along a line, from one point to another.

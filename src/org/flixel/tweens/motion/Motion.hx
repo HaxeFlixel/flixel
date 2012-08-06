@@ -1,5 +1,6 @@
 ﻿package org.flixel.tweens.motion;
 
+import org.flixel.FlxObject;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
@@ -18,6 +19,8 @@ class Motion extends FlxTween
 	 */
 	public var y:Float;
 	
+	private var _object:FlxObject;
+	
 	/**
 	 * Constructor.
 	 * @param	duration	Duration of the Tween.
@@ -31,8 +34,28 @@ class Motion extends FlxTween
 		super(duration, type, complete, ease);
 	}
 	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		_object = null;
+	}
+	
 	override public function update():Void
 	{
 		super.update();
+	}
+	
+	public function setObject(object:FlxObject):Void
+	{
+		_object = object;
+	}
+	
+	public function postUpdate():Void
+	{
+		if (_object != null)
+		{
+			_object.x = x;
+			_object.y = y;
+		}
 	}
 }

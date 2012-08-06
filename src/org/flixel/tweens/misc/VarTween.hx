@@ -18,6 +18,12 @@ class VarTween extends FlxTween
 		super(0, type, complete);
 	}
 	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		_object = null;
+	}
+	
 	/**
 	 * Tweens a numeric public property.
 	 * @param	object		The object containing the property.

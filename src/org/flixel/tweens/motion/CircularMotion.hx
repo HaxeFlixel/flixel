@@ -1,6 +1,5 @@
 ﻿package org.flixel.tweens.motion;
 
-import nme.geom.Point;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 

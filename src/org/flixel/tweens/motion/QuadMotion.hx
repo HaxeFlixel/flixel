@@ -1,8 +1,8 @@
 ﻿package org.flixel.tweens.motion;
 
+import org.flixel.FlxPoint;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
-import nme.geom.Point;
 
 /**
  * Determines motion along a quadratic curve.
@@ -10,8 +10,8 @@ import nme.geom.Point;
 class QuadMotion extends Motion
 {
 	
-	public static var point:Point = new Point();
-	public static var point2:Point = new Point();
+	public static var point:FlxPoint = new FlxPoint();
+	public static var point2:FlxPoint = new FlxPoint();
 	
 	/**
 	 * Constructor.
@@ -91,8 +91,8 @@ class QuadMotion extends Motion
 	private function getDistance():Float
 	{
 		if (_distance >= 0) return _distance;
-		var a:Point = QuadMotion.point;
-		var b:Point = QuadMotion.point2;
+		var a:FlxPoint = QuadMotion.point;
+		var b:FlxPoint = QuadMotion.point2;
 		a.x = x - 2 * _controlX + _toX;
 		a.y = y - 2 * _controlY + _toY;
 		b.x = 2 * _controlX - 2 * x;
