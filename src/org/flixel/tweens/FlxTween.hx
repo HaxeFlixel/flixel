@@ -3,13 +3,6 @@ package org.flixel.tweens;
 import org.flixel.tweens.util.Ease;
 import org.flixel.FlxBasic;
 
-enum TweenType
-{
-	Persist;
-	Looping;
-	OneShot;
-}
-
 typedef CompleteCallback = Void->Void;
 
 /**
@@ -26,6 +19,31 @@ typedef FriendTween = {
 
 class FlxTween
 {
+	/**
+	* Persistent Tween type, will stop when it finishes.
+	*/
+	public static inline var PERSIST:Int = 1;
+
+	/**
+	* Looping Tween type, will restart immediately when it finishes.
+	*/
+	public static inline var LOOPING:Int = 2;
+	
+	/**
+	 * "To and from" Tween type, will play tween hither and thither
+	 */
+	public static inline var TOANDFRO:Int = 4;
+
+	/**
+	* Oneshot Tween type, will stop and remove itself from its core container when it finishes.
+	*/
+	public static inline var ONESHOT:Int = 8;
+	
+	/**
+	 * Backward Tween type, will play tween in reverse direction
+	 */
+	public static inline var BACKWARD:Int = 16;
+	
 	public var active:Bool;
 	public var complete:CompleteCallback;
 
@@ -36,17 +54,30 @@ class FlxTween
 	 * @param	complete		Optional callback for when the Tween completes.
 	 * @param	ease			Optional easer function to apply to the Tweened value.
 	 */
-	public function new(duration:Float, ?type:TweenType, ?complete:CompleteCallback, ?ease:EaseFunction)
+	public function new(duration:Float, ?type:Int = 0, ?complete:CompleteCallback, ?ease:EaseFunction)
 	{
 		_target = duration;
-		if (type == null) 
+		if (type == 0) 
 		{
-			type = TweenType.Persist;
+			type = FlxTween.PERSIST;
+		}
+		else if (type == FlxTween.BACKWARD)
+		{
+			type = FlxTween.PERSIST | FlxTween.BACKWARD;
 		}
 		_type = type;
 		this.complete = complete;
 		_ease = ease;
 		_t = 0;
+		
+		_backward = (_type & BACKWARD) > 0;
+	}
+	
+	public function destroy():Void
+	{
+		complete = null;
+		_parent = null;
+		_ease = null;
 	}
 
 	/**
@@ -56,13 +87,24 @@ class FlxTween
 	{
 		_time += FlxG.elapsed;
 		_t = _time / _target;
-		if (_ease != null && _t > 0 && _t < 1) 
+		if (_ease != null)
 		{
 			_t = _ease(_t);
 		}
+		if (_backward)
+		{
+			_t = 1 - _t;
+		}
 		if (_time >= _target)
 		{
-			_t = 1;
+			if (!_backward)
+			{
+				_t = 1;
+			}
+			else
+			{
+				_t = 0;
+			}
 			_finish = true;
 		}
 	}
@@ -80,24 +122,43 @@ class FlxTween
 		}
 		active = true;
 	}
+	
+	/**
+	 * Immediately stops the Tween and removes it from its Tweener without calling the complete callback.
+	 */
+	public function cancel():Void
+	{
+		active = false;
+		if (_parent != null)
+		{
+			_parent.removeTween(this);
+		}
+	}
 
 	/** @private Called when the Tween completes. */
 	private function finish():Void
 	{
-		switch (_type)
+		switch ((_type & ~ FlxTween.BACKWARD))
 		{
-			case Persist:
+			case FlxTween.PERSIST:
 				_time = _target;
 				active = false;
-			case Looping:
+			case FlxTween.LOOPING:
 				_time %= _target;
 				_t = _time / _target;
 				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
 				start();
-			case OneShot:
+			case FlxTween.TOANDFRO:
+				_time %= _target;
+				_t = _time / _target;
+				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
+				if (_backward) _t = 1 - _t;
+				_backward = !_backward;
+				start();
+			case FlxTween.ONESHOT:
 				_time = _target;
 				active = false;
-				_parent.removeTween(this);
+				_parent.removeTween(this, true);
 		}
 		_finish = false;
 		if (complete != null) complete();
@@ -110,7 +171,7 @@ class FlxTween
 	public var scale(getScale, null):Float;
 	private function getScale():Float { return _t; }
 
-	private var _type:TweenType;
+	private var _type:Int;
 	private var _ease:EaseFunction;
 	private var _t:Float;
 
@@ -121,4 +182,6 @@ class FlxTween
 	private var _parent:FlxBasic;
 	private var _prev:FriendTween;
 	private var _next:FriendTween;
+	
+	private var _backward:Bool;
 }

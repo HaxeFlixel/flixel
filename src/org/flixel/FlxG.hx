@@ -1751,7 +1751,7 @@ class FlxG
 	 */
 	public static function tween(object:Dynamic, values:Dynamic, duration:Float, ?options:Dynamic = null):MultiVarTween
 	{
-		var type:TweenType = TweenType.OneShot,
+		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
 			ease:EaseFunction = null,
 			tweener:FlxBasic = FlxG.tweener;

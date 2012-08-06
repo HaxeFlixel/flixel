@@ -1,5 +1,6 @@
 ﻿package org.flixel.tweens.sound;
 
+import org.flixel.FlxG;
 import org.flixel.FlxSound;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
@@ -15,7 +16,7 @@ class SfxFader extends FlxTween
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(sfx:FlxSound, ?complete:CompleteCallback, type:TweenType)
+	public function new(sfx:FlxSound, ?complete:CompleteCallback, ?type:Int = 0)
 	{
 		super(0, type, finish);
 		_complete = complete;
@@ -44,12 +45,11 @@ class SfxFader extends FlxTween
 	/**
 	 * Fades out the Sfx, while also playing and fading in a replacement Sfx.
 	 * @param	play		The Sfx to play and fade in.
-	 * @param	loop		If the new Sfx should loop.
 	 * @param	duration	Duration of the crossfade.
 	 * @param	volume		The volume to fade in the new Sfx to.
 	 * @param	ease		Optional easer function.
 	 */
-	public function crossFade(play:FlxSound, loop:Bool, duration:Float, ?volume:Float = 1, ?ease:EaseFunction = null):Void
+	public function crossFade(play:FlxSound, duration:Float, ?volume:Float = 1, ?ease:EaseFunction = null):Void
 	{
 		_crossSfx = play;
 		_crossRange = volume;
@@ -57,11 +57,7 @@ class SfxFader extends FlxTween
 		_range = -_start;
 		_target = duration;
 		_ease = ease;
-		if (loop) 
-		{
-			_crossSfx.loop(0);
-		}
-		else _crossSfx.play(0);
+		_crossSfx.play(true);
 		start();
 	}
 

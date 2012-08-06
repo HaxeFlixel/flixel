@@ -14,7 +14,7 @@ class CircularMotion extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:TweenType)
+	public function new(?complete:CompleteCallback, ?type:Int = 0)
 	{
 		_centerX = _centerY = 0;
 		_radius = angle = 0;
