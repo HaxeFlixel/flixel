@@ -4,6 +4,12 @@ v1.07
 ------------------------------
 * Added GlitchFX class from FlixelPowerTools. It doesn't work with 'complex' sprites (such as FlxTileblock, FlxBitmapFont and FlxButtonPlus) on cpp and neko targets.
 * Fixed draw position round issue for cpp and neko targets. It uses less math methods and more accurate now.
+* Added drawTiles() counter in debugger output (on cpp and neko targets).
+* Added BACKWARD and TOANDFRO tween types. Thanks @devolonter!
+* Added cancel() method to FlxTween
+* Moved tilesheet manager to system package. This is preparation for the next major release.
+* Added initial support for html5 target. But it's very-very slow
+* Added NestedSprite addon. It is some sort of display object container, a very limited one, but powerfull enough.
 
 v1.06
 ------------------------------
