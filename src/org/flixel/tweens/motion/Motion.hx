@@ -30,8 +30,8 @@ class Motion extends FlxTween
 	 */
 	public function new(duration:Float, ?complete:CompleteCallback, ?type:Int = 0, ?ease:EaseFunction = null) 
 	{
-		x = y = 0;
 		super(duration, type, complete, ease);
+		x = y = 0;
 	}
 	
 	override public function destroy():Void 
@@ -40,19 +40,22 @@ class Motion extends FlxTween
 		_object = null;
 	}
 	
-	override public function update():Void
-	{
-		super.update();
-	}
-	
 	public function setObject(object:FlxObject):Void
 	{
 		_object = object;
 		_object.immovable = true;
 	}
 	
+	override public function update():Void 
+	{
+		super.update();
+		postUpdate();
+	}
+	
 	public function postUpdate():Void
 	{
+		
+		trace("x = " + x);
 		if (_object != null)
 		{
 			_object.x = x;

@@ -15,9 +15,9 @@ class LinearMotion extends Motion
 	 */
 	public function new(?complete:CompleteCallback, ?type:Int = 0)
 	{
+		super(0, complete, type, null);
 		_fromX = _fromY = _moveX = _moveY = 0;
 		_distance = -1;
-		super(0,complete, type, null);
 	}
 
 	/**
