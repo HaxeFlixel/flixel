@@ -48,6 +48,7 @@ class Motion extends FlxTween
 	public function setObject(object:FlxObject):Void
 	{
 		_object = object;
+		_object.immovable = true;
 	}
 	
 	public function postUpdate():Void

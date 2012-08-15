@@ -104,7 +104,7 @@ class LinearPath extends Motion
 		}
 		else
 		{
-			_index = _points.length;
+			_index = _points.length - 1;
 		}
 		
 		super.start();
@@ -121,7 +121,14 @@ class LinearPath extends Motion
 		{
 			if (_index < _points.length - 1)
 			{
-				while (_t > _pointT[_index + 1]) _index ++;
+				while (_t > _pointT[_index + 1]) 
+				{
+					_index ++;
+					if (_index == _points.length - 1)
+					{
+						_index -= 1;
+					}
+				}
 			}
 			td = _pointT[_index];
 			tt = _pointT[_index + 1] - td;
@@ -138,6 +145,10 @@ class LinearPath extends Motion
 				while (_t < _pointT[_index - 1])
 				{
 					_index -= 1;
+					if (_index == 0)
+					{
+						_index += 1;
+					}
 				}
 			}
 			td = _pointT[_index];

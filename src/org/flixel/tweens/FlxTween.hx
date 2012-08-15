@@ -32,7 +32,7 @@ class FlxTween
 	/**
 	 * "To and from" Tween type, will play tween hither and thither
 	 */
-	public static inline var TOANDFRO:Int = 4;
+	public static inline var PINGPONG:Int = 4;
 
 	/**
 	* Oneshot Tween type, will stop and remove itself from its core container when it finishes.
@@ -148,7 +148,7 @@ class FlxTween
 				_t = _time / _target;
 				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
 				start();
-			case FlxTween.TOANDFRO:
+			case FlxTween.PINGPONG:
 				_time %= _target;
 				_t = _time / _target;
 				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
