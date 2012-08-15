@@ -126,6 +126,7 @@ class QuadPath extends Motion
 					if (_index == _curve.length - 1)
 					{
 						_index -= 1;
+						break;
 					}
 				}
 			}
@@ -148,6 +149,7 @@ class QuadPath extends Motion
 					if (_index == 0)
 					{
 						_index += 1;
+						break;
 					}
 				}
 			}

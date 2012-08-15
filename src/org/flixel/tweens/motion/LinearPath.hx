@@ -127,6 +127,7 @@ class LinearPath extends Motion
 					if (_index == _points.length - 1)
 					{
 						_index -= 1;
+						break;
 					}
 				}
 			}
@@ -148,6 +149,7 @@ class LinearPath extends Motion
 					if (_index == 0)
 					{
 						_index += 1;
+						break;
 					}
 				}
 			}
