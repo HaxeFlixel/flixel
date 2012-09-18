@@ -92,6 +92,7 @@ class FlxText extends FlxSprite
 		_regen = true;
 		_shadow = 0;
 		allowCollisions = FlxObject.NONE;
+		moves = false;
 		#if (flash || js)
 		calcFrame();
 		#else

@@ -17,6 +17,7 @@ import nme.text.TextFormatAlign;
 import nme.Lib;
 import nme.ui.Mouse;
 import nme.ui.Multitouch;
+import nme.ui.MultitouchInputMode;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.TouchManager;
 
@@ -858,6 +859,7 @@ class FlxGame extends Sprite
 		if (FlxG.supportsTouchEvents)
 		{
 			FlxG.maxTouchPoints = Multitouch.maxTouchPoints;
+			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 		}
 		FlxG.touchManager = new TouchManager();
 		

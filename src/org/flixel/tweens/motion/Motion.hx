@@ -54,8 +54,6 @@ class Motion extends FlxTween
 	
 	public function postUpdate():Void
 	{
-		
-		trace("x = " + x);
 		if (_object != null)
 		{
 			_object.x = x;

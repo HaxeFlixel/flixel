@@ -59,10 +59,11 @@ class FlxTextField extends FlxText
 		#if neko
 		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
 		#else
-		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffffff);
+		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
 		#end
 		
 		allowCollisions = FlxObject.NONE;
+		moves = false;
 	}
 	
 	/**

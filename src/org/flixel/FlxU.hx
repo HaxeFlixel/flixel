@@ -63,8 +63,7 @@ class FlxU
 	 */
 	static public function round(Value:Float):Int
 	{
-		var number:Int = Std.int(Value + ((Value > 0) ? 0.5 : -0.5));
-		return (Value > 0) ? (number) : ((number != Value) ? (number - 1) : (number));
+		return Std.int(Value + ((Value > 0) ? 0.5 : -0.5));
 	}
 	
 	/**
@@ -417,7 +416,7 @@ class FlxU
 			return "";
 		}
 		var string:String = AnyArray[0].toString();
-		var i:Int = 0;
+		var i:Int = 1;
 		var l:Int = AnyArray.length;
 		while (i < l)
 		{

@@ -85,6 +85,7 @@ class FlxGroup extends FlxBasic
 			members = null;
 		}
 		_sortIndex = null;
+		super.destroy();
 	}
 	
 	/**
@@ -191,6 +192,12 @@ class FlxGroup extends FlxBasic
 	 */
 	public function add(Object:FlxBasic):FlxBasic
 	{
+		if (Object == null)
+		{
+			FlxG.log("WARNING: Cannot add a `null` object to a FlxGroup.");
+			return null;
+		}
+		
 		//Don't bother adding an object twice.
 		if (FlxU.ArrayIndexOf(members, Object) >= 0)
 		{

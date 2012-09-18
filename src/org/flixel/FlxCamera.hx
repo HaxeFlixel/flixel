@@ -420,6 +420,8 @@ class FlxCamera extends FlxBasic
 		_canvas = null;
 		#end
 		_flashSprite = null;
+		
+		super.destroy();
 	}
 	
 	/**

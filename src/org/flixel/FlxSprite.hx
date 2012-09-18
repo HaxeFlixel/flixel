@@ -1055,7 +1055,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function play(AnimName:String, ?Force:Bool = false):Void
 	{
-		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (!_curAnim.looped || !finished)) return;
+		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) return;
 		_curFrame = 0;
 		_curIndex = 0;
 		#if (cpp || neko)
@@ -1332,8 +1332,7 @@ class FlxSprite extends FlxObject
 		_blue = (_color.rgb & 0xff) * 0.00392;
 		#end
 		
-		#if (cpp || neko)
-		
+	#if (cpp || neko)	
 		#if cpp
 		if (_color < 0xffffff)
 		#else
@@ -1345,7 +1344,7 @@ class FlxSprite extends FlxObject
 				_tileSheetData.isColored = true;
 			}
 		}
-		#end
+	#end
 		
 		return _color;
 	}

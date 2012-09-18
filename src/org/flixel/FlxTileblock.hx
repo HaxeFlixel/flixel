@@ -43,6 +43,7 @@ class FlxTileblock extends FlxSprite
 		#end
 		active = false;
 		immovable = true;
+		moves = false;
 	}
 	
 	/**

@@ -70,8 +70,8 @@ class FlxTile extends FlxObject
 	 */
 	override public function destroy():Void
 	{
-		super.destroy();
 		callbackFunction = null;
 		tilemap = null;
+		super.destroy();
 	}
 }

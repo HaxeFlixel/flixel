@@ -163,6 +163,7 @@ class FlxTilemap extends FlxObject
 		_tiles = null;
 		_tileObjects = null;
 		immovable = true;
+		moves = false;
 		cameras = null;
 		#if (flash || js)
 		_debugTileNotSolid = null;
@@ -1534,14 +1535,13 @@ class FlxTilemap extends FlxObject
 				}
 				rx = q;
 				ry = ly + stepY * ((q - lx) / stepX);
-				if((ry > tileY) && (ry < tileY + _tileHeight))
+				if ((ry > tileY) && (ry < tileY + _tileHeight))
 				{
-					if (Result == null)
+					if (Result != null)
 					{
-						Result = new FlxPoint();
+						Result.x = rx;
+						Result.y = ry;
 					}
-					Result.x = rx;
-					Result.y = ry;
 					return false;
 				}
 				
@@ -1555,12 +1555,11 @@ class FlxTilemap extends FlxObject
 				ry = q;
 				if((rx > tileX) && (rx < tileX + _tileWidth))
 				{
-					if (Result == null)
+					if (Result != null)
 					{
-						Result = new FlxPoint();
+						Result.x = rx;
+						Result.y = ry;
 					}
-					Result.x = rx;
-					Result.y = ry;
 					return false;
 				}
 				return true;

@@ -7,6 +7,7 @@ import nme.display.BitmapInt32;
 import nme.display.Graphics;
 import nme.display.Sprite;
 import nme.display.Stage;
+import nme.display.StageDisplayState;
 import nme.errors.Error;
 import nme.geom.Matrix;
 import nme.geom.Point;
@@ -347,7 +348,7 @@ class FlxG
 	{
 		if ((_game != null) && (_game.debugger != null))
 		{
-			_game.debugger.log.add((Data == null) ? "ERROR: null object" : Data.toString());
+			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Data.toString()));
 		}
 	}
 	
@@ -447,7 +448,21 @@ class FlxG
 		}
 		return Framerate;
 	}
-		
+	
+	#if flash
+	/**
+	 * Switch to full-screen display.
+	 */
+	static public function fullscreen():Void
+	{
+		FlxG.stage.displayState = StageDisplayState.FULL_SCREEN;
+		var fsw:Int = Std.int(FlxG.width * FlxG.camera.zoom);
+		var fsh:Int = Std.int(FlxG.height * FlxG.camera.zoom);
+		FlxG.camera.x = (FlxG.stage.fullScreenWidth - fsw) / 2;
+		FlxG.camera.y = (FlxG.stage.fullScreenHeight - fsh) / 2;
+	}
+	#end
+	
 	/**
 	 * Generates a random number.  Deterministic, meaning safe
 	 * to use if you want to record replays in random environments.

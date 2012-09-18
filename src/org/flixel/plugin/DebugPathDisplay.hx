@@ -28,9 +28,9 @@ class DebugPathDisplay extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
-		super.destroy();
 		clear();
 		_paths = null;
+		super.destroy();
 	}
 	
 	/**
