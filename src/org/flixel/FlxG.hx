@@ -1137,18 +1137,36 @@ class FlxG
 	 */
 	static public function clearBitmapCache():Void
 	{
-		/*if (_cache != null)
+		var bmd:BitmapData;
+		if (_cache != null)
 		{
-			for (bmd in _cache)
+			for (key in _cache.keys())
 			{
+				bmd = _cache.get(key);
 				if (bmd != null)
 				{
+					_cache.remove(key);
 					bmd.dispose();
 					bmd = null;
 				}
 			}
-		}*/
+		}
 		
+		var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;
+		if (cachedBitmapData != null)
+		{
+			for (key in cachedBitmapData.keys())
+			{
+				bmd = cachedBitmapData.get(key);
+				if (bmd != null)
+				{
+					cachedBitmapData.remove(key);
+					bmd.dispose();
+					bmd = null;
+				}
+			}
+		}
+		Assets.cachedBitmapData = new Hash();
 		_cache = new Hash();
 	}
 	

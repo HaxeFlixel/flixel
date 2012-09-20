@@ -294,7 +294,6 @@ class FlxTextField extends FlxText
 	
 	private function updateTextFields():Void
 	{
-		
 		for (tf in _textFields)
 		{
 			if (tf != null)
@@ -354,7 +353,7 @@ class FlxTextField extends FlxText
 			return;
 		}
 		
-		if(_flickerTimer != 0)
+		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
 			if (_flicker) return;
@@ -367,7 +366,7 @@ class FlxTextField extends FlxText
 		var l:Int = cameras.length;
 		var tf:TextField;
 		
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
 			tf = _textFields[i - 1];
