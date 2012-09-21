@@ -108,7 +108,6 @@ class FlxPath
 		{
 			Index = nodes.length;
 		}
-		//nodes.splice(Index, 0, new FlxPoint(X, Y));
 		nodes.insert(Index, new FlxPoint(X, Y));
 	}
 	
@@ -148,12 +147,10 @@ class FlxPath
 		}
 		if (AsReference)
 		{
-			//nodes.splice(Index, 0, Node);
 			nodes.insert(Index, Node);
 		}
 		else
 		{
-			//nodes.splice(Index, 0, new FlxPoint(Node.x, Node.y));
 			nodes.insert(Index, new FlxPoint(Node.x, Node.y));
 		}
 	}
@@ -166,7 +163,6 @@ class FlxPath
 	 */
 	public function remove(Node:FlxPoint):FlxPoint
 	{
-		//var index:Int = nodes.indexOf(Node);
 		var index:Int = FlxU.ArrayIndexOf(nodes, Node);
 		if (index >= 0)
 		{

@@ -400,7 +400,7 @@ class FlxTilemap extends FlxObject
 		
 		var isTilemapFlag:Bool = _tileSheetData.isTilemap;
 		var isColored:Bool = _tileSheetData.isColored;
-		var isColoredCamera:Bool = Camera.isColored;
+		var isColoredCamera:Bool = Camera.isColored();
 		#end
 		
 		//Copy tile images into the tile buffer

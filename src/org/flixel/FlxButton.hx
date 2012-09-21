@@ -16,7 +16,10 @@ import org.flixel.FlxSprite;
 class FlxButton extends FlxSprite
 {
 	
-	public var on(getOn, setOn):Bool;
+	/**
+	 * Use this to toggle checkbox-style behavior.
+	 */
+	public var on(default, default):Bool;
 	
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
@@ -80,11 +83,6 @@ class FlxButton extends FlxSprite
 	 * We recommend using the helper function setSounds()!
 	 */
 	public var soundUp:FlxSound;
-
-	/**
-	 * Used for checkbox-style behavior.
-	 */
-	private var _onToggle:Bool;
 	
 	/**
 	 * Tracks whether or not the button is currently pressed.
@@ -125,7 +123,7 @@ class FlxButton extends FlxSprite
 		soundUp = null;
 
 		status = NORMAL;
-		_onToggle = false;
+		on = false;
 		_pressed = false;
 		_initialized = false;
 	}
@@ -308,7 +306,7 @@ class FlxButton extends FlxSprite
 		}
 		
 		//Then pick the appropriate frame of animation
-		if ((status == HIGHLIGHT) && _onToggle)
+		if ((status == HIGHLIGHT) && on)
 		{
 			frame = NORMAL;
 		}
@@ -418,23 +416,6 @@ class FlxButton extends FlxSprite
 		{
 			soundUp = FlxG.loadSound(SoundUp, SoundUpVolume);
 		}
-	}
-	
-	/**
-	 * Use this to toggle checkbox-style behavior.
-	 */
-	public function getOn():Bool
-	{
-		return _onToggle;
-	}
-	
-	/**
-	 * @private
-	 */
-	public function setOn(On:Bool):Bool
-	{
-		_onToggle = On;
-		return On;
 	}
 	
 	/**

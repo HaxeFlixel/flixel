@@ -231,11 +231,7 @@ class FlxGame extends Sprite
 		_requestedReset = true;
 		_created = false;
 		
-		#if iphone
-		Lib.current.stage.addEventListener(Event.RESIZE, create);
-		#else
 		addEventListener(Event.ADDED_TO_STAGE, create);
-		#end
 	}
 	
 	/**
@@ -648,7 +644,6 @@ class FlxGame extends Sprite
 		if(_requestedReset)
 		{
 			_requestedReset = false;
-			//_requestedState = new _iState();
 			_requestedState = Type.createInstance(_iState, []);
 			_replayTimer = 0;
 			_replayCancelKeys = null;
@@ -745,8 +740,7 @@ class FlxGame extends Sprite
 	private function updateSoundTray(MS:Float):Void
 	{
 		//animate stupid sound tray thing
-		
-		if(_soundTray != null)
+		if (_soundTray != null)
 		{
 			if (_soundTrayTimer > 0)
 			{
@@ -843,11 +837,7 @@ class FlxGame extends Sprite
 		{
 			return;
 		}
-		#if iphone
-		Lib.current.stage.removeEventListener(Event.RESIZE, create);
-		#else
 		removeEventListener(Event.ADDED_TO_STAGE, create);
-		#end
 		
 		_total = Lib.getTimer();
 		//Set up the view window and double buffering
@@ -964,7 +954,7 @@ class FlxGame extends Sprite
 		#end
 		var dtf:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
-		text.defaultTextFormat = dtf; //new TextFormat("system",8,0xffffff,null,null,null,null,null,"center");
+		text.defaultTextFormat = dtf;
 		_soundTray.addChild(text);
 		text.text = "VOLUME";
 		text.y = 16;

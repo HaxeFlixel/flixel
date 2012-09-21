@@ -7,8 +7,10 @@ package org.flixel;
  */
 class FlxGroup extends FlxBasic
 {
-	
-	public var maxSize(getMaxSize, setMaxSize):Int;
+	/**
+	 * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
+	 */
+	public var maxSize(default, setMaxSize):Int;
 	
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.
@@ -31,11 +33,6 @@ class FlxGroup extends FlxBasic
 	public var length:Int;
 
 	/**
-	 * Internal tracker for the maximum capacity of the group.
-	 * Default is 0, or no max capacity.
-	 */
-	private var _maxSize:Int;
-	/**
 	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
 	private var _marker:Int;
@@ -57,7 +54,7 @@ class FlxGroup extends FlxBasic
 		super();
 		members = new Array<FlxBasic>();
 		length = 0;
-		_maxSize = Math.floor(Math.abs(MaxSize));
+		maxSize = Math.floor(Math.abs(MaxSize));
 		_marker = 0;
 		_sortIndex = null;
 	}
@@ -80,7 +77,6 @@ class FlxGroup extends FlxBasic
 					basic.destroy();
 				}
 			}
-			//members.length = 0;
 			members = [];
 			members = null;
 		}
@@ -103,7 +99,7 @@ class FlxGroup extends FlxBasic
 		while(i < length)
 		{
 			basic = members[i++];
-			if((basic != null) && basic.exists && basic.active)
+			if ((basic != null) && basic.exists && basic.active)
 			{
 				basic.preUpdate();
 				basic.update();
@@ -130,7 +126,7 @@ class FlxGroup extends FlxBasic
 	{
 		var basic:FlxBasic;
 		var i:Int = 0;
-		while(i < length)
+		while (i < length)
 		{
 			basic = members[i++];
 			if ((basic != null) && basic.exists && basic.visible)
@@ -141,33 +137,25 @@ class FlxGroup extends FlxBasic
 	}
 	
 	/**
-	 * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
-	 */
-	public function getMaxSize():Int
-	{
-		return _maxSize;
-	}
-	
-	/**
 	 * @private
 	 */
-	public function setMaxSize(Size:Int):Int
+	private function setMaxSize(Size:Int):Int
 	{
-		_maxSize = Math.floor(Math.abs(Size));
-		if (_marker >= _maxSize)
+		maxSize = Math.floor(Math.abs(Size));
+		if (_marker >= maxSize)
 		{
 			_marker = 0;
 		}
-		if ((_maxSize == 0) || (members == null) || (_maxSize >= members.length))
+		if ((maxSize == 0) || (members == null) || (maxSize >= members.length))
 		{
-			return _maxSize;
+			return maxSize;
 		}
 		
 		//If the max size has shrunk, we need to get rid of some objects
 		var basic:FlxBasic;
-		var i:Int = _maxSize;
+		var i:Int = maxSize;
 		var l:Int = members.length;
-		while(i < l)
+		while (i < l)
 		{
 			basic = members[i++];
 			if (basic != null)
@@ -175,9 +163,9 @@ class FlxGroup extends FlxBasic
 				basic.destroy();
 			}
 		}
-		length = /*members.length =*/ _maxSize;
-		FlxU.SetArrayLength(members, _maxSize);
-		return _maxSize;
+		length = maxSize;
+		FlxU.SetArrayLength(members, maxSize);
+		return maxSize;
 	}
 	
 	/**
@@ -222,26 +210,23 @@ class FlxGroup extends FlxBasic
 		}
 		
 		//Failing that, expand the array (if we can) and add the object.
-		if(_maxSize > 0)
+		if (maxSize > 0)
 		{
-			if (members.length >= _maxSize)
+			if (members.length >= maxSize)
 			{
 				return Object;
 			}
-			else if (members.length * 2 <= _maxSize)
+			else if (members.length * 2 <= maxSize)
 			{
-				//members.length *= 2;
 				FlxU.SetArrayLength(members, members.length * 2);
 			}
 			else
 			{
-				//members.length = _maxSize;
-				FlxU.SetArrayLength(members, _maxSize);
+				FlxU.SetArrayLength(members, maxSize);
 			}
 		}
 		else
 		{
-			//members.length *= 2;
 			FlxU.SetArrayLength(members, members.length * 2);
 		}
 		
@@ -273,9 +258,9 @@ class FlxGroup extends FlxBasic
 	public function recycle(?ObjectClass:Class<FlxBasic> = null):FlxBasic
 	{
 		var basic:FlxBasic;
-		if(_maxSize > 0)
+		if (maxSize > 0)
 		{
-			if(length < _maxSize)
+			if (length < maxSize)
 			{
 				if (ObjectClass == null)
 				{
@@ -286,7 +271,7 @@ class FlxGroup extends FlxBasic
 			else
 			{
 				basic = members[_marker++];
-				if (_marker >= _maxSize)
+				if (_marker >= maxSize)
 				{
 					_marker = 0;
 				}
@@ -316,7 +301,6 @@ class FlxGroup extends FlxBasic
 	 */
 	public function remove(Object:FlxBasic, Splice:Bool = false):FlxBasic
 	{
-		//var index:Int = members.indexOf(Object);
 		var index:Int = FlxU.ArrayIndexOf(members, Object);
 		if ((index < 0) || (index >= members.length))
 		{
@@ -342,7 +326,6 @@ class FlxGroup extends FlxBasic
 	 */
 	public function replace(OldObject:FlxBasic, NewObject:FlxBasic):FlxBasic
 	{
-		//var index:Int = members.indexOf(OldObject);
 		var index:Int = FlxU.ArrayIndexOf(members, OldObject);
 		if ((index < 0) || (index >= members.length))
 		{
@@ -389,7 +372,6 @@ class FlxGroup extends FlxBasic
 				}
 				else
 				{
-					//basic[VariableName] = Value;
 					Reflect.setProperty(basic, VariableName, Value);
 				}
 			}
@@ -417,7 +399,6 @@ class FlxGroup extends FlxBasic
 				}
 				else
 				{
-					//basic[FunctionName]();
 					Reflect.callMethod(basic, Reflect.getProperty(basic, FunctionName), []);
 				}
 			}
@@ -520,7 +501,7 @@ class FlxGroup extends FlxBasic
 	{
 		var basic:FlxBasic;
 		var i:Int = 0;
-		while(i < length)
+		while (i < length)
 		{
 			basic = members[i++];
 			if ((basic != null) && !basic.alive)
@@ -540,10 +521,10 @@ class FlxGroup extends FlxBasic
 		var count:Int = -1;
 		var basic:FlxBasic;
 		var i:Int = 0;
-		while(i < length)
+		while (i < length)
 		{
 			basic = members[i++];
-			if(basic != null)
+			if (basic != null)
 			{
 				if (count < 0)
 				{
@@ -612,7 +593,6 @@ class FlxGroup extends FlxBasic
 	 */
 	public function clear():Void
 	{
-		//length = members.length = 0;
 		length = 0;
 		members.splice(0, members.length);
 	}
@@ -646,12 +626,10 @@ class FlxGroup extends FlxBasic
 		var prop1 = Reflect.getProperty(Obj1, _sortIndex);
 		var prop2 = Reflect.getProperty(Obj2, _sortIndex);
 		
-		//if (Obj1[_sortIndex] < Obj2[_sortIndex])
 		if (prop1 < prop2)
 		{
 			return _sortOrder;
 		}
-		//else if (Obj1[_sortIndex] > Obj2[_sortIndex])
 		else if (prop1 > prop2)
 		{
 			return -_sortOrder;

@@ -44,7 +44,6 @@ import org.flixel.tweens.util.Ease;
  */
 class FlxG 
 {
-	
 	/**
 	 * The maximum number of concurrent touch points supported by the current device.
 	 */
@@ -283,10 +282,6 @@ class FlxG
 	 * Whether or not the game sounds are muted.
 	 */
 	static public var mute:Bool;
-	/**
-	 * Internal volume level, used for global sound control.
-	 */
-	static private var _volume:Float;
 
 	/**
 	 * An array of <code>FlxCamera</code> objects that are used to draw stuff.
@@ -314,7 +309,7 @@ class FlxG
 	 * By default flixel uses a couple of plugins:
 	 * DebugPathDisplay, and TimerManager.
 	 */
-	 static public var plugins:Array<FlxBasic>;
+	static public var plugins:Array<FlxBasic>;
 	 
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
@@ -332,7 +327,6 @@ class FlxG
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	//static private var _cache:Hash<BitmapData>;
 	static public var _cache:Hash<BitmapData>;
 	
 	static public function getLibraryName():String
@@ -468,7 +462,7 @@ class FlxG
 	 * to use if you want to record replays in random environments.
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	static public function random():Float
+	inline static public function random():Float
 	{
 		globalSeed = FlxU.srand(globalSeed);
 		if (globalSeed <= 0) globalSeed += 1;
@@ -483,14 +477,14 @@ class FlxG
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
 	 */
-	static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
+	inline static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
 	{
 		HowManyTimes = Math.floor(Math.max(HowManyTimes, 0));
 		var i:Int = 0;
 		var index1:Int;
 		var index2:Int;
 		var object:Dynamic;
-		while(i < HowManyTimes)
+		while (i < HowManyTimes)
 		{
 			index1 = Math.floor(FlxG.random() * Objects.length);
 			index2 = Math.floor(FlxG.random() * Objects.length);
@@ -514,7 +508,7 @@ class FlxG
 	 */
 	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:Int = 0, ?Length:Int = 0):Dynamic
 	{
-		if(Objects != null)
+		if (Objects != null)
 		{
 			if (StartIndex < 0) StartIndex = 0;
 			if (Length < 0) Length = 0;
@@ -775,36 +769,32 @@ class FlxG
 		return FlxG.loadSound(null, Volume, Looped, AutoDestroy, true, URL);
 	}
 	
-	public static var volume(getVolume, setVolume):Float;
-	
 	/**
+	 * 
 	 * Set <code>volume</code> to a number between 0 and 1 to change the global volume.
 	 * 
 	 * @default 0.5
 	 */
-	static public function getVolume():Float
-	{
-		return _volume;
-	}
+	public static var volume(default, setVolume):Float;
 	
 	/**
 	 * @private
 	 */
-	static public function setVolume(Volume:Float):Float
+	static private function setVolume(Volume:Float):Float
 	{
-		_volume = Volume;
-		if (_volume < 0)
+		volume = Volume;
+		if (volume < 0)
 		{
-			_volume = 0;
+			volume = 0;
 		}
-		else if (_volume > 1)
+		else if (volume > 1)
 		{
-			_volume = 1;
+			volume = 1;
 		}
 		if (volumeHandler != null)
 		{
 			// volumeHandler(FlxG.mute ? 0 : _volume);
-			var param:Float = FlxG.mute ? 0 : _volume;
+			var param:Float = FlxG.mute ? 0 : volume;
 			Reflect.callMethod(FlxG, Reflect.getProperty(FlxG, "volumeHandler"), [param]);
 		}
 		return Volume;
@@ -1281,7 +1271,6 @@ class FlxG
 			FlxG._game.removeChild(cam._flashSprite);
 			cam.destroy();
 		}
-		//FlxG.cameras.length = 0;
 		FlxG.cameras.splice(0, FlxG.cameras.length);
 		
 		if (NewCamera == null)
@@ -1414,7 +1403,7 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any oevrlaps were detected.
 	 */
-	static public function overlap(?ObjectOrGroup1:FlxBasic = null, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:FlxObject->FlxObject->Void = null, ?ProcessCallback:FlxObject->FlxObject->Bool = null):Bool
+	inline static public function overlap(?ObjectOrGroup1:FlxBasic = null, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:FlxObject->FlxObject->Void = null, ?ProcessCallback:FlxObject->FlxObject->Bool = null):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -1445,7 +1434,7 @@ class FlxG
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	static public function collide(?ObjectOrGroup1:FlxBasic = null, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:FlxObject->FlxObject->Void = null):Bool
+	inline static public function collide(?ObjectOrGroup1:FlxBasic = null, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:FlxObject->FlxObject->Void = null):Bool
 	{
 		return FlxG.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
 	}
@@ -1459,9 +1448,7 @@ class FlxG
 	{
 		//Don't add repeats
 		var pluginList:Array<FlxBasic> = FlxG.plugins;
-		//var i:UInt = 0;
 		var l:Int = pluginList.length;
-		//while(i < l)
 		for (i in 0...l)
 		{
 			if (pluginList[i].toString() == Plugin.toString())
@@ -1487,7 +1474,6 @@ class FlxG
 		var l:Int = pluginList.length;
 		while(i < l)
 		{
-			//if(pluginList[i] is ClassType)
 			if (Std.is(pluginList[i], ClassType))
 			{
 				return plugins[i];
@@ -1531,7 +1517,6 @@ class FlxG
 		var i:Int = pluginList.length - 1;
 		while(i >= 0)
 		{
-			//if(pluginList[i] is ClassType)
 			if (Std.is(pluginList[i], ClassType))
 			{
 				pluginList.splice(i,1);
@@ -1555,7 +1540,7 @@ class FlxG
 		FlxG.height = Math.floor(Math.abs(Height));
 		
 		FlxG.mute = false;
-		FlxG._volume = 0.5;
+		FlxG.volume = 0.5;
 		FlxG.sounds = new FlxGroup();
 		FlxG.volumeHandler = null;
 		
@@ -1603,9 +1588,7 @@ class FlxG
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
-		//FlxG.levels.length = 0;
 		FlxG.levels = [];
-		//FlxG.scores.length = 0;
 		FlxG.scores = [];
 		FlxG.level = 0;
 		FlxG.score = 0;
@@ -1625,7 +1608,7 @@ class FlxG
 	/**
 	 * Called by the game object to update the keyboard and mouse input tracking objects.
 	 */
-	static public function updateInput():Void
+	inline static public function updateInput():Void
 	{
 		FlxG.keys.update();
 		if (!_game._debuggerUp || !_game._debugger.hasMouse)
@@ -1646,7 +1629,7 @@ class FlxG
 	/**
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
-	static public function lockCameras():Void
+	inline static public function lockCameras():Void
 	{
 		var cam:FlxCamera;
 		var cams:Array<FlxCamera> = FlxG.cameras;
@@ -1684,7 +1667,7 @@ class FlxG
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
 	 */
-	static public function unlockCameras():Void
+	inline static public function unlockCameras():Void
 	{
 		var cam:FlxCamera;
 		var cams:Array<FlxCamera> = FlxG.cameras;
@@ -1711,7 +1694,7 @@ class FlxG
 	/**
 	 * Called by the game object to update the cameras and their tracking/special effects logic.
 	 */
-	static public function updateCameras():Void
+	inline static public function updateCameras():Void
 	{
 		var cam:FlxCamera;
 		var cams:Array<FlxCamera> = FlxG.cameras;
@@ -1737,7 +1720,7 @@ class FlxG
 	/**
 	 * Used by the game object to call <code>update()</code> on all the plugins.
 	 */
-	static public function updatePlugins():Void
+	inline static public function updatePlugins():Void
 	{
 		var plugin:FlxBasic;
 		var pluginList:Array<FlxBasic> = FlxG.plugins;
@@ -1756,7 +1739,7 @@ class FlxG
 	/**
 	 * Used by the game object to call <code>draw()</code> on all the plugins.
 	 */
-	static public function drawPlugins():Void
+	inline static public function drawPlugins():Void
 	{
 		var plugin:FlxBasic;
 		var pluginList:Array<FlxBasic> = FlxG.plugins;

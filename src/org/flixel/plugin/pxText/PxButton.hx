@@ -20,6 +20,9 @@ import org.flixel.system.tileSheet.TileSheetManager;
 class PxButton extends FlxSprite
 {
 	
+	/**
+	 * Use this to toggle checkbox-style behavior.
+	 */
 	public var on(getOn, setOn):Bool;
 	
 	/**
@@ -84,11 +87,6 @@ class PxButton extends FlxSprite
 	 * We recommend using the helper function setSounds()!
 	 */
 	public var soundUp:FlxSound;
-
-	/**
-	 * Used for checkbox-style behavior.
-	 */
-	private var _onToggle:Bool;
 	
 	/**
 	 * Tracks whether or not the button is currently pressed.
@@ -143,7 +141,7 @@ class PxButton extends FlxSprite
 		soundUp = null;
 
 		status = NORMAL;
-		_onToggle = false;
+		on = false;
 		_pressed = false;
 		_initialized = false;
 	}
@@ -366,7 +364,7 @@ class PxButton extends FlxSprite
 		}
 		
 		//Then pick the appropriate frame of animation
-		if ((status == HIGHLIGHT) && _onToggle)
+		if ((status == HIGHLIGHT) && on)
 		{
 			frame = NORMAL;
 		}
@@ -435,23 +433,6 @@ class PxButton extends FlxSprite
 		{
 			soundUp = FlxG.loadSound(SoundUp, SoundUpVolume);
 		}
-	}
-	
-	/**
-	 * Use this to toggle checkbox-style behavior.
-	 */
-	public function getOn():Bool
-	{
-		return _onToggle;
-	}
-	
-	/**
-	 * @private
-	 */
-	public function setOn(On:Bool):Bool
-	{
-		_onToggle = On;
-		return On;
 	}
 	
 	/**

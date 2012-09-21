@@ -669,34 +669,33 @@ class FlxU
 	 * @param	Point2		The Y coordinate of the point.
 	 * @return	The angle in degrees, between -180 and 180.
 	 */
-	static public function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
+	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
 	{
 		var x:Float = Point2.x - Point1.x;
 		var y:Float = Point2.y - Point1.y;
-		if ((x == 0) && (y == 0))
-		{
-			return 0;
-		}
-		var c1:Float = 3.14159265 * 0.25;
-		var c2:Float = 3 * c1;
-		var ay:Float = (y < 0) ? -y : y;
 		var angle:Float = 0;
-		if (x >= 0)
+		if ((x != 0) || (y != 0))
 		{
-			angle = c1 - c1 * ((x - ay) / (x + ay));
-		}
-		else
-		{
-			angle = c2 - c1 * ((x + ay) / (ay - x));
-		}
-		angle = ((y < 0)? -angle:angle) * 57.2957796;
-		if (angle > 90)
-		{
-			angle = angle - 270;
-		}
-		else
-		{
-			angle += 90;
+			var c1:Float = 3.14159265 * 0.25;
+			var c2:Float = 3 * c1;
+			var ay:Float = (y < 0) ? -y : y;
+			if (x >= 0)
+			{
+				angle = c1 - c1 * ((x - ay) / (x + ay));
+			}
+			else
+			{
+				angle = c2 - c1 * ((x + ay) / (ay - x));
+			}
+			angle = ((y < 0)? -angle:angle) * 57.2957796;
+			if (angle > 90)
+			{
+				angle = angle - 270;
+			}
+			else
+			{
+				angle += 90;
+			}
 		}
 		
 		return angle;

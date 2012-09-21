@@ -72,10 +72,6 @@ class FlxSound extends FlxBasic
 	 */
 	private var _position:Float;
 	/**
-	 * Internal tracker for how loud the sound is.
-	 */
-	private var _volume:Float;
-	/**
 	 * Internal tracker for total volume adjustment.
 	 */
 	private var _volumeAdjust:Float;
@@ -141,7 +137,7 @@ class FlxSound extends FlxBasic
 		_sound = null;
 		_position = 0;
 		_paused = false;
-		_volume = 1.0;
+		volume = 1.0;
 		_volumeAdjust = 1.0;
 		_looped = false;
 		_target = null;
@@ -206,7 +202,7 @@ class FlxSound extends FlxBasic
 			
 			if (_pan)
 			{
-				var d:Float = (_target.x - x) / _radius;
+				var d:Float = (x - _target.x) / _radius;
 				if (d < -1) d = -1;
 				else if (d > 1) d = 1;
 				_transform.pan = d;
@@ -231,7 +227,7 @@ class FlxSound extends FlxBasic
 			fade = _fadeOutTimer / _fadeOutTotal;
 			if (fade < 0) fade = 0;
 		}
-		else if(_fadeInTimer > 0)
+		else if (_fadeInTimer > 0)
 		{
 			_fadeInTimer -= FlxG.elapsed;
 			fade = _fadeInTimer / _fadeInTotal;
@@ -418,29 +414,24 @@ class FlxSound extends FlxBasic
 		play();
 	}
 	
-	public var volume(getVolume, setVolume):Float;
-	
 	/**
 	 * Set <code>volume</code> to a value between 0 and 1 to change how this sound is.
 	 */
-	public function getVolume():Float
-	{
-		return _volume;
-	}
+	public var volume(default, setVolume):Float;
 	
 	/**
 	 * @private
 	 */
 	public function setVolume(Volume:Float):Float
 	{
-		_volume = Volume;
-		if (_volume < 0)
+		volume = Volume;
+		if (volume < 0)
 		{
-			_volume = 0;
+			volume = 0;
 		}
-		else if (_volume > 1)
+		else if (volume > 1)
 		{
-			_volume = 1;
+			volume = 1;
 		}
 		updateTransform();
 		return Volume;
@@ -452,7 +443,7 @@ class FlxSound extends FlxBasic
 	 */
 	public function getActualVolume():Float
 	{
-		return _volume * _volumeAdjust;
+		return volume * _volumeAdjust;
 	}
 	
 	/**
@@ -460,7 +451,7 @@ class FlxSound extends FlxBasic
 	 */
 	private function updateTransform():Void
 	{
-		_transform.volume = (FlxG.mute ? 0 : 1) * FlxG.volume * _volume * _volumeAdjust;
+		_transform.volume = (FlxG.mute ? 0 : 1) * FlxG.volume * volume * _volumeAdjust;
 		if (_channel != null)
 		{
 			_channel.soundTransform = _transform;

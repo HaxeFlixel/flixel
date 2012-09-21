@@ -205,7 +205,7 @@ class FlxTileblock extends FlxSprite
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
 			
-			var isColoredCamera:Bool = camera.isColored;
+			var isColoredCamera:Bool = camera.isColored();
 			if (isColoredCamera)
 			{
 				redMult = _red * camera.red; 

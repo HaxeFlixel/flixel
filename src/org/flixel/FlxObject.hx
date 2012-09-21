@@ -420,7 +420,7 @@ class FlxObject extends FlxBasic
 		var camera:FlxCamera;
 		var i:Int = 0;
 		var l:Int = cameras.length;
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
 			if (!onScreen(camera))
@@ -746,7 +746,7 @@ class FlxObject extends FlxBasic
 			}
 			
 			//then set object rotation if necessary
-			if(_pathRotate)
+			if (_pathRotate)
 			{
 				angularVelocity = 0;
 				angularAcceleration = 0;
@@ -772,8 +772,7 @@ class FlxObject extends FlxBasic
 			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
-			//while(i < length)
-			while(i < grp.length)
+			while (i < grp.length)
 			{
 				if (overlaps(members[i++], InScreenSpace, Camera))
 				{
@@ -827,7 +826,6 @@ class FlxObject extends FlxBasic
 			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
-			//while(i < length)
 			while(i < Std.int(grp.length))
 			{
 				if (overlapsAt(X, Y, members[i++], InScreenSpace, Camera))
@@ -944,13 +942,13 @@ class FlxObject extends FlxBasic
 		}
 	}
 	
-	public var flickering(getFlickering, null):Bool;
-	
 	/**
 	 * Check to see if the object is still flickering.
 	 * @return	Whether the object is flickering or not.
 	 */
-	public function getFlickering():Bool
+	public var flickering(getFlickering, null):Bool;
+	
+	private function getFlickering():Bool
 	{
 		return _flickerTimer != 0;
 	}
@@ -962,7 +960,7 @@ class FlxObject extends FlxBasic
 	 * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
 	 * to set the value of allowCollisions directly.
 	 */
-	public function getSolid():Bool
+	private function getSolid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}
@@ -970,7 +968,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * @private
 	 */
-	public function setSolid(Solid:Bool):Bool
+	private function setSolid(Solid:Bool):Bool
 	{
 		if (Solid)
 		{
@@ -988,7 +986,7 @@ class FlxObject extends FlxBasic
 	 * @Point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined.  Otherwise a new one is created.
 	 * @return	A <code>FlxPoint</code> object containing the midpoint of this object in world coordinates.
 	 */
-	public function getMidpoint(?point:FlxPoint = null):FlxPoint
+	inline public function getMidpoint(?point:FlxPoint = null):FlxPoint
 	{
 		if (point == null)
 		{
@@ -1025,7 +1023,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
-	public function isTouching(Direction:Int):Bool
+	inline public function isTouching(Direction:Int):Bool
 	{
 		return (touching & Direction) > NONE;
 	}
@@ -1035,7 +1033,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
-	public function justTouched(Direction:Int):Bool
+	inline public function justTouched(Direction:Int):Bool
 	{
 		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
@@ -1060,7 +1058,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated.
 	 */
-	static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
+	inline static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		var separatedX:Bool = separateX(Object1, Object2);
 		var separatedY:Bool = separateY(Object1, Object2);
@@ -1102,9 +1100,6 @@ class FlxObject extends FlxBasic
 			//Check if the X hulls actually overlap
 			var obj1deltaAbs:Float = (obj1delta > 0)?obj1delta: -obj1delta;
 			var obj2deltaAbs:Float = (obj2delta > 0)?obj2delta: -obj2delta;
-			
-			/*var obj1rect:FlxRect = new FlxRect(Object1.x-((obj1delta > 0)?obj1delta:0),Object1.last.y,Object1.width+((obj1delta > 0)?obj1delta:-obj1delta),Object1.height);
-			var obj2rect:FlxRect = new FlxRect(Object2.x-((obj2delta > 0)?obj2delta:0),Object2.last.y,Object2.width+((obj2delta > 0)?obj2delta:-obj2delta),Object2.height);*/
 			
 			var obj1rect:FlxRect = _firstSeparateFlxRect.make(Object1.x - ((obj1delta > 0)?obj1delta:0), Object1.last.y, Object1.width + ((obj1delta > 0)?obj1delta: -obj1delta), Object1.height);
 			var obj2rect:FlxRect = _secondSeparateFlxRect.make(Object2.x - ((obj2delta > 0)?obj2delta:0), Object2.last.y, Object2.width + ((obj2delta > 0)?obj2delta: -obj2delta), Object2.height);
@@ -1216,9 +1211,6 @@ class FlxObject extends FlxBasic
 			//Check if the Y hulls actually overlap
 			var obj1deltaAbs:Float = (obj1delta > 0)?obj1delta: -obj1delta;
 			var obj2deltaAbs:Float = (obj2delta > 0)?obj2delta: -obj2delta;
-			
-			/*var obj1rect:FlxRect = new FlxRect(Object1.x,Object1.y-((obj1delta > 0)?obj1delta:0),Object1.width,Object1.height+obj1deltaAbs);
-			var obj2rect:FlxRect = new FlxRect(Object2.x,Object2.y-((obj2delta > 0)?obj2delta:0),Object2.width,Object2.height+obj2deltaAbs);*/
 			
 			var obj1rect:FlxRect = _firstSeparateFlxRect.make(Object1.x, Object1.y - ((obj1delta > 0)?obj1delta:0), Object1.width, Object1.height + obj1deltaAbs);
 			var obj2rect:FlxRect = _secondSeparateFlxRect.make(Object2.x, Object2.y - ((obj2delta > 0)?obj2delta:0), Object2.width, Object2.height + obj2deltaAbs);

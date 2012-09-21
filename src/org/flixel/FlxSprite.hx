@@ -734,9 +734,9 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (_tileSheetData.isColored || camera.isColored)
+				if (_tileSheetData.isColored || camera.isColored())
 				{
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;
@@ -792,9 +792,9 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = cos * scale.y;
 				}
 				
-				if (_tileSheetData.isColored || camera.isColored)
+				if (_tileSheetData.isColored || camera.isColored())
 				{
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;

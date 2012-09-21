@@ -54,7 +54,7 @@ class FlxParticle extends FlxSprite
 		}
 		
 		//simpler bounce/spin behavior for now
-		if(touching != 0)
+		if (touching != 0)
 		{
 			if (angularVelocity != 0)
 			{

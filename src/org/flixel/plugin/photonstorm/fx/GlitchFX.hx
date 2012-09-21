@@ -377,14 +377,14 @@ class GlitchSprite extends FlxSprite
 			var onCamGreen:Float = lineGreen;
 			var onCamBlue:Float = lineBlue;
 			
-			if (camera.isColored)
+			if (camera.isColored())
 			{
 				onCamRed = camera.red;
 				onCamGreen = camera.green;
 				onCamBlue = camera.blue;
 			}
 			
-			var useColor:Bool = (_imageTileSheetData.isColored || camera.isColored);
+			var useColor:Bool = (_imageTileSheetData.isColored || camera.isColored());
 			
 			currDrawData = _tileSheetData.drawData[camera.ID];
 			currIndex = _tileSheetData.positionData[camera.ID];
@@ -408,7 +408,7 @@ class GlitchSprite extends FlxSprite
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = frameHeight;
 					
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						currDrawData[currIndex++] = _bgRed * camera.red; 
 						currDrawData[currIndex++] = _bgGreen * camera.green;
@@ -478,7 +478,7 @@ class GlitchSprite extends FlxSprite
 					currDrawData[currIndex++] = sin * scale.x * frameWidth;
 					currDrawData[currIndex++] = cos * scale.y * frameHeight;
 					
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						currDrawData[currIndex++] = _bgRed * camera.red; 
 						currDrawData[currIndex++] = _bgGreen * camera.green;

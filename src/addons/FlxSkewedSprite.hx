@@ -125,9 +125,9 @@ class FlxSkewedSprite extends FlxSprite
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (_tileSheetData.isColored || camera.isColored)
+				if (_tileSheetData.isColored || camera.isColored())
 				{
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;
@@ -206,9 +206,9 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _matrix.c;
 				currDrawData[currIndex++] = _matrix.d;
 				
-				if (_tileSheetData.isColored || camera.isColored)
+				if (_tileSheetData.isColored || camera.isColored())
 				{
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;

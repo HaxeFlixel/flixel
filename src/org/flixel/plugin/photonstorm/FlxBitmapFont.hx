@@ -344,7 +344,7 @@ class FlxBitmapFont extends FlxSprite
 			var redMult:Float = 1;
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
-			var isColoredCamera:Bool = camera.isColored;
+			var isColoredCamera:Bool = camera.isColored();
 			
 			if (isColoredCamera)
 			{

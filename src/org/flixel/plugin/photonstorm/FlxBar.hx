@@ -1217,7 +1217,7 @@ class FlxBar extends FlxSprite
 			currDrawData = _tileSheetData.drawData[camera.ID];
 			currIndex = _tileSheetData.positionData[camera.ID];
 			
-			var isColoredCamera:Bool = camera.isColored;
+			var isColoredCamera:Bool = camera.isColored();
 			
 			if (!onScreen(camera))
 			{

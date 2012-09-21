@@ -11,7 +11,6 @@ import nme.geom.Point;
  */
 class FlxPoint 
 {
-	
 	/**
 	 * @default 0
 	 */
@@ -38,7 +37,7 @@ class FlxPoint
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	public function make(?X:Float = 0, ?Y:Float = 0):FlxPoint
+	inline public function make(?X:Float = 0, ?Y:Float = 0):FlxPoint
 	{
 		x = X;
 		y = Y;
@@ -50,7 +49,7 @@ class FlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to itself.
 	 */
-	public function copyFrom(point:FlxPoint):FlxPoint
+	inline public function copyFrom(point:FlxPoint):FlxPoint
 	{
 		x = point.x;
 		y = point.y;
@@ -62,7 +61,7 @@ class FlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyTo(point:FlxPoint):FlxPoint
+	inline public function copyTo(point:FlxPoint):FlxPoint
 	{
 		point.x = x;
 		point.y = y;
@@ -74,7 +73,7 @@ class FlxPoint
 	 * @param	Point	Any <code>Point</code>.
 	 * @return	A reference to itself.
 	 */
-	public function copyFromFlash(FlashPoint:Point):FlxPoint
+	inline public function copyFromFlash(FlashPoint:Point):FlxPoint
 	{
 		x = FlashPoint.x;
 		y = FlashPoint.y;
@@ -86,7 +85,7 @@ class FlxPoint
 	 * @param	Point	Any <code>Point</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyToFlash(FlashPoint:Point):Point
+	inline public function copyToFlash(FlashPoint:Point):Point
 	{
 		FlashPoint.x = x;
 		FlashPoint.y = y;
@@ -96,7 +95,7 @@ class FlxPoint
 	/**
 	 * Convert object to readable string name.  Useful for debugging, save games, etc.
 	 */
-	public function toString():String
+	inline public function toString():String
 	{
 		return FlxU.getClassName(this, true);
 	}

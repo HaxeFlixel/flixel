@@ -194,7 +194,7 @@ class TileSheetData
 				
 				camera = FlxG.cameras[i];
 				
-				if (camera.isColored)
+				if (camera.isColored())
 				{
 					tempFlags |= Graphics.TILE_RGB;
 				}

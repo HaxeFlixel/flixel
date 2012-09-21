@@ -536,7 +536,7 @@ class StarSprite extends FlxSprite
 				currDrawData[currIndex++] = 0;
 				currDrawData[currIndex++] = height;
 				
-				if (camera.isColored)
+				if (camera.isColored())
 				{
 					currDrawData[currIndex++] = bgRed * camera.red; 
 					currDrawData[currIndex++] = bgGreen * camera.green;
@@ -570,7 +570,7 @@ class StarSprite extends FlxSprite
 					starGreen = starDef.green;
 					starBlue = starDef.blue;
 					
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						starRed *= camera.red;
 						starGreen *= camera.green;
@@ -617,7 +617,7 @@ class StarSprite extends FlxSprite
 				currDrawData[currIndex++] = sin * scale.x * width;
 				currDrawData[currIndex++] = cos * scale.y * height;
 				
-				if (camera.isColored)
+				if (camera.isColored())
 				{
 					currDrawData[currIndex++] = bgRed * camera.red; 
 					currDrawData[currIndex++] = bgGreen * camera.green;
@@ -657,7 +657,7 @@ class StarSprite extends FlxSprite
 					starGreen = starDef.green;
 					starBlue = starDef.blue;
 					
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						starRed *= camera.red;
 						starGreen *= camera.green;
