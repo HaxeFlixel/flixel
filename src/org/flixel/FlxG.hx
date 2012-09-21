@@ -1548,6 +1548,7 @@ class FlxG
 	static public function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{
 		//FlxAssets.cacheSounds();
+		FlxG.clearBitmapCache();
 		
 		FlxG._game = Game;
 		FlxG.width = Math.floor(Math.abs(Width));
@@ -1557,8 +1558,6 @@ class FlxG
 		FlxG._volume = 0.5;
 		FlxG.sounds = new FlxGroup();
 		FlxG.volumeHandler = null;
-		
-		FlxG.clearBitmapCache();
 		
 		if(flashGfxSprite == null)
 		{

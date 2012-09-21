@@ -136,7 +136,7 @@ class Input implements Dynamic
 		while(i < l)
 		{
 			o = Record[i++];
-			#if cpp
+			#if (cpp || neko)
 			o = CodeValuePair.convertFromFlashToCpp(o);
 			#end
 			o2 = _map[o.code];

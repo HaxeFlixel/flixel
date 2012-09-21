@@ -64,6 +64,10 @@ class FlxSound extends FlxBasic
 	 */
 	private var _transform:SoundTransform;
 	/**
+	 * Internal tracker for whether the sound is paused or not (not the same as stopped).
+	 */
+	private var _paused:Bool;
+	/**
 	 * Internal tracker for the position in runtime of the music playback.
 	 */
 	private var _position:Float;
@@ -136,6 +140,7 @@ class FlxSound extends FlxBasic
 		_transform.pan = 0;
 		_sound = null;
 		_position = 0;
+		_paused = false;
 		_volume = 1.0;
 		_volumeAdjust = 1.0;
 		_looped = false;
@@ -167,6 +172,8 @@ class FlxSound extends FlxBasic
 
 		_transform = null;
 		_sound = null;
+		exists = false;
+		active = false;
 		_channel = null;
 		_target = null;
 		name = null;
@@ -180,10 +187,12 @@ class FlxSound extends FlxBasic
 	 */
 	override public function update():Void
 	{
-		if (_position != 0)
+		if (_paused)
 		{
 			return;
 		}
+		
+		_position = _channel.position;
 		
 		var radial:Float = 1.0;
 		var fade:Float = 1.0;
@@ -192,14 +201,14 @@ class FlxSound extends FlxBasic
 		if(_target != null)
 		{
 			radial = FlxU.getDistance(new FlxPoint(_target.x, _target.y), new FlxPoint(x, y)) / _radius;
-			if(radial < 0) radial = 0;
-			if(radial > 1) radial = 1;
+			if (radial < 0) radial = 0;
+			if (radial > 1) radial = 1;
 			
-			if(_pan)
+			if (_pan)
 			{
 				var d:Float = (_target.x - x) / _radius;
-				if(d < -1) d = -1;
-				else if(d > 1) d = 1;
+				if (d < -1) d = -1;
+				else if (d > 1) d = 1;
 				_transform.pan = d;
 			}
 		}
@@ -220,20 +229,20 @@ class FlxSound extends FlxBasic
 				}
 			}
 			fade = _fadeOutTimer / _fadeOutTotal;
-			if(fade < 0) fade = 0;
+			if (fade < 0) fade = 0;
 		}
 		else if(_fadeInTimer > 0)
 		{
 			_fadeInTimer -= FlxG.elapsed;
 			fade = _fadeInTimer / _fadeInTotal;
-			if(fade < 0) fade = 0;
+			if (fade < 0) fade = 0;
 			fade = 1 - fade;
 		}
 		
 		_volumeAdjust = radial * fade;
 		updateTransform();
 		
-		if((_transform.volume > 0) && (_channel != null))
+		if ((_transform.volume > 0) && (_channel != null))
 		{
 			amplitudeLeft = _channel.leftPeak / _transform.volume;
 			amplitudeRight = _channel.rightPeak / _transform.volume;
@@ -244,10 +253,7 @@ class FlxSound extends FlxBasic
 	override public function kill():Void
 	{
 		super.kill();
-		if (_channel != null)
-		{
-			stop();
-		}
+		cleanup(false);
 	}
 	
 	/**
@@ -259,7 +265,7 @@ class FlxSound extends FlxBasic
 	 */
 	public function loadEmbedded(EmbeddedSound:Dynamic, ?Looped:Bool = false, ?AutoDestroy:Bool = false):FlxSound
 	{
-		stop();
+		cleanup(true);
 		createSound();
 		if (Std.is(EmbeddedSound, Sound))
 		{
@@ -291,7 +297,7 @@ class FlxSound extends FlxBasic
 	 */
 	public function loadStream(SoundURL:String, ?Looped:Bool = false, ?AutoDestroy:Bool = false):FlxSound
 	{
-		stop();
+		cleanup(true);
 		createSound();
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
@@ -308,16 +314,16 @@ class FlxSound extends FlxBasic
 	 * based on distance from a particular FlxCore object.
 	 * @param	X		The X position of the sound.
 	 * @param	Y		The Y position of the sound.
-	 * @param	Object	The object you want to track.
+	 * @param	TargetObject	The object you want to track.
 	 * @param	Radius	The maximum distance this sound can travel.
 	 * @param	Pan		Whether the sound should pan in addition to the volume changes (default: true).
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function proximity(X:Float, Y:Float, Object:FlxObject, Radius:Float, ?Pan:Bool = true):FlxSound
+	public function proximity(X:Float, Y:Float, TargetObject:FlxObject, Radius:Float, ?Pan:Bool = true):FlxSound
 	{
 		x = X;
 		y = Y;
-		_target = Object;
+		_target = TargetObject;
 		_radius = Radius;
 		_pan = Pan;
 		return this;
@@ -329,75 +335,28 @@ class FlxSound extends FlxBasic
 	 */
 	public function play(?ForceRestart:Bool = false):Void
 	{
-		if (_position < 0)
+		if (!exists)
 		{
 			return;
 		}
-		if(ForceRestart)
+		if (ForceRestart)
 		{
-			var oldAutoDestroy:Bool = autoDestroy;
-			autoDestroy = false;
-			stop();
-			autoDestroy = oldAutoDestroy;
+			cleanup(false, true);
 		}
-		if(_looped)
+		else if (_channel != null)
 		{
-			if(_position == 0)
-			{
-				if (_channel == null)
-				{
-					_channel = _sound.play(0, 9999, _transform);
-				}
-				if (_channel == null)
-				{
-					exists = false;
-				}
-			}
-			else
-			{
-				_channel = _sound.play(_position, 0, _transform);
-				if (_channel == null)
-				{
-					exists = false;
-				}
-				else
-				{
-					_channel.addEventListener(Event.SOUND_COMPLETE, looped);
-				}
-			}
+			// Already playing sound
+			return;
+		}
+		
+		if (_paused)
+		{
+			startSound(_position);
 		}
 		else
 		{
-			if(_position == 0)
-			{
-				if(_channel == null)
-				{
-					_channel = _sound.play(0, 0, _transform);
-					if (_channel == null)
-					{
-						exists = false;
-					}
-					else
-					{
-						_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
-					}
-				}
-			}
-			else
-			{
-				_channel = _sound.play(_position, 0, _transform);
-				if (_channel == null)
-				{
-					exists = false;
-				}
-				else
-				{
-					_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
-				}
-			}
+			startSound(0);
 		}
-		active = (_channel != null);
-		_position = 0;
 	}
 	
 	/**
@@ -405,31 +364,10 @@ class FlxSound extends FlxBasic
 	 */
 	public function resume():Void
 	{
-		if (_position <= 0)
+		if (_paused)
 		{
-			return;
+			startSound(_position);
 		}
-		if(_looped)
-		{
-			_channel = _sound.play(_position, 0, _transform);
-			if (_channel == null)
-			{
-				exists = false;
-			}
-			else
-			{
-				_channel.addEventListener(Event.SOUND_COMPLETE, looped);
-			}
-		}
-		else
-		{
-			_channel = _sound.play(_position, 0, _transform);
-			if (_channel == null)
-			{
-				exists = false;
-			}
-		}
-		active = (_channel != null);
 	}
 	
 	/**
@@ -437,26 +375,13 @@ class FlxSound extends FlxBasic
 	 */
 	public function pause():Void
 	{
-		if(_channel == null)
+		if (_channel == null)
 		{
-			_position = -1;
 			return;
 		}
 		_position = _channel.position;
-		_channel.stop();
-		if(_looped)
-		{
-			while (_position >= _sound.length)
-			{
-				_position -= _sound.length;
-			}
-		}
-		if (_position <= 0)
-		{
-			_position = 1;
-		}
-		_channel = null;
-		active = false;
+		_paused = true;
+		cleanup(false, false);
 	}
 	
 	/**
@@ -464,12 +389,7 @@ class FlxSound extends FlxBasic
 	 */
 	public function stop():Void
 	{
-		_position = 0;
-		if(_channel != null)
-		{
-			_channel.stop();
-			stopped();
-		}
+		cleanup(autoDestroy, true);
 	}
 	
 	/**
@@ -540,7 +460,7 @@ class FlxSound extends FlxBasic
 	 */
 	private function updateTransform():Void
 	{
-		_transform.volume = (FlxG.mute?0:1) * FlxG.volume * _volume * _volumeAdjust;
+		_transform.volume = (FlxG.mute ? 0 : 1) * FlxG.volume * _volume * _volumeAdjust;
 		if (_channel != null)
 		{
 			_channel.soundTransform = _transform;
@@ -548,37 +468,65 @@ class FlxSound extends FlxBasic
 	}
 	
 	/**
-	 * An internal helper function used to help Flash resume playing a looped sound.
-	 * @param	event		An <code>Event</code> object.
+	 * An internal helper function used to attempt to start playing the sound and populate the `_channel` variable.
 	 */
-	private function looped(?event:Event = null):Void
+	private function startSound(Position:Float):Void
 	{
-		if (_channel == null)
+		_position = Position;
+		_paused = false;
+		_channel = _sound.play(_position, (_looped ? 9999 : 0), _transform);
+		if (_channel != null)
 		{
-			return;
+			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
+			active = true;
 		}
-		_channel.removeEventListener(Event.SOUND_COMPLETE, looped);
-		_channel = null;
-		play();
+		else
+		{
+			exists = false;
+			active = false;
+		}
 	}
-
+	
 	/**
-	 * An internal helper function used to help Flash clean up and re-use finished sounds.
+	 * An internal helper function used to help Flash clean up finished sounds or restart looped sounds.
 	 * @param	event		An <code>Event</code> object.
 	 */
 	private function stopped(?event:Event = null):Void
 	{
-		if (!_looped)
+		if (_looped)
 		{
-			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
+			cleanup(false);
+			play();
 		}
 		else
 		{
-			_channel.removeEventListener(Event.SOUND_COMPLETE, looped);
+			cleanup(autoDestroy);
 		}
-		_channel = null;
+	}
+	
+	/**
+	 * An internal helper function used to help Flash clean up (and potentially re-use) finished sounds.
+	 * 
+	 * @param	destroySound		Whether or not to destroy the sound 
+	 */
+	private function cleanup(destroySound:Bool, ?resetPosition:Bool = true):Void
+	{
+		if (_channel != null)
+		{
+			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
+			_channel.stop();
+			_channel = null;
+		}
+
+		if (resetPosition)
+		{
+			_position = 0;
+			_paused = false;
+		}
+
 		active = false;
-		if (autoDestroy)
+
+		if (destroySound)
 		{
 			destroy();
 		}
