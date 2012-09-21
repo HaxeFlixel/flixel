@@ -383,7 +383,7 @@ class FlxObject extends FlxBasic
 	 * Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
-	private function updateMotion():Void
+	inline private function updateMotion():Void
 	{
 		var delta:Float;
 		var velocityDelta:Float;
@@ -667,7 +667,7 @@ class FlxObject extends FlxBasic
 	 * The first half of the function decides if the object can advance to the next node in the path,
 	 * while the second half handles actually picking a velocity toward the next node.
 	 */
-	private function updatePathMotion():Void
+	inline private function updatePathMotion():Void
 	{
 		//first check if we need to be pointing at the next node yet
 		_point.x = x + width * 0.5;
@@ -913,7 +913,7 @@ class FlxObject extends FlxBasic
 	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	public function getScreenXY(?point:FlxPoint = null, ?Camera:FlxCamera = null):FlxPoint
+	inline public function getScreenXY(?point:FlxPoint = null, ?Camera:FlxCamera = null):FlxPoint
 	{
 		if (point == null)
 		{

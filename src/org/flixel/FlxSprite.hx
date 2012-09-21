@@ -938,7 +938,7 @@ class FlxSprite extends FlxObject
 	 * Useful for cases when you need to update this but are buried down in too many supers.
 	 * This function is called automatically by <code>FlxSprite.postUpdate()</code>.
 	 */
-	private function updateAnimation():Void
+	inline private function updateAnimation():Void
 	{
 		if (_bakedRotation > 0)
 		{

@@ -106,40 +106,16 @@ class Keyboard extends Input
 		var i:Int;
 		
 		//LETTERS
-		#if (flash || js)
 		i = 65;
 		while (i <= 90)
 		{
+			#if (flash || js)
 			addKey(String.fromCharCode(i), i++);
+			#else
+			addKey(String.fromCharCode(i), i + 32);
+			i++;
+			#end
 		}
-		#else
-		addKey("A", 97);
-		addKey("B", 98);
-		addKey("C", 99);
-		addKey("D", 100);
-		addKey("E", 101);
-		addKey("F", 102);
-		addKey("G", 103);
-		addKey("H", 104);
-		addKey("I", 105);
-		addKey("J", 106);
-		addKey("K", 107);
-		addKey("L", 108);
-		addKey("M", 109);
-		addKey("N", 110);
-		addKey("O", 111);
-		addKey("P", 112);
-		addKey("Q", 113);
-		addKey("R", 114);
-		addKey("S", 115);
-		addKey("T", 116);
-		addKey("U", 117);
-		addKey("V", 118);
-		addKey("W", 119);
-		addKey("X", 120);
-		addKey("Y", 121);
-		addKey("Z", 122);
-		#end
 		
 		//NUMBERS
 		i = 48;

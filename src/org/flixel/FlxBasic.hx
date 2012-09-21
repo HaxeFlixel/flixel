@@ -228,7 +228,7 @@ class FlxBasic
 		}
 	}
 
-	public function updateTweens():Void
+	inline public function updateTweens():Void
 	{
 		var t:FlxTween;
 		var	ft:FriendTween = _tween;
