@@ -35,7 +35,7 @@ class FlxTileblock extends FlxSprite
 		#if (flash || js)
 		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), 0, true);
 		#else
-		_bakedRotation = 0;
+		bakedRotation = 0;
 		width = frameWidth = Width;
 		height = frameHeight = Height;
 		resetHelpers();

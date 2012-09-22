@@ -158,10 +158,6 @@ class FlxSprite extends FlxObject
 	private var _color:BitmapInt32;
 	#end
 	/**
-	 * Internal tracker for how many frames of "baked" rotation there are (if any).
-	 */
-	private var _bakedRotation:Float;
-	/**
 	 * Internal, stores the entire source graphic (not the current displayed animation frame), used with Flash getter/setter.
 	 */
 	private var _pixels:BitmapData;
@@ -309,12 +305,12 @@ class FlxSprite extends FlxObject
 	{
 		_pixels = Sprite.pixels;
 		flipped = Sprite.flipped;
-		_bakedRotation = Sprite.bakedRotation;
+		bakedRotation = Sprite.bakedRotation;
 		
 		width = frameWidth = Sprite.frameWidth;
 		height = frameHeight = Sprite.frameHeight;
 		resetHelpers();
-		if (_bakedRotation > 0 && AutoBuffer == true)
+		if (bakedRotation > 0 && AutoBuffer == true)
 		{
 			width = Sprite.width;
 			height = Sprite.height;
@@ -344,7 +340,7 @@ class FlxSprite extends FlxObject
 		Width = FlxU.fromIntToUInt(Width);
 		Height = FlxU.fromIntToUInt(Height);
 		
-		_bakedRotation = 0;
+		bakedRotation = 0;
 		#if (cpp || neko)
 		_pixels = FlxG.addBitmap(Graphic, false, Unique);
 		#else
@@ -480,7 +476,7 @@ class FlxSprite extends FlxObject
 		
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
-		_bakedRotation = 360 / Rotations;
+		bakedRotation = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
 		if (!skipGen)
@@ -505,7 +501,7 @@ class FlxSprite extends FlxObject
 					#else
 					_matrix.translate(max * column + midpointX + column, midpointY + row);
 					#end
-					bakedAngle += _bakedRotation;
+					bakedAngle += bakedRotation;
 					_pixels.draw(brush, _matrix, null, null, null, AntiAliasing);
 					column++;
 				}
@@ -558,7 +554,7 @@ class FlxSprite extends FlxObject
 		}
 		#end
 		
-		_bakedRotation = 0;
+		bakedRotation = 0;
 		_pixels = FlxG.createBitmap(Width, Height, Color, Unique, Key);
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
@@ -738,7 +734,7 @@ class FlxSprite extends FlxObject
 				_matrix.identity();
 				_matrix.translate( -origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
-				if ((angle != 0) && (_bakedRotation <= 0))
+				if ((angle != 0) && (bakedRotation <= 0))
 				{
 					_matrix.rotate(angle * 0.017453293);
 				}
@@ -811,7 +807,7 @@ class FlxSprite extends FlxObject
 		var bitmapData:BitmapData = Brush.framePixels;
 		
 		//Simple draw
-		if(((Brush.angle == 0) || (Brush._bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
+		if(((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
 		{
 			_flashPoint.x = X;
 			_flashPoint.y = Y;
@@ -917,7 +913,7 @@ class FlxSprite extends FlxObject
 	 */
 	inline private function updateAnimation():Void
 	{
-		if (_bakedRotation > 0)
+		if (bakedRotation > 0)
 		{
 			var oldIndex:Int = _curIndex;
 			var angleHelper:Int = Math.floor(angle % 360);
@@ -934,7 +930,7 @@ class FlxSprite extends FlxObject
 			}
 			#end
 			
-			_curIndex = Math.floor(angleHelper / _bakedRotation + 0.5);
+			_curIndex = Math.floor(angleHelper / bakedRotation + 0.5);
 			
 			#if (cpp || neko)
 			if (_framesData != null)
@@ -1370,7 +1366,7 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - offset.y;
 		
 		var result:Bool = false;
-		if (((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
+		if (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
 		{
 			result = ((_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height));
 		}
@@ -1558,14 +1554,9 @@ class FlxSprite extends FlxObject
 	public var flipped(default, null):Int;
 	
 	/**
-	 * If the Sprite has baked rotation.
+	 * How many frames of "baked" rotation there are (if any).
 	 */
-	public var bakedRotation(get_bakedRotation, null):Float;
-	
-	private function get_bakedRotation():Float 
-	{
-		return _bakedRotation;
-	}
+	public var bakedRotation(default, null):Float;
 	
 	/**
 	 * If the Sprite is beeing rendered in simple mode.
@@ -1579,7 +1570,7 @@ class FlxSprite extends FlxObject
 	
 	inline private function simpleRenderSprite():Bool
 	{
-		return (((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null));
+		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null));
 	}
 	
 	/**

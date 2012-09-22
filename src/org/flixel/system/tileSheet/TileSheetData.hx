@@ -13,7 +13,6 @@ import org.flixel.FlxG;
  */
 class TileSheetData
 {
-	
 	public var tileSheet:Tilesheet;
 	
 	/**
@@ -41,14 +40,6 @@ class TileSheetData
 	 */
 	public var antialiasing:Bool;
 	
-	/**
-	 * logical flag showing what draw mode use for the tileSheet 
-	 * if it is true then tileSheet is drawn with rotation, alpha and scale 
-	 */
-	private var _isTilemap:Bool;
-	
-	private var _isColored:Bool;
-	
 	public var positionData:Array<Int>;
 	
 	public function new(tileSheet:Tilesheet, ?isTilemap:Bool = false)
@@ -58,8 +49,8 @@ class TileSheetData
 		pairsData = new Array<RectanglePointPair>();
 		drawData = new Array<Array<Float>>();
 		
-		_isTilemap = isTilemap;
-		_isColored = false;
+		isTilemap = isTilemap;
+		isColored = false;
 		updateFlags();
 		
 		positionData = [];
@@ -121,7 +112,6 @@ class TileSheetData
 		
 		spriteData.halfFrameNumber = Math.floor(0.5 * spriteData.frameIDs.length);
 		flxSpriteFrames.push(spriteData);
-		//return spriteData.frameIDs;
 		return spriteData;
 	}
 	
@@ -158,12 +148,6 @@ class TileSheetData
 	 */
 	public function clearDrawData():Void
 	{
-		/*for (dataArray in drawData)
-		{
-			var len:Int = dataArray.length;
-			if (len > 0) dataArray.splice(0, len);
-		}*/
-		
 		for (i in 0...(positionData.length))
 		{
 			positionData[i] = 0;
@@ -290,30 +274,24 @@ class TileSheetData
 		flxSpriteFrames = null;
 	}
 	
-	public var isTilemap(get_isTilemap, set_isTilemap):Bool;
-	
-	private function get_isTilemap():Bool 
-	{
-		return _isTilemap;
-	}
+	/**
+	 * logical flag showing what draw mode use for the tileSheet 
+	 * if it is true then tileSheet is drawn with rotation, alpha and scale 
+	 */
+	public var isTilemap(default, set_isTilemap):Bool;
 	
 	private function set_isTilemap(value:Bool):Bool 
 	{
-		_isTilemap = value;
+		isTilemap = value;
 		updateFlags();
 		return value;
 	}
 	
-	public var isColored(get_isColored, set_isColored):Bool;
-	
-	private function get_isColored():Bool
-	{
-		return _isColored;
-	}
+	public var isColored(default, set_isColored):Bool;
 	
 	private function set_isColored(value:Bool):Bool
 	{
-		_isColored = value;
+		isColored = value;
 		updateFlags();
 		return value;
 	}
@@ -323,15 +301,15 @@ class TileSheetData
 	{
 		flags = 0;
 		
-		if (_isTilemap == true && _isColored == true)
+		if (isTilemap == true && isColored == true)
 		{
 			flags = Graphics.TILE_RGB;
 		}
-		else if (_isTilemap == false && _isColored == true)
+		else if (isTilemap == false && isColored == true)
 		{
 			flags = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
 		}
-		else if (_isTilemap == false && _isColored == false)
+		else if (isTilemap == false && isColored == false)
 		{
 			flags = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA;
 		}
@@ -341,7 +319,6 @@ class TileSheetData
 
 class FlxSpriteFrames
 {
-	
 	public var width:Int;
 	public var height:Int;
 	public var frameIDs:Array<Int>;

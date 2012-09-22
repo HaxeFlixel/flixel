@@ -41,7 +41,7 @@ class FlxSkewedSprite extends FlxSprite
 	
 	inline private function simpleRenderSkewedSprite():Bool
 	{
-		return (((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (skew.x == 0) && (skew.y == 0));
+		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (skew.x == 0) && (skew.y == 0));
 	}
 	
 	override public function draw():Void 
@@ -157,7 +157,7 @@ class FlxSkewedSprite extends FlxSprite
 				
 				#if (flash || js)
 				_matrix.translate( -origin.x, -origin.y);
-				if ((angle != 0) && (_bakedRotation <= 0))
+				if ((angle != 0) && (bakedRotation <= 0))
 				{
 					_matrix.rotate(angle * 0.017453293);
 				}
