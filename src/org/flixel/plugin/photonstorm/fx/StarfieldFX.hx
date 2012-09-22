@@ -508,7 +508,7 @@ class StarSprite extends FlxSprite
 		{
 			camera = cameras[i++];
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera))
 			{
 				continue;
 			}
@@ -519,7 +519,7 @@ class StarSprite extends FlxSprite
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
 			
-			if (simpleRender)
+			if (simpleRenderSprite())
 			{	//Simple render
 				
 				_point.x += halfWidth;
@@ -549,7 +549,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = bgBlue;
 				}
 				
-				currDrawData[currIndex++] = bgAlpha * _alpha;
+				currDrawData[currIndex++] = bgAlpha * alpha;
 				
 				// draw stars
 				for (j in 0...(starData.length))
@@ -592,7 +592,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = starGreen;
 					currDrawData[currIndex++] = starBlue;
 					
-					currDrawData[currIndex++] = _alpha * starDef.alpha;
+					currDrawData[currIndex++] = alpha * starDef.alpha;
 				}
 				
 				_tileSheetData.positionData[camera.ID] = currIndex;
@@ -630,7 +630,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = bgBlue;
 				}
 				
-				currDrawData[currIndex++] = bgAlpha * _alpha;
+				currDrawData[currIndex++] = bgAlpha * alpha;
 				
 				// draw stars
 				for (j in 0...(starData.length))
@@ -679,7 +679,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = starGreen;
 					currDrawData[currIndex++] = starBlue;
 					
-					currDrawData[currIndex++] = _alpha * starDef.alpha;
+					currDrawData[currIndex++] = alpha * starDef.alpha;
 				}
 				
 				_tileSheetData.positionData[camera.ID] = currIndex;
@@ -697,7 +697,7 @@ class StarSprite extends FlxSprite
 		if (_pixels != null && frameWidth >= 1 && frameHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_tileSheetData.antialiasing = _antialiasing;
+			_tileSheetData.antialiasing = antialiasing;
 			_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
 		}
 	}

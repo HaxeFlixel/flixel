@@ -281,12 +281,6 @@ class FlxCamera extends FlxBasic
 		#end
 		bgColor = FlxG.bgColor;
 		
-		#if !neko
-		color = 0xffffff;
-		#else
-		color = { rgb:0xffffff, a: 0xff };
-		#end
-		
 		#if (flash || js)
 		_flashBitmap = new Bitmap(buffer);
 		_flashBitmap.x = -width * 0.5;
@@ -296,6 +290,13 @@ class FlxCamera extends FlxBasic
 		_canvas.x = -width * 0.5;
 		_canvas.y = -height * 0.5;
 		#end
+		
+		#if !neko
+		color = 0xffffff;
+		#else
+		color = { rgb:0xffffff, a: 0xff };
+		#end
+		
 		_flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 	
@@ -880,11 +881,14 @@ class FlxCamera extends FlxBasic
 	{
 		color = Color;
 		#if (flash || js)
-		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
-		colorTransform.redMultiplier = (color >> 16) * 0.00392;
-		colorTransform.greenMultiplier = (color >> 8 & 0xff) * 0.0039;
-		colorTransform.blueMultiplier = (color & 0xff) * 0.00392;
-		_flashBitmap.transform.colorTransform = colorTransform;
+		if (_flashBitmap != null)
+		{
+			var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
+			colorTransform.redMultiplier = (color >> 16) * 0.00392;
+			colorTransform.greenMultiplier = (color >> 8 & 0xff) * 0.0039;
+			colorTransform.blueMultiplier = (color & 0xff) * 0.00392;
+			_flashBitmap.transform.colorTransform = colorTransform;
+		}
 		#elseif cpp
 		//var colorTransform:ColorTransform = _canvas.transform.colorTransform;
 		//_canvas.transform.colorTransform = colorTransform;

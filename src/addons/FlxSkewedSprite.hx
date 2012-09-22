@@ -34,8 +34,13 @@ class FlxSkewedSprite extends FlxSprite
 		super.destroy();
 	}
 	
-	override public function getSimpleRender():Bool
+	override private function getSimpleRender():Bool
 	{ 
+		return simpleRenderSkewedSprite();
+	}
+	
+	inline private function simpleRenderSkewedSprite():Bool
+	{
 		return (((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (skew.x == 0) && (skew.y == 0));
 	}
 	
@@ -76,7 +81,7 @@ class FlxSkewedSprite extends FlxSprite
 		{
 			camera = cameras[i++];
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera))
 			{
 				continue;
 			}
@@ -97,7 +102,7 @@ class FlxSkewedSprite extends FlxSprite
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
 			#end
-			if (simpleRender)
+			if (simpleRenderSkewedSprite())
 			{	//Simple render
 				#if (flash || js)
 				_flashPoint.x = _point.x;
@@ -110,7 +115,7 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _frameID;
 				
 				// handle reversed sprites
-				if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+				if ((flipped != 0) && (facing == FlxObject.LEFT))
 				{
 					currDrawData[currIndex++] = -1;
 					currDrawData[currIndex++] = 0;
@@ -141,7 +146,7 @@ class FlxSkewedSprite extends FlxSprite
 					}
 				}
 				
-				currDrawData[currIndex++] = _alpha;
+				currDrawData[currIndex++] = alpha;
 				
 				_tileSheetData.positionData[camera.ID] = currIndex;
 				#end
@@ -183,7 +188,7 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.c = -sin;
 				_matrix.d = cos;
 				
-				if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+				if ((flipped != 0) && (facing == FlxObject.LEFT))
 				{
 					_matrix.scale( -scale.x, scale.y);
 				}
@@ -222,7 +227,7 @@ class FlxSkewedSprite extends FlxSprite
 					}
 				}
 				
-				currDrawData[currIndex++] = _alpha;
+				currDrawData[currIndex++] = alpha;
 				
 				_tileSheetData.positionData[camera.ID] = currIndex;
 				#end

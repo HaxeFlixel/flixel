@@ -191,7 +191,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The size of the text being displayed.
 	 */
-	 public function getSize():Float
+	public function getSize():Float
 	{
 		return _textField.defaultTextFormat.size;
 	}

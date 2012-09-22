@@ -368,7 +368,7 @@ class GlitchSprite extends FlxSprite
 		{
 			camera = cameras[i++];
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera))
 			{
 				continue;
 			}
@@ -392,7 +392,7 @@ class GlitchSprite extends FlxSprite
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
 			
-			if (simpleRender)
+			if (simpleRenderSprite())
 			{	//Simple render
 				
 				// draw background
@@ -422,7 +422,7 @@ class GlitchSprite extends FlxSprite
 						
 					}
 					
-					currDrawData[currIndex++] = _bgAlpha * _alpha;
+					currDrawData[currIndex++] = _bgAlpha * alpha;
 					_tileSheetData.positionData[camera.ID] = currIndex;
 				}
 				
@@ -451,7 +451,7 @@ class GlitchSprite extends FlxSprite
 						currDrawData[currIndex++] = onCamBlue;
 					}
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 				
 				_imageTileSheetData.positionData[camera.ID] = currIndex;
@@ -491,7 +491,7 @@ class GlitchSprite extends FlxSprite
 						currDrawData[currIndex++] = _bgBlue;
 					}
 					
-					currDrawData[currIndex++] = _bgAlpha * _alpha;
+					currDrawData[currIndex++] = _bgAlpha * alpha;
 					_tileSheetData.positionData[camera.ID] = currIndex;
 				}
 				
@@ -526,7 +526,7 @@ class GlitchSprite extends FlxSprite
 						currDrawData[currIndex++] = onCamBlue;
 					}
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 				
 				_imageTileSheetData.positionData[camera.ID] = currIndex;
@@ -561,7 +561,7 @@ class GlitchSprite extends FlxSprite
 			if (_pixels != null)
 			{
 				_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-				_tileSheetData.antialiasing = _antialiasing;
+				_tileSheetData.antialiasing = antialiasing;
 				_tileSheetData.isTilemap = false;
 				_framesData = _tileSheetData.addSpriteFramesData(1, 1);
 			}

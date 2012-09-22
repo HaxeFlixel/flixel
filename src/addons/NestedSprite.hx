@@ -110,7 +110,7 @@ class NestedSprite extends FlxSprite
 			Child.scrollFactor.x = this.scrollFactor.x;
 			Child.scrollFactor.y = this.scrollFactor.y;
 			
-			Child._parentAlpha = this._alpha;
+			Child._parentAlpha = this.alpha;
 			Child.alpha = Child.alpha;
 			
 			#if !neko
@@ -227,7 +227,7 @@ class NestedSprite extends FlxSprite
 			child.angularVelocity = child.angularAcceleration = 0;
 			child.postUpdate();
 			
-			if (this.simpleRender)
+			if (simpleRenderSprite())
 			{
 				child.x = this.x + child.relativeX - this.offset.x;
 				child.y = this.y + child.relativeY - this.offset.y;
@@ -295,7 +295,7 @@ class NestedSprite extends FlxSprite
 		}
 	}
 	
-	override public function setAlpha(Alpha:Float):Float
+	override private function setAlpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{
@@ -305,19 +305,19 @@ class NestedSprite extends FlxSprite
 		{
 			Alpha = 0;
 		}
-		if (Alpha == _alpha)
+		if (Alpha == alpha)
 		{
-			return _alpha;
+			return alpha;
 		}
-		_alpha = Alpha;
-		_alpha *= _parentAlpha;
+		alpha = Alpha;
+		alpha *= _parentAlpha;
 		#if (flash || js)
-		if ((_alpha != 1) || (_color != 0x00ffffff))
+		if ((alpha != 1) || (_color != 0x00ffffff))
 		{
 			var red:Float = (_color >> 16) * 0.00392 * _parentRed;
 			var green:Float = (_color >> 8 & 0xff) * 0.00392 * _parentGreen;
 			var blue:Float = (_color & 0xff) * 0.00392 * _parentBlue;
-			_colorTransform = new ColorTransform(red, green, blue, _alpha);
+			_colorTransform = new ColorTransform(red, green, blue, alpha);
 		}
 		else
 		{
@@ -328,11 +328,11 @@ class NestedSprite extends FlxSprite
 		
 		for (child in _children)
 		{
-			child.alpha *= _alpha;
-			child._parentAlpha = _alpha;
+			child.alpha *= alpha;
+			child._parentAlpha = alpha;
 		}
 		
-		return _alpha;
+		return alpha;
 	}
 	
 	#if flash
@@ -361,9 +361,9 @@ class NestedSprite extends FlxSprite
 			return _color;
 		}
 		_color = {rgb: combinedColor, a: 255};
-		if ((_alpha != 1) || (_color.rgb != 0xffffff))
+		if ((alpha != 1) || (_color.rgb != 0xffffff))
 		{
-			_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, _alpha);
+			_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, alpha);
 		}
 		else
 		{
@@ -379,9 +379,9 @@ class NestedSprite extends FlxSprite
 			return _color;
 		}
 		_color = combinedColor;
-		if ((_alpha != 1) || (_color != 0x00ffffff))
+		if ((alpha != 1) || (_color != 0x00ffffff))
 		{
-			_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, _alpha);
+			_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, alpha);
 		}
 		else
 		{

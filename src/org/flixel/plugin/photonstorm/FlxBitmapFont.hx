@@ -270,7 +270,7 @@ class FlxBitmapFont extends FlxSprite
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(fontSet);
 			_tileSheetData.antialiasing = false;
-			var reverse:Bool = (_flipped > 0);
+			var reverse:Bool = (flipped > 0);
 			
 			_framesData = _tileSheetData.addSpriteFramesData(characterWidth, characterHeight, new Point(0, 0), offsetX, offsetY, fontSet.width, fontSet.height, (characterSpacingX == 0) ? 1 : characterSpacingX, (characterSpacingY == 0) ? 1 : characterSpacingY);
 		}
@@ -333,7 +333,7 @@ class FlxBitmapFont extends FlxSprite
 			currDrawData = _tileSheetData.drawData[camera.ID];
 			currIndex = _tileSheetData.positionData[camera.ID];
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera))
 			{
 				continue;
 			}
@@ -359,7 +359,7 @@ class FlxBitmapFont extends FlxSprite
 				blueMult = _blue;
 			}
 			
-			if (simpleRender)
+			if (simpleRenderSprite())
 			{	//Simple render
 				while (j < textLength)
 				{
@@ -387,7 +387,7 @@ class FlxBitmapFont extends FlxSprite
 							currDrawData[currIndex++] = blueMult;
 						}
 						
-						currDrawData[currIndex++] = _alpha;
+						currDrawData[currIndex++] = alpha;
 					}
 					
 					j++;
@@ -428,7 +428,7 @@ class FlxBitmapFont extends FlxSprite
 							currDrawData[currIndex++] = blueMult;
 						}
 						
-						currDrawData[currIndex++] = _alpha;
+						currDrawData[currIndex++] = alpha;
 					}
 					
 					j++;

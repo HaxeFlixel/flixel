@@ -236,7 +236,7 @@ class FlxTextField extends FlxText
 		// this class doesn't support this operation
 	}
 	
-	override public function getSimpleRender():Bool
+	override private function getSimpleRender():Bool
 	{ 
 		return true;
 	}
@@ -267,17 +267,9 @@ class FlxTextField extends FlxText
 	}
 	
 	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
-	 */
-	override public function getAlpha():Float
-	{
-		return _alpha;
-	}
-	
-	/**
 	 * @private
 	 */
-	override public function setAlpha(Alpha:Float):Float
+	override private function setAlpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{
@@ -287,9 +279,9 @@ class FlxTextField extends FlxText
 		{
 			Alpha = 0;
 		}
-		_alpha = Alpha;
+		alpha = Alpha;
 		updateTextFields();
-		return _alpha;
+		return alpha;
 	}
 	
 	private function updateTextFields():Void
@@ -308,7 +300,7 @@ class FlxTextField extends FlxText
 				height = tf.textHeight;
 				height += 4;
 				tf.height = 1.2 * height;
-				tf.alpha = _alpha;
+				tf.alpha = alpha;
 			}
 		}
 	}
@@ -379,7 +371,7 @@ class FlxTextField extends FlxText
 				camera._canvas.addChild(tf);
 			}
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera))
 			{
 				tf.visible = false;
 				continue;
@@ -436,7 +428,7 @@ class FlxTextField extends FlxText
 					_textField.multiline = _multiline;
 					_textField.text = _text;
 					_textField.height = 1.2 * height;
-					_textField.alpha = _alpha;
+					_textField.alpha = alpha;
 					
 					var format:TextFormat = dtfCopy();
 					var formatAdjusted:TextFormat = format;

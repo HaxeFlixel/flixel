@@ -423,7 +423,7 @@ class FlxObject extends FlxBasic
 		while (i < l)
 		{
 			camera = cameras[i++];
-			if (!onScreen(camera))
+			if (!onScreenObject(camera))
 			{
 				continue;
 			}
@@ -896,6 +896,11 @@ class FlxObject extends FlxBasic
 	 * @return	Whether the object is on screen or not.
 	 */
 	public function onScreen(Camera:FlxCamera = null):Bool
+	{
+		return onScreenObject(Camera);
+	}
+	
+	inline private function onScreenObject(Camera:FlxCamera = null):Bool
 	{
 		if (Camera == null)
 		{

@@ -30,7 +30,6 @@ class PxBitmapFont
 	private var _num_letters:Int;
 	
 	private var _tileSheetData:TileSheetData;
-	private var _antialiasing:Bool;
 	private var _bgTileID:Int;
 	#end
 	private var _glyphString:String;
@@ -57,7 +56,7 @@ class PxBitmapFont
 		_colorTransform = new ColorTransform();
 		_glyphs = [];
 		#else
-		_antialiasing = false;
+		antialiasing = false;
 		_bgTileID = -1;
 		_glyphs = new IntHash<PxFontSymbol>();
 		_num_letters = 0;
@@ -668,8 +667,6 @@ class PxBitmapFont
 		return -1;
 	}
 	
-	public var antialiasing(getAntialiasing, setAntialiasing):Bool;
-	
 	public var bgTileID(get_bgTileID, null):Int;
 	
 	private function get_bgTileID():Int 
@@ -677,14 +674,11 @@ class PxBitmapFont
 		return _bgTileID;
 	}
 	
-	public function getAntialiasing():Bool
-	{
-		return _antialiasing;
-	}
+	public var antialiasing(default, setAntialiasing):Bool;
 	
 	public function setAntialiasing(val:Bool):Bool
 	{
-		_antialiasing = val;
+		antialiasing = val;
 		if (_tileSheetData != null)
 		{
 			_tileSheetData.antialiasing = val;

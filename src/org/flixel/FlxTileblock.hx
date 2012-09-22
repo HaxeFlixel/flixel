@@ -193,7 +193,7 @@ class FlxTileblock extends FlxSprite
 			currDrawData = _tileSheetData.drawData[camera.ID];
 			currIndex = _tileSheetData.positionData[camera.ID];
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera))
 			{
 				continue;
 			}
@@ -221,7 +221,7 @@ class FlxTileblock extends FlxSprite
 			
 			if (_tileData != null && _tileSheetData != null)
 			{
-				if (simpleRender)
+				if (simpleRenderSprite())
 				{	//Simple render
 					while (j < numTiles)
 					{
@@ -246,7 +246,7 @@ class FlxTileblock extends FlxSprite
 							currDrawData[currIndex++] = blueMult;
 						}
 						
-						currDrawData[currIndex++] = _alpha;
+						currDrawData[currIndex++] = alpha;
 						j++;
 					}
 				}
@@ -284,7 +284,7 @@ class FlxTileblock extends FlxSprite
 							currDrawData[currIndex++] = blueMult;
 						}
 						
-						currDrawData[currIndex++] = _alpha;
+						currDrawData[currIndex++] = alpha;
 						j++;
 					}
 				}
@@ -311,7 +311,7 @@ class FlxTileblock extends FlxSprite
 		if (_pixels != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_tileSheetData.antialiasing = _antialiasing;
+			_tileSheetData.antialiasing = antialiasing;
 			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
 			//_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight);
 		}

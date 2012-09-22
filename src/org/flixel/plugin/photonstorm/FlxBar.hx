@@ -1219,14 +1219,14 @@ class FlxBar extends FlxSprite
 			
 			var isColoredCamera:Bool = camera.isColored();
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera))
 			{
 				continue;
 			}
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
-			if (simpleRender)
+			if (simpleRenderSprite())
 			{	//Simple render
 				if (_tileSheetData != null && percentFrame >= 0) // TODO: remove this if statement later
 				{
@@ -1257,7 +1257,7 @@ class FlxBar extends FlxSprite
 						}
 					}
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 					
 					// Draw filled bar
 					if (fillHorizontal)
@@ -1294,7 +1294,7 @@ class FlxBar extends FlxSprite
 						}
 					}
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 			}
 			else
@@ -1329,7 +1329,7 @@ class FlxBar extends FlxSprite
 						currDrawData[currIndex++] = _green;
 						currDrawData[currIndex++] = _blue;
 					}
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 					
 					// Draw filled bar
 					var relativeX:Float = 0;
@@ -1366,7 +1366,7 @@ class FlxBar extends FlxSprite
 						currDrawData[currIndex++] = _green;
 						currDrawData[currIndex++] = _blue;
 					}
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 			}
 			
@@ -1407,7 +1407,7 @@ class FlxBar extends FlxSprite
 		if (_pixels != null && barWidth >= 1 && barHeight >= 1)
 		{
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_tileSheetData.antialiasing = _antialiasing;
+			_tileSheetData.antialiasing = antialiasing;
 			
 			_emptyBarFrameID = _tileSheetData.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
 			_filledBarFrames = [];

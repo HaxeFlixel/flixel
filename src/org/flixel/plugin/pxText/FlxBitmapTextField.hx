@@ -83,7 +83,7 @@ class FlxBitmapTextField extends FlxSprite
 		_autoUpperCase = false;
 		_fixedWidth = true;
 		_wordWrap = true;
-		_alpha = 1;
+		alpha = 1;
 		
 		if (pFont == null)
 		{
@@ -187,14 +187,14 @@ class FlxBitmapTextField extends FlxSprite
 			
 			var isColoredCamera:Bool = camera.isColored();
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera))
 			{
 				continue;
 			}
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
 			
-			if (simpleRender)
+			if (simpleRenderSprite())
 			{	
 				if (_background)
 				{
@@ -222,7 +222,7 @@ class FlxBitmapTextField extends FlxSprite
 					}
 					
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 				
 				//Simple render
@@ -260,7 +260,7 @@ class FlxBitmapTextField extends FlxSprite
 							currDrawData[currIndex++] = currTileGreen;
 							currDrawData[currIndex++] = currTileBlue;
 						}
-						currDrawData[currIndex++] = _alpha;
+						currDrawData[currIndex++] = alpha;
 					}
 					
 					j++;
@@ -303,7 +303,7 @@ class FlxBitmapTextField extends FlxSprite
 						currDrawData[currIndex++] = _bgDrawData[5];
 					}
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 				
 				while (j < textLength)
@@ -343,7 +343,7 @@ class FlxBitmapTextField extends FlxSprite
 							currDrawData[currIndex++] = currTileGreen;
 							currDrawData[currIndex++] = currTileBlue;
 						}
-						currDrawData[currIndex++] = _alpha;
+						currDrawData[currIndex++] = alpha;
 					}
 					
 					j++;
@@ -367,23 +367,14 @@ class FlxBitmapTextField extends FlxSprite
 	}
 	
 	#if (cpp || neko)
-	override public function setAntialiasing(val:Bool):Bool
+	override private function setAntialiasing(val:Bool):Bool
 	{
 		if (_font != null)
 		{
 			_font.antialiasing = val;
 		}
+		antialiasing = val;
 		return val;
-	}
-	
-	override public function getAntialiasing():Bool
-	{
-		if (_font != null)
-		{
-			return _font.antialiasing;
-		}
-		
-		return false;
 	}
 	
 	/**
@@ -441,12 +432,12 @@ class FlxBitmapTextField extends FlxSprite
 		return value;
 	}
 	
-	override public function setAlpha(pAlpha:Float):Float
+	override private function setAlpha(pAlpha:Float):Float
 	{
 		#if (flash || js)
 		super.setAlpha(pAlpha);
 		#else
-		_alpha = pAlpha;
+		alpha = pAlpha;
 		_pendingTextChange = true;
 		updateBitmapData();
 		#end
@@ -736,7 +727,7 @@ class FlxBitmapTextField extends FlxSprite
 						#if (flash || js)
 						_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 						#else
-						_font.render(_drawData, t, _outlineColor, _color, _alpha, px + ox + _padding - halfWidth, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+						_font.render(_drawData, t, _outlineColor, _color, alpha, px + ox + _padding - halfWidth, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
 						#end
 					}
 				}
@@ -748,13 +739,13 @@ class FlxBitmapTextField extends FlxSprite
 				#if (flash || js)
 				_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
-				_font.render(_drawData, t, _shadowColor, _color, _alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+				_font.render(_drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
 				#end
 			}
 			#if (flash || js)
 			_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 			#else
-			_font.render(_drawData, t, _textColor, _color, _alpha, ox + _padding - halfWidth, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
+			_font.render(_drawData, t, _textColor, _color, alpha, ox + _padding - halfWidth, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
 			#end
 			row++;
 		}
