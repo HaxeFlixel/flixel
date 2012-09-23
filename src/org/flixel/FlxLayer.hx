@@ -1,62 +1,116 @@
 package org.flixel;
 
-#if (cpp || neko)
 import org.flixel.FlxBasic;
 import org.flixel.system.tileSheet.atlasgen.Atlas;
+#if (cpp || neko)
+import org.flixel.system.tileSheet.TileSheetData;
 #end
 
-class FlxLayer extends FlxGroup
+class FlxLayer
 {	
+	static private var _drawStateCache:DrawStateCache = new DrawStateCache();
 	
-	#if (cpp || neko)
 	private var _atlas:Atlas;
-	#end
+	private var _tileSheetData:TileSheetData;
+	private var _drawStack:Array<DrawState>;
 	
-	public function new(?MaxSize:Int = 0)
+	public function new()
 	{
-		super(MaxSize);
+		
 	}
 	
 	public function createAtlas(TextureWidth:Int, TextureHeight:Int):Void
 	{
-		#if (cpp || neko)
 		if (TextureWidth > 0 && TextureHeight > 0)
 		{
 			_atlas = new Atlas(TextureWidth, TextureHeight, 1, 1);
 		}
-		#end
 	}
 	
-	override public function destroy():Void 
+	public function destroy():Void 
 	{
-		super.destroy();
-		
-		#if (cpp || neko)
 		if (_atlas != null)
 		{
 			_atlas.destroy();
 		}
-		#end
 	}
 	
-	override public function add(Object:FlxBasic):FlxBasic
+	public function add(Object:FlxBasic):FlxBasic
 	{
-		return super.add(Object);
+		return null;
 	}
 	
-	override public function recycle(?ObjectClass:Class<FlxBasic> = null):FlxBasic 
+	public function remove(Object:FlxBasic):FlxBasic
 	{
-		return super.recycle(ObjectClass);
+		return null;
 	}
 	
-	public function addWithBaking(Object:FlxBasic):FlxBasic
+}
+
+class DrawState
+{
+	public var flags:Int;
+	public var blend:Int;
+	public var drawData:Array<Array<Float>>;
+	public var positionData:Array<Int>;
+	public var hasDrawData:Bool;
+	public var exists:Bool;
+	
+	public function new()
 	{
-		return add(Object);
+		
 	}
 	
-	public function recycleWithBaking(?ObjectClass:Class<FlxBasic> = null):FlxBasic
+	public function reset():DrawState
 	{
-		return recycle(ObjectClass);
+		
+		
+		return this;
 	}
 	
+}
+
+class DrawStateCache
+{
+	private var _states:Array<DrawState>;
+	private var _length:Int;
+	
+	public function new()
+	{
+		_length = 0;
+		_states = [];
+	}
+	
+	public function add(state:DrawState):DrawState
+	{
+		_states[_length] = state;
+		_length++;
+		return state;
+	}
+	
+	/*
+	public function remove(state:DrawState):Void
+	{
+		
+	}
+	
+	public function recycle(x:Float, y:Float, width:Float, height:Float):DrawState
+	{
+		var state:DrawState;
+		var i:Int = 0;
+		
+		while (i < _length)
+		{
+			state = _states[i];
+			if (state.exists == false)
+			{
+				state.reset(x, y, width, height, parent);
+				return state;
+			}
+			i++;
+		}
+		
+		return add(new DrawState(x, y, width, height, parent));
+	}
+	*/
 }

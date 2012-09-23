@@ -8,10 +8,20 @@ package org.flixel;
  */
 class FlxState extends FlxGroup
 {
+	private var _layers:Array<FlxLayer>;
 	
 	public function new()
 	{
 		super();
+		_layers = [];
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		
+		// TODO: destroy layers
+		_layers = null;
 	}
 	
 	/**
@@ -20,4 +30,7 @@ class FlxState extends FlxGroup
 	 * We do NOT recommend overriding the constructor, unless you want some crazy unpredictable things to happen!
 	 */
 	public function create():Void { }
+	
+	// TODO: methods for layer manipulation
+	
 }

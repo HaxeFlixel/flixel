@@ -49,7 +49,7 @@ class TileSheetData
 		pairsData = new Array<RectanglePointPair>();
 		drawData = new Array<Array<Float>>();
 		
-		isTilemap = isTilemap;
+		this.isTilemap = isTilemap;
 		isColored = false;
 		updateFlags();
 		
