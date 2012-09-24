@@ -987,7 +987,6 @@ class FlxG
 		}
 		#end
 		
-		var needReverse:Bool = false;
 		var key:String = Key;
 		if (key == null)
 		{
@@ -1067,51 +1066,23 @@ class FlxG
 				
 				bd = tempBitmap;
 			}
-			#end
-			
-			_cache.set(key, bd);
+			#else
 			if (Reverse)
 			{
-				needReverse = true;
+				var newPixels:BitmapData = new BitmapData(bd.width * 2, bd.height, true, 0x00000000);
+				newPixels.draw(bd);
+				var mtx:Matrix = new Matrix();
+				mtx.scale(-1,1);
+				mtx.translate(newPixels.width, 0);
+				newPixels.draw(bd, mtx);
+				bd = newPixels;
+				
 			}
+			#end
+			_cache.set(key, bd);
 		}
 		
-		var pixels:BitmapData = _cache.get(key);
-		
-		#if (flash || js)
-		if (isClass)
-		{
-			tempBitmap = Type.createInstance(Graphic, []).bitmapData;
-		}
-		else if (isBitmap)
-		{
-			tempBitmap = cast(Graphic, BitmapData);
-		}
-		else
-		{
-			tempBitmap = Assets.getBitmapData(Graphic);
-		}
-		
-		if (!needReverse && Reverse && (pixels.width == tempBitmap.width))
-		{
-			needReverse = true;
-		}
-		
-		if (needReverse)
-		{
-			var newPixels:BitmapData = new BitmapData(pixels.width * 2, pixels.height, true, 0x00000000);
-			
-			newPixels.draw(pixels);
-			var mtx:Matrix = new Matrix();
-			mtx.scale(-1,1);
-			mtx.translate(newPixels.width, 0);
-			newPixels.draw(pixels, mtx);
-			pixels = newPixels;
-			_cache.set(key, pixels);
-		}
-		#end
-		
-		return pixels;
+		return _cache.get(key);
 	}
 	
 	public static function removeBitmap(Graphic:String):Void

@@ -11,7 +11,9 @@ class FlxLayer
 	static private var _drawStateCache:DrawStateCache = new DrawStateCache();
 	
 	private var _atlas:Atlas;
+	#if (cpp || neko)
 	private var _tileSheetData:TileSheetData;
+	#end
 	private var _drawStack:Array<DrawState>;
 	
 	public function new()
