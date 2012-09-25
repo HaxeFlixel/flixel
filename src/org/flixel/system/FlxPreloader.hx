@@ -99,7 +99,9 @@ class FlxPreloader extends NMEPreloader
 
 	/**
 	 * List of allowed URLs for built-in site-locking.
-	 * Use full swf's addresses with 'http' or 'https' (e.g. 'http://adamatomic.com/canabalt/')
+	 * Use full swf's addresses with 'http' or 'https'.
+	 * Set it in FlxPreloader's subclass constructor as:
+	 * allowedURLs = ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
 	 */
 	public var allowedURLs:Array<String>;
 	
@@ -107,6 +109,11 @@ class FlxPreloader extends NMEPreloader
 	 * @private
 	 */
 	private var _urlChecked:Bool;
+	
+	/**
+	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
+	 */
+	public static inline var LOCAL:String = "local";
 	
 	/**
 	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds.
@@ -379,7 +386,6 @@ class FlxPreloader extends NMEPreloader
 	{
 		Lib.getURL(new URLRequest(allowedURLs[0]));
 	}
-	#end
 	
 	/**
 	 * Gets home domain
@@ -389,7 +395,6 @@ class FlxPreloader extends NMEPreloader
 		return getDomain(loaderInfo.loaderURL);
 	}
 	
-	
 	private function getDomain(url:String):String
 	{
 		var urlStart:Int = url.indexOf("://") + 3;
@@ -398,7 +403,7 @@ class FlxPreloader extends NMEPreloader
 		var LastDot:Int = home.lastIndexOf(".") - 1;
 		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
 		home = home.substring(domEnd, home.length);
-		return (home == "") ? "local" : home;
+		return (home == "") ? LOCAL : home;
 	}
 	
 	/**
@@ -411,15 +416,22 @@ class FlxPreloader extends NMEPreloader
 			return true;
 		}
 		
+		var homeDomain:String = getHomeDomain();
 		for (i in 0...allowedURLs.length)
 		{
-			if (getDomain(allowedURLs[i]) == getHomeDomain())
+			var allowedURL:String = allowedURLs[i];
+			if (getDomain(allowedURL) == homeDomain)
+			{
+				return true;
+			}
+			else if (allowedURL == LOCAL && homeDomain == LOCAL)
 			{
 				return true;
 			}
 		}
 		return false;
 	}
+	#end
 	
 	/**
 	 * Override this function to manually update the preloader.
