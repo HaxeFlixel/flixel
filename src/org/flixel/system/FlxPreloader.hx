@@ -17,6 +17,7 @@ import nme.net.URLRequest;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.Lib;
+import nme.text.TextFormatAlign;
 import nme.utils.ByteArray;
 import org.flixel.FlxU;
 import org.flixel.plugin.pxText.PxTextAlign;
@@ -30,10 +31,6 @@ import org.flixel.FlxG;
  */
 class FlxPreloader extends NMEPreloader
 {
-	
-	private static inline var LogoWidth:Int = 6;
-	private static inline var LogoHeight:Int = 6;
-	
 	private static inline var LogoCornersWidth:Int = 64;
 	private static inline var LogoCornersHeight:Int = 64;
 	
@@ -102,8 +99,15 @@ class FlxPreloader extends NMEPreloader
 
 	/**
 	 * Set this to your game's URL to use built-in site-locking.
+	 * Use full swf's address with 'http' or 'https' (e.g. 'http://adamatomic.com/canabalt/')
 	 */
 	public var myURL:String;
+	
+	/**
+	 * @private
+	 */
+	private var _urlChecked:Bool;
+	
 	/**
 	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds.
 	 */
@@ -120,6 +124,7 @@ class FlxPreloader extends NMEPreloader
 		
 		minDisplayTime = 5;
 		this._init = false;
+		_urlChecked = false;
 		
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
@@ -307,6 +312,9 @@ class FlxPreloader extends NMEPreloader
 			create();
 			this._init = true;
 		}
+		
+		checkSiteLock();
+		
 		graphics.clear();
 		var time:Int = Lib.getTimer();
 		if((_percent >= 1) && (time > _min))
@@ -324,6 +332,54 @@ class FlxPreloader extends NMEPreloader
 			update(percent);
 		}
 	}
+	
+	private function checkSiteLock():Void
+	{
+		#if flash
+		if (_urlChecked == false && myURL != null)
+		{
+			if ((loaderInfo.url.indexOf(myURL) < 0))
+			{
+				var tmp:Bitmap = new Bitmap(new BitmapData(stage.stageWidth, stage.stageHeight, true, 0xFFFFFFFF));
+				addChild(tmp);
+				
+				var format:TextFormat = new TextFormat();
+				format.color = 0x000000;
+				format.size = 16;
+				format.align = TextFormatAlign.CENTER;
+				format.bold = true;
+				format.font = "system";
+				
+				var textField:TextField = new TextField();
+				textField.width = tmp.width - 16;
+				textField.height = tmp.height - 16;
+				textField.y = 8;
+				textField.multiline = true;
+				textField.wordWrap = true;
+				textField.defaultTextFormat = format;
+				textField.text = "Hi there!  It looks like somebody copied this game without my permission.  Just click anywhere, or copy-paste this URL into your browser.\n\n"+myURL+"\n\nto play the game at my site.  Thanks, and have fun!";
+				addChild(textField);
+				
+				textField.addEventListener(MouseEvent.CLICK, goToMyURL);
+				tmp.addEventListener(MouseEvent.CLICK, goToMyURL);
+				
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+				return;
+			}
+			else
+			{
+				_urlChecked = true;
+			}
+		}
+		#end
+	}
+	
+	#if flash
+	private function goToMyURL(e:MouseEvent = null):Void
+	{
+		Lib.getURL(new URLRequest(myURL));
+	}
+	#end
 	
 	/**
 	 * Override this function to manually update the preloader.
@@ -393,5 +449,4 @@ class FlxPreloader extends NMEPreloader
 		result.setPixels(new Rectangle(0, 0, bitmapWidth, bitmapHeight), byteData);
 		return result;
 	}
-	
 }
