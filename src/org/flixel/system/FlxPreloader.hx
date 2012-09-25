@@ -98,10 +98,10 @@ class FlxPreloader extends NMEPreloader
 	private var _percent:Float;
 
 	/**
-	 * Set this to your game's URL to use built-in site-locking.
-	 * Use full swf's address with 'http' or 'https' (e.g. 'http://adamatomic.com/canabalt/')
+	 * List of allowed URLs for built-in site-locking.
+	 * Use full swf's addresses with 'http' or 'https' (e.g. 'http://adamatomic.com/canabalt/')
 	 */
-	public var myURL:String;
+	public var allowedURLs:Array<String>;
 	
 	/**
 	 * @private
@@ -336,9 +336,9 @@ class FlxPreloader extends NMEPreloader
 	private function checkSiteLock():Void
 	{
 		#if flash
-		if (_urlChecked == false && myURL != null)
+		if (_urlChecked == false && allowedURLs != null)
 		{
-			if ((loaderInfo.url.indexOf(myURL) < 0))
+			if (atHome() == false)
 			{
 				var tmp:Bitmap = new Bitmap(new BitmapData(stage.stageWidth, stage.stageHeight, true, 0xFFFFFFFF));
 				addChild(tmp);
@@ -357,7 +357,7 @@ class FlxPreloader extends NMEPreloader
 				textField.multiline = true;
 				textField.wordWrap = true;
 				textField.defaultTextFormat = format;
-				textField.text = "Hi there!  It looks like somebody copied this game without my permission.  Just click anywhere, or copy-paste this URL into your browser.\n\n"+myURL+"\n\nto play the game at my site.  Thanks, and have fun!";
+				textField.text = "Hi there!  It looks like somebody copied this game without my permission.  Just click anywhere, or copy-paste this URL into your browser.\n\n" + allowedURLs[0] + "\n\nto play the game at my site.  Thanks, and have fun!";
 				addChild(textField);
 				
 				textField.addEventListener(MouseEvent.CLICK, goToMyURL);
@@ -377,9 +377,49 @@ class FlxPreloader extends NMEPreloader
 	#if flash
 	private function goToMyURL(e:MouseEvent = null):Void
 	{
-		Lib.getURL(new URLRequest(myURL));
+		Lib.getURL(new URLRequest(allowedURLs[0]));
 	}
 	#end
+	
+	/**
+	 * Gets home domain
+	 */
+	private function getHomeDomain():String
+	{
+		return getDomain(loaderInfo.loaderURL);
+	}
+	
+	
+	private function getDomain(url:String):String
+	{
+		var urlStart:Int = url.indexOf("://") + 3;
+		var urlEnd:Int = url.indexOf("/", urlStart);
+		var home:String = url.substring(urlStart, urlEnd);
+		var LastDot:Int = home.lastIndexOf(".") - 1;
+		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
+		home = home.substring(domEnd, home.length);
+		return (home == "") ? "local" : home;
+	}
+	
+	/**
+	 * Simple site-lock check
+	 */
+	private function atHome():Bool
+	{
+		if (allowedURLs.length == 0)
+		{
+			return true;
+		}
+		
+		for (i in 0...allowedURLs.length)
+		{
+			if (getDomain(allowedURLs[i]) == getHomeDomain())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * Override this function to manually update the preloader.
