@@ -31,6 +31,18 @@ class FlxAssets //extends Assets
 	public static var imgPlay:String = "assets/data/vcr/play.png";
 	public static var imgStep:String = "assets/data/vcr/step.png";
 	
+	public static var imgBase:String = "assets/data/base.png";
+	public static var imgStick:String = "assets/data/stick.png";
+	public static var imgButtonA:String = "assets/data/button_a.png";
+	public static var imgButtonB:String = "assets/data/button_b.png";
+	public static var imgButtonC:String = "assets/data/button_c.png";
+	public static var imgButtonX:String = "assets/data/button_x.png";
+	public static var imgButtonY:String = "assets/data/button_y.png";
+	public static var imgButtonUp:String = "assets/data/button_up.png";
+	public static var imgButtonDown:String = "assets/data/button_down.png";
+	public static var imgButtonLeft:String = "assets/data/button_left.png";
+	public static var imgButtonRight:String = "assets/data/button_right.png";
+	
 	public static var nokiaFont(getNokiaFont, null):String;
 	public static function getNokiaFont():String
 	{
