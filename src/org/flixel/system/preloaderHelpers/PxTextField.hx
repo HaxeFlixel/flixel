@@ -15,6 +15,7 @@ class PxTextField extends Sprite
 	private var _font:PxBitmapFont;
 	private var _text:String;
 	private var _color:Int;
+	private var _useColor:Bool;
 	private var _outline:Bool;
 	private var _outlineColor:Int;
 	private var _shadow:Bool;
@@ -30,6 +31,9 @@ class PxTextField extends Sprite
 	private var _autoUpperCase:Bool;
 	private var _wordWrap:Bool;
 	private var _fixedWidth:Bool;
+	
+	private var _numSpacesInTab:Int;
+	private var _tabSpaces:String;
 	
 	private var _pendingTextChange:Bool;
 	private var _fieldWidth:Int;
@@ -58,6 +62,7 @@ class PxTextField extends Sprite
 		
 		_text = "";
 		_color = 0x0;
+		_useColor = true;
 		_outline = false;
 		_outlineColor = 0x0;
 		_shadow = false;
@@ -78,6 +83,9 @@ class PxTextField extends Sprite
 		_wordWrap = true;
 		_alpha = 1;
 		
+		_numSpacesInTab = 4;
+		_tabSpaces = "    ";
+		
 		if (pFont == null)
 		{
 			if (PxBitmapFont.fetch("default") == null)
@@ -93,7 +101,6 @@ class PxTextField extends Sprite
 		
 		#if (flash || js)
 		updateGlyphs(true, _shadow, _outline);
-		
 		bitmapData = new BitmapData(1, 1, true);
 		_bitmap = new Bitmap(bitmapData);
 		this.addChild(_bitmap);
@@ -125,6 +132,29 @@ class PxTextField extends Sprite
 		#end
 	}
 	
+	public var numSpacesInTab(get_numSpacesInTab, set_numSpacesInTab):Int;
+	
+	public function get_numSpacesInTab():Int 
+	{
+		return _numSpacesInTab;
+	}
+	
+	public function set_numSpacesInTab(value:Int):Int 
+	{
+		if (_numSpacesInTab != value && value > 0)
+		{
+			_numSpacesInTab = value;
+			_tabSpaces = "";
+			for (i in 0...value)
+			{
+				_tabSpaces += " ";
+			}
+			_pendingTextChange = true;
+			update();
+		}
+		return value;
+	}
+	
 	/**
 	 * Text to display.
 	 */
@@ -137,16 +167,9 @@ class PxTextField extends Sprite
 	
 	public function set_text(pText:String):String 
 	{
-		var tmp:String = pText;
-		tmp = tmp.split("\\n").join("\n");
-		if (tmp != _text)
+		if (pText != _text)
 		{
 			_text = pText;
-			_text = _text.split("\\n").join("\n");
-			if (_autoUpperCase)
-			{
-				_text = _text.toUpperCase();
-			}
 			_pendingTextChange = true;
 			update();
 		}
@@ -163,6 +186,7 @@ class PxTextField extends Sprite
 			return;
 		}
 		
+		var preparedText:String = (_autoUpperCase) ? _text.toUpperCase() : _text;
 		var calcFieldWidth:Int = _fieldWidth;
 		var rows:Array<String> = [];
 		#if (flash || js)
@@ -176,7 +200,7 @@ class PxTextField extends Sprite
 		var lineComplete:Bool;
 		
 		// get words
-		var lines:Array<String> = _text.split("\n");
+		var lines:Array<String> = preparedText.split("\n");
 		var i:Int = -1;
 		var j:Int = -1;
 		if (!_multiLine)
@@ -192,7 +216,15 @@ class PxTextField extends Sprite
 			if (_fixedWidth)
 			{
 				lineComplete = false;
-				var words:Array<String> = lines[i].split(" ");
+				var words:Array<String> = [];
+				if (!wordWrap)
+				{
+					words = lines[i].split("\t").join(_tabSpaces).split(" ");
+				}
+				else
+				{
+					words = lines[i].split("\t").join(" \t ").split(" ");
+				}
 				
 				if (words.length > 0) 
 				{
@@ -201,11 +233,15 @@ class PxTextField extends Sprite
 					while (!lineComplete) 
 					{
 						word = words[wordPos];
-						var currentRow:String = txt + word + " ";
 						var changed:Bool = false;
+						var currentRow:String = txt + word;
 						
 						if (_wordWrap)
 						{
+							var prevWord:String = (wordPos > 0) ? words[wordPos - 1] : "";
+							var nextWord:String = (wordPos < words.length) ? words[wordPos + 1] : "";
+							if (prevWord != "\t") currentRow += " ";
+							
 							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
 							{
 								if (txt == "")
@@ -220,7 +256,14 @@ class PxTextField extends Sprite
 								txt = "";
 								if (_multiLine)
 								{
-									words.splice(0, wordPos);
+									if (word == "\t" && (wordPos < words.length))
+									{
+										words.splice(0, wordPos + 1);
+									}
+									else
+									{
+										words.splice(0, wordPos);
+									}
 								}
 								else
 								{
@@ -231,35 +274,53 @@ class PxTextField extends Sprite
 							}
 							else
 							{
-								txt += word + " ";
+								if (word == "\t")
+								{
+									txt += _tabSpaces;
+								}
+								if (nextWord == "\t" || prevWord == "\t")
+								{
+									txt += word;
+								}
+								else
+								{
+									txt += word + " ";
+								}
 								wordPos++;
 							}
-							
 						}
 						else
 						{
 							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
 							{
-								j = 0;
-								tempStr = "";
-								wordLength = word.length;
-								while (j < wordLength)
+								if (word != "")
 								{
-									currentRow = txt + word.charAt(j);
-									if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+									j = 0;
+									tempStr = "";
+									wordLength = word.length;
+									while (j < wordLength)
 									{
-										rows.push(txt.substr(0, txt.length - 1));
-										txt = "";
-										word = "";
-										wordPos = words.length;
-										j = wordLength;
-										changed = true;
+										currentRow = txt + word.charAt(j);
+										if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+										{
+											rows.push(txt.substr(0, txt.length - 1));
+											txt = "";
+											word = "";
+											wordPos = words.length;
+											j = wordLength;
+											changed = true;
+										}
+										else
+										{
+											txt += word.charAt(j);
+										}
+										j++;
 									}
-									else
-									{
-										txt += word.charAt(j);
-									}
-									j++;
+								}
+								else
+								{
+									changed = false;
+									wordPos = words.length;
 								}
 							}
 							else
@@ -273,9 +334,8 @@ class PxTextField extends Sprite
 						{
 							if (!changed) 
 							{
-								var subText:String = txt.substr(0, txt.length - 1);
-								calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(subText, _letterSpacing, _fontScale)));
-								rows.push(subText);
+								calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(txt, _letterSpacing, _fontScale)));
+								rows.push(txt);
 							}
 							lineComplete = true;
 						}
@@ -288,8 +348,9 @@ class PxTextField extends Sprite
 			}
 			else
 			{
-				calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(lines[i], _letterSpacing, _fontScale)));
-				rows.push(lines[i]);
+				var lineWithoutTabs:String = lines[i].split("\t").join(_tabSpaces);
+				calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(lineWithoutTabs, _letterSpacing, _fontScale)));
+				rows.push(lineWithoutTabs);
 			}
 		}
 		
@@ -386,7 +447,7 @@ class PxTextField extends Sprite
 			#if (flash || js)
 			_font.render(bitmapData, _preparedTextGlyphs, t, _color, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 			#else
-			_font.render(_drawData, t, _color, _alpha, ox + _padding, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _letterSpacing, _fontScale);
+			_font.render(_drawData, t, _color, _alpha, ox + _padding, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _letterSpacing, _fontScale, _useColor);
 			#end
 			row++;
 		}
@@ -541,6 +602,25 @@ class PxTextField extends Sprite
 		if (_color != value)
 		{
 			_color = value;
+			updateGlyphs(true, false, false);
+			_pendingTextChange = true;
+			update();
+		}
+		return value;
+	}
+	
+	public var useColor(get_useColor, set_useColor):Bool;
+	
+	private function get_useColor():Bool 
+	{
+		return _useColor;
+	}
+	
+	private function set_useColor(value:Bool):Bool 
+	{
+		if (_useColor != value)
+		{
+			_useColor = value;
 			updateGlyphs(true, false, false);
 			_pendingTextChange = true;
 			update();
@@ -769,10 +849,8 @@ class PxTextField extends Sprite
 		if (_autoUpperCase != value)
 		{
 			_autoUpperCase = value;
-			if (_autoUpperCase)
-			{
-				text = _text.toUpperCase();
-			}
+			_pendingTextChange = true;
+			update();
 		}
 		return _autoUpperCase;
 	}
@@ -819,7 +897,7 @@ class PxTextField extends Sprite
 		if (textGlyphs)
 		{
 			clearPreparedGlyphs(_preparedTextGlyphs);
-			_preparedTextGlyphs = _font.getPreparedGlyphs(_fontScale, _color);
+			_preparedTextGlyphs = _font.getPreparedGlyphs(_fontScale, _color, _useColor);
 		}
 		
 		if (shadowGlyphs)
