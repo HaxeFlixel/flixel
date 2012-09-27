@@ -156,17 +156,26 @@ class PxBitmapFont
 				
 				charString = String.fromCharCode(symbol.charCode);
 				_glyphString += charString;
+				//
+				var xadvance:Int = symbol.xadvance;
+				var charWidth:Int = xadvance;
 				
+				if (rect.width > xadvance)
+				{
+					charWidth = symbol.width;
+					point.x = 0;
+				}
+				//
 				// create glyph
 				#if (flash || js)
 				bd = null;
 				if (charString != " " && charString != "")
 				{
-					bd = new BitmapData(symbol.xadvance, symbol.height + symbol.yoffset, true, 0x0);
+					bd = new BitmapData(charWidth, symbol.height + symbol.yoffset, true, 0x0);
 				}
 				else
 				{
-					bd = new BitmapData(symbol.xadvance, 1, true, 0x0);
+					bd = new BitmapData(charWidth, 1, true, 0x0);
 				}
 				bd.copyPixels(result, rect, point, null, null, true);
 				
@@ -175,11 +184,11 @@ class PxBitmapFont
 				#else
 				if (charString != " " && charString != "")
 				{
-					setGlyph(symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), symbol.xadvance);
+					setGlyph(symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), charWidth);
 				}
 				else
 				{
-					setGlyph(symbol.charCode, rect, Math.floor(point.x), 1, symbol.xadvance);
+					setGlyph(symbol.charCode, rect, Math.floor(point.x), 1, charWidth);
 				}
 				#end
 			}
