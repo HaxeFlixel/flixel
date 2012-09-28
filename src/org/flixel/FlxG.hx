@@ -1085,11 +1085,34 @@ class FlxG
 		return _cache.get(key);
 	}
 	
+	private static function fromAssetsCache(bmd:BitmapData):Bool
+	{
+		var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;
+		if (cachedBitmapData != null)
+		{
+			for (key in cachedBitmapData.keys())
+			{
+				var cacheBmd:BitmapData = cachedBitmapData.get(key);
+				if (cacheBmd == bmd)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public static function removeBitmap(Graphic:String):Void
 	{
 		if (_cache.exists(Graphic))
 		{
+			var bmd:BitmapData = _cache.get(Graphic);
 			_cache.remove(Graphic);
+			if (fromAssetsCache(bmd) == false)
+			{
+				bmd.dispose();
+				bmd = null;
+			}
 		}
 	}
 		
@@ -1104,30 +1127,14 @@ class FlxG
 			for (key in _cache.keys())
 			{
 				bmd = _cache.get(key);
-				if (bmd != null)
+				_cache.remove(key);
+				if (bmd != null && fromAssetsCache(bmd) == false)
 				{
-					_cache.remove(key);
 					bmd.dispose();
 					bmd = null;
 				}
 			}
 		}
-		
-		var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;
-		if (cachedBitmapData != null)
-		{
-			for (key in cachedBitmapData.keys())
-			{
-				bmd = cachedBitmapData.get(key);
-				if (bmd != null)
-				{
-					cachedBitmapData.remove(key);
-					bmd.dispose();
-					bmd = null;
-				}
-			}
-		}
-		Assets.cachedBitmapData = new Hash();
 		_cache = new Hash();
 	}
 	

@@ -155,7 +155,8 @@ class FlxU
 	 */
 	inline static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:Int = 0, ?Length:Int = 0):Dynamic
 	{
-		if(Objects != null)
+		var res:Dynamic = null;
+		if (Objects != null)
 		{
 			if (StartIndex < 0) StartIndex = 0;
 			if (Length < 0) Length = 0;
@@ -167,10 +168,10 @@ class FlxU
 			}
 			if (l > 0)
 			{
-				return Objects[StartIndex + Std.int(Math.random() * l)];
+				res = Objects[StartIndex + Std.int(Math.random() * l)];
 			}
 		}
-		return null;
+		return res;
 	}
 	
 	/**
