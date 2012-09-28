@@ -892,7 +892,7 @@ class FlxG
 	}
 	
 	/**
-	 * Check the local bitmap cache to see if a bitmap with this key has been loaded already.
+	 * Check the local bitmap cache or the Assets.cachedBitmapData to see if a bitmap with this key has been loaded already.
 	 * @param	Key		The string key identifying the bitmap.
 	 * @return	Whether or not this file can be found in the cache.
 	 */
@@ -900,7 +900,7 @@ class FlxG
 	{
 		return (_cache.exists(Key) && _cache.get(Key) != null);
 	}
-		
+
 	/**
 	 * Generates a new <code>BitmapData</code> object (a colored square) and caches it.
 	 * @param	Width	How wide the square should be.
@@ -959,6 +959,7 @@ class FlxG
 		
 		var isClass:Bool = true;
 		var isBitmap:Bool = true;
+
 		if (Std.is(Graphic, Class))
 		{
 			isClass = true;
@@ -1019,6 +1020,7 @@ class FlxG
 		if (!checkBitmapCache(key))
 		{
 			var bd:BitmapData = null;
+
 			if (isClass)
 			{
 				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), []).bitmapData;
@@ -1031,7 +1033,7 @@ class FlxG
 			{
 				bd = Assets.getBitmapData(Graphic);
 			}
-			
+
 			#if !(flash || js)
 			if (additionalKey != "")
 			{
@@ -1075,31 +1077,15 @@ class FlxG
 				mtx.scale(-1,1);
 				mtx.translate(newPixels.width, 0);
 				newPixels.draw(bd, mtx);
+
 				bd = newPixels;
-				
 			}
 			#end
+
 			_cache.set(key, bd);
 		}
 		
 		return _cache.get(key);
-	}
-	
-	private static function fromAssetsCache(bmd:BitmapData):Bool
-	{
-		var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;
-		if (cachedBitmapData != null)
-		{
-			for (key in cachedBitmapData.keys())
-			{
-				var cacheBmd:BitmapData = cachedBitmapData.get(key);
-				if (cacheBmd == bmd)
-				{
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 	
 	public static function removeBitmap(Graphic:String):Void
@@ -1108,7 +1094,7 @@ class FlxG
 		{
 			var bmd:BitmapData = _cache.get(Graphic);
 			_cache.remove(Graphic);
-			if (fromAssetsCache(bmd) == false)
+			if (!Assets.cachedBitmapData.exists(Graphic))
 			{
 				bmd.dispose();
 				bmd = null;
@@ -1128,7 +1114,7 @@ class FlxG
 			{
 				bmd = _cache.get(key);
 				_cache.remove(key);
-				if (bmd != null && fromAssetsCache(bmd) == false)
+				if (!Assets.cachedBitmapData.exists(key))
 				{
 					bmd.dispose();
 					bmd = null;
