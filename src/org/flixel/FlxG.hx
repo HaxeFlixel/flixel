@@ -1029,11 +1029,11 @@ class FlxG
 			{
 				bd = cast(Graphic, BitmapData);
 			}
-            else
-            {
-                bd = Assets.getBitmapData(Graphic);
-            }
-			
+			else
+			{
+				bd = Assets.getBitmapData(Graphic);
+			}
+
 			#if !(flash || js)
 			if (additionalKey != "")
 			{
@@ -1082,7 +1082,7 @@ class FlxG
 			}
 			#end
 
-            _cache.set(key, bd);
+			_cache.set(key, bd);
 		}
 		
 		return _cache.get(key);
