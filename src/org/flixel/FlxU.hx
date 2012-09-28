@@ -155,8 +155,13 @@ class FlxU
 	 */
 	inline static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:Int = 0, ?Length:Int = 0):Dynamic
 	{
+<<<<<<< HEAD
         var res:Dynamic = null;
 		if(Objects != null)
+=======
+		var res:Dynamic = null;
+		if (Objects != null)
+>>>>>>> zaphod/FlxLayer
 		{
 			if (StartIndex < 0) StartIndex = 0;
 			if (Length < 0) Length = 0;

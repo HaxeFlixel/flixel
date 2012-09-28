@@ -898,24 +898,9 @@ class FlxG
 	 */
 	static public function checkBitmapCache(Key:String):Bool
 	{
-		return (_cache.exists(Key) && _cache.get(Key) != null) || (Assets.cachedBitmapData.exists(Key) && Assets.cachedBitmapData.get(Key) != null);
+		return (_cache.exists(Key) && _cache.get(Key) != null);
 	}
 
-    /**
-     * Get the BitmapData from the local cache and if not present check the  Assets.cachedBitmapData.
-     * @param   Key     The string key identifying the bitmap.
-     * @return  The <code>BitmapData</code> or null.
-     */
-    static public function getCachedBitmapData(Key:String):BitmapData
-    {
-        var b:BitmapData = _cache.get(Key);
-        if (b == null) {
-            b = cast Assets.cachedBitmapData.get(Key);
-        }
-
-        return b;
-    }
-		
 	/**
 	 * Generates a new <code>BitmapData</code> object (a colored square) and caches it.
 	 * @param	Width	How wide the square should be.
@@ -954,7 +939,7 @@ class FlxG
 		{
 			_cache.set(key, new BitmapData(Width, Height, true, Color));
 		}
-		return getCachedBitmapData(key);
+		return _cache.get(key);
 	}
 	
 	/**
@@ -1035,7 +1020,6 @@ class FlxG
 		if (!checkBitmapCache(key))
 		{
 			var bd:BitmapData = null;
-            var isAssetsCached:Bool = false;
 
 			if (isClass)
 			{
@@ -1048,7 +1032,6 @@ class FlxG
             else
             {
                 bd = Assets.getBitmapData(Graphic);
-                isAssetsCached = true;
             }
 			
 			#if !(flash || js)
@@ -1083,7 +1066,6 @@ class FlxG
 					}
 				}
 				
-                isAssetsCached = false;
 				bd = tempBitmap;
 			}
 			#else
@@ -1096,25 +1078,27 @@ class FlxG
 				mtx.translate(newPixels.width, 0);
 				newPixels.draw(bd, mtx);
 
-                isAssetsCached = false;
 				bd = newPixels;
-				
 			}
 			#end
 
-            if (!isAssetsCached) {
-                _cache.set(key, bd);
-            }
+            _cache.set(key, bd);
 		}
 		
-		return getCachedBitmapData(key);
+		return _cache.get(key);
 	}
 	
 	public static function removeBitmap(Graphic:String):Void
 	{
 		if (_cache.exists(Graphic))
 		{
+			var bmd:BitmapData = _cache.get(Graphic);
 			_cache.remove(Graphic);
+			if (!Assets.cachedBitmapData.exists(Graphic))
+			{
+				bmd.dispose();
+				bmd = null;
+			}
 		}
 	}
 		
@@ -1129,30 +1113,14 @@ class FlxG
 			for (key in _cache.keys())
 			{
 				bmd = _cache.get(key);
-				if (bmd != null)
+				_cache.remove(key);
+				if (!Assets.cachedBitmapData(key))
 				{
-					_cache.remove(key);
 					bmd.dispose();
 					bmd = null;
 				}
 			}
 		}
-		
-		/*var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;*/
-		/*if (cachedBitmapData != null)*/
-		/*{*/
-			/*for (key in cachedBitmapData.keys())*/
-			/*{*/
-				/*bmd = cachedBitmapData.get(key);*/
-				/*if (bmd != null)*/
-				/*{*/
-					/*cachedBitmapData.remove(key);*/
-					/*bmd.dispose();*/
-					/*bmd = null;*/
-				/*}*/
-			/*}*/
-		/*}*/
-		/*Assets.cachedBitmapData = new Hash();*/
 		_cache = new Hash();
 	}
 	
