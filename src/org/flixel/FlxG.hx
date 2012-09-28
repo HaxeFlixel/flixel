@@ -1114,7 +1114,7 @@ class FlxG
 			{
 				bmd = _cache.get(key);
 				_cache.remove(key);
-				if (!Assets.cachedBitmapData(key))
+				if (!Assets.cachedBitmapData.exists(key))
 				{
 					bmd.dispose();
 					bmd = null;
