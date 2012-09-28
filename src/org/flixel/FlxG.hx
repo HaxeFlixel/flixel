@@ -892,14 +892,29 @@ class FlxG
 	}
 	
 	/**
-	 * Check the local bitmap cache to see if a bitmap with this key has been loaded already.
+	 * Check the local bitmap cache or the Assets.cachedBitmapData to see if a bitmap with this key has been loaded already.
 	 * @param	Key		The string key identifying the bitmap.
 	 * @return	Whether or not this file can be found in the cache.
 	 */
 	static public function checkBitmapCache(Key:String):Bool
 	{
-		return (_cache.exists(Key) && _cache.get(Key) != null);
+		return (_cache.exists(Key) && _cache.get(Key) != null) || (Assets.cachedBitmapData.exists(Key) && Assets.cachedBitmapData.get(Key) != null);
 	}
+
+    /**
+     * Get the BitmapData from the local cache and if not present check the  Assets.cachedBitmapData.
+     * @param   Key     The string key identifying the bitmap.
+     * @return  The <code>BitmapData</code> or null.
+     */
+    static public function getCachedBitmapData(Key:String):BitmapData
+    {
+        var b:BitmapData = _cache.get(Key);
+        if (b == null) {
+            b = cast Assets.cachedBitmapData.get(Key);
+        }
+
+        return b;
+    }
 		
 	/**
 	 * Generates a new <code>BitmapData</code> object (a colored square) and caches it.
@@ -939,7 +954,7 @@ class FlxG
 		{
 			_cache.set(key, new BitmapData(Width, Height, true, Color));
 		}
-		return _cache.get(key);
+		return getCachedBitmapData(key);
 	}
 	
 	/**
@@ -959,6 +974,7 @@ class FlxG
 		
 		var isClass:Bool = true;
 		var isBitmap:Bool = true;
+
 		if (Std.is(Graphic, Class))
 		{
 			isClass = true;
@@ -1019,6 +1035,8 @@ class FlxG
 		if (!checkBitmapCache(key))
 		{
 			var bd:BitmapData = null;
+            var isAssetsCached:Bool = false;
+
 			if (isClass)
 			{
 				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), []).bitmapData;
@@ -1027,10 +1045,11 @@ class FlxG
 			{
 				bd = cast(Graphic, BitmapData);
 			}
-			else
-			{
-				bd = Assets.getBitmapData(Graphic);
-			}
+            else
+            {
+                bd = Assets.getBitmapData(Graphic);
+                isAssetsCached = true;
+            }
 			
 			#if !(flash || js)
 			if (additionalKey != "")
@@ -1064,6 +1083,7 @@ class FlxG
 					}
 				}
 				
+                isAssetsCached = false;
 				bd = tempBitmap;
 			}
 			#else
@@ -1075,14 +1095,19 @@ class FlxG
 				mtx.scale(-1,1);
 				mtx.translate(newPixels.width, 0);
 				newPixels.draw(bd, mtx);
+
+                isAssetsCached = false;
 				bd = newPixels;
 				
 			}
 			#end
-			_cache.set(key, bd);
+
+            if (!isAssetsCached) {
+                _cache.set(key, bd);
+            }
 		}
 		
-		return _cache.get(key);
+		return getCachedBitmapData(key);
 	}
 	
 	public static function removeBitmap(Graphic:String):Void
@@ -1113,21 +1138,21 @@ class FlxG
 			}
 		}
 		
-		var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;
-		if (cachedBitmapData != null)
-		{
-			for (key in cachedBitmapData.keys())
-			{
-				bmd = cachedBitmapData.get(key);
-				if (bmd != null)
-				{
-					cachedBitmapData.remove(key);
-					bmd.dispose();
-					bmd = null;
-				}
-			}
-		}
-		Assets.cachedBitmapData = new Hash();
+		/*var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;*/
+		/*if (cachedBitmapData != null)*/
+		/*{*/
+			/*for (key in cachedBitmapData.keys())*/
+			/*{*/
+				/*bmd = cachedBitmapData.get(key);*/
+				/*if (bmd != null)*/
+				/*{*/
+					/*cachedBitmapData.remove(key);*/
+					/*bmd.dispose();*/
+					/*bmd = null;*/
+				/*}*/
+			/*}*/
+		/*}*/
+		/*Assets.cachedBitmapData = new Hash();*/
 		_cache = new Hash();
 	}
 	
