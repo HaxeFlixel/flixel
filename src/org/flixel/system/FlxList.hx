@@ -1,5 +1,6 @@
 package org.flixel.system;
 
+import haxe.FastList;
 import org.flixel.FlxObject;
 
 /**
@@ -9,6 +10,11 @@ import org.flixel.FlxObject;
  */
 class FlxList
 {
+	static private var _listCache:FastList<FlxList> = new FastList<FlxList>();
+	#if debug
+	static private var _addedListWatch:Bool = false;
+	#end
+	
 	/**
 	 * Stores a reference to a <code>FlxObject</code>.
 	 */
@@ -28,6 +34,14 @@ class FlxList
 		object = null;
 		next = null;
 		exists = true;
+		
+		#if debug
+		if (!_addedListWatch)
+		{
+			FlxG._game.debugger.watch.add(_listCache, "size", "FlxListCacheSize");
+			_addedListWatch = true;
+		}
+		#end
 	}
 	
 	/**
@@ -35,6 +49,10 @@ class FlxList
 	 */
 	public function destroy():Void
 	{
+		// ensure we haven't been destroyed already
+		if (!exists)
+			return;
+		
 		object = null;
 		if (next != null)
 		{
@@ -42,5 +60,18 @@ class FlxList
 		}
 		next = null;
 		exists = false;
+		 _listCache.add(this);
+	}
+	
+	public static function recycle():FlxList
+	{
+		if (!_listCache.isEmpty())
+		{
+			var listElement:FlxList = _listCache.pop();
+			listElement.exists = true;
+			return listElement;
+		}
+		else
+			return new FlxList();
 	}
 }
