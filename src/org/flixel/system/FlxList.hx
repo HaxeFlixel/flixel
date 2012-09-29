@@ -1,5 +1,6 @@
 package org.flixel.system;
 
+import haxe.FastList;
 import org.flixel.FlxObject;
 
 /**
@@ -9,6 +10,8 @@ import org.flixel.FlxObject;
  */
 class FlxList
 {
+	static private var _listCache:FastList<FlxList> = new FastList<FlxList>();
+	
 	/**
 	 * Stores a reference to a <code>FlxObject</code>.
 	 */
@@ -23,7 +26,7 @@ class FlxList
 	/**
 	 * Creates a new link, and sets <code>object</code> and <code>next</code> to <code>null</code>.
 	 */
-	public function new()
+	private function new()
 	{
 		object = null;
 		next = null;
@@ -35,6 +38,10 @@ class FlxList
 	 */
 	public function destroy():Void
 	{
+		// ensure we haven't been destroyed already
+		if (!exists)
+			return;
+		
 		object = null;
 		if (next != null)
 		{
@@ -42,5 +49,18 @@ class FlxList
 		}
 		next = null;
 		exists = false;
+		 _listCache.add(this);
+	}
+	
+	public static function recycle():FlxList
+	{
+		if (!_listCache.isEmpty())
+		{
+			var listElement:FlxList = _listCache.pop();
+			listElement.exists = true;
+			return listElement;
+		}
+		else
+			return new FlxList();
 	}
 }
