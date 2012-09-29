@@ -196,7 +196,7 @@ class FlxQuadTree extends FlxRect
 	 * @param	Height		Desired height of this node.
 	 * @param	Parent		The parent branch or node.  Pass null to create a root.
 	 */
-	public function new(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null)
+	private function new(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null)
 	{
 		super(X, Y, Width, Height);
 		reset(X, Y, Width, Height, Parent);

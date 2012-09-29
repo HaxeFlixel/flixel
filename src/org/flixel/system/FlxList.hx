@@ -26,7 +26,7 @@ class FlxList
 	/**
 	 * Creates a new link, and sets <code>object</code> and <code>next</code> to <code>null</code>.
 	 */
-	public function new()
+	private function new()
 	{
 		object = null;
 		next = null;
