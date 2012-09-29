@@ -10,7 +10,11 @@ import org.flixel.FlxObject;
  */
 class FlxList
 {
-	static private var _listCache:FastList<FlxList> = new FastList<FlxList>();
+	/**
+	 * Pooling mechanism, when FlxLists are destroyed, they get added to this collection, and when they get recycled they get removed.
+	 */
+	static public var  _NUM_CACHED_FLX_LIST:Int;
+	static private var _cachedListsHead:FlxList;
 	
 	/**
 	 * Stores a reference to a <code>FlxObject</code>.
@@ -24,13 +28,41 @@ class FlxList
 	public var exists:Bool;
 	
 	/**
-	 * Creates a new link, and sets <code>object</code> and <code>next</code> to <code>null</code>.
+	 * Private, use recycle instead.
 	 */
 	private function new()
 	{
 		object = null;
 		next = null;
 		exists = true;
+	}
+	
+	/**
+	 * Recycle a cached Linked List, or creates a new one if needed.
+	 */
+	public static function recycle():FlxList
+	{
+		if (_cachedListsHead != null)
+		{
+			var cachedList:FlxList = _cachedListsHead;
+			_cachedListsHead = _cachedListsHead.next;
+			_NUM_CACHED_FLX_LIST--;
+			
+			cachedList.exists = true;
+			cachedList.next = null;
+			return cachedList;
+		}
+		else
+			return new FlxList();
+	}
+	
+	/**
+	 * Clear cached List nodes. You might want to do this when loading new levels (probably not though, no need to clear cache unless you run into memory problems).
+	 */
+	public static function clearCache():Void 
+	{
+		_cachedListsHead = null;
+		_NUM_CACHED_FLX_LIST = 0;
 	}
 	
 	/**
@@ -47,20 +79,11 @@ class FlxList
 		{
 			next.destroy();
 		}
-		next = null;
 		exists = false;
-		 _listCache.add(this);
-	}
-	
-	public static function recycle():FlxList
-	{
-		if (!_listCache.isEmpty())
-		{
-			var listElement:FlxList = _listCache.pop();
-			listElement.exists = true;
-			return listElement;
-		}
-		else
-			return new FlxList();
+		
+		// Deposit this list into the linked list for reusal.
+		next = _cachedListsHead;
+		_cachedListsHead = this;
+		_NUM_CACHED_FLX_LIST++;
 	}
 }

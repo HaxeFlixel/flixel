@@ -1,11 +1,10 @@
 package org.flixel.system;
 
-import haxe.FastList;
+import nme.system.System;
 import org.flixel.FlxBasic;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxRect;
-import org.flixel.system.FlxQuadTree;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.
@@ -186,15 +185,15 @@ class FlxQuadTree extends FlxRect
 	 */
 	static private var _checkObjectHullHeight:Float;
 	
-	static private var _treesCache:FastList<FlxQuadTree> = new FastList<FlxQuadTree>();
+	/**
+	 * Pooling mechanism, turn FlxQuadTree into a linked list, when FlxQuadTrees are destroyed, they get added to the list, and when they get recycled they get removed.
+	 */
+	static public  var _NUM_CACHED_QUAD_TREES:Int;
+	static private var _cachedTreesHead:FlxQuadTree;
+	private 	   var next:FlxQuadTree;
 	
 	/**
-	 * Instantiate a new Quad Tree node.
-	 * @param	X			The X-coordinate of the point in space.
-	 * @param	Y			The Y-coordinate of the point in space.
-	 * @param	Width		Desired width of this node.
-	 * @param	Height		Desired height of this node.
-	 * @param	Parent		The parent branch or node.  Pass null to create a root.
+	 * Private, use recycle instead.
 	 */
 	private function new(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null)
 	{
@@ -202,16 +201,36 @@ class FlxQuadTree extends FlxRect
 		reset(X, Y, Width, Height, Parent);
 	}
 	
+	/**
+	 * Recycle a cached Quad Tree node, or creates a new one if needed.
+	 * @param	X			The X-coordinate of the point in space.
+	 * @param	Y			The Y-coordinate of the point in space.
+	 * @param	Width		Desired width of this node.
+	 * @param	Height		Desired height of this node.
+	 * @param	Parent		The parent branch or node.  Pass null to create a root.
+	 */
 	public static function recycle(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null):FlxQuadTree
 	{
-		if (!_treesCache.isEmpty())
+		if (_cachedTreesHead != null)
 		{
-			var cachedTree:FlxQuadTree = _treesCache.pop();
+			var cachedTree:FlxQuadTree = _cachedTreesHead;
+			_cachedTreesHead = _cachedTreesHead.next;
+			_NUM_CACHED_QUAD_TREES--;
+			
 			cachedTree.reset(X, Y, Width, Height, Parent);
 			return cachedTree;
 		}
 		else
 			return new FlxQuadTree(X, Y, Width, Height, Parent);
+	}
+	/**
+	 * Clear cached Quad Tree nodes. You might want to do this when loading new levels (probably not though, no need to clear cache unless you run into memory problems).
+	 */
+	public static function clearCache():Void 
+	{
+		_cachedTreesHead = null;
+		_NUM_CACHED_QUAD_TREES = 0;
+		System.gc();
 	}
 	
 	public function reset(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null):Void
@@ -320,8 +339,11 @@ class FlxQuadTree extends FlxRect
 		_notifyCallback = null;
 		
 		exists = false;
-		_treesCache.add(this);
 		
+		// Deposit this tree into the linked list for reusal.
+		next = _cachedTreesHead;
+		_cachedTreesHead = this;
+		_NUM_CACHED_QUAD_TREES++;
 	}
 
 	/**
