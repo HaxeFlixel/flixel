@@ -1596,4 +1596,26 @@ class FlxSprite extends FlxObject
 	#end
 	}
 	
+	override public function overlapsPoint(point:FlxPoint, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	{
+		if (scale.x == 1 && scale.y == 1)
+		{
+			return super.overlapsPoint(point, InScreenSpace, Camera);
+		}
+		
+		if (!InScreenSpace)
+		{
+			return (point.x > x - 0.5 * width * (scale.x - 1)) && (point.x < x + width + 0.5 * width * (scale.x - 1)) && (point.y > y - 0.5 * height * (scale.y - 1)) && (point.y < y + height + 0.5 * height * (scale.y - 1));
+		}
+
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		var X:Float = point.x - Camera.scroll.x;
+		var Y:Float = point.y - Camera.scroll.y;
+		getScreenXY(_point, Camera);
+		return (X > _point.x - 0.5 * width * (scale.x - 1)) && (X < _point.x + width + 0.5 * width * (scale.x - 1)) && (Y > _point.y - 0.5 * height * (scale.y - 1)) && (Y < _point.y + height + 0.5 * height * (scale.y - 1));
+	}
+	
 }

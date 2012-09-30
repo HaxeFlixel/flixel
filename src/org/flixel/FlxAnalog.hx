@@ -76,19 +76,19 @@ class FlxAnalog extends FlxGroup
 				_stick.x = FlxG.mouse.screenX - _stick.width * 0.5;
 				_stick.y = FlxG.mouse.screenY - _stick.height * 0.5;
 				
-				if(_stick.y <= yMin)
+				if (_stick.y <= yMin)
 				{
 					_stick.y = yMin;
 				}
-				if(_stick.y >= yMax)
+				if (_stick.y >= yMax)
 				{
 					_stick.y = yMax;
 				}
-				if(_stick.x <= xMin)
+				if (_stick.x <= xMin)
 				{
 					_stick.x = xMin;
 				}
-				if(_stick.x >= xMax)
+				if (_stick.x >= xMax)
 				{
 					_stick.x = xMax;
 				}

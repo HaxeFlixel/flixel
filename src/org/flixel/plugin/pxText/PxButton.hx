@@ -4,11 +4,17 @@ import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
+import nme.events.Event;
 import nme.events.MouseEvent;
+import nme.events.TouchEvent;
 import nme.media.Sound;
 import nme.media.Sound;
-
+import org.flixel.FlxG;
+import org.flixel.FlxCamera;
+import org.flixel.FlxPoint;
+import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
+import org.flixel.system.input.Touch;
 
 #if (cpp || neko)
 import org.flixel.system.tileSheet.TileSheetManager;
@@ -19,11 +25,10 @@ import org.flixel.system.tileSheet.TileSheetManager;
  */
 class PxButton extends FlxSprite
 {
-	
 	/**
 	 * Use this to toggle checkbox-style behavior.
 	 */
-	public var on(getOn, setOn):Bool;
+	public var on(default, default):Bool;
 	
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
@@ -116,16 +121,12 @@ class PxButton extends FlxSprite
 				PxBitmapFont.store("nokiafc22", new PxBitmapFont().loadPixelizer(Assets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
 			}
 			
-			//label = new FlxText(0, 0, 80, Label);
 			label = new FlxBitmapTextField(PxBitmapFont.fetch("nokiafc22"));
 			label.setWidth(80);
-			if (Label != null)
-			{
-				label.text = Label;
-				label.fontScale = 0.7 * 10 / 11;
-				label.textColor = 0x333333;
-				label.alignment = PxTextAlign.CENTER;
-			}
+			label.text = Label;
+			label.fontScale = 0.7 * 10 / 11;
+			label.textColor = 0x333333;
+			label.alignment = PxTextAlign.CENTER;
 			labelOffset = new FlxPoint(0, 5);
 		}
 		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
@@ -200,13 +201,24 @@ class PxButton extends FlxSprite
 	{
 		if (FlxG.stage != null)
 		{
-			#if (flash || js)
-			FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			#else
-			FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			#end
+			if (!FlxG.supportsTouchEvents)
+			{
+				#if (flash || js)
+				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				#else
+				FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				#end
+			}
+			else
+			{
+				#if (flash || js)
+				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
+				#else
+				FlxGame.clickableArea.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
+				#end
+			}
 		}
-		if(label != null)
+		if (label != null)
 		{
 			label.destroy();
 			label = null;
@@ -243,15 +255,26 @@ class PxButton extends FlxSprite
 	{
 		super.preUpdate();
 		
-		if(!_initialized)
+		if (!_initialized)
 		{
-			if(FlxG.stage != null)
+			if (FlxG.stage != null)
 			{
-				#if (flash || js)
-				FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#else
-				FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#end
+				if (!FlxG.supportsTouchEvents)
+				{
+					#if (flash || js)
+					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+					#else
+					FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+					#end
+				}
+				else
+				{
+					#if (flash || js)
+					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
+					#else
+					FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
+					#end
+				}
 				_initialized = true;
 			}
 		}
@@ -281,6 +304,10 @@ class PxButton extends FlxSprite
 			default:
 				label.alpha = 0.8;
 		}
+		if (label != null)
+		{
+			label.update();
+		}
 	}
 	
 	/**
@@ -303,33 +330,18 @@ class PxButton extends FlxSprite
 			while(i < l)
 			{
 				camera = cameras[i++];
-				FlxG.mouse.getWorldPosition(camera, _point);
-				if (overlapsPoint(_point, true, camera))
+				if (!FlxG.supportsTouchEvents)
 				{
-					offAll = false;
-					if(FlxG.mouse.justPressed())
+					FlxG.mouse.getWorldPosition(camera, _point);
+					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
+				}
+				else
+				{
+					for (j in 0...FlxG.touchManager.touches.length)
 					{
-						status = PRESSED;
-						if (onDown != null)
-						{
-							onDown();
-						}
-						if (soundDown != null)
-						{
-							soundDown.play(true);
-						}
-					}
-					if(status == NORMAL)
-					{
-						status = HIGHLIGHT;
-						if (onOver != null)
-						{
-							onOver();
-						}
-						if (soundOver != null)
-						{
-							soundOver.play(true);
-						}
+						var touch:Touch = FlxG.touchManager.touches[j];
+						touch.getWorldPosition(camera, _point);
+						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}
 				}
 			}
@@ -356,11 +368,16 @@ class PxButton extends FlxSprite
 		{
 			label.x = x;
 			label.y = y;
-		}
-		if(labelOffset != null)
-		{
-			label.x += labelOffset.x;
-			label.y += labelOffset.y;
+			
+			if (labelOffset != null)
+			{
+				label.x += labelOffset.x * scale.x;
+				label.y += labelOffset.y * scale.y;
+			}
+			
+			label.scrollFactor = scrollFactor;
+			label.scale.x = scale.x;
+			label.scale.y = scale.y;
 		}
 		
 		//Then pick the appropriate frame of animation
@@ -374,15 +391,49 @@ class PxButton extends FlxSprite
 		}
 	}
 	
+	private function updateButtonStatus(Point:FlxPoint, Camera:FlxCamera, JustPressed:Bool):Bool
+	{
+		var offAll:Bool = true;
+		if (overlapsPoint(Point, true, Camera))
+		{
+			offAll = false;
+			if (JustPressed)
+			{
+				status = PRESSED;
+				if (onDown != null)
+				{
+					onDown();
+				}
+				if (soundDown != null)
+				{
+					soundDown.play(true);
+				}
+			}
+			if (status == NORMAL)
+			{
+				status = HIGHLIGHT;
+				if (onOver != null)
+				{
+					onOver();
+				}
+				if (soundOver != null)
+				{
+					soundOver.play(true);
+				}
+			}
+		}
+		
+		return offAll;
+	}
+	
 	/**
 	 * Just draws the button graphic and text label to the screen.
 	 */
 	override public function draw():Void
 	{
 		super.draw();
-		if(label != null)
+		if (label != null)
 		{
-			label.scrollFactor = scrollFactor;
 			label.cameras = cameras;
 			label.draw();
 		}
@@ -438,7 +489,7 @@ class PxButton extends FlxSprite
 	/**
 	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
 	 */
-	private function onMouseUp(event:MouseEvent):Void
+	private function onMouseUp(event:Event):Void
 	{
 		if (!exists || !visible || !active || (status != PRESSED))
 		{
@@ -452,5 +503,6 @@ class PxButton extends FlxSprite
 		{
 			soundUp.play(true);
 		}
+		status = NORMAL;
 	}
 }
