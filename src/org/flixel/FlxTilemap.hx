@@ -1193,7 +1193,14 @@ class FlxTilemap extends FlxObject
 			while(column < selectionWidth)
 			{
 				overlapFound = false;
-				tile = _tileObjects[_data[rowStart + column]];
+				var dataIndex:Int = _data[rowStart + column];
+				if (dataIndex < 0)
+				{
+					column++;
+					continue;
+				}
+					
+				tile = _tileObjects[dataIndex];
 				if (tile.allowCollisions != FlxObject.NONE)
 				{
 					tile.x = X + column * _tileWidth;
