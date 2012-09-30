@@ -6,6 +6,8 @@ import nme.system.System;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.Lib;
+import org.flixel.system.FlxList;
+import org.flixel.system.FlxQuadTree;
 
 import org.flixel.FlxU;
 import org.flixel.FlxG;
@@ -73,7 +75,7 @@ class Perf extends FlxWindow
 		#end
 		
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
-		resize(90, 80);
+		resize(90, 110);
 		
 		_lastTime = 0;
 		_updateTimer = 0;
@@ -207,6 +209,9 @@ class Perf extends FlxWindow
 			output += "\nDrwTls:" + drawCallsCount;
 			_drawCallsMarker = 0;
 			#end
+			
+			output += "\nQuadTrees:" + FlxQuadTree._NUM_CACHED_QUAD_TREES;
+			output += "\nLists:" + FlxList._NUM_CACHED_FLX_LIST;
 			
 			_text.text = output;
 			
