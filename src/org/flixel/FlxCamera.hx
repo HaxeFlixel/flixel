@@ -597,8 +597,9 @@ class FlxCamera extends FlxBasic
 	 * Tells this camera object what <code>FlxObject</code> to track.
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
+	 * @param	Offset		Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
 	 */
-	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/):Void
+	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/, ?Offset:FlxPoint):Void
 	{
 		style = Style;
 		target = Target;
@@ -608,8 +609,8 @@ class FlxCamera extends FlxBasic
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
-				var w:Float = _width / 8;
-				var h:Float = _height / 3;
+				var w:Float = (_width / 8) + (Offset != null ? Offset.x : 0);
+				var h:Float = (_height / 3) + (Offset != null ? Offset.y : 0);
 				deadzone = new FlxRect((_width - w) / 2, (_height - h) / 2 - h * 0.25, w, h);
 			case STYLE_TOPDOWN:
 				helper = FlxU.max(_width, _height) / 4;
@@ -620,8 +621,8 @@ class FlxCamera extends FlxBasic
 			case STYLE_LOCKON:
 				if (target != null) 
 				{	
-					w = target.width;
-					h = target.height;
+					w = target.width + (Offset != null ? Offset.x : 0);
+					h = target.height + (Offset != null ? Offset.y : 0);
 				}
 				deadzone = new FlxRect((_width - w) / 2, (_height - h) / 2 - h * 0.25, w, h);
 			case STYLE_SCREEN_BY_SCREEN:
