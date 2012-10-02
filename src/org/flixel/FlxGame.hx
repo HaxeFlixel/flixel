@@ -258,7 +258,7 @@ class FlxGame extends Sprite
 		}
 		for (i in 0...(_soundTrayBars.length))
 		{
-			if (i < Std.int(globalVolume)) _soundTrayBars[i].alpha = 1;
+			if (i < globalVolume) _soundTrayBars[i].alpha = 1;
 			else _soundTrayBars[i].alpha = 0.5;
 		}
 	}
@@ -574,8 +574,8 @@ class FlxGame extends Sprite
 					_accumulator = _maxAccumulation;
 				}
 				// TODO: You may uncomment following lines
-				//while(_accumulator >= Std.int(_step))
-				while(_accumulator > Std.int(_step))
+				//while(_accumulator >= _step)
+				while(_accumulator > _step)
 				{
 					step();
 					_accumulator = _accumulator - _step; 

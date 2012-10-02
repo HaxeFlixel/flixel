@@ -1029,7 +1029,7 @@ class FlxSprite extends FlxObject
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
 	 * @param	Looped		Whether or not the animation is looped or just plays once.
 	 */
-	public function addAnimation(Name:String, Frames:Array<Int>, ?FrameRate:Int = 0, ?Looped:Bool = true):Void
+	public function addAnimation(Name:String, Frames:Array<Int>, ?FrameRate:Int = 30, ?Looped:Bool = true):Void
 	{
 		_animations.push(new FlxAnim(Name, Frames, FlxU.fromIntToUInt(FrameRate), Looped));
 	}
