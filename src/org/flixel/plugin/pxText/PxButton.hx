@@ -125,7 +125,8 @@ class PxButton extends FlxSprite
 			label.setWidth(80);
 			label.text = Label;
 			label.fontScale = 0.7 * 10 / 11;
-			label.textColor = 0x333333;
+			label.color = 0x333333;
+			label.useTextColor = false;
 			label.alignment = PxTextAlign.CENTER;
 			labelOffset = new FlxPoint(0, 5);
 		}
@@ -371,13 +372,11 @@ class PxButton extends FlxSprite
 			
 			if (labelOffset != null)
 			{
-				label.x += labelOffset.x * scale.x;
-				label.y += labelOffset.y * scale.y;
+				label.x += labelOffset.x;
+				label.y += labelOffset.y;
 			}
 			
 			label.scrollFactor = scrollFactor;
-			label.scale.x = scale.x;
-			label.scale.y = scale.y;
 		}
 		
 		//Then pick the appropriate frame of animation

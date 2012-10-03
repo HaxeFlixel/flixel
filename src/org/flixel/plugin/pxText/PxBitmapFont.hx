@@ -538,20 +538,19 @@ class PxBitmapFont
 	#if (cpp || neko)
 		
 		var colorMultiplier:Float = 0.00392;
-		var red:Float = 1;
-		var green:Float = 1;
-		var blue:Float = 1;
+		var red:Float = colorMultiplier;
+		var green:Float = colorMultiplier;
+		var blue:Float = colorMultiplier;
 		
 		if (pUseColor)
 		{
-			colorMultiplier *= 0.00392;
-			
 			red = (pColor >> 16) * colorMultiplier;
 			green = (pColor >> 8 & 0xff) * colorMultiplier;
 			blue = (pColor & 0xff) * colorMultiplier;
 		}
 		
 		#if cpp
+		pSecondColor &= 0x00ffffff;
 		red *= (pSecondColor >> 16);
 		green *= (pSecondColor >> 8 & 0xff);
 		blue *= (pSecondColor & 0xff);

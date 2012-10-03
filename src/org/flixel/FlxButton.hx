@@ -309,14 +309,12 @@ class FlxButton extends FlxSprite
 			label.y = y;
 			
 			if (labelOffset != null)
-			{
-				label.x += labelOffset.x * scale.x;
-				label.y += labelOffset.y * scale.y;
+			{	
+				label.x += labelOffset.x;
+				label.y += labelOffset.y;
 			}
 			
 			label.scrollFactor = scrollFactor;
-			label.scale.x = scale.x;
-			label.scale.y = scale.y;
 		}
 		
 		//Then pick the appropriate frame of animation
