@@ -148,9 +148,9 @@ class PxButton extends FlxSprite
 		_initialized = false;
 	}
 	
-	override public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite 
+	override public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false, ?Key:String = null):FlxSprite 
 	{
-		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique);
+		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique, Key);
 		swapTileSheets();
 		return tempSprite;
 	}

@@ -333,18 +333,19 @@ class FlxSprite extends FlxObject
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
+	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite
+	public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false, ?Key:String = null):FlxSprite
 	{
 		Width = FlxU.fromIntToUInt(Width);
 		Height = FlxU.fromIntToUInt(Height);
 		
 		bakedRotation = 0;
 		#if (cpp || neko)
-		_pixels = FlxG.addBitmap(Graphic, false, Unique);
+		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key);
 		#else
-		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique);
+		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique, Key);
 		#end
 		
 		if (Reverse)
@@ -388,7 +389,11 @@ class FlxSprite extends FlxObject
 		}
 		
 		#if !(flash || js)
-		_pixels = FlxG.addBitmap(Graphic, false, Unique, null, Width, Height);
+		if (Key != null && (Width != 0 || Height != 0))
+		{
+			Key += "FrameSize:" + Width + "_" + Height;
+		}
+		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key, Width, Height);
 		#end
 		
 		height = frameHeight = Height;
@@ -407,9 +412,10 @@ class FlxSprite extends FlxObject
 	 * @param	Frame			If the Graphic has a single row of square animation frames on it, you can specify which of the frames you want to use here.  Default is -1, or "use whole graphic."
 	 * @param	AntiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedGraphic(Graphic:Dynamic, ?Rotations:Int = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false):FlxSprite
+	public function loadRotatedGraphic(Graphic:Dynamic, ?Rotations:Int = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false, ?Key:String = null):FlxSprite
 	{
 		Rotations = FlxU.fromIntToUInt(Rotations);
 		
@@ -458,6 +464,14 @@ class FlxSprite extends FlxObject
 		else if (Std.is(Graphic, Class))
 		{
 			key = Type.getClassName(Graphic);
+		}
+		else if (Std.is(Graphic, BitmapData) && Key == null)
+		{
+			key = Key;
+		}
+		else
+		{
+			return null;
 		}
 	#if (flash || js)
 		key += ":" + Frame + ":" + width + "x" + height;
