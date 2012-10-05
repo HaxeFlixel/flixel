@@ -421,7 +421,7 @@ class FlxSprite extends FlxObject
 		
 		//Create the brush and canvas
 		var rows:Int = Math.floor(Math.sqrt(Rotations));
-		var brush:BitmapData = FlxG.addBitmap(Graphic);
+		var brush:BitmapData = FlxG.addBitmap(Graphic, false, false, Key);
 		if (Frame >= 0)
 		{
 			//Using just a segment of the graphic - find the right bit here
@@ -465,7 +465,7 @@ class FlxSprite extends FlxObject
 		{
 			key = Type.getClassName(Graphic);
 		}
-		else if (Std.is(Graphic, BitmapData) && Key == null)
+		else if (Std.is(Graphic, BitmapData) && Key != null)
 		{
 			key = Key;
 		}
