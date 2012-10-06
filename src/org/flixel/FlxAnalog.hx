@@ -1,5 +1,6 @@
 package org.flixel;
 import flash.geom.Rectangle;
+import org.flixel.system.input.Touch;
 
 /**
  * 
@@ -7,105 +8,350 @@ import flash.geom.Rectangle;
  */
 class FlxAnalog extends FlxGroup
 {
-	// How fast the speed of this object is changing.	
-	private static inline var ACCELERATION:Float = 10;
+	// From radians to degrees.
+	private static inline var DEGREES:Float = (180 / Math.PI);
 	
+	// Used with public variable <code>status</code>, means not highlighted or pressed.
+	private static inline var NORMAL:Int = 0;
+	// Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	private static inline var HIGHLIGHT:Int = 1;
+	// Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	private static inline var PRESSED:Int = 2;		
+	// Shows the current state of the button.
+	public var status:Int;
+	
+	// X position of the upper left corner of this object in world space.
 	public var x:Float;
+	// Y position of the upper left corner of this object in world space.
 	public var y:Float;
-	private var _centerX:Float;
-	private var _centerY:Float;
-
+	
+	// An list of analogs that are currently active.
+	private static var _analogs:Array<FlxAnalog>;
+	// The current pointer that's active on the analog.
+	private var _currentTouch:Touch;
+	// Helper array for checking touches
+	private var _tempTouches:Array<Touch>;
+	// Helper FlxPoint object
+	private var _point:FlxPoint;
+	
+	// This function is called when the button is released.
+	public var onUp:Void->Void;
+	// This function is called when the button is pressed down.
+	public var onDown:Void->Void;
+	// This function is called when the mouse goes over the button.
+	public var onOver:Void->Void;
+	// This function is called when the button is hold down.
+	public var onPressed:Void->Void;
+	
+	// The area which the joystick will react.
 	private var _pad:Rectangle;
+	// The background of the joystick, also known as the base.
 	private var _base:FlxSprite;
+	// The thumb 
 	public var _stick:FlxSprite;
 	
-	public var accel:FlxPoint;
-	public var pressed:Bool;
-	private var yMin:Float;
-	private var yMax:Float;
-	private var xMin:Float;
-	private var xMax:Float;
-		
+	// The radius where the thumb can move.
+	private var _radius:Float;
+	private var _direction:Float;
+	private var _amount:Float;		
+	
+	// How fast the speed of this object is changing.
+	public var acceleration:FlxPoint;
+	// The speed of easing when the thumb is released.
+	private var _ease:Float;
+	
 	/**
 	 * Constructor
-	 * @param X		The x-position of the analog stick
-	 * @param Y		The y-position of the analog stick.
+	 * @param	X		The X-coordinate of the point in space.
+ 	 * @param	Y		The Y-coordinate of the point in space.
+ 	 * @param	radius	The radius where the thumb can move. If 0, the background will be use as radius.
+ 	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
 	 */
-	public function new(X:Float, Y:Float)
+	public function new(X:Float, Y:Float, Radius:Float = 0, Ease:Float = 0.25)
 	{
 		super();
 		
-		accel = new FlxPoint();
 		x = X;
-		y = Y;		
+		y = Y;
+		_radius = Radius;
+		_ease = Ease;
 		
-		yMin = 0 - 24 + y;
-		yMax = 100 - 24 + y;
-		xMin = 0 - 24 + x;
-		xMax = 100 - 24 + x;
+		if (_analogs == null)
+		{
+			_analogs = new Array<FlxAnalog>();
+		}
+		_analogs.push(this);
 		
-		_pad = new Rectangle(x, y, 100, 100);
-		_centerX = X + _pad.width * 0.25;
-		_centerY = Y + _pad.width * 0.25;
+		status = NORMAL;
+		_direction = 0;
+		_amount = 0;
+		acceleration = new FlxPoint();
 		
-		_base = new FlxSprite(X, Y, FlxAssets.imgBase);
+		_tempTouches = [];
+		_point = new FlxPoint();
+		
+		createBase();
+		createThumb();
+		createZone();
+	}
+	
+	/**
+	 * Creates the background of the analog stick.
+	 * Override this to customize the background.
+	 */
+	private function createBase():Void
+	{
+		_base = new FlxSprite(x, y).loadGraphic(FlxAssets.imgBase);
 		_base.cameras = [FlxG.camera];
+		_base.x += -_base.width * .5;
+		_base.y += -_base.height * .5;
 		_base.scrollFactor.x = _base.scrollFactor.y = 0;
 		_base.solid = false;
 		_base.ignoreDrawDebug = true;
-		add(_base);
-		
-		_stick = new FlxSprite(_centerX, _centerY, FlxAssets.imgStick);
+		add(_base);	
+	}
+	
+	/**
+	 * Creates the thumb of the analog stick.
+	 * Override this to customize the thumb.
+	 */
+	private function createThumb():Void 
+	{
+		_stick = new FlxSprite(x, y).loadGraphic(FlxAssets.imgStick);
 		_stick.cameras = [FlxG.camera];
 		_stick.scrollFactor.x = _stick.scrollFactor.y = 0;
-		_stick.width = _stick.height = 48;
-		_stick.offset.x = 20; 
-		_stick.offset.y = 3;
 		_stick.solid = false;
 		_stick.ignoreDrawDebug = true;
 		add(_stick);
 	}
 	
+	/**
+	 * Creates the touch zone. It's based on the size of the background. 
+	 * The thumb will react when the mouse is in the zone.
+	 * Override this to customize the zone.
+	 */
+	private function createZone():Void
+	{
+		if (_radius == 0)			
+		{
+			_radius = _base.width / 2;
+		}
+		_pad = new Rectangle(x - _radius, y - _radius, 2 * _radius, 2 * _radius);
+	}
+	
+	/**
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		super.destroy();
+		_analogs = null;
+		onUp = null;
+		onDown = null;
+		onOver = null;
+		onPressed = null;
+		acceleration = null;
+		_stick = null;
+		_base = null;
+		_pad = null;
+		
+		_currentTouch = null;
+		_tempTouches = null;
+		_point = null;
+	}
+	
+	/**
+	 * Update the behavior. 
+	 */
 	override public function update():Void 
 	{
-		if (FlxG.mouse.pressed())
+		var touch:Touch = null;
+		var offAll:Bool = true;
+		
+		// There is no reason to get into the loop if their is already a pointer on the analog
+		if (FlxG.supportsTouchEvents)
 		{
-			if (_pad.contains(FlxG.mouse.screenX, FlxG.mouse.screenY) || pressed)
+			if (_currentTouch != null)
 			{
-				pressed = true;
-				_stick.x = FlxG.mouse.screenX - _stick.width * 0.5;
-				_stick.y = FlxG.mouse.screenY - _stick.height * 0.5;
-				
-				if (_stick.y <= yMin)
-				{
-					_stick.y = yMin;
+				_tempTouches.push(_currentTouch);
+			}
+			else
+			{
+				for (touch in FlxG.touchManager.touches)
+				{		
+					var touchInserted:Bool = false;
+					for (analog in _analogs)
+					{
+						// check whether the pointer is already taken by another analog.
+						if (analog != this && analog._currentTouch != touch && touchInserted == false) 
+						{		
+							_tempTouches.push(touch);
+							touchInserted = true;
+						}
+					}
 				}
-				if (_stick.y >= yMax)
+			}
+			
+			for (touch in _tempTouches)
+			{
+				_point = touch.getWorldPosition(FlxG.camera, _point);
+				if (updateAnalog(_point, touch.pressed(), touch.justPressed(), touch.justReleased(), touch) == false)
 				{
-					_stick.y = yMax;
+					offAll = false;
+					break;
 				}
-				if (_stick.x <= xMin)
-				{
-					_stick.x = xMin;
-				}
-				if (_stick.x >= xMax)
-				{
-					_stick.x = xMax;
-				}
-				
-				accel.x = ((74 - (100 - _stick.x)) - x) / ACCELERATION;
-				accel.y = ((74 - (100 - _stick.y)) - y) / ACCELERATION;
 			}
 		}
 		else
 		{
-			pressed = false;			
-			_stick.x = _centerX - ((_centerX - _stick.x) / 1.5);
-			_stick.y = _centerY - ((_centerY - _stick.y) / 1.5);
-			// TODO: add motion to accel when released.
-			accel.x = 0;//FlxU.round(((74 - (100 - (_stick.x)))-x) / ACCELERATION);
-			accel.y = 0;//FlxU.round(((74 - (100 - (_stick.y)))-y) / ACCELERATION);			
+			_point = FlxG.mouse.getWorldPosition(FlxG.camera, _point);
+			if (updateAnalog(_point, FlxG.mouse.pressed(), FlxG.mouse.justPressed(), FlxG.mouse.justReleased()) == false)
+			{
+				offAll = false;
+			}
 		}
+		
+		
+		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
+		{				
+			_amount *= _ease;
+			if (Math.abs(_amount) < 0.1) 
+			{
+				_amount = 0;
+			}
+		}
+		
+		_stick.x = x + Math.cos(_direction) * _amount * _radius - (_stick.width * 0.5);
+		_stick.y = y + Math.sin(_direction) * _amount * _radius - (_stick.height * 0.5);
+		
+		if (offAll)
+		{
+			status = NORMAL;			
+		}
+		
+		_tempTouches.splice(0, _tempTouches.length);
 		super.update();
 	}
+	
+	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, ?touch:Touch = null):Bool
+	{
+		var offAll:Bool = true;
+		
+		if (_pad.contains(touchPoint.x, touchPoint.y) || (status == PRESSED))
+		{
+			offAll = false;
+			
+			if (pressed)
+			{
+				if (touch != null)
+				{
+					_currentTouch = touch;
+				}
+				status = PRESSED;			
+				if (justPressed)
+				{
+					if (onDown != null)
+					{
+						onDown();
+					}
+				}						
+				
+				if (status == PRESSED)
+				{
+					if (onPressed != null)
+					{
+						onPressed();						
+					}
+					
+					var dx:Float = touchPoint.x - x;
+					var dy:Float = touchPoint.y - y;
+					
+					var dist:Float = Math.sqrt(dx * dx + dy * dy);
+					if (dist < 1) 
+					{
+						dist = 0;
+					}
+					_direction = Math.atan2(dy, dx);
+					_amount = FlxU.min(_radius, dist) / _radius;
+					
+					acceleration.x = Math.cos(_direction) * _amount * _radius;
+					acceleration.y = Math.sin(_direction) * _amount * _radius;			
+				}					
+			}
+			else if (justReleased && status == PRESSED)
+			{				
+				_currentTouch = null;
+				status = HIGHLIGHT;
+				if (onUp != null)
+				{
+					onUp();
+				}
+				acceleration.x = 0;
+				acceleration.y = 0;
+			}					
+			
+			if (status == NORMAL)
+			{
+				status = HIGHLIGHT;
+				if (onOver != null)
+				{
+					onOver();
+				}
+			}
+		}
+		
+		return offAll;
+	}
+	
+	/**
+	 * Returns the angle in degrees.
+	 * @return	The angle.
+	 */
+	public function getAngle():Float
+	{
+		return Math.atan2(acceleration.y, acceleration.x) * DEGREES;
+	}
+	
+	/**
+	 * Whether the thumb is pressed or not.
+	 */
+	public function pressed():Bool
+	{
+		return status == PRESSED;
+	}
+	
+	/**
+	 * Whether the thumb is just pressed or not.
+	 */
+	public function justPressed():Bool
+	{
+		if (FlxG.supportsTouchEvents)
+		{
+			return _currentTouch.justPressed() && status == PRESSED;
+		}
+		return FlxG.mouse.justPressed() && status == PRESSED;
+	}
+	
+	/**
+	 * Whether the thumb is just released or not.
+	 */
+	public function justReleased():Bool
+	{
+		if (FlxG.supportsTouchEvents)
+		{
+			return _currentTouch.justReleased() && status == HIGHLIGHT;
+		}
+		return FlxG.mouse.justReleased() && status == HIGHLIGHT;
+	}
+
+	/**
+	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the analog.
+	 * @param Alpha
+	 */
+	public function setAlpha(Alpha:Float):Void
+	{
+		_base.alpha = Alpha;
+		_stick.alpha = Alpha;
+	}
+	
 }
