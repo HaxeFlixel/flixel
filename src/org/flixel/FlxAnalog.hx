@@ -183,7 +183,7 @@ class FlxAnalog extends FlxGroup
 					for (analog in _analogs)
 					{
 						// check whether the pointer is already taken by another analog.
-						if (analog != this && analog._currentTouch != touch && touchInserted == false) 
+						if (analog == this && analog._currentTouch != touch && touchInserted == false) 
 						{		
 							_tempTouches.push(touch);
 							touchInserted = true;
