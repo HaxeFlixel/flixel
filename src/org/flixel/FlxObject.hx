@@ -1020,12 +1020,10 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Handy function for checking if this object is touching a particular surface.
-	 * For slightly better performance you can just &amp; the value directly into <code>touching</code>.
-	 * However, this method is good for readability and accessibility.
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
-	public function isTouching(Direction:Int):Bool
+	public inline function isTouching(Direction:Int):Bool
 	{
 		return (touching & Direction) > NONE;
 	}
@@ -1035,7 +1033,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
-	public function justTouched(Direction:Int):Bool
+	public inline function justTouched(Direction:Int):Bool
 	{
 		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}

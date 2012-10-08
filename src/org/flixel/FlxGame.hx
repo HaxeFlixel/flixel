@@ -648,7 +648,6 @@ class FlxGame extends Sprite
 		if(_requestedReset)
 		{
 			_requestedReset = false;
-			//_requestedState = new _iState();
 			_requestedState = Type.createInstance(_iState, []);
 			_replayTimer = 0;
 			_replayCancelKeys = null;

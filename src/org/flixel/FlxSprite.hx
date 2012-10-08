@@ -80,6 +80,10 @@ class FlxSprite extends FlxObject
 	 */
 	public var finished:Bool;
 	/**
+	 * Whether the current animation gets updated or not.
+	 */
+	public var paused:Bool;
+	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 * NOTE: Edit at your own risk!!  This is intended to be read-only.
 	 */
@@ -251,6 +255,7 @@ class FlxSprite extends FlxObject
 		cameras = null;
 		
 		finished = false;
+		paused	 = true;
 		_facing = FlxObject.RIGHT;
 		_animations = new Array<FlxAnim>();
 		_flipped = 0;
@@ -641,7 +646,8 @@ class FlxSprite extends FlxObject
 	override public function postUpdate():Void
 	{
 		super.postUpdate();
-		updateAnimation();
+		if(!paused)
+			updateAnimation();
 	}
 	
 	/**
@@ -1055,7 +1061,11 @@ class FlxSprite extends FlxObject
 	 */
 	public function play(AnimName:String, ?Force:Bool = false):Void
 	{
-		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) return;
+		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished))
+		{
+			paused = false;
+			return;
+		}
 		_curFrame = 0;
 		_curIndex = 0;
 		#if (cpp || neko)
@@ -1088,6 +1098,7 @@ class FlxSprite extends FlxObject
 				}
 				#end
 				dirty = true;
+				paused = false;
 				return;
 			}
 			i++;
