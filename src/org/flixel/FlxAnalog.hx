@@ -204,7 +204,9 @@ class FlxAnalog extends FlxGroup
 		}
 		else
 		{
-			_point = FlxG.mouse.getWorldPosition(FlxG.camera, _point);
+			_point.x = FlxG.mouse.screenX;
+			_point.y = FlxG.mouse.screenY;
+        
 			if (updateAnalog(_point, FlxG.mouse.pressed(), FlxG.mouse.justPressed(), FlxG.mouse.justReleased()) == false)
 			{
 				offAll = false;
