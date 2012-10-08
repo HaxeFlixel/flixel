@@ -237,15 +237,15 @@ class FlxAnalog extends FlxGroup
 	{
 		var offAll:Bool = true;
 		
-                // Use the touch to figure out the world position if it's passed in, as 
-                // the screen coordinates passed in touchPoint are wrong
-                // if the control is used in a group, for example.
+		// Use the touch to figure out the world position if it's passed in, as 
+		// the screen coordinates passed in touchPoint are wrong
+		// if the control is used in a group, for example.
 		if (touch != null)
-                {
-                        touchPoint.x = touch.screenX;
-                        touchPoint.y = touch.screenY;
-                }
-  
+		{
+			touchPoint.x = touch.screenX;
+			touchPoint.y = touch.screenY;
+		}
+		
 		if (_pad.contains(touchPoint.x, touchPoint.y) || (status == PRESSED))
 		{
 			offAll = false;
