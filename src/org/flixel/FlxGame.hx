@@ -230,11 +230,7 @@ class FlxGame extends Sprite
 		_requestedReset = true;
 		_created = false;
 		
-		#if iphone
-		Lib.current.stage.addEventListener(Event.RESIZE, create);
-		#else
 		addEventListener(Event.ADDED_TO_STAGE, create);
-		#end
 	}
 	
 	/**
@@ -839,16 +835,10 @@ class FlxGame extends Sprite
 			return;
 		}
 		
-		#if iphone
-		Lib.current.stage.removeEventListener(Event.RESIZE, create);
-		#else
 		removeEventListener(Event.ADDED_TO_STAGE, create);
-		#end
 		
 		_total = Lib.getTimer();
-		//Set up the view window and double buffering
-		stage.scaleMode = StageScaleMode.NO_SCALE;
-		stage.align = StageAlign.TOP_LEFT;
+		
 		stage.frameRate = _flashFramerate;
 		
 		FlxG.supportsTouchEvents = Multitouch.supportsTouchEvents;
