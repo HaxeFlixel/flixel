@@ -31,9 +31,7 @@ class Main extends Sprite
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
-		
-		initialize();
-		
+				
 		var demo:FlxGame = new ${PROJECT_CLASS}();
 		addChild(demo);
 		
@@ -51,12 +49,6 @@ class Main extends Sprite
 		}
 	}
 	#end
-	
-	private function initialize():Void 
-	{
-		Lib.current.stage.align = StageAlign.TOP_LEFT;
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-	}
 	
 	// Entry point
 	public static function main() {
