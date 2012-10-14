@@ -18,7 +18,7 @@ class OgmoLevelLoader
 	
 	/**
 	 * Creates a new instance of OgmoLevelLoader and prepares the XML level data to be loaded.
-	 * This object can either be contained or ovewritten. Here's an example of 
+	 * This object can either be contained or ovewritten. IMPORTANT: Tile layers must have the Export Mode set to "CSV".
 	 * 
 	 * @param	A String or Class representing the location of xml level data.
 	 */
@@ -45,7 +45,8 @@ class OgmoLevelLoader
 	}
 	
 	/**
-	* Load a Tilemap. Collision with entities should be handled with the reference returned from this function. Here's a tip:
+	* Load a Tilemap. Tile layers must have the Export Mode set to "CSV".
+	* Collision with entities should be handled with the reference returned from this function. Here's a tip:
 	*
 		// IMPORTANT: Always collide the map with objects, not the other way around. 
 		//			  This prevents odd collision errors (collision separation code off by 1 px).

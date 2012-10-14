@@ -19,7 +19,7 @@ class FlxU
 	 * 
 	 * @param	URL		The address of the web page.
 	 */
-	public static function openURL(URL:String):Void
+	static public inline function openURL(URL:String):Void
 	{
 		Lib.getURL(new URLRequest(URL), "_blank");
 	}
@@ -29,7 +29,7 @@ class FlxU
 	 * @param	Value	Any number.
 	 * @return	The absolute value of that number.
 	 */
-	static public function abs(Value:Float):Float
+	static public inline function abs(Value:Float):Float
 	{
 		return (Value > 0) ? Value : -Value;
 	}
@@ -61,7 +61,7 @@ class FlxU
 	 * @param	Value	Any number.
 	 * @return	The rounded value of that number.
 	 */
-	static public function round(Value:Float):Int
+	static public inline function round(Value:Float):Int
 	{
 		return Std.int(Value + ((Value > 0) ? 0.5 : -0.5));
 	}
@@ -72,7 +72,7 @@ class FlxU
 	 * @param	Number2		Any number.
 	 * @return	The smaller of the two numbers.
 	 */
-	static public function min(Number1:Float, Number2:Float):Float
+	static public inline function min(Number1:Float, Number2:Float):Float
 	{
 		return (Number1 <= Number2) ? Number1 : Number2;
 	}
@@ -83,7 +83,7 @@ class FlxU
 	 * @param	Number2		Any number.
 	 * @return	The larger of the two numbers.
 	 */
-	static public function max(Number1:Float, Number2:Float):Float
+	static public inline function max(Number1:Float, Number2:Float):Float
 	{
 		return (Number1 >= Number2) ? Number1 : Number2;
 	}
@@ -97,7 +97,7 @@ class FlxU
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	static public function bound(Value:Float, Min:Float, Max:Float):Float
+	static public inline function bound(Value:Float, Min:Float, Max:Float):Float
 	{
 		var lowerBound:Float = (Value < Min) ? Min : Value;
 		return (lowerBound > Max) ? Max : lowerBound;
@@ -108,7 +108,7 @@ class FlxU
 	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	static public function srand(Seed:Float):Float
+	static public inline function srand(Seed:Float):Float
 	{
 		#if !neko
 		return ((69621 * Std.int(Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
@@ -178,7 +178,7 @@ class FlxU
 	 * Useful for finding out how long it takes to execute specific blocks of code.
 	 * @return	A <code>uint</code> to be passed to <code>FlxU.endProfile()</code>.
 	 */
-	static public function getTicks():Int
+	static public inline function getTicks():Int
 	{
 		return Lib.getTimer();
 	}
@@ -190,7 +190,7 @@ class FlxU
 	 * @param	EndTicks	The second timestamp from the system.
 	 * @return	A <code>String</code> containing the formatted time elapsed information.
 	 */
-	static public function formatTicks(StartTicks:Int, EndTicks:Int):String
+	static public inline function formatTicks(StartTicks:Int, EndTicks:Int):String
 	{
 		return (Math.abs(EndTicks - StartTicks) / 1000) + "s";
 	}
@@ -206,9 +206,9 @@ class FlxU
 	 * @return  The color as a <code>uint</code>.
 	 */
 	#if flash
-	static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, ?Alpha:Float = 1.0):UInt
+	static public inline function makeColor(Red:UInt, Green:UInt, Blue:UInt, ?Alpha:Float = 1.0):UInt
 	#else
-	static public function makeColor(Red:Int, Green:Int, Blue:Int, ?Alpha:Float = 1.0):Int
+	static public inline function makeColor(Red:Int, Green:Int, Blue:Int, ?Alpha:Float = 1.0):Int
 	#end
 	{
 		return (Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
@@ -511,7 +511,7 @@ class FlxU
 	 * @param	Object2		The second object you want to check.
 	 * @return	Whether they have the same class name or not.
 	 */
-	static public function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
+	static public inline function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
 	{
 		return Type.getClassName(Object1) == Type.getClassName(Object2);
 	}
@@ -521,7 +521,7 @@ class FlxU
 	 * @param	Name	The <code>String</code> name of the <code>Class</code> you are interested in.
 	 * @return	A <code>Class</code> object.
 	 */
-	public static function getClass(Name:String):Class<Dynamic>
+	static public inline function getClass(Name:String):Class<Dynamic>
 	{
 		return Type.resolveClass(Name);
 	}
@@ -750,16 +750,16 @@ class FlxU
 		
 	}
 	
-	static public function fromIntToUInt(number:Int):Int
+	static public inline function fromIntToUInt(number:Int):Int
 	{
 		return ((number < 0) ? -number : number);
 	}
 	
 	#if (flash || js)
-	public static var MIN_VALUE:Float = 0.0000000000000001;
+	static public inline var MIN_VALUE:Float = 0.0000000000000001;
 	#else
-	public static var MIN_VALUE:Float = 5e-324;
+	static public inline var MIN_VALUE:Float = 5e-324;
 	#end
-	public static var MAX_VALUE:Float = 1.79e+308;
+	static public inline var MAX_VALUE:Float = 1.79e+308;
 	
 }

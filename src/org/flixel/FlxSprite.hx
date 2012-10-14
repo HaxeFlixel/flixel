@@ -161,11 +161,7 @@ class FlxSprite extends FlxObject
 	 * If assigned, will be called each time the current frame changes.
 	 * A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
 	 */
-	#if flash
-	private var _callback:String->UInt->UInt->Void;
-	#else
 	private var _callback:String->Int->Int->Void;
-	#end
 	/**
 	 * Internal tracker for what direction the sprite is currently facing, used with Flash getter/setter.
 	 */
