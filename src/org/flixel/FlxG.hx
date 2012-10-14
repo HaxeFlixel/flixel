@@ -1267,9 +1267,10 @@ class FlxG
 		FlxG.cameras.splice(0, FlxG.cameras.length);
 		
 		if (NewCamera == null)
-		{
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-		}
+		else
+			NewCamera.ID = 0;
+			
 		FlxG.camera = FlxG.addCamera(NewCamera);
 	}
 	
