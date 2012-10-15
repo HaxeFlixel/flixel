@@ -18,7 +18,11 @@ class OgmoLevelLoader
 	
 	/**
 	 * Creates a new instance of OgmoLevelLoader and prepares the XML level data to be loaded.
-	 * This object can either be contained or ovewritten. IMPORTANT: Tile layers must have the Export Mode set to "CSV".
+	 * This object can either be contained or ovewritten. 
+	 * 
+	 * IMPORTANT: -> Tile layers must have the Export Mode set to "CSV".
+	 * 			  -> First tile in spritesheet must be blank or debug. It will never get drawn so don't place them in Ogmo! 
+	 * 			  	 (This is needed to support many other editors that use index 0 as empty.)
 	 * 
 	 * @param	A String or Class representing the location of xml level data.
 	 */
