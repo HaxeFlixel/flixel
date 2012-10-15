@@ -75,6 +75,10 @@ class FlxSprite extends FlxObject
 	 */
 	public var finished:Bool;
 	/**
+	 * Whether the current animation gets updated or not.
+	 */
+	public var paused:Bool;
+	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 * NOTE: Edit at your own risk!!  This is intended to be read-only.
 	 */
@@ -144,11 +148,7 @@ class FlxSprite extends FlxObject
 	 * If assigned, will be called each time the current frame changes.
 	 * A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
 	 */
-	#if flash
-	private var _callback:String->UInt->UInt->Void;
-	#else
 	private var _callback:String->Int->Int->Void;
-	#end
 	/**
 	 * Internal tracker for color tint, used with Flash getter/setter.
 	 */
@@ -224,6 +224,7 @@ class FlxSprite extends FlxObject
 		cameras = null;
 		
 		finished = false;
+		paused = true;
 		facing = FlxObject.RIGHT;
 		_animations = new Array<FlxAnim>();
 		flipped = 0;
@@ -628,7 +629,7 @@ class FlxSprite extends FlxObject
 	override public function postUpdate():Void
 	{
 		super.postUpdate();
-		updateAnimation();
+		if (!paused) updateAnimation();
 	}
 	
 	/**
@@ -1016,7 +1017,7 @@ class FlxSprite extends FlxObject
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
 	 * @param	Looped		Whether or not the animation is looped or just plays once.
 	 */
-	public function addAnimation(Name:String, Frames:Array<Int>, ?FrameRate:Int = 0, ?Looped:Bool = true):Void
+	public function addAnimation(Name:String, Frames:Array<Int>, ?FrameRate:Int = 30, ?Looped:Bool = true):Void
 	{
 		_animations.push(new FlxAnim(Name, Frames, FlxU.fromIntToUInt(FrameRate), Looped));
 	}
@@ -1042,7 +1043,11 @@ class FlxSprite extends FlxObject
 	 */
 	public function play(AnimName:String, ?Force:Bool = false):Void
 	{
-		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) return;
+		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) 
+		{
+			paused = false;
+			return;
+		}
 		_curFrame = 0;
 		_curIndex = 0;
 		#if (cpp || neko)
@@ -1075,6 +1080,7 @@ class FlxSprite extends FlxObject
 				}
 				#end
 				dirty = true;
+				paused = false;
 				return;
 			}
 			i++;

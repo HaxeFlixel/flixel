@@ -242,7 +242,7 @@ class FlxEmitter extends FlxGroup
 				on = false;
 				var i:Int = 0;
 				var l:Int = _quantity;
-				if ((l <= 0) || (l > Std.int(length)))
+				if ((l <= 0) || (l > length))
 				{
 					l = length;
 				}
@@ -255,15 +255,28 @@ class FlxEmitter extends FlxGroup
 			}
 			else
 			{
-				_timer += FlxG.elapsed;
-				while((frequency > 0) && (_timer > frequency) && on)
+				// Spawn a particle per frame
+				if (frequency <= 0)
 				{
-					_timer -= frequency;
 					emitParticle();
 					if((_quantity > 0) && (++_counter >= _quantity))
 					{
 						on = false;
 						_quantity = 0;
+					}
+				}
+				else
+				{
+					_timer += FlxG.elapsed;
+					while (_timer > frequency)
+					{
+						_timer -= frequency;
+						emitParticle();
+						if ((_quantity > 0) && (++_counter >= _quantity))
+						{
+							on = false;
+							_quantity = 0;
+						}
 					}
 				}
 			}
@@ -296,7 +309,7 @@ class FlxEmitter extends FlxGroup
 		_explode = Explode;
 		lifespan = Lifespan;
 		frequency = Frequency;
-		_quantity += Std.int(Math.abs(Quantity));
+		_quantity += Quantity;
 		
 		_counter = 0;
 		_timer = 0;

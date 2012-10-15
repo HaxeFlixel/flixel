@@ -427,7 +427,15 @@ class FlxCamera extends FlxBasic
 				var targetY:Float;
 				
 				#if (flash || js)
-				if (Std.is(target, FlxSprite) && cast(target, FlxSprite).simpleRender)
+				/* Haxe Notice:
+				* 
+				* In order to apply a fix for smooth follow, we must check if a sprite has baked rotation or is scaled.
+				* If your camera is following something other than a FlxSprite, you must implement the 'simpleRender' property.
+				* Look at 'FlxSprite.simpleRender' for an example of this. Or if you just want it on all the time, you can implement it like so:
+				* 
+				* public var simpleRender(default, null):Bool = true;
+				*/
+				if (Reflect.getProperty(target, "simpleRender") == true)
 				{
 					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001:-0.0000001));
 					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001: -0.0000001));
@@ -580,8 +588,9 @@ class FlxCamera extends FlxBasic
 	 * Tells this camera object what <code>FlxObject</code> to track.
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
+	 * @param  Offset    Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
 	 */
-	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/):Void
+	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/, ?Offset:FlxPoint):Void
 	{
 		style = Style;
 		target = Target;
@@ -591,8 +600,8 @@ class FlxCamera extends FlxBasic
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
-				var w:Float = width / 8;
-				var h:Float = height / 3;
+				var w:Float = (width / 8) + (Offset != null ? Offset.x : 0);
+				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
 				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 			case STYLE_TOPDOWN:
 				helper = FlxU.max(width, height) / 4;
@@ -603,8 +612,8 @@ class FlxCamera extends FlxBasic
 			case STYLE_LOCKON:
 				if (target != null) 
 				{	
-					w = target.width;
-					h = target.height;
+					w = target.width + (Offset != null ? Offset.x : 0);
+					h = target.height + (Offset != null ? Offset.y : 0);
 				}
 				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 			case STYLE_SCREEN_BY_SCREEN:
