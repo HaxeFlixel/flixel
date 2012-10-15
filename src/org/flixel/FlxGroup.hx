@@ -80,8 +80,6 @@ class FlxGroup extends FlxBasic
 					basic.destroy();
 				}
 			}
-			//members.length = 0;
-			members = [];
 			members = null;
 		}
 		_sortIndex = null;
