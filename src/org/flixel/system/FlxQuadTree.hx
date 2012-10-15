@@ -228,9 +228,14 @@ class FlxQuadTree extends FlxRect
 	 */
 	public static function clearCache():Void 
 	{
-		_cachedTreesHead = null;
+		// null out next pointers to help out garbage collector
+		while (_cachedTreesHead != null)
+		{
+			var node = _cachedTreesHead;
+			_cachedTreesHead = _cachedTreesHead.next;
+			node.next = null;
+		}
 		_NUM_CACHED_QUAD_TREES = 0;
-		System.gc();
 	}
 	
 	public function reset(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null):Void

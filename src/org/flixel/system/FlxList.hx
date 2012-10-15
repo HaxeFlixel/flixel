@@ -61,7 +61,14 @@ class FlxList
 	 */
 	public static function clearCache():Void 
 	{
-		_cachedListsHead = null;
+		// null out next pointers to help out garbage collector
+		while (_cachedListsHead != null)
+		{
+			var node = _cachedListsHead;
+			_cachedListsHead = _cachedListsHead.next;
+			node.object = null;
+			node.next = null;
+		}
 		_NUM_CACHED_FLX_LIST = 0;
 	}
 	
@@ -84,6 +91,6 @@ class FlxList
 		// Deposit this list into the linked list for reusal.
 		next = _cachedListsHead;
 		_cachedListsHead = this;
-		_NUM_CACHED_FLX_LIST;
+		_NUM_CACHED_FLX_LIST++;
 	}
 }
