@@ -39,7 +39,7 @@ class FlxU
 	 * @param	Value	Any number.
 	 * @return	The rounded value of that number.
 	 */
-	static public function floor(Value:Float):Int
+	static public inline function floor(Value:Float):Int
 	{
 		var number:Int = Std.int(Value);
 		return (Value > 0) ? (number) : ((number != Value) ? (number - 1) : (number));
@@ -50,7 +50,7 @@ class FlxU
 	 * @param	Value	Any number.
 	 * @return	The rounded value of that number.
 	 */
-	static public function ceil(Value:Float):Int
+	static public inline function ceil(Value:Float):Int
 	{
 		var number:Int = Std.int(Value);
 		return (Value > 0) ? ((number != Value) ? (number + 1) : (number)) : (number);
