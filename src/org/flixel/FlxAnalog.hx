@@ -183,7 +183,8 @@ class FlxAnalog extends FlxGroup
 					for (analog in _analogs)
 					{
 						// check whether the pointer is already taken by another analog.
-						if (analog != this && analog._currentTouch != touch && touchInserted == false) 
+						// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
+						if (analog == this && analog._currentTouch != touch && touchInserted == false) 
 						{		
 							_tempTouches.push(touch);
 							touchInserted = true;
@@ -204,13 +205,14 @@ class FlxAnalog extends FlxGroup
 		}
 		else
 		{
-			_point = FlxG.mouse.getWorldPosition(FlxG.camera, _point);
+			_point.x = FlxG.mouse.screenX;
+			_point.y = FlxG.mouse.screenY;
+			
 			if (updateAnalog(_point, FlxG.mouse.pressed(), FlxG.mouse.justPressed(), FlxG.mouse.justReleased()) == false)
 			{
 				offAll = false;
 			}
 		}
-		
 		
 		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
 		{				
@@ -236,6 +238,15 @@ class FlxAnalog extends FlxGroup
 	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, ?touch:Touch = null):Bool
 	{
 		var offAll:Bool = true;
+		
+		// Use the touch to figure out the world position if it's passed in, as 
+		// the screen coordinates passed in touchPoint are wrong
+		// if the control is used in a group, for example.
+		if (touch != null)
+		{
+			touchPoint.x = touch.screenX;
+			touchPoint.y = touch.screenY;
+		}
 		
 		if (_pad.contains(touchPoint.x, touchPoint.y) || (status == PRESSED))
 		{
