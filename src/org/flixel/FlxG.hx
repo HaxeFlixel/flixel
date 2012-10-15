@@ -71,10 +71,10 @@ class FlxG
 	 */
 	public static var tweener:FlxBasic = new FlxBasic();
 	
-	#if flash
-	public static var bgColor(getBgColor, setBgColor):UInt;
-	#else
+	#if neko
 	public static var bgColor(getBgColor, setBgColor):BitmapInt32;
+	#else
+	public static var bgColor(getBgColor, setBgColor):Int;
 	#end
 	
 	public static var flashFramerate(getFlashFramerate, setFlashFramerate):Int;
@@ -134,62 +134,50 @@ class FlxG
 	 * Primarily used in the visual debugger mode for bounding box displays.
 	 * Red is used to indicate an active, movable, solid object.
 	 */
-	#if flash
-	static public inline var RED:UInt = 0xffff0012;
-	#elseif (cpp || js)
-	static public inline var RED:BitmapInt32 = 0xffff0012;
-	#elseif neko
-	static public inline var RED:BitmapInt32 = {rgb: 0xff0012, a: 0xff};
+	#if neko
+	static public inline var RED:BitmapInt32 = { rgb: 0xff0012, a: 0xff };
+	#else
+	static public inline var RED:Int = 0xffff0012;
 	#end
 	/**
 	 * Green is used to indicate solid but immovable objects.
 	 */
-	#if flash
-	static public inline var GREEN:UInt = 0xff00f225;
-	#elseif (cpp || js)
-	static public inline var GREEN:BitmapInt32 = 0xff00f225;
-	#elseif neko
-	static public inline var GREEN:BitmapInt32 = {rgb: 0x00f225, a: 0xff};
+	#if neko
+	static public inline var GREEN:BitmapInt32 = { rgb: 0x00f225, a: 0xff };
+	#else
+	static public inline var GREEN:Int = 0xff00f225;
 	#end
 	/**
 	 * Blue is used to indicate non-solid objects.
 	 */
-	#if flash
-	static public inline var BLUE:UInt = 0xff0090e9;
-	#elseif (cpp || js)
-	static public inline var BLUE:BitmapInt32 = 0xff0090e9;
-	#elseif neko
-	static public inline var BLUE:BitmapInt32 = {rgb: 0x0090e9, a: 0xff};
+	#if neko
+	static public inline var BLUE:BitmapInt32 = { rgb: 0x0090e9, a: 0xff };
+	#else
+	static public inline var BLUE:Int = 0xff0090e9;
 	#end
 	/**
 	 * Pink is used to indicate objects that are only partially solid, like one-way platforms.
 	 */
-	#if flash
-	static public inline var PINK:UInt = 0xfff01eff;
-	#elseif (cpp || js)
-	static public inline var PINK:BitmapInt32 = 0xfff01eff;
-	#elseif neko
-	static public inline var PINK:BitmapInt32 = {rgb: 0xf01eff, a: 0xff};
+	#if neko
+	static public inline var PINK:BitmapInt32 = { rgb: 0xf01eff, a: 0xff };
+	#else
+	static public inline var PINK:Int = 0xfff01eff;
 	#end
 	/**
 	 * White... for white stuff.
 	 */
-	#if flash
-	static public inline var WHITE:UInt = 0xffffffff;
-	#elseif (cpp || js)
-	static public inline var WHITE:BitmapInt32 = 0xffffffff;
-	#elseif neko
-	static public inline var WHITE:BitmapInt32 = {rgb: 0xffffff, a: 0xff};
+	#if neko
+	static public inline var WHITE:BitmapInt32 = { rgb: 0xffffff, a: 0xff };
+	#else
+	static public inline var WHITE:Int = 0xffffffff;
 	#end
 	/**
 	 * And black too.
 	 */
-	#if flash
-	static public inline var BLACK:UInt = 0xff000000;
-	#elseif (cpp || js)
-	static public inline var BLACK:BitmapInt32 = 0xff000000;
-	#elseif neko
+	#if neko
 	static public inline var BLACK:BitmapInt32 = {rgb: 0x000000, a: 0xff};
+	#else
+	static public inline var BLACK:Int = 0xff000000;
 	#end
 
 	/**
@@ -1252,9 +1240,10 @@ class FlxG
 		FlxG.cameras.splice(0, FlxG.cameras.length);
 		
 		if (NewCamera == null)
-		{
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-		}
+		else
+			NewCamera.ID = 0;
+			
 		FlxG.camera = FlxG.addCamera(NewCamera);
 		NewCamera.ID = 0;
 	}
