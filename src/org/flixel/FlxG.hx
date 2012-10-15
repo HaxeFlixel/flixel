@@ -1256,6 +1256,7 @@ class FlxG
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 		}
 		FlxG.camera = FlxG.addCamera(NewCamera);
+		NewCamera.ID = 0;
 	}
 	
 	/**
