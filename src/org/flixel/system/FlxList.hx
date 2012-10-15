@@ -13,7 +13,7 @@ class FlxList
 	/**
 	 * Pooling mechanism, when FlxLists are destroyed, they get added to this collection, and when they get recycled they get removed.
 	 */
-	static public var  _NUM_CACHED_FLX_LIST:Int;
+	static public var  _NUM_CACHED_FLX_LIST:Int = 0;
 	static private var _cachedListsHead:FlxList;
 	
 	/**
@@ -84,6 +84,6 @@ class FlxList
 		// Deposit this list into the linked list for reusal.
 		next = _cachedListsHead;
 		_cachedListsHead = this;
-		_NUM_CACHED_FLX_LIST++;
+		_NUM_CACHED_FLX_LIST;
 	}
 }
