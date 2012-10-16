@@ -188,7 +188,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Pooling mechanism, turn FlxQuadTree into a linked list, when FlxQuadTrees are destroyed, they get added to the list, and when they get recycled they get removed.
 	 */
-	static public  var _NUM_CACHED_QUAD_TREES:Int;
+	static public  var _NUM_CACHED_QUAD_TREES:Int = 0;
 	static private var _cachedTreesHead:FlxQuadTree;
 	private 	   var next:FlxQuadTree;
 	
@@ -228,9 +228,14 @@ class FlxQuadTree extends FlxRect
 	 */
 	public static function clearCache():Void 
 	{
-		_cachedTreesHead = null;
+		// null out next pointers to help out garbage collector
+		while (_cachedTreesHead != null)
+		{
+			var node = _cachedTreesHead;
+			_cachedTreesHead = _cachedTreesHead.next;
+			node.next = null;
+		}
 		_NUM_CACHED_QUAD_TREES = 0;
-		System.gc();
 	}
 	
 	public function reset(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null):Void

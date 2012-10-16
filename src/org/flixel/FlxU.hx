@@ -531,10 +531,10 @@ class FlxU
 	 * @param	Velocity		Any component of velocity (e.g. 20).
 	 * @param	Acceleration	Rate at which the velocity is changing.
 	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-	 * @param	Max				An absolute value cap for the velocity.
+	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
 	 * @return	The altered Velocity value.
 	 */
-	inline static public function computeVelocity(Velocity:Float, ?Acceleration:Float = 0, ?Drag:Float = 0, ?Max:Float = 10000):Float
+	inline static public function computeVelocity(Velocity:Float, ?Acceleration:Float = 0, ?Drag:Float = 0, ?Max:Float = 0):Float
 	{
 		if (Acceleration != 0)
 		{
@@ -556,7 +556,7 @@ class FlxU
 				Velocity = 0;
 			}
 		}
-		if((Velocity != 0) && (Max != 10000))
+		if((Velocity != 0) && (Max != 0))
 		{
 			if (Velocity > Max)
 			{
