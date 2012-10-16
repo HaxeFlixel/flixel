@@ -534,6 +534,8 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
+		paused = false;
+		
 		#if (cpp || neko)
 		antialiasing = AntiAliasing;
 		#end

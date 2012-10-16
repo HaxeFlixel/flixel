@@ -165,7 +165,12 @@ class FlxSound extends FlxBasic
 	override public function destroy():Void
 	{
 		kill();
-
+		
+		if (_sound != null && _sound.hasEventListener(Event.ID3))
+		{
+			_sound.removeEventListener(Event.ID3, gotID3);
+		}
+		
 		_transform = null;
 		_sound = null;
 		exists = false;
@@ -194,11 +199,13 @@ class FlxSound extends FlxBasic
 		var fade:Float = 1.0;
 		
 		//Distance-based volume control
-		if(_target != null)
+		if (_target != null)
 		{
 			radial = FlxU.getDistance(new FlxPoint(_target.x, _target.y), new FlxPoint(x, y)) / _radius;
 			if (radial < 0) radial = 0;
 			if (radial > 1) radial = 1;
+			
+			radial = 1 - radial;
 			
 			if (_pan)
 			{
@@ -210,10 +217,10 @@ class FlxSound extends FlxBasic
 		}
 		
 		//Cross-fading volume control
-		if(_fadeOutTimer > 0)
+		if (_fadeOutTimer > 0)
 		{
 			_fadeOutTimer -= FlxG.elapsed;
-			if(_fadeOutTimer <= 0)
+			if (_fadeOutTimer <= 0)
 			{
 				if (_pauseOnFadeOut)
 				{
@@ -530,14 +537,8 @@ class FlxSound extends FlxBasic
 	private function gotID3(?event:Event = null):Void
 	{
 		FlxG.log("got ID3 info!");
-		if (_sound.id3.songName.length > 0)
-		{
-			name = _sound.id3.songName;
-		}
-		if (_sound.id3.artist.length > 0)
-		{
-			artist = _sound.id3.artist;
-		}
+		name = _sound.id3.songName;
+		artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);
 	}
 }
