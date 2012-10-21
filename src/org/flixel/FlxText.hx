@@ -233,7 +233,6 @@ class FlxText extends FlxSprite
 	}
 	#end
 	
-	
 	/**
 	 * @private
 	 */
@@ -429,18 +428,14 @@ class FlxText extends FlxSprite
 			}
 			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 			_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
-			#end
-			
+			#else
 			//Finally, update the visible pixels
 			if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
 			{
-				#if !neko
 				framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
-				#else
-				framePixels = new BitmapData(_pixels.width, _pixels.height, true, {rgb: 0, a: 0});
-				#end
 			}
 			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
+			#end
 			
 		#if (cpp || neko)
 			origin.make(frameWidth * 0.5, frameHeight * 0.5);
