@@ -395,18 +395,10 @@ class FlxG
 	 */
 	static public function getFlashFramerate():Int
 	{
-		#if flash
-		if (_game.root != null)
-		#else
 		if (_game.stage != null)
-		#end
-		{
 			return Math.floor(_game.stage.frameRate);
-		}
-		else
-		{
-			return 0;
-		}
+
+		return 0;
 	}
 		
 	/**
@@ -415,11 +407,7 @@ class FlxG
 	static public function setFlashFramerate(Framerate:Int):Int
 	{
 		_game._flashFramerate = Math.floor(Math.abs(Framerate));
-		#if flash
-		if (_game.root != null)
-		#else
 		if (_game.stage != null)
-		#end
 		{
 			_game.stage.frameRate = _game._flashFramerate;
 		}
@@ -1134,14 +1122,9 @@ class FlxG
 	 */
 	static public function getStage():Stage
 	{
-		#if flash
-		if (_game.root != null)
-		#else
 		if (_game.stage != null)
-		#end
-		{
 			return _game.stage;
-		}
+			
 		return null;
 	}
 	
