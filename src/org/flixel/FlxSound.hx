@@ -74,7 +74,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Internal tracker for total volume adjustment.
 	 */
-	private var _volumeAdjust:Float;
+	private var _volumeAdjust:Float = 1.0;
 	/**
 	 * Internal tracker for whether the sound is looping or not.
 	 */
@@ -137,8 +137,8 @@ class FlxSound extends FlxBasic
 		_sound = null;
 		_position = 0;
 		_paused = false;
-		volume = 1.0;
 		_volumeAdjust = 1.0;
+		volume = 1.0;
 		_looped = false;
 		_target = null;
 		_radius = 0;

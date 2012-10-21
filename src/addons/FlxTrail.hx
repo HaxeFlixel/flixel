@@ -37,11 +37,11 @@ class FlxTrail extends FlxGroup
 	/**
 	 *  Counts the frames passed.
 	 */
-	private var counter:Int;
+	private var counter:Int = 0;
 	/**
 	 *  How long is the trail?
 	 */
-	private var trailLength:Int;
+	private var trailLength:Int = 0;
 	/**
 	 *  Stores the trailsprite image.
 	 */
@@ -129,7 +129,7 @@ class FlxTrail extends FlxGroup
 				if (rotationsEnabled) trailSprite.angle = recentAngles[i];
 
 				// Is the trailsprite even visible?
-				trailSprite.visible = true; 
+				trailSprite.exists = true; 
 			}
 		}
 
@@ -140,7 +140,7 @@ class FlxTrail extends FlxGroup
 	{
 		recentPositions.splice(0, recentPositions.length);
 		for (i in 0 ... members.length) 
-			members[i].visible = false;
+			members[i].exists = false;
 	}
 
 	/**
@@ -159,6 +159,7 @@ class FlxTrail extends FlxGroup
 		for (i in 0 ... amount)
 		{
 			var trailSprite:FlxSprite = new FlxSprite(0, 0, image);
+			trailSprite.exists = false;
 			add(trailSprite);
 			trailSprite.alpha = transp;
 			transp -= difference;
