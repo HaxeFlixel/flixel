@@ -629,7 +629,7 @@ class FlxSprite extends FlxObject
 	override public function postUpdate():Void
 	{
 		super.postUpdate();
-		if (!paused) updateAnimation();
+		updateAnimation();
 	}
 	
 	/**
@@ -958,7 +958,7 @@ class FlxSprite extends FlxObject
 				dirty = true;
 			}
 		}
-		else if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished))
+		else if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished) && !paused)
 		{
 			_frameTimer += FlxG.elapsed;
 			while (_frameTimer > _curAnim.delay)
