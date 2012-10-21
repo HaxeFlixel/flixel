@@ -82,28 +82,16 @@ class FlxSprite extends FlxObject
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 * NOTE: Edit at your own risk!!  This is intended to be read-only.
 	 */
-	#if flash
-	public var frameWidth:UInt;
-	#else
 	public var frameWidth:Int;
-	#end
 	/**
 	 * The height of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 * NOTE: Edit at your own risk!!  This is intended to be read-only.
 	 */
-	#if flash
-	public var frameHeight:UInt;
-	#else
 	public var frameHeight:Int;
-	#end
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
-	#if flash
-	public var frames:UInt;
-	#else
 	public var frames:Int;
-	#end
 	/**
 	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
 	 */
@@ -126,19 +114,11 @@ class FlxSprite extends FlxObject
 	 * Internal, keeps track of the current frame of animation.
 	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
 	 */
-	#if flash
-	private var _curFrame:UInt;
-	#else
 	private var _curFrame:Int;
-	#end
 	/**
 	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
 	 */
-	#if flash
-	private var _curIndex:UInt;
-	#else
 	private var _curIndex:Int;
-	#end
 	/**
 	 * Internal, used to time each frame of animation.
 	 */
@@ -926,7 +906,7 @@ class FlxSprite extends FlxObject
 	 * Useful for cases when you need to update this but are buried down in too many supers.
 	 * This function is called automatically by <code>FlxSprite.postUpdate()</code>.
 	 */
-	inline private function updateAnimation():Void
+	private function updateAnimation():Void
 	{
 		if (bakedRotation > 0)
 		{
@@ -953,7 +933,7 @@ class FlxSprite extends FlxObject
 				_frameID = _framesData.frameIDs[_curIndex];
 			}
 			#end		
-			if (oldIndex != Math.floor(_curIndex))
+			if (oldIndex != _curIndex)
 			{
 				dirty = true;
 			}
