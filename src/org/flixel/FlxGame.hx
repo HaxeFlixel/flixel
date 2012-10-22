@@ -940,6 +940,7 @@ class FlxGame extends Sprite
 		if(_requestedReset)
 		{
 			resetGame();
+			switchState();
 			_requestedReset = false;
 		}
 		
