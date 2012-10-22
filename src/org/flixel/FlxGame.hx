@@ -77,10 +77,6 @@ class FlxGame extends Sprite
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
 	private var _iState:Class<FlxState>;
-	/**
-	 * Whether the game object's basic initialization has finished yet.
-	 */
-	private var _created:Bool;
 	
 	/**
 	 * Total number of milliseconds elapsed since game start.
@@ -238,7 +234,6 @@ class FlxGame extends Sprite
 		_iState = InitialState;
 		_requestedState = null;
 		_requestedReset = true;
-		_created = false;
 		
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
@@ -599,7 +594,19 @@ class FlxGame extends Sprite
 			}
 		}
 	}
-
+	
+	/**
+	 * Internal method to create a new instance of iState and reset the game. 
+	 * This gets called when the game is created, as well as when a new state is requested.
+	 */ 
+	private inline function resetGame():Void
+	{
+		_requestedState = Type.createInstance(_iState, []);
+		_replayTimer = 0;
+		_replayCancelKeys = null;
+		FlxG.reset();
+	}
+	
 	/**
 	 * If there is a state change requested during the update loop,
 	 * this function handles actual destroying the old state and related processes,
@@ -652,11 +659,8 @@ class FlxGame extends Sprite
 		//handle game reset request
 		if(_requestedReset)
 		{
+			resetGame();
 			_requestedReset = false;
-			_requestedState = Type.createInstance(_iState, []);
-			_replayTimer = 0;
-			_replayCancelKeys = null;
-			FlxG.reset();
 		}
 		//handle replay-related requests
 		if (_recordingRequested)
@@ -928,15 +932,11 @@ class FlxGame extends Sprite
 			createFocusScreen();
 		}
 		
-		// Instantiate the initial state if there's one
+		// Instantiate the initial state.
 		if(_requestedReset)
 		{
+			resetGame();
 			_requestedReset = false;
-			_requestedState = Type.createInstance(_iState, []);
-			_replayTimer = 0;
-			_replayCancelKeys = null;
-			FlxG.reset();
-			switchState();
 		}
 		
 		//Finally, set up an event for the actual game loop stuff.
