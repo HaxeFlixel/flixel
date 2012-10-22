@@ -87,6 +87,10 @@ class FlxGame extends Sprite
 	 */
 	private var _total:Int;
 	/**
+	 * Helper variable to help calculate elapsed time.
+	 */
+	private var _mark:Int;
+	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
 	 */
@@ -99,6 +103,10 @@ class FlxGame extends Sprite
 	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms. Supposed to be internal
 	 */
 	public var _step:Int;
+	/**
+	 * Milliseconds of time since last step. Supposed to be internal
+	 */
+	public var _elapsedMS:Int;
 	/**
 	 * Framerate of the Flash player (NOT the game loop). Default = 30.
 	 */
@@ -206,8 +214,9 @@ class FlxGame extends Sprite
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		FlxG.framerate = GameFramerate;
 		FlxG.flashFramerate = FlashFramerate;
-		_accumulator = _step;
+		_accumulator = _step; // add 1 to prevent crash when using > (greater than) compassion in step()
 		_total = 0;
+		_mark = 0;
 		_state = null;
 		useSoundHotKeys = true;
 		useSystemCursor = UseSystemCursor;
@@ -548,10 +557,10 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(?FlashEvent:Event = null):Void
 	{			
-		var mark:Int = Lib.getTimer();
-		var elapsedMS:Int = mark - _total;
-		_total = mark;
-		updateSoundTray(elapsedMS);
+		_mark = Lib.getTimer();
+		_elapsedMS = _mark - _total;
+		_total = _mark;
+		updateSoundTray(_elapsedMS);
 		if(!_lostFocus)
 		{
 			if((_debugger != null) && _debugger.vcr.paused)
@@ -564,14 +573,14 @@ class FlxGame extends Sprite
 			}
 			else
 			{
-				_accumulator += elapsedMS;
+				_accumulator += _elapsedMS;
 				if (_accumulator > _maxAccumulation)
 				{
 					_accumulator = _maxAccumulation;
 				}
 				// TODO: You may uncomment following lines
 				//while(_accumulator >= _step)
-				while(_accumulator > _step)
+				while (_accumulator > _step)
 				{
 					step();
 					_accumulator = _accumulator - _step; 
@@ -583,7 +592,7 @@ class FlxGame extends Sprite
 			
 			if(_debuggerUp)
 			{
-				_debugger.perf.flash(elapsedMS);
+				_debugger.perf.flash(_elapsedMS);
 				_debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
 				_debugger.perf.update();
 				_debugger.watch.update();
@@ -775,8 +784,9 @@ class FlxGame extends Sprite
 	 * May be called multiple times per "frame" or draw call.
 	 */
 	private function update():Void
-	{			
-		var mark:Int = Lib.getTimer();
+	{
+		if (_debuggerUp)
+			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
 		FlxG.elapsed = FlxG.timeScale * (_step / 1000);
 		FlxG.updateSounds();
@@ -791,9 +801,7 @@ class FlxGame extends Sprite
 		FlxG.updateCameras();
 		
 		if (_debuggerUp)
-		{
-			_debugger.perf.flixelUpdate(Lib.getTimer() - mark);
-		}
+			_debugger.perf.flixelUpdate(Lib.getTimer() - _mark);
 	}
 	
 	/**
@@ -801,7 +809,8 @@ class FlxGame extends Sprite
 	 */
 	private function draw():Void
 	{
-		var mark:Int = Lib.getTimer();
+		if (_debuggerUp)
+			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
 		#if (cpp || neko)
 		TileSheetManager.clearAllDrawData();
@@ -820,10 +829,9 @@ class FlxGame extends Sprite
 		
 		FlxG.drawPlugins();
 		FlxG.unlockCameras();
+		
 		if (_debuggerUp)
-		{
-			_debugger.perf.flixelDraw(Lib.getTimer() - mark);
-		}
+			_debugger.perf.flixelDraw(Lib.getTimer() - _mark);
 	}
 	
 	/**
@@ -919,8 +927,20 @@ class FlxGame extends Sprite
 			stage.addEventListener(Event.ACTIVATE, onFocus);
 			createFocusScreen();
 		}
+		
+		// Instantiate the initial state if there's one
+		if(_requestedReset)
+		{
+			_requestedReset = false;
+			_requestedState = Type.createInstance(_iState, []);
+			_replayTimer = 0;
+			_replayCancelKeys = null;
+			FlxG.reset();
+			switchState();
+		}
+		
 		//Finally, set up an event for the actual game loop stuff.
-		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame); 
 	}
 	
 	/**
