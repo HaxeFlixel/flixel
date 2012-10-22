@@ -96,11 +96,15 @@ class FlxGame extends Sprite
 	 */
 	private var _lostFocus:Bool;
 	/**
-	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms. Supposed to be internal
+	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms. Supposed to be internal.
 	 */
 	public var _step:Int;
 	/**
-	 * Milliseconds of time since last step. Supposed to be internal
+	 * Optimization so we don't have to divide _step by 1000 to get its value in seconds every frame. Supposed to be internal.
+	 */
+	public var _stepSeconds:Float;
+	/**
+	 * Milliseconds of time since last step. Supposed to be internal.
 	 */
 	public var _elapsedMS:Int;
 	/**
@@ -210,7 +214,7 @@ class FlxGame extends Sprite
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		FlxG.framerate = GameFramerate;
 		FlxG.flashFramerate = FlashFramerate;
-		_accumulator = _step; // add 1 to prevent crash when using > (greater than) compassion in step()
+		_accumulator = _step;
 		_total = 0;
 		_mark = 0;
 		_state = null;
@@ -792,7 +796,7 @@ class FlxGame extends Sprite
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
-		FlxG.elapsed = FlxG.timeScale * (_step / 1000);
+		FlxG.elapsed = FlxG.timeScale * _stepSeconds;
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		_state.update();
