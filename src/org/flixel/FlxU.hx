@@ -534,7 +534,7 @@ class FlxU
 	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
 	 * @return	The altered Velocity value.
 	 */
-	inline static public function computeVelocity(Velocity:Float, ?Acceleration:Float = 0, ?Drag:Float = 0, ?Max:Float = 0):Float
+	inline static public function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
 	{
 		if (Acceleration != 0)
 		{
