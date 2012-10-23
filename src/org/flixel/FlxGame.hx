@@ -138,6 +138,10 @@ class FlxGame extends Sprite
 	 */
 	private var _soundTrayTimer:Float;
 	/**
+	 * Because reading any data from DisplayObject is insanely expensive in hxcpp, keep track of whether we need to update it or not.
+	 */
+	private var _updateSoundTray:Bool;
+	/**
 	 * Helps display the volume bars on the sound tray.
 	 */
 	private var _soundTrayBars:Array<Bitmap>;
@@ -255,6 +259,7 @@ class FlxGame extends Sprite
 		_soundTrayTimer = 1;
 		_soundTray.y = 0;
 		_soundTray.visible = true;
+		_updateSoundTray = true;
 		var globalVolume:Int = Math.round(FlxG.volume * 10);
 		if (FlxG.mute)
 		{
@@ -559,7 +564,10 @@ class FlxGame extends Sprite
 		_mark = Lib.getTimer();
 		_elapsedMS = _mark - _total;
 		_total = _mark;
-		updateSoundTray(_elapsedMS);
+		
+		if(_updateSoundTray)
+			updateSoundTray(_elapsedMS);
+		
 		if(!_lostFocus)
 		{
 			if((_debugger != null) && _debugger.vcr.paused)
@@ -757,31 +765,29 @@ class FlxGame extends Sprite
 	private function updateSoundTray(MS:Float):Void
 	{
 		//animate stupid sound tray thing
-		if (_soundTray != null)
+		if (_soundTrayTimer > 0)
 		{
-			if (_soundTrayTimer > 0)
+			_soundTrayTimer -= MS/1000;
+		}
+		else if(_soundTray.y > -_soundTray.height)
+		{
+			_soundTray.y -= (MS/1000)*FlxG.height*2;
+			if(_soundTray.y <= -_soundTray.height)
 			{
-				_soundTrayTimer -= MS/1000;
-			}
-			else if(_soundTray.y > -_soundTray.height)
-			{
-				_soundTray.y -= (MS/1000)*FlxG.height*2;
-				if(_soundTray.y <= -_soundTray.height)
+				_soundTray.visible = false;
+				_updateSoundTray = false;
+				
+				//Save sound preferences
+				var soundPrefs:FlxSave = new FlxSave();
+				if(soundPrefs.bind("flixel"))
 				{
-					_soundTray.visible = false;
-					
-					//Save sound preferences
-					var soundPrefs:FlxSave = new FlxSave();
-					if(soundPrefs.bind("flixel"))
+					if (soundPrefs.data.sound == null)
 					{
-						if (soundPrefs.data.sound == null)
-						{
-							soundPrefs.data.sound = {};
-						}
-						soundPrefs.data.sound.mute = FlxG.mute;
-						soundPrefs.data.sound.volume = FlxG.volume;
-						soundPrefs.close();
+						soundPrefs.data.sound = {};
 					}
+					soundPrefs.data.sound.mute = FlxG.mute;
+					soundPrefs.data.sound.volume = FlxG.volume;
+					soundPrefs.close();
 				}
 			}
 		}
