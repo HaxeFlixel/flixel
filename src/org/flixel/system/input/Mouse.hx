@@ -33,7 +33,10 @@ class Mouse extends FlxPoint
 	 * Current Y position of the mouse pointer on the screen.
 	 */
 	public var screenY:Int;
-	
+	/**
+	 * Property to check if the cursor is visible or not.
+	 */
+	public var visible(getVisible, null):Bool;
 	/**
 	 * Helper variable for tracking whether the mouse was just pressed or just released.
 	 */
@@ -48,7 +51,7 @@ class Mouse extends FlxPoint
 	 */
 	private var _cursorContainer:Sprite;
 	/**
-	 * Don't update cursor unless we have to
+	 * Don't update cursor unless we have to (this is essentially a "visible" bool, so we avoid checking the visible property in the Sprite which is slow in cpp).
 	 */
 	private var _updateCursorContainer:Bool;
 	/**
@@ -116,18 +119,16 @@ class Mouse extends FlxPoint
 	/**
 	 * Hides the mouse cursor
 	 */
-	public function hide():Void
+	inline public function hide():Void
 	{
-		_cursorContainer.visible = false;
 		_updateCursorContainer = false;
+		_cursorContainer.visible = false;
 	}
-	
-	public var visible(getVisible, null):Bool;
 	
 	/**
 	 * Read only, check visibility of mouse cursor.
 	 */
-	public function getVisible():Bool
+	inline public function getVisible():Bool
 	{
 		return _updateCursorContainer;
 	}
