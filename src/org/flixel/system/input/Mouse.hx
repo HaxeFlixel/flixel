@@ -48,6 +48,10 @@ class Mouse extends FlxPoint
 	 */
 	private var _cursorContainer:Sprite;
 	/**
+	 * Don't update cursor unless we have to
+	 */
+	private var _updateCursorContainer:Bool;
+	/**
 	 * This is just a reference to the current cursor image, if there is one.
 	 */
 	private var _cursor:Bitmap;
@@ -97,6 +101,7 @@ class Mouse extends FlxPoint
 	 */
 	public function show(?Graphic:Dynamic = null, ?Scale:Float = 1, ?XOffset:Int = 0, ?YOffset:Int=0):Void
 	{
+		_updateCursorContainer = true;
 		_cursorContainer.visible = true;
 		if (Graphic != null)
 		{
@@ -114,6 +119,7 @@ class Mouse extends FlxPoint
 	public function hide():Void
 	{
 		_cursorContainer.visible = false;
+		_updateCursorContainer = false;
 	}
 	
 	public var visible(getVisible, null):Bool;
@@ -123,7 +129,7 @@ class Mouse extends FlxPoint
 	 */
 	public function getVisible():Bool
 	{
-		return _cursorContainer.visible;
+		return _updateCursorContainer;
 	}
 	
 	/**
@@ -218,8 +224,11 @@ class Mouse extends FlxPoint
 	private function updateCursor():Void
 	{
 		//actually position the flixel mouse cursor graphic
-		_cursorContainer.x = _globalScreenPosition.x;
-		_cursorContainer.y = _globalScreenPosition.y;
+		if (_updateCursorContainer)
+		{
+			_cursorContainer.x = _globalScreenPosition.x;
+			_cursorContainer.y = _globalScreenPosition.y;
+		}
 		
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
