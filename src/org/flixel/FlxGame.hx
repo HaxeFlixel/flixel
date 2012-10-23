@@ -452,7 +452,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash touch event.
 	 */
-	private function onTouchBegin(FlashEvent:TouchEvent):Void
+	inline private function onTouchBegin(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchBegin(FlashEvent);
 	}
@@ -461,7 +461,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash touch event.
 	 */
-	private function onTouchEnd(FlashEvent:TouchEvent):Void
+	inline private function onTouchEnd(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchEnd(FlashEvent);
 	}
@@ -470,7 +470,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash touch event.
 	 */
-	private function onTouchMove(FlashEvent:TouchEvent):Void
+	inline private function onTouchMove(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchMove(FlashEvent);
 	}
@@ -480,7 +480,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyAxisMove(FlashEvent:JoystickEvent):Void
+	inline private function onJoyAxisMove(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleAxisMove(FlashEvent);
 	}
@@ -489,7 +489,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyBallMove(FlashEvent:JoystickEvent):Void
+	inline private function onJoyBallMove(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleBallMove(FlashEvent);
 	}
@@ -498,7 +498,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyButtonDown(FlashEvent:JoystickEvent):Void
+	inline private function onJoyButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleButtonDown(FlashEvent);
 	}
@@ -507,7 +507,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyButtonUp(FlashEvent:JoystickEvent):Void
+	inline private function onJoyButtonUp(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleButtonUp(FlashEvent);
 	}
@@ -516,7 +516,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyHatMove(FlashEvent:JoystickEvent):Void
+	inline private function onJoyHatMove(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleHatMove(FlashEvent);
 	}
