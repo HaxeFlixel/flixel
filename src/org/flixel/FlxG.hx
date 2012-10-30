@@ -27,7 +27,6 @@ import nme.ui.Multitouch;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
-import org.flixel.system.layer.TileSheetManager;
 import org.flixel.tweens.misc.MultiVarTween;
 
 import org.flixel.plugin.DebugPathDisplay;
@@ -1006,11 +1005,6 @@ class FlxG
 				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Math.floor(bd.width / FrameWidth);
 				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Math.floor(bd.height / FrameHeight);
 				
-				// TODO: check these lines later
-			//	FrameWidth = Math.floor(bd.width / numHorizontalFrames);
-			//	FrameHeight = Math.floor(bd.height / numVerticalFrames);
-				// end of TODO
-				
 				#if !neko
 				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, 0x00000000);
 				#else
@@ -1571,10 +1565,6 @@ class FlxG
 		FlxLayer.clearLayerCache();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
-		
-		// TODO: remove this line later
-		TileSheetManager.clear();
-		// end of TODO
 		#end
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();

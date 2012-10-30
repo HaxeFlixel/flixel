@@ -21,7 +21,6 @@ import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxColor;
 
 import org.flixel.system.layer.TileSheetData;
-import org.flixel.system.layer.TileSheetManager;
 
 /**
  * Creates a static / glitch / monitor-corruption style effect on an FlxSprite
@@ -543,7 +542,7 @@ class GlitchSprite extends FlxSprite
 	
 	public function swapTileSheets():Void
 	{
-		if (_tileSheetData != null && _imageTileSheetData != null)
+		/*if (_tileSheetData != null && _imageTileSheetData != null)
 		{
 			var bgIndex:Int = TileSheetManager.getTileSheetIndex(_tileSheetData);
 			var imgIndex:Int = TileSheetManager.getTileSheetIndex(_imageTileSheetData);
@@ -552,11 +551,12 @@ class GlitchSprite extends FlxSprite
 			{
 				TileSheetManager.swapTileSheets(bgIndex, imgIndex);
 			}
-		}
+		}*/
 	}
 	
 	public function updateTileSheet():Void 
 	{
+		/*
 		if (_tileSheetData == null)
 		{
 			if (_pixels != null)
@@ -618,6 +618,7 @@ class GlitchSprite extends FlxSprite
 		}
 		
 		swapTileSheets();
+		*/
 	}
 	
 }

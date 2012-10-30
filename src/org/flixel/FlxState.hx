@@ -1,7 +1,7 @@
 package org.flixel;
+
 import nme.display.BitmapData;
 import org.flixel.system.layer.TileSheetData;
-import org.flixel.system.layer.TileSheetManager;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game

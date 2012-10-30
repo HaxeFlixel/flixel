@@ -347,7 +347,6 @@ class StarfieldFX extends BaseFX
 			#end
 			
 			#if (cpp || neko)
-			// TODO: update 3D starfield on cpp and neko targets
 			var starDef:StarDef = starArray[i];
 			starDef.red = rgba.red / 255;
 			starDef.green = rgba.green / 255;

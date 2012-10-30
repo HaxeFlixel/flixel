@@ -484,7 +484,6 @@ class FlxText extends FlxSprite
 	}
 	#end
 	
-	// TODO: override updateLayerInfo()
 	override public function updateLayerInfo(updateAtlas:Bool = false):Void
 	{
 		#if (cpp || neko)

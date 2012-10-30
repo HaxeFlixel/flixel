@@ -1245,7 +1245,7 @@ class FlxBar extends FlxSprite
 				
 				currDrawData[currIndex++] = alpha;
 				
-				if (percentFrame >= 0) // TODO: remove this if statement later
+				if (percentFrame >= 0)
 				{
 					// Draw filled bar
 					if (fillHorizontal)
@@ -1321,7 +1321,7 @@ class FlxBar extends FlxSprite
 				
 				currDrawData[currIndex++] = alpha;
 				
-				if (percentFrame >= 0) // TODO: remove this if statement later
+				if (percentFrame >= 0)
 				{
 					// Draw filled bar
 					var relativeX:Float = 0;

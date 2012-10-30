@@ -331,7 +331,6 @@ class FlxTileblock extends FlxSprite
 			updateLayerProps();
 			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
 			
-			// TODO: fix tile indices in _tileData using _tileIndices
 			if (_tileData != null)
 			{
 				for (i in 0...(_tileIndices.length))

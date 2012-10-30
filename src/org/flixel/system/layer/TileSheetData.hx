@@ -29,10 +29,6 @@ class TileSheetData
 		if (containsTileSheet(bitmapData))
 		{
 			tempTileSheetData = getTileSheet(bitmapData);
-			if (tempTileSheetData.isTilemap != isTilemap)
-			{
-				tempTileSheetData.isTilemap = false;
-			}
 			return getTileSheet(bitmapData);
 		}
 		
@@ -100,40 +96,14 @@ class TileSheetData
 	public var pairsData:Array<RectanglePointPair>;
 	
 	/**
-	 * special array to hold data for sprite drawing to different cameras
-	 */
-	public var drawData:Array<Array<Float>>;
-	
-	/**
-	 * drawing flags
-	 */
-	public var flags:Int;
-	
-	/**
 	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
 	 */
 	public var flxSpriteFrames:Array<FlxSpriteFrames>;
 	
-	/**
-	 * smoothing for tileSheet
-	 */
-	public var antialiasing:Bool;
-	
-	public var positionData:Array<Int>;
-	
 	public function new(tileSheet:Tilesheet, ?isTilemap:Bool = false)
 	{
 		this.tileSheet = tileSheet;
-		antialiasing = false;
 		pairsData = new Array<RectanglePointPair>();
-		drawData = new Array<Array<Float>>();
-		
-		this.isTilemap = isTilemap;
-		isColored = false;
-		updateFlags();
-		
-		positionData = [];
-		
 		flxSpriteFrames = new Array<FlxSpriteFrames>();
 	}
 	
@@ -223,53 +193,6 @@ class TileSheetData
 	}
 	
 	/**
-	 * Clears data array for next frame
-	 */
-	public function clearDrawData():Void
-	{
-		for (i in 0...(positionData.length))
-		{
-			positionData[i] = 0;
-		}
-	}
-	
-	public function render(numCameras:Int):Void
-	{
-		var cameraGraphics:Graphics;
-		var data:Array<Float>;
-		var dataLen:Int;
-		var position:Int;
-		var camera:FlxCamera;
-		var tempFlags:Int;
-		for (i in 0...(numCameras))
-		{
-			tempFlags = flags;
-			
-			data = drawData[i];
-			dataLen = data.length;
-			position = positionData[i];
-			if (dataLen > 0)
-			{
-				if (dataLen != position)
-				{
-					data.splice(position, (dataLen - position));
-				}
-				
-				camera = FlxG.cameras[i];
-				
-				if (camera.isColored())
-				{
-					tempFlags |= Graphics.TILE_RGB;
-				}
-				
-				cameraGraphics = camera._canvas.graphics;
-				tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), tempFlags);
-				TileSheetManager._DRAWCALLS++;
-			}
-		}
-	}
-	
-	/**
 	 * Adds new tileRect to tileSheet object
 	 * @return id of added tileRect
 	 */
@@ -343,54 +266,12 @@ class TileSheetData
 			pair.destroy();
 		}
 		pairsData = null;
-		drawData = null;
-		positionData = null;
 		
 		for (spriteData in flxSpriteFrames)
 		{
 			spriteData.destroy();
 		}
 		flxSpriteFrames = null;
-	}
-	
-	/**
-	 * logical flag showing what draw mode use for the tileSheet 
-	 * if it is true then tileSheet is drawn with rotation, alpha and scale 
-	 */
-	public var isTilemap(default, set_isTilemap):Bool;
-	
-	private function set_isTilemap(value:Bool):Bool 
-	{
-		isTilemap = value;
-		updateFlags();
-		return value;
-	}
-	
-	public var isColored(default, set_isColored):Bool;
-	
-	private function set_isColored(value:Bool):Bool
-	{
-		isColored = value;
-		updateFlags();
-		return value;
-	}
-	
-	private function updateFlags():Void
-	{
-		flags = 0;
-		
-		if (isTilemap == true && isColored == true)
-		{
-			flags = Graphics.TILE_RGB;
-		}
-		else if (isTilemap == false && isColored == true)
-		{
-			flags = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA | Graphics.TILE_RGB;
-		}
-		else if (isTilemap == false && isColored == false)
-		{
-			flags = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA;
-		}
 	}
 	
 }

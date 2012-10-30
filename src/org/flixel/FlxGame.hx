@@ -24,7 +24,6 @@ import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 
 #if (cpp || neko)
-import org.flixel.system.layer.TileSheetManager;
 import nme.events.JoystickEvent;
 #end
 
@@ -634,10 +633,6 @@ class FlxGame extends Sprite
 		FlxLayer.clearLayerCache();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
-		
-		// TODO: remove this line later
-		TileSheetManager.clear();
-		// end of TODO
 		#end
 		FlxG.clearBitmapCache();
 		FlxG.resetCameras();

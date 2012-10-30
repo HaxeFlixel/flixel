@@ -13,7 +13,6 @@ import org.flixel.system.layer.Node;
 
 #if (cpp || neko)
 import org.flixel.system.layer.TileSheetData;
-import org.flixel.system.layer.TileSheetManager;
 #end
 
 #if (flash || js)
@@ -170,9 +169,6 @@ class FlxSprite extends FlxObject
 	private var _matrix:Matrix;
 	
 	#if (cpp || neko)
-	// TODO: remove this line later
-	private var _tileSheetData:TileSheetData;
-	// end of TODO
 	private var _frameID:Int;
 	private var _red:Float;
 	private var _green:Float;
@@ -270,45 +266,8 @@ class FlxSprite extends FlxObject
 		{
 			framePixels.dispose();
 		}
-		framePixels = null;
-		
-		#if (cpp || neko)
-		_tileSheetData = null;
-		#end
-		
+		framePixels = null;	
 		super.destroy();
-	}
-	
-	/**
-	 * Load graphic from another FlxSprite and copy it's tileSheet data. This method usefull for non-flash targets
-	 * @param	Sprite			The FlxSprite from which you want to load graphic data
-	 * @param	AutoBuffer		Use this parameter when loading graphic from FlxSprite with "rotated" graphic (graphic loaded with loadRotatedGraphic() method). It should have the same value as you passed to loadRotatedGraphic() method for original FlxSprite.
-	 * @return					This FlxSprite instance (nice for chaining stuff together, if you're into that).
-	 */
-	// TODO: maybe remove this method after layer system will be complete
-	public function loadFrom(Sprite:FlxSprite, ?AutoBuffer:Bool = false):FlxSprite
-	{
-		_pixels = Sprite.pixels;
-		flipped = Sprite.flipped;
-		bakedRotation = Sprite.bakedRotation;
-		
-		width = frameWidth = Sprite.frameWidth;
-		height = frameHeight = Sprite.frameHeight;
-		resetHelpers();
-		if (bakedRotation > 0 && AutoBuffer == true)
-		{
-			width = Sprite.width;
-			height = Sprite.height;
-			centerOffsets();
-		}
-		
-		#if (cpp || neko)
-		_bitmapDataKey = Sprite._bitmapDataKey;
-		layer = Sprite.layer;
-		antialiasing = Sprite.antialiasing;
-		#end
-		
-		return this;
 	}
 	
 	/**
@@ -1541,21 +1500,6 @@ class FlxSprite extends FlxObject
 		#end
 		return val;
 	}
-	
-	#if (cpp || neko)	
-	/**
-	 * Gets FlxSprite's TileSheetData index in TileSheetManager
-	 */
-	public function getTileSheetIndex():Int
-	{
-		if (_tileSheetData != null)
-		{
-			return TileSheetManager.getTileSheetIndex(_tileSheetData);
-		}
-		
-		return -1;
-	}
-	#end
 	
 	/**
 	 * If the Sprite is flipped.
