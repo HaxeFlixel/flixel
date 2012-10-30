@@ -75,7 +75,7 @@ class FlxState extends FlxGroup
 	
 	public function getLayerIndex(layer:FlxLayer):Int
 	{
-		if (!layer.onStage)	return -1; 
+		if (layer == null || !layer.onStage)	return -1; 
 		return FlxU.ArrayIndexOf(_layers, layer);
 	}
 	

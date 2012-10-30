@@ -403,10 +403,10 @@ class FlxButton extends FlxSprite
 	public function swapLayers():Void
 	{
 		#if (cpp || neko)
-		if (label != null)
+		if (label != null && _layer != null)
 		{
 			var labelIndex:Int = FlxG.state.getLayerIndex(label.layer);
-			var bgIndex:Int = FlxG.state.getLayerIndex(this.layer);
+			var bgIndex:Int = FlxG.state.getLayerIndex(_layer);
 			if (bgIndex > labelIndex)
 			{
 				FlxG.state.addLayerAt(label.layer, bgIndex + 1);
@@ -414,6 +414,15 @@ class FlxButton extends FlxSprite
 		}
 		#end
 	}
+	
+	#if (cpp || neko)
+	override private function set_layer(value:FlxLayer):FlxLayer 
+	{
+		var lr:FlxLayer = super.set_layer(value);
+		swapLayers();
+		return lr;
+	}
+	#end
 	
 	/**
 	 * Updates the size of the text field to match the button.

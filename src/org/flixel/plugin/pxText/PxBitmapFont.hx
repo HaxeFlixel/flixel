@@ -29,6 +29,8 @@ class PxBitmapFont
 	private var _glyphs:IntHash<PxFontSymbol>;
 	private var _num_letters:Int;
 	private var _bgTileID:Int;
+	
+	private var _atlasGlyphs:Hash<IntHash<PxFontSymbol>>;
 	#end
 	private var _glyphString:String;
 	private var _maxHeight:Int;
@@ -44,6 +46,7 @@ class PxBitmapFont
 	private var _tileRects:Array<Rectangle>;
 	// Helper for angel code format font
 	private var _symbols:Array<HelperSymbol>;
+	// Prepared bitmapData with font glyphs
 	private var _pixels:BitmapData;
 	private var _bitmapDataKey:String;
 	
@@ -64,6 +67,8 @@ class PxBitmapFont
 		_bgTileID = -1;
 		_glyphs = new IntHash<PxFontSymbol>();
 		_num_letters = 0;
+		
+		_atlasGlyphs = new Hash<IntHash<PxFontSymbol>>();
 		#end
 	}
 	
@@ -472,6 +477,7 @@ class PxBitmapFont
 		_pixels = null;
 		_bitmapDataKey = null;
 		_glyphs = null;
+		_atlasGlyphs = null;
 	}
 	
 	#if flash
