@@ -7,15 +7,15 @@ import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.FlxG;
+import org.flixel.system.layer.Node;
 
-#if (cpp || neko)
-import org.flixel.system.tileSheet.TileSheetData;
-import org.flixel.system.tileSheet.TileSheetManager;
-#end
+// TODO: clone() method or add hash object to track layer data (i think second option is better)
 
 /**
  * Holds information and bitmap glpyhs for a bitmap font.
  * @author Johan Peitz
+ * @author Zaphod
  */
 class PxBitmapFont 
 {
@@ -28,8 +28,6 @@ class PxBitmapFont
 	#else
 	private var _glyphs:IntHash<PxFontSymbol>;
 	private var _num_letters:Int;
-	
-	private var _tileSheetData:TileSheetData;
 	private var _bgTileID:Int;
 	#end
 	private var _glyphString:String;
@@ -41,6 +39,13 @@ class PxBitmapFont
 	#end
 	
 	private var _point:Point;
+	
+	// Helper for pixelizer format font
+	private var _tileRects:Array<Rectangle>;
+	// Helper for angel code format font
+	private var _symbols:Array<HelperSymbol>;
+	private var _pixels:BitmapData;
+	private var _bitmapDataKey:String;
 	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
@@ -56,7 +61,6 @@ class PxBitmapFont
 		_colorTransform = new ColorTransform();
 		_glyphs = [];
 		#else
-		antialiasing = false;
 		_bgTileID = -1;
 		_glyphs = new IntHash<PxFontSymbol>();
 		_num_letters = 0;
@@ -85,33 +89,14 @@ class PxBitmapFont
 		
 		if (pBitmapData != null) 
 		{
-			var tileRects:Array<Rectangle> = [];
-			var result:BitmapData = preparePixelizerBitmapData(pBitmapData, tileRects);
+			_tileRects = [];
+			var result:BitmapData = preparePixelizerBitmapData(pBitmapData, _tileRects);
+			_bitmapDataKey = FlxG.getUniqueBitmapKey("font");
+			_pixels = FlxG.addBitmap(result, false, false, _bitmapDataKey);
 			var currRect:Rectangle;
 			
-			#if (cpp || neko)
-			_tileSheetData = TileSheetManager.addTileSheet(result);
-			_tileSheetData.isColored = true;
-			#end
-			
-			for (letterID in 0...(tileRects.length))
-			{
-				currRect = tileRects[letterID];
-				
-				// create glyph
-				#if (flash || js)
-				var bd:BitmapData = new BitmapData(Math.floor(currRect.width), Math.floor(currRect.height), true, 0x0);
-				bd.copyPixels(pBitmapData, currRect, ZERO_POINT, null, null, true);
-				
-				// store glyph
-				setGlyph(_glyphString.charCodeAt(letterID), bd);
-				#else
-				setGlyph(_glyphString.charCodeAt(letterID), currRect, 0, 0, Math.floor(currRect.width));
-				#end
-			}
-			
-			#if (cpp || neko)
-			_bgTileID = _tileSheetData.addTileRect(new Rectangle(result.width - 1, result.height - 1, 1, 1), ZERO_POINT);
+			#if (flash || js)
+			updateGlyphData();
 			#end
 		}
 		
@@ -130,20 +115,30 @@ class PxBitmapFont
 		
 		if (pBitmapData != null && pXMLData != null) 
 		{
-			var symbols:Array<HelperSymbol> = new Array<HelperSymbol>();
-			var result:BitmapData = prepareAngelCodeBitmapData(pBitmapData, pXMLData, symbols);
+			_symbols = new Array<HelperSymbol>();
+			var result:BitmapData = prepareAngelCodeBitmapData(pBitmapData, pXMLData, _symbols);
+			_bitmapDataKey = FlxG.getUniqueBitmapKey("font");
+			_pixels = FlxG.addBitmap(result, false, false, _bitmapDataKey);
+			#if (flash || js)
+			updateGlyphData();
+			#end
+		}
+		
+		return this;
+	}
+	
+	public function updateGlyphData(node:Node = null):Void
+	{
+		var rect:Rectangle;
+		
+		if (_symbols != null)
+		{
 			_glyphString = "";
-			var rect:Rectangle;
 			var point:Point = new Point();
 			var bd:BitmapData;
 			var charString:String;
 			
-			#if (cpp || neko)
-			_tileSheetData = TileSheetManager.addTileSheet(result);
-			_tileSheetData.isColored = true;
-			#end
-			
-			for (symbol in symbols)
+			for (symbol in _symbols)
 			{
 				rect = new Rectangle();
 				rect.x = symbol.x;
@@ -165,7 +160,6 @@ class PxBitmapFont
 					charWidth = symbol.width;
 					point.x = 0;
 				}
-				//
 				// create glyph
 				#if (flash || js)
 				bd = null;
@@ -177,28 +171,48 @@ class PxBitmapFont
 				{
 					bd = new BitmapData(charWidth, 1, true, 0x0);
 				}
-				bd.copyPixels(result, rect, point, null, null, true);
+				bd.copyPixels(_pixels, rect, point, null, null, true);
 				
 				// store glyph
 				setGlyph(symbol.charCode, bd);
 				#else
 				if (charString != " " && charString != "")
 				{
-					setGlyph(symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), charWidth);
+					setGlyph(node, symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), charWidth);
 				}
 				else
 				{
-					setGlyph(symbol.charCode, rect, Math.floor(point.x), 1, charWidth);
+					setGlyph(node, symbol.charCode, rect, Math.floor(point.x), 1, charWidth);
 				}
 				#end
 			}
 			
 			#if (cpp || neko)
-			_bgTileID = _tileSheetData.addTileRect(new Rectangle(result.width - 1, result.height - 1, 1, 1), ZERO_POINT);
+			_bgTileID = node.addTileRect(new Rectangle(_pixels.width - 1, _pixels.height - 1, 1, 1), ZERO_POINT);
 			#end
 		}
-		
-		return this;
+		else if (_tileRects != null)
+		{
+			for (letterID in 0...(_tileRects.length))
+			{
+				rect = _tileRects[letterID];
+				
+				// create glyph
+				#if (flash || js)
+				var bd:BitmapData = new BitmapData(Math.floor(rect.width), Math.floor(rect.height), true, 0x0);
+				bd.copyPixels(_pixels, rect, ZERO_POINT, null, null, true);
+				
+				// store glyph
+				setGlyph(_glyphString.charCodeAt(letterID), bd);
+				#else
+				setGlyph(node, _glyphString.charCodeAt(letterID), rect, 0, 0, Math.floor(rect.width));
+				#end
+			}
+			
+			#if (cpp || neko)
+			_bgTileID = node.addTileRect(new Rectangle(_pixels.width - 1, _pixels.height - 1, 1, 1), ZERO_POINT);
+			#end
+		}
 	}
 	
 	/**
@@ -214,6 +228,8 @@ class PxBitmapFont
 		_glyphs = new IntHash<PxFontSymbol>();
 		_bgTileID = -1;
 		#end
+		_symbols = null;
+		_tileRects = null;
 		_glyphString = "";
 	}
 	
@@ -449,10 +465,12 @@ class PxBitmapFont
 				_glyphs[i].dispose();
 			}
 		}
-		#else
-		_tileSheetData = null;
 		#end
 		
+		_symbols = null;
+		_tileRects = null;
+		_pixels = null;
+		_bitmapDataKey = null;
 		_glyphs = null;
 	}
 	
@@ -499,9 +517,9 @@ class PxBitmapFont
 		}
 	}
 	#else
-	private function setGlyph(pCharID:Int, pRect:Rectangle, ?pOffsetX:Int = 0, ?pOffsetY:Int = 0, ?pAdvanceX:Int = 0):Void
+	private function setGlyph(node:Node, pCharID:Int, pRect:Rectangle, ?pOffsetX:Int = 0, ?pOffsetY:Int = 0, ?pAdvanceX:Int = 0):Void
 	{
-		var tileID:Int = _tileSheetData.addTileRect(pRect, ZERO_POINT);
+		var tileID:Int = node.addTileRect(pRect, ZERO_POINT);
 		
 		var symbol:PxFontSymbol = new PxFontSymbol();
 		symbol.tileID = tileID;
@@ -658,23 +676,6 @@ class PxBitmapFont
 	public var numLetters(get_numLetters, null):Int;
 	
 	#if (cpp || neko)
-	public var tileSheetData(get_tileSheetData, null):TileSheetData;
-	
-	private function get_tileSheetData():TileSheetData 
-	{
-		return _tileSheetData;
-	}
-	
-	public function getTileSheetIndex():Int
-	{
-		if (_tileSheetData != null)
-		{
-			return TileSheetManager.getTileSheetIndex(_tileSheetData);
-		}
-		
-		return -1;
-	}
-	
 	public var bgTileID(get_bgTileID, null):Int;
 	
 	private function get_bgTileID():Int 
@@ -682,16 +683,18 @@ class PxBitmapFont
 		return _bgTileID;
 	}
 	
-	public var antialiasing(default, setAntialiasing):Bool;
+	public var pixels(get_pixels, null):BitmapData;
 	
-	public function setAntialiasing(val:Bool):Bool
+	private function get_pixels():BitmapData 
 	{
-		antialiasing = val;
-		if (_tileSheetData != null)
-		{
-			_tileSheetData.antialiasing = val;
-		}
-		return val;
+		return _pixels;
+	}
+	
+	public var bitmapDataKey(get_bitmapDataKey, null):String;
+	
+	private function get_bitmapDataKey():String 
+	{
+		return _bitmapDataKey;
 	}
 	#end
 	

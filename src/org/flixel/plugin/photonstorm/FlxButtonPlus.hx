@@ -24,10 +24,6 @@ import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 
-#if (cpp || neko)
-import org.flixel.system.tileSheet.TileSheetManager;
-#end
-
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
@@ -486,7 +482,7 @@ class FlxButtonPlus extends FlxGroup
 		
 		if (textNormal != null)
 		{
-			TileSheetManager.swapTileSheets(textNormal.getTileSheetIndex(), buttonNormal.getTileSheetIndex());
+			FlxG.state.addLayerAt(textNormal.layer, FlxG.state.getLayerIndex(buttonNormal.layer) + 1);
 		}
 		#end
 	}
@@ -539,7 +535,7 @@ class FlxButtonPlus extends FlxGroup
 		
 		if (textHighlight != null)
 		{
-			TileSheetManager.swapTileSheets(textHighlight.getTileSheetIndex(), buttonHighlight.getTileSheetIndex());
+			FlxG.state.addLayerAt(textHighlight.layer, FlxG.state.getLayerIndex(buttonHighlight.layer) + 1);
 		}
 		#end
 	}

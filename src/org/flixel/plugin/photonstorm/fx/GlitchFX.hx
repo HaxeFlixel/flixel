@@ -19,8 +19,9 @@ import flash.geom.Rectangle;
 import nme.display.BitmapInt32;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxColor;
-import org.flixel.system.tileSheet.TileSheetData;
-import org.flixel.system.tileSheet.TileSheetManager;
+
+import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.layer.TileSheetManager;
 
 /**
  * Creates a static / glitch / monitor-corruption style effect on an FlxSprite
@@ -554,7 +555,7 @@ class GlitchSprite extends FlxSprite
 		}
 	}
 	
-	override public function updateTileSheet():Void 
+	public function updateTileSheet():Void 
 	{
 		if (_tileSheetData == null)
 		{

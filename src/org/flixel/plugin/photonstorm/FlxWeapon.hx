@@ -257,8 +257,6 @@ class FlxWeapon
 			tempBullet.frame = frame;
 			tempBullet.antialiasing = antiAliasing;
 			#end
-			
-			tempBullet.updateTileSheet();
 			group.add(tempBullet);
 		}
 		

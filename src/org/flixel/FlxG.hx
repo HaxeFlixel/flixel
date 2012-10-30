@@ -14,6 +14,8 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.media.Sound;
 import nme.media.SoundTransform;
+import org.flixel.system.layer.Atlas;
+import org.flixel.system.layer.TileSheetData;
 
 #if (cpp || neko)
 import org.flixel.system.input.JoystickManager;
@@ -25,7 +27,7 @@ import nme.ui.Multitouch;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.Keyboard;
 import org.flixel.system.input.Mouse;
-import org.flixel.system.tileSheet.TileSheetManager;
+import org.flixel.system.layer.TileSheetManager;
 import org.flixel.tweens.misc.MultiVarTween;
 
 import org.flixel.plugin.DebugPathDisplay;
@@ -316,6 +318,7 @@ class FlxG
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
 	static public var _cache:Hash<BitmapData>;
+	static public var _lastBitmapDataKey:String;
 	
 	static public function getLibraryName():String
 	{
@@ -886,35 +889,30 @@ class FlxG
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	#if flash
+	#if (flash || js)
 	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, ?Unique:Bool = false, ?Key:String = null):BitmapData
 	#else
 	static public function createBitmap(Width:Int, Height:Int, Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):BitmapData
 	#end
 	{
 		var key:String = Key;
-		if(key == null)
+		if (key == null)
 		{
 			#if !neko
 			key = Width + "x" + Height + ":" + Color;
 			#else
 			key = Width + "x" + Height + ":" + Color.a + "." + Color.rgb;
 			#end
-			if(Unique && checkBitmapCache(key))
+			if (Unique && checkBitmapCache(key))
 			{
-				var inc:Int = 0;
-				var ukey:String;
-				do
-				{
-					ukey = key + inc++;
-				} while(checkBitmapCache(ukey));
-				key = ukey;
+				key = getUniqueBitmapKey(key);
 			}
 		}
 		if (!checkBitmapCache(key))
 		{
 			_cache.set(key, new BitmapData(Width, Height, true, Color));
 		}
+		_lastBitmapDataKey = key;
 		return _cache.get(key);
 	}
 	
@@ -977,15 +975,9 @@ class FlxG
 			key += (Reverse ? "_REVERSE_" : "");
 			key += additionalKey;
 			
-			if (Unique && checkBitmapCache(key))
+			if (Unique)
 			{
-				var inc:Int = 0;
-				var ukey:String;
-				do
-				{
-					ukey = key + inc++;
-				} while(checkBitmapCache(ukey));
-				key = ukey;
+				key = getUniqueBitmapKey(key);
 			}
 		}
 		
@@ -1014,8 +1006,10 @@ class FlxG
 				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Math.floor(bd.width / FrameWidth);
 				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Math.floor(bd.height / FrameHeight);
 				
-				FrameWidth = Math.floor(bd.width / numHorizontalFrames);
-				FrameHeight = Math.floor(bd.height / numVerticalFrames);
+				// TODO: check these lines later
+			//	FrameWidth = Math.floor(bd.width / numHorizontalFrames);
+			//	FrameHeight = Math.floor(bd.height / numVerticalFrames);
+				// end of TODO
 				
 				#if !neko
 				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, 0x00000000);
@@ -1035,7 +1029,6 @@ class FlxG
 					{
 						tempPoint.y = j * (FrameHeight + 1);
 						tempRect.y = j * FrameHeight;
-						
 						tempBitmap.copyPixels(bd, tempRect, tempPoint);
 					}
 				}
@@ -1058,7 +1051,36 @@ class FlxG
 			_cache.set(key, bd);
 		}
 		
+		_lastBitmapDataKey = key;
 		return _cache.get(key);
+	}
+	
+	public static function getCacheKeyFor(bmd:BitmapData):String
+	{
+		for (key in _cache.keys())
+		{
+			var data:BitmapData = _cache.get(key);
+			if (data == bmd)
+			{
+				return key;
+			}
+		}
+		return null;
+	}
+	
+	public static function getUniqueBitmapKey(baseKey:String = "pixels"):String
+	{
+		if (checkBitmapCache(baseKey))
+		{
+			var inc:Int = 0;
+			var ukey:String;
+			do
+			{
+				ukey = baseKey + inc++;
+			} while(checkBitmapCache(ukey));
+			baseKey = ukey;
+		}
+		return baseKey;
 	}
 	
 	private static function fromAssetsCache(bmd:BitmapData):Bool
@@ -1091,7 +1113,7 @@ class FlxG
 			}
 		}
 	}
-		
+	
 	/**
 	 * Dumps the cache's image references.
 	 */
@@ -1114,6 +1136,19 @@ class FlxG
 		_cache = new Hash();
 	}
 	
+	/**
+	 * Clears nme.Assests.cachedBitmapData
+	 */
+	static public function clearAssetsCache():Void
+	{
+		for (key in Assets.cachedBitmapData.keys())
+		{
+			var bmd:BitmapData = Assets.cachedBitmapData.get(key);
+			bmd.dispose();
+			Assets.cachedBitmapData.remove(key);
+		}
+	}
+	
 	public static var stage(getStage, null):Stage;
 	
 	/**
@@ -1123,8 +1158,9 @@ class FlxG
 	static public function getStage():Stage
 	{
 		if (_game.stage != null)
+		{
 			return _game.stage;
-			
+		}
 		return null;
 	}
 	
@@ -1222,11 +1258,9 @@ class FlxG
 		}
 		FlxG.cameras.splice(0, FlxG.cameras.length);
 		
-		if (NewCamera == null)
+		if (NewCamera == null)	
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-		else
-			NewCamera.ID = 0;
-			
+		
 		FlxG.camera = FlxG.addCamera(NewCamera);
 		NewCamera.ID = 0;
 	}
@@ -1534,7 +1568,13 @@ class FlxG
 	{
 		#if (cpp || neko)
 		PxBitmapFont.clearStorage();
+		FlxLayer.clearLayerCache();
+		Atlas.clearAtlasCache();
+		TileSheetData.clear();
+		
+		// TODO: remove this line later
 		TileSheetManager.clear();
+		// end of TODO
 		#end
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
@@ -1651,10 +1691,10 @@ class FlxG
 		var cams:Array<FlxCamera> = FlxG.cameras;
 		var i:Int = 0;
 		var l:Int = cams.length;
-		while(i < l)
+		while (i < l)
 		{
 			cam = cams[i++];
-			if((cam != null) && cam.exists)
+			if ((cam != null) && cam.exists)
 			{
 				if (cam.active)
 				{

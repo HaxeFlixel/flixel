@@ -5,10 +5,7 @@ import nme.display.BitmapInt32;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
-
-#if (cpp || neko)
-import org.flixel.system.tileSheet.TileSheetManager;
-#end
+import org.flixel.FlxLayer;
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -50,17 +47,18 @@ class FlxText extends FlxSprite
 	 * @param	Y				The Y position of the text.
 	 * @param	Width			The width of the text object (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
-	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or nto
+	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 */
 	public function new(X:Float, Y:Float, Width:Int, ?Text:String = null, ?EmbeddedFont:Bool = true)
 	{
+		super(X, Y);
 		Width = FlxU.fromIntToUInt(Width);
 		
-		super(X, Y);
+		var key:String = FlxG.getUniqueBitmapKey("text");
 		#if !neko
-		makeGraphic(Width, 1, 0);
+		makeGraphic(Width, 1, 0, false, key);
 		#else
-		makeGraphic(Width, 1, {rgb: 0, a: 0});
+		makeGraphic(Width, 1, {rgb: 0, a: 0}, false, key);
 		#end
 		
 		if (Text == null)
@@ -73,7 +71,6 @@ class FlxText extends FlxSprite
 		_textField.multiline = true;
 		_textField.wordWrap = true;
 		var format:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
-		//_textField.setTextFormat(format);
 		_textField.defaultTextFormat = format;
 		_textField.text = Text;
 		#if flash
@@ -356,9 +353,9 @@ class FlxText extends FlxSprite
 		#if (cpp || neko)
 		if (AreYouSure)
 		{
+			_regen = true;
 		#end
-		
-			if(_regen)
+			if (_regen)
 			{
 				//Need to generate a new buffer to store the text graphic
 				height = _textField.textHeight;
@@ -385,7 +382,7 @@ class FlxText extends FlxSprite
 				#end
 			}
 			
-			if((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
+			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
 			{
 				//Now that we've cleared a buffer, we need to actually render the text to it
 				var format:TextFormat = _textField.defaultTextFormat;
@@ -408,7 +405,7 @@ class FlxText extends FlxSprite
 					#end
 				}
 				//Render a single pixel shadow beneath the text
-				if(_shadow > 0)
+				if (_shadow > 0)
 				{
 					_textField.setTextFormat(new TextFormat(formatAdjusted.font, formatAdjusted.size, _shadow, null, null, null, null, null, formatAdjusted.align));
 					_matrix.translate(1, 1);
@@ -420,14 +417,8 @@ class FlxText extends FlxSprite
 				_pixels.draw(_textField, _matrix, _colorTransform);
 				_textField.setTextFormat(new TextFormat(format.font, format.size, format.color, null, null, null, null, null, format.align));
 			}
-			
 			#if (cpp || neko)
-			if (_tileSheetData != null)
-			{
-				TileSheetManager.removeTileSheet(_tileSheetData);
-			}
-			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
+			updateLayerInfo();
 			#else
 			//Finally, update the visible pixels
 			if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
@@ -483,5 +474,42 @@ class FlxText extends FlxSprite
 	}
 	#end
 	
+	/**
+	 * FlxText objects can't be added on any level. They create their own layers
+	 */
+	#if (cpp || neko)
+	override private function set_layer(value:FlxLayer):FlxLayer 
+	{
+		return value;
+	}
+	#end
 	
+	// TODO: override updateLayerInfo()
+	override public function updateLayerInfo(updateAtlas:Bool = false):Void
+	{
+		#if (cpp || neko)
+		_layer = FlxG.state.getLayerFor(_bitmapDataKey);
+		if (_pixels != FlxG._cache.get(_bitmapDataKey))
+		{
+			FlxG._cache.get(_bitmapDataKey).dispose();
+			FlxG._cache.set(_bitmapDataKey, _pixels);
+			_layer.atlas.clearAndFillWith(_pixels);
+			_layer.atlas = _layer.atlas;
+		}
+		_node = _layer.atlas.getNodeByKey(_bitmapDataKey);
+		updateFrameData();
+		#end
+	}
+	
+	override public function updateFrameData():Void
+	{
+	#if (cpp || neko)
+		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
+		{
+			updateLayerProps();
+			_framesData = _node.addSpriteFramesData(Math.floor(width), Math.floor(height));
+			_frameID = _framesData.frameIDs[0];
+		}
+	#end
+	}
 }

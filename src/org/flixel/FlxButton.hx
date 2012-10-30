@@ -8,9 +8,8 @@ import nme.events.MouseEvent;
 import nme.events.TouchEvent;
 import nme.media.Sound;
 import nme.media.Sound;
+import org.flixel.FlxLayer;
 import org.flixel.system.input.Touch;
-import org.flixel.system.tileSheet.TileSheetManager;
-
 import org.flixel.FlxSprite;
 
 /**
@@ -133,7 +132,7 @@ class FlxButton extends FlxSprite
 	override public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false, ?Key:String = null):FlxSprite 
 	{
 		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique, Key);
-		swapTileSheets();
+		swapLayers();
 		return tempSprite;
 	}
 	
@@ -394,23 +393,23 @@ class FlxButton extends FlxSprite
 		#end
 		
 		var result:FlxSprite = super.makeGraphic(Width, Height, Color, Unique, Key);
-		swapTileSheets();
+		swapLayers();
 		return result;
 	}
 	
 	/**
 	 * Helper function for changing draw order of button's background and label.
 	 */
-	private function swapTileSheets():Void
+	public function swapLayers():Void
 	{
 		#if (cpp || neko)
 		if (label != null)
 		{
-			var labelIndex:Int = label.getTileSheetIndex();
-			var bgIndex:Int = this.getTileSheetIndex();
+			var labelIndex:Int = FlxG.state.getLayerIndex(label.layer);
+			var bgIndex:Int = FlxG.state.getLayerIndex(this.layer);
 			if (bgIndex > labelIndex)
 			{
-				TileSheetManager.swapTileSheets(labelIndex, bgIndex);
+				FlxG.state.addLayerAt(label.layer, bgIndex + 1);
 			}
 		}
 		#end
@@ -483,4 +482,5 @@ class FlxButton extends FlxSprite
 		}
 		status = NORMAL;
 	}
+	
 }

@@ -46,7 +46,16 @@ class FlxSkewedSprite extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if(_flickerTimer != 0)
+		#if (cpp || neko)
+		// Don't try to draw if object isn't on any layer 
+		// or layer isn't added to state
+		if (_layer == null || _layer.onStage == false)
+		{
+			return;
+		}
+		#end
+		
+		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
 			if (_flicker)
@@ -87,8 +96,8 @@ class FlxSkewedSprite extends FlxSprite
 			}
 			
 			#if (cpp || neko)
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = _tileSheetData.positionData[camera.ID];
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
@@ -130,7 +139,7 @@ class FlxSkewedSprite extends FlxSprite
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (_tileSheetData.isColored || camera.isColored())
+				if (_layer.isColored || camera.isColored())
 				{
 					if (camera.isColored())
 					{
@@ -148,7 +157,7 @@ class FlxSkewedSprite extends FlxSprite
 				
 				currDrawData[currIndex++] = alpha;
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 				#end
 			}
 			else
@@ -211,7 +220,7 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _matrix.c;
 				currDrawData[currIndex++] = _matrix.d;
 				
-				if (_tileSheetData.isColored || camera.isColored())
+				if (_layer.isColored || camera.isColored())
 				{
 					if (camera.isColored())
 					{
@@ -229,7 +238,7 @@ class FlxSkewedSprite extends FlxSprite
 				
 				currDrawData[currIndex++] = alpha;
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;

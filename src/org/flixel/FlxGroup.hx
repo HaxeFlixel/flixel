@@ -1,4 +1,5 @@
 package org.flixel;
+import org.flixel.FlxLayer;
 
 /**
  * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
@@ -203,6 +204,9 @@ class FlxGroup extends FlxBasic
 				{
 					length = i + 1;
 				}
+				#if (cpp || neko)
+				addToGroupLayer(Object);
+				#end
 				return Object;
 			}
 			i++;
@@ -231,10 +235,39 @@ class FlxGroup extends FlxBasic
 		
 		//If we made it this far, then we successfully grew the group,
 		//and we can go ahead and add the object at the first open slot.
+		#if (cpp || neko)
+		addToGroupLayer(Object);
+		#end
 		members[i] = Object;
 		length = i + 1;
 		return Object;
 	}
+	
+	#if (cpp || neko)
+	private function addToGroupLayer(Object:FlxBasic):Void
+	{
+		if (_layer != null)
+		{
+			_layer.add(Object);
+		}
+	}
+	
+	override private function set_layer(value:FlxLayer):FlxLayer 
+	{
+		if (_layer != value)
+		{
+			if (value == null)
+			{
+				_node = null;
+				_framesData = null;
+			}
+			
+			_layer = value;
+		}
+		
+		return value;
+	}
+	#end
 	
 	/**
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.

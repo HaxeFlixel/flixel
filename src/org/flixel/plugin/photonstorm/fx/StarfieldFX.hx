@@ -20,8 +20,6 @@ import nme.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.plugin.photonstorm.FlxColor;
-import org.flixel.system.tileSheet.TileSheetManager;
-
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxGradient;
 
@@ -444,9 +442,7 @@ class StarSprite extends FlxSprite
 		#end
 		
 		setBackgroundColor(bgColor);
-		_tileSheetData.isColored = true;
-		
-		_frameID = _framesData.frameIDs[0];
+		_layer.isColored = true;
 		
 		width = Width;
 		height = Height;
@@ -474,7 +470,12 @@ class StarSprite extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if(_flickerTimer != 0)
+		if (_layer == null || _layer.onStage == false)
+		{
+			return;
+		}
+		
+		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
 			if (_flicker)
@@ -504,7 +505,7 @@ class StarSprite extends FlxSprite
 		
 		var starDef:StarDef;
 		
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
 			
@@ -513,8 +514,8 @@ class StarSprite extends FlxSprite
 				continue;
 			}
 			
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = _tileSheetData.positionData[camera.ID];
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
 			
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
@@ -595,7 +596,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = alpha * starDef.alpha;
 				}
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 			}
 			else
 			{	//Advanced render
@@ -682,7 +683,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = alpha * starDef.alpha;
 				}
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 			}
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -692,13 +693,22 @@ class StarSprite extends FlxSprite
 		}
 	}
 	
-	override public function updateTileSheet():Void
+	override public function updateFrameData():Void
 	{
-		if (_pixels != null && frameWidth >= 1 && frameHeight >= 1)
+		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_tileSheetData.antialiasing = antialiasing;
-			_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
+			updateLayerProps();
+			_framesData = _node.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
+			_frameID = _framesData.frameIDs[0];
+		}
+	}
+	
+	override private function updateLayerProps():Void
+	{
+		if (_layer != null)
+		{
+			_layer.antialiasing = antialiasing;
+			_layer.isColored = true;
 		}
 	}
 	

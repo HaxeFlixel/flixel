@@ -22,10 +22,6 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 
-#if (cpp || neko)
-import org.flixel.system.tileSheet.TileSheetManager;
-#end
-
 class FlxBitmapFont extends FlxSprite
 {
 	/**
@@ -61,7 +57,7 @@ class FlxBitmapFont extends FlxSprite
 	public var customSpacingY:Int;
 	#end
 	
-	private var _text:String;
+	private var _text:String = "";
 	
 	/**
 	 * Align each line of multi-line text to the left.
@@ -169,6 +165,8 @@ class FlxBitmapFont extends FlxSprite
 	private var charFrameIDs:Array<Int>;
 	#end
 	
+	private var charsInFont:String;
+	
 	private var _textWidth:Int;
 	private var _textHeight:Int;
 	
@@ -208,71 +206,28 @@ class FlxBitmapFont extends FlxSprite
 		offsetX = xOffset;
 		offsetY = yOffset;
 		
+		charsInFont = chars;
+		
 		//	Take a copy of the font for internal use
 		#if (flash || js)
 		fontSet = FlxG.addBitmap(font);
 		#else
-		fontSet = FlxG.addBitmap(font, false, false, null, (characterSpacingX == 0) ? characterWidth : (characterWidth * charsPerRow), (characterSpacingY == 0) ? characterHeight : Math.floor((chars.length / charsPerRow) * characterHeight));
+		fontSet = FlxG.addBitmap(font, false, false, null, (characterSpacingX == 0) ? characterWidth : 0, (characterSpacingY == 0) ? characterHeight : 0);
+		pixels = fontSet;
 		#end
 		
-		grabData = new Array();
-		
-		//	Now generate our rects for faster copyPixels later on
-		var currentX:Int = offsetX;
-		var currentY:Int = offsetY;
-		var r:Int = 0;
-		
-		#if (cpp || neko)
-		updateTileSheet();
-		charFrameIDs = new Array<Int>();
-		var frameID:Int = 0;
-		var rowNumber:Int = 0;
-		var maxPossibleCharsPerRow:Int = Math.floor((fontSet.width - offsetX) / (characterWidth + characterSpacingX));
+		#if !(cpp || neko)
+		updateCharFrameIDs();
 		#end
-		
-		for (c in 0...(chars.length))
-		{
-			//	The rect is hooked to the ASCII value of the character
-			grabData[chars.charCodeAt(c)] = new Rectangle(currentX, currentY, characterWidth, characterHeight);
-			
-		#if (cpp || neko)
-			charFrameIDs[chars.charCodeAt(c)] = _framesData.frameIDs[frameID];
-		#end
-			
-			r++;
-			
-			if (r == Std.int(characterPerRow))
-			{
-				r = 0;
-				currentX = offsetX;
-				currentY += characterHeight + characterSpacingY;
-				
-				#if (cpp || neko)
-				rowNumber++;
-				frameID = maxPossibleCharsPerRow * rowNumber;
-				#end
-			}
-			else
-			{
-				currentX += characterWidth + characterSpacingX;
-				
-				#if (cpp || neko)
-				frameID++;
-				#end
-			}
-		}
 	}
 	
-	override public function updateTileSheet():Void 
+	override public function updateFrameData():Void 
 	{
 	#if (cpp || neko)
-		if (fontSet != null)
+		if (_node != null && charsInFont != null)
 		{
-			_tileSheetData = TileSheetManager.addTileSheet(fontSet);
-			_tileSheetData.antialiasing = false;
-			var reverse:Bool = (flipped > 0);
-			
-			_framesData = _tileSheetData.addSpriteFramesData(characterWidth, characterHeight, new Point(0, 0), offsetX, offsetY, fontSet.width, fontSet.height, (characterSpacingX == 0) ? 1 : characterSpacingX, (characterSpacingY == 0) ? 1 : characterSpacingY);
+			updateLayerProps();
+			updateCharFrameIDs();
 		}
 	#end
 	}
@@ -289,9 +244,71 @@ class FlxBitmapFont extends FlxSprite
 		super.destroy();
 	}
 	
+	private function updateCharFrameIDs():Void
+	{
+		grabData = new Array();
+		
+		//	Now generate our rects for faster copyPixels later on
+		var currentX:Int = offsetX;
+		var currentY:Int = offsetY;
+		var r:Int = 0;
+		
+		#if (cpp || neko)
+		var spacingX:Int = (characterSpacingX == 0) ? 1 : characterSpacingX;
+		var spacingY:Int = (characterSpacingY == 0) ? 1 : characterSpacingY;
+		#else
+		var spacingX:Int = characterSpacingX;
+		var spacingY:Int = characterSpacingY;
+		#end
+		
+		#if (cpp || neko)
+		charFrameIDs = new Array<Int>();
+		var frameID:Int = 0;
+		var rowNumber:Int = 0;
+		var maxPossibleCharsPerRow:Int = Math.floor((fontSet.width - offsetX) / (characterWidth + spacingX));
+		#end
+		
+		for (c in 0...(charsInFont.length))
+		{
+			//	The rect is hooked to the ASCII value of the character
+			grabData[charsInFont.charCodeAt(c)] = new Rectangle(currentX, currentY, characterWidth, characterHeight);
+		#if (cpp || neko)
+			charFrameIDs[charsInFont.charCodeAt(c)] = _node.addTileRect(grabData[charsInFont.charCodeAt(c)]);
+		#end
+			r++;
+			
+			if (r == Std.int(characterPerRow))
+			{
+				r = 0;
+				currentX = offsetX;
+				currentY += characterHeight + spacingY;
+				#if (cpp || neko)
+				rowNumber++;
+				frameID = maxPossibleCharsPerRow * rowNumber;
+				#end
+			}
+			else
+			{
+				currentX += characterWidth + spacingX;
+				#if (cpp || neko)
+				frameID++;
+				#end
+			}
+		}
+		
+		#if (cpp || neko)
+		updateTextString(text);
+		#end
+	}
+	
 	#if (cpp || neko)
 	override public function draw():Void 
 	{
+		if (_layer == null || _layer.onStage == false)
+		{
+			return;
+		}
+		
 		if(_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -325,13 +342,13 @@ class FlxBitmapFont extends FlxSprite
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		
-		var isColored:Bool = _tileSheetData.isColored;
+		var isColored:Bool = _layer.isColored;
 		
 		while (i < l)
 		{
 			camera = cameras[i++];
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = _tileSheetData.positionData[camera.ID];
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
 			
 			if (!onScreenSprite(camera))
 			{
@@ -363,33 +380,29 @@ class FlxBitmapFont extends FlxSprite
 			{	//Simple render
 				while (j < textLength)
 				{
-					if (_tileSheetData != null)
+					currPosInArr = j * 3;
+					currTileID = points[currPosInArr];
+					currTileX = points[currPosInArr + 1];
+					currTileY = points[currPosInArr + 2];
+					
+					currDrawData[currIndex++] = (_point.x) + currTileX;
+					currDrawData[currIndex++] = (_point.y) + currTileY;
+					
+					currDrawData[currIndex++] = currTileID;
+					
+					currDrawData[currIndex++] = 1;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 1;
+					
+					if (isColored || isColoredCamera)
 					{
-						currPosInArr = j * 3;
-						currTileID = points[currPosInArr];
-						currTileX = points[currPosInArr + 1];
-						currTileY = points[currPosInArr + 2];
-						
-						currDrawData[currIndex++] = (_point.x) + currTileX;
-						currDrawData[currIndex++] = (_point.y) + currTileY;
-						
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = 1;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 1;
-						
-						if (isColored || isColoredCamera)
-						{
-							currDrawData[currIndex++] = redMult; 
-							currDrawData[currIndex++] = greenMult;
-							currDrawData[currIndex++] = blueMult;
-						}
-						
-						currDrawData[currIndex++] = alpha;
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
 					
+					currDrawData[currIndex++] = alpha;
 					j++;
 				}
 			}
@@ -401,41 +414,37 @@ class FlxBitmapFont extends FlxSprite
 				
 				while (j < textLength)
 				{
-					if (_tileSheetData != null)
-					{
-						currPosInArr = j * 3;
-						currTileID = points[currPosInArr];
-						currTileX = points[currPosInArr + 1];
-						currTileY = points[currPosInArr + 2];
-						
-						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
-						
-						currDrawData[currIndex++] = (_point.x) + relativeX;
-						currDrawData[currIndex++] = (_point.y) + relativeY;
-						
-						currDrawData[currIndex++] = currTileID;
+					currPosInArr = j * 3;
+					currTileID = points[currPosInArr];
+					currTileX = points[currPosInArr + 1];
+					currTileY = points[currPosInArr + 2];
 					
-						currDrawData[currIndex++] = cos * scale.x;
-						currDrawData[currIndex++] =  -sin * scale.y;
-						currDrawData[currIndex++] = sin * scale.x;
-						currDrawData[currIndex++] = cos * scale.y;
-						
-						if (isColored || isColoredCamera)
-						{
-							currDrawData[currIndex++] = redMult; 
-							currDrawData[currIndex++] = greenMult;
-							currDrawData[currIndex++] = blueMult;
-						}
-						
-						currDrawData[currIndex++] = alpha;
+					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
+					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
+					
+					currDrawData[currIndex++] = (_point.x) + relativeX;
+					currDrawData[currIndex++] = (_point.y) + relativeY;
+					
+					currDrawData[currIndex++] = currTileID;
+				
+					currDrawData[currIndex++] = cos * scale.x;
+					currDrawData[currIndex++] =  -sin * scale.y;
+					currDrawData[currIndex++] = sin * scale.x;
+					currDrawData[currIndex++] = cos * scale.y;
+					
+					if (isColored || isColoredCamera)
+					{
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
 					
+					currDrawData[currIndex++] = alpha;
 					j++;
 				}
 			}
 			
-			_tileSheetData.positionData[camera.ID] = currIndex;
+			_layer.positionData[camera.ID] = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -453,7 +462,7 @@ class FlxBitmapFont extends FlxSprite
 	 * 
 	 * @return	void
 	 */ 
-	public function setTextString(content:String):String
+	private function setTextString(content:String):String
 	{
 		var newText:String;
 		
@@ -469,13 +478,16 @@ class FlxBitmapFont extends FlxSprite
 		// Smart update: Only change the bitmap data if the string has changed
 		if (newText != _text)
 		{
-			_text = newText;
-			
-			removeUnsupportedCharacters(multiLine);
-			
-			buildBitmapFontText();
+			updateTextString(newText);
 		}
 		return _text;
+	}
+	
+	private function updateTextString(newText:String):Void
+	{
+		_text = newText;
+		removeUnsupportedCharacters(multiLine);
+		buildBitmapFontText();
 	}
 	
 	/**
@@ -491,7 +503,7 @@ class FlxBitmapFont extends FlxSprite
 		align = lineAlignment;
 	}
 	
-	public function getTextString():String
+	private function getTextString():String
 	{
 		return _text;
 	}

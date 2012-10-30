@@ -53,10 +53,10 @@ class NestedSprite extends FlxSprite
 	public var relativeAccelerationY:Float;
 	public var relativeAngularAcceleration:Float;
 	
-	public var _parentAlpha:Float;
-	public var _parentRed:Float;
-	public var _parentGreen:Float;
-	public var _parentBlue:Float;
+	public var _parentAlpha:Float = 1;
+	public var _parentRed:Float = 1;
+	public var _parentGreen:Float = 1;
+	public var _parentBlue:Float = 1;
 	
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:Dynamic = null) 
 	{
@@ -76,11 +76,6 @@ class NestedSprite extends FlxSprite
 		relativeAccelerationX = 0;
 		relativeAccelerationY = 0;
 		relativeAngularAcceleration = 0;
-		
-		_parentAlpha = 1;
-		_parentRed = 1;
-		_parentGreen = 1;
-		_parentBlue = 1;
 	}
 	
 	override public function destroy():Void
@@ -112,7 +107,7 @@ class NestedSprite extends FlxSprite
 			
 			Child._parentAlpha = this.alpha;
 			Child.alpha = Child.alpha;
-			
+
 			#if !neko
 			var thisRed:Float = (_color >> 16) / 255;
 			var thisGreen:Float = (_color >> 8 & 0xff) / 255;
@@ -220,6 +215,31 @@ class NestedSprite extends FlxSprite
 	{
 		super.postUpdate();
 		
+		//
+		
+		var delta:Float;
+		var velocityDelta:Float;
+		var dt:Float = FlxG.elapsed;
+		
+		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeAngularVelocity, relativeAngularAcceleration, angularDrag, maxAngular) - relativeAngularVelocity);
+		relativeAngularVelocity += velocityDelta; 
+		relativeAngle += relativeAngularVelocity * dt;
+		relativeAngularVelocity += velocityDelta;
+		
+		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeVelocityX, relativeAccelerationX, drag.x, maxVelocity.x) - relativeVelocityX);
+		relativeVelocityX += velocityDelta;
+		delta = relativeVelocityX * dt;
+		relativeVelocityX += velocityDelta;
+		relativeX += delta;
+		
+		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeVelocityY, relativeAccelerationY, drag.y, maxVelocity.y) - relativeVelocityY);
+		relativeVelocityY += velocityDelta;
+		delta = relativeVelocityY * dt;
+		relativeVelocityY += velocityDelta;
+		relativeY += delta;
+		
+		//
+		
 		for (child in _children)
 		{
 			child.velocity.x = child.velocity.y = 0;
@@ -259,7 +279,7 @@ class NestedSprite extends FlxSprite
 		}
 	}
 	
-	override private function updateMotion():Void 
+	/*override private function updateMotion():Void 
 	{
 		super.updateMotion();
 		
@@ -283,7 +303,7 @@ class NestedSprite extends FlxSprite
 		delta = relativeVelocityY * dt;
 		relativeVelocityY += velocityDelta;
 		relativeY += delta;
-	}
+	}*/
 	
 	override public function draw():Void 
 	{
@@ -326,10 +346,13 @@ class NestedSprite extends FlxSprite
 		dirty = true;
 		#end
 		
-		for (child in _children)
+		if (_children != null)
 		{
-			child.alpha *= alpha;
-			child._parentAlpha = alpha;
+			for (child in _children)
+			{
+				child.alpha *= alpha;
+				child._parentAlpha = alpha;
+			}
 		}
 		
 		return alpha;
@@ -404,9 +427,9 @@ class NestedSprite extends FlxSprite
 		if (_color.rgb < 0xffffff)
 		#end
 		{
-			if (_tileSheetData != null)
+			if (_layer != null)
 			{
-				_tileSheetData.isColored = true;
+				_layer.isColored = true;
 			}
 		}
 	#end

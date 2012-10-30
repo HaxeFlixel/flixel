@@ -11,11 +11,6 @@ import nme.geom.Rectangle;
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 
-#if (cpp || neko)
-import org.flixel.system.tileSheet.TileSheetData;
-import org.flixel.system.tileSheet.TileSheetManager;
-#end
-
 /**
  * This is a traditional tilemap display and collision class.
  * It takes a string of comma-separated numbers and then associates
@@ -126,8 +121,6 @@ class FlxTilemap extends FlxObject
 	private var _startingIndex:Int;
 	
 	#if (cpp || neko)
-	private var _tileSheetData:TileSheetData;
-	private var _framesData:FlxSpriteFrames;
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
 	 */
@@ -207,11 +200,7 @@ class FlxTilemap extends FlxObject
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
-		#end
-		
-		#if (cpp || neko)
-		_framesData = null;
-		_tileSheetData = null;
+		#elseif (cpp || neko)
 		_helperPoint = null;
 		_rectIDs = null;
 		#end
@@ -279,6 +268,9 @@ class FlxTilemap extends FlxObject
 		
 		//Figure out the size of the tiles
 		_tiles = FlxG.addBitmap(TileGraphic);
+		#if (cpp || neko)
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		#end
 		_tileWidth = TileWidth;
 		if (_tileWidth <= 0)
 		{
@@ -306,7 +298,7 @@ class FlxTilemap extends FlxObject
 			i++;
 		}
 		
-		updateTileSheet();
+		updateLayerInfo();
 		
 		//create debug tiles for rendering bounding boxes on demand
 		#if (flash || js)
@@ -320,18 +312,15 @@ class FlxTilemap extends FlxObject
 		height = heightInTiles * _tileHeight;
 		#if (flash || js)
 		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
-		_rects = new Array<Rectangle>(/*totalTiles*/);
+		_rects = new Array<Rectangle>();
 		FlxU.SetArrayLength(_rects, totalTiles);
-		#else
-		_rectIDs = new Array<Int>();
-		FlxU.SetArrayLength(_rectIDs, totalTiles);
-		#end
 		i = 0;
 		while (i < totalTiles)
 		{
 			updateTile(i++);
 		}
-
+		#end
+		
 		return this;
 	}
 	
@@ -395,11 +384,9 @@ class FlxTilemap extends FlxObject
 		var drawX:Float;
 		var drawY:Float;
 		
-		var currDrawData:Array<Float> = _tileSheetData.drawData[Camera.ID];
-		var currIndex:Int = _tileSheetData.positionData[Camera.ID];
-		
-		var isTilemapFlag:Bool = _tileSheetData.isTilemap;
-		var isColored:Bool = _tileSheetData.isColored;
+		var currDrawData:Array<Float> = _layer.drawData[Camera.ID];
+		var currIndex:Int = _layer.positionData[Camera.ID];
+		var isColored:Bool = _layer.isColored;
 		var isColoredCamera:Bool = Camera.isColored();
 		#end
 		
@@ -479,30 +466,18 @@ class FlxTilemap extends FlxObject
 					currDrawData[currIndex++] = drawY;
 					currDrawData[currIndex++] = tileID;
 					
-					if (isTilemapFlag)
+					currDrawData[currIndex++] = 1;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 1;
+					
+					if (isColoredCamera || isColored)
 					{
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = Camera.red; // red
-							currDrawData[currIndex++] = Camera.green; //	green
-							currDrawData[currIndex++] = Camera.blue; //	blue
-						}
+						currDrawData[currIndex++] = Camera.red; // red
+						currDrawData[currIndex++] = Camera.green; //	green
+						currDrawData[currIndex++] = Camera.blue; //	blue
 					}
-					else
-					{
-						currDrawData[currIndex++] = 1;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 1;
-						
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = Camera.red; // red
-							currDrawData[currIndex++] = Camera.green; //	green
-							currDrawData[currIndex++] = Camera.blue; //	blue
-						}
-						currDrawData[currIndex++] = 1.0; // alpha
-					}
+					currDrawData[currIndex++] = 1.0; // alpha
 					
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
@@ -552,7 +527,7 @@ class FlxTilemap extends FlxObject
 		}
 		
 		#if (cpp || neko)
-		_tileSheetData.positionData[Camera.ID] = currIndex;
+		_layer.positionData[Camera.ID] = currIndex;
 		#end
 		
 		Buffer.x = screenXInTiles * _tileWidth;
@@ -1903,32 +1878,24 @@ class FlxTilemap extends FlxObject
 		#end
 	}
 	
-	#if (cpp || neko)
-	/**
-	 * Gets FlxTilemap's TileSheetData index in TileSheetManager
-	 */
-	public function getTileSheetIndex():Int
-	{
-		if (_tileSheetData != null)
-		{
-			return TileSheetManager.getTileSheetIndex(_tileSheetData);
-		}
-		
-		return -1;
-	}
-	#end
-	
 	/**
 	 * Use this method for creating tileSheet for FlxTilemap. Must be called after loadMap() method.
 	 * If you forget to call it then you will not see this FlxTilemap on c++ target
 	 */
-	public function updateTileSheet():Void
+	override public function updateFrameData():Void
 	{
 	#if (cpp || neko)
-		if (_tiles != null && _tileWidth >= 1 && _tileHeight >= 1)
+		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_tileSheetData = TileSheetManager.addTileSheet(_tiles, true);
-			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, new Point(0, 0));
+			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, new Point(0, 0));
+			
+			_rectIDs = new Array<Int>();
+			FlxU.SetArrayLength(_rectIDs, totalTiles);
+			var i:Int = 0;
+			while (i < totalTiles)
+			{
+				updateTile(i++);
+			}
 		}
 	#end
 	}
@@ -1978,7 +1945,7 @@ class FlxTilemap extends FlxObject
 		tileSprite.y = Y * _tileHeight + y;
 		if (rect != null) tileSprite.pixels.copyPixels(_tiles, rect, pt);
 		tileSprite.dirty = true;
-		tileSprite.updateTileSheet();
+		tileSprite.updateFrameData();
 
 		if (NewTile >= 0) setTile(X, Y, NewTile);
 		

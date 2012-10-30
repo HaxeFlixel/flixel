@@ -205,6 +205,7 @@ class Mouse extends FlxPoint
 	 */
 	public function update(X:Int,Y:Int):Void
 	{
+		
 		_globalScreenPosition.x = X;
 		_globalScreenPosition.y = Y;
 		updateCursor();

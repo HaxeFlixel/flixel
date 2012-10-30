@@ -77,10 +77,9 @@ class FlxEmitter extends FlxGroup
 	 */
 	public var bounce:Float;
 	/**
-	 * Set your own particle class type here.
-	 * Default is <code>FlxParticle</code>.
+	 * Internal variable for tracking the class to create when generating particles.
 	 */
-	public var particleClass:Class<FlxParticle>;
+	private var _particleClass:Class<FlxParticle>;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -121,7 +120,7 @@ class FlxEmitter extends FlxGroup
 		minRotation = -360;
 		maxRotation = 360;
 		gravity = 0;
-		particleClass = null;
+		_particleClass = FlxParticle;
 		particleDrag = new FlxPoint();
 		frequency = 0.1;
 		lifespan = 3;
@@ -141,14 +140,14 @@ class FlxEmitter extends FlxGroup
 		minParticleSpeed = null;
 		maxParticleSpeed = null;
 		particleDrag = null;
-		particleClass = null;
+		_particleClass = null;
 		_point = null;
 		super.destroy();
 	}
 	
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
-	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
 	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
 	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
 	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
@@ -159,7 +158,7 @@ class FlxEmitter extends FlxGroup
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
-		if(Multiple)
+		if (Multiple)
 		{ 
 			var sprite:FlxSprite = new FlxSprite();
 			sprite.loadGraphic(Graphics, true);
@@ -172,14 +171,7 @@ class FlxEmitter extends FlxGroup
 		var i:Int = 0;
 		while (i < Quantity)
 		{
-			if (particleClass == null)
-			{
-				particle = new FlxParticle();
-			}
-			else
-			{
-				particle = Type.createInstance(particleClass, []);
-			}
+			particle = Type.createInstance(_particleClass, []);
 			if (Multiple)
 			{
 				randomFrame = Math.floor(FlxG.random() * totalFrames); 
@@ -320,7 +312,7 @@ class FlxEmitter extends FlxGroup
 	 */
 	public function emitParticle():Void
 	{
-		var particle:FlxParticle = cast(recycle(FlxParticle), FlxParticle);
+		var particle:FlxParticle = cast(recycle(cast _particleClass), FlxParticle);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
 		particle.reset(x - (Math.floor(particle.width) >> 1) + FlxG.random() * width, y - (Math.floor(particle.height) >> 1) + FlxG.random() * height);
@@ -415,5 +407,21 @@ class FlxEmitter extends FlxGroup
 		Object.getMidpoint(_point);
 		x = _point.x - (Std.int(width) >> 1);
 		y = _point.y - (Std.int(height) >> 1);
+	}
+	
+	/**
+	 * Set your own particle class type here. The custom class must extend <code>FlxParticle</code>.
+	 * Default is <code>FlxParticle</code>.
+	 */
+	public var particleClass(get_particleClass, set_particleClass):Class<FlxParticle>;
+	
+	private function get_particleClass():Class<FlxParticle> 
+	{
+		return _particleClass;
+	}
+	
+	private function set_particleClass(value:Class<FlxParticle>):Class<FlxParticle> 
+	{
+		return _particleClass = value;
 	}
 }

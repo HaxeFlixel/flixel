@@ -8,16 +8,19 @@ import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.FlxLayer;
+import org.flixel.system.layer.Node;
 
 #if (cpp || neko)
-import org.flixel.system.tileSheet.TileSheetData;
-import org.flixel.system.tileSheet.TileSheetManager;
+import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.layer.TileSheetManager;
 #end
 
 #if (flash || js)
 import nme.display.BlendMode;
 #end
 
+import org.flixel.FlxG;
 import org.flixel.system.FlxAnim;
 
 /**
@@ -167,8 +170,9 @@ class FlxSprite extends FlxObject
 	private var _matrix:Matrix;
 	
 	#if (cpp || neko)
+	// TODO: remove this line later
 	private var _tileSheetData:TileSheetData;
-	private var _framesData:FlxSpriteFrames;
+	// end of TODO
 	private var _frameID:Int;
 	private var _red:Float;
 	private var _green:Float;
@@ -269,7 +273,6 @@ class FlxSprite extends FlxObject
 		framePixels = null;
 		
 		#if (cpp || neko)
-		_framesData = null;
 		_tileSheetData = null;
 		#end
 		
@@ -282,6 +285,7 @@ class FlxSprite extends FlxObject
 	 * @param	AutoBuffer		Use this parameter when loading graphic from FlxSprite with "rotated" graphic (graphic loaded with loadRotatedGraphic() method). It should have the same value as you passed to loadRotatedGraphic() method for original FlxSprite.
 	 * @return					This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
+	// TODO: maybe remove this method after layer system will be complete
 	public function loadFrom(Sprite:FlxSprite, ?AutoBuffer:Bool = false):FlxSprite
 	{
 		_pixels = Sprite.pixels;
@@ -299,8 +303,9 @@ class FlxSprite extends FlxObject
 		}
 		
 		#if (cpp || neko)
+		_bitmapDataKey = Sprite._bitmapDataKey;
+		layer = Sprite.layer;
 		antialiasing = Sprite.antialiasing;
-		updateTileSheet();
 		#end
 		
 		return this;
@@ -317,6 +322,7 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
+	// TODO: add ability to load Nodes. This will add sprite to layer automatically
 	public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false, ?Key:String = null):FlxSprite
 	{
 		Width = FlxU.fromIntToUInt(Width);
@@ -325,6 +331,7 @@ class FlxSprite extends FlxObject
 		bakedRotation = 0;
 		#if (cpp || neko)
 		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key);
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		#else
 		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique, Key);
 		#end
@@ -375,13 +382,12 @@ class FlxSprite extends FlxObject
 			Key += "FrameSize:" + Width + "_" + Height;
 		}
 		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key, Width, Height);
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		#end
 		
 		height = frameHeight = Height;
 		resetHelpers();
-		
-		updateTileSheet();
-		
+		updateLayerInfo();
 		return this;
 	}
 	
@@ -469,6 +475,10 @@ class FlxSprite extends FlxObject
 		_pixels = FlxG.createBitmap(Math.floor(width) + columns, Math.floor(height) + rows, {rgb: 0, a: 0}, true, key);
 		#end
 		
+		#if (cpp || neko)
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		#end
+		
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
 		bakedRotation = 360 / Rotations;
@@ -514,13 +524,11 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
-		paused = false;
-		
 		#if (cpp || neko)
 		antialiasing = AntiAliasing;
 		#end
 		
-		updateTileSheet();
+		updateLayerInfo();
 		
 		return this;
 	}
@@ -553,12 +561,13 @@ class FlxSprite extends FlxObject
 		
 		bakedRotation = 0;
 		_pixels = FlxG.createBitmap(Width, Height, Color, Unique, Key);
+		#if (cpp || neko)
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		#end
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
 		resetHelpers();
-		
-		updateTileSheet();
-		
+		updateLayerInfo();
 		return this;
 	}
 	
@@ -619,6 +628,15 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		#if (cpp || neko)
+		// Don't try to draw if object isn't on any layer 
+		// or layer isn't added to state
+		if (_layer == null || _layer.onStage == false)
+		{
+			return;
+		}
+		#end
+		
 		if(_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -660,8 +678,8 @@ class FlxSprite extends FlxObject
 			}
 			
 			#if (cpp || neko)
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = _tileSheetData.positionData[camera.ID];
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
@@ -704,7 +722,7 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (_tileSheetData.isColored || camera.isColored())
+				if (_layer.isColored || camera.isColored())
 				{
 					if (camera.isColored())
 					{
@@ -721,8 +739,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				currDrawData[currIndex++] = alpha;
-				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 				#end
 			}
 			else
@@ -762,7 +779,7 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = cos * scale.y;
 				}
 				
-				if (_tileSheetData.isColored || camera.isColored())
+				if (_layer.isColored || camera.isColored())
 				{
 					if (camera.isColored())
 					{
@@ -779,8 +796,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				currDrawData[currIndex++] = alpha;
-				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;
@@ -837,8 +853,7 @@ class FlxSprite extends FlxObject
 		#if (flash || js)
 		calcFrame();
 		#end
-		
-		updateTileSheet();
+		updateLayerInfo(true);
 	}
 	
 	/**
@@ -881,7 +896,7 @@ class FlxSprite extends FlxObject
 		_pixels.draw(FlxG.flashGfxSprite);
 		dirty = true;
 		
-		updateTileSheet();
+		updateLayerInfo(true);
 	}
 	
 	/**
@@ -900,7 +915,7 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		
-		updateTileSheet();
+		updateLayerInfo(true);
 	}
 	
 	/**
@@ -1145,8 +1160,7 @@ class FlxSprite extends FlxObject
 			row++;
 		}
 		
-		updateTileSheet();
-		
+		updateLayerInfo(true);
 		return positions;
 	}
 	
@@ -1170,9 +1184,15 @@ class FlxSprite extends FlxObject
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
 		resetHelpers();
-		
-		updateTileSheet();
-		
+		#if (cpp || neko)
+		_bitmapDataKey = FlxG.getCacheKeyFor(_pixels);
+		if (_bitmapDataKey == null)
+		{
+			_bitmapDataKey = FlxG.getUniqueBitmapKey();
+			FlxG.addBitmap(Pixels, false, false, _bitmapDataKey);
+		}
+		#end
+		updateLayerInfo(true);
 		return _pixels;
 	}
 	
@@ -1293,17 +1313,7 @@ class FlxSprite extends FlxObject
 		#end
 		
 	#if (cpp || neko)	
-		#if cpp
-		if (_color < 0xffffff)
-		#else
-		if (_color.rgb < 0xffffff)
-		#end
-		{
-			if (_tileSheetData != null)
-			{
-				_tileSheetData.isColored = true;
-			}
-		}
+		updateLayerProps();
 	#end
 		
 		return _color;
@@ -1526,11 +1536,8 @@ class FlxSprite extends FlxObject
 	private function setAntialiasing(val:Bool):Bool
 	{
 		antialiasing = val;
-		#if (cpp || neko)	
-		if (_tileSheetData != null)
-		{
-			_tileSheetData.antialiasing = val;
-		}
+		#if (cpp || neko)
+		updateLayerProps();
 		#end
 		return val;
 	}
@@ -1579,24 +1586,42 @@ class FlxSprite extends FlxObject
 	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic or loadRotatedGraphic().
 	 * If you forget to call it then you will not see this FlxSprite on c++ target
 	 */
-	public function updateTileSheet():Void
+	override public function updateFrameData():Void
 	{
 	#if (cpp || neko)
-		if (_pixels != null && frameWidth >= 1 && frameHeight >= 1)
+		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_tileSheetData.antialiasing = antialiasing;
+			updateLayerProps();
 			if (frames > 1)
 			{
-				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), null, 0, 0, 0, 0, 1, 1);
+				_framesData = _node.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), null, 0, 0, 0, 0, 1, 1);
 			}
 			else
 			{
-				_framesData = _tileSheetData.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
+				_framesData = _node.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
 			}
+			_frameID = _framesData.frameIDs[_curIndex];
 		}
 	#end
 	}
+	
+	#if (cpp || neko)
+	private function updateLayerProps():Void
+	{
+		if (_layer != null)
+		{
+			_layer.antialiasing = antialiasing;
+			#if cpp
+			if (_color < 0xffffff)
+			#else
+			if (_color.rgb < 0xffffff)
+			#end
+			{
+				_layer.isColored = true;
+			}
+		}
+	}
+	#end
 	
 	override public function overlapsPoint(point:FlxPoint, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
 	{

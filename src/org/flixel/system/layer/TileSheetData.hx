@@ -1,6 +1,7 @@
-package org.flixel.system.tileSheet;
+package org.flixel.system.layer;
 
 #if (cpp || neko)
+import nme.display.BitmapData;
 import nme.display.Graphics;
 import nme.display.Tilesheet;
 import nme.geom.Point;
@@ -13,6 +14,84 @@ import org.flixel.FlxG;
  */
 class TileSheetData
 {
+	public static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
+	
+	public static var _DRAWCALLS:Int = 0;
+	
+	/**
+	 * Adds new tileSheet to manager and returns it
+	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
+	 */
+	public static function addTileSheet(bitmapData:BitmapData, ?isTilemap:Bool = false):TileSheetData
+	{
+		var tempTileSheetData:TileSheetData;
+		
+		if (containsTileSheet(bitmapData))
+		{
+			tempTileSheetData = getTileSheet(bitmapData);
+			if (tempTileSheetData.isTilemap != isTilemap)
+			{
+				tempTileSheetData.isTilemap = false;
+			}
+			return getTileSheet(bitmapData);
+		}
+		
+		tempTileSheetData = new TileSheetData(new Tilesheet(bitmapData), isTilemap);
+		tileSheetData.push(tempTileSheetData);
+		return (tileSheetData[tileSheetData.length - 1]);
+	}
+	
+	public static function containsTileSheet(bitmapData:BitmapData):Bool
+	{
+		for (tsd in tileSheetData)
+		{
+			if (tsd.tileSheet.nmeBitmap == bitmapData)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public static function getTileSheet(bitmapData:BitmapData):TileSheetData
+	{
+		for (tsd in tileSheetData)
+		{
+			if (tsd.tileSheet.nmeBitmap == bitmapData)
+			{
+				return tsd;
+			}
+		}
+		
+		return null;
+	}
+	
+	public static function removeTileSheet(tileSheetObj:TileSheetData):Void
+	{
+		for (i in 0...(tileSheetData.length))
+		{
+			if (tileSheetData[i] == tileSheetObj)
+			{
+				tileSheetData.splice(i, 1);
+				tileSheetObj.destroy();
+			}
+		}
+	}
+	
+	public static function clear():Void
+	{
+		for (dataObject in tileSheetData)
+		{
+			dataObject.destroy();
+		}
+		tileSheetData = new Array<TileSheetData>();
+	}
+	
+	
+	
+	
+	
 	public var tileSheet:Tilesheet;
 	
 	/**
@@ -104,7 +183,7 @@ class TileSheetData
 		{
 			for (i in 0...(numCols))
 			{
-				tempRect = new Rectangle(i * spacedWidth, j * spacedHeight, width, height);
+				tempRect = new Rectangle(startX + i * spacedWidth, startY + j * spacedHeight, width, height);
 				tileID = addTileRect(tempRect, tempPoint);
 				spriteData.frameIDs.push(tileID);
 			}
@@ -296,7 +375,6 @@ class TileSheetData
 		return value;
 	}
 	
-	// TODO: Check this method
 	private function updateFlags():Void
 	{
 		flags = 0;
@@ -359,7 +437,6 @@ class FlxSpriteFrames
  */
 class RectanglePointPair
 {
-	
 	public var rect:Rectangle;
 	public var point:Point;
 	

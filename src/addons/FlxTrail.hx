@@ -139,7 +139,7 @@ class FlxTrail extends FlxGroup
 	public function resetTrail():Void
 	{
 		recentPositions.splice(0, recentPositions.length);
-		for (i in 0 ... members.length) 
+		for (i in 0...members.length) 
 			members[i].exists = false;
 	}
 
@@ -156,7 +156,7 @@ class FlxTrail extends FlxGroup
 		trailLength += amount;
 
 		// Create the trail sprites
-		for (i in 0 ... amount)
+		for (i in 0...amount)
 		{
 			var trailSprite:FlxSprite = new FlxSprite(0, 0, image);
 			trailSprite.exists = false;

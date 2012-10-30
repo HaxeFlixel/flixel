@@ -1,4 +1,4 @@
-package org.flixel.system.tileSheet;
+package org.flixel.system.layer;
 #if (cpp || neko)
 
 import nme.display.BitmapData;
@@ -14,7 +14,6 @@ import org.flixel.FlxTilemap;
  * ...
  * @author Zaphod
  */
-
 class TileSheetManager 
 {
 	
@@ -122,18 +121,10 @@ class TileSheetManager
 		{
 			id1 = cast(obj1, FlxSprite).getTileSheetIndex();
 		}
-		else if (Std.is(obj1, FlxTilemap))
-		{
-			id1 = cast(obj1, FlxTilemap).getTileSheetIndex();
-		}
 		
 		if (Std.is(obj2, FlxSprite))
 		{
 			id2 = cast(obj2, FlxSprite).getTileSheetIndex();
-		}
-		else if (Std.is(obj2, FlxTilemap))
-		{
-			id2 = cast(obj2, FlxTilemap).getTileSheetIndex();
 		}
 		
 		if (id1 < 0 || id2 < 0) return;

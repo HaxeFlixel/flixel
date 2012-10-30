@@ -85,7 +85,6 @@ class ZoomCamera extends FlxCamera
 		// Example: a zoom of 2 offsets it half the screen at most
 		x = -(width / 2) * (offsetX) * (zoom - 1); 			
 		y = -(height / 2) * (offsetY) * (zoom - 1);
-		
 	}
 	
 	/**

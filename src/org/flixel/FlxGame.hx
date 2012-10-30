@@ -20,9 +20,11 @@ import nme.ui.Multitouch;
 import nme.ui.MultitouchInputMode;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.input.TouchManager;
+import org.flixel.system.layer.Atlas;
+import org.flixel.system.layer.TileSheetData;
 
 #if (cpp || neko)
-import org.flixel.system.tileSheet.TileSheetManager;
+import org.flixel.system.layer.TileSheetManager;
 import nme.events.JoystickEvent;
 #end
 
@@ -96,6 +98,10 @@ class FlxGame extends Sprite
 	 */
 	private var _lostFocus:Bool;
 	/**
+	 * Milliseconds of time since last step. Supposed to be internal.
+	 */
+	public var _elapsedMS:Int;
+	/**
 	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms. Supposed to be internal.
 	 */
 	public var _step:Int;
@@ -103,10 +109,6 @@ class FlxGame extends Sprite
 	 * Optimization so we don't have to divide _step by 1000 to get its value in seconds every frame. Supposed to be internal.
 	 */
 	public var _stepSeconds:Float;
-	/**
-	 * Milliseconds of time since last step. Supposed to be internal.
-	 */
-	public var _elapsedMS:Int;
 	/**
 	 * Framerate of the Flash player (NOT the game loop). Default = 30.
 	 */
@@ -565,7 +567,7 @@ class FlxGame extends Sprite
 		_elapsedMS = _mark - _total;
 		_total = _mark;
 		
-		if(_updateSoundTray)
+		if (_updateSoundTray)
 			updateSoundTray(_elapsedMS);
 		
 		if(!_lostFocus)
@@ -608,9 +610,9 @@ class FlxGame extends Sprite
 	}
 	
 	/**
-	 * Internal method to create a new instance of iState and reset the game. 
+	 * Internal method to create a new instance of iState and reset the game.
 	 * This gets called when the game is created, as well as when a new state is requested.
-	 */ 
+	 */
 	private inline function resetGame():Void
 	{
 		_requestedState = Type.createInstance(_iState, []);
@@ -618,7 +620,7 @@ class FlxGame extends Sprite
 		_replayCancelKeys = null;
 		FlxG.reset();
 	}
-	
+
 	/**
 	 * If there is a state change requested during the update loop,
 	 * this function handles actual destroying the old state and related processes,
@@ -629,7 +631,13 @@ class FlxGame extends Sprite
 		//Basic reset stuff
 		#if (cpp || neko)
 		PxBitmapFont.clearStorage();
+		FlxLayer.clearLayerCache();
+		Atlas.clearAtlasCache();
+		TileSheetData.clear();
+		
+		// TODO: remove this line later
 		TileSheetManager.clear();
+		// end of TODO
 		#end
 		FlxG.clearBitmapCache();
 		FlxG.resetCameras();
@@ -769,17 +777,17 @@ class FlxGame extends Sprite
 		{
 			_soundTrayTimer -= MS/1000;
 		}
-		else if(_soundTray.y > -_soundTray.height)
+		else if (_soundTray.y > -_soundTray.height)
 		{
-			_soundTray.y -= (MS/1000)*FlxG.height*2;
-			if(_soundTray.y <= -_soundTray.height)
+			_soundTray.y -= (MS / 1000) * FlxG.height * 2;
+			if (_soundTray.y <= -_soundTray.height)
 			{
 				_soundTray.visible = false;
 				_updateSoundTray = false;
 				
 				//Save sound preferences
 				var soundPrefs:FlxSave = new FlxSave();
-				if(soundPrefs.bind("flixel"))
+				if (soundPrefs.bind("flixel"))
 				{
 					if (soundPrefs.data.sound == null)
 					{
@@ -798,7 +806,7 @@ class FlxGame extends Sprite
 	 * May be called multiple times per "frame" or draw call.
 	 */
 	private function update():Void
-	{
+	{			
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
@@ -827,23 +835,21 @@ class FlxGame extends Sprite
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
 		#if (cpp || neko)
-		TileSheetManager.clearAllDrawData();
+		_state.clearAllDrawData();
 		#end
 		
 		FlxG.lockCameras();
 		_state.draw();
 		
 		#if (cpp || neko)
-		TileSheetManager.renderAll();
 		if (_debuggerUp)
 		{
-			_debugger.perf.drawCalls(TileSheetManager._DRAWCALLS);
+			_debugger.perf.drawCalls(TileSheetData._DRAWCALLS);
 		}
 		#end
 		
 		FlxG.drawPlugins();
 		FlxG.unlockCameras();
-		
 		if (_debuggerUp)
 			_debugger.perf.flixelDraw(Lib.getTimer() - _mark);
 	}
@@ -939,11 +945,16 @@ class FlxGame extends Sprite
 			//Focus gained/lost monitoring
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
+			#if (cpp || neko)
+			// TODO: Uncomment these lines in after next NME's release
+		//	stage.addEventListener(Event.FOCUS_OUT, onFocusLost);
+		//	stage.addEventListener(Event.FOCUS_IN, onFocus);
+			#end
 			createFocusScreen();
 		}
 		
-		// Instantiate the initial state.
-		if(_requestedReset)
+		// Instantiate the initial state
+		if (_requestedReset)
 		{
 			resetGame();
 			switchState();
@@ -951,7 +962,7 @@ class FlxGame extends Sprite
 		}
 		
 		//Finally, set up an event for the actual game loop stuff.
-		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame); 
+		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 	}
 	
 	/**
