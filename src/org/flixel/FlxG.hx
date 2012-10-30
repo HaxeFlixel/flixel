@@ -381,6 +381,7 @@ class FlxG
 	static public function setFramerate(Framerate:Int):Int
 	{
 		_game._step = Math.floor(Math.abs(1000 / Framerate));
+		_game._stepSeconds = (_game._step / 1000);
 		if (_game._maxAccumulation < _game._step)
 		{
 			_game._maxAccumulation = _game._step;
@@ -397,7 +398,6 @@ class FlxG
 	{
 		if (_game.stage != null)
 			return Math.floor(_game.stage.frameRate);
-
 		return 0;
 	}
 		

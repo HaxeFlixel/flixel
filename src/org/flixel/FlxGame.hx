@@ -77,15 +77,15 @@ class FlxGame extends Sprite
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
 	private var _iState:Class<FlxState>;
-	/**
-	 * Whether the game object's basic initialization has finished yet.
-	 */
-	private var _created:Bool;
 	
 	/**
 	 * Total number of milliseconds elapsed since game start.
 	 */
 	private var _total:Int;
+	/**
+	 * Helper variable to help calculate elapsed time.
+	 */
+	private var _mark:Int;
 	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
@@ -96,9 +96,17 @@ class FlxGame extends Sprite
 	 */
 	private var _lostFocus:Bool;
 	/**
-	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms. Supposed to be internal
+	 * Milliseconds of time per step of the game loop.  FlashEvent.g. 60 fps = 16ms. Supposed to be internal.
 	 */
 	public var _step:Int;
+	/**
+	 * Optimization so we don't have to divide _step by 1000 to get its value in seconds every frame. Supposed to be internal.
+	 */
+	public var _stepSeconds:Float;
+	/**
+	 * Milliseconds of time since last step. Supposed to be internal.
+	 */
+	public var _elapsedMS:Int;
 	/**
 	 * Framerate of the Flash player (NOT the game loop). Default = 30.
 	 */
@@ -129,6 +137,10 @@ class FlxGame extends Sprite
 	 * Helps us auto-hide the sound tray after a volume change.
 	 */
 	private var _soundTrayTimer:Float;
+	/**
+	 * Because reading any data from DisplayObject is insanely expensive in hxcpp, keep track of whether we need to update it or not.
+	 */
+	private var _updateSoundTray:Bool;
 	/**
 	 * Helps display the volume bars on the sound tray.
 	 */
@@ -208,6 +220,7 @@ class FlxGame extends Sprite
 		FlxG.flashFramerate = FlashFramerate;
 		_accumulator = _step;
 		_total = 0;
+		_mark = 0;
 		_state = null;
 		useSoundHotKeys = true;
 		useSystemCursor = UseSystemCursor;
@@ -229,7 +242,6 @@ class FlxGame extends Sprite
 		_iState = InitialState;
 		_requestedState = null;
 		_requestedReset = true;
-		_created = false;
 		
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
@@ -247,6 +259,7 @@ class FlxGame extends Sprite
 		_soundTrayTimer = 1;
 		_soundTray.y = 0;
 		_soundTray.visible = true;
+		_updateSoundTray = true;
 		var globalVolume:Int = Math.round(FlxG.volume * 10);
 		if (FlxG.mute)
 		{
@@ -439,7 +452,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash touch event.
 	 */
-	private function onTouchBegin(FlashEvent:TouchEvent):Void
+	inline private function onTouchBegin(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchBegin(FlashEvent);
 	}
@@ -448,7 +461,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash touch event.
 	 */
-	private function onTouchEnd(FlashEvent:TouchEvent):Void
+	inline private function onTouchEnd(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchEnd(FlashEvent);
 	}
@@ -457,7 +470,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash touch event.
 	 */
-	private function onTouchMove(FlashEvent:TouchEvent):Void
+	inline private function onTouchMove(FlashEvent:TouchEvent):Void
 	{
 		FlxG.touchManager.handleTouchMove(FlashEvent);
 	}
@@ -467,7 +480,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyAxisMove(FlashEvent:JoystickEvent):Void
+	inline private function onJoyAxisMove(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleAxisMove(FlashEvent);
 	}
@@ -476,7 +489,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyBallMove(FlashEvent:JoystickEvent):Void
+	inline private function onJoyBallMove(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleBallMove(FlashEvent);
 	}
@@ -485,7 +498,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyButtonDown(FlashEvent:JoystickEvent):Void
+	inline private function onJoyButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleButtonDown(FlashEvent);
 	}
@@ -494,7 +507,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyButtonUp(FlashEvent:JoystickEvent):Void
+	inline private function onJoyButtonUp(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleButtonUp(FlashEvent);
 	}
@@ -503,7 +516,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	NME joystick event.
 	 */
-	private function onJoyHatMove(FlashEvent:JoystickEvent):Void
+	inline private function onJoyHatMove(FlashEvent:JoystickEvent):Void
 	{
 		FlxG.joystickManager.handleHatMove(FlashEvent);
 	}
@@ -548,10 +561,13 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(?FlashEvent:Event = null):Void
 	{			
-		var mark:Int = Lib.getTimer();
-		var elapsedMS:Int = mark - _total;
-		_total = mark;
-		updateSoundTray(elapsedMS);
+		_mark = Lib.getTimer();
+		_elapsedMS = _mark - _total;
+		_total = _mark;
+		
+		if(_updateSoundTray)
+			updateSoundTray(_elapsedMS);
+		
 		if(!_lostFocus)
 		{
 			if((_debugger != null) && _debugger.vcr.paused)
@@ -564,14 +580,14 @@ class FlxGame extends Sprite
 			}
 			else
 			{
-				_accumulator += elapsedMS;
+				_accumulator += _elapsedMS;
 				if (_accumulator > _maxAccumulation)
 				{
 					_accumulator = _maxAccumulation;
 				}
 				// TODO: You may uncomment following lines
 				//while(_accumulator >= _step)
-				while(_accumulator > _step)
+				while (_accumulator > _step)
 				{
 					step();
 					_accumulator = _accumulator - _step; 
@@ -583,14 +599,26 @@ class FlxGame extends Sprite
 			
 			if(_debuggerUp)
 			{
-				_debugger.perf.flash(elapsedMS);
+				_debugger.perf.flash(_elapsedMS);
 				_debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
 				_debugger.perf.update();
 				_debugger.watch.update();
 			}
 		}
 	}
-
+	
+	/**
+	 * Internal method to create a new instance of iState and reset the game. 
+	 * This gets called when the game is created, as well as when a new state is requested.
+	 */ 
+	private inline function resetGame():Void
+	{
+		_requestedState = Type.createInstance(_iState, []);
+		_replayTimer = 0;
+		_replayCancelKeys = null;
+		FlxG.reset();
+	}
+	
 	/**
 	 * If there is a state change requested during the update loop,
 	 * this function handles actual destroying the old state and related processes,
@@ -643,11 +671,8 @@ class FlxGame extends Sprite
 		//handle game reset request
 		if(_requestedReset)
 		{
+			resetGame();
 			_requestedReset = false;
-			_requestedState = Type.createInstance(_iState, []);
-			_replayTimer = 0;
-			_replayCancelKeys = null;
-			FlxG.reset();
 		}
 		//handle replay-related requests
 		if (_recordingRequested)
@@ -740,31 +765,29 @@ class FlxGame extends Sprite
 	private function updateSoundTray(MS:Float):Void
 	{
 		//animate stupid sound tray thing
-		if (_soundTray != null)
+		if (_soundTrayTimer > 0)
 		{
-			if (_soundTrayTimer > 0)
+			_soundTrayTimer -= MS/1000;
+		}
+		else if(_soundTray.y > -_soundTray.height)
+		{
+			_soundTray.y -= (MS/1000)*FlxG.height*2;
+			if(_soundTray.y <= -_soundTray.height)
 			{
-				_soundTrayTimer -= MS/1000;
-			}
-			else if(_soundTray.y > -_soundTray.height)
-			{
-				_soundTray.y -= (MS/1000)*FlxG.height*2;
-				if(_soundTray.y <= -_soundTray.height)
+				_soundTray.visible = false;
+				_updateSoundTray = false;
+				
+				//Save sound preferences
+				var soundPrefs:FlxSave = new FlxSave();
+				if(soundPrefs.bind("flixel"))
 				{
-					_soundTray.visible = false;
-					
-					//Save sound preferences
-					var soundPrefs:FlxSave = new FlxSave();
-					if(soundPrefs.bind("flixel"))
+					if (soundPrefs.data.sound == null)
 					{
-						if (soundPrefs.data.sound == null)
-						{
-							soundPrefs.data.sound = {};
-						}
-						soundPrefs.data.sound.mute = FlxG.mute;
-						soundPrefs.data.sound.volume = FlxG.volume;
-						soundPrefs.close();
+						soundPrefs.data.sound = {};
 					}
+					soundPrefs.data.sound.mute = FlxG.mute;
+					soundPrefs.data.sound.volume = FlxG.volume;
+					soundPrefs.close();
 				}
 			}
 		}
@@ -775,10 +798,11 @@ class FlxGame extends Sprite
 	 * May be called multiple times per "frame" or draw call.
 	 */
 	private function update():Void
-	{			
-		var mark:Int = Lib.getTimer();
+	{
+		if (_debuggerUp)
+			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
-		FlxG.elapsed = FlxG.timeScale * (_step / 1000);
+		FlxG.elapsed = FlxG.timeScale * _stepSeconds;
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		_state.update();
@@ -791,9 +815,7 @@ class FlxGame extends Sprite
 		FlxG.updateCameras();
 		
 		if (_debuggerUp)
-		{
-			_debugger.perf.flixelUpdate(Lib.getTimer() - mark);
-		}
+			_debugger.perf.flixelUpdate(Lib.getTimer() - _mark);
 	}
 	
 	/**
@@ -801,7 +823,8 @@ class FlxGame extends Sprite
 	 */
 	private function draw():Void
 	{
-		var mark:Int = Lib.getTimer();
+		if (_debuggerUp)
+			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
 		#if (cpp || neko)
 		TileSheetManager.clearAllDrawData();
@@ -820,10 +843,9 @@ class FlxGame extends Sprite
 		
 		FlxG.drawPlugins();
 		FlxG.unlockCameras();
+		
 		if (_debuggerUp)
-		{
-			_debugger.perf.flixelDraw(Lib.getTimer() - mark);
-		}
+			_debugger.perf.flixelDraw(Lib.getTimer() - _mark);
 	}
 	
 	/**
@@ -919,8 +941,17 @@ class FlxGame extends Sprite
 			stage.addEventListener(Event.ACTIVATE, onFocus);
 			createFocusScreen();
 		}
+		
+		// Instantiate the initial state.
+		if(_requestedReset)
+		{
+			resetGame();
+			switchState();
+			_requestedReset = false;
+		}
+		
 		//Finally, set up an event for the actual game loop stuff.
-		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame); 
 	}
 	
 	/**
