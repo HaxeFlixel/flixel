@@ -32,7 +32,7 @@ class ZoomCamera extends FlxCamera
 	
 	public function new(X:Int, Y:Int, Width:Int, Height:Int, ?Zoom:Float = 0)
 	{
-		super(X, Y, Width, Height, 1);
+		super(X, Y, Width, Height, FlxCamera.defaultZoom);
 		zoomSpeed = 25;
 		zoomMargin = 0.25;
 		targetZoom = Zoom;
@@ -87,8 +87,8 @@ class ZoomCamera extends FlxCamera
 		
 		// offset the screen in any direction, based on zoom level
 		// Example: a zoom of 2 offsets it half the screen at most
-		x = -(width / 2) * (offsetX) * (zoom - 1);
-		y = -(height / 2) * (offsetY) * (zoom - 1);
+		x = -(width / 2) * (offsetX) * (zoom - FlxCamera.defaultZoom);
+		y = -(height / 2) * (offsetY) * (zoom - FlxCamera.defaultZoom);
 	}
 	
 	/**
