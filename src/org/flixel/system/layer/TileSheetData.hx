@@ -127,21 +127,31 @@ class TileSheetData
 			endY = bitmapHeight;
 		}
 		
-		if (containsSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing))
+		var pointX:Float = 0.5 * width;
+		var pointY:Float = 0.5 * height;
+		
+		if (origin != null)
 		{
-			var id:Int = getIDforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing);
+			pointX = origin.x;
+			pointY = origin.y;
+		}
+		
+		if (containsSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY))
+		{
+			var id:Int = getIDforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
 			return flxSpriteFrames[id];
 		}
 		
 		var numRows:Int = Math.floor((endY - startY) / (height + ySpacing));
 		var numCols:Int = Math.floor((endX - startX) / (width + xSpacing));
 		
-		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing);
 		var tempPoint:Point = origin;
 		if (origin == null)
 		{
-			tempPoint = new Point(0.5 * width, 0.5 * height);
+			tempPoint = new Point(pointX, pointY);
 		}
+		
+		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
 		
 		var tempRect:Rectangle;
 		var tileID:Int;
@@ -164,11 +174,11 @@ class TileSheetData
 		return spriteData;
 	}
 	
-	public function containsSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int):Bool
+	public function containsSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
 	{
 		for (spriteData in flxSpriteFrames)
 		{
-			if ((spriteData.width == width) && (spriteData.height == height) && (spriteData.startX == startX) && (spriteData.startY == startY) && (spriteData.endX == endX) && (spriteData.endY == endY) && (spriteData.xSpacing == xSpacing) && (spriteData.ySpacing == ySpacing))
+			if ((spriteData.width == width) && (spriteData.height == height) && (spriteData.startX == startX) && (spriteData.startY == startY) && (spriteData.endX == endX) && (spriteData.endY == endY) && (spriteData.xSpacing == xSpacing) && (spriteData.ySpacing == ySpacing) && (spriteData.pointX == pointX) && (spriteData.pointY == pointY))
 			{
 				return true;
 			}
@@ -177,13 +187,13 @@ class TileSheetData
 		return false;
 	}
 	
-	public function getIDforSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int):Int
+	public function getIDforSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Int
 	{
 		var spriteData:FlxSpriteFrames;
 		for (i in 0...(flxSpriteFrames.length))
 		{
 			spriteData = flxSpriteFrames[i];
-			if ((spriteData.width == width) && (spriteData.height == height) && (spriteData.startX == startX) && (spriteData.startY == startY) && (spriteData.endX == endX) && (spriteData.endY == endY) && (spriteData.xSpacing == xSpacing) && (spriteData.ySpacing == ySpacing))
+			if ((spriteData.width == width) && (spriteData.height == height) && (spriteData.startX == startX) && (spriteData.startY == startY) && (spriteData.endX == endX) && (spriteData.endY == endY) && (spriteData.xSpacing == xSpacing) && (spriteData.ySpacing == ySpacing) && (spriteData.pointX == pointX) && (spriteData.pointY == pointY))
 			{
 				return i;
 			}
@@ -290,7 +300,10 @@ class FlxSpriteFrames
 	public var xSpacing:Int;
 	public var ySpacing:Int;
 	
-	public function new(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int)
+	public var pointX:Float;
+	public var pointY:Float;
+	
+	public function new(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float)
 	{
 		this.width = width;
 		this.height = height;
@@ -301,6 +314,9 @@ class FlxSpriteFrames
 		this.endY = endY;
 		this.xSpacing = xSpacing;
 		this.ySpacing = ySpacing;
+		
+		this.pointX = pointX;
+		this.pointY = pointY;
 		
 		frameIDs = [];
 		halfFrameNumber = 0;
