@@ -32,10 +32,10 @@ class ZoomCamera extends FlxCamera
 	
 	public function new(X:Int, Y:Int, Width:Int, Height:Int, ?Zoom:Float = 0)
 	{
-		super(X, Y, Width, Height, Zoom);
+		super(X, Y, Width, Height, 1);
 		zoomSpeed = 25;
 		zoomMargin = 0.25;
-		targetZoom = 1;
+		targetZoom = Zoom;
 	}
 	
 	public override function update():Void
@@ -66,8 +66,13 @@ class ZoomCamera extends FlxCamera
 	private function alignCamera():Void
 	{	
 		// target position in screen space
+		#if (flash || js)
+		var targetScreenX:Float = Math.floor(target.x - scroll.x);
+		var targetScreenY:Float = Math.floor(target.y - scroll.y);
+		#else
 		var targetScreenX:Float = target.x - scroll.x;
 		var targetScreenY:Float = target.y - scroll.y;
+		#end
 		
 		// center on the target, until the camera bumps up to its bounds
 		// then gradually favor the edge of the screen based on zoomMargin
@@ -82,7 +87,7 @@ class ZoomCamera extends FlxCamera
 		
 		// offset the screen in any direction, based on zoom level
 		// Example: a zoom of 2 offsets it half the screen at most
-		x = -(width / 2) * (offsetX) * (zoom - 1); 			
+		x = -(width / 2) * (offsetX) * (zoom - 1);
 		y = -(height / 2) * (offsetY) * (zoom - 1);
 	}
 	
