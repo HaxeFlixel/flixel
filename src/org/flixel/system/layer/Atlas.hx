@@ -521,6 +521,13 @@ class Atlas
 		return root;
 	}
 	
+	public function clone(cloneName:String):Atlas
+	{
+		var atlasKey:String = getUniqueKey(cloneName);
+		// TODO: clone method
+		return null;
+	}
+	
 	private function deleteSubtree(node:Node):Void
 	{
 		if (node != null)

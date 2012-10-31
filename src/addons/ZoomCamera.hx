@@ -35,7 +35,7 @@ class ZoomCamera extends FlxCamera
 		super(X, Y, Width, Height, Zoom);
 		zoomSpeed = 25;
 		zoomMargin = 0.25;
-		targetZoom = 1;	
+		targetZoom = 1;
 	}
 	
 	public override function update():Void
@@ -56,7 +56,6 @@ class ZoomCamera extends FlxCamera
 			y = 0;
 		}
 	}
-	
 	
 	/**
 	 * Align the camera x and y to center on the target 
@@ -101,5 +100,11 @@ class ZoomCamera extends FlxCamera
 		if(value < min) return min;
 		if(value > max) return max;
 		return value;
+	}
+	
+	override public function setScale(X:Float, Y:Float):Void 
+	{
+		_flashSprite.scaleX = X;
+		_flashSprite.scaleY = Y;
 	}
 }

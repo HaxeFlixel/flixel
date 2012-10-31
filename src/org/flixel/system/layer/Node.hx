@@ -102,4 +102,10 @@ class Node
 		this.point = null;
 	}
 	
+	public function clone():Node
+	{
+		// TODO: clone method
+		return null;
+	}
+	
 }
