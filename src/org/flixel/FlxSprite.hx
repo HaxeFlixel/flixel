@@ -3,7 +3,9 @@ package org.flixel;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
+import nme.display.BlendMode;
 import nme.display.Graphics;
+import nme.display.Tilesheet;
 import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
@@ -13,10 +15,6 @@ import org.flixel.system.layer.Node;
 
 #if (cpp || neko)
 import org.flixel.system.layer.TileSheetData;
-#end
-
-#if (flash || js)
-import nme.display.BlendMode;
 #end
 
 import org.flixel.FlxG;
@@ -70,7 +68,8 @@ class FlxSprite extends FlxObject
 	#if (flash || js)
 	public var blend:BlendMode;
 	#else
-	public var blend:String;
+	private var _blend:BlendMode;
+	private var _blendString:String;
 	#end
 	/**
 	 * Whether the current animation has finished its first (or only) loop.
@@ -199,7 +198,12 @@ class FlxSprite extends FlxObject
 		_color = 0x00ffffff;
 		#end
 		alpha = 1.0;
+		#if (flash || js)
 		blend = null;
+		#else
+		_blend = null;
+		_blendString = null;
+		#end
 		antialiasing = false;
 		cameras = null;
 		
@@ -267,6 +271,11 @@ class FlxSprite extends FlxObject
 			framePixels.dispose();
 		}
 		framePixels = null;	
+		#if (flash || js)
+		blend = null;
+		#else
+		_blend = null;
+		#end
 		super.destroy();
 	}
 	
@@ -806,7 +815,7 @@ class FlxSprite extends FlxObject
 		#if (flash || js)
 		var brushBlend:BlendMode = cast(Brush.blend, BlendMode);
 		#else
-		var brushBlend:String = Brush.blend;
+		var brushBlend:String = Brush._blendString;
 		#end
 		_pixels.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		#if (flash || js)
@@ -1523,8 +1532,29 @@ class FlxSprite extends FlxObject
 	
 	inline private function simpleRenderSprite():Bool
 	{
+		#if (flash || js)
 		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null));
+		#else
+		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+		#end
 	}
+	
+	#if (cpp || neko)
+	public var blend(get_blend, set_blend):BlendMode;
+	
+	private function get_blend():BlendMode 
+	{
+		return _blend;
+	}
+	
+	private function set_blend(value:BlendMode):BlendMode 
+	{
+		_blend = value;
+		_blendString = cast(_blend, String);
+		updateLayerProps();
+		return value;
+	}
+	#end
 	
 	/**
 	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic or loadRotatedGraphic().
@@ -1555,6 +1585,7 @@ class FlxSprite extends FlxObject
 		if (_layer != null)
 		{
 			_layer.antialiasing = antialiasing;
+			_layer.blend = _blend;
 			#if cpp
 			if (_color < 0xffffff)
 			#else

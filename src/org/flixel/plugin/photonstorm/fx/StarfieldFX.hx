@@ -708,6 +708,7 @@ class StarSprite extends FlxSprite
 		{
 			_layer.antialiasing = antialiasing;
 			_layer.isColored = true;
+			_layer.blend = _blend;
 		}
 	}
 	

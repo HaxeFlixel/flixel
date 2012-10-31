@@ -477,7 +477,10 @@ class PxBitmapFont
 		_pixels = null;
 		_bitmapDataKey = null;
 		_glyphs = null;
+		
+		#if (cpp || neko)
 		_atlasGlyphs = null;
+		#end
 	}
 	
 	#if flash

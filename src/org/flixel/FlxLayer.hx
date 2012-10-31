@@ -2,6 +2,7 @@ package org.flixel;
 
 import nme.Assets;
 import nme.display.BitmapData;
+import nme.display.BlendMode;
 import nme.display.Graphics;
 import nme.display.Tilesheet;
 import org.flixel.FlxBasic;
@@ -26,8 +27,7 @@ class FlxLayer
 	private var _numObjects:Int;
 	
 	public var flags:Int;
-	// TODO: getter/setter for layer's blending factor
-	public var blend:Int;
+	private var _blend:Int;
 	public var drawData:Array<Array<Float>>;
 	public var positionData:Array<Int>;
 	public var antialiasing:Bool;
@@ -47,7 +47,7 @@ class FlxLayer
 		
 		_layerCache.set(Name, this);
 		isColored = false;
-		blend = 0;
+		_blend = Tilesheet.TILE_BLEND_NORMAL;
 	}
 	
 	/**
@@ -273,7 +273,7 @@ class FlxLayer
 				{
 					tempFlags |= Graphics.TILE_RGB;
 				}
-				tempFlags |= blend;
+				tempFlags |= _blend;
 				cameraGraphics = camera._canvas.graphics;
 				_tileSheet.drawTiles(cameraGraphics, data, (antialiasing || camera.antialiasing), tempFlags);
 				TileSheetData._DRAWCALLS++;
@@ -302,6 +302,38 @@ class FlxLayer
 	#end
 	
 	public var atlas(get_atlas, set_atlas):Atlas;
+	
+	public var blend(get_blend, set_blend):BlendMode;
+	
+	private function get_blend():BlendMode 
+	{
+		var mode:BlendMode = BlendMode.NORMAL;
+		#if (cpp || neko)
+		switch (_blend)
+		{
+			case Tilesheet.TILE_BLEND_ADD:
+				mode = BlendMode.ADD;
+		}
+		#end
+		return mode;
+	}
+	
+	private function set_blend(value:BlendMode):BlendMode 
+	{
+		#if (cpp || neko)
+		if (value != null)
+		{
+			switch (value)
+			{
+				case BlendMode.ADD:
+					_blend = Tilesheet.TILE_BLEND_ADD;
+				default:
+					_blend = Tilesheet.TILE_BLEND_NORMAL;
+			}
+		}
+		#end
+		return value;
+	}
 	
 	private function get_atlas():Atlas 
 	{
