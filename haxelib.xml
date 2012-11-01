@@ -6,5 +6,5 @@
 	<tag v="flash"/>
     <tag v="cpp"/>	
 	<description>Flixel is a popular free game engine. This is a port of Flixel 2.55.</description>
-	<version name="1.06">See CHANGELOG</version>
+	<version name="1.07">See CHANGELOG</version>
 </project>

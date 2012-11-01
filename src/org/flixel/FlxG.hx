@@ -98,7 +98,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "06";
+	static public inline var LIBRARY_MINOR_VERSION:String = "07";
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
