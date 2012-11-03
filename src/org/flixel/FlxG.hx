@@ -1213,15 +1213,6 @@ class FlxG
 		}
 	}
 	
-	#if (cpp || neko)
-	/**
-	 * Helper storage for all on screen camera's IDs. 
-	 * We need to hold them for safely adding and removeing cameras on cpp and neko targets.
-	 * Or possible problems could appear.
-	 */
-	static private var cameraIDs:IntHash<Int> = new IntHash<Int>();
-	#end
-	
 	/**
 	 * Add a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
@@ -1232,27 +1223,7 @@ class FlxG
 	{
 		FlxG._game.addChildAt(NewCamera._flashSprite, FlxG._game.getChildIndex(FlxG._game._mouse));
 		FlxG.cameras.push(NewCamera);
-		#if (cpp || neko)
-		if (NewCamera.ID == -1) // We didn't add this camera before
-		{
-			// find available id
-			var newCamID:Int = -1;
-			var numCameras:Int = cameras.length;
-			for (i in 0...(numCameras))
-			{
-				if (!cameraIDs.exists(i))
-				{
-					newCamID = i;
-				}
-			}
-			if (newCamID == -1)
-			{
-				newCamID = numCameras;
-			}
-			NewCamera.ID = newCamID;
-			cameraIDs.set(newCamID, newCamID);
-		}
-		#end
+		NewCamera.ID = FlxG.cameras.length - 1;
 		return NewCamera;
 	}
 	
@@ -1271,11 +1242,6 @@ class FlxG
 		{
 			FlxG.log("Error removing camera, not part of game.");
 		}
-		
-		#if (cpp || neko)
-		cameraIDs.remove(Camera.ID);
-		Camera.ID = -1;
-		#end
 		
 		if (Destroy)
 		{
@@ -1305,15 +1271,8 @@ class FlxG
 		if (NewCamera == null)	
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 		
-		#if (cpp || neko)
-		for (key in cameraIDs.keys())
-		{
-			cameraIDs.remove(key);
-		}
-		NewCamera.ID = -1;
-		#end
-		
 		FlxG.camera = FlxG.addCamera(NewCamera);
+		NewCamera.ID = 0;
 	}
 	
 	/**

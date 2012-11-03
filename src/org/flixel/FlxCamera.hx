@@ -262,8 +262,6 @@ class FlxCamera extends FlxBasic
 	{
 		super();
 		
-		ID = -1;
-		
 		x = X;
 		y = Y;
 		width = Width;
