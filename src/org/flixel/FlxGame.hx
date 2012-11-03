@@ -204,7 +204,7 @@ class FlxGame extends Sprite
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, ?Zoom:Float = 1, GameFramerate:Int = 60, ?FlashFramerate:Int = 30, ?UseSystemCursor:Bool = false)
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 30, UseSystemCursor:Bool = false)
 	{
 		super();
 		
@@ -229,7 +229,11 @@ class FlxGame extends Sprite
 		{
 			Mouse.hide();
 		}
+		#if debug
+		forceDebugger = true;
+		#else
 		forceDebugger = false;
+		#end
 		_debuggerUp = false;
 		
 		//replay data
@@ -251,7 +255,7 @@ class FlxGame extends Sprite
 	 * Makes the little volume tray slide out.
 	 * @param	Silent	Whether or not it should beep.
 	 */
-	private function showSoundTray(?Silent:Bool = false):Void
+	private function showSoundTray(Silent:Bool = false):Void
 	{
 		if (!Silent)
 		{
@@ -527,7 +531,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onFocus(?FlashEvent:Event = null):Void
+	private function onFocus(FlashEvent:Event = null):Void
 	{
 		if (!_debuggerUp && !useSystemCursor)
 		{
@@ -543,7 +547,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onFocusLost(?FlashEvent:Event = null):Void
+	private function onFocusLost(FlashEvent:Event = null):Void
 	{
 		if((x != 0) || (y != 0))
 		{
@@ -560,7 +564,7 @@ class FlxGame extends Sprite
 	 * Handles the onEnterFrame call and figures out how many updates and draw calls to do.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onEnterFrame(?FlashEvent:Event = null):Void
+	private function onEnterFrame(FlashEvent:Event = null):Void
 	{			
 		_mark = Lib.getTimer();
 		_elapsedMS = _mark - _total;

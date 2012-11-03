@@ -190,7 +190,7 @@ class PxBitmapFont
 	}
 	
 	#if (flash || js)
-	public function getPreparedGlyphs(pScale:Float, pColor:Int, ?pUseColorTransform:Bool = true):Array<BitmapData>
+	public function getPreparedGlyphs(pScale:Float, pColor:Int, pUseColorTransform:Bool = true):Array<BitmapData>
 	{
 		var result:Array<BitmapData> = [];
 		
@@ -319,11 +319,11 @@ class PxBitmapFont
 	 * @param	pOffsetY	Y position of thext output.
 	 */
 	#if flash 
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, ?pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pAngle:Float = 0):Void 
 	#elseif js
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, ?pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pAngle:Float = 0):Void 
 	#else
-	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pAngle:Float = 0, ?pUseColorTransform:Bool = true):Void 
+	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, pAngle:Float = 0, pUseColorTransform:Bool = true):Void 
 	#end
 	{
 		_point.x = pOffsetX;
@@ -398,7 +398,7 @@ class PxBitmapFont
 	 * @param	pFontScale	"size" of the font
 	 * @return	Width in pixels.
 	 */
-	public function getTextWidth(pText:String, ?pLetterSpacing:Int = 0, ?pFontScale:Float = 1.0):Int 
+	public function getTextWidth(pText:String, pLetterSpacing:Int = 0, pFontScale:Float = 1.0):Int 
 	{
 		var w:Int = 0;
 		

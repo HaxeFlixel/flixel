@@ -22,7 +22,7 @@ class Node
 	public var point:Point;
 	public var key:String;
 	
-	public function new(atlas:Atlas, rect:Rectangle, ?item:BitmapData = null, ?key:String = "") 
+	public function new(atlas:Atlas, rect:Rectangle, item:BitmapData = null, key:String = "") 
 	{
 		this.atlas = atlas;
 		this.item = item;
@@ -101,11 +101,4 @@ class Node
 		this.rect = null;
 		this.point = null;
 	}
-	
-	public function clone():Node
-	{
-		// TODO: clone method
-		return null;
-	}
-	
 }

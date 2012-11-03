@@ -168,7 +168,7 @@ class TouchManager
 	 * @param	TouchArray		optional array to fill with touch objects
 	 * @return					array with touches
 	 */
-	public function justStartedTouches(?TouchArray:Array<Touch> = null):Array<Touch>
+	public function justStartedTouches(TouchArray:Array<Touch> = null):Array<Touch>
 	{
 		if (TouchArray == null)
 		{
@@ -197,7 +197,7 @@ class TouchManager
 	 * @param	TouchArray		optional array to fill with touch objects
 	 * @return					array with touches
 	 */
-	public function justReleasedTouches(?TouchArray:Array<Touch> = null):Array<Touch>
+	public function justReleasedTouches(TouchArray:Array<Touch> = null):Array<Touch>
 	{
 		if (TouchArray == null)
 		{

@@ -102,7 +102,7 @@ class FlxButton extends FlxSprite
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Label:String = null, ?OnClick:Void->Void = null)
+	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
 	{
 		super(X, Y);
 		if(Label != null)
@@ -129,7 +129,7 @@ class FlxButton extends FlxSprite
 		_initialized = false;
 	}
 	
-	override public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false, ?Key:String = null):FlxSprite 
+	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite 
 	{
 		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique, Key);
 		swapLayers();
@@ -376,9 +376,9 @@ class FlxButton extends FlxSprite
 	}
 	
 	#if flash 
-	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
 	#else
-	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, Unique:Bool = false, Key:String = null):FlxSprite
 	#end
 	{
 		#if !flash
@@ -452,7 +452,7 @@ class FlxButton extends FlxSprite
 	 * @param SoundUp			What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.
 	 * @param SoundUpVolume		How load the that sound should be.
 	 */
-	public function setSounds(?SoundOver:Sound = null, ?SoundOverVolume:Float = 1.0, ?SoundOut:Sound = null, ?SoundOutVolume:Float = 1.0, ?SoundDown:Sound = null, ?SoundDownVolume:Float = 1.0, ?SoundUp:Sound = null, ?SoundUpVolume:Float = 1.0):Void
+	public function setSounds(SoundOver:Sound = null, SoundOverVolume:Float = 1.0, SoundOut:Sound = null, SoundOutVolume:Float = 1.0, SoundDown:Sound = null, SoundDownVolume:Float = 1.0, SoundUp:Sound = null, SoundUpVolume:Float = 1.0):Void
 	{
 		if (SoundOver != null)
 		{

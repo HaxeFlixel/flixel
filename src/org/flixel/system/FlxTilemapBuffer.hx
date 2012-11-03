@@ -56,7 +56,7 @@ class FlxTilemapBuffer
 	 * @param HeightInTiles	How many tiles tall the tilemap is.
 	 * @param Camera		Which camera this buffer relates to.
 	 */
-	public function new(TileWidth:Float, TileHeight:Float, WidthInTiles:Int, HeightInTiles:Int, ?Camera:FlxCamera = null)
+	public function new(TileWidth:Float, TileHeight:Float, WidthInTiles:Int, HeightInTiles:Int, Camera:FlxCamera = null)
 	{
 		if (WidthInTiles < 0) WidthInTiles = 0;
 		if (HeightInTiles < 0) HeightInTiles = 0;
@@ -106,9 +106,9 @@ class FlxTilemapBuffer
 #if (flash || js)	
 	 
 	#if flash
-	public function fill(?Color:UInt = 0):Void
+	public function fill(Color:UInt = 0):Void
 	#elseif js
-	public function fill(?Color:Int = 0):Void
+	public function fill(Color:Int = 0):Void
 	#end
 	{
 		_pixels.fillRect(_flashRect, Color);

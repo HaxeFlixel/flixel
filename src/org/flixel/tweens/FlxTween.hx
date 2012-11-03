@@ -54,7 +54,7 @@ class FlxTween
 	 * @param	complete		Optional callback for when the Tween completes.
 	 * @param	ease			Optional easer function to apply to the Tweened value.
 	 */
-	public function new(duration:Float, ?type:Int = 0, ?complete:CompleteCallback, ?ease:EaseFunction)
+	public function new(duration:Float, type:Int = 0, complete:CompleteCallback = null, ease:EaseFunction = null)
 	{
 		_target = duration;
 		if (type == 0) 

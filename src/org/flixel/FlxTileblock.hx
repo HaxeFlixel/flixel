@@ -52,7 +52,7 @@ class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	public function loadTiles(TileGraphic:Dynamic, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?Empties:Int = 0):FlxTileblock
+	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{
 		TileWidth = FlxU.fromIntToUInt(TileWidth);
 		TileHeight = FlxU.fromIntToUInt(TileHeight);

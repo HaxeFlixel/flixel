@@ -50,7 +50,7 @@ class FlxGroup extends FlxBasic
 	/**
 	 * Constructor
 	 */
-	public function new(?MaxSize:Int = 0)
+	public function new(MaxSize:Int = 0)
 	{
 		super();
 		members = new Array<FlxBasic>();
@@ -287,7 +287,7 @@ class FlxGroup extends FlxBasic
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
-	public function recycle(?ObjectClass:Class<FlxBasic> = null):FlxBasic
+	public function recycle(ObjectClass:Class<FlxBasic> = null):FlxBasic
 	{
 		var basic:FlxBasic;
 		if (maxSize > 0)
@@ -376,7 +376,7 @@ class FlxGroup extends FlxBasic
 	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
 	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.  
 	 */
-	public function sort(?Index:String = "y", ?Order:Int = -1):Void
+	public function sort(Index:String = "y", Order:Int = -1):Void
 	{
 		_sortIndex = Index;
 		_sortOrder = Order;
@@ -389,7 +389,7 @@ class FlxGroup extends FlxBasic
 	 * @param	Value			The value you want to assign to that variable.
 	 * @param	Recurse			Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
 	 */
-	public function setAll(VariableName:String, Value:Dynamic, ?Recurse:Bool = true):Void
+	public function setAll(VariableName:String, Value:Dynamic, Recurse:Bool = true):Void
 	{
 		var basic:FlxBasic;
 		var i:Int = 0;
@@ -443,7 +443,7 @@ class FlxGroup extends FlxBasic
 	 * @param	ObjectClass		An optional parameter that lets you narrow the results to instances of this particular class.
 	 * @return	A <code>FlxBasic</code> currently flagged as not existing.
 	 */
-	public function getFirstAvailable(?ObjectClass:Class<FlxBasic> = null):FlxBasic
+	public function getFirstAvailable(ObjectClass:Class<FlxBasic> = null):FlxBasic
 	{
 		var basic:FlxBasic;
 		var i:Int = 0;
@@ -606,7 +606,7 @@ class FlxGroup extends FlxBasic
 	 * 
 	 * @return	A <code>FlxBasic</code> from the members list.
 	 */
-	public function getRandom(?StartIndex:Int = 0, ?Length:Int = 0):FlxBasic
+	public function getRandom(StartIndex:Int = 0, Length:Int = 0):FlxBasic
 	{
 		if (StartIndex < 0)
 		{

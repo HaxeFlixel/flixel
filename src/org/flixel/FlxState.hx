@@ -64,6 +64,9 @@ class FlxState extends FlxGroup
 	
 	// Layer manipulation methods
 	
+	/**
+	 * Gets the layer at specified index. May return null if index is out of bounds (less than zero of more than maxIndex).
+	 */
 	public function getLayerAt(index:Int):FlxLayer
 	{
 		if (index < 0 || index > getMaxIndex())
@@ -73,23 +76,32 @@ class FlxState extends FlxGroup
 		return _layers[index];
 	}
 	
+	/**
+	 * Returns layer index. May return -1 if layer isn't on layer stack
+	 */
 	public function getLayerIndex(layer:FlxLayer):Int
 	{
 		if (layer == null || !layer.onStage)	return -1; 
 		return FlxU.ArrayIndexOf(_layers, layer);
 	}
 	
+	/**
+	 * Retutns max index
+	 */
 	public function getMaxIndex():Int
 	{
 		return (_layers.length - 1);
 	}
 	
-	public function addLayerAt(layer:FlxLayer, index:Int):Void
+	/**
+	 * Adds layer at specified index. Adds it at the top of layer stack if index is more than maxIndex, and at the bottom if index is less than zero.
+	 */
+	public function addLayerAt(layer:FlxLayer, index:Int):FlxLayer
 	{
 		var layerIndex:Int = getLayerIndex(layer);
 		if (layerIndex == index)
 		{
-			return;
+			return layer;
 		}
 		
 		var maxIndex:Int = getMaxIndex();
@@ -98,14 +110,12 @@ class FlxState extends FlxGroup
 			removeLayer(layer);
 			if (index > maxIndex)
 			{
-				addLayer(layer);
-				return;
+				return addLayer(layer);
 			}
 		}
 		else if (index > maxIndex)
 		{
-			addLayer(layer);
-			return;
+			return addLayer(layer);
 		}
 		
 		if (index < 0)
@@ -115,17 +125,25 @@ class FlxState extends FlxGroup
 		
 		_layers.insert(index, layer);
 		layer.onStage = true;
+		return layer;
 	}
 	
-	public function removeLayerAt(index:Int):Void
+	/**
+	 * Removes layer at specified index. May return null if layer wasn't added to state before.
+	 */
+	public function removeLayerAt(index:Int):FlxLayer
 	{
 		var layer:FlxLayer = getLayerAt(index);
 		if (layer != null)
 		{
-			removeLayer(layer);
+			return removeLayer(layer);
 		}
+		return null;
 	}
 	
+	/**
+	 * Swaps specified layer
+	 */
 	public function swapLayers(layer1:FlxLayer, layer2:FlxLayer):Void
 	{
 		if (layer1 == layer2) return;
@@ -136,6 +154,9 @@ class FlxState extends FlxGroup
 		swapLayersAt(id1, id2);
 	}
 	
+	/**
+	 * Swaps layers at specified indices.
+	 */
 	public function swapLayersAt(id1:Int, id2:Int):Void
 	{
 		var numLayers:Int = _layers.length;
@@ -145,18 +166,26 @@ class FlxState extends FlxGroup
 		_layers[id2] = tempLayer;
 	}
 	
+	/**
+	 * Adds layer at the top of layer stack. May remove layer and add it again to the state if layer was in the state already.
+	 * @param	Layer	layer to add
+	 * @return	added 	layer
+	 */
 	public function addLayer(Layer:FlxLayer):FlxLayer
 	{
 		#if (cpp || neko)
-		if (!Layer.onStage)
-		{
-			_layers.push(Layer);
-			Layer.onStage = true;
-		}
+		removeLayer(Layer);
+		_layers.push(Layer);
+		Layer.onStage = true;
 		#end
 		return Layer;
 	}
 	
+	/**
+	 * Removes layer from state
+	 * @param	Layer	layer to remove
+	 * @return	removed layer if it was in the state, or null if it wasn't.
+	 */
 	public function removeLayer(Layer:FlxLayer):FlxLayer
 	{
 		#if (cpp || neko)
@@ -165,11 +194,17 @@ class FlxState extends FlxGroup
 		{
 			_layers.splice(pos, 1);
 			Layer.onStage = false;
+			return Layer;
 		}
 		#end
-		return Layer;
+		return null;
 	}
 	
+	/**
+	 * Gets the layer for specified key from bitmap cache in FlxG. Creates new layer for it if there wasn't such a layer 
+	 * @param	KeyInBitmapCache	key from bitmap cache in FlxG
+	 * @return	required layer
+	 */
 	public function getLayerFor(KeyInBitmapCache:String):FlxLayer
 	{
 		#if (cpp || neko)

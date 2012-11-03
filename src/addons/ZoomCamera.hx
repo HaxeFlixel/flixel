@@ -30,7 +30,7 @@ class ZoomCamera extends FlxCamera
 	 */
 	private var zoomMargin:Float;
 	
-	public function new(X:Int, Y:Int, Width:Int, Height:Int, ?Zoom:Float = 0)
+	public function new(X:Int, Y:Int, Width:Int, Height:Int, Zoom:Float = 0)
 	{
 		super(X, Y, Width, Height, FlxCamera.defaultZoom);
 		zoomSpeed = 25;

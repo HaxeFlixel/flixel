@@ -416,7 +416,7 @@ class PxBitmapFont
 	}
 	
 	#if (flash || js)
-	public function getPreparedGlyphs(pScale:Float, pColor:Int, ?pUseColorTransform:Bool = true):Array<BitmapData>
+	public function getPreparedGlyphs(pScale:Float, pColor:Int, pUseColorTransform:Bool = true):Array<BitmapData>
 	{
 		var result:Array<BitmapData> = [];
 		
@@ -526,7 +526,7 @@ class PxBitmapFont
 		}
 	}
 	#else
-	private function setGlyph(node:Node, pCharID:Int, pRect:Rectangle, ?pOffsetX:Int = 0, ?pOffsetY:Int = 0, ?pAdvanceX:Int = 0):Void
+	private function setGlyph(node:Node, pCharID:Int, pRect:Rectangle, pOffsetX:Int = 0, pOffsetY:Int = 0, pAdvanceX:Int = 0):Void
 	{
 		var tileID:Int = node.addTileRect(pRect, ZERO_POINT);
 		
@@ -559,7 +559,7 @@ class PxBitmapFont
 	#elseif js
 	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int):Void 
 	#else
-	public function render(drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pUseColor:Bool = true):Void 
+	public function render(drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, pUseColor:Bool = true):Void 
 	#end
 	{
 	#if (cpp || neko)
@@ -635,7 +635,7 @@ class PxBitmapFont
 	 * @param	pFontScale	"size" of the font
 	 * @return	Width in pixels.
 	 */
-	public function getTextWidth(pText:String, ?pLetterSpacing:Int = 0, ?pFontScale:Float = 1.0):Int 
+	public function getTextWidth(pText:String, pLetterSpacing:Int = 0, pFontScale:Float = 1.0):Int 
 	{
 		var w:Int = 0;
 		

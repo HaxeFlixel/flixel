@@ -32,7 +32,7 @@ class FlxRect
 	 * @param	Width	Desired width of the rectangle.
 	 * @param	Height	Desired height of the rectangle.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Width:Float = 0, ?Height:Float = 0)
+	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
 	{
 		x = X; 
 		y = Y;
@@ -88,7 +88,7 @@ class FlxRect
 	 * @param	Height	Desired height of the rectangle.
 	 * @return	A reference to itself.
 	 */
-	inline public function make(?X:Float = 0, ?Y:Float = 0, ?Width:Float = 0, ?Height:Float = 0):FlxRect
+	inline public function make(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
 		x = X;
 		y = Y;

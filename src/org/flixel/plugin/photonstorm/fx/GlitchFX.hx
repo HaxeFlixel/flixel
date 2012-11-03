@@ -42,9 +42,9 @@ class GlitchFX extends BaseFX
 	}
 	
 	#if flash
-	public function createFromFlxSprite(source:FlxSprite, maxGlitch:Int, maxSkip:Int, ?autoUpdate:Bool = false, ?backgroundColor:UInt = 0x0):FlxSprite
+	public function createFromFlxSprite(source:FlxSprite, maxGlitch:Int, maxSkip:Int, autoUpdate:Bool = false, ?backgroundColor:UInt = 0x0):FlxSprite
 	#else
-	public function createFromFlxSprite(source:FlxSprite, maxGlitch:Int, maxSkip:Int, ?autoUpdate:Bool = false, ?backgroundColor:BitmapInt32 = null):FlxSprite
+	public function createFromFlxSprite(source:FlxSprite, maxGlitch:Int, maxSkip:Int, autoUpdate:Bool = false, ?backgroundColor:BitmapInt32):FlxSprite
 	#end
 	{
 		#if !flash

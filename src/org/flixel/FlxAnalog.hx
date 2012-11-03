@@ -235,7 +235,7 @@ class FlxAnalog extends FlxGroup
 		super.update();
 	}
 	
-	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, ?touch:Touch = null):Bool
+	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, touch:Touch = null):Bool
 	{
 		var offAll:Bool = true;
 		

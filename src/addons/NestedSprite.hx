@@ -58,7 +58,7 @@ class NestedSprite extends FlxSprite
 	public var _parentGreen:Float = 1;
 	public var _parentBlue:Float = 1;
 	
-	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:Dynamic = null) 
+	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null) 
 	{
 		super(X, Y, SimpleGraphic);
 		
@@ -278,32 +278,6 @@ class NestedSprite extends FlxSprite
 			child.acceleration.y = this.acceleration.y;
 		}
 	}
-	
-	/*override private function updateMotion():Void 
-	{
-		super.updateMotion();
-		
-		var delta:Float;
-		var velocityDelta:Float;
-		var dt:Float = FlxG.elapsed;
-		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeAngularVelocity, relativeAngularAcceleration, angularDrag, maxAngular) - relativeAngularVelocity);
-		relativeAngularVelocity += velocityDelta; 
-		relativeAngle += relativeAngularVelocity * dt;
-		relativeAngularVelocity += velocityDelta;
-		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeVelocityX, relativeAccelerationX, drag.x, maxVelocity.x) - relativeVelocityX);
-		relativeVelocityX += velocityDelta;
-		delta = relativeVelocityX * dt;
-		relativeVelocityX += velocityDelta;
-		relativeX += delta;
-		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeVelocityY, relativeAccelerationY, drag.y, maxVelocity.y) - relativeVelocityY);
-		relativeVelocityY += velocityDelta;
-		delta = relativeVelocityY * dt;
-		relativeVelocityY += velocityDelta;
-		relativeY += delta;
-	}*/
 	
 	override public function draw():Void 
 	{

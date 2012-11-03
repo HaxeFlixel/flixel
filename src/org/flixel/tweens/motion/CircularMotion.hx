@@ -13,7 +13,7 @@ class CircularMotion extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:Int = 0)
+	public function new(complete:CompleteCallback = null, type:Int = 0)
 	{
 		_centerX = _centerY = 0;
 		_radius = angle = 0;
@@ -31,7 +31,7 @@ class CircularMotion extends Motion
 	 * @param	duration	Duration of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotion(centerX:Float, centerY:Float, radius:Float, angle:Float, clockwise:Bool, duration:Float, ?ease:EaseFunction = null):Void
+	public function setMotion(centerX:Float, centerY:Float, radius:Float, angle:Float, clockwise:Bool, duration:Float, ease:EaseFunction = null):Void
 	{
 		_centerX = centerX;
 		_centerY = centerY;
@@ -53,7 +53,7 @@ class CircularMotion extends Motion
 	 * @param	speed		Speed of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotionSpeed(centerX:Float, centerY:Float, radius:Float, angle:Float, clockwise:Bool, speed:Float, ?ease:EaseFunction = null):Void
+	public function setMotionSpeed(centerX:Float, centerY:Float, radius:Float, angle:Float, clockwise:Bool, speed:Float, ease:EaseFunction = null):Void
 	{
 		_centerX = centerX;
 		_centerY = centerY;

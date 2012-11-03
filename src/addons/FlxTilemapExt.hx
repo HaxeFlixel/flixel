@@ -69,7 +69,7 @@ class FlxTilemapExt extends FlxTilemap
 	 *
 	 * @return Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	override public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool = null, ?FlipCallbackParams:Bool = false, ?Position:FlxPoint = null):Bool
+	override public function overlapsWithCallback(Object:FlxObject, Callback:FlxObject->FlxObject->Bool = null, FlipCallbackParams:Bool = false, Position:FlxPoint = null):Bool
 	{
 		var results:Bool = false;
 		
@@ -331,7 +331,7 @@ class FlxTilemapExt extends FlxTilemap
 	 * @param An array containing the numbers of the tiles to be treated as clouds.
 	 * 
 	 */
-	public function setClouds(?clouds:Array<Int> = null):Void
+	public function setClouds(clouds:Array<Int> = null):Void
 	{
 		if (clouds != null)
 		{

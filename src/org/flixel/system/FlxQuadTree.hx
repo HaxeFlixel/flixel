@@ -195,7 +195,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Private, use recycle instead.
 	 */
-	private function new(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null)
+	private function new(X:Float, Y:Float, Width:Float, Height:Float, Parent:FlxQuadTree = null)
 	{
 		super(X, Y, Width, Height);
 		reset(X, Y, Width, Height, Parent);
@@ -209,7 +209,7 @@ class FlxQuadTree extends FlxRect
 	 * @param	Height		Desired height of this node.
 	 * @param	Parent		The parent branch or node.  Pass null to create a root.
 	 */
-	public static function recycle(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null):FlxQuadTree
+	public static function recycle(X:Float, Y:Float, Width:Float, Height:Float, Parent:FlxQuadTree = null):FlxQuadTree
 	{
 		if (_cachedTreesHead != null)
 		{
@@ -238,7 +238,7 @@ class FlxQuadTree extends FlxRect
 		_NUM_CACHED_QUAD_TREES = 0;
 	}
 	
-	public function reset(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree = null):Void
+	public function reset(X:Float, Y:Float, Width:Float, Height:Float, Parent:FlxQuadTree = null):Void
 	{
 		exists = true;
 		
@@ -358,7 +358,7 @@ class FlxQuadTree extends FlxRect
 	 * @param NotifyCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
 	 * @param ProcessCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):Boolean</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
 	 */
-	public function load(ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:FlxObject->FlxObject->Void = null, ?ProcessCallback:FlxObject->FlxObject->Bool = null):Void
+	public function load(ObjectOrGroup1:FlxBasic, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Void
 	{
 		add(ObjectOrGroup1, A_LIST);
 		if(ObjectOrGroup2 != null)

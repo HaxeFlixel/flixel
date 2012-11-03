@@ -73,7 +73,7 @@ class FlxTrail extends FlxGroup
 	 * @param	Alpha		The alpha value for the very first trailsprite.
 	 * @param	Diff		How much lower the alpha of the next trailsprite is.
 	 */
-	override public function new(Sprite:FlxSprite, Image:Dynamic, ?Length:Int = 10, ?Delay:Int = 3, ?Alpha:Float = 0.4, ?Diff:Float = 0.05):Void
+	override public function new(Sprite:FlxSprite, Image:Dynamic, Length:Int = 10, Delay:Int = 3, Alpha:Float = 0.4, Diff:Float = 0.05):Void
 	{
 		super();
 
@@ -190,7 +190,7 @@ class FlxTrail extends FlxGroup
 	 * @param 	X 		Whether the trail reacts to x changes or not.
 	 * @param 	Y 		Whether the trail reacts to y changes or not.
 	 */
-	public function changeValuesEnabled(Angle:Bool, ?X:Bool = true, ?Y:Bool = true):Void
+	public function changeValuesEnabled(Angle:Bool, X:Bool = true, Y:Bool = true):Void
 	{
 		rotationsEnabled = Angle;
 		xEnabled = X;

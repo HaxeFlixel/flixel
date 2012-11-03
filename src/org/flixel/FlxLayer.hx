@@ -26,16 +26,37 @@ class FlxLayer
 	 */
 	private var _numObjects:Int;
 	
+	/**
+	 * Drawing flags, used for tilesheet rendering
+	 */
 	public var flags:Int;
+	/**
+	 * Layer blending flag.
+	 */
 	private var _blend:Int;
+	/**
+	 * draw data for tilesheet rendering
+	 */
 	public var drawData:Array<Array<Float>>;
+	/**
+	 * position offsets in drawData arrays. I use them for little optimization
+	 */
 	public var positionData:Array<Int>;
+	/**
+	 * Layer antialiasing
+	 */
 	public var antialiasing:Bool;
-	
+	/**
+	 * Bool flag to track if the layer is on state. Please, do not modify it's value.
+	 */
 	public var onStage:Bool;
 	
 	// TODO: Maybe we need variable (array or list) to track objects on layer
 	
+	/**
+	 * Constructot
+	 * @param	Name	layer name. Need to be unique.
+	 */
 	public function new(Name:String)
 	{
 		_numObjects = 0;
@@ -76,6 +97,9 @@ class FlxLayer
 		return value;
 	}
 	
+	/**
+	 * Updates drawing flags
+	 */
 	private function updateFlags():Void
 	{
 		#if (cpp || neko)
@@ -105,6 +129,11 @@ class FlxLayer
 		onStage = false;
 	}
 	
+	/**
+	 * Adds object to this layer. May remove it if object was on another layer. Tries to add object's bitmapdata on layer's atlas
+	 * @param	Object	object to add.
+	 * @return	added object. May return null if object can't be added on this layer.
+	 */
 	public function add(Object:FlxBasic):FlxBasic
 	{
 		#if (cpp || neko)
@@ -159,6 +188,11 @@ class FlxLayer
 		return Object;
 	}
 	
+	/**
+	 * Removes object from this layer
+	 * @param	Object	object to remove
+	 * @return	removed object
+	 */
 	public function remove(Object:FlxBasic):FlxBasic
 	{
 		#if (cpp || neko)
@@ -195,7 +229,10 @@ class FlxLayer
 		return Object;
 	}
 	
-	public function addImage(Image:Dynamic, ?Key:String = null, ?Unique:Bool = false):Node
+	/**
+	 * Adds image to layer's atlas.
+	 */
+	public function addImage(Image:Dynamic, Key:String = null, Unique:Bool = false):Node
 	{
 		var bd:BitmapData = null;
 		var key:String = null;
@@ -301,8 +338,13 @@ class FlxLayer
 	}
 	#end
 	
+	/**
+	 * Layer's atlas. You can't change layer's atlas if layer contains any object already.
+	 */
 	public var atlas(get_atlas, set_atlas):Atlas;
-	
+	/**
+	 * Layer's blendMode. It supports only NORMAL and ADD modes currently
+	 */
 	public var blend(get_blend, set_blend):BlendMode;
 	
 	private function get_blend():BlendMode 
@@ -359,16 +401,6 @@ class FlxLayer
 		return value;
 	}
 	
-	public function incrementNumObjects():Void
-	{
-		_numObjects++;
-	}
-	
-	public function decrementNumObjects():Void
-	{
-		_numObjects--;
-	}
-	
 	/**
 	 * Creates new layer from specified bitmapdata and stores it in layer cache, or gets cached layer if you don't need unique layer
 	 * @param	Key			key to store in layer cache
@@ -376,7 +408,7 @@ class FlxLayer
 	 * @param	Unique		set this param to true if you want to be sure in key's uniqueness (plus you should provide unique bitmapdata for totally unique layer and it's atlas)
 	 * @return	newly created layer or layer from cache (if Unique is set to false and layer with the same key was found in cache)
 	 */
-	public static function fromBitmapData(Key:String, BmData:BitmapData, ?Unique:Bool = false):FlxLayer
+	public static function fromBitmapData(Key:String, BmData:BitmapData, Unique:Bool = false):FlxLayer
 	{
 		var layer:FlxLayer;
 		var alreadyExist:Bool = checkCache(Key);

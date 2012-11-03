@@ -2,14 +2,17 @@ flixel CHANGELOG
 
 v1.07
 ------------------------------
-* Added GlitchFX class from FlixelPowerTools. It doesn't work with 'complex' sprites (such as FlxTileblock, FlxBitmapFont and FlxButtonPlus) on cpp and neko targets.
+* New layer system for cpp and neko targets
 * Fixed draw position round issue for cpp and neko targets. It uses less math methods and more accurate now.
 * Added drawTiles() counter in debugger output (on cpp and neko targets).
-* Added BACKWARD and TOANDFRO tween types. Thanks @devolonter!
+* Added BACKWARD and PINGPONG tween types. Thanks @devolonter!
 * Added cancel() method to FlxTween
-* Moved tilesheet manager to system package. This is preparation for the next major release.
 * Added initial support for html5 target. But it's very-very slow
-* Added NestedSprite addon. It is some sort of display object container, a very limited one, but powerfull enough.
+* Added NestedSprite addon. It is some sort of display object container, a very limited one, but powerfull enough (it's not in finished state right now but usable).
+* Added FlxTrail class (thanks @crazysam)
+* Fixed ZoomCamera addon class
+* Added FlxGamePad and FlxAnalog controls (initial state). Thanks to WingEraser for his Flixel-Android port (I took them from there).
+* Lots of small fixes, changes and tweaks (thanks to Samuel Batista aka crazysam and @FlixelCommunity)
 
 v1.06
 ------------------------------

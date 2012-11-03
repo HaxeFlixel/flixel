@@ -2,7 +2,6 @@
  * ...
  * @author Zaphod
  */
-
 package org.flixel;
 
 import nme.net.URLRequest;
@@ -153,7 +152,7 @@ class FlxU
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	inline static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:Int = 0, ?Length:Int = 0):Dynamic
+	inline static public function getRandom(Objects:Array<Dynamic>, StartIndex:Int = 0, Length:Int = 0):Dynamic
 	{
 		var res:Dynamic = null;
 		if (Objects != null)
@@ -207,9 +206,9 @@ class FlxU
 	 * @return  The color as a <code>uint</code>.
 	 */
 	#if flash
-	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, ?Alpha:Float = 1.0):UInt
+	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
 	#else
-	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, ?Alpha:Float = 1.0):Int
+	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):Int
 	#end
 	{
 		return (Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
@@ -225,9 +224,9 @@ class FlxU
 	 * @return	The color as a <code>uint</code>.
 	 */
 	#if flash
-	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, ?Alpha:Float = 1.0):UInt
+	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
 	#else
-	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, ?Alpha:Float = 1.0):Int
+	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):Int
 	#end
 	{
 		var red:Float;
@@ -297,9 +296,9 @@ class FlxU
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
 	#if flash
-	inline static public function getRGBA(Color:UInt, ?Results:Array<Float> = null):Array<Float>
+	inline static public function getRGBA(Color:UInt, Results:Array<Float> = null):Array<Float>
 	#else
-	inline static public function getRGBA(Color:Int, ?Results:Array<Float> = null):Array<Float>
+	inline static public function getRGBA(Color:Int, Results:Array<Float> = null):Array<Float>
 	#end
 	{
 		if (Results == null)
@@ -322,9 +321,9 @@ class FlxU
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
 	#if flash
-	inline static public function getHSB(Color:UInt, ?Results:Array<Float> = null):Array<Float>
+	inline static public function getHSB(Color:UInt, Results:Array<Float> = null):Array<Float>
 	#else
-	inline static public function getHSB(Color:Int, ?Results:Array<Float> = null):Array<Float>
+	inline static public function getHSB(Color:Int, Results:Array<Float> = null):Array<Float>
 	#end
 	{
 		if (Results == null)
@@ -381,7 +380,7 @@ class FlxU
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted <code>String</code>, like "1:03".
 	 */
-	inline static public function formatTime(Seconds:Int, ?ShowMS:Bool = false):String
+	inline static public function formatTime(Seconds:Int, ShowMS:Bool = false):String
 	{
 		var timeString:String = Std.int(Seconds / 60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;
@@ -436,7 +435,7 @@ class FlxU
 	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.  Default value is true.
 	 * @return	A nicely formatted <code>String</code>.  Does not include a dollar sign or anything!
 	 */
-	inline static public function formatMoney(Amount:Float, ?ShowDecimal:Bool = true, ?EnglishStyle:Bool = true):String
+	inline static public function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
 		var helper:Int;
 		var amount:Int = Math.floor(Amount);
@@ -490,7 +489,7 @@ class FlxU
 	 * @param	Simple	Returns only the class name, not the package or packages.
 	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
 	 */
-	inline static public function getClassName(Obj:Dynamic, ?Simple:Bool = false):String
+	inline static public function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
 		var s:String = Type.getClassName(Type.getClass(Obj));
 		if (s != null)
@@ -582,7 +581,7 @@ class FlxU
 	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
 	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
 	 */
-	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint = null):FlxPoint
+	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, point:FlxPoint = null):FlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
@@ -715,7 +714,7 @@ class FlxU
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 	
-	inline static public function ArrayIndexOf(array:Array<Dynamic>, whatToFind:Dynamic, ?fromIndex:Int = 0):Int
+	inline static public function ArrayIndexOf(array:Array<Dynamic>, whatToFind:Dynamic, fromIndex:Int = 0):Int
 	{
 		var len:Int = array.length;
 		var index:Int = -1;

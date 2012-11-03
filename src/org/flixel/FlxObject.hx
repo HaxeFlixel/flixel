@@ -265,7 +265,7 @@ class FlxObject extends FlxBasic
 	 * @param	Width	Desired width of the rectangle.
 	 * @param	Height	Desired height of the rectangle.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Width:Float = 0, ?Height:Float = 0)
+	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
 	{
 		super();
 		
@@ -441,7 +441,7 @@ class FlxObject extends FlxBasic
 	 * 
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
-	override public function drawDebug(?Camera:FlxCamera = null):Void
+	override public function drawDebug(Camera:FlxCamera = null):Void
 	{
 		if (Camera == null)
 		{
@@ -528,7 +528,7 @@ class FlxObject extends FlxBasic
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
 	 */
-	public function followPath(Path:FlxPath, ?Speed:Float = 100, ?Mode:Int = 0x000000, ?AutoRotate:Bool = false):Void
+	public function followPath(Path:FlxPath, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false):Void
 	{
 		if(Path.nodes.length <= 0)
 		{
@@ -558,7 +558,7 @@ class FlxObject extends FlxBasic
 	 * Tells this object to stop following the path its on.
 	 * @param	DestroyPath		Tells this function whether to call destroy on the path object.  Default value is false.
 	 */
-	public function stopFollowingPath(?DestroyPath:Bool = false):Void
+	public function stopFollowingPath(DestroyPath:Bool = false):Void
 	{
 		pathSpeed = 0;
 		velocity.x = 0;
@@ -575,7 +575,7 @@ class FlxObject extends FlxBasic
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
 	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
 	 */
-	private function advancePath(?Snap:Bool = true):FlxPoint
+	private function advancePath(Snap:Bool = true):FlxPoint
 	{
 		if (Snap)
 		{
@@ -764,7 +764,7 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
-	public function overlaps(ObjectOrGroup:FlxBasic, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
@@ -817,7 +817,7 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
-	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
@@ -873,7 +873,7 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
-	public function overlapsPoint(point:FlxPoint, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if (!InScreenSpace)
 		{
@@ -916,7 +916,7 @@ class FlxObject extends FlxBasic
 	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	inline public function getScreenXY(?point:FlxPoint = null, ?Camera:FlxCamera = null):FlxPoint
+	inline public function getScreenXY(point:FlxPoint = null, Camera:FlxCamera = null):FlxPoint
 	{
 		if (point == null)
 		{
@@ -938,7 +938,7 @@ class FlxObject extends FlxBasic
 	 * Pass a negative value to flicker forever.
 	 * @param	Duration	How many seconds to flicker for.
 	 */
-	public function flicker(?Duration:Float = 1):Void
+	public function flicker(Duration:Float = 1):Void
 	{
 		_flickerTimer = Duration;
 		if (_flickerTimer == 0)
@@ -991,7 +991,7 @@ class FlxObject extends FlxBasic
 	 * @Point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined.  Otherwise a new one is created.
 	 * @return	A <code>FlxPoint</code> object containing the midpoint of this object in world coordinates.
 	 */
-	inline public function getMidpoint(?point:FlxPoint = null):FlxPoint
+	inline public function getMidpoint(point:FlxPoint = null):FlxPoint
 	{
 		if (point == null)
 		{

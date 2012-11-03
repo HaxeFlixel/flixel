@@ -56,7 +56,7 @@ class PxTextField extends Sprite
 	 * Constructs a new text field component.
 	 * @param pFont	optional parameter for component's font prop
 	 */
-	public function new(?pFont:PxBitmapFont = null) 
+	public function new(pFont:PxBitmapFont = null) 
 	{
 		super();
 		
@@ -891,7 +891,7 @@ class PxTextField extends Sprite
 		return _fixedWidth;
 	}
 	
-	private function updateGlyphs(?textGlyphs:Bool = false, ?shadowGlyphs:Bool = false, ?outlineGlyphs:Bool = false):Void
+	private function updateGlyphs(textGlyphs:Bool = false, shadowGlyphs:Bool = false, outlineGlyphs:Bool = false):Void
 	{
 		#if (flash || js)
 		if (textGlyphs)

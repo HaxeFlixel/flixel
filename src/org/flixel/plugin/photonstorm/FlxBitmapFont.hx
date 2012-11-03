@@ -184,9 +184,9 @@ class FlxBitmapFont extends FlxSprite
 	 * @param	yOffset			If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 	 */
 	#if flash
-	public function new(font:Dynamic, characterWidth:UInt, characterHeight:UInt, chars:String, charsPerRow:UInt, ?xSpacing:UInt = 0, ?ySpacing:UInt = 0, ?xOffset:UInt = 0, ?yOffset:UInt = 0)
+	public function new(font:Dynamic, characterWidth:UInt, characterHeight:UInt, chars:String, charsPerRow:UInt, xSpacing:UInt = 0, ySpacing:UInt = 0, xOffset:UInt = 0, yOffset:UInt = 0)
 	#else
-	public function new(font:Dynamic, characterWidth:Int, characterHeight:Int, chars:String, charsPerRow:Int, ?xSpacing:Int = 0, ?ySpacing:Int = 0, ?xOffset:Int = 0, ?yOffset:Int = 0)
+	public function new(font:Dynamic, characterWidth:Int, characterHeight:Int, chars:String, charsPerRow:Int, xSpacing:Int = 0, ySpacing:Int = 0, xOffset:Int = 0, yOffset:Int = 0)
 	#end
 	{
 		super();
@@ -497,7 +497,7 @@ class FlxBitmapFont extends FlxSprite
 	 * @param	width			Width in pixels of this FlxBitmapFont. Set to zero to disable and re-enable automatic resizing.
 	 * @param	lineAlignment	Align the text within this width. Set to FlxBitmapFont.ALIGN_LEFT (default), FlxBitmapFont.ALIGN_RIGHT or FlxBitmapFont.ALIGN_CENTER.
 	 */
-	public function setFixedWidth(width:Int, ?lineAlignment:String = "left"):Void
+	public function setFixedWidth(width:Int, lineAlignment:String = "left"):Void
 	{
 		fixedWidth = width;
 		align = lineAlignment;
@@ -519,9 +519,9 @@ class FlxBitmapFont extends FlxSprite
 	 * @param	allowLowerCase		Lots of bitmap font sets only include upper-case characters, if yours needs to support lower case then set this to true.
 	 */
 	#if flash
-	public function setText(content:String, ?multiLines:Bool = false, ?characterSpacing:UInt = 0, ?lineSpacing:UInt = 0, ?lineAlignment:String = "left", ?allowLowerCase:Bool = false):Void
+	public function setText(content:String, multiLines:Bool = false, characterSpacing:UInt = 0, lineSpacing:UInt = 0, lineAlignment:String = "left", allowLowerCase:Bool = false):Void
 	#else
-	public function setText(content:String, ?multiLines:Bool = false, ?characterSpacing:Int = 0, ?lineSpacing:Int = 0, ?lineAlignment:String = "left", ?allowLowerCase:Bool = false):Void
+	public function setText(content:String, multiLines:Bool = false, characterSpacing:Int = 0, lineSpacing:Int = 0, lineAlignment:String = "left", allowLowerCase:Bool = false):Void
 	#end
 	{
 		customSpacingX = characterSpacing;
@@ -728,11 +728,11 @@ class FlxBitmapFont extends FlxSprite
 	 * @param	customSpacingX
 	 */
 	#if flash
-	private function pasteLine(output:BitmapData, line:String, ?x:UInt = 0, ?y:UInt = 0, ?customSpacingX:UInt = 0):Void
+	private function pasteLine(output:BitmapData, line:String, x:UInt = 0, y:UInt = 0, customSpacingX:UInt = 0):Void
 	#elseif js
-	private function pasteLine(output:BitmapData, line:String, ?x:Int = 0, ?y:Int = 0, ?customSpacingX:Int = 0):Void
+	private function pasteLine(output:BitmapData, line:String, x:Int = 0, y:Int = 0, customSpacingX:Int = 0):Void
 	#else
-	private function pasteLine(line:String, ?x:Int = 0, ?y:Int = 0, ?customSpacingX:Int = 0):Void
+	private function pasteLine(line:String, x:Int = 0, y:Int = 0, customSpacingX:Int = 0):Void
 	#end
 	{
 		for (c in 0...(line.length))
@@ -807,7 +807,7 @@ class FlxBitmapFont extends FlxSprite
 	 * 
 	 * @return	A clean version of the string
 	 */
-	private function removeUnsupportedCharacters(?stripCR:Bool = true):String
+	private function removeUnsupportedCharacters(stripCR:Bool = true):String
 	{
 		var newString:String = "";
 		

@@ -258,11 +258,11 @@ class FlxCamera extends FlxBasic
 	 * @param Height	The height of the camera display in pixels.
 	 * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
 	 */
-	public function new(X:Int, Y:Int, Width:Int, Height:Int, ?Zoom:Float = 0)
+	public function new(X:Int, Y:Int, Width:Int, Height:Int, Zoom:Float = 0)
 	{
 		super();
 		
-		ID = FlxG.cameras.length;
+		ID = -1;
 		
 		x = X;
 		y = Y;
@@ -590,7 +590,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
 	 * @param  Offset    Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
 	 */
-	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/, ?Offset:FlxPoint):Void
+	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/, Offset:FlxPoint = null):Void
 	{
 		style = Style;
 		target = Target;
@@ -642,7 +642,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Height			The largest Y value of your level (usually the level height).
 	 * @param	UpdateWorld		Whether the global quad-tree's dimensions should be updated to match (default: false).
 	 */
-	public function setBounds(?X:Float = 0, ?Y:Float = 0, ?Width:Float = 0, ?Height:Float = 0, ?UpdateWorld:Bool = false):Void
+	public function setBounds(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0, UpdateWorld:Bool = false):Void
 	{
 		if (bounds == null)
 		{
@@ -664,9 +664,9 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	public function flash(?Color:UInt = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#else
-	public function flash(?Color:BitmapInt32, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	public function flash(?Color:BitmapInt32, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#end
 	{
 		#if (cpp || js)
@@ -704,9 +704,9 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	public function fade(?Color:UInt = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#else
-	public function fade(?Color:BitmapInt32, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	public function fade(?Color:BitmapInt32, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#end
 	{
 		#if (cpp || js)
@@ -753,7 +753,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
 	 */
-	public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Void->Void = null, ?Force:Bool = true, ?Direction:Int = 0/*SHAKE_BOTH_AXES*/):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, OnComplete:Void->Void = null, Force:Bool = true, Direction:Int = 0/*SHAKE_BOTH_AXES*/):Void
 	{
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
@@ -976,11 +976,11 @@ class FlxCamera extends FlxBasic
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
 	#if flash
-	public function fill(Color:UInt, ?BlendAlpha:Bool = true):Void
+	public function fill(Color:UInt, BlendAlpha:Bool = true):Void
 	#elseif js
-	public function fill(Color:BitmapInt32, ?BlendAlpha:Bool = true):Void
+	public function fill(Color:BitmapInt32, BlendAlpha:Bool = true):Void
 	#else
-	public function fill(Color:BitmapInt32, ?BlendAlpha:Bool = true, ?FxAlpha:Float = 1.0, graphics:Graphics = null):Void
+	public function fill(Color:BitmapInt32, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, graphics:Graphics = null):Void
 	#end
 	{
 		#if (flash || js)

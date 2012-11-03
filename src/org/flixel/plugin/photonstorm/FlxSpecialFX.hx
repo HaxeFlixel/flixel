@@ -62,7 +62,7 @@ class FlxSpecialFX extends FlxBasic
 	 * 
 	 * @param	source	A reference to the FX Plugin you wish to run. If null it will start all currently added FX Plugins
 	 */
-	public static function startFX(?source:BaseFX = null):Void
+	public static function startFX(source:BaseFX = null):Void
 	{
 		if (source != null)
 		{
@@ -82,7 +82,7 @@ class FlxSpecialFX extends FlxBasic
 	 * 
 	 * @param	source	A reference to the FX Plugin you wish to stop. If null it will stop all currently added FX Plugins
 	 */
-	public static function stopFX(?source:BaseFX = null):Void
+	public static function stopFX(source:BaseFX = null):Void
 	{
 		if (source != null)
 		{

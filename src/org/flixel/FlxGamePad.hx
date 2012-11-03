@@ -127,7 +127,7 @@ class FlxGamePad extends FlxGroup
 	 * @param Callback	The callback for the button.
 	 * @return			The button.
 	 */
-	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Image:String, ?OnClick:Void->Void = null):FlxButton
+	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Image:String, OnClick:Void->Void = null):FlxButton
 	{
 		var button:FlxButton = new FlxButton(X, Y);
 		button.loadGraphic(Image, true, false, Width, Height);

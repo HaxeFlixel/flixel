@@ -102,7 +102,7 @@ class Mouse extends FlxPoint
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
 	 */
-	public function show(?Graphic:Dynamic = null, ?Scale:Float = 1, ?XOffset:Int = 0, ?YOffset:Int=0):Void
+	public function show(Graphic:Dynamic = null, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		_updateCursorContainer = true;
 		_cursorContainer.visible = true;
@@ -140,7 +140,7 @@ class Mouse extends FlxPoint
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
 	 */
-	public function load(?Graphic:Dynamic = null, ?Scale:Float = 1, ?XOffset:Int=0, ?YOffset:Int=0):Void
+	public function load(Graphic:Dynamic = null, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		if (_cursor != null)
 		{
@@ -248,7 +248,7 @@ class Mouse extends FlxPoint
 	 * @param point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return The mouse's location in world space.
 	 */
-	public function getWorldPosition(?Camera:FlxCamera = null, ?point:FlxPoint = null):FlxPoint
+	public function getWorldPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
 	{
 		if (Camera == null)
 		{
@@ -271,7 +271,7 @@ class Mouse extends FlxPoint
 	 * @param point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return The mouse's location in screen space.
 	 */
-	public function getScreenPosition(?Camera:FlxCamera = null, ?point:FlxPoint = null):FlxPoint
+	public function getScreenPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
 	{
 		if (Camera == null)
 		{

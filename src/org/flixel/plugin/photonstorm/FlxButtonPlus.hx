@@ -131,7 +131,7 @@ class FlxButtonPlus extends FlxGroup
 	 * @param	Width		The width of the button.
 	 * @param	Height		The height of the button.
 	 */
-	public function new(X:Int, Y:Int, Callback:Dynamic, ?Params:Array<Dynamic> = null, ?Label:String = null, ?Width:Int = 100, ?Height:Int = 20)
+	public function new(X:Int, Y:Int, Callback:Dynamic, Params:Array<Dynamic> = null, Label:String = null, Width:Int = 100, Height:Int = 20)
 	{
 		#if !neko
 		borderColor = 0xffffffff;
@@ -577,7 +577,7 @@ class FlxButtonPlus extends FlxGroup
 	 * @param	callback	The function to call, will be called once when the mouse enters
 	 * @param	params		An optional array of parameters to pass to the function
 	 */
-	public function setMouseOverCallback(callbackFunc:Dynamic, ?params:Array<Dynamic> = null):Void
+	public function setMouseOverCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
 	{
 		enterCallback = callbackFunc;
 		
@@ -590,14 +590,14 @@ class FlxButtonPlus extends FlxGroup
 	 * @param	callback	The function to call, will be called once when the mouse leaves the button
 	 * @param	params		An optional array of parameters to pass to the function
 	 */
-	public function setMouseOutCallback(callbackFunc:Dynamic, ?params:Array<Dynamic> = null):Void
+	public function setMouseOutCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
 	{
 		leaveCallback = callbackFunc;
 		
 		leaveCallbackParams = params;
 	}
 	
-	public function setOnClickCallback(callbackFunc:Dynamic, ?params:Array<Dynamic> = null):Void
+	public function setOnClickCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
 	{
 		_onClick = callbackFunc;
 		

@@ -266,7 +266,7 @@ class FlxSound extends FlxBasic
 	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadEmbedded(EmbeddedSound:Dynamic, ?Looped:Bool = false, ?AutoDestroy:Bool = false):FlxSound
+	public function loadEmbedded(EmbeddedSound:Dynamic, Looped:Bool = false, AutoDestroy:Bool = false):FlxSound
 	{
 		cleanup(true);
 		createSound();
@@ -298,7 +298,7 @@ class FlxSound extends FlxBasic
 	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadStream(SoundURL:String, ?Looped:Bool = false, ?AutoDestroy:Bool = false):FlxSound
+	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false):FlxSound
 	{
 		cleanup(true);
 		createSound();
@@ -322,7 +322,7 @@ class FlxSound extends FlxBasic
 	 * @param	Pan		Whether the sound should pan in addition to the volume changes (default: true).
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function proximity(X:Float, Y:Float, TargetObject:FlxObject, Radius:Float, ?Pan:Bool = true):FlxSound
+	public function proximity(X:Float, Y:Float, TargetObject:FlxObject, Radius:Float, Pan:Bool = true):FlxSound
 	{
 		x = X;
 		y = Y;
@@ -336,7 +336,7 @@ class FlxSound extends FlxBasic
 	 * Call this function to play the sound - also works on paused sounds.
 	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call <code>play()</code>, it will continue playing from its current position, NOT start again from the beginning.
 	 */
-	public function play(?ForceRestart:Bool = false):Void
+	public function play(ForceRestart:Bool = false):Void
 	{
 		if (!exists)
 		{
@@ -400,7 +400,7 @@ class FlxSound extends FlxBasic
 	 * @param	Seconds			The amount of time the fade out operation should take.
 	 * @param	PauseInstead	Tells the sound to pause on fadeout, instead of stopping.
 	 */
-	public function fadeOut(Seconds:Float, ?PauseInstead:Bool = false):Void
+	public function fadeOut(Seconds:Float, PauseInstead:Bool = false):Void
 	{
 		_pauseOnFadeOut = PauseInstead;
 		_fadeInTimer = 0;
@@ -489,7 +489,7 @@ class FlxSound extends FlxBasic
 	 * An internal helper function used to help Flash clean up finished sounds or restart looped sounds.
 	 * @param	event		An <code>Event</code> object.
 	 */
-	private function stopped(?event:Event = null):Void
+	private function stopped(event:Event = null):Void
 	{
 		if (_looped)
 		{
@@ -507,7 +507,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	destroySound		Whether or not to destroy the sound 
 	 */
-	private function cleanup(destroySound:Bool, ?resetPosition:Bool = true):Void
+	private function cleanup(destroySound:Bool, resetPosition:Bool = true):Void
 	{
 		if (_channel != null)
 		{
@@ -534,7 +534,7 @@ class FlxSound extends FlxBasic
 	 * Internal event handler for ID3 info (i.e. fetching the song name).
 	 * @param	event	An <code>Event</code> object.
 	 */
-	private function gotID3(?event:Event = null):Void
+	private function gotID3(event:Event = null):Void
 	{
 		FlxG.log("got ID3 info!");
 		name = _sound.id3.songName;

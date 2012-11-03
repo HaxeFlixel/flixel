@@ -28,7 +28,7 @@ class Motion extends FlxTween
 	 * @param	type		Tween type.
 	 * @param	ease		Optional easer function.
 	 */
-	public function new(duration:Float, ?complete:CompleteCallback, ?type:Int = 0, ?ease:EaseFunction = null) 
+	public function new(duration:Float, complete:CompleteCallback = null, type:Int = 0, ease:EaseFunction = null) 
 	{
 		super(duration, type, complete, ease);
 		x = y = 0;

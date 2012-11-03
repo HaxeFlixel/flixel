@@ -108,7 +108,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Y		The Y position of the emitter.
 	 * @param	Size	Optional, specifies a maximum capacity for this emitter.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Size:Int = 0)
+	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
 	{
 		super(Size);
 		x = X;
@@ -154,7 +154,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Dynamic, ?Quantity:Int = 50, ?BakedRotations:Int = 16, ?Multiple:Bool = false, ?Collide:Float = 0.8):FlxEmitter
+	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8):FlxEmitter
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -292,7 +292,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
 	 */
-	public function start(?Explode:Bool = true, ?Lifespan:Float = 0, ?Frequency:Float = 0.1, ?Quantity:Int = 0):Void
+	public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0):Void
 	{
 		revive();
 		visible = true;
@@ -370,7 +370,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Min		The minimum value for this range.
 	 * @param	Max		The maximum value for this range.
 	 */
-	public function setXSpeed(?Min:Float = 0, ?Max:Float = 0):Void
+	public function setXSpeed(Min:Float = 0, Max:Float = 0):Void
 	{
 		minParticleSpeed.x = Min;
 		maxParticleSpeed.x = Max;
@@ -381,7 +381,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Min		The minimum value for this range.
 	 * @param	Max		The maximum value for this range.
 	 */
-	public function setYSpeed(?Min:Float = 0, ?Max:Float = 0):Void
+	public function setYSpeed(Min:Float = 0, Max:Float = 0):Void
 	{
 		minParticleSpeed.y = Min;
 		maxParticleSpeed.y = Max;
@@ -392,7 +392,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Min		The minimum value for this range.
 	 * @param	Max		The maximum value for this range.
 	 */
-	public function setRotation(?Min:Float = 0, Max:Float = 0):Void
+	public function setRotation(Min:Float = 0, Max:Float = 0):Void
 	{
 		minRotation = Min;
 		maxRotation = Max;

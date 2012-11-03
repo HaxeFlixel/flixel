@@ -11,14 +11,13 @@ import org.flixel.FlxSprite;
  * ...
  * @author Zaphod
  */
-
 class FlxSkewedSprite extends FlxSprite
 {
 
 	public var skew:FlxPoint;
 	private var _skewMatrix:Matrix;
 	
-	public function new(?X:Float = 0, ?Y:Float = 0) 
+	public function new(X:Float = 0, Y:Float = 0) 
 	{
 		super(X, Y);
 		

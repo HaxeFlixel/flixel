@@ -14,7 +14,7 @@ class Fader extends FlxTween
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:Int = 0) 
+	public function new(complete:CompleteCallback = null, type:Int = 0) 
 	{
 		super(0, type, complete);
 	}
@@ -25,7 +25,7 @@ class Fader extends FlxTween
 	 * @param	duration	Duration of the fade.
 	 * @param	ease		Optional easer function.
 	 */
-	public function fadeTo(volume:Float, duration:Float, ?ease:EaseFunction = null):Void
+	public function fadeTo(volume:Float, duration:Float, ease:EaseFunction = null):Void
 	{
 		if (volume < 0) volume = 0;
 		_start = FlxG.volume;

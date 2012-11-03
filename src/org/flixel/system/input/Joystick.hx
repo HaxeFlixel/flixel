@@ -171,7 +171,7 @@ class JoyButton
 	public var current:Int;
 	public var last:Int;
 	
-	public function new(id:Int, ?current:Int = 0, ?last:Int = 0)
+	public function new(id:Int, current:Int = 0, last:Int = 0)
 	{
 		this.id = id;
 		this.current = current;

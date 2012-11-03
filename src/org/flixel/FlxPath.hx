@@ -47,7 +47,7 @@ class FlxPath
 	 * 
 	 * @param	Nodes	Optional, can specify all the points for the path up front if you want.
 	 */
-	public function new(?Nodes:Array<FlxPoint> = null)
+	public function new(Nodes:Array<FlxPoint> = null)
 	{
 		if (Nodes == null)
 		{
@@ -118,7 +118,7 @@ class FlxPath
 	 * @param	Node			The point in world coordinates you want to add to the path.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
 	 */
-	public function addPoint(Node:FlxPoint, ?AsReference:Bool = false):Void
+	public function addPoint(Node:FlxPoint, AsReference:Bool = false):Void
 	{
 		if (AsReference)
 		{
@@ -138,7 +138,7 @@ class FlxPath
 	 * @param	Index			Where within the list of path nodes to insert this new point.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
 	 */
-	public function addPointAt(Node:FlxPoint, Index:Int, ?AsReference:Bool = false):Void
+	public function addPointAt(Node:FlxPoint, Index:Int, AsReference:Bool = false):Void
 	{
 		if (Index < 0) return;
 		if (Index > nodes.length)
@@ -225,7 +225,7 @@ class FlxPath
 	 * and <code>debugScrollFactor</code> to control the path's appearance.
 	 * @param	Camera		The camera object the path will draw to.
 	 */
-	public function drawDebug(?Camera:FlxCamera = null):Void
+	public function drawDebug(Camera:FlxCamera = null):Void
 	{
 		if (nodes.length <= 0)
 		{

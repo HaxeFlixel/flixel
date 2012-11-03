@@ -93,7 +93,7 @@ class StarfieldFX extends BaseFX
 	 * @param	type			Type of starfield. Either STARFIELD_TYPE_2D (default, stars move horizontally) or STARFIELD_TYPE_3D (stars flow out from the center)
 	 * @param	updateInterval	How many ms should pass before the next starfield update (default 20)
 	 */
-	public function create(x:Int, y:Int, width:Int, height:Int, ?quantity:Int = 200, ?type:Int = 1, ?updateInterval:Int = 20):FlxSprite
+	public function create(x:Int, y:Int, width:Int, height:Int, quantity:Int = 200, type:Int = 1, updateInterval:Int = 20):FlxSprite
 	{
 		#if (flash || js)
 		sprite = new FlxSprite(x, y).makeGraphic(width, height, backgroundColor);
@@ -197,7 +197,7 @@ class StarfieldFX extends BaseFX
 	#if flash
 	public function setStarDepthColors(depth:Int, ?lowestColor:UInt = 0xff585858, ?highestColor:UInt = 0xffF4F4F4):Void
 	#else
-	public function setStarDepthColors(depth:Int, ?lowestColor:BitmapInt32 = null, ?highestColor:BitmapInt32 = null):Void
+	public function setStarDepthColors(depth:Int, ?lowestColor:BitmapInt32, ?highestColor:BitmapInt32):Void
 	#end
 	{
 		#if !flash
@@ -430,7 +430,7 @@ class StarSprite extends FlxSprite
 	public var halfWidth:Float;
 	public var halfHeight:Float;
 	
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Width:Int = 1, ?Height:Int = 1, ?bgColor:BitmapInt32)
+	public function new(X:Float = 0, Y:Float = 0, Width:Int = 1, Height:Int = 1, ?bgColor:BitmapInt32)
 	{
 		super(X, Y);
 		

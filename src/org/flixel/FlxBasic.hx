@@ -141,7 +141,7 @@ class FlxBasic
 	 * specified camera while the debugger's visual mode is toggled on.
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
-	public function drawDebug(?Camera:FlxCamera = null):Void { }
+	public function drawDebug(Camera:FlxCamera = null):Void { }
 	
 	/**
 	 * Handy function for "killing" game objects.
@@ -174,7 +174,7 @@ class FlxBasic
 		return FlxU.getClassName(this, true);
 	}
 	
-	public function addTween(t:FlxTween, ?start:Bool = false):FlxTween
+	public function addTween(t:FlxTween, start:Bool = false):FlxTween
 	{
 		var ft:FriendTween = t;
 		if (ft._parent != null) 
@@ -196,7 +196,7 @@ class FlxBasic
 		return t;
 	}
 
-	public function removeTween(t:FlxTween, ?destroy:Bool = false):FlxTween
+	public function removeTween(t:FlxTween, destroy:Bool = false):FlxTween
 	{
 		var ft:FriendTween = t;
 		if (ft._parent != this) 
@@ -225,7 +225,7 @@ class FlxBasic
 		return t;
 	}
 
-	public function clearTweens(?destroy:Bool = false):Void
+	public function clearTweens(destroy:Bool = false):Void
 	{
 		var t:FlxTween;
 		var ft:FriendTween = _tween;
@@ -310,7 +310,7 @@ class FlxBasic
 						else if (value.atlas.addNode(bm, _bitmapDataKey) == null)
 						{
 							#if debug
-							throw "Can't add object's graphic to layer. There isn't enough space";
+							throw "Can't add object's graphic to layer's atlas: " + value.atlas.name + ". There isn't enough space";
 							#end
 							return null;
 						}

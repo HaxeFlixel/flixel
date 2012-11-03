@@ -181,7 +181,7 @@ class FlxSprite extends FlxObject
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:Dynamic = null)
+	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null)
 	{
 		super(X, Y);
 		
@@ -291,7 +291,7 @@ class FlxSprite extends FlxObject
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	// TODO: add ability to load Nodes. This will add sprite to layer automatically
-	public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite
 	{
 		Width = FlxU.fromIntToUInt(Width);
 		Height = FlxU.fromIntToUInt(Height);
@@ -370,7 +370,7 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedGraphic(Graphic:Dynamic, ?Rotations:Int = 16, ?Frame:Int = -1, ?AntiAliasing:Bool = false, ?AutoBuffer:Bool = false, ?Key:String = null):FlxSprite
+	public function loadRotatedGraphic(Graphic:Dynamic, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, Key:String = null):FlxSprite
 	{
 		Rotations = FlxU.fromIntToUInt(Rotations);
 		
@@ -511,9 +511,9 @@ class FlxSprite extends FlxObject
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	#if flash 
-	public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
 	#else
-	public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, Unique:Bool = false, Key:String = null):FlxSprite
 	#end
 	{
 		#if !flash
@@ -718,7 +718,7 @@ class FlxSprite extends FlxObject
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * 0.017453293);
+					_matrix.rotate(angle * 0.017453293);	
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
@@ -782,7 +782,7 @@ class FlxSprite extends FlxObject
 	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
 	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
 	 */
-	public function stamp(Brush:FlxSprite, ?X:Int = 0, Y:Int = 0):Void
+	public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void
 	{
 		Brush.drawFrame();
 		var bitmapData:BitmapData = Brush.framePixels;
@@ -835,9 +835,9 @@ class FlxSprite extends FlxObject
 	 * @param	Thickness	How thick the line is in pixels (default value is 1).
 	 */
 	#if flash
-	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:UInt, ?Thickness:UInt = 1):Void
+	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:UInt, Thickness:UInt = 1):Void
 	#else
-	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:BitmapInt32, ?Thickness:Int = 1):Void
+	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:BitmapInt32, Thickness:Int = 1):Void
 	#end
 	{
 		//Draw line
@@ -963,7 +963,7 @@ class FlxSprite extends FlxObject
 	 * Useful if you are doing procedural generation or other weirdness!
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
 	 */
-	public function drawFrame(?Force:Bool = false):Void
+	public function drawFrame(Force:Bool = false):Void
 	{
 		#if (flash || js)
 		if (Force || dirty)
@@ -982,7 +982,7 @@ class FlxSprite extends FlxObject
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
 	 * @param	Looped		Whether or not the animation is looped or just plays once.
 	 */
-	public function addAnimation(Name:String, Frames:Array<Int>, ?FrameRate:Int = 30, ?Looped:Bool = true):Void
+	public function addAnimation(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
 		_animations.push(new FlxAnim(Name, Frames, FlxU.fromIntToUInt(FrameRate), Looped));
 	}
@@ -1006,7 +1006,7 @@ class FlxSprite extends FlxObject
 	 * @param	AnimName	The string name of the animation you want to play.
 	 * @param	Force		Whether to force the animation to restart.
 	 */
-	public function play(AnimName:String, ?Force:Bool = false):Void
+	public function play(AnimName:String, Force:Bool = false):Void
 	{
 		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) 
 		{
@@ -1082,7 +1082,7 @@ class FlxSprite extends FlxObject
 	 * Helper function that adjusts the offset automatically to center the bounding box within the graphic.
 	 * @param	AdjustPosition		Adjusts the actual X and Y position just once to match the offset change. Default is false.
 	 */
-	public function centerOffsets(?AdjustPosition:Bool = false):Void
+	public function centerOffsets(AdjustPosition:Bool = false):Void
 	{
 		offset.x = (frameWidth - width) * 0.5;
 		offset.y = (frameHeight - height) * 0.5;
@@ -1094,9 +1094,9 @@ class FlxSprite extends FlxObject
 	}
 	
 	#if flash
-	public function replaceColor(Color:UInt, NewColor:UInt, ?FetchPositions:Bool = false):Array<FlxPoint>
+	public function replaceColor(Color:UInt, NewColor:UInt, FetchPositions:Bool = false):Array<FlxPoint>
 	#else
-	public function replaceColor(Color:BitmapInt32, NewColor:BitmapInt32, ?FetchPositions:Bool = false):Array<FlxPoint>
+	public function replaceColor(Color:BitmapInt32, NewColor:BitmapInt32, FetchPositions:Bool = false):Array<FlxPoint>
 	#end
 	{
 		var positions:Array<FlxPoint> = null;
@@ -1330,12 +1330,12 @@ class FlxSprite extends FlxObject
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
-	override public function onScreen(?Camera:FlxCamera = null):Bool
+	override public function onScreen(Camera:FlxCamera = null):Bool
 	{
 		return onScreenSprite(Camera);
 	}
 	
-	inline private function onScreenSprite(?Camera:FlxCamera = null):Bool
+	inline private function onScreenSprite(Camera:FlxCamera = null):Bool
 	{
 		if (Camera == null)
 		{
@@ -1378,9 +1378,9 @@ class FlxSprite extends FlxObject
 	 * @return	Whether or not the point overlaps this object.
 	 */
 	#if flash
-	public function pixelsOverlapPoint(point:FlxPoint, ?Mask:UInt = 0xFF, ?Camera:FlxCamera = null):Bool
+	public function pixelsOverlapPoint(point:FlxPoint, Mask:UInt = 0xFF, Camera:FlxCamera = null):Bool
 	#else
-	public function pixelsOverlapPoint(point:FlxPoint, ?Mask:Int = 0xFF, ?Camera:FlxCamera = null):Bool
+	public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, Camera:FlxCamera = null):Bool
 	#end
 	{
 		if (Camera == null)
@@ -1445,7 +1445,7 @@ class FlxSprite extends FlxObject
 	#if (flash || js)
 	private function calcFrame():Void
 	#else
-	private function calcFrame(?AreYouSure:Bool = false):Void
+	private function calcFrame(AreYouSure:Bool = false):Void
 	#end
 	{
 	#if (cpp || neko)
@@ -1549,8 +1549,16 @@ class FlxSprite extends FlxObject
 	
 	private function set_blend(value:BlendMode):BlendMode 
 	{
-		_blend = value;
-		_blendString = cast(_blend, String);
+		switch (value)
+		{
+			case BlendMode.ADD:
+				_blendString = "add";
+				_blend = value;
+			default:
+				_blendString = null;
+				_blend = BlendMode.NORMAL;
+		}
+		
 		updateLayerProps();
 		return value;
 	}
@@ -1598,7 +1606,7 @@ class FlxSprite extends FlxObject
 	}
 	#end
 	
-	override public function overlapsPoint(point:FlxPoint, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if (scale.x == 1 && scale.y == 1)
 		{

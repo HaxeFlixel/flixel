@@ -26,7 +26,7 @@ class FlxPoint
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	public function new(?X:Float=0, ?Y:Float=0)
+	public function new(X:Float = 0, Y:Float = 0)
 	{
 		x = X;
 		y = Y;
@@ -37,7 +37,7 @@ class FlxPoint
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	inline public function make(?X:Float = 0, ?Y:Float = 0):FlxPoint
+	inline public function make(X:Float = 0, Y:Float = 0):FlxPoint
 	{
 		x = X;
 		y = Y;

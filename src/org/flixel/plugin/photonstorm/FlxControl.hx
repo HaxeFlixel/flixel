@@ -47,7 +47,7 @@ class FlxControl extends FlxBasic
 	 * 
 	 * @return	The new FlxControlHandler
 	 */
-	public static function create(source:FlxSprite, movementType:Int, stoppingType:Int, ?player:Int = 1, ?updateFacing:Bool = false, ?enableArrowKeys:Bool = true):FlxControlHandler
+	public static function create(source:FlxSprite, movementType:Int, stoppingType:Int, player:Int = 1, updateFacing:Bool = false, enableArrowKeys:Bool = true):FlxControlHandler
 	{
 		var result:FlxControlHandler;
 		
@@ -120,7 +120,7 @@ class FlxControl extends FlxBasic
 	 * 
 	 * @param	source	The FlxControlHandler to start updating on. If left as null it will start updating all handlers.
 	 */
-	public static function start(?source:FlxControlHandler = null):Void
+	public static function start(source:FlxControlHandler = null):Void
 	{
 		if (source != null)
 		{
@@ -141,7 +141,7 @@ class FlxControl extends FlxBasic
 	 * 
 	 * @param	source	The FlxControlHandler to stop updating. If left as null it will stop updating all handlers.
 	 */
-	public static function stop(?source:FlxControlHandler = null):Void
+	public static function stop(source:FlxControlHandler = null):Void
 	{
 		if (source != null)
 		{

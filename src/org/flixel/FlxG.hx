@@ -343,7 +343,7 @@ class FlxG
 	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
 	 * @param	DisplayName		Optional, display your own string instead of the class name + variable name: e.g. "enemy count".
 	 */
-	static public function watch(AnyObject:Dynamic, VariableName:String, ?DisplayName:String = null):Void
+	static public function watch(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
 		if ((_game != null) && (_game._debugger != null))
 		{
@@ -357,7 +357,7 @@ class FlxG
 	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
 	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
 	 */
-	static public function unwatch(AnyObject:Dynamic, ?VariableName:String = null):Void
+	static public function unwatch(AnyObject:Dynamic, VariableName:String = null):Void
 	{
 		if ((_game != null) && (_game._debugger != null))
 		{
@@ -484,7 +484,7 @@ class FlxG
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:Int = 0, ?Length:Int = 0):Dynamic
+	static public function getRandom(Objects:Array<Dynamic>, StartIndex:Int = 0, Length:Int = 0):Dynamic
 	{
 		if (Objects != null)
 		{
@@ -512,7 +512,7 @@ class FlxG
 	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
 	 * @param	Callback	Optional parameter: if set, called when the replay finishes.  Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
 	 */
-	static public function loadReplay(Data:String, ?State:FlxState = null, ?CancelKeys:Array<String> = null, ?Timeout:Float = 0, ?Callback:Void->Void = null):Void
+	static public function loadReplay(Data:String, State:FlxState = null, CancelKeys:Array<String> = null, Timeout:Float = 0, Callback:Void->Void = null):Void
 	{
 		_game._replay.load(Data);
 		if (State == null)
@@ -533,7 +533,7 @@ class FlxG
 	 * Resets the game or state and replay requested flag.
 	 * @param	StandardMode	If true, reload entire game, else just reload current game state.
 	 */
-	static public function reloadReplay(?StandardMode:Bool = true):Void
+	static public function reloadReplay(StandardMode:Bool = true):Void
 	{
 		if (StandardMode)
 		{
@@ -566,7 +566,7 @@ class FlxG
 	 * Resets the game or state and requests a new recording.
 	 * @param	StandardMode	If true, reset the entire game, else just reset the current state.
 	 */
-	static public function recordReplay(?StandardMode:Bool = true):Void
+	static public function recordReplay(StandardMode:Bool = true):Void
 	{
 		if (StandardMode)
 		{
@@ -628,7 +628,7 @@ class FlxG
 	 * @param	Music		The sound file you want to loop in the background.
 	 * @param	Volume		How loud the sound should be, from 0 to 1.
 	 */
-	static public function playMusic(Music:Dynamic, ?Volume:Float = 1.0):Void
+	static public function playMusic(Music:Dynamic, Volume:Float = 1.0):Void
 	{
 		if (music == null)
 		{
@@ -654,7 +654,7 @@ class FlxG
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public function loadSound(?EmbeddedSound:Dynamic = null, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = false, ?AutoPlay:Bool = false, ?URL:String = null):FlxSound
+	static public function loadSound(EmbeddedSound:Dynamic = null, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, URL:String = null):FlxSound
 	{
 		if((EmbeddedSound == null) && (URL == null))
 		{
@@ -696,7 +696,7 @@ class FlxG
 		}
 	}
 	
-	static public function play(EmbeddedSound:String, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = true):FlxSound
+	static public function play(EmbeddedSound:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true):FlxSound
 	{
 		var sound:Sound = null;
 		
@@ -727,7 +727,7 @@ class FlxG
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public function play(EmbeddedSound:Dynamic, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = true):FlxSound
+	static public function play(EmbeddedSound:Dynamic, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true):FlxSound
 	{
 		return FlxG.loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, true);
 	}
@@ -742,7 +742,7 @@ class FlxG
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A FlxSound object.
 	 */
-	static public function stream(URL:String, ?Volume:Float = 1.0, ?Looped:Bool = false, ?AutoDestroy:Bool = true):FlxSound
+	static public function stream(URL:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true):FlxSound
 	{
 		return FlxG.loadSound(null, Volume, Looped, AutoDestroy, true, URL);
 	}
@@ -783,7 +783,7 @@ class FlxG
 	 * 
 	 * @param	ForceDestroy		Kill sounds even if they're flagged <code>survive</code>.
 	 */
-	static public function destroySounds(?ForceDestroy:Bool = false):Void
+	static public function destroySounds(ForceDestroy:Bool = false):Void
 	{
 		if((music != null) && (ForceDestroy || !music.survive))
 		{
@@ -889,9 +889,9 @@ class FlxG
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
 	#if (flash || js)
-	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, ?Unique:Bool = false, ?Key:String = null):BitmapData
+	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, Unique:Bool = false, Key:String = null):BitmapData
 	#else
-	static public function createBitmap(Width:Int, Height:Int, Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):BitmapData
+	static public function createBitmap(Width:Int, Height:Int, Color:BitmapInt32, Unique:Bool = false, Key:String = null):BitmapData
 	#end
 	{
 		var key:String = Key;
@@ -923,7 +923,7 @@ class FlxG
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	static public function addBitmap(Graphic:Dynamic, ?Reverse:Bool = false, ?Unique:Bool = false, ?Key:String = null, ?FrameWidth:Int = 0, ?FrameHeight:Int = 0):BitmapData
+	static public function addBitmap(Graphic:Dynamic, Reverse:Bool = false, Unique:Bool = false, Key:String = null, FrameWidth:Int = 0, FrameHeight:Int = 0):BitmapData
 	{
 		if (Graphic == null)
 		{
@@ -1049,6 +1049,11 @@ class FlxG
 		return _cache.get(key);
 	}
 	
+	/**
+	 * Gets key from bitmap cache for specified bitmapdata
+	 * @param	bmd	bitmapdata to find in cache
+	 * @return	bitmapdata's key or null if there isn't such bitmapdata in cache
+	 */
 	public static function getCacheKeyFor(bmd:BitmapData):String
 	{
 		for (key in _cache.keys())
@@ -1062,6 +1067,11 @@ class FlxG
 		return null;
 	}
 	
+	/**
+	 * Gets unique key for bitmap cache
+	 * @param	baseKey	key's prefix
+	 * @return	unique key
+	 */
 	public static function getUniqueBitmapKey(baseKey:String = "pixels"):String
 	{
 		if (checkBitmapCache(baseKey))
@@ -1094,6 +1104,10 @@ class FlxG
 		return false;
 	}
 	
+	/**
+	 * Removes bitmapdata from cache
+	 * @param	Graphic	bitmapdata's key to remove
+	 */
 	public static function removeBitmap(Graphic:String):Void
 	{
 		if (_cache.exists(Graphic))
@@ -1131,7 +1145,7 @@ class FlxG
 	}
 	
 	/**
-	 * Clears nme.Assests.cachedBitmapData
+	 * Clears nme.Assests.cachedBitmapData. Use it only when you need it and know what are you doing.
 	 */
 	static public function clearAssetsCache():Void
 	{
@@ -1199,6 +1213,15 @@ class FlxG
 		}
 	}
 	
+	#if (cpp || neko)
+	/**
+	 * Helper storage for all on screen camera's IDs. 
+	 * We need to hold them for safely adding and removeing cameras on cpp and neko targets.
+	 * Or possible problems could appear.
+	 */
+	static private var cameraIDs:IntHash<Int> = new IntHash<Int>();
+	#end
+	
 	/**
 	 * Add a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
@@ -1209,6 +1232,27 @@ class FlxG
 	{
 		FlxG._game.addChildAt(NewCamera._flashSprite, FlxG._game.getChildIndex(FlxG._game._mouse));
 		FlxG.cameras.push(NewCamera);
+		#if (cpp || neko)
+		if (NewCamera.ID == -1) // We didn't add this camera before
+		{
+			// find available id
+			var newCamID:Int = -1;
+			var numCameras:Int = cameras.length;
+			for (i in 0...(numCameras))
+			{
+				if (!cameraIDs.exists(i))
+				{
+					newCamID = i;
+				}
+			}
+			if (newCamID == -1)
+			{
+				newCamID = numCameras;
+			}
+			NewCamera.ID = newCamID;
+			cameraIDs.set(newCamID, newCamID);
+		}
+		#end
 		return NewCamera;
 	}
 	
@@ -1217,7 +1261,7 @@ class FlxG
 	 * @param	Camera	The camera you want to remove.
 	 * @param	Destroy	Whether to call destroy() on the camera, default value is true.
 	 */
-	static public function removeCamera(Camera:FlxCamera, ?Destroy:Bool = true):Void
+	static public function removeCamera(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
 		try
 		{
@@ -1227,6 +1271,12 @@ class FlxG
 		{
 			FlxG.log("Error removing camera, not part of game.");
 		}
+		
+		#if (cpp || neko)
+		cameraIDs.remove(Camera.ID);
+		Camera.ID = -1;
+		#end
+		
 		if (Destroy)
 		{
 			Camera.destroy();
@@ -1239,7 +1289,7 @@ class FlxG
 	 * 
 	 * @param	NewCamera	Optional; specify a specific camera object to be the new main camera.
 	 */
-	static public function resetCameras(?NewCamera:FlxCamera = null):Void
+	static public function resetCameras(NewCamera:FlxCamera = null):Void
 	{
 		var cam:FlxCamera;
 		var i:Int = 0;
@@ -1255,8 +1305,15 @@ class FlxG
 		if (NewCamera == null)	
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 		
+		#if (cpp || neko)
+		for (key in cameraIDs.keys())
+		{
+			cameraIDs.remove(key);
+		}
+		NewCamera.ID = -1;
+		#end
+		
 		FlxG.camera = FlxG.addCamera(NewCamera);
-		NewCamera.ID = 0;
 	}
 	
 	/**
@@ -1267,9 +1324,9 @@ class FlxG
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	static public function flash(?Color:UInt = 0xffffffff, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	static public function flash(?Color:UInt = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#else
-	static public function flash(?Color:BitmapInt32, ?Duration:Float = 1, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	static public function flash(?Color:BitmapInt32, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#end
 	{
 		#if !flash
@@ -1296,9 +1353,9 @@ class FlxG
 	 * @param	Force		Force the effect to reset.
 	 */
 	#if flash
-	static public function fade(?Color:UInt = 0xff000000, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	static public function fade(?Color:UInt = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#else
-	static public function fade(?Color:BitmapInt32, ?Duration:Float = 1, ?FadeIn:Bool = false, ?OnComplete:Void->Void = null, ?Force:Bool = false):Void
+	static public function fade(?Color:BitmapInt32, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#end
 	{
 		#if !flash
@@ -1324,7 +1381,7 @@ class FlxG
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).  Default value is SHAKE_BOTH_AXES (0).
 	 */
-	static public function shake(?Intensity:Float = 0.05, ?Duration:Float = 0.5, ?OnComplete:Void->Void = null, ?Force:Bool = true, ?Direction:Int = 0):Void
+	static public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, OnComplete:Void->Void = null, Force:Bool = true, Direction:Int = 0):Void
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
@@ -1382,7 +1439,7 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any oevrlaps were detected.
 	 */
-	inline static public function overlap(?ObjectOrGroup1:FlxBasic = null, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:FlxObject->FlxObject->Void = null, ?ProcessCallback:FlxObject->FlxObject->Bool = null):Bool
+	inline static public function overlap(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -1413,7 +1470,7 @@ class FlxG
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	inline static public function collide(?ObjectOrGroup1:FlxBasic = null, ?ObjectOrGroup2:FlxBasic = null, ?NotifyCallback:FlxObject->FlxObject->Void = null):Bool
+	inline static public function collide(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null):Bool
 	{
 		return FlxG.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
 	}
@@ -1750,7 +1807,7 @@ class FlxG
 	 *
 	 * Example: FlxG.tween(object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete } );
 	 */
-	public static function tween(object:Dynamic, values:Dynamic, duration:Float, ?options:Dynamic = null):MultiVarTween
+	public static function tween(object:Dynamic, values:Dynamic, duration:Float, options:Dynamic = null):MultiVarTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,

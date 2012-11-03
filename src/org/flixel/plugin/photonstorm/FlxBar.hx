@@ -139,7 +139,7 @@ class FlxBar extends FlxSprite
 	 * @param	max			The maximum value the bar can reach. I.e. for a progress bar this would typically be 100.
 	 * @param	border		Include a 1px border around the bar? (if true it adds +2 to width and height to accommodate it)
 	 */
-	public function new(x:Int, y:Int, ?direction:Int = FILL_LEFT_TO_RIGHT, ?width:Int = 100, ?height:Int = 10, ?parentRef:Dynamic = null, ?variable:String = "", ?min:Float = 0, ?max:Float = 100, ?border:Bool = false)
+	public function new(x:Int, y:Int, direction:Int = FILL_LEFT_TO_RIGHT, width:Int = 100, height:Int = 10, parentRef:Dynamic = null, variable:String = "", min:Float = 0, max:Float = 100, border:Bool = false)
 	{
 		fixedPosition = true;
 		zeroOffset = new Point();
@@ -249,7 +249,7 @@ class FlxBar extends FlxSprite
 	 * @param	offsetX		The offset on X in relation to the origin x/y of the parent
 	 * @param	offsetY		The offset on Y in relation to the origin x/y of the parent
 	 */
-	public function setParent(parentRef:Dynamic, variable:String, ?track:Bool = false, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
+	public function setParent(parentRef:Dynamic, variable:String, track:Bool = false, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
 		parent = parentRef;
 		parentVariable = variable;
@@ -286,7 +286,7 @@ class FlxBar extends FlxSprite
 	 * @param	onFilled		The function that is called if the value of this FlxBar reaches max
 	 * @param	killOnEmpty		If set it will call FlxBar.kill() if the value reaches min
 	 */
-	public function setCallbacks(onEmpty:Void->Void, onFilled:Void->Void, ?killOnEmpty:Bool = false):Void
+	public function setCallbacks(onEmpty:Void->Void, onFilled:Void->Void, killOnEmpty:Bool = false):Void
 	{
 		if (onEmpty != null)
 		{
@@ -402,9 +402,9 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 */
 	#if flash
-	public function createFilledBar(empty:UInt, fill:UInt, ?showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
+	public function createFilledBar(empty:UInt, fill:UInt, showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
 	#else
-	public function createFilledBar(empty:BitmapInt32, fill:BitmapInt32, ?showBorder:Bool = false, ?border:BitmapInt32):Void
+	public function createFilledBar(empty:BitmapInt32, fill:BitmapInt32, showBorder:Bool = false, ?border:BitmapInt32):Void
 	#end
 	{
 		#if !flash
@@ -549,9 +549,9 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 */
 	#if flash
-	public function createGradientBar(empty:Array<UInt>, fill:Array<UInt>, ?chunkSize:Int = 1, ?rotation:Int = 180, ?showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
+	public function createGradientBar(empty:Array<UInt>, fill:Array<UInt>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
 	#else
-	public function createGradientBar(empty:Array<BitmapInt32>, fill:Array<BitmapInt32>, ?chunkSize:Int = 1, ?rotation:Int = 180, ?showBorder:Bool = false, ?border:BitmapInt32):Void
+	public function createGradientBar(empty:Array<BitmapInt32>, fill:Array<BitmapInt32>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, ?border:BitmapInt32):Void
 	#end
 	{
 		#if !flash
@@ -718,9 +718,9 @@ class FlxBar extends FlxSprite
 	 * @param	fillBackground		If no foreground (fill) image is given, use this colour value instead. 0xAARRGGBB format
 	 */
 	#if flash
-	public function createImageBar(?empty:Dynamic = null, ?fill:Dynamic = null, ?emptyBackground:UInt = 0xff000000, ?fillBackground:UInt = 0xff00ff00):Void
+	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, ?emptyBackground:UInt = 0xff000000, ?fillBackground:UInt = 0xff00ff00):Void
 	#else
-	public function createImageBar(?empty:Dynamic = null, ?fill:Dynamic = null, ?emptyBackground:BitmapInt32, ?fillBackground:BitmapInt32):Void
+	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, ?emptyBackground:BitmapInt32, ?fillBackground:BitmapInt32):Void
 	#end
 	{
 		#if !flash

@@ -220,7 +220,7 @@ class FlxTilemap extends FlxObject
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.	
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:String, TileGraphic:Dynamic, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?AutoTile:Int = 0, ?StartingIndex:Int = 0, ?DrawIndex:Int = 1, ?CollideIndex:Int = 1):FlxTilemap
+	public function loadMap(MapData:String, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, AutoTile:Int = 0, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
 		auto = AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
@@ -594,7 +594,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Simple		If true, returns the data as copy, as a series of 1s and 0s (useful for auto-tiling stuff). Default value is false, meaning it will return the actual data array (NOT a copy).
 	 * @return	An array the size of the tilemap full of integers indicating tile placement.
 	 */
-	public function getData(?Simple:Bool = false):Array<Int>
+	public function getData(Simple:Bool = false):Array<Int>
 	{
 		if (!Simple)
 		{
@@ -618,7 +618,7 @@ class FlxTilemap extends FlxObject
 	 * Basically forces a reset of the drawn tilemaps, even if it wasn'tile necessary.
 	 * @param	Dirty		Whether to flag the tilemap buffers as dirty or not.
 	 */
-	public function setDirty(?Dirty:Bool = true):Void
+	public function setDirty(Dirty:Bool = true):Void
 	{
 		var i:Int = 0;
 		var l:Int = _buffers.length;
@@ -638,7 +638,7 @@ class FlxTilemap extends FlxObject
 	 * @param   WideDiagonal   Whether to require an additional tile to make diagonal movement. Default value is true;
 	 * @return	A <code>FlxPath</code> from the start to the end.  If no path could be found, then a null reference is returned.
 	 */
-	public function findPath(Start:FlxPoint, End:FlxPoint, ?Simplify:Bool = true, ?RaySimplify:Bool = false, ?WideDiagonal:Bool = true):FlxPath
+	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, WideDiagonal:Bool = true):FlxPath
 	{
 		//figure out what tile we are starting and ending on.
 		var startIndex:Int = Std.int((Start.y - y) / _tileHeight) * widthInTiles + Std.int((Start.x - x) / _tileWidth);
@@ -1020,7 +1020,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
-	override public function overlaps(ObjectOrGroup:FlxBasic, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	override public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
@@ -1068,7 +1068,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
-	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
@@ -1118,7 +1118,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Position			Optional, specify a custom position for the tilemap (useful for overlapsAt()-type funcitonality).
 	 * @return	Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool = null, ?FlipCallbackParams:Bool = false, ?Position:FlxPoint = null):Bool
+	public function overlapsWithCallback(Object:FlxObject, Callback:FlxObject->FlxObject->Bool = null, FlipCallbackParams:Bool = false, Position:FlxPoint = null):Bool
 	{
 		var results:Bool = false;
 		
@@ -1227,7 +1227,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
-	override public function overlapsPoint(point:FlxPoint, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if (!InScreenSpace)
 		{
@@ -1337,7 +1337,7 @@ class FlxTilemap extends FlxObject
 	 * @param	UpdateGraphics	Whether the graphical representation of this tile should change.
 	 * @return	Whether or not the tile was actually changed.
 	 */ 
-	public function setTile(X:Int, Y:Int, Tile:Int, ?UpdateGraphics:Bool = true):Bool
+	public function setTile(X:Int, Y:Int, Tile:Int, UpdateGraphics:Bool = true):Bool
 	{
 		if ((X >= widthInTiles) || (Y >= heightInTiles))
 		{
@@ -1353,7 +1353,7 @@ class FlxTilemap extends FlxObject
 	 * @param	UpdateGraphics	Whether the graphical representation of this tile should change.
 	 * @return	Whether or not the tile was actually changed.
 	 */
-	public function setTileByIndex(Index:Int, Tile:Int, ?UpdateGraphics:Bool = true):Bool
+	public function setTileByIndex(Index:Int, Tile:Int, UpdateGraphics:Bool = true):Bool
 	{
 		if (Index >= _data.length)
 		{
@@ -1410,7 +1410,7 @@ class FlxTilemap extends FlxObject
 	 * @param	CallbackFilter	If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
 	 * @param	Range			If you want this callback to work for a bunch of different tiles, input the range here.  Default value is 1.
 	 */
-	public function setTileProperties(Tile:Int, ?AllowCollisions:Int = 0x1111, ?Callback:FlxObject->FlxObject->Void = null, CallbackFilter:Class<Dynamic> = null, Range:Int = 1):Void
+	public function setTileProperties(Tile:Int, AllowCollisions:Int = 0x1111, Callback:FlxObject->FlxObject->Void = null, CallbackFilter:Class<Dynamic> = null, Range:Int = 1):Void
 	{
 		if (Range <= 0)
 		{
@@ -1434,7 +1434,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Border			Adjusts the camera follow boundary by whatever number of tiles you specify here.  Handy for blocking off deadends that are offscreen, etc.  Use a negative number to add padding instead of hiding the edges.
 	 * @param	UpdateWorld		Whether to update the collision system's world size, default value is true.
 	 */
-	public function follow(?Camera:FlxCamera = null, ?Border:Int = 0, ?UpdateWorld:Bool = true):Void
+	public function follow(Camera:FlxCamera = null, Border:Int = 0, UpdateWorld:Bool = true):Void
 	{
 		if (Camera == null)
 		{
@@ -1448,7 +1448,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Bounds		Optional, pass in a pre-existing <code>FlxRect</code> to prevent instantiation of a new object.
 	 * @return	A <code>FlxRect</code> containing the world coordinates and size of the entire tilemap.
 	 */
-	public function getBounds(?Bounds:FlxRect = null):FlxRect
+	public function getBounds(Bounds:FlxRect = null):FlxRect
 	{
 		if (Bounds == null)
 		{
@@ -1466,7 +1466,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Resolution	Defaults to 1, meaning check every tile or so.  Higher means more checks!
 	 * @return	Returns true if the ray made it from Start to End without hitting anything.  Returns false and fills Result if a tile was hit.
 	 */
-	public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint = null, ?Resolution:Float = 1):Bool
+	public function ray(Start:FlxPoint, End:FlxPoint, Result:FlxPoint = null, Resolution:Float = 1):Bool
 	{
 		var step:Float = _tileWidth;
 		if (_tileHeight < _tileWidth)
@@ -1565,7 +1565,7 @@ class FlxTilemap extends FlxObject
 	* @param Resolution Defaults to 1, meaning check every tile or so. Higher means more checks!
 	* @return Returns null if the ray made it from Start to End without hitting anything. Returns FlxPoint if a tile was hit.
 	*/
-	public function rayHit(Start:FlxPoint, End:FlxPoint, ?Resolution:Float = 1):FlxPoint
+	public function rayHit(Start:FlxPoint, End:FlxPoint, Resolution:Float = 1):FlxPoint
 	{
 		var Result:FlxPoint = null;
 		var step:Float = _tileWidth;
@@ -1660,7 +1660,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Invert		Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function arrayToCSV(Data:Array<Int>, Width:Int, ?Invert:Bool = false):String
+	static public function arrayToCSV(Data:Array<Int>, Width:Int, Invert:Bool = false):String
 	{
 		var row:Int = 0;
 		var column:Int;
@@ -1719,9 +1719,9 @@ class FlxTilemap extends FlxObject
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
 	#if flash
-	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1, ?ColorMap:Array<UInt> = null):String
+	static public function bitmapToCSV(bitmapData:BitmapData, Invert:Bool = false, Scale:Int = 1, ColorMap:Array<UInt> = null):String
 	#else
-	static public function bitmapToCSV(bitmapData:BitmapData, ?Invert:Bool = false, ?Scale:Int = 1, ?ColorMap:Array<Int> = null):String
+	static public function bitmapToCSV(bitmapData:BitmapData, Invert:Bool = false, Scale:Int = 1, ColorMap:Array<Int> = null):String
 	#end
 	{
 		if (Scale < 1) Scale = 1;
@@ -1800,7 +1800,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function imageToCSV(ImageFile:Dynamic, ?Invert:Bool = false, ?Scale:Int = 1):String
+	static public function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1):String
 	{
 		var tempBitmapData:BitmapData;
 		if (Std.is(ImageFile, String))
@@ -1908,7 +1908,7 @@ class FlxTilemap extends FlxObject
 	 * @param	NewTile	New tile to the mapdata. Use -1 if you dont want any changes. Default = 0 (empty)
 	 * @return	FlxSprite.
 	 */
-	public function tileToFlxSprite(X:Int, Y:Int, ?NewTile:Int = 0):FlxSprite
+	public function tileToFlxSprite(X:Int, Y:Int, NewTile:Int = 0):FlxSprite
 	{
 		var rowIndex:Int = X + (Y * widthInTiles);
 		

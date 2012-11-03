@@ -25,11 +25,17 @@ class Atlas
 	 */
 	public var root:Node;
 	
+	/**
+	 * Name of the atlas. Don't change it manually!!!
+	 */
 	public var name:String;
 	
 	public var nodes:Hash<Node>;
 	public var atlasBitmapData:BitmapData;
 	
+	/**
+	 * Offsets between nodes in atlas
+	 */
 	public var borderX:Int;
 	public var borderY:Int;
 	
@@ -37,6 +43,9 @@ class Atlas
 	public var _tileSheetData:TileSheetData;
 	#end
 	
+	/**
+	 * Bool flag for internal use.
+	 */
 	private var _fromBitmapData:Bool;
 	
 	/**
@@ -46,7 +55,7 @@ class Atlas
 	 * @param	borderX		horizontal distance between nodes
 	 * @param	borderY		vertical distance between nodes
 	 */
-	public function new(name:String, width:Int, height:Int, ?borderX:Int = 1, ?borderY:Int = 1, ?bitmapData:BitmapData = null) 
+	public function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1, bitmapData:BitmapData = null) 
 	{
 		nodes = new Hash<Node>();
 		this.name = name;
@@ -85,7 +94,7 @@ class Atlas
 	 * @param	BmData		atlas' bitmapdata
 	 * @return	atlas from cache
 	 */
-	public static function getAtlas(Key:String, BmData:BitmapData, ?Unique:Bool = false):Atlas
+	public static function getAtlas(Key:String, BmData:BitmapData, Unique:Bool = false):Atlas
 	{
 		var alreadyExist:Bool = _atlasCache.exists(Key);
 		
@@ -123,7 +132,7 @@ class Atlas
 	 * @param	atlas	Atlas to remove
 	 * @param	destroy	if you set this param to true then atlas will be destroyed. Be carefull with it.
 	 */
-	public static function removeAtlas(atlas:Atlas, ?destroy:Bool = false):Void
+	public static function removeAtlas(atlas:Atlas, destroy:Bool = false):Void
 	{
 		var currAtlas:Atlas;
 		for (key in _atlasCache.keys())
@@ -153,7 +162,8 @@ class Atlas
 	}
 	
 	/**
-	 * This method could optimize atlas after adding new nodes with addNode() method
+	 * This method could optimize atlas after adding new nodes with addNode() method.
+	 * Don't use it!!!
 	 */
 	public function rebuildAtlas():Void
 	{
@@ -184,6 +194,9 @@ class Atlas
 		}
 	}
 	
+	/**
+	 * Redraws all nodes on atlasBitmapData
+	 */
 	public function redrawAll():Void
 	{
 		#if !neko
@@ -199,7 +212,7 @@ class Atlas
 	}
 	
 	/**
-	 * Resizes atlas to new dimensions
+	 * Resizes atlas to new dimensions. Don't use it
 	 */
 	public function resize(newWidth:Int, newHeight:Int):Void
 	{
@@ -292,7 +305,6 @@ class Atlas
 	/**
 	 * Total height of atlas
 	 */
-	
 	public var height(get_height, null):Int;
 	
 	public function get_height():Int
@@ -497,7 +509,7 @@ class Atlas
 	}
 	
 	/**
-	 * This method is used by FlxText objects
+	 * This method is used by FlxText objects only.
 	 * @param	bmd		updated FlxText's bitmapdata
 	 */
 	public function clearAndFillWith(bmd:BitmapData):Node
@@ -521,11 +533,27 @@ class Atlas
 		return root;
 	}
 	
+	/**
+	 * Gets cloned atlas.
+	 * @param	cloneName	the name of new atlas
+	 * @return	atlas clone
+	 */
 	public function clone(cloneName:String):Atlas
 	{
+		if (_fromBitmapData)
+		{
+			return null;
+		}
+		
 		var atlasKey:String = getUniqueKey(cloneName);
-		// TODO: clone method
-		return null;
+		var cloneAtlas:Atlas = new Atlas(cloneName, this.width, this.height, this.borderX, this.borderY);
+		cloneAtlas.createQueue();
+		for (node in nodes)
+		{
+			cloneAtlas.addToQueue(node.item, node.key);
+		}
+		cloneAtlas.generateAtlasFromQueue();
+		return cloneAtlas;
 	}
 	
 	private function deleteSubtree(node:Node):Void

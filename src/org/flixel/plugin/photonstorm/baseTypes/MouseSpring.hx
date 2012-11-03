@@ -45,7 +45,7 @@ class MouseSpring
 	 * @param	friction			The friction applied to the spring as it moves
 	 * @param	gravity				The gravity controls how far "down" the spring hangs (use a negative value for it to hang up!)
 	 */
-	public function new(sprite:FlxExtendedSprite, ?retainVelocity:Bool = false, ?tension:Float = 0.1, ?friction:Float = 0.95, ?gravity:Float = 0)
+	public function new(sprite:FlxExtendedSprite, retainVelocity:Bool = false, tension:Float = 0.1, friction:Float = 0.95, gravity:Float = 0)
 	{
 		vx = 0;
 		vy = 0;

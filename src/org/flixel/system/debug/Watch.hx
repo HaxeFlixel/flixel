@@ -38,9 +38,9 @@ class Watch extends FlxWindow
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
 	#if flash
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
 	#else
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
 	#end
 	{
 		#if !flash
@@ -108,7 +108,7 @@ class Watch extends FlxWindow
 	 * @param VariableName	The <code>String</code> name of the variable you want to track, e.g. "width" or "x".
 	 * @param DisplayName	Optional <code>String</code> that can be displayed in the watch window instead of the basic class-name information.
 	 */
-	public function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String = null):Void
+	public function add(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
 		//Don't add repeats
 		var watchEntry:WatchEntry;
@@ -135,7 +135,7 @@ class Watch extends FlxWindow
 	 * @param AnyObject		The <code>Object</code> containing the variable you want to remove, e.g. this or Player.velocity.
 	 * @param VariableName	The <code>String</code> name of the variable you want to remove, e.g. "width" or "x".  If left null, this will remove all variables of that object. 
 	 */
-	public function remove(AnyObject:Dynamic, ?VariableName:String = null):Void
+	public function remove(AnyObject:Dynamic, VariableName:String = null):Void
 	{
 		//splice out the requested object
 		var watchEntry:WatchEntry;

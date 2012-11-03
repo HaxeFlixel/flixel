@@ -49,7 +49,7 @@ class FlxText extends FlxSprite
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 */
-	public function new(X:Float, Y:Float, Width:Int, ?Text:String = null, ?EmbeddedFont:Bool = true)
+	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
 		Width = FlxU.fromIntToUInt(Width);
@@ -124,9 +124,9 @@ class FlxText extends FlxSprite
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	#if flash
-	public function setFormat(?Font:String = null, ?Size:Float = 8, ?Color:UInt = 0xffffff, ?Alignment:String = null, ?ShadowColor:UInt = 0):FlxText
+	public function setFormat(Font:String = null, Size:Float = 8, Color:UInt = 0xffffff, Alignment:String = null, ShadowColor:UInt = 0):FlxText
 	#else
-	public function setFormat(?Font:String = null, ?Size:Float = 8, ?Color:Int = 0xffffff, ?Alignment:String = null, ?ShadowColor:Int = 0):FlxText
+	public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0):FlxText
 	#end
 	{
 		if (Font == null)
@@ -347,7 +347,7 @@ class FlxText extends FlxSprite
 	#if (flash || js)
 	override private function calcFrame():Void
 	#else
-	override private function calcFrame(?AreYouSure:Bool = false):Void
+	override private function calcFrame(AreYouSure:Bool = false):Void
 	#end
 	{
 		#if (cpp || neko)

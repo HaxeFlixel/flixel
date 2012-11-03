@@ -22,7 +22,7 @@ class TileSheetData
 	 * Adds new tileSheet to manager and returns it
 	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
 	 */
-	public static function addTileSheet(bitmapData:BitmapData, ?isTilemap:Bool = false):TileSheetData
+	public static function addTileSheet(bitmapData:BitmapData):TileSheetData
 	{
 		var tempTileSheetData:TileSheetData;
 		
@@ -32,7 +32,7 @@ class TileSheetData
 			return getTileSheet(bitmapData);
 		}
 		
-		tempTileSheetData = new TileSheetData(new Tilesheet(bitmapData), isTilemap);
+		tempTileSheetData = new TileSheetData(new Tilesheet(bitmapData));
 		tileSheetData.push(tempTileSheetData);
 		return (tileSheetData[tileSheetData.length - 1]);
 	}
@@ -100,7 +100,7 @@ class TileSheetData
 	 */
 	public var flxSpriteFrames:Array<FlxSpriteFrames>;
 	
-	public function new(tileSheet:Tilesheet, ?isTilemap:Bool = false)
+	public function new(tileSheet:Tilesheet)
 	{
 		this.tileSheet = tileSheet;
 		pairsData = new Array<RectanglePointPair>();
@@ -113,7 +113,7 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	public function addSpriteFramesData(width:Int, height:Int, ?origin:Point = null, ?startX:Int = 0, ?startY:Int = 0, ?endX:Int = 0, ?endY:Int = 0, ?xSpacing:Int = 0, ?ySpacing:Int = 0):FlxSpriteFrames
+	public function addSpriteFramesData(width:Int, height:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
 	{
 		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
 		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
@@ -206,7 +206,7 @@ class TileSheetData
 	 * Adds new tileRect to tileSheet object
 	 * @return id of added tileRect
 	 */
-	public function addTileRect(rect:Rectangle, ?point:Point = null):Int
+	public function addTileRect(rect:Rectangle, point:Point = null):Int
 	{
 		if (this.containsTileRect(rect, point))
 		{
@@ -221,7 +221,7 @@ class TileSheetData
 	/**
 	 * Search for given data of tileRect and returns true if tileSheet already contains such tileRect
 	 */
-	public function containsTileRect(rect:Rectangle, ?point:Point = null):Bool
+	public function containsTileRect(rect:Rectangle, point:Point = null):Bool
 	{
 		for (pair in pairsData)
 		{
@@ -244,7 +244,7 @@ class TileSheetData
 	/**
 	 * Search for given data of tileRect and returns ID of that tileRect (if this tileRect doesn't exist then returns -1)
 	 */
-	public function getTileRectID(rect:Rectangle, ?point:Point = null):Int
+	public function getTileRectID(rect:Rectangle, point:Point = null):Int
 	{
 		var pair:RectanglePointPair;
 		for (i in 0...(pairsData.length))

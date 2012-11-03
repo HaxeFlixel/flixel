@@ -62,7 +62,7 @@ class OgmoLevelLoader
 	* @param	The name of the layer the tilemap data is stored in Ogmo editor, usually "tiles" or "stage".
 	* @return	A FlxTilemap, where you can collide your entities against.
 	*/ 
-	public function loadTilemap(TileGraphic:Dynamic, ?TileWidth:Int = 16, ?TileHeight:Int = 16, ?TileLayer:String = "tiles"):FlxTilemap
+	public function loadTilemap(TileGraphic:Dynamic, TileWidth:Int = 16, TileHeight:Int = 16, TileLayer:String = "tiles"):FlxTilemap
 	{
 		var tileMap:FlxTilemap = new FlxTilemap();
 		tileMap.loadMap(fastXml.node.resolve(TileLayer).innerData, TileGraphic, TileWidth, TileHeight);
@@ -88,7 +88,7 @@ class OgmoLevelLoader
 	* @param	A function that takes in the following parameters (name:String, data:Xml):Void (returns Void) that spawns entities based on their name.
 	* @param	The name of the layer the entities are stored in Ogmo editor. Usually "entities" or "actors"
 	*/ 
-	public function loadEntities(entityLoadCallback:String -> Xml -> Void, ?EntityLayer:String = "entities"):Void
+	public function loadEntities(entityLoadCallback:String -> Xml -> Void, EntityLayer:String = "entities"):Void
 	{
 		var actors = fastXml.node.resolve(EntityLayer);
 

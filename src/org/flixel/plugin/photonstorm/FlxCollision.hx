@@ -62,7 +62,7 @@ class FlxCollision
 	 * 
 	 * @return	Boolean True if the sprites collide, false if not
 	 */
-	public static function pixelPerfectCheck(contact:FlxSprite, target:FlxSprite, ?alphaTolerance:Int = 255, ?camera:FlxCamera = null):Bool
+	public static function pixelPerfectCheck(contact:FlxSprite, target:FlxSprite, alphaTolerance:Int = 255, camera:FlxCamera = null):Bool
 	{
 		#if (flash || js)
 		var pointA:Point = new Point();
@@ -151,9 +151,9 @@ class FlxCollision
 	 * @return	Boolean True if the x/y point collides with the FlxSprite, false if not
 	 */
 	#if flash
-	public static function pixelPerfectPointCheck(pointX:UInt, pointY:UInt, target:FlxSprite, ?alphaTolerance:Int = 255):Bool
+	public static function pixelPerfectPointCheck(pointX:UInt, pointY:UInt, target:FlxSprite, alphaTolerance:Int = 255):Bool
 	#else
-	public static function pixelPerfectPointCheck(pointX:Int, pointY:Int, target:FlxSprite, ?alphaTolerance:Int = 255):Bool
+	public static function pixelPerfectPointCheck(pointX:Int, pointY:Int, target:FlxSprite, alphaTolerance:Int = 255):Bool
 	#end
 	{
 		//	Intersect check
@@ -222,9 +222,9 @@ class FlxCollision
 	 * @return	FlxGroup The 4 FlxTileblocks that are created are placed into this FlxGroup which should be added to your State
 	 */
 	#if flash
-	public static function createCameraWall(camera:FlxCamera, placement:UInt, thickness:UInt, ?adjustWorldBounds:Bool = false):FlxGroup
+	public static function createCameraWall(camera:FlxCamera, placement:UInt, thickness:UInt, adjustWorldBounds:Bool = false):FlxGroup
 	#else
-	public static function createCameraWall(camera:FlxCamera, placement:Int, thickness:Int, ?adjustWorldBounds:Bool = false):FlxGroup
+	public static function createCameraWall(camera:FlxCamera, placement:Int, thickness:Int, adjustWorldBounds:Bool = false):FlxGroup
 	#end
 	{
 		var left:FlxTileblock = null;

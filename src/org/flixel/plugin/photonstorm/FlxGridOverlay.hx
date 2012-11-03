@@ -40,9 +40,9 @@ class FlxGridOverlay
 	 * @return	FlxSprite of given width/height
 	 */
 	#if flash
-	public static function create(cellWidth:Int, cellHeight:Int, ?width:Int = -1, ?height:Int = -1, ?addLegend:Bool = false, ?alternate:Bool = true, ?color1:UInt = 0xffe7e6e6, ?color2:UInt = 0xffd9d5d5):FlxSprite
+	public static function create(cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, ?color1:UInt = 0xffe7e6e6, ?color2:UInt = 0xffd9d5d5):FlxSprite
 	#else
-	public static function create(cellWidth:Int, cellHeight:Int, ?width:Int = -1, ?height:Int = -1, ?addLegend:Bool = false, ?alternate:Bool = true, ?color1:BitmapInt32, ?color2:BitmapInt32):FlxSprite
+	public static function create(cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, ?color1:BitmapInt32, ?color2:BitmapInt32):FlxSprite
 	#end
 	{
 		#if !flash
@@ -109,9 +109,9 @@ class FlxGridOverlay
 	 * @return	The modified source FlxSprite
 	 */
 	#if flash
-	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, ?width:Int = -1, ?height:Int = -1, ?addLegend:Bool = false, ?alternate:Bool = true, ?color1:UInt = 0x88e7e6e6, ?color2:UInt = 0x88d9d5d5):FlxSprite
+	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, ?color1:UInt = 0x88e7e6e6, ?color2:UInt = 0x88d9d5d5):FlxSprite
 	#else
-	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, ?width:Int = -1, ?height:Int = -1, ?addLegend:Bool = false, ?alternate:Bool = true, ?color1:BitmapInt32, ?color2:BitmapInt32):FlxSprite
+	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, ?color1:BitmapInt32, ?color2:BitmapInt32):FlxSprite
 	#end
 	{
 		#if !flash
@@ -159,7 +159,7 @@ class FlxGridOverlay
 		return source;
 	}
 	
-	public static function addLegend(source:FlxSprite, cellWidth:Int, cellHeight:Int, ?xAxis:Bool = true, ?yAxis:Bool = true):FlxSprite
+	public static function addLegend(source:FlxSprite, cellWidth:Int, cellHeight:Int, xAxis:Bool = true, yAxis:Bool = true):FlxSprite
 	{
 		if (cellWidth > source.width)
 		{
