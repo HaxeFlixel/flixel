@@ -130,7 +130,8 @@ class FlxLayer
 	}
 	
 	/**
-	 * Adds object to this layer. May remove it if object was on another layer. Tries to add object's bitmapdata on layer's atlas
+	 * Adds object to this layer. May remove it if object was on another layer. Tries to add object's bitmapdata on layer's atlas.
+	 * Important note: You will still need to add an object not only in the layer, but in the state using state's add() method
 	 * @param	Object	object to add.
 	 * @return	added object. May return null if object can't be added on this layer.
 	 */
