@@ -91,7 +91,7 @@ class FlxEmitter extends FlxGroup
 	/**
 	 * Internal helper for deciding when to launch particles or kill them.
 	 */
-	private var _timer:Float;
+	private var _timer:Float = 0;
 	/**
 	 * Internal counter for figuring out how many particles to launch.
 	 */
@@ -227,9 +227,9 @@ class FlxEmitter extends FlxGroup
 	 */
 	override public function update():Void
 	{
-		if(on)
+		if (on)
 		{
-			if(_explode)
+			if (_explode)
 			{
 				on = false;
 				var i:Int = 0;
@@ -273,6 +273,15 @@ class FlxEmitter extends FlxGroup
 				}
 			}
 		}
+		else if (_explode)	// possible fix for issue #146
+		{
+			_timer += FlxG.elapsed;
+			if ((lifespan > 0) && (_timer > lifespan))
+			{
+				kill();
+				return;
+			}
+		}	// end of fix
 		super.update();
 	}
 	
