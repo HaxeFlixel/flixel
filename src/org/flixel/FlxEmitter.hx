@@ -129,6 +129,7 @@ class FlxEmitter extends FlxGroup
 		_counter = 0;
 		_explode = true;
 		on = false;
+		exists = false;
 		_point = new FlxPoint();
 	}
 	
@@ -273,7 +274,7 @@ class FlxEmitter extends FlxGroup
 				}
 			}
 		}
-		else if (_explode)	// possible fix for issue #146
+		else if (exists)
 		{
 			_timer += FlxG.elapsed;
 			if ((lifespan > 0) && (_timer > lifespan))
@@ -281,7 +282,7 @@ class FlxEmitter extends FlxGroup
 				kill();
 				return;
 			}
-		}	// end of fix
+		}
 		super.update();
 	}
 	
