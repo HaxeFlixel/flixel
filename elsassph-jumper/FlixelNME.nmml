@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<app title="Jumper Demo" file="Jumper" main="Test" version="0.0.1" company="Zaphod" />
+	
+	<window width="640" height="480" fps="40" orientation="portrait" resizable="true" if="target_flash" />
+	<window width="640" height="480" fps="40" orientation="portrait" resizable="true" unless="target_flash" />
+ 	
+	<set name="BUILD_DIR" value="export" />
+	
+	<classpath name="source" />
+	
+	<haxelib name="nme" />
+	<haxelib name="flixel" />
+	
+	<assets path="assets" include="*" exclude="*.svg|*.ogg" unless="target_flash" />
+	<assets path="assets" include="*" exclude="*.svg|*.wav|*.ogg" if="target_flash" />
+	
+	<assets path="assets/data" include="*.ttf" type="font" />
+	<assets path="assets" include="*.fgr" type="text" />
+	<assets path="assets" include="*.csv" type="text" />
+	<assets path="assets" include="*.txt" type="text" />
+	<assets path="assets" include="*.png" type="image" />
+	<assets path="assets/data" include="*.png" type="image" />
+	<assets path="assets/data/vcr" include="*.png" type="image" />
+	<assets path="assets/data/vis" include="*.png" type="image" />
+	
+	<icon name="assets/HaxeFlixel.svg" />
+</project>

@@ -11,20 +11,21 @@
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="000000" />
+    <movie background="#000000" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="Source" />
-    <class path="Export/flash/haxe" />
+    <class path="source" />
+    <class path="export/cpp/windows/haxe" />
+    <class path="export/cpp/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme_install_tool&#xA;web" />
+    <option directives="nme_install_tool&#xA;desktop&#xA;windows&#xA;code_completion" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--connect 6000&#xA;-swf-version 10.1" />
+    <option additional="--remap flash:nme" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -44,8 +45,7 @@
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxelib run nme test "FlixelNME.nmml" neko
-haxelib run nme test "FlixelNME.nmml" flash</preBuildCommand>
+  <preBuildCommand>haxelib run nme test "FlixelNME.nmml" neko</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
