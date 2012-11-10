@@ -13,7 +13,6 @@ class WrapSprite extends FlxSprite
 	public function new(?X:Int = 0, ?Y:Int = 0, ?Graphic:String = null) 
 	{
 		super(X, Y, Graphic);
-		updateTileSheet();
 		alterBoundingBox();
 	}
 	

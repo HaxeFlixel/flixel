@@ -1,6 +1,7 @@
 package;
 
 import nme.Assets;
+import nme.display.BlendMode;
 import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
@@ -25,9 +26,7 @@ class Player extends FlxSprite
 	{
 		super(X,Y);
 		loadGraphic("assets/spaceman.png", true, true, 8);
-	//	updateTileSheet();
 		_restart = 0;
-		
 		//bounding box tweaks
 		width = 6;
 		height = 7;

@@ -33,7 +33,6 @@ class PlayState extends FlxState
 			#else
 			sprite.makeGraphic(2, 2, {rgb: 0xffffff, a: 0xff});
 			#end
-			sprite.updateTileSheet();
 			sprite.active = false;
 			add(sprite);
 		}
@@ -53,7 +52,6 @@ class PlayState extends FlxState
 		{
 			sprite = new WrapSprite( -100, -100);
 			sprite.makeGraphic(8, 2);
-			sprite.updateTileSheet();
 			sprite.width = 10;
 			sprite.height = 10;
 			sprite.offset.x = -1;

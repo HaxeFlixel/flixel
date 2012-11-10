@@ -106,7 +106,6 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 								FlxG.height - 32 + (Std.int((i % 16) / 4) * 4));//The Y position of this shield piece
 			sprite.active = false;
 			sprite.makeGraphic(4, 4);
-			sprite.updateTileSheet();
 			shields.add(sprite);
 		}
 		add(shields);

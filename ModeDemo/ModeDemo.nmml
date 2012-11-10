@@ -4,20 +4,16 @@
 	<app title="Mode Demo" file="ModeDemo" main="Test" version="0.0.1" company="Zaphod" />
 	
 	<window width="640" height="480" fps="30" orientation="portrait" background="0x000000" resizable="true" if="target_flash" />
-	<window width="0" height="0" fps="30" orientation="landscape" background="0x000000" fullscreen="true" unless="target_flash" />
+	<window width="640" height="480" fps="30" orientation="landscape" background="0x000000" fullscreen="false" unless="target_flash" />
  	
-	<set name="BUILD_DIR" value="Export" />
+	<set name="BUILD_DIR" value="export" />
 	
-	<set name="SWF_VERSION" value="10.1" />
-	
-	<!--<setenv name="no_console" value="1" />-->
-	
-	<classpath name="Source" />
+	<classpath name="source" />
 	
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>
 	
-	<assets path="Assets" rename="assets" if="android" >
+	<assets path="assets" if="android" >
 		<sound path="data/beep.wav" id="Beep" />
 		<sound path="asplode.wav" id="Asplode" />
 		<sound path="button.wav" id="Button" />
@@ -35,7 +31,7 @@
 		<music path="mode.mp3" id="Mode" />
 	</assets>
 	
-	<assets path="Assets" rename="assets" if="desktop" >
+	<assets path="assets" if="desktop" >
 		<sound path="data/beep.wav" id="Beep" />
 		<sound path="asplode.wav" id="Asplode" />
 		<sound path="button.wav" id="Button" />
@@ -53,7 +49,7 @@
 		<music path="mode.wav" id="Mode" />
 	</assets>
 	
-	<assets path="Assets" rename="assets" if="target_flash" >
+	<assets path="assets" if="flash" >
 		<sound path="data/beep.mp3" id="Beep" />
 		<sound path="asplode.mp3" id="Asplode" />
 		<sound path="button.mp3" id="Button" />
@@ -75,16 +71,14 @@
 	<assets path="assets" include="*.fgr" type="text" />
 	<assets path="assets" include="*.csv" type="text" />
 	<assets path="assets" include="*.txt" type="text" />
+	<assets path="assets" include="*.fnt" type="text" />
 	<assets path="assets" include="*.png" type="image" />
 	<assets path="assets/data" include="*.png" type="image" />
 	<assets path="assets/data/vcr" include="*.png" type="image" />
 	<assets path="assets/data/vis" include="*.png" type="image" />
+
+	<haxelib name="nme" />
+	<haxelib name="flixel"/>
 	
-	<!--<icon name="Assets/nme.svg" /> -->
-	
-	<ndll name="std" />
-	<ndll name="regexp" />
-	<ndll name="zlib" />
-	<ndll name="nme" haxelib="nme" />
-	
+	<icon name="assets/HaxeFlixel.svg" />
 </project>

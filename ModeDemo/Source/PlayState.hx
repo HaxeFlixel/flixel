@@ -1,12 +1,15 @@
 package;
 
 import nme.Assets;
+import nme.display.Bitmap;
 import nme.events.MouseEvent;
+import nme.Lib;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
+import org.flixel.FlxLayer;
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
@@ -14,8 +17,6 @@ import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxTextField;
 import org.flixel.FlxTilemap;
-import org.flixel.tileSheetManager.TileSheetData;
-import org.flixel.tileSheetManager.TileSheetManager;
 
 class PlayState extends FlxState
 {
@@ -42,11 +43,11 @@ class PlayState extends FlxState
 	private var _hazards:FlxGroup;
 	
 	//HUD/User Interface stuff
-	#if flash
+	//#if flash
 	private var _score:FlxText;
-	#else
-	private var _score:FlxTextField;
-	#end
+	//#else
+	//private var _score:FlxTextField;
+	//#end
 	private var _score2:FlxText;
 	private var _scoreTimer:Float;
 	private var _jamTimer:Float;
@@ -66,6 +67,12 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
+		#if (cpp || neko)
+		layer = new FlxLayer("GeneralLayer");
+		layer.atlas = FlxLayer.createAtlas(1024, 1024, "GeneralLayer");
+		FlxG.state.addLayer(layer);
+		#end
+		
 		//FlxG.mouse.hide();
 		
 		//Here we are creating a pool of 100 little metal bits that can be exploded.
@@ -78,6 +85,10 @@ class PlayState extends FlxState
 		_littleGibs.bounce = 0.5;
 		_littleGibs.makeParticles(FlxAssets.imgGibs, 100, 10, true, 0.5);
 		
+		#if (cpp || neko)
+		layer.add(_littleGibs);
+		#end
+		
 		//Next we create a smaller pool of larger metal bits for exploding.
 		_bigGibs = new FlxEmitter();
 		_bigGibs.setXSpeed( -200, 200);
@@ -86,6 +97,10 @@ class PlayState extends FlxState
 		_bigGibs.gravity = 350;
 		_bigGibs.bounce = 0.35;
 		_bigGibs.makeParticles(FlxAssets.imgSpawnerGibs, 50, 20, true, 0.5);
+		
+		#if (cpp || neko)
+		layer.add(_bigGibs);
+		#end
 		
 		//Then we'll set up the rest of our object groups or pools
 		_decorations = new FlxGroup();
@@ -109,7 +124,7 @@ class PlayState extends FlxState
 		//Now that we have references to the bullets and metal bits,
 		//we can create the player object.
 		_player = new Player(316, 300, _bullets, _littleGibs);
-
+		
 		//This refers to a custom function down at the bottom of the file
 		//that creates all our level geometry with a total size of 640x480.
 		//This in turn calls buildRoom() a bunch of times, which in turn
@@ -128,6 +143,13 @@ class PlayState extends FlxState
 		//Then we add the player and set up the scrolling camera,
 		//which will automatically set the boundaries of the world.
 		add(_player);
+		
+		#if (cpp || neko)
+		var playerLayer:FlxLayer = getLayerFor(_player.bitmapDataKey);
+		playerLayer.add(_player);
+		addLayer(playerLayer);
+		#end
+		
 		FlxG.camera.setBounds(0, 0, 640, 640, true);
 		FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
 		
@@ -154,11 +176,11 @@ class PlayState extends FlxState
 		//From here on out we are making objects for the HUD,
 		//that is, the player score, number of spawners left, etc.
 		//First, we'll create a text field for the current score
-		#if flash
+	//	#if flash
 		_score = new FlxText(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
-		#else
-		_score = new FlxTextField(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
-		#end
+	//	#else
+	//	_score = new FlxTextField(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
+	//	#end
 		_score.setFormat(null, 16, 0xd8eba2, "center", 0x131c1b);
 		_hud.add(_score);
 		if(FlxG.scores.length < 2)
@@ -215,11 +237,6 @@ class PlayState extends FlxState
 		FlxG.watch(_enemyBullets, "length", "numEnemyBullets");
 		FlxG.watch(FlxG.sounds, "length", "numSounds");
 		
-		#if (cpp || neko)
-		TileSheetManager.setTileSheetIndex(_player.getTileSheetIndex(), TileSheetManager.getMaxIndex());
-		TileSheetManager.setTileSheetIndex(cast(_hud.getFirstAlive(), FlxSprite).getTileSheetIndex(), TileSheetManager.getMaxIndex());
-		#end
-		
 		LeftButton = new FlxButton(1000, 0, "Left");
 		LeftButton.scrollFactor = new FlxPoint(1.0, 1.0);
 		#if neko
@@ -230,6 +247,9 @@ class PlayState extends FlxState
 		LeftButton.label.color = 0xffd8eba2;
 		#end
 		add(LeftButton);
+		#if (cpp || neko)
+		layer.add(_bigGibs);
+		#end
 		
 		var leftCam:FlxCamera = new FlxCamera(Math.floor(10 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
 		leftCam.follow(LeftButton, FlxCamera.STYLE_NO_DEAD_ZONE);
@@ -245,6 +265,9 @@ class PlayState extends FlxState
 		RightButton.label.color = 0xffd8eba2;
 		#end
 		add(RightButton);
+		#if (cpp || neko)
+		layer.add(RightButton);
+		#end
 		
 		var rightCam:FlxCamera = new FlxCamera(Math.floor(100 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
 		rightCam.follow(RightButton, FlxCamera.STYLE_NO_DEAD_ZONE);
@@ -260,14 +283,13 @@ class PlayState extends FlxState
 		JumpButton.label.color = 0xffd8eba2;
 		#end
 		add(JumpButton);
+		#if (cpp || neko)
+		layer.add(_bigGibs);
+		#end
 		
 		var jumpCam:FlxCamera = new FlxCamera(Math.floor((FlxG.width - 90) * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
 		jumpCam.follow(JumpButton, FlxCamera.STYLE_NO_DEAD_ZONE);
 		FlxG.addCamera(jumpCam);
-		
-		#if !flash
-		trace("numTileSheets = " + TileSheetManager.tileSheetData.length);
-		#end
 	}
 	
 	override public function destroy():Void
@@ -447,8 +469,11 @@ class PlayState extends FlxState
 		
 		tileMap = new FlxTilemap();
 		tileMap.loadMap(FlxTilemap.arrayToCSV(map, MAP_WIDTH_IN_TILES), "assets/img_tiles.png", 8, 8, FlxTilemap.OFF);
-	//	tileMap.updateTileSheet();
 		add(tileMap);
+		
+		#if (cpp || neko)
+		layer.add(tileMap);
+		#end
 	}
 	
 	//Just plops down a spawner and some blocks - haphazard and crappy atm but functional!
@@ -510,11 +535,16 @@ class PlayState extends FlxState
 			//Finally actually add the spawner
 			var sp:Spawner = new Spawner(RX + sx * 8, RY + sy * 8, _bigGibs, _enemies, _enemyBullets, _littleGibs, _player);
 			_spawners.add(sp);
+			#if (cpp || neko)
+			layer.add(sp);
+			#end
 			
 			//Then create a dedicated camera to watch the spawner
 			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame);
-		//	miniFrame.updateTileSheet();
 			_hud.add(miniFrame);
+			#if (cpp || neko)
+			layer.add(miniFrame);
+			#end
 			
 			var ratio:Float = FlxCamera.defaultZoom / 2;
 			var camera:FlxCamera = new FlxCamera(Math.floor(ratio * (10 + (_spawners.length - 1) * 32)), Math.floor(ratio * 10), 24, 24, ratio);

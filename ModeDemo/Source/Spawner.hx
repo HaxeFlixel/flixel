@@ -1,6 +1,7 @@
 package;
 
 import nme.Assets;
+import nme.display.BlendMode;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -20,7 +21,6 @@ class Spawner extends FlxSprite
 	{
 		super(X, Y);
 		loadGraphic("assets/spawner.png", true);
-	//	updateTileSheet();
 		_gibs = Gibs;
 		_bots = Bots;
 		_botBullets = BotBullets;

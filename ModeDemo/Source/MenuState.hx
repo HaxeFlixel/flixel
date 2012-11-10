@@ -2,16 +2,19 @@ package;
 
 import nme.Assets;
 import nme.geom.Rectangle;
-import nme.net.SharedObject;
 import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
-import org.flixel.FlxPath;
+import org.flixel.FlxGamePad;
 import org.flixel.FlxSave;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
+import org.flixel.plugin.pxText.FlxBitmapTextField;
+import org.flixel.plugin.pxText.PxBitmapFont;
+import org.flixel.plugin.pxText.PxButton;
+import org.flixel.plugin.pxText.PxTextAlign;
 
 class MenuState extends FlxState
 {
@@ -22,9 +25,6 @@ class MenuState extends FlxState
 	public var fading:Bool;
 	public var timer:Float;
 	public var attractMode:Bool;
-	
-	public var pathFollower:FlxSprite;
-	public var testPath:FlxPath;
 	
 	override public function create():Void
 	{
@@ -70,12 +70,14 @@ class MenuState extends FlxState
 		title1.color = 0x3a5c39;
 		#end
 		title1.antialiasing = true;
+		title1.moves = true;
 		title1.velocity.x = -FlxG.width;
 		add(title1);
 
 		//the letters "de"
 		title2 = new FlxText( -60, title1.y, Math.floor(title1.width), "de");
 		title2.size = title1.size;
+		title2.moves = true;
 		title2.color = title1.color;
 		title2.antialiasing = title1.antialiasing;
 		title2.velocity.x = FlxG.width;
@@ -100,7 +102,6 @@ class MenuState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		
 		if(title2.x > title1.x + title1.width - 4)
 		{
 			//Once mo and de cross each other, fix their positions
@@ -165,8 +166,7 @@ class MenuState extends FlxState
 			dannyButton.label.color = flixelButton.label.color;
 			add(dannyButton);
 			
-			//playButton = new FlxButton(flixelButton.x, flixelButton.y + 62, "CLICK HERE", onPlay);
-			playButton = new FlxButton(flixelButton.x, text.y - 2, "CLICK HERE", onPlay);
+			playButton = new FlxButton(flixelButton.x, flixelButton.y + 62, "CLICK HERE", onPlay);
 			playButton.color = flixelButton.color;
 			playButton.label.color = flixelButton.label.color;
 			add(playButton);
@@ -250,4 +250,5 @@ class MenuState extends FlxState
 		FlxG.stopReplay();
 		FlxG.resetGame();
 	}
+	
 }

@@ -1,21 +1,23 @@
 package;
 
 import nme.Assets;
+import nme.display.Bitmap;
 import nme.events.MouseEvent;
+import nme.Lib;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
+import org.flixel.FlxLayer;
 import org.flixel.FlxObject;
+import org.flixel.FlxParticle;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxTextField;
 import org.flixel.FlxTileblock;
-import org.flixel.tileSheetManager.TileSheetData;
-import org.flixel.tileSheetManager.TileSheetManager;
 
 class PlayStateOld extends FlxState
 {
@@ -62,6 +64,11 @@ class PlayStateOld extends FlxState
 	override public function create():Void
 	{
 		//FlxG.mouse.hide();
+		#if (cpp || neko)
+		layer = new FlxLayer("GeneralLayer");
+		layer.atlas = FlxLayer.createAtlas(1024, 1024, "GeneralLayer");
+		FlxG.state.addLayer(layer);
+		#end
 		
 		//Here we are creating a pool of 100 little metal bits that can be exploded.
 		//We will recycle the crap out of these!
@@ -124,6 +131,13 @@ class PlayStateOld extends FlxState
 		//Then we add the player and set up the scrolling camera,
 		//which will automatically set the boundaries of the world.
 		add(_player);
+		
+		#if (cpp || neko)
+		var playerLayer:FlxLayer = getLayerFor(_player.bitmapDataKey);
+		playerLayer.add(_player);
+		addLayer(playerLayer);
+		#end
+		
 		FlxG.camera.setBounds(0, 0, 640, 640, true);
 		FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
 		
@@ -210,11 +224,6 @@ class PlayStateOld extends FlxState
 		FlxG.watch(_enemies, "length", "numEnemies");
 		FlxG.watch(_enemyBullets, "length", "numEnemyBullets");
 		
-		#if (cpp || neko)
-		TileSheetManager.setTileSheetIndex(_player.getTileSheetIndex(), TileSheetManager.getMaxIndex());
-		TileSheetManager.setTileSheetIndex(cast(_hud.getFirstAlive(), FlxSprite).getTileSheetIndex(), TileSheetManager.getMaxIndex());
-		#end
-		
 		LeftButton = new FlxButton(1000, 0, "Left");
 		LeftButton.scrollFactor = new FlxPoint(1.0, 1.0);
 		#if neko
@@ -259,10 +268,6 @@ class PlayStateOld extends FlxState
 		var jumpCam:FlxCamera = new FlxCamera(Math.floor((FlxG.width - 90) * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
 		jumpCam.follow(JumpButton, FlxCamera.STYLE_NO_DEAD_ZONE);
 		FlxG.addCamera(jumpCam);
-		
-		#if !flash
-		trace("numTileSheets = " + TileSheetManager.tileSheetData.length);
-		#end
 	}
 	
 	override public function destroy():Void
@@ -408,28 +413,38 @@ class PlayStateOld extends FlxState
 		//First, we create the walls, ceiling and floors:
 		b = new FlxTileblock(0, 0, 640, 16);
 		b.loadTiles("assets/tech_tiles.png");
-	//	b.updateTileSheet();
 		_blocks.add(b);
+		#if (cpp || neko)
+		_layer.add(b);
+		#end
 		
 		b = new FlxTileblock(0, 16, 16, 640 - 16);
 		b.loadTiles("assets/tech_tiles.png");
-	//	b.updateTileSheet();
 		_blocks.add(b);
+		#if (cpp || neko)
+		_layer.add(b);
+		#end
 		
 		b = new FlxTileblock(640 - 16, 16, 16, 640 - 16);
 		b.loadTiles("assets/tech_tiles.png");
-	//	b.updateTileSheet();
 		_blocks.add(b);
+		#if (cpp || neko)
+		_layer.add(b);
+		#end
 		
 		b = new FlxTileblock(16, 640 - 24, 640 - 32, 8);
 		b.loadTiles("assets/dirt_top.png");
-	//	b.updateTileSheet();
 		_blocks.add(b);
+		#if (cpp || neko)
+		_layer.add(b);
+		#end
 		
 		b = new FlxTileblock(16, 640 - 16, 640 - 32, 16);
 		b.loadTiles("assets/dirt.png");
-	//	b.updateTileSheet();
 		_blocks.add(b);
+		#if (cpp || neko)
+		_layer.add(b);
+		#end
 		
 		//Then we split the game world up into a 4x4 grid,
 		//and generate some blocks in each area.  Some grid spaces
@@ -499,21 +514,27 @@ class PlayStateOld extends FlxState
 			var b:FlxTileblock;
 			b = new FlxTileblock(RX + bx * 8, RY + by * 8, bw * 8, bh * 8);
 			b.loadTiles("assets/tech_tiles.png");
-		//	b.updateTileSheet();
 			_blocks.add(b);
+			#if (cpp || neko)
+			_layer.add(b);
+			#end
 			
 			//If the block has room, add some non-colliding "dirt" graphics for variety
 			if((bw >= 4) && (bh >= 5))
 			{
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8, bw * 8 - 16, 8);
 				b.loadTiles("assets/dirt_top.png");
-			//	b.updateTileSheet();
 				_decorations.add(b);
+				#if (cpp || neko)
+				_layer.add(b);
+				#end
 				
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8 + 8, bw * 8 - 16, bh * 8 - 24);
 				b.loadTiles("assets/dirt.png");
-			//	b.updateTileSheet();
 				_decorations.add(b);
+				#if (cpp || neko)
+				_layer.add(b);
+				#end
 			}
 		}
 
@@ -525,7 +546,6 @@ class PlayStateOld extends FlxState
 			
 			//Then create a dedicated camera to watch the spawner
 			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame);
-		//	miniFrame.updateTileSheet();
 			_hud.add(miniFrame);
 			var ratio:Float = FlxCamera.defaultZoom / 2;
 			var camera:FlxCamera = new FlxCamera(Math.floor(ratio * (10 + (_spawners.length - 1) * 32)), Math.floor(ratio * 10), 24, 24, ratio);

@@ -21,7 +21,6 @@ class PlayerShip extends WrapSprite
 		#else
 		loadGraphic("assets/ship.png");
 		#end
-		updateTileSheet();
 		alterBoundingBox();
 		_thrust = 0;
 	}

@@ -1,6 +1,7 @@
 package;
 
 import nme.Assets;
+import nme.display.BlendMode;
 import nme.geom.Point;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
@@ -9,7 +10,6 @@ import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxU;
-import org.flixel.tileSheetManager.TileSheetManager;
 
 class Enemy extends FlxSprite
 {
@@ -40,11 +40,15 @@ class Enemy extends FlxSprite
 	{
 		super();
 		#if flash
-		loadRotatedGraphic("assets/bot.png", 64, 0, false, true);
+		loadRotatedGraphic("assets/bot.png", 64, 0, false, false);
 		#else
 		loadGraphic("assets/bot.png");
+		
+		if (FlxG.state.layer != null)
+		{
+			FlxG.state.layer.add(this);
+		}
 		#end
-	//	updateTileSheet();
 
 		//We want the enemy's "hit box" or actual size to be
 		//smaller than the enemy graphic itself, just by a few pixels.
@@ -57,6 +61,13 @@ class Enemy extends FlxSprite
 		_jets = new FlxEmitter();
 		_jets.setRotation();
 		_jets.makeParticles(FlxAssets.imgJet, 15, 0, false, 0);
+		
+		#if (cpp || neko)
+		if (FlxG.state.layer != null)
+		{
+			FlxG.state.layer.add(_jets);
+		}
+		#end
 		
 		//These parameters help control the ship's
 		//speed and direction during the update() loop.

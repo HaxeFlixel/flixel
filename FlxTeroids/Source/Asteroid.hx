@@ -30,7 +30,6 @@ class Asteroid extends WrapSprite
 		#else
 		loadGraphic((Size == null) ? "assets/large.png" : Size);
 		#end
-		updateTileSheet();
 		alterBoundingBox();
 		
 		if (Size == null)

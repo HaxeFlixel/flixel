@@ -14,10 +14,12 @@ class EnemyBullet extends FlxSprite
 	{
 		super();
 		loadGraphic("assets/bot_bullet.png", true);
-	//	updateTileSheet();
 		addAnimation("idle",[0, 1], 50);
 		addAnimation("poof",[2, 3, 4], 50, false);
 		speed = 120;
+		#if (cpp || neko)
+		FlxG.state.layer.add(this);
+		#end
 	}
 	
 	override public function update():Void

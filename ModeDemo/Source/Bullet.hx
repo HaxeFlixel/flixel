@@ -15,7 +15,6 @@ class Bullet extends FlxSprite
 	{
 		super();
 		loadGraphic("assets/bullet.png", true);
-	//	updateTileSheet();
 		width = 6;
 		height = 6;
 		offset.x = 1;
@@ -28,6 +27,9 @@ class Bullet extends FlxSprite
 		addAnimation("poof",[4, 5, 6, 7], 50, false);
 		
 		speed = 360;
+		#if (cpp || neko)
+		FlxG.state.layer.add(this);
+		#end
 	}
 	
 	override public function update():Void
