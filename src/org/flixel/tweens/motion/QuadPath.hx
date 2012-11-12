@@ -1,4 +1,4 @@
-﻿package org.flixel.tweens.motion;
+package org.flixel.tweens.motion;
 
 import org.flixel.FlxPoint;
 import org.flixel.tweens.FlxTween;
@@ -103,7 +103,7 @@ class QuadPath extends Motion
 		}
 		else
 		{
-			_index = _curve.length - 1;
+			_index = _curve.length;
 		}
 		
 		super.start();
@@ -120,15 +120,7 @@ class QuadPath extends Motion
 		{
 			if (_index < _curve.length - 1)
 			{
-				while (_t > _curveT[_index + 1]) 
-				{
-					_index++;
-					if (_index == _curve.length - 1)
-					{
-						_index -= 1;
-						break;
-					}
-				}
+				while (_t > _curveT[_index + 1]) _index++;
 			}
 			td = _curveT[_index];
 			tt = _curveT[_index + 1] - td;
@@ -146,11 +138,6 @@ class QuadPath extends Motion
 				while (_t < _curveT[_index - 1])
 				{
 					_index -= 1;
-					if (_index == 0)
-					{
-						_index += 1;
-						break;
-					}
 				}
 			}
 			
