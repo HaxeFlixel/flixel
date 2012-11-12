@@ -81,7 +81,7 @@ class FlxRect
 	}
 	
 	/**
-	 * Instantiate a new rectangle.
+	 * Fill this rectangle with the data provided.
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 * @param	Width	Desired width of the rectangle.

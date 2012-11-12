@@ -15,6 +15,11 @@ import org.flixel.FlxBasic;
 class FlxObject extends FlxBasic
 {
 	/**
+	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them. 
+	 * Don't modify this unless your objects are passing through eachother.
+	 */
+	static public 		 var SEPARATE_BIAS:Float = 4;
+	/**
 	 * Generic value for "left" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
 	static public inline var LEFT:Int	= 0x0001;
@@ -50,11 +55,6 @@ class FlxObject extends FlxBasic
 	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	static public inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
-	/**
-	 * Handy constant used during collision resolution (see <code>separateX()</code> and <code>separateY()</code>).
-	 */
-	static public inline var OVERLAP_BIAS:Float = 4;
-	
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
@@ -188,11 +188,11 @@ class FlxObject extends FlxBasic
 	/**
 	 * This is just a pre-allocated x-y point container to be used however you like
 	 */
-	private var _point:FlxPoint;
+	public var _point:FlxPoint;
 	/**
 	 * This is just a pre-allocated rectangle container to be used however you like
 	 */
-	private var _rect:FlxRect;
+	public var _rect:FlxRect;
 	/**
 	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
 	 * FlxObject and FlxSprite default to true.
@@ -256,6 +256,21 @@ class FlxObject extends FlxBasic
 	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
 	 */
 	private var _pathRotate:Bool;
+	/**
+	 * Overriding this will force a specific color to be used for debug rect.
+	 */
+	#if flash
+	public var debugBoundingBoxColor(default, onBoundingBoxColorSet):UInt;
+	#else
+	public var debugBoundingBoxColor(default, onBoundingBoxColorSet):Int;
+	#end
+	private var _boundingBoxColorOverritten:Bool = false;
+	private function onBoundingBoxColorSet(val:Int):Int 
+	{
+		_boundingBoxColorOverritten = true;
+		debugBoundingBoxColor = val;
+		return val; 
+	}
 	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
@@ -458,45 +473,39 @@ class FlxObject extends FlxBasic
 		var boundingBoxHeight:Int = (height != Std.int(height)) ? Math.floor(height) : Math.floor(height - 1);
 		#end
 		
-		#if flash
-		var boundingBoxColor:UInt;
-		#else
-		var boundingBoxColor:Int;
-		#end
-		
-		if(allowCollisions != FlxObject.NONE)
+		if(allowCollisions != FlxObject.NONE && !_boundingBoxColorOverritten)
 		{
 			if (allowCollisions != ANY)
 			{
 				#if !neko
-				boundingBoxColor = FlxG.PINK;
+				debugBoundingBoxColor = FlxG.PINK;
 				#else
-				boundingBoxColor = FlxG.PINK.rgb;
+				debugBoundingBoxColor = FlxG.PINK.rgb;
 				#end
 			}
 			if (immovable)
 			{
 				#if !neko
-				boundingBoxColor = FlxG.GREEN;
+				debugBoundingBoxColor = FlxG.GREEN;
 				#else
-				boundingBoxColor = FlxG.GREEN.rgb;
+				debugBoundingBoxColor = FlxG.GREEN.rgb;
 				#end
 			}
 			else
 			{
 				#if !neko
-				boundingBoxColor = FlxG.RED;
+				debugBoundingBoxColor = FlxG.RED;
 				#else
-				boundingBoxColor = FlxG.RED.rgb;
+				debugBoundingBoxColor = FlxG.RED.rgb;
 				#end
 			}
 		}
-		else
+		else if (!_boundingBoxColorOverritten)
 		{
 			#if !neko
-			boundingBoxColor = FlxG.BLUE;
+			debugBoundingBoxColor = FlxG.BLUE;
 			#else
-			boundingBoxColor = FlxG.BLUE.rgb;
+			debugBoundingBoxColor = FlxG.BLUE.rgb;
 			#end
 		}
 		
@@ -505,7 +514,7 @@ class FlxObject extends FlxBasic
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		gfx.moveTo(boundingBoxX, boundingBoxY);
-		gfx.lineStyle(1, boundingBoxColor, 0.5);
+		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
 		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY);
 		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY + boundingBoxHeight);
 		gfx.lineTo(boundingBoxX, boundingBoxY + boundingBoxHeight);
@@ -514,7 +523,7 @@ class FlxObject extends FlxBasic
 		Camera.buffer.draw(FlxG.flashGfxSprite);
 		#else
 		var gfx:Graphics = Camera._debugLayer.graphics;
-		gfx.lineStyle(1, boundingBoxColor, 0.5);
+		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
 		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
 		#end
 	}
@@ -1109,7 +1118,7 @@ class FlxObject extends FlxBasic
 			
 			if((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
 			{
-				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + OVERLAP_BIAS;
+				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS;
 				
 				//If they did overlap (and can), figure out by how much and flip the corresponding flags
 				if(obj1delta > obj2delta)
@@ -1220,7 +1229,7 @@ class FlxObject extends FlxBasic
 			
 			if((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
 			{
-				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + OVERLAP_BIAS;
+				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS;
 				
 				//If they did overlap (and can), figure out by how much and flip the corresponding flags
 				if(obj1delta > obj2delta)
