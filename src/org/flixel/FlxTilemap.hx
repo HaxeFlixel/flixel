@@ -221,7 +221,7 @@ class FlxTilemap extends FlxObject
 	
 	/**
 	 * Load the tilemap with string data and a tile graphic.
-	 * @param	MapData			A string of comma and line-return delineated indices indicating what order the tiles should go in.
+	 * @param	MapData			A string of comma and line-return delineated indices indicating what order the tiles should go in, or an <code>Array of Int</code>. YOU MUST SET <code>widthInTiles</code> and <code>heightInTyles</code> manually BEFORE CALLING <code>loadMap</code> if you pass an Array!
 	 * @param	TileGraphic		All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param	TileWidth		The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param	TileHeight		The height of your tiles (e.g. 8) - defaults to width if unspecified.
@@ -231,40 +231,54 @@ class FlxTilemap extends FlxObject
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.	
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:String, TileGraphic:Dynamic, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?AutoTile:Int = 0, ?StartingIndex:Int = 0, ?DrawIndex:Int = 1, ?CollideIndex:Int = 1):FlxTilemap
+	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?AutoTile:Int = 0, ?StartingIndex:Int = 0, ?DrawIndex:Int = 1, ?CollideIndex:Int = 1):FlxTilemap
 	{
 		auto = AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
-
-		//Figure out the map dimensions based on the data string
-		var columns:Array<String>;
-		_data = new Array<Int>();
-		var rows:Array<String> = MapData.split("\n");
-		heightInTiles = rows.length;
-		var row:Int = 0;
-		var column:Int;
-		while(row < heightInTiles)
+		
+		// Populate data if MapData is a CSV string
+		if (Std.is(MapData, String))
 		{
-			columns = rows[row++].split(",");
-			if(columns.length <= 1)
+			//Figure out the map dimensions based on the data string
+			_data = new Array<Int>();
+			var columns:Array<String>;
+			var rows:Array<String> = MapData.split("\n");
+			heightInTiles = rows.length;
+			var row:Int = 0;
+			var column:Int;
+			while(row < heightInTiles)
 			{
-				heightInTiles = heightInTiles - 1;
-				continue;
+				columns = rows[row++].split(",");
+				if(columns.length <= 1)
+				{
+					heightInTiles = heightInTiles - 1;
+					continue;
+				}
+				if (widthInTiles == 0)
+				{
+					widthInTiles = columns.length;
+				}
+				column = 0;
+				while (column < widthInTiles)
+				{
+					_data.push(Std.parseInt(columns[column++]));
+				}
 			}
-			if (widthInTiles == 0)
-			{
-				widthInTiles = columns.length;
-			}
-			column = 0;
-			while (column < widthInTiles)
-			{
-				_data.push(Std.parseInt(columns[column++]));
-			}
+		}
+		// Data is already set up as an Array<Int>
+		// DON'T FORGET TO SET 'widthInTiles' and 'heightInTyles' manually BEFORE CALLING loadMap() if you pass an Array<Int>!
+		else if (Std.is(MapData, Array))
+		{
+			_data = MapData;
+		}
+		else
+		{
+			throw "Unexpected MapData format '" + Type.typeof(MapData) + "' passed into loadMap. Map data must be CSV string or Array<Int>.";
 		}
 		
 		//Pre-process the map data if it's auto-tiled
 		var i:Int;
-		totalTiles = widthInTiles * heightInTiles;
+		totalTiles =  _data.length;
 		if(auto > OFF)
 		{
 			_startingIndex = 1;
@@ -291,19 +305,14 @@ class FlxTilemap extends FlxObject
 		}
 		
 		//create some tile objects that we'll use for overlap checks (one for each tile)
-		i = 0;
-		var l:Int = Math.floor(_tiles.width / _tileWidth * _tiles.height / _tileHeight);
-		if (auto > OFF)
-		{
-			l++;
-		}
-		_tileObjects = new Array<FlxTile>(/*l*/);
-		FlxU.SetArrayLength(_tileObjects, l);
-		var ac:Int;
-		while(i < l)
+		_tileObjects = new Array<FlxTile>();
+		
+		var length:Int = Math.floor(_tiles.width / _tileWidth * _tiles.height / _tileHeight);
+		length += _startingIndex;
+		
+		for(i in 0 ... length)
 		{
 			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= DrawIndex), (i >= CollideIndex) ? allowCollisions : FlxObject.NONE);
-			i++;
 		}
 		
 		updateTileSheet();
