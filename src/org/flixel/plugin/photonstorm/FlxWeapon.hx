@@ -82,13 +82,13 @@ class FlxWeapon
 	private var velocity:FlxPoint;
 	
 	public var multiShot:Int;
-	public var bulletLifeSpan:Int;
+	public var bulletLifeSpan:Float;
 	
 	public var bulletElasticity:Float;
 	
 	public var rndFactorAngle:Int;
-	public var rndFactorLifeSpan:Int;
 	public var rndFactorSpeed:Int;
+	public var rndFactorLifeSpan:Float;
 	public var rndFactorPosition:FlxPoint;
 	
 	/**
@@ -625,8 +625,10 @@ class FlxWeapon
 	 * 
 	 * @param	randomAngle		The +- value applied to the angle when fired. For example 20 means the bullet can fire up to 20 degrees under or over its angle when fired.
 	 * @param	randomSpeed		The +- value applied to the speed when fired. For example 20 means the bullet can fire up to 20 px/sec slower or faster when fired.
+	 * @param	randomPosition	The +- value applied to the firing location when fired (fire spread).
+	 * @param	randomLifeSpan	The +- value applied to the <code>bulletLifeSpan</code> when fired. For example passing 2 when <code>bulletLifeSpan</code> is 3, means the bullet can live up to 5 seconds, minimum of 1.
 	 */
-	public function setBulletRandomFactor(?randomAngle:Int = 0, ?randomSpeed:Int = 0, ?randomPosition:FlxPoint = null, ?randomLifeSpan:Int = 0):Void
+	public function setBulletRandomFactor(?randomAngle:Int = 0, ?randomSpeed:Int = 0, ?randomPosition:FlxPoint = null, ?randomLifeSpan:Float = 0):Void
 	{
 		rndFactorAngle = FlxU.fromIntToUInt(randomAngle);
 		rndFactorSpeed = FlxU.fromIntToUInt(randomSpeed);
@@ -636,16 +638,16 @@ class FlxWeapon
 			rndFactorPosition = randomPosition;
 		}
 		
-		rndFactorLifeSpan = FlxU.fromIntToUInt(randomLifeSpan);
+		rndFactorLifeSpan = randomLifeSpan < 0 ? -randomLifeSpan : randomLifeSpan;
 	}
 	
 	/**
-	 * If the bullet should have a fixed life span use this function to set it.<br>
+	 * If the bullet should have a fixed life span use this function to set it.
 	 * The bullet will be killed once it passes this lifespan, if still alive and in bounds.
 	 * 
-	 * @param	lifespan	The lifespan of the bullet, given in ms (milliseconds) calculated from the moment the bullet is fired
+	 * @param	lifespan	The lifespan of the bullet, given in seconds.
 	 */
-	public function setBulletLifeSpan(lifespan:Int):Void
+	public function setBulletLifeSpan(lifespan:Float):Void
 	{
 		bulletLifeSpan = lifespan;
 	}

@@ -14,6 +14,7 @@
 package org.flixel.plugin.photonstorm.baseTypes; 
 
 import nme.Lib;
+import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxMath;
@@ -34,9 +35,7 @@ class Bullet extends FlxSprite
 	public var rndFactorAngle:Int;
 	public var rndFactorSpeed:Int;
 	public var rndFactorLifeSpan:Int;
-	public var lifespan:Int;
-	public var launchTime:Int;
-	public var expiresTime:Int;
+	public var lifespan:Float;
 	
 	private var animated:Bool;
 	
@@ -175,17 +174,13 @@ class Bullet extends FlxSprite
 		
 		exists = true;
 		
-		launchTime = Lib.getTimer();
-		
 		if (weapon.bulletLifeSpan > 0)
 		{
 			lifespan = weapon.bulletLifeSpan + FlxMath.rand( -weapon.rndFactorLifeSpan, weapon.rndFactorLifeSpan);
-			expiresTime = Lib.getTimer() + lifespan;
 		}
 		
 		if (weapon.onFireCallback != null)
 		{
-			//weapon.onFireCallback.apply();
 			Reflect.callMethod(weapon, Reflect.getProperty(weapon, "onFireCallback"), []);
 		}
 		
@@ -229,9 +224,11 @@ class Bullet extends FlxSprite
 	
 	override public function update():Void
 	{
-		if (lifespan > 0 && Lib.getTimer() > Std.int(expiresTime))
+		if (lifespan > 0)
 		{
-			kill();
+			lifespan -= FlxG.elapsed;
+			if(lifespan <= 0)
+				kill();
 		}
 		
 		if (FlxMath.pointInFlxRect(Math.floor(x), Math.floor(y), weapon.bounds) == false)
