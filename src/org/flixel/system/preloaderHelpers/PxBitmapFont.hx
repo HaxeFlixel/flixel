@@ -150,11 +150,7 @@ class PxBitmapFont
 			cy += (rowHeight + 1);
 		}
 		
-		#if neko
 		var resultBitmapData:BitmapData = pBitmapData.clone();
-		#else
-		var resultBitmapData:BitmapData = pBitmapData.clone();
-		#end
 		
 		#if flash
 		var pixelColor:UInt;
@@ -194,13 +190,20 @@ class PxBitmapFont
 	}
 	
 	#if (flash || js)
-	public function getPreparedGlyphs(pScale:Float, pColor:Int):Array<BitmapData>
+	public function getPreparedGlyphs(pScale:Float, pColor:Int, pUseColorTransform:Bool = true):Array<BitmapData>
 	{
 		var result:Array<BitmapData> = [];
 		
 		_matrix.identity();
 		_matrix.scale(pScale, pScale);
-		_colorTransform.color = pColor;
+		
+		var colorMultiplier:Float = 0.00392;
+		_colorTransform.redOffset = 0;
+		_colorTransform.greenOffset = 0;
+		_colorTransform.blueOffset = 0;
+		_colorTransform.redMultiplier = (pColor >> 16) * colorMultiplier;
+		_colorTransform.greenMultiplier = (pColor >> 8 & 0xff) * colorMultiplier;
+		_colorTransform.blueMultiplier = (pColor & 0xff) * colorMultiplier;
 		
 		var glyph:BitmapData;
 		var preparedGlyph:BitmapData;
@@ -210,7 +213,14 @@ class PxBitmapFont
 			if (glyph != null)
 			{
 				preparedGlyph = new BitmapData(Math.floor(glyph.width * pScale), Math.floor(glyph.height * pScale), true, 0x00000000);
-				preparedGlyph.draw(glyph,  _matrix, _colorTransform);
+				if (pUseColorTransform)
+				{
+					preparedGlyph.draw(glyph,  _matrix, _colorTransform);
+				}
+				else
+				{
+					preparedGlyph.draw(glyph,  _matrix);
+				}
 				result[i] = preparedGlyph;
 			}
 		}
@@ -309,11 +319,11 @@ class PxBitmapFont
 	 * @param	pOffsetY	Y position of thext output.
 	 */
 	#if flash 
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, ?pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pAngle:Float = 0):Void 
 	#elseif js
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, ?pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pAngle:Float = 0):Void 
 	#else
-	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, ?pAngle:Float = 0):Void 
+	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, pAngle:Float = 0, pUseColorTransform:Bool = true):Void 
 	#end
 	{
 		_point.x = pOffsetX;
@@ -350,9 +360,18 @@ class PxBitmapFont
 				drawData.push(glyph);		// tile_ID
 				drawData.push(pScale);		// scale
 				drawData.push(0);			// rotation
-				drawData.push(red);			
-				drawData.push(green);
-				drawData.push(blue);
+				if (pUseColorTransform)
+				{
+					drawData.push(red);			
+					drawData.push(green);
+					drawData.push(blue);
+				}
+				else
+				{
+					drawData.push(1);			
+					drawData.push(1);
+					drawData.push(1);
+				}
 				drawData.push(pAlpha);		// alpha
 				_point.x += glyphWidth * pScale + pLetterSpacing;
 				#end
@@ -379,7 +398,7 @@ class PxBitmapFont
 	 * @param	pFontScale	"size" of the font
 	 * @return	Width in pixels.
 	 */
-	public function getTextWidth(pText:String, ?pLetterSpacing:Int = 0, ?pFontScale:Float = 1.0):Int 
+	public function getTextWidth(pText:String, pLetterSpacing:Int = 0, pFontScale:Float = 1.0):Int 
 	{
 		var w:Int = 0;
 		

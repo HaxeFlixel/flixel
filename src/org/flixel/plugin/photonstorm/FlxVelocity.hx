@@ -38,7 +38,7 @@ class FlxVelocity
 	 * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
 	 * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 	 */
-	public static function moveTowardsObject(source:FlxSprite, dest:FlxSprite, ?speed:Int = 60, ?maxTime:Int = 0):Void
+	public static function moveTowardsObject(source:FlxSprite, dest:FlxSprite, speed:Int = 60, maxTime:Int = 0):Void
 	{
 		var a:Float = angleBetween(source, dest);
 		
@@ -89,7 +89,7 @@ class FlxVelocity
 	 * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
 	 * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 	 */
-	public static function moveTowardsMouse(source:FlxSprite, ?speed:Int = 60, ?maxTime:Int = 0):Void
+	public static function moveTowardsMouse(source:FlxSprite, speed:Int = 60, maxTime:Int = 0):Void
 	{
 		var a:Float = angleBetweenMouse(source);
 		
@@ -140,7 +140,7 @@ class FlxVelocity
 	 * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
 	 * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 	 */
-	public static function moveTowardsPoint(source:FlxSprite, target:FlxPoint, ?speed:Int = 60, ?maxTime:Int = 0):Void
+	public static function moveTowardsPoint(source:FlxSprite, target:FlxPoint, speed:Int = 60, maxTime:Int = 0):Void
 	{
 		var a:Float = angleBetweenPoint(source, target);
 		
@@ -235,7 +235,7 @@ class FlxVelocity
 	 * 
 	 * @return	Number The angle (in radians unless asDegrees is true)
 	 */
-	public static function angleBetweenPoint(a:FlxSprite, target:FlxPoint, ?asDegrees:Bool = false):Float
+	public static function angleBetweenPoint(a:FlxSprite, target:FlxPoint, asDegrees:Bool = false):Float
 	{
 		var dx:Float = (target.x) - (a.x + a.origin.x);
 		var dy:Float = (target.y) - (a.y + a.origin.y);
@@ -260,7 +260,7 @@ class FlxVelocity
 	 * 
 	 * @return	Number The angle (in radians unless asDegrees is true)
 	 */
-	public static function angleBetween(a:FlxSprite, b:FlxSprite, ?asDegrees:Bool = false):Float
+	public static function angleBetween(a:FlxSprite, b:FlxSprite, asDegrees:Bool = false):Float
 	{
 		var dx:Float = (b.x + b.origin.x) - (a.x + a.origin.x);
 		var dy:Float = (b.y + b.origin.y) - (a.y + a.origin.y);
@@ -342,7 +342,7 @@ class FlxVelocity
 	 * 
 	 * @return	Number The angle (in radians unless asDegrees is true)
 	 */
-	public static function angleBetweenMouse(a:FlxSprite, ?asDegrees:Bool = false):Float
+	public static function angleBetweenMouse(a:FlxSprite, asDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		var p:FlxPoint = a.getScreenXY();

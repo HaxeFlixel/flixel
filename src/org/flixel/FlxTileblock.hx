@@ -5,10 +5,6 @@ import nme.display.BitmapData;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 
-#if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetManager;
-#end
-
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.
  * It can be filled with a random selection of tiles to quickly add detail.
@@ -20,6 +16,8 @@ class FlxTileblock extends FlxSprite
 	private var _tileWidth:Int;
 	private var _tileHeight:Int;
 	private var _tileData:Array<Float>;
+	
+	private var _tileIndices:Array<Int>;
 	#end
 	
 	/**
@@ -32,17 +30,19 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
-		#if flash
+		#if (flash || js)
 		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), 0, true);
 		#else
-		_bakedRotation = 0;
+		bakedRotation = 0;
 		width = frameWidth = Width;
 		height = frameHeight = Height;
 		resetHelpers();
 		_tileData = null;
+		_tileIndices = null;
 		#end
 		active = false;
 		immovable = true;
+		moves = false;
 	}
 	
 	/**
@@ -52,7 +52,7 @@ class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	public function loadTiles(TileGraphic:Dynamic, ?TileWidth:Int = 0, ?TileHeight:Int = 0, ?Empties:Int = 0):FlxTileblock
+	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{
 		TileWidth = FlxU.fromIntToUInt(TileWidth);
 		TileHeight = FlxU.fromIntToUInt(TileHeight);
@@ -65,31 +65,34 @@ class FlxTileblock extends FlxSprite
 		
 		//First create a tile brush
 		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
+		#if (cpp || neko)
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		#end
 		var spriteWidth:Int = Std.int(sprite.width);
 		var spriteHeight:Int = Std.int(sprite.height);
 		var total:Int = sprite.frames + Empties;
 		
 		//Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		var regen:Bool = false;
-		if(width % sprite.width != 0)
+		if (width % sprite.width != 0)
 		{
 			width = Std.int((width / spriteWidth + 1)) * spriteWidth;
 			regen = true;
 		}
-		if(height % sprite.height != 0)
+		if (height % sprite.height != 0)
 		{
 			height = Std.int((height / spriteHeight + 1)) * spriteHeight;
 			regen = true;
 		}
 		
-		#if flash
+		#if (flash || js)
 		if (regen)
 		{
 			makeGraphic(Std.int(width), Std.int(height), 0, true);
 		}
 		else
 		{
-			this.fill(0);
+	//		this.fill(0);
 		}
 		#end
 		
@@ -100,14 +103,16 @@ class FlxTileblock extends FlxSprite
 		var destinationY:Int = 0;
 		var widthInTiles:Int = Std.int(width / spriteWidth);
 		var heightInTiles:Int = Std.int(height / spriteHeight);
-		#if !flash
+		#if (cpp || neko)
 		if (_tileData != null)
 		{
 			_tileData.splice(0, _tileData.length);
+			_tileIndices.splice(0, _tileIndices.length);
 		}
 		else
 		{
 			_tileData = [];
+			_tileIndices = [];
 		}
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
@@ -115,7 +120,7 @@ class FlxTileblock extends FlxSprite
 		frameWidth = Math.floor(width);
 		frameHeight = Math.floor(height);
 		resetHelpers();
-		updateTileSheet();
+		updateLayerInfo();
 		#end
 		while (row < heightInTiles)
 		{
@@ -125,12 +130,14 @@ class FlxTileblock extends FlxSprite
 			{
 				if (FlxG.random() * total > Empties)
 				{
-					#if flash
+					#if (flash || js)
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					_tileData.push(_framesData.frameIDs[Math.floor(FlxG.random() * _framesData.frameIDs.length)]);
+					var tileIndex:Int = Math.floor(FlxG.random() * _framesData.frameIDs.length);
+					_tileIndices.push(tileIndex);
+					_tileData.push(_framesData.frameIDs[tileIndex]);
 					_tileData.push(destinationX - origin.x + 0.5 * _tileWidth);
 					_tileData.push(destinationY - origin.y + 0.5 * _tileHeight);
 					#end
@@ -142,14 +149,25 @@ class FlxTileblock extends FlxSprite
 			destinationY += spriteHeight;
 			row++;
 		}
-		
+		#if (cpp || neko)
+		updateFrameData();
+		#end
 		return this;
 	}
 	
 	#if (cpp || neko)
 	override public function draw():Void 
 	{
-		if(_flickerTimer != 0)
+		#if (cpp || neko)
+		// Don't try to draw if object isn't on any layer 
+		// or layer isn't added to state
+		if (_layer == null || _layer.onStage == false)
+		{
+			return;
+		}
+		#end
+		
+		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
 			if (_flicker)
@@ -189,22 +207,22 @@ class FlxTileblock extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = _tileSheetData.positionData[camera.ID];
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
 			
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
 			var redMult:Float = 1;
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
 			
-			var isColoredCamera:Bool = camera.isColored;
+			var isColoredCamera:Bool = camera.isColored();
 			if (isColoredCamera)
 			{
 				redMult = _red * camera.red; 
@@ -218,9 +236,9 @@ class FlxTileblock extends FlxSprite
 				blueMult = _blue;
 			}
 			
-			if (_tileData != null && _tileSheetData != null)
+			if (_tileData != null)
 			{
-				if (simpleRender)
+				if (simpleRenderSprite())
 				{	//Simple render
 					while (j < numTiles)
 					{
@@ -229,8 +247,8 @@ class FlxTileblock extends FlxSprite
 						currTileX = _tileData[currPosInArr + 1];
 						currTileY = _tileData[currPosInArr + 2];
 						
-						currDrawData[currIndex++] = (_point.x) + origin.x + currTileX;
-						currDrawData[currIndex++] = (_point.y) + origin.y + currTileY;
+						currDrawData[currIndex++] = (_point.x) + currTileX;
+						currDrawData[currIndex++] = (_point.y) + currTileY;
 						currDrawData[currIndex++] = currTileID;
 						
 						currDrawData[currIndex++] = 1;
@@ -238,14 +256,14 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = 0;
 						currDrawData[currIndex++] = 1;
 						
-						if (_tileSheetData.isColored || isColoredCamera)
+						if (_layer.isColored || isColoredCamera)
 						{
 							currDrawData[currIndex++] = redMult; 
 							currDrawData[currIndex++] = greenMult;
 							currDrawData[currIndex++] = blueMult;
 						}
 						
-						currDrawData[currIndex++] = _alpha;
+						currDrawData[currIndex++] = alpha;
 						j++;
 					}
 				}
@@ -266,8 +284,8 @@ class FlxTileblock extends FlxSprite
 						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
 						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
 						
-						currDrawData[currIndex++] = (_point.x) + origin.x + relativeX;
-						currDrawData[currIndex++] = (_point.y) + origin.y + relativeY;
+						currDrawData[currIndex++] = (_point.x) + relativeX;
+						currDrawData[currIndex++] = (_point.y) + relativeY;
 						
 						currDrawData[currIndex++] = currTileID;
 						
@@ -276,19 +294,19 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = sin * scale.x;
 						currDrawData[currIndex++] = cos * scale.y;
 						
-						if (_tileSheetData.isColored || isColoredCamera)
+						if (_layer.isColored || isColoredCamera)
 						{
 							currDrawData[currIndex++] = redMult; 
 							currDrawData[currIndex++] = greenMult;
 							currDrawData[currIndex++] = blueMult;
 						}
 						
-						currDrawData[currIndex++] = _alpha;
+						currDrawData[currIndex++] = alpha;
 						j++;
 					}
 				}
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 			}
 			
 			FlxBasic._VISIBLECOUNT++;
@@ -302,17 +320,24 @@ class FlxTileblock extends FlxSprite
 	override public function destroy():Void 
 	{
 		_tileData = null;
+		_tileIndices = null;
 		super.destroy();
 	}
 	
-	override public function updateTileSheet():Void
+	override public function updateFrameData():Void
 	{
-		if (_pixels != null && _tileWidth >= 1 && _tileHeight >= 1)
+		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_tileSheetData.antialiasing = _antialiasing;
-			_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
-			//_framesData = _tileSheetData.addSpriteFramesData(_tileWidth, _tileHeight);
+			updateLayerProps();
+			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
+			
+			if (_tileData != null)
+			{
+				for (i in 0...(_tileIndices.length))
+				{
+					_tileData[i * 3] = _framesData.frameIDs[_tileIndices[i]];
+				}
+			}
 		}
 	}
 	#end

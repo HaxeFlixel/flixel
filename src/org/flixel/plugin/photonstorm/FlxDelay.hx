@@ -157,7 +157,7 @@ class FlxDelay extends Sprite
 		stop(false);
 	}
 	
-	private function stop(?runCallback:Bool = true):Void
+	private function stop(runCallback:Bool = true):Void
 	{
 		Lib.current.stage.removeEventListener(Event.ENTER_FRAME, update);
 		

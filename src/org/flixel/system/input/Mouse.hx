@@ -33,7 +33,10 @@ class Mouse extends FlxPoint
 	 * Current Y position of the mouse pointer on the screen.
 	 */
 	public var screenY:Int;
-	
+	/**
+	 * Property to check if the cursor is visible or not.
+	 */
+	public var visible(getVisible, null):Bool;
 	/**
 	 * Helper variable for tracking whether the mouse was just pressed or just released.
 	 */
@@ -47,6 +50,10 @@ class Mouse extends FlxPoint
 	 * This container is a child of FlxGame and sits at the right "height".
 	 */
 	private var _cursorContainer:Sprite;
+	/**
+	 * Don't update cursor unless we have to (this is essentially a "visible" bool, so we avoid checking the visible property in the Sprite which is slow in cpp).
+	 */
+	private var _updateCursorContainer:Bool;
 	/**
 	 * This is just a reference to the current cursor image, if there is one.
 	 */
@@ -95,8 +102,9 @@ class Mouse extends FlxPoint
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
 	 */
-	public function show(?Graphic:Dynamic = null, ?Scale:Float = 1, ?XOffset:Int = 0, ?YOffset:Int=0):Void
+	public function show(Graphic:Dynamic = null, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
+		_updateCursorContainer = true;
 		_cursorContainer.visible = true;
 		if (Graphic != null)
 		{
@@ -111,19 +119,18 @@ class Mouse extends FlxPoint
 	/**
 	 * Hides the mouse cursor
 	 */
-	public function hide():Void
+	inline public function hide():Void
 	{
+		_updateCursorContainer = false;
 		_cursorContainer.visible = false;
 	}
-	
-	public var visible(getVisible, null):Bool;
 	
 	/**
 	 * Read only, check visibility of mouse cursor.
 	 */
-	public function getVisible():Bool
+	inline public function getVisible():Bool
 	{
-		return _cursorContainer.visible;
+		return _updateCursorContainer;
 	}
 	
 	/**
@@ -133,7 +140,7 @@ class Mouse extends FlxPoint
 	 * @param	XOffset		The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param	YOffset		The number of pixels between the mouse's screen position and the graphic's top left corner. 
 	 */
-	public function load(?Graphic:Dynamic = null, ?Scale:Float = 1, ?XOffset:Int=0, ?YOffset:Int=0):Void
+	public function load(Graphic:Dynamic = null, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		if (_cursor != null)
 		{
@@ -198,6 +205,7 @@ class Mouse extends FlxPoint
 	 */
 	public function update(X:Int,Y:Int):Void
 	{
+		
 		_globalScreenPosition.x = X;
 		_globalScreenPosition.y = Y;
 		updateCursor();
@@ -218,8 +226,11 @@ class Mouse extends FlxPoint
 	private function updateCursor():Void
 	{
 		//actually position the flixel mouse cursor graphic
-		_cursorContainer.x = _globalScreenPosition.x;
-		_cursorContainer.y = _globalScreenPosition.y;
+		if (_updateCursorContainer)
+		{
+			_cursorContainer.x = _globalScreenPosition.x;
+			_cursorContainer.y = _globalScreenPosition.y;
+		}
 		
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
@@ -237,7 +248,7 @@ class Mouse extends FlxPoint
 	 * @param point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return The mouse's location in world space.
 	 */
-	public function getWorldPosition(?Camera:FlxCamera = null, ?point:FlxPoint = null):FlxPoint
+	public function getWorldPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
 	{
 		if (Camera == null)
 		{
@@ -260,7 +271,7 @@ class Mouse extends FlxPoint
 	 * @param point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return The mouse's location in screen space.
 	 */
-	public function getScreenPosition(?Camera:FlxCamera = null, ?point:FlxPoint = null):FlxPoint
+	public function getScreenPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
 	{
 		if (Camera == null)
 		{

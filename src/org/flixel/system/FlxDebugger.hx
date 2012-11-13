@@ -75,7 +75,7 @@ class FlxDebugger extends Sprite
 		hasMouse = false;
 		_screen = new Point(Width, Height);
 		
-		#if flash
+		#if (flash || js)
 		addChild(new Bitmap(new BitmapData(Math.floor(Width), 15, true, 0x7f000000)));
 		#else
 		var bg:Sprite = new Sprite();
@@ -163,7 +163,7 @@ class FlxDebugger extends Sprite
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseOver(?E:MouseEvent = null):Void
+	private function onMouseOver(E:MouseEvent = null):Void
 	{
 		hasMouse = true;
 	}
@@ -172,7 +172,7 @@ class FlxDebugger extends Sprite
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseOut(?E:MouseEvent = null):Void
+	private function onMouseOut(E:MouseEvent = null):Void
 	{
 		hasMouse = false;
 	}

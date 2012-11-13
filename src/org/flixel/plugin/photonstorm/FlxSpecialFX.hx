@@ -14,7 +14,7 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.plugin.photonstorm.fx.BaseFX;
-import org.flixel.plugin.photonstorm.fx.GlitchFX;
+//import org.flixel.plugin.photonstorm.fx.GlitchFX;
 import org.flixel.plugin.photonstorm.fx.StarfieldFX;
 
 /**
@@ -36,12 +36,12 @@ class FlxSpecialFX extends FlxBasic
 	 * 
 	 * @return	GlitchFX
 	 */
-	public static function glitch():GlitchFX
+	/*public static function glitch():GlitchFX
 	{
 		var temp:GlitchFX = new GlitchFX();
 		members.set(temp, temp);
 		return temp;
-	}
+	}*/
 	
 	/**
 	 * Creates a 2D or 3D Starfield Effect
@@ -62,7 +62,7 @@ class FlxSpecialFX extends FlxBasic
 	 * 
 	 * @param	source	A reference to the FX Plugin you wish to run. If null it will start all currently added FX Plugins
 	 */
-	public static function startFX(?source:BaseFX = null):Void
+	public static function startFX(source:BaseFX = null):Void
 	{
 		if (source != null)
 		{
@@ -82,7 +82,7 @@ class FlxSpecialFX extends FlxBasic
 	 * 
 	 * @param	source	A reference to the FX Plugin you wish to stop. If null it will stop all currently added FX Plugins
 	 */
-	public static function stopFX(?source:BaseFX = null):Void
+	public static function stopFX(source:BaseFX = null):Void
 	{
 		if (source != null)
 		{

@@ -28,9 +28,9 @@ class DebugPathDisplay extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
-		super.destroy();
 		clear();
 		_paths = null;
+		super.destroy();
 	}
 	
 	/**
@@ -62,14 +62,14 @@ class DebugPathDisplay extends FlxBasic
 	 * Very helpful for debugging!
 	 * @param	Camera	Which <code>FlxCamera</code> object to draw the debug data to.
 	 */
-	override public function drawDebug(?Camera:FlxCamera = null):Void
+	override public function drawDebug(Camera:FlxCamera = null):Void
 	{
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
 		}
 		
-		var i:Int = _paths.length-1;
+		var i:Int = _paths.length - 1;
 		var path:FlxPath;
 		while(i >= 0)
 		{

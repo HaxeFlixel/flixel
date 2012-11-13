@@ -69,7 +69,7 @@ class Vis extends Sprite
 	 * Just sets up basic mouse listeners, a la FlxWindow.
 	 * @param	E	Flash event.
 	 */
-	private function init(?E:Event = null):Void
+	private function init(E:Event = null):Void
 	{
 		#if flash
 		if (root == null)
@@ -90,7 +90,7 @@ class Vis extends Sprite
 	 * If the mouse moves, check to see if any buttons should be highlighted.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseMove(?E:MouseEvent = null):Void
+	private function onMouseMove(E:MouseEvent = null):Void
 	{
 		if (!checkOver())
 		{
@@ -103,7 +103,7 @@ class Vis extends Sprite
 	 * If the mouse is pressed down, check to see if the user started pressing down a specific button.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseDown(?E:MouseEvent = null):Void
+	private function onMouseDown(E:MouseEvent = null):Void
 	{
 		unpress();
 		if (_overBounds)
@@ -117,7 +117,7 @@ class Vis extends Sprite
 	 * If it was, take the appropriate action based on button state and visibility.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseUp(?E:MouseEvent = null):Void
+	private function onMouseUp(E:MouseEvent = null):Void
 	{
 		if (_overBounds && _pressingBounds)
 		{

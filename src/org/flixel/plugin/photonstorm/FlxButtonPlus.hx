@@ -24,10 +24,6 @@ import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 
-#if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetManager;
-#end
-
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
@@ -135,7 +131,7 @@ class FlxButtonPlus extends FlxGroup
 	 * @param	Width		The width of the button.
 	 * @param	Height		The height of the button.
 	 */
-	public function new(X:Int, Y:Int, Callback:Dynamic, ?Params:Array<Dynamic> = null, ?Label:String = null, ?Width:Int = 100, ?Height:Int = 20)
+	public function new(X:Int, Y:Int, Callback:Dynamic, Params:Array<Dynamic> = null, Label:String = null, Width:Int = 100, Height:Int = 20)
 	{
 		#if !neko
 		borderColor = 0xffffffff;
@@ -156,7 +152,7 @@ class FlxButtonPlus extends FlxGroup
 		_onClick = Callback;
 		
 		buttonNormal = new FlxExtendedSprite(X, Y);
-		#if flash
+		#if (flash || js)
 		buttonNormal.makeGraphic(Width, Height, borderColor);
 		#end
 		
@@ -167,7 +163,7 @@ class FlxButtonPlus extends FlxGroup
 		buttonNormal.scrollFactor.y = 0;
 		
 		buttonHighlight = new FlxExtendedSprite(X, Y);
-		#if flash
+		#if (flash || js)
 		buttonHighlight.makeGraphic(Width, Height, borderColor);
 		#end
 		
@@ -451,7 +447,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		offColor = colors;
 		
-		#if flash
+		#if (flash || js)
 		buttonNormal.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, offColor), 1, 1);
 		#else
 		var colA:Int;
@@ -486,7 +482,7 @@ class FlxButtonPlus extends FlxGroup
 		
 		if (textNormal != null)
 		{
-			TileSheetManager.swapTileSheets(textNormal.getTileSheetIndex(), buttonNormal.getTileSheetIndex());
+			FlxG.state.addLayerAt(textNormal.layer, FlxG.state.getLayerIndex(buttonNormal.layer) + 1);
 		}
 		#end
 	}
@@ -504,7 +500,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		onColor = colors;
 		
-		#if flash
+		#if (flash || js)
 		buttonHighlight.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, onColor), 1, 1);
 		#else
 		var colA:Int;
@@ -539,7 +535,7 @@ class FlxButtonPlus extends FlxGroup
 		
 		if (textHighlight != null)
 		{
-			TileSheetManager.swapTileSheets(textHighlight.getTileSheetIndex(), buttonHighlight.getTileSheetIndex());
+			FlxG.state.addLayerAt(textHighlight.layer, FlxG.state.getLayerIndex(buttonHighlight.layer) + 1);
 		}
 		#end
 	}
@@ -581,7 +577,7 @@ class FlxButtonPlus extends FlxGroup
 	 * @param	callback	The function to call, will be called once when the mouse enters
 	 * @param	params		An optional array of parameters to pass to the function
 	 */
-	public function setMouseOverCallback(callbackFunc:Dynamic, ?params:Array<Dynamic> = null):Void
+	public function setMouseOverCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
 	{
 		enterCallback = callbackFunc;
 		
@@ -594,14 +590,14 @@ class FlxButtonPlus extends FlxGroup
 	 * @param	callback	The function to call, will be called once when the mouse leaves the button
 	 * @param	params		An optional array of parameters to pass to the function
 	 */
-	public function setMouseOutCallback(callbackFunc:Dynamic, ?params:Array<Dynamic> = null):Void
+	public function setMouseOutCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
 	{
 		leaveCallback = callbackFunc;
 		
 		leaveCallbackParams = params;
 	}
 	
-	public function setOnClickCallback(callbackFunc:Dynamic, ?params:Array<Dynamic> = null):Void
+	public function setOnClickCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
 	{
 		_onClick = callbackFunc;
 		

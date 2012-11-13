@@ -102,7 +102,7 @@ class FlxEmitterExt extends FlxEmitter
 	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
 	 */
-	override public function start(?Explode:Bool = true, ?Lifespan:Float = 0, ?Frequency:Float = 0.1, ?Quantity:Int = 0):Void
+	override public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0):Void
 	{
 		super.start(Explode, Lifespan, Frequency, Quantity);
 
@@ -123,6 +123,7 @@ class FlxEmitterExt extends FlxEmitter
 				i++;
 			}
 			_quantity = 0;
+			_waitForKill = true;
 		}
 	}
 	

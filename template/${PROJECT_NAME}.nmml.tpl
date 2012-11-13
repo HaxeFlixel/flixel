@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	
 	<app title="${PROJECT_NAME}" file="${PROJECT_NAME}" main="Main" version="0.0.1" company="Zaphod" />
 	
-	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="portrait" resizable="true" if="target_flash" />
-	<window width="0" height="0" fps="30" orientation="landscape" fullscreen="true" unless="target_flash" />
+	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="portrait" resizable="true" if="web" />
+	<window width="0" height="0" fps="30" orientation="landscape" fullscreen="true" unless="web" />
  	
-	<set name="BUILD_DIR" value="Export" />
-	
-	<set name="SWF_VERSION" value="10.1" />
-	
-	<app preloader="org.flixel.system.FlxPreloader" />
+	<set name="BUILD_DIR" value="export" />
 	
 	<!--<setenv name="no_console" value="1" />-->
 	
-	<classpath name="Source" />
+	<classpath name="source" />
 	
-	<haxelib name="nme" />
-	<haxelib name="flixel"/>
-	
-	<assets path="Assets" rename="assets" if="android" >
+	<assets path="assets" if="android" >
 		<sound path="data/beep.wav" id="Beep" />
 		
 		<!-- Your sound embedding code here... -->
 		
 	</assets>
 	
-	<assets path="Assets" rename="assets" if="desktop" >
+	<assets path="assets" if="desktop" >
 		<sound path="data/beep.wav" id="Beep" />
 		
 		<!-- Your sound embedding code here... -->
 		
 	</assets>
 	
-	<assets path="Assets" rename="assets" if="target_flash" >
+	<assets path="assets" if="target_flash" >
+		<sound path="data/beep.mp3" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		
+	</assets>
+	
+	<assets path="assets" if="target_js" >
 		<sound path="data/beep.mp3" id="Beep" />
 		
 		<!-- Your sound embedding code here... -->
@@ -49,11 +48,8 @@
 	<assets path="assets/data/vcr" include="*.png" type="image" />
 	<assets path="assets/data/vis" include="*.png" type="image" />
 	
-	<icon name="Assets/HaxeFlixel.svg" />
+	<icon name="assets/HaxeFlixel.svg" />
 	
-	<ndll name="std" />
-	<ndll name="regexp" />
-	<ndll name="zlib" />
-	<ndll name="nme" haxelib="nme" />
-	
+	<haxelib name="nme" />
+	<haxelib name="flixel"/>
 </project>

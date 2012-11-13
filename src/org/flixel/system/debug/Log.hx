@@ -28,12 +28,12 @@ class Log extends FlxWindow
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */	
 	#if flash
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
 	#else
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (BGColor == null)
 		{
 			#if !neko
@@ -106,7 +106,9 @@ class Log extends FlxWindow
 			_text.text = _text.text + Text + "\n";
 			#end
 		}
+		#if !js
 		_text.scrollV = Math.floor(_text.height);
+		#end
 	}
 	
 	/**

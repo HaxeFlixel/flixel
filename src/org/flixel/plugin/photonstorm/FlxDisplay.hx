@@ -167,7 +167,7 @@ class FlxDisplay
 	 * @param	verticalSpacing		The amount of pixels between each sprite vertically (default 0)
 	 * @param	spaceFromBounds		If set to true the h/v spacing values will be added to the width/height of the sprite, if false it will ignore this
 	 */
-	public static function space(sprites:Array<FlxSprite>, startX:Int, startY:Int, ?horizontalSpacing:Int = 0, ?verticalSpacing:Int = 0, ?spaceFromBounds:Bool = false):Void
+	public static function space(sprites:Array<FlxSprite>, startX:Int, startY:Int, horizontalSpacing:Int = 0, verticalSpacing:Int = 0, spaceFromBounds:Bool = false):Void
 	{
 		var prevWidth:Int = 0;
 		var prevHeight:Int = 0;
@@ -198,7 +198,7 @@ class FlxDisplay
 	 * 
 	 * @return	The FlxSprite for chaining
 	 */
-	public static function screenCenter(source:FlxSprite, ?xAxis:Bool = true, ?yAxis:Bool = false):FlxSprite
+	public static function screenCenter(source:FlxSprite, xAxis:Bool = true, yAxis:Bool = false):FlxSprite
 	{
 		if (xAxis)
 		{

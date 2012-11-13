@@ -203,7 +203,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:Dynamic = null)
+	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null)
 	{
 		isPressed = false;
 		clickable = false;
@@ -237,9 +237,9 @@ class FlxExtendedSprite extends FlxSprite
 	 * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
 	 */
 	#if flash
-	public function enableMouseClicks(onRelease:Bool, ?pixelPerfect:Bool = false, ?alphaThreshold:UInt = 255):Void
+	public function enableMouseClicks(onRelease:Bool, pixelPerfect:Bool = false, alphaThreshold:UInt = 255):Void
 	#else
-	public function enableMouseClicks(onRelease:Bool, ?pixelPerfect:Bool = false, ?alphaThreshold:Int = 255):Void
+	public function enableMouseClicks(onRelease:Bool, pixelPerfect:Bool = false, alphaThreshold:Int = 255):Void
 	#end
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
@@ -311,9 +311,9 @@ class FlxExtendedSprite extends FlxSprite
 	 * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
 	 */
 	#if flash
-	public function enableMouseDrag(?lockCenter:Bool = false, ?pixelPerfect:Bool = false, ?alphaThreshold:UInt = 255, ?boundsRect:FlxRect = null, ?boundsSprite:FlxSprite = null):Void
+	public function enableMouseDrag(lockCenter:Bool = false, pixelPerfect:Bool = false, alphaThreshold:UInt = 255, boundsRect:FlxRect = null, boundsSprite:FlxSprite = null):Void
 	#else
-	public function enableMouseDrag(?lockCenter:Bool = false, ?pixelPerfect:Bool = false, ?alphaThreshold:Int = 255, ?boundsRect:FlxRect = null, ?boundsSprite:FlxSprite = null):Void
+	public function enableMouseDrag(lockCenter:Bool = false, pixelPerfect:Bool = false, alphaThreshold:Int = 255, boundsRect:FlxRect = null, boundsSprite:FlxSprite = null):Void
 	#end
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
@@ -362,7 +362,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
 	 * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
 	 */
-	public function setDragLock(?allowHorizontal:Bool = true, ?allowVertical:Bool = true):Void
+	public function setDragLock(allowHorizontal:Bool = true, allowVertical:Bool = true):Void
 	{
 		allowHorizontalDrag = allowHorizontal;
 		allowVerticalDrag = allowVertical;
@@ -408,7 +408,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * @param	onDrag		If true the sprite will snap to the grid while being dragged
 	 * @param	onRelease	If true the sprite will snap to the grid when released
 	 */
-	public function enableMouseSnap(snapX:Int, snapY:Int, ?onDrag:Bool = true, ?onRelease:Bool = false):Void
+	public function enableMouseSnap(snapX:Int, snapY:Int, onDrag:Bool = true, onRelease:Bool = false):Void
 	{
 		snapOnDrag = onDrag;
 		snapOnRelease = onRelease;
@@ -437,7 +437,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * 
 	 * @return	The MouseSpring object if you wish to perform further chaining on it. Also available via FlxExtendedSprite.mouseSpring
 	 */ 
-	public function enableMouseSpring(?onPressed:Bool = true, ?retainVelocity:Bool = false, ?tension:Float = 0.1, ?friction:Float = 0.95, ?gravity:Float = 0):MouseSpring
+	public function enableMouseSpring(onPressed:Bool = true, retainVelocity:Bool = false, tension:Float = 0.1, friction:Float = 0.95, gravity:Float = 0):MouseSpring
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
 		{
@@ -848,7 +848,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * @param	toleranceX	If the velocity.x of the sprite falls between 0 and +- this value, it is set to stop (velocity.x = 0)
 	 * @param	toleranceY	If the velocity.y of the sprite falls between 0 and +- this value, it is set to stop (velocity.y = 0)
 	 */
-	public function setGravity(gravityX:Int, gravityY:Int, ?frictionX:Float = 500, ?frictionY:Float = 500, ?toleranceX:Float = 10, ?toleranceY:Float = 10):Void
+	public function setGravity(gravityX:Int, gravityY:Int, frictionX:Float = 500, frictionY:Float = 500, toleranceX:Float = 10, toleranceY:Float = 10):Void
 	{
 		hasGravity = true;
 		

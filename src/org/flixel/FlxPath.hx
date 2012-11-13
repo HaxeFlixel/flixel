@@ -47,7 +47,7 @@ class FlxPath
 	 * 
 	 * @param	Nodes	Optional, can specify all the points for the path up front if you want.
 	 */
-	public function new(?Nodes:Array<FlxPoint> = null)
+	public function new(Nodes:Array<FlxPoint> = null)
 	{
 		if (Nodes == null)
 		{
@@ -108,7 +108,6 @@ class FlxPath
 		{
 			Index = nodes.length;
 		}
-		//nodes.splice(Index, 0, new FlxPoint(X, Y));
 		nodes.insert(Index, new FlxPoint(X, Y));
 	}
 	
@@ -119,7 +118,7 @@ class FlxPath
 	 * @param	Node			The point in world coordinates you want to add to the path.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
 	 */
-	public function addPoint(Node:FlxPoint, ?AsReference:Bool = false):Void
+	public function addPoint(Node:FlxPoint, AsReference:Bool = false):Void
 	{
 		if (AsReference)
 		{
@@ -139,7 +138,7 @@ class FlxPath
 	 * @param	Index			Where within the list of path nodes to insert this new point.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
 	 */
-	public function addPointAt(Node:FlxPoint, Index:Int, ?AsReference:Bool = false):Void
+	public function addPointAt(Node:FlxPoint, Index:Int, AsReference:Bool = false):Void
 	{
 		if (Index < 0) return;
 		if (Index > nodes.length)
@@ -148,12 +147,10 @@ class FlxPath
 		}
 		if (AsReference)
 		{
-			//nodes.splice(Index, 0, Node);
 			nodes.insert(Index, Node);
 		}
 		else
 		{
-			//nodes.splice(Index, 0, new FlxPoint(Node.x, Node.y));
 			nodes.insert(Index, new FlxPoint(Node.x, Node.y));
 		}
 	}
@@ -166,7 +163,6 @@ class FlxPath
 	 */
 	public function remove(Node:FlxPoint):FlxPoint
 	{
-		//var index:Int = nodes.indexOf(Node);
 		var index:Int = FlxU.ArrayIndexOf(nodes, Node);
 		if (index >= 0)
 		{
@@ -229,7 +225,7 @@ class FlxPath
 	 * and <code>debugScrollFactor</code> to control the path's appearance.
 	 * @param	Camera		The camera object the path will draw to.
 	 */
-	public function drawDebug(?Camera:FlxCamera = null):Void
+	public function drawDebug(Camera:FlxCamera = null):Void
 	{
 		if (nodes.length <= 0)
 		{
@@ -241,7 +237,7 @@ class FlxPath
 		}
 		
 		//Set up our global flash graphics object to draw out the path
-		#if flash
+		#if (flash || js)
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		#else
@@ -261,7 +257,7 @@ class FlxPath
 			//find the screen position of the node on this camera
 			_point.x = node.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
 			_point.y = node.y - Std.int(Camera.scroll.y * debugScrollFactor.y);
-			#if flash
+			#if (flash || js)
 			_point.x = Std.int(_point.x + ((_point.x > 0)?0.0000001:-0.0000001));
 			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001: -0.0000001));
 			#end
@@ -320,7 +316,7 @@ class FlxPath
 			gfx.lineStyle(1, debugColor, linealpha);
 			_point.x = nextNode.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
 			_point.y = nextNode.y - Std.int(Camera.scroll.y * debugScrollFactor.y);
-			#if flash
+			#if (flash || js)
 			_point.x = Std.int(_point.x + ((_point.x > 0)?0.0000001: -0.0000001));
 			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001: -0.0000001));
 			#end
@@ -329,7 +325,7 @@ class FlxPath
 			i++;
 		}
 		
-		#if flash
+		#if (flash || js)
 		//then stamp the path down onto the game buffer
 		Camera.buffer.draw(FlxG.flashGfxSprite);
 		#end

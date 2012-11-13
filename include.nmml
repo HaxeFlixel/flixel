@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<app preloader="org.flixel.system.FlxPreloader" unless="html5" />
+	<set name="SWF_VERSION" value="10.1" />
+</project>

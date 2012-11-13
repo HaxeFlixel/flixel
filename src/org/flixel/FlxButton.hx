@@ -3,11 +3,13 @@ package org.flixel;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
+import nme.events.Event;
 import nme.events.MouseEvent;
+import nme.events.TouchEvent;
 import nme.media.Sound;
 import nme.media.Sound;
-import org.flixel.tileSheetManager.TileSheetManager;
-
+import org.flixel.FlxLayer;
+import org.flixel.system.input.Touch;
 import org.flixel.FlxSprite;
 
 /**
@@ -15,8 +17,10 @@ import org.flixel.FlxSprite;
  */
 class FlxButton extends FlxSprite
 {
-	
-	public var on(getOn, setOn):Bool;
+	/**
+	 * Use this to toggle checkbox-style behavior.
+	 */
+	public var on(default, default):Bool;
 	
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
@@ -80,11 +84,6 @@ class FlxButton extends FlxSprite
 	 * We recommend using the helper function setSounds()!
 	 */
 	public var soundUp:FlxSound;
-
-	/**
-	 * Used for checkbox-style behavior.
-	 */
-	private var _onToggle:Bool;
 	
 	/**
 	 * Tracks whether or not the button is currently pressed.
@@ -103,7 +102,7 @@ class FlxButton extends FlxSprite
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Label:String = null, ?OnClick:Void->Void = null)
+	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
 	{
 		super(X, Y);
 		if(Label != null)
@@ -125,15 +124,15 @@ class FlxButton extends FlxSprite
 		soundUp = null;
 
 		status = NORMAL;
-		_onToggle = false;
+		on = false;
 		_pressed = false;
 		_initialized = false;
 	}
 	
-	override public function loadGraphic(Graphic:Dynamic, ?Animated:Bool = false, ?Reverse:Bool = false, Width:Int = 0, ?Height:Int = 0, ?Unique:Bool = false):FlxSprite 
+	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite 
 	{
-		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique);
-		swapTileSheets();
+		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique, Key);
+		swapLayers();
 		return tempSprite;
 	}
 	
@@ -144,13 +143,24 @@ class FlxButton extends FlxSprite
 	{
 		if (FlxG.stage != null)
 		{
-			#if flash
-			FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			#else
-			FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			#end
+			if (!FlxG.supportsTouchEvents)
+			{
+				#if (flash || js)
+				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				#else
+				FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				#end
+			}
+			else
+			{
+				#if (flash || js)
+				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
+				#else
+				FlxGame.clickableArea.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
+				#end
+			}
 		}
-		if(label != null)
+		if (label != null)
 		{
 			label.destroy();
 			label = null;
@@ -187,15 +197,26 @@ class FlxButton extends FlxSprite
 	{
 		super.preUpdate();
 		
-		if(!_initialized)
+		if (!_initialized)
 		{
-			if(FlxG.stage != null)
+			if (FlxG.stage != null)
 			{
-				#if flash
-				FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#else
-				FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#end
+				if (!FlxG.supportsTouchEvents)
+				{
+					#if (flash || js)
+					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+					#else
+					FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+					#end
+				}
+				else
+				{
+					#if (flash || js)
+					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
+					#else
+					FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
+					#end
+				}
 				_initialized = true;
 			}
 		}
@@ -214,7 +235,7 @@ class FlxButton extends FlxSprite
 		{
 			return;
 		}
-		switch(frame)
+		switch (frame)
 		{
 			case HIGHLIGHT:	//Extra behavior to accomodate checkbox logic.
 				label.alpha = 1.0;
@@ -234,7 +255,7 @@ class FlxButton extends FlxSprite
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		if (FlxG.mouse.visible)
+		if (FlxG.mouse.visible || FlxG.supportsTouchEvents)
 		{
 			if (cameras == null)
 			{
@@ -244,42 +265,27 @@ class FlxButton extends FlxSprite
 			var i:Int = 0;
 			var l:Int = cameras.length;
 			var offAll:Bool = true;
-			while(i < l)
+			while (i < l)
 			{
 				camera = cameras[i++];
-				FlxG.mouse.getWorldPosition(camera, _point);
-				if (overlapsPoint(_point, true, camera))
+				if (!FlxG.supportsTouchEvents)
 				{
-					offAll = false;
-					if(FlxG.mouse.justPressed())
+					FlxG.mouse.getWorldPosition(camera, _point);
+					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
+				}
+				else
+				{
+					for (j in 0...FlxG.touchManager.touches.length)
 					{
-						status = PRESSED;
-						if (onDown != null)
-						{
-							onDown();
-						}
-						if (soundDown != null)
-						{
-							soundDown.play(true);
-						}
-					}
-					if (status == NORMAL)
-					{
-						status = HIGHLIGHT;
-						if (onOver != null)
-						{
-							onOver();
-						}
-						if (soundOver != null)
-						{
-							soundOver.play(true);
-						}
+						var touch:Touch = FlxG.touchManager.touches[j];
+						touch.getWorldPosition(camera, _point);
+						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}
 				}
 			}
 			if (offAll)
 			{
-				if(status != NORMAL)
+				if (status != NORMAL)
 				{
 					if (onOut != null)
 					{
@@ -296,19 +302,22 @@ class FlxButton extends FlxSprite
 	
 		//Then if the label and/or the label offset exist,
 		// position them to match the button.
-		if(label != null)
+		if (label != null)
 		{
 			label.x = x;
 			label.y = y;
-		}
-		if(labelOffset != null)
-		{
-			label.x += labelOffset.x;
-			label.y += labelOffset.y;
+			
+			if (labelOffset != null)
+			{	
+				label.x += labelOffset.x;
+				label.y += labelOffset.y;
+			}
+			
+			label.scrollFactor = scrollFactor;
 		}
 		
 		//Then pick the appropriate frame of animation
-		if ((status == HIGHLIGHT) && _onToggle)
+		if ((status == HIGHLIGHT) && on)
 		{
 			frame = NORMAL;
 		}
@@ -318,30 +327,64 @@ class FlxButton extends FlxSprite
 		}
 	}
 	
+	private function updateButtonStatus(Point:FlxPoint, Camera:FlxCamera, JustPressed:Bool):Bool
+	{
+		var offAll:Bool = true;
+		if (overlapsPoint(Point, true, Camera))
+		{
+			offAll = false;
+			if (JustPressed)
+			{
+				status = PRESSED;
+				if (onDown != null)
+				{
+					onDown();
+				}
+				if (soundDown != null)
+				{
+					soundDown.play(true);
+				}
+			}
+			if (status == NORMAL)
+			{
+				status = HIGHLIGHT;
+				if (onOver != null)
+				{
+					onOver();
+				}
+				if (soundOver != null)
+				{
+					soundOver.play(true);
+				}
+			}
+		}
+		
+		return offAll;
+	}
+	
 	/**
 	 * Just draws the button graphic and text label to the screen.
 	 */
 	override public function draw():Void
 	{
 		super.draw();
-		if(label != null)
+		if (label != null)
 		{
-			label.scrollFactor = scrollFactor;
 			label.cameras = cameras;
 			label.draw();
 		}
 	}
 	
 	#if flash 
-	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
 	#else
-	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, ?Unique:Bool = false, ?Key:String = null):FlxSprite
+	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, Unique:Bool = false, Key:String = null):FlxSprite
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (Color == null)
 		{
-			#if cpp
+			#if (cpp || js)
 			Color = 0xffffffff;
 			#elseif neko
 			Color = { rgb: 0xffffff, a: 0xff };
@@ -350,27 +393,36 @@ class FlxButton extends FlxSprite
 		#end
 		
 		var result:FlxSprite = super.makeGraphic(Width, Height, Color, Unique, Key);
-		swapTileSheets();
+		swapLayers();
 		return result;
 	}
 	
 	/**
 	 * Helper function for changing draw order of button's background and label.
 	 */
-	private function swapTileSheets():Void
+	public function swapLayers():Void
 	{
 		#if (cpp || neko)
-		if (label != null)
+		if (label != null && _layer != null)
 		{
-			var labelIndex:Int = label.getTileSheetIndex();
-			var bgIndex:Int = this.getTileSheetIndex();
+			var labelIndex:Int = FlxG.state.getLayerIndex(label.layer);
+			var bgIndex:Int = FlxG.state.getLayerIndex(_layer);
 			if (bgIndex > labelIndex)
 			{
-				TileSheetManager.swapTileSheets(labelIndex, bgIndex);
+				FlxG.state.addLayerAt(label.layer, bgIndex + 1);
 			}
 		}
 		#end
 	}
+	
+	#if (cpp || neko)
+	override private function set_layer(value:FlxLayer):FlxLayer 
+	{
+		var lr:FlxLayer = super.set_layer(value);
+		swapLayers();
+		return lr;
+	}
+	#end
 	
 	/**
 	 * Updates the size of the text field to match the button.
@@ -400,7 +452,7 @@ class FlxButton extends FlxSprite
 	 * @param SoundUp			What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.
 	 * @param SoundUpVolume		How load the that sound should be.
 	 */
-	public function setSounds(?SoundOver:Sound = null, ?SoundOverVolume:Float = 1.0, ?SoundOut:Sound = null, ?SoundOutVolume:Float = 1.0, ?SoundDown:Sound = null, ?SoundDownVolume:Float = 1.0, ?SoundUp:Sound = null, ?SoundUpVolume:Float = 1.0):Void
+	public function setSounds(SoundOver:Sound = null, SoundOverVolume:Float = 1.0, SoundOut:Sound = null, SoundOutVolume:Float = 1.0, SoundDown:Sound = null, SoundDownVolume:Float = 1.0, SoundUp:Sound = null, SoundUpVolume:Float = 1.0):Void
 	{
 		if (SoundOver != null)
 		{
@@ -421,26 +473,9 @@ class FlxButton extends FlxSprite
 	}
 	
 	/**
-	 * Use this to toggle checkbox-style behavior.
-	 */
-	public function getOn():Bool
-	{
-		return _onToggle;
-	}
-	
-	/**
-	 * @private
-	 */
-	public function setOn(On:Bool):Bool
-	{
-		_onToggle = On;
-		return On;
-	}
-	
-	/**
 	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
 	 */
-	private function onMouseUp(event:MouseEvent):Void
+	private function onMouseUp(event:Event):Void
 	{
 		if (!exists || !visible || !active || (status != PRESSED))
 		{
@@ -454,5 +489,7 @@ class FlxButton extends FlxSprite
 		{
 			soundUp.play(true);
 		}
+		status = NORMAL;
 	}
+	
 }

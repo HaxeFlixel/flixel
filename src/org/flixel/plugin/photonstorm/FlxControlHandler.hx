@@ -204,7 +204,7 @@ class FlxControlHandler
 	 * 
 	 * @see		setMovementSpeed
 	 */
-	public function new(source:FlxSprite, movementType:Int, stoppingType:Int, ?updateFacing:Bool = false, ?enableArrowKeys:Bool = true)
+	public function new(source:FlxSprite, movementType:Int, stoppingType:Int, updateFacing:Bool = false, enableArrowKeys:Bool = true)
 	{
 		nextFireTime = 0;
 		
@@ -259,7 +259,7 @@ class FlxControlHandler
 	 * @param	xDeceleration	A deceleration speed in pixels per second to apply to the sprites horizontal movement (default 0)
 	 * @param	yDeceleration	A deceleration speed in pixels per second to apply to the sprites vertical movement (default 0)
 	 */
-	public function setMovementSpeed(xSpeed:Int, ySpeed:Int, xSpeedMax:Int, ySpeedMax:Int, ?xDeceleration:Int = 0, ?yDeceleration:Int = 0):Void
+	public function setMovementSpeed(xSpeed:Int, ySpeed:Int, xSpeedMax:Int, ySpeedMax:Int, xDeceleration:Int = 0, yDeceleration:Int = 0):Void
 	{
 		xSpeed = FlxU.fromIntToUInt(xSpeed);
 		ySpeed = FlxU.fromIntToUInt(ySpeed);
@@ -279,7 +279,7 @@ class FlxControlHandler
 	 * @param	speed			The speed in pixels per second in which the sprite will move/accelerate/decelerate
 	 * @param	acceleration	If true it will set the speed value as the deceleration value (default) false will leave deceleration disabled
 	 */
-	public function setStandardSpeed(speed:Int, ?acceleration:Bool = true):Void
+	public function setStandardSpeed(speed:Int, acceleration:Bool = true):Void
 	{
 		speed = FlxU.fromIntToUInt(speed);
 		
@@ -309,7 +309,7 @@ class FlxControlHandler
 	 * @param	xDeceleration	Deceleration speed in pixels per second to apply to the sprites horizontal movement (default 0)
 	 * @param	yDeceleration	Deceleration speed in pixels per second to apply to the sprites vertical movement (default 0)
 	 */
-	public function setAdvancedMovementSpeed(leftSpeed:Int, rightSpeed:Int, upSpeed:Int, downSpeed:Int, xSpeedMax:Int, ySpeedMax:Int, ?xDeceleration:Int = 0, ?yDeceleration:Int = 0):Void
+	public function setAdvancedMovementSpeed(leftSpeed:Int, rightSpeed:Int, upSpeed:Int, downSpeed:Int, xSpeedMax:Int, ySpeedMax:Int, xDeceleration:Int = 0, yDeceleration:Int = 0):Void
 	{
 		leftMoveSpeed = -FlxU.fromIntToUInt(leftSpeed);
 		rightMoveSpeed = FlxU.fromIntToUInt(rightSpeed);
@@ -356,7 +356,7 @@ class FlxControlHandler
 	 * @param	speed			The maximum speed in pixels per second in which the sprite can rotate
 	 * @param	limitVelocity	If true the angular velocity of the FlxSprite will be checked and kept within the limit. If false it can be set to anything.
 	 */
-	public function setMaximumRotationSpeed(speed:Float, ?limitVelocity:Bool = true):Void
+	public function setMaximumRotationSpeed(speed:Float, limitVelocity:Bool = true):Void
 	{
 		entity.maxAngular = speed;
 		
@@ -411,7 +411,7 @@ class FlxControlHandler
 	 * @param	customAntiClockwise		The String value of your own key to use for anti-clockwise rotation (as taken from org.flixel.system.input.Keyboard)
 	 * @param	customClockwise			The String value of your own key to use for clockwise rotation (as taken from org.flixel.system.input.Keyboard)
 	 */
-	public function setRotationKeys(?leftRight:Bool = true, ?upDown:Bool = false, ?customAntiClockwise:String = "", ?customClockwise:String = ""):Void
+	public function setRotationKeys(leftRight:Bool = true, upDown:Bool = false, customAntiClockwise:String = "", customClockwise:String = ""):Void
 	{
 		isRotating = true;
 		rotateAntiClockwise = true;
@@ -441,7 +441,7 @@ class FlxControlHandler
 	 * @param	reverseKey		If you want to be able to reverse, set the key string as taken from org.flixel.system.input.Keyboard (defaults to null).
 	 * @param	reverseSpeed	The speed in pixels per second which the sprite will reverse. Acceleration or Instant movement is determined by the Movement Type.
 	 */
-	public function setThrust(thrustKey:String, thrustSpeed:Float, ?reverseKey:String = null, ?reverseSpeed:Float = 0):Void
+	public function setThrust(thrustKey:String, thrustSpeed:Float, reverseKey:String = null, reverseSpeed:Float = 0):Void
 	{
 		thrustEnabled = false;
 		reverseEnabled = false;
@@ -470,7 +470,7 @@ class FlxControlHandler
 	 * @param	ySpeed			The maximum speed in pixels per second in which the sprite can move vertically
 	 * @param	limitVelocity	If true the velocity of the FlxSprite will be checked and kept within the limit. If false it can be set to anything.
 	 */
-	public function setMaximumSpeed(xSpeed:Int, ySpeed:Int, ?limitVelocity:Bool = true):Void
+	public function setMaximumSpeed(xSpeed:Int, ySpeed:Int, limitVelocity:Bool = true):Void
 	{
 		entity.maxVelocity.x = FlxU.fromIntToUInt(xSpeed);
 		entity.maxVelocity.y = FlxU.fromIntToUInt(ySpeed);
@@ -553,7 +553,7 @@ class FlxControlHandler
 	 * @param	xFactor
 	 * @param	yFactor
 	 */
-	public function resetSpeeds(?resetX:Bool = true, ?resetY:Bool = true):Void
+	public function resetSpeeds(resetX:Bool = true, resetY:Bool = true):Void
 	{
 		if (resetX)
 		{
@@ -597,7 +597,7 @@ class FlxControlHandler
 	 * @param	walk	The FlxSound to play when the user walks
 	 * @param	thrust	The FlxSound to play when the user thrusts
 	 */
-	public function setSounds(?jump:FlxSound = null, ?fire:FlxSound = null, ?walk:FlxSound = null, ?thrust:FlxSound = null):Void
+	public function setSounds(jump:FlxSound = null, fire:FlxSound = null, walk:FlxSound = null, thrust:FlxSound = null):Void
 	{
 		if (jump != null)
 		{
@@ -629,7 +629,7 @@ class FlxControlHandler
 	 * @param	callback		A user defined function to call when it fires
 	 * @param	altKey			Specify an alternative fire key that works AS WELL AS the primary fire key (TODO)
 	 */
-	public function setFireButton(key:String, keymode:Int, repeatDelay:Int, callbackFunc:Void->Dynamic, ?altKey:String = ""):Void
+	public function setFireButton(key:String, keymode:Int, repeatDelay:Int, callbackFunc:Void->Dynamic, altKey:String = ""):Void
 	{
 		fireKey = key;
 		fireKeyMode = keymode;
@@ -656,7 +656,7 @@ class FlxControlHandler
 	 * @param	callback		A user defined function to call when the Sprite jumps
 	 * @param	altKey			Specify an alternative jump key that works AS WELL AS the primary jump key (TODO)
 	 */
-	public function setJumpButton(key:String, keymode:Int, height:Int, surface:Int, ?repeatDelay:Int = 250, ?jumpFromFall:Int = 0, ?callbackFunc:Void->Void = null, ?altKey:String = ""):Void
+	public function setJumpButton(key:String, keymode:Int, height:Int, surface:Int, repeatDelay:Int = 250, jumpFromFall:Int = 0, callbackFunc:Void->Void = null, altKey:String = ""):Void
 	{
 		jumpKey = key;
 		jumpKeyMode = keymode;
@@ -1275,7 +1275,7 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the LEFT key
 	 * @param	allowRight	Enable the RIGHT key
 	 */
-	public function setCursorControl(?allowUp:Bool = true, ?allowDown:Bool = true, ?allowLeft:Bool = true, ?allowRight:Bool = true):Void
+	public function setCursorControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
 	{
 		up = allowUp;
 		down = allowDown;
@@ -1297,7 +1297,7 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the left (A) key
 	 * @param	allowRight	Enable the right (D) key
 	 */
-	public function setWASDControl(?allowUp:Bool = true, ?allowDown:Bool = true, ?allowLeft:Bool = true, ?allowRight:Bool = true):Void
+	public function setWASDControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
 	{
 		up = allowUp;
 		down = allowDown;
@@ -1319,7 +1319,7 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the left (S) key
 	 * @param	allowRight	Enable the right (F) key
 	 */
-	public function setESDFControl(?allowUp:Bool = true, ?allowDown:Bool = true, ?allowLeft:Bool = true, ?allowRight:Bool = true):Void
+	public function setESDFControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
 	{
 		up = allowUp;
 		down = allowDown;
@@ -1341,7 +1341,7 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the left (J) key
 	 * @param	allowRight	Enable the right (L) key
 	 */
-	public function setIJKLControl(?allowUp:Bool = true, ?allowDown:Bool = true, ?allowLeft:Bool = true, ?allowRight:Bool = true):Void
+	public function setIJKLControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
 	{
 		up = allowUp;
 		down = allowDown;
@@ -1363,7 +1363,7 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the left (H) key
 	 * @param	allowRight	Enable the right (L) key
 	 */
-	public function setHJKLControl(?allowUp:Bool = true, ?allowDown:Bool = true, ?allowLeft:Bool = true, ?allowRight:Bool = true):Void
+	public function setHJKLControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
 	{
 		up = allowUp;
 		down = allowDown;
@@ -1385,7 +1385,7 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the left (S) key
 	 * @param	allowRight	Enable the right (D) key
 	 */
-	public function setZQSDControl(?allowUp:Bool = true, ?allowDown:Bool = true, ?allowLeft:Bool = true, ?allowRight:Bool = true):Void
+	public function setZQSDControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
 	{
 		up = allowUp;
 		down = allowDown;
@@ -1407,7 +1407,7 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the left (O) key
 	 * @param	allowRight	Enable the right (E) key
 	 */
-	public function setDvorakSimplifiedControl(?allowUp:Bool = true, ?allowDown:Bool = true, ?allowLeft:Bool = true, ?allowRight:Bool = true):Void
+	public function setDvorakSimplifiedControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
 	{
 		up = allowUp;
 		down = allowDown;
@@ -1429,7 +1429,7 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the left (NUMPADFOUR) key
 	 * @param	allowRight	Enable the right (NUMPADSIX) key
 	 */
-	public function setNumpadControl(?allowUp:Bool = true, ?allowDown:Bool = true, ?allowLeft:Bool = true, ?allowRight:Bool = true):Void
+	public function setNumpadControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
 	{
 		up = allowUp;
 		down = allowDown;

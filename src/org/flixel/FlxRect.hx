@@ -32,7 +32,7 @@ class FlxRect
 	 * @param	Width	Desired width of the rectangle.
 	 * @param	Height	Desired height of the rectangle.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Width:Float = 0, ?Height:Float = 0)
+	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
 	{
 		x = X; 
 		y = Y;
@@ -81,14 +81,14 @@ class FlxRect
 	}
 	
 	/**
-	 * Instantiate a new rectangle.
+	 * Fill this rectangle with the data provided.
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 * @param	Width	Desired width of the rectangle.
 	 * @param	Height	Desired height of the rectangle.
 	 * @return	A reference to itself.
 	 */
-	public function make(?X:Float = 0, ?Y:Float = 0, ?Width:Float = 0, ?Height:Float = 0):FlxRect
+	inline public function make(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
 		x = X;
 		y = Y;
@@ -102,7 +102,7 @@ class FlxRect
 	 * @param	Rect	Any <code>FlxRect</code>.
 	 * @return	A reference to itself.
 	 */
-	public function copyFrom(Rect:FlxRect):FlxRect
+	inline public function copyFrom(Rect:FlxRect):FlxRect
 	{
 		x = Rect.x;
 		y = Rect.y;
@@ -116,7 +116,7 @@ class FlxRect
 	 * @param	Point	Any <code>FlxRect</code>.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
-	public function copyTo(Rect:FlxRect):FlxRect
+	inline public function copyTo(Rect:FlxRect):FlxRect
 	{
 		Rect.x = x;
 		Rect.y = y;
@@ -130,7 +130,7 @@ class FlxRect
 	 * @param	FlashRect	Any <code>Rectangle</code>.
 	 * @return	A reference to itself.
 	 */
-	public function copyFromFlash(FlashRect:Rectangle):FlxRect
+	inline public function copyFromFlash(FlashRect:Rectangle):FlxRect
 	{
 		x = FlashRect.x;
 		y = FlashRect.y;
@@ -144,7 +144,7 @@ class FlxRect
 	 * @param	Point	Any <code>Rectangle</code>.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
-	public function copyToFlash(FlashRect:Rectangle):Rectangle
+	inline public function copyToFlash(FlashRect:Rectangle):Rectangle
 	{
 		FlashRect.x = x;
 		FlashRect.y = y;
@@ -158,7 +158,7 @@ class FlxRect
 	 * @param	Rect	The rectangle being tested.
 	 * @return	Whether or not the two rectangles overlap.
 	 */
-	public function overlaps(Rect:FlxRect):Bool
+	inline public function overlaps(Rect:FlxRect):Bool
 	{
 		return (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
 	}

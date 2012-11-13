@@ -29,7 +29,7 @@ class FlxAnim
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40)
 	 * @param	Looped		Whether or not the animation is looped or just plays once
 	 */
-	public function new(Name:String, Frames:Array<Int>, ?FrameRate:Float = 0, ?Looped:Bool = true)
+	public function new(Name:String, Frames:Array<Int>, FrameRate:Float = 0, Looped:Bool = true)
 	{
 		name = Name;
 		delay = 0;

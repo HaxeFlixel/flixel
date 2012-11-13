@@ -14,7 +14,6 @@ import org.flixel.FlxG;
  */
 class ZoomCamera extends FlxCamera
 {
-	
 	/**
 	 * Tell the camera to LERP here eventually
 	 */
@@ -31,15 +30,12 @@ class ZoomCamera extends FlxCamera
 	 */
 	private var zoomMargin:Float;
 	
-	
-	public function new(X:Int, Y:Int, Width:Int, Height:Int, ?Zoom:Float = 0)
+	public function new(X:Int, Y:Int, Width:Int, Height:Int, Zoom:Float = 0)
 	{
+		super(X, Y, Width, Height, FlxCamera.defaultZoom);
 		zoomSpeed = 25;
 		zoomMargin = 0.25;
-		
-		super(X, Y, Width, Height, Zoom);
-		
-		targetZoom = 1;	
+		targetZoom = Zoom;
 	}
 	
 	public override function update():Void
@@ -50,7 +46,7 @@ class ZoomCamera extends FlxCamera
 		zoom += (targetZoom - zoom) / 2 * (FlxG.elapsed) * zoomSpeed;
 		
 		// if we are zooming in, align the camera (x, y)
-		if (target != null && _zoom != 1)
+		if (target != null && zoom != 1)
 		{
 			alignCamera();
 		}
@@ -61,7 +57,6 @@ class ZoomCamera extends FlxCamera
 		}
 	}
 	
-	
 	/**
 	 * Align the camera x and y to center on the target 
 	 * that it's following when zoomed in
@@ -71,8 +66,13 @@ class ZoomCamera extends FlxCamera
 	private function alignCamera():Void
 	{	
 		// target position in screen space
+		#if (flash || js)
+		var targetScreenX:Float = Math.floor(target.x - scroll.x);
+		var targetScreenY:Float = Math.floor(target.y - scroll.y);
+		#else
 		var targetScreenX:Float = target.x - scroll.x;
 		var targetScreenY:Float = target.y - scroll.y;
+		#end
 		
 		// center on the target, until the camera bumps up to its bounds
 		// then gradually favor the edge of the screen based on zoomMargin
@@ -87,9 +87,8 @@ class ZoomCamera extends FlxCamera
 		
 		// offset the screen in any direction, based on zoom level
 		// Example: a zoom of 2 offsets it half the screen at most
-		x = -(width / 2) * (offsetX) * (_zoom - 1); 			
-		y = -(height / 2) * (offsetY) * (_zoom - 1);
-		
+		x = -(width / 2) * (offsetX) * (zoom - FlxCamera.defaultZoom);
+		y = -(height / 2) * (offsetY) * (zoom - FlxCamera.defaultZoom);
 	}
 	
 	/**
@@ -106,5 +105,11 @@ class ZoomCamera extends FlxCamera
 		if(value < min) return min;
 		if(value > max) return max;
 		return value;
+	}
+	
+	override public function setScale(X:Float, Y:Float):Void 
+	{
+		_flashSprite.scaleX = X;
+		_flashSprite.scaleY = Y;
 	}
 }

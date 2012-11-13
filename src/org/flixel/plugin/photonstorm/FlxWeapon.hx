@@ -82,13 +82,14 @@ class FlxWeapon
 	private var velocity:FlxPoint;
 	
 	public var multiShot:Int;
-	public var bulletLifeSpan:Int;
+	public var bulletLifeSpan:Float;
 	
 	public var bulletElasticity:Float;
 	
 	public var rndFactorAngle:Int;
 	public var rndFactorLifeSpan:Int;
 	public var rndFactorSpeed:Int;
+	public var rndFactorLifeSpan:Float;
 	public var rndFactorPosition:FlxPoint;
 	
 	/**
@@ -147,7 +148,7 @@ class FlxWeapon
 	 * @param	xVariable	The x axis variable of the parent to use when firing. Typically "x", but could be "screenX" or any public getter that exposes the x coordinate.
 	 * @param	yVariable	The y axis variable of the parent to use when firing. Typically "y", but could be "screenY" or any public getter that exposes the y coordinate.
 	 */
-	public function new(name:String, ?parentRef:Dynamic = null, ?xVariable:String = "x", ?yVariable:String = "y")
+	public function new(name:String, parentRef:Dynamic = null, xVariable:String = "x", yVariable:String = "y")
 	{
 		bulletsFired = 0;
 		
@@ -188,12 +189,12 @@ class FlxWeapon
 	 * @param	offsetY		When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 */
 	#if flash
-	public function makePixelBullet(quantity:UInt, ?width:Int = 2, ?height:Int = 2, ?color:UInt = 0xffffffff, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
+	public function makePixelBullet(quantity:UInt, width:Int = 2, height:Int = 2, ?color:UInt = 0xffffffff, offsetX:Int = 0, offsetY:Int = 0):Void
 	#else
-	public function makePixelBullet(quantity:Int, ?width:Int = 2, ?height:Int = 2, ?color:BitmapInt32, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
+	public function makePixelBullet(quantity:Int, width:Int = 2, height:Int = 2, ?color:BitmapInt32, offsetX:Int = 0, offsetY:Int = 0):Void
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (color == null)
 		{
 			#if !neko
@@ -209,10 +210,7 @@ class FlxWeapon
 		for (b in 0...(quantity))
 		{
 			var tempBullet:Bullet = new Bullet(this, b);
-			
 			tempBullet.makeGraphic(width, height, color);
-		//	tempBullet.updateTileSheet();
-			
 			group.add(tempBullet);
 		}
 		
@@ -233,7 +231,7 @@ class FlxWeapon
 	 * @param	antiAliasing	Whether to use high quality rotations when creating the graphic. Default is false.
 	 * @param	autoBuffer		Whether to automatically increase the image size to accomodate rotated corners. Default is false. Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 */
-	public function makeImageBullet(quantity:Int, image:Dynamic, ?offsetX:Int = 0, ?offsetY:Int = 0, ?autoRotate:Bool = false, ?rotations:Int = 16, ?frame:Int = -1, ?antiAliasing:Bool = false, ?autoBuffer:Bool = false):Void
+	public function makeImageBullet(quantity:Int, image:Dynamic, offsetX:Int = 0, offsetY:Int = 0, autoRotate:Bool = false, rotations:Int = 16, frame:Int = -1, antiAliasing:Bool = false, autoBuffer:Bool = false):Void
 	{
 		quantity = FlxU.fromIntToUInt(quantity);
 		rotations = FlxU.fromIntToUInt(rotations);
@@ -246,7 +244,7 @@ class FlxWeapon
 		{
 			var tempBullet:Bullet = new Bullet(this, b);
 			
-			#if flash
+			#if (flash || js)
 			if (autoRotate)
 			{
 				tempBullet.loadRotatedGraphic(image, rotations, frame, antiAliasing, autoBuffer);
@@ -260,8 +258,6 @@ class FlxWeapon
 			tempBullet.frame = frame;
 			tempBullet.antialiasing = antiAliasing;
 			#end
-			
-			tempBullet.updateTileSheet();
 			group.add(tempBullet);
 		}
 		
@@ -282,7 +278,7 @@ class FlxWeapon
 	 * @param	offsetX			When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 * @param	offsetY			When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 */
-	public function makeAnimatedBullet(quantity:Int, imageSequence:Dynamic, frameWidth:Int, frameHeight:Int, frames:Array<Int>, frameRate:Int, looped:Bool, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
+	public function makeAnimatedBullet(quantity:Int, imageSequence:Dynamic, frameWidth:Int, frameHeight:Int, frames:Array<Int>, frameRate:Int, looped:Bool, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
 		quantity = FlxU.fromIntToUInt(quantity);
 		group = new FlxGroup(quantity);
@@ -292,7 +288,6 @@ class FlxWeapon
 			var tempBullet:Bullet = new Bullet(this, b);
 			
 			tempBullet.loadGraphic(imageSequence, true, false, frameWidth, frameHeight);
-		//	tempBullet.updateTileSheet();
 			tempBullet.addAnimation("fire", frames, frameRate, looped);
 			
 			group.add(tempBullet);
@@ -311,7 +306,7 @@ class FlxWeapon
 	 * @param	target
 	 * @return	true if a bullet was fired or false if one wasn't available. The bullet last fired is stored in FlxWeapon.prevBullet
 	 */
-	private function runFire(method:Int, ?x:Int = 0, ?y:Int = 0, ?target:FlxSprite = null, ?angle:Int = 0):Bool
+	private function runFire(method:Int, x:Int = 0, y:Int = 0, target:FlxSprite = null, angle:Int = 0):Bool
 	{
 		if (fireRate > 0 && (Lib.getTimer() < Math.floor(nextFire)))
 		{
@@ -478,7 +473,7 @@ class FlxWeapon
 	 * @param	offsetY			When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 * @param	useDirection	When fired the bullet direction is based on parent sprites facing value (up/down/left/right)
 	 */
-	public function setParent(parentRef:Dynamic, xVariable:String, yVariable:String, ?offsetX:Int = 0, ?offsetY:Int = 0, ?useDirection:Bool = false):Void
+	public function setParent(parentRef:Dynamic, xVariable:String, yVariable:String, offsetX:Int = 0, offsetY:Int = 0, useDirection:Bool = false):Void
 	{
 		if (parentRef != null)
 		{
@@ -505,7 +500,7 @@ class FlxWeapon
 	 * @param	offsetX		When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 * @param	offsetY		When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 */
-	public function setFiringPosition(x:Int, y:Int, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
+	public function setFiringPosition(x:Int, y:Int, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
 		fireFromPosition = true;
 		fireX = x;
@@ -629,8 +624,10 @@ class FlxWeapon
 	 * 
 	 * @param	randomAngle		The +- value applied to the angle when fired. For example 20 means the bullet can fire up to 20 degrees under or over its angle when fired.
 	 * @param	randomSpeed		The +- value applied to the speed when fired. For example 20 means the bullet can fire up to 20 px/sec slower or faster when fired.
+	 * @param  randomPosition  The +- value applied to the firing location when fired (fire spread).
+	 * @param  randomLifeSpan  The +- value applied to the <code>bulletLifeSpan</code> when fired. For example passing 2 when <code>bulletLifeSpan</code> is 3, means the bullet can live up to 5 seconds, minimum of 1.
 	 */
-	public function setBulletRandomFactor(?randomAngle:Int = 0, ?randomSpeed:Int = 0, ?randomPosition:FlxPoint = null, ?randomLifeSpan:Int = 0):Void
+	public function setBulletRandomFactor(randomAngle:Int = 0, randomSpeed:Int = 0, randomPosition:FlxPoint = null, randomLifeSpan:Float = 0):Void
 	{
 		rndFactorAngle = FlxU.fromIntToUInt(randomAngle);
 		rndFactorSpeed = FlxU.fromIntToUInt(randomSpeed);
@@ -640,16 +637,16 @@ class FlxWeapon
 			rndFactorPosition = randomPosition;
 		}
 		
-		rndFactorLifeSpan = FlxU.fromIntToUInt(randomLifeSpan);
+		rndFactorLifeSpan = (randomLifeSpan < 0) ? -randomLifeSpan : randomLifeSpan;
 	}
 	
 	/**
-	 * If the bullet should have a fixed life span use this function to set it.<br>
+	 * If the bullet should have a fixed life span use this function to set it.
 	 * The bullet will be killed once it passes this lifespan, if still alive and in bounds.
 	 * 
-	 * @param	lifespan	The lifespan of the bullet, given in ms (milliseconds) calculated from the moment the bullet is fired
+	 * @param	lifespan  The lifespan of the bullet, given in seconds.
 	 */
-	public function setBulletLifeSpan(lifespan:Int):Void
+	public function setBulletLifeSpan(lifespan:Float):Void
 	{
 		bulletLifeSpan = lifespan;
 	}
@@ -699,7 +696,7 @@ class FlxWeapon
 	 * @param	callback	The function to call
 	 * @param	sound		An FlxSound to play
 	 */
-	public function setPreFireCallback(?callbackFunc:Void->Void = null, ?sound:FlxSound = null):Void
+	public function setPreFireCallback(callbackFunc:Void->Void = null, sound:FlxSound = null):Void
 	{
 		onPreFireCallback = callbackFunc;
 		onPreFireSound = sound;
@@ -711,7 +708,7 @@ class FlxWeapon
 	 * @param	callback	The function to call
 	 * @param	sound		An FlxSound to play
 	 */
-	public function setFireCallback(?callbackFunc:Void->Void = null, ?sound:FlxSound = null):Void
+	public function setFireCallback(callbackFunc:Void->Void = null, sound:FlxSound = null):Void
 	{
 		onFireCallback = callbackFunc;
 		onFireSound = sound;
@@ -723,7 +720,7 @@ class FlxWeapon
 	 * @param	callback	The function to call
 	 * @param	sound		An FlxSound to play
 	 */
-	public function setPostFireCallback(?callbackFunc:Void->Void = null, ?sound:FlxSound = null):Void
+	public function setPostFireCallback(callbackFunc:Void->Void = null, sound:FlxSound = null):Void
 	{
 		onPostFireCallback = callbackFunc;
 		onPostFireSound = sound;

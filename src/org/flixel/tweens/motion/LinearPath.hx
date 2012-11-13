@@ -14,7 +14,7 @@ class LinearPath extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:Int = 0)
+	public function new(complete:CompleteCallback = null, type:Int = 0)
 	{
 		super(0, complete, type, null);
 		_points = new Array<FlxPoint>();
@@ -42,7 +42,7 @@ class LinearPath extends Motion
 	 * @param	duration		Duration of the movement.
 	 * @param	ease			Optional easer function.
 	 */
-	public function setMotion(duration:Float, ?ease:EaseFunction = null):Void
+	public function setMotion(duration:Float, ease:EaseFunction = null):Void
 	{
 		updatePath();
 		_target = duration;
@@ -56,7 +56,7 @@ class LinearPath extends Motion
 	 * @param	speed		Speed of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotionSpeed(speed:Float, ?ease:EaseFunction = null):Void
+	public function setMotionSpeed(speed:Float, ease:EaseFunction = null):Void
 	{
 		updatePath();
 		_target = distance / speed;
@@ -71,7 +71,7 @@ class LinearPath extends Motion
 	 * @param	x		X position.
 	 * @param	y		Y position.
 	 */
-	public function addPoint(?x:Float = 0, ?y:Float = 0):Void
+	public function addPoint(x:Float = 0, y:Float = 0):Void
 	{
 		if (_last != null)
 		{
@@ -86,7 +86,7 @@ class LinearPath extends Motion
 	 * @param	index		Index of the point.
 	 * @return	The Point object.
 	 */
-	public function getPoint(?index:Int = 0):FlxPoint
+	public function getPoint(index:Int = 0):FlxPoint
 	{
 		if (_points.length == 0) 
 		{
@@ -104,7 +104,7 @@ class LinearPath extends Motion
 		}
 		else
 		{
-			_index = _points.length;
+			_index = _points.length - 1;
 		}
 		
 		super.start();
@@ -121,7 +121,15 @@ class LinearPath extends Motion
 		{
 			if (_index < _points.length - 1)
 			{
-				while (_t > _pointT[_index + 1]) _index ++;
+				while (_t > _pointT[_index + 1]) 
+				{
+					_index ++;
+					if (_index == _points.length - 1)
+					{
+						_index -= 1;
+						break;
+					}
+				}
 			}
 			td = _pointT[_index];
 			tt = _pointT[_index + 1] - td;
@@ -138,6 +146,11 @@ class LinearPath extends Motion
 				while (_t < _pointT[_index - 1])
 				{
 					_index -= 1;
+					if (_index == 0)
+					{
+						_index += 1;
+						break;
+					}
 				}
 			}
 			td = _pointT[_index];

@@ -26,11 +26,6 @@ import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
-#if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetData;
-import org.flixel.tileSheetManager.TileSheetManager;
-#end
-
 /**
  * FlxBar is a quick and easy way to create a graphical bar which can
  * be used as part of your UI/HUD, or positioned next to a sprite. It could represent
@@ -38,17 +33,13 @@ import org.flixel.tileSheetManager.TileSheetManager;
  */
 class FlxBar extends FlxSprite
 {
-	#if flash
+	#if (flash || js)
 	private var canvas:BitmapData;
+	#end
 	
-	private var barType:UInt;
-	private var barWidth:UInt;
-	private var barHeight:UInt;
-	#else
 	private var barType:Int;
 	private var barWidth:Int;
 	private var barHeight:Int;
-	#end
 	
 	private var parent:Dynamic;
 	private var parentVariable:String;
@@ -112,20 +103,6 @@ class FlxBar extends FlxSprite
 	#end
 	private var fillHorizontal:Bool;
 	
-	#if flash
-	public static inline var FILL_LEFT_TO_RIGHT:UInt = 1;
-	public static inline var FILL_RIGHT_TO_LEFT:UInt = 2;
-	public static inline var FILL_TOP_TO_BOTTOM:UInt = 3;
-	public static inline var FILL_BOTTOM_TO_TOP:UInt = 4;
-	public static inline var FILL_HORIZONTAL_INSIDE_OUT:UInt = 5;
-	public static inline var FILL_HORIZONTAL_OUTSIDE_IN:UInt = 6;
-	public static inline var FILL_VERTICAL_INSIDE_OUT:UInt = 7;
-	public static inline var FILL_VERTICAL_OUTSIDE_IN:UInt = 8;
-	
-	private static inline var BAR_FILLED:UInt = 1;
-	private static inline var BAR_GRADIENT:UInt = 2;
-	private static inline var BAR_IMAGE:UInt = 3;
-	#else
 	public static inline var FILL_LEFT_TO_RIGHT:Int = 1;
 	public static inline var FILL_RIGHT_TO_LEFT:Int = 2;
 	public static inline var FILL_TOP_TO_BOTTOM:Int = 3;
@@ -139,14 +116,13 @@ class FlxBar extends FlxSprite
 	private static inline var BAR_GRADIENT:Int = 2;
 	private static inline var BAR_IMAGE:Int = 3;
 	
+	#if (cpp || neko)
 	private var _emptyBarFrameID:Int;
 	private var _filledBarFrames:Array<Float>;
 	
 	private var _framesPosition:String;
 	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
 	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
-	
-	private var _needToUpdateTileSheet:Bool;
 	#end
 	
 	/**
@@ -163,11 +139,7 @@ class FlxBar extends FlxSprite
 	 * @param	max			The maximum value the bar can reach. I.e. for a progress bar this would typically be 100.
 	 * @param	border		Include a 1px border around the bar? (if true it adds +2 to width and height to accommodate it)
 	 */
-	#if flash
-	public function new(x:Int, y:Int, ?direction:UInt = FILL_LEFT_TO_RIGHT, ?width:Int = 100, ?height:Int = 10, ?parentRef:Dynamic = null, ?variable:String = "", ?min:Float = 0, ?max:Float = 100, ?border:Bool = false)
-	#else
-	public function new(x:Int, y:Int, ?direction:Int = FILL_LEFT_TO_RIGHT, ?width:Int = 100, ?height:Int = 10, ?parentRef:Dynamic = null, ?variable:String = "", ?min:Float = 0, ?max:Float = 100, ?border:Bool = false)
-	#end
+	public function new(x:Int, y:Int, direction:Int = FILL_LEFT_TO_RIGHT, width:Int = 100, height:Int = 10, parentRef:Dynamic = null, variable:String = "", min:Float = 0, max:Float = 100, border:Bool = false)
 	{
 		fixedPosition = true;
 		zeroOffset = new Point();
@@ -177,7 +149,7 @@ class FlxBar extends FlxSprite
 		barWidth = width;
 		barHeight = height;
 		
-		#if flash
+		#if (flash || js)
 		makeGraphic(barWidth, barHeight, 0xffffffff, true);
 		#else
 		this.width = frameWidth = width;
@@ -185,13 +157,12 @@ class FlxBar extends FlxSprite
 		origin.make(frameWidth * 0.5, frameHeight * 0.5);
 		
 		_framesPosition = FRAMES_POSITION_HORIZONTAL;
-		_needToUpdateTileSheet = false;
 		#end
 		
 		filledBarPoint = new Point(0, 0);
 		
-		#if flash
-		canvas = new BitmapData(width, height, true, 0x0);
+		#if (flash || js)
+ 		canvas = new BitmapData(width, height, true, 0x0);
 		#end
 		
 		if (parentRef != null)
@@ -210,16 +181,12 @@ class FlxBar extends FlxSprite
 		createFilledBar({rgb: 0x005100, a: 0xff}, {rgb: 0x00F400, a: 0xff}, border);
 		#end
 		
-		#if !flash
-		_needToUpdateTileSheet = true;
-		#end
-		
 		emptyKill = false;
 	}
 	
 	override public function destroy():Void 
 	{
-		#if flash
+		#if (flash || js)
 		canvas.dispose();
 		canvas = null;
 		#else
@@ -282,7 +249,7 @@ class FlxBar extends FlxSprite
 	 * @param	offsetX		The offset on X in relation to the origin x/y of the parent
 	 * @param	offsetY		The offset on Y in relation to the origin x/y of the parent
 	 */
-	public function setParent(parentRef:Dynamic, variable:String, ?track:Bool = false, ?offsetX:Int = 0, ?offsetY:Int = 0):Void
+	public function setParent(parentRef:Dynamic, variable:String, track:Bool = false, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
 		parent = parentRef;
 		parentVariable = variable;
@@ -319,7 +286,7 @@ class FlxBar extends FlxSprite
 	 * @param	onFilled		The function that is called if the value of this FlxBar reaches max
 	 * @param	killOnEmpty		If set it will call FlxBar.kill() if the value reaches min
 	 */
-	public function setCallbacks(onEmpty:Void->Void, onFilled:Void->Void, ?killOnEmpty:Bool = false):Void
+	public function setCallbacks(onEmpty:Void->Void, onFilled:Void->Void, killOnEmpty:Bool = false):Void
 	{
 		if (onEmpty != null)
 		{
@@ -400,11 +367,8 @@ class FlxBar extends FlxSprite
 			value = min;
 		}
 		
-		#if !flash
-		if (_needToUpdateTileSheet)
-		{
-			updateTileSheet();
-		}
+		#if (cpp || neko)
+		updateFrameData();
 		#end
 	}
 	
@@ -438,12 +402,12 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 */
 	#if flash
-	public function createFilledBar(empty:UInt, fill:UInt, ?showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
+	public function createFilledBar(empty:UInt, fill:UInt, showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
 	#else
-	public function createFilledBar(empty:BitmapInt32, fill:BitmapInt32, ?showBorder:Bool = false, ?border:BitmapInt32):Void
+	public function createFilledBar(empty:BitmapInt32, fill:BitmapInt32, showBorder:Bool = false, ?border:BitmapInt32):Void
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (border == null)
 		{
 			#if !neko
@@ -495,7 +459,7 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-		#if flash
+		#if (flash || js)
 			emptyBar = new BitmapData(barWidth, barHeight, true, border);
 			emptyBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 			
@@ -536,7 +500,7 @@ class FlxBar extends FlxSprite
 		}
 		else
 		{
-		#if flash
+		#if (flash || js)
 			emptyBar = new BitmapData(barWidth, barHeight, true, empty);
 			filledBar = new BitmapData(barWidth, barHeight, true, fill);
 		#else
@@ -567,7 +531,7 @@ class FlxBar extends FlxSprite
 		#end
 		}
 		
-		#if flash
+		#if (flash || js)
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		#end
@@ -585,12 +549,12 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 */
 	#if flash
-	public function createGradientBar(empty:Array<UInt>, fill:Array<UInt>, ?chunkSize:Int = 1, ?rotation:Int = 180, ?showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
+	public function createGradientBar(empty:Array<UInt>, fill:Array<UInt>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
 	#else
-	public function createGradientBar(empty:Array<BitmapInt32>, fill:Array<BitmapInt32>, ?chunkSize:Int = 1, ?rotation:Int = 180, ?showBorder:Bool = false, ?border:BitmapInt32):Void
+	public function createGradientBar(empty:Array<BitmapInt32>, fill:Array<BitmapInt32>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, ?border:BitmapInt32):Void
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (border == null)
 		{
 			#if !neko
@@ -603,7 +567,7 @@ class FlxBar extends FlxSprite
 		
 		barType = BAR_GRADIENT;
 		
-		#if !flash
+		#if (cpp || neko)
 		var colA:Int;
 		var colRGB:Int;
 		
@@ -665,7 +629,7 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-			#if flash
+			#if (flash || js)
 			emptyBar = new BitmapData(barWidth, barHeight, true, border);
 			FlxGradient.overlayGradientOnBitmapData(emptyBar, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 			
@@ -706,7 +670,7 @@ class FlxBar extends FlxSprite
 		}
 		else
 		{
-			#if flash
+			#if (flash || js)
 			emptyBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, empty, chunkSize, rotation);
 			filledBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, fill, chunkSize, rotation);
 			#else
@@ -737,7 +701,7 @@ class FlxBar extends FlxSprite
 			#end
 		}
 		
-		#if flash
+		#if (flash || js)
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		#end
@@ -754,12 +718,12 @@ class FlxBar extends FlxSprite
 	 * @param	fillBackground		If no foreground (fill) image is given, use this colour value instead. 0xAARRGGBB format
 	 */
 	#if flash
-	public function createImageBar(?empty:Dynamic = null, ?fill:Dynamic = null, ?emptyBackground:UInt = 0xff000000, ?fillBackground:UInt = 0xff00ff00):Void
+	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, ?emptyBackground:UInt = 0xff000000, ?fillBackground:UInt = 0xff00ff00):Void
 	#else
-	public function createImageBar(?empty:Dynamic = null, ?fill:Dynamic = null, ?emptyBackground:BitmapInt32, ?fillBackground:BitmapInt32):Void
+	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, ?emptyBackground:BitmapInt32, ?fillBackground:BitmapInt32):Void
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (emptyBackground == null)
 		{
 			#if !neko
@@ -781,7 +745,7 @@ class FlxBar extends FlxSprite
 		var emptyBitmapData:BitmapData = FlxG.addBitmap(empty); 
 		var fillBitmapData:BitmapData = FlxG.addBitmap(fill);
 		
-	#if !flash
+	#if (cpp || neko)
 		var key:String = "";
 		
 		if (empty != null)
@@ -838,7 +802,7 @@ class FlxBar extends FlxSprite
 		if (empty != null && fill == null)
 		{
 			//	If empty is set, but fill is not ...
-		#if flash
+		#if (flash || js)
 			emptyBar = emptyBitmapData;
 			emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 			
@@ -892,7 +856,7 @@ class FlxBar extends FlxSprite
 		else if (empty == null && fill != null)
 		{
 			//	If fill is set, but empty is not ...
-			#if flash
+			#if (flash || js)
 			filledBar = fillBitmapData;
 			filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 			
@@ -945,7 +909,7 @@ class FlxBar extends FlxSprite
 		else if (empty != null && fill != null)
 		{
 			//	If both are set
-			#if flash
+			#if (flash || js)
 			emptyBar = emptyBitmapData;
 			emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 			
@@ -996,7 +960,7 @@ class FlxBar extends FlxSprite
 			#end
 		}
 		
-		#if flash
+		#if (flash || js)
 		canvas = new BitmapData(barWidth, barHeight, true, 0x0);
 		#end
 		
@@ -1032,11 +996,8 @@ class FlxBar extends FlxSprite
 			fillHorizontal = false;
 		}
 		
-		#if !flash
-		if (_needToUpdateTileSheet)
-		{
-			updateTileSheet();
-		}
+		#if (cpp || neko)
+		updateFrameData();
 		#end
 	}
 	
@@ -1083,7 +1044,7 @@ class FlxBar extends FlxSprite
 	 */
 	private function updateBar():Void
 	{
-		#if flash
+		#if (flash || js)
 		if (fillHorizontal)
 		{
 			filledBarRect.width = Std.int(percent * pxPerPercent);
@@ -1205,9 +1166,14 @@ class FlxBar extends FlxSprite
 		return value;
 	}
 	
-	#if !flash
+	#if (cpp || neko)
 	override public function draw():Void 
 	{
+		if (_layer == null || _layer.onStage == false)
+		{
+			return;
+		}
+		
 		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -1230,66 +1196,67 @@ class FlxBar extends FlxSprite
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		
-		var isColored:Bool = _tileSheetData.isColored;
+		var isColored:Bool = _layer.isColored;
 		
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = _tileSheetData.positionData[camera.ID];
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
 			
-			var isColoredCamera:Bool = camera.isColored;
+			var isColoredCamera:Bool = camera.isColored();
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
-			if (simpleRender)
+			if (simpleRenderSprite())
 			{	//Simple render
-				if (_tileSheetData != null && percentFrame >= 0) // TODO: remove this if statement later
+				
+				// Draw empty bar
+				currDrawData[currIndex++] = _point.x;
+				currDrawData[currIndex++] = _point.y;
+				
+				currDrawData[currIndex++] = _emptyBarFrameID;
+				
+				currDrawData[currIndex++] = 1;
+				currDrawData[currIndex++] = 0;
+				currDrawData[currIndex++] = 0;
+				currDrawData[currIndex++] = 1;
+				
+				if (isColored || isColoredCamera)
 				{
-					// Draw empty bar
-					currDrawData[currIndex++] = (_point.x) + origin.x;
-					currDrawData[currIndex++] = (_point.y) + origin.y;
-					
-					currDrawData[currIndex++] = _emptyBarFrameID;
-					
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-					
-					if (isColored || isColoredCamera)
+					if (isColoredCamera)
 					{
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = _red * camera.red; 
-							currDrawData[currIndex++] = _green * camera.green;
-							currDrawData[currIndex++] = _blue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = _red; 
-							currDrawData[currIndex++] = _green;
-							currDrawData[currIndex++] = _blue;
-						}
-					}
-					
-					currDrawData[currIndex++] = _alpha;
-					
-					// Draw filled bar
-					if (fillHorizontal)
-					{
-						currDrawData[currIndex++] = (_point.x) + origin.x + _filledBarFrames[percentFrame];
-						currDrawData[currIndex++] = (_point.y) + origin.y;
+						currDrawData[currIndex++] = _red * camera.red; 
+						currDrawData[currIndex++] = _green * camera.green;
+						currDrawData[currIndex++] = _blue * camera.blue;
 					}
 					else
 					{
-						currDrawData[currIndex++] = (_point.x) + origin.x;
-						currDrawData[currIndex++] = (_point.y) + origin.y + _filledBarFrames[percentFrame];
+						currDrawData[currIndex++] = _red; 
+						currDrawData[currIndex++] = _green;
+						currDrawData[currIndex++] = _blue;
+					}
+				}
+				
+				currDrawData[currIndex++] = alpha;
+				
+				if (percentFrame >= 0)
+				{
+					// Draw filled bar
+					if (fillHorizontal)
+					{
+						currDrawData[currIndex++] = _point.x + _filledBarFrames[percentFrame];
+						currDrawData[currIndex++] = _point.y;
+					}
+					else
+					{
+						currDrawData[currIndex++] = _point.x;
+						currDrawData[currIndex++] = _point.y + _filledBarFrames[percentFrame];
 					}
 					
 					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
@@ -1315,29 +1282,29 @@ class FlxBar extends FlxSprite
 						}
 					}
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 			}
 			else
 			{	
 				//Advanced render
-				if (_tileSheetData != null && percentFrame >= 0) // TODO: remove this if statement later
+				var radians:Float = -angle * 0.017453293;
+				var cos:Float = Math.cos(radians);
+				var sin:Float = Math.sin(radians);
+				
+				// Draw empty bar
+				currDrawData[currIndex++] = _point.x;
+				currDrawData[currIndex++] = _point.y;
+				
+				currDrawData[currIndex++] = _emptyBarFrameID;
+				
+				currDrawData[currIndex++] = cos * scale.x;
+				currDrawData[currIndex++] = sin * scale.y;
+				currDrawData[currIndex++] = -sin * scale.x;
+				currDrawData[currIndex++] = cos * scale.y;
+				
+				if (_layer.isColored || isColoredCamera)
 				{
-					var radians:Float = -angle * 0.017453293;
-					var cos:Float = Math.cos(radians);
-					var sin:Float = Math.sin(radians);
-					
-					// Draw empty bar
-					currDrawData[currIndex++] = (_point.x) + origin.x;
-					currDrawData[currIndex++] = (_point.y) + origin.y;
-					
-					currDrawData[currIndex++] = _emptyBarFrameID;
-					
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = sin * scale.y;
-					currDrawData[currIndex++] = -sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
-					
 					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
@@ -1350,8 +1317,12 @@ class FlxBar extends FlxSprite
 						currDrawData[currIndex++] = _green;
 						currDrawData[currIndex++] = _blue;
 					}
-					currDrawData[currIndex++] = _alpha;
-					
+				}
+				
+				currDrawData[currIndex++] = alpha;
+				
+				if (percentFrame >= 0)
+				{
 					// Draw filled bar
 					var relativeX:Float = 0;
 					var relativeY:Float = 0;
@@ -1365,8 +1336,8 @@ class FlxBar extends FlxSprite
 						relativeY = _filledBarFrames[percentFrame] * cos * scale.y;
 					}
 					
-					currDrawData[currIndex++] = (_point.x) + origin.x + relativeX;
-					currDrawData[currIndex++] = (_point.y) + origin.y + relativeY;
+					currDrawData[currIndex++] = _point.x + relativeX;
+					currDrawData[currIndex++] = _point.y + relativeY;
 					
 					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
 					
@@ -1375,23 +1346,27 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = -sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
 					
-					if (isColoredCamera)
+					if (_layer.isColored || isColoredCamera)
 					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
+						if (isColoredCamera)
+						{
+							currDrawData[currIndex++] = _red * camera.red; 
+							currDrawData[currIndex++] = _green * camera.green;
+							currDrawData[currIndex++] = _blue * camera.blue;
+						}
+						else
+						{
+							currDrawData[currIndex++] = _red; 
+							currDrawData[currIndex++] = _green;
+							currDrawData[currIndex++] = _blue;
+						}
 					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
-					currDrawData[currIndex++] = _alpha;
+					
+					currDrawData[currIndex++] = alpha;
 				}
 			}
 			
-			_tileSheetData.positionData[camera.ID] = currIndex;
+			_layer.positionData[camera.ID] = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -1416,21 +1391,26 @@ class FlxBar extends FlxSprite
 		}
 		
 		resetHelpers();
-		updateTileSheet();
+		_bitmapDataKey = FlxG.getCacheKeyFor(_pixels);
+		if (_bitmapDataKey == null)
+		{
+			_bitmapDataKey = FlxG.getUniqueBitmapKey();
+			FlxG.addBitmap(Pixels, false, false, _bitmapDataKey);
+		}
 		
+		updateLayerInfo(true);
 		return _pixels;
 	}
 	#end
 	
-	override public function updateTileSheet():Void 
+	override public function updateFrameData():Void 
 	{	
 	#if (cpp || neko)
-		if (_pixels != null && barWidth >= 1 && barHeight >= 1)
+		if (_node != null && barWidth >= 1 && barHeight >= 1)
 		{
-			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_tileSheetData.antialiasing = _antialiasing;
+			updateLayerProps();
 			
-			_emptyBarFrameID = _tileSheetData.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
+			_emptyBarFrameID = _node.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
 			_filledBarFrames = [];
 			
 			var frameRelativePosition:Float;
@@ -1516,7 +1496,7 @@ class FlxBar extends FlxSprite
 					_filledBarFrames.push(0.5 * (barHeight - frameHeight));
 				}
 				
-				_filledBarFrames.push(_tileSheetData.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * barWidth, 0.5 * barHeight)));
+				_filledBarFrames.push(_node.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * barWidth, 0.5 * barHeight)));
 			}
 		}
 	#end

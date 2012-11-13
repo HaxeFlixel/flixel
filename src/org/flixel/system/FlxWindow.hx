@@ -99,14 +99,14 @@ class FlxWindow extends Sprite
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
 	#if flash
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
 	#else
-	public function new(Title:String, Width:Float, Height:Float, ?Resizable:Bool = true, ?Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
 	#end
 	{
 		super();
 		
-		#if (cpp || neko)
+		#if !flash
 		if (BGColor == null)
 		{
 			#if !neko
@@ -230,7 +230,7 @@ class FlxWindow extends Sprite
 	 * Used to set up basic mouse listeners.
 	 * @param E		Flash event.
 	 */
-	private function init(?E:Event = null):Void
+	private function init(E:Event = null):Void
 	{
 		#if flash
 		if (root == null)
@@ -251,7 +251,7 @@ class FlxWindow extends Sprite
 	 * Mouse movement handler.  Figures out if mouse is over handle or header bar or what.
 	 * @param E		Flash mouse event.
 	 */
-	private function onMouseMove(?E:MouseEvent = null):Void
+	private function onMouseMove(E:MouseEvent = null):Void
 	{
 		if(_dragging) //user is moving the window around
 		{
@@ -283,7 +283,7 @@ class FlxWindow extends Sprite
 	 * Figure out if window is being repositioned (clicked on header) or resized (clicked on handle).
 	 * @param E		Flash mouse event.
 	 */
-	private function onMouseDown(?E:MouseEvent = null):Void
+	private function onMouseDown(E:MouseEvent = null):Void
 	{
 		if(_overHeader)
 		{
@@ -303,7 +303,7 @@ class FlxWindow extends Sprite
 	 * User let go of header bar or handler (or nothing), so turn off drag and resize behaviors.
 	 * @param E		Flash mouse event.
 	 */
-	private function onMouseUp(?E:MouseEvent = null):Void
+	private function onMouseUp(E:MouseEvent = null):Void
 	{
 		_dragging = false;
 		_resizing = false;

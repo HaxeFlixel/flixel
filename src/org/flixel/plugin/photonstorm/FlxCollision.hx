@@ -36,7 +36,7 @@ class FlxCollision
 {
 	public static var debug:BitmapData = new BitmapData(1, 1, false);
 	
-	#if flash
+	#if (flash || js)
 	public static var CAMERA_WALL_OUTSIDE:UInt = 0;
 	public static var CAMERA_WALL_INSIDE:UInt = 1;
 	#else
@@ -52,8 +52,9 @@ class FlxCollision
 	/**
 	 * A Pixel Perfect Collision check between two FlxSprites.
 	 * It will do a bounds check first, and if that passes it will run a pixel perfect match on the intersecting area.
-	 * Works with rotated, scaled and animated sprites.
-	 * Not working on cpp target (need further investigation) plus it's extremly slow on cpp targets, so I don't recommend you to use it with them.
+	 * Works with rotated and animated sprites.
+	 * It's extremly slow on cpp targets, so I don't recommend you to use it on them.
+	 * Not working on neko target and awfully slows app down
 	 * 
 	 * @param	contact			The first FlxSprite to test against
 	 * @param	target			The second FlxSprite to test again, sprite order is irrelevant
@@ -62,9 +63,8 @@ class FlxCollision
 	 * 
 	 * @return	Boolean True if the sprites collide, false if not
 	 */
-	public static function pixelPerfectCheck(contact:FlxSprite, target:FlxSprite, ?alphaTolerance:Int = 255, ?camera:FlxCamera = null):Bool
+	public static function pixelPerfectCheck(contact:FlxSprite, target:FlxSprite, alphaTolerance:Int = 255, camera:FlxCamera = null):Bool
 	{
-		#if flash
 		var pointA:Point = new Point();
 		var pointB:Point = new Point();
 		
@@ -84,10 +84,13 @@ class FlxCollision
 			pointB.x = target.x - Std.int(FlxG.camera.scroll.x * target.scrollFactor.x) - target.offset.x;
 			pointB.y = target.y - Std.int(FlxG.camera.scroll.y * target.scrollFactor.y) - target.offset.y;
 		}
-		
+		#if (flash || js)
 		var boundsA:Rectangle = new Rectangle(pointA.x, pointA.y, contact.framePixels.width, contact.framePixels.height);
 		var boundsB:Rectangle = new Rectangle(pointB.x, pointB.y, target.framePixels.width, target.framePixels.height);
-		
+		#else
+		var boundsA:Rectangle = new Rectangle(pointA.x, pointA.y, contact.frameWidth, contact.frameHeight);
+		var boundsB:Rectangle = new Rectangle(pointB.x, pointB.y, target.frameWidth, target.frameHeight);
+		#end
 		var intersect:Rectangle = boundsA.intersection(boundsB);
 		
 		if (intersect.isEmpty() || intersect.width == 0 || intersect.height == 0)
@@ -107,24 +110,126 @@ class FlxCollision
 		}
 		
 		//	Thanks to Chris Underwood for helping with the translate logic :)
-		
 		var matrixA:Matrix = new Matrix();
 		matrixA.translate(-(intersect.x - boundsA.x), -(intersect.y - boundsA.y));
 		
 		var matrixB:Matrix = new Matrix();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
+		#if (cpp || neko)
+		contact.drawFrame();
+		target.drawFrame();
+		#end
+		
 		var testA:BitmapData = contact.framePixels;
 		var testB:BitmapData = target.framePixels;
 		var overlapArea:BitmapData = new BitmapData(Math.floor(intersect.width), Math.floor(intersect.height), false);
-		
+		#if (flash || js)
 		overlapArea.draw(testA, matrixA, new ColorTransform(1, 1, 1, 1, 255, -255, -255, alphaTolerance), BlendMode.NORMAL);
 		overlapArea.draw(testB, matrixB, new ColorTransform(1, 1, 1, 1, 255, 255, 255, alphaTolerance), BlendMode.DIFFERENCE);
+		#else
+		// TODO: try to fix this method for neko target
+		var overlapWidth:Int = overlapArea.width;
+		var overlapHeight:Int = overlapArea.height;
+		var targetX:Int;
+		var targetY:Int;
+		var pixelColor:BitmapInt32;
+		var pixelAlpha:Int;
+		var transformedAlpha:Int;
+		var maxX:Int = testA.width + 1;
+		var maxY:Int = testA.height + 1;
+		for (i in 0...(maxX))
+		{
+			targetX = Math.floor(i + matrixA.tx);
+			if (targetX >= 0 && targetX < maxX)
+			{
+				for (j in 0...(maxY))
+				{
+					targetY = Math.floor(j + matrixA.ty);
+					if (targetY >= 0 && targetY < maxY)
+					{
+						pixelColor = testA.getPixel32(i, j);
+						#if !neko
+						pixelAlpha = (pixelColor >> 24) & 0xFF;
+						#else
+						pixelAlpha = (pixelColor.a >> 24) & 0xFF;
+						#end
+						if (pixelAlpha >= alphaTolerance)
+						{
+							#if !neko
+							overlapArea.setPixel32(targetX, targetY, 0xffff0000);
+							#else
+							overlapArea.setPixel32(targetX, targetY, {rgb: 0xff0000, a: 0xff});
+							#end
+						}
+						else
+						{
+							#if !neko
+							overlapArea.setPixel32(targetX, targetY, 0xffffffff);
+							#else
+							overlapArea.setPixel32(targetX, targetY, {rgb: 0xffffff, a: 0xff});
+							#end
+						}
+					}
+				}
+			}
+		}
+
+		maxX = testB.width + 1;
+		maxY = testB.height + 1;
+		var secondColor:BitmapInt32;
+		for (i in 0...(maxX))
+		{
+			targetX = Math.floor(i + matrixB.tx);
+			if (targetX >= 0 && targetX < maxX)
+			{
+				for (j in 0...(maxY))
+				{
+					targetY = Math.floor(j + matrixB.ty);
+					if (targetY >= 0 && targetY < maxY)
+					{
+						pixelColor = testB.getPixel32(i, j);
+						#if !neko
+						pixelAlpha = (pixelColor >> 24) & 0xFF;
+						#else
+						pixelAlpha = (pixelColor.a >> 24) & 0xFF;
+						#end
+						if (pixelAlpha >= alphaTolerance)
+						{
+							secondColor = overlapArea.getPixel32(targetX, targetY);
+							#if !neko
+							if (secondColor == 0xffff0000)
+							{
+								overlapArea.setPixel32(targetX, targetY, 0xff00ffff);
+							}
+							else
+							{
+								overlapArea.setPixel32(targetX, targetY, 0x00000000);
+							}
+							#else
+							if (secondColor.rgb == 0xff0000)
+							{
+								overlapArea.setPixel32(targetX, targetY, {rgb: 0x00ffff, a: 0xff});
+							}
+							else
+							{
+								overlapArea.setPixel32(targetX, targetY, {rgb: 0x000000, a: 0x00});
+							}
+							#end
+						}
+					}
+				}
+			}
+		}
 		
+		#end
 		//	Developers: If you'd like to see how this works, display it in your game somewhere. Or you can comment it out to save a tiny bit of performance
 		debug = overlapArea;
-		
+		#if !neko
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
+		#else
+		var overlap:Rectangle = overlapArea.getColorBoundsRect({rgb: 0xffffff, a: 0xff}, {rgb: 0x00ffff, a: 0xff});
+		#end
 		overlap.offset(intersect.x, intersect.y);
 		
 		if (overlap.isEmpty())
@@ -135,9 +240,8 @@ class FlxCollision
 		{
 			return true;
 		}
-		#else
+		
 		return false;
-		#end
 	}
 	
 	/**
@@ -151,9 +255,9 @@ class FlxCollision
 	 * @return	Boolean True if the x/y point collides with the FlxSprite, false if not
 	 */
 	#if flash
-	public static function pixelPerfectPointCheck(pointX:UInt, pointY:UInt, target:FlxSprite, ?alphaTolerance:Int = 255):Bool
+	public static function pixelPerfectPointCheck(pointX:UInt, pointY:UInt, target:FlxSprite, alphaTolerance:Int = 255):Bool
 	#else
-	public static function pixelPerfectPointCheck(pointX:Int, pointY:Int, target:FlxSprite, ?alphaTolerance:Int = 255):Bool
+	public static function pixelPerfectPointCheck(pointX:Int, pointY:Int, target:FlxSprite, alphaTolerance:Int = 255):Bool
 	#end
 	{
 		//	Intersect check
@@ -162,7 +266,7 @@ class FlxCollision
 			return false;
 		}
 		
-		#if flash
+	#if (flash || js)
 		//	How deep is pointX/Y within the rect?
 		var test:BitmapData = target.framePixels;
 		if (Std.int(FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)))) >= alphaTolerance)
@@ -173,7 +277,7 @@ class FlxCollision
 		{
 			return false;
 		}
-		#else
+	#else
 		var indexX:Int = target.frame * target.frameWidth;
 		var indexY:Int = 0;
 
@@ -208,7 +312,7 @@ class FlxCollision
 		#end
 		
 		return (pixelAlpha >= alphaTolerance);
-		#end
+	#end
 	}
 	
 	/**
@@ -222,9 +326,9 @@ class FlxCollision
 	 * @return	FlxGroup The 4 FlxTileblocks that are created are placed into this FlxGroup which should be added to your State
 	 */
 	#if flash
-	public static function createCameraWall(camera:FlxCamera, placement:UInt, thickness:UInt, ?adjustWorldBounds:Bool = false):FlxGroup
+	public static function createCameraWall(camera:FlxCamera, placement:UInt, thickness:UInt, adjustWorldBounds:Bool = false):FlxGroup
 	#else
-	public static function createCameraWall(camera:FlxCamera, placement:Int, thickness:Int, ?adjustWorldBounds:Bool = false):FlxGroup
+	public static function createCameraWall(camera:FlxCamera, placement:Int, thickness:Int, adjustWorldBounds:Bool = false):FlxGroup
 	#end
 	{
 		var left:FlxTileblock = null;

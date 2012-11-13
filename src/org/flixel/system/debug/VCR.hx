@@ -248,7 +248,7 @@ class VCR extends Sprite
 	 * Attempts to load the file and registers file loading event handlers.
 	 * @param	E	Flash event.
 	 */
-	private function onOpenSelect(?E:Event = null):Void
+	private function onOpenSelect(E:Event = null):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.SELECT, onOpenSelect);
@@ -265,7 +265,7 @@ class VCR extends Sprite
 	 * If there's stuff inside, then the contents are loaded into a new replay.
 	 * @param	E	Flash Event.
 	 */
-	private function onOpenComplete(?E:Event = null):Void
+	private function onOpenComplete(E:Event = null):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
@@ -293,7 +293,7 @@ class VCR extends Sprite
 	 * Called if the open file dialog is canceled.
 	 * @param	E	Flash Event.
 	 */
-	private function onOpenCancel(?E:Event = null):Void
+	private function onOpenCancel(E:Event = null):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.SELECT, onOpenSelect);
@@ -306,7 +306,7 @@ class VCR extends Sprite
 	 * Called if there is a file open error.
 	 * @param	E	Flash Event.
 	 */
-	private function onOpenError(?E:Event=null):Void
+	private function onOpenError(E:Event=null):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
@@ -322,7 +322,7 @@ class VCR extends Sprite
 	 * If Alt is NOT pressed, the game is reset, and a new recording is requested.
 	 * @param	StandardMode	Whether to reset the whole game, or just this <code>FlxState</code>.  StandardMode == false is useful for recording demos or attract modes.
 	 */
-	public function onRecord(?StandardMode:Bool = false):Void
+	public function onRecord(StandardMode:Bool = false):Void
 	{
 		if (_play.visible)
 		{
@@ -354,7 +354,7 @@ class VCR extends Sprite
 	 * Called when the file is saved successfully.
 	 * @param	E	Flash Event.
 	 */
-	private function onSaveComplete(?E:Event = null):Void
+	private function onSaveComplete(E:Event = null):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -369,7 +369,7 @@ class VCR extends Sprite
 	 * Called when the save file dialog is cancelled.
 	 * @param	E	Flash Event.
 	 */
-	private function onSaveCancel(?E:Event = null):Void
+	private function onSaveCancel(E:Event = null):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -383,7 +383,7 @@ class VCR extends Sprite
 	 * Called if there is an error while saving the gameplay recording.
 	 * @param	E	Flash Event.
 	 */
-	private function onSaveError(?E:Event = null):Void
+	private function onSaveError(E:Event = null):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -410,7 +410,7 @@ class VCR extends Sprite
 	 * The GUI is updated accordingly.
 	 * @param	StandardMode	Whether to reset the current game (== true), or just the current state.  Just resetting the current state can be very handy for debugging.
 	 */
-	public function onRestart(?StandardMode:Bool = false):Void
+	public function onRestart(StandardMode:Bool = false):Void
 	{
 		FlxG.reloadReplay(StandardMode);
 		// TODO: Fix this. I don't know where is the problem
@@ -466,7 +466,7 @@ class VCR extends Sprite
 	 * Just sets up basic mouse listeners, a la FlxWindow.
 	 * @param	E	Flash event.
 	 */
-	private function init(?E:Event = null):Void
+	private function init(E:Event = null):Void
 	{
 		#if flash
 		if (root == null)
@@ -487,7 +487,7 @@ class VCR extends Sprite
 	 * If the mouse moves, check to see if any buttons should be highlighted.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseMove(?E:MouseEvent = null):Void
+	private function onMouseMove(E:MouseEvent = null):Void
 	{
 		if (!checkOver())
 		{
@@ -500,7 +500,7 @@ class VCR extends Sprite
 	 * If the mouse is pressed down, check to see if the user started pressing down a specific button.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseDown(?E:MouseEvent = null):Void
+	private function onMouseDown(E:MouseEvent = null):Void
 	{
 		unpress();
 		if (_overOpen)
@@ -530,7 +530,7 @@ class VCR extends Sprite
 	 * If it was, take the appropriate action based on button state and visibility.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseUp(?E:MouseEvent = null):Void
+	private function onMouseUp(E:MouseEvent = null):Void
 	{
 		if (_overOpen && _pressingOpen)
 		{

@@ -15,7 +15,7 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="Source" />
+    <class path="source" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -32,7 +32,7 @@
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="Source\${PROJECT_CLASS}.hx" />
+    <compile path="source\${PROJECT_CLASS}.hx" />
   </compileTargets>
   <!-- Assets to embed into the output SWF -->
   <library>

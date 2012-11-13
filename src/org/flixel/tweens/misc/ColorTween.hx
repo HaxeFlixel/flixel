@@ -24,7 +24,7 @@ class ColorTween extends FlxTween
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:Int = 0)
+	public function new(complete:CompleteCallback = null, type:Int = 0)
 	{
 		alpha = 1;
 		super(0, type, complete);
@@ -39,7 +39,7 @@ class ColorTween extends FlxTween
 	 * @param	toAlpha			End alpha.
 	 * @param	ease			Optional easer function.
 	 */
-	public function tween(duration:Float, fromColor:Int, toColor:Int, ?fromAlpha:Float = 1, ?toAlpha:Float = 1, ?ease:EaseFunction = null):Void
+	public function tween(duration:Float, fromColor:Int, toColor:Int, fromAlpha:Float = 1, toAlpha:Float = 1, ease:EaseFunction = null):Void
 	{
 		fromColor &= 0xFFFFFF;
 		toColor &= 0xFFFFFF;

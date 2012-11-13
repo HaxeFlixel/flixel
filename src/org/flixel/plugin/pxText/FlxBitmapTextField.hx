@@ -7,10 +7,6 @@ import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
 import org.flixel.FlxSprite;
 
-#if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetManager;
-#end
-
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
@@ -20,7 +16,6 @@ import org.flixel.tileSheetManager.TileSheetManager;
  */
 class FlxBitmapTextField extends FlxSprite
 {
-	
 	private var _font:PxBitmapFont;
 	private var _text:String;
 	private var _textColor:Int;
@@ -41,6 +36,9 @@ class FlxBitmapTextField extends FlxSprite
 	private var _wordWrap:Bool;
 	private var _fixedWidth:Bool;
 	
+	private var _numSpacesInTab:Int;
+	private var _tabSpaces:String;
+	
 	private var _pendingTextChange:Bool;
 	private var _fieldWidth:Int;
 	private var _multiLine:Bool;
@@ -58,7 +56,7 @@ class FlxBitmapTextField extends FlxSprite
 	 * Constructs a new text field component.
 	 * @param pFont	optional parameter for component's font prop
 	 */
-	public function new(?pFont:PxBitmapFont = null) 
+	public function new(pFont:PxBitmapFont = null) 
 	{
 		super();
 		
@@ -83,7 +81,10 @@ class FlxBitmapTextField extends FlxSprite
 		_autoUpperCase = false;
 		_fixedWidth = true;
 		_wordWrap = true;
-		_alpha = 1;
+		alpha = 1;
+		
+		_numSpacesInTab = 4;
+		_tabSpaces = "    ";
 		
 		if (pFont == null)
 		{
@@ -102,13 +103,12 @@ class FlxBitmapTextField extends FlxSprite
 		updateGlyphs(true, _shadow, _outline);
 		_pixels = new BitmapData(1, 1, true);
 		#else
-		_tileSheetData = _font.tileSheetData;
+		pixels = _font.pixels;
 		_drawData = [];
 		_bgDrawData = [];
 		#end
 		
 		_pendingTextChange = true;
-		updateBitmapData();
 	}
 	
 	/**
@@ -129,20 +129,53 @@ class FlxBitmapTextField extends FlxSprite
 		super.destroy();
 	}
 	
+	override public function update():Void 
+	{
+		if (_pendingTextChange)
+		{
+			updateBitmapData();
+		}
+		super.update();
+	}
+	
+	public var numSpacesInTab(get_numSpacesInTab, set_numSpacesInTab):Int;
+	
+	public function get_numSpacesInTab():Int 
+	{
+		return _numSpacesInTab;
+	}
+	
+	public function set_numSpacesInTab(value:Int):Int 
+	{
+		if (_numSpacesInTab != value && value > 0)
+		{
+			_numSpacesInTab = value;
+			_tabSpaces = "";
+			for (i in 0...value)
+			{
+				_tabSpaces += " ";
+			}
+			_pendingTextChange = true;
+		}
+		return value;
+	}
+	
 	#if (cpp || neko)
 	override public function setColor(Color:BitmapInt32):BitmapInt32
 	{
 		super.setColor(Color);
-		
 		_pendingTextChange = true;
-		updateBitmapData();
-		
 		return _color;
 	}
 	
 	override public function draw():Void 
 	{
-		if(_flickerTimer != 0)
+		if (_layer == null || _layer.onStage == false)
+		{
+			return;
+		}
+		
+		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
 			if (_flicker)
@@ -182,19 +215,19 @@ class FlxBitmapTextField extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = _tileSheetData.positionData[camera.ID];
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
 			
-			var isColoredCamera:Bool = camera.isColored;
+			var isColoredCamera:Bool = camera.isColored();
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
 			
-			if (simpleRender)
+			if (simpleRenderSprite())
 			{	
 				if (_background)
 				{
@@ -222,47 +255,43 @@ class FlxBitmapTextField extends FlxSprite
 					}
 					
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 				
 				//Simple render
 				while (j < textLength)
 				{
-					if (_tileSheetData != null)
-					{
-						currPosInArr = j * 6;
-						currTileID = _drawData[currPosInArr];
-						currTileX = _drawData[currPosInArr + 1];
-						currTileY = _drawData[currPosInArr + 2];
-						currTileRed = _drawData[currPosInArr + 3];
-						currTileGreen = _drawData[currPosInArr + 4];
-						currTileBlue = _drawData[currPosInArr + 5];
-						
-						currDrawData[currIndex++] = _point.x + currTileX;
-						currDrawData[currIndex++] = _point.y + currTileY;
-						
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = _fontScale;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = _fontScale;
-						
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = currTileRed * camera.red; 
-							currDrawData[currIndex++] = currTileGreen * camera.green;
-							currDrawData[currIndex++] = currTileBlue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = currTileRed; 
-							currDrawData[currIndex++] = currTileGreen;
-							currDrawData[currIndex++] = currTileBlue;
-						}
-						currDrawData[currIndex++] = _alpha;
-					}
+					currPosInArr = j * 6;
+					currTileID = _drawData[currPosInArr];
+					currTileX = _drawData[currPosInArr + 1];
+					currTileY = _drawData[currPosInArr + 2];
+					currTileRed = _drawData[currPosInArr + 3];
+					currTileGreen = _drawData[currPosInArr + 4];
+					currTileBlue = _drawData[currPosInArr + 5];
 					
+					currDrawData[currIndex++] = _point.x + currTileX;
+					currDrawData[currIndex++] = _point.y + currTileY;
+					
+					currDrawData[currIndex++] = currTileID;
+					
+					currDrawData[currIndex++] = _fontScale;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = 0;
+					currDrawData[currIndex++] = _fontScale;
+					
+					if (isColoredCamera)
+					{
+						currDrawData[currIndex++] = currTileRed * camera.red; 
+						currDrawData[currIndex++] = currTileGreen * camera.green;
+						currDrawData[currIndex++] = currTileBlue * camera.blue;
+					}
+					else
+					{
+						currDrawData[currIndex++] = currTileRed; 
+						currDrawData[currIndex++] = currTileGreen;
+						currDrawData[currIndex++] = currTileBlue;
+					}
+					currDrawData[currIndex++] = alpha;
 					j++;
 				}
 			}
@@ -303,54 +332,50 @@ class FlxBitmapTextField extends FlxSprite
 						currDrawData[currIndex++] = _bgDrawData[5];
 					}
 					
-					currDrawData[currIndex++] = _alpha;
+					currDrawData[currIndex++] = alpha;
 				}
 				
 				while (j < textLength)
 				{
-					if (_tileSheetData != null)
-					{
-						currPosInArr = j * 6;
-						currTileID = _drawData[currPosInArr];
-						currTileX = _drawData[currPosInArr + 1];
-						currTileY = _drawData[currPosInArr + 2];
-						currTileRed = _drawData[currPosInArr + 3];
-						currTileGreen = _drawData[currPosInArr + 4];
-						currTileBlue = _drawData[currPosInArr + 5];
-						
-						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
-						
-						currDrawData[currIndex++] = _point.x + relativeX;
-						currDrawData[currIndex++] = _point.y + relativeY;
-						
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = cos * scale.x * _fontScale;
-						currDrawData[currIndex++] = -sin * scale.y * _fontScale;
-						currDrawData[currIndex++] = sin * scale.x * _fontScale;
-						currDrawData[currIndex++] = cos * scale.y * _fontScale;
-						
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = currTileRed * camera.red; 
-							currDrawData[currIndex++] = currTileGreen * camera.green;
-							currDrawData[currIndex++] = currTileBlue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = currTileRed; 
-							currDrawData[currIndex++] = currTileGreen;
-							currDrawData[currIndex++] = currTileBlue;
-						}
-						currDrawData[currIndex++] = _alpha;
-					}
+					currPosInArr = j * 6;
+					currTileID = _drawData[currPosInArr];
+					currTileX = _drawData[currPosInArr + 1];
+					currTileY = _drawData[currPosInArr + 2];
+					currTileRed = _drawData[currPosInArr + 3];
+					currTileGreen = _drawData[currPosInArr + 4];
+					currTileBlue = _drawData[currPosInArr + 5];
 					
+					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
+					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
+					
+					currDrawData[currIndex++] = _point.x + relativeX;
+					currDrawData[currIndex++] = _point.y + relativeY;
+					
+					currDrawData[currIndex++] = currTileID;
+					
+					currDrawData[currIndex++] = cos * scale.x * _fontScale;
+					currDrawData[currIndex++] = -sin * scale.y * _fontScale;
+					currDrawData[currIndex++] = sin * scale.x * _fontScale;
+					currDrawData[currIndex++] = cos * scale.y * _fontScale;
+					
+					if (isColoredCamera)
+					{
+						currDrawData[currIndex++] = currTileRed * camera.red; 
+						currDrawData[currIndex++] = currTileGreen * camera.green;
+						currDrawData[currIndex++] = currTileBlue * camera.blue;
+					}
+					else
+					{
+						currDrawData[currIndex++] = currTileRed; 
+						currDrawData[currIndex++] = currTileGreen;
+						currDrawData[currIndex++] = currTileBlue;
+					}
+					currDrawData[currIndex++] = alpha;
 					j++;
 				}
 			}
 			
-			_tileSheetData.positionData[camera.ID] = currIndex;
+			_layer.positionData[camera.ID] = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -358,45 +383,6 @@ class FlxBitmapTextField extends FlxSprite
 				drawDebug(camera);
 			}
 		}
-	}
-	#end
-	
-	override public function updateTileSheet():Void
-	{
-		
-	}
-	
-	#if (cpp || neko)
-	override public function setAntialiasing(val:Bool):Bool
-	{
-		if (_font != null)
-		{
-			_font.antialiasing = val;
-		}
-		return val;
-	}
-	
-	override public function getAntialiasing():Bool
-	{
-		if (_font != null)
-		{
-			return _font.antialiasing;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Gets FlxSprite's TileSheetData index in TileSheetManager
-	 */
-	override public function getTileSheetIndex():Int
-	{
-		if (_font != null)
-		{
-			return _font.getTileSheetIndex();
-		}
-		
-		return -1;
 	}
 	#end
 	
@@ -417,7 +403,6 @@ class FlxBitmapTextField extends FlxSprite
 			_textColor = value;
 			updateGlyphs(true, false, false);
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return value;
 	}
@@ -436,19 +421,17 @@ class FlxBitmapTextField extends FlxSprite
 			_useTextColor = value;
 			updateGlyphs(true, false, false);
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return value;
 	}
 	
-	override public function setAlpha(pAlpha:Float):Float
+	override private function setAlpha(pAlpha:Float):Float
 	{
 		#if (flash || js)
 		super.setAlpha(pAlpha);
 		#else
-		_alpha = pAlpha;
+		alpha = pAlpha;
 		_pendingTextChange = true;
-		updateBitmapData();
 		#end
 		return pAlpha;
 	}
@@ -467,18 +450,10 @@ class FlxBitmapTextField extends FlxSprite
 	
 	public function set_text(pText:String):String 
 	{
-		var tmp:String = pText;
-		tmp = tmp.split("\\n").join("\n");
-		if (tmp != _text)
+		if (pText != _text)
 		{
 			_text = pText;
-			_text = _text.split("\\n").join("\n");
-			if (_autoUpperCase)
-			{
-				_text = _text.toUpperCase();
-			}
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return _text;
 	}
@@ -498,6 +473,7 @@ class FlxBitmapTextField extends FlxSprite
 			return;
 		}
 		
+		var preparedText:String = (_autoUpperCase) ? _text.toUpperCase() : _text;
 		var calcFieldWidth:Int = _fieldWidth;
 		var rows:Array<String> = [];
 		#if (flash || js)
@@ -511,7 +487,7 @@ class FlxBitmapTextField extends FlxSprite
 		var lineComplete:Bool;
 		
 		// get words
-		var lines:Array<String> = _text.split("\n");
+		var lines:Array<String> = preparedText.split("\n");
 		var i:Int = -1;
 		var j:Int = -1;
 		if (!_multiLine)
@@ -527,7 +503,15 @@ class FlxBitmapTextField extends FlxSprite
 			if (_fixedWidth)
 			{
 				lineComplete = false;
-				var words:Array<String> = lines[i].split(" ");
+				var words:Array<String> = [];
+				if (!wordWrap)
+				{
+					words = lines[i].split("\t").join(_tabSpaces).split(" ");
+				}
+				else
+				{
+					words = lines[i].split("\t").join(" \t ").split(" ");
+				}
 				
 				if (words.length > 0) 
 				{
@@ -536,11 +520,15 @@ class FlxBitmapTextField extends FlxSprite
 					while (!lineComplete) 
 					{
 						word = words[wordPos];
-						var currentRow:String = txt + word + " ";
 						var changed:Bool = false;
+						var currentRow:String = txt + word;
 						
 						if (_wordWrap)
 						{
+							var prevWord:String = (wordPos > 0) ? words[wordPos - 1] : "";
+							var nextWord:String = (wordPos < words.length) ? words[wordPos + 1] : "";
+							if (prevWord != "\t") currentRow += " ";
+							
 							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
 							{
 								if (txt == "")
@@ -555,7 +543,14 @@ class FlxBitmapTextField extends FlxSprite
 								txt = "";
 								if (_multiLine)
 								{
-									words.splice(0, wordPos);
+									if (word == "\t" && (wordPos < words.length))
+									{
+										words.splice(0, wordPos + 1);
+									}
+									else
+									{
+										words.splice(0, wordPos);
+									}
 								}
 								else
 								{
@@ -566,35 +561,53 @@ class FlxBitmapTextField extends FlxSprite
 							}
 							else
 							{
-								txt += word + " ";
+								if (word == "\t")
+								{
+									txt += _tabSpaces;
+								}
+								if (nextWord == "\t" || prevWord == "\t")
+								{
+									txt += word;
+								}
+								else
+								{
+									txt += word + " ";
+								}
 								wordPos++;
 							}
-							
 						}
 						else
 						{
 							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
 							{
-								j = 0;
-								tempStr = "";
-								wordLength = word.length;
-								while (j < wordLength)
+								if (word != "")
 								{
-									currentRow = txt + word.charAt(j);
-									if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+									j = 0;
+									tempStr = "";
+									wordLength = word.length;
+									while (j < wordLength)
 									{
-										rows.push(txt.substr(0, txt.length - 1));
-										txt = "";
-										word = "";
-										wordPos = words.length;
-										j = wordLength;
-										changed = true;
+										currentRow = txt + word.charAt(j);
+										if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+										{
+											rows.push(txt.substr(0, txt.length - 1));
+											txt = "";
+											word = "";
+											wordPos = words.length;
+											j = wordLength;
+											changed = true;
+										}
+										else
+										{
+											txt += word.charAt(j);
+										}
+										j++;
 									}
-									else
-									{
-										txt += word.charAt(j);
-									}
-									j++;
+								}
+								else
+								{
+									changed = false;
+									wordPos = words.length;
 								}
 							}
 							else
@@ -608,9 +621,8 @@ class FlxBitmapTextField extends FlxSprite
 						{
 							if (!changed) 
 							{
-								var subText:String = txt.substr(0, txt.length - 1);
-								calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(subText, _letterSpacing, _fontScale)));
-								rows.push(subText);
+								calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(txt, _letterSpacing, _fontScale)));
+								rows.push(txt);
 							}
 							lineComplete = true;
 						}
@@ -623,8 +635,9 @@ class FlxBitmapTextField extends FlxSprite
 			}
 			else
 			{
-				calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(lines[i], _letterSpacing, _fontScale)));
-				rows.push(lines[i]);
+				var lineWithoutTabs:String = lines[i].split("\t").join(_tabSpaces);
+				calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(lineWithoutTabs, _letterSpacing, _fontScale)));
+				rows.push(lineWithoutTabs);
 			}
 		}
 		
@@ -667,10 +680,16 @@ class FlxBitmapTextField extends FlxSprite
 		_drawData.splice(0, _drawData.length);
 		_bgDrawData.splice(0, _bgDrawData.length);
 		
-		// TODO: draw background
+		if (_node == null || _node.atlas == null)
+		{
+			return;
+		}
+		var nodeName:String = _node.atlas.name;
+		
+		// draw background
 		if (_background)
 		{
-			_bgDrawData.push(_font.bgTileID);		// tile_ID
+			_bgDrawData.push(_font.bgTileID(nodeName));		// tile_ID
 			_bgDrawData.push( -halfWidth);
 			_bgDrawData.push( -halfHeight);
 			
@@ -736,7 +755,7 @@ class FlxBitmapTextField extends FlxSprite
 						#if (flash || js)
 						_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 						#else
-						_font.render(_drawData, t, _outlineColor, _color, _alpha, px + ox + _padding - halfWidth, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+						_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - halfWidth, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
 						#end
 					}
 				}
@@ -748,13 +767,13 @@ class FlxBitmapTextField extends FlxSprite
 				#if (flash || js)
 				_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
-				_font.render(_drawData, t, _shadowColor, _color, _alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+				_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
 				#end
 			}
 			#if (flash || js)
 			_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 			#else
-			_font.render(_drawData, t, _textColor, _color, _alpha, ox + _padding - halfWidth, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
+			_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - halfWidth, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
 			#end
 			row++;
 		}
@@ -782,7 +801,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_background = value;
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return _background;
 	}
@@ -805,7 +823,6 @@ class FlxBitmapTextField extends FlxSprite
 			if (_background)
 			{
 				_pendingTextChange = true;
-				updateBitmapData();
 			}
 		}
 		return _backgroundColor;
@@ -829,7 +846,6 @@ class FlxBitmapTextField extends FlxSprite
 			_outline = false;
 			updateGlyphs(false, _shadow, false);
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		
 		return value;
@@ -852,7 +868,6 @@ class FlxBitmapTextField extends FlxSprite
 			_shadowColor = value;
 			updateGlyphs(false, _shadow, false);
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		
 		return value;
@@ -874,7 +889,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_padding = value;
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return value;
 	}
@@ -892,7 +906,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_fieldWidth = pWidth;
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		
 		return pWidth;
@@ -915,7 +928,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_alignment = pAlignment;
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return pAlignment;
 	}
@@ -936,7 +948,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_multiLine = pMultiLine;
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return pMultiLine;
 	}
@@ -959,7 +970,6 @@ class FlxBitmapTextField extends FlxSprite
 			_shadow = false;
 			updateGlyphs(false, false, true);
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return value;
 	}
@@ -981,7 +991,6 @@ class FlxBitmapTextField extends FlxSprite
 			_outlineColor = value;
 			updateGlyphs(false, false, _outline);
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return value;
 	}
@@ -1003,10 +1012,9 @@ class FlxBitmapTextField extends FlxSprite
 			_font = pFont;
 			updateGlyphs(true, _shadow, _outline);
 			_pendingTextChange = true;
-			updateBitmapData();
 			
 			#if (cpp || neko)
-			_tileSheetData = _font.tileSheetData;
+			pixels = _font.pixels;
 			#end
 		}
 		return pFont;
@@ -1028,7 +1036,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_lineSpacing = Math.floor(Math.abs(pSpacing));
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return pSpacing;
 	}
@@ -1051,7 +1058,6 @@ class FlxBitmapTextField extends FlxSprite
 			_fontScale = tmp;
 			updateGlyphs(true, _shadow, _outline);
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return pScale;
 	}
@@ -1070,7 +1076,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_letterSpacing = tmp;
 			_pendingTextChange = true;
-			updateBitmapData();
 		}
 		return _letterSpacing;
 	}
@@ -1087,10 +1092,7 @@ class FlxBitmapTextField extends FlxSprite
 		if (_autoUpperCase != value)
 		{
 			_autoUpperCase = value;
-			if (_autoUpperCase)
-			{
-				text = _text.toUpperCase();
-			}
+			_pendingTextChange = true;
 		}
 		return _autoUpperCase;
 	}
@@ -1108,7 +1110,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_wordWrap = value;
 			_pendingTextChange = true;
-			update();
 		}
 		return _wordWrap;
 	}
@@ -1126,12 +1127,11 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_fixedWidth = value;
 			_pendingTextChange = true;
-			update();
 		}
 		return _fixedWidth;
 	}
 	
-	private function updateGlyphs(?textGlyphs:Bool = false, ?shadowGlyphs:Bool = false, ?outlineGlyphs:Bool = false):Void
+	private function updateGlyphs(textGlyphs:Bool = false, shadowGlyphs:Bool = false, outlineGlyphs:Bool = false):Void
 	{
 		#if (flash || js)
 		if (textGlyphs)
@@ -1171,4 +1171,15 @@ class FlxBitmapTextField extends FlxSprite
 	}
 	#end
 	
+	override public function updateFrameData():Void
+	{
+	#if (cpp || neko)
+		if (_node != null && _font != null)
+		{
+			updateLayerProps();
+			_layer.isColored = true;
+			_font.updateGlyphData(_node);
+		}
+	#end
+	}
 }

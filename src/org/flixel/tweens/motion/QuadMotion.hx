@@ -18,7 +18,7 @@ class QuadMotion extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:Int = 0)
+	public function new(complete:CompleteCallback = null, type:Int = 0)
 	{
 		_distance = -1;
 		_fromX = _fromY = _toX = _toY = 0;
@@ -37,7 +37,7 @@ class QuadMotion extends Motion
 	 * @param	duration	Duration of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, duration:Float, ?ease:EaseFunction = null):Void
+	public function setMotion(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):Void
 	{
 		_distance = -1;
 		x = _fromX = fromX;
@@ -62,7 +62,7 @@ class QuadMotion extends Motion
 	 * @param	speed		Speed of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotionSpeed(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, speed:Float, ?ease:EaseFunction = null):Void
+	public function setMotionSpeed(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, speed:Float, ease:EaseFunction = null):Void
 	{
 		_distance = -1;
 		x = _fromX = fromX;

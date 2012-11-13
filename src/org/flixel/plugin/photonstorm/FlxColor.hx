@@ -88,9 +88,9 @@ class FlxColor
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
 	#if flash
-	public static function getAnalogousHarmony(color:UInt, ?threshold:Int = 30):Harmony
+	public static function getAnalogousHarmony(color:UInt, threshold:Int = 30):Harmony
 	#else
-	public static function getAnalogousHarmony(color:BitmapInt32, ?threshold:Int = 30):Harmony
+	public static function getAnalogousHarmony(color:BitmapInt32, threshold:Int = 30):Harmony
 	#end
 	{
 		var hsv:HSV = RGBtoHSV(color);
@@ -117,9 +117,9 @@ class FlxColor
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
 	#if flash
-	public static function getSplitComplementHarmony(color:UInt, ?threshold:Int = 30):Harmony
+	public static function getSplitComplementHarmony(color:UInt, threshold:Int = 30):Harmony
 	#else
-	public static function getSplitComplementHarmony(color:BitmapInt32, ?threshold:Int = 30):Harmony
+	public static function getSplitComplementHarmony(color:BitmapInt32, threshold:Int = 30):Harmony
 	#end
 	{
 		var hsv:HSV = RGBtoHSV(color);
@@ -263,9 +263,9 @@ class FlxColor
 	 * @return 32-bit ARGB color value (0xAARRGGBB)
 	 */
 	#if flash
-	public static function HSVtoRGB(h:Float, s:Float, v:Float, ?alpha:UInt = 255):UInt
+	public static function HSVtoRGB(h:Float, s:Float, v:Float, alpha:UInt = 255):UInt
 	#else
-	public static function HSVtoRGB(h:Float, s:Float, v:Float, ?alpha:Int = 255):BitmapInt32
+	public static function HSVtoRGB(h:Float, s:Float, v:Float, alpha:Int = 255):BitmapInt32
 	#end
 	{
 		#if flash
@@ -400,7 +400,7 @@ class FlxColor
 	
 	
 	#if flash
-	public static function interpolateColor(color1:UInt, color2:UInt, steps:UInt, currentStep:UInt, ?alpha:UInt = 255):UInt
+	public static function interpolateColor(color1:UInt, color2:UInt, steps:UInt, currentStep:UInt, alpha:UInt = 255):UInt
 	{
 		var src1:RGBA = getRGB(color1);
 		var src2:RGBA = getRGB(color2);
@@ -432,7 +432,7 @@ class FlxColor
 		return getColor24(r, g, b);
 	}
 	#else
-	public static function interpolateColor(color1:BitmapInt32, color2:BitmapInt32, steps:Int, currentStep:Int, ?alpha:Int = 255):BitmapInt32
+	public static function interpolateColor(color1:BitmapInt32, color2:BitmapInt32, steps:Int, currentStep:Int, alpha:Int = 255):BitmapInt32
 	{
 		var src1:RGBA = getRGB(color1);
 		var src2:RGBA = getRGB(color2);
@@ -477,7 +477,7 @@ class FlxColor
 	 * @return 32-bit color value with alpha
 	 */
 	#if flash
-	public static function getRandomColor(?min:UInt = 0, ?max:UInt = 255, ?alpha:UInt = 255):UInt
+	public static function getRandomColor(min:UInt = 0, max:UInt = 255, alpha:UInt = 255):UInt
 	{
 		//	Sanity checks
 		if (max > 255)
@@ -499,7 +499,7 @@ class FlxColor
 		return getColor32(alpha, red, green, blue);
 	}
 	#else
-	public static function getRandomColor(?min:Int = 0, ?max:Int = 255, ?alpha:Int = 255):BitmapInt32
+	public static function getRandomColor(min:Int = 0, max:Int = 255, alpha:Int = 255):BitmapInt32
 	{
 		//	Sanity checks
 		if (max > 255)

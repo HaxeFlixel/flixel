@@ -2,7 +2,6 @@
  * ...
  * @author Zaphod
  */
-
 package org.flixel;
 
 import nme.net.URLRequest;
@@ -19,7 +18,7 @@ class FlxU
 	 * 
 	 * @param	URL		The address of the web page.
 	 */
-	public static function openURL(URL:String):Void
+	inline public static function openURL(URL:String):Void
 	{
 		Lib.getURL(new URLRequest(URL), "_blank");
 	}
@@ -29,7 +28,7 @@ class FlxU
 	 * @param	Value	Any number.
 	 * @return	The absolute value of that number.
 	 */
-	static public function abs(Value:Float):Float
+	inline static public function abs(Value:Float):Float
 	{
 		return (Value > 0) ? Value : -Value;
 	}
@@ -39,7 +38,7 @@ class FlxU
 	 * @param	Value	Any number.
 	 * @return	The rounded value of that number.
 	 */
-	static public function floor(Value:Float):Int
+	inline static public function floor(Value:Float):Int
 	{
 		var number:Int = Std.int(Value);
 		return (Value > 0) ? (number) : ((number != Value) ? (number - 1) : (number));
@@ -50,7 +49,7 @@ class FlxU
 	 * @param	Value	Any number.
 	 * @return	The rounded value of that number.
 	 */
-	static public function ceil(Value:Float):Int
+	inline static public function ceil(Value:Float):Int
 	{
 		var number:Int = Std.int(Value);
 		return (Value > 0) ? ((number != Value) ? (number + 1) : (number)) : (number);
@@ -61,10 +60,9 @@ class FlxU
 	 * @param	Value	Any number.
 	 * @return	The rounded value of that number.
 	 */
-	static public function round(Value:Float):Int
+	inline static public function round(Value:Float):Int
 	{
-		var number:Int = Std.int(Value + ((Value > 0) ? 0.5 : -0.5));
-		return (Value > 0) ? (number) : ((number != Value) ? (number - 1) : (number));
+		return Std.int(Value + ((Value > 0) ? 0.5 : -0.5));
 	}
 	
 	/**
@@ -73,7 +71,7 @@ class FlxU
 	 * @param	Number2		Any number.
 	 * @return	The smaller of the two numbers.
 	 */
-	static public function min(Number1:Float, Number2:Float):Float
+	inline static public function min(Number1:Float, Number2:Float):Float
 	{
 		return (Number1 <= Number2) ? Number1 : Number2;
 	}
@@ -84,7 +82,7 @@ class FlxU
 	 * @param	Number2		Any number.
 	 * @return	The larger of the two numbers.
 	 */
-	static public function max(Number1:Float, Number2:Float):Float
+	inline static public function max(Number1:Float, Number2:Float):Float
 	{
 		return (Number1 >= Number2) ? Number1 : Number2;
 	}
@@ -98,7 +96,7 @@ class FlxU
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	static public function bound(Value:Float, Min:Float, Max:Float):Float
+	inline static public function bound(Value:Float, Min:Float, Max:Float):Float
 	{
 		var lowerBound:Float = (Value < Min) ? Min : Value;
 		return (lowerBound > Max) ? Max : lowerBound;
@@ -109,7 +107,7 @@ class FlxU
 	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	static public function srand(Seed:Float):Float
+	inline static public function srand(Seed:Float):Float
 	{
 		#if !neko
 		return ((69621 * Std.int(Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
@@ -126,7 +124,7 @@ class FlxU
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
 	 */
-	static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
+	inline static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
 	{
 		var i:Int = 0;
 		var index1:Int;
@@ -154,9 +152,10 @@ class FlxU
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	static public function getRandom(Objects:Array<Dynamic>, ?StartIndex:Int = 0, ?Length:Int = 0):Dynamic
+	inline static public function getRandom(Objects:Array<Dynamic>, StartIndex:Int = 0, Length:Int = 0):Dynamic
 	{
-		if(Objects != null)
+		var res:Dynamic = null;
+		if (Objects != null)
 		{
 			if (StartIndex < 0) StartIndex = 0;
 			if (Length < 0) Length = 0;
@@ -168,10 +167,10 @@ class FlxU
 			}
 			if (l > 0)
 			{
-				return Objects[StartIndex + Std.int(Math.random() * l)];
+				res = Objects[StartIndex + Std.int(Math.random() * l)];
 			}
 		}
-		return null;
+		return res;
 	}
 	
 	/**
@@ -179,7 +178,7 @@ class FlxU
 	 * Useful for finding out how long it takes to execute specific blocks of code.
 	 * @return	A <code>uint</code> to be passed to <code>FlxU.endProfile()</code>.
 	 */
-	static public function getTicks():Int
+	inline static public function getTicks():Int
 	{
 		return Lib.getTimer();
 	}
@@ -191,7 +190,7 @@ class FlxU
 	 * @param	EndTicks	The second timestamp from the system.
 	 * @return	A <code>String</code> containing the formatted time elapsed information.
 	 */
-	static public function formatTicks(StartTicks:Int, EndTicks:Int):String
+	inline static public function formatTicks(StartTicks:Int, EndTicks:Int):String
 	{
 		return (Math.abs(EndTicks - StartTicks) / 1000) + "s";
 	}
@@ -207,9 +206,9 @@ class FlxU
 	 * @return  The color as a <code>uint</code>.
 	 */
 	#if flash
-	static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, ?Alpha:Float = 1.0):UInt
+	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
 	#else
-	static public function makeColor(Red:Int, Green:Int, Blue:Int, ?Alpha:Float = 1.0):Int
+	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):Int
 	#end
 	{
 		return (Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
@@ -225,9 +224,9 @@ class FlxU
 	 * @return	The color as a <code>uint</code>.
 	 */
 	#if flash
-	static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, ?Alpha:Float = 1.0):UInt
+	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
 	#else
-	static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, ?Alpha:Float = 1.0):Int
+	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):Int
 	#end
 	{
 		var red:Float;
@@ -297,9 +296,9 @@ class FlxU
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
 	#if flash
-	static public function getRGBA(Color:UInt, ?Results:Array<Float> = null):Array<Float>
+	inline static public function getRGBA(Color:UInt, Results:Array<Float> = null):Array<Float>
 	#else
-	static public function getRGBA(Color:Int, ?Results:Array<Float> = null):Array<Float>
+	inline static public function getRGBA(Color:Int, Results:Array<Float> = null):Array<Float>
 	#end
 	{
 		if (Results == null)
@@ -322,9 +321,9 @@ class FlxU
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
 	#if flash
-	static public function getHSB(Color:UInt, ?Results:Array<Float> = null):Array<Float>
+	inline static public function getHSB(Color:UInt, Results:Array<Float> = null):Array<Float>
 	#else
-	static public function getHSB(Color:Int, ?Results:Array<Float> = null):Array<Float>
+	inline static public function getHSB(Color:Int, Results:Array<Float> = null):Array<Float>
 	#end
 	{
 		if (Results == null)
@@ -381,7 +380,7 @@ class FlxU
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted <code>String</code>, like "1:03".
 	 */
-	static public function formatTime(Seconds:Int, ?ShowMS:Bool = false):String
+	inline static public function formatTime(Seconds:Int, ShowMS:Bool = false):String
 	{
 		var timeString:String = Std.int(Seconds / 60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;
@@ -410,18 +409,18 @@ class FlxU
 	 * @param	AnyArray	Any <code>Array</code> object.
 	 * @return	A comma-separated <code>String</code> containing the <code>.toString()</code> output of each element in the array.
 	 */
-	static public function formatArray(AnyArray:Array<Dynamic>):String
+	inline static public function formatArray(AnyArray:Array<Dynamic>):String
 	{
-		if ((AnyArray == null) || (AnyArray.length <= 0))
+		var string:String = "";
+		if ((AnyArray != null) && (AnyArray.length > 0))
 		{
-			return "";
-		}
-		var string:String = AnyArray[0].toString();
-		var i:Int = 0;
-		var l:Int = AnyArray.length;
-		while (i < l)
-		{
-			string += ", " + AnyArray[i++].toString();
+			string = Std.string(AnyArray[0]);
+			var i:Int = 1;
+			var l:Int = AnyArray.length;
+			while (i < l)
+			{
+				string += ", " + Std.string(AnyArray[i++]);
+			}
 		}
 		return string;
 	}
@@ -436,7 +435,7 @@ class FlxU
 	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.  Default value is true.
 	 * @return	A nicely formatted <code>String</code>.  Does not include a dollar sign or anything!
 	 */
-	static public function formatMoney(Amount:Float, ?ShowDecimal:Bool = true, ?EnglishStyle:Bool = true):String
+	inline static public function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
 		var helper:Int;
 		var amount:Int = Math.floor(Amount);
@@ -490,10 +489,9 @@ class FlxU
 	 * @param	Simple	Returns only the class name, not the package or packages.
 	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
 	 */
-	static public function getClassName(Obj:Dynamic, ?Simple:Bool = false):String
+	inline static public function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
 		var s:String = Type.getClassName(Type.getClass(Obj));
-		//trace("TODO: makes sure the class name is being parsed correctly.");
 		if (s != null)
 		{
 			s = StringTools.replace(s, "::", ".");
@@ -502,7 +500,6 @@ class FlxU
 				s = s.substr(s.lastIndexOf(".") + 1);
 			}
 		}
-		
 		return s;
 	}
 	
@@ -512,7 +509,7 @@ class FlxU
 	 * @param	Object2		The second object you want to check.
 	 * @return	Whether they have the same class name or not.
 	 */
-	static public function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
+	inline static public function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
 	{
 		return Type.getClassName(Object1) == Type.getClassName(Object2);
 	}
@@ -522,7 +519,7 @@ class FlxU
 	 * @param	Name	The <code>String</code> name of the <code>Class</code> you are interested in.
 	 * @return	A <code>Class</code> object.
 	 */
-	public static function getClass(Name:String):Class<Dynamic>
+	inline public static function getClass(Name:String):Class<Dynamic>
 	{
 		return Type.resolveClass(Name);
 	}
@@ -533,10 +530,10 @@ class FlxU
 	 * @param	Velocity		Any component of velocity (e.g. 20).
 	 * @param	Acceleration	Rate at which the velocity is changing.
 	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-	 * @param	Max				An absolute value cap for the velocity.
+	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
 	 * @return	The altered Velocity value.
 	 */
-	static public function computeVelocity(Velocity:Float, ?Acceleration:Float = 0, ?Drag:Float = 0, ?Max:Float = 10000):Float
+	inline static public function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
 	{
 		if (Acceleration != 0)
 		{
@@ -558,7 +555,7 @@ class FlxU
 				Velocity = 0;
 			}
 		}
-		if((Velocity != 0) && (Max != 10000))
+		if((Velocity != 0) && (Max != 0))
 		{
 			if (Velocity > Max)
 			{
@@ -584,7 +581,7 @@ class FlxU
 	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
 	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
 	 */
-	static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint = null):FlxPoint
+	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, point:FlxPoint = null):FlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
@@ -672,34 +669,33 @@ class FlxU
 	 * @param	Point2		The Y coordinate of the point.
 	 * @return	The angle in degrees, between -180 and 180.
 	 */
-	static public function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
+	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
 	{
 		var x:Float = Point2.x - Point1.x;
 		var y:Float = Point2.y - Point1.y;
-		if ((x == 0) && (y == 0))
-		{
-			return 0;
-		}
-		var c1:Float = 3.14159265 * 0.25;
-		var c2:Float = 3 * c1;
-		var ay:Float = (y < 0) ? -y : y;
 		var angle:Float = 0;
-		if (x >= 0)
+		if ((x != 0) || (y != 0))
 		{
-			angle = c1 - c1 * ((x - ay) / (x + ay));
-		}
-		else
-		{
-			angle = c2 - c1 * ((x + ay) / (ay - x));
-		}
-		angle = ((y < 0)? -angle:angle) * 57.2957796;
-		if (angle > 90)
-		{
-			angle = angle - 270;
-		}
-		else
-		{
-			angle += 90;
+			var c1:Float = 3.14159265 * 0.25;
+			var c2:Float = 3 * c1;
+			var ay:Float = (y < 0) ? -y : y;
+			if (x >= 0)
+			{
+				angle = c1 - c1 * ((x - ay) / (x + ay));
+			}
+			else
+			{
+				angle = c2 - c1 * ((x + ay) / (ay - x));
+			}
+			angle = ((y < 0)? -angle:angle) * 57.2957796;
+			if (angle > 90)
+			{
+				angle = angle - 270;
+			}
+			else
+			{
+				angle += 90;
+			}
 		}
 		
 		return angle;
@@ -711,21 +707,25 @@ class FlxU
 	 * @param Point2	A <code>FlxPoint</code> object referring to the second location.
 	 * @return	The distance between the two points as a floating point <code>Number</code> object.
 	 */
-	static public function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
+	inline static public function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
 	{
 		var dx:Float = Point1.x - Point2.x;
 		var dy:Float = Point1.y - Point2.y;
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 	
-	static public function ArrayIndexOf(array:Array<Dynamic>, whatToFind:Dynamic, ?fromIndex:Int = 0):Int
+	inline static public function ArrayIndexOf(array:Array<Dynamic>, whatToFind:Dynamic, fromIndex:Int = 0):Int
 	{
 		var len:Int = array.length;
+		var index:Int = -1;
 		for (i in fromIndex...len)
 		{
-			if (array[i] == whatToFind) return i;
+			if (array[i] == whatToFind) 
+			{
+				index = i;
+			}
 		}
-		return -1;
+		return index;
 	}
 	
 	static public function SetArrayLength(array:Array<Dynamic>, newLength:Int):Void
@@ -751,16 +751,16 @@ class FlxU
 		
 	}
 	
-	static public function fromIntToUInt(number:Int):Int
+	inline static public function fromIntToUInt(number:Int):Int
 	{
 		return ((number < 0) ? -number : number);
 	}
 	
-	#if flash
-	public static var MIN_VALUE:Float = 0.0000000000000001;
+	#if (flash || js)
+	inline public static var MIN_VALUE:Float = 0.0000000000000001;
 	#else
-	public static var MIN_VALUE:Float = 5e-324;
+	inline public static var MIN_VALUE:Float = 5e-324;
 	#end
-	public static var MAX_VALUE:Float = 1.79e+308;
+	inline public static var MAX_VALUE:Float = 1.79e+308;
 	
 }

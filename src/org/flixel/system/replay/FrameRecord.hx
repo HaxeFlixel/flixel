@@ -35,7 +35,7 @@ class FrameRecord
 	 * @param Mouse		Mouse data from the mouse manager.
 	 * @return A reference to this <code>FrameRecord</code> object.
 	 */
-	public function create(Frame:Float, ?Keys:Array<CodeValuePair> = null, ?Mouse:MouseRecord = null):FrameRecord
+	public function create(Frame:Float, Keys:Array<CodeValuePair> = null, Mouse:MouseRecord = null):FrameRecord
 	{
 		frame = Math.floor(Frame);
 		keys = Keys;

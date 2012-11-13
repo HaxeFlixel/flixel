@@ -5,10 +5,7 @@ import nme.display.BitmapInt32;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
-
-#if (cpp || neko)
-import org.flixel.tileSheetManager.TileSheetManager;
-#end
+import org.flixel.FlxLayer;
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -50,17 +47,18 @@ class FlxText extends FlxSprite
 	 * @param	Y				The Y position of the text.
 	 * @param	Width			The width of the text object (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
-	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or nto
+	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 */
-	public function new(X:Float, Y:Float, Width:Int, ?Text:String = null, ?EmbeddedFont:Bool = true)
+	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true)
 	{
+		super(X, Y);
 		Width = FlxU.fromIntToUInt(Width);
 		
-		super(X, Y);
-		#if (flash || cpp)
-		makeGraphic(Width, 1, 0);
-		#elseif neko
-		makeGraphic(Width, 1, {rgb: 0, a: 0});
+		var key:String = FlxG.getUniqueBitmapKey("text");
+		#if !neko
+		makeGraphic(Width, 1, 0, false, key);
+		#else
+		makeGraphic(Width, 1, {rgb: 0, a: 0}, false, key);
 		#end
 		
 		if (Text == null)
@@ -73,7 +71,6 @@ class FlxText extends FlxSprite
 		_textField.multiline = true;
 		_textField.wordWrap = true;
 		var format:TextFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
-		//_textField.setTextFormat(format);
 		_textField.defaultTextFormat = format;
 		_textField.text = Text;
 		#if flash
@@ -92,7 +89,8 @@ class FlxText extends FlxSprite
 		_regen = true;
 		_shadow = 0;
 		allowCollisions = FlxObject.NONE;
-		#if flash
+		moves = false;
+		#if (flash || js)
 		calcFrame();
 		#else
 		if (Text != "")
@@ -126,14 +124,14 @@ class FlxText extends FlxSprite
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	#if flash
-	public function setFormat(?Font:String = null, ?Size:Float = 8, ?Color:UInt = 0xffffff, ?Alignment:String = null, ?ShadowColor:UInt = 0):FlxText
+	public function setFormat(Font:String = null, Size:Float = 8, Color:UInt = 0xffffff, Alignment:String = null, ShadowColor:UInt = 0):FlxText
 	#else
-	public function setFormat(?Font:String = null, ?Size:Float = 8, ?Color:Int = 0xffffff, ?Alignment:String = null, ?ShadowColor:Int = 0):FlxText
+	public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0):FlxText
 	#end
 	{
 		if (Font == null)
 		{
-			#if flash
+			#if (flash || js)
 			Font = "";
 			#else
 			Font = FlxAssets.nokiaFont;
@@ -148,7 +146,7 @@ class FlxText extends FlxSprite
 		_textField.setTextFormat(format);
 		_shadow = ShadowColor;
 		_regen = true;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -176,7 +174,7 @@ class FlxText extends FlxSprite
 		if(_textField.text != ot)
 		{
 			_regen = true;
-			#if flash
+			#if (flash || js)
 			calcFrame();
 			#else
 			calcFrame(true);
@@ -190,7 +188,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The size of the text being displayed.
 	 */
-	 public function getSize():Float
+	public function getSize():Float
 	{
 		return _textField.defaultTextFormat.size;
 	}
@@ -205,7 +203,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -224,14 +222,13 @@ class FlxText extends FlxSprite
 	#else
 	override public function getColor():BitmapInt32
 	{
-		#if cpp
+		#if (cpp || js)
 		return _textField.defaultTextFormat.color;
 		#elseif neko
 		return { rgb: _textField.defaultTextFormat.color, a: 0xff };
 		#end
 	}
 	#end
-	
 	
 	/**
 	 * @private
@@ -251,7 +248,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -279,7 +276,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
 		_regen = true;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -306,7 +303,7 @@ class FlxText extends FlxSprite
 		format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = format;
 		_textField.setTextFormat(format);
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -336,7 +333,7 @@ class FlxText extends FlxSprite
 	#end
 	{
 		_shadow = Color;
-		#if flash
+		#if (flash || js)
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -347,18 +344,18 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal function to update the current animation frame.
 	 */
-	#if flash
+	#if (flash || js)
 	override private function calcFrame():Void
 	#else
-	override private function calcFrame(?AreYouSure:Bool = false):Void
+	override private function calcFrame(AreYouSure:Bool = false):Void
 	#end
 	{
 		#if (cpp || neko)
 		if (AreYouSure)
 		{
+			_regen = true;
 		#end
-		
-			if(_regen)
+			if (_regen)
 			{
 				//Need to generate a new buffer to store the text graphic
 				height = _textField.textHeight;
@@ -385,14 +382,18 @@ class FlxText extends FlxSprite
 				#end
 			}
 			
-			if((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
+			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
 			{
 				//Now that we've cleared a buffer, we need to actually render the text to it
 				var format:TextFormat = _textField.defaultTextFormat;
 				var formatAdjusted:TextFormat = format;
 				_matrix.identity();
 				//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
+				#if js
+				if (format.align == TextFormatAlign.CENTER)
+				#else
 				if ((format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
+				#end
 				{
 					formatAdjusted = new TextFormat(format.font, format.size, format.color);
 					formatAdjusted.align = TextFormatAlign.LEFT;
@@ -404,7 +405,7 @@ class FlxText extends FlxSprite
 					#end
 				}
 				//Render a single pixel shadow beneath the text
-				if(_shadow > 0)
+				if (_shadow > 0)
 				{
 					_textField.setTextFormat(new TextFormat(formatAdjusted.font, formatAdjusted.size, _shadow, null, null, null, null, null, formatAdjusted.align));
 					_matrix.translate(1, 1);
@@ -416,26 +417,16 @@ class FlxText extends FlxSprite
 				_pixels.draw(_textField, _matrix, _colorTransform);
 				_textField.setTextFormat(new TextFormat(format.font, format.size, format.color, null, null, null, null, null, format.align));
 			}
-			
 			#if (cpp || neko)
-			if (_tileSheetData != null)
-			{
-				TileSheetManager.removeTileSheet(_tileSheetData);
-			}
-			_tileSheetData = TileSheetManager.addTileSheet(_pixels);
-			_framesData = _tileSheetData.addSpriteFramesData(Math.floor(width), Math.floor(height));
-			#end
-			
+			updateLayerInfo();
+			#else
 			//Finally, update the visible pixels
 			if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
 			{
-				#if (flash || cpp)
 				framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
-				#elseif neko
-				framePixels = new BitmapData(_pixels.width, _pixels.height, true, {rgb: 0, a: 0});
-				#end
 			}
 			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
+			#end
 			
 		#if (cpp || neko)
 			origin.make(frameWidth * 0.5, frameHeight * 0.5);
@@ -456,7 +447,7 @@ class FlxText extends FlxSprite
 	/**
 	 * Method for converting string to TextFormatAlign
 	 */
-	#if flash
+	#if (flash || js)
 	private function convertTextAlignmentFromString(strAlign:String):TextFormatAlign
 	{
 		if (strAlign == "right")
@@ -483,5 +474,41 @@ class FlxText extends FlxSprite
 	}
 	#end
 	
+	/**
+	 * FlxText objects can't be added on any level. They create their own layers
+	 */
+	#if (cpp || neko)
+	override private function set_layer(value:FlxLayer):FlxLayer 
+	{
+		return value;
+	}
+	#end
 	
+	override public function updateLayerInfo(updateAtlas:Bool = false):Void
+	{
+		#if (cpp || neko)
+		_layer = FlxG.state.getLayerFor(_bitmapDataKey);
+		if (_pixels != FlxG._cache.get(_bitmapDataKey))
+		{
+			FlxG._cache.get(_bitmapDataKey).dispose();
+			FlxG._cache.set(_bitmapDataKey, _pixels);
+			_layer.atlas.clearAndFillWith(_pixels);
+			_layer.atlas = _layer.atlas;
+		}
+		_node = _layer.atlas.getNodeByKey(_bitmapDataKey);
+		updateFrameData();
+		#end
+	}
+	
+	override public function updateFrameData():Void
+	{
+	#if (cpp || neko)
+		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
+		{
+			updateLayerProps();
+			_framesData = _node.addSpriteFramesData(Math.floor(width), Math.floor(height));
+			_frameID = _framesData.frameIDs[0];
+		}
+	#end
+	}
 }

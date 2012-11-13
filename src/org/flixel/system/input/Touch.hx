@@ -50,7 +50,7 @@ class Touch extends FlxPoint
 	 * @param	Y			stageX touch coordinate
 	 * @param	PointID		touchPointID of the touch
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?PointID:Int = 0)
+	public function new(X:Float = 0, Y:Float = 0, PointID:Int = 0)
 	{
 		super();
 		screenX = 0;
@@ -138,7 +138,7 @@ class Touch extends FlxPoint
 	 * @param point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return The touch point's location in world space.
 	 */
-	public function getWorldPosition(?Camera:FlxCamera = null, ?point:FlxPoint = null):FlxPoint
+	public function getWorldPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
 	{
 		if (Camera == null)
 		{
@@ -161,7 +161,7 @@ class Touch extends FlxPoint
 	 * @param point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return The touch point's location in screen space.
 	 */
-	public function getScreenPosition(?Camera:FlxCamera = null, ?point:FlxPoint = null):FlxPoint
+	public function getScreenPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
 	{
 		if (Camera == null)
 		{

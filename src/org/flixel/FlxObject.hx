@@ -15,6 +15,11 @@ import org.flixel.FlxBasic;
 class FlxObject extends FlxBasic
 {
 	/**
+	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
+	 * Don't modify this unless your objects are passing through eachother.
+	 */
+	static public var SEPARATE_BIAS:Float = 4;
+	/**
 	 * Generic value for "left" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
 	static public inline var LEFT:Int	= 0x0001;
@@ -50,10 +55,6 @@ class FlxObject extends FlxBasic
 	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	static public inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
-	/**
-	 * Handy constant used during collision resolution (see <code>separateX()</code> and <code>separateY()</code>).
-	 */
-	static public inline var OVERLAP_BIAS:Float = 4;
 	
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
@@ -188,15 +189,15 @@ class FlxObject extends FlxBasic
 	/**
 	 * This is just a pre-allocated x-y point container to be used however you like
 	 */
-	private var _point:FlxPoint;
+	public var _point:FlxPoint;
 	/**
 	 * This is just a pre-allocated rectangle container to be used however you like
 	 */
-	private var _rect:FlxRect;
+	public var _rect:FlxRect;
 	/**
 	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
 	 * FlxObject and FlxSprite default to true.
-	 * FlxText, FlxTileblock, FlxTilemap and FlxSound default to false.
+	 * FlxText, FlxTileblock and FlxTilemap default to false.
 	 */
 	public var moves:Bool;
 	/**
@@ -256,10 +257,22 @@ class FlxObject extends FlxBasic
 	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
 	 */
 	private var _pathRotate:Bool;
+	
 	/**
-	 * Internal flag for whether the object's should stop once it has reached the end of the path.
+	 * Overriding this will force a specific color to be used for debug rect.
 	 */
-	private var _pathAutoStop:Bool;
+	#if flash
+	public var debugBoundingBoxColor(default, onBoundingBoxColorSet):UInt;
+	#else
+	public var debugBoundingBoxColor(default, onBoundingBoxColorSet):Int;
+	#end
+	private var _boundingBoxColorOverritten:Bool = false;
+	private function onBoundingBoxColorSet(val:Int):Int 
+	{
+		_boundingBoxColorOverritten = true;
+		debugBoundingBoxColor = val;
+		return val; 
+	}
 	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
@@ -269,7 +282,7 @@ class FlxObject extends FlxBasic
 	 * @param	Width	Desired width of the rectangle.
 	 * @param	Height	Desired height of the rectangle.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Width:Float = 0, ?Height:Float = 0)
+	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
 	{
 		super();
 		
@@ -320,8 +333,6 @@ class FlxObject extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
-		super.destroy();
-		
 		velocity = null;
 		acceleration = null;
 		drag = null;
@@ -336,6 +347,7 @@ class FlxObject extends FlxBasic
 			path.destroy();
 		}
 		path = null;
+		super.destroy();
 	}
 	
 	/**
@@ -348,16 +360,13 @@ class FlxObject extends FlxBasic
 	{
 		FlxBasic._ACTIVECOUNT++;
 		
-		if(_flickerTimer != 0)
+		if(_flickerTimer > 0)
 		{
-			if(_flickerTimer > 0)
+			_flickerTimer -= FlxG.elapsed;
+			if(_flickerTimer <= 0)
 			{
-				_flickerTimer = _flickerTimer - FlxG.elapsed;
-				if(_flickerTimer <= 0)
-				{
-					_flickerTimer = 0;
-					_flicker = false;
-				}
+				_flickerTimer = 0;
+				_flicker = false;
 			}
 		}
 		
@@ -391,7 +400,7 @@ class FlxObject extends FlxBasic
 	 * Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
-	private function updateMotion():Void
+	inline private function updateMotion():Void
 	{
 		var delta:Float;
 		var velocityDelta:Float;
@@ -428,10 +437,10 @@ class FlxObject extends FlxBasic
 		var camera:FlxCamera;
 		var i:Int = 0;
 		var l:Int = cameras.length;
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
-			if (!onScreen(camera))
+			if (!onScreenObject(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
@@ -449,7 +458,7 @@ class FlxObject extends FlxBasic
 	 * 
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
-	override public function drawDebug(?Camera:FlxCamera = null):Void
+	override public function drawDebug(Camera:FlxCamera = null):Void
 	{
 		if (Camera == null)
 		{
@@ -459,58 +468,55 @@ class FlxObject extends FlxBasic
 		//get bounding box coordinates
 		var boundingBoxX:Float = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		var boundingBoxY:Float = y - Std.int(Camera.scroll.y * scrollFactor.y);
-		#if flash
+		#if (flash || js)
 		boundingBoxX = Std.int(boundingBoxX + ((boundingBoxX > 0)?0.0000001: -0.0000001));
 		boundingBoxY = Std.int(boundingBoxY + ((boundingBoxY > 0)?0.0000001: -0.0000001));
 		var boundingBoxWidth:Int = (width != Std.int(width)) ? Math.floor(width) : Math.floor(width - 1);
 		var boundingBoxHeight:Int = (height != Std.int(height)) ? Math.floor(height) : Math.floor(height - 1);
-		var boundingBoxColor:UInt;
-		#else
-		var boundingBoxColor:Int;
 		#end
 		
-		if(allowCollisions != FlxObject.NONE)
+		if (allowCollisions != FlxObject.NONE && !_boundingBoxColorOverritten)
 		{
 			if (allowCollisions != ANY)
 			{
 				#if !neko
-				boundingBoxColor = FlxG.PINK;
+				debugBoundingBoxColor = FlxG.PINK;
 				#else
-				boundingBoxColor = FlxG.PINK.rgb;
+				debugBoundingBoxColor = FlxG.PINK.rgb;
 				#end
 			}
 			if (immovable)
 			{
 				#if !neko
-				boundingBoxColor = FlxG.GREEN;
+				debugBoundingBoxColor = FlxG.GREEN;
 				#else
-				boundingBoxColor = FlxG.GREEN.rgb;
+				debugBoundingBoxColor = FlxG.GREEN.rgb;
 				#end
 			}
 			else
 			{
 				#if !neko
-				boundingBoxColor = FlxG.RED;
+				debugBoundingBoxColor = FlxG.RED;
 				#else
-				boundingBoxColor = FlxG.RED.rgb;
+				debugBoundingBoxColor = FlxG.RED.rgb;
 				#end
 			}
 		}
-		else
+		else if (!_boundingBoxColorOverritten)
 		{
 			#if !neko
-			boundingBoxColor = FlxG.BLUE;
+			debugBoundingBoxColor = FlxG.BLUE;
 			#else
-			boundingBoxColor = FlxG.BLUE.rgb;
+			debugBoundingBoxColor = FlxG.BLUE.rgb;
 			#end
 		}
 		
 		//fill static graphics object with square shape
-		#if flash
+		#if (flash || js)
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		gfx.moveTo(boundingBoxX, boundingBoxY);
-		gfx.lineStyle(1, boundingBoxColor, 0.5);
+		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
 		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY);
 		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY + boundingBoxHeight);
 		gfx.lineTo(boundingBoxX, boundingBoxY + boundingBoxHeight);
@@ -519,7 +525,7 @@ class FlxObject extends FlxBasic
 		Camera.buffer.draw(FlxG.flashGfxSprite);
 		#else
 		var gfx:Graphics = Camera._debugLayer.graphics;
-		gfx.lineStyle(1, boundingBoxColor, 0.5);
+		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
 		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
 		#end
 	}
@@ -532,9 +538,8 @@ class FlxObject extends FlxBasic
 	 * @param	Speed		How fast to travel along the path in pixels per second.
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
-	 * @param  	StopWhenFinished  Automatically stop the player from moving once they have reached the final node in the path. Default is "false" just so it won't conflict with code written for previous versions.
 	 */
-	public function followPath(Path:FlxPath, ?Speed:Float = 100, ?Mode:Int = 0x000000, ?AutoRotate:Bool = false, ?StopWhenFinished:Bool = false):Void
+	public function followPath(Path:FlxPath, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false):Void
 	{
 		if(Path.nodes.length <= 0)
 		{
@@ -546,7 +551,6 @@ class FlxObject extends FlxBasic
 		pathSpeed = FlxU.abs(Speed);
 		_pathMode = Mode;
 		_pathRotate = AutoRotate;
-		_pathAutoStop = StopWhenFinished;
 		
 		//get starting node
 		if((_pathMode == PATH_BACKWARD) || (_pathMode == PATH_LOOP_BACKWARD))
@@ -565,15 +569,11 @@ class FlxObject extends FlxBasic
 	 * Tells this object to stop following the path its on.
 	 * @param	DestroyPath		Tells this function whether to call destroy on the path object.  Default value is false.
 	 */
-	public function stopFollowingPath(?DestroyPath:Bool = false, ?StopMoving:Bool = false):Void
+	public function stopFollowingPath(DestroyPath:Bool = false):Void
 	{
 		pathSpeed = 0;
-		
-		if (StopMoving)	
-		{	
-			velocity.x = 0;
-			velocity.y = 0;
-		}
+		velocity.x = 0;
+		velocity.y = 0;
 		
 		if(DestroyPath && (path != null))
 		{
@@ -586,12 +586,12 @@ class FlxObject extends FlxBasic
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
 	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
 	 */
-	private function advancePath(?Snap:Bool = true):FlxPoint
+	private function advancePath(Snap:Bool = true):FlxPoint
 	{
-		if(Snap)
+		if (Snap)
 		{
 			var oldNode:FlxPoint = path.nodes[_pathNodeIndex];
-			if(oldNode != null)
+			if (oldNode != null)
 			{
 				if ((_pathMode & PATH_VERTICAL_ONLY) == 0)
 				{
@@ -606,38 +606,37 @@ class FlxObject extends FlxBasic
 		
 		_pathNodeIndex += _pathInc;
 		
-		if((_pathMode & PATH_BACKWARD) > 0)
+		if ((_pathMode & PATH_BACKWARD) > 0)
 		{
-			if(_pathNodeIndex < 0)
+			if (_pathNodeIndex < 0)
 			{
 				_pathNodeIndex = 0;
-				//pathSpeed = 0;
-				stopFollowingPath(false, _pathAutoStop);
+				stopFollowingPath(false);
 			}
 		}
-		else if((_pathMode & PATH_LOOP_FORWARD) > 0)
+		else if ((_pathMode & PATH_LOOP_FORWARD) > 0)
 		{
-			if(_pathNodeIndex >= path.nodes.length)
+			if (_pathNodeIndex >= path.nodes.length)
 			{
 				_pathNodeIndex = 0;
 			}
 		}
-		else if((_pathMode & PATH_LOOP_BACKWARD) > 0)
+		else if ((_pathMode & PATH_LOOP_BACKWARD) > 0)
 		{
-			if(_pathNodeIndex < 0)
+			if (_pathNodeIndex < 0)
 			{
 				_pathNodeIndex = path.nodes.length - 1;
-				if(_pathNodeIndex < 0)
+				if (_pathNodeIndex < 0)
 				{
 					_pathNodeIndex = 0;
 				}
 			}
 		}
-		else if((_pathMode & PATH_YOYO) > 0)
+		else if ((_pathMode & PATH_YOYO) > 0)
 		{
-			if(_pathInc > 0)
+			if (_pathInc > 0)
 			{
-				if(_pathNodeIndex >= path.nodes.length)
+				if (_pathNodeIndex >= path.nodes.length)
 				{
 					_pathNodeIndex = path.nodes.length - 2;
 					if (_pathNodeIndex < 0)
@@ -647,7 +646,7 @@ class FlxObject extends FlxBasic
 					_pathInc = -_pathInc;
 				}
 			}
-			else if(_pathNodeIndex < 0)
+			else if (_pathNodeIndex < 0)
 			{
 				_pathNodeIndex = 1;
 				if (_pathNodeIndex >= path.nodes.length)
@@ -663,11 +662,10 @@ class FlxObject extends FlxBasic
 		}
 		else
 		{
-			if(_pathNodeIndex >= path.nodes.length)
+			if (_pathNodeIndex >= path.nodes.length)
 			{
 				_pathNodeIndex = path.nodes.length - 1;
-				//pathSpeed = 0;
-				stopFollowingPath(false, _pathAutoStop);
+				stopFollowingPath(false);
 			}
 		}
 
@@ -680,7 +678,7 @@ class FlxObject extends FlxBasic
 	 * The first half of the function decides if the object can advance to the next node in the path,
 	 * while the second half handles actually picking a velocity toward the next node.
 	 */
-	private function updatePathMotion():Void
+	inline private function updatePathMotion():Void
 	{
 		//first check if we need to be pointing at the next node yet
 		_point.x = x + width * 0.5;
@@ -692,16 +690,16 @@ class FlxObject extends FlxBasic
 		var horizontalOnly:Bool = (_pathMode & PATH_HORIZONTAL_ONLY) > 0;
 		var verticalOnly:Bool = (_pathMode & PATH_VERTICAL_ONLY) > 0;
 		
-		if(horizontalOnly)
+		if (horizontalOnly)
 		{
-			if (((deltaX > 0)?deltaX: -deltaX) < pathSpeed * FlxG.elapsed)
+			if (((deltaX > 0) ? deltaX : -deltaX) < pathSpeed * FlxG.elapsed)
 			{
 				node = advancePath();
 			}
 		}
 		else if(verticalOnly)
 		{
-			if (((deltaY > 0)?deltaY: -deltaY) < pathSpeed * FlxG.elapsed)
+			if (((deltaY > 0) ? deltaY : -deltaY) < pathSpeed * FlxG.elapsed)
 			{
 				node = advancePath();
 			}
@@ -720,9 +718,9 @@ class FlxObject extends FlxBasic
 			//set velocity based on path mode
 			_point.x = x + width * 0.5;
 			_point.y = y + height * 0.5;
-			if(horizontalOnly || (_point.y == node.y))
+			if (horizontalOnly || (_point.y == node.y))
 			{
-				velocity.x = (_point.x < node.x)?pathSpeed: -pathSpeed;
+				velocity.x = (_point.x < node.x) ? pathSpeed : -pathSpeed;
 				if (velocity.x < 0)
 				{
 					pathAngle = -90;
@@ -736,9 +734,9 @@ class FlxObject extends FlxBasic
 					velocity.y = 0;
 				}
 			}
-			else if(verticalOnly || (_point.x == node.x))
+			else if (verticalOnly || (_point.x == node.x))
 			{
-				velocity.y = (_point.y < node.y)?pathSpeed: -pathSpeed;
+				velocity.y = (_point.y < node.y) ? pathSpeed : -pathSpeed;
 				if (velocity.y < 0)
 				{
 					pathAngle = 0;
@@ -759,7 +757,7 @@ class FlxObject extends FlxBasic
 			}
 			
 			//then set object rotation if necessary
-			if(_pathRotate)
+			if (_pathRotate)
 			{
 				angularVelocity = 0;
 				angularAcceleration = 0;
@@ -777,7 +775,7 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
-	public function overlaps(ObjectOrGroup:FlxBasic, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
@@ -785,8 +783,7 @@ class FlxObject extends FlxBasic
 			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
-			//while(i < length)
-			while(i < grp.length)
+			while (i < grp.length)
 			{
 				if (overlaps(members[i++], InScreenSpace, Camera))
 				{
@@ -831,7 +828,7 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
-	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if(Std.is(ObjectOrGroup, FlxGroup))
 		{
@@ -840,7 +837,6 @@ class FlxObject extends FlxBasic
 			var i:Int = 0;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
-			//while(i < length)
 			while(i < Std.int(grp.length))
 			{
 				if (overlapsAt(X, Y, members[i++], InScreenSpace, Camera))
@@ -888,7 +884,7 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
-	public function overlapsPoint(point:FlxPoint, ?InScreenSpace:Bool = false, ?Camera:FlxCamera = null):Bool
+	public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
 		if (!InScreenSpace)
 		{
@@ -912,6 +908,11 @@ class FlxObject extends FlxBasic
 	 */
 	public function onScreen(Camera:FlxCamera = null):Bool
 	{
+		return onScreenObject(Camera);
+	}
+	
+	inline private function onScreenObject(Camera:FlxCamera = null):Bool
+	{
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
@@ -926,7 +927,7 @@ class FlxObject extends FlxBasic
 	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	public function getScreenXY(?point:FlxPoint = null, ?Camera:FlxCamera = null):FlxPoint
+	inline public function getScreenXY(point:FlxPoint = null, Camera:FlxCamera = null):FlxPoint
 	{
 		if (point == null)
 		{
@@ -948,7 +949,7 @@ class FlxObject extends FlxBasic
 	 * Pass a negative value to flicker forever.
 	 * @param	Duration	How many seconds to flicker for.
 	 */
-	public function flicker(?Duration:Float = 1):Void
+	public function flicker(Duration:Float = 1):Void
 	{
 		_flickerTimer = Duration;
 		if (_flickerTimer == 0)
@@ -957,13 +958,13 @@ class FlxObject extends FlxBasic
 		}
 	}
 	
-	public var flickering(getFlickering, null):Bool;
-	
 	/**
 	 * Check to see if the object is still flickering.
 	 * @return	Whether the object is flickering or not.
 	 */
-	public function getFlickering():Bool
+	public var flickering(getFlickering, null):Bool;
+	
+	private function getFlickering():Bool
 	{
 		return _flickerTimer != 0;
 	}
@@ -975,7 +976,7 @@ class FlxObject extends FlxBasic
 	 * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
 	 * to set the value of allowCollisions directly.
 	 */
-	public function getSolid():Bool
+	private function getSolid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}
@@ -983,7 +984,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * @private
 	 */
-	public function setSolid(Solid:Bool):Bool
+	private function setSolid(Solid:Bool):Bool
 	{
 		if (Solid)
 		{
@@ -1001,7 +1002,7 @@ class FlxObject extends FlxBasic
 	 * @Point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined.  Otherwise a new one is created.
 	 * @return	A <code>FlxPoint</code> object containing the midpoint of this object in world coordinates.
 	 */
-	public function getMidpoint(?point:FlxPoint = null):FlxPoint
+	inline public function getMidpoint(point:FlxPoint = null):FlxPoint
 	{
 		if (point == null)
 		{
@@ -1033,12 +1034,10 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Handy function for checking if this object is touching a particular surface.
-	 * For slightly better performance you can just &amp; the value directly into <code>touching</code>.
-	 * However, this method is good for readability and accessibility.
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
-	public function isTouching(Direction:Int):Bool
+	inline public function isTouching(Direction:Int):Bool
 	{
 		return (touching & Direction) > NONE;
 	}
@@ -1048,7 +1047,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
-	public function justTouched(Direction:Int):Bool
+	inline public function justTouched(Direction:Int):Bool
 	{
 		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
@@ -1073,7 +1072,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated.
 	 */
-	static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
+	inline static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		var separatedX:Bool = separateX(Object1, Object2);
 		var separatedY:Bool = separateY(Object1, Object2);
@@ -1116,15 +1115,12 @@ class FlxObject extends FlxBasic
 			var obj1deltaAbs:Float = (obj1delta > 0)?obj1delta: -obj1delta;
 			var obj2deltaAbs:Float = (obj2delta > 0)?obj2delta: -obj2delta;
 			
-			/*var obj1rect:FlxRect = new FlxRect(Object1.x-((obj1delta > 0)?obj1delta:0),Object1.last.y,Object1.width+((obj1delta > 0)?obj1delta:-obj1delta),Object1.height);
-			var obj2rect:FlxRect = new FlxRect(Object2.x-((obj2delta > 0)?obj2delta:0),Object2.last.y,Object2.width+((obj2delta > 0)?obj2delta:-obj2delta),Object2.height);*/
-			
 			var obj1rect:FlxRect = _firstSeparateFlxRect.make(Object1.x - ((obj1delta > 0)?obj1delta:0), Object1.last.y, Object1.width + ((obj1delta > 0)?obj1delta: -obj1delta), Object1.height);
 			var obj2rect:FlxRect = _secondSeparateFlxRect.make(Object2.x - ((obj2delta > 0)?obj2delta:0), Object2.last.y, Object2.width + ((obj2delta > 0)?obj2delta: -obj2delta), Object2.height);
 			
 			if((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
 			{
-				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + OVERLAP_BIAS;
+				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS;
 				
 				//If they did overlap (and can), figure out by how much and flip the corresponding flags
 				if(obj1delta > obj2delta)
@@ -1230,15 +1226,12 @@ class FlxObject extends FlxBasic
 			var obj1deltaAbs:Float = (obj1delta > 0)?obj1delta: -obj1delta;
 			var obj2deltaAbs:Float = (obj2delta > 0)?obj2delta: -obj2delta;
 			
-			/*var obj1rect:FlxRect = new FlxRect(Object1.x,Object1.y-((obj1delta > 0)?obj1delta:0),Object1.width,Object1.height+obj1deltaAbs);
-			var obj2rect:FlxRect = new FlxRect(Object2.x,Object2.y-((obj2delta > 0)?obj2delta:0),Object2.width,Object2.height+obj2deltaAbs);*/
-			
 			var obj1rect:FlxRect = _firstSeparateFlxRect.make(Object1.x, Object1.y - ((obj1delta > 0)?obj1delta:0), Object1.width, Object1.height + obj1deltaAbs);
 			var obj2rect:FlxRect = _secondSeparateFlxRect.make(Object2.x, Object2.y - ((obj2delta > 0)?obj2delta:0), Object2.width, Object2.height + obj2deltaAbs);
 			
 			if((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
 			{
-				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + OVERLAP_BIAS;
+				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS;
 				
 				//If they did overlap (and can), figure out by how much and flip the corresponding flags
 				if(obj1delta > obj2delta)

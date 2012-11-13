@@ -27,7 +27,7 @@ class FlxCaveGenerator
 	 * @param	nCols	Number of columns in the cave tilemap
 	 * @param	nRows	Number of rows in the cave tilemap
 	 */
-	public function new(?nCols:Int = 10, ?nRows:Int = 10) 
+	public function new(nCols:Int = 10, nRows:Int = 10) 
 	{
 		_numTilesCols = nCols;
 		_numTilesRows = nRows;
@@ -87,7 +87,7 @@ class FlxCaveGenerator
 	 * 
 	 * @return	Number of walls around the target, including itself
 	 */
-	private function countNumWallsNeighbors(mat:Array<Array<Int>>, xPos:Int, yPos:Int, ?dist:Int = 1):Int
+	private function countNumWallsNeighbors(mat:Array<Array<Int>>, xPos:Int, yPos:Int, dist:Int = 1):Int
 	{
 		var count:Int = 0;
 		

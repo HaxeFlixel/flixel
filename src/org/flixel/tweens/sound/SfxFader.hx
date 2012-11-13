@@ -16,7 +16,7 @@ class SfxFader extends FlxTween
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(sfx:FlxSound, ?complete:CompleteCallback, ?type:Int = 0)
+	public function new(sfx:FlxSound, complete:CompleteCallback = null, type:Int = 0)
 	{
 		super(0, type, finish);
 		_complete = complete;
@@ -37,7 +37,7 @@ class SfxFader extends FlxTween
 	 * @param	duration	Duration of the fade.
 	 * @param	ease		Optional easer function.
 	 */
-	public function fadeTo(volume:Float, duration:Float, ?ease:EaseFunction = null):Void
+	public function fadeTo(volume:Float, duration:Float, ease:EaseFunction = null):Void
 	{
 		if (volume < 0) 
 		{
@@ -57,7 +57,7 @@ class SfxFader extends FlxTween
 	 * @param	volume		The volume to fade in the new Sfx to.
 	 * @param	ease		Optional easer function.
 	 */
-	public function crossFade(play:FlxSound, duration:Float, ?volume:Float = 1, ?ease:EaseFunction = null):Void
+	public function crossFade(play:FlxSound, duration:Float, volume:Float = 1, ease:EaseFunction = null):Void
 	{
 		_crossSfx = play;
 		_crossRange = volume;

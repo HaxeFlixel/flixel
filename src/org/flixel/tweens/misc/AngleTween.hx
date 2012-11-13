@@ -19,7 +19,7 @@ class AngleTween extends FlxTween
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:Int = 0) 
+	public function new(complete:CompleteCallback = null, type:Int = 0) 
 	{
 		angle = 0;
 		super(0, type, complete);
@@ -32,7 +32,7 @@ class AngleTween extends FlxTween
 	 * @param	duration		Duration of the tween.
 	 * @param	ease			Optional easer function.
 	 */
-	public function tween(fromAngle:Float, toAngle:Float, duration:Float, ?ease:EaseFunction = null):Void
+	public function tween(fromAngle:Float, toAngle:Float, duration:Float, ease:EaseFunction = null):Void
 	{
 		_start = angle = fromAngle;
 		var d:Float = toAngle - angle;

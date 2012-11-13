@@ -11,14 +11,13 @@ import org.flixel.FlxSprite;
  * ...
  * @author Zaphod
  */
-
 class FlxSkewedSprite extends FlxSprite
 {
 
 	public var skew:FlxPoint;
 	private var _skewMatrix:Matrix;
 	
-	public function new(?X:Float = 0, ?Y:Float = 0) 
+	public function new(X:Float = 0, Y:Float = 0) 
 	{
 		super(X, Y);
 		
@@ -34,14 +33,32 @@ class FlxSkewedSprite extends FlxSprite
 		super.destroy();
 	}
 	
-	override public function getSimpleRender():Bool
+	override private function getSimpleRender():Bool
 	{ 
-		return (((angle == 0) || (_bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (skew.x == 0) && (skew.y == 0));
+		return simpleRenderSkewedSprite();
+	}
+	
+	inline private function simpleRenderSkewedSprite():Bool
+	{
+		#if (cpp || neko)
+		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (skew.x == 0) && (skew.y == 0));
+		#else
+		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (skew.x == 0) && (skew.y == 0));
+		#end
 	}
 	
 	override public function draw():Void 
 	{
-		if(_flickerTimer != 0)
+		#if (cpp || neko)
+		// Don't try to draw if object isn't on any layer 
+		// or layer isn't added to state
+		if (_layer == null || _layer.onStage == false)
+		{
+			return;
+		}
+		#end
+		
+		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
 			if (_flicker)
@@ -76,14 +93,14 @@ class FlxSkewedSprite extends FlxSprite
 		{
 			camera = cameras[i++];
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
 			
 			#if (cpp || neko)
-			currDrawData = _tileSheetData.drawData[camera.ID];
-			currIndex = _tileSheetData.positionData[camera.ID];
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
@@ -97,9 +114,9 @@ class FlxSkewedSprite extends FlxSprite
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
 			#end
-			if (simpleRender)
+			if (simpleRenderSkewedSprite())
 			{	//Simple render
-				#if flash
+				#if (flash || js)
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
@@ -110,7 +127,7 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _frameID;
 				
 				// handle reversed sprites
-				if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+				if ((flipped != 0) && (facing == FlxObject.LEFT))
 				{
 					currDrawData[currIndex++] = -1;
 					currDrawData[currIndex++] = 0;
@@ -125,9 +142,9 @@ class FlxSkewedSprite extends FlxSprite
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (_tileSheetData.isColored || camera.isColored)
+				if (_layer.isColored || camera.isColored())
 				{
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;
@@ -141,18 +158,18 @@ class FlxSkewedSprite extends FlxSprite
 					}
 				}
 				
-				currDrawData[currIndex++] = _alpha;
+				currDrawData[currIndex++] = alpha;
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 				#end
 			}
 			else
 			{	//Advanced render
 				_matrix.identity();
 				
-				#if flash
+				#if (flash || js)
 				_matrix.translate( -origin.x, -origin.y);
-				if ((angle != 0) && (_bakedRotation <= 0))
+				if ((angle != 0) && (bakedRotation <= 0))
 				{
 					_matrix.rotate(angle * 0.017453293);
 				}
@@ -183,7 +200,7 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.c = -sin;
 				_matrix.d = cos;
 				
-				if ((_flipped != 0) && (_facing == FlxObject.LEFT))
+				if ((flipped != 0) && (facing == FlxObject.LEFT))
 				{
 					_matrix.scale( -scale.x, scale.y);
 				}
@@ -206,9 +223,9 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _matrix.c;
 				currDrawData[currIndex++] = _matrix.d;
 				
-				if (_tileSheetData.isColored || camera.isColored)
+				if (_layer.isColored || camera.isColored())
 				{
-					if (camera.isColored)
+					if (camera.isColored())
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;
@@ -222,9 +239,9 @@ class FlxSkewedSprite extends FlxSprite
 					}
 				}
 				
-				currDrawData[currIndex++] = _alpha;
+				currDrawData[currIndex++] = alpha;
 				
-				_tileSheetData.positionData[camera.ID] = currIndex;
+				_layer.positionData[camera.ID] = currIndex;
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;

@@ -77,10 +77,9 @@ class FlxEmitter extends FlxGroup
 	 */
 	public var bounce:Float;
 	/**
-	 * Set your own particle class type here.
-	 * Default is <code>FlxParticle</code>.
+	 * Internal variable for tracking the class to create when generating particles.
 	 */
-	public var particleClass:Class<FlxParticle>;
+	private var _particleClass:Class<FlxParticle>;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -92,7 +91,7 @@ class FlxEmitter extends FlxGroup
 	/**
 	 * Internal helper for deciding when to launch particles or kill them.
 	 */
-	private var _timer:Float;
+	private var _timer:Float = 0;
 	/**
 	 * Internal counter for figuring out how many particles to launch.
 	 */
@@ -101,6 +100,10 @@ class FlxEmitter extends FlxGroup
 	 * Internal point object, handy for reusing for memory mgmt purposes.
 	 */
 	private var _point:FlxPoint;
+	/**
+	 * Internal helper for automatic call the kill() method
+	 */
+	private var _waitForKill:Bool = false;
 	
 	/**
 	 * Creates a new <code>FlxEmitter</code> object at a specific position.
@@ -109,7 +112,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Y		The Y position of the emitter.
 	 * @param	Size	Optional, specifies a maximum capacity for this emitter.
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?Size:Int = 0)
+	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
 	{
 		super(Size);
 		x = X;
@@ -121,7 +124,7 @@ class FlxEmitter extends FlxGroup
 		minRotation = -360;
 		maxRotation = 360;
 		gravity = 0;
-		particleClass = null;
+		_particleClass = FlxParticle;
 		particleDrag = new FlxPoint();
 		frequency = 0.1;
 		lifespan = 3;
@@ -130,6 +133,7 @@ class FlxEmitter extends FlxGroup
 		_counter = 0;
 		_explode = true;
 		on = false;
+		exists = false;
 		_point = new FlxPoint();
 	}
 	
@@ -141,25 +145,25 @@ class FlxEmitter extends FlxGroup
 		minParticleSpeed = null;
 		maxParticleSpeed = null;
 		particleDrag = null;
-		particleClass = null;
+		_particleClass = null;
 		_point = null;
 		super.destroy();
 	}
 	
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
-	 * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
 	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
 	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
 	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
 	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Dynamic, ?Quantity:Int = 50, ?BakedRotations:Int = 16, ?Multiple:Bool = false, ?Collide:Float = 0.8):FlxEmitter
+	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8):FlxEmitter
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
-		if(Multiple)
+		if (Multiple)
 		{ 
 			var sprite:FlxSprite = new FlxSprite();
 			sprite.loadGraphic(Graphics, true);
@@ -172,20 +176,13 @@ class FlxEmitter extends FlxGroup
 		var i:Int = 0;
 		while (i < Quantity)
 		{
-			if (particleClass == null)
-			{
-				particle = new FlxParticle();
-			}
-			else
-			{
-				particle = Type.createInstance(particleClass, []);
-			}
+			particle = Type.createInstance(_particleClass, []);
 			if (Multiple)
 			{
 				randomFrame = Math.floor(FlxG.random() * totalFrames); 
 				if (BakedRotations > 0)
 				{
-					#if flash
+					#if (flash || js)
 					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame);
 					#else
 					particle.loadGraphic(Graphics, true);
@@ -202,7 +199,7 @@ class FlxEmitter extends FlxGroup
 			{
 				if (BakedRotations > 0)
 				{
-					#if flash
+					#if (flash || js)
 					particle.loadRotatedGraphic(Graphics, BakedRotations);
 					#else
 					particle.loadGraphic(Graphics);
@@ -225,7 +222,6 @@ class FlxEmitter extends FlxGroup
 			}
 			particle.exists = false;
 			add(particle);
-			//particle.updateTileSheet();
 			i++;
 		}
 		return this;
@@ -236,14 +232,15 @@ class FlxEmitter extends FlxGroup
 	 */
 	override public function update():Void
 	{
-		if(on)
+		if (on)
 		{
-			if(_explode)
+			if (_explode)
 			{
 				on = false;
+				_waitForKill = true;
 				var i:Int = 0;
 				var l:Int = _quantity;
-				if ((l <= 0) || (l > Std.int(length)))
+				if ((l <= 0) || (l > length))
 				{
 					l = length;
 				}
@@ -256,19 +253,44 @@ class FlxEmitter extends FlxGroup
 			}
 			else
 			{
-				_timer += FlxG.elapsed;
-				while((frequency > 0) && (_timer > frequency) && on)
+				// Spawn a particle per frame
+				if (frequency <= 0)
 				{
-					_timer -= frequency;
 					emitParticle();
 					if((_quantity > 0) && (++_counter >= _quantity))
 					{
 						on = false;
+						_waitForKill = true;
 						_quantity = 0;
+					}
+				}
+				else
+				{
+					_timer += FlxG.elapsed;
+					while (_timer > frequency)
+					{
+						_timer -= frequency;
+						emitParticle();
+						if ((_quantity > 0) && (++_counter >= _quantity))
+						{
+							on = false;
+							_waitForKill = true;
+							_quantity = 0;
+						}
 					}
 				}
 			}
 		}
+		else if (_waitForKill)
+		{
+			_timer += FlxG.elapsed;
+			if ((lifespan > 0) && (_timer > lifespan))
+			{
+				kill();
+				return;
+			}
+		}
+		
 		super.update();
 	}
 	
@@ -278,6 +300,7 @@ class FlxEmitter extends FlxGroup
 	override public function kill():Void
 	{
 		on = false;
+		_waitForKill = false;
 		super.kill();
 	}
 	
@@ -288,7 +311,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
 	 */
-	public function start(?Explode:Bool = true, ?Lifespan:Float = 0, ?Frequency:Float = 0.1, ?Quantity:Int = 0):Void
+	public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0):Void
 	{
 		revive();
 		visible = true;
@@ -297,10 +320,12 @@ class FlxEmitter extends FlxGroup
 		_explode = Explode;
 		lifespan = Lifespan;
 		frequency = Frequency;
-		_quantity += Std.int(Math.abs(Quantity));
+		_quantity += Quantity;
 		
 		_counter = 0;
 		_timer = 0;
+		
+		_waitForKill = false;
 	}
 	
 	/**
@@ -308,7 +333,7 @@ class FlxEmitter extends FlxGroup
 	 */
 	public function emitParticle():Void
 	{
-		var particle:FlxParticle = cast(recycle(FlxParticle), FlxParticle);
+		var particle:FlxParticle = cast(recycle(cast _particleClass), FlxParticle);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
 		particle.reset(x - (Math.floor(particle.width) >> 1) + FlxG.random() * width, y - (Math.floor(particle.height) >> 1) + FlxG.random() * height);
@@ -366,7 +391,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Min		The minimum value for this range.
 	 * @param	Max		The maximum value for this range.
 	 */
-	public function setXSpeed(?Min:Float = 0, ?Max:Float = 0):Void
+	public function setXSpeed(Min:Float = 0, Max:Float = 0):Void
 	{
 		minParticleSpeed.x = Min;
 		maxParticleSpeed.x = Max;
@@ -377,7 +402,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Min		The minimum value for this range.
 	 * @param	Max		The maximum value for this range.
 	 */
-	public function setYSpeed(?Min:Float = 0, ?Max:Float = 0):Void
+	public function setYSpeed(Min:Float = 0, Max:Float = 0):Void
 	{
 		minParticleSpeed.y = Min;
 		maxParticleSpeed.y = Max;
@@ -388,7 +413,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Min		The minimum value for this range.
 	 * @param	Max		The maximum value for this range.
 	 */
-	public function setRotation(?Min:Float = 0, Max:Float = 0):Void
+	public function setRotation(Min:Float = 0, Max:Float = 0):Void
 	{
 		minRotation = Min;
 		maxRotation = Max;
@@ -403,5 +428,21 @@ class FlxEmitter extends FlxGroup
 		Object.getMidpoint(_point);
 		x = _point.x - (Std.int(width) >> 1);
 		y = _point.y - (Std.int(height) >> 1);
+	}
+	
+	/**
+	 * Set your own particle class type here. The custom class must extend <code>FlxParticle</code>.
+	 * Default is <code>FlxParticle</code>.
+	 */
+	public var particleClass(get_particleClass, set_particleClass):Class<FlxParticle>;
+	
+	private function get_particleClass():Class<FlxParticle> 
+	{
+		return _particleClass;
+	}
+	
+	private function set_particleClass(value:Class<FlxParticle>):Class<FlxParticle> 
+	{
+		return _particleClass = value;
 	}
 }

@@ -1,7 +1,6 @@
 package org.flixel;
 
 #if (cpp || neko)
-
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.text.TextField;
@@ -9,7 +8,6 @@ import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
 import nme.text.TextFieldAutoSize;
 import org.flixel.FlxSprite;
-
 
 /**
  * Extends <code>FlxText</code> for better support rendering text on cpp target.
@@ -40,7 +38,7 @@ class FlxTextField extends FlxText
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or nto
 	 */
-	public function new(X:Float, Y:Float, Width:Int, ?Text:String = null, ?EmbeddedFont:Bool = true)
+	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true)
 	{
 		_textFields = new Array<TextField>();
 		width = Width;
@@ -59,10 +57,11 @@ class FlxTextField extends FlxText
 		#if neko
 		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
 		#else
-		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffffff);
+		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
 		#end
 		
 		allowCollisions = FlxObject.NONE;
+		moves = false;
 	}
 	
 	/**
@@ -94,7 +93,7 @@ class FlxTextField extends FlxText
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	override public function setFormat(?Font:String = null, ?Size:Float = 8, ?Color:Int = 0xffffff, ?Alignment:String = null, ?ShadowColor:Int = 0):FlxText
+	override public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0):FlxText
 	{
 		if (Font == null)
 		{
@@ -225,22 +224,22 @@ class FlxTextField extends FlxText
 		return 0;
 	}
 	
-	override public function stamp(Brush:FlxSprite, ?X:Int = 0, Y:Int = 0):Void 
+	override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void 
 	{
 		// this class doesn't support this operation
 	}
 	
-	override public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:BitmapInt32, ?Thickness:Int = 1):Void 
+	override public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:BitmapInt32, Thickness:Int = 1):Void 
 	{
 		// this class doesn't support this operation
 	}
 	
-	override public function getSimpleRender():Bool
+	override private function getSimpleRender():Bool
 	{ 
 		return true;
 	}
 	
-	override public function pixelsOverlapPoint(point:FlxPoint, ?Mask:Int = 0xFF, ?Camera:FlxCamera = null):Bool 
+	override public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, Camera:FlxCamera = null):Bool 
 	{
 		// this class doesn't support this operation
 		return false;
@@ -266,17 +265,9 @@ class FlxTextField extends FlxText
 	}
 	
 	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
-	 */
-	override public function getAlpha():Float
-	{
-		return _alpha;
-	}
-	
-	/**
 	 * @private
 	 */
-	override public function setAlpha(Alpha:Float):Float
+	override private function setAlpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{
@@ -286,14 +277,13 @@ class FlxTextField extends FlxText
 		{
 			Alpha = 0;
 		}
-		_alpha = Alpha;
+		alpha = Alpha;
 		updateTextFields();
-		return _alpha;
+		return alpha;
 	}
 	
 	private function updateTextFields():Void
 	{
-		
 		for (tf in _textFields)
 		{
 			if (tf != null)
@@ -308,7 +298,7 @@ class FlxTextField extends FlxText
 				height = tf.textHeight;
 				height += 4;
 				tf.height = 1.2 * height;
-				tf.alpha = _alpha;
+				tf.alpha = alpha;
 			}
 		}
 	}
@@ -353,7 +343,7 @@ class FlxTextField extends FlxText
 			return;
 		}
 		
-		if(_flickerTimer != 0)
+		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
 			if (_flicker) return;
@@ -366,7 +356,7 @@ class FlxTextField extends FlxText
 		var l:Int = cameras.length;
 		var tf:TextField;
 		
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
 			tf = _textFields[i - 1];
@@ -379,7 +369,7 @@ class FlxTextField extends FlxText
 				camera._canvas.addChild(tf);
 			}
 			
-			if (!onScreen(camera))
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				tf.visible = false;
 				continue;
@@ -407,7 +397,7 @@ class FlxTextField extends FlxText
 	/**
 	 * Internal function to update the current animation frame.
 	 */
-	override private function calcFrame(?AreYouSure:Bool = false):Void
+	override private function calcFrame(AreYouSure:Bool = false):Void
 	{
 		if (AreYouSure)
 		{
@@ -436,7 +426,7 @@ class FlxTextField extends FlxText
 					_textField.multiline = _multiline;
 					_textField.text = _text;
 					_textField.height = 1.2 * height;
-					_textField.alpha = _alpha;
+					_textField.alpha = alpha;
 					
 					var format:TextFormat = dtfCopy();
 					var formatAdjusted:TextFormat = format;

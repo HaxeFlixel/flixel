@@ -38,7 +38,7 @@ class BTNTilemap extends FlxTilemap
 	* @return      true if hit a filled tile, false if it hit the end of the tilemap
 	*
 	*/
-	public function rayCast(start:FlxPoint, direction:FlxPoint, ?result:FlxPoint = null, ?resultInTiles:FlxPoint = null, ?maxTilesToCheck:Int = -1):Bool
+	public function rayCast(start:FlxPoint, direction:FlxPoint, result:FlxPoint = null, resultInTiles:FlxPoint = null, maxTilesToCheck:Int = -1):Bool
 	{
 		var cx:Float;
 		var cy:Float;	   // current x, y, in tiles

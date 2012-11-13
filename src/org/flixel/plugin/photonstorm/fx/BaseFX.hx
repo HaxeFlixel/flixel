@@ -30,7 +30,7 @@ class BaseFX
 	 */
 	public var sprite:FlxSprite;
 	
-	#if flash
+	#if (flash || js)
 	/**
 	 * A scratch bitmapData used to build-up the effect before passing to sprite.pixels
 	 */
@@ -74,7 +74,7 @@ class BaseFX
 	 * 
 	 * @param	delay	How many "game updates" should pass between each update? If your game runs at 30fps a value of 0 means it will do 30 updates per second. A value of 1 means it will do 15 updates per second, etc.
 	 */
-	public function start(?delay:Int = 0):Void
+	public function start(delay:Int = 0):Void
 	{
 		updateLimit = delay;
 		lastUpdate = 0;
@@ -102,7 +102,7 @@ class BaseFX
 			sprite.kill();
 		}
 		
-		#if flash
+		#if (flash || js)
 		if (canvas != null)
 		{
 			canvas.dispose();

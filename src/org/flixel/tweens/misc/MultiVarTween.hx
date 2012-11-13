@@ -14,7 +14,7 @@ class MultiVarTween extends FlxTween
 	 * @param	complete		Optional completion callback.
 	 * @param	type			Tween type.
 	 */
-	public function new(?complete:CompleteCallback, ?type:Int = 0)
+	public function new(complete:CompleteCallback = null, type:Int = 0)
 	{
 		_vars = new Array<String>();
 		_start = new Array<Float>();
@@ -36,7 +36,7 @@ class MultiVarTween extends FlxTween
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ?ease:EaseFunction = null):Void
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ease:EaseFunction = null):Void
 	{
 		_object = object;
 		FlxU.SetArrayLength(_vars, 0);
