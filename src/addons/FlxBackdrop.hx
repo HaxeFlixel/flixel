@@ -15,7 +15,6 @@ import org.flixel.FlxObject;
  */
 class FlxBackdrop extends FlxObject
 {
-	private var _data:BitmapData;
 	private var _ppoint:Point;
 	private var _scrollW:Int;
 	private var _scrollH:Int;
@@ -26,6 +25,8 @@ class FlxBackdrop extends FlxObject
 	private var _tileID:Int;
 	private var _tileInfo:Array<Float>;
 	private var _numTiles:Int = 0;
+	#else
+	private var _data:BitmapData;
 	#end
 	
 	/**
@@ -39,6 +40,7 @@ class FlxBackdrop extends FlxObject
 	public function new(graphic:Dynamic, scrollX:Float = 1, scrollY:Float = 1, repeatX:Bool = true, repeatY:Bool = true) 
 	{
 		super();
+		
 		var data:BitmapData = FlxG.addBitmap(graphic);
 		var w:Int = data.width;
 		var h:Int = data.height;
@@ -205,11 +207,6 @@ class FlxBackdrop extends FlxObject
 		if (_node != null)
 		{
 			_tileID = _node.addTileRect(new Rectangle(0, 0, _scrollW, _scrollH), new Point());
-			_numTiles = Math.floor(_tileInfo.length / 2);
-			for (i in 0...(_numTiles))
-			{
-				_tileInfo[i * 3] = _tileID;
-			}
 		}
 	#end
 	}
