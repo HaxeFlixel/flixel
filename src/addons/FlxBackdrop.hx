@@ -29,7 +29,7 @@ class FlxBackdrop extends FlxObject
 	 * @param   repeatX If the backdrop should repeat on the X axis.
 	 * @param   repeatY If the backdrop should repeat on the Y axis.
 	 */
-	public function new(graphic:String, scrollX:Float = 0, scrollY:Float = 0, repeatX:Bool = true, repeatY:Bool = true) 
+	public function new(graphic:String, scrollX:Float = 1, scrollY:Float = 1, repeatX:Bool = true, repeatY:Bool = true) 
 	{
 		super();
 		var data:BitmapData = Assets.getBitmapData(graphic);
