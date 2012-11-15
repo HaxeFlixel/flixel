@@ -5,6 +5,7 @@ import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 
@@ -21,6 +22,12 @@ class FlxBackdrop extends FlxObject
 	private var _repeatX:Bool;
 	private var _repeatY:Bool;
 	
+	#if (cpp || neko)
+	private var _tileID:Int;
+	private var _tileInfo:Array<Float>;
+	private var _numTiles:Int = 0;
+	#end
+	
 	/**
 	 * Creates an instance of the FlxBackdrop class, used to create infinitely scrolling backgrounds.
 	 * @param   bitmap The image you want to use for the backdrop.
@@ -29,28 +36,43 @@ class FlxBackdrop extends FlxObject
 	 * @param   repeatX If the backdrop should repeat on the X axis.
 	 * @param   repeatY If the backdrop should repeat on the Y axis.
 	 */
-	public function new(graphic:String, scrollX:Float = 1, scrollY:Float = 1, repeatX:Bool = true, repeatY:Bool = true) 
+	public function new(graphic:Dynamic, scrollX:Float = 1, scrollY:Float = 1, repeatX:Bool = true, repeatY:Bool = true) 
 	{
 		super();
-		var data:BitmapData = Assets.getBitmapData(graphic);
+		var data:BitmapData = FlxG.addBitmap(graphic);
 		var w:Int = data.width;
 		var h:Int = data.height;
 		if (repeatX) w += FlxG.width;
 		if (repeatY) h += FlxG.height;
-
+		
+		#if flash
 		_data = new BitmapData(w, h);
+		#end
 		_ppoint = new Point();
 
 		_scrollW = data.width;
 		_scrollH = data.height;
 		_repeatX = repeatX;
 		_repeatY = repeatY;
+		
+		#if (cpp || neko)
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_tileInfo = [];
+		updateLayerInfo();
+		_numTiles = 0;
+		#end
 
-		while (_ppoint.y < _data.height + data.height)
+		while (_ppoint.y < h + data.height)
 		{
-			while (_ppoint.x < _data.width + data.width)
+			while (_ppoint.x < w + data.width)
 			{
+				#if flash
 				_data.copyPixels(data, data.rect, _ppoint);
+				#else
+				_tileInfo.push(_ppoint.x);
+				_tileInfo.push(_ppoint.y);
+				_numTiles++;
+				#end
 				_ppoint.x += data.width;
 			}
 			_ppoint.x = 0;
@@ -60,32 +82,135 @@ class FlxBackdrop extends FlxObject
 		scrollFactor.x = scrollX;
 		scrollFactor.y = scrollY;
 	}
+	
+	override public function destroy():Void 
+	{
+		#if flash
+		if (_data != null)
+		{
+			_data.dispose();
+		}
+		_data = null;
+		#else
+		_tileInfo = null;
+		#end
+		_ppoint = null;
+		super.destroy();
+	}
 
 	override public function draw():Void
 	{
-		// find x position
-		if (_repeatX)
-		{   
-			_ppoint.x = (x - FlxG.camera.scroll.x * scrollFactor.x) % _scrollW;
-			if (_ppoint.x > 0) _ppoint.x -= _scrollW;
-		}
-		else 
+		if (cameras == null)
 		{
-			_ppoint.x = (x - FlxG.camera.scroll.x * scrollFactor.x);
+			cameras = FlxG.cameras;
 		}
+		var camera:FlxCamera;
+		var l:Int = cameras.length;
+		
+		for (i in 0...(l))
+		{
+			camera = cameras[i];
+			
+			if (!camera.visible || !camera.exists)
+			{
+				continue;
+			}
+			
+			// find x position
+			if (_repeatX)
+			{   
+				_ppoint.x = (x - camera.scroll.x * scrollFactor.x) % _scrollW;
+				if (_ppoint.x > 0) _ppoint.x -= _scrollW;
+			}
+			else 
+			{
+				_ppoint.x = (x - camera.scroll.x * scrollFactor.x);
+			}
 
-		// find y position
-		if (_repeatY)
-		{
-			_ppoint.y = (y - FlxG.camera.scroll.y * scrollFactor.y) % _scrollH;
-			if (_ppoint.y > 0) _ppoint.y -= _scrollH;
+			// find y position
+			if (_repeatY)
+			{
+				_ppoint.y = (y - camera.scroll.y * scrollFactor.y) % _scrollH;
+				if (_ppoint.y > 0) _ppoint.y -= _scrollH;
+			}
+			else 
+			{
+				_ppoint.y = (y - camera.scroll.y * scrollFactor.y);
+			}
+			
+			// draw to the screen
+			#if flash
+			camera.buffer.copyPixels(_data, _data.rect, _ppoint, null, null, true);
+			#else
+			if (_layer == null || _layer.onStage == false)
+			{
+				return;
+			}
+			
+			var currDrawData:Array<Float>;
+			var currIndex:Int;
+			
+			currDrawData = _layer.drawData[camera.ID];
+			currIndex = _layer.positionData[camera.ID];
+			
+			var currPosInArr:Int;
+			var currTileX:Float;
+			var currTileY:Float;
+			
+			var redMult:Float = 1;
+			var greenMult:Float = 1;
+			var blueMult:Float = 1;
+			
+			var isColoredCamera:Bool = camera.isColored();
+			if (isColoredCamera)
+			{
+				redMult = camera.red; 
+				greenMult = camera.green;
+				blueMult = camera.blue;
+			}
+			
+			for (j in 0...(_numTiles))
+			{
+				currPosInArr = j * 2;
+				currTileX = _tileInfo[currPosInArr];
+				currTileY = _tileInfo[currPosInArr + 1];
+				
+				currDrawData[currIndex++] = (_ppoint.x) + currTileX;
+				currDrawData[currIndex++] = (_ppoint.y) + currTileY;
+				currDrawData[currIndex++] = _tileID;
+				
+				currDrawData[currIndex++] = 1;
+				currDrawData[currIndex++] = 0;
+				currDrawData[currIndex++] = 0;
+				currDrawData[currIndex++] = 1;
+				
+				if (_layer.isColored || isColoredCamera)
+				{
+					currDrawData[currIndex++] = redMult; 
+					currDrawData[currIndex++] = greenMult;
+					currDrawData[currIndex++] = blueMult;
+				}
+				
+				currDrawData[currIndex++] = 1.0;	// alpha
+			}
+			
+			_layer.positionData[camera.ID] = currIndex;
+			#end
 		}
-		else 
+	}
+	
+	override public function updateFrameData():Void
+	{
+	#if (cpp || neko)
+		if (_node != null)
 		{
-			_ppoint.y = (y - FlxG.camera.scroll.y * scrollFactor.y);
+			_tileID = _node.addTileRect(new Rectangle(0, 0, _scrollW, _scrollH), new Point());
+			_numTiles = Math.floor(_tileInfo.length / 2);
+			for (i in 0...(_numTiles))
+			{
+				_tileInfo[i * 3] = _tileID;
+			}
 		}
-
-		// draw to the screen
-		FlxG.camera.buffer.copyPixels(_data, _data.rect, _ppoint, null, null, true);
+	#end
 	}
 }
