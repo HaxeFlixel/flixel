@@ -998,7 +998,6 @@ class FlxG
 			{
 				bd = Assets.getBitmapData(Graphic);
 			}
-			if (Unique)	bd = bd.clone();
 			
 			#if !(flash || js)
 			if (additionalKey != "")
@@ -1043,6 +1042,11 @@ class FlxG
 				
 			}
 			#end
+			else if (Unique)	
+			{
+				bd = bd.clone();
+			}
+			
 			_cache.set(key, bd);
 		}
 		
