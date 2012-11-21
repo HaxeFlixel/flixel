@@ -337,6 +337,17 @@ class FlxG
 	}
 	
 	/**
+	 * Clears the log output.
+	 */
+	static public function clearLog():Void
+	{
+		if ((_game != null) && (_game.debugger != null))
+		{
+			_game.debugger.log.clear();
+		}
+	}
+	
+	/**
 	 * Add a variable to the watch list in the debugger.
 	 * This lets you see the value of the variable all the time.
 	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
@@ -1242,7 +1253,9 @@ class FlxG
 		if (Camera != null && FlxG._game.contains(Camera._flashSprite))
 		{
 			FlxG._game.removeChild(Camera._flashSprite);
-			FlxG.cameras.splice(FlxU.ArrayIndexOf(FlxG.cameras, Camera), 1);
+			var index = FlxU.ArrayIndexOf(FlxG.cameras, Camera);
+			if(index >= 0)
+				FlxG.cameras.splice(index, 1);
 		}
 		else
 		{
@@ -1505,7 +1518,8 @@ class FlxG
 		{
 			if (pluginList[i] == Plugin)
 			{
-				pluginList.splice(i,1);
+				pluginList.splice(i, 1);
+				return Plugin;
 			}
 			i--;
 		}
@@ -1513,7 +1527,7 @@ class FlxG
 	}
 	
 	/**
-	 * Removes an instance of a plugin from the global plugin array.
+	 * Removes all instances of a plugin from the global plugin array.
 	 * @param	ClassType	The class name of the plugin type you want removed from the array.
 	 * @return	Whether or not at least one instance of this plugin type was removed.
 	 */

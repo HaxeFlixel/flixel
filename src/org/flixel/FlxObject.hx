@@ -261,11 +261,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
-	#if flash
-	public var debugBoundingBoxColor(default, onBoundingBoxColorSet):UInt;
-	#else
 	public var debugBoundingBoxColor(default, onBoundingBoxColorSet):Int;
-	#end
 	private var _boundingBoxColorOverritten:Bool = false;
 	private function onBoundingBoxColorSet(val:Int):Int 
 	{
