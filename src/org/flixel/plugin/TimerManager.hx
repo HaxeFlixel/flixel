@@ -71,7 +71,10 @@ class TimerManager extends FlxBasic
 		var index:Int = FlxU.ArrayIndexOf(_timers, Timer);
 		if (index >= 0)
 		{
-			_timers.splice(index,1);
+			if (index < _timers.length - 1)
+				_timers[index] = _timers.pop();
+			else
+				_timers.pop();
 		}
 	}
 	

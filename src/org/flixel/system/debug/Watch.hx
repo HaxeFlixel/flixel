@@ -145,7 +145,11 @@ class Watch extends FlxWindow
 			watchEntry = _watching[i];
 			if((watchEntry.object == AnyObject) && ((VariableName == null) || (watchEntry.field == VariableName)))
 			{
-				_watching.splice(i,1);
+				if (i < _watching.length - 1)
+					_watching[i] = _watching.pop();
+				else
+					_watching.pop();
+				
 				_names.removeChild(watchEntry.nameDisplay);
 				_values.removeChild(watchEntry.valueDisplay);
 				watchEntry.destroy();

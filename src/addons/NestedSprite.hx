@@ -137,7 +137,10 @@ class NestedSprite extends FlxSprite
 		var index:Int = FlxU.ArrayIndexOf(_children, Child);
 		if (index >= 0)
 		{
-			_children.splice(index, 1);
+			if (index < _children.length - 1)
+				_children[index] = _children.pop();
+			else
+				_children.pop();
 		}
 		
 		return Child;
@@ -155,7 +158,11 @@ class NestedSprite extends FlxSprite
 		}
 		
 		var child:NestedSprite = _children[Index];
-		_children.splice(Index, 1);
+		if (index < _children.length - 1)
+			_children[index] = _children.pop();
+		else
+			_children.pop();
+		
 		return child;
 	}
 	
@@ -164,20 +171,18 @@ class NestedSprite extends FlxSprite
 	 */
 	public function removeAll():Void
 	{
-		var l:Int = _children.length - 1;
-		var i:Int = l;
-		while (i >= 0)
+		var i:Int = _children.length;
+		while (i > 0)
 		{
-			removeAt(i);
-			i--;
+			removeAt(--i);
 		}
 	}
 	
 	/**
 	 * All Graphics in this list.
 	 */
-	public var children(getChildren, null):Array<NestedSprite>;
-	private function getChildren():Array<NestedSprite> 
+	public inline var children(getChildren, null):Array<NestedSprite>;
+	private inline function getChildren():Array<NestedSprite> 
 	{ 
 		return _children; 
 	}
