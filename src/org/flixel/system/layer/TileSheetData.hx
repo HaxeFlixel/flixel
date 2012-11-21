@@ -34,7 +34,7 @@ class TileSheetData
 		
 		tempTileSheetData = new TileSheetData(new Tilesheet(bitmapData));
 		tileSheetData.push(tempTileSheetData);
-		return (tileSheetData[tileSheetData.length - 1]);
+		return tempTileSheetData;
 	}
 	
 	public static function containsTileSheet(bitmapData:BitmapData):Bool
@@ -46,7 +46,6 @@ class TileSheetData
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
@@ -59,7 +58,6 @@ class TileSheetData
 				return tsd;
 			}
 		}
-		
 		return null;
 	}
 	
@@ -69,8 +67,14 @@ class TileSheetData
 		{
 			if (tileSheetData[i] == tileSheetObj)
 			{
-				tileSheetData.splice(i, 1);
+				// Does tilesheetData array care about its order? If n
+				if (i < tileSheetData.length - 1)
+					tileSheetData[i] = tileSheetData.pop();
+				else
+					tileSheetData.pop();
+				
 				tileSheetObj.destroy();
+				return;
 			}
 		}
 	}
