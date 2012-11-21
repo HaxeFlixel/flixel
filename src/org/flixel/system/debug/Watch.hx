@@ -145,10 +145,9 @@ class Watch extends FlxWindow
 			watchEntry = _watching[i];
 			if((watchEntry.object == AnyObject) && ((VariableName == null) || (watchEntry.field == VariableName)))
 			{
-				if (i < _watching.length - 1)
-					_watching[i] = _watching.pop();
-				else
-					_watching.pop();
+				// Fast array removal (only do on arrays where order doesn't matter)
+				_watching[i] = _watching[_watching.length - 1];
+				_watching.pop();
 				
 				_names.removeChild(watchEntry.nameDisplay);
 				_values.removeChild(watchEntry.valueDisplay);

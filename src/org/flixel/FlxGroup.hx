@@ -340,10 +340,7 @@ class FlxGroup extends FlxBasic
 		}
 		if (Splice)
 		{
-			if(index < --length)
-				members[index] = members.pop();
-			else
-				members.pop();
+			members.splice(index, 1);
 		}
 		else
 		{

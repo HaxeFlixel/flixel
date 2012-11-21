@@ -137,10 +137,7 @@ class NestedSprite extends FlxSprite
 		var index:Int = FlxU.ArrayIndexOf(_children, Child);
 		if (index >= 0)
 		{
-			if (index < _children.length - 1)
-				_children[index] = _children.pop();
-			else
-				_children.pop();
+			_children.splice(index, 1);
 		}
 		
 		return Child;

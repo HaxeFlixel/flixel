@@ -67,10 +67,9 @@ class TileSheetData
 		{
 			if (tileSheetData[i] == tileSheetObj)
 			{
-				if (i < tileSheetData.length - 1)
-					tileSheetData[i] = tileSheetData.pop();
-				else
-					tileSheetData.pop();
+				// Fast array removal (only do on arrays where order doesn't matter)
+				tileSheetData[i] = tileSheetData[tileSheetData.length - 1];
+				tileSheetData.pop();
 				
 				tileSheetObj.destroy();
 				return;
