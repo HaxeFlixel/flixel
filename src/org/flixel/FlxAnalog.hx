@@ -215,7 +215,7 @@ class FlxAnalog extends FlxGroup
 		}
 		
 		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
-		{				
+		{
 			_amount *= _ease;
 			if (Math.abs(_amount) < 0.1) 
 			{
@@ -228,7 +228,7 @@ class FlxAnalog extends FlxGroup
 		
 		if (offAll)
 		{
-			status = NORMAL;			
+			status = NORMAL;
 		}
 		
 		_tempTouches.splice(0, _tempTouches.length);

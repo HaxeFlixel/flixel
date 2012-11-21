@@ -341,7 +341,6 @@ class FlxGroup extends FlxBasic
 		if (Splice)
 		{
 			members.splice(index, 1);
-			length--;
 		}
 		else
 		{

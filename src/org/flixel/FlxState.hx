@@ -67,7 +67,7 @@ class FlxState extends FlxGroup
 	/**
 	 * Gets the layer at specified index. May return null if index is out of bounds (less than zero of more than maxIndex).
 	 */
-	public function getLayerAt(index:Int):FlxLayer
+	public inline function getLayerAt(index:Int):FlxLayer
 	{
 		if (index < 0 || index > getMaxIndex())
 		{
@@ -81,14 +81,15 @@ class FlxState extends FlxGroup
 	 */
 	public function getLayerIndex(layer:FlxLayer):Int
 	{
-		if (layer == null || !layer.onStage)	return -1; 
+		if (layer == null || !layer.onStage)
+			return -1;
 		return FlxU.ArrayIndexOf(_layers, layer);
 	}
 	
 	/**
 	 * Retutns max index
 	 */
-	public function getMaxIndex():Int
+	public inline function getMaxIndex():Int
 	{
 		return (_layers.length - 1);
 	}
@@ -133,12 +134,16 @@ class FlxState extends FlxGroup
 	 */
 	public function removeLayerAt(index:Int):FlxLayer
 	{
-		var layer:FlxLayer = getLayerAt(index);
-		if (layer != null)
+		if (index < 0 || index > getMaxIndex())
+			return null;
+		
+		var Layer = _layers[index];
+		if (Layer != null)
 		{
-			return removeLayer(layer);
+			_layers.splice(index, 1);
+			Layer.onStage = false;
 		}
-		return null;
+		return Layer;
 	}
 	
 	/**
@@ -189,13 +194,8 @@ class FlxState extends FlxGroup
 	public function removeLayer(Layer:FlxLayer):FlxLayer
 	{
 		#if (cpp || neko)
-		var pos:Int = FlxU.ArrayIndexOf(_layers, Layer);
-		if (pos >= 0)
-		{
-			_layers.splice(pos, 1);
-			Layer.onStage = false;
-			return Layer;
-		}
+		var index:Int = FlxU.ArrayIndexOf(_layers, Layer);
+		return removeLayerAt(index);
 		#end
 		return null;
 	}

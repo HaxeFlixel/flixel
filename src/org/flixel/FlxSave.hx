@@ -101,7 +101,7 @@ class FlxSave
 	public function close(MinFileSize:Int = 0, OnComplete:Bool->Void = null):Bool
 	{
 		_closeRequested = true;
-		return flush(FlxU.fromIntToUInt(MinFileSize), OnComplete);
+		return flush(MinFileSize, OnComplete);
 	}
 
 	/**
@@ -125,7 +125,7 @@ class FlxSave
 		try 
 		{ 
 			#if !js
-			result = _sharedObject.flush(FlxU.fromIntToUInt(MinFileSize)); 
+			result = _sharedObject.flush(MinFileSize); 
 			#else
 			result = _sharedObject.flush(); 
 			#end

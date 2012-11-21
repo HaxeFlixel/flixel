@@ -75,8 +75,8 @@ class FlxVelocity
 		source.acceleration.x = Std.int(Math.cos(a) * speed);
 		source.acceleration.y = Std.int(Math.sin(a) * speed);
 		
-		source.maxVelocity.x = FlxU.fromIntToUInt(xSpeedMax);
-		source.maxVelocity.y = FlxU.fromIntToUInt(ySpeedMax);
+		source.maxVelocity.x = xSpeedMax;
+		source.maxVelocity.y = ySpeedMax;
 	}
 	
 	/**
@@ -125,8 +125,8 @@ class FlxVelocity
 		source.acceleration.x = Std.int(Math.cos(a) * speed);
 		source.acceleration.y = Std.int(Math.sin(a) * speed);
 		
-		source.maxVelocity.x = FlxU.fromIntToUInt(xSpeedMax);
-		source.maxVelocity.y = FlxU.fromIntToUInt(ySpeedMax);
+		source.maxVelocity.x = xSpeedMax;
+		source.maxVelocity.y = ySpeedMax;
 	}
 	
 	/**
@@ -177,8 +177,8 @@ class FlxVelocity
 		source.acceleration.x = Std.int(Math.cos(a) * speed);
 		source.acceleration.y = Std.int(Math.sin(a) * speed);
 		
-		source.maxVelocity.x = FlxU.fromIntToUInt(xSpeedMax);
-		source.maxVelocity.y = FlxU.fromIntToUInt(ySpeedMax);
+		source.maxVelocity.x = xSpeedMax;
+		source.maxVelocity.y = ySpeedMax;
 	}
 	
 	/**

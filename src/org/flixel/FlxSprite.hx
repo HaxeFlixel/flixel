@@ -298,9 +298,6 @@ class FlxSprite extends FlxObject
 	// TODO: add ability to load Nodes. This will add sprite to layer automatically
 	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite
 	{
-		Width = FlxU.fromIntToUInt(Width);
-		Height = FlxU.fromIntToUInt(Height);
-		
 		bakedRotation = 0;
 		#if (cpp || neko)
 		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key);
@@ -379,8 +376,6 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadRotatedGraphic(Graphic:Dynamic, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, Key:String = null):FlxSprite
 	{
-		Rotations = FlxU.fromIntToUInt(Rotations);
-		
 		//Create the brush and canvas
 		var rows:Int = Math.floor(Math.sqrt(Rotations));
 		var brush:BitmapData = FlxG.addBitmap(Graphic, false, false, Key);
@@ -1002,7 +997,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function addAnimation(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		_animations.push(new FlxAnim(Name, Frames, FlxU.fromIntToUInt(FrameRate), Looped));
+		_animations.push(new FlxAnim(Name, Frames, FrameRate, Looped));
 	}
 	
 	/**
