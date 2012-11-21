@@ -111,6 +111,15 @@ class Log extends FlxWindow
 		#end
 	}
 	
+	public function clear():Void
+	{
+		_text.text = "";
+		_lines.splice(0, _lines.length);
+		#if !js
+		_text.scrollV = 0;
+		#end
+	}
+	
 	/**
 	 * Adjusts the width and height of the text field accordingly.
 	 */
