@@ -52,7 +52,6 @@ class FlxText extends FlxSprite
 	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
-		Width = FlxU.fromIntToUInt(Width);
 		
 		var key:String = FlxG.getUniqueBitmapKey("text");
 		#if !neko
