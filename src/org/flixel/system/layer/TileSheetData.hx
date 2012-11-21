@@ -67,7 +67,6 @@ class TileSheetData
 		{
 			if (tileSheetData[i] == tileSheetObj)
 			{
-				// Does tilesheetData array care about its order? If n
 				if (i < tileSheetData.length - 1)
 					tileSheetData[i] = tileSheetData.pop();
 				else
