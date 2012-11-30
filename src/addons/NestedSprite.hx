@@ -155,10 +155,7 @@ class NestedSprite extends FlxSprite
 		}
 		
 		var child:NestedSprite = _children[Index];
-		if (index < _children.length - 1)
-			_children[index] = _children.pop();
-		else
-			_children.pop();
+		_children.splice(Index, 1);
 		
 		return child;
 	}

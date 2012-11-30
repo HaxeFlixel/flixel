@@ -213,10 +213,7 @@ class FlxBasic
 		}
 		else
 		{
-			if (ft._next != null)
-			{
-				_tween = cast(ft._next, FlxTween);
-			}
+			_tween = (ft._next == null) ? null : cast(ft._next, FlxTween);
 		}
 		ft._next = ft._prev = null;
 		ft._parent = null;

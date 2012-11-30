@@ -8,6 +8,7 @@ import nme.display.Sprite;
 import nme.geom.ColorTransform;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.system.layer.DrawStackItem;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -243,6 +244,23 @@ class FlxCamera extends FlxBasic
 	public var red:Float;
 	public var green:Float;
 	public var blue:Float;
+	
+	/**
+	 * Currently used draw stack item
+	 */
+	private var _currentStackItem:DrawStackItem;
+	/**
+	 * Position of currently used draw stack item in _stack array
+	 */
+	private var _stackPosition:Int = 0;
+	/**
+	 * Draw stack items used for current frame
+	 */
+	private var _stack:Array<DrawStackItem>;
+	/**
+	 * Draw stack items that can be reused
+	 */
+	private static var _itemStorage:Array<DrawStackItem>;
 	#end
 	
 	/**

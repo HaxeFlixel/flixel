@@ -1,6 +1,7 @@
 package org.flixel;
 
 import nme.display.BitmapData;
+import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.TileSheetData;
 
 /**
