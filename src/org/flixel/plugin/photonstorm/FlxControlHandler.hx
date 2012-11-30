@@ -261,16 +261,16 @@ class FlxControlHandler
 	 */
 	public function setMovementSpeed(xSpeed:Int, ySpeed:Int, xSpeedMax:Int, ySpeedMax:Int, xDeceleration:Int = 0, yDeceleration:Int = 0):Void
 	{
-		xSpeed = FlxU.fromIntToUInt(xSpeed);
-		ySpeed = FlxU.fromIntToUInt(ySpeed);
+		xSpeed = xSpeed;
+		ySpeed = ySpeed;
 		
 		leftMoveSpeed = -xSpeed;
 		rightMoveSpeed = xSpeed;
 		upMoveSpeed = -ySpeed;
 		downMoveSpeed = ySpeed;
 		
-		setMaximumSpeed(FlxU.fromIntToUInt(xSpeedMax), FlxU.fromIntToUInt(ySpeedMax));
-		setDeceleration(FlxU.fromIntToUInt(xDeceleration), FlxU.fromIntToUInt(yDeceleration));
+		setMaximumSpeed(xSpeedMax, ySpeedMax);
+		setDeceleration(xDeceleration, yDeceleration);
 	}
 	
 	/**
@@ -281,7 +281,7 @@ class FlxControlHandler
 	 */
 	public function setStandardSpeed(speed:Int, acceleration:Bool = true):Void
 	{
-		speed = FlxU.fromIntToUInt(speed);
+		speed = speed;
 		
 		if (acceleration)
 		{
@@ -311,13 +311,13 @@ class FlxControlHandler
 	 */
 	public function setAdvancedMovementSpeed(leftSpeed:Int, rightSpeed:Int, upSpeed:Int, downSpeed:Int, xSpeedMax:Int, ySpeedMax:Int, xDeceleration:Int = 0, yDeceleration:Int = 0):Void
 	{
-		leftMoveSpeed = -FlxU.fromIntToUInt(leftSpeed);
-		rightMoveSpeed = FlxU.fromIntToUInt(rightSpeed);
-		upMoveSpeed = -FlxU.fromIntToUInt(upSpeed);
-		downMoveSpeed = FlxU.fromIntToUInt(downSpeed);
+		leftMoveSpeed = -leftSpeed;
+		rightMoveSpeed = rightSpeed;
+		upMoveSpeed = -upSpeed;
+		downMoveSpeed = downSpeed;
 		
-		setMaximumSpeed(FlxU.fromIntToUInt(xSpeedMax), FlxU.fromIntToUInt(ySpeedMax));
-		setDeceleration(FlxU.fromIntToUInt(xDeceleration), FlxU.fromIntToUInt(yDeceleration));
+		setMaximumSpeed(xSpeedMax, ySpeedMax);
+		setDeceleration(xDeceleration, yDeceleration);
 	}
 	
 	/**
@@ -472,8 +472,8 @@ class FlxControlHandler
 	 */
 	public function setMaximumSpeed(xSpeed:Int, ySpeed:Int, limitVelocity:Bool = true):Void
 	{
-		entity.maxVelocity.x = FlxU.fromIntToUInt(xSpeed);
-		entity.maxVelocity.y = FlxU.fromIntToUInt(ySpeed);
+		entity.maxVelocity.x = xSpeed;
+		entity.maxVelocity.y = ySpeed;
 		
 		capVelocity = limitVelocity;
 	}
@@ -487,8 +487,8 @@ class FlxControlHandler
 	 */
 	public function setDeceleration(xSpeed:Int, ySpeed:Int):Void
 	{
-		entity.drag.x = FlxU.fromIntToUInt(xSpeed);
-		entity.drag.y = FlxU.fromIntToUInt(ySpeed);
+		entity.drag.x = xSpeed;
+		entity.drag.y = ySpeed;
 	}
 	
 	/**
@@ -633,7 +633,7 @@ class FlxControlHandler
 	{
 		fireKey = key;
 		fireKeyMode = keymode;
-		fireRate = FlxU.fromIntToUInt(repeatDelay);
+		fireRate = repeatDelay;
 		fireCallback = callbackFunc;
 		
 		if (altKey != "")
@@ -662,7 +662,7 @@ class FlxControlHandler
 		jumpKeyMode = keymode;
 		jumpHeight = height;
 		jumpSurface = surface;
-		jumpRate = FlxU.fromIntToUInt(repeatDelay);
+		jumpRate = repeatDelay;
 		jumpFromFallTime = jumpFromFall;
 		jumpCallback = callbackFunc;
 		
@@ -685,7 +685,7 @@ class FlxControlHandler
 	 */
 	public function setBounds(x:Int, y:Int, width:Int, height:Int):Void
 	{
-		bounds = new Rectangle(x, y, FlxU.fromIntToUInt(width), FlxU.fromIntToUInt(height));
+		bounds = new Rectangle(x, y, width, height);
 	}
 	
 	/**

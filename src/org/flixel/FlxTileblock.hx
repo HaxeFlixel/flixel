@@ -31,7 +31,7 @@ class FlxTileblock extends FlxSprite
 	{
 		super(X, Y);
 		#if (flash || js)
-		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), 0, true);
+		makeGraphic(Width, Height, 0, true);
 		#else
 		bakedRotation = 0;
 		width = frameWidth = Width;
@@ -54,9 +54,9 @@ class FlxTileblock extends FlxSprite
 	 */
 	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{
-		TileWidth = FlxU.fromIntToUInt(TileWidth);
-		TileHeight = FlxU.fromIntToUInt(TileHeight);
-		Empties = FlxU.fromIntToUInt(Empties);
+		TileWidth = TileWidth;
+		TileHeight = TileHeight;
+		Empties = Empties;
 		
 		if (TileGraphic == null)
 		{

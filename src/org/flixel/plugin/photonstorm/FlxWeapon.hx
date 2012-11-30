@@ -233,8 +233,8 @@ class FlxWeapon
 	 */
 	public function makeImageBullet(quantity:Int, image:Dynamic, offsetX:Int = 0, offsetY:Int = 0, autoRotate:Bool = false, rotations:Int = 16, frame:Int = -1, antiAliasing:Bool = false, autoBuffer:Bool = false):Void
 	{
-		quantity = FlxU.fromIntToUInt(quantity);
-		rotations = FlxU.fromIntToUInt(rotations);
+		quantity = quantity;
+		rotations = rotations;
 		
 		group = new FlxGroup(quantity);
 		
@@ -280,7 +280,7 @@ class FlxWeapon
 	 */
 	public function makeAnimatedBullet(quantity:Int, imageSequence:Dynamic, frameWidth:Int, frameHeight:Int, frames:Array<Int>, frameRate:Int, looped:Bool, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
-		quantity = FlxU.fromIntToUInt(quantity);
+		quantity = quantity;
 		group = new FlxGroup(quantity);
 		
 		for (b in 0...(quantity))
@@ -518,7 +518,7 @@ class FlxWeapon
 	 */
 	public function setBulletSpeed(speed:Int):Void
 	{
-		bulletSpeed = FlxU.fromIntToUInt(speed);
+		bulletSpeed = speed;
 	}
 	
 	/**
@@ -539,7 +539,7 @@ class FlxWeapon
 	 */
 	public function setFireRate(rate:Int):Void
 	{
-		fireRate = FlxU.fromIntToUInt(rate);
+		fireRate = rate;
 	}
 	
 	/**
@@ -629,8 +629,8 @@ class FlxWeapon
 	 */
 	public function setBulletRandomFactor(randomAngle:Int = 0, randomSpeed:Int = 0, randomPosition:FlxPoint = null, randomLifeSpan:Float = 0):Void
 	{
-		rndFactorAngle = FlxU.fromIntToUInt(randomAngle);
-		rndFactorSpeed = FlxU.fromIntToUInt(randomSpeed);
+		rndFactorAngle = randomAngle;
+		rndFactorSpeed = randomSpeed;
 		
 		if (randomPosition != null)
 		{
