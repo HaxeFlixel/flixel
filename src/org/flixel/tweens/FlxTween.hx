@@ -158,6 +158,7 @@ class FlxTween
 			case FlxTween.ONESHOT:
 				_time = _target;
 				active = false;
+				if (complete != null) complete();
 				_parent.removeTween(this, true);
 		}
 		_finish = false;
