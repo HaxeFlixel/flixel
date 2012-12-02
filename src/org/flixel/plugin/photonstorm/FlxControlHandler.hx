@@ -261,9 +261,6 @@ class FlxControlHandler
 	 */
 	public function setMovementSpeed(xSpeed:Int, ySpeed:Int, xSpeedMax:Int, ySpeedMax:Int, xDeceleration:Int = 0, yDeceleration:Int = 0):Void
 	{
-		xSpeed = xSpeed;
-		ySpeed = ySpeed;
-		
 		leftMoveSpeed = -xSpeed;
 		rightMoveSpeed = xSpeed;
 		upMoveSpeed = -ySpeed;
@@ -281,8 +278,6 @@ class FlxControlHandler
 	 */
 	public function setStandardSpeed(speed:Int, acceleration:Bool = true):Void
 	{
-		speed = speed;
-		
 		if (acceleration)
 		{
 			setMovementSpeed(speed, speed, speed, speed, speed, speed);

@@ -233,9 +233,6 @@ class FlxWeapon
 	 */
 	public function makeImageBullet(quantity:Int, image:Dynamic, offsetX:Int = 0, offsetY:Int = 0, autoRotate:Bool = false, rotations:Int = 16, frame:Int = -1, antiAliasing:Bool = false, autoBuffer:Bool = false):Void
 	{
-		quantity = quantity;
-		rotations = rotations;
-		
 		group = new FlxGroup(quantity);
 		
 		rotateToAngle = autoRotate;
@@ -280,7 +277,6 @@ class FlxWeapon
 	 */
 	public function makeAnimatedBullet(quantity:Int, imageSequence:Dynamic, frameWidth:Int, frameHeight:Int, frames:Array<Int>, frameRate:Int, looped:Bool, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
-		quantity = quantity;
 		group = new FlxGroup(quantity);
 		
 		for (b in 0...(quantity))

@@ -54,10 +54,6 @@ class FlxTileblock extends FlxSprite
 	 */
 	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{
-		TileWidth = TileWidth;
-		TileHeight = TileHeight;
-		Empties = Empties;
-		
 		if (TileGraphic == null)
 		{
 			return this;
