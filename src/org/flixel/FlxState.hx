@@ -230,4 +230,24 @@ class FlxState extends FlxGroup
 		#end
 		return null;
 	}
+	
+	/**
+	 * This method is called after application losts its focus.
+	 * Can be useful if you using third part libraries, such as tweening engines.
+	 * Override it in subclasses
+	 */
+	public function onFocusLost():Void
+	{
+		
+	}
+	
+	/**
+	 * This method is called after application has focus.
+	 * Can be useful if you using third part libraries, such as tweening engines.
+	 * Override it in subclasses
+	 */
+	public function onFocus():Void
+	{
+		
+	}
 }

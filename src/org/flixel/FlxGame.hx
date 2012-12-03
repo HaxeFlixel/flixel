@@ -541,6 +541,8 @@ class FlxGame extends Sprite
 		_lostFocus = _focus.visible = false;
 		stage.frameRate = _flashFramerate;
 		FlxG.resumeSounds();
+		
+		_state.onFocus();
 	}
 	
 	/**
@@ -558,6 +560,8 @@ class FlxGame extends Sprite
 		_lostFocus = _focus.visible = true;
 		stage.frameRate = 10;
 		FlxG.pauseSounds();
+		
+		_state.onFocusLost();
 	}
 	
 	/**
