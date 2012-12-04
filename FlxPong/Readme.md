@@ -1,0 +1,1 @@
+This is a Haxe port of FlxPong demo from treydb. Original code can be found at https://github.com/treydb/FlxPong
