@@ -13,22 +13,21 @@ import org.flixel.FlxSprite;
  * Extends <code>FlxText</code> for better support rendering text on cpp target.
  * Can tint, fade, rotate and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
+ * Doesn't have multicamera support.
  */
 class FlxTextField extends FlxText
 {
-	
 	/**
 	 * Internal reference to array of Flash <code>TextField</code> objects.
 	 */
-	private var _textFields:Array<TextField>;
-	
 	private var _selectable:Bool;
 	private var _multiline:Bool;
 	private var _wordWrap:Bool;
 	
-	private var _textFormat:TextFormat;
-	
 	private var _text:String;
+	
+	private var _camera:FlxCamera;
+	private var _addedToDisplay:Bool;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -36,14 +35,20 @@ class FlxTextField extends FlxText
 	 * @param	Y				The Y position of the text.
 	 * @param	Width			The width of the text object (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
-	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or nto
+	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
+	 * @param	Camera			Camera to display. FlxG.camera is used by default (if you pass null)
 	 */
-	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true)
+	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true, Camera:FlxCamera = null)
 	{
-		_textFields = new Array<TextField>();
-		width = Width;
-		
 		super(X, Y, Width);
+		
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		
+		_addedToDisplay = false;
+		width = Width;
 		
 		if (Text == null)
 		{
@@ -54,11 +59,8 @@ class FlxTextField extends FlxText
 		_selectable = false;
 		_multiline = true;
 		_wordWrap = true;
-		#if neko
-		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
-		#else
-		_textFormat = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
-		#end
+		
+		_camera = Camera;
 		
 		allowCollisions = FlxObject.NONE;
 		moves = false;
@@ -69,17 +71,11 @@ class FlxTextField extends FlxText
 	 */
 	override public function destroy():Void
 	{
-		for (tf in _textFields)
+		if (_textField.parent != null)
 		{
-			if (tf != null && tf.parent != null)
-			{
-				tf.parent.removeChild(tf);
-				tf = null;
-			}
+			_textField.parent.removeChild(_textField);
 		}
-		_textFields = null;
-		_textFormat = null;
-		
+		_camera = null;
 		super.destroy();
 	}
 	
@@ -93,18 +89,19 @@ class FlxTextField extends FlxText
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	override public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0):FlxText
+	override public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
 	{
 		if (Font == null)
 		{
 			Font = FlxAssets.nokiaFont;
 		}
-		_textFormat.font = Font;
-		_textFormat.size = Size;
-		_textFormat.color = Color;
-		_textFormat.align = Alignment;
-		updateTextFields();
+		_format.font = Font;
+		_format.size = Size;
+		_format.color = Color;
+		_format.align = Alignment;
+		updateTextField();
 		_shadow = ShadowColor;
+		_useShadow = UseShadow;
 		return this;
 	}
 	
@@ -122,16 +119,8 @@ class FlxTextField extends FlxText
 	override public function setText(Text:String):String
 	{
 		_text = Text;
-		updateTextFields();
+		updateTextField();
 		return text;
-	}
-	
-	/**
-	 * The size of the text being displayed.
-	 */
-	override public function getSize():Float
-	{
-		return _textFormat.size;
 	}
 	
 	/**
@@ -139,21 +128,9 @@ class FlxTextField extends FlxText
 	 */
 	override public function setSize(Size:Float):Float
 	{
-		_textFormat.size = Size;
-		updateTextFields();
+		_format.size = Size;
+		updateTextField();
 		return Size;
-	}
-	
-	/**
-	 * The color of the text being displayed.
-	 */
-	override public function getColor():BitmapInt32
-	{
-		#if neko
-		return { rgb: Std.int(_textFormat.color), a: 0xff };
-		#else
-		return Std.int(_textFormat.color);
-		#end
 	}
 	
 	/**
@@ -162,20 +139,18 @@ class FlxTextField extends FlxText
 	override public function setColor(Color:BitmapInt32):BitmapInt32
 	{
 		#if neko
-		_textFormat.color = Color.rgb;
+		_format.color = Color.rgb;
 		#else
-		_textFormat.color = Color;
+		_format.color = Color;
 		#end
-		updateTextFields();
+		updateTextField();
 		return Color;
 	}
 	
-	/**
-	 * The font used for this text.
-	 */
-	override public function getFont():String
+	override private function set_useShadow(value:Bool):Bool
 	{
-		return Std.string(_textFormat.font);
+		_useShadow = value;
+		return _useShadow;
 	}
 	
 	/**
@@ -183,17 +158,9 @@ class FlxTextField extends FlxText
 	 */
 	override public function setFont(Font:String):String
 	{
-		_textFormat.font = Font;
-		updateTextFields();
+		_format.font = Font;
+		updateTextField();
 		return Font;
-	}
-	
-	/**
-	 * The alignment of the font ("left", "right", or "center").
-	 */
-	override public function getAlignment():String
-	{
-		return cast(_textFormat.align, String);
 	}
 	
 	/**
@@ -201,8 +168,8 @@ class FlxTextField extends FlxText
 	 */
 	override public function setAlignment(Alignment:String):String
 	{
-		_textFormat.align = Alignment;
-		updateTextFields();
+		_format.align = Alignment;
+		updateTextField();
 		return Alignment;
 	}
 	
@@ -278,41 +245,32 @@ class FlxTextField extends FlxText
 			Alpha = 0;
 		}
 		alpha = Alpha;
-		updateTextFields();
+		updateTextField();
 		return alpha;
 	}
 	
-	private function updateTextFields():Void
+	private function updateTextField():Void
 	{
-		for (tf in _textFields)
+		if (_addedToDisplay)
 		{
-			if (tf != null)
-			{
-				tf.width = width;
-				tf.defaultTextFormat = _textFormat;
-				tf.setTextFormat(_textFormat);
-				tf.selectable = _selectable;
-				tf.wordWrap = _wordWrap;
-				tf.multiline = _multiline;
-				tf.text = _text;
-				height = tf.textHeight;
-				height += 4;
-				tf.height = 1.2 * height;
-				tf.alpha = alpha;
-			}
+			_textField.width = width;
+			_textField.defaultTextFormat = _format;
+			_textField.setTextFormat(_format);
+			_textField.selectable = _selectable;
+			_textField.wordWrap = _wordWrap;
+			_textField.multiline = _multiline;
+			_textField.text = _text;
+			height = _textField.textHeight;
+			height += 4;
+			_textField.height = 1.2 * height;
+			_textField.alpha = alpha;
 		}
 	}
 	
 	public function setVisibility(visible:Bool):Void
 	{
 		this.visible = visible;
-		for (tf in _textFields)
-		{
-			if (tf != null)
-			{
-				tf.visible = visible;
-			}
-		}
+		_textField.visible = visible;
 	}
 	
 	public function getVisibility():Bool
@@ -337,11 +295,7 @@ class FlxTextField extends FlxText
 	 */
 	override public function draw():Void
 	{
-		if (visible == false)
-		{
-			setVisibility(false);
-			return;
-		}
+		if (_camera == null)	return;
 		
 		if (_flickerTimer != 0)
 		{
@@ -349,48 +303,39 @@ class FlxTextField extends FlxText
 			if (_flicker) return;
 		}
 		
-		if (cameras == null) cameras = FlxG.cameras;
-		
-		var camera:FlxCamera;
-		var i:Int = 0;
-		var l:Int = cameras.length;
-		var tf:TextField;
-		
-		while (i < l)
+		if (!_addedToDisplay)
 		{
-			camera = cameras[i++];
-			tf = _textFields[i - 1];
-			
-			if (tf == null)
-			{
-				tf = new TextField();
-				_textFields[i - 1] = tf;
-				updateTextFields();
-				camera._canvas.addChild(tf);
-			}
-			
-			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
-			{
-				tf.visible = false;
-				continue;
-			}
-			else
-			{
-				tf.visible = true;
-			}
-			
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
-			
-			// Simple render
-			tf.x = _point.x;
-			tf.y = _point.y;
-			
-			FlxBasic._VISIBLECOUNT++;
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebug(camera);
-			}
+			_camera._canvas.addChild(_textField);
+			_addedToDisplay = true;
+			updateTextField();
+		}
+		
+		if (visible == false)
+		{
+			setVisibility(false);
+			return;
+		}
+		
+		if (!onScreenSprite(_camera) || !_camera.visible || !_camera.exists)
+		{
+			_textField.visible = false;
+		}
+		else
+		{
+			_textField.visible = true;
+		}
+		
+		_point.x = x - (_camera.scroll.x * scrollFactor.x) - (offset.x);
+		_point.y = y - (_camera.scroll.y * scrollFactor.y) - (offset.y);
+		
+		// Simple render
+		_textField.x = _point.x;
+		_textField.y = _point.y;
+		
+		FlxBasic._VISIBLECOUNT++;
+		if (FlxG.visualDebug && !ignoreDrawDebug)
+		{
+			drawDebug(_camera);
 		}
 	}
 	
@@ -401,72 +346,73 @@ class FlxTextField extends FlxText
 	{
 		if (AreYouSure)
 		{
-			var tf:TextField = _textFields[0];
-			if (tf != null)
+			#if !neko
+			_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
+			#else
+			_pixels = new BitmapData(Std.int(width), Std.int(height), true, {rgb: 0, a:0});
+			#end
+			frameHeight = Std.int(height);
+			_flashRect.x = 0;
+			_flashRect.y = 0;
+			_flashRect.width = width;
+			_flashRect.height = height;
+			
+			if((_textField.text != null) && (_textField.text.length > 0))
 			{
-				#if !neko
-				_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
-				#else
-				_pixels = new BitmapData(Std.int(width), Std.int(height), true, {rgb: 0, a:0});
-				#end
-				frameHeight = Std.int(height);
-				_flashRect.x = 0;
-				_flashRect.y = 0;
-				_flashRect.width = width;
-				_flashRect.height = height;
+				//Now that we've cleared a buffer, we need to actually render the text to it
+				updateTextField();
+				_formatAdjusted.font = _format.font;
+				_formatAdjusted.size = _format.size;
+				_formatAdjusted.color = _format.color;
+				_formatAdjusted.align = _format.align;
+				_matrix.identity();
 				
-				if((tf.text != null) && (tf.text.length > 0))
+				//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
+				if ((_format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
 				{
-					//Now that we've cleared a buffer, we need to actually render the text to it
-					_textField.width = width;
-					_textField.defaultTextFormat = _textFormat;
-					_textField.setTextFormat(_textFormat);
-					_textField.selectable = _selectable;
-					_textField.wordWrap = _wordWrap;
-					_textField.multiline = _multiline;
-					_textField.text = _text;
-					_textField.height = 1.2 * height;
-					_textField.alpha = alpha;
-					
-					var format:TextFormat = dtfCopy();
-					var formatAdjusted:TextFormat = format;
-					_matrix.identity();
-					
-					//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-					if ((format.align == TextFormatAlign.CENTER) && (tf.numLines == 1))
-					{
-						formatAdjusted = new TextFormat(format.font, format.size, format.color);
-						formatAdjusted.align = TextFormatAlign.LEFT;
-						_textField.setTextFormat(formatAdjusted);				
-						_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
-					}
-					//Render a single pixel shadow beneath the text
-					if(_shadow > 0)
-					{
-						_textField.setTextFormat(new TextFormat(formatAdjusted.font, formatAdjusted.size, _shadow, null, null, null, null, null, formatAdjusted.align));
-						_matrix.translate(1, 1);
-						_pixels.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate( -1, -1);
-						_textField.setTextFormat(new TextFormat(formatAdjusted.font, formatAdjusted.size, formatAdjusted.color, null, null, null, null, null, formatAdjusted.align));
-					}
-					//Actually draw the text onto the buffer
-					_pixels.draw(_textField, _matrix, _colorTransform);
-					_textField.setTextFormat(new TextFormat(format.font, format.size, format.color, null, null, null, null, null, format.align));
+					_formatAdjusted.align = TextFormatAlign.LEFT;
+					_textField.setTextFormat(_formatAdjusted);				
+					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
 				}
-				
-				//Finally, update the visible pixels
-				if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
-				{
-					#if !neko
-					framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
-					#else
-					framePixels = new BitmapData(_pixels.width, _pixels.height, true, { rgb: 0, a:0 } );
-					#end
-				}
-				framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
-				
+				//Actually draw the text onto the buffer
+				_pixels.draw(_textField, _matrix, _colorTransform);
+				_textField.setTextFormat(_format);
 			}
 		}
+	}
+	
+	/**
+	 * Camera on which this text will be displayed
+	 */
+	public var camera(get_camera, set_camera):FlxCamera;
+	
+	private function get_camera():FlxCamera 
+	{
+		return _camera;
+	}
+	
+	private function set_camera(value:FlxCamera):FlxCamera 
+	{
+		if (_camera != value)
+		{
+			if (value != null)
+			{
+				value._canvas.addChild(_textField);
+				_addedToDisplay = true;
+				updateTextField();
+			}
+			else
+			{
+				if (_camera != null)
+				{
+					_textField.parent.removeChild(_textField);
+				}
+				_addedToDisplay = false;
+			}
+			
+			_camera = value;
+		}
+		return value;
 	}
 }
 #end

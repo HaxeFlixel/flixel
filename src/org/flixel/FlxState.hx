@@ -242,7 +242,7 @@ class FlxState extends FlxGroup
 	}
 	
 	/**
-	 * This method is called after application has focus.
+	 * This method is called after application gets focus.
 	 * Can be useful if you using third part libraries, such as tweening engines.
 	 * Override it in subclasses
 	 */

@@ -289,7 +289,7 @@ class FlxGame extends Sprite
 		}
 		if(!FlxG.mobile)
 		{
-			if((_debugger != null) && ((FlashEvent.keyCode == 192) || (FlashEvent.keyCode == 220)))
+			if ((_debugger != null) && ((FlashEvent.keyCode == 192) || (FlashEvent.keyCode == 220)))
 			{
 				_debugger.visible = !_debugger.visible;
 				_debuggerUp = _debugger.visible;
@@ -304,7 +304,7 @@ class FlxGame extends Sprite
 				//_console.toggle();
 				return;
 			}
-			if(useSoundHotKeys)
+			if (useSoundHotKeys)
 			{
 				var c:Int = FlashEvent.keyCode;
 				var code:String = String.fromCharCode(FlashEvent.charCode);
