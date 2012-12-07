@@ -4,6 +4,7 @@ package org.flixel;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.text.TextField;
+import nme.text.TextFieldType;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
 import nme.text.TextFieldAutoSize;
@@ -14,6 +15,7 @@ import org.flixel.FlxSprite;
  * Can tint, fade, rotate and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
  * Doesn't have multicamera support.
+ * Displays over all other objects.
  */
 class FlxTextField extends FlxText
 {
@@ -28,6 +30,15 @@ class FlxTextField extends FlxText
 	
 	private var _camera:FlxCamera;
 	private var _addedToDisplay:Bool;
+	
+	private var _type:TextFieldType;
+	private var _border:Bool;
+	private var _borderColor:Int;
+	private var _bgColor:Int;
+	private var _background:Bool;
+	private var _autosize:TextFieldAutoSize;
+	
+	// TODO: flash target support
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -60,10 +71,14 @@ class FlxTextField extends FlxText
 		_multiline = true;
 		_wordWrap = true;
 		
-		_camera = Camera;
+		_type = TextFieldType.DYNAMIC;
+		_border = false;
+		_borderColor = 0x000000;
+		_background = false;
+		_bgColor = 0xffffff;
+		_autosize = TextFieldAutoSize.NONE;
 		
-		allowCollisions = FlxObject.NONE;
-		moves = false;
+		_camera = Camera;
 	}
 	
 	/**
@@ -75,6 +90,7 @@ class FlxTextField extends FlxText
 		{
 			_textField.parent.removeChild(_textField);
 		}
+		_type = null;
 		_camera = null;
 		super.destroy();
 	}
@@ -98,7 +114,7 @@ class FlxTextField extends FlxText
 		_format.font = Font;
 		_format.size = Size;
 		_format.color = Color;
-		_format.align = Alignment;
+		_format.align = convertTextAlignmentFromString(Alignment);
 		updateTextField();
 		_shadow = ShadowColor;
 		_useShadow = UseShadow;
@@ -168,7 +184,7 @@ class FlxTextField extends FlxText
 	 */
 	override public function setAlignment(Alignment:String):String
 	{
-		_format.align = Alignment;
+		_format.align = convertTextAlignmentFromString(Alignment);
 		updateTextField();
 		return Alignment;
 	}
@@ -253,6 +269,13 @@ class FlxTextField extends FlxText
 	{
 		if (_addedToDisplay)
 		{
+			_textField.type = _type;
+			_textField.autoSize = _autosize;
+			_textField.selectable = _selectable;
+			_textField.border = _border;
+			_textField.borderColor = _borderColor;
+			_textField.background = _background;
+			_textField.backgroundColor = _bgColor;
 			_textField.width = width;
 			_textField.defaultTextFormat = _format;
 			_textField.setTextFormat(_format);
@@ -382,7 +405,7 @@ class FlxTextField extends FlxText
 	}
 	
 	/**
-	 * Camera on which this text will be displayed
+	 * Camera on which this text will be displayed. Default is FlxG.camera.
 	 */
 	public var camera(get_camera, set_camera):FlxCamera;
 	
@@ -412,6 +435,159 @@ class FlxTextField extends FlxText
 			
 			_camera = value;
 		}
+		return value;
+	}
+	
+	/**
+	 * Type of text field. Can be TextFieldType.DYNAMIC or TextFieldType.INPUT. Default is TextFieldType.DYNAMIC.
+	 */
+	public var type(get_type, set_type):TextFieldType;
+	
+	private function get_type():TextFieldType 
+	{
+		return _type;
+	}
+	
+	private function set_type(value:TextFieldType):TextFieldType 
+	{
+		_type = value;
+		updateTextField();
+		return value;
+	}
+	
+	/**
+	 * Defines whether this text field is selectable or not. Default is false.
+	 */
+	public var selectable(get_selectable, set_selectable):Bool;
+	
+	private function get_selectable():Bool 
+	{
+		return _selectable;
+	}
+	
+	private function set_selectable(value:Bool):Bool 
+	{
+		_selectable = value;
+		updateTextField();
+		return value;
+	}
+	
+	/**
+	 * Defines whether to show border around text field or not. Default is false.
+	 */
+	public var border(get_border, set_border):Bool;
+	
+	private function get_border():Bool 
+	{
+		return _border;
+	}
+	
+	private function set_border(value:Bool):Bool 
+	{
+		_border = value;
+		updateTextField();
+		return value;
+	}
+	
+	/**
+	 * Defines the color of border around text field. Default is 0x000000 (black).
+	 */
+	public var borderColor(get_borderColor, set_borderColor):Int;
+	
+	private function get_borderColor():Int 
+	{
+		return _textField.borderColor;
+	}
+	
+	private function set_borderColor(value:Int):Int 
+	{
+		_borderColor = value;
+		updateTextField();
+		return value;
+	}
+	
+	/**
+	 * Defines whether this text field is multiline or not. Default is true.
+	 */
+	public var multiline(get_multiline, set_multiline):Bool;
+	
+	private function get_multiline():Bool 
+	{
+		return _multiline;
+	}
+	
+	private function set_multiline(value:Bool):Bool 
+	{
+		_multiline = value;
+		updateTextField();
+		return value;
+	}
+	
+	/**
+	 * Defines background color for this text field. Default is 0xffffff (white).
+	 */
+	public var bgColor(get_bgColor, set_bgColor):Int;
+	
+	private function get_bgColor():Int 
+	{
+		return _bgColor;
+	}
+	
+	private function set_bgColor(value:Int):Int 
+	{
+		_bgColor = value;
+		updateTextField();
+		return value;
+	}
+	
+	/**
+	 * Defines whether to show background of this text field or not. Default is false.
+	 */
+	public var background(get_background, set_background):Bool;
+	
+	private function get_background():Bool 
+	{
+		return _background;
+	}
+	
+	private function set_background(value:Bool):Bool 
+	{
+		_background = value;
+		updateTextField();
+		return value;
+	}
+	
+	/**
+	 * Defines whether this text field is using word wrap. Default is true
+	 */
+	public var wordWrap(get_wordWrap, set_wordWrap):Bool;
+	
+	private function get_wordWrap():Bool 
+	{
+		return _wordWrap;
+	}
+	
+	private function set_wordWrap(value:Bool):Bool 
+	{
+		_wordWrap = value;
+		updateTextField();
+		return value;
+	}
+	
+	/**
+	 * Defines textfield's autosize behavior. Default is TextFieldAutoSize.NONE
+	 */
+	public var autosize(get_autosize, set_autosize):TextFieldAutoSize;
+	
+	private function get_autosize():TextFieldAutoSize 
+	{
+		return _autosize;
+	}
+	
+	private function set_autosize(value:TextFieldAutoSize):TextFieldAutoSize 
+	{
+		_autosize = value;
+		updateTextField();
 		return value;
 	}
 }
