@@ -1635,7 +1635,7 @@ class FlxG
 	inline static public function updateInput():Void
 	{
 		FlxG.keys.update();
-		if (!_game._debuggerUp || !_game._debugger.hasMouse)
+		if (FlxG.mouse.visible)
 		{
 			FlxG.mouse.update(Math.floor(FlxG._game.mouseX), Math.floor(FlxG._game.mouseY));
 		}

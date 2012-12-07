@@ -69,7 +69,7 @@ class FlxTrail extends FlxGroup
 	 * @param	Sprite		The FlxSprite the trail is attached to.
 	 * @param	Image		The image to ues for the trailsprites.
 	 * @param	Length		The amount of trailsprites to create. 
-	 * @param	Delay		How often to update the trail.
+	 * @param	Delay		How often to update the trail. 0 updates every frame.
 	 * @param	Alpha		The alpha value for the very first trailsprite.
 	 * @param	Diff		How much lower the alpha of the next trailsprite is.
 	 */
@@ -106,7 +106,7 @@ class FlxTrail extends FlxGroup
 			counter = 0;
 
 			// Push the current position into the positons array and drop one.
-			var spritePosition:FlxPoint = new FlxPoint(sprite.x, sprite.y);
+			var spritePosition:FlxPoint = new FlxPoint(sprite.x - sprite.offset.x, sprite.y - sprite.offset.y);
 			recentPositions.unshift(spritePosition);
 			if (recentPositions.length > trailLength) recentPositions.pop();
 
