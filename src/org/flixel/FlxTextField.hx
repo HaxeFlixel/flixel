@@ -333,6 +333,12 @@ class FlxTextField extends FlxText
 			updateTextField();
 		}
 		
+		if (_type == TextFieldType.INPUT && _text != _textField.text)
+		{
+			_text = _textField.text;
+			updateTextField();
+		}
+		
 		if (visible == false)
 		{
 			setVisibility(false);
