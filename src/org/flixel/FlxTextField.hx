@@ -170,6 +170,11 @@ class FlxTextField extends FlxText
 		return Color;
 	}
 	
+	override private function set_useShadow(value:Bool):Bool
+	{
+		return value;
+	}
+	
 	/**
 	 * @private
 	 */
