@@ -104,6 +104,7 @@ class PlayState extends FlxState
 		tx.color = {rgb: 0x778ea1, a: 0xff};
 		#end
 		tx.shadow = 0x233e58;
+		tx.useShadow = true;
 		add(tx);
 		
 		//Instructions
@@ -115,6 +116,7 @@ class PlayState extends FlxState
 		tx.color = {rgb: 0x778ea1, a: 0xff};
 		#end
 		tx.shadow = 0x233e58;
+		tx.useShadow = true;
 		add(tx);
 		
 		/*part of silly path-finding test

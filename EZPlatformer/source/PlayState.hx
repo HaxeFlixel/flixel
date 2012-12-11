@@ -148,6 +148,7 @@ class PlayState extends FlxState
 		#else
 		score.shadow = 0x000000;
 		#end
+		score.useShadow = true;
 		score.text = "SCORE: " + (coins.countDead() * 100);
 		add(score);
 		
@@ -157,6 +158,7 @@ class PlayState extends FlxState
 		#else
 		status.shadow = 0x000000;
 		#end
+		status.useShadow = true;
 		status.alignment = "right";
 		switch(FlxG.score)
 		{

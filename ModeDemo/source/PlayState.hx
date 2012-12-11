@@ -181,7 +181,7 @@ class PlayState extends FlxState
 	//	#else
 	//	_score = new FlxTextField(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
 	//	#end
-		_score.setFormat(null, 16, 0xd8eba2, "center", 0x131c1b);
+		_score.setFormat(null, 16, 0xd8eba2, "center", 0x131c1b, true);
 		_hud.add(_score);
 		if(FlxG.scores.length < 2)
 		{
@@ -197,7 +197,7 @@ class PlayState extends FlxState
 		if(FlxG.scores[0] != 0)
 		{
 			_score2 = new FlxText(FlxG.width / 2, 0, Math.floor(FlxG.width / 2));
-			_score2.setFormat(null, 8, 0xd8eba2, "right", _score.shadow);
+			_score2.setFormat(null, 8, 0xd8eba2, "right", _score.shadow, true);
 			_hud.add(_score2);
 			_score2.text = "HIGHEST: "+FlxG.scores[0]+"\nLAST: "+FlxG.score;
 		}

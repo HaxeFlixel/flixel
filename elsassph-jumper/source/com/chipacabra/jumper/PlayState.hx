@@ -113,6 +113,7 @@ class PlayState extends FlxState
 		_score.alignment = "center";
 		_score.scrollFactor = ssf;
 		_score.shadow = 0x131c1b;
+		_score.useShadow = true;
 		add(_score);
 		
 		// Set up the game over text
