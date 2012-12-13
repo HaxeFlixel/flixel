@@ -1007,7 +1007,7 @@ class FlxG
 			}
 			else
 			{
-				bd = Assets.getBitmapData(Graphic);
+				bd = FlxAssets.getBitmapData(Graphic);
 			}
 			
 			#if !(flash || js)

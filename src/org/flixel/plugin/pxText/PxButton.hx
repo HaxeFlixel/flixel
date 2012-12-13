@@ -9,6 +9,7 @@ import nme.events.MouseEvent;
 import nme.events.TouchEvent;
 import nme.media.Sound;
 import nme.media.Sound;
+import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxCamera;
 import org.flixel.FlxLayer;
@@ -115,7 +116,7 @@ class PxButton extends FlxSprite
 			// TODO: redo this
 			if (PxBitmapFont.fetch("nokiafc22") == null)
 			{
-				PxBitmapFont.store("nokiafc22", new PxBitmapFont().loadPixelizer(Assets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
+				PxBitmapFont.store("nokiafc22", new PxBitmapFont().loadPixelizer(FlxAssets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
 			}
 			
 			label = new FlxBitmapTextField(PxBitmapFont.fetch("nokiafc22"));

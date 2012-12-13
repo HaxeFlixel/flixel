@@ -3,10 +3,13 @@ package org.flixel.system.layer;
 class DrawStackItem
 {
 	public var atlas:Atlas;
-	public var colored:Bool;
-	public var blending:Int;
+	public var colored:Bool = false;
+	public var blending:Int = 0;
 	public var drawData:Array<Float>;
-	public var position:Int;
+	public var position:Int = 0;
+	public var next:DrawStackItem;
+	
+	public var initialized:Bool = false;
 	
 	public function new()
 	{
@@ -17,10 +20,6 @@ class DrawStackItem
 	{
 		atlas = null;
 		drawData = null;
-	}
-	
-	public inline function match(item:DrawStackItem):Bool
-	{
-		return (atlas == item.atlas && colored == item.colored && blending == item.blending);
+		next = null;
 	}
 }

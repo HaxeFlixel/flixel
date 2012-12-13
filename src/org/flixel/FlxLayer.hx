@@ -249,7 +249,7 @@ class FlxLayer
 		}
 		else if (Std.is(Image, String))
 		{
-			bd = Assets.getBitmapData(Image);
+			bd = FlxAssets.getBitmapData(Image);
 			key = Image;
 		}
 		else

@@ -1820,7 +1820,7 @@ class FlxTilemap extends FlxObject
 		var tempBitmapData:BitmapData;
 		if (Std.is(ImageFile, String))
 		{
-			tempBitmapData = nme.Assets.getBitmapData(ImageFile);
+			tempBitmapData = FlxAssets.getBitmapData(ImageFile);
 		}
 		else
 		{

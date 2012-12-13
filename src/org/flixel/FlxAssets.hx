@@ -1,6 +1,7 @@
 package org.flixel;
 
 import nme.Assets;
+import nme.display.BitmapData;
 import nme.display.Graphics;
 import nme.text.Font;
 
@@ -111,6 +112,11 @@ class FlxAssets //extends Assets
 		graph.lineTo(100, 75);
 		graph.lineTo(100, 100);
 		graph.endFill();
+	}
+	
+	public static function getBitmapData(id:String):BitmapData
+	{
+		return Assets.getBitmapData(id);
 	}
 	
 	// TODO: write code for automatic sound caching for android target

@@ -8,6 +8,7 @@ import nme.display.Sprite;
 import nme.geom.ColorTransform;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
 
 /**
@@ -250,17 +251,85 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _currentStackItem:DrawStackItem;
 	/**
-	 * Position of currently used draw stack item in _stack array
+	 * Pointer to head of stack with draw items
 	 */
-	private var _stackPosition:Int = 0;
-	/**
-	 * Draw stack items used for current frame
-	 */
-	private var _stack:Array<DrawStackItem>;
+	private var _headOfDrawStack:DrawStackItem;
 	/**
 	 * Draw stack items that can be reused
 	 */
-	private static var _itemStorage:Array<DrawStackItem>;
+	private static var _storageHead:DrawStackItem;
+	
+	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int):DrawStackItem
+	{
+		if (_currentStackItem.initialized == false)
+		{
+			_headOfDrawStack = _currentStackItem;
+			_currentStackItem.atlas = ObjAtlas;
+			_currentStackItem.colored = ObjColored;
+			_currentStackItem.blending = ObjBlending;
+			_currentStackItem.initialized = true;
+		}
+		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.colored == ObjColored && _currentStackItem.blending == ObjBlending)
+		{
+			return _currentStackItem;
+		}
+		
+		var newItem:DrawStackItem = null;
+		if (_storageHead != null)
+		{
+			newItem = _storageHead;
+			newItem.initialized = true;
+			var newHead:DrawStackItem = _storageHead.next;
+			newItem.next = null;
+			_storageHead = newHead;
+		}
+		else
+		{
+			newItem = new DrawStackItem();
+		}
+		
+		newItem.atlas = ObjAtlas;
+		newItem.colored = ObjColored;
+		newItem.blending = ObjBlending;
+		_currentStackItem.next = newItem;
+		_currentStackItem = newItem;
+		return _currentStackItem;
+	}
+	
+	inline public function clearDrawStack():Void
+	{	
+		var currItem:DrawStackItem = _headOfDrawStack;
+		while (currItem != _currentStackItem)
+		{
+			currItem.position = 0;
+			var newHead:DrawStackItem = currItem;
+			currItem = currItem.next;
+			if (_storageHead == null)
+			{
+				_storageHead = newHead;
+			}
+			else
+			{
+				newHead.next = _storageHead;
+				_storageHead = newHead;
+			}
+		}
+		
+		_headOfDrawStack = _currentStackItem;
+		_currentStackItem.position = 0;
+		_currentStackItem.next = null;
+		_currentStackItem.initialized = false;
+	}
+	
+	inline public function render():Void
+	{
+		var currItem:DrawStackItem = _headOfDrawStack;
+		while (currItem != null)
+		{
+			// TODO: render current draw stack item
+			currItem = currItem.next;
+		}
+	}
 	#end
 	
 	/**
@@ -373,6 +442,9 @@ class FlxCamera extends FlxBasic
 		blue = 1.0;
 		
 		fog = 0.0;
+		
+		_currentStackItem = new DrawStackItem();
+		_headOfDrawStack = _currentStackItem;
 		#end
 		
 		_fxFadeIn = false;
@@ -420,6 +492,12 @@ class FlxCamera extends FlxBasic
 		}
 		_debugLayer = null;
 		_canvas = null;
+		
+		clearDrawStack();
+		
+		_headOfDrawStack.dispose();
+		_headOfDrawStack = null;
+		_currentStackItem = null;
 		#end
 		_flashSprite = null;
 		
