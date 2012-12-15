@@ -87,7 +87,6 @@ class FlxWeapon
 	public var bulletElasticity:Float;
 	
 	public var rndFactorAngle:Int;
-	public var rndFactorLifeSpan:Int;
 	public var rndFactorSpeed:Int;
 	public var rndFactorLifeSpan:Float;
 	public var rndFactorPosition:FlxPoint;
