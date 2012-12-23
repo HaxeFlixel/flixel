@@ -327,6 +327,9 @@ class FlxCamera extends FlxBasic
 		while (currItem != null)
 		{
 			// TODO: render current draw stack item
+			
+			
+			
 			currItem = currItem.next;
 		}
 	}

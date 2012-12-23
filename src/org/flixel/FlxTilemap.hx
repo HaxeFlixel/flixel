@@ -1048,18 +1048,21 @@ class FlxTilemap extends FlxObject
 			while(i < grp.length)
 			{
 				basic = members[i++];
-				if(Std.is(basic, FlxObject))
+				if ((basic != null) && basic.exists)
 				{
-					if (overlapsWithCallback(cast(basic, FlxObject)))
+					if(Std.is(basic, FlxObject))
 					{
-						results = true;
+						if (overlapsWithCallback(cast(basic, FlxObject)))
+						{
+							results = true;
+						}
 					}
-				}
-				else
-				{
-					if (overlaps(basic, InScreenSpace, Camera))
+					else
 					{
-						results = true;
+						if (overlaps(basic, InScreenSpace, Camera))
+						{
+							results = true;
+						}
 					}
 				}
 			}
@@ -1095,20 +1098,23 @@ class FlxTilemap extends FlxObject
 			while(i < grp.length)
 			{
 				basic = members[i++];
-				if(Std.is(basic, FlxObject))
+				if ((basic != null) && basic.exists)
 				{
-					_point.x = X;
-					_point.y = Y;
-					if (overlapsWithCallback(cast(basic, FlxObject), null, false, _point))
+					if(Std.is(basic, FlxObject))
 					{
-						results = true;
+						_point.x = X;
+						_point.y = Y;
+						if (overlapsWithCallback(cast(basic, FlxObject), null, false, _point))
+						{
+							results = true;
+						}
 					}
-				}
-				else
-				{
-					if (overlapsAt(X, Y, basic, InScreenSpace, Camera))
+					else
 					{
-						results = true;
+						if (overlapsAt(X, Y, basic, InScreenSpace, Camera))
+						{
+							results = true;
+						}
 					}
 				}
 			}

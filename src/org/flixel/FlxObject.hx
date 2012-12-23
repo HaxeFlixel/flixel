@@ -777,11 +777,13 @@ class FlxObject extends FlxBasic
 		{
 			var results:Bool = false;
 			var i:Int = 0;
+			var basic:FlxBasic;
 			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
 			var members:Array<FlxBasic> = grp.members;
 			while (i < grp.length)
 			{
-				if (overlaps(members[i++], InScreenSpace, Camera))
+				basic = members[i++];
+				if (basic != null && basic.exists && overlaps(basic, InScreenSpace, Camera))
 				{
 					results = true;
 				}
@@ -835,7 +837,8 @@ class FlxObject extends FlxBasic
 			var members:Array<FlxBasic> = grp.members;
 			while(i < Std.int(grp.length))
 			{
-				if (overlapsAt(X, Y, members[i++], InScreenSpace, Camera))
+				basic = members[i++];
+				if (basic != null && basic.exists && overlapsAt(X, Y, basic, InScreenSpace, Camera))
 				{
 					results = true;
 				}

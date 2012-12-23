@@ -525,7 +525,8 @@ class FlxText extends FlxSprite
 	{
 		#if (cpp || neko)
 		_layer = FlxG.state.getLayerFor(_bitmapDataKey);
-		if (_pixels != FlxG._cache.get(_bitmapDataKey))
+		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
+		if (_pixels != cachedBmd)
 		{
 			FlxG._cache.get(_bitmapDataKey).dispose();
 			FlxG._cache.set(_bitmapDataKey, _pixels);
