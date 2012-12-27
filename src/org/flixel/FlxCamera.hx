@@ -276,6 +276,7 @@ class FlxCamera extends FlxBasic
 		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.colored == ObjColored && _currentStackItem.blending == ObjBlending)
 		{
 			itemToReturn = _currentStackItem;
+			itemToReturn.initialized = true;
 		}
 		
 		if (itemToReturn == null)
@@ -336,8 +337,10 @@ class FlxCamera extends FlxBasic
 	{
 		var currItem:DrawStackItem = _headOfDrawStack;
 		var useColor:Bool = this.isColored();
+		var i:Int = 0;
 		while (currItem != null)
 		{
+			i++;
 			var data:Array<Float> = currItem.drawData;
 			var dataLen:Int = data.length;
 			var position:Int = currItem.position;
@@ -360,6 +363,7 @@ class FlxCamera extends FlxBasic
 			}
 			currItem = currItem.next;
 		}
+		trace(i);
 	}
 	#end
 	

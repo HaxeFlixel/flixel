@@ -156,8 +156,6 @@ class FlxTileblock extends FlxSprite
 	override public function draw():Void 
 	{
 		#if (cpp || neko)
-		// Don't try to draw if object isn't on any layer 
-		// or layer isn't added to state
 		if (_atlas == null)
 		{
 			return;

@@ -8,6 +8,7 @@ import nme.geom.Rectangle;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
+import org.flixel.system.layer.DrawStackItem;
 
 /**
  * Used for showing infinitely scrolling backgrounds.
@@ -60,7 +61,7 @@ class FlxBackdrop extends FlxObject
 		#if (cpp || neko)
 		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		_tileInfo = [];
-		updateLayerInfo();
+		updateAtlasInfo();
 		_numTiles = 0;
 		#end
 
@@ -144,16 +145,19 @@ class FlxBackdrop extends FlxObject
 			#if flash
 			camera.buffer.copyPixels(_data, _data.rect, _ppoint, null, null, true);
 			#else
-			if (_layer == null || _layer.onStage == false)
+			if (_atlas == null)
 			{
 				return;
 			}
 			
 			var currDrawData:Array<Float>;
 			var currIndex:Int;
+			// TODO: check coloring (see camera coloring) in other class also
+			var isColoredCamera:Bool = camera.isColored();
+			var drawItem:DrawStackItem = camera.getDrawStackItem(_atlas, isColoredCamera, 0);
 			
-			currDrawData = _layer.drawData[camera.ID];
-			currIndex = _layer.positionData[camera.ID];
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
 			
 			var currPosInArr:Int;
 			var currTileX:Float;
@@ -163,7 +167,6 @@ class FlxBackdrop extends FlxObject
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
 			
-			var isColoredCamera:Bool = camera.isColored();
 			if (isColoredCamera)
 			{
 				redMult = camera.red; 
@@ -186,7 +189,7 @@ class FlxBackdrop extends FlxObject
 				currDrawData[currIndex++] = 0;
 				currDrawData[currIndex++] = 1;
 				
-				if (_layer.isColored || isColoredCamera)
+				if (isColoredCamera)
 				{
 					currDrawData[currIndex++] = redMult; 
 					currDrawData[currIndex++] = greenMult;
@@ -196,7 +199,7 @@ class FlxBackdrop extends FlxObject
 				currDrawData[currIndex++] = 1.0;	// alpha
 			}
 			
-			_layer.positionData[camera.ID] = currIndex;
+			drawItem.position = currIndex;
 			#end
 		}
 	}

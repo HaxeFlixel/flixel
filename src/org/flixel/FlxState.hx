@@ -26,9 +26,9 @@ class FlxState extends FlxGroup
 	public function create():Void { }
 	
 	/**
-	 * Gets the layer for specified key from bitmap cache in FlxG. Creates new layer for it if there wasn't such a layer 
+	 * Gets the atlas for specified key from bitmap cache in FlxG. Creates new atlas for it if there wasn't such a atlas 
 	 * @param	KeyInBitmapCache	key from bitmap cache in FlxG
-	 * @return	required layer
+	 * @return	required atlas
 	 */
 	public function getAtlasFor(KeyInBitmapCache:String):Atlas
 	{

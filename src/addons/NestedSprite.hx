@@ -393,20 +393,6 @@ class NestedSprite extends FlxSprite
 		_blue = combinedBlue;
 		#end
 		
-	#if (cpp || neko)	
-		#if cpp
-		if (_color < 0xffffff)
-		#else
-		if (_color.rgb < 0xffffff)
-		#end
-		{
-			if (_layer != null)
-			{
-				_layer.isColored = true;
-			}
-		}
-	#end
-		
 		for (child in _children)
 		{
 			#if !neko

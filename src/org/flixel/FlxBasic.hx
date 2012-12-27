@@ -270,10 +270,7 @@ class FlxBasic
 	private var _atlas:Atlas;
 	private var _node:Node;
 	
-	/**
-	 * Please don't use this variable. It's for internal use only.
-	 * Use layer's add() method to set sprite's layer
-	 */
+	// TODO: document this variable
 	public var atlas(get_atlas, set_atlas):Atlas;
 	
 	private function get_atlas():Atlas 
@@ -308,7 +305,7 @@ class FlxBasic
 						else if (value.addNode(bm, _bitmapDataKey) == null)
 						{
 							#if debug
-							throw "Can't add object's graphic to layer's atlas: " + value.name + ". There isn't enough space";
+							throw "Can't add object's graphic to atlas: " + value.name + ". There isn't enough space";
 							#end
 							return null;
 						}

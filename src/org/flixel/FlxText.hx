@@ -512,7 +512,7 @@ class FlxText extends FlxSprite
 	#end
 	
 	/**
-	 * FlxText objects can't be added on any level. They create their own layers
+	 * FlxText objects can't be added on any level. They create their own atlases
 	 */
 	#if (cpp || neko)
 	override private function set_atlas(value:Atlas):Atlas 
