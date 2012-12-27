@@ -5,11 +5,13 @@ import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.display.Graphics;
 import nme.display.Sprite;
+import nme.display.Tilesheet;
 import nme.geom.ColorTransform;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.system.layer.TileSheetData;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -259,8 +261,10 @@ class FlxCamera extends FlxBasic
 	 */
 	private static var _storageHead:DrawStackItem;
 	
-	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int):DrawStackItem
+	public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int):DrawStackItem
 	{
+		var itemToReturn:DrawStackItem = null;
+		trace(ObjAtlas.name);
 		if (_currentStackItem.initialized == false)
 		{
 			_headOfDrawStack = _currentStackItem;
@@ -268,31 +272,46 @@ class FlxCamera extends FlxBasic
 			_currentStackItem.colored = ObjColored;
 			_currentStackItem.blending = ObjBlending;
 			_currentStackItem.initialized = true;
+		//	itemToReturn = _currentStackItem;
+			trace("_currentStackItem.initialized == false");
+			return _currentStackItem;
 		}
 		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.colored == ObjColored && _currentStackItem.blending == ObjBlending)
 		{
+			//itemToReturn = _currentStackItem;
+			trace("match item");
 			return _currentStackItem;
 		}
 		
-		var newItem:DrawStackItem = null;
-		if (_storageHead != null)
+		if (itemToReturn == null)
 		{
-			newItem = _storageHead;
-			newItem.initialized = true;
-			var newHead:DrawStackItem = _storageHead.next;
-			newItem.next = null;
-			_storageHead = newHead;
-		}
-		else
-		{
-			newItem = new DrawStackItem();
+			var newItem:DrawStackItem = null;
+			if (_storageHead != null)
+			{
+				newItem = _storageHead;
+				newItem.initialized = true;
+				var newHead:DrawStackItem = _storageHead.next;
+				newItem.next = null;
+				_storageHead = newHead;
+				trace("stored item");
+			}
+			else
+			{
+				newItem = new DrawStackItem();
+				newItem.initialized = true;
+				trace("new item");
+			}
+			
+			newItem.atlas = ObjAtlas;
+			newItem.colored = ObjColored;
+			newItem.blending = ObjBlending;
+			_currentStackItem.next = newItem;
+			_currentStackItem = newItem;
+			
+			//itemToReturn = _currentStackItem;
 		}
 		
-		newItem.atlas = ObjAtlas;
-		newItem.colored = ObjColored;
-		newItem.blending = ObjBlending;
-		_currentStackItem.next = newItem;
-		_currentStackItem = newItem;
+		//return itemToReturn;
 		return _currentStackItem;
 	}
 	
@@ -302,6 +321,7 @@ class FlxCamera extends FlxBasic
 		while (currItem != _currentStackItem)
 		{
 			currItem.position = 0;
+			currItem.atlas = null;
 			var newHead:DrawStackItem = currItem;
 			currItem = currItem.next;
 			if (_storageHead == null)
@@ -317,19 +337,45 @@ class FlxCamera extends FlxBasic
 		
 		_headOfDrawStack = _currentStackItem;
 		_currentStackItem.position = 0;
+		_currentStackItem.atlas = null;
 		_currentStackItem.next = null;
 		_currentStackItem.initialized = false;
 	}
 	
-	inline public function render():Void
+	public function render():Void
 	{
+		// TODO: move this check to FlxG (or FlxGame)
+		if (!this.visible || !this.exists)
+		{
+			//continue;
+			return;
+		}
+		trace("camera render");
 		var currItem:DrawStackItem = _headOfDrawStack;
+		var useColor:Bool = this.isColored();
 		while (currItem != null)
 		{
-			// TODO: render current draw stack item
-			
-			
-			
+			var data:Array<Float> = currItem.drawData;
+			var dataLen:Int = data.length;
+			var position:Int = currItem.position;
+			if (position > 0)
+			{
+				if (dataLen != position)
+				{
+					data.splice(position, (dataLen - position));
+				}
+				
+				var tempFlags:Int = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA;
+				if (currItem.colored || useColor)
+				{
+					tempFlags |= Graphics.TILE_RGB;
+				}
+				tempFlags |= currItem.blending;
+				// TODO: currItem.antialiasing
+				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing/* || currItem.antialiasing*/), tempFlags);
+				trace(currItem.atlas.name);
+				TileSheetData._DRAWCALLS++;
+			}
 			currItem = currItem.next;
 		}
 	}

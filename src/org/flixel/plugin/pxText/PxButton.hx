@@ -12,7 +12,6 @@ import nme.media.Sound;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxCamera;
-import org.flixel.FlxLayer;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
@@ -150,14 +149,15 @@ class PxButton extends FlxSprite
 		_initialized = false;
 	}
 	
-	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite 
+	// TODO: remove this later
+	/*override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite 
 	{
 		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, Width, Height, Unique, Key);
-		swapLayers();
 		return tempSprite;
-	}
+	}*/
 	
-	#if flash 
+	// TODO: remove this later
+	/*#if flash 
 	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
 	#else
 	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, Unique:Bool = false, Key:String = null):FlxSprite
@@ -175,36 +175,17 @@ class PxButton extends FlxSprite
 		#end
 		
 		var tempSprite:FlxSprite = super.makeGraphic(Width, Height, Color, Unique, Key);
-		swapLayers();
 		return tempSprite;
-	}
+	}*/
 	
-	/**
-	 * Helper function for changing draw order of button's background and label.
-	 */
-	public function swapLayers():Void
-	{
-		#if (cpp || neko)
-		if (label != null && _layer != null)
-		{
-			var labelIndex:Int = FlxG.state.getLayerIndex(label.layer);
-			var bgIndex:Int = FlxG.state.getLayerIndex(_layer);
-			if (bgIndex > labelIndex)
-			{
-				FlxG.state.addLayerAt(label.layer, bgIndex + 1);
-			}
-		}
-		#end
-	}
-	
-	#if (cpp || neko)
-	override private function set_layer(value:FlxLayer):FlxLayer 
+	// TODO: override set_atlas (for optimizations)
+	/*#if (cpp || neko)
+	override private function set_atlas(value:FlxLayer):FlxLayer 
 	{
 		var lr:FlxLayer = super.set_layer(value);
-		swapLayers();
 		return lr;
 	}
-	#end
+	#end*/
 	
 	/**
 	 * Called by the game state when state is changed (if this object belongs to the state)

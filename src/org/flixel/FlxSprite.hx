@@ -10,7 +10,7 @@ import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
-import org.flixel.FlxLayer;
+import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.Node;
 
 #if (cpp || neko)
@@ -69,7 +69,7 @@ class FlxSprite extends FlxObject
 	public var blend:BlendMode;
 	#else
 	private var _blend:BlendMode;
-	private var _blendString:String;
+	private var _blendInt:Int = 0;
 	/**
 	 * Internal helper for less bitmapData manipulation (for FlxCollision Plugin)
 	 */
@@ -207,7 +207,6 @@ class FlxSprite extends FlxObject
 		blend = null;
 		#else
 		_blend = null;
-		_blendString = null;
 		#end
 		antialiasing = false;
 		cameras = null;
@@ -359,7 +358,7 @@ class FlxSprite extends FlxObject
 		
 		height = frameHeight = Height;
 		resetHelpers();
-		updateLayerInfo();
+		updateAtlasInfo();
 		return this;
 	}
 	
@@ -499,7 +498,7 @@ class FlxSprite extends FlxObject
 		antialiasing = AntiAliasing;
 		#end
 		
-		updateLayerInfo();
+		updateAtlasInfo();
 		
 		return this;
 	}
@@ -539,7 +538,7 @@ class FlxSprite extends FlxObject
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
 		resetHelpers();
-		updateLayerInfo();
+		updateAtlasInfo();
 		return this;
 	}
 	
@@ -603,7 +602,7 @@ class FlxSprite extends FlxObject
 		#if (cpp || neko)
 		// Don't try to draw if object isn't on any layer 
 		// or layer isn't added to state
-		if (_layer == null || _layer.onStage == false)
+		if (_atlas == null)
 		{
 			return;
 		}
@@ -632,8 +631,10 @@ class FlxSprite extends FlxObject
 		var l:Int = cameras.length;
 		
 		#if (cpp || neko)
+		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
+		var isColored:Bool = (_colorTransform != null);
 		
 		var radians:Float;
 		var cos:Float;
@@ -650,8 +651,9 @@ class FlxSprite extends FlxObject
 			}
 			
 			#if (cpp || neko)
-			currDrawData = _layer.drawData[camera.ID];
-			currIndex = _layer.positionData[camera.ID];
+			drawItem = camera.getDrawStackItem(_atlas, _colorTransform != null, _blendInt);
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
@@ -694,7 +696,7 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (_layer.isColored || camera.isColored())
+				if (isColored || camera.isColored())
 				{
 					if (camera.isColored())
 					{
@@ -711,7 +713,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				currDrawData[currIndex++] = alpha;
-				_layer.positionData[camera.ID] = currIndex;
+				drawItem.position = currIndex;
 				#end
 			}
 			else
@@ -751,7 +753,7 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = cos * scale.y;
 				}
 				
-				if (_layer.isColored || camera.isColored())
+				if (isColored || camera.isColored())
 				{
 					if (camera.isColored())
 					{
@@ -768,7 +770,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				currDrawData[currIndex++] = alpha;
-				_layer.positionData[camera.ID] = currIndex;
+				drawItem.position = currIndex;
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;
@@ -816,18 +818,15 @@ class FlxSprite extends FlxObject
 			_matrix.rotate(Brush.angle * 0.017453293);
 		}
 		_matrix.translate(X + Brush.origin.x, Y + Brush.origin.y);
-		#if (flash || js)
 		var brushBlend:BlendMode = Brush.blend;
-		#else
-		var brushBlend:String = Brush._blendString;
+		#if (cpp || neko)
 		_calculatedPixelsIndex = -1;
 		#end
-		//_pixels.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
-		_pixels.draw(bitmapData, _matrix, null, Brush.blend, null, Brush.antialiasing);
+		_pixels.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		#if (flash || js)
 		calcFrame();
 		#end
-		updateLayerInfo(true);
+		updateAtlasInfo(true);
 	}
 	
 	/**
@@ -874,7 +873,7 @@ class FlxSprite extends FlxObject
 		_calculatedPixelsIndex = -1;
 		#end
 		
-		updateLayerInfo(true);
+		updateAtlasInfo(true);
 	}
 	
 	/**
@@ -897,7 +896,7 @@ class FlxSprite extends FlxObject
 		_calculatedPixelsIndex = -1;
 		#end
 		
-		updateLayerInfo(true);
+		updateAtlasInfo(true);
 	}
 	
 	/**
@@ -1142,7 +1141,7 @@ class FlxSprite extends FlxObject
 			row++;
 		}
 		
-		updateLayerInfo(true);
+		updateAtlasInfo(true);
 		return positions;
 	}
 	
@@ -1176,7 +1175,7 @@ class FlxSprite extends FlxObject
 		
 		_calculatedPixelsIndex = -1;
 		#end
-		updateLayerInfo(true);
+		updateAtlasInfo(true);
 		return _pixels;
 	}
 	
@@ -1295,10 +1294,6 @@ class FlxSprite extends FlxObject
 		_green = (_color.rgb >> 8 & 0xff) * 0.00392;
 		_blue = (_color.rgb & 0xff) * 0.00392;
 		#end
-		
-	#if (cpp || neko)	
-		updateLayerProps();
-	#end
 		
 		return _color;
 	}
@@ -1554,9 +1549,6 @@ class FlxSprite extends FlxObject
 	private function setAntialiasing(val:Bool):Bool
 	{
 		antialiasing = val;
-		#if (cpp || neko)
-		updateLayerProps();
-		#end
 		return val;
 	}
 	
@@ -1602,14 +1594,13 @@ class FlxSprite extends FlxObject
 		switch (value)
 		{
 			case BlendMode.ADD:
-				_blendString = "add";
+				_blendInt = Tilesheet.TILE_BLEND_ADD;
 				_blend = value;
 			default:
-				_blendString = null;
+				_blendInt = 0;
 				_blend = BlendMode.NORMAL;
 		}
 		
-		updateLayerProps();
 		return value;
 	}
 	#end
@@ -1623,7 +1614,6 @@ class FlxSprite extends FlxObject
 	#if (cpp || neko)
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			updateLayerProps();
 			if (frames > 1)
 			{
 				_framesData = _node.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight), null, 0, 0, 0, 0, 1, 1);
@@ -1636,25 +1626,6 @@ class FlxSprite extends FlxObject
 		}
 	#end
 	}
-	
-	#if (cpp || neko)
-	private function updateLayerProps():Void
-	{
-		if (_layer != null)
-		{
-			_layer.antialiasing = antialiasing;
-			_layer.blend = _blend;
-			#if cpp
-			if (_color < 0xffffff)
-			#else
-			if (_color.rgb < 0xffffff)
-			#end
-			{
-				_layer.isColored = true;
-			}
-		}
-	}
-	#end
 	
 	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{

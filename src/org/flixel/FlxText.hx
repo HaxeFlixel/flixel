@@ -5,7 +5,7 @@ import nme.display.BitmapInt32;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
-import org.flixel.FlxLayer;
+import org.flixel.system.layer.Atlas;
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -455,7 +455,7 @@ class FlxText extends FlxSprite
 				_textField.setTextFormat(_format);
 			}
 			#if (cpp || neko)
-			updateLayerInfo();
+			updateAtlasInfo();
 			#else
 			//Finally, update the visible pixels
 			if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
@@ -515,25 +515,24 @@ class FlxText extends FlxSprite
 	 * FlxText objects can't be added on any level. They create their own layers
 	 */
 	#if (cpp || neko)
-	override private function set_layer(value:FlxLayer):FlxLayer 
+	override private function set_atlas(value:Atlas):Atlas 
 	{
 		return value;
 	}
 	#end
 	
-	override public function updateLayerInfo(updateAtlas:Bool = false):Void
+	override public function updateAtlasInfo(updateAtlas:Bool = false):Void
 	{
 		#if (cpp || neko)
-		_layer = FlxG.state.getLayerFor(_bitmapDataKey);
+		_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
 		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
-		if (_pixels != cachedBmd)
+		if (cachedBmd != _pixels)
 		{
-			FlxG._cache.get(_bitmapDataKey).dispose();
+			cachedBmd.dispose();
 			FlxG._cache.set(_bitmapDataKey, _pixels);
-			_layer.atlas.clearAndFillWith(_pixels);
-			_layer.atlas = _layer.atlas;
+			_atlas.clearAndFillWith(_pixels);
 		}
-		_node = _layer.atlas.getNodeByKey(_bitmapDataKey);
+		_node = _atlas.getNodeByKey(_bitmapDataKey);
 		updateFrameData();
 		#end
 	}
@@ -543,7 +542,6 @@ class FlxText extends FlxSprite
 	#if (cpp || neko)
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			updateLayerProps();
 			_framesData = _node.addSpriteFramesData(Math.floor(width), Math.floor(height));
 			_frameID = _framesData.frameIDs[0];
 		}

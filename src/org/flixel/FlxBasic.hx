@@ -1,6 +1,7 @@
 package org.flixel;
 
 import nme.display.BitmapData;
+import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.Node;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.tweens.FlxTween;
@@ -88,7 +89,7 @@ class FlxBasic
 		#if (cpp || neko)
 		_framesData = null;
 		_bitmapDataKey = null;
-		_layer = null;
+		_atlas = null;
 		_node = null;
 		#end
 	}
@@ -266,27 +267,27 @@ class FlxBasic
 	#if (cpp || neko)
 	private var _bitmapDataKey:String;
 	private var _framesData:FlxSpriteFrames;
-	private var _layer:FlxLayer;
+	private var _atlas:Atlas;
 	private var _node:Node;
 	
 	/**
 	 * Please don't use this variable. It's for internal use only.
 	 * Use layer's add() method to set sprite's layer
 	 */
-	public var layer(get_layer, set_layer):FlxLayer;
+	public var atlas(get_atlas, set_atlas):Atlas;
 	
-	private function get_layer():FlxLayer 
+	private function get_atlas():Atlas 
 	{
-		return _layer;
+		return _atlas;
 	}
 	
-	private function set_layer(value:FlxLayer):FlxLayer 
+	private function set_atlas(value:Atlas):Atlas 
 	{
-		if (_layer != value)
+		if (_atlas != value)
 		{
 			if (value == null)
 			{
-				_layer = value;
+				_atlas = value;
 				_node = null;
 				_framesData = null;
 			}
@@ -294,7 +295,7 @@ class FlxBasic
 			{
 				if (_bitmapDataKey != null)
 				{
-					if (!value.atlas.hasNodeWithName(_bitmapDataKey))
+					if (!value.hasNodeWithName(_bitmapDataKey))
 					{
 						var bm:BitmapData = FlxG._cache.get(_bitmapDataKey);
 						if (bm == null) 
@@ -304,17 +305,17 @@ class FlxBasic
 							#end
 							return null;
 						}
-						else if (value.atlas.addNode(bm, _bitmapDataKey) == null)
+						else if (value.addNode(bm, _bitmapDataKey) == null)
 						{
 							#if debug
-							throw "Can't add object's graphic to layer's atlas: " + value.atlas.name + ". There isn't enough space";
+							throw "Can't add object's graphic to layer's atlas: " + value.name + ". There isn't enough space";
 							#end
 							return null;
 						}
 					}
 					
-					_layer = value;
-					_node = value.atlas.getNodeByKey(_bitmapDataKey);
+					_atlas = value;
+					_node = value.getNodeByKey(_bitmapDataKey);
 				}
 				
 				updateFrameData();
@@ -332,36 +333,33 @@ class FlxBasic
 	}
 	#end
 	
-	public function updateLayerInfo(updateAtlas:Bool = false):Void
+	// TODO: Check this method
+	public function updateAtlasInfo(updateAtlas:Bool = false):Void
 	{
 		#if (cpp || neko)
-		if (_layer == null)
+		if (_atlas == null)
 		{
-			FlxG.state.getLayerFor(_bitmapDataKey).add(this);
+			_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
+			_node = _atlas.getNodeByKey(_bitmapDataKey);
 		}
-		else if (_layer.atlas.hasNodeWithName(_bitmapDataKey))
+		else if (_atlas.hasNodeWithName(_bitmapDataKey))
 		{
 			if (updateAtlas)
 			{
-				_layer.atlas.redrawNode(_node);
+				_atlas.redrawNode(_node);
 			}
-			_node = _layer.atlas.getNodeByKey(_bitmapDataKey);
-			updateFrameData();
 		}
 		else
 		{
 			var bm:BitmapData = FlxG._cache.get(_bitmapDataKey);
-			_node = _layer.atlas.addNode(bm, _bitmapDataKey);
+			_node = _atlas.addNode(bm, _bitmapDataKey);
 			if (_node == null)
 			{
-				FlxG.state.getLayerFor(_bitmapDataKey).add(this);
-			}
-			else
-			{
-				_node = _layer.atlas.getNodeByKey(_bitmapDataKey);
-				updateFrameData();
+				_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
+				_node = _atlas.getNodeByKey(_bitmapDataKey);
 			}
 		}
+		updateFrameData();
 		#end
 	}
 	

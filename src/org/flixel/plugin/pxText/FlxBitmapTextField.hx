@@ -5,7 +5,10 @@ import nme.display.BitmapInt32;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
+import org.flixel.FlxCamera;
+import org.flixel.FlxG;
 import org.flixel.FlxSprite;
+import org.flixel.system.layer.DrawStackItem;
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -170,7 +173,7 @@ class FlxBitmapTextField extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if (_layer == null || _layer.onStage == false)
+		if (_atlas == null)
 		{
 			return;
 		}
@@ -189,6 +192,7 @@ class FlxBitmapTextField extends FlxSprite
 			cameras = FlxG.cameras;
 		}
 		var camera:FlxCamera;
+		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		var i:Int = 0;
@@ -215,8 +219,9 @@ class FlxBitmapTextField extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			currDrawData = _layer.drawData[camera.ID];
-			currIndex = _layer.positionData[camera.ID];
+			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt);
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
 			
 			var isColoredCamera:Bool = camera.isColored();
 			
@@ -375,7 +380,7 @@ class FlxBitmapTextField extends FlxSprite
 				}
 			}
 			
-			_layer.positionData[camera.ID] = currIndex;
+			drawItem.position = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -1176,8 +1181,6 @@ class FlxBitmapTextField extends FlxSprite
 	#if (cpp || neko)
 		if (_node != null && _font != null)
 		{
-			updateLayerProps();
-			_layer.isColored = true;
 			_font.updateGlyphData(_node);
 		}
 	#end

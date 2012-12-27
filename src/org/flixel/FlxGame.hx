@@ -638,7 +638,6 @@ class FlxGame extends Sprite
 		//Basic reset stuff
 		#if (cpp || neko)
 		PxBitmapFont.clearStorage();
-		FlxLayer.clearLayerCache();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
 		#end
@@ -838,13 +837,15 @@ class FlxGame extends Sprite
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
 		#if (cpp || neko)
-		_state.clearAllDrawData();
+		TileSheetData._DRAWCALLS = 0;
 		#end
 		
 		FlxG.lockCameras();
 		_state.draw();
 		
 		#if (cpp || neko)
+		FlxG.renderCameras();
+		
 		if (_debuggerUp)
 		{
 			_debugger.perf.drawCalls(TileSheetData._DRAWCALLS);

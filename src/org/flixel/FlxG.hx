@@ -1605,7 +1605,6 @@ class FlxG
 	{
 		#if (cpp || neko)
 		PxBitmapFont.clearStorage();
-		FlxLayer.clearLayerCache();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
 		#end
@@ -1661,7 +1660,7 @@ class FlxG
 		var l:Int = cams.length;
 		while(i < l)
 		{
-			cam = cams[i++]; //as FlxCamera;
+			cam = cams[i++];
 			if ((cam == null) || !cam.exists || !cam.visible)
 			{
 				continue;
@@ -1675,6 +1674,7 @@ class FlxG
 			#end
 			
 			#if (cpp || neko)
+			cam.clearDrawStack();
 			cam._canvas.graphics.clear();
 			// clearing camera's debug sprite
 			cam._debugLayer.graphics.clear();
@@ -1690,6 +1690,26 @@ class FlxG
 			#end
 		}
 	}
+	
+	#if (cpp || neko)
+	inline static public function renderCameras():Void
+	{
+		var cam:FlxCamera;
+		var cams:Array<FlxCamera> = FlxG.cameras;
+		var i:Int = 0;
+		var l:Int = cams.length;
+		while(i < l)
+		{
+			cam = cams[i++]; //as FlxCamera;
+			if ((cam == null) || !cam.exists || !cam.visible)
+			{
+				continue;
+			}
+			
+			cam.render();
+		}
+	}
+	#end
 	
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
