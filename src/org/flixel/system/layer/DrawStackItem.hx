@@ -16,6 +16,13 @@ class DrawStackItem
 		drawData = new Array<Float>();
 	}
 	
+	inline public function reset():Void
+	{
+		atlas = null;
+		initialized = false;
+		position = 0;
+	}
+	
 	public function dispose():Void
 	{
 		atlas = null;

@@ -270,13 +270,11 @@ class FlxCamera extends FlxBasic
 			_currentStackItem.atlas = ObjAtlas;
 			_currentStackItem.colored = ObjColored;
 			_currentStackItem.blending = ObjBlending;
-			_currentStackItem.initialized = true;
 			itemToReturn = _currentStackItem;
 		}
 		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.colored == ObjColored && _currentStackItem.blending == ObjBlending)
 		{
 			itemToReturn = _currentStackItem;
-			itemToReturn.initialized = true;
 		}
 		
 		if (itemToReturn == null)
@@ -285,16 +283,15 @@ class FlxCamera extends FlxBasic
 			if (_storageHead != null)
 			{
 				newItem = _storageHead;
-				var newHead:DrawStackItem = _storageHead.next;
+				var newHead:DrawStackItem = FlxCamera._storageHead.next;
 				newItem.next = null;
-				_storageHead = newHead;
+				FlxCamera._storageHead = newHead;
 			}
 			else
 			{
 				newItem = new DrawStackItem();
 			}
 			
-			newItem.initialized = true;
 			newItem.atlas = ObjAtlas;
 			newItem.colored = ObjColored;
 			newItem.blending = ObjBlending;
@@ -303,44 +300,41 @@ class FlxCamera extends FlxBasic
 			itemToReturn = _currentStackItem;
 		}
 		
+		itemToReturn.initialized = true;
 		return itemToReturn;
 	}
 	
 	inline public function clearDrawStack():Void
 	{	
-		var currItem:DrawStackItem = _headOfDrawStack;
-		while (currItem != _currentStackItem)
+		var currItem:DrawStackItem = _headOfDrawStack.next;
+		while (currItem != null)
 		{
-			currItem.position = 0;
-			currItem.atlas = null;
-			var newHead:DrawStackItem = currItem;
+			currItem.reset();
+			var newStorageHead:DrawStackItem = currItem;
 			currItem = currItem.next;
 			if (_storageHead == null)
 			{
-				_storageHead = newHead;
+				FlxCamera._storageHead = newStorageHead;
+				newStorageHead.next = null;
 			}
 			else
 			{
-				newHead.next = _storageHead;
-				_storageHead = newHead;
+				newStorageHead.next = FlxCamera._storageHead;
+				FlxCamera._storageHead = newStorageHead;
 			}
 		}
 		
-		_headOfDrawStack = _currentStackItem;
-		_currentStackItem.position = 0;
-		_currentStackItem.atlas = null;
-		_currentStackItem.next = null;
-		_currentStackItem.initialized = false;
+		_headOfDrawStack.reset();
+		_headOfDrawStack.next = null;
+		_currentStackItem = _headOfDrawStack;
 	}
 	
 	public function render():Void
 	{
 		var currItem:DrawStackItem = _headOfDrawStack;
 		var useColor:Bool = this.isColored();
-		var i:Int = 0;
 		while (currItem != null)
 		{
-			i++;
 			var data:Array<Float> = currItem.drawData;
 			var dataLen:Int = data.length;
 			var position:Int = currItem.position;
@@ -363,7 +357,6 @@ class FlxCamera extends FlxBasic
 			}
 			currItem = currItem.next;
 		}
-		trace(i);
 	}
 	#end
 	
