@@ -83,41 +83,41 @@ class VCR extends Sprite
 		
 		var spacing:Int = 7;
 		
-		_open = new Bitmap(Assets.getBitmapData(FlxAssets.imgOpen));
+		_open = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgOpen));
 		addChild(_open);
 		
-		_recordOff = new Bitmap(Assets.getBitmapData(FlxAssets.imgRecordOff));
+		_recordOff = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgRecordOff));
 		_recordOff.x = _open.x + _open.width + spacing;
 		addChild(_recordOff);
 		
-		_recordOn = new Bitmap(Assets.getBitmapData(FlxAssets.imgRecordOn));
+		_recordOn = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgRecordOn));
 		_recordOn.x = _recordOff.x;
 		_recordOn.visible = false;
 		addChild(_recordOn);
 		
-		_stop = new Bitmap(Assets.getBitmapData(FlxAssets.imgStop));
+		_stop = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgStop));
 		_stop.x = _recordOff.x;
 		_stop.visible = false;
 		addChild(_stop);
 		
-		_flixel = new Bitmap(Assets.getBitmapData(FlxAssets.imgFlixel));
+		_flixel = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgFlixel));
 		_flixel.x = _recordOff.x + _recordOff.width + spacing;
 		addChild(_flixel);
 		
-		_restart = new Bitmap(Assets.getBitmapData(FlxAssets.imgRestart));
+		_restart = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgRestart));
 		_restart.x = _flixel.x + _flixel.width + spacing;
 		addChild(_restart);
 		
-		_pause = new Bitmap(Assets.getBitmapData(FlxAssets.imgPause));
+		_pause = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgPause));
 		_pause.x = _restart.x + _restart.width + spacing;
 		addChild(_pause);
 		
-		_play = new Bitmap(Assets.getBitmapData(FlxAssets.imgPlay));
+		_play = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgPlay));
 		_play.x = _pause.x;
 		_play.visible = false;
 		addChild(_play);
 		
-		_step = new Bitmap(Assets.getBitmapData(FlxAssets.imgStep));
+		_step = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgStep));
 		_step.x = _pause.x + _pause.width + spacing;
 		addChild(_step);
 		

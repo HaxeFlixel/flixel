@@ -138,6 +138,8 @@ class FlxTween
 	/** @private Called when the Tween completes. */
 	private function finish():Void
 	{
+		if (complete != null) complete();
+		
 		switch ((_type & ~ FlxTween.BACKWARD))
 		{
 			case FlxTween.PERSIST:
@@ -161,7 +163,6 @@ class FlxTween
 				_parent.removeTween(this, true);
 		}
 		_finish = false;
-		if (complete != null) complete();
 	}
 
 	public var percent(getPercent, setPercent):Float;

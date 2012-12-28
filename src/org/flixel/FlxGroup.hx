@@ -1,5 +1,6 @@
 package org.flixel;
-import org.flixel.FlxLayer;
+
+import org.flixel.system.layer.Atlas;
 
 /**
  * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
@@ -205,7 +206,7 @@ class FlxGroup extends FlxBasic
 					length = i + 1;
 				}
 				#if (cpp || neko)
-				addToGroupLayer(Object);
+				setGroupAtlas(Object);
 				#end
 				return Object;
 			}
@@ -236,7 +237,7 @@ class FlxGroup extends FlxBasic
 		//If we made it this far, then we successfully grew the group,
 		//and we can go ahead and add the object at the first open slot.
 		#if (cpp || neko)
-		addToGroupLayer(Object);
+		setGroupAtlas(Object);
 		#end
 		members[i] = Object;
 		length = i + 1;
@@ -244,17 +245,17 @@ class FlxGroup extends FlxBasic
 	}
 	
 	#if (cpp || neko)
-	private function addToGroupLayer(Object:FlxBasic):Void
+	private function setGroupAtlas(Object:FlxBasic):Void
 	{
-		if (_layer != null)
+		if (_atlas != null)
 		{
-			_layer.add(Object);
+			Object.atlas = _atlas;
 		}
 	}
 	
-	override private function set_layer(value:FlxLayer):FlxLayer 
+	override private function set_atlas(value:Atlas):Atlas 
 	{
-		if (_layer != value)
+		if (_atlas != value)
 		{
 			if (value == null)
 			{
@@ -262,7 +263,18 @@ class FlxGroup extends FlxBasic
 				_framesData = null;
 			}
 			
-			_layer = value;
+			_atlas = value;
+		}
+		
+		if (_atlas != null)
+		{
+			for (basic in members)
+			{
+				if (basic != null)
+				{
+					setGroupAtlas(basic);
+				}
+			}
 		}
 		
 		return value;
@@ -341,7 +353,6 @@ class FlxGroup extends FlxBasic
 		if (Splice)
 		{
 			members.splice(index, 1);
-			length--;
 		}
 		else
 		{

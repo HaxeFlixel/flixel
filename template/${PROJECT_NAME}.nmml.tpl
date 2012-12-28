@@ -3,7 +3,7 @@
 	<app title="${PROJECT_NAME}" file="${PROJECT_NAME}" main="Main" version="0.0.1" company="Zaphod" />
 	
 	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="portrait" resizable="true" if="web" />
-	<window width="0" height="0" fps="30" orientation="landscape" fullscreen="true" unless="web" />
+	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="landscape" fullscreen="false" unless="web" />
  	
 	<set name="BUILD_DIR" value="export" />
 	

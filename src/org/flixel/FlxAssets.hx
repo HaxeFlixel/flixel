@@ -1,6 +1,7 @@
 package org.flixel;
 
 import nme.Assets;
+import nme.display.BitmapData;
 import nme.display.Graphics;
 import nme.text.Font;
 
@@ -9,7 +10,7 @@ import nme.text.Font;
  * @author Zaphod
  */
 
-class FlxAssets //extends Assets
+class FlxAssets
 {
 	public static var imgDefaultButton:String = "assets/data/button.png";
 	public static var imgLogo:String = "assets/data/logo.png";
@@ -43,17 +44,8 @@ class FlxAssets //extends Assets
 	public static var imgButtonLeft:String = "assets/data/button_left.png";
 	public static var imgButtonRight:String = "assets/data/button_right.png";
 	
-	public static var nokiaFont(getNokiaFont, null):String;
-	public static function getNokiaFont():String
-	{
-		return Assets.getFont("assets/data/nokiafc22.ttf").fontName;
-	}
-	
-	public static var courierFont(getCourierFont, null):String;
-	public static function getCourierFont():String
-	{
-		return Assets.getFont("assets/data/courier.ttf").fontName;
-	}
+	public static var courierFont:String = "assets/data/courier";
+	public static var nokiaFont:String = "assets/data/nokiafc22";
 	
 	public static var sndBeep:String = "Beep";
 	
@@ -111,6 +103,11 @@ class FlxAssets //extends Assets
 		graph.lineTo(100, 75);
 		graph.lineTo(100, 100);
 		graph.endFill();
+	}
+	
+	public static function getBitmapData(id:String):BitmapData
+	{
+		return Assets.getBitmapData(id);
 	}
 	
 	// TODO: write code for automatic sound caching for android target

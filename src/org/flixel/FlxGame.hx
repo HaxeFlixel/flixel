@@ -289,7 +289,7 @@ class FlxGame extends Sprite
 		}
 		if(!FlxG.mobile)
 		{
-			if((_debugger != null) && ((FlashEvent.keyCode == 192) || (FlashEvent.keyCode == 220)))
+			if ((_debugger != null) && ((FlashEvent.keyCode == 192) || (FlashEvent.keyCode == 220)))
 			{
 				_debugger.visible = !_debugger.visible;
 				_debuggerUp = _debugger.visible;
@@ -304,7 +304,7 @@ class FlxGame extends Sprite
 				//_console.toggle();
 				return;
 			}
-			if(useSoundHotKeys)
+			if (useSoundHotKeys)
 			{
 				var c:Int = FlashEvent.keyCode;
 				var code:String = String.fromCharCode(FlashEvent.charCode);
@@ -541,6 +541,8 @@ class FlxGame extends Sprite
 		_lostFocus = _focus.visible = false;
 		stage.frameRate = _flashFramerate;
 		FlxG.resumeSounds();
+		
+		_state.onFocus();
 	}
 	
 	/**
@@ -558,6 +560,8 @@ class FlxGame extends Sprite
 		_lostFocus = _focus.visible = true;
 		stage.frameRate = 10;
 		FlxG.pauseSounds();
+		
+		_state.onFocusLost();
 	}
 	
 	/**
@@ -634,7 +638,6 @@ class FlxGame extends Sprite
 		//Basic reset stuff
 		#if (cpp || neko)
 		PxBitmapFont.clearStorage();
-		FlxLayer.clearLayerCache();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
 		#end
@@ -834,13 +837,15 @@ class FlxGame extends Sprite
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
 		#if (cpp || neko)
-		_state.clearAllDrawData();
+		TileSheetData._DRAWCALLS = 0;
 		#end
 		
 		FlxG.lockCameras();
 		_state.draw();
 		
 		#if (cpp || neko)
+		FlxG.renderCameras();
+		
 		if (_debuggerUp)
 		{
 			_debugger.perf.drawCalls(TileSheetData._DRAWCALLS);

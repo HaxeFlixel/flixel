@@ -5,9 +5,13 @@ import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.display.Graphics;
 import nme.display.Sprite;
+import nme.display.Tilesheet;
 import nme.geom.ColorTransform;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.system.layer.Atlas;
+import org.flixel.system.layer.DrawStackItem;
+import org.flixel.system.layer.TileSheetData;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -243,6 +247,124 @@ class FlxCamera extends FlxBasic
 	public var red:Float;
 	public var green:Float;
 	public var blue:Float;
+	
+	/**
+	 * Currently used draw stack item
+	 */
+	private var _currentStackItem:DrawStackItem;
+	/**
+	 * Pointer to head of stack with draw items
+	 */
+	private var _headOfDrawStack:DrawStackItem;
+	/**
+	 * Draw stack items that can be reused
+	 */
+	private static var _storageHead:DrawStackItem;
+	
+	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int):DrawStackItem
+	{
+		var itemToReturn:DrawStackItem = null;
+		if (_currentStackItem.initialized == false)
+		{
+			_headOfDrawStack = _currentStackItem;
+			_currentStackItem.atlas = ObjAtlas;
+			_currentStackItem.colored = ObjColored;
+			_currentStackItem.blending = ObjBlending;
+			_currentStackItem.initialized = true;
+			itemToReturn = _currentStackItem;
+		}
+		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.colored == ObjColored && _currentStackItem.blending == ObjBlending)
+		{
+			itemToReturn = _currentStackItem;
+			itemToReturn.initialized = true;
+		}
+		
+		if (itemToReturn == null)
+		{
+			var newItem:DrawStackItem = null;
+			if (_storageHead != null)
+			{
+				newItem = _storageHead;
+				var newHead:DrawStackItem = _storageHead.next;
+				newItem.next = null;
+				_storageHead = newHead;
+			}
+			else
+			{
+				newItem = new DrawStackItem();
+			}
+			
+			newItem.initialized = true;
+			newItem.atlas = ObjAtlas;
+			newItem.colored = ObjColored;
+			newItem.blending = ObjBlending;
+			_currentStackItem.next = newItem;
+			_currentStackItem = newItem;
+			itemToReturn = _currentStackItem;
+		}
+		
+		return itemToReturn;
+	}
+	
+	inline public function clearDrawStack():Void
+	{	
+		var currItem:DrawStackItem = _headOfDrawStack;
+		while (currItem != _currentStackItem)
+		{
+			currItem.position = 0;
+			currItem.atlas = null;
+			var newHead:DrawStackItem = currItem;
+			currItem = currItem.next;
+			if (_storageHead == null)
+			{
+				_storageHead = newHead;
+			}
+			else
+			{
+				newHead.next = _storageHead;
+				_storageHead = newHead;
+			}
+		}
+		
+		_headOfDrawStack = _currentStackItem;
+		_currentStackItem.position = 0;
+		_currentStackItem.atlas = null;
+		_currentStackItem.next = null;
+		_currentStackItem.initialized = false;
+	}
+	
+	public function render():Void
+	{
+		var currItem:DrawStackItem = _headOfDrawStack;
+		var useColor:Bool = this.isColored();
+		var i:Int = 0;
+		while (currItem != null)
+		{
+			i++;
+			var data:Array<Float> = currItem.drawData;
+			var dataLen:Int = data.length;
+			var position:Int = currItem.position;
+			if (position > 0)
+			{
+				if (dataLen != position)
+				{
+					data.splice(position, (dataLen - position));
+				}
+				
+				var tempFlags:Int = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA;
+				if (currItem.colored || useColor)
+				{
+					tempFlags |= Graphics.TILE_RGB;
+				}
+				tempFlags |= currItem.blending;
+				// TODO: currItem.antialiasing
+				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing/* || currItem.antialiasing*/), tempFlags);
+				TileSheetData._DRAWCALLS++;
+			}
+			currItem = currItem.next;
+		}
+		trace(i);
+	}
 	#end
 	
 	/**
@@ -355,6 +477,9 @@ class FlxCamera extends FlxBasic
 		blue = 1.0;
 		
 		fog = 0.0;
+		
+		_currentStackItem = new DrawStackItem();
+		_headOfDrawStack = _currentStackItem;
 		#end
 		
 		_fxFadeIn = false;
@@ -402,6 +527,12 @@ class FlxCamera extends FlxBasic
 		}
 		_debugLayer = null;
 		_canvas = null;
+		
+		clearDrawStack();
+		
+		_headOfDrawStack.dispose();
+		_headOfDrawStack = null;
+		_currentStackItem = null;
 		#end
 		_flashSprite = null;
 		

@@ -1169,7 +1169,7 @@ class FlxBar extends FlxSprite
 	#if (cpp || neko)
 	override public function draw():Void 
 	{
-		if (_layer == null || _layer.onStage == false)
+		if (_atlas == null)
 		{
 			return;
 		}
@@ -1398,7 +1398,7 @@ class FlxBar extends FlxSprite
 			FlxG.addBitmap(Pixels, false, false, _bitmapDataKey);
 		}
 		
-		updateLayerInfo(true);
+		updateAtlasInfo(true);
 		return _pixels;
 	}
 	#end

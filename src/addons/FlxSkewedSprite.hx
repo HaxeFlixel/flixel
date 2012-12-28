@@ -6,6 +6,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
+import org.flixel.system.layer.DrawStackItem;
 
 /**
  * ...
@@ -52,7 +53,7 @@ class FlxSkewedSprite extends FlxSprite
 		#if (cpp || neko)
 		// Don't try to draw if object isn't on any layer 
 		// or layer isn't added to state
-		if (_layer == null || _layer.onStage == false)
+		if (_atlas == null)
 		{
 			return;
 		}
@@ -81,6 +82,8 @@ class FlxSkewedSprite extends FlxSprite
 		var l:Int = cameras.length;
 		
 		#if (cpp || neko)
+		var drawItem:DrawStackItem;
+		var isColored:Bool = (_colorTransform != null);
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		#end
@@ -99,8 +102,9 @@ class FlxSkewedSprite extends FlxSprite
 			}
 			
 			#if (cpp || neko)
-			currDrawData = _layer.drawData[camera.ID];
-			currIndex = _layer.positionData[camera.ID];
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
@@ -142,7 +146,7 @@ class FlxSkewedSprite extends FlxSprite
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (_layer.isColored || camera.isColored())
+				if (isColored || camera.isColored())
 				{
 					if (camera.isColored())
 					{
@@ -160,7 +164,7 @@ class FlxSkewedSprite extends FlxSprite
 				
 				currDrawData[currIndex++] = alpha;
 				
-				_layer.positionData[camera.ID] = currIndex;
+				drawItem.position = currIndex;
 				#end
 			}
 			else
@@ -223,7 +227,7 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _matrix.c;
 				currDrawData[currIndex++] = _matrix.d;
 				
-				if (_layer.isColored || camera.isColored())
+				if (isColored || camera.isColored())
 				{
 					if (camera.isColored())
 					{
@@ -241,7 +245,7 @@ class FlxSkewedSprite extends FlxSprite
 				
 				currDrawData[currIndex++] = alpha;
 				
-				_layer.positionData[camera.ID] = currIndex;
+				drawItem.position = currIndex;
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;

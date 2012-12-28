@@ -7,6 +7,7 @@ import nme.display.Graphics;
 import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.system.layer.DrawStackItem;
 
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
@@ -309,7 +310,7 @@ class FlxTilemap extends FlxObject
 			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= DrawIndex), (i >= CollideIndex) ? allowCollisions : FlxObject.NONE);
 		}
 		
-		updateLayerInfo();
+		updateAtlasInfo();
 		
 		//create debug tiles for rendering bounding boxes on demand
 		#if (flash || js)
@@ -395,9 +396,10 @@ class FlxTilemap extends FlxObject
 		var drawX:Float;
 		var drawY:Float;
 		
-		var currDrawData:Array<Float> = _layer.drawData[Camera.ID];
-		var currIndex:Int = _layer.positionData[Camera.ID];
-		var isColored:Bool = _layer.isColored;
+		// TODO: maybe optimize this a liitle bit (get last drawStack item's colored value for example)
+		var drawItem:DrawStackItem = Camera.getDrawStackItem(_atlas, false, 0);
+		var currDrawData:Array<Float> = drawItem.drawData;
+		var currIndex:Int = drawItem.position;
 		var isColoredCamera:Bool = Camera.isColored();
 		#end
 		
@@ -482,7 +484,8 @@ class FlxTilemap extends FlxObject
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
 					
-					if (isColoredCamera || isColored)
+					// TODO: clean up here
+					if (isColoredCamera) // || isColored)
 					{
 						currDrawData[currIndex++] = Camera.red; // red
 						currDrawData[currIndex++] = Camera.green; //	green
@@ -490,7 +493,7 @@ class FlxTilemap extends FlxObject
 					}
 					currDrawData[currIndex++] = 1.0; // alpha
 					
-					if(FlxG.visualDebug && !ignoreDrawDebug)
+					if (FlxG.visualDebug && !ignoreDrawDebug)
 					{
 						tile = _tileObjects[_data[columnIndex]];
 						if(tile != null)
@@ -538,7 +541,7 @@ class FlxTilemap extends FlxObject
 		}
 		
 		#if (cpp || neko)
-		_layer.positionData[Camera.ID] = currIndex;
+		drawItem.position = currIndex;
 		#end
 		
 		Buffer.x = screenXInTiles * _tileWidth;
@@ -1048,18 +1051,21 @@ class FlxTilemap extends FlxObject
 			while(i < grp.length)
 			{
 				basic = members[i++];
-				if(Std.is(basic, FlxObject))
+				if ((basic != null) && basic.exists)
 				{
-					if (overlapsWithCallback(cast(basic, FlxObject)))
+					if(Std.is(basic, FlxObject))
 					{
-						results = true;
+						if (overlapsWithCallback(cast(basic, FlxObject)))
+						{
+							results = true;
+						}
 					}
-				}
-				else
-				{
-					if (overlaps(basic, InScreenSpace, Camera))
+					else
 					{
-						results = true;
+						if (overlaps(basic, InScreenSpace, Camera))
+						{
+							results = true;
+						}
 					}
 				}
 			}
@@ -1095,20 +1101,23 @@ class FlxTilemap extends FlxObject
 			while(i < grp.length)
 			{
 				basic = members[i++];
-				if(Std.is(basic, FlxObject))
+				if ((basic != null) && basic.exists)
 				{
-					_point.x = X;
-					_point.y = Y;
-					if (overlapsWithCallback(cast(basic, FlxObject), null, false, _point))
+					if(Std.is(basic, FlxObject))
 					{
-						results = true;
+						_point.x = X;
+						_point.y = Y;
+						if (overlapsWithCallback(cast(basic, FlxObject), null, false, _point))
+						{
+							results = true;
+						}
 					}
-				}
-				else
-				{
-					if (overlapsAt(X, Y, basic, InScreenSpace, Camera))
+					else
 					{
-						results = true;
+						if (overlapsAt(X, Y, basic, InScreenSpace, Camera))
+						{
+							results = true;
+						}
 					}
 				}
 			}
@@ -1820,7 +1829,7 @@ class FlxTilemap extends FlxObject
 		var tempBitmapData:BitmapData;
 		if (Std.is(ImageFile, String))
 		{
-			tempBitmapData = nme.Assets.getBitmapData(ImageFile);
+			tempBitmapData = FlxAssets.getBitmapData(ImageFile);
 		}
 		else
 		{

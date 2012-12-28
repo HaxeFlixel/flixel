@@ -98,7 +98,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "07";
+	static public inline var LIBRARY_MINOR_VERSION:String = "08";
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
@@ -333,6 +333,17 @@ class FlxG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Data.toString()));
+		}
+	}
+	
+	/**
+	 * Clears the log output.
+	 */
+	static public function clearLog():Void
+	{
+		if ((_game != null) && (_game.debugger != null))
+		{
+			_game.debugger.log.clear();
 		}
 	}
 	
@@ -996,7 +1007,7 @@ class FlxG
 			}
 			else
 			{
-				bd = Assets.getBitmapData(Graphic);
+				bd = FlxAssets.getBitmapData(Graphic);
 			}
 			
 			#if !(flash || js)
@@ -1042,6 +1053,11 @@ class FlxG
 				
 			}
 			#end
+			else if (Unique)	
+			{
+				bd = bd.clone();
+			}
+			
 			_cache.set(key, bd);
 		}
 		
@@ -1237,7 +1253,9 @@ class FlxG
 		if (Camera != null && FlxG._game.contains(Camera._flashSprite))
 		{
 			FlxG._game.removeChild(Camera._flashSprite);
-			FlxG.cameras.splice(FlxU.ArrayIndexOf(FlxG.cameras, Camera), 1);
+			var index = FlxU.ArrayIndexOf(FlxG.cameras, Camera);
+			if(index >= 0)
+				FlxG.cameras.splice(index, 1);
 		}
 		else
 		{
@@ -1404,7 +1422,7 @@ class FlxG
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
-	 * @return	Whether any oevrlaps were detected.
+	 * @return	Whether any overlaps were detected.
 	 */
 	inline static public function overlap(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Bool
 	{
@@ -1500,7 +1518,8 @@ class FlxG
 		{
 			if (pluginList[i] == Plugin)
 			{
-				pluginList.splice(i,1);
+				pluginList.splice(i, 1);
+				return Plugin;
 			}
 			i--;
 		}
@@ -1508,7 +1527,7 @@ class FlxG
 	}
 	
 	/**
-	 * Removes an instance of a plugin from the global plugin array.
+	 * Removes all instances of a plugin from the global plugin array.
 	 * @param	ClassType	The class name of the plugin type you want removed from the array.
 	 * @return	Whether or not at least one instance of this plugin type was removed.
 	 */
@@ -1586,7 +1605,6 @@ class FlxG
 	{
 		#if (cpp || neko)
 		PxBitmapFont.clearStorage();
-		FlxLayer.clearLayerCache();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
 		#end
@@ -1616,7 +1634,7 @@ class FlxG
 	inline static public function updateInput():Void
 	{
 		FlxG.keys.update();
-		if (!_game._debuggerUp || !_game._debugger.hasMouse)
+		if (FlxG.mouse.visible)
 		{
 			FlxG.mouse.update(Math.floor(FlxG._game.mouseX), Math.floor(FlxG._game.mouseY));
 		}
@@ -1642,7 +1660,7 @@ class FlxG
 		var l:Int = cams.length;
 		while(i < l)
 		{
-			cam = cams[i++]; //as FlxCamera;
+			cam = cams[i++];
 			if ((cam == null) || !cam.exists || !cam.visible)
 			{
 				continue;
@@ -1656,6 +1674,7 @@ class FlxG
 			#end
 			
 			#if (cpp || neko)
+			cam.clearDrawStack();
 			cam._canvas.graphics.clear();
 			// clearing camera's debug sprite
 			cam._debugLayer.graphics.clear();
@@ -1671,6 +1690,26 @@ class FlxG
 			#end
 		}
 	}
+	
+	#if (cpp || neko)
+	inline static public function renderCameras():Void
+	{
+		var cam:FlxCamera;
+		var cams:Array<FlxCamera> = FlxG.cameras;
+		var i:Int = 0;
+		var l:Int = cams.length;
+		while(i < l)
+		{
+			cam = cams[i++]; //as FlxCamera;
+			if ((cam == null) || !cam.exists || !cam.visible)
+			{
+				continue;
+			}
+			
+			cam.render();
+		}
+	}
+	#end
 	
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.

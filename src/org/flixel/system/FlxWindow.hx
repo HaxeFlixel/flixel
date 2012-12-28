@@ -165,7 +165,7 @@ class FlxWindow extends Sprite
 		
 		if(_resizable)
 		{
-			_handle = new Bitmap(Assets.getBitmapData(FlxAssets.imgHandle));
+			_handle = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgHandle));
 			addChild(_handle);
 		}
 		

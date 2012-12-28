@@ -4,6 +4,7 @@ import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.system.layer.DrawStackItem;
 
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.
@@ -31,7 +32,7 @@ class FlxTileblock extends FlxSprite
 	{
 		super(X, Y);
 		#if (flash || js)
-		makeGraphic(FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), 0, true);
+		makeGraphic(Width, Height, 0, true);
 		#else
 		bakedRotation = 0;
 		width = frameWidth = Width;
@@ -54,10 +55,6 @@ class FlxTileblock extends FlxSprite
 	 */
 	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{
-		TileWidth = FlxU.fromIntToUInt(TileWidth);
-		TileHeight = FlxU.fromIntToUInt(TileHeight);
-		Empties = FlxU.fromIntToUInt(Empties);
-		
 		if (TileGraphic == null)
 		{
 			return this;
@@ -120,7 +117,7 @@ class FlxTileblock extends FlxSprite
 		frameWidth = Math.floor(width);
 		frameHeight = Math.floor(height);
 		resetHelpers();
-		updateLayerInfo();
+		updateAtlasInfo();
 		#end
 		while (row < heightInTiles)
 		{
@@ -159,9 +156,7 @@ class FlxTileblock extends FlxSprite
 	override public function draw():Void 
 	{
 		#if (cpp || neko)
-		// Don't try to draw if object isn't on any layer 
-		// or layer isn't added to state
-		if (_layer == null || _layer.onStage == false)
+		if (_atlas == null)
 		{
 			return;
 		}
@@ -184,6 +179,8 @@ class FlxTileblock extends FlxSprite
 		var i:Int = 0;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
+		var drawItem:DrawStackItem;
+		var isColored:Bool = (_colorTransform != null);
 		var l:Int = cameras.length;
 		
 		var j:Int = 0;
@@ -207,8 +204,9 @@ class FlxTileblock extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			currDrawData = _layer.drawData[camera.ID];
-			currIndex = _layer.positionData[camera.ID];
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
 			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
@@ -256,7 +254,7 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = 0;
 						currDrawData[currIndex++] = 1;
 						
-						if (_layer.isColored || isColoredCamera)
+						if (isColored || isColoredCamera)
 						{
 							currDrawData[currIndex++] = redMult; 
 							currDrawData[currIndex++] = greenMult;
@@ -294,7 +292,7 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = sin * scale.x;
 						currDrawData[currIndex++] = cos * scale.y;
 						
-						if (_layer.isColored || isColoredCamera)
+						if (isColored || isColoredCamera)
 						{
 							currDrawData[currIndex++] = redMult; 
 							currDrawData[currIndex++] = greenMult;
@@ -306,7 +304,7 @@ class FlxTileblock extends FlxSprite
 					}
 				}
 				
-				_layer.positionData[camera.ID] = currIndex;
+				drawItem.position = currIndex;
 			}
 			
 			FlxBasic._VISIBLECOUNT++;
@@ -328,7 +326,6 @@ class FlxTileblock extends FlxSprite
 	{
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			updateLayerProps();
 			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
 			
 			if (_tileData != null)
