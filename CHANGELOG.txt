@@ -9,6 +9,7 @@ v1.08
 * Small optimizations from @crazysam
 * Added FlxBackdrop addon class
 * Added TaskManager addon (ported from AntHill: https://github.com/AntKarlov/Anthill-Framework)
+* Added onFocusLost() and onFocus() methods to FlxState class. These methods will called when app losts and gets focus. Override them in subclasses.
 
 v1.07
 ------------------------------
