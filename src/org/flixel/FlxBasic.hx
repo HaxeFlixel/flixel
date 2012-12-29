@@ -270,7 +270,10 @@ class FlxBasic
 	private var _atlas:Atlas;
 	private var _node:Node;
 	
-	// TODO: document this variable
+	/**
+	 * Atlas used for drawing this object.
+	 * You can "bake" several images in one atlas and this will decrease the number of draw call which is especially important on mobile platforms
+	 */
 	public var atlas(get_atlas, set_atlas):Atlas;
 	
 	private function get_atlas():Atlas 
@@ -330,10 +333,16 @@ class FlxBasic
 	}
 	#end
 	
-	// TODO: Check this method
 	public function updateAtlasInfo(updateAtlas:Bool = false):Void
 	{
-		#if (cpp || neko)
+	#if (cpp || neko)
+		#if debug
+		if (_bitmapDataKey == null)
+		{
+			throw "Something went wrong: _bitmapDataKey var isn't initialized";
+		}
+		#end
+		
 		if (_atlas == null)
 		{
 			_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
@@ -357,7 +366,7 @@ class FlxBasic
 			}
 		}
 		updateFrameData();
-		#end
+	#end
 	}
 	
 	public function updateFrameData():Void

@@ -343,7 +343,7 @@ class FlxBitmapFont extends FlxSprite
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		
-		var isColored:Bool = (_colorTransform != null);
+		var isColored:Bool = isColored();
 		
 		while (i < l)
 		{
@@ -361,21 +361,15 @@ class FlxBitmapFont extends FlxSprite
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
-			var redMult:Float = 1;
-			var greenMult:Float = 1;
-			var blueMult:Float = 1;
+			var redMult:Float = _red;
+			var greenMult:Float = _green;
+			var blueMult:Float = _blue;
 			
 			if (isColoredCamera)
 			{
 				redMult = _red * camera.red; 
 				greenMult = _green * camera.green;
 				blueMult = _blue * camera.blue;
-			}
-			else
-			{
-				redMult = _red; 
-				greenMult = _green;
-				blueMult = _blue;
 			}
 			
 			if (simpleRenderSprite())

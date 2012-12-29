@@ -1554,6 +1554,7 @@ class FlxG
 	 */
 	static public function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{
+		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
 		FlxG.clearBitmapCache();
 		

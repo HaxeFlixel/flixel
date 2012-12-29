@@ -594,6 +594,15 @@ class FlxSprite extends FlxObject
 		updateAnimation();
 	}
 	
+	inline public function isColored():Bool
+	{
+		#if !neko
+		return (_color < 0xffffff);
+		#else
+		return (_color.rgb < 0xffffff);
+		#end
+	}
+	
 	/**
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
@@ -632,7 +641,7 @@ class FlxSprite extends FlxObject
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		var isColored:Bool = (_colorTransform != null);
+		var isColored:Bool = isColored();
 		
 		var radians:Float;
 		var cos:Float;
@@ -649,7 +658,8 @@ class FlxSprite extends FlxObject
 			}
 			
 			#if (cpp || neko)
-			drawItem = camera.getDrawStackItem(_atlas, _colorTransform != null, _blendInt);
+			var isColoredCamera:Bool = camera.isColored();
+			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -694,9 +704,9 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (isColored || camera.isColored())
+				if (isColored || isColoredCamera)
 				{
-					if (camera.isColored())
+					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;
@@ -751,9 +761,9 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = cos * scale.y;
 				}
 				
-				if (isColored || camera.isColored())
+				if (isColored || isColoredCamera)
 				{
-					if (camera.isColored())
+					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;

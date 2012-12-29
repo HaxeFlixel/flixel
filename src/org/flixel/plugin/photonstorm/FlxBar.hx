@@ -1197,13 +1197,23 @@ class FlxBar extends FlxSprite
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		var drawItem:DrawStackItem;
-		
-		var isColored:Bool = (_colorTransform != null);
+		var isColored:Bool = isColored();
 		
 		while (i < l)
 		{
 			camera = cameras[i++];
 			var isColoredCamera:Bool = camera.isColored();
+			
+			var redMult:Float = _red;
+			var greenMult:Float = _green;
+			var blueMult:Float = _blue;
+			if (isColoredCamera)
+			{
+				redMult *= camera.red;
+				greenMult *= camera.green;
+				blueMult *= camera.blue;
+			}
+			
 			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
@@ -1231,18 +1241,9 @@ class FlxBar extends FlxSprite
 				
 				if (isColored || isColoredCamera)
 				{
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
+					currDrawData[currIndex++] = redMult; 
+					currDrawData[currIndex++] = greenMult;
+					currDrawData[currIndex++] = blueMult;
 				}
 				
 				currDrawData[currIndex++] = alpha;
@@ -1270,18 +1271,9 @@ class FlxBar extends FlxSprite
 					
 					if (isColored || isColoredCamera)
 					{
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = _red * camera.red; 
-							currDrawData[currIndex++] = _green * camera.green;
-							currDrawData[currIndex++] = _blue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = _red; 
-							currDrawData[currIndex++] = _green;
-							currDrawData[currIndex++] = _blue;
-						}
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
 					
 					currDrawData[currIndex++] = alpha;
@@ -1307,18 +1299,9 @@ class FlxBar extends FlxSprite
 				
 				if (isColored || isColoredCamera)
 				{
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
+					currDrawData[currIndex++] = redMult; 
+					currDrawData[currIndex++] = greenMult;
+					currDrawData[currIndex++] = blueMult;
 				}
 				
 				currDrawData[currIndex++] = alpha;
@@ -1350,18 +1333,9 @@ class FlxBar extends FlxSprite
 					
 					if (isColored || isColoredCamera)
 					{
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = _red * camera.red; 
-							currDrawData[currIndex++] = _green * camera.green;
-							currDrawData[currIndex++] = _blue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = _red; 
-							currDrawData[currIndex++] = _green;
-							currDrawData[currIndex++] = _blue;
-						}
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
 					
 					currDrawData[currIndex++] = alpha;

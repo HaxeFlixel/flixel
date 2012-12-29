@@ -397,10 +397,10 @@ class FlxTilemap extends FlxObject
 		var drawY:Float;
 		
 		// TODO: maybe optimize this a liitle bit (get last drawStack item's colored value for example)
-		var drawItem:DrawStackItem = Camera.getDrawStackItem(_atlas, false, 0);
+		var isColoredCamera:Bool = Camera.isColored();
+		var drawItem:DrawStackItem = Camera.getDrawStackItem(_atlas, isColoredCamera, 0);
 		var currDrawData:Array<Float> = drawItem.drawData;
 		var currIndex:Int = drawItem.position;
-		var isColoredCamera:Bool = Camera.isColored();
 		#end
 		
 		//Copy tile images into the tile buffer
@@ -484,8 +484,7 @@ class FlxTilemap extends FlxObject
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
 					
-					// TODO: clean up here
-					if (isColoredCamera) // || isColored)
+					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = Camera.red; // red
 						currDrawData[currIndex++] = Camera.green; //	green
