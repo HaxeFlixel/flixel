@@ -1,5 +1,14 @@
 flixel CHANGELOG
 
+v1.08
+------------------------------
+* New draw stack rendering system for cpp and neko targets (replacement for layer system). It is simpler to use but little bit slower.
+* NME 3.5.1 compatible
+* Bug fixes for FlxText (shadow problem) and tweening (for oneshot tween)
+* FlxTextField class now works on flash target also and can be used as input field, but I've removed multicamera support
+* Small optimizations from @crazysam
+* Added FlxBackdrop addon class
+
 v1.07
 ------------------------------
 * New layer system for cpp and neko targets. See https://github.com/Beeblerox/HaxeFlixel/wiki/Introduction-in-layer-system-%5BEN%5D
