@@ -139,6 +139,7 @@ class FlxTrail extends FlxGroup
 	public function resetTrail():Void
 	{
 		recentPositions.splice(0, recentPositions.length);
+		recentAngles.splice(0, recentAngles.length);
 		for (i in 0...members.length) 
 			members[i].exists = false;
 	}

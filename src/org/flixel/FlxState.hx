@@ -54,12 +54,12 @@ class FlxState extends FlxGroup
 	 * @param	atlasName		name of atlas to be created 
 	 * @param	atlasWidth		width of atlas
 	 * @param	atlasHeight		height of atlas
-	 * @return					created atlas
+	 * @return					new empty atlas object
 	 */
 	public function createAtlas(atlasName:String, atlasWidth:Int, atlasHeight:Int):Atlas
 	{
-		// TODO: implement this
-		return null;
+		var key:String = Atlas.getUniqueKey(atlasName);
+		return new Atlas(key, atlasWidth, atlasHeight);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ class FlxState extends FlxGroup
 	 */
 	public function removeAtlas(atlas:Atlas, destroy:Bool = false):Void
 	{
-		// TODO: implement this
+		Atlas.removeAtlas(atlas, destroy);
 	}
 	
 	/**
