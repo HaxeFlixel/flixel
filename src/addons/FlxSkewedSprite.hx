@@ -93,7 +93,6 @@ class FlxSkewedSprite extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			var isColoredCamera:Bool = camera.isColored();
 			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
@@ -101,6 +100,7 @@ class FlxSkewedSprite extends FlxSprite
 			}
 			
 			#if (cpp || neko)
+			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
