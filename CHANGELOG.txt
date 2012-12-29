@@ -8,6 +8,7 @@ v1.08
 * FlxTextField class now works on flash target also and can be used as input field, but I've removed multicamera support
 * Small optimizations from @crazysam
 * Added FlxBackdrop addon class
+* Added TaskManager addon (ported from AntHill: https://github.com/AntKarlov/Anthill-Framework)
 
 v1.07
 ------------------------------
