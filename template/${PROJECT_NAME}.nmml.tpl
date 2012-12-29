@@ -25,7 +25,7 @@
 		
 	</assets>
 	
-	<assets path="assets" if="target_flash" >
+	<assets path="assets" if="flash" >
 		<sound path="data/beep.mp3" id="Beep" />
 		
 		<!-- Your sound embedding code here... -->
