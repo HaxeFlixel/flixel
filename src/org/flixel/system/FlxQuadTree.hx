@@ -664,10 +664,10 @@ class FlxQuadTree extends FlxRect
 			_checkObjectHullHeight = checkObject.height + ((_checkObjectHullHeight>0)?_checkObjectHullHeight:-_checkObjectHullHeight);
 			
 			//check for intersection of the two hulls
-			if(	(_objectHullX + _objectHullWidth > _checkObjectHullX) &&
+			if ((_objectHullX + _objectHullWidth > _checkObjectHullX) &&
 				(_objectHullX < _checkObjectHullX + _checkObjectHullWidth) &&
 				(_objectHullY + _objectHullHeight > _checkObjectHullY) &&
-				(_objectHullY < _checkObjectHullY + _checkObjectHullHeight) )
+				(_objectHullY < _checkObjectHullY + _checkObjectHullHeight))
 			{
 				
 				// TODO: Comment this line if there will be problems
@@ -683,7 +683,10 @@ class FlxQuadTree extends FlxRect
 					_notifyCallback(_object,checkObject);
 				}
 			}
-			_iterator = _iterator.next;
+			if (_iterator != null)
+			{
+				_iterator = _iterator.next;
+			}
 		}
 		
 		return overlapProcessed;

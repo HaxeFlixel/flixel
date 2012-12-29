@@ -21,6 +21,7 @@ import flash.geom.Rectangle;
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
+import org.flixel.system.layer.DrawStackItem;
 
 class FlxBitmapFont extends FlxSprite
 {
@@ -226,7 +227,6 @@ class FlxBitmapFont extends FlxSprite
 	#if (cpp || neko)
 		if (_node != null && charsInFont != null)
 		{
-			updateLayerProps();
 			updateCharFrameIDs();
 		}
 	#end
@@ -304,7 +304,7 @@ class FlxBitmapFont extends FlxSprite
 	#if (cpp || neko)
 	override public function draw():Void 
 	{
-		if (_layer == null || _layer.onStage == false)
+		if (_atlas == null)
 		{
 			return;
 		}
@@ -339,16 +339,19 @@ class FlxBitmapFont extends FlxSprite
 		var relativeX:Float;
 		var relativeY:Float;
 		
+		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		
-		var isColored:Bool = _layer.isColored;
+		var isColored:Bool = isColored();
 		
 		while (i < l)
 		{
 			camera = cameras[i++];
-			currDrawData = _layer.drawData[camera.ID];
-			currIndex = _layer.positionData[camera.ID];
+			var isColoredCamera:Bool = camera.isColored();
+			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
 			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
@@ -358,22 +361,15 @@ class FlxBitmapFont extends FlxSprite
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
-			var redMult:Float = 1;
-			var greenMult:Float = 1;
-			var blueMult:Float = 1;
-			var isColoredCamera:Bool = camera.isColored();
+			var redMult:Float = _red;
+			var greenMult:Float = _green;
+			var blueMult:Float = _blue;
 			
 			if (isColoredCamera)
 			{
 				redMult = _red * camera.red; 
 				greenMult = _green * camera.green;
 				blueMult = _blue * camera.blue;
-			}
-			else
-			{
-				redMult = _red; 
-				greenMult = _green;
-				blueMult = _blue;
 			}
 			
 			if (simpleRenderSprite())
@@ -444,7 +440,7 @@ class FlxBitmapFont extends FlxSprite
 				}
 			}
 			
-			_layer.positionData[camera.ID] = currIndex;
+			drawItem.position = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)

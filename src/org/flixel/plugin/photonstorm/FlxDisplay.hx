@@ -19,6 +19,7 @@ import nme.display.BitmapData;
 import nme.display.BitmapDataChannel;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 
@@ -57,7 +58,7 @@ class FlxDisplay
 		var data:BitmapData = null;
 		if (Std.is(source, String))
 		{
-			data = nme.Assets.getBitmapData(source);
+			data = FlxAssets.getBitmapData(source);
 		}
 		else if (Std.is(source, Class))
 		{
@@ -74,7 +75,7 @@ class FlxDisplay
 		var maskData:BitmapData = null;
 		if (Std.is(mask, String))
 		{
-			maskData = nme.Assets.getBitmapData(mask);
+			maskData = FlxAssets.getBitmapData(mask);
 		}
 		else if (Std.is(mask, Class))
 		{
