@@ -1,6 +1,5 @@
 package;
 
-import addons.FlxSkewedSprite;
 import flash.ui.Mouse;
 import nme.Assets;
 import nme.display.Bitmap;
@@ -10,7 +9,6 @@ import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
-import org.flixel.FlxLayer;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
@@ -19,6 +17,7 @@ import org.flixel.plugin.pxText.FlxBitmapTextField;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.plugin.pxText.PxButton;
 import org.flixel.plugin.pxText.PxTextAlign;
+import org.flixel.system.layer.Atlas;
 
 /**
  * ...
@@ -148,24 +147,13 @@ class BunnyMarkState extends FlxState
 		#end
 		
 		#if (cpp || neko)
-		var BgAndGameObjects = new FlxLayer('BGAndGameObjects');
-		BgAndGameObjects.atlas = FlxLayer.createAtlas(256, 512, "BGAndGameObjects");
-		BgAndGameObjects.add(bg);
-		BgAndGameObjects.add(bunnies);
-		BgAndGameObjects.add(pirate);
-		addLayerAt(BgAndGameObjects, 1);
-		
-		var textLayer:FlxLayer = bunnyCounter.layer;
-		textLayer.add(bunnyCounter);
-		textLayer.add(fpsCounter);
-		addLayerAt(textLayer, 2);
-		
-		var uiLayer = new FlxLayer('ui');
-		uiLayer.atlas = FlxLayer.createAtlas(128, 128, "ui");
-		addLayer(uiLayer);
-		uiLayer.add(addBunniesBtn);
-		
-	//	addBunniesBtn.swapLayers();
+		var myAtlas:Atlas = createAtlas("myAtlas", 1024, 512);
+		bg.atlas = myAtlas;
+		bunnies.atlas = myAtlas;
+		pirate.atlas = myAtlas;
+		bunnyCounter.atlas = myAtlas;
+		fpsCounter.atlas = myAtlas;
+		addBunniesBtn.atlas = myAtlas;
 		#end
 	}
 	

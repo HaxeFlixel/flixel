@@ -9,7 +9,6 @@ import org.flixel.FlxCamera;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
-import org.flixel.FlxLayer;
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
@@ -68,9 +67,7 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		#if (cpp || neko)
-		layer = new FlxLayer("GeneralLayer");
-		layer.atlas = FlxLayer.createAtlas(1024, 1024, "GeneralLayer");
-		FlxG.state.addLayer(layer);
+		atlas = createAtlas("GeneralAtlas", 1024, 1024);
 		#end
 		
 		//FlxG.mouse.hide();
@@ -86,7 +83,7 @@ class PlayState extends FlxState
 		_littleGibs.makeParticles(FlxAssets.imgGibs, 100, 10, true, 0.5);
 		
 		#if (cpp || neko)
-		layer.add(_littleGibs);
+		_littleGibs.atlas = atlas;
 		#end
 		
 		//Next we create a smaller pool of larger metal bits for exploding.
@@ -99,7 +96,7 @@ class PlayState extends FlxState
 		_bigGibs.makeParticles(FlxAssets.imgSpawnerGibs, 50, 20, true, 0.5);
 		
 		#if (cpp || neko)
-		layer.add(_bigGibs);
+		_bigGibs.atlas = atlas;
 		#end
 		
 		//Then we'll set up the rest of our object groups or pools
@@ -145,9 +142,7 @@ class PlayState extends FlxState
 		add(_player);
 		
 		#if (cpp || neko)
-		var playerLayer:FlxLayer = getLayerFor(_player.bitmapDataKey);
-		playerLayer.add(_player);
-		addLayer(playerLayer);
+		_player.atlas = atlas;
 		#end
 		
 		FlxG.camera.setBounds(0, 0, 640, 640, true);
@@ -248,7 +243,7 @@ class PlayState extends FlxState
 		#end
 		add(LeftButton);
 		#if (cpp || neko)
-		layer.add(_bigGibs);
+		_bigGibs.atlas = atlas;
 		#end
 		
 		var leftCam:FlxCamera = new FlxCamera(Math.floor(10 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
@@ -266,7 +261,7 @@ class PlayState extends FlxState
 		#end
 		add(RightButton);
 		#if (cpp || neko)
-		layer.add(RightButton);
+		RightButton.atlas = atlas;
 		#end
 		
 		var rightCam:FlxCamera = new FlxCamera(Math.floor(100 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
@@ -284,7 +279,7 @@ class PlayState extends FlxState
 		#end
 		add(JumpButton);
 		#if (cpp || neko)
-		layer.add(_bigGibs);
+		_bigGibs.atlas = atlas;
 		#end
 		
 		var jumpCam:FlxCamera = new FlxCamera(Math.floor((FlxG.width - 90) * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
@@ -472,7 +467,7 @@ class PlayState extends FlxState
 		add(tileMap);
 		
 		#if (cpp || neko)
-		layer.add(tileMap);
+		tileMap.atlas = atlas;
 		#end
 	}
 	
@@ -536,14 +531,14 @@ class PlayState extends FlxState
 			var sp:Spawner = new Spawner(RX + sx * 8, RY + sy * 8, _bigGibs, _enemies, _enemyBullets, _littleGibs, _player);
 			_spawners.add(sp);
 			#if (cpp || neko)
-			layer.add(sp);
+			sp.atlas = atlas;
 			#end
 			
 			//Then create a dedicated camera to watch the spawner
 			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame);
 			_hud.add(miniFrame);
 			#if (cpp || neko)
-			layer.add(miniFrame);
+			miniFrame.atlas = atlas;
 			#end
 			
 			var ratio:Float = FlxCamera.defaultZoom / 2;

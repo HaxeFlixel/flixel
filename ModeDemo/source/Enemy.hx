@@ -44,9 +44,9 @@ class Enemy extends FlxSprite
 		#else
 		loadGraphic("assets/bot.png");
 		
-		if (FlxG.state.layer != null)
+		if (FlxG.state.atlas != null)
 		{
-			FlxG.state.layer.add(this);
+			atlas = FlxG.state.atlas;
 		}
 		#end
 
@@ -63,9 +63,9 @@ class Enemy extends FlxSprite
 		_jets.makeParticles(FlxAssets.imgJet, 15, 0, false, 0);
 		
 		#if (cpp || neko)
-		if (FlxG.state.layer != null)
+		if (FlxG.state.atlas != null)
 		{
-			FlxG.state.layer.add(_jets);
+			atlas = FlxG.state.atlas;
 		}
 		#end
 		

@@ -18,7 +18,7 @@ class EnemyBullet extends FlxSprite
 		addAnimation("poof",[2, 3, 4], 50, false);
 		speed = 120;
 		#if (cpp || neko)
-		FlxG.state.layer.add(this);
+		atlas = FlxG.state.atlas;
 		#end
 	}
 	

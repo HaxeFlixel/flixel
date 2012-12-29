@@ -89,6 +89,10 @@ class PlayState extends FlxState
 			whitePixel.visible = false;
 			theEmitter.add(whitePixel);
 		}
+		#if (cpp || neko)
+		var myAtlas = createAtlas("particles", 128, 128);
+		theEmitter.atlas = myAtlas;
+		#end
 		
 		//Now let's setup some buttons for messing with the emitter.
 		collisionButton = new FlxButton(2, FlxG.height - 22, "Collision", onCollision);

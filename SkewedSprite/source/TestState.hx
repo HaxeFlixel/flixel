@@ -40,7 +40,7 @@ class TestState extends FlxState
 		#if !neko
 		FlxG.bgColor = 0xffffffff;
 		#else
-		FlxG.bgColor = {rgb: 0xffffff, a: 0xff};
+		FlxG.camera.bgColor = {rgb: 0xffffff, a: 0xff};
 		#end
 		
 		var grass1:Grass = new Grass(0, 0, 0, 0);

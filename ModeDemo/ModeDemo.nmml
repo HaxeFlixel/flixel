@@ -3,11 +3,9 @@
 	
 	<app title="Mode Demo" file="ModeDemo" main="Test" version="0.0.1" company="Zaphod" />
 	
-	<window width="640" height="480" fps="30" orientation="portrait" background="0x000000" resizable="true" if="target_flash" />
-	<window width="640" height="480" fps="30" orientation="landscape" background="0x000000" fullscreen="false" unless="target_flash" />
+	<window width="640" height="480" fps="30" orientation="portrait" background="0x000000" resizable="true" if="flash" />
+	<window width="640" height="480" fps="30" orientation="landscape" background="0x000000" fullscreen="false" unless="flash" />
  	
-	<set name="BUILD_DIR" value="export" />
-	
 	<classpath name="source" />
 	
 	<haxelib name="nme" />
@@ -67,15 +65,8 @@
 		<music path="mode.mp3" id="Mode" />
 	</assets>
 	
-	<assets path="assets/data" include="*.ttf" type="font" />
-	<assets path="assets" include="*.fgr" type="text" />
-	<assets path="assets" include="*.csv" type="text" />
-	<assets path="assets" include="*.txt" type="text" />
-	<assets path="assets" include="*.fnt" type="text" />
-	<assets path="assets" include="*.png" type="image" />
-	<assets path="assets/data" include="*.png" type="image" />
-	<assets path="assets/data/vcr" include="*.png" type="image" />
-	<assets path="assets/data/vis" include="*.png" type="image" />
+	<assets path="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" unless="flash" />
 
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>

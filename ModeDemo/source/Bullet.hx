@@ -28,7 +28,7 @@ class Bullet extends FlxSprite
 		
 		speed = 360;
 		#if (cpp || neko)
-		FlxG.state.layer.add(this);
+		atlas = FlxG.state.atlas;
 		#end
 	}
 	

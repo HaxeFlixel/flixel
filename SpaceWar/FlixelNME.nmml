@@ -3,11 +3,9 @@
 	
 	<app title="Space War" file="SpaceWar" main="Main" version="0.0.1" company="Zaphod" />
 	
-	<window width="640" height="480" fps="30" background="0x000000" orientation="portrait" resizable="true" if="target_flash" />
-	<window width="640" height="480" fps="30" background="0x000000" orientation="landscape" hardware="true" unless="target_flash" />
+	<window width="640" height="480" fps="30" background="0x000000" orientation="portrait" resizable="true" if="flash" />
+	<window width="640" height="480" fps="30" background="0x000000" orientation="landscape" hardware="true" unless="flash" />
  	
-	<set name="BUILD_DIR" value="export" />
-	
 	<classpath name="source" />
 	
 	<haxelib name="nme" />
@@ -22,15 +20,8 @@
 		<music path="mp3/NyanCat.mp3" id="NyanCat" />
 	</assets>
 	
-	<assets path="assets/data" include="*.ttf" type="font" />
-	<assets path="assets" include="*.fgr" type="text" />
-	<assets path="assets" include="*.csv" type="text" />
-	<assets path="assets" include="*.txt" type="text" />
-	<assets path="assets" include="*.png" type="image" />
-	<assets path="assets/data" include="*.png" type="image" />
-	<assets path="assets/png" include="*.png" type="image" />
-	<assets path="assets/data/vcr" include="*.png" type="image" />
-	<assets path="assets/data/vis" include="*.png" type="image" />
+	<assets path="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" unless="flash" />
 	
 	<icon name="assets/HaxeFlixel.svg" />
 </project>

@@ -3,11 +3,9 @@
 	
 	<app title="Flixel Version of BunnyMark" file="FlixelBunnyMark" main="Test" version="0.0.1" company="Zaphod" />
 	
-	<window width="300" height="28" fps="30" background="#000000" orientation="portrait" resizable="true" if="target_flash" />
-	<window width="300" height="28" fullscreen="false" fps="60" background="#000000" orientation="portrait" vsync="true" antialiasing="0" unless="target_flash" />
+	<window width="300" height="28" fps="30" background="#000000" orientation="portrait" resizable="true" if="flash" />
+	<window width="300" height="28" fullscreen="false" fps="60" background="#000000" orientation="portrait" vsync="true" antialiasing="0" unless="flash" />
  	
-	<set name="BUILD_DIR" value="export" />
-	
 	<classpath name="source" />
 	
 	<haxelib name="nme" />
@@ -21,18 +19,12 @@
 		<sound path="data/beep.wav" id="Beep" />
 	</assets>
 	
-	<assets path="assets" if="target_flash" >
+	<assets path="assets" if="flash" >
 		<sound path="data/beep.mp3" id="Beep" />
 	</assets>
 	
-	<assets path="assets/data" include="*.ttf" type="font" />
-	<assets path="assets" include="*.fgr" type="text" />
-	<assets path="assets" include="*.csv" type="text" />
-	<assets path="assets" include="*.txt" type="text" />
-	<assets path="assets" include="*.png" type="image" />
-	<assets path="assets/data" include="*.png" type="image" />
-	<assets path="assets/data/vcr" include="*.png" type="image" />
-	<assets path="assets/data/vis" include="*.png" type="image" />
+	<assets path="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" unless="flash" />
 	
 	<icon name="assets/HaxeFlixel.svg" />
 </project>
