@@ -51,8 +51,6 @@ class FlxSkewedSprite extends FlxSprite
 	override public function draw():Void 
 	{
 		#if (cpp || neko)
-		// Don't try to draw if object isn't on any layer 
-		// or layer isn't added to state
 		if (_atlas == null)
 		{
 			return;
@@ -83,7 +81,7 @@ class FlxSkewedSprite extends FlxSprite
 		
 		#if (cpp || neko)
 		var drawItem:DrawStackItem;
-		var isColored:Bool = (_colorTransform != null);
+		var isColored:Bool = isColored();
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		#end
@@ -95,6 +93,7 @@ class FlxSkewedSprite extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
+			var isColoredCamera:Bool = camera.isColored();
 			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
@@ -102,7 +101,7 @@ class FlxSkewedSprite extends FlxSprite
 			}
 			
 			#if (cpp || neko)
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -146,9 +145,9 @@ class FlxSkewedSprite extends FlxSprite
 					currDrawData[currIndex++] = 1;
 				}
 				
-				if (isColored || camera.isColored())
+				if (isColored || isColoredCamera)
 				{
-					if (camera.isColored())
+					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;
@@ -227,9 +226,9 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _matrix.c;
 				currDrawData[currIndex++] = _matrix.d;
 				
-				if (isColored || camera.isColored())
+				if (isColored || isColoredCamera)
 				{
-					if (camera.isColored())
+					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _red * camera.red; 
 						currDrawData[currIndex++] = _green * camera.green;

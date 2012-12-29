@@ -180,7 +180,7 @@ class FlxTileblock extends FlxSprite
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		var drawItem:DrawStackItem;
-		var isColored:Bool = (_colorTransform != null);
+		var isColored:Bool = isColored();
 		var l:Int = cameras.length;
 		
 		var j:Int = 0;
@@ -204,7 +204,8 @@ class FlxTileblock extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			var isColoredCamera:Bool = camera.isColored();
+			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -220,7 +221,6 @@ class FlxTileblock extends FlxSprite
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
 			
-			var isColoredCamera:Bool = camera.isColored();
 			if (isColoredCamera)
 			{
 				redMult = _red * camera.red; 

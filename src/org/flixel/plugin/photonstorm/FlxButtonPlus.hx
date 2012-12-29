@@ -479,11 +479,6 @@ class FlxButtonPlus extends FlxGroup
 			FlxGradient.overlayGradientOnBitmapData(normalBitmap, width - 2, height - 2, offColor, 1, 1);
 		}
 		buttonNormal.pixels = FlxG._cache.get(normalKey);
-		
-		if (textNormal != null)
-		{
-			FlxG.state.addLayerAt(textNormal.layer, FlxG.state.getLayerIndex(buttonNormal.layer) + 1);
-		}
 		#end
 	}
 	
@@ -532,11 +527,6 @@ class FlxButtonPlus extends FlxGroup
 			FlxGradient.overlayGradientOnBitmapData(highlightBitmap, width - 2, height - 2, onColor, 1, 1);
 		}
 		buttonHighlight.pixels = FlxG._cache.get(highlightKey);
-		
-		if (textHighlight != null)
-		{
-			FlxG.state.addLayerAt(textHighlight.layer, FlxG.state.getLayerIndex(buttonHighlight.layer) + 1);
-		}
 		#end
 	}
 	

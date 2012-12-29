@@ -25,6 +25,7 @@ import nme.display.BitmapInt32;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
+import org.flixel.system.layer.DrawStackItem;
 
 /**
  * FlxBar is a quick and easy way to create a graphical bar which can
@@ -1195,16 +1196,27 @@ class FlxBar extends FlxSprite
 		
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		
-		var isColored:Bool = _layer.isColored;
+		var drawItem:DrawStackItem;
+		var isColored:Bool = isColored();
 		
 		while (i < l)
 		{
 			camera = cameras[i++];
-			currDrawData = _layer.drawData[camera.ID];
-			currIndex = _layer.positionData[camera.ID];
-			
 			var isColoredCamera:Bool = camera.isColored();
+			
+			var redMult:Float = _red;
+			var greenMult:Float = _green;
+			var blueMult:Float = _blue;
+			if (isColoredCamera)
+			{
+				redMult *= camera.red;
+				greenMult *= camera.green;
+				blueMult *= camera.blue;
+			}
+			
+			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
 			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
@@ -1229,18 +1241,9 @@ class FlxBar extends FlxSprite
 				
 				if (isColored || isColoredCamera)
 				{
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
+					currDrawData[currIndex++] = redMult; 
+					currDrawData[currIndex++] = greenMult;
+					currDrawData[currIndex++] = blueMult;
 				}
 				
 				currDrawData[currIndex++] = alpha;
@@ -1268,18 +1271,9 @@ class FlxBar extends FlxSprite
 					
 					if (isColored || isColoredCamera)
 					{
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = _red * camera.red; 
-							currDrawData[currIndex++] = _green * camera.green;
-							currDrawData[currIndex++] = _blue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = _red; 
-							currDrawData[currIndex++] = _green;
-							currDrawData[currIndex++] = _blue;
-						}
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
 					
 					currDrawData[currIndex++] = alpha;
@@ -1303,20 +1297,11 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = -sin * scale.x;
 				currDrawData[currIndex++] = cos * scale.y;
 				
-				if (_layer.isColored || isColoredCamera)
+				if (isColored || isColoredCamera)
 				{
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
+					currDrawData[currIndex++] = redMult; 
+					currDrawData[currIndex++] = greenMult;
+					currDrawData[currIndex++] = blueMult;
 				}
 				
 				currDrawData[currIndex++] = alpha;
@@ -1346,27 +1331,18 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = -sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
 					
-					if (_layer.isColored || isColoredCamera)
+					if (isColored || isColoredCamera)
 					{
-						if (isColoredCamera)
-						{
-							currDrawData[currIndex++] = _red * camera.red; 
-							currDrawData[currIndex++] = _green * camera.green;
-							currDrawData[currIndex++] = _blue * camera.blue;
-						}
-						else
-						{
-							currDrawData[currIndex++] = _red; 
-							currDrawData[currIndex++] = _green;
-							currDrawData[currIndex++] = _blue;
-						}
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
 					
 					currDrawData[currIndex++] = alpha;
 				}
 			}
 			
-			_layer.positionData[camera.ID] = currIndex;
+			drawItem.position = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -1408,8 +1384,6 @@ class FlxBar extends FlxSprite
 	#if (cpp || neko)
 		if (_node != null && barWidth >= 1 && barHeight >= 1)
 		{
-			updateLayerProps();
-			
 			_emptyBarFrameID = _node.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
 			_filledBarFrames = [];
 			

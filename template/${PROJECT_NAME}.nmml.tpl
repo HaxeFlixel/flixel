@@ -25,7 +25,7 @@
 		
 	</assets>
 	
-	<assets path="assets" if="target_flash" >
+	<assets path="assets" if="flash" >
 		<sound path="data/beep.mp3" id="Beep" />
 		
 		<!-- Your sound embedding code here... -->
@@ -39,14 +39,8 @@
 		
 	</assets>
 	
-	<assets path="assets/data" include="*.ttf" type="font" />
-	<assets path="assets" include="*.fgr" type="text" />
-	<assets path="assets" include="*.csv" type="text" />
-	<assets path="assets" include="*.txt" type="text" />
-	<assets path="assets" include="*.png" type="image" />
-	<assets path="assets/data" include="*.png" type="image" />
-	<assets path="assets/data/vcr" include="*.png" type="image" />
-	<assets path="assets/data/vis" include="*.png" type="image" />
+	<assets path="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" unless="flash" />
 	
 	<icon name="assets/HaxeFlixel.svg" />
 	

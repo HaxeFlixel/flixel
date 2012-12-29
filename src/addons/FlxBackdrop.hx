@@ -152,7 +152,6 @@ class FlxBackdrop extends FlxObject
 			
 			var currDrawData:Array<Float>;
 			var currIndex:Int;
-			// TODO: check coloring (see camera coloring) in other class also
 			var isColoredCamera:Bool = camera.isColored();
 			var drawItem:DrawStackItem = camera.getDrawStackItem(_atlas, isColoredCamera, 0);
 			

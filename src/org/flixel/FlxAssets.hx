@@ -110,25 +110,27 @@ class FlxAssets
 		return Assets.getBitmapData(id);
 	}
 	
-	// TODO: write code for automatic sound caching for android target
+	/**
+	 * Sound caching for android target
+	 */
 	public static function cacheSounds():Void
 	{
 		#if android
-		/*var resourseType:String;
-		var resourseTypes:Hash<String> = cast Reflect.getProperty(Assets, "resourceTypes");
+		Reflect.callMethod(nme.installer.Assets, "initialize", []);
 		
-		if (resourseTypes != null)
+		var resourceClasses:Hash<Dynamic> = cast Reflect.getProperty(nme.installer.Assets, "resourceClasses");
+		var resourceTypes:Hash<String> = cast Reflect.getProperty(nme.installer.Assets, "resourceTypes");
+		
+		if (resourceTypes != null)
 		{
-			for (key in resourseTypes.keys())
+			for (key in resourceTypes.keys())
 			{
-				resourseType = resourseTypes.get(key);
-				
-				if (resourseType != null && resourseType == "sound")
-				{
+				if (resourseType != null && resourceTypes.get(key) == "sound")
+				{	
 					FlxG.addSound(key);
 				}
 			}
-		}*/
+		}
 		#end
 	}
 }

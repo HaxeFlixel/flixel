@@ -949,11 +949,6 @@ class FlxGame extends Sprite
 			//Focus gained/lost monitoring
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
-			#if (cpp || neko)
-			// TODO: Uncomment these lines in after next NME's release
-		//	stage.addEventListener(Event.FOCUS_OUT, onFocusLost);
-		//	stage.addEventListener(Event.FOCUS_IN, onFocus);
-			#end
 			createFocusScreen();
 		}
 		

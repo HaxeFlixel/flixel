@@ -50,6 +50,29 @@ class FlxState extends FlxGroup
 	}
 	
 	/**
+	 * Creates and adds new atlas to atlas cache, so it can be drawn
+	 * @param	atlasName		name of atlas to be created 
+	 * @param	atlasWidth		width of atlas
+	 * @param	atlasHeight		height of atlas
+	 * @return					new empty atlas object
+	 */
+	public function createAtlas(atlasName:String, atlasWidth:Int, atlasHeight:Int):Atlas
+	{
+		var key:String = Atlas.getUniqueKey(atlasName);
+		return new Atlas(key, atlasWidth, atlasHeight);
+	}
+	
+	/**
+	 * Removes atlas from cache.
+	 * @param	atlas		atlas to remove
+	 * @param	destroy		if true then atlas will be completely destroyed also (be carefull with this parameter)
+	 */
+	public function removeAtlas(atlas:Atlas, destroy:Bool = false):Void
+	{
+		Atlas.removeAtlas(atlas, destroy);
+	}
+	
+	/**
 	 * This method is called after application losts its focus.
 	 * Can be useful if you using third part libraries, such as tweening engines.
 	 * Override it in subclasses

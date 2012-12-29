@@ -129,14 +129,6 @@ class FlxButton extends FlxSprite
 		_initialized = false;
 	}
 	
-	// TODO: remove this later
-	/*override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite 
-	{
-		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, Width, Height, Unique, Key);
-		swapLayers();
-		return tempSprite;
-	}*/
-	
 	/**
 	 * Called by the game state when state is changed (if this object belongs to the state)
 	 */
@@ -375,28 +367,6 @@ class FlxButton extends FlxSprite
 			label.draw();
 		}
 	}
-	
-	// TODO: remove this later
-	/*#if flash 
-	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
-	#else
-	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, Unique:Bool = false, Key:String = null):FlxSprite
-	#end
-	{
-		#if !flash
-		if (Color == null)
-		{
-			#if (cpp || js)
-			Color = 0xffffffff;
-			#elseif neko
-			Color = { rgb: 0xffffff, a: 0xff };
-			#end
-		}
-		#end
-		
-		var result:FlxSprite = super.makeGraphic(Width, Height, Color, Unique, Key);
-		return result;
-	}*/
 	
 	/**
 	 * Updates the size of the text field to match the button.

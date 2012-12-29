@@ -16,6 +16,7 @@ import org.flixel.FlxPoint;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
 import org.flixel.system.input.Touch;
+import org.flixel.system.layer.Atlas;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -149,43 +150,18 @@ class PxButton extends FlxSprite
 		_initialized = false;
 	}
 	
-	// TODO: remove this later
-	/*override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite 
+	#if (cpp || neko)
+	override private function set_atlas(value:Atlas):Atlas 
 	{
-		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, Width, Height, Unique, Key);
-		return tempSprite;
-	}*/
-	
-	// TODO: remove this later
-	/*#if flash 
-	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
-	#else
-	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, Unique:Bool = false, Key:String = null):FlxSprite
-	#end
-	{
-		#if !flash
-		if (Color == null)
+		var atl:Atlas = super.set_atlas(value);
+		if (atl == value)
 		{
-			#if !neko
-			Color = 0xffffffff;
-			#else
-			Color = { rgb: 0xffffff, a: 0xff };
-			#end
+			// Maybe there is enough place for font image
+			label.atlas = value;
 		}
-		#end
-		
-		var tempSprite:FlxSprite = super.makeGraphic(Width, Height, Color, Unique, Key);
-		return tempSprite;
-	}*/
-	
-	// TODO: override set_atlas (for optimizations)
-	/*#if (cpp || neko)
-	override private function set_atlas(value:FlxLayer):FlxLayer 
-	{
-		var lr:FlxLayer = super.set_layer(value);
-		return lr;
+		return value;
 	}
-	#end*/
+	#end
 	
 	/**
 	 * Called by the game state when state is changed (if this object belongs to the state)

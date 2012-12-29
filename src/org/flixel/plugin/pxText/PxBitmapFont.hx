@@ -10,8 +10,6 @@ import nme.geom.Rectangle;
 import org.flixel.FlxG;
 import org.flixel.system.layer.Node;
 
-// TODO: clone() method or add hash object to track layer data (i think second option is better)
-
 /**
  * Holds information and bitmap glpyhs for a bitmap font.
  * @author Johan Peitz

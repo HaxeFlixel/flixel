@@ -38,8 +38,6 @@ class FlxTextField extends FlxText
 	private var _background:Bool;
 	private var _autosize:TextFieldAutoSize;
 	
-	// TODO: flash target support
-	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
 	 * @param	X				The X position of the text.

@@ -177,7 +177,7 @@ class Bullet extends FlxSprite
 		if (weapon.bulletLifeSpan > 0)
 		{
 			lifespan = weapon.bulletLifeSpan + FlxMath.rand( -weapon.rndFactorLifeSpan, weapon.rndFactorLifeSpan);
-			expiresTime = Lib.getTimer() + lifespan;
+			//expiresTime = Lib.getTimer() + lifespan;
 		}
 		
 		if (weapon.onFireCallback != null)
