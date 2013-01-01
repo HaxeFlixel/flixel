@@ -899,11 +899,9 @@ class FlxSprite extends FlxObject
 		{
 			dirty = true;
 		}
-		
 		#if (cpp || neko)
 		_calculatedPixelsIndex = -1;
 		#end
-		
 		updateAtlasInfo(true);
 	}
 	
