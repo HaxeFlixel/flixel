@@ -125,7 +125,7 @@ class FlxAssets
 		{
 			for (key in resourceTypes.keys())
 			{
-				if (resourseType != null && resourceTypes.get(key) == "sound")
+				if (resourceTypes.get(key) == "sound")
 				{	
 					FlxG.addSound(key);
 				}
