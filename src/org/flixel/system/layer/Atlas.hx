@@ -183,7 +183,7 @@ class Atlas
 	 */
 	public function redrawNode(node:Node):Void
 	{
-		if (hasNodeWithName(node.key) && atlasBitmapData != node.item)
+		if (hasNodeWithName(node.key) && !_fromBitmapData)
 		{
 			#if !neko
 			atlasBitmapData.fillRect(node.rect, 0x00000000);
