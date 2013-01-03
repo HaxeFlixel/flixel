@@ -1,6 +1,7 @@
 package org.flixel;
 
 import nme.Assets;
+import nme.display.BitmapData;
 import nme.display.Graphics;
 import nme.text.Font;
 
@@ -9,7 +10,7 @@ import nme.text.Font;
  * @author Zaphod
  */
 
-class FlxAssets //extends Assets
+class FlxAssets
 {
 	public static var imgDefaultButton:String = "assets/data/button.png";
 	public static var imgLogo:String = "assets/data/logo.png";
@@ -43,17 +44,8 @@ class FlxAssets //extends Assets
 	public static var imgButtonLeft:String = "assets/data/button_left.png";
 	public static var imgButtonRight:String = "assets/data/button_right.png";
 	
-	public static var nokiaFont(getNokiaFont, null):String;
-	public static function getNokiaFont():String
-	{
-		return Assets.getFont("assets/data/nokiafc22.ttf").fontName;
-	}
-	
-	public static var courierFont(getCourierFont, null):String;
-	public static function getCourierFont():String
-	{
-		return Assets.getFont("assets/data/courier.ttf").fontName;
-	}
+	public static var courierFont:String = "assets/data/courier";
+	public static var nokiaFont:String = "assets/data/nokiafc22";
 	
 	public static var sndBeep:String = "Beep";
 	
@@ -113,25 +105,32 @@ class FlxAssets //extends Assets
 		graph.endFill();
 	}
 	
-	// TODO: write code for automatic sound caching for android target
+	public static function getBitmapData(id:String):BitmapData
+	{
+		return Assets.getBitmapData(id);
+	}
+	
+	/**
+	 * Sound caching for android target
+	 */
 	public static function cacheSounds():Void
 	{
 		#if android
-		/*var resourseType:String;
-		var resourseTypes:Hash<String> = cast Reflect.getProperty(Assets, "resourceTypes");
+		Reflect.callMethod(nme.installer.Assets, "initialize", []);
 		
-		if (resourseTypes != null)
+		var resourceClasses:Hash<Dynamic> = cast Reflect.getProperty(nme.installer.Assets, "resourceClasses");
+		var resourceTypes:Hash<String> = cast Reflect.getProperty(nme.installer.Assets, "resourceTypes");
+		
+		if (resourceTypes != null)
 		{
-			for (key in resourseTypes.keys())
+			for (key in resourceTypes.keys())
 			{
-				resourseType = resourseTypes.get(key);
-				
-				if (resourseType != null && resourseType == "sound")
-				{
+				if (resourceTypes.get(key) == "sound")
+				{	
 					FlxG.addSound(key);
 				}
 			}
-		}*/
+		}
 		#end
 	}
 }

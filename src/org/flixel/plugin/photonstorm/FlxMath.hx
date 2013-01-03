@@ -186,7 +186,7 @@ class FlxMath
 		cosTable = new Array();
 		sinTable = new Array();
 		
-		for (c in 0...(FlxU.fromIntToUInt(length)))
+		for (c in 0...length)
 		{
 			cos -= sin * frq;
 			sin += cos * frq;
@@ -203,7 +203,7 @@ class FlxMath
 	 * @return Array of sine wave data
 	 * @see sinCosGenerator
 	 */
-	public static function getSinTable():Array<Float>
+	public static inline function getSinTable():Array<Float>
 	{
 		return sinTable;
 	}
@@ -213,7 +213,7 @@ class FlxMath
 	 * @return Array of cosine wave data
 	 * @see sinCosGenerator
 	 */
-	public static function getCosTable():Array<Float>
+	public static inline function getCosTable():Array<Float>
 	{
 		return cosTable;
 	}
@@ -479,9 +479,9 @@ class FlxMath
 	 * 
 	 * @return
 	 */
-	public static function vectorLength(dx:Float, dy:Float):Float
+	public static inline function vectorLength(dx:Float, dy:Float):Float
 	{
-		return Math.sqrt(dx * dx + dy * dy);
+		return sqrt(dx * dx + dy * dy);
 	}
 	
 	/**
@@ -494,7 +494,7 @@ class FlxMath
 	 * 
 	 * @return	Dot product
 	 */
-	public static function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
+	public static inline function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
 	{
 		return ax * bx + ay * by;
 	}
@@ -516,7 +516,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is odd. False if the given number is even.
 	 */
-	public static function isOdd(n:Float):Bool
+	public static inline function isOdd(n:Float):Bool
 	{
 		if ((Math.floor(n) & 1) != 0)
 		{
@@ -535,7 +535,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is even. False if the given number is odd.
 	 */
-	public static function isEven(n:Float):Bool
+	public static inline function isEven(n:Float):Bool
 	{
 		if ((Math.floor(n) & 1) != 0)
 		{
@@ -604,7 +604,7 @@ class FlxMath
 	 * @param radians The value in radians
 	 * @return Number Degrees
 	 */
-	public static function asDegrees(radians:Float):Float
+	public static inline function asDegrees(radians:Float):Float
 	{
 		return radians * RADTODEG;
 	}
@@ -617,7 +617,7 @@ class FlxMath
 	 * @param degrees The value in degrees
 	 * @return Number Radians
 	 */
-	public static function asRadians(degrees:Float):Float
+	public static inline function asRadians(degrees:Float):Float
 	{
 		return degrees * DEGTORAD;
 	}

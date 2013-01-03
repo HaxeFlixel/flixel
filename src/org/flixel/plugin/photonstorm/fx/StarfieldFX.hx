@@ -22,6 +22,7 @@ import org.flixel.FlxG;
 import org.flixel.plugin.photonstorm.FlxColor;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxGradient;
+import org.flixel.system.layer.DrawStackItem;
 
 /**
  * Creates a 2D or 3D Star Field effect on an FlxSprite for use in your game.
@@ -441,7 +442,6 @@ class StarSprite extends FlxSprite
 		#end
 		
 		setBackgroundColor(bgColor);
-		_layer.isColored = true;
 		
 		width = Width;
 		height = Height;
@@ -469,7 +469,7 @@ class StarSprite extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if (_layer == null || _layer.onStage == false)
+		if (_atlas == null)
 		{
 			return;
 		}
@@ -493,6 +493,7 @@ class StarSprite extends FlxSprite
 		
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
+		var drawItem:DrawStackItem;
 		
 		var radians:Float;
 		var cos:Float;
@@ -507,14 +508,16 @@ class StarSprite extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
+			var isColoredCamera:Bool = camera.isColored();
 			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
 			
-			currDrawData = _layer.drawData[camera.ID];
-			currIndex = _layer.positionData[camera.ID];
+			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt);
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
 			
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
@@ -536,7 +539,7 @@ class StarSprite extends FlxSprite
 				currDrawData[currIndex++] = 0;
 				currDrawData[currIndex++] = height;
 				
-				if (camera.isColored())
+				if (isColoredCamera)
 				{
 					currDrawData[currIndex++] = bgRed * camera.red; 
 					currDrawData[currIndex++] = bgGreen * camera.green;
@@ -570,7 +573,7 @@ class StarSprite extends FlxSprite
 					starGreen = starDef.green;
 					starBlue = starDef.blue;
 					
-					if (camera.isColored())
+					if (isColoredCamera)
 					{
 						starRed *= camera.red;
 						starGreen *= camera.green;
@@ -595,7 +598,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = alpha * starDef.alpha;
 				}
 				
-				_layer.positionData[camera.ID] = currIndex;
+				drawItem.position = currIndex;
 			}
 			else
 			{	//Advanced render
@@ -617,7 +620,7 @@ class StarSprite extends FlxSprite
 				currDrawData[currIndex++] = sin * scale.x * width;
 				currDrawData[currIndex++] = cos * scale.y * height;
 				
-				if (camera.isColored())
+				if (isColoredCamera)
 				{
 					currDrawData[currIndex++] = bgRed * camera.red; 
 					currDrawData[currIndex++] = bgGreen * camera.green;
@@ -657,7 +660,7 @@ class StarSprite extends FlxSprite
 					starGreen = starDef.green;
 					starBlue = starDef.blue;
 					
-					if (camera.isColored())
+					if (isColoredCamera)
 					{
 						starRed *= camera.red;
 						starGreen *= camera.green;
@@ -682,7 +685,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = alpha * starDef.alpha;
 				}
 				
-				_layer.positionData[camera.ID] = currIndex;
+				drawItem.position = currIndex;
 			}
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -696,22 +699,10 @@ class StarSprite extends FlxSprite
 	{
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			updateLayerProps();
 			_framesData = _node.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
 			_frameID = _framesData.frameIDs[0];
 		}
 	}
-	
-	override private function updateLayerProps():Void
-	{
-		if (_layer != null)
-		{
-			_layer.antialiasing = antialiasing;
-			_layer.isColored = true;
-			_layer.blend = _blend;
-		}
-	}
-	
 }
 
 typedef StarDef = {

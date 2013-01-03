@@ -20,7 +20,6 @@ import org.flixel.system.replay.MouseRecord;
  */
 class Mouse extends FlxPoint
 {
-
 	/**
 	 * Current "delta" value of mouse wheel.  If the wheel was just scrolled up, it will have a positive value.  If it was just scrolled down, it will have a negative value.  If it wasn't just scroll this frame, it will be 0.
 	 */
@@ -162,11 +161,11 @@ class Mouse extends FlxPoint
 		}
 		else if (Std.is(Graphic, String))
 		{
-			_cursor = new Bitmap(Assets.getBitmapData(Graphic));
+			_cursor = new Bitmap(FlxAssets.getBitmapData(Graphic));
 		}
 		else
 		{
-			_cursor = new Bitmap(Assets.getBitmapData(FlxAssets.imgDefaultCursor));
+			_cursor = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgDefaultCursor));
 		}
 		
 		_cursor.x = XOffset;

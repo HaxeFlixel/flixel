@@ -9,13 +9,14 @@ import nme.events.MouseEvent;
 import nme.events.TouchEvent;
 import nme.media.Sound;
 import nme.media.Sound;
+import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxCamera;
-import org.flixel.FlxLayer;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
 import org.flixel.system.input.Touch;
+import org.flixel.system.layer.Atlas;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -115,7 +116,7 @@ class PxButton extends FlxSprite
 			// TODO: redo this
 			if (PxBitmapFont.fetch("nokiafc22") == null)
 			{
-				PxBitmapFont.store("nokiafc22", new PxBitmapFont().loadPixelizer(Assets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
+				PxBitmapFont.store("nokiafc22", new PxBitmapFont().loadPixelizer(FlxAssets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
 			}
 			
 			label = new FlxBitmapTextField(PxBitmapFont.fetch("nokiafc22"));
@@ -149,59 +150,16 @@ class PxButton extends FlxSprite
 		_initialized = false;
 	}
 	
-	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite 
-	{
-		var tempSprite:FlxSprite = super.loadGraphic(Graphic, Animated, Reverse, FlxU.fromIntToUInt(Width), FlxU.fromIntToUInt(Height), Unique, Key);
-		swapLayers();
-		return tempSprite;
-	}
-	
-	#if flash 
-	override public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
-	#else
-	override public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, Unique:Bool = false, Key:String = null):FlxSprite
-	#end
-	{
-		#if !flash
-		if (Color == null)
-		{
-			#if !neko
-			Color = 0xffffffff;
-			#else
-			Color = { rgb: 0xffffff, a: 0xff };
-			#end
-		}
-		#end
-		
-		var tempSprite:FlxSprite = super.makeGraphic(Width, Height, Color, Unique, Key);
-		swapLayers();
-		return tempSprite;
-	}
-	
-	/**
-	 * Helper function for changing draw order of button's background and label.
-	 */
-	public function swapLayers():Void
-	{
-		#if (cpp || neko)
-		if (label != null && _layer != null)
-		{
-			var labelIndex:Int = FlxG.state.getLayerIndex(label.layer);
-			var bgIndex:Int = FlxG.state.getLayerIndex(_layer);
-			if (bgIndex > labelIndex)
-			{
-				FlxG.state.addLayerAt(label.layer, bgIndex + 1);
-			}
-		}
-		#end
-	}
-	
 	#if (cpp || neko)
-	override private function set_layer(value:FlxLayer):FlxLayer 
+	override private function set_atlas(value:Atlas):Atlas 
 	{
-		var lr:FlxLayer = super.set_layer(value);
-		swapLayers();
-		return lr;
+		var atl:Atlas = super.set_atlas(value);
+		if (atl == value)
+		{
+			// Maybe there is enough place for font image
+			label.atlas = value;
+		}
+		return value;
 	}
 	#end
 	

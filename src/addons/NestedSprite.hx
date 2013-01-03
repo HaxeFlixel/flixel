@@ -156,6 +156,7 @@ class NestedSprite extends FlxSprite
 		
 		var child:NestedSprite = _children[Index];
 		_children.splice(Index, 1);
+		
 		return child;
 	}
 	
@@ -164,20 +165,18 @@ class NestedSprite extends FlxSprite
 	 */
 	public function removeAll():Void
 	{
-		var l:Int = _children.length - 1;
-		var i:Int = l;
-		while (i >= 0)
+		var i:Int = _children.length;
+		while (i > 0)
 		{
-			removeAt(i);
-			i--;
+			removeAt(--i);
 		}
 	}
 	
 	/**
 	 * All Graphics in this list.
 	 */
-	public var children(getChildren, null):Array<NestedSprite>;
-	private function getChildren():Array<NestedSprite> 
+	public inline var children(getChildren, null):Array<NestedSprite>;
+	private inline function getChildren():Array<NestedSprite> 
 	{ 
 		return _children; 
 	}
@@ -393,20 +392,6 @@ class NestedSprite extends FlxSprite
 		_green = combinedGreen;
 		_blue = combinedBlue;
 		#end
-		
-	#if (cpp || neko)	
-		#if cpp
-		if (_color < 0xffffff)
-		#else
-		if (_color.rgb < 0xffffff)
-		#end
-		{
-			if (_layer != null)
-			{
-				_layer.isColored = true;
-			}
-		}
-	#end
 		
 		for (child in _children)
 		{
