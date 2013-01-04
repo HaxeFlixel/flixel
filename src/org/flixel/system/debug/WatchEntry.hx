@@ -63,8 +63,8 @@ class WatchEntry
 		field = Field;
 		custom = Custom;
 		
-		_whiteText = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
-		_blackText = new TextFormat(FlxAssets.courierFont, 12, 0);
+		_whiteText = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
+		_blackText = new TextFormat(FlxAssets.debuggerFont, 12, 0);
 		
 		nameDisplay = new TextField();
 		nameDisplay.y = Y;

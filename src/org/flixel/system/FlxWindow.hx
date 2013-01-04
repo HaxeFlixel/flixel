@@ -159,7 +159,7 @@ class FlxWindow extends Sprite
 		_title.height = 16;
 		_title.selectable = false;
 		_title.multiline = false;
-		_title.defaultTextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
+		_title.defaultTextFormat = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
 		_title.text = Title;
 		addChild(_title);
 		
