@@ -44,8 +44,8 @@ class FlxAssets
 	public static var imgButtonLeft:String = "assets/data/button_left.png";
 	public static var imgButtonRight:String = "assets/data/button_right.png";
 	
-	public static var courierFont:String = "assets/data/courier";
-	public static var nokiaFont:String = "assets/data/nokiafc22";
+	public static var debuggerFont:String = "assets/data/courier";
+	public static var defaultFont:String = "assets/data/nokiafc22";
 	
 	public static var sndBeep:String = "Beep";
 	
