@@ -85,7 +85,7 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_format = new TextFormat(FlxAssets.nokiaFont, 8, 0xffffff);
+		_format = new TextFormat(FlxAssets.defaultFont, 8, 0xffffff);
 		_formatAdjusted = new TextFormat();
 		_textField.defaultTextFormat = _format;
 		_textField.text = Text;
@@ -153,7 +153,7 @@ class FlxText extends FlxSprite
 			#if (flash || js)
 			Font = "";
 			#else
-			Font = FlxAssets.nokiaFont;
+			Font = FlxAssets.defaultFont;
 			#end
 		}
 		_format.font = Font;

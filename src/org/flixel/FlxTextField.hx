@@ -112,7 +112,7 @@ class FlxTextField extends FlxText
 	{
 		if (Font == null)
 		{
-			Font = FlxAssets.nokiaFont;
+			Font = FlxAssets.defaultFont;
 		}
 		_format.font = Font;
 		_format.size = Size;

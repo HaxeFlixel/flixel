@@ -60,7 +60,7 @@ class Log extends FlxWindow
 		_text.multiline = true;
 		_text.wordWrap = true;
 		_text.selectable = true;
-		_text.defaultTextFormat = new TextFormat(FlxAssets.courierFont, 12, 0xffffff);
+		_text.defaultTextFormat = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
 		addChild(_text);
 		
 		_lines = new Array<String>();
