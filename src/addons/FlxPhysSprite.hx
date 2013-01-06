@@ -4,6 +4,7 @@ import nape.phys.Body;
 import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Circle;
+import nape.shape.Polygon;
 import org.flixel.FlxSprite;
 
 /**
@@ -19,8 +20,10 @@ class FlxPhysSprite extends FlxSprite
 	private var _radsFactor:Float;
 	private var _linearDrag:Float;
 	private var _angularDrag:Float;
-	private var _useDrag:Bool;
 	
+	/**
+	 * mainBody is the physics body associated with this sprite. 
+	 */
 	public var mainBody:Body;
 
 	/**
@@ -37,8 +40,10 @@ class FlxPhysSprite extends FlxSprite
 	{
 		super(X, Y, SimpleGraphic);
 		_radsFactor = 180 / 3.14159;
+		_linearDrag = 1;	// no drag.
+		_angularDrag = 1; 	// no drag.
 		
-		createPhysObjects();
+		createRectangularBody();
 	}
 
 	/**
@@ -82,20 +87,56 @@ class FlxPhysSprite extends FlxSprite
 	}
 	
 	/**
-	 * Creates the physics body used by this sprite.
-	 * Override this method to create your own physics body!
+	 * Creates the physics body used by this sprite (using a circle shape).
 	 */
-	public function createPhysObjects() 
+	public function createCircularBody(radius:Float = 16) 
 	{
 		if (mainBody != null) 
 			destroyPhysObjects();
 			
 		this.centerOffsets(false);
 		mainBody = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
-		mainBody.shapes.add(new Circle(16));
+		mainBody.shapes.add(new Circle(radius));
 		mainBody.space = FlxPhysState.space;
-		// elasticity, dinamic friction, static friction, density, rotation friction.
-		mainBody.setShapeMaterials(new Material(1, 0.2, 0.38, 0.7,0.01));
+		
+		setBodyMaterial();
+	}
+	
+	/**
+	 * Default method to create the physics body used by this sprite in shape of a rectangle.
+	 * Override this method to create your own physics body!
+	 * The width and height used are based on the size of sprite graphics.
+	 * Call this method after calling makeGraphics() or loadGraphic() to update the body size.
+	 */
+	public function createRectangularBody()
+	{
+		if (mainBody != null) 
+			destroyPhysObjects();
+			
+		this.centerOffsets(false);
+		mainBody = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
+		mainBody.shapes.add(new Polygon(Polygon.box(frameWidth, frameHeight)));
+		mainBody.space = FlxPhysState.space;
+		
+		setBodyMaterial();
+	}
+	
+	/**
+	 * Shortcut method to set/change the physics body material.
+	 * 
+	 * @param	elasticity			Elasticity of material.		
+	 * @param	dynamicFriction		Coeffecient of dynamic friction for material.
+	 * @param	staticFriction		Coeffecient of static friction for material.
+	 * @param	density				Density of this Material.
+	 * @param	rotationFriction	Coeffecient of rolling friction for circle interactions.
+	 */
+	public function setBodyMaterial(elasticity:Float = 1, dynamicFriction:Float = 0.2, 
+									staticFriction:Float = 0.4, density:Float = 1, 
+									rollingFriction:Float = 0.001)
+	{
+		if (mainBody == null) 
+			return;
+		mainBody.setShapeMaterials(new Material(elasticity, dynamicFriction, staticFriction, density, rollingFriction));
 	}
 	
 	/**
@@ -124,7 +165,7 @@ class FlxPhysSprite extends FlxSprite
 		}
 		
 		// Applies custom physics drag.
-		if (_useDrag) 
+		if (_linearDrag < 1 || _angularDrag < 1) 
 		{
 			mainBody.angularVel *= _angularDrag;
 			mainBody.velocity.x *= _linearDrag;
@@ -139,18 +180,11 @@ class FlxPhysSprite extends FlxSprite
 	 * 
 	 * @param	linearDrag Typical value 0.96
 	 * @param	angularDrag	Typical value 0.96
-	 * @param	useDrag	Sets drag enabled/disabled.
 	 */
 	public function setDrag(linearDrag:Float, angularDrag:Float) 
 	{
 		_linearDrag		= linearDrag;
 		_angularDrag 	= angularDrag;
-		_useDrag 		= true;
-		
-		if (_linearDrag == 0 && _angularDrag == 0) 
-		{
-			_useDrag = false;
-		}
 	}
 	
 }
