@@ -1,4 +1,4 @@
-package addons;
+package addons.nape;
 import nape.geom.Vec2;
 import nape.phys.Body;
 import nape.phys.BodyType;
@@ -6,17 +6,16 @@ import nape.phys.Material;
 import nape.shape.Polygon;
 import nape.space.Space;
 import nape.util.ShapeDebug;
-import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 
 /**
- * FlxPhysState is an FlxState that integrates nape.space.Space class 
+ * FlxPhysState is an FlxState that integrates Nape Physics Space class 
  * to provide Nape physics simulation in Flixel.
  * 
- * Extend this state, add some FlxPhysSprite(s) to start using flixel + nape physics.
+ * Extend this state, add some FlxPhysSprite(s) and its ready to go.
  * 
- * Note that 'space' is a static variable, use FlxPhysState.space
+ * Note that 'space' is a static variable, therefore use FlxPhysState.space
  * to access it.
  * 
  * @author TiagoLr ( ~~~ProG4mr~~~ )
@@ -43,21 +42,14 @@ class FlxPhysState extends FlxState
 	 */
 	override public function update():Void 
 	{
+		super.update();
 		
 		space.step(FlxG.elapsed);
 		if (_physDbgSpr != null) 
 		{
 			_physDbgSpr.clear();
-			_physDbgSpr.draw(space);
-			
-			_physDbgSpr.display.scaleX = FlxG.camera.zoom; // inefficient step.
-			_physDbgSpr.display.scaleY = FlxG.camera.zoom; // inefficient step.
-			_physDbgSpr.display.x = -FlxG.camera.scroll.x * FlxG.camera.zoom;
-			_physDbgSpr.display.y = -FlxG.camera.scroll.y * FlxG.camera.zoom;
-			
+			_physDbgSpr.draw(space);			
 		}
-		
-		super.update();
 	}
 	
 	/**
@@ -101,9 +93,6 @@ class FlxPhysState extends FlxState
 		_physDbgSpr = null;
 	}
 	
-	/**
-	 * Creates simple walls around game area - usefull for prototying.
-	 */
 	public function createWalls() 
 	{
 		var _thickness = 10;
