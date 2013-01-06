@@ -950,11 +950,6 @@ class FlxG
 		}
 		else if (Std.is(Graphic, BitmapData))
 		{
-			if (Key == null)
-			{
-				Key = FlxG.getUniqueBitmapKey();
-			}
-			
 			isClass = false;
 			isBitmap = true;
 		}
@@ -969,8 +964,8 @@ class FlxG
 		}
 		
 		var additionalKey:String = "";
-		#if !(flash || js)
-		if (FrameWidth != 0 || FrameHeight != 0)
+		#if !flash
+		if (FrameWidth != 0 || FrameHeight != 0/* || isBitmap*/)
 		{
 			additionalKey = "FrameSize:" + FrameWidth + "_" + FrameHeight;
 		}
@@ -983,6 +978,17 @@ class FlxG
 			{
 				key = Type.getClassName(cast(Graphic, Class<Dynamic>));
 			}
+			else if (isBitmap)
+			{
+				if (!Unique)
+				{
+					key = FlxG.getCacheKeyFor(cast Graphic);
+					if (key == null)
+					{
+						key = getUniqueBitmapKey();
+					}
+				}
+			}
 			else
 			{
 				key = Graphic;
@@ -992,7 +998,7 @@ class FlxG
 			
 			if (Unique)
 			{
-				key = getUniqueBitmapKey(key);
+				key = getUniqueBitmapKey();
 			}
 		}
 		
@@ -1008,14 +1014,14 @@ class FlxG
 			}
 			else if (isBitmap)
 			{
-				bd = cast(Graphic, BitmapData);
+				bd = cast Graphic;
 			}
 			else
 			{
 				bd = FlxAssets.getBitmapData(Graphic);
 			}
 			
-			#if !(flash || js)
+			#if !flash
 			if (additionalKey != "")
 			{
 				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Math.floor(bd.width / FrameWidth);
