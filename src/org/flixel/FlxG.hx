@@ -899,7 +899,7 @@ class FlxG
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	#if (flash || js)
+	#if flash
 	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, Unique:Bool = false, Key:String = null):BitmapData
 	#else
 	static public function createBitmap(Width:Int, Height:Int, Color:BitmapInt32, Unique:Bool = false, Key:String = null):BitmapData
@@ -948,8 +948,13 @@ class FlxG
 			isClass = true;
 			isBitmap = false;
 		}
-		else if (Std.is(Graphic, BitmapData) && Key != null)
+		else if (Std.is(Graphic, BitmapData))
 		{
+			if (Key == null)
+			{
+				Key = FlxG.getUniqueBitmapKey();
+			}
+			
 			isClass = false;
 			isBitmap = true;
 		}
