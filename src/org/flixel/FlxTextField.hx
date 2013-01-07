@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Assets;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.text.TextField;
@@ -112,7 +113,7 @@ class FlxTextField extends FlxText
 	{
 		if (Font == null)
 		{
-			Font = FlxAssets.defaultFont;
+			Font = Assets.getFont(FlxAssets.defaultFont).fontName;
 		}
 		_format.font = Font;
 		_format.size = Size;
@@ -178,7 +179,7 @@ class FlxTextField extends FlxText
 	 */
 	override public function setFont(Font:String):String
 	{
-		_format.font = Font;
+		_format.font = Assets.getFont(Font).fontName;
 		updateTextField();
 		return Font;
 	}

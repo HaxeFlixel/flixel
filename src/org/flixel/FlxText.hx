@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Assets;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.text.TextField;
@@ -85,12 +86,12 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_format = new TextFormat(FlxAssets.defaultFont, 8, 0xffffff);
+		_format = new TextFormat(Assets.getFont(FlxAssets.defaultFont).fontName, 8, 0xffffff);
 		_formatAdjusted = new TextFormat();
 		_textField.defaultTextFormat = _format;
 		_textField.text = Text;
-		#if flash
 		_textField.embedFonts = EmbeddedFont;
+		#if flash
 		_textField.sharpness = 100;
 		#end
 		if (Text.length <= 0)
@@ -153,7 +154,7 @@ class FlxText extends FlxSprite
 			#if (flash || js)
 			Font = "";
 			#else
-			Font = FlxAssets.defaultFont;
+			Font = Assets.getFont(FlxAssets.defaultFont).fontName;
 			#end
 		}
 		_format.font = Font;
@@ -288,7 +289,7 @@ class FlxText extends FlxSprite
 	 */
 	public function setFont(Font:String):String
 	{
-		_format.font = Font;
+		_format.font = Assets.getFont(Font).fontName;
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
 		_regen = true;
