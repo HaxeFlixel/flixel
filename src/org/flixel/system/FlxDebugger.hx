@@ -1,5 +1,6 @@
 package org.flixel.system;
 
+import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.display.Sprite;
@@ -8,6 +9,7 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
+import org.flixel.FlxAssets;
 
 import org.flixel.FlxG;
 import org.flixel.system.debug.Log;
@@ -91,7 +93,7 @@ class FlxDebugger extends Sprite
 		txt.height = 16;
 		txt.selectable = false;
 		txt.multiline = false;
-		txt.defaultTextFormat = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
+		txt.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 12, 0xffffff);
 		var str:String = FlxG.getLibraryName();
 		if (FlxG.debug)
 		{

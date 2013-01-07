@@ -2,9 +2,6 @@ package org.flixel.plugin.pxText;
 
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
-import nme.text.TextField;
-import nme.text.TextFormat;
-import nme.text.TextFormatAlign;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
