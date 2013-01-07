@@ -58,6 +58,8 @@ class FlxText extends FlxSprite
 	 */
 	private var _useShadow:Bool;
 	
+	private var _isStatic:Bool;
+	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
 	 * @param	X				The X position of the text.
@@ -65,10 +67,13 @@ class FlxText extends FlxSprite
 	 * @param	Width			The width of the text object (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
+	 * @param	IsStatic		Whether this text field can't be changed (text or appearance)
 	 */
-	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true)
+	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true, IsStatic:Bool = false)
 	{
 		super(X, Y);
+		
+		_isStatic = false;
 		
 		var key:String = FlxG.getUniqueBitmapKey("text");
 		#if !neko
@@ -116,6 +121,8 @@ class FlxText extends FlxSprite
 			calcFrame(true);
 		}
 		#end
+		
+		_isStatic = IsStatic;
 	}
 	
 	/**
@@ -149,6 +156,11 @@ class FlxText extends FlxSprite
 	public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
 	#end
 	{
+		if (_isStatic)
+		{
+			return this;
+		}
+		
 		if (Font == null)
 		{
 			#if (flash || js)
@@ -189,6 +201,11 @@ class FlxText extends FlxSprite
 	 */
 	public function setText(Text:String):String
 	{
+		if (_isStatic)
+		{
+			return Text;
+		}
+		
 		var ot:String = _textField.text;
 		_textField.text = Text;
 		if(_textField.text != ot)
@@ -218,6 +235,11 @@ class FlxText extends FlxSprite
 	 */
 	public function setSize(Size:Float):Float
 	{
+		if (_isStatic)
+		{
+			return Size;
+		}
+		
 		_format.size = Size;
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
@@ -258,6 +280,11 @@ class FlxText extends FlxSprite
 	override public function setColor(Color:BitmapInt32):BitmapInt32
 	#end
 	{
+		if (_isStatic)
+		{
+			return Color;
+		}
+		
 		#if neko
 		_format.color = Color.rgb;
 		#else
@@ -266,7 +293,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
 		_regen = true;
-		#if (flash || js)
+		#if flash
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -289,6 +316,11 @@ class FlxText extends FlxSprite
 	 */
 	public function setFont(Font:String):String
 	{
+		if (_isStatic)
+		{
+			return Font;
+		}
+		
 		_format.font = Assets.getFont(Font).fontName;
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
@@ -316,6 +348,11 @@ class FlxText extends FlxSprite
 	 */
 	public function setAlignment(Alignment:String):String
 	{
+		if (_isStatic)
+		{
+			return Alignment;
+		}
+		
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
@@ -348,6 +385,11 @@ class FlxText extends FlxSprite
 	public function setShadow(Color:Int):Int
 	#end
 	{
+		if (_isStatic)
+		{
+			return Color;
+		}
+		
 		_shadow = Color;
 		#if (flash || js)
 		calcFrame();
@@ -364,6 +406,11 @@ class FlxText extends FlxSprite
 	
 	private function set_useShadow(value:Bool):Bool
 	{
+		if (_isStatic)
+		{
+			return value;
+		}
+		
 		if (value != _useShadow)
 		{
 			_useShadow = value;
@@ -374,6 +421,29 @@ class FlxText extends FlxSprite
 			#end
 		}
 		return _useShadow;
+	}
+	
+	/**
+	 * Whether this text field can be changed (text or appearance).
+	 * Once set to true it can't be changed anymore.
+	 * Maybe usefull for cpp and neko targets, 
+	 * since if you set it to true then you can insert text's image into other atlas.
+	 */
+	public var isStatic(get_isStatic, set_isStatic):Bool;
+	
+	private function get_isStatic():Bool 
+	{
+		return _isStatic;
+	}
+	
+	private function set_isStatic(value:Bool):Bool 
+	{
+		if (_isStatic)
+		{
+			return value;
+		}
+		
+		return _isStatic = value;
 	}
 	
 	/**
@@ -513,12 +583,17 @@ class FlxText extends FlxSprite
 	#end
 	
 	/**
-	 * FlxText objects can't be added on any level. They create their own atlases
-	 */
+	 * FlxText objects can't be added on any atlas if isStatic property is true. 
+	*/
 	#if (cpp || neko)
 	override private function set_atlas(value:Atlas):Atlas 
 	{
-		return value;
+		if (!_isStatic)
+		{
+			return value;
+		}
+		
+		return super.set_atlas(value);
 	}
 	#end
 	

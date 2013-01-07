@@ -15,6 +15,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
+import org.flixel.system.layer.Atlas;
 
 /**
  * Extends <code>FlxText</code> for better support rendering text on cpp target.
@@ -649,4 +650,11 @@ class FlxTextField extends FlxText
 	{
 		return _textField;
 	}
+	
+	#if (cpp || neko)
+	override private function set_atlas(value:Atlas):Atlas 
+	{
+		return value;
+	}
+	#end
 }
