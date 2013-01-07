@@ -50,8 +50,8 @@ class FlxPhysState extends FlxState
 			_physDbgSpr.clear();
 			_physDbgSpr.draw(space);
 			
-			_physDbgSpr.display.scaleX = FlxG.camera.zoom; // inefficient step.
-			_physDbgSpr.display.scaleY = FlxG.camera.zoom; // inefficient step.
+			_physDbgSpr.display.scaleX = FlxG.camera.zoom; 
+			_physDbgSpr.display.scaleY = FlxG.camera.zoom; 
 			_physDbgSpr.display.x = -FlxG.camera.scroll.x * FlxG.camera.zoom;
 			_physDbgSpr.display.y = -FlxG.camera.scroll.y * FlxG.camera.zoom;
 			
