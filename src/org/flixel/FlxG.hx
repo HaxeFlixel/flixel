@@ -998,7 +998,7 @@ class FlxG
 			
 			if (Unique)
 			{
-				key = getUniqueBitmapKey();
+				key = getUniqueBitmapKey((key == null) ? "pixels" : key);
 			}
 		}
 		

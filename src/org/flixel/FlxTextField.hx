@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Assets;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.text.TextField;
@@ -14,6 +15,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
+import org.flixel.system.layer.Atlas;
 
 /**
  * Extends <code>FlxText</code> for better support rendering text on cpp target.
@@ -112,7 +114,7 @@ class FlxTextField extends FlxText
 	{
 		if (Font == null)
 		{
-			Font = FlxAssets.defaultFont;
+			Font = Assets.getFont(FlxAssets.defaultFont).fontName;
 		}
 		_format.font = Font;
 		_format.size = Size;
@@ -178,7 +180,7 @@ class FlxTextField extends FlxText
 	 */
 	override public function setFont(Font:String):String
 	{
-		_format.font = Font;
+		_format.font = Assets.getFont(Font).fontName;
 		updateTextField();
 		return Font;
 	}
@@ -648,4 +650,11 @@ class FlxTextField extends FlxText
 	{
 		return _textField;
 	}
+	
+	#if (cpp || neko)
+	override private function set_atlas(value:Atlas):Atlas 
+	{
+		return value;
+	}
+	#end
 }

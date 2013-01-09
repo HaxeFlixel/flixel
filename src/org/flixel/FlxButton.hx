@@ -436,4 +436,16 @@ class FlxButton extends FlxSprite
 		status = NORMAL;
 	}
 	
+	#if (cpp || neko)
+	override private function set_atlas(value:Atlas):Atlas 
+	{
+		var atl:Atlas = super.set_atlas(value);
+		if (atl == value)
+		{
+			// Maybe there is enough place for font image
+			label.atlas = value;
+		}
+		return value;
+	}
+	#end
 }

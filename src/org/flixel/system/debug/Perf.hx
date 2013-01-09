@@ -1,11 +1,13 @@
 package org.flixel.system.debug;
 
+import nme.Assets;
 import nme.display.BitmapInt32;
 import nme.geom.Rectangle;
 import nme.system.System;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.Lib;
+import org.flixel.FlxAssets;
 import org.flixel.system.FlxList;
 import org.flixel.system.FlxQuadTree;
 
@@ -87,7 +89,7 @@ class Perf extends FlxWindow
 		_text.multiline = true;
 		_text.wordWrap = true;
 		_text.selectable = true;
-		_text.defaultTextFormat = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
+		_text.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 12, 0xffffff);
 		addChild(_text);
 		
 		_flixelUpdate = new Array();
