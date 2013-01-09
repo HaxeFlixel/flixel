@@ -103,30 +103,44 @@ class FlxPhysState extends FlxState
 	
 	/**
 	 * Creates simple walls around game area - usefull for prototying.
+	 * 
+	 * @param	minX	The smallest X value of your level (usually 0).
+	 * @param	minY	The smallest Y value of your level (usually 0).
+	 * @param	maxX	The largest X value of your level (usually the level width).
+	 * @param	maxY	The largest Y value of your level (usually the level height).
+	 * @param	Thickness	How thick the walls are.
 	 */
-	public function createWalls() 
+	public function createWalls(minX:Float = 0, minY:Float = 0, MaxX:Float = 0, MaxY:Float = 0, Thickness:Float = 10, material:Material = null) 
 	{
-		var _thickness = 10;
+		
+		if (MaxX == 0) 
+			MaxX = FlxG.width;
+			
+		if (MaxY == 0)
+			MaxY = FlxG.height;
+			
+		if (material == null)
+			material = new Material(0.4, 0.2, 0.38, 0.7);
 		
 		var wallLeft:Body 	= new Body(BodyType.STATIC);
 		var wallRight:Body 	= new Body(BodyType.STATIC);
 		var wallUp:Body 	= new Body(BodyType.STATIC);
 		var wallDown:Body 	= new Body(BodyType.STATIC);
 		
-		wallLeft.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7));
-		wallDown.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7));
-		wallUp.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7));
-		wallRight.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7));
-		
-		wallLeft.shapes.add(new Polygon(Polygon.rect(0,0,_thickness,FlxG.height)));
-        wallRight.shapes.add(new Polygon(Polygon.rect(FlxG.width - _thickness,0,_thickness,FlxG.height)));
-        wallUp.shapes.add(new Polygon(Polygon.rect(0,0,FlxG.width, _thickness)));
-        wallDown.shapes.add(new Polygon(Polygon.rect(0, FlxG.height - _thickness, FlxG.width, _thickness)));
+		wallLeft.shapes.add(new Polygon(Polygon.rect(minX, minY, Thickness, MaxY + Math.abs(minY))));
+        wallRight.shapes.add(new Polygon(Polygon.rect(MaxX - Thickness, minY, Thickness, MaxY + Math.abs(minY))));
+        wallUp.shapes.add(new Polygon(Polygon.rect(minX, minY, MaxX + Math.abs(minX), Thickness)));
+        wallDown.shapes.add(new Polygon(Polygon.rect(minX, MaxY - Thickness, MaxX + Math.abs(minX), Thickness)));
 		
 		wallLeft.space = space;
 		wallRight.space = space;
 		wallUp.space = space;
 		wallDown.space = space;
+		
+		wallLeft.setShapeMaterials(material);
+		wallRight.setShapeMaterials(material);
+		wallUp.setShapeMaterials(material);
+		wallDown.setShapeMaterials(material);
 	}
 	
 }
