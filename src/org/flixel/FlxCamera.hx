@@ -78,6 +78,7 @@ class FlxCamera extends FlxBasic
 	 * How wide the camera display is, in game pixels.
 	 */
 	public var width(default, setWidth):Int;
+	
 	/**
 	 * How tall the camera display is, in game pixels.
 	 */
@@ -92,6 +93,17 @@ class FlxCamera extends FlxBasic
 	 * Tells the camera to follow this <code>FlxObject</code> object around.
 	 */
 	public var target:FlxObject;
+	
+	/**
+	 * Used to force the camera to look ahead of the <code>followTarget</code>.
+	 */
+	static public var followLead:Point;
+	
+	/**
+	 * Used to smoothly track the camera as it follows.
+	 */
+	static public var followLerp:Float;
+	
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement.
 	 * The camera will always keep the focus object inside the dead zone,
@@ -196,6 +208,14 @@ class FlxCamera extends FlxBasic
 	#else
 	private var _fxFadeColor:BitmapInt32;
 	#end
+	/**
+	 * Used to calculate the following target current velocity.
+	 */
+	private var _lastTargetPosition:FlxPoint;
+	/**
+	 * Helper to calculate follow target current scroll.
+	 */
+	private var _scrollTarget:FlxPoint;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -376,6 +396,8 @@ class FlxCamera extends FlxBasic
 	public function new(X:Int, Y:Int, Width:Int, Height:Int, Zoom:Float = 0)
 	{
 		super();
+		
+		_scrollTarget = new FlxPoint();
 		
 		x = X;
 		y = Y;
@@ -579,46 +601,74 @@ class FlxCamera extends FlxBasic
 				{
 					if (targetX > scroll.x + width)
 					{
-						scroll.x += width;
+						_scrollTarget.x += width;
 					}
 					else if (targetX < scroll.x)
 					{
-						scroll.x -= width;
+						_scrollTarget.x -= width;
 					}
 
 					if (targetY > scroll.y + height)
 					{
-						scroll.y += height;
+						_scrollTarget.y += height;
 					}
 					else if (targetY < scroll.y)
 					{
-						scroll.y -= height;
+						_scrollTarget.y -= height;
 					}
 				}
 				else
 				{
 					edge = targetX - deadzone.x;
-					if(scroll.x > edge)
+					if(_scrollTarget.x > edge)
 					{
-						scroll.x = edge;
-					}
+						_scrollTarget.x = edge;
+					} 
 					edge = targetX + target.width - deadzone.x - deadzone.width;
-					if(scroll.x < edge)
+					if(_scrollTarget.x < edge)
 					{
-						scroll.x = edge;
+						_scrollTarget.x = edge;
 					}
 
 					edge = targetY - deadzone.y;
-					if(scroll.y > edge)
+					if(_scrollTarget.y > edge)
 					{
-						scroll.y = edge;
+						_scrollTarget.y = edge;
 					}
 					edge = targetY + target.height - deadzone.y - deadzone.height;
-					if(scroll.y < edge)
+					if(_scrollTarget.y < edge)
 					{
-						scroll.y = edge;
+						_scrollTarget.y = edge;
 					}
 				}
+				
+				//_scrollTarget.x += _flashOffsetX;
+				//_scrollTarget.y += _flashOffsetY;
+				
+				if((followLead != null) && (Std.is(target, FlxSprite)))
+				{
+					if (_lastTargetPosition == null)  
+					{
+						_lastTargetPosition = new FlxPoint(target.x, target.y); // Creates this point.
+					} 
+					_scrollTarget.x += (target.x - _lastTargetPosition.x ) * followLead.x;
+					_scrollTarget.y += (target.y - _lastTargetPosition.y ) * followLead.y;
+					
+					_lastTargetPosition.x = target.x;
+					_lastTargetPosition.y = target.y;
+				}
+
+				
+				if (followLerp == 0) // Prevents Camera Jittering.
+				{
+					scroll.x = _scrollTarget.x; 
+					scroll.y = _scrollTarget.y;
+				} else 
+				{
+					scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
+					scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);	
+				}
+				
 			}
 		}
 		
@@ -716,16 +766,19 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Tells this camera object what <code>FlxObject</code> to track.
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
+	 * @param	Lerp		How much lag the camera should have (can help smooth out the camera movement).
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
 	 * @param  Offset    Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
 	 */
-	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/, Offset:FlxPoint = null):Void
+	public function follow(Target:FlxObject, Lerp:Float=0, Style:Int = 0/*STYLE_LOCKON*/, Offset:FlxPoint = null):Void
 	{
 		style = Style;
 		target = Target;
+		followLerp = Lerp;
 		var helper:Float;
 		var w:Float = 0;
 		var h:Float = 0;
+		_lastTargetPosition = null;
 		switch(Style)
 		{
 			case STYLE_PLATFORMER:
@@ -751,6 +804,18 @@ class FlxCamera extends FlxBasic
 				deadzone = null;
 		}
 	}
+	
+    /**
+	 * Specify an additional camera component - the velocity-based "lead",
+	 * or amount the camera should track in front of a sprite.
+	 * 
+	 * @param	LeadX		Percentage of X velocity to add to the camera's motion.
+	 * @param	LeadY		Percentage of Y velocity to add to the camera's motion.
+	 */
+    public function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
+    {
+	   followLead = new Point(LeadX,LeadY);
+    }
 	
 	/**
 	 * Move the camera focus to this location instantly.
@@ -1080,8 +1145,8 @@ class FlxCamera extends FlxBasic
 		_flashSprite.scaleY = Y;
 		
 		// camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
-		_flashOffsetX = width * 0.5 * X;
-		_flashOffsetY = height * 0.5 * Y;
+		//_flashOffsetX = width * 0.5 * X;
+		//_flashOffsetY = height * 0.5 * Y;
 	}
 	
 	/**

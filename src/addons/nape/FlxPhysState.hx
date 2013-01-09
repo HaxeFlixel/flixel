@@ -51,9 +51,13 @@ class FlxPhysState extends FlxState
 			_physDbgSpr.draw(space);
 			
 			_physDbgSpr.display.scaleX = FlxG.camera.zoom; 
-			_physDbgSpr.display.scaleY = FlxG.camera.zoom; 
+			_physDbgSpr.display.scaleY = FlxG.camera.zoom;
 			_physDbgSpr.display.x = -FlxG.camera.scroll.x * FlxG.camera.zoom;
 			_physDbgSpr.display.y = -FlxG.camera.scroll.y * FlxG.camera.zoom;
+			
+			// Corrects offset.
+			_physDbgSpr.display.x += (FlxG.width - _physDbgSpr.display.width) / 2; 
+			_physDbgSpr.display.y += (FlxG.height - _physDbgSpr.display.height) / 2;
 			
 		}
 		
@@ -84,7 +88,11 @@ class FlxPhysState extends FlxState
 		
 		_physDbgSpr = new ShapeDebug(FlxG.width, FlxG.height);
 		_physDbgSpr.drawConstraints = true;
+		
 		FlxG.stage.addChild(_physDbgSpr.display);
+		//FlxG.camera._flashSprite.addChild(_physDbgSpr.display);
+		//_physDbgSpr.display.x = 100;
+		//_physDbgSpr.display.y = 140;
 	}
 	
 	/**
