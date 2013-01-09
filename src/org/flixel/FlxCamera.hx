@@ -502,6 +502,7 @@ class FlxCamera extends FlxBasic
 		alpha = 1.0;
 		angle = 0.0;
 		antialiasing = false;
+
 	}
 	
 	/**
@@ -597,6 +598,7 @@ class FlxCamera extends FlxBasic
 				targetY = target.y;
 				#end
 				
+				
 				if (style == STYLE_SCREEN_BY_SCREEN) 
 				{
 					if (targetX > scroll.x + width)
@@ -642,9 +644,6 @@ class FlxCamera extends FlxBasic
 					}
 				}
 				
-				//_scrollTarget.x += _flashOffsetX;
-				//_scrollTarget.y += _flashOffsetY;
-				
 				if((followLead != null) && (Std.is(target, FlxSprite)))
 				{
 					if (_lastTargetPosition == null)  
@@ -659,10 +658,10 @@ class FlxCamera extends FlxBasic
 				}
 
 				
-				if (followLerp == 0) // Prevents Camera Jittering.
+				if (followLerp == 0) 
 				{
-					scroll.x = _scrollTarget.x; 
-					scroll.y = _scrollTarget.y;
+					scroll.x = _scrollTarget.x; // Prevents Camera Jittering with no lerp.
+					scroll.y = _scrollTarget.y; // Prevents Camera Jittering with no lerp.
 				} else 
 				{
 					scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
@@ -696,7 +695,7 @@ class FlxCamera extends FlxBasic
 		#if (cpp || neko)
 		scroll.x = Math.floor(scroll.x * 100) / 100;
 		scroll.y = Math.floor(scroll.y * 100) / 100;
-		#end
+		#end		
 		
 		//Update the "flash" special effect
 		if(_fxFlashAlpha > 0.0)
@@ -803,6 +802,7 @@ class FlxCamera extends FlxBasic
 			default:
 				deadzone = null;
 		}
+		
 	}
 	
     /**
@@ -1141,12 +1141,14 @@ class FlxCamera extends FlxBasic
 	 */
 	public function setScale(X:Float, Y:Float):Void
 	{
+		
 		_flashSprite.scaleX = X;
 		_flashSprite.scaleY = Y;
 		
-		// camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
-		//_flashOffsetX = width * 0.5 * X;
-		//_flashOffsetY = height * 0.5 * Y;
+		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
+		_flashOffsetX = width * 0.5 * X;
+		_flashOffsetY = height * 0.5 * Y;
+		
 	}
 	
 	/**

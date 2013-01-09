@@ -50,14 +50,23 @@ class FlxPhysState extends FlxState
 			_physDbgSpr.clear();
 			_physDbgSpr.draw(space);
 			
-			_physDbgSpr.display.scaleX = FlxG.camera.zoom; 
-			_physDbgSpr.display.scaleY = FlxG.camera.zoom;
-			_physDbgSpr.display.x = -FlxG.camera.scroll.x * FlxG.camera.zoom;
-			_physDbgSpr.display.y = -FlxG.camera.scroll.y * FlxG.camera.zoom;
+			var cam = FlxG.camera;
+			var zoom = cam.zoom;
 			
-			// Corrects offset.
-			_physDbgSpr.display.x += (FlxG.width - _physDbgSpr.display.width) / 2; 
-			_physDbgSpr.display.y += (FlxG.height - _physDbgSpr.display.height) / 2;
+			_physDbgSpr.display.scaleX = zoom; 
+			_physDbgSpr.display.scaleY = zoom;
+			
+			if (cam.target == null) 
+			{
+				_physDbgSpr.display.x = cam.scroll.x * zoom;
+				_physDbgSpr.display.y = cam.scroll.y * zoom;
+			} else 
+			{
+				_physDbgSpr.display.x = -cam.scroll.x * zoom;
+				_physDbgSpr.display.y = -cam.scroll.y * zoom;
+				_physDbgSpr.display.x += (FlxG.width - FlxG.width * zoom) / 2; 
+				_physDbgSpr.display.y += (FlxG.height - FlxG.height * zoom) / 2;
+			}
 			
 		}
 		
