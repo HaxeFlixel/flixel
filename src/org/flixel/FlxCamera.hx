@@ -97,12 +97,12 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Used to force the camera to look ahead of the <code>followTarget</code>.
 	 */
-	static public var followLead:Point;
+	public var followLead:Point;
 	
 	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
-	static public var followLerp:Float;
+	public var followLerp:Float;
 	
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement.
