@@ -97,12 +97,12 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Used to force the camera to look ahead of the <code>followTarget</code>.
 	 */
-	static public var followLead:Point;
+	public var followLead:Point;
 	
 	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
-	static public var followLerp:Float;
+	public var followLerp:Float;
 	
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement.
@@ -765,11 +765,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Tells this camera object what <code>FlxObject</code> to track.
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
-	 * @param	Lerp		How much lag the camera should have (can help smooth out the camera movement).
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
 	 * @param  Offset    Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
+	 * @param	Lerp		How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, Lerp:Float=0, Style:Int = 0/*STYLE_LOCKON*/, Offset:FlxPoint = null):Void
+	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/, Offset:FlxPoint = null, Lerp:Float=0):Void
 	{
 		style = Style;
 		target = Target;

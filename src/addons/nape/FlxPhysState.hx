@@ -24,8 +24,31 @@ import org.flixel.FlxState;
 
 class FlxPhysState extends FlxState
 {
+	/**
+	 * Contains the sprite used for nape debug graphics.
+	 */
 	private var _physDbgSpr:ShapeDebug;
+	/**
+	 * The space where the nape physics simulation occur.
+	 */
 	static public var space:Space;
+	/**  
+	 * The number of iterations used by nape in resolving
+     * errors in the velocities of objects. This is
+     * together with collision detection the most
+     * expensive phase of a simulation update, as well
+     * as the most important for stable results.
+     * (default 10)
+	 */
+	public var velocityIterations:Int;
+	/** 
+	 * The number of iterations used by nape in resolving
+     * errors in the positions of objects. This is
+     * far more lightweight than velocity iterations,
+     * is well as being less important for the
+     * stability of results. (default 10)
+	 */
+	public var positionIterations:Int;
 	
 	/**
 	 * Override this method like a normal FlxState, but add
@@ -34,6 +57,8 @@ class FlxPhysState extends FlxState
 	override public function create():Void 
 	{
 		space = new Space(new Vec2());
+		velocityIterations = 10;	// Default value. 
+		positionIterations = 10;	// Default value.
 		
 		enablePhysDebug();
 	}
@@ -44,7 +69,7 @@ class FlxPhysState extends FlxState
 	override public function update():Void 
 	{
 		
-		space.step(FlxG.elapsed);
+		space.step(FlxG.elapsed, velocityIterations, positionIterations);
 		if (_physDbgSpr != null) 
 		{
 			_physDbgSpr.clear();
