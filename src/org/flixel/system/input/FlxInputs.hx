@@ -15,10 +15,6 @@ class FlxInputs {
 	
     public function new() {}
 	
-	#if (cpp || neko)
-	public static  var joystickManager:FlxJoystickManager;
-	#end
-	
 	/**
 	 * Initiate the default Inputs
 	 */
@@ -144,7 +140,9 @@ class FlxInputs {
 	#if (cpp || neko)
 	static public function initJoystick():Void
 	{
-		joystickManager = new FlxJoystickManager();
+		var joy = new FlxJoystickManager();
+		FlxG.joystickManager = joy;
+		inputs.push(joy);
 	}
 	#end
 	
@@ -164,7 +162,9 @@ class FlxInputs {
 	
 	static public function initTouch():Void
 	{
-		FlxG.touchManager = new FlxTouchManager();
+		var touch =  new FlxTouchManager();
+		FlxG.touchManager = touch;
+		inputs.push(touch);
 	}
 	
 	/**
@@ -178,6 +178,7 @@ class FlxInputs {
 		{
 			var input = cast( inputs[i++], IInput);
 			input.destroy();
+			input = null;
 		}
 	}
 

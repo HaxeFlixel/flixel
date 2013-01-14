@@ -204,7 +204,7 @@ class FlxGame extends Sprite
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		inputList = inputs;
 		FlxG.framerate = GameFramerate;
-		FlxG.flashFramerate = GameFramerate;
+		FlxG.flashFramerate = FlashFramerate;
 		_accumulator = _step;
 		_total = 0;
 		_mark = 0;
