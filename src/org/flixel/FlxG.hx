@@ -1735,8 +1735,11 @@ class FlxG
 				{
 					cam.update();
 				}
-				cam._flashSprite.x = cam.x + cam._flashOffsetX;
-				cam._flashSprite.y = cam.y + cam._flashOffsetY;
+				if (cam.target == null) 
+				{
+					cam._flashSprite.x = cam.x + cam._flashOffsetX;
+					cam._flashSprite.y = cam.y + cam._flashOffsetY;
+				} 
 				
 				cam._flashSprite.visible = cam.visible;
 			}

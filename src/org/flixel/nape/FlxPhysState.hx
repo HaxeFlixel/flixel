@@ -25,8 +25,31 @@ import org.flixel.FlxState;
 
 class FlxPhysState extends FlxState
 {
+	/**
+	 * Contains the sprite used for nape debug graphics.
+	 */
 	private var _physDbgSpr:ShapeDebug;
+	/**
+	 * The space where the nape physics simulation occur.
+	 */
 	static public var space:Space;
+	/**  
+	 * The number of iterations used by nape in resolving
+     * errors in the velocities of objects. This is
+     * together with collision detection the most
+     * expensive phase of a simulation update, as well
+     * as the most important for stable results.
+     * (default 10)
+	 */
+	public var velocityIterations:Int;
+	/** 
+	 * The number of iterations used by nape in resolving
+     * errors in the positions of objects. This is
+     * far more lightweight than velocity iterations,
+     * is well as being less important for the
+     * stability of results. (default 10)
+	 */
+	public var positionIterations:Int;
 	
 	/**
 	 * Override this method like a normal FlxState, but add
@@ -35,6 +58,8 @@ class FlxPhysState extends FlxState
 	override public function create():Void 
 	{
 		space = new Space(new Vec2());
+		velocityIterations = 10;	// Default value. 
+		positionIterations = 10;	// Default value.
 		
 		enablePhysDebug();
 	}
@@ -45,16 +70,29 @@ class FlxPhysState extends FlxState
 	override public function update():Void 
 	{
 		
-		space.step(FlxG.elapsed);
+		space.step(FlxG.elapsed, velocityIterations, positionIterations);
 		if (_physDbgSpr != null) 
 		{
 			_physDbgSpr.clear();
 			_physDbgSpr.draw(space);
 			
-			_physDbgSpr.display.scaleX = FlxG.camera.zoom; 
-			_physDbgSpr.display.scaleY = FlxG.camera.zoom; 
-			_physDbgSpr.display.x = -FlxG.camera.scroll.x * FlxG.camera.zoom;
-			_physDbgSpr.display.y = -FlxG.camera.scroll.y * FlxG.camera.zoom;
+			var cam = FlxG.camera;
+			var zoom = cam.zoom;
+			
+			_physDbgSpr.display.scaleX = zoom; 
+			_physDbgSpr.display.scaleY = zoom;
+			
+			if (cam.target == null) 
+			{
+				_physDbgSpr.display.x = cam.scroll.x * zoom;
+				_physDbgSpr.display.y = cam.scroll.y * zoom;
+			} else 
+			{
+				_physDbgSpr.display.x = -cam.scroll.x * zoom;
+				_physDbgSpr.display.y = -cam.scroll.y * zoom;
+				_physDbgSpr.display.x += (FlxG.width - FlxG.width * zoom) / 2; 
+				_physDbgSpr.display.y += (FlxG.height - FlxG.height * zoom) / 2;
+			}
 			
 		}
 		
@@ -85,7 +123,11 @@ class FlxPhysState extends FlxState
 		
 		_physDbgSpr = new ShapeDebug(FlxG.width, FlxG.height);
 		_physDbgSpr.drawConstraints = true;
+		
 		FlxG.stage.addChild(_physDbgSpr.display);
+		//FlxG.camera._flashSprite.addChild(_physDbgSpr.display);
+		//_physDbgSpr.display.x = 100;
+		//_physDbgSpr.display.y = 140;
 	}
 	
 	/**
@@ -104,30 +146,44 @@ class FlxPhysState extends FlxState
 	
 	/**
 	 * Creates simple walls around game area - usefull for prototying.
+	 * 
+	 * @param	minX	The smallest X value of your level (usually 0).
+	 * @param	minY	The smallest Y value of your level (usually 0).
+	 * @param	maxX	The largest X value of your level (usually the level width).
+	 * @param	maxY	The largest Y value of your level (usually the level height).
+	 * @param	Thickness	How thick the walls are.
 	 */
-	public function createWalls() 
+	public function createWalls(minX:Float = 0, minY:Float = 0, MaxX:Float = 0, MaxY:Float = 0, Thickness:Float = 10, material:Material = null) 
 	{
-		var _thickness = 10;
+		
+		if (MaxX == 0) 
+			MaxX = FlxG.width;
+			
+		if (MaxY == 0)
+			MaxY = FlxG.height;
+			
+		if (material == null)
+			material = new Material(0.4, 0.2, 0.38, 0.7);
 		
 		var wallLeft:Body 	= new Body(BodyType.STATIC);
 		var wallRight:Body 	= new Body(BodyType.STATIC);
 		var wallUp:Body 	= new Body(BodyType.STATIC);
 		var wallDown:Body 	= new Body(BodyType.STATIC);
 		
-		wallLeft.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7));
-		wallDown.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7));
-		wallUp.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7));
-		wallRight.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7));
-		
-		wallLeft.shapes.add(new Polygon(Polygon.rect(0,0,_thickness,FlxG.height)));
-        wallRight.shapes.add(new Polygon(Polygon.rect(FlxG.width - _thickness,0,_thickness,FlxG.height)));
-        wallUp.shapes.add(new Polygon(Polygon.rect(0,0,FlxG.width, _thickness)));
-        wallDown.shapes.add(new Polygon(Polygon.rect(0, FlxG.height - _thickness, FlxG.width, _thickness)));
+		wallLeft.shapes.add(new Polygon(Polygon.rect(minX, minY, Thickness, MaxY + Math.abs(minY))));
+        wallRight.shapes.add(new Polygon(Polygon.rect(MaxX - Thickness, minY, Thickness, MaxY + Math.abs(minY))));
+        wallUp.shapes.add(new Polygon(Polygon.rect(minX, minY, MaxX + Math.abs(minX), Thickness)));
+        wallDown.shapes.add(new Polygon(Polygon.rect(minX, MaxY - Thickness, MaxX + Math.abs(minX), Thickness)));
 		
 		wallLeft.space = space;
 		wallRight.space = space;
 		wallUp.space = space;
 		wallDown.space = space;
+		
+		wallLeft.setShapeMaterials(material);
+		wallRight.setShapeMaterials(material);
+		wallUp.setShapeMaterials(material);
+		wallDown.setShapeMaterials(material);
 	}
 	
 }

@@ -181,10 +181,10 @@ class FlxPhysSprite extends FlxSprite
 	 * This provides a simple drag alternative. 
 	 * Set any values to linearDrag or angularDrag to activate this feature for this object.
 	 * 
-	 * @param	linearDrag Typical value 0.96
-	 * @param	angularDrag	Typical value 0.96
+	 * @param	linearDrag Typical value 0.96 (1 = no drag).
+	 * @param	angularDrag	Typical value 0.96 (1 = no drag);
 	 */
-	public function setDrag(linearDrag:Float, angularDrag:Float) 
+	public function setDrag(linearDrag:Float = 1, angularDrag:Float = 1) 
 	{
 		_linearDrag		= linearDrag;
 		_angularDrag 	= angularDrag;
