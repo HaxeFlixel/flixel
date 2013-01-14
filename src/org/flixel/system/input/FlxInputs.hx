@@ -48,17 +48,19 @@ class FlxInputs {
 	
 	/**
 	 * Determine the default Inputs from the compiler conditionals
+	 * You must make sure mobile conditional is set in nmml file with 
+	 * <set name="mobile" if="android" /> and so on...
 	 */
 	private static function getDefaultInputs( ):Inputs
 	{
 		var defaults = new Inputs();
 		
-		#if ( flash || cpp || windows || linux || mac || neko)
+		#if (desktop || neko || flash)
 		defaults.keyboard = true;
 		defaults.mouse = true;
 		#end
 		
-		#if (mobile)
+		#if mobile
 		defaults.touch = true;
 		#end
 		

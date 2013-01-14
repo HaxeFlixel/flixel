@@ -1,4 +1,4 @@
-package addons;
+package org.flixel.addons;
 
 import nme.Assets;
 import nme.display.Bitmap;

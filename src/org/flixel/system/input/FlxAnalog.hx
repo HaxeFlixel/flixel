@@ -1,4 +1,11 @@
 package org.flixel.system.input;
+
+import org.flixel.FlxU;
+import org.flixel.FlxG;
+import org.flixel.FlxAssets;
+import org.flixel.FlxSprite;
+import org.flixel.FlxPoint;
+import org.flixel.FlxGroup;
 import flash.geom.Rectangle;
 import org.flixel.system.input.FlxTouch;
 
