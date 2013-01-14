@@ -1,4 +1,4 @@
-package addons;
+package org.flixel.addons;
 
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;

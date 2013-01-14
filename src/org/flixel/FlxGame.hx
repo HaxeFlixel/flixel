@@ -1,5 +1,7 @@
 package org.flixel;
 
+import nme.ui.Mouse;
+import org.flixel.system.input.FlxInputs;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
@@ -8,26 +10,14 @@ import nme.display.Sprite;
 import nme.display.StageAlign;
 import nme.display.StageScaleMode;
 import nme.events.Event;
-import nme.events.KeyboardEvent;
-import nme.events.MouseEvent;
 import nme.media.Sound;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
 import nme.Lib;
-import nme.ui.Mouse;
-import nme.ui.Multitouch;
-import nme.ui.MultitouchInputMode;
 import org.flixel.plugin.pxText.PxBitmapFont;
-import org.flixel.system.input.TouchManager;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
-
-#if (cpp || neko)
-import nme.events.JoystickEvent;
-#end
-
-import nme.events.TouchEvent;
 
 #if flash
 import flash.text.AntiAliasType;
@@ -46,25 +36,19 @@ import org.flixel.system.FlxReplay;
  */
 class FlxGame extends Sprite
 {
+	
 	private var junk:String;
-
 	/**
 	 * Sets 0, -, and + to control the global volume sound volume.
 	 * @default true
 	 */
 	public var useSoundHotKeys:Bool;
 	/**
-	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
-	 * @default false
-	 */
-	public var useSystemCursor:Bool;
-	/**
 	 * Initialize and allow the flixel debugger overlay even in release mode.
 	 * Also useful if you don't use FlxPreloader!
 	 * @default false
 	 */
 	public var forceDebugger:Bool;
-
 	/**
 	 * Current game state.
 	 */
@@ -72,13 +56,11 @@ class FlxGame extends Sprite
 	/**
 	 * Mouse cursor.
 	 */
-	public var _mouse:Sprite;
-	
+	public var _inputContainer:Sprite;
 	/**
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
 	private var _iState:Class<FlxState>;
-	
 	/**
 	 * Total number of milliseconds elapsed since game start.
 	 */
@@ -125,7 +107,6 @@ class FlxGame extends Sprite
 	 * A flag for keeping track of whether a game reset was requested or not.
 	 */
 	public var _requestedReset:Bool;
-
 	/**
 	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
 	 */
@@ -154,7 +135,6 @@ class FlxGame extends Sprite
 	 * A handy boolean that keeps track of whether the debugger exists and is currently visible.
 	 */
 	public var _debuggerUp:Bool;
-	
 	/**
 	 * Container for a game replay object.
 	 */
@@ -188,12 +168,15 @@ class FlxGame extends Sprite
 	 * This function, if set, is triggered when the callback stops playing.
 	 */
 	public var _replayCallback:Void->Void;
-	
 	/**
 	 * This sprite is needed in c++ version of games.
 	 */
 	public static var clickableArea:Sprite;
-
+	/**
+	 * The inputs to enable for the game
+	 */
+	public static var inputList:Inputs;
+	
 	/**
 	 * Instantiate a new game object.
 	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
@@ -204,7 +187,7 @@ class FlxGame extends Sprite
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 30, UseSystemCursor:Bool = false)
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 30, inputs:Inputs = null)
 	{
 		super();
 		
@@ -213,22 +196,21 @@ class FlxGame extends Sprite
 		_focus = new Sprite();
 		_focus.visible = false;
 		_soundTray = new Sprite();
-		_mouse = new Sprite();
+		
+		//todo remove to init in FlxInputs
+		_inputContainer = new Sprite();
 		
 		//basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
+		inputList = inputs;
 		FlxG.framerate = GameFramerate;
-		FlxG.flashFramerate = FlashFramerate;
+		FlxG.flashFramerate = GameFramerate;
 		_accumulator = _step;
 		_total = 0;
 		_mark = 0;
 		_state = null;
 		useSoundHotKeys = true;
-		useSystemCursor = UseSystemCursor;
-		if (!useSystemCursor)
-		{
-			Mouse.hide();
-		}
+
 		#if debug
 		forceDebugger = true;
 		#else
@@ -255,7 +237,7 @@ class FlxGame extends Sprite
 	 * Makes the little volume tray slide out.
 	 * @param	Silent	Whether or not it should beep.
 	 */
-	private function showSoundTray(Silent:Bool = false):Void
+	public function showSoundTray(Silent:Bool = false):Void
 	{
 		if (!Silent)
 		{
@@ -279,268 +261,14 @@ class FlxGame extends Sprite
 
 	/**
 	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash keyboard event.
-	 */
-	private function onKeyUp(FlashEvent:KeyboardEvent):Void
-	{
-		if (_debuggerUp && _debugger.watch.editing)
-		{
-			return;
-		}
-		if(!FlxG.mobile)
-		{
-			if ((_debugger != null) && ((FlashEvent.keyCode == 192) || (FlashEvent.keyCode == 220)))
-			{
-				_debugger.visible = !_debugger.visible;
-				_debuggerUp = _debugger.visible;
-				if (_debugger.visible)
-				{
-					Mouse.show();
-				}
-				else if (!useSystemCursor)
-				{
-					Mouse.hide();
-				}
-				//_console.toggle();
-				return;
-			}
-			if (useSoundHotKeys)
-			{
-				var c:Int = FlashEvent.keyCode;
-				var code:String = String.fromCharCode(FlashEvent.charCode);
-				if (c == 48 || c == 96)
-				{
-					FlxG.mute = !FlxG.mute;
-					if (FlxG.volumeHandler != null)
-					{
-						FlxG.volumeHandler(FlxG.mute?0:FlxG.volume);
-					}
-					showSoundTray();
-					return;
-				}
-				else if (c == 109 || c == 189)
-				{
-					FlxG.mute = false;
-					FlxG.volume = FlxG.volume - 0.1;
-					showSoundTray();
-					return;
-				}
-				else if (c == 107 || c == 187)
-				{
-					FlxG.mute = false;
-					FlxG.volume = FlxG.volume + 0.1;
-					showSoundTray();
-					return;
-				}
-				else
-				{
-					//default:
-				}
-			}
-		}
-		if (_replaying)
-		{
-			return;
-		}
-		FlxG.keys.handleKeyUp(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash keyboard event.
-	 */
-	private function onKeyDown(FlashEvent:KeyboardEvent):Void
-	{
-		if (_debuggerUp && _debugger.watch.editing)
-		{
-			return;
-		}
-		if(_replaying && (_replayCancelKeys != null) && (_debugger == null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
-		{
-			var cancel:Bool = false;
-			var replayCancelKey:String;
-			var i:Int = 0;
-			var l:Int = _replayCancelKeys.length;
-			while(i < l)
-			{
-				replayCancelKey = _replayCancelKeys[i++];
-				if((replayCancelKey == "ANY") || (FlxG.keys.getKeyCode(replayCancelKey) == Std.int(FlashEvent.keyCode)))
-				{
-					if(_replayCallback != null)
-					{
-						_replayCallback();
-						_replayCallback = null;
-					}
-					else
-					{
-						FlxG.stopReplay();
-					}
-					break;
-				}
-			}
-			return;
-		}
-		FlxG.keys.handleKeyDown(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash mouse event.
-	 */
-	private function onMouseDown(FlashEvent:MouseEvent):Void
-	{
-		if(_debuggerUp)
-		{
-			if (_debugger.hasMouse)
-			{
-				return;
-			}
-			if (_debugger.watch.editing)
-			{
-				_debugger.watch.submit();
-			}
-		}
-		if(_replaying && (_replayCancelKeys != null))
-		{
-			var replayCancelKey:String;
-			var i:Int = 0;
-			var l:Int = _replayCancelKeys.length;
-			while(i < l)
-			{
-				replayCancelKey = _replayCancelKeys[i++];
-				if((replayCancelKey == "MOUSE") || (replayCancelKey == "ANY"))
-				{
-					if(_replayCallback != null)
-					{
-						_replayCallback();
-						_replayCallback = null;
-					}
-					else
-					{
-						FlxG.stopReplay();
-					}
-					break;
-				}
-			}
-			return;
-		}
-		FlxG.mouse.handleMouseDown(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash mouse event.
-	 */
-	private function onMouseUp(FlashEvent:MouseEvent):Void
-	{
-		if ((_debuggerUp && _debugger.hasMouse) || _replaying)
-		{
-			return;
-		}
-		FlxG.mouse.handleMouseUp(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash mouse event.
-	 */
-	private function onMouseWheel(FlashEvent:MouseEvent):Void
-	{
-		if ((_debuggerUp && _debugger.hasMouse) || _replaying)
-		{
-			return;
-		}
-		FlxG.mouse.handleMouseWheel(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash touch event.
-	 */
-	inline private function onTouchBegin(FlashEvent:TouchEvent):Void
-	{
-		FlxG.touchManager.handleTouchBegin(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash touch event.
-	 */
-	inline private function onTouchEnd(FlashEvent:TouchEvent):Void
-	{
-		FlxG.touchManager.handleTouchEnd(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash touch event.
-	 */
-	inline private function onTouchMove(FlashEvent:TouchEvent):Void
-	{
-		FlxG.touchManager.handleTouchMove(FlashEvent);
-	}
-	
-#if (cpp || neko)
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	NME joystick event.
-	 */
-	inline private function onJoyAxisMove(FlashEvent:JoystickEvent):Void
-	{
-		FlxG.joystickManager.handleAxisMove(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	NME joystick event.
-	 */
-	inline private function onJoyBallMove(FlashEvent:JoystickEvent):Void
-	{
-		FlxG.joystickManager.handleBallMove(FlashEvent);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	NME joystick event.
-	 */
-	inline private function onJoyButtonDown(FlashEvent:JoystickEvent):Void
-	{
-		FlxG.joystickManager.handleButtonDown(FlashEvent);
-	}
-
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	NME joystick event.
-	 */
-	inline private function onJoyButtonUp(FlashEvent:JoystickEvent):Void
-	{
-		FlxG.joystickManager.handleButtonUp(FlashEvent);
-	}
-
-	/**
-	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	NME joystick event.
-	 */
-	inline private function onJoyHatMove(FlashEvent:JoystickEvent):Void
-	{
-		FlxG.joystickManager.handleHatMove(FlashEvent);
-	}
-#end
-	
-	/**
-	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
 	 */
 	private function onFocus(FlashEvent:Event = null):Void
 	{
-		if (!_debuggerUp && !useSystemCursor)
-		{
-			Mouse.hide();
-		}
-		FlxG.resetInput();
 		_lostFocus = _focus.visible = false;
 		stage.frameRate = _flashFramerate;
 		FlxG.resumeSounds();
+		FlxInputs.onFocus();
 		
 		_state.onFocus();
 	}
@@ -556,10 +284,10 @@ class FlxGame extends Sprite
 			x = 0;
 			y = 0;
 		}
-		Mouse.show();
 		_lostFocus = _focus.visible = true;
 		stage.frameRate = 10;
 		FlxG.pauseSounds();
+		FlxInputs.onFocusLost();
 		
 		_state.onFocusLost();
 	}
@@ -751,7 +479,7 @@ class FlxGame extends Sprite
 		}
 		else
 		{
-			FlxG.updateInput();
+			FlxG.updateInputs();
 		}
 		if(_recording)
 		{
@@ -762,7 +490,8 @@ class FlxGame extends Sprite
 			}
 		}
 		update();
-		FlxG.mouse.wheel = 0;
+		//todo test why is this needed removed with inputs refactor
+//		FlxG.mouse.wheel = 0;
 		if (_debuggerUp)
 		{
 			_debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
@@ -877,57 +606,9 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = _flashFramerate;
 		
-		FlxG.supportsTouchEvents = Multitouch.supportsTouchEvents;
-		if (FlxG.supportsTouchEvents)
-		{
-			FlxG.maxTouchPoints = Multitouch.maxTouchPoints;
-			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
-		}
-		FlxG.touchManager = new TouchManager();
-		
-		//Add basic input event listeners and mouse container
-		#if (flash || js)
-		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		
-		if (FlxG.supportsTouchEvents)
-		{
-			Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-			Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-			Lib.current.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-		}
-		#else
-		clickableArea = new Sprite();
-		clickableArea.graphics.beginFill(0xff0000);
-		clickableArea.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-		clickableArea.graphics.endFill();
-		Lib.current.stage.addChild(clickableArea);
-		clickableArea.alpha = 0;
-		clickableArea.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-		clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		clickableArea.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		
-		if (FlxG.supportsTouchEvents)
-		{
-			clickableArea.addEventListener(TouchEvent.TOUCH_BEGIN , onTouchBegin);
-			clickableArea.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-			clickableArea.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-		}
-		#end
-		
-		#if (cpp || neko)
-		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, onJoyAxisMove);
-		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, onJoyBallMove);
-		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, onJoyButtonDown);
-		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, onJoyButtonUp);
-		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, onJoyHatMove);
-		#end
-		
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-		
-		addChild(_mouse);
+		addChild(_inputContainer);
+
+		FlxInputs.init(inputList);
 		
 		//Let mobile devs opt out of unnecessary overlays.
 		if(!FlxG.mobile)
@@ -1081,6 +762,18 @@ class FlxGame extends Sprite
 		_focus.addChild(logo);
 		
 		addChild(_focus);
+	}
+
+	public static function createClickableArea( ):Void
+	{
+		if ( clickableArea == null ) {
+			clickableArea = new Sprite();
+			clickableArea.graphics.beginFill(0xff0000);
+			clickableArea.graphics.drawRect(0, 0, Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+			clickableArea.graphics.endFill();
+			Lib.current.stage.addChild(clickableArea);
+			FlxGame.clickableArea.alpha = 0;
+		}
 	}
 	
 	public var debugger(getDebugger, null):FlxDebugger;

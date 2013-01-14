@@ -1,4 +1,4 @@
-package addons.taskManager;
+package org.flixel.addons.taskManager;
 /**
  * @author Anton Karlov
  * @since  08.22.2012

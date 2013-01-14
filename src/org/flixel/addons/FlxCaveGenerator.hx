@@ -1,4 +1,4 @@
-package addons;
+package org.flixel.addons;
 
 /**
  * This class uses the cellular automata algorithm

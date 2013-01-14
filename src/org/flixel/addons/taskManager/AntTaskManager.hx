@@ -1,4 +1,4 @@
-package addons.taskManager;
+package org.flixel.addons.taskManager;
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;

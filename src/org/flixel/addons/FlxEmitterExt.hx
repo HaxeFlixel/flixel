@@ -1,4 +1,4 @@
-package addons;
+package org.flixel.addons;
 
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;

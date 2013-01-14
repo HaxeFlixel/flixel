@@ -58,8 +58,8 @@ v1.03
 * Updated rendering system for cpp target so it uses 2d tile transformations now (which means non-uniform scaling is working now)
 * FlxBitmapTextField's background property is working on cpp target now
 * Replaced FlxDictionary with ObjectHash (for FlxControlHandler plugin)
-* Added BTNTileMap class (which can be found in addons package) from http://bullettimeninja.blogspot.com/2012/01/lasers-and-ray-casting.html
-* Added ZoomCamera class (also in addons package) from http://bullettimeninja.blogspot.com/2011/09/zoom-camera.html
+* Added BTNTileMap class (which can be found in org.flixel.addons package) from http://bullettimeninja.blogspot.com/2012/01/lasers-and-ray-casting.html
+* Added ZoomCamera class (also in org.flixel.addons package) from http://bullettimeninja.blogspot.com/2011/09/zoom-camera.html
 * Made a little optimization for FlxSprite's onScreen() method for cpp target (not using Math.sqrt() now)
 * Added width and height getters/setters for FlxCamera on flash target
 * Made small optimizations in rendering for cpp target (the way it pushes and splices draw data)

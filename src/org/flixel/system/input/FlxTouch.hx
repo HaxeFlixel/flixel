@@ -11,7 +11,7 @@ import org.flixel.FlxPoint;
  * Helper class, contains and track touch points in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
-class Touch extends FlxPoint
+class FlxTouch extends FlxPoint
 {
 	
 	/**
