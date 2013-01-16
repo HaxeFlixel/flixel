@@ -248,7 +248,13 @@ class FlxButton extends FlxSprite
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		if (FlxG.mouse.visible || FlxG.supportsTouchEvents)
+		var mouseVisible = false;
+		if (FlxG.mouse != null) 
+		{
+			mouseVisible = FlxG.mouse.visible;
+		}
+		
+		if (mouseVisible|| FlxG.supportsTouchEvents)
 		{
 			if (cameras == null)
 			{

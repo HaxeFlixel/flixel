@@ -1,7 +1,5 @@
 package org.flixel;
 
-import nme.ui.Mouse;
-import org.flixel.system.input.FlxInputs;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
@@ -18,6 +16,7 @@ import nme.Lib;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.input.FlxInputs;
 
 #if flash
 import flash.text.AntiAliasType;
