@@ -169,7 +169,7 @@ class FlxText extends FlxSprite
 			Font = Assets.getFont(FlxAssets.defaultFont).fontName;
 			#end
 		}
-		_format.font = Font;
+		_format.font = Assets.getFont(Font).fontName;;
 		_format.size = Size;
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
