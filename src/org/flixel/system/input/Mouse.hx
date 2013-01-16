@@ -73,6 +73,8 @@ class Mouse extends FlxPoint
 	{
 		super();
 		_cursorContainer = CursorContainer;
+		_cursorContainer.mouseChildren = false;
+		_cursorContainer.mouseEnabled = false;
 		_lastX = screenX = 0;
 		_lastY = screenY = 0;
 		_lastWheel = wheel = 0;
