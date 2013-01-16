@@ -21,7 +21,7 @@ import org.flixel.system.replay.MouseRecord;
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
-class FlxMouse extends FlxPoint, implements IInput
+class FlxMouse extends FlxPoint, implements IFlxInput
 {
 	/**
 	 * Current "delta" value of mouse wheel.  If the wheel was just scrolled up, it will have a positive value.  If it was just scrolled down, it will have a negative value.  If it wasn't just scroll this frame, it will be 0.

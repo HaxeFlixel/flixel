@@ -175,7 +175,7 @@ class FlxGame extends Sprite
 	/**
 	 * The inputs to enable for the game
 	 */
-	public static var inputList:Inputs;
+	public static var inputList:FlxInputList;
 	
 	/**
 	 * Instantiate a new game object.
@@ -187,7 +187,7 @@ class FlxGame extends Sprite
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 30, inputs:Inputs = null)
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 30, inputs:FlxInputList = null)
 	{
 		super();
 		

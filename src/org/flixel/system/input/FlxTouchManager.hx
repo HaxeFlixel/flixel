@@ -14,7 +14,7 @@ import nme.events.TouchEvent;
  * @author Zaphod
  */
 
-class FlxTouchManager implements IInput
+class FlxTouchManager implements IFlxInput
 {
 	
 	/**

@@ -11,17 +11,17 @@ class FlxInputs {
 	/**
 	 * An array for inputs enabled in the system.
 	 */
-	public static  var inputs:Array<IInput>;
+	public static  var inputs:Array<IFlxInput>;
 	
     public function new() {}
 	
 	/**
 	 * Initiate the default Inputs
 	 */
-	static public function init(enabledInputs:Inputs = null):Void
+	static public function init(enabledInputs:FlxInputList = null):Void
 	{
 		inputs = null;
-		inputs = new Array<IInput>();
+		inputs = new Array<IFlxInput>();
 		
 		if ( enabledInputs == null)
 			enabledInputs = getDefaultInputs();
@@ -35,7 +35,7 @@ class FlxInputs {
 		if (enabledInputs.touch)
 			initTouch();
 		
-		#if (cpp || neko)
+		#if (desktop)
 		if (enabledInputs.joystick)
 			initJoystick();
 		#end
@@ -47,15 +47,15 @@ class FlxInputs {
 	 * You must make sure mobile conditional is set in nmml file with 
 	 * <set name="mobile" if="android" /> and so on...
 	 */
-	private static function getDefaultInputs( ):Inputs
+	private static function getDefaultInputs( ):FlxInputList
 	{
-		var defaults = new Inputs();
+		var defaults = new FlxInputList();
 		
 		#if (desktop || neko || flash)
 		defaults.keyboard = true;
 		defaults.mouse = true;
 		#end
-		
+
 		#if mobile
 		defaults.touch = true;
 		#end
@@ -67,7 +67,7 @@ class FlxInputs {
 	 * Add an input to the system
 	 */
 	
-	static public function addInput(input:IInput):IInput
+	static public function addInput(input:IFlxInput):IFlxInput
 	{
 		//Don't add repeats
 		var l:Int = inputs.length;
@@ -92,7 +92,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IInput);
+			var input = cast( inputs[i++], IFlxInput);
 				input.update();
 		}
 	}
@@ -105,7 +105,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IInput);
+			var input = cast( inputs[i++], IFlxInput);
 				input.onFocusLost();
 		}
 	}
@@ -118,7 +118,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IInput);
+			var input = cast( inputs[i++], IFlxInput);
 				input.onFocus();
 		}
 	}
@@ -132,12 +132,12 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IInput);
+			var input = cast( inputs[i++], IFlxInput);
 			input.reset();
 		}
 	}
 	
-	#if (cpp || neko)
+	#if (desktop)
 	static public function initJoystick():Void
 	{
 		var joy = new FlxJoystickManager();
@@ -176,7 +176,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IInput);
+			var input = cast( inputs[i++], IFlxInput);
 			input.destroy();
 			input = null;
 		}
@@ -187,7 +187,7 @@ class FlxInputs {
 /**
  * Basic class for a definition of inputs to enable
  */
-class Inputs {
+class FlxInputList {
 	public function new (){}
     public var mouse : Bool;
 	public var keyboard : Bool;

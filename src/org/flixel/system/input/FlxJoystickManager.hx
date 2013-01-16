@@ -1,6 +1,7 @@
 package org.flixel.system.input;
 
 #if (cpp || neko)
+import org.flixel.FlxG;
 import nme.Lib;
 import nme.events.JoystickEvent;
 import org.flixel.system.input.FlxJoystick;
@@ -10,7 +11,7 @@ import org.flixel.system.input.FlxJoystick;
  * @author Zaphod
  */
 
-class FlxJoystickManager implements IInput
+class FlxJoystickManager implements IFlxInput
 {
 
 	/**
@@ -18,17 +19,19 @@ class FlxJoystickManager implements IInput
 	 * Less this number the more Joystick is sensible.
 	 * Should be between 0.0 and 1.0.
 	 */
-	public static var deadZone:Float = 0.0;
+	public var deadZone:Float = 0.0;
 	
 	/**
 	 * Storage for all connected joysticks
 	 */
-	public static var joysticks:IntHash<FlxJoystick> = new IntHash<FlxJoystick>();
+	public var joysticks:IntHash<FlxJoystick>;
 	
 	/**
 	 * Constructor
 	 */
 	public function new() {
+        joysticks  = new IntHash<FlxJoystick>();
+
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -94,7 +97,7 @@ class FlxJoystickManager implements IInput
 		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		
-		var o:JoyButton = joy.buttons.get(FlashEvent.id);
+		var o:FlxJoyButton = joy.buttons.get(FlashEvent.id);
 		if (o == null) return;
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
@@ -109,7 +112,7 @@ class FlxJoystickManager implements IInput
 		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		
-		var object:JoyButton = joy.buttons.get(FlashEvent.id);
+		var object:FlxJoyButton = joy.buttons.get(FlashEvent.id);
 		if(object == null) return;
 		if(object.current > 0) object.current = -1;
 		else object.current = 0;
