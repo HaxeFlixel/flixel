@@ -1263,8 +1263,8 @@ class FlxCamera extends FlxBasic
 		
 		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			_flashSprite.x = x + _flashOffsetX + _fxShakeOffset.x;
-			_flashSprite.y = y + _flashOffsetY + _fxShakeOffset.y;
+			_flashSprite.x += _fxShakeOffset.x;
+			_flashSprite.y += _fxShakeOffset.y;
 		}
 		
 		#if (cpp || neko)

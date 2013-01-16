@@ -1712,7 +1712,7 @@ class FlxG
 		var l:Int = cams.length;
 		while(i < l)
 		{
-			cam = cams[i++]; //as FlxCamera;
+			cam = cams[i++];
 			if ((cam == null) || !cam.exists || !cam.visible)
 			{
 				continue;
@@ -1768,11 +1768,9 @@ class FlxG
 				{
 					cam.update();
 				}
-				if (cam.target == null) 
-				{
-					cam._flashSprite.x = cam.x + cam._flashOffsetX;
-					cam._flashSprite.y = cam.y + cam._flashOffsetY;
-				} 
+				
+				cam._flashSprite.x = cam.x + cam._flashOffsetX;
+				cam._flashSprite.y = cam.y + cam._flashOffsetY;
 				
 				cam._flashSprite.visible = cam.visible;
 			}
