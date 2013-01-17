@@ -67,6 +67,11 @@ class FlxTextField extends FlxText
 		}
 		_text = Text;
 		
+		_textField.embedFonts = EmbeddedFont;
+		#if flash
+		_textField.sharpness = 100;
+		#end
+		
 		_selectable = false;
 		_multiline = true;
 		_wordWrap = true;

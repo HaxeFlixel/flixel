@@ -163,13 +163,9 @@ class FlxText extends FlxSprite
 		
 		if (Font == null)
 		{
-			#if (flash || js)
-			Font = "";
-			#else
-			Font = Assets.getFont(FlxAssets.defaultFont).fontName;
-			#end
+			Font = FlxAssets.defaultFont;
 		}
-		_format.font = Font;
+		_format.font = Assets.getFont(Font).fontName;
 		_format.size = Size;
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
