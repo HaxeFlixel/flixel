@@ -35,7 +35,7 @@ class FlxInputs {
 		if (enabledInputs.touch)
 			initTouch();
 		
-		#if (desktop)
+		#if (cpp || neko)
 		if (enabledInputs.joystick)
 			initJoystick();
 		#end
@@ -137,7 +137,7 @@ class FlxInputs {
 		}
 	}
 	
-	#if (desktop)
+	#if (cpp || neko)
 	static public function initJoystick():Void
 	{
 		var joy = new FlxJoystickManager();
