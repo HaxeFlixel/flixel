@@ -8,11 +8,14 @@
  * 
  * @version 1.2 - October 10th 2011
  * @link http://www.photonstorm.com
- * @author Richard Davey / Photon Storm
+* @link http://www.haxeflixel.com
+* @author Richard Davey / Photon Storm
+* @author Touch added by Impaler / Beeblerox
 */
 
-package org.flixel.plugin.photonstorm.baseTypes; 
+package org.flixel.plugin.photonstorm.baseTypes;
 
+import org.flixel.system.input.FlxTouch;
 import nme.Lib;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
@@ -88,7 +91,7 @@ class Bullet extends FlxSprite
 		postFire();
 	}
 	
-	public function fireAtMouse(fromX:Int, fromY:Int, speed:Int):Void
+	public function fireAtMouse(fromX:Int, fromY:Int, speed:Int, rotateBulletTowards = true):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
 		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
@@ -101,6 +104,29 @@ class Bullet extends FlxSprite
 		{
 			FlxVelocity.moveTowardsMouse(this, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
 		}
+		
+		if ( rotateBulletTowards )
+		angle = FlxVelocity.angleBetweenMouse(weapon.parent,true);
+		
+		postFire();
+	}
+	
+	public function fireAtTouch(fromX:Int, fromY:Int, touch:FlxTouch, speed:Int, rotateBulletTowards = true):Void
+	{
+		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
+		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
+		
+		if (accelerates)
+		{
+			FlxVelocity.accelerateTowardsTouch(this, touch, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
+		}
+		else
+		{
+			FlxVelocity.moveTowardsTouch(this, touch, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
+		}
+		
+		if ( rotateBulletTowards )
+		angle = FlxVelocity.angleBetweenTouch(weapon.parent, touch,true);
 		
 		postFire();
 	}
