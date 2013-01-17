@@ -195,8 +195,6 @@ class FlxGame extends Sprite
 		_focus = new Sprite();
 		_focus.visible = false;
 		_soundTray = new Sprite();
-		
-		//todo remove to init in FlxInputs
 		_inputContainer = new Sprite();
 		
 		//basic display and update setup stuff

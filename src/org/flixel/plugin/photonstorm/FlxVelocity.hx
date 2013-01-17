@@ -165,6 +165,7 @@ class FlxVelocity
 	 * If you don't need acceleration look at moveTowardsMouse() instead.
 	 * 
 	 * @param	source				The FlxSprite on which the acceleration will be set
+	 * @param	touch					The FlxTouch on which to accelerate towards
 	 * @param	speed					The speed it will accelerate in pixels per second
 	 * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
 	 * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
@@ -284,6 +285,7 @@ class FlxVelocity
 	 * Find the distance (in pixels, rounded) from the object x/y and the FlxPoint screen x/y
 	 * 
 	 * @param	a	The FlxSprite to test against
+	 * @param	b	The FlxTouch to test against
 	 * @return	int	The distance between the given sprite and the mouse coordinates
 	 */
 	public static function distanceToTouch(a:FlxSprite, b:FlxTouch):Int
@@ -434,7 +436,7 @@ class FlxVelocity
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
 	 * 
 	 * @param	a						The FlxObject to test from
-	 * @param	b						The FlxObject to test to
+	 * @param	b						The FlxTouch to test to
 	 * @param	asDegrees		If you need the value in degrees instead of radians, set to true
 	 * 
 	 * @return	Number The angle (in radians unless asDegrees is true)

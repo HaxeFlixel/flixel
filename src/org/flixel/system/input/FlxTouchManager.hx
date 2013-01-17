@@ -62,6 +62,19 @@ class FlxTouchManager implements IFlxInput
 	}
 	
 	/**
+	 * Return the first touch if there is one, beware of null
+	 */
+	public function getFirstTouch():FlxTouch
+	{
+			if (touches[0] != null)
+		{
+		return touches[0];
+		} else {
+			return null;
+		}
+	}
+	
+	/**
 	 * Clean up memory.
 	 */
 	public function destroy():Void

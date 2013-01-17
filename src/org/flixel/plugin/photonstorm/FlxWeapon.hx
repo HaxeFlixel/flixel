@@ -16,6 +16,7 @@
 
 package org.flixel.plugin.photonstorm;
 
+import org.flixel.FlxG;
 import org.flixel.system.input.FlxTouch;
 import nme.display.Bitmap;
 import nme.display.BitmapInt32;
@@ -427,13 +428,22 @@ class FlxWeapon
 	/**
 	 * Fires a bullet (if one is available) at the FlxTouch coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 
-	 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 * 	@param	a	The FlxTouch object to fire at, if null use the first available one
+	 * @return		true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 	 */
-	public function fireAtTouch(a:FlxTouch):Bool
+	public function fireAtTouch(a:FlxTouch = null):Bool
 	{
-		touchTarget = a;
-		var fired = runFire(FIRE_AT_TOUCH);
-		touchTarget = null;
+		if ( a == null ) 
+		{
+			touchTarget = FlxG.touchManager.getFirstTouch();
+		} else {
+			touchTarget = a;
+		}
+		var fired = false;
+		if ( touchTarget != null) {
+			fired = runFire(FIRE_AT_TOUCH);
+			touchTarget = null;
+		}
 		return fired;
 	}
 	
