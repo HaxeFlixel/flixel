@@ -9,11 +9,14 @@
  * 
  * @version 1.3 - October 9th 2011
  * @link http://www.photonstorm.com
+ * @link http://www.haxeflixel.com
  * @author Richard Davey / Photon Storm
+* @author Touch added by Impaler / Beeblerox
 */
 
 package org.flixel.plugin.photonstorm;
 
+import org.flixel.system.input.FlxTouch;
 import nme.display.Bitmap;
 import nme.display.BitmapInt32;
 import nme.Lib;
@@ -69,10 +72,11 @@ class FlxWeapon
 	private var lastFired:Int;
 	private var nextFire:Int;
 	private var fireRate:Int;
+	private var touchTarget:FlxTouch;
 	
 	//	When firing from a parent sprites position (i.e. Space Invaders)
 	private var fireFromParent:Bool;
-	private var parent:Dynamic;
+	public var parent:Dynamic;
 	private var parentXVariable:String;
 	private var parentYVariable:String;
 	private var positionOffset:FlxPoint;
@@ -136,6 +140,7 @@ class FlxWeapon
 	private static inline var FIRE_AT_TARGET:Int = 3;
 	private static inline var FIRE_FROM_ANGLE:Int = 4;
 	private static inline var FIRE_FROM_PARENT_ANGLE:Int = 5;
+	private static inline var FIRE_AT_TOUCH:Int = 6;
 	
 	/**
 	 * Creates the FlxWeapon class which will fire your bullets.<br>
@@ -377,6 +382,11 @@ class FlxWeapon
 		{
 			currentBullet.fireFromAngle(launchX, launchY, parent.angle, bulletSpeed);
 		}
+		else if (method == FIRE_AT_TOUCH)
+		{
+			if ( touchTarget != null)
+			currentBullet.fireAtTouch(launchX, launchY, touchTarget, bulletSpeed);
+		}
 		
 		if (onPostFireCallback != null)
 		{
@@ -412,6 +422,19 @@ class FlxWeapon
 	public function fireAtMouse():Bool
 	{
 		return runFire(FIRE_AT_MOUSE);
+	}
+	
+	/**
+	 * Fires a bullet (if one is available) at the FlxTouch coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
+	 * 
+	 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 */
+	public function fireAtTouch(a:FlxTouch):Bool
+	{
+		touchTarget = a;
+		var fired = runFire(FIRE_AT_TOUCH);
+		touchTarget = null;
+		return fired;
 	}
 	
 	/**

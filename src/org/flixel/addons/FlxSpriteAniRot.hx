@@ -11,7 +11,7 @@
 
 // ONLY FOR BLITTING BASED ENGINES
 #if (flash || js)
-package addons;
+package org.flixel.addons;
 
 import flash.display.BitmapData;
 import flash.geom.Point;

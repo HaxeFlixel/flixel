@@ -7,7 +7,7 @@ import org.flixel.system.replay.CodeValuePair;
  * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
  * Keyboard extends this with actual specific key data.
  */
-class Input implements Dynamic
+class FlxInputStates implements Dynamic
 {
 	/**
 	 * @private
@@ -16,7 +16,7 @@ class Input implements Dynamic
 	/**
 	 * @private
 	 */
-	private var _map:Array<MapObject>;
+	private var _map:Array<FlxMapObject>;
 	/**
 	 * @private
 	 */
@@ -30,7 +30,7 @@ class Input implements Dynamic
 		_total = 256;
 		
 		_lookup = new Hash<Int>();
-		_map = new Array<MapObject>(/*_total*/);
+		_map = new Array<FlxMapObject>(/*_total*/);
 		FlxU.SetArrayLength(_map, _total);
 	}
 	
@@ -42,7 +42,7 @@ class Input implements Dynamic
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:MapObject = _map[i++];
+			var o:FlxMapObject = _map[i++];
 			if(o == null) continue;
 			if((o.last == -1) && (o.current == -1)) o.current = 0;
 			else if((o.last == 2) && (o.current == 2)) o.current = 1;
@@ -58,7 +58,7 @@ class Input implements Dynamic
 		for(i in 0...(_total))
 		{
 			if(_map[i] == null) continue;
-			var o:MapObject = _map[i];
+			var o:FlxMapObject = _map[i];
 			Reflect.setProperty(this, o.name, false);
 			o.current = 0;
 			o.last = 0;
@@ -107,7 +107,7 @@ class Input implements Dynamic
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:MapObject = _map[i++];
+			var o:FlxMapObject = _map[i++];
 			if ((o == null) || (o.current == 0))
 			{
 				continue;
@@ -132,7 +132,7 @@ class Input implements Dynamic
 		var i:Int = 0;
 		var l:Int = Record.length;
 		var o:CodeValuePair;
-		var o2:MapObject;
+		var o2:FlxMapObject;
 		while(i < l)
 		{
 			o = Record[i++];
@@ -168,7 +168,7 @@ class Input implements Dynamic
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:MapObject = _map[i++];
+			var o:FlxMapObject = _map[i++];
 			if ((o != null) && (o.current > 0))
 			{
 				return true;
@@ -176,6 +176,25 @@ class Input implements Dynamic
 		}
 		return false;
 	}
+
+    /**
+    * Get an Array of FlxMapObjects that are in a pressed state
+    * @return	Array<FlxMapObject> of keys that are currently pressed.
+    */
+    public function getIsDown():Array<FlxMapObject>
+    {
+        var keysdown:Array<FlxMapObject> = new Array<FlxMapObject>();
+        var i:Int = 0;
+        while(i < _total)
+        {
+            var o:FlxMapObject = _map[i++];
+            if ((o != null) && (o.current > 0))
+            {
+                keysdown.push (o);
+            }
+        }
+        return keysdown;
+    }
 	
 	/**
 	 * An internal helper function used to build the key array.
@@ -185,7 +204,7 @@ class Input implements Dynamic
 	private function addKey(KeyName:String, KeyCode:Int):Void
 	{
 		_lookup.set(KeyName, KeyCode);
-		_map[KeyCode] = new MapObject(KeyName, 0, 0);
+		_map[KeyCode] = new FlxMapObject(KeyName, 0, 0);
 	}
 	
 	/**

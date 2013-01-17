@@ -1,6 +1,13 @@
-package org.flixel;
+package org.flixel.system.input;
+
+import org.flixel.FlxU;
+import org.flixel.FlxG;
+import org.flixel.FlxAssets;
+import org.flixel.FlxSprite;
+import org.flixel.FlxPoint;
+import org.flixel.FlxGroup;
 import flash.geom.Rectangle;
-import org.flixel.system.input.Touch;
+import org.flixel.system.input.FlxTouch;
 
 /**
  * 
@@ -28,9 +35,9 @@ class FlxAnalog extends FlxGroup
 	// An list of analogs that are currently active.
 	private static var _analogs:Array<FlxAnalog>;
 	// The current pointer that's active on the analog.
-	private var _currentTouch:Touch;
+	private var _currentTouch:FlxTouch;
 	// Helper array for checking touches
-	private var _tempTouches:Array<Touch>;
+	private var _tempTouches:Array<FlxTouch>;
 	// Helper FlxPoint object
 	private var _point:FlxPoint;
 	
@@ -165,7 +172,7 @@ class FlxAnalog extends FlxGroup
 	 */
 	override public function update():Void 
 	{
-		var touch:Touch = null;
+		var touch:FlxTouch = null;
 		var offAll:Bool = true;
 		
 		// There is no reason to get into the loop if their is already a pointer on the analog
@@ -235,7 +242,7 @@ class FlxAnalog extends FlxGroup
 		super.update();
 	}
 	
-	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, touch:Touch = null):Bool
+	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, touch:FlxTouch = null):Bool
 	{
 		var offAll:Bool = true;
 		

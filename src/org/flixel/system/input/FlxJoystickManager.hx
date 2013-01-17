@@ -1,15 +1,17 @@
 package org.flixel.system.input;
 
 #if (cpp || neko)
+import org.flixel.FlxG;
+import nme.Lib;
 import nme.events.JoystickEvent;
-import org.flixel.system.input.Joystick;
+import org.flixel.system.input.FlxJoystick;
 
 /**
  * ...
  * @author Zaphod
  */
 
-class JoystickManager 
+class FlxJoystickManager implements IFlxInput
 {
 
 	/**
@@ -17,27 +19,35 @@ class JoystickManager
 	 * Less this number the more Joystick is sensible.
 	 * Should be between 0.0 and 1.0.
 	 */
-	public static var deadZone:Float = 0.0;
+	public var deadZone:Float = 0.0;
 	
 	/**
 	 * Storage for all connected joysticks
 	 */
-	public static var joysticks:IntHash<Joystick> = new IntHash<Joystick>();
+	public var joysticks:IntHash<FlxJoystick>;
 	
 	/**
 	 * Constructor
 	 */
-	public function new() {  }
+	public function new() {
+        joysticks  = new IntHash<FlxJoystick>();
+
+		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
+		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
+		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
+		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
+		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
+	}
 	
 	/**
 	 * Get a particular Joystick object
 	 */
-	private function joystick(joystickID:Int):Joystick
+	private function joystick(joystickID:Int):FlxJoystick
 	{
-		var joy:Joystick = joysticks.get(joystickID);
+		var joy:FlxJoystick = joysticks.get(joystickID);
 		if (joy == null)
 		{
-			joy = new Joystick(joystickID);
+			joy = new FlxJoystick(joystickID);
 			joysticks.set(joystickID, joy);
 		}
 		return joy;
@@ -75,7 +85,7 @@ class JoystickManager
 			joy.destroy();
 		}
 		
-		joysticks = new IntHash<Joystick>();
+		joysticks = new IntHash<FlxJoystick>();
 	}
 	
 	/**
@@ -84,10 +94,10 @@ class JoystickManager
 	 */
 	public function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
-		var joy:Joystick = joystick(FlashEvent.device);
+		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		
-		var o:JoyButton = joy.buttons.get(FlashEvent.id);
+		var o:FlxJoyButton = joy.buttons.get(FlashEvent.id);
 		if (o == null) return;
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
@@ -99,10 +109,10 @@ class JoystickManager
 	 */
 	public function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
-		var joy:Joystick = joystick(FlashEvent.device);
+		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		
-		var object:JoyButton = joy.buttons.get(FlashEvent.id);
+		var object:FlxJoyButton = joy.buttons.get(FlashEvent.id);
 		if(object == null) return;
 		if(object.current > 0) object.current = -1;
 		else object.current = 0;
@@ -114,7 +124,7 @@ class JoystickManager
 	 */
 	public function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
-		var joy:Joystick = joystick(FlashEvent.device);
+		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		joy.axis.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
 		joy.axis.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
@@ -126,7 +136,7 @@ class JoystickManager
 	 */
 	public function handleBallMove(FlashEvent:JoystickEvent):Void
 	{
-		var joy:Joystick = joystick(FlashEvent.device);
+		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		joy.ball.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
 		joy.ball.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
@@ -138,10 +148,25 @@ class JoystickManager
 	 */
 	public function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
-		var joy:Joystick = joystick(FlashEvent.device);
+		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		joy.hat.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
 		joy.hat.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
+	}
+
+	public function onFocus( ):Void
+	{
+		
+	}
+
+	public function onFocusLost( ):Void
+	{
+		reset();
+	}
+
+	public function toString( ):String
+	{
+		return 'FlxJoyStickManager';
 	}
 	
 }

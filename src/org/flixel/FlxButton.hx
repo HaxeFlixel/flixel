@@ -8,7 +8,7 @@ import nme.events.MouseEvent;
 import nme.events.TouchEvent;
 import nme.media.Sound;
 import nme.media.Sound;
-import org.flixel.system.input.Touch;
+import org.flixel.system.input.FlxTouch;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.Atlas;
 
@@ -248,7 +248,13 @@ class FlxButton extends FlxSprite
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		if (FlxG.mouse.visible || FlxG.supportsTouchEvents)
+		var mouseVisible = false;
+		if (FlxG.mouse != null) 
+		{
+			mouseVisible = FlxG.mouse.visible;
+		}
+		
+		if (mouseVisible|| FlxG.supportsTouchEvents)
 		{
 			if (cameras == null)
 			{
@@ -270,7 +276,7 @@ class FlxButton extends FlxSprite
 				{
 					for (j in 0...FlxG.touchManager.touches.length)
 					{
-						var touch:Touch = FlxG.touchManager.touches[j];
+						var touch:FlxTouch = FlxG.touchManager.touches[j];
 						touch.getWorldPosition(camera, _point);
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}
