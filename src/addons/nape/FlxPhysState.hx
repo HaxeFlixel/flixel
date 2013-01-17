@@ -152,7 +152,7 @@ class FlxPhysState extends FlxState
 	 * @param	maxY	The largest Y value of your level (usually the level height).
 	 * @param	Thickness	How thick the walls are.
 	 */
-	public function createWalls(minX:Float = 0, minY:Float = 0, MaxX:Float = 0, MaxY:Float = 0, Thickness:Float = 10, material:Material = null) 
+	public function createWalls(minX:Float = 0, minY:Float = 0, MaxX:Float = 0, MaxY:Float = 0, Thickness:Float = 10, material:Material = null):Body 
 	{
 		
 		if (MaxX == 0) 
@@ -164,25 +164,21 @@ class FlxPhysState extends FlxState
 		if (material == null)
 			material = new Material(0.4, 0.2, 0.38, 0.7);
 		
-		var wallLeft:Body 	= new Body(BodyType.STATIC);
-		var wallRight:Body 	= new Body(BodyType.STATIC);
-		var wallUp:Body 	= new Body(BodyType.STATIC);
-		var wallDown:Body 	= new Body(BodyType.STATIC);
+		var walls:Body 	= new Body(BodyType.STATIC);
 		
-		wallLeft.shapes.add(new Polygon(Polygon.rect(minX, minY, Thickness, MaxY + Math.abs(minY))));
-        wallRight.shapes.add(new Polygon(Polygon.rect(MaxX - Thickness, minY, Thickness, MaxY + Math.abs(minY))));
-        wallUp.shapes.add(new Polygon(Polygon.rect(minX, minY, MaxX + Math.abs(minX), Thickness)));
-        wallDown.shapes.add(new Polygon(Polygon.rect(minX, MaxY - Thickness, MaxX + Math.abs(minX), Thickness)));
+		// left wall
+		walls.shapes.add(new Polygon(Polygon.rect(minX, minY, Thickness, MaxY + Math.abs(minY))));
+		// right wall
+        walls.shapes.add(new Polygon(Polygon.rect(MaxX - Thickness, minY, Thickness, MaxY + Math.abs(minY))));
+		// upper wall
+        walls.shapes.add(new Polygon(Polygon.rect(minX, minY, MaxX + Math.abs(minX), Thickness)));
+		// bottom wall
+        walls.shapes.add(new Polygon(Polygon.rect(minX, MaxY - Thickness, MaxX + Math.abs(minX), Thickness)));
 		
-		wallLeft.space = space;
-		wallRight.space = space;
-		wallUp.space = space;
-		wallDown.space = space;
 		
-		wallLeft.setShapeMaterials(material);
-		wallRight.setShapeMaterials(material);
-		wallUp.setShapeMaterials(material);
-		wallDown.setShapeMaterials(material);
+		walls.space = space;
+		walls.setShapeMaterials(material);
+		return walls;
 	}
 	
 }
