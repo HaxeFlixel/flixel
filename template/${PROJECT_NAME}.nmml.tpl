@@ -46,4 +46,12 @@
 	
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>
+	
+    <set name="touch" if="mobile" />
+    <set name="mouse" if="desktop" />
+    <set name="mouse" if="flash" />
+    <set name="mouse" if="neko" />
+    <set name="keyboard" if="desktop" />
+    <set name="keyboard" if="flash" />
+    <set name="keyboard" if="neko" />
 </project>

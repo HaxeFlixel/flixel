@@ -25,17 +25,23 @@ class FlxInputs {
 		
 		if ( enabledInputs == null)
 			enabledInputs = getDefaultInputs();
-
+		
+		#if (keyboard)
 		if (enabledInputs.keyboard)
 			initKeyboard();
+		#end
 		
+		#if (mouse)
 		if (enabledInputs.mouse)
 			initMouse();
+		#end
 		
+		#if (touch)
 		if (enabledInputs.touch)
 			initTouch();
+		#end
 		
-		#if (cpp || neko)
+		#if (joystick)
 		if (enabledInputs.joystick)
 			initJoystick();
 		#end
@@ -50,13 +56,20 @@ class FlxInputs {
 	private static function getDefaultInputs( ):FlxInputList
 	{
 		var defaults = new FlxInputList();
-		
-		#if (desktop || neko || flash)
+
+		#if (keyboard)
 		defaults.keyboard = true;
+		#end
+		
+		#if (joystick)
+		defaults.joystick = true;
+		#end
+		
+		#if (mouse)
 		defaults.mouse = true;
 		#end
 
-		#if mobile
+		#if touch
 		defaults.touch = true;
 		#end
 		
@@ -66,7 +79,6 @@ class FlxInputs {
 	/**
 	 * Add an input to the system
 	 */
-	
 	static public function addInput(input:IFlxInput):IFlxInput
 	{
 		//Don't add repeats
@@ -137,7 +149,7 @@ class FlxInputs {
 		}
 	}
 	
-	#if (cpp || neko)
+	#if (joystick)
 	static public function initJoystick():Void
 	{
 		var joy = new FlxJoystickManager();
@@ -146,26 +158,32 @@ class FlxInputs {
 	}
 	#end
 	
+	#if (keyboard)
 	static public function initKeyboard():Void
 	{
 		var key = new FlxKeyboard();
 		FlxG.keys = key;
 		inputs.push(key);
 	}
-	
+	#end
+
+	#if (mouse)
 	static public function initMouse():Void
 	{
 		var mouse = new FlxMouse(FlxG._game._inputContainer);
 		FlxG.mouse = mouse;
 		inputs.push(mouse);
 	}
-	
+	#end
+
+	#if (touch)
 	static public function initTouch():Void
 	{
 		var touch =  new FlxTouchManager();
 		FlxG.touchManager = touch;
 		inputs.push(touch);
 	}
+	#end
 	
 	/**
 	 * Clean up memory.

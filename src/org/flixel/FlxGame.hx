@@ -487,8 +487,10 @@ class FlxGame extends Sprite
 			}
 		}
 		update();
+		#if mouse
 		//todo test why is this needed removed with inputs refactor
-//		FlxG.mouse.wheel = 0;
+		FlxG.mouse.wheel = 0;
+		#end
 		if (_debuggerUp)
 		{
 			_debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);

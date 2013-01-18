@@ -17,13 +17,6 @@ import nme.media.Sound;
 import nme.media.SoundTransform;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
-import org.flixel.system.input.FlxInputs;
-import org.flixel.system.input.FlxTouchManager;
-import org.flixel.system.input.FlxKeyboard;
-import org.flixel.system.input.FlxMouse;
-#if (cpp || neko)
-import org.flixel.system.input.FlxJoystickManager;
-#end
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxQuadTree;
@@ -32,6 +25,20 @@ import org.flixel.tweens.util.Ease;
 import org.flixel.tweens.misc.MultiVarTween;
 import org.flixel.system.FlxDebugger;
 import org.flixel.plugin.DebugPathDisplay;
+
+import org.flixel.system.input.FlxInputs;
+#if touch
+import org.flixel.system.input.FlxTouchManager;
+#end
+#if keyboard
+import org.flixel.system.input.FlxKeyboard;
+#end
+#if mouse
+import org.flixel.system.input.FlxMouse;
+#end
+#if joystick
+import org.flixel.system.input.FlxJoystickManager;
+#end
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -287,22 +294,29 @@ class FlxG
 	 */
 	static public var _cache:Hash<BitmapData>;
 	static public var _lastBitmapDataKey:String;
-	
+
+	#if mouse
 	/**
 	 * A reference to a <code>FlxMouse</code> object.  Important for input!
 	 */
 	static public var mouse:FlxMouse;
+	#end
+
+	#if keyboard
 	/**
 	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
 	 */
 	static public var keys:FlxKeyboard;
-	
+	#end
+
+	#if touch
 	/**
 	 * A reference to a <code>TouchManager</code> object. Useful for devices with multitouch support
 	 */
 	public static var touchManager:FlxTouchManager;
+	#end
 	
-	#if (cpp || neko)
+	#if (joystick)
 	/**
 	 * A reference to a <code>JoystickManager</code> object. Important for input!
 	 * Set the instance in the FlxInputs class
