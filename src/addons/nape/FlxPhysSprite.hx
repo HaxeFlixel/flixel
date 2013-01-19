@@ -24,7 +24,7 @@ class FlxPhysSprite extends FlxSprite
 	/**
 	 * mainBody is the physics body associated with this sprite. 
 	 */
-	public var mainBody:Body;
+	public var body:Body;
 
 	/**
 	 * Creates an FlxSprite and a physics body (<code>mainBody</code>).
@@ -73,7 +73,7 @@ class FlxPhysSprite extends FlxSprite
 	override public function kill():Void
 	{
 		super.kill();
-		mainBody.space = null;
+		body.space = null;
 	}
 
 	/**
@@ -83,7 +83,7 @@ class FlxPhysSprite extends FlxSprite
 	override public function revive():Void
 	{
 		super.revive();
-		mainBody.space = FlxPhysState.space;
+		body.space = FlxPhysState.space;
 	}
 	
 	/**
@@ -91,13 +91,13 @@ class FlxPhysSprite extends FlxSprite
 	 */
 	public function createCircularBody(radius:Float = 16) 
 	{
-		if (mainBody != null) 
+		if (body != null) 
 			destroyPhysObjects();
 			
 		this.centerOffsets(false);
-		mainBody = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
-		mainBody.shapes.add(new Circle(radius));
-		mainBody.space = FlxPhysState.space;
+		body = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
+		body.shapes.add(new Circle(radius));
+		body.space = FlxPhysState.space;
 		
 		setBodyMaterial();
 	}
@@ -110,13 +110,13 @@ class FlxPhysSprite extends FlxSprite
 	 */
 	public function createRectangularBody()
 	{
-		if (mainBody != null) 
+		if (body != null) 
 			destroyPhysObjects();
 			
 		this.centerOffsets(false);
-		mainBody = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
-		mainBody.shapes.add(new Polygon(Polygon.box(frameWidth, frameHeight)));
-		mainBody.space = FlxPhysState.space;
+		body = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
+		body.shapes.add(new Polygon(Polygon.box(frameWidth, frameHeight)));
+		body.space = FlxPhysState.space;
 		
 		setBodyMaterial();
 	}
@@ -134,9 +134,9 @@ class FlxPhysSprite extends FlxSprite
 									staticFriction:Float = 0.4, density:Float = 1, 
 									rollingFriction:Float = 0.001)
 	{
-		if (mainBody == null) 
+		if (body == null) 
 			return;
-		mainBody.setShapeMaterials(new Material(elasticity, dynamicFriction, staticFriction, density, rollingFriction));
+		body.setShapeMaterials(new Material(elasticity, dynamicFriction, staticFriction, density, rollingFriction));
 	}
 	
 	/**
@@ -144,10 +144,10 @@ class FlxPhysSprite extends FlxSprite
 	 */
 	public function destroyPhysObjects() 
 	{
-		if (mainBody != null) 
+		if (body != null) 
 		{
-			FlxPhysState.space.bodies.remove(mainBody);
-			mainBody = null;
+			FlxPhysState.space.bodies.remove(body);
+			body = null;
 		}
 	}
 	
@@ -156,20 +156,20 @@ class FlxPhysSprite extends FlxSprite
 	 */	
 	private function updatePhysObjects() 
 	{
-		this.x = mainBody.position.x - origin.x;
-		this.y = mainBody.position.y - origin.y;
+		this.x = body.position.x - origin.x;
+		this.y = body.position.y - origin.y;
 		
-		if (mainBody.allowRotation) 
+		if (body.allowRotation) 
 		{
-			this.angle = mainBody.rotation * _radsFactor;
+			this.angle = body.rotation * _radsFactor;
 		}
 		
 		// Applies custom physics drag.
 		if (_linearDrag < 1 || _angularDrag < 1) 
 		{
-			mainBody.angularVel *= _angularDrag;
-			mainBody.velocity.x *= _linearDrag;
-			mainBody.velocity.y *= _linearDrag;
+			body.angularVel *= _angularDrag;
+			body.velocity.x *= _linearDrag;
+			body.velocity.y *= _linearDrag;
 		}
 	}
 
