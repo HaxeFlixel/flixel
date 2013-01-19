@@ -363,10 +363,6 @@ class FlxWeapon
 		{
 			currentBullet.fire(launchX, launchY, Math.floor(velocity.x), Math.floor(velocity.y));
 		}
-		else if (method == FIRE_AT_MOUSE)
-		{
-			currentBullet.fireAtMouse(launchX, launchY, bulletSpeed);
-		}
 		else if (method == FIRE_AT_POSITION)
 		{
 			currentBullet.fireAtPosition(launchX, launchY, x, y, bulletSpeed);
@@ -383,12 +379,19 @@ class FlxWeapon
 		{
 			currentBullet.fireFromAngle(launchX, launchY, parent.angle, bulletSpeed);
 		}
+		#if touch
 		else if (method == FIRE_AT_TOUCH)
 		{
 			if ( touchTarget != null)
 			currentBullet.fireAtTouch(launchX, launchY, touchTarget, bulletSpeed);
 		}
-		
+		#end
+		#if mouse
+		else if (method == FIRE_AT_MOUSE)
+		{
+			currentBullet.fireAtMouse(launchX, launchY, bulletSpeed);
+		}
+		#end
 		if (onPostFireCallback != null)
 		{
 			//onPostFireCallback.apply();
@@ -415,6 +418,7 @@ class FlxWeapon
 		return runFire(FIRE);
 	}
 	
+	#if mouse
 	/**
 	 * Fires a bullet (if one is available) at the mouse coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 
@@ -424,7 +428,9 @@ class FlxWeapon
 	{
 		return runFire(FIRE_AT_MOUSE);
 	}
+	#end
 	
+	#if touch
 	/**
 	 * Fires a bullet (if one is available) at the FlxTouch coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 
@@ -446,6 +452,7 @@ class FlxWeapon
 		}
 		return fired;
 	}
+	#end
 	
 	/**
 	 * Fires a bullet (if one is available) at the given x/y coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.

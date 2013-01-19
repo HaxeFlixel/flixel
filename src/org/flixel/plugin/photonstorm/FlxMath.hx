@@ -81,6 +81,7 @@ class FlxMath
 		return false;
 	}
 	
+	#if mouse
 	/**
 	 * Returns true if the mouse world x/y coordinate are within the given rectangular block
 	 * 
@@ -105,6 +106,7 @@ class FlxMath
 			return pointInFlxRect(FlxG.mouse.screenX, FlxG.mouse.screenY, rect);
 		}
 	}
+	#end
 	
 	/**
 	 * Returns true if the given x/y coordinate is within the Rectangle

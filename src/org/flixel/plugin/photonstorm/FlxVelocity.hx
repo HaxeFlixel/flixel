@@ -83,6 +83,7 @@ class FlxVelocity
 		source.maxVelocity.y = ySpeedMax;
 	}
 	
+	#if mouse
 	/**
 	 * Move the given FlxSprite towards the mouse pointer coordinates at a steady velocity
 	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
@@ -108,7 +109,9 @@ class FlxVelocity
 		source.velocity.x = Math.cos(a) * speed;
 		source.velocity.y = Math.sin(a) * speed;
 	}
+	#end
 	
+	#if touch
 	/**
 	 * Move the given FlxSprite towards a FlxTouch point at a steady velocity
 	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
@@ -120,21 +123,23 @@ class FlxVelocity
 	 * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 	 */
 	public static function moveTowardsTouch(source:FlxSprite, touch:FlxTouch, speed:Int = 60, maxTime:Int = 0):Void
+	{
+		var a:Float = angleBetweenTouch(source, touch);
+		
+		if (maxTime > 0)
 		{
-			var a:Float = angleBetweenTouch(source, touch);
+			var d:Int = distanceToTouch(source, touch);
 			
-			if (maxTime > 0)
-			{
-				var d:Int = distanceToTouch(source, touch);
-				
-				//	We know how many pixels we need to move, but how fast?
-				speed = Std.int(d / (maxTime / 1000));
-			}
-			
-			source.velocity.x = Math.cos(a) * speed;
-			source.velocity.y = Math.sin(a) * speed;
+			//	We know how many pixels we need to move, but how fast?
+			speed = Std.int(d / (maxTime / 1000));
 		}
+		
+		source.velocity.x = Math.cos(a) * speed;
+		source.velocity.y = Math.sin(a) * speed;
+	}
+	#end
 	
+	#if mouse
 	/**
 	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the mouse coordinates at the speed given (in pixels per second)<br>
 	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.<br>
@@ -158,7 +163,9 @@ class FlxVelocity
 		source.maxVelocity.x = xSpeedMax;
 		source.maxVelocity.y = ySpeedMax;
 	}
+	#end
 	
+	#if touch
 	/**
 	 * Sets the x/y acceleration on the source FlxSprite so it will move towards a FlxTouch at the speed given (in pixels per second)<br>
 	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.<br>
@@ -183,7 +190,7 @@ class FlxVelocity
 		source.maxVelocity.x = xSpeedMax;
 		source.maxVelocity.y = ySpeedMax;
 	}
-	
+	#end
 	
 	/**
 	 * Sets the x/y velocity on the source FlxSprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
@@ -267,6 +274,7 @@ class FlxVelocity
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
+	#if mouse
 	/**
 	 * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
 	 * 
@@ -280,7 +288,9 @@ class FlxVelocity
 		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
+	#end
 	
+	#if touch
 	/**
 	 * Find the distance (in pixels, rounded) from the object x/y and the FlxPoint screen x/y
 	 * 
@@ -295,6 +305,7 @@ class FlxVelocity
 		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
+	#end
 	
 	/**
 	 * Find the angle (in radians) between an FlxSprite and an FlxPoint. The source sprite takes its x/y and origin into account.
@@ -403,6 +414,7 @@ class FlxVelocity
 		return result;
 	}
 	
+	#if mouse
 	/**
 	 * Find the angle (in radians) between an FlxSprite and the mouse, taking their x/y and origin into account.
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
@@ -430,7 +442,9 @@ class FlxVelocity
 			return Math.atan2(dy, dx);
 		}
 	}
+	#end
 	
+	#if touch
 	/**
 	 * Find the angle (in radians) between an FlxSprite and a FlxTouch, taking their x/y and origin into account.
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
@@ -458,7 +472,6 @@ class FlxVelocity
 			return Math.atan2(dy, dx);
 		}
 	}
+	#end
 
-
-	
 }

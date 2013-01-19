@@ -136,22 +136,21 @@ class FlxButton extends FlxSprite
 	{
 		if (FlxG.stage != null)
 		{
-			if (!FlxG.supportsTouchEvents)
-			{
+			#if mouse
 				#if (flash || js)
 				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				#else
 				FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				#end
-			}
-			else
-			{
+			#end
+			
+			#if touch
 				#if (flash || js)
 				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
 				#else
 				FlxGame.clickableArea.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
 				#end
-			}
+			#end
 		}
 		if (label != null)
 		{
@@ -194,22 +193,20 @@ class FlxButton extends FlxSprite
 		{
 			if (FlxG.stage != null)
 			{
-				if (!FlxG.supportsTouchEvents)
-				{
+				#if mouse
 					#if (flash || js)
 					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 					#else
 					FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 					#end
-				}
-				else
-				{
+				#end
+				#if touch
 					#if (flash || js)
 					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
 					#else
 					FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
 					#end
-				}
+				#end
 				_initialized = true;
 			}
 		}
@@ -248,13 +245,17 @@ class FlxButton extends FlxSprite
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		var mouseVisible = false;
-		if (FlxG.mouse != null) 
-		{
-			mouseVisible = FlxG.mouse.visible;
-		}
+		var continueUpdate = false;
 		
-		if (mouseVisible|| FlxG.supportsTouchEvents)
+		#if mouse
+			continueUpdate = FlxG.mouse.visible;
+		#end
+		
+		#if touch
+			continueUpdate = true;
+		#end
+		
+		if (continueUpdate)
 		{
 			if (cameras == null)
 			{
@@ -267,20 +268,18 @@ class FlxButton extends FlxSprite
 			while (i < l)
 			{
 				camera = cameras[i++];
-				if (!FlxG.supportsTouchEvents)
-				{
+				#if mouse
 					FlxG.mouse.getWorldPosition(camera, _point);
 					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
-				}
-				else
-				{
+				#end
+				#if touch
 					for (j in 0...FlxG.touchManager.touches.length)
 					{
 						var touch:FlxTouch = FlxG.touchManager.touches[j];
 						touch.getWorldPosition(camera, _point);
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}
-				}
+				#end
 			}
 			if (offAll)
 			{

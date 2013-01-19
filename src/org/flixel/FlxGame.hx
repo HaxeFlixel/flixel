@@ -488,7 +488,7 @@ class FlxGame extends Sprite
 		}
 		update();
 		#if mouse
-		//todo test why is this needed removed with inputs refactor
+		//todo test why is this needed can it be put in FlxMouse
 		FlxG.mouse.wheel = 0;
 		#end
 		if (_debuggerUp)
