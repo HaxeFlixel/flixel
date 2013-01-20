@@ -8,7 +8,7 @@ import nme.events.MouseEvent;
 import nme.events.TouchEvent;
 import nme.media.Sound;
 import nme.media.Sound;
-import org.flixel.system.input.Touch;
+import org.flixel.system.input.FlxTouch;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.Atlas;
 
@@ -136,22 +136,21 @@ class FlxButton extends FlxSprite
 	{
 		if (FlxG.stage != null)
 		{
-			if (!FlxG.supportsTouchEvents)
-			{
+			#if !FLX_MOUSE_DISABLED
 				#if (flash || js)
 				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				#else
 				FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				#end
-			}
-			else
-			{
+			#end
+			
+			#if !FLX_TOUCH_DISABLED
 				#if (flash || js)
 				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
 				#else
 				FlxGame.clickableArea.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
 				#end
-			}
+			#end
 		}
 		if (label != null)
 		{
@@ -194,22 +193,20 @@ class FlxButton extends FlxSprite
 		{
 			if (FlxG.stage != null)
 			{
-				if (!FlxG.supportsTouchEvents)
-				{
+				#if !FLX_MOUSE_DISABLED
 					#if (flash || js)
 					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 					#else
 					FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 					#end
-				}
-				else
-				{
+				#end
+				#if !FLX_TOUCH_DISABLED
 					#if (flash || js)
 					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
 					#else
 					FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
 					#end
-				}
+				#end
 				_initialized = true;
 			}
 		}
@@ -248,7 +245,17 @@ class FlxButton extends FlxSprite
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		if (FlxG.mouse.visible || FlxG.supportsTouchEvents)
+		var continueUpdate = false;
+		
+		#if !FLX_MOUSE_DISABLED
+			continueUpdate = FlxG.mouse.visible;
+		#end
+		
+		#if !FLX_TOUCH_DISABLED
+			continueUpdate = true;
+		#end
+		
+		if (continueUpdate)
 		{
 			if (cameras == null)
 			{
@@ -261,20 +268,18 @@ class FlxButton extends FlxSprite
 			while (i < l)
 			{
 				camera = cameras[i++];
-				if (!FlxG.supportsTouchEvents)
-				{
+				#if !FLX_MOUSE_DISABLED
 					FlxG.mouse.getWorldPosition(camera, _point);
 					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
-				}
-				else
-				{
+				#end
+				#if !FLX_TOUCH_DISABLED
 					for (j in 0...FlxG.touchManager.touches.length)
 					{
-						var touch:Touch = FlxG.touchManager.touches[j];
+						var touch:FlxTouch = FlxG.touchManager.touches[j];
 						touch.getWorldPosition(camera, _point);
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}
-				}
+				#end
 			}
 			if (offAll)
 			{

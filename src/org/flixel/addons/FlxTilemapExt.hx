@@ -1,4 +1,4 @@
-package addons;
+package org.flixel.addons;
 
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;

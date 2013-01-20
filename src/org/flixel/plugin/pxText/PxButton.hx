@@ -15,7 +15,7 @@ import org.flixel.FlxCamera;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
-import org.flixel.system.input.Touch;
+import org.flixel.system.input.FlxTouch;
 import org.flixel.system.layer.Atlas;
 
 /**
@@ -308,7 +308,7 @@ class PxButton extends FlxSprite
 				{
 					for (j in 0...FlxG.touchManager.touches.length)
 					{
-						var touch:Touch = FlxG.touchManager.touches[j];
+						var touch:FlxTouch = FlxG.touchManager.touches[j];
 						touch.getWorldPosition(camera, _point);
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}

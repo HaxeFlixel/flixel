@@ -1,4 +1,10 @@
-package org.flixel;
+package org.flixel.system.input;
+
+import org.flixel.FlxSprite;
+import org.flixel.FlxAssets;
+import org.flixel.FlxG;
+import org.flixel.FlxButton;
+import org.flixel.FlxGroup;
 
 /**
  * A gamepad which contains 4 directional buttons and 4 action buttons.

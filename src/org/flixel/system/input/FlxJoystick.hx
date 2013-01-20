@@ -2,10 +2,10 @@ package org.flixel.system.input;
 
 import org.flixel.FlxPoint;
 
-class Joystick 
+class FlxJoystick 
 {
 	
-	public var buttons:IntHash<JoyButton>;
+	public var buttons:IntHash<FlxJoyButton>;
 	public var axis:FlxPoint;
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
@@ -16,10 +16,10 @@ class Joystick
 	
 	public function new(id:Int) 
 	{
-		buttons = new IntHash<JoyButton>();
-		for (i in 0...(Joystick.NUM_BUTTONS))
+		buttons = new IntHash<FlxJoyButton>();
+		for (i in 0...(FlxJoystick.NUM_BUTTONS))
 		{
-			buttons.set(i, new JoyButton(i));
+			buttons.set(i, new FlxJoyButton(i));
 		}
 		
 		ball = new FlxPoint();
@@ -165,7 +165,7 @@ class Joystick
 	
 }
 
-class JoyButton
+class FlxJoyButton
 {
 	public var id:Int;
 	public var current:Int;

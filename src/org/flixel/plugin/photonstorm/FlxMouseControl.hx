@@ -12,6 +12,8 @@
 */
 
 package org.flixel.plugin.photonstorm;
+
+#if !FLX_MOUSE_DISABLED
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
@@ -272,5 +274,5 @@ class FlxMouseControl extends FlxBasic
 	{
 		clear();
 	}
-	
 }
+#end

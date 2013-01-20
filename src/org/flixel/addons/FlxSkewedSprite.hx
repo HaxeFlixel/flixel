@@ -1,4 +1,4 @@
-package addons;
+package org.flixel.addons;
 import nme.geom.Matrix;
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;

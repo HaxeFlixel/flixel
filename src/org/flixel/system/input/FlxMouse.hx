@@ -1,5 +1,8 @@
 package org.flixel.system.input;
 
+import nme.ui.Mouse;
+import org.flixel.FlxGame;
+import nme.Lib;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
@@ -18,7 +21,7 @@ import org.flixel.system.replay.MouseRecord;
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
-class Mouse extends FlxPoint
+class FlxMouse extends FlxPoint, implements IFlxInput
 {
 	/**
 	 * Current "delta" value of mouse wheel.  If the wheel was just scrolled up, it will have a positive value.  If it was just scrolled down, it will have a negative value.  If it wasn't just scroll this frame, it will be 0.
@@ -65,6 +68,11 @@ class Mouse extends FlxPoint
 	private var _lastWheel:Int;
 	private var _point:FlxPoint;
 	private var _globalScreenPosition:FlxPoint;
+	/**
+	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
+	 * @default false
+	 */
+	public var useSystemCursor(default, setSystemCursor):Bool;
 	
 	/**
 	 * Constructor.
@@ -83,7 +91,96 @@ class Mouse extends FlxPoint
 		_cursor = null;
 		_point = new FlxPoint();
 		_globalScreenPosition = new FlxPoint();
+		useSystemCursor = false;
+		
+		#if (flash || js)
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		#else 
+		FlxGame.createClickableArea();
+		FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		#end
 	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	Flash mouse event.
+	 */
+	private function onMouseDown(FlashEvent:MouseEvent):Void
+	{
+		if(FlxG._game._debuggerUp)
+		{
+			if (FlxG._game._debugger.hasMouse)
+			{
+				return;
+			}
+			if (FlxG._game._debugger.watch.editing)
+			{
+				FlxG._game._debugger.watch.submit();
+			}
+		}
+		if(FlxG._game._replaying && (FlxG._game._replayCancelKeys != null))
+		{
+			var replayCancelKey:String;
+			var i:Int = 0;
+			var l:Int =FlxG._game._replayCancelKeys.length;
+			while(i < l)
+			{
+				replayCancelKey = FlxG._game._replayCancelKeys[i++];
+				if((replayCancelKey == "MOUSE") || (replayCancelKey == "ANY"))
+				{
+					if(FlxG._game._replayCallback != null)
+					{
+						FlxG._game._replayCallback();
+						FlxG._game._replayCallback = null;
+					}
+					else
+					{
+						FlxG.stopReplay();
+					}
+					break;
+				}
+			}
+			return;
+		}
+		
+		if(_current > 0) _current = 1;
+		else _current = 2;
+
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	Flash mouse event.
+	 */
+	private function onMouseUp(FlashEvent:MouseEvent):Void
+	{
+		if ((FlxG._game._debuggerUp && FlxG._game._debugger.hasMouse) || FlxG._game._replaying)
+		{
+			return;
+		}
+		
+		if(_current > 0) _current = -1;
+		else _current = 0;
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	Flash mouse event.
+	 */
+	private function onMouseWheel(FlashEvent:MouseEvent):Void
+	{
+		if ((FlxG._game._debuggerUp && FlxG._game._debugger.hasMouse) || FlxG._game._replaying)
+		{
+			return;
+		}
+		
+		wheel = FlashEvent.delta;
+	}
+	
 	
 	/**
 	 * Clean up memory.
@@ -115,6 +212,11 @@ class Mouse extends FlxPoint
 		{
 			load();
 		}
+		if (useSystemCursor)
+		{
+			Mouse.show();
+		}
+		
 	}
 	
 	/**
@@ -124,6 +226,7 @@ class Mouse extends FlxPoint
 	{
 		_updateCursorContainer = false;
 		_cursorContainer.visible = false;
+		
 	}
 	
 	/**
@@ -204,21 +307,26 @@ class Mouse extends FlxPoint
 	 * @param	X			The current X position of the mouse in the window.
 	 * @param	Y			The current Y position of the mouse in the window.
 	 */
-	public function update(X:Int,Y:Int):Void
+	public function update():Void
 	{
-		
-		_globalScreenPosition.x = X;
-		_globalScreenPosition.y = Y;
-		updateCursor();
-		if ((_last == -1) && (_current == -1))
+		if (visible)
 		{
-			_current = 0;
+			var X = Math.floor(FlxG._game.mouseX);
+			var Y = Math.floor(FlxG._game.mouseY);
+			
+			_globalScreenPosition.x = X;
+			_globalScreenPosition.y = Y;
+			updateCursor();
+			if ((_last == -1) && (_current == -1))
+			{
+				_current = 0;
+			}
+			else if ((_last == 2) && (_current == 2))
+			{
+				_current = 1;
+			}
+			_last = _current;
 		}
-		else if ((_last == 2) && (_current == 2))
-		{
-			_current = 1;
-		}
-		_last = _current;
 	}
 	
 	/**
@@ -315,36 +423,6 @@ class Mouse extends FlxPoint
 	public function justReleased():Bool { return _current == -1; }
 	
 	/**
-	 * Event handler so FlxGame can update the mouse.
-	 * @param	FlashEvent	A <code>MouseEvent</code> object.
-	 */
-	public function handleMouseDown(FlashEvent:MouseEvent):Void
-	{
-		if(_current > 0) _current = 1;
-		else _current = 2;
-	}
-	
-	/**
-	 * Event handler so FlxGame can update the mouse.
-	 * @param	FlashEvent	A <code>MouseEvent</code> object.
-	 */
-	public function handleMouseUp(FlashEvent:MouseEvent):Void
-	{
-		if(_current > 0) _current = -1;
-		else _current = 0;
-	}
-	
-	/**
-	 * Event handler so FlxGame can update the mouse.
-	 * 
-	 * @param	FlashEvent	A <code>MouseEvent</code> object.
-	 */
-	public function handleMouseWheel(FlashEvent:MouseEvent):Void
-	{
-		wheel = FlashEvent.delta;
-	}
-	
-	/**
 	 * If the mouse changed state or is pressed, return that info now
 	 * @return	An array of key state data.  Null if there is no data.
 	 */
@@ -373,4 +451,32 @@ class Mouse extends FlxPoint
 		_globalScreenPosition.y = Record.y;
 		updateCursor();
 	}
+
+	public function onFocus(  ):Void
+	{
+		if (!FlxG._game._debuggerUp  && !useSystemCursor)
+		{
+			Mouse.hide();
+		}
+		reset();
+		
+	}
+	
+	public function onFocusLost(  ):Void
+	{
+		Mouse.show();
+	}
+	
+	public function setSystemCursor (value:Bool):Bool 
+	{
+		useSystemCursor = value;
+		if (!useSystemCursor)
+		{
+			Mouse.hide();
+		} else {
+			Mouse.show();
+		}
+		return value;
+	}
+
 }

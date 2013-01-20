@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Lib;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
@@ -16,26 +17,29 @@ import nme.media.Sound;
 import nme.media.SoundTransform;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
-
-#if (cpp || neko)
-import org.flixel.system.input.JoystickManager;
-#end
-
-import org.flixel.system.input.TouchManager;
-import nme.ui.Multitouch;
-
 import org.flixel.plugin.pxText.PxBitmapFont;
-import org.flixel.system.input.Keyboard;
-import org.flixel.system.input.Mouse;
-import org.flixel.tweens.misc.MultiVarTween;
-
-import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
-import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxQuadTree;
-
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
+import org.flixel.tweens.misc.MultiVarTween;
+import org.flixel.system.FlxDebugger;
+import org.flixel.plugin.DebugPathDisplay;
+
+import org.flixel.system.input.FlxInputs;
+
+#if !FLX_TOUCH_DISABLED
+import org.flixel.system.input.FlxTouchManager;
+#end
+#if !FLX_KEYBOARD_DISABLED
+import org.flixel.system.input.FlxKeyboard;
+#end
+#if !FLX_MOUSE_DISABLED
+import org.flixel.system.input.FlxMouse;
+#end
+#if !FLX_JOYSTICK_DISABLED
+import org.flixel.system.input.FlxJoystickManager;
+#end
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -46,27 +50,10 @@ import org.flixel.tweens.util.Ease;
 class FlxG 
 {
 	/**
-	 * The maximum number of concurrent touch points supported by the current device.
-	 */
-	public static var maxTouchPoints:Int = 0;
-	
-	/**
 	 * Indicates whether the current environment supports basic touch input, such as a single finger tap.
 	 */
 	public static var supportsTouchEvents:Bool = false;
-	
-	/**
-	 * A reference to a <code>TouchManager</code> object. Useful for devices with multitouch support
-	 */
-	public static var touchManager:TouchManager;
-	
-	#if (cpp || neko)
-	/**
-	 * A reference to a <code>JoystickManager</code> object. Important for input!
-	 */
-	public static var joystickManager:JoystickManager;
-	#end
-	
+
 	/**
 	 * Global tweener for tweening between multiple worlds
 	 */
@@ -194,7 +181,6 @@ class FlxG
 	 * Set automatically by <code>FlxPreloader</code> during startup.
 	 */
 	static public var debug:Bool;
-	
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
@@ -249,15 +235,6 @@ class FlxG
 	 */
 	static public var saves:Array<Dynamic>; 
 	static public var save:Int;
-
-	/**
-	 * A reference to a <code>FlxMouse</code> object.  Important for input!
-	 */
-	static public var mouse:Mouse;
-	/**
-	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
-	 */
-	static public var keys:Keyboard;
 	
 	/**
 	 * A handy container for a background music object.
@@ -318,6 +295,35 @@ class FlxG
 	 */
 	static public var _cache:Hash<BitmapData>;
 	static public var _lastBitmapDataKey:String;
+
+	#if !FLX_MOUSE_DISABLED
+	/**
+	 * A reference to a <code>FlxMouse</code> object.  Important for input!
+	 */
+	static public var mouse:FlxMouse;
+	#end
+
+	#if !FLX_KEYBOARD_DISABLED
+	/**
+	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
+	 */
+	static public var keys:FlxKeyboard;
+	#end
+
+	#if !FLX_TOUCH_DISABLED
+	/**
+	 * A reference to a <code>TouchManager</code> object. Useful for devices with multitouch support
+	 */
+	public static var touchManager:FlxTouchManager;
+	#end
+	
+	#if (!FLX_JOYSTICK_DISABLED && (cpp||neko))
+	/**
+	 * A reference to a <code>JoystickManager</code> object. Important for input!
+	 * Set the instance in the FlxInputs class
+	 */
+	public static var joystickManager:FlxJoystickManager;
+	#end
 	
 	static public function getLibraryName():String
 	{
@@ -625,12 +631,7 @@ class FlxG
 	 */
 	static public function resetInput():Void
 	{
-		keys.reset();
-		mouse.reset();
-		
-		#if (cpp || neko)
-		joystickManager.reset();
-		#end
+		FlxInputs.resetInputs();
 	}
 	
 	// TODO: Return from Sound -> Class<Sound>
@@ -1248,7 +1249,7 @@ class FlxG
 	 */
 	static public function addCamera(NewCamera:FlxCamera):FlxCamera
 	{
-		FlxG._game.addChildAt(NewCamera._flashSprite, FlxG._game.getChildIndex(FlxG._game._mouse));
+		FlxG._game.addChildAt(NewCamera._flashSprite, FlxG._game.getChildIndex(FlxG._game._inputContainer));
 		FlxG.cameras.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.length - 1;
 		return NewCamera;
@@ -1593,16 +1594,10 @@ class FlxG
 		addPlugin(new DebugPathDisplay());
 		addPlugin(new TimerManager());
 		
-		FlxG.mouse = new Mouse(FlxG._game._mouse);
-		FlxG.keys = new Keyboard();
 		#if js
 		FlxG.mobile = true;
 		#else
 		FlxG.mobile = false;
-		#end
-		
-		#if (cpp || neko)
-		FlxG.joystickManager = new JoystickManager();
 		#end
 
 		FlxG.levels = new Array();
@@ -1641,24 +1636,11 @@ class FlxG
 	}
 	
 	/**
-	 * Called by the game object to update the keyboard and mouse input tracking objects.
+	 * Called by the game object to update all the inputs enabled in FlxInputs
 	 */
-	inline static public function updateInput():Void
+	inline static public function updateInputs():Void
 	{
-		FlxG.keys.update();
-		if (FlxG.mouse.visible)
-		{
-			FlxG.mouse.update(Math.floor(FlxG._game.mouseX), Math.floor(FlxG._game.mouseY));
-		}
-		
-		if (FlxG.supportsTouchEvents)
-		{
-			FlxG.touchManager.update();
-		}
-		
-		#if (cpp || neko)
-		FlxG.joystickManager.update();
-		#end
+		FlxInputs.updateInputs();
 	}
 	
 	/**
@@ -1814,7 +1796,6 @@ class FlxG
 			}
 		}
 	}
-	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.
 	 * @param	object		The object containing the properties to tween.
