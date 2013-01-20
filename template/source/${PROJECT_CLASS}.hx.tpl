@@ -12,7 +12,7 @@ class ${PROJECT_CLASS} extends FlxGame
 		var ratioX:Float = stageWidth / ${WIDTH};
 		var ratioY:Float = stageHeight / ${HEIGHT};
 		var ratio:Float = Math.min(ratioX, ratioY);
-		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), MenuState, ratio, 30, 30);
+		super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), MenuState, ratio, 30, 30);
 		forceDebugger = true;
 	}
 }
