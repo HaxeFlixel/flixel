@@ -5,7 +5,7 @@ package org.flixel.system.input;
  * @author Zaphod
  */
 
-class MapObject
+class FlxMapObject
 {
 	public var name:String;
 	public var current:Int;

@@ -1,4 +1,5 @@
-package addons.nape;
+package org.flixel.nape;
+
 import nape.geom.Vec2;
 import nape.phys.Body;
 import nape.phys.BodyType;
@@ -58,12 +59,14 @@ class FlxPhysSprite extends FlxSprite
 	}
 
 	/**
-	 * Automatically goes through and calls update on everything you added.
+	 * Override core physics velocity etc
 	 */
-	override public function update():Void 
+	override public function postUpdate():Void
 	{
-		super.update();
-		updatePhysObjects();
+		if (moves)
+		{
+			updatePhysObjects();
+		}
 	}
 
 	/**
@@ -154,7 +157,7 @@ class FlxPhysSprite extends FlxSprite
 	/**
 	 * Updates physics FlxSprite graphics to follow this sprite physics object.
 	 */	
-	private function updatePhysObjects() 
+	private inline function updatePhysObjects() 
 	{
 		this.x = body.position.x - origin.x;
 		this.y = body.position.y - origin.y;

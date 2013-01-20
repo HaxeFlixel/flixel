@@ -1,11 +1,14 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxG;
+import org.flixel.FlxGame;
+import nme.Lib;
 import nme.events.KeyboardEvent;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
  */
-class Keyboard extends Input
+class FlxKeyboard extends FlxInputStates, implements IFlxInput
 {
 	public var ESCAPE:Bool;
 	public var F1:Bool;
@@ -189,7 +192,119 @@ class Keyboard extends Input
 		addKey("NUMPADPLUS", 107);
 		addKey("NUMPADPERIOD", 110);
 		#end
+		
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 	}
+	
+	/**
+	 * Event handler so FlxGame can toggle keys.
+	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
+	 */
+	private function onKeyUp(FlashEvent:KeyboardEvent):Void
+	{
+		if (FlxG._game._debuggerUp && FlxG._game._debugger.watch.editing)
+		{
+			return;
+		}
+		if(!FlxG.mobile)
+		{
+			if ((FlxG._game._debugger != null) && ((FlashEvent.keyCode == 192) || (FlashEvent.keyCode == 220)))
+			{
+				FlxG._game._debugger.visible = !FlxG._game._debugger.visible;
+				FlxG._game._debuggerUp = FlxG._game._debugger.visible;
+				
+				return;
+			}
+			if (FlxG._game.useSoundHotKeys)
+			{
+				var c:Int = FlashEvent.keyCode;
+				var code:String = String.fromCharCode(FlashEvent.charCode);
+				if (c == 48 || c == 96)
+				{
+					FlxG.mute = !FlxG.mute;
+					if (FlxG.volumeHandler != null)
+					{
+						FlxG.volumeHandler(FlxG.mute?0:FlxG.volume);
+					}
+					FlxG._game.showSoundTray();
+					return;
+				}
+				else if (c == 109 || c == 189)
+				{
+					FlxG.mute = false;
+					FlxG.volume = FlxG.volume - 0.1;
+					FlxG._game.showSoundTray();
+					return;
+				}
+				else if (c == 107 || c == 187)
+				{
+					FlxG.mute = false;
+					FlxG.volume = FlxG.volume + 0.1;
+					FlxG._game.showSoundTray();
+					return;
+				}
+				else
+				{
+					//default:
+				}
+			}
+		}
+		if (FlxG._game._replaying)
+		{
+			return;
+		}
+		
+		var object:FlxMapObject = _map[FlashEvent.keyCode];
+		if(object == null) return;
+		if(object.current > 0) object.current = -1;
+		else object.current = 0;
+		//this[object.name] = false;
+		Reflect.setProperty(this, object.name, false);
+		
+		FlxG.log(FlashEvent.keyCode);
+	}
+	
+	/**
+	 * Internal event handler for input and focus.
+	 * @param	FlashEvent	Flash keyboard event.
+	 */
+	private function onKeyDown(FlashEvent:KeyboardEvent):Void
+	{
+		if (FlxG._game._debuggerUp && FlxG._game._debugger.watch.editing)
+		{
+			return;
+		}
+		if(FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlxG._game._debugger == null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
+		{
+			var cancel:Bool = false;
+			var replayCancelKey:String;
+			var i:Int = 0;
+			var l:Int = FlxG._game._replayCancelKeys.length;
+			while(i < l)
+			{
+				replayCancelKey = FlxG._game._replayCancelKeys[i++];
+				if((replayCancelKey == "ANY") || (getKeyCode(replayCancelKey) == Std.int(FlashEvent.keyCode)))
+				{
+					if(FlxG._game._replayCallback != null)
+					{
+						FlxG._game._replayCallback();
+						FlxG._game._replayCallback = null;
+					}
+					else
+					{
+						FlxG.stopReplay();
+					}
+					break;
+				}
+			}
+			return;
+		}
+		handleKeyDown(FlashEvent);
+	}
+	
+
+	
 	
 	/**
 	 * Event handler so FlxGame can toggle keys.
@@ -197,25 +312,26 @@ class Keyboard extends Input
 	 */
 	public function handleKeyDown(FlashEvent:KeyboardEvent):Void
 	{
-		var o:MapObject = _map[FlashEvent.keyCode];
+		var o:FlxMapObject = _map[FlashEvent.keyCode];
 		if (o == null) return;
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
 		Reflect.setProperty(this, o.name, true);
 	}
-	
-	/**
-	 * Event handler so FlxGame can toggle keys.
-	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
-	 */
-	public function handleKeyUp(FlashEvent:KeyboardEvent):Void
+
+	public function onFocus( ):Void
 	{
-		var object:MapObject = _map[FlashEvent.keyCode];
-		if(object == null) return;
-		if(object.current > 0) object.current = -1;
-		else object.current = 0;
-		//this[object.name] = false;
-		Reflect.setProperty(this, object.name, false);
+		
+	}
+
+	public function onFocusLost( ):Void
+	{
+		reset();
+	}
+
+	public function toString( ):String
+	{
+		return "Keyboard";
 	}
 
 }

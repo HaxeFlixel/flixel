@@ -69,7 +69,7 @@ class FlxText extends FlxSprite
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @param	IsStatic		Whether this text field can't be changed (text or appearance)
 	 */
-	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true, IsStatic:Bool = false)
+	public function new(X:Float, Y:Float, Width:Int, Text:String = null, size:Int = 8, EmbeddedFont:Bool = true, IsStatic:Bool = false)
 	{
 		super(X, Y);
 		
@@ -91,7 +91,7 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_format = new TextFormat(Assets.getFont(FlxAssets.defaultFont).fontName, 8, 0xffffff);
+		_format = new TextFormat(Assets.getFont(FlxAssets.defaultFont).fontName, size, 0xffffff);
 		_formatAdjusted = new TextFormat();
 		_textField.defaultTextFormat = _format;
 		_textField.text = Text;

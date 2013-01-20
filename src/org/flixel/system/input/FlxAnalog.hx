@@ -1,6 +1,13 @@
-package org.flixel;
+package org.flixel.system.input;
+
+import org.flixel.FlxU;
+import org.flixel.FlxG;
+import org.flixel.FlxAssets;
+import org.flixel.FlxSprite;
+import org.flixel.FlxPoint;
+import org.flixel.FlxGroup;
 import flash.geom.Rectangle;
-import org.flixel.system.input.Touch;
+import org.flixel.system.input.FlxTouch;
 
 /**
  * 
@@ -27,10 +34,12 @@ class FlxAnalog extends FlxGroup
 	
 	// An list of analogs that are currently active.
 	private static var _analogs:Array<FlxAnalog>;
+	#if !FLX_TOUCH_DISABLED
 	// The current pointer that's active on the analog.
-	private var _currentTouch:Touch;
+	private var _currentTouch:FlxTouch;
 	// Helper array for checking touches
-	private var _tempTouches:Array<Touch>;
+	private var _tempTouches:Array<FlxTouch>;
+	#end
 	// Helper FlxPoint object
 	private var _point:FlxPoint;
 	
@@ -165,12 +174,13 @@ class FlxAnalog extends FlxGroup
 	 */
 	override public function update():Void 
 	{
-		var touch:Touch = null;
+		#if !FLX_TOUCH_DISABLED
+		var touch:FlxTouch = null;
+		#end
 		var offAll:Bool = true;
 		
 		// There is no reason to get into the loop if their is already a pointer on the analog
-		if (FlxG.supportsTouchEvents)
-		{
+		#if !FLX_TOUCH_DISABLED
 			if (_currentTouch != null)
 			{
 				_tempTouches.push(_currentTouch);
@@ -202,9 +212,9 @@ class FlxAnalog extends FlxGroup
 					break;
 				}
 			}
-		}
-		else
-		{
+		#end
+		
+		#if !FLX_MOUSE_DISABLED
 			_point.x = FlxG.mouse.screenX;
 			_point.y = FlxG.mouse.screenY;
 			
@@ -212,7 +222,7 @@ class FlxAnalog extends FlxGroup
 			{
 				offAll = false;
 			}
-		}
+		#end
 		
 		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
 		{
@@ -230,15 +240,16 @@ class FlxAnalog extends FlxGroup
 		{
 			status = NORMAL;
 		}
-		
+		#if !FLX_TOUCH_DISABLED
 		_tempTouches.splice(0, _tempTouches.length);
+		#end
 		super.update();
 	}
 	
-	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, touch:Touch = null):Bool
+	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, touch:FlxTouch = null):Bool
 	{
 		var offAll:Bool = true;
-		
+		#if !FLX_TOUCH_DISABLED
 		// Use the touch to figure out the world position if it's passed in, as 
 		// the screen coordinates passed in touchPoint are wrong
 		// if the control is used in a group, for example.
@@ -247,17 +258,19 @@ class FlxAnalog extends FlxGroup
 			touchPoint.x = touch.screenX;
 			touchPoint.y = touch.screenY;
 		}
-		
+		#end
 		if (_pad.contains(touchPoint.x, touchPoint.y) || (status == PRESSED))
 		{
 			offAll = false;
 			
 			if (pressed)
 			{
+				#if !FLX_TOUCH_DISABLED
 				if (touch != null)
 				{
 					_currentTouch = touch;
 				}
+				#end
 				status = PRESSED;			
 				if (justPressed)
 				{
@@ -291,7 +304,9 @@ class FlxAnalog extends FlxGroup
 			}
 			else if (justReleased && status == PRESSED)
 			{				
+				#if !FLX_TOUCH_DISABLED
 				_currentTouch = null;
+				#end
 				status = HIGHLIGHT;
 				if (onUp != null)
 				{
@@ -336,11 +351,12 @@ class FlxAnalog extends FlxGroup
 	 */
 	public function justPressed():Bool
 	{
-		if (FlxG.supportsTouchEvents)
-		{
-			return _currentTouch.justPressed() && status == PRESSED;
-		}
+		#if !FLX_TOUCH_DISABLED
+		return _currentTouch.justPressed() && status == PRESSED;
+		#end
+		#if !FLX_MOUSE_DISABLED
 		return FlxG.mouse.justPressed() && status == PRESSED;
+		#end
 	}
 	
 	/**
@@ -348,11 +364,12 @@ class FlxAnalog extends FlxGroup
 	 */
 	public function justReleased():Bool
 	{
-		if (FlxG.supportsTouchEvents)
-		{
-			return _currentTouch.justReleased() && status == HIGHLIGHT;
-		}
+		#if !FLX_TOUCH_DISABLED
+		return _currentTouch.justReleased() && status == HIGHLIGHT;
+		#end
+		#if !FLX_MOUSE_DISABLED
 		return FlxG.mouse.justReleased() && status == HIGHLIGHT;
+		#end
 	}
 
 	/**

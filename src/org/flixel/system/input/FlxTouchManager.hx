@@ -1,7 +1,12 @@
 package org.flixel.system.input;
 
-import nme.geom.Point;
+import nme.ui.MultitouchInputMode;
+import nme.ui.Multitouch;
 import org.flixel.FlxG;
+import nme.Lib;
+import org.flixel.FlxGroup;
+import nme.geom.Point;
+import org.flixel.FlxGame;
 import nme.events.TouchEvent;
 
 /**
@@ -9,32 +14,64 @@ import nme.events.TouchEvent;
  * @author Zaphod
  */
 
-class TouchManager 
+class FlxTouchManager implements IFlxInput
 {
+	
+	/**
+	 * The maximum number of concurrent touch points supported by the current device.
+	 */
+	public static var maxTouchPoints:Int = 0;
 	
 	/**
 	 * All active touches including just created, moving and just released.
 	 */
-	public var touches:Array<Touch>;
+	public var touches:Array<FlxTouch>;
 	
 	/**
 	 * Storage for inactive touches (some sort of cache for them).
 	 */
-	private var _inactiveTouches:Array<Touch>;
+	private var _inactiveTouches:Array<FlxTouch>;
 	
 	/**
 	 * Helper storage for active touches (for faster access)
 	 */
-	private var _touchesCache:IntHash<Touch>;
+	private var _touchesCache:IntHash<FlxTouch>;
 	
 	/**
 	 * Constructor
 	 */
 	public function new() 
 	{
-		touches = new Array<Touch>();
-		_inactiveTouches = new Array<Touch>();
-		_touchesCache = new IntHash<Touch>();
+		touches = new Array<FlxTouch>();
+		_inactiveTouches = new Array<FlxTouch>();
+		_touchesCache = new IntHash<FlxTouch>();
+		maxTouchPoints = Multitouch.maxTouchPoints;
+		Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+		FlxG.supportsTouchEvents = true;
+		
+		#if (flash || js)
+		Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN, handleTouchBegin);
+		Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, handleTouchEnd);
+		Lib.current.stage.addEventListener(TouchEvent.TOUCH_MOVE, handleTouchMove);
+		#else
+		FlxGame.createClickableArea();
+		FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_BEGIN , handleTouchBegin);
+		FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, handleTouchEnd);
+		FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_MOVE, handleTouchMove);
+		#end
+	}
+	
+	/**
+	 * Return the first touch if there is one, beware of null
+	 */
+	public function getFirstTouch():FlxTouch
+	{
+			if (touches[0] != null)
+		{
+		return touches[0];
+		} else {
+			return null;
+		}
 	}
 	
 	/**
@@ -64,7 +101,7 @@ class TouchManager
 	public function update():Void
 	{
 		var i:Int = touches.length - 1;
-		var touch:Touch;
+		var touch:FlxTouch;
 		while (i >= 0)
 		{
 			touch = touches[i];
@@ -111,7 +148,7 @@ class TouchManager
 	 */
 	public function handleTouchBegin(FlashEvent:TouchEvent):Void
 	{
-		var touch:Touch = _touchesCache.get(FlashEvent.touchPointID);
+		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
 		{
 			if (touch._current > 0) 
@@ -136,7 +173,7 @@ class TouchManager
 	 */
 	public function handleTouchEnd(FlashEvent:TouchEvent):Void
 	{
-		var touch:Touch = _touchesCache.get(FlashEvent.touchPointID);
+		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
 		{
 			if (touch._current > 0) 
@@ -156,7 +193,7 @@ class TouchManager
 	 */
 	public function handleTouchMove(FlashEvent:TouchEvent):Void
 	{
-		var touch:Touch = _touchesCache.get(FlashEvent.touchPointID);
+		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
 		{
 			touch.updateTouchPosition(FlashEvent.stageX, FlashEvent.stageY); 
@@ -168,11 +205,11 @@ class TouchManager
 	 * @param	TouchArray		optional array to fill with touch objects
 	 * @return					array with touches
 	 */
-	public function justStartedTouches(TouchArray:Array<Touch> = null):Array<Touch>
+	public function justStartedTouches(TouchArray:Array<FlxTouch> = null):Array<FlxTouch>
 	{
 		if (TouchArray == null)
 		{
-			TouchArray = new Array<Touch>();
+			TouchArray = new Array<FlxTouch>();
 		}
 		
 		var touchLen:Int = TouchArray.length;
@@ -197,11 +234,11 @@ class TouchManager
 	 * @param	TouchArray		optional array to fill with touch objects
 	 * @return					array with touches
 	 */
-	public function justReleasedTouches(TouchArray:Array<Touch> = null):Array<Touch>
+	public function justReleasedTouches(TouchArray:Array<FlxTouch> = null):Array<FlxTouch>
 	{
 		if (TouchArray == null)
 		{
-			TouchArray = new Array<Touch>();
+			TouchArray = new Array<FlxTouch>();
 		}
 		
 		var touchLen:Int = TouchArray.length;
@@ -226,7 +263,7 @@ class TouchManager
 	 * @param	touch	new touch object
 	 * @return			added touch object
 	 */
-	private function add(touch:Touch):Touch
+	private function add(touch:FlxTouch):FlxTouch
 	{
 		touches.push(touch);
 		_touchesCache.set(touch.touchPointID, touch); 
@@ -240,16 +277,32 @@ class TouchManager
 	 * @param	PointID		id of the touch
 	 * @return				recycled touch object
 	 */
-	private function recycle(X:Float, Y:Float, PointID:Int):Touch
+	private function recycle(X:Float, Y:Float, PointID:Int):FlxTouch
 	{
 		if (_inactiveTouches.length > 0)
 		{
-			var touch:Touch = _inactiveTouches.pop();
+			var touch:FlxTouch = _inactiveTouches.pop();
 			touch.reset(X, Y, PointID);
 			return add(touch);
 		}
 		
-		return add(new Touch(X, Y, PointID));
+		return add(new FlxTouch(X, Y, PointID));
 	}
-	
+
+	public function onFocus( ):Void
+	{
+		
+	}
+
+	public function onFocusLost( ):Void
+	{
+		reset();
+	}
+
+	public function toString( ):String
+	{
+		return 'FlxTouchManager';
+	}
+
+
 }

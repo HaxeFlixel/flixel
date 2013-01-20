@@ -1,4 +1,4 @@
-package addons;
+package org.flixel.addons;
 
 import nme.display.BitmapInt32;
 import nme.geom.ColorTransform;
