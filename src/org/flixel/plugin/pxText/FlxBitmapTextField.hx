@@ -72,7 +72,7 @@ class FlxBitmapTextField extends FlxSprite
 		_alignment = PxTextAlign.LEFT;
 		_padding = 0;
 		_pendingTextChange = false;
-		_fieldWidth = 1;
+		_fieldWidth = 2;
 		_multiLine = false;
 		
 		_lineSpacing = 0;
@@ -655,8 +655,8 @@ class FlxBitmapTextField extends FlxSprite
 		origin.x = width * 0.5;
 		origin.y = height * 0.5;
 		
-		var halfWidth:Int = Math.floor(origin.x);
-		var halfHeight:Int = Math.floor(origin.y);
+		var halfWidth:Float = origin.x;
+		var halfHeight:Float = origin.y;
 		#end
 		
 		#if (flash || js)
@@ -677,7 +677,6 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			_pixels.fillRect(_pixels.rect, _backgroundColor);
 		}
-		_pixels.lock();
 		#else
 		_drawData.splice(0, _drawData.length);
 		_bgDrawData.splice(0, _bgDrawData.length);
@@ -719,70 +718,77 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		#end
 		
-		// render text
-		var row:Int = 0;
-		
-		for (t in rows) 
+		if (_fontScale > 0)
 		{
-			var ox:Int = 0; // LEFT
-			var oy:Int = 0;
-			if (alignment == PxTextAlign.CENTER) 
+			#if (flash || js)
+			_pixels.lock();
+			#end
+			
+			// render text
+			var row:Int = 0;
+			
+			for (t in rows) 
 			{
-				if (_fixedWidth)
+				var ox:Int = 0; // LEFT
+				var oy:Int = 0;
+				if (alignment == PxTextAlign.CENTER) 
 				{
-					ox = Math.floor((_fieldWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
-				}
-				else
-				{
-					ox = Math.floor((finalWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
-				}
-			}
-			if (alignment == PxTextAlign.RIGHT) 
-			{
-				if (_fixedWidth)
-				{
-					ox = _fieldWidth - Math.floor(_font.getTextWidth(t, _letterSpacing, _fontScale));
-				}
-				else
-				{
-					ox = finalWidth - Math.floor(_font.getTextWidth(t, _letterSpacing, _fontScale)) - 2 * padding;
-				}
-			}
-			if (_outline) 
-			{
-				for (py in 0...(2 + 1)) 
-				{
-					for (px in 0...(2 + 1)) 
+					if (_fixedWidth)
 					{
-						#if (flash || js)
-						_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
-						#else
-						_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - halfWidth, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
-						#end
+						ox = Math.floor((_fieldWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
+					}
+					else
+					{
+						ox = Math.floor((finalWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
 					}
 				}
-				ox += 1;
-				oy += 1;
-			}
-			if (_shadow) 
-			{
+				if (alignment == PxTextAlign.RIGHT) 
+				{
+					if (_fixedWidth)
+					{
+						ox = _fieldWidth - Math.floor(_font.getTextWidth(t, _letterSpacing, _fontScale));
+					}
+					else
+					{
+						ox = finalWidth - Math.floor(_font.getTextWidth(t, _letterSpacing, _fontScale)) - 2 * padding;
+					}
+				}
+				if (_outline) 
+				{
+					for (py in 0...(2 + 1)) 
+					{
+						for (px in 0...(2 + 1)) 
+						{
+							#if (flash || js)
+							_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+							#else
+							_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+							#end
+						}
+					}
+					ox += 1;
+					oy += 1;
+				}
+				if (_shadow) 
+				{
+					#if (flash || js)
+					_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+					#else
+					_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+					#end
+				}
 				#if (flash || js)
-				_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+				_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
-				_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+				_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
 				#end
+				row++;
 			}
 			#if (flash || js)
-			_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
-			#else
-			_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - halfWidth, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
+			_pixels.unlock();
+			pixels = _pixels;
 			#end
-			row++;
 		}
-		#if (flash || js)
-		_pixels.unlock();
-		pixels = _pixels;
-		#end
 		
 		_pendingTextChange = false;
 	}

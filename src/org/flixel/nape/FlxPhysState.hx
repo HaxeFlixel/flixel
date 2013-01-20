@@ -153,37 +153,33 @@ class FlxPhysState extends FlxState
 	 * @param	maxY	The largest Y value of your level (usually the level height).
 	 * @param	Thickness	How thick the walls are.
 	 */
-	public function createWalls(minX:Float = 0, minY:Float = 0, MaxX:Float = 0, MaxY:Float = 0, Thickness:Float = 10, material:Material = null) 
+	public function createWalls(minX:Float = 0, minY:Float = 0, maxX:Float = 0, maxY:Float = 0, thickness:Float = 10, material:Material = null):Body 
 	{
 		
-		if (MaxX == 0) 
-			MaxX = FlxG.width;
+		if (maxX == 0) 
+			maxX = FlxG.width;
 			
-		if (MaxY == 0)
-			MaxY = FlxG.height;
+		if (maxY == 0)
+			maxY = FlxG.height;
 			
 		if (material == null)
 			material = new Material(0.4, 0.2, 0.38, 0.7);
 		
-		var wallLeft:Body 	= new Body(BodyType.STATIC);
-		var wallRight:Body 	= new Body(BodyType.STATIC);
-		var wallUp:Body 	= new Body(BodyType.STATIC);
-		var wallDown:Body 	= new Body(BodyType.STATIC);
+		var walls:Body 	= new Body(BodyType.STATIC);
 		
-		wallLeft.shapes.add(new Polygon(Polygon.rect(minX, minY, Thickness, MaxY + Math.abs(minY))));
-        wallRight.shapes.add(new Polygon(Polygon.rect(MaxX - Thickness, minY, Thickness, MaxY + Math.abs(minY))));
-        wallUp.shapes.add(new Polygon(Polygon.rect(minX, minY, MaxX + Math.abs(minX), Thickness)));
-        wallDown.shapes.add(new Polygon(Polygon.rect(minX, MaxY - Thickness, MaxX + Math.abs(minX), Thickness)));
+		// left wall
+		walls.shapes.add(new Polygon(Polygon.rect(minX, minY, thickness, maxY + Math.abs(minY))));
+		// right wall
+        walls.shapes.add(new Polygon(Polygon.rect(maxX - thickness, minY, thickness, maxY + Math.abs(minY))));
+		// upper wall
+        walls.shapes.add(new Polygon(Polygon.rect(minX, minY, maxX + Math.abs(minX), thickness)));
+		// bottom wall
+        walls.shapes.add(new Polygon(Polygon.rect(minX, maxY - thickness, maxX + Math.abs(minX), thickness)));
 		
-		wallLeft.space = space;
-		wallRight.space = space;
-		wallUp.space = space;
-		wallDown.space = space;
 		
-		wallLeft.setShapeMaterials(material);
-		wallRight.setShapeMaterials(material);
-		wallUp.setShapeMaterials(material);
-		wallDown.setShapeMaterials(material);
+		walls.space = space;
+		walls.setShapeMaterials(material);
+		return walls;
 	}
 	
 }

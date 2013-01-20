@@ -457,9 +457,22 @@ class PxBitmapFont
 		for (i in 0...(_glyphs.length))
 		{
 			glyph = _glyphs[i];
+			var bdWidth:Int;
+			var bdHeight:Int;
 			if (glyph != null)
 			{
-				preparedGlyph = new BitmapData(Math.floor(glyph.width * pScale), Math.floor(glyph.height * pScale), true, 0x00000000);
+				if (pScale > 0)
+				{
+					bdWidth = Math.ceil(glyph.width * pScale);
+					bdHeight = Math.ceil(glyph.height * pScale);
+				}
+				else
+				{
+					bdWidth = 1;
+					bdHeight = 1;
+				}
+				
+				preparedGlyph = new BitmapData(bdWidth, bdHeight, true, 0x00000000);
 				if (pUseColorTransform)
 				{
 					preparedGlyph.draw(glyph,  _matrix, _colorTransform);
@@ -584,7 +597,7 @@ class PxBitmapFont
 	#elseif js
 	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int):Void 
 	#else
-	public function render(atlasName:String, drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, pUseColor:Bool = true):Void 
+	public function render(atlasName:String, drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Float, pOffsetY:Float, pLetterSpacing:Int, pScale:Float, pUseColor:Bool = true):Void 
 	#end
 	{
 	#if (cpp || neko)
