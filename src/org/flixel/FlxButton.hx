@@ -136,7 +136,7 @@ class FlxButton extends FlxSprite
 	{
 		if (FlxG.stage != null)
 		{
-			#if mouse
+			#if !FLX_MOUSE_DISABLED
 				#if (flash || js)
 				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				#else
@@ -144,7 +144,7 @@ class FlxButton extends FlxSprite
 				#end
 			#end
 			
-			#if touch
+			#if !FLX_TOUCH_DISABLED
 				#if (flash || js)
 				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
 				#else
@@ -193,14 +193,14 @@ class FlxButton extends FlxSprite
 		{
 			if (FlxG.stage != null)
 			{
-				#if mouse
+				#if !FLX_MOUSE_DISABLED
 					#if (flash || js)
 					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 					#else
 					FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 					#end
 				#end
-				#if touch
+				#if !FLX_TOUCH_DISABLED
 					#if (flash || js)
 					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
 					#else
@@ -247,11 +247,11 @@ class FlxButton extends FlxSprite
 		// (ignore checkbox behavior for now).
 		var continueUpdate = false;
 		
-		#if mouse
+		#if !FLX_MOUSE_DISABLED
 			continueUpdate = FlxG.mouse.visible;
 		#end
 		
-		#if touch
+		#if !FLX_TOUCH_DISABLED
 			continueUpdate = true;
 		#end
 		
@@ -268,11 +268,11 @@ class FlxButton extends FlxSprite
 			while (i < l)
 			{
 				camera = cameras[i++];
-				#if mouse
+				#if !FLX_MOUSE_DISABLED
 					FlxG.mouse.getWorldPosition(camera, _point);
 					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
 				#end
-				#if touch
+				#if !FLX_TOUCH_DISABLED
 					for (j in 0...FlxG.touchManager.touches.length)
 					{
 						var touch:FlxTouch = FlxG.touchManager.touches[j];

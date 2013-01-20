@@ -161,12 +161,12 @@ class FlxReplay
 	{
 		var continueFrame = true;
 		
-		#if keyboard
+		#if !FLX_KEYBOARD_DISABLED
 		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
 		if (keysRecord == null) continueFrame = false;
 		#end
 		
-		#if mouse
+		#if !FLX_MOUSE_DISABLED
 		var mouseRecord:MouseRecord = FlxG.mouse.record();
 		if (mouseRecord == null) continueFrame = false;
 		#end
@@ -178,10 +178,10 @@ class FlxReplay
 		}
 		
 		var frameRecorded = new FrameRecord().create(frame++);
-		#if mouse
+		#if !FLX_MOUSE_DISABLED
 		frameRecorded.mouse = mouseRecord;
 		#end
-		#if keyboard
+		#if !FLX_KEYBOARD_DISABLED
 		frameRecorded.keys = keysRecord;
 		#end
 		
@@ -213,14 +213,14 @@ class FlxReplay
 		
 		var fr:FrameRecord = _frames[_marker++];
 		
-		#if keyboard
+		#if !FLX_KEYBOARD_DISABLED
 		if (fr.keys != null)
 		{
 			FlxG.keys.playback(fr.keys);
 		}
 		#end
 		
-		#if mouse
+		#if !FLX_MOUSE_DISABLED
 		if (fr.mouse != null)
 		{
 			FlxG.mouse.playback(fr.mouse);

@@ -13,7 +13,7 @@
 
 package org.flixel.plugin.photonstorm;
 
-#if mouse
+#if !FLX_MOUSE_DISABLED
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;

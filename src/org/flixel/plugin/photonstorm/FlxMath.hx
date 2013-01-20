@@ -81,7 +81,7 @@ class FlxMath
 		return false;
 	}
 	
-	#if mouse
+	#if !FLX_MOUSE_DISABLED
 	/**
 	 * Returns true if the mouse world x/y coordinate are within the given rectangular block
 	 * 

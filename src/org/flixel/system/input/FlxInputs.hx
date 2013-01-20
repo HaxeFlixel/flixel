@@ -26,22 +26,22 @@ class FlxInputs {
 		if ( enabledInputs == null)
 			enabledInputs = getDefaultInputs();
 		
-		#if (keyboard)
+		#if !FLX_KEYBOARD_DISABLED
 		if (enabledInputs.keyboard)
 			initKeyboard();
 		#end
 		
-		#if (mouse)
+		#if !FLX_MOUSE_DISABLED
 		if (enabledInputs.mouse)
 			initMouse();
 		#end
 		
-		#if (touch)
+		#if !FLX_TOUCH_DISABLED
 		if (enabledInputs.touch)
 			initTouch();
 		#end
 		
-		#if (joystick)
+		#if (!FLX_JOYSTICK_DISABLED && (cpp||neko))
 		if (enabledInputs.joystick)
 			initJoystick();
 		#end
@@ -57,19 +57,19 @@ class FlxInputs {
 	{
 		var defaults = new FlxInputList();
 
-		#if (keyboard)
+		#if !FLX_KEYBOARD_DISABLED
 		defaults.keyboard = true;
 		#end
 		
-		#if (joystick)
+		#if !FLX_JOYSTICK_DISABLED
 		defaults.joystick = true;
 		#end
 		
-		#if (mouse)
+		#if !FLX_MOUSE_DISABLED
 		defaults.mouse = true;
 		#end
 
-		#if touch
+		#if !FLX_TOUCH_DISABLED
 		defaults.touch = true;
 		#end
 		
@@ -149,7 +149,7 @@ class FlxInputs {
 		}
 	}
 	
-	#if (joystick)
+	#if (!FLX_JOYSTICK_DISABLED && (cpp||neko))
 	static public function initJoystick():Void
 	{
 		var joy = new FlxJoystickManager();
@@ -158,7 +158,7 @@ class FlxInputs {
 	}
 	#end
 	
-	#if (keyboard)
+	#if !FLX_KEYBOARD_DISABLED
 	static public function initKeyboard():Void
 	{
 		var key = new FlxKeyboard();
@@ -167,7 +167,7 @@ class FlxInputs {
 	}
 	#end
 
-	#if (mouse)
+	#if !FLX_MOUSE_DISABLED
 	static public function initMouse():Void
 	{
 		var mouse = new FlxMouse(FlxG._game._inputContainer);
@@ -176,7 +176,7 @@ class FlxInputs {
 	}
 	#end
 
-	#if (touch)
+	#if !FLX_TOUCH_DISABLED
 	static public function initTouch():Void
 	{
 		var touch =  new FlxTouchManager();
