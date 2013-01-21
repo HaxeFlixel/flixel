@@ -379,14 +379,14 @@ class FlxWeapon
 		{
 			currentBullet.fireFromAngle(launchX, launchY, parent.angle, bulletSpeed);
 		}
-		#if !FLX_TOUCH_DISABLED
+		#if !FLX_NO_TOUCH
 		else if (method == FIRE_AT_TOUCH)
 		{
 			if ( touchTarget != null)
 			currentBullet.fireAtTouch(launchX, launchY, touchTarget, bulletSpeed);
 		}
 		#end
-		#if !FLX_MOUSE_DISABLED
+		#if !FLX_NO_MOUSE
 		else if (method == FIRE_AT_MOUSE)
 		{
 			currentBullet.fireAtMouse(launchX, launchY, bulletSpeed);
@@ -418,7 +418,7 @@ class FlxWeapon
 		return runFire(FIRE);
 	}
 	
-	#if !FLX_MOUSE_DISABLED
+	#if !FLX_NO_MOUSE
 	/**
 	 * Fires a bullet (if one is available) at the mouse coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 
@@ -430,7 +430,7 @@ class FlxWeapon
 	}
 	#end
 	
-	#if !FLX_TOUCH_DISABLED
+	#if !FLX_NO_TOUCH
 	/**
 	 * Fires a bullet (if one is available) at the FlxTouch coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 

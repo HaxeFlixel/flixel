@@ -1,5 +1,5 @@
 package org.flixel.plugin.photonstorm.baseTypes;
-#if !FLX_MOUSE_DISABLED
+#if !FLX_NO_MOUSE
 import org.flixel.FlxG;
 import org.flixel.plugin.photonstorm.FlxExtendedSprite;
 

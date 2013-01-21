@@ -91,7 +91,7 @@ class Bullet extends FlxSprite
 		postFire();
 	}
 	
-	#if !FLX_MOUSE_DISABLED
+	#if !FLX_NO_MOUSE
 	public function fireAtMouse(fromX:Int, fromY:Int, speed:Int, rotateBulletTowards = true):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
@@ -113,7 +113,7 @@ class Bullet extends FlxSprite
 	}
 	#end
 	
-	#if !FLX_TOUCH_DISABLED
+	#if !FLX_NO_TOUCH
 	public function fireAtTouch(fromX:Int, fromY:Int, touch:FlxTouch, speed:Int, rotateBulletTowards = true):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
