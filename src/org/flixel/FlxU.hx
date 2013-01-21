@@ -4,6 +4,7 @@
  */
 package org.flixel;
 
+import nme.Lib;
 import nme.net.URLRequest;
 import org.flixel.FlxPoint;
 
