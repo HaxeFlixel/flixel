@@ -487,7 +487,7 @@ class FlxGame extends Sprite
 			}
 		}
 		update();
-		#if !FLX_MOUSE_DISABLED
+		#if !FLX_NO_MOUSE
 		//todo test why is this needed can it be put in FlxMouse
 		FlxG.mouse.wheel = 0;
 		#end

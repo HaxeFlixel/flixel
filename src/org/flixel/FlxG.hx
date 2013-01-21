@@ -28,16 +28,16 @@ import org.flixel.plugin.DebugPathDisplay;
 
 import org.flixel.system.input.FlxInputs;
 
-#if !FLX_TOUCH_DISABLED
+#if !FLX_NO_TOUCH
 import org.flixel.system.input.FlxTouchManager;
 #end
-#if !FLX_KEYBOARD_DISABLED
+#if !FLX_NO_KEYBOARD
 import org.flixel.system.input.FlxKeyboard;
 #end
-#if !FLX_MOUSE_DISABLED
+#if !FLX_NO_MOUSE
 import org.flixel.system.input.FlxMouse;
 #end
-#if !FLX_JOYSTICK_DISABLED
+#if !FLX_NO_JOYSTICK
 import org.flixel.system.input.FlxJoystickManager;
 #end
 
@@ -296,28 +296,28 @@ class FlxG
 	static public var _cache:Hash<BitmapData>;
 	static public var _lastBitmapDataKey:String;
 
-	#if !FLX_MOUSE_DISABLED
+	#if !FLX_NO_MOUSE
 	/**
 	 * A reference to a <code>FlxMouse</code> object.  Important for input!
 	 */
 	static public var mouse:FlxMouse;
 	#end
 
-	#if !FLX_KEYBOARD_DISABLED
+	#if !FLX_NO_KEYBOARD
 	/**
 	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
 	 */
 	static public var keys:FlxKeyboard;
 	#end
 
-	#if !FLX_TOUCH_DISABLED
+	#if !FLX_NO_TOUCH
 	/**
 	 * A reference to a <code>TouchManager</code> object. Useful for devices with multitouch support
 	 */
 	public static var touchManager:FlxTouchManager;
 	#end
 	
-	#if (!FLX_JOYSTICK_DISABLED && (cpp||neko))
+	#if (!FLX_NO_JOYSTICK && (cpp||neko))
 	/**
 	 * A reference to a <code>JoystickManager</code> object. Important for input!
 	 * Set the instance in the FlxInputs class

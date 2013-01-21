@@ -48,9 +48,9 @@
 	<haxelib name="flixel"/>
 	
     <!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-    <!--<set name="FLX_MOUSE_DISABLED" if="mobile" />-->
-    <!--<set name="FLX_KEYBOARD_DISABLED" if="mobile" />-->
-    <!--<set name="FLX_TOUCH_DISABLED" if="desktop" />-->
-    <!--<set name="FLX_JOYSTICK_DISABLED" />-->
+    <!--<set name="FLX_NO_MOUSE" if="mobile" />-->
+    <!--<set name="FLX_NO_KEYBOARD" if="mobile" />-->
+    <!--<set name="FLX_NO_TOUCH" if="desktop" />-->
+    <!--<set name="FLX_NO_JOYSTICK" />-->
 
 </project>
