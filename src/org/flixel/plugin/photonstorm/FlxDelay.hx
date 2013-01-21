@@ -17,8 +17,8 @@ package org.flixel.plugin.photonstorm;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.EventDispatcher;
-import nme.Lib;
 import org.flixel.FlxG;
+import org.flixel.FlxU;
 
 /**
  * A useful timer that can be used to trigger events after certain amounts of time are up.<br />
@@ -69,7 +69,7 @@ class FlxDelay extends Sprite
 	 */
 	public function start():Void
 	{
-		started = Lib.getTimer();
+		started = FlxU.getTicks();
 		expires = started + duration;
 		
 		isRunning = true;
@@ -114,7 +114,7 @@ class FlxDelay extends Sprite
 	 */
 	public function getSecondsElapsed():Int
 	{
-		return Math.floor((Lib.getTimer() - started) / 1000);
+		return Math.floor((FlxU.getTicks() - started) / 1000);
 	}
 	
 	public var secondsRemaining(getSecondsRemaining, null):Int;
@@ -124,7 +124,7 @@ class FlxDelay extends Sprite
 	 */
 	public function getSecondsRemaining():Int
 	{
-		return Math.floor((expires - Lib.getTimer()) / 1000);
+		return Math.floor((expires - FlxU.getTicks()) / 1000);
 	}
 	
 	private function update(event:Event):Void
@@ -135,15 +135,15 @@ class FlxDelay extends Sprite
 			pausedTimerRunning = false;
 			
 			//	Add the time the game was paused for onto the expires timer
-			expires += (Lib.getTimer() - pauseStarted);
+			expires += (FlxU.getTicks() - pauseStarted);
 		}
 		else if (FlxG.paused == true && pausedTimerRunning == false)
 		{
-			pauseStarted = Lib.getTimer();
+			pauseStarted = FlxU.getTicks();
 			pausedTimerRunning = true;
 		}
 		
-		if (isRunning == true && pausedTimerRunning == false && Lib.getTimer() > expires)
+		if (isRunning == true && pausedTimerRunning == false && FlxU.getTicks()) > expires)
 		{
 			stop();
 		}

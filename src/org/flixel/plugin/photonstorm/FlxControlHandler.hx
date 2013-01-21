@@ -950,21 +950,21 @@ class FlxControlHandler
 		{
 			if (fireRate > 0)
 			{
-				if (Lib.getTimer() > nextFireTime)
+				if (FlxU.getTicks() > nextFireTime)
 				{
-					lastFiredTime = Lib.getTimer();
+					lastFiredTime = FlxU.getTicks();
 					
 					//fireCallback.call();
 					Reflect.callMethod(this, Reflect.getProperty(this, "fireCallback"), []);
 					
 					fired = true;
 					
-					nextFireTime = lastFiredTime + fireRate;
+					nextFireTime = lastFiredTime + cast(fireRate / FlxG.timeScale);
 				}
 			}
 			else
 			{
-				lastFiredTime = Lib.getTimer();
+				lastFiredTime = FlxU.getTicks();
 				
 				//fireCallback.call();
 				Reflect.callMethod(this, Reflect.getProperty(this, "fireCallback"), []);
@@ -988,7 +988,7 @@ class FlxControlHandler
 		//	This should be called regardless if they've pressed jump or not
 		if (entity.isTouching(jumpSurface))
 		{
-			extraSurfaceTime = Lib.getTimer() + jumpFromFallTime;
+			extraSurfaceTime = FlxU.getTicks() + jumpFromFallTime;
 		}
 		
 		if ((jumpKeyMode == KEYMODE_PRESSED && FlxG.keys.pressed(jumpKey)) || (jumpKeyMode == KEYMODE_JUST_DOWN && FlxG.keys.justPressed(jumpKey)) || (jumpKeyMode == KEYMODE_RELEASED && FlxG.keys.justReleased(jumpKey)))
@@ -997,7 +997,7 @@ class FlxControlHandler
 			if (entity.isTouching(jumpSurface) == false)
 			{
 				//	They've run out of time to jump
-				if (Lib.getTimer() > extraSurfaceTime)
+				if (FlxU.getTicks() > extraSurfaceTime)
 				{
 					return jumped;
 				}
@@ -1011,7 +1011,7 @@ class FlxControlHandler
 				}
 				
 				//	If there is a jump repeat rate set and we're still less than it then return
-				if (Lib.getTimer() < nextJumpTime)
+				if (FlxU.getTicks() < nextJumpTime)
 				{
 					return jumped;
 				}
@@ -1019,7 +1019,7 @@ class FlxControlHandler
 			else
 			{
 				//	If there is a jump repeat rate set and we're still less than it then return
-				if (Lib.getTimer() < nextJumpTime)
+				if (FlxU.getTicks() < nextJumpTime)
 				{
 					return jumped;
 				}
@@ -1042,8 +1042,8 @@ class FlxControlHandler
 				Reflect.callMethod(this, Reflect.getProperty(this, "jumpCallback"), []);
 			}
 			
-			lastJumpTime = Lib.getTimer();
-			nextJumpTime = lastJumpTime + jumpRate;
+			lastJumpTime = FlxU.getTicks();
+			nextJumpTime = lastJumpTime + cast(jumpRate / FlxG.timeScale);
 			
 			jumped = true;
 		}

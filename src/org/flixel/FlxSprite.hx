@@ -27,7 +27,7 @@ import org.flixel.system.FlxAnim;
 class FlxSprite extends FlxObject
 {
 	/**
-	 * Set <code>facing</code> using <code>FlxSprite.LEFT</code>,<code>RIGHT</code>,
+	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>,
 	 * <code>UP</code>, and <code>DOWN</code> to take advantage of
 	 * flipped sprites and/or just track player orientation more easily.
 	 */
