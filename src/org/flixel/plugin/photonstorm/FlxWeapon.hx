@@ -20,7 +20,6 @@ import org.flixel.FlxG;
 import org.flixel.system.input.FlxTouch;
 import nme.display.Bitmap;
 import nme.display.BitmapInt32;
-import nme.Lib;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
@@ -309,7 +308,7 @@ class FlxWeapon
 	 */
 	private function runFire(method:Int, x:Int = 0, y:Int = 0, target:FlxSprite = null, angle:Int = 0):Bool
 	{
-		if (fireRate > 0 && (Lib.getTimer() < Math.floor(nextFire)))
+		if (fireRate > 0 && (FlxU.getTicks() < Math.floor(nextFire)))
 		{
 			return false;
 		}
@@ -336,8 +335,8 @@ class FlxWeapon
 		currentBullet.velocity.x = 0;
 		currentBullet.velocity.y = 0;
 		
-		lastFired = Lib.getTimer();
-		nextFire = Lib.getTimer() + fireRate;
+		lastFired = FlxU.getTicks();
+		nextFire = FlxU.getTicks() + cast(fireRate / FlxG.timeScale);
 		
 		var launchX:Int = Math.floor(positionOffset.x);
 		var launchY:Int = Math.floor(positionOffset.y);

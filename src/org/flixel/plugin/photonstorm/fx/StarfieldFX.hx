@@ -16,7 +16,6 @@ import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.geom.Point;
 import nme.geom.Rectangle;
-import nme.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.plugin.photonstorm.FlxColor;
@@ -381,7 +380,7 @@ class StarfieldFX extends BaseFX
 	
 	override public function draw():Void
 	{
-		if (Lib.getTimer() > tick)
+		if (FlxU.getTicks() > tick)
 		{
 			#if flash
 			canvas.lock();
@@ -404,7 +403,7 @@ class StarfieldFX extends BaseFX
 			
 			if (updateSpeed > 0)
 			{
-				tick = Lib.getTimer() + updateSpeed;
+				tick = FlxU.getTicks() + updateSpeed;
 			}
 		}
 	}

@@ -4,7 +4,6 @@ import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.geom.Point;
 import nme.geom.Rectangle;
-import nme.Lib;
 import org.flixel.system.layer.TileSheetData;
 
 /**
