@@ -30,7 +30,7 @@ class BaseFX
 	 */
 	public var sprite:FlxSprite;
 	
-	#if (flash || js)
+	#if flash
 	/**
 	 * A scratch bitmapData used to build-up the effect before passing to sprite.pixels
 	 */
@@ -102,7 +102,7 @@ class BaseFX
 			sprite.kill();
 		}
 		
-		#if (flash || js)
+		#if flash
 		if (canvas != null)
 		{
 			canvas.dispose();

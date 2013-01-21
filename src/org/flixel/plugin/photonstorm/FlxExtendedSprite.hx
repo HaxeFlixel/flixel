@@ -377,7 +377,7 @@ class FlxExtendedSprite extends FlxSprite
 		mouseStartDragCallback = null;
 		mouseStopDragCallback = null;
 	}
-	 #end
+	#end
 	
 	/**
 	* Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!

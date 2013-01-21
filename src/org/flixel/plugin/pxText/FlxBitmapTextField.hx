@@ -43,7 +43,7 @@ class FlxBitmapTextField extends FlxSprite
 	private var _fieldWidth:Int;
 	private var _multiLine:Bool;
 	
-	#if (flash || js)
+	#if flash
 	private var _preparedTextGlyphs:Array<BitmapData>;
 	private var _preparedShadowGlyphs:Array<BitmapData>;
 	private var _preparedOutlineGlyphs:Array<BitmapData>;
@@ -99,7 +99,7 @@ class FlxBitmapTextField extends FlxSprite
 			_font = pFont;
 		}
 		
-		#if (flash || js)
+		#if flash
 		updateGlyphs(true, _shadow, _outline);
 		_pixels = new BitmapData(1, 1, true);
 		#else
@@ -117,7 +117,7 @@ class FlxBitmapTextField extends FlxSprite
 	override public function destroy():Void 
 	{
 		_font = null;
-		#if (flash || js)
+		#if flash
 		clearPreparedGlyphs(_preparedTextGlyphs);
 		clearPreparedGlyphs(_preparedShadowGlyphs);
 		clearPreparedGlyphs(_preparedOutlineGlyphs);
@@ -160,7 +160,7 @@ class FlxBitmapTextField extends FlxSprite
 		return value;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	override public function setColor(Color:BitmapInt32):BitmapInt32
 	{
 		super.setColor(Color);
@@ -429,7 +429,7 @@ class FlxBitmapTextField extends FlxSprite
 	
 	override private function setAlpha(pAlpha:Float):Float
 	{
-		#if (flash || js)
+		#if flash
 		super.setAlpha(pAlpha);
 		#else
 		alpha = pAlpha;
@@ -478,7 +478,7 @@ class FlxBitmapTextField extends FlxSprite
 		var preparedText:String = (_autoUpperCase) ? _text.toUpperCase() : _text;
 		var calcFieldWidth:Int = _fieldWidth;
 		var rows:Array<String> = [];
-		#if (flash || js)
+		#if flash
 		var fontHeight:Int = Math.floor(_font.getFontHeight() * _fontScale);
 		#else
 		var fontHeight:Int = _font.getFontHeight();
@@ -644,7 +644,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		
 		var finalWidth:Int = calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
-		#if (flash || js)
+		#if flash
 		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
 		#else
 		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight * _fontScale + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
@@ -659,7 +659,7 @@ class FlxBitmapTextField extends FlxSprite
 		var halfHeight:Float = origin.y;
 		#end
 		
-		#if (flash || js)
+		#if flash
 		if (_pixels != null) 
 		{
 			if (finalWidth != _pixels.width || finalHeight != _pixels.height) 
@@ -694,7 +694,7 @@ class FlxBitmapTextField extends FlxSprite
 			_bgDrawData.push( -halfWidth);
 			_bgDrawData.push( -halfHeight);
 			
-			#if (cpp || neko)
+			#if !flash
 			var colorMultiplier:Float = 0.00392 * 0.00392;
 			
 			var red:Float = (_backgroundColor >> 16) * colorMultiplier;
@@ -702,7 +702,7 @@ class FlxBitmapTextField extends FlxSprite
 			var blue:Float = (_backgroundColor & 0xff) * colorMultiplier;
 			#end
 			
-			#if cpp
+			#if (cpp || js)
 			red *= (_color >> 16);
 			green *= (_color >> 8 & 0xff);
 			blue *= (_color & 0xff);
@@ -720,7 +720,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		if (_fontScale > 0)
 		{
-			#if (flash || js)
+			#if flash
 			_pixels.lock();
 			#end
 			
@@ -759,7 +759,7 @@ class FlxBitmapTextField extends FlxSprite
 					{
 						for (px in 0...(2 + 1)) 
 						{
-							#if (flash || js)
+							#if flash
 							_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 							#else
 							_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
@@ -771,20 +771,20 @@ class FlxBitmapTextField extends FlxSprite
 				}
 				if (_shadow) 
 				{
-					#if (flash || js)
+					#if flash
 					_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 					#else
 					_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
 					#end
 				}
-				#if (flash || js)
+				#if flash
 				_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
 				_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
 				#end
 				row++;
 			}
-			#if (flash || js)
+			#if flash
 			_pixels.unlock();
 			pixels = _pixels;
 			#end
@@ -1021,7 +1021,7 @@ class FlxBitmapTextField extends FlxSprite
 			updateGlyphs(true, _shadow, _outline);
 			_pendingTextChange = true;
 			
-			#if (cpp || neko)
+			#if !flash
 			pixels = _font.pixels;
 			#end
 		}
@@ -1141,7 +1141,7 @@ class FlxBitmapTextField extends FlxSprite
 	
 	private function updateGlyphs(textGlyphs:Bool = false, shadowGlyphs:Bool = false, outlineGlyphs:Bool = false):Void
 	{
-		#if (flash || js)
+		#if flash
 		if (textGlyphs)
 		{
 			clearPreparedGlyphs(_preparedTextGlyphs);
@@ -1162,7 +1162,7 @@ class FlxBitmapTextField extends FlxSprite
 		#end
 	}
 	
-	#if (flash || js)
+	#if flash
 	private function clearPreparedGlyphs(pGlyphs:Array<BitmapData>):Void
 	{
 		if (pGlyphs != null)
@@ -1181,7 +1181,7 @@ class FlxBitmapTextField extends FlxSprite
 	
 	override public function updateFrameData():Void
 	{
-	#if (cpp || neko)
+	#if !flash
 		if (_node != null && _font != null)
 		{
 			_font.updateGlyphData(_node);

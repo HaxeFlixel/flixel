@@ -150,7 +150,7 @@ class PxButton extends FlxSprite
 		_initialized = false;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	override private function set_atlas(value:Atlas):Atlas 
 	{
 		var atl:Atlas = super.set_atlas(value);

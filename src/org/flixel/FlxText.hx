@@ -113,7 +113,7 @@ class FlxText extends FlxSprite
 		_useShadow = false;
 		allowCollisions = FlxObject.NONE;
 		moves = false;
-		#if (flash || js)
+		#if flash
 		calcFrame();
 		#else
 		if (Text != "")
@@ -174,7 +174,7 @@ class FlxText extends FlxSprite
 		_shadow = ShadowColor;
 		_useShadow = UseShadow;
 		_regen = true;
-		#if (flash || js)
+		#if flash
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -207,7 +207,7 @@ class FlxText extends FlxSprite
 		if(_textField.text != ot)
 		{
 			_regen = true;
-			#if (flash || js)
+			#if flash
 			calcFrame();
 			#else
 			calcFrame(true);
@@ -240,7 +240,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
 		_regen = true;
-		#if (flash || js)
+		#if flash
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -321,7 +321,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
 		_regen = true;
-		#if (flash || js)
+		#if flash
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -352,7 +352,7 @@ class FlxText extends FlxSprite
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
-		#if (flash || js)
+		#if flash
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -387,7 +387,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_shadow = Color;
-		#if (flash || js)
+		#if flash
 		calcFrame();
 		#else
 		calcFrame(true);
@@ -410,7 +410,7 @@ class FlxText extends FlxSprite
 		if (value != _useShadow)
 		{
 			_useShadow = value;
-			#if (flash || js)
+			#if flash
 			calcFrame();
 			#else
 			calcFrame(true);
@@ -445,13 +445,13 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal function to update the current animation frame.
 	 */
-	#if (flash || js)
+	#if flash
 	override private function calcFrame():Void
 	#else
 	override private function calcFrame(AreYouSure:Bool = false):Void
 	#end
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (AreYouSure)
 		{
 			_regen = true;
@@ -521,7 +521,7 @@ class FlxText extends FlxSprite
 				_pixels.draw(_textField, _matrix, _colorTransform);
 				_textField.setTextFormat(_format);
 			}
-			#if (cpp || neko)
+			#if !flash
 			updateAtlasInfo();
 			#else
 			//Finally, update the visible pixels
@@ -532,7 +532,7 @@ class FlxText extends FlxSprite
 			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 			#end
 			
-		#if (cpp || neko)
+		#if !flash
 			origin.make(frameWidth * 0.5, frameHeight * 0.5);
 		}
 		#end
@@ -581,7 +581,7 @@ class FlxText extends FlxSprite
 	/**
 	 * FlxText objects can't be added on any atlas if isStatic property is true. 
 	*/
-	#if (cpp || neko)
+	#if !flash
 	override private function set_atlas(value:Atlas):Atlas 
 	{
 		if (!_isStatic)
@@ -595,7 +595,7 @@ class FlxText extends FlxSprite
 	
 	override public function updateAtlasInfo(updateAtlas:Bool = false):Void
 	{
-		#if (cpp || neko)
+		#if !flash
 		_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
 		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
 		if (cachedBmd != _pixels)
@@ -611,7 +611,7 @@ class FlxText extends FlxSprite
 	
 	override public function updateFrameData():Void
 	{
-	#if (cpp || neko)
+	#if !flash
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
 			_framesData = _node.addSpriteFramesData(Math.floor(width), Math.floor(height));

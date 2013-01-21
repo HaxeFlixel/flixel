@@ -41,7 +41,7 @@ class FlxSkewedSprite extends FlxSprite
 	
 	inline private function simpleRenderSkewedSprite():Bool
 	{
-		#if (cpp || neko)
+		#if !flash
 		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (skew.x == 0) && (skew.y == 0));
 		#else
 		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (skew.x == 0) && (skew.y == 0));
@@ -50,7 +50,7 @@ class FlxSkewedSprite extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		#if (cpp || neko)
+		#if !flash
 		if (_atlas == null)
 		{
 			return;
@@ -79,7 +79,7 @@ class FlxSkewedSprite extends FlxSprite
 		var i:Int = 0;
 		var l:Int = cameras.length;
 		
-		#if (cpp || neko)
+		#if !flash
 		var drawItem:DrawStackItem;
 		var isColored:Bool = isColored();
 		var currDrawData:Array<Float>;
@@ -99,7 +99,7 @@ class FlxSkewedSprite extends FlxSprite
 				continue;
 			}
 			
-			#if (cpp || neko)
+			#if !flash
 			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
 			currDrawData = drawItem.drawData;
@@ -119,7 +119,7 @@ class FlxSkewedSprite extends FlxSprite
 			#end
 			if (simpleRenderSkewedSprite())
 			{	//Simple render
-				#if (flash || js)
+				#if flash
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
@@ -170,7 +170,7 @@ class FlxSkewedSprite extends FlxSprite
 			{	//Advanced render
 				_matrix.identity();
 				
-				#if (flash || js)
+				#if flash
 				_matrix.translate( -origin.x, -origin.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{

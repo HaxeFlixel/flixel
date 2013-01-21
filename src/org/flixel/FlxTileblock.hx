@@ -13,7 +13,7 @@ import org.flixel.system.layer.DrawStackItem;
 class FlxTileblock extends FlxSprite
 {		
 	
-	#if (cpp || neko)
+	#if !flash
 	private var _tileWidth:Int;
 	private var _tileHeight:Int;
 	private var _tileData:Array<Float>;
@@ -31,7 +31,7 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
-		#if (flash || js)
+		#if flash
 		makeGraphic(Width, Height, 0, true);
 		#else
 		bakedRotation = 0;
@@ -62,7 +62,7 @@ class FlxTileblock extends FlxSprite
 		
 		//First create a tile brush
 		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
-		#if (cpp || neko)
+		#if !flash
 		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		#end
 		var spriteWidth:Int = Std.int(sprite.width);
@@ -82,7 +82,7 @@ class FlxTileblock extends FlxSprite
 			regen = true;
 		}
 		
-		#if (flash || js)
+		#if flash
 		if (regen)
 		{
 			makeGraphic(Std.int(width), Std.int(height), 0, true);
@@ -100,7 +100,7 @@ class FlxTileblock extends FlxSprite
 		var destinationY:Int = 0;
 		var widthInTiles:Int = Std.int(width / spriteWidth);
 		var heightInTiles:Int = Std.int(height / spriteHeight);
-		#if (cpp || neko)
+		#if !flash
 		if (_tileData != null)
 		{
 			_tileData.splice(0, _tileData.length);
@@ -127,7 +127,7 @@ class FlxTileblock extends FlxSprite
 			{
 				if (FlxG.random() * total > Empties)
 				{
-					#if (flash || js)
+					#if flash
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
@@ -146,21 +146,19 @@ class FlxTileblock extends FlxSprite
 			destinationY += spriteHeight;
 			row++;
 		}
-		#if (cpp || neko)
+		#if !flash
 		updateFrameData();
 		#end
 		return this;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	override public function draw():Void 
 	{
-		#if (cpp || neko)
 		if (_atlas == null)
 		{
 			return;
 		}
-		#end
 		
 		if (_flickerTimer != 0)
 		{

@@ -1274,7 +1274,7 @@ class FlxG
 			FlxG.log("Error removing camera, not part of game.");
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		for (i in 0...(FlxG.cameras.length))
 		{
 			FlxG.cameras[i].ID = i;
@@ -1610,7 +1610,7 @@ class FlxG
 	 */
 	static public function reset():Void
 	{
-		#if (cpp || neko)
+		#if !flash
 		PxBitmapFont.clearStorage();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
@@ -1660,24 +1660,24 @@ class FlxG
 				continue;
 			}
 			
-			#if (flash || js)
+			#if flash
 			if (useBufferLocking)
 			{
 				cam.buffer.lock();
 			}
 			#end
 			
-			#if (cpp || neko)
+			#if !flash
 			cam.clearDrawStack();
 			cam._canvas.graphics.clear();
 			// clearing camera's debug sprite
 			cam._debugLayer.graphics.clear();
 			#end
 			
-			#if (flash || js)
+			#if flash
 			cam.fill(cam.bgColor);
 			cam.screen.dirty = true;
-			#elseif cpp
+			#elseif (cpp || js)
 			cam.fill((cam.bgColor & 0x00ffffff), true, ((cam.bgColor >> 24) & 255) / 255);
 			#else
 			cam.fill(cam.bgColor, true, cam.bgColor.a / 255);
@@ -1685,7 +1685,7 @@ class FlxG
 		}
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	inline static public function renderCameras():Void
 	{
 		var cam:FlxCamera;
@@ -1723,7 +1723,7 @@ class FlxG
 			}
 			cam.drawFX();
 			
-			#if (flash || js)
+			#if flash
 			if (useBufferLocking)
 			{
 				cam.buffer.unlock();

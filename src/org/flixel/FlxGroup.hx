@@ -205,7 +205,7 @@ class FlxGroup extends FlxBasic
 				{
 					length = i + 1;
 				}
-				#if (cpp || neko)
+				#if !flash
 				setGroupAtlas(Object);
 				#end
 				return Object;
@@ -236,7 +236,7 @@ class FlxGroup extends FlxBasic
 		
 		//If we made it this far, then we successfully grew the group,
 		//and we can go ahead and add the object at the first open slot.
-		#if (cpp || neko)
+		#if !flash
 		setGroupAtlas(Object);
 		#end
 		members[i] = Object;
@@ -244,7 +244,7 @@ class FlxGroup extends FlxBasic
 		return Object;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	private function setGroupAtlas(Object:FlxBasic):Void
 	{
 		if (_atlas != null)

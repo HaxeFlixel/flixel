@@ -361,7 +361,7 @@ class FlxGame extends Sprite
 	private function switchState():Void
 	{ 
 		//Basic reset stuff
-		#if (cpp || neko)
+		#if !flash
 		PxBitmapFont.clearStorage();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
@@ -564,14 +564,14 @@ class FlxGame extends Sprite
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		
-		#if (cpp || neko)
+		#if !flash
 		TileSheetData._DRAWCALLS = 0;
 		#end
 		
 		FlxG.lockCameras();
 		_state.draw();
 		
-		#if (cpp || neko)
+		#if !flash
 		FlxG.renderCameras();
 		
 		if (_debuggerUp)

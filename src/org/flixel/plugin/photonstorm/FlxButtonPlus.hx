@@ -153,7 +153,7 @@ class FlxButtonPlus extends FlxGroup
 		_onClick = Callback;
 		
 		buttonNormal = new FlxExtendedSprite(X, Y);
-		#if (flash || js)
+		#if flash
 		buttonNormal.makeGraphic(Width, Height, borderColor);
 		#end
 		
@@ -164,7 +164,7 @@ class FlxButtonPlus extends FlxGroup
 		buttonNormal.scrollFactor.y = 0;
 		
 		buttonHighlight = new FlxExtendedSprite(X, Y);
-		#if (flash || js)
+		#if flash
 		buttonHighlight.makeGraphic(Width, Height, borderColor);
 		#end
 		
@@ -448,7 +448,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		offColor = colors;
 		
-		#if (flash || js)
+		#if flash
 		buttonNormal.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, offColor), 1, 1);
 		#else
 		var colA:Int;
@@ -457,7 +457,7 @@ class FlxButtonPlus extends FlxGroup
 		var normalKey:String = "Gradient: " + width + " x " + height + ", colors: [";
 		for (col in offColor)
 		{
-			#if cpp
+			#if (cpp || js)
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
 			#elseif neko
@@ -496,7 +496,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		onColor = colors;
 		
-		#if (flash || js)
+		#if flash
 		buttonHighlight.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, onColor), 1, 1);
 		#else
 		var colA:Int;
@@ -505,7 +505,7 @@ class FlxButtonPlus extends FlxGroup
 		var highlightKey:String = "Gradient: " + width + " x " + height + ", colors: [";
 		for (col in onColor)
 		{
-			#if cpp
+			#if (cpp || js)
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
 			#elseif neko

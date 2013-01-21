@@ -36,7 +36,7 @@ class Perf extends FlxWindow
 	private var _flash:Array <Float>;
 	private var _visibleObject:Array<Int>;
 	
-	#if (cpp || neko)
+	#if !flash
 	private var _drawCalls:Array<Int>;
 	private var _drawCallsMarker:Int;
 	#end
@@ -108,7 +108,7 @@ class Perf extends FlxWindow
 		FlxU.SetArrayLength(_visibleObject, 32);
 		_visibleObjectMarker = 0;
 		
-		#if (cpp || neko)
+		#if !flash
 		_drawCalls = [];
 		_drawCallsMarker = 0;
 		#end
@@ -127,7 +127,7 @@ class Perf extends FlxWindow
 		_activeObject = null;
 		_visibleObject = null;
 		
-		#if (cpp || neko)
+		#if !flash
 		_drawCalls = null;
 		#end
 		
@@ -200,7 +200,7 @@ class Perf extends FlxWindow
 
 			output += "D:" + visibleCount + " " + Std.int(drawTime / _flixelDrawMarker) + "ms";
 			
-			#if (cpp || neko)
+			#if !flash
 			var drawCallsCount:Int = 0;
 			i = 0;
 			while (i < _drawCallsMarker)
@@ -271,7 +271,7 @@ class Perf extends FlxWindow
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	/**
 	 * Keep track of how many times drawTiles() method was called.
 	 * @param Count	How many times drawTiles() method was called.

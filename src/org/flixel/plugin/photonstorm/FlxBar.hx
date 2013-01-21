@@ -34,7 +34,7 @@ import org.flixel.system.layer.DrawStackItem;
  */
 class FlxBar extends FlxSprite
 {
-	#if (flash || js)
+	#if flash
 	private var canvas:BitmapData;
 	#end
 	
@@ -117,7 +117,7 @@ class FlxBar extends FlxSprite
 	private static inline var BAR_GRADIENT:Int = 2;
 	private static inline var BAR_IMAGE:Int = 3;
 	
-	#if (cpp || neko)
+	#if !flash
 	private var _emptyBarFrameID:Int;
 	private var _filledBarFrames:Array<Float>;
 	
@@ -150,7 +150,7 @@ class FlxBar extends FlxSprite
 		barWidth = width;
 		barHeight = height;
 		
-		#if (flash || js)
+		#if flash
 		makeGraphic(barWidth, barHeight, 0xffffffff, true);
 		#else
 		this.width = frameWidth = width;
@@ -162,7 +162,7 @@ class FlxBar extends FlxSprite
 		
 		filledBarPoint = new Point(0, 0);
 		
-		#if (flash || js)
+		#if flash
  		canvas = new BitmapData(width, height, true, 0x0);
 		#end
 		
@@ -187,7 +187,7 @@ class FlxBar extends FlxSprite
 	
 	override public function destroy():Void 
 	{
-		#if (flash || js)
+		#if flash
 		canvas.dispose();
 		canvas = null;
 		#else
@@ -368,7 +368,7 @@ class FlxBar extends FlxSprite
 			value = min;
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		updateFrameData();
 		#end
 	}
@@ -421,7 +421,7 @@ class FlxBar extends FlxSprite
 		
 		barType = BAR_FILLED;
 		
-		#if cpp
+		#if (cpp || js)
 		var emptyA:Int = (empty >> 24) & 255;
 		var emptyRGB:Int = empty & 0x00ffffff;
 		var fillA:Int = (fill >> 24) & 255;
@@ -437,7 +437,7 @@ class FlxBar extends FlxSprite
 		var borderRGB:Int = border.rgb;
 		#end
 		
-		#if (cpp || neko)
+		#if !flash
 		var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + emptyA + "." + emptyRGB + "showBorder: " + showBorder;
 		var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fillA + "." + fillRGB + "showBorder: " + showBorder;
 		if (showBorder)
@@ -460,7 +460,7 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-		#if (flash || js)
+		#if flash
 			emptyBar = new BitmapData(barWidth, barHeight, true, border);
 			emptyBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 			
@@ -501,7 +501,7 @@ class FlxBar extends FlxSprite
 		}
 		else
 		{
-		#if (flash || js)
+		#if flash
 			emptyBar = new BitmapData(barWidth, barHeight, true, empty);
 			filledBar = new BitmapData(barWidth, barHeight, true, fill);
 		#else
@@ -532,7 +532,7 @@ class FlxBar extends FlxSprite
 		#end
 		}
 		
-		#if (flash || js)
+		#if flash
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		#end
@@ -568,14 +568,14 @@ class FlxBar extends FlxSprite
 		
 		barType = BAR_GRADIENT;
 		
-		#if (cpp || neko)
+		#if !flash
 		var colA:Int;
 		var colRGB:Int;
 		
 		var emptyKey:String = "Gradient: " + barWidth + " x " + barHeight + ", colors: [";
 		for (col in empty)
 		{
-			#if cpp
+			#if (cpp || js)
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
 			#elseif neko
@@ -590,7 +590,7 @@ class FlxBar extends FlxSprite
 		var filledKey:String = "Gradient: " + barWidth + " x " + barHeight + ", colors: [";
 		for (col in fill)
 		{
-			#if cpp
+			#if (cpp || js)
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
 			#elseif neko
@@ -604,7 +604,7 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-			#if cpp
+			#if (cpp || js)
 			var borderA:Int = (border >> 24) & 255;
 			var borderRGB:Int = border & 0x00ffffff;
 			#elseif neko
@@ -630,7 +630,7 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-			#if (flash || js)
+			#if flash
 			emptyBar = new BitmapData(barWidth, barHeight, true, border);
 			FlxGradient.overlayGradientOnBitmapData(emptyBar, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 			
@@ -671,7 +671,7 @@ class FlxBar extends FlxSprite
 		}
 		else
 		{
-			#if (flash || js)
+			#if flash
 			emptyBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, empty, chunkSize, rotation);
 			filledBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, fill, chunkSize, rotation);
 			#else
@@ -702,7 +702,7 @@ class FlxBar extends FlxSprite
 			#end
 		}
 		
-		#if (flash || js)
+		#if flash
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		#end
@@ -746,7 +746,7 @@ class FlxBar extends FlxSprite
 		var emptyBitmapData:BitmapData = FlxG.addBitmap(empty); 
 		var fillBitmapData:BitmapData = FlxG.addBitmap(fill);
 		
-	#if (cpp || neko)
+	#if !flash
 		var key:String = "";
 		
 		if (empty != null)
@@ -775,7 +775,7 @@ class FlxBar extends FlxSprite
 			}
 		}
 		
-		#if cpp
+		#if (cpp || js)
 		var emptyBackgroundA:Int = (emptyBackground >> 24) & 255;
 		var emptyBackgroundRGB:Int = emptyBackground & 0x00ffffff;
 		var fillBackgroundA:Int = (fillBackground >> 24) & 255;
@@ -787,7 +787,7 @@ class FlxBar extends FlxSprite
 		var fillBackgroundRGB:Int = fillBackground.rgb;
 		#end
 		
-		#if (cpp || neko)
+		#if !flash
 		key = key + "emptyBackground: " + emptyBackgroundA + "." + emptyBackgroundRGB;
 		key = key + "fillBackground: " + fillBackgroundA + "." + fillBackgroundRGB;
 		#end
@@ -803,7 +803,7 @@ class FlxBar extends FlxSprite
 		if (empty != null && fill == null)
 		{
 			//	If empty is set, but fill is not ...
-		#if (flash || js)
+		#if flash
 			emptyBar = emptyBitmapData;
 			emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 			
@@ -857,7 +857,7 @@ class FlxBar extends FlxSprite
 		else if (empty == null && fill != null)
 		{
 			//	If fill is set, but empty is not ...
-			#if (flash || js)
+			#if flash
 			filledBar = fillBitmapData;
 			filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 			
@@ -910,7 +910,7 @@ class FlxBar extends FlxSprite
 		else if (empty != null && fill != null)
 		{
 			//	If both are set
-			#if (flash || js)
+			#if flash
 			emptyBar = emptyBitmapData;
 			emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 			
@@ -961,7 +961,7 @@ class FlxBar extends FlxSprite
 			#end
 		}
 		
-		#if (flash || js)
+		#if flash
 		canvas = new BitmapData(barWidth, barHeight, true, 0x0);
 		#end
 		
@@ -997,7 +997,7 @@ class FlxBar extends FlxSprite
 			fillHorizontal = false;
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		updateFrameData();
 		#end
 	}
@@ -1045,7 +1045,7 @@ class FlxBar extends FlxSprite
 	 */
 	private function updateBar():Void
 	{
-		#if (flash || js)
+		#if flash
 		if (fillHorizontal)
 		{
 			filledBarRect.width = Std.int(percent * pxPerPercent);
@@ -1167,7 +1167,7 @@ class FlxBar extends FlxSprite
 		return value;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	override public function draw():Void 
 	{
 		if (_atlas == null)
@@ -1381,7 +1381,7 @@ class FlxBar extends FlxSprite
 	
 	override public function updateFrameData():Void 
 	{	
-	#if (cpp || neko)
+	#if !flash
 		if (_node != null && barWidth >= 1 && barHeight >= 1)
 		{
 			_emptyBarFrameID = _node.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));

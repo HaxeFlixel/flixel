@@ -246,7 +246,7 @@ class FlxWeapon
 		{
 			var tempBullet:Bullet = new Bullet(this, b);
 			
-			#if (flash || js)
+			#if flash
 			if (autoRotate)
 			{
 				tempBullet.loadRotatedGraphic(image, rotations, frame, antiAliasing, autoBuffer);

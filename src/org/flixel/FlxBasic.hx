@@ -86,7 +86,7 @@ class FlxBasic
 			_tween = null;
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		_framesData = null;
 		_bitmapDataKey = null;
 		_atlas = null;
@@ -264,7 +264,7 @@ class FlxBasic
 
 	private var _tween:FlxTween;
 	
-	#if (cpp || neko)
+	#if !flash
 	private var _bitmapDataKey:String;
 	private var _framesData:FlxSpriteFrames;
 	private var _atlas:Atlas;
@@ -335,7 +335,7 @@ class FlxBasic
 	
 	public function updateAtlasInfo(updateAtlas:Bool = false):Void
 	{
-	#if (cpp || neko)
+	#if !flash
 		#if debug
 		if (_bitmapDataKey == null)
 		{

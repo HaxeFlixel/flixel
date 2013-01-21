@@ -58,7 +58,7 @@ class GlitchFX extends BaseFX
 		}
 		#end
 		
-		#if (flash || js)
+		#if flash
 		sprite = new FlxSprite(source.x, source.y).makeGraphic(Math.floor(source.width + maxGlitch), Math.floor(source.height), backgroundColor);
 		canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
 		image = source.pixels;
@@ -77,7 +77,7 @@ class GlitchFX extends BaseFX
 		
 		copyPoint = new Point(0, 0);
 		
-		#if (flash || js)
+		#if flash
 		clsRect = new Rectangle(0, 0, canvas.width, canvas.height);
 		copyRect = new Rectangle(0, 0, image.width, 1);
 		#end
@@ -91,7 +91,7 @@ class GlitchFX extends BaseFX
 		glitchSize = maxGlitch;
 		glitchSkip = maxSkip;
 		
-		#if (cpp || neko)
+		#if !flash
 		if (sprite != null && sourceRef != null)
 		{
 			var glitch:GlitchSprite = cast(sprite, GlitchSprite);
@@ -114,7 +114,7 @@ class GlitchFX extends BaseFX
 			
 			if (updateFromSource && sourceRef.exists)
 			{
-				#if (flash || js)
+				#if flash
 				image = sourceRef.framePixels;
 				#else
 				cast(sprite, GlitchSprite).updateFromSourceSprite();
@@ -123,7 +123,7 @@ class GlitchFX extends BaseFX
 			
 			var rndSkip:Int = 1 + Std.int(Math.random() * glitchSkip);
 			
-			#if (flash || js)
+			#if flash
 			canvas.lock();
 			canvas.fillRect(clsRect, clsColor);
 			
@@ -156,7 +156,7 @@ class GlitchFX extends BaseFX
 	
 }
 
-#if (cpp || neko)
+#if !flash
 class GlitchSprite extends FlxSprite
 {
 	/**
@@ -299,7 +299,7 @@ class GlitchSprite extends FlxSprite
 	{
 		var col = super.setColor(Color);
 		
-		#if cpp
+		#if !neko
 		if (_color < 0xffffff)
 		#else
 		if (_color.rgb < 0xffffff)
@@ -349,7 +349,7 @@ class GlitchSprite extends FlxSprite
 		var lineGreen:Float = 1;
 		var lineBlue:Float = 1;
 		
-		#if cpp
+		#if !neko
 		if (_color < 0xffffff)
 		#else
 		if (_color.rgb < 0xffffff)

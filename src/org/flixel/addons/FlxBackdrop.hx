@@ -22,7 +22,7 @@ class FlxBackdrop extends FlxObject
 	private var _repeatX:Bool;
 	private var _repeatY:Bool;
 	
-	#if (cpp || neko)
+	#if !flash
 	private var _tileID:Int;
 	private var _tileInfo:Array<Float>;
 	private var _numTiles:Int = 0;
@@ -58,7 +58,7 @@ class FlxBackdrop extends FlxObject
 		_repeatX = repeatX;
 		_repeatY = repeatY;
 		
-		#if (cpp || neko)
+		#if !flash
 		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		_tileInfo = [];
 		updateAtlasInfo();
@@ -205,7 +205,7 @@ class FlxBackdrop extends FlxObject
 	
 	override public function updateFrameData():Void
 	{
-	#if (cpp || neko)
+	#if !flash
 		if (_node != null)
 		{
 			_tileID = _node.addTileRect(new Rectangle(0, 0, _scrollW, _scrollH), new Point());

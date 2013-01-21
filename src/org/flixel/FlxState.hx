@@ -32,7 +32,7 @@ class FlxState extends FlxGroup
 	 */
 	public function getAtlasFor(KeyInBitmapCache:String):Atlas
 	{
-		#if (cpp || neko)
+		#if !flash
 		var bm:BitmapData = FlxG._cache.get(KeyInBitmapCache);
 		if (bm != null)
 		{

@@ -304,7 +304,7 @@ class NestedSprite extends FlxSprite
 		}
 		alpha = Alpha;
 		alpha *= _parentAlpha;
-		#if (flash || js)
+		#if flash
 		if ((alpha != 1) || (_color != 0x00ffffff))
 		{
 			var red:Float = (_color >> 16) * 0.00392 * _parentRed;
@@ -387,7 +387,7 @@ class NestedSprite extends FlxSprite
 		
 		dirty = true;
 		
-		#if (cpp || neko)
+		#if !flash
 		_red = combinedRed;
 		_green = combinedGreen;
 		_blue = combinedBlue;

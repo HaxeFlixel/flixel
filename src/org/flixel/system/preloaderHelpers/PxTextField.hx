@@ -41,7 +41,7 @@ class PxTextField extends Sprite
 	
 	private var _alpha:Float;
 	
-	#if (flash || js)
+	#if flash
 	public var bitmapData:BitmapData;
 	private var _bitmap:Bitmap;
 	
@@ -99,7 +99,7 @@ class PxTextField extends Sprite
 			_font = pFont;
 		}
 		
-		#if (flash || js)
+		#if flash
 		updateGlyphs(true, _shadow, _outline);
 		bitmapData = new BitmapData(1, 1, true);
 		_bitmap = new Bitmap(bitmapData);
@@ -118,7 +118,7 @@ class PxTextField extends Sprite
 	public function destroy():Void 
 	{
 		_font = null;
-		#if (flash || js)
+		#if flash
 		removeChild(_bitmap);
 		_bitmap = null;
 		bitmapData.dispose();
@@ -189,7 +189,7 @@ class PxTextField extends Sprite
 		var preparedText:String = (_autoUpperCase) ? _text.toUpperCase() : _text;
 		var calcFieldWidth:Int = _fieldWidth;
 		var rows:Array<String> = [];
-		#if (flash || js)
+		#if flash
 		var fontHeight:Int = Math.floor(_font.getFontHeight() * _fontScale);
 		#else
 		var fontHeight:Int = _font.getFontHeight();
@@ -355,13 +355,13 @@ class PxTextField extends Sprite
 		}
 		
 		var finalWidth:Int = calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
-		#if (flash || js)
+		#if flash
 		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
 		#else
 		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight * _fontScale + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
 		#end
 		
-		#if (flash || js)
+		#if flash
 		if (bitmapData != null) 
 		{
 			if (finalWidth != bitmapData.width || finalHeight != bitmapData.height) 
@@ -426,7 +426,7 @@ class PxTextField extends Sprite
 				{
 					for (px in 0...(2 + 1)) 
 					{
-						#if (flash || js)
+						#if flash
 						_font.render(bitmapData, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 						#else
 						_font.render(_drawData, t, _outlineColor, _alpha, px + ox + _padding, py + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _letterSpacing, _fontScale);
@@ -438,20 +438,20 @@ class PxTextField extends Sprite
 			}
 			if (_shadow) 
 			{
-				#if (flash || js)
+				#if flash
 				_font.render(bitmapData, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
 				_font.render(_drawData, t, _shadowColor, _alpha, 1 + ox + _padding, 1 + oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _letterSpacing, _fontScale);
 				#end
 			}
-			#if (flash || js)
+			#if flash
 			_font.render(bitmapData, _preparedTextGlyphs, t, _color, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 			#else
 			_font.render(_drawData, t, _color, _alpha, ox + _padding, oy + row * (Math.floor(fontHeight * _fontScale) + _lineSpacing) + _padding, _letterSpacing, _fontScale, _useColor);
 			#end
 			row++;
 		}
-		#if (flash || js)
+		#if flash
 		bitmapData.unlock();
 		#else
 		_font.drawText(this.graphics, _drawData);
@@ -468,7 +468,7 @@ class PxTextField extends Sprite
 		if (_pendingTextChange) 
 		{
 			updateBitmapData();
-			#if (flash || js)
+			#if flash
 			_bitmap.bitmapData = bitmapData;
 			#end
 		}
@@ -781,7 +781,7 @@ class PxTextField extends Sprite
 	public function setAlpha(pAlpha:Float):Float
 	{
 		_alpha = pAlpha;
-		#if (flash || js)
+		#if flash
 		this.alpha = _alpha;
 		#else
 		_pendingTextChange = true;
@@ -893,7 +893,7 @@ class PxTextField extends Sprite
 	
 	private function updateGlyphs(textGlyphs:Bool = false, shadowGlyphs:Bool = false, outlineGlyphs:Bool = false):Void
 	{
-		#if (flash || js)
+		#if flash
 		if (textGlyphs)
 		{
 			clearPreparedGlyphs(_preparedTextGlyphs);
@@ -914,7 +914,7 @@ class PxTextField extends Sprite
 		#end
 	}
 	
-	#if (flash || js)
+	#if flash
 	private function clearPreparedGlyphs(pGlyphs:Array<BitmapData>):Void
 	{
 		if (pGlyphs != null)

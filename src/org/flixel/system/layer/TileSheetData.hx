@@ -1,6 +1,6 @@
 package org.flixel.system.layer;
 
-#if (cpp || neko)
+#if !flash
 import nme.display.BitmapData;
 import nme.display.Graphics;
 import nme.display.Tilesheet;

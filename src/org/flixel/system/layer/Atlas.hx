@@ -39,7 +39,7 @@ class Atlas
 	public var borderX:Int;
 	public var borderY:Int;
 	
-	#if (cpp || neko)
+	#if !flash
 	public var _tileSheetData:TileSheetData;
 	#end
 	
@@ -81,7 +81,7 @@ class Atlas
 		this.borderX = borderX;
 		this.borderY = borderY;
 		
-		#if (cpp || neko)
+		#if !flash
 		_tileSheetData = TileSheetData.addTileSheet(atlasBitmapData);
 		#end
 		
@@ -484,7 +484,7 @@ class Atlas
 			atlasBitmapData.dispose();
 		}
 		atlasBitmapData = null;
-		#if (cpp || neko)
+		#if !flash
 		_tileSheetData = null;
 		#end
 		nodes = null;
@@ -516,7 +516,7 @@ class Atlas
 	{
 		deleteSubtree(root);
 		nodes = new Hash<Node>();
-		#if (cpp || neko)
+		#if !flash
 		TileSheetData.removeTileSheet(_tileSheetData);
 		#end
 		if (!_fromBitmapData)
@@ -527,7 +527,7 @@ class Atlas
 		atlasBitmapData = bmd;
 		nodes.set(name, root);
 		_fromBitmapData = true;
-		#if (cpp || neko)
+		#if !flash
 		_tileSheetData = TileSheetData.addTileSheet(atlasBitmapData);
 		#end
 		return root;

@@ -36,7 +36,7 @@ class FlxCollision
 {
 	public static var debug:BitmapData = new BitmapData(1, 1, false);
 	
-	#if (flash || js)
+	#if flash
 	public static var CAMERA_WALL_OUTSIDE:UInt = 0;
 	public static var CAMERA_WALL_INSIDE:UInt = 1;
 	#else
@@ -84,7 +84,7 @@ class FlxCollision
 			pointB.x = target.x - Std.int(FlxG.camera.scroll.x * target.scrollFactor.x) - target.offset.x;
 			pointB.y = target.y - Std.int(FlxG.camera.scroll.y * target.scrollFactor.y) - target.offset.y;
 		}
-		#if (flash || js)
+		#if flash
 		var boundsA:Rectangle = new Rectangle(pointA.x, pointA.y, contact.framePixels.width, contact.framePixels.height);
 		var boundsB:Rectangle = new Rectangle(pointB.x, pointB.y, target.framePixels.width, target.framePixels.height);
 		#else
@@ -116,7 +116,7 @@ class FlxCollision
 		var matrixB:Matrix = new Matrix();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
-		#if (cpp || neko)
+		#if !flash
 		contact.drawFrame();
 		target.drawFrame();
 		#end
@@ -124,7 +124,7 @@ class FlxCollision
 		var testA:BitmapData = contact.framePixels;
 		var testB:BitmapData = target.framePixels;
 		var overlapArea:BitmapData = new BitmapData(Math.floor(intersect.width), Math.floor(intersect.height), false);
-		#if (flash || js)
+		#if flash
 		overlapArea.draw(testA, matrixA, new ColorTransform(1, 1, 1, 1, 255, -255, -255, alphaTolerance), BlendMode.NORMAL);
 		overlapArea.draw(testB, matrixB, new ColorTransform(1, 1, 1, 1, 255, 255, 255, alphaTolerance), BlendMode.DIFFERENCE);
 		#else
@@ -266,7 +266,7 @@ class FlxCollision
 			return false;
 		}
 		
-	#if (flash || js)
+	#if flash
 		//	How deep is pointX/Y within the rect?
 		var test:BitmapData = target.framePixels;
 		if (Std.int(FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)))) >= alphaTolerance)
@@ -290,7 +290,7 @@ class FlxCollision
 			indexX %= widthHelper;
 		}
 		
-		#if cpp
+		#if (cpp || js)
 		var pixelColor:BitmapInt32 = 0x00000000;
 		#else
 		var pixelColor:BitmapInt32 = {rgb: 0x000000, a: 0x00};
@@ -305,7 +305,7 @@ class FlxCollision
 			pixelColor = target.pixels.getPixel32(Math.floor(indexX + pointX - target.x), Math.floor(indexY + pointY - target.y));
 		}
 		// end of code from calcFrame() method
-		#if cpp
+		#if (cpp || js)
 		var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 		#else
 		var pixelAlpha:Int = pixelColor.a * 255;

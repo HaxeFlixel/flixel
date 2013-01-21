@@ -10,7 +10,7 @@
 */
 
 // ONLY FOR BLITTING BASED ENGINES
-#if (flash || js)
+#if flash
 package org.flixel.addons;
 
 import flash.display.BitmapData;

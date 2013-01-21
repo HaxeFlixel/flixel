@@ -155,7 +155,7 @@ class FlxBitmapFont extends FlxSprite
 	private var fixedWidth:Int;
 	#end
 	
-	#if (cpp || neko)
+	#if !flash
 	/**
 	 * offsets for each letter in the sprite (not affected by scale and rotation)
 	 */
@@ -210,21 +210,21 @@ class FlxBitmapFont extends FlxSprite
 		charsInFont = chars;
 		
 		//	Take a copy of the font for internal use
-		#if (flash || js)
+		#if flash
 		fontSet = FlxG.addBitmap(font);
 		#else
 		fontSet = FlxG.addBitmap(font, false, false, null, (characterSpacingX == 0) ? characterWidth : 0, (characterSpacingY == 0) ? characterHeight : 0);
 		pixels = fontSet;
 		#end
 		
-		#if !(cpp || neko)
+		#if flash
 		updateCharFrameIDs();
 		#end
 	}
 	
 	override public function updateFrameData():Void 
 	{
-	#if (cpp || neko)
+	#if !flash
 		if (_node != null && charsInFont != null)
 		{
 			updateCharFrameIDs();
@@ -237,7 +237,7 @@ class FlxBitmapFont extends FlxSprite
 		fontSet = null;
 		grabData = null;
 		
-	#if (cpp || neko)
+	#if !flash
 		points = null;
 		charFrameIDs = null;
 	#end
@@ -253,7 +253,7 @@ class FlxBitmapFont extends FlxSprite
 		var currentY:Int = offsetY;
 		var r:Int = 0;
 		
-		#if (cpp || neko)
+		#if !flash
 		var spacingX:Int = (characterSpacingX == 0) ? 1 : characterSpacingX;
 		var spacingY:Int = (characterSpacingY == 0) ? 1 : characterSpacingY;
 		#else
@@ -261,7 +261,7 @@ class FlxBitmapFont extends FlxSprite
 		var spacingY:Int = characterSpacingY;
 		#end
 		
-		#if (cpp || neko)
+		#if !flash
 		charFrameIDs = new Array<Int>();
 		var frameID:Int = 0;
 		var rowNumber:Int = 0;
@@ -272,7 +272,7 @@ class FlxBitmapFont extends FlxSprite
 		{
 			//	The rect is hooked to the ASCII value of the character
 			grabData[charsInFont.charCodeAt(c)] = new Rectangle(currentX, currentY, characterWidth, characterHeight);
-		#if (cpp || neko)
+		#if !flash
 			charFrameIDs[charsInFont.charCodeAt(c)] = _node.addTileRect(grabData[charsInFont.charCodeAt(c)]);
 		#end
 			r++;
@@ -282,7 +282,7 @@ class FlxBitmapFont extends FlxSprite
 				r = 0;
 				currentX = offsetX;
 				currentY += characterHeight + spacingY;
-				#if (cpp || neko)
+				#if !flash
 				rowNumber++;
 				frameID = maxPossibleCharsPerRow * rowNumber;
 				#end
@@ -290,18 +290,18 @@ class FlxBitmapFont extends FlxSprite
 			else
 			{
 				currentX += characterWidth + spacingX;
-				#if (cpp || neko)
+				#if !flash
 				frameID++;
 				#end
 			}
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		updateTextString(text);
 		#end
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	override public function draw():Void 
 	{
 		if (_atlas == null)
@@ -551,7 +551,7 @@ class FlxBitmapFont extends FlxSprite
 		var cx:Int = 0;
 		var cy:Int = 0;
 		
-	#if (cpp || neko)
+	#if !flash
 		if (points == null)
 		{
 			points = new Array<Float>();
@@ -570,14 +570,14 @@ class FlxBitmapFont extends FlxSprite
 			if (fixedWidth > 0)
 			{
 				_textWidth = fixedWidth;
-			#if (flash || js)
+			#if flash
 				temp = new BitmapData(fixedWidth, _textHeight, true, 0xf);
 			#end
 			}
 			else
 			{
 				_textWidth = getLongestLine() * (characterWidth + customSpacingX);
-			#if (flash || js)
+			#if flash
 				temp = new BitmapData(_textWidth, _textHeight, true, 0xf);
 			#end
 			}
@@ -605,7 +605,7 @@ class FlxBitmapFont extends FlxSprite
 					cx = 0;
 				}
 				
-			#if (flash || js)
+			#if flash
 				pasteLine(temp, lines[i], cx, cy, customSpacingX);
 			#else
 				origin.make(_textWidth * 0.5, _textHeight * 0.5);
@@ -621,14 +621,14 @@ class FlxBitmapFont extends FlxSprite
 			if (fixedWidth > 0)
 			{
 				_textWidth = fixedWidth;
-			#if (flash || js)
+			#if flash
 				temp = new BitmapData(_textWidth, _textHeight, true, 0xf);
 			#end
 			}
 			else
 			{
 				_textWidth = _text.length * (characterWidth + customSpacingX);
-			#if (flash || js)
+			#if flash
 				temp = new BitmapData(_textWidth, _textHeight, true, 0xf);
 			#end
 			}
@@ -646,7 +646,7 @@ class FlxBitmapFont extends FlxSprite
 					cx += Math.floor(customSpacingX / 2);
 			}
 			
-		#if (flash || js)
+		#if flash
 			pasteLine(temp, _text, cx, 0, customSpacingX);
 		#else
 			origin.make(_textWidth * 0.5, _textHeight * 0.5);
@@ -654,7 +654,7 @@ class FlxBitmapFont extends FlxSprite
 		#end
 		}
 		
-	#if (flash || js)
+	#if flash
 		pixels = temp;
 	#else
 		width = frameWidth = _textWidth;
@@ -725,8 +725,6 @@ class FlxBitmapFont extends FlxSprite
 	 */
 	#if flash
 	private function pasteLine(output:BitmapData, line:String, x:UInt = 0, y:UInt = 0, customSpacingX:UInt = 0):Void
-	#elseif js
-	private function pasteLine(output:BitmapData, line:String, x:Int = 0, y:Int = 0, customSpacingX:Int = 0):Void
 	#else
 	private function pasteLine(line:String, x:Int = 0, y:Int = 0, customSpacingX:Int = 0):Void
 	#end
@@ -743,7 +741,7 @@ class FlxBitmapFont extends FlxSprite
 				//	If the character doesn't exist in the font then we don't want a blank space, we just want to skip it
 				if (grabData[line.charCodeAt(c)] != null)
 				{
-				#if (flash || js)
+				#if flash
 					output.copyPixels(fontSet, grabData[line.charCodeAt(c)], new Point(x, y));
 				#else
 					points.push(charFrameIDs[line.charCodeAt(c)]);
@@ -753,7 +751,7 @@ class FlxBitmapFont extends FlxSprite
 					
 					x += characterWidth + customSpacingX;
 					
-				#if (flash || js)
+				#if flash
 					if (Math.floor(x) > output.width)
 				#else
 					if (Math.floor(x) > _textWidth)

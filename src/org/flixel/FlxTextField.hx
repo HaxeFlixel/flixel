@@ -656,7 +656,7 @@ class FlxTextField extends FlxText
 		return _textField;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	override private function set_atlas(value:Atlas):Atlas 
 	{
 		return value;
