@@ -5,7 +5,6 @@
 package org.flixel;
 
 import nme.net.URLRequest;
-import nme.Lib;
 import org.flixel.FlxPoint;
 
 class FlxU 
@@ -180,7 +179,7 @@ class FlxU
 	 */
 	inline static public function getTicks():Int
 	{
-		return Lib.getTimer();
+		return FlxGame._mark;
 	}
 	
 	/**

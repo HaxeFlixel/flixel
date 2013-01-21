@@ -1,6 +1,5 @@
 package org.flixel;
 
-import nme.Lib;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;

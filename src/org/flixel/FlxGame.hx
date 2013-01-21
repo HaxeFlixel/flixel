@@ -67,7 +67,7 @@ class FlxGame extends Sprite
 	/**
 	 * Helper variable to help calculate elapsed time.
 	 */
-	private var _mark:Int;
+	public static var _mark(default, null):Int;
 	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
