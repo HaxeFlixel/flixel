@@ -40,7 +40,9 @@
 	</assets>
 	
 	<assets path="assets" exclude="*.wav" if="flash" />
-	<assets path="assets" unless="flash" />
+	<assets path="assets" exclude="*.svg" if="html5" />
+	<assets path="assets" if="desktop" />
+	<assets path="assets" if="mobile" />
 	
 	<icon name="assets/HaxeFlixel.svg" />
 	
