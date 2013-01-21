@@ -34,7 +34,7 @@ class FlxAnalog extends FlxGroup
 	
 	// An list of analogs that are currently active.
 	private static var _analogs:Array<FlxAnalog>;
-	#if !FLX_TOUCH_DISABLED
+	#if !FLX_NO_TOUCH
 	// The current pointer that's active on the analog.
 	private var _currentTouch:FlxTouch;
 	// Helper array for checking touches
@@ -174,13 +174,13 @@ class FlxAnalog extends FlxGroup
 	 */
 	override public function update():Void 
 	{
-		#if !FLX_TOUCH_DISABLED
+		#if !FLX_NO_TOUCH
 		var touch:FlxTouch = null;
 		#end
 		var offAll:Bool = true;
 		
 		// There is no reason to get into the loop if their is already a pointer on the analog
-		#if !FLX_TOUCH_DISABLED
+		#if !FLX_NO_TOUCH
 			if (_currentTouch != null)
 			{
 				_tempTouches.push(_currentTouch);
@@ -214,7 +214,7 @@ class FlxAnalog extends FlxGroup
 			}
 		#end
 		
-		#if !FLX_MOUSE_DISABLED
+		#if !FLX_NO_MOUSE
 			_point.x = FlxG.mouse.screenX;
 			_point.y = FlxG.mouse.screenY;
 			
@@ -240,7 +240,7 @@ class FlxAnalog extends FlxGroup
 		{
 			status = NORMAL;
 		}
-		#if !FLX_TOUCH_DISABLED
+		#if !FLX_NO_TOUCH
 		_tempTouches.splice(0, _tempTouches.length);
 		#end
 		super.update();
@@ -249,7 +249,7 @@ class FlxAnalog extends FlxGroup
 	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, touch:FlxTouch = null):Bool
 	{
 		var offAll:Bool = true;
-		#if !FLX_TOUCH_DISABLED
+		#if !FLX_NO_TOUCH
 		// Use the touch to figure out the world position if it's passed in, as 
 		// the screen coordinates passed in touchPoint are wrong
 		// if the control is used in a group, for example.
@@ -265,7 +265,7 @@ class FlxAnalog extends FlxGroup
 			
 			if (pressed)
 			{
-				#if !FLX_TOUCH_DISABLED
+				#if !FLX_NO_TOUCH
 				if (touch != null)
 				{
 					_currentTouch = touch;
@@ -304,7 +304,7 @@ class FlxAnalog extends FlxGroup
 			}
 			else if (justReleased && status == PRESSED)
 			{				
-				#if !FLX_TOUCH_DISABLED
+				#if !FLX_NO_TOUCH
 				_currentTouch = null;
 				#end
 				status = HIGHLIGHT;
@@ -351,10 +351,10 @@ class FlxAnalog extends FlxGroup
 	 */
 	public function justPressed():Bool
 	{
-		#if !FLX_TOUCH_DISABLED
+		#if !FLX_NO_TOUCH
 		return _currentTouch.justPressed() && status == PRESSED;
 		#end
-		#if !FLX_MOUSE_DISABLED
+		#if !FLX_NO_MOUSE
 		return FlxG.mouse.justPressed() && status == PRESSED;
 		#end
 	}
@@ -364,10 +364,10 @@ class FlxAnalog extends FlxGroup
 	 */
 	public function justReleased():Bool
 	{
-		#if !FLX_TOUCH_DISABLED
+		#if !FLX_NO_TOUCH
 		return _currentTouch.justReleased() && status == HIGHLIGHT;
 		#end
-		#if !FLX_MOUSE_DISABLED
+		#if !FLX_NO_MOUSE
 		return FlxG.mouse.justReleased() && status == HIGHLIGHT;
 		#end
 	}

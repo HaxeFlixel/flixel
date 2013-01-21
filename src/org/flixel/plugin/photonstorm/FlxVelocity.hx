@@ -83,7 +83,7 @@ class FlxVelocity
 		source.maxVelocity.y = ySpeedMax;
 	}
 	
-	#if !FLX_MOUSE_DISABLED
+	#if !FLX_NO_MOUSE
 	/**
 	 * Move the given FlxSprite towards the mouse pointer coordinates at a steady velocity
 	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
@@ -111,7 +111,7 @@ class FlxVelocity
 	}
 	#end
 	
-	#if !FLX_TOUCH_DISABLED
+	#if !FLX_NO_TOUCH
 	/**
 	 * Move the given FlxSprite towards a FlxTouch point at a steady velocity
 	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
@@ -139,7 +139,7 @@ class FlxVelocity
 	}
 	#end
 	
-	#if !FLX_MOUSE_DISABLED
+	#if !FLX_NO_MOUSE
 	/**
 	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the mouse coordinates at the speed given (in pixels per second)<br>
 	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.<br>
@@ -165,7 +165,7 @@ class FlxVelocity
 	}
 	#end
 	
-	#if !FLX_TOUCH_DISABLED
+	#if !FLX_NO_TOUCH
 	/**
 	 * Sets the x/y acceleration on the source FlxSprite so it will move towards a FlxTouch at the speed given (in pixels per second)<br>
 	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.<br>
@@ -274,7 +274,7 @@ class FlxVelocity
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
-	#if !FLX_MOUSE_DISABLED
+	#if !FLX_NO_MOUSE
 	/**
 	 * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
 	 * 
@@ -290,7 +290,7 @@ class FlxVelocity
 	}
 	#end
 	
-	#if !FLX_TOUCH_DISABLED
+	#if !FLX_NO_TOUCH
 	/**
 	 * Find the distance (in pixels, rounded) from the object x/y and the FlxPoint screen x/y
 	 * 
@@ -414,7 +414,7 @@ class FlxVelocity
 		return result;
 	}
 	
-	#if !FLX_MOUSE_DISABLED
+	#if !FLX_NO_MOUSE
 	/**
 	 * Find the angle (in radians) between an FlxSprite and the mouse, taking their x/y and origin into account.
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
@@ -444,7 +444,7 @@ class FlxVelocity
 	}
 	#end
 	
-	#if !FLX_TOUCH_DISABLED
+	#if !FLX_NO_TOUCH
 	/**
 	 * Find the angle (in radians) between an FlxSprite and a FlxTouch, taking their x/y and origin into account.
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)

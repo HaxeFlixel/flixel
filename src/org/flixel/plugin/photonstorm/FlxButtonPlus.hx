@@ -14,7 +14,7 @@
 
 package org.flixel.plugin.photonstorm;
 //todo port to use touch as well
-#if !FLX_MOUSE_DISABLED
+#if !FLX_NO_MOUSE
 import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
