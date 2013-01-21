@@ -167,6 +167,14 @@ class FlxG
 	#else
 	static public inline var BLACK:Int = 0xff000000;
 	#end
+	/**
+	 * Totally transparent color. Usefull for creating transparent BitmapData
+	 */
+	#if neko
+	static public inline var TRANSPARENT:BitmapInt32 = {rgb: 0x000000, a: 0x00};
+	#else
+	static public inline var TRANSPARENT:Int = 0x00000000;
+	#end
 
 	/**
 	 * Internal tracker for game object.
@@ -1028,11 +1036,7 @@ class FlxG
 				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Math.floor(bd.width / FrameWidth);
 				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Math.floor(bd.height / FrameHeight);
 				
-				#if !neko
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, 0x00000000);
-				#else
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, {rgb: 0x000000, a: 0x00});
-				#end
+				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxG.TRANSPARENT);
 				
 				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 				var tempPoint:Point = new Point();
@@ -1677,10 +1681,10 @@ class FlxG
 			#if flash
 			cam.fill(cam.bgColor);
 			cam.screen.dirty = true;
-			#elseif (cpp || js)
-			cam.fill((cam.bgColor & 0x00ffffff), true, ((cam.bgColor >> 24) & 255) / 255);
-			#else
+			#elseif neko
 			cam.fill(cam.bgColor, true, cam.bgColor.a / 255);
+			#else
+			cam.fill((cam.bgColor & 0x00ffffff), true, ((cam.bgColor >> 24) & 255) / 255);
 			#end
 		}
 	}

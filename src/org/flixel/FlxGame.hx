@@ -616,7 +616,7 @@ class FlxGame extends Sprite
 			if(FlxG.debug || forceDebugger)
 			{
 				_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
-				#if (flash)
+				#if flash
 				addChild(_debugger);
 				#else
 				Lib.current.stage.addChild(_debugger);
@@ -686,11 +686,7 @@ class FlxGame extends Sprite
 		var i:Int = 0;
 		while(i < 10)
 		{
-			#if !neko
-			tmp = new Bitmap(new BitmapData(4,++i, false, 0xffffff));
-			#else
-			tmp = new Bitmap(new BitmapData(4,++i, false, {rgb: 0xffffff, a: 0xff}));
-			#end
+			tmp = new Bitmap(new BitmapData(4, ++i, false, FlxG.WHITE));
 			tmp.x = bx;
 			tmp.y = by;
 			_soundTray.addChild(tmp);

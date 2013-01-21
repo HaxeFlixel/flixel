@@ -248,10 +248,13 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to control the "shake" special effect.
 	 */
 	private var _fxShakeDirection:Int;
+	
+	#if flash
 	/**
 	 * Internal helper variable for doing better wipes/fills between renders.
 	 */
 	private var _fill:BitmapData;
+	#end
 	
 	#if !flash
 	/**
@@ -426,10 +429,10 @@ class FlxCamera extends FlxBasic
 		_canvas.y = -height * 0.5;
 		#end
 		
-		#if !neko
+		#if flash
 		color = 0xffffff;
 		#else
-		color = { rgb:0xffffff, a: 0xff };
+		color = FlxG.WHITE;
 		#end
 		
 		_flashSprite = new Sprite();
@@ -449,20 +452,12 @@ class FlxCamera extends FlxBasic
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
-		#if !neko
-		_fxFlashColor = 0;
-		#else
-		_fxFlashColor = { rgb:0, a:0 };
-		#end
+		_fxFlashColor = FlxG.TRANSPARENT;
 		_fxFlashDuration = 0.0;
 		_fxFlashComplete = null;
 		_fxFlashAlpha = 0.0;
 		
-		#if !neko
-		_fxFadeColor = 0;
-		#else
-		_fxFadeColor = { rgb:0, a:0 };
-		#end
+		_fxFadeColor = FlxG.TRANSPARENT;
 		_fxFadeDuration = 0.0;
 		_fxFadeComplete = null;
 		_fxFadeAlpha = 0.0;
@@ -473,13 +468,9 @@ class FlxCamera extends FlxBasic
 		_fxShakeOffset = new FlxPoint();
 		_fxShakeDirection = 0;
 		
-		#if !neko
-		_fill = new BitmapData(width, height, true, 0);
+		#if flash
+		_fill = new BitmapData(width, height, true, FlxG.TRANSPARENT);
 		#else
-		_fill = new BitmapData(width, height, true, {rgb: 0, a: 0});
-		#end
-		
-		#if !flash
 		_canvas.scrollRect = new Rectangle(0, 0, width, height);
 		
 		_debugLayer = new Sprite();
@@ -531,9 +522,13 @@ class FlxCamera extends FlxBasic
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
+		#if flash
+		if (_fill != null)
+		{
+			_fill.dispose();
+		}
 		_fill = null;
-		
-		#if !flash
+		#else
 		_flashSprite.removeChild(_debugLayer);
 		_flashSprite.removeChild(_canvas);
 		var canvasNumChildren:Int = _canvas.numChildren;
@@ -863,15 +858,10 @@ class FlxCamera extends FlxBasic
 	public function flash(?Color:BitmapInt32, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#end
 	{
-		#if (cpp || js)
+		#if !flash
 		if (Color == null)
 		{
-			Color = 0xffffffff;
-		}
-		#elseif neko
-		if (Color == null)
-		{
-			Color = { rgb: 0xffffff, a: 0xff };
+			Color = FlxG.WHITE;
 		}
 		#end
 		
@@ -903,15 +893,10 @@ class FlxCamera extends FlxBasic
 	public function fade(?Color:BitmapInt32, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	#end
 	{
-		#if (cpp || js)
+		#if !flash
 		if (Color == null)
 		{
-			Color = 0xff000000;
-		}
-		#elseif neko
-		if (Color == null)
-		{
-			Color = { rgb: 0x000000, a: 0xff };
+			Color = FlxG.BLACK;
 		}
 		#end
 		
@@ -1185,7 +1170,7 @@ class FlxCamera extends FlxBasic
 		// This is temporal fix for camera's color
 		var targetGraphics:Graphics = (graphics == null) ? _canvas.graphics : graphics;
 		
-		#if (cpp || js)
+		#if !neko
 		Color = Color & 0x00ffffff;
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
@@ -1197,7 +1182,7 @@ class FlxCamera extends FlxBasic
 		// end of fix
 		
 		targetGraphics.beginFill(Color, FxAlpha);
-		#elseif neko
+		#else
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
 			var redComponent:Int = Math.floor((Color.rgb >> 16) * red);
@@ -1232,9 +1217,9 @@ class FlxCamera extends FlxBasic
 			
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
-			#elseif (cpp || js)
+			#elseif !neko
 			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _debugLayer.graphics);
-			#elseif neko
+			#else
 			fill(_fxFlashColor, true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _debugLayer.graphics);
 			#end
 		}
@@ -1250,9 +1235,9 @@ class FlxCamera extends FlxBasic
 			
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
-			#elseif (cpp || js)
+			#elseif !neko
 			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _debugLayer.graphics);
-			#elseif neko
+			#else
 			fill(_fxFadeColor, true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _debugLayer.graphics);
 			#end
 		}
