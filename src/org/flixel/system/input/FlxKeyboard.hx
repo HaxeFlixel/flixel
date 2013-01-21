@@ -261,8 +261,6 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 		else object.current = 0;
 		//this[object.name] = false;
 		Reflect.setProperty(this, object.name, false);
-		
-		FlxG.log(FlashEvent.keyCode);
 	}
 	
 	/**
