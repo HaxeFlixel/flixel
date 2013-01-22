@@ -263,9 +263,9 @@ class FlxCamera extends FlxBasic
 	public var _canvas:Sprite;
 	
 	/**
-	 * sprite for visual debug information (bounding boxes are drawn on it)
+	 * sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
 	 */
-	public var _debugLayer:Sprite;
+	public var _effectsLayer:Sprite;
 	
 	public var red:Float;
 	public var green:Float;
@@ -473,10 +473,10 @@ class FlxCamera extends FlxBasic
 		#else
 		_canvas.scrollRect = new Rectangle(0, 0, width, height);
 		
-		_debugLayer = new Sprite();
-		_debugLayer.x = -width * 0.5;
-		_debugLayer.y = -height * 0.5;
-		_flashSprite.addChild(_debugLayer);
+		_effectsLayer = new Sprite();
+		_effectsLayer.x = -width * 0.5;
+		_effectsLayer.y = -height * 0.5;
+		_flashSprite.addChild(_effectsLayer);
 		
 		red = 1.0;
 		green = 1.0;
@@ -529,14 +529,14 @@ class FlxCamera extends FlxBasic
 		}
 		_fill = null;
 		#else
-		_flashSprite.removeChild(_debugLayer);
+		_flashSprite.removeChild(_effectsLayer);
 		_flashSprite.removeChild(_canvas);
 		var canvasNumChildren:Int = _canvas.numChildren;
 		for (i in 0...(canvasNumChildren))
 		{
 			_canvas.removeChildAt(0);
 		}
-		_debugLayer = null;
+		_effectsLayer = null;
 		_canvas = null;
 		
 		clearDrawStack();
@@ -1218,9 +1218,9 @@ class FlxCamera extends FlxBasic
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
 			#elseif !neko
-			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _debugLayer.graphics);
+			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
 			#else
-			fill(_fxFlashColor, true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _debugLayer.graphics);
+			fill(_fxFlashColor, true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
 			#end
 		}
 		
@@ -1236,9 +1236,9 @@ class FlxCamera extends FlxBasic
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
 			#elseif !neko
-			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _debugLayer.graphics);
+			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
 			#else
-			fill(_fxFadeColor, true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _debugLayer.graphics);
+			fill(_fxFadeColor, true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
 			#end
 		}
 		
@@ -1251,9 +1251,9 @@ class FlxCamera extends FlxBasic
 		#if !flash
 		if (fog > 0)
 		{
-			_debugLayer.graphics.beginFill(0xffffff, fog);
-			_debugLayer.graphics.drawRect(0, 0, width, height);
-			_debugLayer.graphics.endFill();
+			_effectsLayer.graphics.beginFill(0xffffff, fog);
+			_effectsLayer.graphics.drawRect(0, 0, width, height);
+			_effectsLayer.graphics.endFill();
 		}
 		#end
 	}
@@ -1290,7 +1290,7 @@ class FlxCamera extends FlxBasic
 				_canvas.scrollRect = rect;
 				
 				_flashOffsetX = width * 0.5 * zoom;
-				_debugLayer.x = _canvas.x = -width * 0.5;
+				_effectsLayer.x = _canvas.x = -width * 0.5;
 			}
 			#end
 		}
@@ -1316,7 +1316,7 @@ class FlxCamera extends FlxBasic
 				_canvas.scrollRect = rect;
 				
 				_flashOffsetY = height * 0.5 * zoom;
-				_debugLayer.y = _canvas.y = -height * 0.5;
+				_effectsLayer.y = _canvas.y = -height * 0.5;
 			}
 			#end
 		}

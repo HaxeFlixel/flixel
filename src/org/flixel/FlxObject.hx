@@ -520,7 +520,7 @@ class FlxObject extends FlxBasic
 		//draw graphics shape to camera buffer
 		Camera.buffer.draw(FlxG.flashGfxSprite);
 		#else
-		var gfx:Graphics = Camera._debugLayer.graphics;
+		var gfx:Graphics = Camera._effectsLayer.graphics;
 		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
 		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
 		#end

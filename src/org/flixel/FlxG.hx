@@ -1674,7 +1674,7 @@ class FlxG
 			cam.clearDrawStack();
 			cam._canvas.graphics.clear();
 			// clearing camera's debug sprite
-			cam._debugLayer.graphics.clear();
+			cam._effectsLayer.graphics.clear();
 			#end
 			
 			#if flash
