@@ -160,7 +160,7 @@ class FlxGradient
 		var rgb:Int;
 		for (col in colors)
 		{
-			#if (cpp || js)
+			#if !neko
 			a = (col >> 24) & 255;
 			rgb = col & 0x00ffffff;
 			#else
@@ -200,11 +200,7 @@ class FlxGradient
 			s.graphics.drawRect(0, 0, width, height / chunkSize);
 		}
 		
-		#if !neko
-		var data:BitmapData = new BitmapData(width, height, true, 0x0);
-		#else
-		var data:BitmapData = new BitmapData(width, height, true, {rgb: 0, a: 0});
-		#end
+		var data:BitmapData = new BitmapData(width, height, true, FlxG.TRANSPARENT);
 		
 		if (chunkSize == 1)
 		{
@@ -212,11 +208,7 @@ class FlxGradient
 		}
 		else
 		{
-			#if !neko
-			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Math.floor(height / chunkSize), true, 0x0));
-			#else
-			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Math.floor(height / chunkSize), true, {rgb: 0, a: 0}));
-			#end
+			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Math.floor(height / chunkSize), true, FlxG.TRANSPARENT));
 			tempBitmap.bitmapData.draw(s);
 			tempBitmap.scaleY = chunkSize;
 			

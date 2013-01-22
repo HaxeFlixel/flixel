@@ -1,6 +1,7 @@
 package org.flixel.plugin.pxText;
 
 import nme.display.BitmapData;
+import org.flixel.FlxG;
 import org.flixel.plugin.pxText.PxBitmapFont;
 
 /**
@@ -39,19 +40,11 @@ class PxDefaultFontGenerator
 					i++;
 					if (fontData.substr(i, 1) == "1") 
 					{
-						#if neko
-						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, { rgb: 0xFFFFFF, a: 0xFF } );
-						#else
-						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, 0xFFFFFFFF);
-						#end
+						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxG.WHITE);
 					}
 					else 
 					{
-						#if neko
-						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, { rgb: 0x000000, a: 0x00 } );
-						#else
-						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, 0x00000000);
-						#end
+						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxG.TRANSPARENT);
 					}
 				}
 			}

@@ -11,6 +11,7 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
+import org.flixel.FlxG;
 
 import org.flixel.FlxAssets;
 import org.flixel.FlxU;
@@ -20,6 +21,14 @@ import org.flixel.FlxU;
  */
 class FlxWindow extends Sprite
 {
+	#if neko
+	static public inline var BG_COLOR:BitmapInt32 = { rgb: 0x7f7f7f, a: 0x7f };
+	static public inline var TOP_COLOR:BitmapInt32 = { rgb: 0x000000, a: 0x7f };
+	#else
+	static public inline var BG_COLOR:Int = 0x7f7f7f7f;
+	static public inline var TOP_COLOR:Int = 0x7f000000;
+	#end
+	
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
 	 */
@@ -109,19 +118,11 @@ class FlxWindow extends Sprite
 		#if !flash
 		if (BGColor == null)
 		{
-			#if !neko
-			BGColor = 0x7f7f7f7f;
-			#else
-			BGColor = { rgb: 0x7f7f7f, a: 0x7f };
-			#end
+			BGColor = FlxWindow.BG_COLOR;
 		}
 		if (TopColor == null)
 		{
-			#if !neko
-			TopColor = 0x7f000000;
-			#else
-			TopColor = { rgb: 0x000000, a: 0x7f };
-			#end
+			TopColor = FlxWindow.TOP_COLOR;
 		}
 		#end
 		
@@ -142,11 +143,7 @@ class FlxWindow extends Sprite
 		_resizable = Resizable;
 		//_resizable = false;
 		
-		#if !neko
-		_shadow = new Bitmap(new BitmapData(1, 2, true, 0xff000000));
-		#else
-		_shadow = new Bitmap(new BitmapData(1, 2, true, { rgb: 0x000000, a: 0xff }));
-		#end
+		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxG.BLACK));
 		addChild(_shadow);
 		_background = new Bitmap(new BitmapData(1, 1, true, BGColor));
 		_background.y = 15;

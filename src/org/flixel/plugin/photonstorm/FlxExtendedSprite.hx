@@ -15,7 +15,6 @@
 
 package org.flixel.plugin.photonstorm;
 
-
 import flash.display.Bitmap;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;

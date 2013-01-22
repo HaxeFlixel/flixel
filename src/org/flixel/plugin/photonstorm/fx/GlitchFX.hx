@@ -17,6 +17,7 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import nme.display.BitmapInt32;
+import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxColor;
 
@@ -50,11 +51,7 @@ class GlitchFX extends BaseFX
 		#if !flash
 		if (backgroundColor == null)
 		{
-			#if neko
-			backgroundColor = { rgb: 0x000000, a: 0x00 };
-			#else
-			backgroundColor = 0x00000000;
-			#end
+			backgroundColor = FlxG.TRANSPARENT;
 		}
 		#end
 		
@@ -199,11 +196,7 @@ class GlitchSprite extends FlxSprite
 		_imageTileIDs = new IntHash<Array<Int>>();
 		imageLines = new Array<ImageLine>();
 		
-		#if !neko
-		makeGraphic(1, 1, 0xffffffff);
-		#else
-		makeGraphic(1, 1, {rgb: 0xffffff, a: 0xff});
-		#end
+		makeGraphic(1, 1, FlxG.WHITE);
 		
 		_frameID = _framesData.frameIDs[0];
 		_tileSheetData.isColored = true;

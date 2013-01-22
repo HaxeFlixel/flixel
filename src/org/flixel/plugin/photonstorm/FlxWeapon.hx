@@ -203,11 +203,7 @@ class FlxWeapon
 		#if !flash
 		if (color == null)
 		{
-			#if !neko
-			color = 0xffffffff;
-			#else
-			color = { rgb: 0xffffff, a: 0xff };
-			#end
+			color = FlxG.WHITE;
 		}
 		#end
 		

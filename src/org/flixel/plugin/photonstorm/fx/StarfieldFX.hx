@@ -75,11 +75,7 @@ class StarfieldFX extends BaseFX
 		
 		starXOffset = -1;
 		starYOffset = 0;
-		#if !neko
-		backgroundColor = 0xff000000;
-		#else
-		backgroundColor = {rgb: 0x000000, a: 0xff};
-		#end
+		backgroundColor = FlxG.BLACK;
 	}
 	
 	/**
@@ -340,10 +336,8 @@ class StarfieldFX extends BaseFX
 			
 			#if flash
 			canvas.setPixel32(star.x, star.y, 0xffffffff);
-			#elseif neko
-			var rgba:RGBA = FlxColor.getRGB( { rgb: 0xffffff, a: 0xff } );
-			#elseif (cpp || js)
-			var rgba:RGBA = FlxColor.getRGB(0xffffffff);
+			#else
+			var rgba:RGBA = FlxColor.getRGB(FlxG.WHITE);
 			#end
 			
 			#if !flash
@@ -434,11 +428,7 @@ class StarSprite extends FlxSprite
 	{
 		super(X, Y);
 		
-		#if !neko
-		makeGraphic(1, 1, 0xffffffff);
-		#else
-		makeGraphic(1, 1, {rgb: 0xffffff, a: 0xff});
-		#end
+		makeGraphic(1, 1, FlxG.WHITE);
 		
 		setBackgroundColor(bgColor);
 		

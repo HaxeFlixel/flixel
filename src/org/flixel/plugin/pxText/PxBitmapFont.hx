@@ -311,11 +311,7 @@ class PxBitmapFont
 			cy += (rowHeight + 1);
 		}
 		
-		#if neko
-		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, { rgb: 0x000000, a: 0x00 } );
-		#else
-		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, 0x00000000);
-		#end
+		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, FlxG.TRANSPARENT);
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
 		
 		#if flash
@@ -339,12 +335,12 @@ class PxBitmapFont
 				#if neko
 				if (pixelColor.rgb == bgColor32.rgb && pixelColor.a == bgColor32.a)
 				{
-					resultBitmapData.setPixel32(cx, cy, {rgb: 0x000000, a: 0x00});
+					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
 				}
 				#else
 				if (pixelColor == bgColor32)
 				{
-					resultBitmapData.setPixel32(cx, cy, 0x00000000);
+					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
 				}
 				#end
 				cx++;
@@ -352,11 +348,7 @@ class PxBitmapFont
 			cy++;
 		}
 		
-		#if !neko
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, 0xffffffff);
-		#else
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, {rgb: 0xffffff, a: 0xff});
-		#end
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxG.WHITE);
 		
 		return resultBitmapData;
 	}
@@ -419,20 +411,9 @@ class PxBitmapFont
 			newHeight += 2;
 		}
 		
-		#if neko
-		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, { rgb: 0x000000, a: 0x00 } );
-		#else
-		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, 0x00000000);
-		#end
-		
+		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, FlxG.TRANSPARENT);
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
-		
-		#if neko
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, {rgb: 0xffffff, a: 0xff});
-		#else
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, 0xffffffff);
-		#end
-		
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxG.WHITE);
 		return resultBitmapData;
 	}
 	
@@ -612,12 +593,12 @@ class PxBitmapFont
 			blue = (pColor & 0xff) * colorMultiplier;
 		}
 		
-		#if (cpp || js)
+		#if !neko
 		pSecondColor &= 0x00ffffff;
 		red *= (pSecondColor >> 16);
 		green *= (pSecondColor >> 8 & 0xff);
 		blue *= (pSecondColor & 0xff);
-		#elseif neko
+		#else
 		red *= (pSecondColor.rgb >> 16);
 		green *= (pSecondColor.rgb >> 8 & 0xff);
 		blue *= (pSecondColor.rgb & 0xff);

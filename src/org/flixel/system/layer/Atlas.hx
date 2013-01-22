@@ -4,6 +4,7 @@ import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.geom.Point;
 import nme.geom.Rectangle;
+import org.flixel.FlxG;
 import org.flixel.system.layer.TileSheetData;
 
 /**
@@ -62,11 +63,7 @@ class Atlas
 		if (bitmapData == null)
 		{
 			root = new Node(this, new Rectangle(0, 0, width, height));
-			#if !neko
-			atlasBitmapData = new BitmapData(width, height, true, 0x00000000);
-			#else
-			atlasBitmapData = new BitmapData(width, height, true, {rgb: 0x000000, a: 0x00});
-			#end
+			atlasBitmapData = new BitmapData(width, height, true, FlxG.TRANSPARENT);
 			_fromBitmapData = false;
 		}
 		else
@@ -184,11 +181,7 @@ class Atlas
 	{
 		if (hasNodeWithName(node.key) && atlasBitmapData != node.item)
 		{
-			#if !neko
-			atlasBitmapData.fillRect(node.rect, 0x00000000);
-			#else
-			atlasBitmapData.fillRect(node.rect, { rgb: 0x000000, a: 0x00 } );
-			#end
+			atlasBitmapData.fillRect(node.rect, FlxG.TRANSPARENT);
 			atlasBitmapData.copyPixels(node.item, node.rect, node.point);
 		}
 	}
@@ -198,11 +191,7 @@ class Atlas
 	 */
 	public function redrawAll():Void
 	{
-		#if !neko
-		atlasBitmapData.fillRect(atlasBitmapData.rect, 0x00000000);
-		#else
-		atlasBitmapData.fillRect(atlasBitmapData.rect, { rgb: 0x000000, a: 0x00 } );
-		#end
+		atlasBitmapData.fillRect(atlasBitmapData.rect, FlxG.TRANSPARENT);
 		
 		for (node in nodes)
 		{
@@ -218,11 +207,7 @@ class Atlas
 		root.rect.width = newWidth;
 		root.rect.height = newHeight;
 		atlasBitmapData.dispose();
-		#if !neko
-		atlasBitmapData = new BitmapData(newWidth, newHeight, true, 0x00000000);
-		#else
-		atlasBitmapData = new BitmapData(newWidth, newHeight, true, { rgb: 0x000000, a: 0x00 } );
-		#end
+		atlasBitmapData = new BitmapData(newWidth, newHeight, true, FlxG.TRANSPARENT);
 		rebuildAtlas();
 	}
 	
@@ -499,11 +484,7 @@ class Atlas
 		deleteSubtree(root);
 		
 		root = new Node(this, new Rectangle(0, 0, rootWidth, rootHeight));
-		#if !neko
-		atlasBitmapData.fillRect(root.rect, 0x00000000);
-		#else
-		atlasBitmapData.fillRect(root.rect, { rgb: 0x000000, a: 0x00 } );
-		#end
+		atlasBitmapData.fillRect(root.rect, FlxG.TRANSPARENT);
 		nodes = new Hash<Node>();
 	}
 	

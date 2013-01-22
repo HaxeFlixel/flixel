@@ -269,11 +269,9 @@ class FlxColor
 	#end
 	{
 		#if flash
-		var result:UInt = 0;
-		#elseif neko
-		var result:BitmapInt32 = {rgb: 0, a: 0};
+		var result:UInt = FlxG.TRANSPARENT;
 		#else
-		var result:BitmapInt32 = 0;
+		var result:BitmapInt32 = FlxG.TRANSPARENT;
 		#end
 		
 		if (s == 0.0)
