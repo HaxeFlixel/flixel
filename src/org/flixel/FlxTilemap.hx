@@ -1955,11 +1955,7 @@ class FlxTilemap extends FlxObject
 		
 		var pt:Point = new Point(0, 0);
 		var tileSprite:FlxSprite = new FlxSprite();
-		#if !neko
-		tileSprite.makeGraphic(_tileWidth, _tileHeight, 0x00000000, true);
-		#else
-		tileSprite.makeGraphic(_tileWidth, _tileHeight, {rgb: 0x000000, a: 0x00}, true);
-		#end
+		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxG.TRANSPARENT, true);
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
 		if (rect != null) tileSprite.pixels.copyPixels(_tiles, rect, pt);

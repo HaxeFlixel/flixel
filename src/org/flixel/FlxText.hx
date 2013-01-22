@@ -76,11 +76,7 @@ class FlxText extends FlxSprite
 		_isStatic = false;
 		
 		var key:String = FlxG.getUniqueBitmapKey("text");
-		#if !neko
-		makeGraphic(Width, 1, 0, false, key);
-		#else
-		makeGraphic(Width, 1, {rgb: 0, a: 0}, false, key);
-		#end
+		makeGraphic(Width, 1, FlxG.TRANSPARENT, false, key);
 		
 		if (Text == null)
 		{
@@ -259,9 +255,9 @@ class FlxText extends FlxSprite
 	#else
 	override public function getColor():BitmapInt32
 	{
-		#if (cpp || js)
+		#if !neko
 		return _format.color;
-		#elseif neko
+		#else
 		return { rgb: _format.color, a: 0xff };
 		#end
 	}
@@ -461,11 +457,7 @@ class FlxText extends FlxSprite
 				//Need to generate a new buffer to store the text graphic
 				height = _textField.textHeight;
 				height += 4; //account for 2px gutter on top and bottom
-				#if !neko
-				_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
-				#else
-				_pixels = new BitmapData(Std.int(width), Std.int(height), true, {rgb: 0, a: 0});
-				#end
+				_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxG.TRANSPARENT);
 				frameHeight = Std.int(height);
 				_textField.height = height * 1.2;
 				_flashRect.x = 0;
@@ -476,11 +468,7 @@ class FlxText extends FlxSprite
 			}
 			else	//Else just clear the old buffer before redrawing the text
 			{
-				#if !neko
-				_pixels.fillRect(_flashRect, 0);
-				#else
-				_pixels.fillRect(_flashRect, {rgb: 0, a: 0});
-				#end
+				_pixels.fillRect(_flashRect, FlxG.TRANSPARENT);
 			}
 			
 			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))

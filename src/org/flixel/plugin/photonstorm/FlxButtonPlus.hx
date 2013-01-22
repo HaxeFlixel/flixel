@@ -457,10 +457,10 @@ class FlxButtonPlus extends FlxGroup
 		var normalKey:String = "Gradient: " + width + " x " + height + ", colors: [";
 		for (col in offColor)
 		{
-			#if (cpp || js)
+			#if !neko
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
-			#elseif neko
+			#else
 			colA = col.a;
 			colRGB = col.rgb;
 			#end
@@ -471,11 +471,7 @@ class FlxButtonPlus extends FlxGroup
 		
 		if (FlxG._cache.exists(normalKey) == false)
 		{
-			#if neko
-			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, { rgb: 0x000000, a: 0x00 }, false, normalKey);
-			#else
-			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, 0x00000000, false, normalKey);
-			#end
+			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, FlxG.TRANSPARENT, false, normalKey);
 			normalBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(normalBitmap, width - 2, height - 2, offColor, 1, 1);
 		}
@@ -505,10 +501,10 @@ class FlxButtonPlus extends FlxGroup
 		var highlightKey:String = "Gradient: " + width + " x " + height + ", colors: [";
 		for (col in onColor)
 		{
-			#if (cpp || js)
+			#if !neko
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
-			#elseif neko
+			#else
 			colA = col.a;
 			colRGB = col.rgb;
 			#end
@@ -519,11 +515,7 @@ class FlxButtonPlus extends FlxGroup
 		
 		if (FlxG._cache.exists(highlightKey) == false)
 		{
-			#if neko
-			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, { rgb: 0x000000, a: 0x00 }, false, highlightKey);
-			#else
-			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, 0x00000000, false, highlightKey);
-			#end
+			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, FlxG.TRANSPARENT, false, highlightKey);
 			highlightBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(highlightBitmap, width - 2, height - 2, onColor, 1, 1);
 		}

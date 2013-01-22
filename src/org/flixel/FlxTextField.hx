@@ -421,11 +421,7 @@ class FlxTextField extends FlxText
 		if (AreYouSure && _addedToDisplay)
 		{
 		#end
-			#if !neko
-			_pixels = new BitmapData(Std.int(width), Std.int(height), true, 0);
-			#else
-			_pixels = new BitmapData(Std.int(width), Std.int(height), true, {rgb: 0, a:0});
-			#end
+			_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxG.TRANSPARENT);
 			frameHeight = Std.int(height);
 			_flashRect.x = 0;
 			_flashRect.y = 0;

@@ -438,10 +438,8 @@ class FlxSprite extends FlxObject
 		
 		#if flash
 		_pixels = FlxG.createBitmap(Math.floor(width), Math.floor(height), 0, true, key);
-		#elseif (cpp || js)
-		_pixels = FlxG.createBitmap(Math.floor(width) + columns, Math.floor(height) + rows, 0, true, key);
-		#elseif neko
-		_pixels = FlxG.createBitmap(Math.floor(width) + columns, Math.floor(height) + rows, {rgb: 0, a: 0}, true, key);
+		#else
+		_pixels = FlxG.createBitmap(Math.floor(width) + columns, Math.floor(height) + rows, FlxG.TRANSPARENT, true, key);
 		#end
 		
 		#if !flash
@@ -521,11 +519,7 @@ class FlxSprite extends FlxObject
 		#if !flash
 		if (Color == null)
 		{
-			#if (cpp || js)
-			Color = 0xffffffff;
-			#elseif neko
-			Color = { rgb: 0xffffff, a: 0xff };
-			#end
+			Color = FlxG.WHITE;
 		}
 		#end
 		
@@ -1431,11 +1425,7 @@ class FlxSprite extends FlxObject
 				indexX %= widthHelper;
 			}
 			
-			#if (cpp || js)
-			var pixelColor:BitmapInt32 = 0x00000000;
-			#else
-			var pixelColor:BitmapInt32 = {rgb: 0x000000, a: 0x00};
-			#end
+			var pixelColor:BitmapInt32 = FlxG.TRANSPARENT;
 			// handle reversed sprites
 			if ((flipped != 0) && (facing == FlxObject.LEFT))
 			{
@@ -1446,7 +1436,7 @@ class FlxSprite extends FlxObject
 				pixelColor = _pixels.getPixel32(Math.floor(indexX + _flashPoint.x), Math.floor(indexY + _flashPoint.y));
 			}
 			// end of code from calcFrame() method
-			#if (cpp || js)
+			#if !neko
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			#else
 			var pixelAlpha:Int = pixelColor.a * 255;
@@ -1522,11 +1512,7 @@ class FlxSprite extends FlxObject
 				_matrix.identity();
 				_matrix.scale( -1, 1);
 				_matrix.translate(temp.width, 0);
-				#if (cpp || js)
-				framePixels.fillRect(framePixels.rect, 0);
-				#else
-				framePixels.fillRect(framePixels.rect, {rgb: 0, a: 0});
-				#end
+				framePixels.fillRect(framePixels.rect, FlxG.TRANSPARENT);
 				framePixels.draw(temp, _matrix);
 			}
 			#end

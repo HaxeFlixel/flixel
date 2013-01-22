@@ -151,7 +151,7 @@ class FlxBar extends FlxSprite
 		barHeight = height;
 		
 		#if flash
-		makeGraphic(barWidth, barHeight, 0xffffffff, true);
+		makeGraphic(barWidth, barHeight, FlxG.WHITE, true);
 		#else
 		this.width = frameWidth = width;
 		this.height = frameHeight = height;
@@ -163,7 +163,7 @@ class FlxBar extends FlxSprite
 		filledBarPoint = new Point(0, 0);
 		
 		#if flash
- 		canvas = new BitmapData(width, height, true, 0x0);
+ 		canvas = new BitmapData(width, height, true, FlxG.TRANSPARENT);
 		#end
 		
 		if (parentRef != null)
@@ -411,11 +411,7 @@ class FlxBar extends FlxSprite
 		#if !flash
 		if (border == null)
 		{
-			#if !neko
-			border = 0xffffffff;
-			#else
-			border = {rgb: 0xffffff, a: 0xff};
-			#end
+			border = FlxG.WHITE;
 		}
 		#end
 		
@@ -471,11 +467,7 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), {rgb: 0x000000, a: 0x00}, false, key);
-					#else
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), 0x00000000, false, key);
-					#end
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					_pixels.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 					
@@ -484,11 +476,7 @@ class FlxBar extends FlxSprite
 				}
 				else
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, {rgb: 0x000000, a: 0x00}, false, key);
-					#else
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, 0x00000000, false, key);
-					#end
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					_pixels.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 					
@@ -509,21 +497,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), {rgb: 0x000000, a: 0x00}, false, key);
-					#else
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), 0x00000000, false, key);
-					#end
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), empty);
 					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), fill);
 				}
 				else
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, {rgb: 0x000000, a: 0x00}, false, key);
-					#else
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, 0x00000000, false, key);
-					#end
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), empty);
 					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), fill);
 				}
@@ -558,11 +538,7 @@ class FlxBar extends FlxSprite
 		#if !flash
 		if (border == null)
 		{
-			#if !neko
-			border = 0xffffffff;
-			#else
-			border = {rgb: 0xffffff, a: 0xff};
-			#end
+			border = FlxG.WHITE;
 		}
 		#end
 		
@@ -641,11 +617,7 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), {rgb: 0x000000, a: 0x00}, false, key);
-					#else
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), 0x00000000, false, key);
-					#end
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 					
@@ -654,11 +626,7 @@ class FlxBar extends FlxSprite
 				}
 				else
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, {rgb: 0x000000, a: 0x00}, false, key);
-					#else
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, 0x00000000, false, key);
-					#end
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 					
@@ -679,21 +647,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), {rgb: 0x000000, a: 0x00}, false, key);
-					#else
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), 0x00000000, false, key);
-					#end
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, empty, 0, 0, chunkSize, rotation);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, fill, 0, barHeight + 1, chunkSize, rotation);
 				}
 				else
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, {rgb: 0x000000, a: 0x00}, false, key);
-					#else
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, 0x00000000, false, key);
-					#end
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, empty, 0, 0, chunkSize, rotation);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, fill, barWidth + 1, 0, chunkSize, rotation);
 				}
@@ -727,11 +687,7 @@ class FlxBar extends FlxSprite
 		#if !flash
 		if (emptyBackground == null)
 		{
-			#if !neko
-			emptyBackground = 0xff000000;
-			#else
-			emptyBackground = { rgb: 0x000000, a: 0xff };
-			#end
+			emptyBackground = FlxG.BLACK;
 		}
 		if (fillBackground == null)
 		{
@@ -829,23 +785,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), { rgb: 0x000000, a: 0x00 }, false, key);
-					#else
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), 0x00000000, false, key);
-					#end
-					
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point());
 					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), fillBackground);
 				}
 				else
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, { rgb: 0x000000, a: 0x00 }, false, key);
-					#else
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, 0x00000000, false, key);
-					#end
-					
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point());
 					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), fillBackground);
 				}
@@ -883,23 +829,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), { rgb: 0x000000, a: 0x00 }, false, key);
-					#else
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), 0x00000000, false, key);
-					#end
-					
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), emptyBackground);
 					_pixels.copyPixels(fillBitmapData, fillBitmapData.rect, new Point(0, barHeight + 1));
 				}
 				else
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, { rgb: 0x000000, a: 0x00 }, false, key);
-					#else
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, 0x00000000, false, key);
-					#end
-					
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), emptyBackground);
 					_pixels.copyPixels(fillBitmapData, fillBitmapData.rect, new Point(barWidth + 1, 0));
 				}
@@ -936,23 +872,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), { rgb: 0x000000, a: 0x00 }, false, key);
-					#else
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), 0x00000000, false, key);
-					#end
-					
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point(0, 0));
 					_pixels.copyPixels(fillBitmapData, emptyBitmapData.rect, new Point(0, barHeight + 1));
 				}
 				else
 				{
-					#if neko
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, { rgb: 0x000000, a: 0x00 }, false, key);
-					#else
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, 0x00000000, false, key);
-					#end
-					
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point(0, 0));
 					_pixels.copyPixels(fillBitmapData, emptyBitmapData.rect, new Point(barWidth + 1, 0));
 				}

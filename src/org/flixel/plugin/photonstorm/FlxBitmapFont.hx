@@ -674,11 +674,7 @@ class FlxBitmapFont extends FlxSprite
 	public function getCharacter(char:String):FlxSprite
 	{
 		var output:FlxSprite = new FlxSprite();
-		#if !neko
-		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, 0xf);
-		#else
-		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, {rgb: 0, a: 0});
-		#end
+		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, FlxG.TRANSPARENT);
 
 		if (grabData[char.charCodeAt(0)] != null && char.charCodeAt(0) != 32)
 		{
@@ -698,12 +694,8 @@ class FlxBitmapFont extends FlxSprite
 	 */
 	public function getCharacterAsBitmapData(char:String):BitmapData
 	{
-		#if !neko
-		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, 0xf);
-		#else
-		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, {rgb: 0, a: 0});
-		#end
-
+		var temp:BitmapData = new BitmapData(characterWidth, characterHeight, true, FlxG.TRANSPARENT);
+		
 		//if (grabData[char.charCodeAt(0)] is Rectangle && char.charCodeAt(0) != 32)
 		if (grabData[char.charCodeAt(0)] != null)
 		{

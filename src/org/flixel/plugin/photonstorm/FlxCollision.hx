@@ -164,11 +164,7 @@ class FlxCollision
 						}
 						else
 						{
-							#if !neko
-							overlapArea.setPixel32(targetX, targetY, 0xffffffff);
-							#else
-							overlapArea.setPixel32(targetX, targetY, {rgb: 0xffffff, a: 0xff});
-							#end
+							overlapArea.setPixel32(targetX, targetY, FlxG.WHITE);
 						}
 					}
 				}
@@ -290,11 +286,7 @@ class FlxCollision
 			indexX %= widthHelper;
 		}
 		
-		#if (cpp || js)
-		var pixelColor:BitmapInt32 = 0x00000000;
-		#else
-		var pixelColor:BitmapInt32 = {rgb: 0x000000, a: 0x00};
-		#end
+		var pixelColor:BitmapInt32 = FlxG.TRANSPARENT;
 		// handle reversed sprites
 		if ((target.flipped != 0) && (target.facing == FlxObject.LEFT))
 		{
