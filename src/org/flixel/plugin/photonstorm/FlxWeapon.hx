@@ -87,6 +87,7 @@ class FlxWeapon
 	
 	public var multiShot:Int;
 	public var bulletLifeSpan:Float;
+	public var bulletDamage:Float;
 	
 	public var bulletElasticity:Float;
 	
@@ -163,6 +164,7 @@ class FlxWeapon
 		multiShot = 0;
 		bulletLifeSpan = 0;
 		bulletElasticity = 0;
+		bulletDamage = 1;
 		
 		lastFired = 0;
 		nextFire = 0;
