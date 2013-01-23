@@ -66,6 +66,20 @@ class FlxU
 	}
 	
 	/**
+	 * Round a decimal number to have reduced precision (less decimal numbers).
+	 * Ex: roundDecimal(1.2485, 2) -> 1.25
+	 * 
+	 * @param	Value		Any number.
+	 * @param	Precision	Number of decimal points to leave in float.
+	 * @return	The rounded value of that number.
+	 */
+	inline static public function roundDecimal(Value:Float, Precision:Int):Float
+	{
+		var num = Value * Math.pow(10, Precision);
+		return Math.round( num ) / Math.pow(10, Precision);
+	}
+	
+	/**
 	 * Figure out which number is smaller.
 	 * @param	Number1		Any number.
 	 * @param	Number2		Any number.
