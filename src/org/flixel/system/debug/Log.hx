@@ -14,7 +14,7 @@ import org.flixel.system.FlxWindow;
  */
 class Log extends FlxWindow
 {
-	static private var MAX_LOG_LINES:Int = 200;
+	static public var MAX_LOG_LINES:Int = 200;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -94,11 +94,7 @@ class Log extends FlxWindow
 		}
 		else
 		{
-			#if flash
 			_text.appendText(Text + "\n");
-			#else
-			_text.text = _text.text + Text + "\n";
-			#end
 		}
 		#if !js
 		_text.scrollV = Math.floor(_text.height);
