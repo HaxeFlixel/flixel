@@ -96,8 +96,10 @@ class Log extends FlxWindow
 		{
 			_text.appendText(Text + "\n");
 		}
-		#if !js
+		#if flash
 		_text.scrollV = Math.floor(_text.height);
+		#elseif !js
+		_text.scrollV = _text.maxScrollV - Math.floor(_text.height / _text.defaultTextFormat.size) + 1;
 		#end
 	}
 	
