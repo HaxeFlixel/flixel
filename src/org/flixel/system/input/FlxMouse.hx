@@ -93,16 +93,9 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		_globalScreenPosition = new FlxPoint();
 		useSystemCursor = false;
 		
-		#if (flash || js)
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#else 
-		FlxGame.createClickableArea();
-		FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-		FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#end
 	}
 	
 	/**

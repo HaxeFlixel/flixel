@@ -6,6 +6,7 @@ import nme.display.BitmapInt32;
 import nme.events.Event;
 import nme.events.MouseEvent;
 import nme.events.TouchEvent;
+import nme.Lib;
 import nme.media.Sound;
 import nme.media.Sound;
 import org.flixel.system.input.FlxTouch;
@@ -137,19 +138,11 @@ class FlxButton extends FlxSprite
 		if (FlxG.stage != null)
 		{
 			#if !FLX_NO_MOUSE
-				#if (flash || js)
-				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#else
-				FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#end
+				Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			#end
 			
 			#if !FLX_NO_TOUCH
-				#if (flash || js)
-				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
-				#else
-				FlxGame.clickableArea.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
-				#end
+				Lib.current.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
 			#end
 		}
 		if (label != null)
@@ -194,18 +187,10 @@ class FlxButton extends FlxSprite
 			if (FlxG.stage != null)
 			{
 				#if !FLX_NO_MOUSE
-					#if (flash || js)
-					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					#else
-					FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					#end
+					Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				#end
 				#if !FLX_NO_TOUCH
-					#if (flash || js)
-					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
-					#else
-					FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
-					#end
+					Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
 				#end
 				_initialized = true;
 			}

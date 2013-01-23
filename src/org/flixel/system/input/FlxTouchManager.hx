@@ -49,16 +49,9 @@ class FlxTouchManager implements IFlxInput
 		Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 		FlxG.supportsTouchEvents = true;
 		
-		#if (flash || js)
 		Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN, handleTouchBegin);
 		Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, handleTouchEnd);
 		Lib.current.stage.addEventListener(TouchEvent.TOUCH_MOVE, handleTouchMove);
-		#else
-		FlxGame.createClickableArea();
-		FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_BEGIN , handleTouchBegin);
-		FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, handleTouchEnd);
-		FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_MOVE, handleTouchMove);
-		#end
 	}
 	
 	/**

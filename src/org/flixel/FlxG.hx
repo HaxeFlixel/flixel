@@ -622,6 +622,7 @@ class FlxG
 	 */
 	static public function resetState():Void
 	{
+		// TODO: fix this for html5 target
 		_game._requestedState = Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []);
 	}
 	

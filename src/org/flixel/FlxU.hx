@@ -489,7 +489,7 @@ class FlxU
 	 * @param	Simple	Returns only the class name, not the package or packages.
 	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
 	 */
-	inline static public function getClassName(Obj:Dynamic, Simple:Bool = false):String
+	@:extern inline static public function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
 		var s:String = Type.getClassName(Type.getClass(Obj));
 		if (s != null)
@@ -509,7 +509,7 @@ class FlxU
 	 * @param	Object2		The second object you want to check.
 	 * @return	Whether they have the same class name or not.
 	 */
-	inline static public function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
+	@:extern inline static public function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
 	{
 		return Type.getClassName(Object1) == Type.getClassName(Object2);
 	}
@@ -519,7 +519,7 @@ class FlxU
 	 * @param	Name	The <code>String</code> name of the <code>Class</code> you are interested in.
 	 * @return	A <code>Class</code> object.
 	 */
-	inline public static function getClass(Name:String):Class<Dynamic>
+	@:extern inline public static function getClass(Name:String):Class<Dynamic>
 	{
 		return Type.resolveClass(Name);
 	}

@@ -19,6 +19,7 @@ import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 import nme.display.BitmapInt32;
+import nme.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -253,7 +254,7 @@ class FlxButtonPlus extends FlxGroup
 		{
 			if(FlxG.stage != null)
 			{
-				FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				_initialized = true;
 			}
 		}
@@ -389,7 +390,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		if (FlxG.stage != null)
 		{
-			FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 		
 		if (buttonNormal != null)

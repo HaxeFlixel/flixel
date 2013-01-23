@@ -172,19 +172,11 @@ class PxButton extends FlxSprite
 		{
 			if (!FlxG.supportsTouchEvents)
 			{
-				#if (flash || js)
 				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#else
-				FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#end
 			}
 			else
 			{
-				#if (flash || js)
 				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
-				#else
-				FlxGame.clickableArea.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
-				#end
 			}
 		}
 		if (label != null)
@@ -230,19 +222,11 @@ class PxButton extends FlxSprite
 			{
 				if (!FlxG.supportsTouchEvents)
 				{
-					#if (flash || js)
 					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					#else
-					FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					#end
 				}
 				else
 				{
-					#if (flash || js)
 					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
-					#else
-					FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
-					#end
 				}
 				_initialized = true;
 			}

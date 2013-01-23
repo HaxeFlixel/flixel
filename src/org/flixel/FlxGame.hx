@@ -758,18 +758,6 @@ class FlxGame extends Sprite
 		
 		addChild(_focus);
 	}
-
-	public static function createClickableArea( ):Void
-	{
-		if ( clickableArea == null ) {
-			clickableArea = new Sprite();
-			clickableArea.graphics.beginFill(0xff0000);
-			clickableArea.graphics.drawRect(0, 0, Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
-			clickableArea.graphics.endFill();
-			Lib.current.stage.addChild(clickableArea);
-			FlxGame.clickableArea.alpha = 0;
-		}
-	}
 	
 	public var debugger(getDebugger, null):FlxDebugger;
 	
