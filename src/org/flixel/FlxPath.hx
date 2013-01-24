@@ -2,7 +2,9 @@ package org.flixel;
 
 import nme.display.Graphics;
 
+#if FLX_DEBUG
 import org.flixel.plugin.DebugPathDisplay;
+#end
 
 /**
  * This is a simple path data container.  Basically a list of points that
@@ -17,6 +19,8 @@ class FlxPath
 	 * The list of <code>FlxPoint</code>s that make up the path data.
 	 */
 	public var nodes:Array<FlxPoint>;
+
+	#if FLX_DEBUG
 	/**
 	 * Specify a debug display color for the path.  Default is white.
 	 */
@@ -36,7 +40,8 @@ class FlxPath
 	 * @default false
 	 */
 	public var ignoreDrawDebug:Bool;
-
+	#end
+	
 	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
@@ -58,6 +63,8 @@ class FlxPath
 			nodes = Nodes;
 		}
 		_point = new FlxPoint();
+		
+		#if FLX_DEBUG
 		debugScrollFactor = new FlxPoint(1.0,1.0);
 		debugColor = 0xffffff;
 		ignoreDrawDebug = false;
@@ -67,6 +74,7 @@ class FlxPath
 		{
 			debugPathDisplay.add(this);
 		}
+		#end
 	}
 	
 	/**
@@ -74,6 +82,7 @@ class FlxPath
 	 */
 	public function destroy():Void
 	{
+		#if FLX_DEBUG
 		var debugPathDisplay:DebugPathDisplay = manager;
 		if (debugPathDisplay != null)
 		{
@@ -81,6 +90,8 @@ class FlxPath
 		}
 		
 		debugScrollFactor = null;
+		#end
+		
 		_point = null;
 		nodes = null;
 	}
@@ -218,6 +229,7 @@ class FlxPath
 		return null;
 	}
 	
+	#if FLX_DEBUG
 	/**
 	 * While this doesn't override <code>FlxBasic.drawDebug()</code>, the behavior is very similar.
 	 * Based on this path data, it draws a simple lines-and-boxes representation of the path
@@ -330,11 +342,12 @@ class FlxPath
 		Camera.buffer.draw(FlxG.flashGfxSprite);
 		#end
 	}
-	
+
 	public static var manager(getManager, null):DebugPathDisplay;
 	
 	static public function getManager():DebugPathDisplay
 	{
 		return cast(FlxG.getPlugin(DebugPathDisplay), DebugPathDisplay);
-	}
+	}	
+	#end
 }

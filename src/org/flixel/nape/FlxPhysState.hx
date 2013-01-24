@@ -6,7 +6,9 @@ import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Polygon;
 import nape.space.Space;
+#if FLX_DEBUG
 import nape.util.ShapeDebug;
+#end
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
@@ -25,10 +27,13 @@ import org.flixel.FlxState;
 
 class FlxPhysState extends FlxState
 {
+	#if FLX_DEBUG
 	/**
 	 * Contains the sprite used for nape debug graphics.
 	 */
 	private var _physDbgSpr:ShapeDebug;
+	#end
+	
 	/**
 	 * The space where the nape physics simulation occur.
 	 */
@@ -61,7 +66,9 @@ class FlxPhysState extends FlxState
 		velocityIterations = 10;	// Default value. 
 		positionIterations = 10;	// Default value.
 		
+		#if FLX_DEBUG
 		enablePhysDebug();
+		#end
 	}
 	
 	/**
@@ -108,9 +115,13 @@ class FlxPhysState extends FlxState
 	{
 		super.destroy();
 		space.clear();
+		
+		#if FLX_DEBUG
 		disablePhysDebug();
+		#end
 	}
 	
+	#if FLX_DEBUG
 	/**
 	 * Enables debug graphics for nape physics.
 	 */
@@ -143,6 +154,7 @@ class FlxPhysState extends FlxState
 		FlxG.stage.removeChild(_physDbgSpr.display);
 		_physDbgSpr = null;
 	}
+	#end
 	
 	/**
 	 * Creates simple walls around game area - usefull for prototying.

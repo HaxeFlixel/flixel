@@ -1,5 +1,7 @@
 package org.flixel.plugin;
 
+#if FLX_DEBUG
+
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
@@ -126,3 +128,4 @@ class DebugPathDisplay extends FlxBasic
 	}
 	
 }
+#end

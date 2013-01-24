@@ -306,10 +306,13 @@ class FlxTileblock extends FlxSprite
 			}
 			
 			FlxBasic._VISIBLECOUNT++;
+			
+			#if FLX_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
 			}
+			#end
 		}
 	}
 	

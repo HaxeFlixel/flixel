@@ -248,10 +248,12 @@ class FlxSkewedSprite extends FlxSprite
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;
+			#if FLX_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
 			}
+			#end
 		}
 	}
 	

@@ -156,10 +156,9 @@ class FlxPreloader extends NMEPreloader
 	private function create():Void
 	{
 		_min = 0;
-		if(!FlxG.debug)
-		{
-			_min = Math.floor(minDisplayTime * 1000);
-		}
+		#if !FLX_DEBUG
+		_min = Math.floor(minDisplayTime * 1000);
+		#end
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);

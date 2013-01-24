@@ -104,7 +104,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 */
 	private function onMouseDown(FlashEvent:MouseEvent):Void
 	{
-		#if FLX_DEBUGGER
+		#if FLX_DEBUG
 		if(FlxG._game._debuggerUp)
 		{
 			if (FlxG._game._debugger.hasMouse)
@@ -154,7 +154,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 */
 	private function onMouseUp(FlashEvent:MouseEvent):Void
 	{
-		#if FLX_DEBUGGER
+		#if FLX_DEBUG
 		if ((FlxG._game._debuggerUp && FlxG._game._debugger.hasMouse) || FlxG._game._replaying)
 		{
 			return;
@@ -171,7 +171,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 */
 	private function onMouseWheel(FlashEvent:MouseEvent):Void
 	{
-		#if FLX_DEBUGGER
+		#if FLX_DEBUG
 		if ((FlxG._game._debuggerUp && FlxG._game._debugger.hasMouse) || FlxG._game._replaying)
 		{
 			return;
@@ -454,7 +454,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 
 	public function onFocus(  ):Void
 	{
-		#if FLX_DEBUGGER
+		#if FLX_DEBUG
 		if (!FlxG._game._debuggerUp  && !useSystemCursor)
 		#else
 		if (!useSystemCursor)
