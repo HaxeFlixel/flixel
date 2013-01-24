@@ -104,6 +104,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 */
 	private function onMouseDown(FlashEvent:MouseEvent):Void
 	{
+		#if FLX_DEBUGGER
 		if(FlxG._game._debuggerUp)
 		{
 			if (FlxG._game._debugger.hasMouse)
@@ -115,6 +116,8 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 				FlxG._game._debugger.watch.submit();
 			}
 		}
+		#end
+		
 		if(FlxG._game._replaying && (FlxG._game._replayCancelKeys != null))
 		{
 			var replayCancelKey:String;
@@ -151,10 +154,12 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 */
 	private function onMouseUp(FlashEvent:MouseEvent):Void
 	{
+		#if FLX_DEBUGGER
 		if ((FlxG._game._debuggerUp && FlxG._game._debugger.hasMouse) || FlxG._game._replaying)
 		{
 			return;
 		}
+		#end
 		
 		if(_current > 0) _current = -1;
 		else _current = 0;
@@ -166,10 +171,12 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 */
 	private function onMouseWheel(FlashEvent:MouseEvent):Void
 	{
+		#if FLX_DEBUGGER
 		if ((FlxG._game._debuggerUp && FlxG._game._debugger.hasMouse) || FlxG._game._replaying)
 		{
 			return;
 		}
+		#end
 		
 		wheel = FlashEvent.delta;
 	}
@@ -447,7 +454,11 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 
 	public function onFocus(  ):Void
 	{
+		#if FLX_DEBUGGER
 		if (!FlxG._game._debuggerUp  && !useSystemCursor)
+		#else
+		if (!useSystemCursor)
+		#end
 		{
 			Mouse.hide();
 		}
