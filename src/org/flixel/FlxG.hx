@@ -345,7 +345,7 @@ class FlxG
 	{
 		if ((_game != null) && (_game.debugger != null))
 		{
-			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Data.toString()));
+			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Std.string(Data)));
 		}
 	}
 	
