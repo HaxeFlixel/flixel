@@ -824,7 +824,11 @@ class FlxSprite extends FlxObject
 		#if !flash
 		_calculatedPixelsIndex = -1;
 		#end
-		_pixels.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
+		#if (flash || js)
+			_pixels.draw(bitmapData, _matrix, null, Brush.blend, null, Brush.antialiasing);
+		#else
+			_pixels.draw(bitmapData, _matrix, null, cast(Brush.blend,String), null, Brush.antialiasing);
+		#end
 		#if flash
 		calcFrame();
 		#end
