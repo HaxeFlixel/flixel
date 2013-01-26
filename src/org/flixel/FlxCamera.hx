@@ -284,18 +284,30 @@ class FlxCamera extends FlxBasic
 	 */
 	private static var _storageHead:DrawStackItem;
 	
+	#if !js
 	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int):DrawStackItem
+	#else
+	inline public function getDrawStackItem(ObjAtlas:Atlas, UseAlpha:Bool):DrawStackItem
+	#end
 	{
 		var itemToReturn:DrawStackItem = null;
 		if (_currentStackItem.initialized == false)
 		{
 			_headOfDrawStack = _currentStackItem;
 			_currentStackItem.atlas = ObjAtlas;
+			#if !js
 			_currentStackItem.colored = ObjColored;
 			_currentStackItem.blending = ObjBlending;
+			#else
+			_currentStackItem.useAlpha = UseAlpha;
+			#end
 			itemToReturn = _currentStackItem;
 		}
+		#if !js
 		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.colored == ObjColored && _currentStackItem.blending == ObjBlending)
+		#else
+		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.useAlpha == UseAlpha)
+		#end
 		{
 			itemToReturn = _currentStackItem;
 		}
@@ -316,8 +328,12 @@ class FlxCamera extends FlxBasic
 			}
 			
 			newItem.atlas = ObjAtlas;
+			#if !js
 			newItem.colored = ObjColored;
 			newItem.blending = ObjBlending;
+			#else
+			newItem.useAlpha = UseAlpha;
+			#end
 			_currentStackItem.next = newItem;
 			_currentStackItem = newItem;
 			itemToReturn = _currentStackItem;
@@ -355,7 +371,9 @@ class FlxCamera extends FlxBasic
 	public function render():Void
 	{
 		var currItem:DrawStackItem = _headOfDrawStack;
+		#if !js
 		var useColor:Bool = this.isColored();
+		#end
 		while (currItem != null)
 		{
 			var data:Array<Float> = currItem.drawData;
@@ -367,13 +385,20 @@ class FlxCamera extends FlxBasic
 				{
 					data.splice(position, (dataLen - position));
 				}
-				
-				var tempFlags:Int = Graphics.TILE_TRANS_2x2 | Graphics.TILE_ALPHA;
+				var tempFlags:Int = Graphics.TILE_TRANS_2x2;
+				#if !js
+				tempFlags |= Graphics.TILE_ALPHA;
 				if (currItem.colored || useColor)
 				{
 					tempFlags |= Graphics.TILE_RGB;
 				}
 				tempFlags |= currItem.blending;
+				#else
+				if (currItem.useAlpha)
+				{
+					tempFlags |= Graphics.TILE_ALPHA;
+				}
+				#end
 				// TODO: currItem.antialiasing
 				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing/* || currItem.antialiasing*/), tempFlags);
 				TileSheetData._DRAWCALLS++;
@@ -1260,7 +1285,9 @@ class FlxCamera extends FlxBasic
 	
 	#if !flash
 	public var fog(default, default):Float;
+	#end
 	
+	#if !(flash || js)
 	inline public function isColored():Bool
 	{
 		#if neko

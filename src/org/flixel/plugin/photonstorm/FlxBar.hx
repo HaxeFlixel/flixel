@@ -1128,8 +1128,8 @@ class FlxBar extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
+			#if !js
 			var isColoredCamera:Bool = camera.isColored();
-			
 			var redMult:Float = _red;
 			var greenMult:Float = _green;
 			var blueMult:Float = _blue;
@@ -1139,8 +1139,12 @@ class FlxBar extends FlxSprite
 				greenMult *= camera.green;
 				blueMult *= camera.blue;
 			}
-			
 			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			#else
+			var useAlpha:Bool = (alpha < 0);
+			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			#end
+			
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -1164,15 +1168,20 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = 0;
 				currDrawData[currIndex++] = 0;
 				currDrawData[currIndex++] = 1;
-				
+				#if !js
 				if (isColored || isColoredCamera)
 				{
 					currDrawData[currIndex++] = redMult; 
 					currDrawData[currIndex++] = greenMult;
 					currDrawData[currIndex++] = blueMult;
 				}
-				
 				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
 				
 				if (percentFrame >= 0)
 				{
@@ -1195,14 +1204,20 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
 					
+					#if !js
 					if (isColored || isColoredCamera)
 					{
 						currDrawData[currIndex++] = redMult; 
 						currDrawData[currIndex++] = greenMult;
 						currDrawData[currIndex++] = blueMult;
 					}
-					
 					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
 				}
 			}
 			else
@@ -1223,14 +1238,20 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = -sin * scale.x;
 				currDrawData[currIndex++] = cos * scale.y;
 				
+				#if !js
 				if (isColored || isColoredCamera)
 				{
 					currDrawData[currIndex++] = redMult; 
 					currDrawData[currIndex++] = greenMult;
 					currDrawData[currIndex++] = blueMult;
 				}
-				
 				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
 				
 				if (percentFrame >= 0)
 				{
@@ -1257,14 +1278,20 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = -sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
 					
+					#if !js
 					if (isColored || isColoredCamera)
 					{
 						currDrawData[currIndex++] = redMult; 
 						currDrawData[currIndex++] = greenMult;
 						currDrawData[currIndex++] = blueMult;
 					}
-					
 					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
 				}
 			}
 			
