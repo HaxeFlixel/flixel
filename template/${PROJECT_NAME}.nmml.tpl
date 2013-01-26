@@ -49,6 +49,9 @@
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>
 	
+    <!--Enable the Flixel core debugger-->
+    <!--<set name="FLX_DEBUG" />-->
+    
     <!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
     <!--<set name="FLX_NO_MOUSE" if="mobile" />-->
     <!--<set name="FLX_NO_KEYBOARD" if="mobile" />-->

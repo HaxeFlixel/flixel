@@ -22,8 +22,11 @@ import org.flixel.system.FlxQuadTree;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 import org.flixel.tweens.misc.MultiVarTween;
+
+#if FLX_DEBUG
 import org.flixel.system.FlxDebugger;
 import org.flixel.plugin.DebugPathDisplay;
+#end
 
 import org.flixel.system.input.FlxInputs;
 
@@ -84,8 +87,9 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "08";
+	static public inline var LIBRARY_MINOR_VERSION:String = "09-dev";
 	
+	#if FLX_DEBUG
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
 	 */
@@ -115,6 +119,7 @@ class FlxG
 	 * Debugger overlay layout preset: Large windows taking up right third of screen.
 	 */
 	static public inline var DEBUGGER_RIGHT:Int = 5;
+	#end
 	
 	/**
 	 * Some handy color presets.  Less glaring than pure RGB full values.
@@ -215,11 +220,13 @@ class FlxG
 	 * Default value is 6.
 	 */
 	static public var worldDivisions:Int;
+	#if FLX_DEBUG
 	/**
 	 * Whether to show visual debug displays or not.
 	 * Default = false.
 	 */
 	static public var visualDebug:Bool;
+	#end
 	/**
 	 * Setting this to true will disable/skip stuff that isn't necessary for mobile platforms like Android. [BETA]
 	 */
@@ -343,10 +350,12 @@ class FlxG
 	 */
 	static public function log(Data:Dynamic):Void
 	{
+		#if FLX_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Std.string(Data)));
 		}
+		#end
 	}
 	
 	/**
@@ -354,10 +363,12 @@ class FlxG
 	 */
 	static public function clearLog():Void
 	{
+		#if FLX_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			_game.debugger.log.clear();
 		}
+		#end
 	}
 	
 	/**
@@ -369,10 +380,12 @@ class FlxG
 	 */
 	static public function watch(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
+		#if FLX_DEBUG
 		if ((_game != null) && (_game._debugger != null))
 		{
 			_game._debugger.watch.add(AnyObject, VariableName, DisplayName);
 		}
+		#end
 	}
 	
 	/**
@@ -383,10 +396,12 @@ class FlxG
 	 */
 	static public function unwatch(AnyObject:Dynamic, VariableName:String = null):Void
 	{
+		#if FLX_DEBUG
 		if ((_game != null) && (_game._debugger != null))
 		{
 			_game._debugger.watch.remove(AnyObject, VariableName);
 		}
+		#end
 	}
 	
 	public static var framerate(getFramerate, setFramerate):Int;
@@ -579,10 +594,12 @@ class FlxG
 	static public function stopReplay():Void
 	{
 		_game._replaying = false;
+		#if FLX_DEBUG
 		if (_game._debugger != null)
 		{
 			_game._debugger.vcr.stopped();
 		}
+		#end
 		resetInput();
 	}
 		
@@ -610,10 +627,12 @@ class FlxG
 	static public function stopRecording():String
 	{
 		_game._recording = false;
+		#if FLX_DEBUG
 		if (_game._debugger != null)
 		{
 			_game._debugger.vcr.stopped();
 		}
+		#end
 		return _game._replay.save();
 	}
 	
@@ -1221,29 +1240,25 @@ class FlxG
 	{
 		_game._requestedState = State;
 	}
-		
+
+	#if FLX_DEBUG
 	/**
 	 * Change the way the debugger's windows are laid out.
 	 * @param	Layout		See the presets above (e.g. <code>DEBUGGER_MICRO</code>, etc).
 	 */
 	static public function setDebuggerLayout(Layout:Int):Void
 	{
-		if (_game._debugger != null)
-		{
-			_game._debugger.setLayout(Layout);
-		}
+		_game._debugger.setLayout(Layout);
 	}
-		
+	
 	/**
 	 * Just resets the debugger windows to whatever the last selected layout was (<code>DEBUGGER_STANDARD</code> by default).
 	 */
 	static public function resetDebuggerLayout():Void
 	{
-		if (_game._debugger != null)
-		{
-			_game._debugger.resetLayout();
-		}
+		_game._debugger.resetLayout();
 	}
+	#end
 	
 	/**
 	 * Add a new camera object to the game.
@@ -1595,7 +1610,11 @@ class FlxG
 		useBufferLocking = false;
 		
 		plugins = new Array<FlxBasic>();
+		
+		#if FLX_DEBUG
 		addPlugin(new DebugPathDisplay());
+		#end
+		
 		addPlugin(new TimerManager());
 		
 		#if js
@@ -1606,7 +1625,10 @@ class FlxG
 
 		FlxG.levels = new Array();
 		FlxG.scores = new Array();
+		
+		#if FLX_DEBUG
 		FlxG.visualDebug = false;
+		#end
 	}
 	
 	/**
@@ -1632,11 +1654,13 @@ class FlxG
 		FlxG.globalSeed = Math.random();
 		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
+		#if FLX_DEBUG
 		var debugPathDisplay:DebugPathDisplay = cast(FlxG.getPlugin(DebugPathDisplay), DebugPathDisplay);
 		if (debugPathDisplay != null)
 		{
 			debugPathDisplay.clear();
 		}
+		#end
 	}
 	
 	/**

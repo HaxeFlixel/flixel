@@ -34,7 +34,9 @@ import org.flixel.plugin.photonstorm.FlxColor;
 
 class FlxCollision 
 {
+	#if FLX_DEBUG
 	public static var debug:BitmapData = new BitmapData(1, 1, false);
+	#end
 	
 	#if flash
 	public static var CAMERA_WALL_OUTSIDE:UInt = 0;
@@ -219,8 +221,12 @@ class FlxCollision
 		}
 		
 		#end
-		//	Developers: If you'd like to see how this works, display it in your game somewhere. Or you can comment it out to save a tiny bit of performance
+
+		#if FLX_DEBUG
+		//	Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere.
 		debug = overlapArea;
+		#end
+		
 		#if !neko
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
 		#else

@@ -92,6 +92,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _tileObjects:Array<FlxTile>;
 	
+	#if FLX_DEBUG
 	#if flash
 	/**
 	 * Internal, used for rendering the debug bounding box display.
@@ -108,14 +109,16 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
-	
 	private var _debugRect:Rectangle;
 	#end
+	
 	/**
 	 * Internal flag for checking to see if we need to refresh
 	 * the tilemap display to show or hide the bounding boxes.
 	 */
 	private var _lastVisualDebug:Bool;
+	#end
+	
 	/**
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
@@ -150,7 +153,9 @@ class FlxTilemap extends FlxObject
 		_tileHeight = 0;
 		#if flash
 		_rects = null;
+		#if FLX_DEBUG
 		_debugRect = null;
+		#end
 		#else
 		_rectIDs = null;
 		#end
@@ -159,12 +164,14 @@ class FlxTilemap extends FlxObject
 		immovable = true;
 		moves = false;
 		cameras = null;
+		#if FLX_DEBUG
 		#if flash
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
 		#end
 		_lastVisualDebug = FlxG.visualDebug;
+		#end
 		_startingIndex = 0;
 		
 		#if !flash
@@ -197,10 +204,12 @@ class FlxTilemap extends FlxObject
 		_data = null;
 		#if flash
 		_rects = null;
+		#if FLX_DEBUG
 		_debugRect = null;
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
 		_debugTileSolid = null;
+		#end
 		#else
 		_helperPoint = null;
 		_rectIDs = null;
@@ -312,18 +321,22 @@ class FlxTilemap extends FlxObject
 		
 		updateAtlasInfo();
 		
+		#if FLX_DEBUG
 		//create debug tiles for rendering bounding boxes on demand
 		#if flash
 		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
 		_debugTilePartial = makeDebugTile(FlxG.PINK);
 		_debugTileSolid = makeDebugTile(FlxG.GREEN);
 		#end
+		#end
 		
 		//Then go through and create the actual map
 		width = widthInTiles * _tileWidth;
 		height = heightInTiles * _tileHeight;
 		#if flash
+		#if FLX_DEBUG
 		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
+		#end
 		_rects = new Array<Rectangle>();
 		FlxU.SetArrayLength(_rects, totalTiles);
 		i = 0;
@@ -336,6 +349,7 @@ class FlxTilemap extends FlxObject
 		return this;
 	}
 	
+	#if FLX_DEBUG
 	/**
 	 * Internal function to clean up the map loading code.
 	 * Just generates a wireframe box the size of a tile with the specified color.
@@ -359,7 +373,9 @@ class FlxTilemap extends FlxObject
 		return debugTile;
 	}
 	#end
+	#end
 	
+	#if FLX_DEBUG
 	/**
 	 * Main logic loop for tilemap is pretty simple,
 	 * just checks to see if visual debug got turned on.
@@ -374,6 +390,7 @@ class FlxTilemap extends FlxObject
 			setDirty();
 		}
 	}
+	#end
 
 	/**
 	 * Internal function that actually renders the tilemap to the tilemap buffer.  Called by draw().
@@ -388,7 +405,9 @@ class FlxTilemap extends FlxObject
 		_helperPoint.x = Math.floor((x - Camera.scroll.x * scrollFactor.x) * 5) / 5; //copied from getScreenXY()
 		_helperPoint.y = Math.floor((y - Camera.scroll.y * scrollFactor.y) * 5) / 5;
 		var tileID:Int;
+		#if FLX_DEBUG
 		var debugColor:Int;
+		#end
 		var drawX:Float;
 		var drawY:Float;
 		
@@ -435,7 +454,9 @@ class FlxTilemap extends FlxObject
 		var column:Int;
 		var columnIndex:Int;
 		var tile:FlxTile;
+		#if FLX_DEBUG
 		var debugTile:BitmapData;
+		#end
 		while(row < screenRows)
 		{
 			columnIndex = rowIndex;
@@ -448,6 +469,7 @@ class FlxTilemap extends FlxObject
 				if(_flashRect != null)
 				{
 					Buffer.pixels.copyPixels(_tiles, _flashRect, _flashPoint, null, null, true);
+					#if FLX_DEBUG
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
 						tile = _tileObjects[_data[columnIndex]];
@@ -468,6 +490,7 @@ class FlxTilemap extends FlxObject
 							Buffer.pixels.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
 						}
 					}
+					#end
 				}
 				#else
 				tileID = _rectIDs[columnIndex];
@@ -493,6 +516,7 @@ class FlxTilemap extends FlxObject
 					currDrawData[currIndex++] = 1.0; // alpha
 					#end
 					
+					#if FLX_DEBUG
 					if (FlxG.visualDebug && !ignoreDrawDebug)
 					{
 						tile = _tileObjects[_data[columnIndex]];
@@ -529,6 +553,7 @@ class FlxTilemap extends FlxObject
 							gfx.drawRect(drawX, drawY, _tileWidth, _tileHeight);
 						}
 					}
+					#end
 				}
 				#end
 				_flashPoint.x += _tileWidth;

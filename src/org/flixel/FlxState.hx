@@ -41,7 +41,7 @@ class FlxState extends FlxGroup
 		}
 		else
 		{
-			#if debug
+			#if FLX_DEBUG
 			throw "There isn't bitmapdata in cache with key: " + KeyInBitmapCache;
 			#end
 		}
