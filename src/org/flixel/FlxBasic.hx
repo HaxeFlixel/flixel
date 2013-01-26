@@ -46,11 +46,14 @@ class FlxBasic
 	 * You can also change it afterward too, very flexible!
 	 */
 	public var cameras:Array<FlxCamera>;
+	
+	#if FLX_DEBUG
 	/**
 	 * Setting this to true will prevent the object from appearing
 	 * when the visual debug mode in the debugger overlay is toggled on.
 	 */
 	public var ignoreDrawDebug:Bool;
+	#end
 	
 	/**
 	 * If the Tweener should clear on removal. For Entities, this is when they are
@@ -68,9 +71,11 @@ class FlxBasic
 		active = true;
 		visible = true;
 		alive = true;
-		ignoreDrawDebug = false;
-		
 		autoClear = true;
+
+		#if FLX_DEBUG
+		ignoreDrawDebug = false;
+		#end
 	}
 
 	/**
@@ -130,19 +135,25 @@ class FlxBasic
 		{
 			camera = cameras[i++];
 			_VISIBLECOUNT++;
+			
+			#if FLX_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
 			}
+			#end
+			
 		}
 	}
 	
+	#if FLX_DEBUG
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
 	public function drawDebug(Camera:FlxCamera = null):Void { }
+	#end
 	
 	/**
 	 * Handy function for "killing" game objects.

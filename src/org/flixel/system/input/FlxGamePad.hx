@@ -139,8 +139,12 @@ class FlxGamePad extends FlxGroup
 		button.loadGraphic(Image, true, false, Width, Height);
 		button.solid = false;
 		button.immovable = true;
-		button.ignoreDrawDebug = true;
 		button.scrollFactor.x = button.scrollFactor.y = 0;
+
+		#if FLX_DEBUG
+		button.ignoreDrawDebug = true;
+		#end
+		
 		if (OnClick != null)
 		{
 			button.onDown = OnClick;

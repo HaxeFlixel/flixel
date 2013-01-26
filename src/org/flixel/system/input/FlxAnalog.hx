@@ -116,7 +116,11 @@ class FlxAnalog extends FlxGroup
 		_base.y += -_base.height * .5;
 		_base.scrollFactor.x = _base.scrollFactor.y = 0;
 		_base.solid = false;
+		
+		#if FLX_DEBUG
 		_base.ignoreDrawDebug = true;
+		#end
+		
 		add(_base);	
 	}
 	
@@ -130,7 +134,11 @@ class FlxAnalog extends FlxGroup
 		_stick.cameras = [FlxG.camera];
 		_stick.scrollFactor.x = _stick.scrollFactor.y = 0;
 		_stick.solid = false;
+		
+		#if FLX_DEBUG
 		_stick.ignoreDrawDebug = true;
+		#end
+		
 		add(_stick);
 	}
 	

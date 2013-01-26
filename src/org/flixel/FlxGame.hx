@@ -24,8 +24,11 @@ import flash.text.GridFitType;
 #end
 
 import org.flixel.plugin.TimerManager;
-import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxReplay;
+
+#if FLX_DEBUG
+import org.flixel.system.FlxDebugger;
+#end
 
 /**
  * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
@@ -42,12 +45,6 @@ class FlxGame extends Sprite
 	 * @default true
 	 */
 	public var useSoundHotKeys:Bool;
-	/**
-	 * Initialize and allow the flixel debugger overlay even in release mode.
-	 * Also useful if you don't use FlxPreloader!
-	 * @default false
-	 */
-	public var forceDebugger:Bool;
 	/**
 	 * Current game state.
 	 */
@@ -126,6 +123,8 @@ class FlxGame extends Sprite
 	 * Helps display the volume bars on the sound tray.
 	 */
 	private var _soundTrayBars:Array<Bitmap>;
+	
+	#if FLX_DEBUG
 	/**
 	 * The debugger overlay object.
 	 */
@@ -137,6 +136,8 @@ class FlxGame extends Sprite
 	/**
 	 * Container for a game replay object.
 	 */
+	#end
+	
 	public var _replay:FlxReplay;
 	/**
 	 * Flag for whether a playback of a recording was requested.
@@ -207,13 +208,11 @@ class FlxGame extends Sprite
 		_mark = 0;
 		_state = null;
 		useSoundHotKeys = true;
-
-		#if debug
-		forceDebugger = true;
-		#else
-		forceDebugger = false;
-		#end
+		
+		#if FLX_DEBUG
+		FlxG.debug = true;
 		_debuggerUp = false;
+		#end
 		
 		//replay data
 		_replay = new FlxReplay();
@@ -304,6 +303,7 @@ class FlxGame extends Sprite
 		
 		if(!_lostFocus)
 		{
+			#if FLX_DEBUG
 			if((_debugger != null) && _debugger.vcr.paused)
 			{
 				if(_debugger.vcr.stepRequested)
@@ -314,6 +314,7 @@ class FlxGame extends Sprite
 			}
 			else
 			{
+			#end
 				_accumulator += _elapsedMS;
 				if (_accumulator > _maxAccumulation)
 				{
@@ -326,11 +327,14 @@ class FlxGame extends Sprite
 					step();
 					_accumulator = _accumulator - _step; 
 				}
+			#if FLX_DEBUG
 			}
+			#end
 			
 			FlxBasic._VISIBLECOUNT = 0;
 			draw();
 			
+			#if FLX_DEBUG
 			if(_debuggerUp)
 			{
 				_debugger.perf.flash(_elapsedMS);
@@ -338,6 +342,8 @@ class FlxGame extends Sprite
 				_debugger.perf.update();
 				_debugger.watch.update();
 			}
+			#end
+			
 		}
 	}
 	
@@ -371,11 +377,13 @@ class FlxGame extends Sprite
 		FlxG.resetInput();
 		FlxG.destroySounds();
 		
+		#if FLX_DEBUG
 		//Clear the debugger overlay's Watch window
 		if (_debugger != null)
 		{
 			_debugger.watch.removeAll();
 		}
+		#end
 		
 		//Clear any timers left in the timer manager
 		var timerManager:TimerManager = FlxTimer.manager;
@@ -415,21 +423,20 @@ class FlxGame extends Sprite
 			_recordingRequested = false;
 			_replay.create(FlxG.globalSeed);
 			_recording = true;
-			if(_debugger != null)
-			{
-				_debugger.vcr.recording();
-				FlxG.log("FLIXEL: starting new flixel gameplay record.");
-			}
+			
+			#if FLX_DEBUG
+			_debugger.vcr.recording();
+			FlxG.log("FLIXEL: starting new flixel gameplay record.");
+			#end
 		}
 		else if (_replayRequested)
 		{
 			_replayRequested = false;
 			_replay.rewind();
 			FlxG.globalSeed = _replay.seed;
-			if (_debugger != null)
-			{
-				_debugger.vcr.playing();
-			}
+			#if FLX_DEBUG
+			_debugger.vcr.playing();
+			#end
 			_replaying = true;
 		}
 		
@@ -469,10 +476,9 @@ class FlxGame extends Sprite
 					_replayCallback = null;
 				}
 			}
-			if (_debugger != null)
-			{
+			#if FLX_DEBUG
 				_debugger.vcr.updateRuntime(_step);
-			}
+			#end
 		}
 		else
 		{
@@ -481,20 +487,21 @@ class FlxGame extends Sprite
 		if(_recording)
 		{
 			_replay.recordFrame();
-			if (_debugger != null)
-			{
-				_debugger.vcr.updateRuntime(_step);
-			}
+			#if FLX_DEBUG
+			_debugger.vcr.updateRuntime(_step);
+			#end
 		}
 		update();
 		#if !FLX_NO_MOUSE
 		//todo test why is this needed can it be put in FlxMouse
 		FlxG.mouse.wheel = 0;
 		#end
+		#if FLX_DEBUG
 		if (_debuggerUp)
 		{
 			_debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
 		}
+		#end
 	}
 
 	/**
@@ -537,9 +544,11 @@ class FlxGame extends Sprite
 	 */
 	private function update():Void
 	{			
+		#if FLX_DEBUG
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
-		
+		#end
+
 		FlxG.elapsed = FlxG.timeScale * _stepSeconds;
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
@@ -552,8 +561,10 @@ class FlxGame extends Sprite
 		
 		FlxG.updateCameras();
 		
+		#if FLX_DEBUG
 		if (_debuggerUp)
 			_debugger.perf.flixelUpdate(Lib.getTimer() - _mark);
+		#end
 	}
 	
 	/**
@@ -561,9 +572,11 @@ class FlxGame extends Sprite
 	 */
 	private function draw():Void
 	{
+		#if FLX_DEBUG
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
-		
+		#end
+
 		#if !flash
 		TileSheetData._DRAWCALLS = 0;
 		#end
@@ -574,16 +587,20 @@ class FlxGame extends Sprite
 		#if !flash
 		FlxG.renderCameras();
 		
+		#if FLX_DEBUG
 		if (_debuggerUp)
 		{
 			_debugger.perf.drawCalls(TileSheetData._DRAWCALLS);
 		}
 		#end
+		#end
 		
 		FlxG.drawPlugins();
 		FlxG.unlockCameras();
+		#if FLX_DEBUG
 		if (_debuggerUp)
 			_debugger.perf.flixelDraw(Lib.getTimer() - _mark);
+		#end
 	}
 	
 	/**
@@ -612,8 +629,9 @@ class FlxGame extends Sprite
 		//Let mobile devs opt out of unnecessary overlays.
 		if(!FlxG.mobile)
 		{
+			#if FLX_DEBUG
 			//Debugger overlay
-			if(FlxG.debug || forceDebugger)
+			if(FlxG.debug)
 			{
 				_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
 				#if flash
@@ -622,6 +640,7 @@ class FlxGame extends Sprite
 				Lib.current.stage.addChild(_debugger);
 				#end
 			}
+			#end
 			
 			//Volume display tab
 			createSoundTray();
@@ -758,12 +777,14 @@ class FlxGame extends Sprite
 		
 		addChild(_focus);
 	}
-	
+
+	#if FLX_DEBUG
 	public var debugger(getDebugger, null):FlxDebugger;
 	
 	public function getDebugger():FlxDebugger
 	{
 		return _debugger;
 	}
+	#end
 	
 }

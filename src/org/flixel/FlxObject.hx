@@ -258,6 +258,7 @@ class FlxObject extends FlxBasic
 	 */
 	private var _pathRotate:Bool;
 	
+	#if FLX_DEBUG
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
@@ -269,6 +270,7 @@ class FlxObject extends FlxBasic
 		debugBoundingBoxColor = val;
 		return val; 
 	}
+	#end
 	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
@@ -441,13 +443,18 @@ class FlxObject extends FlxBasic
 				continue;
 			}
 			FlxBasic._VISIBLECOUNT++;
+			
+			#if FLX_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
 			}
+			#end
+			
 		}
 	}
 	
+	#if FLX_DEBUG
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
@@ -525,6 +532,7 @@ class FlxObject extends FlxBasic
 		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
 		#end
 	}
+	#end
 	
 	/**
 	 * Call this function to give this object a path to follow.

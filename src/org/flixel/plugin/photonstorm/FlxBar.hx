@@ -373,10 +373,12 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
+	#if FLX_DEBUG
 	public function debug():Void
 	{
 		trace("FlxBar - Min: " + min + " Max: " + max + " Range: " + range + " pct: " + pct + " pxp: " + pxPerPercent + " Value: " + value);
 	}
+	#end
 	
 	public var stats(getStats, null):Hash<Dynamic>;
 	
@@ -1298,10 +1300,13 @@ class FlxBar extends FlxSprite
 			drawItem.position = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
+			
+			#if FLX_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
 			}
+			#end
 		}
 	}
 	
