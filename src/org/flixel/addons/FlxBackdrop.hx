@@ -152,8 +152,12 @@ class FlxBackdrop extends FlxObject
 			
 			var currDrawData:Array<Float>;
 			var currIndex:Int;
+			#if !js
 			var isColoredCamera:Bool = camera.isColored();
 			var drawItem:DrawStackItem = camera.getDrawStackItem(_atlas, isColoredCamera, 0);
+			#else
+			var drawItem:DrawStackItem = camera.getDrawStackItem(_atlas, false);
+			#end
 			
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
@@ -162,6 +166,7 @@ class FlxBackdrop extends FlxObject
 			var currTileX:Float;
 			var currTileY:Float;
 			
+			#if !js
 			var redMult:Float = 1;
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
@@ -172,6 +177,7 @@ class FlxBackdrop extends FlxObject
 				greenMult = camera.green;
 				blueMult = camera.blue;
 			}
+			#end
 			
 			for (j in 0...(_numTiles))
 			{
@@ -188,14 +194,15 @@ class FlxBackdrop extends FlxObject
 				currDrawData[currIndex++] = 0;
 				currDrawData[currIndex++] = 1;
 				
+				#if !js
 				if (isColoredCamera)
 				{
 					currDrawData[currIndex++] = redMult; 
 					currDrawData[currIndex++] = greenMult;
 					currDrawData[currIndex++] = blueMult;
 				}
-				
 				currDrawData[currIndex++] = 1.0;	// alpha
+				#end
 			}
 			
 			drawItem.position = currIndex;

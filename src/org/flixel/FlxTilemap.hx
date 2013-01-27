@@ -399,9 +399,9 @@ class FlxTilemap extends FlxObject
 	 */
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
-		#if flash
+	#if flash
 		Buffer.fill();
-		#else
+	#else
 		_helperPoint.x = Math.floor((x - Camera.scroll.x * scrollFactor.x) * 5) / 5; //copied from getScreenXY()
 		_helperPoint.y = Math.floor((y - Camera.scroll.y * scrollFactor.y) * 5) / 5;
 		var tileID:Int;
@@ -412,11 +412,15 @@ class FlxTilemap extends FlxObject
 		var drawY:Float;
 		
 		// TODO: maybe optimize this a liitle bit (get last drawStack item's colored value for example)
+		#if !js
 		var isColoredCamera:Bool = Camera.isColored();
 		var drawItem:DrawStackItem = Camera.getDrawStackItem(_atlas, isColoredCamera, 0);
+		#else
+		var drawItem:DrawStackItem = Camera.getDrawStackItem(_atlas, false);
+		#end
 		var currDrawData:Array<Float> = drawItem.drawData;
 		var currIndex:Int = drawItem.position;
-		#end
+	#end
 		
 		//Copy tile images into the tile buffer
 		_point.x = Std.int(Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
@@ -502,7 +506,7 @@ class FlxTilemap extends FlxObject
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
-					
+					#if !js
 					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = Camera.red; // red
@@ -510,6 +514,7 @@ class FlxTilemap extends FlxObject
 						currDrawData[currIndex++] = Camera.blue; //	blue
 					}
 					currDrawData[currIndex++] = 1.0; // alpha
+					#end
 					
 					#if FLX_DEBUG
 					if (FlxG.visualDebug && !ignoreDrawDebug)

@@ -342,14 +342,21 @@ class FlxBitmapFont extends FlxSprite
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		
+		#if !js
 		var isColored:Bool = isColored();
+		#else
+		var useAlpha:Bool = (alpha < 1);
+		#end
 		
 		while (i < l)
 		{
 			camera = cameras[i++];
+			#if !js
 			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			#else
+			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -361,6 +368,7 @@ class FlxBitmapFont extends FlxSprite
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
+			#if !js
 			var redMult:Float = _red;
 			var greenMult:Float = _green;
 			var blueMult:Float = _blue;
@@ -371,6 +379,7 @@ class FlxBitmapFont extends FlxSprite
 				greenMult = _green * camera.green;
 				blueMult = _blue * camera.blue;
 			}
+			#end
 			
 			if (simpleRenderSprite())
 			{	//Simple render
@@ -391,14 +400,20 @@ class FlxBitmapFont extends FlxSprite
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
 					
+					#if !js
 					if (isColored || isColoredCamera)
 					{
 						currDrawData[currIndex++] = redMult; 
 						currDrawData[currIndex++] = greenMult;
 						currDrawData[currIndex++] = blueMult;
 					}
-					
 					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
 					j++;
 				}
 			}
@@ -428,14 +443,20 @@ class FlxBitmapFont extends FlxSprite
 					currDrawData[currIndex++] = sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
 					
+					#if !js
 					if (isColored || isColoredCamera)
 					{
 						currDrawData[currIndex++] = redMult; 
 						currDrawData[currIndex++] = greenMult;
 						currDrawData[currIndex++] = blueMult;
 					}
-					
 					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
 					j++;
 				}
 			}

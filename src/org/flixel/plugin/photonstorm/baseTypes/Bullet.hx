@@ -72,7 +72,7 @@ class Bullet extends FlxSprite
 		animated = true;
 	}
 	
-	public function fire(fromX:Int, fromY:Int, velX:Int, velY:Int):Void
+	public function fire(fromX:Float, fromY:Float, velX:Float, velY:Float):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
 		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
@@ -92,7 +92,7 @@ class Bullet extends FlxSprite
 	}
 	
 	#if !FLX_NO_MOUSE
-	public function fireAtMouse(fromX:Int, fromY:Int, speed:Int, rotateBulletTowards = true):Void
+	public function fireAtMouse(fromX:Float, fromY:Float, speed:Int, rotateBulletTowards = true):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
 		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
@@ -114,7 +114,7 @@ class Bullet extends FlxSprite
 	#end
 	
 	#if !FLX_NO_TOUCH
-	public function fireAtTouch(fromX:Int, fromY:Int, touch:FlxTouch, speed:Int, rotateBulletTowards = true):Void
+	public function fireAtTouch(fromX:Float, fromY:Float, touch:FlxTouch, speed:Int, rotateBulletTowards = true):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
 		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
@@ -129,13 +129,13 @@ class Bullet extends FlxSprite
 		}
 		
 		if ( rotateBulletTowards )
-		angle = FlxVelocity.angleBetweenTouch(weapon.parent, touch,true);
+			angle = FlxVelocity.angleBetweenTouch(weapon.parent, touch,true);
 		
 		postFire();
 	}
 	#end
 	
-	public function fireAtPosition(fromX:Int, fromY:Int, toX:Int, toY:Int, speed:Int):Void
+	public function fireAtPosition(fromX:Float, fromY:Float, toX:Float, toY:Float, speed:Int):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
 		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
@@ -152,7 +152,7 @@ class Bullet extends FlxSprite
 		postFire();
 	}
 	
-	public function fireAtTarget(fromX:Int, fromY:Int, target:FlxSprite, speed:Int):Void
+	public function fireAtTarget(fromX:Float, fromY:Float, target:FlxSprite, speed:Int):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
 		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
@@ -169,7 +169,7 @@ class Bullet extends FlxSprite
 		postFire();
 	}
 	
-	public function fireFromAngle(fromX:Int, fromY:Int, fireAngle:Int, speed:Int):Void
+	public function fireFromAngle(fromX:Float, fromY:Float, fireAngle:Int, speed:Int):Void
 	{
 		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
 		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);

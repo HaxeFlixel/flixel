@@ -211,16 +211,23 @@ class FlxBitmapTextField extends FlxSprite
 		var relativeX:Float;
 		var relativeY:Float;
 		
+		#if js
+		var useAlpha:Bool = (alpha < 1);
+		#end
+		
 		var camID:Int;
 		
 		while(i < l)
 		{
 			camera = cameras[i++];
+			#if !js
 			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt);
+			var isColoredCamera:Bool = camera.isColored();
+			#else
+			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
-			
-			var isColoredCamera:Bool = camera.isColored();
 			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
@@ -243,6 +250,7 @@ class FlxBitmapTextField extends FlxSprite
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = height;
 					
+					#if !js
 					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _bgDrawData[3] * camera.red; 
@@ -255,9 +263,13 @@ class FlxBitmapTextField extends FlxSprite
 						currDrawData[currIndex++] = _bgDrawData[4];
 						currDrawData[currIndex++] = _bgDrawData[5];
 					}
-					
-					
 					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
 				}
 				
 				//Simple render
@@ -281,6 +293,7 @@ class FlxBitmapTextField extends FlxSprite
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = _fontScale;
 					
+					#if !js
 					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = currTileRed * camera.red; 
@@ -294,6 +307,12 @@ class FlxBitmapTextField extends FlxSprite
 						currDrawData[currIndex++] = currTileBlue;
 					}
 					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
 					j++;
 				}
 			}
@@ -321,6 +340,7 @@ class FlxBitmapTextField extends FlxSprite
 					currDrawData[currIndex++] = sin * scale.x * width * _fontScale;
 					currDrawData[currIndex++] = cos * scale.y * height * _fontScale;
 					
+					#if !js
 					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = _bgDrawData[3] * camera.red; 
@@ -333,8 +353,13 @@ class FlxBitmapTextField extends FlxSprite
 						currDrawData[currIndex++] = _bgDrawData[4];
 						currDrawData[currIndex++] = _bgDrawData[5];
 					}
-					
 					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
 				}
 				
 				while (j < textLength)
@@ -360,6 +385,7 @@ class FlxBitmapTextField extends FlxSprite
 					currDrawData[currIndex++] = sin * scale.x * _fontScale;
 					currDrawData[currIndex++] = cos * scale.y * _fontScale;
 					
+					#if !js
 					if (isColoredCamera)
 					{
 						currDrawData[currIndex++] = currTileRed * camera.red; 
@@ -373,6 +399,12 @@ class FlxBitmapTextField extends FlxSprite
 						currDrawData[currIndex++] = currTileBlue;
 					}
 					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
 					j++;
 				}
 			}

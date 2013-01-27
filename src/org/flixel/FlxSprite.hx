@@ -42,6 +42,11 @@ class FlxSprite extends FlxObject
 	#end
 	
 	/**
+	 * Gets or sets the currently playing animation.
+	 */
+	public var curAnim(getCurAnim, setCurAnim):String;
+	
+	/**
 	 * WARNING: The origin of the sprite will default to its center.
 	 * If you change this, the visuals and the collisions will likely be
 	 * pretty out-of-sync if you do any rotation.
@@ -631,16 +636,20 @@ class FlxSprite extends FlxObject
 		var i:Int = 0;
 		var l:Int = cameras.length;
 		
-		#if !flash
+	#if !flash
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
+		#if !js
 		var isColored:Bool = isColored();
+		#else
+		var useAlpha:Bool = (alpha < 1);
+		#end
 		
 		var radians:Float;
 		var cos:Float;
 		var sin:Float;
-		#end
+	#end
 		
 		while(i < l)
 		{
@@ -651,9 +660,13 @@ class FlxSprite extends FlxObject
 				continue;
 			}
 			
-			#if !flash
+		#if !flash
+			#if !js
 			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			#else
+			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -662,13 +675,13 @@ class FlxSprite extends FlxObject
 			
 			_point.x = (_point.x) + origin.x;
 			_point.y = (_point.y) + origin.y;
-			#else
+		#else
 			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
 			
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
-			#end
+		#end
 			if (simpleRenderSprite())
 			{	//Simple render
 				#if flash
@@ -697,7 +710,7 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 1;
 				}
-				
+				#if !js
 				if (isColored || isColoredCamera)
 				{
 					if (isColoredCamera)
@@ -713,8 +726,14 @@ class FlxSprite extends FlxObject
 						currDrawData[currIndex++] = _blue;
 					}
 				}
-				
 				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
+				
 				drawItem.position = currIndex;
 				#end
 			}
@@ -754,7 +773,7 @@ class FlxSprite extends FlxObject
 					currDrawData[currIndex++] = -sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
 				}
-				
+				#if !js
 				if (isColored || isColoredCamera)
 				{
 					if (isColoredCamera)
@@ -770,8 +789,13 @@ class FlxSprite extends FlxObject
 						currDrawData[currIndex++] = _blue;
 					}
 				}
-				
 				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
 				drawItem.position = currIndex;
 				#end
 			}
@@ -1333,6 +1357,27 @@ class FlxSprite extends FlxObject
 		#end
 		dirty = true;
 		return Frame;
+	}
+	
+	/**
+	 * Gets the currently playing animation, or null if no animation is playing
+	 */
+	public function getCurAnim():String
+	{
+		if(_curAnim != null && !finished)
+			return _curAnim.name;
+		return null;
+	}
+	
+	/**
+	 * Plays a specified animation (same as calling play)
+	 * 
+	 * @param	AnimName	The name of the animation you want to play.
+	 */
+	public function setCurAnim(AnimName:String):String
+	{
+		play(AnimName);
+		return AnimName;
 	}
 	
 	/**

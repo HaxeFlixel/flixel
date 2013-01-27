@@ -99,9 +99,14 @@ class FlxSkewedSprite extends FlxSprite
 				continue;
 			}
 			
-			#if !flash
+		#if !flash
+			#if !js
 			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			#else
+			var useAlpha:Bool = (alpha < 1);
+			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -110,13 +115,13 @@ class FlxSkewedSprite extends FlxSprite
 			
 			_point.x = (_point.x) + origin.x;
 			_point.y = (_point.y) + origin.y;
-			#else
+		#else
 			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
 			
 			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
 			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
-			#end
+		#end
 			if (simpleRenderSkewedSprite())
 			{	//Simple render
 				#if flash
@@ -145,6 +150,7 @@ class FlxSkewedSprite extends FlxSprite
 					currDrawData[currIndex++] = 1;
 				}
 				
+				#if !js
 				if (isColored || isColoredCamera)
 				{
 					if (isColoredCamera)
@@ -160,8 +166,13 @@ class FlxSkewedSprite extends FlxSprite
 						currDrawData[currIndex++] = _blue;
 					}
 				}
-				
 				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
 				
 				drawItem.position = currIndex;
 				#end
@@ -226,6 +237,7 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _matrix.c;
 				currDrawData[currIndex++] = _matrix.d;
 				
+				#if !js
 				if (isColored || isColoredCamera)
 				{
 					if (isColoredCamera)
@@ -241,8 +253,13 @@ class FlxSkewedSprite extends FlxSprite
 						currDrawData[currIndex++] = _blue;
 					}
 				}
-				
 				currDrawData[currIndex++] = alpha;
+				#else 
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
 				
 				drawItem.position = currIndex;
 				#end

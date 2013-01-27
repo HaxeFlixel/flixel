@@ -497,14 +497,18 @@ class StarSprite extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
-			var isColoredCamera:Bool = camera.isColored();
-			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
 			
+			#if !js
+			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt);
+			#else
+			drawItem = camera.getDrawStackItem(_atlas, true);
+			#end
+			
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -528,6 +532,7 @@ class StarSprite extends FlxSprite
 				currDrawData[currIndex++] = 0;
 				currDrawData[currIndex++] = height;
 				
+				#if !js
 				if (isColoredCamera)
 				{
 					currDrawData[currIndex++] = bgRed * camera.red; 
@@ -540,6 +545,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = bgGreen;
 					currDrawData[currIndex++] = bgBlue;
 				}
+				#end
 				
 				currDrawData[currIndex++] = bgAlpha * alpha;
 				
@@ -562,6 +568,7 @@ class StarSprite extends FlxSprite
 					starGreen = starDef.green;
 					starBlue = starDef.blue;
 					
+				#if !js
 					if (isColoredCamera)
 					{
 						starRed *= camera.red;
@@ -583,6 +590,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = starRed; 
 					currDrawData[currIndex++] = starGreen;
 					currDrawData[currIndex++] = starBlue;
+				#end	
 					
 					currDrawData[currIndex++] = alpha * starDef.alpha;
 				}
@@ -609,6 +617,7 @@ class StarSprite extends FlxSprite
 				currDrawData[currIndex++] = sin * scale.x * width;
 				currDrawData[currIndex++] = cos * scale.y * height;
 				
+				#if !js
 				if (isColoredCamera)
 				{
 					currDrawData[currIndex++] = bgRed * camera.red; 
@@ -621,6 +630,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = bgGreen;
 					currDrawData[currIndex++] = bgBlue;
 				}
+				#end
 				
 				currDrawData[currIndex++] = bgAlpha * alpha;
 				
@@ -644,7 +654,8 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = -sin * scale.y;
 					currDrawData[currIndex++] = sin * scale.x;
 					currDrawData[currIndex++] = cos * scale.y;
-					
+				
+				#if !js
 					starRed = starDef.red;
 					starGreen = starDef.green;
 					starBlue = starDef.blue;
@@ -670,6 +681,7 @@ class StarSprite extends FlxSprite
 					currDrawData[currIndex++] = starRed; 
 					currDrawData[currIndex++] = starGreen;
 					currDrawData[currIndex++] = starBlue;
+				#end
 					
 					currDrawData[currIndex++] = alpha * starDef.alpha;
 				}
