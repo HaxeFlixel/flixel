@@ -76,8 +76,9 @@ class FlxPhysState extends FlxState
 	 */
 	override public function update():Void 
 	{
-		
 		space.step(FlxG.elapsed, velocityIterations, positionIterations);
+		
+		#if FLX_DEBUG
 		if (_physDbgSpr != null) 
 		{
 			_physDbgSpr.clear();
@@ -102,6 +103,7 @@ class FlxPhysState extends FlxState
 			}
 			
 		}
+		#end
 		
 		super.update();
 	}
