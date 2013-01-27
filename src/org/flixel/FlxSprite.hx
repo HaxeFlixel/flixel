@@ -1694,12 +1694,11 @@ class FlxSprite extends FlxObject
 		{
 			case BlendMode.ADD:
 				_blendInt = Tilesheet.TILE_BLEND_ADD;
-				_blend = value;
 			default:
 				_blendInt = 0;
-				_blend = BlendMode.NORMAL;
 		}
 		
+		_blend = value;
 		return value;
 	}
 	#end
