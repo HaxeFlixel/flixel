@@ -306,7 +306,7 @@ class FlxWeapon
 	 */
 	private function runFire(method:Int, x:Int = 0, y:Int = 0, target:FlxSprite = null, angle:Int = 0):Bool
 	{
-		if (fireRate > 0 && (FlxU.getTicks() < Math.floor(nextFire)))
+		if (fireRate > 0 && FlxU.getTicks() < nextFire)
 		{
 			return false;
 		}
@@ -336,13 +336,13 @@ class FlxWeapon
 		lastFired = FlxU.getTicks();
 		nextFire = FlxU.getTicks() + cast(fireRate / FlxG.timeScale);
 		
-		var launchX:Int = Math.floor(positionOffset.x);
-		var launchY:Int = Math.floor(positionOffset.y);
+		var launchX:Float = positionOffset.x;
+		var launchY:Float = positionOffset.y;
 		
 		if (fireFromParent)
 		{
-			launchX += Math.floor(Reflect.getProperty(parent, parentXVariable));
-			launchY += Math.floor(Reflect.getProperty(parent, parentYVariable));
+			launchX += Reflect.getProperty(parent, parentXVariable);
+			launchY += Reflect.getProperty(parent, parentYVariable);
 		}
 		else if (fireFromPosition)
 		{
@@ -358,7 +358,7 @@ class FlxWeapon
 		//	Faster (less CPU) to use this small if-else ladder than a switch statement
 		if (method == FIRE)
 		{
-			currentBullet.fire(launchX, launchY, Math.floor(velocity.x), Math.floor(velocity.y));
+			currentBullet.fire(launchX, launchY, velocity.x, velocity.y);
 		}
 		else if (method == FIRE_AT_POSITION)
 		{
