@@ -310,11 +310,30 @@ class NestedSprite extends FlxSprite
 			var red:Float = (_color >> 16) * 0.00392 * _parentRed;
 			var green:Float = (_color >> 8 & 0xff) * 0.00392 * _parentGreen;
 			var blue:Float = (_color & 0xff) * 0.00392 * _parentBlue;
-			_colorTransform = new ColorTransform(red, green, blue, alpha);
+			
+			if (_colorTransform == null)
+			{
+				_colorTransform = new ColorTransform(red, green, blue, alpha);
+			}
+			else
+			{
+				_colorTransform.redMultiplier = red;
+				_colorTransform.greenMultiplier = green;
+				_colorTransform.blueMultiplier = blue;
+				_colorTransform.alphaMultiplier = alpha;
+			}
+			_useColorTransform = true;
 		}
 		else
 		{
-			_colorTransform = null;
+			if (_colorTransform != null)
+			{
+				_colorTransform.redMultiplier = 1;
+				_colorTransform.greenMultiplier = 1;
+				_colorTransform.blueMultiplier = 1;
+				_colorTransform.alphaMultiplier = 1;
+			}
+			_useColorTransform = false;
 		}
 		dirty = true;
 		#end
@@ -359,11 +378,29 @@ class NestedSprite extends FlxSprite
 		_color = {rgb: combinedColor, a: 255};
 		if ((alpha != 1) || (_color.rgb != 0xffffff))
 		{
-			_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, alpha);
+			if (_colorTransform == null)
+			{
+				_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, alpha);
+			}
+			else
+			{
+				_colorTransform.redMultiplier = combinedRed;
+				_colorTransform.greenMultiplier = combinedGreen;
+				_colorTransform.blueMultiplier = combinedBlue;
+				_colorTransform.alphaMultiplier = alpha;
+			}
+			_useColorTransform = true;
 		}
 		else
 		{
-			_colorTransform = null;
+			if (_colorTransform != null)
+			{
+				_colorTransform.redMultiplier = 1;
+				_colorTransform.greenMultiplier = 1;
+				_colorTransform.blueMultiplier = 1;
+				_colorTransform.alphaMultiplier = 1;
+			}
+			_useColorTransform = false;
 		}
 	#else
 		#if flash
@@ -377,11 +414,29 @@ class NestedSprite extends FlxSprite
 		_color = combinedColor;
 		if ((alpha != 1) || (_color != 0x00ffffff))
 		{
-			_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, alpha);
+			if (_colorTransform == null)
+			{
+				_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, alpha);
+			}
+			else
+			{
+				_colorTransform.redMultiplier = combinedRed;
+				_colorTransform.greenMultiplier = combinedGreen;
+				_colorTransform.blueMultiplier = combinedBlue;
+				_colorTransform.alphaMultiplier = alpha;
+			}
+			_useColorTransform = true;
 		}
 		else
 		{
-			_colorTransform = null;
+			if (_colorTransform != null)
+			{
+				_colorTransform.redMultiplier = 1;
+				_colorTransform.greenMultiplier = 1;
+				_colorTransform.blueMultiplier = 1;
+				_colorTransform.alphaMultiplier = 1;
+			}
+			_useColorTransform = false;
 		}
 	#end
 		
