@@ -42,6 +42,11 @@ class FlxSprite extends FlxObject
 	#end
 	
 	/**
+	 * Gets or sets the currently playing animation.
+	 */
+	public var curAnim(getCurAnim, setCurAnim):String;
+	
+	/**
 	 * WARNING: The origin of the sprite will default to its center.
 	 * If you change this, the visuals and the collisions will likely be
 	 * pretty out-of-sync if you do any rotation.
@@ -1352,6 +1357,27 @@ class FlxSprite extends FlxObject
 		#end
 		dirty = true;
 		return Frame;
+	}
+	
+	/**
+	 * Gets the currently playing animation, or null if no animation is playing
+	 */
+	public function getCurAnim():String
+	{
+		if(_curAnim != null && !finished)
+			return _curAnim.name;
+		return null;
+	}
+	
+	/**
+	 * Plays a specified animation (same as calling play)
+	 * 
+	 * @param	AnimName	The name of the animation you want to play.
+	 */
+	public function setCurAnim(AnimName:String):String
+	{
+		play(AnimName);
+		return AnimName;
 	}
 	
 	/**
