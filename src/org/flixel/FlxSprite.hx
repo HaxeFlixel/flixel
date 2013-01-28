@@ -1093,6 +1093,21 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Gets the FlxAnim object with the specified name.
+	 */
+	public function getAnimation(name:String):FlxAnim
+	{
+		var i:Int = _animations.length - 1;
+		while(i >= 0)
+		{
+			if (_animations[i].name == name)
+				return _animations[i];
+			i--;
+		}
+		return null;
+	}
+	
+	/**
 	 * Tell the sprite to change to a random frame of animation
 	 * Useful for instantiating particles or other weird things.
 	 */
