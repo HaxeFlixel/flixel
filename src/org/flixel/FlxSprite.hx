@@ -173,6 +173,10 @@ class FlxSprite extends FlxObject
 	 */
 	private var _colorTransform:ColorTransform;
 	/**
+	 * Internal, reflects the need to use _colorTransform object
+	 */
+	private var _useColorTransform:Bool;
+	/**
 	 * Internal, helps with animation, caching and drawing.
 	 */
 	private var _matrix:Matrix;
@@ -275,6 +279,7 @@ class FlxSprite extends FlxObject
 		_curAnim = null;
 		_matrix = null;
 		_callback = null;
+		_colorTransform = null;
 		if (framePixels != null)
 		{
 			framePixels.dispose();
@@ -563,7 +568,7 @@ class FlxSprite extends FlxObject
 			framePixels = new BitmapData(Math.floor(width), Math.floor(height));
 		}
 		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
-		if (_colorTransform != null) framePixels.colorTransform(_flashRect, _colorTransform);
+		if (_useColorTransform) framePixels.colorTransform(_flashRect, _colorTransform);
 		
 		frames = Math.floor(_flashRect2.width / _flashRect.width * _flashRect2.height / _flashRect.height);
 	#else
@@ -1259,11 +1264,30 @@ class FlxSprite extends FlxObject
 		#if flash
 		if ((alpha != 1) || (_color != 0x00ffffff))
 		{
-			_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, alpha);
+			if (_colorTransform == null)
+			{
+				_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, alpha);
+			}
+			else
+			{
+				_colorTransform.redMultiplier = (_color >> 16) * 0.00392;
+				_colorTransform.greenMultiplier = (_color >> 8 & 0xff) * 0.00392;
+				_colorTransform.blueMultiplier = (_color & 0xff) * 0.00392;
+				_colorTransform.alphaMultiplier = alpha;
+			}
+			_useColorTransform = true;
 		}
 		else
 		{
-			_colorTransform = null;
+			if (_colorTransform != null)
+			{
+				_colorTransform.redMultiplier = 1;
+				_colorTransform.greenMultiplier = 1;
+				_colorTransform.blueMultiplier = 1;
+				_colorTransform.alphaMultiplier = 1;
+			}
+			
+			_useColorTransform = false;
 		}
 		dirty = true;
 		#end
@@ -1301,11 +1325,29 @@ class FlxSprite extends FlxObject
 		_color = Color;
 		if ((alpha != 1) || (_color.rgb != 0xffffff))
 		{
-			_colorTransform = new ColorTransform((_color.rgb >> 16) * 0.00392, (_color.rgb >> 8 & 0xff) * 0.00392, (_color.rgb & 0xff) * 0.00392, alpha);
+			if (_colorTransform == null)
+			{
+				_colorTransform = new ColorTransform((_color.rgb >> 16) * 0.00392, (_color.rgb >> 8 & 0xff) * 0.00392, (_color.rgb & 0xff) * 0.00392, alpha);
+			}
+			else
+			{
+				_colorTransform.redMultiplier = (_color.rgb >> 16) * 0.00392;
+				_colorTransform.greenMultiplier = (_color.rgb >> 8 & 0xff) * 0.00392;
+				_colorTransform.blueMultiplier = (_color.rgb & 0xff) * 0.00392;
+				_colorTransform.alphaMultiplier = alpha;
+			}
+			_useColorTransform = true;
 		}
 		else
 		{
-			_colorTransform = null;
+			if (_colorTransform != null)
+			{
+				_colorTransform.redMultiplier = 1;
+				_colorTransform.greenMultiplier = 1;
+				_colorTransform.blueMultiplier = 1;
+				_colorTransform.alphaMultiplier = 1;
+			}
+			_useColorTransform = false;
 		}
 		#else
 		Color &= 0x00ffffff;
@@ -1316,11 +1358,29 @@ class FlxSprite extends FlxObject
 		_color = Color;
 		if ((alpha != 1) || (_color != 0x00ffffff))
 		{
-			_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, alpha);
+			if (_colorTransform == null)
+			{
+				_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, alpha);
+			}
+			else
+			{
+				_colorTransform.redMultiplier = (_color >> 16) * 0.00392;
+				_colorTransform.greenMultiplier = (_color >> 8 & 0xff) * 0.00392;
+				_colorTransform.blueMultiplier = (_color & 0xff) * 0.00392;
+				_colorTransform.alphaMultiplier = alpha;
+			}
+			_useColorTransform = true;
 		}
 		else
 		{
-			_colorTransform = null;
+			if (_colorTransform != null)
+			{
+				_colorTransform.redMultiplier = 1;
+				_colorTransform.greenMultiplier = 1;
+				_colorTransform.blueMultiplier = 1;
+				_colorTransform.alphaMultiplier = 1;
+			}
+			_useColorTransform = false;
 		}
 		#end
 		
@@ -1579,7 +1639,7 @@ class FlxSprite extends FlxObject
 			}
 			#end
 			_flashRect.x = _flashRect.y = 0;
-			if (_colorTransform != null) 
+			if (_useColorTransform) 
 			{
 				framePixels.colorTransform(_flashRect, _colorTransform);
 			}
@@ -1649,12 +1709,11 @@ class FlxSprite extends FlxObject
 		{
 			case BlendMode.ADD:
 				_blendInt = Tilesheet.TILE_BLEND_ADD;
-				_blend = value;
 			default:
 				_blendInt = 0;
-				_blend = BlendMode.NORMAL;
 		}
 		
+		_blend = value;
 		return value;
 	}
 	#end

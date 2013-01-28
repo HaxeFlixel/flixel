@@ -126,10 +126,12 @@ class FlxText extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
+		#if !js
 		if (_pixels != null)
 		{
 			_pixels.dispose();
 		}
+		#end
 		_textField = null;
 		_format = null;
 		_formatAdjusted = null;

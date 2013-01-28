@@ -1780,9 +1780,31 @@ class FlxTilemap extends FlxObject
 		{
 			var bd:BitmapData = bitmapData;
 			bitmapData = new BitmapData(bitmapData.width * Scale, bitmapData.height * Scale);
+			// TODO: fix this for html5 target
+			#if js
+			var bdW:Int = bd.width;
+			var bdH:Int = bd.height;
+			var pCol:Int = 0;
+			
+			for (i in 0...bdW)
+			{
+				for (j in 0...bdH)
+				{
+					pCol = bd.getPixel(i, j);
+					for (k in 0...Scale)
+					{
+						for (m in 0...Scale)
+						{
+							bitmapData.setPixel(i * Scale + k, j * Scale + m, pCol);
+						}
+					}
+				}
+			}
+			#else
 			var mtx:Matrix = new Matrix();
 			mtx.scale(Scale, Scale);
 			bitmapData.draw(bd, mtx);
+			#end
 		}
 		
 		//Walk image and export pixel values
