@@ -671,7 +671,14 @@ class FlxGroup extends FlxBasic
 			basic = members[i++];
 			if ((basic != null) && !basic.exists)
 			{
-				basic.revive();
+				if (Std.is(basic, FlxGroup))
+				{
+					cast(basic, FlxGroup).reviveWithMembers();
+				}
+				else
+				{
+					basic.revive();
+				}
 			}
 		}
 	}
