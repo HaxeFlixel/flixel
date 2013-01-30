@@ -321,8 +321,8 @@ class FlxGame extends Sprite
 					_accumulator = _maxAccumulation;
 				}
 				// TODO: You may uncomment following lines
-				//while(_accumulator >= _step)
-				while (_accumulator > _step)
+				//while (_accumulator > _step)
+				while(_accumulator >= _step)
 				{
 					step();
 					_accumulator = _accumulator - _step; 

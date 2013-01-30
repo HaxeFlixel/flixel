@@ -647,7 +647,7 @@ class FlxGroup extends FlxBasic
 	{
 		var basic:FlxBasic;
 		var i:Int = 0;
-		while(i < length)
+		while (i < length)
 		{
 			basic = members[i++];
 			if ((basic != null) && basic.exists)
@@ -656,6 +656,24 @@ class FlxGroup extends FlxBasic
 			}
 		}
 		super.kill();
+	}
+	
+	/**
+	 * Revives the group itself and all of it's members.
+	 */
+	public function reviveWithMembers():Void
+	{
+		revive();
+		var basic:FlxBasic;
+		var i:Int = 0;
+		while (i < length)
+		{
+			basic = members[i++];
+			if ((basic != null) && !basic.exists)
+			{
+				basic.revive();
+			}
+		}
 	}
 	
 	/**

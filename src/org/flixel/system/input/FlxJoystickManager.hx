@@ -19,7 +19,7 @@ class FlxJoystickManager implements IFlxInput
 	 * Less this number the more Joystick is sensible.
 	 * Should be between 0.0 and 1.0.
 	 */
-	public var deadZone:Float = 0.0;
+	public var deadZone:Float = 0.15;
 	
 	/**
 	 * Storage for all connected joysticks
@@ -29,7 +29,8 @@ class FlxJoystickManager implements IFlxInput
 	/**
 	 * Constructor
 	 */
-	public function new() {
+	public function new() 
+	{
         joysticks  = new IntHash<FlxJoystick>();
 
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
