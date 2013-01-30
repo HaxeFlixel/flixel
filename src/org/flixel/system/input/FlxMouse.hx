@@ -23,6 +23,13 @@ import org.flixel.system.replay.MouseRecord;
  */
 class FlxMouse extends FlxPoint, implements IFlxInput
 {
+	//  possible values for field '_current'
+	//  2 - just pressed
+	//  1 - pressed
+	//  0 - released
+	// -1 - just released
+	// -2 - fast press and release
+	
 	/**
 	 * Current "delta" value of mouse wheel.  If the wheel was just scrolled up, it will have a positive value.  If it was just scrolled down, it will have a negative value.  If it wasn't just scroll this frame, it will be 0.
 	 */
@@ -143,9 +150,8 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 			return;
 		}
 		
-		if(_current > 0) _current = 1;
+		if (_current > 0) _current = 1;
 		else _current = 2;
-
 	}
 	
 	/**
@@ -161,8 +167,18 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		}
 		#end
 		
-		if(_current > 0) _current = -1;
-		else _current = 0;
+		if (_current > 0) 
+		{
+			_current = -1;
+		}
+		else if (_current == -2)
+		{
+			_current == -2;
+		}
+		else 
+		{
+			_current = 0;
+		}
 	}
 	
 	/**
@@ -180,7 +196,6 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		
 		wheel = FlashEvent.delta;
 	}
-	
 	
 	/**
 	 * Clean up memory.
@@ -325,6 +340,10 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 			{
 				_current = 1;
 			}
+			else if ((_last == -2) && (_current == -2))
+			{
+				_current = 0;
+			}
 			_last = _current;
 		}
 	}
@@ -414,13 +433,13 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 * Check to see if the mouse was just pressed.
 	 * @return Whether the mouse was just pressed.
 	 */
-	public function justPressed():Bool { return _current == 2; }
+	public function justPressed():Bool { return (_current == 2 || _current == -2); }
 	
 	/**
 	 * Check to see if the mouse was just released.
 	 * @return	Whether the mouse was just released.
 	 */
-	public function justReleased():Bool { return _current == -1; }
+	public function justReleased():Bool { return (_current == -1 || _current == -2); }
 	
 	/**
 	 * If the mouse changed state or is pressed, return that info now

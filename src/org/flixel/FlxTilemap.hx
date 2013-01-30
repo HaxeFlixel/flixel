@@ -1780,12 +1780,10 @@ class FlxTilemap extends FlxObject
 		{
 			var bd:BitmapData = bitmapData;
 			bitmapData = new BitmapData(bitmapData.width * Scale, bitmapData.height * Scale);
-			// TODO: fix this for html5 target
 			#if js
 			var bdW:Int = bd.width;
 			var bdH:Int = bd.height;
 			var pCol:Int = 0;
-			
 			for (i in 0...bdW)
 			{
 				for (j in 0...bdH)
