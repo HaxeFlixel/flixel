@@ -7,12 +7,8 @@ package org.flixel.system.replay;
 
 class JoystickRecord 
 {
-	
-	
-	
 	public function new() 
 	{
 		
 	}
-	
 }

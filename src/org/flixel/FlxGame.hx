@@ -169,10 +169,6 @@ class FlxGame extends Sprite
 	 */
 	public var _replayCallback:Void->Void;
 	/**
-	 * This sprite is needed in c++ version of games.
-	 */
-	public static var clickableArea:Sprite;
-	/**
 	 * The inputs to enable for the game
 	 */
 	public static var inputList:FlxInputList;
