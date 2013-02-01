@@ -12,6 +12,13 @@ class FlxJoystick
 	public var connected:Bool;
 	public var id:Int;
 	
+	/**
+	 * Joystick deadzone. Sets the sensibility. 
+	 * Less this number the more Joystick is sensible.
+	 * Should be between 0.0 and 1.0.
+	 */
+	public var deadZone:Float = 0.15;
+	
 	public function new(id:Int) 
 	{
 		buttons = new IntHash<FlxJoyButton>();
@@ -121,6 +128,12 @@ class FlxJoystick
 		}
 		
 		return false;
+	}
+	
+	public function getAxis(axeID:Int):Float
+	{
+		if (axeID < 0 || axeID >= axis.length) return 0;
+		else return (Math.abs(axis[axeID]) < deadZone) ? 0 : axis[axeID];
 	}
 	
 	/**

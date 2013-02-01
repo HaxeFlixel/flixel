@@ -13,14 +13,6 @@ import org.flixel.system.input.FlxJoystick;
 
 class FlxJoystickManager implements IFlxInput
 {
-
-	/**
-	 * Joystick deadzone. Sets the sensibility. 
-	 * Less this number the more Joystick is sensible.
-	 * Should be between 0.0 and 1.0.
-	 */
-	public var deadZone:Float = 0.15;
-	
 	/**
 	 * Storage for all connected joysticks
 	 */
@@ -138,8 +130,8 @@ class FlxJoystickManager implements IFlxInput
 	{
 		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
-		joy.ball.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
-		joy.ball.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
+		joy.ball.x = (Math.abs(FlashEvent.x) < joy.deadZone) ? 0 : FlashEvent.x;
+		joy.ball.y = (Math.abs(FlashEvent.y) < joy.deadZone) ? 0 : FlashEvent.y;
 	}
 	
 	/**
@@ -150,8 +142,8 @@ class FlxJoystickManager implements IFlxInput
 	{
 		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
-		joy.hat.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
-		joy.hat.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
+		joy.hat.x = (Math.abs(FlashEvent.x) < joy.deadZone) ? 0 : FlashEvent.x;
+		joy.hat.y = (Math.abs(FlashEvent.y) < joy.deadZone) ? 0 : FlashEvent.y;
 	}
 
 	public function onFocus( ):Void
