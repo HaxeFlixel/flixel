@@ -115,6 +115,11 @@ class FlxSkewedSprite extends FlxSprite
 			
 			_point.x = (_point.x) + origin.x;
 			_point.y = (_point.y) + origin.y;
+			
+			#if js
+			_point.x = Math.floor(_point.x);
+			_point.y = Math.floor(_point.y);
+			#end
 		#else
 			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
