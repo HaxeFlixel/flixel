@@ -98,7 +98,7 @@ class FlxJoystickManager implements IFlxInput
 		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		
-		var o:FlxJoyButton = joy.buttons.get(FlashEvent.id);
+		var o:FlxJoyButton = joy.getButton(FlashEvent.id);
 		if (o == null) return;
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
@@ -113,7 +113,7 @@ class FlxJoystickManager implements IFlxInput
 		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
 		
-		var object:FlxJoyButton = joy.buttons.get(FlashEvent.id);
+		var object:FlxJoyButton = joy.getButton(FlashEvent.id);
 		if(object == null) return;
 		if(object.current > 0) object.current = -1;
 		else object.current = 0;
@@ -127,8 +127,7 @@ class FlxJoystickManager implements IFlxInput
 	{
 		var joy:FlxJoystick = joystick(FlashEvent.device);
 		joy.connected = true;
-		joy.axis.x = (Math.abs(FlashEvent.x) < deadZone) ? 0 : FlashEvent.x;
-		joy.axis.y = (Math.abs(FlashEvent.y) < deadZone) ? 0 : FlashEvent.y;
+		joy.axis = FlashEvent.axis;
 	}
 	
 	/**

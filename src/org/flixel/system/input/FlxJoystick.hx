@@ -6,27 +6,31 @@ class FlxJoystick
 {
 	
 	public var buttons:IntHash<FlxJoyButton>;
-	public var axis:FlxPoint;
+	public var axis:Array<Float>;
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
 	public var connected:Bool;
 	public var id:Int;
 	
-	public static inline var NUM_BUTTONS:Int = 8;
-	
 	public function new(id:Int) 
 	{
 		buttons = new IntHash<FlxJoyButton>();
-		for (i in 0...(FlxJoystick.NUM_BUTTONS))
-		{
-			buttons.set(i, new FlxJoyButton(i));
-		}
-		
 		ball = new FlxPoint();
-		axis = new FlxPoint();
+		axis = new Array<Float>();
 		hat = new FlxPoint();
 		connected = false;
 		this.id = id;
+	}
+	
+	public function getButton(buttonID:Int):FlxJoyButton
+	{
+		var joyButton:FlxJoyButton = buttons.get(buttonID);
+		if (joyButton == null)
+		{
+			joyButton = new FlxJoyButton(buttonID);
+			buttons.set(buttonID, joyButton);
+		}
+		return joyButton;
 	}
 	
 	/**
@@ -56,7 +60,12 @@ class FlxJoystick
 			button.last = 0;
 		}
 		
-		axis.x = axis.y = 0;
+		var numAxis:Int = axis.length;
+		for (i in 0...numAxis)
+		{
+			axis[i] = 0;
+		}
+		
 		hat.x = hat.y = 0;
 		ball.x = ball.y = 0;
 	}
@@ -145,9 +154,13 @@ class FlxJoystick
 			}
 		}
 		
-		if (axis.x != 0 || axis.y != 0)
+		var numAxis:Int = axis.length;
+		for (i in 0...numAxis)
 		{
-			return true;
+			if (axis[0] != 0)
+			{
+				return true;
+			}
 		}
 		
 		if (ball.x != 0 || ball.y != 0)
