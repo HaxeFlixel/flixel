@@ -112,12 +112,7 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 		i = 65;
 		while (i <= 90)
 		{
-			#if (flash || js)
 			addKey(String.fromCharCode(i), i++);
-			#else
-			addKey(String.fromCharCode(i), i + 32);
-			i++;
-			#end
 		}
 		
 		//NUMBERS

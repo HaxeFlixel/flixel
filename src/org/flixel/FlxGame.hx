@@ -644,6 +644,7 @@ class FlxGame extends Sprite
 			//Focus gained/lost monitoring
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
+			// TODO: add event listeners for Event.ACTIVATE/DEACTIVATE 
 			createFocusScreen();
 		}
 		

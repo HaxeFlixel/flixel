@@ -136,9 +136,6 @@ class FlxInputStates implements Dynamic
 		while(i < l)
 		{
 			o = Record[i++];
-			#if (cpp || neko)
-			o = CodeValuePair.convertFromFlashToCpp(o);
-			#end
 			o2 = _map[o.code];
 			o2.current = o.value;
 			if (o.value > 0)
