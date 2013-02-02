@@ -271,11 +271,6 @@ class FlxGame extends Sprite
 	 */
 	private function onFocusLost(FlashEvent:Event = null):Void
 	{
-		if((x != 0) || (y != 0))
-		{
-			x = 0;
-			y = 0;
-		}
 		_lostFocus = _focus.visible = true;
 		stage.frameRate = 10;
 		FlxG.pauseSounds();
