@@ -6,7 +6,7 @@ class FlxJoystick
 {
 	
 	public var buttons:IntHash<FlxJoyButton>;
-	public var axis:Array<Float>;
+	public var axis(null, default):Array<Float>;
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
 	public var connected:Bool;
@@ -17,7 +17,7 @@ class FlxJoystick
 	 * Less this number the more Joystick is sensible.
 	 * Should be between 0.0 and 1.0.
 	 */
-	public var deadZone:Float = 0.15;
+	public var deadZone:Float = 0.0;
 	
 	public function new(id:Int) 
 	{

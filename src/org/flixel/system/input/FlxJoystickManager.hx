@@ -35,7 +35,7 @@ class FlxJoystickManager implements IFlxInput
 	/**
 	 * Get a particular Joystick object
 	 */
-	private function joystick(joystickID:Int):FlxJoystick
+	public function joystick(joystickID:Int):FlxJoystick
 	{
 		var joy:FlxJoystick = joysticks.get(joystickID);
 		if (joy == null)
