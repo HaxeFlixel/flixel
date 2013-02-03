@@ -345,6 +345,9 @@ class FlxGroup extends FlxBasic
 	 */
 	public function remove(Object:FlxBasic, Splice:Bool = false):FlxBasic
 	{
+		if (members == null)
+			return null;
+		
 		var index:Int = FlxU.ArrayIndexOf(members, Object);
 		if ((index < 0) || (index >= members.length))
 		{
