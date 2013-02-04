@@ -4,13 +4,11 @@ import org.flixel.FlxPoint;
 
 class FlxJoystick 
 {
-	
 	public var buttons:IntHash<FlxJoyButton>;
-	public var axis:FlxPoint;
-	public var hat:FlxPoint;
-	public var ball:FlxPoint;
-	public var connected:Bool;
 	public var id:Int;
+	public var axis:FlxPoint;	// Left Analogue on Xbox Gamepad
+	public var hat:FlxPoint;	// DPAD on Xbox Gamepad
+	public var ball:FlxPoint;
 	
 	public static inline var NUM_BUTTONS:Int = 8;
 	
@@ -25,7 +23,6 @@ class FlxJoystick
 		ball = new FlxPoint();
 		axis = new FlxPoint();
 		hat = new FlxPoint();
-		connected = false;
 		this.id = id;
 	}
 	
@@ -75,7 +72,7 @@ class FlxJoystick
 	 * @return	Whether the button is pressed
 	 */
 	public function pressed(buttonID:Int):Bool 
-	{ 
+	{
 		if (buttons.exists(buttonID))
 		{
 			return (buttons.get(buttonID).current > 0);
@@ -90,7 +87,8 @@ class FlxJoystick
 	 * @return	Whether the button was just pressed
 	 */
 	public function justPressed(buttonID:Int):Bool 
-	{ 
+	{
+		//FlxG.log("Joy " + id + " button " + "buttonID" + " justPressed.");
 		if (buttons.exists(buttonID))
 		{
 			return (buttons.get(buttonID).current == 2);
@@ -183,5 +181,17 @@ class FlxJoyButton
 		this.current = 0;
 		this.last = 0;
 	}
-	
+}
+
+// Button IDs for commonly used gamepads:
+class XBOX_BUTTON_IDS
+{
+	public static var A_BUTTON:Int = 0;
+	public static var B_BUTTON:Int = 1;
+	public static var X_BUTTON:Int = 2;
+	public static var Y_BUTTON:Int = 3;
+	public static var LB_BUTTON:Int = 4;
+	public static var RB_BUTTON:Int = 5;
+	public static var BACK_BUTTON:Int = 6;
+	public static var START_BUTTON:Int = 7;
 }
