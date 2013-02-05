@@ -24,7 +24,6 @@ class FlxJoystickManager implements IFlxInput
 	public function new() 
 	{
         joysticks  = new IntHash<FlxJoystick>();
-
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -88,7 +87,6 @@ class FlxJoystickManager implements IFlxInput
 	public function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		var joy:FlxJoystick = joystick(FlashEvent.device);
-		joy.connected = true;
 		
 		var o:FlxJoyButton = joy.getButton(FlashEvent.id);
 		if (o == null) return;
@@ -103,7 +101,6 @@ class FlxJoystickManager implements IFlxInput
 	public function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
 		var joy:FlxJoystick = joystick(FlashEvent.device);
-		joy.connected = true;
 		
 		var object:FlxJoyButton = joy.getButton(FlashEvent.id);
 		if(object == null) return;
@@ -118,7 +115,6 @@ class FlxJoystickManager implements IFlxInput
 	public function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
 		var joy:FlxJoystick = joystick(FlashEvent.device);
-		joy.connected = true;
 		joy.axis = FlashEvent.axis;
 	}
 	
@@ -129,7 +125,6 @@ class FlxJoystickManager implements IFlxInput
 	public function handleBallMove(FlashEvent:JoystickEvent):Void
 	{
 		var joy:FlxJoystick = joystick(FlashEvent.device);
-		joy.connected = true;
 		joy.ball.x = (Math.abs(FlashEvent.x) < joy.deadZone) ? 0 : FlashEvent.x;
 		joy.ball.y = (Math.abs(FlashEvent.y) < joy.deadZone) ? 0 : FlashEvent.y;
 	}
@@ -141,7 +136,6 @@ class FlxJoystickManager implements IFlxInput
 	public function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
 		var joy:FlxJoystick = joystick(FlashEvent.device);
-		joy.connected = true;
 		joy.hat.x = (Math.abs(FlashEvent.x) < joy.deadZone) ? 0 : FlashEvent.x;
 		joy.hat.y = (Math.abs(FlashEvent.y) < joy.deadZone) ? 0 : FlashEvent.y;
 	}

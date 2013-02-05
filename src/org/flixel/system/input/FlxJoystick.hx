@@ -7,9 +7,8 @@ class FlxJoystick
 	
 	public var buttons:IntHash<FlxJoyButton>;
 	public var axis(null, default):Array<Float>;
-	public var hat:FlxPoint;
+	public var hat:FlxPoint;	// DPAD on Xbox Gamepad
 	public var ball:FlxPoint;
-	public var connected:Bool;
 	public var id:Int;
 	
 	/**
@@ -17,7 +16,7 @@ class FlxJoystick
 	 * Less this number the more Joystick is sensible.
 	 * Should be between 0.0 and 1.0.
 	 */
-	public var deadZone:Float = 0.0;
+	public var deadZone:Float = 0.15;
 	
 	public function new(id:Int) 
 	{
@@ -25,7 +24,6 @@ class FlxJoystick
 		ball = new FlxPoint();
 		axis = new Array<Float>();
 		hat = new FlxPoint();
-		connected = false;
 		this.id = id;
 	}
 	
@@ -209,5 +207,27 @@ class FlxJoyButton
 		this.current = 0;
 		this.last = 0;
 	}
+}
+
+
+// Button IDs for commonly used gamepads:
+class XBOX_BUTTON_IDS
+{
+	public static var A_BUTTON:Int = 0;
+	public static var B_BUTTON:Int = 1;
+	public static var X_BUTTON:Int = 2;
+	public static var Y_BUTTON:Int = 3;
+	public static var LB_BUTTON:Int = 4;
+	public static var RB_BUTTON:Int = 5;
+	public static var BACK_BUTTON:Int = 6;
+	public static var START_BUTTON:Int = 7;
+	public static var LEFT_ANALOGUE_X:Int = 0;
+	public static var LEFT_ANALOGUE_Y:Int = 1;
+	public static var RIGHT_ANALOGUE_X:Int = 3;
+	public static var RIGHT_ANALOGUE_Y:Int = 4;
 	
+	/**
+	 * Keep in mind that if TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
+	 */
+	public static var TRIGGER:Int = 2;
 }
