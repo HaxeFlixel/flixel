@@ -425,7 +425,7 @@ class FlxVelocity
 	 * 
 	 * @return	Number The angle (in radians unless asDegrees is true)
 	 */
-	public static function angleBetweenMouse(a:FlxSprite, asDegrees:Bool = false):Float
+	public static function angleBetweenMouse(a:FlxObject, asDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		var p:FlxPoint = a.getScreenXY();
@@ -455,7 +455,7 @@ class FlxVelocity
 	 * 
 	 * @return	Number The angle (in radians unless asDegrees is true)
 	 */
-	public static function angleBetweenTouch(a:FlxSprite, b:FlxTouch, asDegrees:Bool = false):Float
+	public static function angleBetweenTouch(a:FlxObject, b:FlxTouch, asDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		var p:FlxPoint = a.getScreenXY();
