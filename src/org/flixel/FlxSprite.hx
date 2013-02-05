@@ -1669,16 +1669,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * If the Sprite is flipped.
 	 */
-	public var flipped(default, setFlipped):Int;
-	
-	/**
-	 * Setter to be overriten if you want custom logic to happen when flipped is set.
-	 */
-	private function setFlipped(isFlipped:Int):Int 
-	{
-		flipped = isFlipped;
-		return flipped;
-	}
+	public var flipped(default, null):Int;
 	
 	/**
 	 * How many frames of "baked" rotation there are (if any).
