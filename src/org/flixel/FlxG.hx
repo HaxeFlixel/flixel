@@ -185,7 +185,7 @@ class FlxG
 	 */
     static public inline var DEG:Float = -180 / Math.PI;
     static public inline var RAD:Float = Math.PI / -180;
-
+	
 	/**
 	 * Internal tracker for game object.
 	 */
