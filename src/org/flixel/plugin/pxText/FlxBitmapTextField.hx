@@ -236,6 +236,11 @@ class FlxBitmapTextField extends FlxSprite
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
 			
+			#if js
+			_point.x = Math.floor(_point.x);
+			_point.y = Math.floor(_point.y);
+			#end
+			
 			if (simpleRenderSprite())
 			{	
 				if (_background)

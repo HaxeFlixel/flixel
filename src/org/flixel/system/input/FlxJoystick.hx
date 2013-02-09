@@ -4,26 +4,38 @@ import org.flixel.FlxPoint;
 
 class FlxJoystick 
 {
+	
 	public var buttons:IntHash<FlxJoyButton>;
-	public var id:Int;
-	public var axis:FlxPoint;	// Left Analogue on Xbox Gamepad
+	public var axis(null, default):Array<Float>;
 	public var hat:FlxPoint;	// DPAD on Xbox Gamepad
 	public var ball:FlxPoint;
+	public var id:Int;
 	
-	public static inline var NUM_BUTTONS:Int = 8;
+	/**
+	 * Joystick deadzone. Sets the sensibility. 
+	 * Less this number the more Joystick is sensible.
+	 * Should be between 0.0 and 1.0.
+	 */
+	public var deadZone:Float = 0.15;
 	
 	public function new(id:Int) 
 	{
 		buttons = new IntHash<FlxJoyButton>();
-		for (i in 0...(FlxJoystick.NUM_BUTTONS))
-		{
-			buttons.set(i, new FlxJoyButton(i));
-		}
-		
 		ball = new FlxPoint();
-		axis = new FlxPoint();
+		axis = new Array<Float>();
 		hat = new FlxPoint();
 		this.id = id;
+	}
+	
+	public function getButton(buttonID:Int):FlxJoyButton
+	{
+		var joyButton:FlxJoyButton = buttons.get(buttonID);
+		if (joyButton == null)
+		{
+			joyButton = new FlxJoyButton(buttonID);
+			buttons.set(buttonID, joyButton);
+		}
+		return joyButton;
 	}
 	
 	/**
@@ -53,7 +65,12 @@ class FlxJoystick
 			button.last = 0;
 		}
 		
-		axis.x = axis.y = 0;
+		var numAxis:Int = axis.length;
+		for (i in 0...numAxis)
+		{
+			axis[i] = 0;
+		}
+		
 		hat.x = hat.y = 0;
 		ball.x = ball.y = 0;
 	}
@@ -72,7 +89,7 @@ class FlxJoystick
 	 * @return	Whether the button is pressed
 	 */
 	public function pressed(buttonID:Int):Bool 
-	{
+	{ 
 		if (buttons.exists(buttonID))
 		{
 			return (buttons.get(buttonID).current > 0);
@@ -87,8 +104,7 @@ class FlxJoystick
 	 * @return	Whether the button was just pressed
 	 */
 	public function justPressed(buttonID:Int):Bool 
-	{
-		//FlxG.log("Joy " + id + " button " + "buttonID" + " justPressed.");
+	{ 
 		if (buttons.exists(buttonID))
 		{
 			return (buttons.get(buttonID).current == 2);
@@ -110,6 +126,12 @@ class FlxJoystick
 		}
 		
 		return false;
+	}
+	
+	public function getAxis(axeID:Int):Float
+	{
+		if (axeID < 0 || axeID >= axis.length) return 0;
+		else return (Math.abs(axis[axeID]) < deadZone) ? 0 : axis[axeID];
 	}
 	
 	/**
@@ -143,9 +165,13 @@ class FlxJoystick
 			}
 		}
 		
-		if (axis.x != 0 || axis.y != 0)
+		var numAxis:Int = axis.length;
+		for (i in 0...numAxis)
 		{
-			return true;
+			if (axis[0] != 0)
+			{
+				return true;
+			}
 		}
 		
 		if (ball.x != 0 || ball.y != 0)
@@ -183,6 +209,7 @@ class FlxJoyButton
 	}
 }
 
+
 // Button IDs for commonly used gamepads:
 class XBOX_BUTTON_IDS
 {
@@ -194,4 +221,13 @@ class XBOX_BUTTON_IDS
 	public static var RB_BUTTON:Int = 5;
 	public static var BACK_BUTTON:Int = 6;
 	public static var START_BUTTON:Int = 7;
+	public static var LEFT_ANALOGUE_X:Int = 0;
+	public static var LEFT_ANALOGUE_Y:Int = 1;
+	public static var RIGHT_ANALOGUE_X:Int = 3;
+	public static var RIGHT_ANALOGUE_Y:Int = 4;
+	
+	/**
+	 * Keep in mind that if TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
+	 */
+	public static var TRIGGER:Int = 2;
 }

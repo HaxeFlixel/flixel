@@ -179,6 +179,12 @@ class FlxG
 	#else
 	static public inline var TRANSPARENT:Int = 0x00000000;
 	#end
+	
+	/**
+	 * Useful for rad-to-deg and deg-to-rad conversion.
+	 */
+    static public inline var DEG:Float = -180 / Math.PI;
+    static public inline var RAD:Float = Math.PI / -180;
 
 	/**
 	 * Internal tracker for game object.
@@ -641,7 +647,6 @@ class FlxG
 	 */
 	static public function resetState():Void
 	{
-		// TODO: fix this for html5 target
 		_game._requestedState = Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []);
 	}
 	

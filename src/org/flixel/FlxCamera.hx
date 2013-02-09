@@ -712,7 +712,7 @@ class FlxCamera extends FlxBasic
 			}
 		}
 		
-		#if !flash
+		#if !(flash || js)
 		scroll.x = Math.floor(scroll.x * 100) / 100;
 		scroll.y = Math.floor(scroll.y * 100) / 100;
 		#end		

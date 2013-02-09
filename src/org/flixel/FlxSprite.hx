@@ -116,7 +116,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal, stores all the animations that were added to this sprite.
 	 */
-	private var _animations:Array<FlxAnim>;
+	private var _animations:Hash<FlxAnim>;
 	/**
 	 * Internal, keeps track of the current animation being played.
 	 */
@@ -223,7 +223,7 @@ class FlxSprite extends FlxObject
 		finished = false;
 		paused = true;
 		facing = FlxObject.RIGHT;
-		_animations = new Array<FlxAnim>();
+		_animations = new Hash<FlxAnim>();
 		flipped = 0;
 		_curAnim = null;
 		_curFrame = 0;
@@ -255,15 +255,11 @@ class FlxSprite extends FlxObject
 	{
 		if(_animations != null)
 		{
-			var a:FlxAnim;
-			var i:Int = 0;
-			var l:Int = _animations.length;
-			while(i < l)
+			for (anim in _animations)
 			{
-				a = _animations[i++];
-				if (a != null)
+				if (anim != null)
 				{
-					a.destroy();
+					anim.destroy();
 				}
 			}
 			_animations = null;
@@ -680,6 +676,11 @@ class FlxSprite extends FlxObject
 			
 			_point.x = (_point.x) + origin.x;
 			_point.y = (_point.y) + origin.y;
+			
+			#if js
+			_point.x = Math.floor(_point.x);
+			_point.y = Math.floor(_point.y);
+			#end
 		#else
 			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
 			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
@@ -1028,7 +1029,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function addAnimation(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		_animations.push(new FlxAnim(Name, Frames, FrameRate, Looped));
+		_animations.set(Name, new FlxAnim(Name, Frames, FrameRate, Looped));
 	}
 	
 	/**
@@ -1066,50 +1067,38 @@ class FlxSprite extends FlxObject
 		}
 		#end
 		_frameTimer = 0;
-		var i:Int = 0;
-		var l:Int = _animations.length;
-		while(i < l)
+		if (_animations.exists(AnimName))
 		{
-			if(_animations[i].name == AnimName)
+			_curAnim = _animations.get(AnimName);
+			if (_curAnim.delay <= 0)
 			{
-				_curAnim = _animations[i];
-				if (_curAnim.delay <= 0)
-				{
-					finished = true;
-				}
-				else
-				{
-					finished = false;
-				}
-				_curIndex = _curAnim.frames[_curFrame];
-				#if !flash
-				if (_framesData != null)
-				{
-					_frameID = _framesData.frameIDs[_curIndex];
-				}
-				#end
-				dirty = true;
-				paused = false;
-				return;
+				finished = true;
 			}
-			i++;
+			else
+			{
+				finished = false;
+			}
+			_curIndex = _curAnim.frames[_curFrame];
+			#if !flash
+			if (_framesData != null)
+			{
+				_frameID = _framesData.frameIDs[_curIndex];
+			}
+			#end
+			dirty = true;
+			paused = false;
+			return;
 		}
+		
 		FlxG.log("WARNING: No animation called \""+AnimName+"\"");
 	}
 	
 	/**
-	 * Gets the FlxAnim object with the specified name.
-	 */
+  	 * Gets the FlxAnim object with the specified name.
+	*/
 	public function getAnimation(name:String):FlxAnim
 	{
-		var i:Int = _animations.length - 1;
-		while(i >= 0)
-		{
-			if (_animations[i].name == name)
-				return _animations[i];
-			i--;
-		}
-		return null;
+		return _animations.get(name); 
 	}
 	
 	/**

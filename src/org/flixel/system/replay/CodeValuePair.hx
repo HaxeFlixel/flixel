@@ -14,17 +14,5 @@ class CodeValuePair
 	{
 		this.code = code;
 		this.value = value;
-	}
-	
-	inline public static function convertFromFlashToCpp(pair:CodeValuePair):CodeValuePair
-	{
-		var convertedCode:Int = pair.code;
-		if (pair.code >= 65 && pair.code <= 90) 
-		{
-			convertedCode = pair.code + 32;
-		}
-		pair.code = convertedCode;
-		return pair;
-	}
-	
+	}	
 }

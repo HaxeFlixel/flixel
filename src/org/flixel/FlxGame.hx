@@ -169,10 +169,6 @@ class FlxGame extends Sprite
 	 */
 	public var _replayCallback:Void->Void;
 	/**
-	 * This sprite is needed in c++ version of games.
-	 */
-	public static var clickableArea:Sprite;
-	/**
 	 * The inputs to enable for the game
 	 */
 	public static var inputList:FlxInputList;
@@ -275,11 +271,6 @@ class FlxGame extends Sprite
 	 */
 	private function onFocusLost(FlashEvent:Event = null):Void
 	{
-		if((x != 0) || (y != 0))
-		{
-			x = 0;
-			y = 0;
-		}
 		_lostFocus = _focus.visible = true;
 		stage.frameRate = 10;
 		FlxG.pauseSounds();
@@ -321,8 +312,8 @@ class FlxGame extends Sprite
 					_accumulator = _maxAccumulation;
 				}
 				// TODO: You may uncomment following lines
-				//while(_accumulator >= _step)
-				while (_accumulator > _step)
+				//while (_accumulator > _step)
+				while(_accumulator >= _step)
 				{
 					step();
 					_accumulator = _accumulator - _step; 
@@ -648,6 +639,7 @@ class FlxGame extends Sprite
 			//Focus gained/lost monitoring
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
+			// TODO: add event listeners for Event.ACTIVATE/DEACTIVATE 
 			createFocusScreen();
 		}
 		

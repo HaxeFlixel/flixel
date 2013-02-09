@@ -184,9 +184,13 @@ class FlxBackdrop extends FlxObject
 				currPosInArr = j * 2;
 				currTileX = _tileInfo[currPosInArr];
 				currTileY = _tileInfo[currPosInArr + 1];
-				
+				#if !js
 				currDrawData[currIndex++] = (_ppoint.x) + currTileX;
 				currDrawData[currIndex++] = (_ppoint.y) + currTileY;
+				#else
+				currDrawData[currIndex++] = Math.floor(_ppoint.x) + currTileX;
+				currDrawData[currIndex++] = Math.floor(_ppoint.y) + currTileY;
+				#end
 				currDrawData[currIndex++] = _tileID;
 				
 				currDrawData[currIndex++] = 1;
