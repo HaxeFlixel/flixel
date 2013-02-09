@@ -4,6 +4,7 @@
  */
 package org.flixel;
 
+import nme.display.BitmapInt32;
 import nme.Lib;
 import nme.net.URLRequest;
 import org.flixel.FlxPoint;
@@ -222,10 +223,14 @@ class FlxU
 	#if flash
 	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
 	#else
-	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):Int
+	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
+		#if !neko
 		return (Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
+		#else
+		return {rgb: (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF), a: Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF << 24 };
+		#end
 	}
 	
 	/**
@@ -240,7 +245,7 @@ class FlxU
 	#if flash
 	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
 	#else
-	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):Int
+	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
 		var red:Float;
@@ -297,8 +302,10 @@ class FlxU
 		}
 		#if flash
 		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | cast(red * 255, UInt) << 16 | cast(green * 255, UInt) << 8 | cast(blue * 255, UInt);
-		#else
+		#elseif !neko
 		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Math.floor(red * 255) << 16 | Math.floor(green * 255) << 8 | Math.floor(blue * 255);
+		#else
+		return { rgb: Math.floor(red * 255) << 16 | Math.floor(green * 255) << 8 | Math.floor(blue * 255), a: (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 };
 		#end
 	}
 	
@@ -312,17 +319,24 @@ class FlxU
 	#if flash
 	inline static public function getRGBA(Color:UInt, Results:Array<Float> = null):Array<Float>
 	#else
-	inline static public function getRGBA(Color:Int, Results:Array<Float> = null):Array<Float>
+	inline static public function getRGBA(Color:BitmapInt32, Results:Array<Float> = null):Array<Float>
 	#end
 	{
 		if (Results == null)
 		{
 			Results = new Array<Float>();
 		}
+		#if !neko
 		Results[0] = (Color >> 16) & 0xFF;
 		Results[1] = (Color >> 8) & 0xFF;
 		Results[2] = Color & 0xFF;
 		Results[3] = ((Color >> 24) & 0xFF) / 255;
+		#else
+		Results[0] = (Color.rgb >> 16) & 0xFF;
+		Results[1] = (Color.rgb >> 8) & 0xFF;
+		Results[2] = Color.rgb & 0xFF;
+		Results[3] = Color.a / 255;
+		#end
 		return Results;
 	}
 	
