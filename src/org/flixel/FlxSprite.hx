@@ -42,6 +42,19 @@ class FlxSprite extends FlxObject
 	#end
 	
 	/**
+	 * If the Sprite is flipped.
+	 * This property shouldn't be changed unless you know what are you doing.
+	 */
+	public var flipped(get_flipped, null):Int;
+	
+	private var _flipped:Int;
+	
+	private function get_flipped():Int 
+	{
+		return _flipped;
+	}
+	
+	/**
 	 * Gets or sets the currently playing animation.
 	 */
 	public var curAnim(getCurAnim, setCurAnim):String;
@@ -224,7 +237,7 @@ class FlxSprite extends FlxObject
 		paused = true;
 		facing = FlxObject.RIGHT;
 		_animations = new Hash<FlxAnim>();
-		flipped = 0;
+		_flipped = 0;
 		_curAnim = null;
 		_curFrame = 0;
 		_curIndex = 0;
@@ -315,11 +328,11 @@ class FlxSprite extends FlxObject
 		
 		if (Reverse)
 		{
-			flipped = _pixels.width >> 1;
+			_flipped = _pixels.width >> 1;
 		}
 		else
 		{
-			flipped = 0;
+			_flipped = 0;
 		}
 		if (Width == 0)
 		{
@@ -327,7 +340,7 @@ class FlxSprite extends FlxObject
 			{
 				Width = _pixels.height;
 			}
-			else if (flipped > 0)
+			else if (_flipped > 0)
 			{
 				#if flash
 				Width = Math.floor(_pixels.width * 0.5);
@@ -570,7 +583,7 @@ class FlxSprite extends FlxObject
 	#else
 		frames = Math.floor(_flashRect2.width / (_flashRect.width + 1) * _flashRect2.height / (_flashRect.height + 1));
 		if (frames == 0) frames = 1;
-		if (flipped > 0)
+		if (_flipped > 0)
 		{
 			frames *= 2;
 		}
@@ -702,7 +715,7 @@ class FlxSprite extends FlxObject
 				currDrawData[currIndex++] = _frameID;
 				
 				// handle reversed sprites
-				if ((flipped != 0) && (facing == FlxObject.LEFT))
+				if ((_flipped != 0) && (facing == FlxObject.LEFT))
 				{
 					currDrawData[currIndex++] = -1;
 					currDrawData[currIndex++] = 0;
@@ -765,7 +778,7 @@ class FlxSprite extends FlxObject
 				
 				currDrawData[currIndex++] = _frameID;
 				
-				if ((flipped != 0) && (facing == FlxObject.LEFT))
+				if ((_flipped != 0) && (facing == FlxObject.LEFT))
 				{
 					currDrawData[currIndex++] = -cos * scale.x;
 					currDrawData[currIndex++] = sin * scale.y;
@@ -1529,7 +1542,7 @@ class FlxSprite extends FlxObject
 			var indexY:Int = 0;
 
 			//Handle sprite sheets
-			var widthHelper:Int = (flipped != 0) ? flipped : _pixels.width;
+			var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
 			if(indexX >= widthHelper)
 			{
 				indexY = Math.floor(indexX / widthHelper) * frameHeight;
@@ -1538,7 +1551,7 @@ class FlxSprite extends FlxObject
 			
 			var pixelColor:BitmapInt32 = FlxG.TRANSPARENT;
 			// handle reversed sprites
-			if ((flipped != 0) && (facing == FlxObject.LEFT))
+			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{
 				pixelColor = _pixels.getPixel32(Math.floor(indexX + frameWidth - _flashPoint.x), Math.floor(indexY + _flashPoint.y));
 			}
@@ -1590,7 +1603,7 @@ class FlxSprite extends FlxObject
 
 			//Handle sprite sheets
 			#if flash
-			var widthHelper:Int = (flipped != 0) ? flipped : _pixels.width;
+			var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
 			#else
 			var widthHelper:Int = _pixels.width;
 			#end
@@ -1606,9 +1619,9 @@ class FlxSprite extends FlxObject
 			
 			#if flash
 			//handle reversed sprites
-			if ((flipped != 0) && (facing == FlxObject.LEFT))
+			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{
-				indexX = (flipped << 1) - indexX - frameWidth;
+				indexX = (_flipped << 1) - indexX - frameWidth;
 			}
 			#end
 			
@@ -1617,7 +1630,7 @@ class FlxSprite extends FlxObject
 			_flashRect.y = indexY;
 			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 			#if !flash
-			if ((flipped != 0) && (facing == FlxObject.LEFT))
+			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{
 				var temp:BitmapData = framePixels.clone();
 				_matrix.identity();
@@ -1638,7 +1651,7 @@ class FlxSprite extends FlxObject
 		
 		if (_callback != null)
 		{
-			Reflect.callMethod(this, Reflect.getProperty(this, "_callback"), [((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex]);
+			_callback(((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex);
 		}
 		dirty = false;
 	}
@@ -1654,11 +1667,6 @@ class FlxSprite extends FlxObject
 		antialiasing = val;
 		return val;
 	}
-	
-	/**
-	 * If the Sprite is flipped.
-	 */
-	public var flipped(default, null):Int;
 	
 	/**
 	 * How many frames of "baked" rotation there are (if any).

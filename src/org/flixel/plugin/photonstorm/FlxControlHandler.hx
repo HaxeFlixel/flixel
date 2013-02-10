@@ -953,22 +953,15 @@ class FlxControlHandler
 				if (FlxU.getTicks() > nextFireTime)
 				{
 					lastFiredTime = FlxU.getTicks();
-					
-					//fireCallback.call();
-					Reflect.callMethod(this, Reflect.getProperty(this, "fireCallback"), []);
-					
+					fireCallback();
 					fired = true;
-					
 					nextFireTime = lastFiredTime + cast(fireRate / FlxG.timeScale);
 				}
 			}
 			else
 			{
 				lastFiredTime = FlxU.getTicks();
-				
-				//fireCallback.call();
-				Reflect.callMethod(this, Reflect.getProperty(this, "fireCallback"), []);
-				
+				fireCallback();
 				fired = true;
 			}
 		}
@@ -1038,8 +1031,7 @@ class FlxControlHandler
 			
 			if (jumpCallback != null)
 			{
-				//jumpCallback.call();
-				Reflect.callMethod(this, Reflect.getProperty(this, "jumpCallback"), []);
+				jumpCallback();
 			}
 			
 			lastJumpTime = FlxU.getTicks();

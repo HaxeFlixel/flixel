@@ -258,7 +258,6 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 		if(object == null) return;
 		if(object.current > 0) object.current = -1;
 		else object.current = 0;
-		//this[object.name] = false;
 		Reflect.setProperty(this, object.name, false);
 	}
 	

@@ -190,7 +190,7 @@ class AntTaskManager extends FlxBasic
 	{
 		if (_taskList != null && _isStarted)
 		{
-			_result = Reflect.callMethod(this, Reflect.getProperty(_taskList, "func"), _taskList.args);
+			_result = Reflect.callMethod(this, _taskList.func, _taskList.args);
 			if (_isStarted && (_taskList.instant || _result))
 			{
 				nextTask(_taskList.ignoreCycle);

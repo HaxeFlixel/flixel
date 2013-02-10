@@ -284,7 +284,6 @@ class FlxCollision
 		var indexY:Int = 0;
 
 		//Handle sprite sheets
-		//var widthHelper:Int = (target.flipped != 0) ? target.flipped : target.pixels.width;
 		var widthHelper:Int = target.pixels.width;
 		if(indexX >= widthHelper)
 		{

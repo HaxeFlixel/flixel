@@ -140,7 +140,6 @@ class FlxInputStates implements Dynamic
 			o2.current = o.value;
 			if (o.value > 0)
 			{
-				//this[o2.name] = true;
 				Reflect.setProperty(this, o2.name, true);
 			}
 		}
