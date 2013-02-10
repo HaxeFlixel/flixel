@@ -1,5 +1,6 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxU;
 import org.flixel.FlxPoint;
 
 class FlxJoystick 
@@ -18,13 +19,16 @@ class FlxJoystick
 	 */
 	public var deadZone:Float = 0.15;
 	
-	public function new(id:Int) 
+	public function new(id:Int, globalDeadZone:Float = 0) 
 	{
 		buttons = new IntHash<FlxJoyButton>();
 		ball = new FlxPoint();
 		axis = new Array<Float>();
 		hat = new FlxPoint();
 		this.id = id;
+		
+		if (globalDeadZone != 0)
+			deadZone = globalDeadZone;
 	}
 	
 	public function getButton(buttonID:Int):FlxJoyButton
@@ -130,8 +134,13 @@ class FlxJoystick
 	
 	public function getAxis(axeID:Int):Float
 	{
-		if (axeID < 0 || axeID >= axis.length) return 0;
-		else return (Math.abs(axis[axeID]) < deadZone) ? 0 : axis[axeID];
+		if (axeID < 0 || axeID >= axis.length)
+			return 0;
+			
+		if (FlxU.abs(axis[axeID]) > deadZone)
+			return axis[axeID];
+		
+		return 0;
 	}
 	
 	/**
@@ -223,8 +232,8 @@ class XBOX_BUTTON_IDS
 	public static var START_BUTTON:Int = 7;
 	public static var LEFT_ANALOGUE_X:Int = 0;
 	public static var LEFT_ANALOGUE_Y:Int = 1;
-	public static var RIGHT_ANALOGUE_X:Int = 3;
-	public static var RIGHT_ANALOGUE_Y:Int = 4;
+	public static var RIGHT_ANALOGUE_X:Int = 4;
+	public static var RIGHT_ANALOGUE_Y:Int = 3;
 	
 	/**
 	 * Keep in mind that if TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
