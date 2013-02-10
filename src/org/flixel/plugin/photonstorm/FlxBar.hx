@@ -951,14 +951,12 @@ class FlxBar extends FlxSprite
 		
 		if (value == min && emptyCallback != null)
 		{
-			//emptyCallback.call();
-			Reflect.callMethod(this, Reflect.getProperty(this, "emptyCallback"), []);
+			emptyCallback();
 		}
 		
 		if (value == max && filledCallback != null)
 		{
-			//filledCallback.call();
-			Reflect.callMethod(this, Reflect.getProperty(this, "filledCallback"), []);
+			filledCallback();
 		}
 		
 		if (value == min && emptyKill)

@@ -321,8 +321,7 @@ class FlxWeapon
 		
 		if (onPreFireCallback != null)
 		{
-			//onPreFireCallback.apply();
-			Reflect.callMethod(this, Reflect.getProperty(this, "onPreFireCallback"), []);
+			onPreFireCallback();
 		}
 		
 		if (onPreFireSound != null)
@@ -392,8 +391,7 @@ class FlxWeapon
 		#end
 		if (onPostFireCallback != null)
 		{
-			//onPostFireCallback.apply();
-			Reflect.callMethod(this, Reflect.getProperty(this, "onPostFireCallback"), []);
+			onPostFireCallback();
 		}
 		
 		if (onPostFireSound != null)

@@ -762,8 +762,7 @@ class FlxExtendedSprite extends FlxSprite
 		
 		if (mousePressedCallback != null)
 		{
-			Reflect.callMethod(this, Reflect.getProperty(this, "mousePressedCallback"), [this, mouseX, mouseY]);
-			//mousePressedCallback.apply(null, [ this, mouseX, mouseY ] );
+			mousePressedCallback(this, mouseX, mouseY);
 		}
 	}
 	#end
@@ -794,8 +793,7 @@ class FlxExtendedSprite extends FlxSprite
 		
 		if (mouseReleasedCallback != null)
 		{
-			Reflect.callMethod(this, Reflect.getProperty(this, "mouseReleasedCallback"), [this, this.mouseX, this.mouseY]);
-			//mouseReleasedCallback.apply(null, [ this, mouseX, mouseY ] );
+			mouseReleasedCallback(this, mouseX, mouseY);
 		}
 	}
 	#end
