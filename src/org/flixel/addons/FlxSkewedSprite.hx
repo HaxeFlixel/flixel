@@ -140,7 +140,7 @@ class FlxSkewedSprite extends FlxSprite
 				currDrawData[currIndex++] = _frameID;
 				
 				// handle reversed sprites
-				if ((flipped != 0) && (facing == FlxObject.LEFT))
+				if ((_flipped != 0) && (facing == FlxObject.LEFT))
 				{
 					currDrawData[currIndex++] = -1;
 					currDrawData[currIndex++] = 0;
@@ -219,7 +219,7 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.c = -sin;
 				_matrix.d = cos;
 				
-				if ((flipped != 0) && (facing == FlxObject.LEFT))
+				if ((_flipped != 0) && (facing == FlxObject.LEFT))
 				{
 					_matrix.scale( -scale.x, scale.y);
 				}
