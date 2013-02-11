@@ -751,6 +751,7 @@ class FlxU
 			if (array[i] == whatToFind) 
 			{
 				index = i;
+				break;
 			}
 		}
 		return index;

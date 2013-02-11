@@ -14,6 +14,17 @@ import org.flixel.system.input.FlxJoystick;
 class FlxJoystickManager implements IFlxInput
 {
 	/**
+	 * While you can have each joystick use a custom dead zone, setting this will 
+	 * set every gamepad to use this deadzone.
+	 */
+	public var globalDeadZone(default, setDeadZone):Float;
+	
+	/**
+	 * A counter for the number of active Joysticks
+	 */
+	public var numActiveJoysticks(getNumActiveJoysticks,null):Int;
+	
+	/**
 	 * Storage for all connected joysticks
 	 */
 	public var joysticks:IntHash<FlxJoystick>;
@@ -23,7 +34,7 @@ class FlxJoystickManager implements IFlxInput
 	 */
 	public function new() 
 	{
-        joysticks  = new IntHash<FlxJoystick>();
+		joysticks  = new IntHash<FlxJoystick>();
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -39,10 +50,21 @@ class FlxJoystickManager implements IFlxInput
 		var joy:FlxJoystick = joysticks.get(joystickID);
 		if (joy == null)
 		{
-			joy = new FlxJoystick(joystickID);
+			joy = new FlxJoystick(joystickID, globalDeadZone);
 			joysticks.set(joystickID, joy);
 		}
 		return joy;
+	}
+	
+	/**
+	 * Gets the number of active joysticks
+	 */
+	function getNumActiveJoysticks():Int
+	{
+		var count = 0;
+		for (joy in joysticks)
+			count++;
+		return count;
 	}
 	
 	/**
@@ -78,6 +100,7 @@ class FlxJoystickManager implements IFlxInput
 		}
 		
 		joysticks = new IntHash<FlxJoystick>();
+		numActiveJoysticks = 0;
 	}
 	
 	/**
@@ -139,7 +162,23 @@ class FlxJoystickManager implements IFlxInput
 		joy.hat.x = (Math.abs(FlashEvent.x) < joy.deadZone) ? 0 : FlashEvent.x;
 		joy.hat.y = (Math.abs(FlashEvent.y) < joy.deadZone) ? 0 : FlashEvent.y;
 	}
-
+	
+	/**
+	 * Facility function to set the deadzone on every available gamepad.
+	 * @param	DeadZone	Joystick deadzone. Sets the sensibility. 
+	 * 						Less this number the more Joystick is sensible.
+	 * 						Should be between 0.0 and 1.0.
+	 */
+	public function setDeadZone(DeadZone:Float):Float
+	{
+		globalDeadZone = DeadZone;
+		for (joy in joysticks)
+		{
+			joy.deadZone = DeadZone;
+		}
+		return globalDeadZone;
+	}
+	
 	public function onFocus( ):Void
 	{
 		
