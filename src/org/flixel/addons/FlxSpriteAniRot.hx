@@ -16,6 +16,7 @@ package org.flixel.addons;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import org.flixel.FlxG;
 
 import org.flixel.FlxU;
 import org.flixel.FlxSprite;
@@ -35,7 +36,7 @@ class FlxSpriteAniRot extends FlxSprite
 		loadGraphic(AnimatedGraphic, true); //Just to get the number of frames
 
 		var columns:Int = Math.floor(Math.sqrt(Rotations));
-		rect = new Rectangle(0, 0, width * columns, cast(height));
+		rect = new Rectangle(0, 0, width * columns, Math.floor(height));
 
 		rotationRefA = new Array<BitmapData>();
 
@@ -43,7 +44,7 @@ class FlxSpriteAniRot extends FlxSprite
 		for (i in 0 ... frames)
 		{
 			loadRotatedGraphic(AnimatedGraphic, Rotations, i, true, false);//Create the rotation spritesheet for that frame
-			var bmd:BitmapData = new BitmapData(cast(width * columns), cast(height), true, 0x00000000);//Create a bitmapData container
+			var bmd:BitmapData = new BitmapData(Math.floor(width * columns), Math.floor(height), true, 0x00000000);//Create a bitmapData container
 			bmd.copyPixels(_pixels, rect, _zeroPoint, pixels, _zeroPoint, true);//get the current pixel data
 			rotationRefA.push(bmd);//store it for reference.
 		}
@@ -52,7 +53,7 @@ class FlxSpriteAniRot extends FlxSprite
 
 	override private function calcFrame():Void 
 	{
-		pixels.fillRect(rect, 0x00000000);//clear out blank to avoid artefacts
+		pixels.fillRect(rect, FlxG.TRANSPARENT);//clear out blank to avoid artefacts
 		pixels.copyPixels(rotationRefA[_curIndex], rect, _zeroPoint, rotationRefA[_curIndex], _zeroPoint, true);
 		super.calcFrame();
 	}

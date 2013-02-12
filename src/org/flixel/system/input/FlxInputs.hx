@@ -104,7 +104,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IFlxInput);
+			var input = inputs[i++];
 				input.update();
 		}
 	}
@@ -117,7 +117,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IFlxInput);
+			var input = inputs[i++];
 				input.onFocusLost();
 		}
 	}
@@ -130,7 +130,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IFlxInput);
+			var input = inputs[i++];
 				input.onFocus();
 		}
 	}
@@ -144,7 +144,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IFlxInput);
+			var input = inputs[i++];
 			input.reset();
 		}
 	}
@@ -194,7 +194,7 @@ class FlxInputs {
 		var l:Int = inputs.length;
 		while(i < l)
 		{
-			var input = cast( inputs[i++], IFlxInput);
+			var input = inputs[i++];
 			input.destroy();
 			input = null;
 		}

@@ -300,9 +300,7 @@ class FlxU
 					blue = 0;
 			}
 		}
-		#if flash
-		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | cast(red * 255, UInt) << 16 | cast(green * 255, UInt) << 8 | cast(blue * 255, UInt);
-		#elseif !neko
+		#if !neko
 		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Math.floor(red * 255) << 16 | Math.floor(green * 255) << 8 | Math.floor(blue * 255);
 		#else
 		return { rgb: Math.floor(red * 255) << 16 | Math.floor(green * 255) << 8 | Math.floor(blue * 255), a: (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 };

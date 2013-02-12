@@ -4,6 +4,14 @@ import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxParticle;
 
+class FlxEmitterExt extends FlxTypedEmitterExt<FlxParticle>
+{
+	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
+	{
+		super(X, Y, Size);
+	}
+}
+
 /**
  * Extended FlxEmitter that emits particles in a circle (instead of a square).
  * It also provides a new function setMotion to control particle behavior even more.
@@ -11,8 +19,7 @@ import org.flixel.FlxParticle;
  * @author Dirk Bunk
  * @link https://github.com/krix/ParticleTest
  */
-
-class FlxEmitterExt extends FlxEmitter 
+class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<T:FlxParticle>
 {		
 	/**
 	 * 	Launch Direction.
@@ -133,7 +140,7 @@ class FlxEmitterExt extends FlxEmitter
 	override public function emitParticle():Void
 	{
 		//recycle a particle to emit
-		var particle:FlxParticle = cast(recycle(FlxParticle), FlxParticle);
+		var particle:FlxParticle = recycle(FlxParticle);
 		particle.elasticity = bounce;
 		particle.reset(x - (Math.floor(particle.width) >> 1) + FlxG.random() * width, y - (Math.floor(particle.height) >> 1) + FlxG.random() * height);
 		particle.visible = true;
