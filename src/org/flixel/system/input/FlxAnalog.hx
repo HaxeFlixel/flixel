@@ -1,11 +1,11 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxTypedGroup;
 import org.flixel.FlxU;
 import org.flixel.FlxG;
 import org.flixel.FlxAssets;
 import org.flixel.FlxSprite;
 import org.flixel.FlxPoint;
-import org.flixel.FlxGroup;
 import flash.geom.Rectangle;
 import org.flixel.system.input.FlxTouch;
 
@@ -13,7 +13,7 @@ import org.flixel.system.input.FlxTouch;
  * 
  * @author Ka Wing Chin
  */
-class FlxAnalog extends FlxGroup
+class FlxAnalog extends FlxTypedGroup<FlxSprite>
 {
 	// From radians to degrees.
 	private static inline var DEGREES:Float = (180 / Math.PI);

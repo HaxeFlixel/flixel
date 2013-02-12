@@ -58,6 +58,9 @@ class FlxGridSprite extends FlxObject
 		super(X, Y, Width, Height);
 	   
 		_sourceImage = FlxG.addBitmap(Graphic);
+		#if !flash
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		#end
 		_grid = Grid;
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
@@ -267,7 +270,7 @@ class FlxGridSprite extends FlxObject
 		{
 			camera = cameras[i++];
 			
-			if (!onScreen(camera) || !camera.visible || !camera.exists)
+			if (!onScreenObject(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
@@ -299,17 +302,6 @@ class FlxGridSprite extends FlxObject
 			}
 			#end
 		}
-	}
-	
-	override public function onScreen(Camera:FlxCamera = null):Bool
-	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		getScreenXY(_point, Camera);
-		
-		return ((_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height));
 	}
    
 	override public function destroy():Void

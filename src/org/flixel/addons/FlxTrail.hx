@@ -1,6 +1,6 @@
 package org.flixel.addons;
 
-import org.flixel.FlxGroup;
+import org.flixel.FlxTypedGroup;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
@@ -12,7 +12,7 @@ import org.flixel.FlxSprite;
  * 
  * @author Gama11
  */
-class FlxTrail extends FlxGroup 
+class FlxTrail extends FlxTypedGroup<FlxSprite>
 {		
 	/**
 	 *  Stores the FlxSprite the trail is attached to.
@@ -122,7 +122,7 @@ class FlxTrail extends FlxGroup
 			var trailSprite:FlxSprite;
 			for (i in 0 ... recentPositions.length) 
 			{
-				trailSprite = cast(members[i]);
+				trailSprite = members[i];
 				trailSprite.x = recentPositions[i].x;
 				trailSprite.y = recentPositions[i].y;
 				// And the angle...
@@ -178,9 +178,9 @@ class FlxTrail extends FlxGroup
 	{
 		image = Image;
 
-		for (i in 0 ... trailLength)
+		for (i in 0...trailLength)
 		{
-			cast(members[i], FlxSprite).loadGraphic(Image);
+			members[i].loadGraphic(Image);
 		}	
 	}
 

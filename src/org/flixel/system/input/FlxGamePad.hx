@@ -4,7 +4,7 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxButton;
-import org.flixel.FlxGroup;
+import org.flixel.FlxTypedGroup;
 
 /**
  * A gamepad which contains 4 directional buttons and 4 action buttons.
@@ -12,7 +12,7 @@ import org.flixel.FlxGroup;
  * 
  * @author Ka Wing Chin
  */
-class FlxGamePad extends FlxGroup
+class FlxGamePad extends FlxTypedGroup<FlxButton>
 {	
 	// Button A
 	public var buttonA:FlxButton;
@@ -51,9 +51,9 @@ class FlxGamePad extends FlxGroup
 	public static inline var A_B_C:Int = 7;
 	
 	// Group of directions buttons.
-	public var dPad:FlxGroup;
+	public var dPad:FlxTypedGroup<FlxButton>;
 	// Group of action buttons.
-	public var actions:FlxGroup;
+	public var actions:FlxTypedGroup<FlxButton>;
 	
 	/**
 	 * Constructor
@@ -64,8 +64,8 @@ class FlxGamePad extends FlxGroup
 	{	
 		super();
 		
-		dPad = new FlxGroup();
-		actions = new FlxGroup();
+		dPad = new FlxTypedGroup<FlxButton>();
+		actions = new FlxTypedGroup<FlxButton>();
 		
 		switch (DPad)
 		{
@@ -163,7 +163,7 @@ class FlxGamePad extends FlxGroup
 		alpha = Alpha;
 		for (i in 0...members.length)
 		{
-			cast(members[i], FlxSprite).alpha = Alpha;
+			members[i].alpha = Alpha;
 		}
 		return Alpha;
 	}

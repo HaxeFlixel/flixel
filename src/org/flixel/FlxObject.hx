@@ -781,12 +781,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
-		if(Std.is(ObjectOrGroup, FlxGroup))
+		if(Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
 			var results:Bool = false;
 			var i:Int = 0;
 			var basic:FlxBasic;
-			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
+			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = grp.members;
 			while (i < grp.length)
 			{
@@ -836,12 +836,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
-		if(Std.is(ObjectOrGroup, FlxGroup))
+		if(Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
 			var i:Int = 0;
-			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
+			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = grp.members;
 			while(i < Std.int(grp.length))
 			{

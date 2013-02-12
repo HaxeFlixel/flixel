@@ -2,9 +2,9 @@ package org.flixel.system;
 
 import nme.system.System;
 import org.flixel.FlxBasic;
-import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxRect;
+import org.flixel.FlxTypedGroup;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.
@@ -384,11 +384,11 @@ class FlxQuadTree extends FlxRect
 	public function add(ObjectOrGroup:FlxBasic, list:Int):Void
 	{
 		_list = list;
-		if(Std.is(ObjectOrGroup, FlxGroup))
+		if(Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
 			var i:Int = 0;
 			var basic:FlxBasic;
-			var group:FlxGroup = cast(ObjectOrGroup, FlxGroup);
+			var group:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = group.members;
 			var l:Int = group.length;
 			while(i < l)
@@ -396,7 +396,7 @@ class FlxQuadTree extends FlxRect
 				basic = members[i++];
 				if((basic != null) && basic.exists)
 				{
-					if (Std.is(basic, FlxGroup))
+					if (Std.is(basic, FlxTypedGroup))
 					{
 						add(basic, list);
 					}

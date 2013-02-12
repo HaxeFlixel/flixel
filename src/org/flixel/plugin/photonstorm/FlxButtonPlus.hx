@@ -25,11 +25,12 @@ import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
+import org.flixel.FlxTypedGroup;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
-class FlxButtonPlus extends FlxGroup
+class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 {
 	static public inline var NORMAL:Int = 0;
 	static public inline var HIGHLIGHT:Int = 1;

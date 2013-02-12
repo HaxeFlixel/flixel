@@ -4,7 +4,6 @@ import nme.ui.MultitouchInputMode;
 import nme.ui.Multitouch;
 import org.flixel.FlxG;
 import nme.Lib;
-import org.flixel.FlxGroup;
 import nme.geom.Point;
 import org.flixel.FlxGame;
 import nme.events.TouchEvent;

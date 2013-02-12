@@ -19,6 +19,7 @@ package org.flixel.plugin.photonstorm;
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxTilemap;
+import org.flixel.FlxTypedGroup;
 import org.flixel.system.input.FlxTouch;
 import nme.display.Bitmap;
 import nme.display.BitmapInt32;
@@ -58,7 +59,7 @@ class FlxWeapon
 	/**
 	 * The FlxGroup into which all the bullets for this weapon are drawn. This should be added to your display and collision checked against it.
 	 */
-	public var group:FlxGroup;
+	public var group:FlxTypedGroup<Bullet>;
 	
 	//	Bullet values
 	public var bounds:FlxRect;
@@ -208,7 +209,7 @@ class FlxWeapon
 		}
 		#end
 		
-		group = new FlxGroup(quantity);
+		group = new FlxTypedGroup<Bullet>(quantity);
 		
 		for (b in 0...(quantity))
 		{
@@ -236,7 +237,7 @@ class FlxWeapon
 	 */
 	public function makeImageBullet(quantity:Int, image:Dynamic, offsetX:Int = 0, offsetY:Int = 0, autoRotate:Bool = false, rotations:Int = 16, frame:Int = -1, antiAliasing:Bool = false, autoBuffer:Bool = false):Void
 	{
-		group = new FlxGroup(quantity);
+		group = new FlxTypedGroup<Bullet>(quantity);
 		
 		rotateToAngle = autoRotate;
 		
@@ -280,7 +281,7 @@ class FlxWeapon
 	 */
 	public function makeAnimatedBullet(quantity:Int, imageSequence:Dynamic, frameWidth:Int, frameHeight:Int, frames:Array<Int>, frameRate:Int, looped:Bool, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
-		group = new FlxGroup(quantity);
+		group = new FlxTypedGroup<Bullet>(quantity);
 		
 		for (b in 0...(quantity))
 		{
@@ -334,7 +335,7 @@ class FlxWeapon
 		currentBullet.velocity.y = 0;
 		
 		lastFired = FlxU.getTicks();
-		nextFire = FlxU.getTicks() + cast(fireRate / FlxG.timeScale);
+		nextFire = FlxU.getTicks() + Math.floor(fireRate / FlxG.timeScale);
 		
 		var launchX:Float = positionOffset.x;
 		var launchY:Float = positionOffset.y;
@@ -707,7 +708,7 @@ class FlxWeapon
 		var bullet:Bullet;
 		for (i in 0...(group.members.length))
 		{
-			bullet = cast(group.members[i], Bullet);
+			bullet = group.members[i];
 			if (bullet.exists == false)
 			{
 				result = bullet;

@@ -263,7 +263,7 @@ class FlxG
 	/**
 	 * A list of all the sounds being played in the game.
 	 */
-	static public var sounds:FlxGroup;
+	static public var sounds:FlxTypedGroup<FlxSound>;
 	/**
 	 * Whether or not the game sounds are muted.
 	 */
@@ -705,7 +705,7 @@ class FlxG
 			FlxG.log("WARNING: FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
-		var sound:FlxSound = cast(sounds.recycle(FlxSound), FlxSound);
+		var sound:FlxSound = sounds.recycle(FlxSound);
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy);
@@ -838,17 +838,10 @@ class FlxG
 		var l:Int = sounds.members.length;
 		while(i < l)
 		{
-			if (Std.is(sounds.members[i], FlxSound))
+			sound = sounds.members[i++];
+			if ((sound != null) && (ForceDestroy || !sound.survive))
 			{
-				sound = cast(sounds.members[i++], FlxSound);
-				if ((sound != null) && (ForceDestroy || !sound.survive))
-				{
-					sound.destroy();
-				}
-			}
-			else
-			{
-				i++;
+				sound.destroy();
 			}
 		}
 	}
@@ -882,7 +875,7 @@ class FlxG
 		var l:Int = sounds.length;
 		while(i < l)
 		{
-			sound = cast(sounds.members[i++], FlxSound);
+			sound = sounds.members[i++];
 			if ((sound != null) && sound.exists && sound.active)
 			{
 				sound.pause();
@@ -904,7 +897,7 @@ class FlxG
 		var l:Int = sounds.length;
 		while(i < l)
 		{
-			sound = cast(sounds.members[i++], FlxSound);
+			sound = sounds.members[i++];
 			if ((sound != null) && sound.exists)
 			{
 				sound.resume();
@@ -1599,7 +1592,7 @@ class FlxG
 		
 		FlxG.mute = false;
 		FlxG.volume = 0.5;
-		FlxG.sounds = new FlxGroup();
+		FlxG.sounds = new FlxTypedGroup<FlxSound>();
 		FlxG.volumeHandler = null;
 		
 		if(flashGfxSprite == null)
