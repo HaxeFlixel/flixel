@@ -316,7 +316,7 @@ class AntTaskManager extends FlxBasic
 	 */
 	public var pause(get_pause, set_pause):Bool;
 	
-	public function set_pause(value:Bool):Bool
+	private function set_pause(value:Bool):Bool
 	{
 		if (value && !_isPaused)
 		{

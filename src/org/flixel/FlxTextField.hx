@@ -132,7 +132,7 @@ class FlxTextField extends FlxText
 	/**
 	 * The text being displayed.
 	 */
-	override public function getText():String
+	override private function get_text():String
 	{
 		return _text;
 	}
@@ -140,7 +140,7 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	override public function setText(Text:String):String
+	override private function set_text(Text:String):String
 	{
 		_text = Text;
 		updateTextField();
@@ -150,7 +150,7 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	override public function setSize(Size:Float):Float
+	override private function set_size(Size:Float):Float
 	{
 		_format.size = Size;
 		updateTextField();
@@ -161,9 +161,9 @@ class FlxTextField extends FlxText
 	 * @private
 	 */
 	#if flash
-	override public function setColor(Color:UInt):UInt
+	override private function set_color(Color:UInt):UInt
 	#else
-	override public function setColor(Color:BitmapInt32):BitmapInt32
+	override private function set_color(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		#if neko
@@ -183,7 +183,7 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	override public function setFont(Font:String):String
+	override private function set_font(Font:String):String
 	{
 		_format.font = Assets.getFont(Font).fontName;
 		updateTextField();
@@ -193,7 +193,7 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	override public function setAlignment(Alignment:String):String
+	override private function set_alignment(Alignment:String):String
 	{
 		_format.align = convertTextAlignmentFromString(Alignment);
 		updateTextField();
@@ -204,9 +204,9 @@ class FlxTextField extends FlxText
 	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
 	#if flash
-	override public function getShadow():UInt
+	override private function get_shadow():UInt
 	#else
-	override public function getShadow():Int
+	override private function get_shadow():Int
 	#end
 	{
 		// shadows are not supported
@@ -217,9 +217,9 @@ class FlxTextField extends FlxText
 	 * @private
 	 */
 	#if flash
-	override public function setShadow(Color:UInt):UInt
+	override private function set_shadow(Color:UInt):UInt
 	#else
-	override public function setShadow(Color:Int):Int
+	override private function set_shadow(Color:Int):Int
 	#end
 	{
 		// shadows are not supported
@@ -240,7 +240,7 @@ class FlxTextField extends FlxText
 		// this class doesn't support this operation
 	}
 	
-	override private function getSimpleRender():Bool
+	override private function get_simpleRender():Bool
 	{ 
 		return true;
 	}
@@ -259,7 +259,7 @@ class FlxTextField extends FlxText
 	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
-	override public function getPixels():BitmapData
+	override private function get_pixels():BitmapData
 	{
 		#if !flash
 		calcFrame(true);
@@ -272,7 +272,7 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	override public function setPixels(Pixels:BitmapData):BitmapData
+	override private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		// this class doesn't support this operation
 		return _pixels;
@@ -281,7 +281,7 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	override private function setAlpha(Alpha:Float):Float
+	override private function set_alpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{

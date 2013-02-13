@@ -34,7 +34,7 @@ class FlxSkewedSprite extends FlxSprite
 		super.destroy();
 	}
 	
-	override private function getSimpleRender():Bool
+	override private function get_simpleRender():Bool
 	{ 
 		return simpleRenderSkewedSprite();
 	}

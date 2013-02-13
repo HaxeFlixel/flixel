@@ -239,12 +239,12 @@ class StarfieldFX extends BaseFX
 		starYOffset = yShift;
 	}
 	
-	public var speed(getSpeed, setSpeed):Int;
+	public var speed(get_speed, set_speed):Int;
 	
 	/**
 	 * The current update speed
 	 */
-	public function getSpeed():Int
+	private function get_speed():Int
 	{
 		return updateSpeed;
 	}
@@ -252,7 +252,7 @@ class StarfieldFX extends BaseFX
 	/**
 	 * Change the tick interval on which the update runs. By default the starfield updates once every 20ms. Set to zero to disable totally.
 	 */
-	public function setSpeed(newSpeed:Int):Int
+	private function set_speed(newSpeed:Int):Int
 	{
 		updateSpeed = newSpeed;
 		return newSpeed;

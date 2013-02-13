@@ -45,7 +45,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	/**
 	 * Property to check if the cursor is visible or not.
 	 */
-	public var visible(getVisible, null):Bool;
+	public var visible(get_visible, null):Bool;
 	/**
 	 * Helper variable for tracking whether the mouse was just pressed or just released.
 	 */
@@ -79,7 +79,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
 	 * @default false
 	 */
-	public var useSystemCursor(default, setSystemCursor):Bool;
+	public var useSystemCursor(default, set_systemCursor):Bool;
 	
 	/**
 	 * Constructor.
@@ -247,7 +247,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	/**
 	 * Read only, check visibility of mouse cursor.
 	 */
-	inline public function getVisible():Bool
+	inline private function get_visible():Bool
 	{
 		return _updateCursorContainer;
 	}
@@ -490,7 +490,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		Mouse.show();
 	}
 	
-	public function setSystemCursor (value:Bool):Bool 
+	private function set_systemCursor(value:Bool):Bool 
 	{
 		useSystemCursor = value;
 		if (!useSystemCursor)

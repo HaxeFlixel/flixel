@@ -291,7 +291,7 @@ class Atlas
 	 */
 	public var height(get_height, null):Int;
 	
-	public function get_height():Int
+	private function get_height():Int
 	{
 		return root.height;
 	}

@@ -969,21 +969,21 @@ class FlxObject extends FlxBasic
 	 * Check to see if the object is still flickering.
 	 * @return	Whether the object is flickering or not.
 	 */
-	public var flickering(getFlickering, null):Bool;
+	public var flickering(get_flickering, null):Bool;
 	
-	private function getFlickering():Bool
+	private function get_flickering():Bool
 	{
 		return _flickerTimer != 0;
 	}
 	
-	public var solid(getSolid, setSolid):Bool;
+	public var solid(get_solid, set_solid):Bool;
 	
 	/**
 	 * Whether the object collides or not.  For more control over what directions
 	 * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
 	 * to set the value of allowCollisions directly.
 	 */
-	private function getSolid():Bool
+	private function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}
@@ -991,7 +991,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * @private
 	 */
-	private function setSolid(Solid:Bool):Bool
+	private function set_solid(Solid:Bool):Bool
 	{
 		if (Solid)
 		{

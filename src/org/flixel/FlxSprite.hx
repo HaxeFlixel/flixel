@@ -31,14 +31,14 @@ class FlxSprite extends FlxObject
 	 * <code>UP</code>, and <code>DOWN</code> to take advantage of
 	 * flipped sprites and/or just track player orientation more easily.
 	 */
-	public var facing(default, setFacing):Int;
+	public var facing(default, set_facing):Int;
 	
 	#if flash
-	public var color(getColor, setColor):UInt;
-	public var frame(getFrame, setFrame):UInt;
+	public var color(get_color, set_color):UInt;
+	public var frame(get_frame, set_frame):UInt;
 	#else
-	public var color(getColor, setColor):BitmapInt32;
-	public var frame(getFrame, setFrame):Int;
+	public var color(get_color, set_color):BitmapInt32;
+	public var frame(get_frame, set_frame):Int;
 	#end
 	
 	/**
@@ -57,7 +57,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Gets or sets the currently playing animation.
 	 */
-	public var curAnim(getCurAnim, setCurAnim):String;
+	public var curAnim(get_curAnim, set_curAnim):String;
 	
 	/**
 	 * WARNING: The origin of the sprite will default to its center.
@@ -1193,13 +1193,13 @@ class FlxSprite extends FlxObject
 		return positions;
 	}
 	
-	public var pixels(getPixels, setPixels):BitmapData;
+	public var pixels(get_pixels, set_pixels):BitmapData;
 	
 	/**
 	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
-	public function getPixels():BitmapData
+	private function get_pixels():BitmapData
 	{
 		return _pixels;
 	}
@@ -1207,7 +1207,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * @private
 	 */
-	public function setPixels(Pixels:BitmapData):BitmapData
+	private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		_pixels = Pixels;
 		width = frameWidth = _pixels.width;
@@ -1230,7 +1230,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * @private
 	 */
-	public function setFacing(Direction:Int):Int
+	private function set_facing(Direction:Int):Int
 	{
 		if (facing != Direction)
 		{
@@ -1243,12 +1243,12 @@ class FlxSprite extends FlxObject
 	/**
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
 	 */
-	public var alpha(default, setAlpha):Float;
+	public var alpha(default, set_alpha):Float;
 	
 	/**
 	 * @private
 	 */
-	private function setAlpha(Alpha:Float):Float
+	private function set_alpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{
@@ -1302,9 +1302,9 @@ class FlxSprite extends FlxObject
 	 * Tints the whole sprite to be this color (similar to OpenGL vertex colors).
 	 */
 	#if flash
-	public function getColor():UInt
+	private function get_color():UInt
 	#else
-	public function getColor():BitmapInt32
+	private function get_color():BitmapInt32
 	#end
 	{
 		return _color;
@@ -1314,9 +1314,9 @@ class FlxSprite extends FlxObject
 	 * @private
 	 */
 	#if flash
-	public function setColor(Color:UInt):UInt
+	private function set_color(Color:UInt):UInt
 	#else
-	public function setColor(Color:BitmapInt32):BitmapInt32
+	private function set_color(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		#if neko
@@ -1407,9 +1407,9 @@ class FlxSprite extends FlxObject
 	 * @param	Frame	The frame you want to display.
 	 */
 	#if flash
-	public function getFrame():UInt
+	private function get_frame():UInt
 	#else
-	public function getFrame():Int
+	private function get_frame():Int
 	#end
 	{
 		return _curIndex;
@@ -1419,9 +1419,9 @@ class FlxSprite extends FlxObject
 	 * @private
 	 */
 	#if flash
-	public function setFrame(Frame:UInt):UInt
+	private function set_frame(Frame:UInt):UInt
 	#else
-	public function setFrame(Frame:Int):Int
+	private function set_frame(Frame:Int):Int
 	#end
 	{
 		_curAnim = null;
@@ -1439,7 +1439,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Gets the currently playing animation, or null if no animation is playing
 	 */
-	public function getCurAnim():String
+	private function get_curAnim():String
 	{
 		if(_curAnim != null && !finished)
 			return _curAnim.name;
@@ -1451,7 +1451,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	AnimName	The name of the animation you want to play.
 	 */
-	public function setCurAnim(AnimName:String):String
+	private function set_curAnim(AnimName:String):String
 	{
 		play(AnimName);
 		return AnimName;
@@ -1660,9 +1660,9 @@ class FlxSprite extends FlxObject
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
 	 */
-	public var antialiasing(default, setAntialiasing):Bool;
+	public var antialiasing(default, set_antialiasing):Bool;
 	
-	private function setAntialiasing(val:Bool):Bool
+	private function set_antialiasing(val:Bool):Bool
 	{
 		antialiasing = val;
 		return val;
@@ -1676,9 +1676,9 @@ class FlxSprite extends FlxObject
 	/**
 	 * If the Sprite is beeing rendered in simple mode.
 	 */
-	public var simpleRender(getSimpleRender, null):Bool;
+	public var simpleRender(get_simpleRender, null):Bool;
 	
-	private function getSimpleRender():Bool
+	private function get_simpleRender():Bool
 	{ 
 		return simpleRenderSprite();
 	}

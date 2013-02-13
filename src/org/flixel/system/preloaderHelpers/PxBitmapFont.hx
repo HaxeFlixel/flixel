@@ -446,7 +446,7 @@ class PxBitmapFont
 	 */
 	public var numLetters(get_numLetters, null):Int;
 	
-	public function get_numLetters():Int 
+	private function get_numLetters():Int 
 	{
 		#if flash
 		return _glyphs.length;

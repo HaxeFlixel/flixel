@@ -109,13 +109,13 @@ class FlxTilemapBuffer
 		_pixels.fillRect(_flashRect, Color);
 	}
 	
-	public var pixels(getPixels, null):BitmapData;
+	public var pixels(get_pixels, null):BitmapData;
 	
 	/**
 	 * Read-only, nab the actual buffer <code>BitmapData</code> object.
 	 * @return	The buffer bitmap data.
 	 */
-	public function getPixels():BitmapData
+	private function get_pixels():BitmapData
 	{
 		return _pixels;
 	}

@@ -266,9 +266,9 @@ class FlxBasic
 		}
 	}
 
-	public var hasTween(getTween, never):Bool;
+	public var hasTween(get_hasTween, never):Bool;
 	
-	private function getTween():Bool 
+	private function get_hasTween():Bool 
 	{ 
 		return (_tween != null); 
 	}
