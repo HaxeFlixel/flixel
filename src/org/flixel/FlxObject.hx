@@ -258,7 +258,7 @@ class FlxObject extends FlxBasic
 	 */
 	private var _pathRotate:Bool;
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
@@ -444,7 +444,7 @@ class FlxObject extends FlxBasic
 			}
 			FlxBasic._VISIBLECOUNT++;
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
@@ -454,7 +454,7 @@ class FlxObject extends FlxBasic
 		}
 	}
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.

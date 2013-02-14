@@ -23,7 +23,7 @@ import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 import org.flixel.tweens.misc.MultiVarTween;
 
-#if FLX_DEBUG
+#if !FLX_NO_DEBUG
 import org.flixel.system.FlxDebugger;
 import org.flixel.plugin.DebugPathDisplay;
 #end
@@ -89,7 +89,7 @@ class FlxG
 	 */
 	static public inline var LIBRARY_MINOR_VERSION:String = "09-dev";
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
 	 */
@@ -226,7 +226,7 @@ class FlxG
 	 * Default value is 6.
 	 */
 	static public var worldDivisions:Int;
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Whether to show visual debug displays or not.
 	 * Default = false.
@@ -356,7 +356,7 @@ class FlxG
 	 */
 	static public function log(Data:Dynamic):Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Std.string(Data)));
@@ -369,7 +369,7 @@ class FlxG
 	 */
 	static public function clearLog():Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			_game.debugger.log.clear();
@@ -386,7 +386,7 @@ class FlxG
 	 */
 	static public function watch(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game._debugger != null))
 		{
 			_game._debugger.watch.add(AnyObject, VariableName, DisplayName);
@@ -402,7 +402,7 @@ class FlxG
 	 */
 	static public function unwatch(AnyObject:Dynamic, VariableName:String = null):Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game._debugger != null))
 		{
 			_game._debugger.watch.remove(AnyObject, VariableName);
@@ -600,7 +600,7 @@ class FlxG
 	static public function stopReplay():Void
 	{
 		_game._replaying = false;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_game._debugger != null)
 		{
 			_game._debugger.vcr.stopped();
@@ -633,7 +633,7 @@ class FlxG
 	static public function stopRecording():String
 	{
 		_game._recording = false;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_game._debugger != null)
 		{
 			_game._debugger.vcr.stopped();
@@ -1238,7 +1238,7 @@ class FlxG
 		_game._requestedState = State;
 	}
 
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Change the way the debugger's windows are laid out.
 	 * @param	Layout		See the presets above (e.g. <code>DEBUGGER_MICRO</code>, etc).
@@ -1608,7 +1608,7 @@ class FlxG
 		
 		plugins = new Array<FlxBasic>();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		addPlugin(new DebugPathDisplay());
 		#end
 		
@@ -1623,7 +1623,7 @@ class FlxG
 		FlxG.levels = new Array();
 		FlxG.scores = new Array();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		FlxG.visualDebug = false;
 		#end
 	}
@@ -1651,7 +1651,7 @@ class FlxG
 		FlxG.globalSeed = Math.random();
 		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		var debugPathDisplay:DebugPathDisplay = cast(FlxG.getPlugin(DebugPathDisplay), DebugPathDisplay);
 		if (debugPathDisplay != null)
 		{

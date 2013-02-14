@@ -468,7 +468,7 @@ class FlxBitmapFont extends FlxSprite
 			
 			drawItem.position = currIndex;
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{

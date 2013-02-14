@@ -373,7 +373,7 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	public function debug():Void
 	{
 		trace("FlxBar - Min: " + min + " Max: " + max + " Range: " + range + " pct: " + pct + " pxp: " + pxPerPercent + " Value: " + value);
@@ -1304,7 +1304,7 @@ class FlxBar extends FlxSprite
 			
 			FlxBasic._VISIBLECOUNT++;
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);

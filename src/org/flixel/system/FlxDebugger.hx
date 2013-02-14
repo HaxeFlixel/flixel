@@ -1,4 +1,5 @@
 package org.flixel.system;
+#if !FLX_NO_DEBUG
 
 import nme.Assets;
 import nme.display.Bitmap;
@@ -10,7 +11,6 @@ import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import org.flixel.FlxAssets;
-
 import org.flixel.FlxG;
 import org.flixel.system.debug.Log;
 import org.flixel.system.debug.Perf;
@@ -242,3 +242,4 @@ class FlxDebugger extends Sprite
 		}
 	}
 }
+#end
