@@ -175,8 +175,8 @@ class NestedSprite extends FlxSprite
 	/**
 	 * All Graphics in this list.
 	 */
-	public inline var children(getChildren, null):Array<NestedSprite>;
-	private inline function getChildren():Array<NestedSprite> 
+	public inline var children(get_children, null):Array<NestedSprite>;
+	private inline function get_children():Array<NestedSprite> 
 	{ 
 		return _children; 
 	}
@@ -184,8 +184,8 @@ class NestedSprite extends FlxSprite
 	/**
 	 * Amount of Graphics in this list.
 	 */
-	public var count(getCount, null):Int;
-	private function getCount():Int 
+	public var count(get_count, null):Int;
+	private function get_count():Int 
 	{ 
 		return _children.length; 
 	}
@@ -288,7 +288,7 @@ class NestedSprite extends FlxSprite
 		}
 	}
 	
-	override private function setAlpha(Alpha:Float):Float
+	override private function set_alpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{
@@ -351,9 +351,9 @@ class NestedSprite extends FlxSprite
 	}
 	
 	#if flash
-	override public function setColor(Color:UInt):UInt
+	override private function set_color(Color:UInt):UInt
 	#else
-	override public function setColor(Color:BitmapInt32):BitmapInt32
+	override private function set_color(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		#if neko

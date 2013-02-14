@@ -77,12 +77,12 @@ class FlxCamera extends FlxBasic
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
-	public var width(default, setWidth):Int;
+	public var width(default, set_width):Int;
 	
 	/**
 	 * How tall the camera display is, in game pixels.
 	 */
-	public var height(default, setHeight):Int;
+	public var height(default, set_height):Int;
 	
 	/**
 	 * Tells the camera to use this following style.
@@ -1020,13 +1020,13 @@ class FlxCamera extends FlxBasic
 		return this;
 	}
 	
-	public var zoom(default, setZoom):Float;
+	public var zoom(default, set_zoom):Float;
 	
 	/**
 	 * The zoom level of this camera. 1 = 1:1, 2 = 2x zoom, etc.
 	 * Indicates how far the camera is zoomed in.
 	 */
-	private function setZoom(Zoom:Float):Float
+	private function set_zoom(Zoom:Float):Float
 	{
 		if (Zoom == 0)
 		{
@@ -1043,12 +1043,12 @@ class FlxCamera extends FlxBasic
 	/**
 	 * The alpha value of this camera display (a Number between 0.0 and 1.0).
 	 */
-	public var alpha(default, setAlpha):Float;
+	public var alpha(default, set_alpha):Float;
 	
 	/**
 	 * @private
 	 */
-	private function setAlpha(Alpha:Float):Float
+	private function set_alpha(Alpha:Float):Float
 	{
 		alpha = FlxU.bound(Alpha, 0, 1);
 		#if flash
@@ -1064,9 +1064,9 @@ class FlxCamera extends FlxBasic
 	 * Currently yields weird display results,
 	 * since cameras aren't nested in an extra display object yet.
 	 */
-	public var angle(default, setAngle):Float;
+	public var angle(default, set_angle):Float;
 	
-	private function setAngle(Angle:Float):Float
+	private function set_angle(Angle:Float):Float
 	{
 		angle = Angle;
 		_flashSprite.rotation = Angle;
@@ -1078,18 +1078,18 @@ class FlxCamera extends FlxBasic
 	 * (Internal, help with color transforming the flash bitmap.)
 	 */
 	#if flash
-	public var color(default, setColor):UInt;
+	public var color(default, set_color):UInt;
 	#else
-	public var color(default, setColor):BitmapInt32;
+	public var color(default, set_color):BitmapInt32;
 	#end
 	
 	/**
 	 * @private
 	 */
 	#if flash
-	private function setColor(Color:UInt):UInt
+	private function set_color(Color:UInt):UInt
 	#else
-	private function setColor(Color:BitmapInt32):BitmapInt32
+	private function set_color(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		color = Color;
@@ -1121,12 +1121,12 @@ class FlxCamera extends FlxBasic
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
 	 */
-	public var antialiasing(default, setAntialiasing):Bool;
+	public var antialiasing(default, set_antialiasing):Bool;
 	
 	/**
 	 * @private
 	 */
-	private function setAntialiasing(Antialiasing:Bool):Bool
+	private function set_antialiasing(Antialiasing:Bool):Bool
 	{
 		antialiasing = Antialiasing;
 		#if flash
@@ -1134,7 +1134,6 @@ class FlxCamera extends FlxBasic
 		#end
 		return Antialiasing;
 	}
-	
 	
 	/**
 	 * The scale of the camera object, irrespective of zoom.
@@ -1298,7 +1297,7 @@ class FlxCamera extends FlxBasic
 	}
 	#end
 	
-	private function setWidth(val:Int):Int
+	private function set_width(val:Int):Int
 	{
 		if (val > 0)
 		{
@@ -1324,7 +1323,7 @@ class FlxCamera extends FlxBasic
 		return val;
 	}
 	
-	private function setHeight(val:Int):Int
+	private function set_height(val:Int):Int
 	{
 		if (val > 0)
 		{

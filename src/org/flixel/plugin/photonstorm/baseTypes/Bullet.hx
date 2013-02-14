@@ -220,33 +220,33 @@ class Bullet extends FlxSprite
 		}
 	}
 	
-	public var xGravity(null, setxGravity):Int;
+	public var xGravity(null, set_xGravity):Int;
 	
-	public function setxGravity(gx:Int):Int
+	private function set_xGravity(gx:Int):Int
 	{
 		acceleration.x = gx;
 		return gx;
 	}
 	
-	public var yGravity(null, setyGravity):Int;
+	public var yGravity(null, set_yGravity):Int;
 	
-	public function setyGravity(gy:Int):Int
+	private function set_yGravity(gy:Int):Int
 	{
 		acceleration.y = gy;
 		return gy;
 	}
 	
-	public var maxVelocityX(null, setMaxVelocityX):Int;
+	public var maxVelocityX(null, set_maxVelocityX):Int;
 	
-	public function setMaxVelocityX(mx:Int):Int
+	private function set_maxVelocityX(mx:Int):Int
 	{
 		maxVelocity.x = mx;
 		return mx;
 	}
 	
-	public var maxVelocityY(null, setMaxVelocityY):Int;
+	public var maxVelocityY(null, set_maxVelocityY):Int;
 	
-	public function setMaxVelocityY(my:Int):Int
+	private function set_maxVelocityY(my:Int):Int
 	{
 		maxVelocity.y = my;
 		return my;

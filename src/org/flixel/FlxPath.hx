@@ -343,9 +343,9 @@ class FlxPath
 		#end
 	}
 
-	public static var manager(getManager, null):DebugPathDisplay;
+	public static var manager(get_manager, null):DebugPathDisplay;
 	
-	static public function getManager():DebugPathDisplay
+	static private function get_manager():DebugPathDisplay
 	{
 		return cast(FlxG.getPlugin(DebugPathDisplay), DebugPathDisplay);
 	}	

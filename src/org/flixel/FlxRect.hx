@@ -40,42 +40,42 @@ class FlxRect
 		height = Height;
 	}
 	
-	public var left(getLeft, null):Float;
+	public var left(get_left, null):Float;
 	
 	/**
 	 * The X coordinate of the left side of the rectangle.  Read-only.
 	 */
-	public function getLeft():Float
+	private function get_left():Float
 	{
 		return x;
 	}
 	
-	public var right(getRight, null):Float;
+	public var right(get_right, null):Float;
 	
 	/**
 	 * The X coordinate of the right side of the rectangle.  Read-only.
 	 */
-	public function getRight():Float
+	private function get_right():Float
 	{
 		return x + width;
 	}
 	
-	public var top(getTop, null):Float;
+	public var top(get_top, null):Float;
 	
 	/**
 	 * The Y coordinate of the top of the rectangle.  Read-only.
 	 */
-	public function getTop():Float
+	private function get_top():Float
 	{
 		return y;
 	}
 	
-	public var bottom(getBottom, null):Float;
+	public var bottom(get_bottom, null):Float;
 	
 	/**
 	 * The Y coordinate of the bottom of the rectangle.  Read-only.
 	 */
-	public function getBottom():Float
+	private function get_bottom():Float
 	{
 		return y + height;
 	}

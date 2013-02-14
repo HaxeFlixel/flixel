@@ -11,7 +11,6 @@ import org.flixel.FlxPoint;
 
 class FlxU 
 {
-
 	public function new() { }
 	
 	/**

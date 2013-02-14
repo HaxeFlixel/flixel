@@ -17,7 +17,7 @@ class FlxJoystickManager implements IFlxInput
 	 * While you can have each joystick use a custom dead zone, setting this will 
 	 * set every gamepad to use this deadzone.
 	 */
-	public var globalDeadZone(default, setDeadZone):Float;
+	public var globalDeadZone(default, set_deadZone):Float;
 	
 	/**
 	 * A counter for the number of active Joysticks
@@ -169,7 +169,7 @@ class FlxJoystickManager implements IFlxInput
 	 * 						Less this number the more Joystick is sensible.
 	 * 						Should be between 0.0 and 1.0.
 	 */
-	public function setDeadZone(DeadZone:Float):Float
+	private function set_deadZone(DeadZone:Float):Float
 	{
 		globalDeadZone = DeadZone;
 		for (joy in joysticks)

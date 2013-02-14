@@ -479,14 +479,14 @@ class FlxBitmapFont extends FlxSprite
 	}
 	#end
 	
-	public var text(getTextString, setTextString):String;
+	public var text(get_textString, set_textString):String;
 	
 	/**
 	 * Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 	 * 
 	 * @return	void
 	 */ 
-	private function setTextString(content:String):String
+	private function set_textString(content:String):String
 	{
 		var newText:String;
 		
@@ -527,7 +527,7 @@ class FlxBitmapFont extends FlxSprite
 		align = lineAlignment;
 	}
 	
-	private function getTextString():String
+	private function get_textString():String
 	{
 		return _text;
 	}

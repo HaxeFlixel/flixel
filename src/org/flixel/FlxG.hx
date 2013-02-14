@@ -62,12 +62,12 @@ class FlxG
 	public static var tweener:FlxBasic = new FlxBasic();
 	
 	#if neko
-	public static var bgColor(getBgColor, setBgColor):BitmapInt32;
+	public static var bgColor(get_bgColor, set_bgColor):BitmapInt32;
 	#else
-	public static var bgColor(getBgColor, setBgColor):Int;
+	public static var bgColor(get_bgColor, set_bgColor):Int;
 	#end
 	
-	public static var flashFramerate(getFlashFramerate, setFlashFramerate):Int;
+	public static var flashFramerate(get_flashFramerate, set_flashFramerate):Int;
 	
 	public function new() { }
 	
@@ -410,14 +410,14 @@ class FlxG
 		#end
 	}
 	
-	public static var framerate(getFramerate, setFramerate):Int;
+	public static var framerate(get_framerate, set_framerate):Int;
 	
 	/**
 	 * How many times you want your game to update each second.
 	 * More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the Flash Player framerate!
 	 */
-	static public function getFramerate():Int
+	static private function get_framerate():Int
 	{
 		return Std.int(1000 / _game._step);
 	}
@@ -425,7 +425,7 @@ class FlxG
 	/**
 	 * @private
 	 */
-	static public function setFramerate(Framerate:Int):Int
+	static private function set_framerate(Framerate:Int):Int
 	{
 		_game._step = Math.floor(Math.abs(1000 / Framerate));
 		_game._stepSeconds = (_game._step / 1000);
@@ -441,7 +441,7 @@ class FlxG
 	 * More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the Flash Player framerate!
 	 */
-	static public function getFlashFramerate():Int
+	static private function get_flashFramerate():Int
 	{
 		if (_game.stage != null)
 			return Math.floor(_game.stage.frameRate);
@@ -451,7 +451,7 @@ class FlxG
 	/**
 	 * @private
 	 */
-	static public function setFlashFramerate(Framerate:Int):Int
+	static private function set_flashFramerate(Framerate:Int):Int
 	{
 		_game._flashFramerate = Math.floor(Math.abs(Framerate));
 		if (_game.stage != null)
@@ -1205,13 +1205,13 @@ class FlxG
 		}
 	}
 	
-	public static var stage(getStage, null):Stage;
+	public static var stage(get_stage, null):Stage;
 	
 	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
 	 * Will be null if it's not safe/useful yet.
 	 */
-	static public function getStage():Stage
+	static private function get_stage():Stage
 	{
 		if (_game.stage != null)
 		{
@@ -1220,12 +1220,12 @@ class FlxG
 		return null;
 	}
 	
-	public static var state(getState, null):FlxState;
+	public static var state(get_state, null):FlxState;
 	
 	/**
 	 * Read-only: access the current game state from anywhere.
 	 */
-	static public function getState():FlxState
+	static private function get_state():FlxState
 	{
 		return _game._state;
 	}
@@ -1410,9 +1410,9 @@ class FlxG
 	 * Set functionality sets the background color of all the current cameras.
 	 */
 	#if flash
-	static public function getBgColor():UInt
+	static private function get_bgColor():UInt
 	#else
-	static public function getBgColor():BitmapInt32
+	static private function get_bgColor():BitmapInt32
 	#end
 	{
 		if (FlxG.camera == null)
@@ -1426,9 +1426,9 @@ class FlxG
 	}
 	
 	#if flash
-	static public function setBgColor(Color:UInt):UInt
+	static private function set_bgColor(Color:UInt):UInt
 	#else
-	static public function setBgColor(Color:BitmapInt32):BitmapInt32
+	static private function set_bgColor(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		var i:Int = 0;

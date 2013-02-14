@@ -152,13 +152,13 @@ class FlxGamePad extends FlxTypedGroup<FlxButton>
 		return button;
 	}	
 	
-	public var alpha(default, setAlpha):Float;
+	public var alpha(default, set_alpha):Float;
 	
 	/**
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the gamepad.
 	 * @param Alpha
 	 */
-	private function setAlpha(Alpha:Float):Float
+	private function set_alpha(Alpha:Float):Float
 	{
 		alpha = Alpha;
 		for (i in 0...members.length)

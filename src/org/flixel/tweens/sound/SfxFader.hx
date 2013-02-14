@@ -104,8 +104,8 @@ class SfxFader extends FlxTween
 	/**
 	 * The current Sfx this object is effecting.
 	 */
-	public var sfx(getSfx, null):FlxSound;
-	private function getSfx():FlxSound { return _sfx; }
+	public var sfx(get_sfx, null):FlxSound;
+	private function get_sfx():FlxSound { return _sfx; }
 
 	// Fader information.
 	private var _sfx:FlxSound;

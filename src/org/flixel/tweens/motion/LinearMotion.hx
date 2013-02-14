@@ -74,8 +74,8 @@ class LinearMotion extends Motion
 	/**
 	 * Length of the current line of movement.
 	 */
-	public var distance(getDistance, null):Float;
-	private function getDistance():Float
+	public var distance(get_distance, null):Float;
+	private function get_distance():Float
 	{
 		if (_distance >= 0) return _distance;
 		return (_distance = Math.sqrt(_moveX * _moveX + _moveY * _moveY));

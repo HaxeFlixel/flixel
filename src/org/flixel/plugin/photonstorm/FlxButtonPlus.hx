@@ -203,9 +203,9 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		}
 	}
 	
-	public var x(getX, setX):Int;
+	public var x(get_x, set_x):Int;
 	
-	public function setX(newX:Int):Int
+	private function set_x(newX:Int):Int
 	{
 		_x = newX;
 		
@@ -220,14 +220,14 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		return newX;
 	}
 	
-	public function getX():Int
+	private function get_x():Int
 	{
 		return _x;
 	}
 	
-	public var y(getY, setY):Int;
+	public var y(get_y, set_y):Int;
 	
-	public function setY(newY:Int):Int
+	private function set_y(newY:Int):Int
 	{
 		_y = newY;
 		
@@ -242,7 +242,7 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		return newY;
 	}
 	
-	public function getY():Int
+	private function get_y():Int
 	{
 		return _y;
 	}
@@ -355,7 +355,6 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 				
 				if (leaveCallback != null)
 				{
-					//leaveCallback.apply(null, leaveCallbackParams);
 					Reflect.callMethod(null, leaveCallback, leaveCallbackParams);
 				}
 			}
@@ -372,7 +371,6 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 				
 				if (enterCallback != null)
 				{
-					//enterCallback.apply(null, enterCallbackParams);
 					Reflect.callMethod(null, enterCallback, enterCallbackParams);
 				}
 			}

@@ -12,7 +12,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
 	 */
-	public var maxSize(default, setMaxSize):Int;
+	public var maxSize(default, set_maxSize):Int;
 	
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.
@@ -140,7 +140,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * @private
 	 */
-	private function setMaxSize(Size:Int):Int
+	private function set_maxSize(Size:Int):Int
 	{
 		maxSize = Math.floor(Math.abs(Size));
 		if (_marker >= maxSize)
