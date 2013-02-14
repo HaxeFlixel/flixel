@@ -1,6 +1,6 @@
 package org.flixel.plugin;
 
-#if FLX_DEBUG
+#if !FLX_NO_DEBUG
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;

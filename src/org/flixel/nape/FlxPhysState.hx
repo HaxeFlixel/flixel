@@ -6,7 +6,7 @@ import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Polygon;
 import nape.space.Space;
-#if FLX_DEBUG
+#if !FLX_NO_DEBUG
 import nape.util.ShapeDebug;
 #end
 import org.flixel.FlxCamera;
@@ -27,7 +27,7 @@ import org.flixel.FlxState;
 
 class FlxPhysState extends FlxState
 {
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Contains the sprite used for nape debug graphics.
 	 */
@@ -66,7 +66,7 @@ class FlxPhysState extends FlxState
 		velocityIterations = 10;	// Default value. 
 		positionIterations = 10;	// Default value.
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		enablePhysDebug();
 		#end
 	}
@@ -78,7 +78,7 @@ class FlxPhysState extends FlxState
 	{
 		space.step(FlxG.elapsed, velocityIterations, positionIterations);
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_physDbgSpr != null) 
 		{
 			_physDbgSpr.clear();
@@ -118,12 +118,12 @@ class FlxPhysState extends FlxState
 		super.destroy();
 		space.clear();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		disablePhysDebug();
 		#end
 	}
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Enables debug graphics for nape physics.
 	 */
