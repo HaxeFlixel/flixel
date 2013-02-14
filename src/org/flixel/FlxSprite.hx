@@ -6,6 +6,8 @@ import nme.display.BitmapInt32;
 import nme.display.BlendMode;
 import nme.display.Graphics;
 import nme.display.Tilesheet;
+import nme.filters.BitmapFilter;
+import nme.filters.GlowFilter;
 import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
@@ -194,6 +196,11 @@ class FlxSprite extends FlxObject
 	 */
 	private var _matrix:Matrix;
 	
+	/**
+	 * An array that contains each filter object currently associated with this sprite.
+	 */
+	public var filters:Array<BitmapFilter>;
+	
 	#if !flash
 	private var _frameID:Int;
 	private var _red:Float;
@@ -260,6 +267,7 @@ class FlxSprite extends FlxObject
 		}
 		loadGraphic(SimpleGraphic);
 	}
+
 	
 	/**
 	 * Clean up memory.
@@ -1654,7 +1662,92 @@ class FlxSprite extends FlxObject
 			_callback(((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex);
 		}
 		dirty = false;
+		
+		// Updates the filter effects on framePixels.
+		if (filters != null)
+		{
+			for (filter in filters) 
+			{
+				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
+			}
+		}
 	}
+	
+	/**
+	 * Adds a filter to the filters array and updates the sprite graphics.
+	 * Note that effects like outer glow, or drop shadow, may require you to increase the sprite graphics size.
+	 * 
+	 * @param	filter		The filter to be added.
+	 * @param	permanent	If permanent, the effect cannot be removed, and will be visible on all sprites sharing this graphic.
+	 */
+	public function addFilter(filter:BitmapFilter, permanent:Bool = false)
+	{
+		if (!permanent)
+		{
+			if (filters == null) 
+			{
+				filters = new Array<BitmapFilter>();
+			}
+			filters.push(filter);
+		}
+		else 
+		{
+			_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
+		}
+		
+		#if !flash
+		_calculatedPixelsIndex = -1;
+		#end
+		
+		updateAtlasInfo(true);
+		
+		drawFrame(true);
+	}
+	
+	/**
+	 * Removes a filter from the sprite.
+	 * @param	filter	The filter to be removed.
+	 */
+	public function removeFilter(filter:BitmapFilter)
+	{
+		if(filters == null || filter == null)
+		{
+			return;
+		}
+		
+		filters.remove(filter);
+		
+		drawFrame(true);
+		
+		if (filters.length == 0)
+		{
+			filters = null;
+		}
+	}
+	
+	/**
+	 * Removes all non-permanent filters from the sprite.
+	 */
+	public function removeAllFilters()
+	{
+		if (filters == null) return;
+		
+		while (filters.length != 0) 
+		{
+			filters.pop();
+		}
+		
+		drawFrame(true);
+		
+		#if !flash
+		_calculatedPixelsIndex = -1;
+		#end
+		
+		updateAtlasInfo(true);
+		
+		filters = null;
+	}
+	
 	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
