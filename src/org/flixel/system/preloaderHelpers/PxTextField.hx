@@ -778,7 +778,7 @@ class PxTextField extends Sprite
 		return pSpacing;
 	}
 	
-	public function setAlpha(pAlpha:Float):Float
+	public function set_alpha(pAlpha:Float):Float
 	{
 		_alpha = pAlpha;
 		#if flash
