@@ -34,7 +34,7 @@ import org.flixel.plugin.photonstorm.FlxColor;
 
 class FlxCollision 
 {
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	public static var debug:BitmapData = new BitmapData(1, 1, false);
 	#end
 	
@@ -222,7 +222,7 @@ class FlxCollision
 		
 		#end
 
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		//	Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere.
 		debug = overlapArea;
 		#end

@@ -2,7 +2,7 @@ package org.flixel;
 
 import nme.display.Graphics;
 
-#if FLX_DEBUG
+#if !FLX_NO_DEBUG
 import org.flixel.plugin.DebugPathDisplay;
 #end
 
@@ -20,7 +20,7 @@ class FlxPath
 	 */
 	public var nodes:Array<FlxPoint>;
 
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Specify a debug display color for the path.  Default is white.
 	 */
@@ -64,7 +64,7 @@ class FlxPath
 		}
 		_point = new FlxPoint();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		debugScrollFactor = new FlxPoint(1.0,1.0);
 		debugColor = 0xffffff;
 		ignoreDrawDebug = false;
@@ -82,7 +82,7 @@ class FlxPath
 	 */
 	public function destroy():Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		var debugPathDisplay:DebugPathDisplay = manager;
 		if (debugPathDisplay != null)
 		{
@@ -229,7 +229,7 @@ class FlxPath
 		return null;
 	}
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * While this doesn't override <code>FlxBasic.drawDebug()</code>, the behavior is very similar.
 	 * Based on this path data, it draws a simple lines-and-boxes representation of the path

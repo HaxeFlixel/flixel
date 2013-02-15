@@ -819,7 +819,7 @@ class FlxSprite extends FlxObject
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);

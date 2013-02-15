@@ -141,7 +141,7 @@ class FlxGamePad extends FlxTypedGroup<FlxButton>
 		button.immovable = true;
 		button.scrollFactor.x = button.scrollFactor.y = 0;
 
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		button.ignoreDrawDebug = true;
 		#end
 		

@@ -117,7 +117,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		_base.scrollFactor.x = _base.scrollFactor.y = 0;
 		_base.solid = false;
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		_base.ignoreDrawDebug = true;
 		#end
 		
@@ -135,7 +135,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		_stick.scrollFactor.x = _stick.scrollFactor.y = 0;
 		_stick.solid = false;
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		_stick.ignoreDrawDebug = true;
 		#end
 		
