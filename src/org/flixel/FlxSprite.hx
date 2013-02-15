@@ -1674,14 +1674,29 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Adds a filter to the filters array and updates the sprite graphics.
-	 * Note that effects like outer glow, or drop shadow, may require you to increase the sprite graphics size.
+	 * Adds a filter to this sprite.
+	 * Note that for effects like outer glow, or drop shadow, updating the sprite clipping
+	 * area may be required, use the argument "updateSize" for that effect.
 	 * 
 	 * @param	filter		The filter to be added.
-	 * @param	permanent	If permanent, the effect cannot be removed, and will be visible on all sprites sharing this graphic.
+	 * 
+	 * @param	updateSize	Filters like outer glow or drop shadow may be clipped by the sprite.
+	 * 						Use this to increase the visible sprite area, for example: new FlxPoint(10,10) will
+	 * 						extend the sprite clipping area by 10 pixels of width and height.
+	 * 
+	 * @param	permanent	If permanent, the effect cannot be removed and will be visible
+	 * 						on all (non-unique) sprites sharing this graphic. 
+	 *
 	 */
-	public function addFilter(filter:BitmapFilter, permanent:Bool = false)
-	{
+	public function addFilter(filter:BitmapFilter, updateSize:FlxPoint = null, permanent:Bool = false)
+	{	
+		// Note: setClipping() makes the sprite unique and will not work with permanent filters,
+		// make sure the original graphics have enough room (alpha zero pixels) in that case.
+		if (updateSize != null && permanent == false)
+		{
+			setClipping(frameWidth + Std.int(updateSize.x) , frameHeight + Std.int(updateSize.y) );
+		}
+		
 		if (!permanent)
 		{
 			if (filters == null) 
@@ -1695,6 +1710,8 @@ class FlxSprite extends FlxObject
 			_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
 		}
 		
+
+		
 		#if !flash
 		_calculatedPixelsIndex = -1;
 		#end
@@ -1705,7 +1722,25 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Sets this sprite clipping width and height, the current graphic is centered
+	 * at the middle.
+	 * 
+	 * @param	width	The new sprite width.
+	 * @param	height	The new sprite height.
+	 */
+	public function setClipping(width:Int, height:Int)
+	{
+		var tempSpr:FlxSprite = new FlxSprite(0, 0, _pixels);
+		var diffSize:FlxPoint = new FlxPoint(width - frameWidth, height - frameHeight);
+		makeGraphic(width, height, 0x0);
+		stamp(tempSpr, Std.int(diffSize.x / 2), Std.int(diffSize.y / 2));
+		
+		tempSpr.destroy();
+	}
+	
+	/**
 	 * Removes a filter from the sprite.
+	 * 
 	 * @param	filter	The filter to be removed.
 	 */
 	public function removeFilter(filter:BitmapFilter)
@@ -1726,7 +1761,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Removes all non-permanent filters from the sprite.
+	 * Removes all filters from the sprite.
 	 */
 	public function removeAllFilters()
 	{
@@ -1747,6 +1782,7 @@ class FlxSprite extends FlxObject
 		
 		filters = null;
 	}
+	
 	
 	
 	/**
