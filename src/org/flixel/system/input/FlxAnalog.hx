@@ -384,7 +384,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the analog.
 	 * @param Alpha
 	 */
-	public function setAlpha(Alpha:Float):Void
+	public function set_alpha(Alpha:Float):Void
 	{
 		_base.alpha = Alpha;
 		_stick.alpha = Alpha;

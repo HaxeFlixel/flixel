@@ -470,7 +470,7 @@ class FlxBitmapTextField extends FlxSprite
 	override private function set_alpha(pAlpha:Float):Float
 	{
 		#if flash
-		super.setAlpha(pAlpha);
+		super.set_alpha(pAlpha);
 		#else
 		alpha = pAlpha;
 		_pendingTextChange = true;
