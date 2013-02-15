@@ -1735,6 +1735,9 @@ class FlxSprite extends FlxObject
 		makeGraphic(width, height, 0x0);
 		stamp(tempSpr, Std.int(diffSize.x / 2), Std.int(diffSize.y / 2));
 		
+		this.x -= diffSize.x * 0.5;
+		this.y -= diffSize.y * 0.5;
+		
 		tempSpr.destroy();
 	}
 	
