@@ -1,22 +1,45 @@
 package org.flixel;
 
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import nme.events.Event;
 import nme.events.MouseEvent;
 import nme.events.TouchEvent;
 import nme.Lib;
 import nme.media.Sound;
-import nme.media.Sound;
 import org.flixel.system.input.FlxTouch;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.Atlas;
 
+class FlxButton extends FlxTypedButton<FlxText>
+{
+	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
+	{
+		super(X, Y, Label, OnClick);
+		if(Label != null)
+		{
+			label = new FlxText(0, 0, 80, Label);
+			label.setFormat(null, 8, 0x333333, "center");
+			labelOffset = new FlxPoint( -1, 3);
+		}
+	}
+	
+	/**
+	 * Updates the size of the text field to match the button.
+	 */
+	override private function resetHelpers():Void
+	{
+		super.resetHelpers();
+		if (label != null)
+		{
+			label.width = label.frameWidth = Std.int(width);
+			label.size = label.size;
+		}
+	}
+}
+
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
-class FlxButton extends FlxSprite
+class FlxTypedButton<T:FlxSprite> extends FlxSprite
 {
 	/**
 	 * Use this to toggle checkbox-style behavior.
@@ -38,7 +61,7 @@ class FlxButton extends FlxSprite
 	/**
 	 * The text that appears on the button.
 	 */
-	public var label:FlxText;
+	public var label:T;
 	/**
 	 * Controls the offset (from top left) of the text from the button.
 	 */
@@ -106,12 +129,7 @@ class FlxButton extends FlxSprite
 	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
 	{
 		super(X, Y);
-		if(Label != null)
-		{
-			label = new FlxText(0, 0, 80, Label);
-			label.setFormat(null, 8, 0x333333, "center");
-			labelOffset = new FlxPoint( -1, 3);
-		}
+		
 		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
 		
 		onUp = OnClick;
@@ -358,19 +376,6 @@ class FlxButton extends FlxSprite
 		}
 	}
 	
-	/**
-	 * Updates the size of the text field to match the button.
-	 */
-	override private function resetHelpers():Void
-	{
-		super.resetHelpers();
-		if (label != null)
-		{
-			label.width = label.frameWidth = Std.int(width);
-			label.size = label.size;
-		}
-	}
-	
 	// TODO: Return from Sound -> Class<Sound>
 	/**
 	 * Set sounds to play during mouse-button interactions.
@@ -430,7 +435,7 @@ class FlxButton extends FlxSprite
 	override private function set_atlas(value:Atlas):Atlas 
 	{
 		var atl:Atlas = super.set_atlas(value);
-		if (atl == value)
+		if (atl == value && label != null)
 		{
 			// Maybe there is enough place for font image
 			label.atlas = value;
