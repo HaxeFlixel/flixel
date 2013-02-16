@@ -172,12 +172,17 @@ class PxButton extends FlxSprite
 		{
 			if (!FlxG.supportsTouchEvents)
 			{
+				#if !FLX_NO_MOUSE
 				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				#end
 			}
 			else
 			{
+				#if !FLX_NO_TOUCH
 				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
+				#end
 			}
+			
 		}
 		if (label != null)
 		{
@@ -222,11 +227,15 @@ class PxButton extends FlxSprite
 			{
 				if (!FlxG.supportsTouchEvents)
 				{
+					#if !FLX_NO_MOUSE
 					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+					#end
 				}
 				else
 				{
+					#if !FLX_NO_TOUCH
 					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
+					#end
 				}
 				_initialized = true;
 			}
@@ -270,7 +279,17 @@ class PxButton extends FlxSprite
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		if(FlxG.mouse.visible)
+		var continueUpdate = false;
+		
+		#if !FLX_NO_MOUSE
+			continueUpdate = FlxG.mouse.visible;
+		#end
+		
+		#if !FLX_NO_TOUCH
+			continueUpdate = true;
+		#end
+	
+		if (continueUpdate)
 		{
 			if (cameras == null)
 			{
@@ -285,17 +304,21 @@ class PxButton extends FlxSprite
 				camera = cameras[i++];
 				if (!FlxG.supportsTouchEvents)
 				{
+					#if !FLX_NO_MOUSE
 					FlxG.mouse.getWorldPosition(camera, _point);
 					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
+					#end
 				}
 				else
 				{
+					#if !FLX_NO_TOUCH
 					for (j in 0...FlxG.touchManager.touches.length)
 					{
 						var touch:FlxTouch = FlxG.touchManager.touches[j];
 						touch.getWorldPosition(camera, _point);
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}
+					#end
 				}
 			}
 			if(offAll)
@@ -314,7 +337,7 @@ class PxButton extends FlxSprite
 				status = NORMAL;
 			}
 		}
-	
+
 		//Then if the label and/or the label offset exist,
 		// position them to match the button.
 		if(label != null)
