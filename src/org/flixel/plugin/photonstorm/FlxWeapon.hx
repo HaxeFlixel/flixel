@@ -61,10 +61,14 @@ class FlxWeapon
 	 */
 	public var group:FlxTypedGroup<Bullet>;
 	
+	// Internal variables, use with caution
+	public var nextFire:Int;
+	public var fireRate:Int;
+	public var bulletSpeed:Int;
+	
 	//	Bullet values
 	public var bounds:FlxRect;
 	
-	private var bulletSpeed:Int;
 	private var rotateToAngle:Bool;
 	
 	//	When firing from a fixed position (i.e. Missile Command)
@@ -73,8 +77,6 @@ class FlxWeapon
 	private var fireY:Int;
 	
 	private var lastFired:Int;
-	private var nextFire:Int;
-	private var fireRate:Int;
 	private var touchTarget:FlxTouch;
 	
 	//	When firing from a parent sprites position (i.e. Space Invaders)
