@@ -18,62 +18,27 @@ class FlxInputs {
 	/**
 	 * Initiate the default Inputs
 	 */
-	static public function init(enabledInputs:FlxInputList = null):Void
+	static public function init():Void
 	{
 		inputs = null;
 		inputs = new Array<IFlxInput>();
 		
-		if ( enabledInputs == null)
-			enabledInputs = getDefaultInputs();
-		
 		#if !FLX_NO_KEYBOARD
-		if (enabledInputs.keyboard)
 			initKeyboard();
 		#end
 		
 		#if !FLX_NO_MOUSE
-		if (enabledInputs.mouse)
 			initMouse();
 		#end
 		
 		#if !FLX_NO_TOUCH
-		if (enabledInputs.touch)
 			initTouch();
 		#end
 		
 		#if (!FLX_NO_JOYSTICK && (cpp||neko))
-		if (enabledInputs.joystick)
 			initJoystick();
 		#end
 		
-	}
-	
-	/**
-	 * Determine the default Inputs from the compiler conditionals
-	 * You must make sure mobile conditional is set in nmml file with 
-	 * <set name="mobile" if="android" /> and so on...
-	 */
-	private static function getDefaultInputs( ):FlxInputList
-	{
-		var defaults = new FlxInputList();
-
-		#if !FLX_NO_KEYBOARD
-		defaults.keyboard = true;
-		#end
-		
-		#if !FLX_NO_JOYSTICK
-		defaults.joystick = true;
-		#end
-		
-		#if !FLX_NO_MOUSE
-		defaults.mouse = true;
-		#end
-
-		#if !FLX_NO_TOUCH
-		defaults.touch = true;
-		#end
-		
-		return defaults;
 	}
 	
 	/**
@@ -200,15 +165,4 @@ class FlxInputs {
 		}
 	}
 
-}
-
-/**
- * Basic class for a definition of inputs to enable
- */
-class FlxInputList {
-	public function new (){}
-    public var mouse : Bool;
-	public var keyboard : Bool;
-	public var touch : Bool;
-	public var joystick: Bool;
 }
