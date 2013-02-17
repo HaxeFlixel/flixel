@@ -591,33 +591,8 @@ class FlxCamera extends FlxBasic
 			else
 			{
 				var edge:Float;
-				var targetX:Float;
-				var targetY:Float;
-				
-				#if flash
-				/* Haxe Notice:
-				* 
-				* In order to apply a fix for smooth follow, we must check if a sprite has baked rotation or is scaled.
-				* If your camera is following something other than a FlxSprite, you must implement the 'simpleRender' property.
-				* Look at 'FlxSprite.simpleRender' for an example of this. Or if you just want it on all the time, you can implement it like so:
-				* 
-				* public var simpleRender(default, null):Bool = true;
-				*/
-				if (Reflect.getProperty(target, "simpleRender") == true)
-				{
-					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001:-0.0000001));
-					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001: -0.0000001));
-				}
-				else
-				{
-					targetX = target.x + ((target.x > 0)?0.0000001:-0.0000001);
-					targetY = target.y + ((target.y > 0)?0.0000001: -0.0000001);
-				}
-				#else
-				targetX = target.x;
-				targetY = target.y;
-				#end
-				
+				var targetX:Float = target.x;
+				var targetY:Float = target.y;
 				
 				if (style == STYLE_SCREEN_BY_SCREEN) 
 				{
@@ -843,8 +818,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public function focusOn(point:FlxPoint):Void
 	{
-		point.x += (point.x > 0)?0.0000001: -0.0000001;
-		point.y += (point.y > 0)?0.0000001: -0.0000001;
 		scroll.make(point.x - width * 0.5, point.y - height * 0.5);
 	}
 	

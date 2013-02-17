@@ -428,10 +428,10 @@ class FlxTilemap extends FlxObject
 	#end
 		
 		//Copy tile images into the tile buffer
-		_point.x = Std.int(Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
-		_point.y = Std.int(Camera.scroll.y * scrollFactor.y) - y;
-		var screenXInTiles:Int = Math.floor((_point.x + ((_point.x > 0)?0.0000001: -0.0000001)) / _tileWidth);
-		var screenYInTiles:Int = Math.floor((_point.y + ((_point.y > 0)?0.0000001: -0.0000001)) / _tileHeight);
+		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
+		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
+		var screenXInTiles:Int = Math.floor(_point.x / _tileWidth);
+		var screenYInTiles:Int = Math.floor(_point.y / _tileHeight);
 		var screenRows:Int = Buffer.rows;
 		var screenColumns:Int = Buffer.columns;
 		
@@ -620,8 +620,8 @@ class FlxTilemap extends FlxObject
 			#if flash
 			if(!buffer.dirty)
 			{
-				_point.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
-				_point.y = y - Std.int(camera.scroll.y * scrollFactor.y) + buffer.y;
+				_point.x = x - (camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
+				_point.y = y - (camera.scroll.y * scrollFactor.y) + buffer.y;
 				buffer.dirty = (_point.x > 0) || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
 			}
 			if(buffer.dirty)
@@ -629,10 +629,8 @@ class FlxTilemap extends FlxObject
 				drawTilemap(buffer, camera);
 				buffer.dirty = false;
 			}
-			_flashPoint.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
-			_flashPoint.y = y - Std.int(camera.scroll.y * scrollFactor.y) + buffer.y;
-			_flashPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
-			_flashPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
+			_flashPoint.x = x - (camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
+			_flashPoint.y = y - (camera.scroll.y * scrollFactor.y) + buffer.y;
 			buffer.draw(camera, _flashPoint);
 			#else
 			drawTilemap(buffer, camera);
