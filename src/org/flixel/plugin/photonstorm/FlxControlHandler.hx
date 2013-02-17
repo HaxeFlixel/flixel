@@ -955,7 +955,7 @@ class FlxControlHandler
 					lastFiredTime = FlxU.getTicks();
 					fireCallback();
 					fired = true;
-					nextFireTime = lastFiredTime + Math.floor(fireRate / FlxG.timeScale);
+					nextFireTime = lastFiredTime + Std.int(fireRate / FlxG.timeScale);
 				}
 			}
 			else
@@ -1035,7 +1035,7 @@ class FlxControlHandler
 			}
 			
 			lastJumpTime = FlxU.getTicks();
-			nextJumpTime = lastJumpTime + Math.floor(jumpRate / FlxG.timeScale);
+			nextJumpTime = lastJumpTime + Std.int(jumpRate / FlxG.timeScale);
 			
 			jumped = true;
 		}

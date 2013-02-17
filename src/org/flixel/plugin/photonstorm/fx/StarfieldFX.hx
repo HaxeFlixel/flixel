@@ -93,7 +93,7 @@ class StarfieldFX extends BaseFX
 	{
 		#if flash
 		sprite = new FlxSprite(x, y).makeGraphic(width, height, backgroundColor);
-		canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
+		canvas = new BitmapData(Std.int(sprite.width), Std.int(sprite.height), true, backgroundColor);
 		#else
 		sprite = new StarSprite(x, y, width, height, backgroundColor);
 		var starDefs:Array<StarDef> = cast(sprite, StarSprite).starData;
@@ -274,9 +274,9 @@ class StarfieldFX extends BaseFX
 			star.y += Math.floor(starYOffset * star.speed);
 			
 			#if flash
-			canvas.setPixel32(star.x, star.y, depthColours[Math.floor(star.speed - 1)]);
+			canvas.setPixel32(star.x, star.y, depthColours[Std.int(star.speed - 1)]);
 			#else
-			var starColor:BitmapInt32 = depthColours[Math.floor(star.speed - 1)];
+			var starColor:BitmapInt32 = depthColours[Std.int(star.speed - 1)];
 			var rgba:RGBA = FlxColor.getRGB(starColor);
 			
 			var starDef:StarDef = starArray[i];
@@ -292,7 +292,7 @@ class StarfieldFX extends BaseFX
 			}
 			else if (star.x < 0)
 			{
-				star.x = Math.floor(sprite.width);
+				star.x = Std.int(sprite.width);
 			}
 			
 			if (star.y > sprite.height)
@@ -301,7 +301,7 @@ class StarfieldFX extends BaseFX
 			}
 			else if (star.y < 0)
 			{
-				star.y = Math.floor(sprite.height);
+				star.y = Std.int(sprite.height);
 			}
 			
 			#if !flash
@@ -708,7 +708,7 @@ class StarSprite extends FlxSprite
 	{
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
+			_framesData = _node.addSpriteFramesData(Std.int(frameWidth), Std.int(frameHeight));
 			_frameID = _framesData.frameIDs[0];
 		}
 	}

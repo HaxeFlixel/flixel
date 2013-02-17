@@ -66,13 +66,8 @@ class ZoomCamera extends FlxCamera
 	private function alignCamera():Void
 	{	
 		// target position in screen space
-		#if flash
-		var targetScreenX:Float = Math.floor(target.x - scroll.x);
-		var targetScreenY:Float = Math.floor(target.y - scroll.y);
-		#else
 		var targetScreenX:Float = target.x - scroll.x;
 		var targetScreenY:Float = target.y - scroll.y;
-		#end
 		
 		// center on the target, until the camera bumps up to its bounds
 		// then gradually favor the edge of the screen based on zoomMargin

@@ -114,7 +114,7 @@ class FlxDelay extends Sprite
 	 */
 	private function get_secondsElapsed():Int
 	{
-		return Math.floor((FlxU.getTicks() - started) / 1000);
+		return Std.int((FlxU.getTicks() - started) / 1000);
 	}
 	
 	public var secondsRemaining(get_secondsRemaining, null):Int;
@@ -124,7 +124,7 @@ class FlxDelay extends Sprite
 	 */
 	private function get_secondsRemaining():Int
 	{
-		return Math.floor((expires - FlxU.getTicks()) / 1000);
+		return Std.int((expires - FlxU.getTicks()) / 1000);
 	}
 	
 	private function update(event:Event):Void

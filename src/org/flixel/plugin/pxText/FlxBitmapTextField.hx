@@ -196,7 +196,7 @@ class FlxBitmapTextField extends FlxSprite
 		var l:Int = cameras.length;
 		
 		var j:Int = 0;
-		var textLength:Int = Math.floor(_drawData.length / 6);
+		var textLength:Int = Std.int(_drawData.length / 6);
 		var currPosInArr:Int;
 		var currTileID:Float;
 		var currTileX:Float;
@@ -663,7 +663,7 @@ class FlxBitmapTextField extends FlxSprite
 						{
 							if (!changed) 
 							{
-								calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(txt, _letterSpacing, _fontScale)));
+								calcFieldWidth = Std.int(Math.max(calcFieldWidth, _font.getTextWidth(txt, _letterSpacing, _fontScale)));
 								rows.push(txt);
 							}
 							lineComplete = true;
@@ -678,16 +678,16 @@ class FlxBitmapTextField extends FlxSprite
 			else
 			{
 				var lineWithoutTabs:String = lines[i].split("\t").join(_tabSpaces);
-				calcFieldWidth = Math.floor(Math.max(calcFieldWidth, _font.getTextWidth(lineWithoutTabs, _letterSpacing, _fontScale)));
+				calcFieldWidth = Std.int(Math.max(calcFieldWidth, _font.getTextWidth(lineWithoutTabs, _letterSpacing, _fontScale)));
 				rows.push(lineWithoutTabs);
 			}
 		}
 		
 		var finalWidth:Int = calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
 		#if flash
-		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
+		var finalHeight:Int = Std.int(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
 		#else
-		var finalHeight:Int = Math.floor(_padding * 2 + Math.max(1, (rows.length * fontHeight * _fontScale + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
+		var finalHeight:Int = Std.int(_padding * 2 + Math.max(1, (rows.length * fontHeight * _fontScale + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
 		
 		width = frameWidth = finalWidth;
 		height = frameHeight = finalHeight;
@@ -775,22 +775,22 @@ class FlxBitmapTextField extends FlxSprite
 				{
 					if (_fixedWidth)
 					{
-						ox = Math.floor((_fieldWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
+						ox = Std.int((_fieldWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
 					}
 					else
 					{
-						ox = Math.floor((finalWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
+						ox = Std.int((finalWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
 					}
 				}
 				if (alignment == PxTextAlign.RIGHT) 
 				{
 					if (_fixedWidth)
 					{
-						ox = _fieldWidth - Math.floor(_font.getTextWidth(t, _letterSpacing, _fontScale));
+						ox = _fieldWidth - Std.int(_font.getTextWidth(t, _letterSpacing, _fontScale));
 					}
 					else
 					{
-						ox = finalWidth - Math.floor(_font.getTextWidth(t, _letterSpacing, _fontScale)) - 2 * padding;
+						ox = finalWidth - Std.int(_font.getTextWidth(t, _letterSpacing, _fontScale)) - 2 * padding;
 					}
 				}
 				if (_outline) 
@@ -1082,7 +1082,7 @@ class FlxBitmapTextField extends FlxSprite
 	{
 		if (_lineSpacing != pSpacing)
 		{
-			_lineSpacing = Math.floor(Math.abs(pSpacing));
+			_lineSpacing = Std.int(Math.abs(pSpacing));
 			_pendingTextChange = true;
 		}
 		return pSpacing;
@@ -1119,7 +1119,7 @@ class FlxBitmapTextField extends FlxSprite
 	
 	private function set_letterSpacing(pSpacing:Int):Int
 	{
-		var tmp:Int = Math.floor(Math.abs(pSpacing));
+		var tmp:Int = Std.int(Math.abs(pSpacing));
 		if (tmp != _letterSpacing)
 		{
 			_letterSpacing = tmp;

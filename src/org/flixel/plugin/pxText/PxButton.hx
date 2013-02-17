@@ -44,7 +44,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 		super.resetHelpers();
 		if (label != null)
 		{
-			label.setWidth(Math.floor(width));
+			label.setWidth(Std.int(width));
 		}
 	}
 	

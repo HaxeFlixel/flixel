@@ -335,7 +335,7 @@ class FlxWeapon
 		currentBullet.velocity.y = 0;
 		
 		lastFired = FlxU.getTicks();
-		nextFire = FlxU.getTicks() + Math.floor(fireRate / FlxG.timeScale);
+		nextFire = FlxU.getTicks() + Std.int(fireRate / FlxG.timeScale);
 		
 		var launchX:Float = positionOffset.x;
 		var launchY:Float = positionOffset.y;

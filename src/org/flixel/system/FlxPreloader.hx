@@ -157,13 +157,13 @@ class FlxPreloader extends NMEPreloader
 	{
 		_min = 0;
 		#if !!FLX_NO_DEBUG
-		_min = Math.floor(minDisplayTime * 1000);
+		_min = Std.int(minDisplayTime * 1000);
 		#end
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
-		_width = Math.floor(Lib.current.stage.stageWidth / _buffer.scaleX);
-		_height = Math.floor(Lib.current.stage.stageHeight / _buffer.scaleY);
+		_width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
+		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		#if !neko
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
 		#else
@@ -440,7 +440,7 @@ class FlxPreloader extends NMEPreloader
 	private function update(Percent:Float):Void
 	{
 		_bmpBar.scaleX = Percent * (_width - 8);
-		_text.text = "FLX v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION + " " + Math.floor(Percent * 100) + "%";
+		_text.text = "FLX v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION + " " + Std.int(Percent * 100) + "%";
 		if(Percent < 0.1)
 		{
 			_logoGlow.alpha = 0;

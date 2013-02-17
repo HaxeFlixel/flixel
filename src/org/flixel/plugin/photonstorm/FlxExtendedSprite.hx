@@ -813,8 +813,8 @@ class FlxExtendedSprite extends FlxSprite
 		else
 		{
 			//	Move the sprite to the middle of the mouse
-			dragOffsetX = Math.floor(frameWidth / 2);
-			dragOffsetY = Math.floor(frameHeight / 2);
+			dragOffsetX = Std.int(frameWidth / 2);
+			dragOffsetY = Std.int(frameHeight / 2);
 		}
 		#end
 	}

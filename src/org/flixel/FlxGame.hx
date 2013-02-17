@@ -727,8 +727,8 @@ class FlxGame extends Sprite
 	private function createFocusScreen():Void
 	{
 		var gfx:Graphics = _focus.graphics;
-		var screenWidth:Int = Math.floor(FlxG.width * FlxCamera.defaultZoom);
-		var screenHeight:Int = Math.floor(FlxG.height * FlxCamera.defaultZoom);
+		var screenWidth:Int = Std.int(FlxG.width * FlxCamera.defaultZoom);
+		var screenHeight:Int = Std.int(FlxG.height * FlxCamera.defaultZoom);
 		
 		//draw transparent black backdrop
 		gfx.moveTo(0, 0);
@@ -740,9 +740,9 @@ class FlxGame extends Sprite
 		gfx.endFill();
 		
 		//draw white arrow
-		var halfWidth:Int = Math.floor(screenWidth / 2);
-		var halfHeight:Int = Math.floor(screenHeight / 2);
-		var helper:Int = Math.floor(FlxU.min(halfWidth, halfHeight) / 3);
+		var halfWidth:Int = Std.int(screenWidth / 2);
+		var halfHeight:Int = Std.int(screenHeight / 2);
+		var helper:Int = Std.int(FlxU.min(halfWidth, halfHeight) / 3);
 		gfx.moveTo(halfWidth - helper, halfHeight - helper);
 		gfx.beginFill(0xffffff, 0.65);
 		gfx.lineTo(halfWidth + helper, halfHeight);

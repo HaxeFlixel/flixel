@@ -311,7 +311,7 @@ class FlxTilemap extends FlxObject
 		//create some tile objects that we'll use for overlap checks (one for each tile)
 		_tileObjects = new Array<FlxTile>();
 		
-		var length:Int = Math.floor(_tiles.width / _tileWidth * _tiles.height / _tileHeight);
+		var length:Int = Std.int(_tiles.width / _tileWidth * _tiles.height / _tileHeight);
 		length += _startingIndex;
 		
 		for (i in 0...length)
@@ -1368,7 +1368,7 @@ class FlxTilemap extends FlxObject
 		{
 			if(_data[i] == Index)
 			{
-				point = new FlxPoint(x + Math.floor(i % widthInTiles) * _tileWidth, y + Math.floor(i / widthInTiles) * _tileHeight);
+				point = new FlxPoint(x + Std.int(i % widthInTiles) * _tileWidth, y + Std.int(i / widthInTiles) * _tileHeight);
 				if (Midpoint)
 				{
 					point.x += _tileWidth * 0.5;

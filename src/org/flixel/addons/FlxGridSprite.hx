@@ -203,7 +203,7 @@ class FlxGridSprite extends FlxObject
 			
 			if (_scaledImage == null)
 			{
-				_scaledImage = new BitmapData(Math.floor(width), Math.floor(height), true, FlxG.TRANSPARENT);
+				_scaledImage = new BitmapData(Std.int(width), Std.int(height), true, FlxG.TRANSPARENT);
 			}
 			else
 			{

@@ -114,8 +114,8 @@ class FlxTileblock extends FlxSprite
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
 		_pixels = FlxG.addBitmap(TileGraphic, false, false, null, _tileWidth, _tileHeight);
-		frameWidth = Math.floor(width);
-		frameHeight = Math.floor(height);
+		frameWidth = Std.int(width);
+		frameHeight = Std.int(height);
 		resetHelpers();
 		updateAtlasInfo();
 		#end
@@ -132,7 +132,7 @@ class FlxTileblock extends FlxSprite
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					var tileIndex:Int = Math.floor(FlxG.random() * _framesData.frameIDs.length);
+					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frameIDs.length);
 					_tileIndices.push(tileIndex);
 					_tileData.push(_framesData.frameIDs[tileIndex]);
 					_tileData.push(destinationX - origin.x + 0.5 * _tileWidth);
@@ -185,7 +185,7 @@ class FlxTileblock extends FlxSprite
 		var numTiles:Int = 0;
 		if (_tileData != null)
 		{
-			numTiles = Math.floor(_tileData.length / 3);
+			numTiles = Std.int(_tileData.length / 3);
 		}
 		
 		var currPosInArr:Int;

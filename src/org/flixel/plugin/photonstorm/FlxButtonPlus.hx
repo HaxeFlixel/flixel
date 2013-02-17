@@ -274,8 +274,8 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		buttonNormal.pixels = normal.pixels;
 		buttonHighlight.pixels = highlight.pixels;
 		
-		width = Math.floor(buttonNormal.width);
-		height = Math.floor(buttonNormal.height);
+		width = Std.int(buttonNormal.width);
+		height = Std.int(buttonNormal.height);
 
 		if (_pressed)
 		{

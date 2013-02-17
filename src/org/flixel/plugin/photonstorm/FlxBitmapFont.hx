@@ -265,7 +265,7 @@ class FlxBitmapFont extends FlxSprite
 		charFrameIDs = new Array<Int>();
 		var frameID:Int = 0;
 		var rowNumber:Int = 0;
-		var maxPossibleCharsPerRow:Int = Math.floor((fontSet.width - offsetX) / (characterWidth + spacingX));
+		var maxPossibleCharsPerRow:Int = Std.int((fontSet.width - offsetX) / (characterWidth + spacingX));
 		#end
 		
 		for (c in 0...(charsInFont.length))
@@ -327,7 +327,7 @@ class FlxBitmapFont extends FlxSprite
 		var l:Int = cameras.length;
 		
 		var j:Int = 0;
-		var textLength:Int = Math.floor(points.length / 3);
+		var textLength:Int = Std.int(points.length / 3);
 		var currPosInArr:Int;
 		var currTileID:Float;
 		var currTileX:Float;

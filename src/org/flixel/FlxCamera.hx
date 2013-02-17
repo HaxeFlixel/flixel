@@ -1171,9 +1171,9 @@ class FlxCamera extends FlxBasic
 		Color = Color & 0x00ffffff;
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
-			var redComponent:Int = Math.floor((Color >> 16) * red);
-			var greenComponent:Int = Math.floor((Color >> 8 & 0xff) * green);
-			var blueComponent:Int = Math.floor((Color & 0xff) * blue);
+			var redComponent:Int = Std.int((Color >> 16) * red);
+			var greenComponent:Int = Std.int((Color >> 8 & 0xff) * green);
+			var blueComponent:Int = Std.int((Color & 0xff) * blue);
 			Color = redComponent << 16 | greenComponent << 8 | blueComponent;
 		}
 		// end of fix
@@ -1182,9 +1182,9 @@ class FlxCamera extends FlxBasic
 		#else
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
-			var redComponent:Int = Math.floor((Color.rgb >> 16) * red);
-			var greenComponent:Int = Math.floor((Color.rgb >> 8 & 0xff) * green);
-			var blueComponent:Int = Math.floor((Color.rgb & 0xff) * blue);
+			var redComponent:Int = Std.int((Color.rgb >> 16) * red);
+			var greenComponent:Int = Std.int((Color.rgb >> 8 & 0xff) * green);
+			var blueComponent:Int = Std.int((Color.rgb & 0xff) * blue);
 			Color.rgb = redComponent << 16 | greenComponent << 8 | blueComponent;
 		}
 		

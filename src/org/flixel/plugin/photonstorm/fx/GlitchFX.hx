@@ -56,8 +56,8 @@ class GlitchFX extends BaseFX
 		#end
 		
 		#if flash
-		sprite = new FlxSprite(source.x, source.y).makeGraphic(Math.floor(source.width + maxGlitch), Math.floor(source.height), backgroundColor);
-		canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
+		sprite = new FlxSprite(source.x, source.y).makeGraphic(Std.int(source.width + maxGlitch), Std.int(source.height), backgroundColor);
+		canvas = new BitmapData(Std.int(sprite.width), Std.int(sprite.height), true, backgroundColor);
 		image = source.pixels;
 		#else
 		sprite = new GlitchSprite(source, maxGlitch, maxSkip, backgroundColor);
@@ -92,7 +92,7 @@ class GlitchFX extends BaseFX
 		if (sprite != null && sourceRef != null)
 		{
 			var glitch:GlitchSprite = cast(sprite, GlitchSprite);
-			glitch.frameWidth = Math.floor(sourceRef.frameWidth + maxGlitch);
+			glitch.frameWidth = Std.int(sourceRef.frameWidth + maxGlitch);
 			glitch.maxGlitch = maxGlitch;
 			glitch.glitchSkip = maxSkip;
 		}
@@ -569,8 +569,8 @@ class GlitchSprite extends FlxSprite
 			this.width = _sourceSprite.width + maxGlitch;
 			this.height = _sourceSprite.height;
 			
-			this.frameWidth = Math.floor(this.width);
-			this.frameHeight = Math.floor(this.height);
+			this.frameWidth = Std.int(this.width);
+			this.frameHeight = Std.int(this.height);
 			
 			_imageTileSheetData = TileSheetManager.addTileSheet(_sourceSprite.pixels);
 			
