@@ -190,14 +190,14 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.translate( -origin.x, -origin.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * 0.017453293);
+					_matrix.rotate(angle * FlxG.RAD);
 				}
 				_matrix.scale(scale.x, scale.y);
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(skew.y * 0.017453293);
-					_skewMatrix.c = Math.tan(skew.x * 0.017453293);
+					_skewMatrix.b = Math.tan(skew.y * FlxG.RAD);
+					_skewMatrix.c = Math.tan(skew.x * FlxG.RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}
@@ -205,7 +205,7 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 				#else
-				radians = -angle * 0.017453293;
+				radians = -angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -231,8 +231,8 @@ class FlxSkewedSprite extends FlxSprite
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(-skew.x * 0.017453293);
-					_skewMatrix.c = Math.tan(-skew.y * 0.017453293);
+					_skewMatrix.b = Math.tan(-skew.x * FlxG.RAD);
+					_skewMatrix.c = Math.tan(-skew.y * FlxG.RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}

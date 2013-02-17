@@ -72,10 +72,10 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<T:FlxParticle>
 	 */
 	public function setMotion(angle:Float, distance:Float, lifespan:Float, angleRange:Float = 0, distanceRange:Float = 0, lifespanRange:Float = 0):Void
 	{
-		this.angle = angle * 0.017453293;
+		this.angle = angle * FlxG.RAD;
 		this.distance = distance;
 		this.lifespan = lifespan;
-		this.angleRange = angleRange * 0.017453293;
+		this.angleRange = angleRange * FlxG.RAD;
 		this.distanceRange = distanceRange;
 		this.lifespanRange = lifespanRange;
 	}

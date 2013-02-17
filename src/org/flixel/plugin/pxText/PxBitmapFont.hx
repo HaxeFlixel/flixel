@@ -425,7 +425,7 @@ class PxBitmapFont
 		_matrix.identity();
 		_matrix.scale(pScale, pScale);
 		
-		var colorMultiplier:Float = 0.00392;
+		var colorMultiplier:Float = 1 / 255;
 		_colorTransform.redOffset = 0;
 		_colorTransform.greenOffset = 0;
 		_colorTransform.blueOffset = 0;
@@ -581,7 +581,7 @@ class PxBitmapFont
 	{
 	#if !flash
 		
-		var colorMultiplier:Float = 0.00392;
+		var colorMultiplier:Float = 1 / 255;
 		var red:Float = colorMultiplier;
 		var green:Float = colorMultiplier;
 		var blue:Float = colorMultiplier;

@@ -604,7 +604,7 @@ class StarSprite extends FlxSprite
 			}
 			else
 			{	//Advanced render
-				radians = angle * 0.017453293;
+				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				

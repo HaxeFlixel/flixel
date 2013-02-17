@@ -487,7 +487,7 @@ class FlxSprite extends FlxObject
 				{
 					_matrix.identity();
 					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
-					_matrix.rotate(bakedAngle * 0.017453293);
+					_matrix.rotate(bakedAngle * FlxG.RAD);
 					#if flash
 					_matrix.translate(max * column + midpointX, midpointY);
 					#else
@@ -764,12 +764,12 @@ class FlxSprite extends FlxObject
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * 0.017453293);	
+					_matrix.rotate(angle * FlxG.RAD);	
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 				#else
-				radians = -angle * 0.017453293;
+				radians = -angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -862,7 +862,7 @@ class FlxSprite extends FlxObject
 		_matrix.scale(Brush.scale.x, Brush.scale.y);
 		if (Brush.angle != 0)
 		{
-			_matrix.rotate(Brush.angle * 0.017453293);
+			_matrix.rotate(Brush.angle * FlxG.RAD);
 		}
 		_matrix.translate(X + Brush.origin.x, Y + Brush.origin.y);
 		var brushBlend:BlendMode = Brush.blend;
@@ -1268,13 +1268,13 @@ class FlxSprite extends FlxObject
 		{
 			if (_colorTransform == null)
 			{
-				_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, alpha);
+				_colorTransform = new ColorTransform((_color >> 16) / 255, (_color >> 8 & 0xff) / 255, (_color & 0xff) / 255, alpha);
 			}
 			else
 			{
-				_colorTransform.redMultiplier = (_color >> 16) * 0.00392;
-				_colorTransform.greenMultiplier = (_color >> 8 & 0xff) * 0.00392;
-				_colorTransform.blueMultiplier = (_color & 0xff) * 0.00392;
+				_colorTransform.redMultiplier = (_color >> 16) / 255;
+				_colorTransform.greenMultiplier = (_color >> 8 & 0xff) / 255;
+				_colorTransform.blueMultiplier = (_color & 0xff) / 255;
 				_colorTransform.alphaMultiplier = alpha;
 			}
 			_useColorTransform = true;
@@ -1329,13 +1329,13 @@ class FlxSprite extends FlxObject
 		{
 			if (_colorTransform == null)
 			{
-				_colorTransform = new ColorTransform((_color.rgb >> 16) * 0.00392, (_color.rgb >> 8 & 0xff) * 0.00392, (_color.rgb & 0xff) * 0.00392, alpha);
+				_colorTransform = new ColorTransform((_color.rgb >> 16) / 255, (_color.rgb >> 8 & 0xff) / 255, (_color.rgb & 0xff) / 255, alpha);
 			}
 			else
 			{
-				_colorTransform.redMultiplier = (_color.rgb >> 16) * 0.00392;
-				_colorTransform.greenMultiplier = (_color.rgb >> 8 & 0xff) * 0.00392;
-				_colorTransform.blueMultiplier = (_color.rgb & 0xff) * 0.00392;
+				_colorTransform.redMultiplier = (_color.rgb >> 16) / 255;
+				_colorTransform.greenMultiplier = (_color.rgb >> 8 & 0xff) / 255;
+				_colorTransform.blueMultiplier = (_color.rgb & 0xff) / 255;
 				_colorTransform.alphaMultiplier = alpha;
 			}
 			_useColorTransform = true;
@@ -1362,13 +1362,13 @@ class FlxSprite extends FlxObject
 		{
 			if (_colorTransform == null)
 			{
-				_colorTransform = new ColorTransform((_color >> 16) * 0.00392, (_color >> 8 & 0xff) * 0.00392, (_color & 0xff) * 0.00392, alpha);
+				_colorTransform = new ColorTransform((_color >> 16) / 255, (_color >> 8 & 0xff) / 255, (_color & 0xff) / 255, alpha);
 			}
 			else
 			{
-				_colorTransform.redMultiplier = (_color >> 16) * 0.00392;
-				_colorTransform.greenMultiplier = (_color >> 8 & 0xff) * 0.00392;
-				_colorTransform.blueMultiplier = (_color & 0xff) * 0.00392;
+				_colorTransform.redMultiplier = (_color >> 16) / 255;
+				_colorTransform.greenMultiplier = (_color >> 8 & 0xff) / 255;
+				_colorTransform.blueMultiplier = (_color & 0xff) / 255;
 				_colorTransform.alphaMultiplier = alpha;
 			}
 			_useColorTransform = true;
@@ -1389,13 +1389,13 @@ class FlxSprite extends FlxObject
 		dirty = true;
 		
 		#if (cpp || js)
-		_red = (_color >> 16) * 0.00392;
-		_green = (_color >> 8 & 0xff) * 0.00392;
-		_blue = (_color & 0xff) * 0.00392;
+		_red = (_color >> 16) / 255;
+		_green = (_color >> 8 & 0xff) / 255;
+		_blue = (_color & 0xff) / 255;
 		#elseif neko
-		_red = (_color.rgb >> 16) * 0.00392;
-		_green = (_color.rgb >> 8 & 0xff) * 0.00392;
-		_blue = (_color.rgb & 0xff) * 0.00392;
+		_red = (_color.rgb >> 16) / 255;
+		_green = (_color.rgb >> 8 & 0xff) / 255;
+		_blue = (_color.rgb & 0xff) / 255;
 		#end
 		
 		return _color;

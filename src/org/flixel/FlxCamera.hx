@@ -1097,21 +1097,21 @@ class FlxCamera extends FlxBasic
 		if (_flashBitmap != null)
 		{
 			var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
-			colorTransform.redMultiplier = (color >> 16) * 0.00392;
-			colorTransform.greenMultiplier = (color >> 8 & 0xff) * 0.0039;
-			colorTransform.blueMultiplier = (color & 0xff) * 0.00392;
+			colorTransform.redMultiplier = (color >> 16) / 255;
+			colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
+			colorTransform.blueMultiplier = (color & 0xff) / 255;
 			_flashBitmap.transform.colorTransform = colorTransform;
 		}
 		#elseif (cpp || js)
 		//var colorTransform:ColorTransform = _canvas.transform.colorTransform;
 		//_canvas.transform.colorTransform = colorTransform;
-		red = (color >> 16) * 0.00392;
-		green = (color >> 8 & 0xff) * 0.0039;
-		blue = (color & 0xff) * 0.00392;
+		red = (color >> 16) / 255;
+		green = (color >> 8 & 0xff) / 255;
+		blue = (color & 0xff) / 255;
 		#elseif neko
-		red = (color.rgb >> 16) * 0.00392;
-		green = (color.rgb >> 8 & 0xff) * 0.0039;
-		blue = (color.rgb & 0xff) * 0.00392;
+		red = (color.rgb >> 16) / 255;
+		green = (color.rgb >> 8 & 0xff) / 255;
+		blue = (color.rgb & 0xff) / 255;
 		#end
 		
 		return Color;

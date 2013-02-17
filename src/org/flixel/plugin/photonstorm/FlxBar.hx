@@ -1228,7 +1228,7 @@ class FlxBar extends FlxSprite
 			else
 			{	
 				//Advanced render
-				var radians:Float = -angle * 0.017453293;
+				var radians:Float = -angle * FlxG.RAD;
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				

@@ -307,9 +307,9 @@ class NestedSprite extends FlxSprite
 		#if flash
 		if ((alpha != 1) || (_color != 0x00ffffff))
 		{
-			var red:Float = (_color >> 16) * 0.00392 * _parentRed;
-			var green:Float = (_color >> 8 & 0xff) * 0.00392 * _parentGreen;
-			var blue:Float = (_color & 0xff) * 0.00392 * _parentBlue;
+			var red:Float = (_color >> 16) * _parentRed / 255;
+			var green:Float = (_color >> 8 & 0xff) * _parentGreen / 255;
+			var blue:Float = (_color & 0xff) * _parentBlue / 255;
 			
 			if (_colorTransform == null)
 			{

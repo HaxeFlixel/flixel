@@ -323,7 +323,7 @@ class FlxBitmapTextField extends FlxSprite
 			}
 			else
 			{	//Advanced render
-				radians = angle * 0.017453293;
+				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -735,7 +735,7 @@ class FlxBitmapTextField extends FlxSprite
 			_bgDrawData.push( -halfHeight);
 			
 			#if !flash
-			var colorMultiplier:Float = 0.00392 * 0.00392;
+			var colorMultiplier:Float = 1 / (255 * 255);
 			
 			var red:Float = (_backgroundColor >> 16) * colorMultiplier;
 			var green:Float = (_backgroundColor >> 8 & 0xff) * colorMultiplier;
