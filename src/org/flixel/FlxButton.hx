@@ -11,6 +11,19 @@ import org.flixel.system.layer.Atlas;
 
 class FlxButton extends FlxTypedButton<FlxText>
 {
+	/**
+	 * Used with public variable <code>status</code>, means not highlighted or pressed.
+	 */
+	static public inline var NORMAL:Int = 0;
+	/**
+	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	 */
+	static public inline var HIGHLIGHT:Int = 1;
+	/**
+	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	 */
+	static public inline var PRESSED:Int = 2;
+	
 	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
 	{
 		super(X, Y, Label, OnClick);
@@ -46,18 +59,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	public var on(default, default):Bool;
 	
-	/**
-	 * Used with public variable <code>status</code>, means not highlighted or pressed.
-	 */
-	static public inline var NORMAL:Int = 0;
-	/**
-	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
-	 */
-	static public inline var HIGHLIGHT:Int = 1;
-	/**
-	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
-	 */
-	static public inline var PRESSED:Int = 2;
 	/**
 	 * The text that appears on the button.
 	 */
@@ -142,7 +143,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		soundDown = null;
 		soundUp = null;
 
-		status = NORMAL;
+		status = FlxButton.NORMAL;
 		on = false;
 		_pressed = false;
 		_initialized = false;
@@ -230,9 +231,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		switch (frame)
 		{
-			case HIGHLIGHT:	//Extra behavior to accomodate checkbox logic.
+			case FlxButton.HIGHLIGHT:	//Extra behavior to accomodate checkbox logic.
 				label.alpha = 1.0;
-			case PRESSED:
+			case FlxButton.PRESSED:
 				label.alpha = 0.5;
 				label.y++;
 			//case NORMAL:
@@ -286,7 +287,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			}
 			if (offAll)
 			{
-				if (status != NORMAL)
+				if (status != FlxButton.NORMAL)
 				{
 					if (onOut != null)
 					{
@@ -297,7 +298,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 						soundOut.play(true);
 					}
 				}
-				status = NORMAL;
+				status = FlxButton.NORMAL;
 			}
 		}
 	
@@ -318,9 +319,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		
 		//Then pick the appropriate frame of animation
-		if ((status == HIGHLIGHT) && on)
+		if ((status == FlxButton.HIGHLIGHT) && on)
 		{
-			frame = NORMAL;
+			frame = FlxButton.NORMAL;
 		}
 		else
 		{
@@ -336,7 +337,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			offAll = false;
 			if (JustPressed)
 			{
-				status = PRESSED;
+				status = FlxButton.PRESSED;
 				if (onDown != null)
 				{
 					onDown();
@@ -346,9 +347,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 					soundDown.play(true);
 				}
 			}
-			if (status == NORMAL)
+			if (status == FlxButton.NORMAL)
 			{
-				status = HIGHLIGHT;
+				status = FlxButton.HIGHLIGHT;
 				if (onOver != null)
 				{
 					onOver();
@@ -416,7 +417,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	private function onMouseUp(event:Event):Void
 	{
-		if (!exists || !visible || !active || (status != PRESSED))
+		if (!exists || !visible || !active || (status != FlxButton.PRESSED))
 		{
 			return;
 		}
@@ -428,7 +429,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			soundUp.play(true);
 		}
-		status = NORMAL;
+		status = FlxButton.NORMAL;
 	}
 	
 	#if !flash
