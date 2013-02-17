@@ -37,14 +37,15 @@ class FlxPhysSprite extends FlxSprite
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic 	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null) 
+	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null, CreateBody:Bool = true) 
 	{
 		super(X, Y, SimpleGraphic);
 		_radsFactor = 180 / 3.14159;
 		_linearDrag = 1;	// no drag.
 		_angularDrag = 1; 	// no drag.
 		
-		createRectangularBody();
+		if(CreateBody)
+			createRectangularBody();
 	}
 
 	/**
@@ -111,14 +112,20 @@ class FlxPhysSprite extends FlxSprite
 	 * The width and height used are based on the size of sprite graphics.
 	 * Call this method after calling makeGraphics() or loadGraphic() to update the body size.
 	 */
-	public function createRectangularBody()
+	public function createRectangularBody(width = 0, height = 0)
 	{
 		if (body != null) 
 			destroyPhysObjects();
+		
+		if (width == 0)
+			width = frameWidth;
+		if (height == 0)
+			height = frameHeight;
+		
 			
 		this.centerOffsets(false);
 		body = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
-		body.shapes.add(new Polygon(Polygon.box(frameWidth, frameHeight)));
+		body.shapes.add(new Polygon(Polygon.box(width, height)));
 		body.space = FlxPhysState.space;
 		
 		setBodyMaterial();
