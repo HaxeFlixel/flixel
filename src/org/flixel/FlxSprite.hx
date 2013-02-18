@@ -770,8 +770,14 @@ class FlxSprite extends FlxObject
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
+				// TODO: optimize this
+				var x1:Float = (origin.x - frameWidth * 0.5);
+				var y1:Float = (origin.y - frameHeight * 0.5);
+				var x2:Float = x1 * cos + y1 * sin;
+				var y2:Float = -x1 * sin + y1 * cos;
+				
+				currDrawData[currIndex++] = _point.x - x2;
+				currDrawData[currIndex++] = _point.y - y2;
 				
 				currDrawData[currIndex++] = _frameID;
 				
