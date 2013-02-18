@@ -773,8 +773,8 @@ class FlxSprite extends FlxObject
 				// TODO: optimize this
 				var x1:Float = (origin.x - frameWidth * 0.5);
 				var y1:Float = (origin.y - frameHeight * 0.5);
-				var x2:Float = x1 * cos + y1 * sin;
-				var y2:Float = -x1 * sin + y1 * cos;
+				var x2:Float = x1 * cos * scale.x + y1 * sin * scale.y;
+				var y2:Float = -x1 * sin * scale.x + y1 * cos * scale.y;
 				
 				currDrawData[currIndex++] = _point.x - x2;
 				currDrawData[currIndex++] = _point.y - y2;
