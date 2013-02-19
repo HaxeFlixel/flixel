@@ -354,7 +354,7 @@ class FlxG
 	 * Log data to the debugger.
 	 * @param	Data		Anything you want to log to the console.
 	 */
-	static public function log(Data:Dynamic):Void
+	static public inline function log(Data:Dynamic):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))

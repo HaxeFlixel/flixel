@@ -6,6 +6,7 @@ import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Circle;
 import nape.shape.Polygon;
+import org.flixel.FlxCamera;
 import org.flixel.FlxSprite;
 
 /**
@@ -37,14 +38,15 @@ class FlxPhysSprite extends FlxSprite
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic 	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null) 
+	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null, CreateBody:Bool = true) 
 	{
 		super(X, Y, SimpleGraphic);
 		_radsFactor = 180 / 3.14159;
 		_linearDrag = 1;	// no drag.
 		_angularDrag = 1; 	// no drag.
 		
-		createRectangularBody();
+		if(CreateBody)
+			createRectangularBody();
 	}
 
 	/**
@@ -89,16 +91,28 @@ class FlxPhysSprite extends FlxSprite
 		body.space = FlxPhysState.space;
 	}
 	
+	public function addPremadeBody(body:Body)
+	{
+		if (this.body != null) 
+			destroyPhysObjects();
+		
+		body.space = FlxPhysState.space;
+		body.position.x = x;
+		body.position.y = y;
+		this.body = body;
+		setBodyMaterial();
+	}
+	
 	/**
 	 * Creates the physics body used by this sprite (using a circle shape).
 	 */
-	public function createCircularBody(radius:Float = 16) 
+	public function createCircularBody(radius:Float = 16, ?type:BodyType) 
 	{
 		if (body != null) 
 			destroyPhysObjects();
 			
 		this.centerOffsets(false);
-		body = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
+		body = new Body(type != null ? type : BodyType.DYNAMIC, Vec2.weak(this.x, this.y));
 		body.shapes.add(new Circle(radius));
 		body.space = FlxPhysState.space;
 		
@@ -111,14 +125,20 @@ class FlxPhysSprite extends FlxSprite
 	 * The width and height used are based on the size of sprite graphics.
 	 * Call this method after calling makeGraphics() or loadGraphic() to update the body size.
 	 */
-	public function createRectangularBody()
+	public function createRectangularBody(width = 0, height = 0, ?type:BodyType)
 	{
 		if (body != null) 
 			destroyPhysObjects();
+		
+		if (width == 0)
+			width = frameWidth;
+		if (height == 0)
+			height = frameHeight;
+		
 			
 		this.centerOffsets(false);
-		body = new Body(BodyType.DYNAMIC, new Vec2(this.x, this.y));
-		body.shapes.add(new Polygon(Polygon.box(frameWidth, frameHeight)));
+		body = new Body(type != null ? type : BodyType.DYNAMIC, Vec2.weak(this.x, this.y));
+		body.shapes.add(new Polygon(Polygon.box(width, height)));
 		body.space = FlxPhysState.space;
 		
 		setBodyMaterial();
@@ -190,4 +210,8 @@ class FlxPhysSprite extends FlxSprite
 		_angularDrag 	= angularDrag;
 	}
 	
+	// Hide debug outline on physics sprites (they already show outlined)
+	#if !FLX_NO_DEBUG
+	override public function drawDebug(Camera:FlxCamera = null):Void { }
+	#end
 }
