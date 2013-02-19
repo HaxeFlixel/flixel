@@ -58,12 +58,10 @@ class FlxTouchManager implements IFlxInput
 	 */
 	public function getFirstTouch():FlxTouch
 	{
-			if (touches[0] != null)
-		{
-		return touches[0];
-		} else {
+		if (touches[0] != null)
+			return touches[0];
+		else
 			return null;
-		}
 	}
 	
 	/**
