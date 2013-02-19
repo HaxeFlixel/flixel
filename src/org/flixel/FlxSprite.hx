@@ -199,6 +199,9 @@ class FlxSprite extends FlxObject
 	private var _red:Float;
 	private var _green:Float;
 	private var _blue:Float;
+	
+	private var _halfWidth:Float;
+	private var _halfHeight:Float;
 	#end
 	
 	/**
@@ -594,6 +597,9 @@ class FlxSprite extends FlxObject
 		{
 			_frameID = _framesData.frameIDs[_curIndex];
 		}
+		
+		_halfWidth = frameWidth * 0.5;
+		_halfHeight = frameHeight * 0.5;
 		#end
 	}
 	
@@ -771,10 +777,15 @@ class FlxSprite extends FlxObject
 				sin = Math.sin(radians);
 				
 				// TODO: optimize this
-				var x1:Float = (origin.x - frameWidth * 0.5);
-				var y1:Float = (origin.y - frameHeight * 0.5);
-				var x2:Float = x1 * cos * scale.x + y1 * sin * scale.y;
-				var y2:Float = -x1 * sin * scale.x + y1 * cos * scale.y;
+				var csx:Float = cos * scale.x;
+				var ssy:Float = sin * scale.y;
+				var ssx:Float = sin * scale.x;
+				var csy:Float = cos * scale.y;
+				
+				var x1:Float = (origin.x - _halfWidth);
+				var y1:Float = (origin.y - _halfHeight);
+				var x2:Float = x1 * csx + y1 * ssy;
+				var y2:Float = -x1 * ssx + y1 * csy;
 				
 				currDrawData[currIndex++] = _point.x - x2;
 				currDrawData[currIndex++] = _point.y - y2;
@@ -783,17 +794,17 @@ class FlxSprite extends FlxObject
 				
 				if ((_flipped != 0) && (facing == FlxObject.LEFT))
 				{
-					currDrawData[currIndex++] = -cos * scale.x;
-					currDrawData[currIndex++] = sin * scale.y;
-					currDrawData[currIndex++] = -sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
+					currDrawData[currIndex++] = -csx;
+					currDrawData[currIndex++] = ssy;
+					currDrawData[currIndex++] = -ssx;
+					currDrawData[currIndex++] = csy;
 				}
 				else
 				{
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = sin * scale.y;
-					currDrawData[currIndex++] = -sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
+					currDrawData[currIndex++] = csx;
+					currDrawData[currIndex++] = ssy;
+					currDrawData[currIndex++] = -ssx;
+					currDrawData[currIndex++] = csy;
 				}
 				#if !js
 				if (isColored || isColoredCamera)
