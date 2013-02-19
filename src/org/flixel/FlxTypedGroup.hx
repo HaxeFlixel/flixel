@@ -56,7 +56,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		super();
 		members = new Array<T>();
 		length = 0;
-		maxSize = Math.floor(Math.abs(MaxSize));
+		maxSize = Std.int(Math.abs(MaxSize));
 		_marker = 0;
 		_sortIndex = null;
 	}
@@ -142,7 +142,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	private function set_maxSize(Size:Int):Int
 	{
-		maxSize = Math.floor(Math.abs(Size));
+		maxSize = Std.int(Math.abs(Size));
 		if (_marker >= maxSize)
 		{
 			_marker = 0;

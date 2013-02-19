@@ -125,7 +125,7 @@ class FlxCollision
 		
 		var testA:BitmapData = contact.framePixels;
 		var testB:BitmapData = target.framePixels;
-		var overlapArea:BitmapData = new BitmapData(Math.floor(intersect.width), Math.floor(intersect.height), false);
+		var overlapArea:BitmapData = new BitmapData(Std.int(intersect.width), Std.int(intersect.height), false);
 		#if flash
 		overlapArea.draw(testA, matrixA, new ColorTransform(1, 1, 1, 1, 255, -255, -255, alphaTolerance), BlendMode.NORMAL);
 		overlapArea.draw(testB, matrixB, new ColorTransform(1, 1, 1, 1, 255, 255, 255, alphaTolerance), BlendMode.DIFFERENCE);
@@ -263,7 +263,7 @@ class FlxCollision
 	#end
 	{
 		//	Intersect check
-		if (FlxMath.pointInCoordinates(pointX, pointY, Math.floor(target.x), Math.floor(target.y), Math.floor(target.width), Math.floor(target.height)) == false)
+		if (FlxMath.pointInCoordinates(pointX, pointY, Math.floor(target.x), Math.floor(target.y), Std.int(target.width), Std.int(target.height)) == false)
 		{
 			return false;
 		}
@@ -287,7 +287,7 @@ class FlxCollision
 		var widthHelper:Int = target.pixels.width;
 		if(indexX >= widthHelper)
 		{
-			indexY = Math.floor(indexX / widthHelper) * target.frameHeight;
+			indexY = Std.int(indexX / widthHelper) * target.frameHeight;
 			indexX %= widthHelper;
 		}
 		
@@ -295,11 +295,11 @@ class FlxCollision
 		// handle reversed sprites
 		if ((target.flipped != 0) && (target.facing == FlxObject.LEFT))
 		{
-			pixelColor = target.pixels.getPixel32(Math.floor(indexX + target.frameWidth + target.x - pointX), Math.floor(indexY + pointY - target.y));
+			pixelColor = target.pixels.getPixel32(Std.int(indexX + target.frameWidth + target.x - pointX), Std.int(indexY + pointY - target.y));
 		}
 		else
 		{
-			pixelColor = target.pixels.getPixel32(Math.floor(indexX + pointX - target.x), Math.floor(indexY + pointY - target.y));
+			pixelColor = target.pixels.getPixel32(Std.int(indexX + pointX - target.x), Std.int(indexY + pointY - target.y));
 		}
 		// end of code from calcFrame() method
 		#if (cpp || js)
@@ -367,5 +367,4 @@ class FlxCollision
 		
 		return result;
 	}
-	
 }

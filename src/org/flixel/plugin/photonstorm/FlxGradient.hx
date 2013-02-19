@@ -76,7 +76,7 @@ class FlxGradient
 		else
 		{
 			//	Spread value
-			var spread:Int = Math.floor(255 / (colors.length - 1));
+			var spread:Int = Std.int(255 / (colors.length - 1));
 			
 			ratio.push(0);
 			
@@ -208,7 +208,7 @@ class FlxGradient
 		}
 		else
 		{
-			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Math.floor(height / chunkSize), true, FlxG.TRANSPARENT));
+			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Std.int(height / chunkSize), true, FlxG.TRANSPARENT));
 			tempBitmap.bitmapData.draw(s);
 			tempBitmap.scaleY = chunkSize;
 			
@@ -248,12 +248,12 @@ class FlxGradient
 	{
 		if (width > dest.width)
 		{
-			width = Math.floor(dest.width);
+			width = Std.int(dest.width);
 		}
 		
 		if (height > dest.height)
 		{
-			height = Math.floor(dest.height);
+			height = Std.int(dest.height);
 		}
 		
 		var source:FlxSprite = createGradientFlxSprite(width, height, colors, chunkSize, rotation, interpolate);

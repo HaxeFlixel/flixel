@@ -469,13 +469,11 @@ class FlxObject extends FlxBasic
 		}
 
 		//get bounding box coordinates
-		var boundingBoxX:Float = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
-		var boundingBoxY:Float = y - Std.int(Camera.scroll.y * scrollFactor.y);
+		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
+		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
 		#if flash
-		boundingBoxX = Std.int(boundingBoxX + ((boundingBoxX > 0)?0.0000001: -0.0000001));
-		boundingBoxY = Std.int(boundingBoxY + ((boundingBoxY > 0)?0.0000001: -0.0000001));
-		var boundingBoxWidth:Int = (width != Std.int(width)) ? Math.floor(width) : Math.floor(width - 1);
-		var boundingBoxHeight:Int = (height != Std.int(height)) ? Math.floor(height) : Math.floor(height - 1);
+		var boundingBoxWidth:Int = Std.int(width);
+		var boundingBoxHeight:Int = Std.int(height);
 		#end
 		
 		if (allowCollisions != FlxObject.NONE && !_boundingBoxColorOverritten)
@@ -876,10 +874,8 @@ class FlxObject extends FlxBasic
 			Camera = FlxG.camera;
 		}
 		var objectScreenPos:FlxPoint = object.getScreenXY(null, Camera);
-		_point.x = X - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
-		_point.y = Y - Std.int(Camera.scroll.y * scrollFactor.y);
-		_point.x += (_point.x > 0)?0.0000001: -0.0000001;
-		_point.y += (_point.y > 0)?0.0000001: -0.0000001;
+		_point.x = X - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
+		_point.y = Y - (Camera.scroll.y * scrollFactor.y);
 		return	(objectScreenPos.x + object.width > _point.x) && (objectScreenPos.x < _point.x + width) &&
 			(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
@@ -944,10 +940,8 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		point.x = x - Math.floor(Camera.scroll.x * scrollFactor.x);
-		point.y = y - Math.floor(Camera.scroll.y * scrollFactor.y);
-		point.x += (point.x > 0)?0.0000001: -0.0000001;
-		point.y += (point.y > 0)?0.0000001: -0.0000001;
+		point.x = x - (Camera.scroll.x * scrollFactor.x);
+		point.y = y - (Camera.scroll.y * scrollFactor.y);
 		return point;
 	}
 	

@@ -126,8 +126,8 @@ class FlxWindow extends Sprite
 		}
 		#end
 		
-		_width = Math.floor(Math.abs(Width));
-		_height = Math.floor(Math.abs(Height));
+		_width = Std.int(Math.abs(Width));
+		_height = Std.int(Math.abs(Height));
 		_bounds = Bounds;
 		minSize = new Point(50, 30);
 		if (_bounds != null)
@@ -204,8 +204,8 @@ class FlxWindow extends Sprite
 	 */
 	public function resize(Width:Float, Height:Float):Void
 	{
-		_width = Math.floor(Math.abs(Width));
-		_height = Math.floor(Math.abs(Height));
+		_width = Std.int(Math.abs(Width));
+		_height = Std.int(Math.abs(Height));
 		updateSize();
 	}
 	
@@ -325,8 +325,8 @@ class FlxWindow extends Sprite
 	 */
 	private function updateSize():Void
 	{
-		_width = Math.floor(FlxU.bound(_width, minSize.x, maxSize.x));
-		_height = Math.floor(FlxU.bound(_height, minSize.y, maxSize.y));
+		_width = Std.int(FlxU.bound(_width, minSize.x, maxSize.x));
+		_height = Std.int(FlxU.bound(_height, minSize.y, maxSize.y));
 		
 		_header.scaleX = _width;
 		_background.scaleX = _width;

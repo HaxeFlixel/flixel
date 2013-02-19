@@ -144,8 +144,8 @@ class TileSheetData
 			return flxSpriteFrames[id];
 		}
 		
-		var numRows:Int = Math.floor((endY - startY) / (height + ySpacing));
-		var numCols:Int = Math.floor((endX - startX) / (width + xSpacing));
+		var numRows:Int = Std.int((endY - startY) / (height + ySpacing));
+		var numCols:Int = Std.int((endX - startX) / (width + xSpacing));
 		
 		var tempPoint:Point = origin;
 		if (origin == null)
@@ -171,7 +171,7 @@ class TileSheetData
 			}
 		}
 		
-		spriteData.halfFrameNumber = Math.floor(0.5 * spriteData.frameIDs.length);
+		spriteData.halfFrameNumber = Std.int(0.5 * spriteData.frameIDs.length);
 		flxSpriteFrames.push(spriteData);
 		return spriteData;
 	}

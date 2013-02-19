@@ -78,11 +78,11 @@ class FlxDebugger extends Sprite
 		_screen = new Point(Width, Height);
 		
 		#if (flash || js)
-		addChild(new Bitmap(new BitmapData(Math.floor(Width), 15, true, 0x7f000000)));
+		addChild(new Bitmap(new BitmapData(Std.int(Width), 15, true, 0x7f000000)));
 		#else
 		var bg:Sprite = new Sprite();
 		bg.graphics.beginFill(0x000000, 0x7f / 255);
-		bg.graphics.drawRect(0, 0, Math.floor(Width), 15);
+		bg.graphics.drawRect(0, 0, Std.int(Width), 15);
 		bg.graphics.endFill();
 		addChild(bg);
 		#end

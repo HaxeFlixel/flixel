@@ -267,12 +267,8 @@ class FlxPath
 			node = nodes[i];
 			
 			//find the screen position of the node on this camera
-			_point.x = node.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
-			_point.y = node.y - Std.int(Camera.scroll.y * debugScrollFactor.y);
-			#if flash
-			_point.x = Std.int(_point.x + ((_point.x > 0)?0.0000001:-0.0000001));
-			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001: -0.0000001));
-			#end
+			_point.x = node.x - (Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
+			_point.y = node.y - (Camera.scroll.y * debugScrollFactor.y);
 			
 			//decide what color this node should be
 			var nodeSize:Int = 2;
@@ -326,12 +322,8 @@ class FlxPath
 			//then draw a line to the next node
 			gfx.moveTo(_point.x, _point.y);
 			gfx.lineStyle(1, debugColor, linealpha);
-			_point.x = nextNode.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
-			_point.y = nextNode.y - Std.int(Camera.scroll.y * debugScrollFactor.y);
-			#if flash
-			_point.x = Std.int(_point.x + ((_point.x > 0)?0.0000001: -0.0000001));
-			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001: -0.0000001));
-			#end
+			_point.x = nextNode.x - (Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
+			_point.y = nextNode.y - (Camera.scroll.y * debugScrollFactor.y);
 			gfx.lineTo(_point.x, _point.y);
 
 			i++;

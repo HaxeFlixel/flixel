@@ -591,33 +591,8 @@ class FlxCamera extends FlxBasic
 			else
 			{
 				var edge:Float;
-				var targetX:Float;
-				var targetY:Float;
-				
-				#if flash
-				/* Haxe Notice:
-				* 
-				* In order to apply a fix for smooth follow, we must check if a sprite has baked rotation or is scaled.
-				* If your camera is following something other than a FlxSprite, you must implement the 'simpleRender' property.
-				* Look at 'FlxSprite.simpleRender' for an example of this. Or if you just want it on all the time, you can implement it like so:
-				* 
-				* public var simpleRender(default, null):Bool = true;
-				*/
-				if (Reflect.getProperty(target, "simpleRender") == true)
-				{
-					targetX = FlxU.ceil(target.x + ((target.x > 0)?0.0000001:-0.0000001));
-					targetY = FlxU.ceil(target.y + ((target.y > 0)?0.0000001: -0.0000001));
-				}
-				else
-				{
-					targetX = target.x + ((target.x > 0)?0.0000001:-0.0000001);
-					targetY = target.y + ((target.y > 0)?0.0000001: -0.0000001);
-				}
-				#else
-				targetX = target.x;
-				targetY = target.y;
-				#end
-				
+				var targetX:Float = target.x;
+				var targetY:Float = target.y;
 				
 				if (style == STYLE_SCREEN_BY_SCREEN) 
 				{
@@ -843,8 +818,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public function focusOn(point:FlxPoint):Void
 	{
-		point.x += (point.x > 0)?0.0000001: -0.0000001;
-		point.y += (point.y > 0)?0.0000001: -0.0000001;
 		scroll.make(point.x - width * 0.5, point.y - height * 0.5);
 	}
 	
@@ -1097,21 +1070,21 @@ class FlxCamera extends FlxBasic
 		if (_flashBitmap != null)
 		{
 			var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
-			colorTransform.redMultiplier = (color >> 16) * 0.00392;
-			colorTransform.greenMultiplier = (color >> 8 & 0xff) * 0.0039;
-			colorTransform.blueMultiplier = (color & 0xff) * 0.00392;
+			colorTransform.redMultiplier = (color >> 16) / 255;
+			colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
+			colorTransform.blueMultiplier = (color & 0xff) / 255;
 			_flashBitmap.transform.colorTransform = colorTransform;
 		}
 		#elseif (cpp || js)
 		//var colorTransform:ColorTransform = _canvas.transform.colorTransform;
 		//_canvas.transform.colorTransform = colorTransform;
-		red = (color >> 16) * 0.00392;
-		green = (color >> 8 & 0xff) * 0.0039;
-		blue = (color & 0xff) * 0.00392;
+		red = (color >> 16) / 255;
+		green = (color >> 8 & 0xff) / 255;
+		blue = (color & 0xff) / 255;
 		#elseif neko
-		red = (color.rgb >> 16) * 0.00392;
-		green = (color.rgb >> 8 & 0xff) * 0.0039;
-		blue = (color.rgb & 0xff) * 0.00392;
+		red = (color.rgb >> 16) / 255;
+		green = (color.rgb >> 8 & 0xff) / 255;
+		blue = (color.rgb & 0xff) / 255;
 		#end
 		
 		return Color;
@@ -1198,9 +1171,9 @@ class FlxCamera extends FlxBasic
 		Color = Color & 0x00ffffff;
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
-			var redComponent:Int = Math.floor((Color >> 16) * red);
-			var greenComponent:Int = Math.floor((Color >> 8 & 0xff) * green);
-			var blueComponent:Int = Math.floor((Color & 0xff) * blue);
+			var redComponent:Int = Std.int((Color >> 16) * red);
+			var greenComponent:Int = Std.int((Color >> 8 & 0xff) * green);
+			var blueComponent:Int = Std.int((Color & 0xff) * blue);
 			Color = redComponent << 16 | greenComponent << 8 | blueComponent;
 		}
 		// end of fix
@@ -1209,9 +1182,9 @@ class FlxCamera extends FlxBasic
 		#else
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
-			var redComponent:Int = Math.floor((Color.rgb >> 16) * red);
-			var greenComponent:Int = Math.floor((Color.rgb >> 8 & 0xff) * green);
-			var blueComponent:Int = Math.floor((Color.rgb & 0xff) * blue);
+			var redComponent:Int = Std.int((Color.rgb >> 16) * red);
+			var greenComponent:Int = Std.int((Color.rgb >> 8 & 0xff) * green);
+			var blueComponent:Int = Std.int((Color.rgb & 0xff) * blue);
 			Color.rgb = redComponent << 16 | greenComponent << 8 | blueComponent;
 		}
 		

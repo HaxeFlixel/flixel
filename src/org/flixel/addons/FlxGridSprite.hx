@@ -203,7 +203,7 @@ class FlxGridSprite extends FlxObject
 			
 			if (_scaledImage == null)
 			{
-				_scaledImage = new BitmapData(Math.floor(width), Math.floor(height), true, FlxG.TRANSPARENT);
+				_scaledImage = new BitmapData(Std.int(width), Std.int(height), true, FlxG.TRANSPARENT);
 			}
 			else
 			{
@@ -278,11 +278,8 @@ class FlxGridSprite extends FlxObject
 		#if !flash
 			
 		#else
-			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x);
-			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y);
-			
-			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
-			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
+			_point.x = x - (camera.scroll.x * scrollFactor.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y);
 		#end
 		
 			#if flash

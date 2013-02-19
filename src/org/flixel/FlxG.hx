@@ -183,8 +183,8 @@ class FlxG
 	/**
 	 * Useful for rad-to-deg and deg-to-rad conversion.
 	 */
-    static public inline var DEG:Float = -180 / Math.PI;
-    static public inline var RAD:Float = Math.PI / -180;
+    static public inline var DEG:Float = 180 / Math.PI;
+    static public inline var RAD:Float = Math.PI / 180;
 	
 	/**
 	 * Internal tracker for game object.
@@ -427,7 +427,7 @@ class FlxG
 	 */
 	static private function set_framerate(Framerate:Int):Int
 	{
-		_game._step = Math.floor(Math.abs(1000 / Framerate));
+		_game._step = Std.int(Math.abs(1000 / Framerate));
 		_game._stepSeconds = (_game._step / 1000);
 		if (_game._maxAccumulation < _game._step)
 		{
@@ -444,7 +444,7 @@ class FlxG
 	static private function get_flashFramerate():Int
 	{
 		if (_game.stage != null)
-			return Math.floor(_game.stage.frameRate);
+			return Std.int(_game.stage.frameRate);
 		return 0;
 	}
 		
@@ -453,12 +453,12 @@ class FlxG
 	 */
 	static private function set_flashFramerate(Framerate:Int):Int
 	{
-		_game._flashFramerate = Math.floor(Math.abs(Framerate));
+		_game._flashFramerate = Std.int(Math.abs(Framerate));
 		if (_game.stage != null)
 		{
 			_game.stage.frameRate = _game._flashFramerate;
 		}
-		_game._maxAccumulation = Math.floor(2000 / _game._flashFramerate) - 1;
+		_game._maxAccumulation = Std.int(2000 / _game._flashFramerate) - 1;
 		if (_game._maxAccumulation < _game._step)
 		{
 			_game._maxAccumulation = _game._step;
@@ -502,15 +502,15 @@ class FlxG
 	 */
 	inline static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
 	{
-		HowManyTimes = Math.floor(Math.max(HowManyTimes, 0));
+		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
 		var i:Int = 0;
 		var index1:Int;
 		var index2:Int;
 		var object:Dynamic;
 		while (i < HowManyTimes)
 		{
-			index1 = Math.floor(FlxG.random() * Objects.length);
-			index2 = Math.floor(FlxG.random() * Objects.length);
+			index1 = Std.int(FlxG.random() * Objects.length);
+			index2 = Std.int(FlxG.random() * Objects.length);
 			object = Objects[index2];
 			Objects[index2] = Objects[index1];
 			Objects[index1] = object;
@@ -569,7 +569,7 @@ class FlxG
 			FlxG.switchState(State);
 		}
 		_game._replayCancelKeys = CancelKeys;
-		_game._replayTimer = Math.floor(Timeout * 1000);
+		_game._replayTimer = Std.int(Timeout * 1000);
 		_game._replayCallback = Callback;
 		_game._replayRequested = true;
 	}
@@ -1049,8 +1049,8 @@ class FlxG
 			#if !flash
 			if (additionalKey != "")
 			{
-				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Math.floor(bd.width / FrameWidth);
-				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Math.floor(bd.height / FrameHeight);
+				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
+				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
 				
 				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxG.TRANSPARENT);
 				
@@ -1587,8 +1587,8 @@ class FlxG
 		FlxG.clearBitmapCache();
 		
 		FlxG._game = Game;
-		FlxG.width = Math.floor(Math.abs(Width));
-		FlxG.height = Math.floor(Math.abs(Height));
+		FlxG.width = Std.int(Math.abs(Width));
+		FlxG.height = Std.int(Math.abs(Height));
 		
 		FlxG.mute = false;
 		FlxG.volume = 0.5;

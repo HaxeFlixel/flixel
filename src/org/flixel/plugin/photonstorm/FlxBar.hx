@@ -765,8 +765,8 @@ class FlxBar extends FlxSprite
 			emptyBar = emptyBitmapData;
 			emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 			
-			barWidth = Math.floor(emptyBarRect.width);
-			barHeight = Math.floor(emptyBarRect.height);
+			barWidth = Std.int(emptyBarRect.width);
+			barHeight = Std.int(emptyBarRect.height);
 			
 			filledBar = new BitmapData(barWidth, barHeight, true, fillBackground);
 			filledBarRect = new Rectangle(0, 0, barWidth, barHeight);
@@ -809,8 +809,8 @@ class FlxBar extends FlxSprite
 			filledBar = fillBitmapData;
 			filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 			
-			barWidth = Math.floor(filledBarRect.width);
-			barHeight = Math.floor(filledBarRect.height);
+			barWidth = Std.int(filledBarRect.width);
+			barHeight = Std.int(filledBarRect.height);
 			
 			emptyBar = new BitmapData(barWidth, barHeight, true, emptyBackground);
 			emptyBarRect = new Rectangle(0, 0, barWidth, barHeight);
@@ -855,8 +855,8 @@ class FlxBar extends FlxSprite
 			filledBar = fillBitmapData;
 			filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 			
-			barWidth = Math.floor(emptyBarRect.width);
-			barHeight = Math.floor(emptyBarRect.height);
+			barWidth = Std.int(emptyBarRect.width);
+			barHeight = Std.int(emptyBarRect.height);
 			#else
 			barWidth = emptyBitmapData.width;
 			barHeight = emptyBitmapData.height;
@@ -1228,7 +1228,7 @@ class FlxBar extends FlxSprite
 			else
 			{	
 				//Advanced render
-				var radians:Float = -angle * 0.017453293;
+				var radians:Float = -angle * FlxG.RAD;
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				
@@ -1319,11 +1319,11 @@ class FlxBar extends FlxSprite
 		if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 		{
 			width = frameWidth = _pixels.width - 1;
-			height = frameHeight = Math.floor(0.5 * (_pixels.height - 2));
+			height = frameHeight = Std.int(0.5 * (_pixels.height - 2));
 		}
 		else
 		{
-			width = frameWidth = Math.floor(0.5 * (_pixels.width - 2));
+			width = frameWidth = Std.int(0.5 * (_pixels.width - 2));
 			height = frameHeight = _pixels.height - 1;
 		}
 		

@@ -3,6 +3,7 @@ package org.flixel;
 import nme.Assets;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
+import nme.geom.Point;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
@@ -524,6 +525,8 @@ class FlxText extends FlxSprite
 			
 		#if !flash
 			origin.make(frameWidth * 0.5, frameHeight * 0.5);
+			_halfWidth = origin.x;
+			_halfHeight = origin.y;
 		}
 		#end
 	}
@@ -604,7 +607,7 @@ class FlxText extends FlxSprite
 	#if !flash
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(Math.floor(width), Math.floor(height));
+			_framesData = _node.addSpriteFramesData(Std.int(width), Std.int(height));
 			_frameID = _framesData.frameIDs[0];
 		}
 	#end
