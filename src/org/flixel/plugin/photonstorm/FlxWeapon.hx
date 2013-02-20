@@ -766,25 +766,22 @@ class FlxWeapon
 	*/
 	public inline function bulletsOverlap(objectOrGroup:FlxBasic, notifyCallBack:FlxObject->FlxObject->Void = null, skipParent:Bool = true):Void
 	{
-		skipParentCollision = skipParent;
-		FlxG.overlap(objectOrGroup, group, notifyCallBack != null ? notifyCallBack : onBulletHit, shouldBulletHit);
+		if (group != null && group.length > 0)
+		{
+			skipParentCollision = skipParent;
+			FlxG.overlap(objectOrGroup, group, notifyCallBack != null ? notifyCallBack : onBulletHit, shouldBulletHit);
+		}
 	}
 
   	private function shouldBulletHit(o:FlxObject, bullet:FlxObject):Bool
 	{
 		if (parent == o && skipParentCollision)
-		{
 			return false;
-		}
-
+		
 		if (Std.is(o, FlxTilemap))
-		{
 			return cast(o, FlxTilemap).overlapsWithCallback(bullet);
-		}
 		else
-		{
 			return true;
-		}
 	}
 
   	private function onBulletHit(o:FlxObject, bullet:FlxObject):Void
