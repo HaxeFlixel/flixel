@@ -204,6 +204,10 @@ class Bullet extends FlxSprite
 		
 		exists = true;
 		
+		// Reset last x and y position in case we were recycled.
+		last.x = x;
+		last.y = y;
+		
 		if (weapon.bulletLifeSpan > 0)
 		{
 			lifespan = weapon.bulletLifeSpan + FlxMath.rand( -weapon.rndFactorLifeSpan, weapon.rndFactorLifeSpan);
