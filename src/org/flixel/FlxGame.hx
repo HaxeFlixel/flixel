@@ -341,7 +341,7 @@ class FlxGame extends Sprite
 	 * Internal method to create a new instance of iState and reset the game.
 	 * This gets called when the game is created, as well as when a new state is requested.
 	 */
-	private function resetGame():Void
+	private inline function resetGame():Void
 	{
 		_requestedState = Type.createInstance(_iState, []);
 		#if !FLX_NO_RECORD
