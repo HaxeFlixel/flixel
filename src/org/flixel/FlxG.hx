@@ -549,6 +549,7 @@ class FlxG
 		return null;
 	}
 		
+	#if !FLX_NO_RECORD
 	/**
 	 * Load replay data from a string and play it back.
 	 * @param	Data		The replay that you want to load.
@@ -573,7 +574,8 @@ class FlxG
 		_game._replayCallback = Callback;
 		_game._replayRequested = true;
 	}
-		
+	#end
+
 	/**
 	 * Resets the game or state and replay requested flag.
 	 * @param	StandardMode	If true, reload entire game, else just reload current game state.
@@ -588,12 +590,16 @@ class FlxG
 		{
 			FlxG.resetState();
 		}
+		
+		#if !FLX_NO_RECORD
 		if (_game._replay.frameCount > 0)
 		{
 			_game._replayRequested = true;
 		}
+		#end
 	}
-		
+	
+	#if !FLX_NO_RECORD
 	/**
 	 * Stops the current replay.
 	 */
@@ -641,6 +647,7 @@ class FlxG
 		#end
 		return _game._replay.save();
 	}
+	#end
 	
 	/**
 	 * Request a reset of the current game state.
