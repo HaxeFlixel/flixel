@@ -1661,6 +1661,7 @@ class FlxSprite extends FlxObject
 		{
 			_callback(((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex);
 		}
+		
 		dirty = false;
 		
 		// Updates the filter effects on framePixels.
@@ -1679,11 +1680,9 @@ class FlxSprite extends FlxObject
 	 * area may be required, use the argument "updateSize" for that effect.
 	 * 
 	 * @param	filter		The filter to be added.
-	 * 
 	 * @param	updateSize	Filters like outer glow or drop shadow may be clipped by the sprite.
 	 * 						Use this to increase the visible sprite area, for example: new FlxPoint(10,10) will
 	 * 						extend the sprite clipping area by 10 pixels of width and height.
-	 * 
 	 * @param	permanent	If permanent, the effect cannot be removed and will be visible
 	 * 						on all (non-unique) sprites sharing this graphic. 
 	 *
@@ -1732,7 +1731,12 @@ class FlxSprite extends FlxObject
 	{
 		var tempSpr:FlxSprite = new FlxSprite(0, 0, _pixels);
 		var diffSize:FlxPoint = new FlxPoint(width - frameWidth, height - frameHeight);
+		#if neko
+		makeGraphic(width, height, {rgb: 0x0, a: 0x0});
+		#else 
 		makeGraphic(width, height, 0x0);
+		#end
+		
 		stamp(tempSpr, Std.int(diffSize.x / 2), Std.int(diffSize.y / 2));
 		
 		this.x -= diffSize.x * 0.5;
