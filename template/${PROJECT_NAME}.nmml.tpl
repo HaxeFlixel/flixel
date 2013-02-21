@@ -52,6 +52,9 @@
     <!--Disable the Flixel core debugger-->
     <!--<set name="FLX_NO_DEBUG" />-->
 	
+    <!--Disable the Flixel core recording system if your not using it-->
+    <!--<set name="FLX_NO_RECORD" />-->
+	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
     <!--<set name="FLX_NO_MOUSE" if="mobile" />-->
     <!--<set name="FLX_NO_KEYBOARD" if="mobile" />-->
