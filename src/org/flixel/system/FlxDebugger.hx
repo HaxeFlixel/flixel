@@ -10,7 +10,9 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
+#if !FLX_NO_MOUSE
 import nme.ui.Mouse;
+#end
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.system.debug.Log;
