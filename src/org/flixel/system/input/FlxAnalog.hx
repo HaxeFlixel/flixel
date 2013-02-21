@@ -1,11 +1,11 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxTypedGroup;
 import org.flixel.FlxU;
 import org.flixel.FlxG;
 import org.flixel.FlxAssets;
 import org.flixel.FlxSprite;
 import org.flixel.FlxPoint;
-import org.flixel.FlxGroup;
 import flash.geom.Rectangle;
 import org.flixel.system.input.FlxTouch;
 
@@ -13,7 +13,7 @@ import org.flixel.system.input.FlxTouch;
  * 
  * @author Ka Wing Chin
  */
-class FlxAnalog extends FlxGroup
+class FlxAnalog extends FlxTypedGroup<FlxSprite>
 {
 	// From radians to degrees.
 	private static inline var DEGREES:Float = (180 / Math.PI);
@@ -117,7 +117,7 @@ class FlxAnalog extends FlxGroup
 		_base.scrollFactor.x = _base.scrollFactor.y = 0;
 		_base.solid = false;
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		_base.ignoreDrawDebug = true;
 		#end
 		
@@ -135,7 +135,7 @@ class FlxAnalog extends FlxGroup
 		_stick.scrollFactor.x = _stick.scrollFactor.y = 0;
 		_stick.solid = false;
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		_stick.ignoreDrawDebug = true;
 		#end
 		
@@ -384,7 +384,7 @@ class FlxAnalog extends FlxGroup
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the analog.
 	 * @param Alpha
 	 */
-	public function setAlpha(Alpha:Float):Void
+	public function set_alpha(Alpha:Float):Void
 	{
 		_base.alpha = Alpha;
 		_stick.alpha = Alpha;

@@ -171,7 +171,7 @@ class Perf extends FlxWindow
 			{
 				activeCount += _activeObject[i++];
 			}
-			activeCount = Math.floor(activeCount / _objectMarker);
+			activeCount = Std.int(activeCount / _objectMarker);
 			
 			output += "U:" + activeCount + " " + Std.int(updateTime / _flixelDrawMarker) + "ms\n";
 			
@@ -188,7 +188,7 @@ class Perf extends FlxWindow
 			{
 				visibleCount += _visibleObject[i++];
 			}
-			visibleCount = Math.floor(visibleCount / _visibleObjectMarker);
+			visibleCount = Std.int(visibleCount / _visibleObjectMarker);
 
 			output += "D:" + visibleCount + " " + Std.int(drawTime / _flixelDrawMarker) + "ms";
 			
@@ -199,7 +199,7 @@ class Perf extends FlxWindow
 			{
 				drawCallsCount += _drawCalls[i++];
 			}
-			drawCallsCount = Math.floor(drawCallsCount / _drawCallsMarker);
+			drawCallsCount = Std.int(drawCallsCount / _drawCallsMarker);
 			output += "\nDrwTls:" + drawCallsCount;
 			_drawCallsMarker = 0;
 			#end

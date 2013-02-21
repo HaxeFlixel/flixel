@@ -19,6 +19,7 @@ package org.flixel.plugin.photonstorm;
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxTilemap;
+import org.flixel.FlxTypedGroup;
 import org.flixel.system.input.FlxTouch;
 import nme.display.Bitmap;
 import nme.display.BitmapInt32;
@@ -58,12 +59,16 @@ class FlxWeapon
 	/**
 	 * The FlxGroup into which all the bullets for this weapon are drawn. This should be added to your display and collision checked against it.
 	 */
-	public var group:FlxGroup;
+	public var group:FlxTypedGroup<Bullet>;
+	
+	// Internal variables, use with caution
+	public var nextFire:Int;
+	public var fireRate:Int;
+	public var bulletSpeed:Int;
 	
 	//	Bullet values
 	public var bounds:FlxRect;
 	
-	private var bulletSpeed:Int;
 	private var rotateToAngle:Bool;
 	
 	//	When firing from a fixed position (i.e. Missile Command)
@@ -72,8 +77,6 @@ class FlxWeapon
 	private var fireY:Int;
 	
 	private var lastFired:Int;
-	private var nextFire:Int;
-	private var fireRate:Int;
 	private var touchTarget:FlxTouch;
 	
 	//	When firing from a parent sprites position (i.e. Space Invaders)
@@ -208,7 +211,7 @@ class FlxWeapon
 		}
 		#end
 		
-		group = new FlxGroup(quantity);
+		group = new FlxTypedGroup<Bullet>(quantity);
 		
 		for (b in 0...(quantity))
 		{
@@ -236,7 +239,7 @@ class FlxWeapon
 	 */
 	public function makeImageBullet(quantity:Int, image:Dynamic, offsetX:Int = 0, offsetY:Int = 0, autoRotate:Bool = false, rotations:Int = 16, frame:Int = -1, antiAliasing:Bool = false, autoBuffer:Bool = false):Void
 	{
-		group = new FlxGroup(quantity);
+		group = new FlxTypedGroup<Bullet>(quantity);
 		
 		rotateToAngle = autoRotate;
 		
@@ -280,7 +283,7 @@ class FlxWeapon
 	 */
 	public function makeAnimatedBullet(quantity:Int, imageSequence:Dynamic, frameWidth:Int, frameHeight:Int, frames:Array<Int>, frameRate:Int, looped:Bool, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
-		group = new FlxGroup(quantity);
+		group = new FlxTypedGroup<Bullet>(quantity);
 		
 		for (b in 0...(quantity))
 		{
@@ -334,7 +337,7 @@ class FlxWeapon
 		currentBullet.velocity.y = 0;
 		
 		lastFired = FlxU.getTicks();
-		nextFire = FlxU.getTicks() + cast(fireRate / FlxG.timeScale);
+		nextFire = FlxU.getTicks() + Std.int(fireRate / FlxG.timeScale);
 		
 		var launchX:Float = positionOffset.x;
 		var launchY:Float = positionOffset.y;
@@ -707,7 +710,7 @@ class FlxWeapon
 		var bullet:Bullet;
 		for (i in 0...(group.members.length))
 		{
-			bullet = cast(group.members[i], Bullet);
+			bullet = group.members[i];
 			if (bullet.exists == false)
 			{
 				result = bullet;
@@ -763,25 +766,22 @@ class FlxWeapon
 	*/
 	public inline function bulletsOverlap(objectOrGroup:FlxBasic, notifyCallBack:FlxObject->FlxObject->Void = null, skipParent:Bool = true):Void
 	{
-		skipParentCollision = skipParent;
-		FlxG.overlap(objectOrGroup, group, notifyCallBack != null ? notifyCallBack : onBulletHit, shouldBulletHit);
+		if (group != null && group.length > 0)
+		{
+			skipParentCollision = skipParent;
+			FlxG.overlap(objectOrGroup, group, notifyCallBack != null ? notifyCallBack : onBulletHit, shouldBulletHit);
+		}
 	}
 
   	private function shouldBulletHit(o:FlxObject, bullet:FlxObject):Bool
 	{
 		if (parent == o && skipParentCollision)
-		{
 			return false;
-		}
-
+		
 		if (Std.is(o, FlxTilemap))
-		{
 			return cast(o, FlxTilemap).overlapsWithCallback(bullet);
-		}
 		else
-		{
 			return true;
-		}
 	}
 
   	private function onBulletHit(o:FlxObject, bullet:FlxObject):Void

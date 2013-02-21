@@ -85,7 +85,7 @@ class BTNTilemap extends FlxTilemap
 			return false;   
 		}
 		
-		if (getTile(Math.floor(cx), Math.floor(cy)) > 0)
+		if (getTile(Std.int(cx), Std.int(cy)) > 0)
 		{
 			// start point is inside a block
 			result.x = start.x;
@@ -96,7 +96,7 @@ class BTNTilemap extends FlxTilemap
 		if (maxTilesToCheck == -1)
 		{
 			// this number is large enough to guarantee that the ray will pass through the entire tile map
-			maxTilesToCheck = Math.floor(widthInTiles * heightInTiles);
+			maxTilesToCheck = widthInTiles * heightInTiles;
 		}
 		
 		// determine step direction, and initial starting block
@@ -104,7 +104,7 @@ class BTNTilemap extends FlxTilemap
 		{
 			stepX = 1;
 			outX = widthInTiles;
-			cbx = x + (cx+1) * _tileWidth;
+			cbx = x + (cx + 1) * _tileWidth;
 		}
 		else
 		{
@@ -153,7 +153,7 @@ class BTNTilemap extends FlxTilemap
 			if (tMaxX < tMaxY)
 			{
 				cx = cx + stepX;
-				if (getTile(Math.floor(cx), Math.floor(cy)) > 0)
+				if (getTile(Std.int(cx), Std.int(cy)) > 0)
 				{
 					hitTile = true;
 					break;
@@ -170,7 +170,7 @@ class BTNTilemap extends FlxTilemap
 			else
 			{
 				cy = cy + stepY;
-				if (getTile(Math.floor(cx), Math.floor(cy)) > 0)
+				if (getTile(Std.int(cx), Std.int(cy)) > 0)
 				{
 					hitTile = true;
 					break;
@@ -208,13 +208,13 @@ class BTNTilemap extends FlxTilemap
    
 	public function tileAt(coordX:Float, coordY:Float):Int
 	{
-		return getTile(Math.floor((coordX - x) / _tileWidth), Math.floor((coordY - y) / _tileHeight));
+		return getTile(Std.int((coordX - x) / _tileWidth), Std.int((coordY - y) / _tileHeight));
 	}
   
 	public function tileIndexAt(coordX:Float, coordY:Float):Int
 	{
-		var X:Int = Math.floor((coordX - x) / _tileWidth);
-		var Y:Int = Math.floor((coordY - y) / _tileHeight);
+		var X:Int = Std.int((coordX - x) / _tileWidth);
+		var Y:Int = Std.int((coordY - y) / _tileHeight);
 		return Y * widthInTiles + X;
 	}
  
@@ -232,12 +232,12 @@ class BTNTilemap extends FlxTilemap
    
 	public function coordsToTileX(coordX:Float):Float
 	{
-	return Math.floor((coordX - x) / _tileWidth);
+	return Std.int((coordX - x) / _tileWidth);
 	}
 
 	public function coordsToTileY(coordY:Float):Float
 	{
-		return Math.floor((coordY - y) / _tileHeight);
+		return Std.int((coordY - y) / _tileHeight);
 	}
 
 	public function indexToCoordX(index:Int):Float
@@ -247,7 +247,7 @@ class BTNTilemap extends FlxTilemap
 
 	public function indexToCoordY(index:Int):Float
 	{
-		return Math.floor(index / widthInTiles) * _tileHeight + _tileHeight / 2;
+		return Std.int(index / widthInTiles) * _tileHeight + _tileHeight / 2;
 	}
 	
 }

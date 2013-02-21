@@ -25,11 +25,12 @@ import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
+import org.flixel.FlxTypedGroup;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
-class FlxButtonPlus extends FlxGroup
+class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 {
 	static public inline var NORMAL:Int = 0;
 	static public inline var HIGHLIGHT:Int = 1;
@@ -202,9 +203,9 @@ class FlxButtonPlus extends FlxGroup
 		}
 	}
 	
-	public var x(getX, setX):Int;
+	public var x(get_x, set_x):Int;
 	
-	public function setX(newX:Int):Int
+	private function set_x(newX:Int):Int
 	{
 		_x = newX;
 		
@@ -219,14 +220,14 @@ class FlxButtonPlus extends FlxGroup
 		return newX;
 	}
 	
-	public function getX():Int
+	private function get_x():Int
 	{
 		return _x;
 	}
 	
-	public var y(getY, setY):Int;
+	public var y(get_y, set_y):Int;
 	
-	public function setY(newY:Int):Int
+	private function set_y(newY:Int):Int
 	{
 		_y = newY;
 		
@@ -241,7 +242,7 @@ class FlxButtonPlus extends FlxGroup
 		return newY;
 	}
 	
-	public function getY():Int
+	private function get_y():Int
 	{
 		return _y;
 	}
@@ -273,8 +274,8 @@ class FlxButtonPlus extends FlxGroup
 		buttonNormal.pixels = normal.pixels;
 		buttonHighlight.pixels = highlight.pixels;
 		
-		width = Math.floor(buttonNormal.width);
-		height = Math.floor(buttonNormal.height);
+		width = Std.int(buttonNormal.width);
+		height = Std.int(buttonNormal.height);
 
 		if (_pressed)
 		{
@@ -354,7 +355,6 @@ class FlxButtonPlus extends FlxGroup
 				
 				if (leaveCallback != null)
 				{
-					//leaveCallback.apply(null, leaveCallbackParams);
 					Reflect.callMethod(null, leaveCallback, leaveCallbackParams);
 				}
 			}
@@ -371,7 +371,6 @@ class FlxButtonPlus extends FlxGroup
 				
 				if (enterCallback != null)
 				{
-					//enterCallback.apply(null, enterCallbackParams);
 					Reflect.callMethod(null, enterCallback, enterCallbackParams);
 				}
 			}

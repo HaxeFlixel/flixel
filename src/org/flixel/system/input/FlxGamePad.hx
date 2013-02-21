@@ -4,7 +4,7 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxButton;
-import org.flixel.FlxGroup;
+import org.flixel.FlxTypedGroup;
 
 /**
  * A gamepad which contains 4 directional buttons and 4 action buttons.
@@ -12,7 +12,7 @@ import org.flixel.FlxGroup;
  * 
  * @author Ka Wing Chin
  */
-class FlxGamePad extends FlxGroup
+class FlxGamePad extends FlxTypedGroup<FlxButton>
 {	
 	// Button A
 	public var buttonA:FlxButton;
@@ -51,9 +51,9 @@ class FlxGamePad extends FlxGroup
 	public static inline var A_B_C:Int = 7;
 	
 	// Group of directions buttons.
-	public var dPad:FlxGroup;
+	public var dPad:FlxTypedGroup<FlxButton>;
 	// Group of action buttons.
-	public var actions:FlxGroup;
+	public var actions:FlxTypedGroup<FlxButton>;
 	
 	/**
 	 * Constructor
@@ -64,8 +64,8 @@ class FlxGamePad extends FlxGroup
 	{	
 		super();
 		
-		dPad = new FlxGroup();
-		actions = new FlxGroup();
+		dPad = new FlxTypedGroup<FlxButton>();
+		actions = new FlxTypedGroup<FlxButton>();
 		
 		switch (DPad)
 		{
@@ -141,7 +141,7 @@ class FlxGamePad extends FlxGroup
 		button.immovable = true;
 		button.scrollFactor.x = button.scrollFactor.y = 0;
 
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		button.ignoreDrawDebug = true;
 		#end
 		
@@ -152,18 +152,18 @@ class FlxGamePad extends FlxGroup
 		return button;
 	}	
 	
-	public var alpha(default, setAlpha):Float;
+	public var alpha(default, set_alpha):Float;
 	
 	/**
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the gamepad.
 	 * @param Alpha
 	 */
-	private function setAlpha(Alpha:Float):Float
+	private function set_alpha(Alpha:Float):Float
 	{
 		alpha = Alpha;
 		for (i in 0...members.length)
 		{
-			cast(members[i], FlxSprite).alpha = Alpha;
+			members[i].alpha = Alpha;
 		}
 		return Alpha;
 	}

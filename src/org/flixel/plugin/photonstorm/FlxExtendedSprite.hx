@@ -281,28 +281,28 @@ class FlxExtendedSprite extends FlxSprite
 	#if !FLX_NO_MOUSE
 	
 	#if flash
-	public var clicks(getClicks, setClicks):UInt;
+	public var clicks(get_clicks, set_clicks):UInt;
 	/**
 	 * Returns the number of times this sprite has been clicked (can be reset by setting clicks to zero)
 	 */
-	public function getClicks():UInt
+	private function get_clicks():UInt
 	{
 		return clickCounter;
 	}
 	/**
 	 * Sets the number of clicks this item has received. Usually you'd only set it to zero.
 	 */
-	public function setClicks(i:UInt):UInt
+	private function set_clicks(i:UInt):UInt
 	{
 		clickCounter = i;
 		return i;
 	}
 	#else
-	public var clicks(getClicks, setClicks):Int;
+	public var clicks(get_clicks, set_clicks):Int;
 	/**
 	 * Returns the number of times this sprite has been clicked (can be reset by setting clicks to zero)
 	 */
-	public function getClicks():Int
+	private function get_clicks():Int
 	{
 		return clickCounter;
 	}
@@ -310,7 +310,7 @@ class FlxExtendedSprite extends FlxSprite
 	/**
 	 * Sets the number of clicks this item has received. Usually you'd only set it to zero.
 	 */
-	public function setClicks(i:Int):Int
+	private function set_clicks(i:Int):Int
 	{
 		clickCounter = i;
 		return i;
@@ -510,22 +510,22 @@ class FlxExtendedSprite extends FlxSprite
 	}
 	#end
 	
-	public var springX(getSpringX, null):Int;
+	public var springX(get_springX, null):Int;
 	
 	/**
 	 * The spring x coordinate in game world space. Consists of sprite.x + springOffsetX
 	 */
-	public function getSpringX():Int
+	private function get_springX():Int
 	{
 		return Math.floor(x + springOffsetX);
 	}
 	
-	public var springY(getSpringY, null):Int;
+	public var springY(get_springY, null):Int;
 	
 	/**
 	 * The spring y coordinate in game world space. Consists of sprite.y + springOffsetY
 	 */
-	public function getSpringY():Int
+	private function get_springY():Int
 	{
 		return Math.floor(y + springOffsetY);
 	}
@@ -813,8 +813,8 @@ class FlxExtendedSprite extends FlxSprite
 		else
 		{
 			//	Move the sprite to the middle of the mouse
-			dragOffsetX = Math.floor(frameWidth / 2);
-			dragOffsetY = Math.floor(frameHeight / 2);
+			dragOffsetX = Std.int(frameWidth / 2);
+			dragOffsetY = Std.int(frameHeight / 2);
 		}
 		#end
 	}
@@ -933,40 +933,40 @@ class FlxExtendedSprite extends FlxSprite
 		}
 	}
 	
-	public var point(getPoint, setPoint):FlxPoint;
+	public var point(get_point, set_point):FlxPoint;
 	
 	/**
 	 * Returns an FlxPoint consisting of this sprites world x/y coordinates
 	 */
-	public function getPoint():FlxPoint
+	private function get_point():FlxPoint
 	{
 		return _point;
 	}
 	
-	public function setPoint(p:FlxPoint):FlxPoint
+	private function set_point(p:FlxPoint):FlxPoint
 	{
 		_point = p;
 		return p;
 	}
 	
 	#if !FLX_NO_MOUSE
-	public var mouseOver(getMouseOver, null):Bool;
+	public var mouseOver(get_mouseOver, null):Bool;
 	
 	/**
 	 * Return true if the mouse is over this Sprite, otherwise false. Only takes the Sprites bounding box into consideration and does not check if there 
 	 * are other sprites potentially on-top of this one. Check the value of this.isPressed if you need to know if the mouse is currently clicked on this sprite.
 	 */
-	public function getMouseOver():Bool
+	private function get_mouseOver():Bool
 	{
 		return FlxMath.pointInCoordinates(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), Math.floor(x), Math.floor(y), Math.floor(width), Math.floor(height));
 	}
 	
-	public var mouseX(getMouseX, null):Int;
+	public var mouseX(get_mouseX, null):Int;
 	
 	/**
 	 * Returns how many horizontal pixels the mouse pointer is inside this sprite from the top left corner. Returns -1 if outside.
 	 */
-	public function getMouseX():Int
+	private function get_mouseX():Int
 	{
 		if (mouseOver)
 		{
@@ -976,12 +976,12 @@ class FlxExtendedSprite extends FlxSprite
 		return -1;
 	}
 	
-	public var mouseY(getMouseY, null):Int;
+	public var mouseY(get_mouseY, null):Int;
 	
 	/**
 	 * Returns how many vertical pixels the mouse pointer is inside this sprite from the top left corner. Returns -1 if outside.
 	 */
-	public function getMouseY():Int
+	private function get_mouseY():Int
 	{
 		if (mouseOver)
 		{
@@ -992,12 +992,12 @@ class FlxExtendedSprite extends FlxSprite
 	}
 	#end
 	
-	public var rect(getRect, null):FlxRect;
+	public var rect(get_rect, null):FlxRect;
 	
 	/**
 	 * Returns an FlxRect consisting of the bounds of this Sprite.
 	 */
-	public function getRect():FlxRect
+	private function get_rect():FlxRect
 	{
 		_rect.x = x;
 		_rect.y = y;
@@ -1006,5 +1006,4 @@ class FlxExtendedSprite extends FlxSprite
 		
 		return _rect;
 	}
-	
 }

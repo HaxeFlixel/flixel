@@ -36,12 +36,12 @@ class FlxCoreUtils
 		return result;
 	}
 	
-	public static var mouseIndex(getMouseIndex, null):Int;
+	public static var mouseIndex(get_mouseIndex, null):Int;
 	
 	/**
 	 * Returns the Display List index of the mouse pointer
 	 */
-	public static function getMouseIndex():Int
+	private static function get_mouseIndex():Int
 	{
 		var mouseIndex:Int = -1;
 		
@@ -57,12 +57,12 @@ class FlxCoreUtils
 		return mouseIndex;
 	}
 	
-	public static var gameContainer(getGameContainer, null):Sprite;
+	public static var gameContainer(get_gameContainer, null):Sprite;
 	
 	/**
 	 * Returns the Sprite that FlxGame extends (which contains the cameras, mouse, etc)
 	 */
-	public static function getGameContainer():Sprite
+	private static function get_gameContainer():Sprite
 	{
 		return cast(FlxG.camera.getContainerSprite().parent, Sprite);
 	}

@@ -5,6 +5,7 @@ import nme.Assets;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.filters.BitmapFilter;
+import nme.geom.Point;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
@@ -20,9 +21,9 @@ import org.flixel.system.layer.Atlas;
 class FlxText extends FlxSprite
 {
 	#if flash
-	public var shadow(getShadow, setShadow):UInt;
+	public var shadow(get_shadow, set_shadow):UInt;
 	#else
-	public var shadow(getShadow, setShadow):Int;
+	public var shadow(get_shadow, set_shadow):Int;
 	#end
 	
 	/**
@@ -182,12 +183,12 @@ class FlxText extends FlxSprite
 		return this;
 	}
 	
-	public var text(getText, setText):String;
+	public var text(get_text, set_text):String;
 	
 	/**
 	 * The text being displayed.
 	 */
-	public function getText():String
+	private function get_text():String
 	{
 		return _textField.text;
 	}
@@ -195,7 +196,7 @@ class FlxText extends FlxSprite
 	/**
 	 * @private
 	 */
-	public function setText(Text:String):String
+	private function set_text(Text:String):String
 	{
 		if (_isStatic)
 		{
@@ -216,12 +217,12 @@ class FlxText extends FlxSprite
 		return _textField.text;
 	}
 	
-	public var size(getSize, setSize):Float;
+	public var size(get_size, set_size):Float;
 	
 	/**
 	 * The size of the text being displayed.
 	 */
-	public function getSize():Float
+	private function get_size():Float
 	{
 		return _format.size;
 	}
@@ -229,7 +230,7 @@ class FlxText extends FlxSprite
 	/**
 	 * @private
 	 */
-	public function setSize(Size:Float):Float
+	private function set_size(Size:Float):Float
 	{
 		if (_isStatic)
 		{
@@ -252,12 +253,12 @@ class FlxText extends FlxSprite
 	 * The color of the text being displayed.
 	 */
 	#if flash
-	override public function getColor():UInt
+	override private function get_color():UInt
 	{
 		return _format.color;
 	}
 	#else
-	override public function getColor():BitmapInt32
+	override private function get_color():BitmapInt32
 	{
 		#if !neko
 		return _format.color;
@@ -271,9 +272,9 @@ class FlxText extends FlxSprite
 	 * @private
 	 */
 	#if flash
-	override public function setColor(Color:UInt):UInt
+	override private function set_color(Color:UInt):UInt
 	#else
-	override public function setColor(Color:BitmapInt32):BitmapInt32
+	override private function set_color(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		if (_isStatic)
@@ -297,12 +298,12 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	public var font(getFont, setFont):String;
+	public var font(get_font, set_font):String;
 	
 	/**
 	 * The font used for this text.
 	 */
-	public function getFont():String
+	private function get_font():String
 	{
 		return _format.font;
 	}
@@ -310,7 +311,7 @@ class FlxText extends FlxSprite
 	/**
 	 * @private
 	 */
-	public function setFont(Font:String):String
+	private function set_font(Font:String):String
 	{
 		if (_isStatic)
 		{
@@ -329,12 +330,12 @@ class FlxText extends FlxSprite
 		return Font;
 	}
 	
-	public var alignment(getAlignment, setAlignment):String;
+	public var alignment(get_alignment, set_alignment):String;
 	
 	/**
 	 * The alignment of the font ("left", "right", or "center").
 	 */
-	public function getAlignment():String
+	private function get_alignment():String
 	{
 		return cast(_format.align, String);
 	}
@@ -342,7 +343,7 @@ class FlxText extends FlxSprite
 	/**
 	 * @private
 	 */
-	public function setAlignment(Alignment:String):String
+	private function set_alignment(Alignment:String):String
 	{
 		if (_isStatic)
 		{
@@ -364,9 +365,9 @@ class FlxText extends FlxSprite
 	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
 	#if flash
-	public function getShadow():UInt
+	private function get_shadow():UInt
 	#else
-	public function getShadow():Int
+	private function get_shadow():Int
 	#end
 	{
 		return _shadow;
@@ -376,9 +377,9 @@ class FlxText extends FlxSprite
 	 * @private
 	 */
 	#if flash
-	public function setShadow(Color:UInt):UInt
+	private function set_shadow(Color:UInt):UInt
 	#else
-	public function setShadow(Color:Int):Int
+	private function set_shadow(Color:Int):Int
 	#end
 	{
 		if (_isStatic)
@@ -526,6 +527,8 @@ class FlxText extends FlxSprite
 			
 		#if !flash
 			origin.make(frameWidth * 0.5, frameHeight * 0.5);
+			_halfWidth = origin.x;
+			_halfHeight = origin.y;
 		}
 		#end
 		
@@ -638,7 +641,7 @@ class FlxText extends FlxSprite
 	#if !flash
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(Math.floor(width), Math.floor(height));
+			_framesData = _node.addSpriteFramesData(Std.int(width), Std.int(height));
 			_frameID = _framesData.frameIDs[0];
 		}
 	#end

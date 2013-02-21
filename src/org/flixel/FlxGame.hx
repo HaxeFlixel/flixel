@@ -26,7 +26,7 @@ import flash.text.GridFitType;
 import org.flixel.plugin.TimerManager;
 import org.flixel.system.FlxReplay;
 
-#if FLX_DEBUG
+#if !FLX_NO_DEBUG
 import org.flixel.system.FlxDebugger;
 #end
 
@@ -124,7 +124,7 @@ class FlxGame extends Sprite
 	 */
 	private var _soundTrayBars:Array<Bitmap>;
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * The debugger overlay object.
 	 */
@@ -168,10 +168,6 @@ class FlxGame extends Sprite
 	 * This function, if set, is triggered when the callback stops playing.
 	 */
 	public var _replayCallback:Void->Void;
-	/**
-	 * The inputs to enable for the game
-	 */
-	public static var inputList:FlxInputList;
 	
 	/**
 	 * Instantiate a new game object.
@@ -183,7 +179,7 @@ class FlxGame extends Sprite
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 30, inputs:FlxInputList = null)
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 30)
 	{
 		super();
 		
@@ -196,7 +192,6 @@ class FlxGame extends Sprite
 		
 		//basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
-		inputList = inputs;
 		FlxG.framerate = GameFramerate;
 		FlxG.flashFramerate = FlashFramerate;
 		_accumulator = _step;
@@ -205,7 +200,7 @@ class FlxGame extends Sprite
 		_state = null;
 		useSoundHotKeys = true;
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		FlxG.debug = true;
 		_debuggerUp = false;
 		#end
@@ -294,7 +289,7 @@ class FlxGame extends Sprite
 		
 		if(!_lostFocus)
 		{
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if((_debugger != null) && _debugger.vcr.paused)
 			{
 				if(_debugger.vcr.stepRequested)
@@ -318,14 +313,14 @@ class FlxGame extends Sprite
 					step();
 					_accumulator = _accumulator - _step; 
 				}
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			}
 			#end
 			
 			FlxBasic._VISIBLECOUNT = 0;
 			draw();
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if(_debuggerUp)
 			{
 				_debugger.perf.flash(_elapsedMS);
@@ -368,7 +363,7 @@ class FlxGame extends Sprite
 		FlxG.resetInput();
 		FlxG.destroySounds();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		//Clear the debugger overlay's Watch window
 		if (_debugger != null)
 		{
@@ -415,7 +410,7 @@ class FlxGame extends Sprite
 			_replay.create(FlxG.globalSeed);
 			_recording = true;
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			_debugger.vcr.recording();
 			FlxG.log("FLIXEL: starting new flixel gameplay record.");
 			#end
@@ -425,7 +420,7 @@ class FlxGame extends Sprite
 			_replayRequested = false;
 			_replay.rewind();
 			FlxG.globalSeed = _replay.seed;
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			_debugger.vcr.playing();
 			#end
 			_replaying = true;
@@ -467,7 +462,7 @@ class FlxGame extends Sprite
 					_replayCallback = null;
 				}
 			}
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 				_debugger.vcr.updateRuntime(_step);
 			#end
 		}
@@ -478,7 +473,7 @@ class FlxGame extends Sprite
 		if(_recording)
 		{
 			_replay.recordFrame();
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			_debugger.vcr.updateRuntime(_step);
 			#end
 		}
@@ -487,7 +482,7 @@ class FlxGame extends Sprite
 		//todo test why is this needed can it be put in FlxMouse
 		FlxG.mouse.wheel = 0;
 		#end
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 		{
 			_debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
@@ -535,7 +530,7 @@ class FlxGame extends Sprite
 	 */
 	private function update():Void
 	{			
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		#end
@@ -552,7 +547,7 @@ class FlxGame extends Sprite
 		
 		FlxG.updateCameras();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 			_debugger.perf.flixelUpdate(Lib.getTimer() - _mark);
 		#end
@@ -563,7 +558,7 @@ class FlxGame extends Sprite
 	 */
 	private function draw():Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		#end
@@ -578,7 +573,7 @@ class FlxGame extends Sprite
 		#if !flash
 		FlxG.renderCameras();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 		{
 			_debugger.perf.drawCalls(TileSheetData._DRAWCALLS);
@@ -588,7 +583,7 @@ class FlxGame extends Sprite
 		
 		FlxG.drawPlugins();
 		FlxG.unlockCameras();
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 			_debugger.perf.flixelDraw(Lib.getTimer() - _mark);
 		#end
@@ -615,12 +610,12 @@ class FlxGame extends Sprite
 		
 		addChild(_inputContainer);
 
-		FlxInputs.init(inputList);
+		FlxInputs.init();
 		
 		//Let mobile devs opt out of unnecessary overlays.
 		if(!FlxG.mobile)
 		{
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			//Debugger overlay
 			if(FlxG.debug)
 			{
@@ -732,8 +727,8 @@ class FlxGame extends Sprite
 	private function createFocusScreen():Void
 	{
 		var gfx:Graphics = _focus.graphics;
-		var screenWidth:Int = Math.floor(FlxG.width * FlxCamera.defaultZoom);
-		var screenHeight:Int = Math.floor(FlxG.height * FlxCamera.defaultZoom);
+		var screenWidth:Int = Std.int(FlxG.width * FlxCamera.defaultZoom);
+		var screenHeight:Int = Std.int(FlxG.height * FlxCamera.defaultZoom);
 		
 		//draw transparent black backdrop
 		gfx.moveTo(0, 0);
@@ -745,9 +740,9 @@ class FlxGame extends Sprite
 		gfx.endFill();
 		
 		//draw white arrow
-		var halfWidth:Int = Math.floor(screenWidth / 2);
-		var halfHeight:Int = Math.floor(screenHeight / 2);
-		var helper:Int = Math.floor(FlxU.min(halfWidth, halfHeight) / 3);
+		var halfWidth:Int = Std.int(screenWidth / 2);
+		var halfHeight:Int = Std.int(screenHeight / 2);
+		var helper:Int = Std.int(FlxU.min(halfWidth, halfHeight) / 3);
 		gfx.moveTo(halfWidth - helper, halfHeight - helper);
 		gfx.beginFill(0xffffff, 0.65);
 		gfx.lineTo(halfWidth + helper, halfHeight);
@@ -770,7 +765,7 @@ class FlxGame extends Sprite
 		addChild(_focus);
 	}
 
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	public var debugger(getDebugger, null):FlxDebugger;
 	
 	public function getDebugger():FlxDebugger

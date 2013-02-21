@@ -138,32 +138,32 @@ class FlxTimer
 		}
 	}
 	
-	public var timeLeft(getTimeLeft, null):Float;
+	public var timeLeft(get_timeLeft, null):Float;
 	
 	/**
 	 * Read-only: check how much time is left on the timer.
 	 */
-	public function getTimeLeft():Float
+	private function get_timeLeft():Float
 	{
 		return time - _timeCounter;
 	}
 	
-	public var loopsLeft(getLoopsLeft, null):Int;
+	public var loopsLeft(get_loopsLeft, null):Int;
 	
 	/**
 	 * Read-only: check how many loops are left on the timer.
 	 */
-	public function getLoopsLeft():Int
+	private function get_loopsLeft():Int
 	{
 		return loops - _loopsCounter;
 	}
 	
-	public var progress(getProgress, null):Float;
+	public var progress(get_progress, null):Float;
 	
 	/**
 	 * Read-only: how far along the timer is, on a scale of 0.0 to 1.0.
 	 */
-	public function getProgress():Float
+	private function get_progress():Float
 	{
 		if (time > 0)
 		{
@@ -175,9 +175,9 @@ class FlxTimer
 		}
 	}
 	
-	public static var manager(getManager, null):TimerManager;
+	public static var manager(get_manager, null):TimerManager;
 	
-	static public function getManager():TimerManager
+	static private function get_manager():TimerManager
 	{
 		return cast(FlxG.getPlugin(TimerManager), TimerManager);
 	}

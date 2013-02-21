@@ -92,7 +92,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _tileObjects:Array<FlxTile>;
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	#if flash
 	/**
 	 * Internal, used for rendering the debug bounding box display.
@@ -153,7 +153,7 @@ class FlxTilemap extends FlxObject
 		_tileHeight = 0;
 		#if flash
 		_rects = null;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		_debugRect = null;
 		#end
 		#else
@@ -164,7 +164,7 @@ class FlxTilemap extends FlxObject
 		immovable = true;
 		moves = false;
 		cameras = null;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		#if flash
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
@@ -204,7 +204,7 @@ class FlxTilemap extends FlxObject
 		_data = null;
 		#if flash
 		_rects = null;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		_debugRect = null;
 		_debugTileNotSolid = null;
 		_debugTilePartial = null;
@@ -311,7 +311,7 @@ class FlxTilemap extends FlxObject
 		//create some tile objects that we'll use for overlap checks (one for each tile)
 		_tileObjects = new Array<FlxTile>();
 		
-		var length:Int = Math.floor(_tiles.width / _tileWidth * _tiles.height / _tileHeight);
+		var length:Int = Std.int(_tiles.width / _tileWidth * _tiles.height / _tileHeight);
 		length += _startingIndex;
 		
 		for (i in 0...length)
@@ -321,7 +321,7 @@ class FlxTilemap extends FlxObject
 		
 		updateAtlasInfo();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		//create debug tiles for rendering bounding boxes on demand
 		#if flash
 		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
@@ -334,7 +334,7 @@ class FlxTilemap extends FlxObject
 		width = widthInTiles * _tileWidth;
 		height = heightInTiles * _tileHeight;
 		#if flash
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		#end
 		_rects = new Array<Rectangle>();
@@ -349,7 +349,7 @@ class FlxTilemap extends FlxObject
 		return this;
 	}
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Internal function to clean up the map loading code.
 	 * Just generates a wireframe box the size of a tile with the specified color.
@@ -375,7 +375,7 @@ class FlxTilemap extends FlxObject
 	#end
 	#end
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Main logic loop for tilemap is pretty simple,
 	 * just checks to see if visual debug got turned on.
@@ -410,7 +410,7 @@ class FlxTilemap extends FlxObject
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		#end
 		var tileID:Int;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		var debugColor:Int;
 		#end
 		var drawX:Float;
@@ -428,10 +428,10 @@ class FlxTilemap extends FlxObject
 	#end
 		
 		//Copy tile images into the tile buffer
-		_point.x = Std.int(Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
-		_point.y = Std.int(Camera.scroll.y * scrollFactor.y) - y;
-		var screenXInTiles:Int = Math.floor((_point.x + ((_point.x > 0)?0.0000001: -0.0000001)) / _tileWidth);
-		var screenYInTiles:Int = Math.floor((_point.y + ((_point.y > 0)?0.0000001: -0.0000001)) / _tileHeight);
+		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
+		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
+		var screenXInTiles:Int = Math.floor(_point.x / _tileWidth);
+		var screenYInTiles:Int = Math.floor(_point.y / _tileHeight);
 		var screenRows:Int = Buffer.rows;
 		var screenColumns:Int = Buffer.columns;
 		
@@ -459,7 +459,7 @@ class FlxTilemap extends FlxObject
 		var column:Int;
 		var columnIndex:Int;
 		var tile:FlxTile;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		var debugTile:BitmapData;
 		#end
 		while(row < screenRows)
@@ -474,7 +474,7 @@ class FlxTilemap extends FlxObject
 				if(_flashRect != null)
 				{
 					Buffer.pixels.copyPixels(_tiles, _flashRect, _flashPoint, null, null, true);
-					#if FLX_DEBUG
+					#if !FLX_NO_DEBUG
 					if(FlxG.visualDebug && !ignoreDrawDebug)
 					{
 						tile = _tileObjects[_data[columnIndex]];
@@ -526,7 +526,7 @@ class FlxTilemap extends FlxObject
 					currDrawData[currIndex++] = 1.0; // alpha
 					#end
 					
-					#if FLX_DEBUG
+					#if !FLX_NO_DEBUG
 					if (FlxG.visualDebug && !ignoreDrawDebug)
 					{
 						tile = _tileObjects[_data[columnIndex]];
@@ -620,8 +620,8 @@ class FlxTilemap extends FlxObject
 			#if flash
 			if(!buffer.dirty)
 			{
-				_point.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
-				_point.y = y - Std.int(camera.scroll.y * scrollFactor.y) + buffer.y;
+				_point.x = x - (camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
+				_point.y = y - (camera.scroll.y * scrollFactor.y) + buffer.y;
 				buffer.dirty = (_point.x > 0) || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
 			}
 			if(buffer.dirty)
@@ -629,10 +629,8 @@ class FlxTilemap extends FlxObject
 				drawTilemap(buffer, camera);
 				buffer.dirty = false;
 			}
-			_flashPoint.x = x - Std.int(camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
-			_flashPoint.y = y - Std.int(camera.scroll.y * scrollFactor.y) + buffer.y;
-			_flashPoint.x += (_flashPoint.x > 0)?0.0000001: -0.0000001;
-			_flashPoint.y += (_flashPoint.y > 0)?0.0000001: -0.0000001;
+			_flashPoint.x = x - (camera.scroll.x * scrollFactor.x) + buffer.x; //copied from getScreenXY()
+			_flashPoint.y = y - (camera.scroll.y * scrollFactor.y) + buffer.y;
 			buffer.draw(camera, _flashPoint);
 			#else
 			drawTilemap(buffer, camera);
@@ -1075,12 +1073,12 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
-		if(Std.is(ObjectOrGroup, FlxGroup))
+		if(Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
 			var i:Int = 0;
-			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
+			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = grp.members;
 			
 			while(i < grp.length)
@@ -1126,12 +1124,12 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
-		if(Std.is(ObjectOrGroup, FlxGroup))
+		if(Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
 			var i:Int = 0;
-			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
+			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = grp.members;
 			while(i < grp.length)
 			{
@@ -1370,7 +1368,7 @@ class FlxTilemap extends FlxObject
 		{
 			if(_data[i] == Index)
 			{
-				point = new FlxPoint(x + Math.floor(i % widthInTiles) * _tileWidth, y + Math.floor(i / widthInTiles) * _tileHeight);
+				point = new FlxPoint(x + Std.int(i % widthInTiles) * _tileWidth, y + Std.int(i / widthInTiles) * _tileHeight);
 				if (Midpoint)
 				{
 					point.x += _tileWidth * 0.5;

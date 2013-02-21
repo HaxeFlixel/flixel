@@ -4,7 +4,6 @@ import nme.ui.MultitouchInputMode;
 import nme.ui.Multitouch;
 import org.flixel.FlxG;
 import nme.Lib;
-import org.flixel.FlxGroup;
 import nme.geom.Point;
 import org.flixel.FlxGame;
 import nme.events.TouchEvent;
@@ -59,12 +58,10 @@ class FlxTouchManager implements IFlxInput
 	 */
 	public function getFirstTouch():FlxTouch
 	{
-			if (touches[0] != null)
-		{
-		return touches[0];
-		} else {
+		if (touches[0] != null)
+			return touches[0];
+		else
 			return null;
-		}
 	}
 	
 	/**

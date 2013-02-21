@@ -31,18 +31,18 @@ class Alarm extends FlxTween
 	/**
 	 * How much time has passed since reset.
 	 */
-	public var elapsed(getElapsed, never):Float;
-	private function getElapsed():Float { return _time; }
+	public var elapsed(get_elapsed, never):Float;
+	private function get_elapsed():Float { return _time; }
 
 	/**
 	 * Current alarm duration.
 	 */
-	public var duration(getDuration, never):Float;
-	private function getDuration():Float { return _target; }
+	public var duration(get_duration, never):Float;
+	private function get_duration():Float { return _target; }
 
 	/**
 	 * Time remaining on the alarm.
 	 */
-	public var remaining(getRemaining, never):Float;
-	private function getRemaining():Float { return _target - _time; }
+	public var remaining(get_remaining, never):Float;
+	private function get_remaining():Float { return _target - _time; }
 }

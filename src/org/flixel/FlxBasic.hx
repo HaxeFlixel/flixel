@@ -47,7 +47,7 @@ class FlxBasic
 	 */
 	public var cameras:Array<FlxCamera>;
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Setting this to true will prevent the object from appearing
 	 * when the visual debug mode in the debugger overlay is toggled on.
@@ -73,7 +73,7 @@ class FlxBasic
 		alive = true;
 		autoClear = true;
 
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		ignoreDrawDebug = false;
 		#end
 	}
@@ -136,7 +136,7 @@ class FlxBasic
 			camera = cameras[i++];
 			_VISIBLECOUNT++;
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
@@ -146,7 +146,7 @@ class FlxBasic
 		}
 	}
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
@@ -266,9 +266,9 @@ class FlxBasic
 		}
 	}
 
-	public var hasTween(getTween, never):Bool;
+	public var hasTween(get_hasTween, never):Bool;
 	
-	private function getTween():Bool 
+	private function get_hasTween():Bool 
 	{ 
 		return (_tween != null); 
 	}

@@ -265,7 +265,7 @@ class FlxBitmapFont extends FlxSprite
 		charFrameIDs = new Array<Int>();
 		var frameID:Int = 0;
 		var rowNumber:Int = 0;
-		var maxPossibleCharsPerRow:Int = Math.floor((fontSet.width - offsetX) / (characterWidth + spacingX));
+		var maxPossibleCharsPerRow:Int = Std.int((fontSet.width - offsetX) / (characterWidth + spacingX));
 		#end
 		
 		for (c in 0...(charsInFont.length))
@@ -327,7 +327,7 @@ class FlxBitmapFont extends FlxSprite
 		var l:Int = cameras.length;
 		
 		var j:Int = 0;
-		var textLength:Int = Math.floor(points.length / 3);
+		var textLength:Int = Std.int(points.length / 3);
 		var currPosInArr:Int;
 		var currTileID:Float;
 		var currTileX:Float;
@@ -424,7 +424,7 @@ class FlxBitmapFont extends FlxSprite
 			}
 			else
 			{	//Advanced render
-				radians = angle * 0.017453293;
+				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -468,7 +468,7 @@ class FlxBitmapFont extends FlxSprite
 			
 			drawItem.position = currIndex;
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT++;
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
@@ -479,14 +479,14 @@ class FlxBitmapFont extends FlxSprite
 	}
 	#end
 	
-	public var text(getTextString, setTextString):String;
+	public var text(get_textString, set_textString):String;
 	
 	/**
 	 * Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 	 * 
 	 * @return	void
 	 */ 
-	private function setTextString(content:String):String
+	private function set_textString(content:String):String
 	{
 		var newText:String;
 		
@@ -527,7 +527,7 @@ class FlxBitmapFont extends FlxSprite
 		align = lineAlignment;
 	}
 	
-	private function getTextString():String
+	private function get_textString():String
 	{
 		return _text;
 	}

@@ -212,13 +212,13 @@ class PxBitmapFont
 				
 				// create glyph
 				#if flash
-				var bd:BitmapData = new BitmapData(Math.floor(rect.width), Math.floor(rect.height), true, 0x0);
+				var bd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0x0);
 				bd.copyPixels(_pixels, rect, ZERO_POINT, null, null, true);
 				
 				// store glyph
 				setGlyph(_glyphString.charCodeAt(letterID), bd);
 				#else
-				setGlyph(node, _glyphString.charCodeAt(letterID), rect, 0, 0, Math.floor(rect.width));
+				setGlyph(node, _glyphString.charCodeAt(letterID), rect, 0, 0, Std.int(rect.width));
 				#end
 			}
 			
@@ -425,7 +425,7 @@ class PxBitmapFont
 		_matrix.identity();
 		_matrix.scale(pScale, pScale);
 		
-		var colorMultiplier:Float = 0.00392;
+		var colorMultiplier:Float = 1 / 255;
 		_colorTransform.redOffset = 0;
 		_colorTransform.greenOffset = 0;
 		_colorTransform.blueOffset = 0;
@@ -581,7 +581,7 @@ class PxBitmapFont
 	{
 	#if !flash
 		
-		var colorMultiplier:Float = 0.00392;
+		var colorMultiplier:Float = 1 / 255;
 		var red:Float = colorMultiplier;
 		var green:Float = colorMultiplier;
 		var blue:Float = colorMultiplier;

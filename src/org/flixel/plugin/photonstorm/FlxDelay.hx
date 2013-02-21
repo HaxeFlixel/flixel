@@ -85,12 +85,12 @@ class FlxDelay extends Sprite
 		#end
 	}
 	
-	public var hasExpired(getHasExpired, null):Bool;
+	public var hasExpired(get_hasExpired, null):Bool;
 	
 	/**
 	 * Has the timer finished?
 	 */
-	public function getHasExpired():Bool
+	private function get_hasExpired():Bool
 	{
 		return complete;
 	}
@@ -107,24 +107,24 @@ class FlxDelay extends Sprite
 		start();
 	}
 	
-	public var secondsElapsed(getSecondsElapsed, null):Int;
+	public var secondsElapsed(get_secondsElapsed, null):Int;
 	
 	/**
 	 * The amount of seconds that have elapsed since the timer was started
 	 */
-	public function getSecondsElapsed():Int
+	private function get_secondsElapsed():Int
 	{
-		return Math.floor((FlxU.getTicks() - started) / 1000);
+		return Std.int((FlxU.getTicks() - started) / 1000);
 	}
 	
-	public var secondsRemaining(getSecondsRemaining, null):Int;
+	public var secondsRemaining(get_secondsRemaining, null):Int;
 	
 	/**
 	 * The amount of seconds that are remaining until the timer completes
 	 */
-	public function getSecondsRemaining():Int
+	private function get_secondsRemaining():Int
 	{
-		return Math.floor((expires - FlxU.getTicks()) / 1000);
+		return Std.int((expires - FlxU.getTicks()) / 1000);
 	}
 	
 	private function update(event:Event):Void

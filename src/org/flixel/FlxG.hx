@@ -23,7 +23,7 @@ import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 import org.flixel.tweens.misc.MultiVarTween;
 
-#if FLX_DEBUG
+#if !FLX_NO_DEBUG
 import org.flixel.system.FlxDebugger;
 import org.flixel.plugin.DebugPathDisplay;
 #end
@@ -62,12 +62,12 @@ class FlxG
 	public static var tweener:FlxBasic = new FlxBasic();
 	
 	#if neko
-	public static var bgColor(getBgColor, setBgColor):BitmapInt32;
+	public static var bgColor(get_bgColor, set_bgColor):BitmapInt32;
 	#else
-	public static var bgColor(getBgColor, setBgColor):Int;
+	public static var bgColor(get_bgColor, set_bgColor):Int;
 	#end
 	
-	public static var flashFramerate(getFlashFramerate, setFlashFramerate):Int;
+	public static var flashFramerate(get_flashFramerate, set_flashFramerate):Int;
 	
 	public function new() { }
 	
@@ -89,7 +89,7 @@ class FlxG
 	 */
 	static public inline var LIBRARY_MINOR_VERSION:String = "09-dev";
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
 	 */
@@ -183,8 +183,8 @@ class FlxG
 	/**
 	 * Useful for rad-to-deg and deg-to-rad conversion.
 	 */
-    static public inline var DEG:Float = -180 / Math.PI;
-    static public inline var RAD:Float = Math.PI / -180;
+    static public inline var DEG:Float = 180 / Math.PI;
+    static public inline var RAD:Float = Math.PI / 180;
 	
 	/**
 	 * Internal tracker for game object.
@@ -226,7 +226,7 @@ class FlxG
 	 * Default value is 6.
 	 */
 	static public var worldDivisions:Int;
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Whether to show visual debug displays or not.
 	 * Default = false.
@@ -263,7 +263,7 @@ class FlxG
 	/**
 	 * A list of all the sounds being played in the game.
 	 */
-	static public var sounds:FlxGroup;
+	static public var sounds:FlxTypedGroup<FlxSound>;
 	/**
 	 * Whether or not the game sounds are muted.
 	 */
@@ -354,9 +354,9 @@ class FlxG
 	 * Log data to the debugger.
 	 * @param	Data		Anything you want to log to the console.
 	 */
-	static public function log(Data:Dynamic):Void
+	static public inline function log(Data:Dynamic):Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Std.string(Data)));
@@ -369,7 +369,7 @@ class FlxG
 	 */
 	static public function clearLog():Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			_game.debugger.log.clear();
@@ -386,7 +386,7 @@ class FlxG
 	 */
 	static public function watch(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game._debugger != null))
 		{
 			_game._debugger.watch.add(AnyObject, VariableName, DisplayName);
@@ -402,7 +402,7 @@ class FlxG
 	 */
 	static public function unwatch(AnyObject:Dynamic, VariableName:String = null):Void
 	{
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game._debugger != null))
 		{
 			_game._debugger.watch.remove(AnyObject, VariableName);
@@ -410,14 +410,14 @@ class FlxG
 		#end
 	}
 	
-	public static var framerate(getFramerate, setFramerate):Int;
+	public static var framerate(get_framerate, set_framerate):Int;
 	
 	/**
 	 * How many times you want your game to update each second.
 	 * More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the Flash Player framerate!
 	 */
-	static public function getFramerate():Int
+	static private function get_framerate():Int
 	{
 		return Std.int(1000 / _game._step);
 	}
@@ -425,9 +425,9 @@ class FlxG
 	/**
 	 * @private
 	 */
-	static public function setFramerate(Framerate:Int):Int
+	static private function set_framerate(Framerate:Int):Int
 	{
-		_game._step = Math.floor(Math.abs(1000 / Framerate));
+		_game._step = Std.int(Math.abs(1000 / Framerate));
 		_game._stepSeconds = (_game._step / 1000);
 		if (_game._maxAccumulation < _game._step)
 		{
@@ -441,24 +441,24 @@ class FlxG
 	 * More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the Flash Player framerate!
 	 */
-	static public function getFlashFramerate():Int
+	static private function get_flashFramerate():Int
 	{
 		if (_game.stage != null)
-			return Math.floor(_game.stage.frameRate);
+			return Std.int(_game.stage.frameRate);
 		return 0;
 	}
 		
 	/**
 	 * @private
 	 */
-	static public function setFlashFramerate(Framerate:Int):Int
+	static private function set_flashFramerate(Framerate:Int):Int
 	{
-		_game._flashFramerate = Math.floor(Math.abs(Framerate));
+		_game._flashFramerate = Std.int(Math.abs(Framerate));
 		if (_game.stage != null)
 		{
 			_game.stage.frameRate = _game._flashFramerate;
 		}
-		_game._maxAccumulation = Math.floor(2000 / _game._flashFramerate) - 1;
+		_game._maxAccumulation = Std.int(2000 / _game._flashFramerate) - 1;
 		if (_game._maxAccumulation < _game._step)
 		{
 			_game._maxAccumulation = _game._step;
@@ -502,15 +502,15 @@ class FlxG
 	 */
 	inline static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
 	{
-		HowManyTimes = Math.floor(Math.max(HowManyTimes, 0));
+		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
 		var i:Int = 0;
 		var index1:Int;
 		var index2:Int;
 		var object:Dynamic;
 		while (i < HowManyTimes)
 		{
-			index1 = Math.floor(FlxG.random() * Objects.length);
-			index2 = Math.floor(FlxG.random() * Objects.length);
+			index1 = Std.int(FlxG.random() * Objects.length);
+			index2 = Std.int(FlxG.random() * Objects.length);
 			object = Objects[index2];
 			Objects[index2] = Objects[index1];
 			Objects[index1] = object;
@@ -569,7 +569,7 @@ class FlxG
 			FlxG.switchState(State);
 		}
 		_game._replayCancelKeys = CancelKeys;
-		_game._replayTimer = Math.floor(Timeout * 1000);
+		_game._replayTimer = Std.int(Timeout * 1000);
 		_game._replayCallback = Callback;
 		_game._replayRequested = true;
 	}
@@ -600,7 +600,7 @@ class FlxG
 	static public function stopReplay():Void
 	{
 		_game._replaying = false;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_game._debugger != null)
 		{
 			_game._debugger.vcr.stopped();
@@ -633,7 +633,7 @@ class FlxG
 	static public function stopRecording():String
 	{
 		_game._recording = false;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		if (_game._debugger != null)
 		{
 			_game._debugger.vcr.stopped();
@@ -705,7 +705,7 @@ class FlxG
 			FlxG.log("WARNING: FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
-		var sound:FlxSound = cast(sounds.recycle(FlxSound), FlxSound);
+		var sound:FlxSound = sounds.recycle(FlxSound);
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy);
@@ -838,17 +838,10 @@ class FlxG
 		var l:Int = sounds.members.length;
 		while(i < l)
 		{
-			if (Std.is(sounds.members[i], FlxSound))
+			sound = sounds.members[i++];
+			if ((sound != null) && (ForceDestroy || !sound.survive))
 			{
-				sound = cast(sounds.members[i++], FlxSound);
-				if ((sound != null) && (ForceDestroy || !sound.survive))
-				{
-					sound.destroy();
-				}
-			}
-			else
-			{
-				i++;
+				sound.destroy();
 			}
 		}
 	}
@@ -882,7 +875,7 @@ class FlxG
 		var l:Int = sounds.length;
 		while(i < l)
 		{
-			sound = cast(sounds.members[i++], FlxSound);
+			sound = sounds.members[i++];
 			if ((sound != null) && sound.exists && sound.active)
 			{
 				sound.pause();
@@ -904,7 +897,7 @@ class FlxG
 		var l:Int = sounds.length;
 		while(i < l)
 		{
-			sound = cast(sounds.members[i++], FlxSound);
+			sound = sounds.members[i++];
 			if ((sound != null) && sound.exists)
 			{
 				sound.resume();
@@ -1056,8 +1049,8 @@ class FlxG
 			#if !flash
 			if (additionalKey != "")
 			{
-				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Math.floor(bd.width / FrameWidth);
-				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Math.floor(bd.height / FrameHeight);
+				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
+				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
 				
 				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxG.TRANSPARENT);
 				
@@ -1212,13 +1205,13 @@ class FlxG
 		}
 	}
 	
-	public static var stage(getStage, null):Stage;
+	public static var stage(get_stage, null):Stage;
 	
 	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
 	 * Will be null if it's not safe/useful yet.
 	 */
-	static public function getStage():Stage
+	static private function get_stage():Stage
 	{
 		if (_game.stage != null)
 		{
@@ -1227,12 +1220,12 @@ class FlxG
 		return null;
 	}
 	
-	public static var state(getState, null):FlxState;
+	public static var state(get_state, null):FlxState;
 	
 	/**
 	 * Read-only: access the current game state from anywhere.
 	 */
-	static public function getState():FlxState
+	static private function get_state():FlxState
 	{
 		return _game._state;
 	}
@@ -1245,7 +1238,7 @@ class FlxG
 		_game._requestedState = State;
 	}
 
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Change the way the debugger's windows are laid out.
 	 * @param	Layout		See the presets above (e.g. <code>DEBUGGER_MICRO</code>, etc).
@@ -1417,9 +1410,9 @@ class FlxG
 	 * Set functionality sets the background color of all the current cameras.
 	 */
 	#if flash
-	static public function getBgColor():UInt
+	static private function get_bgColor():UInt
 	#else
-	static public function getBgColor():BitmapInt32
+	static private function get_bgColor():BitmapInt32
 	#end
 	{
 		if (FlxG.camera == null)
@@ -1433,9 +1426,9 @@ class FlxG
 	}
 	
 	#if flash
-	static public function setBgColor(Color:UInt):UInt
+	static private function set_bgColor(Color:UInt):UInt
 	#else
-	static public function setBgColor(Color:BitmapInt32):BitmapInt32
+	static private function set_bgColor(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		var i:Int = 0;
@@ -1594,12 +1587,12 @@ class FlxG
 		FlxG.clearBitmapCache();
 		
 		FlxG._game = Game;
-		FlxG.width = Math.floor(Math.abs(Width));
-		FlxG.height = Math.floor(Math.abs(Height));
+		FlxG.width = Std.int(Math.abs(Width));
+		FlxG.height = Std.int(Math.abs(Height));
 		
 		FlxG.mute = false;
 		FlxG.volume = 0.5;
-		FlxG.sounds = new FlxGroup();
+		FlxG.sounds = new FlxTypedGroup<FlxSound>();
 		FlxG.volumeHandler = null;
 		
 		if(flashGfxSprite == null)
@@ -1615,7 +1608,7 @@ class FlxG
 		
 		plugins = new Array<FlxBasic>();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		addPlugin(new DebugPathDisplay());
 		#end
 		
@@ -1630,7 +1623,7 @@ class FlxG
 		FlxG.levels = new Array();
 		FlxG.scores = new Array();
 		
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		FlxG.visualDebug = false;
 		#end
 	}
@@ -1658,7 +1651,7 @@ class FlxG
 		FlxG.globalSeed = Math.random();
 		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
-		#if FLX_DEBUG
+		#if !FLX_NO_DEBUG
 		var debugPathDisplay:DebugPathDisplay = cast(FlxG.getPlugin(DebugPathDisplay), DebugPathDisplay);
 		if (debugPathDisplay != null)
 		{

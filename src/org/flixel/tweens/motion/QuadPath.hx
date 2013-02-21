@@ -227,8 +227,8 @@ class QuadPath extends Motion
 	/**
 	 * Amount of points on the path.
 	 */
-	public var pointCount(getPointCount, null):Float;
-	private function getPointCount():Float { return _points.length; }
+	public var pointCount(get_pointCount, null):Float;
+	private function get_pointCount():Float { return _points.length; }
 	
 	/** @private Calculates the lenght of the curve. */
 	private function curveLength(start:FlxPoint, control:FlxPoint, finish:FlxPoint):Float

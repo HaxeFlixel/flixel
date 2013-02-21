@@ -11,7 +11,6 @@ import org.flixel.FlxPoint;
 
 class FlxU 
 {
-
 	public function new() { }
 	
 	/**
@@ -147,8 +146,8 @@ class FlxU
 		var object:Dynamic;
 		while(i < HowManyTimes)
 		{
-			index1 = Math.floor(Math.random() * Objects.length);
-			index2 = Math.floor(Math.random() * Objects.length);
+			index1 = Std.int(Math.random() * Objects.length);
+			index2 = Std.int(Math.random() * Objects.length);
 			object = Objects[index2];
 			Objects[index2] = Objects[index1];
 			Objects[index1] = object;
@@ -227,9 +226,9 @@ class FlxU
 	#end
 	{
 		#if !neko
-		return (Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
+		return (Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
 		#else
-		return {rgb: (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF), a: Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF << 24 };
+		return {rgb: (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF), a: Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF << 24 };
 		#end
 	}
 	
@@ -263,7 +262,7 @@ class FlxU
 			{
 				Hue = 0;
 			}
-			var slice:Int = Math.floor(Hue / 60);
+			var slice:Int = Std.int(Hue / 60);
 			var hf:Float = Hue / 60 - slice;
 			var aa:Float = Brightness*(1 - Saturation);
 			var bb:Float = Brightness * (1 - Saturation * hf);
@@ -300,12 +299,10 @@ class FlxU
 					blue = 0;
 			}
 		}
-		#if flash
-		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | cast(red * 255, UInt) << 16 | cast(green * 255, UInt) << 8 | cast(blue * 255, UInt);
-		#elseif !neko
-		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Math.floor(red * 255) << 16 | Math.floor(green * 255) << 8 | Math.floor(blue * 255);
+		#if !neko
+		return (Std.int((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255);
 		#else
-		return { rgb: Math.floor(red * 255) << 16 | Math.floor(green * 255) << 8 | Math.floor(blue * 255), a: (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 };
+		return { rgb: Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255), a: (Std.int((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 };
 		#end
 	}
 	

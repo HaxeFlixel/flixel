@@ -258,7 +258,7 @@ class FlxObject extends FlxBasic
 	 */
 	private var _pathRotate:Bool;
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
@@ -444,7 +444,7 @@ class FlxObject extends FlxBasic
 			}
 			FlxBasic._VISIBLECOUNT++;
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
@@ -454,7 +454,7 @@ class FlxObject extends FlxBasic
 		}
 	}
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
@@ -469,13 +469,11 @@ class FlxObject extends FlxBasic
 		}
 
 		//get bounding box coordinates
-		var boundingBoxX:Float = x - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
-		var boundingBoxY:Float = y - Std.int(Camera.scroll.y * scrollFactor.y);
+		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
+		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
 		#if flash
-		boundingBoxX = Std.int(boundingBoxX + ((boundingBoxX > 0)?0.0000001: -0.0000001));
-		boundingBoxY = Std.int(boundingBoxY + ((boundingBoxY > 0)?0.0000001: -0.0000001));
-		var boundingBoxWidth:Int = (width != Std.int(width)) ? Math.floor(width) : Math.floor(width - 1);
-		var boundingBoxHeight:Int = (height != Std.int(height)) ? Math.floor(height) : Math.floor(height - 1);
+		var boundingBoxWidth:Int = Std.int(width);
+		var boundingBoxHeight:Int = Std.int(height);
 		#end
 		
 		if (allowCollisions != FlxObject.NONE && !_boundingBoxColorOverritten)
@@ -781,12 +779,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
-		if(Std.is(ObjectOrGroup, FlxGroup))
+		if(Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
 			var results:Bool = false;
 			var i:Int = 0;
 			var basic:FlxBasic;
-			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
+			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = grp.members;
 			while (i < grp.length)
 			{
@@ -836,12 +834,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
-		if(Std.is(ObjectOrGroup, FlxGroup))
+		if(Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
 			var i:Int = 0;
-			var grp:FlxGroup = cast(ObjectOrGroup, FlxGroup);
+			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = grp.members;
 			while(i < Std.int(grp.length))
 			{
@@ -876,10 +874,8 @@ class FlxObject extends FlxBasic
 			Camera = FlxG.camera;
 		}
 		var objectScreenPos:FlxPoint = object.getScreenXY(null, Camera);
-		_point.x = X - Std.int(Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
-		_point.y = Y - Std.int(Camera.scroll.y * scrollFactor.y);
-		_point.x += (_point.x > 0)?0.0000001: -0.0000001;
-		_point.y += (_point.y > 0)?0.0000001: -0.0000001;
+		_point.x = X - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
+		_point.y = Y - (Camera.scroll.y * scrollFactor.y);
 		return	(objectScreenPos.x + object.width > _point.x) && (objectScreenPos.x < _point.x + width) &&
 			(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
@@ -944,10 +940,8 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		point.x = x - Math.floor(Camera.scroll.x * scrollFactor.x);
-		point.y = y - Math.floor(Camera.scroll.y * scrollFactor.y);
-		point.x += (point.x > 0)?0.0000001: -0.0000001;
-		point.y += (point.y > 0)?0.0000001: -0.0000001;
+		point.x = x - (Camera.scroll.x * scrollFactor.x);
+		point.y = y - (Camera.scroll.y * scrollFactor.y);
 		return point;
 	}
 	
@@ -969,21 +963,21 @@ class FlxObject extends FlxBasic
 	 * Check to see if the object is still flickering.
 	 * @return	Whether the object is flickering or not.
 	 */
-	public var flickering(getFlickering, null):Bool;
+	public var flickering(get_flickering, null):Bool;
 	
-	private function getFlickering():Bool
+	private function get_flickering():Bool
 	{
 		return _flickerTimer != 0;
 	}
 	
-	public var solid(getSolid, setSolid):Bool;
+	public var solid(get_solid, set_solid):Bool;
 	
 	/**
 	 * Whether the object collides or not.  For more control over what directions
 	 * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
 	 * to set the value of allowCollisions directly.
 	 */
-	private function getSolid():Bool
+	private function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}
@@ -991,7 +985,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * @private
 	 */
-	private function setSolid(Solid:Bool):Bool
+	private function set_solid(Solid:Bool):Bool
 	{
 		if (Solid)
 		{

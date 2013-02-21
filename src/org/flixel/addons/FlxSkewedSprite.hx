@@ -34,7 +34,7 @@ class FlxSkewedSprite extends FlxSprite
 		super.destroy();
 	}
 	
-	override private function getSimpleRender():Bool
+	override private function get_simpleRender():Bool
 	{ 
 		return simpleRenderSkewedSprite();
 	}
@@ -121,11 +121,8 @@ class FlxSkewedSprite extends FlxSprite
 			_point.y = Math.floor(_point.y);
 			#end
 		#else
-			_point.x = x - Math.floor(camera.scroll.x * scrollFactor.x) - Math.floor(offset.x);
-			_point.y = y - Math.floor(camera.scroll.y * scrollFactor.y) - Math.floor(offset.y);
-			
-			_point.x += (_point.x > 0)?0.0000001:-0.0000001;
-			_point.y += (_point.y > 0)?0.0000001: -0.0000001;
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
 			if (simpleRenderSkewedSprite())
 			{	//Simple render
@@ -190,14 +187,14 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.translate( -origin.x, -origin.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * 0.017453293);
+					_matrix.rotate(angle * FlxG.RAD);
 				}
 				_matrix.scale(scale.x, scale.y);
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(skew.y * 0.017453293);
-					_skewMatrix.c = Math.tan(skew.x * 0.017453293);
+					_skewMatrix.b = Math.tan(skew.y * FlxG.RAD);
+					_skewMatrix.c = Math.tan(skew.x * FlxG.RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}
@@ -205,7 +202,7 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 				#else
-				radians = -angle * 0.017453293;
+				radians = -angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -231,8 +228,8 @@ class FlxSkewedSprite extends FlxSprite
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(-skew.x * 0.017453293);
-					_skewMatrix.c = Math.tan(-skew.y * 0.017453293);
+					_skewMatrix.b = Math.tan(-skew.x * FlxG.RAD);
+					_skewMatrix.c = Math.tan(-skew.y * FlxG.RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}
@@ -270,7 +267,7 @@ class FlxSkewedSprite extends FlxSprite
 				#end
 			}
 			FlxBasic._VISIBLECOUNT++;
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);

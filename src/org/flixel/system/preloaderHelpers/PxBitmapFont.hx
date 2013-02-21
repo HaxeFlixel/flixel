@@ -86,7 +86,7 @@ class PxBitmapFont
 				
 				// create glyph
 				#if flash
-				var bd:BitmapData = new BitmapData(Math.floor(currRect.width), Math.floor(currRect.height), true, 0x0);
+				var bd:BitmapData = new BitmapData(Std.int(currRect.width), Std.int(currRect.height), true, 0x0);
 				bd.copyPixels(pBitmapData, currRect, ZERO_POINT, null, null, true);
 				
 				// store glyph
@@ -197,7 +197,7 @@ class PxBitmapFont
 		_matrix.identity();
 		_matrix.scale(pScale, pScale);
 		
-		var colorMultiplier:Float = 0.00392;
+		var colorMultiplier:Float = 1 / 255;
 		_colorTransform.redOffset = 0;
 		_colorTransform.greenOffset = 0;
 		_colorTransform.blueOffset = 0;
@@ -212,7 +212,7 @@ class PxBitmapFont
 			glyph = _glyphs[i];
 			if (glyph != null)
 			{
-				preparedGlyph = new BitmapData(Math.floor(glyph.width * pScale), Math.floor(glyph.height * pScale), true, 0x00000000);
+				preparedGlyph = new BitmapData(Std.int(glyph.width * pScale), Std.int(glyph.height * pScale), true, 0x00000000);
 				if (pUseColorTransform)
 				{
 					preparedGlyph.draw(glyph,  _matrix, _colorTransform);
@@ -301,11 +301,11 @@ class PxBitmapFont
 		_tileSheet.addTileRect(pRect);
 		_glyphs.set(pCharID, pGlyphID);
 		_num_letters++;
-		_glyphWidthData[pCharID] = Math.floor(pRect.width);
+		_glyphWidthData[pCharID] = Std.int(pRect.width);
 		
-		if (Math.floor(pRect.height) > _maxHeight) 
+		if (Std.int(pRect.height) > _maxHeight) 
 		{
-			_maxHeight = Math.floor(pRect.height);
+			_maxHeight = Std.int(pRect.height);
 		}
 	}
 	#end
@@ -446,7 +446,7 @@ class PxBitmapFont
 	 */
 	public var numLetters(get_numLetters, null):Int;
 	
-	public function get_numLetters():Int 
+	private function get_numLetters():Int 
 	{
 		#if flash
 		return _glyphs.length;

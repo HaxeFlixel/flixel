@@ -305,18 +305,18 @@ class FlxBar extends FlxSprite
 		}
 	}
 	
-	public var killOnEmpty(getKillOnEmpty, setKillOnEmpty):Bool;
+	public var killOnEmpty(get_killOnEmpty, set_killOnEmpty):Bool;
 	
 	/**
 	 * If this FlxBar should be killed when its value reaches empty, set to true
 	 */
-	public function setKillOnEmpty(value:Bool):Bool
+	private function set_killOnEmpty(value:Bool):Bool
 	{
 		emptyKill = value;
 		return value;
 	}
 	
-	public function getKillOnEmpty():Bool
+	private function get_killOnEmpty():Bool
 	{
 		return emptyKill;
 	}
@@ -373,16 +373,16 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
-	#if FLX_DEBUG
+	#if !FLX_NO_DEBUG
 	public function debug():Void
 	{
 		trace("FlxBar - Min: " + min + " Max: " + max + " Range: " + range + " pct: " + pct + " pxp: " + pxPerPercent + " Value: " + value);
 	}
 	#end
 	
-	public var stats(getStats, null):Hash<Dynamic>;
+	public var stats(get_stats, null):Hash<Dynamic>;
 	
-	public function getStats():Hash<Dynamic>
+	private function get_stats():Hash<Dynamic>
 	{
 		var data = new Hash<Dynamic>();
 		data.set("min", min);
@@ -765,8 +765,8 @@ class FlxBar extends FlxSprite
 			emptyBar = emptyBitmapData;
 			emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 			
-			barWidth = Math.floor(emptyBarRect.width);
-			barHeight = Math.floor(emptyBarRect.height);
+			barWidth = Std.int(emptyBarRect.width);
+			barHeight = Std.int(emptyBarRect.height);
 			
 			filledBar = new BitmapData(barWidth, barHeight, true, fillBackground);
 			filledBarRect = new Rectangle(0, 0, barWidth, barHeight);
@@ -809,8 +809,8 @@ class FlxBar extends FlxSprite
 			filledBar = fillBitmapData;
 			filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 			
-			barWidth = Math.floor(filledBarRect.width);
-			barHeight = Math.floor(filledBarRect.height);
+			barWidth = Std.int(filledBarRect.width);
+			barHeight = Std.int(filledBarRect.height);
 			
 			emptyBar = new BitmapData(barWidth, barHeight, true, emptyBackground);
 			emptyBarRect = new Rectangle(0, 0, barWidth, barHeight);
@@ -855,8 +855,8 @@ class FlxBar extends FlxSprite
 			filledBar = fillBitmapData;
 			filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 			
-			barWidth = Math.floor(emptyBarRect.width);
-			barHeight = Math.floor(emptyBarRect.height);
+			barWidth = Std.int(emptyBarRect.width);
+			barHeight = Std.int(emptyBarRect.height);
 			#else
 			barWidth = emptyBitmapData.width;
 			barHeight = emptyBitmapData.height;
@@ -1045,12 +1045,12 @@ class FlxBar extends FlxSprite
 		}
 	}
 	
-	public var percent(getPercent, setPercent):Float;
+	public var percent(get_percent, set_percent):Float;
 	
 	/**
 	 * The percentage of how full the bar is (a value between 0 and 100)
 	 */
-	public function getPercent():Float
+	private function get_percent():Float
 	{
 		if (value > max)
 		{
@@ -1063,7 +1063,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * Sets the percentage of how full the bar is (a value between 0 and 100). This changes FlxBar.currentValue
 	 */
-	public function setPercent(newPct:Float):Float
+	private function set_percent(newPct:Float):Float
 	{
 		if (newPct >= 0 && newPct <= 100)
 		{
@@ -1073,12 +1073,12 @@ class FlxBar extends FlxSprite
 		return newPct;
 	}
 	
-	public var currentValue(getCurrentValue, setCurrentValue):Float;
+	public var currentValue(get_currentValue, set_currentValue):Float;
 	
 	/**
 	 * Set the current value of the bar (must be between min and max range)
 	 */
-	public function setCurrentValue(newValue:Float):Float
+	private function set_currentValue(newValue:Float):Float
 	{
 		updateValue(newValue);
 		updateBar();
@@ -1088,7 +1088,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * The current actual value of the bar
 	 */
-	public function getCurrentValue():Float
+	private function get_currentValue():Float
 	{
 		return value;
 	}
@@ -1228,7 +1228,7 @@ class FlxBar extends FlxSprite
 			else
 			{	
 				//Advanced render
-				var radians:Float = -angle * 0.017453293;
+				var radians:Float = -angle * FlxG.RAD;
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				
@@ -1304,7 +1304,7 @@ class FlxBar extends FlxSprite
 			
 			FlxBasic._VISIBLECOUNT++;
 			
-			#if FLX_DEBUG
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
@@ -1313,17 +1313,17 @@ class FlxBar extends FlxSprite
 		}
 	}
 	
-	override public function setPixels(Pixels:BitmapData):BitmapData
+	override private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		_pixels = Pixels;
 		if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 		{
 			width = frameWidth = _pixels.width - 1;
-			height = frameHeight = Math.floor(0.5 * (_pixels.height - 2));
+			height = frameHeight = Std.int(0.5 * (_pixels.height - 2));
 		}
 		else
 		{
-			width = frameWidth = Math.floor(0.5 * (_pixels.width - 2));
+			width = frameWidth = Std.int(0.5 * (_pixels.width - 2));
 			height = frameHeight = _pixels.height - 1;
 		}
 		
