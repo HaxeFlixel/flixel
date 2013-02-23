@@ -1059,6 +1059,9 @@ class FlxG
 				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
 				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
 				
+				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
+				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
+				
 				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxG.TRANSPARENT);
 				
 				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
