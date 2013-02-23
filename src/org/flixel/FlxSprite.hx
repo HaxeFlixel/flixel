@@ -6,6 +6,8 @@ import nme.display.BitmapInt32;
 import nme.display.BlendMode;
 import nme.display.Graphics;
 import nme.display.Tilesheet;
+import nme.filters.BitmapFilter;
+import nme.filters.GlowFilter;
 import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
@@ -194,6 +196,11 @@ class FlxSprite extends FlxObject
 	 */
 	private var _matrix:Matrix;
 	
+	/**
+	 * An array that contains each filter object currently associated with this sprite.
+	 */
+	public var filters:Array<BitmapFilter>;
+	
 	#if !flash
 	private var _frameID:Int;
 	private var _red:Float;
@@ -263,6 +270,7 @@ class FlxSprite extends FlxObject
 		}
 		loadGraphic(SimpleGraphic);
 	}
+
 	
 	/**
 	 * Clean up memory.
@@ -1667,8 +1675,136 @@ class FlxSprite extends FlxObject
 		{
 			_callback(((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex);
 		}
+		
 		dirty = false;
+		
+		// Updates the filter effects on framePixels.
+		if (filters != null)
+		{
+			for (filter in filters) 
+			{
+				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
+			}
+		}
 	}
+	
+	/**
+	 * Adds a filter to this sprite.
+	 * Note that for effects like outer glow, or drop shadow, updating the sprite clipping
+	 * area may be required, use the argument "updateSize" for that effect.
+	 * 
+	 * @param	filter		The filter to be added.
+	 * @param	updateSize	Filters like outer glow or drop shadow may be clipped by the sprite.
+	 * 						Use this to increase the visible sprite area, for example: new FlxPoint(10,10) will
+	 * 						extend the sprite clipping area by 10 pixels of width and height.
+	 * @param	permanent	If permanent, the effect cannot be removed and will be visible
+	 * 						on all (non-unique) sprites sharing this graphic. 
+	 *
+	 */
+	public function addFilter(filter:BitmapFilter, updateSize:FlxPoint = null, permanent:Bool = false)
+	{	
+		// Note: setClipping() makes the sprite unique and will not work with permanent filters,
+		// make sure the original graphics have enough room (alpha zero pixels) in that case.
+		if (updateSize != null && permanent == false)
+		{
+			setClipping(frameWidth + Std.int(updateSize.x) , frameHeight + Std.int(updateSize.y) );
+		}
+		
+		if (!permanent)
+		{
+			if (filters == null) 
+			{
+				filters = new Array<BitmapFilter>();
+			}
+			filters.push(filter);
+		}
+		else 
+		{
+			_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
+		}
+		
+
+		
+		#if !flash
+		_calculatedPixelsIndex = -1;
+		#end
+		
+		updateAtlasInfo(true);
+		
+		drawFrame(true);
+	}
+	
+	/**
+	 * Sets this sprite clipping width and height, the current graphic is centered
+	 * at the middle.
+	 * 
+	 * @param	width	The new sprite width.
+	 * @param	height	The new sprite height.
+	 */
+	public function setClipping(width:Int, height:Int)
+	{
+		var tempSpr:FlxSprite = new FlxSprite(0, 0, _pixels);
+		var diffSize:FlxPoint = new FlxPoint(width - frameWidth, height - frameHeight);
+		#if neko
+		makeGraphic(width, height, {rgb: 0x0, a: 0x0});
+		#else 
+		makeGraphic(width, height, 0x0);
+		#end
+		
+		stamp(tempSpr, Std.int(diffSize.x / 2), Std.int(diffSize.y / 2));
+		
+		this.x -= diffSize.x * 0.5;
+		this.y -= diffSize.y * 0.5;
+		
+		tempSpr.destroy();
+	}
+	
+	/**
+	 * Removes a filter from the sprite.
+	 * 
+	 * @param	filter	The filter to be removed.
+	 */
+	public function removeFilter(filter:BitmapFilter)
+	{
+		if(filters == null || filter == null)
+		{
+			return;
+		}
+		
+		filters.remove(filter);
+		
+		drawFrame(true);
+		
+		if (filters.length == 0)
+		{
+			filters = null;
+		}
+	}
+	
+	/**
+	 * Removes all filters from the sprite.
+	 */
+	public function removeAllFilters()
+	{
+		if (filters == null) return;
+		
+		while (filters.length != 0) 
+		{
+			filters.pop();
+		}
+		
+		drawFrame(true);
+		
+		#if !flash
+		_calculatedPixelsIndex = -1;
+		#end
+		
+		updateAtlasInfo(true);
+		
+		filters = null;
+	}
+	
+	
 	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
