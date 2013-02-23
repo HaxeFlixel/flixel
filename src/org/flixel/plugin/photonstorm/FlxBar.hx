@@ -156,6 +156,8 @@ class FlxBar extends FlxSprite
 		this.width = frameWidth = width;
 		this.height = frameHeight = height;
 		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+		_halfWidth = 0.5 * frameWidth;
+		_halfHeight = 0.5 * frameHeight;
 		
 		_framesPosition = FRAMES_POSITION_HORIZONTAL;
 		#end
@@ -1232,16 +1234,24 @@ class FlxBar extends FlxSprite
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				
+				var csx:Float = cos * scale.x;
+				var ssy:Float = sin * scale.y;
+				var ssx:Float = sin * scale.x;
+				var csy:Float = cos * scale.y;
+				
+				var x1:Float = (origin.x - _halfWidth);
+				var y1:Float = (origin.y - _halfHeight);
+				
 				// Draw empty bar
 				currDrawData[currIndex++] = _point.x;
 				currDrawData[currIndex++] = _point.y;
 				
 				currDrawData[currIndex++] = _emptyBarFrameID;
 				
-				currDrawData[currIndex++] = cos * scale.x;
-				currDrawData[currIndex++] = sin * scale.y;
-				currDrawData[currIndex++] = -sin * scale.x;
-				currDrawData[currIndex++] = cos * scale.y;
+				currDrawData[currIndex++] = csx;
+				currDrawData[currIndex++] = ssy;
+				currDrawData[currIndex++] = -ssx;
+				currDrawData[currIndex++] = csy;
 				
 				#if !js
 				if (isColored || isColoredCamera)
@@ -1266,11 +1276,11 @@ class FlxBar extends FlxSprite
 					
 					if (fillHorizontal)
 					{
-						relativeX = _filledBarFrames[percentFrame] * cos * scale.x;
+						relativeX = _filledBarFrames[percentFrame] * csx;
 					}
 					else
 					{
-						relativeY = _filledBarFrames[percentFrame] * cos * scale.y;
+						relativeY = _filledBarFrames[percentFrame] * csy;
 					}
 					
 					currDrawData[currIndex++] = _point.x + relativeX;
@@ -1278,10 +1288,10 @@ class FlxBar extends FlxSprite
 					
 					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
 					
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = sin * scale.y;
-					currDrawData[currIndex++] = -sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
+					currDrawData[currIndex++] = csx;
+					currDrawData[currIndex++] = ssy;
+					currDrawData[currIndex++] = -ssx;
+					currDrawData[currIndex++] = csy;
 					
 					#if !js
 					if (isColored || isColoredCamera)

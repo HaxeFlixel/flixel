@@ -784,7 +784,6 @@ class FlxSprite extends FlxObject
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				// TODO: optimize this
 				var csx:Float = cos * scale.x;
 				var ssy:Float = sin * scale.y;
 				var ssx:Float = sin * scale.x;
@@ -1722,8 +1721,6 @@ class FlxSprite extends FlxObject
 		{
 			_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
 		}
-		
-
 		
 		#if !flash
 		_calculatedPixelsIndex = -1;

@@ -512,8 +512,8 @@ class StarSprite extends FlxSprite
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
-			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
+			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x));
+			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y));
 			
 			#if js
 			_point.x = Math.floor(_point.x);
@@ -608,6 +608,11 @@ class StarSprite extends FlxSprite
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
+				var csx:Float = cos * scale.x;
+				var ssy:Float = sin * scale.y;
+				var ssx:Float = sin * scale.x;
+				var csy:Float = cos * scale.y;
+				
 				_point.x += halfWidth;
 				_point.y += halfHeight;
 				
@@ -617,10 +622,10 @@ class StarSprite extends FlxSprite
 				
 				currDrawData[currIndex++] = _frameID;
 				
-				currDrawData[currIndex++] = cos * scale.x * width;
-				currDrawData[currIndex++] = -sin * scale.y * height;
-				currDrawData[currIndex++] = sin * scale.x * width;
-				currDrawData[currIndex++] = cos * scale.y * height;
+				currDrawData[currIndex++] = csx * width;
+				currDrawData[currIndex++] = -ssy * height;
+				currDrawData[currIndex++] = ssx * width;
+				currDrawData[currIndex++] = csy * height;
 				
 				#if !js
 				if (isColoredCamera)
@@ -647,18 +652,18 @@ class StarSprite extends FlxSprite
 					var localX:Float = starDef.x;
 					var localY:Float = starDef.y;
 					
-					var relativeX:Float = (localX * cos * scale.x - localY * sin * scale.y);
-					var relativeY:Float = (localX * sin * scale.x + localY * cos * scale.y);
+					var relativeX:Float = (localX * csx - localY * ssy);
+					var relativeY:Float = (localX * ssx + localY * csy);
 					
 					currDrawData[currIndex++] = _point.x + relativeX;
 					currDrawData[currIndex++] = _point.y + relativeY;
 					
 					currDrawData[currIndex++] = _frameID;
 					
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = -sin * scale.y;
-					currDrawData[currIndex++] = sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
+					currDrawData[currIndex++] = csx;
+					currDrawData[currIndex++] = -ssy;
+					currDrawData[currIndex++] = ssx;
+					currDrawData[currIndex++] = csy;
 				
 				#if !js
 					starRed = starDef.red;

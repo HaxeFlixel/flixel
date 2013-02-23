@@ -206,8 +206,18 @@ class FlxSkewedSprite extends FlxSprite
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
+				var csx:Float = cos * scale.x;
+				var ssy:Float = sin * scale.y;
+				var ssx:Float = sin * scale.x;
+				var csy:Float = cos * scale.y;
+				
+				var x1:Float = (origin.x - _halfWidth);
+				var y1:Float = (origin.y - _halfHeight);
+				var x2:Float = x1 * csx + y1 * ssy;
+				var y2:Float = -x1 * ssx + y1 * csy;
+				
+				currDrawData[currIndex++] = _point.x - x2;
+				currDrawData[currIndex++] = _point.y - y2;
 				
 				currDrawData[currIndex++] = _frameID;
 				

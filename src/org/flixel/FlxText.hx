@@ -532,7 +532,6 @@ class FlxText extends FlxSprite
 		}
 		#end
 		
-		
 		dirty = false;
 		
 		// Updates the filter effects on framePixels.

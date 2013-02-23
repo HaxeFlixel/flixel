@@ -428,6 +428,11 @@ class FlxBitmapFont extends FlxSprite
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
+				var csx:Float = cos * scale.x;
+				var ssy:Float = sin * scale.y;
+				var ssx:Float = sin * scale.x;
+				var csy:Float = cos * scale.y;
+				
 				while (j < textLength)
 				{
 					currPosInArr = j * 3;
@@ -435,18 +440,18 @@ class FlxBitmapFont extends FlxSprite
 					currTileX = points[currPosInArr + 1];
 					currTileY = points[currPosInArr + 2];
 					
-					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
+					relativeX = (currTileX * csx - currTileY * ssy);
+					relativeY = (currTileX * ssx + currTileY * csy);
 					
 					currDrawData[currIndex++] = (_point.x) + relativeX;
 					currDrawData[currIndex++] = (_point.y) + relativeY;
 					
 					currDrawData[currIndex++] = currTileID;
 				
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] =  -sin * scale.y;
-					currDrawData[currIndex++] = sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
+					currDrawData[currIndex++] = csx;
+					currDrawData[currIndex++] =  -ssy;
+					currDrawData[currIndex++] = ssx;
+					currDrawData[currIndex++] = csy;
 					
 					#if !js
 					if (isColored || isColoredCamera)

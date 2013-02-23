@@ -327,23 +327,28 @@ class FlxBitmapTextField extends FlxSprite
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
+				var csx:Float = cos * scale.x;
+				var ssy:Float = sin * scale.y;
+				var ssx:Float = sin * scale.x;
+				var csy:Float = cos * scale.y;
+				
 				if (_background)
 				{
 					currTileX = _bgDrawData[1];
 					currTileY = _bgDrawData[2];
 					
-					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
+					relativeX = (currTileX * csx - currTileY * ssy);
+					relativeY = (currTileX * ssx + currTileY * csy);
 					
 					currDrawData[currIndex++] = _point.x + relativeX;
 					currDrawData[currIndex++] = _point.y + relativeY;
 					
 					currDrawData[currIndex++] = _bgDrawData[0];
 					
-					currDrawData[currIndex++] = cos * scale.x * width * _fontScale;
-					currDrawData[currIndex++] = -sin * scale.y * height * _fontScale;
-					currDrawData[currIndex++] = sin * scale.x * width * _fontScale;
-					currDrawData[currIndex++] = cos * scale.y * height * _fontScale;
+					currDrawData[currIndex++] = csx * width * _fontScale;
+					currDrawData[currIndex++] = -ssy * height * _fontScale;
+					currDrawData[currIndex++] = ssx * width * _fontScale;
+					currDrawData[currIndex++] = csy * height * _fontScale;
 					
 					#if !js
 					if (isColoredCamera)
@@ -377,18 +382,18 @@ class FlxBitmapTextField extends FlxSprite
 					currTileGreen = _drawData[currPosInArr + 4];
 					currTileBlue = _drawData[currPosInArr + 5];
 					
-					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
+					relativeX = (currTileX * csx - currTileY * ssy);
+					relativeY = (currTileX * ssx + currTileY * csy);
 					
 					currDrawData[currIndex++] = _point.x + relativeX;
 					currDrawData[currIndex++] = _point.y + relativeY;
 					
 					currDrawData[currIndex++] = currTileID;
 					
-					currDrawData[currIndex++] = cos * scale.x * _fontScale;
-					currDrawData[currIndex++] = -sin * scale.y * _fontScale;
-					currDrawData[currIndex++] = sin * scale.x * _fontScale;
-					currDrawData[currIndex++] = cos * scale.y * _fontScale;
+					currDrawData[currIndex++] = csx * _fontScale;
+					currDrawData[currIndex++] = -ssy * _fontScale;
+					currDrawData[currIndex++] = ssx * _fontScale;
+					currDrawData[currIndex++] = csy * _fontScale;
 					
 					#if !js
 					if (isColoredCamera)

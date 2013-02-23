@@ -135,8 +135,8 @@ class FlxTileblock extends FlxSprite
 					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frameIDs.length);
 					_tileIndices.push(tileIndex);
 					_tileData.push(_framesData.frameIDs[tileIndex]);
-					_tileData.push(destinationX - origin.x + 0.5 * _tileWidth);
-					_tileData.push(destinationY - origin.y + 0.5 * _tileHeight);
+					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);
+					_tileData.push(destinationY - _halfHeight + 0.5 * _tileHeight);
 					#end
 				}
 				
@@ -288,25 +288,33 @@ class FlxTileblock extends FlxSprite
 					cos = Math.cos(radians);
 					sin = Math.sin(radians);
 					
+					var csx:Float = cos * scale.x;
+					var ssy:Float = sin * scale.y;
+					var ssx:Float = sin * scale.x;
+					var csy:Float = cos * scale.y;
+					
+					var x1:Float = (origin.x - _halfWidth);
+					var y1:Float = (origin.y - _halfHeight);
+					
 					while (j < numTiles)
 					{
 						currPosInArr = j * 3;
 						currTileID = _tileData[currPosInArr];
-						currTileX = _tileData[currPosInArr + 1];
-						currTileY = _tileData[currPosInArr + 2];
+						currTileX = _tileData[currPosInArr + 1] + x1;
+						currTileY = _tileData[currPosInArr + 2] + y1;
 						
-						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
+						relativeX = (currTileX * csx - currTileY * ssy);
+						relativeY = (currTileX * ssx + currTileY * csy);
 						
 						currDrawData[currIndex++] = (_point.x) + relativeX;
 						currDrawData[currIndex++] = (_point.y) + relativeY;
 						
 						currDrawData[currIndex++] = currTileID;
 						
-						currDrawData[currIndex++] = cos * scale.x;
-						currDrawData[currIndex++] = -sin * scale.y;
-						currDrawData[currIndex++] = sin * scale.x;
-						currDrawData[currIndex++] = cos * scale.y;
+						currDrawData[currIndex++] = csx;
+						currDrawData[currIndex++] = -ssy;
+						currDrawData[currIndex++] = ssx;
+						currDrawData[currIndex++] = csy;
 						
 						#if !js
 						if (isColored || isColoredCamera)
