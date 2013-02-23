@@ -7,6 +7,9 @@ import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.IOErrorEvent;
 import nme.events.MouseEvent;
+#if !FLX_NO_MOUSE
+import nme.ui.Mouse;
+#end
 
 import org.flixel.FlxAssets;
 #if flash
@@ -94,6 +97,12 @@ class VCR extends Sprite
 		_recordOn.x = _recordOff.x;
 		_recordOn.visible = false;
 		addChild(_recordOn);
+		
+		#if FLX_NO_RECORD
+		_open.visible = false;
+		_recordOff.visible = false;
+		_recordOn.visible = false;
+		#end
 		
 		_stop = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgStop));
 		_stop.x = _recordOff.x;
@@ -227,6 +236,7 @@ class VCR extends Sprite
 		}
 	}
 	
+	#if !FLX_NO_RECORD
 	//*** ACTUAL BUTTON BEHAVIORS ***//
 	
 	/**
@@ -337,7 +347,10 @@ class VCR extends Sprite
 	 */
 	public function stopRecording():Void
 	{
+		#if !FLX_NO_RECORD
 		var data:String = FlxG.stopRecording();
+		#end
+	
 		if((data != null) && (data.length > 0))
 		{
 			#if flash
@@ -402,6 +415,7 @@ class VCR extends Sprite
 	{
 		FlxG.stopReplay();
 	}
+	#end
 	
 	/**
 	 * Called when the user presses the Rewind-looking button.
@@ -431,6 +445,11 @@ class VCR extends Sprite
 	 */
 	public function onPause():Void
 	{
+		#if !FLX_NO_MOUSE
+		if (!FlxG.mouse.useSystemCursor)
+			Mouse.show();
+		#end
+		
 		paused = true;
 		_pause.visible = false;
 		_play.visible = true;
@@ -442,6 +461,11 @@ class VCR extends Sprite
 	 */
 	public function onPlay():Void
 	{
+		#if !FLX_NO_MOUSE
+		if (!FlxG.mouse.useSystemCursor)
+			Mouse.hide();
+		#end
+	
 		paused = false;
 		_play.visible = false;
 		_pause.visible = true;
@@ -532,6 +556,7 @@ class VCR extends Sprite
 	 */
 	private function onMouseUp(E:MouseEvent = null):Void
 	{
+		#if !FLX_NO_RECORD
 		if (_overOpen && _pressingOpen)
 		{
 			onOpen();
@@ -551,7 +576,9 @@ class VCR extends Sprite
 				onRecord(!E.altKey);
 			}
 		}
-		else if (_overRestart && _pressingRestart)
+		else 
+		#end
+		if (_overRestart && _pressingRestart)
 		{
 			onRestart(!E.altKey);
 		}
