@@ -35,8 +35,19 @@ class FlxSpriteTex extends FlxSprite
 #if !flash
   override public function getAtlas () : Atlas
   {
-    var bm = FlxG._cache.get (_bitmapDataKey);
-    return TexturePackerAtlas.getAtlas (_bitmapDataKey, bm, _tex);
+    var bm : BitmapData = FlxG._cache.get (_bitmapDataKey);
+    if (bm != null)
+    {
+      return TexturePackerAtlas.getAtlas (_bitmapDataKey, bm, _tex);
+    }
+    else
+    {
+#if !FLX_NO_DEBUG
+      throw "There isn't bitmapdata in cache with key: " + _bitmapDataKey;
+#end
+    }
+
+    return null;
   }
 #end
 
