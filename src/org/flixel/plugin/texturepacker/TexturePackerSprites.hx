@@ -2,6 +2,7 @@ package org.flixel.plugin.texturepacker;
 
 import nme.Assets;
 import nme.geom.Rectangle;
+import nme.display.BitmapData;
 import haxe.Json;
 
 class TexturePackerSprites
@@ -11,19 +12,21 @@ class TexturePackerSprites
 
   public var data : Dynamic;
   public var assetName : String;
+  public var asset : BitmapData;
 
-  public function new (description : String, asset : String)
+  public function new (description : String, assetName : String)
   {
-    frames = new Hash ();
-    sprites = new Array ();
+    this.frames = new Hash ();
+    this.sprites = new Array ();
 
-    assetName = asset;
-    data = Json.parse (Assets.getText (description));
+    this.assetName = assetName;
+    this.asset = Assets.getBitmapData (this.assetName);
+    this.data = Json.parse (Assets.getText (description));
 
     for (frame in Lambda.array (data.frames))
     {
-      sprites.push (new TexturePackerSprite (frame));
-      frames.set (frame.filename, sprites.length - 1);
+      this.sprites.push (new TexturePackerSprite (frame));
+      this.frames.set (frame.filename, this.sprites.length - 1);
     }
   }
 }
