@@ -23,6 +23,8 @@ class FlxSpriteTex extends FlxSprite
 #if !flash
     super (x, y, tex.assetName);
     origin = new FlxPoint (0, 0);
+    width = tex.sprites[_spriteId].frame.width;
+    height = tex.sprites[_spriteId].frame.height;
 #else
     var spriteInfo = _tex.sprites[_spriteId];
     var bm : BitmapData = new BitmapData (Std.int (spriteInfo.frame.width),
