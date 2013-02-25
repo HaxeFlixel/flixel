@@ -1242,9 +1242,12 @@ class FlxBar extends FlxSprite
 				var x1:Float = (origin.x - _halfWidth);
 				var y1:Float = (origin.y - _halfHeight);
 				
+				var x2:Float = x1 * csx + y1 * ssy;
+				var y2:Float = -x1 * ssx + y1 * csy;
+				
 				// Draw empty bar
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
+				currDrawData[currIndex++] = _point.x - x2;
+				currDrawData[currIndex++] = _point.y - y2;
 				
 				currDrawData[currIndex++] = _emptyBarFrameID;
 				
@@ -1271,17 +1274,20 @@ class FlxBar extends FlxSprite
 				if (percentFrame >= 0)
 				{
 					// Draw filled bar
-					var relativeX:Float = 0;
-					var relativeY:Float = 0;
+					var currTileX:Float = x1;
+					var currTileY:Float = y1;
 					
 					if (fillHorizontal)
 					{
-						relativeX = _filledBarFrames[percentFrame] * csx;
+						currTileX += _filledBarFrames[percentFrame];
 					}
 					else
 					{
-						relativeY = _filledBarFrames[percentFrame] * csy;
+						currTileY += _filledBarFrames[percentFrame];
 					}
+					
+					var relativeX:Float = (currTileX * csx + currTileY * ssy);
+					var relativeY:Float = (-currTileX * ssx + currTileY * csy);
 					
 					currDrawData[currIndex++] = _point.x + relativeX;
 					currDrawData[currIndex++] = _point.y + relativeY;
@@ -1355,6 +1361,9 @@ class FlxBar extends FlxSprite
 	#if !flash
 		if (_node != null && barWidth >= 1 && barHeight >= 1)
 		{
+			_halfWidth = 0.5 * barWidth;
+			_halfHeight = 0.5 * barHeight;
+			
 			_emptyBarFrameID = _node.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
 			_filledBarFrames = [];
 			
@@ -1383,14 +1392,14 @@ class FlxBar extends FlxSprite
 					frameWidth = barWidth * i / 100;
 					frameHeight = barHeight;
 					
-					_filledBarFrames.push(0);
+					_filledBarFrames.push(-_halfWidth + frameWidth * 0.5);
 				}
 				else if (fillDirection == FILL_TOP_TO_BOTTOM)
 				{
 					frameWidth = barWidth;
 					frameHeight = barHeight * i / 100;
 					
-					_filledBarFrames.push(0);
+					_filledBarFrames.push(-_halfHeight + frameHeight * 0.5);
 				}
 				else if (fillDirection == FILL_BOTTOM_TO_TOP)
 				{
@@ -1398,7 +1407,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight * i / 100;
 					frameY += (barHeight - frameHeight);
 					
-					_filledBarFrames.push(barHeight - frameHeight);
+					_filledBarFrames.push(_halfHeight - 0.5 * frameHeight);
 				}
 				else if (fillDirection == FILL_RIGHT_TO_LEFT)
 				{
@@ -1406,7 +1415,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight;
 					frameX += (barWidth - frameWidth);
 					
-					_filledBarFrames.push(barWidth - frameWidth);
+					_filledBarFrames.push(_halfWidth - 0.5 * frameWidth);
 				}
 				else if (fillDirection == FILL_HORIZONTAL_INSIDE_OUT)
 				{
@@ -1414,7 +1423,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight;
 					frameX += (0.5 * (barWidth - frameWidth));
 					
-					_filledBarFrames.push(0.5 * (barWidth - frameWidth));
+					_filledBarFrames.push(0);
 				}
 				else if (fillDirection == FILL_HORIZONTAL_OUTSIDE_IN)
 				{
@@ -1422,7 +1431,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight;
 					frameX += 0.5 * (barWidth - frameWidth);
 					
-					_filledBarFrames.push(0.5 * (barWidth - frameWidth));
+					_filledBarFrames.push(0);
 				}
 				else if (fillDirection == FILL_VERTICAL_INSIDE_OUT)
 				{
@@ -1430,7 +1439,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight * i / 100;
 					frameY += (0.5 * (barHeight - frameHeight));
 					
-					_filledBarFrames.push(0.5 * (barHeight - frameHeight));
+					_filledBarFrames.push(0);
 				}
 				else if (fillDirection == FILL_VERTICAL_OUTSIDE_IN)
 				{
@@ -1438,10 +1447,10 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight * (100 - i) / 100;
 					frameY += (0.5 * (barHeight - frameHeight));
 					
-					_filledBarFrames.push(0.5 * (barHeight - frameHeight));
+					_filledBarFrames.push(0);
 				}
 				
-				_filledBarFrames.push(_node.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * barWidth, 0.5 * barHeight)));
+				_filledBarFrames.push(_node.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * frameWidth, 0.5 * frameHeight)));
 			}
 		}
 	#end
