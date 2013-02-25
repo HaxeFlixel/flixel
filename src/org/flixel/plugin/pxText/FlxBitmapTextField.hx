@@ -332,10 +332,13 @@ class FlxBitmapTextField extends FlxSprite
 				var ssx:Float = sin * scale.x;
 				var csy:Float = cos * scale.y;
 				
+				var x1:Float = (origin.x - _halfWidth);
+				var y1:Float = (origin.y - _halfHeight);
+				
 				if (_background)
 				{
-					currTileX = _bgDrawData[1];
-					currTileY = _bgDrawData[2];
+					currTileX = _bgDrawData[1] - x1;
+					currTileY = _bgDrawData[2] - y1;
 					
 					relativeX = (currTileX * csx - currTileY * ssy);
 					relativeY = (currTileX * ssx + currTileY * csy);
@@ -345,10 +348,10 @@ class FlxBitmapTextField extends FlxSprite
 					
 					currDrawData[currIndex++] = _bgDrawData[0];
 					
-					currDrawData[currIndex++] = csx * width * _fontScale;
-					currDrawData[currIndex++] = -ssy * height * _fontScale;
-					currDrawData[currIndex++] = ssx * width * _fontScale;
-					currDrawData[currIndex++] = csy * height * _fontScale;
+					currDrawData[currIndex++] = csx * width;
+					currDrawData[currIndex++] = -ssy * height;
+					currDrawData[currIndex++] = ssx * width;
+					currDrawData[currIndex++] = csy * height;
 					
 					#if !js
 					if (isColoredCamera)
@@ -376,8 +379,8 @@ class FlxBitmapTextField extends FlxSprite
 				{
 					currPosInArr = j * 6;
 					currTileID = _drawData[currPosInArr];
-					currTileX = _drawData[currPosInArr + 1];
-					currTileY = _drawData[currPosInArr + 2];
+					currTileX = _drawData[currPosInArr + 1] - x1;
+					currTileY = _drawData[currPosInArr + 2] - y1;
 					currTileRed = _drawData[currPosInArr + 3];
 					currTileGreen = _drawData[currPosInArr + 4];
 					currTileBlue = _drawData[currPosInArr + 5];
@@ -700,8 +703,8 @@ class FlxBitmapTextField extends FlxSprite
 		origin.x = width * 0.5;
 		origin.y = height * 0.5;
 		
-		var halfWidth:Float = origin.x;
-		var halfHeight:Float = origin.y;
+		_halfWidth = origin.x;
+		_halfHeight = origin.y;
 		#end
 		
 		#if flash
@@ -736,8 +739,8 @@ class FlxBitmapTextField extends FlxSprite
 		if (_background)
 		{
 			_bgDrawData.push(_font.bgTileID(nodeName));		// tile_ID
-			_bgDrawData.push( -halfWidth);
-			_bgDrawData.push( -halfHeight);
+			_bgDrawData.push( -_halfWidth);
+			_bgDrawData.push( -_halfHeight);
 			
 			#if !flash
 			var colorMultiplier:Float = 1 / (255 * 255);
@@ -807,7 +810,7 @@ class FlxBitmapTextField extends FlxSprite
 							#if flash
 							_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 							#else
-							_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+							_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - _halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 							#end
 						}
 					}
@@ -819,13 +822,13 @@ class FlxBitmapTextField extends FlxSprite
 					#if flash
 					_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 					#else
-					_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+					_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - _halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 					#end
 				}
 				#if flash
 				_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
-				_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
+				_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - _halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale, _useTextColor);
 				#end
 				row++;
 			}

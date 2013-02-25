@@ -1274,8 +1274,8 @@ class FlxBar extends FlxSprite
 				if (percentFrame >= 0)
 				{
 					// Draw filled bar
-					var currTileX:Float = x1;
-					var currTileY:Float = y1;
+					var currTileX:Float = -x1;
+					var currTileY:Float = -y1;
 					
 					if (fillHorizontal)
 					{

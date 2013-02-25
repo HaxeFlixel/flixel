@@ -428,6 +428,9 @@ class FlxBitmapFont extends FlxSprite
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
+				var x1:Float = (origin.x - _halfWidth);
+				var y1:Float = (origin.y - _halfHeight);
+				
 				var csx:Float = cos * scale.x;
 				var ssy:Float = sin * scale.y;
 				var ssx:Float = sin * scale.x;
@@ -437,8 +440,8 @@ class FlxBitmapFont extends FlxSprite
 				{
 					currPosInArr = j * 3;
 					currTileID = points[currPosInArr];
-					currTileX = points[currPosInArr + 1];
-					currTileY = points[currPosInArr + 2];
+					currTileX = points[currPosInArr + 1] - x1;
+					currTileY = points[currPosInArr + 2] - y1;
 					
 					relativeX = (currTileX * csx - currTileY * ssy);
 					relativeY = (currTileX * ssx + currTileY * csy);
@@ -692,6 +695,8 @@ class FlxBitmapFont extends FlxSprite
 	#else
 		width = frameWidth = _textWidth;
 		height = frameHeight = _textHeight;
+		_halfWidth = 0.5 * width;
+		_halfHeight = 0.5 * height;
 		frames = 1;
 		centerOffsets();
 	#end
