@@ -803,7 +803,7 @@ class FlxSprite extends FlxObject
 				{
 					currDrawData[currIndex++] = -csx;
 					currDrawData[currIndex++] = ssy;
-					currDrawData[currIndex++] = -ssx;
+					currDrawData[currIndex++] = ssx;
 					currDrawData[currIndex++] = csy;
 				}
 				else
