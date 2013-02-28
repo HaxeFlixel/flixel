@@ -27,7 +27,8 @@ class FlxSpriteTex extends FlxSprite
     var bm : BitmapData = new BitmapData (Std.int (spriteInfo.frame.width),
         Std.int (spriteInfo.frame.height));
     bm.copyPixels (_tex.asset, spriteInfo.frame, new Point (0, 0));
-    super (x, y, bm);
+    super (x, y);
+    loadGraphic (bm, false, false, 0, 0, false, _tex.assetName + spriteName);
 #end
   }
 
