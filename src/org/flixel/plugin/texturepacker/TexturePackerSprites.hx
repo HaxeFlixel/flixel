@@ -2,6 +2,7 @@ package org.flixel.plugin.texturepacker;
 
 import nme.Assets;
 import nme.geom.Rectangle;
+import nme.geom.Point;
 import nme.display.BitmapData;
 import haxe.Json;
 
@@ -35,12 +36,14 @@ class TexturePackerSprite
 {
   public var frame : Rectangle;
   public var source : Rectangle;
+  public var trimmed : Bool;
 
   public function new (s : Dynamic)
   {
     frame = new Rectangle (s.frame.x, s.frame.y, s.frame.w, s.frame.h);
-    source = new Rectangle (s.spriteSourceSize.x, s.spriteSourceSize.y,
-        s.spriteSourceSize.w, s.spriteSourceSize.h);
+    source = new Rectangle (0, 0,
+        s.sourceSize.w, s.sourceSize.h);
+    trimmed = s.trimmed;
   }
 }
 

@@ -24,9 +24,16 @@ class FlxSpriteTex extends FlxSprite
     super (x, y, tex.assetName);
 #else
     var spriteInfo = _tex.sprites[_spriteId];
-    var bm : BitmapData = new BitmapData (Std.int (spriteInfo.frame.width),
-        Std.int (spriteInfo.frame.height));
-    bm.copyPixels (_tex.asset, spriteInfo.frame, new Point (0, 0));
+    var bm : BitmapData = new BitmapData (
+        Std.int (spriteInfo.source.width),
+        Std.int (spriteInfo.source.height),
+        true, 0x00ffffff);
+
+    var dst : Point = new Point (
+          (spriteInfo.source.width - spriteInfo.frame.width) * 0.5,
+          (spriteInfo.source.height - spriteInfo.frame.height) * 0.5);
+
+    bm.copyPixels (_tex.asset, spriteInfo.frame, dst);
     super (x, y);
     loadGraphic (bm, false, false, 0, 0, false, _tex.assetName + spriteName);
 #end
@@ -35,8 +42,16 @@ class FlxSpriteTex extends FlxSprite
   override private function resetHelpers () : Void
   {
 #if !flash
-    width = frameWidth = Std.int (_tex.sprites[_spriteId].frame.width);
-    height = frameHeight = Std.int (_tex.sprites[_spriteId].frame.height);
+    var spriteInfo = _tex.sprites[_spriteId];
+
+    width = frameWidth = Std.int (spriteInfo.source.width);
+    height = frameHeight = Std.int (spriteInfo.source.height);
+    if (spriteInfo.trimmed)
+    {
+      offset = new FlxPoint (
+          -(spriteInfo.source.width - spriteInfo.frame.width) * 0.5,
+          -(spriteInfo.source.height - spriteInfo.frame.height) * 0.5);
+    }
 #end
     super.resetHelpers ();
   }
