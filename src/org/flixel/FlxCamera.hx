@@ -740,6 +740,7 @@ class FlxCamera extends FlxBasic
 				_fxShakeOffset.make();
 				if (_fxShakeComplete != null)
 				{
+					
 					_fxShakeComplete();
 				}
 			}
@@ -753,6 +754,13 @@ class FlxCamera extends FlxBasic
 				{
 					_fxShakeOffset.y = (FlxG.random() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * zoom;
 				}
+			}
+			
+			// Camera shake fix for target follow.
+			if (target != null)
+			{
+				_flashSprite.x = x + _flashOffsetX;
+				_flashSprite.y = y + _flashOffsetY;
 			}
 		}
 	}
