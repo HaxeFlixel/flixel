@@ -209,6 +209,11 @@ class FlxSprite extends FlxObject
 	
 	private var _halfWidth:Float;
 	private var _halfHeight:Float;
+
+	/**
+	 * Internal, additional rotation for sprite. Used in FlxSpriteTex.
+	 */
+	private var _additionalAngle : Float;
 	#end
 	
 	/**
@@ -262,6 +267,7 @@ class FlxSprite extends FlxObject
 		_blue = 1.0;
 		
 		_frameID = 0;
+		_additionalAngle = 0.0;
 		#end
 		
 		if (SimpleGraphic == null)
@@ -775,12 +781,12 @@ class FlxSprite extends FlxObject
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * FlxG.RAD);	
+					_matrix.rotate((angle) * FlxG.RAD);	
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 				#else
-				radians = -angle * FlxG.RAD;
+				radians = -(angle + _additionalAngle) * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -975,7 +981,11 @@ class FlxSprite extends FlxObject
 		if (bakedRotation > 0)
 		{
 			var oldIndex:Int = _curIndex;
-			var angleHelper:Int = Math.floor(angle % 360);
+#if flash
+			var angleHelper:Int = Math.floor((angle) % 360);
+#else
+			var angleHelper:Int = Math.floor((angle + _additionalAngle) % 360);
+#end
 			
 			#if flash
 			if (angleHelper < 0)
@@ -1502,7 +1512,11 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - offset.y;
 		
 		var result:Bool = false;
-		if (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
+		var notRotated = angle == 0.0;
+#if !flash
+		notRotated = notRotated && _additionalAngle != 0.0;
+#end
+		if ((notRotated || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
 		{
 			result = ((_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height));
 		}
@@ -1835,7 +1849,7 @@ class FlxSprite extends FlxObject
 		#if flash
 		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null));
 		#else
-		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+		return (((angle == 0 && _additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
 	}
 	
