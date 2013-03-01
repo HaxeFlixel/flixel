@@ -1161,95 +1161,81 @@ class FlxBar extends FlxSprite
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
 			#end
-			
-			if (simpleRenderSprite())
-			{	//Simple render
-				
-				// Draw empty bar
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
-				
-				currDrawData[currIndex++] = _emptyBarFrameID;
-				
-				currDrawData[currIndex++] = 1;
-				currDrawData[currIndex++] = 0;
-				currDrawData[currIndex++] = 0;
-				currDrawData[currIndex++] = 1;
-				#if !js
-				if (isColored || isColoredCamera)
-				{
-					currDrawData[currIndex++] = redMult; 
-					currDrawData[currIndex++] = greenMult;
-					currDrawData[currIndex++] = blueMult;
-				}
-				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
-				
-				if (percentFrame >= 0)
-				{
-					// Draw filled bar
-					if (fillHorizontal)
-					{
-						currDrawData[currIndex++] = _point.x + _filledBarFrames[percentFrame];
-						currDrawData[currIndex++] = _point.y;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _point.x;
-						currDrawData[currIndex++] = _point.y + _filledBarFrames[percentFrame];
-					}
-					
-					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
-					
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-					
-					#if !js
-					if (isColored || isColoredCamera)
-					{
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-				}
-			}
-			else
-			{	
-				//Advanced render
+
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+			var x1:Float = 0;
+			var y1:Float = 0;
+			var x2:Float = 0;
+			var y2:Float = 0;
+
+			if (!simpleRenderSprite ())
+			{
 				var radians:Float = -angle * FlxG.RAD;
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				
-				var csx:Float = cos * scale.x;
-				var ssy:Float = sin * scale.y;
-				var ssx:Float = sin * scale.x;
-				var csy:Float = cos * scale.y;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				
-				var x1:Float = (origin.x - _halfWidth);
-				var y1:Float = (origin.y - _halfHeight);
+				x1 = (origin.x - _halfWidth);
+				y1 = (origin.y - _halfHeight);
+				x2 = x1 * csx + y1 * ssy;
+				y2 = -x1 * ssx + y1 * csy;
+			}
+
+			// Draw empty bar
+			currDrawData[currIndex++] = _point.x - x2;
+			currDrawData[currIndex++] = _point.y - y2;
+			
+			currDrawData[currIndex++] = _emptyBarFrameID;
+			
+			currDrawData[currIndex++] = csx;
+			currDrawData[currIndex++] = ssy;
+			currDrawData[currIndex++] = -ssx;
+			currDrawData[currIndex++] = csy;
+
+			#if !js
+			if (isColored || isColoredCamera)
+			{
+				currDrawData[currIndex++] = redMult;
+				currDrawData[currIndex++] = greenMult;
+				currDrawData[currIndex++] = blueMult;
+			}
+			currDrawData[currIndex++] = alpha;
+			#else
+			if (useAlpha)
+			{
+				currDrawData[currIndex++] = alpha;
+			}
+			#end
+
+			// Draw filled bar
+			if (percentFrame >= 0)
+			{
+				var currTileX:Float = -x1;
+				var currTileY:Float = -y1;
 				
-				var x2:Float = x1 * csx + y1 * ssy;
-				var y2:Float = -x1 * ssx + y1 * csy;
+				if (fillHorizontal)
+				{
+					currTileX += _filledBarFrames[percentFrame];
+				}
+				else
+				{
+					currTileY += _filledBarFrames[percentFrame];
+				}
 				
-				// Draw empty bar
-				currDrawData[currIndex++] = _point.x - x2;
-				currDrawData[currIndex++] = _point.y - y2;
+				var relativeX:Float = (currTileX * csx + currTileY * ssy);
+				var relativeY:Float = (-currTileX * ssx + currTileY * csy);
 				
-				currDrawData[currIndex++] = _emptyBarFrameID;
+				currDrawData[currIndex++] = _point.x + relativeX;
+				currDrawData[currIndex++] = _point.y + relativeY;
+				
+				currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
 				
 				currDrawData[currIndex++] = csx;
 				currDrawData[currIndex++] = ssy;
@@ -1270,50 +1256,6 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = alpha;
 				}
 				#end
-				
-				if (percentFrame >= 0)
-				{
-					// Draw filled bar
-					var currTileX:Float = -x1;
-					var currTileY:Float = -y1;
-					
-					if (fillHorizontal)
-					{
-						currTileX += _filledBarFrames[percentFrame];
-					}
-					else
-					{
-						currTileY += _filledBarFrames[percentFrame];
-					}
-					
-					var relativeX:Float = (currTileX * csx + currTileY * ssy);
-					var relativeY:Float = (-currTileX * ssx + currTileY * csy);
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
-					
-					currDrawData[currIndex++] = csx;
-					currDrawData[currIndex++] = ssy;
-					currDrawData[currIndex++] = -ssx;
-					currDrawData[currIndex++] = csy;
-					
-					#if !js
-					if (isColored || isColoredCamera)
-					{
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-				}
 			}
 			
 			drawItem.position = currIndex;

@@ -240,186 +240,113 @@ class FlxBitmapTextField extends FlxSprite
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
 			#end
-			
-			if (simpleRenderSprite())
-			{	
-				if (_background)
-				{
-					currDrawData[currIndex++] = _point.x + _bgDrawData[1];
-					currDrawData[currIndex++] = _point.y + _bgDrawData[2];
-					
-					currDrawData[currIndex++] = _bgDrawData[0];
-					
-					currDrawData[currIndex++] = width;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = height;
-					
-					#if !js
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _bgDrawData[3] * camera.red; 
-						currDrawData[currIndex++] = _bgDrawData[4] * camera.green;
-						currDrawData[currIndex++] = _bgDrawData[5] * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _bgDrawData[3]; 
-						currDrawData[currIndex++] = _bgDrawData[4];
-						currDrawData[currIndex++] = _bgDrawData[5];
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-				}
-				
-				//Simple render
-				while (j < textLength)
-				{
-					currPosInArr = j * 6;
-					currTileID = _drawData[currPosInArr];
-					currTileX = _drawData[currPosInArr + 1];
-					currTileY = _drawData[currPosInArr + 2];
-					currTileRed = _drawData[currPosInArr + 3];
-					currTileGreen = _drawData[currPosInArr + 4];
-					currTileBlue = _drawData[currPosInArr + 5];
-					
-					currDrawData[currIndex++] = _point.x + currTileX;
-					currDrawData[currIndex++] = _point.y + currTileY;
-					
-					currDrawData[currIndex++] = currTileID;
-					
-					currDrawData[currIndex++] = _fontScale;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = _fontScale;
-					
-					#if !js
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = currTileRed * camera.red; 
-						currDrawData[currIndex++] = currTileGreen * camera.green;
-						currDrawData[currIndex++] = currTileBlue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = currTileRed; 
-						currDrawData[currIndex++] = currTileGreen;
-						currDrawData[currIndex++] = currTileBlue;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-					j++;
-				}
-			}
-			else
-			{	//Advanced render
+
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+			var x1:Float = 0;
+			var y1:Float = 0;
+
+			if (!simpleRenderSprite ())
+			{
 				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				var csx:Float = cos * scale.x;
-				var ssy:Float = sin * scale.y;
-				var ssx:Float = sin * scale.x;
-				var csy:Float = cos * scale.y;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				
-				var x1:Float = (origin.x - _halfWidth);
-				var y1:Float = (origin.y - _halfHeight);
+				x1 = (origin.x - _halfWidth);
+				y1 = (origin.y - _halfHeight);
+			}
+
+			if (_background)
+			{
+				currTileX = _bgDrawData[1] - x1;
+				currTileY = _bgDrawData[2] - y1;
 				
-				if (_background)
+				relativeX = (currTileX * csx - currTileY * ssy);
+				relativeY = (currTileX * ssx + currTileY * csy);
+				
+				currDrawData[currIndex++] = _point.x + relativeX;
+				currDrawData[currIndex++] = _point.y + relativeY;
+				
+				currDrawData[currIndex++] = _bgDrawData[0];
+				
+				currDrawData[currIndex++] = csx * width;
+				currDrawData[currIndex++] = -ssy * height;
+				currDrawData[currIndex++] = ssx * width;
+				currDrawData[currIndex++] = csy * height;
+				
+				#if !js
+				if (isColoredCamera)
 				{
-					currTileX = _bgDrawData[1] - x1;
-					currTileY = _bgDrawData[2] - y1;
-					
-					relativeX = (currTileX * csx - currTileY * ssy);
-					relativeY = (currTileX * ssx + currTileY * csy);
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = _bgDrawData[0];
-					
-					currDrawData[currIndex++] = csx * width;
-					currDrawData[currIndex++] = -ssy * height;
-					currDrawData[currIndex++] = ssx * width;
-					currDrawData[currIndex++] = csy * height;
-					
-					#if !js
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _bgDrawData[3] * camera.red; 
-						currDrawData[currIndex++] = _bgDrawData[4] * camera.green;
-						currDrawData[currIndex++] = _bgDrawData[5] * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _bgDrawData[3]; 
-						currDrawData[currIndex++] = _bgDrawData[4];
-						currDrawData[currIndex++] = _bgDrawData[5];
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
+					currDrawData[currIndex++] = _bgDrawData[3] * camera.red;
+					currDrawData[currIndex++] = _bgDrawData[4] * camera.green;
+					currDrawData[currIndex++] = _bgDrawData[5] * camera.blue;
 				}
-				
-				while (j < textLength)
+				else
 				{
-					currPosInArr = j * 6;
-					currTileID = _drawData[currPosInArr];
-					currTileX = _drawData[currPosInArr + 1] - x1;
-					currTileY = _drawData[currPosInArr + 2] - y1;
-					currTileRed = _drawData[currPosInArr + 3];
-					currTileGreen = _drawData[currPosInArr + 4];
-					currTileBlue = _drawData[currPosInArr + 5];
-					
-					relativeX = (currTileX * csx - currTileY * ssy);
-					relativeY = (currTileX * ssx + currTileY * csy);
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = currTileID;
-					
-					currDrawData[currIndex++] = csx * _fontScale;
-					currDrawData[currIndex++] = -ssy * _fontScale;
-					currDrawData[currIndex++] = ssx * _fontScale;
-					currDrawData[currIndex++] = csy * _fontScale;
-					
-					#if !js
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = currTileRed * camera.red; 
-						currDrawData[currIndex++] = currTileGreen * camera.green;
-						currDrawData[currIndex++] = currTileBlue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = currTileRed; 
-						currDrawData[currIndex++] = currTileGreen;
-						currDrawData[currIndex++] = currTileBlue;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-					j++;
+					currDrawData[currIndex++] = _bgDrawData[3];
+					currDrawData[currIndex++] = _bgDrawData[4];
+					currDrawData[currIndex++] = _bgDrawData[5];
 				}
+				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
+			}
+
+			while (j < textLength)
+			{
+				currPosInArr = j * 6;
+				currTileID = _drawData[currPosInArr];
+				currTileX = _drawData[currPosInArr + 1] - x1;
+				currTileY = _drawData[currPosInArr + 2] - y1;
+				currTileRed = _drawData[currPosInArr + 3];
+				currTileGreen = _drawData[currPosInArr + 4];
+				currTileBlue = _drawData[currPosInArr + 5];
+				
+				relativeX = (currTileX * csx - currTileY * ssy);
+				relativeY = (currTileX * ssx + currTileY * csy);
+				
+				currDrawData[currIndex++] = _point.x + relativeX;
+				currDrawData[currIndex++] = _point.y + relativeY;
+				
+				currDrawData[currIndex++] = currTileID;
+				
+				currDrawData[currIndex++] = csx * _fontScale;
+				currDrawData[currIndex++] = -ssy * _fontScale;
+				currDrawData[currIndex++] = ssx * _fontScale;
+				currDrawData[currIndex++] = csy * _fontScale;
+				
+				#if !js
+				if (isColoredCamera)
+				{
+					currDrawData[currIndex++] = currTileRed * camera.red;
+					currDrawData[currIndex++] = currTileGreen * camera.green;
+					currDrawData[currIndex++] = currTileBlue * camera.blue;
+				}
+				else
+				{
+					currDrawData[currIndex++] = currTileRed;
+					currDrawData[currIndex++] = currTileGreen;
+					currDrawData[currIndex++] = currTileBlue;
+				}
+				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
+				j++;
 			}
 			
 			drawItem.position = currIndex;

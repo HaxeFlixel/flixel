@@ -246,93 +246,62 @@ class FlxTileblock extends FlxSprite
 			
 			if (_tileData != null)
 			{
-				if (simpleRenderSprite())
-				{	//Simple render
-					while (j < numTiles)
-					{
-						currPosInArr = j * 3;
-						currTileID = _tileData[currPosInArr];
-						currTileX = _tileData[currPosInArr + 1];
-						currTileY = _tileData[currPosInArr + 2];
-						
-						currDrawData[currIndex++] = (_point.x) + currTileX;
-						currDrawData[currIndex++] = (_point.y) + currTileY;
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = 1;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 1;
-						
-						#if !js
-						if (isColored || isColoredCamera)
-						{
-							currDrawData[currIndex++] = redMult; 
-							currDrawData[currIndex++] = greenMult;
-							currDrawData[currIndex++] = blueMult;
-						}
-						currDrawData[currIndex++] = alpha;
-						#else
-						if (useAlpha)
-						{
-							currDrawData[currIndex++] = alpha;
-						}
-						#end
-						j++;
-					}
-				}
-				else
-				{	
-					//Advanced render
+				var csx : Float = 1;
+				var ssy : Float = 0;
+				var ssx : Float = 0;
+				var csy : Float = 1;
+				var x1 : Float = 0;
+				var y1 : Float = 0;
+
+				if (!simpleRenderSprite ())
+				{
 					radians = angle * FlxG.RAD;
 					cos = Math.cos(radians);
 					sin = Math.sin(radians);
 					
-					var csx:Float = cos * scale.x;
-					var ssy:Float = sin * scale.y;
-					var ssx:Float = sin * scale.x;
-					var csy:Float = cos * scale.y;
+					csx = cos * scale.x;
+					ssy = sin * scale.y;
+					ssx = sin * scale.x;
+					csy = cos * scale.y;
 					
-					var x1:Float = (origin.x - _halfWidth);
-					var y1:Float = (origin.y - _halfHeight);
+					x1 = (origin.x - _halfWidth);
+					y1 = (origin.y - _halfHeight);
+				}
+
+				while (j < numTiles)
+				{
+					currPosInArr = j * 3;
+					currTileID = _tileData[currPosInArr];
+					currTileX = _tileData[currPosInArr + 1] + x1;
+					currTileY = _tileData[currPosInArr + 2] + y1;
+					relativeX = (currTileX * csx - currTileY * ssy);
+					relativeY = (currTileX * ssx + currTileY * csy);
 					
-					while (j < numTiles)
+					currDrawData[currIndex++] = (_point.x) + relativeX;
+					currDrawData[currIndex++] = (_point.y) + relativeY;
+					currDrawData[currIndex++] = currTileID;
+
+					currDrawData[currIndex++] = csx;
+					currDrawData[currIndex++] = -ssy;
+					currDrawData[currIndex++] = ssx;
+					currDrawData[currIndex++] = csy;
+
+					#if !js
+					if (isColored || isColoredCamera)
 					{
-						currPosInArr = j * 3;
-						currTileID = _tileData[currPosInArr];
-						currTileX = _tileData[currPosInArr + 1] + x1;
-						currTileY = _tileData[currPosInArr + 2] + y1;
-						
-						relativeX = (currTileX * csx - currTileY * ssy);
-						relativeY = (currTileX * ssx + currTileY * csy);
-						
-						currDrawData[currIndex++] = (_point.x) + relativeX;
-						currDrawData[currIndex++] = (_point.y) + relativeY;
-						
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = csx;
-						currDrawData[currIndex++] = -ssy;
-						currDrawData[currIndex++] = ssx;
-						currDrawData[currIndex++] = csy;
-						
-						#if !js
-						if (isColored || isColoredCamera)
-						{
-							currDrawData[currIndex++] = redMult; 
-							currDrawData[currIndex++] = greenMult;
-							currDrawData[currIndex++] = blueMult;
-						}
-						currDrawData[currIndex++] = alpha;
-						#else
-						if (useAlpha)
-						{
-							currDrawData[currIndex++] = alpha;
-						}
-						#end
-						
-						j++;
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
+					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
+					
+					j++;
 				}
 				
 				drawItem.position = currIndex;
