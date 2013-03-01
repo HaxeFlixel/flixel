@@ -37,13 +37,37 @@ class TexturePackerSprite
   public var frame : Rectangle;
   public var source : Rectangle;
   public var trimmed : Bool;
+  public var rotated : Bool;
+  public var offset : FlxPoint;
 
   public function new (s : Dynamic)
   {
-    frame = new Rectangle (s.frame.x, s.frame.y, s.frame.w, s.frame.h);
-    source = new Rectangle (0, 0,
-        s.sourceSize.w, s.sourceSize.h);
     trimmed = s.trimmed;
+    rotated = s.rotated;
+    source = new Rectangle (0, 0, s.sourceSize.w, s.sourceSize.h);
+    offset = new FlxPoint (0, 0);
+#if !flash
+    // we use negative offset because code in FlxSprite.draw
+    // use it in such way
+    offset.make (
+        -(s.sourceSize.w - s.frame.w) * 0.5,
+        -(s.sourceSize.h - s.frame.h) * 0.5);
+    if (rotated)
+    {
+      frame = new Rectangle (s.frame.x, s.frame.y, s.frame.h, s.frame.w);
+    }
+    else
+    {
+      frame = new Rectangle (s.frame.x, s.frame.y, s.frame.w, s.frame.h);
+    }
+#else
+    frame = new Rectangle (s.frame.x, s.frame.y, s.frame.w, s.frame.h);
+    // we use positive offset because in FlxSpriteTex.new
+    // we need to translate a sprite
+    offset.make (
+        (s.sourceSize.w - s.frame.w) * 0.5,
+        (s.sourceSize.h - s.frame.h) * 0.5);
+#end
   }
 }
 
