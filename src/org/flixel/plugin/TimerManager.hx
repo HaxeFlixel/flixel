@@ -82,16 +82,20 @@ class TimerManager extends FlxBasic
 	 */
 	public function clear():Void
 	{
-		var i:Int = _timers.length - 1;
-		var timer:FlxTimer;
-		while(i >= 0)
+		if (_timers != null)
 		{
-			timer = _timers[i--];
-			if (timer != null)
+			var i:Int = _timers.length - 1;
+			var timer:FlxTimer;
+			while(i >= 0)
 			{
-				timer.destroy();
+				timer = _timers[i--];
+				if (timer != null)
+				{
+					timer.destroy();
+				}
 			}
 		}
+		
 		_timers = [];
 	}
 }

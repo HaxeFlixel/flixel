@@ -144,21 +144,36 @@ class FlxDebugger extends Sprite
 	public function destroy():Void
 	{
 		_screen = null;
-		removeChild(log);
-		log.destroy();
-		log = null;
-		removeChild(watch);
-		watch.destroy();
-		watch = null;
-		removeChild(perf);
-		perf.destroy();
-		perf = null;
-		removeChild(vcr);
-		vcr.destroy();
-		vcr = null;
-		removeChild(vis);
-		vis.destroy();
-		vis = null;
+		if (log != null)
+		{
+			removeChild(log);
+			log.destroy();
+			log = null;
+		}
+		if (watch != null)
+		{
+			removeChild(watch);
+			watch.destroy();
+			watch = null;
+		}
+		if (perf != null)
+		{
+			removeChild(perf);
+			perf.destroy();
+			perf = null;
+		}
+		if (vcr != null)
+		{
+			removeChild(vcr);
+			vcr.destroy();
+			vcr = null;
+		}
+		if (vis != null)
+		{
+			removeChild(vis);
+			vis.destroy();
+			vis = null;
+		}
 		
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);

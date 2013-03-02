@@ -289,7 +289,10 @@ class FlxPreloader extends NMEPreloader
 	private function destroy():Void
 	{
 		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-		removeChild(_buffer);
+		if (_buffer != null)	
+		{
+			removeChild(_buffer);
+		}
 		_buffer = null;
 		_bmpBar = null;
 		_text = null;

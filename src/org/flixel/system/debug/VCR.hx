@@ -166,23 +166,50 @@ class VCR extends Sprite
 		_file = null;
 		#end
 		
-		removeChild(_open);
+		if (_open != null)
+		{
+			removeChild(_open);
+		}
 		_open = null;
-		removeChild(_recordOff);
+		if (_recordOff != null)
+		{
+			removeChild(_recordOff);
+		}
 		_recordOff = null;
-		removeChild(_recordOn);
+		if (_recordOn != null)
+		{
+			removeChild(_recordOn);
+		}
 		_recordOn = null;
-		removeChild(_stop);
+		if (_stop != null)
+		{
+			removeChild(_stop);
+		}
 		_stop = null;
-		removeChild(_flixel);
+		if (_flixel != null)
+		{
+			removeChild(_flixel);
+		}
 		_flixel = null;
-		removeChild(_restart);
+		if (_restart != null)
+		{
+			removeChild(_restart);
+		}
 		_restart = null;
-		removeChild(_pause);
+		if (_pause != null)
+		{
+			removeChild(_pause);
+		}
 		_pause = null;
-		removeChild(_play);
+		if (_play != null)
+		{
+			removeChild(_play);
+		}
 		_play = null;
-		removeChild(_step);
+		if (_step != null)
+		{
+			removeChild(_step);
+		}
 		_step = null;
 		
 		parent.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);

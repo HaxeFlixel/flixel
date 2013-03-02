@@ -45,7 +45,10 @@ class Vis extends Sprite
 	 */
 	public function destroy():Void
 	{
-		removeChild(_bounds);
+		if (_bounds != null)
+		{
+			removeChild(_bounds);
+		}
 		_bounds = null;
 		
 		parent.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);

@@ -111,7 +111,10 @@ class Perf extends FlxWindow
 	 */
 	override public function destroy():Void
 	{
-		removeChild(_text);
+		if (_text != null)
+		{
+			removeChild(_text);
+		}
 		_text = null;
 		_flixelUpdate = null;
 		_flixelDraw = null;
