@@ -402,6 +402,7 @@ class FlxPreloader extends NMEPreloader
 		var LastDot:Int = home.lastIndexOf(".") - 1;
 		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
 		home = home.substring(domEnd, home.length);
+		home = home.split(":")[0];
 		return (home == "") ? LOCAL : home;
 	}
 	
