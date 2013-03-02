@@ -344,10 +344,19 @@ class FlxGame extends Sprite
 	private inline function resetGame():Void
 	{
 		_requestedState = Type.createInstance(_iState, []);
+		
+		#if !FLX_NO_DEBUG
+		if (Std.is(_requestedState, FlxSubState))
+		{
+			throw "You can't set FlxSubState class instance as the state for you game";
+		}
+		#end
+		
 		#if !FLX_NO_RECORD
 		_replayTimer = 0;
 		_replayCancelKeys = null;
 		#end
+		
 		FlxG.reset();
 	}
 
@@ -556,7 +565,7 @@ class FlxGame extends Sprite
 		FlxG.elapsed = FlxG.timeScale * _stepSeconds;
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
-		_state.update();
+		_state.tryUpdate();
 		
 		if (FlxG.tweener.active && FlxG.tweener.hasTween) 
 		{
