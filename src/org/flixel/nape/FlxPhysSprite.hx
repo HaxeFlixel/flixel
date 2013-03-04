@@ -126,17 +126,16 @@ class FlxPhysSprite extends FlxSprite
 	 * The width and height used are based on the size of sprite graphics.
 	 * Call this method after calling makeGraphics() or loadGraphic() to update the body size.
 	 */
-	public function createRectangularBody(width = 0, height = 0, ?type:BodyType)
+	public function createRectangularBody(width:Float = 0, height:Float = 0, ?type:BodyType)
 	{
 		if (body != null) 
 			destroyPhysObjects();
 		
 		if (width == 0)
-			width = frameWidth;
+			width = cast frameWidth;
 		if (height == 0)
-			height = frameHeight;
+			height = cast frameHeight;
 		
-			
 		this.centerOffsets(false);
 		body = new Body(type != null ? type : BodyType.DYNAMIC, Vec2.weak(this.x, this.y));
 		body.shapes.add(new Polygon(Polygon.box(width, height)));
@@ -183,7 +182,7 @@ class FlxPhysSprite extends FlxSprite
 		this.x = body.position.x - origin.x;
 		this.y = body.position.y - origin.y;
 		
-		if (body.allowRotation) 
+		if (body.allowRotation)
 		{
 			this.angle = body.rotation * _radsFactor;
 		}

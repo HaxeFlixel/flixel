@@ -727,6 +727,16 @@ class FlxU
 	}
 	
 	/**
+	 * Transforms degrees to radians
+	 * @param degrees	Angle in degrees (0 - 360).
+	 * @return	The andgle in radians.
+	 */
+	inline static public function degreesToRadians(degrees:Float):Float 
+	{
+		return degrees * 0.01745329251; // this equals degrees * (Math.PI / 180);
+	}
+	
+	/**
 	 * Calculate the distance between two points.
 	 * @param Point1	A <code>FlxPoint</code> object referring to the first location.
 	 * @param Point2	A <code>FlxPoint</code> object referring to the second location.
