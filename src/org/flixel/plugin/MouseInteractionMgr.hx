@@ -28,7 +28,7 @@ class MouseInteractionMgr extends FlxBasic
 	private static var registeredSprites:Array<SpriteReg>;
 	private static var mouseOverSprites:Array<SpriteReg>;
 	
-	public static var _point:FlxPoint;
+	private static var _point:FlxPoint;
 	
 	/**
 	 * Call this using FlxG.addPlugin(new MouseInteractionMgr()).
@@ -224,6 +224,10 @@ class MouseInteractionMgr extends FlxBasic
 			{
 				var touch:FlxTouch = FlxG.touchManager.touches[j];
 				touch.getWorldPosition(camera, _point);
+				if (sprite.angle != 0) 
+				{
+					FlxU.rotatePoint(_point.x, _point.y, sprite.x + sprite.origin.x, sprite.y + sprite.origin.y, -180 + sprite.angle, _point);	
+				}
 				if (sprite.overlapsPoint(_point, true, camera))
 				{
 					if (sprite.pixelsOverlapPoint(_point, 0x0, camera))
