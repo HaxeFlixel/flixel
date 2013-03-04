@@ -89,9 +89,8 @@ class MouseInteractionMgr extends FlxBasic
 			onMouseOut	 	: onMouseOut,
 		}
 		
-		registeredSprites.reverse();
-		registeredSprites.push(newReg);
-		registeredSprites.reverse();
+		registeredSprites.unshift(newReg);
+		
 	}
 	/**
 	 * Removes a sprite from the registry.
