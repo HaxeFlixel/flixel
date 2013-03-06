@@ -50,7 +50,7 @@ class TexturePackerTileSheetData extends TileSheetData
     }
 
     spriteData.halfFrameNumber = Std.int (spriteData.frameIDs.length / 2);
-    flxSpriteFrames.push (spriteData);
+    flxSpriteFrames.set(_tex.assetName, spriteData);
     return spriteData;
   }
 }
