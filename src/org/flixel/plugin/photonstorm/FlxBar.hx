@@ -156,6 +156,8 @@ class FlxBar extends FlxSprite
 		this.width = frameWidth = width;
 		this.height = frameHeight = height;
 		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+		_halfWidth = 0.5 * frameWidth;
+		_halfHeight = 0.5 * frameHeight;
 		
 		_framesPosition = FRAMES_POSITION_HORIZONTAL;
 		#end
@@ -1159,89 +1161,86 @@ class FlxBar extends FlxSprite
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
 			#end
-			
-			if (simpleRenderSprite())
-			{	//Simple render
-				
-				// Draw empty bar
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
-				
-				currDrawData[currIndex++] = _emptyBarFrameID;
-				
-				currDrawData[currIndex++] = 1;
-				currDrawData[currIndex++] = 0;
-				currDrawData[currIndex++] = 0;
-				currDrawData[currIndex++] = 1;
-				#if !js
-				if (isColored || isColoredCamera)
-				{
-					currDrawData[currIndex++] = redMult; 
-					currDrawData[currIndex++] = greenMult;
-					currDrawData[currIndex++] = blueMult;
-				}
-				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
-				
-				if (percentFrame >= 0)
-				{
-					// Draw filled bar
-					if (fillHorizontal)
-					{
-						currDrawData[currIndex++] = _point.x + _filledBarFrames[percentFrame];
-						currDrawData[currIndex++] = _point.y;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _point.x;
-						currDrawData[currIndex++] = _point.y + _filledBarFrames[percentFrame];
-					}
-					
-					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
-					
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-					
-					#if !js
-					if (isColored || isColoredCamera)
-					{
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-				}
-			}
-			else
-			{	
-				//Advanced render
+
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+			var x1:Float = 0;
+			var y1:Float = 0;
+			var x2:Float = 0;
+			var y2:Float = 0;
+
+			if (!simpleRenderSprite ())
+			{
 				var radians:Float = -angle * FlxG.RAD;
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				
-				// Draw empty bar
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				
-				currDrawData[currIndex++] = _emptyBarFrameID;
+				x1 = (origin.x - _halfWidth);
+				y1 = (origin.y - _halfHeight);
+				x2 = x1 * csx + y1 * ssy;
+				y2 = -x1 * ssx + y1 * csy;
+			}
+
+			// Draw empty bar
+			currDrawData[currIndex++] = _point.x - x2;
+			currDrawData[currIndex++] = _point.y - y2;
+			
+			currDrawData[currIndex++] = _emptyBarFrameID;
+			
+			currDrawData[currIndex++] = csx;
+			currDrawData[currIndex++] = ssy;
+			currDrawData[currIndex++] = -ssx;
+			currDrawData[currIndex++] = csy;
+
+			#if !js
+			if (isColored || isColoredCamera)
+			{
+				currDrawData[currIndex++] = redMult;
+				currDrawData[currIndex++] = greenMult;
+				currDrawData[currIndex++] = blueMult;
+			}
+			currDrawData[currIndex++] = alpha;
+			#else
+			if (useAlpha)
+			{
+				currDrawData[currIndex++] = alpha;
+			}
+			#end
+
+			// Draw filled bar
+			if (percentFrame >= 0)
+			{
+				var currTileX:Float = -x1;
+				var currTileY:Float = -y1;
 				
-				currDrawData[currIndex++] = cos * scale.x;
-				currDrawData[currIndex++] = sin * scale.y;
-				currDrawData[currIndex++] = -sin * scale.x;
-				currDrawData[currIndex++] = cos * scale.y;
+				if (fillHorizontal)
+				{
+					currTileX += _filledBarFrames[percentFrame];
+				}
+				else
+				{
+					currTileY += _filledBarFrames[percentFrame];
+				}
+				
+				var relativeX:Float = (currTileX * csx + currTileY * ssy);
+				var relativeY:Float = (-currTileX * ssx + currTileY * csy);
+				
+				currDrawData[currIndex++] = _point.x + relativeX;
+				currDrawData[currIndex++] = _point.y + relativeY;
+				
+				currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
+				
+				currDrawData[currIndex++] = csx;
+				currDrawData[currIndex++] = ssy;
+				currDrawData[currIndex++] = -ssx;
+				currDrawData[currIndex++] = csy;
 				
 				#if !js
 				if (isColored || isColoredCamera)
@@ -1257,47 +1256,6 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = alpha;
 				}
 				#end
-				
-				if (percentFrame >= 0)
-				{
-					// Draw filled bar
-					var relativeX:Float = 0;
-					var relativeY:Float = 0;
-					
-					if (fillHorizontal)
-					{
-						relativeX = _filledBarFrames[percentFrame] * cos * scale.x;
-					}
-					else
-					{
-						relativeY = _filledBarFrames[percentFrame] * cos * scale.y;
-					}
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
-					
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = sin * scale.y;
-					currDrawData[currIndex++] = -sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
-					
-					#if !js
-					if (isColored || isColoredCamera)
-					{
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-				}
 			}
 			
 			drawItem.position = currIndex;
@@ -1345,6 +1303,9 @@ class FlxBar extends FlxSprite
 	#if !flash
 		if (_node != null && barWidth >= 1 && barHeight >= 1)
 		{
+			_halfWidth = 0.5 * barWidth;
+			_halfHeight = 0.5 * barHeight;
+			
 			_emptyBarFrameID = _node.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
 			_filledBarFrames = [];
 			
@@ -1373,14 +1334,14 @@ class FlxBar extends FlxSprite
 					frameWidth = barWidth * i / 100;
 					frameHeight = barHeight;
 					
-					_filledBarFrames.push(0);
+					_filledBarFrames.push(-_halfWidth + frameWidth * 0.5);
 				}
 				else if (fillDirection == FILL_TOP_TO_BOTTOM)
 				{
 					frameWidth = barWidth;
 					frameHeight = barHeight * i / 100;
 					
-					_filledBarFrames.push(0);
+					_filledBarFrames.push(-_halfHeight + frameHeight * 0.5);
 				}
 				else if (fillDirection == FILL_BOTTOM_TO_TOP)
 				{
@@ -1388,7 +1349,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight * i / 100;
 					frameY += (barHeight - frameHeight);
 					
-					_filledBarFrames.push(barHeight - frameHeight);
+					_filledBarFrames.push(_halfHeight - 0.5 * frameHeight);
 				}
 				else if (fillDirection == FILL_RIGHT_TO_LEFT)
 				{
@@ -1396,7 +1357,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight;
 					frameX += (barWidth - frameWidth);
 					
-					_filledBarFrames.push(barWidth - frameWidth);
+					_filledBarFrames.push(_halfWidth - 0.5 * frameWidth);
 				}
 				else if (fillDirection == FILL_HORIZONTAL_INSIDE_OUT)
 				{
@@ -1404,7 +1365,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight;
 					frameX += (0.5 * (barWidth - frameWidth));
 					
-					_filledBarFrames.push(0.5 * (barWidth - frameWidth));
+					_filledBarFrames.push(0);
 				}
 				else if (fillDirection == FILL_HORIZONTAL_OUTSIDE_IN)
 				{
@@ -1412,7 +1373,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight;
 					frameX += 0.5 * (barWidth - frameWidth);
 					
-					_filledBarFrames.push(0.5 * (barWidth - frameWidth));
+					_filledBarFrames.push(0);
 				}
 				else if (fillDirection == FILL_VERTICAL_INSIDE_OUT)
 				{
@@ -1420,7 +1381,7 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight * i / 100;
 					frameY += (0.5 * (barHeight - frameHeight));
 					
-					_filledBarFrames.push(0.5 * (barHeight - frameHeight));
+					_filledBarFrames.push(0);
 				}
 				else if (fillDirection == FILL_VERTICAL_OUTSIDE_IN)
 				{
@@ -1428,10 +1389,10 @@ class FlxBar extends FlxSprite
 					frameHeight = barHeight * (100 - i) / 100;
 					frameY += (0.5 * (barHeight - frameHeight));
 					
-					_filledBarFrames.push(0.5 * (barHeight - frameHeight));
+					_filledBarFrames.push(0);
 				}
 				
-				_filledBarFrames.push(_node.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * barWidth, 0.5 * barHeight)));
+				_filledBarFrames.push(_node.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * frameWidth, 0.5 * frameHeight)));
 			}
 		}
 	#end

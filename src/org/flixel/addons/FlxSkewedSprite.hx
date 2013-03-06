@@ -124,66 +124,17 @@ class FlxSkewedSprite extends FlxSprite
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
-			if (simpleRenderSkewedSprite())
-			{	//Simple render
-				#if flash
+
+#if flash
+			if (simpleRenderSkewedSprite ())
+			{
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
-				#else
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
-				
-				currDrawData[currIndex++] = _frameID;
-				
-				// handle reversed sprites
-				if ((_flipped != 0) && (facing == FlxObject.LEFT))
-				{
-					currDrawData[currIndex++] = -1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-				}
-				else
-				{
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-				}
-				
-				#if !js
-				if (isColored || isColoredCamera)
-				{
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
-				}
-				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
-				
-				drawItem.position = currIndex;
-				#end
 			}
 			else
-			{	//Advanced render
-				_matrix.identity();
-				
-				#if flash
+			{
+				_matrix.identity ();
 				_matrix.translate( -origin.x, -origin.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
@@ -201,22 +152,46 @@ class FlxSkewedSprite extends FlxSprite
 				
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
-				#else
+			}
+#else
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+			var x2:Float = 0;
+			var y2:Float = 0;
+
+			var isFlipped : Bool = (_flipped != 0) && (facing == FlxObject.LEFT);
+			if (simpleRenderSkewedSprite ())
+			{
+				if (isFlipped)
+				{
+					csx = -csx;
+				}
+			}
+			else
+			{
 				radians = -angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				
-				currDrawData[currIndex++] = _frameID;
-				
+				var x1:Float = (origin.x - _halfWidth);
+				var y1:Float = (origin.y - _halfHeight);
+				x2 = x1 * csx + y1 * ssy;
+				y2 = -x1 * ssx + y1 * csy;
+
+				_matrix.identity();
 				_matrix.a = cos;
 				_matrix.b = sin;
 				_matrix.c = -sin;
 				_matrix.d = cos;
 				
-				if ((_flipped != 0) && (facing == FlxObject.LEFT))
+				if (isFlipped)
 				{
 					_matrix.scale( -scale.x, scale.y);
 				}
@@ -233,39 +208,49 @@ class FlxSkewedSprite extends FlxSprite
 					
 					_matrix.concat(_skewMatrix);
 				}
-				
-				currDrawData[currIndex++] = _matrix.a;
-				currDrawData[currIndex++] = _matrix.b;
-				currDrawData[currIndex++] = _matrix.c;
-				currDrawData[currIndex++] = _matrix.d;
-				
-				#if !js
-				if (isColored || isColoredCamera)
-				{
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
-				}
-				currDrawData[currIndex++] = alpha;
-				#else 
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
-				
-				drawItem.position = currIndex;
-				#end
+
+				csx = _matrix.a;
+				ssy = _matrix.b;
+				ssx = _matrix.c;
+				csy = _matrix.d;
 			}
+
+			currDrawData[currIndex++] = _point.x - x2;
+			currDrawData[currIndex++] = _point.y - y2;
+			currDrawData[currIndex++] = _frameID;
+
+			currDrawData[currIndex++] = csx;
+			currDrawData[currIndex++] = ssy;
+			currDrawData[currIndex++] = ssx;
+			currDrawData[currIndex++] = csy;
+
+			#if !js
+			if (isColored || isColoredCamera)
+			{
+				if (isColoredCamera)
+				{
+					currDrawData[currIndex++] = _red * camera.red;
+					currDrawData[currIndex++] = _green * camera.green;
+					currDrawData[currIndex++] = _blue * camera.blue;
+				}
+				else
+				{
+					currDrawData[currIndex++] = _red;
+					currDrawData[currIndex++] = _green;
+					currDrawData[currIndex++] = _blue;
+				}
+			}
+			currDrawData[currIndex++] = alpha;
+			#else 
+			if (useAlpha)
+			{
+				currDrawData[currIndex++] = alpha;
+			}
+			#end
+			
+			drawItem.position = currIndex;
+#end
+
 			FlxBasic._VISIBLECOUNT++;
 			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)

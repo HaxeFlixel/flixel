@@ -142,7 +142,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Set the angle of a sprite to rotate it.
 	 * WARNING: rotating sprites decreases rendering
-	 * performance for this sprite by a factor of 10x!
+	 * performance for this sprite by a factor of 10x (in Flash target)!
 	 */
 	public var angle:Float;
 	/**

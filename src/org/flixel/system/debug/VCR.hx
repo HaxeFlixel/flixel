@@ -7,6 +7,9 @@ import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.IOErrorEvent;
 import nme.events.MouseEvent;
+#if !FLX_NO_MOUSE
+import nme.ui.Mouse;
+#end
 
 import org.flixel.FlxAssets;
 #if flash
@@ -95,6 +98,12 @@ class VCR extends Sprite
 		_recordOn.visible = false;
 		addChild(_recordOn);
 		
+		#if FLX_NO_RECORD
+		_open.visible = false;
+		_recordOff.visible = false;
+		_recordOn.visible = false;
+		#end
+		
 		_stop = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgStop));
 		_stop.x = _recordOff.x;
 		_stop.visible = false;
@@ -157,28 +166,58 @@ class VCR extends Sprite
 		_file = null;
 		#end
 		
-		removeChild(_open);
+		if (_open != null)
+		{
+			removeChild(_open);
+		}
 		_open = null;
-		removeChild(_recordOff);
+		if (_recordOff != null)
+		{
+			removeChild(_recordOff);
+		}
 		_recordOff = null;
-		removeChild(_recordOn);
+		if (_recordOn != null)
+		{
+			removeChild(_recordOn);
+		}
 		_recordOn = null;
-		removeChild(_stop);
+		if (_stop != null)
+		{
+			removeChild(_stop);
+		}
 		_stop = null;
-		removeChild(_flixel);
+		if (_flixel != null)
+		{
+			removeChild(_flixel);
+		}
 		_flixel = null;
-		removeChild(_restart);
+		if (_restart != null)
+		{
+			removeChild(_restart);
+		}
 		_restart = null;
-		removeChild(_pause);
+		if (_pause != null)
+		{
+			removeChild(_pause);
+		}
 		_pause = null;
-		removeChild(_play);
+		if (_play != null)
+		{
+			removeChild(_play);
+		}
 		_play = null;
-		removeChild(_step);
+		if (_step != null)
+		{
+			removeChild(_step);
+		}
 		_step = null;
 		
-		parent.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
-		parent.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-		parent.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+		if (parent != null)
+		{
+			parent.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
+			parent.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			parent.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+		}
 	}
 	
 	/**
@@ -227,6 +266,7 @@ class VCR extends Sprite
 		}
 	}
 	
+	#if !FLX_NO_RECORD
 	//*** ACTUAL BUTTON BEHAVIORS ***//
 	
 	/**
@@ -337,7 +377,10 @@ class VCR extends Sprite
 	 */
 	public function stopRecording():Void
 	{
+		#if !FLX_NO_RECORD
 		var data:String = FlxG.stopRecording();
+		#end
+	
 		if((data != null) && (data.length > 0))
 		{
 			#if flash
@@ -402,6 +445,7 @@ class VCR extends Sprite
 	{
 		FlxG.stopReplay();
 	}
+	#end
 	
 	/**
 	 * Called when the user presses the Rewind-looking button.
@@ -431,6 +475,11 @@ class VCR extends Sprite
 	 */
 	public function onPause():Void
 	{
+		#if !FLX_NO_MOUSE
+		if (!FlxG.mouse.useSystemCursor)
+			Mouse.show();
+		#end
+		
 		paused = true;
 		_pause.visible = false;
 		_play.visible = true;
@@ -442,6 +491,11 @@ class VCR extends Sprite
 	 */
 	public function onPlay():Void
 	{
+		#if !FLX_NO_MOUSE
+		if (!FlxG.mouse.useSystemCursor)
+			Mouse.hide();
+		#end
+	
 		paused = false;
 		_play.visible = false;
 		_pause.visible = true;
@@ -532,6 +586,7 @@ class VCR extends Sprite
 	 */
 	private function onMouseUp(E:MouseEvent = null):Void
 	{
+		#if !FLX_NO_RECORD
 		if (_overOpen && _pressingOpen)
 		{
 			onOpen();
@@ -551,7 +606,9 @@ class VCR extends Sprite
 				onRecord(!E.altKey);
 			}
 		}
-		else if (_overRestart && _pressingRestart)
+		else 
+		#end
+		if (_overRestart && _pressingRestart)
 		{
 			onRestart(!E.altKey);
 		}

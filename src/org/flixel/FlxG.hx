@@ -549,6 +549,7 @@ class FlxG
 		return null;
 	}
 		
+	#if !FLX_NO_RECORD
 	/**
 	 * Load replay data from a string and play it back.
 	 * @param	Data		The replay that you want to load.
@@ -573,7 +574,8 @@ class FlxG
 		_game._replayCallback = Callback;
 		_game._replayRequested = true;
 	}
-		
+	#end
+
 	/**
 	 * Resets the game or state and replay requested flag.
 	 * @param	StandardMode	If true, reload entire game, else just reload current game state.
@@ -588,12 +590,16 @@ class FlxG
 		{
 			FlxG.resetState();
 		}
+		
+		#if !FLX_NO_RECORD
 		if (_game._replay.frameCount > 0)
 		{
 			_game._replayRequested = true;
 		}
+		#end
 	}
-		
+	
+	#if !FLX_NO_RECORD
 	/**
 	 * Stops the current replay.
 	 */
@@ -641,6 +647,7 @@ class FlxG
 		#end
 		return _game._replay.save();
 	}
+	#end
 	
 	/**
 	 * Request a reset of the current game state.
@@ -648,6 +655,12 @@ class FlxG
 	static public function resetState():Void
 	{
 		_game._requestedState = Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []);
+		#if !FLX_NO_DEBUG
+		if (Std.is(_game._requestedState, FlxSubState))
+		{
+			throw "You can't set FlxSubState class instance as the state for you game";
+		}
+		#end
 	}
 	
 	/**
@@ -1051,6 +1064,9 @@ class FlxG
 			{
 				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
 				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
+				
+				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
+				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
 				
 				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxG.TRANSPARENT);
 				
@@ -1775,9 +1791,12 @@ class FlxG
 				{
 					cam.update();
 				}
-				
-				cam._flashSprite.x = cam.x + cam._flashOffsetX;
-				cam._flashSprite.y = cam.y + cam._flashOffsetY;
+
+				if (cam.target == null) 
+				{
+					cam._flashSprite.x = cam.x + cam._flashOffsetX;
+					cam._flashSprite.y = cam.y + cam._flashOffsetY;
+				}
 				
 				cam._flashSprite.visible = cam.visible;
 			}

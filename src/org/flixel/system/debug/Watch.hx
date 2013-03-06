@@ -76,17 +76,27 @@ class Watch extends FlxWindow
 	 */
 	override public function destroy():Void
 	{
-		removeChild(_names);
-		_names = null;
-		removeChild(_values);
-		_values = null;
-		var i:Int = 0;
-		var l:Int = _watching.length;
-		while (i < l)
+		if (_names != null)
 		{
-			_watching[i++].destroy();
+			removeChild(_names);
 		}
-		_watching = null;
+		_names = null;
+		if (_values != null)
+		{
+			removeChild(_values);
+		}
+		_values = null;
+		if (_watching != null)
+		{
+			var i:Int = 0;
+			var l:Int = _watching.length;
+			while (i < l)
+			{
+				_watching[i++].destroy();
+			}
+			_watching = null;
+		}
+		
 		super.destroy();
 	}
 

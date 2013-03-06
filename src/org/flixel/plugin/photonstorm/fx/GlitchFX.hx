@@ -384,146 +384,95 @@ class GlitchSprite extends FlxSprite
 			
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
-			
-			if (simpleRenderSprite())
-			{	//Simple render
-				
-				// draw background
-				if (_bgAlpha > 0)
-				{
-					currDrawData[currIndex++] = _point.x + halfWidth;
-					currDrawData[currIndex++] = _point.y + halfHeight;
-					
-					currDrawData[currIndex++] = _frameID;
-					
-					currDrawData[currIndex++] = frameWidth;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = frameHeight;
-					
-					if (camera.isColored())
-					{
-						currDrawData[currIndex++] = _bgRed * camera.red; 
-						currDrawData[currIndex++] = _bgGreen * camera.green;
-						currDrawData[currIndex++] = _bgBlue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _bgRed; 
-						currDrawData[currIndex++] = _bgGreen;
-						currDrawData[currIndex++] = _bgBlue;
-						
-					}
-					
-					currDrawData[currIndex++] = _bgAlpha * alpha;
-					_tileSheetData.positionData[camera.ID] = currIndex;
-				}
-				
-				// draw lines
-				currDrawData = _imageTileSheetData.drawData[camera.ID];
-				currIndex = _imageTileSheetData.positionData[camera.ID];
-				
-				for (j in 0...(imageLines.length))
-				{
-					lineDef = imageLines[j];
-					
-					currDrawData[currIndex++] = _point.x + lineDef.x;
-					currDrawData[currIndex++] = _point.y + lineDef.y;
-					
-					currDrawData[currIndex++] = lineDef.tileID;
-					
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-					
-					if (useColor)
-					{
-						currDrawData[currIndex++] = onCamRed; 
-						currDrawData[currIndex++] = onCamGreen;
-						currDrawData[currIndex++] = onCamBlue;
-					}
-					
-					currDrawData[currIndex++] = alpha;
-				}
-				
-				_imageTileSheetData.positionData[camera.ID] = currIndex;
-			}
-			else
-			{	//Advanced render
+
+			var csx : Float = 1;
+			var ssy : Float = 0;
+			var ssx : Float = 0;
+			var csy : Float = 1;
+			var x1 : Float = 0;
+			var y1 : Float = 0;
+
+			if (!simpleRenderSprite ())
+			{
 				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
-				
-				_point.x += halfWidth;
-				_point.y += halfHeight;
-				
-				// draw background
-				if (_bgAlpha > 0)
-				{
-					currDrawData[currIndex++] = _point.x;
-					currDrawData[currIndex++] = _point.y;
-					
-					currDrawData[currIndex++] = _frameID;
-					
-					currDrawData[currIndex++] = cos * scale.x * frameWidth;
-					currDrawData[currIndex++] = -sin * scale.y * frameHeight;
-					currDrawData[currIndex++] = sin * scale.x * frameWidth;
-					currDrawData[currIndex++] = cos * scale.y * frameHeight;
-					
-					if (camera.isColored())
-					{
-						currDrawData[currIndex++] = _bgRed * camera.red; 
-						currDrawData[currIndex++] = _bgGreen * camera.green;
-						currDrawData[currIndex++] = _bgBlue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _bgRed; 
-						currDrawData[currIndex++] = _bgGreen;
-						currDrawData[currIndex++] = _bgBlue;
-					}
-					
-					currDrawData[currIndex++] = _bgAlpha * alpha;
-					_tileSheetData.positionData[camera.ID] = currIndex;
-				}
-				
-				// draw lines
-				currDrawData = _imageTileSheetData.drawData[camera.ID];
-				currIndex = _imageTileSheetData.positionData[camera.ID];
-				
-				for (j in 0...(imageLines.length))
-				{
-					lineDef = imageLines[j];
-					
-					var localX:Float = lineDef.x - halfWidth;
-					var localY:Float = lineDef.y - halfHeight;
-					
-					var relativeX:Float = (localX * cos * scale.x - localY * sin * scale.y);
-					var relativeY:Float = (localX * sin * scale.x + localY * cos * scale.y);
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = lineDef.tileID;
-					
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = -sin * scale.y;
-					currDrawData[currIndex++] = sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
-					
-					if (useColor)
-					{
-						currDrawData[currIndex++] = onCamRed; 
-						currDrawData[currIndex++] = onCamGreen;
-						currDrawData[currIndex++] = onCamBlue;
-					}
-					
-					currDrawData[currIndex++] = alpha;
-				}
-				
-				_imageTileSheetData.positionData[camera.ID] = currIndex;
+
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
+				x1 = halfWidth;
+				y1 = halfHeight;
 			}
+
+			_point.x += halfWidth;
+			_point.y += halfHeight;
+			
+			// draw background
+			if (_bgAlpha > 0)
+			{
+				currDrawData[currIndex++] = _point.x;
+				currDrawData[currIndex++] = _point.y;
+				
+				currDrawData[currIndex++] = _frameID;
+				
+				currDrawData[currIndex++] = csx * frameWidth;
+				currDrawData[currIndex++] = -ssy * frameHeight;
+				currDrawData[currIndex++] = ssx * frameWidth;
+				currDrawData[currIndex++] = csy * frameHeight;
+				
+				if (camera.isColored())
+				{
+					currDrawData[currIndex++] = _bgRed * camera.red;
+					currDrawData[currIndex++] = _bgGreen * camera.green;
+					currDrawData[currIndex++] = _bgBlue * camera.blue;
+				}
+				else
+				{
+					currDrawData[currIndex++] = _bgRed;
+					currDrawData[currIndex++] = _bgGreen;
+					currDrawData[currIndex++] = _bgBlue;
+				}
+				
+				currDrawData[currIndex++] = _bgAlpha * alpha;
+				_tileSheetData.positionData[camera.ID] = currIndex;
+			}
+
+			// draw lines
+			currDrawData = _imageTileSheetData.drawData[camera.ID];
+			currIndex = _imageTileSheetData.positionData[camera.ID];
+
+			for (j in 0...(imageLines.length))
+			{
+				lineDef = imageLines[j];
+				
+				var localX:Float = lineDef.x - x1;
+				var localY:Float = lineDef.y - y1;
+				
+				var relativeX:Float = (localX * csx - localY * ssy);
+				var relativeY:Float = (localX * ssx + localY * csy);
+				
+				currDrawData[currIndex++] = _point.x + relativeX;
+				currDrawData[currIndex++] = _point.y + relativeY;
+				
+				currDrawData[currIndex++] = lineDef.tileID;
+				
+				currDrawData[currIndex++] = csx;
+				currDrawData[currIndex++] = -ssy;
+				currDrawData[currIndex++] = ssx;
+				currDrawData[currIndex++] = csy;
+				
+				if (useColor)
+				{
+					currDrawData[currIndex++] = onCamRed;
+					currDrawData[currIndex++] = onCamGreen;
+					currDrawData[currIndex++] = onCamBlue;
+				}
+				
+				currDrawData[currIndex++] = alpha;
+			}
+			_imageTileSheetData.positionData[camera.ID] = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
 			

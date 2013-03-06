@@ -183,16 +183,30 @@ class FlxWindow extends Sprite
 		minSize = null;
 		maxSize = null;
 		_bounds = null;
-		removeChild(_shadow);
+		if (_shadow != null)
+		{
+			removeChild(_shadow);
+		}
 		_shadow = null;
-		removeChild(_background);
+		if (_background != null)
+		{
+			removeChild(_background);
+		}
 		_background = null;
-		removeChild(_header);
+		if (_header != null)
+		{
+			removeChild(_header);
+		}
 		_header = null;
-		removeChild(_title);
+		if (_title != null)
+		{
+			removeChild(_title);
+		}
 		_title = null;
 		if(_handle != null)
+		{
 			removeChild(_handle);
+		}
 		_handle = null;
 		_drag = null;
 	}

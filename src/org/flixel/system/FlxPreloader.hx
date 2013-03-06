@@ -289,7 +289,10 @@ class FlxPreloader extends NMEPreloader
 	private function destroy():Void
 	{
 		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-		removeChild(_buffer);
+		if (_buffer != null)	
+		{
+			removeChild(_buffer);
+		}
 		_buffer = null;
 		_bmpBar = null;
 		_text = null;
@@ -402,6 +405,7 @@ class FlxPreloader extends NMEPreloader
 		var LastDot:Int = home.lastIndexOf(".") - 1;
 		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
 		home = home.substring(domEnd, home.length);
+		home = home.split(":")[0];
 		return (home == "") ? LOCAL : home;
 	}
 	

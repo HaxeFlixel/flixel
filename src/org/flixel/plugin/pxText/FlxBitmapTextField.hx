@@ -240,178 +240,113 @@ class FlxBitmapTextField extends FlxSprite
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
 			#end
-			
-			if (simpleRenderSprite())
-			{	
-				if (_background)
-				{
-					currDrawData[currIndex++] = _point.x + _bgDrawData[1];
-					currDrawData[currIndex++] = _point.y + _bgDrawData[2];
-					
-					currDrawData[currIndex++] = _bgDrawData[0];
-					
-					currDrawData[currIndex++] = width;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = height;
-					
-					#if !js
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _bgDrawData[3] * camera.red; 
-						currDrawData[currIndex++] = _bgDrawData[4] * camera.green;
-						currDrawData[currIndex++] = _bgDrawData[5] * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _bgDrawData[3]; 
-						currDrawData[currIndex++] = _bgDrawData[4];
-						currDrawData[currIndex++] = _bgDrawData[5];
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-				}
-				
-				//Simple render
-				while (j < textLength)
-				{
-					currPosInArr = j * 6;
-					currTileID = _drawData[currPosInArr];
-					currTileX = _drawData[currPosInArr + 1];
-					currTileY = _drawData[currPosInArr + 2];
-					currTileRed = _drawData[currPosInArr + 3];
-					currTileGreen = _drawData[currPosInArr + 4];
-					currTileBlue = _drawData[currPosInArr + 5];
-					
-					currDrawData[currIndex++] = _point.x + currTileX;
-					currDrawData[currIndex++] = _point.y + currTileY;
-					
-					currDrawData[currIndex++] = currTileID;
-					
-					currDrawData[currIndex++] = _fontScale;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = _fontScale;
-					
-					#if !js
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = currTileRed * camera.red; 
-						currDrawData[currIndex++] = currTileGreen * camera.green;
-						currDrawData[currIndex++] = currTileBlue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = currTileRed; 
-						currDrawData[currIndex++] = currTileGreen;
-						currDrawData[currIndex++] = currTileBlue;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-					j++;
-				}
-			}
-			else
-			{	//Advanced render
+
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+			var x1:Float = 0;
+			var y1:Float = 0;
+
+			if (!simpleRenderSprite ())
+			{
 				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				if (_background)
-				{
-					currTileX = _bgDrawData[1];
-					currTileY = _bgDrawData[2];
-					
-					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = _bgDrawData[0];
-					
-					currDrawData[currIndex++] = cos * scale.x * width * _fontScale;
-					currDrawData[currIndex++] = -sin * scale.y * height * _fontScale;
-					currDrawData[currIndex++] = sin * scale.x * width * _fontScale;
-					currDrawData[currIndex++] = cos * scale.y * height * _fontScale;
-					
-					#if !js
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _bgDrawData[3] * camera.red; 
-						currDrawData[currIndex++] = _bgDrawData[4] * camera.green;
-						currDrawData[currIndex++] = _bgDrawData[5] * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _bgDrawData[3]; 
-						currDrawData[currIndex++] = _bgDrawData[4];
-						currDrawData[currIndex++] = _bgDrawData[5];
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-				}
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				
-				while (j < textLength)
+				x1 = (origin.x - _halfWidth);
+				y1 = (origin.y - _halfHeight);
+			}
+
+			if (_background)
+			{
+				currTileX = _bgDrawData[1] - x1;
+				currTileY = _bgDrawData[2] - y1;
+				
+				relativeX = (currTileX * csx - currTileY * ssy);
+				relativeY = (currTileX * ssx + currTileY * csy);
+				
+				currDrawData[currIndex++] = _point.x + relativeX;
+				currDrawData[currIndex++] = _point.y + relativeY;
+				
+				currDrawData[currIndex++] = _bgDrawData[0];
+				
+				currDrawData[currIndex++] = csx * width;
+				currDrawData[currIndex++] = -ssy * height;
+				currDrawData[currIndex++] = ssx * width;
+				currDrawData[currIndex++] = csy * height;
+				
+				#if !js
+				if (isColoredCamera)
 				{
-					currPosInArr = j * 6;
-					currTileID = _drawData[currPosInArr];
-					currTileX = _drawData[currPosInArr + 1];
-					currTileY = _drawData[currPosInArr + 2];
-					currTileRed = _drawData[currPosInArr + 3];
-					currTileGreen = _drawData[currPosInArr + 4];
-					currTileBlue = _drawData[currPosInArr + 5];
-					
-					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = currTileID;
-					
-					currDrawData[currIndex++] = cos * scale.x * _fontScale;
-					currDrawData[currIndex++] = -sin * scale.y * _fontScale;
-					currDrawData[currIndex++] = sin * scale.x * _fontScale;
-					currDrawData[currIndex++] = cos * scale.y * _fontScale;
-					
-					#if !js
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = currTileRed * camera.red; 
-						currDrawData[currIndex++] = currTileGreen * camera.green;
-						currDrawData[currIndex++] = currTileBlue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = currTileRed; 
-						currDrawData[currIndex++] = currTileGreen;
-						currDrawData[currIndex++] = currTileBlue;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-					j++;
+					currDrawData[currIndex++] = _bgDrawData[3] * camera.red;
+					currDrawData[currIndex++] = _bgDrawData[4] * camera.green;
+					currDrawData[currIndex++] = _bgDrawData[5] * camera.blue;
 				}
+				else
+				{
+					currDrawData[currIndex++] = _bgDrawData[3];
+					currDrawData[currIndex++] = _bgDrawData[4];
+					currDrawData[currIndex++] = _bgDrawData[5];
+				}
+				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
+			}
+
+			while (j < textLength)
+			{
+				currPosInArr = j * 6;
+				currTileID = _drawData[currPosInArr];
+				currTileX = _drawData[currPosInArr + 1] - x1;
+				currTileY = _drawData[currPosInArr + 2] - y1;
+				currTileRed = _drawData[currPosInArr + 3];
+				currTileGreen = _drawData[currPosInArr + 4];
+				currTileBlue = _drawData[currPosInArr + 5];
+				
+				relativeX = (currTileX * csx - currTileY * ssy);
+				relativeY = (currTileX * ssx + currTileY * csy);
+				
+				currDrawData[currIndex++] = _point.x + relativeX;
+				currDrawData[currIndex++] = _point.y + relativeY;
+				
+				currDrawData[currIndex++] = currTileID;
+				
+				currDrawData[currIndex++] = csx * _fontScale;
+				currDrawData[currIndex++] = -ssy * _fontScale;
+				currDrawData[currIndex++] = ssx * _fontScale;
+				currDrawData[currIndex++] = csy * _fontScale;
+				
+				#if !js
+				if (isColoredCamera)
+				{
+					currDrawData[currIndex++] = currTileRed * camera.red;
+					currDrawData[currIndex++] = currTileGreen * camera.green;
+					currDrawData[currIndex++] = currTileBlue * camera.blue;
+				}
+				else
+				{
+					currDrawData[currIndex++] = currTileRed;
+					currDrawData[currIndex++] = currTileGreen;
+					currDrawData[currIndex++] = currTileBlue;
+				}
+				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
+				j++;
 			}
 			
 			drawItem.position = currIndex;
@@ -695,8 +630,8 @@ class FlxBitmapTextField extends FlxSprite
 		origin.x = width * 0.5;
 		origin.y = height * 0.5;
 		
-		var halfWidth:Float = origin.x;
-		var halfHeight:Float = origin.y;
+		_halfWidth = origin.x;
+		_halfHeight = origin.y;
 		#end
 		
 		#if flash
@@ -731,8 +666,8 @@ class FlxBitmapTextField extends FlxSprite
 		if (_background)
 		{
 			_bgDrawData.push(_font.bgTileID(nodeName));		// tile_ID
-			_bgDrawData.push( -halfWidth);
-			_bgDrawData.push( -halfHeight);
+			_bgDrawData.push( -_halfWidth);
+			_bgDrawData.push( -_halfHeight);
 			
 			#if !flash
 			var colorMultiplier:Float = 1 / (255 * 255);
@@ -802,7 +737,7 @@ class FlxBitmapTextField extends FlxSprite
 							#if flash
 							_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 							#else
-							_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+							_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - _halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 							#end
 						}
 					}
@@ -814,13 +749,13 @@ class FlxBitmapTextField extends FlxSprite
 					#if flash
 					_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 					#else
-					_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale);
+					_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - _halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 					#end
 				}
 				#if flash
 				_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
-				_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - halfHeight, _letterSpacing, _fontScale, _useTextColor);
+				_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - _halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale, _useTextColor);
 				#end
 				row++;
 			}

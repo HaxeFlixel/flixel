@@ -512,187 +512,120 @@ class StarSprite extends FlxSprite
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
-			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
+			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x));
+			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y));
 			
 			#if js
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
 			#end
-			
-			if (simpleRenderSprite())
-			{	//Simple render
-				
-				_point.x += halfWidth;
-				_point.y += halfHeight;
-				
-				// draw background
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
-				
-				currDrawData[currIndex++] = _frameID;
-				
-				currDrawData[currIndex++] = width;
-				currDrawData[currIndex++] = 0;
-				currDrawData[currIndex++] = 0;
-				currDrawData[currIndex++] = height;
-				
-				#if !js
-				if (isColoredCamera)
-				{
-					currDrawData[currIndex++] = bgRed * camera.red; 
-					currDrawData[currIndex++] = bgGreen * camera.green;
-					currDrawData[currIndex++] = bgBlue * camera.blue;
-				}
-				else
-				{
-					currDrawData[currIndex++] = bgRed; 
-					currDrawData[currIndex++] = bgGreen;
-					currDrawData[currIndex++] = bgBlue;
-				}
-				#end
-				
-				currDrawData[currIndex++] = bgAlpha * alpha;
-				
-				// draw stars
-				for (j in 0...(starData.length))
-				{
-					starDef = starData[j];
-					
-					currDrawData[currIndex++] = _point.x + starDef.x + 0.5;
-					currDrawData[currIndex++] = _point.y + starDef.y + 0.5;
-					
-					currDrawData[currIndex++] = _frameID;
-					
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-					
-					starRed = starDef.red;
-					starGreen = starDef.green;
-					starBlue = starDef.blue;
-					
-				#if !js
-					if (isColoredCamera)
-					{
-						starRed *= camera.red;
-						starGreen *= camera.green;
-						starBlue *= camera.blue;
-					}
-					
-					#if !neko
-					if (_color < 0xffffff)
-					#else
-					if (_color.rgb < 0xffffff)
-					#end
-					{
-						starRed *= _red;
-						starGreen *= _green;
-						starBlue *= _blue;
-					}
-					
-					currDrawData[currIndex++] = starRed; 
-					currDrawData[currIndex++] = starGreen;
-					currDrawData[currIndex++] = starBlue;
-				#end	
-					
-					currDrawData[currIndex++] = alpha * starDef.alpha;
-				}
-				
-				drawItem.position = currIndex;
-			}
-			else
-			{	//Advanced render
+
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+			var x1 : Float = 0.5; // yes, 0.5
+			var y1 : Float = 0.5; // yes, 0.5
+
+			if (!simpleRenderSprite ())
+			{
 				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				_point.x += halfWidth;
-				_point.y += halfHeight;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
+				x1 = 0.0; // yes, zero
+				y1 = 0.0; // yes, zero
+			}
+
+			_point.x += halfWidth;
+			_point.y += halfHeight;
+			
+			// draw background
+			currDrawData[currIndex++] = _point.x;
+			currDrawData[currIndex++] = _point.y;
+			
+			currDrawData[currIndex++] = _frameID;
+			
+			currDrawData[currIndex++] = csx * width;
+			currDrawData[currIndex++] = -ssy * height;
+			currDrawData[currIndex++] = ssx * width;
+			currDrawData[currIndex++] = csy * height;
+			
+			#if !js
+			if (isColoredCamera)
+			{
+				currDrawData[currIndex++] = bgRed * camera.red;
+				currDrawData[currIndex++] = bgGreen * camera.green;
+				currDrawData[currIndex++] = bgBlue * camera.blue;
+			}
+			else
+			{
+				currDrawData[currIndex++] = bgRed;
+				currDrawData[currIndex++] = bgGreen;
+				currDrawData[currIndex++] = bgBlue;
+			}
+			#end
+			
+			currDrawData[currIndex++] = bgAlpha * alpha;
+
+			// draw stars
+			for (j in 0...(starData.length))
+			{
+				starDef = starData[j];
 				
-				// draw background
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
+				var localX:Float = starDef.x;
+				var localY:Float = starDef.y;
+				
+				var relativeX:Float = (localX * csx - localY * ssy);
+				var relativeY:Float = (localX * ssx + localY * csy);
+				
+				currDrawData[currIndex++] = _point.x + relativeX + x1;
+				currDrawData[currIndex++] = _point.y + relativeY + y1;
 				
 				currDrawData[currIndex++] = _frameID;
 				
-				currDrawData[currIndex++] = cos * scale.x * width;
-				currDrawData[currIndex++] = -sin * scale.y * height;
-				currDrawData[currIndex++] = sin * scale.x * width;
-				currDrawData[currIndex++] = cos * scale.y * height;
+				currDrawData[currIndex++] = csx;
+				currDrawData[currIndex++] = -ssy;
+				currDrawData[currIndex++] = ssx;
+				currDrawData[currIndex++] = csy;
+			
+				starRed = starDef.red;
+				starGreen = starDef.green;
+				starBlue = starDef.blue;
 				
-				#if !js
+			#if !js
 				if (isColoredCamera)
 				{
-					currDrawData[currIndex++] = bgRed * camera.red; 
-					currDrawData[currIndex++] = bgGreen * camera.green;
-					currDrawData[currIndex++] = bgBlue * camera.blue;
+					starRed *= camera.red;
+					starGreen *= camera.green;
+					starBlue *= camera.blue;
 				}
-				else
-				{
-					currDrawData[currIndex++] = bgRed; 
-					currDrawData[currIndex++] = bgGreen;
-					currDrawData[currIndex++] = bgBlue;
-				}
+				
+				#if !neko
+				if (_color < 0xffffff)
+				#else
+				if (_color.rgb < 0xffffff)
 				#end
-				
-				currDrawData[currIndex++] = bgAlpha * alpha;
-				
-				// draw stars
-				for (j in 0...(starData.length))
 				{
-					starDef = starData[j];
-					
-					var localX:Float = starDef.x;
-					var localY:Float = starDef.y;
-					
-					var relativeX:Float = (localX * cos * scale.x - localY * sin * scale.y);
-					var relativeY:Float = (localX * sin * scale.x + localY * cos * scale.y);
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = _frameID;
-					
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = -sin * scale.y;
-					currDrawData[currIndex++] = sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
-				
-				#if !js
-					starRed = starDef.red;
-					starGreen = starDef.green;
-					starBlue = starDef.blue;
-					
-					if (isColoredCamera)
-					{
-						starRed *= camera.red;
-						starGreen *= camera.green;
-						starBlue *= camera.blue;
-					}
-					
-					#if !neko
-					if (_color < 0xffffff)
-					#else
-					if (_color.rgb < 0xffffff)
-					#end
-					{
-						starRed *= _red;
-						starGreen *= _green;
-						starBlue *= _blue;
-					}
-					
-					currDrawData[currIndex++] = starRed; 
-					currDrawData[currIndex++] = starGreen;
-					currDrawData[currIndex++] = starBlue;
-				#end
-					
-					currDrawData[currIndex++] = alpha * starDef.alpha;
+					starRed *= _red;
+					starGreen *= _green;
+					starBlue *= _blue;
 				}
 				
-				drawItem.position = currIndex;
+				currDrawData[currIndex++] = starRed;
+				currDrawData[currIndex++] = starGreen;
+				currDrawData[currIndex++] = starBlue;
+			#end
+				
+				currDrawData[currIndex++] = alpha * starDef.alpha;
 			}
+			
+			drawItem.position = currIndex;
+
 			FlxBasic._VISIBLECOUNT++;
 			
 			#if !FLX_NO_DEBUG

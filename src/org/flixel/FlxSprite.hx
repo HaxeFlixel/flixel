@@ -6,6 +6,8 @@ import nme.display.BitmapInt32;
 import nme.display.BlendMode;
 import nme.display.Graphics;
 import nme.display.Tilesheet;
+import nme.filters.BitmapFilter;
+import nme.filters.GlowFilter;
 import nme.geom.ColorTransform;
 import nme.geom.Matrix;
 import nme.geom.Point;
@@ -194,6 +196,11 @@ class FlxSprite extends FlxObject
 	 */
 	private var _matrix:Matrix;
 	
+	/**
+	 * An array that contains each filter object currently associated with this sprite.
+	 */
+	public var filters:Array<BitmapFilter>;
+	
 	#if !flash
 	private var _frameID:Int;
 	private var _red:Float;
@@ -202,6 +209,11 @@ class FlxSprite extends FlxObject
 	
 	private var _halfWidth:Float;
 	private var _halfHeight:Float;
+
+	/**
+	 * Internal, additional rotation for sprite. Used in FlxSpriteTex.
+	 */
+	private var _additionalAngle : Float;
 	#end
 	
 	/**
@@ -255,6 +267,7 @@ class FlxSprite extends FlxObject
 		_blue = 1.0;
 		
 		_frameID = 0;
+		_additionalAngle = 0.0;
 		#end
 		
 		if (SimpleGraphic == null)
@@ -263,6 +276,7 @@ class FlxSprite extends FlxObject
 		}
 		loadGraphic(SimpleGraphic);
 	}
+
 	
 	/**
 	 * Clean up memory.
@@ -704,134 +718,95 @@ class FlxSprite extends FlxObject
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
-			if (simpleRenderSprite())
-			{	//Simple render
-				#if flash
+#if flash
+			if (simpleRenderSprite ())
+			{
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
 				
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
-				#else
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
-				
-				currDrawData[currIndex++] = _frameID;
-				
-				// handle reversed sprites
-				if ((_flipped != 0) && (facing == FlxObject.LEFT))
-				{
-					currDrawData[currIndex++] = -1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-				}
-				else
-				{
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-				}
-				#if !js
-				if (isColored || isColoredCamera)
-				{
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
-				}
-				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
-				
-				drawItem.position = currIndex;
-				#end
 			}
 			else
-			{	//Advanced render
-				#if flash
+			{
 				_matrix.identity();
 				_matrix.translate( -origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * FlxG.RAD);	
+					_matrix.rotate(angle * FlxG.RAD);
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
-				#else
-				radians = -angle * FlxG.RAD;
+			}
+#else
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+			var x2:Float = 0.0;
+			var y2:Float = 0.0;
+
+			if (!simpleRenderSprite ())
+			{
+				radians = -(angle + _additionalAngle) * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				// TODO: optimize this
-				var csx:Float = cos * scale.x;
-				var ssy:Float = sin * scale.y;
-				var ssx:Float = sin * scale.x;
-				var csy:Float = cos * scale.y;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				
 				var x1:Float = (origin.x - _halfWidth);
 				var y1:Float = (origin.y - _halfHeight);
-				var x2:Float = x1 * csx + y1 * ssy;
-				var y2:Float = -x1 * ssx + y1 * csy;
-				
-				currDrawData[currIndex++] = _point.x - x2;
-				currDrawData[currIndex++] = _point.y - y2;
-				
-				currDrawData[currIndex++] = _frameID;
-				
-				if ((_flipped != 0) && (facing == FlxObject.LEFT))
+				x2 = x1 * csx + y1 * ssy;
+				y2 = -x1 * ssx + y1 * csy;
+			}
+
+			currDrawData[currIndex++] = _point.x - x2;
+			currDrawData[currIndex++] = _point.y - y2;
+			
+			currDrawData[currIndex++] = _frameID;
+
+			if ((_flipped != 0) && (facing == FlxObject.LEFT))
+			{
+				currDrawData[currIndex++] = -csx;
+				currDrawData[currIndex++] = ssy;
+				currDrawData[currIndex++] = ssx;
+				currDrawData[currIndex++] = csy;
+			}
+			else
+			{
+				currDrawData[currIndex++] = csx;
+				currDrawData[currIndex++] = ssy;
+				currDrawData[currIndex++] = -ssx;
+				currDrawData[currIndex++] = csy;
+			}
+			#if !js
+			if (isColored || isColoredCamera)
+			{
+				if (isColoredCamera)
 				{
-					currDrawData[currIndex++] = -csx;
-					currDrawData[currIndex++] = ssy;
-					currDrawData[currIndex++] = -ssx;
-					currDrawData[currIndex++] = csy;
+					currDrawData[currIndex++] = _red * camera.red; 
+					currDrawData[currIndex++] = _green * camera.green;
+					currDrawData[currIndex++] = _blue * camera.blue;
 				}
 				else
 				{
-					currDrawData[currIndex++] = csx;
-					currDrawData[currIndex++] = ssy;
-					currDrawData[currIndex++] = -ssx;
-					currDrawData[currIndex++] = csy;
+					currDrawData[currIndex++] = _red; 
+					currDrawData[currIndex++] = _green;
+					currDrawData[currIndex++] = _blue;
 				}
-				#if !js
-				if (isColored || isColoredCamera)
-				{
-					if (isColoredCamera)
-					{
-						currDrawData[currIndex++] = _red * camera.red; 
-						currDrawData[currIndex++] = _green * camera.green;
-						currDrawData[currIndex++] = _blue * camera.blue;
-					}
-					else
-					{
-						currDrawData[currIndex++] = _red; 
-						currDrawData[currIndex++] = _green;
-						currDrawData[currIndex++] = _blue;
-					}
-				}
-				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
-				drawItem.position = currIndex;
-				#end
 			}
+			currDrawData[currIndex++] = alpha;
+			#else
+			if (useAlpha)
+			{
+				currDrawData[currIndex++] = alpha;
+			}
+			#end
+			drawItem.position = currIndex;
+#end
 			FlxBasic._VISIBLECOUNT++;
 			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
@@ -968,7 +943,11 @@ class FlxSprite extends FlxObject
 		if (bakedRotation > 0)
 		{
 			var oldIndex:Int = _curIndex;
-			var angleHelper:Int = Math.floor(angle % 360);
+#if flash
+			var angleHelper:Int = Math.floor((angle) % 360);
+#else
+			var angleHelper:Int = Math.floor((angle + _additionalAngle) % 360);
+#end
 			
 			#if flash
 			if (angleHelper < 0)
@@ -1495,7 +1474,11 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - offset.y;
 		
 		var result:Bool = false;
-		if (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
+		var notRotated = angle == 0.0;
+#if !flash
+		notRotated = notRotated && _additionalAngle != 0.0;
+#end
+		if ((notRotated || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
 		{
 			result = ((_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height));
 		}
@@ -1667,8 +1650,134 @@ class FlxSprite extends FlxObject
 		{
 			_callback(((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex);
 		}
+		
 		dirty = false;
+		
+		// Updates the filter effects on framePixels.
+		if (filters != null)
+		{
+			for (filter in filters) 
+			{
+				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
+			}
+		}
 	}
+	
+	/**
+	 * Adds a filter to this sprite.
+	 * Note that for effects like outer glow, or drop shadow, updating the sprite clipping
+	 * area may be required, use the argument "updateSize" for that effect.
+	 * 
+	 * @param	filter		The filter to be added.
+	 * @param	updateSize	Filters like outer glow or drop shadow may be clipped by the sprite.
+	 * 						Use this to increase the visible sprite area, for example: new FlxPoint(10,10) will
+	 * 						extend the sprite clipping area by 10 pixels of width and height.
+	 * @param	permanent	If permanent, the effect cannot be removed and will be visible
+	 * 						on all (non-unique) sprites sharing this graphic. 
+	 *
+	 */
+	public function addFilter(filter:BitmapFilter, updateSize:FlxPoint = null, permanent:Bool = false)
+	{	
+		// Note: setClipping() makes the sprite unique and will not work with permanent filters,
+		// make sure the original graphics have enough room (alpha zero pixels) in that case.
+		if (updateSize != null && permanent == false)
+		{
+			setClipping(frameWidth + Std.int(updateSize.x) , frameHeight + Std.int(updateSize.y) );
+		}
+		
+		if (!permanent)
+		{
+			if (filters == null) 
+			{
+				filters = new Array<BitmapFilter>();
+			}
+			filters.push(filter);
+		}
+		else 
+		{
+			_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
+		}
+		
+		#if !flash
+		_calculatedPixelsIndex = -1;
+		#end
+		
+		updateAtlasInfo(true);
+		
+		drawFrame(true);
+	}
+	
+	/**
+	 * Sets this sprite clipping width and height, the current graphic is centered
+	 * at the middle.
+	 * 
+	 * @param	width	The new sprite width.
+	 * @param	height	The new sprite height.
+	 */
+	public function setClipping(width:Int, height:Int)
+	{
+		var tempSpr:FlxSprite = new FlxSprite(0, 0, _pixels);
+		var diffSize:FlxPoint = new FlxPoint(width - frameWidth, height - frameHeight);
+		#if neko
+		makeGraphic(width, height, {rgb: 0x0, a: 0x0});
+		#else 
+		makeGraphic(width, height, 0x0);
+		#end
+		
+		stamp(tempSpr, Std.int(diffSize.x / 2), Std.int(diffSize.y / 2));
+		
+		this.x -= diffSize.x * 0.5;
+		this.y -= diffSize.y * 0.5;
+		
+		tempSpr.destroy();
+	}
+	
+	/**
+	 * Removes a filter from the sprite.
+	 * 
+	 * @param	filter	The filter to be removed.
+	 */
+	public function removeFilter(filter:BitmapFilter)
+	{
+		if(filters == null || filter == null)
+		{
+			return;
+		}
+		
+		filters.remove(filter);
+		
+		drawFrame(true);
+		
+		if (filters.length == 0)
+		{
+			filters = null;
+		}
+	}
+	
+	/**
+	 * Removes all filters from the sprite.
+	 */
+	public function removeAllFilters()
+	{
+		if (filters == null) return;
+		
+		while (filters.length != 0) 
+		{
+			filters.pop();
+		}
+		
+		drawFrame(true);
+		
+		#if !flash
+		_calculatedPixelsIndex = -1;
+		#end
+		
+		updateAtlasInfo(true);
+		
+		filters = null;
+	}
+	
+	
 	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
@@ -1702,7 +1811,7 @@ class FlxSprite extends FlxObject
 		#if flash
 		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null));
 		#else
-		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+		return (((angle == 0 && _additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
 	}
 	

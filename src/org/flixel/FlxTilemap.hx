@@ -188,19 +188,29 @@ class FlxTilemap extends FlxObject
 		_flashRect = null;
 		_tiles = null;
 		var i:Int = 0;
-		var l:Int = _tileObjects.length;
-		for (i in 0...l)
+		var l:Int;
+		
+		if (_tileObjects != null)
 		{
-			_tileObjects[i].destroy();
+			l = _tileObjects.length;
+			for (i in 0...l)
+			{
+				_tileObjects[i].destroy();
+			}
+			_tileObjects = null;
 		}
-		_tileObjects = null;
-		i = 0;
-		l = _buffers.length;
-		for (i in 0...l)
+		
+		if (_buffers != null)
 		{
-			_buffers[i].destroy();
+			i = 0;
+			l = _buffers.length;
+			for (i in 0...l)
+			{
+				_buffers[i].destroy();
+			}
+			_buffers = null;
 		}
-		_buffers = null;
+		
 		_data = null;
 		#if flash
 		_rects = null;

@@ -1,8 +1,10 @@
 package org.flixel;
+import org.flixel.FlxPoint;
 
 import nme.Assets;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
+import nme.filters.BitmapFilter;
 import nme.geom.Point;
 import nme.text.TextField;
 import nme.text.TextFormat;
@@ -529,7 +531,38 @@ class FlxText extends FlxSprite
 			_halfHeight = origin.y;
 		}
 		#end
+		
+		dirty = false;
+		
+		// Updates the filter effects on framePixels.
+		if (filters != null)
+		{
+			for (filter in filters) 
+			{
+				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
+			}
+		}
 	}
+	
+	/**
+	 * Adds a bitmap filter to the textField.
+	 * UpdateSize does not work effectively for FlxText, see FlxText setClipping() for tips on how 
+	 * to increase the FlxText render area.
+	 */
+	override public function addFilter(filter:BitmapFilter, updateSize:FlxPoint = null, permanent:Bool = false)
+	{
+		super.addFilter(filter, null, false);
+	}
+	
+	/**
+	 * Set clipping does not work properly for FlxText, however the size of the text rendering 
+	 * can be increased in two ways:
+	 * Horizontally - set alignment to "center" and increase the sprite width.
+	 * Vertically   - add newlines ('\n') to the beggining and end of the text.
+	 */
+	override public function setClipping(width:Int, height:Int):Dynamic 
+	{}
+
 	
 	/**
 	 * A helper function for updating the <code>TextField</code> that we use for rendering.

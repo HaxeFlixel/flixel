@@ -10,6 +10,9 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
+#if !FLX_NO_MOUSE
+import nme.ui.Mouse;
+#end
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.system.debug.Log;
@@ -141,21 +144,36 @@ class FlxDebugger extends Sprite
 	public function destroy():Void
 	{
 		_screen = null;
-		removeChild(log);
-		log.destroy();
-		log = null;
-		removeChild(watch);
-		watch.destroy();
-		watch = null;
-		removeChild(perf);
-		perf.destroy();
-		perf = null;
-		removeChild(vcr);
-		vcr.destroy();
-		vcr = null;
-		removeChild(vis);
-		vis.destroy();
-		vis = null;
+		if (log != null)
+		{
+			removeChild(log);
+			log.destroy();
+			log = null;
+		}
+		if (watch != null)
+		{
+			removeChild(watch);
+			watch.destroy();
+			watch = null;
+		}
+		if (perf != null)
+		{
+			removeChild(perf);
+			perf.destroy();
+			perf = null;
+		}
+		if (vcr != null)
+		{
+			removeChild(vcr);
+			vcr.destroy();
+			vcr = null;
+		}
+		if (vis != null)
+		{
+			removeChild(vis);
+			vis.destroy();
+			vis = null;
+		}
 		
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
@@ -168,6 +186,9 @@ class FlxDebugger extends Sprite
 	private function onMouseOver(E:MouseEvent = null):Void
 	{
 		hasMouse = true;
+		#if !FLX_NO_MOUSE
+		Mouse.show();
+		#end
 	}
 	
 	/**
@@ -177,6 +198,10 @@ class FlxDebugger extends Sprite
 	private function onMouseOut(E:MouseEvent = null):Void
 	{
 		hasMouse = false;
+		#if !FLX_NO_MOUSE
+		if (!FlxG.mouse.useSystemCursor && !FlxG._game._debugger.vcr.paused)
+			Mouse.hide();
+		#end
 	}
 	
 	/**

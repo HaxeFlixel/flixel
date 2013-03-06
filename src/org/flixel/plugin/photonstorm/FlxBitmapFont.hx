@@ -385,85 +385,65 @@ class FlxBitmapFont extends FlxSprite
 				blueMult = _blue * camera.blue;
 			}
 			#end
+
+			var x1:Float = 0;
+			var y1:Float = 0;
 			
-			if (simpleRenderSprite())
-			{	//Simple render
-				while (j < textLength)
-				{
-					currPosInArr = j * 3;
-					currTileID = points[currPosInArr];
-					currTileX = points[currPosInArr + 1];
-					currTileY = points[currPosInArr + 2];
-					
-					currDrawData[currIndex++] = (_point.x) + currTileX;
-					currDrawData[currIndex++] = (_point.y) + currTileY;
-					
-					currDrawData[currIndex++] = currTileID;
-					
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-					
-					#if !js
-					if (isColored || isColoredCamera)
-					{
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-					j++;
-				}
-			}
-			else
-			{	//Advanced render
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+
+			if (!simpleRenderSprite ())
+			{
 				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				while (j < textLength)
-				{
-					currPosInArr = j * 3;
-					currTileID = points[currPosInArr];
-					currTileX = points[currPosInArr + 1];
-					currTileY = points[currPosInArr + 2];
-					
-					relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-					relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
-					
-					currDrawData[currIndex++] = (_point.x) + relativeX;
-					currDrawData[currIndex++] = (_point.y) + relativeY;
-					
-					currDrawData[currIndex++] = currTileID;
+				x1 = (origin.x - _halfWidth);
+				y1 = (origin.y - _halfHeight);
 				
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] =  -sin * scale.y;
-					currDrawData[currIndex++] = sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
-					
-					#if !js
-					if (isColored || isColoredCamera)
-					{
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
-					}
-					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
-					j++;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
+			}
+
+			while (j < textLength)
+			{
+				currPosInArr = j * 3;
+				currTileID = points[currPosInArr];
+				currTileX = points[currPosInArr + 1] - x1;
+				currTileY = points[currPosInArr + 2] - y1;
+
+				relativeX = (currTileX * csx - currTileY * ssy);
+				relativeY = (currTileX * ssx + currTileY * csy);
+				
+				currDrawData[currIndex++] = (_point.x) + relativeX;
+				currDrawData[currIndex++] = (_point.y) + relativeY;
+				
+				currDrawData[currIndex++] = currTileID;
+				
+				currDrawData[currIndex++] = csx;
+				currDrawData[currIndex++] =  -ssy;
+				currDrawData[currIndex++] = ssx;
+				currDrawData[currIndex++] = csy;
+
+				#if !js
+				if (isColored || isColoredCamera)
+				{
+					currDrawData[currIndex++] = redMult;
+					currDrawData[currIndex++] = greenMult;
+					currDrawData[currIndex++] = blueMult;
 				}
+				currDrawData[currIndex++] = alpha;
+				#else
+				if (useAlpha)
+				{
+					currDrawData[currIndex++] = alpha;
+				}
+				#end
+				j++;
 			}
 			
 			drawItem.position = currIndex;
@@ -687,6 +667,8 @@ class FlxBitmapFont extends FlxSprite
 	#else
 		width = frameWidth = _textWidth;
 		height = frameHeight = _textHeight;
+		_halfWidth = 0.5 * width;
+		_halfHeight = 0.5 * height;
 		frames = 1;
 		centerOffsets();
 	#end

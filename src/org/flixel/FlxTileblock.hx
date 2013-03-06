@@ -135,8 +135,8 @@ class FlxTileblock extends FlxSprite
 					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frameIDs.length);
 					_tileIndices.push(tileIndex);
 					_tileData.push(_framesData.frameIDs[tileIndex]);
-					_tileData.push(destinationX - origin.x + 0.5 * _tileWidth);
-					_tileData.push(destinationY - origin.y + 0.5 * _tileHeight);
+					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);
+					_tileData.push(destinationY - _halfHeight + 0.5 * _tileHeight);
 					#end
 				}
 				
@@ -246,85 +246,62 @@ class FlxTileblock extends FlxSprite
 			
 			if (_tileData != null)
 			{
-				if (simpleRenderSprite())
-				{	//Simple render
-					while (j < numTiles)
-					{
-						currPosInArr = j * 3;
-						currTileID = _tileData[currPosInArr];
-						currTileX = _tileData[currPosInArr + 1];
-						currTileY = _tileData[currPosInArr + 2];
-						
-						currDrawData[currIndex++] = (_point.x) + currTileX;
-						currDrawData[currIndex++] = (_point.y) + currTileY;
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = 1;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 1;
-						
-						#if !js
-						if (isColored || isColoredCamera)
-						{
-							currDrawData[currIndex++] = redMult; 
-							currDrawData[currIndex++] = greenMult;
-							currDrawData[currIndex++] = blueMult;
-						}
-						currDrawData[currIndex++] = alpha;
-						#else
-						if (useAlpha)
-						{
-							currDrawData[currIndex++] = alpha;
-						}
-						#end
-						j++;
-					}
-				}
-				else
-				{	
-					//Advanced render
+				var csx : Float = 1;
+				var ssy : Float = 0;
+				var ssx : Float = 0;
+				var csy : Float = 1;
+				var x1 : Float = 0;
+				var y1 : Float = 0;
+
+				if (!simpleRenderSprite ())
+				{
 					radians = angle * FlxG.RAD;
 					cos = Math.cos(radians);
 					sin = Math.sin(radians);
 					
-					while (j < numTiles)
+					csx = cos * scale.x;
+					ssy = sin * scale.y;
+					ssx = sin * scale.x;
+					csy = cos * scale.y;
+					
+					x1 = (origin.x - _halfWidth);
+					y1 = (origin.y - _halfHeight);
+				}
+
+				while (j < numTiles)
+				{
+					currPosInArr = j * 3;
+					currTileID = _tileData[currPosInArr];
+					currTileX = _tileData[currPosInArr + 1] + x1;
+					currTileY = _tileData[currPosInArr + 2] + y1;
+					relativeX = (currTileX * csx - currTileY * ssy);
+					relativeY = (currTileX * ssx + currTileY * csy);
+					
+					currDrawData[currIndex++] = (_point.x) + relativeX;
+					currDrawData[currIndex++] = (_point.y) + relativeY;
+					currDrawData[currIndex++] = currTileID;
+
+					currDrawData[currIndex++] = csx;
+					currDrawData[currIndex++] = -ssy;
+					currDrawData[currIndex++] = ssx;
+					currDrawData[currIndex++] = csy;
+
+					#if !js
+					if (isColored || isColoredCamera)
 					{
-						currPosInArr = j * 3;
-						currTileID = _tileData[currPosInArr];
-						currTileX = _tileData[currPosInArr + 1];
-						currTileY = _tileData[currPosInArr + 2];
-						
-						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
-						
-						currDrawData[currIndex++] = (_point.x) + relativeX;
-						currDrawData[currIndex++] = (_point.y) + relativeY;
-						
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = cos * scale.x;
-						currDrawData[currIndex++] = -sin * scale.y;
-						currDrawData[currIndex++] = sin * scale.x;
-						currDrawData[currIndex++] = cos * scale.y;
-						
-						#if !js
-						if (isColored || isColoredCamera)
-						{
-							currDrawData[currIndex++] = redMult; 
-							currDrawData[currIndex++] = greenMult;
-							currDrawData[currIndex++] = blueMult;
-						}
-						currDrawData[currIndex++] = alpha;
-						#else
-						if (useAlpha)
-						{
-							currDrawData[currIndex++] = alpha;
-						}
-						#end
-						
-						j++;
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
+					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
+					
+					j++;
 				}
 				
 				drawItem.position = currIndex;

@@ -249,10 +249,12 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 				}
 			}
 		}
+		#if !FLX_NO_RECORD
 		if (FlxG._game._replaying)
 		{
 			return;
 		}
+		#end
 		
 		var object:FlxMapObject = _map[FlashEvent.keyCode];
 		if(object == null) return;
@@ -267,12 +269,12 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 	 */
 	private function onKeyDown(FlashEvent:KeyboardEvent):Void
 	{
+		#if !FLX_NO_RECORD
 		#if !FLX_NO_DEBUG
 		if (FlxG._game._debuggerUp && FlxG._game._debugger.watch.editing)
 		{
 			return;
 		}
-
 		if(FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlxG._game._debugger == null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
 		#else
 		if(FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
@@ -301,6 +303,8 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 			}
 			return;
 		}
+		#end
+		
 		handleKeyDown(FlashEvent);
 	}
 	

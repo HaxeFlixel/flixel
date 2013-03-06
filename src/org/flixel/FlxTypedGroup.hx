@@ -47,6 +47,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Helper for sort.
 	 */
 	private var _sortOrder:Int;
+	
+	public var autoReviveMembers:Bool;
 
 	/**
 	 * Constructor
@@ -59,6 +61,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		maxSize = Std.int(Math.abs(MaxSize));
 		_marker = 0;
 		_sortIndex = null;
+		autoReviveMembers = false;
 	}
 	
 	/**
@@ -666,21 +669,17 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Revives the group itself and all of it's members.
 	 */
-	public function reviveWithMembers():Void
+	override public function revive():Void
 	{
-		revive();
-		var basic:T;
-		var i:Int = 0;
-		while (i < length)
+		super.revive();
+		if (autoReviveMembers)
 		{
-			basic = members[i++];
-			if ((basic != null) && !basic.exists)
+			var basic:T;
+			var i:Int = 0;
+			while (i < length)
 			{
-				if (Std.is(basic, FlxTypedGroup))
-				{
-					(cast basic).reviveWithMembers();
-				}
-				else
+				basic = members[i++];
+				if ((basic != null) && !basic.exists)
 				{
 					basic.revive();
 				}

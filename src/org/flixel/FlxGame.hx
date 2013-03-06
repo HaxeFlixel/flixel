@@ -133,11 +133,12 @@ class FlxGame extends Sprite
 	 * A handy boolean that keeps track of whether the debugger exists and is currently visible.
 	 */
 	public var _debuggerUp:Bool;
+	#end
+	
+	#if !FLX_NO_RECORD
 	/**
 	 * Container for a game replay object.
 	 */
-	#end
-	
 	public var _replay:FlxReplay;
 	/**
 	 * Flag for whether a playback of a recording was requested.
@@ -168,6 +169,7 @@ class FlxGame extends Sprite
 	 * This function, if set, is triggered when the callback stops playing.
 	 */
 	public var _replayCallback:Void->Void;
+	#end
 	
 	/**
 	 * Instantiate a new game object.
@@ -205,12 +207,14 @@ class FlxGame extends Sprite
 		_debuggerUp = false;
 		#end
 		
+		#if !FLX_NO_RECORD
 		//replay data
 		_replay = new FlxReplay();
 		_replayRequested = false;
 		_recordingRequested = false;
 		_replaying = false;
 		_recording = false;
+		#end
 		
 		//then get ready to create the game object for real
 		_iState = InitialState;
@@ -340,8 +344,19 @@ class FlxGame extends Sprite
 	private inline function resetGame():Void
 	{
 		_requestedState = Type.createInstance(_iState, []);
+		
+		#if !FLX_NO_DEBUG
+		if (Std.is(_requestedState, FlxSubState))
+		{
+			throw "You can't set FlxSubState class instance as the state for you game";
+		}
+		#end
+		
+		#if !FLX_NO_RECORD
 		_replayTimer = 0;
 		_replayCancelKeys = null;
+		#end
+		
 		FlxG.reset();
 	}
 
@@ -403,6 +418,8 @@ class FlxGame extends Sprite
 			resetGame();
 			_requestedReset = false;
 		}
+		
+		#if !FLX_NO_RECORD
 		//handle replay-related requests
 		if (_recordingRequested)
 		{
@@ -425,6 +442,7 @@ class FlxGame extends Sprite
 			#end
 			_replaying = true;
 		}
+		#end
 		
 		//handle state switching requests
 		if (_state != _requestedState)
@@ -434,6 +452,8 @@ class FlxGame extends Sprite
 		
 		//finally actually step through the game physics
 		FlxBasic._ACTIVECOUNT = 0;
+		
+		#if !FLX_NO_RECORD
 		if(_replaying)
 		{
 			_replay.playNextFrame();
@@ -468,7 +488,11 @@ class FlxGame extends Sprite
 		}
 		else
 		{
-			FlxG.updateInputs();
+		#end
+	
+		FlxG.updateInputs();
+		
+		#if !FLX_NO_RECORD
 		}
 		if(_recording)
 		{
@@ -477,7 +501,10 @@ class FlxGame extends Sprite
 			_debugger.vcr.updateRuntime(_step);
 			#end
 		}
+		#end
+		
 		update();
+		
 		#if !FLX_NO_MOUSE
 		//todo test why is this needed can it be put in FlxMouse
 		FlxG.mouse.wheel = 0;
@@ -538,7 +565,7 @@ class FlxGame extends Sprite
 		FlxG.elapsed = FlxG.timeScale * _stepSeconds;
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
-		_state.update();
+		_state.tryUpdate();
 		
 		if (FlxG.tweener.active && FlxG.tweener.hasTween) 
 		{

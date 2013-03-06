@@ -100,13 +100,13 @@ class TileSheetData
 	/**
 	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
 	 */
-	public var flxSpriteFrames:Array<FlxSpriteFrames>;
+	public var flxSpriteFrames:Hash<FlxSpriteFrames>;
 	
 	public function new(tileSheet:Tilesheet)
 	{
 		this.tileSheet = tileSheet;
 		pairsData = new Array<RectanglePointPair>();
-		flxSpriteFrames = new Array<FlxSpriteFrames>();
+		flxSpriteFrames = new Hash<FlxSpriteFrames>();
 	}
 	
 	/**
@@ -138,10 +138,10 @@ class TileSheetData
 			pointY = origin.y;
 		}
 		
-		if (containsSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY))
+		var key:String = getKeyforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		if (flxSpriteFrames.exists(key))
 		{
-			var id:Int = getIDforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
-			return flxSpriteFrames[id];
+			return flxSpriteFrames.get(key);
 		}
 		
 		var numRows:Int = Std.int((endY - startY) / (height + ySpacing));
@@ -172,36 +172,19 @@ class TileSheetData
 		}
 		
 		spriteData.halfFrameNumber = Std.int(0.5 * spriteData.frameIDs.length);
-		flxSpriteFrames.push(spriteData);
+		flxSpriteFrames.set(key, spriteData);
 		return spriteData;
 	}
 	
 	public function containsSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
 	{
-		for (spriteData in flxSpriteFrames)
-		{
-			if ((spriteData.width == width) && (spriteData.height == height) && (spriteData.startX == startX) && (spriteData.startY == startY) && (spriteData.endX == endX) && (spriteData.endY == endY) && (spriteData.xSpacing == xSpacing) && (spriteData.ySpacing == ySpacing) && (spriteData.pointX == pointX) && (spriteData.pointY == pointY))
-			{
-				return true;
-			}
-		}
-		
-		return false;
+		var key:String = getKeyforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		return flxSpriteFrames.exists(key);
 	}
 	
-	public function getIDforSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Int
+	public function getKeyforSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
 	{
-		var spriteData:FlxSpriteFrames;
-		for (i in 0...(flxSpriteFrames.length))
-		{
-			spriteData = flxSpriteFrames[i];
-			if ((spriteData.width == width) && (spriteData.height == height) && (spriteData.startX == startX) && (spriteData.startY == startY) && (spriteData.endX == endX) && (spriteData.endY == endY) && (spriteData.xSpacing == xSpacing) && (spriteData.ySpacing == ySpacing) && (spriteData.pointX == pointX) && (spriteData.pointY == pointY))
-			{
-				return i;
-			}
-		}
-		
-		return -1;
+		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
 	}
 	
 	/**

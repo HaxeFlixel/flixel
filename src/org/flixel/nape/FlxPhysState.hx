@@ -62,7 +62,9 @@ class FlxPhysState extends FlxState
 	 */
 	override public function create():Void 
 	{
-		space = new Space(new Vec2());
+		if(space == null)
+			space = new Space(new Vec2());
+		
 		velocityIterations = 10;	// Default value. 
 		positionIterations = 10;	// Default value.
 		
@@ -76,8 +78,6 @@ class FlxPhysState extends FlxState
 	 */
 	override public function update():Void 
 	{
-		space.step(FlxG.elapsed, velocityIterations, positionIterations);
-		
 		#if !FLX_NO_DEBUG
 		if (_physDbgSpr != null) 
 		{
@@ -105,7 +105,10 @@ class FlxPhysState extends FlxState
 		}
 		#end
 		
+		space.step(FlxG.elapsed, velocityIterations, positionIterations);
+		
 		super.update();
+		
 	}
 	
 	/**
