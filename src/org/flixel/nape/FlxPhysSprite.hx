@@ -132,9 +132,9 @@ class FlxPhysSprite extends FlxSprite
 			destroyPhysObjects();
 		
 		if (width == 0)
-			width = cast frameWidth;
+			width = frameWidth;
 		if (height == 0)
-			height = cast frameHeight;
+			height = frameHeight;
 		
 		this.centerOffsets(false);
 		body = new Body(type != null ? type : BodyType.DYNAMIC, Vec2.weak(this.x, this.y));
