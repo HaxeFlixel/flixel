@@ -733,7 +733,7 @@ class FlxU
 	 */
 	inline static public function degreesToRadians(degrees:Float):Float 
 	{
-		return degrees * 0.01745329251; // this equals degrees * (Math.PI / 180);
+		return degrees * FlxG.RAD;
 	}
 	
 	/**
