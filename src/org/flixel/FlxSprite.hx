@@ -719,7 +719,7 @@ class FlxSprite extends FlxObject
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
 #if flash
-			if (simpleRenderSprite ())
+			if (simpleRenderSprite())
 			{
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
@@ -746,7 +746,7 @@ class FlxSprite extends FlxObject
 			var x2:Float = 0.0;
 			var y2:Float = 0.0;
 
-			if (!simpleRenderSprite ())
+			if (!simpleRenderSprite())
 			{
 				radians = -(angle + _additionalAngle) * FlxG.RAD;
 				cos = Math.cos(radians);

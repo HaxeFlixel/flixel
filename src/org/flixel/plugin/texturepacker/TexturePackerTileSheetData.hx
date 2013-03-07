@@ -26,7 +26,7 @@ class TexturePackerTileSheetData extends TileSheetData
 
 	private var _tex:TexturePackerSprites;
 	
-	public function new (tileSheet:Tilesheet, tex:TexturePackerSprites)
+	public function new(tileSheet:Tilesheet, tex:TexturePackerSprites)
 	{
 		_tex = tex;
 		super (tileSheet);

@@ -33,8 +33,8 @@ class TexturePackerAtlas extends Atlas
 		super(name, width, height, borderX, borderY, bitmapData);
 	}
 
-	override public function createTileSheetData (bitmapData:BitmapData):TileSheetData
+	override public function createTileSheetData(bitmapData:BitmapData):TileSheetData
 	{
-		return TexturePackerTileSheetData.addTileSheet (bitmapData, _tex);
+		return TexturePackerTileSheetData.addTileSheet(bitmapData, _tex);
 	}
 }

@@ -356,7 +356,7 @@ class FlxBasic
 		
 		if (_atlas == null)
 		{
-			_atlas = getAtlas ();
+			_atlas = getAtlas();
 			_node = _atlas.getNodeByKey(_bitmapDataKey);
 		}
 		else if (_atlas.hasNodeWithName(_bitmapDataKey))
@@ -372,7 +372,7 @@ class FlxBasic
 			_node = _atlas.addNode(bm, _bitmapDataKey);
 			if (_node == null)
 			{
-				_atlas = getAtlas ();
+				_atlas = getAtlas();
 				_node = _atlas.getNodeByKey(_bitmapDataKey);
 			}
 		}
@@ -381,10 +381,10 @@ class FlxBasic
 	}
 
 #if !flash
-  public function getAtlas () : Atlas
-  {
-    return FlxG.state.getAtlasFor(_bitmapDataKey);
-  }
+	public function getAtlas():Atlas
+	{
+		return FlxG.state.getAtlasFor(_bitmapDataKey);
+	}
 #end
 	
 	public function updateFrameData():Void

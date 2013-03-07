@@ -17,7 +17,7 @@ class FlxSpriteTex extends FlxSprite
 	var _tex:TexturePackerSprites;
 	var _spriteId:Int;
 	
-	public function new (x:Float = 0, y:Float = 0, spriteName:String, tex:TexturePackerSprites)
+	public function new(x:Float, y:Float, spriteName:String, tex:TexturePackerSprites)
 	{
 		_tex = tex;
 		_spriteId = tex.frames.get(spriteName);
@@ -90,7 +90,7 @@ class FlxSpriteTex extends FlxSprite
 		_framesData = _node.addSpriteFramesData(Std.int(width), Std.int(height));
 		_frameID = _framesData.frameIDs[_spriteId];
 #else
-		super.updateFrameData ();
+		super.updateFrameData();
 #end
 	}
 }

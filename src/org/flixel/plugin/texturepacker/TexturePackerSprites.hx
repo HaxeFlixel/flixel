@@ -15,7 +15,7 @@ class TexturePackerSprites
 	public var assetName:String;
 	public var asset:BitmapData;
 
-	public function new (description:String, assetName:String)
+	public function new(description:String, assetName:String)
 	{
 		this.frames = new Hash<Int>();
 		this.sprites = new Array<TexturePackerSprite>();
@@ -41,7 +41,7 @@ class TexturePackerSprite
 	public var offset:FlxPoint;
 	public var filename:String;
 
-	public function new (s:Dynamic)
+	public function new(s:Dynamic)
 	{
 		trimmed = s.trimmed;
 		rotated = s.rotated;
@@ -51,20 +51,20 @@ class TexturePackerSprite
 #if !flash
 		// we use negative offset because code in FlxSprite.draw
 		// use it in such way
-		offset.make (-(s.sourceSize.w - s.frame.w) * 0.5, -(s.sourceSize.h - s.frame.h) * 0.5);
+		offset.make(-s.spriteSourceSize.x, -s.spriteSourceSize.y);
 		if (rotated)
 		{
-			frame = new Rectangle (s.frame.x, s.frame.y, s.frame.h, s.frame.w);
+			frame = new Rectangle(s.frame.x, s.frame.y, s.frame.h, s.frame.w);
 		}
 		else
 		{
-			frame = new Rectangle (s.frame.x, s.frame.y, s.frame.w, s.frame.h);
+			frame = new Rectangle(s.frame.x, s.frame.y, s.frame.w, s.frame.h);
 		}
 #else
-		frame = new Rectangle (s.frame.x, s.frame.y, s.frame.w, s.frame.h);
+		frame = new Rectangle(s.frame.x, s.frame.y, s.frame.w, s.frame.h);
 		// we use positive offset because in FlxSpriteTex.new
 		// we need to translate a sprite
-		offset.make ((s.sourceSize.w - s.frame.w) * 0.5, (s.sourceSize.h - s.frame.h) * 0.5);
+		offset.make(s.spriteSourceSize.x, s.spriteSourceSize.y);
 #end
 	}
 }
