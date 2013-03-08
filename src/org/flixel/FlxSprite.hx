@@ -1535,14 +1535,14 @@ class FlxSprite extends FlxObject
 		else // 2. Check pixel at (_flashPoint.x, _flashPoint.y)
 		{
 			// this code is from calcFrame() method
-			var indexX:Int = _curIndex * frameWidth;
+			var indexX:Int = _curIndex * (frameWidth + 1);
 			var indexY:Int = 0;
 
 			//Handle sprite sheets
 			var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
 			if(indexX >= widthHelper)
 			{
-				indexY = Std.int(indexX / widthHelper) * frameHeight;
+				indexY = Std.int(indexX / widthHelper) * (frameHeight + 1);
 				indexX %= widthHelper;
 			}
 			
@@ -1560,7 +1560,7 @@ class FlxSprite extends FlxObject
 			#if !neko
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			#else
-			var pixelAlpha:Int = pixelColor.a * 255;
+			var pixelAlpha:Int = pixelColor.a;
 			#end
 			return (pixelAlpha >= Mask);
 		}
