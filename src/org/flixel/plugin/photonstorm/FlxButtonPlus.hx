@@ -201,6 +201,10 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		{
 			onClickParams = Params;
 		}
+		else
+		{
+			onClickParams = [];
+		}
 	}
 	
 	public var x(get_x, set_x):Int;
@@ -564,7 +568,14 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	{
 		enterCallback = callbackFunc;
 		
-		enterCallbackParams = params;
+		if (params != null)
+		{
+			enterCallbackParams = params;
+		}
+		else
+		{
+			enterCallbackParams = [];
+		}
 	}
 	
 	/**
@@ -577,7 +588,14 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	{
 		leaveCallback = callbackFunc;
 		
-		leaveCallbackParams = params;
+		if (params != null)
+		{
+			leaveCallbackParams = params;
+		}
+		else
+		{
+			leaveCallbackParams = [];
+		}
 	}
 	
 	public function setOnClickCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
@@ -587,6 +605,10 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		if (params != null)
 		{
 			onClickParams = params;
+		}
+		else
+		{
+			onClickParams = [];
 		}
 	}
 	
