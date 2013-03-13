@@ -413,8 +413,8 @@ class FlxTilemap extends FlxObject
 		Buffer.fill();
 	#else
 		#if !js
-		_helperPoint.x = Math.floor((x - Camera.scroll.x * scrollFactor.x) * 5) / 5; //copied from getScreenXY()
-		_helperPoint.y = Math.floor((y - Camera.scroll.y * scrollFactor.y) * 5) / 5;
+		_helperPoint.x = Std.int((x - Std.int(Camera.scroll.x) * scrollFactor.x) * 5) / 5 + 0.1; //copied from getScreenXY()
+		_helperPoint.y = Std.int((y - Std.int(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
 		#else
 		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x; //copied from getScreenXY()
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
