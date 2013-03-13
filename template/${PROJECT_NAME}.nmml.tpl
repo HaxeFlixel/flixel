@@ -40,10 +40,25 @@
 	</assets>
 	
 	<assets path="assets" exclude="*.wav" if="flash" />
-	<assets path="assets" unless="flash" />
+	<assets path="assets" exclude="*.svg" if="html5" />
+	<assets path="assets" if="desktop" />
+	<assets path="assets" if="mobile" />
 	
 	<icon name="assets/HaxeFlixel.svg" />
 	
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>
+	
+    <!--Disable the Flixel core debugger-->
+    <!--<set name="FLX_NO_DEBUG" />-->
+	
+    <!--Disable the Flixel core recording system if your not using it-->
+    <!--<set name="FLX_NO_RECORD" />-->
+	
+	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
+    <!--<set name="FLX_NO_MOUSE" if="mobile" />-->
+    <!--<set name="FLX_NO_KEYBOARD" if="mobile" />-->
+    <!--<set name="FLX_NO_TOUCH" if="desktop" />-->
+    <!--<set name="FLX_NO_JOYSTICK" />-->
+
 </project>

@@ -1,5 +1,5 @@
 package org.flixel.plugin.photonstorm.baseTypes;
-
+#if !FLX_NO_MOUSE
 import org.flixel.FlxG;
 import org.flixel.plugin.photonstorm.FlxExtendedSprite;
 
@@ -99,3 +99,4 @@ class MouseSpring
 	}
 	
 }
+#end

@@ -1,27 +1,16 @@
 package org.flixel;
 
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import nme.events.Event;
 import nme.events.MouseEvent;
 import nme.events.TouchEvent;
+import nme.Lib;
 import nme.media.Sound;
-import nme.media.Sound;
-import org.flixel.system.input.Touch;
+import org.flixel.system.input.FlxTouch;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.Atlas;
 
-/**
- * A simple button class that calls a function when clicked by the mouse.
- */
-class FlxButton extends FlxSprite
+class FlxButton extends FlxTypedButton<FlxText>
 {
-	/**
-	 * Use this to toggle checkbox-style behavior.
-	 */
-	public var on(default, default):Bool;
-	
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */
@@ -34,10 +23,46 @@ class FlxButton extends FlxSprite
 	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
 	 */
 	static public inline var PRESSED:Int = 2;
+	
+	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
+	{
+		super(X, Y, Label, OnClick);
+		if(Label != null)
+		{
+			label = new FlxText(0, 0, 80, Label);
+			label.setFormat(null, 8, 0x333333, "center");
+			labelOffset = new FlxPoint( -1, 3);
+		}
+	}
+	
+	/**
+	 * Updates the size of the text field to match the button.
+	 */
+	override private function resetHelpers():Void
+	{
+		super.resetHelpers();
+		if (label != null)
+		{
+			label.width = label.frameWidth = Std.int(width);
+			label.size = label.size;
+		}
+	}
+}
+
+/**
+ * A simple button class that calls a function when clicked by the mouse.
+ */
+class FlxTypedButton<T:FlxSprite> extends FlxSprite
+{
+	/**
+	 * Use this to toggle checkbox-style behavior.
+	 */
+	public var on(default, default):Bool;
+	
 	/**
 	 * The text that appears on the button.
 	 */
-	public var label:FlxText;
+	public var label:T;
 	/**
 	 * Controls the offset (from top left) of the text from the button.
 	 */
@@ -105,12 +130,7 @@ class FlxButton extends FlxSprite
 	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
 	{
 		super(X, Y);
-		if(Label != null)
-		{
-			label = new FlxText(0, 0, 80, Label);
-			label.setFormat(null, 8, 0x333333, "center");
-			labelOffset = new FlxPoint( -1, 3);
-		}
+		
 		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
 		
 		onUp = OnClick;
@@ -123,7 +143,7 @@ class FlxButton extends FlxSprite
 		soundDown = null;
 		soundUp = null;
 
-		status = NORMAL;
+		status = FlxButton.NORMAL;
 		on = false;
 		_pressed = false;
 		_initialized = false;
@@ -136,22 +156,13 @@ class FlxButton extends FlxSprite
 	{
 		if (FlxG.stage != null)
 		{
-			if (!FlxG.supportsTouchEvents)
-			{
-				#if (flash || js)
-				FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#else
-				FlxGame.clickableArea.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#end
-			}
-			else
-			{
-				#if (flash || js)
-				FlxG.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
-				#else
-				FlxGame.clickableArea.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
-				#end
-			}
+			#if !FLX_NO_MOUSE
+				Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			#end
+			
+			#if !FLX_NO_TOUCH
+				Lib.current.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
+			#end
 		}
 		if (label != null)
 		{
@@ -194,22 +205,12 @@ class FlxButton extends FlxSprite
 		{
 			if (FlxG.stage != null)
 			{
-				if (!FlxG.supportsTouchEvents)
-				{
-					#if (flash || js)
-					FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					#else
-					FlxGame.clickableArea.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					#end
-				}
-				else
-				{
-					#if (flash || js)
-					FlxG.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
-					#else
-					FlxGame.clickableArea.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
-					#end
-				}
+				#if !FLX_NO_MOUSE
+					Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				#end
+				#if !FLX_NO_TOUCH
+					Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
+				#end
 				_initialized = true;
 			}
 		}
@@ -230,9 +231,9 @@ class FlxButton extends FlxSprite
 		}
 		switch (frame)
 		{
-			case HIGHLIGHT:	//Extra behavior to accomodate checkbox logic.
+			case FlxButton.HIGHLIGHT:	//Extra behavior to accomodate checkbox logic.
 				label.alpha = 1.0;
-			case PRESSED:
+			case FlxButton.PRESSED:
 				label.alpha = 0.5;
 				label.y++;
 			//case NORMAL:
@@ -248,7 +249,17 @@ class FlxButton extends FlxSprite
 	{
 		//Figure out if the button is highlighted or pressed or what
 		// (ignore checkbox behavior for now).
-		if (FlxG.mouse.visible || FlxG.supportsTouchEvents)
+		var continueUpdate = false;
+		
+		#if !FLX_NO_MOUSE
+			continueUpdate = FlxG.mouse.visible;
+		#end
+		
+		#if !FLX_NO_TOUCH
+			continueUpdate = true;
+		#end
+		
+		if (continueUpdate)
 		{
 			if (cameras == null)
 			{
@@ -261,24 +272,22 @@ class FlxButton extends FlxSprite
 			while (i < l)
 			{
 				camera = cameras[i++];
-				if (!FlxG.supportsTouchEvents)
-				{
+				#if !FLX_NO_MOUSE
 					FlxG.mouse.getWorldPosition(camera, _point);
 					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
-				}
-				else
-				{
+				#end
+				#if !FLX_NO_TOUCH
 					for (j in 0...FlxG.touchManager.touches.length)
 					{
-						var touch:Touch = FlxG.touchManager.touches[j];
+						var touch:FlxTouch = FlxG.touchManager.touches[j];
 						touch.getWorldPosition(camera, _point);
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}
-				}
+				#end
 			}
 			if (offAll)
 			{
-				if (status != NORMAL)
+				if (status != FlxButton.NORMAL)
 				{
 					if (onOut != null)
 					{
@@ -289,7 +298,7 @@ class FlxButton extends FlxSprite
 						soundOut.play(true);
 					}
 				}
-				status = NORMAL;
+				status = FlxButton.NORMAL;
 			}
 		}
 	
@@ -310,9 +319,9 @@ class FlxButton extends FlxSprite
 		}
 		
 		//Then pick the appropriate frame of animation
-		if ((status == HIGHLIGHT) && on)
+		if ((status == FlxButton.HIGHLIGHT) && on)
 		{
-			frame = NORMAL;
+			frame = FlxButton.NORMAL;
 		}
 		else
 		{
@@ -328,7 +337,7 @@ class FlxButton extends FlxSprite
 			offAll = false;
 			if (JustPressed)
 			{
-				status = PRESSED;
+				status = FlxButton.PRESSED;
 				if (onDown != null)
 				{
 					onDown();
@@ -338,9 +347,9 @@ class FlxButton extends FlxSprite
 					soundDown.play(true);
 				}
 			}
-			if (status == NORMAL)
+			if (status == FlxButton.NORMAL)
 			{
-				status = HIGHLIGHT;
+				status = FlxButton.HIGHLIGHT;
 				if (onOver != null)
 				{
 					onOver();
@@ -365,19 +374,6 @@ class FlxButton extends FlxSprite
 		{
 			label.cameras = cameras;
 			label.draw();
-		}
-	}
-	
-	/**
-	 * Updates the size of the text field to match the button.
-	 */
-	override private function resetHelpers():Void
-	{
-		super.resetHelpers();
-		if (label != null)
-		{
-			label.width = label.frameWidth = Std.int(width);
-			label.size = label.size;
 		}
 	}
 	
@@ -421,7 +417,7 @@ class FlxButton extends FlxSprite
 	 */
 	private function onMouseUp(event:Event):Void
 	{
-		if (!exists || !visible || !active || (status != PRESSED))
+		if (!exists || !visible || !active || (status != FlxButton.PRESSED))
 		{
 			return;
 		}
@@ -433,14 +429,14 @@ class FlxButton extends FlxSprite
 		{
 			soundUp.play(true);
 		}
-		status = NORMAL;
+		status = FlxButton.NORMAL;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	override private function set_atlas(value:Atlas):Atlas 
 	{
 		var atl:Atlas = super.set_atlas(value);
-		if (atl == value)
+		if (atl == value && label != null)
 		{
 			// Maybe there is enough place for font image
 			label.atlas = value;

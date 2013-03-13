@@ -165,12 +165,12 @@ class FlxTween
 		_finish = false;
 	}
 
-	public var percent(getPercent, setPercent):Float;
-	private function getPercent():Float { return _time / _target; }
-	private function setPercent(value:Float):Float { _time = _target * value; return _time; }
+	public var percent(get_percent, set_percent):Float;
+	private function get_percent():Float { return _time / _target; }
+	private function set_percent(value:Float):Float { _time = _target * value; return _time; }
 
-	public var scale(getScale, null):Float;
-	private function getScale():Float { return _t; }
+	public var scale(get_scale, null):Float;
+	private function get_scale():Float { return _t; }
 
 	private var _type:Int;
 	private var _ease:EaseFunction;

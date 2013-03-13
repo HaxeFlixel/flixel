@@ -4,7 +4,7 @@ import nme.display.Bitmap;
 import nme.display.BitmapData;
 import nme.geom.Point;
 import nme.geom.Rectangle;
-import nme.Lib;
+import org.flixel.FlxG;
 import org.flixel.system.layer.TileSheetData;
 
 /**
@@ -39,7 +39,7 @@ class Atlas
 	public var borderX:Int;
 	public var borderY:Int;
 	
-	#if (cpp || neko)
+	#if !flash
 	public var _tileSheetData:TileSheetData;
 	#end
 	
@@ -63,11 +63,7 @@ class Atlas
 		if (bitmapData == null)
 		{
 			root = new Node(this, new Rectangle(0, 0, width, height));
-			#if !neko
-			atlasBitmapData = new BitmapData(width, height, true, 0x00000000);
-			#else
-			atlasBitmapData = new BitmapData(width, height, true, {rgb: 0x000000, a: 0x00});
-			#end
+			atlasBitmapData = new BitmapData(width, height, true, FlxG.TRANSPARENT);
 			_fromBitmapData = false;
 		}
 		else
@@ -81,12 +77,34 @@ class Atlas
 		this.borderX = borderX;
 		this.borderY = borderY;
 		
-		#if (cpp || neko)
-		_tileSheetData = TileSheetData.addTileSheet(atlasBitmapData);
+		#if !flash
+		_tileSheetData = createTileSheetData (atlasBitmapData);
 		#end
 		
 		_atlasCache.set(name, this);
 	}
+
+#if !flash
+  /**
+   * Creates TileSheetData for BitmapData.
+   * @param bitmapData    BitmapData for that TileSheetData will be created
+   * @return TileSheetData
+   */
+  public function createTileSheetData (bitmapData : BitmapData) : TileSheetData
+  {
+    return TileSheetData.addTileSheet (bitmapData);
+  }
+#end
+
+  /**
+   * Returns true if atlas for key is already exist.
+   * @param key   atlas' key (name)
+   * @return true if atlas already in cache
+   */
+  public static function isExists (key : String) : Bool
+  {
+    return _atlasCache.exists (key);
+  }
 	
 	/**
 	 * Gets atlas from cache or creates new one.
@@ -96,7 +114,7 @@ class Atlas
 	 */
 	public static function getAtlas(Key:String, BmData:BitmapData, Unique:Bool = false):Atlas
 	{
-		var alreadyExist:Bool = _atlasCache.exists(Key);
+		var alreadyExist:Bool = isExists(Key);
 		
 		if (!Unique && alreadyExist)
 		{
@@ -185,11 +203,7 @@ class Atlas
 	{
 		if (hasNodeWithName(node.key) && atlasBitmapData != node.item)
 		{
-			#if !neko
-			atlasBitmapData.fillRect(node.rect, 0x00000000);
-			#else
-			atlasBitmapData.fillRect(node.rect, { rgb: 0x000000, a: 0x00 } );
-			#end
+			atlasBitmapData.fillRect(node.rect, FlxG.TRANSPARENT);
 			atlasBitmapData.copyPixels(node.item, node.rect, node.point);
 		}
 	}
@@ -199,11 +213,7 @@ class Atlas
 	 */
 	public function redrawAll():Void
 	{
-		#if !neko
-		atlasBitmapData.fillRect(atlasBitmapData.rect, 0x00000000);
-		#else
-		atlasBitmapData.fillRect(atlasBitmapData.rect, { rgb: 0x000000, a: 0x00 } );
-		#end
+		atlasBitmapData.fillRect(atlasBitmapData.rect, FlxG.TRANSPARENT);
 		
 		for (node in nodes)
 		{
@@ -219,11 +229,7 @@ class Atlas
 		root.rect.width = newWidth;
 		root.rect.height = newHeight;
 		atlasBitmapData.dispose();
-		#if !neko
-		atlasBitmapData = new BitmapData(newWidth, newHeight, true, 0x00000000);
-		#else
-		atlasBitmapData = new BitmapData(newWidth, newHeight, true, { rgb: 0x000000, a: 0x00 } );
-		#end
+		atlasBitmapData = new BitmapData(newWidth, newHeight, true, FlxG.TRANSPARENT);
 		rebuildAtlas();
 	}
 	
@@ -307,7 +313,7 @@ class Atlas
 	 */
 	public var height(get_height, null):Int;
 	
-	public function get_height():Int
+	private function get_height():Int
 	{
 		return root.height;
 	}
@@ -484,7 +490,7 @@ class Atlas
 			atlasBitmapData.dispose();
 		}
 		atlasBitmapData = null;
-		#if (cpp || neko)
+		#if !flash
 		_tileSheetData = null;
 		#end
 		nodes = null;
@@ -500,11 +506,7 @@ class Atlas
 		deleteSubtree(root);
 		
 		root = new Node(this, new Rectangle(0, 0, rootWidth, rootHeight));
-		#if !neko
-		atlasBitmapData.fillRect(root.rect, 0x00000000);
-		#else
-		atlasBitmapData.fillRect(root.rect, { rgb: 0x000000, a: 0x00 } );
-		#end
+		atlasBitmapData.fillRect(root.rect, FlxG.TRANSPARENT);
 		nodes = new Hash<Node>();
 	}
 	
@@ -516,7 +518,7 @@ class Atlas
 	{
 		deleteSubtree(root);
 		nodes = new Hash<Node>();
-		#if (cpp || neko)
+		#if !flash
 		TileSheetData.removeTileSheet(_tileSheetData);
 		#end
 		if (!_fromBitmapData)
@@ -527,7 +529,7 @@ class Atlas
 		atlasBitmapData = bmd;
 		nodes.set(name, root);
 		_fromBitmapData = true;
-		#if (cpp || neko)
+		#if !flash
 		_tileSheetData = TileSheetData.addTileSheet(atlasBitmapData);
 		#end
 		return root;

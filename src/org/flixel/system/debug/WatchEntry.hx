@@ -100,9 +100,12 @@ class WatchEntry
 		nameDisplay = null;
 		field = null;
 		custom = null;
-		valueDisplay.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
-		valueDisplay.removeEventListener(KeyboardEvent.KEY_UP,onKeyUp);
-		valueDisplay = null;
+		if (valueDisplay != null)
+		{
+			valueDisplay.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			valueDisplay.removeEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			valueDisplay = null;
+		}
 	}
 	
 	/**
@@ -130,17 +133,9 @@ class WatchEntry
 			nameDisplay.text = "";
 			if (NameWidth > 120)
 			{
-				#if flash
 				nameDisplay.appendText(FlxU.getClassName(object, (NameWidth < 240)) + ".");
-				#else
-				nameDisplay.text = nameDisplay.text + FlxU.getClassName(object, (NameWidth < 240)) + ".";
-				#end
 			}
-			#if flash
 			nameDisplay.appendText(field);
-			#else
-			nameDisplay.text = nameDisplay.text + field;
-			#end
 		}
 	}
 	
@@ -153,7 +148,6 @@ class WatchEntry
 		{
 			return false;
 		}
-		//valueDisplay.text = object[field]..toString();
 		valueDisplay.text = Std.string(Reflect.getProperty(object, field));
 		return true;
 	}
@@ -165,7 +159,6 @@ class WatchEntry
 	public function onMouseUp(FlashEvent:MouseEvent):Void
 	{
 		editing = true;
-		//oldValue = object[field];
 		oldValue = Reflect.getProperty(object, field);
 		valueDisplay.type = TextFieldType.INPUT;
 		valueDisplay.setTextFormat(_blackText);
@@ -207,7 +200,6 @@ class WatchEntry
 	 */
 	public function submit():Void
 	{
-		//object[field] = valueDisplay.text;
 		Reflect.setProperty(object, field, valueDisplay.text);
 		doneEditing();
 	}

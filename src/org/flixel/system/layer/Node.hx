@@ -70,7 +70,7 @@ class Node
 		return Std.int(rect.height);
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	public function addSpriteFramesData(frameWidth:Int, frameHeight:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
 	{
 		if (endX == 0)

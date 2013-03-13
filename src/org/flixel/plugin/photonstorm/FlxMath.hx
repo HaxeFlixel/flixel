@@ -81,6 +81,7 @@ class FlxMath
 		return false;
 	}
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Returns true if the mouse world x/y coordinate are within the given rectangular block
 	 * 
@@ -105,6 +106,7 @@ class FlxMath
 			return pointInFlxRect(FlxG.mouse.screenX, FlxG.mouse.screenY, rect);
 		}
 	}
+	#end
 	
 	/**
 	 * Returns true if the given x/y coordinate is within the Rectangle
@@ -462,9 +464,9 @@ class FlxMath
 	{
 		var diff:Int;
 
-		value = Math.floor(Math.abs(value));
-		amount = Math.floor(Math.abs(amount));
-		max = Math.floor(Math.abs(max));
+		value = Std.int(Math.abs(value));
+		amount = Std.int(Math.abs(amount));
+		max = Std.int(Math.abs(max));
 		
 		diff = (value + amount) % max;
 		
@@ -518,7 +520,7 @@ class FlxMath
 	 */
 	public static inline function isOdd(n:Float):Bool
 	{
-		if ((Math.floor(n) & 1) != 0)
+		if ((Std.int(n) & 1) != 0)
 		{
 			return true;
 		}
@@ -537,7 +539,7 @@ class FlxMath
 	 */
 	public static inline function isEven(n:Float):Bool
 	{
-		if ((Math.floor(n) & 1) != 0)
+		if ((Std.int(n) & 1) != 0)
 		{
 			return false;
 		}

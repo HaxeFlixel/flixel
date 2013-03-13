@@ -1,5 +1,7 @@
 package org.flixel.plugin;
 
+#if !FLX_NO_DEBUG
+
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
@@ -111,18 +113,22 @@ class DebugPathDisplay extends FlxBasic
 	 */
 	public function clear():Void
 	{
-		var i:Int = _paths.length-1;
-		var path:FlxPath;
-		while(i >= 0)
+		if (_paths != null)
 		{
-			path = _paths[i--];
-			if (path != null)
+			var i:Int = _paths.length - 1;
+			var path:FlxPath;
+			while(i >= 0)
 			{
-				path.destroy();
+				path = _paths[i--];
+				if (path != null)
+				{
+					path.destroy();
+				}
 			}
 		}
-		//_paths.length = 0;
+		
 		_paths = [];
 	}
 	
 }
+#end

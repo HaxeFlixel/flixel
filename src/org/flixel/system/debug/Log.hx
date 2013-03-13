@@ -14,7 +14,7 @@ import org.flixel.system.FlxWindow;
  */
 class Log extends FlxWindow
 {
-	static private var MAX_LOG_LINES:Int = 200;
+	static public var MAX_LOG_LINES:Int = 200;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -38,19 +38,11 @@ class Log extends FlxWindow
 		#if !flash
 		if (BGColor == null)
 		{
-			#if !neko
-			BGColor = 0x7f7f7f7f;
-			#else
-			BGColor = { rgb: 0x7f7f7f, a: 0x7f };
-			#end
+			BGColor = FlxWindow.BG_COLOR;
 		}
 		if (TopColor == null)
 		{
-			#if !neko
-			TopColor = 0x7f000000;
-			#else
-			TopColor = { rgb: 0x000000, a: 0x7f };
-			#end
+			TopColor = FlxWindow.TOP_COLOR;
 		}
 		#end
 		
@@ -73,7 +65,10 @@ class Log extends FlxWindow
 	 */
 	override public function destroy():Void
 	{
-		removeChild(_text);
+		if (_text != null)
+		{
+			removeChild(_text);
+		}
 		_text = null;
 		_lines = null;
 		super.destroy();
@@ -102,14 +97,12 @@ class Log extends FlxWindow
 		}
 		else
 		{
-			#if flash
 			_text.appendText(Text + "\n");
-			#else
-			_text.text = _text.text + Text + "\n";
-			#end
 		}
-		#if !js
-		_text.scrollV = Math.floor(_text.height);
+		#if flash
+		_text.scrollV = Std.int(_text.height);
+		#elseif !js
+		_text.scrollV = _text.maxScrollV - Std.int(_text.height / _text.defaultTextFormat.size) + 1;
 		#end
 	}
 	

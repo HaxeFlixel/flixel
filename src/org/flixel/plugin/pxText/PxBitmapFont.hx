@@ -21,7 +21,7 @@ class PxBitmapFont
 	
 	private static var ZERO_POINT:Point = new Point();
 	
-	#if (flash || js)
+	#if flash
 	private var _glyphs:Array<BitmapData>;
 	#else
 	private var _glyphs:IntHash<PxFontSymbol>;
@@ -34,7 +34,7 @@ class PxBitmapFont
 	private var _glyphString:String;
 	private var _maxHeight:Int;
 	
-	#if (flash || js)
+	#if flash
 	private var _matrix:Matrix;
 	private var _colorTransform:ColorTransform;
 	#end
@@ -58,7 +58,7 @@ class PxBitmapFont
 	{
 		_maxHeight = 0;
 		_point = new Point();
-		#if (flash || js)
+		#if flash
 		_matrix = new Matrix();
 		_colorTransform = new ColorTransform();
 		_glyphs = [];
@@ -84,7 +84,7 @@ class PxBitmapFont
 		
 		_glyphString = pLetters;
 		
-		#if (flash || js)
+		#if flash
 		// fill array with nulls
 		for (i in 0...(256)) 
 		{
@@ -100,7 +100,7 @@ class PxBitmapFont
 			_pixels = FlxG.addBitmap(result, false, false, _bitmapDataKey);
 			var currRect:Rectangle;
 			
-			#if (flash || js)
+			#if flash
 			updateGlyphData();
 			#end
 		}
@@ -124,7 +124,7 @@ class PxBitmapFont
 			var result:BitmapData = prepareAngelCodeBitmapData(pBitmapData, pXMLData, _symbols);
 			_bitmapDataKey = FlxG.getUniqueBitmapKey("font");
 			_pixels = FlxG.addBitmap(result, false, false, _bitmapDataKey);
-			#if (flash || js)
+			#if flash
 			updateGlyphData();
 			#end
 		}
@@ -137,7 +137,7 @@ class PxBitmapFont
 	 */
 	public function updateGlyphData(node:Node = null):Void
 	{
-		#if (cpp || neko)
+		#if !flash
 		_glyphs = new IntHash<PxFontSymbol>();
 		#end
 		var rect:Rectangle;
@@ -172,7 +172,7 @@ class PxBitmapFont
 					point.x = 0;
 				}
 				// create glyph
-				#if (flash || js)
+				#if flash
 				bd = null;
 				if (charString != " " && charString != "")
 				{
@@ -198,7 +198,7 @@ class PxBitmapFont
 				#end
 			}
 			
-			#if (cpp || neko)
+			#if !flash
 			_bgTileID = node.addTileRect(new Rectangle(_pixels.width - 1, _pixels.height - 1, 1, 1), ZERO_POINT);
 			
 			updateAtlasGlyphs(node.atlas.name);
@@ -211,18 +211,18 @@ class PxBitmapFont
 				rect = _tileRects[letterID];
 				
 				// create glyph
-				#if (flash || js)
-				var bd:BitmapData = new BitmapData(Math.floor(rect.width), Math.floor(rect.height), true, 0x0);
+				#if flash
+				var bd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0x0);
 				bd.copyPixels(_pixels, rect, ZERO_POINT, null, null, true);
 				
 				// store glyph
 				setGlyph(_glyphString.charCodeAt(letterID), bd);
 				#else
-				setGlyph(node, _glyphString.charCodeAt(letterID), rect, 0, 0, Math.floor(rect.width));
+				setGlyph(node, _glyphString.charCodeAt(letterID), rect, 0, 0, Std.int(rect.width));
 				#end
 			}
 			
-			#if (cpp || neko)
+			#if !flash
 			_bgTileID = node.addTileRect(new Rectangle(_pixels.width - 1, _pixels.height - 1, 1, 1), ZERO_POINT);
 			
 			updateAtlasGlyphs(node.atlas.name);
@@ -230,7 +230,7 @@ class PxBitmapFont
 		}
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	/**
 	 * caches tile data for atlas named AtlasName
 	 */
@@ -248,7 +248,7 @@ class PxBitmapFont
 	{
 		dispose(false);
 		_maxHeight = 0;
-		#if (flash || js)
+		#if flash
 		_glyphs = [];
 		#else
 		_glyphs = new IntHash<PxFontSymbol>();
@@ -311,11 +311,7 @@ class PxBitmapFont
 			cy += (rowHeight + 1);
 		}
 		
-		#if neko
-		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, { rgb: 0x000000, a: 0x00 } );
-		#else
-		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, 0x00000000);
-		#end
+		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, FlxG.TRANSPARENT);
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
 		
 		#if flash
@@ -339,12 +335,12 @@ class PxBitmapFont
 				#if neko
 				if (pixelColor.rgb == bgColor32.rgb && pixelColor.a == bgColor32.a)
 				{
-					resultBitmapData.setPixel32(cx, cy, {rgb: 0x000000, a: 0x00});
+					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
 				}
 				#else
 				if (pixelColor == bgColor32)
 				{
-					resultBitmapData.setPixel32(cx, cy, 0x00000000);
+					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
 				}
 				#end
 				cx++;
@@ -352,11 +348,7 @@ class PxBitmapFont
 			cy++;
 		}
 		
-		#if !neko
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, 0xffffffff);
-		#else
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, {rgb: 0xffffff, a: 0xff});
-		#end
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxG.WHITE);
 		
 		return resultBitmapData;
 	}
@@ -419,24 +411,13 @@ class PxBitmapFont
 			newHeight += 2;
 		}
 		
-		#if neko
-		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, { rgb: 0x000000, a: 0x00 } );
-		#else
-		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, 0x00000000);
-		#end
-		
+		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, FlxG.TRANSPARENT);
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
-		
-		#if neko
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, {rgb: 0xffffff, a: 0xff});
-		#else
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, 0xffffffff);
-		#end
-		
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxG.WHITE);
 		return resultBitmapData;
 	}
 	
-	#if (flash || js)
+	#if flash
 	public function getPreparedGlyphs(pScale:Float, pColor:Int, pUseColorTransform:Bool = true):Array<BitmapData>
 	{
 		var result:Array<BitmapData> = [];
@@ -444,7 +425,7 @@ class PxBitmapFont
 		_matrix.identity();
 		_matrix.scale(pScale, pScale);
 		
-		var colorMultiplier:Float = 0.00392;
+		var colorMultiplier:Float = 1 / 255;
 		_colorTransform.redOffset = 0;
 		_colorTransform.greenOffset = 0;
 		_colorTransform.blueOffset = 0;
@@ -494,7 +475,7 @@ class PxBitmapFont
 	 */
 	public function dispose(total:Bool = true):Void 
 	{
-		#if (flash || js)
+		#if flash
 		var bd:BitmapData;
 		for (i in 0...(_glyphs.length)) 
 		{
@@ -512,7 +493,7 @@ class PxBitmapFont
 		_bitmapDataKey = null;
 		_glyphs = null;
 		
-		#if (cpp || neko)
+		#if !flash
 		if (total)
 		{
 			_atlasGlyphs = null;
@@ -548,7 +529,7 @@ class PxBitmapFont
 	}
 	#end
 	
-	#if (flash || js)
+	#if flash
 	private function setGlyph(pCharID:Int, pBitmapData:BitmapData):Void 
 	{
 		if (_glyphs[pCharID] != null) 
@@ -594,15 +575,13 @@ class PxBitmapFont
 	 */
 	#if flash 
 	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int):Void 
-	#elseif js
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int):Void 
 	#else
 	public function render(atlasName:String, drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Float, pOffsetY:Float, pLetterSpacing:Int, pScale:Float, pUseColor:Bool = true):Void 
 	#end
 	{
-	#if (cpp || neko)
+	#if !flash
 		
-		var colorMultiplier:Float = 0.00392;
+		var colorMultiplier:Float = 1 / 255;
 		var red:Float = colorMultiplier;
 		var green:Float = colorMultiplier;
 		var blue:Float = colorMultiplier;
@@ -614,12 +593,12 @@ class PxBitmapFont
 			blue = (pColor & 0xff) * colorMultiplier;
 		}
 		
-		#if cpp
+		#if !neko
 		pSecondColor &= 0x00ffffff;
 		red *= (pSecondColor >> 16);
 		green *= (pSecondColor >> 8 & 0xff);
 		blue *= (pSecondColor & 0xff);
-		#elseif neko
+		#else
 		red *= (pSecondColor.rgb >> 16);
 		green *= (pSecondColor.rgb >> 8 & 0xff);
 		blue *= (pSecondColor.rgb & 0xff);
@@ -629,7 +608,7 @@ class PxBitmapFont
 		
 		_point.x = pOffsetX;
 		_point.y = pOffsetY;
-		#if (flash || js)
+		#if flash
 		var glyph:BitmapData;
 		#else
 		var glyph:PxFontSymbol;
@@ -644,7 +623,7 @@ class PxBitmapFont
 		for (i in 0...(pText.length)) 
 		{
 			var charCode:Int = pText.charCodeAt(i);
-			#if (flash || js)
+			#if flash
 			glyph = pFontData[charCode];
 			if (glyph != null) 
 			#else
@@ -652,7 +631,7 @@ class PxBitmapFont
 			if (_glyphs.exists(charCode))
 			#end
 			{
-				#if (flash || js)
+				#if flash
 				pBitmapData.copyPixels(glyph, glyph.rect, _point, null, null, true);
 				_point.x += glyph.width + pLetterSpacing;
 				#else
@@ -686,7 +665,7 @@ class PxBitmapFont
 		for (i in 0...(textLength)) 
 		{
 			var charCode:Int = pText.charCodeAt(i);
-			#if (flash || js)
+			#if flash
 			var glyph:BitmapData = _glyphs[charCode];
 			if (glyph != null) 
 			{
@@ -727,7 +706,7 @@ class PxBitmapFont
 	 */
 	public var numLetters(get_numLetters, null):Int;
 	
-	#if (cpp || neko)
+	#if !flash
 	public function bgTileID(AtlasName):Int 
 	{
 		return _bgTiles.get(AtlasName);
@@ -750,7 +729,7 @@ class PxBitmapFont
 	
 	public function get_numLetters():Int 
 	{
-		#if (flash || js)
+		#if flash
 		return _glyphs.length;
 		#else
 		return _num_letters;

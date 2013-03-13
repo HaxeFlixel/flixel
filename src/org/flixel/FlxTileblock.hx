@@ -13,7 +13,7 @@ import org.flixel.system.layer.DrawStackItem;
 class FlxTileblock extends FlxSprite
 {		
 	
-	#if (cpp || neko)
+	#if !flash
 	private var _tileWidth:Int;
 	private var _tileHeight:Int;
 	private var _tileData:Array<Float>;
@@ -31,7 +31,7 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
-		#if (flash || js)
+		#if flash
 		makeGraphic(Width, Height, 0, true);
 		#else
 		bakedRotation = 0;
@@ -62,7 +62,7 @@ class FlxTileblock extends FlxSprite
 		
 		//First create a tile brush
 		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
-		#if (cpp || neko)
+		#if !flash
 		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		#end
 		var spriteWidth:Int = Std.int(sprite.width);
@@ -82,7 +82,7 @@ class FlxTileblock extends FlxSprite
 			regen = true;
 		}
 		
-		#if (flash || js)
+		#if flash
 		if (regen)
 		{
 			makeGraphic(Std.int(width), Std.int(height), 0, true);
@@ -100,7 +100,7 @@ class FlxTileblock extends FlxSprite
 		var destinationY:Int = 0;
 		var widthInTiles:Int = Std.int(width / spriteWidth);
 		var heightInTiles:Int = Std.int(height / spriteHeight);
-		#if (cpp || neko)
+		#if !flash
 		if (_tileData != null)
 		{
 			_tileData.splice(0, _tileData.length);
@@ -114,8 +114,8 @@ class FlxTileblock extends FlxSprite
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
 		_pixels = FlxG.addBitmap(TileGraphic, false, false, null, _tileWidth, _tileHeight);
-		frameWidth = Math.floor(width);
-		frameHeight = Math.floor(height);
+		frameWidth = Std.int(width);
+		frameHeight = Std.int(height);
 		resetHelpers();
 		updateAtlasInfo();
 		#end
@@ -127,16 +127,16 @@ class FlxTileblock extends FlxSprite
 			{
 				if (FlxG.random() * total > Empties)
 				{
-					#if (flash || js)
+					#if flash
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					var tileIndex:Int = Math.floor(FlxG.random() * _framesData.frameIDs.length);
+					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frameIDs.length);
 					_tileIndices.push(tileIndex);
 					_tileData.push(_framesData.frameIDs[tileIndex]);
-					_tileData.push(destinationX - origin.x + 0.5 * _tileWidth);
-					_tileData.push(destinationY - origin.y + 0.5 * _tileHeight);
+					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);
+					_tileData.push(destinationY - _halfHeight + 0.5 * _tileHeight);
 					#end
 				}
 				
@@ -146,21 +146,19 @@ class FlxTileblock extends FlxSprite
 			destinationY += spriteHeight;
 			row++;
 		}
-		#if (cpp || neko)
+		#if !flash
 		updateFrameData();
 		#end
 		return this;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	override public function draw():Void 
 	{
-		#if (cpp || neko)
 		if (_atlas == null)
 		{
 			return;
 		}
-		#end
 		
 		if (_flickerTimer != 0)
 		{
@@ -187,7 +185,7 @@ class FlxTileblock extends FlxSprite
 		var numTiles:Int = 0;
 		if (_tileData != null)
 		{
-			numTiles = Math.floor(_tileData.length / 3);
+			numTiles = Std.int(_tileData.length / 3);
 		}
 		
 		var currPosInArr:Int;
@@ -204,8 +202,13 @@ class FlxTileblock extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
+			#if !js
 			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			#else
+			var useAlpha:Bool = (alpha < 1);
+			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -217,10 +220,16 @@ class FlxTileblock extends FlxSprite
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
+			#if js
+			_point.x = Math.floor(_point.x);
+			_point.y = Math.floor(_point.y);
+			#end
+			
 			var redMult:Float = 1;
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
 			
+			#if !js
 			if (isColoredCamera)
 			{
 				redMult = _red * camera.red; 
@@ -233,85 +242,79 @@ class FlxTileblock extends FlxSprite
 				greenMult = _green;
 				blueMult = _blue;
 			}
+			#end
 			
 			if (_tileData != null)
 			{
-				if (simpleRenderSprite())
-				{	//Simple render
-					while (j < numTiles)
-					{
-						currPosInArr = j * 3;
-						currTileID = _tileData[currPosInArr];
-						currTileX = _tileData[currPosInArr + 1];
-						currTileY = _tileData[currPosInArr + 2];
-						
-						currDrawData[currIndex++] = (_point.x) + currTileX;
-						currDrawData[currIndex++] = (_point.y) + currTileY;
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = 1;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 0;
-						currDrawData[currIndex++] = 1;
-						
-						if (isColored || isColoredCamera)
-						{
-							currDrawData[currIndex++] = redMult; 
-							currDrawData[currIndex++] = greenMult;
-							currDrawData[currIndex++] = blueMult;
-						}
-						
-						currDrawData[currIndex++] = alpha;
-						j++;
-					}
-				}
-				else
-				{	
-					//Advanced render
-					radians = angle * 0.017453293;
+				var csx : Float = 1;
+				var ssy : Float = 0;
+				var ssx : Float = 0;
+				var csy : Float = 1;
+				var x1 : Float = 0;
+				var y1 : Float = 0;
+
+				if (!simpleRenderSprite ())
+				{
+					radians = angle * FlxG.RAD;
 					cos = Math.cos(radians);
 					sin = Math.sin(radians);
 					
-					while (j < numTiles)
+					csx = cos * scale.x;
+					ssy = sin * scale.y;
+					ssx = sin * scale.x;
+					csy = cos * scale.y;
+					
+					x1 = (origin.x - _halfWidth);
+					y1 = (origin.y - _halfHeight);
+				}
+
+				while (j < numTiles)
+				{
+					currPosInArr = j * 3;
+					currTileID = _tileData[currPosInArr];
+					currTileX = _tileData[currPosInArr + 1] + x1;
+					currTileY = _tileData[currPosInArr + 2] + y1;
+					relativeX = (currTileX * csx - currTileY * ssy);
+					relativeY = (currTileX * ssx + currTileY * csy);
+					
+					currDrawData[currIndex++] = (_point.x) + relativeX;
+					currDrawData[currIndex++] = (_point.y) + relativeY;
+					currDrawData[currIndex++] = currTileID;
+
+					currDrawData[currIndex++] = csx;
+					currDrawData[currIndex++] = -ssy;
+					currDrawData[currIndex++] = ssx;
+					currDrawData[currIndex++] = csy;
+
+					#if !js
+					if (isColored || isColoredCamera)
 					{
-						currPosInArr = j * 3;
-						currTileID = _tileData[currPosInArr];
-						currTileX = _tileData[currPosInArr + 1];
-						currTileY = _tileData[currPosInArr + 2];
-						
-						relativeX = (currTileX * cos * scale.x - currTileY * sin * scale.y);
-						relativeY = (currTileX * sin * scale.x + currTileY * cos * scale.y);
-						
-						currDrawData[currIndex++] = (_point.x) + relativeX;
-						currDrawData[currIndex++] = (_point.y) + relativeY;
-						
-						currDrawData[currIndex++] = currTileID;
-						
-						currDrawData[currIndex++] = cos * scale.x;
-						currDrawData[currIndex++] = -sin * scale.y;
-						currDrawData[currIndex++] = sin * scale.x;
-						currDrawData[currIndex++] = cos * scale.y;
-						
-						if (isColored || isColoredCamera)
-						{
-							currDrawData[currIndex++] = redMult; 
-							currDrawData[currIndex++] = greenMult;
-							currDrawData[currIndex++] = blueMult;
-						}
-						
-						currDrawData[currIndex++] = alpha;
-						j++;
+						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = greenMult;
+						currDrawData[currIndex++] = blueMult;
 					}
+					currDrawData[currIndex++] = alpha;
+					#else
+					if (useAlpha)
+					{
+						currDrawData[currIndex++] = alpha;
+					}
+					#end
+					
+					j++;
 				}
 				
 				drawItem.position = currIndex;
 			}
 			
 			FlxBasic._VISIBLECOUNT++;
+			
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
 			}
+			#end
 		}
 	}
 	

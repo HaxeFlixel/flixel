@@ -36,7 +36,7 @@ class Perf extends FlxWindow
 	private var _flash:Array <Float>;
 	private var _visibleObject:Array<Int>;
 	
-	#if (cpp || neko)
+	#if !flash
 	private var _drawCalls:Array<Int>;
 	private var _drawCallsMarker:Int;
 	#end
@@ -60,19 +60,11 @@ class Perf extends FlxWindow
 		#if !flash
 		if (BGColor == null)
 		{
-			#if !neko
-			BGColor = 0x7f7f7f7f;
-			#else
-			BGColor = { rgb: 0x7f7f7f, a: 0x7f };
-			#end
+			BGColor = FlxWindow.BG_COLOR;
 		}
 		if (TopColor == null)
 		{
-			#if !neko
-			TopColor = 0x7f000000;
-			#else
-			TopColor = { rgb: 0x000000, a: 0x7f };
-			#end
+			TopColor = FlxWindow.TOP_COLOR;
 		}
 		#end
 		
@@ -108,7 +100,7 @@ class Perf extends FlxWindow
 		FlxU.SetArrayLength(_visibleObject, 32);
 		_visibleObjectMarker = 0;
 		
-		#if (cpp || neko)
+		#if !flash
 		_drawCalls = [];
 		_drawCallsMarker = 0;
 		#end
@@ -119,7 +111,10 @@ class Perf extends FlxWindow
 	 */
 	override public function destroy():Void
 	{
-		removeChild(_text);
+		if (_text != null)
+		{
+			removeChild(_text);
+		}
 		_text = null;
 		_flixelUpdate = null;
 		_flixelDraw = null;
@@ -127,7 +122,7 @@ class Perf extends FlxWindow
 		_activeObject = null;
 		_visibleObject = null;
 		
-		#if (cpp || neko)
+		#if !flash
 		_drawCalls = null;
 		#end
 		
@@ -179,7 +174,7 @@ class Perf extends FlxWindow
 			{
 				activeCount += _activeObject[i++];
 			}
-			activeCount = Math.floor(activeCount / _objectMarker);
+			activeCount = Std.int(activeCount / _objectMarker);
 			
 			output += "U:" + activeCount + " " + Std.int(updateTime / _flixelDrawMarker) + "ms\n";
 			
@@ -196,18 +191,18 @@ class Perf extends FlxWindow
 			{
 				visibleCount += _visibleObject[i++];
 			}
-			visibleCount = Math.floor(visibleCount / _visibleObjectMarker);
+			visibleCount = Std.int(visibleCount / _visibleObjectMarker);
 
 			output += "D:" + visibleCount + " " + Std.int(drawTime / _flixelDrawMarker) + "ms";
 			
-			#if (cpp || neko)
+			#if !flash
 			var drawCallsCount:Int = 0;
 			i = 0;
 			while (i < _drawCallsMarker)
 			{
 				drawCallsCount += _drawCalls[i++];
 			}
-			drawCallsCount = Math.floor(drawCallsCount / _drawCallsMarker);
+			drawCallsCount = Std.int(drawCallsCount / _drawCallsMarker);
 			output += "\nDrwTls:" + drawCallsCount;
 			_drawCallsMarker = 0;
 			#end
@@ -271,7 +266,7 @@ class Perf extends FlxWindow
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	/**
 	 * Keep track of how many times drawTiles() method was called.
 	 * @param Count	How many times drawTiles() method was called.

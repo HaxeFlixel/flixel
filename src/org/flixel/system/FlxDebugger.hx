@@ -1,4 +1,5 @@
 package org.flixel.system;
+#if !FLX_NO_DEBUG
 
 import nme.Assets;
 import nme.display.Bitmap;
@@ -9,8 +10,10 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
+#if !FLX_NO_MOUSE
+import nme.ui.Mouse;
+#end
 import org.flixel.FlxAssets;
-
 import org.flixel.FlxG;
 import org.flixel.system.debug.Log;
 import org.flixel.system.debug.Perf;
@@ -78,11 +81,11 @@ class FlxDebugger extends Sprite
 		_screen = new Point(Width, Height);
 		
 		#if (flash || js)
-		addChild(new Bitmap(new BitmapData(Math.floor(Width), 15, true, 0x7f000000)));
+		addChild(new Bitmap(new BitmapData(Std.int(Width), 15, true, 0x7f000000)));
 		#else
 		var bg:Sprite = new Sprite();
 		bg.graphics.beginFill(0x000000, 0x7f / 255);
-		bg.graphics.drawRect(0, 0, Math.floor(Width), 15);
+		bg.graphics.drawRect(0, 0, Std.int(Width), 15);
 		bg.graphics.endFill();
 		addChild(bg);
 		#end
@@ -141,21 +144,36 @@ class FlxDebugger extends Sprite
 	public function destroy():Void
 	{
 		_screen = null;
-		removeChild(log);
-		log.destroy();
-		log = null;
-		removeChild(watch);
-		watch.destroy();
-		watch = null;
-		removeChild(perf);
-		perf.destroy();
-		perf = null;
-		removeChild(vcr);
-		vcr.destroy();
-		vcr = null;
-		removeChild(vis);
-		vis.destroy();
-		vis = null;
+		if (log != null)
+		{
+			removeChild(log);
+			log.destroy();
+			log = null;
+		}
+		if (watch != null)
+		{
+			removeChild(watch);
+			watch.destroy();
+			watch = null;
+		}
+		if (perf != null)
+		{
+			removeChild(perf);
+			perf.destroy();
+			perf = null;
+		}
+		if (vcr != null)
+		{
+			removeChild(vcr);
+			vcr.destroy();
+			vcr = null;
+		}
+		if (vis != null)
+		{
+			removeChild(vis);
+			vis.destroy();
+			vis = null;
+		}
 		
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
@@ -168,6 +186,9 @@ class FlxDebugger extends Sprite
 	private function onMouseOver(E:MouseEvent = null):Void
 	{
 		hasMouse = true;
+		#if !FLX_NO_MOUSE
+		Mouse.show();
+		#end
 	}
 	
 	/**
@@ -177,6 +198,10 @@ class FlxDebugger extends Sprite
 	private function onMouseOut(E:MouseEvent = null):Void
 	{
 		hasMouse = false;
+		#if !FLX_NO_MOUSE
+		if (!FlxG.mouse.useSystemCursor && !FlxG._game._debugger.vcr.paused)
+			Mouse.hide();
+		#end
 	}
 	
 	/**
@@ -242,3 +267,4 @@ class FlxDebugger extends Sprite
 		}
 	}
 }
+#end

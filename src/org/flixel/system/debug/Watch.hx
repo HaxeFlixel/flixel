@@ -44,19 +44,11 @@ class Watch extends FlxWindow
 		#if !flash
 		if (BGColor == null)
 		{
-			#if !neko
-			BGColor = 0x7f7f7f7f;
-			#else
-			BGColor = { rgb: 0x7f7f7f, a: 0x7f };
-			#end
+			BGColor = FlxWindow.BG_COLOR;
 		}
 		if (TopColor == null)
 		{
-			#if !neko
-			TopColor = 0x7f000000;
-			#else
-			TopColor = { rgb: 0x000000, a: 0x7f };
-			#end
+			TopColor = FlxWindow.TOP_COLOR;
 		}
 		#end
 		
@@ -84,17 +76,27 @@ class Watch extends FlxWindow
 	 */
 	override public function destroy():Void
 	{
-		removeChild(_names);
-		_names = null;
-		removeChild(_values);
-		_values = null;
-		var i:Int = 0;
-		var l:Int = _watching.length;
-		while (i < l)
+		if (_names != null)
 		{
-			_watching[i++].destroy();
+			removeChild(_names);
 		}
-		_watching = null;
+		_names = null;
+		if (_values != null)
+		{
+			removeChild(_values);
+		}
+		_values = null;
+		if (_watching != null)
+		{
+			var i:Int = 0;
+			var l:Int = _watching.length;
+			while (i < l)
+			{
+				_watching[i++].destroy();
+			}
+			_watching = null;
+		}
+		
 		super.destroy();
 	}
 

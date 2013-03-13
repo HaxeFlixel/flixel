@@ -76,7 +76,7 @@ class FlxGradient
 		else
 		{
 			//	Spread value
-			var spread:Int = Math.floor(255 / (colors.length - 1));
+			var spread:Int = Std.int(255 / (colors.length - 1));
 			
 			ratio.push(0);
 			
@@ -154,13 +154,13 @@ class FlxGradient
 			height = 1;
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		var key:String = "Gradient: " + width + " x " + height + ", colors: [";
 		var a:Int;
 		var rgb:Int;
 		for (col in colors)
 		{
-			#if cpp
+			#if !neko
 			a = (col >> 24) & 255;
 			rgb = col & 0x00ffffff;
 			#else
@@ -200,11 +200,7 @@ class FlxGradient
 			s.graphics.drawRect(0, 0, width, height / chunkSize);
 		}
 		
-		#if !neko
-		var data:BitmapData = new BitmapData(width, height, true, 0x0);
-		#else
-		var data:BitmapData = new BitmapData(width, height, true, {rgb: 0, a: 0});
-		#end
+		var data:BitmapData = new BitmapData(width, height, true, FlxG.TRANSPARENT);
 		
 		if (chunkSize == 1)
 		{
@@ -212,11 +208,7 @@ class FlxGradient
 		}
 		else
 		{
-			#if !neko
-			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Math.floor(height / chunkSize), true, 0x0));
-			#else
-			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Math.floor(height / chunkSize), true, {rgb: 0, a: 0}));
-			#end
+			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Std.int(height / chunkSize), true, FlxG.TRANSPARENT));
 			tempBitmap.bitmapData.draw(s);
 			tempBitmap.scaleY = chunkSize;
 			
@@ -226,7 +218,7 @@ class FlxGradient
 			data.draw(tempBitmap, sM);
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		FlxG._cache.set(key, data);
 		#end
 		
@@ -256,12 +248,12 @@ class FlxGradient
 	{
 		if (width > dest.width)
 		{
-			width = Math.floor(dest.width);
+			width = Std.int(dest.width);
 		}
 		
 		if (height > dest.height)
 		{
-			height = Math.floor(dest.height);
+			height = Std.int(dest.height);
 		}
 		
 		var source:FlxSprite = createGradientFlxSprite(width, height, colors, chunkSize, rotation, interpolate);

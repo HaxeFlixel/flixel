@@ -8,7 +8,7 @@ import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 
-#if (cpp || neko)
+#if !flash
 import nme.display.Tilesheet;
 #end
 
@@ -22,7 +22,7 @@ class PxBitmapFont
 	
 	private static var ZERO_POINT:Point = new Point();
 	
-	#if (flash || js)
+	#if flash
 	private var _glyphs:Array<BitmapData>;
 	#else
 	private var _glyphs:IntHash<Int>;
@@ -34,7 +34,7 @@ class PxBitmapFont
 	private var _glyphString:String;
 	private var _maxHeight:Int;
 	
-	#if (flash || js)
+	#if flash
 	private var _matrix:Matrix;
 	private var _colorTransform:ColorTransform;
 	#end
@@ -50,7 +50,7 @@ class PxBitmapFont
 	{
 		_maxHeight = 0;
 		_point = new Point();
-		#if (flash || js)
+		#if flash
 		_matrix = new Matrix();
 		_colorTransform = new ColorTransform();
 		_glyphs = [];
@@ -62,7 +62,7 @@ class PxBitmapFont
 		
 		_glyphString = pLetters;
 		
-		#if (flash || js)
+		#if flash
 		// fill array with nulls
 		for (i in 0...(256)) 
 		{
@@ -76,7 +76,7 @@ class PxBitmapFont
 			var result:BitmapData = prepareBitmapData(pBitmapData, tileRects);
 			var currRect:Rectangle;
 			
-			#if (cpp || neko)
+			#if !flash
 			_tileSheet = new Tilesheet(result);
 			#end
 			
@@ -85,8 +85,8 @@ class PxBitmapFont
 				currRect = tileRects[letterID];
 				
 				// create glyph
-				#if (flash || js)
-				var bd:BitmapData = new BitmapData(Math.floor(currRect.width), Math.floor(currRect.height), true, 0x0);
+				#if flash
+				var bd:BitmapData = new BitmapData(Std.int(currRect.width), Std.int(currRect.height), true, 0x0);
 				bd.copyPixels(pBitmapData, currRect, ZERO_POINT, null, null, true);
 				
 				// store glyph
@@ -189,7 +189,7 @@ class PxBitmapFont
 		return resultBitmapData;
 	}
 	
-	#if (flash || js)
+	#if flash
 	public function getPreparedGlyphs(pScale:Float, pColor:Int, pUseColorTransform:Bool = true):Array<BitmapData>
 	{
 		var result:Array<BitmapData> = [];
@@ -197,7 +197,7 @@ class PxBitmapFont
 		_matrix.identity();
 		_matrix.scale(pScale, pScale);
 		
-		var colorMultiplier:Float = 0.00392;
+		var colorMultiplier:Float = 1 / 255;
 		_colorTransform.redOffset = 0;
 		_colorTransform.greenOffset = 0;
 		_colorTransform.blueOffset = 0;
@@ -212,7 +212,7 @@ class PxBitmapFont
 			glyph = _glyphs[i];
 			if (glyph != null)
 			{
-				preparedGlyph = new BitmapData(Math.floor(glyph.width * pScale), Math.floor(glyph.height * pScale), true, 0x00000000);
+				preparedGlyph = new BitmapData(Std.int(glyph.width * pScale), Std.int(glyph.height * pScale), true, 0x00000000);
 				if (pUseColorTransform)
 				{
 					preparedGlyph.draw(glyph,  _matrix, _colorTransform);
@@ -234,7 +234,7 @@ class PxBitmapFont
 	 */
 	public function dispose():Void 
 	{
-		#if (flash || js)
+		#if flash
 		var bd:BitmapData;
 		for (i in 0...(_glyphs.length)) 
 		{
@@ -253,7 +253,7 @@ class PxBitmapFont
 		_glyphs = null;
 	}
 	
-	#if (flash || js)
+	#if flash
 	/**
 	 * Serializes font data to cryptic bit string.
 	 * @return	Cryptic string with font as bits.
@@ -280,7 +280,7 @@ class PxBitmapFont
 	}
 	#end
 	
-	#if (flash || js)
+	#if flash
 	private function setGlyph(pCharID:Int, pBitmapData:BitmapData):Void 
 	{
 		if (_glyphs[pCharID] != null) 
@@ -301,11 +301,11 @@ class PxBitmapFont
 		_tileSheet.addTileRect(pRect);
 		_glyphs.set(pCharID, pGlyphID);
 		_num_letters++;
-		_glyphWidthData[pCharID] = Math.floor(pRect.width);
+		_glyphWidthData[pCharID] = Std.int(pRect.width);
 		
-		if (Math.floor(pRect.height) > _maxHeight) 
+		if (Std.int(pRect.height) > _maxHeight) 
 		{
-			_maxHeight = Math.floor(pRect.height);
+			_maxHeight = Std.int(pRect.height);
 		}
 	}
 	#end
@@ -320,15 +320,13 @@ class PxBitmapFont
 	 */
 	#if flash 
 	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pAngle:Float = 0):Void 
-	#elseif js
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pAngle:Float = 0):Void 
 	#else
 	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, pAngle:Float = 0, pUseColorTransform:Bool = true):Void 
 	#end
 	{
 		_point.x = pOffsetX;
 		_point.y = pOffsetY;
-		#if (flash || js)
+		#if flash
 		var glyph:BitmapData;
 		#else
 		var glyph:Int;
@@ -338,7 +336,7 @@ class PxBitmapFont
 		for (i in 0...(pText.length)) 
 		{
 			var charCode:Int = pText.charCodeAt(i);
-			#if (flash || js)
+			#if flash
 			glyph = pFontData[charCode];
 			if (glyph != null) 
 			#else
@@ -346,7 +344,7 @@ class PxBitmapFont
 			if (_glyphs.exists(charCode))
 			#end
 			{
-				#if (flash || js)
+				#if flash
 				pBitmapData.copyPixels(glyph, glyph.rect, _point, null, null, true);
 				_point.x += glyph.width + pLetterSpacing;
 				#else
@@ -379,7 +377,7 @@ class PxBitmapFont
 		}
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	/**
 	 * Internal method for actually drawing text on cpp and neko targets
 	 * @param	graphics
@@ -406,7 +404,7 @@ class PxBitmapFont
 		for (i in 0...(textLength)) 
 		{
 			var charCode:Int = pText.charCodeAt(i);
-			#if (flash || js)
+			#if flash
 			var glyph:BitmapData = _glyphs[charCode];
 			if (glyph != null) 
 			{
@@ -448,9 +446,9 @@ class PxBitmapFont
 	 */
 	public var numLetters(get_numLetters, null):Int;
 	
-	public function get_numLetters():Int 
+	private function get_numLetters():Int 
 	{
-		#if (flash || js)
+		#if flash
 		return _glyphs.length;
 		#else
 		return _num_letters;

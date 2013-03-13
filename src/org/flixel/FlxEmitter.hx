@@ -2,6 +2,14 @@ package org.flixel;
 
 import nme.display.Bitmap;
 
+class FlxEmitter extends FlxTypedEmitter<FlxParticle>
+{
+	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
+	{
+		super(X, Y, Size);
+	}
+}
+
 /**
  * <code>FlxEmitter</code> is a lightweight particle emitter.
  * It can be used for one-time explosions or for
@@ -12,7 +20,7 @@ import nme.display.Bitmap;
  * It is easy to use and relatively efficient,
  * relying on <code>FlxGroup</code>'s RECYCLE POWERS.
  */
-class FlxEmitter extends FlxGroup
+class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 {
 	/**
 	 * The X position of the top left corner of the emitter in world space.
@@ -79,7 +87,7 @@ class FlxEmitter extends FlxGroup
 	/**
 	 * Internal variable for tracking the class to create when generating particles.
 	 */
-	private var _particleClass:Class<FlxParticle>;
+	private var _particleClass:Class<T>;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -124,7 +132,7 @@ class FlxEmitter extends FlxGroup
 		minRotation = -360;
 		maxRotation = 360;
 		gravity = 0;
-		_particleClass = FlxParticle;
+		_particleClass = cast FlxParticle;
 		particleDrag = new FlxPoint();
 		frequency = 0.1;
 		lifespan = 3;
@@ -159,7 +167,7 @@ class FlxEmitter extends FlxGroup
 	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8):FlxEmitter
+	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -179,10 +187,10 @@ class FlxEmitter extends FlxGroup
 			particle = Type.createInstance(_particleClass, []);
 			if (Multiple)
 			{
-				randomFrame = Math.floor(FlxG.random() * totalFrames); 
+				randomFrame = Std.int(FlxG.random() * totalFrames); 
 				if (BakedRotations > 0)
 				{
-					#if (flash || js)
+					#if flash
 					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame);
 					#else
 					particle.loadGraphic(Graphics, true);
@@ -199,7 +207,7 @@ class FlxEmitter extends FlxGroup
 			{
 				if (BakedRotations > 0)
 				{
-					#if (flash || js)
+					#if flash
 					particle.loadRotatedGraphic(Graphics, BakedRotations);
 					#else
 					particle.loadGraphic(Graphics);
@@ -333,10 +341,10 @@ class FlxEmitter extends FlxGroup
 	 */
 	public function emitParticle():Void
 	{
-		var particle:FlxParticle = cast(recycle(cast _particleClass), FlxParticle);
+		var particle:FlxParticle = recycle(cast _particleClass);
 		particle.lifespan = lifespan;
 		particle.elasticity = bounce;
-		particle.reset(x - (Math.floor(particle.width) >> 1) + FlxG.random() * width, y - (Math.floor(particle.height) >> 1) + FlxG.random() * height);
+		particle.reset(x - (Std.int(particle.width) >> 1) + FlxG.random() * width, y - (Std.int(particle.height) >> 1) + FlxG.random() * height);
 		particle.visible = true;
 		
 		if (minParticleSpeed.x != maxParticleSpeed.x)
@@ -434,14 +442,14 @@ class FlxEmitter extends FlxGroup
 	 * Set your own particle class type here. The custom class must extend <code>FlxParticle</code>.
 	 * Default is <code>FlxParticle</code>.
 	 */
-	public var particleClass(get_particleClass, set_particleClass):Class<FlxParticle>;
+	public var particleClass(get_particleClass, set_particleClass):Class<T>;
 	
-	private function get_particleClass():Class<FlxParticle> 
+	private function get_particleClass():Class<T> 
 	{
 		return _particleClass;
 	}
 	
-	private function set_particleClass(value:Class<FlxParticle>):Class<FlxParticle> 
+	private function set_particleClass(value:Class<T>):Class<T> 
 	{
 		return _particleClass = value;
 	}

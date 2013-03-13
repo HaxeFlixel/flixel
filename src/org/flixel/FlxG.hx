@@ -16,26 +16,32 @@ import nme.media.Sound;
 import nme.media.SoundTransform;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
-
-#if (cpp || neko)
-import org.flixel.system.input.JoystickManager;
-#end
-
-import org.flixel.system.input.TouchManager;
-import nme.ui.Multitouch;
-
 import org.flixel.plugin.pxText.PxBitmapFont;
-import org.flixel.system.input.Keyboard;
-import org.flixel.system.input.Mouse;
-import org.flixel.tweens.misc.MultiVarTween;
-
-import org.flixel.plugin.DebugPathDisplay;
 import org.flixel.plugin.TimerManager;
-import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxQuadTree;
-
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
+import org.flixel.tweens.misc.MultiVarTween;
+
+#if !FLX_NO_DEBUG
+import org.flixel.system.FlxDebugger;
+import org.flixel.plugin.DebugPathDisplay;
+#end
+
+import org.flixel.system.input.FlxInputs;
+
+#if !FLX_NO_TOUCH
+import org.flixel.system.input.FlxTouchManager;
+#end
+#if !FLX_NO_KEYBOARD
+import org.flixel.system.input.FlxKeyboard;
+#end
+#if !FLX_NO_MOUSE
+import org.flixel.system.input.FlxMouse;
+#end
+#if !FLX_NO_JOYSTICK
+import org.flixel.system.input.FlxJoystickManager;
+#end
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -46,39 +52,22 @@ import org.flixel.tweens.util.Ease;
 class FlxG 
 {
 	/**
-	 * The maximum number of concurrent touch points supported by the current device.
-	 */
-	public static var maxTouchPoints:Int = 0;
-	
-	/**
 	 * Indicates whether the current environment supports basic touch input, such as a single finger tap.
 	 */
 	public static var supportsTouchEvents:Bool = false;
-	
-	/**
-	 * A reference to a <code>TouchManager</code> object. Useful for devices with multitouch support
-	 */
-	public static var touchManager:TouchManager;
-	
-	#if (cpp || neko)
-	/**
-	 * A reference to a <code>JoystickManager</code> object. Important for input!
-	 */
-	public static var joystickManager:JoystickManager;
-	#end
-	
+
 	/**
 	 * Global tweener for tweening between multiple worlds
 	 */
 	public static var tweener:FlxBasic = new FlxBasic();
 	
 	#if neko
-	public static var bgColor(getBgColor, setBgColor):BitmapInt32;
+	public static var bgColor(get_bgColor, set_bgColor):BitmapInt32;
 	#else
-	public static var bgColor(getBgColor, setBgColor):Int;
+	public static var bgColor(get_bgColor, set_bgColor):Int;
 	#end
 	
-	public static var flashFramerate(getFlashFramerate, setFlashFramerate):Int;
+	public static var flashFramerate(get_flashFramerate, set_flashFramerate):Int;
 	
 	public function new() { }
 	
@@ -98,8 +87,9 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "08";
+	static public inline var LIBRARY_MINOR_VERSION:String = "09";
 	
+	#if !FLX_NO_DEBUG
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
 	 */
@@ -129,6 +119,7 @@ class FlxG
 	 * Debugger overlay layout preset: Large windows taking up right third of screen.
 	 */
 	static public inline var DEBUGGER_RIGHT:Int = 5;
+	#end
 	
 	/**
 	 * Some handy color presets.  Less glaring than pure RGB full values.
@@ -180,7 +171,21 @@ class FlxG
 	#else
 	static public inline var BLACK:Int = 0xff000000;
 	#end
-
+	/**
+	 * Totally transparent color. Usefull for creating transparent BitmapData
+	 */
+	#if neko
+	static public inline var TRANSPARENT:BitmapInt32 = {rgb: 0x000000, a: 0x00};
+	#else
+	static public inline var TRANSPARENT:Int = 0x00000000;
+	#end
+	
+	/**
+	 * Useful for rad-to-deg and deg-to-rad conversion.
+	 */
+	static public inline var DEG:Float = 180 / Math.PI;
+	static public inline var RAD:Float = Math.PI / 180;
+	
 	/**
 	 * Internal tracker for game object.
 	 */
@@ -194,7 +199,6 @@ class FlxG
 	 * Set automatically by <code>FlxPreloader</code> during startup.
 	 */
 	static public var debug:Bool;
-	
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
@@ -222,11 +226,13 @@ class FlxG
 	 * Default value is 6.
 	 */
 	static public var worldDivisions:Int;
+	#if !FLX_NO_DEBUG
 	/**
 	 * Whether to show visual debug displays or not.
 	 * Default = false.
 	 */
 	static public var visualDebug:Bool;
+	#end
 	/**
 	 * Setting this to true will disable/skip stuff that isn't necessary for mobile platforms like Android. [BETA]
 	 */
@@ -249,15 +255,6 @@ class FlxG
 	 */
 	static public var saves:Array<Dynamic>; 
 	static public var save:Int;
-
-	/**
-	 * A reference to a <code>FlxMouse</code> object.  Important for input!
-	 */
-	static public var mouse:Mouse;
-	/**
-	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
-	 */
-	static public var keys:Keyboard;
 	
 	/**
 	 * A handy container for a background music object.
@@ -266,7 +263,7 @@ class FlxG
 	/**
 	 * A list of all the sounds being played in the game.
 	 */
-	static public var sounds:FlxGroup;
+	static public var sounds:FlxTypedGroup<FlxSound>;
 	/**
 	 * Whether or not the game sounds are muted.
 	 */
@@ -318,6 +315,35 @@ class FlxG
 	 */
 	static public var _cache:Hash<BitmapData>;
 	static public var _lastBitmapDataKey:String;
+
+	#if !FLX_NO_MOUSE
+	/**
+	 * A reference to a <code>FlxMouse</code> object.  Important for input!
+	 */
+	static public var mouse:FlxMouse;
+	#end
+
+	#if !FLX_NO_KEYBOARD
+	/**
+	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
+	 */
+	static public var keys:FlxKeyboard;
+	#end
+
+	#if !FLX_NO_TOUCH
+	/**
+	 * A reference to a <code>TouchManager</code> object. Useful for devices with multitouch support
+	 */
+	public static var touchManager:FlxTouchManager;
+	#end
+	
+	#if (!FLX_NO_JOYSTICK && (cpp||neko))
+	/**
+	 * A reference to a <code>JoystickManager</code> object. Important for input!
+	 * Set the instance in the FlxInputs class
+	 */
+	public static var joystickManager:FlxJoystickManager;
+	#end
 	
 	static public function getLibraryName():String
 	{
@@ -328,12 +354,14 @@ class FlxG
 	 * Log data to the debugger.
 	 * @param	Data		Anything you want to log to the console.
 	 */
-	static public function log(Data:Dynamic):Void
+	static public inline function log(Data:Dynamic):Void
 	{
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
-			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Data.toString()));
+			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Std.string(Data)));
 		}
+		#end
 	}
 	
 	/**
@@ -341,10 +369,12 @@ class FlxG
 	 */
 	static public function clearLog():Void
 	{
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			_game.debugger.log.clear();
 		}
+		#end
 	}
 	
 	/**
@@ -356,10 +386,12 @@ class FlxG
 	 */
 	static public function watch(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game._debugger != null))
 		{
 			_game._debugger.watch.add(AnyObject, VariableName, DisplayName);
 		}
+		#end
 	}
 	
 	/**
@@ -370,20 +402,22 @@ class FlxG
 	 */
 	static public function unwatch(AnyObject:Dynamic, VariableName:String = null):Void
 	{
+		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game._debugger != null))
 		{
 			_game._debugger.watch.remove(AnyObject, VariableName);
 		}
+		#end
 	}
 	
-	public static var framerate(getFramerate, setFramerate):Int;
+	public static var framerate(get_framerate, set_framerate):Int;
 	
 	/**
 	 * How many times you want your game to update each second.
 	 * More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the Flash Player framerate!
 	 */
-	static public function getFramerate():Int
+	static private function get_framerate():Int
 	{
 		return Std.int(1000 / _game._step);
 	}
@@ -391,9 +425,9 @@ class FlxG
 	/**
 	 * @private
 	 */
-	static public function setFramerate(Framerate:Int):Int
+	static private function set_framerate(Framerate:Int):Int
 	{
-		_game._step = Math.floor(Math.abs(1000 / Framerate));
+		_game._step = Std.int(Math.abs(1000 / Framerate));
 		_game._stepSeconds = (_game._step / 1000);
 		if (_game._maxAccumulation < _game._step)
 		{
@@ -407,24 +441,24 @@ class FlxG
 	 * More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the Flash Player framerate!
 	 */
-	static public function getFlashFramerate():Int
+	static private function get_flashFramerate():Int
 	{
 		if (_game.stage != null)
-			return Math.floor(_game.stage.frameRate);
+			return Std.int(_game.stage.frameRate);
 		return 0;
 	}
 		
 	/**
 	 * @private
 	 */
-	static public function setFlashFramerate(Framerate:Int):Int
+	static private function set_flashFramerate(Framerate:Int):Int
 	{
-		_game._flashFramerate = Math.floor(Math.abs(Framerate));
+		_game._flashFramerate = Std.int(Math.abs(Framerate));
 		if (_game.stage != null)
 		{
 			_game.stage.frameRate = _game._flashFramerate;
 		}
-		_game._maxAccumulation = Math.floor(2000 / _game._flashFramerate) - 1;
+		_game._maxAccumulation = Std.int(2000 / _game._flashFramerate) - 1;
 		if (_game._maxAccumulation < _game._step)
 		{
 			_game._maxAccumulation = _game._step;
@@ -468,15 +502,15 @@ class FlxG
 	 */
 	inline static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
 	{
-		HowManyTimes = Math.floor(Math.max(HowManyTimes, 0));
+		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
 		var i:Int = 0;
 		var index1:Int;
 		var index2:Int;
 		var object:Dynamic;
 		while (i < HowManyTimes)
 		{
-			index1 = Math.floor(FlxG.random() * Objects.length);
-			index2 = Math.floor(FlxG.random() * Objects.length);
+			index1 = Std.int(FlxG.random() * Objects.length);
+			index2 = Std.int(FlxG.random() * Objects.length);
 			object = Objects[index2];
 			Objects[index2] = Objects[index1];
 			Objects[index1] = object;
@@ -515,6 +549,7 @@ class FlxG
 		return null;
 	}
 		
+	#if !FLX_NO_RECORD
 	/**
 	 * Load replay data from a string and play it back.
 	 * @param	Data		The replay that you want to load.
@@ -535,11 +570,12 @@ class FlxG
 			FlxG.switchState(State);
 		}
 		_game._replayCancelKeys = CancelKeys;
-		_game._replayTimer = Math.floor(Timeout * 1000);
+		_game._replayTimer = Std.int(Timeout * 1000);
 		_game._replayCallback = Callback;
 		_game._replayRequested = true;
 	}
-		
+	#end
+
 	/**
 	 * Resets the game or state and replay requested flag.
 	 * @param	StandardMode	If true, reload entire game, else just reload current game state.
@@ -554,22 +590,28 @@ class FlxG
 		{
 			FlxG.resetState();
 		}
+		
+		#if !FLX_NO_RECORD
 		if (_game._replay.frameCount > 0)
 		{
 			_game._replayRequested = true;
 		}
+		#end
 	}
-		
+	
+	#if !FLX_NO_RECORD
 	/**
 	 * Stops the current replay.
 	 */
 	static public function stopReplay():Void
 	{
 		_game._replaying = false;
+		#if !FLX_NO_DEBUG
 		if (_game._debugger != null)
 		{
 			_game._debugger.vcr.stopped();
 		}
+		#end
 		resetInput();
 	}
 		
@@ -597,12 +639,15 @@ class FlxG
 	static public function stopRecording():String
 	{
 		_game._recording = false;
+		#if !FLX_NO_DEBUG
 		if (_game._debugger != null)
 		{
 			_game._debugger.vcr.stopped();
 		}
+		#end
 		return _game._replay.save();
 	}
+	#end
 	
 	/**
 	 * Request a reset of the current game state.
@@ -610,6 +655,12 @@ class FlxG
 	static public function resetState():Void
 	{
 		_game._requestedState = Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []);
+		#if !FLX_NO_DEBUG
+		if (Std.is(_game._requestedState, FlxSubState))
+		{
+			throw "You can't set FlxSubState class instance as the state for you game";
+		}
+		#end
 	}
 	
 	/**
@@ -625,12 +676,7 @@ class FlxG
 	 */
 	static public function resetInput():Void
 	{
-		keys.reset();
-		mouse.reset();
-		
-		#if (cpp || neko)
-		joystickManager.reset();
-		#end
+		FlxInputs.resetInputs();
 	}
 	
 	// TODO: Return from Sound -> Class<Sound>
@@ -672,7 +718,7 @@ class FlxG
 			FlxG.log("WARNING: FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
-		var sound:FlxSound = cast(sounds.recycle(FlxSound), FlxSound);
+		var sound:FlxSound = sounds.recycle(FlxSound);
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy);
@@ -782,9 +828,8 @@ class FlxG
 		}
 		if (volumeHandler != null)
 		{
-			// volumeHandler(FlxG.mute ? 0 : _volume);
 			var param:Float = FlxG.mute ? 0 : volume;
-			Reflect.callMethod(FlxG, Reflect.getProperty(FlxG, "volumeHandler"), [param]);
+			volumeHandler(param);
 		}
 		return Volume;
 	}
@@ -806,17 +851,10 @@ class FlxG
 		var l:Int = sounds.members.length;
 		while(i < l)
 		{
-			if (Std.is(sounds.members[i], FlxSound))
+			sound = sounds.members[i++];
+			if ((sound != null) && (ForceDestroy || !sound.survive))
 			{
-				sound = cast(sounds.members[i++], FlxSound);
-				if ((sound != null) && (ForceDestroy || !sound.survive))
-				{
-					sound.destroy();
-				}
-			}
-			else
-			{
-				i++;
+				sound.destroy();
 			}
 		}
 	}
@@ -850,7 +888,7 @@ class FlxG
 		var l:Int = sounds.length;
 		while(i < l)
 		{
-			sound = cast(sounds.members[i++], FlxSound);
+			sound = sounds.members[i++];
 			if ((sound != null) && sound.exists && sound.active)
 			{
 				sound.pause();
@@ -872,7 +910,7 @@ class FlxG
 		var l:Int = sounds.length;
 		while(i < l)
 		{
-			sound = cast(sounds.members[i++], FlxSound);
+			sound = sounds.members[i++];
 			if ((sound != null) && sound.exists)
 			{
 				sound.resume();
@@ -1024,14 +1062,13 @@ class FlxG
 			#if !flash
 			if (additionalKey != "")
 			{
-				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Math.floor(bd.width / FrameWidth);
-				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Math.floor(bd.height / FrameHeight);
+				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
+				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
 				
-				#if !neko
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, 0x00000000);
-				#else
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, {rgb: 0x000000, a: 0x00});
-				#end
+				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
+				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
+				
+				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxG.TRANSPARENT);
 				
 				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 				var tempPoint:Point = new Point();
@@ -1184,13 +1221,13 @@ class FlxG
 		}
 	}
 	
-	public static var stage(getStage, null):Stage;
+	public static var stage(get_stage, null):Stage;
 	
 	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
 	 * Will be null if it's not safe/useful yet.
 	 */
-	static public function getStage():Stage
+	static private function get_stage():Stage
 	{
 		if (_game.stage != null)
 		{
@@ -1199,12 +1236,12 @@ class FlxG
 		return null;
 	}
 	
-	public static var state(getState, null):FlxState;
+	public static var state(get_state, null):FlxState;
 	
 	/**
 	 * Read-only: access the current game state from anywhere.
 	 */
-	static public function getState():FlxState
+	static private function get_state():FlxState
 	{
 		return _game._state;
 	}
@@ -1216,29 +1253,25 @@ class FlxG
 	{
 		_game._requestedState = State;
 	}
-		
+
+	#if !FLX_NO_DEBUG
 	/**
 	 * Change the way the debugger's windows are laid out.
 	 * @param	Layout		See the presets above (e.g. <code>DEBUGGER_MICRO</code>, etc).
 	 */
 	static public function setDebuggerLayout(Layout:Int):Void
 	{
-		if (_game._debugger != null)
-		{
-			_game._debugger.setLayout(Layout);
-		}
+		_game._debugger.setLayout(Layout);
 	}
-		
+	
 	/**
 	 * Just resets the debugger windows to whatever the last selected layout was (<code>DEBUGGER_STANDARD</code> by default).
 	 */
 	static public function resetDebuggerLayout():Void
 	{
-		if (_game._debugger != null)
-		{
-			_game._debugger.resetLayout();
-		}
+		_game._debugger.resetLayout();
 	}
+	#end
 	
 	/**
 	 * Add a new camera object to the game.
@@ -1248,7 +1281,7 @@ class FlxG
 	 */
 	static public function addCamera(NewCamera:FlxCamera):FlxCamera
 	{
-		FlxG._game.addChildAt(NewCamera._flashSprite, FlxG._game.getChildIndex(FlxG._game._mouse));
+		FlxG._game.addChildAt(NewCamera._flashSprite, FlxG._game.getChildIndex(FlxG._game._inputContainer));
 		FlxG.cameras.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.length - 1;
 		return NewCamera;
@@ -1273,7 +1306,7 @@ class FlxG
 			FlxG.log("Error removing camera, not part of game.");
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		for (i in 0...(FlxG.cameras.length))
 		{
 			FlxG.cameras[i].ID = i;
@@ -1393,9 +1426,9 @@ class FlxG
 	 * Set functionality sets the background color of all the current cameras.
 	 */
 	#if flash
-	static public function getBgColor():UInt
+	static private function get_bgColor():UInt
 	#else
-	static public function getBgColor():BitmapInt32
+	static private function get_bgColor():BitmapInt32
 	#end
 	{
 		if (FlxG.camera == null)
@@ -1409,9 +1442,9 @@ class FlxG
 	}
 	
 	#if flash
-	static public function setBgColor(Color:UInt):UInt
+	static private function set_bgColor(Color:UInt):UInt
 	#else
-	static public function setBgColor(Color:BitmapInt32):BitmapInt32
+	static private function set_bgColor(Color:BitmapInt32):BitmapInt32
 	#end
 	{
 		var i:Int = 0;
@@ -1570,12 +1603,12 @@ class FlxG
 		FlxG.clearBitmapCache();
 		
 		FlxG._game = Game;
-		FlxG.width = Math.floor(Math.abs(Width));
-		FlxG.height = Math.floor(Math.abs(Height));
+		FlxG.width = Std.int(Math.abs(Width));
+		FlxG.height = Std.int(Math.abs(Height));
 		
 		FlxG.mute = false;
 		FlxG.volume = 0.5;
-		FlxG.sounds = new FlxGroup();
+		FlxG.sounds = new FlxTypedGroup<FlxSound>();
 		FlxG.volumeHandler = null;
 		
 		if(flashGfxSprite == null)
@@ -1590,24 +1623,25 @@ class FlxG
 		useBufferLocking = false;
 		
 		plugins = new Array<FlxBasic>();
+		
+		#if !FLX_NO_DEBUG
 		addPlugin(new DebugPathDisplay());
+		#end
+		
 		addPlugin(new TimerManager());
 		
-		FlxG.mouse = new Mouse(FlxG._game._mouse);
-		FlxG.keys = new Keyboard();
 		#if js
 		FlxG.mobile = true;
 		#else
 		FlxG.mobile = false;
 		#end
-		
-		#if (cpp || neko)
-		FlxG.joystickManager = new JoystickManager();
-		#end
 
 		FlxG.levels = new Array();
 		FlxG.scores = new Array();
+		
+		#if !FLX_NO_DEBUG
 		FlxG.visualDebug = false;
+		#end
 	}
 	
 	/**
@@ -1615,7 +1649,7 @@ class FlxG
 	 */
 	static public function reset():Void
 	{
-		#if (cpp || neko)
+		#if !flash
 		PxBitmapFont.clearStorage();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
@@ -1633,32 +1667,21 @@ class FlxG
 		FlxG.globalSeed = Math.random();
 		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
+		#if !FLX_NO_DEBUG
 		var debugPathDisplay:DebugPathDisplay = cast(FlxG.getPlugin(DebugPathDisplay), DebugPathDisplay);
 		if (debugPathDisplay != null)
 		{
 			debugPathDisplay.clear();
 		}
+		#end
 	}
 	
 	/**
-	 * Called by the game object to update the keyboard and mouse input tracking objects.
+	 * Called by the game object to update all the inputs enabled in FlxInputs
 	 */
-	inline static public function updateInput():Void
+	inline static public function updateInputs():Void
 	{
-		FlxG.keys.update();
-		if (FlxG.mouse.visible)
-		{
-			FlxG.mouse.update(Math.floor(FlxG._game.mouseX), Math.floor(FlxG._game.mouseY));
-		}
-		
-		if (FlxG.supportsTouchEvents)
-		{
-			FlxG.touchManager.update();
-		}
-		
-		#if (cpp || neko)
-		FlxG.joystickManager.update();
-		#end
+		FlxInputs.updateInputs();
 	}
 	
 	/**
@@ -1678,32 +1701,32 @@ class FlxG
 				continue;
 			}
 			
-			#if (flash || js)
+			#if flash
 			if (useBufferLocking)
 			{
 				cam.buffer.lock();
 			}
 			#end
 			
-			#if (cpp || neko)
+			#if !flash
 			cam.clearDrawStack();
 			cam._canvas.graphics.clear();
 			// clearing camera's debug sprite
-			cam._debugLayer.graphics.clear();
+			cam._effectsLayer.graphics.clear();
 			#end
 			
-			#if (flash || js)
+			#if flash
 			cam.fill(cam.bgColor);
 			cam.screen.dirty = true;
-			#elseif cpp
-			cam.fill((cam.bgColor & 0x00ffffff), true, ((cam.bgColor >> 24) & 255) / 255);
-			#else
+			#elseif neko
 			cam.fill(cam.bgColor, true, cam.bgColor.a / 255);
+			#else
+			cam.fill((cam.bgColor & 0x00ffffff), true, ((cam.bgColor >> 24) & 255) / 255);
 			#end
 		}
 	}
 	
-	#if (cpp || neko)
+	#if !flash
 	inline static public function renderCameras():Void
 	{
 		var cam:FlxCamera;
@@ -1741,7 +1764,7 @@ class FlxG
 			}
 			cam.drawFX();
 			
-			#if (flash || js)
+			#if flash
 			if (useBufferLocking)
 			{
 				cam.buffer.unlock();
@@ -1768,9 +1791,12 @@ class FlxG
 				{
 					cam.update();
 				}
-				
-				cam._flashSprite.x = cam.x + cam._flashOffsetX;
-				cam._flashSprite.y = cam.y + cam._flashOffsetY;
+
+				if (cam.target == null) 
+				{
+					cam._flashSprite.x = cam.x + cam._flashOffsetX;
+					cam._flashSprite.y = cam.y + cam._flashOffsetY;
+				}
 				
 				cam._flashSprite.visible = cam.visible;
 			}
@@ -1814,7 +1840,6 @@ class FlxG
 			}
 		}
 	}
-	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.
 	 * @param	object		The object containing the properties to tween.

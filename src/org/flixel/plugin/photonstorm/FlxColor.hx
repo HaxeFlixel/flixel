@@ -72,7 +72,7 @@ class FlxColor
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
-		var opposite:Int = FlxMath.wrapValue(Math.floor(hsv.hue), 180, 359);
+		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
 		
 		return HSVtoRGB(opposite, 1.0, 1.0);
 	}
@@ -100,10 +100,10 @@ class FlxColor
 			throw "FlxColor Warning: Invalid threshold given to getAnalogousHarmony()";
 		}
 		
-		var warmer:Int = FlxMath.wrapValue(Math.floor(hsv.hue), 359 - threshold, 359);
-		var colder:Int = FlxMath.wrapValue(Math.floor(hsv.hue), threshold, 359);
+		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), 359 - threshold, 359);
+		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), threshold, 359);
 		
-		return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: Math.floor(hsv.hue), hue2: warmer, hue3: colder };
+		return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
 	}
 	
 	/**
@@ -129,16 +129,16 @@ class FlxColor
 			throw "FlxColor Warning: Invalid threshold given to getSplitComplementHarmony()";
 		}
 		
-		var opposite:Int = FlxMath.wrapValue(Math.floor(hsv.hue), 180, 359);
+		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
 		
-		var warmer:Int = FlxMath.wrapValue(Math.floor(hsv.hue), opposite - threshold, 359);
-		var colder:Int = FlxMath.wrapValue(Math.floor(hsv.hue), opposite + threshold, 359);
+		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite - threshold, 359);
+		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite + threshold, 359);
 		
 		FlxG.log("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
 		//return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
 		
-		return { color1: color, color2: HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: Math.floor(hsv.hue), hue2: warmer, hue3: colder };
+		return { color1: color, color2: HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
 	}
 	
 	/**
@@ -158,7 +158,7 @@ class FlxColor
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
-		var triadic1:Int = FlxMath.wrapValue(Math.floor(hsv.hue), 120, 359);
+		var triadic1:Int = FlxMath.wrapValue(Std.int(hsv.hue), 120, 359);
 		var triadic2:Int = FlxMath.wrapValue(triadic1, 120, 359);
 		
 		return { color1: color, color2: HSVtoRGB(triadic1, 1.0, 1.0), color3: HSVtoRGB(triadic2, 1.0, 1.0) };
@@ -247,7 +247,7 @@ class FlxColor
 		var lsd:Float = color % 16;
 		var msd:Float = (color - lsd) / 16;
 		
-		var hexified:String = digits.charAt(Math.floor(msd)) + digits.charAt(Math.floor(lsd));
+		var hexified:String = digits.charAt(Std.int(msd)) + digits.charAt(Std.int(lsd));
 		
 		return hexified;
 	}
@@ -269,16 +269,14 @@ class FlxColor
 	#end
 	{
 		#if flash
-		var result:UInt = 0;
-		#elseif neko
-		var result:BitmapInt32 = {rgb: 0, a: 0};
+		var result:UInt = FlxG.TRANSPARENT;
 		#else
-		var result:BitmapInt32 = 0;
+		var result:BitmapInt32 = FlxG.TRANSPARENT;
 		#end
 		
 		if (s == 0.0)
 		{
-			result = getColor32(alpha, Math.floor(v * 255), Math.floor(v * 255), Math.floor(v * 255));
+			result = getColor32(alpha, Std.int(v * 255), Std.int(v * 255), Std.int(v * 255));
 		}
 		else
 		{
@@ -291,22 +289,22 @@ class FlxColor
 			switch (Std.int(h))
 			{
 				case 0:
-					result = getColor32(alpha, Math.floor(v * 255), Math.floor(t * 255), Math.floor(p * 255));
+					result = getColor32(alpha, Std.int(v * 255), Std.int(t * 255), Std.int(p * 255));
 					
 				case 1:
-					result = getColor32(alpha, Math.floor(q * 255), Math.floor(v * 255), Math.floor(p * 255));
+					result = getColor32(alpha, Std.int(q * 255), Std.int(v * 255), Std.int(p * 255));
 					
 				case 2:
-					result = getColor32(alpha, Math.floor(p * 255), Math.floor(v * 255), Math.floor(t * 255));
+					result = getColor32(alpha, Std.int(p * 255), Std.int(v * 255), Std.int(t * 255));
 					
 				case 3:
-					result = getColor32(alpha, Math.floor(p * 255), Math.floor(q * 255), Math.floor(v * 255));
+					result = getColor32(alpha, Std.int(p * 255), Std.int(q * 255), Std.int(v * 255));
 					
 				case 4:
-					result = getColor32(alpha, Math.floor(t * 255), Math.floor(p * 255), Math.floor(v * 255));
+					result = getColor32(alpha, Std.int(t * 255), Std.int(p * 255), Std.int(v * 255));
 					
 				case 5:
-					result = getColor32(alpha, Math.floor(v * 255), Math.floor(p * 255), Math.floor(q * 255));
+					result = getColor32(alpha, Std.int(v * 255), Std.int(p * 255), Std.int(q * 255));
 					
 				default:
 					FlxG.log("FlxColor Error: HSVtoRGB : Unknown color");
@@ -437,9 +435,9 @@ class FlxColor
 		var src1:RGBA = getRGB(color1);
 		var src2:RGBA = getRGB(color2);
 		
-		var r:Int = Math.floor((((src2.red - src1.red) * currentStep) / steps) + src1.red);
-		var g:Int = Math.floor((((src2.green - src1.green) * currentStep) / steps) + src1.green);
-		var b:Int = Math.floor((((src2.blue - src1.blue) * currentStep) / steps) + src1.blue);
+		var r:Int = Std.int((((src2.red - src1.red) * currentStep) / steps) + src1.red);
+		var g:Int = Std.int((((src2.green - src1.green) * currentStep) / steps) + src1.green);
+		var b:Int = Std.int((((src2.blue - src1.blue) * currentStep) / steps) + src1.blue);
 
 		return getColor32(alpha, r, g, b);
 	}
@@ -448,18 +446,18 @@ class FlxColor
 	{
 		var src:RGBA = getRGB(color);
 		
-		var r:Int = Math.floor((((r2 - src.red) * currentStep) / steps) + src.red);
-		var g:Int = Math.floor((((g2 - src.green) * currentStep) / steps) + src.green);
-		var b:Int = Math.floor((((b2 - src.blue) * currentStep) / steps) + src.blue);
+		var r:Int = Std.int((((r2 - src.red) * currentStep) / steps) + src.red);
+		var g:Int = Std.int((((g2 - src.green) * currentStep) / steps) + src.green);
+		var b:Int = Std.int((((b2 - src.blue) * currentStep) / steps) + src.blue);
 	
 		return getColor24(r, g, b);
 	}
 	
 	public static function interpolateRGB(r1:Int, g1:Int, b1:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):BitmapInt32
 	{
-		var r:Int = Math.floor((((r2 - r1) * currentStep) / steps) + r1);
-		var g:Int = Math.floor((((g2 - g1) * currentStep) / steps) + g1);
-		var b:Int = Math.floor((((b2 - b1) * currentStep) / steps) + b1);
+		var r:Int = Std.int((((r2 - r1) * currentStep) / steps) + r1);
+		var g:Int = Std.int((((g2 - g1) * currentStep) / steps) + g1);
+		var b:Int = Std.int((((b2 - b1) * currentStep) / steps) + b1);
 	
 		return getColor24(r, g, b);
 	}

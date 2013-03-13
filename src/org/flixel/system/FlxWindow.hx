@@ -11,6 +11,7 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
+import org.flixel.FlxG;
 
 import org.flixel.FlxAssets;
 import org.flixel.FlxU;
@@ -20,6 +21,14 @@ import org.flixel.FlxU;
  */
 class FlxWindow extends Sprite
 {
+	#if neko
+	static public inline var BG_COLOR:BitmapInt32 = { rgb: 0x7f7f7f, a: 0x7f };
+	static public inline var TOP_COLOR:BitmapInt32 = { rgb: 0x000000, a: 0x7f };
+	#else
+	static public inline var BG_COLOR:Int = 0x7f7f7f7f;
+	static public inline var TOP_COLOR:Int = 0x7f000000;
+	#end
+	
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
 	 */
@@ -109,24 +118,16 @@ class FlxWindow extends Sprite
 		#if !flash
 		if (BGColor == null)
 		{
-			#if !neko
-			BGColor = 0x7f7f7f7f;
-			#else
-			BGColor = { rgb: 0x7f7f7f, a: 0x7f };
-			#end
+			BGColor = FlxWindow.BG_COLOR;
 		}
 		if (TopColor == null)
 		{
-			#if !neko
-			TopColor = 0x7f000000;
-			#else
-			TopColor = { rgb: 0x000000, a: 0x7f };
-			#end
+			TopColor = FlxWindow.TOP_COLOR;
 		}
 		#end
 		
-		_width = Math.floor(Math.abs(Width));
-		_height = Math.floor(Math.abs(Height));
+		_width = Std.int(Math.abs(Width));
+		_height = Std.int(Math.abs(Height));
 		_bounds = Bounds;
 		minSize = new Point(50, 30);
 		if (_bounds != null)
@@ -142,11 +143,7 @@ class FlxWindow extends Sprite
 		_resizable = Resizable;
 		//_resizable = false;
 		
-		#if !neko
-		_shadow = new Bitmap(new BitmapData(1, 2, true, 0xff000000));
-		#else
-		_shadow = new Bitmap(new BitmapData(1, 2, true, { rgb: 0x000000, a: 0xff }));
-		#end
+		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxG.BLACK));
 		addChild(_shadow);
 		_background = new Bitmap(new BitmapData(1, 1, true, BGColor));
 		_background.y = 15;
@@ -186,16 +183,30 @@ class FlxWindow extends Sprite
 		minSize = null;
 		maxSize = null;
 		_bounds = null;
-		removeChild(_shadow);
+		if (_shadow != null)
+		{
+			removeChild(_shadow);
+		}
 		_shadow = null;
-		removeChild(_background);
+		if (_background != null)
+		{
+			removeChild(_background);
+		}
 		_background = null;
-		removeChild(_header);
+		if (_header != null)
+		{
+			removeChild(_header);
+		}
 		_header = null;
-		removeChild(_title);
+		if (_title != null)
+		{
+			removeChild(_title);
+		}
 		_title = null;
 		if(_handle != null)
+		{
 			removeChild(_handle);
+		}
 		_handle = null;
 		_drag = null;
 	}
@@ -207,8 +218,8 @@ class FlxWindow extends Sprite
 	 */
 	public function resize(Width:Float, Height:Float):Void
 	{
-		_width = Math.floor(Math.abs(Width));
-		_height = Math.floor(Math.abs(Height));
+		_width = Std.int(Math.abs(Width));
+		_height = Std.int(Math.abs(Height));
 		updateSize();
 	}
 	
@@ -328,8 +339,8 @@ class FlxWindow extends Sprite
 	 */
 	private function updateSize():Void
 	{
-		_width = Math.floor(FlxU.bound(_width, minSize.x, maxSize.x));
-		_height = Math.floor(FlxU.bound(_height, minSize.y, maxSize.y));
+		_width = Std.int(FlxU.bound(_width, minSize.x, maxSize.x));
+		_height = Std.int(FlxU.bound(_height, minSize.y, maxSize.y));
 		
 		_header.scaleX = _width;
 		_background.scaleX = _width;

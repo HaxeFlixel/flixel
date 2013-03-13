@@ -15,7 +15,6 @@
 
 package org.flixel.plugin.photonstorm;
 
-
 import flash.display.Bitmap;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
@@ -58,6 +57,7 @@ class FlxExtendedSprite extends FlxSprite
 	private var clickCounter:Int;
 	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Function called when the mouse is pressed down on this sprite. Function is passed these parameters: obj:FlxExtendedSprite, x:int, y:int
 	 * @default null
@@ -69,6 +69,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * @default null
 	 */
 	public var mouseReleasedCallback:FlxExtendedSprite->Int->Int->Void;
+	#end
 	
 	/**
 	 * Is this sprite allowed to be thrown?
@@ -139,6 +140,7 @@ class FlxExtendedSprite extends FlxSprite
 	private var allowHorizontalDrag:Bool;
 	private var allowVerticalDrag:Bool;
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Function called when the mouse starts to drag this sprite. Function is passed these parameters: obj:FlxExtendedSprite, x:int, y:int
 	 * @default null
@@ -150,6 +152,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * @default null
 	 */
 	public var mouseStopDragCallback:Dynamic;
+	#end
 	
 	/**
 	 * An FlxRect region of the game world within which the sprite is restricted during mouse drag
@@ -168,11 +171,13 @@ class FlxExtendedSprite extends FlxSprite
 	private var snapX:Int;
 	private var snapY:Int;
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Is this sprite using a mouse spring?
 	 * @default false
 	 */
 	public var hasMouseSpring:Bool;
+	#end
 	
 	/**
 	 * Will the Mouse Spring be active always (false) or only when pressed (true)
@@ -180,10 +185,12 @@ class FlxExtendedSprite extends FlxSprite
 	 */
 	public var springOnPressed:Bool;
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * The MouseSpring object which is used to tie this sprite to the mouse
 	 */
 	public var mouseSpring:MouseSpring;
+	#end
 	
 	/**
 	 * By default the spring attaches to the top left of the sprite. To change this location provide an x offset (in pixels)
@@ -220,7 +227,9 @@ class FlxExtendedSprite extends FlxSprite
 		boundsSprite = null;
 		snapOnDrag = false;
 		snapOnRelease = false;
+		#if !FLX_NO_MOUSE
 		hasMouseSpring = false;
+		#end
 		springOnPressed = true;
 		
 		clickCounter = 0;
@@ -228,6 +237,7 @@ class FlxExtendedSprite extends FlxSprite
 		super(X, Y, SimpleGraphic);
 	}
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Allow this Sprite to receive mouse clicks, the total number of times this sprite is clicked is stored in this.clicks<br>
 	 * You can add callbacks via mousePressedCallback and mouseReleasedCallback
@@ -254,7 +264,9 @@ class FlxExtendedSprite extends FlxSprite
 		clickPixelPerfectAlpha = alphaThreshold;
 		clickCounter = 0;
 	}
+	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Stops this sprite from checking for mouse clicks and clears any set callbacks
 	 */
@@ -264,43 +276,50 @@ class FlxExtendedSprite extends FlxSprite
 		mousePressedCallback = null;
 		mouseReleasedCallback = null;
 	}
+	#end
+	
+	#if !FLX_NO_MOUSE
 	
 	#if flash
-	public var clicks(getClicks, setClicks):UInt;
+	public var clicks(get_clicks, set_clicks):UInt;
 	/**
 	 * Returns the number of times this sprite has been clicked (can be reset by setting clicks to zero)
 	 */
-	public function getClicks():UInt
+	private function get_clicks():UInt
 	{
 		return clickCounter;
 	}
 	/**
 	 * Sets the number of clicks this item has received. Usually you'd only set it to zero.
 	 */
-	public function setClicks(i:UInt):UInt
+	private function set_clicks(i:UInt):UInt
 	{
 		clickCounter = i;
 		return i;
 	}
 	#else
-	public var clicks(getClicks, setClicks):Int;
+	public var clicks(get_clicks, set_clicks):Int;
 	/**
 	 * Returns the number of times this sprite has been clicked (can be reset by setting clicks to zero)
 	 */
-	public function getClicks():Int
+	private function get_clicks():Int
 	{
 		return clickCounter;
 	}
+	
 	/**
 	 * Sets the number of clicks this item has received. Usually you'd only set it to zero.
 	 */
-	public function setClicks(i:Int):Int
+	private function set_clicks(i:Int):Int
 	{
 		clickCounter = i;
 		return i;
 	}
 	#end
 	
+	#end
+	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
 	 * 
@@ -337,7 +356,9 @@ class FlxExtendedSprite extends FlxSprite
 			this.boundsSprite = boundsSprite;
 		}
 	}
+	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
 	 */
@@ -355,7 +376,8 @@ class FlxExtendedSprite extends FlxSprite
 		mouseStartDragCallback = null;
 		mouseStopDragCallback = null;
 	}
-	 
+	#end
+	
 	/**
 	* Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
 	 * 
@@ -368,6 +390,7 @@ class FlxExtendedSprite extends FlxSprite
 		allowVerticalDrag = allowVertical;
 	}
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Make this Sprite throwable by the mouse. The sprite is thrown only when the mouse button is released.
 	 * 
@@ -390,7 +413,9 @@ class FlxExtendedSprite extends FlxSprite
 			clickable = true;
 		}
 	}
+	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Stops this sprite from being able to be thrown. If it currently has velocity this is NOT removed from it.
 	 */
@@ -398,7 +423,9 @@ class FlxExtendedSprite extends FlxSprite
 	{
 		throwable = false;
 	}
+	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Make this Sprite snap to the given grid either during drag or when it's released.
 	 * For example 16x16 as the snapX and snapY would make the sprite snap to every 16 pixels.
@@ -415,7 +442,9 @@ class FlxExtendedSprite extends FlxSprite
 		this.snapX = snapX;
 		this.snapY = snapY;
 	}
+	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Stops the sprite from snapping to a grid during drag or release.
 	 */
@@ -424,7 +453,9 @@ class FlxExtendedSprite extends FlxSprite
 		snapOnDrag = false;
 		snapOnRelease = false;
 	}
+	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Adds a simple spring between the mouse and this Sprite. The spring can be activated either when the mouse is pressed (default), or enabled all the time.
 	 * Note that nearly always the Spring will over-ride any other motion setting the sprite has (like velocity or gravity)
@@ -465,7 +496,9 @@ class FlxExtendedSprite extends FlxSprite
 		
 		return mouseSpring;
 	}
+	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Stops the sprite to mouse spring from being active
 	 */
@@ -475,23 +508,24 @@ class FlxExtendedSprite extends FlxSprite
 		
 		mouseSpring = null;
 	}
+	#end
 	
-	public var springX(getSpringX, null):Int;
+	public var springX(get_springX, null):Int;
 	
 	/**
 	 * The spring x coordinate in game world space. Consists of sprite.x + springOffsetX
 	 */
-	public function getSpringX():Int
+	private function get_springX():Int
 	{
 		return Math.floor(x + springOffsetX);
 	}
 	
-	public var springY(getSpringY, null):Int;
+	public var springY(get_springY, null):Int;
 	
 	/**
 	 * The spring y coordinate in game world space. Consists of sprite.y + springOffsetY
 	 */
-	public function getSpringY():Int
+	private function get_springY():Int
 	{
 		return Math.floor(y + springOffsetY);
 	}
@@ -501,6 +535,7 @@ class FlxExtendedSprite extends FlxSprite
 	 */
 	override public function update():Void
 	{
+		#if !FLX_NO_MOUSE
 		if (draggable == true && isDragged == true)
 		{
 			updateDrag();
@@ -534,7 +569,7 @@ class FlxExtendedSprite extends FlxSprite
 				}
 			}
 		}
-		
+		#end
 		super.update();
 	}
 	
@@ -650,15 +685,19 @@ class FlxExtendedSprite extends FlxSprite
 	private function updateDrag():Void
 	{
 		//FlxG.mouse.getWorldPosition(null, tempPoint);
-		
+		//todo touch drag
 		if (allowHorizontalDrag == true)
 		{
+			#if !FLX_NO_MOUSE
 			x = Math.floor(FlxG.mouse.x) - dragOffsetX;
+			#end
 		}
 		
 		if (allowVerticalDrag == true)
 		{
+			#if !FLX_NO_MOUSE
 			y = Math.floor(FlxG.mouse.y) - dragOffsetY;
+			#end
 		}
 		
 		if (boundsRect != null)
@@ -683,6 +722,7 @@ class FlxExtendedSprite extends FlxSprite
 	 */
 	private function checkForClick():Void
 	{
+		#if !FLX_NO_MOUSE
 		if (mouseOver && FlxG.mouse.justPressed())
 		{
 			//	If we don't need a pixel perfect check, then don't bother running one! By this point we know the mouse is over the sprite already
@@ -704,8 +744,10 @@ class FlxExtendedSprite extends FlxSprite
 				return;
 			}
 		}
+		#end
 	}
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Called by FlxMouseControl when this sprite is clicked. Should not usually be called directly.
 	 */
@@ -720,11 +762,12 @@ class FlxExtendedSprite extends FlxSprite
 		
 		if (mousePressedCallback != null)
 		{
-			Reflect.callMethod(this, Reflect.getProperty(this, "mousePressedCallback"), [this, mouseX, mouseY]);
-			//mousePressedCallback.apply(null, [ this, mouseX, mouseY ] );
+			mousePressedCallback(this, mouseX, mouseY);
 		}
 	}
+	#end
 	
+	#if !FLX_NO_MOUSE
 	/**
 	 * Called by FlxMouseControl when this sprite is released from a click. Should not usually be called directly.
 	 */
@@ -750,10 +793,10 @@ class FlxExtendedSprite extends FlxSprite
 		
 		if (mouseReleasedCallback != null)
 		{
-			Reflect.callMethod(this, Reflect.getProperty(this, "mouseReleasedCallback"), [this, this.mouseX, this.mouseY]);
-			//mouseReleasedCallback.apply(null, [ this, mouseX, mouseY ] );
+			mouseReleasedCallback(this, mouseX, mouseY);
 		}
 	}
+	#end
 	
 	/**
 	 * Called by FlxMouseControl when Mouse Drag starts on this Sprite. Should not usually be called directly.
@@ -761,7 +804,7 @@ class FlxExtendedSprite extends FlxSprite
 	public function startDrag():Void
 	{
 		isDragged = true;
-		
+		#if !FLX_NO_MOUSE
 		if (dragFromPoint == false)
 		{
 			dragOffsetX = Math.floor(Math.floor(FlxG.mouse.x) - x);
@@ -770,9 +813,10 @@ class FlxExtendedSprite extends FlxSprite
 		else
 		{
 			//	Move the sprite to the middle of the mouse
-			dragOffsetX = Math.floor(frameWidth / 2);
-			dragOffsetY = Math.floor(frameHeight / 2);
+			dragOffsetX = Std.int(frameWidth / 2);
+			dragOffsetY = Std.int(frameHeight / 2);
 		}
+		#end
 	}
 	
 	/**
@@ -889,39 +933,40 @@ class FlxExtendedSprite extends FlxSprite
 		}
 	}
 	
-	public var point(getPoint, setPoint):FlxPoint;
+	public var point(get_point, set_point):FlxPoint;
 	
 	/**
 	 * Returns an FlxPoint consisting of this sprites world x/y coordinates
 	 */
-	public function getPoint():FlxPoint
+	private function get_point():FlxPoint
 	{
 		return _point;
 	}
 	
-	public function setPoint(p:FlxPoint):FlxPoint
+	private function set_point(p:FlxPoint):FlxPoint
 	{
 		_point = p;
 		return p;
 	}
 	
-	public var mouseOver(getMouseOver, null):Bool;
+	#if !FLX_NO_MOUSE
+	public var mouseOver(get_mouseOver, null):Bool;
 	
 	/**
 	 * Return true if the mouse is over this Sprite, otherwise false. Only takes the Sprites bounding box into consideration and does not check if there 
 	 * are other sprites potentially on-top of this one. Check the value of this.isPressed if you need to know if the mouse is currently clicked on this sprite.
 	 */
-	public function getMouseOver():Bool
+	private function get_mouseOver():Bool
 	{
 		return FlxMath.pointInCoordinates(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), Math.floor(x), Math.floor(y), Math.floor(width), Math.floor(height));
 	}
 	
-	public var mouseX(getMouseX, null):Int;
+	public var mouseX(get_mouseX, null):Int;
 	
 	/**
 	 * Returns how many horizontal pixels the mouse pointer is inside this sprite from the top left corner. Returns -1 if outside.
 	 */
-	public function getMouseX():Int
+	private function get_mouseX():Int
 	{
 		if (mouseOver)
 		{
@@ -931,12 +976,12 @@ class FlxExtendedSprite extends FlxSprite
 		return -1;
 	}
 	
-	public var mouseY(getMouseY, null):Int;
+	public var mouseY(get_mouseY, null):Int;
 	
 	/**
 	 * Returns how many vertical pixels the mouse pointer is inside this sprite from the top left corner. Returns -1 if outside.
 	 */
-	public function getMouseY():Int
+	private function get_mouseY():Int
 	{
 		if (mouseOver)
 		{
@@ -945,13 +990,14 @@ class FlxExtendedSprite extends FlxSprite
 		
 		return -1;
 	}
+	#end
 	
-	public var rect(getRect, null):FlxRect;
+	public var rect(get_rect, null):FlxRect;
 	
 	/**
 	 * Returns an FlxRect consisting of the bounds of this Sprite.
 	 */
-	public function getRect():FlxRect
+	private function get_rect():FlxRect
 	{
 		_rect.x = x;
 		_rect.y = y;
@@ -960,5 +1006,4 @@ class FlxExtendedSprite extends FlxSprite
 		
 		return _rect;
 	}
-	
 }

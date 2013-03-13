@@ -2,7 +2,9 @@ package org.flixel;
 
 import nme.display.Graphics;
 
+#if !FLX_NO_DEBUG
 import org.flixel.plugin.DebugPathDisplay;
+#end
 
 /**
  * This is a simple path data container.  Basically a list of points that
@@ -17,6 +19,8 @@ class FlxPath
 	 * The list of <code>FlxPoint</code>s that make up the path data.
 	 */
 	public var nodes:Array<FlxPoint>;
+
+	#if !FLX_NO_DEBUG
 	/**
 	 * Specify a debug display color for the path.  Default is white.
 	 */
@@ -36,7 +40,8 @@ class FlxPath
 	 * @default false
 	 */
 	public var ignoreDrawDebug:Bool;
-
+	#end
+	
 	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
@@ -58,6 +63,8 @@ class FlxPath
 			nodes = Nodes;
 		}
 		_point = new FlxPoint();
+		
+		#if !FLX_NO_DEBUG
 		debugScrollFactor = new FlxPoint(1.0,1.0);
 		debugColor = 0xffffff;
 		ignoreDrawDebug = false;
@@ -67,6 +74,7 @@ class FlxPath
 		{
 			debugPathDisplay.add(this);
 		}
+		#end
 	}
 	
 	/**
@@ -74,6 +82,7 @@ class FlxPath
 	 */
 	public function destroy():Void
 	{
+		#if !FLX_NO_DEBUG
 		var debugPathDisplay:DebugPathDisplay = manager;
 		if (debugPathDisplay != null)
 		{
@@ -81,6 +90,8 @@ class FlxPath
 		}
 		
 		debugScrollFactor = null;
+		#end
+		
 		_point = null;
 		nodes = null;
 	}
@@ -218,6 +229,7 @@ class FlxPath
 		return null;
 	}
 	
+	#if !FLX_NO_DEBUG
 	/**
 	 * While this doesn't override <code>FlxBasic.drawDebug()</code>, the behavior is very similar.
 	 * Based on this path data, it draws a simple lines-and-boxes representation of the path
@@ -237,11 +249,11 @@ class FlxPath
 		}
 		
 		//Set up our global flash graphics object to draw out the path
-		#if (flash || js)
+		#if flash
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		#else
-		var gfx:Graphics = Camera._debugLayer.graphics;
+		var gfx:Graphics = Camera._effectsLayer.graphics;
 		#end
 		
 		//Then fill up the object with node and path graphics
@@ -255,12 +267,8 @@ class FlxPath
 			node = nodes[i];
 			
 			//find the screen position of the node on this camera
-			_point.x = node.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
-			_point.y = node.y - Std.int(Camera.scroll.y * debugScrollFactor.y);
-			#if (flash || js)
-			_point.x = Std.int(_point.x + ((_point.x > 0)?0.0000001:-0.0000001));
-			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001: -0.0000001));
-			#end
+			_point.x = node.x - (Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
+			_point.y = node.y - (Camera.scroll.y * debugScrollFactor.y);
 			
 			//decide what color this node should be
 			var nodeSize:Int = 2;
@@ -314,27 +322,24 @@ class FlxPath
 			//then draw a line to the next node
 			gfx.moveTo(_point.x, _point.y);
 			gfx.lineStyle(1, debugColor, linealpha);
-			_point.x = nextNode.x - Std.int(Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
-			_point.y = nextNode.y - Std.int(Camera.scroll.y * debugScrollFactor.y);
-			#if (flash || js)
-			_point.x = Std.int(_point.x + ((_point.x > 0)?0.0000001: -0.0000001));
-			_point.y = Std.int(_point.y + ((_point.y > 0)?0.0000001: -0.0000001));
-			#end
+			_point.x = nextNode.x - (Camera.scroll.x * debugScrollFactor.x); //copied from getScreenXY()
+			_point.y = nextNode.y - (Camera.scroll.y * debugScrollFactor.y);
 			gfx.lineTo(_point.x, _point.y);
 
 			i++;
 		}
 		
-		#if (flash || js)
+		#if flash
 		//then stamp the path down onto the game buffer
 		Camera.buffer.draw(FlxG.flashGfxSprite);
 		#end
 	}
+
+	public static var manager(get_manager, null):DebugPathDisplay;
 	
-	public static var manager(getManager, null):DebugPathDisplay;
-	
-	static public function getManager():DebugPathDisplay
+	static private function get_manager():DebugPathDisplay
 	{
 		return cast(FlxG.getPlugin(DebugPathDisplay), DebugPathDisplay);
-	}
+	}	
+	#end
 }

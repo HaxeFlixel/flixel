@@ -13,21 +13,24 @@
 */
 
 package org.flixel.plugin.photonstorm;
-
+//todo port to use touch as well
+#if !FLX_NO_MOUSE
 import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 import nme.display.BitmapInt32;
+import nme.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
+import org.flixel.FlxTypedGroup;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
-class FlxButtonPlus extends FlxGroup
+class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 {
 	static public inline var NORMAL:Int = 0;
 	static public inline var HIGHLIGHT:Int = 1;
@@ -152,7 +155,7 @@ class FlxButtonPlus extends FlxGroup
 		_onClick = Callback;
 		
 		buttonNormal = new FlxExtendedSprite(X, Y);
-		#if (flash || js)
+		#if flash
 		buttonNormal.makeGraphic(Width, Height, borderColor);
 		#end
 		
@@ -163,7 +166,7 @@ class FlxButtonPlus extends FlxGroup
 		buttonNormal.scrollFactor.y = 0;
 		
 		buttonHighlight = new FlxExtendedSprite(X, Y);
-		#if (flash || js)
+		#if flash
 		buttonHighlight.makeGraphic(Width, Height, borderColor);
 		#end
 		
@@ -198,11 +201,15 @@ class FlxButtonPlus extends FlxGroup
 		{
 			onClickParams = Params;
 		}
+		else
+		{
+			onClickParams = [];
+		}
 	}
 	
-	public var x(getX, setX):Int;
+	public var x(get_x, set_x):Int;
 	
-	public function setX(newX:Int):Int
+	private function set_x(newX:Int):Int
 	{
 		_x = newX;
 		
@@ -217,14 +224,14 @@ class FlxButtonPlus extends FlxGroup
 		return newX;
 	}
 	
-	public function getX():Int
+	private function get_x():Int
 	{
 		return _x;
 	}
 	
-	public var y(getY, setY):Int;
+	public var y(get_y, set_y):Int;
 	
-	public function setY(newY:Int):Int
+	private function set_y(newY:Int):Int
 	{
 		_y = newY;
 		
@@ -239,7 +246,7 @@ class FlxButtonPlus extends FlxGroup
 		return newY;
 	}
 	
-	public function getY():Int
+	private function get_y():Int
 	{
 		return _y;
 	}
@@ -252,7 +259,7 @@ class FlxButtonPlus extends FlxGroup
 		{
 			if(FlxG.stage != null)
 			{
-				FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				_initialized = true;
 			}
 		}
@@ -271,8 +278,8 @@ class FlxButtonPlus extends FlxGroup
 		buttonNormal.pixels = normal.pixels;
 		buttonHighlight.pixels = highlight.pixels;
 		
-		width = Math.floor(buttonNormal.width);
-		height = Math.floor(buttonNormal.height);
+		width = Std.int(buttonNormal.width);
+		height = Std.int(buttonNormal.height);
 
 		if (_pressed)
 		{
@@ -352,7 +359,6 @@ class FlxButtonPlus extends FlxGroup
 				
 				if (leaveCallback != null)
 				{
-					//leaveCallback.apply(null, leaveCallbackParams);
 					Reflect.callMethod(null, leaveCallback, leaveCallbackParams);
 				}
 			}
@@ -369,7 +375,6 @@ class FlxButtonPlus extends FlxGroup
 				
 				if (enterCallback != null)
 				{
-					//enterCallback.apply(null, enterCallbackParams);
 					Reflect.callMethod(null, enterCallback, enterCallbackParams);
 				}
 			}
@@ -388,7 +393,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		if (FlxG.stage != null)
 		{
-			FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 		
 		if (buttonNormal != null)
@@ -447,7 +452,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		offColor = colors;
 		
-		#if (flash || js)
+		#if flash
 		buttonNormal.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, offColor), 1, 1);
 		#else
 		var colA:Int;
@@ -456,10 +461,10 @@ class FlxButtonPlus extends FlxGroup
 		var normalKey:String = "Gradient: " + width + " x " + height + ", colors: [";
 		for (col in offColor)
 		{
-			#if cpp
+			#if !neko
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
-			#elseif neko
+			#else
 			colA = col.a;
 			colRGB = col.rgb;
 			#end
@@ -470,11 +475,7 @@ class FlxButtonPlus extends FlxGroup
 		
 		if (FlxG._cache.exists(normalKey) == false)
 		{
-			#if neko
-			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, { rgb: 0x000000, a: 0x00 }, false, normalKey);
-			#else
-			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, 0x00000000, false, normalKey);
-			#end
+			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, FlxG.TRANSPARENT, false, normalKey);
 			normalBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(normalBitmap, width - 2, height - 2, offColor, 1, 1);
 		}
@@ -495,7 +496,7 @@ class FlxButtonPlus extends FlxGroup
 	{
 		onColor = colors;
 		
-		#if (flash || js)
+		#if flash
 		buttonHighlight.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, onColor), 1, 1);
 		#else
 		var colA:Int;
@@ -504,10 +505,10 @@ class FlxButtonPlus extends FlxGroup
 		var highlightKey:String = "Gradient: " + width + " x " + height + ", colors: [";
 		for (col in onColor)
 		{
-			#if cpp
+			#if !neko
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
-			#elseif neko
+			#else
 			colA = col.a;
 			colRGB = col.rgb;
 			#end
@@ -518,11 +519,7 @@ class FlxButtonPlus extends FlxGroup
 		
 		if (FlxG._cache.exists(highlightKey) == false)
 		{
-			#if neko
-			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, { rgb: 0x000000, a: 0x00 }, false, highlightKey);
-			#else
-			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, 0x00000000, false, highlightKey);
-			#end
+			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, FlxG.TRANSPARENT, false, highlightKey);
 			highlightBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(highlightBitmap, width - 2, height - 2, onColor, 1, 1);
 		}
@@ -571,7 +568,14 @@ class FlxButtonPlus extends FlxGroup
 	{
 		enterCallback = callbackFunc;
 		
-		enterCallbackParams = params;
+		if (params != null)
+		{
+			enterCallbackParams = params;
+		}
+		else
+		{
+			enterCallbackParams = [];
+		}
 	}
 	
 	/**
@@ -584,7 +588,14 @@ class FlxButtonPlus extends FlxGroup
 	{
 		leaveCallback = callbackFunc;
 		
-		leaveCallbackParams = params;
+		if (params != null)
+		{
+			leaveCallbackParams = params;
+		}
+		else
+		{
+			leaveCallbackParams = [];
+		}
 	}
 	
 	public function setOnClickCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
@@ -595,6 +606,11 @@ class FlxButtonPlus extends FlxGroup
 		{
 			onClickParams = params;
 		}
+		else
+		{
+			onClickParams = [];
+		}
 	}
 	
 }
+#end

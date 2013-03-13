@@ -16,7 +16,6 @@ import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.geom.Point;
 import nme.geom.Rectangle;
-import nme.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.plugin.photonstorm.FlxColor;
@@ -76,11 +75,7 @@ class StarfieldFX extends BaseFX
 		
 		starXOffset = -1;
 		starYOffset = 0;
-		#if !neko
-		backgroundColor = 0xff000000;
-		#else
-		backgroundColor = {rgb: 0x000000, a: 0xff};
-		#end
+		backgroundColor = FlxG.BLACK;
 	}
 	
 	/**
@@ -96,9 +91,9 @@ class StarfieldFX extends BaseFX
 	 */
 	public function create(x:Int, y:Int, width:Int, height:Int, quantity:Int = 200, type:Int = 1, updateInterval:Int = 20):FlxSprite
 	{
-		#if (flash || js)
+		#if flash
 		sprite = new FlxSprite(x, y).makeGraphic(width, height, backgroundColor);
-		canvas = new BitmapData(Math.floor(sprite.width), Math.floor(sprite.height), true, backgroundColor);
+		canvas = new BitmapData(Std.int(sprite.width), Std.int(sprite.height), true, backgroundColor);
 		#else
 		sprite = new StarSprite(x, y, width, height, backgroundColor);
 		var starDefs:Array<StarDef> = cast(sprite, StarSprite).starData;
@@ -139,7 +134,7 @@ class StarfieldFX extends BaseFX
 			
 			stars.push(star);
 			
-			#if (cpp || neko)
+			#if !flash
 			starDefs.push( { x: 0, y: 0, red: 0, green: 0, blue: 0, alpha: 0 } );
 			#end
 		}
@@ -180,7 +175,7 @@ class StarfieldFX extends BaseFX
 	{
 		clsColor = backgroundColor;
 		
-		#if (cpp || neko)
+		#if !flash
 		if (sprite != null)
 		{
 			cast(sprite, StarSprite).setBackgroundColor(backgroundColor);
@@ -244,12 +239,12 @@ class StarfieldFX extends BaseFX
 		starYOffset = yShift;
 	}
 	
-	public var speed(getSpeed, setSpeed):Int;
+	public var speed(get_speed, set_speed):Int;
 	
 	/**
 	 * The current update speed
 	 */
-	public function getSpeed():Int
+	private function get_speed():Int
 	{
 		return updateSpeed;
 	}
@@ -257,7 +252,7 @@ class StarfieldFX extends BaseFX
 	/**
 	 * Change the tick interval on which the update runs. By default the starfield updates once every 20ms. Set to zero to disable totally.
 	 */
-	public function setSpeed(newSpeed:Int):Int
+	private function set_speed(newSpeed:Int):Int
 	{
 		updateSpeed = newSpeed;
 		return newSpeed;
@@ -265,7 +260,7 @@ class StarfieldFX extends BaseFX
 	
 	private function update2DStarfield():Void
 	{
-		#if (cpp || neko)
+		#if !flash
 		var starSprite:StarSprite = cast(sprite, StarSprite);
 		var starArray:Array<StarDef> = starSprite.starData;
 		#end
@@ -278,10 +273,10 @@ class StarfieldFX extends BaseFX
 			star.x += Math.floor(starXOffset * star.speed);
 			star.y += Math.floor(starYOffset * star.speed);
 			
-			#if (flash || js)
-			canvas.setPixel32(star.x, star.y, depthColours[Math.floor(star.speed - 1)]);
+			#if flash
+			canvas.setPixel32(star.x, star.y, depthColours[Std.int(star.speed - 1)]);
 			#else
-			var starColor:BitmapInt32 = depthColours[Math.floor(star.speed - 1)];
+			var starColor:BitmapInt32 = depthColours[Std.int(star.speed - 1)];
 			var rgba:RGBA = FlxColor.getRGB(starColor);
 			
 			var starDef:StarDef = starArray[i];
@@ -297,7 +292,7 @@ class StarfieldFX extends BaseFX
 			}
 			else if (star.x < 0)
 			{
-				star.x = Math.floor(sprite.width);
+				star.x = Std.int(sprite.width);
 			}
 			
 			if (star.y > sprite.height)
@@ -306,10 +301,10 @@ class StarfieldFX extends BaseFX
 			}
 			else if (star.y < 0)
 			{
-				star.y = Math.floor(sprite.height);
+				star.y = Std.int(sprite.height);
 			}
 			
-			#if (cpp || neko)
+			#if !flash
 			starDef.x = star.x - starSprite.halfWidth;
 			starDef.y = star.y - starSprite.halfHeight;
 			#end
@@ -318,7 +313,7 @@ class StarfieldFX extends BaseFX
 	
 	private function update3DStarfield():Void
 	{
-		#if (cpp || neko)
+		#if !flash
 		var starSprite:StarSprite = cast(sprite, StarSprite);
 		var starArray:Array<StarDef> = starSprite.starData;
 		#end
@@ -339,15 +334,13 @@ class StarfieldFX extends BaseFX
 				star.alpha = 255;
 			}
 			
-			#if (flash || js)
+			#if flash
 			canvas.setPixel32(star.x, star.y, 0xffffffff);
-			#elseif neko
-			var rgba:RGBA = FlxColor.getRGB( { rgb: 0xffffff, a: 0xff } );
-			#elseif cpp
-			var rgba:RGBA = FlxColor.getRGB(0xffffffff);
+			#else
+			var rgba:RGBA = FlxColor.getRGB(FlxG.WHITE);
 			#end
 			
-			#if (cpp || neko)
+			#if !flash
 			var starDef:StarDef = starArray[i];
 			starDef.red = rgba.red / 255;
 			starDef.green = rgba.green / 255;
@@ -367,12 +360,12 @@ class StarfieldFX extends BaseFX
 				
 				stars[star.index] = star;
 				
-				#if (cpp || neko)
+				#if !flash
 				starDef.alpha = 0;
 				#end
 			}
 			
-			#if (cpp || neko)
+			#if !flash
 			starDef.x = star.x - starSprite.halfWidth;
 			starDef.y = star.y - starSprite.halfHeight;
 			#end
@@ -381,9 +374,9 @@ class StarfieldFX extends BaseFX
 	
 	override public function draw():Void
 	{
-		if (Lib.getTimer() > tick)
+		if (FlxU.getTicks() > tick)
 		{
-			#if (flash || js)
+			#if flash
 			canvas.lock();
 			canvas.fillRect(clsRect, clsColor);
 			#end
@@ -397,21 +390,21 @@ class StarfieldFX extends BaseFX
 				update3DStarfield();
 			}
 			
-			#if (flash || js)
+			#if flash
 			canvas.unlock();
 			sprite.pixels = canvas;
 			#end
 			
 			if (updateSpeed > 0)
 			{
-				tick = Lib.getTimer() + updateSpeed;
+				tick = FlxU.getTicks() + updateSpeed;
 			}
 		}
 	}
 	
 }
 
-#if (cpp || neko)
+#if !flash
 class StarSprite extends FlxSprite
 {
 	
@@ -435,11 +428,7 @@ class StarSprite extends FlxSprite
 	{
 		super(X, Y);
 		
-		#if !neko
-		makeGraphic(1, 1, 0xffffffff);
-		#else
-		makeGraphic(1, 1, {rgb: 0xffffff, a: 0xff});
-		#end
+		makeGraphic(1, 1, FlxG.WHITE);
 		
 		setBackgroundColor(bgColor);
 		
@@ -508,190 +497,143 @@ class StarSprite extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
-			var isColoredCamera:Bool = camera.isColored();
-			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
 			
+			#if !js
+			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt);
+			#else
+			drawItem = camera.getDrawStackItem(_atlas, true);
+			#end
+			
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
-			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
+			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x));
+			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y));
 			
-			if (simpleRenderSprite())
-			{	//Simple render
-				
-				_point.x += halfWidth;
-				_point.y += halfHeight;
-				
-				// draw background
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
-				
-				currDrawData[currIndex++] = _frameID;
-				
-				currDrawData[currIndex++] = width;
-				currDrawData[currIndex++] = 0;
-				currDrawData[currIndex++] = 0;
-				currDrawData[currIndex++] = height;
-				
-				if (isColoredCamera)
-				{
-					currDrawData[currIndex++] = bgRed * camera.red; 
-					currDrawData[currIndex++] = bgGreen * camera.green;
-					currDrawData[currIndex++] = bgBlue * camera.blue;
-				}
-				else
-				{
-					currDrawData[currIndex++] = bgRed; 
-					currDrawData[currIndex++] = bgGreen;
-					currDrawData[currIndex++] = bgBlue;
-				}
-				
-				currDrawData[currIndex++] = bgAlpha * alpha;
-				
-				// draw stars
-				for (j in 0...(starData.length))
-				{
-					starDef = starData[j];
-					
-					currDrawData[currIndex++] = _point.x + starDef.x + 0.5;
-					currDrawData[currIndex++] = _point.y + starDef.y + 0.5;
-					
-					currDrawData[currIndex++] = _frameID;
-					
-					currDrawData[currIndex++] = 1;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
-					
-					starRed = starDef.red;
-					starGreen = starDef.green;
-					starBlue = starDef.blue;
-					
-					if (isColoredCamera)
-					{
-						starRed *= camera.red;
-						starGreen *= camera.green;
-						starBlue *= camera.blue;
-					}
-					
-					#if cpp
-					if (_color < 0xffffff)
-					#else
-					if (_color.rgb < 0xffffff)
-					#end
-					{
-						starRed *= _red;
-						starGreen *= _green;
-						starBlue *= _blue;
-					}
-					
-					currDrawData[currIndex++] = starRed; 
-					currDrawData[currIndex++] = starGreen;
-					currDrawData[currIndex++] = starBlue;
-					
-					currDrawData[currIndex++] = alpha * starDef.alpha;
-				}
-				
-				drawItem.position = currIndex;
-			}
-			else
-			{	//Advanced render
-				radians = angle * 0.017453293;
+			#if js
+			_point.x = Math.floor(_point.x);
+			_point.y = Math.floor(_point.y);
+			#end
+
+			var csx:Float = 1;
+			var ssy:Float = 0;
+			var ssx:Float = 0;
+			var csy:Float = 1;
+			var x1 : Float = 0.5; // yes, 0.5
+			var y1 : Float = 0.5; // yes, 0.5
+
+			if (!simpleRenderSprite ())
+			{
+				radians = angle * FlxG.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				_point.x += halfWidth;
-				_point.y += halfHeight;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
+				x1 = 0.0; // yes, zero
+				y1 = 0.0; // yes, zero
+			}
+
+			_point.x += halfWidth;
+			_point.y += halfHeight;
+			
+			// draw background
+			currDrawData[currIndex++] = _point.x;
+			currDrawData[currIndex++] = _point.y;
+			
+			currDrawData[currIndex++] = _frameID;
+			
+			currDrawData[currIndex++] = csx * width;
+			currDrawData[currIndex++] = -ssy * height;
+			currDrawData[currIndex++] = ssx * width;
+			currDrawData[currIndex++] = csy * height;
+			
+			#if !js
+			if (isColoredCamera)
+			{
+				currDrawData[currIndex++] = bgRed * camera.red;
+				currDrawData[currIndex++] = bgGreen * camera.green;
+				currDrawData[currIndex++] = bgBlue * camera.blue;
+			}
+			else
+			{
+				currDrawData[currIndex++] = bgRed;
+				currDrawData[currIndex++] = bgGreen;
+				currDrawData[currIndex++] = bgBlue;
+			}
+			#end
+			
+			currDrawData[currIndex++] = bgAlpha * alpha;
+
+			// draw stars
+			for (j in 0...(starData.length))
+			{
+				starDef = starData[j];
 				
-				// draw background
-				currDrawData[currIndex++] = _point.x;
-				currDrawData[currIndex++] = _point.y;
+				var localX:Float = starDef.x;
+				var localY:Float = starDef.y;
+				
+				var relativeX:Float = (localX * csx - localY * ssy);
+				var relativeY:Float = (localX * ssx + localY * csy);
+				
+				currDrawData[currIndex++] = _point.x + relativeX + x1;
+				currDrawData[currIndex++] = _point.y + relativeY + y1;
 				
 				currDrawData[currIndex++] = _frameID;
 				
-				currDrawData[currIndex++] = cos * scale.x * width;
-				currDrawData[currIndex++] = -sin * scale.y * height;
-				currDrawData[currIndex++] = sin * scale.x * width;
-				currDrawData[currIndex++] = cos * scale.y * height;
+				currDrawData[currIndex++] = csx;
+				currDrawData[currIndex++] = -ssy;
+				currDrawData[currIndex++] = ssx;
+				currDrawData[currIndex++] = csy;
+			
+				starRed = starDef.red;
+				starGreen = starDef.green;
+				starBlue = starDef.blue;
 				
+			#if !js
 				if (isColoredCamera)
 				{
-					currDrawData[currIndex++] = bgRed * camera.red; 
-					currDrawData[currIndex++] = bgGreen * camera.green;
-					currDrawData[currIndex++] = bgBlue * camera.blue;
+					starRed *= camera.red;
+					starGreen *= camera.green;
+					starBlue *= camera.blue;
 				}
-				else
+				
+				#if !neko
+				if (_color < 0xffffff)
+				#else
+				if (_color.rgb < 0xffffff)
+				#end
 				{
-					currDrawData[currIndex++] = bgRed; 
-					currDrawData[currIndex++] = bgGreen;
-					currDrawData[currIndex++] = bgBlue;
+					starRed *= _red;
+					starGreen *= _green;
+					starBlue *= _blue;
 				}
 				
-				currDrawData[currIndex++] = bgAlpha * alpha;
+				currDrawData[currIndex++] = starRed;
+				currDrawData[currIndex++] = starGreen;
+				currDrawData[currIndex++] = starBlue;
+			#end
 				
-				// draw stars
-				for (j in 0...(starData.length))
-				{
-					starDef = starData[j];
-					
-					var localX:Float = starDef.x;
-					var localY:Float = starDef.y;
-					
-					var relativeX:Float = (localX * cos * scale.x - localY * sin * scale.y);
-					var relativeY:Float = (localX * sin * scale.x + localY * cos * scale.y);
-					
-					currDrawData[currIndex++] = _point.x + relativeX;
-					currDrawData[currIndex++] = _point.y + relativeY;
-					
-					currDrawData[currIndex++] = _frameID;
-					
-					currDrawData[currIndex++] = cos * scale.x;
-					currDrawData[currIndex++] = -sin * scale.y;
-					currDrawData[currIndex++] = sin * scale.x;
-					currDrawData[currIndex++] = cos * scale.y;
-					
-					starRed = starDef.red;
-					starGreen = starDef.green;
-					starBlue = starDef.blue;
-					
-					if (isColoredCamera)
-					{
-						starRed *= camera.red;
-						starGreen *= camera.green;
-						starBlue *= camera.blue;
-					}
-					
-					#if cpp
-					if (_color < 0xffffff)
-					#else
-					if (_color.rgb < 0xffffff)
-					#end
-					{
-						starRed *= _red;
-						starGreen *= _green;
-						starBlue *= _blue;
-					}
-					
-					currDrawData[currIndex++] = starRed; 
-					currDrawData[currIndex++] = starGreen;
-					currDrawData[currIndex++] = starBlue;
-					
-					currDrawData[currIndex++] = alpha * starDef.alpha;
-				}
-				
-				drawItem.position = currIndex;
+				currDrawData[currIndex++] = alpha * starDef.alpha;
 			}
+			
+			drawItem.position = currIndex;
+
 			FlxBasic._VISIBLECOUNT++;
+			
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
 			}
+			#end
 		}
 	}
 	
@@ -699,7 +641,7 @@ class StarSprite extends FlxSprite
 	{
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(Math.floor(frameWidth), Math.floor(frameHeight));
+			_framesData = _node.addSpriteFramesData(Std.int(frameWidth), Std.int(frameHeight));
 			_frameID = _framesData.frameIDs[0];
 		}
 	}

@@ -46,11 +46,14 @@ class FlxBasic
 	 * You can also change it afterward too, very flexible!
 	 */
 	public var cameras:Array<FlxCamera>;
+	
+	#if !FLX_NO_DEBUG
 	/**
 	 * Setting this to true will prevent the object from appearing
 	 * when the visual debug mode in the debugger overlay is toggled on.
 	 */
 	public var ignoreDrawDebug:Bool;
+	#end
 	
 	/**
 	 * If the Tweener should clear on removal. For Entities, this is when they are
@@ -68,9 +71,11 @@ class FlxBasic
 		active = true;
 		visible = true;
 		alive = true;
-		ignoreDrawDebug = false;
-		
 		autoClear = true;
+
+		#if !FLX_NO_DEBUG
+		ignoreDrawDebug = false;
+		#end
 	}
 
 	/**
@@ -86,7 +91,7 @@ class FlxBasic
 			_tween = null;
 		}
 		
-		#if (cpp || neko)
+		#if !flash
 		_framesData = null;
 		_bitmapDataKey = null;
 		_atlas = null;
@@ -130,19 +135,25 @@ class FlxBasic
 		{
 			camera = cameras[i++];
 			_VISIBLECOUNT++;
+			
+			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
 				drawDebug(camera);
 			}
+			#end
+			
 		}
 	}
 	
+	#if !FLX_NO_DEBUG
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
 	public function drawDebug(Camera:FlxCamera = null):Void { }
+	#end
 	
 	/**
 	 * Handy function for "killing" game objects.
@@ -255,16 +266,16 @@ class FlxBasic
 		}
 	}
 
-	public var hasTween(getTween, never):Bool;
+	public var hasTween(get_hasTween, never):Bool;
 	
-	private function getTween():Bool 
+	private function get_hasTween():Bool 
 	{ 
 		return (_tween != null); 
 	}
 
 	private var _tween:FlxTween;
 	
-	#if (cpp || neko)
+	#if !flash
 	private var _bitmapDataKey:String;
 	private var _framesData:FlxSpriteFrames;
 	private var _atlas:Atlas;
@@ -335,7 +346,7 @@ class FlxBasic
 	
 	public function updateAtlasInfo(updateAtlas:Bool = false):Void
 	{
-	#if (cpp || neko)
+	#if !flash
 		#if debug
 		if (_bitmapDataKey == null)
 		{
@@ -345,7 +356,7 @@ class FlxBasic
 		
 		if (_atlas == null)
 		{
-			_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
+			_atlas = getAtlas();
 			_node = _atlas.getNodeByKey(_bitmapDataKey);
 		}
 		else if (_atlas.hasNodeWithName(_bitmapDataKey))
@@ -361,13 +372,20 @@ class FlxBasic
 			_node = _atlas.addNode(bm, _bitmapDataKey);
 			if (_node == null)
 			{
-				_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
+				_atlas = getAtlas();
 				_node = _atlas.getNodeByKey(_bitmapDataKey);
 			}
 		}
 		updateFrameData();
 	#end
 	}
+
+#if !flash
+	public function getAtlas():Atlas
+	{
+		return FlxG.state.getAtlasFor(_bitmapDataKey);
+	}
+#end
 	
 	public function updateFrameData():Void
 	{

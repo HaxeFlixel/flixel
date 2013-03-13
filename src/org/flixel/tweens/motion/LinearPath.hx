@@ -186,8 +186,8 @@ class LinearPath extends Motion
 	/**
 	 * How many points are on the path.
 	 */
-	public var pointCount(getPointCount, never):Float;
-	private function getPointCount():Float { return _points.length; }
+	public var pointCount(get_pointCount, never):Float;
+	private function get_pointCount():Float { return _points.length; }
 
 	// Path information.
 	private var _points:Array<FlxPoint>;

@@ -4,13 +4,13 @@
  */
 package org.flixel;
 
-import nme.net.URLRequest;
+import nme.display.BitmapInt32;
 import nme.Lib;
+import nme.net.URLRequest;
 import org.flixel.FlxPoint;
 
 class FlxU 
 {
-
 	public function new() { }
 	
 	/**
@@ -63,6 +63,20 @@ class FlxU
 	inline static public function round(Value:Float):Int
 	{
 		return Std.int(Value + ((Value > 0) ? 0.5 : -0.5));
+	}
+	
+	/**
+	 * Round a decimal number to have reduced precision (less decimal numbers).
+	 * Ex: roundDecimal(1.2485, 2) -> 1.25
+	 * 
+	 * @param	Value		Any number.
+	 * @param	Precision	Number of decimal points to leave in float.
+	 * @return	The rounded value of that number.
+	 */
+	inline static public function roundDecimal(Value:Float, Precision:Int):Float
+	{
+		var num = Value * Math.pow(10, Precision);
+		return Math.round( num ) / Math.pow(10, Precision);
 	}
 	
 	/**
@@ -132,8 +146,8 @@ class FlxU
 		var object:Dynamic;
 		while(i < HowManyTimes)
 		{
-			index1 = Math.floor(Math.random() * Objects.length);
-			index2 = Math.floor(Math.random() * Objects.length);
+			index1 = Std.int(Math.random() * Objects.length);
+			index2 = Std.int(Math.random() * Objects.length);
 			object = Objects[index2];
 			Objects[index2] = Objects[index1];
 			Objects[index1] = object;
@@ -180,7 +194,7 @@ class FlxU
 	 */
 	inline static public function getTicks():Int
 	{
-		return Lib.getTimer();
+		return FlxGame._mark;
 	}
 	
 	/**
@@ -208,10 +222,14 @@ class FlxU
 	#if flash
 	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
 	#else
-	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):Int
+	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
-		return (Math.floor((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
+		#if !neko
+		return (Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
+		#else
+		return {rgb: (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF), a: Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF << 24 };
+		#end
 	}
 	
 	/**
@@ -226,7 +244,7 @@ class FlxU
 	#if flash
 	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
 	#else
-	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):Int
+	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
 		var red:Float;
@@ -244,7 +262,7 @@ class FlxU
 			{
 				Hue = 0;
 			}
-			var slice:Int = Math.floor(Hue / 60);
+			var slice:Int = Std.int(Hue / 60);
 			var hf:Float = Hue / 60 - slice;
 			var aa:Float = Brightness*(1 - Saturation);
 			var bb:Float = Brightness * (1 - Saturation * hf);
@@ -281,10 +299,10 @@ class FlxU
 					blue = 0;
 			}
 		}
-		#if flash
-		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | cast(red * 255, UInt) << 16 | cast(green * 255, UInt) << 8 | cast(blue * 255, UInt);
+		#if !neko
+		return (Std.int((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255);
 		#else
-		return (Math.floor((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Math.floor(red * 255) << 16 | Math.floor(green * 255) << 8 | Math.floor(blue * 255);
+		return { rgb: Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255), a: (Std.int((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 };
 		#end
 	}
 	
@@ -298,17 +316,24 @@ class FlxU
 	#if flash
 	inline static public function getRGBA(Color:UInt, Results:Array<Float> = null):Array<Float>
 	#else
-	inline static public function getRGBA(Color:Int, Results:Array<Float> = null):Array<Float>
+	inline static public function getRGBA(Color:BitmapInt32, Results:Array<Float> = null):Array<Float>
 	#end
 	{
 		if (Results == null)
 		{
 			Results = new Array<Float>();
 		}
+		#if !neko
 		Results[0] = (Color >> 16) & 0xFF;
 		Results[1] = (Color >> 8) & 0xFF;
 		Results[2] = Color & 0xFF;
 		Results[3] = ((Color >> 24) & 0xFF) / 255;
+		#else
+		Results[0] = (Color.rgb >> 16) & 0xFF;
+		Results[1] = (Color.rgb >> 8) & 0xFF;
+		Results[2] = Color.rgb & 0xFF;
+		Results[3] = Color.a / 255;
+		#end
 		return Results;
 	}
 	
@@ -489,7 +514,7 @@ class FlxU
 	 * @param	Simple	Returns only the class name, not the package or packages.
 	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
 	 */
-	inline static public function getClassName(Obj:Dynamic, Simple:Bool = false):String
+	@:extern inline static public function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
 		var s:String = Type.getClassName(Type.getClass(Obj));
 		if (s != null)
@@ -509,7 +534,7 @@ class FlxU
 	 * @param	Object2		The second object you want to check.
 	 * @return	Whether they have the same class name or not.
 	 */
-	inline static public function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
+	@:extern inline static public function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
 	{
 		return Type.getClassName(Object1) == Type.getClassName(Object2);
 	}
@@ -519,7 +544,7 @@ class FlxU
 	 * @param	Name	The <code>String</code> name of the <code>Class</code> you are interested in.
 	 * @return	A <code>Class</code> object.
 	 */
-	inline public static function getClass(Name:String):Class<Dynamic>
+	@:extern inline public static function getClass(Name:String):Class<Dynamic>
 	{
 		return Type.resolveClass(Name);
 	}
@@ -702,6 +727,16 @@ class FlxU
 	}
 	
 	/**
+	 * Transforms degrees to radians
+	 * @param degrees	Angle in degrees (0 - 360).
+	 * @return	The andgle in radians.
+	 */
+	inline static public function degreesToRadians(degrees:Float):Float 
+	{
+		return degrees * FlxG.RAD;
+	}
+	
+	/**
 	 * Calculate the distance between two points.
 	 * @param Point1	A <code>FlxPoint</code> object referring to the first location.
 	 * @param Point2	A <code>FlxPoint</code> object referring to the second location.
@@ -723,6 +758,7 @@ class FlxU
 			if (array[i] == whatToFind) 
 			{
 				index = i;
+				break;
 			}
 		}
 		return index;
