@@ -87,7 +87,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "09-dev";
+	static public inline var LIBRARY_MINOR_VERSION:String = "09";
 	
 	#if !FLX_NO_DEBUG
 	/**

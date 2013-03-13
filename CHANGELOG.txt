@@ -1,5 +1,30 @@
 flixel CHANGELOG
 
+v1.09
+------------------------------
+* Fix for FlxSprite.fill() on cpp targets
+* Now you can pass BitmapData to FlxTilemap's loadMap() method
+* Added Nape support (thanks @ProG4mr). See org.flixel.nape package
+* FlxText can be static (i.e. non-changable) now. This can be usefull for cpp targets
+* FlxCamera improvements: lerp, lead and following (thanks @ProG4mr)
+* Refactored input system (thanks @impaler). Added new compiler conditionals for switching off unnecessary inputs - see template nmml-file.
+* Tilesheet rendering for html5 target (it is much faster than blitting)
+* Added new compiler conditionals for switching off debugger and recording systems - see template nmml-file (thanks @impaler)
+* Improved Joystick support (thanks @crazysam)
+* Added FlxTypedGroup - much less casting in the engine's code. Plus you can use it too
+* Updated getters/setters (for Haxe 3 compatibility)
+* Replaced Math.floor() with Std.int where it was possible
+* Fix for FlxSprite's porting (now it works correctly)
+* Added filters functionality for FlxSprite (thanks @ProG4mr). Works on flash target
+* Fix for FlxBar - now they rotate correctly
+* Initial support of TexturePacker format - see org.flixel.plugin.texturepacker (thanks @sergey-miryanov)
+* Refactored drawing methods - now they are more readable and compact (thanks @sergey-miryanov)
+* Initial SubState support (thanks @IQAndreas for his AS3 code)
+* MouseInteractionMgr - mouse events for FlxSprite (thanks @ProG4mr)
+* Fix for null Params arrays for callbacks in FlxButtonPlus
+* Pausing cameras when the game is paused
+* Many other little improvements, fixes and optimizations from FlixelCommunity, @impaler, @crazysam, @ProG4mr and others
+
 v1.08
 ------------------------------
 * New draw stack rendering system for cpp and neko targets (replacement for layer system). It is simpler to use but little bit slower.
