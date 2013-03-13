@@ -580,6 +580,8 @@ class FlxCamera extends FlxBasic
 	 */
 	override public function update():Void
 	{
+		if (FlxG.paused)	return;
+		
 		//Either follow the object closely, 
 		//or doublecheck our deadzone and update accordingly.
 		if(target != null)
