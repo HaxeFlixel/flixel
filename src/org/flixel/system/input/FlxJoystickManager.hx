@@ -22,12 +22,12 @@ class FlxJoystickManager implements IFlxInput
 	/**
 	 * A counter for the number of active Joysticks
 	 */
-	public var numActiveJoysticks(getNumActiveJoysticks,null):Int;
+	public var numActiveJoysticks(getNumActiveJoysticks, null):Int;
 	
 	/**
 	 * Storage for all connected joysticks
 	 */
-	public var joysticks:IntHash<FlxJoystick>;
+	private var joysticks:IntHash<FlxJoystick>;
 	
 	/**
 	 * Constructor
