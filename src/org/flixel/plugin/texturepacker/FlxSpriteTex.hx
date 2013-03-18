@@ -87,8 +87,8 @@ class FlxSpriteTex extends FlxSprite
 	override public function updateFrameData():Void
 	{
 #if !flash
-		_framesData = _node.addSpriteFramesData(Std.int(width), Std.int(height));
-		_frameID = _framesData.frameIDs[_spriteId];
+		_framesData = _node.addSpriteSheetFramesData(Std.int(width), Std.int(height));
+		_flxFrame = _framesData.frames[_spriteId];
 #else
 		super.updateFrameData();
 #end

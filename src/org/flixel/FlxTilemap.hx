@@ -1961,7 +1961,7 @@ class FlxTilemap extends FlxObject
 		}
 		_rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
 		#else
-		_rectIDs[Index] = _framesData.frameIDs[_data[Index] - _startingIndex];
+		_rectIDs[Index] = _framesData.frames[_data[Index] - _startingIndex].tileID;
 		#end
 	}
 	
@@ -1974,7 +1974,7 @@ class FlxTilemap extends FlxObject
 	#if !flash
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, 1, 1);
+			_framesData = _node.addSpriteSheetFramesData(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, 1, 1);
 			
 			_rectIDs = new Array<Int>();
 			FlxU.SetArrayLength(_rectIDs, totalTiles);

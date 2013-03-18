@@ -329,7 +329,7 @@ class FlxTileblock extends FlxSprite
 	{
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
+			_framesData = _node.addSpriteSheetFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
 			
 			if (_tileData != null)
 			{
