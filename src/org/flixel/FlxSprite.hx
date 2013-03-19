@@ -1849,11 +1849,11 @@ class FlxSprite extends FlxObject
 		{
 			if (frames > 1)
 			{
-				_framesData = _node.addSpriteSheetFramesData(Std.int(frameWidth), Std.int(frameHeight), null, 0, 0, 0, 0, 1, 1);
+				_framesData = _node.getSpriteSheetFrames(Std.int(frameWidth), Std.int(frameHeight), null, 0, 0, 0, 0, 1, 1);
 			}
 			else
 			{
-				_framesData = _node.addSpriteSheetFramesData(Std.int(frameWidth), Std.int(frameHeight));
+				_framesData = _node.getSpriteSheetFrames(Std.int(frameWidth), Std.int(frameHeight));
 			}
 			_flxFrame = _framesData.frames[_curIndex];
 		}

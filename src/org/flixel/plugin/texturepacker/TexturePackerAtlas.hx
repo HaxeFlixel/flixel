@@ -6,7 +6,7 @@ import nme.display.BitmapData;
 
 class TexturePackerAtlas extends Atlas
 {
-	public static function getAtlas(key:String, bmData:BitmapData, tex:TexturePackerSprites, unique:Bool = false):Atlas
+	public static function getAtlas(key:String, bmData:BitmapData, tex:TexturePackerFrames, unique:Bool = false):Atlas
 	{
 		var alreadyExist:Bool = Atlas.isExists(key);
 		if (!unique && alreadyExist)
@@ -25,9 +25,9 @@ class TexturePackerAtlas extends Atlas
 	}
 
 
-	private var _tex:TexturePackerSprites;
+	private var _tex:TexturePackerFrames;
 	
-	public function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1, bitmapData:BitmapData = null, tex:TexturePackerSprites = null)
+	public function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1, bitmapData:BitmapData = null, tex:TexturePackerFrames = null)
 	{
 		_tex = tex;
 		super(name, width, height, borderX, borderY, bitmapData);

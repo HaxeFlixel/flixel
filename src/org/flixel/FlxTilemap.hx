@@ -1974,7 +1974,7 @@ class FlxTilemap extends FlxObject
 	#if !flash
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.addSpriteSheetFramesData(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, 1, 1);
+			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, 1, 1);
 			
 			_rectIDs = new Array<Int>();
 			FlxU.SetArrayLength(_rectIDs, totalTiles);

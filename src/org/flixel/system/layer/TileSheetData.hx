@@ -115,7 +115,7 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	public function addSpriteSheetFramesData(width:Int, height:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
+	public function getSpriteSheetFrames(width:Int, height:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
 	{
 		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
 		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
@@ -138,7 +138,7 @@ class TileSheetData
 			pointY = origin.y;
 		}
 		
-		var key:String = getKeyforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		var key:String = getKeyForSpriteSheetFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
 		if (flxSpriteFrames.exists(key))
 		{
 			return flxSpriteFrames.get(key);
@@ -179,13 +179,25 @@ class TileSheetData
 		return spriteData;
 	}
 	
-	public function containsSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
+	public function getTexturePackerFrames(name:String, animated:Bool = false):FlxSpriteFrames
 	{
-		var key:String = getKeyforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		// TODO: implement this
+		return null;
+	}
+	
+	public function addFrame():FlxFrame
+	{
+		// TODO: implement this
+		return null;
+	}
+	
+	public function containsSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
+	{
+		var key:String = getKeyForSpriteSheetFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
 		return flxSpriteFrames.exists(key);
 	}
 	
-	public function getKeyforSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
+	public function getKeyForSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
 	{
 		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
 	}

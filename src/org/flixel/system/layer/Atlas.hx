@@ -78,22 +78,22 @@ class Atlas
 		this.borderY = borderY;
 		
 		#if !flash
-		_tileSheetData = createTileSheetData (atlasBitmapData);
+		_tileSheetData = createTileSheetData(atlasBitmapData);
 		#end
 		
 		_atlasCache.set(name, this);
 	}
 
 #if !flash
-  /**
-   * Creates TileSheetData for BitmapData.
-   * @param bitmapData    BitmapData for that TileSheetData will be created
-   * @return TileSheetData
-   */
-  public function createTileSheetData (bitmapData : BitmapData) : TileSheetData
-  {
-    return TileSheetData.addTileSheet (bitmapData);
-  }
+	/**
+	* Creates TileSheetData for BitmapData.
+	* @param bitmapData    BitmapData for that TileSheetData will be created
+	* @return TileSheetData
+	*/
+	public function createTileSheetData(bitmapData:BitmapData):TileSheetData
+	{
+	return TileSheetData.addTileSheet(bitmapData);
+	}
 #end
 
   /**
@@ -101,10 +101,10 @@ class Atlas
    * @param key   atlas' key (name)
    * @return true if atlas already in cache
    */
-  public static function isExists (key : String) : Bool
-  {
-    return _atlasCache.exists (key);
-  }
+	public static function isExists(key:String):Bool
+	{
+		return _atlasCache.exists(key);
+	}
 	
 	/**
 	 * Gets atlas from cache or creates new one.
