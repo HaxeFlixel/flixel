@@ -21,8 +21,6 @@ class MultiTouchTest extends FlxGame
 		
 		#if android
 		FlxG.addSound("Beep");
-		#end
-		
-		forceDebugger = true;
+		#end	
 	}
 }

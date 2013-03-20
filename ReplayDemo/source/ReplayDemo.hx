@@ -14,7 +14,6 @@ class ReplayDemo extends FlxGame
 		var manager = new StateManager();
 		
 		super(400, 300, MenuState, 1, 20, 20);
-		forceDebugger = true;
 	}
 	
 }

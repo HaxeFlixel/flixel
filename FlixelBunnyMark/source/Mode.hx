@@ -15,6 +15,6 @@ class Mode extends FlxGame
 		#else
 		super(stageWidth, stageHeight, BunnyMarkState, 1, 60, 30);
 		#end
-		forceDebugger = true;
+
 	}
 }

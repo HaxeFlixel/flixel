@@ -17,6 +17,5 @@ class Jumper extends FlxGame
 	public function new()
 	{
 		super(640, 480, MenuState, 1, 40, 40);
-		forceDebugger = true;
 	}
 }
