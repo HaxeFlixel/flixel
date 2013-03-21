@@ -224,11 +224,7 @@ class FlxSprite extends FlxObject
 		offset = new FlxPoint();
 		origin = new FlxPoint();
 		scale = new FlxPoint(1.0, 1.0);
-		#if neko
-		_color = { rgb: 0xffffff, a:0x00 };
-		#else
 		_color = 0x00ffffff;
-		#end
 		alpha = 1.0;
 		#if flash
 		blend = null;
@@ -615,11 +611,7 @@ class FlxSprite extends FlxObject
 	
 	inline public function isColored():Bool
 	{
-		#if !neko
 		return (_color < 0xffffff);
-		#else
-		return (_color.rgb < 0xffffff);
-		#end
 	}
 	
 	/**
@@ -1266,39 +1258,6 @@ class FlxSprite extends FlxObject
 	 */
 	private function set_color(Color:Int):Int
 	{
-		#if neko
-		if (_color.rgb == Color.rgb)
-		{
-			return _color;
-		}
-		_color = Color;
-		if ((alpha != 1) || (_color.rgb != 0xffffff))
-		{
-			if (_colorTransform == null)
-			{
-				_colorTransform = new ColorTransform((_color.rgb >> 16) / 255, (_color.rgb >> 8 & 0xff) / 255, (_color.rgb & 0xff) / 255, alpha);
-			}
-			else
-			{
-				_colorTransform.redMultiplier = (_color.rgb >> 16) / 255;
-				_colorTransform.greenMultiplier = (_color.rgb >> 8 & 0xff) / 255;
-				_colorTransform.blueMultiplier = (_color.rgb & 0xff) / 255;
-				_colorTransform.alphaMultiplier = alpha;
-			}
-			_useColorTransform = true;
-		}
-		else
-		{
-			if (_colorTransform != null)
-			{
-				_colorTransform.redMultiplier = 1;
-				_colorTransform.greenMultiplier = 1;
-				_colorTransform.blueMultiplier = 1;
-				_colorTransform.alphaMultiplier = 1;
-			}
-			_useColorTransform = false;
-		}
-		#else
 		Color &= 0x00ffffff;
 		if (_color == Color)
 		{
@@ -1331,7 +1290,6 @@ class FlxSprite extends FlxObject
 			}
 			_useColorTransform = false;
 		}
-		#end
 		
 		dirty = true;
 		
@@ -1339,10 +1297,6 @@ class FlxSprite extends FlxObject
 		_red = (_color >> 16) / 255;
 		_green = (_color >> 8 & 0xff) / 255;
 		_blue = (_color & 0xff) / 255;
-		#elseif neko
-		_red = (_color.rgb >> 16) / 255;
-		_green = (_color.rgb >> 8 & 0xff) / 255;
-		_blue = (_color.rgb & 0xff) / 255;
 		#end
 		
 		return _color;
@@ -1499,11 +1453,7 @@ class FlxSprite extends FlxObject
 				pixelColor = _pixels.getPixel32(Std.int(indexX + _flashPoint.x), Std.int(indexY + _flashPoint.y));
 			}
 			// end of code from calcFrame() method
-			#if !neko
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
-			#else
-			var pixelAlpha:Int = pixelColor.a;
-			#end
 			return (pixelAlpha >= Mask);
 		}
 		#end
@@ -1660,11 +1610,7 @@ class FlxSprite extends FlxObject
 	{
 		var tempSpr:FlxSprite = new FlxSprite(0, 0, _pixels);
 		var diffSize:FlxPoint = new FlxPoint(width - frameWidth, height - frameHeight);
-		#if neko
-		makeGraphic(width, height, {rgb: 0x0, a: 0x0});
-		#else 
 		makeGraphic(width, height, 0x0);
-		#end
 		
 		stamp(tempSpr, Std.int(diffSize.x / 2), Std.int(diffSize.y / 2));
 		

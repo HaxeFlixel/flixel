@@ -323,17 +323,10 @@ class PxBitmapFont
 			while (cx < pBitmapData.width)
 			{
 				pixelColor = pBitmapData.getPixel32(cx, cy);
-				#if neko
-				if (pixelColor.rgb == bgColor32.rgb && pixelColor.a == bgColor32.a)
-				{
-					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
-				}
-				#else
 				if (pixelColor == bgColor32)
 				{
 					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
 				}
-				#end
 				cx++;
 			}
 			cy++;

@@ -60,11 +60,7 @@ class FlxG
 	 */
 	public static var tweener:FlxBasic = new FlxBasic();
 	
-	#if neko
-	public static var bgColor(get_bgColor, set_bgColor):BitmapInt32;
-	#else
 	public static var bgColor(get_bgColor, set_bgColor):Int;
-	#end
 	
 	public static var flashFramerate(get_flashFramerate, set_flashFramerate):Int;
 	
@@ -913,11 +909,7 @@ class FlxG
 		var key:String = Key;
 		if (key == null)
 		{
-			#if !neko
 			key = Width + "x" + Height + ":" + Color;
-			#else
-			key = Width + "x" + Height + ":" + Color.a + "." + Color.rgb;
-			#end
 			if (Unique && checkBitmapCache(key))
 			{
 				key = getUniqueBitmapKey(key);
