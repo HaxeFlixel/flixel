@@ -1056,16 +1056,10 @@ class FlxCamera extends FlxBasic
 			colorTransform.blueMultiplier = (color & 0xff) / 255;
 			_flashBitmap.transform.colorTransform = colorTransform;
 		}
-		#elseif (cpp || js)
-		//var colorTransform:ColorTransform = _canvas.transform.colorTransform;
-		//_canvas.transform.colorTransform = colorTransform;
+		#elseif
 		red = (color >> 16) / 255;
 		green = (color >> 8 & 0xff) / 255;
 		blue = (color & 0xff) / 255;
-		#elseif neko
-		red = (color.rgb >> 16) / 255;
-		green = (color.rgb >> 8 & 0xff) / 255;
-		blue = (color.rgb & 0xff) / 255;
 		#end
 		
 		return Color;
@@ -1171,36 +1165,24 @@ class FlxCamera extends FlxBasic
 		//Draw the "flash" special effect onto the buffer
 		if(_fxFlashAlpha > 0.0)
 		{
-			#if neko
-			alphaComponent = _fxFlashColor.a;
-			#else
 			alphaComponent = (_fxFlashColor >> 24) & 255;
-			#end
 			
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
-			#elseif !neko
-			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
 			#else
-			fill(_fxFlashColor, true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
+			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
 			#end
 		}
 		
 		//Draw the "fade" special effect onto the buffer
 		if(_fxFadeAlpha > 0.0)
 		{
-			#if neko
-			alphaComponent = _fxFadeColor.a;
-			#else
 			alphaComponent = (_fxFadeColor >> 24) & 255;
-			#end
 			
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
-			#elseif !neko
-			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
 			#else
-			fill(_fxFadeColor, true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
+			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
 			#end
 		}
 		
@@ -1227,11 +1209,7 @@ class FlxCamera extends FlxBasic
 	#if !(flash || js)
 	inline public function isColored():Bool
 	{
-		#if neko
-		return (color.rgb < 0xffffff);
-		#else
 		return (color < 0xffffff);
-		#end
 	}
 	#end
 	

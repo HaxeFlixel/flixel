@@ -302,17 +302,10 @@ class FlxU
 		{
 			Results = new Array<Float>();
 		}
-		#if !neko
 		Results[0] = (Color >> 16) & 0xFF;
 		Results[1] = (Color >> 8) & 0xFF;
 		Results[2] = Color & 0xFF;
 		Results[3] = ((Color >> 24) & 0xFF) / 255;
-		#else
-		Results[0] = (Color.rgb >> 16) & 0xFF;
-		Results[1] = (Color.rgb >> 8) & 0xFF;
-		Results[2] = Color.rgb & 0xFF;
-		Results[3] = Color.a / 255;
-		#end
 		return Results;
 	}
 	

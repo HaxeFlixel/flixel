@@ -544,27 +544,15 @@ class FlxTilemap extends FlxObject
 						{
 							if (tile.allowCollisions <= FlxObject.NONE)
 							{
-								#if !neko
 								debugColor = FlxG.BLUE;
-								#else
-								debugColor = FlxG.BLUE.rgb;
-								#end
 							}
 							else if (tile.allowCollisions != FlxObject.ANY)
 							{
-								#if !neko
 								debugColor = FlxG.PINK;
-								#else
-								debugColor = FlxG.PINK.rgb;
-								#end
 							}
 							else
 							{
-								#if !neko
 								debugColor = FlxG.GREEN;
-								#else
-								debugColor = FlxG.GREEN.rgb;
-								#end
 							}
 							
 							// Copied from makeDebugTile
