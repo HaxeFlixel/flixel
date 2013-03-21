@@ -5,7 +5,6 @@ import nme.geom.Rectangle;
 import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
-import org.flixel.FlxGamePad;
 import org.flixel.FlxSave;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
