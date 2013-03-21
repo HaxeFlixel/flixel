@@ -4,7 +4,6 @@
  */
 package org.flixel;
 
-import nme.display.BitmapInt32;
 import nme.Lib;
 import nme.net.URLRequest;
 import org.flixel.FlxPoint;
@@ -190,7 +189,7 @@ class FlxU
 	/**
 	 * Just grabs the current "ticks" or time in milliseconds that has passed since Flash Player started up.
 	 * Useful for finding out how long it takes to execute specific blocks of code.
-	 * @return	A <code>uint</code> to be passed to <code>FlxU.endProfile()</code>.
+	 * @return	A <code>int</code> to be passed to <code>FlxU.endProfile()</code>.
 	 */
 	inline static public function getTicks():Int
 	{
@@ -210,26 +209,18 @@ class FlxU
 	}
 	
 	/**
-	 * Generate a Flash <code>uint</code> color from RGBA components.
+	 * Generate a Flash <code>int</code> color from RGBA components.
 	 * 
 	 * @param   Red     The red component, between 0 and 255.
 	 * @param   Green   The green component, between 0 and 255.
 	 * @param   Blue    The blue component, between 0 and 255.
 	 * @param   Alpha   How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * 
-	 * @return  The color as a <code>uint</code>.
+	 * @return  The color as a <code>int</code>.
 	 */
-	#if flash
-	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
-	#else
-	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):BitmapInt32
-	#end
+	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):Int
 	{
-		#if !neko
 		return (Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
-		#else
-		return {rgb: (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF), a: Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF << 24 };
-		#end
 	}
 	
 	/**
@@ -241,11 +232,7 @@ class FlxU
 	 * @param   Alpha   	How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * @return	The color as a <code>uint</code>.
 	 */
-	#if flash
-	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
-	#else
-	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):BitmapInt32
-	#end
+	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):Int
 	{
 		var red:Float;
 		var green:Float;
@@ -299,11 +286,7 @@ class FlxU
 					blue = 0;
 			}
 		}
-		#if !neko
 		return (Std.int((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255);
-		#else
-		return { rgb: Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255), a: (Std.int((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 };
-		#end
 	}
 	
 	/**
@@ -313,11 +296,7 @@ class FlxU
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	#if flash
-	inline static public function getRGBA(Color:UInt, Results:Array<Float> = null):Array<Float>
-	#else
-	inline static public function getRGBA(Color:BitmapInt32, Results:Array<Float> = null):Array<Float>
-	#end
+	inline static public function getRGBA(Color:Int, Results:Array<Float> = null):Array<Float>
 	{
 		if (Results == null)
 		{
@@ -345,11 +324,7 @@ class FlxU
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	#if flash
-	inline static public function getHSB(Color:UInt, Results:Array<Float> = null):Array<Float>
-	#else
 	inline static public function getHSB(Color:Int, Results:Array<Float> = null):Array<Float>
-	#end
 	{
 		if (Results == null)
 		{

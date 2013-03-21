@@ -3,7 +3,6 @@ package org.flixel.system;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.MouseEvent;
@@ -21,13 +20,8 @@ import org.flixel.FlxU;
  */
 class FlxWindow extends Sprite
 {
-	#if neko
-	static public inline var BG_COLOR:BitmapInt32 = { rgb: 0x7f7f7f, a: 0x7f };
-	static public inline var TOP_COLOR:BitmapInt32 = { rgb: 0x000000, a: 0x7f };
-	#else
 	static public inline var BG_COLOR:Int = 0x7f7f7f7f;
 	static public inline var TOP_COLOR:Int = 0x7f000000;
-	#end
 	
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
@@ -107,11 +101,7 @@ class FlxWindow extends Sprite
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-	#if flash
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
-	#else
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
-	#end
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
 	{
 		super();
 		

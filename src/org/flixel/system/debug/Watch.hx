@@ -1,6 +1,5 @@
 package org.flixel.system.debug;
 
-import nme.display.BitmapInt32;
 import nme.display.Sprite;
 import nme.geom.Rectangle;
 
@@ -35,11 +34,7 @@ class Watch extends FlxWindow
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-	#if flash
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:UInt = 0x7f7f7f7f, ?TopColor:UInt = 0x7f000000)
-	#else
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
-	#end
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
 	{
 		#if !flash
 		if (BGColor == null)

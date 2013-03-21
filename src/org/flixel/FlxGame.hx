@@ -793,9 +793,8 @@ class FlxGame extends Sprite
 	}
 
 	#if !FLX_NO_DEBUG
-	public var debugger(getDebugger, null):FlxDebugger;
-	
-	public function getDebugger():FlxDebugger
+	public var debugger(get_debugger, null):FlxDebugger;
+	public function get_debugger():FlxDebugger
 	{
 		return _debugger;
 	}

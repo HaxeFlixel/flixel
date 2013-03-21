@@ -3,7 +3,6 @@ package org.flixel;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import nme.display.Graphics;
 import nme.display.Sprite;
 import nme.display.Stage;
@@ -39,7 +38,7 @@ import org.flixel.system.input.FlxKeyboard;
 #if !FLX_NO_MOUSE
 import org.flixel.system.input.FlxMouse;
 #end
-#if !FLX_NO_JOYSTICK
+#if (!FLX_NO_JOYSTICK && (cpp || neko))
 import org.flixel.system.input.FlxJoystickManager;
 #end
 
@@ -126,65 +125,37 @@ class FlxG
 	 * Primarily used in the visual debugger mode for bounding box displays.
 	 * Red is used to indicate an active, movable, solid object.
 	 */
-	#if neko
-	static public inline var RED:BitmapInt32 = { rgb: 0xff0012, a: 0xff };
-	#else
 	static public inline var RED:Int = 0xffff0012;
-	#end
 	/**
 	 * Green is used to indicate solid but immovable objects.
 	 */
-	#if neko
-	static public inline var GREEN:BitmapInt32 = { rgb: 0x00f225, a: 0xff };
-	#else
 	static public inline var GREEN:Int = 0xff00f225;
-	#end
 	/**
 	 * Blue is used to indicate non-solid objects.
 	 */
-	#if neko
-	static public inline var BLUE:BitmapInt32 = { rgb: 0x0090e9, a: 0xff };
-	#else
 	static public inline var BLUE:Int = 0xff0090e9;
-	#end
 	/**
 	 * Pink is used to indicate objects that are only partially solid, like one-way platforms.
 	 */
-	#if neko
-	static public inline var PINK:BitmapInt32 = { rgb: 0xf01eff, a: 0xff };
-	#else
 	static public inline var PINK:Int = 0xfff01eff;
-	#end
 	/**
 	 * White... for white stuff.
 	 */
-	#if neko
-	static public inline var WHITE:BitmapInt32 = { rgb: 0xffffff, a: 0xff };
-	#else
 	static public inline var WHITE:Int = 0xffffffff;
-	#end
 	/**
 	 * And black too.
 	 */
-	#if neko
-	static public inline var BLACK:BitmapInt32 = {rgb: 0x000000, a: 0xff};
-	#else
 	static public inline var BLACK:Int = 0xff000000;
-	#end
 	/**
 	 * Totally transparent color. Usefull for creating transparent BitmapData
 	 */
-	#if neko
-	static public inline var TRANSPARENT:BitmapInt32 = {rgb: 0x000000, a: 0x00};
-	#else
 	static public inline var TRANSPARENT:Int = 0x00000000;
-	#end
 	
 	/**
 	 * Useful for rad-to-deg and deg-to-rad conversion.
 	 */
-	static public inline var DEG:Float = 180 / Math.PI;
-	static public inline var RAD:Float = Math.PI / 180;
+	static public var DEG:Float = 180 / Math.PI;
+	static public var RAD:Float = Math.PI / 180;
 	
 	/**
 	 * Internal tracker for game object.
@@ -313,7 +284,7 @@ class FlxG
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	static public var _cache:Hash<BitmapData>;
+	static public var _cache:Map<String, BitmapData>;
 	static public var _lastBitmapDataKey:String;
 
 	#if !FLX_NO_MOUSE
@@ -337,7 +308,7 @@ class FlxG
 	public static var touchManager:FlxTouchManager;
 	#end
 	
-	#if (!FLX_NO_JOYSTICK && (cpp||neko))
+	#if (!FLX_NO_JOYSTICK && (cpp || neko))
 	/**
 	 * A reference to a <code>JoystickManager</code> object. Important for input!
 	 * Set the instance in the FlxInputs class
@@ -810,12 +781,12 @@ class FlxG
 	 * 
 	 * @default 0.5
 	 */
-	public static var volume(default, setVolume):Float;
+	public static var volume(default, set_volume):Float;
 	
 	/**
 	 * @private
 	 */
-	static private function setVolume(Volume:Float):Float
+	static private function set_volume(Volume:Float):Float
 	{
 		volume = Volume;
 		if (volume < 0)
@@ -937,11 +908,7 @@ class FlxG
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	#if flash
-	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, Unique:Bool = false, Key:String = null):BitmapData
-	#else
-	static public function createBitmap(Width:Int, Height:Int, Color:BitmapInt32, Unique:Bool = false, Key:String = null):BitmapData
-	#end
+	static public function createBitmap(Width:Int, Height:Int, Color:Int, Unique:Bool = false, Key:String = null):BitmapData
 	{
 		var key:String = Key;
 		if (key == null)
@@ -1153,7 +1120,7 @@ class FlxG
 	
 	private static function fromAssetsCache(bmd:BitmapData):Bool
 	{
-		var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;
+		var cachedBitmapData:Map<String, BitmapData> = Assets.cachedBitmapData;
 		if (cachedBitmapData != null)
 		{
 			for (key in cachedBitmapData.keys())
@@ -1205,7 +1172,7 @@ class FlxG
 				}
 			}
 		}
-		_cache = new Hash();
+		_cache = new Map<String, BitmapData>();
 	}
 	
 	/**
@@ -1352,11 +1319,7 @@ class FlxG
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	#if flash
-	static public function flash(?Color:UInt = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#else
-	static public function flash(?Color:BitmapInt32, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#end
+	static public function flash(?Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	{
 		#if !flash
 		if (Color == null)
@@ -1381,11 +1344,7 @@ class FlxG
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	#if flash
-	static public function fade(?Color:UInt = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#else
-	static public function fade(?Color:BitmapInt32, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#end
+	static public function fade(?Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	{
 		#if !flash
 		if (Color == null)
@@ -1425,11 +1384,7 @@ class FlxG
 	 * Get functionality is equivalent to FlxG.camera.bgColor.
 	 * Set functionality sets the background color of all the current cameras.
 	 */
-	#if flash
-	static private function get_bgColor():UInt
-	#else
-	static private function get_bgColor():BitmapInt32
-	#end
+	static private function get_bgColor():Int
 	{
 		if (FlxG.camera == null)
 		{
@@ -1441,11 +1396,7 @@ class FlxG
 		}
 	}
 	
-	#if flash
-	static private function set_bgColor(Color:UInt):UInt
-	#else
-	static private function set_bgColor(Color:BitmapInt32):BitmapInt32
-	#end
+	static private function set_bgColor(Color:Int):Int
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
@@ -1718,8 +1669,6 @@ class FlxG
 			#if flash
 			cam.fill(cam.bgColor);
 			cam.screen.dirty = true;
-			#elseif neko
-			cam.fill(cam.bgColor, true, cam.bgColor.a / 255);
 			#else
 			cam.fill((cam.bgColor & 0x00ffffff), true, ((cam.bgColor >> 24) & 255) / 255);
 			#end

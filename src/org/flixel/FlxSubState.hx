@@ -1,7 +1,6 @@
 package org.flixel;
 
 import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import org.flixel.system.BGSprite;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
@@ -35,20 +34,12 @@ class FlxSubState extends FlxState
 		#end
 	}
 	
-	#if flash
-	override private function get_bgColor():UInt 
-	#else
-	override private function get_bgColor():BitmapInt32 
-	#end
+	override private function get_bgColor():Int 
 	{
 		return _bgColor;
 	}
 	
-	#if flash
-	override private function set_bgColor(value:UInt):UInt 
-	#else
-	override private function set_bgColor(value:BitmapInt32):BitmapInt32 
-	#end
+	override private function set_bgColor(value:Int):Int 
 	{
 		_bgColor = value;
 		#if !flash

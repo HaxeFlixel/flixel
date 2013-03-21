@@ -2,7 +2,6 @@ package org.flixel;
 
 import nme.display.Bitmap;
 import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import nme.display.BlendMode;
 import nme.display.Graphics;
 import nme.display.Tilesheet;
@@ -35,13 +34,8 @@ class FlxSprite extends FlxObject
 	 */
 	public var facing(default, set_facing):Int;
 	
-	#if flash
-	public var color(get_color, set_color):UInt;
-	public var frame(get_frame, set_frame):UInt;
-	#else
-	public var color(get_color, set_color):BitmapInt32;
+	public var color(get_color, set_color):Int;
 	public var frame(get_frame, set_frame):Int;
-	#end
 	
 	/**
 	 * If the Sprite is flipped.
@@ -131,7 +125,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal, stores all the animations that were added to this sprite.
 	 */
-	private var _animations:Hash<FlxAnim>;
+	private var _animations:Map<String, FlxAnim>;
 	/**
 	 * Internal, keeps track of the current animation being played.
 	 */
@@ -152,17 +146,13 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal tracker for the animation callback.  Default is null.
 	 * If assigned, will be called each time the current frame changes.
-	 * A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
+	 * A function that has 3 parameters: a string name, a int frame number, and a int frame index.
 	 */
 	private var _callback:String->Int->Int->Void;
 	/**
 	 * Internal tracker for color tint, used with Flash getter/setter.
 	 */
-	#if flash
-	private var _color:UInt;
-	#else
-	private var _color:BitmapInt32;
-	#end
+	private var _color:Int;
 	/**
 	 * Internal, stores the entire source graphic (not the current displayed animation frame), used with Flash getter/setter.
 	 */
@@ -251,7 +241,7 @@ class FlxSprite extends FlxObject
 		finished = false;
 		paused = true;
 		facing = FlxObject.RIGHT;
-		_animations = new Hash<FlxAnim>();
+		_animations = new Map<String, FlxAnim>();
 		_flipped = 0;
 		_curAnim = null;
 		_curFrame = 0;
@@ -546,11 +536,7 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	#if flash 
-	public function makeGraphic(Width:UInt, Height:UInt, ?Color:UInt = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
-	#else
-	public function makeGraphic(Width:Int, Height:Int, ?Color:BitmapInt32, Unique:Bool = false, Key:String = null):FlxSprite
-	#end
+	public function makeGraphic(Width:Int, Height:Int, ?Color:Int = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
 	{
 		#if !flash
 		if (Color == null)
@@ -875,30 +861,18 @@ class FlxSprite extends FlxObject
 	 * @param	Color		The line's color.
 	 * @param	Thickness	How thick the line is in pixels (default value is 1).
 	 */
-	#if flash
-	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:UInt, Thickness:UInt = 1):Void
-	#else
-	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:BitmapInt32, Thickness:Int = 1):Void
-	#end
+	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
 	{
 		//Draw line
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		gfx.moveTo(StartX, StartY);
-		#if !neko
 		var alphaComponent:Float = ((Color >> 24) & 255) / 255;
-		#else
-		var alphaComponent:Float = Color.a / 255;
-		#end
 		if (alphaComponent <= 0)
 		{
 			alphaComponent = 1;
 		}
-		#if neko
-		gfx.lineStyle(Thickness, Color.rgb, alphaComponent);
-		#else
 		gfx.lineStyle(Thickness, Color, alphaComponent);
-		#end
 		gfx.lineTo(EndX, EndY);
 		
 		//Cache line to bitmap
@@ -916,11 +890,7 @@ class FlxSprite extends FlxObject
 	 * Fills this sprite's graphic with a specific color.
 	 * @param	Color		The color with which to fill the graphic, format 0xAARRGGBB.
 	 */
-	#if flash
-	public function fill(Color:UInt):Void
-	#else
-	public function fill(Color:BitmapInt32):Void
-	#end
+	public function fill(Color:Int):Void
 	{
 		_pixels.fillRect(_flashRect2, Color);
 		if (_pixels != framePixels)
@@ -1040,13 +1010,9 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Pass in a function to be called whenever this sprite's animation changes.
-	 * @param	AnimationCallback		A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
+	 * @param	AnimationCallback		A function that has 3 parameters: a string name, a int frame number, and a int frame index.
 	 */
-	#if flash
-	public function addAnimationCallback(AnimationCallback:String->UInt->UInt->Void):Void
-	#else
 	public function addAnimationCallback(AnimationCallback:String->Int->Int->Void):Void
-	#end
 	{
 		_callback = AnimationCallback;
 	}
@@ -1147,11 +1113,7 @@ class FlxSprite extends FlxObject
 		}
 	}
 	
-	#if flash
-	public function replaceColor(Color:UInt, NewColor:UInt, FetchPositions:Bool = false):Array<FlxPoint>
-	#else
-	public function replaceColor(Color:BitmapInt32, NewColor:BitmapInt32, FetchPositions:Bool = false):Array<FlxPoint>
-	#end
+	public function replaceColor(Color:Int, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (FetchPositions)
@@ -1168,7 +1130,7 @@ class FlxSprite extends FlxObject
 			column = 0;
 			while(column < columns)
 			{
-				if(_pixels.getPixel32(column,row) == Color)
+				if(_pixels.getPixel32(column,row) == cast Color)
 				{
 					_pixels.setPixel32(column,row,NewColor);
 					if (FetchPositions)
@@ -1294,11 +1256,7 @@ class FlxSprite extends FlxObject
 	 * <code>color</code> IGNORES ALPHA.  To change the opacity use <code>alpha</code>.
 	 * Tints the whole sprite to be this color (similar to OpenGL vertex colors).
 	 */
-	#if flash
-	private function get_color():UInt
-	#else
-	private function get_color():BitmapInt32
-	#end
+	private function get_color():Int
 	{
 		return _color;
 	}
@@ -1306,11 +1264,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * @private
 	 */
-	#if flash
-	private function set_color(Color:UInt):UInt
-	#else
-	private function set_color(Color:BitmapInt32):BitmapInt32
-	#end
+	private function set_color(Color:Int):Int
 	{
 		#if neko
 		if (_color.rgb == Color.rgb)
@@ -1399,11 +1353,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	Frame	The frame you want to display.
 	 */
-	#if flash
-	private function get_frame():UInt
-	#else
 	private function get_frame():Int
-	#end
 	{
 		return _curIndex;
 	}
@@ -1411,11 +1361,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * @private
 	 */
-	#if flash
-	private function set_frame(Frame:UInt):UInt
-	#else
 	private function set_frame(Frame:Int):Int
-	#end
 	{
 		_curAnim = null;
 		_curIndex = Frame % frames;
@@ -1509,11 +1455,7 @@ class FlxSprite extends FlxObject
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
-	#if flash
-	public function pixelsOverlapPoint(point:FlxPoint, Mask:UInt = 0xFF, Camera:FlxCamera = null):Bool
-	#else
 	public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, Camera:FlxCamera = null):Bool
-	#end
 	{
 		if (Camera == null)
 		{
@@ -1546,7 +1488,7 @@ class FlxSprite extends FlxObject
 				indexX %= widthHelper;
 			}
 			
-			var pixelColor:BitmapInt32 = FlxG.TRANSPARENT;
+			var pixelColor:Int = FlxG.TRANSPARENT;
 			// handle reversed sprites
 			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{

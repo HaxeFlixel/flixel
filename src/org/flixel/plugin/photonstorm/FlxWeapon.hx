@@ -22,7 +22,6 @@ import org.flixel.FlxTilemap;
 import org.flixel.FlxTypedGroup;
 import org.flixel.system.input.FlxTouch;
 import nme.display.Bitmap;
-import nme.display.BitmapInt32;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
@@ -198,11 +197,7 @@ class FlxWeapon
 	 * @param	offsetX		When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 * @param	offsetY		When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 */
-	#if flash
-	public function makePixelBullet(quantity:UInt, width:Int = 2, height:Int = 2, ?color:UInt = 0xffffffff, offsetX:Int = 0, offsetY:Int = 0):Void
-	#else
-	public function makePixelBullet(quantity:Int, width:Int = 2, height:Int = 2, ?color:BitmapInt32, offsetX:Int = 0, offsetY:Int = 0):Void
-	#end
+	public function makePixelBullet(quantity:Int, width:Int = 2, height:Int = 2, ?color:Int = 0xffffffff, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
 		#if !flash
 		if (color == null)

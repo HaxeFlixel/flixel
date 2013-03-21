@@ -8,7 +8,7 @@ import nme.events.KeyboardEvent;
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
  */
-class FlxKeyboard extends FlxInputStates, implements IFlxInput
+class FlxKeyboard extends FlxInputStates implements IFlxInput
 {
 	public var ESCAPE:Bool;
 	public var F1:Bool;
@@ -147,13 +147,11 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 		addKey("INSERT", 45);
 		
 		//FUNCTION KEYS
-		#if (flash || js)
 		i = 1;
 		while (i <= 12)
 		{
 			addKey("F"+i,111+(i++));
 		}
-		#end
 		
 		//SPECIAL KEYS + PUNCTUATION
 		addKey("ESCAPE",27);

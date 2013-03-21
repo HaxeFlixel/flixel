@@ -100,13 +100,13 @@ class TileSheetData
 	/**
 	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
 	 */
-	public var flxSpriteFrames:Hash<FlxSpriteFrames>;
+	public var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
 	public function new(tileSheet:Tilesheet)
 	{
 		this.tileSheet = tileSheet;
 		pairsData = new Array<RectanglePointPair>();
-		flxSpriteFrames = new Hash<FlxSpriteFrames>();
+		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
 	}
 	
 	/**

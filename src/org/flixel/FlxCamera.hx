@@ -2,7 +2,6 @@ package org.flixel;
 
 import nme.display.Bitmap;
 import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import nme.display.Graphics;
 import nme.display.Sprite;
 import nme.display.Tilesheet;
@@ -134,11 +133,7 @@ class FlxCamera extends FlxBasic
 	 * The natural background color of the camera. Defaults to FlxG.bgColor.
 	 * NOTE: can be transparent for crazy FX!
 	 */
-	#if flash
-	public var bgColor:UInt;
-	#else
-	public var bgColor:BitmapInt32;
-	#end
+	public var bgColor:Int;
 	
 	#if flash
 	/**
@@ -183,11 +178,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	#if flash
-	private var _fxFlashColor:UInt;
-	#else
-	private var _fxFlashColor:BitmapInt32;
-	#end
+	private var _fxFlashColor:Int;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -203,11 +194,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	#if flash
-	private var _fxFadeColor:UInt;
-	#else
-	private var _fxFadeColor:BitmapInt32;
-	#end
+	private var _fxFadeColor:Int;
 	/**
 	 * Used to calculate the following target current velocity.
 	 */
@@ -860,11 +847,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	#if flash
-	public function flash(?Color:UInt = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#else
-	public function flash(?Color:BitmapInt32, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#end
+	public function flash(?Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	{
 		#if !flash
 		if (Color == null)
@@ -895,11 +878,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	#if flash
-	public function fade(?Color:UInt = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#else
-	public function fade(?Color:BitmapInt32, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#end
+	public function fade(?Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	{
 		#if !flash
 		if (Color == null)
@@ -1060,20 +1039,12 @@ class FlxCamera extends FlxBasic
 	 * The color tint of the camera display.
 	 * (Internal, help with color transforming the flash bitmap.)
 	 */
-	#if flash
-	public var color(default, set_color):UInt;
-	#else
-	public var color(default, set_color):BitmapInt32;
-	#end
+	public var color(default, set_color):Int;
 	
 	/**
 	 * @private
 	 */
-	#if flash
-	private function set_color(Color:UInt):UInt
-	#else
-	private function set_color(Color:BitmapInt32):BitmapInt32
-	#end
+	private function set_color(Color:Int):Int
 	{
 		color = Color;
 		#if flash
@@ -1163,11 +1134,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	#if flash
-	public function fill(Color:UInt, BlendAlpha:Bool = true):Void
-	#else
-	public function fill(Color:BitmapInt32, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, graphics:Graphics = null):Void
-	#end
+	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, graphics:Graphics = null):Void
 	{
 	#if flash
 		_fill.fillRect(_flashRect, Color);
@@ -1177,7 +1144,6 @@ class FlxCamera extends FlxBasic
 		// This is temporal fix for camera's color
 		var targetGraphics:Graphics = (graphics == null) ? _canvas.graphics : graphics;
 		
-		#if !neko
 		Color = Color & 0x00ffffff;
 		if (red != 1.0 || green != 1.0 || blue != 1.0)
 		{
@@ -1189,17 +1155,6 @@ class FlxCamera extends FlxBasic
 		// end of fix
 		
 		targetGraphics.beginFill(Color, FxAlpha);
-		#else
-		if (red != 1.0 || green != 1.0 || blue != 1.0)
-		{
-			var redComponent:Int = Std.int((Color.rgb >> 16) * red);
-			var greenComponent:Int = Std.int((Color.rgb >> 8 & 0xff) * green);
-			var blueComponent:Int = Std.int((Color.rgb & 0xff) * blue);
-			Color.rgb = redComponent << 16 | greenComponent << 8 | blueComponent;
-		}
-		
-		targetGraphics.beginFill(Color.rgb, FxAlpha);
-		#end
 		
 		targetGraphics.drawRect(0, 0, width, height);
 		targetGraphics.endFill();

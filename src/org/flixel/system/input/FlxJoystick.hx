@@ -6,7 +6,7 @@ import org.flixel.FlxPoint;
 class FlxJoystick 
 {
 	
-	public var buttons:IntHash<FlxJoyButton>;
+	public var buttons:Map<Int, FlxJoyButton>;
 	public var axis(null, default):Array<Float>;
 	public var hat:FlxPoint;	// DPAD on Xbox Gamepad
 	public var ball:FlxPoint;
@@ -21,7 +21,7 @@ class FlxJoystick
 	
 	public function new(id:Int, globalDeadZone:Float = 0) 
 	{
-		buttons = new IntHash<FlxJoyButton>();
+		buttons = new Map<Int, FlxJoyButton>();
 		ball = new FlxPoint();
 		axis = new Array<Float>();
 		hat = new FlxPoint();

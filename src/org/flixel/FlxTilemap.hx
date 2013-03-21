@@ -21,8 +21,8 @@ import org.flixel.system.FlxTilemapBuffer;
  */
 class FlxTilemap extends FlxObject
 {
-	public static inline var imgAuto:String = FlxAssets.imgAuto;
-	public static inline var imgAutoAlt:String = FlxAssets.imgAutoAlt;
+	public static var imgAuto:String = FlxAssets.imgAuto;
+	public static var imgAutoAlt:String = FlxAssets.imgAutoAlt;
 	
 	/**
 	 * No auto-tiling.

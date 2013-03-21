@@ -16,7 +16,7 @@ class Atlas
 	/**
 	 * Storate for all created atlases in current state
 	 */
-	private static var _atlasCache:Hash<Atlas> = new Hash<Atlas>();
+	private static var _atlasCache:Map<String, Atlas> = new Map<String, Atlas>();
 	
 	public var tempStorage:Array<TempAtlasObj>;
 	
@@ -30,7 +30,7 @@ class Atlas
 	 */
 	public var name:String;
 	
-	public var nodes:Hash<Node>;
+	public var nodes:Map<String, Node>;
 	public var atlasBitmapData:BitmapData;
 	
 	/**
@@ -57,7 +57,7 @@ class Atlas
 	 */
 	public function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1, bitmapData:BitmapData = null) 
 	{
-		nodes = new Hash<Node>();
+		nodes = new Map<String, Node>();
 		this.name = name;
 		
 		if (bitmapData == null)
@@ -507,7 +507,7 @@ class Atlas
 		
 		root = new Node(this, new Rectangle(0, 0, rootWidth, rootHeight));
 		atlasBitmapData.fillRect(root.rect, FlxG.TRANSPARENT);
-		nodes = new Hash<Node>();
+		nodes = new Map<String, Node>();
 	}
 	
 	/**
@@ -517,7 +517,7 @@ class Atlas
 	public function clearAndFillWith(bmd:BitmapData):Node
 	{
 		deleteSubtree(root);
-		nodes = new Hash<Node>();
+		nodes = new Map<String, Node>();
 		#if !flash
 		TileSheetData.removeTileSheet(_tileSheetData);
 		#end

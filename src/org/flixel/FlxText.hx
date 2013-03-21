@@ -3,7 +3,6 @@ import org.flixel.FlxPoint;
 
 import nme.Assets;
 import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import nme.filters.BitmapFilter;
 import nme.geom.Point;
 import nme.text.TextField;
@@ -252,41 +251,23 @@ class FlxText extends FlxSprite
 	/**
 	 * The color of the text being displayed.
 	 */
-	#if flash
-	override private function get_color():UInt
+	override private function get_color():Int
 	{
 		return _format.color;
 	}
-	#else
-	override private function get_color():BitmapInt32
-	{
-		#if !neko
-		return _format.color;
-		#else
-		return { rgb: _format.color, a: 0xff };
-		#end
-	}
-	#end
 	
 	/**
 	 * @private
 	 */
-	#if flash
-	override private function set_color(Color:UInt):UInt
-	#else
-	override private function set_color(Color:BitmapInt32):BitmapInt32
-	#end
+	override private function set_color(Color:Int):Int
 	{
 		if (_isStatic)
 		{
 			return Color;
 		}
 		
-		#if neko
-		_format.color = Color.rgb;
-		#else
 		_format.color = Color;
-		#end
+		
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
 		_regen = true;
@@ -560,7 +541,7 @@ class FlxText extends FlxSprite
 	 * Horizontally - set alignment to "center" and increase the sprite width.
 	 * Vertically   - add newlines ('\n') to the beggining and end of the text.
 	 */
-	override public function setClipping(width:Int, height:Int):Dynamic 
+	override public function setClipping(width:Int, height:Int)
 	{}
 
 	

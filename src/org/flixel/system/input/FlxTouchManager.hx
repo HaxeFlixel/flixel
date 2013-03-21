@@ -34,7 +34,7 @@ class FlxTouchManager implements IFlxInput
 	/**
 	 * Helper storage for active touches (for faster access)
 	 */
-	private var _touchesCache:IntHash<FlxTouch>;
+	private var _touchesCache:Map<Int, FlxTouch>;
 	
 	/**
 	 * Constructor
@@ -43,7 +43,7 @@ class FlxTouchManager implements IFlxInput
 	{
 		touches = new Array<FlxTouch>();
 		_inactiveTouches = new Array<FlxTouch>();
-		_touchesCache = new IntHash<FlxTouch>();
+		_touchesCache = new Map<Int, FlxTouch>();
 		maxTouchPoints = Multitouch.maxTouchPoints;
 		Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 		FlxG.supportsTouchEvents = true;

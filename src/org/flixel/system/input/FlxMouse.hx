@@ -21,7 +21,7 @@ import org.flixel.system.replay.MouseRecord;
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
-class FlxMouse extends FlxPoint, implements IFlxInput
+class FlxMouse extends FlxPoint implements IFlxInput
 {
 	//  possible values for field '_current'
 	//  2 - just pressed
@@ -79,7 +79,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
 	 * @default false
 	 */
-	public var useSystemCursor(default, set_systemCursor):Bool;
+	public var useSystemCursor(default, set_useSystemCursor):Bool;
 	
 	/**
 	 * Constructor.
@@ -492,7 +492,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		Mouse.show();
 	}
 	
-	private function set_systemCursor(value:Bool):Bool 
+	private function set_useSystemCursor(value:Bool):Bool 
 	{
 		useSystemCursor = value;
 		if (!useSystemCursor)
