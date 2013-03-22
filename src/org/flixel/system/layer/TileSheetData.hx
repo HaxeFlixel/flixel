@@ -115,7 +115,7 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	public function addSpriteFramesData(width:Int, height:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
+	public function getSpriteSheetFrames(width:Int, height:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
 	{
 		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
 		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
@@ -138,7 +138,7 @@ class TileSheetData
 			pointY = origin.y;
 		}
 		
-		var key:String = getKeyforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		var key:String = getKeyForSpriteSheetFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
 		if (flxSpriteFrames.exists(key))
 		{
 			return flxSpriteFrames.get(key);
@@ -153,10 +153,11 @@ class TileSheetData
 			tempPoint = new Point(pointX, pointY);
 		}
 		
-		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(key);
 		
 		var tempRect:Rectangle;
 		var tileID:Int;
+		var frame:FlxFrame;
 		
 		var spacedWidth:Int = width + xSpacing;
 		var spacedHeight:Int = height + ySpacing;
@@ -167,22 +168,36 @@ class TileSheetData
 			{
 				tempRect = new Rectangle(startX + i * spacedWidth, startY + j * spacedHeight, width, height);
 				tileID = addTileRect(tempRect, tempPoint);
-				spriteData.frameIDs.push(tileID);
+				// TODO: check this line
+				frame = new FlxFrame();
+				frame.tileID = tileID;
+				spriteData.frames.push(frame);
 			}
 		}
 		
-		spriteData.halfFrameNumber = Std.int(0.5 * spriteData.frameIDs.length);
 		flxSpriteFrames.set(key, spriteData);
 		return spriteData;
 	}
 	
-	public function containsSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
+	public function getTexturePackerFrames(name:String, animated:Bool = false):FlxSpriteFrames
 	{
-		var key:String = getKeyforSpriteFrameData(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		// TODO: implement this
+		return null;
+	}
+	
+	public function addFrame():FlxFrame
+	{
+		// TODO: implement this
+		return null;
+	}
+	
+	public function containsSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
+	{
+		var key:String = getKeyForSpriteSheetFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
 		return flxSpriteFrames.exists(key);
 	}
 	
-	public function getKeyforSpriteFrameData(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
+	public function getKeyForSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
 	{
 		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
 	}
@@ -273,45 +288,44 @@ class TileSheetData
 
 class FlxSpriteFrames
 {
-	public var width:Int;
-	public var height:Int;
-	public var frameIDs:Array<Int>;
-	public var halfFrameNumber:Int;
+	public var frames:Array<FlxFrame>;
+	public var name:String;
 	
-	public var startX:Int;
-	public var startY:Int;
-	public var endX:Int;
-	public var endY:Int;
-	public var xSpacing:Int;
-	public var ySpacing:Int;
-	
-	public var pointX:Float;
-	public var pointY:Float;
-	
-	public function new(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float)
+	public function new(name:String)
 	{
-		this.width = width;
-		this.height = height;
-		
-		this.startX = startX;
-		this.startY = startY;
-		this.endX = endX;
-		this.endY = endY;
-		this.xSpacing = xSpacing;
-		this.ySpacing = ySpacing;
-		
-		this.pointX = pointX;
-		this.pointY = pointY;
-		
-		frameIDs = [];
-		halfFrameNumber = 0;
+		this.name = name;
+		frames = [];
 	}
 	
 	public function destroy():Void
 	{
-		frameIDs = null;
+		frames = null;
+		name = null;
+	}	
+}
+
+class FlxFrame
+{
+	public var filename:String = null;
+	public var rotated:Bool = false;
+	public var trimmed:Bool = false;
+	public var frame:Rectangle = null;
+	public var source:Rectangle = null;
+	public var offset:Point = null;
+	public var tileID:Int = -1;
+	
+	public function new()
+	{
+		
 	}
 	
+	public function destroy():Void
+	{
+		filename = null;
+		frame = null;
+		source = null;
+		offset = null;
+	}
 }
 
 /**

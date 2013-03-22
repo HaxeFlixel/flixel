@@ -192,7 +192,7 @@ class FlxSprite extends FlxObject
 	public var filters:Array<BitmapFilter>;
 	
 	#if !flash
-	private var _frameID:Int;
+	private var _flxFrame:FlxFrame;
 	private var _red:Float;
 	private var _green:Float;
 	private var _blue:Float;
@@ -252,7 +252,7 @@ class FlxSprite extends FlxObject
 		_green = 1.0;
 		_blue = 1.0;
 		
-		_frameID = 0;
+		_flxFrame = null;
 		_additionalAngle = 0.0;
 		#end
 		
@@ -591,7 +591,7 @@ class FlxSprite extends FlxObject
 		#if !flash
 		if (_framesData != null)
 		{
-			_frameID = _framesData.frameIDs[_curIndex];
+			_flxFrame = _framesData.frames[_curIndex];
 		}
 		
 		_halfWidth = frameWidth * 0.5;
@@ -744,7 +744,7 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = _point.x - x2;
 			currDrawData[currIndex++] = _point.y - y2;
 			
-			currDrawData[currIndex++] = _frameID;
+			currDrawData[currIndex++] = _flxFrame.tileID;
 
 			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{
@@ -928,7 +928,7 @@ class FlxSprite extends FlxObject
 			#if !flash
 			if (_framesData != null)
 			{
-				_frameID = _framesData.frameIDs[_curIndex];
+				_flxFrame = _framesData.frames[_curIndex];
 			}
 			#end		
 			if (oldIndex != _curIndex)
@@ -958,7 +958,7 @@ class FlxSprite extends FlxObject
 				#if !flash
 				if (_framesData != null)
 				{
-					_frameID = _framesData.frameIDs[_curIndex];
+					_flxFrame = _framesData.frames[_curIndex];
 				}
 				#end
 				dirty = true;
@@ -1027,7 +1027,7 @@ class FlxSprite extends FlxObject
 		#if !flash
 		if (_framesData != null)
 		{
-			_frameID = _framesData.frameIDs[_curIndex];
+			_flxFrame = _framesData.frames[_curIndex];
 		}
 		#end
 		_frameTimer = 0;
@@ -1046,7 +1046,7 @@ class FlxSprite extends FlxObject
 			#if !flash
 			if (_framesData != null)
 			{
-				_frameID = _framesData.frameIDs[_curIndex];
+				_flxFrame = _framesData.frames[_curIndex];
 			}
 			#end
 			dirty = true;
@@ -1076,7 +1076,7 @@ class FlxSprite extends FlxObject
 		#if !flash
 		if (_framesData != null)
 		{
-			_frameID = _framesData.frameIDs[_curIndex];
+			_flxFrame = _framesData.frames[_curIndex];
 		}
 		#end
 		dirty = true;
@@ -1322,7 +1322,7 @@ class FlxSprite extends FlxObject
 		#if !flash
 		if (_framesData != null)
 		{
-			_frameID = _framesData.frameIDs[_curIndex];
+			_flxFrame = _framesData.frames[_curIndex];
 		}
 		#end
 		dirty = true;
@@ -1737,13 +1737,13 @@ class FlxSprite extends FlxObject
 		{
 			if (frames > 1)
 			{
-				_framesData = _node.addSpriteFramesData(Std.int(frameWidth), Std.int(frameHeight), null, 0, 0, 0, 0, 1, 1);
+				_framesData = _node.getSpriteSheetFrames(Std.int(frameWidth), Std.int(frameHeight), null, 0, 0, 0, 0, 1, 1);
 			}
 			else
 			{
-				_framesData = _node.addSpriteFramesData(Std.int(frameWidth), Std.int(frameHeight));
+				_framesData = _node.getSpriteSheetFrames(Std.int(frameWidth), Std.int(frameHeight));
 			}
-			_frameID = _framesData.frameIDs[_curIndex];
+			_flxFrame = _framesData.frames[_curIndex];
 		}
 	#end
 	}

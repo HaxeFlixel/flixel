@@ -329,13 +329,13 @@ class FlxTileblock extends FlxSprite
 	{
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
+			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
 			
 			if (_tileData != null)
 			{
 				for (i in 0...(_tileIndices.length))
 				{
-					_tileData[i * 3] = _framesData.frameIDs[_tileIndices[i]];
+					_tileData[i * 3] = _framesData.frames[_tileIndices[i]].tileID;
 				}
 			}
 		}
