@@ -183,9 +183,9 @@ class FlxSave
 	{
 		switch(Result)
 		{
-			case PENDING:
+			case FlxSave.PENDING:
 				FlxG.log("FLIXEL: FlxSave is requesting extra storage space.");
-			case ERROR:
+			case FlxSave.ERROR:
 				FlxG.log("ERROR: There was a problem flushing\nthe shared object data from FlxSave.");
 			//default:
 		}

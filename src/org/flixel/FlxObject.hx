@@ -164,7 +164,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Should always represent (0,0) - useful for different things, for avoiding unnecessary <code>new</code> calls.
 	 */
-	static private inline var _pZero:FlxPoint = new FlxPoint();
+	static private inline function _pZero() { return new FlxPoint(); }
 	
 	/**
 	 * A point that can store numbers from 0 to 1 (for X and Y independently)
@@ -262,9 +262,9 @@ class FlxObject extends FlxBasic
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
-	public var debugBoundingBoxColor(default, onBoundingBoxColorSet):Int;
+	public var debugBoundingBoxColor(default, set_debugBoundingBoxColor):Int;
 	private var _boundingBoxColorOverritten:Bool = false;
-	private function onBoundingBoxColorSet(val:Int):Int 
+	private function set_debugBoundingBoxColor(val:Int):Int 
 	{
 		_boundingBoxColorOverritten = true;
 		debugBoundingBoxColor = val;
@@ -480,36 +480,20 @@ class FlxObject extends FlxBasic
 		{
 			if (allowCollisions != ANY)
 			{
-				#if !neko
 				debugBoundingBoxColor = FlxG.PINK;
-				#else
-				debugBoundingBoxColor = FlxG.PINK.rgb;
-				#end
 			}
 			if (immovable)
 			{
-				#if !neko
 				debugBoundingBoxColor = FlxG.GREEN;
-				#else
-				debugBoundingBoxColor = FlxG.GREEN.rgb;
-				#end
 			}
 			else
 			{
-				#if !neko
 				debugBoundingBoxColor = FlxG.RED;
-				#else
-				debugBoundingBoxColor = FlxG.RED.rgb;
-				#end
 			}
 		}
 		else if (!_boundingBoxColorOverritten)
 		{
-			#if !neko
 			debugBoundingBoxColor = FlxG.BLUE;
-			#else
-			debugBoundingBoxColor = FlxG.BLUE.rgb;
-			#end
 		}
 		
 		//fill static graphics object with square shape

@@ -1,6 +1,6 @@
 package org.flixel.system.input;
 
-#if (cpp || neko)
+#if (!FLX_NO_JOYSTICK && (cpp || neko))
 import org.flixel.FlxG;
 import nme.Lib;
 import nme.events.JoystickEvent;
@@ -17,24 +17,24 @@ class FlxJoystickManager implements IFlxInput
 	 * While you can have each joystick use a custom dead zone, setting this will 
 	 * set every gamepad to use this deadzone.
 	 */
-	public var globalDeadZone(default, set_deadZone):Float;
+	public var globalDeadZone(default, set_globalDeadZone):Float;
 	
 	/**
 	 * A counter for the number of active Joysticks
 	 */
-	public var numActiveJoysticks(getNumActiveJoysticks, null):Int;
+	public var numActiveJoysticks(get_numActiveJoysticks, null):Int;
 	
 	/**
 	 * Storage for all connected joysticks
 	 */
-	private var joysticks:IntHash<FlxJoystick>;
+	private var joysticks:Map<Int, FlxJoystick>;
 	
 	/**
 	 * Constructor
 	 */
 	public function new() 
 	{
-		joysticks  = new IntHash<FlxJoystick>();
+		joysticks  = new Map<Int, FlxJoystick>();
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -59,7 +59,7 @@ class FlxJoystickManager implements IFlxInput
 	/**
 	 * Gets the number of active joysticks
 	 */
-	function getNumActiveJoysticks():Int
+	public function get_numActiveJoysticks():Int
 	{
 		var count = 0;
 		for (joy in joysticks)
@@ -99,7 +99,7 @@ class FlxJoystickManager implements IFlxInput
 			joy.destroy();
 		}
 		
-		joysticks = new IntHash<FlxJoystick>();
+		joysticks = new Map<Int, FlxJoystick>();
 		numActiveJoysticks = 0;
 	}
 	
@@ -169,7 +169,7 @@ class FlxJoystickManager implements IFlxInput
 	 * 						Less this number the more Joystick is sensible.
 	 * 						Should be between 0.0 and 1.0.
 	 */
-	private function set_deadZone(DeadZone:Float):Float
+	private function set_globalDeadZone(DeadZone:Float):Float
 	{
 		globalDeadZone = DeadZone;
 		for (joy in joysticks)

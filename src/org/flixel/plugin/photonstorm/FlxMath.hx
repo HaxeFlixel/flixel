@@ -33,8 +33,8 @@ class FlxMath
 	private static var sinTable:Array<Float> = new Array<Float>();
 	
 	private static var coefficient1:Float = Math.PI / 4;
-	private static inline var RADTODEG:Float = 180 / Math.PI;
-	private static inline var DEGTORAD:Float = Math.PI / 180;
+	private static var RADTODEG:Float = 180 / Math.PI;
+	private static var DEGTORAD:Float = Math.PI / 180;
 	
 	public function new() { }
 	

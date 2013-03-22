@@ -21,8 +21,8 @@ import org.flixel.system.FlxTilemapBuffer;
  */
 class FlxTilemap extends FlxObject
 {
-	public static inline var imgAuto:String = FlxAssets.imgAuto;
-	public static inline var imgAutoAlt:String = FlxAssets.imgAutoAlt;
+	public static var imgAuto:String = FlxAssets.imgAuto;
+	public static var imgAutoAlt:String = FlxAssets.imgAutoAlt;
 	
 	/**
 	 * No auto-tiling.
@@ -544,27 +544,15 @@ class FlxTilemap extends FlxObject
 						{
 							if (tile.allowCollisions <= FlxObject.NONE)
 							{
-								#if !neko
 								debugColor = FlxG.BLUE;
-								#else
-								debugColor = FlxG.BLUE.rgb;
-								#end
 							}
 							else if (tile.allowCollisions != FlxObject.ANY)
 							{
-								#if !neko
 								debugColor = FlxG.PINK;
-								#else
-								debugColor = FlxG.PINK.rgb;
-								#end
 							}
 							else
 							{
-								#if !neko
 								debugColor = FlxG.GREEN;
-								#else
-								debugColor = FlxG.GREEN.rgb;
-								#end
 							}
 							
 							// Copied from makeDebugTile
@@ -1961,7 +1949,7 @@ class FlxTilemap extends FlxObject
 		}
 		_rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
 		#else
-		_rectIDs[Index] = _framesData.frameIDs[_data[Index] - _startingIndex];
+		_rectIDs[Index] = _framesData.frames[_data[Index] - _startingIndex].tileID;
 		#end
 	}
 	
@@ -1974,7 +1962,7 @@ class FlxTilemap extends FlxObject
 	#if !flash
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, 1, 1);
+			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, 1, 1);
 			
 			_rectIDs = new Array<Int>();
 			FlxU.SetArrayLength(_rectIDs, totalTiles);

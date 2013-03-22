@@ -685,11 +685,7 @@ class FlxGame extends Sprite
 		_soundTray.visible = false;
 		_soundTray.scaleX = 2;
 		_soundTray.scaleY = 2;
-		#if !neko
 		var tmp:Bitmap = new Bitmap(new BitmapData(80, 30, true, 0x7F000000));
-		#else
-		var tmp:Bitmap = new Bitmap(new BitmapData(80, 30, true, {rgb: 0x000000, a: 0x7F}));
-		#end
 		_soundTray.x = (FlxG.width / 2) * FlxCamera.defaultZoom - (tmp.width / 2) * _soundTray.scaleX;
 		_soundTray.addChild(tmp);
 		
@@ -793,9 +789,8 @@ class FlxGame extends Sprite
 	}
 
 	#if !FLX_NO_DEBUG
-	public var debugger(getDebugger, null):FlxDebugger;
-	
-	public function getDebugger():FlxDebugger
+	public var debugger(get_debugger, null):FlxDebugger;
+	public function get_debugger():FlxDebugger
 	{
 		return _debugger;
 	}
