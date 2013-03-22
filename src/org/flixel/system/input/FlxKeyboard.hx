@@ -147,11 +147,13 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		addKey("INSERT", 45);
 		
 		//FUNCTION KEYS
+		#if (flash || js)
 		i = 1;
 		while (i <= 12)
 		{
 			addKey("F"+i,111+(i++));
 		}
+		#end
 		
 		//SPECIAL KEYS + PUNCTUATION
 		addKey("ESCAPE",27);
@@ -254,11 +256,11 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		}
 		#end
 		
-		var object:FlxMapObject = _map[FlashEvent.keyCode];
-		if(object == null) return;
-		if(object.current > 0) object.current = -1;
-		else object.current = 0;
-		Reflect.setProperty(this, object.name, false);
+		var o:FlxMapObject = _map[FlashEvent.keyCode];
+		if(o == null) return;
+		if(o.current > 0) o.current = -1;
+		else o.current = 0;
+		Reflect.setProperty(this, o.name, false);
 	}
 	
 	/**
