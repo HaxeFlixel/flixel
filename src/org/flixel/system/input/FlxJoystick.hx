@@ -230,6 +230,8 @@ class XBOX_BUTTON_IDS
 	public static var RB_BUTTON:Int = 5;
 	public static var BACK_BUTTON:Int = 6;
 	public static var START_BUTTON:Int = 7;
+	public static var LEFT_ANALOGUE_BUTTON:Int = 8;
+	public static var RIGHT_ANALOGUE_BUTTON:Int = 9;
 	public static var LEFT_ANALOGUE_X:Int = 0;
 	public static var LEFT_ANALOGUE_Y:Int = 1;
 	public static var RIGHT_ANALOGUE_X:Int = 4;
