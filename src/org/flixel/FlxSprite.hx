@@ -1035,6 +1035,17 @@ class FlxSprite extends FlxObject
 	 */
 	public function addAnimation(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
+		// Check animation frames
+		var numFrames:Int = Frames.length - 1;
+		var i:Int = numFrames;
+		while (i >= 0)
+		{
+			if (Frames[i] >= frames)
+			{
+				Frames.splice(i, 1);
+			}
+			i--;
+		}
 		_animations.set(Name, new FlxAnim(Name, Frames, FrameRate, Looped));
 	}
 	
