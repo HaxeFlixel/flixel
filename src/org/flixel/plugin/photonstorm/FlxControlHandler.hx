@@ -83,8 +83,8 @@ class FlxControlHandler
 	private var xSpeedAdjust:Float;
 	private var ySpeedAdjust:Float;
 	
-	private var gravityX:Int;
-	private var gravityY:Int;
+	private var gravityX:Int = 0;
+	private var gravityY:Int = 0;
 	
 	private var fireRate:Int; 			// The ms delay between firing when the key is held down
 	private var nextFireTime:Int; 		// The internal time when they can next fire
@@ -216,7 +216,6 @@ class FlxControlHandler
 		enabled = false;
 		xSpeedAdjust = 0;
 		ySpeedAdjust = 0;
-		
 		
 		entity = source;
 		
