@@ -132,9 +132,9 @@ class FlxTileblock extends FlxSprite
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frameIDs.length);
+					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frames.length);
 					_tileIndices.push(tileIndex);
-					_tileData.push(_framesData.frameIDs[tileIndex]);
+					_tileData.push(_framesData.frames[tileIndex].tileID);
 					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);
 					_tileData.push(destinationY - _halfHeight + 0.5 * _tileHeight);
 					#end

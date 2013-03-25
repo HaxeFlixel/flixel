@@ -70,7 +70,6 @@ class Node
 		return Std.int(rect.height);
 	}
 	
-	#if !flash
 	public function getSpriteSheetFrames(frameWidth:Int, frameHeight:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
 	{
 		if (endX == 0)
@@ -90,7 +89,6 @@ class Node
 		tileRect.y += this.y;
 		return atlas._tileSheetData.addTileRect(tileRect, point);
 	}
-	#end
 	
 	public function destroy():Void
 	{
