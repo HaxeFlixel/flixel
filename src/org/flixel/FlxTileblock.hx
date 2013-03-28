@@ -132,9 +132,9 @@ class FlxTileblock extends FlxSprite
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frameIDs.length);
+					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frames.length);
 					_tileIndices.push(tileIndex);
-					_tileData.push(_framesData.frameIDs[tileIndex]);
+					_tileData.push(_framesData.frames[tileIndex].tileID);
 					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);
 					_tileData.push(destinationY - _halfHeight + 0.5 * _tileHeight);
 					#end
@@ -329,13 +329,13 @@ class FlxTileblock extends FlxSprite
 	{
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
+			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
 			
 			if (_tileData != null)
 			{
 				for (i in 0...(_tileIndices.length))
 				{
-					_tileData[i * 3] = _framesData.frameIDs[_tileIndices[i]];
+					_tileData[i * 3] = _framesData.frames[_tileIndices[i]].tileID;
 				}
 			}
 		}

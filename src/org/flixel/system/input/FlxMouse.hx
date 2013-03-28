@@ -67,6 +67,10 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 * This is just a reference to the current cursor image, if there is one.
 	 */
 	private var _cursor:Bitmap;
+	
+	private var _transparentPixel:BitmapData;
+	private var _cursorBitmapData:BitmapData;
+	
 	/**
 	 * Helper variables for recording purposes.
 	 */
@@ -208,6 +212,16 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		_cursor = null;
 		_point = null;
 		_globalScreenPosition = null;
+		if (_cursorBitmapData != null)
+		{
+			_cursorBitmapData.dispose();
+			_cursorBitmapData = null;
+		}
+		if (_transparentPixel != null)
+		{
+			_transparentPixel.dispose();
+			_transparentPixel = null;
+		}
 	}
 	
 	/**
@@ -233,7 +247,6 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		{
 			Mouse.show();
 		}
-		
 	}
 	
 	/**
@@ -243,7 +256,6 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	{
 		_updateCursorContainer = false;
 		_cursorContainer.visible = false;
-		
 	}
 	
 	/**
@@ -497,11 +509,33 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		useSystemCursor = value;
 		if (!useSystemCursor)
 		{
+			if (_cursorBitmapData != null)
+			{
+				show(_cursorBitmapData);
+			}
 			Mouse.hide();
 		} else {
+			createTransparentPixel();
+			if (_cursor != null && _cursor.bitmapData != null && _cursor.bitmapData != _transparentPixel)
+			{
+				_cursorBitmapData = _cursor.bitmapData;
+			}
+			show(_transparentPixel);
 			Mouse.show();
 		}
 		return value;
 	}
-
+	
+	private function createTransparentPixel():Void
+	{
+		if (_transparentPixel == null)	
+			_transparentPixel = new BitmapData(1, 1, true, FlxG.TRANSPARENT);
+	}
+	
+	public function transparentMouse():Void
+	{
+		createTransparentPixel();
+		show(_transparentPixel);
+		Mouse.hide();
+	}
 }
