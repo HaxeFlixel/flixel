@@ -548,7 +548,7 @@ class StarSprite extends FlxSprite
 			currDrawData[currIndex++] = _point.x;
 			currDrawData[currIndex++] = _point.y;
 			
-			currDrawData[currIndex++] = _frameID;
+			currDrawData[currIndex++] = _flxFrame.tileID;
 			
 			currDrawData[currIndex++] = csx * width;
 			currDrawData[currIndex++] = -ssy * height;
@@ -586,7 +586,7 @@ class StarSprite extends FlxSprite
 				currDrawData[currIndex++] = _point.x + relativeX + x1;
 				currDrawData[currIndex++] = _point.y + relativeY + y1;
 				
-				currDrawData[currIndex++] = _frameID;
+				currDrawData[currIndex++] = _flxFrame.tileID;
 				
 				currDrawData[currIndex++] = csx;
 				currDrawData[currIndex++] = -ssy;
@@ -641,8 +641,8 @@ class StarSprite extends FlxSprite
 	{
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(Std.int(frameWidth), Std.int(frameHeight));
-			_frameID = _framesData.frameIDs[0];
+			_framesData = _node.getSpriteSheetFrames(Std.int(frameWidth), Std.int(frameHeight));
+			_flxFrame = _framesData.frames[0];
 		}
 	}
 }

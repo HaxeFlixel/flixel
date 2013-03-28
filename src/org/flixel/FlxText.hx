@@ -651,8 +651,8 @@ class FlxText extends FlxSprite
 	#if !flash
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(Std.int(width), Std.int(height));
-			_frameID = _framesData.frameIDs[0];
+			_framesData = _node.getSpriteSheetFrames(Std.int(width), Std.int(height));
+			_flxFrame = _framesData.frames[0];
 		}
 	#end
 	}
