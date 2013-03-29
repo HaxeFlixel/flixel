@@ -33,5 +33,7 @@
 	<assets path="assets" exclude="*.wav" if="flash" />
 	<assets path="assets" unless="flash" />
 	
+	<set name="thread" />
+	
 	<icon name="assets/nme.svg" />
 </project>
