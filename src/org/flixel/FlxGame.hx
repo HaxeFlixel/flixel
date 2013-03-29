@@ -565,7 +565,12 @@ class FlxGame extends Sprite
 		FlxG.elapsed = FlxG.timeScale * _stepSeconds;
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
-		_state.tryUpdate();
+		
+		#if !(cpp && thread)
+        this.updateState();
+        #else
+        this.deque.push(true);
+        #end
 		
 		if (FlxG.tweener.active && FlxG.tweener.hasTween) 
 		{
@@ -578,6 +583,27 @@ class FlxGame extends Sprite
 		if (_debuggerUp)
 			_debugger.perf.flixelUpdate(Lib.getTimer() - _mark);
 		#end
+	}
+		
+	#if (cpp && thread)
+	public var deque:cpp.vm.Deque<Bool>;
+
+	/**
+	* Threading test
+	*
+	*/
+	public function thread():Void 
+	{
+		while (this.deque.pop(true))
+		{
+			this.updateState();
+		}
+	}
+	#end
+	
+	private function updateState():Void
+	{
+		_state.tryUpdate();
 	}
 	
 	/**
@@ -672,6 +698,11 @@ class FlxGame extends Sprite
 			switchState();
 			_requestedReset = false;
 		}
+		
+		#if (cpp && thread)
+		this.deque = new cpp.vm.Deque();
+		cpp.vm.Thread.create(this.thread);
+        #end
 		
 		//Finally, set up an event for the actual game loop stuff.
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
