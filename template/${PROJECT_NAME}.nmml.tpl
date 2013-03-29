@@ -60,5 +60,6 @@
     <!--<set name="FLX_NO_KEYBOARD" if="mobile" />-->
     <!--<set name="FLX_NO_TOUCH" if="desktop" />-->
     <!--<set name="FLX_NO_JOYSTICK" />-->
+    <!--<set name="thread" />-->
 
 </project>
