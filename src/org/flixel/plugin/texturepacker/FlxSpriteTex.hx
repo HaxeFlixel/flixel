@@ -1,7 +1,7 @@
 package org.flixel.plugin.texturepacker;
 
 import org.flixel.FlxSprite;
-import org.flixel.plugin.texturepacker.TexturePackerSprites;
+import org.flixel.plugin.texturepacker.TexturePackerFrames;
 
 #if !flash
 import org.flixel.plugin.texturepacker.TexturePackerAtlas;
@@ -14,10 +14,10 @@ import nme.display.BitmapData;
 
 class FlxSpriteTex extends FlxSprite
 {
-	var _tex:TexturePackerSprites;
+	var _tex:TexturePackerFrames;
 	var _spriteId:Int;
 	
-	public function new(x:Float, y:Float, spriteName:String, tex:TexturePackerSprites)
+	public function new(x:Float, y:Float, spriteName:String, tex:TexturePackerFrames)
 	{
 		_tex = tex;
 		_spriteId = tex.frames.get(spriteName);
@@ -53,7 +53,7 @@ class FlxSpriteTex extends FlxSprite
 	override private function resetHelpers():Void
 	{
 #if !flash
-		var spriteInfo:TexturePackerSprite = _tex.sprites[_spriteId];
+		var spriteInfo:TexturePackerFrame = _tex.sprites[_spriteId];
 		width = frameWidth = Std.int(spriteInfo.source.width);
 		height = frameHeight = Std.int(spriteInfo.source.height);
 		offset = spriteInfo.offset;
@@ -87,8 +87,8 @@ class FlxSpriteTex extends FlxSprite
 	override public function updateFrameData():Void
 	{
 #if !flash
-		_framesData = _node.addSpriteFramesData(Std.int(width), Std.int(height));
-		_frameID = _framesData.frameIDs[_spriteId];
+		_framesData = _node.getSpriteSheetFrames(Std.int(width), Std.int(height));
+		_flxFrame = _framesData.frames[_spriteId];
 #else
 		super.updateFrameData();
 #end

@@ -537,21 +537,32 @@ class FlxText extends FlxSprite
 		// Updates the filter effects on framePixels.
 		if (filters != null)
 		{
+			#if flash 
 			for (filter in filters) 
 			{
 				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
 			}
+			#else
+			_pixels.copyPixels(_pixelsBackup, _flashRect, _flashPointZero);
+			for (filter in filters) 
+			{
+				_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
+			}
+			#end
 		}
 	}
 	
 	/**
 	 * Adds a bitmap filter to the textField.
-	 * UpdateSize does not work effectively for FlxText, see FlxText setClipping() for tips on how 
-	 * to increase the FlxText render area.
+	 * See FlxText.setClipping() for tips on how to increase the FlxText render area.
+	 * 
+	 * @param	filter		The filter to be applied.
+	 * @param	widthInc	Not used for FlxText, see FlxText.setClipping().
+	 * @param	heightInc	Not used for FlxText, see FlxText.setClipping().
 	 */
-	override public function addFilter(filter:BitmapFilter, updateSize:FlxPoint = null, permanent:Bool = false)
+	override public function addFilter(filter:BitmapFilter,  widthInc:Int = 0, heightInc:Int = 0)
 	{
-		super.addFilter(filter, null, false);
+		super.addFilter(filter);
 	}
 	
 	/**
@@ -640,8 +651,8 @@ class FlxText extends FlxSprite
 	#if !flash
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(Std.int(width), Std.int(height));
-			_frameID = _framesData.frameIDs[0];
+			_framesData = _node.getSpriteSheetFrames(Std.int(width), Std.int(height));
+			_flxFrame = _framesData.frames[0];
 		}
 	#end
 	}
