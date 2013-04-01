@@ -509,7 +509,7 @@ class GlitchSprite extends FlxSprite
 				_tileSheetData = TileSheetManager.addTileSheet(_pixels);
 				_tileSheetData.antialiasing = antialiasing;
 				_tileSheetData.isTilemap = false;
-				_framesData = _tileSheetData.addSpriteFramesData(1, 1);
+				_framesData = _tileSheetData.getSpriteSheetFrames(1, 1);
 			}
 		}
 		

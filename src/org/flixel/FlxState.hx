@@ -1,7 +1,6 @@
 package org.flixel;
 
 import nme.display.BitmapData;
-import nme.display.BitmapInt32;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.TileSheetData;
@@ -44,28 +43,15 @@ class FlxState extends FlxGroup
 		return _subState;
 	}
 	
-	#if flash
-	private var _bgColor:UInt;
-	public var bgColor(get_bgColor, set_bgColor):UInt;
-	#else
-	private var _bgColor:BitmapInt32;
-	public var bgColor(get_bgColor, set_bgColor):BitmapInt32;	
-	#end
+	private var _bgColor:Int;
+	public var bgColor(get_bgColor, set_bgColor):Int;
 	
-	#if flash
-	private function get_bgColor():UInt 
-	#else
-	private function get_bgColor():BitmapInt32 
-	#end
+	private function get_bgColor():Int 
 	{
 		return FlxG.bgColor;
 	}
 	
-	#if flash
-	private function set_bgColor(value:UInt):UInt 
-	#else
-	private function set_bgColor(value:BitmapInt32):BitmapInt32 
-	#end
+	private function set_bgColor(value:Int):Int 
 	{
 		return FlxG.bgColor = value;
 	}

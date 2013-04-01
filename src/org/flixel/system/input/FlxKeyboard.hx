@@ -8,7 +8,7 @@ import nme.events.KeyboardEvent;
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
  */
-class FlxKeyboard extends FlxInputStates, implements IFlxInput
+class FlxKeyboard extends FlxInputStates implements IFlxInput
 {
 	public var ESCAPE:Bool;
 	public var F1:Bool;
@@ -256,11 +256,11 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 		}
 		#end
 		
-		var object:FlxMapObject = _map[FlashEvent.keyCode];
-		if(object == null) return;
-		if(object.current > 0) object.current = -1;
-		else object.current = 0;
-		Reflect.setProperty(this, object.name, false);
+		var o:FlxMapObject = _map[FlashEvent.keyCode];
+		if(o == null) return;
+		if(o.current > 0) o.current = -1;
+		else o.current = 0;
+		Reflect.setProperty(this, o.name, false);
 	}
 	
 	/**

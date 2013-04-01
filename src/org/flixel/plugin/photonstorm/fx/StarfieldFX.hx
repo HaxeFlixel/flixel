@@ -641,7 +641,7 @@ class StarSprite extends FlxSprite
 	{
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
-			_framesData = _node.addSpriteFramesData(Std.int(frameWidth), Std.int(frameHeight));
+			_framesData = _node.getSpriteSheetFrames(Std.int(frameWidth), Std.int(frameHeight));
 			_frameID = _framesData.frameIDs[0];
 		}
 	}

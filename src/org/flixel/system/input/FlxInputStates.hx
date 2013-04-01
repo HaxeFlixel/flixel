@@ -12,7 +12,7 @@ class FlxInputStates implements Dynamic
 	/**
 	 * @private
 	 */
-	private var _lookup:Hash<Int>;
+	private var _lookup:Map<String, Int>;
 	/**
 	 * @private
 	 */
@@ -29,9 +29,8 @@ class FlxInputStates implements Dynamic
 	{
 		_total = 256;
 		
-		_lookup = new Hash<Int>();
-		_map = new Array<FlxMapObject>(/*_total*/);
-		FlxU.SetArrayLength(_map, _total);
+		_lookup = new Map<String, Int>();
+		_map = new Array<FlxMapObject>();
 	}
 	
 	/**
