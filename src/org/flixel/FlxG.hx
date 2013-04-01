@@ -1823,6 +1823,25 @@ class FlxG
 	}
 	
 	/**
+	 * Used by the game object to call <code>postUpdate()</code> on all the plugins. Called after the current state has been updated.
+	 */
+	inline static public function postUpdatePlugins():Void
+	{
+		var plugin:FlxBasic;
+		var pluginList:Array<FlxBasic> = FlxG.plugins;
+		var i:Int = 0;
+		var l:Int = pluginList.length;
+		while(i < l)
+		{
+			plugin = pluginList[i++];
+			if (plugin.exists && plugin.active)
+			{
+				plugin.postUpdate();
+			}
+		}
+	}
+	
+	/**
 	 * Used by the game object to call <code>draw()</code> on all the plugins.
 	 */
 	inline static public function drawPlugins():Void
