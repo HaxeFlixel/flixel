@@ -160,17 +160,9 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	#if flash
-	override private function set_color(Color:UInt):UInt
-	#else
-	override private function set_color(Color:BitmapInt32):BitmapInt32
-	#end
+	override private function set_color(Color:Int):Int
 	{
-		#if neko
-		_format.color = Color.rgb;
-		#else
 		_format.color = Color;
-		#end
 		updateTextField();
 		return Color;
 	}
