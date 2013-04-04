@@ -32,6 +32,9 @@ class FlxPhysState extends FlxState
 	 * Contains the sprite used for nape debug graphics.
 	 */
 	private var _physDbgSpr:ShapeDebug;
+	
+	public static var debug(get_debug, null):ShapeDebug;
+	public static function get_debug() { return cast(FlxG.state, FlxPhysState)._physDbgSpr; }
 	#end
 	
 	/**

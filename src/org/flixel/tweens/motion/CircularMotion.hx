@@ -91,5 +91,5 @@ class CircularMotion extends Motion
 	private var _radius:Float;
 	private var _angleStart:Float;
 	private var _angleFinish:Float;
-	private static inline var _CIRC:Float = Math.PI * 2;
+	private static var _CIRC:Float = Math.PI * 2;
 }

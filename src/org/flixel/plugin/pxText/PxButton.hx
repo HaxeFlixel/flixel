@@ -25,11 +25,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 			label.setWidth(80);
 			label.text = Label;
 			label.fontScale = 0.7 * 10 / 11;
-			#if !neko
 			label.color = 0x333333;
-			#else
-			label.color = {rgb: 0x333333, a: 0xff};
-			#end
 			label.useTextColor = false;
 			label.alignment = PxTextAlign.CENTER;
 			labelOffset = new FlxPoint(0, 5);

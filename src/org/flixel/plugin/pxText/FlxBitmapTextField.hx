@@ -681,10 +681,6 @@ class FlxBitmapTextField extends FlxSprite
 			red *= (_color >> 16);
 			green *= (_color >> 8 & 0xff);
 			blue *= (_color & 0xff);
-			#elseif neko
-			red *= (_color.rgb >> 16);
-			green *= (_color.rgb >> 8 & 0xff);
-			blue *= (_color.rgb & 0xff);
 			#end
 			
 			_bgDrawData.push(red);
