@@ -253,6 +253,7 @@ class FlxTilemap extends FlxObject
 			var columns:Array<String>;
 			var rows:Array<String> = MapData.split("\n");
 			heightInTiles = rows.length;
+			widthInTiles = 0;
 			var row:Int = 0;
 			var column:Int;
 			while (row < heightInTiles)
