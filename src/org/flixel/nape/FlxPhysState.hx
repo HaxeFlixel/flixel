@@ -73,95 +73,7 @@ class FlxPhysState extends FlxState
 		#end
 	}
 	
-	/**
-	 * Override this method and add <code>super.update()</code>. 
-	 */
-	override public function update():Void 
-	{
-		#if !FLX_NO_DEBUG
-		if (_physDbgSpr != null) 
-		{
-			_physDbgSpr.clear();
-			_physDbgSpr.draw(space);
-			
-			var cam = FlxG.camera;
-			var zoom = cam.zoom;
-			
-			_physDbgSpr.display.scaleX = zoom; 
-			_physDbgSpr.display.scaleY = zoom;
-			
-			if (cam.target == null) 
-			{
-				_physDbgSpr.display.x = cam.scroll.x * zoom;
-				_physDbgSpr.display.y = cam.scroll.y * zoom;
-			} else 
-			{
-				_physDbgSpr.display.x = -cam.scroll.x * zoom;
-				_physDbgSpr.display.y = -cam.scroll.y * zoom;
-				_physDbgSpr.display.x += (FlxG.width - FlxG.width * zoom) / 2; 
-				_physDbgSpr.display.y += (FlxG.height - FlxG.height * zoom) / 2;
-			}
-			
-		}
-		#end
-		
-		space.step(FlxG.elapsed, velocityIterations, positionIterations);
-		
-		super.update();
-		
-	}
-	
-	/**
-	 * Override this function to null out variables or manually call
-	 * <code>destroy()</code> on class members if necessary.
-	 * Don't forget to call <code>super.destroy()</code>!
-	 */
-	override public function destroy():Void 
-	{
-		super.destroy();
-		space.clear();
-		
-		#if !FLX_NO_DEBUG
-		disablePhysDebug();
-		#end
-	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Enables debug graphics for nape physics.
-	 */
-	public function enablePhysDebug() 
-	{
-		if (_physDbgSpr != null) 
-		{
-			disablePhysDebug();
-		}
-		
-		_physDbgSpr = new ShapeDebug(FlxG.width, FlxG.height);
-		_physDbgSpr.drawConstraints = true;
-		
-		FlxG.stage.addChild(_physDbgSpr.display);
-		//FlxG.camera._flashSprite.addChild(_physDbgSpr.display);
-		//_physDbgSpr.display.x = 100;
-		//_physDbgSpr.display.y = 140;
-	}
-	
-	/**
-	 * Disables debug graphics.
-	 */
-	public function disablePhysDebug()
-	{
-		if (_physDbgSpr == null) 
-		{
-			return;
-		}
-		
-		FlxG.stage.removeChild(_physDbgSpr.display);
-		_physDbgSpr = null;
-	}
-	#end
-	
-	/**
+		/**
 	 * Creates simple walls around game area - usefull for prototying.
 	 * 
 	 * @param	minX	The smallest X value of your level (usually 0).
@@ -187,16 +99,108 @@ class FlxPhysState extends FlxState
 		// left wall
 		walls.shapes.add(new Polygon(Polygon.rect(minX, minY, thickness, maxY + Math.abs(minY))));
 		// right wall
-        walls.shapes.add(new Polygon(Polygon.rect(maxX - thickness, minY, thickness, maxY + Math.abs(minY))));
+		walls.shapes.add(new Polygon(Polygon.rect(maxX - thickness, minY, thickness, maxY + Math.abs(minY))));
 		// upper wall
-        walls.shapes.add(new Polygon(Polygon.rect(minX, minY, maxX + Math.abs(minX), thickness)));
+		walls.shapes.add(new Polygon(Polygon.rect(minX, minY, maxX + Math.abs(minX), thickness)));
 		// bottom wall
-        walls.shapes.add(new Polygon(Polygon.rect(minX, maxY - thickness, maxX + Math.abs(minX), thickness)));
-		
+		walls.shapes.add(new Polygon(Polygon.rect(minX, maxY - thickness, maxX + Math.abs(minX), thickness)));
 		
 		walls.space = space;
 		walls.setShapeMaterials(material);
 		return walls;
 	}
 	
+	/**
+	 * Override this method and add <code>super.update()</code>. 
+	 */
+	override public function update():Void 
+	{
+		space.step(FlxG.elapsed, velocityIterations, positionIterations);
+		super.update();
+	}
+	
+	/**
+	 * Override this method to draw debug physics shapes
+	 */
+	override public function draw():Void 
+	{
+		super.draw();
+		#if !FLX_NO_DEBUG
+		drawPhysDebug();
+		#end
+	}
+	
+	/**
+	 * Override this function to null out variables or manually call
+	 * <code>destroy()</code> on class members if necessary.
+	 * Don't forget to call <code>super.destroy()</code>!
+	 */
+	override public function destroy():Void 
+	{
+		super.destroy();
+		space.clear();
+		
+		#if !FLX_NO_DEBUG
+		disablePhysDebug();
+		#end
+	}
+	
+	#if !FLX_NO_DEBUG
+	/**
+	 * Enables debug graphics for nape physics.
+	 */
+	public function enablePhysDebug() 
+	{
+		if (_physDbgSpr != null) 
+			disablePhysDebug();
+		
+		_physDbgSpr = new ShapeDebug(FlxG.width, FlxG.height);
+		_physDbgSpr.drawConstraints = true;
+		
+		FlxG.stage.addChild(_physDbgSpr.display);
+	}
+	
+	/**
+	 * Disables debug graphics.
+	 */
+	public function disablePhysDebug()
+	{
+		if (_physDbgSpr == null) 
+			return;
+		
+		FlxG.stage.removeChild(_physDbgSpr.display);
+		_physDbgSpr = null;
+	}
+	
+	/**
+	 * Draws debug graphics.
+	 */
+	private function drawPhysDebug()
+	{
+		if (_physDbgSpr == null) 
+			return;
+		
+		_physDbgSpr.clear();
+		_physDbgSpr.draw(space);
+		
+		var cam = FlxG.camera;
+		var zoom = cam.zoom;
+		
+		_physDbgSpr.display.scaleX = zoom; 
+		_physDbgSpr.display.scaleY = zoom;
+		
+		if (cam.target == null) 
+		{
+			_physDbgSpr.display.x = cam.scroll.x * zoom;
+			_physDbgSpr.display.y = cam.scroll.y * zoom;
+		} 
+		else
+		{
+			_physDbgSpr.display.x = -cam.scroll.x * zoom;
+			_physDbgSpr.display.y = -cam.scroll.y * zoom;
+			_physDbgSpr.display.x += (FlxG.width - FlxG.width * zoom) / 2; 
+			_physDbgSpr.display.y += (FlxG.height - FlxG.height * zoom) / 2;
+		}
+	}
+	#end
 }
