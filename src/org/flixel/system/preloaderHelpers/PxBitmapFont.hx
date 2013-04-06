@@ -1,5 +1,6 @@
 package org.flixel.system.preloaderHelpers;
 
+import haxe.ds.StringMap;
 import nme.display.BitmapData;
 import nme.display.BitmapInt32;
 import nme.display.Graphics;
@@ -16,12 +17,12 @@ import nme.display.Tilesheet;
  * Holds information and bitmap glpyhs for a bitmap font.
  * @author Johan Peitz
  */
-class PxBitmapFont 
+class PxBitmapFont
 {
-	private static var _storedFonts:Hash<PxBitmapFont> = new Hash<PxBitmapFont>();
-	
+	private static var _storedFonts:StringMap<PxBitmapFont> = new StringMap<PxBitmapFont>();
+
 	private static var ZERO_POINT:Point = new Point();
-	
+
 	#if flash
 	private var _glyphs:Array<BitmapData>;
 	#else

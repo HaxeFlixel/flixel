@@ -10,28 +10,28 @@ import flash.geom.Rectangle;
 import org.flixel.system.input.FlxTouch;
 
 /**
- * 
+ *
  * @author Ka Wing Chin
  */
 class FlxAnalog extends FlxTypedGroup<FlxSprite>
 {
 	// From radians to degrees.
-	private static inline var DEGREES:Float = (180 / Math.PI);
-	
+	private static var DEGREES:Float = (180 / Math.PI);
+
 	// Used with public variable <code>status</code>, means not highlighted or pressed.
 	private static inline var NORMAL:Int = 0;
 	// Used with public variable <code>status</code>, means highlighted (usually from mouse over).
 	private static inline var HIGHLIGHT:Int = 1;
 	// Used with public variable <code>status</code>, means pressed (usually from mouse click).
-	private static inline var PRESSED:Int = 2;		
+	private static inline var PRESSED:Int = 2;
 	// Shows the current state of the button.
 	public var status:Int;
-	
+
 	// X position of the upper left corner of this object in world space.
 	public var x:Float;
 	// Y position of the upper left corner of this object in world space.
 	public var y:Float;
-	
+
 	// An list of analogs that are currently active.
 	private static var _analogs:Array<FlxAnalog>;
 	#if !FLX_NO_TOUCH
