@@ -1,9 +1,10 @@
 package com.werdn.haxeflixel;
 
 import haxe.io.Bytes;
-import neko.io.File;
-import neko.io.FileOutput;
-import neko.zip.Reader;
+import sys.io.File;
+import sys.io.FileOutput;
+import haxe.zip.Entry;
+import haxe.zip.Reader;
 
 class CommandLine
 {
@@ -38,8 +39,8 @@ class ProjectCreator
 
 	public function new()
 	{
-		var args:Array<String> = neko.Sys.args();
-		
+		var args:Array<String> = Sys.args();
+
 		var cmd = parseCommandLine(args);
 
 		if(args.length < 2 || cmd.help)
@@ -63,7 +64,7 @@ class ProjectCreator
 
 		var length = args.length;
 		result.projectDir = trimPath(args[length - 1]);
-		
+
 		var index = 0;
     	while (index < length - 1)
     	{
@@ -98,9 +99,9 @@ class ProjectCreator
 	/**
 	 * Extract path
 	 */
-	private function trimPath(path:String) 
+	private function trimPath(path:String)
 	{
-		return new neko.io.Path(path).dir;
+		return new haxe.io.Path(path).dir;
 	}
 
 	/**
@@ -110,7 +111,7 @@ class ProjectCreator
 	private function createProject(cmd:CommandLine):Void
 	{
 		var fileInput = File.read("template.zip", true);
-		var data:List<ZipEntry> = Reader.readZip(fileInput);
+		var data:List<Entry> = Reader.readZip(fileInput);
 		fileInput.close();
 
 		for(entry in data)
@@ -121,9 +122,9 @@ class ProjectCreator
 			{
 				fileName = fileName.substr(0, -1);
 				neko.Lib.println("Directory: " + fileName);
-				if(!neko.FileSystem.exists(cmd.projectDir + "/" +fileName))
+				if(!sys.FileSystem.exists(cmd.projectDir + "/" +fileName))
 				{
-					neko.FileSystem.createDirectory(cmd.projectDir + "/" +fileName);
+					sys.FileSystem.createDirectory(cmd.projectDir + "/" +fileName);
 				}
 			}
 			else
@@ -133,11 +134,11 @@ class ProjectCreator
 				{
 					//TODO make some template magic
 					var text:String = new haxe.io.BytesInput(bytes).readString(bytes.length);
-					
+
 					text = replaceAll(text, cmd);
-					
+
 					bytes = Bytes.ofString(text);
-					
+
 					fileName = replaceAll(fileName.substr(0, -4), cmd);
 				}
 
@@ -146,7 +147,7 @@ class ProjectCreator
 				var fout:FileOutput = File.write(cmd.projectDir + "/" + fileName, true);
 				fout.writeBytes(bytes, 0, bytes.length);
 				fout.close();
-			}				
+			}
 		}
 	}
 
