@@ -1,5 +1,6 @@
 package org.flixel;
 
+import nme.Lib;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
@@ -12,7 +13,6 @@ import nme.media.Sound;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
-import nme.Lib;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
@@ -447,68 +447,25 @@ class FlxGame extends Sprite
 		//handle state switching requests
 		if (_state != _requestedState)
 		{
+			#if (cpp && thread)
+			//aquiring the threadMutex here allows us to guarantee the state isn't being updated on another thread.
+			threadMutex.acquire();
 			switchState();
+			threadMutex.release();
+			#else
+			switchState();
+			#end
 		}
 		
 		//finally actually step through the game physics
 		FlxBasic._ACTIVECOUNT = 0;
 		
-		#if !FLX_NO_RECORD
-		if(_replaying)
-		{
-			_replay.playNextFrame();
-			if(_replayTimer > 0)
-			{
-				_replayTimer -= _step;
-				if(_replayTimer <= 0)
-				{
-					if(_replayCallback != null)
-					{
-						_replayCallback();
-						_replayCallback = null;
-					}
-					else
-					{
-						FlxG.stopReplay();
-					}
-				}
-			}
-			if(_replaying && _replay.finished)
-			{
-				FlxG.stopReplay();
-				if(_replayCallback != null)
-				{
-					_replayCallback();
-					_replayCallback = null;
-				}
-			}
-			#if !FLX_NO_DEBUG
-				_debugger.vcr.updateRuntime(_step);
-			#end
-		}
-		else
-		{
-		#end
-	
-		FlxG.updateInputs();
-		
-		#if !FLX_NO_RECORD
-		}
-		if(_recording)
-		{
-			_replay.recordFrame();
-			#if !FLX_NO_DEBUG
-			_debugger.vcr.updateRuntime(_step);
-			#end
-		}
-		#end
-		
+		#if (cpp && thread)
+		threadSync.push(true);
+		#else
 		update();
-		
-		#if !FLX_NO_MOUSE
-		//todo test why is this needed can it be put in FlxMouse
-		FlxG.mouse.wheel = 0;
 		#end
+		
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 		{
@@ -516,7 +473,25 @@ class FlxGame extends Sprite
 		}
 		#end
 	}
-
+	
+	#if (cpp && thread)
+	// this mutex allows us to synchronize operations between both threads.
+	public var threadMutex:cpp.vm.Mutex;
+	
+	// push 'true' into this array to trigger an update. push 'false' to terminate update thread.
+	public var threadSync:cpp.vm.Deque<Bool>;
+	
+	private function threadedUpdate():Void 
+	{
+		while (threadSync.pop(true))
+		{
+			threadMutex.acquire();
+			update();
+			threadMutex.release();
+		}
+	}
+	#end
+	
 	/**
 	 * This function just updates the soundtray object.
 	 */
@@ -556,7 +531,7 @@ class FlxGame extends Sprite
 	 * May be called multiple times per "frame" or draw call.
 	 */
 	private function update():Void
-	{			
+	{
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
@@ -566,11 +541,8 @@ class FlxGame extends Sprite
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		
-		#if !(cpp && thread)
-        this.updateState();
-        #else
-        this.deque.push(true);
-        #end
+		updateInput();
+		updateState();
 		
 		if (FlxG.tweener.active && FlxG.tweener.hasTween) 
 		{
@@ -584,26 +556,68 @@ class FlxGame extends Sprite
 			_debugger.perf.flixelUpdate(Lib.getTimer() - _mark);
 		#end
 	}
-		
-	#if (cpp && thread)
-	public var deque:cpp.vm.Deque<Bool>;
-
-	/**
-	* Threading test
-	*
-	*/
-	public function thread():Void 
-	{
-		while (this.deque.pop(true))
-		{
-			this.updateState();
-		}
-	}
-	#end
 	
 	private function updateState():Void
 	{
 		_state.tryUpdate();
+	}
+	
+	private function updateInput():Void
+	{
+		#if !FLX_NO_RECORD
+		if(_replaying)
+		{
+			_replay.playNextFrame();
+			if(_replayTimer > 0)
+			{
+				_replayTimer -= _step;
+				if(_replayTimer <= 0)
+				{
+					if(_replayCallback != null)
+					{
+						_replayCallback();
+						_replayCallback = null;
+					}
+					else
+					{
+						FlxG.stopReplay();
+					}
+				}
+			}
+			if(_replaying && _replay.finished)
+			{
+				FlxG.stopReplay();
+				if(_replayCallback != null)
+				{
+					_replayCallback();
+					_replayCallback = null;
+				}
+			}
+			#if !FLX_NO_DEBUG
+				_debugger.vcr.updateRuntime(_step);
+			#end
+		}
+		else
+		{
+		#end
+		
+		FlxInputs.updateInputs();
+		
+		#if !FLX_NO_RECORD
+		}
+		if(_recording)
+		{
+			_replay.recordFrame();
+			#if !FLX_NO_DEBUG
+			_debugger.vcr.updateRuntime(_step);
+			#end
+		}
+		#end
+		
+		#if !FLX_NO_MOUSE
+		//todo test why is this needed can it be put in FlxMouse
+		FlxG.mouse.wheel = 0;
+		#end
 	}
 	
 	/**
@@ -700,9 +714,10 @@ class FlxGame extends Sprite
 		}
 		
 		#if (cpp && thread)
-		this.deque = new cpp.vm.Deque();
-		cpp.vm.Thread.create(this.thread);
-        #end
+		threadSync = new cpp.vm.Deque();
+		threadMutex = new cpp.vm.Mutex();
+		cpp.vm.Thread.create(threadedUpdate);
+		#end
 		
 		//Finally, set up an event for the actual game loop stuff.
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -716,11 +731,7 @@ class FlxGame extends Sprite
 		_soundTray.visible = false;
 		_soundTray.scaleX = 2;
 		_soundTray.scaleY = 2;
-		#if !neko
 		var tmp:Bitmap = new Bitmap(new BitmapData(80, 30, true, 0x7F000000));
-		#else
-		var tmp:Bitmap = new Bitmap(new BitmapData(80, 30, true, {rgb: 0x000000, a: 0x7F}));
-		#end
 		_soundTray.x = (FlxG.width / 2) * FlxCamera.defaultZoom - (tmp.width / 2) * _soundTray.scaleX;
 		_soundTray.addChild(tmp);
 		
@@ -824,9 +835,8 @@ class FlxGame extends Sprite
 	}
 
 	#if !FLX_NO_DEBUG
-	public var debugger(getDebugger, null):FlxDebugger;
-	
-	public function getDebugger():FlxDebugger
+	public var debugger(get_debugger, null):FlxDebugger;
+	public function get_debugger():FlxDebugger
 	{
 		return _debugger;
 	}
