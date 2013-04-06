@@ -11,16 +11,16 @@ import org.flixel.system.layer.DrawStackItem;
  * It can be filled with a random selection of tiles to quickly add detail.
  */
 class FlxTileblock extends FlxSprite
-{		
-	
+{
+
 	#if !flash
 	private var _tileWidth:Int;
 	private var _tileHeight:Int;
 	private var _tileData:Array<Float>;
-	
+
 	private var _tileIndices:Array<Int>;
 	#end
-	
+
 	/**
 	 * Creates a new <code>FlxBlock</code> object with the specified position and size.
 	 * @param	X			The X position of the block.
@@ -45,7 +45,7 @@ class FlxTileblock extends FlxSprite
 		immovable = true;
 		moves = false;
 	}
-	
+
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
@@ -59,7 +59,7 @@ class FlxTileblock extends FlxSprite
 		{
 			return this;
 		}
-		
+
 		//First create a tile brush
 		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
 		#if !flash
@@ -68,7 +68,7 @@ class FlxTileblock extends FlxSprite
 		var spriteWidth:Int = Std.int(sprite.width);
 		var spriteHeight:Int = Std.int(sprite.height);
 		var total:Int = sprite.frames + Empties;
-		
+
 		//Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		var regen:Bool = false;
 		if (width % sprite.width != 0)
@@ -81,7 +81,7 @@ class FlxTileblock extends FlxSprite
 			height = Std.int((height / spriteHeight + 1)) * spriteHeight;
 			regen = true;
 		}
-		
+
 		#if flash
 		if (regen)
 		{
@@ -92,7 +92,7 @@ class FlxTileblock extends FlxSprite
 	//		this.fill(0);
 		}
 		#end
-		
+
 		//Stamp random tiles onto the canvas
 		var row:Int = 0;
 		var column:Int;
@@ -132,14 +132,14 @@ class FlxTileblock extends FlxSprite
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frameIDs.length);
+					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frames.length);
 					_tileIndices.push(tileIndex);
-					_tileData.push(_framesData.frameIDs[tileIndex]);
+					_tileData.push(_framesData.frames[tileIndex].tileID);
 					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);
 					_tileData.push(destinationY - _halfHeight + 0.5 * _tileHeight);
 					#end
 				}
-				
+
 				destinationX += spriteWidth;
 				column++;
 			}
@@ -151,15 +151,15 @@ class FlxTileblock extends FlxSprite
 		#end
 		return this;
 	}
-	
+
 	#if !flash
-	override public function draw():Void 
+	override public function draw():Void
 	{
 		if (_atlas == null)
 		{
 			return;
 		}
-		
+
 		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -168,7 +168,7 @@ class FlxTileblock extends FlxSprite
 				return;
 			}
 		}
-		
+
 		if (cameras == null)
 		{
 			cameras = FlxG.cameras;
@@ -180,25 +180,25 @@ class FlxTileblock extends FlxSprite
 		var drawItem:DrawStackItem;
 		var isColored:Bool = isColored();
 		var l:Int = cameras.length;
-		
+
 		var j:Int = 0;
 		var numTiles:Int = 0;
 		if (_tileData != null)
 		{
 			numTiles = Std.int(_tileData.length / 3);
 		}
-		
+
 		var currPosInArr:Int;
 		var currTileID:Float;
 		var currTileX:Float;
 		var currTileY:Float;
-		
+
 		var radians:Float;
 		var cos:Float;
 		var sin:Float;
 		var relativeX:Float;
 		var relativeY:Float;
-		
+
 		while(i < l)
 		{
 			camera = cameras[i++];
@@ -211,39 +211,39 @@ class FlxTileblock extends FlxSprite
 			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
-			
+
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
-			
+
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
-			
+
 			#if js
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
 			#end
-			
+
 			var redMult:Float = 1;
 			var greenMult:Float = 1;
 			var blueMult:Float = 1;
-			
+
 			#if !js
 			if (isColoredCamera)
 			{
-				redMult = _red * camera.red; 
+				redMult = _red * camera.red;
 				greenMult = _green * camera.green;
 				blueMult = _blue * camera.blue;
 			}
 			else
 			{
-				redMult = _red; 
+				redMult = _red;
 				greenMult = _green;
 				blueMult = _blue;
 			}
 			#end
-			
+
 			if (_tileData != null)
 			{
 				var csx : Float = 1;
@@ -258,12 +258,12 @@ class FlxTileblock extends FlxSprite
 					radians = angle * FlxG.RAD;
 					cos = Math.cos(radians);
 					sin = Math.sin(radians);
-					
+
 					csx = cos * scale.x;
 					ssy = sin * scale.y;
 					ssx = sin * scale.x;
 					csy = cos * scale.y;
-					
+
 					x1 = (origin.x - _halfWidth);
 					y1 = (origin.y - _halfHeight);
 				}
@@ -276,7 +276,7 @@ class FlxTileblock extends FlxSprite
 					currTileY = _tileData[currPosInArr + 2] + y1;
 					relativeX = (currTileX * csx - currTileY * ssy);
 					relativeY = (currTileX * ssx + currTileY * csy);
-					
+
 					currDrawData[currIndex++] = (_point.x) + relativeX;
 					currDrawData[currIndex++] = (_point.y) + relativeY;
 					currDrawData[currIndex++] = currTileID;
@@ -289,7 +289,7 @@ class FlxTileblock extends FlxSprite
 					#if !js
 					if (isColored || isColoredCamera)
 					{
-						currDrawData[currIndex++] = redMult; 
+						currDrawData[currIndex++] = redMult;
 						currDrawData[currIndex++] = greenMult;
 						currDrawData[currIndex++] = blueMult;
 					}
@@ -300,15 +300,15 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = alpha;
 					}
 					#end
-					
+
 					j++;
 				}
-				
+
 				drawItem.position = currIndex;
 			}
-			
+
 			FlxBasic._VISIBLECOUNT++;
-			
+
 			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
@@ -317,20 +317,20 @@ class FlxTileblock extends FlxSprite
 			#end
 		}
 	}
-	
-	override public function destroy():Void 
+
+	override public function destroy():Void
 	{
 		_tileData = null;
 		_tileIndices = null;
 		super.destroy();
 	}
-	
+
 	override public function updateFrameData():Void
 	{
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
 			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
-			
+
 			if (_tileData != null)
 			{
 				for (i in 0...(_tileIndices.length))
