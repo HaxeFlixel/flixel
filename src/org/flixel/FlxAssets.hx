@@ -133,4 +133,13 @@ class FlxAssets
 		}
 		#end
 	}
+	
+	public static function addBitmapDataToCache(key:String, bmd:BitmapData):Void
+	{
+		Reflect.callMethod(Assets, Reflect.field(Assets, "initialize"), []);
+		var resourceTypes:Map<String, String> = cast Reflect.getProperty(Assets, "resourceTypes");
+		
+		resourceTypes.set(key, "image");
+		Assets.cachedBitmapData.set(key, bmd);
+	}
 }

@@ -404,7 +404,7 @@ class FlxObject extends FlxBasic
 		var velocityDelta:Float;
 		
 		var dt:Float = FlxG.elapsed;
-
+		
 		velocityDelta = 0.5 * (FlxU.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
 		angularVelocity += velocityDelta; 
 		angle += angularVelocity * dt;
