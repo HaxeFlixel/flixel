@@ -285,6 +285,7 @@ class FlxText extends FlxSprite
 		#if neko
 		_format.color = Color.rgb;
 		#else
+		Color &= 0x00ffffff;
 		_format.color = Color;
 		#end
 		_textField.defaultTextFormat = _format;
