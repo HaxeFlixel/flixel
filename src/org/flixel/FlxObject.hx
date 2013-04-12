@@ -348,17 +348,11 @@ class FlxObject extends FlxBasic
 		super.destroy();
 	}
 	
-	/**
-	 * Pre-update is called right before <code>update()</code> on each object in the game loop.
-	 * In <code>FlxObject</code> it controls the flicker timer,
-	 * tracking the last coordinates for collision purposes,
-	 * and checking if the object is moving along a path or not.
-	 */
-	override public function preUpdate():Void
+	override public function update():Void 
 	{
 		FlxBasic._ACTIVECOUNT++;
 		
-		if(_flickerTimer > 0)
+		if (_flickerTimer > 0)
 		{
 			_flickerTimer -= FlxG.elapsed;
 			if(_flickerTimer <= 0)
@@ -375,15 +369,7 @@ class FlxObject extends FlxBasic
 		{
 			updatePathMotion();
 		}
-	}
-	
-	/**
-	 * Post-update is called right after <code>update()</code> on each object in the game loop.
-	 * In <code>FlxObject</code> this function handles integrating the objects motion
-	 * based on the velocity and acceleration settings, and tracking/clearing the <code>touching</code> flags.
-	 */
-	override public function postUpdate():Void
-	{
+		
 		if (moves)
 		{
 			updateMotion();

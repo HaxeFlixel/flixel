@@ -400,6 +400,8 @@ class FlxTilemap extends FlxObject
 			_lastVisualDebug = FlxG.visualDebug;
 			setDirty();
 		}
+		
+		super.update();
 	}
 	#end
 

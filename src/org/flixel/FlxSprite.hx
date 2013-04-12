@@ -624,13 +624,9 @@ class FlxSprite extends FlxObject
 		#end
 	}
 	
-	/**
-	 * Automatically called after update() by the game loop,
-	 * this function just calls updateAnimation().
-	 */
-	override public function postUpdate():Void
+	override public function update():Void 
 	{
-		super.postUpdate();
+		super.update();
 		updateAnimation();
 	}
 	

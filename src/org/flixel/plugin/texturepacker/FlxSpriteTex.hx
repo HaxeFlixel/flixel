@@ -26,7 +26,7 @@ class FlxSpriteTex extends FlxSprite
 #else
 		super(x, y);
 		
-		var spriteInfo:TexturePackerSprite = _tex.sprites[_spriteId];
+		var spriteInfo:TexturePackerFrame = _tex.sprites[_spriteId];
 		var bm:BitmapData = new BitmapData(Std.int(spriteInfo.source.width), Std.int(spriteInfo.source.height), true, 0x00ffffff);
 		
 		if (spriteInfo.rotated)

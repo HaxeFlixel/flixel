@@ -100,23 +100,13 @@ class FlxBasic
 	}
 	
 	/**
-	 * Pre-update is called right before <code>update()</code> on each object in the game loop.
-	 */
-	public function preUpdate():Void
-	{
-		_ACTIVECOUNT++;
-	}
-	
-	/**
 	 * Override this function to update your class's position and appearance.
 	 * This is where most of your game rules and behavioral code will go.
 	 */
-	public function update():Void { }
-	
-	/**
-	 * Post-update is called right after <code>update()</code> on each object in the game loop.
-	 */
-	public function postUpdate():Void { }
+	public function update():Void 
+	{ 
+		_ACTIVECOUNT++;
+	}
 	
 	/**
 	 * Override this function to control how the object is drawn.

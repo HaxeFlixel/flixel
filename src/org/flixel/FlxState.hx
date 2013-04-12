@@ -233,15 +233,4 @@ class FlxState extends FlxGroup
 	{
 		
 	}
-	
-	/**
-	 * This function is inlined because it never gets called on FlxState objects.
-	 * Put your code in the update() function.
-	 */
-	override public inline function preUpdate():Void {}
-	/**
-	 * This function is inlined because it never gets called on FlxState objects.
-	 * Put your code in the update() function.
-	 */
-	override public inline function postUpdate():Void {}
 }
