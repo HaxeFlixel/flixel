@@ -1045,6 +1045,8 @@ class FlxBar extends FlxSprite
 				y = parent.y + positionOffset.y;
 			}
 		}
+		
+		super.update();
 	}
 	
 	public var percent(get_percent, set_percent):Float;

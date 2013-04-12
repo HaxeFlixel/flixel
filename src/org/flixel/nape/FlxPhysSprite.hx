@@ -6,6 +6,7 @@ import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Circle;
 import nape.shape.Polygon;
+import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxSprite;
 
@@ -65,10 +66,23 @@ class FlxPhysSprite extends FlxSprite
 	 */
 	override public function postUpdate():Void
 	{
+		FlxBasic._ACTIVECOUNT++;
+		
+		if (_flickerTimer > 0)
+		{
+			_flickerTimer -= FlxG.elapsed;
+			if(_flickerTimer <= 0)
+			{
+				_flickerTimer = 0;
+				_flicker = false;
+			}
+		}
+		
 		if (moves)
 		{
 			updatePhysObjects();
 		}
+		
 		updateAnimation();
 	}
 
@@ -97,9 +111,9 @@ class FlxPhysSprite extends FlxSprite
 		if (this.body != null) 
 			destroyPhysObjects();
 		
-		body.space = FlxPhysState.space;
 		body.position.x = x;
 		body.position.y = y;
+		body.space = FlxPhysState.space;
 		this.body = body;
 		setBodyMaterial();
 	}

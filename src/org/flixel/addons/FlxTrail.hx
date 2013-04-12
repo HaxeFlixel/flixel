@@ -95,7 +95,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 * Updates positions and other values according to the delay that has been set.
 	 * 
 	 */
-	override public function postUpdate():Void
+	override public function update():Void
 	{
 		// Count the frames
 		counter++;
