@@ -129,7 +129,7 @@ class FlxBasic
 			#if !FLX_NO_DEBUG
 			if (FlxG.visualDebug && !ignoreDrawDebug)
 			{
-				drawDebug(camera);
+				drawDebugOnCamera(camera);
 			}
 			#end
 			
@@ -137,12 +137,25 @@ class FlxBasic
 	}
 	
 	#if !FLX_NO_DEBUG
+	public function drawDebug():Void
+	{
+		if (!ignoreDrawDebug)
+		{
+			var i:Int = 0;
+			var l:Int = cameras.length;
+			while (i < l)
+			{
+				drawDebugOnCamera(cameras[i++]);
+			}
+		}
+	}
+	
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
-	public function drawDebug(Camera:FlxCamera = null):Void { }
+	public function drawDebugOnCamera(Camera:FlxCamera = null):Void { }
 	#end
 	
 	/**

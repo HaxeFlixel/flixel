@@ -315,6 +315,16 @@ class NestedSprite extends FlxSprite
 		}
 	}
 	
+	override public function drawDebug():Void 
+	{
+		super.drawDebug();
+		
+		for (child in _children)
+		{
+			child.drawDebug();
+		}
+	}
+	
 	override private function set_alpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)

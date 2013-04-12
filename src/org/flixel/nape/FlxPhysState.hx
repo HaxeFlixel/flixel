@@ -120,17 +120,6 @@ class FlxPhysState extends FlxState
 	}
 	
 	/**
-	 * Override this method to draw debug physics shapes
-	 */
-	override public function draw():Void 
-	{
-		super.draw();
-		#if !FLX_NO_DEBUG
-		drawPhysDebug();
-		#end
-	}
-	
-	/**
 	 * Override this function to null out variables or manually call
 	 * <code>destroy()</code> on class members if necessary.
 	 * Don't forget to call <code>super.destroy()</code>!
@@ -146,6 +135,11 @@ class FlxPhysState extends FlxState
 	}
 	
 	#if !FLX_NO_DEBUG
+	override public function drawDebug():Void 
+	{
+		drawPhysDebug();
+	}
+	
 	/**
 	 * Enables debug graphics for nape physics.
 	 */

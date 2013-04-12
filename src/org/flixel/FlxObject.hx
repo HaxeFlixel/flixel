@@ -429,14 +429,6 @@ class FlxObject extends FlxBasic
 				continue;
 			}
 			FlxBasic._VISIBLECOUNT++;
-			
-			#if !FLX_NO_DEBUG
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebug(camera);
-			}
-			#end
-			
 		}
 	}
 	
@@ -447,11 +439,16 @@ class FlxObject extends FlxBasic
 	 * 
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
-	override public function drawDebug(Camera:FlxCamera = null):Void
+	override public function drawDebugOnCamera(Camera:FlxCamera = null):Void
 	{
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
+		}
+		
+		if (!onScreenObject(Camera) || !Camera.visible || !Camera.exists)
+		{
+			return;
 		}
 
 		//get bounding box coordinates

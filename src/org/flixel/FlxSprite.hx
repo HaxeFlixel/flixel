@@ -811,12 +811,6 @@ class FlxSprite extends FlxObject
 			drawItem.position = currIndex;
 #end
 			FlxBasic._VISIBLECOUNT++;
-			#if !FLX_NO_DEBUG
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebug(camera);
-			}
-			#end
 		}
 	}
 	

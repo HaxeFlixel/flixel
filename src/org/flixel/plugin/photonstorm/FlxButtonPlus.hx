@@ -377,11 +377,6 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		}
 	}
 	
-	override public function draw():Void
-	{
-		super.draw();
-	}
-	
 	/**
 	 * Called by the game state when state is changed (if this object belongs to the state)
 	 */

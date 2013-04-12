@@ -132,6 +132,22 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 	}
 	
+	#if !FLX_NO_DEBUG
+	override public function drawDebug():Void 
+	{
+		var basic:T;
+		var i:Int = 0;
+		while (i < length)
+		{
+			basic = members[i++];
+			if ((basic != null) && basic.exists && basic.visible)
+			{
+				basic.drawDebug();
+			}
+		}
+	}
+	#end
+	
 	/**
 	 * @private
 	 */

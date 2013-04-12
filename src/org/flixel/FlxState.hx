@@ -99,6 +99,19 @@ class FlxState extends FlxGroup
 		}
 	}
 	
+	override public function drawDebug():Void
+	{
+		if (persistantDraw || _subState == null)
+		{
+			super.drawDebug();
+		}
+		
+		if (_subState != null)
+		{
+			_subState.drawDebug();
+		}
+	}
+	
 	public function tryUpdate():Void
 	{
 		if (persistantUpdate || _subState == null)

@@ -1832,6 +1832,23 @@ class FlxG
 			}
 		}
 	}
+	
+	inline static public function drawDebugPlugins():Void
+	{
+		var plugin:FlxBasic;
+		var pluginList:Array<FlxBasic> = FlxG.plugins;
+		var i:Int = 0;
+		var l:Int = pluginList.length;
+		while(i < l)
+		{
+			plugin = pluginList[i++];
+			if (plugin.exists && plugin.visible && !plugin.ignoreDrawDebug)
+			{
+				plugin.drawDebug();
+			}
+		}
+	}
+	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.
 	 * @param	object		The object containing the properties to tween.

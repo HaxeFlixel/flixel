@@ -637,6 +637,13 @@ class FlxGame extends Sprite
 		FlxG.lockCameras();
 		_state.draw();
 		
+		#if !FLX_NO_DEBUG
+		if (FlxG.visualDebug)
+		{
+			_state.drawDebug();
+		}
+		#end
+		
 		#if !flash
 		FlxG.renderCameras();
 		
@@ -649,6 +656,12 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.drawPlugins();
+		#if !FLX_NO_DEBUG
+		if (FlxG.visualDebug)
+		{
+			FlxG.drawDebugPlugins();
+		}
+		#end
 		FlxG.unlockCameras();
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)

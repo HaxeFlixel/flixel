@@ -368,6 +368,15 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 	}
 	
+	override public function drawDebug():Void 
+	{
+		super.drawDebug();
+		if (label != null)
+		{
+			label.drawDebug();
+		}
+	}
+	
 	// TODO: Return from Sound -> Class<Sound>
 	/**
 	 * Set sounds to play during mouse-button interactions.
