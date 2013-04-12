@@ -469,6 +469,9 @@ class FlxTilemap extends FlxObject
 		var column:Int;
 		var columnIndex:Int;
 		var tile:FlxTile;
+		#if !FLX_NO_DEBUG
+		var debugTile:BitmapData;
+		#end 
 		while(row < screenRows)
 		{
 			columnIndex = rowIndex;
@@ -481,6 +484,28 @@ class FlxTilemap extends FlxObject
 				if(_flashRect != null)
 				{
 					Buffer.pixels.copyPixels(_tiles, _flashRect, _flashPoint, null, null, true);
+					#if !FLX_NO_DEBUG
+					if (FlxG.visualDebug && !ignoreDrawDebug) 
+					{
+						tile = _tileObjects[_data[columnIndex]];
+						if(tile != null)
+						{
+							if (tile.allowCollisions <= FlxObject.NONE)
+							{
+								debugTile = _debugTileNotSolid; //blue
+							}
+							else if (tile.allowCollisions != FlxObject.ANY)
+							{
+								debugTile = _debugTilePartial; //pink
+							}
+							else
+							{
+								debugTile = _debugTileSolid; //green
+							}
+							Buffer.pixels.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
+						}
+					}
+					#end
 				}
 				#else
 				tileID = _rectIDs[columnIndex];
@@ -529,6 +554,9 @@ class FlxTilemap extends FlxObject
 		Buffer.y = screenYInTiles * _tileHeight;
 	}
 	
+	#if flash
+	override public function drawDebug():Void {  }
+	#else
 	override public function drawDebugOnCamera(Camera:FlxCamera = null):Void
 	{
 		var buffer:FlxTilemapBuffer = null;
@@ -544,7 +572,6 @@ class FlxTilemap extends FlxObject
 		
 		if (buffer == null)	return;
 		
-	#if !flash
 		#if !js
 		_helperPoint.x = Math.floor((x - Math.floor(Camera.scroll.x) * scrollFactor.x) * 5) / 5 + 0.1; //copied from getScreenXY()
 		_helperPoint.y = Math.floor((y - Math.floor(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
@@ -556,7 +583,6 @@ class FlxTilemap extends FlxObject
 		var debugColor:Int;
 		var drawX:Float;
 		var drawY:Float;
-	#end
 	
 		//Copy tile images into the tile buffer
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
@@ -599,29 +625,6 @@ class FlxTilemap extends FlxObject
 			_flashPoint.x = 0;
 			while(column < screenColumns)
 			{
-				#if flash
-				_flashRect = _rects[columnIndex];
-				if(_flashRect != null)
-				{
-					tile = _tileObjects[_data[columnIndex]];
-					if(tile != null)
-					{
-						if (tile.allowCollisions <= FlxObject.NONE)
-						{
-							debugTile = _debugTileNotSolid; //blue
-						}
-						else if (tile.allowCollisions != FlxObject.ANY)
-						{
-							debugTile = _debugTilePartial; //pink
-						}
-						else
-						{
-							debugTile = _debugTileSolid; //green
-						}
-						buffer.pixels.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
-					}
-				}
-				#else
 				tileID = _rectIDs[columnIndex];
 				if (tileID != -1)
 				{
@@ -662,7 +665,6 @@ class FlxTilemap extends FlxObject
 						gfx.drawRect(drawX, drawY, _tileWidth, _tileHeight);
 					}
 				}
-				#end
 				_flashPoint.x += _tileWidth;
 				column++;
 				columnIndex++;
@@ -672,6 +674,7 @@ class FlxTilemap extends FlxObject
 			row++;
 		}
 	}
+	#end
 	
 	/**
 	 * Draws the tilemap buffers to the cameras and handles flickering.
