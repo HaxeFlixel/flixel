@@ -16,7 +16,7 @@ import org.flixel.system.input.FlxTouch;
 class FlxAnalog extends FlxTypedGroup<FlxSprite>
 {
 	// From radians to degrees.
-	private static inline var DEGREES:Float = (180 / Math.PI);
+	private static var DEGREES:Float = (180 / Math.PI);
 	
 	// Used with public variable <code>status</code>, means not highlighted or pressed.
 	private static inline var NORMAL:Int = 0;
