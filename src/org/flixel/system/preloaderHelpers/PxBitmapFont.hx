@@ -18,7 +18,7 @@ import nme.display.Tilesheet;
  */
 class PxBitmapFont 
 {
-	private static var _storedFonts:Hash<PxBitmapFont> = new Hash<PxBitmapFont>();
+	private static var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
 	
 	private static var ZERO_POINT:Point = new Point();
 	
