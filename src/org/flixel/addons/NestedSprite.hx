@@ -315,6 +315,7 @@ class NestedSprite extends FlxSprite
 		}
 	}
 	
+	#if !FLX_NO_DEBUG
 	override public function drawDebug():Void 
 	{
 		super.drawDebug();
@@ -324,6 +325,7 @@ class NestedSprite extends FlxSprite
 			child.drawDebug();
 		}
 	}
+	#end
 	
 	override private function set_alpha(Alpha:Float):Float
 	{

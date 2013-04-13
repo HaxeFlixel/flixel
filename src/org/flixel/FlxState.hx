@@ -99,6 +99,7 @@ class FlxState extends FlxGroup
 		}
 	}
 	
+#if !FLX_NO_DEBUG
 	override public function drawDebug():Void
 	{
 		if (persistantDraw || _subState == null)
@@ -111,6 +112,7 @@ class FlxState extends FlxGroup
 			_subState.drawDebug();
 		}
 	}
+#end
 	
 	public function tryUpdate():Void
 	{

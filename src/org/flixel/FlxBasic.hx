@@ -125,14 +125,6 @@ class FlxBasic
 		{
 			camera = cameras[i++];
 			_VISIBLECOUNT++;
-			
-			#if !FLX_NO_DEBUG
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebugOnCamera(camera);
-			}
-			#end
-			
 		}
 	}
 	

@@ -554,6 +554,7 @@ class FlxTilemap extends FlxObject
 		Buffer.y = screenYInTiles * _tileHeight;
 	}
 	
+#if !FLX_NO_DEBUG
 	#if flash
 	override public function drawDebug():Void {  }
 	#else
@@ -675,6 +676,7 @@ class FlxTilemap extends FlxObject
 		}
 	}
 	#end
+#end
 	
 	/**
 	 * Draws the tilemap buffers to the cameras and handles flickering.

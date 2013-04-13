@@ -226,6 +226,6 @@ class FlxPhysSprite extends FlxSprite
 	
 	// Hide debug outline on physics sprites (they already show outlined)
 	#if !FLX_NO_DEBUG
-	override public function drawDebug(Camera:FlxCamera = null):Void { }
+	override public function drawDebug():Void { }
 	#end
 }
