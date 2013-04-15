@@ -89,7 +89,8 @@ class FlxPhysSprite extends FlxSprite
 	override public function revive():Void
 	{
 		super.revive();
-		body.space = FlxPhysState.space;
+		if(body != null)
+			body.space = FlxPhysState.space;
 	}
 	
 	public function addPremadeBody(body:Body)
