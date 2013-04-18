@@ -87,7 +87,7 @@ class Atlas
 	*/
 	public function createTileSheetData(bitmapData:BitmapData):TileSheetData
 	{
-	return TileSheetData.addTileSheet(bitmapData);
+		return TileSheetData.addTileSheet(bitmapData);
 	}
 
 	/**

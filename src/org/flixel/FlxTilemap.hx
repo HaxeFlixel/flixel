@@ -415,13 +415,16 @@ class FlxTilemap extends FlxObject
 	#if flash
 		Buffer.fill();
 	#else
-		#if !js
-		_helperPoint.x = Math.floor((x - Math.floor(Camera.scroll.x) * scrollFactor.x) * 5) / 5 + 0.1; //copied from getScreenXY()
-		_helperPoint.y = Math.floor((y - Math.floor(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
-		#else
+	//	#if !js
+	//	_helperPoint.x = Math.floor((x - Math.floor(Camera.scroll.x) * scrollFactor.x) * 5) / 5 + 0.1; //copied from getScreenXY()
+	//	_helperPoint.y = Math.floor((y - Math.floor(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
+	//	#else
 		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x; //copied from getScreenXY()
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
-		#end
+		
+	//	_helperPoint.x += ((_helperPoint.x > 0)?0.0000001: -0.0000001);
+	//	_helperPoint.y += ((_helperPoint.y > 0)?0.0000001: -0.0000001);
+	//	#end
 		var tileID:Int;
 		var drawX:Float;
 		var drawY:Float;
@@ -522,10 +525,10 @@ class FlxTilemap extends FlxObject
 					#end
 					currDrawData[currIndex++] = tileID;
 					
-					currDrawData[currIndex++] = 1;
+					currDrawData[currIndex++] = 1.01;
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1;
+					currDrawData[currIndex++] = 1.01;
 					#if !js
 					if (isColoredCamera)
 					{

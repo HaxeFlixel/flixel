@@ -770,7 +770,7 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = _point.y - y2;
 			
 			currDrawData[currIndex++] = _flxFrame.tileID;
-
+			
 			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{
 				currDrawData[currIndex++] = -csx;

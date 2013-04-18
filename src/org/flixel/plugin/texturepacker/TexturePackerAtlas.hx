@@ -8,6 +8,7 @@ class TexturePackerAtlas extends Atlas
 {
 	public static function getAtlas(key:String, bmData:BitmapData, tex:TexturePackerFrames, unique:Bool = false):Atlas
 	{
+		// TODO: make sure that we are returning TexturePackerAtlas and not just Atlas
 		var alreadyExist:Bool = Atlas.isExists(key);
 		if (!unique && alreadyExist)
 		{

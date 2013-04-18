@@ -11,6 +11,7 @@ class TexturePackerTileSheetData extends TileSheetData
 {
 	public static function addTileSheet(bitmapData:BitmapData, tex:TexturePackerFrames):TileSheetData
 	{
+		// TODO: make sure that we are returning TexturePackerTileSheetData and not just TileSheetData
 		var tempTileSheetData:TileSheetData;
 		
 		if (TileSheetData.containsTileSheet(bitmapData))
@@ -18,7 +19,7 @@ class TexturePackerTileSheetData extends TileSheetData
 			tempTileSheetData = TileSheetData.getTileSheet(bitmapData);
 			return TileSheetData.getTileSheet(bitmapData);
 		}
-		
+	
 		tempTileSheetData = new TexturePackerTileSheetData(new Tilesheet(bitmapData), tex);
 		TileSheetData.tileSheetData.push(tempTileSheetData);
 		return tempTileSheetData;
@@ -26,7 +27,7 @@ class TexturePackerTileSheetData extends TileSheetData
 
 	private var _tex:TexturePackerFrames;
 	
-	public function new(tileSheet:Tilesheet, tex:TexturePackerFrames)
+	private function new(tileSheet:Tilesheet, tex:TexturePackerFrames)
 	{
 		_tex = tex;
 		super (tileSheet);
