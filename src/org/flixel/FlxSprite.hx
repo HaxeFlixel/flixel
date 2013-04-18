@@ -13,6 +13,7 @@ import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.system.layer.frames.FlxFrame;
 import org.flixel.system.layer.Node;
 
 #if !flash

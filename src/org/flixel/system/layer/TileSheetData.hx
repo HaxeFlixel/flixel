@@ -10,6 +10,8 @@ import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 
 import org.flixel.system.layer.TileSheetWrapper;
+import org.flixel.system.layer.frames.FlxFrame;
+import org.flixel.system.layer.frames.FlxSpriteFrames;
 
 /**
  * Object of this class holds information about single Tilesheet
@@ -203,13 +205,14 @@ class TileSheetData
 			return flxFrames.get(key);
 		}
 		
-		var frame:FlxFrame = new FlxFrame();
+		var frame:FlxFrame = new FlxFrame(this);
 		frame.tileID = addTileRect(rect, point);
-		frame.rotated = false;
-		frame.trimmed = false;
+		// TODO: remove this
+	//	frame.rotated = false;
+	//	frame.trimmed = false;
+	//	frame.offset = new FlxPoint();
+	//	frame.sourceSize = new FlxPoint(rect.width, rect.height);
 		frame.name = key;
-		frame.offset = new FlxPoint();
-		frame.sourceSize = new FlxPoint(rect.width, rect.height);
 		frame.frame = rect;
 		flxFrames.set(key, frame);
 		return frame;
@@ -258,52 +261,5 @@ class TileSheetData
 		flxSpriteFrames = null;
 		// TODO: destroy FlxFrames in flxFrames hash
 		flxFrames = null;
-	}
-}
-
-class FlxSpriteFrames
-{
-	public var frames:Array<FlxFrame>;
-	public var name:String;
-	
-	public function new(name:String)
-	{
-		this.name = name;
-		frames = [];
-	}
-	
-	public function destroy():Void
-	{
-		frames = null;
-		name = null;
-	}	
-}
-
-class FlxFrame
-{
-	public var name:String = null;
-	public var rotated:Bool = false;
-	public var trimmed:Bool = false;
-	public var frame:Rectangle = null;
-	public var sourceSize:FlxPoint = null;
-	public var offset:FlxPoint = null;
-	public var tileID:Int = -1;
-	
-	public function new()
-	{
-		
-	}
-	
-	public function destroy():Void
-	{
-		name = null;
-		frame = null;
-		sourceSize = null;
-		offset = null;
-	}
-	
-	public function prepare():Void
-	{
-		
 	}
 }
