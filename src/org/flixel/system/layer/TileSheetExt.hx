@@ -6,9 +6,9 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.ObjectHash;
 
-class TileSheetWrapper extends Tilesheet
+class TileSheetExt extends Tilesheet
 {
-	private static var _tileSheetCache:ObjectHash<BitmapData, TileSheetWrapper> = new ObjectHash<BitmapData, TileSheetWrapper>();
+	private static var _tileSheetCache:ObjectHash<BitmapData, TileSheetExt> = new ObjectHash<BitmapData, TileSheetExt>();
 	
 	public static var _DRAWCALLS:Int = 0;
 	
@@ -16,14 +16,14 @@ class TileSheetWrapper extends Tilesheet
 	 * Adds new tileSheet to manager and returns it
 	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
 	 */
-	public static function addTileSheet(bitmapData:BitmapData):TileSheetWrapper
+	public static function addTileSheet(bitmapData:BitmapData):TileSheetExt
 	{
 		if (containsTileSheet(bitmapData))
 		{
 			return getTileSheet(bitmapData);
 		}
 		
-		var tempTileSheetData:TileSheetWrapper = new TileSheetWrapper(bitmapData);
+		var tempTileSheetData:TileSheetExt = new TileSheetExt(bitmapData);
 		_tileSheetCache.set(bitmapData, tempTileSheetData);
 		return tempTileSheetData;
 	}
@@ -33,17 +33,17 @@ class TileSheetWrapper extends Tilesheet
 		return _tileSheetCache.exists(bitmapData);
 	}
 	
-	public static function getTileSheet(bitmapData:BitmapData):TileSheetWrapper
+	public static function getTileSheet(bitmapData:BitmapData):TileSheetExt
 	{
 		return _tileSheetCache.get(bitmapData);
 	}
 	
-	public static function removeTileSheet(tileSheetObj:TileSheetWrapper):Void
+	public static function removeTileSheet(tileSheetObj:TileSheetExt):Void
 	{
 		var key:BitmapData = tileSheetObj.nmeBitmap;
 		if (containsTileSheet(key))
 		{
-			var temp:TileSheetWrapper = _tileSheetCache.get(key);
+			var temp:TileSheetExt = _tileSheetCache.get(key);
 			_tileSheetCache.remove(key);
 			temp.destroy();
 		}
@@ -53,7 +53,7 @@ class TileSheetWrapper extends Tilesheet
 	{
 		for (key in _tileSheetCache.keys())
 		{
-			var temp:TileSheetWrapper = _tileSheetCache.get(key);
+			var temp:TileSheetExt = _tileSheetCache.get(key);
 			_tileSheetCache.remove(key);
 			temp.destroy();
 		}

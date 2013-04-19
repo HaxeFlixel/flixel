@@ -9,7 +9,7 @@ import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 
-import org.flixel.system.layer.TileSheetWrapper;
+import org.flixel.system.layer.TileSheetExt;
 import org.flixel.system.layer.frames.FlxFrame;
 import org.flixel.system.layer.frames.FlxSpriteFrames;
 
@@ -33,7 +33,7 @@ class TileSheetData
 			return getTileSheet(bitmapData);
 		}
 		
-		var tilesheet:TileSheetWrapper = TileSheetWrapper.addTileSheet(bitmapData);
+		var tilesheet:TileSheetExt = TileSheetExt.addTileSheet(bitmapData);
 		var tempTileSheetData:TileSheetData = new TileSheetData(tilesheet);
 		tileSheetData.push(tempTileSheetData);
 		return tempTileSheetData;
@@ -87,14 +87,14 @@ class TileSheetData
 		}
 		tileSheetData = new Array<TileSheetData>();
 		
-		TileSheetWrapper.clear();
+		TileSheetExt.clear();
 	}
 	
 	
 	
 	
 	// TODO: make it work only on non-flash targets
-	public var tileSheet:TileSheetWrapper;
+	public var tileSheet:TileSheetExt;
 	
 	/**
 	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
@@ -105,7 +105,7 @@ class TileSheetData
 	// TODO: document this
 	private var flxFrames:Hash<FlxFrame>;
 	
-	private function new(tileSheet:TileSheetWrapper)
+	private function new(tileSheet:TileSheetExt)
 	{
 		this.tileSheet = tileSheet;
 		flxSpriteFrames = new Hash<FlxSpriteFrames>();

@@ -6,7 +6,7 @@ import nme.geom.Rectangle;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.system.layer.TileSheetData;
-import org.flixel.system.layer.TileSheetWrapper;
+import org.flixel.system.layer.TileSheetExt;
 
 class FlxFrame
 {

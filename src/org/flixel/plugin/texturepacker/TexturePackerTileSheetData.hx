@@ -3,7 +3,7 @@ package org.flixel.plugin.texturepacker;
 import org.flixel.system.layer.frames.FlxFrame;
 import org.flixel.system.layer.frames.FlxSpriteFrames;
 import org.flixel.system.layer.TileSheetData;
-import org.flixel.system.layer.TileSheetWrapper;
+import org.flixel.system.layer.TileSheetExt;
 
 import nme.geom.Point;
 import nme.geom.Rectangle;
@@ -12,14 +12,14 @@ import nme.display.Tilesheet;
 
 class TexturePackerTileSheetData extends TileSheetData
 {
-	public static function addTileSheet(bitmapData:BitmapData, tex:TexturePackerData):TileSheetData
+	public static function addTileSheet(bitmapData:BitmapData, tex:TexturePackerData):TexturePackerTileSheetData
 	{
 		if (TexturePackerTileSheetData.containsTileSheet(bitmapData))
 		{
 			return TexturePackerTileSheetData.getTileSheet(bitmapData);
 		}
 		
-		var tilesheet:TileSheetWrapper = TileSheetWrapper.addTileSheet(bitmapData);
+		var tilesheet:TileSheetExt = TileSheetExt.addTileSheet(bitmapData);
 		var tempTileSheetData:TexturePackerTileSheetData = new TexturePackerTileSheetData(tilesheet, tex);
 		TileSheetData.tileSheetData.push(tempTileSheetData);
 		return tempTileSheetData;
@@ -37,13 +37,13 @@ class TexturePackerTileSheetData extends TileSheetData
 		return false;
 	}
 	
-	public static function getTileSheet(bitmapData:BitmapData):TileSheetData
+	public static function getTileSheet(bitmapData:BitmapData):TexturePackerTileSheetData
 	{
 		for (tsd in TileSheetData.tileSheetData)
 		{
 			if (tsd.tileSheet.nmeBitmap == bitmapData && Std.is(tsd, TexturePackerTileSheetData))
 			{
-				return tsd;
+				return cast(tsd, TexturePackerTileSheetData);
 			}
 		}
 		return null;
@@ -51,7 +51,7 @@ class TexturePackerTileSheetData extends TileSheetData
 
 	private var _tex:TexturePackerData;
 	
-	private function new(tileSheet:TileSheetWrapper, tex:TexturePackerData)
+	private function new(tileSheet:TileSheetExt, tex:TexturePackerData)
 	{
 		_tex = tex;
 		super(tileSheet);
