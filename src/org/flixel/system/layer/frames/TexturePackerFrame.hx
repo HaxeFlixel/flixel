@@ -3,6 +3,7 @@ package org.flixel.system.layer.frames;
 import nme.display.BitmapData;
 import nme.geom.Matrix;
 import nme.geom.Rectangle;
+import org.flixel.plugin.texturepacker.TexturePackerTileSheetData;
 
 class TexturePackerFrame extends FlxFrame
 {
@@ -13,9 +14,9 @@ class TexturePackerFrame extends FlxFrame
 	public var sourceSize:FlxPoint = null;
 	public var offset:FlxPoint = null;
 	
-	public function new()
+	public function new(tileSheet:TexturePackerTileSheetData)
 	{
-		super();
+		super(tileSheet);
 	}
 	
 	override public function destroy():Void 
@@ -26,7 +27,6 @@ class TexturePackerFrame extends FlxFrame
 		super.destroy();
 	}
 	
-	// TODO: test this
 	override public function getBitmap():BitmapData 
 	{
 		if (_bitmapData != null)
@@ -38,10 +38,11 @@ class TexturePackerFrame extends FlxFrame
 		
 		if (rotated)
 		{
+			// TODO: fix this for non-square sprites
 			MATRIX.identity();
-			MATRIX.translate(-source.width * 0.5, -source.height * 0.5);
+			MATRIX.translate(-sourceSize.x * 0.5, -sourceSize.y * 0.5);
 			MATRIX.rotate(-90.0 * FlxG.RAD);
-			MATRIX.translate(source.width * 0.5, source.height * 0.5);
+			MATRIX.translate(sourceSize.x * 0.5, sourceSize.y * 0.5);
 			MATRIX.translate(offset.x, offset.y);
 			
 			var r:Rectangle = new Rectangle(frame.x, frame.y, frame.width + offset.x, frame.height + offset.y);
@@ -49,9 +50,9 @@ class TexturePackerFrame extends FlxFrame
 		}
 		else
 		{
-			POINT.x = offset.x;
-			POINT.y = offset.y;
-			_bitmapData.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, POINT);
+			FlxFrame.POINT.x = offset.x;
+			FlxFrame.POINT.y = offset.y;
+			_bitmapData.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, FlxFrame.POINT);
 		}
 		
 		return _bitmapData;

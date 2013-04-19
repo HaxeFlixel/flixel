@@ -207,11 +207,6 @@ class TileSheetData
 		
 		var frame:FlxFrame = new FlxFrame(this);
 		frame.tileID = addTileRect(rect, point);
-		// TODO: remove this
-	//	frame.rotated = false;
-	//	frame.trimmed = false;
-	//	frame.offset = new FlxPoint();
-	//	frame.sourceSize = new FlxPoint(rect.width, rect.height);
 		frame.name = key;
 		frame.frame = rect;
 		flxFrames.set(key, frame);
@@ -222,26 +217,6 @@ class TileSheetData
 	{
 		return flxFrames.exists(key);
 	}
-	
-	public function getTexturePackerFrames(name:String, animated:Bool = false):FlxSpriteFrames
-	{
-		// TODO: implement this
-		return null;
-	}
-	
-	// TODO: document and implement this
-	/*public function addTexturePackerFrame(key:String, ):FlxFrame
-	{
-		
-		if (this.containsFrame(rect, point))
-		{
-			return getTileRectID(rect, point);
-		}
-		
-		tileSheet.addTileRect(rect, point);
-		pairsData.push(new RectanglePointPair(rect, point));
-		return (pairsData.length - 1);
-	}*/
 	
 	public function addTileRect(tileRect, point):Int
 	{
