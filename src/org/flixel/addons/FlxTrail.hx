@@ -62,6 +62,10 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 *  Stores the sprites recent angles.
 	 */
 	private var recentAngles:Array<Float>;
+	/**
+	 *  Internal var, whether trailsprites are solid or not. Access via setSolid and getSolid.
+	 */
+	private var _solid:Bool;
 
 	/**
 	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
@@ -170,6 +174,8 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			transp -= difference;
 
 			if (trailSprite.alpha <= 0) trailSprite.kill();
+			
+			setSolid(false);
 		}	
 	}
 
@@ -201,4 +207,21 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		xEnabled = X;
 		yEnabled = Y;
 	}
+	
+	/**
+	 * Function that allows you to change whether the trailsprites are able to collide (solid). False by default.
+	 *
+	 * @param 	Solid 	Whether the trailsprites should be solid or not.
+	 */
+	public function setSolid(Solid:Bool):Void
+	{
+		if (_solid == Solid) return;
+		
+		_solid = Solid;
+		
+		for (i in 0...trailLength)
+			members[i].solid = Solid;   
+	}	
+
+	public function getSolid():Bool { return _solid }
 }
