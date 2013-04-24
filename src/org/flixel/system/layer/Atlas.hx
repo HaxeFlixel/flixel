@@ -39,9 +39,7 @@ class Atlas
 	public var borderX:Int;
 	public var borderY:Int;
 	
-	#if !flash
 	public var _tileSheetData:TileSheetData;
-	#end
 	
 	/**
 	 * Bool flag for internal use.
@@ -77,14 +75,11 @@ class Atlas
 		this.borderX = borderX;
 		this.borderY = borderY;
 		
-		#if !flash
 		_tileSheetData = createTileSheetData(atlasBitmapData);
-		#end
 		
 		_atlasCache.set(name, this);
 	}
 
-#if !flash
 	/**
 	* Creates TileSheetData for BitmapData.
 	* @param bitmapData    BitmapData for that TileSheetData will be created
@@ -94,13 +89,12 @@ class Atlas
 	{
 	return TileSheetData.addTileSheet(bitmapData);
 	}
-#end
 
-  /**
-   * Returns true if atlas for key is already exist.
-   * @param key   atlas' key (name)
-   * @return true if atlas already in cache
-   */
+	/**
+	   * Returns true if atlas for key is already exist.
+	   * @param key   atlas' key (name)
+	   * @return true if atlas already in cache
+	*/
 	public static function isExists(key:String):Bool
 	{
 		return _atlasCache.exists(key);
@@ -490,9 +484,7 @@ class Atlas
 			atlasBitmapData.dispose();
 		}
 		atlasBitmapData = null;
-		#if !flash
 		_tileSheetData = null;
-		#end
 		nodes = null;
 	}
 	
@@ -518,9 +510,7 @@ class Atlas
 	{
 		deleteSubtree(root);
 		nodes = new Map<String, Node>();
-		#if !flash
 		TileSheetData.removeTileSheet(_tileSheetData);
-		#end
 		if (!_fromBitmapData)
 		{
 			atlasBitmapData.dispose();
@@ -529,9 +519,7 @@ class Atlas
 		atlasBitmapData = bmd;
 		nodes.set(name, root);
 		_fromBitmapData = true;
-		#if !flash
 		_tileSheetData = TileSheetData.addTileSheet(atlasBitmapData);
-		#end
 		return root;
 	}
 	
