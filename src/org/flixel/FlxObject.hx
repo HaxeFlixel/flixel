@@ -749,7 +749,7 @@ class FlxObject extends FlxBasic
 				angularAcceleration = 0;
 				angle = pathAngle;
 			}
-		}			
+		}
 	}
 	
 	/**
@@ -776,6 +776,7 @@ class FlxObject extends FlxBasic
 				if (basic != null && basic.exists && overlaps(basic, InScreenSpace, Camera))
 				{
 					results = true;
+					break;
 				}
 			}
 			return results;
@@ -831,6 +832,7 @@ class FlxObject extends FlxBasic
 				if (basic != null && basic.exists && overlapsAt(X, Y, basic, InScreenSpace, Camera))
 				{
 					results = true;
+					break;
 				}
 			}
 			return results;
