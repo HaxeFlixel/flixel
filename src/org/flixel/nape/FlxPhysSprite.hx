@@ -210,8 +210,12 @@ class FlxPhysSprite extends FlxSprite
 		_angularDrag 	= angularDrag;
 	}
 	
-	// Hide debug outline on physics sprites (they already show outlined)
+	// Hide debug outline on physics sprites if the physics debug shapes are turned on
 	#if !FLX_NO_DEBUG
-	override public function drawDebug(Camera:FlxCamera = null):Void { }
+	override public function drawDebug(Camera:FlxCamera = null):Void
+	{
+		if (FlxPhysState.debug == null)
+			super.drawDebug(Camera);
+	}
 	#end
 }
