@@ -10,12 +10,5 @@ class FlxInvaders extends FlxGame
 		#if !neko
 		FlxG.bgColor = 0x000000;
 		#end
-
-		
-		//Here we are just displaying the cursor to encourage people to click the game,
-		// which will give Flash the browser focus and let the keyboard work.
-		//Normally we would do this in say the main menu state or something,
-		// but FlxInvaders has no menu :P
-		FlxG.mouse.show();
 	}
 }

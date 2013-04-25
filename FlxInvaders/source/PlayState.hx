@@ -24,6 +24,12 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 	//Inside this function we will create and orient all the important game objects.
 	override public function create():Void
 	{
+		//Here we are just displaying the cursor to encourage people to click the game,
+		// which will give Flash the browser focus and let the keyboard work.
+		//Normally we would do this in say the main menu state or something,
+		// but FlxInvaders has no menu :P
+		FlxG.mouse.show();
+		
 		#if neko
 		FlxG.camera.bgColor = { rgb: 0x000000, a: 0xff };
 		#end
