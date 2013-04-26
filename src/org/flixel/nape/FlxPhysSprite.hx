@@ -64,26 +64,15 @@ class FlxPhysSprite extends FlxSprite
 	/**
 	 * Override core physics velocity etc
 	 */
-	override public function postUpdate():Void
+	override public function update():Void
 	{
-		FlxBasic._ACTIVECOUNT++;
-		
-		if (_flickerTimer > 0)
-		{
-			_flickerTimer -= FlxG.elapsed;
-			if(_flickerTimer <= 0)
-			{
-				_flickerTimer = 0;
-				_flicker = false;
-			}
-		}
+		super.update();
 		
 		if (moves)
 		{
 			updatePhysObjects();
 		}
 		
-		updateAnimation();
 	}
 
 	/**
