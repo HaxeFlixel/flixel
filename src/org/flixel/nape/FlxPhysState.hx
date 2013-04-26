@@ -116,6 +116,9 @@ class FlxPhysState extends FlxState
 	override public function update():Void 
 	{
 		space.step(FlxG.elapsed, velocityIterations, positionIterations);
+		#if !FLX_NO_DEBUG
+		drawPhysDebug();
+		#end
 		super.update();
 	}
 	

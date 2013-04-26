@@ -1,5 +1,5 @@
-package org.flixel.nape;
 
+package org.flixel.nape;
 import nape.geom.Vec2;
 import nape.phys.Body;
 import nape.phys.BodyType;
@@ -63,13 +63,13 @@ class FlxPhysSprite extends FlxSprite
 	/**
 	 * Override core physics velocity etc
 	 */
-	override public function postUpdate():Void
+	override public function update():Void
 	{
+		super.update();
 		if (moves)
 		{
 			updatePhysObjects();
 		}
-		updateAnimation();
 	}
 
 	/**
