@@ -1677,14 +1677,6 @@ class FlxG
 	}
 	
 	/**
-	 * Called by the game object to update all the inputs enabled in FlxInputs
-	 */
-	inline static public function updateInputs():Void
-	{
-		FlxInputs.updateInputs();
-	}
-	
-	/**
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
 	inline static public function lockCameras():Void
@@ -1840,6 +1832,25 @@ class FlxG
 			}
 		}
 	}
+	
+#if !FLX_NO_DEBUG
+	inline static public function drawDebugPlugins():Void
+	{
+		var plugin:FlxBasic;
+		var pluginList:Array<FlxBasic> = FlxG.plugins;
+		var i:Int = 0;
+		var l:Int = pluginList.length;
+		while(i < l)
+		{
+			plugin = pluginList[i++];
+			if (plugin.exists && plugin.visible && !plugin.ignoreDrawDebug)
+			{
+				plugin.drawDebug();
+			}
+		}
+	}
+#end
+	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.
 	 * @param	object		The object containing the properties to tween.

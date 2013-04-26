@@ -34,9 +34,9 @@ import org.flixel.plugin.photonstorm.FlxColor;
 
 class FlxCollision 
 {
-	#if !FLX_NO_DEBUG
+//	#if !FLX_NO_DEBUG
 	public static var debug:BitmapData = new BitmapData(1, 1, false);
-	#end
+//	#end
 	
 	#if flash
 	public static var CAMERA_WALL_OUTSIDE:UInt = 0;
@@ -222,10 +222,10 @@ class FlxCollision
 		
 		#end
 
-		#if !FLX_NO_DEBUG
+//		#if !FLX_NO_DEBUG
 		//	Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere.
 		debug = overlapArea;
-		#end
+//		#end
 		
 		#if !neko
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
@@ -280,14 +280,14 @@ class FlxCollision
 			return false;
 		}
 	#else
-		var indexX:Int = target.frame * target.frameWidth;
+		var indexX:Int = target.frame * (target.frameWidth + 1);
 		var indexY:Int = 0;
 
 		//Handle sprite sheets
 		var widthHelper:Int = target.pixels.width;
 		if(indexX >= widthHelper)
 		{
-			indexY = Std.int(indexX / widthHelper) * target.frameHeight;
+			indexY = Std.int(indexX / widthHelper) * (target.frameHeight + 1);
 			indexX %= widthHelper;
 		}
 		
@@ -307,7 +307,6 @@ class FlxCollision
 		#else
 		var pixelAlpha:Int = pixelColor.a * 255;
 		#end
-		
 		return (pixelAlpha >= alphaTolerance);
 	#end
 	}

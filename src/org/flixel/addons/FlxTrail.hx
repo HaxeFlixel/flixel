@@ -62,6 +62,8 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 *  Stores the sprites recent angles.
 	 */
 	private var recentAngles:Array<Float>;
+	
+	private var _solid:Bool;
 
 	/**
 	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
@@ -89,13 +91,14 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 
 		// Create the initial trailsprites
 		increaseLength(Length);
+		solid = false;
 	}		
 
 	/**
 	 * Updates positions and other values according to the delay that has been set.
 	 * 
 	 */
-	override public function postUpdate():Void
+	override public function update():Void
 	{
 		// Count the frames
 		counter++;
@@ -164,6 +167,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			add(trailSprite);
 			trailSprite.alpha = transp;
 			transp -= difference;
+			trailSprite.solid = _solid;
 
 			if (trailSprite.alpha <= 0) trailSprite.kill();
 		}	
@@ -196,5 +200,22 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		rotationsEnabled = Angle;
 		xEnabled = X;
 		yEnabled = Y;
+	}
+	
+	public var solid(get_solid, set_solid):Bool;
+	
+	private function get_solid():Bool
+	{
+		return _solid;
+	}
+	
+	private function set_solid(value:Bool):Bool
+	{
+		for (i in 0...trailLength)
+		{
+			members[i].solid = value; 
+		}
+		_solid = value;
+		return value;
 	}
 }

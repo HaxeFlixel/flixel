@@ -99,6 +99,21 @@ class FlxState extends FlxGroup
 		}
 	}
 	
+#if !FLX_NO_DEBUG
+	override public function drawDebug():Void
+	{
+		if (persistantDraw || _subState == null)
+		{
+			super.drawDebug();
+		}
+		
+		if (_subState != null)
+		{
+			_subState.drawDebug();
+		}
+	}
+#end
+	
 	public function tryUpdate():Void
 	{
 		if (persistantUpdate || _subState == null)
@@ -201,7 +216,7 @@ class FlxState extends FlxGroup
 	public function createAtlas(atlasName:String, atlasWidth:Int, atlasHeight:Int):Atlas
 	{
 		var key:String = Atlas.getUniqueKey(atlasName);
-		return new Atlas(key, atlasWidth, atlasHeight);
+		return Atlas.getAtlas(key, null, false, atlasWidth, atlasHeight);
 	}
 	
 	/**
@@ -233,15 +248,4 @@ class FlxState extends FlxGroup
 	{
 		
 	}
-	
-	/**
-	 * This function is inlined because it never gets called on FlxState objects.
-	 * Put your code in the update() function.
-	 */
-	override public inline function preUpdate():Void {}
-	/**
-	 * This function is inlined because it never gets called on FlxState objects.
-	 * Put your code in the update() function.
-	 */
-	override public inline function postUpdate():Void {}
 }
