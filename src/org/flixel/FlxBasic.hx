@@ -4,6 +4,7 @@ import nme.display.BitmapData;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.Node;
 import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.layer.frames.FlxSpriteFrames;
 import org.flixel.tweens.FlxTween;
 
 /**
@@ -100,23 +101,13 @@ class FlxBasic
 	}
 	
 	/**
-	 * Pre-update is called right before <code>update()</code> on each object in the game loop.
-	 */
-	public function preUpdate():Void
-	{
-		_ACTIVECOUNT++;
-	}
-	
-	/**
 	 * Override this function to update your class's position and appearance.
 	 * This is where most of your game rules and behavioral code will go.
 	 */
-	public function update():Void { }
-	
-	/**
-	 * Post-update is called right after <code>update()</code> on each object in the game loop.
-	 */
-	public function postUpdate():Void { }
+	public function update():Void 
+	{ 
+		_ACTIVECOUNT++;
+	}
 	
 	/**
 	 * Override this function to control how the object is drawn.
@@ -135,24 +126,29 @@ class FlxBasic
 		{
 			camera = cameras[i++];
 			_VISIBLECOUNT++;
-			
-			#if !FLX_NO_DEBUG
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebug(camera);
-			}
-			#end
-			
 		}
 	}
 	
 	#if !FLX_NO_DEBUG
+	public function drawDebug():Void
+	{
+		if (!ignoreDrawDebug)
+		{
+			var i:Int = 0;
+			var l:Int = cameras.length;
+			while (i < l)
+			{
+				drawDebugOnCamera(cameras[i++]);
+			}
+		}
+	}
+	
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
-	public function drawDebug(Camera:FlxCamera = null):Void { }
+	public function drawDebugOnCamera(Camera:FlxCamera = null):Void { }
 	#end
 	
 	/**

@@ -627,13 +627,6 @@ class StarSprite extends FlxSprite
 			drawItem.position = currIndex;
 
 			FlxBasic._VISIBLECOUNT++;
-			
-			#if !FLX_NO_DEBUG
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebug(camera);
-			}
-			#end
 		}
 	}
 	

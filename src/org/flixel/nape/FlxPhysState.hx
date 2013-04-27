@@ -116,18 +116,10 @@ class FlxPhysState extends FlxState
 	override public function update():Void 
 	{
 		space.step(FlxG.elapsed, velocityIterations, positionIterations);
-		super.update();
-	}
-	
-	/**
-	 * Override this method to draw debug physics shapes
-	 */
-	override public function draw():Void 
-	{
-		super.draw();
 		#if !FLX_NO_DEBUG
 		drawPhysDebug();
 		#end
+		super.update();
 	}
 	
 	/**

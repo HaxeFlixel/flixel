@@ -1045,6 +1045,8 @@ class FlxBar extends FlxSprite
 				y = parent.y + positionOffset.y;
 			}
 		}
+		
+		super.update();
 	}
 	
 	public var percent(get_percent, set_percent):Float;
@@ -1261,13 +1263,6 @@ class FlxBar extends FlxSprite
 			drawItem.position = currIndex;
 			
 			FlxBasic._VISIBLECOUNT++;
-			
-			#if !FLX_NO_DEBUG
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebug(camera);
-			}
-			#end
 		}
 	}
 	

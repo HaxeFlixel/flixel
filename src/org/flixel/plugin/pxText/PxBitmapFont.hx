@@ -138,6 +138,11 @@ class PxBitmapFont
 	public function updateGlyphData(node:Node = null):Void
 	{
 		#if !flash
+		// there is already glyphs in this atlas, so don't do it again
+		if (_atlasGlyphs.exists(node.atlas.name))
+		{
+			return;
+		}
 		_glyphs = new IntHash<PxFontSymbol>();
 		#end
 		var rect:Rectangle;
@@ -548,7 +553,6 @@ class PxBitmapFont
 	private function setGlyph(node:Node, pCharID:Int, pRect:Rectangle, pOffsetX:Int = 0, pOffsetY:Int = 0, pAdvanceX:Int = 0):Void
 	{
 		var tileID:Int = node.addTileRect(pRect, ZERO_POINT);
-		
 		var symbol:PxFontSymbol = new PxFontSymbol();
 		symbol.tileID = tileID;
 		symbol.xoffset = pOffsetX;

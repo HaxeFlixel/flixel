@@ -53,7 +53,7 @@ class Atlas
 	 * @param	borderX		horizontal distance between nodes
 	 * @param	borderY		vertical distance between nodes
 	 */
-	public function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1, bitmapData:BitmapData = null) 
+	private function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1, bitmapData:BitmapData = null) 
 	{
 		nodes = new Hash<Node>();
 		this.name = name;
@@ -87,7 +87,7 @@ class Atlas
 	*/
 	public function createTileSheetData(bitmapData:BitmapData):TileSheetData
 	{
-	return TileSheetData.addTileSheet(bitmapData);
+		return TileSheetData.addTileSheet(bitmapData);
 	}
 
 	/**
@@ -106,23 +106,41 @@ class Atlas
 	 * @param	BmData		atlas' bitmapdata
 	 * @return	atlas from cache
 	 */
-	public static function getAtlas(Key:String, BmData:BitmapData, Unique:Bool = false):Atlas
+	// TODO: redocument this
+	public static function getAtlas(Key:String, BmData:BitmapData, Unique:Bool = false, Width:Int = 0, Height:Int = 0):Atlas
 	{
-		var alreadyExist:Bool = isExists(Key);
+		if (BmData == null && Width <= 0 && Height <= 0)
+		{
+			return null;
+		}
 		
+		var alreadyExist:Bool = isExists(Key);	
 		if (!Unique && alreadyExist)
 		{
 			return _atlasCache.get(Key);
 		}
 		
-		var AtlasKey:String = Key;
+		var AtlasWidth:Int = Width;
+		var AtlasHeight:Int = Height;
+		if (BmData != null)
+		{
+			AtlasWidth = BmData.width;
+			AtlasHeight = BmData.height;
+		}
+		
+		var AtlasKey:String = Key;	
 		if (Unique && alreadyExist)
 		{
 			AtlasKey = getUniqueKey(Key);
 		}
 		
-		var atlas:Atlas = new Atlas(AtlasKey, BmData.width, BmData.height, 1, 1, BmData);
+		var atlas:Atlas = new Atlas(AtlasKey, AtlasWidth, AtlasHeight, 1, 1, BmData);
 		return atlas;
+	}
+	
+	public static function getAtlasByKey(Key:String):Atlas
+	{
+		return _atlasCache.get(Key);
 	}
 	
 	public static function getUniqueKey(Key:String):String

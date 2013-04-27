@@ -6,6 +6,7 @@ import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Circle;
 import nape.shape.Polygon;
+import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxSprite;
 
@@ -63,13 +64,15 @@ class FlxPhysSprite extends FlxSprite
 	/**
 	 * Override core physics velocity etc
 	 */
-	override public function postUpdate():Void
+	override public function update():Void
 	{
+		super.update();
+		
 		if (moves)
 		{
 			updatePhysObjects();
 		}
-		updateAnimation();
+		
 	}
 
 	/**
@@ -97,9 +100,9 @@ class FlxPhysSprite extends FlxSprite
 		if (this.body != null) 
 			destroyPhysObjects();
 		
-		body.space = FlxPhysState.space;
 		body.position.x = x;
 		body.position.y = y;
+		body.space = FlxPhysState.space;
 		this.body = body;
 		setBodyMaterial();
 	}
@@ -212,6 +215,6 @@ class FlxPhysSprite extends FlxSprite
 	
 	// Hide debug outline on physics sprites (they already show outlined)
 	#if !FLX_NO_DEBUG
-	override public function drawDebug(Camera:FlxCamera = null):Void { }
+	override public function drawDebug():Void { }
 	#end
 }
