@@ -382,11 +382,11 @@ class FlxBar extends FlxSprite
 	}
 	#end
 	
-	public var stats(get_stats, null):Hash<Dynamic>;
+	public var stats(get_stats, null):Map<String, Dynamic>;
 	
-	private function get_stats():Hash<Dynamic>
+	private function get_stats():Map<String, Dynamic>
 	{
-		var data = new Hash<Dynamic>();
+		var data = new Map<String, Dynamic>();
 		data.set("min", min);
 		data.set("max", max);
 		data.set("range", range);
