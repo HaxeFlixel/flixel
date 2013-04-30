@@ -39,7 +39,7 @@ class DebugPathDisplay extends FlxBasic
 	 * Called by <code>FlxG.drawPlugins()</code> after the game state has been drawn.
 	 * Cycles through cameras and calls <code>drawDebug()</code> on each one.
 	 */
-	override public function draw():Void
+	override public function drawDebug():Void
 	{
 		if (!FlxG.visualDebug || ignoreDrawDebug)
 		{
@@ -54,7 +54,7 @@ class DebugPathDisplay extends FlxBasic
 		var l:Int = cameras.length;
 		while (i < l)
 		{
-			drawDebug(cameras[i++]);
+			drawDebugOnCamera(cameras[i++]);
 		}
 	}
 	
@@ -64,7 +64,7 @@ class DebugPathDisplay extends FlxBasic
 	 * Very helpful for debugging!
 	 * @param	Camera	Which <code>FlxCamera</code> object to draw the debug data to.
 	 */
-	override public function drawDebug(Camera:FlxCamera = null):Void
+	override public function drawDebugOnCamera(Camera:FlxCamera = null):Void
 	{
 		if (Camera == null)
 		{

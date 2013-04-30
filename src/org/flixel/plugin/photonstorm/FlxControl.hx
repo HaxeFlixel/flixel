@@ -159,7 +159,8 @@ class FlxControl extends FlxBasic
 	/**
 	 * Runs update on all currently active FlxControlHandlers
 	 */
-	override public function draw():Void
+	//override public function draw():Void
+	override public function update():Void
 	{
 		for (handler in members)
 		{

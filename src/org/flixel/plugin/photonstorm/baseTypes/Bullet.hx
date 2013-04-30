@@ -271,6 +271,8 @@ class Bullet extends FlxSprite
 		{
 			kill();
 		}
+		
+		super.update();
 	}
 	
 }

@@ -1,7 +1,8 @@
 package org.flixel.plugin.texturepacker;
 
 import org.flixel.FlxSprite;
-import org.flixel.plugin.texturepacker.TexturePackerFrames;
+import org.flixel.plugin.texturepacker.TexturePackerData;
+import org.flixel.system.layer.frames.TexturePackerFrame;
 
 #if !flash
 import org.flixel.plugin.texturepacker.TexturePackerAtlas;
@@ -14,10 +15,10 @@ import nme.display.BitmapData;
 
 class FlxSpriteTex extends FlxSprite
 {
-	var _tex:TexturePackerFrames;
+	var _tex:TexturePackerData;
 	var _spriteId:Int;
 	
-	public function new(x:Float, y:Float, spriteName:String, tex:TexturePackerFrames)
+	public function new(x:Float, y:Float, spriteName:String, tex:TexturePackerData)
 	{
 		_tex = tex;
 		_spriteId = tex.frames.get(spriteName);
@@ -26,26 +27,8 @@ class FlxSpriteTex extends FlxSprite
 #else
 		super(x, y);
 		
-		var spriteInfo:TexturePackerSprite = _tex.sprites[_spriteId];
-		var bm:BitmapData = new BitmapData(Std.int(spriteInfo.source.width), Std.int(spriteInfo.source.height), true, 0x00ffffff);
-		
-		if (spriteInfo.rotated)
-		{
-			_matrix.identity();
-			_matrix.translate(-spriteInfo.source.width * 0.5, -spriteInfo.source.height * 0.5);
-			_matrix.rotate(-90.0 * FlxG.RAD);
-			_matrix.translate(spriteInfo.source.width * 0.5, spriteInfo.source.height * 0.5);
-			_matrix.translate(spriteInfo.offset.x, spriteInfo.offset.y);
-			
-			var r:Rectangle = new Rectangle(spriteInfo.frame.x, spriteInfo.frame.y, spriteInfo.frame.width + spriteInfo.offset.x, spriteInfo.frame.height + spriteInfo.offset.y);
-			bm.draw(_tex.asset, _matrix, null, null, r, false);
-		}
-		else
-		{
-			var dst:Point = new Point(spriteInfo.offset.x, spriteInfo.offset.y);
-			bm.copyPixels(_tex.asset, spriteInfo.frame, dst);
-		}
-		
+		var spriteInfo:TexturePackerFrame = _tex.sprites[_spriteId];
+		var bm:BitmapData = spriteInfo.getBitmap();
 		loadGraphic(bm, false, false, 0, 0, false, _tex.assetName + spriteName);
 #end
 	}
@@ -54,13 +37,16 @@ class FlxSpriteTex extends FlxSprite
 	{
 #if !flash
 		var spriteInfo:TexturePackerFrame = _tex.sprites[_spriteId];
-		width = frameWidth = Std.int(spriteInfo.source.width);
-		height = frameHeight = Std.int(spriteInfo.source.height);
+		width = frameWidth = Std.int(spriteInfo.sourceSize.x);
+		height = frameHeight = Std.int(spriteInfo.sourceSize.y);
+		
 		offset = spriteInfo.offset;
 		if (spriteInfo.rotated)
 		{
 			_additionalAngle = -90.0;
 		}
+		
+		trace(offset.x + "; " + offset.y);
 #end
 		super.resetHelpers();
 	}

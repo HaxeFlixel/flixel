@@ -1,6 +1,9 @@
 package org.flixel.plugin.texturepacker;
 
+import org.flixel.system.layer.frames.FlxFrame;
+import org.flixel.system.layer.frames.FlxSpriteFrames;
 import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.layer.TileSheetExt;
 
 import nme.geom.Point;
 import nme.geom.Rectangle;
@@ -9,27 +12,49 @@ import nme.display.Tilesheet;
 
 class TexturePackerTileSheetData extends TileSheetData
 {
-	public static function addTileSheet(bitmapData:BitmapData, tex:TexturePackerFrames):TileSheetData
+	public static function addTileSheet(bitmapData:BitmapData, tex:TexturePackerData):TexturePackerTileSheetData
 	{
-		var tempTileSheetData:TileSheetData;
-		
-		if (TileSheetData.containsTileSheet(bitmapData))
+		if (TexturePackerTileSheetData.containsTileSheet(bitmapData))
 		{
-			tempTileSheetData = TileSheetData.getTileSheet(bitmapData);
-			return TileSheetData.getTileSheet(bitmapData);
+			return TexturePackerTileSheetData.getTileSheet(bitmapData);
 		}
 		
-		tempTileSheetData = new TexturePackerTileSheetData(new Tilesheet(bitmapData), tex);
+		var tilesheet:TileSheetExt = TileSheetExt.addTileSheet(bitmapData);
+		var tempTileSheetData:TexturePackerTileSheetData = new TexturePackerTileSheetData(tilesheet, tex);
 		TileSheetData.tileSheetData.push(tempTileSheetData);
 		return tempTileSheetData;
 	}
-
-	private var _tex:TexturePackerFrames;
 	
-	public function new(tileSheet:Tilesheet, tex:TexturePackerFrames)
+	public static function containsTileSheet(bitmapData:BitmapData):Bool
+	{
+		for (tsd in TileSheetData.tileSheetData)
+		{
+			if (tsd.tileSheet.nmeBitmap == bitmapData && Std.is(tsd, TexturePackerTileSheetData))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static function getTileSheet(bitmapData:BitmapData):TexturePackerTileSheetData
+	{
+		for (tsd in TileSheetData.tileSheetData)
+		{
+			if (tsd.tileSheet.nmeBitmap == bitmapData && Std.is(tsd, TexturePackerTileSheetData))
+			{
+				return cast(tsd, TexturePackerTileSheetData);
+			}
+		}
+		return null;
+	}
+
+	private var _tex:TexturePackerData;
+	
+	private function new(tileSheet:TileSheetExt, tex:TexturePackerData)
 	{
 		_tex = tex;
-		super (tileSheet);
+		super(tileSheet);
 	}
 
 	override public function getSpriteSheetFrames(width:Int, height:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
@@ -41,7 +66,7 @@ class TexturePackerTileSheetData extends TileSheetData
 		for (sprite in _tex.sprites)
 		{
 			tileId = addTileRect(sprite.frame, p);
-			frame = new FlxFrame();
+			frame = new FlxFrame(this);
 			frame.tileID = tileId;
 			spriteData.frames.push(frame);
 		}
@@ -49,4 +74,29 @@ class TexturePackerTileSheetData extends TileSheetData
 		flxSpriteFrames.set(_tex.assetName, spriteData);
 		return spriteData;
 	}
+	
+	public function parseTexturePackerFrames():Void
+	{
+		
+	}
+	
+	public function getTexturePackerFrames(name:String, animated:Bool = false):FlxSpriteFrames
+	{
+		// TODO: implement this
+		return null;
+	}
+	
+	// TODO: document and implement this
+	/*public function addTexturePackerFrame(key:String, ):FlxFrame
+	{
+		
+		if (this.containsFrame(rect, point))
+		{
+			return getTileRectID(rect, point);
+		}
+		
+		tileSheet.addTileRect(rect, point);
+		pairsData.push(new RectanglePointPair(rect, point));
+		return (pairsData.length - 1);
+	}*/
 }
