@@ -621,11 +621,11 @@ class FlxG
 	 */
 	static public function resetState():Void
 	{
-		_game._requestedState = Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []);
+		_game.requestNewState(Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []));
 		#if !FLX_NO_DEBUG
 		if (Std.is(_game._requestedState, FlxSubState))
 		{
-			throw "You can't set FlxSubState class instance as the state for you game";
+			throw "You can't set FlxSubState class instance as the state for your game";
 		}
 		#end
 	}
@@ -1210,7 +1210,7 @@ class FlxG
 	 */
 	static public function switchState(State:FlxState):Void
 	{
-		_game._requestedState = State;
+		_game.requestNewState(State);
 	}
 
 	#if !FLX_NO_DEBUG

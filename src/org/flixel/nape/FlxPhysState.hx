@@ -180,7 +180,7 @@ class FlxPhysState extends FlxState
 	 */
 	private function drawPhysDebug()
 	{
-		if (_physDbgSpr == null) 
+		if (_physDbgSpr == null || space == null) 
 			return;
 		
 		_physDbgSpr.clear();
