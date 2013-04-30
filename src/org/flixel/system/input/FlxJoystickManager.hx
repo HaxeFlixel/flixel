@@ -57,6 +57,76 @@ class FlxJoystickManager implements IFlxInput
 	}
 	
 	/**
+	 * Check to see if any button was pressed on any joystick
+	 */
+	public function anyButton():Bool
+	{
+		var it = joysticks.iterator();
+		var joy = it.next();
+		while(joy != null)
+		{
+			if (joy.anyButton())
+				return true;
+			joy = it.next();
+		}
+		return false;
+	}
+	
+		/**
+	 * Check to see if this button is pressed on any joystick.
+	 * @param	buttonID		button id (from 0 to 7).
+	 * @return	Whether the button is pressed
+	 */
+	public function anyJoyPressed(buttonID:Int):Bool 
+	{ 
+		var it = joysticks.iterator();
+		var joy = it.next();
+		while(joy != null)
+		{
+			if (joy.pressed(buttonID))
+				return true;
+			joy = it.next();
+		}
+		return false;
+	}
+	
+	/**
+	 * Check to see if this button was just pressed on any joystick.
+	 * @param	buttonID		button id (from 0 to 7).
+	 * @return	Whether the button was just pressed
+	 */
+	public function anyJoyJustPressed(buttonID:Int):Bool 
+	{ 
+		var it = joysticks.iterator();
+		var joy = it.next();
+		while(joy != null)
+		{
+			if (joy.justPressed(buttonID))
+				return true;
+			joy = it.next();
+		}
+		return false;
+	}
+	
+	/**
+	 * Check to see if this button is just released on any joystick.
+	 * @param	buttonID		button id (from 0 to 7).
+	 * @return	Whether the button is just released.
+	 */
+	public function anyJoyJustReleased(buttonID:Int):Bool 
+	{ 
+		var it = joysticks.iterator();
+		var joy = it.next();
+		while(joy != null)
+		{
+			if (joy.justReleased(buttonID))
+				return true;
+			joy = it.next();
+		}
+		return false;
+	}
+	
+	/**
 	 * Gets the number of active joysticks
 	 */
 	public function get_numActiveJoysticks():Int
