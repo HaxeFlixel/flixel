@@ -160,16 +160,8 @@ class FlxMouseControl extends FlxBasic
 		}
 		else
 		{
-			//	No target, but is the mouse down?
-			
-			if (FlxG.mouse.justPressed())
-			{
-				clickStack = [];
-			}
-			
 			//	If you are wondering how the brand new array can have anything in it by now, it's because FlxExtendedSprite
 			//	adds itself to the clickStack
-			
 			if (FlxG.mouse.pressed() && clickStack.length > 0)
 			{
 				assignClickedSprite();
