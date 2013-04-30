@@ -1833,6 +1833,7 @@ class FlxG
 		}
 	}
 	
+#if !FLX_NO_DEBUG
 	inline static public function drawDebugPlugins():Void
 	{
 		var plugin:FlxBasic;
@@ -1848,6 +1849,7 @@ class FlxG
 			}
 		}
 	}
+#end
 	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.

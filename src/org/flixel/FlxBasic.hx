@@ -4,6 +4,7 @@ import nme.display.BitmapData;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.Node;
 import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.layer.frames.FlxSpriteFrames;
 import org.flixel.tweens.FlxTween;
 
 /**
@@ -125,14 +126,6 @@ class FlxBasic
 		{
 			camera = cameras[i++];
 			_VISIBLECOUNT++;
-			
-			#if !FLX_NO_DEBUG
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebugOnCamera(camera);
-			}
-			#end
-			
 		}
 	}
 	

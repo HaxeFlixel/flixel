@@ -99,6 +99,7 @@ class FlxState extends FlxGroup
 		}
 	}
 	
+#if !FLX_NO_DEBUG
 	override public function drawDebug():Void
 	{
 		if (persistantDraw || _subState == null)
@@ -111,6 +112,7 @@ class FlxState extends FlxGroup
 			_subState.drawDebug();
 		}
 	}
+#end
 	
 	public function tryUpdate():Void
 	{
@@ -214,7 +216,7 @@ class FlxState extends FlxGroup
 	public function createAtlas(atlasName:String, atlasWidth:Int, atlasHeight:Int):Atlas
 	{
 		var key:String = Atlas.getUniqueKey(atlasName);
-		return new Atlas(key, atlasWidth, atlasHeight);
+		return Atlas.getAtlas(key, null, false, atlasWidth, atlasHeight);
 	}
 	
 	/**

@@ -13,6 +13,7 @@ import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.system.layer.frames.FlxFrame;
 import org.flixel.system.layer.Node;
 
 #if !flash
@@ -770,7 +771,7 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = _point.y - y2;
 			
 			currDrawData[currIndex++] = _flxFrame.tileID;
-
+			
 			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{
 				currDrawData[currIndex++] = -csx;

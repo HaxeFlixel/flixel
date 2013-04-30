@@ -116,6 +116,9 @@ class FlxPhysState extends FlxState
 	override public function update():Void 
 	{
 		space.step(FlxG.elapsed, velocityIterations, positionIterations);
+		#if !FLX_NO_DEBUG
+		drawPhysDebug();
+		#end
 		super.update();
 	}
 	
@@ -135,11 +138,6 @@ class FlxPhysState extends FlxState
 	}
 	
 	#if !FLX_NO_DEBUG
-	override public function drawDebug():Void 
-	{
-		drawPhysDebug();
-	}
-	
 	/**
 	 * Enables debug graphics for nape physics.
 	 */

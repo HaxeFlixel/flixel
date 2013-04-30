@@ -444,19 +444,6 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		//handle state switching requests
-		if (_state != _requestedState)
-		{
-			#if (cpp && thread)
-			//aquiring the threadMutex here allows us to guarantee the state isn't being updated on another thread.
-			threadMutex.acquire();
-			switchState();
-			threadMutex.release();
-			#else
-			switchState();
-			#end
-		}
-		
 		//finally actually step through the game physics
 		FlxBasic._ACTIVECOUNT = 0;
 		
@@ -475,20 +462,13 @@ class FlxGame extends Sprite
 	}
 	
 	#if (cpp && thread)
-	// this mutex allows us to synchronize operations between both threads.
-	public var threadMutex:cpp.vm.Mutex;
-	
 	// push 'true' into this array to trigger an update. push 'false' to terminate update thread.
 	public var threadSync:cpp.vm.Deque<Bool>;
 	
 	private function threadedUpdate():Void 
 	{
 		while (threadSync.pop(true))
-		{
-			threadMutex.acquire();
 			update();
-			threadMutex.release();
-		}
 	}
 	#end
 	
@@ -532,11 +512,14 @@ class FlxGame extends Sprite
 	 */
 	private function update():Void
 	{
+		if (_state != _requestedState)
+			switchState();
+		
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
 		#end
-
+		
 		FlxG.elapsed = FlxG.timeScale * _stepSeconds;
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
@@ -728,7 +711,6 @@ class FlxGame extends Sprite
 		
 		#if (cpp && thread)
 		threadSync = new cpp.vm.Deque();
-		threadMutex = new cpp.vm.Mutex();
 		cpp.vm.Thread.create(threadedUpdate);
 		#end
 		
@@ -858,5 +840,4 @@ class FlxGame extends Sprite
 		return _debugger;
 	}
 	#end
-	
 }

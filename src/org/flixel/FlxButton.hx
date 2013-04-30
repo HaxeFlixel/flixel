@@ -368,6 +368,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 	}
 	
+#if !FLX_NO_DEBUG
 	override public function drawDebug():Void 
 	{
 		super.drawDebug();
@@ -376,6 +377,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			label.drawDebug();
 		}
 	}
+#end
 	
 	// TODO: Return from Sound -> Class<Sound>
 	/**
