@@ -63,7 +63,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 */
 	private var recentAngles:Array<Float>;
 	/**
-	 * Determines trailsprites are solid or not.
+	 * Determines if trailsprites are solid or not. False by default.
 	 */
 	private var solid(default, set_solid):Bool;
 
