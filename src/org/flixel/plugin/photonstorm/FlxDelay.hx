@@ -17,6 +17,7 @@ package org.flixel.plugin.photonstorm;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.events.EventDispatcher;
+import nme.Lib;
 import org.flixel.FlxG;
 import org.flixel.FlxU;
 
@@ -143,7 +144,7 @@ class FlxDelay extends Sprite
 			pausedTimerRunning = true;
 		}
 		
-		if (isRunning == true && pausedTimerRunning == false && FlxU.getTicks()) > expires)
+		if (isRunning == true && pausedTimerRunning == false && FlxU.getTicks() > expires)
 		{
 			stop();
 		}
