@@ -361,7 +361,8 @@ class FlxGame extends Sprite
 	}
 	
 	/**
-	 * Notify the game that we're about to switch states
+	 * Notify the game that we're about to switch states. 
+	 * INTERNAL, do not use this, call FlxG.switchState instead.
 	 */
 	public inline function requestNewState(newState:FlxState):Void
 	{
