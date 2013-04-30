@@ -89,11 +89,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Just making sure we don't increment the active objects count.
-	 */
-	override public function preUpdate():Void { }
-	
-	/**
 	 * Automatically goes through and calls update on everything you added.
 	 */
 	override public function update():Void
@@ -105,15 +100,12 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			if ((basic != null) && basic.exists && basic.active)
 			{
-				basic.preUpdate();
 				basic.update();
 				
 				if (basic.hasTween) 
 				{
 					basic.updateTweens();
 				}
-				
-				basic.postUpdate();
 			}
 		}
 		
@@ -139,6 +131,22 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 		}
 	}
+	
+	#if !FLX_NO_DEBUG
+	override public function drawDebug():Void 
+	{
+		var basic:T;
+		var i:Int = 0;
+		while (i < length)
+		{
+			basic = members[i++];
+			if ((basic != null) && basic.exists && basic.visible)
+			{
+				basic.drawDebug();
+			}
+		}
+	}
+	#end
 	
 	/**
 	 * @private

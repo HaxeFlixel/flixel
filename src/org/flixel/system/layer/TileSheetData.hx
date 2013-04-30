@@ -9,12 +9,16 @@ import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 
+import org.flixel.system.layer.TileSheetExt;
+import org.flixel.system.layer.frames.FlxFrame;
+import org.flixel.system.layer.frames.FlxSpriteFrames;
+
 /**
  * Object of this class holds information about single Tilesheet
  */
 class TileSheetData
 {
-	public static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
+	private static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
 	
 	public static var _DRAWCALLS:Int = 0;
 	
@@ -24,15 +28,13 @@ class TileSheetData
 	 */
 	public static function addTileSheet(bitmapData:BitmapData):TileSheetData
 	{
-		var tempTileSheetData:TileSheetData;
-		
 		if (containsTileSheet(bitmapData))
 		{
-			tempTileSheetData = getTileSheet(bitmapData);
 			return getTileSheet(bitmapData);
 		}
 		
-		tempTileSheetData = new TileSheetData(new Tilesheet(bitmapData));
+		var tilesheet:TileSheetExt = TileSheetExt.addTileSheet(bitmapData);
+		var tempTileSheetData:TileSheetData = new TileSheetData(tilesheet);
 		tileSheetData.push(tempTileSheetData);
 		return tempTileSheetData;
 	}
@@ -84,18 +86,12 @@ class TileSheetData
 			dataObject.destroy();
 		}
 		tileSheetData = new Array<TileSheetData>();
+		
+		TileSheetExt.clear();
 	}
 	
-	
-	
-	
 	// TODO: make it work only on non-flash targets
-	public var tileSheet:Tilesheet;
-	
-	/**
-	 * array to hold data about tiles in the tileSheet object
-	 */
-	private var pairsData:Array<RectanglePointPair>;
+	public var tileSheet:TileSheetExt;
 	
 	/**
 	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
@@ -106,10 +102,9 @@ class TileSheetData
 	// TODO: document this
 	private var flxFrames:Map<String, FlxFrame>;
 	
-	public function new(tileSheet:Tilesheet)
+	private function new(tileSheet:TileSheetExt)
 	{
 		this.tileSheet = tileSheet;
-		pairsData = new Array<RectanglePointPair>();
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
 		// TODO: fill this hash later
 		flxFrames = new Map<String, FlxFrame>();
@@ -207,13 +202,9 @@ class TileSheetData
 			return flxFrames.get(key);
 		}
 		
-		var frame:FlxFrame = new FlxFrame();
+		var frame:FlxFrame = new FlxFrame(this);
 		frame.tileID = addTileRect(rect, point);
-		frame.rotated = false;
-		frame.trimmed = false;
 		frame.name = key;
-		frame.offset = new FlxPoint();
-		frame.sourceSize = new FlxPoint(rect.width, rect.height);
 		frame.frame = rect;
 		flxFrames.set(key, frame);
 		return frame;
@@ -224,100 +215,14 @@ class TileSheetData
 		return flxFrames.exists(key);
 	}
 	
-	public function getTexturePackerFrames(name:String, animated:Bool = false):FlxSpriteFrames
+	public function addTileRect(tileRect, point):Int
 	{
-		// TODO: implement this
-		return null;
-	}
-	
-	// TODO: document and implement this
-	/*public function addTexturePackerFrame(key:String, ):FlxFrame
-	{
-		
-		if (this.containsFrame(rect, point))
-		{
-			return getTileRectID(rect, point);
-		}
-		
-		tileSheet.addTileRect(rect, point);
-		pairsData.push(new RectanglePointPair(rect, point));
-		return (pairsData.length - 1);
-	}*/
-	
-	/**
-	 * Adds new tileRect to tileSheet object
-	 * @return id of added tileRect
-	 */
-	public function addTileRect(rect:Rectangle, point:Point = null):Int
-	{
-		if (this.containsTileRect(rect, point))
-		{
-			return getTileRectID(rect, point);
-		}
-		
-		tileSheet.addTileRect(rect, point);
-		pairsData.push(new RectanglePointPair(rect, point));
-		return (pairsData.length - 1);
-	}
-	
-	/**
-	 * Search for given data of tileRect and returns true if tileSheet already contains such tileRect
-	 */
-	public function containsTileRect(rect:Rectangle, point:Point = null):Bool
-	{
-		for (pair in pairsData)
-		{
-			if (pair.rect.equals(rect))
-			{
-				if (pair.point != null && point != null && pair.point.equals(point))
-				{
-					return true;
-				}
-				else if (pair.point == null && point == null)
-				{
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Search for given data of tileRect and returns ID of that tileRect (if this tileRect doesn't exist then returns -1)
-	 */
-	public function getTileRectID(rect:Rectangle, point:Point = null):Int
-	{
-		var pair:RectanglePointPair;
-		for (i in 0...(pairsData.length))
-		{
-			pair = pairsData[i];
-			if (pair.rect.equals(rect))
-			{
-				if (pair.point != null && point != null && pair.point.equals(point))
-				{
-					return i;
-				}
-				else if (pair.point == null && point == null)
-				{
-					return i;
-				}
-			}
-		}
-		
-		return -1;
+		return tileSheet.addTileRectID(tileRect, point);
 	}
 	
 	public function destroy():Void
 	{
-		tileSheet.nmeBitmap = null;
 		tileSheet = null;
-		
-		for (pair in pairsData)
-		{
-			pair.destroy();
-		}
-		pairsData = null;
 		
 		for (spriteData in flxSpriteFrames)
 		{
@@ -328,68 +233,5 @@ class TileSheetData
 		flxSpriteFrames = null;
 		// TODO: destroy FlxFrames in flxFrames hash
 		flxFrames = null;
-	}
-}
-
-class FlxSpriteFrames
-{
-	public var frames:Array<FlxFrame>;
-	public var name:String;
-	
-	public function new(name:String)
-	{
-		this.name = name;
-		frames = [];
-	}
-	
-	public function destroy():Void
-	{
-		frames = null;
-		name = null;
-	}	
-}
-
-class FlxFrame
-{
-	public var name:String = null;
-	public var rotated:Bool = false;
-	public var trimmed:Bool = false;
-	public var frame:Rectangle = null;
-	public var sourceSize:FlxPoint = null;
-	public var offset:FlxPoint = null;
-	public var tileID:Int = -1;
-	
-	public function new()
-	{
-		
-	}
-	
-	public function destroy():Void
-	{
-		name = null;
-		frame = null;
-		sourceSize = null;
-		offset = null;
-	}
-}
-
-/**
- * Helper class to store data about "frames" of tilesheets
- */
-class RectanglePointPair
-{
-	public var rect:Rectangle;
-	public var point:Point;
-	
-	public function new(rect:Rectangle, point:Point)
-	{
-		this.rect = rect;
-		this.point = point;
-	}
-	
-	public function destroy():Void
-	{
-		rect = null;
-		point = null;
 	}
 }

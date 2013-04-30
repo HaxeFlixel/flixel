@@ -193,14 +193,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
-	 * Since button uses its own mouse handler for thread reasons,
-	 * we run a little pre-check here to make sure that we only add
-	 * the mouse handler when it is actually safe to do so.
+	 * Called by the game loop automatically, handles mouseover and click detection.
 	 */
-	override public function preUpdate():Void
+	override public function update():Void
 	{
-		super.preUpdate();
-		
 		if (!_initialized)
 		{
 			if (FlxG.stage != null)
@@ -214,13 +210,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				_initialized = true;
 			}
 		}
-	}
-	
-	/**
-	 * Called by the game loop automatically, handles mouseover and click detection.
-	 */
-	override public function update():Void
-	{
+		super.update();
+		
 		updateButton(); //Basic button logic
 
 		//Default button appearance is to simply update
@@ -376,6 +367,17 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			label.draw();
 		}
 	}
+	
+#if !FLX_NO_DEBUG
+	override public function drawDebug():Void 
+	{
+		super.drawDebug();
+		if (label != null)
+		{
+			label.drawDebug();
+		}
+	}
+#end
 	
 	// TODO: Return from Sound -> Class<Sound>
 	/**

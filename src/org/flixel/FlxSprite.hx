@@ -12,6 +12,7 @@ import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.system.layer.frames.FlxFrame;
 import org.flixel.system.layer.Node;
 
 #if !flash
@@ -606,13 +607,9 @@ class FlxSprite extends FlxObject
 		#end
 	}
 	
-	/**
-	 * Automatically called after update() by the game loop,
-	 * this function just calls updateAnimation().
-	 */
-	override public function postUpdate():Void
+	override public function update():Void 
 	{
-		super.postUpdate();
+		super.update();
 		updateAnimation();
 	}
 	
@@ -752,7 +749,7 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = _point.y - y2;
 			
 			currDrawData[currIndex++] = _flxFrame.tileID;
-
+			
 			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{
 				currDrawData[currIndex++] = -csx;
@@ -793,12 +790,6 @@ class FlxSprite extends FlxObject
 			drawItem.position = currIndex;
 #end
 			FlxBasic._VISIBLECOUNT++;
-			#if !FLX_NO_DEBUG
-			if (FlxG.visualDebug && !ignoreDrawDebug)
-			{
-				drawDebug(camera);
-			}
-			#end
 		}
 	}
 	
