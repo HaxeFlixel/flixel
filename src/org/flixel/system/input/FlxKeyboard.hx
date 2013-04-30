@@ -112,7 +112,8 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		i = 65;
 		while (i <= 90)
 		{
-			addKey(String.fromCharCode(i), i++);
+			addKey(String.fromCharCode(i), i);
+			i++;
 		}
 		
 		//NUMBERS

@@ -300,10 +300,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * and no object class was provided, it will return null
 	 * instead of a valid object!</p>
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
+	 * @param	ContructorArgs	An array of arguments passed into a newly object if there aren't any dead members to recycle.
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
-	public function recycle(ObjectClass:Class<T> = null):T
+	public function recycle(ObjectClass:Class<T> = null, ContructorArgs:Array<Dynamic> = null):T
 	{
+		if (ContructorArgs == null)
+			ContructorArgs = [];
+		
 		var basic:T;
 		if (maxSize > 0)
 		{
@@ -313,7 +317,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				{
 					return null;
 				}
-				return add(Type.createInstance(ObjectClass, []));
+				return add(Type.createInstance(ObjectClass, ContructorArgs));
 			}
 			else
 			{
@@ -336,7 +340,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			{
 				return null;
 			}
-			return add(Type.createInstance(ObjectClass, []));
+			return add(Type.createInstance(ObjectClass, ContructorArgs));
 		}
 	}
 	

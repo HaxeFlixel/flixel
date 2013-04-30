@@ -190,6 +190,12 @@ class FlxSprite extends FlxObject
 	 * An array that contains each filter object currently associated with this sprite.
 	 */
 	public var filters:Array<BitmapFilter>;
+	/**
+	 * Stores a copy of pixels before any bitmap filter is applied, this is necessary for native targets
+	 * where bitmap filters only show when applied directly to _pixels, so a backup is needed to clear
+	 * filters when removeFilter() is called or when filters are reapplied during calcFrame().
+	 */
+	public var _pixelsBackup:BitmapData;
 	
 	#if !flash
 	private var _flxFrame:FlxFrame;
@@ -204,6 +210,7 @@ class FlxSprite extends FlxObject
 	 * Internal, additional rotation for sprite. Used in FlxSpriteTex.
 	 */
 	private var _additionalAngle : Float;
+	
 	#end
 	
 	/**
@@ -997,6 +1004,17 @@ class FlxSprite extends FlxObject
 	 */
 	public function addAnimation(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
+		// Check animation frames
+		var numFrames:Int = Frames.length - 1;
+		var i:Int = numFrames;
+		while (i >= 0)
+		{
+			if (Frames[i] >= frames)
+			{
+				Frames.splice(i, 1);
+			}
+			i--;
+		}
 		_animations.set(Name, new FlxAnim(Name, Frames, FrameRate, Looped));
 	}
 	
@@ -1548,55 +1566,54 @@ class FlxSprite extends FlxObject
 		// Updates the filter effects on framePixels.
 		if (filters != null)
 		{
+			#if flash 
 			for (filter in filters) 
 			{
 				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
 			}
+			#else
+			_pixels.copyPixels(_pixelsBackup, _pixels.rect, _flashPointZero);
+			for (filter in filters) 
+			{
+				_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
+			}
+			#end
 		}
 	}
 	
 	/**
-	 * Adds a filter to this sprite.
+	 * Adds a filter to this sprite, the sprite becomes unique and won't share its graphics with other sprites.
 	 * Note that for effects like outer glow, or drop shadow, updating the sprite clipping
-	 * area may be required, use the argument "updateSize" for that effect.
+	 * area may be required, use widthInc or heightInc to increase the sprite area.
 	 * 
 	 * @param	filter		The filter to be added.
-	 * @param	updateSize	Filters like outer glow or drop shadow may be clipped by the sprite.
-	 * 						Use this to increase the visible sprite area, for example: new FlxPoint(10,10) will
-	 * 						extend the sprite clipping area by 10 pixels of width and height.
-	 * @param	permanent	If permanent, the effect cannot be removed and will be visible
-	 * 						on all (non-unique) sprites sharing this graphic. 
-	 *
+	 * @param	widthInc	The ammount of pixels to increase the width of the sprite.
+	 * @param	heightInc	The ammount of pixels to increase the height of the sprite.
 	 */
-	public function addFilter(filter:BitmapFilter, updateSize:FlxPoint = null, permanent:Bool = false)
+	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0)
 	{	
-		// Note: setClipping() makes the sprite unique and will not work with permanent filters,
-		// make sure the original graphics have enough room (alpha zero pixels) in that case.
-		if (updateSize != null && permanent == false)
+		// This makes the sprite graphic unique, essential for native target that uses texture atlas,
+		setClipping(frameWidth + widthInc , frameHeight + heightInc);
+		
+		if (filters == null) 
 		{
-			setClipping(frameWidth + Std.int(updateSize.x) , frameHeight + Std.int(updateSize.y) );
+			filters = new Array<BitmapFilter>();
 		}
 		
-		if (!permanent)
-		{
-			if (filters == null) 
-			{
-				filters = new Array<BitmapFilter>();
-			}
-			filters.push(filter);
-		}
-		else 
-		{
-			_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
-		}
+		filters.push(filter);
 		
 		#if !flash
+		if (_pixelsBackup == null) 
+		{
+			_pixelsBackup = new BitmapData(Std.int(_pixels.rect.width), Std.int(_pixels.rect.height));
+			_pixelsBackup.copyPixels(_pixels, _pixels.rect, _flashPointZero);
+			
+		}
 		_calculatedPixelsIndex = -1;
+		updateAtlasInfo(true);
 		#end
 		
-		updateAtlasInfo(true);
-		
-		drawFrame(true);
+		drawFrame(true); // at the end of calcframe() filters will be applied.
 	}
 	
 	/**
@@ -1643,7 +1660,8 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Removes all filters from the sprite.
+	 * Removes all filters from the sprite, additionally you may call loadGraphic() after removing
+	 * the filters to reuse cached graphics/bitmaps and stop this sprite from being unique.
 	 */
 	public function removeAllFilters()
 	{
@@ -1654,13 +1672,13 @@ class FlxSprite extends FlxObject
 			filters.pop();
 		}
 		
-		drawFrame(true);
 		
 		#if !flash
 		_calculatedPixelsIndex = -1;
 		#end
 		
 		updateAtlasInfo(true);
+		drawFrame(true);
 		
 		filters = null;
 	}

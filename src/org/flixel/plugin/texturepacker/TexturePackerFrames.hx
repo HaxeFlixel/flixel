@@ -6,6 +6,7 @@ import nme.geom.Point;
 import nme.display.BitmapData;
 import haxe.Json;
 import org.flixel.system.layer.Atlas;
+import org.flixel.system.layer.TileSheetData;
 
 class TexturePackerFrames
 {
@@ -27,15 +28,27 @@ class TexturePackerFrames
 		this.asset = Assets.getBitmapData(this.assetName);
 		this.data = Json.parse(Assets.getText(description));
 		
+		// TODO: create atlas and add all frames
+		atlas = Atlas.getAtlas(assetName, this.asset);
+		
 		for (frame in Lambda.array(data.frames))
 		{
 			this.sprites.push(new TexturePackerFrame(frame));
 			this.frames.set(frame.filename, this.sprites.length - 1);
 		}
 		
-		// TODO: create atlas and add all frames
-		atlas = Atlas.getAtlas(assetName, this.asset);
-		
+	}
+	
+	public function getFrameBitmapData(frameName:String):BitmapData
+	{
+		// TODO: implement it
+		return null;
+	}
+	
+	public function getAnimationBitmapData(animationPrefix:String):BitmapData
+	{
+		// TODO: implement it
+		return null;
 	}
 	
 	public function destroy():Void
@@ -46,12 +59,19 @@ class TexturePackerFrames
 
 class TexturePackerFrame
 {
+	// TODO: move this to FlxFrame
 	public var frame:Rectangle;
 	public var source:Rectangle;
 	public var trimmed:Bool;
 	public var rotated:Bool;
 	public var offset:FlxPoint;
 	public var filename:String;
+	// End of TODO
+	
+	public var flxFrame:FlxFrame;
+	#if flash
+	public var bitmapData:BitmapData;
+	#end
 
 	public function new(s:Dynamic)
 	{

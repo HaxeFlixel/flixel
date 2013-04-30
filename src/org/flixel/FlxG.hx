@@ -703,7 +703,7 @@ class FlxG
 	}
 	
 	#if android
-	private static var _soundCache:Hash<Sound> = new Hash<Sound>();
+	private static var _soundCache:Map<String, Sound> = new Map<String, Sound>();
 	private static var _soundTransform:SoundTransform = new SoundTransform();
 	
 	static public function addSound(EmbeddedSound:String):Sound
@@ -1617,14 +1617,6 @@ class FlxG
 			debugPathDisplay.clear();
 		}
 		#end
-	}
-	
-	/**
-	 * Called by the game object to update all the inputs enabled in FlxInputs
-	 */
-	inline static public function updateInputs():Void
-	{
-		FlxInputs.updateInputs();
 	}
 	
 	/**
