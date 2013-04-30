@@ -937,6 +937,12 @@ class FlxSprite extends FlxObject
 
 		_pixels.draw(FlxG.flashGfxSprite);
 		dirty = true;
+		
+		#if !flash
+		_calculatedPixelsIndex = -1;
+		#end
+		
+		updateAtlasInfo(true);
 	}
 	
 	/**
