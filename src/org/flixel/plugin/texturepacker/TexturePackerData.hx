@@ -5,10 +5,13 @@ import nme.geom.Rectangle;
 import nme.geom.Point;
 import nme.display.BitmapData;
 import haxe.Json;
+import org.flixel.FlxPoint;
 import org.flixel.system.layer.Atlas;
+import org.flixel.system.layer.frames.FlxFrame;
+import org.flixel.system.layer.frames.TexturePackerFrame;
 import org.flixel.system.layer.TileSheetData;
 
-class TexturePackerFrames
+class TexturePackerData
 {
 	public var frames:Hash<Int>;
 	public var sprites:Array<TexturePackerFrame>;
@@ -17,7 +20,7 @@ class TexturePackerFrames
 	public var assetName:String;
 	public var asset:BitmapData;
 	
-	public var atlas:Atlas;
+	public var atlas:TexturePackerAtlas;
 
 	public function new(description:String, assetName:String)
 	{
@@ -29,12 +32,38 @@ class TexturePackerFrames
 		this.data = Json.parse(Assets.getText(description));
 		
 		// TODO: create atlas and add all frames
-		atlas = Atlas.getAtlas(assetName, this.asset);
+		atlas = cast(TexturePackerAtlas.getAtlas(assetName, this.asset, this), TexturePackerAtlas);
+		var tsd:TexturePackerTileSheetData = cast(atlas._tileSheetData, TexturePackerTileSheetData);
 		
 		for (frame in Lambda.array(data.frames))
 		{
-			this.sprites.push(new TexturePackerFrame(frame));
-			this.frames.set(frame.filename, this.sprites.length - 1);
+			var texFrame:TexturePackerFrame = new TexturePackerFrame(tsd);
+			texFrame.trimmed = frame.trimmed;
+			texFrame.rotated = frame.rotated;
+			texFrame.name = frame.filename;
+			texFrame.sourceSize = new FlxPoint(frame.sourceSize.w, frame.sourceSize.h);
+			texFrame.offset = new FlxPoint(0, 0);
+		#if !flash
+			// we use negative offset because code in FlxSprite.draw
+			// use it in such way
+			texFrame.offset.make(-frame.spriteSourceSize.x, -frame.spriteSourceSize.y);
+			if (frame.rotated)
+			{
+				texFrame.frame = new Rectangle(frame.frame.x, frame.frame.y, frame.frame.h, frame.frame.w);
+			}
+			else
+			{
+				texFrame.frame = new Rectangle(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h);
+			}
+		#else
+			texFrame.frame = new Rectangle(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h);
+			// we use positive offset because in FlxSpriteTex.new
+			// we need to translate a sprite
+			texFrame.offset.make(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
+		#end
+		
+			this.sprites.push(texFrame);
+			this.frames.set(texFrame.name, this.sprites.length - 1);
 		}
 		
 	}
@@ -56,7 +85,7 @@ class TexturePackerFrames
 		// TODO: implement it
 	}
 }
-
+/*
 class TexturePackerFrame
 {
 	// TODO: move this to FlxFrame
@@ -105,3 +134,4 @@ class TexturePackerFrame
 		// TODO: implement it
 	}
 }
+*/

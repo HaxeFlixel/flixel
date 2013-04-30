@@ -6,28 +6,35 @@ import nme.display.BitmapData;
 
 class TexturePackerAtlas extends Atlas
 {
-	public static function getAtlas(key:String, bmData:BitmapData, tex:TexturePackerFrames, unique:Bool = false):Atlas
+	public static function getAtlas(key:String, bmData:BitmapData, tex:TexturePackerData, unique:Bool = false):TexturePackerAtlas
 	{
 		var alreadyExist:Bool = Atlas.isExists(key);
-		if (!unique && alreadyExist)
+		var isTexurePacker:Bool = false;
+		
+		var cachedAtlas:Atlas = Atlas.getAtlasByKey(key);
+		if (Std.is(cachedAtlas, TexturePackerAtlas))
 		{
-			return Atlas.getAtlas(key, bmData, unique);
+			isTexurePacker = true;
+		}
+		
+		if (!unique && alreadyExist && isTexurePacker)
+		{
+			return cast(Atlas.getAtlas(key, bmData, unique), TexturePackerAtlas);
 		}
 		
 		var atlasKey:String = key;
-		if (unique && alreadyExist)
+		if (alreadyExist && (unique || !isTexurePacker))
 		{
 			atlasKey = Atlas.getUniqueKey(key);
 		}
-		
-		var atlas:Atlas = new TexturePackerAtlas(atlasKey, bmData.width, bmData.height, 1, 1, bmData, tex);
+		// TODO: change constructor signature
+		var atlas:TexturePackerAtlas = new TexturePackerAtlas(atlasKey, bmData.width, bmData.height, 1, 1, bmData, tex);
 		return atlas;
 	}
 
-
-	private var _tex:TexturePackerFrames;
+	private var _tex:TexturePackerData;
 	
-	public function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1, bitmapData:BitmapData = null, tex:TexturePackerFrames = null)
+	private function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1, bitmapData:BitmapData = null, tex:TexturePackerData = null)
 	{
 		_tex = tex;
 		super(name, width, height, borderX, borderY, bitmapData);
