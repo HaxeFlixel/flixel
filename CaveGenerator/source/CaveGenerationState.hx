@@ -32,7 +32,7 @@ class CaveGenerationState extends FlxState
 		#end
 		
 		// Create cave of size 200x100 tiles
-		var cave:FlxCaveGenerator = new FlxCaveGenerator(340, 330);
+		var cave:FlxCaveGenerator = new FlxCaveGenerator(200, 100);
 
 		// Generate the level and returns a matrix
 		// 0 = empty, 1 = wall tile
