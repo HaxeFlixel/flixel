@@ -1,6 +1,6 @@
 package;
 
-import addons.FlxSkewedSprite;
+import org.flixel.addons.FlxSkewedSprite;
 import flash.ui.Mouse;
 import nme.Assets;
 import nme.Lib;

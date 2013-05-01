@@ -1,6 +1,6 @@
 package;
 
-import addons.FlxTilemapExt;
+import org.flixel.addons.FlxTilemapExt;
 import nme.Assets;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;

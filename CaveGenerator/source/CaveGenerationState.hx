@@ -1,6 +1,6 @@
 package;
 
-import addons.FlxCaveGenerator;
+import org.flixel.addons.FlxCaveGenerator;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
