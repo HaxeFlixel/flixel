@@ -5,7 +5,7 @@ package;
  */
 
 import flash.ui.Mouse;
-import addons.FlxTrail;
+import org.flixel.addons.FlxTrail;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;

@@ -45,6 +45,8 @@ class Bullet extends FlxSprite
 		{
 			kill();
 		}
+
+        super.update();
 	}
 	
 	override public function kill():Void

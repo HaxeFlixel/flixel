@@ -56,5 +56,7 @@ class Player extends FlxSprite
 			play("jump");
 		else
 			play("flail");
+
+        super.update();
 	}
 }

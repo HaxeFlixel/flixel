@@ -1,5 +1,5 @@
 package ;
-import addons.FlxSkewedSprite;
+import org.flixel.addons.FlxSkewedSprite;
 import org.flixel.FlxG;
 
 /**

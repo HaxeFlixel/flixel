@@ -121,7 +121,7 @@ class Player extends FlxSprite
 		{
 			_aim = FlxObject.UP;
 		}
-		else if(FlxG.keys.DOWN && velocity.y != 0)
+		else if(FlxG.keys.DOWN)
 		{
 			_aim = FlxObject.DOWN;
 		}
@@ -163,6 +163,8 @@ class Player extends FlxSprite
 				}
 			}
 		}
+
+        super.update();
 	}
 	
 	override public function hurt(Damage:Float):Void
