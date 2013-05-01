@@ -1468,7 +1468,7 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any overlaps were detected.
 	 */
-	inline static public function overlap(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Bool
+	inline static public function overlap(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:Dynamic->Dynamic->Void = null, ProcessCallback:Dynamic->Dynamic->Bool = null):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -1499,7 +1499,7 @@ class FlxG
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	inline static public function collide(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null):Bool
+	inline static public function collide(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:Dynamic->Dynamic->Void = null):Bool
 	{
 		return FlxG.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
 	}
