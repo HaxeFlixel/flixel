@@ -8,7 +8,7 @@ import org.flixel.system.replay.CodeValuePair;
  * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
  * Keyboard extends this with actual specific key data.
  */
-class FlxInputStates implements Dynamic
+class FlxInputStates
 {
 	/**
 	 * @private
@@ -23,6 +23,8 @@ class FlxInputStates implements Dynamic
 	 */
 	private var _total:Int;
 	
+	private var _keyBools:Hash<Bool>;
+	
 	/**
 	 * Constructor
 	 */
@@ -33,6 +35,8 @@ class FlxInputStates implements Dynamic
 		_lookup = new Hash<Int>();
 		_map = new Array<FlxMapObject>(/*_total*/);
 		FlxU.SetArrayLength(_map, _total);
+		
+		_keyBools = new Hash<Bool>();
 	}
 	
 	/**
@@ -60,7 +64,7 @@ class FlxInputStates implements Dynamic
 		{
 			if(_map[i] == null) continue;
 			var o:FlxMapObject = _map[i];
-			Reflect.setProperty(this, o.name, false);
+			_keyBools.set(o.name, false);
 			o.current = 0;
 			o.last = 0;
 		}
@@ -73,7 +77,12 @@ class FlxInputStates implements Dynamic
 	 */
 	public function pressed(Key:String):Bool 
 	{ 
-		return Reflect.getProperty(this, Key); 
+		if (_keyBools.exists(Key))
+		{
+			return _keyBools.get(Key);
+		}
+		
+		return false; 
 	}
 	
 	/**
@@ -157,7 +166,7 @@ class FlxInputStates implements Dynamic
 			o2.current = o.value;
 			if (o.value > 0)
 			{
-				Reflect.setProperty(this, o2.name, true);
+				_keyBools.set(o2.name, true);
 			}
 		}
 	}
@@ -227,5 +236,6 @@ class FlxInputStates implements Dynamic
 	{
 		_lookup = null;
 		_map = null;
+		_keyBools = null;
 	}
 }
