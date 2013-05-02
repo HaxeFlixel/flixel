@@ -223,5 +223,5 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			members[i].solid = Solid;   
 	}	
 
-	public function getSolid():Bool { return _solid }
+	public function getSolid():Bool { return _solid; }
 }
