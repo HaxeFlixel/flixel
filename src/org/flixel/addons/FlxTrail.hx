@@ -65,7 +65,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	/**
 	 *  Internal var, whether trailsprites are solid or not. Access via setSolid and getSolid.
 	 */
-	private var _solid:Bool;
+	public var solid(get_solid, set_solid):Bool;
 
 	/**
 	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
@@ -172,11 +172,11 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			add(trailSprite);
 			trailSprite.alpha = transp;
 			transp -= difference;
-
-			if (trailSprite.alpha <= 0) trailSprite.kill();
 			
-			setSolid(false);
+			if (trailSprite.alpha <= 0) trailSprite.kill();
 		}	
+		
+		solid = false;
 	}
 
 	/**
@@ -213,15 +213,14 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 *
 	 * @param 	Solid 	Whether the trailsprites should be solid or not.
 	 */
-	public function setSolid(Solid:Bool):Void
+	private function set_solid(Solid:Bool):Bool
 	{
-		if (_solid == Solid) return;
-		
-		_solid = Solid;
-		
 		for (i in 0...trailLength)
 			members[i].solid = Solid;   
+			
+		solid = Solid;
+		return Solid;
 	}	
 
-	public function getSolid():Bool { return _solid; }
+	private function get_solid():Bool { return solid; }
 }
