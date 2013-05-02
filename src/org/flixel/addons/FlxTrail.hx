@@ -172,11 +172,10 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			add(trailSprite);
 			trailSprite.alpha = transp;
 			transp -= difference;
+			trailSprite.solid = solid;
 			
 			if (trailSprite.alpha <= 0) trailSprite.kill();
 		}	
-		
-		solid = false;
 	}
 
 	/**
