@@ -1,5 +1,6 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.system.replay.CodeValuePair;
 
@@ -82,7 +83,15 @@ class FlxInputStates implements Dynamic
 	 */
 	public function justPressed(Key:String):Bool 
 	{ 
-		return _map[_lookup.get(Key)].current == 2;
+		if (_map[_lookup.get(Key)] != null) 
+		{
+			return _map[_lookup.get(Key)].current == 2;
+		}
+		else
+		{
+			FlxG.log("Function and numpad keys can only be used in flash and js");
+			return false;
+		}
 	}
 	
 	/**
@@ -92,7 +101,15 @@ class FlxInputStates implements Dynamic
 	 */
 	public function justReleased(Key:String):Bool 
 	{ 
-		return _map[_lookup.get(Key)].current == -1; 
+		if (_map[_lookup.get(Key)] != null) 
+		{
+			return _map[_lookup.get(Key)].current == -1;
+		}
+		else
+		{
+			FlxG.log("Function and numpad keys can only be used in flash and js");
+			return false;
+		}
 	}
 	
 	/**
