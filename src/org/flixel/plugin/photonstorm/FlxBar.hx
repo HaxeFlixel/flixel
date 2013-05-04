@@ -1019,7 +1019,7 @@ class FlxBar extends FlxSprite
 			else if (fillDirection == FILL_VERTICAL_OUTSIDE_IN)
 			{
 				filledBarRect.height = Std.int(100 - percent * pxPerPercent);
-				filledBarPoint.y = Std.int((barHeight- filledBarRect.height) / 2);
+				filledBarPoint.y = Std.int((barHeight - filledBarRect.height) / 2);
 			}
 			
 			canvas.copyPixels(filledBar, filledBarRect, filledBarPoint);

@@ -87,7 +87,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "09";
+	static public inline var LIBRARY_MINOR_VERSION:String = "10-dev";
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -654,11 +654,11 @@ class FlxG
 	 */
 	static public function resetState():Void
 	{
-		_game._requestedState = Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []);
+		_game.requestNewState(Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []));
 		#if !FLX_NO_DEBUG
 		if (Std.is(_game._requestedState, FlxSubState))
 		{
-			throw "You can't set FlxSubState class instance as the state for you game";
+			throw "You can't set FlxSubState class instance as the state for your game";
 		}
 		#end
 	}
@@ -810,12 +810,12 @@ class FlxG
 	 * 
 	 * @default 0.5
 	 */
-	public static var volume(default, setVolume):Float;
+	public static var volume(default, set_volume):Float;
 	
 	/**
 	 * @private
 	 */
-	static private function setVolume(Volume:Float):Float
+	static private function set_volume(Volume:Float):Float
 	{
 		volume = Volume;
 		if (volume < 0)
@@ -1251,7 +1251,7 @@ class FlxG
 	 */
 	static public function switchState(State:FlxState):Void
 	{
-		_game._requestedState = State;
+		_game.requestNewState(State); 
 	}
 
 	#if !FLX_NO_DEBUG
@@ -1468,7 +1468,7 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any overlaps were detected.
 	 */
-	inline static public function overlap(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Bool
+	inline static public function overlap(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:Dynamic->Dynamic->Void = null, ProcessCallback:Dynamic->Dynamic->Bool = null):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -1499,7 +1499,7 @@ class FlxG
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	inline static public function collide(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null):Bool
+	inline static public function collide(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:Dynamic->Dynamic->Void = null):Bool
 	{
 		return FlxG.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
 	}

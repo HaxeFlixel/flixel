@@ -26,6 +26,24 @@ class FlxParticle extends FlxSprite
 	public var friction:Float;
 	
 	/**
+	 * If this is set to true, particles will slowly fade away by
+	 * decreasing their alpha value based on their lifespan.
+	*/
+	public var fadingAway:Bool = false;
+
+	/**
+	 * If this is set to true, particles will slowly decrease in scale
+	 * based on their lifespan.
+	 * WARNING: This severely impacts performance on flash target.
+	*/
+	public var decreasingSize:Bool = false;
+	
+	/**
+	 * Helper variable for fading and sizeDecreasing effects.
+	*/
+	public var maxLifespan:Float;
+	
+	/**
 	 * Instantiate a new particle.  Like <code>FlxSprite</code>, all meaningful creation
 	 * happens during <code>loadGraphic()</code> or <code>makeGraphic()</code> or whatever.
 	 */
@@ -34,6 +52,7 @@ class FlxParticle extends FlxSprite
 		super();
 		lifespan = 0;
 		friction = 500;
+		exists = false;
 	}
 	
 	/**
@@ -69,6 +88,18 @@ class FlxParticle extends FlxSprite
 			if (lifespan <= 0)
 			{
 				kill();
+			}
+			
+			// Fading away
+			if (fadingAway)
+			{
+				alpha -= (FlxG.elapsed / maxLifespan);
+			}
+
+			// Decreasing size
+			if (decreasingSize)
+			{
+				scale.x = scale.y -= (FlxG.elapsed / maxLifespan);
 			}
 			
 			//simpler bounce/spin behavior for now

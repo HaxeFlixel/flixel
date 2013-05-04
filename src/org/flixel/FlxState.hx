@@ -189,7 +189,6 @@ class FlxState extends FlxGroup
 	 */
 	public function getAtlasFor(KeyInBitmapCache:String):Atlas
 	{
-		#if !flash
 		var bm:BitmapData = FlxG._cache.get(KeyInBitmapCache);
 		if (bm != null)
 		{
@@ -202,7 +201,7 @@ class FlxState extends FlxGroup
 			throw "There isn't bitmapdata in cache with key: " + KeyInBitmapCache;
 			#end
 		}
-		#end
+		
 		return null;
 	}
 	

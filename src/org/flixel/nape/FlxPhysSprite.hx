@@ -64,26 +64,14 @@ class FlxPhysSprite extends FlxSprite
 	/**
 	 * Override core physics velocity etc
 	 */
-	override public function postUpdate():Void
+	override public function update():Void
 	{
-		FlxBasic._ACTIVECOUNT++;
-		
-		if (_flickerTimer > 0)
-		{
-			_flickerTimer -= FlxG.elapsed;
-			if(_flickerTimer <= 0)
-			{
-				_flickerTimer = 0;
-				_flicker = false;
-			}
-		}
+		super.update();
 		
 		if (moves)
 		{
 			updatePhysObjects();
 		}
-		
-		updateAnimation();
 	}
 
 	/**
@@ -224,8 +212,12 @@ class FlxPhysSprite extends FlxSprite
 		_angularDrag 	= angularDrag;
 	}
 	
-	// Hide debug outline on physics sprites (they already show outlined)
+	// Hide debug outline on physics sprites if the physics debug shapes are turned on
 	#if !FLX_NO_DEBUG
-	override public function drawDebug():Void { }
+	override public function drawDebug(Camera:FlxCamera = null):Void 
+	{
+		if (FlxPhysState.debug == null) 
+			super.drawDebug(Camera); 
+	}
 	#end
 }

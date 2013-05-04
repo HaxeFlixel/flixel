@@ -343,7 +343,7 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
-		_requestedState = Type.createInstance(_iState, []);
+		requestNewState(Type.createInstance(_iState, []));
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(_requestedState, FlxSubState))
@@ -359,6 +359,18 @@ class FlxGame extends Sprite
 		
 		FlxG.reset();
 	}
+	
+	/**
+	 * Notify the game that we're about to switch states. 
+	 * INTERNAL, do not use this, call FlxG.switchState instead.
+	 */
+	public inline function requestNewState(newState:FlxState):Void
+	{
+		_requestedState = newState;
+		#if(cpp && thread)
+		_stateSwitchRequested = true;
+		#end
+	} 
 
 	/**
 	 * If there is a state change requested during the update loop,
@@ -402,6 +414,10 @@ class FlxGame extends Sprite
 		//Finally assign and create the new state
 		_state = _requestedState;
 		_state.create();
+		
+		#if (cpp && thread) 
+		_stateSwitchRequested = false; 
+		#end
 	}
 	
 	/**
@@ -448,7 +464,7 @@ class FlxGame extends Sprite
 		FlxBasic._ACTIVECOUNT = 0;
 		
 		#if (cpp && thread)
-		threadSync.push(true);
+		_threadSync.push(true);
 		#else
 		update();
 		#end
@@ -463,11 +479,12 @@ class FlxGame extends Sprite
 	
 	#if (cpp && thread)
 	// push 'true' into this array to trigger an update. push 'false' to terminate update thread.
-	public var threadSync:cpp.vm.Deque<Bool>;
+	public var _stateSwitchRequested:Bool;
+	public var _threadSync:cpp.vm.Deque<Bool>;
 	
 	private function threadedUpdate():Void 
 	{
-		while (threadSync.pop(true))
+		while (_threadSync.pop(true))
 			update();
 	}
 	#end
@@ -618,6 +635,11 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.lockCameras();
+		
+		#if (cpp && thread)
+		// Only draw the state if a new state hasn't been requested
+		if (!_stateSwitchRequested)
+		#end 
 		_state.draw();
 		
 		#if !FLX_NO_DEBUG
@@ -710,7 +732,7 @@ class FlxGame extends Sprite
 		}
 		
 		#if (cpp && thread)
-		threadSync = new cpp.vm.Deque();
+		_threadSync = new cpp.vm.Deque();
 		cpp.vm.Thread.create(threadedUpdate);
 		#end
 		

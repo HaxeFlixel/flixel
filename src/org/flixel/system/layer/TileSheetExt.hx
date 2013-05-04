@@ -6,6 +6,7 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.ObjectHash;
 
+// TODO: check image caching for tilesheets and their disposing
 class TileSheetExt extends Tilesheet
 {
 	private static var _tileSheetCache:ObjectHash<BitmapData, TileSheetExt> = new ObjectHash<BitmapData, TileSheetExt>();

@@ -95,10 +95,12 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<T:FlxParticle>
 		//set particle direction and speed
 		var a:Float = angle + FlxG.random() * angleRange;
 		var d:Float = distance + FlxG.random() * distanceRange;
-			
+		
 		particle.velocity.x = Math.cos(a) * d;
 		particle.velocity.y = Math.sin(a) * d;
-		particle.lifespan = lifespan + FlxG.random() * lifespanRange;
+		particle.lifespan = particle.maxLifespan = lifespan + FlxG.random() * lifespanRange;
+		particle.decreasingSize = decreasingSize;
+		particle.fadingAway = fadingAway; 
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import nme.geom.Rectangle;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
+import org.flixel.plugin.texturepacker.TexturePackerData;
 
 import org.flixel.system.layer.TileSheetExt;
 import org.flixel.system.layer.frames.FlxFrame;
@@ -113,6 +114,11 @@ class TileSheetData
 		flxFrames = new Hash<FlxFrame>();
 	}
 	
+	public function getFrame(name:String):FlxFrame
+	{
+		return flxFrames.get(name);
+	}
+	
 	/**
 	 * Adds new ID array for FlxSprite with specific dimensions
 	 * @param	width	sprite width
@@ -171,7 +177,7 @@ class TileSheetData
 			{
 				tempRect = new Rectangle(startX + i * spacedWidth, startY + j * spacedHeight, width, height);
 				frame = addSpriteSheetFrame(tempRect, tempPoint);
-				spriteData.frames.push(frame);
+				spriteData.addFrame(frame);
 			}
 		}
 		
@@ -209,6 +215,13 @@ class TileSheetData
 		frame.tileID = addTileRect(rect, point);
 		frame.name = key;
 		frame.frame = rect;
+		
+		frame.rotated = false;
+		frame.trimmed = false;
+		frame.sourceSize = new FlxPoint(rect.width, rect.height);
+		frame.offset = new FlxPoint(0, 0);
+		
+		frame.center = new FlxPoint(0.5 * rect.width, 0.5 * rect.height);
 		flxFrames.set(key, frame);
 		return frame;
 	}
@@ -218,6 +231,7 @@ class TileSheetData
 		return flxFrames.exists(key);
 	}
 	
+	// TODO: make point paramenter optional (?) not only for this method but for tileSheet:Tilesheet.addTileRect() method
 	public function addTileRect(tileRect, point):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
@@ -236,5 +250,69 @@ class TileSheetData
 		flxSpriteFrames = null;
 		// TODO: destroy FlxFrames in flxFrames hash
 		flxFrames = null;
+	}
+	
+	// TODO: document this
+	public function getTexturePackerFrames(data:TexturePackerData, startX:Int = 0, startY:Int = 0):FlxSpriteFrames
+	{
+		// No need to parse data again
+		if (flxSpriteFrames.exists(data.assetName))	
+		{
+			return flxSpriteFrames.get(data.assetName);
+		}
+		
+		var packerFrames:FlxSpriteFrames = new FlxSpriteFrames(data.assetName);
+		
+		for (frame in Lambda.array(data.data.frames))
+		{
+			var frame:FlxFrame = addTexturePackerFrame(frame, startX, startY);
+			packerFrames.addFrame(frame);
+		}
+		
+		flxSpriteFrames.set(data.assetName, packerFrames);
+		return packerFrames;
+	}
+	
+	// TODO: document (and check) this
+	private function addTexturePackerFrame(frameData:Dynamic, startX:Int = 0, startY:Int = 0):FlxFrame
+	{
+		var key:String = frameData.filename;
+		if (containsFrame(key))
+		{
+			return flxFrames.get(key);
+		}
+		
+		var texFrame:FlxFrame = new FlxFrame(this);
+		texFrame.trimmed = frameData.trimmed;
+		texFrame.rotated = frameData.rotated;
+		texFrame.name = key;
+		texFrame.sourceSize = new FlxPoint(frameData.sourceSize.w, frameData.sourceSize.h);
+		texFrame.offset = new FlxPoint(0, 0);
+		
+		texFrame.center = new FlxPoint(0, 0);
+		
+	#if !flash
+		texFrame.offset.make(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
+		if (frameData.rotated)
+		{
+			texFrame.frame = new Rectangle(frameData.frame.x + startX, frameData.frame.y + startY, frameData.frame.h, frameData.frame.w);
+			texFrame.center.make(texFrame.frame.height * 0.5 + texFrame.offset.x, texFrame.frame.width * 0.5 + texFrame.offset.y);
+			texFrame.additionalAngle = -90.0;
+		}
+		else
+		{
+			texFrame.frame = new Rectangle(frameData.frame.x + startX, frameData.frame.y + startY, frameData.frame.w, frameData.frame.h);
+			texFrame.center.make(texFrame.frame.width * 0.5 + texFrame.offset.x, texFrame.frame.height * 0.5 + texFrame.offset.y);
+		}
+		
+		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
+		
+	#else
+		texFrame.frame = new Rectangle(frameData.frame.x, frameData.frame.y, frameData.frame.w, frameData.frame.h);
+		texFrame.offset.make(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
+	#end
+		
+		flxFrames.set(key, texFrame);
+		return texFrame;
 	}
 }
