@@ -13,17 +13,20 @@ class FlxInputStates
 	/**
 	 * @private
 	 */
-	private var _lookup:Hash<Int>;
+	private var _keyLookup:Hash<Int>;
 	/**
 	 * @private
 	 */
-	private var _map:Array<FlxMapObject>;
+	private var _keyBools:Hash<Bool>;
+	/**
+	 * @private
+	 */
+	private var _keyMap:Array<FlxMapObject>;
 	/**
 	 * @private
 	 */
 	private var _total:Int;
 	
-	private var _keyBools:Hash<Bool>;
 	
 	/**
 	 * Constructor
@@ -32,11 +35,11 @@ class FlxInputStates
 	{
 		_total = 256;
 		
-		_lookup = new Hash<Int>();
-		_map = new Array<FlxMapObject>(/*_total*/);
-		FlxU.SetArrayLength(_map, _total);
-		
+		_keyLookup = new Hash<Int>();
 		_keyBools = new Hash<Bool>();
+		
+		_keyMap = new Array<FlxMapObject>(/*_total*/);
+		FlxU.SetArrayLength(_keyMap, _total);
 	}
 	
 	/**
@@ -47,7 +50,7 @@ class FlxInputStates
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:FlxMapObject = _map[i++];
+			var o:FlxMapObject = _keyMap[i++];
 			if(o == null) continue;
 			if((o.last == -1) && (o.current == -1)) o.current = 0;
 			else if((o.last == 2) && (o.current == 2)) o.current = 1;
@@ -62,8 +65,8 @@ class FlxInputStates
 	{
 		for(i in 0...(_total))
 		{
-			if(_map[i] == null) continue;
-			var o:FlxMapObject = _map[i];
+			if(_keyMap[i] == null) continue;
+			var o:FlxMapObject = _keyMap[i];
 			_keyBools.set(o.name, false);
 			o.current = 0;
 			o.last = 0;
@@ -93,9 +96,9 @@ class FlxInputStates
 	 */
 	public function justPressed(Key:String):Bool 
 	{ 
-		if (_map[_lookup.get(Key)] != null) 
+		if (_keyMap[_keyLookup.get(Key)] != null) 
 		{
-			return _map[_lookup.get(Key)].current == 2;
+			return _keyMap[_keyLookup.get(Key)].current == 2;
 		}
 		else
 		{
@@ -111,9 +114,9 @@ class FlxInputStates
 	 */
 	public function justReleased(Key:String):Bool 
 	{ 
-		if (_map[_lookup.get(Key)] != null) 
+		if (_keyMap[_keyLookup.get(Key)] != null) 
 		{
-			return _map[_lookup.get(Key)].current == -1;
+			return _keyMap[_keyLookup.get(Key)].current == -1;
 		}
 		else
 		{
@@ -134,7 +137,7 @@ class FlxInputStates
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:FlxMapObject = _map[i++];
+			var o:FlxMapObject = _keyMap[i++];
 			if ((o == null) || (o.current == 0))
 			{
 				continue;
@@ -163,7 +166,7 @@ class FlxInputStates
 		while(i < l)
 		{
 			o = Record[i++];
-			o2 = _map[o.code];
+			o2 = _keyMap[o.code];
 			o2.current = o.value;
 			if (o.value > 0)
 			{
@@ -179,7 +182,7 @@ class FlxInputStates
 	 */
 	public function getKeyCode(KeyName:String):Int
 	{
-		return _lookup.get(KeyName);
+		return _keyLookup.get(KeyName);
 	}
 	
 	/**
@@ -191,7 +194,7 @@ class FlxInputStates
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:FlxMapObject = _map[i++];
+			var o:FlxMapObject = _keyMap[i++];
 			if ((o != null) && (o.current > 0))
 			{
 				return true;
@@ -200,25 +203,25 @@ class FlxInputStates
 		return false;
 	}
 
-    /**
-    * Get an Array of FlxMapObjects that are in a pressed state
-    * @return	Array<FlxMapObject> of keys that are currently pressed.
-    */
-    public function getIsDown():Array<FlxMapObject>
-    {
-        var keysdown:Array<FlxMapObject> = new Array<FlxMapObject>();
-        var i:Int = 0;
-        while(i < _total)
-        {
-            var o:FlxMapObject = _map[i++];
-            if ((o != null) && (o.current > 0))
-            {
-                keysdown.push (o);
-            }
-        }
-        return keysdown;
-    }
-	
+	/**
+	* Get an Array of FlxMapObjects that are in a pressed state
+	* @return	Array<FlxMapObject> of keys that are currently pressed.
+	*/
+	public function getIsDown():Array<FlxMapObject>
+	{
+		var keysdown:Array<FlxMapObject> = new Array<FlxMapObject>();
+		var i:Int = 0;
+		while(i < _total)
+		{
+			var o:FlxMapObject = _keyMap[i++];
+			if ((o != null) && (o.current > 0))
+			{
+				keysdown.push (o);
+			}
+		}
+		return keysdown;
+	}
+
 	/**
 	 * An internal helper function used to build the key array.
 	 * @param	KeyName		String name of the key (e.g. "LEFT" or "A")
@@ -226,17 +229,17 @@ class FlxInputStates
 	 */
 	private function addKey(KeyName:String, KeyCode:Int):Void
 	{
-		_lookup.set(KeyName, KeyCode);
-		_map[KeyCode] = new FlxMapObject(KeyName, 0, 0);
+		_keyLookup.set(KeyName, KeyCode);
+		_keyMap[KeyCode] = new FlxMapObject(KeyName, 0, 0);
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
 	public function destroy():Void
 	{
-		_lookup = null;
-		_map = null;
+		_keyMap = null;
 		_keyBools = null;
+		_keyLookup = null;
 	}
 }
