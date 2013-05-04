@@ -81,6 +81,17 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 */
 	public var lifespan:Float;
 	/**
+	 * If this is set to true, particles will slowly fade away by 
+	 * decreasing their alpha value based on their lifespan.
+	 */
+	public var fadingAway:Bool = false;
+	/**
+	 * If this is set to true, particles will slowly decrease in scale 
+	 * based on their lifespan.
+	 * WARNING: This severely impacts performance.
+	 */
+	public var decreasingSize:Bool = false;
+	/**
 	 * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
 	 */
 	public var bounce:Float;
@@ -342,8 +353,10 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	public function emitParticle():Void
 	{
 		var particle:FlxParticle = recycle(cast _particleClass);
-		particle.lifespan = lifespan;
+		particle.lifespan = particle.maxLifespan = lifespan;
 		particle.elasticity = bounce;
+		particle.decreasingSize = decreasingSize;
+		particle.fadingAway = fadingAway;
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxG.random() * width, y - (Std.int(particle.height) >> 1) + FlxG.random() * height);
 		particle.visible = true;
 		
