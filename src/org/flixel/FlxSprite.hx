@@ -877,6 +877,32 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * This function draws a circle on this sprite at position X,Y
+	 * with the specified color.
+	 * @param   X           X coordinate of the circle's center
+	 * @param   Y           Y coordinate of the circle's center
+	 * @param   Radius      Radius of the circle
+	 * @param   Color       Color of the circle
+	 */
+	public function drawCircle(X:Float, Y:Float, Radius:Float, Color:Int):Void
+	{
+		var gfx:Graphics = FlxG.flashGfx;
+		gfx.clear();
+		gfx.beginFill(Color, 1);
+		gfx.drawCircle(X, Y, Radius);
+		gfx.endFill();
+
+		_pixels.draw(FlxG.flashGfxSprite);
+		dirty = true;
+		
+		#if !flash
+		_calculatedPixelsIndex = -1;
+		#end
+		
+		updateAtlasInfo(true);
+	}
+	
+	/**
 	 * Fills this sprite's graphic with a specific color.
 	 * @param	Color		The color with which to fill the graphic, format 0xAARRGGBB.
 	 */

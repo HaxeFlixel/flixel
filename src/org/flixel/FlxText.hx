@@ -174,11 +174,6 @@ class FlxText extends FlxSprite
 		_shadow = ShadowColor;
 		_useShadow = UseShadow;
 		_regen = true;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
 		return this;
 	}
 	
@@ -207,11 +202,6 @@ class FlxText extends FlxSprite
 		if(_textField.text != ot)
 		{
 			_regen = true;
-			#if flash
-			calcFrame();
-			#else
-			calcFrame(true);
-			#end
 		}
 		return _textField.text;
 	}
@@ -240,11 +230,6 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
 		_regen = true;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
 		return Size;
 	}
 	
@@ -271,11 +256,6 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
 		_regen = true;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
 		return Color;
 	}
 	
@@ -303,11 +283,6 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
 		_regen = true;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
 		return Font;
 	}
 	
@@ -334,11 +309,7 @@ class FlxText extends FlxSprite
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
 		_textField.setTextFormat(_format);
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
+		dirty = true;
 		return Alignment;
 	}
 	
@@ -369,11 +340,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_shadow = Color;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
+		dirty = true;
 		return Color;
 	}
 	
@@ -392,11 +359,7 @@ class FlxText extends FlxSprite
 		if (value != _useShadow)
 		{
 			_useShadow = value;
-			#if flash
-			calcFrame();
-			#else
-			calcFrame(true);
-			#end
+			dirty = true;
 		}
 		return _useShadow;
 	}
@@ -636,5 +599,19 @@ class FlxText extends FlxSprite
 			_flxFrame = _framesData.frames[0];
 		}
 	#end
+	}
+	
+	override public function draw():Void 
+	{
+		if (_regen)		//rarely
+		{
+			#if !flash
+			calcFrame(true);
+			#else
+			calcFrame();
+			#end
+		}
+		
+		super.draw();
 	}
 }

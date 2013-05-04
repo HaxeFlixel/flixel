@@ -1,5 +1,6 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.system.replay.CodeValuePair;
 
@@ -7,20 +8,25 @@ import org.flixel.system.replay.CodeValuePair;
  * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
  * Keyboard extends this with actual specific key data.
  */
-class FlxInputStates implements Dynamic
+class FlxInputStates
 {
 	/**
 	 * @private
 	 */
-	private var _lookup:Map<String, Int>;
+	private var _keyLookup:Map<String, Int>;
 	/**
 	 * @private
 	 */
-	private var _map:Array<FlxMapObject>;
+	private var _keyBools:Map<String, Bool>;
+	/**
+	 * @private
+	 */
+	private var _keyMap:Array<FlxMapObject>;
 	/**
 	 * @private
 	 */
 	private var _total:Int;
+	
 	
 	/**
 	 * Constructor
@@ -29,8 +35,11 @@ class FlxInputStates implements Dynamic
 	{
 		_total = 256;
 		
-		_lookup = new Map<String, Int>();
-		_map = new Array<FlxMapObject>();
+		_keyLookup = new Map<String, Int>();
+		_keyBools = new Map<String, Bool>();
+		
+		_keyMap = new Array<FlxMapObject>(/*_total*/);
+		FlxU.SetArrayLength(_keyMap, _total);
 	}
 	
 	/**
@@ -41,7 +50,7 @@ class FlxInputStates implements Dynamic
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:FlxMapObject = _map[i++];
+			var o:FlxMapObject = _keyMap[i++];
 			if(o == null) continue;
 			if((o.last == -1) && (o.current == -1)) o.current = 0;
 			else if((o.last == 2) && (o.current == 2)) o.current = 1;
@@ -56,9 +65,9 @@ class FlxInputStates implements Dynamic
 	{
 		for(i in 0...(_total))
 		{
-			if(_map[i] == null) continue;
-			var o:FlxMapObject = _map[i];
-			Reflect.setProperty(this, o.name, false);
+			if(_keyMap[i] == null) continue;
+			var o:FlxMapObject = _keyMap[i];
+			_keyBools.set(o.name, false);
 			o.current = 0;
 			o.last = 0;
 		}
@@ -71,7 +80,13 @@ class FlxInputStates implements Dynamic
 	 */
 	public function pressed(Key:String):Bool 
 	{ 
-		return Reflect.getProperty(this, Key); 
+		if (_keyBools.exists(Key))
+		{
+			return _keyBools.get(Key);
+		}
+		
+		FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+		return false; 
 	}
 	
 	/**
@@ -81,7 +96,15 @@ class FlxInputStates implements Dynamic
 	 */
 	public function justPressed(Key:String):Bool 
 	{ 
-		return _map[_lookup.get(Key)].current == 2;
+		if (_keyMap[_keyLookup.get(Key)] != null) 
+		{
+			return _keyMap[_keyLookup.get(Key)].current == 2;
+		}
+		else
+		{
+			FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+			return false;
+		}
 	}
 	
 	/**
@@ -91,7 +114,15 @@ class FlxInputStates implements Dynamic
 	 */
 	public function justReleased(Key:String):Bool 
 	{ 
-		return _map[_lookup.get(Key)].current == -1; 
+		if (_keyMap[_keyLookup.get(Key)] != null) 
+		{
+			return _keyMap[_keyLookup.get(Key)].current == -1;
+		}
+		else
+		{
+			FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+			return false;
+		}
 	}
 	
 	/**
@@ -106,7 +137,7 @@ class FlxInputStates implements Dynamic
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:FlxMapObject = _map[i++];
+			var o:FlxMapObject = _keyMap[i++];
 			if ((o == null) || (o.current == 0))
 			{
 				continue;
@@ -135,11 +166,11 @@ class FlxInputStates implements Dynamic
 		while(i < l)
 		{
 			o = Record[i++];
-			o2 = _map[o.code];
+			o2 = _keyMap[o.code];
 			o2.current = o.value;
 			if (o.value > 0)
 			{
-				Reflect.setProperty(this, o2.name, true);
+				_keyBools.set(o2.name, true);
 			}
 		}
 	}
@@ -151,7 +182,7 @@ class FlxInputStates implements Dynamic
 	 */
 	public function getKeyCode(KeyName:String):Int
 	{
-		return _lookup.get(KeyName);
+		return _keyLookup.get(KeyName);
 	}
 	
 	/**
@@ -163,7 +194,7 @@ class FlxInputStates implements Dynamic
 		var i:Int = 0;
 		while(i < _total)
 		{
-			var o:FlxMapObject = _map[i++];
+			var o:FlxMapObject = _keyMap[i++];
 			if ((o != null) && (o.current > 0))
 			{
 				return true;
@@ -172,25 +203,25 @@ class FlxInputStates implements Dynamic
 		return false;
 	}
 
-    /**
-    * Get an Array of FlxMapObjects that are in a pressed state
-    * @return	Array<FlxMapObject> of keys that are currently pressed.
-    */
-    public function getIsDown():Array<FlxMapObject>
-    {
-        var keysdown:Array<FlxMapObject> = new Array<FlxMapObject>();
-        var i:Int = 0;
-        while(i < _total)
-        {
-            var o:FlxMapObject = _map[i++];
-            if ((o != null) && (o.current > 0))
-            {
-                keysdown.push (o);
-            }
-        }
-        return keysdown;
-    }
-	
+	/**
+	* Get an Array of FlxMapObjects that are in a pressed state
+	* @return	Array<FlxMapObject> of keys that are currently pressed.
+	*/
+	public function getIsDown():Array<FlxMapObject>
+	{
+		var keysdown:Array<FlxMapObject> = new Array<FlxMapObject>();
+		var i:Int = 0;
+		while(i < _total)
+		{
+			var o:FlxMapObject = _keyMap[i++];
+			if ((o != null) && (o.current > 0))
+			{
+				keysdown.push (o);
+			}
+		}
+		return keysdown;
+	}
+
 	/**
 	 * An internal helper function used to build the key array.
 	 * @param	KeyName		String name of the key (e.g. "LEFT" or "A")
@@ -198,16 +229,17 @@ class FlxInputStates implements Dynamic
 	 */
 	private function addKey(KeyName:String, KeyCode:Int):Void
 	{
-		_lookup.set(KeyName, KeyCode);
-		_map[KeyCode] = new FlxMapObject(KeyName, 0, 0);
+		_keyLookup.set(KeyName, KeyCode);
+		_keyMap[KeyCode] = new FlxMapObject(KeyName, 0, 0);
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
 	public function destroy():Void
 	{
-		_lookup = null;
-		_map = null;
+		_keyMap = null;
+		_keyBools = null;
+		_keyLookup = null;
 	}
 }
