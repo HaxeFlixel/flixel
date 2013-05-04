@@ -257,11 +257,11 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		}
 		#end
 		
-		var o:FlxMapObject = _map[FlashEvent.keyCode];
-		if(o == null) return;
-		if(o.current > 0) o.current = -1;
-		else o.current = 0;
-		Reflect.setProperty(this, o.name, false);
+		var object:FlxMapObject = _map[FlashEvent.keyCode];
+		if(object == null) return;
+		if(object.current > 0) object.current = -1;
+		else object.current = 0;
+		_keyBools.set(object.name, false);
 	}
 	
 	/**
@@ -322,7 +322,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		if (o == null) return;
 		if(o.current > 0) o.current = 1;
 		else o.current = 2;
-		Reflect.setProperty(this, o.name, true);
+		_keyBools.set(o.name, true);
 	}
 
 	public function onFocus( ):Void

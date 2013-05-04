@@ -1,5 +1,6 @@
 package org.flixel.system.input;
 
+import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.system.replay.CodeValuePair;
 
@@ -7,12 +8,16 @@ import org.flixel.system.replay.CodeValuePair;
  * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
  * Keyboard extends this with actual specific key data.
  */
-class FlxInputStates implements Dynamic
+class FlxInputStates
 {
 	/**
 	 * @private
 	 */
 	private var _lookup:Map<String, Int>;
+	/**
+	 * @private
+	 */
+	private var _keyBools:Map<String, Bool>;
 	/**
 	 * @private
 	 */
@@ -22,6 +27,7 @@ class FlxInputStates implements Dynamic
 	 */
 	private var _total:Int;
 	
+	
 	/**
 	 * Constructor
 	 */
@@ -29,8 +35,11 @@ class FlxInputStates implements Dynamic
 	{
 		_total = 256;
 		
-		_lookup = new Map<String, Int>();
-		_map = new Array<FlxMapObject>();
+		_lookup = new Hash<Int>();
+		_map = new Array<FlxMapObject>(/*_total*/);
+		FlxU.SetArrayLength(_map, _total);
+		
+		_keyBools = new Map<String, Bool>();
 	}
 	
 	/**
@@ -58,7 +67,7 @@ class FlxInputStates implements Dynamic
 		{
 			if(_map[i] == null) continue;
 			var o:FlxMapObject = _map[i];
-			Reflect.setProperty(this, o.name, false);
+			_keyBools.set(o.name, false);
 			o.current = 0;
 			o.last = 0;
 		}
@@ -71,7 +80,13 @@ class FlxInputStates implements Dynamic
 	 */
 	public function pressed(Key:String):Bool 
 	{ 
-		return Reflect.getProperty(this, Key); 
+		if (_keyBools.exists(Key))
+		{
+			return _keyBools.get(Key);
+		}
+		
+		FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+		return false; 
 	}
 	
 	/**
@@ -81,7 +96,15 @@ class FlxInputStates implements Dynamic
 	 */
 	public function justPressed(Key:String):Bool 
 	{ 
-		return _map[_lookup.get(Key)].current == 2;
+		if (_map[_lookup.get(Key)] != null) 
+		{
+			return _map[_lookup.get(Key)].current == 2;
+		}
+		else
+		{
+			FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+			return false;
+		}
 	}
 	
 	/**
@@ -91,7 +114,15 @@ class FlxInputStates implements Dynamic
 	 */
 	public function justReleased(Key:String):Bool 
 	{ 
-		return _map[_lookup.get(Key)].current == -1; 
+		if (_map[_lookup.get(Key)] != null) 
+		{
+			return _map[_lookup.get(Key)].current == -1;
+		}
+		else
+		{
+			FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+			return false;
+		}
 	}
 	
 	/**
@@ -139,7 +170,7 @@ class FlxInputStates implements Dynamic
 			o2.current = o.value;
 			if (o.value > 0)
 			{
-				Reflect.setProperty(this, o2.name, true);
+				_keyBools.set(o2.name, true);
 			}
 		}
 	}
@@ -209,5 +240,6 @@ class FlxInputStates implements Dynamic
 	{
 		_lookup = null;
 		_map = null;
+		_keyBools = null;
 	}
 }

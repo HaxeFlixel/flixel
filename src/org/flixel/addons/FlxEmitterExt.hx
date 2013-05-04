@@ -98,7 +98,9 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<T:FlxParticle>
 			
 		particle.velocity.x = Math.cos(a) * d;
 		particle.velocity.y = Math.sin(a) * d;
-		particle.lifespan = lifespan + FlxG.random() * lifespanRange;
+		particle.lifespan = particle.maxLifespan = lifespan + FlxG.random() * lifespanRange;
+		particle.decreasingSize = decreasingSize;
+		particle.fadingAway = fadingAway;
 	}
 	
 	/**
