@@ -381,11 +381,10 @@ class FlxGame extends Sprite
 	private function switchState():Void
 	{ 
 		//Basic reset stuff
-		#if !flash
 		PxBitmapFont.clearStorage();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
-		#end
+		
 		FlxG.clearBitmapCache();
 		FlxG.resetCameras();
 		FlxG.resetInput();

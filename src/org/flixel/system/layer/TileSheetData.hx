@@ -99,19 +99,19 @@ class TileSheetData
 	public var tileSheet:TileSheetExt;
 	
 	/**
-	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
+	 * Storage for all groups of FlxFrames.
 	 */
-	// TODO: redocument this
 	private var flxSpriteFrames:Hash<FlxSpriteFrames>;
 	
-	// TODO: document this
+	/**
+	 * Storage for all FlxFrames in this TileSheetData object.
+	 */
 	private var flxFrames:Hash<FlxFrame>;
 	
 	private function new(tileSheet:TileSheetExt)
 	{
 		this.tileSheet = tileSheet;
 		flxSpriteFrames = new Hash<FlxSpriteFrames>();
-		// TODO: fill this hash later
 		flxFrames = new Hash<FlxFrame>();
 	}
 	
@@ -197,13 +197,14 @@ class TileSheetData
 		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
 	}
 	
-	// TODO: document this
 	public function getSpriteSheetFrameKey(rect:Rectangle, point:Point):String
 	{
 		return rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_" + point.x + "_" + point.y;
 	}
 	
-	// TODO: document this
+	/**
+	 * Adds new FlxFrame to this TileSheetData object
+	 */
 	public function addSpriteSheetFrame(rect:Rectangle, point:Point):FlxFrame
 	{
 		var key:String = getSpriteSheetFrameKey(rect, point);
@@ -213,7 +214,9 @@ class TileSheetData
 		}
 		
 		var frame:FlxFrame = new FlxFrame(this);
+		#if !flash
 		frame.tileID = addTileRect(rect, point);
+		#end
 		frame.name = key;
 		frame.frame = rect;
 		
@@ -232,7 +235,6 @@ class TileSheetData
 		return flxFrames.exists(key);
 	}
 	
-	// TODO: make point paramenter optional (?) not only for this method but for tileSheet:Tilesheet.addTileRect() method
 	public function addTileRect(tileRect, point):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
@@ -247,13 +249,22 @@ class TileSheetData
 			spriteData.destroy();
 		}
 		
-		// TODO: destroy FlxSpriteFrames in flxSpriteFrames hash
+		for (frames in flxSpriteFrames)
+		{
+			frames.destroy();
+		}
 		flxSpriteFrames = null;
-		// TODO: destroy FlxFrames in flxFrames hash
+		
+		for (frame in flxFrames)
+		{
+			frame.destroy();
+		}
 		flxFrames = null;
 	}
 	
-	// TODO: document this
+	/**
+	 * Parses provided TexturePackerData object and returns generated FlxSpriteFrames object
+	 */
 	public function getTexturePackerFrames(data:TexturePackerData, startX:Int = 0, startY:Int = 0):FlxSpriteFrames
 	{
 		// No need to parse data again
@@ -274,7 +285,9 @@ class TileSheetData
 		return packerFrames;
 	}
 	
-	// TODO: document (and check) this
+	/**
+	 * Parses frame TexturePacker data object and returns it
+	 */
 	private function addTexturePackerFrame(frameData:Dynamic, startX:Int = 0, startY:Int = 0):FlxFrame
 	{
 		var key:String = frameData.filename;
@@ -304,9 +317,9 @@ class TileSheetData
 			texFrame.frame = new Rectangle(frameData.frame.x + startX, frameData.frame.y + startY, frameData.frame.w, frameData.frame.h);
 			texFrame.center.make(texFrame.frame.width * 0.5 + texFrame.offset.x, texFrame.frame.height * 0.5 + texFrame.offset.y);
 		}
-		
+		#if !flash
 		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
-		
+		#end
 		flxFrames.set(key, texFrame);
 		return texFrame;
 	}

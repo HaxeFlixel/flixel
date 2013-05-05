@@ -1649,11 +1649,10 @@ class FlxG
 	 */
 	static public function reset():Void
 	{
-		#if !flash
 		PxBitmapFont.clearStorage();
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
-		#end
+		
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);

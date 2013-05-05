@@ -104,9 +104,11 @@ class Atlas
 	 * Gets atlas from cache or creates new one.
 	 * @param	Key			atlas' key (name)
 	 * @param	BmData		atlas' bitmapdata
+	 * @param	Unique		Optional, whether the atlas should be a unique instance in the atlas cache. Default is false.
+	 * @param	Width		The width of atlas
+	 * @param	Height		The height of atlas
 	 * @return	atlas from cache
 	 */
-	// TODO: redocument this
 	public static function getAtlas(Key:String, BmData:BitmapData, Unique:Bool = false, Width:Int = 0, Height:Int = 0):Atlas
 	{
 		if (BmData == null && Width <= 0 && Height <= 0)
