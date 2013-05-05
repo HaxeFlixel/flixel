@@ -19,9 +19,10 @@ import org.flixel.system.layer.frames.FlxSpriteFrames;
  */
 class TileSheetData
 {
+	/**
+	 * Cache for TileSheetData objects
+	 */
 	private static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
-	
-	public static var _DRAWCALLS:Int = 0;
 	
 	/**
 	 * Adds new tileSheet to manager and returns it
@@ -92,9 +93,9 @@ class TileSheetData
 	}
 	
 	
+	// END OF STATIC CONSTANTS AND METHODS
 	
 	
-	// TODO: make it work only on non-flash targets
 	public var tileSheet:TileSheetExt;
 	
 	/**
@@ -291,7 +292,6 @@ class TileSheetData
 		
 		texFrame.center = new FlxPoint(0, 0);
 		
-	#if !flash
 		texFrame.offset.make(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
 		if (frameData.rotated)
 		{
@@ -307,12 +307,15 @@ class TileSheetData
 		
 		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
 		
-	#else
-		texFrame.frame = new Rectangle(frameData.frame.x, frameData.frame.y, frameData.frame.w, frameData.frame.h);
-		texFrame.offset.make(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
-	#end
-		
 		flxFrames.set(key, texFrame);
 		return texFrame;
+	}
+	
+	public function destroyFrameBitmapDatas():Void
+	{
+		for (frame in flxFrames)
+		{
+			frame.destroyBitmapDatas();
+		}
 	}
 }

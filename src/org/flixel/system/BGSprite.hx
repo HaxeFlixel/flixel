@@ -77,13 +77,8 @@ class BGSprite extends FlxSprite
 			var ssx:Float = 0;
 			var csy:Float = camera.height;
 			
-			var x1:Float = (origin.x - _halfWidth);
-			var y1:Float = (origin.y - _halfHeight);
-			var x2:Float = x1 * csx + y1 * ssy;
-			var y2:Float = -x1 * ssx + y1 * csy;
-			
-			currDrawData[currIndex++] = _point.x - x2;
-			currDrawData[currIndex++] = _point.y - y2;
+			currDrawData[currIndex++] = _point.x;
+			currDrawData[currIndex++] = _point.y;
 			
 			currDrawData[currIndex++] = _flxFrame.tileID;
 			

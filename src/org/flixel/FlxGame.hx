@@ -17,6 +17,7 @@ import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.input.FlxInputs;
+import org.flixel.system.layer.TileSheetExt;
 
 #if flash
 import flash.text.AntiAliasType;
@@ -631,7 +632,7 @@ class FlxGame extends Sprite
 		#end
 
 		#if !flash
-		TileSheetData._DRAWCALLS = 0;
+		TileSheetExt._DRAWCALLS = 0;
 		#end
 		
 		FlxG.lockCameras();
@@ -655,7 +656,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 		{
-			_debugger.perf.drawCalls(TileSheetData._DRAWCALLS);
+			_debugger.perf.drawCalls(TileSheetExt._DRAWCALLS);
 		}
 		#end
 		#end

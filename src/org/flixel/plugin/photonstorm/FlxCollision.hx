@@ -34,9 +34,7 @@ import org.flixel.plugin.photonstorm.FlxColor;
 
 class FlxCollision 
 {
-//	#if !FLX_NO_DEBUG
 	public static var debug:BitmapData = new BitmapData(1, 1, false);
-//	#end
 	
 	#if flash
 	public static var CAMERA_WALL_OUTSIDE:UInt = 0;
@@ -221,11 +219,9 @@ class FlxCollision
 		}
 		
 		#end
-
-//		#if !FLX_NO_DEBUG
+		
 		//	Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere.
 		debug = overlapArea;
-//		#end
 		
 		#if !neko
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
@@ -271,7 +267,19 @@ class FlxCollision
 	#if flash
 		//	How deep is pointX/Y within the rect?
 		var test:BitmapData = target.framePixels;
-		if (Std.int(FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)))) >= alphaTolerance)
+		var pixelAlpha:UInt = 0;
+	#else
+		var test:BitmapData = target.getFlxFrameBitmapData();
+		var pixelAlpha:Int = 0;  
+	#end
+		pixelAlpha = FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)));
+		
+	#if !flash
+		pixelAlpha = Std.int(pixelAlpha * target.alpha);
+	#end
+		
+		//	How deep is pointX/Y within the rect?
+		if (pixelAlpha >= alphaTolerance)
 		{
 			return true;
 		}
@@ -279,36 +287,6 @@ class FlxCollision
 		{
 			return false;
 		}
-	#else
-		var indexX:Int = target.frame * (target.frameWidth + 1);
-		var indexY:Int = 0;
-
-		//Handle sprite sheets
-		var widthHelper:Int = target.pixels.width;
-		if(indexX >= widthHelper)
-		{
-			indexY = Std.int(indexX / widthHelper) * (target.frameHeight + 1);
-			indexX %= widthHelper;
-		}
-		
-		var pixelColor:BitmapInt32 = FlxG.TRANSPARENT;
-		// handle reversed sprites
-		if ((target.flipped != 0) && (target.facing == FlxObject.LEFT))
-		{
-			pixelColor = target.pixels.getPixel32(Std.int(indexX + target.frameWidth + target.x - pointX), Std.int(indexY + pointY - target.y));
-		}
-		else
-		{
-			pixelColor = target.pixels.getPixel32(Std.int(indexX + pointX - target.x), Std.int(indexY + pointY - target.y));
-		}
-		// end of code from calcFrame() method
-		#if (cpp || js)
-		var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
-		#else
-		var pixelAlpha:Int = pixelColor.a * 255;
-		#end
-		return (pixelAlpha >= alphaTolerance);
-	#end
 	}
 	
 	/**

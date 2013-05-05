@@ -12,6 +12,7 @@ import nme.geom.Rectangle;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.layer.TileSheetExt;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -401,7 +402,7 @@ class FlxCamera extends FlxBasic
 				#end
 				// TODO: currItem.antialiasing
 				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing/* || currItem.antialiasing*/), tempFlags);
-				TileSheetData._DRAWCALLS++;
+				TileSheetExt._DRAWCALLS++;
 			}
 			currItem = currItem.next;
 		}

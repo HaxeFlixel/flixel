@@ -56,17 +56,7 @@ class FlxFrame
 		
 		_tileSheet = null;
 		
-		if (_bitmapData != null)
-		{
-			_bitmapData.dispose();
-			_bitmapData = null;
-		}
-		
-		if (_reversedBitmapData != null)
-		{
-			_reversedBitmapData.dispose();
-			_reversedBitmapData = null;
-		}
+		destroyBitmapDatas();
 	}
 	
 	public function getBitmap():BitmapData
@@ -80,15 +70,16 @@ class FlxFrame
 		
 		if (rotated)
 		{
-			// TODO: fix this for non-square sprites
-			MATRIX.identity();
-			MATRIX.translate(-sourceSize.x * 0.5, -sourceSize.y * 0.5);
-			MATRIX.rotate(-90.0 * FlxG.RAD);
-			MATRIX.translate(sourceSize.x * 0.5, sourceSize.y * 0.5);
-			MATRIX.translate(offset.x, offset.y);
+			var temp:BitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxG.TRANSPARENT);
+			FlxFrame.POINT.x = FlxFrame.POINT.y = 0;
+			temp.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, FlxFrame.POINT);
 			
-			var r:Rectangle = new Rectangle(frame.x, frame.y, frame.width + offset.x, frame.height + offset.y);
-			_bitmapData.draw(_tileSheet.tileSheet.nmeBitmap, MATRIX, null, null, r, false);
+			MATRIX.identity();
+			MATRIX.translate( -0.5 * frame.width, -0.5 * frame.height);
+			MATRIX.rotate(-90.0 * FlxG.RAD);
+			MATRIX.translate(offset.x + 0.5 * frame.height, offset.y + 0.5 * frame.width);
+			
+			_bitmapData.draw(temp, MATRIX);
 		}
 		else
 		{
@@ -102,13 +93,33 @@ class FlxFrame
 	
 	public function getReversedBitmap():BitmapData
 	{
-		// TODO: implement this
-		return null;
+		if (_reversedBitmapData != null)
+		{
+			return _reversedBitmapData;
+		}
+		
+		var normalFrame:BitmapData = getBitmap();
+		MATRIX.identity();
+		MATRIX.scale( -1, 1);
+		MATRIX.translate(Std.int(sourceSize.x), 0);
+		_reversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxG.TRANSPARENT);
+		_reversedBitmapData.draw(normalFrame, MATRIX);
+		
+		return _reversedBitmapData;
 	}
 	
-	public function pixelsOverlapPoint():Bool
+	public function destroyBitmapDatas():Void
 	{
-		// TODO: implement this
-		return false;
+		if (_bitmapData != null)
+		{
+			_bitmapData.dispose();
+			_bitmapData = null;
+		}
+		
+		if (_reversedBitmapData != null)
+		{
+			_reversedBitmapData.dispose();
+			_reversedBitmapData = null;
+		}
 	}
 }
