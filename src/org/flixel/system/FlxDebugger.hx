@@ -20,6 +20,7 @@ import org.flixel.system.debug.Perf;
 import org.flixel.system.debug.VCR;
 import org.flixel.system.debug.Vis;
 import org.flixel.system.debug.Watch;
+import org.flixel.system.debug.Console;
 
 /**
  * Container for the new debugger overlay.
@@ -48,6 +49,10 @@ class FlxDebugger extends Sprite
 	 * Container for the visual debug mode toggle.
 	 */
 	public var vis:Vis;
+	/**
+	 * Container for console.
+	 */
+	public var console:Console;
 	/**
 	 * Whether the mouse is currently over one of the debugger windows or not.
 	 */
@@ -117,6 +122,9 @@ class FlxDebugger extends Sprite
 		
 		watch = new Watch("watch", 0, 0, true, screenBounds);
 		addChild(watch);
+		
+		console = new Console("console", 0, 0, false, screenBounds);
+		addChild(console);
 		
 		perf = new Perf("stats", 0, 0, false, screenBounds);
 		addChild(perf);
@@ -229,11 +237,13 @@ class FlxDebugger extends Sprite
 				watch.reposition(_screen.x,_screen.y);
 				perf.reposition(_screen.x, 0);
 			case FlxG.DEBUGGER_BIG:
-				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
-				log.reposition(0, _screen.y);
+				log.resize((_screen.x - _gutter * 3) / 2, _screen.y - 70);
+				log.reposition(0, 10);
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
-				watch.reposition(_screen.x, _screen.y);
+				watch.reposition(_screen.x, _screen.y - watch.height - 50);
 				perf.reposition(_screen.x, 0);
+				console.reposition(0, _screen.y);
+				console.resize((_screen.x - _gutter * 2), 35);
 			case FlxG.DEBUGGER_TOP:
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
 				log.reposition(0,0);
@@ -257,7 +267,8 @@ class FlxDebugger extends Sprite
 				log.reposition(0,_screen.y);
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y);
-				perf.reposition(_screen.x,0);
+				perf.reposition(_screen.x, 0);
+				console.resize((_screen.x - _gutter * 2), 35);
 			default:
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
 				log.reposition(0,_screen.y);

@@ -1548,6 +1548,11 @@ class FlxG
 		return null;
 	}
 	
+	static public function addCommand(Command:String, Object:Dynamic, Function:Dynamic):Void
+	{
+		_game.debugger.console.addCommand(Command, Object, Function);
+	}
+	
 	/**
 	 * Removes an instance of a plugin from the global plugin array.
 	 * @param	Plugin	The plugin instance you want to remove.
