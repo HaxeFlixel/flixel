@@ -169,53 +169,6 @@ class FlxState extends FlxGroup
 	}
 	
 	/**
-	 * Gets the atlas for specified key from bitmap cache in FlxG. Creates new atlas for it if there wasn't such a atlas 
-	 * @param	KeyInBitmapCache	key from bitmap cache in FlxG
-	 * @return	required atlas
-	 */
-	public function getAtlasFor(KeyInBitmapCache:String):Atlas
-	{
-		#if !flash
-		var bm:BitmapData = FlxG._cache.get(KeyInBitmapCache);
-		if (bm != null)
-		{
-			var tempAtlas:Atlas = Atlas.getAtlas(KeyInBitmapCache, bm);
-			return tempAtlas;
-		}
-		else
-		{
-			#if !FLX_NO_DEBUG
-			throw "There isn't bitmapdata in cache with key: " + KeyInBitmapCache;
-			#end
-		}
-		#end
-		return null;
-	}
-	
-	/**
-	 * Creates and adds new atlas to atlas cache, so it can be drawn
-	 * @param	atlasName		name of atlas to be created 
-	 * @param	atlasWidth		width of atlas
-	 * @param	atlasHeight		height of atlas
-	 * @return					new empty atlas object
-	 */
-	public function createAtlas(atlasName:String, atlasWidth:Int, atlasHeight:Int):Atlas
-	{
-		var key:String = Atlas.getUniqueKey(atlasName);
-		return Atlas.getAtlas(key, null, false, atlasWidth, atlasHeight);
-	}
-	
-	/**
-	 * Removes atlas from cache.
-	 * @param	atlas		atlas to remove
-	 * @param	destroy		if true then atlas will be completely destroyed also (be carefull with this parameter)
-	 */
-	public function removeAtlas(atlas:Atlas, destroy:Bool = false):Void
-	{
-		Atlas.removeAtlas(atlas, destroy);
-	}
-	
-	/**
 	 * This method is called after application losts its focus.
 	 * Can be useful if you using third part libraries, such as tweening engines.
 	 * Override it in subclasses
@@ -234,4 +187,5 @@ class FlxState extends FlxGroup
 	{
 		
 	}
+	
 }
