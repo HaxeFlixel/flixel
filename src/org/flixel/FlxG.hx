@@ -1630,12 +1630,8 @@ class FlxG
 		
 		addPlugin(new TimerManager());
 		
-		#if js
-		FlxG.mobile = true;
-		#else
 		FlxG.mobile = false;
-		#end
-
+		
 		FlxG.levels = new Array();
 		FlxG.scores = new Array();
 		
