@@ -242,8 +242,6 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
 				watch.reposition(_screen.x, _screen.y - watch.height - 50);
 				perf.reposition(_screen.x, 0);
-				console.reposition(0, _screen.y);
-				console.resize((_screen.x - _gutter * 2), 35);
 			case FlxG.DEBUGGER_TOP:
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
 				log.reposition(0,0);
@@ -263,11 +261,18 @@ class FlxDebugger extends Sprite
 				watch.reposition(_screen.x,_screen.y);
 				perf.reposition(0,0);
 			case FlxG.DEBUGGER_STANDARD:
-				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				log.reposition(0,_screen.y);
-				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,_screen.y);
+				//log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
+				//log.reposition(0,_screen.y);
+				//watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
+				//watch.reposition(_screen.x,_screen.y);
+				//perf.reposition(_screen.x, 0);
+				//console.resize((_screen.x - _gutter * 2), 35);
+				log.resize((_screen.x - _gutter * 3) / 2, _screen.y - 70);
+				log.reposition(0, 10);
+				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
+				watch.reposition(_screen.x, _screen.y - watch.height - 50);
 				perf.reposition(_screen.x, 0);
+				console.reposition(0, _screen.y - 40);
 				console.resize((_screen.x - _gutter * 2), 35);
 			default:
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
