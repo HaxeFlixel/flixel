@@ -257,6 +257,8 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		}
 		#end
 		
+		FlashEvent.stopPropagation();
+		
 		var object:FlxMapObject = _keyMap[FlashEvent.keyCode];
 		if(object == null) return;
 		if(object.current > 0) object.current = -1;
@@ -305,6 +307,8 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			return;
 		}
 		#end
+		
+		FlashEvent.stopPropagation();
 		
 		var o:FlxMapObject = _keyMap[FlashEvent.keyCode];
 		if (o == null) return;
