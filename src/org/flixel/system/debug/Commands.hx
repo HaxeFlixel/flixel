@@ -15,28 +15,28 @@ class Commands
 		_console = console;
 		
 		// Install commands
-		console.addCommand("help", this, help);
+		console.addCommand("help", this, help, "h");
 		console.addCommand("log", FlxG, FlxG.log);
 		console.addCommand("clearLog", FlxG, FlxG.clearLog);
-		console.addCommand("clear", FlxG, FlxG.clearLog);
-		console.addCommand("clearHistory", this, clearHistory);
-		console.addCommand("resetState", this, resetState);
-		console.addCommand("switchState", this, switchState);
-		console.addCommand("resetGame", FlxG, FlxG.resetGame);
+		console.addCommand("clear", FlxG, FlxG.clearLog, "cl");
+		console.addCommand("clearHistory", this, clearHistory, "ch");
+		console.addCommand("resetState", this, resetState, "rs");
+		console.addCommand("switchState", this, switchState, "ss");
+		console.addCommand("resetGame", FlxG, FlxG.resetGame, "rg");
 		#if flash
-		console.addCommand("fullscreen", FlxG, FlxG.fullscreen);
+		console.addCommand("fullscreen", FlxG, FlxG.fullscreen, "fs");
 		#end
-		console.addCommand("watchMouse", this, watchMouse);
-		console.addCommand("visualDebug", this, visualDebug);
-		console.addCommand("play", FlxG, FlxG.play);
-		console.addCommand("playMusic", FlxG, FlxG.playMusic);
-		console.addCommand("bgColor", this, bgColor);
+		console.addCommand("watchMouse", this, watchMouse, "wm");
+		console.addCommand("visualDebug", this, visualDebug, "vd");
+		console.addCommand("play", FlxG, FlxG.play, "p");
+		console.addCommand("playMusic", FlxG, FlxG.playMusic, "pm");
+		console.addCommand("bgColor", this, bgColor, "bg");
 		console.addCommand("pauseSounds", this, pauseSounds);
 		console.addCommand("resumeSounds", this, resumeSounds);
-		console.addCommand("shake", this, shake);
-		console.addCommand("volume", this, volume);
+		console.addCommand("shake", this, shake, "sh");
+		console.addCommand("volume", this, volume, "vl");
 		console.addCommand("close", this, close);
-		console.addCommand("create", this, create);
+		console.addCommand("create", this, create, "cr");
 		console.addCommand("set", this, set);
 	}
 	
@@ -46,27 +46,27 @@ class Commands
 		FlxG.log("|                          List of system commands:                          |" );
 		FlxG.log("------------------------------------------------------------------------");
 		FlxG.log("| > log [Text:String]");
-		FlxG.log("| > clearLog | clear");
-		FlxG.log("| > clearHistory");
-		FlxG.log("| > help");
-		FlxG.log("| > resetState");
-		FlxG.log("| > switchState [State:FlxState]");
-		FlxG.log("| > resetGame");
+		FlxG.log("| > clearLog | clear | cl");
+		FlxG.log("| > clearHistory | ch");
+		FlxG.log("| > help | h");
+		FlxG.log("| > resetState | rs");
+		FlxG.log("| > switchState | ss [State:FlxState]");
+		FlxG.log("| > resetGame | rs");
 		#if flash
-		FlxG.log("| > fullscreen");
+		FlxG.log("| > fullscreen | fs");
 		#end
-		FlxG.log("| > watchMouse (toggle)");
-		FlxG.log("| > visualDebug (toggle)");
-		FlxG.log("| > play [Sound:Dynamic] [Volume:Float = 1]");
-		FlxG.log("| > playMusic [Sound:Dynamic] [Volume:Float = 1]");
-		FlxG.log("| > bgColor [Color:UInt or color from FlxG]");
+		FlxG.log("| > watchMouse | wm (toggle)");
+		FlxG.log("| > visualDebug | vd (toggle)");
+		FlxG.log("| > play | p [Sound:Dynamic] [Volume:Float = 1]");
+		FlxG.log("| > playMusic | pm [Sound:Dynamic] [Volume:Float = 1]");
+		FlxG.log("| > bgColor | bg [Color:UInt or color from FlxG]");
 		FlxG.log("| > pauseSounds");
 		FlxG.log("| > resumeSounds");
-		FlxG.log("| > shake [Intensity:Float = 0.05] [Duration:Float = 0.5]");
-		FlxG.log("| > volume [Volume:Float]");
-		FlxG.log("| > create [Object:FlxObject] [X:Float = FlxG.mouse.x] [Y:Float = FlxG.mouse.y]");
+		FlxG.log("| > shake | sh [Intensity:Float = 0.05] [Duration:Float = 0.5]");
+		FlxG.log("| > volume | vl [Volume:Float]");
+		FlxG.log("| > create | cr [Object:FlxObject] [X:Float = FlxG.mouse.x] [Y:Float = FlxG.mouse.y]");
 		FlxG.log("| > set [Object] [Variable] [NewValue:Dynamic]");
-		FlxG.log("| > close");
+		FlxG.log("| > close | cl");
 		FlxG.log("------------------------------------------------------------------------");
 	}
 	
@@ -96,13 +96,13 @@ class Commands
 	private function watchMouse():Void
 	{
 		if (!watchingMouse) {
-			FlxG.watch(FlxG.mouse, "x", "Mouse.x");
-			FlxG.watch(FlxG.mouse, "y", "Mouse.y");
+			FlxG.watch(FlxG._game, "mouseX", "Mouse.x");
+			FlxG.watch(FlxG._game, "mouseY", "Mouse.y");
 			FlxG.log("> watchMouse: Mouse position added to watch window");
 		}
 		else {
-			FlxG.unwatch(FlxG.mouse, "x");
-			FlxG.unwatch(FlxG.mouse, "y");
+			FlxG.unwatch(FlxG._game, "mouseX");
+			FlxG.unwatch(FlxG._game, "mouseY");
 			FlxG.log("> watchMouse: Mouse position removed from watch window");
 		}
 		
@@ -212,12 +212,12 @@ class Commands
 		
 		var obj:FlxObject = cast(instance);
 		if (X == -1) 
-			obj.x = FlxG.mouse.x;
+			obj.x = FlxG._game.mouseX;
 		else 
 			obj.x = X;
 			
 		if (Y == -1) 
-			obj.y = FlxG.mouse.y;
+			obj.y = FlxG._game.mouseY;
 		else 
 			obj.y = Y;
 		
@@ -227,16 +227,23 @@ class Commands
 	
 	private function set(AnyObject:Dynamic, VariableName:String, NewValue:Dynamic):Void
 	{
+		// Shortcut to access current state
 		if (Std.string(AnyObject) == "state") 
 			AnyObject = FlxG.state;
-		
+		// Shortcut to access FlxG which would be org.flixel.FlxG normally	
+		else if (Std.string(AnyObject) == "FlxG") 
+			AnyObject = FlxG;
+		// Turn string into actual object
+		else
+			AnyObject = Type.resolveClass(AnyObject);
+			
 		if (!Reflect.isObject(AnyObject)) {
-			FlxG.log("> set: " + Std.string(AnyObject) + " is not a valid Object");
+			FlxG.log("> set: '" + Std.string(AnyObject) + "' is not a valid Object");
 			return;
 		}
 		
-		if (Reflect.field(AnyObject, VariableName) == null) {
-			FlxG.log("> set: " + Std.string(AnyObject) + " does not have a field " + VariableName);
+		if (!Reflect.hasField(AnyObject, VariableName)) {
+			FlxG.log("> set: " + Std.string(AnyObject) + " does not have a field '" + VariableName + "'");
 			return;
 		}
 		

@@ -16,6 +16,8 @@ import org.flixel.FlxObject;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.system.FlxWindow;
+import nme.Lib;
+import nme.events.Event;
 
 /**
  * 
@@ -24,8 +26,6 @@ class Console extends FlxWindow
 {
 	private var _input:TextField;
 	public var _shared:SharedObject;
-	
-	private var defaultText:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
 	
 	private var commandList:Hash<Dynamic>;
 	private var commandObjects:Hash<Dynamic>;
@@ -37,6 +37,8 @@ class Console extends FlxWindow
 	private var watchingMouse:Bool = false;
 	private var historyIndex:Int;
 	private var historyMax:Int = 25;
+	
+	private var defaultText:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
@@ -86,7 +88,9 @@ class Console extends FlxWindow
 		_input.height = _height - 15;
 		_input.x = 0;
 		_input.y = 15;
+		#if flash
 		_input.restrict = "a-zA-Z 0-9.";
+		#end
 		addChild(_input);
 		
 		_input.addEventListener(FocusEvent.FOCUS_IN, onFocus);
@@ -99,6 +103,7 @@ class Console extends FlxWindow
 	
 	private function onFocus(e:FocusEvent):Void
 	{
+		FlxG._game.debugger.vcr.onPause();
 		FlxG._game.useSoundHotKeys = false;
 		
 		if (_input.text == defaultText) 
@@ -107,6 +112,7 @@ class Console extends FlxWindow
 	
 	private function onFocusLost(e:FocusEvent):Void
 	{
+		FlxG._game.debugger.vcr.onPlay();
 		FlxG._game.useSoundHotKeys = true;
 		
 		if (_input.text == "") 
@@ -116,12 +122,8 @@ class Console extends FlxWindow
 	private function onKeyPress(e:KeyboardEvent):Void
 	{
 		// Don't allow spaces at the start, they break commands
-		if (e.keyCode == Keyboard.SPACE) {
-			if (_input.text == " ") {
-				_input.text = "";	
-				_input.setSelection(0, 0);
-			}
-		}
+		if (e.keyCode == Keyboard.SPACE && _input.text == " ") 
+			_input.text = "";	
 		
 		// Submitting the command
 		if (e.keyCode == Keyboard.ENTER && _input.text != "") 
@@ -186,29 +188,35 @@ class Console extends FlxWindow
 		}
 		
 		// Quick-access
-		else if (e.keyCode == Keyboard.TAB) {
-			FlxG.stage.focus = _input;
-		}
+		else if (e.keyCode == Keyboard.ESCAPE) 
+			FlxG.stage.focus = null;
 		
 		// Delete the current text
-		else if (e.keyCode == Keyboard.DELETE) {
+		else if (e.keyCode == Keyboard.DELETE) 
 			_input.text = "";
-		}
 		
 		// Show previous command in history
 		else if (e.keyCode == Keyboard.UP) {
 			if (commandHistory.length == 0) return;
 			
 			_input.text = getPreviousCommand();
-			_input.setSelection(0, _input.length);
+			
+			// Workaround to override default behaviour of selection jumping to 0 when pressing up
+			addEventListener(Event.RENDER, overrideDefaultSelection, false, 0, true);
+			FlxG.stage.invalidate();
 		}
 		// Show next command in history
 		else if (e.keyCode == Keyboard.DOWN) {
 			if (commandHistory.length == 0) return;
 			
 			_input.text = getNextCommand();
-			_input.setSelection(0, _input.length);
 		}
+	}
+	
+	private function overrideDefaultSelection(e:Event):Void
+	{
+		_input.setSelection(_input.text.length, _input.text.length);
+		removeEventListener(Event.RENDER, overrideDefaultSelection);
 	}
 	
 	private function filterDigits(str:String):String 
@@ -240,10 +248,15 @@ class Console extends FlxWindow
 			return "";
 	}
 	
-	public function addCommand(Command:String, Object:Dynamic, Function:Dynamic):Void
+	public function addCommand(Command:String, Object:Dynamic, Function:Dynamic, Alt:String = ""):Void
 	{
 		commandList.set(Command, Function);
 		commandObjects.set(Command, Object);
+		
+		if (Alt != "") {
+			commandList.set(Alt, Function);
+			commandObjects.set(Alt, Object);
+		}
 	}
 
 	

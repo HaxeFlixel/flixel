@@ -1548,10 +1548,12 @@ class FlxG
 		return null;
 	}
 	
-	static public function addCommand(Command:String, Object:Dynamic, Function:Dynamic):Void
+	#if !FLX_NO_DEBUG
+	static public function addCommand(Command:String, Object:Dynamic, Function:Dynamic, Alt:String = ""):Void
 	{
-		_game.debugger.console.addCommand(Command, Object, Function);
+		_game.debugger.console.addCommand(Command, Object, Function, Alt);
 	}
+	#end
 	
 	/**
 	 * Removes an instance of a plugin from the global plugin array.
