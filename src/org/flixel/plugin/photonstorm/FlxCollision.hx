@@ -267,11 +267,10 @@ class FlxCollision
 	#if flash
 		//	How deep is pointX/Y within the rect?
 		var test:BitmapData = target.framePixels;
-		var pixelAlpha:UInt = 0;
 	#else
 		var test:BitmapData = target.getFlxFrameBitmapData();
-		var pixelAlpha:Int = 0;  
 	#end
+		var pixelAlpha:Int = 0;  
 		pixelAlpha = FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)));
 		
 	#if !flash

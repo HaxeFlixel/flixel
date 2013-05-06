@@ -14,7 +14,13 @@ import org.flixel.system.layer.TileSheetData;
 class Atlas
 {
 	/**
-	 * Storate for all created atlases in current state
+	 * Memory managment related var. 
+	 * If if will have value <= 0 then this atlas will be destoyed.
+	 */
+	public var _useCount:Int;
+	
+	/**
+	 * Storage for all created atlases in current state
 	 */
 	private static var _atlasCache:Hash<Atlas> = new Hash<Atlas>();
 	
@@ -76,8 +82,8 @@ class Atlas
 		this.borderY = borderY;
 		
 		_tileSheetData = createTileSheetData(atlasBitmapData);
-		
 		_atlasCache.set(name, this);
+		_useCount = 0;
 	}
 
 	/**

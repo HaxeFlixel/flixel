@@ -243,7 +243,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		var continueUpdate = false;
 		
 		#if !FLX_NO_MOUSE
-			continueUpdate = FlxG.mouse.visible;
+			continueUpdate = true;
 		#end
 		
 		#if !FLX_NO_TOUCH

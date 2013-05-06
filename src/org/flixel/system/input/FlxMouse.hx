@@ -58,7 +58,8 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 * A display container for the mouse cursor.
 	 * This container is a child of FlxGame and sits at the right "height".
 	 */
-	private var _cursorContainer:Sprite;
+	//private var _cursorContainer:Sprite;
+	public var _cursorContainer:Sprite;
 	/**
 	 * Don't update cursor unless we have to (this is essentially a "visible" bool, so we avoid checking the visible property in the Sprite which is slow in cpp).
 	 */
@@ -67,9 +68,6 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 * This is just a reference to the current cursor image, if there is one.
 	 */
 	private var _cursor:Bitmap;
-	
-	private var _transparentPixel:BitmapData;
-	private var _cursorBitmapData:BitmapData;
 	
 	/**
 	 * Helper variables for recording purposes.
@@ -212,16 +210,6 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		_cursor = null;
 		_point = null;
 		_globalScreenPosition = null;
-		if (_cursorBitmapData != null)
-		{
-			_cursorBitmapData.dispose();
-			_cursorBitmapData = null;
-		}
-		if (_transparentPixel != null)
-		{
-			_transparentPixel.dispose();
-			_transparentPixel = null;
-		}
 	}
 	
 	/**
@@ -338,28 +326,25 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 */
 	public function update():Void
 	{
-		if (visible)
+		var X = Math.floor(FlxG._game.mouseX);
+		var Y = Math.floor(FlxG._game.mouseY);
+		
+		_globalScreenPosition.x = X;
+		_globalScreenPosition.y = Y;
+		updateCursor();
+		if ((_last == -1) && (_current == -1))
 		{
-			var X = Math.floor(FlxG._game.mouseX);
-			var Y = Math.floor(FlxG._game.mouseY);
-			
-			_globalScreenPosition.x = X;
-			_globalScreenPosition.y = Y;
-			updateCursor();
-			if ((_last == -1) && (_current == -1))
-			{
-				_current = 0;
-			}
-			else if ((_last == 2) && (_current == 2))
-			{
-				_current = 1;
-			}
-			else if ((_last == -2) && (_current == -2))
-			{
-				_current = 0;
-			}
-			_last = _current;
+			_current = 0;
 		}
+		else if ((_last == 2) && (_current == 2))
+		{
+			_current = 1;
+		}
+		else if ((_last == -2) && (_current == -2))
+		{
+			_current = 0;
+		}
+		_last = _current;
 	}
 	
 	/**
@@ -509,33 +494,10 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		useSystemCursor = value;
 		if (!useSystemCursor)
 		{
-			if (_cursorBitmapData != null)
-			{
-				show(_cursorBitmapData);
-			}
 			Mouse.hide();
 		} else {
-			createTransparentPixel();
-			if (_cursor != null && _cursor.bitmapData != null && _cursor.bitmapData != _transparentPixel)
-			{
-				_cursorBitmapData = _cursor.bitmapData;
-			}
-			show(_transparentPixel);
 			Mouse.show();
 		}
 		return value;
-	}
-	
-	private function createTransparentPixel():Void
-	{
-		if (_transparentPixel == null)	
-			_transparentPixel = new BitmapData(1, 1, true, FlxG.TRANSPARENT);
-	}
-	
-	public function transparentMouse():Void
-	{
-		createTransparentPixel();
-		show(_transparentPixel);
-		Mouse.hide();
 	}
 }

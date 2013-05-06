@@ -302,42 +302,39 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	{
 		var prevStatus:Int = _status;
 		
-		if (FlxG.mouse.visible)
+		if (buttonNormal.cameras == null)
 		{
-			if (buttonNormal.cameras == null)
-			{
-				buttonNormal.cameras = FlxG.cameras;
-			}
+			buttonNormal.cameras = FlxG.cameras;
+		}
+		
+		var c:FlxCamera;
+		var i:Int = 0;
+		var l:Int = buttonNormal.cameras.length;
+		var offAll:Bool = true;
+		
+		while(i < l)
+		{
+			c = buttonNormal.cameras[i++];
 			
-			var c:FlxCamera;
-			var i:Int = 0;
-			var l:Int = buttonNormal.cameras.length;
-			var offAll:Bool = true;
-			
-			while(i < l)
+			if (FlxMath.mouseInFlxRect(false, buttonNormal.rect))
 			{
-				c = buttonNormal.cameras[i++];
+				offAll = false;
 				
-				if (FlxMath.mouseInFlxRect(false, buttonNormal.rect))
+				if (FlxG.mouse.justPressed())
 				{
-					offAll = false;
-					
-					if (FlxG.mouse.justPressed())
-					{
-						_status = PRESSED;
-					}
-					
-					if (_status == NORMAL)
-					{
-						_status = HIGHLIGHT;
-					}
+					_status = PRESSED;
+				}
+				
+				if (_status == NORMAL)
+				{
+					_status = HIGHLIGHT;
 				}
 			}
-			
-			if (offAll)
-			{
-				_status = NORMAL;
-			}
+		}
+		
+		if (offAll)
+		{
+			_status = NORMAL;
 		}
 		
 		if (_status != prevStatus)
