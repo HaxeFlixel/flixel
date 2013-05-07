@@ -95,14 +95,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		_direction = 0;
 		_amount = 0;
 		acceleration = new FlxPoint();
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
 		
-=======
->>>>>>> 383609eaf2e2e0a370ef150fa28117769757a432
->>>>>>> 536337f1bc81dcf60139aa0326349e02f39009db
 		#if !FLX_NO_TOUCH
 		_tempTouches = [];
 		#end
