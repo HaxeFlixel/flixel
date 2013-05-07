@@ -377,9 +377,51 @@ class FlxBasic
 	}
 
 #if !flash
-	public function getAtlas():Atlas
+	/**
+	 * Creates and adds new atlas to atlas cache, so it can be drawn
+	 * @param	atlasName		name of atlas to be created 
+	 * @param	atlasWidth		width of atlas
+	 * @param	atlasHeight		height of atlas
+	 * @return					new empty atlas object
+	 */
+	public function createAtlas(atlasName:String, atlasWidth:Int, atlasHeight:Int):Atlas
 	{
-		return FlxG.state.getAtlasFor(_bitmapDataKey);
+		var key:String = Atlas.getUniqueKey(atlasName);
+		return Atlas.getAtlas(key, null, false, atlasWidth, atlasHeight);
+	}
+	
+	/**
+	 * Removes atlas from cache.
+	 * @param	atlas		atlas to remove
+	 * @param	destroy		if true then atlas will be completely destroyed also (be carefull with this parameter)
+	 */
+	public function removeAtlas(atlas:Atlas, destroy:Bool = false):Void
+	{
+		Atlas.removeAtlas(atlas, destroy);
+	}
+
+	/**
+	 * Gets the atlas for specified key from bitmap cache in FlxG. Creates new atlas for it if there wasn't such a atlas 
+	 * @param	_bitmapDataKey	key from bitmap cache in FlxG
+	 * @return	required atlas
+	 */
+	public function getAtlas(_bitmapDataKey:String):Atlas
+	{
+		
+		var bm:BitmapData = FlxG._cache.get(_bitmapDataKey);
+		if (bm != null)
+		{
+			var tempAtlas:Atlas = Atlas.getAtlas(_bitmapDataKey, bm);
+			return tempAtlas;
+		}
+		else
+		{
+			#if !FLX_NO_DEBUG
+			throw "There isn't bitmapdata in cache with key: " + _bitmapDataKey;
+			#end
+		}
+
+		return null;
 	}
 #end
 	
