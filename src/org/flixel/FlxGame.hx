@@ -17,6 +17,7 @@ import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.input.FlxInputs;
+import nme.geom.Matrix;
 
 #if flash
 import flash.text.AntiAliasType;
@@ -751,7 +752,7 @@ class FlxGame extends Sprite
 	/**
 	 * Sets up the darkened overlay with the big white "play" button that appears when a flixel game loses focus.
 	 */
-	private function createFocusScreen():Void
+	public function createFocusScreen():Void
 	{
 		var gfx:Graphics = _focus.graphics;
 		var screenWidth:Int = Std.int(FlxG.width * FlxCamera.defaultZoom);
@@ -767,27 +768,42 @@ class FlxGame extends Sprite
 		gfx.endFill();
 		
 		//draw white arrow
-		var halfWidth:Int = Std.int(screenWidth / 2);
-		var halfHeight:Int = Std.int(screenHeight / 2);
-		var helper:Int = Std.int(FlxU.min(halfWidth, halfHeight) / 3);
-		gfx.moveTo(halfWidth - helper, halfHeight - helper);
-		gfx.beginFill(0xffffff, 0.65);
-		gfx.lineTo(halfWidth + helper, halfHeight);
-		gfx.lineTo(halfWidth - helper, halfHeight + helper);
-		gfx.lineTo(halfWidth - helper, halfHeight - helper);
-		gfx.endFill();
+		// var halfWidth:Int = Std.int(screenWidth / 2);
+		// var halfHeight:Int = Std.int(screenHeight / 2);
+		// var helper:Int = Std.int(FlxU.min(halfWidth, halfHeight) / 3);
+		// gfx.moveTo(halfWidth - helper, halfHeight - helper);
+		// gfx.beginFill(0xffffff, 0.65);
+		// gfx.lineTo(halfWidth + helper, halfHeight);
+		// gfx.lineTo(halfWidth - helper, halfHeight + helper);
+		// gfx.lineTo(halfWidth - helper, halfHeight - helper);
+		// gfx.endFill();
 		
-		var logo:Sprite = new Sprite();
-		FlxAssets.drawLogo(logo.graphics);
-		logo.scaleX = helper / 1000;
-		if (logo.scaleX < 0.2)
-		{
-			logo.scaleX = 0.2;
-		}
-		logo.scaleY = logo.scaleX;
-		logo.x = logo.y = 5;
-		logo.alpha = 0.35;
-		_focus.addChild(logo);
+		// var logo:Sprite = new Sprite();
+		// FlxAssets.drawLogo(logo.graphics);
+		// logo.scaleX = helper / 1000;
+		// if (logo.scaleX < 0.2)
+		// {
+		// 	logo.scaleX = 0.2;
+		// }
+		// logo.scaleY = logo.scaleX;
+		// logo.x = logo.y = 5;
+		// logo.alpha = 0.35;
+		// _focus.addChild(logo);
+
+		// draw PAUSED text
+		//var text:TextField = new TextField();
+		//text.text = "hello world";
+		//_focus.addChild(text);
+		
+		var bmp:BitmapData = FlxAssets.getBitmapData("assets/img/paused.png");
+		var pos : FlxPoint = new FlxPoint(FlxG.width/2-bmp.width/2,FlxG.height/2-bmp.height/2);
+		var matrix:Matrix = new Matrix();
+		matrix.tx = pos.x;
+		matrix.ty = pos.y;
+
+		gfx.beginBitmapFill(bmp, matrix);
+		gfx.drawRect(pos.x, pos.y, bmp.width, bmp.height);
+		gfx.endFill();
 		
 		addChild(_focus);
 	}
