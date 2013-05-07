@@ -95,8 +95,10 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		_direction = 0;
 		_amount = 0;
 		acceleration = new FlxPoint();
+
 		#if !FLX_NO_TOUCH
 		_tempTouches = [];
+		#end
 		_point = new FlxPoint();
 		#end
 		createBase();
@@ -171,6 +173,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		_stick = null;
 		_base = null;
 		_pad = null;
+
 		#if !FLX_NO_TOUCH
 		_currentTouch = null;
 		_tempTouches = null;
