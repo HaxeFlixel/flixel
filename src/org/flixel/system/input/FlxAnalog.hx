@@ -174,9 +174,15 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		_base = null;
 		_pad = null;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 <<<<<<< HEAD
+		
+=======
+>>>>>>> 383609eaf2e2e0a370ef150fa28117769757a432
+>>>>>>> 536337f1bc81dcf60139aa0326349e02f39009db
+=======
 		
 =======
 >>>>>>> 383609eaf2e2e0a370ef150fa28117769757a432
