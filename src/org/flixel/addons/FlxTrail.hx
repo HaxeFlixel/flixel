@@ -35,6 +35,10 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 */
 	public var rotationsEnabled:Bool = true;
 	/**
+	 * Determines whether trailsprites are solid or not. False by default.
+	 */
+	public var solid(default, set_solid):Bool = false;
+	/**
 	 *  Counts the frames passed.
 	 */
 	private var counter:Int = 0;
@@ -62,10 +66,6 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 *  Stores the sprites recent angles.
 	 */
 	private var recentAngles:Array<Float>;
-	/**
-	 *  Internal var, whether trailsprites are solid or not. Access via setSolid and getSolid.
-	 */
-	private var _solid:Bool;
 
 	/**
 	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
@@ -93,13 +93,13 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 
 		// Create the initial trailsprites
 		increaseLength(Length);
-	}		
+	}
 
 	/**
 	 * Updates positions and other values according to the delay that has been set.
 	 * 
 	 */
-	override public function postUpdate():Void
+	override public function update():Void
 	{
 		// Count the frames
 		counter++;
@@ -172,11 +172,10 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			add(trailSprite);
 			trailSprite.alpha = transp;
 			transp -= difference;
+			trailSprite.solid = solid;
 
 			if (trailSprite.alpha <= 0) trailSprite.kill();
-			
-			setSolid(false);
-		}	
+		}
 	}
 
 	/**
@@ -208,20 +207,13 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		yEnabled = Y;
 	}
 	
-	/**
-	 * Function that allows you to change whether the trailsprites are able to collide (solid). False by default.
-	 *
-	 * @param 	Solid 	Whether the trailsprites should be solid or not.
-	 */
-	public function setSolid(Solid:Bool):Void
+	private function set_solid(value:Bool):Bool
 	{
-		if (_solid == Solid) return;
-		
-		_solid = Solid;
-		
 		for (i in 0...trailLength)
-			members[i].solid = Solid;   
-	}	
-
-	public function getSolid():Bool { return _solid }
+		{
+			members[i].solid = value; 
+		}
+		solid = value;
+		return value;
+	}
 }

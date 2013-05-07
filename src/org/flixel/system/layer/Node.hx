@@ -5,6 +5,7 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 
 import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.layer.frames.FlxSpriteFrames;
 
 /**
  * Atlas Node holds BitmapData and it's position on Atlas

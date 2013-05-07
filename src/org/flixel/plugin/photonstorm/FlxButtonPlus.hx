@@ -251,20 +251,6 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		return _y;
 	}
 	
-	override public function preUpdate():Void
-	{
-		super.preUpdate();
-		
-		if (!_initialized)
-		{
-			if(FlxG.stage != null)
-			{
-				Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				_initialized = true;
-			}
-		}
-	}
-	
 	/**
 	 * If you wish to replace the two buttons (normal and hovered-over) with FlxSprites, then pass them here.<br />
 	 * Note: The pixel data is extract from the passed FlxSprites and assigned locally, it doesn't actually use the sprites<br />
@@ -296,6 +282,16 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	 */
 	override public function update():Void
 	{
+		if (!_initialized)
+		{
+			if(FlxG.stage != null)
+			{
+				Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_initialized = true;
+			}
+		}
+		
+		super.update();
 		updateButton(); //Basic button logic
 	}
 	
@@ -379,11 +375,6 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 				}
 			}
 		}
-	}
-	
-	override public function draw():Void
-	{
-		super.draw();
 	}
 	
 	/**
