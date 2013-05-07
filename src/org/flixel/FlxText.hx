@@ -577,7 +577,7 @@ class FlxText extends FlxSprite
 	override public function updateAtlasInfo(updateAtlas:Bool = false):Void
 	{
 		#if !flash
-		_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
+		_atlas = getAtlas();
 		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
 		if (cachedBmd != _pixels)
 		{
