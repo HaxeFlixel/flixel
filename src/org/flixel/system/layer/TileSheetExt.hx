@@ -61,6 +61,8 @@ class TileSheetExt extends Tilesheet
 				temp.destroy();
 			}
 		}
+		
+		_tileSheetCache = new ObjectHash<BitmapData, TileSheetExt>();
 	}
 	
 	private var _numTiles:Int;
