@@ -54,9 +54,12 @@ class TileSheetExt extends Tilesheet
 	{
 		for (key in _tileSheetCache.keys())
 		{
-			var temp:TileSheetExt = _tileSheetCache.get(key);
-			_tileSheetCache.remove(key);
-			temp.destroy();
+			if (key != null)
+			{
+				var temp:TileSheetExt = _tileSheetCache.get(key);
+				_tileSheetCache.remove(key);
+				temp.destroy();
+			}
 		}
 	}
 	

@@ -91,6 +91,16 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * WARNING: This severely impacts performance on flash target.
 	*/
 	public var decreasingSize:Bool = false;
+	// TODO: continue here tomorrow (TODO: startAlpha, endAlpha, startColor, endColor)
+	/**
+	 * Sets start scale range (when particle emits)
+	 */
+	public var startScale:FlxPoint;
+	/**
+	 * Sets end scale range (when particle dies)
+	 */
+	public var endScale:FlxPoint;
+	
 	/**
 	 * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
 	 */

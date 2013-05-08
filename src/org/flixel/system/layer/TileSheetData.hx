@@ -242,6 +242,7 @@ class TileSheetData
 	
 	public function destroy():Void
 	{
+		tileSheet.destroy();
 		tileSheet = null;
 		
 		for (spriteData in flxSpriteFrames)

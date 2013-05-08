@@ -599,9 +599,9 @@ class FlxText extends FlxSprite
 		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
 		if (cachedBmd != _pixels)
 		{
-			cachedBmd.dispose();
 			FlxG._cache.set(_bitmapDataKey, _pixels);
 			_atlas.clearAndFillWith(_pixels);
+			cachedBmd.dispose();
 		}
 		_node = _atlas.getNodeByKey(_bitmapDataKey);
 		updateFrameData();

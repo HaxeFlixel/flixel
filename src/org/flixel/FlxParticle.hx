@@ -88,16 +88,19 @@ class FlxParticle extends FlxSprite
 			if (lifespan <= 0)
 			{
 				kill();
+				// reset alpha in case this particle is fading away
+				alpha = 1.0;
+				scale.x = scale.y = 1.0;
 			}
 			
 			// Fading away
-			if (fadingAway)
+			if (fadingAway && alive)
 			{
 				alpha -= (FlxG.elapsed / maxLifespan);
 			}
 
 			// Decreasing size
-			if (decreasingSize)
+			if (decreasingSize && alive)
 			{
 				scale.x = scale.y -= (FlxG.elapsed / maxLifespan);
 			}
