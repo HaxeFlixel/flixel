@@ -206,7 +206,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 					{
 						// check whether the pointer is already taken by another analog.
 						// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
-						if (analog != this && analog._currentTouch != touch && touchInserted == false) 
+						if (analog == this && analog._currentTouch != touch && touchInserted == false) 
 						{		
 							_tempTouches.push(touch);
 							touchInserted = true;
