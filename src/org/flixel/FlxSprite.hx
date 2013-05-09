@@ -675,6 +675,11 @@ class FlxSprite extends FlxObject
 		height = frameHeight;
 	}
 	
+	public function setOriginToCenter():Void
+	{
+		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+	}
+	
 	/**
 	 * Resets some important variables for sprite optimization and rendering.
 	 */
@@ -685,8 +690,7 @@ class FlxSprite extends FlxObject
 		_flashRect2.y = 0;
 		_flashRect2.width = _pixels.width;
 		_flashRect2.height = _pixels.height;
-		
-		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+		setOriginToCenter();
 		
 	#if flash
 		if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
@@ -867,6 +871,8 @@ class FlxSprite extends FlxObject
 			var x2:Float = x1;
 			var y2:Float = y1;
 			
+			var facingMult:Int = ((_flipped != 0) && (facing == FlxObject.LEFT)) ? -1 : 1;
+			
 			// transformation matrix coefficients
 			var a:Float = csx;
 			var b:Float = ssy;
@@ -884,29 +890,31 @@ class FlxSprite extends FlxObject
 				ssx = sin * scale.x;
 				csy = cos * scale.y;
 				
-				x1 = (origin.x - _flxFrame.center.x);
-				y1 = (origin.y - _flxFrame.center.y);
-				
 				if (_flxFrame.rotated)
 				{
 					x2 = x1 * ssx - y1 * csy;
 					y2 = x1 * csx + y1 * ssy;
 					
 					a = csy;
-					b = ssx;
+					b = ssx * facingMult;
 					c = ssy;
-					d = csx;
+					d = csx * facingMult;
 				}
 				else
 				{
 					x2 = x1 * csx + y1 * ssy;
 					y2 = -x1 * ssx + y1 * csy;
 					
-					a = csx;
+					a = csx * facingMult;
 					b = ssy;
-					c = ssx;
+					c = ssx * facingMult;
 					d = csy;
 				}
+			}
+			else
+			{
+				a *= facingMult;
+				c *= facingMult;
 			}
 			
 			currDrawData[currIndex++] = _point.x - x2;
@@ -914,30 +922,11 @@ class FlxSprite extends FlxObject
 			
 			currDrawData[currIndex++] = _flxFrame.tileID;
 			
-			if ((_flipped != 0) && (facing == FlxObject.LEFT))
-			{
-				if (_flxFrame.rotated)
-				{
-					currDrawData[currIndex++] = a;
-					currDrawData[currIndex++] = -b;
-					currDrawData[currIndex++] = -c;
-					currDrawData[currIndex++] = -d;
-				}
-				else
-				{
-					currDrawData[currIndex++] = -a;
-					currDrawData[currIndex++] = b;
-					currDrawData[currIndex++] = c;
-					currDrawData[currIndex++] = d;
-				}	
-			}
-			else
-			{
-				currDrawData[currIndex++] = a;
-				currDrawData[currIndex++] = b;
-				currDrawData[currIndex++] = -c;
-				currDrawData[currIndex++] = d;
-			}
+			currDrawData[currIndex++] = a;
+			currDrawData[currIndex++] = b;
+			currDrawData[currIndex++] = -c;
+			currDrawData[currIndex++] = d;
+			
 			#if !js
 			if (isColored || isColoredCamera)
 			{
