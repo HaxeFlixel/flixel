@@ -390,5 +390,5 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		_base.alpha = Alpha;
 		_stick.alpha = Alpha;
 	}
-	
+
 }
