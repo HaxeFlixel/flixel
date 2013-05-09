@@ -171,6 +171,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		_stick = null;
 		_base = null;
 		_pad = null;
+		
 		#if !FLX_NO_TOUCH
 		_currentTouch = null;
 		_tempTouches = null;
