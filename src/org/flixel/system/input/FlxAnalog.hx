@@ -97,8 +97,8 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		acceleration = new FlxPoint();
 		#if !FLX_NO_TOUCH
 		_tempTouches = [];
-		#end
 		_point = new FlxPoint();
+		#end
 		createBase();
 		createThumb();
 		createZone();
@@ -361,13 +361,11 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	public function justPressed():Bool
 	{
 		#if !FLX_NO_TOUCH
-		if(_currentTouch != null)
-			return _currentTouch.justPressed() && status == PRESSED;
+		return _currentTouch.justPressed() && status == PRESSED;
 		#end
 		#if !FLX_NO_MOUSE
 		return FlxG.mouse.justPressed() && status == PRESSED;
 		#end
-		return false;
 	}
 	
 	/**
@@ -376,13 +374,11 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	public function justReleased():Bool
 	{
 		#if !FLX_NO_TOUCH
-		if(_currentTouch != null)
-			return _currentTouch.justReleased() && status == HIGHLIGHT;
+		return _currentTouch.justReleased() && status == HIGHLIGHT;
 		#end
 		#if !FLX_NO_MOUSE
 		return FlxG.mouse.justReleased() && status == HIGHLIGHT;
 		#end
-		return false;
 	}
 
 	/**
