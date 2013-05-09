@@ -916,10 +916,20 @@ class FlxSprite extends FlxObject
 			
 			if ((_flipped != 0) && (facing == FlxObject.LEFT))
 			{
-				currDrawData[currIndex++] = -a;
-				currDrawData[currIndex++] = b;
-				currDrawData[currIndex++] = c;
-				currDrawData[currIndex++] = d;
+				if (_flxFrame.rotated)
+				{
+					currDrawData[currIndex++] = a;
+					currDrawData[currIndex++] = -b;
+					currDrawData[currIndex++] = -c;
+					currDrawData[currIndex++] = -d;
+				}
+				else
+				{
+					currDrawData[currIndex++] = -a;
+					currDrawData[currIndex++] = b;
+					currDrawData[currIndex++] = c;
+					currDrawData[currIndex++] = d;
+				}	
 			}
 			else
 			{
