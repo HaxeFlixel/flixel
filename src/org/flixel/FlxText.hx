@@ -168,6 +168,9 @@ class FlxText extends FlxSprite
 		}
 		_format.font = Assets.getFont(Font).fontName;
 		_format.size = Size;
+		#if !neko
+		Color &= 0x00ffffff;
+		#end
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
