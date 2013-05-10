@@ -29,9 +29,9 @@ class FlxButton extends FlxTypedButton<FlxText>
 		super(X, Y, Label, OnClick);
 		if(Label != null)
 		{
-			label = new FlxText(0, 0, 80, Label);
-			label.setFormat(null, 8, 0x333333, "center");
 			labelOffset = new FlxPoint( -1, 3);
+			label = new FlxText(X + labelOffset.x, Y + labelOffset.y, 80, Label);
+			label.setFormat(null, 8, 0x333333, "center");
 		}
 	}
 	

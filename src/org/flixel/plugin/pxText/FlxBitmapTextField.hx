@@ -160,14 +160,16 @@ class FlxBitmapTextField extends FlxSprite
 		return value;
 	}
 	
-	#if !flash
-	override private function set_color(Color:BitmapInt32):BitmapInt32
+	#if flash
+	override public function draw():Void 
 	{
-		super.set_color(Color);
-		_pendingTextChange = true;
-		return _color;
+		if (_pendingTextChange)
+		{
+			updateBitmapData();
+		}
+		super.draw();
 	}
-	
+	#else
 	override public function draw():Void 
 	{
 		if (_atlas == null)
@@ -182,6 +184,11 @@ class FlxBitmapTextField extends FlxSprite
 			{
 				return;
 			}
+		}
+		
+		if (_pendingTextChange)
+		{
+			updateBitmapData();
 		}
 		
 		if (cameras == null)
@@ -353,6 +360,13 @@ class FlxBitmapTextField extends FlxSprite
 			
 			FlxBasic._VISIBLECOUNT++;
 		}
+	}
+	
+	override private function set_color(Color:BitmapInt32):BitmapInt32
+	{
+		super.set_color(Color);
+		_pendingTextChange = true;
+		return _color;
 	}
 	#end
 	

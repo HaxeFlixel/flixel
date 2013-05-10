@@ -134,6 +134,10 @@ class FlxBasic
 		if (!ignoreDrawDebug)
 		{
 			var i:Int = 0;
+			if (cameras == null)
+			{
+				cameras = FlxG.cameras;
+			}
 			var l:Int = cameras.length;
 			while (i < l)
 			{
