@@ -182,6 +182,12 @@ class FlxDebugger extends Sprite
 			vis.destroy();
 			vis = null;
 		}
+		if (console != null) 
+		{
+			removeChild(console);
+			console.destroy();
+			console = null;
+		}
 		
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
@@ -232,54 +238,60 @@ class FlxDebugger extends Sprite
 		{
 			case FlxG.DEBUGGER_MICRO:
 				log.resize(_screen.x / 4, 68);
-				log.reposition(0,_screen.y);
+				log.reposition(0, _screen.y);
+				console.resize((_screen.x / 2) - _gutter * 4, 35);
+				console.reposition(log.x + log.width + _gutter, _screen.y);
 				watch.resize(_screen.x / 4, 68);
 				watch.reposition(_screen.x,_screen.y);
 				perf.reposition(_screen.x, 0);
 			case FlxG.DEBUGGER_BIG:
-				log.resize((_screen.x - _gutter * 3) / 2, _screen.y - 70);
-				log.reposition(0, 10);
+				console.resize(_screen.x - _gutter * 2, 35);
+				console.reposition(_gutter, _screen.y);
+				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
+				log.reposition(0, _screen.y - log.height - console.height - _gutter * 1.5);
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
-				watch.reposition(_screen.x, _screen.y - watch.height - 50);
+				watch.reposition(_screen.x, _screen.y - watch.height - console.height - _gutter * 1.5);
 				perf.reposition(_screen.x, 0);
 			case FlxG.DEBUGGER_TOP:
+				console.resize(_screen.x - _gutter * 2, 35);
+				console.reposition(0,0);
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				log.reposition(0,0);
+				log.reposition(0,console.height + _gutter + 15);
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,0);
+				watch.reposition(_screen.x,console.height + _gutter + 15);
 				perf.reposition(_screen.x,_screen.y);
 			case FlxG.DEBUGGER_LEFT:
-				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2);
+				console.resize(_screen.x - _gutter * 2, 35);
+				console.reposition(_gutter, _screen.y);
+				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2 - _gutter);
 				log.reposition(0,0);
-				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2);
-				watch.reposition(0,_screen.y);
+				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2);
+				watch.reposition(0,log.y + log.height + _gutter);
 				perf.reposition(_screen.x,0);
 			case FlxG.DEBUGGER_RIGHT:
-				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2);
+				console.resize(_screen.x - _gutter * 2, 35);
+				console.reposition(_gutter, _screen.y);
+				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2 - _gutter);
 				log.reposition(_screen.x,0);
-				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2);
-				watch.reposition(_screen.x,_screen.y);
+				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2);
+				watch.reposition(_screen.x,log.y + log.height + _gutter);
 				perf.reposition(0,0);
 			case FlxG.DEBUGGER_STANDARD:
-				//log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				//log.reposition(0,_screen.y);
-				//watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				//watch.reposition(_screen.x,_screen.y);
-				//perf.reposition(_screen.x, 0);
-				//console.resize((_screen.x - _gutter * 2), 35);
-				log.resize((_screen.x - _gutter * 3) / 2, _screen.y - 70);
-				log.reposition(0, 10);
-				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
-				watch.reposition(_screen.x, _screen.y - watch.height - 50);
-				perf.reposition(_screen.x, 0);
-				console.reposition(0, _screen.y - 40);
-				console.resize((_screen.x - _gutter * 2), 35);
-			default:
+				console.resize(_screen.x - _gutter * 2, 35);
+				console.reposition(_gutter, _screen.y);
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				log.reposition(0,_screen.y);
+				log.reposition(0,_screen.y - log.height - console.height - _gutter * 1.5);
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,_screen.y);
-				perf.reposition(_screen.x,0);
+				watch.reposition(_screen.x,_screen.y - watch.height - console.height - _gutter * 1.5);
+				perf.reposition(_screen.x, 0);
+			default:
+				console.resize(_screen.x - _gutter * 2, 35);
+				console.reposition(_gutter, _screen.y);
+				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
+				log.reposition(0,_screen.y - log.height - console.height - _gutter * 1.5);
+				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
+				watch.reposition(_screen.x,_screen.y - watch.height - console.height - _gutter * 1.5);
+				perf.reposition(_screen.x, 0);
 		}
 	}
 }

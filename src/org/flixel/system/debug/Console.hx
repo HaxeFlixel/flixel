@@ -8,16 +8,13 @@ import flash.ui.Keyboard;
 import nme.Assets;
 import nme.display.BitmapInt32;
 import nme.errors.ArgumentError;
+import nme.events.Event;
 import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import org.flixel.FlxAssets;
-import org.flixel.FlxObject;
 import org.flixel.FlxG;
-import org.flixel.FlxState;
 import org.flixel.system.FlxWindow;
-import nme.Lib;
-import nme.events.Event;
 
 /**
  * 
@@ -31,10 +28,6 @@ class Console extends FlxWindow
 	private var commandObjects:Hash<Dynamic>;
 	public var commandHistory:Array<String>;
 	
-	private var focusTextFormat:TextFormat;
-	private var focusLostTextFormat:TextFormat;
-	
-	private var watchingMouse:Bool = false;
 	private var historyIndex:Int;
 	private var historyMax:Int = 25;
 	
@@ -53,7 +46,7 @@ class Console extends FlxWindow
 	#if flash
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:UInt = 0xAA000000, ?TopColor:UInt = 0x7f000000)
 	#else
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:BitmapInt32, ?TopColor:BitmapInt32)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:BitmapInt32 = 0xAA000000, ?TopColor:BitmapInt32)
 	#end
 	{	
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
@@ -61,9 +54,6 @@ class Console extends FlxWindow
 		commandList = new Hash<Dynamic>();
 		commandObjects = new Hash<Dynamic>();
 		commandHistory = new Array<String>();
-		
-		focusTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 14, 0xFFFFFF, false, false, false);
-		focusLostTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 14, 0xFFFFFF, false, true, false);
 		
 		// Createa a shared object for command history
 		_shared = SharedObject.getLocal("CommandHistory");
@@ -81,7 +71,7 @@ class Console extends FlxWindow
 		// Create the input textfield
 		_input = new TextField();
 		_input.type = TextFieldType.INPUT;
-		_input.defaultTextFormat = focusTextFormat;
+		_input.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 14, 0xFFFFFF, false, false, false);
 		_input.selectable = true;
 		_input.text = defaultText;
 		_input.width = _width;
@@ -103,8 +93,12 @@ class Console extends FlxWindow
 	
 	private function onFocus(e:FocusEvent):Void
 	{
+		// Pause game
+		#if flash
 		FlxG._game.debugger.vcr.onPause();
-		FlxG._game.useSoundHotKeys = false;
+		#end
+		// Shouldn't be able to trigger sound control when console has focus
+		FlxG._game.tempDisableSoundHotKeys = true;
 		
 		if (_input.text == defaultText) 
 			_input.text = "";
@@ -112,8 +106,11 @@ class Console extends FlxWindow
 	
 	private function onFocusLost(e:FocusEvent):Void
 	{
+		// Unpause game
+		#if flash
 		FlxG._game.debugger.vcr.onPlay();
-		FlxG._game.useSoundHotKeys = true;
+		#end
+		FlxG._game.tempDisableSoundHotKeys = false;
 		
 		if (_input.text == "") 
 			_input.text = defaultText;
@@ -258,7 +255,6 @@ class Console extends FlxWindow
 			commandObjects.set(Alt, Object);
 		}
 	}
-
 	
 	/**
 	 * Clean up memory.
@@ -268,7 +264,14 @@ class Console extends FlxWindow
 		_input.removeEventListener(FocusEvent.FOCUS_IN, onFocus);
 		_input.removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		_input.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
-		removeChild(_input);
+		
+		if (_input != null)
+			removeChild(_input);
+		_input = null;
+		
+		_shared = null;
+		commandList = null;
+		commandHistory = null;
 		
 		super.destroy();
 	}

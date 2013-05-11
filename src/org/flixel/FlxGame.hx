@@ -46,6 +46,10 @@ class FlxGame extends Sprite
 	 */
 	public var useSoundHotKeys:Bool;
 	/**
+	 * Internal var used to temporarily disable sound hot keys without overriding useSoundHotKeys.
+	 */
+	public var tempDisableSoundHotKeys:Bool;
+	/**
 	 * Current game state.
 	 */
 	public var _state:FlxState;
@@ -201,6 +205,7 @@ class FlxGame extends Sprite
 		_mark = 0;
 		_state = null;
 		useSoundHotKeys = true;
+		tempDisableSoundHotKeys = false;
 		
 		#if !FLX_NO_DEBUG
 		FlxG.debug = true;

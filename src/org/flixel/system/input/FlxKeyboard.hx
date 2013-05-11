@@ -216,7 +216,7 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 				return;
 			}
 			#end
-			if (FlxG._game.useSoundHotKeys)
+			if (FlxG._game.useSoundHotKeys && !FlxG._game.tempDisableSoundHotKeys)
 			{
 				var c:Int = FlashEvent.keyCode;
 				var code:String = String.fromCharCode(FlashEvent.charCode);

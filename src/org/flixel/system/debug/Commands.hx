@@ -1,6 +1,5 @@
 package org.flixel.system.debug;
 
-import nme.display.GradientType;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxState;
@@ -121,29 +120,27 @@ class Commands
 	
 	private function bgColor(Color:Dynamic):Void
 	{
-		var colorString:String = cast(Color);
-		var color:Int;
-		if (Std.parseInt(Color) == null) 
-			color = -1;
-		else 
-			color = Std.parseInt(Color);
+		var colorString:String = Std.string(Color);
+		var color:Int = Std.parseInt(Color);
 		
-		switch (colorString) {
-			case "red":
-				color = FlxG.RED;
-			case "green":
-				color = FlxG.GREEN;
-			case "blue":
-				color = FlxG.BLUE;
-			case "pink":
-				color = FlxG.PINK;
-			case "white":
-				color = FlxG.WHITE;
-			case "black":
-				color = FlxG.BLACK;
+		if (colorString != null) {
+			switch (colorString) {
+				case "red":
+					color = FlxG.RED;
+				case "green":
+					color = FlxG.GREEN;
+				case "blue":
+					color = FlxG.BLUE;
+				case "pink":
+					color = FlxG.PINK;
+				case "white":
+					color = FlxG.WHITE;
+				case "black":
+					color = FlxG.BLACK;
+			}
 		}
-	
-		if (color != -1) {
+		
+		if (!Math.isNaN(color)) {
 			FlxG.bgColor = color;
 			FlxG.log("> bgColor: Changed background color to '" + Color + "'");
 		}
@@ -210,7 +207,7 @@ class Commands
 		if (instance == null) 
 			return;
 		
-		var obj:FlxObject = cast(instance);
+		var obj:FlxObject = instance;
 		if (X == -1) 
 			obj.x = FlxG._game.mouseX;
 		else 

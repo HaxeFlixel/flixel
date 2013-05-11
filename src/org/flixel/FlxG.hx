@@ -1549,6 +1549,13 @@ class FlxG
 	}
 	
 	#if !FLX_NO_DEBUG
+	/**
+	 * Add a custom command to the console on the debugging screen.
+	 * @param Command	The command's name.
+	 * @param Object 	Object containing the function (<code>this</code> if function is within the class you're calling this from).
+	 * @param Function	Function to be called with params when the command is entered.
+	 * @param Alt		Alternative name for the command, useful as a shortcut.
+	 */
 	static public function addCommand(Command:String, Object:Dynamic, Function:Dynamic, Alt:String = ""):Void
 	{
 		_game.debugger.console.addCommand(Command, Object, Function, Alt);
