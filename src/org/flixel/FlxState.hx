@@ -87,13 +87,15 @@ class FlxState extends FlxGroup
 	
 	#if flash
 	public function new(bgColor:UInt = 0xFF000000, useMouse:Bool = false)
-	#else
+	#elseif neko
 	public function new(bgColor:BitmapInt32 = null, useMouse:Bool = false)
+	#else
+	public function new(bgColor:Int = 0xFF000000, useMouse:Bool = false)
 	#end
 	{
 		super();
 		
-		#if !flash
+		#if neko
 		if (bgColor == null)
 		{
 			bgColor = FlxG.BLACK;

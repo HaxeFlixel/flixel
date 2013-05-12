@@ -25,11 +25,13 @@ class FlxSubState extends FlxState
 	
 	#if flash
 	public function new(bgColor:UInt = 0x00000000, useMouse:Bool = false) 
-	#else
+	#elseif neko
 	public function new(bgColor:BitmapInt32 = null, useMouse:Bool = false) 
+	#else
+	public function new(bgColor:Int = 0x00000000, useMouse:Bool = false) 
 	#end
 	{
-		#if !flash
+		#if neko
 		if (bgColor == null) bgColor = FlxG.TRANSPARENT;
 		#end
 		super(bgColor, useMouse);
@@ -37,6 +39,7 @@ class FlxSubState extends FlxState
 		
 		#if !flash
 		_bgSprite = new BGSprite();
+		this.bgColor = bgColor;
 		#end
 	}
 	
@@ -55,10 +58,14 @@ class FlxSubState extends FlxState
 	override private function set_bgColor(value:BitmapInt32):BitmapInt32 
 	#end
 	{
-		_bgColor = value;
-		#if !flash
-		_bgSprite.pixels.setPixel32(0, 0, _bgColor);
-		#end
+		if (_bgSprite != null)
+		{
+			_bgColor = value;
+			#if !flash
+			_bgSprite.pixels.setPixel32(0, 0, _bgColor);
+			#end
+		}
+		
 		return value;
 	}
 	
