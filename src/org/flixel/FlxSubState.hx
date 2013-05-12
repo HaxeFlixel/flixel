@@ -23,11 +23,16 @@ class FlxSubState extends FlxState
 	private var _bgSprite:BGSprite;
 	#end
 	
-	public function new()
+	#if flash
+	public function new(bgColor:UInt = 0x00000000, useMouse:Bool = false) 
+	#else
+	public function new(bgColor:BitmapInt32 = null, useMouse:Bool = false) 
+	#end
 	{
-		super();
-		
-		_bgColor = FlxG.TRANSPARENT;
+		#if !flash
+		if (bgColor == null) bgColor = FlxG.TRANSPARENT;
+		#end
+		super(bgColor, useMouse);
 		closeCallback = null;
 		
 		#if !flash

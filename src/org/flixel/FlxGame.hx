@@ -344,7 +344,8 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
-		requestNewState(Type.createInstance(_iState, []));
+		var stateParams:Array<Dynamic> = [FlxG.BLACK, false];
+		requestNewState(Type.createInstance(_iState, stateParams));
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(_requestedState, FlxSubState))

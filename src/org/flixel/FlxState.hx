@@ -70,13 +70,40 @@ class FlxState extends FlxGroup
 		return FlxG.bgColor = value;
 	}
 	
-	public function new()
+	private var _useMouse:Bool = false;
+	public var useMouse(get_useMouse, set_useMouse):Bool;
+	private function get_useMouse():Bool { return _useMouse; }
+	private function set_useMouse(value:Bool):Bool
+	{
+		_useMouse = value;
+		this.updateMouseVisibility();
+		return value;
+	}
+	private function updateMouseVisibility():Void
+	{
+		if (_useMouse) { FlxG.mouse.show(); }
+		else { FlxG.mouse.hide(); }
+	}
+	
+	#if flash
+	public function new(bgColor:UInt = 0xFF000000, useMouse:Bool = false)
+	#else
+	public function new(bgColor:BitmapInt32 = null, useMouse:Bool = false)
+	#end
 	{
 		super();
 		
+		#if !flash
+		if (bgColor == null)
+		{
+			bgColor = FlxG.BLACK;
+		}
+		#end
+		
 		persistantUpdate = false;
 		persistantDraw = true;
-		_bgColor = FlxG.bgColor;
+		this.bgColor = bgColor;
+		this.useMouse = useMouse;
 	}
 	
 	/**
@@ -161,6 +188,7 @@ class FlxState extends FlxGroup
 			{ 
 				FlxG.resetInput();
 			}
+			
 			_subState.create();
 		}
 	}
@@ -174,6 +202,8 @@ class FlxState extends FlxGroup
 		
 		_subState.destroy();
 		_subState = null;
+		
+		this.updateMouseVisibility();
 	}
 
 	override public function destroy():Void
