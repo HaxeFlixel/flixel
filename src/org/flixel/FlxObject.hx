@@ -1296,4 +1296,10 @@ class FlxObject extends FlxBasic
 			return false;
 		}
 	}
+	
+	public function move(x:Float, y:Float):Void
+	{
+		this.x = x;
+		this.y = y;
+	}
 }
