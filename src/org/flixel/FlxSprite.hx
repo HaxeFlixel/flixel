@@ -1927,7 +1927,10 @@ class FlxSprite extends FlxObject
 
 			//Handle sprite sheets
 			var widthHelper:Int = (_flipped != 0) ? _flipped : _pixels.width;
-			if (indexX >= widthHelper)
+			// TODO: fix this check
+			// maybe it should be: 
+			if (indexX + frameWidth > widthHelper)
+		//	if (indexX >= widthHelper)
 			{
 				indexY = Std.int(indexX / widthHelper) * frameHeight;
 				indexX %= widthHelper;
