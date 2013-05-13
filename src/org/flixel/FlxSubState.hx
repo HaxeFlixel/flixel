@@ -68,13 +68,13 @@ class FlxSubState extends FlxState
 	override private function set_bgColor(value:BitmapInt32):BitmapInt32 
 	#end
 	{
+		_bgColor = value;
+		#if !flash
 		if (_bgSprite != null)
 		{
-			_bgColor = value;
-			#if !flash
 			_bgSprite.pixels.setPixel32(0, 0, _bgColor);
-			#end
 		}
+		#end
 		
 		return value;
 	}

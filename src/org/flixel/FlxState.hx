@@ -164,14 +164,14 @@ class FlxState extends FlxGroup
 		this.setSubState(null, null, destroy);
 	}
 	
-	public function setSubState(requestedState:FlxSubState, closeCallback:Void->Void = null, destroy:Bool = true):Void
+	public function setSubState(requestedState:FlxSubState, closeCallback:Void->Void = null, destroyPrevious:Bool = true):Void
 	{
 		if (_subState == requestedState)	return;
 
 		//Destroy the old state (if there is an old state)
 		if(_subState != null)
 		{
-			_subState.close(destroy);
+			_subState.close(destroyPrevious);
 		}
 
 		//Finally assign and create the new state (or set it to null)
