@@ -37,6 +37,10 @@ class FlxState extends FlxGroup
 	public var persistantDraw:Bool;
 	
 	private var _subState:FlxSubState;
+	/**
+	 * Current substate.
+	 * Substates also can have substates
+	 */
 	public var subState(get_subState, null):FlxSubState;
 	
 	private function get_subState():FlxSubState 
@@ -44,6 +48,9 @@ class FlxState extends FlxGroup
 		return _subState;
 	}
 	
+	/**
+	 * Background color of this state
+	 */
 	#if flash
 	private var _bgColor:UInt;
 	public var bgColor(get_bgColor, set_bgColor):UInt;
@@ -71,6 +78,10 @@ class FlxState extends FlxGroup
 	}
 	
 	private var _useMouse:Bool = false;
+	
+	/**
+	 * Whether to show mouse pointer or not
+	 */
 	public var useMouse(get_useMouse, set_useMouse):Bool;
 	private function get_useMouse():Bool { return _useMouse; }
 	private function set_useMouse(value:Bool):Bool
@@ -81,10 +92,19 @@ class FlxState extends FlxGroup
 	}
 	private function updateMouseVisibility():Void
 	{
+		#if mobile
+		FlxG.mouse.hide();
+		#else
 		if (_useMouse) { FlxG.mouse.show(); }
 		else { FlxG.mouse.hide(); }
+		#end
 	}
 	
+	/**
+	 * State constructor
+	 * @param	bgColor		background color for this state
+	 * @param	useMouse	whether to show mouse pointer or not
+	 */
 	#if flash
 	public function new(bgColor:UInt = 0xFF000000, useMouse:Bool = false)
 	#elseif neko
@@ -157,13 +177,19 @@ class FlxState extends FlxGroup
 	}
 	
 	/**
-	 * Manually close the sub-state (will always give the reason FlxSubState.CLOSED_BY_PARENT)
+	 * Manually close the sub-state
 	*/
 	public function closeSubState(destroy:Bool = true):Void
 	{
 		this.setSubState(null, null, destroy);
 	}
 	
+	/**
+	 * Set substate for this state
+	 * @param	requestedState		substate to add
+	 * @param	closeCallback		close callback function, which will be called after closing requestedState
+	 * @param	destroyPrevious		whether to destroy previuos substate (if there is one) or not
+	 */
 	public function setSubState(requestedState:FlxSubState, closeCallback:Void->Void = null, destroyPrevious:Bool = true):Void
 	{
 		if (_subState == requestedState)	return;
@@ -198,7 +224,11 @@ class FlxState extends FlxGroup
 			}
 		}
 	}
-
+	
+	/**
+	 * Helper method for closing substate
+	 * @param	destroy		whether to destroy current substate (by default) or leave it as is, so closed substate can be reused many times
+	 */
 	private function subStateCloseHandler(destroy:Bool = true):Void
 	{
 		if (_subState.closeCallback != null)

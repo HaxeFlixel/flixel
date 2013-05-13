@@ -15,24 +15,42 @@ import org.flixel.system.layer.TileSheetData;
  */
 class FlxSubState extends FlxState
 {
+	/**
+	 * Internal helper
+	 */
 	public var _parentState:FlxState;
 	
+	/**
+	 * Callback method for state close event
+	 */
 	public var closeCallback:Void->Void;
 	
 	#if !flash
+	/**
+	 * Helper sprite object for non-flash targets. Draws background
+	 */
 	private var _bgSprite:BGSprite;
 	#end
 	
+	/**
+	 * Internal helper for substates which can be reused
+	 */
 	private var _initialized:Bool = false;
 	
 	public var initialized(get_initialized, null):Bool;
 	
 	private function get_initialized():Bool { return _initialized; }
+	
 	/**
-	 * Internal method. Don't use it!!!
+	 * Internal helper method
 	 */
 	public function initialize():Void { _initialized = true; }
 	
+	/**
+	 * Substate constructor
+	 * @param	bgColor		background color for this substate
+	 * @param	useMouse	whether to show mouse pointer or not
+	 */
 	#if flash
 	public function new(bgColor:UInt = 0x00000000, useMouse:Bool = false) 
 	#elseif neko
@@ -100,6 +118,10 @@ class FlxSubState extends FlxState
 		super.draw();
 	}
 	
+	/**
+	 * Use this method to close this substate
+	 * @param	destroy	whether to destroy this state or leave it in memory
+	 */
 	public function close(destroy:Bool = true):Void
 	{
 		if (_parentState != null) 
