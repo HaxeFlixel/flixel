@@ -14,7 +14,6 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.media.Sound;
 import nme.media.SoundTransform;
-import org.flixel.system.FlxWindow;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.plugin.pxText.PxBitmapFont;
@@ -1559,15 +1558,7 @@ class FlxG
 	 */
 	static public function addCommand(Command:String, Object:Dynamic, Function:Dynamic, Alt:String = ""):Void
 	{
-		var console:FlxWindow = _game.debugger.console;
-		
-		console.cmdFunctions.set(Command, Function);
-		console.cmdObjects.set(Command, Object);
-		
-		if (Alt != "") {
-			console.cmdFunctions.set(Alt, Function);
-			console.cmdObjects.set(Alt, Object);
-		}
+		_game.debugger.console.addCommand(Command, Object, Function, Alt);
 	}
 	#end
 	

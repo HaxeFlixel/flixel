@@ -22,8 +22,8 @@ class Console extends FlxWindow
 {
 	private var _input:TextField;
 	
-	public var cmdFunctions:Hash<Dynamic>;
-	public var cmdObjects:Hash<Dynamic>;
+	private var cmdFunctions:Hash<Dynamic>;
+	private var cmdObjects:Hash<Dynamic>;
 	
 	public var cmdHistory:Array<String>;
 	
@@ -244,6 +244,17 @@ class Console extends FlxWindow
 			return "";
 	}
 	
+	public function addCommand(Command:String, Object:Dynamic, Function:Dynamic, Alt:String = ""):Void
+	{
+		cmdFunctions.set(Command, Function);
+		cmdObjects.set(Command, Object);
+		
+		if (Alt != "") {
+			cmdFunctions.set(Alt, Function);
+			cmdObjects.set(Alt, Object);
+		}
+	}
+	
 	/**
 	 * Clean up memory.
 	 */
@@ -262,5 +273,16 @@ class Console extends FlxWindow
 		cmdHistory = null;
 		
 		super.destroy();
+	}
+	
+	/**
+	 * Adjusts the width and height of the text field accordingly.
+	 */
+	override private function updateSize():Void
+	{
+		_input.width = _width - 4;
+		_input.height = _height - 15;
+		
+		super.updateSize();
 	}
 }

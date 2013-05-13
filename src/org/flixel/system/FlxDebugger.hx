@@ -123,7 +123,7 @@ class FlxDebugger extends Sprite
 		watch = new Watch("watch", 0, 0, true, screenBounds);
 		addChild(watch);
 		
-		console= new Console("console", 0, 0, false, screenBounds);
+		console = new Console("console", 0, 0, false, screenBounds);
 		addChild(console);
 		
 		perf = new Perf("stats", 0, 0, false, screenBounds);
