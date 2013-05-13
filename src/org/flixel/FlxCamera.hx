@@ -1133,7 +1133,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public function setScale(X:Float, Y:Float):Void
 	{
-		
 		_flashSprite.scaleX = X;
 		_flashSprite.scaleY = Y;
 		
@@ -1141,6 +1140,8 @@ class FlxCamera extends FlxBasic
 		_flashOffsetX = width * 0.5 * X;
 		_flashOffsetY = height * 0.5 * Y;
 		
+		_flashSprite.x = x + _flashOffsetX;
+		_flashSprite.y = y + _flashOffsetY;
 	}
 	
 	/**
