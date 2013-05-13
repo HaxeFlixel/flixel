@@ -23,6 +23,16 @@ class FlxSubState extends FlxState
 	private var _bgSprite:BGSprite;
 	#end
 	
+	private var _initialized:Bool = false;
+	
+	public var initialized(get_initialized, null):Bool;
+	
+	private function get_initialized():Bool { return _initialized; }
+	/**
+	 * Internal method. Don't use it!!!
+	 */
+	public function initialize():Void { _initialized = true; }
+	
 	#if flash
 	public function new(bgColor:UInt = 0x00000000, useMouse:Bool = false) 
 	#elseif neko
@@ -90,21 +100,25 @@ class FlxSubState extends FlxState
 		super.draw();
 	}
 	
-	public function close():Void
+	public function close(destroy:Bool = true):Void
 	{
 		if (_parentState != null) 
 		{ 
-			_parentState.subStateCloseHandler(); 
+			_parentState.subStateCloseHandler(destroy); 
 		}
 		else 
 		{ 
 			/* Missing parent from this state! Do something!!" */ 
+			#if !FLX_NO_DEBUG
+			throw "This subState haven't any parent state";
+			#end
 		}
 	}
 	
 	override public function destroy():Void 
 	{
 		super.destroy();
+		_initialized = false;
 		_parentState = null;
 		closeCallback = null;
 	}

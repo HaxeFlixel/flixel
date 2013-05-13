@@ -159,19 +159,19 @@ class FlxState extends FlxGroup
 	/**
 	 * Manually close the sub-state (will always give the reason FlxSubState.CLOSED_BY_PARENT)
 	*/
-	public function closeSubState():Void
+	public function closeSubState(destroy:Bool = true):Void
 	{
-		this.setSubState(null);
+		this.setSubState(null, null, destroy);
 	}
 	
-	public function setSubState(requestedState:FlxSubState, closeCallback:Void->Void = null):Void
+	public function setSubState(requestedState:FlxSubState, closeCallback:Void->Void = null, destroy:Bool = true):Void
 	{
 		if (_subState == requestedState)	return;
 
 		//Destroy the old state (if there is an old state)
 		if(_subState != null)
 		{
-			_subState.close();
+			_subState.close(destroy);
 		}
 
 		//Finally assign and create the new state (or set it to null)
@@ -191,18 +191,25 @@ class FlxState extends FlxGroup
 				FlxG.resetInput();
 			}
 			
-			_subState.create();
+			if (!_subState.initialized)
+			{
+				_subState.initialize();
+				_subState.create();
+			}
 		}
 	}
 
-	private function subStateCloseHandler():Void
+	private function subStateCloseHandler(destroy:Bool = true):Void
 	{
 		if (_subState.closeCallback != null)
 		{
 			_subState.closeCallback();
 		}
 		
-		_subState.destroy();
+		if (destroy)
+		{
+			_subState.destroy();
+		}
 		_subState = null;
 		
 		this.updateMouseVisibility();
