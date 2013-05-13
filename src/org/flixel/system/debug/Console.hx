@@ -2,7 +2,6 @@ package org.flixel.system.debug;
 
 import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
-import flash.net.SharedObject;
 import flash.text.TextFieldType;
 import flash.ui.Keyboard;
 import nme.Assets;
@@ -22,13 +21,13 @@ import org.flixel.system.FlxWindow;
 class Console extends FlxWindow
 {
 	private var _input:TextField;
-	public var _shared:SharedObject;
 	
-	private var commandList:Hash<Dynamic>;
-	private var commandObjects:Hash<Dynamic>;
-	public var commandHistory:Array<String>;
+	public var cmdFunctions:Hash<Dynamic>;
+	public var cmdObjects:Hash<Dynamic>;
 	
-	private var historyIndex:Int;
+	public var cmdHistory:Array<String>;
+	
+	private var historyIndex:Int = 0;
 	private var historyMax:Int = 25;
 	
 	private var defaultText:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
@@ -51,32 +50,28 @@ class Console extends FlxWindow
 	{	
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		
-		commandList = new Hash<Dynamic>();
-		commandObjects = new Hash<Dynamic>();
-		commandHistory = new Array<String>();
+		cmdFunctions = new Hash<Dynamic>();
+		cmdObjects = new Hash<Dynamic>();
+		cmdHistory = new Array<String>();
 		
-		// Createa a shared object for command history
-		_shared = SharedObject.getLocal("CommandHistory");
-		
-		if (_shared.data.history) {
-			commandHistory = _shared.data.history;
-			historyIndex = commandHistory.length;
+		// Load old command history if existant
+		if (FlxG._game._prefsSave.data.history != null) {
+			cmdHistory = FlxG._game._prefsSave.data.history;
+			historyIndex = cmdHistory.length;
 		}
 		else {
-			commandHistory = new Array<String>();
-			_shared.data.history = commandHistory;
-			historyIndex = 0;
+			cmdHistory = new Array<String>();
+			FlxG._game._prefsSave.data.history = cmdHistory;
 		}
 		
 		// Create the input textfield
 		_input = new TextField();
 		_input.type = TextFieldType.INPUT;
 		_input.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 14, 0xFFFFFF, false, false, false);
-		_input.selectable = true;
 		_input.text = defaultText;
-		_input.width = _width;
+		_input.width = _width - 4;
 		_input.height = _height - 15;
-		_input.x = 0;
+		_input.x = 2;
 		_input.y = 15;
 		#if flash
 		_input.restrict = "a-zA-Z 0-9.";
@@ -127,24 +122,28 @@ class Console extends FlxWindow
 		{ 
 			var args:Array<Dynamic> = _input.text.split(" ");
 			var command:String = args.shift();
-			var obj:Dynamic = commandObjects.get(command);
-			var func:Dynamic = commandList.get(command);
+			var obj:Dynamic = cmdObjects.get(command);
+			var func:Dynamic = cmdFunctions.get(command);
 			
 			if (func != null) 
 			{
 				// Only save new commands 
-				if (getPreviousCommand() != _input.text) {
-					commandHistory.push(_input.text);
-					_shared.flush();
+				if (getPreviousCommand() != _input.text) 
+				{
+					cmdHistory.push(_input.text);
+					FlxG._game._prefsSave.flush();
+					
 					// Set a maximum for commands you can save
-					if (commandHistory.length > historyMax)
-						commandHistory.shift();
+					if (cmdHistory.length > historyMax)
+						cmdHistory.shift();
 				}
 					
-				historyIndex = commandHistory.length;
+				historyIndex = cmdHistory.length;
 				
-				if (Reflect.isFunction(func)) {
-					try {
+				if (Reflect.isFunction(func)) 
+				{
+					try 
+					{
 						// For the log command, push all the arguments into the first parameter
 						if (command == "log") {
 							Reflect.callMethod(obj, func, [args.join(" ")]);
@@ -194,7 +193,7 @@ class Console extends FlxWindow
 		
 		// Show previous command in history
 		else if (e.keyCode == Keyboard.UP) {
-			if (commandHistory.length == 0) return;
+			if (cmdHistory.length == 0) return;
 			
 			_input.text = getPreviousCommand();
 			
@@ -204,7 +203,7 @@ class Console extends FlxWindow
 		}
 		// Show next command in history
 		else if (e.keyCode == Keyboard.DOWN) {
-			if (commandHistory.length == 0) return;
+			if (cmdHistory.length == 0) return;
 			
 			_input.text = getNextCommand();
 		}
@@ -231,29 +230,18 @@ class Console extends FlxWindow
 		if (historyIndex > 0) 
 			historyIndex --;
 			
-		return commandHistory[historyIndex];
+		return cmdHistory[historyIndex];
 	}
 	
 	private function getNextCommand():String
 	{
-		if (historyIndex < commandHistory.length) 
+		if (historyIndex < cmdHistory.length) 
 			historyIndex ++;
 			
-		if (commandHistory[historyIndex] != null) 
-			return commandHistory[historyIndex];
+		if (cmdHistory[historyIndex] != null) 
+			return cmdHistory[historyIndex];
 		else 
 			return "";
-	}
-	
-	public function addCommand(Command:String, Object:Dynamic, Function:Dynamic, Alt:String = ""):Void
-	{
-		commandList.set(Command, Function);
-		commandObjects.set(Command, Object);
-		
-		if (Alt != "") {
-			commandList.set(Alt, Function);
-			commandObjects.set(Alt, Object);
-		}
 	}
 	
 	/**
@@ -269,21 +257,10 @@ class Console extends FlxWindow
 			removeChild(_input);
 		_input = null;
 		
-		_shared = null;
-		commandList = null;
-		commandHistory = null;
+		cmdFunctions = null;
+		cmdObjects = null;
+		cmdHistory = null;
 		
 		super.destroy();
-	}
-	
-	/**
-	 * Adjusts the width and height of the text field accordingly.
-	 */
-	override private function updateSize():Void
-	{
-		_input.width = _width;
-		_input.height = _height - 15;
-		
-		super.updateSize();
 	}
 }

@@ -16,8 +16,7 @@ class Commands
 		// Install commands
 		console.addCommand("help", this, help, "h");
 		console.addCommand("log", FlxG, FlxG.log);
-		console.addCommand("clearLog", FlxG, FlxG.clearLog);
-		console.addCommand("clear", FlxG, FlxG.clearLog, "cl");
+		console.addCommand("clearLog", FlxG, FlxG.clearLog, "clear");
 		console.addCommand("clearHistory", this, clearHistory, "ch");
 		console.addCommand("resetState", this, resetState, "rs");
 		console.addCommand("switchState", this, switchState, "ss");
@@ -27,6 +26,7 @@ class Commands
 		#end
 		console.addCommand("watchMouse", this, watchMouse, "wm");
 		console.addCommand("visualDebug", this, visualDebug, "vd");
+		console.addCommand("pause", this, pause);
 		console.addCommand("play", FlxG, FlxG.play, "p");
 		console.addCommand("playMusic", FlxG, FlxG.playMusic, "pm");
 		console.addCommand("bgColor", this, bgColor, "bg");
@@ -34,7 +34,7 @@ class Commands
 		console.addCommand("resumeSounds", this, resumeSounds);
 		console.addCommand("shake", this, shake, "sh");
 		console.addCommand("volume", this, volume, "vl");
-		console.addCommand("close", this, close);
+		console.addCommand("close", this, close, "cl");
 		console.addCommand("create", this, create, "cr");
 		console.addCommand("set", this, set);
 	}
@@ -45,7 +45,7 @@ class Commands
 		FlxG.log("|                          List of system commands:                          |" );
 		FlxG.log("------------------------------------------------------------------------");
 		FlxG.log("| > log [Text:String]");
-		FlxG.log("| > clearLog | clear | cl");
+		FlxG.log("| > clearLog | clear");
 		FlxG.log("| > clearHistory | ch");
 		FlxG.log("| > help | h");
 		FlxG.log("| > resetState | rs");
@@ -56,6 +56,7 @@ class Commands
 		#end
 		FlxG.log("| > watchMouse | wm (toggle)");
 		FlxG.log("| > visualDebug | vd (toggle)");
+		FlxG.log("| > pause (toggle)");
 		FlxG.log("| > play | p [Sound:Dynamic] [Volume:Float = 1]");
 		FlxG.log("| > playMusic | pm [Sound:Dynamic] [Volume:Float = 1]");
 		FlxG.log("| > bgColor | bg [Color:UInt or color from FlxG]");
@@ -71,8 +72,8 @@ class Commands
 	
 	private function clearHistory():Void
 	{
-		_console.commandHistory = new Array<String>();
-		_console._shared.flush();
+		_console.cmdHistory = new Array<String>();
+		FlxG._game._prefsSave.flush();
 		FlxG.log("> clearHistory: Command history cleared");
 	}
 	
@@ -116,6 +117,18 @@ class Commands
 			FlxG.log("> visualDebug: Enbaled");
 		else
 			FlxG.log("> visualDebug: Disabled");
+	}
+	
+	private function pause():Void
+	{
+		if (FlxG._game.debugger.vcr.paused) {
+			FlxG._game.debugger.vcr.onPlay();
+			FlxG.log("> pause: Game unpaused");
+		}
+		else {
+			FlxG._game.debugger.vcr.onPause();
+			FlxG.log("> pause: Game paused");
+		}
 	}
 	
 	private function bgColor(Color:Dynamic):Void
