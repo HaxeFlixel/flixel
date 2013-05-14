@@ -502,11 +502,8 @@ class FlxGame extends Sprite
 				_updateSoundTray = false;
 				
 				//Save sound preferences
-				if (_prefsSave.data.sound == null)
-					_prefsSave.data.sound = {};
-					
-				_prefsSave.data.sound.mute = FlxG.mute;
-				_prefsSave.data.sound.volume = FlxG.volume;
+				_prefsSave.data.mute = FlxG.mute;
+				_prefsSave.data.volume = FlxG.volume;
 				_prefsSave.flush();
 			}
 		}
@@ -780,11 +777,15 @@ class FlxGame extends Sprite
 		addChild(_soundTray);
 		
 		//load saved sound preferences for this game if they exist
-		if (_prefsSave.data.sound.volume != null)
+		if (_prefsSave.data.volume != null)
 			FlxG.volume = _prefsSave.data.sound.volume;
+		else 
+			FlxG.volume = 0.5;
 			
-		if (_prefsSave.data.sound.mute != null)
+		if (_prefsSave.data.mute != null)
 			FlxG.mute = _prefsSave.data.sound.mute;
+		else 
+			FlxG.mute = false;
 	}
 	
 	/**
