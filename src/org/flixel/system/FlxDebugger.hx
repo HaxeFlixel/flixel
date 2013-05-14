@@ -125,6 +125,7 @@ class FlxDebugger extends Sprite
 		
 		console = new Console("console", 0, 0, false, screenBounds);
 		addChild(console);
+		FlxG.console = console;
 		
 		perf = new Perf("stats", 0, 0, false, screenBounds);
 		addChild(perf);

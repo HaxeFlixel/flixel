@@ -14,6 +14,7 @@ import nme.text.TextFormat;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.system.FlxWindow;
+import org.flixel.FlxObject;
 
 /**
  * 
@@ -25,7 +26,32 @@ class Console extends FlxWindow
 	private var cmdFunctions:Hash<Dynamic>;
 	private var cmdObjects:Hash<Dynamic>;
 	
+	/**
+	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
+	 * helper function to register new ones or add them to this Hash directly.
+	 */
+	public var registeredObjects:Hash<Dynamic>;
+	/**
+	 * Hash containing all registered Functions for the call command. You can use the registerFunction() 
+	 * helper function to register new ones or add them to this Hash directly.
+	 */
+	public var registeredFunctions:Hash<Dynamic>;
+	
+	/**
+	 * Internal helper var containing all the FlxObjects created via the create command.
+	 */
+	public var objectStack:Array<FlxObject>;
+	
+	/**
+	 * Reference to the array containing the command history.
+	 */
 	public var cmdHistory:Array<String>;
+	
+	/**
+	 * Whether the console should auto-pause or not when it's focused. Only works for flash atm.
+	 * @default true
+	 */
+	public var autoPause:Bool = true;
 	
 	private var historyIndex:Int = 0;
 	private var historyMax:Int = 25;
@@ -52,6 +78,12 @@ class Console extends FlxWindow
 		
 		cmdFunctions = new Hash<Dynamic>();
 		cmdObjects = new Hash<Dynamic>();
+		
+		registeredObjects = new Hash<Dynamic>();
+		registeredFunctions = new Hash<Dynamic>();
+		
+		objectStack = new Array<FlxObject>();
+		
 		cmdHistory = new Array<String>();
 		
 		// Load old command history if existant
@@ -73,9 +105,6 @@ class Console extends FlxWindow
 		_input.height = _height - 15;
 		_input.x = 2;
 		_input.y = 15;
-		#if flash
-		_input.restrict = "a-zA-Z 0-9.";
-		#end
 		addChild(_input);
 		
 		_input.addEventListener(FocusEvent.FOCUS_IN, onFocus);
@@ -90,7 +119,8 @@ class Console extends FlxWindow
 	{
 		// Pause game
 		#if flash
-		FlxG._game.debugger.vcr.onPause();
+		if (autoPause)
+			FlxG._game.debugger.vcr.onPause();
 		#end
 		// Shouldn't be able to trigger sound control when console has focus
 		FlxG._game.tempDisableSoundHotKeys = true;
@@ -103,7 +133,8 @@ class Console extends FlxWindow
 	{
 		// Unpause game
 		#if flash
-		FlxG._game.debugger.vcr.onPlay();
+		if (autoPause)
+			FlxG._game.debugger.vcr.onPlay();
 		#end
 		FlxG._game.tempDisableSoundHotKeys = false;
 		
@@ -119,71 +150,9 @@ class Console extends FlxWindow
 		
 		// Submitting the command
 		if (e.keyCode == Keyboard.ENTER && _input.text != "") 
-		{ 
-			var args:Array<Dynamic> = _input.text.split(" ");
-			var command:String = args.shift();
-			var obj:Dynamic = cmdObjects.get(command);
-			var func:Dynamic = cmdFunctions.get(command);
-			
-			if (func != null) 
-			{
-				// Only save new commands 
-				if (getPreviousCommand() != _input.text) 
-				{
-					cmdHistory.push(_input.text);
-					FlxG._game._prefsSave.flush();
-					
-					// Set a maximum for commands you can save
-					if (cmdHistory.length > historyMax)
-						cmdHistory.shift();
-				}
-					
-				historyIndex = cmdHistory.length;
-				
-				if (Reflect.isFunction(func)) 
-				{
-					try 
-					{
-						// For the log command, push all the arguments into the first parameter
-						if (command == "log") {
-							Reflect.callMethod(obj, func, [args.join(" ")]);
-						}
-						else 
-							Reflect.callMethod(obj, func, args);
-					}
-					catch(e:ArgumentError)
-					{
-						if (e.errorID == 1063)
-						{
-							/* Retrieve the number of expected arguments from the error message
-							The first 4 digits in the message are the error-type (1063), 5th is 
-							the one we are looking for */
-							var expected:Int = Std.parseInt(filterDigits(e.message).charAt(4));
-							
-							// We can deal with too many parameters...
-							if (expected < args.length) {
-								// Shorten args accordingly
-								var shortenedArgs:Array<Dynamic> = args.slice(0, expected);
-								// Try again
-								Reflect.callMethod(obj, func, shortenedArgs);
-							}
-							// ...but not with too few
-							else {
-								FlxG.log("> Invalid number or paramters: " + expected + " expected, " + args.length + " passed");
-								return;
-							}
-						}
-					}
-				}
-				
-				_input.text = "";
-			}
-			else {
-				FlxG.log("> Invalid command: '" + command + "'");
-			}
-		}
+			processCommand();
 		
-		// Quick-access
+		// Quick-unfcous
 		else if (e.keyCode == Keyboard.ESCAPE) 
 			FlxG.stage.focus = null;
 		
@@ -206,6 +175,85 @@ class Console extends FlxWindow
 			if (cmdHistory.length == 0) return;
 			
 			_input.text = getNextCommand();
+		}
+	}
+	
+	private function processCommand():Void
+	{
+		var args:Array<Dynamic> = StringTools.rtrim(_input.text).split(" ");
+		var command:String = args.shift();
+		
+		var obj:Dynamic = cmdObjects.get(command);
+		var func:Dynamic = cmdFunctions.get(command);
+		
+		// Check if the commmand exists
+		if (func != null) 
+		{
+			// Only save new commands 
+			if (getPreviousCommand() != _input.text) 
+			{
+				// Save the command to the history
+				cmdHistory.push(_input.text);
+				FlxG._game._prefsSave.flush();
+					
+				// Set a maximum for commands you can save
+				if (cmdHistory.length > historyMax)
+					cmdHistory.shift();
+			}
+				
+			historyIndex = cmdHistory.length;
+				
+			if (Reflect.isFunction(func)) 
+			{
+				// Push all the strings into one param for the log command
+				if  (command == "log") 
+					args = [args.join(" ")];
+				// Make the second param of call an array of the ramining params to 
+				// be passed to the function you call
+				else if (command == "call") 
+					args[1] = args.slice(1, args.length);
+					
+				callFunction(obj, func, args); 
+			}
+			
+			_input.text = "";
+		}
+		// In case the command doesn't exist
+		else {
+			FlxG.log("> Invalid command: '" + command + "'");
+		}
+	}
+	
+	public function callFunction(obj:Dynamic, func:Dynamic, args:Array<Dynamic>):Void
+	{
+		try 
+		{
+			Reflect.callMethod(obj, func, args);
+		}
+		catch(e:ArgumentError)
+		{
+			if (e.errorID == 1063)
+			{
+				/* Retrieve the number of expected arguments from the error message
+				The first 4 digits in the message are the error-type (1063), 5th is 
+				the one we are looking for */
+				var expected:Int = Std.parseInt(filterDigits(e.message).charAt(4));
+				
+				// We can deal with too many parameters...
+				if (expected < args.length) 
+				{
+					// Shorten args accordingly
+					var shortenedArgs:Array<Dynamic> = args.slice(0, expected);
+					// Try again
+					Reflect.callMethod(obj, func, shortenedArgs);
+				}
+				// ...but not with too few
+				else 
+				{
+					FlxG.log("> Invalid number or paramters: " + expected + " expected, " + args.length + " passed");
+					return;
+				}
+			}
 		}
 	}
 	
@@ -244,15 +292,43 @@ class Console extends FlxWindow
 			return "";
 	}
 	
-	public function addCommand(Command:String, Object:Dynamic, Function:Dynamic, Alt:String = ""):Void
+	/**
+	 * Add a custom command to the console on the debugging screen.
+	 * @param Command	The command's name.
+	 * @param AnyObject Object containing the function (<code>this</code> if function is within the class you're calling this from).
+	 * @param Function	Function to be called with params when the command is entered.
+	 * @param Alt		Alternative name for the command, useful as a shortcut.
+	 */
+	public function addCommand(Command:String, AnyObject:Dynamic, Function:Dynamic, Alt:String = ""):Void
 	{
 		cmdFunctions.set(Command, Function);
-		cmdObjects.set(Command, Object);
+		cmdObjects.set(Command, AnyObject);
 		
 		if (Alt != "") {
 			cmdFunctions.set(Alt, Function);
-			cmdObjects.set(Alt, Object);
+			cmdObjects.set(Alt, AnyObject);
 		}
+	}
+	
+	/**
+	 * Register a new object to use for the set command.
+	 * @param ObjectAlias	The name with which you want to access the object.
+	 * @param AnyObject		The object to register.
+	 */
+	public function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
+	{
+		registeredObjects.set(ObjectAlias, AnyObject);
+	}
+	
+	/**
+	 * Register a new function to use for the call command.
+	 * @param FunctionAlias	The name with which you want to access the function.
+	 * @param Function		The function to register.
+	 * @param AnyObject		The object that contains the function.
+	 */
+	public function registerFunction(FunctionAlias:String, Function:Dynamic, AnyObject:Dynamic):Void
+	{
+		registeredFunctions.set(FunctionAlias, [Function, AnyObject]);
 	}
 	
 	/**
@@ -270,7 +346,11 @@ class Console extends FlxWindow
 		
 		cmdFunctions = null;
 		cmdObjects = null;
-		cmdHistory = null;
+		
+		registeredObjects = null;
+		registeredFunctions = null;
+		
+		objectStack = null;
 		
 		super.destroy();
 	}
