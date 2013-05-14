@@ -112,7 +112,7 @@ class Console extends FlxWindow
 		_input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		
 		// Install commands
-		var commands:Commands = new Commands(this);
+		var commands:ConsoleCommands = new ConsoleCommands(this);
 	}
 	
 	private function onFocus(e:FocusEvent):Void

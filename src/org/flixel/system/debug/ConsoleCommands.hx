@@ -1,11 +1,10 @@
 package org.flixel.system.debug;
 
-import nme.display.GradientType;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxState;
 
-class Commands
+class ConsoleCommands
 {
 	private var _console:Console;
 	private var watchingMouse:Bool = false;
