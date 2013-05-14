@@ -1740,7 +1740,7 @@ class FlxTilemap extends FlxObject
 			column = 0;
 			while(column < Width)
 			{
-				index = Data[row * Width + column];
+				index = Data[Std.int(row * Width + column)];
 				if(Invert)
 				{
 					if (index == 0)
