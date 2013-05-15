@@ -446,7 +446,10 @@ class FlxGame extends Sprite
 		
 		//finally actually step through the game physics
 		FlxBasic._ACTIVECOUNT = 0;
-		
+
+        if (_state != _requestedState)
+            switchState();
+
 		#if (cpp && thread)
 		threadSync.push(true);
 		#else
@@ -511,10 +514,7 @@ class FlxGame extends Sprite
 	 * May be called multiple times per "frame" or draw call.
 	 */
 	private function update():Void
-	{
-		if (_state != _requestedState)
-			switchState();
-		
+    {
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 			_mark = Lib.getTimer(); // getTimer is expensive, only do it if necessary
