@@ -242,6 +242,11 @@ class FlxObject extends FlxBasic
 	 */
 	public var pathAngle:Float;
 	/**
+	 * Whether the object should auto-center the path or at its origin.
+	 * @default true
+	 */
+	public var pathAutoCenter:Bool;
+	/**
 	 * Internal helper, tracks which node of the path this object is moving toward.
 	 */
 	private var _pathNodeIndex:Int;
@@ -322,6 +327,7 @@ class FlxObject extends FlxBasic
 		path = null;
 		pathSpeed = 0;
 		pathAngle = 0;
+		pathAutoCenter = true;
 	}
 	
 	/**
@@ -568,6 +574,24 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Change the path node this object is currently at.
+	 * @param	NodeIndex		The index of the new node out of <code>path.nodes</code>.
+	 */
+	public function setPathNode(NodeIndex:Int):Void
+	{
+		if (path == null) 
+			return;
+		
+		if (NodeIndex < 0) 
+			NodeIndex = 0;
+		else if (NodeIndex > path.nodes.length - 1)
+			NodeIndex = path.nodes.length - 1;
+		
+		_pathNodeIndex = NodeIndex; 
+		advancePath();
+	}
+
+	/**
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
 	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
 	 */
@@ -580,11 +604,15 @@ class FlxObject extends FlxBasic
 			{
 				if ((_pathMode & PATH_VERTICAL_ONLY) == 0)
 				{
-					x = oldNode.x - width * 0.5;
+					x = oldNode.x;
+					if (pathAutoCenter) 
+						x -= width * 0.5;
 				}
 				if ((_pathMode & PATH_HORIZONTAL_ONLY) == 0)
 				{
-					y = oldNode.y - height * 0.5;
+					y = oldNode.y;
+					if (pathAutoCenter) 
+						y -= height * 0.5;
 				}
 			}
 		}
@@ -666,8 +694,10 @@ class FlxObject extends FlxBasic
 	inline private function updatePathMotion():Void
 	{
 		//first check if we need to be pointing at the next node yet
-		_point.x = x + width * 0.5;
-		_point.y = y + height * 0.5;
+		if (pathAutoCenter) {
+			_point.x = x + width * 0.5;
+			_point.y = y + height * 0.5;
+		}
 		var node:FlxPoint = path.nodes[_pathNodeIndex];
 		var deltaX:Float = node.x - _point.x;
 		var deltaY:Float = node.y - _point.y;
@@ -701,8 +731,10 @@ class FlxObject extends FlxBasic
 		if(pathSpeed != 0)
 		{
 			//set velocity based on path mode
-			_point.x = x + width * 0.5;
-			_point.y = y + height * 0.5;
+			if (pathAutoCenter) {
+				_point.x = x + width * 0.5;
+				_point.y = y + height * 0.5;
+			}
 			if (horizontalOnly || (_point.y == node.y))
 			{
 				velocity.x = (_point.x < node.x) ? pathSpeed : -pathSpeed;
@@ -1296,7 +1328,7 @@ class FlxObject extends FlxBasic
 			return false;
 		}
 	}
-
+		
 	public function move(x:Float, y:Float):Void
 	{
 		this.x = x;
