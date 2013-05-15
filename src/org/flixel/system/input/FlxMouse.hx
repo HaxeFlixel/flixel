@@ -50,6 +50,18 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 * Helper variable for tracking whether the mouse was just pressed or just released.
 	 */
 	private var _current:Int;
+	
+	#if (FLX_MOUSE_ADVANCED && !js)
+	/**
+	 * Helper variable for tracking whether the right mouse button was just pressed or just released.
+	 */
+	private var _currentRight:Int;
+	/**
+	 * Helper variable for tracking whether the left mouse button was just pressed or just released.
+	 */
+	private var _currentMiddle:Int;
+	#end
+	
 	/**
 	 * Helper variable for tracking whether the mouse was just pressed or just released.
 	 */
@@ -107,6 +119,12 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		#if (FLX_MOUSE_ADVANCED && !js)
+		Lib.current.stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onMouseDownRight);
+		Lib.current.stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onMouseUpRight);
+		Lib.current.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMouseDownMiddle);
+		Lib.current.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUpMiddle);
+		#end
 	}
 	
 	/**
@@ -202,6 +220,52 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 		
 		wheel = FlashEvent.delta;
 	}
+	
+	#if (FLX_MOUSE_ADVANCED && !js)
+	private function onMouseDownRight(FlashEvent:MouseEvent):Void
+	{
+		if (_currentRight > 0) _currentRight = 1;
+		else _currentRight = 2;
+	}
+	
+	private function onMouseUpRight(FlashEvent:MouseEvent):Void
+	{
+		if (_currentRight > 0) 
+		{
+			_currentRight = -1;
+		}
+		else if (_currentRight == -2)
+		{
+			_currentRight == -2;
+		}
+		else 
+		{
+			_currentRight = 0;
+		}
+	}
+	
+	private function onMouseDownMiddle(FlashEvent:MouseEvent):Void
+	{
+		if (_currentMiddle > 0) _currentMiddle = 1;
+		else _currentMiddle = 2;
+	}
+	
+	private function onMouseUpMiddle(FlashEvent:MouseEvent):Void
+	{
+		if (_currentMiddle > 0) 
+		{
+			_currentMiddle = -1;
+		}
+		else if (_currentMiddle == -2)
+		{
+			_currentMiddle == -2;
+		}
+		else 
+		{
+			_currentMiddle = 0;
+		}
+	}
+	#end
 	
 	/**
 	 * Clean up memory.
@@ -454,6 +518,44 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	 * @return	Whether the mouse was just released.
 	 */
 	public function justReleased():Bool { return (_current == -1 || _current == -2); }
+	
+	#if (FLX_MOUSE_ADVANCED && !js)
+	/**
+	 * Check to see if the right mouse button is pressed.
+	 * @return	Whether the right mouse button is pressed.
+	 */
+	public function pressedRight():Bool { return _currentRight > 0; }
+	
+	/**
+	 * Check to see if the right mouse button was just pressed.
+	 * @return Whether the right mouse button was just pressed.
+	 */
+	public function justPressedRight():Bool { return (_currentRight == 2 || _currentRight == -2); }
+	
+	/**
+	 * Check to see if the right mouse button was just released.
+	 * @return	Whether the right mouse button was just released.
+	 */
+	public function justReleasedRight():Bool { return (_currentRight == -1 || _currentRight == -2); }
+	
+	/**
+	 * Check to see if the middle mouse button is pressed.
+	 * @return	Whether the middle mouse button is pressed.
+	 */
+	public function pressedMiddle():Bool { return _currentMiddle > 0; }
+	
+	/**
+	 * Check to see if the middle mouse button was just pressed.
+	 * @return Whether the middle mouse button was just pressed.
+	 */
+	public function justPressedMiddle():Bool { return (_currentMiddle == 2 || _currentMiddle == -2); }
+	
+	/**
+	 * Check to see if the middle mouse button was just released.
+	 * @return	Whether the middle mouse button was just released.
+	 */
+	public function justReleasedMiddle ():Bool { return (_currentMiddle == -1 || _currentMiddle == -2); }
+	#end
 	
 	/**
 	 * If the mouse changed state or is pressed, return that info now
