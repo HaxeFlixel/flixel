@@ -522,36 +522,42 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	#if (FLX_MOUSE_ADVANCED && !js)
 	/**
 	 * Check to see if the right mouse button is pressed.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return	Whether the right mouse button is pressed.
 	 */
 	public function pressedRight():Bool { return _currentRight > 0; }
 	
 	/**
 	 * Check to see if the right mouse button was just pressed.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return Whether the right mouse button was just pressed.
 	 */
 	public function justPressedRight():Bool { return (_currentRight == 2 || _currentRight == -2); }
 	
 	/**
 	 * Check to see if the right mouse button was just released.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return	Whether the right mouse button was just released.
 	 */
 	public function justReleasedRight():Bool { return (_currentRight == -1 || _currentRight == -2); }
 	
 	/**
 	 * Check to see if the middle mouse button is pressed.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return	Whether the middle mouse button is pressed.
 	 */
 	public function pressedMiddle():Bool { return _currentMiddle > 0; }
 	
 	/**
 	 * Check to see if the middle mouse button was just pressed.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return Whether the middle mouse button was just pressed.
 	 */
 	public function justPressedMiddle():Bool { return (_currentMiddle == 2 || _currentMiddle == -2); }
 	
 	/**
 	 * Check to see if the middle mouse button was just released.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return	Whether the middle mouse button was just released.
 	 */
 	public function justReleasedMiddle ():Bool { return (_currentMiddle == -1 || _currentMiddle == -2); }
