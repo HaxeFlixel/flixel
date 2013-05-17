@@ -118,7 +118,7 @@ class FlxPhysState extends FlxState
 	 */
 	override public function update():Void 
 	{
-		space.step(FlxG.elapsed, velocityIterations, positionIterations);
+		space.step(FlxG.elapsed * FlxG.timeScale, velocityIterations, positionIterations);
 		super.update();
 	}
 	
@@ -192,18 +192,10 @@ class FlxPhysState extends FlxState
 		_physDbgSpr.display.scaleX = zoom; 
 		_physDbgSpr.display.scaleY = zoom;
 		
-		if (cam.target == null) 
-		{
-			_physDbgSpr.display.x = cam.scroll.x * zoom;
-			_physDbgSpr.display.y = cam.scroll.y * zoom;
-		} 
-		else
-		{
-			_physDbgSpr.display.x = -cam.scroll.x * zoom;
-			_physDbgSpr.display.y = -cam.scroll.y * zoom;
-			_physDbgSpr.display.x += (FlxG.width - FlxG.width * zoom) / 2; 
-			_physDbgSpr.display.y += (FlxG.height - FlxG.height * zoom) / 2;
-		}
+		_physDbgSpr.display.x = -cam.scroll.x * zoom;
+		_physDbgSpr.display.y = -cam.scroll.y * zoom;
+		_physDbgSpr.display.x += (FlxG.width - FlxG.width * zoom) / 2; 
+		_physDbgSpr.display.y += (FlxG.height - FlxG.height * zoom) / 2;
 	}
 	#end
 }
