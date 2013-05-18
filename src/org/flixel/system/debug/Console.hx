@@ -250,7 +250,7 @@ class Console extends FlxWindow
 				// ...but not with too few
 				else 
 				{
-					FlxG.log("> Invalid number or paramters: " + expected + " expected, " + args.length + " passed");
+					FlxG.log("> Invalid number or parameters: " + expected + " expected, " + args.length + " passed");
 					return;
 				}
 			}

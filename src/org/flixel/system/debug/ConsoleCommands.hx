@@ -346,6 +346,8 @@ class ConsoleCommands
 		FlxG.log("> set: " + Std.string(object) + "." + tempVarName + " is now " + NewValue);
 	}
 	
+	
+	
 	private function call(FunctionAlias:String, Params:Array<String>):Void
 	{
 		var info:Array<Dynamic> = _console.registeredFunctions.get(FunctionAlias);
