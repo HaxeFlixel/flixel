@@ -815,7 +815,7 @@ class FlxGame extends Sprite
 	/**
 	 * Sets up the darkened overlay with the big white "play" button that appears when a flixel game loses focus.
 	 */
-	private function createFocusScreen():Void
+	public function createFocusScreen():Void
 	{
 		var gfx:Graphics = _focus.graphics;
 		var screenWidth:Int = Std.int(FlxG.width * FlxCamera.defaultZoom);
