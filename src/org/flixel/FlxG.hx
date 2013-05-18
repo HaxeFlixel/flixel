@@ -14,6 +14,8 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.media.Sound;
 import nme.media.SoundTransform;
+import org.flixel.system.debug.Console;
+import org.flixel.system.FlxWindow;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.plugin.pxText.PxBitmapFont;
@@ -232,6 +234,11 @@ class FlxG
 	 * Default = false.
 	 */
 	static public var visualDebug:Bool;
+	/**
+	 * Reference to the console on the debugging screen - use it to add commands,
+	 * register objects and functions, etc.
+	 */
+	static public var console:Console;
 	#end
 	/**
 	 * Setting this to true will disable/skip stuff that isn't necessary for mobile platforms like Android. [BETA]
