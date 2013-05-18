@@ -283,6 +283,7 @@ class ConsoleCommands
 		FlxG.log("> create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
 	}
 	
+	// TODO: remove one parameter, so we will be able to type in console 'set sprite.x 10'
 	private function set(ObjectAlias:String, VariableName:String, NewValue:Dynamic):Void
 	{
 		var tempArr1:Array<String> = ObjectAlias.split(".");
@@ -303,7 +304,7 @@ class ConsoleCommands
 		for (i in 0...l)
 		{
 			tempVarName = searchArr[i];
-			if (!Reflect.hasField(object, tempVarName)) 
+			if (!Reflect.hasField(tempObj, tempVarName)) 
 			{
 				FlxG.log("> set: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
 				return;
@@ -348,14 +349,61 @@ class ConsoleCommands
 	
 	private function call(FunctionAlias:String, Params:Array<String>):Void
 	{
+		// Search for function in registeredFunctions hash
 		var info:Array<Dynamic> = _console.registeredFunctions.get(FunctionAlias);
-		if (info == null) {
+		var func:Dynamic = null;
+		var obj:Dynamic = null;
+		
+		if (info != null)
+		{
+			// We found it!
+			func = info[0];
+			obj = info[1];
+		}
+		else
+		{
+			// Otherwise, we'll search for function in registeredObjects' methods
+			var searchArr:Array<String> = FunctionAlias.split(".");
+			var objectName:String = searchArr.shift();
+			var object:Dynamic = _console.registeredObjects.get(objectName);
+			
+			if (!Reflect.isObject(object)) 
+			{
+				FlxG.log("> call: '" + Std.string(object) + "' is not a valid Object to call function from");
+				return;
+			}
+			
+			var tempObj:Dynamic = object;
+			var tempVarName:String = "";
+			var funcName:String = "";
+			var l:Int = searchArr.length - 1;
+			for (i in 0...l)
+			{
+				tempVarName = searchArr[i];
+				if (!Reflect.hasField(tempObj, tempVarName)) 
+				{
+					FlxG.log("> call: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "' to call function from");
+					return;
+				}
+				
+				tempObj = Reflect.getProperty(tempObj, tempVarName);
+			}
+			
+			obj = tempObj;
+			func = Reflect.field(tempObj, searchArr[l]);
+			
+			if (func == null)
+			{
+				FlxG.log("> call: " + Std.string(obj) + " does not have a method '" + searchArr[l] + "' to call");
+				return;
+			}
+		}
+		
+		if (info == null && (func == null || obj == null)) 
+		{
 			FlxG.log("> call: '" + FunctionAlias + "' is not a registered function");
 			return;
 		}
-			
-		var func:Dynamic = info[0];
-		var obj:Dynamic = info[1];
 		
 		if (Reflect.isFunction(func)) {
 			_console.callFunction(obj, func, Params);

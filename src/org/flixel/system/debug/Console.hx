@@ -208,7 +208,7 @@ class Console extends FlxWindow
 				// Push all the strings into one param for the log command
 				if  (command == "log") 
 					args = [args.join(" ")];
-				// Make the second param of call an array of the ramining params to 
+				// Make the second param of call an array of the remaining params to 
 				// be passed to the function you call
 				else if (command == "call") 
 					args[1] = args.slice(1, args.length);
