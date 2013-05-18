@@ -311,12 +311,12 @@ class ConsoleCommands
 			
 			if (i < (l - 1))
 			{
-				tempObj = Reflect.field(tempObj, tempVarName);
+				tempObj = Reflect.getProperty(tempObj, tempVarName);
 			}
 		}
 		
 		object = tempObj;
-		var variable:Dynamic = Reflect.field(object, tempVarName);
+		var variable:Dynamic = Reflect.getProperty(object, tempVarName);
 		
 		// Workaround to make Booleans work
 		if (Std.is(variable, Bool)) {
@@ -345,8 +345,6 @@ class ConsoleCommands
 		
 		FlxG.log("> set: " + Std.string(object) + "." + tempVarName + " is now " + NewValue);
 	}
-	
-	
 	
 	private function call(FunctionAlias:String, Params:Array<String>):Void
 	{
