@@ -283,19 +283,16 @@ class ConsoleCommands
 		FlxG.log("> create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
 	}
 	
-	// TODO: remove one parameter, so we will be able to type in console 'set sprite.x 10'
-	private function set(ObjectAlias:String, VariableName:String, NewValue:Dynamic):Void
+	private function set(ObjectAndVarialble:String, NewVariableValue:Dynamic):Void
 	{
-		var tempArr1:Array<String> = ObjectAlias.split(".");
-		var object:Dynamic = _console.registeredObjects.get(tempArr1.shift());
+		var searchArr:Array<String> = ObjectAndVarialble.split(".");
+		var object:Dynamic = _console.registeredObjects.get(searchArr.shift());
+		var variableName:String = searchArr.join(".");
 		
 		if (!Reflect.isObject(object)) {
 			FlxG.log("> set: '" + Std.string(object) + "' is not a valid Object");
 			return;
 		}
-		
-		var tempArr2:Array<String> = VariableName.split(".");
-		var searchArr:Array<String> = tempArr1.concat(tempArr2);
 		
 		// Searching for property...
 		var l:Int = searchArr.length;
@@ -321,30 +318,29 @@ class ConsoleCommands
 		
 		// Workaround to make Booleans work
 		if (Std.is(variable, Bool)) {
-			if (NewValue == "false" || NewValue == "0") 
-				NewValue = false;
-			else if (NewValue == "true" || NewValue == "1") 
-				NewValue = true;
+			if (NewVariableValue == "false" || NewVariableValue == "0") 
+				NewVariableValue = false;
+			else if (NewVariableValue == "true" || NewVariableValue == "1") 
+				NewVariableValue = true;
 			else {
-				FlxG.log("> set: '" + NewValue + "' is not a valid value for Booelan '" + VariableName + "'");
+				FlxG.log("> set: '" + NewVariableValue + "' is not a valid value for Booelan '" + variableName + "'");
 				return;
 			}
 		}
 		// Prevent turning numbers into NaN
-		else if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewValue))) {
-			FlxG.log("> set: '" + NewValue + "' is not a valid value for number '" + VariableName + "'");
+		else if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) {
+			FlxG.log("> set: '" + NewVariableValue + "' is not a valid value for number '" + variableName + "'");
 			return;
 		}
 		// Prevent setting non "simple" typed properties
 		else if (!Std.is(variable, Float) && !Std.is(variable, Bool) && !Std.is(variable, String))
 		{
-			FlxG.log("> set: '" + VariableName + ":" + Std.string(variable) + "' is not of a simple type (number, bool or string)");
+			FlxG.log("> set: '" + variableName + ":" + Std.string(variable) + "' is not of a simple type (number, bool or string)");
 			return;
 		}
 		
-		Reflect.setProperty(object, tempVarName, NewValue);
-		
-		FlxG.log("> set: " + Std.string(object) + "." + tempVarName + " is now " + NewValue);
+		Reflect.setProperty(object, tempVarName, NewVariableValue);
+		FlxG.log("> set: " + Std.string(object) + "." + tempVarName + " is now " + NewVariableValue);
 	}
 	
 	private function call(FunctionAlias:String, Params:Array<String>):Void
