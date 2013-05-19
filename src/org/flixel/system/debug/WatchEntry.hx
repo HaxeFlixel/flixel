@@ -157,8 +157,7 @@ class WatchEntry
 			if (NameWidth > 120)
 				nameDisplay.appendText(FlxU.getClassName(object, (NameWidth < 240)) + ".");
 			
-			if (field != null)
-				nameDisplay.appendText(field);
+			nameDisplay.appendText(field);
 		}
 	}
 	
@@ -167,7 +166,7 @@ class WatchEntry
 	 */
 	public function updateValue():Bool
 	{
-		if (editing || field == null)
+		if (editing)
 			return false;
 		
 		valueDisplay.text = Std.string(Reflect.getProperty(object, field));
@@ -180,14 +179,11 @@ class WatchEntry
 	 */
 	public function onMouseUp(FlashEvent:MouseEvent):Void
 	{
-		if (field != null)
-		{
-			editing = true;
-			oldValue = Reflect.getProperty(object, field);
-			valueDisplay.type = TextFieldType.INPUT;
-			valueDisplay.setTextFormat(_blackText);
-			valueDisplay.background = true;
-		}
+		editing = true;
+		oldValue = Reflect.getProperty(object, field);
+		valueDisplay.type = TextFieldType.INPUT;
+		valueDisplay.setTextFormat(_blackText);
+		valueDisplay.background = true;
 	}
 	
 	/**
@@ -224,11 +220,8 @@ class WatchEntry
 	 */
 	public function submit():Void
 	{
-		if (field != null)
-		{
-			Reflect.setProperty(object, field, valueDisplay.text);
-			doneEditing();
-		}
+		Reflect.setProperty(object, field, valueDisplay.text);
+		doneEditing();
 	}
 	
 	/**

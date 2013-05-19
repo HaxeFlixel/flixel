@@ -125,6 +125,14 @@ class Watch extends FlxWindow
 		
 		//Good, no repeats, add away!
 		watchEntry = new WatchEntry(_watching.length * LINE_HEIGHT, _width / 2, _width / 2 - 10, AnyObject, VariableName, DisplayName);
+		
+		if (watchEntry.field == null)
+		{
+			watchEntry.destroy();
+			watchEntry = null;
+			return;
+		}
+		
 		_names.addChild(watchEntry.nameDisplay);
 		_values.addChild(watchEntry.valueDisplay);
 		_watching.push(watchEntry);
