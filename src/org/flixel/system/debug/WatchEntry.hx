@@ -7,6 +7,7 @@ import nme.text.TextField;
 import nme.text.TextFieldType;
 import nme.text.TextFormat;
 import org.flixel.FlxAssets;
+import org.flixel.FlxPoint;
 
 import org.flixel.FlxU;
 
@@ -77,7 +78,7 @@ class WatchEntry
 		
 		valueDisplay = new TextField();
 		valueDisplay.y = Y;
-		valueDisplay.height = 16;
+		valueDisplay.height = 19;
 		valueDisplay.multiline = false;
 		valueDisplay.selectable = true;
 		valueDisplay.doubleClickEnabled = true;
@@ -148,7 +149,15 @@ class WatchEntry
 		{
 			return false;
 		}
-		valueDisplay.text = Std.string(Reflect.getProperty(object, field));
+		
+		var property:Dynamic = Reflect.getProperty(object, field);
+		
+		if (Std.is(property, FlxPoint)) {
+			valueDisplay.text = "x: " + FlxU.round(property.x) + " | y: " +  FlxU.round(property.y); 
+		}
+		else 
+			valueDisplay.text = Std.string(property);
+			
 		return true;
 	}
 	
