@@ -7,7 +7,7 @@ import nme.text.TextField;
 import nme.text.TextFieldType;
 import nme.text.TextFormat;
 import org.flixel.FlxAssets;
-
+import org.flixel.FlxG;
 import org.flixel.FlxU;
 
 /**
@@ -23,7 +23,7 @@ class WatchEntry
 	/**
 	 * The member variable of that object.
 	 */
-	public var field:String;
+	public var field:String;	
 	/**
 	 * A custom display name for this object, if there is any.
 	 */
@@ -64,6 +64,28 @@ class WatchEntry
 		object = Obj;
 		field = Field;
 		custom = Custom;
+		
+		var tempArr:Array<String> = field.split(".");
+		var l:Int = tempArr.length;
+		var tempObj:Dynamic = object;
+		var tempVarName:String = "";
+		for (i in 0...l)
+		{
+			tempVarName = tempArr[i];
+			if (!Reflect.hasField(tempObj, tempVarName)) 
+			{
+				FlxG.log("> Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
+				return;
+			}
+			
+			if (i < (l - 1))
+			{
+				tempObj = Reflect.getProperty(tempObj, tempVarName);
+			}
+		}
+		
+		object = tempObj;
+		field = tempVarName;
 		
 		var fontName:String = Assets.getFont(FlxAssets.debuggerFont).fontName;
 		_whiteText = new TextFormat(fontName, 12, 0xffffff);
