@@ -75,7 +75,8 @@ class WatchEntry
 			if (!Reflect.hasField(tempObj, tempVarName)) 
 			{
 				FlxG.log("> Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
-				return;
+				tempVarName = null;
+				break;
 			}
 			
 			if (i < (l - 1))
@@ -154,10 +155,10 @@ class WatchEntry
 		{
 			nameDisplay.text = "";
 			if (NameWidth > 120)
-			{
 				nameDisplay.appendText(FlxU.getClassName(object, (NameWidth < 240)) + ".");
-			}
-			nameDisplay.appendText(field);
+			
+			if (field != null)
+				nameDisplay.appendText(field);
 		}
 	}
 	
@@ -166,10 +167,9 @@ class WatchEntry
 	 */
 	public function updateValue():Bool
 	{
-		if (editing)
-		{
+		if (editing || field == null)
 			return false;
-		}
+		
 		valueDisplay.text = Std.string(Reflect.getProperty(object, field));
 		return true;
 	}
@@ -180,12 +180,14 @@ class WatchEntry
 	 */
 	public function onMouseUp(FlashEvent:MouseEvent):Void
 	{
-		editing = true;
-		oldValue = Reflect.getProperty(object, field);
-		valueDisplay.type = TextFieldType.INPUT;
-		valueDisplay.setTextFormat(_blackText);
-		valueDisplay.background = true;
-		
+		if (field != null)
+		{
+			editing = true;
+			oldValue = Reflect.getProperty(object, field);
+			valueDisplay.type = TextFieldType.INPUT;
+			valueDisplay.setTextFormat(_blackText);
+			valueDisplay.background = true;
+		}
 	}
 	
 	/**
@@ -222,8 +224,11 @@ class WatchEntry
 	 */
 	public function submit():Void
 	{
-		Reflect.setProperty(object, field, valueDisplay.text);
-		doneEditing();
+		if (field != null)
+		{
+			Reflect.setProperty(object, field, valueDisplay.text);
+			doneEditing();
+		}
 	}
 	
 	/**
