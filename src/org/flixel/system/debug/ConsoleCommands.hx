@@ -37,6 +37,8 @@ class ConsoleCommands
 		console.addCommand("call", this, call);
 		console.addCommand("listObjects", this, listObjects, "lo");
 		console.addCommand("listFunctions", this, listFunctions, "lf");
+		console.addCommand("watch", this, watch, "w");
+		console.addCommand("unwatch", this, unwatch, "uw");
 		
 		// Registration
 		console.registerObject("FlxG", FlxG);
@@ -100,15 +102,21 @@ class ConsoleCommands
 					FlxG.log("> create: Creates a new FlxObject and registers it. Doesn't work if its constructor requires params");
 					FlxG.log("> create [FlxObject] (x = mouse.x) (y = mouse.y)");
 				case "set":
-					FlxG.log("> set: Changes a var within a previosuly registered object via FlxG.console.registerObject");
-					FlxG.log("> set [Object] [VariableName] [NewValue]");
+					FlxG.log("> set: Changes a var within a previosuly registered object via FlxG.console.registerObject. Supports nesting (a field within an object within a registered object). Set a WatchName if you want to add the var to the watch window.");
+					FlxG.log("> set [Object.VariableName] [NewValue] (WatchName)");
 				case "call":
-					FlxG.log("> call: Calls a function previously registered via FlxG.console.registerFunction with a set of params");
-					FlxG.log("> call [Function] [param0...paramX]");
+					FlxG.log("> call: Calls a function previously registered via FlxG.console.registerFunction with a set of params (or a function of a registered object");
+					FlxG.log("> call [(Object.)Function] [param0...paramX]");
 				case "listObjects":
 					FlxG.log("> listObjects: Lists all the aliases of the objects registered");
 				case "listFunctions":
 					FlxG.log("> listFunctions: Lists all the aliases of the functions registered");
+				case "watch":
+					FlxG.log("> watch: Calls FlxG.watch()");
+					FlxG.log("> watch [Object.VariableName] (DisplayName)");
+				case "unwatch":
+					FlxG.log("> unwatch: Calls FlxG.unwatch()");
+					FlxG.log("> unwatch [Object(.VariableName)]");
 				default:
 					FlxG.log("> help: Couldn't find command '" + Command + "'");
 			}
@@ -283,38 +291,17 @@ class ConsoleCommands
 		FlxG.log("> create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
 	}
 	
-	private function set(ObjectAndVarialble:String, NewVariableValue:Dynamic):Void
+	private function set(ObjectAndVariable:String, NewVariableValue:Dynamic, WatchName:String = null):Void
 	{
-		var searchArr:Array<String> = ObjectAndVarialble.split(".");
-		var object:Dynamic = _console.registeredObjects.get(searchArr.shift());
-		var variableName:String = searchArr.join(".");
+		var info:Array<Dynamic> = resolveObjecAndVariable(ObjectAndVariable, "set");
 		
-		if (!Reflect.isObject(object)) {
-			FlxG.log("> set: '" + Std.string(object) + "' is not a valid Object");
+		// In case resolving failed
+		if (info == null)
 			return;
-		}
-		
-		// Searching for property...
-		var l:Int = searchArr.length;
-		var tempObj:Dynamic = object;
-		var tempVarName:String = "";
-		for (i in 0...l)
-		{
-			tempVarName = searchArr[i];
-			if (!Reflect.hasField(tempObj, tempVarName)) 
-			{
-				FlxG.log("> set: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
-				return;
-			}
 			
-			if (i < (l - 1))
-			{
-				tempObj = Reflect.getProperty(tempObj, tempVarName);
-			}
-		}
-		
-		object = tempObj;
-		var variable:Dynamic = Reflect.getProperty(object, tempVarName);
+		var object:Dynamic = info[0];
+		var varName:String = info[1];
+		var variable:Dynamic = Reflect.getProperty(object, varName);
 		
 		// Workaround to make Booleans work
 		if (Std.is(variable, Bool)) {
@@ -323,24 +310,27 @@ class ConsoleCommands
 			else if (NewVariableValue == "true" || NewVariableValue == "1") 
 				NewVariableValue = true;
 			else {
-				FlxG.log("> set: '" + NewVariableValue + "' is not a valid value for Booelan '" + variableName + "'");
+				FlxG.log("> set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
 				return;
 			}
 		}
 		// Prevent turning numbers into NaN
 		else if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) {
-			FlxG.log("> set: '" + NewVariableValue + "' is not a valid value for number '" + variableName + "'");
+			FlxG.log("> set: '" + NewVariableValue + "' is not a valid value for number '" + varName + "'");
 			return;
 		}
 		// Prevent setting non "simple" typed properties
 		else if (!Std.is(variable, Float) && !Std.is(variable, Bool) && !Std.is(variable, String))
 		{
-			FlxG.log("> set: '" + variableName + ":" + Std.string(variable) + "' is not of a simple type (number, bool or string)");
+			FlxG.log("> set: '" + varName + ":" + Std.string(variable) + "' is not of a simple type (number, bool or string)");
 			return;
 		}
 		
-		Reflect.setProperty(object, tempVarName, NewVariableValue);
-		FlxG.log("> set: " + Std.string(object) + "." + tempVarName + " is now " + NewVariableValue);
+		Reflect.setProperty(object, varName, NewVariableValue);
+		FlxG.log("> set: " + Std.string(object) + "." + varName + " is now " + NewVariableValue);
+		
+		if (WatchName != null) 
+			FlxG.watch(object, varName, WatchName);
 	}
 	
 	private function call(FunctionAlias:String, Params:Array<String>):Void
@@ -426,6 +416,34 @@ class ConsoleCommands
 		listHash(_console.registeredFunctions);
 	}
 	
+	private function watch(ObjectAndVariable:String, DisplayName:String = null):Void
+	{
+		var info:Array<Dynamic> = resolveObjecAndVariable(ObjectAndVariable, "watch");
+		
+		// In case resolving failed
+		if (info == null)
+			return;
+			
+		var object:Dynamic = info[0];
+		var varName:String = info[1];
+		
+		FlxG.watch(object, varName);
+	}
+	
+	private function unwatch(ObjectAndVariable:String, VariableName:String = null):Void
+	{
+		var info:Array<Dynamic> = resolveObjecAndVariable(ObjectAndVariable, "watch");
+		
+		// In case resolving failed
+		if (info == null)
+			return;
+			
+		var object:Dynamic = info[0];
+		var varName:String = info[1];
+		
+		FlxG.unwatch(object, varName);
+	}
+	
 	/**
 	 * Helper functions
 	 */
@@ -459,5 +477,45 @@ class ConsoleCommands
 		output = output.substring(0, output.length - 2);
 		
 		FlxG.log(output);
+	}
+	
+	private function resolveObjecAndVariable(ObjectAndVariable:String, CommandName:String):Array<Dynamic>
+	{
+		var searchArr:Array<String> = ObjectAndVariable.split(".");
+		
+		// In case there's not dot in the string
+		if (searchArr[0].length == ObjectAndVariable.length) {
+			FlxG.log("> " + CommandName + ": '" + ObjectAndVariable + "' does not refer to an object's field");
+			return null;
+		}
+		
+		var object:Dynamic = _console.registeredObjects.get(searchArr.shift());
+		var variableName:String = searchArr.join(".");
+		
+		if (!Reflect.isObject(object)) {
+			FlxG.log("> " + CommandName + ": '" + Std.string(object) + "' is not a valid Object");
+			return null;
+		}
+		
+		// Searching for property...
+		var l:Int = searchArr.length;
+		var tempObj:Dynamic = object;
+		var tempVarName:String = "";
+		for (i in 0...l)
+		{
+			tempVarName = searchArr[i];
+			if (!Reflect.hasField(tempObj, tempVarName)) 
+			{
+				FlxG.log("> " + CommandName + ": " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
+				return null;
+			}
+			
+			if (i < (l - 1))
+			{
+				tempObj = Reflect.getProperty(tempObj, tempVarName);
+			}
+		}
+		
+		return [tempObj, tempVarName];
 	}
 }
