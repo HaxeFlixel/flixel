@@ -78,8 +78,16 @@ class FlxSprite extends FlxObject
 	 * NOTE: Scale doesn't currently affect collisions automatically,
 	 * you will need to adjust the width, height and offset manually.
 	 * WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
+	 * example:
+	 *		// scale to half size then position origin and offset to the center 
+	 * 		scale.x = scale.y = 0.5;
+	 * 		width *= scale.x;
+	 * 		height *= scale.y;
+	 * 		origin.x = offset.x = width / 2;
+	 * 		origin.y = offset.y = height / 2;
 	 */
 	public var scale:FlxPoint;
+	
 	/**
 	 * Blending modes, just like Photoshop or whatever.
 	 * E.g. "multiply", "screen", etc.
@@ -722,8 +730,8 @@ class FlxSprite extends FlxObject
 			_point.y = Math.floor(_point.y);
 			#end
 		#else
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		#end
 #if flash
 			if (simpleRenderSprite())
@@ -736,7 +744,7 @@ class FlxSprite extends FlxObject
 			else
 			{
 				_matrix.identity();
-				_matrix.translate( -origin.x, -origin.y);
+				_matrix.translate( -origin.x / scale.x, -origin.y / scale.y);
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
@@ -764,8 +772,8 @@ class FlxSprite extends FlxObject
 				ssx = sin * scale.x;
 				csy = cos * scale.y;
 				
-				var x1:Float = (origin.x - _halfWidth);
-				var y1:Float = (origin.y - _halfHeight);
+				var x1:Float = (origin.x / scale.x - _halfWidth);
+				var y1:Float = (origin.y / scale.y - _halfHeight);
 				x2 = x1 * csx + y1 * ssy;
 				y2 = -x1 * ssx + y1 * csy;
 			}
