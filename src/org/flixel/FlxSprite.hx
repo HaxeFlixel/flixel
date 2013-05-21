@@ -80,6 +80,7 @@ class FlxSprite extends FlxObject
 	 * WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
 	 */
 	public var scale:FlxPoint;
+	
 	/**
 	 * Blending modes, just like Photoshop or whatever.
 	 * E.g. "multiply", "screen", etc.
@@ -722,8 +723,8 @@ class FlxSprite extends FlxObject
 			_point.y = Math.floor(_point.y);
 			#end
 		#else
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x * scale.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y * scale.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - offset.x;
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - offset.y;
 		#end
 #if flash
 			if (simpleRenderSprite())
@@ -736,13 +737,13 @@ class FlxSprite extends FlxObject
 			else
 			{
 				_matrix.identity();
-				_matrix.translate( -origin.x, -origin.y);
+				_matrix.translate( -origin.x / scale.x, -origin.y / scale.y);
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
 					_matrix.rotate(angle * FlxG.RAD);
 				}
-				_matrix.translate(_point.x + origin.x * scale.x, _point.y + origin.y * scale.y);
+				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 			}
 #else
@@ -764,8 +765,8 @@ class FlxSprite extends FlxObject
 				ssx = sin * scale.x;
 				csy = cos * scale.y;
 				
-				var x1:Float = (origin.x - _halfWidth);
-				var y1:Float = (origin.y - _halfHeight);
+				var x1:Float = (origin.x / scale.x - _halfWidth);
+				var y1:Float = (origin.y / scale.y - _halfHeight);
 				x2 = x1 * csx + y1 * ssy;
 				y2 = -x1 * ssx + y1 * csy;
 			}
