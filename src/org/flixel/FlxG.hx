@@ -371,8 +371,12 @@ class FlxG
 			else {
 				if (Std.is(Data, Array)) 
 					Data = FlxU.formatArray(cast(Data, Array<Dynamic>));
-				else if (Std.is(Data, FlxPoint))
-					Data = "x: " + FlxU.round(Data.x) + " | y: " + FlxU.round(Data.y);
+				else if (Std.is(Data, FlxPoint)) {
+					var xValue:Float = FlxU.roundDecimal(Data.x, FlxDebugger.pointDecimals);
+					var yValue:Float = FlxU.roundDecimal(Data.y, FlxDebugger.pointDecimals);
+					
+					Data = "x: " + xValue + " | y: " + yValue;
+				}
 					
 				_game.debugger.log.add(Data);
 			}
