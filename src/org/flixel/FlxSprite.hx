@@ -722,8 +722,8 @@ class FlxSprite extends FlxObject
 			_point.y = Math.floor(_point.y);
 			#end
 		#else
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x * scale.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y * scale.y);
 		#end
 #if flash
 			if (simpleRenderSprite())
@@ -742,7 +742,7 @@ class FlxSprite extends FlxObject
 				{
 					_matrix.rotate(angle * FlxG.RAD);
 				}
-				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
+				_matrix.translate(_point.x + origin.x * scale.x, _point.y + origin.y * scale.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 			}
 #else
