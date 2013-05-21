@@ -78,6 +78,13 @@ class FlxSprite extends FlxObject
 	 * NOTE: Scale doesn't currently affect collisions automatically,
 	 * you will need to adjust the width, height and offset manually.
 	 * WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
+	 * example:
+	 *		// scale to half size then position origin and offset to the center 
+	 * 		scale.x = scale.y = 0.5;
+	 * 		width *= scale.x;
+	 * 		height *= scale.y;
+	 * 		origin.x = offset.x = width / 2;
+	 * 		origin.y = offset.y = height / 2;
 	 */
 	public var scale:FlxPoint;
 	
