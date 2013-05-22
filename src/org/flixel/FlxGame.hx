@@ -41,11 +41,6 @@ class FlxGame extends Sprite
 	
 	private var junk:String;
 	/**
-	 * Sets 0, -, and + to control the global volume sound volume.
-	 * @default true
-	 */
-	public var useSoundHotKeys:Bool;
-	/**
 	 * Internal var used to temporarily disable sound hot keys without overriding useSoundHotKeys.
 	 */
 	public var tempDisableSoundHotKeys:Bool;
@@ -107,10 +102,15 @@ class FlxGame extends Sprite
 	 * A flag for keeping track of whether a game reset was requested or not.
 	 */
 	public var _requestedReset:Bool;
+	
+	#if !FLX_NO_PAUSE_SCREEN
 	/**
 	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
 	 */
 	private var _focus:Sprite;
+	#end
+	
+	#if !FLX_NO_SOUND_TRAY
 	/**
 	 * The sound tray display container (see <code>createSoundTray()</code>).
 	 */
@@ -127,6 +127,8 @@ class FlxGame extends Sprite
 	 * Helps display the volume bars on the sound tray.
 	 */
 	private var _soundTrayBars:Array<Bitmap>;
+	#end
+	
 	/**
 	 * A FlxSave used for saving the volume and the console's command history.
 	 */
@@ -195,9 +197,16 @@ class FlxGame extends Sprite
 		
 		//super high priority init stuff (focus, mouse, etc)
 		_lostFocus = false;
+		
+		#if !FLX_NO_PAUSE_SCREEN
 		_focus = new Sprite();
 		_focus.visible = false;
+		#end
+		
+		#if !FLX_NO_SOUND_TRAY
 		_soundTray = new Sprite();
+		#end
+		
 		_inputContainer = new Sprite();
 		
 		//basic display and update setup stuff
@@ -208,7 +217,6 @@ class FlxGame extends Sprite
 		_total = 0;
 		_mark = 0;
 		_state = null;
-		useSoundHotKeys = true;
 		tempDisableSoundHotKeys = false;
 		_prefsSave = new FlxSave();
 		_prefsSave.bind("flixel");
@@ -235,6 +243,7 @@ class FlxGame extends Sprite
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
 	
+	#if !FLX_NO_SOUND_TRAY
 	/**
 	 * Makes the little volume tray slide out.
 	 * @param	Silent	Whether or not it should beep.
@@ -260,6 +269,7 @@ class FlxGame extends Sprite
 			else _soundTrayBars[i].alpha = 0.5;
 		}
 	}
+	#end
 
 	/**
 	 * Internal event handler for input and focus.
@@ -267,12 +277,20 @@ class FlxGame extends Sprite
 	 */
 	private function onFocus(FlashEvent:Event = null):Void
 	{
-		_lostFocus = _focus.visible = false;
+		if (!FlxG.autoPause) {
+			_state.onFocus();
+			return;
+		}
+		
+		_lostFocus = false;
+		
+		#if !FLX_NO_PAUSE_SCREEN
+		_focus.visible = false;
+		#end
+		
 		stage.frameRate = _flashFramerate;
 		FlxG.resumeSounds();
 		FlxInputs.onFocus();
-		
-		_state.onFocus();
 	}
 	
 	/**
@@ -281,12 +299,20 @@ class FlxGame extends Sprite
 	 */
 	private function onFocusLost(FlashEvent:Event = null):Void
 	{
-		_lostFocus = _focus.visible = true;
+		if (!FlxG.autoPause) {
+			_state.onFocusLost();
+			return;
+		}
+		
+		_lostFocus = true;
+		
+		#if !FLX_NO_PAUSE_SCREEN
+		_focus.visible = true;
+		#end
+		
 		stage.frameRate = 10;
 		FlxG.pauseSounds();
 		FlxInputs.onFocusLost();
-		
-		_state.onFocusLost();
 	}
 	
 	/**
@@ -299,8 +325,10 @@ class FlxGame extends Sprite
 		_elapsedMS = _mark - _total;
 		_total = _mark;
 		
+		#if !FLX_NO_SOUND_TRAY
 		if (_updateSoundTray)
 			updateSoundTray(_elapsedMS);
+		#end
 		
 		if(!_lostFocus)
 		{
@@ -483,6 +511,7 @@ class FlxGame extends Sprite
 	}
 	#end
 	
+	#if !FLX_NO_SOUND_TRAY 
 	/**
 	 * This function just updates the soundtray object.
 	 */
@@ -508,6 +537,7 @@ class FlxGame extends Sprite
 			}
 		}
 	}
+	#end
 	
 	/**
 	 * This function is called by step() and updates the actual game state.
@@ -675,8 +705,16 @@ class FlxGame extends Sprite
 		stage.frameRate = _flashFramerate;
 		
 		addChild(_inputContainer);
+		
+		//Assign default values to the keys used by core flixel
+		FlxG.keyDebugger = [192, 220];
+		FlxG.keyVolumeUp = [107, 187];
+		FlxG.keyVolumeDown = [109, 189];
+		FlxG.keyMute = [48, 96];
 
 		FlxInputs.init();
+		
+		FlxG.autoPause = true;
 		
 		//Let mobile devs opt out of unnecessary overlays.
 		if(!FlxG.mobile)
@@ -695,13 +733,19 @@ class FlxGame extends Sprite
 			#end
 			
 			//Volume display tab
+			#if !FLX_NO_SOUND_TRAY
 			createSoundTray();
+			#end
+			
+			loadSoundPrefs();
 			
 			//Focus gained/lost monitoring
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
 			// TODO: add event listeners for Event.ACTIVATE/DEACTIVATE 
+			#if !FLX_NO_PAUSE_SCREEN
 			createFocusScreen();
+			#end
 		}
 		
 		// Instantiate the initial state
@@ -721,6 +765,7 @@ class FlxGame extends Sprite
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 	}
 	
+	#if !FLX_NO_SOUND_TRAY
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
@@ -775,8 +820,14 @@ class FlxGame extends Sprite
 		_soundTray.y = -_soundTray.height;
 		_soundTray.visible = false;
 		addChild(_soundTray);
-		
-		//load saved sound preferences for this game if they exist
+	}
+	#end
+	
+	/**
+	 * Loads sound preferences if they exist.
+	 */
+	private function loadSoundPrefs():Void
+	{
 		if (_prefsSave.data.volume != null)
 			FlxG.volume = _prefsSave.data.sound.volume;
 		else 
@@ -788,6 +839,7 @@ class FlxGame extends Sprite
 			FlxG.mute = false;
 	}
 	
+	#if !FLX_NO_PAUSE_SCREEN
 	/**
 	 * Sets up the darkened overlay with the big white "play" button that appears when a flixel game loses focus.
 	 */
@@ -831,6 +883,7 @@ class FlxGame extends Sprite
 		
 		addChild(_focus);
 	}
+	#end
 
 	#if !FLX_NO_DEBUG
 	public var debugger(get_debugger, null):FlxDebugger;
