@@ -711,8 +711,8 @@ class FlxSprite extends FlxObject
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 			
-			_point.x = (_point.x) + origin.x;
-			_point.y = (_point.y) + origin.y;
+			_point.x = (_point.x) + origin.x * scale.x;
+			_point.y = (_point.y) + origin.y * scale.y;
 			
 			#if js
 			_point.x = Math.floor(_point.x);
@@ -739,7 +739,7 @@ class FlxSprite extends FlxObject
 				{
 					_matrix.rotate(angle * FlxG.RAD);
 				}
-				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
+				_matrix.translate(_point.x + origin.x * scale.x, _point.y + origin.y * scale.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 			}
 #else
