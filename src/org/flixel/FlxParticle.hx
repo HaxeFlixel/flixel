@@ -88,19 +88,16 @@ class FlxParticle extends FlxSprite
 			if (lifespan <= 0)
 			{
 				kill();
-				// reset alpha in case this particle is fading away
-				alpha = 1.0;
-				scale.x = scale.y = 1.0;
 			}
 			
 			// Fading away
-			if (fadingAway && alive)
+			if (fadingAway)
 			{
 				alpha -= (FlxG.elapsed / maxLifespan);
 			}
 
 			// Decreasing size
-			if (decreasingSize && alive)
+			if (decreasingSize)
 			{
 				scale.x = scale.y -= (FlxG.elapsed / maxLifespan);
 			}
@@ -154,6 +151,14 @@ class FlxParticle extends FlxSprite
 			
 			updateAnimation();
 		}
+	}
+	
+	override public function reset(X:Float, Y:Float):Void 
+	{
+		super.reset(X, Y);
+		
+		alpha = 1.0;
+		scale.x = scale.y = 1.0;
 	}
 	
 	/**
