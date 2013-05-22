@@ -102,8 +102,6 @@ class FlxState extends FlxGroup
 	
 	/**
 	 * State constructor
-	 * @param	bgColor		background color for this state
-	 * @param	useMouse	whether to show mouse pointer or not
 	 */
 	public function new()
 	{
