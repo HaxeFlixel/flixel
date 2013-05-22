@@ -29,19 +29,33 @@ class FlxParticle extends FlxSprite
 	 * If this is set to true, particles will slowly fade away by
 	 * decreasing their alpha value based on their lifespan.
 	*/
-	public var fadingAway:Bool = false;
+	public var useFading:Bool = false;
 
 	/**
 	 * If this is set to true, particles will slowly decrease in scale
 	 * based on their lifespan.
 	 * WARNING: This severely impacts performance on flash target.
 	*/
-	public var decreasingSize:Bool = false;
+	public var useScaling:Bool = false;
+	
+	public var useColoring:Bool = false;
 	
 	/**
 	 * Helper variable for fading and sizeDecreasing effects.
 	*/
 	public var maxLifespan:Float;
+	
+	public var startAlpha:Float;
+	
+	public var rangeAlpha:Float;
+	
+	public var startColor:Int;
+	
+	public var rangeColor:Int;
+	
+	public var startScale:Float;
+	
+	public var rangeScale:Float;
 	
 	/**
 	 * Instantiate a new particle.  Like <code>FlxSprite</code>, all meaningful creation
@@ -76,11 +90,6 @@ class FlxParticle extends FlxSprite
 		last.x = x;
 		last.y = y;
 		
-		if ((path != null) && (pathSpeed != 0) && (path.nodes[_pathNodeIndex] != null))
-		{
-			updatePathMotion();
-		}
-		
 		//lifespan behavior
 		if (lifespan > 0)
 		{
@@ -90,16 +99,24 @@ class FlxParticle extends FlxSprite
 				kill();
 			}
 			
-			// Fading away
-			if (fadingAway)
+			var lifespanRatio:Float = (1 - lifespan / maxLifespan);
+			
+			// Fading
+			if (useFading)
 			{
-				alpha -= (FlxG.elapsed / maxLifespan);
+				alpha = startAlpha + lifespanRatio * rangeAlpha;
 			}
-
-			// Decreasing size
-			if (decreasingSize)
+			
+			// Changing size
+			if (useScaling)
 			{
-				scale.x = scale.y -= (FlxG.elapsed / maxLifespan);
+				scale.x = scale.y = startScale + lifespanRatio * rangeScale;
+			}
+			
+			// Tinting
+			if (useColoring)
+			{
+				color = startColor + Std.int(lifespanRatio * rangeColor);
 			}
 			
 			//simpler bounce/spin behavior for now
@@ -141,11 +158,7 @@ class FlxParticle extends FlxSprite
 		
 		if (exists && alive)
 		{
-			if (moves)
-			{
-				updateMotion();
-			}
-			
+			updateMotion();
 			wasTouching = touching;
 			touching = FlxObject.NONE;
 			
@@ -159,6 +172,7 @@ class FlxParticle extends FlxSprite
 		
 		alpha = 1.0;
 		scale.x = scale.y = 1.0;
+		color = 0xffffff;
 	}
 	
 	/**

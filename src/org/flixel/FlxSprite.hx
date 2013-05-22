@@ -2136,12 +2136,19 @@ class FlxSprite extends FlxObject
 	
 	private function set_blend(value:BlendMode):BlendMode 
 	{
-		switch (value)
+		if (value != null)
 		{
-			case BlendMode.ADD:
-				_blendInt = Tilesheet.TILE_BLEND_ADD;
-			default:
-				_blendInt = 0;
+			switch (value)
+			{
+				case BlendMode.ADD:
+					_blendInt = Tilesheet.TILE_BLEND_ADD;
+				default:
+					_blendInt = 0;
+			}
+		}
+		else
+		{
+			_blendInt = 0;
 		}
 		
 		_blend = value;
