@@ -208,7 +208,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8):FlxSuperTypedEmitter<T>
+	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
