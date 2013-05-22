@@ -105,13 +105,7 @@ class FlxState extends FlxGroup
 	 * @param	bgColor		background color for this state
 	 * @param	useMouse	whether to show mouse pointer or not
 	 */
-	#if flash
-	public function new(bgColor:UInt = 0xFF000000, useMouse:Bool = false)
-	#elseif neko
-	public function new(bgColor:BitmapInt32 = null, useMouse:Bool = false)
-	#else
-	public function new(bgColor:Int = 0xFF000000, useMouse:Bool = false)
-	#end
+	public function new()
 	{
 		super();
 		
@@ -124,8 +118,7 @@ class FlxState extends FlxGroup
 		
 		persistantUpdate = false;
 		persistantDraw = true;
-		this.bgColor = bgColor;
-		this.useMouse = useMouse;
+		this.useMouse = false;
 	}
 	
 	/**

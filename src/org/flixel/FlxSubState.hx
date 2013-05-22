@@ -62,13 +62,14 @@ class FlxSubState extends FlxState
 		#if neko
 		if (bgColor == null) bgColor = FlxG.TRANSPARENT;
 		#end
-		super(bgColor, useMouse);
+		super();
 		closeCallback = null;
 		
 		#if !flash
 		_bgSprite = new BGSprite();
-		this.bgColor = bgColor;
 		#end
+		this.bgColor = bgColor;
+		this.useMouse = useMouse;
 	}
 	
 	#if flash
