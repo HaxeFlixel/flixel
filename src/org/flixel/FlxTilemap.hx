@@ -1804,12 +1804,13 @@ class FlxTilemap extends FlxObject
 		var csv:String = "";
 		var Height:Int = Std.int(Data.length / Width);
 		var index:Int;
+		var offset:Int = 0;
 		while(row < Height)
 		{
 			column = 0;
 			while(column < Width)
 			{
-				index = Data[row * Width + column];
+				index = Data[offset];
 				if(Invert)
 				{
 					if (index == 0)
@@ -1838,6 +1839,7 @@ class FlxTilemap extends FlxObject
 					csv += ", "+index;
 				}
 				column++;
+				offset++;
 			}
 			row++;
 		}
