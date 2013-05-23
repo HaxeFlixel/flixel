@@ -16,6 +16,10 @@ import org.flixel.FlxG;
 import org.flixel.system.FlxWindow;
 import org.flixel.FlxObject;
 
+#if haxe3
+private typedef Hash<T> = Map<String,T>;
+#end 
+
 /**
  * A powerful console for the flixel debugger screen with supports
  * custom commands, registering objects and functions and saves the 
