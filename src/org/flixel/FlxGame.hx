@@ -46,6 +46,10 @@ class FlxGame extends Sprite
 	 */
 	public var useSoundHotKeys:Bool;
 	/**
+	 * Internal var used to temporarily disable sound hot keys without overriding useSoundHotKeys.
+	 */
+	public var tempDisableSoundHotKeys:Bool;
+	/**
 	 * Current game state.
 	 */
 	public var _state:FlxState;
@@ -123,6 +127,10 @@ class FlxGame extends Sprite
 	 * Helps display the volume bars on the sound tray.
 	 */
 	private var _soundTrayBars:Array<Bitmap>;
+	/**
+	 * A FlxSave used for saving the volume and the console's command history.
+	 */
+	public var _prefsSave:FlxSave;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -201,6 +209,9 @@ class FlxGame extends Sprite
 		_mark = 0;
 		_state = null;
 		useSoundHotKeys = true;
+		tempDisableSoundHotKeys = false;
+		_prefsSave = new FlxSave();
+		_prefsSave.bind("flixel");
 		
 		#if !FLX_NO_DEBUG
 		FlxG.debug = true;
@@ -508,17 +519,9 @@ class FlxGame extends Sprite
 				_updateSoundTray = false;
 				
 				//Save sound preferences
-				var soundPrefs:FlxSave = new FlxSave();
-				if (soundPrefs.bind("flixel"))
-				{
-					if (soundPrefs.data.sound == null)
-					{
-						soundPrefs.data.sound = {};
-					}
-					soundPrefs.data.sound.mute = FlxG.mute;
-					soundPrefs.data.sound.volume = FlxG.volume;
-					soundPrefs.close();
-				}
+				_prefsSave.data.mute = FlxG.mute;
+				_prefsSave.data.volume = FlxG.volume;
+				_prefsSave.flush();
 			}
 		}
 	}
@@ -792,19 +795,15 @@ class FlxGame extends Sprite
 		addChild(_soundTray);
 		
 		//load saved sound preferences for this game if they exist
-		var soundPrefs:FlxSave = new FlxSave();
-		if(soundPrefs.bind("flixel") && (soundPrefs.data.sound != null))
-		{
-			if (soundPrefs.data.sound.volume != null)
-			{
-				FlxG.volume = soundPrefs.data.sound.volume;
-			}
-			if (soundPrefs.data.sound.mute != null)
-			{
-				FlxG.mute = soundPrefs.data.sound.mute;
-			}
-			soundPrefs.destroy();
-		}
+		if (_prefsSave.data.volume != null)
+			FlxG.volume = _prefsSave.data.sound.volume;
+		else 
+			FlxG.volume = 0.5;
+			
+		if (_prefsSave.data.mute != null)
+			FlxG.mute = _prefsSave.data.sound.mute;
+		else 
+			FlxG.mute = false;
 	}
 	
 	/**

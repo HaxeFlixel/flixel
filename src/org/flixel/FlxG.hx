@@ -13,6 +13,7 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.media.Sound;
 import nme.media.SoundTransform;
+import org.flixel.system.debug.Console;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.plugin.pxText.PxBitmapFont;
@@ -199,6 +200,11 @@ class FlxG
 	 * Default = false.
 	 */
 	static public var visualDebug:Bool;
+	/**
+	 * Reference to the console on the debugging screen - use it to add commands,
+	 * register objects and functions, etc.
+	 */
+	static public var console:Console;
 	#end
 	/**
 	 * Setting this to true will disable/skip stuff that isn't necessary for mobile platforms like Android. [BETA]
@@ -1774,7 +1780,7 @@ class FlxG
 		}
 	}
 	
-#if !FLX_NO_DEBUG
+	#if !FLX_NO_DEBUG
 	inline static public function drawDebugPlugins():Void
 	{
 		var plugin:FlxBasic;
@@ -1790,7 +1796,7 @@ class FlxG
 			}
 		}
 	}
-#end
+	#end
 	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.
