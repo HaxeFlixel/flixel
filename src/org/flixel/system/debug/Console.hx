@@ -17,7 +17,11 @@ import org.flixel.system.FlxWindow;
 import org.flixel.FlxObject;
 
 /**
- * 
+ * A powerful console for the flixel debugger screen with supports
+ * custom commands, registering objects and functions and saves the 
+ * last 25 commands used.
+ * Inspired by Eric Smith's "CoolConsole".
+ * @link http://www.youtube.com/watch?v=QWfpw7elWk8
  */
 class Console extends FlxWindow
 {
@@ -212,6 +216,10 @@ class Console extends FlxWindow
 				// be passed to the function you call
 				else if (command == "call") 
 					args[1] = args.slice(1, args.length);
+				// Make the third param of create an array of the remaining params to 
+				// be passed to the constructor of the FlxObject to create
+				else if (command == "create" || command == "cr") 
+					args[2] = args.slice(2, args.length);
 					
 				callFunction(obj, func, args); 
 			}
