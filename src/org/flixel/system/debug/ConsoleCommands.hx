@@ -4,6 +4,10 @@ import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxState;
 
+#if haxe3
+private typedef Hash<T> = Map<String,T>;
+#end
+
 class ConsoleCommands
 {
 	private var _console:Console;
