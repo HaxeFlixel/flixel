@@ -17,7 +17,11 @@ import org.flixel.system.FlxWindow;
 import org.flixel.FlxObject;
 
 /**
- * 
+ * A powerful console for the flixel debugger screen with supports
+ * custom commands, registering objects and functions and saves the 
+ * last 25 commands used.
+ * Inspired by Eric Smith's "CoolConsole".
+ * @link http://www.youtube.com/watch?v=QWfpw7elWk8
  */
 class Console extends FlxWindow
 {
