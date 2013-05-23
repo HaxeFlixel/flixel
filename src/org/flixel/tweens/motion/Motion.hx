@@ -4,6 +4,11 @@ import org.flixel.FlxObject;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 
+typedef Movable = {
+  public var immovable : Bool;
+  public function move(x : Float, y : Float):Void;
+};
+
 /**
  * Base class for motion Tweens.
  */
@@ -19,7 +24,7 @@ class Motion extends FlxTween
 	 */
 	public var y:Float;
 	
-	private var _object:FlxObject;
+	private var _object:Movable;
 	
 	/**
 	 * Constructor.
@@ -40,7 +45,7 @@ class Motion extends FlxTween
 		_object = null;
 	}
 	
-	public function setObject(object:FlxObject):Void
+	public function setObject(object:Movable):Void
 	{
 		_object = object;
 		_object.immovable = true;
@@ -56,8 +61,7 @@ class Motion extends FlxTween
 	{
 		if (_object != null)
 		{
-			_object.x = x;
-			_object.y = y;
+			_object.move(x, y);
 		}
 	}
 }

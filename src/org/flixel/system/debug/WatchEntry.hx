@@ -77,7 +77,7 @@ class WatchEntry
 		
 		valueDisplay = new TextField();
 		valueDisplay.y = Y;
-		valueDisplay.height = 15;
+		valueDisplay.height = 16;
 		valueDisplay.multiline = false;
 		valueDisplay.selectable = true;
 		valueDisplay.doubleClickEnabled = true;

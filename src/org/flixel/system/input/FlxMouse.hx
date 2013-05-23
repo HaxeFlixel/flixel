@@ -50,6 +50,18 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Helper variable for tracking whether the mouse was just pressed or just released.
 	 */
 	private var _current:Int;
+	
+	#if (FLX_MOUSE_ADVANCED && !js)
+	/**
+	 * Helper variable for tracking whether the right mouse button was just pressed or just released.
+	 */
+	private var _currentRight:Int;
+	/**
+	 * Helper variable for tracking whether the left mouse button was just pressed or just released.
+	 */
+	private var _currentMiddle:Int;
+	#end
+	
 	/**
 	 * Helper variable for tracking whether the mouse was just pressed or just released.
 	 */
@@ -58,7 +70,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * A display container for the mouse cursor.
 	 * This container is a child of FlxGame and sits at the right "height".
 	 */
-	private var _cursorContainer:Sprite;
+	public var cursorContainer:Sprite;
 	/**
 	 * Don't update cursor unless we have to (this is essentially a "visible" bool, so we avoid checking the visible property in the Sprite which is slow in cpp).
 	 */
@@ -91,9 +103,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	public function new(CursorContainer:Sprite)
 	{
 		super();
-		_cursorContainer = CursorContainer;
-		_cursorContainer.mouseChildren = false;
-		_cursorContainer.mouseEnabled = false;
+		cursorContainer = CursorContainer;
+		cursorContainer.mouseChildren = false;
+		cursorContainer.mouseEnabled = false;
 		_lastX = screenX = 0;
 		_lastY = screenY = 0;
 		_lastWheel = wheel = 0;
@@ -107,6 +119,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		#if (FLX_MOUSE_ADVANCED && !js)
+		Lib.current.stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onMouseDownRight);
+		Lib.current.stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onMouseUpRight);
+		Lib.current.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMouseDownMiddle);
+		Lib.current.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUpMiddle);
+		#end
 	}
 	
 	/**
@@ -203,12 +221,58 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		wheel = FlashEvent.delta;
 	}
 	
+	#if (FLX_MOUSE_ADVANCED && !js)
+	private function onMouseDownRight(FlashEvent:MouseEvent):Void
+	{
+		if (_currentRight > 0) _currentRight = 1;
+		else _currentRight = 2;
+	}
+	
+	private function onMouseUpRight(FlashEvent:MouseEvent):Void
+	{
+		if (_currentRight > 0) 
+		{
+			_currentRight = -1;
+		}
+		else if (_currentRight == -2)
+		{
+			_currentRight == -2;
+		}
+		else 
+		{
+			_currentRight = 0;
+		}
+	}
+	
+	private function onMouseDownMiddle(FlashEvent:MouseEvent):Void
+	{
+		if (_currentMiddle > 0) _currentMiddle = 1;
+		else _currentMiddle = 2;
+	}
+	
+	private function onMouseUpMiddle(FlashEvent:MouseEvent):Void
+	{
+		if (_currentMiddle > 0) 
+		{
+			_currentMiddle = -1;
+		}
+		else if (_currentMiddle == -2)
+		{
+			_currentMiddle == -2;
+		}
+		else 
+		{
+			_currentMiddle = 0;
+		}
+	}
+	#end
+	
 	/**
 	 * Clean up memory.
 	 */
 	public function destroy():Void
 	{
-		_cursorContainer = null;
+		cursorContainer = null;
 		_cursor = null;
 		_point = null;
 		_globalScreenPosition = null;
@@ -234,7 +298,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	public function show(Graphic:Dynamic = null, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		_updateCursorContainer = true;
-		_cursorContainer.visible = true;
+		cursorContainer.visible = true;
 		if (Graphic != null)
 		{
 			load(Graphic, Scale, XOffset, YOffset);
@@ -255,7 +319,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	inline public function hide():Void
 	{
 		_updateCursorContainer = false;
-		_cursorContainer.visible = false;
+		cursorContainer.visible = false;
 	}
 	
 	/**
@@ -277,7 +341,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		if (_cursor != null)
 		{
-			_cursorContainer.removeChild(_cursor);
+			cursorContainer.removeChild(_cursor);
 		}
 		
 		if (Graphic == null)
@@ -307,7 +371,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor.scaleX = Scale;
 		_cursor.scaleY = Scale;
 		
-		_cursorContainer.addChild(_cursor);
+		cursorContainer.addChild(_cursor);
 	}
 	
 	/**
@@ -318,13 +382,13 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		if(_cursor != null)
 		{
-			if (_cursorContainer.visible)
+			if (cursorContainer.visible)
 			{
 				load();
 			}
 			else
 			{
-				_cursorContainer.removeChild(_cursor);
+				cursorContainer.removeChild(_cursor);
 				_cursor = null;
 			}
 		}
@@ -370,8 +434,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		//actually position the flixel mouse cursor graphic
 		if (_updateCursorContainer)
 		{
-			_cursorContainer.x = _globalScreenPosition.x;
-			_cursorContainer.y = _globalScreenPosition.y;
+			cursorContainer.x = _globalScreenPosition.x;
+			cursorContainer.y = _globalScreenPosition.y;
 		}
 		
 		//update the x, y, screenX, and screenY variables based on the default camera.
@@ -454,6 +518,50 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * @return	Whether the mouse was just released.
 	 */
 	public function justReleased():Bool { return (_current == -1 || _current == -2); }
+	
+	#if (FLX_MOUSE_ADVANCED && !js)
+	/**
+	 * Check to see if the right mouse button is pressed.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
+	 * @return	Whether the right mouse button is pressed.
+	 */
+	public function pressedRight():Bool { return _currentRight > 0; }
+	
+	/**
+	 * Check to see if the right mouse button was just pressed.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
+	 * @return Whether the right mouse button was just pressed.
+	 */
+	public function justPressedRight():Bool { return (_currentRight == 2 || _currentRight == -2); }
+	
+	/**
+	 * Check to see if the right mouse button was just released.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
+	 * @return	Whether the right mouse button was just released.
+	 */
+	public function justReleasedRight():Bool { return (_currentRight == -1 || _currentRight == -2); }
+	
+	/**
+	 * Check to see if the middle mouse button is pressed.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
+	 * @return	Whether the middle mouse button is pressed.
+	 */
+	public function pressedMiddle():Bool { return _currentMiddle > 0; }
+	
+	/**
+	 * Check to see if the middle mouse button was just pressed.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
+	 * @return Whether the middle mouse button was just pressed.
+	 */
+	public function justPressedMiddle():Bool { return (_currentMiddle == 2 || _currentMiddle == -2); }
+	
+	/**
+	 * Check to see if the middle mouse button was just released.
+	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
+	 * @return	Whether the middle mouse button was just released.
+	 */
+	public function justReleasedMiddle ():Bool { return (_currentMiddle == -1 || _currentMiddle == -2); }
+	#end
 	
 	/**
 	 * If the mouse changed state or is pressed, return that info now
