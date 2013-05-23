@@ -212,6 +212,10 @@ class Console extends FlxWindow
 				// be passed to the function you call
 				else if (command == "call") 
 					args[1] = args.slice(1, args.length);
+				// Make the third param of create an array of the remaining params to 
+				// be passed to the constructor of the FlxObject to create
+				else if (command == "create" || command == "cr") 
+					args[2] = args.slice(2, args.length);
 					
 				callFunction(obj, func, args); 
 			}
