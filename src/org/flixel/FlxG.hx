@@ -365,7 +365,21 @@ class FlxG
 		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
-			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Std.string(Data)));
+			if (Data == null) {
+				_game.debugger.log.add("ERROR: null object");
+			}
+			else {
+				if (Std.is(Data, Array)) 
+					Data = FlxU.formatArray(cast(Data, Array<Dynamic>));
+				else if (Std.is(Data, FlxPoint)) {
+					var xValue:Float = FlxU.roundDecimal(Data.x, FlxDebugger.pointDecimals);
+					var yValue:Float = FlxU.roundDecimal(Data.y, FlxDebugger.pointDecimals);
+					
+					Data = "x: " + xValue + " | y: " + yValue;
+				}
+					
+				_game.debugger.log.add(Data);
+			}
 		}
 		#end
 	}

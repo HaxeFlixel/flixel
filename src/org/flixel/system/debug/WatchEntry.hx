@@ -7,6 +7,8 @@ import nme.text.TextField;
 import nme.text.TextFieldType;
 import nme.text.TextFormat;
 import org.flixel.FlxAssets;
+import org.flixel.FlxPoint;
+import org.flixel.system.FlxDebugger;
 
 import org.flixel.FlxU;
 
@@ -77,7 +79,7 @@ class WatchEntry
 		
 		valueDisplay = new TextField();
 		valueDisplay.y = Y;
-		valueDisplay.height = 16;
+		valueDisplay.height = 19;
 		valueDisplay.multiline = false;
 		valueDisplay.selectable = true;
 		valueDisplay.doubleClickEnabled = true;
@@ -148,7 +150,18 @@ class WatchEntry
 		{
 			return false;
 		}
-		valueDisplay.text = Std.string(Reflect.getProperty(object, field));
+		
+		var property:Dynamic = Reflect.getProperty(object, field);
+		
+		if (Std.is(property, FlxPoint)) {
+			var xValue:Float = FlxU.roundDecimal(property.x, FlxDebugger.pointDecimals);
+			var yValue:Float = FlxU.roundDecimal(property.y, FlxDebugger.pointDecimals);
+
+			valueDisplay.text = "x: " + xValue + " | y: " +  yValue;
+		}
+		else 
+			valueDisplay.text = Std.string(property);
+			
 		return true;
 	}
 	
@@ -200,7 +213,25 @@ class WatchEntry
 	 */
 	public function submit():Void
 	{
-		Reflect.setProperty(object, field, valueDisplay.text);
+		var property:Dynamic = Reflect.getProperty(object, field);
+		
+		if (Std.is(property, FlxPoint)) {
+			var xString:String = valueDisplay.text.split(" |")[0];
+			xString = xString.substring(3, xString.length);
+			var xValue:Float = Std.parseFloat(xString);
+			
+			var yString:String = valueDisplay.text.split("| ")[1];
+			yString = yString.substring(3, yString.length);
+			var yValue:Float = Std.parseFloat(yString);
+			
+			if (!Math.isNaN(xValue)) 
+				Reflect.setField(property, "x", xValue);
+			if (!Math.isNaN(yValue)) 
+				Reflect.setField(property, "y", yValue);
+		}
+		else
+			Reflect.setProperty(object, field, valueDisplay.text);
+			
 		doneEditing();
 	}
 	
