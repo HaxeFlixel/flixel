@@ -24,20 +24,20 @@ class FlxEmitter extends FlxTypedEmitter<FlxParticle>
 class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 {
 	/**
-	 * The X position of the top left corner of the emitter in world space.
+	 * The x position range of the emitter in world space.
 	 */
 	public var xPosition:Bounds<Float>;
 	/**
-	 * The Y position of the top left corner of emitter in world space.
+	 * The y position range of emitter in world space.
 	 */
 	public var yPosition:Bounds<Float>;
 	/**
-	 * The minimum possible velocity of a particle.
+	 * The x velocity range of a particle.
 	 * The default value is (-100,-100).
 	 */
 	public var xVelocity:Bounds<Float>;
 	/**
-	 * The maximum possible velocity of a particle.
+	 * The y velocity range of a particle.
 	 * The default value is (100,100).
 	 */
 	public var yVelocity:Bounds<Float>;
@@ -46,17 +46,12 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 */
 	public var particleDrag:FlxPoint;
 	/**
-	 * The minimum possible angular velocity of a particle.  The default value is -360.
+	 * The minimum and maximum possible angular velocity of a particle.  The default value is (-360, 360).
 	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
 	 */
 	public var rotation:Bounds<Float>;
 	/**
-	 * The maximum possible angular velocity of a particle.  The default value is 360.
-	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
-	 */
-//	public var maxRotation:Float;
-	/**
-	 * Sets the <code>acceleration.y</code> member of each particle to this value on launch.
+	 * Sets the <code>acceleration</code> member of each particle to this value on launch.
 	 */
 	public var gravity:FlxPoint;
 	/**
@@ -73,17 +68,6 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * Set lifespan to 'zero' for particles to live forever.
 	 */
 	public var lifespan:Bounds<Float>;
-	/**
-	 * If this is set to true, particles will slowly fade away by
-	 * decreasing their alpha value based on their lifespan.
-	*/
-	//public var fadingAway:Bool = false;
-	/**
-	 * If this is set to true, particles will slowly decrease in scale
-	 * based on their lifespan.
-	 * WARNING: This severely impacts performance on flash target.
-	*/
-	//public var decreasingSize:Bool = false;
 	
 	/**
 	 * Sets start scale range (when particle emits)
@@ -94,14 +78,50 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 */
 	public var endScale:Bounds<Float>;
 	
+	/**
+	 * Sets start alpha range (when particle emits)
+	 */
 	public var startAlpha:Bounds<Float>;
 	
+	/**
+	 * Sets end alpha range (when particle emits)
+	 */
 	public var endAlpha:Bounds<Float>;
 	
-	public var startColor:Bounds<Int>;
+	/**
+	 * Sets start red color component range (when particle emits)
+	 */
+	public var startRed:Bounds<Float>;
 	
-	public var endColor:Bounds<Int>;
+	/**
+	 * Sets start green color component range (when particle emits)
+	 */
+	public var startGreen:Bounds<Float>;
 	
+	/**
+	 * Sets start blue color component range (when particle emits)
+	 */
+	public var startBlue:Bounds<Float>;
+	
+	/**
+	 * Sets end red color component range (when particle emits)
+	 */
+	public var endRed:Bounds<Float>;
+	
+	/**
+	 * Sets end green color component range (when particle emits)
+	 */
+	public var endGreen:Bounds<Float>;
+	
+	/**
+	 * Sets end blue color component range (when particle emits)
+	 */
+	public var endBlue:Bounds<Float>;
+	
+	/**
+	 * Sets particle's blend mode. null by default.
+	 * Warning: expensive on flash target
+	 */
 	public var blend:BlendMode;
 	
 	/**
@@ -157,8 +177,12 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		endScale = new Bounds<Float>(1, 1);
 		startAlpha = new Bounds<Float>(1.0, 1.0);
 		endAlpha = new Bounds<Float>(1.0, 1.0);
-		startColor = new Bounds<Int>(0xffffff, 0xffffff);
-		endColor = new Bounds<Int>(0xffffff, 0xffffff);
+		startRed = new Bounds<Float>(1.0, 1.0);
+		startGreen = new Bounds<Float>(1.0, 1.0);
+		startBlue = new Bounds<Float>(1.0, 1.0);
+		endRed = new Bounds<Float>(1.0, 1.0);
+		endGreen = new Bounds<Float>(1.0, 1.0);
+		endBlue = new Bounds<Float>(1.0, 1.0);
 		blend = null;
 		gravity = new FlxPoint(0, 0);
 		_particleClass = cast FlxParticle;
@@ -188,8 +212,12 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		endScale = null;
 		startAlpha = null;
 		endAlpha = null;
-		startColor = null;
-		endColor = null;
+		startRed = null;
+		startGreen = null;
+		startBlue = null;
+		endRed = null;
+		endGreen = null;
+		endBlue = null;
 		blend = null;
 		gravity = null;
 		
@@ -357,6 +385,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * Call this function to start emitting particles.
 	 * @param	Explode		Whether the particles should all burst out at once.
 	 * @param	Lifespan	How long each particle lives once emitted. 0 = forever.
+	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
 	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
 	 */
@@ -424,34 +453,53 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 			particle.useFading = false;
 			particle.rangeAlpha = 0;
 		}
+		// particle color settings
+		var startRedComp:Float = particle.startRed = startRed.min;
+		var startGreenComp:Float = particle.startGreen = startGreen.min;
+		var startBlueComp:Float = particle.startBlue = startBlue.min;
 		
-		if (startColor.min != startColor.max)
-		{
-			particle.startColor = startColor.min + Std.int(FlxG.random() * (startColor.max - startColor.min));
-		}
-		else
-		{
-			particle.startColor = startColor.min;
-		}
-		particle.color = particle.startColor;
+		var endRedComp:Float = endRed.min;
+		var endGreenComp:Float = endGreen.min;
+		var endBlueComp:Float = endBlue.min;
 		
-		var particleEndColor:Int = endColor.min;
-		if (endColor.min != endColor.max)
+		if (startRed.min != startRed.max)
 		{
-			particleEndColor = endColor.min + Std.int(FlxG.random() * (endColor.max - endColor.min));
+			particle.startRed = startRedComp = startRed.min + FlxG.random() * (startRed.max - startRed.min);
+		}
+		if (startGreen.min != startGreen.max)
+		{
+			particle.startGreen = startGreenComp = startGreen.min + FlxG.random() * (startGreen.max - startGreen.min);
+		}
+		if (startBlue.min != startBlue.max)
+		{
+			particle.startBlue = startBlueComp = startBlue.min + FlxG.random() * (startBlue.max - startBlue.min);
 		}
 		
-		if (particleEndColor != particle.startColor)
+		if (endRed.min != endRed.max)
+		{
+			endRedComp = endRed.min + FlxG.random() * (endRed.max - endRed.min);
+		}
+		
+		if (endGreen.min != endGreen.max)
+		{
+			endGreenComp = endGreen.min + FlxG.random() * (endGreen.max - endGreen.min);
+		}
+		
+		if (endBlue.min != endBlue.max)
+		{
+			endBlueComp = endBlue.min + FlxG.random() * (endBlue.max - endBlue.min);
+		}
+		
+		particle.rangeRed = endRedComp - startRedComp;
+		particle.rangeGreen = endGreenComp - startGreenComp;
+		particle.rangeBlue = endBlueComp - startBlueComp;
+		
+		particle.useColoring = false;
+		if (particle.rangeRed != 0 || particle.rangeGreen != 0 || particle.rangeBlue != 0)
 		{
 			particle.useColoring = true;
-			particle.rangeColor = particleEndColor - particle.startColor;
 		}
-		else
-		{
-			particle.useColoring = false;
-			particle.rangeColor = 0;
-		}
-		
+		// end of particle color settings
 		if (startScale.min != startScale.max)
 		{
 			particle.startScale = startScale.min + FlxG.random() * (startScale.max - startScale.min);
@@ -569,15 +617,13 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		rotation.max = Max;
 	}
 	
-	public function setLifeSpan(Min:Float = 0, Max:Float = 0):Void
-	{
-		if (Max < Min)
-			Max = Min;
-		
-		lifespan.min = Min;
-		lifespan.max = Max;
-	}
-	
+	/**
+	 * A more compact way of setting the scale constraints of the emitter.
+	 * @param	startMin	The minimum value for particle scale at the start (emission).
+	 * @param	startMax	The maximum value for particle scale at the start (emission).
+	 * @param	endMin		The minimum value for particle scale at the end (death).
+	 * @param	endMax		The maximum value for particle scale at the end (death).
+	 */
 	public function setScale(startMin:Float = 1, startMax:Float = 1, endMin:Float = 1, endMax:Float = 1):Void
 	{
 		if (startMax < startMin)	
@@ -592,6 +638,13 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		endScale.max = endMax;
 	}
 	
+	/**
+	 * A more compact way of setting the alpha constraints of the emitter.
+	 * @param	startMin	The minimum value for particle alpha at the start (emission).
+	 * @param	startMax	The maximum value for particle alpha at the start (emission).
+	 * @param	endMin		The minimum value for particle alpha at the end (death).
+	 * @param	endMax		The maximum value for particle alpha at the end (death).
+	 */
 	public function setAlpha(startMin:Float = 1.0, startMax:Float = 1.0, endMin:Float = 1.0, endMax:Float = 1.0):Void
 	{
 		if (startMin < 0)
@@ -612,24 +665,32 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		endAlpha.max = endMax;
 	}
 	
-	public function setColor(startMin:Int = 0xffffff, startMax:Int = 0xffffff, endMin:Int = 0xffffff, endMax:Int = 0xffffff):Void
+	/**
+	 * A more compact way of setting the color constraints of the emitter.
+	 * But it's not so flexible as setting values of each color bounds objects.
+	 * @param	start		The start particles color at the start (emission).
+	 * @param	endMin		The end particles color at the end (death).
+	 */
+	public function setColor(start:Int = 0xffffff, end:Int = 0xffffff):Void
 	{
-		if (startMin < 0)
-			startMin = 0;
+		start &= 0xffffff;
+		end &= 0xffffff;
 		
-		if (startMax < startMin)
-			startMax = startMin;
+		var startRedComp:Float = (start >> 16 & 0xFF) / 255;
+		var startGreenComp:Float = (start >> 8 & 0xFF) / 255;
+		var startBlueComp:Float = (start & 0xFF) / 255;
 		
-		if (endMin < 0)
-			endMin = 0;
+		var endRedComp:Float = (end >> 16 & 0xFF) / 255;
+		var endGreenComp:Float = (end >> 8 & 0xFF) / 255;
+		var endBlueComp:Float = (end & 0xFF) / 255;
 		
-		if (endMax < endMin)
-			endMax = endMin;
+		startRed.min = startRed.max = startRedComp;
+		startGreen.min = startGreen.max = startGreenComp;
+		startBlue.min = startBlue.max = startBlueComp;
 		
-		startColor.min = startMin;
-		startColor.max = startMax;
-		endColor.min = endMin;
-		endColor.max = endMax;
+		endRed.min = endRed.max = endRedComp;
+		endGreen.min = endGreen.max = endGreenComp;
+		endBlue.min = endBlue.max = endBlueComp;
 	}
 	
 	/**
@@ -671,11 +732,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	
 	private function set_width(value:Float):Float
 	{
-		if (value >= 0 && value >= xPosition.min)
-		{
-			xPosition.max = value;
-		}
-		
+		xPosition.max = value;
 		return value;
 	}
 	
@@ -691,11 +748,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	
 	private function set_height(value:Float):Float
 	{
-		if (value >= 0 && value >= yPosition.min)
-		{
-			yPosition.max = value;
-		}
-		
+		yPosition.max = value;
 		return value;
 	}
 	
@@ -708,9 +761,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	
 	private function set_x(value:Float):Float
 	{
-		var dx:Float = xPosition.max - xPosition.min;
 		xPosition.min = value;
-		xPosition.max = value + dx;
 		return value;
 	}
 	
@@ -723,13 +774,14 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	
 	private function set_y(value:Float):Float
 	{
-		var dy:Float = yPosition.max - yPosition.min;
 		yPosition.min = value;
-		yPosition.max = value + dy;
 		return value;
 	}
 }
 
+/**
+ * Helper object for holding bounds of different variables
+ */
 class Bounds<T>
 {
 	public var min:T;
