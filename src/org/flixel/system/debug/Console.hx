@@ -16,6 +16,10 @@ import org.flixel.FlxG;
 import org.flixel.system.FlxWindow;
 import org.flixel.FlxObject;
 
+#if haxe3
+private typedef Hash<T> = Map<String,T>;
+#end
+
 /**
  * 
  */
