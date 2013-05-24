@@ -365,19 +365,11 @@ class ConsoleCommands
 			Params = [];
 			
 		// Search for function in registeredFunctions hash
-		var info:Array<Dynamic> = _console.registeredFunctions.get(FunctionAlias);
-		var func:Dynamic = null;
-		var obj:Dynamic = null;
+		var func:Dynamic = _console.registeredFunctions.get(FunctionAlias);
 		
-		if (info != null)
+		// Otherwise, we'll search for function in registeredObjects' methods
+		if (!Reflect.isFunction(func))
 		{
-			// We found it!
-			func = info[0];
-			obj = info[1];
-		}
-		else
-		{
-			// Otherwise, we'll search for function in registeredObjects' methods
 			var searchArr:Array<String> = FunctionAlias.split(".");
 			var objectName:String = searchArr.shift();
 			var object:Dynamic = _console.registeredObjects.get(objectName);
@@ -404,33 +396,25 @@ class ConsoleCommands
 				tempObj = Reflect.getProperty(tempObj, tempVarName);
 			}
 			
-			obj = tempObj;
 			func = Reflect.field(tempObj, searchArr[l]);
 			
 			if (func == null)
 			{
-				FlxG.log("> call: " + Std.string(obj) + " does not have a method '" + searchArr[l] + "' to call");
+				FlxG.log("> call: " + Std.string(tempObj) + " does not have a method '" + searchArr[l] + "' to call");
 				return;
 			}
 		}
 		
-		if (info == null && (func == null || obj == null)) 
-		{
-			FlxG.log("> call: '" + FunctionAlias + "' is not a registered function");
-			return;
-		}
-		
 		if (Reflect.isFunction(func)) {
-			_console.callFunction(obj, func, Params);
+			_console.callFunction(null, func, Params);
 			
 			if (Params.length == 0) 
 				FlxG.log("> call: Called '" + FunctionAlias + "'");
 			else 
 				FlxG.log("> call: Called '" + FunctionAlias + "' with params " + Params);
-
 		}
 		else {
-			FlxG.log("> call: '" + FunctionAlias + "' is not a valid function of object '" + Std.string(obj) + "'");
+			FlxG.log("> call: '" + FunctionAlias + "' is not a valid function");
 		}
 	}
 	

@@ -336,11 +336,10 @@ class Console extends FlxWindow
 	 * Register a new function to use for the call command.
 	 * @param FunctionAlias	The name with which you want to access the function.
 	 * @param Function		The function to register.
-	 * @param AnyObject		The object that contains the function.
 	 */
-	public function registerFunction(FunctionAlias:String, Function:Dynamic, AnyObject:Dynamic):Void
+	public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
-		registeredFunctions.set(FunctionAlias, [Function, AnyObject]);
+		registeredFunctions.set(FunctionAlias, Function);
 	}
 	
 	/**
