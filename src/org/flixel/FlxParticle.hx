@@ -38,24 +38,66 @@ class FlxParticle extends FlxSprite
 	*/
 	public var useScaling:Bool = false;
 	
+	/**
+	 * If this is set to true, particles will change their color
+	 * based on their lifespan and start and range color components values.
+	 */
 	public var useColoring:Bool = false;
 	
 	/**
-	 * Helper variable for fading and sizeDecreasing effects.
-	*/
+	 * Helper variable for fading, scaling and coloring particle.
+	 */
 	public var maxLifespan:Float;
 	
+	/**
+	 * Start value for particle's alpha
+	 */
 	public var startAlpha:Float;
 	
+	/**
+	 * Range of alpha change during particle's life
+	 */
 	public var rangeAlpha:Float;
 	
-	public var startColor:Int;
-	
-	public var rangeColor:Int;
-	
+	/**
+	 * Start value for particle's scale.x and scale.y
+	 */
 	public var startScale:Float;
 	
+	/**
+	 * Range of scale change during particle's life
+	 */
 	public var rangeScale:Float;
+	
+	/**
+	 * Start value for particle's red color component
+	 */
+	public var startRed:Float;
+	
+	/**
+	 * Start value for particle's green color component
+	 */
+	public var startGreen:Float;
+	
+	/**
+	 * Start value for particle's blue color component
+	 */
+	public var startBlue:Float;
+	
+	/**
+	 * Range of red color component change during particle's life
+	 */
+	public var rangeRed:Float;
+	
+	/**
+	 * Range of green color component change during particle's life
+	 */
+	public var rangeGreen:Float;
+	
+	/**
+	 * Range of blue color component change during particle's life
+	 */
+	public var rangeBlue:Float;
 	
 	/**
 	 * Instantiate a new particle.  Like <code>FlxSprite</code>, all meaningful creation
@@ -116,7 +158,11 @@ class FlxParticle extends FlxSprite
 			// Tinting
 			if (useColoring)
 			{
-				color = startColor + Std.int(lifespanRatio * rangeColor);
+				var redComp:Float = startRed + lifespanRatio * rangeRed;
+				var greenComp:Float = startGreen + lifespanRatio * rangeGreen;
+				var blueComp:Float = startBlue + lifespanRatio * rangeBlue;
+				
+				color = Std.int(255 * redComp) << 16 | Std.int(255 * greenComp) << 8 | Std.int(255 * blueComp);
 			}
 			
 			//simpler bounce/spin behavior for now
@@ -179,6 +225,5 @@ class FlxParticle extends FlxSprite
 	 * Triggered whenever this object is launched by a <code>FlxEmitter</code>.
 	 * You can override this to add custom behavior like a sound or AI or something.
 	 */
-	public function onEmit():Void { }
-	
+	public function onEmit():Void { }	
 }

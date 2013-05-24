@@ -528,7 +528,7 @@ class FlxObject extends FlxBasic
 	{
 		if(Path.nodes.length <= 0)
 		{
-			FlxG.log("WARNING: Paths need at least one node in them to be followed.");
+			FlxG.warn("Paths need at least one node in them to be followed.");
 			return;
 		}
 		
