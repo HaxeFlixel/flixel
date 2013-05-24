@@ -1132,6 +1132,10 @@ class FlxBar extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
+			{
+				continue;
+			}
 			#if !js
 			var isColoredCamera:Bool = camera.isColored();
 			var redMult:Float = _red;
@@ -1152,10 +1156,6 @@ class FlxBar extends FlxSprite
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
-			{
-				continue;
-			}
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
@@ -1173,7 +1173,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-			if (!simpleRenderSprite ())
+			if (!simpleRenderSprite())
 			{
 				var radians:Float = -angle * FlxG.RAD;
 				var cos:Float = Math.cos(radians);
