@@ -1822,7 +1822,11 @@ class FlxSprite extends FlxObject
 		var result:Bool = false;
 		var notRotated = angle == 0.0;
 #if !flash
-		notRotated = notRotated && _flxFrame.additionalAngle != 0.0;
+		// TODO: make less checks in subclasses
+		if (_flxFrame != null)
+		{
+			notRotated = notRotated && _flxFrame.additionalAngle != 0.0;
+		}
 #end
 		if ((notRotated || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
 		{
@@ -2122,7 +2126,13 @@ class FlxSprite extends FlxObject
 		#if flash
 		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null));
 		#else
-		return (((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+		// TODO: fix this for subclasses (make less checks)
+		var result:Bool = (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+		if (_flxFrame != null)
+		{
+			result = result && ((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)); // (((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+		}
+		return result;
 		#end
 	}
 	
