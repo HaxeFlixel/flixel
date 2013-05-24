@@ -134,7 +134,7 @@ class FlxColor
 		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite - threshold, 359);
 		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite + threshold, 359);
 		
-		FlxG.log("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
+		FlxG.notice("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
 		//return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
 		
@@ -307,7 +307,7 @@ class FlxColor
 					result = getColor32(alpha, Std.int(v * 255), Std.int(p * 255), Std.int(q * 255));
 					
 				default:
-					FlxG.log("FlxColor Error: HSVtoRGB : Unknown color");
+					FlxG.error("FlxColor: HSVtoRGB : Unknown color");
 			}
 		}
 		
@@ -480,13 +480,13 @@ class FlxColor
 		//	Sanity checks
 		if (max > 255)
 		{
-			FlxG.log("FlxColor Warning: getRandomColor - max value too high");
+			FlxG.warn("FlxColor: getRandomColor - max value too high");
 			return getColor24(255, 255, 255);
 		}
 		
 		if (min > max)
 		{
-			FlxG.log("FlxColor Warning: getRandomColor - min value higher than max");
+			FlxG.warn("FlxColor: getRandomColor - min value higher than max");
 			return getColor24(255, 255, 255);
 		}
 		
@@ -502,13 +502,13 @@ class FlxColor
 		//	Sanity checks
 		if (max > 255)
 		{
-			FlxG.log("FlxColor Warning: getRandomColor - max value too high");
+			FlxG.warn("FlxColor: getRandomColor - max value too high");
 			return getColor24(255, 255, 255);
 		}
 		
 		if (min > max)
 		{
-			FlxG.log("FlxColor Warning: getRandomColor - min value higher than max");
+			FlxG.warn("FlxColor: getRandomColor - min value higher than max");
 			return getColor24(255, 255, 255);
 		}
 		
