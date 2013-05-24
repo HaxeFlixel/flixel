@@ -19,7 +19,7 @@ class FlxEmitterExt extends FlxTypedEmitterExt<FlxParticle>
  * @author Dirk Bunk
  * @link https://github.com/krix/ParticleTest
  */
-class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<T:FlxParticle>
+class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 {		
 	/**
 	 * 	Launch Direction.

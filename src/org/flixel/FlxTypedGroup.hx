@@ -194,7 +194,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		if (Object == null)
 		{
-			FlxG.log("WARNING: Cannot add a `null` object to a FlxGroup.");
+			FlxG.warn("Cannot add a `null` object to a FlxGroup.");
 			return null;
 		}
 		

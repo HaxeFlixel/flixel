@@ -13,6 +13,9 @@ import nme.geom.Point;
 import nme.geom.Rectangle;
 import nme.media.Sound;
 import nme.media.SoundTransform;
+import org.flixel.system.debug.Console;
+import org.flixel.system.debug.LogStyle;
+import org.flixel.system.debug.Log;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.plugin.pxText.PxBitmapFont;
@@ -199,6 +202,11 @@ class FlxG
 	 * Default = false.
 	 */
 	static public var visualDebug:Bool;
+	/**
+	 * Reference to the console on the debugging screen - use it to add commands,
+	 * register objects and functions, etc.
+	 */
+	static public var console:Console;
 	#end
 	/**
 	 * Setting this to true will disable/skip stuff that isn't necessary for mobile platforms like Android. [BETA]
@@ -319,14 +327,69 @@ class FlxG
 	
 	/**
 	 * Log data to the debugger.
-	 * @param	Data		Anything you want to log to the console.
 	 */
-	static public inline function log(Data:Dynamic):Void
+	static public var log:Dynamic;
+	
+	static private inline function _log(Data:Array<Dynamic>):Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game.debugger != null))
+			advancedLog(Data, Log.STYLE_NORMAL); 
+		#end
+	}
+	
+	/**
+	 * Add a warning to the debugger.
+	 */
+	static public var warn:Dynamic;
+	
+	static private inline function _warn(Data:Array<Dynamic>):Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game.debugger != null))
+			advancedLog(Data, Log.STYLE_WARNING); 
+		#end
+	}
+	
+	/**
+	 * Add an error to the debugger.
+	 */
+	static public var error:Dynamic;
+	
+	static private inline function _error(Data:Array<Dynamic>):Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game.debugger != null))
+			advancedLog(Data, Log.STYLE_ERROR); 
+		#end
+	}
+	
+	/**
+	 * Add a notice to the debugger.
+	 */
+	static public var notice:Dynamic;
+	
+	static private inline function _notice(Data:Array<Dynamic>):Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game.debugger != null))
+			advancedLog(Data, Log.STYLE_NOTICE); 
+		#end
+	}
+	
+	static public function advancedLog(Data:Dynamic, Style:LogStyle):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
-			_game.debugger.log.add((Data == null) ? "ERROR: null object" : (Std.is(Data, Array) ? FlxU.formatArray(cast(Data, Array<Dynamic>)):Std.string(Data)));
+			_game.debugger.log.add(Data, Style);
+			
+			if (Style.errorSound != null)
+				FlxG.play(Style.errorSound);
+			if (Style.openConsole) 
+				_game.debugger.visible = _game._debuggerUp = true;
+			if (Reflect.isFunction(Style.callbackFunction))
+				Reflect.callMethod(null, Style.callbackFunction, []);
 		}
 		#end
 	}
@@ -682,7 +745,7 @@ class FlxG
 	{
 		if((EmbeddedSound == null) && (URL == null))
 		{
-			FlxG.log("WARNING: FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
+			FlxG.warn("FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
 		var sound:FlxSound = sounds.recycle(FlxSound);
@@ -1262,7 +1325,7 @@ class FlxG
 		}
 		else
 		{
-			FlxG.log("Error removing camera, not part of game.");
+			FlxG.error("Removing camera, not part of game.");
 		}
 		
 		#if !flash
@@ -1583,6 +1646,10 @@ class FlxG
 		FlxG.scores = new Array();
 		
 		#if !FLX_NO_DEBUG
+		log = Reflect.makeVarArgs(_log);
+		warn = Reflect.makeVarArgs(_warn);
+		error = Reflect.makeVarArgs(_error);
+		notice = Reflect.makeVarArgs(_notice);
 		FlxG.visualDebug = false;
 		#end
 	}
@@ -1774,7 +1841,7 @@ class FlxG
 		}
 	}
 	
-#if !FLX_NO_DEBUG
+	#if !FLX_NO_DEBUG
 	inline static public function drawDebugPlugins():Void
 	{
 		var plugin:FlxBasic;
@@ -1790,7 +1857,7 @@ class FlxG
 			}
 		}
 	}
-#end
+	#end
 	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.

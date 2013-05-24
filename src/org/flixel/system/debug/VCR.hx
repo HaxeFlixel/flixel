@@ -321,7 +321,7 @@ class VCR extends Sprite
 		_file = null;
 		if((fileContents == null) || (fileContents.length <= 0))
 		{
-			FlxG.log("ERROR: Empty flixel gameplay record.");
+			FlxG.error("Empty flixel gameplay record.");
 			return;
 		}
 		
@@ -352,7 +352,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onOpenError);
 		_file = null;
-		FlxG.log("ERROR: Unable to open flixel gameplay record.");
+		FlxG.error("Unable to open flixel gameplay record.");
 		#end
 	}
 	
@@ -404,7 +404,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.log("FLIXEL: successfully saved flixel gameplay record.");
+		FlxG.notice("Successfully saved flixel gameplay record.");
 		#end
 	}
 	
@@ -433,7 +433,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.log("ERROR: problem saving flixel gameplay record.");
+		FlxG.error("Problem saving flixel gameplay record.");
 		#end
 	}
 	

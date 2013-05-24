@@ -5,6 +5,7 @@ import nme.geom.Rectangle;
 import nme.text.TextField;
 import nme.text.TextFormat;
 import org.flixel.FlxAssets;
+import org.flixel.FlxU;
 
 import org.flixel.system.FlxWindow;
 
@@ -14,6 +15,11 @@ import org.flixel.system.FlxWindow;
 class Log extends FlxWindow
 {
 	static public var MAX_LOG_LINES:Int = 200;
+	
+	static public var STYLE_NORMAL:LogStyle;
+	static public var STYLE_WARNING:LogStyle;
+	static public var STYLE_ERROR:LogStyle;
+	static public var STYLE_NOTICE:LogStyle;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -53,6 +59,11 @@ class Log extends FlxWindow
 		addChild(_text);
 		
 		_lines = new Array<String>();
+		
+		STYLE_NORMAL = new LogStyle();
+		STYLE_WARNING = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, "Beep");
+		STYLE_ERROR = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, "Beep", true);
+		STYLE_NOTICE = new LogStyle("[NOTICE] ", "008000", 12, true);
 	}
 	
 	/**
@@ -66,20 +77,61 @@ class Log extends FlxWindow
 		}
 		_text = null;
 		_lines = null;
+		STYLE_NORMAL = null;
+		STYLE_WARNING = null;
+		STYLE_ERROR = null;
+		STYLE_NOTICE = null;
 		super.destroy();
 	}
 	
 	/**
 	 * Adds a new line to the log window.
-	 * @param Text		The line you want to add to the log window.
+	 * @param Data		The data being logged.
+	 * @param Style		The <code>LogStyle</code> to be used for the log
 	 */
-	public function add(Text:String):Void
+	public function add(Data:Array<Dynamic>, Style:LogStyle):Void
 	{
+		trace(Data);
+		if (Data == null) 
+			return;
+		
+		var l:Int = Data.length;
+		for (i in 0...l) {
+			if (Std.is(Data[i], Array))
+				Data[i] = FlxU.formatArray(Data[i]);
+			else 
+				Data[i] = Std.string(Data[i]);
+		}
+		
+		var text:String = Data.join(" ");
+
+		// Create the text and apply color and styles
+		var prefix:String = "<font size='" + Style.size + "' color='#" + Style.color + "'>";
+		var suffix:String = "</font>";
+		
+		if (Style.bold) {
+			prefix = "<b>" + prefix;
+			suffix = "</b>" + suffix;
+		}
+		if (Style.italic) {
+			prefix = "<i>" + prefix;
+			suffix = "</i>" + suffix;
+		}
+		if (Style.underlined) {
+			prefix = "<u>" + prefix;
+			suffix = "</u>" + suffix;
+		}
+		
+		text = prefix + Style.prefix + text + suffix;
+		
+		// Actually add it to the textfield
 		if (_lines.length <= 0)
 		{
 			_text.text = "";
 		}
-		_lines.push(Text);
+		
+		_lines.push(text);
+		
 		if(_lines.length > MAX_LOG_LINES)
 		{
 			_lines.shift();
@@ -88,14 +140,14 @@ class Log extends FlxWindow
 			{
 				newText += _lines[i]+"\n";
 			}
-			_text.text = newText;
+			_text.htmlText = newText;
 		}
 		else
 		{
-			_text.appendText(Text + "\n");
+			_text.htmlText += (text + "\n");
 		}
 		#if flash
-		_text.scrollV = Std.int(_text.height);
+		_text.scrollV = Std.int(_text.maxScrollV);
 		#elseif !js
 		_text.scrollV = _text.maxScrollV - Std.int(_text.height / _text.defaultTextFormat.size) + 1;
 		#end

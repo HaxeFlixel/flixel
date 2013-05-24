@@ -512,7 +512,7 @@ class FlxObject extends FlxBasic
 	{
 		if(Path.nodes.length <= 0)
 		{
-			FlxG.log("WARNING: Paths need at least one node in them to be followed.");
+			FlxG.warn("Paths need at least one node in them to be followed.");
 			return;
 		}
 		
@@ -1279,5 +1279,11 @@ class FlxObject extends FlxBasic
 		{
 			return false;
 		}
+	}
+
+	public function move(x:Float, y:Float):Void
+	{
+		this.x = x;
+		this.y = y;
 	}
 }

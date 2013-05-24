@@ -1089,7 +1089,7 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		FlxG.log("WARNING: No animation called \""+AnimName+"\"");
+		FlxG.warn("No animation called \""+AnimName+"\"");
 	}
 	
 	/**
@@ -1428,8 +1428,8 @@ class FlxSprite extends FlxObject
 			#else
 			var radius:Float = ((frameWidth >= frameHeight) ? frameWidth : frameHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
 			#end
-			_point.x += halfWidth;
-			_point.y += halfHeight;
+			_point.x += halfWidth * scale.x;
+			_point.y += halfHeight * scale.y;
 			result = ((_point.x + radius > 0) && (_point.x - radius < Camera.width) && (_point.y + radius > 0) && (_point.y - radius < Camera.height));
 		}
 		
