@@ -440,7 +440,7 @@ class FlxGame extends Sprite
 			
 			#if !FLX_NO_DEBUG
 			_debugger.vcr.recording();
-			FlxG.log("FLIXEL: starting new flixel gameplay record.");
+			FlxG.notice("Starting new flixel gameplay record.");
 			#end
 		}
 		else if (_replayRequested)
