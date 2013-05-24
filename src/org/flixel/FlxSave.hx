@@ -79,7 +79,7 @@ class FlxSave
 		}
 		catch(e:Error)
 		{
-			FlxG.log("ERROR: There was a problem binding to\nthe shared object data from FlxSave.");
+			FlxG.error("There was a problem binding to\nthe shared object data from FlxSave.");
 			destroy();
 			return false;
 		}
@@ -184,9 +184,9 @@ class FlxSave
 		switch(Result)
 		{
 			case PENDING:
-				FlxG.log("FLIXEL: FlxSave is requesting extra storage space.");
+				FlxG.warn("FlxSave is requesting extra storage space.");
 			case ERROR:
-				FlxG.log("ERROR: There was a problem flushing\nthe shared object data from FlxSave.");
+				FlxG.error("There was a problem flushing\nthe shared object data from FlxSave.");
 			//default:
 		}
 		if (_onComplete != null)
@@ -208,7 +208,7 @@ class FlxSave
 	{
 		if(_sharedObject == null)
 		{
-			FlxG.log("FLIXEL: You must call FlxSave.bind()\nbefore you can read or write data.");
+			FlxG.warn("You must call FlxSave.bind()\nbefore you can read or write data.");
 			return false;
 		}
 		return true;

@@ -102,7 +102,7 @@ class FlxInputStates
 		}
 		else
 		{
-			FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+			FlxG.error("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
 			return false;
 		}
 	}
@@ -120,7 +120,7 @@ class FlxInputStates
 		}
 		else
 		{
-			FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+			FlxG.error("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
 			return false;
 		}
 	}

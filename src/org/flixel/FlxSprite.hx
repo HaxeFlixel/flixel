@@ -1131,7 +1131,7 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		FlxG.log("WARNING: No animation called \""+AnimName+"\"");
+		FlxG.warn("No animation called \""+AnimName+"\"");
 	}
 	
 	/**
