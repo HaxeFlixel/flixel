@@ -21,6 +21,7 @@ class Log extends FlxWindow
 	static public var STYLE_WARNING:LogStyle;
 	static public var STYLE_ERROR:LogStyle;
 	static public var STYLE_NOTICE:LogStyle;
+	static public var STYLE_CONSOLE:LogStyle;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -69,6 +70,7 @@ class Log extends FlxWindow
 		STYLE_WARNING = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, "Beep");
 		STYLE_ERROR = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, "Beep", true);
 		STYLE_NOTICE = new LogStyle("[NOTICE] ", "008000", 12, true);
+		STYLE_CONSOLE = new LogStyle("&#62; ", "0000ff", 12, true);
 	}
 	
 	/**
@@ -86,6 +88,7 @@ class Log extends FlxWindow
 		STYLE_WARNING = null;
 		STYLE_ERROR = null;
 		STYLE_NOTICE = null;
+		STYLE_CONSOLE = null;
 		super.destroy();
 	}
 	
@@ -96,7 +99,6 @@ class Log extends FlxWindow
 	 */
 	public function add(Data:Array<Dynamic>, Style:LogStyle):Void
 	{
-		trace(Data);
 		if (Data == null) 
 			return;
 		
@@ -116,15 +118,15 @@ class Log extends FlxWindow
 		
 		if (Style.bold) {
 			prefix = "<b>" + prefix;
-			suffix = "</b>" + suffix;
+			suffix = suffix + "</b>";
 		}
 		if (Style.italic) {
 			prefix = "<i>" + prefix;
-			suffix = "</i>" + suffix;
+			suffix = suffix + "</i>";
 		}
 		if (Style.underlined) {
 			prefix = "<u>" + prefix;
-			suffix = "</u>" + suffix;
+			suffix = suffix + "</u>";
 		}
 		
 		text = prefix + Style.prefix + text + suffix;
