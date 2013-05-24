@@ -107,17 +107,17 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
         }
     }
 	
-	private function xTransform(s:FlxSprite, dx:Dynamic):Void
+	private function xTransform(s:FlxSprite, dx:Float):Void
 	{
 		s.x += dx;
 	}
 	
-	private function yTransform(s:FlxSprite, dy:Dynamic):Void
+	private function yTransform(s:FlxSprite, dy:Float):Void
 	{
 		s.y += dy;
 	}
 	
-	private function alphaTransform(s:FlxSprite, a:Dynamic):Void
+	private function alphaTransform(s:FlxSprite, a:Float):Void
 	{
 		s.alpha = a;
 	}
