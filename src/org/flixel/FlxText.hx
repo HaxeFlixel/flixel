@@ -170,7 +170,7 @@ class FlxText extends FlxSprite
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format, 0, _textField.text.length);
+		updateFormat(_format);
 		_shadow = ShadowColor;
 		_useShadow = UseShadow;
 		_regen = true;
@@ -228,7 +228,7 @@ class FlxText extends FlxSprite
 		
 		_format.size = Size;
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format, 0, _textField.text.length);
+		updateFormat(_format);
 		_regen = true;
 		return Size;
 	}
@@ -254,7 +254,7 @@ class FlxText extends FlxSprite
 		_format.color = Color;
 		
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format, 0, _textField.text.length);
+		updateFormat(_format);
 		_regen = true;
 		return Color;
 	}
@@ -281,7 +281,7 @@ class FlxText extends FlxSprite
 		
 		_format.font = Assets.getFont(Font).fontName;
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format, 0, _textField.text.length);
+		updateFormat(_format);
 		_regen = true;
 		return Font;
 	}
@@ -308,7 +308,7 @@ class FlxText extends FlxSprite
 		
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format, 0, _textField.text.length);
+		updateFormat(_format);
 		dirty = true;
 		return Alignment;
 	}
@@ -436,7 +436,7 @@ class FlxText extends FlxSprite
 				#end
 				{
 					_formatAdjusted.align = TextFormatAlign.LEFT;
-					_textField.setTextFormat(_formatAdjusted, 0, _textField.text.length);
+					updateFormat(_formatAdjusted);				
 					#if flash
 					_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
 					#else
@@ -447,16 +447,16 @@ class FlxText extends FlxSprite
 				if (_useShadow)
 				{
 					_formatAdjusted.color = _shadow;
-					_textField.setTextFormat(_formatAdjusted, 0, _textField.text.length);
+					updateFormat(_formatAdjusted);
 					_matrix.translate(1, 1);
 					_pixels.draw(_textField, _matrix, _colorTransform);
 					_matrix.translate( -1, -1);
 					_formatAdjusted.color = _format.color;
-					_textField.setTextFormat(_formatAdjusted, 0, _textField.text.length);
+					updateFormat(_formatAdjusted);
 				}
 				//Actually draw the text onto the buffer
 				_pixels.draw(_textField, _matrix, _colorTransform);
-				_textField.setTextFormat(_format, 0, _textField.text.length);
+				updateFormat(_format);
 			}
 			#if !flash
 			updateAtlasInfo();
@@ -613,5 +613,14 @@ class FlxText extends FlxSprite
 		}
 		
 		super.draw();
+	}
+	
+	inline private function updateFormat(format:TextFormat):Void
+	{
+		#if !flash
+		_textField.setTextFormat(format, 0, _textField.text.length);
+		#else
+		_textField.setTextFormat(format);
+		#end
 	}
 }
