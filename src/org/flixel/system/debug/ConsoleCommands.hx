@@ -211,16 +211,19 @@ class ConsoleCommands
 	
 	private function visualDebug():Void
 	{		
+		#if !FLX_NO_DEBUG
 		FlxG.visualDebug = !FlxG.visualDebug;
 		
 		if (FlxG.visualDebug) 
 			FlxG.log("> visualDebug: Enbaled");
 		else
 			FlxG.log("> visualDebug: Disabled");
+		#end
 	}
 	
 	private function pause():Void
 	{
+		#if !FLX_NO_DEBUG
 		if (FlxG._game.debugger.vcr.paused) {
 			FlxG._game.debugger.vcr.onPlay();
 			FlxG.log("> pause: Game unpaused");
@@ -229,6 +232,7 @@ class ConsoleCommands
 			FlxG._game.debugger.vcr.onPause();
 			FlxG.log("> pause: Game paused");
 		}
+		#end
 	}
 	
 	private function bgColor(Color:Dynamic):Void
@@ -278,8 +282,10 @@ class ConsoleCommands
 	
 	private function close():Void
 	{
+		#if !FLX_NO_DEBUG
 		FlxG._game._debugger.visible = false;
 		FlxG._game._debugger.hasMouse = false;
+		#end
 	}
 	
 	private function create(ClassName:String, MousePos:Bool = true, Params:Array<String> = null):Void
