@@ -751,6 +751,9 @@ class FlxU
 	
 	inline static public function ArrayIndexOf(array:Array<Dynamic>, whatToFind:Dynamic, fromIndex:Int = 0):Int
 	{
+		#if flash
+		return untyped array.indexOf(whatToFind, fromIndex);
+		#else
 		var len:Int = array.length;
 		var index:Int = -1;
 		for (i in fromIndex...len)
@@ -762,21 +765,18 @@ class FlxU
 			}
 		}
 		return index;
+		#end
 	}
 	
 	static public function SetArrayLength(array:Array<Dynamic>, newLength:Int):Void
 	{
+		#if flash
+		untyped array.length = newLength;
+		#else
 		if (newLength < 0) return;
 		var oldLength:Int = array.length;
 		var diff:Int = newLength - oldLength;
-		if (diff > 0)
-		{
-			/*for (i in 0...diff)
-			{
-				array.push(null);
-			}*/
-		}
-		else if (diff < 0)
+		if (diff < 0)
 		{
 			diff = -diff;
 			for (i in 0...diff)
@@ -784,7 +784,7 @@ class FlxU
 				array.pop();
 			}
 		}
-		
+		#end
 	}
 	
 	#if (flash || js)
