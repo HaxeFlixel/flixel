@@ -57,7 +57,7 @@ class ConsoleCommands
 			fs = "fullscreen,";
 			#end
 			
-			FlxG.log(">> System commands << \nlog, clearLog, clearHistory, help, resetState, switchState, resetGame, " + fs + " watchMouse, visualDebug, pause, play, playMusic, bgColor, shake, create, set, call, close, listObjects, listFunctions, watch, unwatch");
+			FlxG.log(">> System commands: log, clearLog, clearHistory, help, resetState, switchState, resetGame, " + fs + " watchMouse, visualDebug, pause, play, playMusic, bgColor, shake, create, set, call, close, listObjects, listFunctions, watch, unwatch");
 		}
 		else {
 			FlxG.log(">> Help: " + Command + " <<");
