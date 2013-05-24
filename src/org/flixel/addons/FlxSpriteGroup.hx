@@ -83,7 +83,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
         while(i < length)
         {
             sprite = members[i++];
-            if (sprite != null)
+            if (sprite != null && sprite.exists)
             {
 				lambda(sprite, value);
 			}
@@ -110,7 +110,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
         while(i < length)
         {
             sprite = members[i++];
-            if (sprite != null)
+            if (sprite != null && sprite.exists)
             {
 				for (j in 0...numProps)
 				{
