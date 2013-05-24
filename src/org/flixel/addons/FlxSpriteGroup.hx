@@ -60,14 +60,14 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	{
 		var xOffset:Float = newX - _x;
 		var yOffset:Float = newY - _y;
-		var valueArr:Array<Float> = [xOffset, yOffset];
-		var lambdaArr:Array < FlxSprite-> Float->Void > = [xTransform, yTransform];
+		var valueArr:Array<Dynamic> = [xOffset, yOffset];
+		var lambdaArr:Array<FlxSprite->Dynamic->Void> = [xTransform, yTransform];
 		multiTransformChildren(lambdaArr, valueArr);
 		_x = newX;
 		_y = newY;
 	}
 
-    private function transformChildren(lambda:FlxSprite->Float->Void, value:Float = 0):Void
+    private function transformChildren(lambda:FlxSprite->Dynamic->Void, value:Dynamic = 0):Void
     {
         var sprite:FlxSprite;
         var i:Int = 0;
@@ -81,7 +81,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
         }
     }
 	
-	private function multiTransformChildren(lambdaArr:Array<FlxSprite->Float->Void>, valueArr:Array<Float>):Void
+	private function multiTransformChildren(lambdaArr:Array<FlxSprite->Dynamic->Void>, valueArr:Array<Dynamic>):Void
     {
         var numProps:Int = lambdaArr.length;
 		if (numProps > valueArr.length)
@@ -90,7 +90,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 		}
 		
 		var sprite:FlxSprite;
-		var lambda:FlxSprite->Float->Void;
+		var lambda:FlxSprite->Dynamic->Void;
         var i:Int = 0;
 		var j:Int;
         while(i < length)
@@ -107,17 +107,17 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
         }
     }
 	
-	private function xTransform(s:FlxSprite, dx:Float):Void
+	private function xTransform(s:FlxSprite, dx:Dynamic):Void
 	{
 		s.x += dx;
 	}
 	
-	private function yTransform(s:FlxSprite, dy:Float):Void
+	private function yTransform(s:FlxSprite, dy:Dynamic):Void
 	{
 		s.y += dy;
 	}
 	
-	private function alphaTransform(s:FlxSprite, a:Float):Void
+	private function alphaTransform(s:FlxSprite, a:Dynamic):Void
 	{
 		s.alpha = a;
 	}
