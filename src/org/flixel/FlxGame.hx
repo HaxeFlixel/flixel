@@ -763,7 +763,7 @@ class FlxGame extends Sprite
 		var i:Int = 0;
 		while(i < 10)
 		{
-			tmp = new Bitmap(new BitmapData(4, ++i, false, FlxG.WHITE));
+			tmp = new Bitmap(new BitmapData(4, ++i, false, FlxColorUtils.WHITE));
 			tmp.x = bx;
 			tmp.y = by;
 			_soundTray.addChild(tmp);

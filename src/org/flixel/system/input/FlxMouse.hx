@@ -15,6 +15,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxU;
+import org.flixel.FlxColorUtils;
 import org.flixel.system.replay.MouseRecord;
 
 /**
@@ -637,7 +638,7 @@ class FlxMouse extends FlxPoint, implements IFlxInput
 	private function createTransparentPixel():Void
 	{
 		if (_transparentPixel == null)	
-			_transparentPixel = new BitmapData(1, 1, true, FlxG.TRANSPARENT);
+			_transparentPixel = new BitmapData(1, 1, true, FlxColorUtils.TRANSPARENT);
 	}
 	
 	public function transparentMouse():Void

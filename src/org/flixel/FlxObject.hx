@@ -464,34 +464,34 @@ class FlxObject extends FlxBasic
 			if (allowCollisions != ANY)
 			{
 				#if !neko
-				debugBoundingBoxColor = FlxG.PINK;
+				debugBoundingBoxColor = FlxColorUtils.PINK;
 				#else
-				debugBoundingBoxColor = FlxG.PINK.rgb;
+				debugBoundingBoxColor = FlxColorUtils.PINK.rgb;
 				#end
 			}
 			if (immovable)
 			{
 				#if !neko
-				debugBoundingBoxColor = FlxG.GREEN;
+				debugBoundingBoxColor = FlxColorUtils.GREEN;
 				#else
-				debugBoundingBoxColor = FlxG.GREEN.rgb;
+				debugBoundingBoxColor = FlxColorUtils.GREEN.rgb;
 				#end
 			}
 			else
 			{
 				#if !neko
-				debugBoundingBoxColor = FlxG.RED;
+				debugBoundingBoxColor = FlxColorUtils.RED;
 				#else
-				debugBoundingBoxColor = FlxG.RED.rgb;
+				debugBoundingBoxColor = FlxColorUtils.RED.rgb;
 				#end
 			}
 		}
 		else if (!_boundingBoxColorOverritten)
 		{
 			#if !neko
-			debugBoundingBoxColor = FlxG.BLUE;
+			debugBoundingBoxColor = FlxColorUtils.BLUE;
 			#else
-			debugBoundingBoxColor = FlxG.BLUE.rgb;
+			debugBoundingBoxColor = FlxColorUtils.BLUE.rgb;
 			#end
 		}
 		

@@ -4,6 +4,7 @@ import nme.display.BitmapData;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import org.flixel.FlxG;
+import org.flixel.FlxColorUtils;
 import org.flixel.FlxPoint;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.layer.TileSheetExt;
@@ -49,7 +50,7 @@ class FlxFrame
 			return _bitmapData;
 		}
 		
-		_bitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxG.TRANSPARENT);
+		_bitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxColorUtils.TRANSPARENT);
 		POINT.x = POINT.y = 0;
 		_bitmapData.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, POINT);
 		return _bitmapData;

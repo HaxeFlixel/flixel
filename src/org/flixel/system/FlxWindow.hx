@@ -15,6 +15,7 @@ import org.flixel.FlxG;
 
 import org.flixel.FlxAssets;
 import org.flixel.FlxU;
+import org.flixel.FlxColorUtils;
 
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
@@ -143,7 +144,7 @@ class FlxWindow extends Sprite
 		_resizable = Resizable;
 		//_resizable = false;
 		
-		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxG.BLACK));
+		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColorUtils.BLACK));
 		addChild(_shadow);
 		_background = new Bitmap(new BitmapData(1, 1, true, BGColor));
 		_background.y = 15;

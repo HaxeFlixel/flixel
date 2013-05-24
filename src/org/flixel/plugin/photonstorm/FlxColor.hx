@@ -18,6 +18,7 @@ package org.flixel.plugin.photonstorm;
 import flash.errors.Error;
 import nme.display.BitmapInt32;
 import org.flixel.FlxG;
+import org.flixel.FlxColorUtils;
 
 
 /**
@@ -269,9 +270,9 @@ class FlxColor
 	#end
 	{
 		#if flash
-		var result:UInt = FlxG.TRANSPARENT;
+		var result:UInt = FlxColorUtils.TRANSPARENT;
 		#else
-		var result:BitmapInt32 = FlxG.TRANSPARENT;
+		var result:BitmapInt32 = FlxColorUtils.TRANSPARENT;
 		#end
 		
 		if (s == 0.0)

@@ -27,7 +27,7 @@ class FlxSubState extends FlxState
 	{
 		super();
 		
-		_bgColor = FlxG.TRANSPARENT;
+		_bgColor = FlxColorUtils.TRANSPARENT;
 		closeCallback = null;
 		
 		#if !flash
