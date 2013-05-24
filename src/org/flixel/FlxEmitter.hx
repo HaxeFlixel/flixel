@@ -53,7 +53,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	/**
 	 * Sets the <code>acceleration</code> member of each particle to this value on launch.
 	 */
-	public var gravity:FlxPoint;
+	public var acceleration:FlxPoint;
 	/**
 	 * Determines whether the emitter is currently emitting particles.
 	 * It is totally safe to directly toggle this.
@@ -63,11 +63,8 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * How often a particle is emitted (if emitter is started with Explode == false).
 	 */
 	public var frequency:Float;
-	/**
-	 * How long each particle lives once it is emitted.
-	 * Set lifespan to 'zero' for particles to live forever.
-	 */
-	public var lifespan:Bounds<Float>;
+	
+	public var life:Bounds<Float>;
 	
 	/**
 	 * Sets start scale range (when particle emits)
@@ -184,11 +181,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		endGreen = new Bounds<Float>(1.0, 1.0);
 		endBlue = new Bounds<Float>(1.0, 1.0);
 		blend = null;
-		gravity = new FlxPoint(0, 0);
+		acceleration = new FlxPoint(0, 0);
 		_particleClass = cast FlxParticle;
 		particleDrag = new FlxPoint();
 		frequency = 0.1;
-		lifespan = new Bounds<Float>(3, 3);
+		life = new Bounds<Float>(3, 3);
 		bounce = 0;
 		_quantity = 0;
 		_counter = 0;
@@ -219,7 +216,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		endGreen = null;
 		endBlue = null;
 		blend = null;
-		gravity = null;
+		acceleration = null;
 		
 		particleDrag = null;
 		_particleClass = null;
@@ -361,7 +358,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		else if (_waitForKill)
 		{
 			_timer += FlxG.elapsed;
-			if ((lifespan.max > 0) && (_timer > lifespan.max))
+			if ((life.max > 0) && (_timer > life.max))
 			{
 				kill();
 				return;
@@ -385,19 +382,19 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * Call this function to start emitting particles.
 	 * @param	Explode		Whether the particles should all burst out at once.
 	 * @param	Lifespan	How long each particle lives once emitted. 0 = forever.
-	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
 	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
+	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
 	 */
-	public function start(Explode:Bool = true, Lifespan:Float = 0, LifespanRange:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0):Void
+	public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0, LifespanRange:Float = 0):Void
 	{
 		revive();
 		visible = true;
 		on = true;
 		
 		_explode = Explode;
-		lifespan.min = Lifespan;
-		lifespan.max = Lifespan + Math.abs(LifespanRange);
+		life.min = Lifespan;
+		life.max = Lifespan + Math.abs(LifespanRange);
 		frequency = Frequency;
 		_quantity += Quantity;
 		
@@ -418,13 +415,13 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxG.random() * width, y - (Std.int(particle.height) >> 1) + FlxG.random() * height);
 		particle.visible = true;
 		
-		if (lifespan.min != lifespan.max)
+		if (life.min != life.max)
 		{
-			particle.lifespan = particle.maxLifespan = lifespan.min + FlxG.random() * (lifespan.max - lifespan.min);
+			particle.lifespan = particle.maxLifespan = life.min + FlxG.random() * (life.max - life.min);
 		}
 		else
 		{
-			particle.lifespan = particle.maxLifespan = lifespan.min;
+			particle.lifespan = particle.maxLifespan = life.min;
 		}
 		
 		if (startAlpha.min != startAlpha.max)
@@ -545,7 +542,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		{
 			particle.velocity.y = yVelocity.min;
 		}
-		particle.acceleration.make(gravity.x, gravity.y);
+		particle.acceleration.make(acceleration.x, acceleration.y);
 		
 		if (rotation.min != rotation.max)
 		{
@@ -775,6 +772,75 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	private function set_y(value:Float):Float
 	{
 		yPosition.min = value;
+		return value;
+	}
+	
+	/**
+	 * Sets the <code>acceleration.y</code> member of each particle to this value on launch.
+	 */
+	public var gravity(get_gravity, set_gravity):Float;
+	
+	private function get_gravity():Float
+	{
+		return acceleration.y;
+	}
+	
+	private function set_gravity(value:Float):Float
+	{
+		acceleration.y = value;
+		return value;
+	}
+	
+	/**
+	 * The minimum possible angular velocity of a particle. The default value is -360.
+	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 */
+	public var minRotation(get_minRotation, set_minRotation):Float;
+	
+	private function get_minRotation():Float
+	{
+		return rotation.min;
+	}
+	
+	private function set_minRotation(value:Float):Float
+	{
+		rotation.min = value;
+		return value;
+	}
+	
+	/**
+	 * The maximum possible angular velocity of a particle. The default value is 360.
+	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 */
+	public var maxRotation(get_maxRotation, set_maxRotation):Float;
+	
+	private function get_maxRotation():Float
+	{
+		return rotation.max;
+	}
+	
+	private function set_maxRotation(value:Float):Float
+	{
+		rotation.max = value;
+		return value;
+	}
+	
+	/**
+	 * How long each particle lives once it is emitted.
+	 * Set lifespan to 'zero' for particles to live forever.
+	 */
+	public var lifespan(get_lifespan, set_lifespan):Float;
+	
+	private function get_lifespan():Float
+	{
+		return life.min;
+	}
+	
+	private function set_lifespan(value:Float):Float
+	{
+		var dl:Float = life.max - life.min;
+		life.min = value;
+		life.max = value + dl;
 		return value;
 	}
 }

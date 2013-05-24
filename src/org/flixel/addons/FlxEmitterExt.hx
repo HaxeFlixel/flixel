@@ -60,8 +60,8 @@ class FlxEmitterExt extends FlxEmitter
 	{
 		this.angle = angle * 0.017453293;
 		this.distance = distance;
-		this.lifespan.min = lifespan;
-		this.lifespan.max = lifespan + lifespanRange;
+		this.life.min = lifespan;
+		this.life.max = lifespan + lifespanRange;
 		this.angleRange = angleRange * 0.017453293;
 		this.distanceRange = distanceRange;
 	}
@@ -93,10 +93,11 @@ class FlxEmitterExt extends FlxEmitter
 	 * @param	Lifespan	Unused parameter due to class override. Use setMotion to set things like a particle's lifespan.
 	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
+	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
 	 */
-	override public function start(Explode:Bool = true, Lifespan:Float = 0, LifespanRange:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0):Void
+	override public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0, LifespanRange:Float = 0):Void
 	{
-		super.start(Explode, Lifespan, LifespanRange, Frequency, Quantity);
+		super.start(Explode, Lifespan, Frequency, Quantity, LifespanRange);
 
 		//Immediately execute the explosion code part from the update function, to prevent other explosions to override this one.
 		//This fixes the problem, that you can not add two particle explosions in the same frame.
@@ -129,13 +130,13 @@ class FlxEmitterExt extends FlxEmitter
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxG.random() * width, y - (Std.int(particle.height) >> 1) + FlxG.random() * height);
 		particle.visible = true;
 		
-		if (lifespan.min != lifespan.max)
+		if (life.min != life.max)
 		{
-			particle.lifespan = particle.maxLifespan = lifespan.min + FlxG.random() * (lifespan.max - lifespan.min);
+			particle.lifespan = particle.maxLifespan = life.min + FlxG.random() * (life.max - life.min);
 		}
 		else
 		{
-			particle.lifespan = particle.maxLifespan = lifespan.min;
+			particle.lifespan = particle.maxLifespan = life.min;
 		}
 		
 		if (startAlpha.min != startAlpha.max)
@@ -242,7 +243,7 @@ class FlxEmitterExt extends FlxEmitter
 		
 		//set particle motion
 		setParticleMotion(particle, angle, distance, angleRange, distanceRange);
-		particle.acceleration.make(gravity.x, gravity.y);
+		particle.acceleration.make(acceleration.x, acceleration.y);
 		
 		if (rotation.min != rotation.max)
 		{
