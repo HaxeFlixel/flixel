@@ -74,7 +74,7 @@ class WatchEntry
 			tempVarName = tempArr[i];
 			if (!Reflect.hasField(tempObj, tempVarName)) 
 			{
-				FlxG.log("> Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
+				FlxG.error("Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
 				tempVarName = null;
 				break;
 			}
