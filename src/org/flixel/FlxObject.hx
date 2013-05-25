@@ -187,13 +187,9 @@ class FlxObject extends FlxBasic
 	 */
 	public var health:Float;
 	/**
-	 * This is just a pre-allocated x-y point container to be used however you like
+	 * This is just a pre-allocated x-y point container used internally for pathing and overlapping
 	 */
-	public var _point:FlxPoint;
-	/**
-	 * This is just a pre-allocated rectangle container to be used however you like
-	 */
-	public var _rect:FlxRect;
+	private var _point:FlxPoint;
 	/**
 	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
 	 * FlxObject and FlxSprite default to true.
