@@ -451,6 +451,25 @@ class FlxU
 	}
 	
 	/**
+	 * Generate a string representation of a FlxPoint.
+	 * @param	Point	A <code>FlxPoint</code> object.
+	 * @return	A <code>String</code> formatted like this: <code>x: Point.x | y: Point.y</code>
+	 */
+	inline static public function formatFlxPoint(Point:FlxPoint, Precision:Int):String
+	{
+		var string:String = "";
+		if (Point != null) 
+		{
+			var xValue:Float = roundDecimal(Point.x, Precision);
+			var yValue:Float = roundDecimal(Point.y, Precision);
+			
+			string = "x: " + xValue + " | y: " + yValue;
+		}
+		
+		return string;
+	}
+	
+	/**
 	 * Automatically commas and decimals in the right places for displaying money amounts.
 	 * Does not include a dollar sign or anything, so doesn't really do much
 	 * if you call say <code>var results:String = FlxU.formatMoney(10,false);</code>

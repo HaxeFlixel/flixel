@@ -7,6 +7,8 @@ import nme.text.TextField;
 import nme.text.TextFormat;
 import org.flixel.FlxAssets;
 import org.flixel.FlxU;
+import org.flixel.FlxPoint;
+import org.flixel.system.FlxDebugger;
 
 import org.flixel.system.FlxWindow;
 
@@ -101,16 +103,24 @@ class Log extends FlxWindow
 	{
 		if (Data == null) 
 			return;
+			
+		var texts:Array<String> = new Array<String>();
 		
-		var l:Int = Data.length;
-		for (i in 0...l) {
-			if (Std.is(Data[i], Array))
-				Data[i] = FlxU.formatArray(Data[i]);
-			else 
-				Data[i] = Std.string(Data[i]);
+		// Format FlxPoints, Arrays or turn the Data entry into a String
+		for (i in 0...Data.length) {
+			if (Std.is(Data[i], FlxPoint)) 
+				texts[i] = FlxU.formatFlxPoint(Data[i], FlxDebugger.pointPrecision);
+			else if (Std.is(i, Array))
+				texts[i] = FlxU.formatArray(Data[i]); 
+			else {
+				texts[i] = Std.string(Data[i]);
+				// Make sure you can't insert html tags
+				texts[i] = StringTools.replace(texts[i], "<", "");
+				texts[i] = StringTools.replace(texts[i], ">", "");
+			}
 		}
 		
-		var text:String = Data.join(" ");
+		var text:String = texts.join(" ");
 
 		// Create the text and apply color and styles
 		var prefix:String = "<font size='" + Style.size + "' color='#" + Style.color + "'>";
@@ -145,13 +155,13 @@ class Log extends FlxWindow
 			var newText:String = "";
 			for (i in 0..._lines.length) 
 			{
-				newText += _lines[i]+"\n";
+				newText += _lines[i] + "<br>";
 			}
 			_text.htmlText = newText;
 		}
 		else
 		{
-			_text.htmlText += (text + "\n");
+			_text.htmlText += (text + "<br>");
 		}
 		#if flash
 		_text.scrollV = Std.int(_text.maxScrollV);
