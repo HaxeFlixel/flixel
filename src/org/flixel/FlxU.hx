@@ -8,6 +8,7 @@ import nme.display.BitmapInt32;
 import nme.Lib;
 import nme.net.URLRequest;
 import org.flixel.FlxPoint;
+import org.flixel.FlxColorUtils;
 
 class FlxU 
 {
@@ -245,12 +246,12 @@ class FlxU
 	/**
 	 * Reference to FlxColorUtils.getRGBA for backwards compatibility.
 	 */
-	inline static public function getRGBA(Color:UInt, Results:Array<Float> = null):Array<Float>
+	inline static public function getRGBA(Color:UInt, Results:RGBA = null):RGBA
 	#else
 	/**
 	 * Reference to FlxColorUtils.getRGBA for backwards compatibility.
 	 */
-	inline static public function getRGBA(Color:BitmapInt32, Results:Array<Float> = null):Array<Float>
+	inline static public function getRGBA(Color:BitmapInt32, Results:RGBA = null):RGBA
 	#end
 	{
 		return FlxColorUtils.getRGBA(Color, Results);
@@ -260,15 +261,15 @@ class FlxU
 	/**
 	 * Reference to FlxColorUtils.getHSB for backwards compatibility.
 	 */
-	inline static public function getHSB(Color:UInt, Results:Array<Float> = null):Array<Float>
+	inline static public function getHSB(Color:UInt, Results:HSBA = null):HSBA
 	#else
 	/**
 	 * Reference to FlxColorUtils.getHSB for backwards compatibility.
 	 */
-	inline static public function getHSB(Color:Int, Results:Array<Float> = null):Array<Float>
+	inline static public function getHSB(Color:Int, Results:HSBA = null):HSBA
 	#end
 	{
-		return FlxColorUtils.getHSB(Color, Results);
+		return FlxColorUtils.getHSBA(Color, Results);
 	}
 	
 	/**
