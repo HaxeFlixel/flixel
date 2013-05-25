@@ -318,7 +318,6 @@ class FlxObject extends FlxBasic
 		_flickerTimer = 0;
 		
 		_point = new FlxPoint();
-		_rect = new FlxRect();
 		
 		path = null;
 		pathSpeed = 0;
@@ -339,7 +338,6 @@ class FlxObject extends FlxBasic
 		maxVelocity = null;
 		scrollFactor = null;
 		_point = null;
-		_rect = null;
 		last = null;
 		cameras = null;
 		if (path != null)
