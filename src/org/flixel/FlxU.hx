@@ -214,32 +214,32 @@ class FlxU
 	
 	#if flash
 	/**
-	 * Reference to FlxColorUtils.makeColor for backwards compatibility.
+	 * Reference to FlxColorUtils.makeFromRGBA for backwards compatibility.
 	 */
 	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
 	#else
 	/**
-	 * Reference to FlxColorUtils.makeColor for backwards compatibility.
+	 * Reference to FlxColorUtils.makeFromRGBA for backwards compatibility.
 	 */
 	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
-		return FlxColorUtils.makeColor(Red, Green, Blue, Alpha);
+		return FlxColorUtils.makeFromRGBA(Red, Green, Blue, Alpha);
 	}
 	
 	#if flash
 	/**
-	 * Reference to FlxColorUtils.makeColorFromHSB for backwards compatibility.
+	 * Reference to FlxColorUtils.makeFromHSBA for backwards compatibility.
 	 */
 	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
 	#else
 	/**
-	 * Reference to FlxColorUtils.makeColorFromHSB for backwards compatibility.
+	 * Reference to FlxColorUtils.makeFromHSBA for backwards compatibility.
 	 */
 	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
-		return FlxColorUtils.makeColorFromHSB(Hue, Saturation, Brightness, Alpha);
+		return FlxColorUtils.makeFromHSBA(Hue, Saturation, Brightness, Alpha);
 	}
 	
 	#if flash
@@ -259,12 +259,12 @@ class FlxU
 	
 	#if flash
 	/**
-	 * Reference to FlxColorUtils.getHSB for backwards compatibility.
+	 * Reference to FlxColorUtils.getHSBA for backwards compatibility.
 	 */
 	inline static public function getHSB(Color:UInt, Results:HSBA = null):HSBA
 	#else
 	/**
-	 * Reference to FlxColorUtils.getHSB for backwards compatibility.
+	 * Reference to FlxColorUtils.getHSBA for backwards compatibility.
 	 */
 	inline static public function getHSB(Color:Int, Results:HSBA = null):HSBA
 	#end

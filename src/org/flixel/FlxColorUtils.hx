@@ -512,7 +512,7 @@ class FlxColorUtils
 	 * 
 	 * @return  The color as a <code>uint</code>.
 	 */
-	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
+	inline static public function makeFromRGBA(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
 	#else
 	/**
 	 * Generate a Flash <code>uint</code> color from RGBA components.
@@ -524,7 +524,7 @@ class FlxColorUtils
 	 * 
 	 * @return  The color as a <code>uint</code>.
 	 */
-	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):BitmapInt32
+	inline static public function makeFromRGBA(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
 		#if !neko
@@ -536,7 +536,7 @@ class FlxColorUtils
 	
 	#if flash
 	/**
-	 * Generate a Flash <code>uint</code> color from HSB components.
+	 * Generate a Flash <code>uint</code> color from HSBA components.
 	 * 
 	 * @param	Hue			A number between 0 and 360, indicating position on a color strip or wheel.
 	 * @param	Saturation	A number between 0 and 1, indicating how colorful or gray the color should be.  0 is gray, 1 is vibrant.
@@ -544,10 +544,10 @@ class FlxColorUtils
 	 * @param   Alpha   	How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * @return	The color as a <code>uint</code>.
 	 */
-	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
+	inline static public function makeFromHSBA(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
 	#else
 	/**
-	 * Generate a Flash <code>uint</code> color from HSB components.
+	 * Generate a Flash <code>uint</code> color from HSBA components.
 	 * 
 	 * @param	Hue			A number between 0 and 360, indicating position on a color strip or wheel.
 	 * @param	Saturation	A number between 0 and 1, indicating how colorful or gray the color should be.  0 is gray, 1 is vibrant.
@@ -555,7 +555,7 @@ class FlxColorUtils
 	 * @param   Alpha   	How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * @return	The color as a <code>uint</code>.
 	 */
-	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):BitmapInt32
+	inline static public function makeFromHSBA(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
 		var red:Float;
