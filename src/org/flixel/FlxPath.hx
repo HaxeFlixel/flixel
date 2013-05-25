@@ -286,17 +286,17 @@ class FlxPath
 				if (i == 0)
 				{
 					#if !neko
-					nodeColor = FlxG.GREEN;
+					nodeColor = FlxColorUtils.GREEN;
 					#else
-					nodeColor = FlxG.GREEN.rgb;
+					nodeColor = FlxColorUtils.GREEN.rgb;
 					#end
 				}
 				else if (i == l - 1)
 				{
 					#if !neko
-					nodeColor = FlxG.RED;
+					nodeColor = FlxColorUtils.RED;
 					#else
-					nodeColor = FlxG.RED.rgb;
+					nodeColor = FlxColorUtils.RED.rgb;
 					#end
 				}
 			}

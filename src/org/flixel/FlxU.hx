@@ -8,6 +8,7 @@ import nme.display.BitmapInt32;
 import nme.Lib;
 import nme.net.URLRequest;
 import org.flixel.FlxPoint;
+import org.flixel.FlxColorUtils;
 
 class FlxU 
 {
@@ -209,194 +210,66 @@ class FlxU
 		return (Math.abs(EndTicks - StartTicks) / 1000) + "s";
 	}
 	
-	/**
-	 * Generate a Flash <code>uint</code> color from RGBA components.
-	 * 
-	 * @param   Red     The red component, between 0 and 255.
-	 * @param   Green   The green component, between 0 and 255.
-	 * @param   Blue    The blue component, between 0 and 255.
-	 * @param   Alpha   How opaque the color should be, either between 0 and 1 or 0 and 255.
-	 * 
-	 * @return  The color as a <code>uint</code>.
-	 */
+	// TODO: Eventually remove all the color-related functions from FlxU
+	
 	#if flash
+	/**
+	 * Reference to FlxColorUtils.makeFromRGBA for backwards compatibility.
+	 */
 	inline static public function makeColor(Red:UInt, Green:UInt, Blue:UInt, Alpha:Float = 1.0):UInt
 	#else
+	/**
+	 * Reference to FlxColorUtils.makeFromRGBA for backwards compatibility.
+	 */
 	inline static public function makeColor(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
-		#if !neko
-		return (Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
-		#else
-		return {rgb: (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF), a: Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF << 24 };
-		#end
+		return FlxColorUtils.makeFromRGBA(Red, Green, Blue, Alpha);
 	}
 	
-	/**
-	 * Generate a Flash <code>uint</code> color from HSB components.
-	 * 
-	 * @param	Hue			A number between 0 and 360, indicating position on a color strip or wheel.
-	 * @param	Saturation	A number between 0 and 1, indicating how colorful or gray the color should be.  0 is gray, 1 is vibrant.
-	 * @param	Brightness	A number between 0 and 1, indicating how bright the color should be.  0 is black, 1 is full bright.
-	 * @param   Alpha   	How opaque the color should be, either between 0 and 1 or 0 and 255.
-	 * @return	The color as a <code>uint</code>.
-	 */
 	#if flash
+	/**
+	 * Reference to FlxColorUtils.makeFromHSBA for backwards compatibility.
+	 */
 	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):UInt
 	#else
+	/**
+	 * Reference to FlxColorUtils.makeFromHSBA for backwards compatibility.
+	 */
 	inline static public function makeColorFromHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):BitmapInt32
 	#end
 	{
-		var red:Float;
-		var green:Float;
-		var blue:Float;
-		if(Saturation == 0.0)
-		{
-			red   = Brightness;
-			green = Brightness;        
-			blue  = Brightness;
-		}       
-		else
-		{
-			if (Hue == 360)
-			{
-				Hue = 0;
-			}
-			var slice:Int = Std.int(Hue / 60);
-			var hf:Float = Hue / 60 - slice;
-			var aa:Float = Brightness*(1 - Saturation);
-			var bb:Float = Brightness * (1 - Saturation * hf);
-			var cc:Float = Brightness * (1 - Saturation * (1.0 - hf));
-			switch (slice)
-			{
-				case 0: 
-					red = Brightness; 
-					green = cc;   
-					blue = aa;  
-				case 1: 
-					red = bb;  
-					green = Brightness;  
-					blue = aa;
-				case 2: 
-					red = aa;  
-					green = Brightness;  
-					blue = cc;
-				case 3: 
-					red = aa;  
-					green = bb;   
-					blue = Brightness;
-				case 4: 
-					red = cc;  
-					green = aa;   
-					blue = Brightness;
-				case 5: 
-					red = Brightness; 
-					green = aa;   
-					blue = bb;
-				default: 
-					red = 0;  
-					green = 0;    
-					blue = 0;
-			}
-		}
-		#if !neko
-		return (Std.int((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 | Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255);
-		#else
-		return { rgb: Std.int(red * 255) << 16 | Std.int(green * 255) << 8 | Std.int(blue * 255), a: (Std.int((Alpha > 1) ? Alpha :( Alpha * 255)) & 0xFF) << 24 };
-		#end
+		return FlxColorUtils.makeFromHSBA(Hue, Saturation, Brightness, Alpha);
 	}
 	
-	/**
-	 * Loads an array with the RGBA values of a Flash <code>uint</code> color.
-	 * RGB values are stored 0-255.  Alpha is stored as a floating point number between 0 and 1.
-	 * @param	Color	The color you want to break into components.
-	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
-	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
-	 */
 	#if flash
-	inline static public function getRGBA(Color:UInt, Results:Array<Float> = null):Array<Float>
+	/**
+	 * Reference to FlxColorUtils.getRGBA for backwards compatibility.
+	 */
+	inline static public function getRGBA(Color:UInt, Results:RGBA = null):RGBA
 	#else
-	inline static public function getRGBA(Color:BitmapInt32, Results:Array<Float> = null):Array<Float>
+	/**
+	 * Reference to FlxColorUtils.getRGBA for backwards compatibility.
+	 */
+	inline static public function getRGBA(Color:BitmapInt32, Results:RGBA = null):RGBA
 	#end
 	{
-		if (Results == null)
-		{
-			Results = new Array<Float>();
-		}
-		#if !neko
-		Results[0] = (Color >> 16) & 0xFF;
-		Results[1] = (Color >> 8) & 0xFF;
-		Results[2] = Color & 0xFF;
-		Results[3] = ((Color >> 24) & 0xFF) / 255;
-		#else
-		Results[0] = (Color.rgb >> 16) & 0xFF;
-		Results[1] = (Color.rgb >> 8) & 0xFF;
-		Results[2] = Color.rgb & 0xFF;
-		Results[3] = Color.a / 255;
-		#end
-		return Results;
+		return FlxColorUtils.getRGBA(Color, Results);
 	}
 	
-	/**
-	 * Loads an array with the HSB values of a Flash <code>uint</code> color.
-	 * Hue is a value between 0 and 360.  Saturation, Brightness and Alpha
-	 * are as floating point numbers between 0 and 1.
-	 * @param	Color	The color you want to break into components.
-	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
-	 * @return	An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.
-	 */
 	#if flash
-	inline static public function getHSB(Color:UInt, Results:Array<Float> = null):Array<Float>
+	/**
+	 * Reference to FlxColorUtils.getHSBA for backwards compatibility.
+	 */
+	inline static public function getHSB(Color:UInt, Results:HSBA = null):HSBA
 	#else
-	inline static public function getHSB(Color:Int, Results:Array<Float> = null):Array<Float>
+	/**
+	 * Reference to FlxColorUtils.getHSBA for backwards compatibility.
+	 */
+	inline static public function getHSB(Color:Int, Results:HSBA = null):HSBA
 	#end
 	{
-		if (Results == null)
-		{
-			Results = new Array<Float>();
-		}
-		
-		var red:Float = ((Color >> 16) & 0xFF) / 255;
-		var green:Float = ((Color >> 8) & 0xFF) / 255;
-		var blue:Float = ((Color) & 0xFF) / 255;
-		
-		var m:Float = (red > green) ? red : green;
-		var dmax:Float = (m > blue) ? m : blue;
-		m = (red > green) ? green : red;
-		var dmin:Float = (m > blue) ? blue : m;
-		var range:Float = dmax - dmin;
-		
-		Results[2] = dmax;
-		Results[1] = 0;
-		Results[0] = 0;
-		
-		if (dmax != 0)
-		{
-			Results[1] = range / dmax;
-		}
-		if(Results[1] != 0) 
-		{
-			if (red == dmax)
-			{
-				Results[0] = (green - blue) / range;
-			}
-			else if (green == dmax)
-			{
-				Results[0] = 2 + (blue - red) / range;
-			}
-			else if (blue == dmax)
-			{
-				Results[0] = 4 + (red - green) / range;
-			}
-			Results[0] *= 60;
-			if (Results[0] < 0)
-			{
-				Results[0] += 360;
-			}
-		}
-		
-		Results[3] = ((Color >> 24) & 0xFF) / 255;
-		return Results;
+		return FlxColorUtils.getHSBA(Color, Results);
 	}
 	
 	/**
