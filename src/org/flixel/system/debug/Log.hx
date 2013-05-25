@@ -112,12 +112,12 @@ class Log extends FlxWindow
 				texts[i] = FlxU.formatFlxPoint(Data[i], FlxDebugger.pointPrecision);
 			else if (Std.is(i, Array))
 				texts[i] = FlxU.formatArray(Data[i]); 
-			else {
+			else 
 				texts[i] = Std.string(Data[i]);
-				// Make sure you can't insert html tags
-				texts[i] = StringTools.replace(texts[i], "<", "");
-				texts[i] = StringTools.replace(texts[i], ">", "");
-			}
+				
+			// Make sure you can't insert html tags
+			texts[i] = StringTools.replace(texts[i], "<", "");
+			texts[i] = StringTools.replace(texts[i], ">", "");
 		}
 		
 		var text:String = texts.join(" ");
