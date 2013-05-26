@@ -452,7 +452,8 @@ class FlxU
 	
 	/**
 	 * Generate a string representation of a FlxPoint.
-	 * @param	Point	A <code>FlxPoint</code> object.
+	 * @param	Point		A <code>FlxPoint</code> object.
+	 * @param	Precison	To how many decimals x and y should be rounded.
 	 * @return	A <code>String</code> formatted like this: <code>x: Point.x | y: Point.y</code>
 	 */
 	inline static public function formatFlxPoint(Point:FlxPoint, Precision:Int):String
@@ -466,6 +467,22 @@ class FlxU
 			string = "x: " + xValue + " | y: " + yValue;
 		}
 		
+		return string;
+	}
+	
+	/**
+	 * Generate a comma-seperated string representation of the keys in a Hash.
+	 * @param	AnyHash		A <code>Hash</code> object.
+	 * @return	A <code>String</code> formatted like this: <code>key1, key2, ..., keyX</code>
+	 */
+	inline static public function formatHash(AnyHash:Hash<Dynamic>):String
+	{
+		var string:String = "";
+		for (key in AnyHash.keys()) {
+			string += Std.string(key);
+			string += ", ";
+		}
+		string = string.substring(0, string.length - 2);
 		return string;
 	}
 	
