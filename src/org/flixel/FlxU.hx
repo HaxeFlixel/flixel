@@ -451,6 +451,42 @@ class FlxU
 	}
 	
 	/**
+	 * Generate a string representation of a FlxPoint.
+	 * @param	Point		A <code>FlxPoint</code> object.
+	 * @param	Precison	To how many decimals x and y should be rounded.
+	 * @return	A <code>String</code> formatted like this: <code>x: Point.x | y: Point.y</code>
+	 */
+	inline static public function formatFlxPoint(Point:FlxPoint, Precision:Int):String
+	{
+		var string:String = "";
+		if (Point != null) 
+		{
+			var xValue:Float = roundDecimal(Point.x, Precision);
+			var yValue:Float = roundDecimal(Point.y, Precision);
+			
+			string = "x: " + xValue + " | y: " + yValue;
+		}
+		
+		return string;
+	}
+	
+	/**
+	 * Generate a comma-seperated string representation of the keys in a Hash.
+	 * @param	AnyHash		A <code>Hash</code> object.
+	 * @return	A <code>String</code> formatted like this: <code>key1, key2, ..., keyX</code>
+	 */
+	inline static public function formatHash(AnyHash:Hash<Dynamic>):String
+	{
+		var string:String = "";
+		for (key in AnyHash.keys()) {
+			string += Std.string(key);
+			string += ", ";
+		}
+		string = string.substring(0, string.length - 2);
+		return string;
+	}
+	
+	/**
 	 * Automatically commas and decimals in the right places for displaying money amounts.
 	 * Does not include a dollar sign or anything, so doesn't really do much
 	 * if you call say <code>var results:String = FlxU.formatMoney(10,false);</code>

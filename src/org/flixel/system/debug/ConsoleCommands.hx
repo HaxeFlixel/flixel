@@ -3,6 +3,7 @@ package org.flixel.system.debug;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxState;
+import org.flixel.FlxU;
 
 #if haxe3
 private typedef Hash<T> = Map<String,T>;
@@ -62,6 +63,7 @@ class ConsoleCommands
 			#end
 			
 			cLog("System commands: \nlog, clearLog, clearHistory, help, resetState, switchState, resetGame, " + fs + " watchMouse, visualDebug, pause, play, playMusic, bgColor, shake, create, set, call, close, listObjects, listFunctions, watch, unwatch");
+			cLog("help (Command) for more information about a specific command");
 		}
 		else {
 			cLog("help: " + Command);
@@ -400,12 +402,12 @@ class ConsoleCommands
 	
 	private function listObjects():Void
 	{
-		cLog("Objects registered: \n" + hashToString(_console.registeredObjects)); 
+		cLog("Objects registered: \n" + FlxU.formatHash(_console.registeredObjects)); 
 	}
 	
 	private function listFunctions():Void
 	{
-		cLog("Functions registered: \n" + hashToString(_console.registeredFunctions)); 
+		cLog("Functions registered: \n" + FlxU.formatHash(_console.registeredFunctions)); 
 	}
 	
 	private function watch(ObjectAndVariable:String, DisplayName:String = null):Void
@@ -459,19 +461,6 @@ class ConsoleCommands
 		}
 		
 		return instance;
-	}
-	
-	private function hashToString(hash:Hash<Dynamic>):String
-	{
-		var output:String = "";
-		
-		for (key in hash.keys()) {
-			output += key;
-			output += ", ";
-		}
-		output = output.substring(0, output.length - 2);
-		
-		return output;
 	}
 	
 	private function resolveObjecAndVariable(ObjectAndVariable:String, CommandName:String):Array<Dynamic>
