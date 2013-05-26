@@ -225,6 +225,14 @@ class FlxG
 	 */
 	static public var paused:Bool;
 	/**
+	 * Whether the game should be paused when focus is lost or not. 
+	 * Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
+	 * pause screen. Override onFocus() and onFocusLost() for your own 
+	 * behaviour in your state
+	 * @default true
+	 */
+	static public var autoPause:Bool;
+	/**
 	 * Whether you are running in Debug or Release mode.
 	 * Set automatically by <code>FlxPreloader</code> during startup.
 	 */
@@ -363,6 +371,26 @@ class FlxG
 	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
 	 */
 	static public var keys:FlxKeyboard;
+	/**
+	 * The key codes used to open the debugger. (via nme.ui.Keyboard)
+	 * @default [192, 220]
+	 */
+	static public var keyDebugger:Array<Int>;
+	/**
+	 * The key codes used to increase volume. (via nme.ui.Keyboard)
+	 * @default [107, 187]
+	 */
+	static public var keyVolumeUp:Array<Int>;
+	/**
+	 * The key codes used to decrease volume. (via nme.ui.Keyboard)
+	 * @default [109, 189]
+	 */
+	static public var keyVolumeDown:Array<Int>;
+	/**
+	 * The key codes used to mute / unmute the game. (via nme.ui.Keyboard)
+	 * @default [48, 96]
+	 */
+	static public var keyMute:Array<Int>;
 	#end
 
 	#if !FLX_NO_TOUCH

@@ -54,6 +54,12 @@
 	
     <!--Disable the Flixel core recording system if your not using it-->
     <!--<set name="FLX_NO_RECORD" />-->
+
+    <!--Disable the Flixel core sound tray-->
+    <!--<set name="FLX_NO_SOUND_TRAY" />-->
+
+    <!--Disable the Flixel core focus lost screen-->
+    <!--<set name="FLX_NO_FOCUS_LOST_SCREEN" />-->
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
     <!--<set name="FLX_NO_MOUSE" if="mobile" />-->
