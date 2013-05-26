@@ -335,9 +335,9 @@ class FlxTilemap extends FlxObject
 		#if !FLX_NO_DEBUG
 		//create debug tiles for rendering bounding boxes on demand
 		#if flash
-		_debugTileNotSolid = makeDebugTile(FlxG.BLUE);
-		_debugTilePartial = makeDebugTile(FlxG.PINK);
-		_debugTileSolid = makeDebugTile(FlxG.GREEN);
+		_debugTileNotSolid = makeDebugTile(FlxColorUtils.BLUE);
+		_debugTilePartial = makeDebugTile(FlxColorUtils.PINK);
+		_debugTileSolid = makeDebugTile(FlxColorUtils.GREEN);
 		#end
 		#end
 		
@@ -2113,7 +2113,7 @@ class FlxTilemap extends FlxObject
 		
 		var pt:Point = new Point(0, 0);
 		var tileSprite:FlxSprite = new FlxSprite();
-		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxG.TRANSPARENT, true);
+		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColorUtils.TRANSPARENT, true);
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
 		if (rect != null) tileSprite.pixels.copyPixels(_tiles, rect, pt);

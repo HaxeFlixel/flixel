@@ -8,6 +8,7 @@ import nme.geom.Matrix;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 import org.flixel.FlxG;
+import org.flixel.FlxColorUtils;
 import org.flixel.system.layer.Node;
 
 /**
@@ -316,7 +317,7 @@ class PxBitmapFont
 			cy += (rowHeight + 1);
 		}
 		
-		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, FlxG.TRANSPARENT);
+		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, FlxColorUtils.TRANSPARENT);
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
 		
 		#if flash
@@ -340,12 +341,12 @@ class PxBitmapFont
 				#if neko
 				if (pixelColor.rgb == bgColor32.rgb && pixelColor.a == bgColor32.a)
 				{
-					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
+					resultBitmapData.setPixel32(cx, cy, FlxColorUtils.TRANSPARENT);
 				}
 				#else
 				if (pixelColor == bgColor32)
 				{
-					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
+					resultBitmapData.setPixel32(cx, cy, FlxColorUtils.TRANSPARENT);
 				}
 				#end
 				cx++;
@@ -353,7 +354,7 @@ class PxBitmapFont
 			cy++;
 		}
 		
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxG.WHITE);
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxColorUtils.WHITE);
 		
 		return resultBitmapData;
 	}
@@ -416,9 +417,9 @@ class PxBitmapFont
 			newHeight += 2;
 		}
 		
-		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, FlxG.TRANSPARENT);
+		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, FlxColorUtils.TRANSPARENT);
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxG.WHITE);
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxColorUtils.WHITE);
 		return resultBitmapData;
 	}
 	

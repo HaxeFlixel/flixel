@@ -124,63 +124,90 @@ class FlxG
 	static public inline var DEBUGGER_RIGHT:Int = 5;
 	#end
 	
-	/**
-	 * Some handy color presets.  Less glaring than pure RGB full values.
-	 * Primarily used in the visual debugger mode for bounding box displays.
-	 * Red is used to indicate an active, movable, solid object.
-	 */
+	// TODO: Eventually remove all the color constants from FlxG
+	
 	#if neko
-	static public inline var RED:BitmapInt32 = { rgb: 0xff0012, a: 0xff };
+	/**
+	 * Reference to FlxColorUtils.RED for backwards compatibility.
+	 */
+	static public inline var RED:BitmapInt32 = FlxColorUtils.RED;
 	#else
-	static public inline var RED:Int = 0xffff0012;
+	/**
+	 * Reference to FlxColorUtils.RED for backwards compatibility.
+	 */
+	static public inline var RED:Int = FlxColorUtils.RED;
 	#end
-	/**
-	 * Green is used to indicate solid but immovable objects.
-	 */
+	
 	#if neko
-	static public inline var GREEN:BitmapInt32 = { rgb: 0x00f225, a: 0xff };
+	/**
+	 * Reference to FlxColorUtils.GREEN for backwards compatibility.
+	 */
+	static public inline var GREEN:BitmapInt32 = FlxColorUtils.GREEN;
 	#else
-	static public inline var GREEN:Int = 0xff00f225;
+	/**
+	 * Reference to FlxColorUtils.GREEN for backwards compatibility.
+	 */
+	static public inline var GREEN:Int = FlxColorUtils.GREEN;
 	#end
-	/**
-	 * Blue is used to indicate non-solid objects.
-	 */
+	
 	#if neko
-	static public inline var BLUE:BitmapInt32 = { rgb: 0x0090e9, a: 0xff };
+	/**
+	 * Reference to FlxColorUtils.BLUE for backwards compatibility.
+	 */
+	static public inline var BLUE:BitmapInt32 = FlxColorUtils.BLUE;
 	#else
-	static public inline var BLUE:Int = 0xff0090e9;
+	/**
+	 * Reference to FlxColorUtils.BLUE for backwards compatibility.
+	 */
+	static public inline var BLUE:Int = FlxColorUtils.BLUE;
 	#end
-	/**
-	 * Pink is used to indicate objects that are only partially solid, like one-way platforms.
-	 */
+	
 	#if neko
-	static public inline var PINK:BitmapInt32 = { rgb: 0xf01eff, a: 0xff };
+	/**
+	 * Reference to FlxColorUtils.PINK for backwards compatibility.
+	 */
+	static public inline var PINK:BitmapInt32 = FlxColorUtils.PINK;
 	#else
-	static public inline var PINK:Int = 0xfff01eff;
+	/**
+	 * Reference to FlxColorUtils.PINK for backwards compatibility.
+	 */
+	static public inline var PINK:Int = FlxColorUtils.PINK;
 	#end
-	/**
-	 * White... for white stuff.
-	 */
+	
 	#if neko
-	static public inline var WHITE:BitmapInt32 = { rgb: 0xffffff, a: 0xff };
+	/**
+	 * Reference to FlxColorUtils.WHITE for backwards compatibility.
+	 */
+	static public inline var WHITE:BitmapInt32 = FlxColorUtils.WHITE;
 	#else
-	static public inline var WHITE:Int = 0xffffffff;
+	/**
+	 * Reference to FlxColorUtils.WHITE for backwards compatibility.
+	 */
+	static public inline var WHITE:Int = FlxColorUtils.WHITE;
 	#end
-	/**
-	 * And black too.
-	 */
+	
 	#if neko
-	static public inline var BLACK:BitmapInt32 = {rgb: 0x000000, a: 0xff};
+	/**
+	 * Reference to FlxColorUtils.BLACK for backwards compatibility.
+	 */
+	static public inline var BLACK:BitmapInt32 = FlxColorUtils.BLACK;
 	#else
-	static public inline var BLACK:Int = 0xff000000;
+	/**
+	 * Reference to FlxColorUtils.BLACK for backwards compatibility.
+	 */
+	static public inline var BLACK:Int = FlxColorUtils.BLACK;
 	#end
-	/**
-	 * Totally transparent color. Usefull for creating transparent BitmapData
-	 */
+	
 	#if neko
-	static public inline var TRANSPARENT:BitmapInt32 = {rgb: 0x000000, a: 0x00};
+	/**
+	 * Reference to FlxColorUtils.TRANSPARENT for backwards compatibility.
+	 */
+	static public inline var TRANSPARENT:BitmapInt32 = FlxColorUtils.TRANSPARENT;
 	#else
-	static public inline var TRANSPARENT:Int = 0x00000000;
+	/**
+	 * Reference to FlxColorUtils.TRANSPARENT for backwards compatibility.
+	 */
+	static public inline var TRANSPARENT:Int = FlxColorUtils.TRANSPARENT;
 	#end
 	
 	/**
@@ -1131,7 +1158,7 @@ class FlxG
 				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
 				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
 				
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxG.TRANSPARENT);
+				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxColorUtils.TRANSPARENT);
 				
 				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 				var tempPoint:Point = new Point();
@@ -1496,7 +1523,7 @@ class FlxG
 	{
 		if (FlxG.camera == null)
 		{
-			return FlxG.BLACK;
+			return FlxColorUtils.BLACK;
 		}
 		else
 		{
