@@ -103,7 +103,7 @@ class FlxGame extends Sprite
 	 */
 	public var _requestedReset:Bool;
 	
-	#if !FLX_NO_PAUSE_SCREEN
+	#if !FLX_NO_FOCUS_LOST_SCREEN
 	/**
 	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
 	 */
@@ -198,7 +198,7 @@ class FlxGame extends Sprite
 		//super high priority init stuff (focus, mouse, etc)
 		_lostFocus = false;
 		
-		#if !FLX_NO_PAUSE_SCREEN
+		#if !FLX_NO_FOCUS_LOST_SCREEN
 		_focus = new Sprite();
 		_focus.visible = false;
 		#end
@@ -284,7 +284,7 @@ class FlxGame extends Sprite
 		
 		_lostFocus = false;
 		
-		#if !FLX_NO_PAUSE_SCREEN
+		#if !FLX_NO_FOCUS_LOST_SCREEN
 		_focus.visible = false;
 		#end
 		
@@ -306,7 +306,7 @@ class FlxGame extends Sprite
 		
 		_lostFocus = true;
 		
-		#if !FLX_NO_PAUSE_SCREEN
+		#if !FLX_NO_FOCUS_LOST_SCREEN
 		_focus.visible = true;
 		#end
 		
@@ -743,7 +743,7 @@ class FlxGame extends Sprite
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
 			// TODO: add event listeners for Event.ACTIVATE/DEACTIVATE 
-			#if !FLX_NO_PAUSE_SCREEN
+			#if !FLX_NO_FOCUS_LOST_SCREEN
 			createFocusScreen();
 			#end
 		}
@@ -839,7 +839,7 @@ class FlxGame extends Sprite
 			FlxG.mute = false;
 	}
 	
-	#if !FLX_NO_PAUSE_SCREEN
+	#if !FLX_NO_FOCUS_LOST_SCREEN
 	/**
 	 * Sets up the darkened overlay with the big white "play" button that appears when a flixel game loses focus.
 	 */
