@@ -1738,9 +1738,6 @@ class FlxG
 		#else
 		FlxG.mobile = false;
 		#end
-
-		FlxG.levels = new Array();
-		FlxG.scores = new Array();
 		
 		#if !FLX_NO_DEBUG
 		log = Reflect.makeVarArgs(_log);
@@ -1764,10 +1761,6 @@ class FlxG
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
-		FlxG.levels = [];
-		FlxG.scores = [];
-		FlxG.level = 0;
-		FlxG.score = 0;
 		FlxG.paused = false;
 		FlxG.timeScale = 1.0;
 		FlxG.elapsed = 0;
