@@ -285,21 +285,6 @@ class FlxG
 	 */
 	static public var globalSeed:Float;
 	/**
-	 * <code>FlxG.levels</code> and <code>FlxG.scores</code> are generic
-	 * global variables that can be used for various cross-state stuff.
-	 */
-	static public var levels:Array<Dynamic>;
-	static public var level:Int;
-	static public var scores:Array<Dynamic>;
-	static public var score:Int;
-	/**
-	 * <code>FlxG.saves</code> is a generic bucket for storing
-	 * FlxSaves so you can access them whenever you want.
-	 */
-	static public var saves:Array<Dynamic>; 
-	static public var save:Int;
-	
-	/**
 	 * A handy container for a background music object.
 	 */
 	static public var music:FlxSound;
