@@ -30,6 +30,10 @@ import org.flixel.system.debug.Console;
 class FlxDebugger extends Sprite
 {
 	/**
+	 * The amount of decimals FlxPoints are rounded to in log / watch.
+     */
+ 	static public var pointPrecision:Int = 3;
+	/**
 	 * Container for the performance monitor widget.
 	 */
 	public var perf:Perf;

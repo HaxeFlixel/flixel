@@ -360,7 +360,8 @@ class FlxG
 	}
 	
 	/**
-	 * Log data to the debugger.
+	 * Log data to the debugger. Example: <code>FlxG.log("Test", "1", "2", "3");</code> - will turn into "Test 1 2 3".
+	 * Infinite amount of arguments allowed, they will be pieced together to one String.
 	 */
 	static public var log:Dynamic;
 	
@@ -373,7 +374,8 @@ class FlxG
 	}
 	
 	/**
-	 * Add a warning to the debugger.
+	 * Add a warning to the debugger. Example: <code>FlxG.warn("Test", "1", "2", "3");</code> - will turn into "[WARNING] Test 1 2 3".
+	 * Infinite amount of arguments allowed, they will be pieced together to one String.
 	 */
 	static public var warn:Dynamic;
 	
@@ -386,7 +388,8 @@ class FlxG
 	}
 	
 	/**
-	 * Add an error to the debugger.
+	 * Add an error to the debugger. Example: <code>FlxG.error("Test", "1", "2", "3");</code> - will turn into "[ERROR] Test 1 2 3".
+	 * Infinite amount of arguments allowed, they will be pieced together to one String.
 	 */
 	static public var error:Dynamic;
 	
@@ -399,7 +402,8 @@ class FlxG
 	}
 	
 	/**
-	 * Add a notice to the debugger.
+	 * Add a notice to the debugger. Example: <code>FlxG.notice("Test", "1", "2", "3");</code> - will turn into "[NOTICE] Test 1 2 3".
+	 * Infinite amount of arguments allowed, they will be pieced together to one String.
 	 */
 	static public var notice:Dynamic;
 	
@@ -411,11 +415,19 @@ class FlxG
 		#end
 	}
 	
+	/**
+	 * Add an advanced log message to the debugger by also specifying a <code>LogStyle</code>. Backend to <code>FlxG.log(), FlxG.warn(), FlxG.error() and FlxG.notice()</code>.
+	 * @param	Data	Any Data to log.
+	 * @param	Style 	The <code>LogStyle</code> to use, for example <code>Log.STYLE_WARNING</code>. You can also create your own by importing the <code>LogStyle</code> class.
+	 */
 	static public function advancedLog(Data:Dynamic, Style:LogStyle):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
+			if (!Std.is(Data, Array))
+				Data = [Data];
+				
 			_game.debugger.log.add(Data, Style);
 			
 			if (Style.errorSound != null)
