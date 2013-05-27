@@ -207,8 +207,10 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 		#end
 		if(!FlxG.mobile)
 		{
+			var c:Int = FlashEvent.keyCode;
+			
 			#if !FLX_NO_DEBUG
-			if ((FlxG._game._debugger != null) && ((FlashEvent.keyCode == 192) || (FlashEvent.keyCode == 220)))
+			if ((FlxG._game._debugger != null) && (FlxG.keyDebugger != null && Lambda.indexOf(FlxG.keyDebugger, c) != -1))
 			{
 				FlxG._game._debugger.visible = !FlxG._game._debugger.visible;
 				FlxG._game._debuggerUp = FlxG._game._debugger.visible;
@@ -216,32 +218,44 @@ class FlxKeyboard extends FlxInputStates, implements IFlxInput
 				return;
 			}
 			#end
-			if (FlxG._game.useSoundHotKeys && !FlxG._game.tempDisableSoundHotKeys)
+			
+			if (!FlxG._game.tempDisableSoundHotKeys)
 			{
-				var c:Int = FlashEvent.keyCode;
 				var code:String = String.fromCharCode(FlashEvent.charCode);
-				if (c == 48 || c == 96)
+				if (FlxG.keyMute != null && Lambda.indexOf(FlxG.keyMute, c) != -1)
 				{
 					FlxG.mute = !FlxG.mute;
 					if (FlxG.volumeHandler != null)
 					{
 						FlxG.volumeHandler(FlxG.mute?0:FlxG.volume);
 					}
+					
+					#if !FLX_NO_SOUND_TRAY
 					FlxG._game.showSoundTray();
+					#end
+					
 					return;
 				}
-				else if (c == 109 || c == 189)
+				else if (FlxG.keyVolumeDown != null && Lambda.indexOf(FlxG.keyVolumeDown, c) != -1)
 				{
 					FlxG.mute = false;
 					FlxG.volume = FlxG.volume - 0.1;
+					
+					#if !FLX_NO_SOUND_TRAY
 					FlxG._game.showSoundTray();
+					#end
+					
 					return;
 				}
-				else if (c == 107 || c == 187)
+				else if (FlxG.keyVolumeUp != null && Lambda.indexOf(FlxG.keyVolumeUp, c) != -1)
 				{
 					FlxG.mute = false;
 					FlxG.volume = FlxG.volume + 0.1;
+					
+					#if !FLX_NO_SOUND_TRAY
 					FlxG._game.showSoundTray();
+					#end
+					
 					return;
 				}
 				else
