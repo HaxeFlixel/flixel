@@ -57,6 +57,8 @@ class FlxExtendedSprite extends FlxSprite
 	private var clickCounter:Int;
 	#end
 	
+	private var _rect:FlxRect;
+	
 	#if !FLX_NO_MOUSE
 	/**
 	 * Function called when the mouse is pressed down on this sprite. Function is passed these parameters: obj:FlxExtendedSprite, x:int, y:int
@@ -231,6 +233,7 @@ class FlxExtendedSprite extends FlxSprite
 		hasMouseSpring = false;
 		#end
 		springOnPressed = true;
+		_rect = new FlxRect();
 		
 		clickCounter = 0;
 		
