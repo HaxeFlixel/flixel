@@ -97,13 +97,13 @@ class FlxObject extends FlxBasic
 	 */
 	public var y:Float;
 	/**
-	 * The width of this object.
+	 * The width of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
-	public var width:Float;
+	public var width(default, set_width):Float;
 	/**
-	 * The height of this object.
+	 * The height of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
-	public var height:Float;
+	public var height(default, set_height):Float;
 
 	/**
 	 * Whether an object will move/alter position after a collision.
@@ -971,6 +971,32 @@ class FlxObject extends FlxBasic
 	
 	public var solid(get_solid, set_solid):Bool;
 	
+	/**
+	 * @private
+     */
+	private function set_width(Width:Float):Float
+	{
+		if (Width < 0) 
+			FlxG.warn("An object's width cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
+		else
+			width = Width;
+      
+		return Width;
+	}
+  
+	/**
+	 * @private
+	 */
+	private function set_height(Height:Float):Float
+	{
+		if (Height < 0) 
+			FlxG.warn("An object's height cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
+		else
+		height = Height;
+		
+		return Height;
+	}
+
 	/**
 	 * Whether the object collides or not.  For more control over what directions
 	 * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
