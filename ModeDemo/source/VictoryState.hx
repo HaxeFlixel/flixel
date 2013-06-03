@@ -1,6 +1,6 @@
 package;
 
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
@@ -30,9 +30,9 @@ class VictoryState extends FlxState
 		gibs.start(false, 0, 0.005);
 		
 		#if flash
-		var text:FlxText = new FlxText(0, FlxG.height / 2 - 35, FlxG.width, "VICTORY\n\nSCORE: " + FlxG.score);
+		var text:FlxText = new FlxText(0, FlxG.height / 2 - 35, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score);
 		#else
-		var text:FlxTextField = new FlxTextField(0, FlxG.height / 2 - 35, FlxG.width, "VICTORY\n\nSCORE: " + FlxG.score);
+		var text:FlxTextField = new FlxTextField(0, FlxG.height / 2 - 35, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score);
 		#end
 		text.setFormat(null, 16, 0xd8eba2, "center");
 		add(text);
@@ -49,11 +49,7 @@ class VictoryState extends FlxState
 				_fading = true;
 				FlxG.play("MenuHit2");
 				
-				#if (flash || cpp)
 				FlxG.fade(0xff131c1b, 2, false, onPlay);
-				#elseif neko
-				FlxG.fade({rgb:0x131c1b, a:0xff}, 2, false, onPlay);
-				#end
 			}
 		}
 	}
@@ -63,5 +59,4 @@ class VictoryState extends FlxState
 		FlxG.switchState(new PlayState());
 	//	FlxG.switchState(new PlayStateOld());
 	}
-	
 }

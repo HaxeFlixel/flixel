@@ -33,11 +33,7 @@ class StarField extends FlxGroup
 			var transp:Int = (Math.round(16 * ( -vel / speedMultiplier) - 1));
 			#end
 			
-			#if !neko
 			str.makeGraphic(2, 2, 0x00ffffff | transp);
-			#else
-			str.makeGraphic(2, 2, {rgb: 0xffffff, a: (0x00 | transp));
-			#end
 			str.velocity.x = sinang * vel;
 			str.velocity.y = cosang * vel;
 			add(str);

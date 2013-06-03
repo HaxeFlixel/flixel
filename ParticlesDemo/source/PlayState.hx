@@ -73,19 +73,11 @@ class PlayState extends FlxState
 		for (i in 0...(Std.int(theEmitter.maxSize / 2))) 
 		{
 			whitePixel = new FlxParticle();
-			#if !neko
 			whitePixel.makeGraphic(2, 2, 0xFFFFFFFF);
-			#else
-			whitePixel.makeGraphic(2, 2, {rgb: 0xFFFFFF, a: 0xFF});
-			#end
 			whitePixel.visible = false; //Make sure the particle doesn't show up at (0, 0)
 			theEmitter.add(whitePixel);
 			whitePixel = new FlxParticle();
-			#if !neko
 			whitePixel.makeGraphic(1, 1, 0xFFFFFFFF);
-			#else
-			whitePixel.makeGraphic(1, 1, {rgb: 0xFFFFFF, a: 0xFF});
-			#end
 			whitePixel.visible = false;
 			theEmitter.add(whitePixel);
 		}
@@ -110,21 +102,13 @@ class PlayState extends FlxState
 		//Lets setup some walls for our pixels to collide against
 		collisionGroup = new FlxGroup();
 		wall = new FlxSprite(100, 100);
-		#if !neko
 		wall.makeGraphic(10, 100, 0x50FFFFFF); //Make it darker - easier on the eyes :)
-		#else
-		wall.makeGraphic(10, 100, {rgb: 0xFFFFFF, a: 0x50});
-		#end
 		wall.visible = wall.solid = false;//Set both the visibility AND the solidity to false, in one go
 		wall.immovable = true;//Lets make sure the pixels don't push out wall away! (though it does look funny)
 		collisionGroup.add(wall);
 		//Duplicate our wall but this time it's a floor to catch gravity affected particles
 		floor = new FlxSprite(10, 267);
-		#if !neko
 		floor.makeGraphic(FlxG.width - 20, 10, 0x50FFFFFF);
-		#else
-		floor.makeGraphic(FlxG.width - 20, 10, {rgb: 0xFFFFFF, a: 0x50});
-		#end
 		floor.visible = floor.solid = false;
 		floor.immovable = true;
 		collisionGroup.add(floor);

@@ -49,11 +49,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		#if !neko
 		FlxG.bgColor = 0xFF01355F;
-		#else
-		FlxG.camera.bgColor = {rgb: 0x01355F, a: 0xFF};
-		#end
 		
 		easeInfo = new Array<EaseInfo>();
 		
@@ -122,11 +118,7 @@ class PlayState extends FlxState
 		}
 		else if (Std.is(tween, ColorTween))
 		{
-			#if !neko
 			sprite.color = cast(tween, ColorTween).color;
-			#else
-			sprite.color = {rgb: cast(tween, ColorTween).color, a: 0xff};
-			#end
 		}
 		else if (Std.is(tween, NumTween))
 		{

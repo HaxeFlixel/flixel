@@ -52,5 +52,7 @@ class PlayerShip extends FlxSprite		//Class declaration for the player's little 
 			bullet.reset(x + width/2 - bullet.width/2, y);
 			bullet.velocity.y = -140;
 		}
+		
+		super.update();
 	}
 }

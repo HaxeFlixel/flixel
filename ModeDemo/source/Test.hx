@@ -1,18 +1,18 @@
 package;
 
-import nme.Assets;
-import nme.display.BitmapData;
-import nme.display.StageAlign;
-import nme.display.StageScaleMode;
-import nme.display.FPS;
-import nme.display.Sprite;
-import nme.display.Tilesheet;
-import nme.events.Event;
-import nme.events.KeyboardEvent;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.Lib;
-import nme.ui.Keyboard;
+import openfl.Assets;
+import flash.display.BitmapData;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
+import openfl.display.FPS;
+import flash.display.Sprite;
+import openfl.display.Tilesheet;
+import flash.events.Event;
+import flash.events.KeyboardEvent;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import flash.Lib;
+import flash.ui.Keyboard;
 import org.flixel.FlxGame;
 
 /**

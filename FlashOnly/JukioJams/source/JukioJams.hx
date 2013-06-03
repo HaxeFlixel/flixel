@@ -6,6 +6,6 @@ class JukioJams extends FlxGame
 {
 	public function new()
 	{
-		super(256, 192, PlayState, 4, 60, 60, true);
+		super(256, 192, PlayState, 4, 60, 60);
 	}
 }

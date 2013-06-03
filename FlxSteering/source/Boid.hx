@@ -1,6 +1,5 @@
 package;
 
-import nme.display.BitmapInt32;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 
@@ -18,22 +17,9 @@ class Boid extends FlxSprite
 	
 	private var _slowingDistance:Float = 20;// Slowing distance, you can adjust this
 	
-	#if flash
-	public function new(X:Float, Y:Float, size:Float = 10, scale:Float = 1, Color:UInt = 0xff222222)
-	#elseif neko
-	public function new(X:Float, Y:Float, size:Float = 10, scale:Float = 1, Color:BitmapInt32 = null)
-	#else
 	public function new(X:Float, Y:Float, size:Float = 10, scale:Float = 1, Color:Int = 0xff222222)
-	#end
 	{
 		super(X, Y);
-		
-		#if neko
-		if (Color == null)
-		{
-			Color = { rgb:0xff222222, a: 0xff };
-		}
-		#end
 		
 		makeGraphic(Std.int(size * scale), Std.int(size * scale), Color);
 		

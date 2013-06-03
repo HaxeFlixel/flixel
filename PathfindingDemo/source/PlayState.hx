@@ -1,5 +1,5 @@
 package;
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxButton;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -16,25 +16,25 @@ class PlayState extends FlxState
 	/*
 	 * Tile width
 	 */
-	private var TILE_WIDTH:Int;
+	private static var TILE_WIDTH:Int;
 	/*
 	 * Tile height
 	 */
-	private var TILE_HEIGHT:Int;
+	private static var TILE_HEIGHT:Int;
 	
 	/*
 	 * Unit value for action go
 	 */
-	private var ACTION_GO:Int;
+	private static var ACTION_GO:Int;
 	
 	/*
 	 * Unit value for action idle
 	 */
-	private var ACTION_IDLE:Int;
+	private static var ACTION_IDLE:Int;
 	/*
 	 * Unit move speed
 	 */
-	private var MOVE_SPEED:Int;
+	private static var MOVE_SPEED:Int;
 	
 	/*
 	 * Map
@@ -98,17 +98,15 @@ class PlayState extends FlxState
 		
 		super();
 		
-		#if !neko
 		FlxG.bgColor = 0xff000000;
-		#else
-		FlxG.camera.bgColor = {rgb: 0x000000, a: 0xff};
-		#end
 	}
 	
 	override public function create():Void
 	{
 		FlxG.framerate = 50;
 		FlxG.flashFramerate = 50;
+		
+		FlxG.mouse.show();
 		
 		//Load _datamap to _map and add to PlayState
 		_map = new FlxTilemap();
@@ -121,21 +119,13 @@ class PlayState extends FlxState
 		add(_pathPoint);
 		
 		//Set goal coordinate and add goal to PlayState
-		#if !neko
 		_goal = new FlxSprite().makeGraphic(TILE_WIDTH, TILE_HEIGHT, 0xffffff00);
-		#else
-		_goal = new FlxSprite().makeGraphic(TILE_WIDTH, TILE_HEIGHT, {rgb: 0xffff00, a: 0xff});
-		#end
 		_goal.x = _map.width - TILE_WIDTH;
 		_goal.y = _map.height - TILE_HEIGHT;
 		add(_goal);
 		
 		//Set and add unit to PlayState
-		#if !neko
 		_unit  = new FlxSprite(0, 0).makeGraphic(TILE_WIDTH, TILE_HEIGHT, 0xffff0000);
-		#else
-		_unit  = new FlxSprite(0, 0).makeGraphic(TILE_WIDTH, TILE_HEIGHT, {rgb: 0xff0000, a: 0xff});
-		#end
 		_action = ACTION_IDLE;
 		_destination = 0;
 		//_unit.drag.x = _unit.drag.y = MOVE_SPEED * 8;
@@ -197,7 +187,7 @@ class PlayState extends FlxState
 		
 		switch (_action)
 		{
-			case ACTION_GO:
+			case PlayState.ACTION_GO:
 				//Move unit for the first time
 				if (_unit.velocity.x == 0 && _unit.velocity.y == 0)
 				{
@@ -240,7 +230,7 @@ class PlayState extends FlxState
 						_unit.velocity.x = _unit.velocity.y = 0;
 					}
 				}
-			case ACTION_IDLE:
+			case PlayState.ACTION_IDLE:
 				_unit.velocity.x = _unit.velocity.y = 0;
 		}
 	}
@@ -302,11 +292,7 @@ class PlayState extends FlxState
 		//Add 100 FlxSprite and set exist to false in PathHelper
 		for (i in 0...100)
 		{
-			#if !neko
 			_pathPoint.add(new FlxSprite(0, 0).makeGraphic(TILE_WIDTH, TILE_HEIGHT, 0xffffffff));
-			#else
-			_pathPoint.add(new FlxSprite(0, 0).makeGraphic(TILE_WIDTH, TILE_HEIGHT, {rgb: 0xffffff, a: 0xff}));
-			#end
 			_pathPoint.members[i].exists = false;
 		}
 	}

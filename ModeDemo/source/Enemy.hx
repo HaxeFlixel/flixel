@@ -1,8 +1,8 @@
 package;
 
-import nme.Assets;
-import nme.display.BlendMode;
-import nme.geom.Point;
+import openfl.Assets;
+import flash.display.BlendMode;
+import flash.geom.Point;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -223,7 +223,7 @@ class Enemy extends FlxSprite
 		FlxG.play("Hit");
 		
 		flicker(0.2);
-		FlxG.score += 10;
+		Reg.score += 10;
 		super.hurt(Damage);
 	}
 	
@@ -242,7 +242,7 @@ class Enemy extends FlxSprite
 		_jets.kill();
 		_gibs.at(this);
 		_gibs.start(true,3,0,20);
-		FlxG.score += 200;
+		Reg.score += 200;
 	}
 	
 	//A helper function that returns the angle between

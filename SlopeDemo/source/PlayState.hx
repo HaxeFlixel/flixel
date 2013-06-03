@@ -1,7 +1,7 @@
 package;
 
 import org.flixel.addons.FlxTilemapExt;
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -53,11 +53,7 @@ class PlayState extends FlxState
 		
 		//Create player (a red box)
 		player = new FlxSprite(70);
-		#if !neko
 		player.makeGraphic(10, 12, 0xffaa1111);
-		#else
-		player.makeGraphic(10, 12, {rgb: 0xaa1111, a: 0xff});
-		#end
 		
 		//Max velocities on player.  If it's a platformer, Y should be high, like 200.
 		//Otherwise, set them to something like 80.

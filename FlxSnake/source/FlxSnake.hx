@@ -8,7 +8,7 @@
 
 package;
 
-import nme.Lib;
+import flash.Lib;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
@@ -52,24 +52,16 @@ class FlxSnake extends FlxState
 		
 		//	Get the head piece from the body For easy later reference, and also visually change the colour a little
 		snakeHead = cast(snakeBody.members[0], FlxSprite);
-		#if !neko
 		snakeHead.makeGraphic(8, 8, 0xFF00FF00);
-		#else
-		snakeHead.makeGraphic(8, 8, {rgb: 0x00FF00, a: 0xFF});
-		#end
 		snakeHead.facing = FlxObject.LEFT;
 		
 		//	Something to eat
-		#if !neko
 		fruit = new FlxSprite(0, 0).makeGraphic(8, 8, 0xFFFF0000);
-		#else
-		fruit = new FlxSprite(0, 0).makeGraphic(8, 8, {rgb: 0xFF0000, a: 0xFF});
-		#end
 		placeFruit();
 		
 		//	Simple score
 		score = new FlxText(0, 0, 200);
-		FlxG.score = 0;
+		Reg.score = 0;
 		
 		add(snakeBody);
 		add(fruit);
@@ -87,7 +79,7 @@ class FlxSnake extends FlxState
 			//	1) First did we hit the fruit?
 			if (snakeHead.overlaps(fruit))
 			{
-				FlxG.score += 10;
+				Reg.score += 10;
 				placeFruit();
 				addSegment = true;
 				FlxG.play("Beep");
@@ -103,7 +95,7 @@ class FlxSnake extends FlxState
 			//	We set the deadSnake callback to stop the QuadTree killing both objects, as we want them on-screen with the game over message
 			FlxG.overlap(snakeHead, snakeBody, deadSnake);
 			
-			score.text = "Score: " + Std.string(FlxG.score);
+			score.text = "Score: " + Std.string(Reg.score);
 			
 			if (FlxG.keys.UP)
 			{
@@ -130,7 +122,7 @@ class FlxSnake extends FlxState
 		}
 		else
 		{
-			score.text = "GAME OVER! Score: " + Std.string(FlxG.score);
+			score.text = "GAME OVER! Score: " + Std.string(Reg.score);
 		}
 	}
 	
@@ -248,11 +240,7 @@ class FlxSnake extends FlxState
 	
 	private function spawnNewBody(_x:Int, _y:Int):Void
 	{
-		#if !neko
 		snakeBody.add(new FlxSprite(_x, _y).makeGraphic(8, 8, 0xFF008000));
-		#else
-		snakeBody.add(new FlxSprite(_x, _y).makeGraphic(8, 8, {rgb: 0x008000, a: 0xFF}));
-		#end
 	}
 	
 }

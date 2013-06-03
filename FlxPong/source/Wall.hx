@@ -1,14 +1,10 @@
 package;
-import nme.display.BitmapInt32;
+
 import org.flixel.FlxSprite;
 
 class Wall extends FlxSprite 
 {
-	#if flash
-	public function new(X:Float, Y:Float, color:UInt, horizontalRotate:Bool = false) 
-	#else
-	public function new(X:Float, Y:Float, color:BitmapInt32, horizontalRotate:Bool = false) 
-	#end
+	public function new(X:Float, Y:Float, color:Int, horizontalRotate:Bool = false) 
 	{
 		super(X, Y);
 		this.makeGraphic(112, 16, color, false, null);

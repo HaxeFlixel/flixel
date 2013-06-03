@@ -1,7 +1,7 @@
 package;
 
-import nme.Assets;
-import nme.display.BlendMode;
+import openfl.Assets;
+import flash.display.BlendMode;
 import org.flixel.FlxButton;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
@@ -177,7 +177,7 @@ class Player extends FlxSprite
 		FlxG.play("Hurt");
 		
 		flicker(1.3);
-		if(FlxG.score > 1000) FlxG.score -= 1000;
+		if(Reg.score > 1000) Reg.score -= 1000;
 		if(velocity.x > 0)
 		{
 			velocity.x = -maxVelocity.x;
@@ -206,11 +206,7 @@ class Player extends FlxSprite
 		velocity.make();
 		acceleration.make();
 		FlxG.camera.shake(0.005, 0.35);
-		#if !neko
 		FlxG.camera.flash(0xffd8eba2, 0.35);
-		#else
-		FlxG.camera.flash({rgb: 0xd8eba2, a: 0xff}, 0.35);
-		#end
 		if(_gibs != null)
 		{
 			_gibs.at(this);

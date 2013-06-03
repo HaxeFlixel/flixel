@@ -1,6 +1,5 @@
 package;
 
-import nme.display.BitmapInt32;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
@@ -98,11 +97,7 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		#if neko
-		var gray:BitmapInt32 = { a: 0xff, rgb: 0xcccccc };
-		#else
 		var gray:Int = 0xffcccccc;
-		#end
 		
 		if (gamePad.pressed(XBOX_BUTTON_IDS.A_BUTTON))
 		{

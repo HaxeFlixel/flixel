@@ -1,6 +1,6 @@
 package com.chipacabra.jumper;
 
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -91,7 +91,7 @@ class PlayState extends FlxState
 		add(_coins);
 		add(_enemies);
 		
-		FlxG.score = 0;
+		Reg.score = 0;
 		
 		super.create();
 		
@@ -138,7 +138,7 @@ class PlayState extends FlxState
 		
 		super.update();
 		
-		_score.text = '$' + Std.string(FlxG.score);
+		_score.text = '$' + Std.string(Reg.score);
 		
 		if (!player.alive)
 		{

@@ -55,7 +55,7 @@ class PlayerShip extends WrapSprite
 			bullet.velocity.x += velocity.x;
 			bullet.velocity.y += velocity.y;
 		}
-
+		super.update();
 	}
 	
 }

@@ -30,7 +30,7 @@ class PlayState extends FlxState
 		FlxG.mouse.show();
 		this.add(ballMC = new Ball(Math.floor(FlxG.width / 2) + 8, FlxG.height - 20, "assets/ball.png"));
 		this.add(paddleMC = new Paddle(Math.floor(FlxG.width / 2), FlxG.height - 10, "assets/paddle.png", gameInitiated, ballMC));
-		this.add(scoreTxt = new FlxText(0, 0, 200, Std.string(FlxG.score)));
+		this.add(scoreTxt = new FlxText(0, 0, 200, Std.string(Reg.score)));
 		this.add(brickGroup);
 		createMap();
 		ballMC._paddle = paddleMC;
@@ -72,7 +72,7 @@ class PlayState extends FlxState
 	{
 		super.update();			
 		
-		scoreTxt.text = "Score: "+ Std.string(FlxG.score);			
+		scoreTxt.text = "Score: "+ Std.string(Reg.score);			
 		
 		if (FlxG.mouse.justReleased()) 
 		{				

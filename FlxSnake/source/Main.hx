@@ -6,7 +6,7 @@
 package;
 
 import org.flixel.FlxGame;
-import nme.Lib;
+import flash.Lib;
 
 class Main extends FlxGame
 {

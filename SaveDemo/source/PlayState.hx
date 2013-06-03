@@ -60,11 +60,7 @@ class PlayState extends FlxState
 		
 		//This just makes some dim text with instructions
 		var dragText:FlxText = new FlxText(5, FlxG.height / 2 -20, FlxG.width, "Click to Drag");
-		#if !neko
 		dragText.color = 0x10101010;
-		#else
-		dragText.color = { rgb: 0x101010, a: 0x10 };
-		#end
 		dragText.size = 50;
 		add(dragText);
 		
@@ -96,11 +92,7 @@ class PlayState extends FlxState
 				}
 				topText.text = "No save found, using default positions";
 			}
-			#if !neko
 			box.makeGraphic(32, 32, 0xFFAAAAAA); //Make a graphic for our button, instead of the default
-			#else
-			box.makeGraphic(32, 32, {rgb: 0xAAAAAA, a: 0xFF});
-			#end
 			boxGroup.add(box); //And add it to the group
 		}
 		add(boxGroup);//Add the group to the state

@@ -11,25 +11,27 @@
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="000000" />
+    <movie background="0" />
+    <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="export/cpp/windows/haxe" />
-    <class path="export/cpp/haxe" />
+    <class path="C:\HaxeToolkit\haxe/lib\flixel/2,0,0-alpha/" />
+    <class path="C:\HaxeToolkit\haxe/lib\nme/3,5,6/" />
+    <class path="bin/flash/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme_install_tool&#xA;desktop&#xA;windows&#xA;code_completion" />
+    <option directives="nme&#xA;nme_ver=3.5.6&#xA;nme_install_tool=1&#xA;nme3=1&#xA;web" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--remap flash:nme" />
+    <option additional="-swf-version 10.1" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="nme" />
+    <library name="openfl" />
     <library name="flixel" />
     <library name="nme" />
     <library name="flixel" />
@@ -47,7 +49,9 @@
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand />
+  <preBuildCommand>haxelib run openfl test "ModeDemo.nmml" neko
+haxelib run openfl test "ModeDemo.nmml" windows
+haxelib run openfl test "ModeDemo.nmml" flash</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

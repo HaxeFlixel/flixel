@@ -2,8 +2,8 @@ package;
 
 import org.flixel.addons.FlxSkewedSprite;
 import flash.ui.Mouse;
-import nme.Assets;
-import nme.Lib;
+import openfl.Assets;
+import flash.Lib;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;

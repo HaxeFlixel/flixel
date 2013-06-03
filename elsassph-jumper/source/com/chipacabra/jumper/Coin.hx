@@ -1,6 +1,6 @@
 package com.chipacabra.jumper;
 
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 
@@ -23,6 +23,6 @@ class Coin extends FlxSprite
 	{
 		super.kill();
 		FlxG.play(Assets.getSound("assets/sounds/coin" + Jumper.SoundExtension), 3, false);
-		FlxG.score++;
+		Reg.score++;
 	}
 }

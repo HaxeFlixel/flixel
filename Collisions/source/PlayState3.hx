@@ -24,18 +24,10 @@ class PlayState3 extends FlxState
 		FlxG.worldBounds.make(0, 0, FlxG.width, FlxG.height);
 		
 		//Background
-		#if !neko
 		FlxG.bgColor = 0xffacbcd7;
-		#else
-		FlxG.camera.bgColor = {rgb: 0xacbcd7, a: 0xff};
-		#end
 		
 		//The thing you can move around
-		#if !neko
 		_platform = new FlxSprite((FlxG.width - 64) / 2, 200).makeGraphic(64, 16, 0xff233e58);
-		#else
-		_platform = new FlxSprite((FlxG.width - 64) / 2, 200).makeGraphic(64, 16, {rgb: 0x233e58, a: 0xff});
-		#end
 		_platform.immovable = true;
 		add(_platform);
 		
@@ -55,11 +47,7 @@ class PlayState3 extends FlxState
 		var tx:FlxText;
 		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS + SPACE, or press ENTER for next demo.");
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
-		#if !neko
 		tx.color = 0x49637a;
-		#else
-		tx.color = {rgb: 0x49637a, a: 0xff};
-		#end
 		add(tx);
 	}
 	

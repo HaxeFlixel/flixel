@@ -1,6 +1,6 @@
 package;
 
-import nme.display.Graphics;
+import flash.display.Graphics;
 
 /**
  * 2D vector class

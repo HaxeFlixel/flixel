@@ -101,6 +101,8 @@ class Asteroid extends WrapSprite
 		{
 			angularVelocity = (FlxU.abs(velocity.x) + FlxU.abs(velocity.y));
 		}
+		
+		super.update();
 	}
 	
 	override public function kill():Void 

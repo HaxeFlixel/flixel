@@ -1,6 +1,6 @@
 package com.chipacabra.jumper;
 
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -210,13 +210,13 @@ class Player extends FlxSprite
 			collideBottom = true;*/
 		}
 		
-		super.update();
-		
 		if (isTouching(FlxObject.FLOOR) && !FlxG.keys.C)
 		{
 			_jump = 0;
 			_canDJump = true;  // Reset the double jump flag
 		}
+		
+		super.update();
 	}
 	
 	private function shoot():Void 

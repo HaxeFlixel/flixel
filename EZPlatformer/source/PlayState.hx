@@ -25,11 +25,7 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		//super.create();
-		#if !neko
 		FlxG.bgColor = 0xffaaaaaa;
-		#else
-		FlxG.camera.bgColor = {rgb: 0xaaaaaa, a: 0xff};
-		#end
 		
 		var data:Array<Int> = [
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -69,11 +65,7 @@ class PlayState extends FlxState
 		
 		// Create the level exit
 		exit = new FlxSprite(35 * 8 + 1 , 25 * 8);
-		#if !neko
 		exit.makeGraphic(14, 16, 0xff3f3f3f);
-		#else
-		exit.makeGraphic(14, 16, {rgb: 0x3f3f3f, a: 0xff});
-		#end
 		exit.exists = false;
 		add(exit);
 		
@@ -131,11 +123,7 @@ class PlayState extends FlxState
 		
 		// Create player
 		player = new FlxSprite(FlxG.width / 2 -5);
-		#if !neko
 		player.makeGraphic(10, 12, 0xffaa1111);
-		#else
-		player.makeGraphic(10, 12, {rgb: 0xaa1111, a: 0xff});
-		#end
 		player.maxVelocity.x = 80;
 		player.maxVelocity.y = 200;
 		player.acceleration.y = 200;
@@ -143,24 +131,16 @@ class PlayState extends FlxState
 		add(player);
 		
 		score = new FlxText(2, 2, 80);
-		#if !neko
 		score.shadow = 0xff000000;
-		#else
-		score.shadow = 0x000000;
-		#end
 		score.useShadow = true;
 		score.text = "SCORE: " + (coins.countDead() * 100);
 		add(score);
 		
 		status = new FlxText(FlxG.width - 160 - 2, 2, 160);
-		#if !neko
 		status.shadow = 0xff000000;
-		#else
-		status.shadow = 0x000000;
-		#end
 		status.useShadow = true;
 		status.alignment = "right";
-		switch(FlxG.score)
+		switch(Reg.score)
 		{
 			case 0: status.text = "Collect coins.";
 			case 1: status.text = "Aww, you died!";
@@ -173,11 +153,7 @@ class PlayState extends FlxState
 	public function createCoin(X:Int,Y:Int):Void
 	{
 		var coin:FlxSprite = new FlxSprite(X * 8 + 3, Y * 8 + 2);
-		#if !neko
 		coin.makeGraphic(2, 4, 0xffffff00);
-		#else
-		coin.makeGraphic(2, 4,{rgb: 0xffff00, a: 0xff});
-		#end
 		coins.add(coin);
 	}
 	
@@ -206,7 +182,7 @@ class PlayState extends FlxState
 		
 		if (player.y > FlxG.height)
 		{
-			FlxG.score = 1;
+			Reg.score = 1;
 			FlxG.resetState();
 		}
 	}

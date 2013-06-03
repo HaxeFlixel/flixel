@@ -1,7 +1,7 @@
 package;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import nme.display.BlendMode;
+import flash.display.BlendMode;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxParticle;

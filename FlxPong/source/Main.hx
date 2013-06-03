@@ -6,14 +6,14 @@
 package;
 
 import org.flixel.FlxGame;
-import nme.Lib;
+import flash.Lib;
 
 class Main extends FlxGame
 {
 	
 	public function new()
 	{
-		super(224, 160, MenuState, 2, 60, 60, true);
+		super(224, 160, MenuState, 2, 60, 60);
 	}
 	
 	public static function main() 

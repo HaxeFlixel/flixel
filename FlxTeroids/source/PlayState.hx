@@ -28,11 +28,7 @@ class PlayState extends FlxState
 		for (i in 0...100)
 		{
 			sprite = new FlxSprite(FlxG.random() * FlxG.width, FlxG.random() * FlxG.height);
-			#if !neko
 			sprite.makeGraphic(2, 2, 0xffffffff);
-			#else
-			sprite.makeGraphic(2, 2, {rgb: 0xffffff, a: 0xff});
-			#end
 			sprite.active = false;
 			add(sprite);
 		}
@@ -80,6 +76,8 @@ class PlayState extends FlxState
 		{
 			FlxG.resetState();
 		}
+		
+		super.update();
 	}
 	
 	private function stuffHitStuff(Object1:FlxObject, Object2:FlxObject):Void

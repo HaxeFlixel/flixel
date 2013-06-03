@@ -1,7 +1,7 @@
 package;
 
-import nme.Assets;
-import nme.display.BlendMode;
+import openfl.Assets;
+import flash.display.BlendMode;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -83,7 +83,7 @@ class Spawner extends FlxSprite
 		FlxG.play("Hit");
 		
 		flicker(0.2);
-		FlxG.score += 50;
+		Reg.score += 50;
 		super.hurt(Damage);
 	}
 	
@@ -103,16 +103,12 @@ class Spawner extends FlxSprite
 		flicker(0);
 		play("dead");
 		FlxG.camera.shake(0.007, 0.25);
-		#if !neko
 		FlxG.camera.flash(0xffd8eba2, 0.65, turnOffSlowMo);
-		#else
-		FlxG.camera.flash({rgb:0xd8eba2, a:0xff}, 0.65, turnOffSlowMo);
-		#end
 		FlxG.timeScale = 0.35;
 		makeBot();
 		_gibs.at(this);
 		_gibs.start(true,3);
-		FlxG.score += 1000;
+		Reg.score += 1000;
 	}
 	
 	private function makeBot():Void

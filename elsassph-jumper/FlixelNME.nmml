@@ -8,7 +8,7 @@
  	
 	<classpath name="source" />
 	
-	<haxelib name="nme" />
+	<haxelib name="openfl" />
 	<haxelib name="flixel" />
 	
 	<assets path="assets" include="*" exclude="*.svg|*.ogg" unless="flash" />
