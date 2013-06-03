@@ -119,10 +119,10 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		#if (FLX_MOUSE_ADVANCED && !js)
-		Lib.current.stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onMouseDownRight);
-		Lib.current.stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onMouseUpRight);
-		Lib.current.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMouseDownMiddle);
-		Lib.current.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUpMiddle);
+		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, onMouseDownRight);
+		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, onMouseUpRight);
+		Lib.current.stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, onMouseDownMiddle);
+		Lib.current.stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, onMouseUpMiddle);
 		#end
 	}
 
