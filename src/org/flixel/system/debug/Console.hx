@@ -4,21 +4,16 @@ import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
 import flash.text.TextFieldType;
 import flash.ui.Keyboard;
-import nme.Assets;
-import nme.display.BitmapInt32;
-import nme.errors.ArgumentError;
-import nme.events.Event;
-import nme.geom.Rectangle;
-import nme.text.TextField;
-import nme.text.TextFormat;
+import openfl.Assets;
+import flash.errors.ArgumentError;
+import flash.events.Event;
+import flash.geom.Rectangle;
+import flash.text.TextField;
+import flash.text.TextFormat;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.system.FlxWindow;
 import org.flixel.FlxObject;
-
-#if haxe3
-private typedef Hash<T> = Map<String,T>;
-#end 
 
 /**
  * A powerful console for the flixel debugger screen with supports
@@ -31,19 +26,19 @@ class Console extends FlxWindow
 {
 	private var _input:TextField;
 	
-	private var cmdFunctions:Hash<Dynamic>;
-	private var cmdObjects:Hash<Dynamic>;
+	private var cmdFunctions:Map<String, Dynamic>;
+	private var cmdObjects:Map<String, Dynamic>;
 	
 	/**
 	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
 	 * helper function to register new ones or add them to this Hash directly.
 	 */
-	public var registeredObjects:Hash<Dynamic>;
+	public var registeredObjects:Map<String, Dynamic>;
 	/**
 	 * Hash containing all registered Functions for the call command. You can use the registerFunction() 
 	 * helper function to register new ones or add them to this Hash directly.
 	 */
-	public var registeredFunctions:Hash<Dynamic>;
+	public var registeredFunctions:Map<String, Dynamic>;
 	
 	/**
 	 * Internal helper var containing all the FlxObjects created via the create command.
@@ -76,19 +71,15 @@ class Console extends FlxWindow
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */	
-	#if flash
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:UInt = 0xAA000000, ?TopColor:UInt = 0x7f000000)
-	#else
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:BitmapInt32 = 0xAA000000, ?TopColor:BitmapInt32)
-	#end
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0xAA000000, TopColor:Int = 0x7f000000)
 	{	
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		
-		cmdFunctions = new Hash<Dynamic>();
-		cmdObjects = new Hash<Dynamic>();
+		cmdFunctions = new Map<String, Dynamic>();
+		cmdObjects = new Map<String, Dynamic>();
 		
-		registeredObjects = new Hash<Dynamic>();
-		registeredFunctions = new Hash<Dynamic>();
+		registeredObjects = new Map<String, Dynamic>();
+		registeredFunctions = new Map<String, Dynamic>();
 		
 		objectStack = new Array<FlxObject>();
 		

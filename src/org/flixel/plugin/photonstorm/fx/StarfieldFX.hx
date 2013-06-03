@@ -12,10 +12,9 @@
 
 package org.flixel.plugin.photonstorm.fx;
 
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.plugin.photonstorm.FlxColor;
@@ -51,20 +50,12 @@ class StarfieldFX extends BaseFX
 	private var stars:Array<StarObject>;
 	private var starfieldType:Int;
 	
-	#if flash
-	private var backgroundColor:UInt;
-	#else
-	private var backgroundColor:BitmapInt32;
-	#end
+	private var backgroundColor:Int;
 	
 	private var updateSpeed:Int;
 	private var tick:Int;
 	
-	#if flash
-	private var depthColours:Array<UInt>;
-	#else
-	private var depthColours:Array<BitmapInt32>;
-	#end
+	private var depthColours:Array<Int>;
 	
 	public static inline var STARFIELD_TYPE_2D:Int = 1;
 	public static inline var STARFIELD_TYPE_3D:Int = 2;
@@ -142,19 +133,11 @@ class StarfieldFX extends BaseFX
 		//	Colours array
 		if (type == STARFIELD_TYPE_2D)
 		{
-			#if !neko
 			depthColours = FlxGradient.createGradientArray(1, 5, [0xff585858, 0xffF4F4F4]);
-			#else
-			depthColours = FlxGradient.createGradientArray(1, 5, [{rgb: 0x585858, a: 0xff}, {rgb: 0xF4F4F4, a: 0xff}]);
-			#end
 		}
 		else
 		{
-			#if !neko
 			depthColours = FlxGradient.createGradientArray(1, 300, [0xff292929, 0xffffffff]);
-			#else
-			depthColours = FlxGradient.createGradientArray(1, 300, [{rgb: 0x292929, a: 0xff}, {rgb: 0xffffff, a: 0xff}]);
-			#end
 		}
 		
 		active = true;
@@ -167,11 +150,7 @@ class StarfieldFX extends BaseFX
 	 * 
 	 * @param	backgroundColor
 	 */
-	#if flash
-	public function setBackgroundColor(backgroundColor:UInt):Void
-	#else
-	public function setBackgroundColor(backgroundColor:BitmapInt32):Void
-	#end
+	public function setBackgroundColor(backgroundColor:Int):Void
 	{
 		clsColor = backgroundColor;
 		
@@ -190,32 +169,8 @@ class StarfieldFX extends BaseFX
 	 * @param	lowestColor		The color given to the stars furthest away from the camera (i.e. the slowest stars), typically the darker colour
 	 * @param	highestColor	The color given to the stars cloest to the camera (i.e. the fastest stars), typically the brighter colour
 	 */
-	#if flash
-	public function setStarDepthColors(depth:Int, ?lowestColor:UInt = 0xff585858, ?highestColor:UInt = 0xffF4F4F4):Void
-	#else
-	public function setStarDepthColors(depth:Int, ?lowestColor:BitmapInt32, ?highestColor:BitmapInt32):Void
-	#end
+	public function setStarDepthColors(depth:Int, lowestColor:Int = 0xff585858, highestColor:Int = 0xffF4F4F4):Void
 	{
-		#if !flash
-		if (lowestColor == null)
-		{
-			#if !neko
-			lowestColor = 0xff585858;
-			#else
-			lowestColor = {rgb: 0x585858, a: 0xff};
-			#end
-		}
-		
-		if (highestColor == null)
-		{
-			#if !neko
-			highestColor = 0xffF4F4F4;
-			#else
-			highestColor = {rgb: 0xF4F4F4, a: 0xff};
-			#end
-		}
-		#end
-		
 		//	Depth is the same, we just need to update the gradient then
 		depthColours = FlxGradient.createGradientArray(1, depth, [lowestColor, highestColor]);
 		
@@ -276,7 +231,7 @@ class StarfieldFX extends BaseFX
 			#if flash
 			canvas.setPixel32(star.x, star.y, depthColours[Std.int(star.speed - 1)]);
 			#else
-			var starColor:BitmapInt32 = depthColours[Std.int(star.speed - 1)];
+			var starColor:Int = depthColours[Std.int(star.speed - 1)];
 			var rgba:RGBA = FlxColor.getRGB(starColor);
 			
 			var starDef:StarDef = starArray[i];
@@ -424,7 +379,7 @@ class StarSprite extends FlxSprite
 	public var halfWidth:Float;
 	public var halfHeight:Float;
 	
-	public function new(X:Float = 0, Y:Float = 0, Width:Int = 1, Height:Int = 1, ?bgColor:BitmapInt32)
+	public function new(X:Float = 0, Y:Float = 0, Width:Int = 1, Height:Int = 1, ?bgColor:Int)
 	{
 		super(X, Y);
 		
@@ -441,7 +396,7 @@ class StarSprite extends FlxSprite
 		starData = new Array<StarDef>();
 	}
 	
-	public function setBackgroundColor(bgColor:BitmapInt32):Void
+	public function setBackgroundColor(bgColor:Int):Void
 	{
 		var rgba:RGBA = FlxColor.getRGB(bgColor);
 		bgRed = rgba.red / 255;
@@ -503,7 +458,6 @@ class StarSprite extends FlxSprite
 			}
 			
 			#if !js
-			var isColoredCamera:Bool = camera.isColored();
 			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt);
 			#else
 			drawItem = camera.getDrawStackItem(_atlas, true);
@@ -556,17 +510,9 @@ class StarSprite extends FlxSprite
 			currDrawData[currIndex++] = csy * height;
 			
 			#if !js
-			if (isColoredCamera)
-			{
-				currDrawData[currIndex++] = bgRed * camera.red;
-				currDrawData[currIndex++] = bgGreen * camera.green;
-				currDrawData[currIndex++] = bgBlue * camera.blue;
-			}
-			else
-			{
-				currDrawData[currIndex++] = bgRed;
-				currDrawData[currIndex++] = bgGreen;
-				currDrawData[currIndex++] = bgBlue;
+			currDrawData[currIndex++] = bgRed;
+			currDrawData[currIndex++] = bgGreen;
+			currDrawData[currIndex++] = bgBlue;
 			}
 			#end
 			
@@ -598,18 +544,7 @@ class StarSprite extends FlxSprite
 				starBlue = starDef.blue;
 				
 			#if !js
-				if (isColoredCamera)
-				{
-					starRed *= camera.red;
-					starGreen *= camera.green;
-					starBlue *= camera.blue;
-				}
-				
-				#if !neko
 				if (_color < 0xffffff)
-				#else
-				if (_color.rgb < 0xffffff)
-				#end
 				{
 					starRed *= _red;
 					starGreen *= _green;

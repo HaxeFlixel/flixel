@@ -1,6 +1,6 @@
 package org.flixel.plugin;
 
-import nme.errors.Error;
+import flash.errors.Error;
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;

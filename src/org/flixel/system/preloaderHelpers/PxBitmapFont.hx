@@ -1,15 +1,14 @@
 package org.flixel.system.preloaderHelpers;
 
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
-import nme.display.Graphics;
-import nme.geom.ColorTransform;
-import nme.geom.Matrix;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.display.Graphics;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 
 #if !flash
-import nme.display.Tilesheet;
+import openfl.display.Tilesheet;
 #end
 
 /**
@@ -18,14 +17,14 @@ import nme.display.Tilesheet;
  */
 class PxBitmapFont 
 {
-	private static var _storedFonts:Hash<PxBitmapFont> = new Hash<PxBitmapFont>();
+	private static var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
 	
 	private static var ZERO_POINT:Point = new Point();
 	
 	#if flash
 	private var _glyphs:Array<BitmapData>;
 	#else
-	private var _glyphs:IntHash<Int>;
+	private var _glyphs:Map<Int, Int>;
 	private var _num_letters:Int;
 	private var _tileSheet:Tilesheet;
 	private static var _flags = Tilesheet.TILE_SCALE | Tilesheet.TILE_ROTATION | Tilesheet.TILE_ALPHA | Tilesheet.TILE_RGB;
@@ -56,7 +55,7 @@ class PxBitmapFont
 		_glyphs = [];
 		#else
 		_glyphWidthData = [];
-		_glyphs = new IntHash<Int>();
+		_glyphs = new Map<Int, Int>();
 		_num_letters = 0;
 		#end
 		
@@ -152,15 +151,11 @@ class PxBitmapFont
 		
 		var resultBitmapData:BitmapData = pBitmapData.clone();
 		
-		#if flash
-		var pixelColor:UInt;
-		var bgColor32:UInt = pBitmapData.getPixel(0, 0);
-		#elseif js
 		var pixelColor:Int;
+		#if (flash || js)
 		var bgColor32:Int = pBitmapData.getPixel(0, 0);
 		#else
-		var pixelColor:BitmapInt32;
-		var bgColor32:BitmapInt32 = pBitmapData.getPixel32(0, 0);
+		var bgColor32:Int = pBitmapData.getPixel32(0, 0);
 		#end
 		
 		cy = 0;
@@ -170,17 +165,10 @@ class PxBitmapFont
 			while (cx < pBitmapData.width)
 			{
 				pixelColor = pBitmapData.getPixel32(cx, cy);
-				#if neko
-				if (pixelColor.rgb == bgColor32.rgb && pixelColor.a == bgColor32.a)
-				{
-					resultBitmapData.setPixel32(cx, cy, {rgb: 0x000000, a: 0x00});
-				}
-				#else
 				if (pixelColor == bgColor32)
 				{
 					resultBitmapData.setPixel32(cx, cy, 0x00000000);
 				}
-				#end
 				cx++;
 			}
 			cy++;
@@ -319,7 +307,7 @@ class PxBitmapFont
 	 * @param	pOffsetY	Y position of thext output.
 	 */
 	#if flash 
-	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pAngle:Float = 0):Void 
+	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pAngle:Float = 0):Void 
 	#else
 	public function render(drawData:Array<Float>, pText:String, pColor:Int, pAlpha:Float, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int, pScale:Float, pAngle:Float = 0, pUseColorTransform:Bool = true):Void 
 	#end

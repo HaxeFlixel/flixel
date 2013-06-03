@@ -1,7 +1,7 @@
 package org.flixel.system.input;
 
-import nme.events.TouchEvent;
-import nme.geom.Point;
+import flash.events.TouchEvent;
+import flash.geom.Point;
 
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;

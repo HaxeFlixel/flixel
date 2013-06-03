@@ -1,11 +1,11 @@
 package org.flixel.system.debug;
 
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.events.MouseEvent;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.events.MouseEvent;
 import org.flixel.FlxAssets;
 
 import org.flixel.FlxG;

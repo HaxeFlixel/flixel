@@ -1,9 +1,13 @@
 package com.werdn.haxeflixel;
 
 import haxe.io.Bytes;
-import neko.io.File;
-import neko.io.FileOutput;
-import neko.zip.Reader;
+import haxe.io.Path;
+import neko.Lib;
+import sys.FileSystem;
+import sys.io.File;
+import sys.io.FileOutput;
+import haxe.zip.Reader;
+import haxe.zip.Entry;
 
 class CommandLine
 {
@@ -38,18 +42,18 @@ class ProjectCreator
 
 	public function new()
 	{
-		var args:Array<String> = neko.Sys.args();
+		var args:Array<String> = Sys.args();
 		
 		var cmd = parseCommandLine(args);
 
 		if(args.length < 2 || cmd.help)
 		{
-			neko.Lib.println("Flixel project template creation tool.\n");
-			neko.Lib.println("haxelib run flixel [help] [-name \"Your Project Name\"] [-class MainProjectClass] [-screen WIDTH HEIGHT]\n");
-			neko.Lib.println("\thelp - this screen");
-			neko.Lib.println("\t-name \"Your Project Name\"");
-			neko.Lib.println("\t-class MainProjectClass");
-			neko.Lib.println("\t-screen WIDTH HEIGHT");
+			Lib.println("Flixel project template creation tool.\n");
+			Lib.println("haxelib run flixel [help] [-name \"Your Project Name\"] [-class MainProjectClass] [-screen WIDTH HEIGHT]\n");
+			Lib.println("\thelp - this screen");
+			Lib.println("\t-name \"Your Project Name\"");
+			Lib.println("\t-class MainProjectClass");
+			Lib.println("\t-screen WIDTH HEIGHT");
 		}
 		else
 		{
@@ -100,7 +104,7 @@ class ProjectCreator
 	 */
 	private function trimPath(path:String) 
 	{
-		return new neko.io.Path(path).dir;
+		return new Path(path).dir;
 	}
 
 	/**
@@ -110,7 +114,7 @@ class ProjectCreator
 	private function createProject(cmd:CommandLine):Void
 	{
 		var fileInput = File.read("template.zip", true);
-		var data:List<ZipEntry> = Reader.readZip(fileInput);
+		var data:List<Entry> = Reader.readZip(fileInput);
 		fileInput.close();
 
 		for(entry in data)
@@ -121,9 +125,9 @@ class ProjectCreator
 			{
 				fileName = fileName.substr(0, -1);
 				neko.Lib.println("Directory: " + fileName);
-				if(!neko.FileSystem.exists(cmd.projectDir + "/" +fileName))
+				if(!FileSystem.exists(cmd.projectDir + "/" +fileName))
 				{
-					neko.FileSystem.createDirectory(cmd.projectDir + "/" +fileName);
+					FileSystem.createDirectory(cmd.projectDir + "/" +fileName);
 				}
 			}
 			else

@@ -1,5 +1,5 @@
 package org.flixel.addons;
-import nme.geom.Matrix;
+import flash.geom.Matrix;
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
@@ -101,8 +101,7 @@ class FlxSkewedSprite extends FlxSprite
 			
 		#if !flash
 			#if !js
-			var isColoredCamera:Bool = camera.isColored();
-			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
 			#else
 			var useAlpha:Bool = (alpha < 1);
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
@@ -217,7 +216,7 @@ class FlxSkewedSprite extends FlxSprite
 
 			currDrawData[currIndex++] = _point.x - x2;
 			currDrawData[currIndex++] = _point.y - y2;
-			currDrawData[currIndex++] = _frameID;
+			currDrawData[currIndex++] = _flxFrame.tileID;
 
 			currDrawData[currIndex++] = csx;
 			currDrawData[currIndex++] = ssy;
@@ -225,20 +224,11 @@ class FlxSkewedSprite extends FlxSprite
 			currDrawData[currIndex++] = csy;
 
 			#if !js
-			if (isColored || isColoredCamera)
+			if (isColored)
 			{
-				if (isColoredCamera)
-				{
-					currDrawData[currIndex++] = _red * camera.red;
-					currDrawData[currIndex++] = _green * camera.green;
-					currDrawData[currIndex++] = _blue * camera.blue;
-				}
-				else
-				{
-					currDrawData[currIndex++] = _red;
-					currDrawData[currIndex++] = _green;
-					currDrawData[currIndex++] = _blue;
-				}
+				currDrawData[currIndex++] = _red;
+				currDrawData[currIndex++] = _green;
+				currDrawData[currIndex++] = _blue;
 			}
 			currDrawData[currIndex++] = alpha;
 			#else 

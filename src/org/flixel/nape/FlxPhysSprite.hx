@@ -72,6 +72,7 @@ class FlxPhysSprite extends FlxSprite
 		{
 			updatePhysObjects();
 		}
+		
 	}
 
 	/**
@@ -91,7 +92,8 @@ class FlxPhysSprite extends FlxSprite
 	override public function revive():Void
 	{
 		super.revive();
-		body.space = FlxPhysState.space;
+		if(body != null)
+			body.space = FlxPhysState.space;
 	}
 	
 	public function addPremadeBody(body:Body)
@@ -214,10 +216,10 @@ class FlxPhysSprite extends FlxSprite
 	
 	// Hide debug outline on physics sprites if the physics debug shapes are turned on
 	#if !FLX_NO_DEBUG
-	override public function drawDebug(Camera:FlxCamera = null):Void 
+	override public function drawDebug():Void
 	{
-		if (FlxPhysState.debug == null) 
-			super.drawDebug(Camera); 
+		if (FlxPhysState.debug == null)
+			super.drawDebug();
 	}
 	#end
 }

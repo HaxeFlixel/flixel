@@ -1,8 +1,8 @@
 package org.flixel.system.preloaderHelpers;
 
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.Sprite;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Sprite;
 import org.flixel.system.preloaderHelpers.PxBitmapFont;
 import org.flixel.plugin.pxText.PxTextAlign;
 

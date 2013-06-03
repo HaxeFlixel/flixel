@@ -1,10 +1,10 @@
 package org.flixel.system.layer;
 
-import nme.display.BitmapData;
-import nme.display.Graphics;
-import nme.display.Tilesheet;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.display.Graphics;
+import openfl.display.Tilesheet;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
@@ -101,18 +101,18 @@ class TileSheetData
 	/**
 	 * Storage for all groups of FlxFrames.
 	 */
-	private var flxSpriteFrames:Hash<FlxSpriteFrames>;
+	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
 	/**
 	 * Storage for all FlxFrames in this TileSheetData object.
 	 */
-	private var flxFrames:Hash<FlxFrame>;
+	private var flxFrames:Map<String, FlxFrame>;
 	
 	private function new(tileSheet:TileSheetExt)
 	{
 		this.tileSheet = tileSheet;
-		flxSpriteFrames = new Hash<FlxSpriteFrames>();
-		flxFrames = new Hash<FlxFrame>();
+		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
+		flxFrames = new Map<String, FlxFrame>();
 	}
 	
 	public function getFrame(name:String):FlxFrame

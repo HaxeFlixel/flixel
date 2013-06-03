@@ -1,8 +1,8 @@
 package org.flixel.system;
 
-import nme.display.BitmapData;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;

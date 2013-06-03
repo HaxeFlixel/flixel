@@ -428,6 +428,9 @@ class FlxVelocity
 	public static function angleBetweenMouse(a:FlxObject, asDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
+		if (a == null)
+			return 0;
+		
 		var p:FlxPoint = a.getScreenXY();
 		
 		var dx:Float = FlxG.mouse.screenX - p.x;

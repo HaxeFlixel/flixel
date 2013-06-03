@@ -1,15 +1,15 @@
 package org.flixel.system.layer;
 
-import nme.display.BitmapData;
-import nme.display.Tilesheet;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.ObjectHash;
+import haxe.ds.ObjectMap;
+import flash.display.BitmapData;
+import openfl.display.Tilesheet;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 
 // TODO: check image caching for tilesheets and their disposing
 class TileSheetExt extends Tilesheet
 {
-	private static var _tileSheetCache:ObjectHash<BitmapData, TileSheetExt> = new ObjectHash<BitmapData, TileSheetExt>();
+	private static var _tileSheetCache:ObjectMap<BitmapData, TileSheetExt> = new ObjectMap<BitmapData, TileSheetExt>();
 	
 	public static var _DRAWCALLS:Int = 0;
 	
@@ -62,18 +62,18 @@ class TileSheetExt extends Tilesheet
 			}
 		}
 		
-		_tileSheetCache = new ObjectHash<BitmapData, TileSheetExt>();
+		_tileSheetCache = new ObjectMap<BitmapData, TileSheetExt>();
 	}
 	
 	private var _numTiles:Int;
 	
-	private var _tileIDs:Hash<Int>;
+	private var _tileIDs:Map<String, Int>;
 	
 	private function new(bitmap:BitmapData)
 	{
 		super(bitmap);
 		
-		_tileIDs = new Hash<Int>();
+		_tileIDs = new Map<String, Int>();
 		_numTiles = 0;
 	}
 	
@@ -109,7 +109,20 @@ class TileSheetExt extends Tilesheet
 	
 	public function destroy():Void
 	{
+		#if !(flash || js)
+		__bitmap = null;
+		#else
 		nmeBitmap = null;
+		#end
 		_tileIDs = null;
 	}
+	
+	#if !(flash || js)
+	public var nmeBitmap(get_nmeBitmap, null):BitmapData;
+	
+	private function get_nmeBitmap():BitmapData
+	{
+		return __bitmap;
+	}
+	#end
 }

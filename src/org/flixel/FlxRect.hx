@@ -1,6 +1,6 @@
 package org.flixel;
 
-import nme.geom.Rectangle;
+import flash.geom.Rectangle;
 
 /**
  * Stores a rectangle.

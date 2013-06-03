@@ -1,8 +1,8 @@
 package org.flixel;
 
-import nme.errors.Error;
-import nme.net.SharedObject;
-import nme.net.SharedObjectFlushStatus;
+import flash.errors.Error;
+import flash.net.SharedObject;
+import flash.net.SharedObjectFlushStatus;
 
 #if flash
 import flash.events.NetStatusEvent;
@@ -183,9 +183,9 @@ class FlxSave
 	{
 		switch(Result)
 		{
-			case PENDING:
+			case FlxSave.PENDING:
 				FlxG.warn("FlxSave is requesting extra storage space.");
-			case ERROR:
+			case FlxSave.ERROR:
 				FlxG.error("There was a problem flushing\nthe shared object data from FlxSave.");
 			//default:
 		}

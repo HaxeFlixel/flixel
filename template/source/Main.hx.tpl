@@ -1,12 +1,12 @@
 package;
 
-import nme.display.StageAlign;
-import nme.display.StageScaleMode;
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.events.KeyboardEvent;
-import nme.Lib;
-import nme.ui.Keyboard;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.events.KeyboardEvent;
+import flash.Lib;
+import flash.ui.Keyboard;
 import org.flixel.FlxGame;
 
 /**

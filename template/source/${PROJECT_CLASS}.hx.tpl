@@ -1,6 +1,6 @@
 package;
 
-import nme.Lib;
+import flash.Lib;
 import org.flixel.FlxGame;
 	
 class ${PROJECT_CLASS} extends FlxGame

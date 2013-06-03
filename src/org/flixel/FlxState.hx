@@ -1,7 +1,6 @@
 package org.flixel;
 
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
+import flash.display.BitmapData;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.TileSheetData;
@@ -51,28 +50,15 @@ class FlxState extends FlxGroup
 	/**
 	 * Background color of this state
 	 */
-	#if flash
-	private var _bgColor:UInt;
-	public var bgColor(get_bgColor, set_bgColor):UInt;
-	#else
-	private var _bgColor:BitmapInt32;
-	public var bgColor(get_bgColor, set_bgColor):BitmapInt32;	
-	#end
+	private var _bgColor:Int;
+	public var bgColor(get_bgColor, set_bgColor):Int;
 	
-	#if flash
-	private function get_bgColor():UInt 
-	#else
-	private function get_bgColor():BitmapInt32 
-	#end
+	private function get_bgColor():Int 
 	{
 		return FlxG.bgColor;
 	}
 	
-	#if flash
-	private function set_bgColor(value:UInt):UInt 
-	#else
-	private function set_bgColor(value:BitmapInt32):BitmapInt32 
-	#end
+	private function set_bgColor(value:Int):Int 
 	{
 		return FlxG.bgColor = value;
 	}
@@ -92,12 +78,14 @@ class FlxState extends FlxGroup
 	}
 	private function updateMouseVisibility():Void
 	{
+	#if !FLX_NO_MOUSE
 		#if mobile
 		FlxG.mouse.hide();
 		#else
 		if (_useMouse) { FlxG.mouse.show(); }
 		else { FlxG.mouse.hide(); }
 		#end
+	#end
 	}
 	
 	/**
@@ -106,13 +94,6 @@ class FlxState extends FlxGroup
 	public function new()
 	{
 		super();
-		
-		#if neko
-		if (bgColor == null)
-		{
-			bgColor = FlxG.BLACK;
-		}
-		#end
 		
 		persistantUpdate = false;
 		persistantDraw = true;

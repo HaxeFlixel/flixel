@@ -15,14 +15,13 @@
 
 package org.flixel.plugin.photonstorm;
 
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
-import nme.display.Sprite;
-import nme.geom.ColorTransform;
-import nme.geom.Matrix;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.display.BlendMode;
+import flash.display.BitmapData;
+import flash.display.Sprite;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import flash.display.BlendMode;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -36,13 +35,8 @@ class FlxCollision
 {
 	public static var debug:BitmapData = new BitmapData(1, 1, false);
 	
-	#if flash
-	public static var CAMERA_WALL_OUTSIDE:UInt = 0;
-	public static var CAMERA_WALL_INSIDE:UInt = 1;
-	#else
 	public static var CAMERA_WALL_OUTSIDE:Int = 0;
 	public static var CAMERA_WALL_INSIDE:Int = 1;
-	#end
 	
 	public function new() 
 	{
@@ -133,7 +127,7 @@ class FlxCollision
 		var overlapHeight:Int = overlapArea.height;
 		var targetX:Int;
 		var targetY:Int;
-		var pixelColor:BitmapInt32;
+		var pixelColor:Int;
 		var pixelAlpha:Int;
 		var transformedAlpha:Int;
 		var maxX:Int = testA.width + 1;
@@ -149,18 +143,10 @@ class FlxCollision
 					if (targetY >= 0 && targetY < maxY)
 					{
 						pixelColor = testA.getPixel32(i, j);
-						#if !neko
 						pixelAlpha = (pixelColor >> 24) & 0xFF;
-						#else
-						pixelAlpha = (pixelColor.a >> 24) & 0xFF;
-						#end
 						if (pixelAlpha >= alphaTolerance)
 						{
-							#if !neko
 							overlapArea.setPixel32(targetX, targetY, 0xffff0000);
-							#else
-							overlapArea.setPixel32(targetX, targetY, {rgb: 0xff0000, a: 0xff});
-							#end
 						}
 						else
 						{
@@ -173,7 +159,7 @@ class FlxCollision
 
 		maxX = testB.width + 1;
 		maxY = testB.height + 1;
-		var secondColor:BitmapInt32;
+		var secondColor:Int;
 		for (i in 0...(maxX))
 		{
 			targetX = Math.floor(i + matrixB.tx);
@@ -185,15 +171,10 @@ class FlxCollision
 					if (targetY >= 0 && targetY < maxY)
 					{
 						pixelColor = testB.getPixel32(i, j);
-						#if !neko
 						pixelAlpha = (pixelColor >> 24) & 0xFF;
-						#else
-						pixelAlpha = (pixelColor.a >> 24) & 0xFF;
-						#end
 						if (pixelAlpha >= alphaTolerance)
 						{
 							secondColor = overlapArea.getPixel32(targetX, targetY);
-							#if !neko
 							if (secondColor == 0xffff0000)
 							{
 								overlapArea.setPixel32(targetX, targetY, 0xff00ffff);
@@ -202,16 +183,6 @@ class FlxCollision
 							{
 								overlapArea.setPixel32(targetX, targetY, 0x00000000);
 							}
-							#else
-							if (secondColor.rgb == 0xff0000)
-							{
-								overlapArea.setPixel32(targetX, targetY, {rgb: 0x00ffff, a: 0xff});
-							}
-							else
-							{
-								overlapArea.setPixel32(targetX, targetY, {rgb: 0x000000, a: 0x00});
-							}
-							#end
 						}
 					}
 				}
@@ -223,11 +194,7 @@ class FlxCollision
 		//	Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere.
 		debug = overlapArea;
 		
-		#if !neko
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
-		#else
-		var overlap:Rectangle = overlapArea.getColorBoundsRect({rgb: 0xffffff, a: 0xff}, {rgb: 0x00ffff, a: 0xff});
-		#end
 		overlap.offset(intersect.x, intersect.y);
 		
 		if (overlap.isEmpty())
@@ -252,11 +219,7 @@ class FlxCollision
 	 * 
 	 * @return	Boolean True if the x/y point collides with the FlxSprite, false if not
 	 */
-	#if flash
-	public static function pixelPerfectPointCheck(pointX:UInt, pointY:UInt, target:FlxSprite, alphaTolerance:Int = 255):Bool
-	#else
 	public static function pixelPerfectPointCheck(pointX:Int, pointY:Int, target:FlxSprite, alphaTolerance:Int = 255):Bool
-	#end
 	{
 		//	Intersect check
 		if (FlxMath.pointInCoordinates(pointX, pointY, Math.floor(target.x), Math.floor(target.y), Std.int(target.width), Std.int(target.height)) == false)
@@ -298,11 +261,7 @@ class FlxCollision
 	 * 
 	 * @return	FlxGroup The 4 FlxTileblocks that are created are placed into this FlxGroup which should be added to your State
 	 */
-	#if flash
-	public static function createCameraWall(camera:FlxCamera, placement:UInt, thickness:UInt, adjustWorldBounds:Bool = false):FlxGroup
-	#else
 	public static function createCameraWall(camera:FlxCamera, placement:Int, thickness:Int, adjustWorldBounds:Bool = false):FlxGroup
-	#end
 	{
 		var left:FlxTileblock = null;
 		var right:FlxTileblock = null;
@@ -311,7 +270,7 @@ class FlxCollision
 		
 		switch (placement)
 		{
-			case CAMERA_WALL_OUTSIDE:
+			case FlxCollision.CAMERA_WALL_OUTSIDE:
 				left = new FlxTileblock(Math.floor(camera.x - thickness), Math.floor(camera.y + thickness), thickness, camera.height - (thickness * 2));
 				right = new FlxTileblock(Math.floor(camera.x + camera.width), Math.floor(camera.y + thickness), thickness, camera.height - (thickness * 2));
 				top = new FlxTileblock(Math.floor(camera.x - thickness), Math.floor(camera.y - thickness), camera.width + thickness * 2, thickness);
@@ -322,7 +281,7 @@ class FlxCollision
 					FlxG.worldBounds = new FlxRect(camera.x - thickness, camera.y - thickness, camera.width + thickness * 2, camera.height + thickness * 2);
 				}
 				
-			case CAMERA_WALL_INSIDE:
+			case FlxCollision.CAMERA_WALL_INSIDE:
 				left = new FlxTileblock(Math.floor(camera.x), Math.floor(camera.y + thickness), thickness, camera.height - (thickness * 2));
 				right = new FlxTileblock(Math.floor(camera.x + camera.width - thickness), Math.floor(camera.y + thickness), thickness, camera.height - (thickness * 2));
 				top = new FlxTileblock(Math.floor(camera.x), Math.floor(camera.y), camera.width, thickness);

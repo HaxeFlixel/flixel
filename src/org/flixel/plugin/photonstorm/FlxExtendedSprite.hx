@@ -30,11 +30,7 @@ class FlxExtendedSprite extends FlxSprite
 	/**
 	 * Used by FlxMouseControl when multiple sprites overlap and register clicks, and you need to determine which sprite has priority
 	 */
-	#if flash
-	public var priorityID:UInt;
-	#else
 	public var priorityID:Int;
-	#end
 	
 	/**
 	 * If the mouse currently pressed down on this sprite?
@@ -49,13 +45,10 @@ class FlxExtendedSprite extends FlxSprite
 	public var clickable:Bool;
 	private var clickOnRelease:Bool;
 	private var clickPixelPerfect:Bool;
-	#if flash
-	private var clickPixelPerfectAlpha:UInt;
-	private var clickCounter:UInt;
-	#else
 	private var clickPixelPerfectAlpha:Int;
 	private var clickCounter:Int;
-	#end
+	
+	private var _rect:FlxRect; 
 	
 	#if !FLX_NO_MOUSE
 	/**
@@ -129,11 +122,7 @@ class FlxExtendedSprite extends FlxSprite
 	 */
 	public var draggable:Bool;
 	private var dragPixelPerfect:Bool;
-	#if flash
-	private var dragPixelPerfectAlpha:UInt;
-	#else
 	private var dragPixelPerfectAlpha:Int;
-	#end
 	private var dragOffsetX:Int;
 	private var dragOffsetY:Int;
 	private var dragFromPoint:Bool;
@@ -231,6 +220,7 @@ class FlxExtendedSprite extends FlxSprite
 		hasMouseSpring = false;
 		#end
 		springOnPressed = true;
+		_rect = new FlxRect();
 		
 		clickCounter = 0;
 		
@@ -246,11 +236,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
 	 * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
 	 */
-	#if flash
-	public function enableMouseClicks(onRelease:Bool, pixelPerfect:Bool = false, alphaThreshold:UInt = 255):Void
-	#else
 	public function enableMouseClicks(onRelease:Bool, pixelPerfect:Bool = false, alphaThreshold:Int = 255):Void
-	#end
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
 		{
@@ -280,24 +266,6 @@ class FlxExtendedSprite extends FlxSprite
 	
 	#if !FLX_NO_MOUSE
 	
-	#if flash
-	public var clicks(get_clicks, set_clicks):UInt;
-	/**
-	 * Returns the number of times this sprite has been clicked (can be reset by setting clicks to zero)
-	 */
-	private function get_clicks():UInt
-	{
-		return clickCounter;
-	}
-	/**
-	 * Sets the number of clicks this item has received. Usually you'd only set it to zero.
-	 */
-	private function set_clicks(i:UInt):UInt
-	{
-		clickCounter = i;
-		return i;
-	}
-	#else
 	public var clicks(get_clicks, set_clicks):Int;
 	/**
 	 * Returns the number of times this sprite has been clicked (can be reset by setting clicks to zero)
@@ -315,7 +283,6 @@ class FlxExtendedSprite extends FlxSprite
 		clickCounter = i;
 		return i;
 	}
-	#end
 	
 	#end
 	
@@ -329,11 +296,7 @@ class FlxExtendedSprite extends FlxSprite
 	 * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
 	 * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
 	 */
-	#if flash
-	public function enableMouseDrag(lockCenter:Bool = false, pixelPerfect:Bool = false, alphaThreshold:UInt = 255, boundsRect:FlxRect = null, boundsSprite:FlxSprite = null):Void
-	#else
 	public function enableMouseDrag(lockCenter:Bool = false, pixelPerfect:Bool = false, alphaThreshold:Int = 255, boundsRect:FlxRect = null, boundsSprite:FlxSprite = null):Void
-	#end
 	{
 		if (FlxG.getPlugin(FlxMouseControl) == null)
 		{

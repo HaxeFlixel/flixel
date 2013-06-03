@@ -1,7 +1,6 @@
 package org.flixel.plugin.pxText;
 
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
+import flash.display.BitmapData;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
@@ -229,7 +228,6 @@ class FlxBitmapTextField extends FlxSprite
 			camera = cameras[i++];
 			#if !js
 			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt);
-			var isColoredCamera:Bool = camera.isColored();
 			#else
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
 			#end
@@ -289,18 +287,9 @@ class FlxBitmapTextField extends FlxSprite
 				currDrawData[currIndex++] = csy * height;
 				
 				#if !js
-				if (isColoredCamera)
-				{
-					currDrawData[currIndex++] = _bgDrawData[3] * camera.red;
-					currDrawData[currIndex++] = _bgDrawData[4] * camera.green;
-					currDrawData[currIndex++] = _bgDrawData[5] * camera.blue;
-				}
-				else
-				{
-					currDrawData[currIndex++] = _bgDrawData[3];
-					currDrawData[currIndex++] = _bgDrawData[4];
-					currDrawData[currIndex++] = _bgDrawData[5];
-				}
+				currDrawData[currIndex++] = _bgDrawData[3];
+				currDrawData[currIndex++] = _bgDrawData[4];
+				currDrawData[currIndex++] = _bgDrawData[5];
 				currDrawData[currIndex++] = alpha;
 				#else
 				if (useAlpha)
@@ -334,18 +323,9 @@ class FlxBitmapTextField extends FlxSprite
 				currDrawData[currIndex++] = csy * _fontScale;
 				
 				#if !js
-				if (isColoredCamera)
-				{
-					currDrawData[currIndex++] = currTileRed * camera.red;
-					currDrawData[currIndex++] = currTileGreen * camera.green;
-					currDrawData[currIndex++] = currTileBlue * camera.blue;
-				}
-				else
-				{
-					currDrawData[currIndex++] = currTileRed;
-					currDrawData[currIndex++] = currTileGreen;
-					currDrawData[currIndex++] = currTileBlue;
-				}
+				currDrawData[currIndex++] = currTileRed;
+				currDrawData[currIndex++] = currTileGreen;
+				currDrawData[currIndex++] = currTileBlue;
 				currDrawData[currIndex++] = alpha;
 				#else
 				if (useAlpha)
@@ -362,7 +342,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 	}
 	
-	override private function set_color(Color:BitmapInt32):BitmapInt32
+	override private function set_color(Color:Int):Int
 	{
 		super.set_color(Color);
 		_pendingTextChange = true;
@@ -682,16 +662,10 @@ class FlxBitmapTextField extends FlxSprite
 			var red:Float = (_backgroundColor >> 16) * colorMultiplier;
 			var green:Float = (_backgroundColor >> 8 & 0xff) * colorMultiplier;
 			var blue:Float = (_backgroundColor & 0xff) * colorMultiplier;
-			#end
 			
-			#if (cpp || js)
 			red *= (_color >> 16);
 			green *= (_color >> 8 & 0xff);
 			blue *= (_color & 0xff);
-			#elseif neko
-			red *= (_color.rgb >> 16);
-			green *= (_color.rgb >> 8 & 0xff);
-			blue *= (_color.rgb & 0xff);
 			#end
 			
 			_bgDrawData.push(red);

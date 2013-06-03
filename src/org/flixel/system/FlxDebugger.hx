@@ -1,17 +1,17 @@
 package org.flixel.system;
 #if !FLX_NO_DEBUG
 
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.Sprite;
-import nme.events.MouseEvent;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.text.TextField;
-import nme.text.TextFormat;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Sprite;
+import flash.events.MouseEvent;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import flash.text.TextField;
+import flash.text.TextFormat;
 #if !FLX_NO_MOUSE
-import nme.ui.Mouse;
+import flash.ui.Mouse;
 #end
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
@@ -31,8 +31,8 @@ class FlxDebugger extends Sprite
 {
 	/**
 	 * The amount of decimals FlxPoints are rounded to in log / watch.
-     */
- 	static public var pointPrecision:Int = 3;
+	 */
+	static public var pointPrecision:Int = 3; 
 	/**
 	 * Container for the performance monitor widget.
 	 */
@@ -74,7 +74,6 @@ class FlxDebugger extends Sprite
 	 * Internal, used to space out windows from the edges.
 	 */
 	private var _gutter:Int;
-	
 	
 	/**
 	 * Instantiates the debugger overlay.

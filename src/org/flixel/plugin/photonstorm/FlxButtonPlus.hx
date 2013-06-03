@@ -18,8 +18,7 @@ package org.flixel.plugin.photonstorm;
 import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
-import nme.display.BitmapInt32;
-import nme.Lib;
+import flash.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
@@ -93,29 +92,17 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	/**
 	 * The 1px thick border color that is drawn around this button
 	 */
-	#if flash
-	public var borderColor:UInt;
-	#else
-	public var borderColor:BitmapInt32;
-	#end
+	public var borderColor:Int;
 	
 	/**
 	 * The color gradient of the button in its in-active (not hovered over) state
 	 */
-	#if flash
-	public var offColor:Array<UInt>;
-	#else
-	public var offColor:Array<BitmapInt32>;
-	#end
+	public var offColor:Array<Int>;
 	
 	/**
 	 * The color gradient of the button in its hovered state
 	 */
-	#if flash
-	public var onColor:Array<UInt>;
-	#else
-	public var onColor:Array<BitmapInt32>;
-	#end
+	public var onColor:Array<Int>;
 	
 	private var _x:Int;
 	private var _y:Int;
@@ -136,15 +123,9 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	 */
 	public function new(X:Int, Y:Int, Callback:Dynamic, Params:Array<Dynamic> = null, Label:String = null, Width:Int = 100, Height:Int = 20)
 	{
-		#if !neko
 		borderColor = 0xffffffff;
 		offColor = [0xff008000, 0xff00ff00];
 		onColor = [0xff800000, 0xffff0000];
-		#else
-		borderColor = { rgb: 0xffffff, a: 0xff };
-		offColor = [{ rgb: 0x008000, a: 0xff }, { rgb: 0x00FF00, a: 0xff }];
-		onColor = [{ rgb: 0x800000, a: 0xff }, { rgb: 0xFF0000, a: 0xff }];
-		#end
 		
 		super(4);
 		
@@ -432,11 +413,7 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	 * 
 	 * @param	colors
 	 */
-	#if flash
-	public function updateInactiveButtonColors(colors:Array<UInt>):Void
-	#else
-	public function updateInactiveButtonColors(colors:Array<BitmapInt32>):Void
-	#end
+	public function updateInactiveButtonColors(colors:Array<Int>):Void
 	{
 		offColor = colors;
 		
@@ -449,13 +426,8 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		var normalKey:String = "Gradient: " + width + " x " + height + ", colors: [";
 		for (col in offColor)
 		{
-			#if !neko
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
-			#else
-			colA = col.a;
-			colRGB = col.rgb;
-			#end
 			
 			normalKey = normalKey + colRGB + "_" + colA + ", ";
 		}
@@ -476,11 +448,7 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	 * 
 	 * @param	colors
 	 */
-	#if flash
-	public function updateActiveButtonColors(colors:Array<UInt>):Void
-	#else
-	public function updateActiveButtonColors(colors:Array<BitmapInt32>):Void
-	#end
+	public function updateActiveButtonColors(colors:Array<Int>):Void
 	{
 		onColor = colors;
 		
@@ -493,13 +461,8 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		var highlightKey:String = "Gradient: " + width + " x " + height + ", colors: [";
 		for (col in onColor)
 		{
-			#if !neko
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
-			#else
-			colA = col.a;
-			colRGB = col.rgb;
-			#end
 			
 			highlightKey = highlightKey + colRGB + "_" + colA + ", ";
 		}
@@ -515,12 +478,12 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		#end
 	}
 	
-	public var text(null, setText):String;
+	public var text(null, set_text):String;
 	
 	/**
 	 * If this button has text, set this to change the value
 	 */
-	public function setText(value:String):String
+	public function set_text(value:String):String
 	{
 		if (textNormal != null && textNormal.text != value)
 		{

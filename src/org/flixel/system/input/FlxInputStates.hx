@@ -13,11 +13,11 @@ class FlxInputStates
 	/**
 	 * @private
 	 */
-	private var _keyLookup:Hash<Int>;
+	private var _keyLookup:Map<String, Int>;
 	/**
 	 * @private
 	 */
-	private var _keyBools:Hash<Bool>;
+	private var _keyBools:Map<String, Bool>;
 	/**
 	 * @private
 	 */
@@ -35,8 +35,8 @@ class FlxInputStates
 	{
 		_total = 256;
 		
-		_keyLookup = new Hash<Int>();
-		_keyBools = new Hash<Bool>();
+		_keyLookup = new Map<String, Int>();
+		_keyBools = new Map<String, Bool>();
 		
 		_keyMap = new Array<FlxMapObject>(/*_total*/);
 		FlxU.SetArrayLength(_keyMap, _total);

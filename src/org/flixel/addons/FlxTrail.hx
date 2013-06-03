@@ -63,8 +63,6 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 */
 	private var recentAngles:Array<Float>;
 	
-	private var _solid:Bool;
-
 	/**
 	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
 	 * 
@@ -144,7 +142,10 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		recentPositions.splice(0, recentPositions.length);
 		recentAngles.splice(0, recentAngles.length);
 		for (i in 0...members.length) 
-			members[i].exists = false;
+		{
+			if (members[i] != null)
+				members[i].exists = false;
+		}
 	}
 
 	/**
@@ -172,7 +173,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			add(trailSprite);
 			trailSprite.alpha = transp;
 			transp -= difference;
-			trailSprite.solid = _solid;
+			trailSprite.solid = solid;
 
 			if (trailSprite.alpha <= 0) trailSprite.kill();
 		}	
@@ -207,12 +208,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		yEnabled = Y;
 	}
 	
-	public var solid(get_solid, set_solid):Bool;
-	
-	private function get_solid():Bool
-	{
-		return _solid;
-	}
+	public var solid(default, set_solid):Bool;
 	
 	private function set_solid(value:Bool):Bool
 	{
@@ -220,7 +216,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		{
 			members[i].solid = value; 
 		}
-		_solid = value;
+		solid = value;
 		return value;
 	}
 }

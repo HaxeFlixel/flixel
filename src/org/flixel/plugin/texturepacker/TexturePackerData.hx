@@ -1,9 +1,9 @@
 package org.flixel.plugin.texturepacker;
 
-import nme.Assets;
-import nme.geom.Rectangle;
-import nme.geom.Point;
-import nme.display.BitmapData;
+import openfl.Assets;
+import flash.geom.Rectangle;
+import flash.geom.Point;
+import flash.display.BitmapData;
 import haxe.Json;
 import org.flixel.FlxPoint;
 import org.flixel.system.layer.Atlas;
@@ -13,7 +13,7 @@ import org.flixel.system.layer.TileSheetData;
 
 class TexturePackerData
 {
-	public var frames:Hash<Int>;
+	public var frames:Map<String, Int>;
 	public var sprites:Array<FlxFrame>;
 
 	public var data:Dynamic;
@@ -22,7 +22,7 @@ class TexturePackerData
 
 	public function new(description:String, assetName:String)
 	{
-		this.frames = new Hash<Int>();
+		this.frames = new Map<String, Int>();
 		this.sprites = new Array<FlxFrame>();
 		
 		this.assetName = assetName;

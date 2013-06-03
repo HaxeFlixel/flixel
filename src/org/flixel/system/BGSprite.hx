@@ -61,8 +61,7 @@ class BGSprite extends FlxSprite
 			}
 			
 			#if !js
-			var isColoredCamera:Bool = camera.isColored();
-			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
 			#else
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
 			#end
@@ -88,20 +87,11 @@ class BGSprite extends FlxSprite
 			currDrawData[currIndex++] = csy;
 			
 			#if !js
-			if (isColored || isColoredCamera)
+			if (isColored)
 			{
-				if (isColoredCamera)
-				{
-					currDrawData[currIndex++] = _red * camera.red; 
-					currDrawData[currIndex++] = _green * camera.green;
-					currDrawData[currIndex++] = _blue * camera.blue;
-				}
-				else
-				{
-					currDrawData[currIndex++] = _red; 
-					currDrawData[currIndex++] = _green;
-					currDrawData[currIndex++] = _blue;
-				}
+				currDrawData[currIndex++] = _red; 
+				currDrawData[currIndex++] = _green;
+				currDrawData[currIndex++] = _blue;
 			}
 			currDrawData[currIndex++] = alpha;
 			#else

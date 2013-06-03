@@ -1,10 +1,10 @@
 package org.flixel;
 
-import nme.events.Event;
-import nme.events.MouseEvent;
-import nme.events.TouchEvent;
-import nme.Lib;
-import nme.media.Sound;
+import flash.events.Event;
+import flash.events.MouseEvent;
+import flash.events.TouchEvent;
+import flash.Lib;
+import flash.media.Sound;
 import org.flixel.system.input.FlxTouch;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.Atlas;

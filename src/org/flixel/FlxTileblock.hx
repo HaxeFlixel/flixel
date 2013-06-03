@@ -1,9 +1,9 @@
 package org.flixel;
 
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import org.flixel.system.layer.DrawStackItem;
 
 /**
@@ -20,6 +20,9 @@ class FlxTileblock extends FlxSprite
 	
 	private var _tileIndices:Array<Int>;
 	#end
+	
+	private var _repeatX:Int = 0;
+	private var _repeatY:Int = 0;
 	
 	/**
 	 * Creates a new <code>FlxBlock</code> object with the specified position and size.
@@ -53,7 +56,7 @@ class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
+	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0, RepeatX:Int = 1, RepeatY:Int = 1):FlxTileblock
 	{
 		if (TileGraphic == null)
 		{
@@ -62,9 +65,6 @@ class FlxTileblock extends FlxSprite
 		
 		//First create a tile brush
 		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
-		#if !flash
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
-		#end
 		var spriteWidth:Int = Std.int(sprite.width);
 		var spriteHeight:Int = Std.int(sprite.height);
 		var total:Int = sprite.frames + Empties;
@@ -100,6 +100,10 @@ class FlxTileblock extends FlxSprite
 		var destinationY:Int = 0;
 		var widthInTiles:Int = Std.int(width / spriteWidth);
 		var heightInTiles:Int = Std.int(height / spriteHeight);
+		
+		_repeatX = (RepeatX >= 0 ) ? RepeatX : 0;
+		_repeatY = (RepeatY >= 0) ? RepeatY : 0;
+		
 		#if !flash
 		if (_tileData != null)
 		{
@@ -113,7 +117,8 @@ class FlxTileblock extends FlxSprite
 		}
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
-		_pixels = FlxG.addBitmap(TileGraphic, false, false, null, _tileWidth, _tileHeight);
+		_pixels = FlxG.addTilemapBitmap(TileGraphic, false, false, null, _tileWidth, _tileHeight, _repeatX, _repeatY);
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		frameWidth = Std.int(width);
 		frameHeight = Std.int(height);
 		resetHelpers();
@@ -203,8 +208,7 @@ class FlxTileblock extends FlxSprite
 		{
 			camera = cameras[i++];
 			#if !js
-			var isColoredCamera:Bool = camera.isColored();
-			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
 			#else
 			var useAlpha:Bool = (alpha < 1);
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
@@ -225,31 +229,12 @@ class FlxTileblock extends FlxSprite
 			_point.y = Math.floor(_point.y);
 			#end
 			
-			var redMult:Float = 1;
-			var greenMult:Float = 1;
-			var blueMult:Float = 1;
-			
-			#if !js
-			if (isColoredCamera)
-			{
-				redMult = _red * camera.red; 
-				greenMult = _green * camera.green;
-				blueMult = _blue * camera.blue;
-			}
-			else
-			{
-				redMult = _red; 
-				greenMult = _green;
-				blueMult = _blue;
-			}
-			#end
-			
 			if (_tileData != null)
 			{
-				var csx : Float = 1;
+				var csx : Float = 1.01;
 				var ssy : Float = 0;
 				var ssx : Float = 0;
-				var csy : Float = 1;
+				var csy : Float = 1.01;
 				var x1 : Float = 0;
 				var y1 : Float = 0;
 
@@ -259,10 +244,14 @@ class FlxTileblock extends FlxSprite
 					cos = Math.cos(radians);
 					sin = Math.sin(radians);
 					
-					csx = cos * scale.x;
-					ssy = sin * scale.y;
-					ssx = sin * scale.x;
-					csy = cos * scale.y;
+					// tilemap tearing hack
+					var sx:Float = 1.01 * scale.x;
+					var sy:Float = 1.01 * scale.y;
+					
+					csx = cos * sx;
+					ssy = sin * sy;
+					ssx = sin * sx;
+					csy = cos * sy;
 					
 					x1 = (origin.x - _halfWidth);
 					y1 = (origin.y - _halfHeight);
@@ -287,11 +276,11 @@ class FlxTileblock extends FlxSprite
 					currDrawData[currIndex++] = csy;
 
 					#if !js
-					if (isColored || isColoredCamera)
+					if (isColored)
 					{
-						currDrawData[currIndex++] = redMult; 
-						currDrawData[currIndex++] = greenMult;
-						currDrawData[currIndex++] = blueMult;
+						currDrawData[currIndex++] = _red; 
+						currDrawData[currIndex++] = _green;
+						currDrawData[currIndex++] = _blue;
 					}
 					currDrawData[currIndex++] = alpha;
 					#else
@@ -322,7 +311,7 @@ class FlxTileblock extends FlxSprite
 	{
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
+			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, null, 0, 0, 0, 0, _repeatX + 1, _repeatY + 1);
 			
 			if (_tileData != null)
 			{

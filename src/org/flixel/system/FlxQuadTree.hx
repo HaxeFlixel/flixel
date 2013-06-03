@@ -1,6 +1,6 @@
 package org.flixel.system;
 
-import nme.system.System;
+import flash.system.System;
 import org.flixel.FlxBasic;
 import org.flixel.FlxObject;
 import org.flixel.FlxRect;

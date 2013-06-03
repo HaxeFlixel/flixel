@@ -1,7 +1,6 @@
 package org.flixel.addons;
 
-import nme.display.BitmapInt32;
-import nme.geom.ColorTransform;
+import flash.geom.ColorTransform;
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
@@ -110,15 +109,9 @@ class NestedSprite extends FlxSprite
 			Child._parentAlpha = this.alpha;
 			Child.alpha = Child.alpha;
 
-			#if !neko
 			var thisRed:Float = (_color >> 16) / 255;
 			var thisGreen:Float = (_color >> 8 & 0xff) / 255;
 			var thisBlue:Float = (_color & 0xff) / 255;
-			#else
-			var thisRed:Float = (_color.rgb >> 16) / 255;
-			var thisGreen:Float = (_color.rgb >> 8 & 0xff) / 255;
-			var thisBlue:Float = (_color.rgb & 0xff) / 255;
-			#end
 			
 			Child._parentRed = thisRed;
 			Child._parentGreen = thisGreen;
@@ -389,64 +382,17 @@ class NestedSprite extends FlxSprite
 		return alpha;
 	}
 	
-	#if flash
-	override private function set_color(Color:UInt):UInt
-	#else
-	override private function set_color(Color:BitmapInt32):BitmapInt32
-	#end
+	override private function set_color(Color:Int):Int
 	{
-		#if neko
-		var combinedRed:Float = (Color.rgb >> 16) * _parentRed / 255;
-		var combinedGreen:Float = (Color.rgb >> 8 & 0xff) * _parentGreen / 255;
-		var combinedBlue:Float = (Color.rgb & 0xff) * _parentBlue / 255;
-		#else
 		Color &= 0x00ffffff;
 		
 		var combinedRed:Float = (Color >> 16) * _parentRed / 255;
 		var combinedGreen:Float = (Color >> 8 & 0xff) * _parentGreen / 255;
 		var combinedBlue:Float = (Color & 0xff) * _parentBlue / 255;
-		#end
 		
 		var combinedColor:Int = Std.int(combinedRed * 255) << 16 | Std.int(combinedGreen * 255) << 8 | Std.int(combinedBlue * 255);
 		
-	#if neko
-		if (_color.rgb == combinedColor)
-		{
-			return _color;
-		}
-		_color = {rgb: combinedColor, a: 255};
-		if ((alpha != 1) || (_color.rgb != 0xffffff))
-		{
-			if (_colorTransform == null)
-			{
-				_colorTransform = new ColorTransform(combinedRed, combinedGreen, combinedBlue, alpha);
-			}
-			else
-			{
-				_colorTransform.redMultiplier = combinedRed;
-				_colorTransform.greenMultiplier = combinedGreen;
-				_colorTransform.blueMultiplier = combinedBlue;
-				_colorTransform.alphaMultiplier = alpha;
-			}
-			_useColorTransform = true;
-		}
-		else
-		{
-			if (_colorTransform != null)
-			{
-				_colorTransform.redMultiplier = 1;
-				_colorTransform.greenMultiplier = 1;
-				_colorTransform.blueMultiplier = 1;
-				_colorTransform.alphaMultiplier = 1;
-			}
-			_useColorTransform = false;
-		}
-	#else
-		#if flash
-		if (_color == cast(combinedColor, UInt))
-		#else
 		if (_color == combinedColor)
-		#end
 		{
 			return _color;
 		}
@@ -477,7 +423,6 @@ class NestedSprite extends FlxSprite
 			}
 			_useColorTransform = false;
 		}
-	#end
 		
 		dirty = true;
 		
@@ -489,11 +434,7 @@ class NestedSprite extends FlxSprite
 		
 		for (child in _children)
 		{
-			#if !neko
 			var childColor:Int = child.color;
-			#else
-			var childColor:Int = child.color.rgb;
-			#end
 			
 			var childRed:Float = (childColor >> 16) / (255 * child._parentRed);
 			var childGreen:Float = (childColor >> 8 & 0xff) / (255 * child._parentGreen);
@@ -501,11 +442,7 @@ class NestedSprite extends FlxSprite
 			
 			combinedColor = Std.int(childRed * combinedRed * 255) << 16 | Std.int(childGreen * combinedGreen * 255) << 8 | Std.int(childBlue * combinedBlue * 255);
 			
-			#if !neko
 			child.color = combinedColor;
-			#else
-			child.color = {rgb: combinedColor, a: 255};
-			#end
 			
 			child._parentRed = combinedRed;
 			child._parentGreen = combinedGreen;

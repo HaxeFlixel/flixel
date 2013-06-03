@@ -1,7 +1,6 @@
 package org.flixel;
 
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
+import flash.display.BitmapData;
 import org.flixel.system.BGSprite;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
@@ -51,17 +50,8 @@ class FlxSubState extends FlxState
 	 * @param	bgColor		background color for this substate
 	 * @param	useMouse	whether to show mouse pointer or not
 	 */
-	#if flash
-	public function new(bgColor:UInt = 0x00000000, useMouse:Bool = false) 
-	#elseif neko
-	public function new(bgColor:BitmapInt32 = null, useMouse:Bool = false) 
-	#else
-	public function new(bgColor:Int = 0x00000000, useMouse:Bool = false) 
-	#end
+	public function new(bgColor:Int = 0x00000000, useMouse:Bool = false)
 	{
-		#if neko
-		if (bgColor == null) bgColor = FlxG.TRANSPARENT;
-		#end
 		super();
 		closeCallback = null;
 		
@@ -72,20 +62,12 @@ class FlxSubState extends FlxState
 		this.useMouse = useMouse;
 	}
 	
-	#if flash
-	override private function get_bgColor():UInt 
-	#else
-	override private function get_bgColor():BitmapInt32 
-	#end
+	override private function get_bgColor():Int 
 	{
 		return _bgColor;
 	}
 	
-	#if flash
-	override private function set_bgColor(value:UInt):UInt 
-	#else
-	override private function set_bgColor(value:BitmapInt32):BitmapInt32 
-	#end
+	override private function set_bgColor(value:Int):Int
 	{
 		_bgColor = value;
 		#if !flash

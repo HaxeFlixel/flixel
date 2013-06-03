@@ -1,19 +1,18 @@
 package org.flixel;
 
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
-import nme.display.Graphics;
-import nme.display.Sprite;
-import nme.display.Stage;
-import nme.display.StageDisplayState;
-import nme.errors.Error;
-import nme.geom.Matrix;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.media.Sound;
-import nme.media.SoundTransform;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Graphics;
+import flash.display.Sprite;
+import flash.display.Stage;
+import flash.display.StageDisplayState;
+import flash.errors.Error;
+import flash.geom.Matrix;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import flash.media.Sound;
+import flash.media.SoundTransform;
 import org.flixel.system.debug.Console;
 import org.flixel.system.debug.LogStyle; 
 import org.flixel.system.debug.Log;
@@ -65,11 +64,7 @@ class FlxG
 	 */
 	public static var tweener:FlxBasic = new FlxBasic();
 	
-	#if neko
-	public static var bgColor(get_bgColor, set_bgColor):BitmapInt32;
-	#else
 	public static var bgColor(get_bgColor, set_bgColor):Int;
-	#end
 	
 	public static var flashFramerate(get_flashFramerate, set_flashFramerate):Int;
 	
@@ -85,13 +80,13 @@ class FlxG
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
-	static public inline var LIBRARY_MAJOR_VERSION:String = "1";
+	static public inline var LIBRARY_MAJOR_VERSION:String = "2";
 	
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "10-dev";
+	static public inline var LIBRARY_MINOR_VERSION:String = "0.0-alpha.2";
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -126,69 +121,39 @@ class FlxG
 	#end
 	
 	/**
-	 * Some handy color presets.  Less glaring than pure RGB full values.
-	 * Primarily used in the visual debugger mode for bounding box displays.
-	 * Red is used to indicate an active, movable, solid object.
+	 * Reference to FlxColorUtils.RED for backwards compatibility.
 	 */
-	#if neko
-	static public inline var RED:BitmapInt32 = { rgb: 0xff0012, a: 0xff };
-	#else
-	static public inline var RED:Int = 0xffff0012;
-	#end
+	static public inline var RED:Int = FlxColorUtils.RED;
 	/**
-	 * Green is used to indicate solid but immovable objects.
+	 * Reference to FlxColorUtils.GREEN for backwards compatibility.
 	 */
-	#if neko
-	static public inline var GREEN:BitmapInt32 = { rgb: 0x00f225, a: 0xff };
-	#else
-	static public inline var GREEN:Int = 0xff00f225;
-	#end
+	static public inline var GREEN:Int = FlxColorUtils.GREEN;
 	/**
-	 * Blue is used to indicate non-solid objects.
+	 * Reference to FlxColorUtils.BLUE for backwards compatibility.
 	 */
-	#if neko
-	static public inline var BLUE:BitmapInt32 = { rgb: 0x0090e9, a: 0xff };
-	#else
-	static public inline var BLUE:Int = 0xff0090e9;
-	#end
+	static public inline var BLUE:Int = FlxColorUtils.BLUE;
 	/**
-	 * Pink is used to indicate objects that are only partially solid, like one-way platforms.
+	 * Reference to FlxColorUtils.PINK for backwards compatibility. 
 	 */
-	#if neko
-	static public inline var PINK:BitmapInt32 = { rgb: 0xf01eff, a: 0xff };
-	#else
-	static public inline var PINK:Int = 0xfff01eff;
-	#end
+	static public inline var PINK:Int = FlxColorUtils.PINK;
 	/**
-	 * White... for white stuff.
+	 * Reference to FlxColorUtils.WHITE for backwards compatibility.
 	 */
-	#if neko
-	static public inline var WHITE:BitmapInt32 = { rgb: 0xffffff, a: 0xff };
-	#else
-	static public inline var WHITE:Int = 0xffffffff;
-	#end
+	static public inline var WHITE:Int = FlxColorUtils.WHITE;
 	/**
-	 * And black too.
+	 * Reference to FlxColorUtils.BLACK for backwards compatibility.
 	 */
-	#if neko
-	static public inline var BLACK:BitmapInt32 = {rgb: 0x000000, a: 0xff};
-	#else
-	static public inline var BLACK:Int = 0xff000000;
-	#end
+	static public inline var BLACK:Int = FlxColorUtils.BLACK;
 	/**
-	 * Totally transparent color. Usefull for creating transparent BitmapData
+	 * Reference to FlxColorUtils.TRANSPARENT for backwards compatibility. 
 	 */
-	#if neko
-	static public inline var TRANSPARENT:BitmapInt32 = {rgb: 0x000000, a: 0x00};
-	#else
-	static public inline var TRANSPARENT:Int = 0x00000000;
-	#end
+	static public inline var TRANSPARENT:Int = FlxColorUtils.TRANSPARENT;
 	
 	/**
 	 * Useful for rad-to-deg and deg-to-rad conversion.
 	 */
-	static public inline var DEG:Float = 180 / Math.PI;
-	static public inline var RAD:Float = Math.PI / 180;
+	static public var DEG:Float = 180 / Math.PI;
+	static public var RAD:Float = Math.PI / 180;
 	
 	/**
 	 * Internal tracker for game object.
@@ -198,6 +163,14 @@ class FlxG
 	 * Handy shared variable for implementing your own pause behavior.
 	 */
 	static public var paused:Bool;
+	/**
+	 * Whether the game should be paused when focus is lost or not. 
+	 * Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
+	 * pause screen. Override onFocus() and onFocusLost() for your own 
+	 * behaviour in your state
+	 * @default true 
+	 */
+	static public var autoPause:Bool;
 	/**
 	 * Whether you are running in Debug or Release mode.
 	 * Set automatically by <code>FlxPreloader</code> during startup.
@@ -250,21 +223,6 @@ class FlxG
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
 	 */
 	static public var globalSeed:Float;
-	/**
-	 * <code>FlxG.levels</code> and <code>FlxG.scores</code> are generic
-	 * global variables that can be used for various cross-state stuff.
-	 */
-	static public var levels:Array<Dynamic>;
-	static public var level:Int;
-	static public var scores:Array<Dynamic>;
-	static public var score:Int;
-	/**
-	 * <code>FlxG.saves</code> is a generic bucket for storing
-	 * FlxSaves so you can access them whenever you want.
-	 */
-	static public var saves:Array<Dynamic>; 
-	static public var save:Int;
-	
 	/**
 	 * A handy container for a background music object.
 	 */
@@ -322,7 +280,7 @@ class FlxG
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	static public var _cache:Hash<BitmapData>;
+	static public var _cache:Map<String, BitmapData>;
 	static public var _lastBitmapDataKey:String;
 
 	#if !FLX_NO_MOUSE
@@ -337,6 +295,26 @@ class FlxG
 	 * A reference to a <code>FlxKeyboard</code> object.  Important for input!
 	 */
 	static public var keys:FlxKeyboard;
+	/**
+	 * The key codes used to open the debugger. (via flash.ui.Keyboard)
+	 * @default [192, 220]
+	 */
+	static public var keyDebugger:Array<Int>;
+	/**
+	 * The key codes used to increase volume. (via flash.ui.Keyboard)
+	 * @default [107, 187]
+	 */
+	static public var keyVolumeUp:Array<Int>;
+	/**
+	 * The key codes used to decrease volume. (via flash.ui.Keyboard)
+	 * @default [109, 189]
+	 */
+	static public var keyVolumeDown:Array<Int>;
+	/**
+	 * The key codes used to mute / unmute the game. (via flash.ui.Keyboard)
+	 * @default [48, 96]
+	*/
+	static public var keyMute:Array<Int>; 
 	#end
 
 	#if !FLX_NO_TOUCH
@@ -361,7 +339,7 @@ class FlxG
 	
 	/**
 	 * Log data to the debugger. Example: <code>FlxG.log("Test", "1", "2", "3");</code> - will turn into "Test 1 2 3".
-	 * Infinite amount of arguments allowed, they will be pieced together to one String.
+	 * Infinite amount of arguments allowed, they will be pieced together to one String. 
 	 */
 	static public var log:Dynamic;
 	
@@ -375,7 +353,7 @@ class FlxG
 	
 	/**
 	 * Add a warning to the debugger. Example: <code>FlxG.warn("Test", "1", "2", "3");</code> - will turn into "[WARNING] Test 1 2 3".
-	 * Infinite amount of arguments allowed, they will be pieced together to one String.
+	 * Infinite amount of arguments allowed, they will be pieced together to one String. 
 	 */
 	static public var warn:Dynamic;
 	
@@ -389,7 +367,7 @@ class FlxG
 	
 	/**
 	 * Add an error to the debugger. Example: <code>FlxG.error("Test", "1", "2", "3");</code> - will turn into "[ERROR] Test 1 2 3".
-	 * Infinite amount of arguments allowed, they will be pieced together to one String.
+	 * Infinite amount of arguments allowed, they will be pieced together to one String. 
 	 */
 	static public var error:Dynamic;
 	
@@ -403,7 +381,7 @@ class FlxG
 	
 	/**
 	 * Add a notice to the debugger. Example: <code>FlxG.notice("Test", "1", "2", "3");</code> - will turn into "[NOTICE] Test 1 2 3".
-	 * Infinite amount of arguments allowed, they will be pieced together to one String.
+	 * Infinite amount of arguments allowed, they will be pieced together to one String. 
 	 */
 	static public var notice:Dynamic;
 	
@@ -417,17 +395,17 @@ class FlxG
 	
 	/**
 	 * Add an advanced log message to the debugger by also specifying a <code>LogStyle</code>. Backend to <code>FlxG.log(), FlxG.warn(), FlxG.error() and FlxG.notice()</code>.
-	 * @param	Data	Any Data to log.
-	 * @param	Style 	The <code>LogStyle</code> to use, for example <code>Log.STYLE_WARNING</code>. You can also create your own by importing the <code>LogStyle</code> class.
-	 */
+	 * @param  Data  Any Data to log.
+	 * @param  Style   The <code>LogStyle</code> to use, for example <code>Log.STYLE_WARNING</code>. You can also create your own by importing the <code>LogStyle</code> class.
+	 */ 
 	static public function advancedLog(Data:Dynamic, Style:LogStyle):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((_game != null) && (_game.debugger != null))
 		{
 			if (!Std.is(Data, Array))
-				Data = [Data];
-				
+				Data = [Data]; 
+			
 			_game.debugger.log.add(Data, Style);
 			
 			if (Style.errorSound != null)
@@ -812,9 +790,16 @@ class FlxG
 	}
 	
 	#if android
-	private static var _soundCache:Hash<Sound> = new Hash<Sound>();
+	private static var _soundCache:Map<String, Sound> = new Map<String, Sound>();
 	private static var _soundTransform:SoundTransform = new SoundTransform();
 	
+	/**
+	 * Method for sound caching on Android target.
+	 * Application may freeze for some time at first try to play sound if you don't use this method
+	 * 
+	 * @param	EmbeddedSound	Name of sound assets specified in your .nmml project file
+	 * @return	Cached Sound object
+	 */
 	static public function addSound(EmbeddedSound:String):Sound
 	{
 		if (_soundCache.exists(EmbeddedSound))
@@ -1013,20 +998,12 @@ class FlxG
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	#if flash
-	static public function createBitmap(Width:UInt, Height:UInt, Color:UInt, Unique:Bool = false, Key:String = null):BitmapData
-	#else
-	static public function createBitmap(Width:Int, Height:Int, Color:BitmapInt32, Unique:Bool = false, Key:String = null):BitmapData
-	#end
+	static public function createBitmap(Width:Int, Height:Int, Color:Int, Unique:Bool = false, Key:String = null):BitmapData
 	{
 		var key:String = Key;
 		if (key == null)
 		{
-			#if !neko
 			key = Width + "x" + Height + ":" + Color;
-			#else
-			key = Width + "x" + Height + ":" + Color.a + "." + Color.rgb;
-			#end
 			if (Unique && checkBitmapCache(key))
 			{
 				key = getUniqueBitmapKey(key);
@@ -1046,9 +1023,13 @@ class FlxG
 	 * @param	Reverse		Whether to generate a flipped version.
 	 * @param	Unique		Ensures that the bitmap data uses a new slot in the cache.
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
+	 * @param	FrameWidth
+	 * @param	FrameHeight
+	 * @param 	SpacingX
+	 * @param 	SpacingY
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	static public function addBitmap(Graphic:Dynamic, Reverse:Bool = false, Unique:Bool = false, Key:String = null, FrameWidth:Int = 0, FrameHeight:Int = 0):BitmapData
+	static public function addBitmap(Graphic:Dynamic, Reverse:Bool = false, Unique:Bool = false, Key:String = null, FrameWidth:Int = 0, FrameHeight:Int = 0, SpacingX:Int = 1, SpacingY:Int = 1):BitmapData
 	{
 		if (Graphic == null)
 		{
@@ -1079,9 +1060,9 @@ class FlxG
 		
 		var additionalKey:String = "";
 		#if !flash
-		if (FrameWidth != 0 || FrameHeight != 0/* || isBitmap*/)
+		if (FrameWidth != 0 || FrameHeight != 0 || SpacingX != 1 || SpacingY != 1)
 		{
-			additionalKey = "FrameSize:" + FrameWidth + "_" + FrameHeight;
+			additionalKey = "FrameSize:" + FrameWidth + "_" + FrameHeight + "_Spacing:" + SpacingX + "_" + SpacingY;
 		}
 		#end
 		
@@ -1144,19 +1125,19 @@ class FlxG
 				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
 				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
 				
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames, bd.height + numVerticalFrames, true, FlxG.TRANSPARENT);
+				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColorUtils.TRANSPARENT);
 				
 				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 				var tempPoint:Point = new Point();
 				
 				for (i in 0...(numHorizontalFrames))
 				{
-					tempPoint.x = i * (FrameWidth + 1);
+					tempPoint.x = i * (FrameWidth + SpacingX);
 					tempRect.x = i * FrameWidth;
 					
 					for (j in 0...(numVerticalFrames))
 					{
-						tempPoint.y = j * (FrameHeight + 1);
+						tempPoint.y = j * (FrameHeight + SpacingY);
 						tempRect.y = j * FrameHeight;
 						tempBitmap.copyPixels(bd, tempRect, tempPoint);
 					}
@@ -1170,7 +1151,7 @@ class FlxG
 				var newPixels:BitmapData = new BitmapData(bd.width * 2, bd.height, true, 0x00000000);
 				newPixels.draw(bd);
 				var mtx:Matrix = new Matrix();
-				mtx.scale(-1,1);
+				mtx.scale( -1, 1);
 				mtx.translate(newPixels.width, 0);
 				newPixels.draw(bd, mtx);
 				bd = newPixels;
@@ -1187,6 +1168,66 @@ class FlxG
 		
 		_lastBitmapDataKey = key;
 		return _cache.get(key);
+	}
+	
+	/**
+	 * Helper method for loading and modifying tilesheets for tilemaps and tileblocks. It should help resolve tilemap tearing issue for native targets
+	 * @param	Graphic		The image file that you want to load.
+	 * @param	Reverse		Whether to generate a flipped version.
+	 * @param	Unique		Ensures that the bitmap data uses a new slot in the cache.
+	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
+	 * @param	FrameWidth
+	 * @param	FrameHeight
+	 * @param	RepeatX
+	 * @param	RepeatY
+	 * @return
+	 */
+	static public function addTilemapBitmap(Graphic:Dynamic, Reverse:Bool = false, Unique:Bool = false, Key:String = null, FrameWidth:Int = 0, FrameHeight:Int = 0, RepeatX:Int = 1, RepeatY:Int = 1):BitmapData
+	{
+		var bitmap:BitmapData = FlxG.addBitmap(Graphic, Reverse, Unique, Key, FrameWidth, FrameHeight, RepeatX + 1, RepeatY + 1);
+		
+		// Now modify tilemap image - insert repeatable pixels
+		var extendedFrameWidth:Int = FrameWidth + RepeatX + 1;
+		var extendedFrameHeight:Int = FrameHeight + RepeatY + 1;
+		var numCols:Int = Std.int(bitmap.width / extendedFrameWidth);
+		var numRows:Int = Std.int(bitmap.height / extendedFrameHeight);
+		var tempRect:Rectangle = new Rectangle();
+		var tempPoint:Point = new Point();
+		var pixelColor:Int;
+		
+		tempRect.y = 0;
+		tempRect.width = 1;
+		tempRect.height = bitmap.height;
+		tempPoint.y = 0;
+		for (i in 0...numCols)
+		{
+			var tempX:Int = i * extendedFrameWidth + FrameWidth;
+			tempRect.x = tempX - 1;
+			
+			for (j in 0...RepeatX)
+			{
+				tempPoint.x = tempX + j;
+				bitmap.copyPixels(bitmap, tempRect, tempPoint);
+			}
+		}
+		
+		tempRect.x = 0;
+		tempRect.width = bitmap.width;
+		tempRect.height = 1;
+		tempPoint.x = 0;
+		for (i in 0...numRows)
+		{
+			var tempY:Int = i * extendedFrameHeight + FrameHeight;
+			tempRect.y = tempY - 1;
+			
+			for (j in 0...RepeatY)
+			{
+				tempPoint.y = tempY + j;
+				bitmap.copyPixels(bitmap, tempRect, tempPoint);
+			}
+		}
+		
+		return bitmap;
 	}
 	
 	/**
@@ -1229,7 +1270,7 @@ class FlxG
 	
 	private static function fromAssetsCache(bmd:BitmapData):Bool
 	{
-		var cachedBitmapData:Hash<BitmapData> = Assets.cachedBitmapData;
+		var cachedBitmapData:Map<String, BitmapData> = Assets.cachedBitmapData;
 		if (cachedBitmapData != null)
 		{
 			for (key in cachedBitmapData.keys())
@@ -1281,11 +1322,11 @@ class FlxG
 				}
 			}
 		}
-		_cache = new Hash();
+		_cache = new Map();
 	}
 	
 	/**
-	 * Clears nme.Assests.cachedBitmapData. Use it only when you need it and know what are you doing.
+	 * Clears flash.Assests.cachedBitmapData. Use it only when you need it and know what are you doing.
 	 */
 	static public function clearAssetsCache():Void
 	{
@@ -1428,19 +1469,8 @@ class FlxG
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	#if flash
-	static public function flash(?Color:UInt = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#else
-	static public function flash(?Color:BitmapInt32, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#end
+	static public function flash(Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	{
-		#if !flash
-		if (Color == null)
-		{
-			Color = WHITE;
-		}
-		#end
-		
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
@@ -1457,19 +1487,8 @@ class FlxG
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	#if flash
-	static public function fade(?Color:UInt = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#else
-	static public function fade(?Color:BitmapInt32, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#end
+	static public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	{
-		#if !flash
-		if (Color == null)
-		{
-			Color = FlxG.BLACK;
-		}
-		#end
-		
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
 		while (i < l)
@@ -1501,15 +1520,11 @@ class FlxG
 	 * Get functionality is equivalent to FlxG.camera.bgColor.
 	 * Set functionality sets the background color of all the current cameras.
 	 */
-	#if flash
-	static private function get_bgColor():UInt
-	#else
-	static private function get_bgColor():BitmapInt32
-	#end
+	static private function get_bgColor():Int
 	{
 		if (FlxG.camera == null)
 		{
-			return FlxG.BLACK;
+			return FlxColorUtils.BLACK;
 		}
 		else
 		{
@@ -1517,11 +1532,7 @@ class FlxG
 		}
 	}
 	
-	#if flash
-	static private function set_bgColor(Color:UInt):UInt
-	#else
-	static private function set_bgColor(Color:BitmapInt32):BitmapInt32
-	#end
+	static private function set_bgColor(Color:Int):Int
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.length;
@@ -1708,9 +1719,6 @@ class FlxG
 		
 		FlxG.mobile = false;
 		
-		FlxG.levels = new Array();
-		FlxG.scores = new Array();
-		
 		#if !FLX_NO_DEBUG
 		log = Reflect.makeVarArgs(_log);
 		warn = Reflect.makeVarArgs(_warn);
@@ -1732,10 +1740,6 @@ class FlxG
 		FlxG.clearBitmapCache();
 		FlxG.resetInput();
 		FlxG.destroySounds(true);
-		FlxG.levels = [];
-		FlxG.scores = [];
-		FlxG.level = 0;
-		FlxG.score = 0;
 		FlxG.paused = false;
 		FlxG.timeScale = 1.0;
 		FlxG.elapsed = 0;
@@ -1779,14 +1783,12 @@ class FlxG
 			cam.clearDrawStack();
 			cam._canvas.graphics.clear();
 			// clearing camera's debug sprite
-			cam._effectsLayer.graphics.clear();
+			cam._debugLayer.graphics.clear();
 			#end
 			
 			#if flash
 			cam.fill(cam.bgColor);
 			cam.screen.dirty = true;
-			#elseif neko
-			cam.fill(cam.bgColor, true, cam.bgColor.a / 255);
 			#else
 			cam.fill((cam.bgColor & 0x00ffffff), true, ((cam.bgColor >> 24) & 255) / 255);
 			#end

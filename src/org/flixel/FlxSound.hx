@@ -1,11 +1,11 @@
 package org.flixel;
 
-import nme.Assets;
-import nme.events.Event;
-import nme.media.Sound;
-import nme.media.SoundChannel;
-import nme.media.SoundTransform;
-import nme.net.URLRequest;
+import openfl.Assets;
+import flash.events.Event;
+import flash.media.Sound;
+import flash.media.SoundChannel;
+import flash.media.SoundTransform;
+import flash.net.URLRequest;
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.

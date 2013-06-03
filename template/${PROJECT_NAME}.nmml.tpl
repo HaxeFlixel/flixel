@@ -3,7 +3,7 @@
 	<app title="${PROJECT_NAME}" file="${PROJECT_NAME}" main="Main" version="0.0.1" company="Zaphod" />
 	
 	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="portrait" resizable="true" if="web" />
-	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="landscape" fullscreen="false" unless="web" />
+	<window width="${WIDTH}" height="${HEIGHT}" fps="30" orientation="landscape" fullscreen="false" vsync="true" unless="web" />
  	
 	<set name="BUILD_DIR" value="export" />
 	
@@ -46,24 +46,30 @@
 	
 	<icon name="assets/HaxeFlixel.svg" />
 	
-	<haxelib name="nme" />
+	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
     <!--Disable the Flixel core debugger-->
-    <!--<set name="FLX_NO_DEBUG" />-->
+    <!--<haxedef name="FLX_NO_DEBUG" />-->
 	
     <!--Disable the Flixel core recording system if you're not using it-->
-    <!--<set name="FLX_NO_RECORD" />-->
+    <!--<haxedef name="FLX_NO_RECORD" />-->
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-    <!--<set name="FLX_NO_MOUSE" if="mobile" />-->
-    <!--<set name="FLX_NO_KEYBOARD" if="mobile" />-->
-    <!--<set name="FLX_NO_TOUCH" if="desktop" />-->
-    <!--<set name="FLX_NO_JOYSTICK" />-->
-    <!--<set name="thread" />-->
+    <!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->
+    <!--<haxedef name="FLX_NO_KEYBOARD" if="mobile" />-->
+    <!--<haxedef name="FLX_NO_TOUCH" if="desktop" />-->
+    <!--<haxedef name="FLX_NO_JOYSTICK" />-->
+    <!--<haxedef name="thread" />-->
+	
+	<!--Disable the Flixel core sound tray-->
+	<!--<haxedef name="FLX_NO_SOUND_TRAY" />-->
+
+	<!--Disable the Flixel core focus lost screen-->
+	<!--<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />-->
 	
 	<!--Enable right and middle click support for the mouse. Requires flash player version 11.2 or higher. Doesn't work for HTML5. -->
-	<!--<set name="FLX_MOUSE_ADVANCED" />-->
+	<!--<haxedef name="FLX_MOUSE_ADVANCED" />-->
 	<!--<app swf-version="11.2" />--> 
 
 </project>

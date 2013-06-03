@@ -1,7 +1,7 @@
 package org.flixel;
 
-import nme.display.Bitmap;
-import nme.display.BlendMode;
+import flash.display.Bitmap;
+import flash.display.BlendMode;
 
 class FlxEmitter extends FlxTypedEmitter<FlxParticle>
 {

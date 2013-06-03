@@ -1,6 +1,5 @@
 package org.flixel.system;
 
-import haxe.FastList;
 import org.flixel.FlxObject;
 
 /**

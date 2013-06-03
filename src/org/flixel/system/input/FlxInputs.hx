@@ -3,8 +3,8 @@ package org.flixel.system.input;
 import org.flixel.FlxGame;
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
-import nme.ui.Multitouch;
-import nme.ui.MultitouchInputMode;
+import flash.ui.Multitouch;
+import flash.ui.MultitouchInputMode;
 
 class FlxInputs {
 	

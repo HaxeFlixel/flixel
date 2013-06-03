@@ -5,10 +5,6 @@ import org.flixel.FlxObject;
 import org.flixel.FlxState;
 import org.flixel.FlxU;
 
-#if haxe3
-private typedef Hash<T> = Map<String,T>;
-#end 
-
 class ConsoleCommands
 {
 	private var _console:Console;
@@ -63,7 +59,7 @@ class ConsoleCommands
 			#end
 			
 			cLog("System commands: \nlog, clearLog, clearHistory, help, resetState, switchState, resetGame, " + fs + " watchMouse, visualDebug, pause, play, playMusic, bgColor, shake, create, set, call, close, listObjects, listFunctions, watch, unwatch");
-			cLog("help (Command) for more information about a specific command");
+			cLog("help (Command) for more information about a specific command"); 
 		}
 		else {
 			cLog("help: " + Command);

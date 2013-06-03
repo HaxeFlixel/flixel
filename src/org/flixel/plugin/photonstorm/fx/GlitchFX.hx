@@ -16,7 +16,6 @@ package org.flixel.plugin.photonstorm.fx;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import nme.display.BitmapInt32;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxColor;
@@ -42,19 +41,8 @@ class GlitchFX extends BaseFX
 		super();
 	}
 	
-	#if flash
-	public function createFromFlxSprite(source:FlxSprite, maxGlitch:Int, maxSkip:Int, autoUpdate:Bool = false, ?backgroundColor:UInt = 0x0):FlxSprite
-	#else
-	public function createFromFlxSprite(source:FlxSprite, maxGlitch:Int, maxSkip:Int, autoUpdate:Bool = false, ?backgroundColor:BitmapInt32):FlxSprite
-	#end
+	public function createFromFlxSprite(source:FlxSprite, maxGlitch:Int, maxSkip:Int, autoUpdate:Bool = false, backgroundColor:Int = 0x0):FlxSprite
 	{
-		#if !flash
-		if (backgroundColor == null)
-		{
-			backgroundColor = FlxG.TRANSPARENT;
-		}
-		#end
-		
 		#if flash
 		sprite = new FlxSprite(source.x, source.y).makeGraphic(Std.int(source.width + maxGlitch), Std.int(source.height), backgroundColor);
 		canvas = new BitmapData(Std.int(sprite.width), Std.int(sprite.height), true, backgroundColor);
@@ -171,7 +159,7 @@ class GlitchSprite extends FlxSprite
 	/**
 	 * storage for each frame's lines tile IDs
 	 */
-	private var _imageTileIDs:IntHash<Array<Int>>;
+	private var _imageTileIDs:Map<Int, Array<Int>>;
 	
 	private var _bgRed:Float;
 	private var _bgGreen:Float;
@@ -183,7 +171,7 @@ class GlitchSprite extends FlxSprite
 	
 	public var sourceFrame:Int;
 	
-	public function new(Source:FlxSprite, MaxGlitch:Int, GlitchSkip:Int, BgColor:BitmapInt32)
+	public function new(Source:FlxSprite, MaxGlitch:Int, GlitchSkip:Int, BgColor:Int)
 	{
 		super();
 		
@@ -193,7 +181,7 @@ class GlitchSprite extends FlxSprite
 		this.maxGlitch = MaxGlitch;
 		this.glitchSkip = GlitchSkip;
 		
-		_imageTileIDs = new IntHash<Array<Int>>();
+		_imageTileIDs = new Map<Int, Array<Int>>();
 		imageLines = new Array<ImageLine>();
 		
 		makeGraphic(1, 1, FlxG.WHITE);
@@ -288,15 +276,11 @@ class GlitchSprite extends FlxSprite
 		_imageTileIDs = null;
 	}
 	
-	override public function setColor(Color:BitmapInt32):BitmapInt32 
+	override public function set_color(Color:Int):Int 
 	{
-		var col = super.setColor(Color);
+		var col = super.set_color(Color);
 		
-		#if !neko
 		if (_color < 0xffffff)
-		#else
-		if (_color.rgb < 0xffffff)
-		#end
 		{
 			if (_imageTileSheetData != null)
 			{
@@ -342,11 +326,7 @@ class GlitchSprite extends FlxSprite
 		var lineGreen:Float = 1;
 		var lineBlue:Float = 1;
 		
-		#if !neko
 		if (_color < 0xffffff)
-		#else
-		if (_color.rgb < 0xffffff)
-		#end
 		{
 			lineRed = _red;
 			lineGreen = _green;

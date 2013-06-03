@@ -1,6 +1,6 @@
 package org.flixel.addons;
 
-import nme.display.Sprite;
+import flash.display.Sprite;
 import org.flixel.FlxSprite;
 import org.flixel.FlxTypedGroup;
 
@@ -18,7 +18,10 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	
     private function set_x(nx:Float):Float
     {
-        var offset:Float = nx - x;
+        #if neko
+		if (x == null)	x = 0;
+		#end
+		var offset:Float = nx - x;
         transformChildren(xTransform, offset);
         x = nx;
 		return nx;
@@ -31,7 +34,10 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	
     private function set_y(ny:Float):Float
     {
-        var offset:Float = ny - y;
+        #if neko
+		if (y == null)	y = 0;
+		#end
+		var offset:Float = ny - y;
         transformChildren(yTransform, offset);
         y = ny;
 		return ny;
@@ -79,10 +85,9 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
     public function transformChildren(lambda:FlxSprite->Dynamic->Void, value:Dynamic = 0):Void
     {
         var sprite:FlxSprite;
-        var i:Int = 0;
-        while(i < length)
+        for (i in 0...length)
         {
-            sprite = members[i++];
+            sprite = members[i];
             if (sprite != null && sprite.exists)
             {
 				lambda(sprite, value);
@@ -105,11 +110,10 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 		
 		var sprite:FlxSprite;
 		var lambda:FlxSprite->Dynamic->Void;
-        var i:Int = 0;
 		var j:Int;
-        while(i < length)
+        for (i in 0...length)
         {
-            sprite = members[i++];
+            sprite = members[i];
             if (sprite != null && sprite.exists)
             {
 				for (j in 0...numProps)

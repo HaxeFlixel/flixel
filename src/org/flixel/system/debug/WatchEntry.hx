@@ -1,16 +1,16 @@
 package org.flixel.system.debug;
 
-import nme.Assets;
-import nme.events.KeyboardEvent;
-import nme.events.MouseEvent;
-import nme.text.TextField;
-import nme.text.TextFieldType;
-import nme.text.TextFormat;
+import openfl.Assets;
+import flash.events.KeyboardEvent;
+import flash.events.MouseEvent;
+import flash.text.TextField;
+import flash.text.TextFieldType;
+import flash.text.TextFormat;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxU;
 import org.flixel.FlxPoint;
-import org.flixel.system.FlxDebugger;
+import org.flixel.system.FlxDebugger; 
 
 /**
  * Helper class for the debugger overlay's Watch window.
@@ -74,7 +74,7 @@ class WatchEntry
 		for (i in 0...l)
 		{
 			tempVarName = tempArr[i];
-			if (!Reflect.hasField(tempObj, tempVarName)) 
+			if (Reflect.getProperty(tempObj, tempVarName) == null)
 			{
 				FlxG.error("Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
 				tempVarName = null;
@@ -170,13 +170,13 @@ class WatchEntry
 	{
 		if (editing)
 			return false;
-			
+		
 		var property:Dynamic = Reflect.getProperty(object, field);
 		
 		if (Std.is(property, FlxPoint)) 
 			valueDisplay.text = FlxU.formatFlxPoint(property, FlxDebugger.pointPrecision);
 		else
-			valueDisplay.text = Std.string(property);
+			valueDisplay.text = Std.string(property); 
 		
 		return true;
 	}
@@ -229,25 +229,25 @@ class WatchEntry
 	public function submit():Void
 	{
 		var property:Dynamic = Reflect.getProperty(object, field);
-	    
+		
 		// Workaround to be able to edit FlxPoints
-	    if (Std.is(property, FlxPoint)) {
+		if (Std.is(property, FlxPoint)) {
 			var xString:String = valueDisplay.text.split(" |")[0];
 			xString = xString.substring(3, xString.length);
 			var xValue:Float = Std.parseFloat(xString);
-	      
+			
 			var yString:String = valueDisplay.text.split("| ")[1];
 			yString = yString.substring(3, yString.length);
 			var yValue:Float = Std.parseFloat(yString);
-	     
+			
 			if (!Math.isNaN(xValue)) 
 				Reflect.setField(property, "x", xValue);
 			if (!Math.isNaN(yValue)) 
 				Reflect.setField(property, "y", yValue);
 		}
-	    else
-			Reflect.setProperty(object, field, valueDisplay.text);
-
+		else
+			Reflect.setProperty(object, field, valueDisplay.text); 
+		
 		doneEditing();
 	}
 	

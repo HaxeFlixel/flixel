@@ -20,8 +20,7 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import nme.Assets;
-import nme.display.BitmapInt32;
+import openfl.Assets;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
@@ -97,11 +96,7 @@ class FlxBar extends FlxSprite
 	private var filledBarRect:Rectangle;
 	private var filledBarPoint:Point;
 	
-	#if flash
-	private var fillDirection:UInt;
-	#else
 	private var fillDirection:Int;
-	#end
 	private var fillHorizontal:Bool;
 	
 	public static inline var FILL_LEFT_TO_RIGHT:Int = 1;
@@ -178,11 +173,7 @@ class FlxBar extends FlxSprite
 		
 		setRange(min, max);
 		
-		#if !neko
 		createFilledBar(0xff005100, 0xff00F400, border);
-		#else
-		createFilledBar({rgb: 0x005100, a: 0xff}, {rgb: 0x00F400, a: 0xff}, border);
-		#end
 		
 		emptyKill = false;
 	}
@@ -382,11 +373,11 @@ class FlxBar extends FlxSprite
 	}
 	#end
 	
-	public var stats(get_stats, null):Hash<Dynamic>;
+	public var stats(get_stats, null):Map<String, Dynamic>;
 	
-	private function get_stats():Hash<Dynamic>
+	private function get_stats():Map<String, Dynamic>
 	{
-		var data = new Hash<Dynamic>();
+		var data = new Map<String, Dynamic>();
 		data.set("min", min);
 		data.set("max", max);
 		data.set("range", range);
@@ -406,35 +397,17 @@ class FlxBar extends FlxSprite
 	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 */
-	#if flash
-	public function createFilledBar(empty:UInt, fill:UInt, showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
-	#else
-	public function createFilledBar(empty:BitmapInt32, fill:BitmapInt32, showBorder:Bool = false, ?border:BitmapInt32):Void
-	#end
+	public function createFilledBar(empty:Int, fill:Int, showBorder:Bool = false, border:Int = 0xffffffff):Void
 	{
-		#if !flash
-		if (border == null)
-		{
-			border = FlxG.WHITE;
-		}
-		#end
-		
 		barType = BAR_FILLED;
 		
-		#if (cpp || js)
+		#if !flash
 		var emptyA:Int = (empty >> 24) & 255;
 		var emptyRGB:Int = empty & 0x00ffffff;
 		var fillA:Int = (fill >> 24) & 255;
 		var fillRGB:Int = fill & 0x00ffffff;
 		var borderA:Int = (border >> 24) & 255;
 		var borderRGB:Int = border & 0x00ffffff;
-		#elseif neko
-		var emptyA:Int = empty.a;
-		var emptyRGB:Int = empty.rgb;
-		var fillA:Int = fill.a;
-		var fillRGB:Int = fill.rgb;
-		var borderA:Int = border.a;
-		var borderRGB:Int = border.rgb;
 		#end
 		
 		#if !flash
@@ -533,19 +506,8 @@ class FlxBar extends FlxSprite
 	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 */
-	#if flash
-	public function createGradientBar(empty:Array<UInt>, fill:Array<UInt>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, ?border:UInt = 0xffffffff):Void
-	#else
-	public function createGradientBar(empty:Array<BitmapInt32>, fill:Array<BitmapInt32>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, ?border:BitmapInt32):Void
-	#end
+	public function createGradientBar(empty:Array<Int>, fill:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):Void
 	{
-		#if !flash
-		if (border == null)
-		{
-			border = FlxG.WHITE;
-		}
-		#end
-		
 		barType = BAR_GRADIENT;
 		
 		#if !flash
@@ -555,13 +517,8 @@ class FlxBar extends FlxSprite
 		var emptyKey:String = "Gradient: " + barWidth + " x " + barHeight + ", colors: [";
 		for (col in empty)
 		{
-			#if (cpp || js)
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
-			#elseif neko
-			colA = col.a;
-			colRGB = col.rgb;
-			#end
 			
 			emptyKey = emptyKey + colRGB + "_" + colA + ", ";
 		}
@@ -570,13 +527,8 @@ class FlxBar extends FlxSprite
 		var filledKey:String = "Gradient: " + barWidth + " x " + barHeight + ", colors: [";
 		for (col in fill)
 		{
-			#if (cpp || js)
 			colA = (col >> 24) & 255;
 			colRGB = col & 0x00ffffff;
-			#elseif neko
-			colA = col.a;
-			colRGB = col.rgb;
-			#end
 			
 			filledKey = filledKey + colRGB + "_" + colA + ", ";
 		}
@@ -584,13 +536,8 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-			#if (cpp || js)
 			var borderA:Int = (border >> 24) & 255;
 			var borderRGB:Int = border & 0x00ffffff;
-			#elseif neko
-			var borderA:Int = border.a;
-			var borderRGB:Int = border.rgb;
-			#end
 			
 			emptyKey = emptyKey + "border: " + borderA + "." + borderRGB;
 			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
@@ -682,27 +629,8 @@ class FlxBar extends FlxSprite
 	 * @param	emptyBackground		If no background (empty) image is given, use this colour value instead. 0xAARRGGBB format
 	 * @param	fillBackground		If no foreground (fill) image is given, use this colour value instead. 0xAARRGGBB format
 	 */
-	#if flash
-	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, ?emptyBackground:UInt = 0xff000000, ?fillBackground:UInt = 0xff00ff00):Void
-	#else
-	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, ?emptyBackground:BitmapInt32, ?fillBackground:BitmapInt32):Void
-	#end
+	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, emptyBackground:Int = 0xff000000, fillBackground:Int = 0xff00ff00):Void
 	{
-		#if !flash
-		if (emptyBackground == null)
-		{
-			emptyBackground = FlxG.BLACK;
-		}
-		if (fillBackground == null)
-		{
-			#if !neko
-			fillBackground = 0xff00ff00;
-			#else
-			fillBackground = { rgb: 0x00ff00, a: 0xff };
-			#end
-		}
-		#end
-		
 		var emptyBitmapData:BitmapData = FlxG.addBitmap(empty); 
 		var fillBitmapData:BitmapData = FlxG.addBitmap(fill);
 		
@@ -735,17 +663,10 @@ class FlxBar extends FlxSprite
 			}
 		}
 		
-		#if (cpp || js)
 		var emptyBackgroundA:Int = (emptyBackground >> 24) & 255;
 		var emptyBackgroundRGB:Int = emptyBackground & 0x00ffffff;
 		var fillBackgroundA:Int = (fillBackground >> 24) & 255;
 		var fillBackgroundRGB:Int = fillBackground & 0x00ffffff;
-		#elseif neko
-		var emptyBackgroundA:Int = emptyBackground.a;
-		var emptyBackgroundRGB:Int = emptyBackground.rgb;
-		var fillBackgroundA:Int = fillBackground.a;
-		var fillBackgroundRGB:Int = fillBackground.rgb;
-		#end
 		
 		#if !flash
 		key = key + "emptyBackground: " + emptyBackgroundA + "." + emptyBackgroundRGB;
@@ -910,11 +831,7 @@ class FlxBar extends FlxSprite
 	 * 
 	 * @param	direction 			One of the FlxBar.FILL_ constants (such as FILL_LEFT_TO_RIGHT, FILL_TOP_TO_BOTTOM etc)
 	 */
-	#if flash
-	public function setFillDirection(direction:UInt):Void
-	#else
 	public function setFillDirection(direction:Int):Void
-	#end
 	{
 		if (direction == FILL_LEFT_TO_RIGHT || direction == FILL_RIGHT_TO_LEFT || direction == FILL_HORIZONTAL_INSIDE_OUT || direction == FILL_HORIZONTAL_OUTSIDE_IN)
 		{
@@ -1137,17 +1054,7 @@ class FlxBar extends FlxSprite
 				continue;
 			}
 			#if !js
-			var isColoredCamera:Bool = camera.isColored();
-			var redMult:Float = _red;
-			var greenMult:Float = _green;
-			var blueMult:Float = _blue;
-			if (isColoredCamera)
-			{
-				redMult *= camera.red;
-				greenMult *= camera.green;
-				blueMult *= camera.blue;
-			}
-			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
 			#else
 			var useAlpha:Bool = (alpha < 0);
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
@@ -1202,11 +1109,11 @@ class FlxBar extends FlxSprite
 			currDrawData[currIndex++] = csy;
 
 			#if !js
-			if (isColored || isColoredCamera)
+			if (isColored)
 			{
-				currDrawData[currIndex++] = redMult;
-				currDrawData[currIndex++] = greenMult;
-				currDrawData[currIndex++] = blueMult;
+				currDrawData[currIndex++] = _red;
+				currDrawData[currIndex++] = _green;
+				currDrawData[currIndex++] = _blue;
 			}
 			currDrawData[currIndex++] = alpha;
 			#else
@@ -1245,11 +1152,11 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = csy;
 				
 				#if !js
-				if (isColored || isColoredCamera)
+				if (isColored)
 				{
-					currDrawData[currIndex++] = redMult; 
-					currDrawData[currIndex++] = greenMult;
-					currDrawData[currIndex++] = blueMult;
+					currDrawData[currIndex++] = _red; 
+					currDrawData[currIndex++] = _green;
+					currDrawData[currIndex++] = _blue;
 				}
 				currDrawData[currIndex++] = alpha;
 				#else

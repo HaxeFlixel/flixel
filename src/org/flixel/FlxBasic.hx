@@ -1,6 +1,6 @@
 package org.flixel;
 
-import nme.display.BitmapData;
+import flash.display.BitmapData;
 import org.flixel.plugin.texturepacker.TexturePackerData;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.Node;
