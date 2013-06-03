@@ -69,8 +69,8 @@ class FlxSprite extends FlxObject
 	 */
 	public var origin:FlxPoint;
 	/**
-	* If you changed the size of your sprite object after loading or making the graphic,
-	* you might need to offset the graphic away from the bound box to center it the way you want.
+	* Controls the position of the sprite's hitbox. Likely needs to be adjusted after
+	* changing a sprite's width or height.
 	*/
 	public var offset:FlxPoint;
 	
