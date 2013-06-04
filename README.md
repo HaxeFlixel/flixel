@@ -1,11 +1,15 @@
 About
 =
-[HaxeFlixel](http://www.haxeflixel.com/) is an open source 2d game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Haxe NME](http://www.haxenme.org/).
+[HaxeFlixel](http://www.haxeflixel.com/) is an open source 2d game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Open Flash Library](https://github.com/openfl).
 
-Please visit the official website at [www.haxeflixel.com](http://www.haxeflixel.com/) and our [Forum](http://www.haxeflixel.com/forum/).
+Please visit the official website for community support and resources at [www.haxeflixel.com](http://www.haxeflixel.com/).
+
+You can also chat with us on our [Forum](http://www.haxeflixel.com/forum/) or through IRC on the #haxeflixel on freenode channel.
 ______________________________________________________
 
-HaxeFlixel is based largely on the As3 version of Flixel written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) , [Flixel Github](https://github.com/AdamAtomic/flixel).
+HaxeFlixel founded and created by Alexander Hohlov also known on github as Beeblerox who continues to be the project lead and repository maintainer. The codebase started largely from a Haxe port of the As3 version of Flixel written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) , [Flixel Github](https://github.com/AdamAtomic/flixel).
+
+Special thanks to community contributors by github names Werdn, crazysam, impaler, ProG4mr, Gama11, sergey-miryanov and more.
 
 HaxeFlixel presents substantial enhancements from the original Flixel as3 code;
 <ul>
@@ -14,7 +18,7 @@ HaxeFlixel presents substantial enhancements from the original Flixel as3 code;
 <li>Cross platform development Linux, Max and Windows</li>
 <li>Texture Atlas and Layer enhancement for cpp targets</li>
 <li>Integrated and robust Tween System</li>
-<li>Access to NME native extensions</li>
+<li>Access to OpenFL native extensions</li>
 <li>Compile to Mobile and Desktop targets with native code through NME</li>
 <li>Impressive Native Performance using GPU accelerated drawTiles implimentation in cpp targets</li>
 </ul>
@@ -77,11 +81,9 @@ ______________________________________________________
 </ul>
 ______________________________________________________
 
-###Community Code and Plugins
+###Getting Started
 
-Progress has been made on ports of the Flixel Power Tools and additional community input.
-[Community Code](https://github.com/Beeblerox/HaxeFlixel/wiki/Additional-classes-from-the-flixel-community) 
+It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel)
 
-______________________________________________________
-
-If you are after support or want to communicate with other HaxeFlixel devs please use our [Forum](http://www.haxeflixel.com/forum/) 
+You can read our getting started docs here
+http://haxeflixel.com/articles/getting-started
