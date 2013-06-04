@@ -712,11 +712,14 @@ class FlxObject extends FlxBasic
 		if (pathSpeed != 0)
 		{
 			//set velocity based on path mode
+			_point.x = x;
+			_point.y = y;
 			if (pathAutoCenter)
 			{
 				_point.x += width * 0.5;
 				_point.y += height * 0.5;
 			}
+			
 			if (horizontalOnly || (_point.y == node.y))
 			{
 				velocity.x = (_point.x < node.x) ? pathSpeed : -pathSpeed;
