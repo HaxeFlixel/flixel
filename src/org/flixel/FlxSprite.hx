@@ -1273,7 +1273,7 @@ class FlxSprite extends FlxObject
 	 * If you call an animation that is already playing it will be ignored.
 	 * @param	AnimName	The string name of the animation you want to play.
 	 * @param	Force		Whether to force the animation to restart.
-	 * @param	Frame		The frame number in animation you want to start from (0 by default).
+	 * @param	Frame		The frame number in animation you want to start from (0 by default). If you pass negative value then it will start from random frame
 	 */
 	public function play(AnimName:String, Force:Bool = false, Frame:Int = 0):Void
 	{
@@ -1307,7 +1307,11 @@ class FlxSprite extends FlxObject
 				finished = false;
 			}
 			
-			if (Frame >= 0 && _curAnim.frames.length > Frame)
+			if (Frame < 0)
+			{
+				_curFrame = Std.int(Math.random() * _curAnim.frames.length);
+			}
+			else if (_curAnim.frames.length > Frame)
 			{
 				_curFrame = Frame;
 			}
