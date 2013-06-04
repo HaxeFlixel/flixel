@@ -1307,7 +1307,7 @@ class FlxSprite extends FlxObject
 				finished = false;
 			}
 			
-			if (_curAnim.frames.length > Frame)
+			if (Frame >= 0 && _curAnim.frames.length > Frame)
 			{
 				_curFrame = Frame;
 			}
