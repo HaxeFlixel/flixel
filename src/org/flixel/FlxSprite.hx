@@ -1273,8 +1273,9 @@ class FlxSprite extends FlxObject
 	 * If you call an animation that is already playing it will be ignored.
 	 * @param	AnimName	The string name of the animation you want to play.
 	 * @param	Force		Whether to force the animation to restart.
+	 * @param	Frame		The frame number in animation you want to start from (0 by default).
 	 */
-	public function play(AnimName:String, Force:Bool = false):Void
+	public function play(AnimName:String, Force:Bool = false, Frame:Int = 0):Void
 	{
 		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) 
 		{
@@ -1305,6 +1306,12 @@ class FlxSprite extends FlxObject
 			{
 				finished = false;
 			}
+			
+			if (_curAnim.frames.length > Frame)
+			{
+				_curFrame = Frame;
+			}
+			
 			_curIndex = _curAnim.frames[_curFrame];
 			
 			#if flash
