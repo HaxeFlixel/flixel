@@ -94,7 +94,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Whether the current animation gets updated or not.
 	 */
-	public var paused:Bool;
+	public var paused(default, null):Bool;
 	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 * NOTE: Edit at your own risk!!  This is intended to be read-only.
@@ -1336,6 +1336,75 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Sends the playhead to the specified frame in current animation and plays from that frame.
+	 * @param	Frame	frame number in current animation
+	 */
+	public function gotoAndPlay(Frame:Int = 0):Void
+	{
+		if (_curAnim == null || _curAnim.frames.length <= Frame)
+		{
+			return;
+		}
+		
+		play(_curAnim.name, true, Frame);
+	}
+	
+	/**
+	 * Sends the playhead to the specified frame in current animation and pauses it there.
+	 * @param	Frame	frame number in current animation
+	 */
+	public function gotoAndStop(Frame:Int = 0):Void
+	{
+		if (_curAnim == null || _curAnim.frames.length <= Frame)
+		{
+			return;
+		}
+		
+		_frameTimer = 0;
+		if (_curAnim.delay <= 0)
+		{
+			finished = true;
+		}
+		else
+		{
+			finished = false;
+		}
+		
+		_curFrame = Frame;
+		_curIndex = _curAnim.frames[_curFrame];
+		
+		#if flash
+		if (_textureData != null)
+		#else
+		if (_framesData != null)
+		#end
+		{
+			_flxFrame = _framesData.frames[_curIndex];
+		}
+		
+		dirty = true;
+		paused = true;
+		return;
+	}
+	
+	/**
+	 * Pauses current animation
+	 */
+	public function pauseAnimation():Void
+	{
+		paused = true;
+	}
+	
+	/**
+	 * Resumes current animation if it's exist and not finished
+	 */
+	public function resumeAnimation():Void
+	{
+		if (_curAnim != null && !finished)
+			paused = false;
+	}
+	
+	/**
   	 * Gets the FlxAnim object with the specified name.
 	*/
 	public function getAnimation(name:String):FlxAnim
@@ -1361,6 +1430,7 @@ class FlxSprite extends FlxObject
 			resetFrameSize();
 		}
 		
+		paused = true;
 		dirty = true;
 	}
 	
@@ -1619,6 +1689,7 @@ class FlxSprite extends FlxObject
 			resetFrameSize();
 		}
 		
+		paused = true;
 		dirty = true;
 		return Frame;
 	}
@@ -1650,6 +1721,7 @@ class FlxSprite extends FlxObject
 				_curIndex = getFrameIndex(_flxFrame);
 				resetFrameSize();
 			}
+			paused = true;
 			dirty = true;
 		}
 		
@@ -1671,7 +1743,7 @@ class FlxSprite extends FlxObject
 	 */
 	private function get_curAnim():String
 	{
-		if(_curAnim != null && !finished)
+		if (_curAnim != null && !finished)
 			return _curAnim.name;
 		return null;
 	}
