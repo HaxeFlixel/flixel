@@ -116,7 +116,7 @@ class FlxAssets
 	public static function cacheSounds():Void
 	{
 		#if android
-		Reflect.callMethod(Assets, "initialize", []);
+		Reflect.callMethod(Assets, Reflect.field(Assets, "initialize"), []);
 		
 		var resourceClasses:Map<String, Dynamic> = cast Reflect.getProperty(Assets, "resourceClasses");
 		var resourceTypes:Map<String, String> = cast Reflect.getProperty(Assets, "resourceTypes");
