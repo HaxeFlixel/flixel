@@ -231,9 +231,10 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
 	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
 	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8):FlxTypedEmitter<T>
+	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -257,7 +258,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 				if (BakedRotations > 0)
 				{
 					#if flash
-					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame);
+					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics, true);
 					particle.frame = randomFrame;
@@ -274,7 +275,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 				if (BakedRotations > 0)
 				{
 					#if flash
-					particle.loadRotatedGraphic(Graphics, BakedRotations);
+					particle.loadRotatedGraphic(Graphics, BakedRotations, -1, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics);
 					#end
