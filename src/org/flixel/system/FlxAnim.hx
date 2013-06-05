@@ -48,4 +48,19 @@ class FlxAnim
 	{
 		frames = null;
 	}
+	
+	/**
+	 * Animation frameRate - the speed in frames per second that the animation should play at.
+	 */
+	public var frameRate(default, set_frameRate):Float;
+	
+	private function set_frameRate(value:Float):Float
+	{
+		frameRate = value;
+		if (value > 0)
+		{
+			delay = 1.0 / value;
+		}
+		return value;
+	}
 }
