@@ -973,6 +973,12 @@ class FlxBar extends FlxSprite
 	 */
 	private function get_percent():Float
 	{
+		#if neko
+		if (value == null) {
+            	    value = min;
+        	}
+        	#end
+
 		if (value > max)
 		{
 			return 100;
