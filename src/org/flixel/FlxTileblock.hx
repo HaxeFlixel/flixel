@@ -13,7 +13,7 @@ import org.flixel.system.layer.DrawStackItem;
 class FlxTileblock extends FlxSprite
 {		
 	
-	#if !flash
+	#if !(flash || js)
 	private var _tileWidth:Int;
 	private var _tileHeight:Int;
 	private var _tileData:Array<Float>;
@@ -34,7 +34,7 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
-		#if flash
+		#if (flash || js)
 		makeGraphic(Width, Height, 0, true);
 		#else
 		bakedRotation = 0;
@@ -82,14 +82,14 @@ class FlxTileblock extends FlxSprite
 			regen = true;
 		}
 		
-		#if flash
+		#if (flash || js)
 		if (regen)
 		{
 			makeGraphic(Std.int(width), Std.int(height), 0, true);
 		}
 		else
 		{
-	//		this.fill(0);
+			this.fill(0);
 		}
 		#end
 		
@@ -104,7 +104,7 @@ class FlxTileblock extends FlxSprite
 		_repeatX = (RepeatX >= 0 ) ? RepeatX : 0;
 		_repeatY = (RepeatY >= 0) ? RepeatY : 0;
 		
-		#if !flash
+		#if !(flash || js)
 		if (_tileData != null)
 		{
 			_tileData.splice(0, _tileData.length);
@@ -132,7 +132,7 @@ class FlxTileblock extends FlxSprite
 			{
 				if (FlxG.random() * total > Empties)
 				{
-					#if flash
+					#if (flash || js)
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
@@ -151,13 +151,13 @@ class FlxTileblock extends FlxSprite
 			destinationY += spriteHeight;
 			row++;
 		}
-		#if !flash
+		#if !(flash || js)
 		updateFrameData();
 		#end
 		return this;
 	}
 	
-	#if !flash
+	#if !(flash || js)
 	override public function draw():Void 
 	{
 		if (_atlas == null)
@@ -207,12 +207,7 @@ class FlxTileblock extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			#if !js
 			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
-			#else
-			var useAlpha:Bool = (alpha < 1);
-			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
-			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -223,11 +218,6 @@ class FlxTileblock extends FlxSprite
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
-			
-			#if js
-			_point.x = Math.floor(_point.x);
-			_point.y = Math.floor(_point.y);
-			#end
 			
 			if (_tileData != null)
 			{
@@ -275,7 +265,6 @@ class FlxTileblock extends FlxSprite
 					currDrawData[currIndex++] = ssx;
 					currDrawData[currIndex++] = csy;
 
-					#if !js
 					if (isColored)
 					{
 						currDrawData[currIndex++] = _red; 
@@ -283,12 +272,6 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = _blue;
 					}
 					currDrawData[currIndex++] = alpha;
-					#else
-					if (useAlpha)
-					{
-						currDrawData[currIndex++] = alpha;
-					}
-					#end
 					
 					j++;
 				}

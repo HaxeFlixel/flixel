@@ -108,7 +108,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
-	public var frames:Int;
+	public var frames(default, null):Int;
 	/**
 	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
 	 */
@@ -1419,7 +1419,7 @@ class FlxSprite extends FlxObject
 	public function randomFrame():Void
 	{
 		_curAnim = null;
-		_curIndex = Std.int(FlxG.random() * (_pixels.width / frameWidth));
+		_curIndex = Std.int(FlxG.random() * frames);
 		#if !flash
 		if (_framesData != null)
 		#else
