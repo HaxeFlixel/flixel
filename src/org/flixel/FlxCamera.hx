@@ -477,7 +477,12 @@ class FlxCamera extends FlxBasic
 		#if flash
 		_fill = new BitmapData(width, height, true, FlxColorUtils.TRANSPARENT);
 		#else
+		
+		#if !js
 		_canvas.scrollRect = new Rectangle(0, 0, width, height);
+		#else
+		_canvas.scrollRect = new Rectangle(0, 0, width * zoom, height * zoom);
+		#end
 		
 		_debugLayer = new Sprite();
 		_debugLayer.x = -width * 0.5;
@@ -1168,7 +1173,11 @@ class FlxCamera extends FlxBasic
 			if (_canvas != null)
 			{
 				var rect:Rectangle = _canvas.scrollRect;
+				#if !js
 				rect.width = val;
+				#else
+				rect.width = val * zoom;
+				#end
 				_canvas.scrollRect = rect;
 				
 				_flashOffsetX = width * 0.5 * zoom;
@@ -1194,7 +1203,11 @@ class FlxCamera extends FlxBasic
 			if (_canvas != null)
 			{
 				var rect:Rectangle = _canvas.scrollRect;
+				#if !js
 				rect.height = val;
+				#else
+				rect.height = val * zoom;
+				#end
 				_canvas.scrollRect = rect;
 				
 				_flashOffsetY = height * 0.5 * zoom;
