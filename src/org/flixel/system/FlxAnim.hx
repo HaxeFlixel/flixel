@@ -32,11 +32,7 @@ class FlxAnim
 	public function new(Name:String, Frames:Array<Int>, FrameRate:Float = 0, Looped:Bool = true)
 	{
 		name = Name;
-		delay = 0;
-		if (FrameRate > 0)
-		{
-			delay = 1.0 / FrameRate;
-		}
+		frameRate = FrameRate;
 		frames = Frames;
 		looped = Looped;
 	}
@@ -56,6 +52,7 @@ class FlxAnim
 	
 	private function set_frameRate(value:Float):Float
 	{
+		delay = 0;
 		frameRate = value;
 		if (value > 0)
 		{
