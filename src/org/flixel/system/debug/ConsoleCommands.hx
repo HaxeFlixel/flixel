@@ -365,7 +365,7 @@ class ConsoleCommands
 			for (i in 0...l)
 			{
 				tempVarName = searchArr[i];
-				if (!Reflect.hasField(tempObj, tempVarName)) 
+				if (Reflect.getProperty(tempObj, tempVarName) == null) 
 				{
 					FlxG.error("call: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "' to call function from");
 					return;
@@ -484,7 +484,7 @@ class ConsoleCommands
 		for (i in 0...l)
 		{
 			tempVarName = searchArr[i];
-			if (!Reflect.hasField(tempObj, tempVarName)) 
+			if (Reflect.getProperty(tempObj, tempVarName) == null) 
 			{
 				FlxG.error(CommandName + ": " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
 				return null;
