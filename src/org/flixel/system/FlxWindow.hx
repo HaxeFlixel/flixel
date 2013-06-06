@@ -121,7 +121,6 @@ class FlxWindow extends Sprite
 		_drag = new Point();
 		
 		_resizable = Resizable;
-		//_resizable = false;
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColorUtils.BLACK));
 		addChild(_shadow);
@@ -244,6 +243,12 @@ class FlxWindow extends Sprite
 	 */
 	private function onMouseMove(E:MouseEvent = null):Void
 	{
+		if (!parent.visible)
+		{
+			_overHandle = _overHeader = false;
+			return;
+		}
+		
 		if (_dragging) //user is moving the window around
 		{
 			_overHeader = true;
