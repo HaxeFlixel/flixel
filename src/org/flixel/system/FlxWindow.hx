@@ -231,11 +231,11 @@ class FlxWindow extends Sprite
 		{
 			return;
 		}
-		removeEventListener(Event.ENTER_FRAME,init);
+		removeEventListener(Event.ENTER_FRAME, init);
 		
-		stage.addEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
-		stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-		stage.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 	}
 	
 	/**
@@ -244,17 +244,17 @@ class FlxWindow extends Sprite
 	 */
 	private function onMouseMove(E:MouseEvent = null):Void
 	{
-		if(_dragging) //user is moving the window around
+		if (_dragging) //user is moving the window around
 		{
 			_overHeader = true;
 			reposition(parent.mouseX - _drag.x, parent.mouseY - _drag.y);
 		}
-		else if(_resizing)
+		else if (_resizing)
 		{
 			_overHandle = true;
 			resize(mouseX - _drag.x, mouseY - _drag.y);
 		}
-		else if((mouseX >= 0) && (mouseX <= _width) && (mouseY >= 0) && (mouseY <= _height))
+		else if ((mouseX >= 0) && (mouseX <= _width) && (mouseY >= 0) && (mouseY <= _height))
 		{	//not dragging, mouse is over the window
 			_overHeader = (mouseX <= _header.width) && (mouseY <= _header.height);
 			if (_resizable)
@@ -276,13 +276,14 @@ class FlxWindow extends Sprite
 	 */
 	private function onMouseDown(E:MouseEvent = null):Void
 	{
-		if(_overHeader)
+		if (_overHeader)
 		{
+			parent.addChild(this);
 			_dragging = true;
 			_drag.x = mouseX;
 			_drag.y = mouseY;
 		}
-		else if(_overHandle)
+		else if (_overHandle)
 		{
 			_resizing = true;
 			_drag.x = _width - mouseX;
