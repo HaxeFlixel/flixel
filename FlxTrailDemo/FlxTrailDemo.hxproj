@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="project.nmml" />
+    <movie path="project.xml" />
     <movie fps="30" />
     <movie width="640" />
     <movie height="480" />
@@ -60,9 +60,9 @@
     <hidden path=".hgignore" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxelib run openfl test "project.nmml" neko
-haxelib run openfl test "project.nmml" windows
-haxelib run openfl test "project.nmml" flash</preBuildCommand>
+  <preBuildCommand>haxelib run openfl test "project.xml" neko
+haxelib run openfl test "project.xml" windows
+haxelib run openfl test "project.xml" flash</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

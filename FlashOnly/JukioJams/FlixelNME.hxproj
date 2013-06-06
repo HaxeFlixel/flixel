@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="FlixelNME.nmml" />
+    <movie path="FlixelNME.xml" />
     <movie fps="60" />
     <movie width="1024" />
     <movie height="768" />
@@ -46,7 +46,7 @@
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxelib run openfl test "FlixelNME.nmml" flash</preBuildCommand>
+  <preBuildCommand>haxelib run openfl test "FlixelNME.xml" flash</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
