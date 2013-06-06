@@ -139,6 +139,11 @@ class FlxTilemap extends FlxObject
 	private var _repeatY:Int = 0;
 	
 	/**
+	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
+	 */
+	public var tileScaleHack:Float = 1.01;
+	
+	/**
 	 * The tilemap constructor just initializes some basic variables.
 	 */
 	public function new()
@@ -529,10 +534,10 @@ class FlxTilemap extends FlxObject
 					#end
 					currDrawData[currIndex++] = tileID;
 					
-					currDrawData[currIndex++] = 1.01; // tilemap tearing hack
+					currDrawData[currIndex++] = tileScaleHack; // tilemap tearing hack
 					currDrawData[currIndex++] = 0;
 					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 1.01; // tilemap tearing hack
+					currDrawData[currIndex++] = tileScaleHack; // tilemap tearing hack
 					#if !js
 					currDrawData[currIndex++] = 1.0; // alpha
 					#end

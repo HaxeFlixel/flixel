@@ -25,6 +25,11 @@ class FlxTileblock extends FlxSprite
 	private var _repeatY:Int = 0;
 	
 	/**
+	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
+	 */
+	public var tileScaleHack:Float = 1.01;
+	
+	/**
 	 * Creates a new <code>FlxBlock</code> object with the specified position and size.
 	 * @param	X			The X position of the block.
 	 * @param	Y			The Y position of the block.
@@ -221,10 +226,10 @@ class FlxTileblock extends FlxSprite
 			
 			if (_tileData != null)
 			{
-				var csx : Float = 1.01;
+				var csx : Float = tileScaleHack;
 				var ssy : Float = 0;
 				var ssx : Float = 0;
-				var csy : Float = 1.01;
+				var csy : Float = tileScaleHack;
 				var x1 : Float = 0;
 				var y1 : Float = 0;
 
@@ -235,8 +240,8 @@ class FlxTileblock extends FlxSprite
 					sin = Math.sin(radians);
 					
 					// tilemap tearing hack
-					var sx:Float = 1.01 * scale.x;
-					var sy:Float = 1.01 * scale.y;
+					var sx:Float = tileScaleHack * scale.x;
+					var sy:Float = tileScaleHack * scale.y;
 					
 					csx = cos * sx;
 					ssy = sin * sy;
