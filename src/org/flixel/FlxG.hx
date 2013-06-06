@@ -1719,11 +1719,12 @@ class FlxG
 		
 		FlxG.mobile = false;
 		
-		#if !FLX_NO_DEBUG
 		log = Reflect.makeVarArgs(_log);
 		warn = Reflect.makeVarArgs(_warn);
 		error = Reflect.makeVarArgs(_error);
 		notice = Reflect.makeVarArgs(_notice);
+		
+		#if !FLX_NO_DEBUG
 		FlxG.visualDebug = false;
 		#end
 	}
