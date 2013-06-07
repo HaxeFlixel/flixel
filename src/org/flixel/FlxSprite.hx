@@ -855,9 +855,9 @@ class FlxSprite extends FlxObject
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				csx = cos * scale.x;
+				csx = cos * scale.x * facingMult;
 				ssy = sin * scale.y;
-				ssx = sin * scale.x;
+				ssx = sin * scale.x * facingMult;
 				csy = cos * scale.y;
 				
 				if (_flxFrame.rotated)
@@ -866,25 +866,29 @@ class FlxSprite extends FlxObject
 					y2 = x1 * csx + y1 * ssy;
 					
 					a = csy;
-					b = ssx * facingMult;
+					b = ssx;
 					c = ssy;
-					d = csx * facingMult;
+					d = csx;
 				}
 				else
 				{
 					x2 = x1 * csx + y1 * ssy;
 					y2 = -x1 * ssx + y1 * csy;
 					
-					a = csx * facingMult;
+					a = csx;
 					b = ssy;
-					c = ssx * facingMult;
+					c = ssx;
 					d = csy;
 				}
 			}
 			else
 			{
+				csx *= facingMult;
+				
+				x2 = x1 * csx + y1 * ssy;
+				y2 = -x1 * ssx + y1 * csy;
+				
 				a *= facingMult;
-				c *= facingMult;
 			}
 			
 			currDrawData[currIndex++] = _point.x - x2;
