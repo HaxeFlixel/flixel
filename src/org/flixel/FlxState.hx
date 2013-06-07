@@ -97,7 +97,9 @@ class FlxState extends FlxGroup
 		
 		persistantUpdate = false;
 		persistantDraw = true;
-		this.useMouse = false;
+		#if !FLX_NO_MOUSE
+		this.useMouse = FlxG.mouse.visible;
+		#end
 	}
 	
 	/**
