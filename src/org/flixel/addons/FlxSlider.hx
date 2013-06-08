@@ -171,9 +171,7 @@ class FlxSlider extends FlxSpriteGroup
 		if (Callback != null) 
 			overwriting = false;
 		
-		var prop:Dynamic = Reflect.getProperty(Obj, VarString);
-		
-		if (Obj != null && VarString != null && prop != null && prop != Math.round(prop)) 
+		if (Obj != null && VarString != null && Reflect.hasField(Obj, VarString) && Reflect.getProperty(Obj, VarString) != Math.round(Reflect.getProperty(Obj, VarString))) 
 		{
 			decimals = 2;
 		}
