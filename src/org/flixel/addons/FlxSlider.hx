@@ -3,22 +3,22 @@ package org.flixel.addons;
 #if !FLX_NO_MOUSE
 import org.flixel.addons.FlxSpriteGroup;
 import org.flixel.FlxG;
+import org.flixel.FlxPoint;
 import org.flixel.FlxRect;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 import org.flixel.plugin.photonstorm.FlxExtendedSprite;
+import org.flixel.plugin.photonstorm.FlxMath;
 import org.flixel.plugin.photonstorm.FlxMouseControl;
+import org.flixel.FlxU;
 
 /**
- * ...
+ * A slider GUI element for floats and integers. 
+ * 
  * @author Gama11
  */
 class FlxSlider extends FlxSpriteGroup
 {
-	/**
-	 * The dragable handle - loadGraphic() to change its graphic.
-	 */
-	public var handle:FlxExtendedSprite;
 	/**
 	 * The dragable area for the handle. Is configured automatically.
 	 */
@@ -26,15 +26,11 @@ class FlxSlider extends FlxSpriteGroup
 	/**
 	 * The horizontal line in the background.
 	 */
-	public var line:FlxSprite;
+	public var backGround:FlxSprite;
 	/**
-	 * The left border sprite.
+	 * The dragable handle - loadGraphic() to change its graphic.
 	 */
-	public var leftBorder:FlxSprite;
-	/**
-	 * The right border sprite.
-	 */
-	public var rightBorder:FlxSprite;
+	public var handle:FlxExtendedSprite;
 	/**
 	 * The text under the left border - equals minValue by default.
 	 */
@@ -50,57 +46,43 @@ class FlxSlider extends FlxSpriteGroup
 	/**
 	 * A text under the slider that displays the current value.
 	 */
-	public var currentLabel:FlxText;
+	public var valueLabel:FlxText;
 
 	/**
 	 * The width of the slider.
 	 */
-	public var width:Int = 100;
+	private var width:Int;
 	/**
 	 * The height of the slider - make sure to call createSlider() if you
 	 * want to change this.
 	 */
-	public var height:Int = 8;
+	private var height:Int;
 	/**
 	 * The thickness of the slider - make sure to call createSlider() if you
 	 * want to change this.
 	 */
-	public var thickness:Int = 2;
+	private var thickness:Int;
 	/**
 	 * The color of the slider - make sure to call createSlider() if you
 	 * want to change this.
 	 */
-	public var color:Int = 0xFF000000;
+	private var color:Int;
 	/**
 	 * The color of the handle - make sure to call createSlider() if you
 	 * want to change this.
 	 */
-	public var handleColor:Int = 0xFF828282;
-	/**
-	 * Current x pos.
-	 */
-	public var xCoord:Int = 0;
-	/**
-	 * Current y pos.
-	 */
-	public var yCoord:Int = 0;
+	private var handleColor:Int;
+	
 	/**
 	 * Stores a reference to parent object.
 	 */
-	private var obj:Dynamic;
-	/**
-	 * (Optional) Function to be called when slider was dragged / value changed.
-	 * Two parameters are passed:
-	 * The value the var is supossed to have (Number) and
-	 * The currentLabel (FlxText) - needs to be updated manually in that case.
-	 */
-	public var callback:Float->FlxText->Void;
+	private var object:Dynamic;
 	/**
 	 * Stores the variable the slider controls.
 	 */
 	public var varString:String;
 	/**
-	 * Stores the value of the variable - updated each frame.
+	 * Stores the current value of the variable - updated each frame.
 	 */
 	public var value:Float;
 	/**
@@ -112,20 +94,10 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	public var maxValue:Float;
 	/**
-	 * The handle's position relative to the slider's width.
-	 */
-	public var relHandlePos:Float;
-	/**
 	 * How many decimals the variable can have at max. Default is zero,
 	 * or "only whole numbers".
 	 */
 	public var decimals:Int = 0;
-	/**
-	 * Whether this class should handle the changes to the specified var
-	 * or if you wanna do that yourself / not at all. Automatically set to
-	 * false if you specify a Callback function.
-	 */
-	public var overwriting:Bool = true;
 	/**
 	 * Sound that's played whenever the slider is clicked.
 	 */
@@ -142,258 +114,286 @@ class FlxSlider extends FlxSpriteGroup
 	 * Helper variable to avoid the hoverSound playing every frame.
 	 */
 	private var justHovered:Bool = false;
-
+	/**
+	 * Whether you can also click on the slider to change the value or not.
+	 */
+	public var clickable:Bool = true;
+	/**
+	 * The offset of the slider from x and y.
+	 */
+	private var offset:FlxPoint;
+	/**
+	 * Stores the Callback function.
+	 */
+	private var callbackFunction:Float->Void;
+	/**
+	 * Helper var for callbacks.
+	 */
+	private var lastPos:Float;
+	/**
+	 * The alpha value the slider uses when it's hovered over. 1 to turn the effect off.
+	 */
+	public var hoverAlpha:Float = 0.5;
+	
 	/**
 	 * Creates a new <code>FlxSlider</code>.
 	 *
-	 * @param X X Position
-	 * @param Y Y Position
-	 * @param MinValue Mininum value the variable can be changed to.
-	 * @param MaxValue Maximum value the variable can be changed to.
-	 * @param Callback Function to be called when slider was dragged / value changed.
-	 * @param VarString Variable that the slider controls - NEEDS TO BE PUBLIC! Not needed if Callback is used.
-	 * @param Obj Reference to the object the variable belongs to. Not needed if Callback is used.
-	 * @param Width Width of the slider.
+	 * @param 	X				x Position
+	 * @param 	Y 				y Position
+	 * @param 	MinValue 		Mininum value the variable can be changed to
+	 * @param 	MaxValue 		Maximum value the variable can be changed to
+	 * @param 	Obj 			Reference to the parent object of the variable
+	 * @param 	VarString 		Variable that the slider controls
+	 * @param 	Width 			Width of the slider
+	 * @param 	Height 			Height of the slider
+	 * @param 	Thickness 		Thickness of the slider
+	 * @param 	Color 			Color of the slider background and all texts except for valueText showing the current value
+	 * @param 	HandleColor 	Color of the slider handle and the valueText showing the current value
 	 */
-	public function new(X:Int = 0, Y:Int = 0, MinValue:Float = 0, MaxValue:Float = 10, Callback:Float->FlxText->Void = null, VarString:String = null, Obj:Dynamic = null, Width:Int = 100)
+	public function new(X:Float = 0, Y:Float = 0, MinValue:Float = 0, MaxValue:Float = 10, Object:Dynamic = null, VarString:String = null, Width:Int = 100, Height:Int = 15, Thickness:Int = 3, Color:Int = 0xFF000000, HandleColor:Int = 0xFF828282)
 	{
 		super();
+		
 		// Assign all those constructor vars
-		xCoord = X;
-		yCoord = Y;
 		minValue = MinValue;
 		maxValue = MaxValue;
+		object = Object;
 		varString = VarString;
-		obj = Obj;
 		width = Width;
-		callback = Callback;
+		height = Height;
+		thickness = Thickness;
+		color = Color;
+		handleColor = HandleColor;
 		
-		if (Callback != null) 
-			overwriting = false;
-		
-		var prop:Dynamic = Reflect.getProperty(Obj, VarString);
-		
-		if (Obj != null && VarString != null && prop != null && prop != Math.round(prop)) 
+		// Need the mouse control plugin for dragable sprites
+		if (FlxG.getPlugin(FlxMouseControl) == null) 
+			FlxG.addPlugin(new FlxMouseControl());
+			
+		// Attempt to create the slider
+		if (!Reflect.hasField(object, varString)) 
 		{
-			decimals = 2;
+			FlxG.error("Could not create FlxSlider -", "'" + varString + "'" , "is not a valid field of", "'" + object + "'");
+			kill();
 		}
-		else
-		{
-			decimals = 0;
-		}
-
-		// Create the slider
-		createSlider();
+		else 
+			createSlider(X, Y);
 	}	
 
 	/**
-	 * Initially creates the slider with all its objects. Can also be
-	 * called to redraw the thing if certain vars are changed manually later.
+	 * Initially creates the slider with all its objects.
 	 */
-	public function createSlider():Void
+	private function createSlider(X:Float, Y:Float):Void
 	{
-		// Need that to make use of the FlxPowerTools' dragable sprite feature
-		if (FlxG.getPlugin(FlxMouseControl) == null) 
-			FlxG.addPlugin(new FlxMouseControl());
-
+		offset = new FlxPoint(5, 10); 
+		bounds = new FlxRect(X + offset.x, Y + offset.y, width, height);
+		
 		// Creating the "body" of the slider
-		line = new FlxSprite(0, 0);
-		line.makeGraphic(width + thickness * 3, thickness, color);
-
-		var yPos:Int = Math.floor(0.5 * (thickness - height));
-		leftBorder = new FlxSprite(0 - thickness, yPos);
-		leftBorder.makeGraphic(thickness, height, color);
-		rightBorder = new FlxSprite(width + thickness * 2, yPos);
-		rightBorder.makeGraphic(thickness, height, color);
-
-		// Creating the texts
-		var textOffset:Int = 3;
-
-		minLabel = new FlxText(2 - thickness * 2, (height / 2) + textOffset, 100, Std.string(minValue));
-		minLabel.setFormat(null, 12, FlxG.BLACK, "left");
-		maxLabel = new FlxText(width, (height / 2) + textOffset, 100, Std.string(maxValue));
-		maxLabel.setFormat(null, 12, FlxG.BLACK, "left");
-
-		nameLabel = new FlxText(0, - height * 3, width, varString);
-		nameLabel.setFormat(null, 16, FlxG.BLACK, "center");
-
-		currentLabel = new FlxText(0, (height / 2) + textOffset, width, "");
-		currentLabel.setFormat(null, 12, handleColor, "center");
+		backGround = new FlxSprite(offset.x, offset.y);
+		backGround.makeGraphic(width, height, 0);
+		backGround.drawLine(0, height / 2, width, height / 2, color, thickness); 
 		
-		if (obj != null && varString != null) 
-		{
-			value = Reflect.getProperty(obj, varString);
-			currentLabel.text = Std.string(value);
-		}
-		else 
-		{
-			value = minValue;
-			currentLabel.text = Std.string(minValue);
-		}
-		
-		bounds = new FlxRect(xCoord, 0, width + thickness * 2, FlxG.height);
-
-		handle = new FlxExtendedSprite(0, yPos);
-		handle.makeGraphic(thickness * 2, height, handleColor);
+		handle = new FlxExtendedSprite(offset.x, offset.y);
+		handle.makeGraphic(thickness, height, handleColor);
 		handle.enableMouseDrag(false, false, 255, bounds);
-		handle.setDragLock(true, false);
-
-		if (obj != null && varString != null) 
-			handle.x = ((value - minValue) / (maxValue - minValue)) * width;
+		
+		// Creating the texts
+		nameLabel = new FlxText(0, -4, width, varString);
+		nameLabel.alignment = "center";
+		nameLabel.color = color;
+		
+		var textOffset:Int = height + 10;
+		
+		valueLabel = new FlxText(offset.x, textOffset, width);
+		valueLabel.alignment = "center";
+		valueLabel.color = handleColor;
+		
+		minLabel = new FlxText( -50 + offset.x, textOffset, 100, Std.string(minValue));
+		minLabel.alignment = "center";
+		minLabel.color = color;
+		
+		maxLabel = new FlxText(width - 50 + offset.x, textOffset, 100, Std.string(maxValue));
+		maxLabel.alignment = "center";
+		maxLabel.color = color;
 		
 		// Add all the objects
-		add(line);
-		add(leftBorder);
-		add(rightBorder);
+		add(backGround);
+		add(handle);
+		add(nameLabel);
+		add(valueLabel);
 		add(minLabel);
 		add(maxLabel);
-		add(nameLabel);
-		add(currentLabel);
-		add(handle);
-
+		
 		// Position the objects
-		x = xCoord;
-		y = yCoord;
-
-		// Fire Callback just once so that a text for currentLabel can be set
-		relHandlePos = (handle.x - xCoord) / width;
-		if (callback != null) 
-			callback(round(minValue + relHandlePos * (maxValue - minValue)), currentLabel);
+		x = X;
+		y = Y;
 	}
 
 	override public function update():Void
 	{
-		// Update the var that stores the handle position relative to the slider's width
-		relHandlePos = (handle.x - xCoord) / width;
-		
-		// Update the variable's value
-		if (obj != null && varString != null && callback == null) 
+		// Clicking and sound logic
+		if (FlxMath.mouseInFlxRect(true, bounds)) 
 		{
-			currentLabel.text = Std.string(round(Reflect.getProperty(obj, varString)));
-		}
-		else
-		{
-			currentLabel.text = Std.string(round(minValue + relHandlePos * (maxValue - minValue)));
-		}
-		
-		var tempValue:Float = minValue + relHandlePos * (maxValue - minValue);
-		
-		// ...and change the variable's value if the handle has been dragged
-		if (value != tempValue) 
-		{
-			if (obj != null && varString != null && overwriting) 
-				Reflect.setProperty(obj, varString, round(tempValue));
+			if (hoverAlpha != 1)
+				alpha = hoverAlpha;
+				
+			if (hoverSound != null && !justHovered)
+				FlxG.play(hoverSound);
+			justHovered = true;
 			
-			if (callback != null) 
-				callback(round(tempValue), currentLabel);
-
-			value = tempValue;
-		}
-
-		// Make it possible to click anywhere on the slider
-
-		var xM:Int = Math.floor(FlxG.mouse.x);
-		var yM:Int = Math.floor(FlxG.mouse.y);
-
-		if (xM >= xCoord && xM <= xCoord + width && yM >= (yCoord) && yM <= (yCoord + height * 2) && visible) 
-		{
-			if (FlxG.mouse.pressed()) 
-			{
+			if (clickable && FlxG.mouse.pressed()) {
 				handle.x = FlxG.mouse.x;
-				if (!justClicked && clickSound != null) 
-				{
+				updateValue();
+				
+				if (clickSound != null && !justClicked) {
 					FlxG.play(clickSound);
 					justClicked = true;
 				}
 			}
-			else 
-			{
+			if (!FlxG.mouse.pressed())
 				justClicked = false;
-			}
-			
-			alpha = 0.5;
-			if (!justHovered && hoverSound != null) 
-				FlxG.play(hoverSound);
-			
-			justHovered = true;
 		}
-		else if (visible) 
-		{
-			alpha = 1;
+		else {
+			if (hoverAlpha != 1)
+				alpha = 1;
+				
 			justHovered = false;
 		}
-
+		
+		// Update the target value whenever the slider is being used
+		if (handle.isDragged)
+			updateValue();
+			
+		// Update the value variable
+		if (Reflect.getProperty(object, varString) != null)
+			value = Reflect.getProperty(object, varString);
+			
+		// Changes to value from outside update the handle pos
+		if (callbackFunction == null && handle.x != expectedPos) 
+			handle.x = expectedPos;
+			
+		// Finally, update the valueLabel
+		valueLabel.text = Std.string(FlxU.roundDecimal(value, decimals));
+		
 		super.update();
 	}
-
+	
+	/**
+	 * Function that is called whenever the slider is used to either update the variable tracked or call the Callback function.
+	 */
+	private function updateValue():Void
+	{
+		if (callbackFunction == null) {
+			if (Reflect.hasField(object, varString))
+				Reflect.setProperty(object, varString, relativePos * maxValue);
+		}
+		else if (lastPos != relativePos) {
+			Reflect.callMethod(null, callbackFunction, [relativePos]);
+			lastPos = relativePos;
+		}
+	}
+	
+	/**
+	 * The expected position of the handle based on the current variable value.
+	 */
+	public var expectedPos(get, never):Float;
+	
+	private function get_expectedPos():Float 
+	{ 
+		var pos:Float = x + offset.x + ((width - handle.width) * (value / maxValue));
+		if (pos > x + width + offset.x)
+			pos = x + width + offset.x;
+		else if (pos < x + offset.x)
+			pos = x + offset.x; 
+		
+		return pos; 
+	}
+	
+	/**
+	 * The position of the handle relative to the slider / max value.
+	 */
+	public var relativePos(get, never):Float;
+	
+	private function get_relativePos():Float 
+	{ 
+		var pos:Float = (handle.x - x - offset.x) / (width - handle.width); 
+		if (pos > 1) 
+			pos = 1;
+			
+		return pos;
+	}
+	
 	/**
 	 * Handy function for changing the textfields.
 	 *
-	 * @param Name Name of the slider - "" to hide
-	 * @param Current Whether to show the current value or not
-	 * @param Left Label for the left border text - "" to hide
-	 * @param Right Label for the right border text - "" to hide
+	 * @param 	Name 		Text of nameLabel - null to hide
+	 * @param 	Value	 	Whether to show the valueText or not
+	 * @param 	Min 		Text of minLabel - null to hide
+	 * @param 	Max 		Text of maxLabel - null to hide
+	 * @param 	Size 		Size to use for the texts
 	 */
-	public function setTexts(Name:String, Current:Bool = true, Left:String = null, Right:String = null):Void
+	public function setTexts(Name:String, Value:Bool = true, Min:String = null, Max:String = null, Size:Int = 8):Void
 	{
-		if (Left == "") 
-		{
-			minLabel.visible = false;
-		}
-		else if (Left != null) 
-		{
-			minLabel.text = Left;
-			minLabel.visible = true;
-		}
-
-		if (Right == "") 
-		{
-			maxLabel.visible = false;
-		}
-		else if (Right != null) 
-		{
-			maxLabel.text = Right;
-			maxLabel.visible = true;
-		}
-
-		if (Name == "") 
-		{
+		if (Name == null) 
 			nameLabel.visible = false;
-		}
-		else if (Name != null) 
+		else 
 		{
 			nameLabel.text = Name;
 			nameLabel.visible = true;
 		}
-
-		if (!Current) 
+		
+		if (Min == null) 
+			minLabel.visible = false;
+		else
 		{
-			currentLabel.visible = false;
+			minLabel.text = Min;
+			minLabel.visible = true;
 		}
+
+		if (Max == null) 
+			maxLabel.visible = false;
+		else
+		{
+			maxLabel.text = Max;
+			maxLabel.visible = true;
+		}
+
+		if (!Value) 
+			valueLabel.visible = false;
 		else 
-		{
-			currentLabel.visible = true;
-		}
+			valueLabel.visible = true;
+		
+		nameLabel.size = Size;
+		valueLabel.size = Size;
+		minLabel.size = Size;
+		maxLabel.size = Size;
 	}
-
+	
 	/**
-	 * Handy function to round a number to set amount of decimals.
-	 *
-	 * @param n Number to round
+	 * Sets a callback function to call whenever the handle position is changed. Disables the automatic adjustments of the tracked variable.
+	 * 
+	 * @param	Callback	Function to call. Must have one Float param to receive the relative handle position.
 	 */
-	private function round(n:Float):Float
+	public function setCallback(Callback:Float->Void):Void
 	{
-		decimals = Std.int(Math.abs(decimals));
-		return Std.int((n) * Math.pow(10, decimals)) / Math.pow(10, decimals);
+		callbackFunction = Callback;
 	}
-
+	
 	/**
-	 * Need that to make use of the FlxPowerTools' dragable sprite feature as well.
+	 * Cleaning up memory.
 	 */
 	override public function destroy():Void
 	{
-		// Important! Clear out the plugin otherwise resources will get messed right up after a while
 		FlxMouseControl.clear();
+		
+		handle = null;
+		bounds = null;
+		backGround = null;
+		minLabel = null;
+		maxLabel = null;
+		nameLabel = null;
+		valueLabel = null;
+		offset = null;
+		
 		super.destroy();
 	}
 }
