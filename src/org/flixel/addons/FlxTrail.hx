@@ -35,6 +35,14 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 */
 	public var rotationsEnabled:Bool = true;
 	/**
+	 *  Whether to check for scale changes or not.
+	 */
+	public var scalesEnabled:Bool = true;
+	/**
+	 * Determines whether trailsprites are solid or not. False by default.
+	 */
+	public var solid(default, set_solid):Bool = false;
+	/**
 	 *  Counts the frames passed.
 	 */
 	private var counter:Int = 0;
@@ -62,6 +70,14 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 *  Stores the sprites recent angles.
 	 */
 	private var recentAngles:Array<Float>;
+	/**
+	 *  Stores the sprites recent scale.
+	 */
+	private var recentScales:Array<FlxPoint>;
+	/**
+	 *  Stores the sprite origin (rotation axis)
+	 */
+	private var spriteOrigin:FlxPoint;
 	
 	/**
 	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
@@ -79,6 +95,8 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 
 		recentAngles = new Array<Float>();
 		recentPositions = new Array<FlxPoint>();
+		recentScales = new Array<FlxPoint>();
+		spriteOrigin = Sprite.origin;
 
 		// Sync the vars 
 		sprite = Sprite;
@@ -118,6 +136,14 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 				recentAngles.unshift(spriteAngle);
 				if (recentAngles.length > trailLength) recentAngles.pop();
 			}
+			
+			// Again the same thing for Sprites scales if scalesEnabled
+			if (scalesEnabled)
+			{
+				var spriteScale:FlxPoint = sprite.scale;
+				recentScales.unshift(spriteScale);
+				if (recentScales.length > trailLength) recentScales.pop();
+			}
 
 			// Now we need to update the all the Trailsprites' values
 			var trailSprite:FlxSprite;
@@ -127,7 +153,14 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 				trailSprite.x = recentPositions[i].x;
 				trailSprite.y = recentPositions[i].y;
 				// And the angle...
-				if (rotationsEnabled) trailSprite.angle = recentAngles[i];
+				if (rotationsEnabled) 
+				{
+					trailSprite.angle = recentAngles[i];
+					trailSprite.origin = spriteOrigin;
+				}
+				
+				// the scale...
+				if (scalesEnabled) trailSprite.scale = recentScales[i];
 
 				// Is the trailsprite even visible?
 				trailSprite.exists = true; 
@@ -141,6 +174,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	{
 		recentPositions.splice(0, recentPositions.length);
 		recentAngles.splice(0, recentAngles.length);
+		recentScales.splice(0, recentScales.length);
 		for (i in 0...members.length) 
 		{
 			if (members[i] != null)
@@ -200,15 +234,15 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 * @param 	Angle 	Whether the trail reacts to angle changes or not.
 	 * @param 	X 		Whether the trail reacts to x changes or not.
 	 * @param 	Y 		Whether the trail reacts to y changes or not.
+	 * @param	Scale	Wheater the trail reacts to scale changes or not.
 	 */
-	public function changeValuesEnabled(Angle:Bool, X:Bool = true, Y:Bool = true):Void
+	public function changeValuesEnabled(Angle:Bool, X:Bool = true, Y:Bool = true, Scale:Bool = true):Void
 	{
 		rotationsEnabled = Angle;
 		xEnabled = X;
 		yEnabled = Y;
+		scalesEnabled = Scale;
 	}
-	
-	public var solid(default, set_solid):Bool;
 	
 	private function set_solid(value:Bool):Bool
 	{
