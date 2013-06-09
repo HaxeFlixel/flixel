@@ -407,7 +407,7 @@ class FlxSlider extends FlxSpriteGroup
 		}
 		catch (e:Dynamic) 
 		{
-			FlxG.error("Could not create FlxSlider -", "'" + varString + "'" , "is not a valid field of", "'" + object + "'");
+			FlxG.error("Could not create FlxSlider -", "'" + value + "'" , "is not a valid field of", "'" + object + "'");
 			varString = null;
 		}
 		
