@@ -80,7 +80,7 @@ class FlxSlider extends FlxSpriteGroup
 	/**
 	 * Stores the variable the slider controls.
 	 */
-	public var varString:String;
+	public var varString(default, set_varString):String;
 	/**
 	 * Stores the current value of the variable - updated each frame.
 	 */
@@ -168,15 +168,17 @@ class FlxSlider extends FlxSpriteGroup
 		// Need the mouse control plugin for dragable sprites
 		if (FlxG.getPlugin(FlxMouseControl) == null) 
 			FlxG.addPlugin(new FlxMouseControl());
-			
-		// Attempt to create the slider
-		if (Reflect.field(object, varString) == null) 
+		
+		if (varString == null) 
 		{
 			FlxG.error("Could not create FlxSlider -", "'" + varString + "'" , "is not a valid field of", "'" + object + "'");
 			kill();
 		}
-		else 
+		else
+		{
+			// Attempt to create the slider
 			createSlider(X, Y);
+		}
 	}	
 
 	/**
@@ -283,8 +285,8 @@ class FlxSlider extends FlxSpriteGroup
 	private function updateValue():Void
 	{
 		if (callbackFunction == null) {
-			if (Reflect.field(object, varString) != null)
-				Reflect.setProperty(object, varString, relativePos * maxValue);
+			if (varString != null)
+				Reflect.setProperty(object, varString, relativePos * (maxValue - minValue) + minValue);
 		}
 		else if (lastPos != relativePos) {
 			Reflect.callMethod(null, callbackFunction, [relativePos]);
@@ -299,7 +301,7 @@ class FlxSlider extends FlxSpriteGroup
 	
 	private function get_expectedPos():Float 
 	{ 
-		var pos:Float = x + offset.x + ((width - handle.width) * (value / maxValue));
+		var pos:Float = x + offset.x + ((width - handle.width) * ((value - minValue) / (maxValue - minValue)));
 		if (pos > x + width + offset.x)
 			pos = x + width + offset.x;
 		else if (pos < x + offset.x)
@@ -395,6 +397,22 @@ class FlxSlider extends FlxSpriteGroup
 		offset = null;
 		
 		super.destroy();
+	}
+	
+	private function set_varString(value:String):String
+	{
+		try 
+		{
+			var prop:Dynamic = Reflect.getProperty(object, value);
+			varString = value;
+		}
+		catch (e:Dynamic) 
+		{
+			FlxG.error("Could not create FlxSlider -", "'" + varString + "'" , "is not a valid field of", "'" + object + "'");
+			varString = null;
+		}
+		
+		return value;
 	}
 }
 #end
