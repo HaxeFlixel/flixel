@@ -58,12 +58,7 @@ class MultiVarTween extends FlxTween
 
 		for (p in fields)
 		{
-			
-		#if (cpp || neko)
 			if (Reflect.getProperty(object, p) == null)
-		#else
-			if (!Reflect.hasField(object, p))
-		#end
 			{
 				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
 			}

@@ -33,8 +33,8 @@ class FlxMath
 	private static var sinTable:Array<Float> = new Array<Float>();
 	
 	private static var coefficient1:Float = Math.PI / 4;
-	private static inline var RADTODEG:Float = 180 / Math.PI;
-	private static inline var DEGTORAD:Float = Math.PI / 180;
+	private static var RADTODEG:Float = 180 / Math.PI;
+	private static var DEGTORAD:Float = Math.PI / 180;
 	
 	public function new() { }
 	
@@ -50,7 +50,7 @@ class FlxMath
 	 * 
 	 * @return	true if pointX/pointY is within the region, otherwise false
 	 */
-	public static function pointInCoordinates(pointX:Int, pointY:Int, rectX:Int, rectY:Int, rectWidth:Int, rectHeight:Int):Bool
+	public static function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
 	{
 		if (pointX >= rectX && pointX <= (rectX + rectWidth))
 		{
@@ -71,7 +71,7 @@ class FlxMath
 	 * @param	rect		The FlxRect to test within
 	 * @return	true if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	public static function pointInFlxRect(pointX:Int, pointY:Int, rect:FlxRect):Bool
+	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
 	{
 		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
 		{
@@ -116,7 +116,7 @@ class FlxMath
 	 * @param	rect		The Rectangle to test within
 	 * @return	true if pointX/pointY is within the Rectangle, otherwise false
 	 */
-	public static function pointInRectangle(pointX:Int, pointY:Int, rect:Rectangle):Bool
+	public static function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
 	{
 		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
 		{

@@ -11,9 +11,9 @@
 */
 
 package org.flixel.plugin.photonstorm;
-import nme.display.Sprite;
-import nme.errors.Error;
-import nme.utils.ByteArray;
+import flash.display.Sprite;
+import flash.errors.Error;
+import flash.utils.ByteArray;
 import org.flixel.FlxG;
 
 class FlxCoreUtils 

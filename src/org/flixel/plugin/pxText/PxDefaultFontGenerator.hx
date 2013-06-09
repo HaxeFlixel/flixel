@@ -1,6 +1,6 @@
 package org.flixel.plugin.pxText;
 
-import nme.display.BitmapData;
+import flash.display.BitmapData;
 import org.flixel.FlxG;
 import org.flixel.plugin.pxText.PxBitmapFont;
 
@@ -19,11 +19,7 @@ class PxDefaultFontGenerator
 	public static function generateAndStoreDefaultFont():Void 
 	{
 		var letters:String = "";
-		#if neko
-		var bd:BitmapData = new BitmapData(700, 9, true, {rgb: 0x888888, a: 0xFF});
-		#else
 		var bd:BitmapData = new BitmapData(700, 9, true, 0xFF888888);
-		#end
 		
 		var letterPos:Int = 0;
 		var i:Int = 0;

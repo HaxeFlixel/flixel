@@ -54,7 +54,7 @@ The current targets possible are;
 ______________________________________________________
 
 ###Demos for HaxeFlixel
-https://github.com/Beeblerox/HaxeFlixelDemoes
+https://github.com/HaxeFlixel/samples
 
 ______________________________________________________
 

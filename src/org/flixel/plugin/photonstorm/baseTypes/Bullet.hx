@@ -16,7 +16,7 @@
 package org.flixel.plugin.photonstorm.baseTypes;
 
 import org.flixel.system.input.FlxTouch;
-import nme.Lib;
+import flash.Lib;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
@@ -106,8 +106,8 @@ class Bullet extends FlxSprite
 			FlxVelocity.moveTowardsMouse(this, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
 		}
 		
-		if ( rotateBulletTowards )
-		angle = FlxVelocity.angleBetweenMouse(weapon.parent,true);
+		if (rotateBulletTowards)
+			angle = FlxVelocity.angleBetweenMouse(weapon.parent, true);
 		
 		postFire();
 	}

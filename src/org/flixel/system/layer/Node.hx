@@ -1,8 +1,9 @@
 package org.flixel.system.layer;
 
-import nme.display.BitmapData;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import org.flixel.plugin.texturepacker.TexturePackerData;
 
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.layer.frames.FlxSpriteFrames;
@@ -82,6 +83,11 @@ class Node
 			endY += item.height;
 		}
 		return atlas._tileSheetData.getSpriteSheetFrames(frameWidth, frameHeight, origin, startX + this.x, startY + this.y, endX + this.x, endY + this.y, xSpacing, ySpacing);
+	}
+	
+	public function getTexturePackerFrames(data:TexturePackerData):FlxSpriteFrames
+	{
+		return atlas._tileSheetData.getTexturePackerFrames(data, this.x, this.y);
 	}
 	
 	public function addTileRect(tileRect:Rectangle, point:Point = null):Int

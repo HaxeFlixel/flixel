@@ -1,6 +1,6 @@
 package org.flixel;
 
-import nme.display.Graphics;
+import flash.display.Graphics;
 
 #if !FLX_NO_DEBUG
 import org.flixel.plugin.DebugPathDisplay;
@@ -24,11 +24,7 @@ class FlxPath
 	/**
 	 * Specify a debug display color for the path.  Default is white.
 	 */
-	#if flash
-	public var debugColor:UInt;
-	#else
 	public var debugColor:Int;
-	#end
 	/**
 	 * Specify a debug display scroll factor for the path.  Default is (1,1).
 	 * NOTE: does not affect world movement!  Object scroll factors take care of that.
@@ -253,7 +249,7 @@ class FlxPath
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		#else
-		var gfx:Graphics = Camera._effectsLayer.graphics;
+		var gfx:Graphics = Camera._debugLayer.graphics;
 		#end
 		
 		//Then fill up the object with node and path graphics
@@ -276,28 +272,16 @@ class FlxPath
 			{
 				nodeSize *= 2;
 			}
-			#if flash
-			var nodeColor:UInt = debugColor;
-			#else
 			var nodeColor:Int = debugColor;
-			#end
 			if(l > 1)
 			{
 				if (i == 0)
 				{
-					#if !neko
-					nodeColor = FlxG.GREEN;
-					#else
-					nodeColor = FlxG.GREEN.rgb;
-					#end
+					nodeColor = FlxColorUtils.GREEN;
 				}
 				else if (i == l - 1)
 				{
-					#if !neko
-					nodeColor = FlxG.RED;
-					#else
-					nodeColor = FlxG.RED.rgb;
-					#end
+					nodeColor = FlxColorUtils.RED;
 				}
 			}
 			

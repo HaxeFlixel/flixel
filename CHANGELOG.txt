@@ -1,5 +1,33 @@
 flixel CHANGELOG
 
+v.2.0.0-alpha.2
+------------------------------
+* openfl compatibility
+* Removed isColored() method from FlxCamera, since Sprite's colorTransform is working properly with drawTiles() now
+* Added XBox controller button definitions for Mac (took from HaxePunk)
+* FlxPath enhancement, it has pathAutoCenter property now (true by default) and setPathNode() method for direct change of current path node. Thanks @Gama11
+* Little fixes regarding new compiler conditionals and mouse input
+
+v.2.0.0-alpha
+------------------------------
+* Perfomance optimization: merged preUpdate(), update() and postUpdate() methods. So you should call super.update(); from your classes.
+* A little bit better TexturePacker format support for FlxSprite
+* Added missing button definitions for XBox controller to FlxJoystick. Thanks @volvis
+* Bitmap filters for FlxSprite and FlxText now works on native targets. Thanks @ProG4mr
+* Added experimental update thread. Thanks @crazysam
+* Fixed FlxTilemap for multiple map loading. Thanks @SeanHogan
+* Added FlxAssets.addBitmapDataToCache() method for more control over image caching
+* Added drawCircle() function to FlxSprite. Thanks @Gama11
+* Added method for updating tilemap buffers, usefull for camera resizing. Thanks @impaler
+* FlxEmitter Improvements: added scaling, fading and coloring. Thanks @Gama11 for the idea and help
+* Added powerfull Console to FlxDebugger. Thanks @Gama11
+* Improved logging and variable watching functionality. Thanks @Gama11
+* Added move function to FlxObject. Thanks @sergey-miryanov
+* Fixed FlxTilemap's arrayToCSV() method on neko target. Thanks @pentaphobe
+* Added optional right and middle mouse button support. Use FLX_MOUSE_ADVANCED compiler conditional. Thanks @Gama11
+* Added FlxColorUtils class. Thanks @Gama11
+* Added new compiler conditionals: FLX_NO_FOCUS_LOST_SCREEN and FLX_NO_SOUND_TRAY compiler conditionals. See template.nmml file for details. Thanks @Gama11
+
 v1.09
 ------------------------------
 * Fix for FlxSprite.fill() on cpp targets

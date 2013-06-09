@@ -1,8 +1,8 @@
 package org.flixel.system.layer.frames;
 
-import nme.display.BitmapData;
-import nme.geom.Matrix;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.geom.Matrix;
+import flash.geom.Rectangle;
 import org.flixel.plugin.texturepacker.TexturePackerTileSheetData;
 
 class TexturePackerFrame extends FlxFrame

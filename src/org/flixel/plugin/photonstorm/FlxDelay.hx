@@ -14,10 +14,10 @@
 
 package org.flixel.plugin.photonstorm;
 
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.events.EventDispatcher;
-import nme.Lib;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.events.EventDispatcher;
+import flash.Lib;
 import org.flixel.FlxG;
 import org.flixel.FlxU;
 

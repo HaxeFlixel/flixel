@@ -16,7 +16,7 @@ import org.flixel.system.input.FlxTouch;
 class FlxAnalog extends FlxTypedGroup<FlxSprite>
 {
 	// From radians to degrees.
-	private static inline var DEGREES:Float = (180 / Math.PI);
+	private static var DEGREES:Float = (180 / Math.PI);
 	
 	// Used with public variable <code>status</code>, means not highlighted or pressed.
 	private static inline var NORMAL:Int = 0;
@@ -97,8 +97,8 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		acceleration = new FlxPoint();
 		#if !FLX_NO_TOUCH
 		_tempTouches = [];
-		_point = new FlxPoint();
 		#end
+		_point = new FlxPoint();
 		createBase();
 		createThumb();
 		createZone();
@@ -361,11 +361,13 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	public function justPressed():Bool
 	{
 		#if !FLX_NO_TOUCH
-		return _currentTouch.justPressed() && status == PRESSED;
+		if (_currentTouch != null)
+			return _currentTouch.justPressed() && status == PRESSED;
 		#end
 		#if !FLX_NO_MOUSE
 		return FlxG.mouse.justPressed() && status == PRESSED;
 		#end
+		return false;
 	}
 	
 	/**
@@ -374,11 +376,13 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	public function justReleased():Bool
 	{
 		#if !FLX_NO_TOUCH
-		return _currentTouch.justReleased() && status == HIGHLIGHT;
+		if (_currentTouch != null)
+			return _currentTouch.justReleased() && status == HIGHLIGHT;
 		#end
 		#if !FLX_NO_MOUSE
 		return FlxG.mouse.justReleased() && status == HIGHLIGHT;
 		#end
+		return false;
 	}
 
 	/**

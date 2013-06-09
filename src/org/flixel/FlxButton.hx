@@ -1,10 +1,10 @@
 package org.flixel;
 
-import nme.events.Event;
-import nme.events.MouseEvent;
-import nme.events.TouchEvent;
-import nme.Lib;
-import nme.media.Sound;
+import flash.events.Event;
+import flash.events.MouseEvent;
+import flash.events.TouchEvent;
+import flash.Lib;
+import flash.media.Sound;
 import org.flixel.system.input.FlxTouch;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.Atlas;
@@ -29,9 +29,9 @@ class FlxButton extends FlxTypedButton<FlxText>
 		super(X, Y, Label, OnClick);
 		if(Label != null)
 		{
-			label = new FlxText(0, 0, 80, Label);
-			label.setFormat(null, 8, 0x333333, "center");
 			labelOffset = new FlxPoint( -1, 3);
+			label = new FlxText(X + labelOffset.x, Y + labelOffset.y, 80, Label);
+			label.setFormat(null, 8, 0x333333, "center");
 		}
 	}
 	
@@ -243,7 +243,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		var continueUpdate = false;
 		
 		#if !FLX_NO_MOUSE
-			continueUpdate = FlxG.mouse.visible;
+			continueUpdate = true;
 		#end
 		
 		#if !FLX_NO_TOUCH

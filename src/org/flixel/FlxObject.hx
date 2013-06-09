@@ -1,8 +1,8 @@
 package org.flixel;
 
-import nme.display.Graphics;
-import nme.display.Sprite;
-import nme.geom.Point;
+import flash.display.Graphics;
+import flash.display.Sprite;
+import flash.geom.Point;
 
 import org.flixel.FlxBasic;
 
@@ -97,13 +97,13 @@ class FlxObject extends FlxBasic
 	 */
 	public var y:Float;
 	/**
-	 * The width of this object.
+	 * The width of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
-	public var width:Float;
+	public var width(default, set_width):Float;
 	/**
-	 * The height of this object.
+	 * The height of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
-	public var height:Float;
+	public var height(default, set_height):Float;
 
 	/**
 	 * Whether an object will move/alter position after a collision.
@@ -164,7 +164,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Should always represent (0,0) - useful for different things, for avoiding unnecessary <code>new</code> calls.
 	 */
-	static private inline var _pZero:FlxPoint = new FlxPoint();
+	static private var _pZero:FlxPoint = new FlxPoint();
 	
 	/**
 	 * A point that can store numbers from 0 to 1 (for X and Y independently)
@@ -187,13 +187,9 @@ class FlxObject extends FlxBasic
 	 */
 	public var health:Float;
 	/**
-	 * This is just a pre-allocated x-y point container to be used however you like
+	 * This is just a pre-allocated x-y point container used internally for pathing and overlapping
 	 */
-	public var _point:FlxPoint;
-	/**
-	 * This is just a pre-allocated rectangle container to be used however you like
-	 */
-	public var _rect:FlxRect;
+	private var _point:FlxPoint;
 	/**
 	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
 	 * FlxObject and FlxSprite default to true.
@@ -242,6 +238,11 @@ class FlxObject extends FlxBasic
 	 */
 	public var pathAngle:Float;
 	/**
+	 * Whether the object should auto-center the path or at its origin.
+	 * @default true
+	 */
+	public var pathAutoCenter:Bool;
+	/**
 	 * Internal helper, tracks which node of the path this object is moving toward.
 	 */
 	private var _pathNodeIndex:Int;
@@ -262,9 +263,9 @@ class FlxObject extends FlxBasic
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
-	public var debugBoundingBoxColor(default, onBoundingBoxColorSet):Int;
+	public var debugBoundingBoxColor(default, set_debugBoundingBoxColor):Int;
 	private var _boundingBoxColorOverritten:Bool = false;
-	private function onBoundingBoxColorSet(val:Int):Int 
+	private function set_debugBoundingBoxColor(val:Int):Int 
 	{
 		_boundingBoxColorOverritten = true;
 		debugBoundingBoxColor = val;
@@ -286,7 +287,7 @@ class FlxObject extends FlxBasic
 		
 		x = X;
 		y = Y;
-		last = new FlxPoint(x,y);
+		last = new FlxPoint(x, y);
 		width = Width;
 		height = Height;
 		mass = 1.0;
@@ -317,11 +318,11 @@ class FlxObject extends FlxBasic
 		_flickerTimer = 0;
 		
 		_point = new FlxPoint();
-		_rect = new FlxRect();
 		
 		path = null;
 		pathSpeed = 0;
 		pathAngle = 0;
+		pathAutoCenter = true;
 	}
 	
 	/**
@@ -337,7 +338,6 @@ class FlxObject extends FlxBasic
 		maxVelocity = null;
 		scrollFactor = null;
 		_point = null;
-		_rect = null;
 		last = null;
 		cameras = null;
 		if (path != null)
@@ -463,36 +463,20 @@ class FlxObject extends FlxBasic
 		{
 			if (allowCollisions != ANY)
 			{
-				#if !neko
-				debugBoundingBoxColor = FlxG.PINK;
-				#else
-				debugBoundingBoxColor = FlxG.PINK.rgb;
-				#end
+				debugBoundingBoxColor = FlxColorUtils.PINK;
 			}
 			if (immovable)
 			{
-				#if !neko
-				debugBoundingBoxColor = FlxG.GREEN;
-				#else
-				debugBoundingBoxColor = FlxG.GREEN.rgb;
-				#end
+				debugBoundingBoxColor = FlxColorUtils.GREEN;
 			}
 			else
 			{
-				#if !neko
-				debugBoundingBoxColor = FlxG.RED;
-				#else
-				debugBoundingBoxColor = FlxG.RED.rgb;
-				#end
+				debugBoundingBoxColor = FlxColorUtils.RED;
 			}
 		}
 		else if (!_boundingBoxColorOverritten)
 		{
-			#if !neko
-			debugBoundingBoxColor = FlxG.BLUE;
-			#else
-			debugBoundingBoxColor = FlxG.BLUE.rgb;
-			#end
+			debugBoundingBoxColor = FlxColorUtils.BLUE;
 		}
 		
 		//fill static graphics object with square shape
@@ -508,7 +492,7 @@ class FlxObject extends FlxBasic
 		//draw graphics shape to camera buffer
 		Camera.buffer.draw(FlxG.flashGfxSprite);
 		#else
-		var gfx:Graphics = Camera._effectsLayer.graphics;
+		var gfx:Graphics = Camera._debugLayer.graphics;
 		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
 		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
 		#end
@@ -528,7 +512,7 @@ class FlxObject extends FlxBasic
 	{
 		if(Path.nodes.length <= 0)
 		{
-			FlxG.log("WARNING: Paths need at least one node in them to be followed.");
+			FlxG.warn("Paths need at least one node in them to be followed.");
 			return;
 		}
 		
@@ -568,6 +552,24 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Change the path node this object is currently at.
+	 * @param  NodeIndex    The index of the new node out of <code>path.nodes</code>.
+	 */
+	public function setPathNode(NodeIndex:Int):Void
+	{
+		if (path == null) 
+			return;
+		
+		if (NodeIndex < 0) 
+			NodeIndex = 0;
+		else if (NodeIndex > path.nodes.length - 1)
+			NodeIndex = path.nodes.length - 1;
+		
+		_pathNodeIndex = NodeIndex; 
+		advancePath();
+	} 
+	
+	/**
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
 	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
 	 */
@@ -580,11 +582,15 @@ class FlxObject extends FlxBasic
 			{
 				if ((_pathMode & PATH_VERTICAL_ONLY) == 0)
 				{
-					x = oldNode.x - width * 0.5;
+					x = oldNode.x;
+					if (pathAutoCenter) 
+						x -= width * 0.5; 
 				}
 				if ((_pathMode & PATH_HORIZONTAL_ONLY) == 0)
 				{
-					y = oldNode.y - height * 0.5;
+					y = oldNode.y;
+					if (pathAutoCenter) 
+						y -= height * 0.5; 
 				}
 			}
 		}
@@ -666,8 +672,13 @@ class FlxObject extends FlxBasic
 	inline private function updatePathMotion():Void
 	{
 		//first check if we need to be pointing at the next node yet
-		_point.x = x + width * 0.5;
-		_point.y = y + height * 0.5;
+		_point.x = x;
+		_point.y = y;
+		if (pathAutoCenter)
+		{
+			_point.x += width * 0.5;
+			_point.y += height * 0.5;
+		}
 		var node:FlxPoint = path.nodes[_pathNodeIndex];
 		var deltaX:Float = node.x - _point.x;
 		var deltaY:Float = node.y - _point.y;
@@ -698,11 +709,17 @@ class FlxObject extends FlxBasic
 		}
 		
 		//then just move toward the current node at the requested speed
-		if(pathSpeed != 0)
+		if (pathSpeed != 0)
 		{
 			//set velocity based on path mode
-			_point.x = x + width * 0.5;
-			_point.y = y + height * 0.5;
+			_point.x = x;
+			_point.y = y;
+			if (pathAutoCenter)
+			{
+				_point.x += width * 0.5;
+				_point.y += height * 0.5;
+			}
+			
 			if (horizontalOnly || (_point.y == node.y))
 			{
 				velocity.x = (_point.x < node.x) ? pathSpeed : -pathSpeed;
@@ -775,6 +792,7 @@ class FlxObject extends FlxBasic
 				if (basic != null && basic.exists && overlaps(basic, InScreenSpace, Camera))
 				{
 					results = true;
+					break;
 				}
 			}
 			return results;
@@ -830,6 +848,7 @@ class FlxObject extends FlxBasic
 				if (basic != null && basic.exists && overlapsAt(X, Y, basic, InScreenSpace, Camera))
 				{
 					results = true;
+					break;
 				}
 			}
 			return results;
@@ -955,6 +974,32 @@ class FlxObject extends FlxBasic
 	
 	public var solid(get_solid, set_solid):Bool;
 	
+	/**
+	 * @private
+     */
+	private function set_width(Width:Float):Float
+	{
+		if (Width < 0) 
+			FlxG.warn("An object's width cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
+		else
+			width = Width;
+      
+		return Width;
+	}
+  
+	/**
+	 * @private
+	 */
+	private function set_height(Height:Float):Float
+	{
+		if (Height < 0) 
+			FlxG.warn("An object's height cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
+		else
+		height = Height;
+		
+		return Height;
+	}
+
 	/**
 	 * Whether the object collides or not.  For more control over what directions
 	 * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
@@ -1293,5 +1338,11 @@ class FlxObject extends FlxBasic
 		{
 			return false;
 		}
+	}
+	
+	public function move(x:Float, y:Float):Void
+	{
+		this.x = x;
+		this.y = y;
 	}
 }

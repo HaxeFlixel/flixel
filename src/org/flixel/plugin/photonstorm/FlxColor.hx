@@ -16,7 +16,7 @@
 package org.flixel.plugin.photonstorm;
 
 import flash.errors.Error;
-import nme.display.BitmapInt32;
+import org.flixel.FlxColorUtils;
 import org.flixel.FlxG;
 
 
@@ -35,17 +35,9 @@ class FlxColor
 	 * 
 	 * @return	Array
 	 */
-	#if flash
-	public static function getHSVColorWheel(alpha:UInt = 255):Array<UInt>
-	#else
-	public static function getHSVColorWheel(alpha:Int = 255):Array<BitmapInt32>
-	#end
+	public static function getHSVColorWheel(alpha:Int = 255):Array<Int>
 	{
-		#if flash
-		var colors:Array<UInt> = new Array<UInt>();
-		#else
-		var colors:Array<BitmapInt32> = new Array<BitmapInt32>();
-		#end
+		var colors:Array<Int> = new Array<Int>();
 		
 		for (c in 0...360)
 		{
@@ -64,11 +56,7 @@ class FlxColor
 	 * 
 	 * @return 0xAARRGGBB format color value
 	 */
-	#if flash
-	public static function getComplementHarmony(color:UInt):UInt
-	#else
-	public static function getComplementHarmony(color:BitmapInt32):BitmapInt32
-	#end
+	public static function getComplementHarmony(color:Int):Int
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
@@ -87,11 +75,7 @@ class FlxColor
 	 * 
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
-	#if flash
-	public static function getAnalogousHarmony(color:UInt, threshold:Int = 30):Harmony
-	#else
-	public static function getAnalogousHarmony(color:BitmapInt32, threshold:Int = 30):Harmony
-	#end
+	public static function getAnalogousHarmony(color:Int, threshold:Int = 30):Harmony
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
@@ -116,11 +100,7 @@ class FlxColor
 	 * 
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
-	#if flash
-	public static function getSplitComplementHarmony(color:UInt, threshold:Int = 30):Harmony
-	#else
-	public static function getSplitComplementHarmony(color:BitmapInt32, threshold:Int = 30):Harmony
-	#end
+	public static function getSplitComplementHarmony(color:Int, threshold:Int = 30):Harmony
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
@@ -134,7 +114,7 @@ class FlxColor
 		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite - threshold, 359);
 		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite + threshold, 359);
 		
-		FlxG.log("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
+		FlxG.notice("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
 		//return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
 		
@@ -150,11 +130,7 @@ class FlxColor
 	 * 
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
 	 */
-	#if flash
-	public static function getTriadicHarmony(color:UInt):TriadicHarmony
-	#else
-	public static function getTriadicHarmony(color:BitmapInt32):TriadicHarmony
-	#end
+	public static function getTriadicHarmony(color:Int):TriadicHarmony
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
@@ -172,11 +148,7 @@ class FlxColor
 	 * 
 	 * @return	String containing the 3 lines of information
 	 */
-	#if flash
-	public static function getColorInfo(color:UInt):String
-	#else
-	public static function getColorInfo(color:BitmapInt32):String
-	#end
+	public static function getColorInfo(color:Int):String
 	{
 		var argb:RGBA = getRGB(color);
 		var hsl:HSV = RGBtoHSV(color);
@@ -200,11 +172,7 @@ class FlxColor
 	 * 
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	#if flash
-	public static function RGBtoHexString(color:UInt):String
-	#else
-	public static function RGBtoHexString(color:BitmapInt32):String
-	#end
+	public static function RGBtoHexString(color:Int):String
 	{
 		var argb:RGBA = getRGB(color);
 		
@@ -218,11 +186,7 @@ class FlxColor
 	 * 
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	#if flash
-	public static function RGBtoWebString(color:UInt):String
-	#else
-	public static function RGBtoWebString(color:BitmapInt32):String
-	#end
+	public static function RGBtoWebString(color:Int):String
 	{
 		var argb:RGBA = getRGB(color);
 		
@@ -236,11 +200,7 @@ class FlxColor
 	 * 
 	 * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
 	 */
-	#if flash
-	public static function colorToHexString(color:UInt):String
-	#else
 	public static function colorToHexString(color:Int):String
-	#end
 	{
 		var digits:String = "0123456789ABCDEF";
 		
@@ -262,17 +222,9 @@ class FlxColor
 	 * 
 	 * @return 32-bit ARGB color value (0xAARRGGBB)
 	 */
-	#if flash
-	public static function HSVtoRGB(h:Float, s:Float, v:Float, alpha:UInt = 255):UInt
-	#else
-	public static function HSVtoRGB(h:Float, s:Float, v:Float, alpha:Int = 255):BitmapInt32
-	#end
+	public static function HSVtoRGB(h:Float, s:Float, v:Float, alpha:Int = 255):Int
 	{
-		#if flash
-		var result:UInt = FlxG.TRANSPARENT;
-		#else
-		var result:BitmapInt32 = FlxG.TRANSPARENT;
-		#end
+		var result = FlxColorUtils.TRANSPARENT;
 		
 		if (s == 0.0)
 		{
@@ -307,7 +259,7 @@ class FlxColor
 					result = getColor32(alpha, Std.int(v * 255), Std.int(p * 255), Std.int(q * 255));
 					
 				default:
-					FlxG.log("FlxColor Error: HSVtoRGB : Unknown color");
+					FlxG.error("FlxColor: HSVtoRGB : Unknown color");
 			}
 		}
 		
@@ -321,11 +273,7 @@ class FlxColor
 	 * 
 	 * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
 	 */
-	#if flash
-	public static function RGBtoHSV(color:UInt):HSV
-	#else
-	public static function RGBtoHSV(color:BitmapInt32):HSV
-	#end
+	public static function RGBtoHSV(color:Int):HSV
 	{
 		var rgb:RGBA = getRGB(color);
 		
@@ -396,41 +344,7 @@ class FlxColor
 		return { hue: hue, saturation: saturation, lightness: lightness, value: lightness };
 	}
 	
-	
-	#if flash
-	public static function interpolateColor(color1:UInt, color2:UInt, steps:UInt, currentStep:UInt, alpha:UInt = 255):UInt
-	{
-		var src1:RGBA = getRGB(color1);
-		var src2:RGBA = getRGB(color2);
-		
-		var r:UInt = cast((((src2.red - src1.red) * currentStep) / steps) + src1.red, UInt);
-		var g:UInt = cast((((src2.green - src1.green) * currentStep) / steps) + src1.green, UInt);
-		var b:UInt = cast((((src2.blue - src1.blue) * currentStep) / steps) + src1.blue, UInt);
-
-		return getColor32(alpha, r, g, b);
-	}
-	
-	public static function interpolateColorWithRGB(color:UInt, r2:UInt, g2:UInt, b2:UInt, steps:UInt, currentStep:UInt):UInt
-	{
-		var src:RGBA = getRGB(color);
-		
-		var r:UInt = cast((((r2 - src.red) * currentStep) / steps) + src.red, UInt);
-		var g:UInt = cast((((g2 - src.green) * currentStep) / steps) + src.green, UInt);
-		var b:UInt = cast((((b2 - src.blue) * currentStep) / steps) + src.blue, UInt);
-	
-		return getColor24(r, g, b);
-	}
-	
-	public static function interpolateRGB(r1:UInt, g1:UInt, b1:UInt, r2:UInt, g2:UInt, b2:UInt, steps:UInt, currentStep:UInt):UInt
-	{
-		var r:UInt = cast((((r2 - r1) * currentStep) / steps) + r1, UInt);
-		var g:UInt = cast((((g2 - g1) * currentStep) / steps) + g1, UInt);
-		var b:UInt = cast((((b2 - b1) * currentStep) / steps) + b1, UInt);
-	
-		return getColor24(r, g, b);
-	}
-	#else
-	public static function interpolateColor(color1:BitmapInt32, color2:BitmapInt32, steps:Int, currentStep:Int, alpha:Int = 255):BitmapInt32
+	public static function interpolateColor(color1:Int, color2:Int, steps:Int, currentStep:Int, alpha:Int = 255):Int
 	{
 		var src1:RGBA = getRGB(color1);
 		var src2:RGBA = getRGB(color2);
@@ -442,7 +356,7 @@ class FlxColor
 		return getColor32(alpha, r, g, b);
 	}
 	
-	public static function interpolateColorWithRGB(color:BitmapInt32, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):BitmapInt32
+	public static function interpolateColorWithRGB(color:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):Int
 	{
 		var src:RGBA = getRGB(color);
 		
@@ -453,7 +367,7 @@ class FlxColor
 		return getColor24(r, g, b);
 	}
 	
-	public static function interpolateRGB(r1:Int, g1:Int, b1:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):BitmapInt32
+	public static function interpolateRGB(r1:Int, g1:Int, b1:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):Int
 	{
 		var r:Int = Std.int((((r2 - r1) * currentStep) / steps) + r1);
 		var g:Int = Std.int((((g2 - g1) * currentStep) / steps) + g1);
@@ -461,7 +375,6 @@ class FlxColor
 	
 		return getColor24(r, g, b);
 	}
-	#end
 	
 	/**
 	 * Returns a random color value between black and white
@@ -474,41 +387,18 @@ class FlxColor
 	 * 
 	 * @return 32-bit color value with alpha
 	 */
-	#if flash
-	public static function getRandomColor(min:UInt = 0, max:UInt = 255, alpha:UInt = 255):UInt
+	public static function getRandomColor(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
 	{
 		//	Sanity checks
 		if (max > 255)
 		{
-			FlxG.log("FlxColor Warning: getRandomColor - max value too high");
+			FlxG.warn("FlxColor: getRandomColor - max value too high");
 			return getColor24(255, 255, 255);
 		}
 		
 		if (min > max)
 		{
-			FlxG.log("FlxColor Warning: getRandomColor - min value higher than max");
-			return getColor24(255, 255, 255);
-		}
-		
-		var red:UInt = min + Std.int(Math.random() * (max - min));
-		var green:UInt = min + Std.int(Math.random() * (max - min));
-		var blue:UInt = min + Std.int(Math.random() * (max - min));
-		
-		return getColor32(alpha, red, green, blue);
-	}
-	#else
-	public static function getRandomColor(min:Int = 0, max:Int = 255, alpha:Int = 255):BitmapInt32
-	{
-		//	Sanity checks
-		if (max > 255)
-		{
-			FlxG.log("FlxColor Warning: getRandomColor - max value too high");
-			return getColor24(255, 255, 255);
-		}
-		
-		if (min > max)
-		{
-			FlxG.log("FlxColor Warning: getRandomColor - min value higher than max");
+			FlxG.warn("FlxColor: getRandomColor - min value higher than max");
 			return getColor24(255, 255, 255);
 		}
 		
@@ -518,7 +408,6 @@ class FlxColor
 		
 		return getColor32(alpha, red, green, blue);
 	}
-	#end
 	
 	/**
 	 * Given an alpha and 3 color values this will return an integer representation of it
@@ -530,21 +419,10 @@ class FlxColor
 	 * 
 	 * @return	A native color value integer (format: 0xAARRGGBB)
 	 */
-	#if flash
-	public static function getColor32(alpha:UInt, red:UInt, green:UInt, blue:UInt):UInt
+	public static function getColor32(alpha:Int, red:Int, green:Int, blue:Int):Int
 	{
 		return alpha << 24 | red << 16 | green << 8 | blue;
 	}
-	#else
-	public static function getColor32(alpha:Int, red:Int, green:Int, blue:Int):BitmapInt32
-	{
-		#if neko
-		return {rgb: red << 16 | green << 8 | blue, a: alpha};
-		#else
-		return alpha << 24 | red << 16 | green << 8 | blue;
-		#end
-	}
-	#end
 	
 	/**
 	 * Given 3 color values this will return an integer representation of it
@@ -555,21 +433,10 @@ class FlxColor
 	 * 
 	 * @return	A native color value integer (format: 0xRRGGBB)
 	 */
-	#if flash
-	public static function getColor24(red:UInt, green:UInt, blue:UInt):UInt
+	public static function getColor24(red:Int, green:Int, blue:Int):Int
 	{
 		return red << 16 | green << 8 | blue;
 	}
-	#else
-	public static function getColor24(red:Int, green:Int, blue:Int):BitmapInt32
-	{
-		#if !neko
-		return red << 16 | green << 8 | blue;
-		#else
-		return {rgb: red << 16 | green << 8 | blue, a: 255};
-		#end
-	}
-	#end
 	
 	/**
 	 * Return the component parts of a color as an Object with the properties alpha, red, green, blue
@@ -580,36 +447,16 @@ class FlxColor
 	 * 
 	 * @return Object with properties: alpha, red, green, blue
 	 */
-	#if flash
-	public static function getRGB(color:UInt):RGBA
-	{
-		//var alpha:UInt = color >>> 24;
-		var alpha:UInt = (color >> 24) & 0xFF;
-		var red:UInt = color >> 16 & 0xFF;
-		var green:UInt = color >> 8 & 0xFF;
-		var blue:UInt = color & 0xFF;
-		
-		return { alpha: alpha, red: red, green: green, blue: blue };
-	}
-	#else
-	public static function getRGB(color:BitmapInt32):RGBA
+	public static function getRGB(color:Int):RGBA
 	{
 		//var alpha:Int = color >>> 24;
-		#if !neko
 		var alpha:Int = (color >> 24) & 0xFF;
 		var red:Int = color >> 16 & 0xFF;
 		var green:Int = color >> 8 & 0xFF;
 		var blue:Int = color & 0xFF;
-		#else
-		var alpha:Int = color.a;
-		var red:Int = color.rgb >> 16 & 0xFF;
-		var green:Int = color.rgb >> 8 & 0xFF;
-		var blue:Int = color.rgb & 0xFF;
-		#end
 		
 		return { alpha: alpha, red: red, green: green, blue: blue };
 	}
-	#end
 	
 	/**
 	 * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
@@ -618,18 +465,10 @@ class FlxColor
 	 * 
 	 * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
 	 */
-	#if flash
-	public static function getAlpha(color:UInt):UInt
-	#else
-	public static function getAlpha(color:BitmapInt32):Int
-	#end
+	public static function getAlpha(color:Int):Int
 	{
 		//return color >>> 24;
-		#if !neko
 		return (color >> 24) & 0xFF;
-		#else
-		return color.a;
-		#end
 	}
 	
 	/**
@@ -639,22 +478,10 @@ class FlxColor
 	 * 
 	 * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
 	 */
-	#if flash
-	public static function getAlphaFloat(color:UInt):Float
-	{
-		//var f:UInt = color >>> 24;
-		var f:UInt = (color >> 24) & 0xFF;
-	#else
-	public static function getAlphaFloat(color:BitmapInt32):Float
+	public static function getAlphaFloat(color:Int):Float
 	{
 		//var f:Int = color >>> 24;
-		#if !neko
 		var f:Int = (color >> 24) & 0xFF;
-		#else
-		var f:Int = color.a;
-		#end
-	#end
-		
 		return f / 255;
 	}
 	
@@ -665,11 +492,7 @@ class FlxColor
 	 * 
 	 * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
 	 */
-	#if flash
-	public static function getRed(color:UInt):UInt
-	#else
 	public static function getRed(color:Int):Int
-	#end
 	{
 		return color >> 16 & 0xFF;
 	}
@@ -681,11 +504,7 @@ class FlxColor
 	 * 
 	 * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
 	 */
-	#if flash
-	public static function getGreen(color:UInt):UInt
-	#else
 	public static function getGreen(color:Int):Int
-	#end
 	{
 		return color >> 8 & 0xFF;
 	}
@@ -697,11 +516,7 @@ class FlxColor
 	 * 
 	 * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
 	 */
-	#if flash
-	public static function getBlue(color:UInt):UInt
-	#else
 	public static function getBlue(color:Int):Int
-	#end
 	{
 		return color & 0xFF;
 	}
@@ -716,42 +531,23 @@ typedef HSV = {
 }
 
 typedef RGBA = {
-    #if flash
-	var alpha:UInt;
-    var red:UInt;
-    var green:UInt;
-    var blue:UInt;
-	#else
-	var alpha:Int;
+    var alpha:Int;
     var red:Int;
     var green:Int;
     var blue:Int;
-	#end
 }
 
 typedef Harmony = {
-    #if flash
-	var color1:UInt;
-    var color2:UInt;
-    var color3:UInt;
-	#else
-	var color1:BitmapInt32;
-    var color2:BitmapInt32;
-    var color3:BitmapInt32;
-	#end
-    var hue1:Int;
+	var color1:Int;
+    var color2:Int;
+    var color3:Int;
+	var hue1:Int;
     var hue2:Int;
     var hue3:Int;
 }
 
 typedef TriadicHarmony = {
-    #if flash
-	var color1:UInt;
-    var color2:UInt;
-    var color3:UInt;
-	#else
-	var color1:BitmapInt32;
-    var color2:BitmapInt32;
-    var color3:BitmapInt32;
-	#end
+	var color1:Int;
+    var color2:Int;
+    var color3:Int;
 }

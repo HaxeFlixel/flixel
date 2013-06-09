@@ -1,13 +1,12 @@
 package org.flixel;
 
-import nme.Assets;
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
-import nme.text.TextField;
-import nme.text.TextFieldType;
-import nme.text.TextFormat;
-import nme.text.TextFormatAlign;
-import nme.text.TextFieldAutoSize;
+import openfl.Assets;
+import flash.display.BitmapData;
+import flash.text.TextField;
+import flash.text.TextFieldType;
+import flash.text.TextFormat;
+import flash.text.TextFormatAlign;
+import flash.text.TextFieldAutoSize;
 import org.flixel.FlxAssets;
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
@@ -111,17 +110,13 @@ class FlxTextField extends FlxText
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	#if flash
-	override public function setFormat(Font:String = null, Size:Float = 8, Color:UInt = 0xffffff, Alignment:String = null, ShadowColor:UInt = 0, UseShadow:Bool = false):FlxText
-	#else
 	override public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
-	#end
 	{
 		if (Font == null)
 		{
 			Font = Assets.getFont(FlxAssets.defaultFont).fontName;
 		}
-		_format.font = Font;
+		_format.font = Assets.getFont(Font).fontName;
 		_format.size = Size;
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
@@ -160,17 +155,9 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	#if flash
-	override private function set_color(Color:UInt):UInt
-	#else
-	override private function set_color(Color:BitmapInt32):BitmapInt32
-	#end
+	override private function set_color(Color:Int):Int
 	{
-		#if neko
-		_format.color = Color.rgb;
-		#else
 		_format.color = Color;
-		#end
 		updateTextField();
 		return Color;
 	}
@@ -203,11 +190,7 @@ class FlxTextField extends FlxText
 	/**
 	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
-	#if flash
-	override private function get_shadow():UInt
-	#else
 	override private function get_shadow():Int
-	#end
 	{
 		// shadows are not supported
 		return 0;
@@ -216,11 +199,7 @@ class FlxTextField extends FlxText
 	/**
 	 * @private
 	 */
-	#if flash
-	override private function set_shadow(Color:UInt):UInt
-	#else
 	override private function set_shadow(Color:Int):Int
-	#end
 	{
 		// shadows are not supported
 		return 0;
@@ -231,11 +210,7 @@ class FlxTextField extends FlxText
 		// this class doesn't support this operation
 	}
 	
-	#if flash
-	override public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:UInt, Thickness:UInt = 1):Void
-	#else
-	override public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:BitmapInt32, Thickness:Int = 1):Void
-	#end
+	override public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
 	{
 		// this class doesn't support this operation
 	}
@@ -245,11 +220,7 @@ class FlxTextField extends FlxText
 		return true;
 	}
 	
-	#if flash
-	override public function pixelsOverlapPoint(point:FlxPoint, Mask:UInt = 0xFF, Camera:FlxCamera = null):Bool
-	#else
 	override public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, Camera:FlxCamera = null):Bool
-	#end
 	{
 		// this class doesn't support this operation
 		return false;

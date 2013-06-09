@@ -1,17 +1,17 @@
 package org.flixel;
 
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
-import nme.display.Graphics;
-import nme.display.Sprite;
-import nme.display.Tilesheet;
-import nme.geom.ColorTransform;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Graphics;
+import flash.display.Sprite;
+import openfl.display.Tilesheet;
+import flash.geom.ColorTransform;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.TileSheetData;
+import org.flixel.system.layer.TileSheetExt;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -134,11 +134,7 @@ class FlxCamera extends FlxBasic
 	 * The natural background color of the camera. Defaults to FlxG.bgColor.
 	 * NOTE: can be transparent for crazy FX!
 	 */
-	#if flash
-	public var bgColor:UInt;
-	#else
-	public var bgColor:BitmapInt32;
-	#end
+	public var bgColor:Int;
 	
 	#if flash
 	/**
@@ -183,11 +179,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	#if flash
-	private var _fxFlashColor:UInt;
-	#else
-	private var _fxFlashColor:BitmapInt32;
-	#end
+	private var _fxFlashColor:Int;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -203,11 +195,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	#if flash
-	private var _fxFadeColor:UInt;
-	#else
-	private var _fxFadeColor:BitmapInt32;
-	#end
+	private var _fxFadeColor:Int;
 	/**
 	 * Used to calculate the following target current velocity.
 	 */
@@ -265,11 +253,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
 	 */
-	public var _effectsLayer:Sprite;
-	
-	public var red:Float;
-	public var green:Float;
-	public var blue:Float;
+	public var _debugLayer:Sprite;
 	
 	/**
 	 * Currently used draw stack item
@@ -371,9 +355,6 @@ class FlxCamera extends FlxBasic
 	public function render():Void
 	{
 		var currItem:DrawStackItem = _headOfDrawStack;
-		#if !js
-		var useColor:Bool = this.isColored();
-		#end
 		while (currItem != null)
 		{
 			var data:Array<Float> = currItem.drawData;
@@ -388,7 +369,7 @@ class FlxCamera extends FlxBasic
 				var tempFlags:Int = Graphics.TILE_TRANS_2x2;
 				#if !js
 				tempFlags |= Graphics.TILE_ALPHA;
-				if (currItem.colored || useColor)
+				if (currItem.colored)
 				{
 					tempFlags |= Graphics.TILE_RGB;
 				}
@@ -401,7 +382,7 @@ class FlxCamera extends FlxBasic
 				#end
 				// TODO: currItem.antialiasing
 				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing/* || currItem.antialiasing*/), tempFlags);
-				TileSheetData._DRAWCALLS++;
+				TileSheetExt._DRAWCALLS++;
 			}
 			currItem = currItem.next;
 		}
@@ -477,12 +458,12 @@ class FlxCamera extends FlxBasic
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
-		_fxFlashColor = FlxG.TRANSPARENT;
+		_fxFlashColor = FlxColorUtils.TRANSPARENT;
 		_fxFlashDuration = 0.0;
 		_fxFlashComplete = null;
 		_fxFlashAlpha = 0.0;
 		
-		_fxFadeColor = FlxG.TRANSPARENT;
+		_fxFadeColor = FlxColorUtils.TRANSPARENT;
 		_fxFadeDuration = 0.0;
 		_fxFadeComplete = null;
 		_fxFadeAlpha = 0.0;
@@ -494,20 +475,20 @@ class FlxCamera extends FlxBasic
 		_fxShakeDirection = 0;
 		
 		#if flash
-		_fill = new BitmapData(width, height, true, FlxG.TRANSPARENT);
+		_fill = new BitmapData(width, height, true, FlxColorUtils.TRANSPARENT);
 		#else
+		
+		#if !js
 		_canvas.scrollRect = new Rectangle(0, 0, width, height);
+		#else
+		_canvas.scrollRect = new Rectangle(0, 0, width * zoom, height * zoom);
+		#end
 		
-		_effectsLayer = new Sprite();
-		_effectsLayer.x = -width * 0.5;
-		_effectsLayer.y = -height * 0.5;
-		_flashSprite.addChild(_effectsLayer);
-		
-		red = 1.0;
-		green = 1.0;
-		blue = 1.0;
-		
-		fog = 0.0;
+		_debugLayer = new Sprite();
+		_debugLayer.x = -width * 0.5;
+		_debugLayer.y = -height * 0.5;
+		_debugLayer.scaleX = 1;
+		_flashSprite.addChild(_debugLayer);
 		
 		_currentStackItem = new DrawStackItem();
 		_headOfDrawStack = _currentStackItem;
@@ -518,7 +499,6 @@ class FlxCamera extends FlxBasic
 		alpha = 1.0;
 		angle = 0.0;
 		antialiasing = false;
-
 	}
 	
 	/**
@@ -554,14 +534,14 @@ class FlxCamera extends FlxBasic
 		}
 		_fill = null;
 		#else
-		_flashSprite.removeChild(_effectsLayer);
+		_flashSprite.removeChild(_debugLayer);
 		_flashSprite.removeChild(_canvas);
 		var canvasNumChildren:Int = _canvas.numChildren;
 		for (i in 0...(canvasNumChildren))
 		{
 			_canvas.removeChildAt(0);
 		}
-		_effectsLayer = null;
+		_debugLayer = null;
 		_canvas = null;
 		
 		clearDrawStack();
@@ -688,11 +668,6 @@ class FlxCamera extends FlxBasic
 				scroll.y = bounds.bottom - height;
 			}
 		}
-		
-		#if !(flash || js)
-		scroll.x = Math.floor(scroll.x * 100) / 100;
-		scroll.y = Math.floor(scroll.y * 100) / 100;
-		#end		
 		
 		//Update the "flash" special effect
 		if(_fxFlashAlpha > 0.0)
@@ -860,19 +835,8 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	#if flash
-	public function flash(?Color:UInt = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#else
-	public function flash(?Color:BitmapInt32, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#end
+	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 	{
-		#if !flash
-		if (Color == null)
-		{
-			Color = FlxG.WHITE;
-		}
-		#end
-		
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
 			return;
@@ -895,19 +859,8 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	#if flash
-	public function fade(?Color:UInt = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#else
-	public function fade(?Color:BitmapInt32, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-	#end
+	public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 	{
-		#if !flash
-		if (Color == null)
-		{
-			Color = FlxG.BLACK;
-		}
-		#end
-		
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
 			return;
@@ -1060,22 +1013,14 @@ class FlxCamera extends FlxBasic
 	 * The color tint of the camera display.
 	 * (Internal, help with color transforming the flash bitmap.)
 	 */
-	#if flash
-	public var color(default, set_color):UInt;
-	#else
-	public var color(default, set_color):BitmapInt32;
-	#end
+	public var color(default, set_color):Int;
 	
 	/**
 	 * @private
 	 */
-	#if flash
-	private function set_color(Color:UInt):UInt
-	#else
-	private function set_color(Color:BitmapInt32):BitmapInt32
-	#end
+	private function set_color(Color:Int):Int
 	{
-		color = Color;
+		color = Color & 0x00ffffff;
 		#if flash
 		if (_flashBitmap != null)
 		{
@@ -1085,16 +1030,12 @@ class FlxCamera extends FlxBasic
 			colorTransform.blueMultiplier = (color & 0xff) / 255;
 			_flashBitmap.transform.colorTransform = colorTransform;
 		}
-		#elseif (cpp || js)
-		//var colorTransform:ColorTransform = _canvas.transform.colorTransform;
-		//_canvas.transform.colorTransform = colorTransform;
-		red = (color >> 16) / 255;
-		green = (color >> 8 & 0xff) / 255;
-		blue = (color & 0xff) / 255;
-		#elseif neko
-		red = (color.rgb >> 16) / 255;
-		green = (color.rgb >> 8 & 0xff) / 255;
-		blue = (color.rgb & 0xff) / 255;
+		#else
+		var colorTransform:ColorTransform = _canvas.transform.colorTransform;
+		colorTransform.redMultiplier = (color >> 16) / 255;
+		colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
+		colorTransform.blueMultiplier = (color & 0xff) / 255;
+		_canvas.transform.colorTransform = colorTransform;
 		#end
 		
 		return Color;
@@ -1133,14 +1074,12 @@ class FlxCamera extends FlxBasic
 	 */
 	public function setScale(X:Float, Y:Float):Void
 	{
-		
 		_flashSprite.scaleX = X;
 		_flashSprite.scaleY = Y;
 		
 		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
 		_flashOffsetX = width * 0.5 * X;
-		_flashOffsetY = height * 0.5 * Y;
-		
+		_flashOffsetY = height * 0.5 * Y;	
 	}
 	
 	/**
@@ -1163,11 +1102,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	#if flash
-	public function fill(Color:UInt, BlendAlpha:Bool = true):Void
-	#else
-	public function fill(Color:BitmapInt32, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, graphics:Graphics = null):Void
-	#end
+	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, graphics:Graphics = null):Void
 	{
 	#if flash
 		_fill.fillRect(_flashRect, Color);
@@ -1176,31 +1111,10 @@ class FlxCamera extends FlxBasic
 		
 		// This is temporal fix for camera's color
 		var targetGraphics:Graphics = (graphics == null) ? _canvas.graphics : graphics;
-		
-		#if !neko
 		Color = Color & 0x00ffffff;
-		if (red != 1.0 || green != 1.0 || blue != 1.0)
-		{
-			var redComponent:Int = Std.int((Color >> 16) * red);
-			var greenComponent:Int = Std.int((Color >> 8 & 0xff) * green);
-			var blueComponent:Int = Std.int((Color & 0xff) * blue);
-			Color = redComponent << 16 | greenComponent << 8 | blueComponent;
-		}
 		// end of fix
 		
 		targetGraphics.beginFill(Color, FxAlpha);
-		#else
-		if (red != 1.0 || green != 1.0 || blue != 1.0)
-		{
-			var redComponent:Int = Std.int((Color.rgb >> 16) * red);
-			var greenComponent:Int = Std.int((Color.rgb >> 8 & 0xff) * green);
-			var blueComponent:Int = Std.int((Color.rgb & 0xff) * blue);
-			Color.rgb = redComponent << 16 | greenComponent << 8 | blueComponent;
-		}
-		
-		targetGraphics.beginFill(Color.rgb, FxAlpha);
-		#end
-		
 		targetGraphics.drawRect(0, 0, width, height);
 		targetGraphics.endFill();
 	#end
@@ -1216,36 +1130,24 @@ class FlxCamera extends FlxBasic
 		//Draw the "flash" special effect onto the buffer
 		if(_fxFlashAlpha > 0.0)
 		{
-			#if neko
-			alphaComponent = _fxFlashColor.a;
-			#else
 			alphaComponent = (_fxFlashColor >> 24) & 255;
-			#end
 			
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
-			#elseif !neko
-			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
 			#else
-			fill(_fxFlashColor, true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
+			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _canvas.graphics);
 			#end
 		}
 		
 		//Draw the "fade" special effect onto the buffer
 		if(_fxFadeAlpha > 0.0)
 		{
-			#if neko
-			alphaComponent = _fxFadeColor.a;
-			#else
 			alphaComponent = (_fxFadeColor >> 24) & 255;
-			#end
 			
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
-			#elseif !neko
-			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
 			#else
-			fill(_fxFadeColor, true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
+			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _canvas.graphics);
 			#end
 		}
 		
@@ -1254,31 +1156,7 @@ class FlxCamera extends FlxBasic
 			_flashSprite.x += _fxShakeOffset.x;
 			_flashSprite.y += _fxShakeOffset.y;
 		}
-		
-		#if !flash
-		if (fog > 0)
-		{
-			_effectsLayer.graphics.beginFill(0xffffff, fog);
-			_effectsLayer.graphics.drawRect(0, 0, width, height);
-			_effectsLayer.graphics.endFill();
-		}
-		#end
 	}
-	
-	#if !flash
-	public var fog(default, default):Float;
-	#end
-	
-	#if !(flash || js)
-	inline public function isColored():Bool
-	{
-		#if neko
-		return (color.rgb < 0xffffff);
-		#else
-		return (color < 0xffffff);
-		#end
-	}
-	#end
 	
 	private function set_width(val:Int):Int
 	{
@@ -1295,11 +1173,15 @@ class FlxCamera extends FlxBasic
 			if (_canvas != null)
 			{
 				var rect:Rectangle = _canvas.scrollRect;
+				#if !js
 				rect.width = val;
+				#else
+				rect.width = val * zoom;
+				#end
 				_canvas.scrollRect = rect;
 				
 				_flashOffsetX = width * 0.5 * zoom;
-				_effectsLayer.x = _canvas.x = -width * 0.5;
+				_debugLayer.x = _canvas.x = -width * 0.5;
 			}
 			#end
 		}
@@ -1321,11 +1203,15 @@ class FlxCamera extends FlxBasic
 			if (_canvas != null)
 			{
 				var rect:Rectangle = _canvas.scrollRect;
+				#if !js
 				rect.height = val;
+				#else
+				rect.height = val * zoom;
+				#end
 				_canvas.scrollRect = rect;
 				
 				_flashOffsetY = height * 0.5 * zoom;
-				_effectsLayer.y = _canvas.y = -height * 0.5;
+				_debugLayer.y = _canvas.y = -height * 0.5;
 			}
 			#end
 		}

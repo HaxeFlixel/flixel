@@ -14,7 +14,6 @@ package org.flixel.plugin.photonstorm;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import nme.display.BitmapInt32;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 
@@ -39,31 +38,8 @@ class FlxGridOverlay
 	 * 
 	 * @return	FlxSprite of given width/height
 	 */
-	#if flash
-	public static function create(cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, ?color1:UInt = 0xffe7e6e6, ?color2:UInt = 0xffd9d5d5):FlxSprite
-	#else
-	public static function create(cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, ?color1:BitmapInt32, ?color2:BitmapInt32):FlxSprite
-	#end
+	public static function create(cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, color1:Int = 0xffe7e6e6, color2:Int = 0xffd9d5d5):FlxSprite
 	{
-		#if !flash
-		if (color1 == null)
-		{
-			#if !neko
-			color1 = 0xffe7e6e6;
-			#else
-			color1 = { rgb: 0xe7e6e6, a: 0xff };
-			#end
-		}
-		if (color2 == null)
-		{
-			#if !neko
-			color2 = 0xffd9d5d5;
-			#else
-			color2 = { rgb: 0xd9d5d5, a: 0xff };
-			#end
-		}
-		#end
-		
 		if (width == -1)
 		{
 			width = FlxG.width;
@@ -108,31 +84,8 @@ class FlxGridOverlay
 	 * 
 	 * @return	The modified source FlxSprite
 	 */
-	#if flash
-	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, ?color1:UInt = 0x88e7e6e6, ?color2:UInt = 0x88d9d5d5):FlxSprite
-	#else
-	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, ?color1:BitmapInt32, ?color2:BitmapInt32):FlxSprite
-	#end
+	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, color1:Int = 0x88e7e6e6, color2:Int = 0x88d9d5d5):FlxSprite
 	{
-		#if !flash
-		if (color1 == null)
-		{
-			#if !neko
-			color1 = 0x88e7e6e6;
-			#else
-			color1 = { rgb: 0xe7e6e6, a: 0x88 };
-			#end
-		}
-		if (color2 == null)
-		{
-			#if !neko
-			color2 = 0x88d9d5d5;
-			#else
-			color2 = { rgb: 0xd9d5d5, a: 0x88 };
-			#end
-		}
-		#end
-		
 		if (width == -1)
 		{
 			width = FlxG.width;
@@ -185,20 +138,11 @@ class FlxGridOverlay
 		
 	}
 	
-	#if flash
-	public static function createGrid(cellWidth:Int, cellHeight:Int, width:Int, height:Int, alternate:Bool, color1:UInt, color2:UInt):BitmapData
-	#else
-	public static function createGrid(cellWidth:Int, cellHeight:Int, width:Int, height:Int, alternate:Bool, color1:BitmapInt32, color2:BitmapInt32):BitmapData
-	#end
+	public static function createGrid(cellWidth:Int, cellHeight:Int, width:Int, height:Int, alternate:Bool, color1:Int, color2:Int):BitmapData
 	{
 		//	How many cells can we fit into the width/height? (round it UP if not even, then trim back)
-		#if flash
-		var rowColor:UInt = color1;
-		var lastColor:UInt = color1;
-		#else
-		var rowColor:BitmapInt32 = color1;
-		var lastColor:BitmapInt32 = color1;
-		#end
+		var rowColor:Int = color1;
+		var lastColor:Int = color1;
 		var grid:BitmapData = new BitmapData(width, height, true);
 		
 		//	If there aren't an even number of cells in a row then we need to swap the lastColor value

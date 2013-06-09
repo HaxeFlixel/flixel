@@ -1,10 +1,10 @@
 package org.flixel.addons;
 
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
@@ -153,8 +153,7 @@ class FlxBackdrop extends FlxObject
 			var currDrawData:Array<Float>;
 			var currIndex:Int;
 			#if !js
-			var isColoredCamera:Bool = camera.isColored();
-			var drawItem:DrawStackItem = camera.getDrawStackItem(_atlas, isColoredCamera, 0);
+			var drawItem:DrawStackItem = camera.getDrawStackItem(_atlas, false, 0);
 			#else
 			var drawItem:DrawStackItem = camera.getDrawStackItem(_atlas, false);
 			#end
@@ -165,19 +164,6 @@ class FlxBackdrop extends FlxObject
 			var currPosInArr:Int;
 			var currTileX:Float;
 			var currTileY:Float;
-			
-			#if !js
-			var redMult:Float = 1;
-			var greenMult:Float = 1;
-			var blueMult:Float = 1;
-			
-			if (isColoredCamera)
-			{
-				redMult = camera.red; 
-				greenMult = camera.green;
-				blueMult = camera.blue;
-			}
-			#end
 			
 			for (j in 0...(_numTiles))
 			{
@@ -199,12 +185,6 @@ class FlxBackdrop extends FlxObject
 				currDrawData[currIndex++] = 1;
 				
 				#if !js
-				if (isColoredCamera)
-				{
-					currDrawData[currIndex++] = redMult; 
-					currDrawData[currIndex++] = greenMult;
-					currDrawData[currIndex++] = blueMult;
-				}
 				currDrawData[currIndex++] = 1.0;	// alpha
 				#end
 			}

@@ -1,6 +1,6 @@
 package org.flixel.addons;
 
-import nme.Assets;
+import openfl.Assets;
 import haxe.xml.Fast;
 import haxe.xml.Parser;
 import org.flixel.FlxG;

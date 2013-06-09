@@ -1,14 +1,13 @@
 package org.flixel;
 import org.flixel.FlxPoint;
 
-import nme.Assets;
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
-import nme.filters.BitmapFilter;
-import nme.geom.Point;
-import nme.text.TextField;
-import nme.text.TextFormat;
-import nme.text.TextFormatAlign;
+import openfl.Assets;
+import flash.display.BitmapData;
+import flash.filters.BitmapFilter;
+import flash.geom.Point;
+import flash.text.TextField;
+import flash.text.TextFormat;
+import flash.text.TextFormatAlign;
 import org.flixel.system.layer.Atlas;
 
 /**
@@ -20,11 +19,7 @@ import org.flixel.system.layer.Atlas;
  */
 class FlxText extends FlxSprite
 {
-	#if flash
-	public var shadow(get_shadow, set_shadow):UInt;
-	#else
 	public var shadow(get_shadow, set_shadow):Int;
-	#end
 	
 	/**
 	 * Whether to draw shadow or not
@@ -51,11 +46,7 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal tracker for the text shadow color, default is clear/transparent.
 	 */
-	#if flash
-	private var _shadow:UInt;
-	#else
 	private var _shadow:Int;
-	#end
 	/**
 	 * Internal tracker for shadow usage, default is false
 	 */
@@ -79,7 +70,7 @@ class FlxText extends FlxSprite
 		_isStatic = false;
 		
 		var key:String = FlxG.getUniqueBitmapKey("text");
-		makeGraphic(Width, 1, FlxG.TRANSPARENT, false, key);
+		makeGraphic(Width, 1, FlxColorUtils.TRANSPARENT, false, key);
 		
 		if (Text == null)
 		{
@@ -151,11 +142,7 @@ class FlxText extends FlxSprite
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	#if flash
-	public function setFormat(Font:String = null, Size:Float = 8, Color:UInt = 0xffffff, Alignment:String = null, ShadowColor:UInt = 0, UseShadow:Bool = false):FlxText
-	#else
 	public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
-	#end
 	{
 		if (_isStatic)
 		{
@@ -168,18 +155,14 @@ class FlxText extends FlxSprite
 		}
 		_format.font = Assets.getFont(Font).fontName;
 		_format.size = Size;
+		Color &= 0x00ffffff;
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format);
+		updateFormat(_format);
 		_shadow = ShadowColor;
 		_useShadow = UseShadow;
 		_regen = true;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
 		return this;
 	}
 	
@@ -208,11 +191,6 @@ class FlxText extends FlxSprite
 		if(_textField.text != ot)
 		{
 			_regen = true;
-			#if flash
-			calcFrame();
-			#else
-			calcFrame(true);
-			#end
 		}
 		return _textField.text;
 	}
@@ -239,63 +217,34 @@ class FlxText extends FlxSprite
 		
 		_format.size = Size;
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format);
+		updateFormat(_format);
 		_regen = true;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
 		return Size;
 	}
 	
 	/**
 	 * The color of the text being displayed.
 	 */
-	#if flash
-	override private function get_color():UInt
+	override private function get_color():Int
 	{
 		return _format.color;
 	}
-	#else
-	override private function get_color():BitmapInt32
-	{
-		#if !neko
-		return _format.color;
-		#else
-		return { rgb: _format.color, a: 0xff };
-		#end
-	}
-	#end
 	
 	/**
 	 * @private
 	 */
-	#if flash
-	override private function set_color(Color:UInt):UInt
-	#else
-	override private function set_color(Color:BitmapInt32):BitmapInt32
-	#end
+	override private function set_color(Color:Int):Int
 	{
 		if (_isStatic)
 		{
 			return Color;
 		}
 		
-		#if neko
-		_format.color = Color.rgb;
-		#else
 		Color &= 0x00ffffff;
 		_format.color = Color;
-		#end
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format);
+		updateFormat(_format);
 		_regen = true;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
 		return Color;
 	}
 	
@@ -321,13 +270,8 @@ class FlxText extends FlxSprite
 		
 		_format.font = Assets.getFont(Font).fontName;
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format);
+		updateFormat(_format);
 		_regen = true;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
 		return Font;
 	}
 	
@@ -353,23 +297,16 @@ class FlxText extends FlxSprite
 		
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
-		_textField.setTextFormat(_format);
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
+		updateFormat(_format);
+		dirty = true;
+		_regen = true;
 		return Alignment;
 	}
 	
 	/**
 	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
-	#if flash
-	private function get_shadow():UInt
-	#else
 	private function get_shadow():Int
-	#end
 	{
 		return _shadow;
 	}
@@ -377,11 +314,7 @@ class FlxText extends FlxSprite
 	/**
 	 * @private
 	 */
-	#if flash
-	private function set_shadow(Color:UInt):UInt
-	#else
 	private function set_shadow(Color:Int):Int
-	#end
 	{
 		if (_isStatic)
 		{
@@ -389,11 +322,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_shadow = Color;
-		#if flash
-		calcFrame();
-		#else
-		calcFrame(true);
-		#end
+		dirty = true;
 		return Color;
 	}
 	
@@ -412,11 +341,7 @@ class FlxText extends FlxSprite
 		if (value != _useShadow)
 		{
 			_useShadow = value;
-			#if flash
-			calcFrame();
-			#else
-			calcFrame(true);
-			#end
+			dirty = true;
 		}
 		return _useShadow;
 	}
@@ -463,7 +388,7 @@ class FlxText extends FlxSprite
 				//Need to generate a new buffer to store the text graphic
 				height = _textField.textHeight;
 				height += 4; //account for 2px gutter on top and bottom
-				_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxG.TRANSPARENT);
+				_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColorUtils.TRANSPARENT);
 				frameHeight = Std.int(height);
 				_textField.height = height * 1.2;
 				_flashRect.x = 0;
@@ -474,7 +399,7 @@ class FlxText extends FlxSprite
 			}
 			else	//Else just clear the old buffer before redrawing the text
 			{
-				_pixels.fillRect(_flashRect, FlxG.TRANSPARENT);
+				_pixels.fillRect(_flashRect, FlxColorUtils.TRANSPARENT);
 			}
 			
 			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
@@ -493,7 +418,7 @@ class FlxText extends FlxSprite
 				#end
 				{
 					_formatAdjusted.align = TextFormatAlign.LEFT;
-					_textField.setTextFormat(_formatAdjusted);				
+					updateFormat(_formatAdjusted);				
 					#if flash
 					_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
 					#else
@@ -504,16 +429,16 @@ class FlxText extends FlxSprite
 				if (_useShadow)
 				{
 					_formatAdjusted.color = _shadow;
-					_textField.setTextFormat(_formatAdjusted);
+					updateFormat(_formatAdjusted);
 					_matrix.translate(1, 1);
 					_pixels.draw(_textField, _matrix, _colorTransform);
 					_matrix.translate( -1, -1);
 					_formatAdjusted.color = _format.color;
-					_textField.setTextFormat(_formatAdjusted);
+					updateFormat(_formatAdjusted);
 				}
 				//Actually draw the text onto the buffer
 				_pixels.draw(_textField, _matrix, _colorTransform);
-				_textField.setTextFormat(_format);
+				updateFormat(_format);
 			}
 			#if !flash
 			updateAtlasInfo();
@@ -528,8 +453,6 @@ class FlxText extends FlxSprite
 			
 		#if !flash
 			origin.make(frameWidth * 0.5, frameHeight * 0.5);
-			_halfWidth = origin.x;
-			_halfHeight = origin.y;
 		}
 		#end
 		
@@ -572,7 +495,7 @@ class FlxText extends FlxSprite
 	 * Horizontally - set alignment to "center" and increase the sprite width.
 	 * Vertically   - add newlines ('\n') to the beggining and end of the text.
 	 */
-	override public function setClipping(width:Int, height:Int):Dynamic 
+	override public function setClipping(width:Int, height:Int) 
 	{}
 
 	
@@ -638,9 +561,9 @@ class FlxText extends FlxSprite
 		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
 		if (cachedBmd != _pixels)
 		{
-			cachedBmd.dispose();
 			FlxG._cache.set(_bitmapDataKey, _pixels);
 			_atlas.clearAndFillWith(_pixels);
+			cachedBmd.dispose();
 		}
 		_node = _atlas.getNodeByKey(_bitmapDataKey);
 		updateFrameData();
@@ -656,5 +579,28 @@ class FlxText extends FlxSprite
 			_flxFrame = _framesData.frames[0];
 		}
 	#end
+	}
+	
+	override public function draw():Void 
+	{
+		if (_regen)		//rarely
+		{
+			#if !flash
+			calcFrame(true);
+			#else
+			calcFrame();
+			#end
+		}
+		
+		super.draw();
+	}
+	
+	inline private function updateFormat(format:TextFormat):Void
+	{
+		#if !flash
+		_textField.setTextFormat(format, 0, _textField.text.length);
+		#else
+		_textField.setTextFormat(format);
+		#end
 	}
 }

@@ -1,14 +1,14 @@
 package org.flixel.system.debug;
 
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.events.IOErrorEvent;
-import nme.events.MouseEvent;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.events.IOErrorEvent;
+import flash.events.MouseEvent;
 #if !FLX_NO_MOUSE
-import nme.ui.Mouse;
+import flash.ui.Mouse;
 #end
 
 import org.flixel.FlxAssets;
@@ -16,10 +16,10 @@ import org.flixel.FlxAssets;
 import flash.net.FileFilter;
 import flash.net.FileReference;
 #end
-import nme.text.TextField;
-import nme.text.TextFormat;
-import nme.text.TextFormatAlign;
-import nme.utils.ByteArray;
+import flash.text.TextField;
+import flash.text.TextFormat;
+import flash.text.TextFormatAlign;
+import flash.utils.ByteArray;
 
 import org.flixel.FlxG;
 import org.flixel.FlxU;
@@ -33,7 +33,7 @@ import org.flixel.system.replay.MouseRecord;
 class VCR extends Sprite
 {
 	#if flash
-	static private inline var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
+	static private var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 	#end
 	static private inline var DEFAULT_FILE_NAME:String = "replay.fgr";
 	
@@ -321,7 +321,7 @@ class VCR extends Sprite
 		_file = null;
 		if((fileContents == null) || (fileContents.length <= 0))
 		{
-			FlxG.log("ERROR: Empty flixel gameplay record.");
+			FlxG.error("Empty flixel gameplay record.");
 			return;
 		}
 		
@@ -352,7 +352,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onOpenError);
 		_file = null;
-		FlxG.log("ERROR: Unable to open flixel gameplay record.");
+		FlxG.error("Unable to open flixel gameplay record.");
 		#end
 	}
 	
@@ -404,7 +404,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.log("FLIXEL: successfully saved flixel gameplay record.");
+		FlxG.notice("Successfully saved flixel gameplay record.");
 		#end
 	}
 	
@@ -433,7 +433,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.log("ERROR: problem saving flixel gameplay record.");
+		FlxG.error("Problem saving flixel gameplay record.");
 		#end
 	}
 	

@@ -1,13 +1,14 @@
 package org.flixel.system.layer;
 
-import nme.display.BitmapData;
-import nme.display.Graphics;
-import nme.display.Tilesheet;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.display.Graphics;
+import openfl.display.Tilesheet;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPoint;
+import org.flixel.plugin.texturepacker.TexturePackerData;
 
 import org.flixel.system.layer.TileSheetExt;
 import org.flixel.system.layer.frames.FlxFrame;
@@ -18,9 +19,10 @@ import org.flixel.system.layer.frames.FlxSpriteFrames;
  */
 class TileSheetData
 {
+	/**
+	 * Cache for TileSheetData objects
+	 */
 	private static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
-	
-	public static var _DRAWCALLS:Int = 0;
 	
 	/**
 	 * Adds new tileSheet to manager and returns it
@@ -91,26 +93,31 @@ class TileSheetData
 	}
 	
 	
+	// END OF STATIC CONSTANTS AND METHODS
 	
 	
-	// TODO: make it work only on non-flash targets
 	public var tileSheet:TileSheetExt;
 	
 	/**
-	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
+	 * Storage for all groups of FlxFrames.
 	 */
-	// TODO: redocument this
-	private var flxSpriteFrames:Hash<FlxSpriteFrames>;
+	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
-	// TODO: document this
-	private var flxFrames:Hash<FlxFrame>;
+	/**
+	 * Storage for all FlxFrames in this TileSheetData object.
+	 */
+	private var flxFrames:Map<String, FlxFrame>;
 	
 	private function new(tileSheet:TileSheetExt)
 	{
 		this.tileSheet = tileSheet;
-		flxSpriteFrames = new Hash<FlxSpriteFrames>();
-		// TODO: fill this hash later
-		flxFrames = new Hash<FlxFrame>();
+		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
+		flxFrames = new Map<String, FlxFrame>();
+	}
+	
+	public function getFrame(name:String):FlxFrame
+	{
+		return flxFrames.get(name);
 	}
 	
 	/**
@@ -171,7 +178,7 @@ class TileSheetData
 			{
 				tempRect = new Rectangle(startX + i * spacedWidth, startY + j * spacedHeight, width, height);
 				frame = addSpriteSheetFrame(tempRect, tempPoint);
-				spriteData.frames.push(frame);
+				spriteData.addFrame(frame);
 			}
 		}
 		
@@ -190,13 +197,14 @@ class TileSheetData
 		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
 	}
 	
-	// TODO: document this
 	public function getSpriteSheetFrameKey(rect:Rectangle, point:Point):String
 	{
 		return rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_" + point.x + "_" + point.y;
 	}
 	
-	// TODO: document this
+	/**
+	 * Adds new FlxFrame to this TileSheetData object
+	 */
 	public function addSpriteSheetFrame(rect:Rectangle, point:Point):FlxFrame
 	{
 		var key:String = getSpriteSheetFrameKey(rect, point);
@@ -206,9 +214,18 @@ class TileSheetData
 		}
 		
 		var frame:FlxFrame = new FlxFrame(this);
+		#if !flash
 		frame.tileID = addTileRect(rect, point);
+		#end
 		frame.name = key;
 		frame.frame = rect;
+		
+		frame.rotated = false;
+		frame.trimmed = false;
+		frame.sourceSize = new FlxPoint(rect.width, rect.height);
+		frame.offset = new FlxPoint(0, 0);
+		
+		frame.center = new FlxPoint(0.5 * rect.width, 0.5 * rect.height);
 		flxFrames.set(key, frame);
 		return frame;
 	}
@@ -225,6 +242,7 @@ class TileSheetData
 	
 	public function destroy():Void
 	{
+		TileSheetExt.removeTileSheet(tileSheet);
 		tileSheet = null;
 		
 		for (spriteData in flxSpriteFrames)
@@ -232,9 +250,86 @@ class TileSheetData
 			spriteData.destroy();
 		}
 		
-		// TODO: destroy FlxSpriteFrames in flxSpriteFrames hash
+		for (frames in flxSpriteFrames)
+		{
+			frames.destroy();
+		}
 		flxSpriteFrames = null;
-		// TODO: destroy FlxFrames in flxFrames hash
+		
+		for (frame in flxFrames)
+		{
+			frame.destroy();
+		}
 		flxFrames = null;
+	}
+	
+	/**
+	 * Parses provided TexturePackerData object and returns generated FlxSpriteFrames object
+	 */
+	public function getTexturePackerFrames(data:TexturePackerData, startX:Int = 0, startY:Int = 0):FlxSpriteFrames
+	{
+		// No need to parse data again
+		if (flxSpriteFrames.exists(data.assetName))	
+		{
+			return flxSpriteFrames.get(data.assetName);
+		}
+		
+		var packerFrames:FlxSpriteFrames = new FlxSpriteFrames(data.assetName);
+		
+		for (frame in Lambda.array(data.data.frames))
+		{
+			var frame:FlxFrame = addTexturePackerFrame(frame, startX, startY);
+			packerFrames.addFrame(frame);
+		}
+		
+		flxSpriteFrames.set(data.assetName, packerFrames);
+		return packerFrames;
+	}
+	
+	/**
+	 * Parses frame TexturePacker data object and returns it
+	 */
+	private function addTexturePackerFrame(frameData:Dynamic, startX:Int = 0, startY:Int = 0):FlxFrame
+	{
+		var key:String = frameData.filename;
+		if (containsFrame(key))
+		{
+			return flxFrames.get(key);
+		}
+		
+		var texFrame:FlxFrame = new FlxFrame(this);
+		texFrame.trimmed = frameData.trimmed;
+		texFrame.rotated = frameData.rotated;
+		texFrame.name = key;
+		texFrame.sourceSize = new FlxPoint(frameData.sourceSize.w, frameData.sourceSize.h);
+		texFrame.offset = new FlxPoint(0, 0);
+		
+		texFrame.center = new FlxPoint(0, 0);
+		
+		texFrame.offset.make(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
+		if (frameData.rotated)
+		{
+			texFrame.frame = new Rectangle(frameData.frame.x + startX, frameData.frame.y + startY, frameData.frame.h, frameData.frame.w);
+			texFrame.center.make(texFrame.frame.height * 0.5 + texFrame.offset.x, texFrame.frame.width * 0.5 + texFrame.offset.y);
+			texFrame.additionalAngle = -90.0;
+		}
+		else
+		{
+			texFrame.frame = new Rectangle(frameData.frame.x + startX, frameData.frame.y + startY, frameData.frame.w, frameData.frame.h);
+			texFrame.center.make(texFrame.frame.width * 0.5 + texFrame.offset.x, texFrame.frame.height * 0.5 + texFrame.offset.y);
+		}
+		#if !flash
+		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
+		#end
+		flxFrames.set(key, texFrame);
+		return texFrame;
+	}
+	
+	public function destroyFrameBitmapDatas():Void
+	{
+		for (frame in flxFrames)
+		{
+			frame.destroyBitmapDatas();
+		}
 	}
 }

@@ -43,20 +43,12 @@ class FlxBitmapFont extends FlxSprite
 	/**
 	 * Adds horizontal spacing between each character of the font, in pixels. Default is 0.
 	 */
-	#if flash
-	public var customSpacingX:UInt;
-	#else
 	public var customSpacingX:Int;
-	#end
 	
 	/**
 	 * Adds vertical spacing between each line of multi-line text, set in pixels. Default is 0.
 	 */
-	#if flash
-	public var customSpacingY:UInt;
-	#else
 	public var customSpacingY:Int;
-	#end
 	
 	private var _text:String = "";
 	
@@ -135,16 +127,6 @@ class FlxBitmapFont extends FlxSprite
 	 */
 	private var fontSet:BitmapData;
 	private var grabData:Array<Rectangle>;
-	#if flash
-	private var offsetX:UInt;
-	private var offsetY:UInt;
-	public var characterWidth:UInt;
-	public var characterHeight:UInt;
-	private var characterSpacingX:UInt;
-	private var characterSpacingY:UInt;
-	private var characterPerRow:UInt;
-	private var fixedWidth:UInt;
-	#else
 	private var offsetX:Int;
 	private var offsetY:Int;
 	public var characterWidth:Int;
@@ -153,7 +135,6 @@ class FlxBitmapFont extends FlxSprite
 	private var characterSpacingY:Int;
 	private var characterPerRow:Int;
 	private var fixedWidth:Int;
-	#end
 	
 	#if !flash
 	/**
@@ -184,11 +165,7 @@ class FlxBitmapFont extends FlxSprite
 	 * @param	xOffset			If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
 	 * @param	yOffset			If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 	 */
-	#if flash
-	public function new(font:Dynamic, characterWidth:UInt, characterHeight:UInt, chars:String, charsPerRow:UInt, xSpacing:UInt = 0, ySpacing:UInt = 0, xOffset:UInt = 0, yOffset:UInt = 0)
-	#else
 	public function new(font:Dynamic, characterWidth:Int, characterHeight:Int, chars:String, charsPerRow:Int, xSpacing:Int = 0, ySpacing:Int = 0, xOffset:Int = 0, yOffset:Int = 0)
-	#end
 	{
 		super();
 		
@@ -352,8 +329,7 @@ class FlxBitmapFont extends FlxSprite
 		{
 			camera = cameras[i++];
 			#if !js
-			var isColoredCamera:Bool = camera.isColored();
-			drawItem = camera.getDrawStackItem(_atlas, (isColored || isColoredCamera), _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
 			#else
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
 			#end
@@ -371,19 +347,6 @@ class FlxBitmapFont extends FlxSprite
 			#if js
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
-			#end
-			
-			#if !js
-			var redMult:Float = _red;
-			var greenMult:Float = _green;
-			var blueMult:Float = _blue;
-			
-			if (isColoredCamera)
-			{
-				redMult = _red * camera.red; 
-				greenMult = _green * camera.green;
-				blueMult = _blue * camera.blue;
-			}
 			#end
 
 			var x1:Float = 0;
@@ -430,11 +393,11 @@ class FlxBitmapFont extends FlxSprite
 				currDrawData[currIndex++] = csy;
 
 				#if !js
-				if (isColored || isColoredCamera)
+				if (isColored)
 				{
-					currDrawData[currIndex++] = redMult;
-					currDrawData[currIndex++] = greenMult;
-					currDrawData[currIndex++] = blueMult;
+					currDrawData[currIndex++] = _red;
+					currDrawData[currIndex++] = _green;
+					currDrawData[currIndex++] = _blue;
 				}
 				currDrawData[currIndex++] = alpha;
 				#else
@@ -451,14 +414,14 @@ class FlxBitmapFont extends FlxSprite
 	}
 	#end
 	
-	public var text(get_textString, set_textString):String;
+	public var text(get_text, set_text):String;
 	
 	/**
 	 * Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 	 * 
 	 * @return	void
 	 */ 
-	private function set_textString(content:String):String
+	private function set_text(content:String):String
 	{
 		var newText:String;
 		
@@ -499,7 +462,7 @@ class FlxBitmapFont extends FlxSprite
 		align = lineAlignment;
 	}
 	
-	private function get_textString():String
+	private function get_text():String
 	{
 		return _text;
 	}
@@ -514,11 +477,7 @@ class FlxBitmapFont extends FlxSprite
 	 * @param	lineAlignment		Align each line of multi-line text. Set to FlxBitmapFont.ALIGN_LEFT (default), FlxBitmapFont.ALIGN_RIGHT or FlxBitmapFont.ALIGN_CENTER.
 	 * @param	allowLowerCase		Lots of bitmap font sets only include upper-case characters, if yours needs to support lower case then set this to true.
 	 */
-	#if flash
-	public function setText(content:String, multiLines:Bool = false, characterSpacing:UInt = 0, lineSpacing:UInt = 0, lineAlignment:String = "left", allowLowerCase:Bool = false):Void
-	#else
 	public function setText(content:String, multiLines:Bool = false, characterSpacing:Int = 0, lineSpacing:Int = 0, lineAlignment:String = "left", allowLowerCase:Bool = false):Void
-	#end
 	{
 		customSpacingX = characterSpacing;
 		customSpacingY = lineSpacing;
@@ -763,15 +722,10 @@ class FlxBitmapFont extends FlxSprite
 	 * 
 	 * @return	A value
 	 */
-	#if flash
-	private function getLongestLine():UInt
-	{
-		var longestLine:UInt = 0;
-	#else
 	private function getLongestLine():Int
 	{
 		var longestLine:Int = 0;
-	#end
+		
 		if (_text.length > 0)
 		{
 			var lines:Array<String> = _text.split("\n");

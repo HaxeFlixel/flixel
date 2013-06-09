@@ -13,12 +13,12 @@
 
 package org.flixel.plugin.photonstorm;
 
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.BitmapDataChannel;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.BitmapDataChannel;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;

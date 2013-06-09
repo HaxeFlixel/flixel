@@ -90,7 +90,7 @@ class FlxControlHandler
 	private var nextFireTime:Int; 		// The internal time when they can next fire
 	private var lastFiredTime:Int; 		// The internal time of when when they last fired
 	private var fireKeyMode:Int;		// The fire key mode
-	private var fireCallback:Void->Dynamic;	// A function to call every time they fire
+	private var fireCallback:Void->Void;	// A function to call every time they fire
 	
 	private var jumpHeight:Int; 		// The pixel height amount they jump (drag and gravity also both influence this)
 	private var jumpRate:Int; 			// The ms delay between jumping when the key is held down
@@ -623,7 +623,7 @@ class FlxControlHandler
 	 * @param	callback		A user defined function to call when it fires
 	 * @param	altKey			Specify an alternative fire key that works AS WELL AS the primary fire key (TODO)
 	 */
-	public function setFireButton(key:String, keymode:Int, repeatDelay:Int, callbackFunc:Void->Dynamic, altKey:String = ""):Void
+	public function setFireButton(key:String, keymode:Int, repeatDelay:Int, callbackFunc:Void->Void, altKey:String = ""):Void
 	{
 		fireKey = key;
 		fireKeyMode = keymode;

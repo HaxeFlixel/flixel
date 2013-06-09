@@ -2,8 +2,8 @@ package org.flixel.system.input;
 
 #if (cpp || neko)
 import org.flixel.FlxG;
-import nme.Lib;
-import nme.events.JoystickEvent;
+import flash.Lib;
+import openfl.events.JoystickEvent;
 import org.flixel.system.input.FlxJoystick;
 
 /**
@@ -17,24 +17,24 @@ class FlxJoystickManager implements IFlxInput
 	 * While you can have each joystick use a custom dead zone, setting this will 
 	 * set every gamepad to use this deadzone.
 	 */
-	public var globalDeadZone(default, set_deadZone):Float;
+	public var globalDeadZone(default, set_globalDeadZone):Float;
 	
 	/**
 	 * A counter for the number of active Joysticks
 	 */
-	public var numActiveJoysticks(getNumActiveJoysticks, null):Int;
+	public var numActiveJoysticks(get_numActiveJoysticks, null):Int;
 	
 	/**
 	 * Storage for all connected joysticks
 	 */
-	private var joysticks:IntHash<FlxJoystick>;
+	private var joysticks:Map<Int, FlxJoystick>;
 	
 	/**
 	 * Constructor
 	 */
 	public function new() 
 	{
-		joysticks  = new IntHash<FlxJoystick>();
+		joysticks  = new Map<Int, FlxJoystick>();
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -57,9 +57,79 @@ class FlxJoystickManager implements IFlxInput
 	}
 	
 	/**
+	 * Check to see if any button was pressed on any joystick
+	*/
+	public function anyButton():Bool
+	{
+		var it = joysticks.iterator();
+		var joy = it.next();
+		while(joy != null)
+		{
+			if (joy.anyButton())
+				return true;
+			joy = it.next();
+		}
+		return false;
+	}
+
+	/**
+	 * Check to see if this button is pressed on any joystick.
+	 * @param buttonID button id (from 0 to 7).
+	 * @return Whether the button is pressed
+	*/
+	public function anyJoyPressed(buttonID:Int):Bool
+	{
+		var it = joysticks.iterator();
+		var joy = it.next();
+		while(joy != null)
+		{
+			if (joy.pressed(buttonID))
+				return true;
+			joy = it.next();
+		}
+		return false;
+	}
+
+	/**
+	 * Check to see if this button was just pressed on any joystick.
+	 * @param buttonID button id (from 0 to 7).
+	 * @return Whether the button was just pressed
+	*/
+	public function anyJoyJustPressed(buttonID:Int):Bool
+	{
+		var it = joysticks.iterator();
+		var joy = it.next();
+		while(joy != null)
+		{
+			if (joy.justPressed(buttonID))
+				return true;
+			joy = it.next();
+		}
+		return false;
+	}
+
+	/**
+	 * Check to see if this button is just released on any joystick.
+	 * @param buttonID button id (from 0 to 7).
+	 * @return Whether the button is just released.
+	*/
+	public function anyJoyJustReleased(buttonID:Int):Bool
+	{
+		var it = joysticks.iterator();
+		var joy = it.next();
+		while(joy != null)
+		{
+			if (joy.justReleased(buttonID))
+				return true;
+			joy = it.next();
+		}
+		return false;
+	}
+	
+	/**
 	 * Gets the number of active joysticks
 	 */
-	function getNumActiveJoysticks():Int
+	function get_numActiveJoysticks():Int
 	{
 		var count = 0;
 		for (joy in joysticks)
@@ -99,7 +169,7 @@ class FlxJoystickManager implements IFlxInput
 			joy.destroy();
 		}
 		
-		joysticks = new IntHash<FlxJoystick>();
+		joysticks = new Map<Int, FlxJoystick>();
 		numActiveJoysticks = 0;
 	}
 	
@@ -169,7 +239,7 @@ class FlxJoystickManager implements IFlxInput
 	 * 						Less this number the more Joystick is sensible.
 	 * 						Should be between 0.0 and 1.0.
 	 */
-	private function set_deadZone(DeadZone:Float):Float
+	private function set_globalDeadZone(DeadZone:Float):Float
 	{
 		globalDeadZone = DeadZone;
 		for (joy in joysticks)

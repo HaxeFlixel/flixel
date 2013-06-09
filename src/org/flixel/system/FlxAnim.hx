@@ -32,11 +32,7 @@ class FlxAnim
 	public function new(Name:String, Frames:Array<Int>, FrameRate:Float = 0, Looped:Bool = true)
 	{
 		name = Name;
-		delay = 0;
-		if (FrameRate > 0)
-		{
-			delay = 1.0 / FrameRate;
-		}
+		frameRate = FrameRate;
 		frames = Frames;
 		looped = Looped;
 	}
@@ -47,5 +43,21 @@ class FlxAnim
 	public function destroy():Void
 	{
 		frames = null;
+	}
+	
+	/**
+	 * Animation frameRate - the speed in frames per second that the animation should play at.
+	 */
+	public var frameRate(default, set_frameRate):Float;
+	
+	private function set_frameRate(value:Float):Float
+	{
+		delay = 0;
+		frameRate = value;
+		if (value > 0)
+		{
+			delay = 1.0 / value;
+		}
+		return value;
 	}
 }

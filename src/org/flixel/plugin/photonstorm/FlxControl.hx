@@ -12,8 +12,7 @@
 
 package org.flixel.plugin.photonstorm;
 
-import nme.ObjectHash;
-
+import haxe.ds.ObjectMap;
 import org.flixel.FlxBasic;
 import org.flixel.FlxSprite;
 import org.flixel.FlxU;
@@ -27,7 +26,7 @@ class FlxControl extends FlxBasic
 	public static var player4:FlxControlHandler;
 	
 	//	Additional control handlers
-	private static var members:ObjectHash<FlxControlHandler, FlxControlHandler> = new ObjectHash<FlxControlHandler, FlxControlHandler>();
+	private static var members:ObjectMap<FlxControlHandler, FlxControlHandler> = new ObjectMap<FlxControlHandler, FlxControlHandler>();
 	
 	public function new() 
 	{

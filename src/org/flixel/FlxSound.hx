@@ -1,11 +1,11 @@
 package org.flixel;
 
-import nme.Assets;
-import nme.events.Event;
-import nme.media.Sound;
-import nme.media.SoundChannel;
-import nme.media.SoundTransform;
-import nme.net.URLRequest;
+import openfl.Assets;
+import flash.events.Event;
+import flash.media.Sound;
+import flash.media.SoundChannel;
+import flash.media.SoundTransform;
+import flash.net.URLRequest;
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
@@ -571,7 +571,7 @@ class FlxSound extends FlxBasic
 	 */
 	private function gotID3(event:Event = null):Void
 	{
-		FlxG.log("got ID3 info!");
+		FlxG.notice("Got ID3 info.");
 		name = _sound.id3.songName;
 		artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);

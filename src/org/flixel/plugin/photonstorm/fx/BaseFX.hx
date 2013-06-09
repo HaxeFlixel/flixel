@@ -12,11 +12,10 @@
 
 package org.flixel.plugin.photonstorm.fx; 
 
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.display.BitmapInt32;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import org.flixel.FlxSprite;
-import nme.display.BitmapData;
+import flash.display.BitmapData;
 
 class BaseFX 
 {
@@ -47,11 +46,7 @@ class BaseFX
 	var updateFromSource:Bool;
 	var clsRect:Rectangle;
 	var clsPoint:Point;
-	#if flash
-	var clsColor:UInt;
-	#else
-	var clsColor:BitmapInt32;
-	#end
+	var clsColor:Int;
 	
 	//	For staggered drawing updates
 	var updateLimit:Int;

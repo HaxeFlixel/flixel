@@ -21,8 +21,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxTilemap;
 import org.flixel.FlxTypedGroup;
 import org.flixel.system.input.FlxTouch;
-import nme.display.Bitmap;
-import nme.display.BitmapInt32;
+import flash.display.Bitmap;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
@@ -198,19 +197,8 @@ class FlxWeapon
 	 * @param	offsetX		When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 * @param	offsetY		When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 */
-	#if flash
-	public function makePixelBullet(quantity:UInt, width:Int = 2, height:Int = 2, ?color:UInt = 0xffffffff, offsetX:Int = 0, offsetY:Int = 0):Void
-	#else
-	public function makePixelBullet(quantity:Int, width:Int = 2, height:Int = 2, ?color:BitmapInt32, offsetX:Int = 0, offsetY:Int = 0):Void
-	#end
+	public function makePixelBullet(quantity:Int, width:Int = 2, height:Int = 2, color:Int = 0xffffffff, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
-		#if !flash
-		if (color == null)
-		{
-			color = FlxG.WHITE;
-		}
-		#end
-		
 		group = new FlxTypedGroup<Bullet>(quantity);
 		
 		for (b in 0...(quantity))
@@ -359,35 +347,35 @@ class FlxWeapon
 		}
 		
 		//	Faster (less CPU) to use this small if-else ladder than a switch statement
-		if (method == FIRE)
+		if (method == FlxWeapon.FIRE)
 		{
 			currentBullet.fire(launchX, launchY, velocity.x, velocity.y);
 		}
-		else if (method == FIRE_AT_POSITION)
+		else if (method == FlxWeapon.FIRE_AT_POSITION)
 		{
 			currentBullet.fireAtPosition(launchX, launchY, x, y, bulletSpeed);
 		}
-		else if (method == FIRE_AT_TARGET)
+		else if (method == FlxWeapon.FIRE_AT_TARGET)
 		{
 			currentBullet.fireAtTarget(launchX, launchY, target, bulletSpeed);
 		}
-		else if (method == FIRE_FROM_ANGLE)
+		else if (method == FlxWeapon.FIRE_FROM_ANGLE)
 		{
 			currentBullet.fireFromAngle(launchX, launchY, angle, bulletSpeed);
 		}
-		else if (method == FIRE_FROM_PARENT_ANGLE)
+		else if (method == FlxWeapon.FIRE_FROM_PARENT_ANGLE)
 		{
 			currentBullet.fireFromAngle(launchX, launchY, Math.floor(parent.angle), bulletSpeed);
 		}
 		#if !FLX_NO_TOUCH
-		else if (method == FIRE_AT_TOUCH)
+		else if (method == FlxWeapon.FIRE_AT_TOUCH)
 		{
 			if ( touchTarget != null)
 			currentBullet.fireAtTouch(launchX, launchY, touchTarget, bulletSpeed);
 		}
 		#end
 		#if !FLX_NO_MOUSE
-		else if (method == FIRE_AT_MOUSE)
+		else if (method == FlxWeapon.FIRE_AT_MOUSE)
 		{
 			currentBullet.fireAtMouse(launchX, launchY, bulletSpeed);
 		}
@@ -414,7 +402,7 @@ class FlxWeapon
 	 */
 	public inline function fire():Bool
 	{
-		return runFire(FIRE);
+		return runFire(FlxWeapon.FIRE);
 	}
 	
 	#if !FLX_NO_MOUSE
@@ -425,7 +413,7 @@ class FlxWeapon
 	 */
 	public inline function fireAtMouse():Bool
 	{
-		return runFire(FIRE_AT_MOUSE);
+		return runFire(FlxWeapon.FIRE_AT_MOUSE);
 	}
 	#end
 	
@@ -446,7 +434,7 @@ class FlxWeapon
 		}
 		var fired = false;
 		if ( touchTarget != null) {
-			fired = runFire(FIRE_AT_TOUCH);
+			fired = runFire(FlxWeapon.FIRE_AT_TOUCH);
 			touchTarget = null;
 		}
 		return fired;
@@ -462,7 +450,7 @@ class FlxWeapon
 	 */
 	public inline function fireAtPosition(x:Int, y:Int):Bool
 	{
-		return runFire(FIRE_AT_POSITION, x, y);
+		return runFire(FlxWeapon.FIRE_AT_POSITION, x, y);
 	}
 	
 	/**
@@ -473,7 +461,7 @@ class FlxWeapon
 	 */
 	public inline function fireAtTarget(target:FlxSprite):Bool
 	{
-		return runFire(FIRE_AT_TARGET, 0, 0, target);
+		return runFire(FlxWeapon.FIRE_AT_TARGET, 0, 0, target);
 	}
 	
 	/**
@@ -484,7 +472,7 @@ class FlxWeapon
 	 */
 	public inline function fireFromAngle(angle:Int):Bool
 	{
-		return runFire(FIRE_FROM_ANGLE, 0, 0, null, angle);
+		return runFire(FlxWeapon.FIRE_FROM_ANGLE, 0, 0, null, angle);
 	}
 	
 	/**
@@ -494,7 +482,7 @@ class FlxWeapon
 	 */
 	public inline function fireFromParentAngle():Bool
 	{
-		return runFire(FIRE_FROM_PARENT_ANGLE);
+		return runFire(FlxWeapon.FIRE_FROM_PARENT_ANGLE);
 	}
 	
 	/**

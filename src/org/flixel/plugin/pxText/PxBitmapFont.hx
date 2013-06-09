@@ -1,12 +1,12 @@
 package org.flixel.plugin.pxText;
 
-import nme.display.BitmapData;
-import nme.display.BitmapInt32;
-import nme.display.Graphics;
-import nme.geom.ColorTransform;
-import nme.geom.Matrix;
-import nme.geom.Point;
-import nme.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.display.Graphics;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import org.flixel.FlxColorUtils;
 import org.flixel.FlxG;
 import org.flixel.system.layer.Node;
 
@@ -17,19 +17,19 @@ import org.flixel.system.layer.Node;
  */
 class PxBitmapFont 
 {
-	private static var _storedFonts:Hash<PxBitmapFont> = new Hash<PxBitmapFont>();
+	private static var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
 	
 	private static var ZERO_POINT:Point = new Point();
 	
 	#if flash
 	private var _glyphs:Array<BitmapData>;
 	#else
-	private var _glyphs:IntHash<PxFontSymbol>;
+	private var _glyphs:Map<Int, PxFontSymbol>;
 	private var _num_letters:Int;
 	private var _bgTileID:Int;
 	
-	private var _atlasGlyphs:Hash<IntHash<PxFontSymbol>>;
-	private var _bgTiles:Hash<Int>;
+	private var _atlasGlyphs:Map<String, Map<Int, PxFontSymbol>>;
+	private var _bgTiles:Map<String, Int>;
 	#end
 	private var _glyphString:String;
 	private var _maxHeight:Int;
@@ -64,11 +64,11 @@ class PxBitmapFont
 		_glyphs = [];
 		#else
 		_bgTileID = -1;
-		_glyphs = new IntHash<PxFontSymbol>();
+		_glyphs = new Map<Int, PxFontSymbol>();
 		_num_letters = 0;
 		
-		_atlasGlyphs = new Hash<IntHash<PxFontSymbol>>();
-		_bgTiles = new Hash<Int>();
+		_atlasGlyphs = new Map<String, Map<Int, PxFontSymbol>>();
+		_bgTiles = new Map<String, Int>();
 		#end
 	}
 	
@@ -143,7 +143,7 @@ class PxBitmapFont
 		{
 			return;
 		}
-		_glyphs = new IntHash<PxFontSymbol>();
+		_glyphs = new Map<Int, PxFontSymbol>();
 		#end
 		var rect:Rectangle;
 		
@@ -256,7 +256,7 @@ class PxBitmapFont
 		#if flash
 		_glyphs = [];
 		#else
-		_glyphs = new IntHash<PxFontSymbol>();
+		_glyphs = new Map<Int, PxFontSymbol>();
 		_bgTileID = -1;
 		#end
 		_symbols = null;
@@ -316,18 +316,14 @@ class PxBitmapFont
 			cy += (rowHeight + 1);
 		}
 		
-		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, FlxG.TRANSPARENT);
+		var resultBitmapData:BitmapData = new BitmapData(pBitmapData.width + 2, pBitmapData.height, true, FlxColorUtils.TRANSPARENT);
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
 		
-		#if flash
-		var pixelColor:UInt;
-		var bgColor32:UInt = pBitmapData.getPixel(0, 0);
-		#elseif js
 		var pixelColor:Int;
+		#if (flash || js)
 		var bgColor32:Int = pBitmapData.getPixel(0, 0);
 		#else
-		var pixelColor:BitmapInt32;
-		var bgColor32:BitmapInt32 = pBitmapData.getPixel32(0, 0);
+		var bgColor32:Int = pBitmapData.getPixel32(0, 0);
 		#end
 		
 		cy = 0;
@@ -337,23 +333,16 @@ class PxBitmapFont
 			while (cx < pBitmapData.width)
 			{
 				pixelColor = pBitmapData.getPixel32(cx, cy);
-				#if neko
-				if (pixelColor.rgb == bgColor32.rgb && pixelColor.a == bgColor32.a)
-				{
-					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
-				}
-				#else
 				if (pixelColor == bgColor32)
 				{
-					resultBitmapData.setPixel32(cx, cy, FlxG.TRANSPARENT);
+					resultBitmapData.setPixel32(cx, cy, FlxColorUtils.TRANSPARENT);
 				}
-				#end
 				cx++;
 			}
 			cy++;
 		}
 		
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxG.WHITE);
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxColorUtils.WHITE);
 		
 		return resultBitmapData;
 	}
@@ -416,9 +405,9 @@ class PxBitmapFont
 			newHeight += 2;
 		}
 		
-		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, FlxG.TRANSPARENT);
+		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, FlxColorUtils.TRANSPARENT);
 		resultBitmapData.copyPixels(pBitmapData, pBitmapData.rect, ZERO_POINT);
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxG.WHITE);
+		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxColorUtils.WHITE);
 		return resultBitmapData;
 	}
 	
@@ -580,7 +569,7 @@ class PxBitmapFont
 	#if flash 
 	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:UInt, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int):Void 
 	#else
-	public function render(atlasName:String, drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:BitmapInt32, pAlpha:Float, pOffsetX:Float, pOffsetY:Float, pLetterSpacing:Int, pScale:Float, pUseColor:Bool = true):Void 
+	public function render(atlasName:String, drawData:Array<Float>, pText:String, pColor:Int, pSecondColor:Int, pAlpha:Float, pOffsetX:Float, pOffsetY:Float, pLetterSpacing:Int, pScale:Float, pUseColor:Bool = true):Void 
 	#end
 	{
 	#if !flash
@@ -597,16 +586,10 @@ class PxBitmapFont
 			blue = (pColor & 0xff) * colorMultiplier;
 		}
 		
-		#if !neko
 		pSecondColor &= 0x00ffffff;
 		red *= (pSecondColor >> 16);
 		green *= (pSecondColor >> 8 & 0xff);
 		blue *= (pSecondColor & 0xff);
-		#else
-		red *= (pSecondColor.rgb >> 16);
-		green *= (pSecondColor.rgb >> 8 & 0xff);
-		blue *= (pSecondColor.rgb & 0xff);
-		#end
 		
 	#end
 		
@@ -768,7 +751,7 @@ class PxBitmapFont
 			font.dispose();
 		}
 		
-		_storedFonts = new Hash<PxBitmapFont>();
+		_storedFonts = new Map<String, PxBitmapFont>();
 	}
 
 }

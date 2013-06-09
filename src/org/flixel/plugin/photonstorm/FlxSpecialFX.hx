@@ -9,7 +9,7 @@
 
 package org.flixel.plugin.photonstorm;
 
-import nme.ObjectHash;
+import haxe.ds.ObjectMap;
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxU;
@@ -22,7 +22,7 @@ import org.flixel.plugin.photonstorm.fx.StarfieldFX;
  */
 class FlxSpecialFX extends FlxBasic
 {
-	private static var members:ObjectHash<BaseFX, BaseFX> = new ObjectHash<BaseFX, BaseFX>();
+	private static var members:ObjectMap<BaseFX, BaseFX> = new ObjectMap<BaseFX, BaseFX>();
 	
 	public function new() 
 	{
