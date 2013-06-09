@@ -170,7 +170,7 @@ class FlxSlider extends FlxSpriteGroup
 			FlxG.addPlugin(new FlxMouseControl());
 			
 		// Attempt to create the slider
-		if (!Reflect.hasField(object, varString)) 
+		if (Reflect.field(object, varString) == null) 
 		{
 			FlxG.error("Could not create FlxSlider -", "'" + varString + "'" , "is not a valid field of", "'" + object + "'");
 			kill();
@@ -283,7 +283,7 @@ class FlxSlider extends FlxSpriteGroup
 	private function updateValue():Void
 	{
 		if (callbackFunction == null) {
-			if (Reflect.hasField(object, varString))
+			if (Reflect.field(object, varString) != null)
 				Reflect.setProperty(object, varString, relativePos * maxValue);
 		}
 		else if (lastPos != relativePos) {
