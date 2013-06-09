@@ -74,7 +74,12 @@ class WatchEntry
 		for (i in 0...l)
 		{
 			tempVarName = tempArr[i];
-			if (Reflect.getProperty(tempObj, tempVarName) == null)
+			
+			try 
+			{
+				Reflect.getProperty(tempObj, tempVarName);
+			}
+			catch (e:Dynamic)
 			{
 				FlxG.error("Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
 				tempVarName = null;
@@ -153,7 +158,7 @@ class WatchEntry
 		{
 			nameDisplay.text = custom;
 		}
-		else
+		else if (field != null)
 		{
 			nameDisplay.text = "";
 			if (NameWidth > 120)

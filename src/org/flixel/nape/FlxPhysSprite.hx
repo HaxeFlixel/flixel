@@ -72,7 +72,6 @@ class FlxPhysSprite extends FlxSprite
 		{
 			updatePhysObjects();
 		}
-		
 	}
 
 	/**

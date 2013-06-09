@@ -297,7 +297,7 @@ class ConsoleCommands
 	
 	private function set(ObjectAndVariable:String, NewVariableValue:Dynamic, WatchName:String = null):Void
 	{
-		var info:Array<Dynamic> = resolveObjecAndVariable(ObjectAndVariable, "set");
+		var info:Array<Dynamic> = resolveObjectAndVariable(ObjectAndVariable, "set");
 		
 		// In case resolving failed
 		if (info == null)
@@ -305,7 +305,16 @@ class ConsoleCommands
 			
 		var object:Dynamic = info[0];
 		var varName:String = info[1];
-		var variable:Dynamic = Reflect.getProperty(object, varName);
+		var variable:Dynamic = null;
+		
+		try
+		{
+			variable = Reflect.getProperty(object, varName);
+		}
+		catch (e:Dynamic)
+		{
+			return;
+		}
 		
 		// Workaround to make Booleans work
 		if (Std.is(variable, Bool)) {
@@ -365,7 +374,12 @@ class ConsoleCommands
 			for (i in 0...l)
 			{
 				tempVarName = searchArr[i];
-				if (!Reflect.hasField(tempObj, tempVarName)) 
+				
+				try 
+				{
+					var prop:Dynamic = Reflect.getProperty(tempObj, tempVarName);
+				}
+				catch (e:Dynamic) 
 				{
 					FlxG.error("call: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "' to call function from");
 					return;
@@ -408,7 +422,7 @@ class ConsoleCommands
 	
 	private function watch(ObjectAndVariable:String, DisplayName:String = null):Void
 	{
-		var info:Array<Dynamic> = resolveObjecAndVariable(ObjectAndVariable, "watch");
+		var info:Array<Dynamic> = resolveObjectAndVariable(ObjectAndVariable, "watch");
 		
 		// In case resolving failed
 		if (info == null)
@@ -422,7 +436,7 @@ class ConsoleCommands
 	
 	private function unwatch(ObjectAndVariable:String, VariableName:String = null):Void
 	{
-		var info:Array<Dynamic> = resolveObjecAndVariable(ObjectAndVariable, "watch");
+		var info:Array<Dynamic> = resolveObjectAndVariable(ObjectAndVariable, "watch");
 		
 		// In case resolving failed
 		if (info == null)
@@ -459,7 +473,7 @@ class ConsoleCommands
 		return instance;
 	}
 	
-	private function resolveObjecAndVariable(ObjectAndVariable:String, CommandName:String):Array<Dynamic>
+	private function resolveObjectAndVariable(ObjectAndVariable:String, CommandName:String):Array<Dynamic>
 	{
 		var searchArr:Array<String> = ObjectAndVariable.split(".");
 		
@@ -484,15 +498,18 @@ class ConsoleCommands
 		for (i in 0...l)
 		{
 			tempVarName = searchArr[i];
-			if (!Reflect.hasField(tempObj, tempVarName)) 
+			
+			try 
+			{
+				if (i < (l - 1))
+				{
+					tempObj = Reflect.getProperty(tempObj, tempVarName);
+				}
+			}
+			catch (e:Dynamic) 
 			{
 				FlxG.error(CommandName + ": " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
 				return null;
-			}
-			
-			if (i < (l - 1))
-			{
-				tempObj = Reflect.getProperty(tempObj, tempVarName);
 			}
 		}
 		

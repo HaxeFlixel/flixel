@@ -58,7 +58,6 @@ class MultiVarTween extends FlxTween
 
 		for (p in fields)
 		{
-			
 			if (Reflect.getProperty(object, p) == null)
 			{
 				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
