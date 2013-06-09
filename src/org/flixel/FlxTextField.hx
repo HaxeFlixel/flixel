@@ -116,7 +116,7 @@ class FlxTextField extends FlxText
 		{
 			Font = Assets.getFont(FlxAssets.defaultFont).fontName;
 		}
-		_format.font = Font;
+		_format.font = Assets.getFont(Font).fontName;
 		_format.size = Size;
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
