@@ -171,7 +171,6 @@ class FlxSlider extends FlxSpriteGroup
 		
 		if (varString == null) 
 		{
-			FlxG.error("Could not create FlxSlider -", "'" + varString + "'" , "is not a valid field of", "'" + object + "'");
 			kill();
 		}
 		else
@@ -266,7 +265,7 @@ class FlxSlider extends FlxSpriteGroup
 			updateValue();
 			
 		// Update the value variable
-		if (Reflect.getProperty(object, varString) != null)
+		if (varString != null && Reflect.getProperty(object, varString) != null)
 			value = Reflect.getProperty(object, varString);
 			
 		// Changes to value from outside update the handle pos
