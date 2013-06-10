@@ -249,7 +249,7 @@ class FlxU
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted <code>String</code>, like "1:03".
 	 */
-	inline static public function formatTime(Seconds:Int, ShowMS:Bool = false):String
+	inline static public function formatTime(Seconds:Float, ShowMS:Bool = false):String
 	{
 		var timeString:String = Std.int(Seconds / 60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;
@@ -261,7 +261,7 @@ class FlxU
 		if(ShowMS)
 		{
 			timeString += ".";
-			timeStringHelper = (Seconds - Std.int(Seconds)) * 100;
+			timeStringHelper = Std.int((Seconds - Std.int(Seconds)) * 100);
 			if (timeStringHelper < 10)
 			{
 				timeString += "0";
