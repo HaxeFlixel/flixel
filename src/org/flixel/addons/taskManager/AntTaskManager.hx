@@ -90,13 +90,14 @@ class AntTaskManager extends FlxBasic
 	 * Adds a task to the end of queue, the method will be executed while it returns <code>false</code>.
 	 * The task will be completed only when the method will return <code>true</code>. And manager will switch to the next task.
 	 * 
+	 * @param	aObj	 An object to call method-task from
 	 * @param	aFunc	 Method-task to be executed in sequence.
 	 * @param	aArgs	 An array of arguments that can be passed to the task-method.
 	 * @param	aIgnoreCycle	 If true then the task will be deleted from the manager immediately after execution.
 	 */
-	public function addTask(aFunc:Dynamic, aArgs:Array<Dynamic> = null, aIgnoreCycle:Bool = false):Void
+	public function addTask(aObj:Dynamic, aFunc:Dynamic, aArgs:Array<Dynamic> = null, aIgnoreCycle:Bool = false):Void
 	{
-		push(new AntTask(aFunc, aArgs, aIgnoreCycle, false));
+		push(new AntTask(aObj, aFunc, aArgs, aIgnoreCycle, false));
 		start();
 	}
 	
@@ -105,13 +106,14 @@ class AntTaskManager extends FlxBasic
 	 * Добавляет задачу в конец очереди, указанный метод будет выполнен только один раз, после чего будет осуществлен
 	 * переход к следующей задачи не зависимо от того, что вернет метод-задача и вернет ли вообще.
 	 * 
+	 * @param	aObj	 An object to call method-task from
 	 * @param	aFunc	 Method-task to be executed in sequence.
 	 * @param	aArgs	 An array of arguments that can be passed to the task-method.
 	 * @param	aIgnoreCycle	 If true then the task will be deleted from the manager immediately after execution.
 	 */
-	public function addInstantTask(aFunc:Dynamic, aArgs:Array<Dynamic> = null, aIgnoreCycle:Bool = false):Void
+	public function addInstantTask(aObj:Dynamic, aFunc:Dynamic, aArgs:Array<Dynamic> = null, aIgnoreCycle:Bool = false):Void
 	{
-		push(new AntTask(aFunc, aArgs, aIgnoreCycle, true));
+		push(new AntTask(aObj, aFunc, aArgs, aIgnoreCycle, true));
 		start();
 	}
 	
@@ -119,26 +121,28 @@ class AntTaskManager extends FlxBasic
 	 * Adds a task to the top of the queue, the method will be executed while it returns <code>false</code>.
 	 * The task will be completed only when the method will return <code>true</code>, and the manager will move to the next task.
 	 * 
+	 * @param	aObj	 An object to call method-task from
 	 * @param	aFunc	 Method-task to be executed in sequence.
 	 * @param	aArgs	 An array of arguments that can be passed to the task-method.
 	 * @param	aIgnoreCycle	 If true then the task will be deleted from the manager immediately after execution.
 	 */
-	public function addUrgentTask(aFunc:Dynamic, aArgs:Array<Dynamic> = null, aIgnoreCycle:Bool = false):Void
+	public function addUrgentTask(aObj:Dynamic, aFunc:Dynamic, aArgs:Array<Dynamic> = null, aIgnoreCycle:Bool = false):Void
 	{
-		unshift(new AntTask(aFunc, aArgs, aIgnoreCycle, false));
+		unshift(new AntTask(aObj, aFunc, aArgs, aIgnoreCycle, false));
 		start();
 	}
 	
 	/**
 	 * Adds a task to the top of the queue, the method will be executed only ONCE, after that we go to the next task.
 	 * 
+	 * @param	aObj	 An object to call method-task from
 	 * @param	aFunc	 Method-task to be executed in sequence.
 	 * @param	aArgs	 An array of arguments that can be passed to the task-method.
 	 * @param	aIgnoreCycle	 If true then the task will be deleted from the manager immediately after execution.
 	 */
-	public function addUrgentInstantTask(aFunc:Dynamic, aArgs:Array<Dynamic> = null, aIgnoreCycle:Bool = false):Void
+	public function addUrgentInstantTask(aObj:Dynamic, aFunc:Dynamic, aArgs:Array<Dynamic> = null, aIgnoreCycle:Bool = false):Void
 	{
-		unshift(new AntTask(aFunc, aArgs, aIgnoreCycle, true));
+		unshift(new AntTask(aObj, aFunc, aArgs, aIgnoreCycle, true));
 		start();
 	}
 	
@@ -149,7 +153,7 @@ class AntTaskManager extends FlxBasic
 	 */
 	public function addPause(aDelay:Float, aIgnoreCycle:Bool = false):Void
 	{
-		addTask(taskPause, [aDelay], aIgnoreCycle);
+		addTask(this, taskPause, [aDelay], aIgnoreCycle);
 	}
 	
 	/**
@@ -190,7 +194,7 @@ class AntTaskManager extends FlxBasic
 	{
 		if (_taskList != null && _isStarted)
 		{
-			_result = Reflect.callMethod(this, _taskList.func, _taskList.args);
+			_result = Reflect.callMethod(_taskList.obj, _taskList.func, _taskList.args);
 			if (_isStarted && (_taskList.instant || _result))
 			{
 				nextTask(_taskList.ignoreCycle);
@@ -356,9 +360,9 @@ class AntTaskManager extends FlxBasic
 	/**
 	 * Number of tasks
 	 */
-	public var length(get_lenght, null):Int;
+	public var length(get_length, null):Int;
 	
-	private function get_lenght():Int
+	private function get_length():Int
 	{
 		if (_taskList == null)
 		{

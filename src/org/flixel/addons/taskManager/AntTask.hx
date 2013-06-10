@@ -13,6 +13,11 @@ class AntTask
 	public var func:Dynamic;
 	
 	/**
+	 * An object to call func from
+	 */
+	public var obj:Dynamic;
+	
+	/**
 	 * An array of arguments that can be passed to the task-method.
 	 */
 	public var args:Array<Dynamic>;
@@ -35,8 +40,9 @@ class AntTask
 	/**
 	 * Constructor
 	 */
-	public function new(func:Dynamic, args:Array<Dynamic> = null, ignoreCycle:Bool = false, instant:Bool = false, next:AntTask = null)
+	public function new(obj:Dynamic, func:Dynamic, args:Array<Dynamic> = null, ignoreCycle:Bool = false, instant:Bool = false, next:AntTask = null)
 	{
+		this.obj = obj;
 		this.func = func;
 		if (args == null)	args = new Array<Dynamic>();
 		this.args = args;
@@ -55,6 +61,7 @@ class AntTask
 			next.dispose();
 		}
 		next = null;
+		obj = null;
 		func = null;
 		args = null;
 	}
