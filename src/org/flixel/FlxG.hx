@@ -741,6 +741,7 @@ class FlxG
 	 */
 	static public function playMusic(Music:Dynamic, Volume:Float = 1.0):Void
 	{
+		#if !js
 		if (music == null)
 		{
 			music = new FlxSound();
@@ -753,6 +754,7 @@ class FlxG
 		music.volume = Volume;
 		music.survive = true;
 		music.play();
+		#end
 	}
 	
 	/**
@@ -767,6 +769,7 @@ class FlxG
 	 */
 	static public function loadSound(EmbeddedSound:Dynamic = null, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, URL:String = null):FlxSound
 	{
+		#if !js
 		if((EmbeddedSound == null) && (URL == null))
 		{
 			FlxG.warn("FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
@@ -787,6 +790,9 @@ class FlxG
 			sound.play();
 		}
 		return sound;
+		#else
+		return null;
+		#end
 	}
 	
 	#if android
@@ -847,7 +853,11 @@ class FlxG
 	 */
 	static public function play(EmbeddedSound:Dynamic, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true):FlxSound
 	{
+		#if !js
 		return FlxG.loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, true);
+		#else
+		return null;
+		#end
 	}
 	#end
 		
@@ -862,7 +872,11 @@ class FlxG
 	 */
 	static public function stream(URL:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true):FlxSound
 	{
+		#if !js
 		return FlxG.loadSound(null, Volume, Looped, AutoDestroy, true, URL);
+		#else
+		return null;
+		#end
 	}
 	
 	/**
