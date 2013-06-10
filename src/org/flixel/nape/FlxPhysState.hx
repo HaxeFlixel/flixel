@@ -147,12 +147,12 @@ class FlxPhysState extends FlxState
 		#end
 	}
 
-	#if !FLX_NO_DEBUG
 	/**
 	 * Enables debug graphics for nape physics.
 	 */
 	public function enablePhysDebug()
 	{
+		#if !FLX_NO_DEBUG
 		if (_physDbgSpr != null)
 			disablePhysDebug();
 
@@ -160,6 +160,7 @@ class FlxPhysState extends FlxState
 		_physDbgSpr.drawConstraints = true;
 
 		FlxG.stage.addChild(_physDbgSpr.display);
+		#end
 	}
 
 	/**
@@ -167,11 +168,13 @@ class FlxPhysState extends FlxState
 	 */
 	public function disablePhysDebug()
 	{
+		#if !FLX_NO_DEBUG
 		if (_physDbgSpr == null)
 			return;
 
 		FlxG.stage.removeChild(_physDbgSpr.display);
 		_physDbgSpr = null;
+		#end
 	}
 
 	/**
@@ -179,6 +182,7 @@ class FlxPhysState extends FlxState
 	 */
 	private function drawPhysDebug()
 	{
+		#if !FLX_NO_DEBUG
 		if (_physDbgSpr == null || space == null)
 			return;
 
@@ -203,6 +207,6 @@ class FlxPhysState extends FlxState
 			_physDbgSpr.display.x += (FlxG.width - FlxG.width * zoom) / 2;
 			_physDbgSpr.display.y += (FlxG.height - FlxG.height * zoom) / 2;
 		}
+		#end
 	}
-	#end
 }
