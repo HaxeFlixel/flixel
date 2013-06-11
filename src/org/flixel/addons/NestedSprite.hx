@@ -6,7 +6,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxSprite;
 import org.flixel.util.FlxMath;
-import org.flixel.util.FlxMisc;
+import org.flixel.util.FlxArray;
 
 /**
  * Some sort of DisplayObjectContainer but very limited.
@@ -99,7 +99,7 @@ class NestedSprite extends FlxSprite
 	 */
 	public function add(Child:NestedSprite):NestedSprite
 	{
-		if (FlxMisc.arrayIndexOf(_children, Child) < 0)
+		if (FlxArray.indexOf(_children, Child) < 0)
 		{
 			_children.push(Child);
 			Child.velocity.x = Child.velocity.y = 0;
@@ -130,7 +130,7 @@ class NestedSprite extends FlxSprite
 	 */
 	public function remove(Child:NestedSprite):NestedSprite
 	{
-		var index:Int = FlxMisc.arrayIndexOf(_children, Child);
+		var index:Int = FlxArray.indexOf(_children, Child);
 		if (index >= 0)
 		{
 			_children.splice(index, 1);

@@ -9,7 +9,7 @@ import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.util.FlxColor;
-import org.flixel.util.FlxMisc;
+import org.flixel.util.FlxArray;
 import org.flixel.util.FlxPoint;
 import org.flixel.util.FlxRect;
 
@@ -367,7 +367,7 @@ class FlxTilemap extends FlxObject
 		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		#end
 		_rects = new Array<Rectangle>();
-		FlxMisc.setArrayLength(_rects, totalTiles);
+		FlxArray.setLength(_rects, totalTiles);
 		i = 0;
 		while (i < totalTiles)
 		{
@@ -745,7 +745,7 @@ class FlxTilemap extends FlxObject
 		var i:Int = 0;
 		var l:Int = _data.length;
 		var data:Array<Int> = new Array(/*l*/);
-		FlxMisc.setArrayLength(data, l);
+		FlxArray.setLength(data, l);
 		while(i < l)
 		{
 			data[i] = (_tileObjects[_data[i]].allowCollisions > 0) ? 1 : 0;
@@ -912,7 +912,7 @@ class FlxTilemap extends FlxObject
 		//All walls are flagged as -2, all open areas as -1.
 		var mapSize:Int = widthInTiles * heightInTiles;
 		var distances:Array<Int> = new Array<Int>(/*mapSize*/);
-		FlxMisc.setArrayLength(distances, mapSize);
+		FlxArray.setLength(distances, mapSize);
 		var i:Int = 0;
 		while(i < mapSize)
 		{
@@ -1917,7 +1917,7 @@ class FlxTilemap extends FlxObject
 				pixel = bitmapData.getPixel(column, row);
 				if (ColorMap != null)
 				{
-					pixel = FlxMisc.arrayIndexOf(ColorMap, pixel);
+					pixel = FlxArray.indexOf(ColorMap, pixel);
 				}
 				else if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
 				{
@@ -2051,7 +2051,7 @@ class FlxTilemap extends FlxObject
 			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, _repeatX + 1, _repeatY + 1);
 			
 			_rectIDs = new Array<Int>();
-			FlxMisc.setArrayLength(_rectIDs, totalTiles);
+			FlxArray.setLength(_rectIDs, totalTiles);
 			var i:Int = 0;
 			while (i < totalTiles)
 			{

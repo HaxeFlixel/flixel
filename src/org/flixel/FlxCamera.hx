@@ -13,6 +13,7 @@ import org.flixel.system.layer.TileSheetExt;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMath;
 import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRandom;
 import org.flixel.util.FlxRect;
 
 /**
@@ -727,11 +728,11 @@ class FlxCamera extends FlxBasic
 			{
 				if ((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_HORIZONTAL_ONLY))
 				{
-					_fxShakeOffset.x = (FlxG.random() * _fxShakeIntensity * width * 2 - _fxShakeIntensity * width) * zoom;
+					_fxShakeOffset.x = (FlxRandom.random() * _fxShakeIntensity * width * 2 - _fxShakeIntensity * width) * zoom;
 				}
 				if ((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_VERTICAL_ONLY))
 				{
-					_fxShakeOffset.y = (FlxG.random() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * zoom;
+					_fxShakeOffset.y = (FlxRandom.random() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * zoom;
 				}
 			}
 			

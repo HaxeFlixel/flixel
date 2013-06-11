@@ -3,6 +3,7 @@ package org.flixel.addons;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxParticle;
+import org.flixel.util.FlxRandom;
 
 /**
  * Extended FlxEmitter that emits particles in a circle (instead of a square).
@@ -79,8 +80,8 @@ class FlxEmitterExt extends FlxEmitter
 	private function setParticleMotion(particle:FlxParticle, angle:Float, distance:Float, angleRange:Float = 0, distanceRange:Float = 0):Void
 	{			
 		//set particle direction and speed
-		var a:Float = angle + FlxG.random() * angleRange;
-		var d:Float = distance + FlxG.random() * distanceRange;
+		var a:Float = angle + FlxRandom.random() * angleRange;
+		var d:Float = distance + FlxRandom.random() * distanceRange;
 		
 		particle.velocity.x = Math.cos(a) * d;
 		particle.velocity.y = Math.sin(a) * d;
@@ -127,12 +128,12 @@ class FlxEmitterExt extends FlxEmitter
 		var particle:FlxParticle = recycle(cast _particleClass);
 		particle.elasticity = bounce;
 		
-		particle.reset(x - (Std.int(particle.width) >> 1) + FlxG.random() * width, y - (Std.int(particle.height) >> 1) + FlxG.random() * height);
+		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.random() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.random() * height);
 		particle.visible = true;
 		
 		if (life.min != life.max)
 		{
-			particle.lifespan = particle.maxLifespan = life.min + FlxG.random() * (life.max - life.min);
+			particle.lifespan = particle.maxLifespan = life.min + FlxRandom.random() * (life.max - life.min);
 		}
 		else
 		{
@@ -141,7 +142,7 @@ class FlxEmitterExt extends FlxEmitter
 		
 		if (startAlpha.min != startAlpha.max)
 		{
-			particle.startAlpha = startAlpha.min + FlxG.random() * (startAlpha.max - startAlpha.min);
+			particle.startAlpha = startAlpha.min + FlxRandom.random() * (startAlpha.max - startAlpha.min);
 		}
 		else
 		{
@@ -152,7 +153,7 @@ class FlxEmitterExt extends FlxEmitter
 		var particleEndAlpha:Float = endAlpha.min;
 		if (endAlpha.min != endAlpha.max)
 		{
-			particleEndAlpha = endAlpha.min + FlxG.random() * (endAlpha.max - endAlpha.min);
+			particleEndAlpha = endAlpha.min + FlxRandom.random() * (endAlpha.max - endAlpha.min);
 		}
 		
 		if (particleEndAlpha != particle.startAlpha)
@@ -176,30 +177,30 @@ class FlxEmitterExt extends FlxEmitter
 		
 		if (startRed.min != startRed.max)
 		{
-			particle.startRed = startRedComp = startRed.min + FlxG.random() * (startRed.max - startRed.min);
+			particle.startRed = startRedComp = startRed.min + FlxRandom.random() * (startRed.max - startRed.min);
 		}
 		if (startGreen.min != startGreen.max)
 		{
-			particle.startGreen = startGreenComp = startGreen.min + FlxG.random() * (startGreen.max - startGreen.min);
+			particle.startGreen = startGreenComp = startGreen.min + FlxRandom.random() * (startGreen.max - startGreen.min);
 		}
 		if (startBlue.min != startBlue.max)
 		{
-			particle.startBlue = startBlueComp = startBlue.min + FlxG.random() * (startBlue.max - startBlue.min);
+			particle.startBlue = startBlueComp = startBlue.min + FlxRandom.random() * (startBlue.max - startBlue.min);
 		}
 		
 		if (endRed.min != endRed.max)
 		{
-			endRedComp = endRed.min + FlxG.random() * (endRed.max - endRed.min);
+			endRedComp = endRed.min + FlxRandom.random() * (endRed.max - endRed.min);
 		}
 		
 		if (endGreen.min != endGreen.max)
 		{
-			endGreenComp = endGreen.min + FlxG.random() * (endGreen.max - endGreen.min);
+			endGreenComp = endGreen.min + FlxRandom.random() * (endGreen.max - endGreen.min);
 		}
 		
 		if (endBlue.min != endBlue.max)
 		{
-			endBlueComp = endBlue.min + FlxG.random() * (endBlue.max - endBlue.min);
+			endBlueComp = endBlue.min + FlxRandom.random() * (endBlue.max - endBlue.min);
 		}
 		
 		particle.rangeRed = endRedComp - startRedComp;
@@ -214,7 +215,7 @@ class FlxEmitterExt extends FlxEmitter
 		// end of particle color settings
 		if (startScale.min != startScale.max)
 		{
-			particle.startScale = startScale.min + FlxG.random() * (startScale.max - startScale.min);
+			particle.startScale = startScale.min + FlxRandom.random() * (startScale.max - startScale.min);
 		}
 		else
 		{
@@ -225,7 +226,7 @@ class FlxEmitterExt extends FlxEmitter
 		var particleEndScale:Float = endScale.min;
 		if (endScale.min != endScale.max)
 		{
-			particleEndScale = endScale.min + Std.int(FlxG.random() * (endScale.max - endScale.min));
+			particleEndScale = endScale.min + Std.int(FlxRandom.random() * (endScale.max - endScale.min));
 		}
 		
 		if (particleEndScale != particle.startScale)
@@ -247,7 +248,7 @@ class FlxEmitterExt extends FlxEmitter
 		
 		if (rotation.min != rotation.max)
 		{
-			particle.angularVelocity = rotation.min + FlxG.random() * (rotation.max - rotation.min);
+			particle.angularVelocity = rotation.min + FlxRandom.random() * (rotation.max - rotation.min);
 		}
 		else
 		{
@@ -255,7 +256,7 @@ class FlxEmitterExt extends FlxEmitter
 		}
 		if (particle.angularVelocity != 0)
 		{
-			particle.angle = FlxG.random() * 360 - 180;
+			particle.angle = FlxRandom.random() * 360 - 180;
 		}
 		
 		particle.drag.make(particleDrag.x, particleDrag.y);

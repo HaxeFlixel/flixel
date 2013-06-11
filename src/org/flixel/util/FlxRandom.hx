@@ -1,5 +1,7 @@
 package org.flixel.util;
 
+import org.flixel.FlxG;
+
 /**
  * A class containing a set of functions for randomnly 
  * generating numbers or other random things.
@@ -8,7 +10,19 @@ class FlxRandom
 {
 	public static inline var getrandmax:Int = 0xffffff; // Std.int(FlxMath.MAX_VALUE);
 	private static var mr:Int = 0;
-		
+	
+	/**
+	 * Generates a random number.  Deterministic, meaning safe
+	 * to use if you want to record replays in random environments.
+	 * @return	A <code>Number</code> between 0 and 1.
+	 */
+	inline static public function random():Float
+	{
+		FlxG.globalSeed = srand(FlxG.globalSeed);
+		if (FlxG.globalSeed <= 0) FlxG.globalSeed += 1;
+		return FlxG.globalSeed;
+	}
+	
 	/**
 	 * Generates a random number based on the seed provided.
 	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
@@ -21,63 +35,6 @@ class FlxRandom
 		#else
 		return Math.random();
 		#end
-	}
-	
-	/**
-	 * Shuffles the entries in an array into a new random order.
-	 * <code>FlxG.shuffle()</code> is deterministic and safe for use with replays/recordings.
-	 * HOWEVER, <code>FlxMath.shuffle()</code> is NOT deterministic and unsafe for use with replays/recordings.
-	 * @param	A				A Flash <code>Array</code> object containing...stuff.
-	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
-	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
-	 */
-	inline static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
-	{
-		var i:Int = 0;
-		var index1:Int;
-		var index2:Int;
-		var object:Dynamic;
-		while(i < HowManyTimes)
-		{
-			index1 = Std.int(Math.random() * Objects.length);
-			index2 = Std.int(Math.random() * Objects.length);
-			object = Objects[index2];
-			Objects[index2] = Objects[index1];
-			Objects[index1] = object;
-			i++;
-		}
-		return Objects;
-	}
-	
-	/**
-	 * Fetch a random entry from the given array.
-	 * Will return null if random selection is missing, or array has no entries.
-	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
-	 * HOWEVER, <code>FlxMath.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
-	 * @param	Objects		A Flash array of objects.
-	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
-	 * @return	The random object that was selected.
-	 */
-	inline static public function getRandom(Objects:Array<Dynamic>, StartIndex:Int = 0, Length:Int = 0):Dynamic
-	{
-		var res:Dynamic = null;
-		if (Objects != null)
-		{
-			if (StartIndex < 0) StartIndex = 0;
-			if (Length < 0) Length = 0;
-			
-			var l:Int = Length;
-			if ((l == 0) || (l > Objects.length - StartIndex))
-			{
-				l = Objects.length - StartIndex;
-			}
-			if (l > 0)
-			{
-				res = Objects[StartIndex + Std.int(Math.random() * l)];
-			}
-		}
-		return res;
 	}
 	
 	/**
@@ -127,7 +84,7 @@ class FlxRandom
 					result = Math.floor(max + (Math.random() * (min + 1 - max)));
 				}
 			}
-			while (FlxMisc.arrayIndexOf(excludes, result) >= 0);
+			while (FlxArray.indexOf(excludes, result) >= 0);
 			
 			return result;
 		}

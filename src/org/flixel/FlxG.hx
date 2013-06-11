@@ -25,13 +25,14 @@ import org.flixel.system.FlxQuadTree;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 import org.flixel.tweens.misc.MultiVarTween;
+import org.flixel.util.FlxArray;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMath;
-import org.flixel.util.FlxMisc;
 import org.flixel.util.FlxRandom;
 import org.flixel.util.FlxRect;
 import org.flixel.util.FlxPoint;
 import org.flixel.util.FlxString;
+import org.flixel.util.FlxArray;
 
 #if !FLX_NO_DEBUG
 import org.flixel.system.FlxDebugger;
@@ -511,75 +512,6 @@ class FlxG
 		FlxG.camera.y = (FlxG.stage.fullScreenHeight - fsh) / 2;
 	}
 	#end
-	
-	/**
-	 * Generates a random number.  Deterministic, meaning safe
-	 * to use if you want to record replays in random environments.
-	 * @return	A <code>Number</code> between 0 and 1.
-	 */
-	inline static public function random():Float
-	{
-		globalSeed = FlxRandom.srand(globalSeed);
-		if (globalSeed <= 0) globalSeed += 1;
-		return globalSeed;
-	}
-		
-	/**
-	 * Shuffles the entries in an array into a new random order.
-	 * <code>FlxG.shuffle()</code> is deterministic and safe for use with replays/recordings.
-	 * HOWEVER, <code>FlxMath.shuffle()</code> is NOT deterministic and unsafe for use with replays/recordings.
-	 * @param	A				A Flash <code>Array</code> object containing...stuff.
-	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
-	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
-	 */
-	inline static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
-	{
-		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
-		var i:Int = 0;
-		var index1:Int;
-		var index2:Int;
-		var object:Dynamic;
-		while (i < HowManyTimes)
-		{
-			index1 = Std.int(FlxG.random() * Objects.length);
-			index2 = Std.int(FlxG.random() * Objects.length);
-			object = Objects[index2];
-			Objects[index2] = Objects[index1];
-			Objects[index1] = object;
-			i++;
-		}
-		return Objects;
-	}
-		
-	/**
-	 * Fetch a random entry from the given array.
-	 * Will return null if random selection is missing, or array has no entries.
-	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
-	 * HOWEVER, <code>FlxMath.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
-	 * @param	Objects		A Flash array of objects.
-	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
-	 * @return	The random object that was selected.
-	 */
-	static public function getRandom(Objects:Array<Dynamic>, StartIndex:Int = 0, Length:Int = 0):Dynamic
-	{
-		if (Objects != null)
-		{
-			if (StartIndex < 0) StartIndex = 0;
-			if (Length < 0) Length = 0;
-			
-			var l:Int = Length;
-			if ((l == 0) || (l > Objects.length - StartIndex))
-			{
-				l = Objects.length - StartIndex;
-			}
-			if (l > 0)
-			{
-				return Objects[StartIndex + Std.int(FlxG.random() * l)];
-			}
-		}
-		return null;
-	}
 		
 	#if !FLX_NO_RECORD
 	/**
@@ -1407,7 +1339,7 @@ class FlxG
 		if (Camera != null && FlxG._game.contains(Camera._flashSprite))
 		{
 			FlxG._game.removeChild(Camera._flashSprite);
-			var index = FlxMisc.arrayIndexOf(FlxG.cameras, Camera);
+			var index = FlxArray.indexOf(FlxG.cameras, Camera);
 			if(index >= 0)
 				FlxG.cameras.splice(index, 1);
 		}

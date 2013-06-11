@@ -1,6 +1,7 @@
 package org.flixel.plugin;
 
 import org.flixel.FlxBasic;
+import org.flixel.util.FlxArray;
 import org.flixel.util.FlxMisc;
 import org.flixel.util.FlxTimer;
 
@@ -69,7 +70,7 @@ class TimerManager extends FlxBasic
 	public function remove(Timer:FlxTimer):Void
 	{
 		//var index:Int = _timers.indexOf(Timer);
-		var index:Int = FlxMisc.arrayIndexOf(_timers, Timer);
+		var index:Int = FlxArray.indexOf(_timers, Timer);
 		if (index >= 0)
 		{
 			// Fast array removal (only do on arrays where order doesn't matter)

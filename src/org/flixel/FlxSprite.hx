@@ -15,8 +15,9 @@ import org.flixel.system.FlxAnim;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.frames.FlxFrame;
 import org.flixel.util.FlxColor;
-import org.flixel.util.FlxMisc;
+import org.flixel.util.FlxArray;
 import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRandom;
 
 #if !flash
 import org.flixel.system.layer.TileSheetData;
@@ -1422,7 +1423,7 @@ class FlxSprite extends FlxObject
 	public function randomFrame():Void
 	{
 		_curAnim = null;
-		_curIndex = Std.int(FlxG.random() * frames);
+		_curIndex = Std.int(FlxRandom.random() * frames);
 		#if !flash
 		if (_framesData != null)
 		#else
@@ -1738,7 +1739,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function getFrameIndex(Frame:FlxFrame):Int
 	{
-		return FlxMisc.arrayIndexOf(_framesData.frames, Frame);
+		return FlxArray.indexOf(_framesData.frames, Frame);
 	}
 	
 	/**

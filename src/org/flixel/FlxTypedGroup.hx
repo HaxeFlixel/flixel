@@ -1,7 +1,7 @@
 package org.flixel;
 
 import org.flixel.system.layer.Atlas;
-import org.flixel.util.FlxMisc;
+import org.flixel.util.FlxArray;
 
 /**
  * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
@@ -177,7 +177,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 		}
 		length = maxSize;
-		FlxMisc.setArrayLength(members, maxSize);
+		FlxArray.setLength(members, maxSize);
 		return maxSize;
 	}
 	
@@ -200,7 +200,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		
 		//Don't bother adding an object twice.
-		if (FlxMisc.arrayIndexOf(members, Object) >= 0)
+		if (FlxArray.indexOf(members, Object) >= 0)
 		{
 			return Object;
 		}
@@ -234,16 +234,16 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 			else if (members.length * 2 <= maxSize)
 			{
-				FlxMisc.setArrayLength(members, members.length * 2);
+				FlxArray.setLength(members, members.length * 2);
 			}
 			else
 			{
-				FlxMisc.setArrayLength(members, maxSize);
+				FlxArray.setLength(members, maxSize);
 			}
 		}
 		else
 		{
-			FlxMisc.setArrayLength(members, members.length * 2);
+			FlxArray.setLength(members, members.length * 2);
 		}
 		
 		//If we made it this far, then we successfully grew the group,
@@ -366,7 +366,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			return null;
 		}
 		
-		var index:Int = FlxMisc.arrayIndexOf(members, Object);
+		var index:Int = FlxArray.indexOf(members, Object);
 		if ((index < 0) || (index >= members.length))
 		{
 			return null;
@@ -390,7 +390,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function replace(OldObject:T, NewObject:T):T
 	{
-		var index:Int = FlxMisc.arrayIndexOf(members, OldObject);
+		var index:Int = FlxArray.indexOf(members, OldObject);
 		if ((index < 0) || (index >= members.length))
 		{
 			return null;
@@ -648,7 +648,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			Length = length;
 		}
-		return FlxG.getRandom(members, StartIndex, Length);
+		return FlxArray.getRandom(members, StartIndex, Length);
 	}
 	
 	/**

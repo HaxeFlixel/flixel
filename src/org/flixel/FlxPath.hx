@@ -1,8 +1,8 @@
 package org.flixel;
 
 import flash.display.Graphics;
+import org.flixel.util.FlxArray;
 import org.flixel.util.FlxColor;
-import org.flixel.util.FlxMisc;
 import org.flixel.util.FlxPoint;
 
 #if !FLX_NO_DEBUG
@@ -173,7 +173,7 @@ class FlxPath
 	 */
 	public function remove(Node:FlxPoint):FlxPoint
 	{
-		var index:Int = FlxMisc.arrayIndexOf(nodes, Node);
+		var index:Int = FlxArray.indexOf(nodes, Node);
 		if (index >= 0)
 		{
 			return nodes.splice(index, 1)[0];
