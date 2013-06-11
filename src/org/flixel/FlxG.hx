@@ -1891,4 +1891,13 @@ class FlxG
 		return tween;
 	}
 	
+	// TODO: Remove this reference at some point?
+	/**
+	 * Reference to <code>FlxRandom.random()</code> for backwards compatibility.
+	 * Might or might not be removed some time in the future.
+	 */
+	inline static public function random():Float
+	{
+		return FlxRandom.random();
+	}
 }
