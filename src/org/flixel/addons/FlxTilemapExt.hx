@@ -3,8 +3,8 @@ package org.flixel.addons;
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxTilemap;
-import org.flixel.FlxU;
 import org.flixel.system.FlxTile;
+import org.flixel.util.FlxMath;
 
 /**
  * extended <code>FlxTilemap</code> class that provides collision detection against slopes
@@ -82,10 +82,10 @@ class FlxTilemapExt extends FlxTilemap
 		}
 		
 		//Figure out what tiles we need to check against
-		var selectionX:Int = FlxU.floor((Object.x - X) / _tileWidth);
-		var selectionY:Int = FlxU.floor((Object.y - Y) / _tileHeight);
-		var selectionWidth:Int = selectionX + (FlxU.ceil(Object.width / _tileWidth)) + 1;
-		var selectionHeight:Int = selectionY + FlxU.ceil(Object.height / _tileHeight) + 1;
+		var selectionX:Int = Math.floor((Object.x - X) / _tileWidth);
+		var selectionY:Int = Math.floor((Object.y - Y) / _tileHeight);
+		var selectionWidth:Int = selectionX + (Math.ceil(Object.width / _tileWidth)) + 1;
+		var selectionHeight:Int = selectionY + Math.ceil(Object.height / _tileHeight) + 1;
 		
 		//Then bound these coordinates by the map edges
 		if(selectionX < 0)
@@ -178,8 +178,8 @@ class FlxTilemapExt extends FlxTilemap
 	 */
 	private function fixSlopePoint(slope:FlxTile):Void
 	{
-		_slopePoint.x = FlxU.bound(_slopePoint.x, slope.x, slope.x + _tileWidth);
-		_slopePoint.y = FlxU.bound(_slopePoint.y, slope.y, slope.y + _tileHeight);
+		_slopePoint.x = FlxMath.bound(_slopePoint.x, slope.x, slope.x + _tileWidth);
+		_slopePoint.y = FlxMath.bound(_slopePoint.y, slope.y, slope.y + _tileHeight);
 	}
 	
 	/**
@@ -226,8 +226,8 @@ class FlxTilemapExt extends FlxTilemap
 	private function solveCollisionSlopeFloorLeft(slope:FlxObject, obj:FlxObject):Void
 	{
 		//calculate the corner point of the object
-		_objPoint.x = FlxU.floor(obj.x + obj.width + _snapping);
-		_objPoint.y = FlxU.floor(obj.y + obj.height);
+		_objPoint.x = Math.floor(obj.x + obj.width + _snapping);
+		_objPoint.y = Math.floor(obj.y + obj.height);
 		
 		//calculate position of the point on the slope that the object might overlap
 		//this would be one side of the object projected onto the slope's surface
@@ -253,8 +253,8 @@ class FlxTilemapExt extends FlxTilemap
 	private function solveCollisionSlopeFloorRight(slope:FlxObject, obj:FlxObject):Void
 	{
 		//calculate the corner point of the object
-		_objPoint.x = FlxU.floor(obj.x - _snapping);
-		_objPoint.y = FlxU.floor(obj.y + obj.height);
+		_objPoint.x = Math.floor(obj.x - _snapping);
+		_objPoint.y = Math.floor(obj.y + obj.height);
 		
 		//calculate position of the point on the slope that the object might overlap
 		//this would be one side of the object projected onto the slope's surface
@@ -280,8 +280,8 @@ class FlxTilemapExt extends FlxTilemap
 	private function solveCollisionSlopeCeilLeft(slope:FlxObject, obj:FlxObject):Void
 	{
 		//calculate the corner point of the object
-		_objPoint.x = FlxU.floor(obj.x + obj.width + _snapping);
-		_objPoint.y = FlxU.ceil(obj.y);
+		_objPoint.x = Math.floor(obj.x + obj.width + _snapping);
+		_objPoint.y = Math.ceil(obj.y);
 		
 		//calculate position of the point on the slope that the object might overlap
 		//this would be one side of the object projected onto the slope's surface
@@ -307,8 +307,8 @@ class FlxTilemapExt extends FlxTilemap
 	private function solveCollisionSlopeCeilRight(slope:FlxObject, obj:FlxObject):Void
 	{
 		//calculate the corner point of the object
-		_objPoint.x = FlxU.floor(obj.x - _snapping);
-		_objPoint.y = FlxU.ceil(obj.y);
+		_objPoint.x = Math.floor(obj.x - _snapping);
+		_objPoint.y = Math.ceil(obj.y);
 		
 		//calculate position of the point on the slope that the object might overlap
 		//this would be one side of the object projected onto the slope's surface

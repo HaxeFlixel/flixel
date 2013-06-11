@@ -15,7 +15,6 @@ package org.flixel.plugin.photonstorm;
 import haxe.ds.ObjectMap;
 import org.flixel.FlxBasic;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
 
 class FlxControl extends FlxBasic
 {

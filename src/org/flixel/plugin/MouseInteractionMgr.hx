@@ -7,8 +7,8 @@ import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
 import org.flixel.system.input.FlxTouch;
+import org.flixel.util.FlxMath;
 
 typedef SpriteReg = {
 	var sprite:FlxSprite;
@@ -199,7 +199,7 @@ class MouseInteractionMgr extends FlxBasic
 			FlxG.mouse.getWorldPosition(camera, _point);
 			if (sprite.angle != 0)
 			{
-				FlxU.rotatePoint(_point.x, _point.y, sprite.x + sprite.origin.x, sprite.y + sprite.origin.y, -180 + sprite.angle, _point);	
+				FlxMath.rotatePoint(_point.x, _point.y, sprite.x + sprite.origin.x, sprite.y + sprite.origin.y, -180 + sprite.angle, _point);	
 			}
 			if (sprite.overlapsPoint(_point, true, camera))
 			{
@@ -221,7 +221,7 @@ class MouseInteractionMgr extends FlxBasic
 				touch.getWorldPosition(camera, _point);
 				if (sprite.angle != 0)
 				{
-					FlxU.rotatePoint(_point.x, _point.y, sprite.x + sprite.origin.x, sprite.y + sprite.origin.y, -180 + sprite.angle, _point);	
+					FlxMath.rotatePoint(_point.x, _point.y, sprite.x + sprite.origin.x, sprite.y + sprite.origin.y, -180 + sprite.angle, _point);	
 				}
 				if (sprite.overlapsPoint(_point, true, camera))
 				{

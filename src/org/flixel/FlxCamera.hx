@@ -4,14 +4,16 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.display.Sprite;
-import openfl.display.Tilesheet;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.DrawStackItem;
-import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.layer.TileSheetExt;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxMath;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRect;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -438,7 +440,7 @@ class FlxCamera extends FlxBasic
 		#if flash
 		color = 0xffffff;
 		#else
-		color = FlxG.WHITE;
+		color = FlxColor.WHITE;
 		#end
 		
 		_flashSprite = new Sprite();
@@ -458,12 +460,12 @@ class FlxCamera extends FlxBasic
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
-		_fxFlashColor = FlxColorUtils.TRANSPARENT;
+		_fxFlashColor = FlxColor.TRANSPARENT;
 		_fxFlashDuration = 0.0;
 		_fxFlashComplete = null;
 		_fxFlashAlpha = 0.0;
 		
-		_fxFadeColor = FlxColorUtils.TRANSPARENT;
+		_fxFadeColor = FlxColor.TRANSPARENT;
 		_fxFadeDuration = 0.0;
 		_fxFadeComplete = null;
 		_fxFadeAlpha = 0.0;
@@ -475,7 +477,7 @@ class FlxCamera extends FlxBasic
 		_fxShakeDirection = 0;
 		
 		#if flash
-		_fill = new BitmapData(width, height, true, FlxColorUtils.TRANSPARENT);
+		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		#else
 		
 		#if !js
@@ -765,10 +767,10 @@ class FlxCamera extends FlxBasic
 				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
 				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 			case STYLE_TOPDOWN:
-				helper = FlxU.max(width, height) / 4;
+				helper = Math.max(width, height) / 4;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
 			case STYLE_TOPDOWN_TIGHT:
-				helper = FlxU.max(width, height) / 8;
+				helper = Math.max(width, height) / 8;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
 			case STYLE_LOCKON:
 				if (target != null) 
@@ -844,7 +846,7 @@ class FlxCamera extends FlxBasic
 		_fxFlashColor = Color;
 		if (Duration <= 0)
 		{
-			Duration = FlxU.MIN_VALUE;
+			Duration = FlxMath.MIN_VALUE;
 		}
 		_fxFlashDuration = Duration;
 		_fxFlashComplete = OnComplete;
@@ -868,7 +870,7 @@ class FlxCamera extends FlxBasic
 		_fxFadeColor = Color;
 		if (Duration <= 0)
 		{
-			Duration = FlxU.MIN_VALUE;
+			Duration = FlxMath.MIN_VALUE;
 		}
 		
 		_fxFadeIn = FadeIn;
@@ -881,7 +883,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			_fxFadeAlpha = FlxU.MIN_VALUE;
+			_fxFadeAlpha = FlxMath.MIN_VALUE;
 		}
 	}
 	
@@ -986,7 +988,7 @@ class FlxCamera extends FlxBasic
 	 */
 	private function set_alpha(Alpha:Float):Float
 	{
-		alpha = FlxU.bound(Alpha, 0, 1);
+		alpha = FlxMath.bound(Alpha, 0, 1);
 		#if flash
 		_flashBitmap.alpha = Alpha;
 		#else

@@ -1,7 +1,6 @@
 package org.flixel.system.input;
 
 import org.flixel.FlxTypedGroup;
-import org.flixel.FlxU;
 import org.flixel.FlxG;
 import org.flixel.FlxAssets;
 import org.flixel.FlxSprite;
@@ -305,7 +304,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 						dist = 0;
 					}
 					_direction = Math.atan2(dy, dx);
-					_amount = FlxU.min(_radius, dist) / _radius;
+					_amount = Math.min(_radius, dist) / _radius;
 					
 					acceleration.x = Math.cos(_direction) * _amount * _radius;
 					acceleration.y = Math.sin(_direction) * _amount * _radius;			

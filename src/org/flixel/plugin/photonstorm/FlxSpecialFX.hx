@@ -12,7 +12,6 @@ package org.flixel.plugin.photonstorm;
 import haxe.ds.ObjectMap;
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
-import org.flixel.FlxU;
 import org.flixel.plugin.photonstorm.fx.BaseFX;
 //import org.flixel.plugin.photonstorm.fx.GlitchFX;
 import org.flixel.plugin.photonstorm.fx.StarfieldFX;

@@ -19,7 +19,7 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.Lib;
 import org.flixel.FlxG;
-import org.flixel.FlxU;
+import org.flixel.util.FlxMisc;
 
 /**
  * A useful timer that can be used to trigger events after certain amounts of time are up.<br />
@@ -70,7 +70,7 @@ class FlxDelay extends Sprite
 	 */
 	public function start():Void
 	{
-		started = FlxU.getTicks();
+		started = FlxMisc.getTicks();
 		expires = started + duration;
 		
 		isRunning = true;
@@ -115,7 +115,7 @@ class FlxDelay extends Sprite
 	 */
 	private function get_secondsElapsed():Int
 	{
-		return Std.int((FlxU.getTicks() - started) / 1000);
+		return Std.int((FlxMisc.getTicks() - started) / 1000);
 	}
 	
 	public var secondsRemaining(get_secondsRemaining, null):Int;
@@ -125,7 +125,7 @@ class FlxDelay extends Sprite
 	 */
 	private function get_secondsRemaining():Int
 	{
-		return Std.int((expires - FlxU.getTicks()) / 1000);
+		return Std.int((expires - FlxMisc.getTicks()) / 1000);
 	}
 	
 	private function update(event:Event):Void
@@ -136,15 +136,15 @@ class FlxDelay extends Sprite
 			pausedTimerRunning = false;
 			
 			//	Add the time the game was paused for onto the expires timer
-			expires += (FlxU.getTicks() - pauseStarted);
+			expires += (FlxMisc.getTicks() - pauseStarted);
 		}
 		else if (FlxG.paused == true && pausedTimerRunning == false)
 		{
-			pauseStarted = FlxU.getTicks();
+			pauseStarted = FlxMisc.getTicks();
 			pausedTimerRunning = true;
 		}
 		
-		if (isRunning == true && pausedTimerRunning == false && FlxU.getTicks() > expires)
+		if (isRunning == true && pausedTimerRunning == false && FlxMisc.getTicks() > expires)
 		{
 			stop();
 		}

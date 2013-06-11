@@ -1,10 +1,9 @@
 package org.flixel.system;
 
-import flash.system.System;
 import org.flixel.FlxBasic;
 import org.flixel.FlxObject;
-import org.flixel.FlxRect;
 import org.flixel.FlxTypedGroup;
+import org.flixel.util.FlxRect;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.

@@ -1,9 +1,5 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import org.flixel.system.layer.DrawStackItem;
 
 /**

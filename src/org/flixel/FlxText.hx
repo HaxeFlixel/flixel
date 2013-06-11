@@ -1,14 +1,13 @@
 package org.flixel;
-import org.flixel.FlxPoint;
 
-import openfl.Assets;
 import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
-import flash.geom.Point;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
+import openfl.Assets;
 import org.flixel.system.layer.Atlas;
+import org.flixel.util.FlxColor;
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -70,7 +69,7 @@ class FlxText extends FlxSprite
 		_isStatic = false;
 		
 		var key:String = FlxG.getUniqueBitmapKey("text");
-		makeGraphic(Width, 1, FlxColorUtils.TRANSPARENT, false, key);
+		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
 		
 		if (Text == null)
 		{
@@ -388,7 +387,7 @@ class FlxText extends FlxSprite
 				//Need to generate a new buffer to store the text graphic
 				height = _textField.textHeight;
 				height += 4; //account for 2px gutter on top and bottom
-				_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColorUtils.TRANSPARENT);
+				_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
 				frameHeight = Std.int(height);
 				_textField.height = height * 1.2;
 				_flashRect.x = 0;
@@ -399,7 +398,7 @@ class FlxText extends FlxSprite
 			}
 			else	//Else just clear the old buffer before redrawing the text
 			{
-				_pixels.fillRect(_flashRect, FlxColorUtils.TRANSPARENT);
+				_pixels.fillRect(_flashRect, FlxColor.TRANSPARENT);
 			}
 			
 			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))

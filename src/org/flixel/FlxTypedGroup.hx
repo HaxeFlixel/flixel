@@ -1,6 +1,7 @@
 package org.flixel;
 
 import org.flixel.system.layer.Atlas;
+import org.flixel.util.FlxMisc;
 
 /**
  * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
@@ -176,7 +177,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 		}
 		length = maxSize;
-		FlxU.SetArrayLength(members, maxSize);
+		FlxMisc.setArrayLength(members, maxSize);
 		return maxSize;
 	}
 	
@@ -199,7 +200,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		
 		//Don't bother adding an object twice.
-		if (FlxU.ArrayIndexOf(members, Object) >= 0)
+		if (FlxMisc.arrayIndexOf(members, Object) >= 0)
 		{
 			return Object;
 		}
@@ -233,16 +234,16 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 			else if (members.length * 2 <= maxSize)
 			{
-				FlxU.SetArrayLength(members, members.length * 2);
+				FlxMisc.setArrayLength(members, members.length * 2);
 			}
 			else
 			{
-				FlxU.SetArrayLength(members, maxSize);
+				FlxMisc.setArrayLength(members, maxSize);
 			}
 		}
 		else
 		{
-			FlxU.SetArrayLength(members, members.length * 2);
+			FlxMisc.setArrayLength(members, members.length * 2);
 		}
 		
 		//If we made it this far, then we successfully grew the group,
@@ -365,7 +366,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			return null;
 		}
 		
-		var index:Int = FlxU.ArrayIndexOf(members, Object);
+		var index:Int = FlxMisc.arrayIndexOf(members, Object);
 		if ((index < 0) || (index >= members.length))
 		{
 			return null;
@@ -389,7 +390,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function replace(OldObject:T, NewObject:T):T
 	{
-		var index:Int = FlxU.ArrayIndexOf(members, OldObject);
+		var index:Int = FlxMisc.arrayIndexOf(members, OldObject);
 		if ((index < 0) || (index >= members.length))
 		{
 			return null;

@@ -10,21 +10,20 @@
  * @version 1.5 - August 4th 2011
  * @link http://www.photonstorm.com
  * @author Richard Davey / Photon Storm
- * @see Depends upon FlxMath
+ * @see Depends upon FlxPTMath
 */
 
 package org.flixel.plugin.photonstorm;
 
 import flash.errors.Error;
-import org.flixel.FlxColorUtils;
 import org.flixel.FlxG;
-
+import org.flixel.util.FlxColor;
 
 /**
  * <code>FlxColor</code> is a set of fast color manipulation and color harmony methods.<br />
  * Can be used for creating gradient maps or general color translation / conversion.
  */
-class FlxColor
+class FlxPTColor
 {
 	public function new() {  }
 	
@@ -60,7 +59,7 @@ class FlxColor
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
-		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
+		var opposite:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), 180, 359);
 		
 		return HSVtoRGB(opposite, 1.0, 1.0);
 	}
@@ -84,8 +83,8 @@ class FlxColor
 			throw "FlxColor Warning: Invalid threshold given to getAnalogousHarmony()";
 		}
 		
-		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), 359 - threshold, 359);
-		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), threshold, 359);
+		var warmer:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), 359 - threshold, 359);
+		var colder:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), threshold, 359);
 		
 		return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
 	}
@@ -109,10 +108,10 @@ class FlxColor
 			throw "FlxColor Warning: Invalid threshold given to getSplitComplementHarmony()";
 		}
 		
-		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
+		var opposite:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), 180, 359);
 		
-		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite - threshold, 359);
-		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite + threshold, 359);
+		var warmer:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), opposite - threshold, 359);
+		var colder:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), opposite + threshold, 359);
 		
 		FlxG.notice("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
@@ -134,8 +133,8 @@ class FlxColor
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
-		var triadic1:Int = FlxMath.wrapValue(Std.int(hsv.hue), 120, 359);
-		var triadic2:Int = FlxMath.wrapValue(triadic1, 120, 359);
+		var triadic1:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), 120, 359);
+		var triadic2:Int = FlxPTMath.wrapValue(triadic1, 120, 359);
 		
 		return { color1: color, color2: HSVtoRGB(triadic1, 1.0, 1.0), color3: HSVtoRGB(triadic2, 1.0, 1.0) };
 	}
@@ -224,7 +223,7 @@ class FlxColor
 	 */
 	public static function HSVtoRGB(h:Float, s:Float, v:Float, alpha:Int = 255):Int
 	{
-		var result = FlxColorUtils.TRANSPARENT;
+		var result = FlxColor.TRANSPARENT;
 		
 		if (s == 0.0)
 		{

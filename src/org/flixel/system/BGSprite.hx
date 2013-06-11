@@ -8,6 +8,7 @@ import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.Node;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.FlxG;
+import org.flixel.util.FlxColor;
 
 /**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
@@ -18,7 +19,7 @@ class BGSprite extends FlxSprite
 	public function new()
 	{
 		super();
-		makeGraphic(1, 1, FlxG.TRANSPARENT, true, FlxG.getUniqueBitmapKey("bg_graphic_"));
+		makeGraphic(1, 1, FlxColor.TRANSPARENT, true, FlxG.getUniqueBitmapKey("bg_graphic_"));
 		scrollFactor.make();
 	}
 	

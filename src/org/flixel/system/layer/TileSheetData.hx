@@ -1,18 +1,13 @@
 package org.flixel.system.layer;
 
 import flash.display.BitmapData;
-import flash.display.Graphics;
-import openfl.display.Tilesheet;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import org.flixel.FlxCamera;
-import org.flixel.FlxG;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.plugin.texturepacker.TexturePackerData;
-
-import org.flixel.system.layer.TileSheetExt;
 import org.flixel.system.layer.frames.FlxFrame;
 import org.flixel.system.layer.frames.FlxSpriteFrames;
+import org.flixel.system.layer.TileSheetExt;
 
 /**
  * Object of this class holds information about single Tilesheet

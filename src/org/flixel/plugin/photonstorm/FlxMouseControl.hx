@@ -16,8 +16,9 @@ package org.flixel.plugin.photonstorm;
 #if !FLX_NO_MOUSE
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
-import org.flixel.FlxRect;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRect;
+import org.flixel.util.FlxMath;
 
 class FlxMouseControl extends FlxBasic
 {

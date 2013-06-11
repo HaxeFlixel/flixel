@@ -1,10 +1,10 @@
 package org.flixel.system;
 
 import org.flixel.FlxG;
-import org.flixel.FlxU;
 import org.flixel.system.replay.CodeValuePair;
 import org.flixel.system.replay.FrameRecord;
 import org.flixel.system.replay.MouseRecord;
+import org.flixel.util.FlxMisc;
 
 /**
  * The replay object both records and replays game recordings,
@@ -115,7 +115,7 @@ class FlxReplay
 				if(frameCount >= _capacity)
 				{
 					_capacity *= 2;
-					FlxU.SetArrayLength(_frames, _capacity);
+					FlxMisc.setArrayLength(_frames, _capacity);
 				}
 			}
 		}
@@ -130,7 +130,7 @@ class FlxReplay
 	{
 		_capacity = 100;
 		_frames = new Array<FrameRecord>(/*_capacity*/);
-		FlxU.SetArrayLength(_frames, _capacity);
+		FlxMisc.setArrayLength(_frames, _capacity);
 		frameCount = 0;
 	}
 	
@@ -190,7 +190,7 @@ class FlxReplay
 		if(frameCount >= _capacity)
 		{
 			_capacity *= 2;
-			FlxU.SetArrayLength(_frames, _capacity);
+			FlxMisc.setArrayLength(_frames, _capacity);
 		}
 	}
 	

@@ -1,6 +1,5 @@
 package org.flixel.system;
 
-import openfl.Assets;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -10,11 +9,10 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import org.flixel.FlxColorUtils;
-import org.flixel.FlxG;
-
+import openfl.Assets;
 import org.flixel.FlxAssets;
-import org.flixel.FlxU;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxMath;
 
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
@@ -116,13 +114,13 @@ class FlxWindow extends Sprite
 		}
 		else
 		{
-			maxSize = new Point(FlxU.MAX_VALUE, FlxU.MAX_VALUE);
+			maxSize = new Point(FlxMath.MAX_VALUE, FlxMath.MAX_VALUE);
 		}
 		_drag = new Point();
 		
 		_resizable = Resizable;
 		
-		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColorUtils.BLACK));
+		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
 		addChild(_shadow);
 		_background = new Bitmap(new BitmapData(1, 1, true, BGColor));
 		_background.y = 15;
@@ -315,8 +313,8 @@ class FlxWindow extends Sprite
 	{
 		if(_bounds != null)
 		{
-			x = FlxU.bound(x, _bounds.left, _bounds.right - _width);
-			y = FlxU.bound(y, _bounds.top, _bounds.bottom - _height);
+			x = FlxMath.bound(x, _bounds.left, _bounds.right - _width);
+			y = FlxMath.bound(y, _bounds.top, _bounds.bottom - _height);
 		}
 	}
 	
@@ -325,8 +323,8 @@ class FlxWindow extends Sprite
 	 */
 	private function updateSize():Void
 	{
-		_width = Std.int(FlxU.bound(_width, minSize.x, maxSize.x));
-		_height = Std.int(FlxU.bound(_height, minSize.y, maxSize.y));
+		_width = Std.int(FlxMath.bound(_width, minSize.x, maxSize.x));
+		_height = Std.int(FlxMath.bound(_height, minSize.y, maxSize.y));
 		
 		_header.scaleX = _width;
 		_background.scaleX = _width;

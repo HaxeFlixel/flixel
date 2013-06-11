@@ -1,7 +1,6 @@
 package org.flixel.system.input;
 
-import org.flixel.FlxU;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 
 class FlxJoystick 
 {
@@ -137,7 +136,7 @@ class FlxJoystick
 		if (axeID < 0 || axeID >= axis.length)
 			return 0;
 			
-		if (FlxU.abs(axis[axeID]) > deadZone)
+		if (Math.abs(axis[axeID]) > deadZone)
 			return axis[axeID];
 		
 		return 0;

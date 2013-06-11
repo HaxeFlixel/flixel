@@ -4,16 +4,10 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import org.flixel.FlxCamera;
-import org.flixel.FlxColorUtils;
 import org.flixel.FlxG;
-import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
-import org.flixel.FlxSprite;
-import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.TileSheetData;
-import org.flixel.system.layer.TileSheetExt;
-import org.flixel.tweens.misc.NumTween;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxPoint;
 
 class FlxFrame
 {
@@ -67,11 +61,11 @@ class FlxFrame
 			return _bitmapData;
 		}
 		
-		_bitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColorUtils.TRANSPARENT);
+		_bitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		
 		if (rotated)
 		{
-			var temp:BitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxColorUtils.TRANSPARENT);
+			var temp:BitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxColor.TRANSPARENT);
 			FlxFrame.POINT.x = FlxFrame.POINT.y = 0;
 			temp.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, FlxFrame.POINT);
 			
@@ -103,7 +97,7 @@ class FlxFrame
 		MATRIX.identity();
 		MATRIX.scale( -1, 1);
 		MATRIX.translate(Std.int(sourceSize.x), 0);
-		_reversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColorUtils.TRANSPARENT);
+		_reversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		_reversedBitmapData.draw(normalFrame, MATRIX);
 		
 		return _reversedBitmapData;

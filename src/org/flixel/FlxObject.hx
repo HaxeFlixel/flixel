@@ -1,10 +1,11 @@
 package org.flixel;
 
 import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.geom.Point;
-
 import org.flixel.FlxBasic;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxMath;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRect;
 
 /**
  * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
@@ -391,18 +392,18 @@ class FlxObject extends FlxBasic
 		
 		var dt:Float = FlxG.elapsed;
 		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
 		angularVelocity += velocityDelta; 
 		angle += angularVelocity * dt;
 		angularVelocity += velocityDelta;
 		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
 		velocity.x += velocityDelta;
 		delta = velocity.x * dt;
 		velocity.x += velocityDelta;
 		x += delta;
 		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
 		velocity.y += velocityDelta;
 		delta = velocity.y * dt;
 		velocity.y += velocityDelta;
@@ -463,20 +464,20 @@ class FlxObject extends FlxBasic
 		{
 			if (allowCollisions != ANY)
 			{
-				debugBoundingBoxColor = FlxColorUtils.PINK;
+				debugBoundingBoxColor = FlxColor.PINK;
 			}
 			if (immovable)
 			{
-				debugBoundingBoxColor = FlxColorUtils.GREEN;
+				debugBoundingBoxColor = FlxColor.GREEN;
 			}
 			else
 			{
-				debugBoundingBoxColor = FlxColorUtils.RED;
+				debugBoundingBoxColor = FlxColor.RED;
 			}
 		}
 		else if (!_boundingBoxColorOverritten)
 		{
-			debugBoundingBoxColor = FlxColorUtils.BLUE;
+			debugBoundingBoxColor = FlxColor.BLUE;
 		}
 		
 		//fill static graphics object with square shape
@@ -517,7 +518,7 @@ class FlxObject extends FlxBasic
 		}
 		
 		path = Path;
-		pathSpeed = FlxU.abs(Speed);
+		pathSpeed = Math.abs(Speed);
 		_pathMode = Mode;
 		_pathRotate = AutoRotate;
 		
@@ -754,8 +755,8 @@ class FlxObject extends FlxBasic
 			}
 			else
 			{
-				pathAngle = FlxU.getAngle(_point, node);
-				FlxU.rotatePoint(0, pathSpeed, 0, 0, pathAngle, velocity);
+				pathAngle = FlxMath.getAngle(_point, node);
+				FlxMath.rotatePoint(0, pathSpeed, 0, 0, pathAngle, velocity);
 			}
 			
 			//then set object rotation if necessary

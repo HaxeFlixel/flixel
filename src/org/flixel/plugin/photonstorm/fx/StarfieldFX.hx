@@ -21,6 +21,7 @@ import org.flixel.plugin.photonstorm.FlxColor;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxGradient;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxMisc;
 
 /**
  * Creates a 2D or 3D Star Field effect on an FlxSprite for use in your game.
@@ -329,7 +330,7 @@ class StarfieldFX extends BaseFX
 	
 	override public function draw():Void
 	{
-		if (FlxU.getTicks() > tick)
+		if (FlxMisc.getTicks() > tick)
 		{
 			#if flash
 			canvas.lock();
@@ -352,7 +353,7 @@ class StarfieldFX extends BaseFX
 			
 			if (updateSpeed > 0)
 			{
-				tick = FlxU.getTicks() + updateSpeed;
+				tick = FlxMisc.getTicks() + updateSpeed;
 			}
 		}
 	}

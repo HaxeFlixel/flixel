@@ -25,6 +25,13 @@ import org.flixel.system.FlxQuadTree;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 import org.flixel.tweens.misc.MultiVarTween;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxMath;
+import org.flixel.util.FlxMisc;
+import org.flixel.util.FlxRandom;
+import org.flixel.util.FlxRect;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxString;
 
 #if !FLX_NO_DEBUG
 import org.flixel.system.FlxDebugger;
@@ -49,7 +56,7 @@ import org.flixel.system.input.FlxJoystickManager;
 /**
  * This is a global helper class full of useful functions for audio,
  * input, basic info, and the camera system among other things.
- * Utilities for maths and color and things can be found in <code>FlxU</code>.
+ * Utilities for maths and color and things can be found in the util package.
  * <code>FlxG</code> is specifically for Flixel-specific properties.
  */
 class FlxG 
@@ -119,35 +126,6 @@ class FlxG
 	 */
 	static public inline var DEBUGGER_RIGHT:Int = 5;
 	#end
-	
-	/**
-	 * Reference to FlxColorUtils.RED for backwards compatibility.
-	 */
-	static public inline var RED:Int = FlxColorUtils.RED;
-	/**
-	 * Reference to FlxColorUtils.GREEN for backwards compatibility.
-	 */
-	static public inline var GREEN:Int = FlxColorUtils.GREEN;
-	/**
-	 * Reference to FlxColorUtils.BLUE for backwards compatibility.
-	 */
-	static public inline var BLUE:Int = FlxColorUtils.BLUE;
-	/**
-	 * Reference to FlxColorUtils.PINK for backwards compatibility. 
-	 */
-	static public inline var PINK:Int = FlxColorUtils.PINK;
-	/**
-	 * Reference to FlxColorUtils.WHITE for backwards compatibility.
-	 */
-	static public inline var WHITE:Int = FlxColorUtils.WHITE;
-	/**
-	 * Reference to FlxColorUtils.BLACK for backwards compatibility.
-	 */
-	static public inline var BLACK:Int = FlxColorUtils.BLACK;
-	/**
-	 * Reference to FlxColorUtils.TRANSPARENT for backwards compatibility. 
-	 */
-	static public inline var TRANSPARENT:Int = FlxColorUtils.TRANSPARENT;
 	
 	/**
 	 * Useful for rad-to-deg and deg-to-rad conversion.
@@ -541,7 +519,7 @@ class FlxG
 	 */
 	inline static public function random():Float
 	{
-		globalSeed = FlxU.srand(globalSeed);
+		globalSeed = FlxRandom.srand(globalSeed);
 		if (globalSeed <= 0) globalSeed += 1;
 		return globalSeed;
 	}
@@ -549,7 +527,7 @@ class FlxG
 	/**
 	 * Shuffles the entries in an array into a new random order.
 	 * <code>FlxG.shuffle()</code> is deterministic and safe for use with replays/recordings.
-	 * HOWEVER, <code>FlxU.shuffle()</code> is NOT deterministic and unsafe for use with replays/recordings.
+	 * HOWEVER, <code>FlxMath.shuffle()</code> is NOT deterministic and unsafe for use with replays/recordings.
 	 * @param	A				A Flash <code>Array</code> object containing...stuff.
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
@@ -577,7 +555,7 @@ class FlxG
 	 * Fetch a random entry from the given array.
 	 * Will return null if random selection is missing, or array has no entries.
 	 * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
-	 * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
+	 * HOWEVER, <code>FlxMath.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
 	 * @param	Objects		A Flash array of objects.
 	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
@@ -708,7 +686,8 @@ class FlxG
 	 */
 	static public function resetState():Void
 	{
-		_game.requestNewState(Type.createInstance(FlxU.getClass(FlxU.getClassName(_game._state, false)), []));
+		_game.requestNewState(Type.createInstance(Type.resolveClass(FlxString.getClassName(_game._state, false)), []));
+		
 		#if !FLX_NO_DEBUG
 		if (Std.is(_game._requestedState, FlxSubState))
 		{
@@ -1139,7 +1118,7 @@ class FlxG
 				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
 				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
 				
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColorUtils.TRANSPARENT);
+				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColor.TRANSPARENT);
 				
 				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 				var tempPoint:Point = new Point();
@@ -1428,7 +1407,7 @@ class FlxG
 		if (Camera != null && FlxG._game.contains(Camera._flashSprite))
 		{
 			FlxG._game.removeChild(Camera._flashSprite);
-			var index = FlxU.ArrayIndexOf(FlxG.cameras, Camera);
+			var index = FlxMisc.arrayIndexOf(FlxG.cameras, Camera);
 			if(index >= 0)
 				FlxG.cameras.splice(index, 1);
 		}
@@ -1538,7 +1517,7 @@ class FlxG
 	{
 		if (FlxG.camera == null)
 		{
-			return FlxColorUtils.BLACK;
+			return FlxColor.BLACK;
 		}
 		else
 		{

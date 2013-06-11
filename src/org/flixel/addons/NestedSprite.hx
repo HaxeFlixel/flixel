@@ -5,7 +5,8 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
+import org.flixel.util.FlxMath;
+import org.flixel.util.FlxMisc;
 
 /**
  * Some sort of DisplayObjectContainer but very limited.
@@ -98,7 +99,7 @@ class NestedSprite extends FlxSprite
 	 */
 	public function add(Child:NestedSprite):NestedSprite
 	{
-		if (FlxU.ArrayIndexOf(_children, Child) < 0)
+		if (FlxMisc.arrayIndexOf(_children, Child) < 0)
 		{
 			_children.push(Child);
 			Child.velocity.x = Child.velocity.y = 0;
@@ -129,7 +130,7 @@ class NestedSprite extends FlxSprite
 	 */
 	public function remove(Child:NestedSprite):NestedSprite
 	{
-		var index:Int = FlxU.ArrayIndexOf(_children, Child);
+		var index:Int = FlxMisc.arrayIndexOf(_children, Child);
 		if (index >= 0)
 		{
 			_children.splice(index, 1);
@@ -240,18 +241,18 @@ class NestedSprite extends FlxSprite
 		var velocityDelta:Float;
 		var dt:Float = FlxG.elapsed;
 		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeAngularVelocity, relativeAngularAcceleration, angularDrag, maxAngular) - relativeAngularVelocity);
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(relativeAngularVelocity, relativeAngularAcceleration, angularDrag, maxAngular) - relativeAngularVelocity);
 		relativeAngularVelocity += velocityDelta; 
 		relativeAngle += relativeAngularVelocity * dt;
 		relativeAngularVelocity += velocityDelta;
 		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeVelocityX, relativeAccelerationX, drag.x, maxVelocity.x) - relativeVelocityX);
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(relativeVelocityX, relativeAccelerationX, drag.x, maxVelocity.x) - relativeVelocityX);
 		relativeVelocityX += velocityDelta;
 		delta = relativeVelocityX * dt;
 		relativeVelocityX += velocityDelta;
 		relativeX += delta;
 		
-		velocityDelta = 0.5 * (FlxU.computeVelocity(relativeVelocityY, relativeAccelerationY, drag.y, maxVelocity.y) - relativeVelocityY);
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(relativeVelocityY, relativeAccelerationY, drag.y, maxVelocity.y) - relativeVelocityY);
 		relativeVelocityY += velocityDelta;
 		delta = relativeVelocityY * dt;
 		relativeVelocityY += velocityDelta;

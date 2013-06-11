@@ -1,12 +1,11 @@
 package org.flixel;
 
-import openfl.Assets;
 import flash.display.BitmapData;
 import flash.text.TextField;
-import flash.text.TextFieldType;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
 import flash.text.TextFieldAutoSize;
+import flash.text.TextFieldType;
+import flash.text.TextFormatAlign;
+import openfl.Assets;
 import org.flixel.FlxAssets;
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
