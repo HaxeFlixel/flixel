@@ -371,6 +371,7 @@ class FlxBasic
 			}
 			else if (_atlas.hasNodeWithName(_bitmapDataKey))
 			{
+				_node = _atlas.getNodeByKey(_bitmapDataKey);
 				if (updateAtlas)
 				{
 					_atlas.redrawNode(_node);
