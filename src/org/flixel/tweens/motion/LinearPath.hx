@@ -1,6 +1,6 @@
 package org.flixel.tweens.motion;
 
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
 

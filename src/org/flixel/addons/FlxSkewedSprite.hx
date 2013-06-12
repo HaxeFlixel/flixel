@@ -4,9 +4,9 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxPoint;
 
 /**
  * ...

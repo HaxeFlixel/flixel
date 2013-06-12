@@ -22,7 +22,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import openfl.Assets;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.DrawStackItem;
 

@@ -18,7 +18,7 @@ package org.flixel.plugin.photonstorm;
 
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.system.input.FlxTouch;
 
