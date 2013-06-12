@@ -273,6 +273,27 @@ class FlxMath
 	}
 	
 	/**
+	 * Compare two numbers.
+	 * 
+	 * @param	num1	The first number
+	 * @param	num2	The second number
+	 * 
+	 * @return	-1 if num1 is smaller, 1 if num2 is bigger, 0 if they are equal
+	 */
+	public static function numericComparison(num1:Float, num2:Float):Int
+	{
+		if (num2 > num1)
+		{
+			return -1;
+		}
+		else if (num1 > num2)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	
+	/**
 	 * Returns true if the given x/y coordinate is within the given rectangular block
 	 * 
 	 * @param	pointX		The X value to test
@@ -374,9 +395,18 @@ class FlxMath
 	}
 	
 	#if (flash || js)
+	/**
+	 * Minimum value of a floating point number.
+	 */
 	inline public static var MIN_VALUE:Float = 0.0000000000000001;
 	#else
+	/**
+	 * Minimum value of a floating point number.
+	 */
 	inline public static var MIN_VALUE:Float = 5e-324;
 	#end
+	/**
+	 * Maximum value of a floating point number.
+	 */
 	inline public static var MAX_VALUE:Float = 1.79e+308;
 }

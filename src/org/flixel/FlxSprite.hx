@@ -1423,7 +1423,7 @@ class FlxSprite extends FlxObject
 	public function randomFrame():Void
 	{
 		_curAnim = null;
-		_curIndex = Std.int(FlxRandom.random() * frames);
+		_curIndex = Std.int(FlxRandom.float() * frames);
 		#if !flash
 		if (_framesData != null)
 		#else

@@ -133,14 +133,14 @@ class FlxTileblock extends FlxSprite
 			column = 0;
 			while(column < widthInTiles)
 			{
-				if (FlxRandom.random() * total > Empties)
+				if (FlxRandom.float() * total > Empties)
 				{
 					#if (flash || js)
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					var tileIndex:Int = Std.int(FlxRandom.random() * _framesData.frames.length);
+					var tileIndex:Int = Std.int(FlxRandom.float() * _framesData.frames.length);
 					_tileIndices.push(tileIndex);
 					_tileData.push(_framesData.frames[tileIndex].tileID);
 					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);

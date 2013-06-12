@@ -20,6 +20,7 @@ import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.input.FlxInputs;
 import org.flixel.system.layer.TileSheetExt;
 import org.flixel.util.FlxColor;
+import org.flixel.util.FlxRandom;
 import org.flixel.util.FlxTimer;
 
 #if flash
@@ -488,7 +489,7 @@ class FlxGame extends Sprite
 		if (_recordingRequested)
 		{
 			_recordingRequested = false;
-			_replay.create(FlxG.globalSeed);
+			_replay.create(FlxRandom.globalSeed);
 			_recording = true;
 			
 			#if !FLX_NO_DEBUG
@@ -500,7 +501,7 @@ class FlxGame extends Sprite
 		{
 			_replayRequested = false;
 			_replay.rewind();
-			FlxG.globalSeed = _replay.seed;
+			FlxRandom.globalSeed = _replay.seed;
 			#if !FLX_NO_DEBUG
 			_debugger.vcr.playing();
 			#end

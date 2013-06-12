@@ -199,10 +199,6 @@ class FlxG
 	 */
 	static public var mobile:Bool; 
 	/**
-	 * The global random number generator seed (for deterministic behavior in recordings and saves).
-	 */
-	static public var globalSeed:Float;
-	/**
 	 * A handy container for a background music object.
 	 */
 	static public var music:FlxSound;
@@ -1669,7 +1665,7 @@ class FlxG
 		FlxG.paused = false;
 		FlxG.timeScale = 1.0;
 		FlxG.elapsed = 0;
-		FlxG.globalSeed = Math.random();
+		FlxRandom.globalSeed = Math.random();
 		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
 		#if !FLX_NO_DEBUG
@@ -1893,11 +1889,11 @@ class FlxG
 	
 	// TODO: Remove this reference at some point?
 	/**
-	 * Reference to <code>FlxRandom.random()</code> for backwards compatibility.
+	 * Reference to <code>FlxRandom.float()</code> for backwards compatibility.
 	 * Might or might not be removed some time in the future.
 	 */
 	inline static public function random():Float
 	{
-		return FlxRandom.random();
+		return FlxRandom.float();
 	}
 }

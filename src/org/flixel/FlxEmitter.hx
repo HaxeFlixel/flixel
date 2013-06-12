@@ -255,7 +255,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 			particle = Type.createInstance(_particleClass, []);
 			if (Multiple)
 			{
-				randomFrame = Std.int(FlxRandom.random() * totalFrames); 
+				randomFrame = Std.int(FlxRandom.float() * totalFrames); 
 				if (BakedRotations > 0)
 				{
 					#if flash
@@ -414,12 +414,12 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		var particle:FlxParticle = recycle(cast _particleClass);
 		particle.elasticity = bounce;
 		
-		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.random() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.random() * height);
+		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);
 		particle.visible = true;
 		
 		if (life.min != life.max)
 		{
-			particle.lifespan = particle.maxLifespan = life.min + FlxRandom.random() * (life.max - life.min);
+			particle.lifespan = particle.maxLifespan = life.min + FlxRandom.float() * (life.max - life.min);
 		}
 		else
 		{
@@ -428,7 +428,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		
 		if (startAlpha.min != startAlpha.max)
 		{
-			particle.startAlpha = startAlpha.min + FlxRandom.random() * (startAlpha.max - startAlpha.min);
+			particle.startAlpha = startAlpha.min + FlxRandom.float() * (startAlpha.max - startAlpha.min);
 		}
 		else
 		{
@@ -439,7 +439,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		var particleEndAlpha:Float = endAlpha.min;
 		if (endAlpha.min != endAlpha.max)
 		{
-			particleEndAlpha = endAlpha.min + FlxRandom.random() * (endAlpha.max - endAlpha.min);
+			particleEndAlpha = endAlpha.min + FlxRandom.float() * (endAlpha.max - endAlpha.min);
 		}
 		
 		if (particleEndAlpha != particle.startAlpha)
@@ -463,30 +463,30 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		
 		if (startRed.min != startRed.max)
 		{
-			particle.startRed = startRedComp = startRed.min + FlxRandom.random() * (startRed.max - startRed.min);
+			particle.startRed = startRedComp = startRed.min + FlxRandom.float() * (startRed.max - startRed.min);
 		}
 		if (startGreen.min != startGreen.max)
 		{
-			particle.startGreen = startGreenComp = startGreen.min + FlxRandom.random() * (startGreen.max - startGreen.min);
+			particle.startGreen = startGreenComp = startGreen.min + FlxRandom.float() * (startGreen.max - startGreen.min);
 		}
 		if (startBlue.min != startBlue.max)
 		{
-			particle.startBlue = startBlueComp = startBlue.min + FlxRandom.random() * (startBlue.max - startBlue.min);
+			particle.startBlue = startBlueComp = startBlue.min + FlxRandom.float() * (startBlue.max - startBlue.min);
 		}
 		
 		if (endRed.min != endRed.max)
 		{
-			endRedComp = endRed.min + FlxRandom.random() * (endRed.max - endRed.min);
+			endRedComp = endRed.min + FlxRandom.float() * (endRed.max - endRed.min);
 		}
 		
 		if (endGreen.min != endGreen.max)
 		{
-			endGreenComp = endGreen.min + FlxRandom.random() * (endGreen.max - endGreen.min);
+			endGreenComp = endGreen.min + FlxRandom.float() * (endGreen.max - endGreen.min);
 		}
 		
 		if (endBlue.min != endBlue.max)
 		{
-			endBlueComp = endBlue.min + FlxRandom.random() * (endBlue.max - endBlue.min);
+			endBlueComp = endBlue.min + FlxRandom.float() * (endBlue.max - endBlue.min);
 		}
 		
 		particle.rangeRed = endRedComp - startRedComp;
@@ -501,7 +501,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		// end of particle color settings
 		if (startScale.min != startScale.max)
 		{
-			particle.startScale = startScale.min + FlxRandom.random() * (startScale.max - startScale.min);
+			particle.startScale = startScale.min + FlxRandom.float() * (startScale.max - startScale.min);
 		}
 		else
 		{
@@ -512,7 +512,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		var particleEndScale:Float = endScale.min;
 		if (endScale.min != endScale.max)
 		{
-			particleEndScale = endScale.min + Std.int(FlxRandom.random() * (endScale.max - endScale.min));
+			particleEndScale = endScale.min + Std.int(FlxRandom.float() * (endScale.max - endScale.min));
 		}
 		
 		if (particleEndScale != particle.startScale)
@@ -530,7 +530,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		
 		if (xVelocity.min != xVelocity.max)
 		{
-			particle.velocity.x = xVelocity.min + FlxRandom.random() * (xVelocity.max - xVelocity.min);
+			particle.velocity.x = xVelocity.min + FlxRandom.float() * (xVelocity.max - xVelocity.min);
 		}
 		else
 		{
@@ -538,7 +538,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		}
 		if (yVelocity.min != yVelocity.max)
 		{
-			particle.velocity.y = yVelocity.min + FlxRandom.random() * (yVelocity.max - yVelocity.min);
+			particle.velocity.y = yVelocity.min + FlxRandom.float() * (yVelocity.max - yVelocity.min);
 		}
 		else
 		{
@@ -548,7 +548,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		
 		if (rotation.min != rotation.max)
 		{
-			particle.angularVelocity = rotation.min + FlxRandom.random() * (rotation.max - rotation.min);
+			particle.angularVelocity = rotation.min + FlxRandom.float() * (rotation.max - rotation.min);
 		}
 		else
 		{
@@ -556,7 +556,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		}
 		if (particle.angularVelocity != 0)
 		{
-			particle.angle = FlxRandom.random() * 360 - 180;
+			particle.angle = FlxRandom.float() * 360 - 180;
 		}
 		
 		particle.drag.make(particleDrag.x, particleDrag.y);

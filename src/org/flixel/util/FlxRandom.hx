@@ -8,48 +8,59 @@ import org.flixel.FlxG;
  */
 class FlxRandom
 {
-	public static inline var getrandmax:Int = 0xffffff; // Std.int(FlxMath.MAX_VALUE);
-	private static var mr:Int = 0;
+	/**
+	 * The global random number generator seed (for deterministic behavior in recordings and saves).
+	 */
+	static public var globalSeed:Float;
+	/**
+	 * Internal helper for <code>FlxRandom.int()</code>
+	 */
+	static private var intHelper:Int = 0;
+	/**
+	 * Maximum value returned by <code>FlxRandom.intRanged</code> and <code>FlxRandom.floatRanged</code> by default.
+	 */
+	static public inline var MAX_RANGE:Int = 0xffffff;
 	
 	/**
-	 * Generates a random number.  Deterministic, meaning safe
-	 * to use if you want to record replays in random environments.
-	 * @return	A <code>Number</code> between 0 and 1.
+	 * Generates a small random number between 0 and 65535 very quickly
+	 * 
+	 * Generates a small random number between 0 and 65535 using an extremely fast cyclical generator, 
+	 * with an even spread of numbers. After the 65536th call to this function the value resets.
+	 * 
+	 * @return A pseudo random value between 0 and 65536 inclusive.
 	 */
-	inline static public function random():Float
+	static public function int():Int
 	{
-		FlxG.globalSeed = srand(FlxG.globalSeed);
-		if (FlxG.globalSeed <= 0) FlxG.globalSeed += 1;
-		return FlxG.globalSeed;
-	}
-	
-	/**
-	 * Generates a random number based on the seed provided.
-	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
-	 * @return	A <code>Number</code> between 0 and 1.
-	 */
-	inline static public function srand(Seed:Float):Float
-	{
-		#if !neko
-		return ((69621 * Std.int(Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
-		#else
-		return Math.random();
-		#end
+		var result:Int = Std.int(intHelper);
+		
+		result++;
+		result *= 75;
+		result %= 65537;
+		result--;
+		
+		intHelper++;
+		
+		if (intHelper == 65536)
+		{
+			intHelper = 0;
+		}
+		
+		return result;
 	}
 	
 	/**
 	 * Generate a random integer
-	 * <p>
-	 * If called without the optional min, max arguments rand() returns a peudo-random integer between 0 and getrandmax().
+	 * 
+	 * If called without the optional min, max arguments rand() returns a peudo-random integer between 0 and MAX_RANGE.
 	 * If you want a random number between 5 and 15, for example, (inclusive) use rand(5, 15)
 	 * Parameter order is insignificant, the return will always be between the lowest and highest value.
-	 * </p>
+	 * 
 	 * @param 	min 		The lowest value to return (default: 0)
-	 * @param 	max 		The highest value to return (default: getrandmax)
+	 * @param 	max 		The highest value to return (default: MAX_RANGE)
 	 * @param 	excludes 	An Array of integers that will NOT be returned (default: null)
-	 * @return A pseudo-random value between min (or 0) and max (or getrandmax, inclusive)
+	 * @return A pseudo-random value between min (or 0) and max (or MAX_RANGE, inclusive)
 	 */
-	public static function rand(?min:Float, ?max:Float, ?excludes:Array<Float> = null):Int
+	static public function intRanged(?min:Float, ?max:Float, ?excludes:Array<Float> = null):Int
 	{
 		if (min == null)
 		{
@@ -58,7 +69,7 @@ class FlxRandom
 		
 		if (max == null)
 		{
-			max = getrandmax;
+			max = MAX_RANGE;
 		}
 		
 		if (min == max)
@@ -70,7 +81,7 @@ class FlxRandom
 		{
 			//	Sort the exclusion array
 			//excludes.sort(Array.NUMERIC);
-			excludes.sort(FlxRandom.numericComparison);
+			excludes.sort(FlxMath.numericComparison);
 			
 			var result:Int;
 			
@@ -103,57 +114,29 @@ class FlxRandom
 	}
 	
 	/**
-	 * Generates a small random number between 0 and 65535 very quickly
-	 * <p>
-	 * Generates a small random number between 0 and 65535 using an extremely fast cyclical generator, 
-	 * with an even spread of numbers. After the 65536th call to this function the value resets.
-	 * </p>
-	 * @return A pseudo random value between 0 and 65536 inclusive.
+	 * Generates a random number.  Deterministic, meaning safe
+	 * to use if you want to record replays in random environments.
+	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	public static function miniRand():Int
+	inline static public function float():Float
 	{
-		var result:Int = Std.int(mr);
-		
-		result++;
-		result *= 75;
-		result %= 65537;
-		result--;
-		
-		mr++;
-		
-		if (mr == 65536)
-		{
-			mr = 0;
-		}
-		
-		return result;
-	}
-	
-	public static function numericComparison(int1:Float, int2:Float):Int
-	{
-		if (int2 > int1)
-		{
-			return -1;
-		}
-		else if (int1 > int2)
-		{
-			return 1;
-		}
-		return 0;
+		globalSeed = srand(globalSeed);
+		if (globalSeed <= 0) globalSeed += 1;
+		return globalSeed;
 	}
 	
 	/**
 	 * Generate a random float (number)
-	 * <p>
-	 * If called without the optional min, max arguments rand() returns a peudo-random float between 0 and getrandmax().
+	 * 
+	 * If called without the optional min, max arguments rand() returns a peudo-random float between 0 and MAX_RANGE().
 	 * If you want a random number between 5 and 15, for example, (inclusive) use rand(5, 15)
 	 * Parameter order is insignificant, the return will always be between the lowest and highest value.
-	 * </p>
+	 * 
 	 * @param 	min 	The lowest value to return (default: 0)
-	 * @param 	max 	The highest value to return (default: getrandmax)
-	 * @return A pseudo random value between min (or 0) and max (or getrandmax, inclusive)
+	 * @param 	max 	The highest value to return (default: MAX_RANGE)
+	 * @return A pseudo random value between min (or 0) and max (or MAX_RANGE, inclusive)
 	 */
-	public static function randFloat(?min:Float, ?max:Float):Float
+	static public function floatRanged(?min:Float, ?max:Float):Float
 	{
 		if (min == null)
 		{
@@ -162,7 +145,7 @@ class FlxRandom
 		
 		if (max == null)
 		{
-			max = getrandmax;
+			max = MAX_RANGE;
 		}
 		
 		if (min == max)
@@ -180,15 +163,29 @@ class FlxRandom
 	}
 	
 	/**
+	 * Generates a random number based on the seed provided.
+	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
+	 * @return	A <code>Number</code> between 0 and 1.
+	 */
+	inline static public function srand(Seed:Float):Float
+	{
+		#if !neko
+		return ((69621 * Std.int(Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
+		#else
+		return Math.random();
+		#end
+	}
+	
+	/**
 	 * Generate a random boolean result based on the chance value
-	 * <p>
+	 * 
 	 * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
 	 * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
-	 * </p>
+	 * 
 	 * @param 	chance 	The chance of receiving the value. Should be given as a uint between 0 and 100 (effectively 0% to 100%)
 	 * @return true if the roll passed, or false
 	 */
-	public static function chanceRoll(chance:Int = 50):Bool
+	static public function chanceRoll(chance:Int = 50):Bool
 	{
 		if (chance <= 0)
 		{
@@ -216,7 +213,7 @@ class FlxRandom
 	 * 
 	 * @return	1 or -1
 	 */
-	public static function sign():Float
+	static public function sign():Float
 	{
 		return (Math.random() > 0.5) ? 1 : -1;
 	}
