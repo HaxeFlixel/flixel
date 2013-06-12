@@ -8,6 +8,7 @@ import flash.media.Sound;
 import org.flixel.system.input.FlxTouch;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.Atlas;
+import org.flixel.util.FlxPoint;
 
 class FlxButton extends FlxTypedButton<FlxText>
 {
@@ -415,7 +416,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
-	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
+	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxMisc.openURL()</code>).
 	 */
 	private function onMouseUp(event:Event):Void
 	{

@@ -1,8 +1,8 @@
 package org.flixel.system.input;
 
 import org.flixel.FlxG;
-import org.flixel.FlxU;
 import org.flixel.system.replay.CodeValuePair;
+import org.flixel.util.FlxArray;
 
 /**
  * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
@@ -39,7 +39,7 @@ class FlxInputStates
 		_keyBools = new Map<String, Bool>();
 		
 		_keyMap = new Array<FlxMapObject>(/*_total*/);
-		FlxU.SetArrayLength(_keyMap, _total);
+		FlxArray.setLength(_keyMap, _total);
 	}
 	
 	/**

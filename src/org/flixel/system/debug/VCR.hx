@@ -7,6 +7,7 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.MouseEvent;
+import org.flixel.util.FlxString;
 #if !FLX_NO_MOUSE
 import flash.ui.Mouse;
 #end
@@ -22,7 +23,6 @@ import flash.text.TextFormatAlign;
 import flash.utils.ByteArray;
 
 import org.flixel.FlxG;
-import org.flixel.FlxU;
 import org.flixel.system.FlxReplay;
 import org.flixel.system.replay.FrameRecord;
 import org.flixel.system.replay.MouseRecord;
@@ -259,7 +259,7 @@ class VCR extends Sprite
 	public function updateRuntime(Time:Int):Void
 	{
 		_runtime += Time;
-		_runtimeDisplay.text = FlxU.formatTime(Std.int(_runtime / 1000), true);
+		_runtimeDisplay.text = FlxString.formatTime(Std.int(_runtime / 1000), true);
 		if (!_runtimeDisplay.visible)
 		{
 			_runtimeDisplay.visible = true;

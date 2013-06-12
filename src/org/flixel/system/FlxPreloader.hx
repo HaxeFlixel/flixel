@@ -19,7 +19,6 @@ import flash.text.TextFormat;
 import flash.Lib;
 import flash.text.TextFormatAlign;
 import flash.utils.ByteArray;
-import org.flixel.FlxU;
 import org.flixel.plugin.pxText.PxTextAlign;
 import org.flixel.system.preloaderHelpers.PxBitmapFont;
 import org.flixel.system.preloaderHelpers.PxTextField;

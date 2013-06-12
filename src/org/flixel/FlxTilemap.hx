@@ -1,16 +1,17 @@
 package org.flixel;
 
-import openfl.Assets;
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import org.flixel.system.layer.DrawStackItem;
-
 import org.flixel.system.FlxTile;
 import org.flixel.system.FlxTilemapBuffer;
+import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxArray;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRect;
 
 /**
  * This is a traditional tilemap display and collision class.
@@ -352,9 +353,9 @@ class FlxTilemap extends FlxObject
 		#if !FLX_NO_DEBUG
 		//create debug tiles for rendering bounding boxes on demand
 		#if flash
-		_debugTileNotSolid = makeDebugTile(FlxColorUtils.BLUE);
-		_debugTilePartial = makeDebugTile(FlxColorUtils.PINK);
-		_debugTileSolid = makeDebugTile(FlxColorUtils.GREEN);
+		_debugTileNotSolid = makeDebugTile(FlxColor.BLUE);
+		_debugTilePartial = makeDebugTile(FlxColor.PINK);
+		_debugTileSolid = makeDebugTile(FlxColor.GREEN);
 		#end
 		#end
 		
@@ -366,7 +367,7 @@ class FlxTilemap extends FlxObject
 		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		#end
 		_rects = new Array<Rectangle>();
-		FlxU.SetArrayLength(_rects, totalTiles);
+		FlxArray.setLength(_rects, totalTiles);
 		i = 0;
 		while (i < totalTiles)
 		{
@@ -643,15 +644,15 @@ class FlxTilemap extends FlxObject
 					{
 						if (tile.allowCollisions <= FlxObject.NONE)
 						{
-							debugColor = FlxColorUtils.BLUE;
+							debugColor = FlxColor.BLUE;
 						}
 						else if (tile.allowCollisions != FlxObject.ANY)
 						{
-							debugColor = FlxColorUtils.PINK;
+							debugColor = FlxColor.PINK;
 						}
 						else
 						{
-							debugColor = FlxColorUtils.GREEN;
+							debugColor = FlxColor.GREEN;
 						}
 						
 						// Copied from makeDebugTile
@@ -744,7 +745,7 @@ class FlxTilemap extends FlxObject
 		var i:Int = 0;
 		var l:Int = _data.length;
 		var data:Array<Int> = new Array(/*l*/);
-		FlxU.SetArrayLength(data, l);
+		FlxArray.setLength(data, l);
 		while(i < l)
 		{
 			data[i] = (_tileObjects[_data[i]].allowCollisions > 0) ? 1 : 0;
@@ -911,7 +912,7 @@ class FlxTilemap extends FlxObject
 		//All walls are flagged as -2, all open areas as -1.
 		var mapSize:Int = widthInTiles * heightInTiles;
 		var distances:Array<Int> = new Array<Int>(/*mapSize*/);
-		FlxU.SetArrayLength(distances, mapSize);
+		FlxArray.setLength(distances, mapSize);
 		var i:Int = 0;
 		while(i < mapSize)
 		{
@@ -1277,10 +1278,10 @@ class FlxTilemap extends FlxObject
 		}
 		
 		//Figure out what tiles we need to check against
-		var selectionX:Int = FlxU.floor((Object.x - X) / _tileWidth);
-		var selectionY:Int = FlxU.floor((Object.y - Y) / _tileHeight);
-		var selectionWidth:Int = selectionX + (FlxU.ceil(Object.width / _tileWidth)) + 1;
-		var selectionHeight:Int = selectionY + FlxU.ceil(Object.height / _tileHeight) + 1;
+		var selectionX:Int = Math.floor((Object.x - X) / _tileWidth);
+		var selectionY:Int = Math.floor((Object.y - Y) / _tileHeight);
+		var selectionWidth:Int = selectionX + (Math.ceil(Object.width / _tileWidth)) + 1;
+		var selectionHeight:Int = selectionY + Math.ceil(Object.height / _tileHeight) + 1;
 		
 		//Then bound these coordinates by the map edges
 		if (selectionX < 0)
@@ -1916,7 +1917,7 @@ class FlxTilemap extends FlxObject
 				pixel = bitmapData.getPixel(column, row);
 				if (ColorMap != null)
 				{
-					pixel = FlxU.ArrayIndexOf(ColorMap, pixel);
+					pixel = FlxArray.indexOf(ColorMap, pixel);
 				}
 				else if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
 				{
@@ -2050,7 +2051,7 @@ class FlxTilemap extends FlxObject
 			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, _repeatX + 1, _repeatY + 1);
 			
 			_rectIDs = new Array<Int>();
-			FlxU.SetArrayLength(_rectIDs, totalTiles);
+			FlxArray.setLength(_rectIDs, totalTiles);
 			var i:Int = 0;
 			while (i < totalTiles)
 			{
@@ -2096,7 +2097,7 @@ class FlxTilemap extends FlxObject
 		
 		var pt:Point = new Point(0, 0);
 		var tileSprite:FlxSprite = new FlxSprite();
-		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColorUtils.TRANSPARENT, true);
+		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.TRANSPARENT, true);
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
 		if (rect != null) tileSprite.pixels.copyPixels(_tiles, rect, pt);

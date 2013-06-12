@@ -1,8 +1,8 @@
 ﻿package org.flixel.tweens.misc;
 
-import org.flixel.FlxU;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;
+import org.flixel.util.FlxRandom;
 
 /**
  * Tweens from one angle to another.
@@ -47,7 +47,7 @@ class AngleTween extends FlxTween
 		}
 		else 
 		{
-			_range = FlxU.getRandom([180, -180]);
+			_range = FlxRandom.getRandom([180, -180]);
 		}
 		_target = duration;
 		_ease = ease;

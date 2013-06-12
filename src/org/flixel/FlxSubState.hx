@@ -1,10 +1,6 @@
 package org.flixel;
 
-import flash.display.BitmapData;
 import org.flixel.system.BGSprite;
-import org.flixel.system.layer.Atlas;
-import org.flixel.system.layer.DrawStackItem;
-import org.flixel.system.layer.TileSheetData;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game
