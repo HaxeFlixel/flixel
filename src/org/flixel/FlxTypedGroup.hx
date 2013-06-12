@@ -274,8 +274,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				_node = null;
 				_framesData = null;
 			}
-			
-			_atlas = value;
 		}
 		
 		if (_atlas != null)
@@ -289,6 +287,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 		}
 		
+		_atlas = value;
 		return value;
 	}
 	#end
