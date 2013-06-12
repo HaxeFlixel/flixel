@@ -18,6 +18,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
+import org.flixel.util.FlxColor;
 
 import flash.display.Bitmap;
 import flash.geom.Matrix;
@@ -40,7 +41,7 @@ class FlxGradient
 		var gradientMatrix:Matrix = new Matrix();
 		
 		//	Rotation (in radians) that the gradient is rotated
-		var rot:Float = FlxMath.asRadians(rotation);
+		var rot:Float = FlxPTMath.asRadians(rotation);
 		
 		//	Last 2 values = horizontal and vertical shift (in pixels)
 		if (chunkSize == 1)
@@ -173,7 +174,7 @@ class FlxGradient
 			s.graphics.drawRect(0, 0, width, height / chunkSize);
 		}
 		
-		var data:BitmapData = new BitmapData(width, height, true, FlxG.TRANSPARENT);
+		var data:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		
 		if (chunkSize == 1)
 		{
@@ -181,7 +182,7 @@ class FlxGradient
 		}
 		else
 		{
-			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Std.int(height / chunkSize), true, FlxG.TRANSPARENT));
+			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Std.int(height / chunkSize), true, FlxColor.TRANSPARENT));
 			tempBitmap.bitmapData.draw(s);
 			tempBitmap.scaleY = chunkSize;
 			
