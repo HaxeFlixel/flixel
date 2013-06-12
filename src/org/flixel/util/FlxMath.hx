@@ -241,7 +241,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is odd. False if the given number is even.
 	 */
-	public static inline function isOdd(n:Float):Bool
+	inline static public function isOdd(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -260,7 +260,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is even. False if the given number is odd.
 	 */
-	public static inline function isEven(n:Float):Bool
+	inline static public function isEven(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -280,7 +280,7 @@ class FlxMath
 	 * 
 	 * @return	-1 if num1 is smaller, 1 if num2 is bigger, 0 if they are equal
 	 */
-	public static function numericComparison(num1:Float, num2:Float):Int
+	static public function numericComparison(num1:Float, num2:Float):Int
 	{
 		if (num2 > num1)
 		{
@@ -305,7 +305,7 @@ class FlxMath
 	 * 
 	 * @return	true if pointX/pointY is within the region, otherwise false
 	 */
-	public static function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
+	static public function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
 	{
 		if (pointX >= rectX && pointX <= (rectX + rectWidth))
 		{
@@ -326,7 +326,7 @@ class FlxMath
 	 * @param	rect		The FlxRect to test within
 	 * @return	true if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
+	static public function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
 	{
 		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
 		{
@@ -345,7 +345,7 @@ class FlxMath
 	 * 
 	 * @return	true if mouse is within the FlxRect, otherwise false
 	 */
-	public static function mouseInFlxRect(useWorldCoords:Bool, rect:FlxRect):Bool
+	static public function mouseInFlxRect(useWorldCoords:Bool, rect:FlxRect):Bool
 	{
 		if (rect == null)
 		{
@@ -371,7 +371,7 @@ class FlxMath
 	 * @param	rect		The Rectangle to test within
 	 * @return	true if pointX/pointY is within the Rectangle, otherwise false
 	 */
-	public static function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
+	static public function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
 	{
 		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
 		{
@@ -389,7 +389,7 @@ class FlxMath
 	 * 
 	 * @return
 	 */
-	public static inline function vectorLength(dx:Float, dy:Float):Float
+	inline static public function vectorLength(dx:Float, dy:Float):Float
 	{
 		return Math.sqrt(dx * dx + dy * dy);
 	}

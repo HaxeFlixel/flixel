@@ -24,9 +24,7 @@ import org.flixel.util.FlxColor;
  * Can be used for creating gradient maps or general color translation / conversion.
  */
 class FlxPTColor
-{
-	public function new() {  }
-	
+{	
 	/**
 	 * Get HSV color wheel values in an array which will be 360 elements in size
 	 * 
@@ -34,7 +32,7 @@ class FlxPTColor
 	 * 
 	 * @return	Array
 	 */
-	public static function getHSVColorWheel(alpha:Int = 255):Array<Int>
+	static public function getHSVColorWheel(alpha:Int = 255):Array<Int>
 	{
 		var colors:Array<Int> = new Array<Int>();
 		
@@ -55,7 +53,7 @@ class FlxPTColor
 	 * 
 	 * @return 0xAARRGGBB format color value
 	 */
-	public static function getComplementHarmony(color:Int):Int
+	static public function getComplementHarmony(color:Int):Int
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
@@ -74,7 +72,7 @@ class FlxPTColor
 	 * 
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
-	public static function getAnalogousHarmony(color:Int, threshold:Int = 30):Harmony
+	static public function getAnalogousHarmony(color:Int, threshold:Int = 30):Harmony
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
@@ -99,7 +97,7 @@ class FlxPTColor
 	 * 
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
-	public static function getSplitComplementHarmony(color:Int, threshold:Int = 30):Harmony
+	static public function getSplitComplementHarmony(color:Int, threshold:Int = 30):Harmony
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
@@ -129,7 +127,7 @@ class FlxPTColor
 	 * 
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
 	 */
-	public static function getTriadicHarmony(color:Int):TriadicHarmony
+	static public function getTriadicHarmony(color:Int):TriadicHarmony
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
@@ -147,7 +145,7 @@ class FlxPTColor
 	 * 
 	 * @return	String containing the 3 lines of information
 	 */
-	public static function getColorInfo(color:Int):String
+	static public function getColorInfo(color:Int):String
 	{
 		var argb:RGBA = getRGB(color);
 		var hsl:HSV = RGBtoHSV(color);
@@ -171,7 +169,7 @@ class FlxPTColor
 	 * 
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	public static function RGBtoHexString(color:Int):String
+	static public function RGBtoHexString(color:Int):String
 	{
 		var argb:RGBA = getRGB(color);
 		
@@ -185,7 +183,7 @@ class FlxPTColor
 	 * 
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	public static function RGBtoWebString(color:Int):String
+	static public function RGBtoWebString(color:Int):String
 	{
 		var argb:RGBA = getRGB(color);
 		
@@ -199,7 +197,7 @@ class FlxPTColor
 	 * 
 	 * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
 	 */
-	public static function colorToHexString(color:Int):String
+	static public function colorToHexString(color:Int):String
 	{
 		var digits:String = "0123456789ABCDEF";
 		
@@ -221,13 +219,13 @@ class FlxPTColor
 	 * 
 	 * @return 32-bit ARGB color value (0xAARRGGBB)
 	 */
-	public static function HSVtoRGB(h:Float, s:Float, v:Float, alpha:Int = 255):Int
+	static public function HSVtoRGB(h:Float, s:Float, v:Float, alpha:Int = 255):Int
 	{
 		var result = FlxColor.TRANSPARENT;
 		
 		if (s == 0.0)
 		{
-			result = getColor32(alpha, Std.int(v * 255), Std.int(v * 255), Std.int(v * 255));
+			result = FlxColor.getColor32(alpha, Std.int(v * 255), Std.int(v * 255), Std.int(v * 255));
 		}
 		else
 		{
@@ -240,22 +238,22 @@ class FlxPTColor
 			switch (Std.int(h))
 			{
 				case 0:
-					result = getColor32(alpha, Std.int(v * 255), Std.int(t * 255), Std.int(p * 255));
+					result = FlxColor.getColor32(alpha, Std.int(v * 255), Std.int(t * 255), Std.int(p * 255));
 					
 				case 1:
-					result = getColor32(alpha, Std.int(q * 255), Std.int(v * 255), Std.int(p * 255));
+					result = FlxColor.getColor32(alpha, Std.int(q * 255), Std.int(v * 255), Std.int(p * 255));
 					
 				case 2:
-					result = getColor32(alpha, Std.int(p * 255), Std.int(v * 255), Std.int(t * 255));
+					result = FlxColor.getColor32(alpha, Std.int(p * 255), Std.int(v * 255), Std.int(t * 255));
 					
 				case 3:
-					result = getColor32(alpha, Std.int(p * 255), Std.int(q * 255), Std.int(v * 255));
+					result = FlxColor.getColor32(alpha, Std.int(p * 255), Std.int(q * 255), Std.int(v * 255));
 					
 				case 4:
-					result = getColor32(alpha, Std.int(t * 255), Std.int(p * 255), Std.int(v * 255));
+					result = FlxColor.getColor32(alpha, Std.int(t * 255), Std.int(p * 255), Std.int(v * 255));
 					
 				case 5:
-					result = getColor32(alpha, Std.int(v * 255), Std.int(p * 255), Std.int(q * 255));
+					result = FlxColor.getColor32(alpha, Std.int(v * 255), Std.int(p * 255), Std.int(q * 255));
 					
 				default:
 					FlxG.error("FlxColor: HSVtoRGB : Unknown color");
@@ -272,7 +270,7 @@ class FlxPTColor
 	 * 
 	 * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
 	 */
-	public static function RGBtoHSV(color:Int):HSV
+	static public function RGBtoHSV(color:Int):HSV
 	{
 		var rgb:RGBA = getRGB(color);
 		
@@ -343,7 +341,7 @@ class FlxPTColor
 		return { hue: hue, saturation: saturation, lightness: lightness, value: lightness };
 	}
 	
-	public static function interpolateColor(color1:Int, color2:Int, steps:Int, currentStep:Int, alpha:Int = 255):Int
+	static public function interpolateColor(color1:Int, color2:Int, steps:Int, currentStep:Int, alpha:Int = 255):Int
 	{
 		var src1:RGBA = getRGB(color1);
 		var src2:RGBA = getRGB(color2);
@@ -352,10 +350,10 @@ class FlxPTColor
 		var g:Int = Std.int((((src2.green - src1.green) * currentStep) / steps) + src1.green);
 		var b:Int = Std.int((((src2.blue - src1.blue) * currentStep) / steps) + src1.blue);
 
-		return getColor32(alpha, r, g, b);
+		return FlxColor.getColor32(alpha, r, g, b);
 	}
 	
-	public static function interpolateColorWithRGB(color:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):Int
+	static public function interpolateColorWithRGB(color:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):Int
 	{
 		var src:RGBA = getRGB(color);
 		
@@ -363,78 +361,16 @@ class FlxPTColor
 		var g:Int = Std.int((((g2 - src.green) * currentStep) / steps) + src.green);
 		var b:Int = Std.int((((b2 - src.blue) * currentStep) / steps) + src.blue);
 	
-		return getColor24(r, g, b);
+		return FlxColor.getColor24(r, g, b);
 	}
 	
-	public static function interpolateRGB(r1:Int, g1:Int, b1:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):Int
+	static public function interpolateRGB(r1:Int, g1:Int, b1:Int, r2:Int, g2:Int, b2:Int, steps:Int, currentStep:Int):Int
 	{
 		var r:Int = Std.int((((r2 - r1) * currentStep) / steps) + r1);
 		var g:Int = Std.int((((g2 - g1) * currentStep) / steps) + g1);
 		var b:Int = Std.int((((b2 - b1) * currentStep) / steps) + b1);
 	
-		return getColor24(r, g, b);
-	}
-	
-	/**
-	 * Returns a random color value between black and white
-	 * <p>Set the min value to start each channel from the given offset.</p>
-	 * <p>Set the max value to restrict the maximum color used per channel</p>
-	 * 
-	 * @param	min		The lowest value to use for the color
-	 * @param	max 	The highest value to use for the color
-	 * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
-	 * 
-	 * @return 32-bit color value with alpha
-	 */
-	public static function getRandomColor(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
-	{
-		//	Sanity checks
-		if (max > 255)
-		{
-			FlxG.warn("FlxColor: getRandomColor - max value too high");
-			return getColor24(255, 255, 255);
-		}
-		
-		if (min > max)
-		{
-			FlxG.warn("FlxColor: getRandomColor - min value higher than max");
-			return getColor24(255, 255, 255);
-		}
-		
-		var red:Int = min + Std.int(Math.random() * (max - min));
-		var green:Int = min + Std.int(Math.random() * (max - min));
-		var blue:Int = min + Std.int(Math.random() * (max - min));
-		
-		return getColor32(alpha, red, green, blue);
-	}
-	
-	/**
-	 * Given an alpha and 3 color values this will return an integer representation of it
-	 * 
-	 * @param	alpha	The Alpha value (between 0 and 255)
-	 * @param	red		The Red channel value (between 0 and 255)
-	 * @param	green	The Green channel value (between 0 and 255)
-	 * @param	blue	The Blue channel value (between 0 and 255)
-	 * 
-	 * @return	A native color value integer (format: 0xAARRGGBB)
-	 */
-	public static function getColor32(alpha:Int, red:Int, green:Int, blue:Int):Int
-	{
-		return alpha << 24 | red << 16 | green << 8 | blue;
-	}
-	
-	/**
-	 * Given 3 color values this will return an integer representation of it
-	 * 
-	 * @param	red		The Red channel value (between 0 and 255)
-	 * @param	green	The Green channel value (between 0 and 255)
-	 * @param	blue	The Blue channel value (between 0 and 255)
-	 * 
-	 * @return	A native color value integer (format: 0xRRGGBB)
-	 */
-	public static function getColor24(red:Int, green:Int, blue:Int):Int
-	{
-		return red << 16 | green << 8 | blue;
+		return FlxColor.getColor24(r, g, b);
 	}
 	
 	/**
@@ -446,7 +382,7 @@ class FlxPTColor
 	 * 
 	 * @return Object with properties: alpha, red, green, blue
 	 */
-	public static function getRGB(color:Int):RGBA
+	static public function getRGB(color:Int):RGBA
 	{
 		//var alpha:Int = color >>> 24;
 		var alpha:Int = (color >> 24) & 0xFF;
@@ -456,70 +392,6 @@ class FlxPTColor
 		
 		return { alpha: alpha, red: red, green: green, blue: blue };
 	}
-	
-	/**
-	 * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
-	 * 
-	 * @param	color	In the format 0xAARRGGBB
-	 * 
-	 * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
-	 */
-	public static function getAlpha(color:Int):Int
-	{
-		//return color >>> 24;
-		return (color >> 24) & 0xFF;
-	}
-	
-	/**
-	 * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1
-	 * 
-	 * @param	color	In the format 0xAARRGGBB
-	 * 
-	 * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
-	 */
-	public static function getAlphaFloat(color:Int):Float
-	{
-		//var f:Int = color >>> 24;
-		var f:Int = (color >> 24) & 0xFF;
-		return f / 255;
-	}
-	
-	/**
-	 * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255
-	 * 
-	 * @param	color	In the format 0xAARRGGBB
-	 * 
-	 * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
-	 */
-	public static function getRed(color:Int):Int
-	{
-		return color >> 16 & 0xFF;
-	}
-	
-	/**
-	 * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255
-	 * 
-	 * @param	color	In the format 0xAARRGGBB
-	 * 
-	 * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
-	 */
-	public static function getGreen(color:Int):Int
-	{
-		return color >> 8 & 0xFF;
-	}
-	
-	/**
-	 * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255
-	 * 
-	 * @param	color	In the format 0xAARRGGBB
-	 * 
-	 * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
-	 */
-	public static function getBlue(color:Int):Int
-	{
-		return color & 0xFF;
-	}
-	
 }
 
 typedef HSV = {
