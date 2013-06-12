@@ -229,7 +229,7 @@ class FlxCollision
 		var test:BitmapData = target.getFlxFrameBitmapData();
 	#end
 		var pixelAlpha:Int = 0;  
-		pixelAlpha = FlxPTColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)));
+		pixelAlpha = FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)));
 		
 	#if !flash
 		pixelAlpha = Std.int(pixelAlpha * target.alpha);

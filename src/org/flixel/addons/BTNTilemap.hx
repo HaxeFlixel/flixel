@@ -5,8 +5,8 @@ package org.flixel.addons;
  * @author greglieberman
  */
 
-import org.flixel.FlxPoint;
-import org.flixel.FlxTilemap; 
+import org.flixel.FlxTilemap;
+import org.flixel.util.FlxPoint;
 
 class BTNTilemap extends FlxTilemap
 {

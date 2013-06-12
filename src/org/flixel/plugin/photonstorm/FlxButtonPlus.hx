@@ -25,6 +25,7 @@ import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 import org.flixel.FlxTypedGroup;
+import org.flixel.util.FlxMath;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.

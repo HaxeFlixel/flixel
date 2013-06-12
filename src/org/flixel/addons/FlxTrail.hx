@@ -1,8 +1,8 @@
 package org.flixel.addons;
 
-import org.flixel.FlxTypedGroup;
-import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
+import org.flixel.FlxTypedGroup;
+import org.flixel.util.FlxPoint;
 
 /**
  * Nothing too fancy, just a handy little class to attach a trail effect to a FlxSprite.

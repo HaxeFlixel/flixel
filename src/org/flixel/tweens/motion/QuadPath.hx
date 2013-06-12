@@ -1,8 +1,6 @@
 ﻿package org.flixel.tweens.motion;
 
-import org.flixel.FlxPoint;
-import org.flixel.tweens.FlxTween;
-import org.flixel.tweens.util.Ease;
+import org.flixel.util.FlxPoint;
 
 /**
  * A series of points which will determine a path from the

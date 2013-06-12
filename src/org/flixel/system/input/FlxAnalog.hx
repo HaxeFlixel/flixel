@@ -4,7 +4,7 @@ import org.flixel.FlxTypedGroup;
 import org.flixel.FlxG;
 import org.flixel.FlxAssets;
 import org.flixel.FlxSprite;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import flash.geom.Rectangle;
 import org.flixel.system.input.FlxTouch;
 

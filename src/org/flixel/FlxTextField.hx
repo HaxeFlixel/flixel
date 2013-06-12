@@ -10,10 +10,10 @@ import org.flixel.FlxAssets;
 import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 import org.flixel.system.layer.Atlas;
+import org.flixel.util.FlxPoint;
 
 /**
  * Extends <code>FlxText</code> for better support rendering text on cpp target.

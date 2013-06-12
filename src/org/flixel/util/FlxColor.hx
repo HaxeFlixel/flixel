@@ -1,5 +1,7 @@
 package org.flixel.util;
 
+import org.flixel.FlxG;
+
 /**
  * Class containing a set of useful color constants and 
  * a few color-related functions previously located in FlxU
@@ -372,6 +374,131 @@ class FlxColor
 		if (Results != null) 
 			Results = { hue: Std.int(hue), brightness: brightness, saturation: saturation, alpha: alpha };
 		return { hue: Std.int(hue), brightness: brightness, saturation: saturation, alpha: alpha };
+	}
+	
+	/**
+	 * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
+	 * 
+	 * @param	color	In the format 0xAARRGGBB
+	 * 
+	 * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
+	 */
+	inline static public function getAlpha(color:Int):Int
+	{
+		//return color >>> 24;
+		return (color >> 24) & 0xFF;
+	}
+	
+	/**
+	 * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1
+	 * 
+	 * @param	color	In the format 0xAARRGGBB
+	 * 
+	 * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
+	 */
+	inline static public function getAlphaFloat(color:Int):Float
+	{
+		//var f:Int = color >>> 24;
+		var f:Int = (color >> 24) & 0xFF;
+		return f / 255;
+	}
+	
+	/**
+	 * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255
+	 * 
+	 * @param	color	In the format 0xAARRGGBB
+	 * 
+	 * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
+	 */
+	inline static public function getRed(color:Int):Int
+	{
+		return color >> 16 & 0xFF;
+	}
+	
+	/**
+	 * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255
+	 * 
+	 * @param	color	In the format 0xAARRGGBB
+	 * 
+	 * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
+	 */
+	inline static public function getGreen(color:Int):Int
+	{
+		return color >> 8 & 0xFF;
+	}
+	
+	/**
+	 * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255
+	 * 
+	 * @param	color	In the format 0xAARRGGBB
+	 * 
+	 * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
+	 */
+	inline static public function getBlue(color:Int):Int
+	{
+		return color & 0xFF;
+	}
+	
+	/**
+	 * Returns a random color value between black and white
+	 * <p>Set the min value to start each channel from the given offset.</p>
+	 * <p>Set the max value to restrict the maximum color used per channel</p>
+	 * 
+	 * @param	min		The lowest value to use for the color
+	 * @param	max 	The highest value to use for the color
+	 * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
+	 * 
+	 * @return 32-bit color value with alpha
+	 */
+	static public function getRandomColor(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
+	{
+		//	Sanity checks
+		if (max > 255)
+		{
+			FlxG.warn("FlxColor: getRandomColor - max value too high");
+			return getColor24(255, 255, 255);
+		}
+		
+		if (min > max)
+		{
+			FlxG.warn("FlxColor: getRandomColor - min value higher than max");
+			return getColor24(255, 255, 255);
+		}
+		
+		var red:Int = min + Std.int(Math.random() * (max - min));
+		var green:Int = min + Std.int(Math.random() * (max - min));
+		var blue:Int = min + Std.int(Math.random() * (max - min));
+		
+		return getColor32(alpha, red, green, blue);
+	}
+	
+	/**
+	 * Given an alpha and 3 color values this will return an integer representation of it
+	 * 
+	 * @param	alpha	The Alpha value (between 0 and 255)
+	 * @param	red		The Red channel value (between 0 and 255)
+	 * @param	green	The Green channel value (between 0 and 255)
+	 * @param	blue	The Blue channel value (between 0 and 255)
+	 * 
+	 * @return	A native color value integer (format: 0xAARRGGBB)
+	 */
+	inline static public function getColor32(alpha:Int, red:Int, green:Int, blue:Int):Int
+	{
+		return alpha << 24 | red << 16 | green << 8 | blue;
+	}
+	
+	/**
+	 * Given 3 color values this will return an integer representation of it
+	 * 
+	 * @param	red		The Red channel value (between 0 and 255)
+	 * @param	green	The Green channel value (between 0 and 255)
+	 * @param	blue	The Blue channel value (between 0 and 255)
+	 * 
+	 * @return	A native color value integer (format: 0xRRGGBB)
+	 */
+	inline static public function getColor24(red:Int, green:Int, blue:Int):Int
+	{
+		return red << 16 | green << 8 | blue;
 	}
 }
 

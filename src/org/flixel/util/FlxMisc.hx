@@ -15,7 +15,7 @@ class FlxMisc
 	 * 
 	 * @param	URL		The address of the web page.
 	 */
-	inline public static function openURL(URL:String):Void
+	inline static public function openURL(URL:String):Void
 	{
 		Lib.getURL(new URLRequest(URL), "_blank");
 	}

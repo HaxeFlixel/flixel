@@ -22,7 +22,7 @@ import flash.geom.Rectangle;
 import flash.Lib;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
 import org.flixel.util.FlxMisc;

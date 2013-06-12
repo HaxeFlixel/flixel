@@ -213,8 +213,24 @@ class FlxRandom
 	 * 
 	 * @return	1 or -1
 	 */
-	static public function sign():Float
+	inline static public function sign():Float
 	{
 		return (Math.random() > 0.5) ? 1 : -1;
+	}
+	
+	/**
+	 * Returns a random color value between black and white
+	 * <p>Set the min value to start each channel from the given offset.</p>
+	 * <p>Set the max value to restrict the maximum color used per channel</p>
+	 * 
+	 * @param	min		The lowest value to use for the color
+	 * @param	max 	The highest value to use for the color
+	 * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
+	 * 
+	 * @return 32-bit color value with alpha
+	 */
+	inline static public function color(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
+	{
+		return FlxColor.getRandomColor(min, max, alpha);
 	}
 }

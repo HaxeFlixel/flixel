@@ -3,7 +3,7 @@ package org.flixel.plugin.pxText;
 import org.flixel.FlxAssets;
 import org.flixel.FlxButton;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.

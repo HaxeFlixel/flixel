@@ -24,12 +24,12 @@ import org.flixel.util.FlxRect;
  */
 class FlxPTMath
 {	
-	private static var cosTable:Array<Float> = new Array<Float>();
+	static private var cosTable:Array<Float> = new Array<Float>();
 	private static var sinTable:Array<Float> = new Array<Float>();
 	
-	private static var coefficient1:Float = Math.PI / 4;
-	private static var RADTODEG:Float = 180 / Math.PI;
-	private static var DEGTORAD:Float = Math.PI / 180;
+	static private var coefficient1:Float = Math.PI / 4;
+	static private var RADTODEG:Float = 180 / Math.PI;
+	static private var DEGTORAD:Float = Math.PI / 180;
 	
 	/**
 	 * A faster (but much less accurate) version of Math.atan2(). For close range / loose comparisons this works very well, 
@@ -44,7 +44,7 @@ class FlxPTMath
 	 * @param x The x coordinate of the point
 	 * @return The angle of the point x/y in radians
 	 */
-	public static function atan2(y:Float, x:Float):Float
+	static public function atan2(y:Float, x:Float):Float
 	{
 		var absY:Float = y;
 		var coefficient2:Float = 3 * coefficient1;
@@ -84,7 +84,7 @@ class FlxPTMath
 	 * @see getSinTable
 	 * @see getCosTable
 	 */
-	public static function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Array<Float>
+	static public function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Array<Float>
 	{
 		var sin:Float = sinAmplitude;
 		var cos:Float = cosAmplitude;
@@ -110,7 +110,7 @@ class FlxPTMath
 	 * @return Array of sine wave data
 	 * @see sinCosGenerator
 	 */
-	public static inline function getSinTable():Array<Float>
+	inline static public function getSinTable():Array<Float>
 	{
 		return sinTable;
 	}
@@ -120,7 +120,7 @@ class FlxPTMath
 	 * @return Array of cosine wave data
 	 * @see sinCosGenerator
 	 */
-	public static inline function getCosTable():Array<Float>
+	inline static public function getCosTable():Array<Float>
 	{
 		return cosTable;
 	}
@@ -133,7 +133,7 @@ class FlxPTMath
 	 * @param max The maximum the value is allowed to be
 	 * @return The new value
 	 */
-	public static function maxAdd(value:Int, amount:Int, max:Int):Int
+	static public function maxAdd(value:Int, amount:Int, max:Int):Int
 	{
 		value += amount;
 		
@@ -154,7 +154,7 @@ class FlxPTMath
 	 * @param max The maximum the value is allowed to be
 	 * @return The wrapped value
 	 */
-	public static function wrapValue(value:Int, amount:Int, max:Int):Int
+	static public function wrapValue(value:Int, amount:Int, max:Int):Int
 	{
 		var diff:Int;
 
@@ -177,7 +177,7 @@ class FlxPTMath
 	 * 
 	 * @return	Dot product
 	 */
-	public static inline function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
+	inline static public function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
 	{
 		return ax * bx + ay * by;
 	}
@@ -190,7 +190,7 @@ class FlxPTMath
 	 * 
 	 * @return	The new angle value, returns the same as the input angle if it was within bounds
 	 */
-	public static function wrapAngle(angle:Float):Int
+	static public function wrapAngle(angle:Float):Int
 	{
 		var result:Int = Std.int(angle);
 		
@@ -215,7 +215,7 @@ class FlxPTMath
 	 * 
 	 * @return	The new angle value, returns the same as the input angle if it was within bounds
 	 */
-	public static function angleLimit(angle:Int, min:Int, max:Int):Int
+	static public function angleLimit(angle:Int, min:Int, max:Int):Int
 	{
 		var result:Int = angle;
 		
@@ -239,7 +239,7 @@ class FlxPTMath
 	 * @param radians The value in radians
 	 * @return Number Degrees
 	 */
-	public static inline function asDegrees(radians:Float):Float
+	inline static public function asDegrees(radians:Float):Float
 	{
 		return radians * RADTODEG;
 	}
@@ -252,9 +252,8 @@ class FlxPTMath
 	 * @param degrees The value in degrees
 	 * @return Number Radians
 	 */
-	public static inline function asRadians(degrees:Float):Float
+	inline static public function asRadians(degrees:Float):Float
 	{
 		return degrees * DEGTORAD;
 	}
-	
 }

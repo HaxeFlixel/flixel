@@ -1,10 +1,10 @@
 package org.flixel.addons;
 
 import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
 import org.flixel.FlxTilemap;
 import org.flixel.system.FlxTile;
 import org.flixel.util.FlxMath;
+import org.flixel.util.FlxPoint;
 
 /**
  * extended <code>FlxTilemap</code> class that provides collision detection against slopes
