@@ -19,6 +19,9 @@ import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.input.FlxInputs;
 import org.flixel.system.layer.TileSheetExt;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxRandom;
+import org.flixel.util.FlxTimer;
 
 #if flash
 import flash.text.AntiAliasType;
@@ -486,7 +489,7 @@ class FlxGame extends Sprite
 		if (_recordingRequested)
 		{
 			_recordingRequested = false;
-			_replay.create(FlxG.globalSeed);
+			_replay.create(FlxRandom.globalSeed);
 			_recording = true;
 			
 			#if !FLX_NO_DEBUG
@@ -498,7 +501,7 @@ class FlxGame extends Sprite
 		{
 			_replayRequested = false;
 			_replay.rewind();
-			FlxG.globalSeed = _replay.seed;
+			FlxRandom.globalSeed = _replay.seed;
 			#if !FLX_NO_DEBUG
 			_debugger.vcr.playing();
 			#end
@@ -835,7 +838,7 @@ class FlxGame extends Sprite
 		var i:Int = 0;
 		while(i < 10)
 		{
-			tmp = new Bitmap(new BitmapData(4, ++i, false, FlxColorUtils.WHITE));
+			tmp = new Bitmap(new BitmapData(4, ++i, false, FlxColor.WHITE));
 			tmp.x = bx;
 			tmp.y = by;
 			_soundTray.addChild(tmp);
@@ -888,7 +891,7 @@ class FlxGame extends Sprite
 		//draw white arrow
 		var halfWidth:Int = Std.int(screenWidth / 2);
 		var halfHeight:Int = Std.int(screenHeight / 2);
-		var helper:Int = Std.int(FlxU.min(halfWidth, halfHeight) / 3);
+		var helper:Int = Std.int(Math.min(halfWidth, halfHeight) / 3);
 		gfx.moveTo(halfWidth - helper, halfHeight - helper);
 		gfx.beginFill(0xffffff, 0.65);
 		gfx.lineTo(halfWidth + helper, halfHeight);

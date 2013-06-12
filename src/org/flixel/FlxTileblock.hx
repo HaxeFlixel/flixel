@@ -1,10 +1,8 @@
 package org.flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxArray;
+import org.flixel.util.FlxRandom;
 
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.
@@ -135,14 +133,14 @@ class FlxTileblock extends FlxSprite
 			column = 0;
 			while(column < widthInTiles)
 			{
-				if (FlxG.random() * total > Empties)
+				if (FlxRandom.float() * total > Empties)
 				{
 					#if (flash || js)
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					var tileIndex:Int = Std.int(FlxG.random() * _framesData.frames.length);
+					var tileIndex:Int = Std.int(FlxRandom.float() * _framesData.frames.length);
 					_tileIndices.push(tileIndex);
 					_tileData.push(_framesData.frames[tileIndex].tileID);
 					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);

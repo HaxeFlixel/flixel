@@ -1,15 +1,15 @@
 package org.flixel.system.debug;
 #if !FLX_NO_DEBUG
 
-import openfl.Assets;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import openfl.Assets;
 import org.flixel.FlxAssets;
-import org.flixel.FlxU;
-import org.flixel.FlxPoint;
 import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxWindow;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxString;
 
 /**
  * A simple trace output window for use in the debugger overlay.
@@ -93,9 +93,9 @@ class Log extends FlxWindow
 		// Format FlxPoints, Arrays or turn the Data entry into a String
 		for (i in 0...Data.length) {
 			if (Std.is(Data[i], FlxPoint)) 
-				texts[i] = FlxU.formatFlxPoint(Data[i], FlxDebugger.pointPrecision);
+				texts[i] = FlxString.formatFlxPoint(Data[i], FlxDebugger.pointPrecision);
 			else if (Std.is(i, Array))
-				texts[i] = FlxU.formatArray(Data[i]); 
+				texts[i] = FlxString.formatArray(Data[i]); 
 			else 
 				texts[i] = Std.string(Data[i]);
 				

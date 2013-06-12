@@ -3,14 +3,14 @@ package org.flixel.addons;
 #if !FLX_NO_MOUSE
 import org.flixel.addons.FlxSpriteGroup;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
-import org.flixel.FlxRect;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 import org.flixel.plugin.photonstorm.FlxExtendedSprite;
-import org.flixel.plugin.photonstorm.FlxMath;
 import org.flixel.plugin.photonstorm.FlxMouseControl;
-import org.flixel.FlxU;
+import org.flixel.util.FlxMath;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRect;
+import org.flixel.plugin.photonstorm.FlxPTMath;
 
 /**
  * A slider GUI element for floats and integers. 
@@ -273,7 +273,7 @@ class FlxSlider extends FlxSpriteGroup
 			handle.x = expectedPos;
 			
 		// Finally, update the valueLabel
-		valueLabel.text = Std.string(FlxU.roundDecimal(value, decimals));
+		valueLabel.text = Std.string(FlxMath.roundDecimal(value, decimals));
 		
 		super.update();
 	}

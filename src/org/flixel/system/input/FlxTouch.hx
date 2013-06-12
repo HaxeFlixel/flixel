@@ -1,15 +1,12 @@
 package org.flixel.system.input;
 
-import flash.events.TouchEvent;
 import flash.geom.Point;
-
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
 import org.flixel.FlxBasic;
-import org.flixel.FlxObject;
 import org.flixel.FlxCamera;
-import org.flixel.FlxPoint;
-import org.flixel.FlxTypedGroup; 
+import org.flixel.FlxG;
+import org.flixel.FlxObject;
+import org.flixel.FlxTypedGroup;
+import org.flixel.util.FlxPoint;
 
 /**
  * Helper class, contains and track touch points in your game.

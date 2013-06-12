@@ -18,7 +18,6 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import org.flixel.FlxG;
 
-import org.flixel.FlxU;
 import org.flixel.FlxSprite;
 
 class FlxSpriteAniRot extends FlxSprite

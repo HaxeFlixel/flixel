@@ -9,8 +9,8 @@ import flash.Lib;
 import org.flixel.FlxAssets;
 import org.flixel.system.FlxList;
 import org.flixel.system.FlxQuadTree;
+import org.flixel.util.FlxArray;
 
-import org.flixel.FlxU;
 import org.flixel.FlxG;
 import org.flixel.system.FlxWindow;
 
@@ -69,19 +69,19 @@ class Perf extends FlxWindow
 		addChild(_text);
 		
 		_flixelUpdate = new Array();
-		FlxU.SetArrayLength(_flixelUpdate, 32);
+		FlxArray.setLength(_flixelUpdate, 32);
 		_flixelUpdateMarker = 0;
 		_flixelDraw = new Array();
-		FlxU.SetArrayLength(_flixelDraw, 32);
+		FlxArray.setLength(_flixelDraw, 32);
 		_flixelDrawMarker = 0;
 		_flash = new Array();
-		FlxU.SetArrayLength(_flash, 32);
+		FlxArray.setLength(_flash, 32);
 		_flashMarker = 0;
 		_activeObject = new Array();
-		FlxU.SetArrayLength(_activeObject, 32);
+		FlxArray.setLength(_activeObject, 32);
 		_objectMarker = 0;
 		_visibleObject = new Array();
-		FlxU.SetArrayLength(_visibleObject, 32);
+		FlxArray.setLength(_visibleObject, 32);
 		_visibleObjectMarker = 0;
 		
 		#if !flash

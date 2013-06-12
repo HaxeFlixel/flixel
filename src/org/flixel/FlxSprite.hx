@@ -1,27 +1,27 @@
 package org.flixel;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.display.Graphics;
-import openfl.display.Tilesheet;
 import flash.filters.BitmapFilter;
-import flash.filters.GlowFilter;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import openfl.display.Tilesheet;
+import org.flixel.FlxG;
 import org.flixel.plugin.texturepacker.TexturePackerData;
+import org.flixel.system.FlxAnim;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.frames.FlxFrame;
-import org.flixel.system.layer.Node;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxArray;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRandom;
 
 #if !flash
 import org.flixel.system.layer.TileSheetData;
 #end
-
-import org.flixel.FlxG;
-import org.flixel.system.FlxAnim;
 
 /**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
@@ -439,7 +439,7 @@ class FlxSprite extends FlxObject
 			max = Std.int(max * 1.5);
 		}
 		
-		var columns:Int = FlxU.ceil(Rotations / rows);
+		var columns:Int = Math.ceil(Rotations / rows);
 		width = max * columns;
 		height = max * rows;
 		var key:String = "";
@@ -469,7 +469,7 @@ class FlxSprite extends FlxObject
 		#if flash
 		_pixels = FlxG.createBitmap(Std.int(width), Std.int(height), 0, true, key);
 		#else
-		_pixels = FlxG.createBitmap(Std.int(width) + columns, Std.int(height) + rows, FlxG.TRANSPARENT, true, key);
+		_pixels = FlxG.createBitmap(Std.int(width) + columns, Std.int(height) + rows, FlxColor.TRANSPARENT, true, key);
 		#end
 		
 		#if !flash
@@ -1423,7 +1423,7 @@ class FlxSprite extends FlxObject
 	public function randomFrame():Void
 	{
 		_curAnim = null;
-		_curIndex = Std.int(FlxG.random() * frames);
+		_curIndex = Std.int(FlxRandom.float() * frames);
 		#if !flash
 		if (_framesData != null)
 		#else
@@ -1739,7 +1739,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function getFrameIndex(Frame:FlxFrame):Int
 	{
-		return FlxU.ArrayIndexOf(_framesData.frames, Frame);
+		return FlxArray.indexOf(_framesData.frames, Frame);
 	}
 	
 	/**

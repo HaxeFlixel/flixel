@@ -3,10 +3,10 @@ package org.flixel;
 import flash.display.BitmapData;
 import org.flixel.plugin.texturepacker.TexturePackerData;
 import org.flixel.system.layer.Atlas;
-import org.flixel.system.layer.Node;
-import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.layer.frames.FlxSpriteFrames;
+import org.flixel.system.layer.Node;
 import org.flixel.tweens.FlxTween;
+import org.flixel.util.FlxString;
 
 /**
  * This is a useful "generic" Flixel object.
@@ -182,7 +182,7 @@ class FlxBasic
 	 */
 	public function toString():String
 	{
-		return FlxU.getClassName(this, true);
+		return FlxString.getClassName(this, true);
 	}
 	
 	public function addTween(t:FlxTween, start:Bool = false):FlxTween

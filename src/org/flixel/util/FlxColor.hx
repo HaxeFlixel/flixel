@@ -1,10 +1,10 @@
-package org.flixel;
+package org.flixel.util;
 
 /**
  * Class containing a set of useful color constants and 
  * a few color-related functions previously located in FlxU
  */
-class FlxColorUtils 
+class FlxColor
 {
 	/**
 	 * 0xffff0012
@@ -306,7 +306,7 @@ class FlxColorUtils
 		var red:Int = (Color >> 16) & 0xFF;
 		var green:Int = (Color >> 8) & 0xFF;
 		var blue:Int = Color & 0xFF;
-		var alpha:Float = FlxU.roundDecimal(((Color >> 24) & 0xFF) / 255, 4);
+		var alpha:Float = FlxMath.roundDecimal(((Color >> 24) & 0xFF) / 255, 4);
 		
 		if (Results != null)
 			Results = { red: red, green: green, blue: blue, alpha: alpha };
@@ -338,13 +338,13 @@ class FlxColorUtils
 		var dmin:Float = (m > blue) ? blue : m;
 		var range:Float = dmax - dmin;
 		
-		brightness = FlxU.roundDecimal(dmax, 4);
+		brightness = FlxMath.roundDecimal(dmax, 4);
 		saturation = 0;
 		hue = 0;
 		
 		if (dmax != 0)
 		{
-			saturation = FlxU.roundDecimal(range / dmax, 4);
+			saturation = FlxMath.roundDecimal(range / dmax, 4);
 		}
 		if(saturation != 0) 
 		{
@@ -367,7 +367,7 @@ class FlxColorUtils
 			}
 		}
 		
-		alpha = FlxU.roundDecimal(((Color >> 24) & 0xFF) / 255, 4);
+		alpha = FlxMath.roundDecimal(((Color >> 24) & 0xFF) / 255, 4);
 		
 		if (Results != null) 
 			Results = { hue: Std.int(hue), brightness: brightness, saturation: saturation, alpha: alpha };

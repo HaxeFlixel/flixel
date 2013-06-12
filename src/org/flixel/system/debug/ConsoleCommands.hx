@@ -3,7 +3,8 @@ package org.flixel.system.debug;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxState;
-import org.flixel.FlxU;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxString;
 
 class ConsoleCommands
 {
@@ -223,17 +224,17 @@ class ConsoleCommands
 		if (colorString != null) {
 			switch (colorString) {
 				case "red":
-					color = FlxG.RED;
+					color = FlxColor.RED;
 				case "green":
-					color = FlxG.GREEN;
+					color = FlxColor.GREEN;
 				case "blue":
-					color = FlxG.BLUE;
+					color = FlxColor.BLUE;
 				case "pink":
-					color = FlxG.PINK;
+					color = FlxColor.PINK;
 				case "white":
-					color = FlxG.WHITE;
+					color = FlxColor.WHITE;
 				case "black":
-					color = FlxG.BLACK;
+					color = FlxColor.BLACK;
 			}
 		}
 		
@@ -412,12 +413,12 @@ class ConsoleCommands
 	
 	private function listObjects():Void
 	{
-		cLog("Objects registered: \n" + FlxU.formatHash(_console.registeredObjects)); 
+		cLog("Objects registered: \n" + FlxString.formatHash(_console.registeredObjects)); 
 	}
 	
 	private function listFunctions():Void
 	{
-		cLog("Functions registered: \n" + FlxU.formatHash(_console.registeredFunctions)); 
+		cLog("Functions registered: \n" + FlxString.formatHash(_console.registeredFunctions)); 
 	}
 	
 	private function watch(ObjectAndVariable:String, DisplayName:String = null):Void

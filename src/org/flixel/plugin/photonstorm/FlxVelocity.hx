@@ -20,15 +20,10 @@ import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
 import org.flixel.system.input.FlxTouch;
 
-
 class FlxVelocity 
-{
-	
-	public function new() { }
-	
+{	
 	/**
 	 * Sets the source FlxSprite x/y velocity so it will move directly towards the destination FlxSprite at the speed given (in pixels per second)<br>
 	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>

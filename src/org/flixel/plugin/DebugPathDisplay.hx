@@ -6,6 +6,7 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxPath;
+import org.flixel.util.FlxArray;
 
 /**
  * A simple manager for tracking and drawing FlxPath debug data to the screen.
@@ -101,7 +102,7 @@ class DebugPathDisplay extends FlxBasic
 	public function remove(Path:FlxPath):Void
 	{
 		//var index:Int = _paths.indexOf(Path);
-		var index:Int = FlxU.ArrayIndexOf(_paths, Path);
+		var index:Int = FlxArray.indexOf(_paths, Path);
 		if (index >= 0)
 		{
 			_paths.splice(index,1);

@@ -16,20 +16,20 @@
 package org.flixel.plugin.photonstorm;
 
 import flash.display.BitmapData;
-import flash.display.Sprite;
+import flash.display.BlendMode;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flash.display.BlendMode;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.FlxRect;
 import org.flixel.FlxSprite;
 import org.flixel.FlxTileblock;
-import org.flixel.plugin.photonstorm.FlxColor;
+import org.flixel.plugin.photonstorm.FlxPTColor;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxRect;
+import org.flixel.util.FlxMath;
 
 class FlxCollision 
 {
@@ -37,11 +37,6 @@ class FlxCollision
 	
 	public static var CAMERA_WALL_OUTSIDE:Int = 0;
 	public static var CAMERA_WALL_INSIDE:Int = 1;
-	
-	public function new() 
-	{
-		
-	}
 	
 	/**
 	 * A Pixel Perfect Collision check between two FlxSprites.
@@ -150,7 +145,7 @@ class FlxCollision
 						}
 						else
 						{
-							overlapArea.setPixel32(targetX, targetY, FlxG.WHITE);
+							overlapArea.setPixel32(targetX, targetY, FlxColor.WHITE);
 						}
 					}
 				}
@@ -234,7 +229,7 @@ class FlxCollision
 		var test:BitmapData = target.getFlxFrameBitmapData();
 	#end
 		var pixelAlpha:Int = 0;  
-		pixelAlpha = FlxColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)));
+		pixelAlpha = FlxPTColor.getAlpha(test.getPixel32(Math.floor(pointX - target.x), Math.floor(pointY - target.y)));
 		
 	#if !flash
 		pixelAlpha = Std.int(pixelAlpha * target.alpha);

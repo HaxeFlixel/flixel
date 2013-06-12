@@ -1,9 +1,5 @@
-/**
- * ...
- * @author Zaphod
- */
+package org.flixel.util;
 
-package org.flixel;
 import flash.geom.Point;
 
 /**
@@ -97,7 +93,7 @@ class FlxPoint
 	 */
 	inline public function toString():String
 	{
-		return FlxU.getClassName(this, true);
+		return FlxString.getClassName(this, true);
 	}
 	
 }

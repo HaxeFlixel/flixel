@@ -15,12 +15,12 @@
 
 package org.flixel.plugin.photonstorm;
 
-import flash.display.Bitmap;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
-import org.flixel.FlxRect;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.baseTypes.MouseSpring;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRect;
+import org.flixel.util.FlxMath;
 
 /**
  * An enhanced FlxSprite that is capable of receiving mouse clicks, being dragged and thrown, mouse springs, gravity and other useful things

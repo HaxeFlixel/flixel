@@ -397,7 +397,7 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	}
 	
 	/**
-	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxU.openURL()</code>).
+	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxMisc.openURL()</code>).
 	 */
 	function onMouseUp(event:MouseEvent):Void
 	{

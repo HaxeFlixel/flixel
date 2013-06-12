@@ -5,7 +5,7 @@ import flash.geom.Rectangle;
 import flash.geom.Point;
 import flash.display.BitmapData;
 import haxe.Json;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.frames.FlxFrame;
 import org.flixel.system.layer.frames.FlxSpriteFrames;

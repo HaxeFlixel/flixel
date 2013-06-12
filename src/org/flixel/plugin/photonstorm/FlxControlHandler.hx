@@ -25,7 +25,7 @@ import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
+import org.flixel.util.FlxMisc;
 
 /**
  * Makes controlling an FlxSprite with the keyboard a LOT easier and quicker to set-up!<br>
@@ -949,9 +949,9 @@ class FlxControlHandler
 		{
 			if (fireRate > 0)
 			{
-				if (FlxU.getTicks() > nextFireTime)
+				if (FlxMisc.getTicks() > nextFireTime)
 				{
-					lastFiredTime = FlxU.getTicks();
+					lastFiredTime = FlxMisc.getTicks();
 					fireCallback();
 					fired = true;
 					nextFireTime = lastFiredTime + Std.int(fireRate / FlxG.timeScale);
@@ -959,7 +959,7 @@ class FlxControlHandler
 			}
 			else
 			{
-				lastFiredTime = FlxU.getTicks();
+				lastFiredTime = FlxMisc.getTicks();
 				fireCallback();
 				fired = true;
 			}
@@ -980,7 +980,7 @@ class FlxControlHandler
 		//	This should be called regardless if they've pressed jump or not
 		if (entity.isTouching(jumpSurface))
 		{
-			extraSurfaceTime = FlxU.getTicks() + jumpFromFallTime;
+			extraSurfaceTime = FlxMisc.getTicks() + jumpFromFallTime;
 		}
 		
 		if ((jumpKeyMode == KEYMODE_PRESSED && FlxG.keys.pressed(jumpKey)) || (jumpKeyMode == KEYMODE_JUST_DOWN && FlxG.keys.justPressed(jumpKey)) || (jumpKeyMode == KEYMODE_RELEASED && FlxG.keys.justReleased(jumpKey)))
@@ -989,7 +989,7 @@ class FlxControlHandler
 			if (entity.isTouching(jumpSurface) == false)
 			{
 				//	They've run out of time to jump
-				if (FlxU.getTicks() > extraSurfaceTime)
+				if (FlxMisc.getTicks() > extraSurfaceTime)
 				{
 					return jumped;
 				}
@@ -1003,7 +1003,7 @@ class FlxControlHandler
 				}
 				
 				//	If there is a jump repeat rate set and we're still less than it then return
-				if (FlxU.getTicks() < nextJumpTime)
+				if (FlxMisc.getTicks() < nextJumpTime)
 				{
 					return jumped;
 				}
@@ -1011,7 +1011,7 @@ class FlxControlHandler
 			else
 			{
 				//	If there is a jump repeat rate set and we're still less than it then return
-				if (FlxU.getTicks() < nextJumpTime)
+				if (FlxMisc.getTicks() < nextJumpTime)
 				{
 					return jumped;
 				}
@@ -1033,7 +1033,7 @@ class FlxControlHandler
 				jumpCallback();
 			}
 			
-			lastJumpTime = FlxU.getTicks();
+			lastJumpTime = FlxMisc.getTicks();
 			nextJumpTime = lastJumpTime + Std.int(jumpRate / FlxG.timeScale);
 			
 			jumped = true;

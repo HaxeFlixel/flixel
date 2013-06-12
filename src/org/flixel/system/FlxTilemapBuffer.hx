@@ -3,10 +3,8 @@ package org.flixel.system;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
-import org.flixel.FlxU;
 
 /**
  * A helper object to keep tilemap drawing performance decent across the new multi-camera system.
@@ -66,12 +64,12 @@ class FlxTilemapBuffer
 			Camera = FlxG.camera;
 		}
 
-		columns = FlxU.ceil(Camera.width / TileWidth) + 1;
+		columns = Math.ceil(Camera.width / TileWidth) + 1;
 		if (columns > WidthInTiles)
 		{
 			columns = WidthInTiles;
 		}
-		rows = FlxU.ceil(Camera.height / TileHeight) + 1;
+		rows = Math.ceil(Camera.height / TileHeight) + 1;
 		if (rows > HeightInTiles)
 		{
 			rows = HeightInTiles;

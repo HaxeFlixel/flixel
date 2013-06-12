@@ -28,9 +28,9 @@ import org.flixel.FlxPoint;
 import org.flixel.FlxRect;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
 import org.flixel.plugin.photonstorm.baseTypes.Bullet;
 import org.flixel.plugin.photonstorm.FlxVelocity;
+import org.flixel.util.FlxMisc;
 
 /**
  * A Weapon can only fire 1 type of bullet. But it can fire many of them at once (in different directions if needed) via createBulletPattern
@@ -298,7 +298,7 @@ class FlxWeapon
 	 */
 	private function runFire(method:Int, x:Int = 0, y:Int = 0, target:FlxSprite = null, angle:Int = 0):Bool
 	{
-		if (fireRate > 0 && FlxU.getTicks() < nextFire)
+		if (fireRate > 0 && FlxMisc.getTicks() < nextFire)
 		{
 			return false;
 		}
@@ -324,8 +324,8 @@ class FlxWeapon
 		currentBullet.velocity.x = 0;
 		currentBullet.velocity.y = 0;
 		
-		lastFired = FlxU.getTicks();
-		nextFire = FlxU.getTicks() + Std.int(fireRate / FlxG.timeScale);
+		lastFired = FlxMisc.getTicks();
+		nextFire = FlxMisc.getTicks() + Std.int(fireRate / FlxG.timeScale);
 		
 		var launchX:Float = positionOffset.x;
 		var launchY:Float = positionOffset.y;

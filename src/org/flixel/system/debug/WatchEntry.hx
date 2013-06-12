@@ -1,16 +1,16 @@
 package org.flixel.system.debug;
 
-import openfl.Assets;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.text.TextFieldType;
 import flash.text.TextFormat;
+import openfl.Assets;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
-import org.flixel.FlxU;
-import org.flixel.FlxPoint;
-import org.flixel.system.FlxDebugger; 
+import org.flixel.system.FlxDebugger;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxString;
 
 /**
  * Helper class for the debugger overlay's Watch window.
@@ -162,7 +162,7 @@ class WatchEntry
 		{
 			nameDisplay.text = "";
 			if (NameWidth > 120)
-				nameDisplay.appendText(FlxU.getClassName(object, (NameWidth < 240)) + ".");
+				nameDisplay.appendText(FlxString.getClassName(object, (NameWidth < 240)) + ".");
 			
 			nameDisplay.appendText(field);
 		}
@@ -179,7 +179,7 @@ class WatchEntry
 		var property:Dynamic = Reflect.getProperty(object, field);
 		
 		if (Std.is(property, FlxPoint)) 
-			valueDisplay.text = FlxU.formatFlxPoint(property, FlxDebugger.pointPrecision);
+			valueDisplay.text = FlxString.formatFlxPoint(property, FlxDebugger.pointPrecision);
 		else
 			valueDisplay.text = Std.string(property); 
 		

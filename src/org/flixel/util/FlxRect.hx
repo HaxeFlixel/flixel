@@ -1,4 +1,4 @@
-package org.flixel;
+package org.flixel.util;
 
 import flash.geom.Rectangle;
 

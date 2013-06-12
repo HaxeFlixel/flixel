@@ -1,14 +1,8 @@
 package org.flixel;
 
-import openfl.Assets;
 import flash.display.BitmapData;
 import flash.display.Graphics;
-import flash.text.Font;
-
-/**
- * ...
- * @author Zaphod
- */
+import openfl.Assets;
 
 class FlxAssets
 {

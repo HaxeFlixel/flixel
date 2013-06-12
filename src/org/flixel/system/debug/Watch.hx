@@ -3,7 +3,6 @@ package org.flixel.system.debug;
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 
-import org.flixel.FlxU;
 import org.flixel.system.FlxWindow;
 
 /**
