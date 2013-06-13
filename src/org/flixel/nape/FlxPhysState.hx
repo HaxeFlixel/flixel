@@ -6,20 +6,19 @@ import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Polygon;
 import nape.space.Space;
+import org.flixel.FlxG;
+import org.flixel.FlxState;
 #if !FLX_NO_DEBUG
 import nape.util.ShapeDebug;
 #end
-import org.flixel.FlxCamera;
-import org.flixel.FlxG;
-import org.flixel.FlxState;
 
 /**
- * FlxPhysState is an FlxState that integrates nape.space.Space class
+ * <code>FlxPhysState</code> is an <code>FlxState</code> that integrates <code>nape.space.Space</code>
  * to provide Nape physics simulation in Flixel.
  *
- * Extend this state, add some FlxPhysSprite(s) to start using flixel + nape physics.
+ * Extend this state, add some <code>FlxPhysSprite(s)</code> to start using flixel + nape physics.
  *
- * Note that 'space' is a static variable, use FlxPhysState.space
+ * Note that </code>space</code> is a static variable, use <code>FlxPhysState.space</code>
  * to access it.
  *
  * @author TiagoLr ( ~~~ProG4mr~~~ )
@@ -32,9 +31,11 @@ class FlxPhysState extends FlxState
 	 * Contains the sprite used for nape debug graphics.
 	 */
 	private var _physDbgSpr:ShapeDebug;
-
-	public static var debug(get_debug, null):ShapeDebug;
-	public static function get_debug() { return cast(FlxG.state, FlxPhysState)._physDbgSpr; }
+	/**
+	 * Contains the sprite used for nape debug graphics.
+	 */
+	static public var debug(get_debug, null):ShapeDebug;
+	static private function get_debug():ShapeDebug { return cast(FlxG.state, FlxPhysState)._physDbgSpr; }
 	#end
 
 	/**
@@ -60,7 +61,7 @@ class FlxPhysState extends FlxState
 	public var positionIterations:Int;
 
 	/**
-	 * Override this method like a normal FlxState, but add
+	 * Override this method like a normal <code>FlxState</code>, but add
 	 * <code>super.create()</code> to it, so that this function is called.
 	 */
 	override public function create():Void
@@ -79,36 +80,38 @@ class FlxPhysState extends FlxState
 	/**
 	 * Creates simple walls around game area - usefull for prototying.
 	 *
-	 * @param minX The smallest X value of your level (usually 0).
-	 * @param minY The smallest Y value of your level (usually 0).
-	 * @param maxX The largest X value of your level (usually the level width).
-	 * @param maxY The largest Y value of your level (usually the level height).
-	 * @param Thickness How thick the walls are.
+	 * @param 	MinX 		The smallest X value of your level (usually 0).
+	 * @param 	MinY 		The smallest Y value of your level (usually 0).
+	 * @param 	MaxX 		The largest X value of your level - 0 means <code>FlxG.width</code> (usually the level width).
+	 * @param 	MaxY 		The largest Y value of your level - 0 means <code>FlxG.height</code> (usually the level height).
+	 * @param 	Thickness 	How thick the walls are. 10 by default.
+	 * @param 	_Material 	The <code>Material</code> to use for the physics body of the walls.
 	 */
-	public function createWalls(minX:Float = 0, minY:Float = 0, maxX:Float = 0, maxY:Float = 0, thickness:Float = 10, material:Material = null):Body
+	public function createWalls(MinX:Float = 0, MinY:Float = 0, MaxX:Float = 0, MaxY:Float = 0, Thickness:Float = 10, _Material:Material = null):Body
 	{
-		if (maxX == 0)
-			maxX = FlxG.width;
+		if (MaxX == 0)
+			MaxX = FlxG.width;
 
-		if (maxY == 0)
-			maxY = FlxG.height;
+		if (MinY == 0)
+			MinY = FlxG.height;
 
-		if (material == null)
-			material = new Material(0.4, 0.2, 0.38, 0.7);
+		if (_Material == null)
+			_Material = new Material(0.4, 0.2, 0.38, 0.7);
 
 		var walls:Body = new Body(BodyType.STATIC);
 
-		// left wall
-		walls.shapes.add(new Polygon(Polygon.rect(minX, minY, thickness, maxY + Math.abs(minY))));
-		// right wall
-		walls.shapes.add(new Polygon(Polygon.rect(maxX - thickness, minY, thickness, maxY + Math.abs(minY))));
-		// upper wall
-		walls.shapes.add(new Polygon(Polygon.rect(minX, minY, maxX + Math.abs(minX), thickness)));
-		// bottom wall
-		walls.shapes.add(new Polygon(Polygon.rect(minX, maxY - thickness, maxX + Math.abs(minX), thickness)));
+		// Left wall
+		walls.shapes.add(new Polygon(Polygon.rect(MinX, MinY, Thickness, MaxY + Math.abs(MinY))));
+		// Right wall
+		walls.shapes.add(new Polygon(Polygon.rect(MaxX - Thickness, MinY, Thickness, MaxY + Math.abs(MinY))));
+		// Upper wall
+		walls.shapes.add(new Polygon(Polygon.rect(MinX, MinY, MaxX + Math.abs(MinX), Thickness)));
+		// Bottom wall
+		walls.shapes.add(new Polygon(Polygon.rect(MinX, MaxY - Thickness, MaxX + Math.abs(MinX), Thickness)));
 
 		walls.space = space;
-		walls.setShapeMaterials(material);
+		walls.setShapeMaterials(_Material);
+		
 		return walls;
 	}
 
@@ -150,7 +153,7 @@ class FlxPhysState extends FlxState
 	/**
 	 * Enables debug graphics for nape physics.
 	 */
-	public function enablePhysDebug()
+	public function enablePhysDebug():Void
 	{
 		#if !FLX_NO_DEBUG
 		if (_physDbgSpr != null)
@@ -166,7 +169,7 @@ class FlxPhysState extends FlxState
 	/**
 	 * Disables debug graphics.
 	 */
-	public function disablePhysDebug()
+	public function disablePhysDebug():Void
 	{
 		#if !FLX_NO_DEBUG
 		if (_physDbgSpr == null)
@@ -180,7 +183,7 @@ class FlxPhysState extends FlxState
 	/**
 	 * Draws debug graphics.
 	 */
-	private function drawPhysDebug()
+	private function drawPhysDebug():Void
 	{
 		#if !FLX_NO_DEBUG
 		if (_physDbgSpr == null || space == null)
