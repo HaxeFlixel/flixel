@@ -80,6 +80,11 @@ class NestedSprite extends FlxSprite
 		relativeAngularAcceleration = 0;
 	}
 	
+	/**
+	 * WARNING: This will remove this sprite entirely. Use <code>kill()</code> if you 
+	 * want to disable it temporarily only and <code>reset()</code> it later to revive it.
+	 * Used to clean up memory.
+	 */
 	override public function destroy():Void
 	{
 		super.destroy();

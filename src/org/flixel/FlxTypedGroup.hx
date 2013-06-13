@@ -66,6 +66,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
+	 * WARNING: This will remove this group entirely. Use <code>kill()</code> if you want to disable it
+	 * temporarily only and be able to <code>revive()</code> it later.
 	 * Override this function to handle any deleting or "shutdown" type operations you might need,
 	 * such as removing traditional Flash children like Sprite objects.
 	 */
@@ -661,7 +663,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Calls kill on the group's members and then on the group itself.
+	 * Calls kill on the group's members and then on the group itself. 
+	 * You can revive this group later via <code>revive()</code> after this.
 	 */
 	override public function kill():Void
 	{
