@@ -19,6 +19,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxColor;
 import org.flixel.plugin.photonstorm.FlxGradient;
+import org.flixel.system.layer.DrawStackItem;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMisc;
 
