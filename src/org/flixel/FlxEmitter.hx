@@ -3,6 +3,7 @@ package org.flixel;
 import flash.display.Bitmap;
 import flash.display.BlendMode;
 import org.flixel.util.FlxRandom;
+import org.flixel.util.FlxPoint;
 
 class FlxEmitter extends FlxTypedEmitter<FlxParticle>
 {
