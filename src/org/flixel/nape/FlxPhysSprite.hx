@@ -130,7 +130,7 @@ class FlxPhysSprite extends FlxSprite
 			destroyPhysObjects();
 			
 		centerOffsets(false);
-		body = new Body(_Type != null ? _Type : BodyType.DYNAMIC, Vec2.weak(this.x, this.y));
+		body = new Body(_Type != null ? _Type : BodyType.DYNAMIC, Vec2.weak(x, y));
 		body.shapes.add(new Circle(Radius));
 		body.space = FlxPhysState.space;
 		
@@ -157,7 +157,7 @@ class FlxPhysSprite extends FlxSprite
 			Height = frameHeight;
 		
 		centerOffsets(false);
-		body = new Body(_Type != null ? _Type : BodyType.DYNAMIC, Vec2.weak(this.x, this.y));
+		body = new Body(_Type != null ? _Type : BodyType.DYNAMIC, Vec2.weak(x, y));
 		body.shapes.add(new Polygon(Polygon.box(Width, Height)));
 		body.space = FlxPhysState.space;
 		
