@@ -269,7 +269,9 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Clean up memory.
+	 * WARNING: This will remove this sprite entirely. Use <code>kill()</code> if you 
+	 * want to disable it temporarily only and <code>reset()</code> it later to revive it.
+	 * Used to clean up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -2067,7 +2069,9 @@ class FlxSprite extends FlxObject
 	public var bakedRotation(default, null):Float;
 	
 	/**
-	 * If the Sprite is beeing rendered in simple mode.
+	 * If the Sprite is being rendered in "simple mode" (via copyPixels).
+	 * True for flash when no angle, bakedRotations, scaling or blend modes are used.
+	 * This enables the sprite to be rendered much faster if true.
 	 */
 	public var simpleRender(get_simpleRender, null):Bool;
 	

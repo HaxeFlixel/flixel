@@ -359,6 +359,8 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	}
 	
 	/**
+	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you 
+	 * want to disable it temporarily only and <code>reset()</code> it later to revive it.
 	 * Called by the game state when state is changed (if this object belongs to the state)
 	 */
 	override public function destroy():Void

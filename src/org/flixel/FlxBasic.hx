@@ -81,6 +81,8 @@ class FlxBasic
 	}
 
 	/**
+	 * WARNING: This will remove this <code>FlxBasic</code> entirely. Use <code>kill()</code> if you 
+	 * want to disable it temporarily only and be able to <code>revive()</code> it later.
 	 * Override this function to null out variables or manually call
 	 * <code>destroy()</code> on class members if necessary.
 	 * Don't forget to call <code>super.destroy()</code>!
@@ -155,7 +157,7 @@ class FlxBasic
 	#end
 	
 	/**
-	 * Handy function for "killing" game objects.
+	 * Handy function for "killing" game objects. Use <code>reset()</code> to revive them.
 	 * Default behavior is to flag them as nonexistent AND dead.
 	 * However, if you want the "corpse" to remain in the game,
 	 * like to animate an effect or whatever, you should override this,
