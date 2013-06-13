@@ -16,9 +16,8 @@ package org.flixel.addons;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import org.flixel.FlxG;
-
 import org.flixel.FlxSprite;
+import org.flixel.util.FlxColor;
 
 class FlxSpriteAniRot extends FlxSprite
 {
@@ -52,7 +51,7 @@ class FlxSpriteAniRot extends FlxSprite
 
 	override private function calcFrame():Void 
 	{
-		pixels.fillRect(rect, FlxG.TRANSPARENT);//clear out blank to avoid artefacts
+		pixels.fillRect(rect, FlxColor.TRANSPARENT);//clear out blank to avoid artefacts
 		pixels.copyPixels(rotationRefA[_curIndex], rect, _zeroPoint, rotationRefA[_curIndex], _zeroPoint, true);
 		super.calcFrame();
 	}

@@ -21,10 +21,10 @@ import flash.geom.Rectangle;
 import flash.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
-import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 import org.flixel.FlxTypedGroup;
+import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMath;
 
 /**
@@ -438,7 +438,7 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		
 		if (FlxG._cache.exists(normalKey) == false)
 		{
-			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, FlxG.TRANSPARENT, false, normalKey);
+			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, FlxColor.TRANSPARENT, false, normalKey);
 			normalBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(normalBitmap, width - 2, height - 2, offColor, 1, 1);
 		}
@@ -473,7 +473,7 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		
 		if (FlxG._cache.exists(highlightKey) == false)
 		{
-			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, FlxG.TRANSPARENT, false, highlightKey);
+			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, FlxColor.TRANSPARENT, false, highlightKey);
 			highlightBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(highlightBitmap, width - 2, height - 2, onColor, 1, 1);
 		}

@@ -15,12 +15,11 @@ package org.flixel.plugin.photonstorm.fx;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import org.flixel.FlxCamera;
 import org.flixel.FlxG;
-import org.flixel.plugin.photonstorm.FlxColor;
 import org.flixel.FlxSprite;
+import org.flixel.plugin.photonstorm.FlxColor;
 import org.flixel.plugin.photonstorm.FlxGradient;
-import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMisc;
 
 /**
@@ -67,7 +66,7 @@ class StarfieldFX extends BaseFX
 		
 		starXOffset = -1;
 		starYOffset = 0;
-		backgroundColor = FlxG.BLACK;
+		backgroundColor = FlxColor.BLACK;
 	}
 	
 	/**
@@ -293,7 +292,7 @@ class StarfieldFX extends BaseFX
 			#if flash
 			canvas.setPixel32(star.x, star.y, 0xffffffff);
 			#else
-			var rgba:RGBA = FlxColor.getRGB(FlxG.WHITE);
+			var rgba:RGBA = FlxColor.getRGB(FlxColor.WHITE);
 			#end
 			
 			#if !flash
@@ -384,7 +383,7 @@ class StarSprite extends FlxSprite
 	{
 		super(X, Y);
 		
-		makeGraphic(1, 1, FlxG.WHITE);
+		makeGraphic(1, 1, FlxColor.WHITE);
 		
 		setBackgroundColor(bgColor);
 		
