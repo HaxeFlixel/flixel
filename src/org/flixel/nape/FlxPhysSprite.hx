@@ -6,31 +6,37 @@ import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Circle;
 import nape.shape.Polygon;
-import org.flixel.FlxBasic;
-import org.flixel.FlxCamera;
 import org.flixel.FlxSprite;
 
 /**
  * FlxPhysSprite consists of an FlxSprite with a physics body.
  * During the simulation, the sprite follows the physics body position and rotation.
  * 
- * Override createPhysObjects() method to create your own physics body (default one is a circle).
+ * By default, a rectangular physics body is created upon construction in <code>createRectangularBody()</code>.
  * 
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
 class FlxPhysSprite extends FlxSprite
 {
 	private var _radsFactor:Float;
+	/**
+	 * Internal var to update <code>body.velocity.x</code> and <code>body.velocity.y</code>. 
+	 * Default is 1, which menas no drag.
+	 */
 	private var _linearDrag:Float;
+	/**
+	 * Internal var to update <code>body.angularVel</code>
+	 * Default is 1, which menas no drag.
+	 */
 	private var _angularDrag:Float;
 	
 	/**
-	 * mainBody is the physics body associated with this sprite. 
+	 * <code>body</code> is the physics body associated with this sprite. 
 	 */
 	public var body:Body;
 
 	/**
-	 * Creates an FlxSprite and a physics body (<code>mainBody</code>).
+	 * Creates an FlxSprite and a physics body (<code>body</code>).
 	 * The body is then added to the space of the current state.
 	 * At each step, the physics are updated, and so is the position and rotation of the sprite 
 	 * to match the bodys position and rotation values.
@@ -38,6 +44,7 @@ class FlxPhysSprite extends FlxSprite
 	 * @param	X				The initial X position of the sprite.
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic 	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
+	 * @param	CreateBody	 	Whether a rectangular physics body should be created for this sprite. True by default.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null, CreateBody:Bool = true) 
 	{
@@ -46,7 +53,7 @@ class FlxPhysSprite extends FlxSprite
 		_linearDrag = 1;	// no drag.
 		_angularDrag = 1; 	// no drag.
 		
-		if(CreateBody)
+		if (CreateBody)
 			createRectangularBody();
 	}
 
@@ -93,33 +100,40 @@ class FlxPhysSprite extends FlxSprite
 	override public function revive():Void
 	{
 		super.revive();
-		if(body != null)
+		if (body != null)
 			body.space = FlxPhysState.space;
 	}
 	
-	public function addPremadeBody(body:Body)
+	/**
+	 * Makes it easier to add a physics body of your own to this sprite by setting it's position,
+	 * space and material for you.
+	 * @param	_Body 	The new physics body replacing the old one.
+	 */
+	public function addPremadeBody(_Body:Body):Void
 	{
-		if (this.body != null) 
+		if (body != null) 
 			destroyPhysObjects();
 		
-		body.position.x = x;
-		body.position.y = y;
-		body.space = FlxPhysState.space;
-		this.body = body;
+		_Body.position.x = x;
+		_Body.position.y = y;
+		_Body.space = FlxPhysState.space;
+		body = _Body;
 		setBodyMaterial();
 	}
 	
 	/**
-	 * Creates the physics body used by this sprite (using a circle shape).
+	 * Creates a circular physics body for this sprite.
+	 * @param	Radius	The radius of the circle-shaped body - 16 by default
+	 * @param 	_Type	The <code>BodyType</code> of the physics body. Optional, <code>DYNAMIC</code> by default.
 	 */
-	public function createCircularBody(radius:Float = 16, ?type:BodyType) 
+	public function createCircularBody(Radius:Float = 16, ?_Type:BodyType):Void
 	{
 		if (body != null) 
 			destroyPhysObjects();
 			
-		this.centerOffsets(false);
-		body = new Body(type != null ? type : BodyType.DYNAMIC, Vec2.weak(this.x, this.y));
-		body.shapes.add(new Circle(radius));
+		centerOffsets(false);
+		body = new Body(_Type != null ? _Type : BodyType.DYNAMIC, Vec2.weak(x, y));
+		body.shapes.add(new Circle(Radius));
 		body.space = FlxPhysState.space;
 		
 		setBodyMaterial();
@@ -128,22 +142,25 @@ class FlxPhysSprite extends FlxSprite
 	/**
 	 * Default method to create the physics body used by this sprite in shape of a rectangle.
 	 * Override this method to create your own physics body!
-	 * The width and height used are based on the size of sprite graphics.
+	 * The width and height used are based on the size of sprite graphics if 0 is passed.
 	 * Call this method after calling makeGraphics() or loadGraphic() to update the body size.
+	 * @param	width	The width of the rectangle. 0 = <code>frameWidth</code>
+	 * @param	height	The height of the rectangle. 0 = <code>frameHeight</code>
+	 * @param	type	The <code>BodyType</code> of the physics body. Optional, <code>DYNAMIC</code> by default.
 	 */
-	public function createRectangularBody(width:Float = 0, height:Float = 0, ?type:BodyType)
+	public function createRectangularBody(Width:Float = 0, Height:Float = 0, ?_Type:BodyType):Void
 	{
 		if (body != null) 
 			destroyPhysObjects();
 		
-		if (width == 0)
-			width = frameWidth;
-		if (height == 0)
-			height = frameHeight;
+		if (Width == 0)
+			Width = frameWidth;
+		if (Height == 0)
+			Height = frameHeight;
 		
-		this.centerOffsets(false);
-		body = new Body(type != null ? type : BodyType.DYNAMIC, Vec2.weak(this.x, this.y));
-		body.shapes.add(new Polygon(Polygon.box(width, height)));
+		centerOffsets(false);
+		body = new Body(_Type != null ? _Type : BodyType.DYNAMIC, Vec2.weak(x, y));
+		body.shapes.add(new Polygon(Polygon.box(Width, Height)));
 		body.space = FlxPhysState.space;
 		
 		setBodyMaterial();
@@ -152,25 +169,24 @@ class FlxPhysSprite extends FlxSprite
 	/**
 	 * Shortcut method to set/change the physics body material.
 	 * 
-	 * @param	elasticity			Elasticity of material.		
-	 * @param	dynamicFriction		Coeffecient of dynamic friction for material.
-	 * @param	staticFriction		Coeffecient of static friction for material.
-	 * @param	density				Density of this Material.
-	 * @param	rotationFriction	Coeffecient of rolling friction for circle interactions.
+	 * @param	Elasticity			Elasticity of material.		
+	 * @param	DynamicFriction		Coeffecient of dynamic friction for material.
+	 * @param	StaticFriction		Coeffecient of static friction for material.
+	 * @param	Density				Density of this Material.
+	 * @param	RotationFriction	Coeffecient of rolling friction for circle interactions.
 	 */
-	public function setBodyMaterial(elasticity:Float = 1, dynamicFriction:Float = 0.2, 
-									staticFriction:Float = 0.4, density:Float = 1, 
-									rollingFriction:Float = 0.001)
+	public function setBodyMaterial(Elasticity:Float = 1, DynamicFriction:Float = 0.2, StaticFriction:Float = 0.4, Density:Float = 1, RotationFriction:Float = 0.001):Void
 	{
 		if (body == null) 
 			return;
-		body.setShapeMaterials(new Material(elasticity, dynamicFriction, staticFriction, density, rollingFriction));
+			
+		body.setShapeMaterials(new Material(Elasticity, DynamicFriction, StaticFriction, Density, RotationFriction));
 	}
 	
 	/**
 	 * Destroys the physics main body.
 	 */
-	public function destroyPhysObjects() 
+	public function destroyPhysObjects():Void
 	{
 		if (body != null) 
 		{
@@ -180,17 +196,16 @@ class FlxPhysSprite extends FlxSprite
 	}
 	
 	/**
-	 * Updates physics FlxSprite graphics to follow this sprite physics object.
+	 * Updates physics FlxSprite graphics to follow this sprite physics object, called at the end of <code>update()</code>.
+	 * Things that are updated: Position, angle, angular and linear drag.
 	 */	
-	private inline function updatePhysObjects() 
+	inline private function updatePhysObjects():Void 
 	{
-		this.x = body.position.x - origin.x;
-		this.y = body.position.y - origin.y;
+		x = body.position.x - origin.x;
+		y = body.position.y - origin.y;
 		
 		if (body.allowRotation)
-		{
-			this.angle = body.rotation * _radsFactor;
-		}
+			angle = body.rotation * _radsFactor;
 		
 		// Applies custom physics drag.
 		if (_linearDrag < 1 || _angularDrag < 1) 
@@ -206,17 +221,19 @@ class FlxPhysSprite extends FlxSprite
 	 * This provides a simple drag alternative. 
 	 * Set any values to linearDrag or angularDrag to activate this feature for this object.
 	 * 
-	 * @param	linearDrag Typical value 0.96 (1 = no drag).
-	 * @param	angularDrag	Typical value 0.96 (1 = no drag);
+	 * @param	LinearDrag		Typical value 0.96 (1 = no drag).
+	 * @param	AngularDrag		Typical value 0.96 (1 = no drag);
 	 */
-	public function setDrag(linearDrag:Float = 1, angularDrag:Float = 1) 
+	public function setDrag(LinearDrag:Float = 1, AngularDrag:Float = 1):Void 
 	{
-		_linearDrag		= linearDrag;
-		_angularDrag 	= angularDrag;
+		_linearDrag	= LinearDrag;
+		_angularDrag = AngularDrag;
 	}
 	
-	// Hide debug outline on physics sprites if the physics debug shapes are turned on
 	#if !FLX_NO_DEBUG
+	/**
+	 * Hide debug outline on physics sprites if the physics debug shapes are turned on
+	 */	
 	override public function drawDebug():Void
 	{
 		if (FlxPhysState.debug == null)

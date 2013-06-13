@@ -106,6 +106,7 @@ class Log extends FlxWindow
 		
 		var text:String = texts.join(" ");
 
+		#if !js
 		// Create the text and apply color and styles
 		var prefix:String = "<font size='" + Style.size + "' color='#" + Style.color + "'>";
 		var suffix:String = "</font>";
@@ -123,7 +124,11 @@ class Log extends FlxWindow
 			suffix = suffix + "</u>";
 		}
 		
+		// TODO: Make htmlText on HTML5 target
 		text = prefix + Style.prefix + text + suffix;
+		#else
+		text = Style.prefix + text;
+		#end
 		
 		// Actually add it to the textfield
 		if (_lines.length <= 0)
@@ -141,11 +146,21 @@ class Log extends FlxWindow
 			{
 				newText += _lines[i] + "<br>";
 			}
+			// TODO: Make htmlText on HTML5 target
+			#if !js
 			_text.htmlText = newText;
+			#else
+			_text.text = newText;
+			#end
 		}
 		else
 		{
+			// TODO: Make htmlText on HTML5 target
+			#if !js
 			_text.htmlText += (text + "<br>");
+			#else
+			_text.text += text + "\n";
+			#end
 		}
 		#if flash
 		_text.scrollV = Std.int(_text.maxScrollV);
