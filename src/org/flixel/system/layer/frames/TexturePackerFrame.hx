@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
 import org.flixel.plugin.texturepacker.TexturePackerTileSheetData;
+import org.flixel.util.FlxColor;
 
 class TexturePackerFrame extends FlxFrame
 {
@@ -34,7 +35,7 @@ class TexturePackerFrame extends FlxFrame
 			return _bitmapData;
 		}
 		
-		_bitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxG.TRANSPARENT);
+		_bitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		
 		if (rotated)
 		{
