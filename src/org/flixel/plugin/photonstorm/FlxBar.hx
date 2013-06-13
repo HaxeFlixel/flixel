@@ -16,15 +16,14 @@
 
 package org.flixel.plugin.photonstorm;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import openfl.Assets;
 import org.flixel.FlxG;
-import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxColor;
 
 /**
  * FlxBar is a quick and easy way to create a graphical bar which can
@@ -146,7 +145,7 @@ class FlxBar extends FlxSprite
 		barHeight = height;
 		
 		#if flash
-		makeGraphic(barWidth, barHeight, FlxG.WHITE, true);
+		makeGraphic(barWidth, barHeight, FlxColor.WHITE, true);
 		#else
 		this.width = frameWidth = width;
 		this.height = frameHeight = height;
@@ -160,7 +159,7 @@ class FlxBar extends FlxSprite
 		filledBarPoint = new Point(0, 0);
 		
 		#if flash
- 		canvas = new BitmapData(width, height, true, FlxG.TRANSPARENT);
+ 		canvas = new BitmapData(width, height, true, Flxcolor.TRANSPARENT);
 		#end
 		
 		if (parentRef != null)
@@ -444,7 +443,7 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					_pixels.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 					
@@ -453,7 +452,7 @@ class FlxBar extends FlxSprite
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					_pixels.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 					
@@ -474,13 +473,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), empty);
 					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), fill);
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), empty);
 					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), fill);
 				}
@@ -568,7 +567,7 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 					
@@ -577,7 +576,7 @@ class FlxBar extends FlxSprite
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 					
@@ -598,13 +597,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, empty, 0, 0, chunkSize, rotation);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, fill, 0, barHeight + 1, chunkSize, rotation);
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, empty, 0, 0, chunkSize, rotation);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, fill, barWidth + 1, 0, chunkSize, rotation);
 				}
@@ -710,13 +709,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point());
 					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), fillBackground);
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point());
 					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), fillBackground);
 				}
@@ -754,13 +753,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), emptyBackground);
 					_pixels.copyPixels(fillBitmapData, fillBitmapData.rect, new Point(0, barHeight + 1));
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), emptyBackground);
 					_pixels.copyPixels(fillBitmapData, fillBitmapData.rect, new Point(barWidth + 1, 0));
 				}
@@ -797,13 +796,13 @@ class FlxBar extends FlxSprite
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point(0, 0));
 					_pixels.copyPixels(fillBitmapData, emptyBitmapData.rect, new Point(0, barHeight + 1));
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxG.TRANSPARENT, false, key);
+					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point(0, 0));
 					_pixels.copyPixels(fillBitmapData, emptyBitmapData.rect, new Point(barWidth + 1, 0));
 				}

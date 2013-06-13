@@ -16,11 +16,7 @@ package org.flixel.plugin.photonstorm.fx;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import org.flixel.FlxG;
 import org.flixel.FlxSprite;
-import org.flixel.plugin.photonstorm.FlxColor;
-
-import org.flixel.system.layer.TileSheetData;
 
 /**
  * Creates a static / glitch / monitor-corruption style effect on an FlxSprite
@@ -184,7 +180,7 @@ class GlitchSprite extends FlxSprite
 		_imageTileIDs = new Map<Int, Array<Int>>();
 		imageLines = new Array<ImageLine>();
 		
-		makeGraphic(1, 1, FlxG.WHITE);
+		makeGraphic(1, 1, FlxColor.WHITE);
 		
 		_frameID = _framesData.frameIDs[0];
 		_tileSheetData.isColored = true;

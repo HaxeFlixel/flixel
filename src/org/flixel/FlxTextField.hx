@@ -13,6 +13,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 import org.flixel.system.layer.Atlas;
+import org.flixel.util.FlxColor;
 import org.flixel.util.FlxPoint;
 
 /**
@@ -387,7 +388,7 @@ class FlxTextField extends FlxText
 		if (AreYouSure && _addedToDisplay)
 		{
 		#end
-			_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxG.TRANSPARENT);
+			_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
 			frameHeight = Std.int(height);
 			_flashRect.x = 0;
 			_flashRect.y = 0;

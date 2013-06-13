@@ -1,8 +1,8 @@
 package org.flixel.plugin.pxText;
 
 import flash.display.BitmapData;
-import org.flixel.FlxG;
 import org.flixel.plugin.pxText.PxBitmapFont;
+import org.flixel.util.FlxColor;
 
 /**
  * Creates a default font. This is done automatically when intializing Pixelizer.
@@ -36,11 +36,11 @@ class PxDefaultFontGenerator
 					i++;
 					if (fontData.substr(i, 1) == "1") 
 					{
-						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxG.WHITE);
+						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxColor.WHITE);
 					}
 					else 
 					{
-						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxG.TRANSPARENT);
+						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxColor.TRANSPARENT);
 					}
 				}
 			}
