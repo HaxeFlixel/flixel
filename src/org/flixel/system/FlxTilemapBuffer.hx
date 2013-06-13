@@ -1,6 +1,7 @@
 package org.flixel.system;
 
 import flash.display.BitmapData;
+import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import org.flixel.FlxCamera;
@@ -41,9 +42,13 @@ class FlxTilemapBuffer
 	 */
 	public var columns:Int;
 	
+	public var forceComplexRender:Bool = false;
+	
 	#if flash
 	private var _pixels:BitmapData;	
 	private var _flashRect:Rectangle;
+	
+	private var _matrix:Matrix;
 	#end
 
 	/**
@@ -79,6 +84,7 @@ class FlxTilemapBuffer
 		width = _pixels.width;
 		height = _pixels.height;	
 		_flashRect = new Rectangle(0, 0, width, height);
+		_matrix = new Matrix();
 		#else
 		width = Std.int(columns * TileWidth);
 		height = Std.int(rows * TileHeight);
@@ -93,6 +99,7 @@ class FlxTilemapBuffer
 	{
 		#if flash
 		_pixels = null;
+		_matrix = null;
 		#end
 	}
 	
@@ -125,7 +132,16 @@ class FlxTilemapBuffer
 	 */
 	public function draw(Camera:FlxCamera, FlashPoint:Point):Void
 	{
-		Camera.buffer.copyPixels(_pixels, _flashRect, FlashPoint, null, null, true);
+		if (!forceComplexRender)
+		{
+			Camera.buffer.copyPixels(_pixels, _flashRect, FlashPoint, null, null, true);
+		}
+		else
+		{
+			_matrix.identity();
+			_matrix.translate(FlashPoint.x, FlashPoint.y);
+			Camera.buffer.draw(_pixels, _matrix);
+		}
 	}
 #end
 }

@@ -244,6 +244,12 @@ class FlxObject extends FlxBasic
 	 */
 	public var pathAutoCenter:Bool;
 	/**
+	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
+	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
+	 * @default false
+	 */
+	public var forceComplexRender(default, set_forceComplexRender):Bool = false;
+	/**
 	 * Internal helper, tracks which node of the path this object is moving toward.
 	 */
 	private var _pathNodeIndex:Int;
@@ -1347,5 +1353,10 @@ class FlxObject extends FlxBasic
 	{
 		this.x = x;
 		this.y = y;
+	}
+	
+	function set_forceComplexRender(value:Bool):Bool 
+	{
+		return forceComplexRender = value;
 	}
 }

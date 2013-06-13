@@ -2083,7 +2083,7 @@ class FlxSprite extends FlxObject
 	inline private function simpleRenderSprite():Bool
 	{
 		#if flash
-		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null));
+		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (forceComplexRender == false));
 		#else
 		// TODO: fix this for subclasses (make less checks)
 		var result:Bool = (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));

@@ -705,6 +705,7 @@ class FlxTilemap extends FlxObject
 			if (_buffers[i] == null)
 			{
 				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera);
+				_buffers[i].forceComplexRender = forceComplexRender;
 			}
 			buffer = _buffers[i++];
 			#if flash
@@ -2130,4 +2131,21 @@ class FlxTilemap extends FlxObject
         _buffers = new Array<FlxTilemapBuffer>();
     }
 	
+	override private function set_forceComplexRender(value:Bool):Bool 
+	{
+		var i:Int = 0;
+        var l:Int;
+		
+        if (_buffers != null)
+        {
+            i = 0;
+            l = _buffers.length;
+            for (i in 0...l)
+            {
+                _buffers[i].forceComplexRender = value;
+            }
+        }
+		
+		return super.set_forceComplexRender(value);
+	}
 }
