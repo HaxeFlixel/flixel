@@ -58,6 +58,8 @@ class FlxPhysSprite extends FlxSprite
 	}
 
 	/**
+	 * WARNING: This will remove this sprite entirely. Use <code>kill()</code> if you 
+	 * want to disable it temporarily only and <code>reset()</code> it later to revive it.
 	 * Override this function to null out variables or manually call
 	 * <code>destroy()</code> on class members if necessary.
 	 * Don't forget to call <code>super.destroy()</code>!
