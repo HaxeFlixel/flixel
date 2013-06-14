@@ -1,35 +1,150 @@
-/**
-* FlxMath
-* -- Part of the Flixel Power Tools set
-* 
-* v1.7 Added mouseInFlxRect
-* v1.6 Added wrapAngle, angleLimit and more documentation
-* v1.5 Added pointInCoordinates, pointInFlxRect and pointInRectangle
-* v1.4 Updated for the Flixel 2.5 Plugin system
-* 
-* @version 1.7 - June 28th 2011
-* @link http://www.photonstorm.com
-* @author Richard Davey / Photon Storm
-*/
-
-package org.flixel.plugin.photonstorm;
-
-import flash.geom.Rectangle;
-import org.flixel.FlxG;
-import org.flixel.util.FlxMisc;
-import org.flixel.util.FlxRect;
+package org.flixel.util;
 
 /**
- * Adds a set of fast Math functions and extends a few commonly used ones
+ * A set of functions related to angle calculations.
  */
-class FlxPTMath
-{	
+class FlxAngle
+{
 	static private var cosTable:Array<Float> = new Array<Float>();
-	private static var sinTable:Array<Float> = new Array<Float>();
+	static private var sinTable:Array<Float> = new Array<Float>();
+	
+	/**
+	 * Useful for rad-to-deg and deg-to-rad conversion.
+	 */
+	static public var DEG:Float = 180 / Math.PI;
+	static public var RAD:Float = Math.PI / 180;
 	
 	static private var coefficient1:Float = Math.PI / 4;
-	static private var RADTODEG:Float = 180 / Math.PI;
-	static private var DEGTORAD:Float = Math.PI / 180;
+	
+	/**
+	 * Rotates a point in 2D space around another point by the given angle.
+	 * @param	X		The X coordinate of the point you want to rotate.
+	 * @param	Y		The Y coordinate of the point you want to rotate.
+	 * @param	PivotX	The X coordinate of the point you want to rotate around.
+	 * @param	PivotY	The Y coordinate of the point you want to rotate around.
+	 * @param	Angle	Rotate the point by this many degrees.
+	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
+	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
+	 */
+	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, point:FlxPoint = null):FlxPoint
+	{
+		var sin:Float = 0;
+		var cos:Float = 0;
+		var radians:Float = Angle * -0.017453293;
+		while (radians < -3.14159265)
+		{
+			radians += 6.28318531;
+		}
+		while (radians >  3.14159265)
+		{
+			radians = radians - 6.28318531;
+		}
+		
+		if (radians < 0)
+		{
+			sin = 1.27323954 * radians + .405284735 * radians * radians;
+			if (sin < 0)
+			{
+				sin = .225 * (sin *-sin - sin) + sin;
+			}
+			else
+			{
+				sin = .225 * (sin * sin - sin) + sin;
+			}
+		}
+		else
+		{
+			sin = 1.27323954 * radians - 0.405284735 * radians * radians;
+			if (sin < 0)
+			{
+				sin = .225 * (sin *-sin - sin) + sin;
+			}
+			else
+			{
+				sin = .225 * (sin * sin - sin) + sin;
+			}
+		}
+		
+		radians += 1.57079632;
+		if (radians >  3.14159265)
+		{
+			radians = radians - 6.28318531;
+		}
+		if (radians < 0)
+		{
+			cos = 1.27323954 * radians + 0.405284735 * radians * radians;
+			if (cos < 0)
+			{
+				cos = .225 * (cos *-cos - cos) + cos;
+			}
+			else
+			{
+				cos = .225 * (cos * cos - cos) + cos;
+			}
+		}
+		else
+		{
+			cos = 1.27323954 * radians - 0.405284735 * radians * radians;
+			if (cos < 0)
+			{
+				cos = .225 * (cos *-cos - cos) + cos;
+			}
+			else
+			{
+				cos = .225 * (cos * cos - cos) + cos;
+			}
+		}
+		
+		var dx:Float = X - PivotX;
+		// TODO: Uncomment this line if there will be problems
+		//var dy:Float = PivotY + Y; //Y axis is inverted in flash, normally this would be a subtract operation
+		var dy:Float = Y - PivotY;
+		if (point == null)
+		{
+			point = new FlxPoint();
+		}
+		point.x = PivotX + cos * dx - sin * dy;
+		point.y = PivotY - sin * dx - cos * dy;
+		return point;
+	}
+	
+	/**
+	 * Calculates the angle between two points.  0 degrees points straight up.
+	 * @param	Point1		The X coordinate of the point.
+	 * @param	Point2		The Y coordinate of the point.
+	 * @return	The angle in degrees, between -180 and 180.
+	 */
+	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
+	{
+		var x:Float = Point2.x - Point1.x;
+		var y:Float = Point2.y - Point1.y;
+		var angle:Float = 0;
+		if ((x != 0) || (y != 0))
+		{
+			var c1:Float = 3.14159265 * 0.25;
+			var c2:Float = 3 * c1;
+			var ay:Float = (y < 0) ? -y : y;
+			if (x >= 0)
+			{
+				angle = c1 - c1 * ((x - ay) / (x + ay));
+			}
+			else
+			{
+				angle = c2 - c1 * ((x + ay) / (ay - x));
+			}
+			angle = ((y < 0)? -angle:angle) * 57.2957796;
+			if (angle > 90)
+			{
+				angle = angle - 270;
+			}
+			else
+			{
+				angle += 90;
+			}
+		}
+		
+		return angle;
+	}
 	
 	/**
 	 * A faster (but much less accurate) version of Math.atan2(). For close range / loose comparisons this works very well, 
@@ -72,10 +187,10 @@ class FlxPTMath
 	
 	/**
 	 * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
-	 * <p>
+	 * 
 	 * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
 	 * you should get the results via getSinTable() and getCosTable(). This generator is fast enough to be used in real-time.
-	 * </p>
+	 * 
 	 * @param length 		The length of the wave
 	 * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
 	 * @param cosAmplitude 	The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
@@ -126,65 +241,8 @@ class FlxPTMath
 	}
 	
 	/**
-	 * Adds the given amount to the value, but never lets the value go over the specified maximum
-	 * 
-	 * @param value The value to add the amount to
-	 * @param amount The amount to add to the value
-	 * @param max The maximum the value is allowed to be
-	 * @return The new value
-	 */
-	static public function maxAdd(value:Int, amount:Int, max:Int):Int
-	{
-		value += amount;
-		
-		if (value > max)
-		{
-			value = max;
-		}
-		
-		return value;
-	}
-	
-	/**
-	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-	 * <p>Values must be positive integers, and are passed through Math.abs</p>
-	 * 
-	 * @param value The value to add the amount to
-	 * @param amount The amount to add to the value
-	 * @param max The maximum the value is allowed to be
-	 * @return The wrapped value
-	 */
-	static public function wrapValue(value:Int, amount:Int, max:Int):Int
-	{
-		var diff:Int;
-
-		value = Std.int(Math.abs(value));
-		amount = Std.int(Math.abs(amount));
-		max = Std.int(Math.abs(max));
-		
-		diff = (value + amount) % max;
-		
-		return diff;
-	}
-	
-	/**
-	 * Finds the dot product value of two vectors
-	 * 
-	 * @param	ax		Vector X
-	 * @param	ay		Vector Y
-	 * @param	bx		Vector X
-	 * @param	by		Vector Y
-	 * 
-	 * @return	Dot product
-	 */
-	inline static public function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
-	{
-		return ax * bx + ay * by;
-	}
-	
-	/**
-	 * Keeps an angle value between -180 and +180<br>
-	 * Should be called whenever the angle is updated on the FlxSprite to stop it from going insane.
+	 * Keeps an angle value between -180 and +180
+	 * Should be called whenever the angle is updated on a FlxSprite to stop it from going insane.
 	 * 
 	 * @param	angle	The angle value to check
 	 * 
@@ -233,27 +291,25 @@ class FlxPTMath
 	
 	/**
 	 * Converts a Radian value into a Degree
-	 * <p>
 	 * Converts the radians value into degrees and returns
-	 * </p>
-	 * @param radians The value in radians
+	 * 
+	 * @param 	radians 	The value in radians
 	 * @return Number Degrees
 	 */
 	inline static public function asDegrees(radians:Float):Float
 	{
-		return radians * RADTODEG;
+		return radians * DEG;
 	}
 	
 	/**
 	 * Converts a Degrees value into a Radian
-	 * <p>
 	 * Converts the degrees value into radians and returns
-	 * </p>
-	 * @param degrees The value in degrees
+	 * 
+	 * @param 	degrees The value in degrees
 	 * @return Number Radians
 	 */
 	inline static public function asRadians(degrees:Float):Float
 	{
-		return degrees * DEGTORAD;
+		return degrees * RAD;
 	}
 }

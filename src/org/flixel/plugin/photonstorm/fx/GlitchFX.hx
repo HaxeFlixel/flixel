@@ -17,6 +17,7 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import org.flixel.FlxSprite;
+import org.flixel.util.FlxAngle;
 
 /**
  * Creates a static / glitch / monitor-corruption style effect on an FlxSprite
@@ -370,7 +371,7 @@ class GlitchSprite extends FlxSprite
 
 			if (!simpleRenderSprite ())
 			{
-				radians = angle * FlxG.RAD;
+				radians = angle * FlxAngle.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 

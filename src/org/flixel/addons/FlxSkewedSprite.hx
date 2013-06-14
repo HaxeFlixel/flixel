@@ -6,6 +6,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxPoint;
 
 /**
@@ -142,14 +143,14 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.translate( -origin.x, -origin.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * FlxG.RAD);
+					_matrix.rotate(angle * FlxAngle.RAD);
 				}
 				_matrix.scale(scale.x, scale.y);
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(skew.y * FlxG.RAD);
-					_skewMatrix.c = Math.tan(skew.x * FlxG.RAD);
+					_skewMatrix.b = Math.tan(skew.y * FlxAngle.RAD);
+					_skewMatrix.c = Math.tan(skew.x * FlxAngle.RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}
@@ -175,7 +176,7 @@ class FlxSkewedSprite extends FlxSprite
 			}
 			else
 			{
-				radians = -angle * FlxG.RAD;
+				radians = -angle * FlxAngle.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -207,8 +208,8 @@ class FlxSkewedSprite extends FlxSprite
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(-skew.x * FlxG.RAD);
-					_skewMatrix.c = Math.tan(-skew.y * FlxG.RAD);
+					_skewMatrix.b = Math.tan(-skew.x * FlxAngle.RAD);
+					_skewMatrix.c = Math.tan(-skew.y * FlxAngle.RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}
