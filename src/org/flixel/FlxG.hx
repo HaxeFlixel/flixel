@@ -674,7 +674,7 @@ class FlxG
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public function loadSound(EmbeddedSound:Dynamic = null, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, URL:String = null):FlxSound
+	static public function loadSound(EmbeddedSound:Dynamic = null, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, URL:String = null, OnComplete:Void->Void = null):FlxSound
 	{
 		#if !js
 		if((EmbeddedSound == null) && (URL == null))
@@ -685,11 +685,11 @@ class FlxG
 		var sound:FlxSound = sounds.recycle(FlxSound);
 		if (EmbeddedSound != null)
 		{
-			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy);
+			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
 		}
 		else
 		{
-			sound.loadStream(URL, Looped, AutoDestroy);
+			sound.loadStream(URL, Looped, AutoDestroy, OnComplete);
 		}
 		sound.volume = Volume;
 		if (AutoPlay)
@@ -727,7 +727,7 @@ class FlxG
 		}
 	}
 	
-	static public function play(EmbeddedSound:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true):FlxSound
+	static public function play(EmbeddedSound:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true, OnComplete:Void->Void = null):FlxSound
 	{
 		var sound:Sound = null;
 		
@@ -758,10 +758,10 @@ class FlxG
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	static public function play(EmbeddedSound:Dynamic, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true):FlxSound
+	static public function play(EmbeddedSound:Dynamic, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true, OnComplete:Void->Void = null):FlxSound
 	{
 		#if !js
-		return FlxG.loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, true);
+		return FlxG.loadSound(EmbeddedSound, Volume, Looped, AutoDestroy, true, null, OnComplete);
 		#else
 		return null;
 		#end
@@ -777,10 +777,10 @@ class FlxG
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A FlxSound object.
 	 */
-	static public function stream(URL:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true):FlxSound
+	static public function stream(URL:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true, OnComplete:Void->Void = null):FlxSound
 	{
 		#if !js
-		return FlxG.loadSound(null, Volume, Looped, AutoDestroy, true, URL);
+		return FlxG.loadSound(null, Volume, Looped, AutoDestroy, true, URL, OnComplete);
 		#else
 		return null;
 		#end

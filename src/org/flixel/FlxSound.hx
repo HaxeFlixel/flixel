@@ -105,6 +105,12 @@ class FlxSound extends FlxBasic
 	 * Internal flag for what to do when the sound is done fading out.
 	 */
 	private var _onFadeComplete:Void->Void;
+	/**
+	 * Internal tracker for sound complete callback. Default is null.
+	 * If assigend, will be called each time when sound reaches its end.
+	 * Works only on flash and desktop targets.
+	 */
+	private var _onComplete:Void->Void;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -173,6 +179,8 @@ class FlxSound extends FlxBasic
 			_sound.removeEventListener(Event.ID3, gotID3);
 			_sound = null;
 		}
+		
+		_onComplete = null;
 		
 		super.destroy();
 	}
@@ -264,7 +272,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadEmbedded(EmbeddedSound:Dynamic, Looped:Bool = false, AutoDestroy:Bool = false):FlxSound
+	public function loadEmbedded(EmbeddedSound:Dynamic, Looped:Bool = false, AutoDestroy:Bool = false, OnComplete:Void->Void = null):FlxSound
 	{
 		cleanup(true);
 		
@@ -286,6 +294,7 @@ class FlxSound extends FlxBasic
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
+		_onComplete = OnComplete;
 		return this;
 	}
 	
@@ -298,7 +307,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false):FlxSound
+	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false, OnComplete:Void->Void = null):FlxSound
 	{
 		cleanup(true);
 		
@@ -309,6 +318,7 @@ class FlxSound extends FlxBasic
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
+		_onComplete = OnComplete;
 		return this;
 	}
 	
@@ -518,6 +528,11 @@ class FlxSound extends FlxBasic
 	 */
 	private function stopped(event:Event = null):Void
 	{
+		if (_onComplete != null)
+		{
+			_onComplete();
+		}
+		
 		if (_looped)
 		{
 			cleanup(false);
