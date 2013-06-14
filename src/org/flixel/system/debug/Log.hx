@@ -4,6 +4,7 @@ package org.flixel.system.debug;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import haxe.ds.StringMap;
 import openfl.Assets;
 import org.flixel.FlxAssets;
 import org.flixel.system.FlxDebugger;
@@ -90,12 +91,12 @@ class Log extends FlxWindow
 			
 		var texts:Array<String> = new Array<String>();
 		
-		// Format FlxPoints, Arrays or turn the Data entry into a String
+		// Format FlxPoints, Arrays, Maps or turn the Data entry into a String
 		for (i in 0...Data.length) {
 			if (Std.is(Data[i], FlxPoint)) 
 				texts[i] = FlxString.formatFlxPoint(Data[i], FlxDebugger.pointPrecision);
-			else if (Std.is(i, Array))
-				texts[i] = FlxString.formatArray(Data[i]); 
+			else if (Std.is(Data[i], StringMap))
+				texts[i] = FlxString.formatStringMap(Data[i]);
 			else 
 				texts[i] = Std.string(Data[i]);
 				

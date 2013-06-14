@@ -413,12 +413,12 @@ class ConsoleCommands
 	
 	private function listObjects():Void
 	{
-		cLog("Objects registered: \n" + FlxString.formatHash(_console.registeredObjects)); 
+		cLog("Objects registered: \n" + FlxString.formatStringMap(_console.registeredObjects)); 
 	}
 	
 	private function listFunctions():Void
 	{
-		cLog("Functions registered: \n" + FlxString.formatHash(_console.registeredFunctions)); 
+		cLog("Functions registered: \n" + FlxString.formatStringMap(_console.registeredFunctions)); 
 	}
 	
 	private function watch(ObjectAndVariable:String, DisplayName:String = null):Void

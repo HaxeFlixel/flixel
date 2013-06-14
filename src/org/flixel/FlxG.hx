@@ -439,7 +439,38 @@ class FlxG
 		#end
 	}
 	
-	public static var framerate(get_framerate, set_framerate):Int;
+	/**
+	 * Add or update a quickWatch entry to the watch list in the debugger.
+	 * Extremely useful when called in <code>update()</code> functions when there 
+	 * doesn't exist a variable for a value you want to watch - so you won't have to create one.
+	 * @param	Name		The name of the quickWatch entry, for example "mousePressed".
+	 * @param	NewValue	The new value for this entry, for example <code>FlxG.mouse.pressed()</code>.
+	 */
+	static public function quickWatch(Name:String, NewValue:Dynamic):Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game._debugger != null))
+		{
+			_game.debugger.watch.updateQuickWatch(Name, NewValue);
+		}
+		#end
+	}
+	
+	/**
+	 * Remove a quickWatch entry from the watch list of the debugger.
+	 * @param	Name	The name of the quickWatch entry you want to remove.
+	 */
+	static public function removeQuickWatch(Name:String):Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game._debugger != null))
+		{
+			_game.debugger.watch.remove(null, null, Name);
+		}
+		#end
+	}
+	
+	static public var framerate(get_framerate, set_framerate):Int;
 	
 	/**
 	 * How many times you want your game to update each second.
