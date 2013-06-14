@@ -52,6 +52,12 @@ class FlxSound extends FlxBasic
 	 * Whether to call destroy() when the sound has finished.
 	 */
 	public var autoDestroy:Bool;
+	/**
+	 * Tracker for sound complete callback. Default is null.
+	 * If assigend, will be called each time when sound reaches its end.
+	 * Works only on flash and desktop targets.
+	 */
+	public var onComplete:Void->Void;
 
 	/**
 	 * Internal tracker for a Flash sound object.
@@ -105,12 +111,6 @@ class FlxSound extends FlxBasic
 	 * Internal flag for what to do when the sound is done fading out.
 	 */
 	private var _onFadeComplete:Void->Void;
-	/**
-	 * Internal tracker for sound complete callback. Default is null.
-	 * If assigend, will be called each time when sound reaches its end.
-	 * Works only on flash and desktop targets.
-	 */
-	private var _onComplete:Void->Void;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -180,7 +180,7 @@ class FlxSound extends FlxBasic
 			_sound = null;
 		}
 		
-		_onComplete = null;
+		onComplete = null;
 		
 		super.destroy();
 	}
@@ -294,7 +294,7 @@ class FlxSound extends FlxBasic
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
-		_onComplete = OnComplete;
+		onComplete = OnComplete;
 		return this;
 	}
 	
@@ -318,7 +318,7 @@ class FlxSound extends FlxBasic
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
-		_onComplete = OnComplete;
+		onComplete = OnComplete;
 		return this;
 	}
 	
@@ -528,9 +528,9 @@ class FlxSound extends FlxBasic
 	 */
 	private function stopped(event:Event = null):Void
 	{
-		if (_onComplete != null)
+		if (onComplete != null)
 		{
-			_onComplete();
+			onComplete();
 		}
 		
 		if (_looped)
