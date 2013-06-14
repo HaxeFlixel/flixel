@@ -129,12 +129,6 @@ class FlxG
 	#end
 	
 	/**
-	 * Useful for rad-to-deg and deg-to-rad conversion.
-	 */
-	static public var DEG:Float = 180 / Math.PI;
-	static public var RAD:Float = Math.PI / 180;
-	
-	/**
 	 * Internal tracker for game object.
 	 */
 	static public var _game:FlxGame;

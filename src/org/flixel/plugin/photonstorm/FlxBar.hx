@@ -22,6 +22,7 @@ import flash.geom.Rectangle;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxPoint;
 import org.flixel.util.FlxColor;
 
@@ -1088,7 +1089,7 @@ class FlxBar extends FlxSprite
 
 			if (!simpleRenderSprite())
 			{
-				var radians:Float = -angle * FlxG.RAD;
+				var radians:Float = -angle * FlxAngle.RAD;
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				

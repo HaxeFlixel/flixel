@@ -82,146 +82,6 @@ class FlxMath
 	}
 	
 	/**
-	 * Rotates a point in 2D space around another point by the given angle.
-	 * @param	X		The X coordinate of the point you want to rotate.
-	 * @param	Y		The Y coordinate of the point you want to rotate.
-	 * @param	PivotX	The X coordinate of the point you want to rotate around.
-	 * @param	PivotY	The Y coordinate of the point you want to rotate around.
-	 * @param	Angle	Rotate the point by this many degrees.
-	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
-	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
-	 */
-	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, point:FlxPoint = null):FlxPoint
-	{
-		var sin:Float = 0;
-		var cos:Float = 0;
-		var radians:Float = Angle * -0.017453293;
-		while (radians < -3.14159265)
-		{
-			radians += 6.28318531;
-		}
-		while (radians >  3.14159265)
-		{
-			radians = radians - 6.28318531;
-		}
-		
-		if (radians < 0)
-		{
-			sin = 1.27323954 * radians + .405284735 * radians * radians;
-			if (sin < 0)
-			{
-				sin = .225 * (sin *-sin - sin) + sin;
-			}
-			else
-			{
-				sin = .225 * (sin * sin - sin) + sin;
-			}
-		}
-		else
-		{
-			sin = 1.27323954 * radians - 0.405284735 * radians * radians;
-			if (sin < 0)
-			{
-				sin = .225 * (sin *-sin - sin) + sin;
-			}
-			else
-			{
-				sin = .225 * (sin * sin - sin) + sin;
-			}
-		}
-		
-		radians += 1.57079632;
-		if (radians >  3.14159265)
-		{
-			radians = radians - 6.28318531;
-		}
-		if (radians < 0)
-		{
-			cos = 1.27323954 * radians + 0.405284735 * radians * radians;
-			if (cos < 0)
-			{
-				cos = .225 * (cos *-cos - cos) + cos;
-			}
-			else
-			{
-				cos = .225 * (cos * cos - cos) + cos;
-			}
-		}
-		else
-		{
-			cos = 1.27323954 * radians - 0.405284735 * radians * radians;
-			if (cos < 0)
-			{
-				cos = .225 * (cos *-cos - cos) + cos;
-			}
-			else
-			{
-				cos = .225 * (cos * cos - cos) + cos;
-			}
-		}
-		
-		var dx:Float = X - PivotX;
-		// TODO: Uncomment this line if there will be problems
-		//var dy:Float = PivotY + Y; //Y axis is inverted in flash, normally this would be a subtract operation
-		var dy:Float = Y - PivotY;
-		if (point == null)
-		{
-			point = new FlxPoint();
-		}
-		point.x = PivotX + cos * dx - sin * dy;
-		point.y = PivotY - sin * dx - cos * dy;
-		return point;
-	}
-	
-	/**
-	 * Calculates the angle between two points.  0 degrees points straight up.
-	 * @param	Point1		The X coordinate of the point.
-	 * @param	Point2		The Y coordinate of the point.
-	 * @return	The angle in degrees, between -180 and 180.
-	 */
-	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
-	{
-		var x:Float = Point2.x - Point1.x;
-		var y:Float = Point2.y - Point1.y;
-		var angle:Float = 0;
-		if ((x != 0) || (y != 0))
-		{
-			var c1:Float = 3.14159265 * 0.25;
-			var c2:Float = 3 * c1;
-			var ay:Float = (y < 0) ? -y : y;
-			if (x >= 0)
-			{
-				angle = c1 - c1 * ((x - ay) / (x + ay));
-			}
-			else
-			{
-				angle = c2 - c1 * ((x + ay) / (ay - x));
-			}
-			angle = ((y < 0)? -angle:angle) * 57.2957796;
-			if (angle > 90)
-			{
-				angle = angle - 270;
-			}
-			else
-			{
-				angle += 90;
-			}
-		}
-		
-		return angle;
-	}
-	
-	/**
-	 * Transforms degrees to radians
-	 * @param 	degrees		Angle in degrees (0 - 360).
-	 * @return	The andgle in radians.
-	 */
-	inline static public function degreesToRadians(degrees:Float):Float 
-	{
-		return degrees * FlxG.RAD;
-	}
-	
-	/**
 	 * Calculate the distance between two points.
 	 * @param 	Point1		A <code>FlxPoint</code> object referring to the first location.
 	 * @param 	Point2		A <code>FlxPoint</code> object referring to the second location.
@@ -382,12 +242,69 @@ class FlxMath
 	}
 	
 	/**
+	 * Adds the given amount to the value, but never lets the value go over the specified maximum
+	 * 
+	 * @param 	value 	The value to add the amount to
+	 * @param 	amount 	The amount to add to the value
+	 * @param 	max 	The maximum the value is allowed to be
+	 * @return The new value
+	 */
+	static public function maxAdd(value:Int, amount:Int, max:Int):Int
+	{
+		value += amount;
+		
+		if (value > max)
+		{
+			value = max;
+		}
+		
+		return value;
+	}
+	
+	/**
+	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
+	 * Values must be positive integers, and are passed through <code>Math.abs</code>
+	 * 
+	 * @param 	value 	The value to add the amount to
+	 * @param 	amount 	The amount to add to the value
+	 * @param 	max 	The maximum the value is allowed to be
+	 * @return The wrapped value
+	 */
+	static public function wrapValue(value:Int, amount:Int, max:Int):Int
+	{
+		var diff:Int;
+
+		value = Std.int(Math.abs(value));
+		amount = Std.int(Math.abs(amount));
+		max = Std.int(Math.abs(max));
+		
+		diff = (value + amount) % max;
+		
+		return diff;
+	}
+	
+	/**
+	 * Finds the dot product value of two vectors
+	 * 
+	 * @param	ax		Vector X
+	 * @param	ay		Vector Y
+	 * @param	bx		Vector X
+	 * @param	by		Vector Y
+	 * 
+	 * @return	Result of the dot product
+	 */
+	inline static public function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
+	{
+		return ax * bx + ay * by;
+	}
+	
+	/**
 	 * Finds the length of the given vector
 	 * 
 	 * @param	dx
 	 * @param	dy
 	 * 
-	 * @return
+	 * @return The length
 	 */
 	inline static public function vectorLength(dx:Float, dy:Float):Float
 	{

@@ -22,6 +22,7 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxAngle;
 
 class FlxBitmapFont extends FlxSprite
 {
@@ -359,7 +360,7 @@ class FlxBitmapFont extends FlxSprite
 
 			if (!simpleRenderSprite ())
 			{
-				radians = angle * FlxG.RAD;
+				radians = angle * FlxAngle.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				

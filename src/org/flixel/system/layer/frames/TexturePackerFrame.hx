@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
 import org.flixel.plugin.texturepacker.TexturePackerTileSheetData;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxColor;
 
 class TexturePackerFrame extends FlxFrame
@@ -42,7 +43,7 @@ class TexturePackerFrame extends FlxFrame
 			// TODO: fix this for non-square sprites
 			MATRIX.identity();
 			MATRIX.translate(-sourceSize.x * 0.5, -sourceSize.y * 0.5);
-			MATRIX.rotate(-90.0 * FlxG.RAD);
+			MATRIX.rotate(-90.0 * FlxAngle.RAD);
 			MATRIX.translate(sourceSize.x * 0.5, sourceSize.y * 0.5);
 			MATRIX.translate(offset.x, offset.y);
 			

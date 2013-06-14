@@ -6,6 +6,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import org.flixel.FlxG;
 import org.flixel.system.layer.TileSheetData;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxPoint;
 
@@ -71,7 +72,7 @@ class FlxFrame
 			
 			MATRIX.identity();
 			MATRIX.translate( -0.5 * frame.width, -0.5 * frame.height);
-			MATRIX.rotate(-90.0 * FlxG.RAD);
+			MATRIX.rotate(-90.0 * FlxAngle.RAD);
 			MATRIX.translate(offset.x + 0.5 * frame.height, offset.y + 0.5 * frame.width);
 			
 			_bitmapData.draw(temp, MATRIX);

@@ -14,6 +14,7 @@ import org.flixel.plugin.texturepacker.TexturePackerData;
 import org.flixel.system.FlxAnim;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.frames.FlxFrame;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxArray;
 import org.flixel.util.FlxPoint;
@@ -329,7 +330,7 @@ class FlxSprite extends FlxObject
 		_flipped = Sprite.flipped;
 		bakedRotation = Sprite.bakedRotation;
 		_bitmapDataKey = Sprite.bitmapDataKey;
-		_textureData = Sprite.textureData;
+		_textureData = Sprite._textureData;
 		
 		width = frameWidth = Sprite.frameWidth;
 		height = frameHeight = Sprite.frameHeight;
@@ -532,7 +533,7 @@ class FlxSprite extends FlxObject
 				{
 					_matrix.identity();
 					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
-					_matrix.rotate(bakedAngle * FlxG.RAD);
+					_matrix.rotate(bakedAngle * FlxAngle.RAD);
 					#if flash
 					_matrix.translate(max * column + midpointX, midpointY);
 					#else
@@ -859,7 +860,7 @@ class FlxSprite extends FlxObject
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * FlxG.RAD);
+					_matrix.rotate(angle * FlxAngle.RAD);
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
@@ -886,7 +887,7 @@ class FlxSprite extends FlxObject
 			
 			if (!simpleRenderSprite())
 			{
-				radians = -(angle + _flxFrame.additionalAngle) * FlxG.RAD;
+				radians = -(angle + _flxFrame.additionalAngle) * FlxAngle.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -993,7 +994,7 @@ class FlxSprite extends FlxObject
 		_matrix.scale(Brush.scale.x, Brush.scale.y);
 		if (Brush.angle != 0)
 		{
-			_matrix.rotate(Brush.angle * FlxG.RAD);
+			_matrix.rotate(Brush.angle * FlxAngle.RAD);
 		}
 		_matrix.translate(X + Brush.origin.x, Y + Brush.origin.y);
 		var brushBlend:BlendMode = Brush.blend;

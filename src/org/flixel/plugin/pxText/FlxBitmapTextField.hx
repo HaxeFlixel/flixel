@@ -5,6 +5,7 @@ import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxAngle;
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -255,7 +256,7 @@ class FlxBitmapTextField extends FlxSprite
 
 			if (!simpleRenderSprite ())
 			{
-				radians = angle * FlxG.RAD;
+				radians = angle * FlxAngle.RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				

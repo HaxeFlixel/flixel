@@ -19,7 +19,7 @@ import flash.geom.Rectangle;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.util.FlxColor;
-
+import org.flixel.util.FlxAngle;
 import flash.display.Bitmap;
 import flash.geom.Matrix;
 import flash.display.BitmapData;
@@ -33,15 +33,12 @@ import flash.display.InterpolationMethod;
  */
 class FlxGradient
 {
-	
-	public function new() { }
-	
 	public static function createGradientMatrix(width:Int, height:Int, colors:Array<Int>, chunkSize:Int = 1, rotation:Int = 90):GradientMatrix
 	{
 		var gradientMatrix:Matrix = new Matrix();
 		
 		//	Rotation (in radians) that the gradient is rotated
-		var rot:Float = FlxPTMath.asRadians(rotation);
+		var rot:Float = FlxAngle.asRadians(rotation);
 		
 		//	Last 2 values = horizontal and vertical shift (in pixels)
 		if (chunkSize == 1)
