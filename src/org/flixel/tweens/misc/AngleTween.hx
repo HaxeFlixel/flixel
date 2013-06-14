@@ -47,7 +47,7 @@ class AngleTween extends FlxTween
 		}
 		else 
 		{
-			_range = FlxRandom.getRandom([180, -180]);
+			_range = FlxRandom.floatRanged(180, -180);
 		}
 		_target = duration;
 		_ease = ease;

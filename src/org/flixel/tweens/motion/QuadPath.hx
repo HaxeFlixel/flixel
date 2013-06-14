@@ -1,5 +1,7 @@
 ﻿package org.flixel.tweens.motion;
 
+import org.flixel.tweens.FlxTween.CompleteCallback;
+import org.flixel.tweens.util.Ease.EaseFunction;
 import org.flixel.util.FlxPoint;
 
 /**
