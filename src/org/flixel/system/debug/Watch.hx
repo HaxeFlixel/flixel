@@ -2,8 +2,13 @@ package org.flixel.system.debug;
 
 import flash.display.Sprite;
 import flash.geom.Rectangle;
-
+import haxe.ds.StringMap;
+import org.flixel.FlxG;
+import org.flixel.system.FlxDebugger;
 import org.flixel.system.FlxWindow;
+import org.flixel.util.FlxArray;
+import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxString;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
@@ -22,6 +27,7 @@ class Watch extends FlxWindow
 	private var _names:Sprite;
 	private var _values:Sprite;
 	private var _watching:Array<WatchEntry>;
+	private var _quickWatchList:Map<String, WatchEntry>;
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
@@ -48,6 +54,7 @@ class Watch extends FlxWindow
 		addChild(_values);
 		
 		_watching = new Array<WatchEntry>();
+		_quickWatchList = new Map<String, WatchEntry>();
 		
 		editing = false;
 		
@@ -79,6 +86,7 @@ class Watch extends FlxWindow
 			}
 			_watching = null;
 		}
+		_quickWatchList = null;
 		
 		super.destroy();
 	}
@@ -93,7 +101,7 @@ class Watch extends FlxWindow
 	 */
 	public function add(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
-		//Don't add repeats
+		// Don't add repeats
 		var watchEntry:WatchEntry;
 		var i:Int = 0;
 		var l:Int = _watching.length;
@@ -106,7 +114,7 @@ class Watch extends FlxWindow
 			}
 		}
 		
-		//Good, no repeats, add away!
+		// Good, no repeats, add away!
 		watchEntry = new WatchEntry(_watching.length * LINE_HEIGHT, _width / 2, _width / 2 - 10, AnyObject, VariableName, DisplayName);
 		
 		if (watchEntry.field == null)
@@ -122,34 +130,96 @@ class Watch extends FlxWindow
 	}
 	
 	/**
-	 * Remove a variable from the watch window.
-	 * @param AnyObject		The <code>Object</code> containing the variable you want to remove, e.g. this or Player.velocity.
-	 * @param VariableName	The <code>String</code> name of the variable you want to remove, e.g. "width" or "x".  If left null, this will remove all variables of that object. 
+	 * Add or update a quickWatch entry to the watch list in the debugger.
+	 * Extremely useful when called in <code>update()</code> functions when there 
+	 * doesn't exist a variable for a value you want to watch - so you won't have to create one.
+	 * @param	Name		The name of the quickWatch entry, for example "mousePressed".
+	 * @param	NewValue	The new value for this entry, for example <code>FlxG.mouse.pressed()</code>.
 	 */
-	public function remove(AnyObject:Dynamic, VariableName:String = null):Void
+	public function updateQuickWatch(Name:String, NewValue:Dynamic):Void
 	{
-		//splice out the requested object
+		// Does this quickWatch exist yet? If not, create one.
+		if (_quickWatchList.get(Name) == null)
+		{
+			var quickWatch:WatchEntry = new WatchEntry(_watching.length * LINE_HEIGHT, _width / 2, _width / 2 - 10, null, null, Name);
+			_names.addChild(quickWatch.nameDisplay);
+			_values.addChild(quickWatch.valueDisplay);
+			_watching.push(quickWatch);
+			_quickWatchList.set(Name, quickWatch);
+		}
+		// Otherwise just update its value
+		else 
+		{
+			var quickWatch:WatchEntry = _quickWatchList.get(Name);
+			
+			if (quickWatch != null) 
+			{
+				var text:String = Std.string(NewValue);
+				
+				if (Std.is(NewValue, StringMap))
+					text = FlxString.formatStringMap(NewValue);
+				else if (Std.is(NewValue, FlxPoint))
+					text = FlxString.formatFlxPoint(NewValue, FlxDebugger.pointPrecision);
+				
+				quickWatch.valueDisplay.text = text;
+			}
+		}
+	}
+	
+	/**
+	 * Remove a variable from the watch window.
+	 * @param 	AnyObject		The <code>Object</code> containing the variable you want to remove, e.g. this or Player.velocity.
+	 * @param 	VariableName	The <code>String</code> name of the variable you want to remove, e.g. "width" or "x".  If left null, this will remove all variables of that object. 
+	 * @param	QuickWatchName	In case you want to remove a quickWatch entry.
+	 */
+	public function remove(AnyObject:Dynamic, VariableName:String = null, QuickWatchName:String = null):Void
+	{
+		// Remove quickWatch entry
+		if (AnyObject == null && VariableName == null && QuickWatchName != null)
+		{
+			var quickWatch:WatchEntry = _quickWatchList.get(QuickWatchName);
+			
+			if (quickWatch != null)
+				removeEntry(quickWatch, FlxArray.indexOf(_watching, quickWatch));
+			_quickWatchList.remove(QuickWatchName);
+			
+			// We're done here
+			return;
+		}
+			
+		// Remove regular entrys
 		var watchEntry:WatchEntry;
-		var i:Int = _watching.length-1;
+		
+		var i:Int = _watching.length - 1;
 		while(i >= 0)
 		{
 			watchEntry = _watching[i];
-			if((watchEntry.object == AnyObject) && ((VariableName == null) || (watchEntry.field == VariableName)))
+			
+			if ((watchEntry.object == AnyObject) && ((VariableName == null) || (watchEntry.field == VariableName)))
 			{
-				// Fast array removal (only do on arrays where order doesn't matter)
-				_watching[i] = _watching[_watching.length - 1];
-				_watching.pop();
-				
-				_names.removeChild(watchEntry.nameDisplay);
-				_values.removeChild(watchEntry.valueDisplay);
-				watchEntry.destroy();
+				removeEntry(watchEntry, i);
 			}
+			
 			i--;
 		}
 		watchEntry = null;
+	}
+	
+	/**
+	 * Helper function to acutally remove an entry.
+	 */
+	private function removeEntry(Entry:WatchEntry, Index:Int):Void
+	{
+		// Fast array removal (only do on arrays where order doesn't matter)
+		_watching[Index] = _watching[_watching.length - 1];
+		_watching.pop();
 		
-		//reset the display heights of the remaining objects
-		i = 0;
+		_names.removeChild(Entry.nameDisplay);
+		_values.removeChild(Entry.valueDisplay);
+		Entry.destroy();
+		
+		// Reset the display heights of the remaining objects
+		var i:Int = 0;
 		var l:Int = _watching.length;
 		while(i < l)
 		{
