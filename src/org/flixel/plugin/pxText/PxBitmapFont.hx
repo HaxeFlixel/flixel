@@ -343,6 +343,9 @@ class PxBitmapFont
 		
 		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxColor.WHITE);
 		
+		// fix for html5
+		resultBitmapData.floodFill(0, 0, FlxColor.TRANSPARENT);
+		
 		return resultBitmapData;
 	}
 	
