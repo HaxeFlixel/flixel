@@ -2,6 +2,7 @@ package org.flixel;
 
 import flash.display.Graphics;
 import org.flixel.FlxBasic;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMath;
 import org.flixel.util.FlxPoint;
@@ -763,8 +764,8 @@ class FlxObject extends FlxBasic
 			}
 			else
 			{
-				pathAngle = FlxMath.getAngle(_point, node);
-				FlxMath.rotatePoint(0, pathSpeed, 0, 0, pathAngle, velocity);
+				pathAngle = FlxAngle.getAngle(_point, node);
+				FlxAngle.rotatePoint(0, pathSpeed, 0, 0, pathAngle, velocity);
 			}
 			
 			//then set object rotation if necessary

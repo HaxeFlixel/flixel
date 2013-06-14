@@ -1,6 +1,7 @@
 package org.flixel;
 
 import org.flixel.system.layer.DrawStackItem;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxArray;
 import org.flixel.util.FlxRandom;
 
@@ -233,7 +234,7 @@ class FlxTileblock extends FlxSprite
 
 				if (!simpleRenderSprite ())
 				{
-					radians = angle * FlxG.RAD;
+					radians = angle * FlxAngle.RAD;
 					cos = Math.cos(radians);
 					sin = Math.sin(radians);
 					

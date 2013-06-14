@@ -18,6 +18,7 @@ package org.flixel.plugin.photonstorm;
 import flash.errors.Error;
 import org.flixel.FlxG;
 import org.flixel.util.FlxColor;
+import org.flixel.util.FlxMath;
 
 /**
  * <code>FlxColor</code> is a set of fast color manipulation and color harmony methods.<br />
@@ -57,7 +58,7 @@ class FlxPTColor
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
-		var opposite:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), 180, 359);
+		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
 		
 		return HSVtoRGB(opposite, 1.0, 1.0);
 	}
@@ -81,8 +82,8 @@ class FlxPTColor
 			throw "FlxColor Warning: Invalid threshold given to getAnalogousHarmony()";
 		}
 		
-		var warmer:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), 359 - threshold, 359);
-		var colder:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), threshold, 359);
+		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), 359 - threshold, 359);
+		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), threshold, 359);
 		
 		return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
 	}
@@ -106,10 +107,10 @@ class FlxPTColor
 			throw "FlxColor Warning: Invalid threshold given to getSplitComplementHarmony()";
 		}
 		
-		var opposite:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), 180, 359);
+		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
 		
-		var warmer:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), opposite - threshold, 359);
-		var colder:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), opposite + threshold, 359);
+		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite - threshold, 359);
+		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite + threshold, 359);
 		
 		FlxG.notice("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
@@ -131,8 +132,8 @@ class FlxPTColor
 	{
 		var hsv:HSV = RGBtoHSV(color);
 		
-		var triadic1:Int = FlxPTMath.wrapValue(Std.int(hsv.hue), 120, 359);
-		var triadic2:Int = FlxPTMath.wrapValue(triadic1, 120, 359);
+		var triadic1:Int = FlxMath.wrapValue(Std.int(hsv.hue), 120, 359);
+		var triadic2:Int = FlxMath.wrapValue(triadic1, 120, 359);
 		
 		return { color1: color, color2: HSVtoRGB(triadic1, 1.0, 1.0), color3: HSVtoRGB(triadic2, 1.0, 1.0) };
 	}

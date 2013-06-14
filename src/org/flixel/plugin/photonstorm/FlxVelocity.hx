@@ -18,6 +18,7 @@ package org.flixel.plugin.photonstorm;
 
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.system.input.FlxTouch;
@@ -319,7 +320,7 @@ class FlxVelocity
 		
 		if (asDegrees)
 		{
-			return FlxMath.asDegrees(Math.atan2(dy, dx));
+			return FlxAngle.asDegrees(Math.atan2(dy, dx));
 		}
 		else
 		{
@@ -344,7 +345,7 @@ class FlxVelocity
 		
 		if (asDegrees)
 		{
-			return FlxMath.asDegrees(Math.atan2(dy, dx));
+			return FlxAngle.asDegrees(Math.atan2(dy, dx));
 		}
 		else
 		{
@@ -362,7 +363,7 @@ class FlxVelocity
 	 */
 	public static function velocityFromAngle(angle:Int, speed:Int):FlxPoint
 	{
-		var a:Float = FlxMath.asRadians(angle);
+		var a:Float = FlxAngle.asRadians(angle);
 		
 		var result:FlxPoint = new FlxPoint();
 		
@@ -386,19 +387,19 @@ class FlxVelocity
 		
 		if (parent.facing == FlxObject.LEFT)
 		{
-			a = FlxMath.asRadians(180);
+			a = FlxAngle.asRadians(180);
 		}
 		else if (parent.facing == FlxObject.RIGHT)
 		{
-			a = FlxMath.asRadians(0);
+			a = FlxAngle.asRadians(0);
 		}
 		else if (parent.facing == FlxObject.UP)
 		{
-			a = FlxMath.asRadians( -90);
+			a = FlxAngle.asRadians( -90);
 		}
 		else if (parent.facing == FlxObject.DOWN)
 		{
-			a = FlxMath.asRadians(90);
+			a = FlxAngle.asRadians(90);
 		}
 		
 		var result:FlxPoint = new FlxPoint();
@@ -433,7 +434,7 @@ class FlxVelocity
 		
 		if (asDegrees)
 		{
-			return FlxMath.asDegrees(Math.atan2(dy, dx));
+			return FlxAngle.asDegrees(Math.atan2(dy, dx));
 		}
 		else
 		{
@@ -463,7 +464,7 @@ class FlxVelocity
 		
 		if (asDegrees)
 		{
-			return FlxMath.asDegrees(Math.atan2(dy, dx));
+			return FlxAngle.asDegrees(Math.atan2(dy, dx));
 		}
 		else
 		{

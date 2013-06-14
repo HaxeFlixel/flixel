@@ -10,7 +10,6 @@ import org.flixel.plugin.photonstorm.FlxMouseControl;
 import org.flixel.util.FlxMath;
 import org.flixel.util.FlxPoint;
 import org.flixel.util.FlxRect;
-import org.flixel.plugin.photonstorm.FlxPTMath;
 
 /**
  * A slider GUI element for floats and integers. 

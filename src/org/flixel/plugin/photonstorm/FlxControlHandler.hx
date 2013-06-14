@@ -22,6 +22,7 @@ import flash.geom.Rectangle;
 import flash.Lib;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
+import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxPoint;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
@@ -839,7 +840,7 @@ class FlxControlHandler
 			// TODO - Not quite there yet given the way Flixel can rotate to any valid int angle!
 			if (enforceAngleLimits)
 			{
-				//entity.angle = FlxMath.angleLimit(entity.angle, minAngle, maxAngle);
+				//entity.angle = FlxAngle.angleLimit(entity.angle, minAngle, maxAngle);
 			}
 		}
 		
@@ -866,7 +867,7 @@ class FlxControlHandler
 			// TODO - Not quite there yet given the way Flixel can rotate to any valid int angle!
 			if (enforceAngleLimits)
 			{
-				//entity.angle = FlxMath.angleLimit(entity.angle, minAngle, maxAngle);
+				//entity.angle = FlxAngle.angleLimit(entity.angle, minAngle, maxAngle);
 			}
 		}
 		
