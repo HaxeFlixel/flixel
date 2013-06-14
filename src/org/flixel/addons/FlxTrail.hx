@@ -39,6 +39,10 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 */
 	public var scalesEnabled:Bool = true;
 	/**
+	 * Whether to check for frame changes of the "parent" FlxSprite or not.
+	 */
+	public var framesEnabled:Bool = true;
+	/**
 	 * Determines whether trailsprites are solid or not. False by default.
 	 */
 	public var solid(default, set_solid):Bool = false;
@@ -75,6 +79,14 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 */
 	private var recentScales:Array<FlxPoint>;
 	/**
+	 *  Stores the sprites recent frame.
+	 */
+	private var recentFrames:Array<Int>;
+	/**
+	 *  Stores the sprites recent facing.
+	 */
+	private var recentFacings:Array<Int>;
+	/**
 	 *  Stores the sprite origin (rotation axis)
 	 */
 	private var spriteOrigin:FlxPoint;
@@ -89,13 +101,15 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 * @param	Alpha		The alpha value for the very first trailsprite.
 	 * @param	Diff		How much lower the alpha of the next trailsprite is.
 	 */
-	override public function new(Sprite:FlxSprite, Image:Dynamic = null, Length:Int = 10, Delay:Int = 3, Alpha:Float = 0.4, Diff:Float = 0.05):Void
+	public function new(Sprite:FlxSprite, Image:Dynamic = null, Length:Int = 10, Delay:Int = 3, Alpha:Float = 0.4, Diff:Float = 0.05):Void
 	{
 		super();
 
 		recentAngles = new Array<Float>();
 		recentPositions = new Array<FlxPoint>();
 		recentScales = new Array<FlxPoint>();
+		recentFrames = new Array<Int>();
+		recentFacings = new Array<Int>();
 		spriteOrigin = Sprite.origin;
 
 		// Sync the vars 
@@ -108,7 +122,22 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		// Create the initial trailsprites
 		increaseLength(Length);
 		solid = false;
-	}		
+	}
+	
+	override public function destroy():Void
+	{
+		recentAngles = null;
+		recentPositions = null;
+		recentScales = null;
+		recentFrames = null;
+		recentFacings = null;
+		spriteOrigin = null;
+
+		sprite = null;
+		image = null;
+		
+		super.destroy();
+	}
 
 	/**
 	 * Updates positions and other values according to the delay that has been set.
@@ -144,6 +173,18 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 				recentScales.unshift(spriteScale);
 				if (recentScales.length > trailLength) recentScales.pop();
 			}
+			
+			// Again the same thing for Sprites frames if framesEnabled
+			if (framesEnabled && image == null) 
+			{
+				var spriteFrame:Int = sprite.frame;
+				recentFrames.unshift(spriteFrame);
+				if (recentFrames.length > trailLength) recentFrames.pop();
+				
+				var spriteFacing:Int = sprite.facing;
+				recentFacings.unshift(spriteFacing);
+				if (recentFacings.length > trailLength) recentFacings.pop();
+			}
 
 			// Now we need to update the all the Trailsprites' values
 			var trailSprite:FlxSprite;
@@ -161,6 +202,13 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 				
 				// the scale...
 				if (scalesEnabled) trailSprite.scale = recentScales[i];
+				
+				// and frame...
+				if (framesEnabled && image == null) 
+				{
+					trailSprite.frame = recentFrames[i];
+					trailSprite.facing = recentFacings[i];
+				}
 
 				// Is the trailsprite even visible?
 				trailSprite.exists = true; 
@@ -175,6 +223,8 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		recentPositions.splice(0, recentPositions.length);
 		recentAngles.splice(0, recentAngles.length);
 		recentScales.splice(0, recentScales.length);
+		recentFrames.splice(0, recentFrames.length);
+		recentFacings.splice(0, recentFacings.length);
 		for (i in 0...members.length) 
 		{
 			if (members[i] != null)
@@ -200,8 +250,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			var trailSprite:FlxSprite = new FlxSprite(0, 0);
 			trailSprite.exists = false;
 			
-			// TODO: improve this (if sprite have multiple frames)
-			if (image == null) trailSprite.pixels = sprite.pixels;
+			if (image == null) trailSprite.loadFromSprite(sprite);
 			else trailSprite.loadGraphic(image);
 			
 			add(trailSprite);
@@ -221,7 +270,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	public function changeGraphic(Image:Dynamic):Void
 	{
 		image = Image;
-
+		
 		for (i in 0...trailLength)
 		{
 			members[i].loadGraphic(Image);

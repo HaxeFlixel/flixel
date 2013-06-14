@@ -316,6 +316,41 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Load graphic from another FlxSprite and copy it's tileSheet data. This method can usefull for non-flash targets (and used by FlxTrail effect)
+	 * @param	Sprite			The FlxSprite from which you want to load graphic data
+	 * 
+	 * @return					This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
+	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
+	{
+		nullTextureData();
+		
+		_pixels = Sprite.pixels;
+		_flipped = Sprite.flipped;
+		bakedRotation = Sprite.bakedRotation;
+		_bitmapDataKey = Sprite.bitmapDataKey;
+		_textureData = Sprite.textureData;
+		
+		width = frameWidth = Sprite.frameWidth;
+		height = frameHeight = Sprite.frameHeight;
+		if (bakedRotation > 0)
+		{
+			width = Sprite.width;
+			height = Sprite.height;
+			centerOffsets();
+		}
+		
+		updateAtlasInfo();
+		resetHelpers();
+		antialiasing = Sprite.antialiasing;
+		
+		frame = Sprite.frame;
+		trace(frames);
+		
+		return this;
+	}
+	
+	/**
 	 * Load an image from an embedded graphic file.
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
