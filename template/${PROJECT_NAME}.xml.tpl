@@ -32,7 +32,7 @@
 		
 	</assets>
 	
-	<assets path="assets" if="target_js" >
+	<assets path="assets" if="html5" >
 		<sound path="data/beep.mp3" id="Beep" />
 		
 		<!-- Your sound embedding code here... -->
