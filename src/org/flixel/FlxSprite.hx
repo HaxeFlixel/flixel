@@ -343,9 +343,7 @@ class FlxSprite extends FlxObject
 		updateAtlasInfo();
 		resetHelpers();
 		antialiasing = Sprite.antialiasing;
-		
 		frame = Sprite.frame;
-		trace(frames);
 		
 		return this;
 	}
