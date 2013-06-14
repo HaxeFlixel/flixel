@@ -40,24 +40,4 @@ class FlxMisc
 	{
 		return Type.getClassName(Object1) == Type.getClassName(Object2);
 	}
-	
-	/**
-	 * Get the <code>String</code> name of any <code>Object</code>.
-	 * @param	Obj		The <code>Object</code> object in question.
-	 * @param	Simple	Returns only the class name, not the package or packages.
-	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
-	 */
-	@:extern inline static public function getClassName(Obj:Dynamic, Simple:Bool = false):String
-	{
-		var s:String = Type.getClassName(Type.getClass(Obj));
-		if (s != null)
-		{
-			s = StringTools.replace(s, "::", ".");
-			if (Simple)
-			{
-				s = s.substr(s.lastIndexOf(".") + 1);
-			}
-		}
-		return s;
-	}
 }
