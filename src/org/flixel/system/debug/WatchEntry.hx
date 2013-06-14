@@ -51,7 +51,14 @@ class WatchEntry
 	private var _blackText:TextFormat;
 	
 	/**
-	 * Creates a new watch entry in the watch window.
+	 * Whether this entry is a quickWatch or not.
+	 */
+	public var quickWatch:Bool = false;
+	
+	/**
+	 * Creates a new watch entry in the watch window. 
+	 * Will be a "quickWatch" when Obj and Field are null, but a Custom name is set.
+	 * 
 	 * @param Y				The initial height in the Watch window.
 	 * @param NameWidth		The initial width of the name field.
 	 * @param ValueWidth	The initial width of the value field.
@@ -63,40 +70,53 @@ class WatchEntry
 	{
 		editing = false;
 		
-		object = Obj;
-		field = Field;
+		if (Obj == null && Field == null && Custom != null)
+			quickWatch = true;
+		
 		custom = Custom;
 		
-		var tempArr:Array<String> = field.split(".");
-		var l:Int = tempArr.length;
-		var tempObj:Dynamic = object;
-		var tempVarName:String = "";
-		for (i in 0...l)
+		// No need to retrieve a variable if this is a quickWatch
+		if (!quickWatch)
 		{
-			tempVarName = tempArr[i];
+			object = Obj;
+			field = Field;
 			
-			try 
+			var tempArr:Array<String> = field.split(".");
+			var l:Int = tempArr.length;
+			var tempObj:Dynamic = object;
+			var tempVarName:String = "";
+			for (i in 0...l)
 			{
-				Reflect.getProperty(tempObj, tempVarName);
-			}
-			catch (e:Dynamic)
-			{
-				FlxG.error("Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
-				tempVarName = null;
-				break;
+				tempVarName = tempArr[i];
+				
+				try 
+				{
+					Reflect.getProperty(tempObj, tempVarName);
+				}
+				catch (e:Dynamic)
+				{
+					FlxG.error("Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
+					tempVarName = null;
+					break;
+				}
+				
+				if (i < (l - 1))
+				{
+					tempObj = Reflect.getProperty(tempObj, tempVarName);
+				}
 			}
 			
-			if (i < (l - 1))
-			{
-				tempObj = Reflect.getProperty(tempObj, tempVarName);
-			}
+			object = tempObj;
+			field = tempVarName;
 		}
 		
-		object = tempObj;
-		field = tempVarName;
-		
 		var fontName:String = Assets.getFont(FlxAssets.debuggerFont).fontName;
-		_whiteText = new TextFormat(fontName, 12, 0xffffff);
+		// quickWatch is green, normal watch is white
+		var color:Int = 0xffffff;
+		if (quickWatch)
+			color = 0x008000;
+			
+		_whiteText = new TextFormat(fontName, 12, color);
 		_blackText = new TextFormat(fontName, 12, 0);
 		
 		nameDisplay = new TextField();
@@ -111,8 +131,12 @@ class WatchEntry
 		valueDisplay.multiline = false;
 		valueDisplay.selectable = true;
 		valueDisplay.doubleClickEnabled = true;
-		valueDisplay.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
-		valueDisplay.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+		// No editing for quickWatch
+		if (!quickWatch) 
+		{
+			valueDisplay.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			valueDisplay.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+		}
 		valueDisplay.background = false;
 		valueDisplay.backgroundColor = 0xffffff;
 		valueDisplay.defaultTextFormat = _whiteText;
@@ -173,7 +197,7 @@ class WatchEntry
 	 */
 	public function updateValue():Bool
 	{
-		if (editing)
+		if (editing || quickWatch)
 			return false;
 		
 		var property:Dynamic = Reflect.getProperty(object, field);
@@ -206,7 +230,7 @@ class WatchEntry
 	 */
 	public function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
-		if((FlashEvent.keyCode == 13) || (FlashEvent.keyCode == 9) || (FlashEvent.keyCode == 27)) //enter or tab or escape
+		if ((FlashEvent.keyCode == 13) || (FlashEvent.keyCode == 9) || (FlashEvent.keyCode == 27)) //enter or tab or escape
 		{
 			if (FlashEvent.keyCode == 27)
 			{

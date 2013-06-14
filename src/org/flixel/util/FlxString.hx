@@ -1,4 +1,5 @@
 package org.flixel.util;
+import haxe.ds.StringMap.StringMap;
 
 /**
  * A class primarily containing functions related 
@@ -90,19 +91,19 @@ class FlxString
 	}
 
 	 /**
-	 * Generate a comma-seperated string representation of the keys in a Hash.
-	 * @param  AnyHash    A <code>Hash</code> object.
+	 * Generate a comma-seperated string representation of the keys of a <code>StringMap</code>.
+	 * @param  AnyMap    A <code>StringMap</code> object.
 	 * @return  A <code>String</code> formatted like this: <code>key1, key2, ..., keyX</code>
 	 */
-	inline static public function formatHash(AnyHash:Map<String, Dynamic>):String
+	inline static public function formatStringMap(AnyMap:Map<String,Dynamic>):String
 	{
 		var string:String = "";
-		for (key in AnyHash.keys()) {
+		for (key in AnyMap.keys()) {
 			string += Std.string(key);
 			string += ", ";
 		}
-		string = string.substring(0, string.length - 2);
-		return string;
+		
+		return string.substring(0, string.length - 2);
 	} 
 	
 	/**
