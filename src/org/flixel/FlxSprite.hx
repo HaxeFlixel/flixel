@@ -340,7 +340,7 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
-		updateAtlasInfo();
+		atlas = Sprite.atlas;
 		resetHelpers();
 		antialiasing = Sprite.antialiasing;
 		frame = Sprite.frame;
