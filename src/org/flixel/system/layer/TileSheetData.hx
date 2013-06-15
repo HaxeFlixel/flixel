@@ -3,6 +3,7 @@ package org.flixel.system.layer;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import org.flixel.plugin.texturepacker.Frame;
 import org.flixel.util.FlxPoint;
 import org.flixel.plugin.texturepacker.TexturePackerData;
 import org.flixel.system.layer.frames.FlxFrame;
@@ -269,11 +270,13 @@ class TileSheetData
 			return flxSpriteFrames.get(data.assetName);
 		}
 		
+		data.parseData();
 		var packerFrames:FlxSpriteFrames = new FlxSpriteFrames(data.assetName);
 		
-		for (frame in Lambda.array(data.data.frames))
+		var l:Int = data.frames.length;
+		for (i in 0...l)
 		{
-			var frame:FlxFrame = addTexturePackerFrame(frame, startX, startY);
+			var frame:FlxFrame = addTexturePackerFrame(data.frames[i], startX, startY);
 			packerFrames.addFrame(frame);
 		}
 		
@@ -284,9 +287,9 @@ class TileSheetData
 	/**
 	 * Parses frame TexturePacker data object and returns it
 	 */
-	private function addTexturePackerFrame(frameData:Dynamic, startX:Int = 0, startY:Int = 0):FlxFrame
+	private function addTexturePackerFrame(frameData:Frame, startX:Int = 0, startY:Int = 0):FlxFrame
 	{
-		var key:String = frameData.filename;
+		var key:String = frameData.name;
 		if (containsFrame(key))
 		{
 			return flxFrames.get(key);
@@ -296,21 +299,18 @@ class TileSheetData
 		texFrame.trimmed = frameData.trimmed;
 		texFrame.rotated = frameData.rotated;
 		texFrame.name = key;
-		texFrame.sourceSize = new FlxPoint(frameData.sourceSize.w, frameData.sourceSize.h);
-		texFrame.offset = new FlxPoint(0, 0);
-		
+		texFrame.sourceSize = new FlxPoint().copyFrom(frameData.sourceSize);
+		texFrame.offset = new FlxPoint().copyFrom(frameData.offset);
 		texFrame.center = new FlxPoint(0, 0);
+		texFrame.frame = frameData.frame.clone();
 		
-		texFrame.offset.make(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
 		if (frameData.rotated)
 		{
-			texFrame.frame = new Rectangle(frameData.frame.x + startX, frameData.frame.y + startY, frameData.frame.h, frameData.frame.w);
 			texFrame.center.make(texFrame.frame.height * 0.5 + texFrame.offset.x, texFrame.frame.width * 0.5 + texFrame.offset.y);
 			texFrame.additionalAngle = -90.0;
 		}
 		else
 		{
-			texFrame.frame = new Rectangle(frameData.frame.x + startX, frameData.frame.y + startY, frameData.frame.w, frameData.frame.h);
 			texFrame.center.make(texFrame.frame.width * 0.5 + texFrame.offset.x, texFrame.frame.height * 0.5 + texFrame.offset.y);
 		}
 		#if !flash
