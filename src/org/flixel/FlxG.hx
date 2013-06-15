@@ -301,9 +301,51 @@ class FlxG
 	public static var joystickManager:FlxJoystickManager;
 	#end
 	
-	static public function getLibraryName():String
+	inline static public function getLibraryName():String
 	{
 		return FlxG.LIBRARY_NAME + " v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION;
+	}
+	
+	/**
+	 * Toggles the flixel debugger, if it exists.
+	 */
+	static public function toggleDebugger():Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game.debugger != null))
+		{
+			_game._debuggerUp = !_game.debugger.visible;
+			_game.debugger.visible = !_game.debugger.visible;
+		}
+		#end
+	}
+	
+	/**
+	 * Shows the flixel debugger, if it exists.
+	 */
+	static public function showDebugger():Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game.debugger != null))
+		{
+			_game._debuggerUp = true;
+			_game.debugger.visible = true;
+		}
+		#end
+	}
+	
+	/**
+	 * Hides the flixel debugger, if it exists.
+	 */
+	static public function hideDebugger():Void
+	{
+		#if !FLX_NO_DEBUG
+		if ((_game != null) && (_game.debugger != null))
+		{
+			_game._debuggerUp = false;
+			_game.debugger.visible = false;
+		}
+		#end
 	}
 	
 	/**
