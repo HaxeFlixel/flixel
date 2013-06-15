@@ -365,7 +365,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	inline static public function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
+	static public function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		if (Object == null)
