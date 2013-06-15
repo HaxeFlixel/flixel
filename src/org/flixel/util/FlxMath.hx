@@ -1,6 +1,9 @@
 package org.flixel.util;
 
 import flash.geom.Rectangle;
+import org.flixel.FlxG;
+import org.flixel.FlxSprite;
+import org.flixel.system.input.FlxTouch;
 
 /**
  * A class containing a set of math-related functions.
@@ -310,6 +313,70 @@ class FlxMath
 	{
 		return Math.sqrt(dx * dx + dy * dy);
 	}
+	
+	/**
+	 * Find the distance (in pixels, rounded) between two FlxSprites, taking their origin into account
+	 * 
+	 * @param	SpriteA		The first FlxSprite
+	 * @param	SpriteB		The second FlxSprite
+	 * @return	Distance between the sprites in pixels
+	 */
+	inline static public function distanceBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Int
+	{
+		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
+		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
+		
+		return Std.int(FlxMath.vectorLength(dx, dy));
+	}
+	
+	/**
+	 * Find the distance (in pixels, rounded) from an <code>FlxSprite</code>
+	 * to the given <code>FlxPoint</code>, taking the source origin into account.
+	 * 
+	 * @param	Sprite	The FlxSprite
+	 * @param	Target	The FlxPoint
+	 * @return	Distance in pixels
+	 */
+	inline static public function distanceToPoint(Sprite:FlxSprite, Target:FlxPoint):Int
+	{
+		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
+		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
+		
+		return Std.int(FlxMath.vectorLength(dx, dy));
+	}
+	
+	#if !FLX_NO_MOUSE
+	/**
+	 * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
+	 * 
+	 * @param	Sprite	The FlxSprite to test against
+	 * @return	The distance between the given sprite and the mouse coordinates
+	 */
+	inline static public function distanceToMouse(Sprite:FlxSprite):Int
+	{
+		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
+		
+		return Std.int(FlxMath.vectorLength(dx, dy));
+	}
+	#end
+	
+	#if !FLX_NO_TOUCH
+	/**
+	 * Find the distance (in pixels, rounded) from the object x/y and the FlxPoint screen x/y
+	 * 
+	 * @param	Sprite	The FlxSprite to test against
+	 * @param	Touch	The FlxTouch to test against
+	 * @return	The distance between the given sprite and the mouse coordinates
+	 */
+	inline static public function distanceToTouch(Sprite:FlxSprite, Touch:FlxTouch):Int
+	{
+		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
+		
+		return Std.int(FlxMath.vectorLength(dx, dy));
+	}
+	#end
 	
 	#if (flash || js)
 	/**

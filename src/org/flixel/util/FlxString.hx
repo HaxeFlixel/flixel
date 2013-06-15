@@ -1,4 +1,5 @@
 package org.flixel.util;
+
 import haxe.ds.StringMap.StringMap;
 
 /**

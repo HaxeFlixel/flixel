@@ -26,9 +26,6 @@ import org.flixel.FlxSprite;
 
 class FlxDisplay 
 {
-	
-	public function new() {  }
-	
 	public function pad():Void
 	{
 		//	Pad the sprite out with empty pixels left/right/above/below it
