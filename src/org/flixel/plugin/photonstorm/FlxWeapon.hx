@@ -29,8 +29,8 @@ import org.flixel.util.FlxRect;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.baseTypes.Bullet;
-import org.flixel.plugin.photonstorm.FlxVelocity;
 import org.flixel.util.FlxMisc;
+import org.flixel.util.FlxVelocity;
 
 /**
  * A Weapon can only fire 1 type of bullet. But it can fire many of them at once (in different directions if needed) via createBulletPattern

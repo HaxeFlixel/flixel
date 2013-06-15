@@ -1,4 +1,7 @@
 package org.flixel.util;
+import org.flixel.FlxObject;
+import org.flixel.FlxSprite;
+import org.flixel.system.input.FlxTouch;
 
 /**
  * A set of functions related to angle calculations.
@@ -294,7 +297,7 @@ class FlxAngle
 	 * Converts the radians value into degrees and returns
 	 * 
 	 * @param 	radians 	The value in radians
-	 * @return Number Degrees
+	 * @return	Degrees
 	 */
 	inline static public function asDegrees(radians:Float):Float
 	{
@@ -306,10 +309,102 @@ class FlxAngle
 	 * Converts the degrees value into radians and returns
 	 * 
 	 * @param 	degrees The value in degrees
-	 * @return Number Radians
+	 * @return	Radians
 	 */
 	inline static public function asRadians(degrees:Float):Float
 	{
 		return degrees * RAD;
 	}
+	
+	/**
+	 * Find the angle (in radians) between the two FlxSprite, taking their x/y and origin into account.
+	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * 
+	 * @param	SpriteA		The FlxSprite to test from
+	 * @param	SpriteB		The FlxSprite to test to
+	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
+	 * @return	The angle (in radians unless asDegrees is true)
+	 */
+	inline static public function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
+	{
+		var dx:Float = (SpriteB.x + SpriteB.origin.x) - (SpriteA.x + SpriteA.origin.x);
+		var dy:Float = (SpriteB.y + SpriteB.origin.y) - (SpriteA.y + SpriteA.origin.y);
+		
+		if (AsDegrees)
+			return asDegrees(Math.atan2(dy, dx));
+		else
+			return Math.atan2(dy, dx);
+	}
+	
+	/**
+	 * Find the angle (in radians) between an FlxSprite and an FlxPoint. The source sprite takes its x/y and origin into account.
+	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * 
+	 * @param	Sprite		The FlxSprite to test from
+	 * @param	Target		The FlxPoint to angle the FlxSprite towards
+	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
+	 * @return	The angle (in radians unless AsDegrees is true)
+	 */
+	static public function angleBetweenPoint(Sprite:FlxSprite, Target:FlxPoint, AsDegrees:Bool = false):Float
+	{
+		var dx:Float = (Target.x) - (Sprite.x + Sprite.origin.x);
+		var dy:Float = (Target.y) - (Sprite.y + Sprite.origin.y);
+		
+		if (AsDegrees)
+			return asDegrees(Math.atan2(dy, dx));
+		else
+			return Math.atan2(dy, dx);
+	}
+	
+	#if !FLX_NO_MOUSE
+	/**
+	 * Find the angle (in radians) between an FlxSprite and the mouse, taking their x/y and origin into account.
+	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * 
+	 * @param	Object		The FlxObject to test from
+	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
+	 * @return	The angle (in radians unless AsDegrees is true)
+	 */
+	inline static public function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
+	{
+		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
+		if (Object == null)
+			return 0;
+		
+		var p:FlxPoint = Object.getScreenXY();
+		
+		var dx:Float = FlxG.mouse.screenX - p.x;
+		var dy:Float = FlxG.mouse.screenY - p.y;
+		
+		if (AsDegrees)
+			return asDegrees(Math.atan2(dy, dx));
+		else
+			return Math.atan2(dy, dx);
+	}
+	#end
+	
+	#if !FLX_NO_TOUCH
+	/**
+	 * Find the angle (in radians) between an FlxSprite and a FlxTouch, taking their x/y and origin into account.
+	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * 
+	 * @param	Object		The FlxObject to test from
+	 * @param	Touch		The FlxTouch to test to
+	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
+	 * @return	The angle (in radians unless AsDegrees is true)
+	 */
+	inline static public function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
+	{
+		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
+		var p:FlxPoint = Object.getScreenXY();
+		
+		var dx:Float = Touch.screenX - p.x;
+		var dy:Float = Touch.screenY - p.y;
+		
+		if (AsDegrees)
+			return asDegrees(Math.atan2(dy, dx));
+		else
+			return Math.atan2(dy, dx);
+	}
+	#end
 }

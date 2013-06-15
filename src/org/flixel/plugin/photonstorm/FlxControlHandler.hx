@@ -27,6 +27,7 @@ import org.flixel.util.FlxPoint;
 import org.flixel.FlxSound;
 import org.flixel.FlxSprite;
 import org.flixel.util.FlxMisc;
+import org.flixel.util.FlxVelocity;
 
 /**
  * Makes controlling an FlxSprite with the keyboard a LOT easier and quicker to set-up!<br>

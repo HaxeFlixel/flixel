@@ -1,28 +1,8 @@
-/**
-* FlxVelocity
-* -- Part of the Flixel Power Tools set
-* 
-* v1.5 New methods: velocityFromAngle, accelerateTowardsObject, accelerateTowardsMouse, accelerateTowardsPoint
-* v1.4 New methods: moveTowardsPoint, distanceToPoint, angleBetweenPoint
-* v1.3 Updated for the Flixel 2.5 Plugin system
-* 
-* @version 1.5 - June 10th 2011
-* @link http://www.photonstorm.com
-* @link http://www.haxeflixel.com
-* @author Richard Davey / Photon Storm
-* @author Touch added by Impaler / Beeblerox
-* @see Depends on FlxMath
-*/
+package org.flixel.util;
 
-package org.flixel.plugin.photonstorm;
-
-import org.flixel.FlxG;
 import org.flixel.FlxObject;
-import org.flixel.util.FlxAngle;
-import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.system.input.FlxTouch;
-import org.flixel.util.FlxMath;
 
 class FlxVelocity 
 {	
@@ -41,11 +21,11 @@ class FlxVelocity
 	 */
 	static public function moveTowardsObject(Source:FlxSprite, Dest:FlxSprite, Speed:Int = 60, MaxTime:Int = 0):Void
 	{
-		var a:Float = angleBetween(Source, Dest);
+		var a:Float = FlxAngle.angleBetween(Source, Dest);
 		
 		if (MaxTime > 0)
 		{
-			var d:Int = distanceBetween(Source, Dest);
+			var d:Int = FlxMath.distanceBetween(Source, Dest);
 			
 			//	We know how many pixels we need to move, but how fast?
 			Speed = Std.int(d / (MaxTime / 1000));
@@ -68,7 +48,7 @@ class FlxVelocity
 	 */
 	static public function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
 	{
-		var a:Float = angleBetween(Source, Dest);
+		var a:Float = FlxAngle.angleBetween(Source, Dest);
 		
 		Source.velocity.x = 0;
 		Source.velocity.y = 0;
@@ -93,11 +73,11 @@ class FlxVelocity
 	 */
 	static public function moveTowardsMouse(Source:FlxSprite, Speed:Int = 60, MaxTime:Int = 0):Void
 	{
-		var a:Float = angleBetweenMouse(Source);
+		var a:Float = FlxAngle.angleBetweenMouse(Source);
 		
 		if (MaxTime > 0)
 		{
-			var d:Int = distanceToMouse(Source);
+			var d:Int = FlxMath.distanceToMouse(Source);
 			
 			//	We know how many pixels we need to move, but how fast?
 			Speed = Std.int(d / (MaxTime / 1000));
@@ -121,11 +101,11 @@ class FlxVelocity
 	 */
 	public static function moveTowardsTouch(Source:FlxSprite, Touch:FlxTouch, Speed:Int = 60, MaxTime:Int = 0):Void
 	{
-		var a:Float = angleBetweenTouch(Source, Touch);
+		var a:Float = FlxAngle.angleBetweenTouch(Source, Touch);
 		
 		if (MaxTime > 0)
 		{
-			var d:Int = distanceToTouch(Source, Touch);
+			var d:Int = FlxMath.distanceToTouch(Source, Touch);
 			
 			//	We know how many pixels we need to move, but how fast?
 			Speed = Std.int(d / (MaxTime / 1000));
@@ -149,7 +129,7 @@ class FlxVelocity
 	 */
 	static public function accelerateTowardsMouse(Source:FlxSprite, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
 	{
-		var a:Float = angleBetweenMouse(Source);
+		var a:Float = FlxAngle.angleBetweenMouse(Source);
 		
 		Source.velocity.x = 0;
 		Source.velocity.y = 0;
@@ -176,7 +156,7 @@ class FlxVelocity
 	 */
 	static public function accelerateTowardsTouch(Source:FlxSprite, Touch:FlxTouch, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
 	{
-		var a:Float = angleBetweenTouch(Source, Touch);
+		var a:Float = FlxAngle.angleBetweenTouch(Source, Touch);
 		
 		Source.velocity.x = 0;
 		Source.velocity.y = 0;
@@ -202,11 +182,11 @@ class FlxVelocity
 	 */
 	static public function moveTowardsPoint(Source:FlxSprite, Target:FlxPoint, Speed:Int = 60, MaxTime:Int = 0):Void
 	{
-		var a:Float = angleBetweenPoint(Source, Target);
+		var a:Float = FlxAngle.angleBetweenPoint(Source, Target);
 		
 		if (MaxTime > 0)
 		{
-			var d:Int = distanceToPoint(Source, Target);
+			var d:Int = FlxMath.distanceToPoint(Source, Target);
 			
 			//	We know how many pixels we need to move, but how fast?
 			Speed = Std.int(d / (MaxTime / 1000));
@@ -229,7 +209,7 @@ class FlxVelocity
 	 */
 	static public function accelerateTowardsPoint(Source:FlxSprite, Target:FlxPoint, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
 	{
-		var a:Float = angleBetweenPoint(Source, Target);
+		var a:Float = FlxAngle.angleBetweenPoint(Source, Target);
 		
 		Source.velocity.x = 0;
 		Source.velocity.y = 0;
@@ -239,118 +219,6 @@ class FlxVelocity
 		
 		Source.maxVelocity.x = MaxXSpeed;
 		Source.maxVelocity.y = MaxYSpeed;
-	}
-	
-	/**
-	 * Find the distance (in pixels, rounded) between two FlxSprites, taking their origin into account
-	 * 
-	 * @param	SpriteA		The first FlxSprite
-	 * @param	SpriteB		The second FlxSprite
-	 * @return	Distance between the sprites in pixels
-	 */
-	inline static public function distanceBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Int
-	{
-		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
-		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
-		
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	
-	/**
-	 * Find the distance (in pixels, rounded) from an <code>FlxSprite</code>
-	 * to the given <code>FlxPoint</code>, taking the source origin into account.
-	 * 
-	 * @param	Sprite	The FlxSprite
-	 * @param	Target	The FlxPoint
-	 * @return	Distance in pixels
-	 */
-	inline static public function distanceToPoint(Sprite:FlxSprite, Target:FlxPoint):Int
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
-		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
-		
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	
-	#if !FLX_NO_MOUSE
-	/**
-	 * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
-	 * 
-	 * @param	Sprite	The FlxSprite to test against
-	 * @return	The distance between the given sprite and the mouse coordinates
-	 */
-	inline static public function distanceToMouse(Sprite:FlxSprite):Int
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
-		
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	#end
-	
-	#if !FLX_NO_TOUCH
-	/**
-	 * Find the distance (in pixels, rounded) from the object x/y and the FlxPoint screen x/y
-	 * 
-	 * @param	Sprite	The FlxSprite to test against
-	 * @param	Touch	The FlxTouch to test against
-	 * @return	The distance between the given sprite and the mouse coordinates
-	 */
-	inline static public function distanceToTouch(Sprite:FlxSprite, Touch:FlxTouch):Int
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
-		
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	#end
-	
-	/**
-	 * Find the angle (in radians) between an FlxSprite and an FlxPoint. The source sprite takes its x/y and origin into account.
-	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-	 * 
-	 * @param	Sprite		The FlxSprite to test from
-	 * @param	Target		The FlxPoint to angle the FlxSprite towards
-	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
-	 * @return	The angle (in radians unless AsDegrees is true)
-	 */
-	static public function angleBetweenPoint(Sprite:FlxSprite, Target:FlxPoint, AsDegrees:Bool = false):Float
-	{
-		var dx:Float = (Target.x) - (Sprite.x + Sprite.origin.x);
-		var dy:Float = (Target.y) - (Sprite.y + Sprite.origin.y);
-		
-		if (AsDegrees)
-		{
-			return FlxAngle.asDegrees(Math.atan2(dy, dx));
-		}
-		else
-		{
-			return Math.atan2(dy, dx);
-		}
-	}
-	
-	/**
-	 * Find the angle (in radians) between the two FlxSprite, taking their x/y and origin into account.
-	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-	 * 
-	 * @param	SpriteA		The FlxSprite to test from
-	 * @param	SpriteB		The FlxSprite to test to
-	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
-	 * @return	The angle (in radians unless asDegrees is true)
-	 */
-	inline static public function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
-	{
-		var dx:Float = (SpriteB.x + SpriteB.origin.x) - (SpriteA.x + SpriteA.origin.x);
-		var dy:Float = (SpriteB.y + SpriteB.origin.y) - (SpriteA.y + SpriteA.origin.y);
-		
-		if (AsDegrees)
-		{
-			return FlxAngle.asDegrees(Math.atan2(dy, dx));
-		}
-		else
-		{
-			return Math.atan2(dy, dx);
-		}
 	}
 	
 	/**
@@ -407,64 +275,4 @@ class FlxVelocity
 		
 		return result;
 	}
-	
-	#if !FLX_NO_MOUSE
-	/**
-	 * Find the angle (in radians) between an FlxSprite and the mouse, taking their x/y and origin into account.
-	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-	 * 
-	 * @param	Object		The FlxObject to test from
-	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
-	 * @return	The angle (in radians unless AsDegrees is true)
-	 */
-	inline static public function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
-	{
-		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
-		if (Object == null)
-			return 0;
-		
-		var p:FlxPoint = Object.getScreenXY();
-		
-		var dx:Float = FlxG.mouse.screenX - p.x;
-		var dy:Float = FlxG.mouse.screenY - p.y;
-		
-		if (AsDegrees)
-		{
-			return FlxAngle.asDegrees(Math.atan2(dy, dx));
-		}
-		else
-		{
-			return Math.atan2(dy, dx);
-		}
-	}
-	#end
-	
-	#if !FLX_NO_TOUCH
-	/**
-	 * Find the angle (in radians) between an FlxSprite and a FlxTouch, taking their x/y and origin into account.
-	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-	 * 
-	 * @param	Object		The FlxObject to test from
-	 * @param	Touch		The FlxTouch to test to
-	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
-	 * @return	The angle (in radians unless AsDegrees is true)
-	 */
-	inline static public function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
-	{
-		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
-		var p:FlxPoint = Object.getScreenXY();
-		
-		var dx:Float = Touch.screenX - p.x;
-		var dy:Float = Touch.screenY - p.y;
-		
-		if (AsDegrees)
-		{
-			return FlxAngle.asDegrees(Math.atan2(dy, dx));
-		}
-		else
-		{
-			return Math.atan2(dy, dx);
-		}
-	}
-	#end
 }
