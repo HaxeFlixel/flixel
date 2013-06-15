@@ -18,10 +18,10 @@ package org.flixel.plugin.photonstorm.baseTypes;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.plugin.photonstorm.FlxMath;
-import org.flixel.plugin.photonstorm.FlxVelocity;
 import org.flixel.plugin.photonstorm.FlxWeapon;
 import org.flixel.system.input.FlxTouch;
 import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxVelocity;
 
 class Bullet extends FlxSprite
 {

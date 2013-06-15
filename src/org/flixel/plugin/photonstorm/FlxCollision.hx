@@ -26,7 +26,6 @@ import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxTileblock;
-import org.flixel.plugin.photonstorm.FlxPTColor;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxRect;
 import org.flixel.util.FlxMath;
