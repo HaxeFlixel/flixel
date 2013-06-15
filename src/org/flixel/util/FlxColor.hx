@@ -4,7 +4,7 @@ import org.flixel.FlxG;
 
 /**
  * Class containing a set of useful color constants and 
- * a few color-related functions previously located in FlxU
+ * a few functions for color manipulation and color harmony.
  */
 class FlxColor
 {

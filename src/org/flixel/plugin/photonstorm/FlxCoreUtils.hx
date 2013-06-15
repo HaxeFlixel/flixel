@@ -18,9 +18,6 @@ import org.flixel.FlxG;
 
 class FlxCoreUtils 
 {
-	
-	public function new() { }
-	
 	/**
 	 * Performs a complete object deep-copy and returns a duplicate (not a reference)
 	 * 
