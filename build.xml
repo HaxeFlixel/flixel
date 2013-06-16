@@ -1,6 +1,6 @@
 <project default="all" basedir=".">
 
-	<property name="VERSION" value="2.0.0-alpha.2"/>
+	<property name="VERSION" value="2.0.0-alpha.3"/>
 	<property name="PACKAGE_NAME" value="flixel"/>
 
 	<target name="Project Template">

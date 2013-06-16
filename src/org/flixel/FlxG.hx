@@ -94,7 +94,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "0.0-alpha.2";
+	static public inline var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
 	
 	#if !FLX_NO_DEBUG
 	/**

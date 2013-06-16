@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["flash", "game", "cpp", "openfl"],
 	"description": "Flixel is a popular free game engine. This is a port of Flixel 2.55.",
-	"version": "2.0.0-alpha.2",
-	"releasenote": "Second alpha release with openfl compatibility",
+	"version": "2.0.0-alpha.3",
+	"releasenote": "Third alpha release with openfl 1.0.0 compatibility and lots of bug fixes, refactoring and small additions",
 	"contributors": ["haxeflixel"],
 	"dependencies": { "openfl": "" }
 }
