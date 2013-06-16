@@ -42,11 +42,7 @@ class PlayState extends FlxState
 		
 		_hud = new FlxGroup();
 
-		#if !neko
 		FlxG.bgColor = 0xff050509;
-		#else
-		FlxG.camera.bgColor = FlxG.WHITE;
-		#end
 		
 		//Simple Version
 		//=================================================================

@@ -7,9 +7,10 @@ import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxAngle;
+import org.flixel.util.FlxMath;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
 
 class Enemy extends FlxSprite
 {
@@ -141,8 +142,8 @@ class Enemy extends FlxSprite
 		
 		//Set the bot's movement speed and direction
 		//based on angle and whether the jets are on.
-		_thrust = FlxU.computeVelocity(_thrust, (jetsOn ? 90 : 0), drag.x, 60);
-		FlxU.rotatePoint(0, _thrust, 0, 0, angle, velocity);
+		_thrust = FlxMath.computeVelocity(_thrust, (jetsOn ? 90 : 0), drag.x, 60);
+		FlxAngle.rotatePoint(0, _thrust, 0, 0, angle, velocity);
 
 		//Shooting - three shots every few seconds
 		if(onScreen())
@@ -249,6 +250,6 @@ class Enemy extends FlxSprite
 	//the Enemy's midpoint and the player's midpoint.
 	private function angleTowardPlayer():Float
 	{
-		return FlxU.getAngle(getMidpoint(_point), _player.getMidpoint(_playerMidpoint));
+		return FlxAngle.getAngle(getMidpoint(_point), _player.getMidpoint(_playerMidpoint));
 	}
 }

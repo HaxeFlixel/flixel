@@ -43,13 +43,13 @@ class CaveGenerationState extends FlxState
 		tileMap.loadMap(dataStr, FlxAssets.imgAuto, 0, 0, FlxTilemap.AUTO);
 		add(tileMap);
 
-        Lib.stage.addEventListener(Event.RESIZE, handleOnResize);
+        Lib.current.stage.addEventListener(Event.RESIZE, handleOnResize);
 	}
 
     public function handleOnResize(?e:Event):Void
     {
-        var stageWidth = Lib.stage.stageWidth;
-        var stageHeight = Lib.stage.stageHeight;
+        var stageWidth = Lib.current.stage.stageWidth;
+        var stageHeight = Lib.current.stage.stageHeight;
 
         FlxG.resetCameras(new FlxCamera(0, 0, stageWidth, stageHeight));
         FlxG.width = stageWidth;

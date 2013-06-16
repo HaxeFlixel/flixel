@@ -17,16 +17,17 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="C:\HaxeToolkit\haxe/lib\flixel/2,0,0-alpha/" />
+    <class path="C:\HaxeToolkit\haxe/lib\openfl/1,0,0/" />
+    <class path="C:\HaxeToolkit\haxe/lib\flixel/2,0,0-alpha,2/" />
     <class path="bin/flash/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme_ver=3.5.6&#xA;nme_install_tool=1&#xA;nme3=1&#xA;web" />
+    <option directives="nme4=1&#xA;tools=1&#xA;nme_ver=4.0.2&#xA;nme&#xA;nme_install_tool=1&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="-swf-version 10.1" />
+    <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -61,8 +62,7 @@
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand>haxelib run openfl test "project.xml" neko
-haxelib run openfl test "project.xml" windows
-haxelib run openfl test "project.xml" flash</preBuildCommand>
+haxelib run openfl test "project.xml" windows</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

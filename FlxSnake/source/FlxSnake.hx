@@ -15,7 +15,6 @@ import org.flixel.FlxObject;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxU;
 
 class FlxSnake extends FlxState
 {

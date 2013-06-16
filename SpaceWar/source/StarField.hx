@@ -2,7 +2,7 @@ package;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
+import org.flixel.util.FlxAngle;
 
 class StarField extends FlxGroup 
 {
@@ -52,7 +52,7 @@ class StarField extends FlxGroup
 		for (starBasic in members) 
 		{	
 			star = cast(starBasic, FlxSprite);
-			FlxU.rotatePoint(star.velocity.x, star.velocity.y, 0, 0, howMuch, star.velocity);
+			FlxAngle.rotatePoint(star.velocity.x, star.velocity.y, 0, 0, howMuch, star.velocity);
 		}
 	}
 

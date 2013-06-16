@@ -2,7 +2,8 @@ package;
 
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
+import org.flixel.util.FlxAngle;
+import org.flixel.util.FlxMath;
 
 /**
  * ...
@@ -43,7 +44,7 @@ class PlayerShip extends WrapSprite
 		acceleration.y = 0;
 		if (FlxG.keys.UP)
 		{
-			FlxU.rotatePoint(90,0,0,0,angle,acceleration);
+			FlxAngle.rotatePoint(90,0,0,0,angle,acceleration);
 		}
 
 		if(FlxG.keys.justPressed("SPACE"))
@@ -51,7 +52,7 @@ class PlayerShip extends WrapSprite
 			var bullet:FlxSprite = cast(cast(FlxG.state, PlayState).bullets.recycle(), FlxSprite);
 			bullet.reset(x + (width - bullet.width)/2, y + (height - bullet.height)/2);
 			bullet.angle = angle;
-			FlxU.rotatePoint(150,0,0,0,bullet.angle,bullet.velocity);
+			FlxAngle.rotatePoint(150,0,0,0,bullet.angle,bullet.velocity);
 			bullet.velocity.x += velocity.x;
 			bullet.velocity.y += velocity.y;
 		}

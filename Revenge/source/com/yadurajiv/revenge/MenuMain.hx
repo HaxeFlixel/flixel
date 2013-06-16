@@ -27,6 +27,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
+import org.flixel.util.FlxColor;
 
 /**
  * ...
@@ -44,7 +45,7 @@ class MenuMain extends FlxState
 		/**
 		 * fade in from black
 		 */
-		FlxG.flash(FlxG.BLACK, 3, null);
+		FlxG.flash(FlxColor.BLACK, 3, null);
 		
 		/**
 		 * show the mouse
@@ -105,7 +106,7 @@ class MenuMain extends FlxState
 	
 	private function onStart():Void
 	{
-		FlxG.fade(FlxG.BLACK, 2, false, this.onFade);
+		FlxG.fade(FlxColor.BLACK, 2, false, this.onFade);
 	}
 	
 	private function onFade():Void

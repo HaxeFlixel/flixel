@@ -5,7 +5,6 @@ import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxU;
 
 	
 class PlayState2 extends FlxState
@@ -31,7 +30,7 @@ class PlayState2 extends FlxState
 		blocks = new FlxGroup();
 		for (i in 0...300)
 		{
-			block = new FlxSprite(FlxU.floor(FlxG.random() * 40) * 16, FlxU.floor(FlxG.random() * 30) * 16).makeGraphic(16, 16, 0xff233e58);
+			block = new FlxSprite(Math.floor(FlxG.random() * 40) * 16, Math.floor(FlxG.random() * 30) * 16).makeGraphic(16, 16, 0xff233e58);
 			block.immovable = true;
 			block.moves = false;
 			block.active = false;

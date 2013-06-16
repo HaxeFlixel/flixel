@@ -4,7 +4,7 @@ import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxPath;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;

@@ -5,8 +5,7 @@ import openfl.Assets;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
-import org.flixel.FlxU;
+import org.flixel.util.FlxPoint;
 /**
  * ...
  * @author David Bell

@@ -37,11 +37,7 @@ class TestState extends FlxState
 		FlxG.flashFramerate = 60;
 		#end
 		
-		#if !neko
 		FlxG.bgColor = 0xffffffff;
-		#else
-		FlxG.camera.bgColor = {rgb: 0xffffff, a: 0xff};
-		#end
 		
 		var grass1:Grass = new Grass(0, 0, 0, 0);
 		var grass2:Grass = new Grass(0, 0, 1, -5);

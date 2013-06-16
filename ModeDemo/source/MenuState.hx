@@ -9,11 +9,11 @@ import org.flixel.FlxSave;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxU;
 import org.flixel.plugin.pxText.FlxBitmapTextField;
 import org.flixel.plugin.pxText.PxBitmapFont;
 import org.flixel.plugin.pxText.PxButton;
 import org.flixel.plugin.pxText.PxTextAlign;
+import org.flixel.util.FlxMisc;
 
 class MenuState extends FlxState
 {
@@ -163,12 +163,12 @@ class MenuState extends FlxState
 	//corresponding buttons are pressed with the mouse.
 	private function onFlixel():Void
 	{
-		FlxU.openURL("http://flixel.org");
+		FlxMisc.openURL("http://flixel.org");
 	}
 	
 	private function onDanny():Void
 	{
-		FlxU.openURL("http://dbsoundworks.com");
+		FlxMisc.openURL("http://dbsoundworks.com");
 	}
 	
 	private function onPlay():Void

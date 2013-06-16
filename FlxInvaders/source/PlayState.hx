@@ -6,6 +6,7 @@ import org.flixel.FlxObject;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
+import org.flixel.util.FlxColor;
 
 class PlayState extends FlxState		//The class declaration for the main game state
 {
@@ -81,7 +82,7 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 		var colors:Array<Int>;
 		#end
 		
-		colors = [FlxG.BLUE, (FlxG.BLUE | FlxG.GREEN), FlxG.GREEN, (FlxG.GREEN | FlxG.RED), FlxG.RED];
+		colors = [FlxColor.BLUE, (FlxColor.BLUE | FlxColor.GREEN), FlxColor.GREEN, (FlxColor.GREEN | FlxColor.RED), FlxColor.RED];
 		for (i in 0...(numAliens))
 		{
 			a = new Alien(	8 + (i % 10) * 32,		//The X position of the alien

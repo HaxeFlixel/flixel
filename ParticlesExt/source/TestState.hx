@@ -5,7 +5,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxTimer;
+import org.flixel.util.FlxTimer;
 
 
 class TestState extends FlxState

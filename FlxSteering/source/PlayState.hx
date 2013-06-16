@@ -3,7 +3,6 @@ package;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxU;
 
 class PlayState extends FlxState
 {
@@ -35,7 +34,7 @@ class PlayState extends FlxState
 		
 		FlxG.collide();
 		
-		_fps.text = FlxU.floor(1 / FlxG.elapsed) + " fps";
+		_fps.text = Math.floor(1 / FlxG.elapsed) + " fps";
 		
 		var v:Vector2D = new Vector2D(FlxG.mouse.screenX, FlxG.mouse.screenY);
 	

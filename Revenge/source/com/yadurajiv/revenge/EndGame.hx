@@ -26,6 +26,7 @@ import org.flixel.FlxButton;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
+import org.flixel.util.FlxColor;
 
 /**
  * ...
@@ -41,7 +42,7 @@ class EndGame extends FlxState
 		/**
 		 * fade in to the scene from black
 		 */
-		FlxG.flash(FlxG.BLACK, 3);
+		FlxG.flash(FlxColor.BLACK, 3);
 		
 		/**
 		 * show our mouse!
@@ -91,7 +92,7 @@ class EndGame extends FlxState
 	
 	private function onStart():Void
 	{
-		FlxG.fade(FlxG.BLACK, 2, false, this.onFade);
+		FlxG.fade(FlxColor.BLACK, 2, false, this.onFade);
 	}
 	
 	private function onFade():Void
