@@ -933,8 +933,8 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = _flxFrame.tileID;
 			
 			currDrawData[currIndex++] = a;
-			currDrawData[currIndex++] = b;
 			currDrawData[currIndex++] = -c;
+			currDrawData[currIndex++] = b;
 			currDrawData[currIndex++] = d;
 			
 			#if !js

@@ -283,8 +283,8 @@ class FlxBitmapTextField extends FlxSprite
 				currDrawData[currIndex++] = _bgDrawData[0];
 				
 				currDrawData[currIndex++] = csx * width;
-				currDrawData[currIndex++] = -ssy * height;
 				currDrawData[currIndex++] = ssx * width;
+				currDrawData[currIndex++] = -ssy * height;
 				currDrawData[currIndex++] = csy * height;
 				
 				#if !js
@@ -319,8 +319,8 @@ class FlxBitmapTextField extends FlxSprite
 				currDrawData[currIndex++] = currTileID;
 				
 				currDrawData[currIndex++] = csx * _fontScale;
-				currDrawData[currIndex++] = -ssy * _fontScale;
 				currDrawData[currIndex++] = ssx * _fontScale;
+				currDrawData[currIndex++] = -ssy * _fontScale;
 				currDrawData[currIndex++] = csy * _fontScale;
 				
 				#if !js

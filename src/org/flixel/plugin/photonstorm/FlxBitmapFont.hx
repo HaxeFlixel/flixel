@@ -23,6 +23,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.util.FlxAngle;
+import org.flixel.util.FlxColor;
 
 class FlxBitmapFont extends FlxSprite
 {
@@ -389,8 +390,8 @@ class FlxBitmapFont extends FlxSprite
 				currDrawData[currIndex++] = currTileID;
 				
 				currDrawData[currIndex++] = csx;
-				currDrawData[currIndex++] =  -ssy;
 				currDrawData[currIndex++] = ssx;
+				currDrawData[currIndex++] = -ssy;
 				currDrawData[currIndex++] = csy;
 
 				#if !js

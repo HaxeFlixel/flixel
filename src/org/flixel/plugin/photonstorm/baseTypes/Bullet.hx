@@ -17,10 +17,12 @@ package org.flixel.plugin.photonstorm.baseTypes;
 
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
-import org.flixel.plugin.photonstorm.FlxMath;
 import org.flixel.plugin.photonstorm.FlxWeapon;
 import org.flixel.system.input.FlxTouch;
+import org.flixel.util.FlxAngle;
+import org.flixel.util.FlxMath;
 import org.flixel.util.FlxPoint;
+import org.flixel.util.FlxRandom;
 import org.flixel.util.FlxVelocity;
 
 class Bullet extends FlxSprite
@@ -73,18 +75,18 @@ class Bullet extends FlxSprite
 	
 	public function fire(fromX:Float, fromY:Float, velX:Float, velY:Float):Void
 	{
-		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
-		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
+		x = fromX + FlxRandom.intRanged( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
+		y = fromY + FlxRandom.intRanged( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
 		
 		if (accelerates)
 		{
-			acceleration.x = xAcceleration + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed);
-			acceleration.y = yAcceleration + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed);
+			acceleration.x = xAcceleration + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed);
+			acceleration.y = yAcceleration + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed);
 		}
 		else
 		{
-			velocity.x = velX + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed);
-			velocity.y = velY + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed);
+			velocity.x = velX + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed);
+			velocity.y = velY + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed);
 		}
 		
 		postFire();
@@ -93,20 +95,20 @@ class Bullet extends FlxSprite
 	#if !FLX_NO_MOUSE
 	public function fireAtMouse(fromX:Float, fromY:Float, speed:Int, rotateBulletTowards = true):Void
 	{
-		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
-		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
+		x = fromX + FlxRandom.intRanged( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
+		y = fromY + FlxRandom.intRanged( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
 		
 		if (accelerates)
 		{
-			FlxVelocity.accelerateTowardsMouse(this, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
+			FlxVelocity.accelerateTowardsMouse(this, speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
 		}
 		else
 		{
-			FlxVelocity.moveTowardsMouse(this, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
+			FlxVelocity.moveTowardsMouse(this, speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
 		}
 		
 		if (rotateBulletTowards)
-			angle = FlxVelocity.angleBetweenMouse(weapon.parent, true);
+			angle = FlxAngle.angleBetweenMouse(weapon.parent, true);
 		
 		postFire();
 	}
@@ -115,20 +117,20 @@ class Bullet extends FlxSprite
 	#if !FLX_NO_TOUCH
 	public function fireAtTouch(fromX:Float, fromY:Float, touch:FlxTouch, speed:Int, rotateBulletTowards = true):Void
 	{
-		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
-		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
+		x = fromX + FlxRandom.intRanged( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
+		y = fromY + FlxRandom.intRanged( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
 		
 		if (accelerates)
 		{
-			FlxVelocity.accelerateTowardsTouch(this, touch, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
+			FlxVelocity.accelerateTowardsTouch(this, touch, speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
 		}
 		else
 		{
-			FlxVelocity.moveTowardsTouch(this, touch, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
+			FlxVelocity.moveTowardsTouch(this, touch, speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
 		}
 		
 		if ( rotateBulletTowards )
-			angle = FlxVelocity.angleBetweenTouch(weapon.parent, touch,true);
+			angle = FlxAngle.angleBetweenTouch(weapon.parent, touch,true);
 		
 		postFire();
 	}
@@ -136,16 +138,16 @@ class Bullet extends FlxSprite
 	
 	public function fireAtPosition(fromX:Float, fromY:Float, toX:Float, toY:Float, speed:Int):Void
 	{
-		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
-		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
+		x = fromX + FlxRandom.intRanged( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
+		y = fromY + FlxRandom.intRanged( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
 		
 		if (accelerates)
 		{
-			FlxVelocity.accelerateTowardsPoint(this, new FlxPoint(toX, toY), speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
+			FlxVelocity.accelerateTowardsPoint(this, new FlxPoint(toX, toY), speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
 		}
 		else
 		{
-			FlxVelocity.moveTowardsPoint(this, new FlxPoint(toX, toY), speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
+			FlxVelocity.moveTowardsPoint(this, new FlxPoint(toX, toY), speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
 		}
 		
 		postFire();
@@ -153,16 +155,16 @@ class Bullet extends FlxSprite
 	
 	public function fireAtTarget(fromX:Float, fromY:Float, target:FlxSprite, speed:Int):Void
 	{
-		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
-		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
+		x = fromX + FlxRandom.intRanged( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
+		y = fromY + FlxRandom.intRanged( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
 		
 		if (accelerates)
 		{
-			FlxVelocity.accelerateTowardsObject(this, target, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
+			FlxVelocity.accelerateTowardsObject(this, target, speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed), Math.floor(maxVelocity.x), Math.floor(maxVelocity.y));
 		}
 		else
 		{
-			FlxVelocity.moveTowardsObject(this, target, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
+			FlxVelocity.moveTowardsObject(this, target, speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
 		}
 		
 		postFire();
@@ -170,10 +172,10 @@ class Bullet extends FlxSprite
 	
 	public function fireFromAngle(fromX:Float, fromY:Float, fireAngle:Int, speed:Int):Void
 	{
-		x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
-		y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
+		x = fromX + FlxRandom.intRanged( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
+		y = fromY + FlxRandom.intRanged( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
 		
-		var newVelocity:FlxPoint = FlxVelocity.velocityFromAngle(fireAngle + FlxMath.rand( -weapon.rndFactorAngle, weapon.rndFactorAngle), speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
+		var newVelocity:FlxPoint = FlxVelocity.velocityFromAngle(fireAngle + FlxRandom.intRanged( -weapon.rndFactorAngle, weapon.rndFactorAngle), speed + FlxRandom.intRanged( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
 		
 		if (accelerates)
 		{
@@ -209,7 +211,7 @@ class Bullet extends FlxSprite
 		
 		if (weapon.bulletLifeSpan > 0)
 		{
-			lifespan = weapon.bulletLifeSpan + FlxMath.rand( -weapon.rndFactorLifeSpan, weapon.rndFactorLifeSpan);
+			lifespan = weapon.bulletLifeSpan + FlxRandom.intRanged( -weapon.rndFactorLifeSpan, weapon.rndFactorLifeSpan);
 		}
 		
 		if (weapon.onFireCallback != null)

@@ -265,8 +265,8 @@ class FlxTileblock extends FlxSprite
 					currDrawData[currIndex++] = currTileID;
 
 					currDrawData[currIndex++] = csx;
-					currDrawData[currIndex++] = -ssy;
 					currDrawData[currIndex++] = ssx;
+					currDrawData[currIndex++] = -ssy;
 					currDrawData[currIndex++] = csy;
 
 					if (isColored)

@@ -160,7 +160,7 @@ class FlxBar extends FlxSprite
 		filledBarPoint = new Point(0, 0);
 		
 		#if flash
- 		canvas = new BitmapData(width, height, true, Flxcolor.TRANSPARENT);
+ 		canvas = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		#end
 		
 		if (parentRef != null)
@@ -1111,8 +1111,8 @@ class FlxBar extends FlxSprite
 			currDrawData[currIndex++] = _emptyBarFrameID;
 			
 			currDrawData[currIndex++] = csx;
-			currDrawData[currIndex++] = ssy;
 			currDrawData[currIndex++] = -ssx;
+			currDrawData[currIndex++] = ssy;
 			currDrawData[currIndex++] = csy;
 
 			#if !js
@@ -1154,8 +1154,8 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
 				
 				currDrawData[currIndex++] = csx;
-				currDrawData[currIndex++] = ssy;
 				currDrawData[currIndex++] = -ssx;
+				currDrawData[currIndex++] = ssy;
 				currDrawData[currIndex++] = csy;
 				
 				#if !js

@@ -83,8 +83,8 @@ class BGSprite extends FlxSprite
 			currDrawData[currIndex++] = _flxFrame.tileID;
 			
 			currDrawData[currIndex++] = csx;
-			currDrawData[currIndex++] = ssy;
-			currDrawData[currIndex++] = -ssx;
+			currDrawData[currIndex++] = ssx;
+			currDrawData[currIndex++] = -ssy;
 			currDrawData[currIndex++] = csy;
 			
 			#if !js

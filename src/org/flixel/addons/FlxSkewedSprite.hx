@@ -192,8 +192,8 @@ class FlxSkewedSprite extends FlxSprite
 
 				_matrix.identity();
 				_matrix.a = cos;
-				_matrix.b = sin;
-				_matrix.c = -sin;
+				_matrix.b = -sin;
+				_matrix.c = sin;
 				_matrix.d = cos;
 				
 				if (isFlipped)
@@ -208,8 +208,9 @@ class FlxSkewedSprite extends FlxSprite
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(-skew.x * FlxAngle.RAD);
-					_skewMatrix.c = Math.tan(-skew.y * FlxAngle.RAD);
+					
+					_skewMatrix.b = Math.tan(skew.y * FlxAngle.RAD);
+					_skewMatrix.c = Math.tan(skew.x * FlxAngle.RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}

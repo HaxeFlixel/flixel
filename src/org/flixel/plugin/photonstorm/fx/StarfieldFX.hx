@@ -15,9 +15,9 @@ package org.flixel.plugin.photonstorm.fx;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import org.flixel.FlxBasic;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
-import org.flixel.plugin.photonstorm.FlxColor;
 import org.flixel.plugin.photonstorm.FlxGradient;
 import org.flixel.system.layer.DrawStackItem;
 import org.flixel.util.FlxAngle;
@@ -507,15 +507,14 @@ class StarSprite extends FlxSprite
 			currDrawData[currIndex++] = _flxFrame.tileID;
 			
 			currDrawData[currIndex++] = csx * width;
-			currDrawData[currIndex++] = -ssy * height;
 			currDrawData[currIndex++] = ssx * width;
+			currDrawData[currIndex++] = -ssy * height;
 			currDrawData[currIndex++] = csy * height;
 			
 			#if !js
 			currDrawData[currIndex++] = bgRed;
 			currDrawData[currIndex++] = bgGreen;
 			currDrawData[currIndex++] = bgBlue;
-			}
 			#end
 			
 			currDrawData[currIndex++] = bgAlpha * alpha;
@@ -537,8 +536,8 @@ class StarSprite extends FlxSprite
 				currDrawData[currIndex++] = _flxFrame.tileID;
 				
 				currDrawData[currIndex++] = csx;
-				currDrawData[currIndex++] = -ssy;
 				currDrawData[currIndex++] = ssx;
+				currDrawData[currIndex++] = -ssy;
 				currDrawData[currIndex++] = csy;
 			
 				starRed = starDef.red;
