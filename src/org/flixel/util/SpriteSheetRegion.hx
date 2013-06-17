@@ -2,7 +2,7 @@ package org.flixel.util;
 
 import org.display.BitmapData;
 
-class TileSheetRegion
+class SpriteSheetRegion
 {
 	public var bitmap:BitmapData;
 	
