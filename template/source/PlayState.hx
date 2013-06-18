@@ -8,9 +8,9 @@ import org.flixel.FlxText;
 import org.flixel.util.FlxMath;
 
 /**
- * A FlxState which can be used for the game's menu.
+ * A FlxState which can be used for the actual gameplay.
  */
-class MenuState extends FlxState
+class PlayState extends FlxState
 {
 	/**
 	 * Function that is called up when to state is created to set it up. 
