@@ -90,7 +90,7 @@ class FlxGame extends Sprite
 	 */
 	public var _stepSeconds:Float;
 	/**
-	 * Framerate of the Flash player (NOT the game loop). Default = 30.
+	 * Framerate of the Flash player (NOT the game loop). Default = 60.
 	 */
 	public var _flashFramerate:Int;
 	/**
@@ -192,10 +192,10 @@ class FlxGame extends Sprite
 	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
 	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
 	 * @param	GameFramerate	How frequently the game should update (default is 60 times per second).
-	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 30 times per second).
+	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 60 times per second).
 	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 30)
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60)
 	{
 		super();
 		
