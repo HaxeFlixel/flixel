@@ -214,6 +214,10 @@ class FlxGame extends Sprite
 		
 		//basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
+		
+		if (GameFramerate < FlashFramerate)
+			GameFramerate = FlashFramerate;
+		
 		FlxG.framerate = GameFramerate;
 		FlxG.flashFramerate = FlashFramerate;
 		_accumulator = _step;
