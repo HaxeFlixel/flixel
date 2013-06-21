@@ -5,13 +5,21 @@ import org.flixel.FlxG;
 import org.flixel.FlxParticle;
 import org.flixel.util.FlxRandom;
 
+class FlxEmitterExt extends FlxTypedEmitterExt<FlxParticle>
+{
+	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
+	{
+		super(X, Y, Size);
+	}
+}
+
 /**
  * Extended FlxEmitter that emits particles in a circle (instead of a square).
  * It also provides a new function setMotion to control particle behavior even more.
  * This was inspired by the way Chevy Ray Johnston implemented his particle emitter in Flashpunk.
  * @author Dirk Bunk
  */
-class FlxEmitterExt extends FlxEmitter 
+class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle> 
 {		
 	/**
 	 * 	Launch Direction.
