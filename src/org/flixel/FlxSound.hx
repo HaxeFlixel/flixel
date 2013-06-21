@@ -8,6 +8,7 @@ import flash.net.URLRequest;
 import openfl.Assets;
 import org.flixel.util.FlxMath;
 import org.flixel.util.FlxPoint;
+import org.flixel.tweens.misc.NumTween;
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
@@ -106,7 +107,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Internal helper for fading sounds.
 	 */
-	private var _fade:FadeTween;
+	private var _fade:NumTween;
 	/**
 	 * Internal flag for what to do when the sound is done fading out.
 	 */
@@ -211,7 +212,7 @@ class FlxSound extends FlxBasic
 
 			if (_pan)
 			{
-				var d:Float = (x-_target.x)/_radius;
+				var d:Float = (x - _target.x) / _radius;
 				if (d < -1) 
 				{
 					d = -1;
@@ -227,12 +228,12 @@ class FlxSound extends FlxBasic
 		//Cross-fading volume control
 		if (_fade != null)
 		{
-			_fade.progress += FlxG.elapsed;
+			_fade.update();
 			fadeMultiplier = _fade.value;
 
-			if (_fade.finished)
+			if (_fade.percent >= 1.0)
 			{
-				_fade = null;
+				_fade.destroy();
 				if (_onFadeComplete != null) 
 				{ 
 					_onFadeComplete();
@@ -420,7 +421,9 @@ class FlxSound extends FlxBasic
 		}
 		
 		var fadeStartVolume:Float = ((_fade != null) ? _fade.value : 1);
-		_fade = new FadeTween(fadeStartVolume, 0, Seconds);
+		_fade = new NumTween();
+		_fade.tween(fadeStartVolume, 0, Seconds);
+		_fade.start();
 		_onFadeComplete = (PauseInstead ? pause : stop);
 	}
 	
@@ -437,10 +440,13 @@ class FlxSound extends FlxBasic
 		}
 		
 		var fadeStartVolume:Float = ((_fade != null) ? _fade.value : 0);
-		_fade = new FadeTween(fadeStartVolume, 1, Seconds);
+		_fade = new NumTween();
+		_fade.tween(fadeStartVolume, 1, Seconds);
+		_fade.start();
 		_onFadeComplete = null;
-
+	
 		play();
+		update();	// need to update sound volume immediately
 	}
 	
 	/**
@@ -592,115 +598,5 @@ class FlxSound extends FlxBasic
 		name = _sound.id3.songName;
 		artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);
-	}
-}
-
-/**
- * Simple class for tweening a simple numerical value from one point to another.
- * For more complex operations, please use a dedicated library such as TweenMax.
- *
- * This class does not use the "global" time to progress the tween, but must 
- * manually be incremented with the `progress` property.
- * 
- * @author	Andreas Renberg (IQAndreas)
- */
-class FadeTween
-{
-
-	/**
-	 * A simple, linear tween (constant motion, with no acceleration).
-	 *
-	 * @param StartValue	The starting value.
-	 * @param EndValue	The end value.
-	 * @param Duration	The total duration of the tween.
-	 * @param Ease	The easing function used by the tween. Any tweening function from TweenMax library or the `fl.transitions.easing` package can be used. Defaults to `FadeTween.linear`.
-	 */
-	public function new(StartValue:Float, EndValue:Float, Duration:Float, Ease:Float->Float->Float->Float->Float = null)
-	{
-		easingFunction = (Ease != null) ? Ease : FadeTween.linear;
-
-		// TODO: Verify perameters (such as negative duration, invalid start or end values, etc)
-		startValue = StartValue;
-		totalChange = EndValue - StartValue;
-		duration = Duration;
-
-		_progress = 0;
-	}
-	
-	public function destroy():Void
-	{
-		easingFunction = null;
-	}
-
-	/**
-	 * The easing function used by the Tween.
-	 */
-	private var easingFunction:Float->Float->Float->Float->Float;
-	/**
-	 * Internal tracker for the start value of the tween.
-	 */
-	private var startValue:Float;
-	/**
-	 * Internal tracker for the total change in value in the tween.
-	 */
-	private var totalChange:Float;
-	/**
-	 * Internal tracker for the duration of the tween.
-	 */
-	private var duration:Float;
-	/**
-	 * Internal tracker for the progress of the tween.
-	 */
-	private var _progress:Float;
-
-	public var progress(get_progress, set_progress):Float;
-	
-	private function get_progress():Float
-	{
-		return _progress;
-	}
-	
-	private function set_progress(value:Float):Float
-	{
-		if (value >= duration)
-		{
-			value = duration;
-		}
-		else if (value < 0)
-		{
-			value = 0;
-		}
-
-		_progress = value;
-		return _progress;
-	}
-
-	public var finished(get_finished, null):Bool;
-	
-	private function get_finished():Bool
-	{
-		return (_progress >= duration);
-	}
-
-	public var value(get_value, null):Float;
-	
-	private function get_value():Float
-	{
-		return easingFunction(_progress, startValue, totalChange, duration);
-	}
-
-	/**
-	 * A simple, linear tween (constant motion, with no acceleration).
-	 *
-	 * @param t	Specifies the current progress, between 0 and duration inclusive.
-	 * @param b	Specifies the starting value.
-	 * @param c	Specifies the total change in the value.
-	 * @param d	Specifies the duration of the motion.
-	 *
-	 * @return	The value of the interpolated property at the specified time.
-	 */
-	public static function linear(t:Float, b:Float, c:Float, d:Float):Float
-	{
-		return b + (c * t) / d;
 	}
 }
