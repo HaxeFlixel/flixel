@@ -21,7 +21,20 @@ typedef SpriteReg = {
 	var onMouseOut:FlxSprite->Void;
 }
 /**
-* Provides mouse event detection for normal FlxSprites.
+* Provides mouse event detection for FlxSprites.
+* To use it, initialize the manager and register sprites. 
+* 
+* 		FlxG.addPlugin(new MouseInteractionMgr());
+* 		var spr:FlxSprite = new FlxSprite();
+* 		MouseInteractionMgr.addSprite(spr, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+* 
+* Also implement the callbacks with FlxSprite return:
+* 
+* 		function onMouseDown(sprite:FlxSprite) {}
+* 		function onMouseUp(sprite:FlxSprite) {}
+* 		function onMouseOver(sprite:FlxSprite) {}
+* 		function onMouseOut(sprite:FlxSprite) {} 
+* 
 * @author TiagoLr (~~~ ProG4mr ~~~)
 */
 class MouseInteractionMgr extends FlxBasic
