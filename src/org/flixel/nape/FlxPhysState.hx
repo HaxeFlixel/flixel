@@ -123,7 +123,7 @@ class FlxPhysState extends FlxState
 		space.step(FlxG.elapsed, velocityIterations, positionIterations);
 		super.update();
 	}
-	
+
 	/**
 	 * Override this method to draw debug physics shapes
 	 */
