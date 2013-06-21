@@ -585,10 +585,12 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.elapsed = FlxG.timeScale * _stepSeconds;
+		
+		updateInput();
+		
 		FlxG.updateSounds();
 		FlxG.updatePlugins();
 		
-		updateInput();
 		updateState();
 		
 		if (FlxG.tweener.active && FlxG.tweener.hasTween) 
