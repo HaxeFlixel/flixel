@@ -86,7 +86,6 @@ class FlxSubState extends FlxState
 		while (i < l)
 		{
 			var camera:FlxCamera = cameras[i++];
-			
 			camera.fill(this.bgColor);
 		}
 		#else

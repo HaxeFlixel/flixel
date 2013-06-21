@@ -881,8 +881,8 @@ class FlxSprite extends FlxObject
 			
 			// transformation matrix coefficients
 			var a:Float = csx;
-			var b:Float = ssy;
-			var c:Float = ssx;
+			var b:Float = ssx;
+			var c:Float = ssy;
 			var d:Float = csy;
 			
 			if (!simpleRenderSprite())
@@ -902,8 +902,8 @@ class FlxSprite extends FlxObject
 					y2 = x1 * csx + y1 * ssy;
 					
 					a = csy;
-					b = ssx;
-					c = ssy;
+					b = ssy;
+					c = ssx;
 					d = csx;
 				}
 				else
@@ -912,8 +912,8 @@ class FlxSprite extends FlxObject
 					y2 = -x1 * ssx + y1 * csy;
 					
 					a = csx;
-					b = ssy;
-					c = ssx;
+					b = ssx;
+					c = ssy;
 					d = csy;
 				}
 			}
@@ -933,8 +933,8 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = _flxFrame.tileID;
 			
 			currDrawData[currIndex++] = a;
-			currDrawData[currIndex++] = -c;
-			currDrawData[currIndex++] = b;
+			currDrawData[currIndex++] = -b;
+			currDrawData[currIndex++] = c;
 			currDrawData[currIndex++] = d;
 			
 			#if !js

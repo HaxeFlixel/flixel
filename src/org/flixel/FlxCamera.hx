@@ -422,9 +422,9 @@ class FlxCamera extends FlxBasic
 		bounds = null;
 		#if flash
 		screen = new FlxSprite();
-		screen.makeGraphic(width, height, 0, true);
+		buffer = new BitmapData(width, height, true, 0);
+		screen.pixels = buffer;
 		screen.setOriginToCorner();
-		buffer = screen.pixels;
 		#end
 		bgColor = FlxG.bgColor;
 		
@@ -1108,8 +1108,15 @@ class FlxCamera extends FlxBasic
 	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, graphics:Graphics = null):Void
 	{
 	#if flash
-		_fill.fillRect(_flashRect, Color);
-		buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
+		if (BlendAlpha)
+		{
+			_fill.fillRect(_flashRect, Color);
+			buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
+		}
+		else
+		{
+			buffer.fillRect(_flashRect, Color);
+		}
 	#else
 		
 		// This is temporal fix for camera's color
@@ -1219,5 +1226,17 @@ class FlxCamera extends FlxBasic
 			#end
 		}
 		return val;
+	}
+	
+	/**
+	 * Whether to use alpha blending for camera's background fill or not. 
+	 * Useful for flash target (and works only on this target). Default value is true.
+	 */
+	@:isVar public var useBgAlphaBlending(default, set_useBgAlphaBlending):Bool = true;
+	
+	private function set_useBgAlphaBlending(value:Bool):Bool
+	{
+		useBgAlphaBlending = value;
+		return value;
 	}
 }

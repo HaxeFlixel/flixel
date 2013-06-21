@@ -1,6 +1,7 @@
 package org.flixel.util;
 
 import org.flixel.plugin.TimerManager;
+import org.flixel.FlxG;
 
 /**
  * A simple timer class, leveraging the new plugins system.

@@ -21,6 +21,7 @@ import flash.geom.Rectangle;
 import flash.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
+import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
 import org.flixel.FlxTypedGroup;
@@ -189,8 +190,8 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		}
 	}
 	
-	@:isVar
-	public var x(get_x, set_x):Int;
+	@:isVar 
+	public var x(get, set):Int;
 	
 	private function set_x(newX:Int):Int
 	{
@@ -213,7 +214,7 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	}
 	
 	@:isVar
-	public var y(get_y, set_y):Int;
+	public var y(get, set):Int;
 	
 	private function set_y(newY:Int):Int
 	{

@@ -2,6 +2,7 @@ package org.flixel.tweens;
 
 import org.flixel.tweens.util.Ease;
 import org.flixel.FlxBasic;
+import org.flixel.FlxG;
 
 typedef CompleteCallback = Void->Void;
 
