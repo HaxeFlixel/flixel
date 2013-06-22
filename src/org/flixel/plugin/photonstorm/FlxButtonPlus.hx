@@ -21,17 +21,16 @@ import flash.geom.Rectangle;
 import flash.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
-import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxText;
-import org.flixel.FlxTypedGroup;
+import org.flixel.addons.FlxSpriteGroup;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMath;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
-class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
+class FlxButtonPlus extends FlxSpriteGroup
 {
 	static public inline var NORMAL:Int = 0;
 	static public inline var HIGHLIGHT:Int = 1;
@@ -106,8 +105,6 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	 */
 	public var onColor:Array<Int>;
 	
-	private var _x:Int;
-	private var _y:Int;
 	public var width:Int;
 	public var height:Int;
 	
@@ -131,8 +128,8 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		
 		super(4);
 		
-		_x = X;
-		_y = Y;
+		x = X;
+		y = Y;
 		width = Width;
 		height = Height;
 		_onClick = Callback;
@@ -188,52 +185,6 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 		{
 			onClickParams = [];
 		}
-	}
-	
-	@:isVar 
-	public var x(get, set):Int;
-	
-	private function set_x(newX:Int):Int
-	{
-		_x = newX;
-		
-		buttonNormal.x = _x;
-		buttonHighlight.x = _x;
-		
-		if (textNormal != null)
-		{
-			textNormal.x = _x;
-			textHighlight.x = _x;
-		}
-		return newX;
-	}
-	
-	private function get_x():Int
-	{
-		return _x;
-	}
-	
-	@:isVar
-	public var y(get, set):Int;
-	
-	private function set_y(newY:Int):Int
-	{
-		_y = newY;
-		
-		buttonNormal.y = _y;
-		buttonHighlight.y = _y;
-		
-		if (textNormal != null)
-		{
-			textNormal.y = _y;
-			textHighlight.y = _y;
-		}
-		return newY;
-	}
-	
-	private function get_y():Int
-	{
-		return _y;
 	}
 	
 	/**
@@ -409,7 +360,6 @@ class FlxButtonPlus extends FlxTypedGroup<FlxSprite>
 	{
 		if (exists && visible && active && (_status == PRESSED) && (_onClick != null) && (pauseProof || !FlxG.paused))
 		{
-			//_onClick.apply(null, onClickParams);
 			Reflect.callMethod(this, Reflect.getProperty(this, "_onClick"), onClickParams);
 		}
 	}
