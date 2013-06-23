@@ -119,6 +119,11 @@ class FlxSprite extends FlxObject
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
 	public var dirty:Bool;
+	/**
+	 * Controls whether the object is smoothed when rotated, affects performance.
+	 * @default false
+	 */
+	public var antialiasing:Bool;
 	
 	/**
 	 * Internal, stores all the animations that were added to this sprite.
@@ -2081,20 +2086,6 @@ class FlxSprite extends FlxObject
 		drawFrame(true);
 		
 		filters = null;
-	}
-	
-	
-	
-	/**
-	 * Controls whether the object is smoothed when rotated, affects performance.
-	 * @default false
-	 */
-	public var antialiasing(default, set_antialiasing):Bool;
-	
-	private function set_antialiasing(val:Bool):Bool
-	{
-		antialiasing = val;
-		return val;
 	}
 	
 	/**
