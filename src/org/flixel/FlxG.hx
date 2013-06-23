@@ -523,6 +523,11 @@ class FlxG
 	 */
 	static private function set_framerate(Framerate:Int):Int
 	{
+		if (Framerate < FlxG.flashFramerate)
+		{
+			FlxG.warn("You about to set game framerate less that flash framerate. It could stop your game from updating");
+		}
+		
 		_game._step = Std.int(Math.abs(1000 / Framerate));
 		_game._stepSeconds = (_game._step / 1000);
 		if (_game._maxAccumulation < _game._step)
@@ -549,6 +554,11 @@ class FlxG
 	 */
 	static private function set_flashFramerate(Framerate:Int):Int
 	{
+		if (Framerate > FlxG.framerate)
+		{
+			FlxG.warn("You about to set flash framerate more than game framerate. It could stop your game from updating");
+		}
+		
 		_game._flashFramerate = Std.int(Math.abs(Framerate));
 		if (_game.stage != null)
 		{

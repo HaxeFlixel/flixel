@@ -25,6 +25,10 @@ class FlxText extends FlxSprite
 	 */
 	public var useShadow(get_useShadow, set_useShadow):Bool;
 	
+	public var outline(get_outline, set_outline):Int;
+	
+	public var useOutline(get_useOutline, set_useOutline):Bool;
+	
 	/**
 	 * Internal reference to a Flash <code>TextField</code> object.
 	 */
@@ -50,6 +54,10 @@ class FlxText extends FlxSprite
 	 * Internal tracker for shadow usage, default is false
 	 */
 	private var _useShadow:Bool;
+	
+	public var _outline:Int;
+	
+	private var _useOutline:Bool;
 	
 	private var _isStatic:Bool;
 	
@@ -100,6 +108,8 @@ class FlxText extends FlxSprite
 		_regen = true;
 		_shadow = 0;
 		_useShadow = false;
+		_outline = 0;
+		_useOutline = false;
 		allowCollisions = FlxObject.NONE;
 		moves = false;
 		#if flash
@@ -349,6 +359,51 @@ class FlxText extends FlxSprite
 		return _useShadow;
 	}
 	
+	private function get_outline():Int
+	{
+		return _outline;
+	}
+	
+	/**
+	 * @private
+	 */
+	// TODO: implement this
+	private function set_outline(Color:Int):Int
+	{
+		/*if (_isStatic)
+		{
+			return Color;
+		}
+		
+		Color &= 0x00ffffff;
+		if (_shadow != Color && useShadow == true)
+		{
+			dirty = true;
+		}
+		_shadow = Color;*/
+		return Color;
+	}
+	
+	private function get_useOutline():Bool
+	{
+		return _useOutline;
+	}
+	
+	private function set_useOutline(value:Bool):Bool
+	{
+		/*if (_isStatic)
+		{
+			return value;
+		}
+		
+		if (value != _useShadow)
+		{
+			_useShadow = value;
+			dirty = true;
+		}*/
+		return _useOutline;
+	}
+	
 	/**
 	 * Whether this text field can be changed (text or appearance).
 	 * Once set to true it can't be changed anymore.
@@ -438,6 +493,10 @@ class FlxText extends FlxSprite
 					_matrix.translate( -1, -1);
 					_formatAdjusted.color = _format.color;
 					updateFormat(_formatAdjusted);
+				}
+				else if (_useOutline)
+				{
+					// TODO: implement this
 				}
 				//Actually draw the text onto the buffer
 				_pixels.draw(_textField, _matrix, _colorTransform);
