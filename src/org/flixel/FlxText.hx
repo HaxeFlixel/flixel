@@ -320,8 +320,12 @@ class FlxText extends FlxSprite
 			return Color;
 		}
 		
+		Color &= 0x00ffffff;
+		if (_shadow != Color && useShadow == true)
+		{
+			dirty = true;
+		}
 		_shadow = Color;
-		dirty = true;
 		return Color;
 	}
 	
