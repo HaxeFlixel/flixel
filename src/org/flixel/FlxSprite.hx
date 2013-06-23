@@ -824,7 +824,7 @@ class FlxSprite extends FlxObject
 			
 		#if !flash
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt, antialiasing);
 			#else
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
 			#end

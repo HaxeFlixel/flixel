@@ -331,7 +331,7 @@ class FlxBitmapFont extends FlxSprite
 		{
 			camera = cameras[i++];
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt, antialiasing);
 			#else
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
 			#end

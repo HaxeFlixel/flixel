@@ -211,7 +211,7 @@ class FlxTileblock extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt, antialiasing);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			

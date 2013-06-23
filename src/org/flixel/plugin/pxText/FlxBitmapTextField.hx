@@ -228,7 +228,7 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			camera = cameras[i++];
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt, antialiasing);
 			#else
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
 			#end

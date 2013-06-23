@@ -272,9 +272,9 @@ class FlxCamera extends FlxBasic
 	private static var _storageHead:DrawStackItem;
 	
 	#if !js
-	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int):DrawStackItem
+	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
 	#else
-	inline public function getDrawStackItem(ObjAtlas:Atlas, UseAlpha:Bool):DrawStackItem
+	inline public function getDrawStackItem(ObjAtlas:Atlas, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
 	#end
 	{
 		var itemToReturn:DrawStackItem = null;
@@ -282,6 +282,7 @@ class FlxCamera extends FlxBasic
 		{
 			_headOfDrawStack = _currentStackItem;
 			_currentStackItem.atlas = ObjAtlas;
+			_currentStackItem.smoothing = ObjSmoothing;
 			#if !js
 			_currentStackItem.colored = ObjColored;
 			_currentStackItem.blending = ObjBlending;
@@ -290,11 +291,17 @@ class FlxCamera extends FlxBasic
 			#end
 			itemToReturn = _currentStackItem;
 		}
-		#if !js
-		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.colored == ObjColored && _currentStackItem.blending == ObjBlending)
-		#else
-		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.useAlpha == UseAlpha)
+	#if !js
+		else if (_currentStackItem.atlas == ObjAtlas 
+			&& _currentStackItem.colored == ObjColored 
+			&& _currentStackItem.blending == ObjBlending 
+		#if FLX_SPRITE_ANTIALIASING 
+			&& _currentStackItem.smoothing == ObjSmoothing 
 		#end
+		)
+	#else
+		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.useAlpha == UseAlpha)
+	#end
 		{
 			itemToReturn = _currentStackItem;
 		}
@@ -315,6 +322,7 @@ class FlxCamera extends FlxBasic
 			}
 			
 			newItem.atlas = ObjAtlas;
+			newItem.smoothing = ObjSmoothing;
 			#if !js
 			newItem.colored = ObjColored;
 			newItem.blending = ObjBlending;
@@ -383,8 +391,7 @@ class FlxCamera extends FlxBasic
 					tempFlags |= Graphics.TILE_ALPHA;
 				}
 				#end
-				// TODO: currItem.antialiasing
-				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing/* || currItem.antialiasing*/), tempFlags);
+				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing || currItem.smoothing), tempFlags);
 				TileSheetExt._DRAWCALLS++;
 			}
 			currItem = currItem.next;

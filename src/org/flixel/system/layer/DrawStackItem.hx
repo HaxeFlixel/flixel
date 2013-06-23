@@ -16,6 +16,8 @@ class DrawStackItem
 	
 	public var initialized:Bool = false;
 	
+	public var smoothing:Bool = false;
+	
 	public function new()
 	{
 		drawData = new Array<Float>();
@@ -25,6 +27,7 @@ class DrawStackItem
 	{
 		atlas = null;
 		initialized = false;
+		smoothing = false;
 		position = 0;
 	}
 	

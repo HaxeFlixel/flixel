@@ -1061,7 +1061,7 @@ class FlxBar extends FlxSprite
 				continue;
 			}
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt, antialiasing);
 			#else
 			var useAlpha:Bool = (alpha < 0);
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);

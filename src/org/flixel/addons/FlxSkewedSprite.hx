@@ -107,7 +107,7 @@ class FlxSkewedSprite extends FlxSprite
 			
 		#if !flash
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt, antialiasing);
 			#else
 			var useAlpha:Bool = (alpha < 1);
 			drawItem = camera.getDrawStackItem(_atlas, useAlpha);

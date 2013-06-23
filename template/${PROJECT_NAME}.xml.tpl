@@ -70,6 +70,9 @@
 	
 	<!--Enable right and middle click support for the mouse. Requires flash player version 11.2 or higher. Doesn't work for HTML5. -->
 	<!--<haxedef name="FLX_MOUSE_ADVANCED" />-->
-	<!--<app swf-version="11.2" />--> 
+	<!--<app swf-version="11.2" />-->
+	
+	<!--Enables checks for antialiasing for sprite rendering on native targets. And could affect perfomance. -->
+	<!--<haxedef name="FLX_SPRITE_ANTIALIASING" />-->
 
 </project>
