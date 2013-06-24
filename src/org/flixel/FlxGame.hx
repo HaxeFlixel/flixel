@@ -193,7 +193,6 @@ class FlxGame extends Sprite
 	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
 	 * @param	GameFramerate	How frequently the game should update (default is 60 times per second).
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 60 times per second).
-	 * @param	UseSystemCursor	Whether to use the default OS mouse pointer, or to use custom flixel ones.
 	 */
 	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60)
 	{

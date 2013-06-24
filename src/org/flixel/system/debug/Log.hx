@@ -54,7 +54,7 @@ class Log extends FlxWindow
 		_lines = new Array<String>();
 		
 		STYLE_NORMAL = new LogStyle();
-		STYLE_WARNING = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, "Beep");
+		STYLE_WARNING = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, "Beep", true);
 		STYLE_ERROR = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, "Beep", true);
 		STYLE_NOTICE = new LogStyle("[NOTICE] ", "008000", 12, true);
 		STYLE_CONSOLE = new LogStyle("&#62; ", "0000ff", 12, true);
