@@ -525,7 +525,7 @@ class FlxG
 	{
 		if (Framerate < FlxG.flashFramerate)
 		{
-			FlxG.warn("You about to set game framerate less that flash framerate. It could stop your game from updating");
+			FlxG.warn("FlxG.framerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
 		_game._step = Std.int(Math.abs(1000 / Framerate));
@@ -556,7 +556,7 @@ class FlxG
 	{
 		if (Framerate > FlxG.framerate)
 		{
-			FlxG.warn("You about to set flash framerate more than game framerate. It could stop your game from updating");
+			FlxG.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
 		_game._flashFramerate = Std.int(Math.abs(Framerate));
