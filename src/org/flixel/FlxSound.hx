@@ -269,7 +269,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
+	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -304,7 +304,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	EmbeddedSound	A string representing the URL of the MP3 file you want to play.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.
+	 * @param	AutoDestroy		Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
 	 * 
 	 * @return	This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -500,7 +500,7 @@ class FlxSound extends FlxBasic
 	 */
 	private function updateTransform():Void
 	{
-		_transform.volume = (FlxG.mute ? 0 : 1) * FlxG.volume * _volume * _volumeAdjust;
+		_transform.volume = (FlxG.sound.mute ? 0 : 1) * FlxG.sound.volume * _volume * _volumeAdjust;
 		if (_channel != null)
 		{
 			_channel.soundTransform = _transform;
@@ -594,7 +594,7 @@ class FlxSound extends FlxBasic
 	 */
 	private function gotID3(event:Event = null):Void
 	{
-		FlxG.notice("Got ID3 info.");
+		FlxG.log.notice("Got ID3 info.");
 		name = _sound.id3.songName;
 		artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);

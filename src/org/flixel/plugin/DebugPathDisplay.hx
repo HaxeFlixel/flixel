@@ -37,19 +37,19 @@ class DebugPathDisplay extends FlxBasic
 	}
 	
 	/**
-	 * Called by <code>FlxG.drawPlugins()</code> after the game state has been drawn.
+	 * Called by <code>FlxG.plugins.draw()</code> after the game state has been drawn.
 	 * Cycles through cameras and calls <code>drawDebug()</code> on each one.
 	 */
 	override public function drawDebug():Void
 	{
-		if (!FlxG.visualDebug || ignoreDrawDebug)
+		if (!FlxG.debugger.visualDebug || ignoreDrawDebug)
 		{
 			return;	
 		}
 		
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var i:Int = 0;
 		var l:Int = cameras.length;
@@ -69,7 +69,7 @@ class DebugPathDisplay extends FlxBasic
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		
 		var i:Int = _paths.length - 1;

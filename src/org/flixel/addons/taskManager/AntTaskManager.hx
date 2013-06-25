@@ -217,7 +217,7 @@ class AntTaskManager extends FlxBasic
 	{
 		if (!_isStarted)
 		{
-			FlxG.addPlugin(this);
+			FlxG.plugins.add(this);
 			_isStarted = true;
 			_isPaused = false;
 		}
@@ -230,7 +230,7 @@ class AntTaskManager extends FlxBasic
 	{
 		if (_isStarted)
 		{
-			FlxG.removePlugin(this);
+			FlxG.plugins.remove(this);
 			_isStarted = false;
 		}
 	}
@@ -326,7 +326,7 @@ class AntTaskManager extends FlxBasic
 		{
 			if (_isStarted)
 			{
-				FlxG.removePlugin(this);
+				FlxG.plugins.remove(this);
 			}
 			_isPaused = true;
 		}
@@ -334,7 +334,7 @@ class AntTaskManager extends FlxBasic
 		{
 			if (_isStarted)
 			{
-				FlxG.addPlugin(this);
+				FlxG.plugins.add(this);
 			}
 			_isPaused = false;
 		}

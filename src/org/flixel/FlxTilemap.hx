@@ -179,7 +179,7 @@ class FlxTilemap extends FlxObject
 		_debugTilePartial = null;
 		_debugTileSolid = null;
 		#end
-		_lastVisualDebug = FlxG.visualDebug;
+		_lastVisualDebug = FlxG.debugger.visualDebug;
 		#end
 		_startingIndex = 0;
 		
@@ -313,7 +313,7 @@ class FlxTilemap extends FlxObject
 		}
 		
 		//Figure out the size of the tiles
-		_tiles = FlxG.addBitmap(TileGraphic);
+		_tiles = FlxG.bitmap.add(TileGraphic);
 		_tileWidth = TileWidth;
 		if (_tileWidth <= 0)
 		{
@@ -329,8 +329,8 @@ class FlxTilemap extends FlxObject
 		_repeatY = (RepeatY >= 0) ? RepeatY : 0;
 		
 		#if !flash
-		_tiles = FlxG.addTilemapBitmap(TileGraphic, false, false, null, _tileWidth, _tileHeight, _repeatX, _repeatY);
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_tiles = FlxG.bitmap.addTilemap(TileGraphic, false, false, null, _tileWidth, _tileHeight, _repeatX, _repeatY);
+		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		#end
 		
 		//create some tile objects that we'll use for overlap checks (one for each tile)
@@ -413,9 +413,9 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function update():Void
 	{
-		if(_lastVisualDebug != FlxG.visualDebug)
+		if(_lastVisualDebug != FlxG.debugger.visualDebug)
 		{
-			_lastVisualDebug = FlxG.visualDebug;
+			_lastVisualDebug = FlxG.debugger.visualDebug;
 			setDirty();
 		}
 		
@@ -498,7 +498,7 @@ class FlxTilemap extends FlxObject
 				{
 					Buffer.pixels.copyPixels(_tiles, _flashRect, _flashPoint, null, null, true);
 					#if !FLX_NO_DEBUG
-					if (FlxG.visualDebug && !ignoreDrawDebug) 
+					if (FlxG.debugger.visualDebug && !ignoreDrawDebug) 
 					{
 						tile = _tileObjects[_data[columnIndex]];
 						if(tile != null)
@@ -568,10 +568,10 @@ class FlxTilemap extends FlxObject
 	override public function drawDebugOnCamera(Camera:FlxCamera = null):Void
 	{
 		var buffer:FlxTilemapBuffer = null;
-		var l:Int = FlxG.cameras.length;
+		var l:Int = FlxG.cameras.list.length;
 		for (i in 0...l)
 		{
-			if (FlxG.cameras[i] == Camera)
+			if (FlxG.cameras.list[i] == Camera)
 			{
 				buffer = _buffers[i];
 				break;
@@ -689,7 +689,7 @@ class FlxTilemap extends FlxObject
 		
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var buffer:FlxTilemapBuffer;
@@ -1384,7 +1384,7 @@ class FlxTilemap extends FlxObject
 		
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		point.x = point.x - Camera.scroll.x;
 		point.y = point.y - Camera.scroll.y;
@@ -1586,7 +1586,7 @@ class FlxTilemap extends FlxObject
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		Camera.setBounds(x + Border * _tileWidth, y + Border * _tileHeight, width - Border * _tileWidth * 2, height - Border * _tileHeight * 2, UpdateWorld);
 	}

@@ -240,7 +240,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 		
 		if (buttonNormal.cameras == null)
 		{
-			buttonNormal.cameras = FlxG.cameras;
+			buttonNormal.cameras = FlxG.cameras.list;
 		}
 		
 		var c:FlxCamera;
@@ -389,13 +389,13 @@ class FlxButtonPlus extends FlxSpriteGroup
 		}
 		normalKey = normalKey + "]";
 		
-		if (FlxG._cache.exists(normalKey) == false)
+		if (FlxG.bitmap._cache.exists(normalKey) == false)
 		{
-			var normalBitmap:BitmapData = FlxG.createBitmap(width, height, FlxColor.TRANSPARENT, false, normalKey);
+			var normalBitmap:BitmapData = FlxG.bitmap.create(width, height, FlxColor.TRANSPARENT, false, normalKey);
 			normalBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(normalBitmap, width - 2, height - 2, offColor, 1, 1);
 		}
-		buttonNormal.pixels = FlxG._cache.get(normalKey);
+		buttonNormal.pixels = FlxG.bitmap._cache.get(normalKey);
 		#end
 	}
 	
@@ -424,13 +424,13 @@ class FlxButtonPlus extends FlxSpriteGroup
 		}
 		highlightKey = highlightKey + "]";
 		
-		if (FlxG._cache.exists(highlightKey) == false)
+		if (FlxG.bitmap._cache.exists(highlightKey) == false)
 		{
-			var highlightBitmap:BitmapData = FlxG.createBitmap(width, height, FlxColor.TRANSPARENT, false, highlightKey);
+			var highlightBitmap:BitmapData = FlxG.bitmap.create(width, height, FlxColor.TRANSPARENT, false, highlightKey);
 			highlightBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(highlightBitmap, width - 2, height - 2, onColor, 1, 1);
 		}
-		buttonHighlight.pixels = FlxG._cache.get(highlightKey);
+		buttonHighlight.pixels = FlxG.bitmap._cache.get(highlightKey);
 		#end
 	}
 	

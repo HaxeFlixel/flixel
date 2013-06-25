@@ -42,7 +42,7 @@ class FlxBackdrop extends FlxObject
 	{
 		super();
 		
-		var data:BitmapData = FlxG.addBitmap(graphic);
+		var data:BitmapData = FlxG.bitmap.add(graphic);
 		var w:Int = data.width;
 		var h:Int = data.height;
 		if (repeatX) w += FlxG.width;
@@ -59,7 +59,7 @@ class FlxBackdrop extends FlxObject
 		_repeatY = repeatY;
 		
 		#if !flash
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		_tileInfo = [];
 		updateAtlasInfo();
 		_numTiles = 0;
@@ -105,10 +105,10 @@ class FlxBackdrop extends FlxObject
 	{
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
-		var l:Int = cameras.length;
+		var l:Int = cameras.list.length;
 		
 		for (i in 0...(l))
 		{

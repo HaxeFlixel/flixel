@@ -7,7 +7,6 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import org.flixel.FlxAssets;
-
 import org.flixel.FlxG;
 
 /**
@@ -66,7 +65,7 @@ class Vis extends Sprite
 	 */
 	public function onBounds():Void
 	{
-		FlxG.visualDebug = !FlxG.visualDebug;
+		FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
 	}
 	
 	//***EVENT HANDLERS***//
@@ -168,7 +167,7 @@ class Vis extends Sprite
 	 */
 	private function updateGUI():Void
 	{
-		if(FlxG.visualDebug)
+		if(FlxG.debugger.visualDebug)
 		{
 			if (_overBounds && (_bounds.alpha != 1.0))
 			{

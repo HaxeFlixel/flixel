@@ -1,29 +1,18 @@
 package org.flixel.system;
 
-import flash.geom.Rectangle;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
-import flash.display.DisplayObject;
-import flash.display.Graphics;
-import flash.display.MovieClip;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
-import flash.errors.Error;
 import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.net.URLRequest;
-import flash.text.TextField;
-import flash.text.TextFormat;
+import flash.geom.Rectangle;
 import flash.Lib;
-import flash.text.TextFormatAlign;
 import flash.utils.ByteArray;
-import org.flixel.plugin.pxText.PxTextAlign;
+import org.flixel.FlxG;
 import org.flixel.system.preloaderHelpers.PxBitmapFont;
 import org.flixel.system.preloaderHelpers.PxTextField;
-
-import org.flixel.FlxG;
 
 /**
  * This class handles the 8-bit style preloader.

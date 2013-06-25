@@ -4,7 +4,6 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import org.flixel.FlxG;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxColor;

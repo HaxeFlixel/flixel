@@ -24,7 +24,7 @@ typedef SpriteReg = {
 * Provides mouse event detection for FlxSprites.
 * To use it, initialize the manager and register sprites. 
 * 
-* 		FlxG.addPlugin(new MouseInteractionMgr());
+* 		FlxG.plugins.add(new MouseInteractionMgr());
 * 		var spr:FlxSprite = new FlxSprite();
 * 		MouseInteractionMgr.addSprite(spr, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
 * 
@@ -45,7 +45,7 @@ class MouseInteractionMgr extends FlxBasic
 	private static var _point:FlxPoint;
 
 	/**
-	* Call this using FlxG.addPlugin(new MouseInteractionMgr()).
+	* Call this using FlxG.plugins.add(new MouseInteractionMgr()).
 	*/
 	public function new()
 	{
@@ -67,8 +67,8 @@ class MouseInteractionMgr extends FlxBasic
 	*/
 	public static function initTimerManager()
 	{
-		if (FlxG.getPlugin(MouseInteractionMgr) == null)
-			FlxG.addPlugin(new MouseInteractionMgr());
+		if (FlxG.plugins.get(MouseInteractionMgr) == null)
+			FlxG.plugins.add(new MouseInteractionMgr());
 	}
 	/**
 	* Adds a sprite to MouseInteractionMgr registry.
@@ -85,8 +85,8 @@ class MouseInteractionMgr extends FlxBasic
 	*/
 	public static function addSprite(sprite:FlxSprite, onMouseDown:FlxSprite->Void = null, onMouseUp:FlxSprite->Void = null, onMouseOver:FlxSprite->Void = null, onMouseOut:FlxSprite->Void = null, mouseChildren = false, mouseEnabled = true)
 	{
-		if (FlxG.getPlugin(MouseInteractionMgr) == null)
-			FlxG.addPlugin(new MouseInteractionMgr());
+		if (FlxG.plugins.get(MouseInteractionMgr) == null)
+			FlxG.plugins.add(new MouseInteractionMgr());
 
 		var newReg:SpriteReg = {
 			sprite: sprite,
@@ -203,11 +203,11 @@ class MouseInteractionMgr extends FlxBasic
 	private function checkOverlap(sprite:FlxSprite):Bool
 	{
 		var i:Int = 0;
-		var l:Int = FlxG.cameras.length;
+		var l:Int = FlxG.cameras.list.length;
 		var camera:FlxCamera;
 		while (i < l)
 		{
-			camera = FlxG.cameras[i++];
+			camera = FlxG.cameras.list[i++];
 
 			#if !FLX_NO_MOUSE
 			FlxG.mouse.getWorldPosition(camera, _point);

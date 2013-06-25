@@ -80,7 +80,7 @@ class FlxSubState extends FlxState
 	{
 		//Draw background
 		#if flash
-		if(cameras == null) { cameras = FlxG.cameras; }
+		if(cameras == null) { cameras = FlxG.cameras.list; }
 		var i:Int = 0;
 		var l:Int = cameras.length;
 		while (i < l)

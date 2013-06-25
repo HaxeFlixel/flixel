@@ -21,6 +21,7 @@ class TexturePackerData
 	
 	/**
 	 * Constructor
+	 * 
 	 * @param	description		name of data file with atlas description
 	 * @param	assetName		name of atlas image file
 	 */

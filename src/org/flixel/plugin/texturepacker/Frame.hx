@@ -13,7 +13,7 @@ class Frame
 	public var sourceSize:FlxPoint = null;
 	public var offset:FlxPoint = null;
 	
-	public function new() {  }
+	public function new() {}
 	
 	public function destroy():Void
 	{
