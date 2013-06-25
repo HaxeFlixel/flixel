@@ -255,7 +255,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			if (cameras == null)
 			{
-				cameras = FlxG.cameras;
+				cameras = FlxG.cameras.list;
 			}
 			var camera:FlxCamera;
 			var i:Int = 0;
@@ -369,7 +369,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 	}
 	
-#if !FLX_NO_DEBUG
+	#if !FLX_NO_DEBUG
 	override public function drawDebug():Void 
 	{
 		super.drawDebug();
@@ -378,7 +378,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			label.drawDebug();
 		}
 	}
-#end
+	#end
 	
 	// TODO: Return from Sound -> Class<Sound>
 	/**
@@ -399,19 +399,19 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		if (SoundOver != null)
 		{
-			soundOver = FlxG.loadSound(SoundOver, SoundOverVolume);
+			soundOver = FlxG.sound.load(SoundOver, SoundOverVolume);
 		}
 		if (SoundOut != null)
 		{
-			soundOut = FlxG.loadSound(SoundOut, SoundOutVolume);
+			soundOut = FlxG.sound.load(SoundOut, SoundOutVolume);
 		}
 		if (SoundDown != null)
 		{
-			soundDown = FlxG.loadSound(SoundDown, SoundDownVolume);
+			soundDown = FlxG.sound.load(SoundDown, SoundDownVolume);
 		}
 		if (SoundUp != null)
 		{
-			soundUp = FlxG.loadSound(SoundUp, SoundUpVolume);
+			soundUp = FlxG.sound.load(SoundUp, SoundUpVolume);
 		}
 	}
 	

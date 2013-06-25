@@ -150,7 +150,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 			while(i < l)
 			{
 				replayCancelKey = FlxG._game._replayCancelKeys[i++];
-				if((replayCancelKey == "MOUSE") || (replayCancelKey == "ANY"))
+				if ((replayCancelKey == "MOUSE") || (replayCancelKey == "ANY"))
 				{
 					if(FlxG._game._replayCallback != null)
 					{
@@ -159,7 +159,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 					}
 					else
 					{
-						FlxG.stopReplay();
+						FlxG.vcr.stopReplay();
 					}
 					break;
 				}
@@ -426,7 +426,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
-		var camera:FlxCamera = FlxG.camera;
+		var camera:FlxCamera = FlxG.cameras.defaultCamera;
 		screenX = Math.floor((_globalScreenPosition.x - camera.x)/camera.zoom);
 		screenY = Math.floor((_globalScreenPosition.y - camera.y)/camera.zoom);
 		x = screenX + camera.scroll.x;
@@ -444,7 +444,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		if (point == null)
 		{
@@ -467,7 +467,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		if (point == null)
 		{

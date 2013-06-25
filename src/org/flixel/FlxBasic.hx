@@ -118,7 +118,7 @@ class FlxBasic
 	{
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var i:Int = 0;
@@ -138,7 +138,7 @@ class FlxBasic
 			var i:Int = 0;
 			if (cameras == null)
 			{
-				cameras = FlxG.cameras;
+				cameras = FlxG.cameras.list;
 			}
 			var l:Int = cameras.length;
 			while (i < l)
@@ -312,11 +312,11 @@ class FlxBasic
 				{
 					if (!value.hasNodeWithName(_bitmapDataKey))
 					{
-						var bm:BitmapData = FlxG._cache.get(_bitmapDataKey);
+						var bm:BitmapData = FlxG.bitmap._cache.get(_bitmapDataKey);
 						if (bm == null) 
 						{
 							#if debug
-							throw "There isn't bitmapData with key: " + _bitmapDataKey + " in FlxG._cache";
+							throw "There is no bitmapData with key: " + _bitmapDataKey + " in FlxG.bitmap._cache";
 							#end
 							return null;
 						}
@@ -381,7 +381,7 @@ class FlxBasic
 			}
 			else
 			{
-				var bm:BitmapData = FlxG._cache.get(_bitmapDataKey);
+				var bm:BitmapData = FlxG.bitmap._cache.get(_bitmapDataKey);
 				_node = _atlas.addNode(bm, _bitmapDataKey);
 				if (_node == null)
 				{

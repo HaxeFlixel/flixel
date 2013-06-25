@@ -370,10 +370,10 @@ class FlxSprite extends FlxObject
 	{
 		bakedRotation = 0;
 		#if !flash
-		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key);
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_pixels = FlxG.bitmap.add(Graphic, false, Unique, Key);
+		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		#else
-		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique, Key);
+		_pixels = FlxG.bitmap.add(Graphic, Reverse, Unique, Key);
 		#end
 		
 		if (Reverse)
@@ -421,8 +421,8 @@ class FlxSprite extends FlxObject
 		{
 			Key += "FrameSize:" + Width + "_" + Height;
 		}
-		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key, Width, Height);
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_pixels = FlxG.bitmap.add(Graphic, false, Unique, Key, Width, Height);
+		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		#else
 		nullTextureData();
 		#end
@@ -448,7 +448,7 @@ class FlxSprite extends FlxObject
 	{
 		//Create the brush and canvas
 		var rows:Int = Std.int(Math.sqrt(Rotations));
-		var brush:BitmapData = FlxG.addBitmap(Graphic, false, false, Key);
+		var brush:BitmapData = FlxG.bitmap.add(Graphic, false, false, Key);
 		if (Frame >= 0)
 		{
 			//Using just a segment of the graphic - find the right bit here
@@ -505,16 +505,16 @@ class FlxSprite extends FlxObject
 	#else
 		key += ":" + Frame + ":" + width + "x" + height + ":" + Rotations;
 	#end
-		var skipGen:Bool = FlxG.checkBitmapCache(key);
+		var skipGen:Bool = FlxG.bitmap.checkCache(key);
 		
 		#if flash
-		_pixels = FlxG.createBitmap(Std.int(width), Std.int(height), 0, true, key);
+		_pixels = FlxG.bitmap.create(Std.int(width), Std.int(height), 0, true, key);
 		#else
-		_pixels = FlxG.createBitmap(Std.int(width) + columns, Std.int(height) + rows, FlxColor.TRANSPARENT, true, key);
+		_pixels = FlxG.bitmap.create(Std.int(width) + columns, Std.int(height) + rows, FlxColor.TRANSPARENT, true, key);
 		#end
 		
 		#if !flash
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		#end
 		
 		width = frameWidth = _pixels.width;
@@ -585,9 +585,9 @@ class FlxSprite extends FlxObject
 	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
 	{
 		bakedRotation = 0;
-		_pixels = FlxG.createBitmap(Width, Height, Color, Unique, Key);
+		_pixels = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
 		#if !flash
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		#else
 		nullTextureData();
 		#end
@@ -612,8 +612,8 @@ class FlxSprite extends FlxObject
 		bakedRotation = 0;
 		_textureData = Data;
 		
-		_pixels = FlxG.addBitmap(Data.assetName, false, Unique);
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_pixels = FlxG.bitmap.add(Data.assetName, false, Unique);
+		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		
 		if (Reverse)
 		{
@@ -797,7 +797,7 @@ class FlxSprite extends FlxObject
 		
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var i:Int = 0;
@@ -1377,7 +1377,7 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		FlxG.warn("No animation called \"" + AnimName + "\"");
+		FlxG.log.warn("No animation called \"" + AnimName + "\"");
 	}
 	
 	/**
@@ -1566,11 +1566,11 @@ class FlxSprite extends FlxObject
 		height = frameHeight = _pixels.height;
 		resetHelpers();
 		#if !flash
-		_bitmapDataKey = FlxG.getCacheKeyFor(_pixels);
+		_bitmapDataKey = FlxG.bitmap.getCacheKeyFor(_pixels);
 		if (_bitmapDataKey == null)
 		{
-			_bitmapDataKey = FlxG.getUniqueBitmapKey();
-			FlxG.addBitmap(Pixels, false, false, _bitmapDataKey);
+			_bitmapDataKey = FlxG.bitmap.getUniqueKey();
+			FlxG.bitmap.add(Pixels, false, false, _bitmapDataKey);
 		}
 		#else
 		nullTextureData();
@@ -1821,7 +1821,7 @@ class FlxSprite extends FlxObject
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		getScreenXY(_point, Camera);
 		_point.x = _point.x - offset.x;
@@ -1871,7 +1871,7 @@ class FlxSprite extends FlxObject
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		getScreenXY(_point, Camera);
 		_point.x = _point.x - offset.x;
@@ -2170,7 +2170,7 @@ class FlxSprite extends FlxObject
 
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		var X:Float = point.x - Camera.scroll.x;
 		var Y:Float = point.y - Camera.scroll.y;

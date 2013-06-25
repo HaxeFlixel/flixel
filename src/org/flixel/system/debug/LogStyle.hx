@@ -2,7 +2,7 @@ package org.flixel.system.debug;
 
 /**
  * A class that allows you to create a custom style
- * for <code>FlxG.advancedLog()</code>. Also used 
+ * for <code>FlxG.log.advanced()</code>. Also used 
  * internally for the pre-defined styles.
  */
 class LogStyle
@@ -54,7 +54,7 @@ class LogStyle
 	public var callbackFunction:Dynamic;
 	
 	/**
-	 * Create a new <code>LogStyle</code> to be used in conjunction with <code>FlxG.advancedLog()</code>
+	 * Create a new <code>LogStyle</code> to be used in conjunction with <code>FlxG.log.advanced()</code>
 	 * @param	Prefix				A prefix which is always attached to the start of the logged data.
 	 * @param	Color				The text color.
 	 * @param	Size				The text size.

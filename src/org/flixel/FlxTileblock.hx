@@ -121,8 +121,8 @@ class FlxTileblock extends FlxSprite
 		}
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
-		_pixels = FlxG.addTilemapBitmap(TileGraphic, false, false, null, _tileWidth, _tileHeight, _repeatX, _repeatY);
-		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_pixels = FlxG.bitmap.addTilemap(TileGraphic, false, false, null, _tileWidth, _tileHeight, _repeatX, _repeatY);
+		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		frameWidth = Std.int(width);
 		frameHeight = Std.int(height);
 		resetHelpers();
@@ -180,7 +180,7 @@ class FlxTileblock extends FlxSprite
 		
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var i:Int = 0;

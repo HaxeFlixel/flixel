@@ -244,7 +244,7 @@ class FlxPath
 		}
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		
 		//Set up our global flash graphics object to draw out the path
@@ -326,7 +326,7 @@ class FlxPath
 	
 	static private function get_manager():DebugPathDisplay
 	{
-		return cast(FlxG.getPlugin(DebugPathDisplay), DebugPathDisplay);
+		return cast(FlxG.plugins.get(DebugPathDisplay), DebugPathDisplay);
 	}	
 	#end
 }

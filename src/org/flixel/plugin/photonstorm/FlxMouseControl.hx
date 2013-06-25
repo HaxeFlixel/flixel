@@ -148,7 +148,7 @@ class FlxMouseControl extends FlxBasic
 			
 			if (linkToDeadZone == true)
 			{
-				if (FlxMath.mouseInFlxRect(false, FlxG.camera.deadzone) == false)
+				if (FlxMath.mouseInFlxRect(false, FlxG.cameras.defaultCamera.deadzone) == false)
 				{
 					releaseMouse();
 				}

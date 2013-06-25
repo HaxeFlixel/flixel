@@ -117,7 +117,7 @@ class FlxKongregate
 
     private static function apiLoadError(error:IOError):Void
     {
-        FlxG.log("Error loading Kongregate API:" + error);
+        FlxG.log.add("Error loading Kongregate API:" + error);
     }
 
     /**

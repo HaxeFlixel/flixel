@@ -238,7 +238,7 @@ class FlxExtendedSprite extends FlxSprite
 	 */
 	public function enableMouseClicks(onRelease:Bool, pixelPerfect:Bool = false, alphaThreshold:Int = 255):Void
 	{
-		if (FlxG.getPlugin(FlxMouseControl) == null)
+		if (FlxG.plugins.get(FlxMouseControl) == null)
 		{
 			throw "FlxExtendedSprite.enableMouseClicks called but FlxMouseControl plugin not activated";
 		}
@@ -298,7 +298,7 @@ class FlxExtendedSprite extends FlxSprite
 	 */
 	public function enableMouseDrag(lockCenter:Bool = false, pixelPerfect:Bool = false, alphaThreshold:Int = 255, boundsRect:FlxRect = null, boundsSprite:FlxSprite = null):Void
 	{
-		if (FlxG.getPlugin(FlxMouseControl) == null)
+		if (FlxG.plugins.get(FlxMouseControl) == null)
 		{
 			throw "FlxExtendedSprite.enableMouseDrag called but FlxMouseControl plugin not activated";
 		}
@@ -362,7 +362,7 @@ class FlxExtendedSprite extends FlxSprite
 	 */
 	public function enableMouseThrow(xFactor:Int, yFactor:Int):Void
 	{
-		if (FlxG.getPlugin(FlxMouseControl) == null)
+		if (FlxG.plugins.get(FlxMouseControl) == null)
 		{
 			throw "FlxExtendedSprite.enableMouseThrow called but FlxMouseControl plugin not activated";
 		}
@@ -433,7 +433,7 @@ class FlxExtendedSprite extends FlxSprite
 	 */ 
 	public function enableMouseSpring(onPressed:Bool = true, retainVelocity:Bool = false, tension:Float = 0.1, friction:Float = 0.95, gravity:Float = 0):MouseSpring
 	{
-		if (FlxG.getPlugin(FlxMouseControl) == null)
+		if (FlxG.plugins.get(FlxMouseControl) == null)
 		{
 			throw "FlxExtendedSprite.enableMouseSpring called but FlxMouseControl plugin not activated";
 		}

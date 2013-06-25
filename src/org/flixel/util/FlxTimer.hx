@@ -180,6 +180,6 @@ class FlxTimer
 	
 	static private function get_manager():TimerManager
 	{
-		return cast(FlxG.getPlugin(TimerManager), TimerManager);
+		return cast(FlxG.plugins.get(TimerManager), TimerManager);
 	}
 }

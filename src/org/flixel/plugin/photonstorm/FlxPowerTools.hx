@@ -12,11 +12,7 @@ package org.flixel.plugin.photonstorm;
 
 class FlxPowerTools 
 {
-	
-	public static inline var LIBRARY_NAME:String = "flixel power tools";
-	public static inline var LIBRARY_MAJOR_VERSION:Int = 1;
-	public static inline var LIBRARY_MINOR_VERSION:Int = 9;
-	
-	public function new() { }
-	
+	inline static public var LIBRARY_NAME:String = "flixel power tools";
+	inline static public var LIBRARY_MAJOR_VERSION:Int = 1;
+	inline static public var LIBRARY_MINOR_VERSION:Int = 9;
 }

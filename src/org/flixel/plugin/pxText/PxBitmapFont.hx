@@ -95,8 +95,8 @@ class PxBitmapFont
 		{
 			_tileRects = [];
 			var result:BitmapData = preparePixelizerBitmapData(pBitmapData, _tileRects);
-			_bitmapDataKey = FlxG.getUniqueBitmapKey("font");
-			_pixels = FlxG.addBitmap(result, false, false, _bitmapDataKey);
+			_bitmapDataKey = FlxG.bitmap.getUniqueKey("font");
+			_pixels = FlxG.bitmap.add(result, false, false, _bitmapDataKey);
 			var currRect:Rectangle;
 			
 			#if flash
@@ -121,8 +121,8 @@ class PxBitmapFont
 		{
 			_symbols = new Array<HelperSymbol>();
 			var result:BitmapData = prepareAngelCodeBitmapData(pBitmapData, pXMLData, _symbols);
-			_bitmapDataKey = FlxG.getUniqueBitmapKey("font");
-			_pixels = FlxG.addBitmap(result, false, false, _bitmapDataKey);
+			_bitmapDataKey = FlxG.bitmap.getUniqueKey("font");
+			_pixels = FlxG.bitmap.add(result, false, false, _bitmapDataKey);
 			#if flash
 			updateGlyphData();
 			#end

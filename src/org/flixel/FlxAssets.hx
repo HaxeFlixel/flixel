@@ -121,7 +121,7 @@ class FlxAssets
 			{
 				if (resourceTypes.get(key) == "sound")
 				{	
-					FlxG.addSound(key);
+					FlxG.sound.add(key);
 				}
 			}
 		}

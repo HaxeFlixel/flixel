@@ -426,7 +426,7 @@ class FlxObject extends FlxBasic
 	{
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var i:Int = 0;
@@ -453,7 +453,7 @@ class FlxObject extends FlxBasic
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		
 		if (!onScreenObject(Camera) || !Camera.visible || !Camera.exists)
@@ -522,7 +522,7 @@ class FlxObject extends FlxBasic
 	{
 		if(Path.nodes.length <= 0)
 		{
-			FlxG.warn("Paths need at least one node in them to be followed.");
+			FlxG.log.warn("Paths need at least one node in them to be followed.");
 			return;
 		}
 		
@@ -824,7 +824,7 @@ class FlxObject extends FlxBasic
 
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		var objectScreenPos:FlxPoint = object.getScreenXY(null, Camera);
 		getScreenXY(_point, Camera);
@@ -883,7 +883,7 @@ class FlxObject extends FlxBasic
 		
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		var objectScreenPos:FlxPoint = object.getScreenXY(null, Camera);
 		_point.x = X - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
@@ -908,7 +908,7 @@ class FlxObject extends FlxBasic
 
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		var X:Float = point.x - Camera.scroll.x;
 		var Y:Float = point.y - Camera.scroll.y;
@@ -930,7 +930,7 @@ class FlxObject extends FlxBasic
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		getScreenXY(_point,Camera);
 		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
@@ -950,7 +950,7 @@ class FlxObject extends FlxBasic
 		}
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		point.x = x - (Camera.scroll.x * scrollFactor.x);
 		point.y = y - (Camera.scroll.y * scrollFactor.y);
@@ -990,7 +990,7 @@ class FlxObject extends FlxBasic
 	private function set_width(Width:Float):Float
 	{
 		if (Width < 0) 
-			FlxG.warn("An object's width cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
+			FlxG.log.warn("An object's width cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
 		else
 			width = Width;
       
@@ -1003,7 +1003,7 @@ class FlxObject extends FlxBasic
 	private function set_height(Height:Float):Float
 	{
 		if (Height < 0) 
-			FlxG.warn("An object's height cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
+			FlxG.log.warn("An object's height cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
 		else
 		height = Height;
 		

@@ -1,6 +1,5 @@
 ﻿package org.flixel.tweens.sound;
 
-import org.flixel.FlxG;
 import org.flixel.FlxSound;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.util.Ease;

@@ -76,7 +76,7 @@ class FlxText extends FlxSprite
 		
 		_isStatic = false;
 		
-		var key:String = FlxG.getUniqueBitmapKey("text");
+		var key:String = FlxG.bitmap.getUniqueKey("text");
 		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
 		
 		if (Text == null)
@@ -620,10 +620,10 @@ class FlxText extends FlxSprite
 	{
 		#if !flash
 		_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
-		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
+		var cachedBmd:BitmapData = FlxG.bitmap._cache.get(_bitmapDataKey);
 		if (cachedBmd != _pixels)
 		{
-			FlxG._cache.set(_bitmapDataKey, _pixels);
+			FlxG.bitmap._cache.set(_bitmapDataKey, _pixels);
 			_atlas.clearAndFillWith(_pixels);
 			cachedBmd.dispose();
 		}

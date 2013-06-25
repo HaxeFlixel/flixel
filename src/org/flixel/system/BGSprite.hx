@@ -19,7 +19,7 @@ class BGSprite extends FlxSprite
 	public function new()
 	{
 		super();
-		makeGraphic(1, 1, FlxColor.TRANSPARENT, true, FlxG.getUniqueBitmapKey("bg_graphic_"));
+		makeGraphic(1, 1, FlxColor.TRANSPARENT, true, FlxG.bitmap.getUniqueKey("bg_graphic_"));
 		scrollFactor.make();
 	}
 	
@@ -37,7 +37,7 @@ class BGSprite extends FlxSprite
 		
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var i:Int = 0;

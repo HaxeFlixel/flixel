@@ -46,7 +46,7 @@ class FlxTextField extends FlxText
 	 * @param	Width			The width of the text object (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
-	 * @param	Camera			Camera to display. FlxG.camera is used by default (if you pass null)
+	 * @param	Camera			Camera to display. FlxG.cameras.defaultCamera is used by default (if you pass null)
 	 */
 	public function new(X:Float, Y:Float, Width:Int, Text:String = null, EmbeddedFont:Bool = true, Camera:FlxCamera = null)
 	{
@@ -54,7 +54,7 @@ class FlxTextField extends FlxText
 		
 		if (Camera == null)
 		{
-			Camera = FlxG.camera;
+			Camera = FlxG.cameras.defaultCamera;
 		}
 		
 		_addedToDisplay = false;
@@ -368,8 +368,8 @@ class FlxTextField extends FlxText
 		_textField.x = _point.x;
 		_textField.y = _point.y;
 		#else
-		_textField.x = _point.x - FlxG.camera.width * 0.5;
-		_textField.y = _point.y - FlxG.camera.height * 0.5;
+		_textField.x = _point.x - FlxG.cameras.defaultCamera.width * 0.5;
+		_textField.y = _point.y - FlxG.cameras.defaultCamera.height * 0.5;
 		#end
 		
 		FlxBasic._VISIBLECOUNT++;
@@ -422,7 +422,7 @@ class FlxTextField extends FlxText
 	}
 	
 	/**
-	 * Camera on which this text will be displayed. Default is FlxG.camera.
+	 * Camera on which this text will be displayed. Default is FlxG.cameras.defaultCamera.
 	 */
 	public var camera(get_camera, set_camera):FlxCamera;
 	

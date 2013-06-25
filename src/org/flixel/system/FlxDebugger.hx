@@ -30,6 +30,36 @@ import org.flixel.system.debug.Console;
 class FlxDebugger extends Sprite
 {
 	/**
+	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
+	 */
+	inline static public var DEBUGGER_STANDARD:Int = 0;
+	
+	/**
+	 * Debugger overlay layout preset: Tiny windows in the screen corners.
+	 */
+	inline static public var DEBUGGER_MICRO:Int = 1;
+	
+	/**
+	 * Debugger overlay layout preset: Large windows taking up bottom half of screen.
+	 */
+	inline static public var DEBUGGER_BIG:Int = 2;
+	
+	/**
+	 * Debugger overlay layout preset: Wide but low windows at the top of the screen.
+	 */
+	inline static public var DEBUGGER_TOP:Int = 3;
+	
+	/**
+	 * Debugger overlay layout preset: Large windows taking up left third of screen.
+	 */
+	inline static public var DEBUGGER_LEFT:Int = 4;
+	
+	/**
+	 * Debugger overlay layout preset: Large windows taking up right third of screen.
+	 */
+	inline static public var DEBUGGER_RIGHT:Int = 5;
+
+	/**
 	 * The amount of decimals FlxPoints are rounded to in log / watch.
 	 */
 	static public var pointPrecision:Int = 3; 
@@ -100,13 +130,13 @@ class FlxDebugger extends Sprite
 		
 		var txt:TextField = new TextField();
 		txt.x = 2;
-		txt.width = 160;
-		txt.height = 16;
+		txt.width = 170;
+		txt.height = 20;
 		txt.selectable = false;
 		txt.multiline = false;
 		txt.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 12, 0xffffff);
-		var str:String = FlxG.getLibraryName();
-		if (FlxG.debug)
+		var str:String = FlxG.libraryName;
+		if (FlxG.debugger.debug)
 		{
 			str += " [debug]";
 		}
@@ -128,7 +158,6 @@ class FlxDebugger extends Sprite
 		
 		console = new Console("console", 0, 0, false, screenBounds);
 		addChild(console);
-		FlxG.console = console;
 		
 		perf = new Perf("stats", 0, 0, false, screenBounds);
 		addChild(perf);
@@ -143,7 +172,7 @@ class FlxDebugger extends Sprite
 		vis.y = 2;
 		addChild(vis);
 		
-		setLayout(FlxG.DEBUGGER_STANDARD);
+		setLayout(DEBUGGER_STANDARD);
 		
 		//Should help with fake mouse focus type behavior
 		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
@@ -224,7 +253,7 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Rearrange the debugger windows using one of the constants specified in FlxG.
-	 * @param	Layout		The layout style for the debugger windows, e.g. <code>FlxG.DEBUGGER_MICRO</code>.
+	 * @param	Layout		The layout style for the debugger windows, e.g. <code>DEBUGGER_MICRO</code>.
 	 */
 	public function setLayout(Layout:Int):Void
 	{
@@ -234,13 +263,13 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Forces the debugger windows to reset to the last specified layout.
-	 * The default layout is <code>FlxG.DEBUGGER_STANDARD</code>.
+	 * The default layout is <code>DEBUGGER_STANDARD</code>.
 	 */
 	public function resetLayout():Void
 	{
 		switch(_layout)
 		{
-			case FlxG.DEBUGGER_MICRO:
+			case DEBUGGER_MICRO:
 				log.resize(_screen.x / 4, 68);
 				log.reposition(0, _screen.y);
 				console.resize((_screen.x / 2) - _gutter * 4, 35);
@@ -248,7 +277,7 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 4, 68);
 				watch.reposition(_screen.x,_screen.y);
 				perf.reposition(_screen.x, 0);
-			case FlxG.DEBUGGER_BIG:
+			case DEBUGGER_BIG:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(_gutter, _screen.y);
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
@@ -256,7 +285,7 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
 				watch.reposition(_screen.x, _screen.y - watch.height - console.height - _gutter * 1.5);
 				perf.reposition(_screen.x, 0);
-			case FlxG.DEBUGGER_TOP:
+			case DEBUGGER_TOP:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(0,0);
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
@@ -264,7 +293,7 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,console.height + _gutter + 15);
 				perf.reposition(_screen.x,_screen.y);
-			case FlxG.DEBUGGER_LEFT:
+			case DEBUGGER_LEFT:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(_gutter, _screen.y);
 				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2 - _gutter);
@@ -272,7 +301,7 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2);
 				watch.reposition(0,log.y + log.height + _gutter);
 				perf.reposition(_screen.x,0);
-			case FlxG.DEBUGGER_RIGHT:
+			case DEBUGGER_RIGHT:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(_gutter, _screen.y);
 				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2 - _gutter);
@@ -280,7 +309,7 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2);
 				watch.reposition(_screen.x,log.y + log.height + _gutter);
 				perf.reposition(0,0);
-			case FlxG.DEBUGGER_STANDARD:
+			case DEBUGGER_STANDARD:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(_gutter, _screen.y);
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
