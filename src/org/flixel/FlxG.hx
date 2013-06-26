@@ -165,47 +165,56 @@ class FlxG
 	// From here on: frontEnds
 	
 	/**
-	 * Contains things related to the console window on the debugger.
+	 * A reference to the <code>ConsoleFrontEnd</code> object. Use it to register functions and objects
+	 * or add new commands to the console window.
 	 */
 	static public var console:ConsoleFrontEnd;
 	/**
-	 * Contains things related to the log window on the debugger.
+	 * A reference to the <code>LogFrontEnd</code> object. Use it to add messages to the log window.
 	 */
 	static public var log:LogFrontEnd;
 	/**
-	 * Contains things related to the watch window on the debugger.
+	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
+	 * watch window.
 	 */
 	static public var watch:WatchFrontEnd;
 	/**
-	 * Contains things related to the debugger object.
+	 * A reference to the <code>DebuggerFrontEnd</code> object. Use it to show / hide / toggle the debguger
+	 * change its layout, activate visual debugging or change the key used to toggle it.
 	 */
 	static public var debugger:DebuggerFrontEnd;
 	
 	#if !FLX_NO_RECORD
 	/**
-	 * Contains things related to the recording system. 
+	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
+	 * and replaying.
 	 */
 	static public var vcr:VCRFrontEnd;
 	#end
 	
 	/**
-	 * Contains everything related to bitmaps.
+	 * A reference to the <code>BitmapFrontEnd</code> object. Contains things related to bimtaps,
+	 * for example regarding the bitmap cache and the cache itself.
 	 */
 	static public var bitmap:BitmapFrontEnd;
 	/**
-	 * Contains things related to cameras.
+	 * A reference to the <code>CameraFrontEnd</code> object. Contains things related to cameras,
+	 * a <code>list</code> of all cameras and the <code>defaultCamera</code> amongst other things.
 	 */
 	static public var cameras:CameraFrontEnd;
 	/**
-	 * Contains things related to plugins.
-	 */
-	static public var plugins:PluginFrontEnd;
-	/**
-	 * Contains the <code>fade()</code>, <code>flash()</code> and <code>shake()</code> effects.
+	 * A reference to the <code>CameraFXFrontEnd</code> object. Contains the <code>fade()</code>, 
+	 * <code>flash()</code> and <code>shake()</code> effects.
 	 */
 	static public var cameraFX:CameraFXFrontEnd;
 	/**
-	 * Contains things related to sound.
+	 * A reference to the <code>PluginFrontEnd</code> object. Contains a <code>list</code> of all 
+	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
+	 */
+	static public var plugins:PluginFrontEnd;
+	/**
+	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
+	 * sounds and other things to manage or <code>play()</code> sounds.
 	 */
 	static public var sound:SoundFrontEnd;
 	
