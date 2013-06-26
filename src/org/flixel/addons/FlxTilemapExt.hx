@@ -1,8 +1,8 @@
 package org.flixel.addons;
 
 import org.flixel.FlxObject;
-import org.flixel.FlxTilemap;
-import org.flixel.system.FlxTile;
+import org.flixel.tile.FlxTilemap;
+import org.flixel.tile.FlxTile;
 import org.flixel.util.FlxMath;
 import org.flixel.util.FlxPoint;
 

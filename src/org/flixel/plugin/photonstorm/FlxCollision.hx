@@ -25,7 +25,7 @@ import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
-import org.flixel.FlxTileblock;
+import org.flixel.tile.FlxTileblock;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxRect;
 import org.flixel.util.FlxMath;

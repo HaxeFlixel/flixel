@@ -2,6 +2,7 @@ package org.flixel;
 
 import flash.display.Graphics;
 import org.flixel.FlxBasic;
+import org.flixel.tile.FlxTilemap;
 import org.flixel.util.FlxAngle;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMath;
