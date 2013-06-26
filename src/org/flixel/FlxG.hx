@@ -87,11 +87,8 @@ class FlxG
 	 */
 	static public var paused:Bool;
 	/**
-	 * Whether the game should be paused when focus is lost or not. 
-	 * Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
-	 * pause screen. Override onFocus() and onFocusLost() for your own 
-	 * behaviour in your state
-	 * @default true 
+	 * Whether the game should be paused when focus is lost or not. Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
+	 * pause screen. Override onFocus() and onFocusLost() for your own behaviour in your state.
 	 */
 	static public var autoPause:Bool;
 	/**
@@ -115,10 +112,8 @@ class FlxG
 	 */
 	static public var worldBounds:FlxRect;
 	/**
-	 * How many times the quad tree should divide the world on each axis.
-	 * Generally, sparse collisions can have fewer divisons,
-	 * while denser collision activity usually profits from more.
-	 * Default value is 6.
+	 * How many times the quad tree should divide the world on each axis. Generally, sparse collisions can have fewer divisons,
+	 * while denser collision activity usually profits from more. Default value is 6.
 	 */
 	static public var worldDivisions:Int;
 	/**
@@ -165,47 +160,57 @@ class FlxG
 	// From here on: frontEnds
 	
 	/**
-	 * Contains things related to the console window on the debugger.
+	 * A reference to the <code>ConsoleFrontEnd</code> object. Use it to register functions and objects
+	 * or add new commands to the console window.
 	 */
 	static public var console:ConsoleFrontEnd;
 	/**
-	 * Contains things related to the log window on the debugger.
+	 * A reference to the <code>LogFrontEnd</code> object. Use it to <code>add</code> messages to the log window. It is recommended 
+	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
 	 */
 	static public var log:LogFrontEnd;
 	/**
-	 * Contains things related to the watch window on the debugger.
+	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
+	 * watch window.
 	 */
 	static public var watch:WatchFrontEnd;
 	/**
-	 * Contains things related to the debugger object.
+	 * A reference to the <code>DebuggerFrontEnd</code> object. Use it to show / hide / toggle the debguger
+	 * change its layout, activate visual debugging or change the key used to toggle it.
 	 */
 	static public var debugger:DebuggerFrontEnd;
 	
 	#if !FLX_NO_RECORD
 	/**
-	 * Contains things related to the recording system. 
+	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
+	 * and replaying.
 	 */
 	static public var vcr:VCRFrontEnd;
 	#end
 	
 	/**
-	 * Contains everything related to bitmaps.
+	 * A reference to the <code>BitmapFrontEnd</code> object. Contains things related to bimtaps,
+	 * for example regarding the bitmap cache and the cache itself.
 	 */
 	static public var bitmap:BitmapFrontEnd;
 	/**
-	 * Contains things related to cameras.
+	 * A reference to the <code>CameraFrontEnd</code> object. Contains things related to cameras,
+	 * a <code>list</code> of all cameras and the <code>defaultCamera</code> amongst other things.
 	 */
 	static public var cameras:CameraFrontEnd;
 	/**
-	 * Contains things related to plugins.
-	 */
-	static public var plugins:PluginFrontEnd;
-	/**
-	 * Contains the <code>fade()</code>, <code>flash()</code> and <code>shake()</code> effects.
+	 * A reference to the <code>CameraFXFrontEnd</code> object. Contains the <code>fade()</code>, 
+	 * <code>flash()</code> and <code>shake()</code> effects.
 	 */
 	static public var cameraFX:CameraFXFrontEnd;
 	/**
-	 * Contains things related to sound.
+	 * A reference to the <code>PluginFrontEnd</code> object. Contains a <code>list</code> of all 
+	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
+	 */
+	static public var plugins:PluginFrontEnd;
+	/**
+	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
+	 * sounds and other things to manage or <code>play()</code> sounds.
 	 */
 	static public var sound:SoundFrontEnd;
 	
@@ -259,21 +264,17 @@ class FlxG
 		return FlxG.LIBRARY_NAME + " v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION;
 	}
 	
-	static public var framerate(get, set):Int;
-	
 	/**
-	 * How many times you want your game to update each second.
-	 * More updates usually means better collisions and smoother motion.
+	 * How many times you want your game to update each second. More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the Flash Player framerate!
 	 */
+	static public var framerate(get, set):Int;
+	
 	static private function get_framerate():Int
 	{
 		return Std.int(1000 / _game._step);
 	}
 		
-	/**
-	 * @private
-	 */
 	static private function set_framerate(Framerate:Int):Int
 	{
 		if (Framerate < FlxG.flashFramerate)
@@ -290,13 +291,12 @@ class FlxG
 		return Framerate;
 	}
 		
-	public static var flashFramerate(get, set):Int;
-		
 	/**
-	 * How many times you want your game to update each second.
-	 * More updates usually means better collisions and smoother motion.
+	 * How many times you want your game to update each second. More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the Flash Player framerate!
 	 */
+	public static var flashFramerate(get, set):Int;
+		
 	static private function get_flashFramerate():Int
 	{
 		if (_game.stage != null)
@@ -304,9 +304,6 @@ class FlxG
 		return 0;
 	}
 		
-	/**
-	 * @private
-	 */
 	static private function set_flashFramerate(Framerate:Int):Int
 	{
 		if (Framerate > FlxG.framerate)
@@ -396,7 +393,8 @@ class FlxG
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a <code>FlxGroup</code> (or even bundling groups together!).
-	 * <p>NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.</p>
+	 * NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.
+	 * 
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
@@ -426,9 +424,10 @@ class FlxG
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a <code>FlxGroup</code> (or even bundling groups together!).
-	 * <p>This function just calls FlxG.overlap and presets the ProcessCallback parameter to FlxObject.separate.
-	 * To create your own collision logic, write your own ProcessCallback and use FlxG.overlap to set it up.</p>
-	 * <p>NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.</p>
+	 * This function just calls FlxG.overlap and presets the ProcessCallback parameter to FlxObject.separate.
+	 * To create your own collision logic, write your own ProcessCallback and use FlxG.overlap to set it up.
+	 * NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.
+	 * 
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
