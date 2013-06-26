@@ -190,9 +190,9 @@ class FlxBitmapFont extends FlxSprite
 		
 		//	Take a copy of the font for internal use
 		#if flash
-		fontSet = FlxG.addBitmap(font);
+		fontSet = FlxG.bitmap.add(font);
 		#else
-		fontSet = FlxG.addBitmap(font, false, false, null, (characterSpacingX == 0) ? characterWidth : 0, (characterSpacingY == 0) ? characterHeight : 0);
+		fontSet = FlxG.bitmap.add(font, false, false, null, (characterSpacingX == 0) ? characterWidth : 0, (characterSpacingY == 0) ? characterHeight : 0);
 		pixels = fontSet;
 		#end
 		
@@ -299,7 +299,7 @@ class FlxBitmapFont extends FlxSprite
 		
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var i:Int = 0;

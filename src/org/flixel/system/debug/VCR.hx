@@ -321,11 +321,11 @@ class VCR extends Sprite
 		_file = null;
 		if((fileContents == null) || (fileContents.length <= 0))
 		{
-			FlxG.error("Empty flixel gameplay record.");
+			FlxG.log.error("Empty flixel gameplay record.");
 			return;
 		}
 		
-		FlxG.loadReplay(fileContents);
+		FlxG.vcr.loadReplay(fileContents);
 		#end
 	}
 	
@@ -352,7 +352,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onOpenError);
 		_file = null;
-		FlxG.error("Unable to open flixel gameplay record.");
+		FlxG.log.error("Unable to open flixel gameplay record.");
 		#end
 	}
 	
@@ -368,7 +368,7 @@ class VCR extends Sprite
 		{
 			onPlay();
 		}
-		FlxG.recordReplay(StandardMode);
+		FlxG.vcr.startRecording(StandardMode);
 	}
 	
 	/**
@@ -378,7 +378,7 @@ class VCR extends Sprite
 	public function stopRecording():Void
 	{
 		#if !FLX_NO_RECORD
-		var data:String = FlxG.stopRecording();
+		var data:String = FlxG.vcr.stopRecording();
 		#end
 	
 		if((data != null) && (data.length > 0))
@@ -404,7 +404,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.notice("Successfully saved flixel gameplay record.");
+		FlxG.log.notice("Successfully saved flixel gameplay record.");
 		#end
 	}
 	
@@ -433,7 +433,7 @@ class VCR extends Sprite
 		_file.removeEventListener(Event.CANCEL,onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.error("Problem saving flixel gameplay record.");
+		FlxG.log.error("Problem saving flixel gameplay record.");
 		#end
 	}
 	
@@ -443,7 +443,7 @@ class VCR extends Sprite
 	 */
 	public function onStop():Void
 	{
-		FlxG.stopReplay();
+		FlxG.vcr.stopReplay();
 	}
 	#end
 	
@@ -456,7 +456,8 @@ class VCR extends Sprite
 	 */
 	public function onRestart(StandardMode:Bool = false):Void
 	{
-		FlxG.reloadReplay(StandardMode);
+		#if !FLX_NO_RECORD
+		FlxG.vcr.reloadReplay(StandardMode);
 		// TODO: Fix this. I don't know where is the problem
 		/*
 		if(FlxG.reloadReplay(StandardMode))
@@ -466,6 +467,7 @@ class VCR extends Sprite
 			_stop.visible = true;
 		}
 		*/
+		#end
 	}
 	
 	/**

@@ -165,8 +165,8 @@ class FlxSlider extends FlxSpriteGroup
 		handleColor = HandleColor;
 		
 		// Need the mouse control plugin for dragable sprites
-		if (FlxG.getPlugin(FlxMouseControl) == null) 
-			FlxG.addPlugin(new FlxMouseControl());
+		if (FlxG.plugins.get(FlxMouseControl) == null) 
+			FlxG.plugins.add(new FlxMouseControl());
 		
 		if (varString == null) 
 		{
@@ -237,7 +237,7 @@ class FlxSlider extends FlxSpriteGroup
 				alpha = hoverAlpha;
 				
 			if (hoverSound != null && !justHovered)
-				FlxG.play(hoverSound);
+				FlxG.sound.play(hoverSound);
 			justHovered = true;
 			
 			if (clickable && FlxG.mouse.pressed()) {
@@ -245,7 +245,7 @@ class FlxSlider extends FlxSpriteGroup
 				updateValue();
 				
 				if (clickSound != null && !justClicked) {
-					FlxG.play(clickSound);
+					FlxG.sound.play(clickSound);
 					justClicked = true;
 				}
 			}
@@ -406,7 +406,7 @@ class FlxSlider extends FlxSpriteGroup
 		}
 		catch (e:Dynamic) 
 		{
-			FlxG.error("Could not create FlxSlider -", "'" + value + "'" , "is not a valid field of", "'" + object + "'");
+			FlxG.log.error("Could not create FlxSlider -", "'" + value + "'" , "is not a valid field of", "'" + object + "'");
 			varString = null;
 		}
 		

@@ -229,7 +229,7 @@ class Console extends FlxWindow
 		}
 		// In case the command doesn't exist
 		else {
-			FlxG.error("Console: Invalid command: '" + command + "'");
+			FlxG.log.error("Console: Invalid command: '" + command + "'");
 		}
 	}
 	
@@ -260,7 +260,7 @@ class Console extends FlxWindow
 				// ...but not with too few
 				else 
 				{
-					FlxG.error("Console: Invalid number or parameters: " + expected + " expected, " + args.length + " passed");
+					FlxG.log.error("Console: Invalid number or parameters: " + expected + " expected, " + args.length + " passed");
 					return false;
 				}
 				

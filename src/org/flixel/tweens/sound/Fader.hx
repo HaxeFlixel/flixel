@@ -28,7 +28,7 @@ class Fader extends FlxTween
 	public function fadeTo(volume:Float, duration:Float, ease:EaseFunction = null):Void
 	{
 		if (volume < 0) volume = 0;
-		_start = FlxG.volume;
+		_start = FlxG.sound.volume;
 		_range = volume - _start;
 		_target = duration;
 		_ease = ease;
@@ -39,7 +39,7 @@ class Fader extends FlxTween
 	override public function update():Void
 	{
 		super.update();
-		FlxG.volume = _start + _range * _t;
+		FlxG.sound.volume = _start + _range * _t;
 	}
 	
 	// Fader information.

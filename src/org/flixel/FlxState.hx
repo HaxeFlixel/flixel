@@ -53,12 +53,12 @@ class FlxState extends FlxGroup
 	
 	private function get_bgColor():Int 
 	{
-		return FlxG.bgColor;
+		return FlxG.cameras.bgColor;
 	}
 	
 	private function set_bgColor(value:Int):Int 
 	{
-		return FlxG.bgColor = value;
+		return FlxG.cameras.bgColor = value;
 	}
 	
 	private var _useMouse:Bool = false;
@@ -219,7 +219,9 @@ class FlxState extends FlxGroup
 
 	override public function destroy():Void
 	{
-		if (_subState != null)	this.closeSubState();
+		if (_subState != null)	
+			this.closeSubState();
+			
 		super.destroy();
 	}
 	
@@ -230,7 +232,7 @@ class FlxState extends FlxGroup
 	 */
 	public function getAtlasFor(KeyInBitmapCache:String):Atlas
 	{
-		var bm:BitmapData = FlxG._cache.get(KeyInBitmapCache);
+		var bm:BitmapData = FlxG.bitmap._cache.get(KeyInBitmapCache);
 		if (bm != null)
 		{
 			var tempAtlas:Atlas = Atlas.getAtlas(KeyInBitmapCache, bm);

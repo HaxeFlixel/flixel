@@ -193,7 +193,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var drawItem:DrawStackItem;

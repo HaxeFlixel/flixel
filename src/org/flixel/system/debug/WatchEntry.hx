@@ -95,7 +95,7 @@ class WatchEntry
 				}
 				catch (e:Dynamic)
 				{
-					FlxG.error("Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
+					FlxG.log.error("Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
 					tempVarName = null;
 					break;
 				}
@@ -192,6 +192,7 @@ class WatchEntry
 		}
 	}
 	
+	#if !FLX_NO_DEBUG
 	/**
 	 * Update the variable value on display with the current in-game value.
 	 */
@@ -209,6 +210,7 @@ class WatchEntry
 		
 		return true;
 	}
+	#end
 	
 	/**
 	 * A watch entry was clicked, so flip into edit mode for that entry.

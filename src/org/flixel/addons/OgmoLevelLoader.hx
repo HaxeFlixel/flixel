@@ -45,7 +45,7 @@ class OgmoLevelLoader
 		width = Std.parseInt(fastXml.att.width);
 		height = Std.parseInt(fastXml.att.height);
 
-		FlxG.camera.setBounds(0, 0, width, height, true);
+		FlxG.cameras.defaultCamera.setBounds(0, 0, width, height, true);
 	}
 
 	/**

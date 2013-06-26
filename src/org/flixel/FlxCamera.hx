@@ -134,7 +134,7 @@ class FlxCamera extends FlxBasic
 	#end
 	
 	/**
-	 * The natural background color of the camera. Defaults to FlxG.bgColor.
+	 * The natural background color of the camera. Defaults to FlxG.cameras.bgColor.
 	 * NOTE: can be transparent for crazy FX!
 	 */
 	public var bgColor:Int;
@@ -433,7 +433,7 @@ class FlxCamera extends FlxBasic
 		screen.pixels = buffer;
 		screen.setOriginToCorner();
 		#end
-		bgColor = FlxG.bgColor;
+		bgColor = FlxG.cameras.bgColor;
 		
 		#if flash
 		_flashBitmap = new Bitmap(buffer);

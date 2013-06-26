@@ -455,13 +455,13 @@ class FlxColor
 		//	Sanity checks
 		if (max > 255)
 		{
-			FlxG.warn("FlxColor: getRandomColor - max value too high");
+			FlxG.log.warn("FlxColor: getRandomColor - max value too high");
 			return getColor24(255, 255, 255);
 		}
 		
 		if (min > max)
 		{
-			FlxG.warn("FlxColor: getRandomColor - min value higher than max");
+			FlxG.log.warn("FlxColor: getRandomColor - min value higher than max");
 			return getColor24(255, 255, 255);
 		}
 		
@@ -551,7 +551,7 @@ class FlxColor
 		
 		if (Threshold > 359 || Threshold < 0)
 		{
-			FlxG.warn("FlxColor Warning: Invalid threshold given to getAnalogousHarmony()");
+			FlxG.log.warn("FlxColor Warning: Invalid threshold given to getAnalogousHarmony()");
 		}
 		
 		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), 359 - Threshold, 359);
@@ -575,7 +575,7 @@ class FlxColor
 		
 		if (Threshold >= 359 || Threshold <= 0)
 		{
-			FlxG.warn("FlxColor: Invalid threshold given to getSplitComplementHarmony()");
+			FlxG.log.warn("FlxColor: Invalid threshold given to getSplitComplementHarmony()");
 		}
 		
 		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
@@ -583,7 +583,7 @@ class FlxColor
 		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite - Threshold, 359);
 		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), opposite + Threshold, 359);
 		
-		FlxG.notice("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
+		FlxG.log.notice("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
 		//return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
 		
@@ -714,7 +714,7 @@ class FlxColor
 				case 5:
 					result = getColor32(Alpha, Std.int(V * 255), Std.int(p * 255), Std.int(q * 255));
 				default:
-					FlxG.warn("FlxColor: HSVtoRGB: Unknown color");
+					FlxG.log.warn("FlxColor: HSVtoRGB: Unknown color");
 			}
 		}
 		

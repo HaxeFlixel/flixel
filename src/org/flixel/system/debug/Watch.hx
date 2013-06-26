@@ -129,6 +129,7 @@ class Watch extends FlxWindow
 		_watching.push(watchEntry);
 	}
 	
+	#if !FLX_NO_DEBUG
 	/**
 	 * Add or update a quickWatch entry to the watch list in the debugger.
 	 * Extremely useful when called in <code>update()</code> functions when there 
@@ -165,6 +166,7 @@ class Watch extends FlxWindow
 			}
 		}
 	}
+	#end
 	
 	/**
 	 * Remove a variable from the watch window.
@@ -253,6 +255,7 @@ class Watch extends FlxWindow
 	 */
 	public function update():Void
 	{
+		#if !FLX_NO_DEBUG
 		editing = false;
 		var i:Int = 0;
 		var l:Int = _watching.length;
@@ -263,6 +266,7 @@ class Watch extends FlxWindow
 				editing = true;
 			}
 		}
+		#end
 	}
 	
 	/**

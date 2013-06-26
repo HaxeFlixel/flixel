@@ -440,11 +440,11 @@ class FlxBar extends FlxSprite
 			filledBar = new BitmapData(barWidth, barHeight, true, border);
 			filledBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), fill);
 		#else
-			if (FlxG._cache.exists(key) == false)
+			if (FlxG.bitmap._cache.exists(key) == false)
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					_pixels.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 					
@@ -453,7 +453,7 @@ class FlxBar extends FlxSprite
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					_pixels.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 					
@@ -461,7 +461,7 @@ class FlxBar extends FlxSprite
 					_pixels.fillRect(new Rectangle(barWidth + 2, 1, barWidth - 2, barHeight - 2), fill);
 				}
 			}
-			pixels = FlxG._cache.get(key);
+			pixels = FlxG.bitmap._cache.get(key);
 		#end
 		}
 		else
@@ -470,22 +470,22 @@ class FlxBar extends FlxSprite
 			emptyBar = new BitmapData(barWidth, barHeight, true, empty);
 			filledBar = new BitmapData(barWidth, barHeight, true, fill);
 		#else
-			if (FlxG._cache.exists(key) == false)
+			if (FlxG.bitmap_cache.exists(key) == false)
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), empty);
 					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), fill);
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), empty);
 					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), fill);
 				}
 			}
-			pixels = FlxG._cache.get(key);
+			pixels = FlxG.bitmap._cache.get(key);
 		#end
 		}
 		
@@ -564,11 +564,11 @@ class FlxBar extends FlxSprite
 			filledBar = new BitmapData(barWidth, barHeight, true, border);
 			FlxGradient.overlayGradientOnBitmapData(filledBar, barWidth - 2, barHeight - 2, fill, 1, 1, chunkSize, rotation);
 			#else
-			if (FlxG._cache.exists(key) == false)
+			if (FlxG.bitmap._cache.exists(key) == false)
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 					
@@ -577,7 +577,7 @@ class FlxBar extends FlxSprite
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 					
@@ -585,7 +585,7 @@ class FlxBar extends FlxSprite
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, fill, barWidth + 2, 1, chunkSize, rotation);
 				}
 			}
-			pixels = FlxG._cache.get(key);
+			pixels = FlxG.bitmap._cache.get(key);
 			#end
 		}
 		else
@@ -594,22 +594,22 @@ class FlxBar extends FlxSprite
 			emptyBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, empty, chunkSize, rotation);
 			filledBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, fill, chunkSize, rotation);
 			#else
-			if (FlxG._cache.exists(key) == false)
+			if (FlxG.bitmap._cache.exists(key) == false)
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, empty, 0, 0, chunkSize, rotation);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, fill, 0, barHeight + 1, chunkSize, rotation);
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, empty, 0, 0, chunkSize, rotation);
 					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, fill, barWidth + 1, 0, chunkSize, rotation);
 				}
 			}
-			pixels = FlxG._cache.get(key);
+			pixels = FlxG.bitmap._cache.get(key);
 			#end
 		}
 		
@@ -631,8 +631,8 @@ class FlxBar extends FlxSprite
 	 */
 	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, emptyBackground:Int = 0xff000000, fillBackground:Int = 0xff00ff00):Void
 	{
-		var emptyBitmapData:BitmapData = FlxG.addBitmap(empty); 
-		var fillBitmapData:BitmapData = FlxG.addBitmap(fill);
+		var emptyBitmapData:BitmapData = FlxG.bitmap.add(empty); 
+		var fillBitmapData:BitmapData = FlxG.bitmap.add(fill);
 		
 	#if !flash
 		var key:String = "";
@@ -706,23 +706,23 @@ class FlxBar extends FlxSprite
 				_framesPosition = FRAMES_POSITION_VERTICAL;
 			}
 			
-			if (FlxG._cache.exists(key) == false)
+			if (FlxG.bitmap._cache.exists(key) == false)
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point());
 					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), fillBackground);
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point());
 					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), fillBackground);
 				}
 				
 			}
-			pixels = FlxG._cache.get(key);
+			pixels = FlxG.bitmap._cache.get(key);
 		#end
 		}
 		else if (empty == null && fill != null)
@@ -750,22 +750,22 @@ class FlxBar extends FlxSprite
 				_framesPosition = FRAMES_POSITION_VERTICAL;
 			}
 			
-			if (FlxG._cache.exists(key) == false)
+			if (FlxG.bitmap._cache.exists(key) == false)
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), emptyBackground);
 					_pixels.copyPixels(fillBitmapData, fillBitmapData.rect, new Point(0, barHeight + 1));
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), emptyBackground);
 					_pixels.copyPixels(fillBitmapData, fillBitmapData.rect, new Point(barWidth + 1, 0));
 				}
 			}
-			pixels = FlxG._cache.get(key);
+			pixels = FlxG.bitmap._cache.get(key);
 			#end	
 		}
 		else if (empty != null && fill != null)
@@ -793,22 +793,22 @@ class FlxBar extends FlxSprite
 				_framesPosition = FRAMES_POSITION_VERTICAL;
 			}
 			
-			if (FlxG._cache.exists(key) == false)
+			if (FlxG.bitmap._cache.exists(key) == false)
 			{
 				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
 				{
-					_pixels = FlxG.createBitmap(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point(0, 0));
 					_pixels.copyPixels(fillBitmapData, emptyBitmapData.rect, new Point(0, barHeight + 1));
 				}
 				else
 				{
-					_pixels = FlxG.createBitmap(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
+					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
 					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point(0, 0));
 					_pixels.copyPixels(fillBitmapData, emptyBitmapData.rect, new Point(barWidth + 1, 0));
 				}
 			}
-			pixels = FlxG._cache.get(key);
+			pixels = FlxG.bitmap._cache.get(key);
 			#end
 		}
 		
@@ -1040,7 +1040,7 @@ class FlxBar extends FlxSprite
 		
 		if (cameras == null)
 		{
-			cameras = FlxG.cameras;
+			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
 		var i:Int = 0;
@@ -1195,11 +1195,11 @@ class FlxBar extends FlxSprite
 		}
 		
 		resetHelpers();
-		_bitmapDataKey = FlxG.getCacheKeyFor(_pixels);
+		_bitmapDataKey = FlxG.bitmap.getCacheKeyFor(_pixels);
 		if (_bitmapDataKey == null)
 		{
-			_bitmapDataKey = FlxG.getUniqueBitmapKey();
-			FlxG.addBitmap(Pixels, false, false, _bitmapDataKey);
+			_bitmapDataKey = FlxG.bitmap.getUniqueKey();
+			FlxG.bitmap.add(Pixels, false, false, _bitmapDataKey);
 		}
 		
 		updateAtlasInfo(true);

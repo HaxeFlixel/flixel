@@ -26,9 +26,5 @@ class PxFontSymbol
 	 */
 	public var tileID:Int;
 	
-	public function new() 
-	{
-		
-	}
-	
+	public function new() {}	
 }

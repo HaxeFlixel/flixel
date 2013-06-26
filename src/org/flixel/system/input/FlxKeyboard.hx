@@ -210,11 +210,9 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			var c:Int = FlashEvent.keyCode;
 			
 			#if !FLX_NO_DEBUG
-			if ((FlxG._game._debugger != null) && (FlxG.keyDebugger != null && Lambda.indexOf(FlxG.keyDebugger, c) != -1))
+			if ((FlxG._game._debugger != null) && (FlxG.debugger.toggleKeys != null && Lambda.indexOf(FlxG.debugger.toggleKeys, c) != -1))
 			{
-				FlxG._game._debugger.visible = !FlxG._game._debugger.visible;
-				FlxG._game._debuggerUp = FlxG._game._debugger.visible;
-				
+				FlxG.debugger.toggle();
 				return;
 			}
 			#end
@@ -222,12 +220,12 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			if (!FlxG._game.tempDisableSoundHotKeys)
 			{
 				var code:String = String.fromCharCode(FlashEvent.charCode);
-				if (FlxG.keyMute != null && Lambda.indexOf(FlxG.keyMute, c) != -1)
+				if (FlxG.sound.keyMute != null && Lambda.indexOf(FlxG.sound.keyMute, c) != -1)
 				{
-					FlxG.mute = !FlxG.mute;
-					if (FlxG.volumeHandler != null)
+					FlxG.sound.mute = !FlxG.sound.mute;
+					if (FlxG.sound.volumeHandler != null)
 					{
-						FlxG.volumeHandler(FlxG.mute?0:FlxG.volume);
+						FlxG.sound.volumeHandler(FlxG.sound.mute?0:FlxG.sound.volume);
 					}
 					
 					#if !FLX_NO_SOUND_TRAY
@@ -236,10 +234,10 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 					
 					return;
 				}
-				else if (FlxG.keyVolumeDown != null && Lambda.indexOf(FlxG.keyVolumeDown, c) != -1)
+				else if (FlxG.sound.keyVolumeDown != null && Lambda.indexOf(FlxG.sound.keyVolumeDown, c) != -1)
 				{
-					FlxG.mute = false;
-					FlxG.volume = FlxG.volume - 0.1;
+					FlxG.sound.mute = false;
+					FlxG.sound.volume = FlxG.sound.volume - 0.1;
 					
 					#if !FLX_NO_SOUND_TRAY
 					FlxG._game.showSoundTray();
@@ -247,10 +245,10 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 					#end
 					return;
 				}
-				else if (FlxG.keyVolumeUp != null && Lambda.indexOf(FlxG.keyVolumeUp, c) != -1) 
+				else if (FlxG.sound.keyVolumeUp != null && Lambda.indexOf(FlxG.sound.keyVolumeUp, c) != -1) 
 				{
-					FlxG.mute = false;
-					FlxG.volume = FlxG.volume + 0.1;
+					FlxG.sound.mute = false;
+					FlxG.sound.volume = FlxG.sound.volume + 0.1;
 					
 					#if !FLX_NO_SOUND_TRAY
 					FlxG._game.showSoundTray();
@@ -272,9 +270,14 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		#end
 		
 		var object:FlxMapObject = _keyMap[FlashEvent.keyCode];
-		if(object == null) return;
-		if(object.current > 0) object.current = -1;
-		else object.current = 0;
+		
+		if (object == null) 
+			return;
+		if (object.current > 0) 
+			object.current = -1;
+		else 
+			object.current = 0;
+			
 		_keyBools.set(object.name, false);
 	}
 	
@@ -290,9 +293,9 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		{
 			return;
 		}
-		if(FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlxG._game._debugger == null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
+		if (FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlxG._game._debugger == null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
 		#else
-		if(FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
+		if (FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
 		#end
 		{
 			var cancel:Bool = false;
@@ -302,16 +305,16 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			while(i < l)
 			{
 				replayCancelKey = FlxG._game._replayCancelKeys[i++];
-				if((replayCancelKey == "ANY") || (getKeyCode(replayCancelKey) == Std.int(FlashEvent.keyCode)))
+				if ((replayCancelKey == "ANY") || (getKeyCode(replayCancelKey) == Std.int(FlashEvent.keyCode)))
 				{
-					if(FlxG._game._replayCallback != null)
+					if (FlxG._game._replayCallback != null)
 					{
 						FlxG._game._replayCallback();
 						FlxG._game._replayCallback = null;
 					}
 					else
 					{
-						FlxG.stopReplay();
+						FlxG.vcr.stopReplay();
 					}
 					break;
 				}

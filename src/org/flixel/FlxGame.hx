@@ -230,7 +230,7 @@ class FlxGame extends Sprite
 		_prefsSave.bind("flixel");
 		
 		#if !FLX_NO_DEBUG
-		FlxG.debug = true;
+		FlxG.debugger.debug = true;
 		_debuggerUp = false;
 		#end
 		
@@ -260,14 +260,14 @@ class FlxGame extends Sprite
 	{
 		if (!Silent)
 		{
-			FlxG.play(FlxAssets.sndBeep);
+			FlxG.sound.play(FlxAssets.sndBeep);
 		}
 		_soundTrayTimer = 1;
 		_soundTray.y = 0;
 		_soundTray.visible = true;
 		_updateSoundTray = true;
-		var globalVolume:Int = Math.round(FlxG.volume * 10);
-		if (FlxG.mute)
+		var globalVolume:Int = Math.round(FlxG.sound.volume * 10);
+		if (FlxG.sound.mute)
 		{
 			globalVolume = 0;
 		}
@@ -298,7 +298,7 @@ class FlxGame extends Sprite
 		#end 
 		
 		stage.frameRate = _flashFramerate;
-		FlxG.resumeSounds();
+		FlxG.sound.resumeSounds();
 		FlxInputs.onFocus();
 	}
 	
@@ -321,7 +321,7 @@ class FlxGame extends Sprite
 		#end 
 		
 		stage.frameRate = 10;
-		FlxG.pauseSounds();
+		FlxG.sound.pauseSounds();
 		FlxInputs.onFocusLost();
 	}
 	
@@ -433,10 +433,10 @@ class FlxGame extends Sprite
 		Atlas.clearAtlasCache();
 		TileSheetData.clear();
 		
-		FlxG.clearBitmapCache();
-		FlxG.resetCameras();
+		FlxG.bitmap.clearCache();
+		FlxG.cameras.reset();
 		FlxG.resetInput();
-		FlxG.destroySounds();
+		FlxG.sound.destroySounds();
 		
 		#if !FLX_NO_DEBUG
 		//Clear the debugger overlay's Watch window
@@ -499,7 +499,7 @@ class FlxGame extends Sprite
 			
 			#if !FLX_NO_DEBUG
 			_debugger.vcr.recording();
-			FlxG.notice("Starting new flixel gameplay record.");
+			FlxG.log.notice("Starting new flixel gameplay record.");
 			#end
 		}
 		else if (_replayRequested)
@@ -563,8 +563,8 @@ class FlxGame extends Sprite
 				_updateSoundTray = false;
 				
 				//Save sound preferences
-				_prefsSave.data.mute = FlxG.mute;
-				_prefsSave.data.volume = FlxG.volume; 
+				_prefsSave.data.mute = FlxG.sound.mute;
+				_prefsSave.data.volume = FlxG.sound.volume; 
 				_prefsSave.flush(); 
 			}
 		}
@@ -589,8 +589,8 @@ class FlxGame extends Sprite
 		
 		updateInput();
 		
-		FlxG.updateSounds();
-		FlxG.updatePlugins();
+		FlxG.sound.updateSounds();
+		FlxG.plugins.update();
 		
 		updateState();
 		
@@ -599,7 +599,7 @@ class FlxGame extends Sprite
 			FlxG.tweener.updateTweens();
 		}
 		
-		FlxG.updateCameras();
+		FlxG.cameras.update();
 		
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
@@ -630,13 +630,13 @@ class FlxGame extends Sprite
 					}
 					else
 					{
-						FlxG.stopReplay();
+						FlxG.vcr.stopReplay();
 					}
 				}
 			}
 			if(_replaying && _replay.finished)
 			{
-				FlxG.stopReplay();
+				FlxG.vcr.stopReplay();
 				if(_replayCallback != null)
 				{
 					_replayCallback();
@@ -684,7 +684,7 @@ class FlxGame extends Sprite
 		TileSheetExt._DRAWCALLS = 0;
 		#end
 		
-		FlxG.lockCameras();
+		FlxG.cameras.lock();
 		
 		#if (cpp && thread)
 		// Only draw the state if a new state hasn't been requested
@@ -693,14 +693,14 @@ class FlxGame extends Sprite
 		_state.draw();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.visualDebug)
+		if (FlxG.debugger.visualDebug)
 		{
 			_state.drawDebug();
 		}
 		#end
 		
 		#if !flash
-		FlxG.renderCameras();
+		FlxG.cameras.render();
 		
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
@@ -710,14 +710,14 @@ class FlxGame extends Sprite
 		#end
 		#end
 		
-		FlxG.drawPlugins();
+		FlxG.plugins.draw();
 		#if !FLX_NO_DEBUG
-		if (FlxG.visualDebug)
+		if (FlxG.debugger.visualDebug)
 		{
-			FlxG.drawDebugPlugins();
+			FlxG.debugger.drawDebugPlugins();
 		}
 		#end
-		FlxG.unlockCameras();
+		FlxG.cameras.unlock();
 		#if !FLX_NO_DEBUG
 		if (_debuggerUp)
 			_debugger.perf.flixelDraw(Lib.getTimer() - _mark);
@@ -745,14 +745,6 @@ class FlxGame extends Sprite
 		
 		addChild(_inputContainer);
 		
-		#if !FLX_NO_KEYBOARD
-		//Assign default values to the keys used by core flixel
-		FlxG.keyDebugger = [192, 220];
-		FlxG.keyVolumeUp = [107, 187];
-		FlxG.keyVolumeDown = [109, 189];
-		FlxG.keyMute = [48, 96]; 
-		#end
-		
 		FlxInputs.init();
 		
 		FlxG.autoPause = true;
@@ -762,7 +754,7 @@ class FlxGame extends Sprite
 		{
 			#if !FLX_NO_DEBUG
 			//Debugger overlay
-			if(FlxG.debug)
+			if(FlxG.debugger.debug)
 			{
 				_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
 				#if flash
@@ -866,14 +858,14 @@ class FlxGame extends Sprite
 	private function loadSoundPrefs():Void
 	{
 		if (_prefsSave.data.volume != null)
-			FlxG.volume = _prefsSave.data.volume;
+			FlxG.sound.volume = _prefsSave.data.volume;
 		else 
-			FlxG.volume = 0.5; 
+			FlxG.sound.volume = 0.5; 
 		
 		if (_prefsSave.data.mute != null)
-			FlxG.mute = _prefsSave.data.mute;
+			FlxG.sound.mute = _prefsSave.data.mute;
 		else 
-			FlxG.mute = false; 
+			FlxG.sound.mute = false; 
 	}
 	
 	#if !FLX_NO_FOCUS_LOST_SCREEN
