@@ -1,5 +1,6 @@
 package org.flixel.system.frontEnds;
 
+import haxe.PosInfos;
 import org.flixel.FlxG;
 import org.flixel.system.debug.LogStyle; 
 import org.flixel.system.debug.Log;
@@ -13,6 +14,11 @@ class LogFrontEnd
 		warn = Reflect.makeVarArgs(_warn);
 		error = Reflect.makeVarArgs(_error);
 		notice = Reflect.makeVarArgs(_notice);
+		
+		_oldTrace = haxe.Log.trace;
+		#if !FLX_NO_DEBUG
+		redirectTraces = true;
+		#end
 	}
 	
 	/**
@@ -108,5 +114,36 @@ class LogFrontEnd
 			FlxG._game.debugger.log.clear();
 		}
 		#end
+	}
+	
+	/**
+	 * Whether everything you <code>trace()</code> is being redirected into the log window.
+	 * True by default.
+	 */
+	public var redirectTraces(default, set):Bool;
+	/**
+	 * Internal var used to undo the redirection of traces.
+	 */
+	private var _oldTrace:Dynamic;	
+	
+	private function set_redirectTraces(Redirect:Bool):Bool
+	{
+		if (Redirect)
+			haxe.Log.trace = processTraceData;
+		else 
+			haxe.Log.trace = _oldTrace;
+			
+		return redirectTraces = Redirect;
+	}
+	
+	/**
+	 * Internal function used as a interface between <code>trace()</code> and <code>add()</code>.
+	 * 
+	 * @param	Data	The data that has been traced
+	 * @param	Inf		Information about the position at which <code>trace()</code> was called
+	 */
+	private function processTraceData(Data:Dynamic, ?Inf:PosInfos):Void
+	{
+		add(Data);
 	}
 }
