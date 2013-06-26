@@ -104,7 +104,7 @@ class DebuggerFrontEnd
 	 * 
 	 * @param	Layout		See the presets above (e.g. <code>DEBUGGER_MICRO</code>, etc).
 	 */
-	public function setDebuggerLayout(Layout:Int):Void
+	public function setLayout(Layout:Int):Void
 	{
 		FlxG._game._debugger.setLayout(Layout);
 	}
@@ -112,7 +112,7 @@ class DebuggerFrontEnd
 	/**
 	 * Just resets the debugger windows to whatever the last selected layout was (<code>DEBUGGER_STANDARD</code> by default).
 	 */
-	public function resetDebuggerLayout():Void
+	public function resetLayout():Void
 	{
 		FlxG._game._debugger.resetLayout();
 	}
