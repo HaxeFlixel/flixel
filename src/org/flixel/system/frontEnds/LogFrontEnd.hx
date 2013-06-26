@@ -120,7 +120,7 @@ class LogFrontEnd
 	 * Whether everything you <code>trace()</code> is being redirected into the log window.
 	 * True by default.
 	 */
-	public var redirectTraces(default, set):Bool;
+	public var redirectTraces(default, set):Bool = false;
 	/**
 	 * Internal var used to undo the redirection of traces.
 	 */
