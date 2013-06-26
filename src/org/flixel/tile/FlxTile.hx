@@ -1,7 +1,6 @@
-package org.flixel.system;
+package org.flixel.tile;
 
 import org.flixel.FlxObject;
-import org.flixel.FlxTilemap;
 
 /**
  * A simple helper object for <code>FlxTilemap</code> that helps expand collision opportunities and control.

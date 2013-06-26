@@ -1,4 +1,4 @@
-package org.flixel.system;
+package org.flixel.tile;
 
 import flash.display.BitmapData;
 import flash.geom.Matrix;
