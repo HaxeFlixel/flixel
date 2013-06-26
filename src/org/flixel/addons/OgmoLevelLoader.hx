@@ -5,7 +5,7 @@ import haxe.xml.Fast;
 import haxe.xml.Parser;
 import org.flixel.FlxG;
 import org.flixel.util.FlxPoint;
-import org.flixel.FlxTilemap;
+import org.flixel.tile.FlxTilemap;
 
 class OgmoLevelLoader
 {

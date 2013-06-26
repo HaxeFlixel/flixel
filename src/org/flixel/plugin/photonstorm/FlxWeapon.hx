@@ -18,7 +18,7 @@ package org.flixel.plugin.photonstorm;
 
 import org.flixel.FlxBasic;
 import org.flixel.FlxG;
-import org.flixel.FlxTilemap;
+import org.flixel.tile.FlxTilemap;
 import org.flixel.FlxTypedGroup;
 import org.flixel.system.input.FlxTouch;
 import flash.display.Bitmap;

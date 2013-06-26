@@ -1,15 +1,13 @@
-package org.flixel;
+package org.flixel.tile;
 
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import org.flixel.system.FlxTile;
-import org.flixel.system.FlxTilemapBuffer;
 import org.flixel.system.layer.DrawStackItem;
-import org.flixel.util.FlxColor;
 import org.flixel.util.FlxArray;
+import org.flixel.util.FlxColor;
 import org.flixel.util.FlxPoint;
 import org.flixel.util.FlxRect;
 
