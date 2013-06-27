@@ -98,7 +98,7 @@ class VCR extends Sprite
 		_recordOn.visible = false;
 		addChild(_recordOn);
 		
-		#if FLX_RECORD
+		#if !FLX_RECORD
 		_open.visible = false;
 		_recordOff.visible = false;
 		_recordOn.visible = false;
