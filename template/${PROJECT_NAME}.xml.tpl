@@ -52,8 +52,8 @@
     <!--Disable the Flixel core debugger-->
     <!--<haxedef name="FLX_NO_DEBUG" />-->
 	
-    <!--Disable the Flixel core recording system if you're not using it-->
-    <!--<haxedef name="FLX_NO_RECORD" />-->
+    <!--The Flixel core recording system. Disabled by default, remove this flag to enable it-->
+    <haxedef name="FLX_RECORD" />
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
     <!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->

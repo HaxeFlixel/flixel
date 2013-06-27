@@ -98,7 +98,7 @@ class VCR extends Sprite
 		_recordOn.visible = false;
 		addChild(_recordOn);
 		
-		#if FLX_NO_RECORD
+		#if FLX_RECORD
 		_open.visible = false;
 		_recordOff.visible = false;
 		_recordOn.visible = false;
@@ -266,7 +266,7 @@ class VCR extends Sprite
 		}
 	}
 	
-	#if !FLX_NO_RECORD
+	#if !FLX_RECORD
 	//*** ACTUAL BUTTON BEHAVIORS ***//
 	
 	/**
@@ -377,7 +377,7 @@ class VCR extends Sprite
 	 */
 	public function stopRecording():Void
 	{
-		#if !FLX_NO_RECORD
+		#if !FLX_RECORD
 		var data:String = FlxG.vcr.stopRecording();
 		#end
 	
@@ -456,7 +456,7 @@ class VCR extends Sprite
 	 */
 	public function onRestart(StandardMode:Bool = false):Void
 	{
-		#if !FLX_NO_RECORD
+		#if !FLX_RECORD
 		FlxG.vcr.reloadReplay(StandardMode);
 		// TODO: Fix this. I don't know where is the problem
 		/*
@@ -588,7 +588,7 @@ class VCR extends Sprite
 	 */
 	private function onMouseUp(E:MouseEvent = null):Void
 	{
-		#if !FLX_NO_RECORD
+		#if !FLX_RECORD
 		if (_overOpen && _pressingOpen)
 		{
 			onOpen();

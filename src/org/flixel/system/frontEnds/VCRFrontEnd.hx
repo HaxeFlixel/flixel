@@ -9,7 +9,7 @@ class VCRFrontEnd
 	 */
 	public function new() { }
 	
-	#if !FLX_NO_RECORD
+	#if !FLX_RECORD
 	/**
 	 * Load replay data from a string and play it back.
 	 * 
