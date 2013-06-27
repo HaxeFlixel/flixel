@@ -1,11 +1,11 @@
 package;
 
-import org.flixel.FlxG;
-import org.flixel.FlxButton;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.text.FlxText;
-import org.flixel.util.FlxMath;
+import flixel.FlxG;
+import flixel.FlxButton;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.text.FlxText;
+import flixel.util.FlxMath;
 
 /**
  * A FlxState which can be used for the actual gameplay.
