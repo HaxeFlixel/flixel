@@ -1,4 +1,4 @@
-package org.flixel.plugin.pxText;
+package org.flixel.text.pxText;
 
 import org.flixel.FlxAssets;
 import org.flixel.FlxButton;

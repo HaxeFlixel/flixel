@@ -3,7 +3,7 @@ package org.flixel;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.display.Stage;
-import org.flixel.plugin.pxText.PxBitmapFont;
+import org.flixel.text.pxText.PxBitmapFont;
 import org.flixel.system.FlxQuadTree;
 import org.flixel.system.frontEnds.BitmapFrontEnd;
 import org.flixel.system.frontEnds.CameraFrontEnd;
