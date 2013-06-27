@@ -1,4 +1,4 @@
-package org.flixel;
+package org.flixel.text;
 
 import flash.display.BitmapData;
 import flash.filters.BitmapFilter;

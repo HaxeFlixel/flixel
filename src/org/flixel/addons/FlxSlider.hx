@@ -4,7 +4,7 @@ package org.flixel.addons;
 import org.flixel.addons.FlxSpriteGroup;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
-import org.flixel.FlxText;
+import org.flixel.text.FlxText;
 import org.flixel.plugin.photonstorm.FlxExtendedSprite;
 import org.flixel.plugin.photonstorm.FlxMouseControl;
 import org.flixel.util.FlxMath;

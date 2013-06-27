@@ -1,4 +1,4 @@
-package org.flixel.plugin.pxText;
+package org.flixel.text.pxText;
 
 import flash.display.BitmapData;
 import org.flixel.FlxCamera;

@@ -14,7 +14,7 @@ import flash.media.Sound;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
-import org.flixel.plugin.pxText.PxBitmapFont;
+import org.flixel.text.pxText.PxBitmapFont;
 import org.flixel.system.layer.Atlas;
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.input.FlxInputs;

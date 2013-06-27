@@ -9,6 +9,7 @@ import org.flixel.system.input.FlxTouch;
 import org.flixel.FlxSprite;
 import org.flixel.system.layer.Atlas;
 import org.flixel.util.FlxPoint;
+import org.flixel.text.FlxText;
 
 class FlxButton extends FlxTypedButton<FlxText>
 {
