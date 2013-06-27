@@ -150,7 +150,7 @@ class FlxGame extends Sprite
 	public var _debuggerUp:Bool;
 	#end
 	
-	#if !FLX_RECORD
+	#if FLX_RECORD
 	/**
 	 * Container for a game replay object.
 	 */
@@ -235,7 +235,7 @@ class FlxGame extends Sprite
 		_debuggerUp = false;
 		#end
 		
-		#if !FLX_RECORD
+		#if FLX_RECORD
 		//replay data
 		_replay = new FlxReplay();
 		_replayRequested = false;
@@ -402,7 +402,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if !FLX_RECORD
+		#if FLX_RECORD
 		_replayTimer = 0;
 		_replayCancelKeys = null;
 		#end
@@ -490,7 +490,7 @@ class FlxGame extends Sprite
 			_requestedReset = false;
 		}
 		
-		#if !FLX_RECORD
+		#if FLX_RECORD
 		//handle replay-related requests
 		if (_recordingRequested)
 		{
@@ -615,7 +615,7 @@ class FlxGame extends Sprite
 	
 	private function updateInput():Void
 	{
-		#if !FLX_RECORD
+		#if FLX_RECORD
 		if(_replaying)
 		{
 			_replay.playNextFrame();
@@ -654,7 +654,7 @@ class FlxGame extends Sprite
 		
 		FlxInputs.updateInputs();
 		
-		#if !FLX_RECORD
+		#if FLX_RECORD
 		}
 		if(_recording)
 		{

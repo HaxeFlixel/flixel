@@ -180,7 +180,7 @@ class FlxG
 	 */
 	static public var debugger:DebuggerFrontEnd;
 	
-	#if !FLX_RECORD
+	#if FLX_RECORD
 	/**
 	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
 	 * and replaying.
@@ -249,7 +249,7 @@ class FlxG
 		cameraFX = new CameraFXFrontEnd();
 		sound = new SoundFrontEnd();
 		
-		#if !FLX_RECORD
+		#if FLX_RECORD
 		vcr = new VCRFrontEnd();
 		#end
 	}

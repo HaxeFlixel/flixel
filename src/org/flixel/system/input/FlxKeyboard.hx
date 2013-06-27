@@ -262,7 +262,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				}
 			}
 		}
-		#if !FLX_RECORD
+		#if FLX_RECORD
 		if (FlxG._game._replaying)
 		{
 			return;
@@ -287,7 +287,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	 */
 	private function onKeyDown(FlashEvent:KeyboardEvent):Void
 	{
-		#if !FLX_RECORD
+		#if FLX_RECORD
 		#if !FLX_NO_DEBUG
 		if (FlxG._game._debuggerUp && FlxG._game._debugger.watch.editing)
 		{
