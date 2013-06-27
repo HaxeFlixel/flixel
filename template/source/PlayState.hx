@@ -4,7 +4,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxButton;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
-import org.flixel.FlxText;
+import org.flixel.text.FlxText;
 import org.flixel.util.FlxMath;
 
 /**

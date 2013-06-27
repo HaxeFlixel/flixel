@@ -1,4 +1,4 @@
-package org.flixel.plugin.pxText;
+package org.flixel.text.pxText;
 
 /**
  * Omnipotent class that can be used to take various short cuts. Also holds various useful things.

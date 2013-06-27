@@ -22,7 +22,7 @@ import flash.Lib;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
-import org.flixel.FlxText;
+import org.flixel.text.FlxText;
 import org.flixel.addons.FlxSpriteGroup;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxMath;

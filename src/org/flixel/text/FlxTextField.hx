@@ -1,4 +1,4 @@
-package org.flixel;
+package org.flixel.text;
 
 import flash.display.BitmapData;
 import flash.text.TextField;
@@ -11,7 +11,6 @@ import org.flixel.FlxBasic;
 import org.flixel.FlxCamera;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
-import org.flixel.FlxText;
 import org.flixel.system.layer.Atlas;
 import org.flixel.util.FlxColor;
 import org.flixel.util.FlxPoint;
