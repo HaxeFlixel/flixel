@@ -12,6 +12,7 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.plugin.TimerManager;
+import flixel.system.FlxAssets;
 import flixel.system.FlxReplay;
 import flixel.system.input.FlxInputs;
 import flixel.system.layer.Atlas;

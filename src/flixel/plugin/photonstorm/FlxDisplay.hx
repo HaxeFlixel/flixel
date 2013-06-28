@@ -13,16 +13,13 @@
 
 package flixel.plugin.photonstorm;
 
-import openfl.Assets;
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BitmapDataChannel;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxAssets;
 import flixel.FlxG;
 import flixel.FlxSprite;
-
+import flixel.system.FlxAssets;
 
 class FlxDisplay 
 {

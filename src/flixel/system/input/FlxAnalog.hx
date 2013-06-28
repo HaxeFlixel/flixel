@@ -1,12 +1,12 @@
 package flixel.system.input;
 
-import flixel.FlxTypedGroup;
-import flixel.FlxG;
-import flixel.FlxAssets;
-import flixel.FlxSprite;
-import flixel.util.FlxPoint;
 import flash.geom.Rectangle;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxTypedGroup;
+import flixel.system.FlxAssets;
 import flixel.system.input.FlxTouch;
+import flixel.util.FlxPoint;
 
 /**
  * 

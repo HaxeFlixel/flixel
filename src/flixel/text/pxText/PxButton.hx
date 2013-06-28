@@ -1,8 +1,6 @@
 package flixel.text.pxText;
 
-import flixel.FlxAssets;
-import flixel.FlxButton;
-import flixel.FlxG;
+import flixel.system.FlxAssets;
 import flixel.util.FlxPoint;
 
 /**

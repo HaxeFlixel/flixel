@@ -12,6 +12,7 @@ import openfl.display.Tilesheet;
 import flixel.FlxG;
 import flixel.plugin.texturepacker.TexturePackerData;
 import flixel.system.FlxAnim;
+import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxAngle;
