@@ -6,13 +6,7 @@ import flash.display.Sprite;
 import flash.display.Graphics;
 
 class DebuggerFrontEnd
-{
-	/**
-	 * Whether you are running in Debug or Release mode.
-	 * Set automatically by <code>FlxPreloader</code> during startup.
-	 */
-	public var debug:Bool;
-	
+{	
 	#if !FLX_NO_DEBUG
 	/**
 	 * Whether to show visual debug displays or not.
