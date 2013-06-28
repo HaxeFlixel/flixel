@@ -1,23 +1,21 @@
 package flixel.system.debug;
 
-import openfl.Assets;
 import flash.geom.Rectangle;
+import flash.Lib;
 import flash.system.System;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import flash.Lib;
 import flixel.FlxAssets;
+import flixel.FlxG;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
 import flixel.util.FlxArray;
-
-import flixel.FlxG;
-import flixel.system.FlxWindow;
+import openfl.Assets;
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
  */
-class Perf extends FlxWindow
+class Perf extends Window
 {
 	private var _text:TextField;
 	
