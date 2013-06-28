@@ -116,10 +116,6 @@ class FlxG
 	 * while denser collision activity usually profits from more. Default value is 6.
 	 */
 	static public var worldDivisions:Int;
-	/**
-	 * Setting this to true will disable/skip stuff that isn't necessary for mobile platforms like Android. [BETA]
-	 */
-	static public var mobile:Bool;
 	
 	/**
 	 * Useful helper objects for doing Flash-specific rendering.
@@ -238,8 +234,6 @@ class FlxG
 
 		cameras = new CameraFrontEnd();
 		plugins = new PluginFrontEnd();
-		
-		FlxG.mobile = false;
 		
 		// Most of the front ends
 		console = new ConsoleFrontEnd();

@@ -205,10 +205,10 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			return;
 		}
 		#end
-		if(!FlxG.mobile)
-		{
+		
+		#if !mobile
 			var c:Int = FlashEvent.keyCode;
-			
+				
 			#if !FLX_NO_DEBUG
 			if ((FlxG._game._debugger != null) && (FlxG.debugger.toggleKeys != null && Lambda.indexOf(FlxG.debugger.toggleKeys, c) != -1))
 			{
@@ -216,7 +216,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				return;
 			}
 			#end
-			
+				
 			if (!FlxG._game.tempDisableSoundHotKeys)
 			{
 				var code:String = String.fromCharCode(FlashEvent.charCode);
@@ -238,11 +238,11 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				{
 					FlxG.sound.mute = false;
 					FlxG.sound.volume = FlxG.sound.volume - 0.1;
-					
+						
 					#if !FLX_NO_SOUND_TRAY
 					FlxG._game.showSoundTray();
-					
 					#end
+					
 					return;
 				}
 				else if (FlxG.sound.keyVolumeUp != null && Lambda.indexOf(FlxG.sound.keyVolumeUp, c) != -1) 
@@ -253,15 +253,12 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 					#if !FLX_NO_SOUND_TRAY
 					FlxG._game.showSoundTray();
 					#end
-					
+						
 					return;
 				}
-				else
-				{
-					//default:
-				}
 			}
-		}
+		#end
+		
 		#if FLX_RECORD
 		if (FlxG._game._replaying)
 		{
