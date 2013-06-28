@@ -1,7 +1,7 @@
 package;
 
 import flash.Lib;
-import org.flixel.FlxGame;
+import flixel.FlxGame;
 	
 class ${PROJECT_CLASS} extends FlxGame
 {	
