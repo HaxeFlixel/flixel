@@ -15,7 +15,7 @@
 
 	<target name="Haxelib Package" depends="Run.n, Project Template">
 		<zip destfile="${PACKAGE_NAME}-${VERSION}.zip">
-			<zipfileset dir="" prefix="${PACKAGE_NAME}" includes="run.n,template.zip,CHANGELOG.txt,include.nmml" />
+			<zipfileset dir="" prefix="${PACKAGE_NAME}" includes="run.n,template.zip,CHANGELOG.txt" />
 			<zipfileset dir="src" prefix="${PACKAGE_NAME}" />
 		</zip>
 	</target>

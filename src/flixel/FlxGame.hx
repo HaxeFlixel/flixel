@@ -417,7 +417,7 @@ class FlxGame extends Sprite
 	public inline function requestNewState(newState:FlxState):Void
 	{
 		_requestedState = newState;
-		#if(cpp && thread)
+		#if (cpp && FLX_THREADING)
 		_stateSwitchRequested = true;
 		#end
 	} 
@@ -470,7 +470,7 @@ class FlxGame extends Sprite
 		#end
 		_state.create();
 		
-		#if (cpp && thread) 
+		#if (cpp && FLX_THREADING) 
 		_stateSwitchRequested = false; 
 		#end
 	}
@@ -518,7 +518,7 @@ class FlxGame extends Sprite
 		//finally actually step through the game physics
 		FlxBasic._ACTIVECOUNT = 0;
 		
-		#if (cpp && thread)
+		#if (cpp && FLX_THREADING)
 		_threadSync.push(true);
 		#else
 		update();
@@ -532,7 +532,7 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	#if (cpp && thread)
+	#if (cpp && FLX_THREADING)
 	// push 'true' into this array to trigger an update. push 'false' to terminate update thread.
 	public var _stateSwitchRequested:Bool;
 	public var _threadSync:cpp.vm.Deque<Bool>;
@@ -687,7 +687,7 @@ class FlxGame extends Sprite
 		
 		FlxG.cameras.lock();
 		
-		#if (cpp && thread)
+		#if (cpp && FLX_THREADING)
 		// Only draw the state if a new state hasn't been requested
 		if (!_stateSwitchRequested)
 		#end 
@@ -790,7 +790,7 @@ class FlxGame extends Sprite
 			_requestedReset = false;
 		}
 		
-		#if (cpp && thread)
+		#if (cpp && FLX_THREADING)
 		_threadSync = new cpp.vm.Deque();
 		cpp.vm.Thread.create(threadedUpdate);
 		#end
