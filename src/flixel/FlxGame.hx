@@ -1,8 +1,5 @@
 package flixel;
 
-import flash.events.ProgressEvent;
-import flash.Lib;
-import openfl.Assets;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
@@ -10,26 +7,26 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flash.media.Sound;
+import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
-import flixel.text.pxText.PxBitmapFont;
+import flixel.plugin.TimerManager;
+import flixel.system.FlxReplay;
+import flixel.system.input.FlxInputs;
 import flixel.system.layer.Atlas;
 import flixel.system.layer.TileSheetData;
-import flixel.system.input.FlxInputs;
 import flixel.system.layer.TileSheetExt;
+import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
 import flixel.util.FlxTimer;
+import openfl.Assets;
 
 #if flash
 import flash.text.AntiAliasType;
 import flash.text.GridFitType;
 #end
-
-import flixel.plugin.TimerManager;
-import flixel.system.FlxReplay;
 
 #if !FLX_NO_DEBUG
 import flixel.system.FlxDebugger;
@@ -43,7 +40,6 @@ import flixel.system.FlxDebugger;
  */
 class FlxGame extends Sprite
 {
-	private var junk:String;
 	/**
 	 * Internal var used to temporarily disable sound hot keys without overriding useSoundHotKeys.
 	 * Used by the console window of the debugger.
@@ -231,7 +227,6 @@ class FlxGame extends Sprite
 		_prefsSave.bind("flixel");
 		
 		#if !FLX_NO_DEBUG
-		FlxG.debugger.debug = true;
 		_debuggerUp = false;
 		#end
 		
@@ -739,7 +734,8 @@ class FlxGame extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
 		_total = Lib.getTimer();
-		//Set up the view window and double buffering
+		
+		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = _flashFramerate;
@@ -750,33 +746,26 @@ class FlxGame extends Sprite
 		
 		FlxG.autoPause = true;
 		
-		//Let mobile devs opt out of unnecessary overlays.
-		if(!FlxG.mobile)
+		// Let mobile devs opt out of unnecessary overlays.
+		if (!FlxG.mobile)
 		{
+			// Creating the debugger overlay
 			#if !FLX_NO_DEBUG
-			//Debugger overlay
-			if(FlxG.debugger.debug)
-			{
-				_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
-				#if flash
-				addChild(_debugger);
-				#else
-				Lib.current.stage.addChild(_debugger);
-				#end
-			}
+			_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
+			addChild(_debugger);
 			#end
 			
-			//Volume display tab
+			// Volume display tab
 			#if !FLX_NO_SOUND_TRAY
 			createSoundTray();
 			#end
 			
 			loadSoundPrefs();
 			
-			//Focus gained/lost monitoring
+			// Focus gained/lost monitoring
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
-			// TODO: add event listeners for Event.ACTIVATE/DEACTIVATE 
+			
 			#if !FLX_NO_FOCUS_LOST_SCREEN
 			createFocusScreen();
 			#end
@@ -795,8 +784,8 @@ class FlxGame extends Sprite
 		cpp.vm.Thread.create(threadedUpdate);
 		#end
 		
-		//Finally, set up an event for the actual game loop stuff.
-		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		// Finally, set up an event for the actual game loop stuff.
+		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 	}
 	
 	#if !FLX_NO_SOUND_TRAY
