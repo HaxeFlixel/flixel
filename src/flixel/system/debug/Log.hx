@@ -4,12 +4,12 @@ package flixel.system.debug;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import haxe.ds.StringMap;
-import openfl.Assets;
-import flixel.FlxAssets;
+import flixel.system.FlxAssets;
 import flixel.system.FlxDebugger;
 import flixel.util.FlxPoint;
 import flixel.util.FlxString;
+import haxe.ds.StringMap;
+import openfl.Assets;
 
 /**
  * A simple trace output window for use in the debugger overlay.

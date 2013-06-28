@@ -6,9 +6,9 @@ import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.Lib;
 import flash.ui.Mouse;
-import flixel.FlxAssets;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxPoint;
 

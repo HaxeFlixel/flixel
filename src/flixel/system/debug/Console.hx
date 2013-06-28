@@ -1,18 +1,18 @@
 package flixel.system.debug;
 
-import flash.events.FocusEvent;
-import flash.events.KeyboardEvent;
-import flash.text.TextFieldType;
-import flash.ui.Keyboard;
-import openfl.Assets;
 import flash.errors.ArgumentError;
 import flash.events.Event;
+import flash.events.FocusEvent;
+import flash.events.KeyboardEvent;
 import flash.geom.Rectangle;
 import flash.text.TextField;
+import flash.text.TextFieldType;
 import flash.text.TextFormat;
-import flixel.FlxAssets;
+import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.system.FlxAssets;
+import openfl.Assets;
 
 /**
  * A powerful console for the flixel debugger screen with supports

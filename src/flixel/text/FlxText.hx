@@ -6,6 +6,7 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import openfl.Assets;
+import flixel.system.FlxAssets;
 import flixel.system.layer.Atlas;
 import flixel.util.FlxColor;
 

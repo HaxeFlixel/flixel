@@ -10,7 +10,7 @@ import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import openfl.Assets;
-import flixel.FlxAssets;
+import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 

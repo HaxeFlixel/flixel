@@ -9,7 +9,7 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flash.utils.ByteArray;
-import flixel.FlxAssets;
+import flixel.system.FlxAssets;
 import flixel.FlxG;
 import flixel.util.FlxString;
 import openfl.Assets;

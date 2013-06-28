@@ -5,15 +5,15 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFieldType;
 import flash.text.TextFormatAlign;
-import openfl.Assets;
-import flixel.FlxAssets;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.system.FlxAssets;
 import flixel.system.layer.Atlas;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
+import openfl.Assets;
 
 /**
  * Extends <code>FlxText</code> for better support rendering text on cpp target.

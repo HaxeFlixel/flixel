@@ -6,7 +6,7 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import flixel.FlxAssets;
+import flixel.system.FlxAssets;
 import flixel.FlxG;
 
 /**
