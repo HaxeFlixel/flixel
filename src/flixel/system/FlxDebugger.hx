@@ -1,7 +1,6 @@
 package flixel.system;
 #if !FLX_NO_DEBUG
 
-import openfl.Assets;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -10,17 +9,19 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
-#if !FLX_NO_MOUSE
-import flash.ui.Mouse;
-#end
-import flixel.FlxAssets;
 import flixel.FlxG;
+import flixel.system.debug.Console;
 import flixel.system.debug.Log;
 import flixel.system.debug.Perf;
 import flixel.system.debug.VCR;
 import flixel.system.debug.Vis;
 import flixel.system.debug.Watch;
-import flixel.system.debug.Console;
+import flixel.system.FlxAssets;
+import openfl.Assets;
+
+#if !FLX_NO_MOUSE
+import flash.ui.Mouse;
+#end
 
 /**
  * Container for the new debugger overlay.

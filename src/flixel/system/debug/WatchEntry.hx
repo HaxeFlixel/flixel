@@ -5,12 +5,12 @@ import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.text.TextFieldType;
 import flash.text.TextFormat;
-import openfl.Assets;
-import flixel.FlxAssets;
 import flixel.FlxG;
+import flixel.system.FlxAssets;
 import flixel.system.FlxDebugger;
 import flixel.util.FlxPoint;
 import flixel.util.FlxString;
+import openfl.Assets;
 
 /**
  * Helper class for the debugger overlay's Watch window.

@@ -1,10 +1,9 @@
 package flixel.system.input;
 
-import flixel.FlxSprite;
-import flixel.FlxAssets;
-import flixel.FlxG;
 import flixel.FlxButton;
+import flixel.FlxG;
 import flixel.FlxTypedGroup;
+import flixel.system.FlxAssets;
 
 /**
  * A gamepad which contains 4 directional buttons and 4 action buttons.
