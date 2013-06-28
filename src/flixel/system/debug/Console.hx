@@ -12,7 +12,6 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxAssets;
 import flixel.FlxG;
-import flixel.system.FlxWindow;
 import flixel.FlxObject;
 
 /**
@@ -22,7 +21,7 @@ import flixel.FlxObject;
  * Inspired by Eric Smith's "CoolConsole".
  * @link http://www.youtube.com/watch?v=QWfpw7elWk8
  */
-class Console extends FlxWindow
+class Console extends Window
 {
 	private var _input:TextField;
 	

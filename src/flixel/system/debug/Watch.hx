@@ -5,7 +5,6 @@ import flash.geom.Rectangle;
 import haxe.ds.StringMap;
 import flixel.FlxG;
 import flixel.system.FlxDebugger;
-import flixel.system.FlxWindow;
 import flixel.util.FlxArray;
 import flixel.util.FlxPoint;
 import flixel.util.FlxString;
@@ -14,7 +13,7 @@ import flixel.util.FlxString;
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
  * Track the values of any public variable in real-time, and/or edit their values on the fly.
  */
-class Watch extends FlxWindow
+class Watch extends Window
 {
 	static private inline var MAX_LOG_LINES:Int = 1024;
 	static private inline var LINE_HEIGHT:Int = 15;

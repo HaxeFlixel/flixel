@@ -1,4 +1,4 @@
-package flixel.system;
+package flixel.system.debug;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -17,10 +17,16 @@ import flixel.util.FlxMath;
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
  */
-class FlxWindow extends Sprite
+class Window extends Sprite
 {
-	static public inline var BG_COLOR:Int = 0x7f7f7f7f;
-	static public inline var TOP_COLOR:Int = 0x7f000000;
+	/**
+	 * The background color of the window.
+	 */
+	inline static public var BG_COLOR:Int = 0x7f7f7f7f;
+	/**
+	 * The color used for the "handle" at the top of the window.
+	 */
+	inline static public var TOP_COLOR:Int = 0x7f000000;
 	
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
@@ -130,14 +136,15 @@ class FlxWindow extends Sprite
 		
 		_title = new TextField();
 		_title.x = 2;
-		_title.height = 16;
+		_title.y = -1;
+		_title.height = 20;
 		_title.selectable = false;
 		_title.multiline = false;
 		_title.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 12, 0xffffff);
 		_title.text = Title;
 		addChild(_title);
 		
-		if(_resizable)
+		if (_resizable)
 		{
 			_handle = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgHandle));
 			addChild(_handle);

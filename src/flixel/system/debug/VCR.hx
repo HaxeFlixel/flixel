@@ -1,31 +1,26 @@
 package flixel.system.debug;
 
-import openfl.Assets;
 import flash.display.Bitmap;
-import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.MouseEvent;
-import flixel.util.FlxString;
-#if !FLX_NO_MOUSE
-import flash.ui.Mouse;
-#end
-
-import flixel.FlxAssets;
-#if flash
-import flash.net.FileFilter;
-import flash.net.FileReference;
-#end
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flash.utils.ByteArray;
-
+import flixel.FlxAssets;
 import flixel.FlxG;
-import flixel.system.FlxReplay;
-import flixel.system.replay.FrameRecord;
-import flixel.system.replay.MouseRecord;
+import flixel.util.FlxString;
+import openfl.Assets;
+
+#if !FLX_NO_MOUSE
+import flash.ui.Mouse;
+#end
+#if flash
+import flash.net.FileFilter;
+import flash.net.FileReference;
+#end
 
 /**
  * This class contains the record, stop, play, and step 1 frame buttons seen on the top edge of the debugger overlay.
