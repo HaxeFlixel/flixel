@@ -31,7 +31,9 @@ class DebuggerFrontEnd
 	
 	public function new() 
 	{
+		#if !FLX_NO_KEYBOARD
 		toggleKeys = [192, 220];
+		#end
 		
 		#if !FLX_NO_DEBUG
 		visualDebug = false;
