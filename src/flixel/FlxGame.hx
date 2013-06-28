@@ -747,29 +747,29 @@ class FlxGame extends Sprite
 		FlxG.autoPause = true;
 		
 		// Let mobile devs opt out of unnecessary overlays.
-		if (!FlxG.mobile)
-		{
+		#if !mobile
 			// Creating the debugger overlay
 			#if !FLX_NO_DEBUG
 			_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
 			addChild(_debugger);
 			#end
-			
+				
 			// Volume display tab
 			#if !FLX_NO_SOUND_TRAY
 			createSoundTray();
 			#end
-			
+				
 			loadSoundPrefs();
-			
+				
 			// Focus gained/lost monitoring
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
-			
+				
 			#if !FLX_NO_FOCUS_LOST_SCREEN
 			createFocusScreen();
 			#end
-		}
+			
+		#end
 		
 		// Instantiate the initial state
 		if (_requestedReset)
