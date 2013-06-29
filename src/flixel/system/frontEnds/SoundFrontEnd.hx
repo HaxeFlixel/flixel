@@ -4,7 +4,7 @@ import flash.media.Sound;
 import flash.media.SoundTransform;
 import flixel.FlxG;
 import flixel.FlxSound;
-import flixel.FlxTypedGroup;
+import flixel.group.FlxTypedGroup;
 
 class SoundFrontEnd
 {

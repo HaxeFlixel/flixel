@@ -23,12 +23,12 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxGroup;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.tile.FlxTileblock;
 import flixel.util.FlxColor;
-import flixel.util.FlxRect;
 import flixel.util.FlxMath;
+import flixel.util.FlxRect;
 
 class FlxCollision 
 {

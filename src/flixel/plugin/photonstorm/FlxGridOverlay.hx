@@ -19,8 +19,6 @@ import flixel.FlxSprite;
 
 class FlxGridOverlay 
 {
-	public function new() { }
-	
 	/**
 	 * Creates an FlxSprite of the given width and height filled with a checkerboard pattern.<br />
 	 * Each grid cell is the specified width and height, and alternates between two colors.<br />

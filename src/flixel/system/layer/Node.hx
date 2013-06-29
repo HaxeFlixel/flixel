@@ -3,10 +3,8 @@ package flixel.system.layer;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.plugin.texturepacker.TexturePackerData;
-
-import flixel.system.layer.TileSheetData;
 import flixel.system.layer.frames.FlxSpriteFrames;
+import flixel.util.loaders.TexturePackerData;
 
 /**
  * Atlas Node holds BitmapData and it's position on Atlas

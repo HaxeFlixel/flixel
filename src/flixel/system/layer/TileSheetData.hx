@@ -3,12 +3,12 @@ package flixel.system.layer;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.plugin.texturepacker.Frame;
-import flixel.util.FlxPoint;
-import flixel.plugin.texturepacker.TexturePackerData;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.TileSheetExt;
+import flixel.util.FlxPoint;
+import flixel.util.loaders.Frame;
+import flixel.util.loaders.TexturePackerData;
 
 /**
  * Object of this class holds information about single Tilesheet

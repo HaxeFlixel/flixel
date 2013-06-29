@@ -19,12 +19,13 @@ import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 import flash.Lib;
+import flixel.group.FlxSpriteGroup;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
-import flixel.addons.FlxSpriteGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxGradient;
 import flixel.util.FlxMath;
 
 /**

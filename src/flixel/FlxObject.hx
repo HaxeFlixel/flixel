@@ -2,6 +2,7 @@ package flixel;
 
 import flash.display.Graphics;
 import flixel.FlxBasic;
+import flixel.group.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;

@@ -1,12 +1,12 @@
 package flixel;
 
 import flash.display.BitmapData;
-import flixel.plugin.texturepacker.TexturePackerData;
 import flixel.system.layer.Atlas;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Node;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxString;
+import flixel.util.loaders.TexturePackerData;
 
 /**
  * This is a useful "generic" Flixel object.
