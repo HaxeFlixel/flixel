@@ -167,10 +167,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		_onOut = null;
 		_onOver = null;
 		
-		_onUpParams = null;
-		_onDownParams = null;
-		_onOutParams = null;
-		_onOverParams = null;
+		_onUpParams = [];
+		_onDownParams = [];
+		_onOutParams = [];
+		_onOverParams = [];
 		
 		soundOver = null;
 		soundOut = null;
@@ -262,12 +262,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		switch (frame)
 		{
-			case FlxButton.HIGHLIGHT:	// Extra behavior to accomodate checkbox logic.
+			case FlxButton.HIGHLIGHT:
 				label.alpha = 1.0;
 			case FlxButton.PRESSED:
 				label.alpha = 0.5;
 				label.y++;
-			//case NORMAL:
 			default:
 				label.alpha = 0.8;
 		}
@@ -279,7 +278,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	function updateButton():Void
 	{
 		// Figure out if the button is highlighted or pressed or what
-		// (ignore checkbox behavior for now).
 		var continueUpdate = false;
 		
 		#if !FLX_NO_MOUSE
@@ -467,6 +465,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	inline public function setOnUpCallback(Callback:Dynamic->Void, ?Params:Array<Dynamic>):Void
 	{
 		_onUp = Callback;
+		
+		if (Params == null)
+		{
+			Params = [];
+		}
+		
 		_onUpParams = Params;
 	}
 	
@@ -479,6 +483,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	inline public function setOnDownCallback(Callback:Dynamic->Void, ?Params:Array<Dynamic>):Void
 	{
 		_onDown = Callback;
+		
+		if (Params == null)
+		{
+			Params = [];
+		}
+		
 		_onDownParams = Params;
 	}
 	
@@ -491,6 +501,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	inline public function setOnOverCallback(Callback:Dynamic->Void, ?Params:Array<Dynamic>):Void
 	{
 		_onOver = Callback;
+		
+		if (Params == null)
+		{
+			Params = [];
+		}
+		
 		_onOverParams = Params;
 	}
 	
@@ -503,6 +519,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	inline public function setOnOutCallback(Callback:Dynamic->Void, ?Params:Array<Dynamic>):Void
 	{
 		_onOut = Callback;
+		
+		if (Params == null)
+		{
+			Params = [];
+		}
+		
 		_onOutParams = Params;
 	}
 	
