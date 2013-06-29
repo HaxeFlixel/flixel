@@ -1,7 +1,5 @@
 package flixel.util;
 
-import flixel.FlxG;
-
 /**
  * Class containing a set of useful color constants and 
  * a few functions for color manipulation and color harmony.

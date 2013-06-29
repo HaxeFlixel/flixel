@@ -3,6 +3,7 @@ package flixel.system.layer.frames;
 import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
+// TODO: TexturePackerTileSheetData doesn't seem to exist (anymore)?
 import flixel.plugin.texturepacker.TexturePackerTileSheetData;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;

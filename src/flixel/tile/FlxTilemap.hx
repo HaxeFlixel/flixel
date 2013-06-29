@@ -5,6 +5,7 @@ import flash.display.Graphics;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.group.FlxTypedGroup;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxArray;

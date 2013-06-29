@@ -648,7 +648,7 @@ class FlxExtendedSprite extends FlxSprite
 	private function updateDrag():Void
 	{
 		//FlxG.mouse.getWorldPosition(null, tempPoint);
-		//todo touch drag
+		// TODO: touch drag
 		if (allowHorizontalDrag == true)
 		{
 			#if !FLX_NO_MOUSE

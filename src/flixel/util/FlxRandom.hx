@@ -1,7 +1,5 @@
 package flixel.util;
 
-import flixel.FlxG;
-
 /**
  * A class containing a set of functions for randomnly 
  * generating numbers or other random things.

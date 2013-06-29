@@ -2,7 +2,6 @@ package flixel.util;
 
 import flash.Lib;
 import flash.net.URLRequest;
-import flixel.FlxGame;
 
 /**
  * A class containing random functions that didn't 

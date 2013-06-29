@@ -8,22 +8,18 @@ import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import openfl.display.Tilesheet;
 import flixel.FlxG;
-import flixel.plugin.texturepacker.TexturePackerData;
 import flixel.system.FlxAnim;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxAngle;
-import flixel.util.FlxColor;
 import flixel.util.FlxArray;
+import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
-
-#if !flash
-import flixel.system.layer.TileSheetData;
-#end
+import flixel.util.loaders.TexturePackerData;
+import openfl.display.Tilesheet;
 
 /**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
@@ -976,7 +972,7 @@ class FlxSprite extends FlxObject
 		var bitmapData:BitmapData = Brush.framePixels;
 		
 		//Simple draw
-		if(((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
+		if (((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
 		{
 			_flashPoint.x = X;
 			_flashPoint.y = Y;
@@ -1011,77 +1007,6 @@ class FlxSprite extends FlxObject
 		#if flash
 		calcFrame();
 		#end
-		updateAtlasInfo(true);
-	}
-	
-	/**
-	 * This function draws a line on this sprite from position X1,Y1
-	 * to position X2,Y2 with the specified color.
-	 * @param	StartX		X coordinate of the line's start point.
-	 * @param	StartY		Y coordinate of the line's start point.
-	 * @param	EndX		X coordinate of the line's end point.
-	 * @param	EndY		Y coordinate of the line's end point.
-	 * @param	Color		The line's color.
-	 * @param	Thickness	How thick the line is in pixels (default value is 1).
-	 */
-	public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
-	{
-		//Draw line
-		var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.moveTo(StartX, StartY);
-		var alphaComponent:Float = ((Color >> 24) & 255) / 255;
-		if (alphaComponent <= 0)
-		{
-			alphaComponent = 1;
-		}
-		gfx.lineStyle(Thickness, Color, alphaComponent);
-		gfx.lineTo(EndX, EndY);
-		
-		//Cache line to bitmap
-		_pixels.draw(FlxG.flashGfxSprite);
-		dirty = true;
-		
-		resetFrameBitmapDatas();
-		updateAtlasInfo(true);
-	}
-	
-	/**
-	 * This function draws a circle on this sprite at position X,Y
-	 * with the specified color.
-	 * @param X X coordinate of the circle's center
-	 * @param Y Y coordinate of the circle's center
-	 * @param Radius Radius of the circle
-	 * @param Color Color of the circle
-	*/
-	public function drawCircle(X:Float, Y:Float, Radius:Float, Color:Int):Void
-	{
-		var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.beginFill(Color, 1);
-		gfx.drawCircle(X, Y, Radius);
-		gfx.endFill();
-
-		_pixels.draw(FlxG.flashGfxSprite);
-		dirty = true;
-		
-		resetFrameBitmapDatas();
-		updateAtlasInfo(true);
-	}
-	
-	/**
-	 * Fills this sprite's graphic with a specific color.
-	 * @param	Color		The color with which to fill the graphic, format 0xAARRGGBB.
-	 */
-	public function fill(Color:Int):Void
-	{
-		_pixels.fillRect(_flashRect2, Color);
-		if (_pixels != framePixels)
-		{
-			dirty = true;
-		}
-		
-		resetFrameBitmapDatas();
 		updateAtlasInfo(true);
 	}
 	
@@ -1550,16 +1475,13 @@ class FlxSprite extends FlxObject
 	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
-	public var pixels(get_pixels, set_pixels):BitmapData;
+	public var pixels(get, set):BitmapData;
 	
 	private function get_pixels():BitmapData
 	{
 		return _pixels;
 	}
 	
-	/**
-	 * @private
-	 */
 	private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		_pixels = Pixels;
@@ -1577,6 +1499,7 @@ class FlxSprite extends FlxObject
 		nullTextureData();
 		#end
 		updateAtlasInfo(true);
+		
 		return _pixels;
 	}
 	
@@ -2273,9 +2196,9 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
-	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), drawLine() and other similar method calls).
+	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
 	 */
-	private function resetFrameBitmapDatas():Void
+	public function resetFrameBitmapDatas():Void
 	{
 		#if flash
 		if (_textureData != null)
