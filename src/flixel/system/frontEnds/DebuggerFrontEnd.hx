@@ -1,116 +1,95 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxG;
 import flixel.FlxBasic;
-import flash.display.Sprite;
-import flash.display.Graphics;
+import flixel.FlxG;
 
 class DebuggerFrontEnd
 {	
 	#if !FLX_NO_DEBUG
 	/**
-	 * Whether to show visual debug displays or not.
+	 * Whether to show visual debug displays or not. Doesn't exist in <code>FLX_NO_DEBUG</code> mode.
 	 * @default false
 	 */
-	public var visualDebug:Bool;
+	public var visualDebug:Bool = false;
 	#end
 	
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * The key codes used to open the debugger. (via flash.ui.Keyboard)
+	 * The key codes used to open the debugger (via <code>flash.ui.Keyboard</code>). 
+	 * Doesn't exist in <code>FLX_NO_KEYBOARD</code> mode.
 	 * @default [192, 220]
 	 */
 	public var toggleKeys:Array<Int>;
 	#end
 	
+	/**
+	 * Used to instantiate this class and assign a value to <code>toggleKeys</code>
+	 */
 	public function new() 
 	{
 		#if !FLX_NO_KEYBOARD
 		toggleKeys = [192, 220];
 		#end
-		
+	}
+	
+	/**
+	 * Change the way the debugger's windows are laid out.
+	 * 
+	 * @param	Layout	The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
+	 */
+	inline public function setLayout(Layout:Int):Void
+	{
 		#if !FLX_NO_DEBUG
-		visualDebug = false;
+		FlxG._game._debugger.setLayout(Layout);
 		#end
 	}
 	
+	/**
+	 * Just resets the debugger windows to whatever the last selected layout was (<code>STANDARD</code> by default).
+	 */
+	inline public function resetLayout():Void
+	{
+		#if !FLX_NO_DEBUG
+		FlxG._game._debugger.resetLayout();
+		#end
+	}
+	
+	/**
+	 * Whether the debugger is visible or not.
+	 * @default false
+	 */
+	public var visible(default, set):Bool = false;
+	
+	private function set_visible(Visible:Bool):Bool
+	{
+		#if !FLX_NO_DEBUG
+		FlxG._game._debuggerUp = Visible;
+		FlxG._game.debugger.visible = Visible;
+		#end
+		
+		return visible = Visible;
+	}
+	
 	#if !FLX_NO_DEBUG
-	inline public function drawDebugPlugins():Void
+	/**
+	 * You shouldn't need to call this. Used to Draw the debug graphics for any installed plugins.
+	 */
+	public function drawDebugPlugins():Void
 	{
 		var plugin:FlxBasic;
 		var pluginList:Array<FlxBasic> = FlxG.plugins.list;
 		var i:Int = 0;
 		var l:Int = pluginList.length;
+		
 		while(i < l)
 		{
 			plugin = pluginList[i++];
+			
 			if (plugin.exists && plugin.visible && !plugin.ignoreDrawDebug)
 			{
 				plugin.drawDebug();
 			}
 		}
-	}
-	#end
-	
-	/**
-	 * Toggles the flixel debugger, if it exists.
-	 */
-	public function toggle():Void
-	{
-		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
-		{
-			FlxG._game._debuggerUp = !FlxG._game.debugger.visible;
-			FlxG._game.debugger.visible = !FlxG._game.debugger.visible;
-		}
-		#end
-	}
-	
-	/**
-	 * Shows the flixel debugger, if it exists.
-	 */
-	public function show():Void
-	{
-		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
-		{
-			FlxG._game._debuggerUp = true;
-			FlxG._game.debugger.visible = true;
-		}
-		#end
-	}
-	
-	/**
-	 * Hides the flixel debugger, if it exists.
-	 */
-	public function hide():Void
-	{
-		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
-		{
-			FlxG._game._debuggerUp = false;
-			FlxG._game.debugger.visible = false;
-		}
-		#end
-	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Change the way the debugger's windows are laid out.
-	 * 
-	 * @param	Layout		See the presets above (e.g. <code>DEBUGGER_MICRO</code>, etc).
-	 */
-	public function setLayout(Layout:Int):Void
-	{
-		FlxG._game._debugger.setLayout(Layout);
-	}
-	
-	/**
-	 * Just resets the debugger windows to whatever the last selected layout was (<code>DEBUGGER_STANDARD</code> by default).
-	 */
-	public function resetLayout():Void
-	{
-		FlxG._game._debugger.resetLayout();
 	}
 	#end
 }

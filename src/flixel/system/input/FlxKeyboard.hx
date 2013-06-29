@@ -212,7 +212,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			#if !FLX_NO_DEBUG
 			if ((FlxG._game._debugger != null) && (FlxG.debugger.toggleKeys != null && Lambda.indexOf(FlxG.debugger.toggleKeys, c) != -1))
 			{
-				FlxG.debugger.toggle();
+				FlxG.debugger.visible = !FlxG.debugger.visible;
 				return;
 			}
 			#end

@@ -263,7 +263,7 @@ class ConsoleCommands
 	
 	private function close():Void
 	{
-		FlxG.debugger.hide();
+		FlxG.debugger.visible = false;
 	}
 	
 	private function create(ClassName:String, MousePos:Bool = true, Params:Array<String> = null):Void
