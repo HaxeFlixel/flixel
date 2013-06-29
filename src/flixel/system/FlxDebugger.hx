@@ -1,4 +1,5 @@
 package flixel.system;
+
 #if !FLX_NO_DEBUG
 
 import flash.display.Bitmap;
@@ -33,32 +34,32 @@ class FlxDebugger extends Sprite
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the bottom of the screen.
 	 */
-	inline static public var DEBUGGER_STANDARD:Int = 0;
+	inline static public var STANDARD:Int = 0;
 	
 	/**
 	 * Debugger overlay layout preset: Tiny windows in the screen corners.
 	 */
-	inline static public var DEBUGGER_MICRO:Int = 1;
+	inline static public var MICRO:Int = 1;
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up bottom half of screen.
 	 */
-	inline static public var DEBUGGER_BIG:Int = 2;
+	inline static public var BIG:Int = 2;
 	
 	/**
 	 * Debugger overlay layout preset: Wide but low windows at the top of the screen.
 	 */
-	inline static public var DEBUGGER_TOP:Int = 3;
+	inline static public var TOP:Int = 3;
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up left third of screen.
 	 */
-	inline static public var DEBUGGER_LEFT:Int = 4;
+	inline static public var LEFT:Int = 4;
 	
 	/**
 	 * Debugger overlay layout preset: Large windows taking up right third of screen.
 	 */
-	inline static public var DEBUGGER_RIGHT:Int = 5;
+	inline static public var RIGHT:Int = 5;
 
 	/**
 	 * The amount of decimals FlxPoints are rounded to in log / watch.
@@ -109,8 +110,8 @@ class FlxDebugger extends Sprite
 	/**
 	 * Instantiates the debugger overlay.
 	 * 
-	 * @param Width		The width of the screen.
-	 * @param Height	The height of the screen.
+	 * @param 	Width	The width of the screen.
+	 * @param 	Height	The height of the screen.
 	 */
 	public function new(Width:Float, Height:Float)
 	{
@@ -165,7 +166,7 @@ class FlxDebugger extends Sprite
 		vis.y = 2;
 		addChild(vis);
 		
-		setLayout(DEBUGGER_STANDARD);
+		setLayout(STANDARD);
 		
 		//Should help with fake mouse focus type behavior
 		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
@@ -223,9 +224,10 @@ class FlxDebugger extends Sprite
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseOver(E:MouseEvent = null):Void
+	private function onMouseOver(?E:MouseEvent):Void
 	{
 		hasMouse = true;
+		
 		#if !FLX_NO_MOUSE
 		Mouse.show();
 		#end
@@ -235,9 +237,10 @@ class FlxDebugger extends Sprite
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 * @param	E	Flash mouse event.
 	 */
-	private function onMouseOut(E:MouseEvent = null):Void
+	private function onMouseOut(?E:MouseEvent):Void
 	{
 		hasMouse = false;
+		
 		#if !FLX_NO_MOUSE
 		if (!FlxG.mouse.useSystemCursor && !FlxG._game._debugger.vcr.paused)
 			Mouse.hide();
@@ -245,8 +248,9 @@ class FlxDebugger extends Sprite
 	}
 	
 	/**
-	 * Rearrange the debugger windows using one of the constants specified in FlxG.
-	 * @param	Layout		The layout style for the debugger windows, e.g. <code>DEBUGGER_MICRO</code>.
+	 * Change the way the debugger's windows are laid out.
+	 * 
+	 * @param	Layout	The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
 	 */
 	public function setLayout(Layout:Int):Void
 	{
@@ -256,13 +260,13 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Forces the debugger windows to reset to the last specified layout.
-	 * The default layout is <code>DEBUGGER_STANDARD</code>.
+	 * The default layout is <code>STANDARD</code>.
 	 */
 	public function resetLayout():Void
 	{
 		switch(_layout)
 		{
-			case DEBUGGER_MICRO:
+			case MICRO:
 				log.resize(_screen.x / 4, 68);
 				log.reposition(0, _screen.y);
 				console.resize((_screen.x / 2) - _gutter * 4, 35);
@@ -270,7 +274,7 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 4, 68);
 				watch.reposition(_screen.x,_screen.y);
 				perf.reposition(_screen.x, 0);
-			case DEBUGGER_BIG:
+			case BIG:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(_gutter, _screen.y);
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
@@ -278,7 +282,7 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
 				watch.reposition(_screen.x, _screen.y - watch.height - console.height - _gutter * 1.5);
 				perf.reposition(_screen.x, 0);
-			case DEBUGGER_TOP:
+			case TOP:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(0,0);
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
@@ -286,7 +290,7 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,console.height + _gutter + 15);
 				perf.reposition(_screen.x,_screen.y);
-			case DEBUGGER_LEFT:
+			case LEFT:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(_gutter, _screen.y);
 				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2 - _gutter);
@@ -294,7 +298,7 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2);
 				watch.reposition(0,log.y + log.height + _gutter);
 				perf.reposition(_screen.x,0);
-			case DEBUGGER_RIGHT:
+			case RIGHT:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(_gutter, _screen.y);
 				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2 - _gutter);
@@ -302,7 +306,7 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2);
 				watch.reposition(_screen.x,log.y + log.height + _gutter);
 				perf.reposition(0,0);
-			case DEBUGGER_STANDARD:
+			case STANDARD:
 				console.resize(_screen.x - _gutter * 2, 35);
 				console.reposition(_gutter, _screen.y);
 				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
