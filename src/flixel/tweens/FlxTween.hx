@@ -4,7 +4,7 @@ import flixel.tweens.util.Ease;
 import flixel.FlxBasic;
 import flixel.FlxG;
 
-typedef CompleteCallback = Void->Void;
+typedef CompleteCallback = FlxTween->Void;
 
 /**
  * Friend class for access to Tween private members
@@ -139,7 +139,7 @@ class FlxTween
 	/** @private Called when the Tween completes. */
 	private function finish():Void
 	{
-		if (complete != null) complete();
+		if (complete != null) complete(this);
 		
 		switch ((_type & ~ FlxTween.BACKWARD))
 		{
