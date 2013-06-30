@@ -361,7 +361,7 @@ class FlxBitmapFont extends FlxSprite
 
 			if (!simpleRenderSprite ())
 			{
-				radians = angle * FlxAngle.RAD;
+				radians = angle * FlxAngle.TO_RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				

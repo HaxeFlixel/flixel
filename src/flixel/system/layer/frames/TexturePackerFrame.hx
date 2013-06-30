@@ -40,7 +40,7 @@ class TexturePackerFrame extends FlxFrame
 			// TODO: fix this for non-square sprites
 			MATRIX.identity();
 			MATRIX.translate(-sourceSize.x * 0.5, -sourceSize.y * 0.5);
-			MATRIX.rotate(-90.0 * FlxAngle.RAD);
+			MATRIX.rotate(-90.0 * FlxAngle.TO_RAD);
 			MATRIX.translate(sourceSize.x * 0.5, sourceSize.y * 0.5);
 			MATRIX.translate(offset.x, offset.y);
 			

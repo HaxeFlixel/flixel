@@ -71,7 +71,7 @@ class FlxFrame
 			
 			MATRIX.identity();
 			MATRIX.translate( -0.5 * frame.width, -0.5 * frame.height);
-			MATRIX.rotate(-90.0 * FlxAngle.RAD);
+			MATRIX.rotate(-90.0 * FlxAngle.TO_RAD);
 			MATRIX.translate(offset.x + 0.5 * frame.height, offset.y + 0.5 * frame.width);
 			
 			_bitmapData.draw(temp, MATRIX);
