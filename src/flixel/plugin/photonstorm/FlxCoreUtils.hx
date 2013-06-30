@@ -1,3 +1,10 @@
+package flixel.plugin.photonstorm;
+
+import flash.display.Sprite;
+import flash.errors.Error;
+import flash.utils.ByteArray;
+import flixel.FlxG;
+
 /**
  * FlxCoreUtils
  * -- Part of the Flixel Power Tools set
@@ -9,13 +16,6 @@
  * @link http://www.photonstorm.com
  * @author Richard Davey / Photon Storm
 */
-
-package flixel.plugin.photonstorm;
-import flash.display.Sprite;
-import flash.errors.Error;
-import flash.utils.ByteArray;
-import flixel.FlxG;
-
 class FlxCoreUtils 
 {
 	/**
@@ -63,5 +63,4 @@ class FlxCoreUtils
 	{
 		return cast(FlxG.cameras.defaultCamera.getContainerSprite().parent, Sprite);
 	}
-	
 }

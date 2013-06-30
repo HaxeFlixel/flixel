@@ -1,9 +1,9 @@
 package flixel.system.input;
 
-import flixel.FlxButton;
 import flixel.FlxG;
-import flixel.FlxTypedGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.system.FlxAssets;
+import flixel.ui.FlxButton;
 
 /**
  * A gamepad which contains 4 directional buttons and 4 action buttons.
@@ -132,7 +132,7 @@ class FlxGamePad extends FlxTypedGroup<FlxButton>
 	 * @param Callback	The callback for the button.
 	 * @return			The button.
 	 */
-	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Image:String, OnClick:Void->Void = null):FlxButton
+	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Image:String, OnClick:Dynamic->Void = null):FlxButton
 	{
 		var button:FlxButton = new FlxButton(X, Y);
 		button.loadGraphic(Image, true, false, Width, Height);
@@ -146,7 +146,7 @@ class FlxGamePad extends FlxTypedGroup<FlxButton>
 		
 		if (OnClick != null)
 		{
-			button.onDown = OnClick;
+			button.setOnDownCallback(OnClick);
 		}
 		return button;
 	}	

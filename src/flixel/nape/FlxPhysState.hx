@@ -8,6 +8,7 @@ import nape.shape.Polygon;
 import nape.space.Space;
 import flixel.FlxG;
 import flixel.FlxState;
+
 #if !FLX_NO_DEBUG
 import nape.util.ShapeDebug;
 #end

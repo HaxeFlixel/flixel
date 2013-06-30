@@ -18,18 +18,16 @@ package flixel.plugin.photonstorm;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.tile.FlxTilemap;
-import flixel.FlxTypedGroup;
-import flixel.system.input.FlxTouch;
-import flash.display.Bitmap;
-import flixel.group.FlxGroup;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRect;
 import flixel.FlxSound;
 import flixel.FlxSprite;
+import flixel.group.FlxTypedGroup;
 import flixel.plugin.photonstorm.baseTypes.Bullet;
+import flixel.system.input.FlxTouch;
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxMisc;
+import flixel.util.FlxPoint;
+import flixel.util.FlxRect;
 import flixel.util.FlxVelocity;
 
 /**
