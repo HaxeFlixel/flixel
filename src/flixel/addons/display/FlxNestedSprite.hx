@@ -5,29 +5,24 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.util.FlxMath;
+import flixel.util.FlxAngle;
 import flixel.util.FlxArray;
+import flixel.util.FlxMath;
 
 /**
  * Some sort of DisplayObjectContainer but very limited.
- * It can contain only other NestedSprites.
+ * It can contain only other <code>FlxNestedSprites</code>.
  * @author Zaphod
  */
-
 class FlxNestedSprite extends FlxSprite
 {
-	private static var _degToRad:Float = Math.PI / 180;
-	
 	/**
-	 * List of all nested sprites
-	 */
-	private var _children:Array<NestedSprite>;
-	
-	/**
-	 * Position of this sprite relative to parent.
-	 * By default it is equal to (0, 0)
+	 * X position of this sprite relative to parent, 0 by default
 	 */
 	public var relativeX:Float;
+	/**
+	 * Y position of this sprite relative to parent, 0 by default
+	 */
 	public var relativeY:Float;
 	
 	/**
@@ -36,23 +31,38 @@ class FlxNestedSprite extends FlxSprite
 	public var relativeAngle:Float;
 	
 	/**
-	 * Scale of this sprite relative to parent
+	 * X scale of this sprite relative to parent
 	 */
 	public var relativeScaleX:Float;
+	/**
+	 * Y scale of this sprite relative to parent
+	 */
 	public var relativeScaleY:Float;
 	
 	/**
-	 * Velocities relative to parent sprite
+	 * X velocity relative to parent sprite
 	 */
 	public var relativeVelocityX:Float;
+	/**
+	 * Y velocity relative to parent sprite
+	 */
 	public var relativeVelocityY:Float;
+	/**
+	 * Angular velocity relative to parent sprite
+	 */
 	public var relativeAngularVelocity:Float;
 	
 	/**
-	 * Accelerations relative to parent sprite
+	 * X acceleration relative to parent sprite
 	 */
 	public var relativeAccelerationX:Float;
+	/**
+	 * Y acceleration relative to parent sprite
+	 */
 	public var relativeAccelerationY:Float;
+	/**
+	 * Angular acceleration relative to parent sprite
+	 */
 	public var relativeAngularAcceleration:Float;
 	
 	public var _parentAlpha:Float = 1;
@@ -60,7 +70,12 @@ class FlxNestedSprite extends FlxSprite
 	public var _parentGreen:Float = 1;
 	public var _parentBlue:Float = 1;
 	
-	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null) 
+	/**
+	 * List of all nested sprites
+	 */
+	private var _children:Array<FlxNestedSprite>;
+	
+	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:Dynamic) 
 	{
 		super(X, Y, SimpleGraphic);
 		
@@ -98,19 +113,19 @@ class FlxNestedSprite extends FlxSprite
 	}
 	
 	/**
-	 * Adds the FlxSprite to the children list.
-	 * @param	graphic		The FlxSprite to add.
-	 * @return	The added FlxSprite.
+	 * Adds the <code>FlxNestedSprite</code> to the children list.
+	 * @param	Child	The <code>FlxNestedSprite</code> to add.
+	 * @return	The added <code>FlxNestedSprite</code>.
 	 */
-	public function add(Child:NestedSprite):NestedSprite
+	public function add(Child:FlxNestedSprite):FlxNestedSprite
 	{
 		if (FlxArray.indexOf(_children, Child) < 0)
 		{
 			_children.push(Child);
 			Child.velocity.x = Child.velocity.y = 0;
 			Child.acceleration.x = Child.acceleration.y = 0;
-			Child.scrollFactor.x = this.scrollFactor.x;
-			Child.scrollFactor.y = this.scrollFactor.y;
+			Child.scrollFactor.x = scrollFactor.x;
+			Child.scrollFactor.y = scrollFactor.y;
 			
 			Child._parentAlpha = this.alpha;
 			Child.alpha = Child.alpha;
@@ -129,13 +144,14 @@ class FlxNestedSprite extends FlxSprite
 	}
 	
 	/**
-	 * Removes the FlxSprite from the children list.
-	 * @param	graphic		The FlxSprite to remove.
-	 * @return	The removed FlxSprite.
+	 * Removes the <code>FlxNestedSprite</code> from the children list.
+	 * @param	Child	The <code>FlxNestedSprite</code> to remove.
+	 * @return	The removed <code>FlxNestedSprite</code>.
 	 */
-	public function remove(Child:NestedSprite):NestedSprite
+	public function remove(Child:FlxNestedSprite):FlxNestedSprite
 	{
 		var index:Int = FlxArray.indexOf(_children, Child);
+		
 		if (index >= 0)
 		{
 			_children.splice(index, 1);
@@ -145,17 +161,17 @@ class FlxNestedSprite extends FlxSprite
 	}
 	
 	/**
-	 * Removes the FlxSprite from the position in the children list.
-	 * @param	index		Index to remove.
+	 * Removes the <code>FlxNestedSprite</code> from the position in the children list.
+	 * @param	Index	Index to remove.
 	 */
-	public function removeAt(Index:Int = 0):NestedSprite
+	public function removeAt(Index:Int = 0):FlxNestedSprite
 	{
 		if (_children.length < Index || Index < 0)
 		{
 			return null;
 		}
 		
-		var child:NestedSprite = _children[Index];
+		var child:FlxNestedSprite = _children[Index];
 		_children.splice(Index, 1);
 		
 		return child;
@@ -176,8 +192,9 @@ class FlxNestedSprite extends FlxSprite
 	/**
 	 * All Graphics in this list.
 	 */
-	public inline var children(get_children, null):Array<NestedSprite>;
-	private inline function get_children():Array<NestedSprite> 
+	inline public var children(get, never):Array<FlxNestedSprite>;
+	
+	inline private function get_children():Array<FlxNestedSprite> 
 	{ 
 		return _children; 
 	}
@@ -185,7 +202,8 @@ class FlxNestedSprite extends FlxSprite
 	/**
 	 * Amount of Graphics in this list.
 	 */
-	public var count(get_count, null):Int;
+	public var count(get, never):Int;
+	
 	private function get_count():Int 
 	{ 
 		return _children.length; 
@@ -198,6 +216,7 @@ class FlxNestedSprite extends FlxSprite
 		if (_flickerTimer > 0)
 		{
 			_flickerTimer -= FlxG.elapsed;
+			
 			if(_flickerTimer <= 0)
 			{
 				_flickerTimer = 0;
@@ -222,10 +241,12 @@ class FlxNestedSprite extends FlxSprite
 	override public function update():Void 
 	{
 		preUpdate();
+		
 		for (child in _children)
 		{
 			child.update();
 		}
+		
 		postUpdate();
 	}
 	
@@ -240,7 +261,6 @@ class FlxNestedSprite extends FlxSprite
 		touching = FlxObject.NONE;
 		updateAnimation();
 		
-		//
 		
 		var delta:Float;
 		var velocityDelta:Float;
@@ -263,7 +283,6 @@ class FlxNestedSprite extends FlxSprite
 		relativeVelocityY += velocityDelta;
 		relativeY += delta;
 		
-		//
 		
 		for (child in _children)
 		{
@@ -274,33 +293,33 @@ class FlxNestedSprite extends FlxSprite
 			
 			if (simpleRenderSprite())
 			{
-				child.x = this.x + child.relativeX - this.offset.x;
-				child.y = this.y + child.relativeY - this.offset.y;
+				child.x = x + child.relativeX - offset.x;
+				child.y = y + child.relativeY - offset.y;
 			}
 			else
 			{
-				var radians:Float = this.angle * _degToRad;
+				var radians:Float = angle * FlxAngle.TO_RAD;
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				
-				var dx:Float = child.relativeX - this.offset.x;
-				var dy:Float = child.relativeY - this.offset.y;
+				var dx:Float = child.relativeX - offset.x;
+				var dy:Float = child.relativeY - offset.y;
 				
-				var relX:Float = (dx * cos * this.scale.x - dy * sin * this.scale.y);
-				var relY:Float = (dx * sin * this.scale.x + dy * cos * this.scale.y);
+				var relX:Float = (dx * cos * scale.x - dy * sin * scale.y);
+				var relY:Float = (dx * sin * scale.x + dy * cos * scale.y);
 				
-				child.x = this.x + relX;
-				child.y = this.y + relY;
+				child.x = x + relX;
+				child.y = y + relY;
 			}
 			
-			child.angle = this.angle + child.relativeAngle;
-			child.scale.x = this.scale.x * child.relativeScaleX;
-			child.scale.y = this.scale.y * child.relativeScaleY;
+			child.angle = angle + child.relativeAngle;
+			child.scale.x = scale.x * child.relativeScaleX;
+			child.scale.y = scale.y * child.relativeScaleY;
 			
-			child.velocity.x = this.velocity.x;
-			child.velocity.y = this.velocity.y;
-			child.acceleration.x = this.acceleration.x;
-			child.acceleration.y = this.acceleration.y;
+			child.velocity.x = velocity.x;
+			child.velocity.y = velocity.y;
+			child.acceleration.x = acceleration.x;
+			child.acceleration.y = acceleration.y;
 		}
 	}
 	
@@ -457,5 +476,4 @@ class FlxNestedSprite extends FlxSprite
 		
 		return _color;
 	}
-	
 }

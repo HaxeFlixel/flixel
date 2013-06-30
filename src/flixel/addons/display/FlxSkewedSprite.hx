@@ -16,8 +16,8 @@ import flixel.util.FlxPoint;
  */
 class FlxSkewedSprite extends FlxSprite
 {
-
 	public var skew:FlxPoint;
+	
 	private var _skewMatrix:Matrix;
 	
 	public function new(X:Float = 0, Y:Float = 0) 
@@ -130,7 +130,7 @@ class FlxSkewedSprite extends FlxSprite
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
-
+		
 #if flash
 			if (simpleRenderSkewedSprite ())
 			{
@@ -144,14 +144,14 @@ class FlxSkewedSprite extends FlxSprite
 				_matrix.translate( -origin.x, -origin.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * FlxAngle.RAD);
+					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
 				_matrix.scale(scale.x, scale.y);
 				if (skew.x != 0 || skew.y != 0)
 				{
 					_skewMatrix.identity();
-					_skewMatrix.b = Math.tan(skew.y * FlxAngle.RAD);
-					_skewMatrix.c = Math.tan(skew.x * FlxAngle.RAD);
+					_skewMatrix.b = Math.tan(skew.y * FlxAngle.TO_RAD);
+					_skewMatrix.c = Math.tan(skew.x * FlxAngle.TO_RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}
@@ -166,7 +166,7 @@ class FlxSkewedSprite extends FlxSprite
 			var csy:Float = 1;
 			var x2:Float = 0;
 			var y2:Float = 0;
-
+			
 			var isFlipped : Bool = (_flipped != 0) && (facing == FlxObject.LEFT);
 			if (simpleRenderSkewedSprite ())
 			{
@@ -177,7 +177,7 @@ class FlxSkewedSprite extends FlxSprite
 			}
 			else
 			{
-				radians = -angle * FlxAngle.RAD;
+				radians = -angle * FlxAngle.TO_RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -190,7 +190,7 @@ class FlxSkewedSprite extends FlxSprite
 				var y1:Float = (origin.y - _halfHeight);
 				x2 = x1 * csx + y1 * ssy;
 				y2 = -x1 * ssx + y1 * csy;
-
+				
 				_matrix.identity();
 				_matrix.a = cos;
 				_matrix.b = -sin;
@@ -210,27 +210,27 @@ class FlxSkewedSprite extends FlxSprite
 				{
 					_skewMatrix.identity();
 					
-					_skewMatrix.b = Math.tan(skew.y * FlxAngle.RAD);
-					_skewMatrix.c = Math.tan(skew.x * FlxAngle.RAD);
+					_skewMatrix.b = Math.tan(skew.y * FlxAngle.TO_RAD);
+					_skewMatrix.c = Math.tan(skew.x * FlxAngle.TO_RAD);
 					
 					_matrix.concat(_skewMatrix);
 				}
-
+				
 				csx = _matrix.a;
 				ssy = _matrix.b;
 				ssx = _matrix.c;
 				csy = _matrix.d;
 			}
-
+			
 			currDrawData[currIndex++] = _point.x - x2;
 			currDrawData[currIndex++] = _point.y - y2;
 			currDrawData[currIndex++] = _flxFrame.tileID;
-
+			
 			currDrawData[currIndex++] = csx;
 			currDrawData[currIndex++] = ssy;
 			currDrawData[currIndex++] = ssx;
 			currDrawData[currIndex++] = csy;
-
+			
 			#if !js
 			if (isColored)
 			{
@@ -248,9 +248,8 @@ class FlxSkewedSprite extends FlxSprite
 			
 			drawItem.position = currIndex;
 #end
-
+			
 			FlxBasic._VISIBLECOUNT++;
 		}
 	}
-	
 }

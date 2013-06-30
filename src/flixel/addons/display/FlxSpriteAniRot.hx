@@ -17,39 +17,45 @@ import flixel.util.FlxColor;
 */
 class FlxSpriteAniRot extends FlxSprite
 {
+	static private var _zeroPoint:Point;
+	
 	private var rotationRefA:Array<BitmapData>;
 	private var rect:Rectangle;
 
 	private var frameCounter:Int = 0;
-
-	static private var _zeroPoint:Point;
 
 	public function new(AnimatedGraphic:Dynamic, Rotations:Int, X:Float = 0, Y:Float = 0)
 	{
 		_zeroPoint = new Point(0, 0);
 		
 		super(X, Y);
-		loadGraphic(AnimatedGraphic, true); //Just to get the number of frames
-
+		// Just to get the number of frames
+		loadGraphic(AnimatedGraphic, true); 
+		
 		var columns:Int = Std.int(Math.sqrt(Rotations));
 		rect = new Rectangle(0, 0, width * columns, Std.int(height));
-
+		
 		rotationRefA = new Array<BitmapData>();
-
-		//Load the graphic, create rotations every 10 degrees
+		
+		// Load the graphic, create rotations every 10 degrees
 		for (i in 0 ... frames)
 		{
-			loadRotatedGraphic(AnimatedGraphic, Rotations, i, true, false);//Create the rotation spritesheet for that frame
-			var bmd:BitmapData = new BitmapData(Std.int(width * columns), Std.int(height), true, 0x00000000);//Create a bitmapData container
-			bmd.copyPixels(_pixels, rect, _zeroPoint, pixels, _zeroPoint, true);//get the current pixel data
-			rotationRefA.push(bmd);//store it for reference.
+			// Create the rotation spritesheet for that frame
+			loadRotatedGraphic(AnimatedGraphic, Rotations, i, true, false);
+			// Create a bitmapData container
+			var bmd:BitmapData = new BitmapData(Std.int(width * columns), Std.int(height), true, 0x00000000);
+			// Get the current pixel data
+			bmd.copyPixels(_pixels, rect, _zeroPoint, pixels, _zeroPoint, true);
+			// Store it for reference.
+			rotationRefA.push(bmd);
 		}
 		bakedRotation = 0;
 	}
 
 	override private function calcFrame():Void 
 	{
-		pixels.fillRect(rect, FlxColor.TRANSPARENT);//clear out blank to avoid artefacts
+		// Clear out blank to avoid artefacts
+		pixels.fillRect(rect, FlxColor.TRANSPARENT);
 		pixels.copyPixels(rotationRefA[_curIndex], rect, _zeroPoint, rotationRefA[_curIndex], _zeroPoint, true);
 		super.calcFrame();
 	}

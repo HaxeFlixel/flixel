@@ -1076,7 +1076,7 @@ class FlxBar extends FlxSprite
 
 			if (!simpleRenderSprite())
 			{
-				var radians:Float = -angle * FlxAngle.RAD;
+				var radians:Float = -angle * FlxAngle.TO_RAD;
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				

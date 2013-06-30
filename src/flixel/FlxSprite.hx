@@ -535,7 +535,7 @@ class FlxSprite extends FlxObject
 				{
 					_matrix.identity();
 					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
-					_matrix.rotate(bakedAngle * FlxAngle.RAD);
+					_matrix.rotate(bakedAngle * FlxAngle.TO_RAD);
 					#if flash
 					_matrix.translate(max * column + midpointX, midpointY);
 					#else
@@ -862,7 +862,7 @@ class FlxSprite extends FlxObject
 				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
-					_matrix.rotate(angle * FlxAngle.RAD);
+					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
@@ -889,7 +889,7 @@ class FlxSprite extends FlxObject
 			
 			if (!simpleRenderSprite())
 			{
-				radians = -(angle + _flxFrame.additionalAngle) * FlxAngle.RAD;
+				radians = -(angle + _flxFrame.additionalAngle) * FlxAngle.TO_RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -996,7 +996,7 @@ class FlxSprite extends FlxObject
 		_matrix.scale(Brush.scale.x, Brush.scale.y);
 		if (Brush.angle != 0)
 		{
-			_matrix.rotate(Brush.angle * FlxAngle.RAD);
+			_matrix.rotate(Brush.angle * FlxAngle.TO_RAD);
 		}
 		_matrix.translate(X + Brush.origin.x, Y + Brush.origin.y);
 		var brushBlend:BlendMode = Brush.blend;

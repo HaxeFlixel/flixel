@@ -7,22 +7,23 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 
 /**
- * extended <code>FlxTilemap</code> class that provides collision detection against slopes
+ * Extended <code>FlxTilemap</code> class that provides collision detection against slopes
  * Based on the original by Dirk Bunk.
+ * 
  * @author Peter Christiansen
  * @link https://github.com/TheTurnipMaster/SlopeDemo
  */
 class FlxTilemapExt extends FlxTilemap
 {
-	//slope related variables
+	inline static public var SLOPE_FLOOR_LEFT:Int = 0;
+	inline static public var SLOPE_FLOOR_RIGHT:Int = 1;
+	inline static public var SLOPE_CEIL_LEFT:Int = 2;
+	inline static public var SLOPE_CEIL_RIGHT:Int = 3;
+	
+	// Slope related variables
 	private var _snapping:Int;
 	private var _slopePoint:FlxPoint;
 	private var _objPoint:FlxPoint;
-	
-	public static inline var SLOPE_FLOOR_LEFT:Int = 0;
-	public static inline var SLOPE_FLOOR_RIGHT:Int = 1;
-	public static inline var SLOPE_CEIL_LEFT:Int = 2;
-	public static inline var SLOPE_CEIL_RIGHT:Int = 3;
 	
 	private var slopeFloorLeft:Array<Int>;
 	private var slopeFloorRight:Array<Int>;
@@ -62,10 +63,10 @@ class FlxTilemapExt extends FlxTilemap
 	 * and calls the specified callback function (if there is one).
 	 * Also calls the tile's registered callback if the filter matches.
 	 *
-	 * @param Object The <code>FlxObject</code> you are checking for overlaps against.
-	 * @param Callback An optional function that takes the form "myCallback(Object1:FlxObject,Object2:FlxObject)", where Object1 is a FlxTile object, and Object2 is the object passed in in the first parameter of this method.
-	 * @param FlipCallbackParams Used to preserve A-B list ordering from FlxObject.separate() - returns the FlxTile object as the second parameter instead.
-	 * @param Position Optional, specify a custom position for the tilemap (useful for overlapsAt()-type funcitonality).
+	 * @param 	Object 				The <code>FlxObject</code> you are checking for overlaps against.
+	 * @param 	Callback 			An optional function that takes the form "myCallback(Object1:FlxObject,Object2:FlxObject)", where Object1 is a FlxTile object, and Object2 is the object passed in in the first parameter of this method.
+	 * @param 	FlipCallbackParams 	Used to preserve A-B list ordering from FlxObject.separate() - returns the FlxTile object as the second parameter instead.
+	 * @param 	Position 			Optional, specify a custom position for the tilemap (useful for overlapsAt()-type funcitonality).
 	 *
 	 * @return Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
@@ -75,7 +76,8 @@ class FlxTilemapExt extends FlxTilemap
 		
 		var X:Float = x;
 		var Y:Float = y;
-		if(Position != null)
+		
+		if (Position != null)
 		{
 			X = Position.x;
 			Y = Position.y;
@@ -88,24 +90,24 @@ class FlxTilemapExt extends FlxTilemap
 		var selectionHeight:Int = selectionY + Math.ceil(Object.height / _tileHeight) + 1;
 		
 		//Then bound these coordinates by the map edges
-		if(selectionX < 0)
+		if (selectionX < 0)
 		{
 			selectionX = 0;
 		}
-		if(selectionY < 0)
+		if (selectionY < 0)
 		{
 			selectionY = 0;
 		}
-		if(selectionWidth > widthInTiles)
+		if (selectionWidth > widthInTiles)
 		{
 			selectionWidth = widthInTiles;
 		}
-		if(selectionHeight > heightInTiles)
+		if (selectionHeight > heightInTiles)
 		{
 			selectionHeight = heightInTiles;
 		}
 		
-		//Then loop through this selection of tiles and call FlxObject.separate() accordingly
+		// Then loop through this selection of tiles and call FlxObject.separate() accordingly
 		var rowStart:Int = selectionY * widthInTiles;
 		var row:Int = selectionY;
 		var column:Int;
@@ -113,22 +115,25 @@ class FlxTilemapExt extends FlxTilemap
 		var overlapFound:Bool;
 		var deltaX:Float = X - last.x;
 		var deltaY:Float = Y - last.y;
-		while(row < selectionHeight)
+		
+		while (row < selectionHeight)
 		{
 			column = selectionX;
-			while(column < selectionWidth)
+			
+			while (column < selectionWidth)
 			{
 				overlapFound = false;
 				tile = _tileObjects[_data[rowStart + column]];
-				if(tile.allowCollisions != 0)
+				if (tile.allowCollisions != 0)
 				{
 					tile.x = X + column * _tileWidth;
 					tile.y = Y + row * _tileHeight;
 					tile.last.x = tile.x - deltaX;
 					tile.last.y = tile.y - deltaY;
-					if(Callback != null)
+					
+					if (Callback != null)
 					{
-						if(FlipCallbackParams)
+						if (FlipCallbackParams)
 						{
 							overlapFound = Callback(Object, tile);
 						}
@@ -142,16 +147,16 @@ class FlxTilemapExt extends FlxTilemap
 						overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
 					}
 					
-					//solve slope collisions if no overlap was found
+					// Solve slope collisions if no overlap was found
 					/*
 					if (overlapFound
 						|| (!overlapFound && (tile.index == SLOPE_FLOOR_LEFT || tile.index == SLOPE_FLOOR_RIGHT || tile.index == SLOPE_CEIL_LEFT || tile.index == SLOPE_CEIL_RIGHT)))
 					*/
 					
-					//New generalized slope collisions
+					// New generalized slope collisions
 					if (overlapFound || (!overlapFound && checkArrays(tile.index)))
 					{
-						if((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
+						if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
 						{
 							tile.mapIndex = rowStart + column;
 							tile.callbackFunction(tile, Object);
@@ -159,7 +164,7 @@ class FlxTilemapExt extends FlxTilemap
 						results = true;
 					}
 				}
-				else if((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
+				else if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
 				{
 					tile.mapIndex = rowStart + column;
 					tile.callbackFunction(tile, Object);
@@ -173,206 +178,214 @@ class FlxTilemapExt extends FlxTilemap
 	}
 	
 	/**
-	 * bounds the slope point to the slope
-	 * @param slope the slope to fix the slopePoint for
+	 * Bounds the slope point to the slope
+	 * 
+	 * @param 	Slope 	The slope to fix the slopePoint for
 	 */
-	private function fixSlopePoint(slope:FlxTile):Void
+	private function fixSlopePoint(Slope:FlxTile):Void
 	{
-		_slopePoint.x = FlxMath.bound(_slopePoint.x, slope.x, slope.x + _tileWidth);
-		_slopePoint.y = FlxMath.bound(_slopePoint.y, slope.y, slope.y + _tileHeight);
+		_slopePoint.x = FlxMath.bound(_slopePoint.x, Slope.x, Slope.x + _tileWidth);
+		_slopePoint.y = FlxMath.bound(_slopePoint.y, Slope.y, Slope.y + _tileHeight);
 	}
 	
 	/**
-	 * is called if an object collides with a floor slope
-	 * @param slope the floor slope
-	 * @param obj the object that collides with that slope
+	 * Ss called if an object collides with a floor slope
+	 * 
+	 * @param 	Slope	The floor slope
+	 * @param	Obj 	The object that collides with that slope
 	 */
-	private function onCollideFloorSlope(slope:FlxObject, obj:FlxObject):Void
+	private function onCollideFloorSlope(Slope:FlxObject, Obj:FlxObject):Void
 	{
-		//set the object's touching flag
-		obj.touching = FlxObject.FLOOR;
+		// Set the object's touching flag
+		Obj.touching = FlxObject.FLOOR;
 		
-		//adjust the object's velocity
-		obj.velocity.y = 0;
+		// Adjust the object's velocity
+		Obj.velocity.y = 0;
 		
-		//reposition the object
-		obj.y = _slopePoint.y - obj.height;
-		if (obj.y < slope.y - obj.height) { obj.y = slope.y - obj.height; };
+		// Reposition the object
+		Obj.y = _slopePoint.y - Obj.height;
+		if (Obj.y < Slope.y - Obj.height) { Obj.y = Slope.y - Obj.height; };
 	}
 	
 	/**
-	 * is called if an object collides with a ceiling slope
-	 * @param slope the ceiling slope
-	 * @param obj the object that collides with that slope
+	 * Is called if an object collides with a ceiling slope
+	 * 
+	 * @param 	Slope 	The ceiling slope
+	 * @param 	Obj 	The object that collides with that slope
 	 */
-	private function onCollideCeilSlope(slope:FlxObject, obj:FlxObject):Void
+	private function onCollideCeilSlope(Slope:FlxObject, Obj:FlxObject):Void
 	{
-		//set the object's touching flag
-		obj.touching = FlxObject.CEILING;
+		// Set the object's touching flag
+		Obj.touching = FlxObject.CEILING;
 		
-		//adjust the object's velocity
-		obj.velocity.y = 0;
+		// Adjust the object's velocity
+		Obj.velocity.y = 0;
 		
-		//reposition the object
-		obj.y = _slopePoint.y;
-		if (obj.y > slope.y + _tileHeight) { obj.y = slope.y + _tileHeight; };
+		// Reposition the object
+		Obj.y = _slopePoint.y;
+		if (Obj.y > Slope.y + _tileHeight) { Obj.y = Slope.y + _tileHeight; };
 	}
 	
 	/**
-	 * solves collision against a left-sided floor slope
-	 * @param slope the slope to check against
-	 * @param obj the object that collides with the slope
+	 * Solves collision against a left-sided floor slope
+	 * 
+	 * @param 	Slope 	The slope to check against
+	 * @param 	Obj 	The object that collides with the slope
 	 */
-	private function solveCollisionSlopeFloorLeft(slope:FlxObject, obj:FlxObject):Void
+	private function solveCollisionSlopeFloorLeft(Slope:FlxObject, Obj:FlxObject):Void
 	{
-		//calculate the corner point of the object
-		_objPoint.x = Math.floor(obj.x + obj.width + _snapping);
-		_objPoint.y = Math.floor(obj.y + obj.height);
+		// Calculate the corner point of the object
+		_objPoint.x = Math.floor(Obj.x + Obj.width + _snapping);
+		_objPoint.y = Math.floor(Obj.y + Obj.height);
 		
-		//calculate position of the point on the slope that the object might overlap
-		//this would be one side of the object projected onto the slope's surface
+		// Calculate position of the point on the slope that the object might overlap
+		// this would be one side of the object projected onto the slope's surface
 		_slopePoint.x = _objPoint.x;
-		_slopePoint.y = (slope.y + _tileHeight) - (_slopePoint.x - slope.x);
+		_slopePoint.y = (Slope.y + _tileHeight) - (_slopePoint.x - Slope.x);
 		
-		//fix the slope point to the slope tile
-		fixSlopePoint(cast(slope, FlxTile));
+		// Fix the slope point to the slope tile
+		fixSlopePoint(cast(Slope, FlxTile));
 		
-		//check if the object is inside the slope
-		if (_objPoint.x > slope.x + _snapping && _objPoint.x < slope.x + _tileWidth + obj.width + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= slope.y + _tileHeight)
+		// Check if the object is inside the slope
+		if (_objPoint.x > Slope.x + _snapping && _objPoint.x < Slope.x + _tileWidth + Obj.width + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= Slope.y + _tileHeight)
 		{
-			//call the collide function for the floor slope
-			onCollideFloorSlope(slope, obj);
+			// Call the collide function for the floor slope
+			onCollideFloorSlope(Slope, Obj);
 		}
 	}
 	
 	/**
-	 * solves collision against a right-sided floor slope
-	 * @param slope the slope to check against
-	 * @param obj the object that collides with the slope
+	 * Solves collision against a right-sided floor slope
+	 * 
+	 * @param 	Slope 	The slope to check against
+	 * @param 	Obj 	The object that collides with the slope
 	 */
-	private function solveCollisionSlopeFloorRight(slope:FlxObject, obj:FlxObject):Void
+	private function solveCollisionSlopeFloorRight(Slope:FlxObject, Obj:FlxObject):Void
 	{
-		//calculate the corner point of the object
-		_objPoint.x = Math.floor(obj.x - _snapping);
-		_objPoint.y = Math.floor(obj.y + obj.height);
+		// Calculate the corner point of the object
+		_objPoint.x = Math.floor(Obj.x - _snapping);
+		_objPoint.y = Math.floor(Obj.y + Obj.height);
 		
-		//calculate position of the point on the slope that the object might overlap
-		//this would be one side of the object projected onto the slope's surface
+		// Calculate position of the point on the slope that the object might overlap
+		// this would be one side of the object projected onto the slope's surface
 		_slopePoint.x = _objPoint.x;
-		_slopePoint.y = (slope.y + _tileHeight) - (slope.x - _slopePoint.x + _tileWidth);
+		_slopePoint.y = (Slope.y + _tileHeight) - (Slope.x - _slopePoint.x + _tileWidth);
 		
-		//fix the slope point to the slope tile
-		fixSlopePoint(cast(slope, FlxTile));
+		// Fix the slope point to the slope tile
+		fixSlopePoint(cast(Slope, FlxTile));
 		
-		//check if the object is inside the slope
-		if (_objPoint.x > slope.x - obj.width - _snapping && _objPoint.x < slope.x + _tileWidth + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= slope.y + _tileHeight)
+		// Check if the object is inside the slope
+		if (_objPoint.x > Slope.x - Obj.width - _snapping && _objPoint.x < Slope.x + _tileWidth + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= Slope.y + _tileHeight)
 		{
-			//call the collide function for the floor slope
-			onCollideFloorSlope(slope, obj);
+			// Call the collide function for the floor slope
+			onCollideFloorSlope(Slope, Obj);
 		}
 	}
 	
 	/**
-	 * solves collision against a left-sided ceiling slope
-	 * @param slope the slope to check against
-	 * @param obj the object that collides with the slope
+	 * Solves collision against a left-sided ceiling slope
+	 * 
+	 * @param 	Slope 	The slope to check against
+	 * @param 	Obj 	The object that collides with the slope
 	 */
-	private function solveCollisionSlopeCeilLeft(slope:FlxObject, obj:FlxObject):Void
+	private function solveCollisionSlopeCeilLeft(Slope:FlxObject, Obj:FlxObject):Void
 	{
-		//calculate the corner point of the object
-		_objPoint.x = Math.floor(obj.x + obj.width + _snapping);
-		_objPoint.y = Math.ceil(obj.y);
+		// Calculate the corner point of the object
+		_objPoint.x = Math.floor(Obj.x + Obj.width + _snapping);
+		_objPoint.y = Math.ceil(Obj.y);
 		
-		//calculate position of the point on the slope that the object might overlap
-		//this would be one side of the object projected onto the slope's surface
+		// Calculate position of the point on the slope that the object might overlap
+		// this would be one side of the object projected onto the slope's surface
 		_slopePoint.x = _objPoint.x;
-		_slopePoint.y = (slope.y) + (_slopePoint.x - slope.x);
+		_slopePoint.y = (Slope.y) + (_slopePoint.x - Slope.x);
 		
-		//fix the slope point to the slope tile
-		fixSlopePoint(cast(slope, FlxTile));
+		// Fix the slope point to the slope tile
+		fixSlopePoint(cast(Slope, FlxTile));
 		
-		//check if the object is inside the slope
-		if (_objPoint.x > slope.x + _snapping && _objPoint.x < slope.x + _tileWidth + obj.width + _snapping && _objPoint.y <= _slopePoint.y && _objPoint.y >= slope.y)
+		// Check if the object is inside the slope
+		if (_objPoint.x > Slope.x + _snapping && _objPoint.x < Slope.x + _tileWidth + Obj.width + _snapping && _objPoint.y <= _slopePoint.y && _objPoint.y >= Slope.y)
 		{
-			//call the collide function for the floor slope
-			onCollideCeilSlope(slope, obj);
+			// Call the collide function for the floor slope
+			onCollideCeilSlope(Slope, Obj);
 		}
 	}
 	
 	/**
-	 * solves collision against a right-sided ceiling slope
-	 * @param slope the slope to check against
-	 * @param obj the object that collides with the slope
+	 * Solves collision against a right-sided ceiling slope
+	 * 
+	 * @param 	Slope 	The slope to check against
+	 * @param 	Obj 	The object that collides with the slope
 	 */
-	private function solveCollisionSlopeCeilRight(slope:FlxObject, obj:FlxObject):Void
+	private function solveCollisionSlopeCeilRight(Slope:FlxObject, Obj:FlxObject):Void
 	{
-		//calculate the corner point of the object
-		_objPoint.x = Math.floor(obj.x - _snapping);
-		_objPoint.y = Math.ceil(obj.y);
+		// Calculate the corner point of the object
+		_objPoint.x = Math.floor(Obj.x - _snapping);
+		_objPoint.y = Math.ceil(Obj.y);
 		
-		//calculate position of the point on the slope that the object might overlap
-		//this would be one side of the object projected onto the slope's surface
+		// Calculate position of the point on the slope that the object might overlap
+		// this would be one side of the object projected onto the slope's surface
 		_slopePoint.x = _objPoint.x;
-		_slopePoint.y = (slope.y) + (slope.x - _slopePoint.x + _tileWidth);
+		_slopePoint.y = (Slope.y) + (Slope.x - _slopePoint.x + _tileWidth);
 		
-		//fix the slope point to the slope tile
-		fixSlopePoint(cast(slope, FlxTile));
+		// Fix the slope point to the slope tile
+		fixSlopePoint(cast(Slope, FlxTile));
 		
-		//check if the object is inside the slope
-		if (_objPoint.x > slope.x - obj.width - _snapping && _objPoint.x < slope.x + _tileWidth + _snapping && _objPoint.y <= _slopePoint.y && _objPoint.y >= slope.y)
+		// Check if the object is inside the slope
+		if (_objPoint.x > Slope.x - Obj.width - _snapping && _objPoint.x < Slope.x + _tileWidth + _snapping && _objPoint.y <= _slopePoint.y && _objPoint.y >= Slope.y)
 		{
-			//call the collide function for the floor slope
-			onCollideCeilSlope(slope, obj);
+			// Call the collide function for the floor slope
+			onCollideCeilSlope(Slope, Obj);
 		}
 	}
 	
 	/**
 	 * Sets the tiles that are treated as "clouds" or blocks that are only solid from the top.
-	 * @param An array containing the numbers of the tiles to be treated as clouds.
 	 * 
+	 * @param 	Clouds	An array containing the numbers of the tiles to be treated as clouds.
 	 */
-	public function setClouds(clouds:Array<Int> = null):Void
+	public function setClouds(?Clouds:Array<Int>):Void
 	{
-		if (clouds != null)
+		if (Clouds != null)
 		{
-			for (i in 0...(clouds.length))
+			for (i in 0...(Clouds.length))
 			{
-				setTileProperties(clouds[i], FlxObject.CEILING);			
+				setTileProperties(Clouds[i], FlxObject.CEILING);			
 			}
 		}
 	}
 	
 	/**
 	 * Sets the slope arrays, which define which tiles are treated as slopes.
-	 * @param An array containing the numbers of the tiles to be treated as left floor slopes.
-	 * @param An array containing the numbers of the tiles to be treated as right floor slopes.
-	 * @param An array containing the numbers of the tiles to be treated as left ceiling slopes.
-	 * @param An array containing the numbers of the tiles to be treated as right ceiling slopes.
+	 * 
+	 * @param 	LeftFloorSlopes 	An array containing the numbers of the tiles to be treated as left floor slopes.
+	 * @param 	RightFloorSlopes	An array containing the numbers of the tiles to be treated as right floor slopes.
+	 * @param 	LeftCeilSlopes		An array containing the numbers of the tiles to be treated as left ceiling slopes.
+	 * @param 	RightCeilSlopes		An array containing the numbers of the tiles to be treated as right ceiling slopes.
 	 */
-	public function setSlopes(leftFloorSlopes:Array<Int> = null, rightFloorSlopes:Array<Int> = null, leftCeilSlopes:Array<Int> = null, rightCeilSlopes:Array<Int> = null):Void
+	public function setSlopes(?LeftFloorSlopes:Array<Int>, ?RightFloorSlopes:Array<Int>, ?LeftCeilSlopes:Array<Int>, ?RightCeilSlopes:Array<Int>):Void
 	{
-		if (leftFloorSlopes != null)
+		if (LeftFloorSlopes != null)
 		{
-			slopeFloorLeft = leftFloorSlopes;
+			slopeFloorLeft = LeftFloorSlopes;
 		}
-		if (rightFloorSlopes != null)
+		if (RightFloorSlopes != null)
 		{
-			slopeFloorRight = rightFloorSlopes;
+			slopeFloorRight = RightFloorSlopes;
 		}
-		if (leftCeilSlopes != null)
+		if (LeftCeilSlopes != null)
 		{
-			slopeCeilLeft = leftCeilSlopes;
+			slopeCeilLeft = LeftCeilSlopes;
 		}
-		if (rightCeilSlopes != null)
+		if (RightCeilSlopes != null)
 		{
-			slopeCeilRight = rightCeilSlopes;
+			slopeCeilRight = RightCeilSlopes;
 		}
 		
 		setSlopeProperties();
 	}
 	
 	/**
-	 * internal helper function for setting the tiles currently held in the slope arrays to use slope collision.
+	 * Internal helper function for setting the tiles currently held in the slope arrays to use slope collision.
 	 * Note that if you remove items from a slope, this function will not unset the slope property.
 	 */
 	private function setSlopeProperties():Void
@@ -396,37 +409,37 @@ class FlxTilemapExt extends FlxTilemap
 	}
 	
 	/**
-	 * internal helper function for comparing a tile to the slope arrays to see if a tile should be treated as a slope.
-	 * @param The Tile Index number of the Tile you want to check.
+	 * Internal helper function for comparing a tile to the slope arrays to see if a tile should be treated as a slope.
 	 * 
-	 * @return Returns true if the tile is listed in one of the slope arrays.  Otherwise returns false.
+	 * @param 	TileIndex	The Tile Index number of the Tile you want to check.
+	 * @return	Returns true if the tile is listed in one of the slope arrays. Otherwise returns false.
 	 */
-	private function checkArrays(tileIndex:Int):Bool
+	private function checkArrays(TileIndex:Int):Bool
 	{
 		for (i in 0...(slopeFloorLeft.length))
 		{
-			if (slopeFloorLeft[i] == tileIndex)
+			if (slopeFloorLeft[i] == TileIndex)
 			{
 				return true;
 			}
 		}	
 		for (i in 0...(slopeFloorRight.length))
 		{
-			if (slopeFloorRight[i] == tileIndex)
+			if (slopeFloorRight[i] == TileIndex)
 			{
 				return true;
 			}
 		}	
 		for (i in 0...(slopeCeilLeft.length))
 		{
-			if (slopeCeilLeft[i] == tileIndex)
+			if (slopeCeilLeft[i] == TileIndex)
 			{
 				return true;
 			}
 		}	
 		for (i in 0...(slopeCeilRight.length))
 		{
-			if (slopeCeilRight[i] == tileIndex)
+			if (slopeCeilRight[i] == TileIndex)
 			{
 				return true;
 			}
@@ -434,5 +447,4 @@ class FlxTilemapExt extends FlxTilemap
 		
 		return false;
 	}
-	
 }
