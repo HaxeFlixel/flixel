@@ -1,7 +1,7 @@
 package flixel.effects;
 
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxPoint;
 
 /**
@@ -12,112 +12,109 @@ import flixel.util.FlxPoint;
  * 
  * @author Gama11
  */
-class FlxTrail extends FlxTypedGroup<FlxSprite>
+class FlxTrail extends FlxSpriteGroup
 {		
 	/**
-	 *  Stores the FlxSprite the trail is attached to.
+	 * Stores the FlxSprite the trail is attached to.
 	 */
 	public var sprite:FlxSprite;
 	/**
-	 *  How often to update the trail.
+	 * How often to update the trail.
 	 */
 	public var delay:Int;
 	/**
-	 *  Whether to check for X changes or not.
+	 * Whether to check for X changes or not.
 	 */
 	public var xEnabled:Bool = true;
 	/**
-	 *  Whether to check for Y changes or not.
+	 * Whether to check for Y changes or not.
 	 */
 	public var yEnabled:Bool = true;
 	/**
-	 *  Whether to check for angle changes or not.
+	 * Whether to check for angle changes or not.
 	 */
 	public var rotationsEnabled:Bool = true;
 	/**
-	 *  Whether to check for scale changes or not.
+	 * Whether to check for scale changes or not.
 	 */
 	public var scalesEnabled:Bool = true;
 	/**
 	 * Whether to check for frame changes of the "parent" FlxSprite or not.
 	 */
 	public var framesEnabled:Bool = true;
-	/**
-	 * Determines whether trailsprites are solid or not. False by default.
-	 */
-	public var solid(default, set_solid):Bool = false;
+	
 	/**
 	 *  Counts the frames passed.
 	 */
-	private var counter:Int = 0;
+	private var _counter:Int = 0;
 	/**
 	 *  How long is the trail?
 	 */
-	private var trailLength:Int = 0;
+	private var _trailLength:Int = 0;
 	/**
 	 *  Stores the trailsprite image.
 	 */
-	private var image:Dynamic;
+	private var _image:Dynamic;
 	/**
 	 *  The alpha value for the next trailsprite.
 	 */
-	private var transp:Float = 1;
+	private var _transp:Float = 1;
 	/**
 	 *  How much lower the alpha value of the next trailsprite is.
 	 */
-	private var difference:Float;
+	private var _difference:Float;
 	/**
 	 *  Stores the sprites recent positions.
 	 */
-	private var recentPositions:Array<FlxPoint>;
+	private var _recentPositions:Array<FlxPoint>;
 	/**
 	 *  Stores the sprites recent angles.
 	 */
-	private var recentAngles:Array<Float>;
+	private var _recentAngles:Array<Float>;
 	/**
 	 *  Stores the sprites recent scale.
 	 */
-	private var recentScales:Array<FlxPoint>;
+	private var _recentScales:Array<FlxPoint>;
 	/**
 	 *  Stores the sprites recent frame.
 	 */
-	private var recentFrames:Array<Int>;
+	private var _recentFrames:Array<Int>;
 	/**
 	 *  Stores the sprites recent facing.
 	 */
-	private var recentFacings:Array<Int>;
+	private var _recentFacings:Array<Int>;
 	/**
 	 *  Stores the sprite origin (rotation axis)
 	 */
-	private var spriteOrigin:FlxPoint;
+	private var _spriteOrigin:FlxPoint;
 	
 	/**
 	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
 	 * 
 	 * @param	Sprite		The FlxSprite the trail is attached to.
-	 * @param  Image    The image to ues for the trailsprites. Optional, uses the sprite's graphic if null.
+	 * @param  	Image   	The image to ues for the trailsprites. Optional, uses the sprite's graphic if null.
 	 * @param	Length		The amount of trailsprites to create. 
 	 * @param	Delay		How often to update the trail. 0 updates every frame.
 	 * @param	Alpha		The alpha value for the very first trailsprite.
 	 * @param	Diff		How much lower the alpha of the next trailsprite is.
 	 */
-	public function new(Sprite:FlxSprite, Image:Dynamic = null, Length:Int = 10, Delay:Int = 3, Alpha:Float = 0.4, Diff:Float = 0.05):Void
+	public function new(Sprite:FlxSprite, ?Image:Dynamic, Length:Int = 10, Delay:Int = 3, Alpha:Float = 0.4, Diff:Float = 0.05):Void
 	{
 		super();
 
-		recentAngles = new Array<Float>();
-		recentPositions = new Array<FlxPoint>();
-		recentScales = new Array<FlxPoint>();
-		recentFrames = new Array<Int>();
-		recentFacings = new Array<Int>();
-		spriteOrigin = Sprite.origin;
+		_recentAngles = new Array<Float>();
+		_recentPositions = new Array<FlxPoint>();
+		_recentScales = new Array<FlxPoint>();
+		_recentFrames = new Array<Int>();
+		_recentFacings = new Array<Int>();
+		_spriteOrigin = Sprite.origin;
 
 		// Sync the vars 
 		sprite = Sprite;
 		delay = Delay;
-		image = Image;
-		transp = Alpha;
-		difference = Diff;
+		_image = Image;
+		_transp = Alpha;
+		_difference = Diff;
 
 		// Create the initial trailsprites
 		increaseLength(Length);
@@ -126,15 +123,15 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	
 	override public function destroy():Void
 	{
-		recentAngles = null;
-		recentPositions = null;
-		recentScales = null;
-		recentFrames = null;
-		recentFacings = null;
-		spriteOrigin = null;
+		_recentAngles = null;
+		_recentPositions = null;
+		_recentScales = null;
+		_recentFrames = null;
+		_recentFacings = null;
+		_spriteOrigin = null;
 
 		sprite = null;
-		image = null;
+		_image = null;
 		
 		super.destroy();
 	}
@@ -146,68 +143,93 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	override public function update():Void
 	{
 		// Count the frames
-		counter++;
+		_counter++;
 
 		// Update the trail in case the intervall and there actually is one.
-		if (counter >= delay && trailLength >= 1)
+		if (_counter >= delay && _trailLength >= 1)
 		{
-			counter = 0;
+			_counter = 0;
 
 			// Push the current position into the positons array and drop one.
 			var spritePosition:FlxPoint = new FlxPoint(sprite.x - sprite.offset.x, sprite.y - sprite.offset.y);
-			recentPositions.unshift(spritePosition);
-			if (recentPositions.length > trailLength) recentPositions.pop();
+			_recentPositions.unshift(spritePosition);
+			
+			if (_recentPositions.length > _trailLength) 
+			{
+				_recentPositions.pop();
+			}
 
 			// Also do the same thing for the Sprites angle if rotationsEnabled 
 			if (rotationsEnabled) 
 			{
 				var spriteAngle:Float = sprite.angle;
-				recentAngles.unshift(spriteAngle);
-				if (recentAngles.length > trailLength) recentAngles.pop();
+				_recentAngles.unshift(spriteAngle);
+				
+				if (_recentAngles.length > _trailLength) 
+				{
+					_recentAngles.pop();
+				}
 			}
 			
 			// Again the same thing for Sprites scales if scalesEnabled
 			if (scalesEnabled)
 			{
 				var spriteScale:FlxPoint = sprite.scale;
-				recentScales.unshift(spriteScale);
-				if (recentScales.length > trailLength) recentScales.pop();
+				_recentScales.unshift(spriteScale);
+				
+				if (_recentScales.length > _trailLength) 
+				{
+					_recentScales.pop();
+				}
 			}
 			
 			// Again the same thing for Sprites frames if framesEnabled
-			if (framesEnabled && image == null) 
+			if (framesEnabled && _image == null) 
 			{
 				var spriteFrame:Int = sprite.frame;
-				recentFrames.unshift(spriteFrame);
-				if (recentFrames.length > trailLength) recentFrames.pop();
+				_recentFrames.unshift(spriteFrame);
+				
+				if (_recentFrames.length > _trailLength) 
+				{
+					_recentFrames.pop();
+				}
 				
 				var spriteFacing:Int = sprite.facing;
-				recentFacings.unshift(spriteFacing);
-				if (recentFacings.length > trailLength) recentFacings.pop();
+				_recentFacings.unshift(spriteFacing);
+				
+				if (_recentFacings.length > _trailLength) 
+				{
+					_recentFacings.pop();
+				}
 			}
 
 			// Now we need to update the all the Trailsprites' values
 			var trailSprite:FlxSprite;
-			for (i in 0 ... recentPositions.length) 
+			
+			for (i in 0..._recentPositions.length) 
 			{
 				trailSprite = members[i];
-				trailSprite.x = recentPositions[i].x;
-				trailSprite.y = recentPositions[i].y;
+				trailSprite.x = _recentPositions[i].x;
+				trailSprite.y = _recentPositions[i].y;
+				
 				// And the angle...
 				if (rotationsEnabled) 
 				{
-					trailSprite.angle = recentAngles[i];
-					trailSprite.origin = spriteOrigin;
+					trailSprite.angle = _recentAngles[i];
+					trailSprite.origin = _spriteOrigin;
 				}
 				
 				// the scale...
-				if (scalesEnabled) trailSprite.scale = recentScales[i];
+				if (scalesEnabled) 
+				{
+					trailSprite.scale = _recentScales[i];
+				}
 				
 				// and frame...
-				if (framesEnabled && image == null) 
+				if (framesEnabled && _image == null) 
 				{
-					trailSprite.frame = recentFrames[i];
-					trailSprite.facing = recentFacings[i];
+					trailSprite.frame = _recentFrames[i];
+					trailSprite.facing = _recentFacings[i];
 				}
 
 				// Is the trailsprite even visible?
@@ -220,45 +242,60 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 
 	public function resetTrail():Void
 	{
-		recentPositions.splice(0, recentPositions.length);
-		recentAngles.splice(0, recentAngles.length);
-		recentScales.splice(0, recentScales.length);
-		recentFrames.splice(0, recentFrames.length);
-		recentFacings.splice(0, recentFacings.length);
+		_recentPositions.splice(0, _recentPositions.length);
+		_recentAngles.splice(0, _recentAngles.length);
+		_recentScales.splice(0, _recentScales.length);
+		_recentFrames.splice(0, _recentFrames.length);
+		_recentFacings.splice(0, _recentFacings.length);
+		
 		for (i in 0...members.length) 
 		{
 			if (members[i] != null)
+			{
 				members[i].exists = false;
+			}
 		}
 	}
 
 	/**
 	 * A function to add a specific number of sprites to the trail to increase its length.
 	 *
-	 * @param 	amount	The amount of sprites to add to the trail.
+	 * @param 	Amount	The amount of sprites to add to the trail.
 	 */
-	public function increaseLength(amount:Int):Void
+	public function increaseLength(Amount:Int):Void
 	{
 		// Can't create less than 1 sprite obviously
-		if (amount <= 0) return;
+		if (Amount <= 0) 
+		{
+			return;
+		}
 
-		trailLength += amount;
+		_trailLength += Amount;
 
 		// Create the trail sprites
-		for (i in 0...amount)
+		for (i in 0...Amount)
 		{
 			var trailSprite:FlxSprite = new FlxSprite(0, 0);
 			trailSprite.exists = false;
 			
-			if (image == null) trailSprite.loadFromSprite(sprite);
-			else trailSprite.loadGraphic(image);
+			if (_image == null) 
+			{
+				trailSprite.loadFromSprite(sprite);
+			}
+			else 
+			{
+				trailSprite.loadGraphic(_image);
+			}
 			
 			add(trailSprite);
-			trailSprite.alpha = transp;
-			transp -= difference;
+			trailSprite.alpha = _transp;
+			_transp -= _difference;
 			trailSprite.solid = solid;
-
-			if (trailSprite.alpha <= 0) trailSprite.kill();
+			
+			if (trailSprite.alpha <= 0) 
+			{
+				trailSprite.kill();
+			}
 		}	
 	}
 
@@ -269,9 +306,9 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 */
 	public function changeGraphic(Image:Dynamic):Void
 	{
-		image = Image;
+		_image = Image;
 		
-		for (i in 0...trailLength)
+		for (i in 0..._trailLength)
 		{
 			members[i].loadGraphic(Image);
 		}	
@@ -293,13 +330,18 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		scalesEnabled = Scale;
 	}
 	
-	private function set_solid(value:Bool):Bool
+	/**
+	 * Determines whether trailsprites are solid or not. False by default.
+	 */
+	public var solid(default, set):Bool = false;
+	
+	private function set_solid(Value:Bool):Bool
 	{
-		for (i in 0...trailLength)
+		for (i in 0..._trailLength)
 		{
-			members[i].solid = value; 
+			members[i].solid = Value; 
 		}
-		solid = value;
-		return value;
+		
+		return solid = Value;
 	}
 }

@@ -44,6 +44,7 @@ class FlxSpecialFX extends FlxBasic
 	{
 		var temp:StarfieldFX = new StarfieldFX();
 		members.set(temp, temp);
+
 		return temp;
 	}
 	
@@ -52,13 +53,13 @@ class FlxSpecialFX extends FlxBasic
 	/**
 	 * Starts the given FX Plugin running
 	 * 
-	 * @param	source	A reference to the FX Plugin you wish to run. If null it will start all currently added FX Plugins
+	 * @param	Effect	A reference to the FX Plugin you wish to run. If null it will start all currently added FX Plugins
 	 */
-	public static function startFX(source:BaseFX = null):Void
+	public static function startFX(Effect:BaseFX = null):Void
 	{
-		if (source != null)
+		if (Effect != null)
 		{
-			members.get(source).active = true;
+			members.get(Effect).active = true;
 		}
 		else
 		{
@@ -72,13 +73,13 @@ class FlxSpecialFX extends FlxBasic
 	/**
 	 * Stops the given FX Plugin running
 	 * 
-	 * @param	source	A reference to the FX Plugin you wish to stop. If null it will stop all currently added FX Plugins
+	 * @param	Effect	A reference to the FX Plugin you wish to stop. If null it will stop all currently added FX Plugins
 	 */
-	public static function stopFX(source:BaseFX = null):Void
+	public static function stopFX(Effect:BaseFX = null):Void
 	{
-		if (source != null)
+		if (Effect != null)
 		{
-			members.get(source).active = false;
+			members.get(Effect).active = false;
 		}
 		else
 		{
@@ -92,14 +93,14 @@ class FlxSpecialFX extends FlxBasic
 	/**
 	 * Returns the active state of the given FX Plugin running
 	 * 
-	 * @param	source	A reference to the FX Plugin you wish to run. If null it will start all currently added FX Plugins
+	 * @param	Effect	A reference to the FX Plugin you wish to run. If null it will start all currently added FX Plugins
 	 * @return	Boolean	true if the FX Plugin is active, false if not
 	 */
-	public static function isActive(source:BaseFX):Bool
+	public static function isActive(Effect:BaseFX):Bool
 	{
-		if (members.exists(source))
+		if (members.exists(Effect))
 		{
-			return members.get(source).active;
+			return members.get(Effect).active;
 		}
 		
 		return false;
@@ -127,15 +128,16 @@ class FlxSpecialFX extends FlxBasic
 	/**
 	 * Removes a FX Plugin from the Special FX Handler
 	 * 
-	 * @param	source	The FX Plugin to remove
+	 * @param	Effect	The FX Plugin to remove
 	 * @return	Boolean	true if the plugin was removed, otherwise false.
 	 */
-	public static function remove(source:BaseFX):Bool
+	public static function remove(Effect:BaseFX):Bool
 	{
-		if (members.exists(source))
+		if (members.exists(Effect))
 		{
-			members.get(source).destroy();
-			members.remove(source);
+			members.get(Effect).destroy();
+			members.remove(Effect);
+			
 			return true;
 		}
 		
@@ -143,8 +145,8 @@ class FlxSpecialFX extends FlxBasic
 	}
 	
 	/**
-	 * Removes all FX Plugins<br>
-	 * This is called automatically if the plugin is destroyed, but should be called manually by you if you change States
+	 * Removes all FX Plugins. This is called automatically if the plugin is destroyed, 
+	 * but should be called manually by you if you change states.
 	 */
 	public static function clear():Void
 	{

@@ -17,7 +17,6 @@ class BaseFX
 	 * Set to false to stop this effect being updated by the FlxSpecialFX Plugin. Set to true to enable.
 	 */
 	public var active:Bool;
-	
 	/**
 	 * The FlxSprite into which the effect is drawn. Add this to your FlxState / FlxGroup to display the effect.
 	 */
@@ -27,47 +26,47 @@ class BaseFX
 	/**
 	 * A scratch bitmapData used to build-up the effect before passing to sprite.pixels
 	 */
-	var canvas:BitmapData;
+	public var canvas:BitmapData;
 	
 	/**
 	 * TODO A snapshot of the sprite background before the effect is applied
 	 */
-	var back:BitmapData;
+	public var back:BitmapData;
 	#end
 	
-	var image:BitmapData;
-	var sourceRef:FlxSprite;
-	var updateFromSource:Bool;
-	var clsRect:Rectangle;
-	var clsPoint:Point;
-	var clsColor:Int;
+	private var _image:BitmapData;
+	private var _sourceRef:FlxSprite;
+	private var _updateFromSource:Bool;
+	private var _clsRect:Rectangle;
+	private var _clsPoint:Point;
+	private var _clsColor:Int;
+
+	// For staggered drawing updates
+	private var _updateLimit:Int;
+	private var _lastUpdate:Int;
+	private var _ready:Bool;
 	
-	//	For staggered drawing updates
-	var updateLimit:Int;
-	var lastUpdate:Int;
-	var ready:Bool;
-	
-	var copyRect:Rectangle;
-	var copyPoint:Point;
+	private var _copyRect:Rectangle;
+	private var _copyPoint:Point;
 	
 	public function new() 
 	{
-		updateLimit = 0;
-		lastUpdate = 0;
-		ready = false;
+		_updateLimit = 0;
+		_lastUpdate = 0;
+		_ready = false;
 		active = false;
 	}
 	
 	/**
 	 * Starts the effect runnning
 	 * 
-	 * @param	delay	How many "game updates" should pass between each update? If your game runs at 30fps a value of 0 means it will do 30 updates per second. A value of 1 means it will do 15 updates per second, etc.
+	 * @param	Delay	How many "game updates" should pass between each update? If your game runs at 30fps a value of 0 means it will do 30 updates per second. A value of 1 means it will do 15 updates per second, etc.
 	 */
-	public function start(delay:Int = 0):Void
+	public function start(Delay:Int = 0):Void
 	{
-		updateLimit = delay;
-		lastUpdate = 0;
-		ready = true;
+		_updateLimit = Delay;
+		_lastUpdate = 0;
+		_ready = true;
 	}
 	
 	/**
@@ -76,7 +75,7 @@ class BaseFX
 	 */
 	public function stop():Void
 	{
-		ready = false;
+		_ready = false;
 	}
 	
 	public function draw():Void
@@ -103,13 +102,12 @@ class BaseFX
 		}
 		#end
 		
-		if (image != null)
+		if (_image != null)
 		{
-			image.dispose();
+			_image.dispose();
 		}
 		
-		sourceRef = null;
+		_sourceRef = null;
 		active = false;
-	}
-	
+	}	
 }
