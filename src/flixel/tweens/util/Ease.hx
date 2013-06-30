@@ -1,7 +1,5 @@
 package flixel.tweens.util;
 
-typedef EaseFunction = Float -> Float;
-
 /**
  * Static class with useful easer functions that can be used by Tweens.
  */
@@ -213,3 +211,5 @@ class Ease
 	 * 		return (t <= .5) ? in(t * 2) / 2 : out(t * 2 - 1) / 2 + .5;
 	 */
 }
+
+typedef EaseFunction = Float -> Float;

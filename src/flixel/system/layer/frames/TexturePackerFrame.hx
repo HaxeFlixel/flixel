@@ -4,23 +4,19 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
 // TODO: TexturePackerTileSheetData doesn't seem to exist (anymore)?
-import flixel.plugin.texturepacker.TexturePackerTileSheetData;
+//import flixel.plugin.texturepacker.TexturePackerTileSheetData;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
 
 class TexturePackerFrame extends FlxFrame
 {
 	public static var MATRIX:Matrix = new Matrix();
 	
-	public var rotated:Bool = false;
-	public var trimmed:Bool = false;
-	public var sourceSize:FlxPoint = null;
-	public var offset:FlxPoint = null;
-	
-	public function new(tileSheet:TexturePackerTileSheetData)
-	{
-		super(tileSheet);
-	}
+	//public function new(tileSheet:TexturePackerTileSheetData)
+	//{
+		//super(tileSheet);
+	//}
 	
 	override public function destroy():Void 
 	{
@@ -62,8 +58,8 @@ class TexturePackerFrame extends FlxFrame
 	}
 	
 	// TODO: implement this
-	override public function prepare():Void 
-	{
-		super.prepare();
-	}
+	//override public function prepare():Void 
+	//{
+		//super.prepare();
+	//}
 }

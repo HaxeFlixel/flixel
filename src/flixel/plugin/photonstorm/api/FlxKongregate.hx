@@ -128,7 +128,7 @@ class FlxKongregate
      * @param   contentType     Type of content to listen for
      * @param   callback        Function to call when content load request has been made
      */
-    public static function addLoadListener(contentType:String, cb:Void):Void
+    public static function addLoadListener(contentType:String, cb:Void->Void):Void
     {
         api.sharedContent.addLoadListener(contentType, cb);
     }
@@ -140,7 +140,7 @@ class FlxKongregate
      * @param   contentType     The event to listen for (i.e. "login")
      * @param   callback        Funcation to call when this event is received
      */
-    public static function addEventListener(contentType:String, cb:Void):Void
+    public static function addEventListener(contentType:String, cb:Void->Void):Void
     {
         api.services.addEventListener(contentType, cb);
     }
@@ -270,7 +270,7 @@ class FlxKongregate
      * @param   items       The array of item identifier strings or item/metadata objects.
      * @param   callback    The callback function
      */
-    public static function purchaseItem(items:Array<Dynamic>, cb:Void):Void
+    public static function purchaseItem(items:Array<Dynamic>, cb:Void->Void):Void
     {
         api.mtx.purchaseItems(items, cb);
     }
@@ -283,7 +283,7 @@ class FlxKongregate
      * @param   username    The username to request inventory for, or null for the current player
      * @param   callback    The callback function
      */
-    public static function requestUserItemList(username:String, cb:Void):Void
+    public static function requestUserItemList(username:String, cb:Void->Void):Void
     {
         api.mtx.requestUserItemList(username, cb);
     }
@@ -324,7 +324,7 @@ class FlxKongregate
      * @param   thumb       Optional but highly recommended! Send us a DisplayObject that we will snapshotted and used as a thumbnail for the content.
      * @param   label       Optional, label for sub-classing the shared content.
      */
-    public static function saveSharedContent(type:String, content:String, cb:Void, ?thumb:DisplayObject = null, ?label:String = null):Void
+    public static function saveSharedContent(type:String, content:String, cb:Void->Void, ?thumb:DisplayObject = null, ?label:String = null):Void
     {
         api.sharedContent.save(type, content, cb, thumb, label);
     }
@@ -336,7 +336,7 @@ class FlxKongregate
      * @param   avatar      Can be null, but highly recommended that you send yourself. If null, we will snapshot the stage.
      * @param   callback    Function to call when content load request has been made
      */
-    public static function submitAvatar(avatar:DisplayObject, cb:Void):Void
+    public static function submitAvatar(avatar:DisplayObject, cb:Void->Void):Void
     {
         api.images.submitAvatar(avatar, cb);
     }

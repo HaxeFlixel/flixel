@@ -1,7 +1,7 @@
 package flixel.effects;
 
 import flixel.FlxSprite;
-import flixel.FlxTypedGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.util.FlxPoint;
 
 /**

@@ -108,7 +108,7 @@ class FlxBackdrop extends FlxObject
 			cameras = FlxG.cameras.list;
 		}
 		var camera:FlxCamera;
-		var l:Int = cameras.list.length;
+		var l:Int = cameras.length;
 		
 		for (i in 0...(l))
 		{

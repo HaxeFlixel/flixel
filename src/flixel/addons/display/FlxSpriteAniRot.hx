@@ -1,6 +1,6 @@
-#if flash
 package flixel.addons.display;
 
+#if flash
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -22,10 +22,12 @@ class FlxSpriteAniRot extends FlxSprite
 
 	private var frameCounter:Int = 0;
 
-	private static inline var _zeroPoint:Point = new Point(0, 0);
+	static private var _zeroPoint:Point;
 
 	public function new(AnimatedGraphic:Dynamic, Rotations:Int, X:Float = 0, Y:Float = 0)
 	{
+		_zeroPoint = new Point(0, 0);
+		
 		super(X, Y);
 		loadGraphic(AnimatedGraphic, true); //Just to get the number of frames
 
