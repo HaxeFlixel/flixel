@@ -209,11 +209,6 @@ class FlxTextField extends FlxText
 		// this class doesn't support this operation
 	}
 	
-	override public function drawLine(StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
-	{
-		// this class doesn't support this operation
-	}
-	
 	override private function get_simpleRender():Bool
 	{ 
 		return true;

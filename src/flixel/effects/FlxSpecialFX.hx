@@ -1,9 +1,9 @@
 package flixel.effects;
 
+import flixel.effects.fx.BaseFX;
+import flixel.effects.fx.StarfieldFX;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.plugin.photonstorm.fx.BaseFX;
-import flixel.plugin.photonstorm.fx.StarfieldFX;
 import haxe.ds.ObjectMap;
 
 /**

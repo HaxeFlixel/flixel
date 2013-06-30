@@ -4,7 +4,7 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flixel.system.preloaderHelpers.PxBitmapFont;
-import flixel.plugin.pxText.PxTextAlign;
+import flixel.text.pxText.PxTextAlign;
 
 /**
  * Renders a text field.

@@ -3,6 +3,7 @@ package flixel.system;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
+import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
@@ -13,6 +14,12 @@ import flash.utils.ByteArray;
 import flixel.FlxG;
 import flixel.system.preloaderHelpers.PxBitmapFont;
 import flixel.system.preloaderHelpers.PxTextField;
+import flixel.text.pxText.PxTextAlign;
+import flash.events.MouseEvent;
+import flash.text.TextFormat;
+import flash.text.TextFormatAlign;
+import flash.text.TextField;
+import flash.net.URLRequest;
 
 /**
  * This class handles the 8-bit style preloader.
@@ -468,7 +475,7 @@ class FlxPreloader extends NMEPreloader
 		#if (flash || js)
 		byteData.uncompress();
 		#else
-		byteData.uncompress("");
+		byteData.uncompress();
 		#end
 		
 		var result:BitmapData = new BitmapData(bitmapWidth, bitmapHeight, true, 0);

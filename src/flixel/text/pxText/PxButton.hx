@@ -1,6 +1,7 @@
 package flixel.text.pxText;
 
 import flixel.system.FlxAssets;
+import flixel.ui.FlxTypedButton;
 import flixel.util.FlxPoint;
 
 /**
@@ -8,10 +9,11 @@ import flixel.util.FlxPoint;
  */
 class PxButton extends FlxTypedButton<FlxBitmapTextField>
 {
-	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
+	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Dynamic->Void = null)
 	{
 		super(X, Y, Label, OnClick);
-		if(Label != null)
+		
+		if (Label != null)
 		{
 			// TODO: redo this
 			if (PxBitmapFont.fetch("nokiafc22") == null)

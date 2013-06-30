@@ -3,7 +3,7 @@ package flixel.system.input;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxTypedGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.system.FlxAssets;
 import flixel.system.input.FlxTouch;
 import flixel.util.FlxPoint;

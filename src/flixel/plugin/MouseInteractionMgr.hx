@@ -4,23 +4,12 @@ import flash.errors.Error;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxGroup;
+import flixel.FlxSprite;
+import flixel.group.FlxGroup;
+import flixel.system.input.FlxTouch;
 import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
-import flixel.FlxSprite;
-import flixel.system.input.FlxTouch;
-import flixel.util.FlxMath;
-import flixel.group.FlxGroup;
 
-typedef SpriteReg = {
-	var sprite:FlxSprite;
-	var mouseChildren:Bool;
-	var mouseEnabled:Bool;
-	var onMouseDown:FlxSprite->Void;
-	var onMouseUp:FlxSprite->Void;
-	var onMouseOver:FlxSprite->Void;
-	var onMouseOut:FlxSprite->Void;
-}
 /**
 * Provides mouse event detection for FlxSprites.
 * To use it, initialize the manager and register sprites. 
@@ -439,4 +428,14 @@ class MouseInteractionMgr extends FlxBasic
 		}
 		registeredSprites = null;
 	}
+}
+
+typedef SpriteReg = {
+	var sprite:FlxSprite;
+	var mouseChildren:Bool;
+	var mouseEnabled:Bool;
+	var onMouseDown:FlxSprite->Void;
+	var onMouseUp:FlxSprite->Void;
+	var onMouseOver:FlxSprite->Void;
+	var onMouseOut:FlxSprite->Void;
 }

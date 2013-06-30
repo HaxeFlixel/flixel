@@ -4,20 +4,6 @@ import flixel.tweens.util.Ease;
 import flixel.FlxBasic;
 import flixel.FlxG;
 
-typedef CompleteCallback = FlxTween->Void;
-
-/**
- * Friend class for access to Tween private members
- */
-typedef FriendTween = {
-	private function finish():Void;
-
-	private var _finish:Bool;
-	private var _parent:FlxBasic;
-	private var _prev:FriendTween;
-	private var _next:FriendTween;
-}
-
 class FlxTween
 {
 	/**
@@ -186,4 +172,18 @@ class FlxTween
 	private var _next:FriendTween;
 	
 	private var _backward:Bool;
+}
+
+typedef CompleteCallback = FlxTween->Void;
+
+/**
+ * Friend class for access to Tween private members
+ */
+typedef FriendTween = {
+	private function finish():Void;
+
+	private var _finish:Bool;
+	private var _parent:FlxBasic;
+	private var _prev:FriendTween;
+	private var _next:FriendTween;
 }

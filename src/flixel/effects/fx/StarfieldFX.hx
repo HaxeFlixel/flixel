@@ -3,6 +3,7 @@ package flixel.effects.fx;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxMisc;

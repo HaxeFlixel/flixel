@@ -1,6 +1,6 @@
 package flixel.util;
 
-import display.BitmapData;
+import flash.display.BitmapData;
 
 class SpriteSheetRegion
 {
