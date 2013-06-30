@@ -11,10 +11,13 @@ class FlxAngle
 	static private var sinTable:Array<Float> = new Array<Float>();
 	
 	/**
-	 * Useful for rad-to-deg and deg-to-rad conversion.
+	 * Convert radions to degrees by multiplying it with this value.
 	 */
-	static public var DEG:Float = 180 / Math.PI;
-	static public var RAD:Float = Math.PI / 180;
+	static public var TO_DEG:Float = 180 / Math.PI;
+	/**
+	 * Convert degrees to radians by multiplying it with this value.
+	 */
+	static public var TO_RAD:Float = Math.PI / 180;
 	
 	static private var coefficient1:Float = Math.PI / 4;
 	
@@ -300,7 +303,7 @@ class FlxAngle
 	 */
 	inline static public function asDegrees(radians:Float):Float
 	{
-		return radians * DEG;
+		return radians * TO_DEG;
 	}
 	
 	/**
@@ -312,7 +315,7 @@ class FlxAngle
 	 */
 	inline static public function asRadians(degrees:Float):Float
 	{
-		return degrees * RAD;
+		return degrees * TO_RAD;
 	}
 	
 	/**

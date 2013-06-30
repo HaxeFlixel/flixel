@@ -32,21 +32,29 @@ class FlxBackdrop extends FlxObject
 	
 	/**
 	 * Creates an instance of the FlxBackdrop class, used to create infinitely scrolling backgrounds.
-	 * @param   bitmap The image you want to use for the backdrop.
-	 * @param   scrollX Scrollrate on the X axis.
-	 * @param   scrollY Scrollrate on the Y axis.
-	 * @param   repeatX If the backdrop should repeat on the X axis.
-	 * @param   repeatY If the backdrop should repeat on the Y axis.
+	 * 
+	 * @param   Graphic		The image you want to use for the backdrop.
+	 * @param   ScrollX 	Scrollrate on the X axis.
+	 * @param   ScrollY 	Scrollrate on the Y axis.
+	 * @param   RepeatX 	If the backdrop should repeat on the X axis.
+	 * @param   RepeatY 	If the backdrop should repeat on the Y axis.
 	 */
-	public function new(graphic:Dynamic, scrollX:Float = 1, scrollY:Float = 1, repeatX:Bool = true, repeatY:Bool = true) 
+	public function new(Graphic:Dynamic, ScrollX:Float = 1, ScrollY:Float = 1, RepeatX:Bool = true, RepeatY:Bool = true) 
 	{
 		super();
 		
-		var data:BitmapData = FlxG.bitmap.add(graphic);
+		var data:BitmapData = FlxG.bitmap.add(Graphic);
 		var w:Int = data.width;
 		var h:Int = data.height;
-		if (repeatX) w += FlxG.width;
-		if (repeatY) h += FlxG.height;
+		
+		if (RepeatX) 
+		{
+			w += FlxG.width;
+		}
+		if (RepeatY) 
+		{
+			h += FlxG.height;
+		}
 		
 		#if flash
 		_data = new BitmapData(w, h);
@@ -55,8 +63,8 @@ class FlxBackdrop extends FlxObject
 
 		_scrollW = data.width;
 		_scrollH = data.height;
-		_repeatX = repeatX;
-		_repeatY = repeatY;
+		_repeatX = RepeatX;
+		_repeatY = RepeatY;
 		
 		#if !flash
 		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
@@ -82,8 +90,8 @@ class FlxBackdrop extends FlxObject
 			_ppoint.y += data.height;
 		}
 		
-		scrollFactor.x = scrollX;
-		scrollFactor.y = scrollY;
+		scrollFactor.x = ScrollX;
+		scrollFactor.y = ScrollY;
 	}
 	
 	override public function destroy():Void 
@@ -98,6 +106,7 @@ class FlxBackdrop extends FlxObject
 		_tileInfo = null;
 		#end
 		_ppoint = null;
+		
 		super.destroy();
 	}
 
@@ -119,7 +128,7 @@ class FlxBackdrop extends FlxObject
 				continue;
 			}
 			
-			// find x position
+			// Find x position
 			if (_repeatX)
 			{   
 				_ppoint.x = (x - camera.scroll.x * scrollFactor.x) % _scrollW;
@@ -130,7 +139,7 @@ class FlxBackdrop extends FlxObject
 				_ppoint.x = (x - camera.scroll.x * scrollFactor.x);
 			}
 
-			// find y position
+			// Find y position
 			if (_repeatY)
 			{
 				_ppoint.y = (y - camera.scroll.y * scrollFactor.y) % _scrollH;
@@ -141,7 +150,7 @@ class FlxBackdrop extends FlxObject
 				_ppoint.y = (y - camera.scroll.y * scrollFactor.y);
 			}
 			
-			// draw to the screen
+			// Draw to the screen
 			#if flash
 			camera.buffer.copyPixels(_data, _data.rect, _ppoint, null, null, true);
 			#else
@@ -185,7 +194,8 @@ class FlxBackdrop extends FlxObject
 				currDrawData[currIndex++] = 1;
 				
 				#if !js
-				currDrawData[currIndex++] = 1.0;	// alpha
+				// Alpha
+				currDrawData[currIndex++] = 1.0;	
 				#end
 			}
 			
@@ -196,11 +206,11 @@ class FlxBackdrop extends FlxObject
 	
 	override public function updateFrameData():Void
 	{
-	#if !flash
+		#if !flash
 		if (_node != null)
 		{
 			_tileID = _node.addTileRect(new Rectangle(0, 0, _scrollW, _scrollH), new Point());
 		}
-	#end
+		#end
 	}
 }
