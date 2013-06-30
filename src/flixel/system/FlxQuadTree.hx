@@ -2,7 +2,7 @@ package flixel.system;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.FlxTypedGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.util.FlxRect;
 
 /**

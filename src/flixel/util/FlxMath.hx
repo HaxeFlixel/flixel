@@ -1,8 +1,6 @@
 package flixel.util;
 
 import flash.geom.Rectangle;
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.system.input.FlxTouch;
 
 /**

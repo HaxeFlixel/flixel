@@ -3,6 +3,7 @@ package flixel.tile;
 import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxAngle;
 import flixel.util.FlxRandom;
+import flixel.util.FlxSpriteUtil;
 
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.
@@ -92,7 +93,7 @@ class FlxTileblock extends FlxSprite
 		}
 		else
 		{
-			this.fill(0);
+			FlxSpriteUtil.fill(this, 0);
 		}
 		#end
 		

@@ -2,8 +2,6 @@ package flixel.util;
 
 import haxe.ds.ObjectMap;
 import flixel.FlxG;
-import flixel.FlxSound;
-import flixel.util.FlxTimer;
 
 class FlxSoundUtil
 {

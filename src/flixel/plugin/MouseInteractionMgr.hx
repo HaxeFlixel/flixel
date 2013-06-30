@@ -10,6 +10,7 @@ import flixel.util.FlxPoint;
 import flixel.FlxSprite;
 import flixel.system.input.FlxTouch;
 import flixel.util.FlxMath;
+import flixel.group.FlxGroup;
 
 typedef SpriteReg = {
 	var sprite:FlxSprite;

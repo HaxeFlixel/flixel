@@ -2,6 +2,7 @@ package flixel;
 
 import flash.display.BitmapData;
 import flixel.system.layer.Atlas;
+import flixel.group.FlxGroup;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game

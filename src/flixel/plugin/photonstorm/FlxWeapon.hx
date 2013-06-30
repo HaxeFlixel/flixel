@@ -22,7 +22,7 @@ import flixel.tile.FlxTilemap;
 import flixel.FlxTypedGroup;
 import flixel.system.input.FlxTouch;
 import flash.display.Bitmap;
-import flixel.FlxGroup;
+import flixel.group.FlxGroup;
 import flixel.FlxObject;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
