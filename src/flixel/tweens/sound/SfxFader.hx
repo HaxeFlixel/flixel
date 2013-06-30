@@ -17,7 +17,7 @@ class SfxFader extends FlxTween
 	 */
 	public function new(sfx:FlxSound, complete:CompleteCallback = null, type:Int = 0)
 	{
-		super(0, type, finish);
+		super(0, type, finishCallback);
 		_complete = complete;
 		_sfx = sfx;
 	}
@@ -83,7 +83,9 @@ class SfxFader extends FlxTween
 	}
 
 	/** @private When the tween completes. */
-	override private function finish():Void
+	override private function finish():Void {  }
+	
+	private function finishCallback(tween:FlxTween):Void
 	{
 		if (_crossSfx != null)
 		{
@@ -96,7 +98,7 @@ class SfxFader extends FlxTween
 		}
 		if (_complete != null) 
 		{
-			_complete();
+			_complete(this);
 		}
 	}
 
