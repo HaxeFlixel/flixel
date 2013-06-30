@@ -7,9 +7,6 @@ package flixel.addons.tile;
  */
 class FlxCaveGenerator
 {
-	private var _numTilesCols:Int;
-	private var _numTilesRows:Int;
-	
 	/**
 	 * How many times do you want to "smooth" the cave.
 	 * The higher number the smoother.
@@ -22,31 +19,32 @@ class FlxCaveGenerator
 	 */
 	public static var initWallRatio:Float = 0.5;
 	
+	private var _numTilesCols:Int;
+	private var _numTilesRows:Int;
+	
 	/**
-	 * 
-	 * @param	nCols	Number of columns in the cave tilemap
-	 * @param	nRows	Number of rows in the cave tilemap
+	 * @param	Columns		Number of columns in the cave tilemap
+	 * @param	Rows		Number of rows in the cave tilemap
 	 */
-	public function new(nCols:Int = 10, nRows:Int = 10) 
+	public function new(Columns:Int = 10, Rows:Int = 10) 
 	{
-		_numTilesCols = nCols;
-		_numTilesRows = nRows;
+		_numTilesCols = Columns;
+		_numTilesRows = Rows;
 	}
 	
 	/**
-	 * @param 	mat		A matrix of data
-	 * 
-	 * @return 	A string that is usuable for FlxTileMap.loadMap(...)
+	 * @param 	Matrix		A matrix of data
+	 * @return 	A string that is usuable for <code>FlxTileMap.loadMap()</code>
 	 */
-	static public function convertMatrixToStr(mat:Array<Array<Int>>):String
+	static public function convertMatrixToStr(Matrix:Array<Array<Int>>):String
 	{
 		var mapString:String = "";
 		
-		for (y in 0...(mat.length))
+		for (y in 0...(Matrix.length))
 		{
-			for (x in 0...(mat[y].length))
+			for (x in 0...(Matrix[y].length))
 			{
-				mapString += Std.string(mat[y][x]) + ",";
+				mapString += Std.string(Matrix[y][x]) + ",";
 			}
 			
 			mapString += "\n";
@@ -57,19 +55,20 @@ class FlxCaveGenerator
 	
 	/**
 	 * 
-	 * @param	rows 	Number of rows for the matrix
-	 * @param	cols	Number of cols for the matrix
-	 * 
-	 * @return Spits out a matrix that is cols x rows, zero initiated
+	 * @param	Rows		Number of rows for the matrix
+	 * @param	Columns 	Number of cols for the matrix
+	 * @return 	Spits out a matrix that is cols x rows, zero initiated
 	 */
-	private function genInitMatrix(rows:Int, cols:Int):Array<Array<Int>>
+	private function genInitMatrix(Rows:Int, Columns:Int):Array<Array<Int>>
 	{
 		// Build array of 1s
 		var mat:Array<Array<Int>> = new Array<Array<Int>>();
-		for (y in 0...(rows))
+		
+		for (y in 0...(Rows))
 		{
 			mat.push(new Array<Int>());
-			for (x in 0...(cols)) 
+			
+			for (x in 0...(Columns)) 
 			{
 				mat[y].push(0);
 			}
@@ -79,27 +78,31 @@ class FlxCaveGenerator
 	}
 	
 	/**
-	 * 
-	 * @param	mat		Matrix of data (0=empty, 1 = wall)
-	 * @param	xPos	Column we are examining
-	 * @param	yPos	Row we are exampining
-	 * @param	dist	Radius of how far to check for neighbors
-	 * 
+	 * @param	Matrix		Matrix of data (0 = empty, 1 = wall)
+	 * @param	PosX		Column we are examining
+	 * @param	PosY		Row we are exampining
+	 * @param	Distance	Radius of how far to check for neighbors
 	 * @return	Number of walls around the target, including itself
 	 */
-	private function countNumWallsNeighbors(mat:Array<Array<Int>>, xPos:Int, yPos:Int, dist:Int = 1):Int
+	private function countNumWallsNeighbors(Matrix:Array<Array<Int>>, PosX:Int, PosY:Int, Distance:Int = 1):Int
 	{
 		var count:Int = 0;
 		
-		for (y in (-dist)...(dist + 1))
+		for (y in ( -Distance)...(Distance + 1))
 		{
-			for (x in (-dist)...(dist + 1))
+			for (x in ( -Distance)...(Distance + 1))
 			{
 				// Boundary
-				if ((xPos + x < 0) || (xPos + x > _numTilesCols - 1) || (yPos + y < 0) || (yPos + y > _numTilesRows - 1)) continue;
+				if ((PosX + x < 0) || (PosX + x > _numTilesCols - 1) || (PosY + y < 0) || (PosY + y > _numTilesRows - 1))
+				{
+					continue;
+				}
 				
 				// Neighbor is non-wall
-				if (mat[yPos + y][xPos + x] != 0) ++count;
+				if (Matrix[PosY + y][PosX + x] != 0) 
+				{
+					count++;
+				}
 			}
 		}
 		
@@ -109,31 +112,37 @@ class FlxCaveGenerator
 	/**
 	 * Use the 4-5 rule to smooth cells
 	 */
-	private function runCelluarAutomata(inMat:Array<Array<Int>>, outMat:Array<Array<Int>>):Void
+	private function runCelluarAutomata(InMatrix:Array<Array<Int>>, OutMatrix:Array<Array<Int>>):Void
 	{
-		var numRows:Int = inMat.length;
-		var numCols:Int = inMat[0].length;
+		var numRows:Int = InMatrix.length;
+		var numCols:Int = InMatrix[0].length;
 		
 		for (y in 0...(numRows))
 		{
 			for (x in 0...(numCols))
 			{
-				var numWalls:Int = countNumWallsNeighbors(inMat, x, y, 1);
+				var numWalls:Int = countNumWallsNeighbors(InMatrix, x, y, 1);
 				
-				if (numWalls >= 5) outMat[y][x] = 1;
-				else outMat[y][x] = 0;
+				if (numWalls >= 5) 
+				{
+					OutMatrix[y][x] = 1;
+				}
+				else 
+				{
+					OutMatrix[y][x] = 0;
+				}
 			}
 		}
 	}
 	
 	/**
-	 * 
 	 * @return Returns a matrix of a cave!
 	 */
 	public function generateCaveLevel():Array<Array<Int>>
 	{
 		// Initialize random array
 		var mat:Array<Array<Int>> = genInitMatrix(_numTilesRows, _numTilesCols);
+		
 		for (y in 0...(_numTilesRows))
 		{
 			for (x in 0...(_numTilesCols)) 

@@ -3,7 +3,7 @@ package flixel.effects.particles;
 import flixel.util.FlxRandom;
 
 /**
- * Extended FlxEmitter that emits particles in a circle (instead of a square).
+ * Extended <code>FlxEmitter</code> that emits particles in a circle (instead of a square).
  * It also provides a new function setMotion to control particle behavior even more.
  * This was inspired by the way Chevy Ray Johnston implemented his particle emitter in Flashpunk.
  * @author Dirk Bunk
@@ -14,24 +14,21 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 	 * 	Launch Direction.
 	 */
 	public var angle:Float;
-	
 	/**
 	 * 	Distance to travel.
 	 */
 	public var distance:Float;
-	
 	/**
 	 * 	Random amount to add to the particle's direction.
 	 */
 	public var angleRange:Float;
-	
 	/**
 	 * 	Random amount to add to the particle's distance.
 	 */
 	public var distanceRange:Float;
 	
 	/**
-	 * Creates a new <code>FlxEmitterExt</code> object at a specific position.
+	 * Creates a new <code>FlxTypedEmitterExt</code> object at a specific position.
 	 * Does NOT automatically generate or attach particles!
 	 * 
 	 * @param	X		The X position of the emitter.
@@ -41,78 +38,83 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 	public function new(X:Float = 0, Y:Float = 0, Size:Float = 0) 
 	{
 		super(X, Y, Std.int(Size));
-		//set defaults
+		// Set defaults
 		setMotion(0, 0, 0.5, 360, 100, 1.5);
 	}
 	
 	/**
 	 * Defines the motion range for this emitter.
-	 * @param	angle			Launch Direction.
-	 * @param	distance		Distance to travel.
-	 * @param	lifespan		Particle duration.
-	 * @param	angleRange		Random amount to add to the particle's direction.
-	 * @param	distanceRange	Random amount to add to the particle's distance.
-	 * @param	lifespanRange	Random amount to add to the particle's duration.
+	 * 
+	 * @param	Angle			Launch Direction.
+	 * @param	Distance		Distance to travel.
+	 * @param	Lifespan		Particle duration.
+	 * @param	AngleRange		Random amount to add to the particle's direction.
+	 * @param	DistanceRange	Random amount to add to the particle's distance.
+	 * @param	LifespanRange	Random amount to add to the particle's duration.
 	 */
-	public function setMotion(angle:Float, distance:Float, lifespan:Float, angleRange:Float = 0, distanceRange:Float = 0, lifespanRange:Float = 0):Void
+	public function setMotion(Angle:Float, Distance:Float, Lifespan:Float, AngleRange:Float = 0, DistanceRange:Float = 0, LifespanRange:Float = 0):Void
 	{
-		this.angle = angle * 0.017453293;
-		this.distance = distance;
-		this.life.min = lifespan;
-		this.life.max = lifespan + lifespanRange;
-		this.angleRange = angleRange * 0.017453293;
-		this.distanceRange = distanceRange;
+		angle = Angle * 0.017453293;
+		distance = Distance;
+		life.min = Lifespan;
+		life.max = Lifespan + LifespanRange;
+		angleRange = AngleRange * 0.017453293;
+		distanceRange = DistanceRange;
 	}
 	
 	/**
 	 * Defines the motion range for a specific particle.
-	 * @param   particle		The Particle to set the motion for
-	 * @param	angle			Launch Direction.
-	 * @param	distance		Distance to travel.
-	 * @param	lifespan		Particle duration.
-	 * @param	angleRange		Random amount to add to the particle's direction.
-	 * @param	distanceRange	Random amount to add to the particle's distance.
-	 * @param	lifespanRange	Random amount to add to the particle's duration.
+	 * 
+	 * @param   Particle		The Particle to set the motion for
+	 * @param	Angle			Launch Direction.
+	 * @param	Distance		Distance to travel.
+	 * @param	Lifespan		Particle duration.
+	 * @param	AngleRange		Random amount to add to the particle's direction.
+	 * @param	DistanceRange	Random amount to add to the particle's distance.
+	 * @param	LifespanRange	Random amount to add to the particle's duration.
 	 */
-	private function setParticleMotion(particle:FlxParticle, angle:Float, distance:Float, angleRange:Float = 0, distanceRange:Float = 0):Void
+	private function setParticleMotion(Particle:FlxParticle, Angle:Float, Distance:Float, AngleRange:Float = 0, DistanceRange:Float = 0):Void
 	{			
 		//set particle direction and speed
-		var a:Float = angle + FlxRandom.float() * angleRange;
-		var d:Float = distance + FlxRandom.float() * distanceRange;
+		var a:Float = Angle + FlxRandom.float() * AngleRange;
+		var d:Float = Distance + FlxRandom.float() * DistanceRange;
 		
-		particle.velocity.x = Math.cos(a) * d;
-		particle.velocity.y = Math.sin(a) * d;
+		Particle.velocity.x = Math.cos(a) * d;
+		Particle.velocity.y = Math.sin(a) * d;
 	}
 	
 	/**
 	 * Call this function to start emitting particles.
 	 * 
-	 * @param	Explode		Whether the particles should all burst out at once.
-	 * @param	Lifespan	Unused parameter due to class override. Use setMotion to set things like a particle's lifespan.
-	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
+	 * @param	Explode			Whether the particles should all burst out at once.
+	 * @param	Lifespan		Unused parameter due to class override. Use setMotion to set things like a particle's lifespan.
+	 * @param	Frequency		Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+	 * @param	Quantity		How many particles to launch. 0 = "all of the particles".
 	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
 	 */
 	override public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0, LifespanRange:Float = 0):Void
 	{
 		super.start(Explode, Lifespan, Frequency, Quantity, LifespanRange);
 
-		//Immediately execute the explosion code part from the update function, to prevent other explosions to override this one.
-		//This fixes the problem, that you can not add two particle explosions in the same frame.
+		// Immediately execute the explosion code part from the update function, to prevent other explosions to override this one.
+		// This fixes the problem that you can not add two particle explosions in the same frame.
 		if (Explode)
 		{
 			on = false;
 			var i:Int = 0;
 			var l:Int = _quantity;
+			
 			if ((l <= 0) || (l > members.length))
 			{
 				l = members.length;
 			}
+			
 			while (i < l)
 			{
 				emitParticle();
 				i++;
 			}
+			
 			_quantity = 0;
 		}
 	}
@@ -163,6 +165,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 			particle.useFading = false;
 			particle.rangeAlpha = 0;
 		}
+		
 		// particle color settings
 		var startRedComp:Float = particle.startRed = startRed.min;
 		var startGreenComp:Float = particle.startGreen = startGreen.min;
@@ -205,11 +208,13 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		particle.rangeBlue = endBlueComp - startBlueComp;
 		
 		particle.useColoring = false;
+		
 		if (particle.rangeRed != 0 || particle.rangeGreen != 0 || particle.rangeBlue != 0)
 		{
 			particle.useColoring = true;
 		}
-		// end of particle color settings
+		
+		// End of particle color settings
 		if (startScale.min != startScale.max)
 		{
 			particle.startScale = startScale.min + FlxRandom.float() * (startScale.max - startScale.min);
@@ -221,6 +226,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		particle.scale.x = particle.scale.y = particle.startScale;
 		
 		var particleEndScale:Float = endScale.min;
+		
 		if (endScale.min != endScale.max)
 		{
 			particleEndScale = endScale.min + Std.int(FlxRandom.float() * (endScale.max - endScale.min));
@@ -239,7 +245,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		
 		particle.blend = blend;
 		
-		//set particle motion
+		// Set particle motion
 		setParticleMotion(particle, angle, distance, angleRange, distanceRange);
 		particle.acceleration.make(acceleration.x, acceleration.y);
 		
