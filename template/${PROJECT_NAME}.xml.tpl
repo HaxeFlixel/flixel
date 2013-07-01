@@ -7,7 +7,7 @@
  	
 	<!--The flixel preloader gets stuck in Chrome, so it's disabled by default for now. 
 	Safe to use if you embed the swf into a html file!-->
-	<!--<app preloader="org.flixel.system.FlxPreloader" unless="html5" />-->
+	<!--<app preloader="org.flixel.system.FlxPreloader" />-->
 	
 	<!--The swf version should be at least 11.2 if you want to use the FLX_MOUSE_ADVANCED option-->
 	<set name="SWF_VERSION" value="11.2" />

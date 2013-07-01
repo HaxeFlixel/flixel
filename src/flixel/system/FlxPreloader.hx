@@ -19,6 +19,15 @@ import flash.text.TextFormatAlign;
 import flash.text.TextField;
 import flash.net.URLRequest;
 
+#if js
+class FlxPreloader extends NMEPreloader
+{	
+	public function new()
+	{
+		super();
+	}
+}
+#else
 @:font("assets/data/nokiafc22.ttf") class PreloaderFont extends Font { }
 
 @:bitmap("assets/data/logo_light.png") class LogoLight extends BitmapData {}
@@ -447,3 +456,4 @@ class FlxPreloader extends NMEPreloader
 		}
 	}
 }
+#end
