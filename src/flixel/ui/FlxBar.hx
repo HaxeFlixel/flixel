@@ -163,6 +163,11 @@ class FlxBar extends FlxSprite
 		createFilledBar(0xff005100, 0xff00F400, border);
 		
 		emptyKill = false;
+		
+		// Make sure the bar is drawn
+		#if flash
+		updateBar();
+		#end
 	}
 	
 	override public function destroy():Void 
