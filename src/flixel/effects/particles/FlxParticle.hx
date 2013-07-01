@@ -1,5 +1,6 @@
 package flixel.effects.particles;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 
 /**

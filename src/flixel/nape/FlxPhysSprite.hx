@@ -1,5 +1,6 @@
 package flixel.nape;
 
+import flixel.util.FlxAngle;
 import nape.geom.Vec2;
 import nape.phys.Body;
 import nape.phys.BodyType;
@@ -18,22 +19,21 @@ import flixel.FlxSprite;
  */
 class FlxPhysSprite extends FlxSprite
 {
-	private var _radsFactor:Float;
-	/**
-	 * Internal var to update <code>body.velocity.x</code> and <code>body.velocity.y</code>. 
-	 * Default is 1, which menas no drag.
-	 */
-	private var _linearDrag:Float;
-	/**
-	 * Internal var to update <code>body.angularVel</code>
-	 * Default is 1, which menas no drag.
-	 */
-	private var _angularDrag:Float;
-	
 	/**
 	 * <code>body</code> is the physics body associated with this sprite. 
 	 */
 	public var body:Body;
+	
+	/**
+	 * Internal var to update <code>body.velocity.x</code> and <code>body.velocity.y</code>. 
+	 * Default is 1, which menas no drag.
+	 */
+	private var _linearDrag:Float = 1;
+	/**
+	 * Internal var to update <code>body.angularVel</code>
+	 * Default is 1, which menas no drag.
+	 */
+	private var _angularDrag:Float = 1;
 
 	/**
 	 * Creates an FlxSprite and a physics body (<code>body</code>).
@@ -46,15 +46,14 @@ class FlxPhysSprite extends FlxSprite
 	 * @param	SimpleGraphic 	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 * @param	CreateBody	 	Whether a rectangular physics body should be created for this sprite. True by default.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null, CreateBody:Bool = true) 
+	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:Dynamic, CreateBody:Bool = true) 
 	{
 		super(X, Y, SimpleGraphic);
-		_radsFactor = 180 / 3.14159;
-		_linearDrag = 1;	// no drag.
-		_angularDrag = 1; 	// no drag.
 		
 		if (CreateBody)
+		{
 			createRectangularBody();
+		}
 	}
 
 	/**
@@ -67,6 +66,7 @@ class FlxPhysSprite extends FlxSprite
 	override public function destroy():Void 
 	{
 		destroyPhysObjects();
+		
 		super.destroy();
 	}
 
@@ -90,6 +90,7 @@ class FlxPhysSprite extends FlxSprite
 	override public function kill():Void
 	{
 		super.kill();
+		
 		body.space = null;
 	}
 
@@ -100,36 +101,45 @@ class FlxPhysSprite extends FlxSprite
 	override public function revive():Void
 	{
 		super.revive();
+		
 		if (body != null)
+		{
 			body.space = FlxPhysState.space;
+		}
 	}
 	
 	/**
 	 * Makes it easier to add a physics body of your own to this sprite by setting it's position,
 	 * space and material for you.
-	 * @param	_Body 	The new physics body replacing the old one.
+	 * 
+	 * @param	NewBody 	The new physics body replacing the old one.
 	 */
-	public function addPremadeBody(_Body:Body):Void
+	public function addPremadeBody(NewBody:Body):Void
 	{
 		if (body != null) 
+		{
 			destroyPhysObjects();
+		}
 		
 		_Body.position.x = x;
 		_Body.position.y = y;
 		_Body.space = FlxPhysState.space;
-		body = _Body;
+		body = NewBody;
 		setBodyMaterial();
 	}
 	
 	/**
 	 * Creates a circular physics body for this sprite.
+	 * 
 	 * @param	Radius	The radius of the circle-shaped body - 16 by default
 	 * @param 	_Type	The <code>BodyType</code> of the physics body. Optional, <code>DYNAMIC</code> by default.
 	 */
 	public function createCircularBody(Radius:Float = 16, ?_Type:BodyType):Void
 	{
 		if (body != null) 
+		{
 			destroyPhysObjects();
+		}
 			
 		centerOffsets(false);
 		body = new Body(_Type != null ? _Type : BodyType.DYNAMIC, Vec2.weak(x, y));
@@ -144,19 +154,26 @@ class FlxPhysSprite extends FlxSprite
 	 * Override this method to create your own physics body!
 	 * The width and height used are based on the size of sprite graphics if 0 is passed.
 	 * Call this method after calling makeGraphics() or loadGraphic() to update the body size.
-	 * @param	width	The width of the rectangle. 0 = <code>frameWidth</code>
-	 * @param	height	The height of the rectangle. 0 = <code>frameHeight</code>
-	 * @param	type	The <code>BodyType</code> of the physics body. Optional, <code>DYNAMIC</code> by default.
+	 * 
+	 * @param	Width	The width of the rectangle. 0 = <code>frameWidth</code>
+	 * @param	Height	The height of the rectangle. 0 = <code>frameHeight</code>
+	 * @param	_Type	The <code>BodyType</code> of the physics body. Optional, <code>DYNAMIC</code> by default.
 	 */
 	public function createRectangularBody(Width:Float = 0, Height:Float = 0, ?_Type:BodyType):Void
 	{
 		if (body != null) 
+		{
 			destroyPhysObjects();
+		}
 		
 		if (Width == 0)
+		{
 			Width = frameWidth;
+		}
 		if (Height == 0)
+		{
 			Height = frameHeight;
+		}
 		
 		centerOffsets(false);
 		body = new Body(_Type != null ? _Type : BodyType.DYNAMIC, Vec2.weak(x, y));
@@ -178,7 +195,9 @@ class FlxPhysSprite extends FlxSprite
 	public function setBodyMaterial(Elasticity:Float = 1, DynamicFriction:Float = 0.2, StaticFriction:Float = 0.4, Density:Float = 1, RotationFriction:Float = 0.001):Void
 	{
 		if (body == null) 
+		{
 			return;
+		}
 			
 		body.setShapeMaterials(new Material(Elasticity, DynamicFriction, StaticFriction, Density, RotationFriction));
 	}
@@ -199,13 +218,15 @@ class FlxPhysSprite extends FlxSprite
 	 * Updates physics FlxSprite graphics to follow this sprite physics object, called at the end of <code>update()</code>.
 	 * Things that are updated: Position, angle, angular and linear drag.
 	 */	
-	inline private function updatePhysObjects():Void 
+	private function updatePhysObjects():Void 
 	{
 		x = body.position.x - origin.x;
 		y = body.position.y - origin.y;
 		
 		if (body.allowRotation)
-			angle = body.rotation * _radsFactor;
+		{
+			angle = body.rotation * FlxAngle.TO_DEG;
+		}
 		
 		// Applies custom physics drag.
 		if (_linearDrag < 1 || _angularDrag < 1) 
@@ -224,7 +245,7 @@ class FlxPhysSprite extends FlxSprite
 	 * @param	LinearDrag		Typical value 0.96 (1 = no drag).
 	 * @param	AngularDrag		Typical value 0.96 (1 = no drag);
 	 */
-	public function setDrag(LinearDrag:Float = 1, AngularDrag:Float = 1):Void 
+	inline public function setDrag(LinearDrag:Float = 1, AngularDrag:Float = 1):Void 
 	{
 		_linearDrag	= LinearDrag;
 		_angularDrag = AngularDrag;
@@ -237,7 +258,9 @@ class FlxPhysSprite extends FlxSprite
 	override public function drawDebug():Void
 	{
 		if (FlxPhysState.debug == null)
+		{
 			super.drawDebug();
+		}
 	}
 	#end
 }

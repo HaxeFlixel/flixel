@@ -1,11 +1,11 @@
 package flixel.effects.particles;
 
-import flash.display.Bitmap;
 import flash.display.BlendMode;
+import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxRandom;
-import flixel.util.FlxPoint;
 import flixel.group.FlxTypedGroup;
+import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 
 /**
  * <code>FlxTypedEmitter</code> is a lightweight particle emitter.
