@@ -27,18 +27,6 @@ import nape.util.ShapeDebug;
 
 class FlxPhysState extends FlxState
 {
-	#if !FLX_NO_DEBUG
-	/**
-	 * Contains the sprite used for nape debug graphics.
-	 */
-	private var _physDbgSpr:ShapeDebug;
-	/**
-	 * Contains the sprite used for nape debug graphics.
-	 */
-	static public var debug(get_debug, null):ShapeDebug;
-	static private function get_debug():ShapeDebug { return cast(FlxG.state, FlxPhysState)._physDbgSpr; }
-	#end
-
 	/**
 	 * The space where the nape physics simulation occur.
 	 */
@@ -51,7 +39,7 @@ class FlxPhysState extends FlxState
 	 * as the most important for stable results.
 	 * (default 10)
 	 */
-	public var velocityIterations:Int;
+	public var velocityIterations:Int = 10;
 	/**
 	 * The number of iterations used by nape in resolving
 	 * errors in the positions of objects. This is
@@ -59,7 +47,23 @@ class FlxPhysState extends FlxState
 	 * is well as being less important for the
 	 * stability of results. (default 10)
 	 */
-	public var positionIterations:Int;
+	public var positionIterations:Int = 10;
+	
+	#if !FLX_NO_DEBUG
+	/**
+	 * Contains the sprite used for nape debug graphics.
+	 */
+	private var _physDbgSpr:ShapeDebug;
+	/**
+	 * Contains the sprite used for nape debug graphics.
+	 */
+	static public var debug(get, never):ShapeDebug;
+	
+	static private function get_debug():ShapeDebug 
+	{ 
+		return cast(FlxG.state, FlxPhysState)._physDbgSpr; 
+	}
+	#end
 
 	/**
 	 * Override this method like a normal <code>FlxState</code>, but add
@@ -67,12 +71,11 @@ class FlxPhysState extends FlxState
 	 */
 	override public function create():Void
 	{
-		if(space == null)
+		if (space == null)
+		{
 			space = new Space(new Vec2());
-
-		velocityIterations = 10;	// Default value.
-		positionIterations = 10;	// Default value.
-
+		}
+		
 		#if !FLX_NO_DEBUG
 		enablePhysDebug();
 		#end
@@ -91,16 +94,22 @@ class FlxPhysState extends FlxState
 	public function createWalls(MinX:Float = 0, MinY:Float = 0, MaxX:Float = 0, MaxY:Float = 0, Thickness:Float = 10, _Material:Material = null):Body
 	{
 		if (MaxX == 0)
+		{
 			MaxX = FlxG.width;
-
+		}
+		
 		if (MinY == 0)
+		{
 			MinY = FlxG.height;
-
+		}
+		
 		if (_Material == null)
+		{
 			_Material = new Material(0.4, 0.2, 0.38, 0.7);
-
+		}
+		
 		var walls:Body = new Body(BodyType.STATIC);
-
+		
 		// Left wall
 		walls.shapes.add(new Polygon(Polygon.rect(MinX, MinY, Thickness, MaxY + Math.abs(MinY))));
 		// Right wall
@@ -122,6 +131,7 @@ class FlxPhysState extends FlxState
 	override public function update():Void
 	{
 		space.step(FlxG.elapsed, velocityIterations, positionIterations);
+		
 		super.update();
 	}
 
@@ -131,6 +141,7 @@ class FlxPhysState extends FlxState
 	override public function draw():Void
 	{
 		super.draw();
+		
 		#if !FLX_NO_DEBUG
 		drawPhysDebug();
 		#end
@@ -144,6 +155,7 @@ class FlxPhysState extends FlxState
 	override public function destroy():Void
 	{
 		super.destroy();
+		
 		space.clear();
 
 		#if !FLX_NO_DEBUG
@@ -158,11 +170,13 @@ class FlxPhysState extends FlxState
 	{
 		#if !FLX_NO_DEBUG
 		if (_physDbgSpr != null)
+		{
 			disablePhysDebug();
-
+		}
+		
 		_physDbgSpr = new ShapeDebug(FlxG.width, FlxG.height);
 		_physDbgSpr.drawConstraints = true;
-
+		
 		FlxG.stage.addChild(_physDbgSpr.display);
 		#end
 	}
@@ -174,7 +188,9 @@ class FlxPhysState extends FlxState
 	{
 		#if !FLX_NO_DEBUG
 		if (_physDbgSpr == null)
+		{
 			return;
+		}
 
 		FlxG.stage.removeChild(_physDbgSpr.display);
 		_physDbgSpr = null;
@@ -188,17 +204,19 @@ class FlxPhysState extends FlxState
 	{
 		#if !FLX_NO_DEBUG
 		if (_physDbgSpr == null || space == null)
+		{
 			return;
-
+		}
+		
 		_physDbgSpr.clear();
 		_physDbgSpr.draw(space);
-
+		
 		var cam = FlxG.cameras.defaultCamera;
 		var zoom = cam.zoom;
-
+		
 		_physDbgSpr.display.scaleX = zoom;
 		_physDbgSpr.display.scaleY = zoom;
-
+		
 		if (cam.target == null)
 		{
 			_physDbgSpr.display.x = cam.scroll.x * zoom;
