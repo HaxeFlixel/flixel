@@ -1,6 +1,6 @@
 package flixel.group;
 
-import flixel.system.layer.Atlas;
+import flixel.FlxBasic;
 
 /**
  * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
