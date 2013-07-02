@@ -9,7 +9,7 @@ import flixel.util.FlxPoint;
  */
 class PxButton extends FlxTypedButton<FlxBitmapTextField>
 {
-	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Dynamic->Void = null)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic->Void)
 	{
 		super(X, Y, Label, OnClick);
 		
@@ -40,6 +40,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 	override private function resetHelpers():Void
 	{
 		super.resetHelpers();
+		
 		if (label != null)
 		{
 			label.setWidth(Std.int(width));
@@ -49,6 +50,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 	override public function update():Void
 	{
 		super.update();
+		
 		if (label != null)
 		{
 			label.update();

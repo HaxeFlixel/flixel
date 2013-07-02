@@ -7,22 +7,19 @@ package flixel.text.pxText;
 class PxFontSymbol 
 {
 	/**
-	 * x offset to draw symbol with
+	 * X offset to draw symbol with
 	 */
 	public var xoffset:Int;
-	
 	/**
-	 * y offset to draw symbol with
+	 * Y offset to draw symbol with
 	 */
 	public var yoffset:Int;
-	
 	/**
-	 * real width of symbol
+	 * Real width of symbol
 	 */
 	public var xadvance:Int;
-	
 	/**
-	 * tile id in tileSheet
+	 * Tile id in tileSheet
 	 */
 	public var tileID:Int;
 	
