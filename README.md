@@ -86,4 +86,4 @@ ______________________________________________________
 It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel)
 
 You can read our getting started docs here
-http://haxeflixel.com/articles/getting-started
+http://haxeflixel.com/wiki/getting-started
