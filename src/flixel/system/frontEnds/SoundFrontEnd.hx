@@ -5,6 +5,7 @@ import flash.media.SoundTransform;
 import flixel.FlxG;
 import flixel.FlxSound;
 import flixel.group.FlxTypedGroup;
+import openfl.Assets;
 
 class SoundFrontEnd
 {
@@ -57,6 +58,11 @@ class SoundFrontEnd
 		volume = 0.5;
 		list = new FlxTypedGroup<FlxSound>();
 		volumeHandler = null;
+		
+		#if android
+		_soundCache = new Map<String, Sound>();
+		_soundTransform = new SoundTransform();
+		#end
 	}
 	
 	// TODO: Return from Sound -> Class<Sound>
@@ -124,8 +130,8 @@ class SoundFrontEnd
 	}
 	
 	#if android
-	private var _soundCache:Map<String, Sound> = new Map<String, Sound>();
-	private var _soundTransform:SoundTransform = new SoundTransform();
+	private var _soundCache:Map<String, Sound>;
+	private var _soundTransform:SoundTransform;
 	
 	/**
 	 * Method for sound caching on Android target.
