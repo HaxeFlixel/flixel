@@ -121,9 +121,9 @@ class FlxPhysSprite extends FlxSprite
 			destroyPhysObjects();
 		}
 		
-		_Body.position.x = x;
-		_Body.position.y = y;
-		_Body.space = FlxPhysState.space;
+		NewBody.position.x = x;
+		NewBody.position.y = y;
+		NewBody.space = FlxPhysState.space;
 		body = NewBody;
 		setBodyMaterial();
 	}
