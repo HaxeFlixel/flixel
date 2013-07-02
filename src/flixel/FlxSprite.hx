@@ -1003,7 +1003,7 @@ class FlxSprite extends FlxObject
 		_pixels.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		
 		resetFrameBitmapDatas();
-	
+		
 		#if flash
 		calcFrame();
 		#end

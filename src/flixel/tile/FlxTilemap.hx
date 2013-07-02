@@ -2110,27 +2110,6 @@ class FlxTilemap extends FlxObject
 		return tileSprite;
 	}
 
-    /**
-	 * Use this method so the tilemap buffers are updated, eg when resizing your game
-	 */
-    public function updateBuffers():Void
-    {
-        var i:Int = 0;
-        var l:Int;
-
-        if (_buffers != null)
-        {
-            i = 0;
-            l = _buffers.length;
-            for (i in 0...l)
-            {
-                _buffers[i].destroy();
-            }
-            _buffers = null;
-        }
-        _buffers = new Array<FlxTilemapBuffer>();
-    }
-	
 	/**
 	 * Use this method so the tilemap buffers are updated, eg when resizing your game
 	*/

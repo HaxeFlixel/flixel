@@ -3,6 +3,7 @@ package flixel.system.input;
 import flixel.FlxG;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArray;
+
 /**
  * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
  * Keyboard extends this with actual specific key data.
