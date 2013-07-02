@@ -27,6 +27,15 @@ import flixel.util.FlxRect;
 class FlxTilemap extends FlxObject
 {
 	/**
+	 * A set of generic tiles you can use. Useful for protyping.
+	 */
+	inline static public var imgAuto:String = FlxAssets.imgAuto;
+	/**
+	 * An alternate set of generic tiles you can use. Useful for protyping.
+	 */
+	inline static public var imgAutoAlt:String = FlxAssets.imgAutoAlt;
+	
+	/**
 	 * No auto-tiling.
 	 */
 	inline static public var OFF:Int = 0;
