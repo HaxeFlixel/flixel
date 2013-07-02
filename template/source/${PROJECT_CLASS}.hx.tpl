@@ -1,7 +1,7 @@
 package;
 
-import nme.Lib;
-import org.flixel.FlxGame;
+import flash.Lib;
+import flixel.FlxGame;
 	
 class ${PROJECT_CLASS} extends FlxGame
 {	
@@ -9,9 +9,13 @@ class ${PROJECT_CLASS} extends FlxGame
 	{
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
+		
 		var ratioX:Float = stageWidth / ${WIDTH};
 		var ratioY:Float = stageHeight / ${HEIGHT};
 		var ratio:Float = Math.min(ratioX, ratioY);
-		super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), MenuState, ratio, 30, 30);
+		
+		var fps:Int = 60;
+		
+		super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), MenuState, ratio, fps, fps);
 	}
 }
