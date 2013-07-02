@@ -39,7 +39,7 @@ class DebuggerFrontEnd
 	 */
 	inline public function setLayout(Layout:Int):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG && !mobile)
 		FlxG._game._debugger.setLayout(Layout);
 		#end
 	}
@@ -49,7 +49,7 @@ class DebuggerFrontEnd
 	 */
 	inline public function resetLayout():Void
 	{
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG && !mobile)
 		FlxG._game._debugger.resetLayout();
 		#end
 	}
@@ -62,7 +62,7 @@ class DebuggerFrontEnd
 	
 	private function set_visible(Visible:Bool):Bool
 	{
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG && !mobile)
 		FlxG._game._debuggerUp = Visible;
 		FlxG._game.debugger.visible = Visible;
 		#end
