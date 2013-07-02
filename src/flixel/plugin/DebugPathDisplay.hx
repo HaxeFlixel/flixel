@@ -1,7 +1,6 @@
 package flixel.plugin;
 
 #if !FLX_NO_DEBUG
-
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -23,7 +22,9 @@ class DebugPathDisplay extends FlxBasic
 		super();
 		
 		_paths = new Array<FlxPath>();
-		active = false; //don't call update on this plugin
+		
+		// Don't call update on this plugin
+		active = false; 
 	}
 	
 	/**
@@ -33,6 +34,7 @@ class DebugPathDisplay extends FlxBasic
 	{
 		clear();
 		_paths = null;
+		
 		super.destroy();
 	}
 	
@@ -51,8 +53,10 @@ class DebugPathDisplay extends FlxBasic
 		{
 			cameras = FlxG.cameras.list;
 		}
+		
 		var i:Int = 0;
 		var l:Int = cameras.length;
+		
 		while (i < l)
 		{
 			drawDebugOnCamera(cameras[i++]);
@@ -63,9 +67,10 @@ class DebugPathDisplay extends FlxBasic
 	 * Similar to <code>FlxObject</code>'s <code>drawDebug()</code> functionality,
 	 * this function calls <code>drawDebug()</code> on each <code>FlxPath</code> for the specified camera.
 	 * Very helpful for debugging!
+	 * 
 	 * @param	Camera	Which <code>FlxCamera</code> object to draw the debug data to.
 	 */
-	override public function drawDebugOnCamera(Camera:FlxCamera = null):Void
+	override public function drawDebugOnCamera(?Camera:FlxCamera):Void
 	{
 		if (Camera == null)
 		{
@@ -74,9 +79,11 @@ class DebugPathDisplay extends FlxBasic
 		
 		var i:Int = _paths.length - 1;
 		var path:FlxPath;
+		
 		while(i >= 0)
 		{
 			path = _paths[i--];
+			
 			if ((path != null) && !path.ignoreDrawDebug)
 			{
 				path.drawDebug(Camera);
@@ -87,6 +94,7 @@ class DebugPathDisplay extends FlxBasic
 	/**
 	 * Add a path to the path debug display manager.
 	 * Usually called automatically by <code>FlxPath</code>'s constructor.
+	 * 
 	 * @param	Path	The <code>FlxPath</code> you want to add to the manager.
 	 */
 	public function add(Path:FlxPath):Void
@@ -97,12 +105,13 @@ class DebugPathDisplay extends FlxBasic
 	/**
 	 * Remove a path from the path debug display manager.
 	 * Usually called automatically by <code>FlxPath</code>'s <code>destroy()</code> function.
+	 * 
 	 * @param	Path	The <code>FlxPath</code> you want to remove from the manager.
 	 */
 	public function remove(Path:FlxPath):Void
 	{
-		//var index:Int = _paths.indexOf(Path);
 		var index:Int = FlxArray.indexOf(_paths, Path);
+		
 		if (index >= 0)
 		{
 			_paths.splice(index,1);
@@ -118,9 +127,11 @@ class DebugPathDisplay extends FlxBasic
 		{
 			var i:Int = _paths.length - 1;
 			var path:FlxPath;
+			
 			while(i >= 0)
 			{
 				path = _paths[i--];
+				
 				if (path != null)
 				{
 					path.destroy();
@@ -130,6 +141,5 @@ class DebugPathDisplay extends FlxBasic
 		
 		_paths = [];
 	}
-	
 }
 #end

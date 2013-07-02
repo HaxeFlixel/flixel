@@ -5,10 +5,13 @@ import flash.filters.BitmapFilter;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
-import openfl.Assets;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.system.layer.Atlas;
 import flixel.util.FlxColor;
+import openfl.Assets;
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -18,18 +21,7 @@ import flixel.util.FlxColor;
  * as long as they are only one liners.
  */
 class FlxText extends FlxSprite
-{
-	public var shadow(get_shadow, set_shadow):Int;
-	
-	/**
-	 * Whether to draw shadow or not
-	 */
-	public var useShadow(get_useShadow, set_useShadow):Bool;
-	
-	public var outline(get_outline, set_outline):Int;
-	
-	public var useOutline(get_useOutline, set_useOutline):Bool;
-	
+{			
 	/**
 	 * Internal reference to a Flash <code>TextField</code> object.
 	 */
@@ -46,21 +38,21 @@ class FlxText extends FlxSprite
 	 * Whether the actual text field needs to be regenerated and stamped again.
 	 * This is NOT the same thing as <code>FlxSprite.dirty</code>.
 	 */
-	private var _regen:Bool;
+	private var _regen:Bool = true;
 	/**
 	 * Internal tracker for the text shadow color, default is clear/transparent.
 	 */
-	private var _shadow:Int;
+	private var _shadow:Int = 0;
 	/**
 	 * Internal tracker for shadow usage, default is false
 	 */
-	private var _useShadow:Bool;
+	private var _useShadow:Bool = false;
 	
-	public var _outline:Int;
+	private var _outline:Int = 0;
 	
-	private var _useOutline:Bool;
+	private var _useOutline:Bool = false;
 	
-	private var _isStatic:Bool;
+	private var _isStatic:Bool = false;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -71,11 +63,9 @@ class FlxText extends FlxSprite
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @param	IsStatic		Whether this text field can't be changed (text or appearance)
 	 */
-	public function new(X:Float, Y:Float, Width:Int, Text:String = null, size:Int = 8, EmbeddedFont:Bool = true, IsStatic:Bool = false)
+	public function new(X:Float, Y:Float, Width:Int, ?Text:String, size:Int = 8, EmbeddedFont:Bool = true, IsStatic:Bool = false)
 	{
 		super(X, Y);
-		
-		_isStatic = false;
 		
 		var key:String = FlxG.bitmap.getUniqueKey("text");
 		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
@@ -84,6 +74,7 @@ class FlxText extends FlxSprite
 		{
 			Text = "";
 		}
+		
 		_textField = new TextField();
 		_textField.width = Width;
 		_textField.selectable = false;
@@ -94,9 +85,11 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		_textField.text = Text;
 		_textField.embedFonts = EmbeddedFont;
+		
 		#if flash
 		_textField.sharpness = 100;
 		#end
+		
 		if (Text.length <= 0)
 		{
 			_textField.height = 1;
@@ -106,13 +99,9 @@ class FlxText extends FlxSprite
 			_textField.height = 10;
 		}
 		
-		_regen = true;
-		_shadow = 0;
-		_useShadow = false;
-		_outline = 0;
-		_useOutline = false;
 		allowCollisions = FlxObject.NONE;
 		moves = false;
+		
 		#if flash
 		calcFrame();
 		#else
@@ -136,15 +125,18 @@ class FlxText extends FlxSprite
 			_pixels.dispose();
 		}
 		#end
+		
 		_textField = null;
 		_format = null;
 		_formatAdjusted = null;
+		
 		super.destroy();
 	}
 	
 	/**
 	 * You can use this if you have a lot of text parameters
 	 * to set instead of the individual properties.
+	 * 
 	 * @param	Font		The name of the font face for the text display.
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
@@ -152,7 +144,7 @@ class FlxText extends FlxSprite
 	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(Font:String = null, Size:Float = 8, Color:Int = 0xffffff, Alignment:String = null, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
 	{
 		if (_isStatic)
 		{
@@ -163,6 +155,7 @@ class FlxText extends FlxSprite
 		{
 			Font = FlxAssets.defaultFont;
 		}
+		
 		_format.font = Assets.getFont(Font).fontName;
 		_format.size = Size;
 		Color &= 0x00ffffff;
@@ -173,22 +166,20 @@ class FlxText extends FlxSprite
 		_shadow = ShadowColor;
 		_useShadow = UseShadow;
 		_regen = true;
+		
 		return this;
 	}
-	
-	public var text(get_text, set_text):String;
 	
 	/**
 	 * The text being displayed.
 	 */
+	public var text(get, set):String;
+	
 	private function get_text():String
 	{
 		return _textField.text;
 	}
 	
-	/**
-	 * @private
-	 */
 	private function set_text(Text:String):String
 	{
 		if (_isStatic)
@@ -198,26 +189,25 @@ class FlxText extends FlxSprite
 		
 		var ot:String = _textField.text;
 		_textField.text = Text;
+		
 		if(_textField.text != ot)
 		{
 			_regen = true;
 		}
+		
 		return _textField.text;
 	}
-	
-	public var size(get_size, set_size):Float;
 	
 	/**
 	 * The size of the text being displayed.
 	 */
+	public var size(get, set):Float;
+	
 	private function get_size():Float
 	{
 		return _format.size;
 	}
 	
-	/**
-	 * @private
-	 */
 	private function set_size(Size:Float):Float
 	{
 		if (_isStatic)
@@ -229,6 +219,7 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
 		_regen = true;
+		
 		return Size;
 	}
 	
@@ -240,9 +231,6 @@ class FlxText extends FlxSprite
 		return _format.color;
 	}
 	
-	/**
-	 * @private
-	 */
 	override private function set_color(Color:Int):Int
 	{
 		if (_isStatic)
@@ -255,22 +243,20 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
 		_regen = true;
+		
 		return Color;
 	}
-	
-	public var font(get_font, set_font):String;
 	
 	/**
 	 * The font used for this text.
 	 */
+	public var font(get, set):String;
+	
 	private function get_font():String
 	{
 		return _format.font;
 	}
 	
-	/**
-	 * @private
-	 */
 	private function set_font(Font:String):String
 	{
 		if (_isStatic)
@@ -282,22 +268,20 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
 		_regen = true;
+		
 		return Font;
 	}
-	
-	public var alignment(get_alignment, set_alignment):String;
 	
 	/**
 	 * The alignment of the font ("left", "right", or "center").
 	 */
+	public var alignment(get, set):String;
+	
 	private function get_alignment():String
 	{
 		return cast(_format.align, String);
 	}
 	
-	/**
-	 * @private
-	 */
 	private function set_alignment(Alignment:String):String
 	{
 		if (_isStatic)
@@ -310,20 +294,20 @@ class FlxText extends FlxSprite
 		updateFormat(_format);
 		dirty = true;
 		_regen = true;
+		
 		return Alignment;
 	}
 	
 	/**
 	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
+	public var shadow(get, set):Int;
+	
 	private function get_shadow():Int
 	{
 		return _shadow;
 	}
 	
-	/**
-	 * @private
-	 */
 	private function set_shadow(Color:Int):Int
 	{
 		if (_isStatic)
@@ -332,13 +316,20 @@ class FlxText extends FlxSprite
 		}
 		
 		Color &= 0x00ffffff;
+		
 		if (_shadow != Color && useShadow == true)
 		{
 			dirty = true;
 		}
 		_shadow = Color;
+		
 		return Color;
 	}
+	
+	/**
+	 * Whether to draw shadow or not
+	 */
+	public var useShadow(get, set):Bool;
 	
 	private function get_useShadow():Bool
 	{
@@ -357,8 +348,11 @@ class FlxText extends FlxSprite
 			_useShadow = value;
 			dirty = true;
 		}
+		
 		return _useShadow;
 	}
+	
+	public var outline(get, set):Int;
 	
 	private function get_outline():Int
 	{
@@ -377,13 +371,17 @@ class FlxText extends FlxSprite
 		}
 		
 		Color &= 0x00ffffff;
+		
 		if (_shadow != Color && useShadow == true)
 		{
 			dirty = true;
 		}
 		_shadow = Color;*/
+		
 		return Color;
 	}
+	
+	public var useOutline(get, set):Bool;
 	
 	private function get_useOutline():Bool
 	{
@@ -402,6 +400,7 @@ class FlxText extends FlxSprite
 			_useShadow = value;
 			dirty = true;
 		}*/
+		
 		return _useOutline;
 	}
 	
@@ -411,21 +410,21 @@ class FlxText extends FlxSprite
 	 * Maybe usefull for cpp and neko targets, 
 	 * since if you set it to true then you can insert text's image into other atlas.
 	 */
-	public var isStatic(get_isStatic, set_isStatic):Bool;
+	public var isStatic(get, set):Bool;
 	
 	private function get_isStatic():Bool 
 	{
 		return _isStatic;
 	}
 	
-	private function set_isStatic(value:Bool):Bool 
+	private function set_isStatic(Value:Bool):Bool 
 	{
 		if (_isStatic)
 		{
-			return value;
+			return Value;
 		}
 		
-		return _isStatic = value;
+		return _isStatic = Value;
 	}
 	
 	/**
@@ -444,9 +443,10 @@ class FlxText extends FlxSprite
 		#end
 			if (_regen)
 			{
-				//Need to generate a new buffer to store the text graphic
+				// Need to generate a new buffer to store the text graphic
 				height = _textField.textHeight;
-				height += 4; //account for 2px gutter on top and bottom
+				// Account for 2px gutter on top and bottom
+				height += 4; 
 				_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
 				frameHeight = Std.int(height);
 				_textField.height = height * 1.2;
@@ -456,20 +456,22 @@ class FlxText extends FlxSprite
 				_flashRect.height = height;
 				_regen = false;
 			}
-			else	//Else just clear the old buffer before redrawing the text
+			// Else just clear the old buffer before redrawing the text
+			else	
 			{
 				_pixels.fillRect(_flashRect, FlxColor.TRANSPARENT);
 			}
 			
 			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
 			{
-				//Now that we've cleared a buffer, we need to actually render the text to it
+				// Now that we've cleared a buffer, we need to actually render the text to it
 				_formatAdjusted.font = _format.font;
 				_formatAdjusted.size = _format.size;
 				_formatAdjusted.color = _format.color;
 				_formatAdjusted.align = _format.align;
 				_matrix.identity();
-				//If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
+				
+				// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 				#if js
 				if (_format.align == TextFormatAlign.CENTER)
 				#else
@@ -477,14 +479,15 @@ class FlxText extends FlxSprite
 				#end
 				{
 					_formatAdjusted.align = TextFormatAlign.LEFT;
-					updateFormat(_formatAdjusted);				
+					updateFormat(_formatAdjusted);	
+					
 					#if flash
 					_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
 					#else
 					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
 					#end
 				}
-				//Render a single pixel shadow beneath the text
+				// Render a single pixel shadow beneath the text
 				if (_useShadow)
 				{
 					_formatAdjusted.color = _shadow;
@@ -499,6 +502,7 @@ class FlxText extends FlxSprite
 				{
 					// TODO: implement this
 				}
+				
 				//Actually draw the text onto the buffer
 				_pixels.draw(_textField, _matrix, _colorTransform);
 				updateFormat(_format);
@@ -506,11 +510,13 @@ class FlxText extends FlxSprite
 			#if !flash
 			updateAtlasInfo();
 			#else
+			
 			//Finally, update the visible pixels
 			if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
 			{
 				framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
 			}
+			
 			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
 			#end
 			
@@ -530,7 +536,9 @@ class FlxText extends FlxSprite
 				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
 			}
 			#else
+			
 			_pixels.copyPixels(_pixelsBackup, _flashRect, _flashPointZero);
+			
 			for (filter in filters) 
 			{
 				_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
@@ -543,13 +551,13 @@ class FlxText extends FlxSprite
 	 * Adds a bitmap filter to the textField.
 	 * See FlxText.setClipping() for tips on how to increase the FlxText render area.
 	 * 
-	 * @param	filter		The filter to be applied.
-	 * @param	widthInc	Not used for FlxText, see FlxText.setClipping().
-	 * @param	heightInc	Not used for FlxText, see FlxText.setClipping().
+	 * @param	Filter		The filter to be applied.
+	 * @param	WidthInc	Not used for FlxText, see FlxText.setClipping().
+	 * @param	HeightInc	Not used for FlxText, see FlxText.setClipping().
 	 */
-	override public function addFilter(filter:BitmapFilter,  widthInc:Int = 0, heightInc:Int = 0)
+	override public function addFilter(Filter:BitmapFilter, WidthInc:Int = 0, HeightInc:Int = 0)
 	{
-		super.addFilter(filter);
+		super.addFilter(Filter);
 	}
 	
 	/**
@@ -558,17 +566,17 @@ class FlxText extends FlxSprite
 	 * Horizontally - set alignment to "center" and increase the sprite width.
 	 * Vertically   - add newlines ('\n') to the beggining and end of the text.
 	 */
-	override public function setClipping(width:Int, height:Int) 
-	{}
-
+	override public function setClipping(Width:Int, Height:Int) {}
 	
 	/**
 	 * A helper function for updating the <code>TextField</code> that we use for rendering.
+	 * 
 	 * @return	A writable copy of <code>TextField.defaultTextFormat</code>.
 	 */
 	private function dtfCopy():TextFormat
 	{
 		var defaultTextFormat:TextFormat = _textField.defaultTextFormat;
+		
 		return new TextFormat(defaultTextFormat.font, defaultTextFormat.size, defaultTextFormat.color, defaultTextFormat.bold, defaultTextFormat.italic, defaultTextFormat.underline, defaultTextFormat.url, defaultTextFormat.target, defaultTextFormat.align);
 	}
 	
@@ -576,17 +584,17 @@ class FlxText extends FlxSprite
 	 * Method for converting string to TextFormatAlign
 	 */
 	#if (flash || js)
-	private function convertTextAlignmentFromString(strAlign:String):TextFormatAlign
+	private function convertTextAlignmentFromString(StrAlign:String):TextFormatAlign
 	{
-		if (strAlign == "right")
+		if (StrAlign == "right")
 		{
 			return TextFormatAlign.RIGHT;
 		}
-		else if (strAlign == "center")
+		else if (StrAlign == "center")
 		{
 			return TextFormatAlign.CENTER;
 		}
-		else if (strAlign == "justify")
+		else if (StrAlign == "justify")
 		{
 			return TextFormatAlign.JUSTIFY;
 		}
@@ -596,9 +604,9 @@ class FlxText extends FlxSprite
 		}
 	}
 	#else
-	private function convertTextAlignmentFromString(strAlign:String):String
+	private function convertTextAlignmentFromString(StrAlign:String):String
 	{
-		return strAlign;
+		return StrAlign;
 	}
 	#end
 	
@@ -606,28 +614,30 @@ class FlxText extends FlxSprite
 	 * FlxText objects can't be added on any atlas if isStatic property is true. 
 	*/
 	#if !flash
-	override private function set_atlas(value:Atlas):Atlas 
+	override private function set_atlas(Value:Atlas):Atlas 
 	{
 		if (!_isStatic)
 		{
-			return value;
+			return Value;
 		}
 		
-		return super.set_atlas(value);
+		return super.set_atlas(Value);
 	}
 	#end
 	
-	override public function updateAtlasInfo(updateAtlas:Bool = false):Void
+	override public function updateAtlasInfo(UpdateAtlas:Bool = false):Void
 	{
 		#if !flash
 		_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
 		var cachedBmd:BitmapData = FlxG.bitmap._cache.get(_bitmapDataKey);
+		
 		if (cachedBmd != _pixels)
 		{
 			FlxG.bitmap._cache.set(_bitmapDataKey, _pixels);
 			_atlas.clearAndFillWith(_pixels);
 			cachedBmd.dispose();
 		}
+		
 		_node = _atlas.getNodeByKey(_bitmapDataKey);
 		updateFrameData();
 		#end
@@ -635,18 +645,19 @@ class FlxText extends FlxSprite
 	
 	override public function updateFrameData():Void
 	{
-	#if !flash
+		#if !flash
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
 			_framesData = _node.getSpriteSheetFrames(Std.int(width), Std.int(height));
 			_flxFrame = _framesData.frames[0];
 		}
-	#end
+		#end
 	}
 	
 	override public function draw():Void 
 	{
-		if (_regen)		//rarely
+		// Rarely
+		if (_regen)		
 		{
 			#if !flash
 			calcFrame(true);
@@ -658,12 +669,12 @@ class FlxText extends FlxSprite
 		super.draw();
 	}
 	
-	inline private function updateFormat(format:TextFormat):Void
+	inline private function updateFormat(Format:TextFormat):Void
 	{
 		#if !flash
-		_textField.setTextFormat(format, 0, _textField.text.length);
+		_textField.setTextFormat(Format, 0, _textField.text.length);
 		#else
-		_textField.setTextFormat(format);
+		_textField.setTextFormat(Format);
 		#end
 	}
 }

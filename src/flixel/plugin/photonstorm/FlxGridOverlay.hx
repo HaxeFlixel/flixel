@@ -1,14 +1,3 @@
-/**
-* FlxGridOverlay
-* -- Part of the Flixel Power Tools set
-* 
-* v1.1 Updated for the Flixel 2.5 Plugin system
-* 
-* @version 1.1 - April 23rd 2011
-* @link http://www.photonstorm.com
-* @author Richard Davey / Photon Storm
-*/
-
 package flixel.plugin.photonstorm;
 
 import flash.display.BitmapData;
@@ -17,6 +6,12 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
+/**
+ * FlxGridOverlay
+ *  
+ * @link http://www.photonstorm.com
+ * @author Richard Davey / Photon Storm
+ */
 class FlxGridOverlay 
 {
 	/**
@@ -25,37 +20,35 @@ class FlxGridOverlay
 	 * If alternate is true each row of the pattern will be offset, for a proper checkerboard style. If false each row will be the same colour, creating a striped-pattern effect.<br />
 	 * So to create an 8x8 grid you'd call create(8,8)
 	 * 
-	 * @param	cellWidth		The grid cell width
-	 * @param	cellHeight		The grid cell height
-	 * @param	width			The width of the FlxSprite. If -1 it will be the size of the game (FlxG.width)
-	 * @param	height			The height of the FlxSprite. If -1 it will be the size of the game (FlxG.height)
-	 * @param	addLegend		TODO
-	 * @param	alternate		Should the pattern alternate on each new row? Default true = checkerboard effect. False = vertical stripes
-	 * @param	color1			The first fill colour in 0xAARRGGBB format
-	 * @param	color2			The second fill colour in 0xAARRGGBB format
-	 * 
+	 * @param	CellWidth		The grid cell width
+	 * @param	CellHeight		The grid cell height
+	 * @param	Width			The width of the FlxSprite. If -1 it will be the size of the game (FlxG.width)
+	 * @param	Height			The height of the FlxSprite. If -1 it will be the size of the game (FlxG.height)
+	 * @param	AddLegend		TODO
+	 * @param	Alternate		Should the pattern alternate on each new row? Default true = checkerboard effect. False = vertical stripes
+	 * @param	Color1			The first fill colour in 0xAARRGGBB format
+	 * @param	Color2			The second fill colour in 0xAARRGGBB format
 	 * @return	FlxSprite of given width/height
 	 */
-	public static function create(cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, color1:Int = 0xffe7e6e6, color2:Int = 0xffd9d5d5):FlxSprite
+	static public function create(CellWidth:Int, CellHeight:Int, Width:Int = -1, Height:Int = -1, AddLegend:Bool = false, Alternate:Bool = true, Color1:Int = 0xffe7e6e6, Color2:Int = 0xffd9d5d5):FlxSprite
 	{
-		if (width == -1)
+		if (Width == -1)
 		{
-			width = FlxG.width;
+			Width = FlxG.width;
 		}
 		
-		if (height == -1)
+		if (Height == -1)
 		{
-			height = FlxG.height;
+			Height = FlxG.height;
 		}
 		
-		if (width < cellWidth || height < cellHeight)
+		if (Width < CellWidth || Height < CellHeight)
 		{
 			return null;
 		}
 		
-		var grid:BitmapData = createGrid(cellWidth, cellHeight, width, height, alternate, color1, color2);
+		var grid:BitmapData = createGrid(CellWidth, CellHeight, Width, Height, Alternate, Color1, Color2);
 		
-		//var output:FlxSprite = new FlxSprite().makeGraphic(width, height);
 		var output:FlxSprite = new FlxSprite();
 		
 		output.pixels = grid;
@@ -70,116 +63,117 @@ class FlxGridOverlay
 	 * If alternate is true each row of the pattern will be offset, for a proper checkerboard style. If false each row will be the same colour, creating a striped-pattern effect.<br />
 	 * So to create an 8x8 grid you'd call create(8,8,
 	 * 
-	 * @param	source			The FlxSprite you wish to draw the grid on-top of. This updates its pixels value, not just the current frame (don't use animated sprites!)
-	 * @param	cellWidth		The grid cell width
-	 * @param	cellHeight		The grid cell height
-	 * @param	width			The width of the FlxSprite. If -1 it will be the size of the game (FlxG.width)
-	 * @param	height			The height of the FlxSprite. If -1 it will be the size of the game (FlxG.height)
-	 * @param	addLegend		TODO
-	 * @param	alternate		Should the pattern alternate on each new row? Default true = checkerboard effect. False = vertical stripes
-	 * @param	color1			The first fill colour in 0xAARRGGBB format
-	 * @param	color2			The second fill colour in 0xAARRGGBB format
-	 * 
+	 * @param	Sprite			The FlxSprite you wish to draw the grid on-top of. This updates its pixels value, not just the current frame (don't use animated sprites!)
+	 * @param	CellWidth		The grid cell width
+	 * @param	CellHeight		The grid cell height
+	 * @param	Width			The width of the FlxSprite. If -1 it will be the size of the game (FlxG.width)
+	 * @param	Height			The height of the FlxSprite. If -1 it will be the size of the game (FlxG.height)
+	 * @param	AddLegend		TODO
+	 * @param	Alternate		Should the pattern alternate on each new row? Default true = checkerboard effect. False = vertical stripes
+	 * @param	Color1			The first fill colour in 0xAARRGGBB format
+	 * @param	Color2			The second fill colour in 0xAARRGGBB format
 	 * @return	The modified source FlxSprite
 	 */
-	public static function overlay(source:FlxSprite, cellWidth:Int, cellHeight:Int, width:Int = -1, height:Int = -1, addLegend:Bool = false, alternate:Bool = true, color1:Int = 0x88e7e6e6, color2:Int = 0x88d9d5d5):FlxSprite
+	static public function overlay(Sprite:FlxSprite, CellWidth:Int, CellHeight:Int, Width:Int = -1, Height:Int = -1, AddLegend:Bool = false, Alternate:Bool = true, Color1:Int = 0x88e7e6e6, Color2:Int = 0x88d9d5d5):FlxSprite
 	{
-		if (width == -1)
+		if (Width == -1)
 		{
-			width = FlxG.width;
+			Width = FlxG.width;
 		}
 		
-		if (height == -1)
+		if (Height == -1)
 		{
-			height = FlxG.height;
+			Height = FlxG.height;
 		}
 		
-		if (width < cellWidth || height < cellHeight)
+		if (Width < CellWidth || Height < CellHeight)
 		{
 			return null;
 		}
 		
-		var grid:BitmapData = createGrid(cellWidth, cellHeight, width, height, alternate, color1, color2);
+		var grid:BitmapData = createGrid(CellWidth, CellHeight, Width, Height, Alternate, Color1, Color2);
 		
-		var pixels:BitmapData = source.pixels;
+		var pixels:BitmapData = Sprite.pixels;
 		
-		pixels.copyPixels(grid, new Rectangle(0, 0, width, height), new Point(0, 0), null, null, true);
+		pixels.copyPixels(grid, new Rectangle(0, 0, Width, Height), new Point(0, 0), null, null, true);
 		
-		source.pixels = pixels;
+		Sprite.pixels = pixels;
 		
-		return source;
+		return Sprite;
 	}
 	
-	public static function addLegend(source:FlxSprite, cellWidth:Int, cellHeight:Int, xAxis:Bool = true, yAxis:Bool = true):FlxSprite
+	static public function addLegend(Sprite:FlxSprite, CellWidth:Int, CellHeight:Int, AxisX:Bool = true, AxisY:Bool = true):FlxSprite
 	{
-		if (cellWidth > source.width)
+		if (CellWidth > Sprite.width)
 		{
 			throw "cellWidth larger than FlxSprites width";
-			return source;
+			return Sprite;
 		}
 		
-		if (cellHeight > source.height)
+		if (CellHeight > Sprite.height)
 		{
 			throw "cellHeight larger than FlxSprites height";
-			return source;
+			return Sprite;
 		}
 		
-		if (source.width < cellWidth || source.height < cellHeight)
+		if (Sprite.width < CellWidth || Sprite.height < CellHeight)
 		{
 			throw "source FlxSprite width or height smaller than requested cell width or height";
-			return source;
+			return Sprite;
 		}
 		
-		//	Valid cell width/height and source to work on
+		// Valid cell width/height and source to work on
 		
-		return source;
-		
+		return Sprite;
 	}
 	
-	public static function createGrid(cellWidth:Int, cellHeight:Int, width:Int, height:Int, alternate:Bool, color1:Int, color2:Int):BitmapData
+	static public function createGrid(CellWidth:Int, CellHeight:Int, Width:Int, Height:Int, Alternate:Bool, Color1:Int, Color2:Int):BitmapData
 	{
-		//	How many cells can we fit into the width/height? (round it UP if not even, then trim back)
-		var rowColor:Int = color1;
-		var lastColor:Int = color1;
-		var grid:BitmapData = new BitmapData(width, height, true);
+		// How many cells can we fit into the width/height? (round it UP if not even, then trim back)
+		var rowColor:Int = Color1;
+		var lastColor:Int = Color1;
+		var grid:BitmapData = new BitmapData(Width, Height, true);
 		
-		//	If there aren't an even number of cells in a row then we need to swap the lastColor value
+		// If there aren't an even number of cells in a row then we need to swap the lastColor value
 		var y:Int = 0;
-		while (y <= height)
+		
+		while (y <= Height)
 		{
-			if (y > 0 && lastColor == rowColor && alternate)
+			if (y > 0 && lastColor == rowColor && Alternate)
 			{
-				(lastColor == color1) ? lastColor = color2 : lastColor = color1;
+				(lastColor == Color1) ? lastColor = Color2 : lastColor = Color1;
 			}
-			else if (y > 0 && lastColor != rowColor && alternate == false)
+			else if (y > 0 && lastColor != rowColor && Alternate == false)
 			{
-				(lastColor == color2) ? lastColor = color1 : lastColor = color2;
+				(lastColor == Color2) ? lastColor = Color1 : lastColor = Color2;
 			}
 			
 			var x:Int = 0;
-			while (x <= width)
+			
+			while (x <= Width)
 			{
 				if (x == 0)
 				{
 					rowColor = lastColor;
 				}
 				
-				grid.fillRect(new Rectangle(x, y, cellWidth, cellHeight), lastColor);
+				grid.fillRect(new Rectangle(x, y, CellWidth, CellHeight), lastColor);
 				
-				if (lastColor == color1)
+				if (lastColor == Color1)
 				{
-					lastColor = color2;
+					lastColor = Color2;
 				}
 				else
 				{
-					lastColor = color1;
+					lastColor = Color1;
 				}
-				x += cellWidth;
+				
+				x += CellWidth;
 			}
-			y += cellHeight;
+			
+			y += CellHeight;
 		}
-
+		
 		return grid;
 	}
-	
 }

@@ -1,21 +1,3 @@
-/**
- * FlxControlHandler
- * -- Part of the Flixel Power Tools set
- * 
- * v1.8 Added isPressedUp/Down/Left/Right handlers
- * v1.7 Modified update function so gravity is applied constantly
- * v1.6 Thrust and Reverse complete, final few rotation bugs solved. Sounds hooked in for fire, jump, walk and thrust
- * v1.5 Full support for rotation with min/max angle limits
- * v1.4 Fixed bug in runFire causing fireRate to be ignored
- * v1.3 Major refactoring and lots of new enhancements
- * v1.2 First real version deployed to dev
- * v1.1 Updated for the Flixel 2.5 Plugin system
- * 
- * @version 1.8 - August 16th 2011
- * @link http://www.photonstorm.com
- * @author Richard Davey / Photon Storm
-*/
-
 package flixel.plugin.photonstorm;
 
 import flash.geom.Rectangle;
@@ -30,215 +12,213 @@ import flixel.util.FlxMisc;
 import flixel.util.FlxVelocity;
 
 /**
+ * 
  * Makes controlling an FlxSprite with the keyboard a LOT easier and quicker to set-up!<br>
  * Sometimes it's hard to know what values to set, especially if you want gravity, jumping, sliding, etc.<br>
  * This class helps sort that - and adds some cool extra functionality too :)
  * 
- * TODO
- * ----
- * Hot Keys
- * Binding of sound effects to keys (seperate from setSounds? as those are event based)
- * If moving diagonally compensate speed parameter (times x,y velocities by 0.707 or cos/sin(45))
- * Specify animation frames to play based on velocity
- * Variable gravity (based on height, the higher the stronger the effect)
+ * TODO: Hot Keys
+ * TODO: Binding of sound effects to keys (seperate from setSounds? as those are event based)
+ * TODO: If moving diagonally compensate speed parameter (times x,y velocities by 0.707 or cos/sin(45))
+ * TODO: Specify animation frames to play based on velocity
+ * TODO: Variable gravity (based on height, the higher the stronger the effect)
+ * 
+ * @link http://www.photonstorm.com
+ * @author Richard Davey / Photon Storm
  */
 class FlxControlHandler
 {
-	//	Used by the FlxControl plugin
-	public var enabled:Bool;
-	
-	private var entity:FlxSprite;
-	
-	private var bounds:Rectangle;
-	
-	private var up:Bool;
-	private var down:Bool;
-	private var left:Bool;
-	private var right:Bool;
-	private var fire:Bool;
-	private var altFire:Bool;
-	private var jump:Bool;
-	private var altJump:Bool;
-	private var xFacing:Bool;
-	private var yFacing:Bool;
-	private var rotateAntiClockwise:Bool;
-	private var rotateClockwise:Bool;
-	
-	private var upMoveSpeed:Int;
-	private var downMoveSpeed:Int;
-	private var leftMoveSpeed:Int;
-	private var rightMoveSpeed:Int;
-	private var thrustSpeed:Int;
-	private var reverseSpeed:Int;
-	
-	//	Rotation
-	private var thrustEnabled:Bool;
-	private var reverseEnabled:Bool;
-	private var isRotating:Bool;
-	private var antiClockwiseRotationSpeed:Float;
-	private var clockwiseRotationSpeed:Float;
-	private var enforceAngleLimits:Bool;
-	private var minAngle:Int;
-	private var maxAngle:Int;
-	private var capAngularVelocity:Bool;
-	
-	private var xSpeedAdjust:Float;
-	private var ySpeedAdjust:Float;
-	
-	private var gravityX:Int = 0;
-	private var gravityY:Int = 0;
-	
-	private var fireRate:Int; 			// The ms delay between firing when the key is held down
-	private var nextFireTime:Int; 		// The internal time when they can next fire
-	private var lastFiredTime:Int; 		// The internal time of when when they last fired
-	private var fireKeyMode:Int;		// The fire key mode
-	private var fireCallback:Void->Void;	// A function to call every time they fire
-	
-	private var jumpHeight:Int; 		// The pixel height amount they jump (drag and gravity also both influence this)
-	private var jumpRate:Int; 			// The ms delay between jumping when the key is held down
-	private var jumpKeyMode:Int;		// The jump key mode
-	private var nextJumpTime:Int; 		// The internal time when they can next jump
-	private var lastJumpTime:Int; 		// The internal time of when when they last jumped
-	private var jumpFromFallTime:Int; 	// A short window of opportunity for them to jump having just fallen off the edge of a surface
-	private var extraSurfaceTime:Int; 	// Internal time of when they last collided with a valid jumpSurface
-	private var jumpSurface:Int; 		// The surfaces from FlxObject they can jump from (i.e. FlxObject.FLOOR)
-	private var jumpCallback:Void->Void;	// A function to call every time they jump
-	
-	private var movement:Int;
-	private var stopping:Int;
-	private var rotation:Int;
-	private var rotationStopping:Int;
-	private var capVelocity:Bool;
-	
-	private var hotkeys:Array<String>;			// TODO
-	
-	private var upKey:String;
-	private var downKey:String;
-	private var leftKey:String;
-	private var rightKey:String;
-	private var fireKey:String;
-	private var altFireKey:String;		// TODO
-	private var jumpKey:String;
-	private var altJumpKey:String;		// TODO
-	private var antiClockwiseKey:String;
-	private var clockwiseKey:String;
-	private var thrustKey:String;
-	private var reverseKey:String;
-	
-	//	Sounds
-	private var jumpSound:FlxSound;
-	private var fireSound:FlxSound;
-	private var walkSound:FlxSound;
-	private var thrustSound:FlxSound;
-	
-	//	Helpers
-	public var isPressedUp:Bool;
-	public var isPressedDown:Bool;
-	public var isPressedLeft:Bool;
-	public var isPressedRight:Bool;
-	
 	/**
 	 * The "Instant" Movement Type means the sprite will move at maximum speed instantly, and will not "accelerate" (or speed-up) before reaching that speed.
 	 */
-	public static inline var MOVEMENT_INSTANT:Int = 0;
+	inline static public var MOVEMENT_INSTANT:Int = 0;
 	/**
 	 * The "Accelerates" Movement Type means the sprite will accelerate until it reaches maximum speed.
 	 */
-	public static inline var MOVEMENT_ACCELERATES:Int = 1;
+	inline static public var MOVEMENT_ACCELERATES:Int = 1;
 	/**
 	 * The "Instant" Stopping Type means the sprite will stop immediately when no direction keys are being pressed, there will be no deceleration.
 	 */
-	public static inline var STOPPING_INSTANT:Int = 0;
+	inline static public var STOPPING_INSTANT:Int = 0;
 	/**
 	 * The "Decelerates" Stopping Type means the sprite will start decelerating when no direction keys are being pressed. Deceleration continues until the speed reaches zero.
 	 */
-	public static inline var STOPPING_DECELERATES:Int = 1;
+	inline static public var STOPPING_DECELERATES:Int = 1;
 	/**
 	 * The "Never" Stopping Type means the sprite will never decelerate, any speed built up will be carried on and never reduce.
 	 */
-	public static inline var STOPPING_NEVER:Int = 2;
+	inline static public var STOPPING_NEVER:Int = 2;
 	
 	/**
 	 * The "Instant" Movement Type means the sprite will rotate at maximum speed instantly, and will not "accelerate" (or speed-up) before reaching that speed.
 	 */
-	public static inline var ROTATION_INSTANT:Int = 0;
+	inline static public var ROTATION_INSTANT:Int = 0;
 	/**
 	 * The "Accelerates" Rotaton Type means the sprite will accelerate until it reaches maximum rotation speed.
 	 */
-	public static inline var ROTATION_ACCELERATES:Int = 1;
+	inline static public var ROTATION_ACCELERATES:Int = 1;
 	/**
 	 * The "Instant" Stopping Type means the sprite will stop rotating immediately when no rotation keys are being pressed, there will be no deceleration.
 	 */
-	public static inline var ROTATION_STOPPING_INSTANT:Int = 0;
+	inline static public var ROTATION_STOPPING_INSTANT:Int = 0;
 	/**
 	 * The "Decelerates" Stopping Type means the sprite will start decelerating when no rotation keys are being pressed. Deceleration continues until rotation speed reaches zero.
 	 */
-	public static inline var ROTATION_STOPPING_DECELERATES:Int = 1;
+	inline static public var ROTATION_STOPPING_DECELERATES:Int = 1;
 	/**
 	 * The "Never" Stopping Type means the sprite will never decelerate, any speed built up will be carried on and never reduce.
 	 */
-	public static inline var ROTATION_STOPPING_NEVER:Int = 2;
+	inline static public var ROTATION_STOPPING_NEVER:Int = 2;
 	
 	/**
 	 * This keymode fires for as long as the key is held down
 	 */
-	public static inline var KEYMODE_PRESSED:Int = 0;
+	inline static public var KEYMODE_PRESSED:Int = 0;
 	
 	/**
 	 * This keyboard fires when the key has just been pressed down, and not again until it is released and re-pressed
 	 */
-	public static inline var KEYMODE_JUST_DOWN:Int = 1;
+	inline static public var KEYMODE_JUST_DOWN:Int = 1;
 	
 	/**
 	 * This keyboard fires only when the key has been pressed and then released again
 	 */
-	public static inline var KEYMODE_RELEASED:Int = 2;
+	inline static public var KEYMODE_RELEASED:Int = 2;
+	
+	// Helpers
+	public var isPressedUp:Bool = false;
+	public var isPressedDown:Bool = false;
+	public var isPressedLeft:Bool = false;
+	public var isPressedRight:Bool = false;
+	
+	// Used by the FlxControl plugin
+	public var enabled:Bool = false;
+	
+	private var _entity:FlxSprite;
+	
+	private var _bounds:Rectangle;
+	
+	private var _up:Bool = false;
+	private var _down:Bool = false;
+	private var _left:Bool = false;
+	private var _right:Bool = false;
+
+	private var _fire:Bool;
+	private var _altFire:Bool;
+	private var _jump:Bool;
+	private var _altJump:Bool;
+	private var _xFacing:Bool;
+	private var _yFacing:Bool;
+	private var _rotateAntiClockwise:Bool;
+	private var _rotateClockwise:Bool;
+	
+	private var _upMoveSpeed:Int;
+	private var _downMoveSpeed:Int;
+	private var _leftMoveSpeed:Int;
+	private var _rightMoveSpeed:Int;
+	private var _thrustSpeed:Int;
+	private var _reverseSpeed:Int;
+	
+	// Rotation
+	private var _thrustEnabled:Bool = false;
+	private var _reverseEnabled:Bool;
+	private var _isRotating:Bool = false;
+	private var _antiClockwiseRotationSpeed:Float;
+	private var _clockwiseRotationSpeed:Float;
+	private var _enforceAngleLimits:Bool = false;
+	private var _minAngle:Int;
+	private var _maxAngle:Int;
+	private var _capAngularVelocity:Bool;
+	
+	private var _xSpeedAdjust:Float = 0;
+	private var _ySpeedAdjust:Float = 0;
+	
+	private var _gravityX:Int = 0;
+	private var _gravityY:Int = 0;
+	
+	// The ms delay between firing when the key is held down
+	private var _fireRate:Int; 			
+	// The internal time when they can next fire
+	private var _nextFireTime:Int = 0; 		
+	// The internal time of when when they last fired
+	private var _lastFiredTime:Int; 		
+	// The fire key mode
+	private var _fireKeyMode:Int;		
+	// A function to call every time they fire
+	private var _fireCallback:Void->Void;	
+	
+	// The pixel height amount they jump (drag and gravity also both influence this)
+	private var _jumpHeight:Int; 	
+	// The ms delay between jumping when the key is held down
+	private var _jumpRate:Int; 	
+	// The jump key mode
+	private var _jumpKeyMode:Int;
+	// The internal time when they can next jump
+	private var _nextJumpTime:Int; 		
+	// The internal time of when when they last jumped
+	private var _lastJumpTime:Int; 		
+	// A short window of opportunity for them to jump having just fallen off the edge of a surface
+	private var _jumpFromFallTime:Int; 	
+	// Internal time of when they last collided with a valid jumpSurface
+	private var _extraSurfaceTime:Int; 	
+	// The surfaces from FlxObject they can jump from (i.e. FlxObject.FLOOR)
+	private var _jumpSurface:Int; 		
+	// A function to call every time they jump
+	private var _jumpCallback:Void->Void;	
+	
+	private var _movement:Int;
+	private var _stopping:Int;
+	private var _rotation:Int;
+	private var _rotationStopping:Int;
+	private var _capVelocity:Bool;
+	// TODO
+	private var _hotkeys:Array<String>;			
+	
+	private var _upKey:String;
+	private var _downKey:String;
+	private var _leftKey:String;
+	private var _rightKey:String;
+	private var _fireKey:String;
+	// TODO
+	private var _altFireKey:String;		
+	private var _jumpKey:String;
+	// TODO
+	private var _altJumpKey:String;		
+	private var _antiClockwiseKey:String;
+	private var _clockwiseKey:String;
+	private var _thrustKey:String;
+	private var _reverseKey:String;
+	
+	// Sounds
+	private var _jumpSound:FlxSound;
+	private var _fireSound:FlxSound;
+	private var _walkSound:FlxSound;
+	private var _thrustSound:FlxSound;
 	
 	/**
 	 * Sets the FlxSprite to be controlled by this class, and defines the initial movement and stopping types.<br>
 	 * After creating an instance of this class you should call setMovementSpeed, and one of the enableXControl functions if you need more than basic cursors.
 	 * 
-	 * @param	source			The FlxSprite you want this class to control. It can only control one FlxSprite at once.
-	 * @param	movementType	Set to either MOVEMENT_INSTANT or MOVEMENT_ACCELERATES
-	 * @param	stoppingType	Set to STOPPING_INSTANT, STOPPING_DECELERATES or STOPPING_NEVER
-	 * @param	updateFacing	If true it sets the FlxSprite.facing value to the direction pressed (default false)
-	 * @param	enableArrowKeys	If true it will enable all arrow keys (default) - see setCursorControl for more fine-grained control
-	 * 
-	 * @see		setMovementSpeed
+	 * @param	Sprite			The FlxSprite you want this class to control. It can only control one FlxSprite at once.
+	 * @param	MovementType	Set to either MOVEMENT_INSTANT or MOVEMENT_ACCELERATES
+	 * @param	StoppingType	Set to STOPPING_INSTANT, STOPPING_DECELERATES or STOPPING_NEVER
+	 * @param	UpdateFacing	If true it sets the FlxSprite.facing value to the direction pressed (default false)
+	 * @param	EnableArrowKeys	If true it will enable all arrow keys (default) - see setCursorControl for more fine-grained control
 	 */
-	public function new(source:FlxSprite, movementType:Int, stoppingType:Int, updateFacing:Bool = false, enableArrowKeys:Bool = true)
+	public function new(Sprite:FlxSprite, MovementType:Int, StoppingType:Int, UpdateFacing:Bool = false, EnableArrowKeys:Bool = true)
 	{
-		nextFireTime = 0;
+		_entity = Sprite;
 		
-		isPressedUp = false;
-		isPressedDown = false;
-		isPressedLeft = false;
-		isPressedRight = false;
+		_movement = MovementType;
+		_stopping = StoppingType;
 		
-		enabled = false;
-		xSpeedAdjust = 0;
-		ySpeedAdjust = 0;
+		_xFacing = UpdateFacing;
+		_yFacing = UpdateFacing;
 		
-		entity = source;
+		_rotation = ROTATION_INSTANT;
+		_rotationStopping = ROTATION_STOPPING_INSTANT;
 		
-		movement = movementType;
-		stopping = stoppingType;
-		
-		xFacing = updateFacing;
-		yFacing = updateFacing;
-		
-		up = false;
-		down = false;
-		left = false;
-		right = false;
-		
-		thrustEnabled = false;
-		isRotating = false;
-		enforceAngleLimits = false;
-		rotation = ROTATION_INSTANT;
-		rotationStopping = ROTATION_STOPPING_INSTANT;
-		
-		if (enableArrowKeys)
+		if (EnableArrowKeys)
 		{
 			setCursorControl();
 		}
@@ -248,44 +228,44 @@ class FlxControlHandler
 	
 	/**
 	 * Set the speed at which the sprite will move when a direction key is pressed.<br>
-	 * All values are given in pixels per second. So an xSpeed of 100 would move the sprite 100 pixels in 1 second (1000ms)<br>
-	 * Due to the nature of the internal Flash timer this amount is not 100% accurate and will vary above/below the desired distance by a few pixels.<br>
+	 * All values are given in pixels per second. So an xSpeed of 100 would move the sprite 100 pixels in 1 second (1000ms)
+	 * Due to the nature of the internal Flash timer this amount is not 100% accurate and will vary above/below the desired distance by a few pixels.
 	 * 
 	 * If you need different speed values for left/right or up/down then use setAdvancedMovementSpeed
 	 * 
-	 * @param	xSpeed			The speed in pixels per second in which the sprite will move/accelerate horizontally
-	 * @param	ySpeed			The speed in pixels per second in which the sprite will move/accelerate vertically
-	 * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
-	 * @param	xDeceleration	A deceleration speed in pixels per second to apply to the sprites horizontal movement (default 0)
-	 * @param	yDeceleration	A deceleration speed in pixels per second to apply to the sprites vertical movement (default 0)
+	 * @param	SpeedX			The speed in pixels per second in which the sprite will move/accelerate horizontally
+	 * @param	SpeedY			The speed in pixels per second in which the sprite will move/accelerate vertically
+	 * @param	SpeedMaxX		The maximum speed in pixels per second in which the sprite can move horizontally
+	 * @param	SpeedMaxY		The maximum speed in pixels per second in which the sprite can move vertically
+	 * @param	DecelerationX	A deceleration speed in pixels per second to apply to the sprites horizontal movement (default 0)
+	 * @param	DecelerationY	A deceleration speed in pixels per second to apply to the sprites vertical movement (default 0)
 	 */
-	public function setMovementSpeed(xSpeed:Int, ySpeed:Int, xSpeedMax:Int, ySpeedMax:Int, xDeceleration:Int = 0, yDeceleration:Int = 0):Void
+	public function setMovementSpeed(SpeedX:Int, SpeedY:Int, SpeedMaxX:Int, SpeedMaxY:Int, DecelerationX:Int = 0, DecelerationY:Int = 0):Void
 	{
-		leftMoveSpeed = -xSpeed;
-		rightMoveSpeed = xSpeed;
-		upMoveSpeed = -ySpeed;
-		downMoveSpeed = ySpeed;
+		_leftMoveSpeed = - SpeedX;
+		_rightMoveSpeed = SpeedX;
+		_upMoveSpeed = - SpeedY;
+		_downMoveSpeed = SpeedY;
 		
-		setMaximumSpeed(xSpeedMax, ySpeedMax);
-		setDeceleration(xDeceleration, yDeceleration);
+		setMaximumSpeed(SpeedMaxX, SpeedMaxY);
+		setDeceleration(DecelerationX, DecelerationY);
 	}
 	
 	/**
 	 * If you know you need the same value for the acceleration, maximum speeds and (optionally) deceleration then this is a quick way to set them.
 	 * 
-	 * @param	speed			The speed in pixels per second in which the sprite will move/accelerate/decelerate
-	 * @param	acceleration	If true it will set the speed value as the deceleration value (default) false will leave deceleration disabled
+	 * @param	Speed			The speed in pixels per second in which the sprite will move/accelerate/decelerate
+	 * @param	Acceleration	If true it will set the speed value as the deceleration value (default) false will leave deceleration disabled
 	 */
-	public function setStandardSpeed(speed:Int, acceleration:Bool = true):Void
+	public function setStandardSpeed(Speed:Int, Acceleration:Bool = true):Void
 	{
-		if (acceleration)
+		if (Acceleration)
 		{
-			setMovementSpeed(speed, speed, speed, speed, speed, speed);
+			setMovementSpeed(Speed, Speed, Speed, Speed, Speed, Speed);
 		}
 		else
 		{
-			setMovementSpeed(speed, speed, speed, speed);
+			setMovementSpeed(Speed, Speed, Speed, Speed);
 		}
 	}
 	
@@ -296,24 +276,24 @@ class FlxControlHandler
 	 * 
 	 * If you don't need different speed values for every direction on its own then use setMovementSpeed
 	 * 
-	 * @param	leftSpeed		The speed in pixels per second in which the sprite will move/accelerate to the left
-	 * @param	rightSpeed		The speed in pixels per second in which the sprite will move/accelerate to the right
-	 * @param	upSpeed			The speed in pixels per second in which the sprite will move/accelerate up
-	 * @param	downSpeed		The speed in pixels per second in which the sprite will move/accelerate down
-	 * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
-	 * @param	xDeceleration	Deceleration speed in pixels per second to apply to the sprites horizontal movement (default 0)
-	 * @param	yDeceleration	Deceleration speed in pixels per second to apply to the sprites vertical movement (default 0)
+	 * @param	LeftSpeed		The speed in pixels per second in which the sprite will move/accelerate to the left
+	 * @param	RightSpeed		The speed in pixels per second in which the sprite will move/accelerate to the right
+	 * @param	UpSpeed			The speed in pixels per second in which the sprite will move/accelerate up
+	 * @param	DownSpeed		The speed in pixels per second in which the sprite will move/accelerate down
+	 * @param	SpeedMaxX		The maximum speed in pixels per second in which the sprite can move horizontally
+	 * @param	SpeedMaxY		The maximum speed in pixels per second in which the sprite can move vertically
+	 * @param	DecelerationX	Deceleration speed in pixels per second to apply to the sprites horizontal movement (default 0)
+	 * @param	DecelerationY	Deceleration speed in pixels per second to apply to the sprites vertical movement (default 0)
 	 */
-	public function setAdvancedMovementSpeed(leftSpeed:Int, rightSpeed:Int, upSpeed:Int, downSpeed:Int, xSpeedMax:Int, ySpeedMax:Int, xDeceleration:Int = 0, yDeceleration:Int = 0):Void
+	public function setAdvancedMovementSpeed(LeftSpeed:Int, RightSpeed:Int, UpSpeed:Int, DownSpeed:Int, SpeedMaxX:Int, SpeedMaxY:Int, DecelerationX:Int = 0, DecelerationY:Int = 0):Void
 	{
-		leftMoveSpeed = -leftSpeed;
-		rightMoveSpeed = rightSpeed;
-		upMoveSpeed = -upSpeed;
-		downMoveSpeed = downSpeed;
+		_leftMoveSpeed = - LeftSpeed;
+		_rightMoveSpeed = RightSpeed;
+		_upMoveSpeed = - UpSpeed;
+		_downMoveSpeed = DownSpeed;
 		
-		setMaximumSpeed(xSpeedMax, ySpeedMax);
-		setDeceleration(xDeceleration, yDeceleration);
+		setMaximumSpeed(SpeedMaxX, SpeedMaxY);
+		setDeceleration(DecelerationX, DecelerationY);
 	}
 	
 	/**
@@ -322,26 +302,24 @@ class FlxControlHandler
 	 * All values are given in pixels per second. So an xSpeed of 100 would rotate the sprite 100 pixels in 1 second (1000ms)<br>
 	 * Due to the nature of the internal Flash timer this amount is not 100% accurate and will vary above/below the desired distance by a few pixels.<br>
 	 */
-	public function setRotationSpeed(antiClockwiseSpeed:Float, clockwiseSpeed:Float, speedMax:Float, deceleration:Float):Void
+	public function setRotationSpeed(AntiClockwiseSpeed:Float, ClockwiseSpeed:Float, SpeedMax:Float, Deceleration:Float):Void
 	{
-		antiClockwiseRotationSpeed = -antiClockwiseSpeed;
-		clockwiseRotationSpeed = clockwiseSpeed;
+		_antiClockwiseRotationSpeed = -AntiClockwiseSpeed;
+		_clockwiseRotationSpeed = ClockwiseSpeed;
 		
 		setRotationKeys();
-		setMaximumRotationSpeed(speedMax);
-		setRotationDeceleration(deceleration);
+		setMaximumRotationSpeed(SpeedMax);
+		setRotationDeceleration(Deceleration);
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param	rotationType
-	 * @param	stoppingType
+	 * @param	RotationType
+	 * @param	StoppingType
 	 */
-	public function setRotationType(rotationType:Int, stoppingType:Int):Void
+	public function setRotationType(RotationType:Int, StoppingType:Int):Void
 	{
-		rotation = rotationType;
-		rotationStopping = stoppingType;
+		_rotation = RotationType;
+		_rotationStopping = StoppingType;
 	}
 	
 	/**
@@ -349,45 +327,45 @@ class FlxControlHandler
 	 * When the FlxSprite is accelerating (movement type MOVEMENT_ACCELERATES) its speed won't increase above this value.<br>
 	 * However Flixel allows the velocity of an FlxSprite to be set to anything. So if you'd like to check the value and restrain it, then enable "limitVelocity".
 	 * 
-	 * @param	speed			The maximum speed in pixels per second in which the sprite can rotate
-	 * @param	limitVelocity	If true the angular velocity of the FlxSprite will be checked and kept within the limit. If false it can be set to anything.
+	 * @param	Speed			The maximum speed in pixels per second in which the sprite can rotate
+	 * @param	LimitVelocity	If true the angular velocity of the FlxSprite will be checked and kept within the limit. If false it can be set to anything.
 	 */
-	public function setMaximumRotationSpeed(speed:Float, limitVelocity:Bool = true):Void
+	public function setMaximumRotationSpeed(Speed:Float, LimitVelocity:Bool = true):Void
 	{
-		entity.maxAngular = speed;
+		_entity.maxAngular = Speed;
 		
-		capAngularVelocity = limitVelocity;
+		_capAngularVelocity = LimitVelocity;
 	}
 	
 	/**
 	 * Deceleration is a speed (in pixels per second) that is applied to the sprite if stopping type is "DECELERATES" and if no rotation is taking place.<br>
 	 * The velocity of the sprite will be reduced until it reaches zero.
 	 * 
-	 * @param	speed		The speed in pixels per second at which the sprite will have its angular rotation speed decreased
+	 * @param	Speed	The speed in pixels per second at which the sprite will have its angular rotation speed decreased
 	 */
-	public function setRotationDeceleration(speed:Float):Void
+	public function setRotationDeceleration(Speed:Float):Void
 	{
-		entity.angularDrag = speed;
+		_entity.angularDrag = Speed;
 	}
 	
 	/**
 	 * Set minimum and maximum angle limits that the Sprite won't be able to rotate beyond.<br>
 	 * Values must be between -180 and +180. 0 is pointing right, 90 down, 180 left, -90 up.
 	 * 
-	 * @param	minimumAngle	Minimum angle below which the sprite cannot rotate (must be -180 or above)
-	 * @param	maximumAngle	Maximum angle above which the sprite cannot rotate (must be 180 or below)
+	 * @param	MinimumAngle	Minimum angle below which the sprite cannot rotate (must be -180 or above)
+	 * @param	MaximumAngle	Maximum angle above which the sprite cannot rotate (must be 180 or below)
 	 */
-	public function setRotationLimits(minimumAngle:Int, maximumAngle:Int):Void
+	public function setRotationLimits(MinimumAngle:Int, MaximumAngle:Int):Void
 	{
-		if (minimumAngle > maximumAngle || minimumAngle < -180 || maximumAngle > 180)
+		if (MinimumAngle > MaximumAngle || MinimumAngle < -180 || MaximumAngle > 180)
 		{
 			throw "FlxControlHandler setRotationLimits: Invalid Minimum / Maximum angle";
 		}
 		else
 		{
-			enforceAngleLimits = true;
-			minAngle = minimumAngle;
-			maxAngle = maximumAngle;
+			_enforceAngleLimits = true;
+			_minAngle = MinimumAngle;
+			_maxAngle = MaximumAngle;
 		}
 	}
 	
@@ -396,35 +374,35 @@ class FlxControlHandler
 	 */
 	public function disableRotationLimits():Void
 	{
-		enforceAngleLimits = false;
+		_enforceAngleLimits = false;
 	}
 	
 	/**
 	 * Set which keys will rotate the sprite. The speed of rotation is set in setRotationSpeed.
 	 * 
-	 * @param	leftRight				Use the LEFT and RIGHT arrow keys for anti-clockwise and clockwise rotation respectively.
-	 * @param	upDown					Use the UP and DOWN arrow keys for anti-clockwise and clockwise rotation respectively.
-	 * @param	customAntiClockwise		The String value of your own key to use for anti-clockwise rotation (as taken from flixel.system.input.Keyboard)
-	 * @param	customClockwise			The String value of your own key to use for clockwise rotation (as taken from flixel.system.input.Keyboard)
+	 * @param	LeftRight				Use the LEFT and RIGHT arrow keys for anti-clockwise and clockwise rotation respectively.
+	 * @param	UpDown					Use the UP and DOWN arrow keys for anti-clockwise and clockwise rotation respectively.
+	 * @param	CustomAntiClockwise		The String value of your own key to use for anti-clockwise rotation (as taken from flixel.system.input.Keyboard)
+	 * @param	CustomClockwise			The String value of your own key to use for clockwise rotation (as taken from flixel.system.input.Keyboard)
 	 */
-	public function setRotationKeys(leftRight:Bool = true, upDown:Bool = false, customAntiClockwise:String = "", customClockwise:String = ""):Void
+	public function setRotationKeys(LeftRight:Bool = true, UpDown:Bool = false, CustomAntiClockwise:String = "", CustomClockwise:String = ""):Void
 	{
-		isRotating = true;
-		rotateAntiClockwise = true;
-		rotateClockwise = true;
-		antiClockwiseKey = "LEFT";
-		clockwiseKey = "RIGHT";
+		_isRotating = true;
+		_rotateAntiClockwise = true;
+		_rotateClockwise = true;
+		_antiClockwiseKey = "LEFT";
+		_clockwiseKey = "RIGHT";
 
-		if (upDown == true)
+		if (UpDown)
 		{
-			antiClockwiseKey = "UP";
-			clockwiseKey = "DOWN";
+			_antiClockwiseKey = "UP";
+			_clockwiseKey = "DOWN";
 		}
 		
-		if (customAntiClockwise != "" && customClockwise != "")
+		if (CustomAntiClockwise != "" && CustomClockwise != "")
 		{
-			antiClockwiseKey = customAntiClockwise;
-			clockwiseKey = customClockwise;
+			_antiClockwiseKey = CustomAntiClockwise;
+			_clockwiseKey = CustomClockwise;
 		}
 	}
 	
@@ -432,28 +410,28 @@ class FlxControlHandler
 	 * If you want to enable a Thrust like motion for your sprite use this to set the speed and keys.<br>
 	 * This is usually used in conjunction with Rotation and it will over-ride anything already defined in setMovementSpeed.
 	 * 
-	 * @param	thrustKey		Specify the key String (as taken from flixel.system.input.Keyboard) to use for the Thrust action
-	 * @param	thrustSpeed		The speed in pixels per second which the sprite will move. Acceleration or Instant movement is determined by the Movement Type.
-	 * @param	reverseKey		If you want to be able to reverse, set the key string as taken from flixel.system.input.Keyboard (defaults to null).
-	 * @param	reverseSpeed	The speed in pixels per second which the sprite will reverse. Acceleration or Instant movement is determined by the Movement Type.
+	 * @param	ThrustKey		Specify the key String (as taken from flixel.system.input.Keyboard) to use for the Thrust action
+	 * @param	ThrustSpeed		The speed in pixels per second which the sprite will move. Acceleration or Instant movement is determined by the Movement Type.
+	 * @param	ReverseKey		If you want to be able to reverse, set the key string as taken from flixel.system.input.Keyboard (defaults to null).
+	 * @param	ReverseSpeed	The speed in pixels per second which the sprite will reverse. Acceleration or Instant movement is determined by the Movement Type.
 	 */
-	public function setThrust(thrustKey:String, thrustSpeed:Float, reverseKey:String = null, reverseSpeed:Float = 0):Void
+	public function setThrust(ThrustKey:String, ThrustSpeed:Float, ?ReverseKey:String, ReverseSpeed:Float = 0):Void
 	{
-		thrustEnabled = false;
-		reverseEnabled = false;
+		_thrustEnabled = false;
+		_reverseEnabled = false;
 		
-		if (thrustKey != "")
+		if (ThrustKey != "")
 		{
-			this.thrustKey = thrustKey;
-			this.thrustSpeed = Math.floor(thrustSpeed);
-			thrustEnabled = true;
+			_thrustKey = ThrustKey;
+			_thrustSpeed = Math.floor(ThrustSpeed);
+			_thrustEnabled = true;
 		}
 		
-		if (reverseKey != null)
+		if (ReverseKey != null)
 		{
-			this.reverseKey = reverseKey;
-			this.reverseSpeed = Math.floor(reverseSpeed);
-			reverseEnabled = true;
+			_reverseKey = ReverseKey;
+			_reverseSpeed = Math.floor(ReverseSpeed);
+			_reverseEnabled = true;
 		}
 	}
 	
@@ -462,29 +440,29 @@ class FlxControlHandler
 	 * When the FlxSprite is accelerating (movement type MOVEMENT_ACCELERATES) its speed won't increase above this value.<br>
 	 * However Flixel allows the velocity of an FlxSprite to be set to anything. So if you'd like to check the value and restrain it, then enable "limitVelocity".
 	 * 
-	 * @param	xSpeed			The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	ySpeed			The maximum speed in pixels per second in which the sprite can move vertically
-	 * @param	limitVelocity	If true the velocity of the FlxSprite will be checked and kept within the limit. If false it can be set to anything.
+	 * @param	SpeedX			The maximum speed in pixels per second in which the sprite can move horizontally
+	 * @param	SpeedY			The maximum speed in pixels per second in which the sprite can move vertically
+	 * @param	LimitVelocity	If true the velocity of the FlxSprite will be checked and kept within the limit. If false it can be set to anything.
 	 */
-	public function setMaximumSpeed(xSpeed:Int, ySpeed:Int, limitVelocity:Bool = true):Void
+	public function setMaximumSpeed(SpeedX:Int, SpeedY:Int, LimitVelocity:Bool = true):Void
 	{
-		entity.maxVelocity.x = xSpeed;
-		entity.maxVelocity.y = ySpeed;
+		_entity.maxVelocity.x = SpeedX;
+		_entity.maxVelocity.y = SpeedY;
 		
-		capVelocity = limitVelocity;
+		_capVelocity = LimitVelocity;
 	}
 	
 	/**
 	 * Deceleration is a speed (in pixels per second) that is applied to the sprite if stopping type is "DECELERATES" and if no acceleration is taking place.<br>
 	 * The velocity of the sprite will be reduced until it reaches zero, and can be configured separately per axis.
 	 * 
-	 * @param	xSpeed		The speed in pixels per second at which the sprite will have its horizontal speed decreased
-	 * @param	ySpeed		The speed in pixels per second at which the sprite will have its vertical speed decreased
+	 * @param	SpeedX		The speed in pixels per second at which the sprite will have its horizontal speed decreased
+	 * @param	SpeedY		The speed in pixels per second at which the sprite will have its vertical speed decreased
 	 */
-	public function setDeceleration(xSpeed:Int, ySpeed:Int):Void
+	public function setDeceleration(SpeedX:Int, SpeedY:Int):Void
 	{
-		entity.drag.x = xSpeed;
-		entity.drag.y = ySpeed;
+		_entity.drag.x = SpeedX;
+		_entity.drag.y = SpeedY;
 	}
 	
 	/**
@@ -492,16 +470,16 @@ class FlxControlHandler
 	 * Gravity is given in pixels per second and is applied as acceleration. The speed the sprite reaches under gravity will never exceed the Maximum Movement Speeds set.<br>
 	 * If you don't want gravity for a specific direction pass a value of zero.
 	 * 
-	 * @param	xForce	A positive value applies gravity dragging the sprite to the right. A negative value drags the sprite to the left. Zero disables horizontal gravity.
-	 * @param	yForce	A positive value applies gravity dragging the sprite down. A negative value drags the sprite up. Zero disables vertical gravity.
+	 * @param	ForceX	A positive value applies gravity dragging the sprite to the right. A negative value drags the sprite to the left. Zero disables horizontal gravity.
+	 * @param	ForceY	A positive value applies gravity dragging the sprite down. A negative value drags the sprite up. Zero disables vertical gravity.
 	 */
-	public function setGravity(xForce:Int, yForce:Int):Void
+	public function setGravity(ForceX:Int, ForceY:Int):Void
 	{
-		gravityX = xForce;
-		gravityY = yForce;
+		_gravityX = ForceX;
+		_gravityY = ForceY;
 		
-		entity.acceleration.x = gravityX;
-		entity.acceleration.y = gravityY;
+		_entity.acceleration.x = _gravityX;
+		_entity.acceleration.y = _gravityY;
 	}
 	
 	/**
@@ -510,77 +488,77 @@ class FlxControlHandler
 	 */
 	public function flipGravity():Void
 	{
-		if (!Math.isNaN(gravityX) && gravityX != 0)
+		if (!Math.isNaN(_gravityX) && _gravityX != 0)
 		{
-			gravityX = -gravityX;
-			entity.acceleration.x = gravityX;
+			_gravityX = - _gravityX;
+			_entity.acceleration.x = _gravityX;
 		}
 		
-		if (!Math.isNaN(gravityY) && gravityY != 0)
+		if (!Math.isNaN(_gravityY) && _gravityY != 0)
 		{
-			gravityY = -gravityY;
-			entity.acceleration.y = gravityY;
+			_gravityY = - _gravityY;
+			_entity.acceleration.y = _gravityY;
 		}
 	}
 	
 	/**
 	 * TODO
 	 * 
-	 * @param	xFactor
-	 * @param	yFactor
+	 * @param	FactorX
+	 * @param	FactorY
 	 */
-	public function speedUp(xFactor:Float, yFactor:Float):Void
+	public function speedUp(FactorX:Float, FactorY:Float):Void
 	{
 	}
 	
 	/**
 	 * TODO
 	 * 
-	 * @param	xFactor
-	 * @param	yFactor
+	 * @param	FactorX
+	 * @param	FactorY
 	 */
-	public function slowDown(xFactor:Float, yFactor:Float):Void
+	public function slowDown(FactorX:Float, FactorY:Float):Void
 	{
 	}
 	
 	/**
 	 * TODO
 	 * 
-	 * @param	xFactor
-	 * @param	yFactor
+	 * @param	ResetX
+	 * @param	ResetY
 	 */
-	public function resetSpeeds(resetX:Bool = true, resetY:Bool = true):Void
+	public function resetSpeeds(ResetX:Bool = true, ResetY:Bool = true):Void
 	{
-		if (resetX)
+		if (ResetX)
 		{
-			xSpeedAdjust = 0;
+			_xSpeedAdjust = 0;
 		}
 		
-		if (resetY)
+		if (ResetY)
 		{
-			ySpeedAdjust = 0;
+			_ySpeedAdjust = 0;
 		}
 	}
 	
 	/**
 	 * Creates a new Hot Key, which can be bound to any function you specify (such as "swap weapon", "quit", etc)
 	 * 
-	 * @param	key			The key to use as the hot key (String from flixel.system.input.Keyboard, i.e. "SPACE", "CONTROL", "Q", etc)
-	 * @param	callback	The function to call when the key is pressed
-	 * @param	keymode		The keymode that will trigger the callback, either KEYMODE_PRESSED, KEYMODE_JUST_DOWN or KEYMODE_RELEASED
+	 * @param	Key			The key to use as the hot key (String from flixel.system.input.Keyboard, i.e. "SPACE", "CONTROL", "Q", etc)
+	 * @param	Callback	The function to call when the key is pressed
+	 * @param	Keymode		The keymode that will trigger the callback, either KEYMODE_PRESSED, KEYMODE_JUST_DOWN or KEYMODE_RELEASED
 	 */
-	public function addHotKey(key:String, callbackFunc:Dynamic, keymode:Int):Void
+	public function addHotKey(Key:String, Callback:Dynamic, Keymode:Int):Void
 	{
-		
+		// TODO
 	}
 	
 	/**
 	 * Removes a previously defined hot key
 	 * 
-	 * @param	key		The key to use as the hot key (String from flixel.system.input.Keyboard, i.e. "SPACE", "CONTROL", "Q", etc)
-	 * @return	true if the key was found and removed, false if the key couldn't be found
+	 * @param	Key		The key to use as the hot key (String from flixel.system.input.Keyboard, i.e. "SPACE", "CONTROL", "Q", etc)
+	 * @return	True if the key was found and removed, false if the key couldn't be found
 	 */
-	public function removeHotKey(key:String):Bool
+	public function removeHotKey(Key:String):Bool
 	{
 		return true;
 	}
@@ -588,100 +566,100 @@ class FlxControlHandler
 	/**
 	 * Set sound effects for the movement events jumping, firing, walking and thrust.
 	 * 
-	 * @param	jump	The FlxSound to play when the user jumps
-	 * @param	fire	The FlxSound to play when the user fires
-	 * @param	walk	The FlxSound to play when the user walks
-	 * @param	thrust	The FlxSound to play when the user thrusts
+	 * @param	Jump	The FlxSound to play when the user jumps
+	 * @param	Fire	The FlxSound to play when the user fires
+	 * @param	Walk	The FlxSound to play when the user walks
+	 * @param	Thrust	The FlxSound to play when the user thrusts
 	 */
-	public function setSounds(jump:FlxSound = null, fire:FlxSound = null, walk:FlxSound = null, thrust:FlxSound = null):Void
+	public function setSounds(?Jump:FlxSound, ?Fire:FlxSound, ?Walk:FlxSound, ?Thrust:FlxSound):Void
 	{
-		if (jump != null)
+		if (Jump != null)
 		{
-			jumpSound = jump;
+			_jumpSound = Jump;
 		}
 		
-		if (fire != null)
+		if (Fire != null)
 		{
-			fireSound = fire;
+			_fireSound = Fire;
 		}
 		
-		if (walk != null)
+		if (Walk != null)
 		{
-			walkSound = walk;
+			_walkSound = Walk;
 		}
 		
-		if (thrust != null)
+		if (Thrust != null)
 		{
-			thrustSound = thrust;
+			_thrustSound = Thrust;
 		}
 	}
 	
 	/**
 	 * Enable a fire button
 	 * 
-	 * @param	key				The key to use as the fire button (String from flixel.system.input.Keyboard, i.e. "SPACE", "CONTROL")
-	 * @param	keymode			The FlxControlHandler KEYMODE value (KEYMODE_PRESSED, KEYMODE_JUST_DOWN, KEYMODE_RELEASED)
-	 * @param	repeatDelay		Time delay in ms between which the fire action can repeat (0 means instant, 250 would allow it to fire approx. 4 times per second)
-	 * @param	callback		A user defined function to call when it fires
-	 * @param	altKey			Specify an alternative fire key that works AS WELL AS the primary fire key (TODO)
+	 * @param	Key				The key to use as the fire button (String from flixel.system.input.Keyboard, i.e. "SPACE", "CONTROL")
+	 * @param	Keymode			The FlxControlHandler KEYMODE value (KEYMODE_PRESSED, KEYMODE_JUST_DOWN, KEYMODE_RELEASED)
+	 * @param	RepeatDelay		Time delay in ms between which the fire action can repeat (0 means instant, 250 would allow it to fire approx. 4 times per second)
+	 * @param	Callback		A user defined function to call when it fires
+	 * @param	AltKey			Specify an alternative fire key that works AS WELL AS the primary fire key (TODO)
 	 */
-	public function setFireButton(key:String, keymode:Int, repeatDelay:Int, callbackFunc:Void->Void, altKey:String = ""):Void
+	public function setFireButton(Key:String, Keymode:Int, RepeatDelay:Int, Callback:Void->Void, AltKey:String = ""):Void
 	{
-		fireKey = key;
-		fireKeyMode = keymode;
-		fireRate = repeatDelay;
-		fireCallback = callbackFunc;
+		_fireKey = Key;
+		_fireKeyMode = Keymode;
+		_fireRate = RepeatDelay;
+		_fireCallback = Callback;
 		
-		if (altKey != "")
+		if (AltKey != "")
 		{
-			altFireKey = altKey;
+			_altFireKey = AltKey;
 		}
 		
-		fire = true;
+		_fire = true;
 	}
 	
 	/**
 	 * Enable a jump button
 	 * 
-	 * @param	key				The key to use as the jump button (String from flixel.system.input.Keyboard, i.e. "SPACE", "CONTROL")
-	 * @param	keymode			The FlxControlHandler KEYMODE value (KEYMODE_PRESSED, KEYMODE_JUST_DOWN, KEYMODE_RELEASED)
-	 * @param	height			The height in pixels/sec that the Sprite will attempt to jump (gravity and acceleration can influence this actual height obtained)
-	 * @param	surface			A bitwise combination of all valid surfaces the Sprite can jump off (from FlxObject, such as FlxObject.FLOOR)
-	 * @param	repeatDelay		Time delay in ms between which the jumping can repeat (250 would be 4 times per second)
-	 * @param	jumpFromFall	A time in ms that allows the Sprite to still jump even if it's just fallen off a platform, if still within ths time limit
-	 * @param	callback		A user defined function to call when the Sprite jumps
-	 * @param	altKey			Specify an alternative jump key that works AS WELL AS the primary jump key (TODO)
+	 * @param	Key				The key to use as the jump button (String from flixel.system.input.Keyboard, i.e. "SPACE", "CONTROL")
+	 * @param	Keymode			The FlxControlHandler KEYMODE value (KEYMODE_PRESSED, KEYMODE_JUST_DOWN, KEYMODE_RELEASED)
+	 * @param	Height			The height in pixels/sec that the Sprite will attempt to jump (gravity and acceleration can influence this actual height obtained)
+	 * @param	Surface			A bitwise combination of all valid surfaces the Sprite can jump off (from FlxObject, such as FlxObject.FLOOR)
+	 * @param	RepeatDelay		Time delay in ms between which the jumping can repeat (250 would be 4 times per second)
+	 * @param	JumpFromFall	A time in ms that allows the Sprite to still jump even if it's just fallen off a platform, if still within ths time limit
+	 * @param	Callback		A user defined function to call when the Sprite jumps
+	 * @param	AltKey			Specify an alternative jump key that works AS WELL AS the primary jump key (TODO)
 	 */
-	public function setJumpButton(key:String, keymode:Int, height:Int, surface:Int, repeatDelay:Int = 250, jumpFromFall:Int = 0, callbackFunc:Void->Void = null, altKey:String = ""):Void
+	public function setJumpButton(Key:String, Keymode:Int, Height:Int, Surface:Int, RepeatDelay:Int = 250, JumpFromFall:Int = 0, ?Callback:Void->Void, AltKey:String = ""):Void
 	{
-		jumpKey = key;
-		jumpKeyMode = keymode;
-		jumpHeight = height;
-		jumpSurface = surface;
-		jumpRate = repeatDelay;
-		jumpFromFallTime = jumpFromFall;
-		jumpCallback = callbackFunc;
+		_jumpKey = Key;
+		_jumpKeyMode = Keymode;
+		_jumpHeight = Height;
+		_jumpSurface = Surface;
+		_jumpRate = RepeatDelay;
+		_jumpFromFallTime = JumpFromFall;
+		_jumpCallback = Callback;
 		
-		if (altKey != "")
+		if (AltKey != "")
 		{
-			altJumpKey = altKey;
+			_altJumpKey = AltKey;
 		}
 		
-		jump = true;
+		_jump = true;
 	}
 	
 	/**
-	 * Limits the sprite to only be allowed within this rectangle. If its x/y coordinates go outside it will be repositioned back inside.<br>
+	 * Limits the sprite to only be allowed within this rectangle. If its x/y coordinates go outside it will be repositioned back inside.
 	 * Coordinates should be given in GAME WORLD pixel values (not screen value, although often they are the two same things)
 	 * 
-	 * @param	x		The x coordinate of the top left corner of the area (in game world pixels)
-	 * @param	y		The y coordinate of the top left corner of the area (in game world pixels)
-	 * @param	width	The width of the area (in pixels)
-	 * @param	height	The height of the area (in pixels)
+	 * @param	X		The x coordinate of the top left corner of the area (in game world pixels)
+	 * @param	Y		The y coordinate of the top left corner of the area (in game world pixels)
+	 * @param	Width	The width of the area (in pixels)
+	 * @param	Height	The height of the area (in pixels)
 	 */
-	public function setBounds(x:Int, y:Int, width:Int, height:Int):Void
+	public function setBounds(X:Int, Y:Int, Width:Int, Height:Int):Void
 	{
-		bounds = new Rectangle(x, y, width, height);
+		_bounds = new Rectangle(X, Y, Width, Height);
 	}
 	
 	/**
@@ -689,35 +667,35 @@ class FlxControlHandler
 	 */
 	public function removeBounds():Void
 	{
-		bounds = null;
+		_bounds = null;
 	}
 	
 	private function moveUp():Bool
 	{
 		var move:Bool = false;
 		
-		if (FlxG.keys.pressed(upKey))
+		if (FlxG.keys.pressed(_upKey))
 		{
 			move = true;
 			isPressedUp = true;
 			
-			if (yFacing)
+			if (_yFacing)
 			{
-				entity.facing = FlxObject.UP;
+				_entity.facing = FlxObject.UP;
 			}
 			
-			if (movement == MOVEMENT_INSTANT)
+			if (_movement == MOVEMENT_INSTANT)
 			{
-				entity.velocity.y = upMoveSpeed;
+				_entity.velocity.y = _upMoveSpeed;
 			}
-			else if (movement == MOVEMENT_ACCELERATES)
+			else if (_movement == MOVEMENT_ACCELERATES)
 			{
-				entity.acceleration.y = upMoveSpeed;
+				_entity.acceleration.y = _upMoveSpeed;
 			}
 			
-			if (bounds != null && entity.y < bounds.top)
+			if (_bounds != null && _entity.y < _bounds.top)
 			{
-				entity.y = bounds.top;
+				_entity.y = _bounds.top;
 			}
 		}
 		
@@ -728,28 +706,28 @@ class FlxControlHandler
 	{
 		var move:Bool = false;
 		
-		if (FlxG.keys.pressed(downKey))
+		if (FlxG.keys.pressed(_downKey))
 		{
 			move = true;
 			isPressedDown = true;
 			
-			if (yFacing)
+			if (_yFacing)
 			{
-				entity.facing = FlxObject.DOWN;
+				_entity.facing = FlxObject.DOWN;
 			}
 			
-			if (movement == MOVEMENT_INSTANT)
+			if (_movement == MOVEMENT_INSTANT)
 			{
-				entity.velocity.y = downMoveSpeed;
+				_entity.velocity.y = _downMoveSpeed;
 			}
-			else if (movement == MOVEMENT_ACCELERATES)
+			else if (_movement == MOVEMENT_ACCELERATES)
 			{
-				entity.acceleration.y = downMoveSpeed;
+				_entity.acceleration.y = _downMoveSpeed;
 			}
 			
-			if (bounds != null && entity.y > bounds.bottom)
+			if (_bounds != null && _entity.y > _bounds.bottom)
 			{
-				entity.y = bounds.bottom;
+				_entity.y = _bounds.bottom;
 			}
 			
 		}
@@ -761,28 +739,28 @@ class FlxControlHandler
 	{
 		var move:Bool = false;
 		
-		if (FlxG.keys.pressed(leftKey))
+		if (FlxG.keys.pressed(_leftKey))
 		{
 			move = true;
 			isPressedLeft = true;
 			
-			if (xFacing)
+			if (_xFacing)
 			{
-				entity.facing = FlxObject.LEFT;
+				_entity.facing = FlxObject.LEFT;
 			}
 			
-			if (movement == MOVEMENT_INSTANT)
+			if (_movement == MOVEMENT_INSTANT)
 			{
-				entity.velocity.x = leftMoveSpeed;
+				_entity.velocity.x = _leftMoveSpeed;
 			}
-			else if (movement == MOVEMENT_ACCELERATES)
+			else if (_movement == MOVEMENT_ACCELERATES)
 			{
-				entity.acceleration.x = leftMoveSpeed;
+				_entity.acceleration.x = _leftMoveSpeed;
 			}
 			
-			if (bounds != null && entity.x < bounds.x)
+			if (_bounds != null && _entity.x < _bounds.x)
 			{
-				entity.x = bounds.x;
+				_entity.x = _bounds.x;
 			}
 		}
 		
@@ -793,28 +771,28 @@ class FlxControlHandler
 	{
 		var move:Bool = false;
 		
-		if (FlxG.keys.pressed(rightKey))
+		if (FlxG.keys.pressed(_rightKey))
 		{
 			move = true;
 			isPressedRight = true;
 			
-			if (xFacing)
+			if (_xFacing)
 			{
-				entity.facing = FlxObject.RIGHT;
+				_entity.facing = FlxObject.RIGHT;
 			}
 			
-			if (movement == MOVEMENT_INSTANT)
+			if (_movement == MOVEMENT_INSTANT)
 			{
-				entity.velocity.x = rightMoveSpeed;
+				_entity.velocity.x = _rightMoveSpeed;
 			}
-			else if (movement == MOVEMENT_ACCELERATES)
+			else if (_movement == MOVEMENT_ACCELERATES)
 			{
-				entity.acceleration.x = rightMoveSpeed;
+				_entity.acceleration.x = _rightMoveSpeed;
 			}
 			
-			if (bounds != null && entity.x > bounds.right)
+			if (_bounds != null && _entity.x > _bounds.right)
 			{
-				entity.x = bounds.right;
+				_entity.x = _bounds.right;
 			}
 		}
 		
@@ -825,21 +803,21 @@ class FlxControlHandler
 	{
 		var move:Bool = false;
 		
-		if (FlxG.keys.pressed(antiClockwiseKey))
+		if (FlxG.keys.pressed(_antiClockwiseKey))
 		{
 			move = true;
 			
-			if (rotation == ROTATION_INSTANT)
+			if (_rotation == ROTATION_INSTANT)
 			{
-				entity.angularVelocity = antiClockwiseRotationSpeed;
+				_entity.angularVelocity = _antiClockwiseRotationSpeed;
 			}
-			else if (rotation == ROTATION_ACCELERATES)
+			else if (_rotation == ROTATION_ACCELERATES)
 			{
-				entity.angularAcceleration = antiClockwiseRotationSpeed;
+				_entity.angularAcceleration = _antiClockwiseRotationSpeed;
 			}
 			
 			// TODO - Not quite there yet given the way Flixel can rotate to any valid int angle!
-			if (enforceAngleLimits)
+			if (_enforceAngleLimits)
 			{
 				//entity.angle = FlxAngle.angleLimit(entity.angle, minAngle, maxAngle);
 			}
@@ -852,21 +830,21 @@ class FlxControlHandler
 	{
 		var move:Bool = false;
 		
-		if (FlxG.keys.pressed(clockwiseKey))
+		if (FlxG.keys.pressed(_clockwiseKey))
 		{
 			move = true;
 			
-			if (rotation == ROTATION_INSTANT)
+			if (_rotation == ROTATION_INSTANT)
 			{
-				entity.angularVelocity = clockwiseRotationSpeed;
+				_entity.angularVelocity = _clockwiseRotationSpeed;
 			}
-			else if (rotation == ROTATION_ACCELERATES)
+			else if (_rotation == ROTATION_ACCELERATES)
 			{
-				entity.angularAcceleration = clockwiseRotationSpeed;
+				_entity.angularAcceleration = _clockwiseRotationSpeed;
 			}
 			
 			// TODO - Not quite there yet given the way Flixel can rotate to any valid int angle!
-			if (enforceAngleLimits)
+			if (_enforceAngleLimits)
 			{
 				//entity.angle = FlxAngle.angleLimit(entity.angle, minAngle, maxAngle);
 			}
@@ -879,32 +857,32 @@ class FlxControlHandler
 	{
 		var move:Bool = false;
 		
-		if (FlxG.keys.pressed(thrustKey))
+		if (FlxG.keys.pressed(_thrustKey))
 		{
 			move = true;
 			
-			var motion:FlxPoint = FlxVelocity.velocityFromAngle(Math.floor(entity.angle), thrustSpeed);
+			var motion:FlxPoint = FlxVelocity.velocityFromAngle(Math.floor(_entity.angle), _thrustSpeed);
 			
-			if (movement == MOVEMENT_INSTANT)
+			if (_movement == MOVEMENT_INSTANT)
 			{
-				entity.velocity.x = motion.x;
-				entity.velocity.y = motion.y;
+				_entity.velocity.x = motion.x;
+				_entity.velocity.y = motion.y;
 			}
-			else if (movement == MOVEMENT_ACCELERATES)
+			else if (_movement == MOVEMENT_ACCELERATES)
 			{
-				entity.acceleration.x = motion.x;
-				entity.acceleration.y = motion.y;
+				_entity.acceleration.x = motion.x;
+				_entity.acceleration.y = motion.y;
 			}
 			
-			if (bounds != null && entity.x < bounds.x)
+			if (_bounds != null && _entity.x < _bounds.x)
 			{
-				entity.x = bounds.x;
+				_entity.x = _bounds.x;
 			}
 		}
 		
-		if (move && thrustSound != null)
+		if (move && _thrustSound != null)
 		{
-			thrustSound.play(false);
+			_thrustSound.play(false);
 		}
 		
 		return move;
@@ -914,26 +892,26 @@ class FlxControlHandler
 	{
 		var move:Bool = false;
 		
-		if (FlxG.keys.pressed(reverseKey))
+		if (FlxG.keys.pressed(_reverseKey))
 		{
 			move = true;
 			
-			var motion:FlxPoint = FlxVelocity.velocityFromAngle(Math.floor(entity.angle), reverseSpeed);
+			var motion:FlxPoint = FlxVelocity.velocityFromAngle(Math.floor(_entity.angle), _reverseSpeed);
 			
-			if (movement == MOVEMENT_INSTANT)
+			if (_movement == MOVEMENT_INSTANT)
 			{
-				entity.velocity.x = -motion.x;
-				entity.velocity.y = -motion.y;
+				_entity.velocity.x = -motion.x;
+				_entity.velocity.y = -motion.y;
 			}
-			else if (movement == MOVEMENT_ACCELERATES)
+			else if (_movement == MOVEMENT_ACCELERATES)
 			{
-				entity.acceleration.x = -motion.x;
-				entity.acceleration.y = -motion.y;
+				_entity.acceleration.x = -motion.x;
+				_entity.acceleration.y = -motion.y;
 			}
 			
-			if (bounds != null && entity.x < bounds.x)
+			if (_bounds != null && _entity.x < _bounds.x)
 			{
-				entity.x = bounds.x;
+				_entity.x = _bounds.x;
 			}
 		}
 		
@@ -944,32 +922,32 @@ class FlxControlHandler
 	{
 		var fired:Bool = false;
 		
-		//	0 = Pressed
-		//	1 = Just Down
-		//	2 = Just Released
-		if ((fireKeyMode == 0 && FlxG.keys.pressed(fireKey)) || (fireKeyMode == 1 && FlxG.keys.justPressed(fireKey)) || (fireKeyMode == 2 && FlxG.keys.justReleased(fireKey)))
+		// 0 = Pressed
+		// 1 = Just Down
+		// 2 = Just Released
+		if ((_fireKeyMode == 0 && FlxG.keys.pressed(_fireKey)) || (_fireKeyMode == 1 && FlxG.keys.justPressed(_fireKey)) || (_fireKeyMode == 2 && FlxG.keys.justReleased(_fireKey)))
 		{
-			if (fireRate > 0)
+			if (_fireRate > 0)
 			{
-				if (FlxMisc.getTicks() > nextFireTime)
+				if (FlxMisc.getTicks() > _nextFireTime)
 				{
-					lastFiredTime = FlxMisc.getTicks();
-					fireCallback();
+					_lastFiredTime = FlxMisc.getTicks();
+					_fireCallback();
 					fired = true;
-					nextFireTime = lastFiredTime + Std.int(fireRate / FlxG.timeScale);
+					_nextFireTime = _lastFiredTime + Std.int(_fireRate / FlxG.timeScale);
 				}
 			}
 			else
 			{
-				lastFiredTime = FlxMisc.getTicks();
-				fireCallback();
+				_lastFiredTime = FlxMisc.getTicks();
+				_fireCallback();
 				fired = true;
 			}
 		}
 		
-		if (fired && fireSound != null)
+		if (fired && _fireSound != null)
 		{
-			fireSound.play(true);
+			_fireSound.play(true);
 		}
 		
 		return fired;
@@ -979,71 +957,71 @@ class FlxControlHandler
 	{
 		var jumped:Bool = false;
 		
-		//	This should be called regardless if they've pressed jump or not
-		if (entity.isTouching(jumpSurface))
+		// This should be called regardless if they've pressed jump or not
+		if (_entity.isTouching(_jumpSurface))
 		{
-			extraSurfaceTime = FlxMisc.getTicks() + jumpFromFallTime;
+			_extraSurfaceTime = FlxMisc.getTicks() + _jumpFromFallTime;
 		}
 		
-		if ((jumpKeyMode == KEYMODE_PRESSED && FlxG.keys.pressed(jumpKey)) || (jumpKeyMode == KEYMODE_JUST_DOWN && FlxG.keys.justPressed(jumpKey)) || (jumpKeyMode == KEYMODE_RELEASED && FlxG.keys.justReleased(jumpKey)))
+		if ((_jumpKeyMode == KEYMODE_PRESSED && FlxG.keys.pressed(_jumpKey)) || (_jumpKeyMode == KEYMODE_JUST_DOWN && FlxG.keys.justPressed(_jumpKey)) || (_jumpKeyMode == KEYMODE_RELEASED && FlxG.keys.justReleased(_jumpKey)))
 		{
-			//	Sprite not touching a valid jump surface
-			if (entity.isTouching(jumpSurface) == false)
+			// Sprite not touching a valid jump surface
+			if (_entity.isTouching(_jumpSurface) == false)
 			{
-				//	They've run out of time to jump
-				if (FlxMisc.getTicks() > extraSurfaceTime)
+				// They've run out of time to jump
+				if (FlxMisc.getTicks() > _extraSurfaceTime)
 				{
 					return jumped;
 				}
 				else
 				{
-					//	Still within the fall-jump window of time, but have jumped recently
-					if (lastJumpTime > (extraSurfaceTime - jumpFromFallTime))
+					// Still within the fall-jump window of time, but have jumped recently
+					if (_lastJumpTime > (_extraSurfaceTime - _jumpFromFallTime))
 					{
 						return jumped;
 					}
 				}
 				
-				//	If there is a jump repeat rate set and we're still less than it then return
-				if (FlxMisc.getTicks() < nextJumpTime)
+				// If there is a jump repeat rate set and we're still less than it then return
+				if (FlxMisc.getTicks() < _nextJumpTime)
 				{
 					return jumped;
 				}
 			}
 			else
 			{
-				//	If there is a jump repeat rate set and we're still less than it then return
-				if (FlxMisc.getTicks() < nextJumpTime)
+				// If there is a jump repeat rate set and we're still less than it then return
+				if (FlxMisc.getTicks() < _nextJumpTime)
 				{
 					return jumped;
 				}
 			}
 			
-			if (gravityY > 0)
+			if (_gravityY > 0)
 			{
-				//	Gravity is pulling them down to earth, so they are jumping up (negative)
-				entity.velocity.y = -jumpHeight;
+				// Gravity is pulling them down to earth, so they are jumping up (negative)
+				_entity.velocity.y = -_jumpHeight;
 			}
 			else
 			{
-				//	Gravity is pulling them up, so they are jumping down (positive)
-				entity.velocity.y = jumpHeight;
+				// Gravity is pulling them up, so they are jumping down (positive)
+				_entity.velocity.y = _jumpHeight;
 			}
 			
-			if (jumpCallback != null)
+			if (_jumpCallback != null)
 			{
-				jumpCallback();
+				_jumpCallback();
 			}
 			
-			lastJumpTime = FlxMisc.getTicks();
-			nextJumpTime = lastJumpTime + Std.int(jumpRate / FlxG.timeScale);
+			_lastJumpTime = FlxMisc.getTicks();
+			_nextJumpTime = _lastJumpTime + Std.int(_jumpRate / FlxG.timeScale);
 			
 			jumped = true;
 		}
 		
-		if (jumped && jumpSound != null)
+		if (jumped && _jumpSound != null)
 		{
-			jumpSound.play(true);
+			_jumpSound.play(true);
 		}
 		
 		return jumped;
@@ -1054,64 +1032,64 @@ class FlxControlHandler
 	 */
 	public function update():Void
 	{
-		if (entity == null)
+		if (_entity == null)
 		{
 			return;
 		}
 		
-		//	Reset the helper booleans
+		// Reset the helper booleans
 		isPressedUp = false;
 		isPressedDown = false;
 		isPressedLeft = false;
 		isPressedRight = false;
 		
-		if (stopping == STOPPING_INSTANT)
+		if (_stopping == STOPPING_INSTANT)
 		{
-			if (movement == MOVEMENT_INSTANT)
+			if (_movement == MOVEMENT_INSTANT)
 			{
-				entity.velocity.x = 0;
-				entity.velocity.y = 0;
+				_entity.velocity.x = 0;
+				_entity.velocity.y = 0;
 			}
-			else if (movement == MOVEMENT_ACCELERATES)
+			else if (_movement == MOVEMENT_ACCELERATES)
 			{
-				entity.acceleration.x = 0;
-				entity.acceleration.y = 0;
+				_entity.acceleration.x = 0;
+				_entity.acceleration.y = 0;
 			}
 		}
-		else if (stopping == STOPPING_DECELERATES)
+		else if (_stopping == STOPPING_DECELERATES)
 		{
-			if (movement == MOVEMENT_INSTANT)
+			if (_movement == MOVEMENT_INSTANT)
 			{
-				entity.velocity.x = 0;
-				entity.velocity.y = 0;
+				_entity.velocity.x = 0;
+				_entity.velocity.y = 0;
 			}
-			else if (movement == MOVEMENT_ACCELERATES)
+			else if (_movement == MOVEMENT_ACCELERATES)
 			{
-				//	By default these are zero anyway, so it's safe to set like this
-				entity.acceleration.x = gravityX;
-				entity.acceleration.y = gravityY;
+				// By default these are zero anyway, so it's safe to set like this
+				_entity.acceleration.x = _gravityX;
+				_entity.acceleration.y = _gravityY;
 			}
 		}
 		
-		//	Rotation
-		if (isRotating)
+		// Rotation
+		if (_isRotating)
 		{
-			if (rotationStopping == ROTATION_STOPPING_INSTANT)
+			if (_rotationStopping == ROTATION_STOPPING_INSTANT)
 			{
-				if (rotation == ROTATION_INSTANT)
+				if (_rotation == ROTATION_INSTANT)
 				{
-					entity.angularVelocity = 0;
+					_entity.angularVelocity = 0;
 				}
-				else if (rotation == ROTATION_ACCELERATES)
+				else if (_rotation == ROTATION_ACCELERATES)
 				{
-					entity.angularAcceleration = 0;
+					_entity.angularAcceleration = 0;
 				}
 			}
-			else if (rotationStopping == ROTATION_STOPPING_DECELERATES)
+			else if (_rotationStopping == ROTATION_STOPPING_DECELERATES)
 			{
-				if (rotation == ROTATION_INSTANT)
+				if (_rotation == ROTATION_INSTANT)
 				{
-					entity.angularVelocity = 0;
+					_entity.angularVelocity = 0;
 				}
 			}
 			
@@ -1125,33 +1103,33 @@ class FlxControlHandler
 				hasRotatedClockwise = moveClockwise();
 			}
 			
-			if (rotationStopping == ROTATION_STOPPING_DECELERATES)
+			if (_rotationStopping == ROTATION_STOPPING_DECELERATES)
 			{
-				if (rotation == ROTATION_ACCELERATES && hasRotatedAntiClockwise == false && hasRotatedClockwise == false)
+				if (_rotation == ROTATION_ACCELERATES && hasRotatedAntiClockwise == false && hasRotatedClockwise == false)
 				{
-					entity.angularAcceleration = 0;
+					_entity.angularAcceleration = 0;
 				}
 			}
 			
-			//	If they have got instant stopping with acceleration and are NOT pressing a key, then stop the rotation. Otherwise we let it carry on
-			if (rotationStopping == ROTATION_STOPPING_INSTANT && rotation == ROTATION_ACCELERATES && hasRotatedAntiClockwise == false && hasRotatedClockwise == false)
+			// If they have got instant stopping with acceleration and are NOT pressing a key, then stop the rotation. Otherwise we let it carry on
+			if (_rotationStopping == ROTATION_STOPPING_INSTANT && _rotation == ROTATION_ACCELERATES && hasRotatedAntiClockwise == false && hasRotatedClockwise == false)
 			{
-				entity.angularVelocity = 0;
-				entity.angularAcceleration = 0;
+				_entity.angularVelocity = 0;
+				_entity.angularAcceleration = 0;
 			}
 		}
 		
-		//	Thrust
-		if (thrustEnabled || reverseEnabled)
+		// Thrust
+		if (_thrustEnabled || _reverseEnabled)
 		{
 			var moved:Bool = false;
 			
-			if (thrustEnabled)
+			if (_thrustEnabled)
 			{
 				moved = moveThrust();
 			}
 			
-			if (moved == false && reverseEnabled)
+			if (moved == false && _reverseEnabled)
 			{
 				moved = moveReverse();
 			}
@@ -1161,59 +1139,59 @@ class FlxControlHandler
 			var movedX:Bool = false;
 			var movedY:Bool = false;
 			
-			if (up)
+			if (_up)
 			{
 				movedY = moveUp();
 			}
 			
-			if (down && movedY == false)
+			if (_down && movedY == false)
 			{
 				movedY = moveDown();
 			}
 			
-			if (left)
+			if (_left)
 			{
 				movedX = moveLeft();
 			}
 			
-			if (right && movedX == false)
+			if (_right && movedX == false)
 			{
 				movedX = moveRight();
 			}
 		}
 		
-		if (fire)
+		if (_fire)
 		{
 			runFire();
 		}
 		
-		if (jump)
+		if (_jump)
 		{
 			runJump();
 		}
 		
-		if (capVelocity)
+		if (_capVelocity)
 		{
-			if (entity.velocity.x > entity.maxVelocity.x)
+			if (_entity.velocity.x > _entity.maxVelocity.x)
 			{
-				entity.velocity.x = entity.maxVelocity.x;
+				_entity.velocity.x = _entity.maxVelocity.x;
 			}
 			
-			if (entity.velocity.y > entity.maxVelocity.y)
+			if (_entity.velocity.y > _entity.maxVelocity.y)
 			{
-				entity.velocity.y = entity.maxVelocity.y;
+				_entity.velocity.y = _entity.maxVelocity.y;
 			}
 		}
 		
-		if (walkSound != null)
+		if (_walkSound != null)
 		{
-			if ((movement == MOVEMENT_INSTANT && entity.velocity.x != 0) || (movement == MOVEMENT_ACCELERATES && entity.acceleration.x != 0))
+			if ((_movement == MOVEMENT_INSTANT && _entity.velocity.x != 0) || (_movement == MOVEMENT_ACCELERATES && _entity.acceleration.x != 0))
 			{
-				walkSound.play(false);
+				_walkSound.play(false);
 			}
 			else
 			{
-				walkSound.stop();
+				_walkSound.stop();
 			}
 		}
 	}
@@ -1222,35 +1200,35 @@ class FlxControlHandler
 	 * Sets Custom Key controls. Useful if none of the pre-defined sets work. All String values should be taken from flixel.system.input.Keyboard
 	 * Pass a blank (empty) String to disable that key from being checked.
 	 * 
-	 * @param	customUpKey		The String to use for the Up key.
-	 * @param	customDownKey	The String to use for the Down key.
-	 * @param	customLeftKey	The String to use for the Left key.
-	 * @param	customRightKey	The String to use for the Right key.
+	 * @param	CustomUpKey		The String to use for the Up key.
+	 * @param	CustomDownKey	The String to use for the Down key.
+	 * @param	CustomLeftKey	The String to use for the Left key.
+	 * @param	CustomRightKey	The String to use for the Right key.
 	 */
-	public function setCustomKeys(customUpKey:String, customDownKey:String, customLeftKey:String, customRightKey:String):Void
+	public function setCustomKeys(CustomUpKey:String, CustomDownKey:String, CustomLeftKey:String, CustomRightKey:String):Void
 	{
-		if (customUpKey != "")
+		if (CustomUpKey != "")
 		{
-			up = true;
-			upKey = customUpKey;
+			_up = true;
+			_upKey = CustomUpKey;
 		}
 		
-		if (customDownKey != "")
+		if (CustomDownKey != "")
 		{
-			down = true;
-			downKey = customDownKey;
+			_down = true;
+			_downKey = CustomDownKey;
 		}
 		
-		if (customLeftKey != "")
+		if (CustomLeftKey != "")
 		{
-			left = true;
-			leftKey = customLeftKey;
+			_left = true;
+			_leftKey = CustomLeftKey;
 		}
 		
-		if (customRightKey != "")
+		if (CustomRightKey != "")
 		{
-			right = true;
-			rightKey = customRightKey;
+			_right = true;
+			_rightKey = CustomRightKey;
 		}
 	}
 	
@@ -1258,22 +1236,22 @@ class FlxControlHandler
 	 * Enables Cursor/Arrow Key controls. Can be set on a per-key basis. Useful if you only want to allow a few keys.<br>
 	 * For example in a Space Invaders game you'd only enable LEFT and RIGHT.
 	 * 
-	 * @param	allowUp		Enable the UP key
-	 * @param	allowDown	Enable the DOWN key
-	 * @param	allowLeft	Enable the LEFT key
-	 * @param	allowRight	Enable the RIGHT key
+	 * @param	AllowUp		Enable the UP key
+	 * @param	AllowDown	Enable the DOWN key
+	 * @param	AllowLeft	Enable the LEFT key
+	 * @param	AllowRight	Enable the RIGHT key
 	 */
-	public function setCursorControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
+	public function setCursorControl(AllowUp:Bool = true, AllowDown:Bool = true, AllowLeft:Bool = true, AllowRight:Bool = true):Void
 	{
-		up = allowUp;
-		down = allowDown;
-		left = allowLeft;
-		right = allowRight;
+		_up = AllowUp;
+		_down = AllowDown;
+		_left = AllowLeft;
+		_right = AllowRight;
 		
-		upKey = "UP";
-		downKey = "DOWN";
-		leftKey = "LEFT";
-		rightKey = "RIGHT";
+		_upKey = "UP";
+		_downKey = "DOWN";
+		_leftKey = "LEFT";
+		_rightKey = "RIGHT";
 	}
 	
 	/**
@@ -1285,149 +1263,148 @@ class FlxControlHandler
 	 * @param	allowLeft	Enable the left (A) key
 	 * @param	allowRight	Enable the right (D) key
 	 */
-	public function setWASDControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
+	public function setWASDControl(AllowUp:Bool = true, AllowDown:Bool = true, AllowLeft:Bool = true, AllowRight:Bool = true):Void
 	{
-		up = allowUp;
-		down = allowDown;
-		left = allowLeft;
-		right = allowRight;
+		_up = AllowUp;
+		_down = AllowDown;
+		_left = AllowLeft;
+		_right = AllowRight;
 		
-		upKey = "W";
-		downKey = "S";
-		leftKey = "A";
-		rightKey = "D";
+		_upKey = "W";
+		_downKey = "S";
+		_leftKey = "A";
+		_rightKey = "D";
 	}
 	
 	/**
 	 * Enables ESDF (home row) controls. Can be set on a per-key basis. Useful if you only want to allow a few keys.<br>
 	 * For example in a Space Invaders game you'd only enable LEFT and RIGHT.
 	 * 
-	 * @param	allowUp		Enable the up (E) key
-	 * @param	allowDown	Enable the down (D) key
-	 * @param	allowLeft	Enable the left (S) key
-	 * @param	allowRight	Enable the right (F) key
+	 * @param	AllowUp		Enable the up (E) key
+	 * @param	AllowDown	Enable the down (D) key
+	 * @param	AllowLeft	Enable the left (S) key
+	 * @param	AllowRight	Enable the right (F) key
 	 */
-	public function setESDFControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
+	public function setESDFControl(AllowUp:Bool = true, AllowDown:Bool = true, AllowLeft:Bool = true, AllowRight:Bool = true):Void
 	{
-		up = allowUp;
-		down = allowDown;
-		left = allowLeft;
-		right = allowRight;
+		_up = AllowUp;
+		_down = AllowDown;
+		_left = AllowLeft;
+		_right = AllowRight;
 		
-		upKey = "E";
-		downKey = "D";
-		leftKey = "S";
-		rightKey = "F";
+		_upKey = "E";
+		_downKey = "D";
+		_leftKey = "S";
+		_rightKey = "F";
 	}
 	
 	/**
 	 * Enables IJKL (right-sided or secondary player) controls. Can be set on a per-key basis. Useful if you only want to allow a few keys.<br>
 	 * For example in a Space Invaders game you'd only enable LEFT and RIGHT.
 	 * 
-	 * @param	allowUp		Enable the up (I) key
-	 * @param	allowDown	Enable the down (K) key
-	 * @param	allowLeft	Enable the left (J) key
-	 * @param	allowRight	Enable the right (L) key
+	 * @param	AllowUp		Enable the up (I) key
+	 * @param	AllowDown	Enable the down (K) key
+	 * @param	AllowLeft	Enable the left (J) key
+	 * @param	AllowRight	Enable the right (L) key
 	 */
-	public function setIJKLControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
+	public function setIJKLControl(AllowUp:Bool = true, AllowDown:Bool = true, AllowLeft:Bool = true, AllowRight:Bool = true):Void
 	{
-		up = allowUp;
-		down = allowDown;
-		left = allowLeft;
-		right = allowRight;
+		_up = AllowUp;
+		_down = AllowDown;
+		_left = AllowLeft;
+		_right = AllowRight;
 		
-		upKey = "I";
-		downKey = "K";
-		leftKey = "J";
-		rightKey = "L";
+		_upKey = "I";
+		_downKey = "K";
+		_leftKey = "J";
+		_rightKey = "L";
 	}
 	
 	/**
 	 * Enables HJKL (Rogue / Net-Hack) controls. Can be set on a per-key basis. Useful if you only want to allow a few keys.<br>
 	 * For example in a Space Invaders game you'd only enable LEFT and RIGHT.
 	 * 
-	 * @param	allowUp		Enable the up (K) key
-	 * @param	allowDown	Enable the down (J) key
-	 * @param	allowLeft	Enable the left (H) key
-	 * @param	allowRight	Enable the right (L) key
+	 * @param	AllowUp		Enable the up (K) key
+	 * @param	AllowDown	Enable the down (J) key
+	 * @param	AllowLeft	Enable the left (H) key
+	 * @param	AllowRight	Enable the right (L) key
 	 */
-	public function setHJKLControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
+	public function setHJKLControl(AllowUp:Bool = true, AllowDown:Bool = true, AllowLeft:Bool = true, AllowRight:Bool = true):Void
 	{
-		up = allowUp;
-		down = allowDown;
-		left = allowLeft;
-		right = allowRight;
+		_up = AllowUp;
+		_down = AllowDown;
+		_left = AllowLeft;
+		_right = AllowRight;
 		
-		upKey = "K";
-		downKey = "J";
-		leftKey = "H";
-		rightKey = "L";
+		_upKey = "K";
+		_downKey = "J";
+		_leftKey = "H";
+		_rightKey = "L";
 	}
 	
 	/**
 	 * Enables ZQSD (Azerty keyboard) controls. Can be set on a per-key basis. Useful if you only want to allow a few keys.<br>
 	 * For example in a Space Invaders game you'd only enable LEFT and RIGHT.
 	 * 
-	 * @param	allowUp		Enable the up (Z) key
-	 * @param	allowDown	Enable the down (Q) key
-	 * @param	allowLeft	Enable the left (S) key
-	 * @param	allowRight	Enable the right (D) key
+	 * @param	AllowUp		Enable the up (Z) key
+	 * @param	AllowDown	Enable the down (Q) key
+	 * @param	AllowLeft	Enable the left (S) key
+	 * @param	AllowRight	Enable the right (D) key
 	 */
-	public function setZQSDControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
+	public function setZQSDControl(AllowUp:Bool = true, AllowDown:Bool = true, AllowLeft:Bool = true, AllowRight:Bool = true):Void
 	{
-		up = allowUp;
-		down = allowDown;
-		left = allowLeft;
-		right = allowRight;
+		_up = AllowUp;
+		_down = AllowDown;
+		_left = AllowLeft;
+		_right = AllowRight;
 		
-		upKey = "Z";
-		downKey = "S";
-		leftKey = "Q";
-		rightKey = "D";
+		_upKey = "Z";
+		_downKey = "S";
+		_leftKey = "Q";
+		_rightKey = "D";
 	}
 	
 	/**
 	 * Enables Dvoark Simplified Controls. Can be set on a per-key basis. Useful if you only want to allow a few keys.<br>
 	 * For example in a Space Invaders game you'd only enable LEFT and RIGHT.
 	 * 
-	 * @param	allowUp		Enable the up (COMMA) key
-	 * @param	allowDown	Enable the down (A) key
-	 * @param	allowLeft	Enable the left (O) key
-	 * @param	allowRight	Enable the right (E) key
+	 * @param	AllowUp		Enable the up (COMMA) key
+	 * @param	AllowDown	Enable the down (A) key
+	 * @param	AllowLeft	Enable the left (O) key
+	 * @param	AllowRight	Enable the right (E) key
 	 */
-	public function setDvorakSimplifiedControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
+	public function setDvorakSimplifiedControl(AllowUp:Bool = true, AllowDown:Bool = true, AllowLeft:Bool = true, AllowRight:Bool = true):Void
 	{
-		up = allowUp;
-		down = allowDown;
-		left = allowLeft;
-		right = allowRight;
+		_up = AllowUp;
+		_down = AllowDown;
+		_left = AllowLeft;
+		_right = AllowRight;
 		
-		upKey = "COMMA";
-		downKey = "O";
-		leftKey = "A";
-		rightKey = "E";
+		_upKey = "COMMA";
+		_downKey = "O";
+		_leftKey = "A";
+		_rightKey = "E";
 	}
 	
 	/**
-	 * Enables Numpad (left-handed) Controls. Can be set on a per-key basis. Useful if you only want to allow a few keys.<br>
+	 * Enables Numpad (left-handed) Controls. Can be set on a per-key basis. Useful if you only want to allow a few keys.
 	 * For example in a Space Invaders game you'd only enable LEFT and RIGHT.
 	 * 
-	 * @param	allowUp		Enable the up (NUMPADEIGHT) key
-	 * @param	allowDown	Enable the down (NUMPADTWO) key
-	 * @param	allowLeft	Enable the left (NUMPADFOUR) key
-	 * @param	allowRight	Enable the right (NUMPADSIX) key
+	 * @param	AllowUp		Enable the up (NUMPADEIGHT) key
+	 * @param	AllowDown	Enable the down (NUMPADTWO) key
+	 * @param	AllowLeft	Enable the left (NUMPADFOUR) key
+	 * @param	AllowRight	Enable the right (NUMPADSIX) key
 	 */
-	public function setNumpadControl(allowUp:Bool = true, allowDown:Bool = true, allowLeft:Bool = true, allowRight:Bool = true):Void
+	public function setNumpadControl(AllowUp:Bool = true, AllowDown:Bool = true, AllowLeft:Bool = true, AllowRight:Bool = true):Void
 	{
-		up = allowUp;
-		down = allowDown;
-		left = allowLeft;
-		right = allowRight;
+		_up = AllowUp;
+		_down = AllowDown;
+		_left = AllowLeft;
+		_right = AllowRight;
 		
-		upKey = "NUMPADEIGHT";
-		downKey = "NUMPADTWO";
-		leftKey = "NUMPADFOUR";
-		rightKey = "NUMPADSIX";
+		_upKey = "NUMPADEIGHT";
+		_downKey = "NUMPADTWO";
+		_leftKey = "NUMPADFOUR";
+		_rightKey = "NUMPADSIX";
 	}
-	
 }

@@ -32,11 +32,11 @@ class StarfieldFX extends BaseFX
 	/**
 	 * How much to shift on the X axis every update. Negative values move towards the left, positiive to the right. 2D Starfield only. Can also be set via setStarSpeed()
 	 */
-	public var starXOffset:Float;
+	public var starXOffset:Float = -1;
 	/**
 	 * How much to shift on the Y axis every update. Negative values move up, positiive values move down. 2D Starfield only. Can also be set via setStarSpeed()
 	 */
-	public var starYOffset:Float;
+	public var starYOffset:Float = 0;
 	
 	private var _stars:Array<StarObject>;
 	private var _starfieldType:Int;
@@ -52,8 +52,6 @@ class StarfieldFX extends BaseFX
 	{
 		super();
 		
-		starXOffset = -1;
-		starYOffset = 0;
 		_backgroundColor = FlxColor.BLACK;
 	}
 	

@@ -29,7 +29,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * The number of entries in the members array. For performance and safety you should check this 
 	 * variable instead of <code>members.length</code> unless you really know what you're doing!
 	 */
-	public var length:Int;
+	public var length:Int = 0;
 	/**
 	 * Whether <code>revive()</code> also revives all members of this group. 
 	 * False by default.
@@ -39,11 +39,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
-	private var _marker:Int;
+	private var _marker:Int = 0;
 	/**
 	 * Helper for sort.
 	 */
-	private var _sortIndex:String;
+	private var _sortIndex:String = null;
 	/**
 	 * Helper for sort.
 	 */
@@ -59,10 +59,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		super();
 		
 		members = new Array<T>();
-		length = 0;
 		maxSize = Std.int(Math.abs(MaxSize));
-		_marker = 0;
-		_sortIndex = null;
 	}
 	
 	/**

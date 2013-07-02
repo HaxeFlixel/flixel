@@ -18,13 +18,13 @@ class FlxParticle extends FlxSprite
 	 * NOTE: this is a maximum, not a minimum; the object
 	 * could get recycled before its lifespan is up.
 	 */
-	public var lifespan:Float;
+	public var lifespan:Float = 0;
 	/**
 	 * Determines how quickly the particles come to rest on the ground.
 	 * Only used if the particle has gravity-like acceleration applied.
 	 * @default 500
 	 */
-	public var friction:Float;
+	public var friction:Float = 500;
 	/**
 	 * If this is set to true, particles will slowly fade away by
 	 * decreasing their alpha value based on their lifespan.
@@ -93,8 +93,7 @@ class FlxParticle extends FlxSprite
 	public function new()
 	{
 		super();
-		lifespan = 0;
-		friction = 500;
+		
 		exists = false;
 	}
 	
