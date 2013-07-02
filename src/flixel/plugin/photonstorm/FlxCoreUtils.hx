@@ -21,23 +21,24 @@ class FlxCoreUtils
 	/**
 	 * Performs a complete object deep-copy and returns a duplicate (not a reference)
 	 * 
-	 * @param	value	The object you want copied
+	 * @param	Value	The object you want copied
 	 * @return	A copy of this object
 	 */
-	public static function copyObject(value:Dynamic):Dynamic
+	public static function copyObject(Value:Dynamic):Dynamic
 	{
 		var buffer:ByteArray = new ByteArray();
-		buffer.writeObject(value);
+		buffer.writeObject(Value);
 		buffer.position = 0;
 		var result:Dynamic = buffer.readObject();
+		
 		return result;
 	}
 	
-	public static var mouseIndex(get_mouseIndex, null):Int;
-	
 	/**
-	 * Returns the Display List index of the mouse pointer
+	 * The Display List index of the mouse pointer
 	 */
+	public static var mouseIndex(get, never):Int;
+	
 	private static function get_mouseIndex():Int
 	{
 		var mouseIndex:Int = -1;
@@ -54,11 +55,11 @@ class FlxCoreUtils
 		return mouseIndex;
 	}
 	
-	public static var gameContainer(get_gameContainer, null):Sprite;
-	
 	/**
 	 * Returns the Sprite that FlxGame extends (which contains the cameras, mouse, etc)
 	 */
+	public static var gameContainer(get, never):Sprite;
+	
 	private static function get_gameContainer():Sprite
 	{
 		return cast(FlxG.cameras.defaultCamera.getContainerSprite().parent, Sprite);

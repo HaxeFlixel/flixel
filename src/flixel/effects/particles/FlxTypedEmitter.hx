@@ -54,11 +54,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * Determines whether the emitter is currently emitting particles.
 	 * It is totally safe to directly toggle this.
 	 */
-	public var on:Bool;
+	public var emitting:Bool = false;
 	/**
 	 * How often a particle is emitted (if emitter is started with Explode == false).
 	 */
-	public var frequency:Float;
+	public var frequency:Float = 0.1;
 	public var life:Bounds<Float>;
 	/**
 	 * Sets start scale range (when particle emits)
@@ -104,11 +104,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * Sets particle's blend mode. null by default.
 	 * Warning: expensive on flash target
 	 */
-	public var blend:BlendMode;
+	public var blend:BlendMode = null;
 	/**
 	 * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
 	 */
-	public var bounce:Float;
+	public var bounce:Float = 0;
 	/**
 	 * Internal variable for tracking the class to create when generating particles.
 	 */
@@ -117,11 +117,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
-	private var _quantity:Int;
+	private var _quantity:Int = 0;
 	/**
 	 * Internal helper for the style of particle emission (all at once, or one at a time).
 	 */
-	private var _explode:Bool;
+	private var _explode:Bool = true;
 	/**
 	 * Internal helper for deciding when to launch particles or kill them.
 	 */
@@ -129,7 +129,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	/**
 	 * Internal counter for figuring out how many particles to launch.
 	 */
-	private var _counter:Int;
+	private var _counter:Int = 0;
 	/**
 	 * Internal point object, handy for reusing for memory mgmt purposes.
 	 */
@@ -167,17 +167,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		endGreen = new Bounds<Float>(1.0, 1.0);
 		endBlue = new Bounds<Float>(1.0, 1.0);
 		
-		blend = null;
 		acceleration = new FlxPoint(0, 0);
 		_particleClass = cast FlxParticle;
 		particleDrag = new FlxPoint();
-		frequency = 0.1;
+		
 		life = new Bounds<Float>(3, 3);
-		bounce = 0;
-		_quantity = 0;
-		_counter = 0;
-		_explode = true;
-		on = false;
 		exists = false;
 		_point = new FlxPoint();
 	}
@@ -301,12 +295,13 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 */
 	override public function update():Void
 	{
-		if (on)
+		if (emitting)
 		{
 			if (_explode)
 			{
-				on = false;
+				emitting = false;
 				_waitForKill = true;
+				
 				var i:Int = 0;
 				var l:Int = _quantity;
 				
@@ -332,7 +327,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 					
 					if((_quantity > 0) && (++_counter >= _quantity))
 					{
-						on = false;
+						emitting = false;
 						_waitForKill = true;
 						_quantity = 0;
 					}
@@ -348,7 +343,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 						
 						if ((_quantity > 0) && (++_counter >= _quantity))
 						{
-							on = false;
+							emitting = false;
 							_waitForKill = true;
 							_quantity = 0;
 						}
@@ -375,7 +370,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 */
 	override public function kill():Void
 	{
-		on = false;
+		emitting = false;
 		_waitForKill = false;
 		
 		super.kill();
@@ -393,7 +388,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	{
 		revive();
 		visible = true;
-		on = true;
+		emitting = true;
 		
 		_explode = Explode;
 		life.min = Lifespan;

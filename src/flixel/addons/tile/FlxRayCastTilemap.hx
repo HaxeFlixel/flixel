@@ -8,11 +8,6 @@ import flixel.util.FlxPoint;
  */
 class FlxRayCastTilemap extends FlxTilemap
 {
-	public function new() 
-	{
-		super();
-	}
-	
 	/**
 	* Casts a ray from the start point until it hits either a filled tile, or the edge of the tilemap
 	*
@@ -154,7 +149,7 @@ class FlxRayCastTilemap extends FlxTilemap
 		}
 		
 		// Step through each block  
-		for (tileCount in 0...(MaxTilesToCheck))
+		for (tileCount in 0...MaxTilesToCheck)
 		{
 			if (tMaxX < tMaxY)
 			{
@@ -176,6 +171,7 @@ class FlxRayCastTilemap extends FlxTilemap
 			else
 			{
 				cy = cy + stepY;
+				
 				if (getTile(Std.int(cx), Std.int(cy)) > 0)
 				{
 					hitTile = true;

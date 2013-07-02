@@ -1,19 +1,5 @@
-/**
- * FlxButtonPlus
- * -- Part of the Flixel Power Tools set
- * 
- * v1.5 Added setOnClickCallback
- * v1.4 Added scrollFactor to button and swapped to using mouseInFlxRect so buttons in scrolling worlds work
- * v1.3 Updated gradient colour values to include alpha
- * v1.2 Updated for the Flixel 2.5 Plugin system
- * 
- * @version 1.5 - August 3rd 2011
- * @link http://www.photonstorm.com
- * @author Richard Davey / Photon Storm
-*/
-
 package flixel.plugin.photonstorm;
-//todo port to use touch as well
+
 #if !FLX_NO_MOUSE
 import flash.display.BitmapData;
 import flash.events.MouseEvent;
@@ -28,37 +14,19 @@ import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxMath;
 
+//TODO: Port to use touch as well
+
 /**
  * A simple button class that calls a function when clicked by the mouse.
+ * 
+ * @link http://www.photonstorm.com
+ * @author Richard Davey / Photon Storm
  */
 class FlxButtonPlus extends FlxSpriteGroup
 {
-	static public inline var NORMAL:Int = 0;
-	static public inline var HIGHLIGHT:Int = 1;
-	static public inline var PRESSED:Int = 2;
-	
-	/**
-	 * Set this to true if you want this button to function even while the game is paused.
-	 */
-	public var pauseProof:Bool;
-	/**
-	 * Shows the current state of the button.
-	 */
-	var _status:Int;
-	/**
-	 * This function is called when the button is clicked.
-	 */
-	var _onClick:Dynamic;
-	/**
-	 * Tracks whether or not the button is currently pressed.
-	 */
-	var _pressed:Bool;
-	/**
-	 * Whether or not the button has initialized itself yet.
-	 */
-	var _initialized:Bool;
-	
-	//	Flixel Power Tools Modification from here down
+	inline static public var NORMAL:Int = 0;
+	inline static public var HIGHLIGHT:Int = 1;
+	inline static public var PRESSED:Int = 2;
 	
 	public var buttonNormal:FlxExtendedSprite;
 	public var buttonHighlight:FlxExtendedSprite;
@@ -67,40 +35,13 @@ class FlxButtonPlus extends FlxSpriteGroup
 	public var textHighlight:FlxText;
 	
 	/**
-	 * The parameters passed to the _onClick function when the button is clicked
-	 */
-	private var onClickParams:Array<Dynamic>;
-	
-	/**
-	 * This function is called when the button is hovered over
-	 */
-	private var enterCallback:Dynamic;
-	
-	/**
-	 * The parameters passed to the enterCallback function when the button is hovered over
-	 */
-	private var enterCallbackParams:Array<Dynamic>;
-	
-	/**
-	 * This function is called when the mouse leaves a hovered button (but didn't click)
-	 */
-	private var leaveCallback:Dynamic;
-	
-	/**
-	 * The parameters passed to the leaveCallback function when the hovered button is left
-	 */
-	private var leaveCallbackParams:Array<Dynamic>;
-	
-	/**
 	 * The 1px thick border color that is drawn around this button
 	 */
-	public var borderColor:Int;
-	
+	public var borderColor:Int = 0xffffffff;
 	/**
 	 * The color gradient of the button in its in-active (not hovered over) state
 	 */
 	public var offColor:Array<Int>;
-	
 	/**
 	 * The color gradient of the button in its hovered state
 	 */
@@ -108,6 +49,48 @@ class FlxButtonPlus extends FlxSpriteGroup
 	
 	public var width:Int;
 	public var height:Int;
+	
+	/**
+	 * Set this to true if you want this button to function even while the game is paused.
+	 */
+	public var pauseProof:Bool;
+	/**
+	 * Shows the current state of the button.
+	 */
+	
+	private var _status:Int;
+	/**
+	 * This function is called when the button is clicked.
+	 */
+	private var _onClick:Dynamic;
+	/**
+	 * Tracks whether or not the button is currently pressed.
+	 */
+	private var _pressed:Bool;
+	/**
+	 * Whether or not the button has initialized itself yet.
+	 */
+	private var _initialized:Bool;
+	/**
+	 * The parameters passed to the _onClick function when the button is clicked
+	 */
+	private var _onClickParams:Array<Dynamic>;
+	/**
+	 * This function is called when the button is hovered over
+	 */
+	private var _enterCallback:Dynamic;
+	/**
+	 * The parameters passed to the enterCallback function when the button is hovered over
+	 */
+	private var _enterCallbackParams:Array<Dynamic>;
+	/**
+	 * This function is called when the mouse leaves a hovered button (but didn't click)
+	 */
+	private var _leaveCallback:Dynamic;
+	/**
+	 * The parameters passed to the leaveCallback function when the hovered button is left
+	 */
+	private var _leaveCallbackParams:Array<Dynamic>;
 	
 	/**
 	 * Creates a new <code>FlxButton</code> object with a gray background
@@ -121,9 +104,8 @@ class FlxButtonPlus extends FlxSpriteGroup
 	 * @param	Width		The width of the button.
 	 * @param	Height		The height of the button.
 	 */
-	public function new(X:Int, Y:Int, Callback:Dynamic, Params:Array<Dynamic> = null, Label:String = null, Width:Int = 100, Height:Int = 20)
+	public function new(X:Int, Y:Int, Callback:Dynamic, ?Params:Array<Dynamic>, ?Label:String, Width:Int = 100, Height:Int = 20)
 	{
-		borderColor = 0xffffffff;
 		offColor = [0xff008000, 0xff00ff00];
 		onColor = [0xff800000, 0xffff0000];
 		
@@ -136,6 +118,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 		_onClick = Callback;
 		
 		buttonNormal = new FlxExtendedSprite(X, Y);
+		
 		#if flash
 		buttonNormal.makeGraphic(Width, Height, borderColor);
 		#end
@@ -147,6 +130,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 		buttonNormal.scrollFactor.y = 0;
 		
 		buttonHighlight = new FlxExtendedSprite(X, Y);
+		
 		#if flash
 		buttonHighlight.makeGraphic(Width, Height, borderColor);
 		#end
@@ -180,11 +164,11 @@ class FlxButtonPlus extends FlxSpriteGroup
 		
 		if (Params != null)
 		{
-			onClickParams = Params;
+			_onClickParams = Params;
 		}
 		else
 		{
-			onClickParams = [];
+			_onClickParams = [];
 		}
 	}
 	
@@ -193,13 +177,13 @@ class FlxButtonPlus extends FlxSpriteGroup
 	 * Note: The pixel data is extract from the passed FlxSprites and assigned locally, it doesn't actually use the sprites<br />
 	 * or keep a reference to them.
 	 * 
-	 * @param	normal		The FlxSprite to use when the button is in-active (not hovered over)
-	 * @param	highlight	The FlxSprite to use when the button is hovered-over by the mouse
+	 * @param	Normal		The FlxSprite to use when the button is in-active (not hovered over)
+	 * @param	Highlight	The FlxSprite to use when the button is hovered-over by the mouse
 	 */
-	public function loadGraphic(normal:FlxSprite, highlight:FlxSprite):Void
+	public function loadGraphic(Normal:FlxSprite, Highlight:FlxSprite):Void
 	{
-		buttonNormal.pixels = normal.pixels;
-		buttonHighlight.pixels = highlight.pixels;
+		buttonNormal.pixels = Normal.pixels;
+		buttonHighlight.pixels = Highlight.pixels;
 		
 		width = Std.int(buttonNormal.width);
 		height = Std.int(buttonNormal.height);
@@ -221,7 +205,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 	{
 		if (!_initialized)
 		{
-			if(FlxG.stage != null)
+			if (FlxG.stage != null)
 			{
 				Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				_initialized = true;
@@ -229,7 +213,9 @@ class FlxButtonPlus extends FlxSpriteGroup
 		}
 		
 		super.update();
-		updateButton(); //Basic button logic
+		
+		//Basic button logic
+		updateButton(); 
 	}
 	
 	/**
@@ -249,7 +235,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 		var l:Int = buttonNormal.cameras.length;
 		var offAll:Bool = true;
 		
-		while(i < l)
+		while (i < l)
 		{
 			c = buttonNormal.cameras[i++];
 			
@@ -287,9 +273,9 @@ class FlxButtonPlus extends FlxSpriteGroup
 					textHighlight.visible = false;
 				}
 				
-				if (leaveCallback != null)
+				if (_leaveCallback != null)
 				{
-					Reflect.callMethod(null, leaveCallback, leaveCallbackParams);
+					Reflect.callMethod(null, _leaveCallback, _leaveCallbackParams);
 				}
 			}
 			else if (_status == HIGHLIGHT)
@@ -303,9 +289,9 @@ class FlxButtonPlus extends FlxSpriteGroup
 					textHighlight.visible = true;
 				}
 				
-				if (enterCallback != null)
+				if (_enterCallback != null)
 				{
-					Reflect.callMethod(null, enterCallback, enterCallbackParams);
+					Reflect.callMethod(null, _enterCallback, _enterCallbackParams);
 				}
 			}
 		}
@@ -348,8 +334,8 @@ class FlxButtonPlus extends FlxSpriteGroup
 		}
 		
 		_onClick = null;
-		enterCallback = null;
-		leaveCallback = null;
+		_enterCallback = null;
+		_leaveCallback = null;
 		
 		super.destroy();
 	}
@@ -357,11 +343,11 @@ class FlxButtonPlus extends FlxSpriteGroup
 	/**
 	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxMisc.openURL()</code>).
 	 */
-	function onMouseUp(event:MouseEvent):Void
+	function onMouseUp(E:MouseEvent):Void
 	{
 		if (exists && visible && active && (_status == PRESSED) && (_onClick != null) && (pauseProof || !FlxG.paused))
 		{
-			Reflect.callMethod(this, Reflect.getProperty(this, "_onClick"), onClickParams);
+			Reflect.callMethod(this, Reflect.getProperty(this, "_onClick"), _onClickParams);
 		}
 	}
 	
@@ -370,9 +356,9 @@ class FlxButtonPlus extends FlxSpriteGroup
 	 * 
 	 * @param	colors
 	 */
-	public function updateInactiveButtonColors(colors:Array<Int>):Void
+	public function updateInactiveButtonColors(Colors:Array<Int>):Void
 	{
-		offColor = colors;
+		offColor = Colors;
 		
 		#if flash
 		buttonNormal.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, offColor), 1, 1);
@@ -381,6 +367,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 		var colRGB:Int;
 		
 		var normalKey:String = "Gradient: " + width + " x " + height + ", colors: [";
+		
 		for (col in offColor)
 		{
 			colA = (col >> 24) & 255;
@@ -388,6 +375,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 			
 			normalKey = normalKey + colRGB + "_" + colA + ", ";
 		}
+		
 		normalKey = normalKey + "]";
 		
 		if (FlxG.bitmap._cache.exists(normalKey) == false)
@@ -396,6 +384,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 			normalBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(normalBitmap, width - 2, height - 2, offColor, 1, 1);
 		}
+		
 		buttonNormal.pixels = FlxG.bitmap._cache.get(normalKey);
 		#end
 	}
@@ -403,19 +392,21 @@ class FlxButtonPlus extends FlxSpriteGroup
 	/**
 	 * If you want to change the color of this button in its active (hovered over) state, then pass a new array of color values
 	 * 
-	 * @param	colors
+	 * @param	Colors
 	 */
-	public function updateActiveButtonColors(colors:Array<Int>):Void
+	public function updateActiveButtonColors(Colors:Array<Int>):Void
 	{
-		onColor = colors;
+		onColor = Colors;
 		
 		#if flash
 		buttonHighlight.stamp(FlxGradient.createGradientFlxSprite(width - 2, height - 2, onColor), 1, 1);
 		#else
+		
 		var colA:Int;
 		var colRGB:Int;
 		
 		var highlightKey:String = "Gradient: " + width + " x " + height + ", colors: [";
+		
 		for (col in onColor)
 		{
 			colA = (col >> 24) & 255;
@@ -423,6 +414,7 @@ class FlxButtonPlus extends FlxSpriteGroup
 			
 			highlightKey = highlightKey + colRGB + "_" + colA + ", ";
 		}
+		
 		highlightKey = highlightKey + "]";
 		
 		if (FlxG.bitmap._cache.exists(highlightKey) == false)
@@ -431,28 +423,31 @@ class FlxButtonPlus extends FlxSpriteGroup
 			highlightBitmap.fillRect(new Rectangle(0, 0, width, height), borderColor);
 			FlxGradient.overlayGradientOnBitmapData(highlightBitmap, width - 2, height - 2, onColor, 1, 1);
 		}
+		
 		buttonHighlight.pixels = FlxG.bitmap._cache.get(highlightKey);
 		#end
 	}
 	
-	public var text(null, set_text):String;
-	
 	/**
 	 * If this button has text, set this to change the value
 	 */
-	public function set_text(value:String):String
+	
+	public var text(never, set):String;
+	
+	public function set_text(NewText:String):String
 	{
-		if (textNormal != null && textNormal.text != value)
+		if (textNormal != null && textNormal.text != NewText)
 		{
-			textNormal.text = value;
-			textHighlight.text = value;
+			textNormal.text = NewText;
+			textHighlight.text = NewText;
 		}
-		return value;
+		
+		return NewText;
 	}
 	
 	/**
-	 * Center this button (on the X axis) Uses FlxG.width / 2 - button width / 2 to achieve this.<br />
-	 * Doesn't take into consideration scrolling
+	 * Center this button (on the X axis) Uses <code>FlxG.width / 2 - button width / 2</code>
+	 * to achieve this. Doesn't take scrolling into consideration.
 	 */
 	public function screenCenter():Void
 	{
@@ -469,56 +464,55 @@ class FlxButtonPlus extends FlxSpriteGroup
 	/**
 	 * Sets a callback function for when this button is rolled-over with the mouse
 	 * 
-	 * @param	callback	The function to call, will be called once when the mouse enters
-	 * @param	params		An optional array of parameters to pass to the function
+	 * @param	Callback	The function to call, will be called once when the mouse enters
+	 * @param	Params		An optional array of parameters to pass to the function
 	 */
-	public function setMouseOverCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
+	public function setMouseOverCallback(Callback:Dynamic, ?Params:Array<Dynamic>):Void
 	{
-		enterCallback = callbackFunc;
+		_enterCallback = Callback;
 		
-		if (params != null)
+		if (Params != null)
 		{
-			enterCallbackParams = params;
+			_enterCallbackParams = Params;
 		}
 		else
 		{
-			enterCallbackParams = [];
+			_enterCallbackParams = [];
 		}
 	}
 	
 	/**
 	 * Sets a callback function for when the mouse rolls-out of this button
 	 * 
-	 * @param	callback	The function to call, will be called once when the mouse leaves the button
-	 * @param	params		An optional array of parameters to pass to the function
+	 * @param	Callback	The function to call, will be called once when the mouse leaves the button
+	 * @param	Params		An optional array of parameters to pass to the function
 	 */
-	public function setMouseOutCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
+	public function setMouseOutCallback(Callback:Dynamic, ?Params:Array<Dynamic>):Void
 	{
-		leaveCallback = callbackFunc;
+		_leaveCallback = Callback;
 		
-		if (params != null)
+		if (Params != null)
 		{
-			leaveCallbackParams = params;
+			_leaveCallbackParams = Params;
 		}
 		else
 		{
-			leaveCallbackParams = [];
+			_leaveCallbackParams = [];
 		}
 	}
 	
-	public function setOnClickCallback(callbackFunc:Dynamic, params:Array<Dynamic> = null):Void
+	public function setOnClickCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
 	{
-		_onClick = callbackFunc;
+		_onClick = Callback;
 		
-		if (params != null)
+		if (Params != null)
 		{
-			onClickParams = params;
+			_onClickParams = Params;
 		}
 		else
 		{
-			onClickParams = [];
+			_onClickParams = [];
 		}
 	}
-	
 }
 #end
