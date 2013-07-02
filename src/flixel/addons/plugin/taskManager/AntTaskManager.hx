@@ -26,31 +26,26 @@ class AntTaskManager extends FlxBasic
 	 * The list of active tasks
 	 */
 	private var _taskList:AntTask;
-	
 	/**
 	 * Defines a manager's job is running
 	 * @default    false
 	 */
 	private var _isStarted:Bool;
-	
 	/**
 	 * Determines whether the tasks put on pause
 	 * @default    false
 	 */
 	private var _isPaused:Bool;
-	
 	/**
 	 * Helper to determine the end of the current task
 	 * @default    false
 	 */
 	private var _result:Bool;
-	
 	/**
 	 * Determines whether tasks are performed in a loop
 	 * @default    false
 	 */
 	private var _cycle:Bool;
-	
 	/**
 	 * Used to calculate the current pause between tasks
 	 * @default    0
@@ -91,14 +86,14 @@ class AntTaskManager extends FlxBasic
 	 * Adds a task to the end of queue, the method will be executed while it returns <code>false</code>.
 	 * The task will be completed only when the method will return <code>true</code>. And manager will switch to the next task.
 	 * 
-	 * @param	Obj				An object to call method-task from
-	 * @param	Func			Method-task to be executed in sequence.
-	 * @param	Args	 		An array of arguments that can be passed to the task-method.
+	 * @param	Object				An object to call method-task from
+	 * @param	Function			Method-task to be executed in sequence.
+	 * @param	Arguments	 		An array of arguments that can be passed to the task-method.
 	 * @param	IgnoreCycle		If true then the task will be deleted from the manager immediately after execution.
 	 */
-	public function addTask(Obj:Dynamic, Func:Dynamic, ?Args:Array<Dynamic>, IgnoreCycle:Bool = false):Void
+	public function addTask(Object:Dynamic, Function:Dynamic, ?Arguments:Array<Dynamic>, IgnoreCycle:Bool = false):Void
 	{
-		push(new AntTask(Obj, Func, Args, IgnoreCycle, false));
+		push(new AntTask(Object, Function, Arguments, IgnoreCycle, false));
 		start();
 	}
 	
@@ -107,14 +102,14 @@ class AntTaskManager extends FlxBasic
 	 * Добавляет задачу в конец очереди, указанный метод будет выполнен только один раз, после чего будет осуществлен
 	 * переход к следующей задачи не зависимо от того, что вернет метод-задача и вернет ли вообще.
 	 * 
-	 * @param	Obj	 			An object to call method-task from
-	 * @param	Func	 		Method-task to be executed in sequence.
-	 * @param	Args	 		An array of arguments that can be passed to the task-method.
+	 * @param	Object	 			An object to call method-task from
+	 * @param	Function	 		Method-task to be executed in sequence.
+	 * @param	Arguments	 		An array of arguments that can be passed to the task-method.
 	 * @param	IgnoreCycle		If true then the task will be deleted from the manager immediately after execution.
 	 */
-	public function addInstantTask(Obj:Dynamic, Func:Dynamic, ?Args:Array<Dynamic>, IgnoreCycle:Bool = false):Void
+	public function addInstantTask(Object:Dynamic, Function:Dynamic, ?Arguments:Array<Dynamic>, IgnoreCycle:Bool = false):Void
 	{
-		push(new AntTask(Obj, Func, Args, IgnoreCycle, true));
+		push(new AntTask(Object, Function, Arguments, IgnoreCycle, true));
 		start();
 	}
 	
@@ -122,28 +117,28 @@ class AntTaskManager extends FlxBasic
 	 * Adds a task to the top of the queue, the method will be executed while it returns <code>false</code>.
 	 * The task will be completed only when the method will return <code>true</code>, and the manager will move to the next task.
 	 * 
-	 * @param	Obj	 			An object to call method-task from
-	 * @param	Func	 		Method-task to be executed in sequence.
-	 * @param	Args	 		An array of arguments that can be passed to the task-method.
+	 * @param	Object	 			An object to call method-task from
+	 * @param	Function	 		Method-task to be executed in sequence.
+	 * @param	Arguments	 		An array of arguments that can be passed to the task-method.
 	 * @param	IgnoreCycle	 	If true then the task will be deleted from the manager immediately after execution.
 	 */
-	public function addUrgentTask(Obj:Dynamic, Func:Dynamic, ?Args:Array<Dynamic>, IgnoreCycle:Bool = false):Void
+	public function addUrgentTask(Object:Dynamic, Function:Dynamic, ?Arguments:Array<Dynamic>, IgnoreCycle:Bool = false):Void
 	{
-		unshift(new AntTask(Obj, Func, Args, IgnoreCycle, false));
+		unshift(new AntTask(Object, Function, Arguments, IgnoreCycle, false));
 		start();
 	}
 	
 	/**
 	 * Adds a task to the top of the queue, the method will be executed only ONCE, after that we go to the next task.
 	 * 
-	 * @param	Obj	 			An object to call method-task from
-	 * @param	Func	 		Method-task to be executed in sequence.
-	 * @param	Args	 		An array of arguments that can be passed to the task-method.
+	 * @param	Object	 			An object to call method-task from
+	 * @param	Function	 		Method-task to be executed in sequence.
+	 * @param	Arguments	 		An array of arguments that can be passed to the task-method.
 	 * @param	IgnoreCycle	 	If true then the task will be deleted from the manager immediately after execution.
 	 */
-	public function addUrgentInstantTask(Obj:Dynamic, Func:Dynamic, ?Args:Array<Dynamic>, IgnoreCycle:Bool = false):Void
+	public function addUrgentInstantTask(Object:Dynamic, Function:Dynamic, ?Arguments:Array<Dynamic>, IgnoreCycle:Bool = false):Void
 	{
-		unshift(new AntTask(Obj, Func, Args, IgnoreCycle, true));
+		unshift(new AntTask(Object, Function, Arguments, IgnoreCycle, true));
 		start();
 	}
 	

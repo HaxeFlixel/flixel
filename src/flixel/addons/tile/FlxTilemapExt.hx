@@ -21,27 +21,26 @@ class FlxTilemapExt extends FlxTilemap
 	inline static public var SLOPE_CEIL_RIGHT:Int = 3;
 	
 	// Slope related variables
-	private var _snapping:Int;
+	private var _snapping:Int = 2;
 	private var _slopePoint:FlxPoint;
 	private var _objPoint:FlxPoint;
 	
-	private var slopeFloorLeft:Array<Int>;
-	private var slopeFloorRight:Array<Int>;
-	private var slopeCeilLeft:Array<Int>;
-	private var slopeCeilRight:Array<Int>;
+	private var _slopeFloorLeft:Array<Int>;
+	private var _slopeFloorRight:Array<Int>;
+	private var _slopeCeilLeft:Array<Int>;
+	private var _slopeCeilRight:Array<Int>;
 	
 	public function new()
 	{
 		super();
 		
-		_snapping = 2;
 		_slopePoint = new FlxPoint();
 		_objPoint = new FlxPoint();
 		
-		slopeFloorLeft = new Array<Int>();
-		slopeFloorRight = new Array<Int>();
-		slopeCeilLeft = new Array<Int>();
-		slopeCeilRight = new Array<Int>();
+		_slopeFloorLeft = new Array<Int>();
+		_slopeFloorRight = new Array<Int>();
+		_slopeCeilLeft = new Array<Int>();
+		_slopeCeilRight = new Array<Int>();
 	}
 	
 	override public function destroy():Void 
@@ -49,10 +48,10 @@ class FlxTilemapExt extends FlxTilemap
 		_slopePoint = null;
 		_objPoint = null;
 		
-		slopeFloorLeft = null;
-		slopeFloorRight = null;
-		slopeCeilLeft = null;
-		slopeCeilRight = null;
+		_slopeFloorLeft = null;
+		_slopeFloorRight = null;
+		_slopeCeilLeft = null;
+		_slopeCeilRight = null;
 		
 		super.destroy();
 	}
@@ -70,7 +69,7 @@ class FlxTilemapExt extends FlxTilemap
 	 *
 	 * @return Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	override public function overlapsWithCallback(Object:FlxObject, Callback:FlxObject->FlxObject->Bool = null, FlipCallbackParams:Bool = false, Position:FlxPoint = null):Bool
+	override public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool, FlipCallbackParams:Bool = false, ?Position:FlxPoint):Bool
 	{
 		var results:Bool = false;
 		
@@ -124,6 +123,7 @@ class FlxTilemapExt extends FlxTilemap
 			{
 				overlapFound = false;
 				tile = _tileObjects[_data[rowStart + column]];
+				
 				if (tile.allowCollisions != 0)
 				{
 					tile.x = X + column * _tileWidth;
@@ -171,10 +171,58 @@ class FlxTilemapExt extends FlxTilemap
 				}
 				column++;
 			}
+			
 			rowStart += widthInTiles;
 			row++;
 		}
+		
 		return results;
+	}
+	
+	/**
+	 * Sets the tiles that are treated as "clouds" or blocks that are only solid from the top.
+	 * 
+	 * @param 	Clouds	An array containing the numbers of the tiles to be treated as clouds.
+	 */
+	public function setClouds(?Clouds:Array<Int>):Void
+	{
+		if (Clouds != null)
+		{
+			for (i in 0...(Clouds.length))
+			{
+				setTileProperties(Clouds[i], FlxObject.CEILING);			
+			}
+		}
+	}
+	
+	/**
+	 * Sets the slope arrays, which define which tiles are treated as slopes.
+	 * 
+	 * @param 	LeftFloorSlopes 	An array containing the numbers of the tiles to be treated as left floor slopes.
+	 * @param 	RightFloorSlopes	An array containing the numbers of the tiles to be treated as right floor slopes.
+	 * @param 	LeftCeilSlopes		An array containing the numbers of the tiles to be treated as left ceiling slopes.
+	 * @param 	RightCeilSlopes		An array containing the numbers of the tiles to be treated as right ceiling slopes.
+	 */
+	public function setSlopes(?LeftFloorSlopes:Array<Int>, ?RightFloorSlopes:Array<Int>, ?LeftCeilSlopes:Array<Int>, ?RightCeilSlopes:Array<Int>):Void
+	{
+		if (LeftFloorSlopes != null)
+		{
+			_slopeFloorLeft = LeftFloorSlopes;
+		}
+		if (RightFloorSlopes != null)
+		{
+			_slopeFloorRight = RightFloorSlopes;
+		}
+		if (LeftCeilSlopes != null)
+		{
+			_slopeCeilLeft = LeftCeilSlopes;
+		}
+		if (RightCeilSlopes != null)
+		{
+			_slopeCeilRight = RightCeilSlopes;
+		}
+		
+		setSlopeProperties();
 	}
 	
 	/**
@@ -192,51 +240,59 @@ class FlxTilemapExt extends FlxTilemap
 	 * Ss called if an object collides with a floor slope
 	 * 
 	 * @param 	Slope	The floor slope
-	 * @param	Obj 	The object that collides with that slope
+	 * @param	Object 	The object that collides with that slope
 	 */
-	private function onCollideFloorSlope(Slope:FlxObject, Obj:FlxObject):Void
+	private function onCollideFloorSlope(Slope:FlxObject, Object:FlxObject):Void
 	{
 		// Set the object's touching flag
-		Obj.touching = FlxObject.FLOOR;
+		Object.touching = FlxObject.FLOOR;
 		
 		// Adjust the object's velocity
-		Obj.velocity.y = 0;
+		Object.velocity.y = 0;
 		
 		// Reposition the object
-		Obj.y = _slopePoint.y - Obj.height;
-		if (Obj.y < Slope.y - Obj.height) { Obj.y = Slope.y - Obj.height; };
+		Object.y = _slopePoint.y - Object.height;
+		
+		if (Object.y < Slope.y - Object.height) 
+		{ 
+			Object.y = Slope.y - Object.height; 
+		}
 	}
 	
 	/**
 	 * Is called if an object collides with a ceiling slope
 	 * 
 	 * @param 	Slope 	The ceiling slope
-	 * @param 	Obj 	The object that collides with that slope
+	 * @param 	Object 	The object that collides with that slope
 	 */
-	private function onCollideCeilSlope(Slope:FlxObject, Obj:FlxObject):Void
+	private function onCollideCeilSlope(Slope:FlxObject, Object:FlxObject):Void
 	{
 		// Set the object's touching flag
-		Obj.touching = FlxObject.CEILING;
+		Object.touching = FlxObject.CEILING;
 		
 		// Adjust the object's velocity
-		Obj.velocity.y = 0;
+		Object.velocity.y = 0;
 		
 		// Reposition the object
-		Obj.y = _slopePoint.y;
-		if (Obj.y > Slope.y + _tileHeight) { Obj.y = Slope.y + _tileHeight; };
+		Object.y = _slopePoint.y;
+		
+		if (Object.y > Slope.y + _tileHeight) 
+		{ 
+			Object.y = Slope.y + _tileHeight; 
+		}
 	}
 	
 	/**
 	 * Solves collision against a left-sided floor slope
 	 * 
 	 * @param 	Slope 	The slope to check against
-	 * @param 	Obj 	The object that collides with the slope
+	 * @param 	Object 	The object that collides with the slope
 	 */
-	private function solveCollisionSlopeFloorLeft(Slope:FlxObject, Obj:FlxObject):Void
+	private function solveCollisionSlopeFloorLeft(Slope:FlxObject, Object:FlxObject):Void
 	{
 		// Calculate the corner point of the object
-		_objPoint.x = Math.floor(Obj.x + Obj.width + _snapping);
-		_objPoint.y = Math.floor(Obj.y + Obj.height);
+		_objPoint.x = Math.floor(Object.x + Object.width + _snapping);
+		_objPoint.y = Math.floor(Object.y + Object.height);
 		
 		// Calculate position of the point on the slope that the object might overlap
 		// this would be one side of the object projected onto the slope's surface
@@ -247,10 +303,10 @@ class FlxTilemapExt extends FlxTilemap
 		fixSlopePoint(cast(Slope, FlxTile));
 		
 		// Check if the object is inside the slope
-		if (_objPoint.x > Slope.x + _snapping && _objPoint.x < Slope.x + _tileWidth + Obj.width + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= Slope.y + _tileHeight)
+		if (_objPoint.x > Slope.x + _snapping && _objPoint.x < Slope.x + _tileWidth + Object.width + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= Slope.y + _tileHeight)
 		{
 			// Call the collide function for the floor slope
-			onCollideFloorSlope(Slope, Obj);
+			onCollideFloorSlope(Slope, Object);
 		}
 	}
 	
@@ -258,13 +314,13 @@ class FlxTilemapExt extends FlxTilemap
 	 * Solves collision against a right-sided floor slope
 	 * 
 	 * @param 	Slope 	The slope to check against
-	 * @param 	Obj 	The object that collides with the slope
+	 * @param 	Object 	The object that collides with the slope
 	 */
-	private function solveCollisionSlopeFloorRight(Slope:FlxObject, Obj:FlxObject):Void
+	private function solveCollisionSlopeFloorRight(Slope:FlxObject, Object:FlxObject):Void
 	{
 		// Calculate the corner point of the object
-		_objPoint.x = Math.floor(Obj.x - _snapping);
-		_objPoint.y = Math.floor(Obj.y + Obj.height);
+		_objPoint.x = Math.floor(Object.x - _snapping);
+		_objPoint.y = Math.floor(Object.y + Object.height);
 		
 		// Calculate position of the point on the slope that the object might overlap
 		// this would be one side of the object projected onto the slope's surface
@@ -275,10 +331,10 @@ class FlxTilemapExt extends FlxTilemap
 		fixSlopePoint(cast(Slope, FlxTile));
 		
 		// Check if the object is inside the slope
-		if (_objPoint.x > Slope.x - Obj.width - _snapping && _objPoint.x < Slope.x + _tileWidth + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= Slope.y + _tileHeight)
+		if (_objPoint.x > Slope.x - Object.width - _snapping && _objPoint.x < Slope.x + _tileWidth + _snapping && _objPoint.y >= _slopePoint.y && _objPoint.y <= Slope.y + _tileHeight)
 		{
 			// Call the collide function for the floor slope
-			onCollideFloorSlope(Slope, Obj);
+			onCollideFloorSlope(Slope, Object);
 		}
 	}
 	
@@ -339,72 +395,26 @@ class FlxTilemapExt extends FlxTilemap
 	}
 	
 	/**
-	 * Sets the tiles that are treated as "clouds" or blocks that are only solid from the top.
-	 * 
-	 * @param 	Clouds	An array containing the numbers of the tiles to be treated as clouds.
-	 */
-	public function setClouds(?Clouds:Array<Int>):Void
-	{
-		if (Clouds != null)
-		{
-			for (i in 0...(Clouds.length))
-			{
-				setTileProperties(Clouds[i], FlxObject.CEILING);			
-			}
-		}
-	}
-	
-	/**
-	 * Sets the slope arrays, which define which tiles are treated as slopes.
-	 * 
-	 * @param 	LeftFloorSlopes 	An array containing the numbers of the tiles to be treated as left floor slopes.
-	 * @param 	RightFloorSlopes	An array containing the numbers of the tiles to be treated as right floor slopes.
-	 * @param 	LeftCeilSlopes		An array containing the numbers of the tiles to be treated as left ceiling slopes.
-	 * @param 	RightCeilSlopes		An array containing the numbers of the tiles to be treated as right ceiling slopes.
-	 */
-	public function setSlopes(?LeftFloorSlopes:Array<Int>, ?RightFloorSlopes:Array<Int>, ?LeftCeilSlopes:Array<Int>, ?RightCeilSlopes:Array<Int>):Void
-	{
-		if (LeftFloorSlopes != null)
-		{
-			slopeFloorLeft = LeftFloorSlopes;
-		}
-		if (RightFloorSlopes != null)
-		{
-			slopeFloorRight = RightFloorSlopes;
-		}
-		if (LeftCeilSlopes != null)
-		{
-			slopeCeilLeft = LeftCeilSlopes;
-		}
-		if (RightCeilSlopes != null)
-		{
-			slopeCeilRight = RightCeilSlopes;
-		}
-		
-		setSlopeProperties();
-	}
-	
-	/**
 	 * Internal helper function for setting the tiles currently held in the slope arrays to use slope collision.
 	 * Note that if you remove items from a slope, this function will not unset the slope property.
 	 */
 	private function setSlopeProperties():Void
 	{
-		for (i in 0...(slopeFloorLeft.length))
+		for (i in 0..._slopeFloorLeft.length)
 		{
-			setTileProperties(slopeFloorLeft[i], FlxObject.RIGHT | FlxObject.FLOOR, solveCollisionSlopeFloorLeft);			
+			setTileProperties(_slopeFloorLeft[i], FlxObject.RIGHT | FlxObject.FLOOR, solveCollisionSlopeFloorLeft);			
 		}
-		for (i in 0...(slopeFloorRight.length))
+		for (i in 0..._slopeFloorRight.length)
 		{
-			setTileProperties(slopeFloorRight[i], FlxObject.LEFT | FlxObject.FLOOR, solveCollisionSlopeFloorRight);
+			setTileProperties(_slopeFloorRight[i], FlxObject.LEFT | FlxObject.FLOOR, solveCollisionSlopeFloorRight);
 		}
-		for (i in 0...(slopeCeilLeft.length))
+		for (i in 0..._slopeCeilLeft.length)
 		{
-			setTileProperties(slopeCeilLeft[i], FlxObject.RIGHT | FlxObject.CEILING, solveCollisionSlopeCeilLeft);			
+			setTileProperties(_slopeCeilLeft[i], FlxObject.RIGHT | FlxObject.CEILING, solveCollisionSlopeCeilLeft);			
 		}
-		for (i in 0...(slopeCeilRight.length))
+		for (i in 0..._slopeCeilRight.length)
 		{
-			setTileProperties(slopeCeilRight[i], FlxObject.LEFT | FlxObject.CEILING, solveCollisionSlopeCeilRight);
+			setTileProperties(_slopeCeilRight[i], FlxObject.LEFT | FlxObject.CEILING, solveCollisionSlopeCeilRight);
 		}
 	}
 	
@@ -416,30 +426,30 @@ class FlxTilemapExt extends FlxTilemap
 	 */
 	private function checkArrays(TileIndex:Int):Bool
 	{
-		for (i in 0...(slopeFloorLeft.length))
+		for (i in 0..._slopeFloorLeft.length)
 		{
-			if (slopeFloorLeft[i] == TileIndex)
+			if (_slopeFloorLeft[i] == TileIndex)
 			{
 				return true;
 			}
 		}	
-		for (i in 0...(slopeFloorRight.length))
+		for (i in 0..._slopeFloorRight.length)
 		{
-			if (slopeFloorRight[i] == TileIndex)
+			if (_slopeFloorRight[i] == TileIndex)
 			{
 				return true;
 			}
 		}	
-		for (i in 0...(slopeCeilLeft.length))
+		for (i in 0..._slopeCeilLeft.length)
 		{
-			if (slopeCeilLeft[i] == TileIndex)
+			if (_slopeCeilLeft[i] == TileIndex)
 			{
 				return true;
 			}
 		}	
-		for (i in 0...(slopeCeilRight.length))
+		for (i in 0..._slopeCeilRight.length)
 		{
-			if (slopeCeilRight[i] == TileIndex)
+			if (_slopeCeilRight[i] == TileIndex)
 			{
 				return true;
 			}

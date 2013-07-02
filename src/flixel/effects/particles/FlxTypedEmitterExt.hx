@@ -38,6 +38,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 	public function new(X:Float = 0, Y:Float = 0, Size:Float = 0) 
 	{
 		super(X, Y, Std.int(Size));
+		
 		// Set defaults
 		setMotion(0, 0, 0.5, 360, 100, 1.5);
 	}
@@ -100,7 +101,8 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		// This fixes the problem that you can not add two particle explosions in the same frame.
 		if (Explode)
 		{
-			on = false;
+			emitting = false;
+			
 			var i:Int = 0;
 			var l:Int = _quantity;
 			

@@ -1,5 +1,7 @@
 package flixel.effects.fx;
 
+import flixel.FlxBasic;
+import flixel.FlxG;
 import flixel.FlxSprite;
 
 #if !flash
@@ -10,15 +12,19 @@ class GlitchSprite extends FlxSprite
 	 */
 	public var imageLines:Array<ImageLine>;
 	
-	private var _sourceSprite:FlxSprite;
+		
+	public var maxGlitch:Float;
+	public var glitchSkip:Float;
 	
+	public var sourceFrame:Int = -1;
+	
+	private var _sourceSprite:FlxSprite;
 	/**
-	 * link to source image tilesheet data
+	 * Link to source image tilesheet data
 	 */
 	private var _imageTileSheetData:TileSheetData;
-	
 	/**
-	 * storage for each frame's lines tile IDs
+	 * Storage for each frame's lines tile IDs
 	 */
 	private var _imageTileIDs:Map<Int, Array<Int>>;
 	
@@ -27,20 +33,14 @@ class GlitchSprite extends FlxSprite
 	private var _bgBlue:Float;
 	private var _bgAlpha:Float;
 	
-	public var maxGlitch:Float;
-	public var glitchSkip:Float;
-	
-	public var sourceFrame:Int;
-	
 	public function new(Source:FlxSprite, MaxGlitch:Int, GlitchSkip:Int, BgColor:Int)
 	{
 		super();
 		
 		_sourceSprite = Source;
-		sourceFrame = -1;
 		
-		this.maxGlitch = MaxGlitch;
-		this.glitchSkip = GlitchSkip;
+		maxGlitch = MaxGlitch;
+		glitchSkip = GlitchSkip;
 		
 		_imageTileIDs = new Map<Int, Array<Int>>();
 		imageLines = new Array<ImageLine>();
@@ -56,8 +56,8 @@ class GlitchSprite extends FlxSprite
 		_bgBlue = rgba.blue / 255;
 		_bgAlpha = rgba.alpha / 255;
 		
-		this.x = _sourceSprite.x;
-		this.y = _sourceSprite.y;
+		x = _sourceSprite.x;
+		y = _sourceSprite.y;
 	}
 	
 	public function updateFromSourceSprite():Void
@@ -88,6 +88,7 @@ class GlitchSprite extends FlxSprite
 			for (i in 0...(sourceFrameHeight))
 			{
 				imageLine = imageLines[i];
+				
 				if (imageLine == null)
 				{
 					imageLines[i] = { x: 0, y: i + 0.5, tileID: frameLines[i] };
@@ -115,7 +116,7 @@ class GlitchSprite extends FlxSprite
 		var y:Int = 0;
 		var rndX:Float = 0;
 		
-		for (i in 0...(sourceFrameHeight))
+		for (i in 0...sourceFrameHeight)
 		{
 			if (i == y)
 			{
@@ -250,7 +251,7 @@ class GlitchSprite extends FlxSprite
 			_point.x += halfWidth;
 			_point.y += halfHeight;
 			
-			// draw background
+			// Draw background
 			if (_bgAlpha > 0)
 			{
 				currDrawData[currIndex++] = _point.x;
@@ -280,11 +281,11 @@ class GlitchSprite extends FlxSprite
 				_tileSheetData.positionData[camera.ID] = currIndex;
 			}
 
-			// draw lines
+			// Draw lines
 			currDrawData = _imageTileSheetData.drawData[camera.ID];
 			currIndex = _imageTileSheetData.positionData[camera.ID];
 
-			for (j in 0...(imageLines.length))
+			for (j in 0...imageLines.length)
 			{
 				lineDef = imageLines[j];
 				

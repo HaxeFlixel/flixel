@@ -47,22 +47,28 @@ class FlxTilemapBuffer
 	#if flash
 	private var _pixels:BitmapData;	
 	private var _flashRect:Rectangle;
-	
 	private var _matrix:Matrix;
 	#end
 
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
+	 * 
 	 * @param TileWidth		The width of the tiles in this tilemap.
 	 * @param TileHeight	The height of the tiles in this tilemap.
 	 * @param WidthInTiles	How many tiles wide the tilemap is.
 	 * @param HeightInTiles	How many tiles tall the tilemap is.
 	 * @param Camera		Which camera this buffer relates to.
 	 */
-	public function new(TileWidth:Float, TileHeight:Float, WidthInTiles:Int, HeightInTiles:Int, Camera:FlxCamera = null)
+	public function new(TileWidth:Float, TileHeight:Float, WidthInTiles:Int, HeightInTiles:Int, ?Camera:FlxCamera)
 	{
-		if (WidthInTiles < 0) WidthInTiles = 0;
-		if (HeightInTiles < 0) HeightInTiles = 0;
+		if (WidthInTiles < 0) 
+		{
+			WidthInTiles = 0;
+		}
+		if (HeightInTiles < 0) 
+		{
+			HeightInTiles = 0;
+		}
 		
 		if (Camera == null)
 		{
@@ -70,15 +76,19 @@ class FlxTilemapBuffer
 		}
 
 		columns = Math.ceil(Camera.width / TileWidth) + 1;
+		
 		if (columns > WidthInTiles)
 		{
 			columns = WidthInTiles;
 		}
+		
 		rows = Math.ceil(Camera.height / TileHeight) + 1;
+		
 		if (rows > HeightInTiles)
 		{
 			rows = HeightInTiles;
 		}
+		
 		#if flash
 		_pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
 		width = _pixels.width;
@@ -89,6 +99,7 @@ class FlxTilemapBuffer
 		width = Std.int(columns * TileWidth);
 		height = Std.int(rows * TileHeight);
 		#end
+		
 		dirty = true;
 	}
 	
@@ -106,18 +117,20 @@ class FlxTilemapBuffer
 	/**
 	 * Fill the buffer with the specified color.
 	 * Default value is transparent.
+	 * 
 	 * @param	Color	What color to fill with, in 0xAARRGGBB hex format.
 	 */
-#if flash
+	#if flash
 	public function fill(Color:UInt = 0):Void
 	{
 		_pixels.fillRect(_flashRect, Color);
 	}
 	
-	public var pixels(get_pixels, null):BitmapData;
+	public var pixels(get, never):BitmapData;
 	
 	/**
 	 * Read-only, nab the actual buffer <code>BitmapData</code> object.
+	 * 
 	 * @return	The buffer bitmap data.
 	 */
 	private function get_pixels():BitmapData
@@ -127,6 +140,7 @@ class FlxTilemapBuffer
 	
 	/**
 	 * Just stamps this buffer onto the specified camera at the specified location.
+	 * 
 	 * @param	Camera		Which camera to draw the buffer onto.
 	 * @param	FlashPoint	Where to draw the buffer at in camera coordinates.
 	 */
@@ -143,5 +157,5 @@ class FlxTilemapBuffer
 			Camera.buffer.draw(_pixels, _matrix);
 		}
 	}
-#end
+	#end
 }
