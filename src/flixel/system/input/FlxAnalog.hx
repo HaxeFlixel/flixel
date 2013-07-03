@@ -110,7 +110,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	private function createBase():Void
 	{
 		_base = new FlxSprite(x, y).loadGraphic(FlxAssets.imgBase);
-		_base.cameras = [FlxG.cameras.defaultCamera];
+		_base.cameras = [FlxG.camera];
 		_base.x += -_base.width * .5;
 		_base.y += -_base.height * .5;
 		_base.scrollFactor.x = _base.scrollFactor.y = 0;
@@ -130,7 +130,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	private function createThumb():Void 
 	{
 		_stick = new FlxSprite(x, y).loadGraphic(FlxAssets.imgStick);
-		_stick.cameras = [FlxG.cameras.defaultCamera];
+		_stick.cameras = [FlxG.camera];
 		_stick.scrollFactor.x = _stick.scrollFactor.y = 0;
 		_stick.solid = false;
 		
@@ -213,7 +213,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 			
 			for (touch in _tempTouches)
 			{
-				_point = touch.getWorldPosition(FlxG.cameras.defaultCamera, _point);
+				_point = touch.getWorldPosition(FlxG.camera, _point);
 				if (updateAnalog(_point, touch.pressed(), touch.justPressed(), touch.justReleased(), touch) == false)
 				{
 					offAll = false;

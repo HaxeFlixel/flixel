@@ -455,7 +455,7 @@ class FlxObject extends FlxBasic
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		
 		if (!onScreenObject(Camera) || !Camera.visible || !Camera.exists)
@@ -826,7 +826,7 @@ class FlxObject extends FlxBasic
 
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		var objectScreenPos:FlxPoint = object.getScreenXY(null, Camera);
 		getScreenXY(_point, Camera);
@@ -885,7 +885,7 @@ class FlxObject extends FlxBasic
 		
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		var objectScreenPos:FlxPoint = object.getScreenXY(null, Camera);
 		_point.x = X - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
@@ -910,7 +910,7 @@ class FlxObject extends FlxBasic
 
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		var X:Float = point.x - Camera.scroll.x;
 		var Y:Float = point.y - Camera.scroll.y;
@@ -932,7 +932,7 @@ class FlxObject extends FlxBasic
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		getScreenXY(_point,Camera);
 		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
@@ -952,7 +952,7 @@ class FlxObject extends FlxBasic
 		}
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		point.x = x - (Camera.scroll.x * scrollFactor.x);
 		point.y = y - (Camera.scroll.y * scrollFactor.y);

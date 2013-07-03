@@ -74,7 +74,7 @@ class DebugPathDisplay extends FlxBasic
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		
 		var i:Int = _paths.length - 1;

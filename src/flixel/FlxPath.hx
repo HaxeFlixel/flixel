@@ -244,7 +244,7 @@ class FlxPath
 		}
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		
 		//Set up our global flash graphics object to draw out the path

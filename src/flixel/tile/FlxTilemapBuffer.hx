@@ -72,7 +72,7 @@ class FlxTilemapBuffer
 		
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 
 		columns = Math.ceil(Camera.width / TileWidth) + 1;
