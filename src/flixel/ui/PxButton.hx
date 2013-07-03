@@ -3,9 +3,10 @@ package flixel.text.pxText;
 import flixel.system.FlxAssets;
 import flixel.ui.FlxTypedButton;
 import flixel.util.FlxPoint;
+import flixel.text.FlxBitmapTextField;
 
 /**
- * A simple button class that calls a function when clicked by the mouse.
+ * A button with a bitmap text field for the label
  */
 class PxButton extends FlxTypedButton<FlxBitmapTextField>
 {
