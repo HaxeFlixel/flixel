@@ -240,7 +240,7 @@ class FlxSprite extends FlxObject
 		#else
 		_blend = null;
 		#end
-		antialiasing = false;
+		antialiasing = FlxG.antialiasByDefault;
 		cameras = null;
 		
 		finished = false;

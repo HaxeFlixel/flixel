@@ -508,7 +508,7 @@ class FlxCamera extends FlxBasic
 		
 		alpha = 1.0;
 		angle = 0.0;
-		antialiasing = false;
+		antialiasing = FlxG.antialiasByDefault;
 	}
 	
 	/**
