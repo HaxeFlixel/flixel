@@ -45,7 +45,7 @@ class FlxCoreUtils
 		
 		try
 		{
-			mouseIndex = FlxG.cameras.defaultCamera.getContainerSprite().parent.numChildren - 4;
+			mouseIndex = FlxG.camera.getContainerSprite().parent.numChildren - 4;
 		}
 		catch (e:Error)
 		{
@@ -62,6 +62,6 @@ class FlxCoreUtils
 	
 	private static function get_gameContainer():Sprite
 	{
-		return cast(FlxG.cameras.defaultCamera.getContainerSprite().parent, Sprite);
+		return cast(FlxG.camera.getContainerSprite().parent, Sprite);
 	}
 }

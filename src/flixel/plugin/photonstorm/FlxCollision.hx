@@ -56,11 +56,11 @@ class FlxCollision
 		}
 		else
 		{
-			pointA.x = Contact.x - Std.int(FlxG.cameras.defaultCamera.scroll.x * Contact.scrollFactor.x) - Contact.offset.x;
-			pointA.y = Contact.y - Std.int(FlxG.cameras.defaultCamera.scroll.y * Contact.scrollFactor.y) - Contact.offset.y;
+			pointA.x = Contact.x - Std.int(FlxG.camera.scroll.x * Contact.scrollFactor.x) - Contact.offset.x;
+			pointA.y = Contact.y - Std.int(FlxG.camera.scroll.y * Contact.scrollFactor.y) - Contact.offset.y;
 			
-			pointB.x = Target.x - Std.int(FlxG.cameras.defaultCamera.scroll.x * Target.scrollFactor.x) - Target.offset.x;
-			pointB.y = Target.y - Std.int(FlxG.cameras.defaultCamera.scroll.y * Target.scrollFactor.y) - Target.offset.y;
+			pointB.x = Target.x - Std.int(FlxG.camera.scroll.x * Target.scrollFactor.x) - Target.offset.x;
+			pointB.y = Target.y - Std.int(FlxG.camera.scroll.y * Target.scrollFactor.y) - Target.offset.y;
 		}
 		
 		#if flash
@@ -251,7 +251,7 @@ class FlxCollision
 	/**
 	 * Creates a "wall" around the given camera which can be used for FlxSprite collision
 	 * 
-	 * @param	Camera				The FlxCamera to use for the wall bounds (can be FlxG.cameras.defaultCamera for the current one)
+	 * @param	Camera				The FlxCamera to use for the wall bounds (can be FlxG.camera for the current one)
 	 * @param	Placement			CAMERA_WALL_OUTSIDE or CAMERA_WALL_INSIDE
 	 * @param	Thickness			The thickness of the wall in pixels
 	 * @param	AdjustWorldBounds	Adjust the FlxG.worldBounds based on the wall (true) or leave alone (false)

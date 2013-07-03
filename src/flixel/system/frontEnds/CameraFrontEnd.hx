@@ -15,11 +15,6 @@ class CameraFrontEnd
 	 */
 	public var list:Array<FlxCamera>;
 	/**
-	 * By default this just refers to the first entry in the cameras array
-	 * declared above, but you can do what you like with it.
-	 */
-	public var defaultCamera:FlxCamera;
-	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's <code>draw()</code> call.
 	 * @default false
@@ -224,7 +219,7 @@ class CameraFrontEnd
 		if (NewCamera == null)	
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 		
-		defaultCamera = add(NewCamera);
+		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
 	}
 	
@@ -236,11 +231,11 @@ class CameraFrontEnd
 	{
 		FlxG.stage.displayState = StageDisplayState.FULL_SCREEN;
 		
-		var fsw:Int = Std.int(FlxG.width * defaultCamera.zoom);
-		var fsh:Int = Std.int(FlxG.height * defaultCamera.zoom);
+		var fsw:Int = Std.int(FlxG.width * FlxG.camera.zoom);
+		var fsh:Int = Std.int(FlxG.height * FlxG.camera.zoom);
 		
-		defaultCamera.x = (FlxG.stage.fullScreenWidth - fsw) / 2;
-		defaultCamera.y = (FlxG.stage.fullScreenHeight - fsh) / 2;
+		FlxG.camera.x = (FlxG.stage.fullScreenWidth - fsw) / 2;
+		FlxG.camera.y = (FlxG.stage.fullScreenHeight - fsh) / 2;
 	}
 	#end
 	
@@ -253,13 +248,13 @@ class CameraFrontEnd
 	 */
 	private function get_bgColor():Int
 	{
-		if (defaultCamera == null)
+		if (FlxG.camera == null)
 		{
 			return FlxColor.BLACK;
 		}
 		else
 		{
-			return defaultCamera.bgColor;
+			return FlxG.camera.bgColor;
 		}
 	}
 	

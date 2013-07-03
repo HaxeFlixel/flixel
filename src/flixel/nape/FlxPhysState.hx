@@ -211,7 +211,7 @@ class FlxPhysState extends FlxState
 		_physDbgSpr.clear();
 		_physDbgSpr.draw(space);
 		
-		var cam = FlxG.cameras.defaultCamera;
+		var cam = FlxG.camera;
 		var zoom = cam.zoom;
 		
 		_physDbgSpr.display.scaleX = zoom;
