@@ -747,14 +747,14 @@ class FlxGame extends Sprite
 		
 		FlxG.autoPause = true;
 		
+		// Creating the debugger overlay
+		#if !FLX_NO_DEBUG
+		_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
+		addChild(_debugger);
+		#end
+		
 		// Let mobile devs opt out of unnecessary overlays.
-		#if !mobile
-			// Creating the debugger overlay
-			#if !FLX_NO_DEBUG
-			_debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
-			addChild(_debugger);
-			#end
-				
+		#if !mobile	
 			// Volume display tab
 			#if !FLX_NO_SOUND_TRAY
 			createSoundTray();
