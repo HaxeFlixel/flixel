@@ -121,6 +121,11 @@ class FlxG
 	 * while denser collision activity usually profits from more. Default value is 6.
 	 */
 	static public var worldDivisions:Int;
+	/**
+	 * By default this just refers to the first entry in the <code>FlxG.cameras.list</code> 
+	 * array but you can do what you like with it.
+	 */
+	static public var camera:FlxCamera;
 	
 	/**
 	 * Useful helper objects for doing Flash-specific rendering.

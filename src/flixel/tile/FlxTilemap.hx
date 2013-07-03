@@ -1522,7 +1522,7 @@ class FlxTilemap extends FlxObject
 		
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		
 		WorldPoint.x = WorldPoint.x - Camera.scroll.x;
@@ -1743,7 +1743,7 @@ class FlxTilemap extends FlxObject
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		
 		Camera.setBounds(x + Border * _tileWidth, y + Border * _tileHeight, width - Border * _tileWidth * 2, height - Border * _tileHeight * 2, UpdateWorld);

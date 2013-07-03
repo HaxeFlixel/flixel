@@ -426,7 +426,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
-		var camera:FlxCamera = FlxG.cameras.defaultCamera;
+		var camera:FlxCamera = FlxG.camera;
 		screenX = Math.floor((_globalScreenPosition.x - camera.x)/camera.zoom);
 		screenY = Math.floor((_globalScreenPosition.y - camera.y)/camera.zoom);
 		x = screenX + camera.scroll.x;
@@ -444,7 +444,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		if (point == null)
 		{
@@ -467,7 +467,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		if (Camera == null)
 		{
-			Camera = FlxG.cameras.defaultCamera;
+			Camera = FlxG.camera;
 		}
 		if (point == null)
 		{
