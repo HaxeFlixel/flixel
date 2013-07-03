@@ -27,7 +27,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic->Void)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic)
 	{
 		super(X, Y, Label, OnClick);
 		
