@@ -53,14 +53,12 @@ class MouseInteractionMgr extends FlxBasic
 	}
 	
 	/**
-	* As alternative you can call MouseInteractionMgr.initTimeManager()).
+	* As alternative you can call MouseInteractionMgr.init().
 	*/
-	public static function initTimerManager()
+	public static inline function init()
 	{
 		if (FlxG.plugins.get(MouseInteractionMgr) == null)
-		{
 			FlxG.plugins.add(new MouseInteractionMgr());
-		}
 	}
 	/**
 	* Adds a sprite to MouseInteractionMgr registry.
