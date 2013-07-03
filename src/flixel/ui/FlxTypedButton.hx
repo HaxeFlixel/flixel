@@ -54,19 +54,19 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * We recommend assigning your main button behavior to this function
 	 * via the <code>FlxButton</code> constructor.
 	 */
-	private var _onUp:Dynamic->Void;
+	private var _onUp:Dynamic;
 	/**
 	 * This function is called when the button is pressed down.
 	 */
-	private var _onDown:Dynamic->Void;
+	private var _onDown:Dynamic;
 	/**
 	 * This function is called when the mouse goes over the button.
 	 */
-	private var _onOver:Dynamic->Void;
+	private var _onOver:Dynamic;
 	/**
 	 * This function is called when the mouse leaves the button area.
 	 */
-	private var _onOut:Dynamic->Void;
+	private var _onOut:Dynamic;
 	/**
 	 * The params to pass to the <code>_onUp</code> function
 	 */
@@ -103,7 +103,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	Label		The text that you want to appear on the button.
 	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic->Void)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic)
 	{
 		super(X, Y);
 		
@@ -409,7 +409,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	Callback	The callback function.
 	 * @param	Params		Any params you want to pass to the function. Optional!
 	 */
-	inline public function setOnUpCallback(Callback:Dynamic->Void, Params:Array<Dynamic> = null):Void
+	inline public function setOnUpCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
 	{
 		_onUp = Callback;
 		
@@ -427,7 +427,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	Callback	The callback function.
 	 * @param	Params		Any params you want to pass to the function. Optional!
 	 */
-	inline public function setOnDownCallback(Callback:Dynamic->Void, Params:Array<Dynamic> = null):Void
+	inline public function setOnDownCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
 	{
 		_onDown = Callback;
 		
@@ -445,7 +445,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	Callback	The callback function.
 	 * @param	Params		Any params you want to pass to the function. Optional!
 	 */
-	inline public function setOnOverCallback(Callback:Dynamic->Void, Params:Array<Dynamic> = null):Void
+	inline public function setOnOverCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
 	{
 		_onOver = Callback;
 		
@@ -463,7 +463,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	Callback	The callback function.
 	 * @param	Params		Any params you want to pass to the function. Optional!
 	 */
-	inline public function setOnOutCallback(Callback:Dynamic->Void, Params:Array<Dynamic> = null):Void
+	inline public function setOnOutCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
 	{
 		_onOut = Callback;
 		
