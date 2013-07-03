@@ -1,16 +1,3 @@
-/**
- * FlxMouseControl
- * -- Part of the Flixel Power Tools set
- * 
- * v1.2 Added Mouse Zone, Mouse Speed and refactored addToStack process
- * v1.1 Moved to a native plugin
- * v1.0 First release
- * 
- * @version 1.2 - July 28th 2011
- * @link http://www.photonstorm.com
- * @author Richard Davey / Photon Storm
-*/
-
 package flixel.plugin.photonstorm;
 
 #if !FLX_NO_MOUSE
@@ -20,96 +7,88 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.util.FlxMath;
 
+/**
+ * FlxMouseControl
+ * 
+ * @link http://www.photonstorm.com
+ * @author Richard Davey / Photon Storm
+*/
 class FlxMouseControl extends FlxBasic
 {
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.
 	 */
-	public static inline var ASCENDING:Int = -1;
-	
+	inline static public var ASCENDING:Int = -1;
 	/**
 	 * Use with <code>sort()</code> to sort in descending order.
 	 */
-	public static inline var DESCENDING:Int = 1;
-	
+	inline static public var DESCENDING:Int = 1;
 	/**
 	 * The value that the FlxExtendedSprites are sorted by before deciding which is "on-top" for click select
 	 */
-	public static var sortIndex:String = "y";
-	
+	static public var sortIndex:String = "y";
 	/**
 	 * The sorting order. If the sortIndex is "y" and the order is ASCENDING then a sprite with a Y value of 200 would be "on-top" of one with a Y value of 100.
 	 */
-	public static var sortOrder:Int = ASCENDING;
-	
+	static public var sortOrder:Int = ASCENDING;
 	/**
 	 * Is the mouse currently dragging a sprite? If you have just clicked but NOT yet moved the mouse then this might return false.
 	 */
-	public static var isDragging:Bool = false;
-	
+	static public var isDragging:Bool = false;
 	/**
 	 * The FlxExtendedSprite that is currently being dragged, if any.
 	 */
-	public static var dragTarget:FlxExtendedSprite;
-	
-	/**
-	 * The FlxExtendedSprite that currently has the mouse button pressed on it
-	 */
-	public static var clickTarget:FlxExtendedSprite;
-	private static var clickStack:Array<FlxExtendedSprite> = new Array<FlxExtendedSprite>();
-	private static var clickCoords:FlxPoint;
-	private static var hasClickTarget:Bool = false;
-	
-	private static var oldX:Int = 0;
-	private static var oldY:Int = 0;
-	
+	static public var dragTarget:FlxExtendedSprite;
+	static public var clickTarget:FlxExtendedSprite;
 	/**
 	 * The speed the mouse is moving on the X axis in pixels per frame
 	 */
-	public static var speedX:Int;
-	
+	static public var speedX:Int;
 	/**
 	 * The speed the mouse is moving on the Y axis in pixels per frame
 	 */
-	public static var speedY:Int;
-	
+	static public var speedY:Int;
 	/**
 	 * The mouse can be set to only be active within a specific FlxRect region of the game world.
 	 * If outside this FlxRect no clicks, drags or throws will be processed.
 	 * If the mouse leaves this region while still dragging then the sprite is automatically dropped and its release handler is called.
 	 * Set the FlxRect to null to disable the zone.
 	 */
-	public static var mouseZone:FlxRect;
-	
+	static public var mouseZone:FlxRect;
 	/**
 	 * Instead of using a mouseZone (which is calculated in world coordinates) you can limit the mouse to the FlxG.camera.deadzone area instead.
 	 * If set to true the mouse will use the camera deadzone. If false (or the deadzone is null) no check will take place.
 	 * Note that this takes priority over the mouseZone above. If the mouseZone and deadzone are set, the deadzone is used.
 	 */
-	public static var linkToDeadZone:Bool = false;
+	static public var linkToDeadZone:Bool = false;
 	
-	public function new() 
-	{
-		super();
-	}
+	/**
+	 * The FlxExtendedSprite that currently has the mouse button pressed on it
+	 */
+	static private var _clickStack:Array<FlxExtendedSprite> = new Array<FlxExtendedSprite>();
+	static private var _clickCoords:FlxPoint;
+	static private var _hasClickTarget:Bool = false;
+	
+	static private var _oldX:Int = 0;
+	static private var _oldY:Int = 0;
 	
 	/**
 	 * Adds the given FlxExtendedSprite to the stack of potential sprites that were clicked, the stack is then sorted and the final sprite is selected from that
 	 * 
-	 * @param	item	The FlxExtendedSprite that was clicked by the mouse
+	 * @param	Item	The FlxExtendedSprite that was clicked by the mouse
 	 */
-	public static function addToStack(item:FlxExtendedSprite):Void
+	static public function addToStack(Item:FlxExtendedSprite):Void
 	{
 		if (mouseZone != null)
 		{
 			if (FlxMath.pointInFlxRect(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), mouseZone) == true)
 			{
-				clickStack.push(item);
+				_clickStack.push(Item);
 			}
 		}
 		else
 		{
-			clickStack.push(item);
+			_clickStack.push(Item);
 		}
 	}
 	
@@ -118,22 +97,22 @@ class FlxMouseControl extends FlxBasic
 	 */
 	override public function update():Void
 	{
-		//	Update mouse speed
-		speedX = FlxG.mouse.screenX - oldX;
-		speedY = FlxG.mouse.screenY - oldY;
+		// Update mouse speed
+		speedX = FlxG.mouse.screenX - _oldX;
+		speedY = FlxG.mouse.screenY - _oldY;
 		
-		oldX = FlxG.mouse.screenX;
-		oldY = FlxG.mouse.screenY;
+		_oldX = FlxG.mouse.screenX;
+		_oldY = FlxG.mouse.screenY;
 		
-		//	Is the mouse currently pressed down on a target?
-		if (hasClickTarget)
+		// Is the mouse currently pressed down on a target?
+		if (_hasClickTarget)
 		{
 			if (FlxG.mouse.pressed())
 			{
-				//	Has the mouse moved? If so then we're candidate for a drag
-				if (isDragging == false && clickTarget.draggable == true && (clickCoords.x != FlxG.mouse.x || clickCoords.y != FlxG.mouse.y))
+				// Has the mouse moved? If so then we're candidate for a drag
+				if (isDragging == false && clickTarget.draggable == true && (_clickCoords.x != FlxG.mouse.x || _clickCoords.y != FlxG.mouse.y))
 				{
-					//	Drag on
+					// Drag on
 					isDragging = true;
 					
 					dragTarget = clickTarget;
@@ -155,15 +134,15 @@ class FlxMouseControl extends FlxBasic
 			}
 			else if (FlxMath.mouseInFlxRect(true, mouseZone) == false)
 			{
-				//	Is a mouse zone enabled? In which case check if we're still in it
+				// Is a mouse zone enabled? In which case check if we're still in it
 				releaseMouse();
 			}
 		}
 		else
 		{
-			//	If you are wondering how the brand new array can have anything in it by now, it's because FlxExtendedSprite
-			//	adds itself to the clickStack
-			if (FlxG.mouse.pressed() && clickStack.length > 0)
+			// If you are wondering how the brand new array can have anything in it by now, it's because FlxExtendedSprite
+			// adds itself to the clickStack
+			if (FlxG.mouse.pressed() && _clickStack.length > 0)
 			{
 				assignClickedSprite();
 			}
@@ -178,7 +157,7 @@ class FlxMouseControl extends FlxBasic
 		//	Mouse is no longer down, so tell the click target it's free - this will also stop dragging if happening
 		clickTarget.mouseReleasedHandler();
 		
-		hasClickTarget = false;
+		_hasClickTarget = false;
 		clickTarget = null;
 		
 		isDragging = false;
@@ -191,34 +170,34 @@ class FlxMouseControl extends FlxBasic
 	private function assignClickedSprite():Void
 	{
 		//	If there is more than one potential target then sort them
-		if (clickStack.length > 1)
+		if (_clickStack.length > 1)
 		{
-			clickStack.sort(sortHandler);
+			_clickStack.sort(sortHandler);
 		}
 		
-		clickTarget = clickStack.pop();
+		clickTarget = _clickStack.pop();
 		
-		clickCoords = clickTarget.point;
+		_clickCoords = clickTarget.point;
 		
-		hasClickTarget = true;
+		_hasClickTarget = true;
 		
 		clickTarget.mousePressedHandler();
 		
-		clickStack = [];
+		_clickStack = [];
 	}
 	
 	/**
 	 * Helper function for the sort process.
 	 * 
-	 * @param 	item1	The first object being sorted.
-	 * @param	item2	The second object being sorted.
+	 * @param 	Item1	The first object being sorted.
+	 * @param	Item2	The second object being sorted.
 	 * 
 	 * @return	An integer value: -1 (item1 before item2), 0 (same), or 1 (item1 after item2)
 	 */
-	private function sortHandler(item1:FlxExtendedSprite, item2:FlxExtendedSprite):Int
+	private function sortHandler(Item1:FlxExtendedSprite, Item2:FlxExtendedSprite):Int
 	{
-		var prop1 = Reflect.getProperty(item1, sortIndex);
-		var prop2 = Reflect.getProperty(item2, sortIndex);
+		var prop1 = Reflect.getProperty(Item1, sortIndex);
+		var prop2 = Reflect.getProperty(Item2, sortIndex);
 		
 		if (prop1 < prop2)
 		{
@@ -226,7 +205,7 @@ class FlxMouseControl extends FlxBasic
 		}
 		else if (prop1 > prop2)
 		{
-			return -sortOrder;
+			return - sortOrder;
 		}
 		
 		return 0;
@@ -237,7 +216,7 @@ class FlxMouseControl extends FlxBasic
 	 */
 	public static function clear():Void
 	{
-		hasClickTarget = false;
+		_hasClickTarget = false;
 		
 		if (clickTarget != null)
 		{

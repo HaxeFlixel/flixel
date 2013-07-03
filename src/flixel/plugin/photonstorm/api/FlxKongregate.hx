@@ -1,12 +1,3 @@
-/**
-FlxKongregate
--- Part of the Flixel Power Tools set
-v1.0 First release
-@Version 1.0 - August 1st 2011
-@link http://www.photonstorm.com
-@author Richard Davey / Photon Storm 
-*/
-
 package flixel.plugin.photonstorm.api;
 
 import flash.display.DisplayObject;
@@ -19,42 +10,44 @@ import flash.system.Security;
 import flixel.FlxG;
 
 /**
- *  Allows for easy access to the Kongregate API
+ * Allows for easy access to the Kongregate API
  * 
- *  Todo: Add in the functions for Chat Integration - you can still use them via the FlxKongregate.api object.
+ * Todo: Add in the functions for Chat Integration - you can still use them via the FlxKongregate.api object.
+ * 
+ * @link http://www.photonstorm.com
+ * @author Richard Davey / Photon Storm 
  */
 class FlxKongregate 
 {
     /**
      * The Kongregate API object. You can make calls directly to this once the API has connected.
      */
-    public static var api:Dynamic;
+    static public var api:Dynamic;
 
     /**
-     * true if the API has loaded otherwise false. Loaded is not the same thing as connected, it just means it's ready for the connection.
+     * True if the API has loaded otherwise false. Loaded is not the same thing as connected, it just means it's ready for the connection.
      */
-    public static var hasLoaded:Bool = false;
+    static public var hasLoaded:Bool = false;
 
     /**
      * Is the game running locally in Shadow API mode (true) or from Kongregates servers (false)
      */
-    public static var isLocal:Bool = false;
+    static public var isLocal:Bool = false;
 
-    private static var shadowAPI:String = "http://www.kongregate.com/flash/API_AS3_Local.swf";
-    private static var apiLoader:Loader;
-    private static var loadCallback:Dynamic;
-
-    public function new() {  }
+	inline static private var SHADOW_API:String = "http://www.kongregate.com/flash/API_AS3_Local.swf";
+    static private var _apiLoader:Loader;
+    static private var _loadCallback:Dynamic;
 
     /**
      * Loads the Kongregate API and if successful connects to the service.
      * Note that your game must have access to Stage by this point.
      * 
-     * @param   callback    This function is called if the API loads successfully. Do not call any API function until this has happened.
+     * @param   Callback    This function is called if the API loads successfully. Do not call any API function until this has happened.
      */
-    public static function init(cb:Dynamic):Void
+    static public function init(Callback:Dynamic):Void
     {
         var parameters:Dynamic;
+		
         try
         {
             parameters = FlxG.stage.loaderInfo.parameters;
@@ -64,9 +57,9 @@ class FlxKongregate
             throw "FlxKongregate: No access to FlxG.stage - only call this once your game has access to the display list";
             return;
         }
-
+		
         var apiPath:String;
-
+		
         if (parameters.kongregate_api_path)
         {
             Security.allowDomain(parameters.kongregate_api_path);
@@ -74,50 +67,50 @@ class FlxKongregate
         }
         else
         {
-            Security.allowDomain(shadowAPI);
-            apiPath = shadowAPI;
+            Security.allowDomain(SHADOW_API);
+            apiPath = SHADOW_API;
             isLocal = true;
         }
-
-        loadCallback = cb;
-
-        apiLoader = new Loader();
-        apiLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, apiLoadComplete, false, 0, true);
-        apiLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, apiLoadError, false, 0, true);
-        apiLoader.load(new URLRequest(apiPath));
-
-        FlxG.stage.addChild(apiLoader);
+		
+        _loadCallback = Callback;
+		
+        _apiLoader = new Loader();
+        _apiLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, apiLoadComplete, false, 0, true);
+        _apiLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, apiLoadError, false, 0, true);
+        _apiLoader.load(new URLRequest(apiPath));
+		
+        FlxG.stage.addChild(_apiLoader);
     }
 
     /**
      * Remove the API from memory (when possible) and removes it from the display list also
      */
-    public static function disconnect():Void
+    static public function disconnect():Void
     {
         api = null;
-
+		
         hasLoaded = false;
-
-        FlxG.stage.removeChild(apiLoader);
+		
+        FlxG.stage.removeChild(_apiLoader);
     }
 
-    private static function apiLoadComplete(event:Event):Void
+    static private function apiLoadComplete(E:Event):Void
     {
         api = event.target.content;
-
+		
         hasLoaded = true;
-
+		
         Security.allowDomain(api.loaderInfo.url);
-
-        if (Std.is (loadCallback, Dynamic))
+		
+        if (Std.is(_loadCallback, Dynamic))
         {
-            loadCallback.call();
+            _loadCallback.call();
         }
     }
 
-    private static function apiLoadError(error:IOError):Void
+    static private function apiLoadError(E:IOError):Void
     {
-        FlxG.log.add("Error loading Kongregate API:" + error);
+        FlxG.log.add("Error loading Kongregate API:" + E);
     }
 
     /**
@@ -125,30 +118,30 @@ class FlxKongregate
      * These MUST be set-up *before* you call FlxKongregate.connect()
      * See: http://www.kongregate.com/developer_center/docs/shared-content-api
      * 
-     * @param   contentType     Type of content to listen for
-     * @param   callback        Function to call when content load request has been made
+     * @param   ContentType     Type of content to listen for
+     * @param   Callback        Function to call when content load request has been made
      */
-    public static function addLoadListener(contentType:String, cb:Void->Void):Void
+    static public function addLoadListener(ContentType:String, Callback:Void->Void):Void
     {
-        api.sharedContent.addLoadListener(contentType, cb);
+        api.sharedContent.addLoadListener(ContentType, Callback);
     }
 
     /**
      * Register an event listener with the API. Useful for capturing guest to user login requests for example.
      * See: http://www.kongregate.com/developer_center/docs/handling-guests
      * 
-     * @param   contentType     The event to listen for (i.e. "login")
-     * @param   callback        Funcation to call when this event is received
+     * @param   ContentType     The event to listen for (i.e. "login")
+     * @param   Callback        Funcation to call when this event is received
      */
-    public static function addEventListener(contentType:String, cb:Void->Void):Void
+    static public function addEventListener(ContentType:String, Callback:Void->Void):Void
     {
-        api.services.addEventListener(contentType, cb);
+        api.services.addEventListener(ContentType, Callback);
     }
 
     /**
      * Connect to the Kongregate API. This should be called only after the init callback reports a succesful load of the API
      */
-    public static function connect():Void
+    static public function connect():Void
     {
         if (hasLoaded)
         {
@@ -159,7 +152,7 @@ class FlxKongregate
     /**
      * The isGuest function can be called to determine if the player is currently signed into Kongregate or not
      */
-    public static function  isGuest():Bool
+    static public function isGuest():Bool
     {
         return api.services.isGuest();
     }
@@ -167,7 +160,7 @@ class FlxKongregate
     /**
      * You can use the getUsername() function to retrieve the username of the current player. It will begin with Guest if the user is not signed in.
      */
-    public static function  getUserName():String
+    static public function getUserName():String
     {
         return api.services.getUsername();
     }
@@ -175,7 +168,7 @@ class FlxKongregate
     /**
      * You can use the getUserId() function to retrieve the unique user id of the current player. It will return 0 if the user is not signed in.
      */
-    public static function  getUserId():Float
+    static public function getUserId():Float
     {
         try
         {
@@ -192,7 +185,7 @@ class FlxKongregate
     /**
      * If you are using the Authentication API you can use the getGameAuthToken function to get the player's game authentication token.
      */
-    public static function  getGameAuthToken():String
+    static public function getGameAuthToken():String
     {
         return api.services.getGameAuthToken();
     }
@@ -200,7 +193,7 @@ class FlxKongregate
     /**
      * If the player is a guest, and you want to display the sign-in/registration UI to them you can use the showSignInBox function.
      */
-    public static function showSignInBox():Void
+    static public function showSignInBox():Void
     {
         if (api.services.isGuest())
         {
@@ -211,7 +204,7 @@ class FlxKongregate
     /**
      * This call works the same way as showSigninBox, but it focuses the registration form rather than the sign-in form.
      */
-    public static function showRegistrationBox():Void
+    static public function showRegistrationBox():Void
     {
         if (api.services.isGuest())
         {
@@ -222,9 +215,9 @@ class FlxKongregate
     /**
      * If a player is logged-in and you want to allow them to post a shout on their profile page, you may bring up the shout box, optionally populated with some initial content.
      * 
-     * @param   message     The optional initial content
+     * @param   Message		The optional initial content
      */
-    public static function showShoutBox(?message:String = ""):Void
+    static public function showShoutBox(Message:String = ""):Void
     {
         if (api.services.isGuest() == false)
         {
@@ -236,30 +229,36 @@ class FlxKongregate
      * If you need to resize your game's enclosing container, you may do so with resizeGame call. The enclosing iframe will resize around your game.
      * Games may not be resized smaller than their initial dimensions. This call requires special permission from Kongregate to use.
      * 
-     * @param   width       New width (in pixels) of the container
-     * @param   height      New height (in pixels) of the container
+     * @param   Width	New width (in pixels) of the container
+     * @param   Height	New height (in pixels) of the container
      */
-    public static function resizeGame(width:Int, height:Int):Void
+    static public function resizeGame(Width:Int, Height:Int):Void
     {
-        api.services.resizeGame(width, height);
+        api.services.resizeGame(Width, Height);
     }
 
     /**
      * Submit a statistic to the Kongregate server. Make sure you have defined the stat before calling this.
      * See the Kongregate API documentation for details.
      * 
-     * @param   name        The name of the statistic
-     * @param   value       The value to submit (will be converted to an integer server-side)
+     * @param   Name	The name of the statistic
+     * @param   Value	The value to submit (will be converted to an integer server-side)
      */
-    public static function submitStats(name:String, value:Float):Void
+    static public function submitStats(Name:String, Value:Float):Void
     {
-        api.stats.submit(name, value);
+        api.stats.submit(Name, Value);
     }
 
-    public static function submitScore(score:Float, mode:String):Void
+	/**
+     * Submit a score to the Kongregate server. Make sure you have defined the stat before calling this.
+     * See the Kongregate API documentation for details.
+     * 
+     * @param   Score	The value of the score
+     * @param   Mode	What game mode this score is for, like "Hard" or "Normal"
+     */
+    static public function submitScore(Score:Float, Mode:String):Void
     {
-        // api.stats.submit(name, value);
-        api.scores.submit(score, mode);
+        api.scores.submit(Score, Mode);
     }
 
     /**
@@ -267,12 +266,12 @@ class FlxKongregate
      * Your game must be in the Kongregate Microtransactions beta to use this function.
      * See: http://www.kongregate.com/developer_center/docs/microtransaction-client-api
      * 
-     * @param   items       The array of item identifier strings or item/metadata objects.
-     * @param   callback    The callback function
+     * @param   Items       The array of item identifier strings or item/metadata objects.
+     * @param   Callback    The callback function
      */
-    public static function purchaseItem(items:Array<Dynamic>, cb:Void->Void):Void
+    static public function purchaseItem(Items:Array<Dynamic>, Callback:Void->Void):Void
     {
-        api.mtx.purchaseItems(items, cb);
+        api.mtx.purchaseItems(Items, Callback);
     }
 
     /**
@@ -280,12 +279,12 @@ class FlxKongregate
      * Your game must be in the Kongregate Microtransactions beta to use this function.
      * See: http://www.kongregate.com/developer_center/docs/microtransaction-client-api
      * 
-     * @param   username    The username to request inventory for, or null for the current player
-     * @param   callback    The callback function
+     * @param   Username    The username to request inventory for, or null for the current player
+     * @param   Callback    The callback function
      */
-    public static function requestUserItemList(username:String, cb:Void->Void):Void
+    static public function requestUserItemList(Username:String, Callback:Void->Void):Void
     {
-        api.mtx.requestUserItemList(username, cb);
+        api.mtx.requestUserItemList(Username, Callback);
     }
 
     /**
@@ -293,9 +292,9 @@ class FlxKongregate
      * Your game must be in the Kongregate Microtransactions beta to use this function.
      * See: http://www.kongregate.com/developer_center/docs/microtransaction-client-api
      * 
-     * @param   purchaseMethod   The purchase method to display. Should be "offers" or "mobile"
+     * @param   PurchaseMethod   The purchase method to display. Should be "offers" or "mobile"
      */
-    public static function showKredPurchaseDialog(purchaseMethod:String):Void
+    static public function showKredPurchaseDialog(PurchaseMethod:String):Void
     {
         api.mtx.showKredPurchaseDialog(purchaseMethod);
     }
@@ -305,39 +304,39 @@ class FlxKongregate
      * This will allow them to view, rate, or load shared content for your game.
      * See: http://www.kongregate.com/developer_center/docs/shared-content-api
      * 
-     * @param   contentType     Type of content to browse
-     * @param   sortOrder       Optional constant specifying how to sort content (see API docs)
-     * @param   label           Optional, only browse content saved with the specified label
+     * @param   ContentType     Type of content to browse
+     * @param   SortOrder       Optional constant specifying how to sort content (see API docs)
+     * @param   Label           Optional, only browse content saved with the specified label
      */
-    public static function browseSharedContent(contentType:String, ?sortOrder:String = null, ?label:String = null):Void
+    static public function browseSharedContent(ContentType:String, ?SortOrder:String, ?Label:String):Void
     {
-        api.sharedContent.browse(contentType, sortOrder, label);
+        api.sharedContent.browse(ContentType, SortOrder, Label);
     }
 
     /**
      * Use the save function to submit shared content on the Kongregate back-end.
      * See: http://www.kongregate.com/developer_center/docs/shared-content-api
      * 
-     * @param   type        Type of content the user wishes to save, 12 characters max.
-     * @param   content     Value of content to be saved. We strongly recommend keeping these values under 100K.
-     * @param   callback    Function to call when save has finished.
-     * @param   thumb       Optional but highly recommended! Send us a DisplayObject that we will snapshotted and used as a thumbnail for the content.
-     * @param   label       Optional, label for sub-classing the shared content.
+     * @param   ContentType		Type of content the user wishes to save, 12 characters max.
+     * @param   Content			Value of content to be saved. We strongly recommend keeping these values under 100K.
+     * @param   Callback		Function to call when save has finished.
+     * @param   Thumb			Optional but highly recommended! Send us a DisplayObject that we will snapshotted and used as a thumbnail for the content.
+     * @param   Label			Optional, label for sub-classing the shared content.
      */
-    public static function saveSharedContent(type:String, content:String, cb:Void->Void, ?thumb:DisplayObject = null, ?label:String = null):Void
+    static public function saveSharedContent(ContentType:String, Content:String, Callback:Void->Void, ?Thumb:DisplayObject, ?Label:String):Void
     {
-        api.sharedContent.save(type, content, cb, thumb, label);
+        api.sharedContent.save(ContentType, Content, Callback, Thumb, Label);
     }
 
     /**
      * Export a DisplayObject to be converted to a user avatar. It is highly recommended that avatars be at least 40 x 40px.
      * See: http://www.kongregate.com/developer_center/docs/avatar-api
      * 
-     * @param   avatar      Can be null, but highly recommended that you send yourself. If null, we will snapshot the stage.
-     * @param   callback    Function to call when content load request has been made
+     * @param   Avatar      Can be null, but highly recommended that you send yourself. If null, we will snapshot the stage.
+     * @param   Callback    Function to call when content load request has been made
      */
-    public static function submitAvatar(avatar:DisplayObject, cb:Void->Void):Void
+    static public function submitAvatar(Avatar:DisplayObject, Callback:Void->Void):Void
     {
-        api.images.submitAvatar(avatar, cb);
+        api.images.submitAvatar(Avatar, Callback);
     }
 }

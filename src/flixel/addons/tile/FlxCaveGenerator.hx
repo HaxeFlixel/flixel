@@ -11,13 +11,13 @@ class FlxCaveGenerator
 	 * How many times do you want to "smooth" the cave.
 	 * The higher number the smoother.
 	 */ 
-	public static var numSmoothingIterations:Int = 6;
+	static public var numSmoothingIterations:Int = 6;
 	
 	/**
 	 * During initial state, how percent of matrix are walls?
 	 * The closer the value is to 1.0, more wall-e the area is
 	 */
-	public static var initWallRatio:Float = 0.5;
+	static public var initWallRatio:Float = 0.5;
 	
 	private var _numTilesCols:Int;
 	private var _numTilesRows:Int;
@@ -51,6 +51,39 @@ class FlxCaveGenerator
 		}
 		
 		return mapString;
+	}
+	
+	/**
+	 * @return Returns a matrix of a cave!
+	 */
+	public function generateCaveLevel():Array<Array<Int>>
+	{
+		// Initialize random array
+		var mat:Array<Array<Int>> = genInitMatrix(_numTilesRows, _numTilesCols);
+		
+		for (y in 0...(_numTilesRows))
+		{
+			for (x in 0...(_numTilesCols)) 
+			{
+				mat[y][x] = (Math.random() < initWallRatio ? 1 : 0);
+			}
+		}
+	
+		// Secondary buffer
+		var mat2:Array<Array<Int>> = genInitMatrix(_numTilesRows, _numTilesCols);
+		
+		// Run automata
+		for (i in 0...(numSmoothingIterations))
+		{
+			runCelluarAutomata(mat, mat2);
+			
+			// Swap
+			var temp:Array<Array<Int>> = mat;
+			mat = mat2;
+			mat2 = temp;
+		}
+		
+		return mat;
 	}
 	
 	/**
@@ -133,38 +166,5 @@ class FlxCaveGenerator
 				}
 			}
 		}
-	}
-	
-	/**
-	 * @return Returns a matrix of a cave!
-	 */
-	public function generateCaveLevel():Array<Array<Int>>
-	{
-		// Initialize random array
-		var mat:Array<Array<Int>> = genInitMatrix(_numTilesRows, _numTilesCols);
-		
-		for (y in 0...(_numTilesRows))
-		{
-			for (x in 0...(_numTilesCols)) 
-			{
-				mat[y][x] = (Math.random() < initWallRatio ? 1 : 0);
-			}
-		}
-	
-		// Secondary buffer
-		var mat2:Array<Array<Int>> = genInitMatrix(_numTilesRows, _numTilesCols);
-		
-		// Run automata
-		for (i in 0...(numSmoothingIterations))
-		{
-			runCelluarAutomata(mat, mat2);
-			
-			// Swap
-			var temp:Array<Array<Int>> = mat;
-			mat = mat2;
-			mat2 = temp;
-		}
-		
-		return mat;
 	}
 }

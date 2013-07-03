@@ -1,17 +1,3 @@
-/**
- * FlxDelay
- * -- Part of the Flixel Power Tools set
- * 
- * v1.4 Modified abort so it no longer runs the stop callback (thanks to Cambrian-Man)
- * v1.3 Added secondsElapsed and secondsRemaining and some more documentation
- * v1.2 Added callback support
- * v1.1 Updated for the Flixel 2.5 Plugin system
- * 
- * @version 1.4 - July 31st 2011
- * @link http://www.photonstorm.com
- * @author Richard Davey / Photon Storm
-*/
-
 package flixel.plugin.photonstorm;
 
 import flash.display.Sprite;
@@ -22,47 +8,45 @@ import flixel.FlxG;
 import flixel.util.FlxMisc;
 
 /**
- * A useful timer that can be used to trigger events after certain amounts of time are up.<br />
- * Uses getTimer so is low on resources and avoids using Flash events.<br />
- * Also takes into consideration the Pause state of your game.<br />
+ * A useful timer that can be used to trigger events after certain amounts of time are up.
+ * Uses getTimer so is low on resources and avoids using Flash events.
+ * Also takes into consideration the Pause state of your game.
  * If your game pauses, when it starts again the timer notices and adjusts the expires time accordingly.
+ * 
+ * @link http://www.photonstorm.com
+ * @author Richard Davey / Photon Storm
  */
-
 class FlxDelay extends Sprite
 {
 	/**
-	 * true if the timer is currently running, otherwise false
+	 * True if the timer is currently running, otherwise false
 	 */
 	public var isRunning:Bool;
-	
 	/**
 	 * If you wish to call a function once the timer completes, set it here
 	 */
 	public var callbackFunction:Void->Void;
-	
 	/**
 	 * The duration of the Delay in milliseconds
 	 */
 	public var duration:Int;
 	
-	private var started:Int;
-	private var expires:Int;
-	private var pauseStarted:Int;
-	private var pausedTimerRunning:Bool;
-	private var complete:Bool;
+	private var _started:Int;
+	private var _expires:Int = 0;
+	private var _pauseStarted:Int;
+	private var _pausedTimerRunning:Bool;
+	private var _complete:Bool = false;
 	
 	/**
 	 * Create a new timer which will run for the given amount of ms (1000 = 1 second real time)
 	 * 
-	 * @param	runFor	The duration of this timer in ms. Call start() to set it going.
+	 * @param	RunFor	The duration of this timer in ms. Call start() to set it going.
 	 */
-	public function new(runFor:Int)
+	public function new(RunFor:Int)
 	{
 		super();
 		
-		expires = 0;
-		duration = runFor;
-		complete = false;
+		duration = RunFor;
 	}
 	
 	/**
@@ -70,14 +54,14 @@ class FlxDelay extends Sprite
 	 */
 	public function start():Void
 	{
-		started = FlxMisc.getTicks();
-		expires = started + duration;
+		_started = FlxMisc.getTicks();
+		_expires = _started + duration;
 		
 		isRunning = true;
-		complete = false;
+		_complete = false;
 		
-		pauseStarted = 0;
-		pausedTimerRunning = false;
+		_pauseStarted = 0;
+		_pausedTimerRunning = false;
 		
 		#if flash
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, update, false, 0, true);
@@ -86,65 +70,65 @@ class FlxDelay extends Sprite
 		#end
 	}
 	
-	public var hasExpired(get_hasExpired, null):Bool;
-	
 	/**
 	 * Has the timer finished?
 	 */
+	public var hasExpired(get, never):Bool;
+	
 	private function get_hasExpired():Bool
 	{
-		return complete;
+		return _complete;
 	}
 	
 	/**
 	 * Restart the timer using the new duration
 	 * 
-	 * @param	newDuration	The duration of this timer in ms.
+	 * @param	NewDuration	The duration of this timer in ms.
 	 */
-	public function reset(newDuration:Int):Void
+	public function reset(NewDuration:Int):Void
 	{
-		duration = newDuration;
+		duration = NewDuration;
 		
 		start();
 	}
 	
-	public var secondsElapsed(get_secondsElapsed, null):Int;
-	
 	/**
 	 * The amount of seconds that have elapsed since the timer was started
 	 */
+	public var secondsElapsed(get, never):Int;
+	
 	private function get_secondsElapsed():Int
 	{
-		return Std.int((FlxMisc.getTicks() - started) / 1000);
+		return Std.int((FlxMisc.getTicks() - _started) / 1000);
 	}
-	
-	public var secondsRemaining(get_secondsRemaining, null):Int;
 	
 	/**
 	 * The amount of seconds that are remaining until the timer completes
 	 */
+	public var secondsRemaining(get, never):Int;
+	
 	private function get_secondsRemaining():Int
 	{
-		return Std.int((expires - FlxMisc.getTicks()) / 1000);
+		return Std.int((_expires - FlxMisc.getTicks()) / 1000);
 	}
 	
-	private function update(event:Event):Void
+	private function update(E:Event):Void
 	{
 		//	Has the game been paused?
-		if (pausedTimerRunning == true && FlxG.paused == false)
+		if (_pausedTimerRunning == true && FlxG.paused == false)
 		{
-			pausedTimerRunning = false;
+			_pausedTimerRunning = false;
 			
 			//	Add the time the game was paused for onto the expires timer
-			expires += (FlxMisc.getTicks() - pauseStarted);
+			_expires += (FlxMisc.getTicks() - _pauseStarted);
 		}
-		else if (FlxG.paused == true && pausedTimerRunning == false)
+		else if (FlxG.paused == true && _pausedTimerRunning == false)
 		{
-			pauseStarted = FlxMisc.getTicks();
-			pausedTimerRunning = true;
+			_pauseStarted = FlxMisc.getTicks();
+			_pausedTimerRunning = true;
 		}
 		
-		if (isRunning == true && pausedTimerRunning == false && FlxMisc.getTicks() > expires)
+		if (isRunning == true && _pausedTimerRunning == false && FlxMisc.getTicks() > _expires)
 		{
 			stop();
 		}
@@ -158,18 +142,16 @@ class FlxDelay extends Sprite
 		stop(false);
 	}
 	
-	private function stop(runCallback:Bool = true):Void
+	private function stop(RunCallback:Bool = true):Void
 	{
 		Lib.current.stage.removeEventListener(Event.ENTER_FRAME, update);
 		
 		isRunning = false;
-		complete = true;
+		_complete = true;
 		
-		if (callbackFunction != null && runCallback == true)
+		if (callbackFunction != null && RunCallback == true)
 		{
 			callbackFunction();
 		}
-		
 	}
-	
 }

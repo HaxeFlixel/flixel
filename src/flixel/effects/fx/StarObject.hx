@@ -9,6 +9,4 @@ class StarObject
 	public var speed:Float;
 	public var r:Float;
 	public var alpha:Float;
-	
-	public function new() {  }
 }

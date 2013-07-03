@@ -1,19 +1,3 @@
-/**
- * FlxWeapon
- * -- Part of the Flixel Power Tools set
- * 
- * v1.3 Added bullet elasticity and bulletsFired counter
- * v1.2 Added useParentDirection boolean
- * v1.1 Added pre-fire, fire and post-fire callbacks and sound support, rnd factors, boolean returns and currentBullet
- * v1.0 First release
- * 
- * @version 1.3 - October 9th 2011
- * @link http://www.photonstorm.com
- * @link http://www.haxeflixel.com
- * @author Richard Davey / Photon Storm
-* @author Touch added by Impaler / Beeblerox
-*/
-
 package flixel.plugin.photonstorm;
 
 import flixel.FlxBasic;
@@ -22,7 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSound;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.plugin.photonstorm.baseTypes.Bullet;
+import flixel.plugin.photonstorm.baseTypes.FlxBullet;
 import flixel.system.input.FlxTouch;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxMisc;
@@ -34,267 +18,250 @@ import flixel.util.FlxVelocity;
  * A Weapon can only fire 1 type of bullet. But it can fire many of them at once (in different directions if needed) via createBulletPattern
  * A Player could fire multiple Weapons at the same time however, if you need to layer them up
  * 
- * TODO
- * ----
+ * @version 1.3 - October 9th 2011
+ * @link http://www.photonstorm.com
+ * @link http://www.haxeflixel.com
+ * @author Richard Davey / Photon Storm
+ * @author Touch added by Impaler / Beeblerox
  * 
- * Angled bullets
- * Baked Rotation support for angled bullets
- * Bullet death styles (particle effects)
- * Bullet trails - blur FX style and Missile Command "draw lines" style? (could be another FX plugin)
- * Homing Missiles
- * Bullet uses random sprite from sprite sheet (for rainbow style bullets), or cycles through them in sequence?
- * Some Weapon base classes like shotgun, lazer, etc?
+ * TODO: Angled bullets
+ * TODO: Baked Rotation support for angled bullets
+ * TODO: Bullet death styles (particle effects)
+ * TODO: Bullet trails - blur FX style and Missile Command "draw lines" style? (could be another FX plugin)
+ * TODO: Homing Missiles
+ * TODO: Bullet uses random sprite from sprite sheet (for rainbow style bullets), or cycles through them in sequence?
+ * TODO: Some Weapon base classes like shotgun, lazer, etc?
  */
-
 class FlxWeapon 
 {
+	// Quick firing direction angle constants
+	inline static public var BULLET_UP:Int = -90;
+	inline static public var BULLET_DOWN:Int = 90;
+	inline static public var BULLET_LEFT:Int = 180;
+	inline static public var BULLET_RIGHT:Int = 0;
+	inline static public var BULLET_NORTH_EAST:Int = -45;
+	inline static public var BULLET_NORTH_WEST:Int = -135;
+	inline static public var BULLET_SOUTH_EAST:Int = 45;
+	inline static public var BULLET_SOUTH_WEST:Int = 135;
+	
 	/**
 	 * Internal name for this weapon (i.e. "pulse rifle")
 	 */
 	public var name:String;
-	
 	/**
 	 * The FlxGroup into which all the bullets for this weapon are drawn. This should be added to your display and collision checked against it.
 	 */
-	public var group:FlxTypedGroup<Bullet>;
+	public var group:FlxTypedGroup<FlxBullet>;
 	
 	// Internal variables, use with caution
-	public var nextFire:Int;
-	public var fireRate:Int;
+	public var nextFire:Int = 0;
+	public var fireRate:Int = 0;
 	public var bulletSpeed:Int;
 	
-	//	Bullet values
+	// Bullet values
 	public var bounds:FlxRect;
 	
-	private var rotateToAngle:Bool;
-	
-	//	When firing from a fixed position (i.e. Missile Command)
-	private var fireFromPosition:Bool;
-	private var fireX:Int;
-	private var fireY:Int;
-	
-	private var lastFired:Int;
-	private var touchTarget:FlxTouch;
-	
-	//	When firing from a parent sprites position (i.e. Space Invaders)
-	private var fireFromParent:Bool;
 	public var parent:FlxSprite;
-	private var positionOffset:FlxPoint;
-	private var directionFromParent:Bool;
-	private var angleFromParent:Bool;
 	
-	private var velocity:FlxPoint;
+	public var multiShot:Int = 0;
+	public var bulletLifeSpan:Float = 0;
+	public var bulletDamage:Float = 1;
 	
-	public var multiShot:Int;
-	public var bulletLifeSpan:Float;
-	public var bulletDamage:Float;
+	public var bulletElasticity:Float = 0;
 	
-	public var bulletElasticity:Float;
-	
-	public var rndFactorAngle:Int;
-	public var rndFactorSpeed:Int;
-	public var rndFactorLifeSpan:Float;
+	public var rndFactorAngle:Int = 0;
+	public var rndFactorSpeed:Int = 0;
+	public var rndFactorLifeSpan:Float = 0;
 	public var rndFactorPosition:FlxPoint;
 	
 	/**
 	 * A reference to the Bullet that was fired
 	 */
-	public var currentBullet:Bullet;
+	public var currentBullet:FlxBullet;
 	
-	//	Callbacks
+	// Callbacks
 	public var onPreFireCallback:Void->Void;
 	public var onFireCallback:Void->Void;
 	public var onPostFireCallback:Void->Void;
 	
-	//	Sounds
+	// Sounds
 	public var onPreFireSound:FlxSound;
 	public var onFireSound:FlxSound;
 	public var onPostFireSound:FlxSound;
 	
-	//	Quick firing direction angle constants
-	public static inline var BULLET_UP:Int = -90;
-	public static inline var BULLET_DOWN:Int = 90;
-	public static inline var BULLET_LEFT:Int = 180;
-	public static inline var BULLET_RIGHT:Int = 0;
-	public static inline var BULLET_NORTH_EAST:Int = -45;
-	public static inline var BULLET_NORTH_WEST:Int = -135;
-	public static inline var BULLET_SOUTH_EAST:Int = 45;
-	public static inline var BULLET_SOUTH_WEST:Int = 135;
+	inline static private var FIRE:Int = 0;
+	inline static private var FIRE_AT_MOUSE:Int = 1;
+	inline static private var FIRE_AT_POSITION:Int = 2;
+	inline static private var FIRE_AT_TARGET:Int = 3;
+	inline static private var FIRE_FROM_ANGLE:Int = 4;
+	inline static private var FIRE_FROM_PARENT_ANGLE:Int = 5;
+	inline static private var FIRE_AT_TOUCH:Int = 6;
 	
-	//	TODO :)
+	private var _rotateToAngle:Bool;
+	private var _velocity:FlxPoint;
+	
+	// When firing from a fixed position (i.e. Missile Command)
+	private var _fireFromPosition:Bool;
+	private var _fireX:Int;
+	private var _fireY:Int;
+	
+	private var _lastFired:Int = 0;
+	private var _touchTarget:FlxTouch;
+	
+	//	When firing from a parent sprites position (i.e. Space Invaders)
+	private var _fireFromParent:Bool;
+	private var _positionOffset:FlxPoint;
+	private var _directionFromParent:Bool;
+	private var _angleFromParent:Bool;
+	
+	// TODO :)
 	/**
 	 * Keeps a tally of how many bullets have been fired by this weapon
 	 */
-	private var bulletsFired:Int;
-	private var currentMagazine:Int;
-	//private var currentBullet:Int;
-	private var magazineCount:Int;
-	private var bulletsPerMagazine:Int;
-	private var magazineSwapDelay:Int;
-	private var skipParentCollision:Bool;
+	private var _bulletsFired:Int = 0;
+	private var _currentMagazine:Int;
+	//private var _currentBullet:Int;
+	private var _magazineCount:Int;
+	private var _bulletsPerMagazine:Int;
+	private var _magazineSwapDelay:Int;
+	private var _skipParentCollision:Bool;
 	
-	private var magazineSwapCallback:Dynamic;
-	private var magazineSwapSound:FlxSound;
-	
-	private static inline var FIRE:Int = 0;
-	private static inline var FIRE_AT_MOUSE:Int = 1;
-	private static inline var FIRE_AT_POSITION:Int = 2;
-	private static inline var FIRE_AT_TARGET:Int = 3;
-	private static inline var FIRE_FROM_ANGLE:Int = 4;
-	private static inline var FIRE_FROM_PARENT_ANGLE:Int = 5;
-	private static inline var FIRE_AT_TOUCH:Int = 6;
+	private var _magazineSwapCallback:Dynamic;
+	private var _magazineSwapSound:FlxSound;
 	
 	/**
-	 * Creates the FlxWeapon class which will fire your bullets.<br>
-	 * You should call one of the makeBullet functions to visually create the bullets.<br>
-	 * Then either use setDirection with fire() or one of the fireAt functions to launch them.
+	 * Creates the FlxWeapon class which will fire your bullets.
+	 * You should call one of the makeBullet functions to visually create the bullets.
+	 * Then either use <code>setDirection</code> with <code>fire()</code> or one of the <code>fireAt</code> functions to launch them.
 	 * 
-	 * @param	name		The name of your weapon (i.e. "lazer" or "shotgun"). For your internal reference really, but could be displayed in-game.
-	 * @param	parentRef	If this weapon belongs to a parent sprite, specify it here (bullets will fire from the sprites x/y vars as defined below).
-	 * @param	xVariable	The x axis variable of the parent to use when firing. Typically "x", but could be "screenX" or any public getter that exposes the x coordinate.
-	 * @param	yVariable	The y axis variable of the parent to use when firing. Typically "y", but could be "screenY" or any public getter that exposes the y coordinate.
+	 * @param	Name		The name of your weapon (i.e. "lazer" or "shotgun"). For your internal reference really, but could be displayed in-game.
+	 * @param	ParentRef	If this weapon belongs to a parent sprite, specify it here (bullets will fire from the sprites x/y vars as defined below).
 	 */
-	public function new(name:String, parentRef:FlxSprite = null)
+	public function new(Name:String, ?ParentRef:FlxSprite)
 	{
-		bulletsFired = 0;
-		
-		rndFactorAngle = 0;
-		rndFactorLifeSpan = 0;
-		rndFactorSpeed = 0;
 		rndFactorPosition = new FlxPoint();
-		multiShot = 0;
-		bulletLifeSpan = 0;
-		bulletElasticity = 0;
-		bulletDamage = 1;
-		
-		lastFired = 0;
-		nextFire = 0;
-		fireRate = 0;
-		
-		this.name = name;
-		
 		bounds = new FlxRect(0, 0, FlxG.width, FlxG.height);
+		_positionOffset = new FlxPoint();
+		_velocity = new FlxPoint();
 		
-		positionOffset = new FlxPoint();
+		name = Name;
 		
-		velocity = new FlxPoint();
-		
-		if (parentRef != null)
+		if (ParentRef != null)
 		{
-			setParent(parentRef);
+			setParent(ParentRef);
 		}
 	}
 	
 	/**
 	 * Makes a pixel bullet sprite (rather than an image). You can set the width/height and color of the bullet.
 	 * 
-	 * @param	quantity	How many bullets do you need to make? This value should be high enough to cover all bullets you need on-screen *at once* plus probably a few extra spare!
-	 * @param	width		The width (in pixels) of the bullets
-	 * @param	height		The height (in pixels) of the bullets
-	 * @param	color		The color of the bullets. Must be given in 0xAARRGGBB format
-	 * @param	offsetX		When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
-	 * @param	offsetY		When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	Quantity	How many bullets do you need to make? This value should be high enough to cover all bullets you need on-screen *at once* plus probably a few extra spare!
+	 * @param	Width		The width (in pixels) of the bullets
+	 * @param	Height		The height (in pixels) of the bullets
+	 * @param	Color		The color of the bullets. Must be given in 0xAARRGGBB format
+	 * @param	OffsetX		When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	OffsetY		When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 */
-	public function makePixelBullet(quantity:Int, width:Int = 2, height:Int = 2, color:Int = 0xffffffff, offsetX:Int = 0, offsetY:Int = 0):Void
+	public function makePixelBullet(Quantity:Int, Width:Int = 2, Height:Int = 2, Color:Int = 0xffffffff, OffsetX:Int = 0, OffsetY:Int = 0):Void
 	{
-		group = new FlxTypedGroup<Bullet>(quantity);
+		group = new FlxTypedGroup<FlxBullet>(Quantity);
 		
-		for (b in 0...(quantity))
+		for (b in 0...Quantity)
 		{
-			var tempBullet:Bullet = new Bullet(this, b);
-			tempBullet.makeGraphic(width, height, color);
+			var tempBullet:FlxBullet = new FlxBullet(this, b);
+			tempBullet.makeGraphic(Width, Height, Color);
 			group.add(tempBullet);
 		}
 		
-		positionOffset.x = offsetX;
-		positionOffset.y = offsetY;
+		_positionOffset.x = OffsetX;
+		_positionOffset.y = OffsetY;
 	}
 	
 	/**
 	 * Makes a bullet sprite from the given image. It will use the width/height of the image.
 	 * 
-	 * @param	quantity		How many bullets do you need to make? This value should be high enough to cover all bullets you need on-screen *at once* plus probably a few extra spare!
-	 * @param	image			The image used to create the bullet from
-	 * @param	offsetX			When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
-	 * @param	offsetY			When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
-	 * @param	autoRotate		When true the bullet sprite will rotate to match the angle of the parent sprite. Call fireFromParentAngle or fromFromAngle to fire it using an angle as the velocity.
-	 * @param	frame			If the image has a single row of square animation frames on it, you can specify which of the frames you want to use here. Default is -1, or "use whole graphic"
-	 * @param	rotations		The number of rotation frames the final sprite should have.  For small sprites this can be quite a large number (360 even) without any problems.
-	 * @param	antiAliasing	Whether to use high quality rotations when creating the graphic. Default is false.
-	 * @param	autoBuffer		Whether to automatically increase the image size to accomodate rotated corners. Default is false. Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @param	Quantity		How many bullets do you need to make? This value should be high enough to cover all bullets you need on-screen *at once* plus probably a few extra spare!
+	 * @param	Image			The image used to create the bullet from
+	 * @param	OffsetX			When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	OffsetY			When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	AutoRotate		When true the bullet sprite will rotate to match the angle of the parent sprite. Call fireFromParentAngle or fromFromAngle to fire it using an angle as the velocity.
+	 * @param	Frame			If the image has a single row of square animation frames on it, you can specify which of the frames you want to use here. Default is -1, or "use whole graphic"
+	 * @param	Rotations		The number of rotation frames the final sprite should have.  For small sprites this can be quite a large number (360 even) without any problems.
+	 * @param	AntiAliasing	Whether to use high quality rotations when creating the graphic. Default is false.
+	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners. Default is false. Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 */
-	public function makeImageBullet(quantity:Int, image:Dynamic, offsetX:Int = 0, offsetY:Int = 0, autoRotate:Bool = false, rotations:Int = 16, frame:Int = -1, antiAliasing:Bool = false, autoBuffer:Bool = false):Void
+	public function makeImageBullet(Quantity:Int, Image:Dynamic, OffsetX:Int = 0, OffsetY:Int = 0, AutoRotate:Bool = false, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false):Void
 	{
-		group = new FlxTypedGroup<Bullet>(quantity);
+		group = new FlxTypedGroup<FlxBullet>(Quantity);
 		
-		rotateToAngle = autoRotate;
+		_rotateToAngle = AutoRotate;
 		
-		for (b in 0...(quantity))
+		for (b in 0...Quantity)
 		{
-			var tempBullet:Bullet = new Bullet(this, b);
+			var tempBullet:FlxBullet = new FlxBullet(this, b);
 			
 			#if flash
-			if (autoRotate)
+			if (AutoRotate)
 			{
-				tempBullet.loadRotatedGraphic(image, rotations, frame, antiAliasing, autoBuffer);
+				tempBullet.loadRotatedGraphic(Image, Rotations, Frame, AntiAliasing, AutoBuffer);
 			}
 			else
 			{
-				tempBullet.loadGraphic(image);
+				tempBullet.loadGraphic(Image);
 			}
 			#else
-			tempBullet.loadGraphic(image);
-			tempBullet.frame = frame;
-			tempBullet.antialiasing = antiAliasing;
+			tempBullet.loadGraphic(Image);
+			tempBullet.frame = Frame;
+			tempBullet.antialiasing = AntiAliasing;
 			#end
 			group.add(tempBullet);
 		}
 		
-		positionOffset.x = offsetX;
-		positionOffset.y = offsetY;
+		_positionOffset.x = OffsetX;
+		_positionOffset.y = OffsetY;
 	}
 	
 	/**
 	 * Makes an animated bullet from the image and frame data given.
 	 * 
-	 * @param	quantity		How many bullets do you need to make? This value should be high enough to cover all bullets you need on-screen *at once* plus probably a few extra spare!
-	 * @param	imageSequence	The image used to created the animated bullet from
-	 * @param	frameWidth		The width of each frame in the animation
-	 * @param	frameHeight		The height of each frame in the animation
-	 * @param	frames			An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3)
-	 * @param	frameRate		The speed in frames per second that the animation should play at (e.g. 40 fps)
-	 * @param	looped			Whether or not the animation is looped or just plays once
-	 * @param	offsetX			When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
-	 * @param	offsetY			When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	Quantity		How many bullets do you need to make? This value should be high enough to cover all bullets you need on-screen *at once* plus probably a few extra spare!
+	 * @param	ImageSequence	The image used to created the animated bullet from
+	 * @param	FrameWidth		The width of each frame in the animation
+	 * @param	FrameHeight		The height of each frame in the animation
+	 * @param	Frames			An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3)
+	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps)
+	 * @param	Looped			Whether or not the animation is looped or just plays once
+	 * @param	OffsetX			When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	OffsetY			When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 */
-	public function makeAnimatedBullet(quantity:Int, imageSequence:Dynamic, frameWidth:Int, frameHeight:Int, frames:Array<Int>, frameRate:Int, looped:Bool, offsetX:Int = 0, offsetY:Int = 0):Void
+	public function makeAnimatedBullet(Quantity:Int, ImageSequence:Dynamic, FrameWidth:Int, FrameHeight:Int, Frames:Array<Int>, FrameRate:Int, Looped:Bool, OffsetX:Int = 0, OffsetY:Int = 0):Void
 	{
-		group = new FlxTypedGroup<Bullet>(quantity);
+		group = new FlxTypedGroup<FlxBullet>(Quantity);
 		
-		for (b in 0...(quantity))
+		for (b in 0...Quantity)
 		{
-			var tempBullet:Bullet = new Bullet(this, b);
+			var tempBullet:FlxBullet = new FlxBullet(this, b);
 			
-			tempBullet.loadGraphic(imageSequence, true, false, frameWidth, frameHeight);
-			tempBullet.addAnimation("fire", frames, frameRate, looped);
+			tempBullet.loadGraphic(ImageSequence, true, false, FrameWidth, FrameHeight);
+			tempBullet.addAnimation("fire", Frames, FrameRate, Looped);
 			
 			group.add(tempBullet);
 		}
 		
-		positionOffset.x = offsetX;
-		positionOffset.y = offsetY;
+		_positionOffset.x = OffsetX;
+		_positionOffset.y = OffsetY;
 	}
 	
 	/**
 	 * Internal function that handles the actual firing of the bullets
 	 * 
-	 * @param	method
-	 * @param	x
-	 * @param	y
-	 * @param	target
-	 * @return	true if a bullet was fired or false if one wasn't available. The bullet last fired is stored in FlxWeapon.prevBullet
+	 * @param	Method
+	 * @param	X
+	 * @param	Y
+	 * @param	Target
+	 * @return	True if a bullet was fired or false if one wasn't available. The bullet last fired is stored in <code>FlxWeapon.prevBullet</code>
 	 */
-	private function runFire(method:Int, x:Int = 0, y:Int = 0, target:FlxSprite = null, angle:Int = 0):Bool
+	private function runFire(Method:Int, X:Int = 0, Y:Int = 0, ?Target:FlxSprite, Angle:Int = 0):Bool
 	{
 		if (fireRate > 0 && FlxMisc.getTicks() < nextFire)
 		{
@@ -318,62 +285,62 @@ class FlxWeapon
 			onPreFireSound.play();
 		}
 
-		//	Clear any velocity that may have been previously set from the pool
+		// Clear any velocity that may have been previously set from the pool
 		currentBullet.velocity.x = 0;
 		currentBullet.velocity.y = 0;
 		
-		lastFired = FlxMisc.getTicks();
+		_lastFired = FlxMisc.getTicks();
 		nextFire = FlxMisc.getTicks() + Std.int(fireRate / FlxG.timeScale);
 		
-		var launchX:Float = positionOffset.x;
-		var launchY:Float = positionOffset.y;
+		var launchX:Float = _positionOffset.x;
+		var launchY:Float = _positionOffset.y;
 		
-		if (fireFromParent)
+		if (_fireFromParent)
 		{
 			launchX += parent.x;
 			launchY += parent.y;
 		}
-		else if (fireFromPosition)
+		else if (_fireFromPosition)
 		{
-			launchX += fireX;
-			launchY += fireY;
+			launchX += _fireX;
+			launchY += _fireY;
 		}
 		
-		if (directionFromParent)
+		if (_directionFromParent)
 		{
-			velocity = FlxVelocity.velocityFromFacing(parent, bulletSpeed);
+			_velocity = FlxVelocity.velocityFromFacing(parent, bulletSpeed);
 		}
 		
-		//	Faster (less CPU) to use this small if-else ladder than a switch statement
-		if (method == FlxWeapon.FIRE)
+		// Faster (less CPU) to use this small if-else ladder than a switch statement
+		if (Method == FlxWeapon.FIRE)
 		{
-			currentBullet.fire(launchX, launchY, velocity.x, velocity.y);
+			currentBullet.fire(launchX, launchY, _velocity.x, _velocity.y);
 		}
-		else if (method == FlxWeapon.FIRE_AT_POSITION)
+		else if (Method == FlxWeapon.FIRE_AT_POSITION)
 		{
-			currentBullet.fireAtPosition(launchX, launchY, x, y, bulletSpeed);
+			currentBullet.fireAtPosition(launchX, launchY, X, Y, bulletSpeed);
 		}
-		else if (method == FlxWeapon.FIRE_AT_TARGET)
+		else if (Method == FlxWeapon.FIRE_AT_TARGET)
 		{
-			currentBullet.fireAtTarget(launchX, launchY, target, bulletSpeed);
+			currentBullet.fireAtTarget(launchX, launchY, Target, bulletSpeed);
 		}
-		else if (method == FlxWeapon.FIRE_FROM_ANGLE)
+		else if (Method == FlxWeapon.FIRE_FROM_ANGLE)
 		{
-			currentBullet.fireFromAngle(launchX, launchY, angle, bulletSpeed);
+			currentBullet.fireFromAngle(launchX, launchY, Angle, bulletSpeed);
 		}
-		else if (method == FlxWeapon.FIRE_FROM_PARENT_ANGLE)
+		else if (Method == FlxWeapon.FIRE_FROM_PARENT_ANGLE)
 		{
 			currentBullet.fireFromAngle(launchX, launchY, Math.floor(parent.angle), bulletSpeed);
 		}
 		#if !FLX_NO_TOUCH
-		else if (method == FlxWeapon.FIRE_AT_TOUCH)
+		else if (Method == FlxWeapon.FIRE_AT_TOUCH)
 		{
-			if ( touchTarget != null)
-			currentBullet.fireAtTouch(launchX, launchY, touchTarget, bulletSpeed);
+			if (_touchTarget != null)
+			currentBullet.fireAtTouch(launchX, launchY, _touchTarget, bulletSpeed);
 		}
 		#end
 		#if !FLX_NO_MOUSE
-		else if (method == FlxWeapon.FIRE_AT_MOUSE)
+		else if (Method == FlxWeapon.FIRE_AT_MOUSE)
 		{
 			currentBullet.fireAtMouse(launchX, launchY, bulletSpeed);
 		}
@@ -388,7 +355,7 @@ class FlxWeapon
 			onPostFireSound.play();
 		}
 		
-		bulletsFired++;
+		_bulletsFired++;
 		
 		return true;
 	}
@@ -396,9 +363,9 @@ class FlxWeapon
 	/**
 	 * Fires a bullet (if one is available). The bullet will be given the velocity defined in setBulletDirection and fired at the rate set in setFireRate.
 	 * 
-	 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 * @return	True if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 	 */
-	public inline function fire():Bool
+	inline public function fire():Bool
 	{
 		return runFire(FlxWeapon.FIRE);
 	}
@@ -407,9 +374,9 @@ class FlxWeapon
 	/**
 	 * Fires a bullet (if one is available) at the mouse coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 
-	 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 * @return	True if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 	 */
-	public inline function fireAtMouse():Bool
+	inline public function fireAtMouse():Bool
 	{
 		return runFire(FlxWeapon.FIRE_AT_MOUSE);
 	}
@@ -419,22 +386,28 @@ class FlxWeapon
 	/**
 	 * Fires a bullet (if one is available) at the FlxTouch coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 
-	 * 	@param	a	The FlxTouch object to fire at, if null use the first available one
-	 * @return		true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 * @param	Touch	The FlxTouch object to fire at, if null use the first available one
+	 * @return	True if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 	 */
-	public function fireAtTouch(a:FlxTouch = null):Bool
+	public function fireAtTouch(?Touch:FlxTouch):Bool
 	{
-		if ( a == null ) 
+		if (Touch == null) 
 		{
-			touchTarget = FlxG.touchManager.getFirstTouch();
-		} else {
-			touchTarget = a;
+			_touchTarget = FlxG.touchManager.getFirstTouch();
+		} 
+		else 
+		{
+			_touchTarget = Touch;
 		}
+		
 		var fired = false;
-		if ( touchTarget != null) {
+		
+		if (_touchTarget != null) 
+		{
 			fired = runFire(FlxWeapon.FIRE_AT_TOUCH);
-			touchTarget = null;
+			_touchTarget = null;
 		}
+		
 		return fired;
 	}
 	#end
@@ -442,43 +415,43 @@ class FlxWeapon
 	/**
 	 * Fires a bullet (if one is available) at the given x/y coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 
-	 * @param	x	The x coordinate (in game world pixels) to fire at
-	 * @param	y	The y coordinate (in game world pixels) to fire at
-	 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 * @param	X	The x coordinate (in game world pixels) to fire at
+	 * @param	Y	The y coordinate (in game world pixels) to fire at
+	 * @return	True if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 	 */
-	public inline function fireAtPosition(x:Int, y:Int):Bool
+	inline public function fireAtPosition(X:Int, Y:Int):Bool
 	{
-		return runFire(FlxWeapon.FIRE_AT_POSITION, x, y);
+		return runFire(FlxWeapon.FIRE_AT_POSITION, X, Y);
 	}
 	
 	/**
 	 * Fires a bullet (if one is available) at the given targets x/y coordinates, using the speed set in setBulletSpeed and the rate set in setFireRate.
 	 * 
-	 * @param	target	The FlxSprite you wish to fire the bullet at
-	 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 * @param	Target	The FlxSprite you wish to fire the bullet at
+	 * @return	True if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 	 */
-	public inline function fireAtTarget(target:FlxSprite):Bool
+	inline public function fireAtTarget(Target:FlxSprite):Bool
 	{
-		return runFire(FlxWeapon.FIRE_AT_TARGET, 0, 0, target);
+		return runFire(FlxWeapon.FIRE_AT_TARGET, 0, 0, Target);
 	}
 	
 	/**
 	 * Fires a bullet (if one is available) based on the given angle
 	 * 
-	 * @param	angle	The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-	 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 * @param	Angle	The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * @return	True if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 	 */
-	public inline function fireFromAngle(angle:Int):Bool
+	inline public function fireFromAngle(Angle:Int):Bool
 	{
-		return runFire(FlxWeapon.FIRE_FROM_ANGLE, 0, 0, null, angle);
+		return runFire(FlxWeapon.FIRE_FROM_ANGLE, 0, 0, null, Angle);
 	}
 	
 	/**
 	 * Fires a bullet (if one is available) based on the angle of the Weapons parent
 	 * 
-	 * @return	true if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
+	 * @return	True if a bullet was fired or false if one wasn't available. A reference to the bullet fired is stored in FlxWeapon.currentBullet.
 	 */
-	public inline function fireFromParentAngle():Bool
+	inline public function fireFromParentAngle():Bool
 	{
 		return runFire(FlxWeapon.FIRE_FROM_PARENT_ANGLE);
 	}
@@ -486,25 +459,25 @@ class FlxWeapon
 	/**
 	 * Causes the Weapon to fire from the parents x/y value, as seen in Space Invaders and most shoot-em-ups.
 	 * 
-	 * @param	parentRef		If this weapon belongs to a parent sprite, specify it here (bullets will fire from the sprites x/y vars as defined below).
-	 * @param	xVariable		The x axis variable of the parent to use when firing. Typically "x", but could be "screenX" or any public getter that exposes the x coordinate.
-	 * @param	yVariable		The y axis variable of the parent to use when firing. Typically "y", but could be "screenY" or any public getter that exposes the y coordinate.
-	 * @param	offsetX			When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
-	 * @param	offsetY			When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
-	 * @param	useDirection	When fired the bullet direction is based on parent sprites facing value (up/down/left/right)
+	 * @param	ParentRef		If this weapon belongs to a parent sprite, specify it here (bullets will fire from the sprites x/y vars as defined below).
+	 * @param	VariableX		The x axis variable of the parent to use when firing. Typically "x", but could be "screenX" or any public getter that exposes the x coordinate.
+	 * @param	VariableY		The y axis variable of the parent to use when firing. Typically "y", but could be "screenY" or any public getter that exposes the y coordinate.
+	 * @param	OffsetX			When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	OffsetY			When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	UseDirection	When fired the bullet direction is based on parent sprites facing value (up/down/left/right)
 	 */
-	public function setParent(parentRef:FlxSprite, offsetX:Int = 0, offsetY:Int = 0, useDirection:Bool = false):Void
+	public function setParent(ParentRef:FlxSprite, OffsetX:Int = 0, OffsetY:Int = 0, UseDirection:Bool = false):Void
 	{
-		if (parentRef != null)
+		if (ParentRef != null)
 		{
-			fireFromParent = true;
+			_fireFromParent = true;
 			
-			parent = parentRef;
+			parent = ParentRef;
 			
-			positionOffset.x = offsetX;
-			positionOffset.y = offsetY;
+			_positionOffset.x = OffsetX;
+			_positionOffset.y = OffsetY;
 			
-			directionFromParent = useDirection;
+			_directionFromParent = UseDirection;
 		}
 	}
 	
@@ -512,30 +485,30 @@ class FlxWeapon
 	 * Causes the Weapon to fire from a fixed x/y position on the screen, like in the game Missile Command.<br>
 	 * If set this over-rides a call to setParent (which causes the Weapon to fire from the parents x/y position)
 	 * 
-	 * @param	x	The x coordinate (in game world pixels) to fire from
-	 * @param	y	The y coordinate (in game world pixels) to fire from
-	 * @param	offsetX		When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
-	 * @param	offsetY		When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	X			The x coordinate (in game world pixels) to fire from
+	 * @param	Y			The y coordinate (in game world pixels) to fire from
+	 * @param	OffsetX		When the bullet is fired if you need to offset it on the x axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
+	 * @param	OffsetY		When the bullet is fired if you need to offset it on the y axis, for example to line it up with the "nose" of a space ship, set the amount here (positive or negative)
 	 */
-	public function setFiringPosition(x:Int, y:Int, offsetX:Int = 0, offsetY:Int = 0):Void
+	public function setFiringPosition(X:Int, Y:Int, OffsetX:Int = 0, OffsetY:Int = 0):Void
 	{
-		fireFromPosition = true;
-		fireX = x;
-		fireY = y;
+		_fireFromPosition = true;
+		_fireX = X;
+		_fireY = Y;
 		
-		positionOffset.x = offsetX;
-		positionOffset.y = offsetY;
+		_positionOffset.x = OffsetX;
+		_positionOffset.y = OffsetY;
 	}
 	
 	/**
 	 * The speed in pixels/sec (sq) that the bullet travels at when fired via fireAtMouse, fireAtPosition or fireAtTarget.<br>
 	 * You can update this value in real-time, should you need to speed-up or slow-down your bullets (i.e. collecting a power-up)
 	 * 
-	 * @param	speed		The speed it will move, in pixels per second (sq)
+	 * @param	Speed	The speed it will move, in pixels per second (sq)
 	 */
-	public function setBulletSpeed(speed:Int):Void
+	public function setBulletSpeed(Speed:Int):Void
 	{
-		bulletSpeed = speed;
+		bulletSpeed = Speed;
 	}
 	
 	/**
@@ -552,22 +525,22 @@ class FlxWeapon
 	 * Sets the firing rate of the Weapon. By default there is no rate, as it can be controlled by FlxControl.setFireButton.<br>
 	 * However if you are firing using the mouse you may wish to set a firing rate.
 	 * 
-	 * @param	rate	The delay in milliseconds (ms) between which each bullet is fired, set to zero to clear
+	 * @param	Rate	The delay in milliseconds (ms) between which each bullet is fired, set to zero to clear
 	 */
-	public function setFireRate(rate:Int):Void
+	public function setFireRate(Rate:Int):Void
 	{
-		fireRate = rate;
+		fireRate = Rate;
 	}
 	
 	/**
 	 * When a bullet goes outside of this bounds it will be automatically killed, freeing it up for firing again.
 	 * TODO - Needs testing with a scrolling map (when not using single screen display)
 	 * 
-	 * @param	bounds	An FlxRect area. Inside this area the bullet should be considered alive, once outside it will be killed.
+	 * @param	Bounds	An FlxRect area. Inside this area the bullet should be considered alive, once outside it will be killed.
 	 */
-	public function setBulletBounds(bounds:FlxRect):Void
+	public function setBulletBounds(Bounds:FlxRect):Void
 	{
-		this.bounds = bounds;
+		bounds = Bounds;
 	}
 	
 	/**
@@ -578,22 +551,22 @@ class FlxWeapon
 	 * @param	angle		The angle of the bullet. In clockwise positive direction: Right = 0, Down = 90, Left = 180, Up = -90. You can use one of the consts such as BULLET_UP, etc
 	 * @param	speed		The speed it will move, in pixels per second (sq)
 	 */
-	public function setBulletDirection(angle:Int, speed:Int):Void
+	public function setBulletDirection(Angle:Int, Speed:Int):Void
 	{
-		velocity = FlxVelocity.velocityFromAngle(angle, speed);
+		_velocity = FlxVelocity.velocityFromAngle(Angle, Speed);
 	}
 	
 	/**
 	 * Sets gravity on all currently created bullets<br>
 	 * This will update ALL bullets, even those currently "in flight", so be careful about when you call this!
 	 * 
-	 * @param	xForce	A positive value applies gravity dragging the bullet to the right. A negative value drags the bullet to the left. Zero disables horizontal gravity.
-	 * @param	yforce	A positive value applies gravity dragging the bullet down. A negative value drags the bullet up. Zero disables vertical gravity.
+	 * @param	ForceX	A positive value applies gravity dragging the bullet to the right. A negative value drags the bullet to the left. Zero disables horizontal gravity.
+	 * @param	ForceY	A positive value applies gravity dragging the bullet down. A negative value drags the bullet up. Zero disables vertical gravity.
 	 */
-	public function setBulletGravity(xForce:Int, yForce:Int):Void
+	public function setBulletGravity(ForceX:Int, ForceY:Int):Void
 	{
-		group.setAll("xGravity", xForce);
-		group.setAll("yGravity", yForce);
+		group.setAll("xGravity", ForceX);
+		group.setAll("yGravity", ForceY);
 	}
 	
 	/**
@@ -601,24 +574,24 @@ class FlxWeapon
 	 * If you've previously set the acceleration then setting it to zero will cancel the effect.<br>
 	 * This will update ALL bullets, even those currently "in flight", so be careful about when you call this!
 	 * 
-	 * @param	xAcceleration		Acceleration speed in pixels per second to apply to the sprites horizontal movement, set to zero to cancel. Negative values move left, positive move right.
-	 * @param	yAcceleration		Acceleration speed in pixels per second to apply to the sprites vertical movement, set to zero to cancel. Negative values move up, positive move down.
-	 * @param	xSpeedMax			The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	ySpeedMax			The maximum speed in pixels per second in which the sprite can move vertically
+	 * @param	AccelerationX		Acceleration speed in pixels per second to apply to the sprites horizontal movement, set to zero to cancel. Negative values move left, positive move right.
+	 * @param	AccelerationY		Acceleration speed in pixels per second to apply to the sprites vertical movement, set to zero to cancel. Negative values move up, positive move down.
+	 * @param	SpeedMaxX			The maximum speed in pixels per second in which the sprite can move horizontally
+	 * @param	SpeedMaxY			The maximum speed in pixels per second in which the sprite can move vertically
 	 */
-	public function setBulletAcceleration(xAcceleration:Int, yAcceleration:Int, xSpeedMax:Int, ySpeedMax:Int):Void
+	public function setBulletAcceleration(AccelerationX:Int, AccelerationY:Int, SpeedMaxX:Int, SpeedMaxY:Int):Void
 	{
-		if (xAcceleration == 0 && yAcceleration == 0)
+		if (AccelerationX == 0 && AccelerationY == 0)
 		{
 			group.setAll("accelerates", false);
 		}
 		else
 		{
 			group.setAll("accelerates", true);
-			group.setAll("xAcceleration", xAcceleration);
-			group.setAll("yAcceleration", yAcceleration);
-			group.setAll("maxVelocityX", xSpeedMax);
-			group.setAll("maxVelocityY", ySpeedMax);
+			group.setAll("xAcceleration", AccelerationX);
+			group.setAll("yAcceleration", AccelerationY);
+			group.setAll("maxVelocityX", SpeedMaxX);
+			group.setAll("maxVelocityY", SpeedMaxY);
 		}
 	}
 	
@@ -627,65 +600,65 @@ class FlxWeapon
 	 * Often you need to align a bullet with the sprite, i.e. to make it look like it came out of the "nose" of a space ship.<br>
 	 * Use this offset x/y value to achieve that effect.
 	 * 
-	 * @param	offsetX		The x coordinate offset to add to the launch location (positive or negative)
-	 * @param	offsetY		The y coordinate offset to add to the launch location (positive or negative)
+	 * @param	OffsetX		The x coordinate offset to add to the launch location (positive or negative)
+	 * @param	OffsetY		The y coordinate offset to add to the launch location (positive or negative)
 	 */
-	public function setBulletOffset(offsetX:Float, offsetY:Float):Void
+	public function setBulletOffset(OffsetX:Float, OffsetY:Float):Void
 	{
-		positionOffset.x = offsetX;
-		positionOffset.y = offsetY;
+		_positionOffset.x = OffsetX;
+		_positionOffset.y = OffsetY;
 	}
 	
 	/**
 	 * To make the bullet apply a random factor to either its angle, speed, or both when fired, set these values. Can create a nice "scatter gun" effect.
 	 * 
-	 * @param	randomAngle		The +- value applied to the angle when fired. For example 20 means the bullet can fire up to 20 degrees under or over its angle when fired.
-	 * @param	randomSpeed		The +- value applied to the speed when fired. For example 20 means the bullet can fire up to 20 px/sec slower or faster when fired.
-	 * @param  randomPosition  The +- value applied to the firing location when fired (fire spread).
-	 * @param  randomLifeSpan  The +- value applied to the <code>bulletLifeSpan</code> when fired. For example passing 2 when <code>bulletLifeSpan</code> is 3, means the bullet can live up to 5 seconds, minimum of 1.
+	 * @param 	RandomAngle		The +- value applied to the angle when fired. For example 20 means the bullet can fire up to 20 degrees under or over its angle when fired.
+	 * @param	RandomSpeed		The +- value applied to the speed when fired. For example 20 means the bullet can fire up to 20 px/sec slower or faster when fired.
+	 * @param 	RandomPosition  The +- value applied to the firing location when fired (fire spread).
+	 * @param 	RandomLifeSpan  The +- value applied to the <code>bulletLifeSpan</code> when fired. For example passing 2 when <code>bulletLifeSpan</code> is 3, means the bullet can live up to 5 seconds, minimum of 1.
 	 */
-	public function setBulletRandomFactor(randomAngle:Int = 0, randomSpeed:Int = 0, randomPosition:FlxPoint = null, randomLifeSpan:Float = 0):Void
+	public function setBulletRandomFactor(RandomAngle:Int = 0, RandomSpeed:Int = 0, ?RandomPosition:FlxPoint, RandomLifeSpan:Float = 0):Void
 	{
-		rndFactorAngle = randomAngle;
-		rndFactorSpeed = randomSpeed;
+		rndFactorAngle = RandomAngle;
+		rndFactorSpeed = RandomSpeed;
 		
-		if (randomPosition != null)
+		if (RandomPosition != null)
 		{
-			rndFactorPosition = randomPosition;
+			rndFactorPosition = RandomPosition;
 		}
 		
-		rndFactorLifeSpan = (randomLifeSpan < 0) ? -randomLifeSpan : randomLifeSpan;
+		rndFactorLifeSpan = (RandomLifeSpan < 0) ? -RandomLifeSpan : RandomLifeSpan;
 	}
 	
 	/**
 	 * If the bullet should have a fixed life span use this function to set it.
 	 * The bullet will be killed once it passes this lifespan, if still alive and in bounds.
 	 * 
-	 * @param	lifespan  The lifespan of the bullet, given in seconds.
+	 * @param	Lifespan  The lifespan of the bullet, given in seconds.
 	 */
-	public function setBulletLifeSpan(lifespan:Float):Void
+	public function setBulletLifeSpan(Lifespan:Float):Void
 	{
-		bulletLifeSpan = lifespan;
+		bulletLifeSpan = Lifespan;
 	}
 	
 	/**
 	 * The elasticity of the fired bullet controls how much it rebounds off collision surfaces.
 	 * 
-	 * @param	elasticity	The elasticity of the bullet between 0 and 1 (0 being no rebound, 1 being 100% force rebound). Set to zero to disable.
+	 * @param	Elasticity	The elasticity of the bullet between 0 and 1 (0 being no rebound, 1 being 100% force rebound). Set to zero to disable.
 	 */
-	public function setBulletElasticity(elasticity:Float):Void
+	public function setBulletElasticity(Elasticity:Float):Void
 	{
-		bulletElasticity = elasticity;
+		bulletElasticity = Elasticity;
 	}
 	
 	/**
 	 * Internal function that returns the next available bullet from the pool (if any)
 	 * 
-	 * @return	A bullet
+	 * @return	A <code>FlxBullet</code>
 	 */
-	private function getFreeBullet():Bullet
+	private function getFreeBullet():FlxBullet
 	{
-		var result:Bullet = null;
+		var result:FlxBullet = null;
 		
 		if (group == null || group.length == 0)
 		{
@@ -693,10 +666,12 @@ class FlxWeapon
 			return null;
 		}
 		
-		var bullet:Bullet;
+		var bullet:FlxBullet;
+		
 		for (i in 0...(group.members.length))
 		{
 			bullet = group.members[i];
+			
 			if (bullet.exists == false)
 			{
 				result = bullet;
@@ -710,81 +685,85 @@ class FlxWeapon
 	/**
 	 * Sets a pre-fire callback function and sound. These are played immediately before the bullet is fired.
 	 * 
-	 * @param	callback	The function to call
-	 * @param	sound		An FlxSound to play
+	 * @param	Callback	The function to call
+	 * @param	Sound		A FlxSound to play
 	 */
-	public function setPreFireCallback(callbackFunc:Void->Void = null, sound:FlxSound = null):Void
+	public function setPreFireCallback(?Callback:Void->Void, ?Sound:FlxSound):Void
 	{
-		onPreFireCallback = callbackFunc;
-		onPreFireSound = sound;
+		onPreFireCallback = Callback;
+		onPreFireSound = Sound;
 	}
 	
 	/**
 	 * Sets a fire callback function and sound. These are played immediately as the bullet is fired.
 	 * 
-	 * @param	callback	The function to call
-	 * @param	sound		An FlxSound to play
+	 * @param	Callback	The function to call
+	 * @param	Sound		A FlxSound to play
 	 */
-	public function setFireCallback(callbackFunc:Void->Void = null, sound:FlxSound = null):Void
+	public function setFireCallback(?Callback:Void->Void, ?Sound:FlxSound):Void
 	{
-		onFireCallback = callbackFunc;
-		onFireSound = sound;
+		onFireCallback = Callback;
+		onFireSound = Sound;
 	}
 	
 	/**
 	 * Sets a post-fire callback function and sound. These are played immediately after the bullet is fired.
 	 * 
-	 * @param	callback	The function to call
-	 * @param	sound		An FlxSound to play
+	 * @param	Callback	The function to call
+	 * @param	Sound		An FlxSound to play
 	 */
-	public function setPostFireCallback(callbackFunc:Void->Void = null, sound:FlxSound = null):Void
+	public function setPostFireCallback(?Callback:Void->Void, ?Sound:FlxSound):Void
 	{
-		onPostFireCallback = callbackFunc;
-		onPostFireSound = sound;
+		onPostFireCallback = Callback;
+		onPostFireSound = Sound;
 	}
 	
 	/**
 	 * Checks to see if the bullets are overlapping the specified object or group
 	 * 
-	 * @param  objectOrGroup  The group or object to check if bullets collide
-	 * @param  notifyCallBack  A function that will get called if a bullet overlaps an object
-	 * @param  skipParent    Don't trigger colision notifies with the parent of this object
+	 * @param  ObjectOrGroup  	The group or object to check if bullets collide
+	 * @param  NotifyCallBack  	A function that will get called if a bullet overlaps an object
+	 * @param  SkipParent    	Don't trigger colision notifies with the parent of this object
 	*/
-	public inline function bulletsOverlap(objectOrGroup:FlxBasic, notifyCallBack:FlxObject->FlxObject->Void = null, skipParent:Bool = true):Void
+	inline public function bulletsOverlap(ObjectOrGroup:FlxBasic, ?NotifyCallBack:FlxObject->FlxObject->Void, SkipParent:Bool = true):Void
 	{
 		if (group != null && group.length > 0)
 		{
-			skipParentCollision = skipParent;
-			FlxG.overlap(objectOrGroup, group, notifyCallBack != null ? notifyCallBack : onBulletHit, shouldBulletHit);
+			_skipParentCollision = SkipParent;
+			FlxG.overlap(ObjectOrGroup, group, NotifyCallBack != null ? NotifyCallBack : onBulletHit, shouldBulletHit);
 		}
 	}
 
-  	private function shouldBulletHit(o:FlxObject, bullet:FlxObject):Bool
+  	private function shouldBulletHit(Object:FlxObject, Bullet:FlxObject):Bool
 	{
-		if (parent == o && skipParentCollision)
+		if (parent == Object && _skipParentCollision)
+		{
 			return false;
+		}
 		
-		if (Std.is(o, FlxTilemap))
-			return cast(o, FlxTilemap).overlapsWithCallback(bullet);
+		if (Std.is(Object, FlxTilemap))
+		{
+			return cast(Object, FlxTilemap).overlapsWithCallback(Bullet);
+		}
 		else
+		{
 			return true;
+		}
 	}
 
-  	private function onBulletHit(o:FlxObject, bullet:FlxObject):Void
+  	private function onBulletHit(Object:FlxObject, Bullet:FlxObject):Void
 	{
-		bullet.kill();
+		Bullet.kill();
 	}
 	
 	// TODO
-	public function createBulletPattern(pattern:Array<Dynamic>):Void
+	public function createBulletPattern(Pattern:Array<Dynamic>):Void
 	{
 		//	Launches this many bullets
 	}
-	
 	
 	public function update():Void
 	{
 		// ???
 	}
-	
 }

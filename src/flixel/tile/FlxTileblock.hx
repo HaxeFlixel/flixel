@@ -1,5 +1,8 @@
 package flixel.tile;
 
+import flixel.FlxBasic;
+import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxAngle;
 import flixel.util.FlxRandom;
@@ -30,6 +33,7 @@ class FlxTileblock extends FlxSprite
 	
 	/**
 	 * Creates a new <code>FlxBlock</code> object with the specified position and size.
+	 * 
 	 * @param	X			The X position of the block.
 	 * @param	Y			The Y position of the block.
 	 * @param	Width		The width of the block.
@@ -38,6 +42,7 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
+		
 		#if (flash || js)
 		makeGraphic(Width, Height, 0, true);
 		#else
@@ -48,6 +53,7 @@ class FlxTileblock extends FlxSprite
 		_tileData = null;
 		_tileIndices = null;
 		#end
+		
 		active = false;
 		immovable = true;
 		moves = false;
@@ -55,6 +61,7 @@ class FlxTileblock extends FlxSprite
 	
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
+	 * 
 	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
 	 * @param	TileWidth		The width of a single tile in the graphic.
 	 * @param	TileHeight		The height of a single tile in the graphic.
@@ -67,19 +74,21 @@ class FlxTileblock extends FlxSprite
 			return this;
 		}
 		
-		//First create a tile brush
+		// First create a tile brush
 		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
 		var spriteWidth:Int = Std.int(sprite.width);
 		var spriteHeight:Int = Std.int(sprite.height);
 		var total:Int = sprite.frames + Empties;
 		
-		//Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
+		// Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		var regen:Bool = false;
+		
 		if (width % sprite.width != 0)
 		{
 			width = Std.int((width / spriteWidth + 1)) * spriteWidth;
 			regen = true;
 		}
+		
 		if (height % sprite.height != 0)
 		{
 			height = Std.int((height / spriteHeight + 1)) * spriteHeight;
@@ -97,7 +106,7 @@ class FlxTileblock extends FlxSprite
 		}
 		#end
 		
-		//Stamp random tiles onto the canvas
+		// Stamp random tiles onto the canvas
 		var row:Int = 0;
 		var column:Int;
 		var destinationX:Int;
@@ -119,6 +128,7 @@ class FlxTileblock extends FlxSprite
 			_tileData = [];
 			_tileIndices = [];
 		}
+		
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
 		_pixels = FlxG.bitmap.addTilemap(TileGraphic, false, false, null, _tileWidth, _tileHeight, _repeatX, _repeatY);
@@ -132,6 +142,7 @@ class FlxTileblock extends FlxSprite
 		{
 			destinationX = 0;
 			column = 0;
+			
 			while(column < widthInTiles)
 			{
 				if (FlxRandom.float() * total > Empties)
@@ -152,12 +163,15 @@ class FlxTileblock extends FlxSprite
 				destinationX += spriteWidth;
 				column++;
 			}
+			
 			destinationY += spriteHeight;
 			row++;
 		}
+		
 		#if !(flash || js)
 		updateFrameData();
 		#end
+		
 		return this;
 	}
 	
@@ -182,6 +196,7 @@ class FlxTileblock extends FlxSprite
 		{
 			cameras = FlxG.cameras.list;
 		}
+		
 		var camera:FlxCamera;
 		var i:Int = 0;
 		var currDrawData:Array<Float>;
@@ -192,6 +207,7 @@ class FlxTileblock extends FlxSprite
 		
 		var j:Int = 0;
 		var numTiles:Int = 0;
+		
 		if (_tileData != null)
 		{
 			numTiles = Std.int(_tileData.length / 3);
@@ -231,14 +247,14 @@ class FlxTileblock extends FlxSprite
 				var csy : Float = tileScaleHack;
 				var x1 : Float = 0;
 				var y1 : Float = 0;
-
-				if (!simpleRenderSprite ())
+				
+				if (!simpleRenderSprite())
 				{
 					radians = angle * FlxAngle.TO_RAD;
 					cos = Math.cos(radians);
 					sin = Math.sin(radians);
 					
-					// tilemap tearing hack
+					// Tilemap tearing hack
 					var sx:Float = tileScaleHack * scale.x;
 					var sy:Float = tileScaleHack * scale.y;
 					
@@ -250,7 +266,7 @@ class FlxTileblock extends FlxSprite
 					x1 = (origin.x - _halfWidth);
 					y1 = (origin.y - _halfHeight);
 				}
-
+				
 				while (j < numTiles)
 				{
 					currPosInArr = j * 3;
@@ -275,6 +291,7 @@ class FlxTileblock extends FlxSprite
 						currDrawData[currIndex++] = _green;
 						currDrawData[currIndex++] = _blue;
 					}
+					
 					currDrawData[currIndex++] = alpha;
 					
 					j++;
@@ -291,6 +308,7 @@ class FlxTileblock extends FlxSprite
 	{
 		_tileData = null;
 		_tileIndices = null;
+		
 		super.destroy();
 	}
 	
@@ -302,7 +320,7 @@ class FlxTileblock extends FlxSprite
 			
 			if (_tileData != null)
 			{
-				for (i in 0...(_tileIndices.length))
+				for (i in 0..._tileIndices.length)
 				{
 					_tileData[i * 3] = _framesData.frames[_tileIndices[i]].tileID;
 				}
