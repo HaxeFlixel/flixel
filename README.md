@@ -9,14 +9,12 @@ About
 
 In case you're looking for ressources, help, or just want to interact with the community:
 
-<ul>
-<li>[HaxeFlixel.com](http://www.haxeflixel.com/)</li>
-<li>[Forums](http://www.haxeflixel.com/forum)</li>
-<li>[Wiki](http://www.haxeflixel.com/wiki)</li>
+- [HaxeFlixel.com](http://www.haxeflixel.com/)
+- [Forums](http://www.haxeflixel.com/forum)
+- [Wiki](http://www.haxeflixel.com/wiki)
 
-<li>[@HaxeFlixel on Twitter(https://twitter.com/HaxeFlixel)</li>
-<li>[#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)</li>
-</ul>
+- [@HaxeFlixel on Twitter(https://twitter.com/HaxeFlixel)
+- [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
 
 ______________________________________________________
 
