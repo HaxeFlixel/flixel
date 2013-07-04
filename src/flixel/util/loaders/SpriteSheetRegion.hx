@@ -1,4 +1,4 @@
-package flixel.util;
+package flixel.util.loaders;
 
 import flash.display.BitmapData;
 
