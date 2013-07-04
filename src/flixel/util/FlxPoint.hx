@@ -93,7 +93,7 @@ class FlxPoint
 	 */
 	inline public function toString():String
 	{
-		return FlxString.getClassName(this, true);
+		return FlxStringUtil.getClassName(this, true);
 	}
 	
 }

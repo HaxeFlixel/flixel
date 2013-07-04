@@ -6,7 +6,7 @@ import haxe.ds.StringMap.StringMap;
  * A class primarily containing functions related 
  * to formatting different data types to strings.
  */
-class FlxString
+class FlxStringUtil
 {
 	/**
 	 * Takes two "ticks" timestamps and formats them into the number of seconds that passed as a String.

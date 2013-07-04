@@ -7,7 +7,7 @@ import flixel.FlxG;
 import flixel.system.FlxDebugger;
 import flixel.util.FlxArray;
 import flixel.util.FlxPoint;
-import flixel.util.FlxString;
+import flixel.util.FlxStringUtil;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
@@ -157,9 +157,9 @@ class Watch extends Window
 				var text:String = Std.string(NewValue);
 				
 				if (Std.is(NewValue, StringMap))
-					text = FlxString.formatStringMap(NewValue);
+					text = FlxStringUtil.formatStringMap(NewValue);
 				else if (Std.is(NewValue, FlxPoint))
-					text = FlxString.formatFlxPoint(NewValue, FlxDebugger.pointPrecision);
+					text = FlxStringUtil.formatFlxPoint(NewValue, FlxDebugger.pointPrecision);
 				
 				quickWatch.valueDisplay.text = text;
 			}

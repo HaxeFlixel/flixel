@@ -9,7 +9,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.FlxDebugger;
 import flixel.util.FlxPoint;
-import flixel.util.FlxString;
+import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
 /**
@@ -186,7 +186,7 @@ class WatchEntry
 		{
 			nameDisplay.text = "";
 			if (NameWidth > 120)
-				nameDisplay.appendText(FlxString.getClassName(object, (NameWidth < 240)) + ".");
+				nameDisplay.appendText(FlxStringUtil.getClassName(object, (NameWidth < 240)) + ".");
 			
 			nameDisplay.appendText(field);
 		}
@@ -204,7 +204,7 @@ class WatchEntry
 		var property:Dynamic = Reflect.getProperty(object, field);
 		
 		if (Std.is(property, FlxPoint)) 
-			valueDisplay.text = FlxString.formatFlxPoint(property, FlxDebugger.pointPrecision);
+			valueDisplay.text = FlxStringUtil.formatFlxPoint(property, FlxDebugger.pointPrecision);
 		else
 			valueDisplay.text = Std.string(property); 
 		
