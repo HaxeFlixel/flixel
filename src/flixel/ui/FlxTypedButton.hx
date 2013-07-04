@@ -1,10 +1,11 @@
 package flixel.ui;
 
-import flash.Lib;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.TouchEvent;
+import flash.Lib;
 import flash.media.Sound;
+import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.system.input.FlxTouch;
 import flixel.system.layer.Atlas;
@@ -123,10 +124,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		soundOut = null;
 		soundDown = null;
 		soundUp = null;
-
+		
 		status = FlxButton.NORMAL;
 		_pressed = false;
 		_initialized = false;
+		
+		scrollFactor.x = 0;
+		scrollFactor.y = 0;
 	}
 	
 	/**
