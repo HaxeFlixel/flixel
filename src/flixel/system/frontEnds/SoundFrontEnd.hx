@@ -3,8 +3,8 @@ package flixel.system.frontEnds;
 import flash.media.Sound;
 import flash.media.SoundTransform;
 import flixel.FlxG;
-import flixel.FlxSound;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxSound;
 import openfl.Assets;
 
 class SoundFrontEnd

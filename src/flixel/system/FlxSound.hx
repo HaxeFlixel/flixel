@@ -1,14 +1,15 @@
-package flixel;
+package flixel.system;
 
 import flash.events.Event;
 import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;
 import flash.net.URLRequest;
-import openfl.Assets;
+import flixel.FlxBasic;
+import flixel.tweens.misc.NumTween;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
-import flixel.tweens.misc.NumTween;
+import openfl.Assets;
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.

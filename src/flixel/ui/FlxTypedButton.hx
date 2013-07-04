@@ -7,6 +7,7 @@ import flash.Lib;
 import flash.media.Sound;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
+import flixel.system.FlxSound;
 import flixel.system.input.FlxTouch;
 import flixel.system.layer.Atlas;
 import flixel.util.FlxPoint;

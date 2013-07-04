@@ -1,7 +1,8 @@
 package flixel.util;
 
-import haxe.ds.ObjectMap;
 import flixel.FlxG;
+import flixel.system.FlxSound;
+import haxe.ds.ObjectMap;
 
 class FlxSoundUtil
 {

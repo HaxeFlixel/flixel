@@ -1,12 +1,11 @@
 package flixel.plugin.photonstorm;
 
 import flash.geom.Rectangle;
-import flash.Lib;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
-import flixel.FlxSound;
+import flixel.system.FlxSound;
 import flixel.FlxSprite;
 import flixel.util.FlxMisc;
 import flixel.util.FlxVelocity;

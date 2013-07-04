@@ -1,8 +1,7 @@
 ﻿package flixel.tweens.sound;
 
-import flixel.FlxSound;
+import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
 
 /**
  * Sound effect fader.
