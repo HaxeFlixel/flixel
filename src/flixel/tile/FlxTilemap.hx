@@ -14,6 +14,7 @@ import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxArray;
 import flixel.util.FlxColor;
+import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 

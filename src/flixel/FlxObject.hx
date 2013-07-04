@@ -7,6 +7,7 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
+import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 

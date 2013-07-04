@@ -4,8 +4,8 @@ package flixel.plugin;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxPath;
 import flixel.util.FlxArray;
+import flixel.util.FlxPath;
 
 /**
  * A simple manager for tracking and drawing FlxPath debug data to the screen.

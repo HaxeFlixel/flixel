@@ -1,4 +1,4 @@
-package flixel;
+package flixel.util;
 
 import flash.display.Graphics;
 import flixel.util.FlxArray;
