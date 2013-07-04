@@ -1,8 +1,7 @@
-package flixel.plugin.photonstorm.baseTypes;
+package flixel.addons.weapon;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.plugin.photonstorm.FlxWeapon;
 import flixel.system.input.FlxTouch;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;

@@ -1,10 +1,10 @@
-package flixel.ui;
+package flixel.addons.ui;
 
 #if !FLX_NO_MOUSE
+import flixel.addons.display.FlxExtendedSprite;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
-import flixel.plugin.photonstorm.FlxExtendedSprite;
-import flixel.plugin.photonstorm.FlxMouseControl;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;

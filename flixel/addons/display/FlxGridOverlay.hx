@@ -1,4 +1,4 @@
-package flixel.plugin.photonstorm;
+package flixel.addons.display;
 
 import flash.display.BitmapData;
 import flash.geom.Point;
