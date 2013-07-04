@@ -12,7 +12,6 @@ In case you're looking for ressources, help, or just want to interact with the c
 - [HaxeFlixel.com](http://www.haxeflixel.com/)
 - [Forums](http://www.haxeflixel.com/forum)
 - [Wiki](http://www.haxeflixel.com/wiki)
-
 - [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
 - [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
 
