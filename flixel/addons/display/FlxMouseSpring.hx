@@ -1,8 +1,7 @@
-package flixel.plugin.photonstorm.baseTypes;
+package flixel.addons.display;
 
 #if !FLX_NO_MOUSE
 import flixel.FlxG;
-import flixel.plugin.photonstorm.FlxExtendedSprite;
 
 class FlxMouseSpring 
 {

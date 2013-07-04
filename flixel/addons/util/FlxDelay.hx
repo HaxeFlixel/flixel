@@ -1,4 +1,4 @@
-package flixel.plugin.photonstorm;
+package flixel.addons.util;
 
 import flash.display.Sprite;
 import flash.events.Event;

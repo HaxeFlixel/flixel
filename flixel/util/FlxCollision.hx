@@ -1,4 +1,4 @@
-package flixel.plugin.photonstorm;
+package flixel.util;
 
 import flash.display.BitmapData;
 import flash.display.BlendMode;
@@ -11,9 +11,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.tile.FlxTileblock;
-import flixel.util.FlxColor;
-import flixel.util.FlxMath;
-import flixel.util.FlxRect;
 
 /**
  * FlxCollision

@@ -1,4 +1,4 @@
-package flixel.plugin.photonstorm;
+package flixel.addons.control;
 
 import flixel.FlxBasic;
 import flixel.FlxSprite;

@@ -2,6 +2,10 @@ package flixel.util;
 
 import flash.Lib;
 import flash.net.URLRequest;
+import flash.display.Sprite;
+import flash.utils.ByteArray;
+import flixel.FlxG;
+import haxe.io.Error;
 
 /**
  * A class containing random functions that didn't 
@@ -38,5 +42,57 @@ class FlxMisc
 	@:extern inline static public function compareClassNames(Object1:Dynamic, Object2:Dynamic):Bool
 	{
 		return Type.getClassName(Object1) == Type.getClassName(Object2);
+	}
+	
+	// TODO: fix issue with compiling this function
+	// "flash.utils.ByteArray has no field writeObject"
+	// "flash.utils.ByteArray has no field readObject"
+		
+	/**
+	 * Performs a complete object deep-copy and returns a duplicate (not a reference)
+	 * 
+	 * @param	Value	The object you want copied
+	 * @return	A copy of this object
+	 */
+	//static public function copyObject(Value:Dynamic):Dynamic
+	//{
+		
+		//var buffer:ByteArray = new ByteArray();
+		//buffer.writeObject(Value);
+		//buffer.position = 0;
+		//var result:Dynamic = buffer.readObject();
+
+		//return result;
+	//}
+	
+	/**
+	 * The Display List index of the mouse pointer
+	 */
+	static public var mouseIndex(get, never):Int;
+	
+	static private function get_mouseIndex():Int
+	{
+		var mouseIndex:Int = -1;
+		
+		try
+		{
+			mouseIndex = FlxG.camera.getContainerSprite().parent.numChildren - 4;
+		}
+		catch (e:Error)
+		{
+			//trace
+		}
+		
+		return mouseIndex;
+	}
+	
+	/**
+	 * Returns the Sprite that FlxGame extends (which contains the cameras, mouse, etc)
+	 */
+	static public var gameContainer(get, never):Sprite;
+	
+	inline static private function get_gameContainer():Sprite
+	{
+		return cast(FlxG.camera.getContainerSprite().parent, Sprite);
 	}
 }

@@ -1,11 +1,10 @@
-package flixel.plugin.photonstorm;
+package flixel.addons.weapon;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.plugin.photonstorm.baseTypes.FlxBullet;
 import flixel.system.FlxSound;
 import flixel.system.input.FlxTouch;
 import flixel.tile.FlxTilemap;
