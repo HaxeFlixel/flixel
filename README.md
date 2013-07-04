@@ -13,7 +13,7 @@ In case you're looking for ressources, help, or just want to interact with the c
 - [Forums](http://www.haxeflixel.com/forum)
 - [Wiki](http://www.haxeflixel.com/wiki)
 
-- [@HaxeFlixel on Twitter(https://twitter.com/HaxeFlixel)
+- [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
 - [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
 
 ______________________________________________________
@@ -23,18 +23,17 @@ HaxeFlixel was founded and created by Alexander Hohlov, also known as [Beeblerox
 Special thanks go to the community contributors [Werdn](https://github.com/werdn), [crazysam](https://github.com/crazysam), [impaler](https://github.com/impaler), [ProG4mr](https://github.com/ProG4mr), [Gama11](https://github.com/Gama11), [sergey-miryanov](https://github.com/sergey-miryanov) and more.
 
 HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
-<ul>
-<li>Use of a robust and powerful, opensource language</li>
-<li>Flexible Asset Management System</li>
-<li>Cross-platform development for Linux, Mac and Windows</li>
-<li>Texture Atlas and Layer enhancement for cpp targets</li>
-<li>Integrated and robust Tween System</li>
-<li>Access to OpenFL native extensions</li>
-<li>Compile to Mobile and Desktop targets with native code through OpenFL</li>
-<li>Impressive Native Performance using GPU accelerated drawTiles implimentation in cpp targets</li>
-<li>A powerful debugger with a console as well as an advanced logging system</li>
-<li>A vibrant community that keeps updating the engine and adding new features</li>
-</ul>
+
+- Use of a robust and powerful, opensource language
+- Flexible Asset Management System
+- Cross-platform development for Linux, Mac and Windows
+- Texture Atlas and Layer enhancement for cpp targets
+- Integrated and robust Tween System
+- Access to OpenFL native extensions
+- Compile to Mobile and Desktop targets with native code through OpenFL
+- Impressive Native Performance using GPU accelerated drawTiles implimentation in cpp targets
+- A powerful debugger with a console as well as an advanced logging system
+- A vibrant community that keeps updating the engine and adding new features to it
 
 
 ###Runtime Targets
@@ -90,21 +89,20 @@ ______________________________________________________
 
 ###Basic Features
 
-<ul>
-<li>Display thousands of moving objects</li>
-<li>Basic collisions between objects</li>
-<li>Group objects together for simplicity</li>
-<li>Easily generate and emit particles</li>
-<li>Create game levels using tilemaps</li>
-<li>Text display, save games, scrolling</li>
-<li>Mouse & keyboard input</li>
-<li>Math & color utilities</li>
-<li>Record and play back replays</li>
-<li>Powerful interactive debugger</li>
-<li>Camera system for split screen</li>
-<li>Pathfinding and following</li>
-<li>Easy object recycling</li>
-</ul>
+- Display thousands of moving objects
+- Basic collisions between objects
+- Group objects together for simplicity
+- Easily generate and emit particles
+- Create game levels using tilemaps
+- Text display, save games, scrolling
+- Mouse & keyboard input
+- Math & color utilities
+- Record and play back replays
+- Powerful interactive debugger
+- Camera system for split screen
+- Pathfinding and following
+- Easy object recycling
+
 ______________________________________________________
 
 ###Getting Started
