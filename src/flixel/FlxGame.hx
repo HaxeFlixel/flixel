@@ -21,6 +21,7 @@ import flixel.system.layer.TileSheetExt;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
+import flixel.util.FlxSave;
 import flixel.util.FlxTimer;
 import openfl.Assets;
 

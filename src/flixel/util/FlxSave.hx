@@ -1,4 +1,4 @@
-package flixel;
+package flixel.util;
 
 import flash.errors.Error;
 import flash.net.SharedObject;
