@@ -5,7 +5,7 @@ import flixel.system.layer.Atlas;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Node;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxString;
+import flixel.util.FlxStringUtil;
 import flixel.util.loaders.TexturePackerData;
 
 /**
@@ -184,7 +184,7 @@ class FlxBasic
 	 */
 	public function toString():String
 	{
-		return FlxString.getClassName(this, true);
+		return FlxStringUtil.getClassName(this, true);
 	}
 	
 	public function addTween(t:FlxTween, start:Bool = false):FlxTween

@@ -11,7 +11,7 @@ import flash.text.TextFormatAlign;
 import flash.utils.ByteArray;
 import flixel.system.FlxAssets;
 import flixel.FlxG;
-import flixel.util.FlxString;
+import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
 #if !FLX_NO_MOUSE
@@ -254,7 +254,7 @@ class VCR extends Sprite
 	public function updateRuntime(Time:Int):Void
 	{
 		_runtime += Time;
-		_runtimeDisplay.text = FlxString.formatTime(Std.int(_runtime / 1000), true);
+		_runtimeDisplay.text = FlxStringUtil.formatTime(Std.int(_runtime / 1000), true);
 		if (!_runtimeDisplay.visible)
 		{
 			_runtimeDisplay.visible = true;

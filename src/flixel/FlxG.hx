@@ -23,7 +23,7 @@ import flixel.tweens.misc.MultiVarTween;
 import flixel.tweens.util.Ease.EaseFunction;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
-import flixel.util.FlxString;
+import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
 import flixel.system.FlxDebugger;
@@ -382,7 +382,7 @@ class FlxG
 	 */
 	static public function resetState():Void
 	{
-		_game.requestNewState(Type.createInstance(Type.resolveClass(FlxString.getClassName(_game._state, false)), []));
+		_game.requestNewState(Type.createInstance(Type.resolveClass(FlxStringUtil.getClassName(_game._state, false)), []));
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(_game._requestedState, FlxSubState))

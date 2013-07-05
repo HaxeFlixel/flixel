@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.util.FlxColor;
-import flixel.util.FlxString;
+import flixel.util.FlxStringUtil;
 
 class ConsoleCommands
 {
@@ -412,12 +412,12 @@ class ConsoleCommands
 	
 	private function listObjects():Void
 	{
-		cLog("Objects registered: \n" + FlxString.formatStringMap(_console.registeredObjects)); 
+		cLog("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
 	}
 	
 	private function listFunctions():Void
 	{
-		cLog("Functions registered: \n" + FlxString.formatStringMap(_console.registeredFunctions)); 
+		cLog("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
 	}
 	
 	private function watch(ObjectAndVariable:String, DisplayName:String = null):Void

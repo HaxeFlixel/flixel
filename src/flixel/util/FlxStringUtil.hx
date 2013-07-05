@@ -6,7 +6,7 @@ import haxe.ds.StringMap.StringMap;
  * A class primarily containing functions related 
  * to formatting different data types to strings.
  */
-class FlxString
+class FlxStringUtil
 {
 	/**
 	 * Takes two "ticks" timestamps and formats them into the number of seconds that passed as a String.
@@ -110,7 +110,7 @@ class FlxString
 	/**
 	 * Automatically commas and decimals in the right places for displaying money amounts.
 	 * Does not include a dollar sign or anything, so doesn't really do much
-	 * if you call say <code>var results:String = FlxString.formatMoney(10,false);</code>
+	 * if you call say <code>var results:String = FlxStringUtil.formatMoney(10,false);</code>
 	 * However, very handy for displaying large sums or decimal money values.
 	 * @param	Amount			How much moneys (in dollars, or the equivalent "main" currency - i.e. not cents).
 	 * @param	ShowDecimal		Whether to show the decimals/cents component. Default value is true.
