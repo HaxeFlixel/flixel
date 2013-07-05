@@ -1,4 +1,4 @@
-package flixel.plugin.photonstorm.api;
+package flixel.addons.api;
 
 import flash.display.DisplayObject;
 import flash.display.Loader;

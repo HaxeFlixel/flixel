@@ -21,6 +21,7 @@ import flixel.system.layer.TileSheetData;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
 import flixel.tweens.util.Ease.EaseFunction;
+import flixel.util.FlxCollision;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxStringUtil;
@@ -421,6 +422,24 @@ class FlxG
 		var result:Bool = quadTree.execute();
 		quadTree.destroy();
 		return result;
+	}
+	
+	/**
+	 * A Pixel Perfect Collision check between two FlxSprites.
+	 * It will do a bounds check first, and if that passes it will run a pixel perfect match on the intersecting area.
+	 * Works with rotated and animated sprites.
+	 * It's extremly slow on cpp targets, so I don't recommend you to use it on them.
+	 * Not working on neko target and awfully slows app down
+	 * 
+	 * @param	Sprite1			The first FlxSprite to test against
+	 * @param	Sprite2			The second FlxSprite to test again, sprite order is irrelevant
+	 * @param	AlphaTolerance	The tolerance value above which alpha pixels are included. Default to 255 (must be fully opaque for collision).
+	 * @param	Camera			If the collision is taking place in a camera other than FlxG.camera (the default/current) then pass it here
+	 * @return	Boolean True if the sprites collide, false if not
+	 */
+	inline static public function pixelPerfectOverlap(Sprite1:FlxSprite, Sprite2:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
+	{
+		return FlxCollision.pixelPerfectCheck(Sprite1, Sprite2, AlphaTolerance, Camera);
 	}
 	
 	/**

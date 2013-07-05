@@ -1,11 +1,12 @@
-package flixel.plugin.photonstorm;
+package flixel.addons.plugin;
 
 #if !FLX_NO_MOUSE
+import flixel.addons.display.FlxExtendedSprite;
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
-import flixel.util.FlxMath;
 
 /**
  * FlxMouseControl

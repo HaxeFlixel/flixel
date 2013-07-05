@@ -1,11 +1,12 @@
-package flixel.plugin.photonstorm;
+package flixel.addons.display;
 
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.plugin.photonstorm.baseTypes.FlxMouseSpring;
+import flixel.util.FlxCollision;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
-import flixel.util.FlxMath;
 
 /**
  * An enhanced FlxSprite that is capable of receiving mouse clicks, being dragged and thrown, mouse springs, gravity and other useful things

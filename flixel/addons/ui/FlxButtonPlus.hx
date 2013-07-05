@@ -1,14 +1,15 @@
-package flixel.plugin.photonstorm;
+package flixel.addons.ui;
 
 #if !FLX_NO_MOUSE
 import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 import flash.Lib;
-import flixel.group.FlxSpriteGroup;
+import flixel.addons.display.FlxExtendedSprite;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
