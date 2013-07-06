@@ -377,6 +377,25 @@ class FlxMath
 	}
 	#end
 	
+	/**
+	 * Returns the amount of decimals a Float has
+	 * 
+	 * @param	Number	The floating point number
+	 * @return	Amount of decimals
+	 */
+	inline static public function getDecimals(Number:Float):Int
+	{
+		var helperArray:Array<String> = Std.string(Number).split(".");
+		var decimals:Int = 0;
+		
+		if (helperArray.length > 1)
+		{
+			decimals = helperArray[1].length;
+		}
+		
+		return decimals;
+	}
+	
 	#if (flash || js)
 	/**
 	 * Minimum value of a floating point number.
