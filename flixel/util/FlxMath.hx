@@ -328,6 +328,21 @@ class FlxMath
 	}
 	
 	/**
+	 * Find the distance (in pixels, rounded) between two FlxPoints
+	 * 
+	 * @param	SpriteA		The first FlxSprite
+	 * @param	SpriteB		The second FlxSprite
+	 * @return	Distance between the sprites in pixels
+	 */
+	inline static public function distanceBetweenPoints(PointA:FlxPoint, PointB:FlxPoint):Int
+	{
+		var dx:Float = PointA.x - PointB.x;
+		var dy:Float = PointA.y - PointB.y;
+		
+		return Std.int(FlxMath.vectorLength(dx, dy));
+	}
+	
+	/**
 	 * Find the distance (in pixels, rounded) from an <code>FlxSprite</code>
 	 * to the given <code>FlxPoint</code>, taking the source origin into account.
 	 * 
