@@ -1,8 +1,8 @@
 ﻿![](http://www.haxeflixel.com/sites/all/themes/haxeflixel_bootstrap/assets/images/haxeflixel-logo.png)
 =
-Related repos: [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-samples](https://github.com/HaxeFlixel/flixel-samples) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools)
+**Related repos:    [flixel-addons](https://github.com/HaxeFlixel/flixel-addons)    |    [flixel-samples](https://github.com/HaxeFlixel/flixel-samples)    |    [flixel-tools](https://github.com/HaxeFlixel/flixel-tools)**
 
-[HaxeFlixel](http://www.haxeflixel.com/) is an open source 2d game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Open Flash Library](https://github.com/openfl).
+[HaxeFlixel](http://www.haxeflixel.com/) is an open source 2D game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Open Flash Library](https://github.com/openfl).
 
 
 ###Links
