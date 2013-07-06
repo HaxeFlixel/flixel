@@ -1,5 +1,6 @@
 package flixel.addons.api;
 
+#if flash
 import flash.display.DisplayObject;
 import flash.display.Loader;
 import flash.errors.IOError;
@@ -96,7 +97,7 @@ class FlxKongregate
 
     static private function apiLoadComplete(E:Event):Void
     {
-        api = event.target.content;
+        api = E.target.content;
 		
         hasLoaded = true;
 		
@@ -221,7 +222,7 @@ class FlxKongregate
     {
         if (api.services.isGuest() == false)
         {
-            api.services.showShoutBox(message);
+            api.services.showShoutBox(Message);
         }
     }
 
@@ -296,7 +297,7 @@ class FlxKongregate
      */
     static public function showKredPurchaseDialog(PurchaseMethod:String):Void
     {
-        api.mtx.showKredPurchaseDialog(purchaseMethod);
+        api.mtx.showKredPurchaseDialog(PurchaseMethod);
     }
 
     /**
@@ -340,3 +341,4 @@ class FlxKongregate
         api.images.submitAvatar(Avatar, Callback);
     }
 }
+#end
