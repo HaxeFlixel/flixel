@@ -83,19 +83,6 @@ class FlxMath
 	}
 	
 	/**
-	 * Calculate the distance between two points.
-	 * @param 	Point1		A <code>FlxPoint</code> object referring to the first location.
-	 * @param 	Point2		A <code>FlxPoint</code> object referring to the second location.
-	 * @return	The distance between the two points as a floating point <code>Number</code> object.
-	 */
-	inline static public function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
-	{
-		var dx:Float = Point1.x - Point2.x;
-		var dy:Float = Point1.y - Point2.y;
-		return Math.sqrt(dx * dx + dy * dy);
-	}
-	
-	/**
 	 * Returns true if the number given is odd.
 	 * 
 	 * @param	n	The number to check
@@ -313,6 +300,20 @@ class FlxMath
 	}
 	
 	/**
+	 * Calculate the distance between two points.
+	 * 
+	 * @param 	Point1		A <code>FlxPoint</code> object referring to the first location.
+	 * @param 	Point2		A <code>FlxPoint</code> object referring to the second location.
+	 * @return	The distance between the two points as a floating point <code>Number</code> object.
+	 */
+	inline static public function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
+	{
+		var dx:Float = Point1.x - Point2.x;
+		var dy:Float = Point1.y - Point2.y;
+		return vectorLength(dx, dy);
+	}
+	
+	/**
 	 * Find the distance (in pixels, rounded) between two FlxSprites, taking their origin into account
 	 * 
 	 * @param	SpriteA		The first FlxSprite
@@ -323,21 +324,6 @@ class FlxMath
 	{
 		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
 		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
-		
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	
-	/**
-	 * Find the distance (in pixels, rounded) between two FlxPoints
-	 * 
-	 * @param	SpriteA		The first FlxSprite
-	 * @param	SpriteB		The second FlxSprite
-	 * @return	Distance between the sprites in pixels
-	 */
-	inline static public function distanceBetweenPoints(PointA:FlxPoint, PointB:FlxPoint):Int
-	{
-		var dx:Float = PointA.x - PointB.x;
-		var dy:Float = PointA.y - PointB.y;
 		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
