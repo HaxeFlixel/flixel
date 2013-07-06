@@ -1,8 +1,8 @@
-package flixel.addons.ui;
+package flixel.ui;
 
 #if !FLX_NO_MOUSE
-import flixel.addons.display.FlxExtendedSprite;
-import flixel.addons.plugin.FlxMouseControl;
+import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxMath;
@@ -11,7 +11,7 @@ import flixel.util.FlxRect;
 import flixel.util.FlxSpriteUtil;
 
 /**
- * A slider GUI element for floats and integers. 
+ * A slider GUI element for float and integer manipulation. 
  * 
  * @author Gama11
  */
@@ -28,7 +28,7 @@ class FlxSlider extends FlxSpriteGroup
 	/**
 	 * The dragable handle - loadGraphic() to change its graphic.
 	 */
-	public var handle:FlxExtendedSprite;
+	public var handle:FlxSprite;
 	/**
 	 * The text under the left border - equals minValue by default.
 	 */
@@ -163,10 +163,6 @@ class FlxSlider extends FlxSpriteGroup
 		color = Color;
 		handleColor = HandleColor;
 		
-		// Need the mouse control plugin for dragable sprites
-		if (FlxG.plugins.get(FlxMouseControl) == null) 
-			FlxG.plugins.add(new FlxMouseControl());
-		
 		if (varString == null) 
 		{
 			kill();
@@ -191,9 +187,8 @@ class FlxSlider extends FlxSpriteGroup
 		backGround.makeGraphic(width, height, 0);
 		FlxSpriteUtil.drawLine(backGround, 0, height / 2, width, height / 2, color, thickness); 
 		
-		handle = new FlxExtendedSprite(offset.x, offset.y);
+		handle = new FlxSprite(offset.x, offset.y);
 		handle.makeGraphic(thickness, height, handleColor);
-		handle.enableMouseDrag(false, false, 255, bounds);
 		
 		// Creating the texts
 		nameLabel = new FlxText(0, -4, width, varString);
@@ -225,12 +220,15 @@ class FlxSlider extends FlxSpriteGroup
 		// Position the objects
 		x = X;
 		y = Y;
+		
+		// No srolling for UI components
+		transformChildren(function (s:FlxSprite, v:Dynamic) { s.scrollFactor.make(0, 0); } );
 	}
 
 	override public function update():Void
 	{
 		// Clicking and sound logic
-		if (FlxMath.mouseInFlxRect(true, bounds)) 
+		if (FlxMath.mouseInFlxRect(false, bounds)) 
 		{
 			if (hoverAlpha != 1)
 				alpha = hoverAlpha;
@@ -240,7 +238,7 @@ class FlxSlider extends FlxSpriteGroup
 			justHovered = true;
 			
 			if (clickable && FlxG.mouse.pressed()) {
-				handle.x = FlxG.mouse.x;
+				handle.x = FlxG.mouse.screenX;
 				updateValue();
 				
 				if (clickSound != null && !justClicked) {
@@ -259,7 +257,7 @@ class FlxSlider extends FlxSpriteGroup
 		}
 		
 		// Update the target value whenever the slider is being used
-		if (handle.isDragged)
+		if (FlxG.mouse.pressed() && FlxMath.mouseInFlxRect(false, bounds))
 			updateValue();
 			
 		// Update the value variable
@@ -382,8 +380,6 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	override public function destroy():Void
 	{
-		FlxMouseControl.clear();
-		
 		handle = null;
 		bounds = null;
 		backGround = null;
