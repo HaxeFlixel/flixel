@@ -66,8 +66,6 @@ class CameraFrontEnd
 			#if flash
 			cam.fill(cam.bgColor, cam.useBgAlphaBlending);
 			cam.screen.dirty = true;
-			#else
-			cam.fill((cam.bgColor & 0x00ffffff), cam.useBgAlphaBlending, ((cam.bgColor >> 24) & 255) / 255);
 			#end
 		}
 	}

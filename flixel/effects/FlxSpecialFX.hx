@@ -16,7 +16,7 @@ class FlxSpecialFX extends FlxBasic
 {
 	static private var members:ObjectMap<BaseFX, BaseFX> = new ObjectMap<BaseFX, BaseFX>();
 	
-	//	THE SPECIAL FX PLUGINS AVAILABLE
+	// THE SPECIAL FX PLUGINS AVAILABLE
 	
 	/**
 	 * Creates a Glitch Effect

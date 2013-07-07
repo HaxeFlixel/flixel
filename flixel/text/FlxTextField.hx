@@ -444,9 +444,9 @@ class FlxTextField extends FlxText
 				_addedToDisplay = false;
 			}
 			
-			_camera = value;
+			_camera = Value;
 		}
-		return value;
+		return Value;
 	}
 	
 	/**

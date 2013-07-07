@@ -83,19 +83,6 @@ class FlxMath
 	}
 	
 	/**
-	 * Calculate the distance between two points.
-	 * @param 	Point1		A <code>FlxPoint</code> object referring to the first location.
-	 * @param 	Point2		A <code>FlxPoint</code> object referring to the second location.
-	 * @return	The distance between the two points as a floating point <code>Number</code> object.
-	 */
-	inline static public function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
-	{
-		var dx:Float = Point1.x - Point2.x;
-		var dy:Float = Point1.y - Point2.y;
-		return Math.sqrt(dx * dx + dy * dy);
-	}
-	
-	/**
 	 * Returns true if the number given is odd.
 	 * 
 	 * @param	n	The number to check
@@ -313,6 +300,20 @@ class FlxMath
 	}
 	
 	/**
+	 * Calculate the distance between two points.
+	 * 
+	 * @param 	Point1		A <code>FlxPoint</code> object referring to the first location.
+	 * @param 	Point2		A <code>FlxPoint</code> object referring to the second location.
+	 * @return	The distance between the two points as a floating point <code>Number</code> object.
+	 */
+	inline static public function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
+	{
+		var dx:Float = Point1.x - Point2.x;
+		var dy:Float = Point1.y - Point2.y;
+		return vectorLength(dx, dy);
+	}
+	
+	/**
 	 * Find the distance (in pixels, rounded) between two FlxSprites, taking their origin into account
 	 * 
 	 * @param	SpriteA		The first FlxSprite
@@ -375,6 +376,25 @@ class FlxMath
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	#end
+	
+	/**
+	 * Returns the amount of decimals a Float has
+	 * 
+	 * @param	Number	The floating point number
+	 * @return	Amount of decimals
+	 */
+	inline static public function getDecimals(Number:Float):Int
+	{
+		var helperArray:Array<String> = Std.string(Number).split(".");
+		var decimals:Int = 0;
+		
+		if (helperArray.length > 1)
+		{
+			decimals = helperArray[1].length;
+		}
+		
+		return decimals;
+	}
 	
 	#if (flash || js)
 	/**

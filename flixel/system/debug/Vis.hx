@@ -1,5 +1,6 @@
 package flixel.system.debug;
 
+#if !FLX_NO_DEBUG
 import openfl.Assets;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -191,3 +192,4 @@ class Vis extends Sprite
 		}
 	}
 }
+#end
