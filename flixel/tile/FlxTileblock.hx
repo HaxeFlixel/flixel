@@ -23,9 +23,6 @@ class FlxTileblock extends FlxSprite
 	private var _tileIndices:Array<Int>;
 	#end
 	
-	private var _repeatX:Int = 0;
-	private var _repeatY:Int = 0;
-	
 	/**
 	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
 	 */
@@ -67,7 +64,7 @@ class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0, RepeatX:Int = 1, RepeatY:Int = 1):FlxTileblock
+	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{
 		if (TileGraphic == null)
 		{
@@ -114,9 +111,6 @@ class FlxTileblock extends FlxSprite
 		var widthInTiles:Int = Std.int(width / spriteWidth);
 		var heightInTiles:Int = Std.int(height / spriteHeight);
 		
-		_repeatX = (RepeatX >= 0 ) ? RepeatX : 0;
-		_repeatY = (RepeatY >= 0) ? RepeatY : 0;
-		
 		#if !(flash || js)
 		if (_tileData != null)
 		{
@@ -131,7 +125,7 @@ class FlxTileblock extends FlxSprite
 		
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
-		_pixels = FlxG.bitmap.addTilemap(TileGraphic, false, false, null, _tileWidth, _tileHeight, _repeatX, _repeatY);
+		_pixels = FlxG.bitmap.add(TileGraphic, false, false, null, _tileWidth, _tileHeight);
 		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		frameWidth = Std.int(width);
 		frameHeight = Std.int(height);
@@ -316,7 +310,7 @@ class FlxTileblock extends FlxSprite
 	{
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, null, 0, 0, 0, 0, _repeatX + 1, _repeatY + 1);
+			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
 			
 			if (_tileData != null)
 			{
