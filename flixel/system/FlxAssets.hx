@@ -3,6 +3,7 @@ package flixel.system;
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import openfl.Assets;
+import flixel.FlxG;
 
 class FlxAssets
 {
