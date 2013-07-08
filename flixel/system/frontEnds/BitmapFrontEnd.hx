@@ -8,6 +8,9 @@ import openfl.Assets;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 
+import flixel.util.loaders.TexturePackerData;
+import flixel.system.layer.TileSheetExt;
+
 class BitmapFrontEnd
 {
 	/**
@@ -324,5 +327,42 @@ class BitmapFrontEnd
 			bmd.dispose();
 			Assets.cachedBitmapData.remove(key);
 		}
+	}
+}
+
+class CachedObject
+{
+	public var key:String;
+	public var bitmap:BitmapData;
+	public var data:TexturePackerData;
+	public var tilesheet:TileSheetExt;
+	public var persist:Bool = false;
+	
+	public function new(key:String, bitmap:BitmapData, persist:Bool = false)
+	{
+		this.key = key;
+		this.bitmap = bitmap;
+		this.persist = persist;
+	}
+	
+	// TODO: check this later
+	public function destroy():Void
+	{
+		key = null;
+		if (bitmap != null)
+		{
+			bitmap.dispose();
+		}
+		bitmap = null;
+		if (data != null)
+		{
+			data.destroy();
+		}
+		data = null;
+		if (tilesheet != null)
+		{
+			tilesheet.destroy();
+		}
+		tilesheet = null;
 	}
 }
