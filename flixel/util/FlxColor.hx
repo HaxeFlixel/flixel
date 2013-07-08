@@ -52,6 +52,11 @@ class FlxColor
 	static public inline var GRAY:Int = 0xff808080;
 	
 	/**
+	 * 0xff964B00
+	 */
+	static public inline var BROWN:Int = 0xff964B00;
+	
+	/**
 	 * 0x00000000 
 	 */
 	static public inline var TRANSPARENT:Int = 0x00000000;
