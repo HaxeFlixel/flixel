@@ -205,7 +205,7 @@ class FlxTouch extends FlxPoint
 			}
 			return results;
 		}
-		return cast(ObjectOrGroup, FlxObject).overlapsPoint(this, false, Camera);
+		return cast(ObjectOrGroup, FlxObject).overlapsPoint(this, true, Camera);
 	}
 	
 	/**
