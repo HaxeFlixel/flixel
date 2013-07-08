@@ -132,17 +132,17 @@ class FlxSlider extends FlxSpriteGroup
 	/**
 	 * Creates a new <code>FlxSlider</code>.
 	 *
-     * @param 	Object 			Reference to the parent object of the variable
-	 * @param 	VarString 		Variable that the slider controls
-	 * @param 	X				x Position
-	 * @param 	Y 				y Position
-	 * @param 	MinValue 		Mininum value the variable can be changed to
-	 * @param 	MaxValue 		Maximum value the variable can be changed to
-	 * @param 	Width 			Width of the slider
-	 * @param 	Height 			Height of the slider
-	 * @param 	Thickness 		Thickness of the slider
-	 * @param 	Color 			Color of the slider background and all texts except for valueText showing the current value
-	 * @param 	HandleColor 	Color of the slider handle and the valueText showing the current value
+	 * @param	Object 			Reference to the parent object of the variable
+	 * @param	VarString 		Variable that the slider controls
+	 * @param	X				x Position
+	 * @param	Y 				y Position
+	 * @param	MinValue 		Mininum value the variable can be changed to
+	 * @param	MaxValue 		Maximum value the variable can be changed to
+	 * @param	Width 			Width of the slider
+	 * @param	Height 			Height of the slider
+	 * @param	Thickness 		Thickness of the slider
+	 * @param	Color 			Color of the slider background and all texts except for valueText showing the current value
+	 * @param	HandleColor 	Color of the slider handle and the valueText showing the current value
 	 */
 	public function new(Object:Dynamic, VarString:String, X:Float = 0, Y:Float = 0, MinValue:Float = 0, MaxValue:Float = 10, Width:Int = 100, Height:Int = 15, Thickness:Int = 3, Color:Int = 0xFF000000, HandleColor:Int = 0xFF828282)
 	{
@@ -160,6 +160,8 @@ class FlxSlider extends FlxSpriteGroup
 		{
 			decimals = FlxMath.getDecimals(MaxValue);
 		}
+		
+		decimals ++;
 		
 		// Assign all those constructor vars
 		minValue = MinValue;
