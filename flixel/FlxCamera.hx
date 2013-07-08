@@ -131,26 +131,13 @@ class FlxCamera extends FlxBasic
 	 * The actual bitmap data of the camera display itself.
 	 */
 	public var buffer:BitmapData;
+	#end
 	
 	/**
 	 * The natural background color of the camera. Defaults to FlxG.cameras.bgColor.
 	 * NOTE: can be transparent for crazy FX!
 	 */
 	public var bgColor:Int;
-	#else
-	public var bgColor(default, set):Int;
-	
-	private function set_bgColor(value:Int):Int
-	{
-		bgColor = value;
-		if (_background != null)
-		{
-			_background.graphics.clear();
-			fill((bgColor & 0x00ffffff), useBgAlphaBlending, ((bgColor >> 24) & 255) / 255, _background.graphics);
-		}
-		return value;
-	}
-	#end
 	
 	#if flash
 	/**
@@ -261,11 +248,6 @@ class FlxCamera extends FlxBasic
 	#end
 	
 	#if !flash
-	/**
-	 * sprite for drawing background fill color (for non-flash targets)
-	 */
-	public var _background:Sprite;
-	
 	/**
 	 * sprite for drawing (instead of _flashBitmap in flash)
 	 */
@@ -457,10 +439,9 @@ class FlxCamera extends FlxBasic
 		_flashBitmap.x = -width * 0.5;
 		_flashBitmap.y = -height * 0.5;
 		#else
-		_background = new Sprite();
 		_canvas = new Sprite();
-		_background.x = _canvas.x = -width * 0.5;
-		_background.y = _canvas.y = -height * 0.5;
+		_canvas.x = -width * 0.5;
+		_canvas.y = -height * 0.5;
 		#end
 		
 		#if flash
@@ -481,7 +462,6 @@ class FlxCamera extends FlxBasic
 		#if flash
 		_flashSprite.addChild(_flashBitmap);
 		#else
-		_flashSprite.addChild(_background);
 		_flashSprite.addChild(_canvas);
 		#end
 		_flashRect = new Rectangle(0, 0, width, height);
@@ -512,8 +492,6 @@ class FlxCamera extends FlxBasic
 		#else
 		_canvas.scrollRect = new Rectangle(0, 0, width * zoom, height * zoom);
 		#end
-		
-		_background.scrollRect = _canvas.scrollRect;
 		
 		_debugLayer = new Sprite();
 		_debugLayer.x = -width * 0.5;
@@ -569,7 +547,6 @@ class FlxCamera extends FlxBasic
 		#else
 		_flashSprite.removeChild(_debugLayer);
 		_flashSprite.removeChild(_canvas);
-		_flashSprite.removeChild(_background);
 		var canvasNumChildren:Int = _canvas.numChildren;
 		for (i in 0...(canvasNumChildren))
 		{
@@ -577,7 +554,6 @@ class FlxCamera extends FlxBasic
 		}
 		_debugLayer = null;
 		_canvas = null;
-		_background = null;
 		
 		clearDrawStack();
 		
@@ -1025,7 +1001,7 @@ class FlxCamera extends FlxBasic
 		#if flash
 		_flashBitmap.alpha = Alpha;
 		#else
-		_background.alpha = _canvas.alpha = Alpha;
+		_canvas.alpha = Alpha;
 		#end
 		return Alpha;
 	}
@@ -1071,7 +1047,6 @@ class FlxCamera extends FlxBasic
 		colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
 		colorTransform.blueMultiplier = (color & 0xff) / 255;
 		_canvas.transform.colorTransform = colorTransform;
-		_background.transform.colorTransform = colorTransform;
 		#end
 		
 		return Color;
@@ -1152,6 +1127,10 @@ class FlxCamera extends FlxBasic
 		}
 	#else
 		
+		if (FxAlpha == 0)
+		{
+			return;
+		}
 		// This is temporal fix for camera's color
 		var targetGraphics:Graphics = (graphics == null) ? _canvas.graphics : graphics;
 		Color = Color & 0x00ffffff;
@@ -1221,10 +1200,10 @@ class FlxCamera extends FlxBasic
 				#else
 				rect.width = val * zoom;
 				#end
-				_background.scrollRect = _canvas.scrollRect = rect;
+				_canvas.scrollRect = rect;
 				
 				_flashOffsetX = width * 0.5 * zoom;
-				_background.x = _debugLayer.x = _canvas.x = -width * 0.5;
+				_debugLayer.x = _canvas.x = -width * 0.5;
 			}
 			#end
 		}
@@ -1251,10 +1230,10 @@ class FlxCamera extends FlxBasic
 				#else
 				rect.height = val * zoom;
 				#end
-				_background.scrollRect = _canvas.scrollRect = rect;
+				_canvas.scrollRect = rect;
 				
 				_flashOffsetY = height * 0.5 * zoom;
-				_background.y = _debugLayer.y = _canvas.y = -height * 0.5;
+				_debugLayer.y = _canvas.y = -height * 0.5;
 			}
 			#end
 		}

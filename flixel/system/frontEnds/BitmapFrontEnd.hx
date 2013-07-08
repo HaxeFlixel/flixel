@@ -216,67 +216,6 @@ class BitmapFrontEnd
 	}
 	
 	/**
-	 * Helper method for loading and modifying tilesheets for tilemaps and tileblocks. It should help resolve tilemap tearing issue for native targets
-	 * 
-	 * @param	Graphic		The image file that you want to load.
-	 * @param	Reverse		Whether to generate a flipped version.
-	 * @param	Unique		Ensures that the bitmap data uses a new slot in the cache.
-	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
-	 * @param	FrameWidth
-	 * @param	FrameHeight
-	 * @param	RepeatX
-	 * @param	RepeatY
-	 * @return
-	 */
-	public function addTilemap(Graphic:Dynamic, Reverse:Bool = false, Unique:Bool = false, Key:String = null, FrameWidth:Int = 0, FrameHeight:Int = 0, RepeatX:Int = 1, RepeatY:Int = 1):BitmapData
-	{
-		var bitmap:BitmapData = FlxG.bitmap.add(Graphic, Reverse, Unique, Key, FrameWidth, FrameHeight, RepeatX + 1, RepeatY + 1);
-		
-		// Now modify tilemap image - insert repeatable pixels
-		var extendedFrameWidth:Int = FrameWidth + RepeatX + 1;
-		var extendedFrameHeight:Int = FrameHeight + RepeatY + 1;
-		var numCols:Int = Std.int(bitmap.width / extendedFrameWidth);
-		var numRows:Int = Std.int(bitmap.height / extendedFrameHeight);
-		var tempRect:Rectangle = new Rectangle();
-		var tempPoint:Point = new Point();
-		var pixelColor:Int;
-		
-		tempRect.y = 0;
-		tempRect.width = 1;
-		tempRect.height = bitmap.height;
-		tempPoint.y = 0;
-		for (i in 0...numCols)
-		{
-			var tempX:Int = i * extendedFrameWidth + FrameWidth;
-			tempRect.x = tempX - 1;
-			
-			for (j in 0...RepeatX)
-			{
-				tempPoint.x = tempX + j;
-				bitmap.copyPixels(bitmap, tempRect, tempPoint);
-			}
-		}
-		
-		tempRect.x = 0;
-		tempRect.width = bitmap.width;
-		tempRect.height = 1;
-		tempPoint.x = 0;
-		for (i in 0...numRows)
-		{
-			var tempY:Int = i * extendedFrameHeight + FrameHeight;
-			tempRect.y = tempY - 1;
-			
-			for (j in 0...RepeatY)
-			{
-				tempPoint.y = tempY + j;
-				bitmap.copyPixels(bitmap, tempRect, tempPoint);
-			}
-		}
-		
-		return bitmap;
-	}
-	
-	/**
 	 * Gets key from bitmap cache for specified bitmapdata
 	 * 
 	 * @param	bmd	bitmapdata to find in cache

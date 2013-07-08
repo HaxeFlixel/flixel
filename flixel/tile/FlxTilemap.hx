@@ -152,9 +152,6 @@ class FlxTilemap extends FlxObject
 	private var _rectIDs:Array<Int>;
 	#end
 	
-	private var _repeatX:Int = 0;
-	private var _repeatY:Int = 0;
-	
 	/**
 	 * The tilemap constructor just initializes some basic variables.
 	 */
@@ -267,11 +264,9 @@ class FlxTilemap extends FlxObject
 	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
 	 * @param	DrawIndex		Initializes all tile objects equal to and after this index as visible. Default value is 1.  Ignored if AutoTile is set.
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.	
-	 * @param 	RepeatX						
-	 * @param 	RepeatY
 	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, AutoTile:Int = 0, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1, RepeatX:Int = 1, RepeatY:Int = 1):FlxTilemap
+	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, AutoTile:Int = 0, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
 		auto = AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
@@ -353,11 +348,8 @@ class FlxTilemap extends FlxObject
 			_tileHeight = _tileWidth;
 		}
 		
-		_repeatX = (RepeatX >= 0 ) ? RepeatX : 0;
-		_repeatY = (RepeatY >= 0) ? RepeatY : 0;
-		
 		#if !flash
-		_tiles = FlxG.bitmap.addTilemap(TileGraphic, false, false, null, _tileWidth, _tileHeight, _repeatX, _repeatY);
+		_tiles = FlxG.bitmap.add(TileGraphic, false, false, null, _tileWidth, _tileHeight);
 		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		#end
 		
@@ -367,7 +359,7 @@ class FlxTilemap extends FlxObject
 		#if flash
 		var length:Int = Std.int(_tiles.width / _tileWidth * _tiles.height / _tileHeight);
 		#else
-		var length:Int = Std.int(_tiles.width / (_tileWidth + (_repeatX + 1)) * _tiles.height / (_tileHeight + (_repeatY + 1)));
+		var length:Int = Std.int(_tiles.width / (_tileWidth + 1) * _tiles.height / (_tileHeight + 1));
 		#end
 		
 		length += _startingIndex;
@@ -2298,7 +2290,7 @@ class FlxTilemap extends FlxObject
 		#if !flash
 		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, _repeatX + 1, _repeatY + 1);
+			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, 1, 1);
 			
 			_rectIDs = new Array<Int>();
 			FlxArray.setLength(_rectIDs, totalTiles);
@@ -2339,12 +2331,12 @@ class FlxTilemap extends FlxObject
 		}
 		else
 		{
-			var rx:Int = (_data[rowIndex] - _startingIndex) * (_tileWidth + _repeatX + 1);
+			var rx:Int = (_data[rowIndex] - _startingIndex) * (_tileWidth + 1);
 			var ry:Int = 0;
 			
 			if(Std.int(rx) >= _tiles.width)
 			{
-				ry = Std.int(rx / _tiles.width) * (_tileHeight + _repeatY + 1);
+				ry = Std.int(rx / _tiles.width) * (_tileHeight + 1);
 				rx %= _tiles.width;
 			}
 			
