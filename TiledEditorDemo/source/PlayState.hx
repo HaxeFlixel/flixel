@@ -8,10 +8,6 @@ import flixel.text.FlxText;
 import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
 
-/**
- * ...
- * @author Zaphod
- */
 class PlayState extends FlxState
 {
 	public var level:TiledLevel;

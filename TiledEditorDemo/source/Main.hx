@@ -3,14 +3,8 @@
 import flash.display.Sprite;
 import flash.Lib;
 
-/**
- * ...
- * @author Zaphod
- */
-
 class Main extends Sprite
 {
-	
 	public static function main() 
 	{
 		new Main();

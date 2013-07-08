@@ -1,4 +1,4 @@
-package ;
+package;
 
 import openfl.Assets;
 import haxe.io.Path;
@@ -8,17 +8,16 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
-import flixel.addons.tmx.TmxMap;
-import flixel.addons.tmx.TmxObject;
-import flixel.addons.tmx.TmxObjectGroup;
-import flixel.addons.tmx.TmxTileSet;
+import flixel.addons.editors.tiled.TiledMap;
+import flixel.addons.editors.tiled.TiledObject;
+import flixel.addons.editors.tiled.TiledObjectGroup;
+import flixel.addons.editors.tiled.TiledTileSet;
 
 /**
  * ...
  * @author Samuel Batista
  */
-
-class TiledLevel extends TmxMap
+class TiledLevel extends TiledMap
 {
 	// For each "Tile Layer" in the map, you must define a "tileset" property which contains the name of a tile sheet image 
 	// used to draw tiles in that layer (without file extension). The image file must be located in the directory specified bellow.
@@ -29,9 +28,9 @@ class TiledLevel extends TmxMap
 	public var backgroundTiles:FlxGroup;
 	private var collidableTileLayers:Array<FlxTilemap>;
 	
-	public function new(tmxLevel:Dynamic)
+	public function new(tiledLevel:Dynamic)
 	{
-		super(tmxLevel);
+		super(tiledLevel);
 		
 		foregroundTiles = new FlxGroup();
 		backgroundTiles = new FlxGroup();
@@ -46,7 +45,7 @@ class TiledLevel extends TmxMap
 			if (tileSheetName == null)
 				throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
 				
-			var tileSet:TmxTileSet = null;
+			var tileSet:TiledTileSet = null;
 			for ( ts in tilesets )
 			{
 				if ( ts.name == tileSheetName)
@@ -93,7 +92,7 @@ class TiledLevel extends TmxMap
 		}
 	}
 	
-	private function loadObject(o:TmxObject, g:TmxObjectGroup, state:PlayState)
+	private function loadObject(o:TiledObject, g:TiledObjectGroup, state:PlayState)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;
