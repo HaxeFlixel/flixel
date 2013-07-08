@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<app title="Flixel Version of BunnyMark" file="FlixelBunnyMark" main="Test" version="0.0.1" company="Zaphod" />
+	
+	<window width="800" height="600" fps="30" background="#000000" orientation="portrait" resizable="true" if="flash" />
+	<window width="1280" height="720" fullscreen="false" fps="60" background="#000000" orientation="portrait" vsync="true" antialiasing="0" unless="flash" />
+ 	
+	<set name="BUILD_DIR" value="export" />
+	
+	<app preloader="org.flixel.system.FlxPreloader" unless="html5" />
+	
+	<classpath name="source" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="flixel" />
+	
+	<assets path="assets" rename="assets" if="android" >
+		<sound path="data/beep.wav" id="Beep" />
+		
+	</assets>
+	
+	<assets path="assets" rename="assets" if="desktop" >
+		<sound path="data/beep.wav" id="Beep" />
+		
+	</assets>
+	
+	<assets path="assets" rename="assets" if="flash" >
+		<sound path="data/beep.mp3" id="Beep" />
+		
+	</assets>
+	
+	<assets path="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" unless="flash" />
+	
+	<set name="thread" />
+	
+	<icon name="assets/nme.svg" />
+</project>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<app title="Zocklet Bricks" file="ZockletBricks" main="BrickMain" version="0.0.1" company="Zaphod" />
+	
+	<window width="312" height="152" fps="60" background="0x000000" orientation="portrait" resizable="true" if="flash" />
+	<window width="312" height="152" fps="60" background="0x000000" orientation="landscape" hardware="true" unless="flash" />
+ 	
+	<classpath name="source" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="flixel" />
+	
+	<assets path="assets" if="android" >
+		<sound path="data/beep.wav" id="Beep" />
+		
+		<sound path="beep.wav" id="BeepSound" />
+		<sound path="boop.wav" id="BoopSound" />
+	</assets>
+	
+	<assets path="assets" if="desktop" >
+		<sound path="data/beep.wav" id="Beep" />
+		
+		<sound path="beep.wav" id="BeepSound" />
+		<sound path="boop.wav" id="BoopSound" />
+	</assets>
+	
+	<assets path="assets" if="flash" >
+		<sound path="data/beep.mp3" id="Beep" />
+		
+		<sound path="beep.mp3" id="BeepSound" />
+		<sound path="boop.mp3" id="BoopSound" />
+	</assets>
+	
+	<assets path="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" unless="flash" />
+	
+	<icon name="assets/HaxeFlixel.svg" />
+</project>

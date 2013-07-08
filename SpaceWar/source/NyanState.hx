@@ -4,7 +4,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxParticle;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 
@@ -39,7 +39,7 @@ class NyanState extends FlxState
 		
 		resetSpawnTimer();
 		
-		FlxG.score = 0;
+		Reg.score = 0;
 		_scoreText = new FlxText(10, 8, 200, "0");
 		_scoreText.setFormat(null, 32, 0xFFFFFF, "left");
 		add(_scoreText);
@@ -112,8 +112,8 @@ class NyanState extends FlxState
 	{
 		cat.kill();
 		bullet.kill();
-		FlxG.score += 1;
-		_scoreText.text = Std.string(FlxG.score);
+		Reg.score += 1;
+		_scoreText.text = Std.string(Reg.score);
 		FlxG.play("ExplosionAlien");
 		var emitter:FlxEmitter = createEmitter();
 		emitter.at(cat);
@@ -144,11 +144,7 @@ class NyanState extends FlxState
 		for (i in 0...(particles)) 
 		{
 			var particle:FlxParticle = new FlxParticle();
-			#if !neko
 			particle.makeGraphic(3, 3, 0xFFF66FFF);
-			#else
-			particle.makeGraphic(3, 3, {rgb: 0xF66FFF, a: 0xFF});
-			#end
 			particle.exists = false;
 			emitter.add(particle);
 		}

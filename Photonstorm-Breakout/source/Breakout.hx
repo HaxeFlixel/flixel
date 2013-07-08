@@ -6,7 +6,7 @@
 * Original code and video can be found at: http://www.photonstorm.com/archives/1290/video-of-me-coding-breakout-in-flixel-in-20-mins
 */
 package;
-import nme.display.BitmapInt32;
+
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
@@ -35,18 +35,10 @@ class Breakout extends FlxState
 	
 	override public function create():Void
 	{
-		#if !neko
 		bat = new FlxSprite(180, 220).makeGraphic(40, 6, 0xffd63bc3);
-		#else
-		bat = new FlxSprite(180, 220).makeGraphic(40, 6, {rgb: 0xd63bc3, a: 0xff});
-		#end
 		bat.immovable = true;
 		
-		#if !neko
 		ball = new FlxSprite(180, 160).makeGraphic(6, 6, 0xffd63bc3);
-		#else
-		ball = new FlxSprite(180, 160).makeGraphic(6, 6, {rgb: 0xd63bc3, a: 0xff});
-		#end
 		ball.elasticity = 1;
 		ball.maxVelocity.x = 200;
 		ball.maxVelocity.y = 200;
@@ -54,35 +46,19 @@ class Breakout extends FlxState
 		
 		walls = new FlxGroup();
 		
-		#if !neko
 		leftWall = new FlxSprite(0, 0).makeGraphic(10, 240, 0xffababab);
-		#else
-		leftWall = new FlxSprite(0, 0).makeGraphic(10, 240, {rgb: 0xababab, a: 0xff});
-		#end
 		leftWall.immovable = true;
 		walls.add(leftWall);
 		
-		#if !neko
 		rightWall = new FlxSprite(310, 0).makeGraphic(10, 240, 0xffababab);
-		#else
-		rightWall = new FlxSprite(310, 0).makeGraphic(10, 240, {rgb: 0xababab, a: 0xff});
-		#end
 		rightWall.immovable = true;
 		walls.add(rightWall);
 		
-		#if !neko
 		topWall = new FlxSprite(0, 0).makeGraphic(320, 10, 0xffababab);
-		#else
-		topWall = new FlxSprite(0, 0).makeGraphic(320, 10, {rgb: 0xababab, a: 0xff});
-		#end
 		topWall.immovable = true;
 		walls.add(topWall);
 		
-		#if !neko
 		bottomWall = new FlxSprite(0, 239).makeGraphic(320, 10, 0xff000000);
-		#else
-		bottomWall = new FlxSprite(0, 239).makeGraphic(320, 10, {rgb: 0x000000, a: 0xff});
-		#end
 		bottomWall.immovable = true;
 		walls.add(bottomWall);
 		
@@ -94,10 +70,8 @@ class Breakout extends FlxState
 		
 		#if flash
 		var brickColours:Array<UInt> = [0xffd03ad1, 0xfff75352, 0xfffd8014, 0xffff9024, 0xff05b320, 0xff6d65f6];
-		#elseif (cpp || js)
+		#else
 		var brickColours:Array<Int> = [0xffd03ad1, 0xfff75352, 0xfffd8014, 0xffff9024, 0xff05b320, 0xff6d65f6];
-		#elseif neko
-		var brickColours:Array<BitmapInt32> = [{rgb: 0xd03ad1, a: 0xff}, {rgb: 0xf75352, a: 0xff}, {rgb: 0xfd8014, a: 0xff}, {rgb: 0xff9024, a: 0xff}, {rgb: 0x05b320, a: 0xff}, {rgb: 0x6d65f6, a: 0xff}];
 		#end
 		
 		for (y in 0...6)

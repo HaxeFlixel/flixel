@@ -1,10 +1,11 @@
 package;
+import org.flixel.addons.FlxEmitterExt;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxTimer;
+import org.flixel.util.FlxTimer;
 
 
 class TestState extends FlxState
@@ -21,11 +22,7 @@ class TestState extends FlxState
 	
 	override public function create():Void
 	{			
-		#if !neko
 		FlxG.bgColor = 0xFF333333;
-		#else
-		FlxG.camera.bgColor = {rgb: 0x333333, a: 0xFF};
-		#end
 		FlxG.mouse.show();
 		
 		//add info box

@@ -1,15 +1,14 @@
 package;
 
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.events.MouseEvent;
-import nme.Lib;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.events.MouseEvent;
+import flash.Lib;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
-import org.flixel.FlxLayer;
 import org.flixel.FlxObject;
 import org.flixel.FlxParticle;
 import org.flixel.FlxPoint;
@@ -63,13 +62,6 @@ class PlayStateOld extends FlxState
 	
 	override public function create():Void
 	{
-		//FlxG.mouse.hide();
-		#if (cpp || neko)
-		layer = new FlxLayer("GeneralLayer");
-		layer.atlas = FlxLayer.createAtlas(1024, 1024, "GeneralLayer");
-		FlxG.state.addLayer(layer);
-		#end
-		
 		//Here we are creating a pool of 100 little metal bits that can be exploded.
 		//We will recycle the crap out of these!
 		_littleGibs = new FlxEmitter();
@@ -414,37 +406,22 @@ class PlayStateOld extends FlxState
 		b = new FlxTileblock(0, 0, 640, 16);
 		b.loadTiles("assets/tech_tiles.png");
 		_blocks.add(b);
-		#if (cpp || neko)
-		_layer.add(b);
-		#end
 		
 		b = new FlxTileblock(0, 16, 16, 640 - 16);
 		b.loadTiles("assets/tech_tiles.png");
 		_blocks.add(b);
-		#if (cpp || neko)
-		_layer.add(b);
-		#end
 		
 		b = new FlxTileblock(640 - 16, 16, 16, 640 - 16);
 		b.loadTiles("assets/tech_tiles.png");
 		_blocks.add(b);
-		#if (cpp || neko)
-		_layer.add(b);
-		#end
 		
 		b = new FlxTileblock(16, 640 - 24, 640 - 32, 8);
 		b.loadTiles("assets/dirt_top.png");
 		_blocks.add(b);
-		#if (cpp || neko)
-		_layer.add(b);
-		#end
 		
 		b = new FlxTileblock(16, 640 - 16, 640 - 32, 16);
 		b.loadTiles("assets/dirt.png");
 		_blocks.add(b);
-		#if (cpp || neko)
-		_layer.add(b);
-		#end
 		
 		//Then we split the game world up into a 4x4 grid,
 		//and generate some blocks in each area.  Some grid spaces
@@ -515,9 +492,6 @@ class PlayStateOld extends FlxState
 			b = new FlxTileblock(RX + bx * 8, RY + by * 8, bw * 8, bh * 8);
 			b.loadTiles("assets/tech_tiles.png");
 			_blocks.add(b);
-			#if (cpp || neko)
-			_layer.add(b);
-			#end
 			
 			//If the block has room, add some non-colliding "dirt" graphics for variety
 			if((bw >= 4) && (bh >= 5))
@@ -525,16 +499,10 @@ class PlayStateOld extends FlxState
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8, bw * 8 - 16, 8);
 				b.loadTiles("assets/dirt_top.png");
 				_decorations.add(b);
-				#if (cpp || neko)
-				_layer.add(b);
-				#end
 				
 				b = new FlxTileblock(RX + bx * 8 + 8, RY + by * 8 + 8, bw * 8 - 16, bh * 8 - 24);
 				b.loadTiles("assets/dirt.png");
 				_decorations.add(b);
-				#if (cpp || neko)
-				_layer.add(b);
-				#end
 			}
 		}
 

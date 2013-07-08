@@ -1,6 +1,6 @@
 package com.chipacabra.jumper;
 
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;

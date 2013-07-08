@@ -3,7 +3,6 @@ package;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxSprite;
-import org.flixel.FlxU;
 
 /**
  * ...
@@ -53,7 +52,7 @@ class Asteroid extends WrapSprite
 			y = Y;
 			velocity.x = VelocityX;
 			velocity.y = VelocityY;
-			angularVelocity = (FlxU.abs(velocity.x) + FlxU.abs(velocity.y));
+			angularVelocity = (Math.abs(velocity.x) + Math.abs(velocity.y));
 			return this;
 		}
 		
@@ -89,7 +88,7 @@ class Asteroid extends WrapSprite
 			velocity.x = FlxG.random() * initial_velocity * 2 - initial_velocity;
 		}
 		
-		angularVelocity = (FlxU.abs(velocity.x) + FlxU.abs(velocity.y));
+		angularVelocity = (Math.abs(velocity.x) + Math.abs(velocity.y));
 		return this;
 	}
 	
@@ -99,8 +98,10 @@ class Asteroid extends WrapSprite
 		
 		if (justTouched(FlxObject.ANY))
 		{
-			angularVelocity = (FlxU.abs(velocity.x) + FlxU.abs(velocity.y));
+			angularVelocity = (Math.abs(velocity.x) + Math.abs(velocity.y));
 		}
+		
+		super.update();
 	}
 	
 	override public function kill():Void 

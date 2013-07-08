@@ -1,8 +1,8 @@
 package;
 
-import nme.display.BitmapInt32;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.system.input.FlxJoystick;
@@ -40,7 +40,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		FlxG.bgColor = FlxG.WHITE;
+		FlxG.bgColor = FlxColor.WHITE;
 		
 		// getting first availble gamepad
 		gamePad = FlxG.joystickManager.joystick(0);
@@ -98,11 +98,7 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		#if neko
-		var gray:BitmapInt32 = { a: 0xff, rgb: 0xcccccc };
-		#else
 		var gray:Int = 0xffcccccc;
-		#end
 		
 		if (gamePad.pressed(XBOX_BUTTON_IDS.A_BUTTON))
 		{

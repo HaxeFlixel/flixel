@@ -1,6 +1,5 @@
 package;
 
-import nme.display.BitmapInt32;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
@@ -12,11 +11,7 @@ class Alien extends FlxSprite		//Class declaration for the squid monster class
 	
 	//This is the constructor for the squid monster.
 	//We are going to set up the basic values and then create a simple animation.
-	#if flash
-	public function new(X:Int, Y:Int, Color:UInt, Bullets:FlxGroup)
-	#else
-	public function new(X:Int, Y:Int, Color:BitmapInt32, Bullets:FlxGroup)
-	#end
+	public function new(X:Int, Y:Int, Color:Int, Bullets:FlxGroup)
 	{
 		super(X, Y);				//Initialize sprite object
 		loadGraphic("assets/alien.png", true);	//Load this animated graphic file
@@ -66,6 +61,8 @@ class Alien extends FlxSprite		//Class declaration for the squid monster class
 			bullet.reset(x + width / 2 - bullet.width / 2, y);
 			bullet.velocity.y = 65;
 		}
+		
+		super.update();
 	}
 	
 	//This function just resets our bullet logic timer to a random value between 1 and 11

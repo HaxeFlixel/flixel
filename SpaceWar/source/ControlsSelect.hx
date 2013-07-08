@@ -13,6 +13,8 @@ class ControlsSelect extends FlxState
 	
 	override public function create():Void 
 	{	
+		FlxG.mouse.show();
+		
 		var title:FlxText;
 		title = new FlxText(0, 16, FlxG.width, "Space War");
 		title.setFormat(null, 16, 0xFFFFFF, "center");

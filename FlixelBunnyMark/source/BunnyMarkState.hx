@@ -1,9 +1,9 @@
 package;
 
 import flash.ui.Mouse;
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.Lib;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.Lib;
 import org.flixel.system.input.FlxAnalog;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;

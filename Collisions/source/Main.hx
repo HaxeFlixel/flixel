@@ -1,7 +1,7 @@
 package;
 
-import nme.display.Sprite;
-import nme.Lib;
+import flash.display.Sprite;
+import flash.Lib;
 
 import org.flixel.FlxGame;
 

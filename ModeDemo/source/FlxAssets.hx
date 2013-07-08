@@ -1,7 +1,7 @@
 package ;
-import nme.display.Bitmap;
-import nme.media.Sound;
-import nme.Assets;
+import flash.display.Bitmap;
+import flash.media.Sound;
+import openfl.Assets;
 
 /**
  * ...

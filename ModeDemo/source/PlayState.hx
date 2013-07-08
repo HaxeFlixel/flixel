@@ -1,16 +1,16 @@
 package;
 
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.events.MouseEvent;
-import nme.Lib;
+import openfl.Assets;
+import flash.display.Bitmap;
+import flash.events.MouseEvent;
+import flash.Lib;
 import org.flixel.FlxButton;
 import org.flixel.FlxCamera;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
@@ -178,34 +178,30 @@ class PlayState extends FlxState
 	//	#end
 		_score.setFormat(null, 16, 0xd8eba2, "center", 0x131c1b, true);
 		_hud.add(_score);
-		if(FlxG.scores.length < 2)
+		if(Reg.scores.length < 2)
 		{
-			FlxG.scores.push(0);
-			FlxG.scores.push(0);
+			Reg.scores.push(0);
+			Reg.scores.push(0);
 		}
 		
 		//Then for the player's highest and last scores
-		if(FlxG.score > FlxG.scores[0])
+		if(Reg.score > Reg.scores[0])
 		{
-			FlxG.scores[0] = FlxG.score;
+			Reg.scores[0] = Reg.score;
 		}
-		if(FlxG.scores[0] != 0)
+		if(Reg.scores[0] != 0)
 		{
 			_score2 = new FlxText(FlxG.width / 2, 0, Math.floor(FlxG.width / 2));
 			_score2.setFormat(null, 8, 0xd8eba2, "right", _score.shadow, true);
 			_hud.add(_score2);
-			_score2.text = "HIGHEST: "+FlxG.scores[0]+"\nLAST: "+FlxG.score;
+			_score2.text = "HIGHEST: "+Reg.scores[0]+"\nLAST: "+Reg.score;
 		}
-		FlxG.score = 0;
+		Reg.score = 0;
 		_scoreTimer = 0;
 		
 		//Then we create the "gun jammed" notification
 		_gunjam = new FlxGroup();
-		#if !neko
 		_gunjam.add(new FlxSprite(0, FlxG.height - 22).makeGraphic(FlxG.width, 24, 0xff131c1b));
-		#else
-		_gunjam.add(new FlxSprite(0, FlxG.height - 22).makeGraphic(FlxG.width, 24, {rgb: 0x131c1b, a: 0xff }));
-		#end
 		_gunjam.add(new FlxText(0, FlxG.height - 22, FlxG.width, "GUN IS JAMMED").setFormat(null, 16, 0xd8eba2, "center"));
 		_gunjam.visible = false;
 		_hud.add(_gunjam);
@@ -234,13 +230,8 @@ class PlayState extends FlxState
 		
 		LeftButton = new FlxButton(1000, 0, "Left");
 		LeftButton.scrollFactor = new FlxPoint(1.0, 1.0);
-		#if neko
-		LeftButton.color = { rgb: 0x729954, a: 0xff };
-		LeftButton.label.color = { rgb: 0xd8eba2, a: 0xff };
-		#else
 		LeftButton.color = 0xff729954;
 		LeftButton.label.color = 0xffd8eba2;
-		#end
 		add(LeftButton);
 		#if (cpp || neko)
 		_bigGibs.atlas = atlas;
@@ -252,13 +243,8 @@ class PlayState extends FlxState
 		
 		RightButton = new FlxButton(1000, 100, "Right");
 		RightButton.scrollFactor = new FlxPoint(1.0, 1.0);
-		#if neko
-		RightButton.color = { rgb: 0x729954, a: 0xff };
-		RightButton.label.color = { rgb: 0xd8eba2, a: 0xff };
-		#else
 		RightButton.color = 0xff729954;
 		RightButton.label.color = 0xffd8eba2;
-		#end
 		add(RightButton);
 		#if (cpp || neko)
 		RightButton.atlas = atlas;
@@ -270,13 +256,8 @@ class PlayState extends FlxState
 		
 		JumpButton = new FlxButton(1000, 200, "Jump");
 		JumpButton.scrollFactor = new FlxPoint(1.0, 1.0);
-		#if neko
-		JumpButton.color = { rgb: 0x729954, a: 0xff };
-		JumpButton.label.color = { rgb: 0xd8eba2, a: 0xff };
-		#else
 		JumpButton.color = 0xff729954;
 		JumpButton.label.color = 0xffd8eba2;
-		#end
 		add(JumpButton);
 		#if (cpp || neko)
 		_bigGibs.atlas = atlas;
@@ -321,7 +302,7 @@ class PlayState extends FlxState
 	override public function update():Void
 	{			
 		//save off the current score and update the game state
-		var oldScore:Int = FlxG.score;
+		var oldScore:Int = Reg.score;
 		super.update();
 		
 		//collisions with environment
@@ -330,7 +311,7 @@ class PlayState extends FlxState
 		FlxG.overlap(_bullets, _hazards, overlapped);
 		
 		//check to see if the player scored any points this frame
-		var scoreChanged:Bool = oldScore != FlxG.score;
+		var scoreChanged:Bool = oldScore != Reg.score;
 		
 		//Jammed message
 		if(FlxG.keys.justPressed("C") && _player.flickering)
@@ -361,15 +342,15 @@ class PlayState extends FlxState
 			_scoreTimer -= FlxG.elapsed;
 			if(_scoreTimer < 0)
 			{
-				if(FlxG.score > 0)
+				if(Reg.score > 0)
 				{
-					if(FlxG.score > 100)
+					if(Reg.score > 100)
 					{
-						FlxG.score -= 100;
+						Reg.score -= 100;
 					}
 					else
 					{
-						FlxG.score = 0;
+						Reg.score = 0;
 						_player.kill();
 					}
 					_scoreTimer = 1;
@@ -377,7 +358,7 @@ class PlayState extends FlxState
 					
 					//Play loud beeps if your score is low
 					var volume:Float = 0.35;
-					if(FlxG.score < 600)
+					if(Reg.score < 600)
 					{
 						volume = 1.0;
 					}
@@ -389,19 +370,15 @@ class PlayState extends FlxState
 			if(_spawners.countLiving() <= 0)
 			{
 				_fading = true;
-				#if !neko
 				FlxG.fade(0xffd8eba2, 3, false, onVictory);
-				#else
-				FlxG.fade({rgb:0xd8eba2, a:0xff}, 3, false, onVictory);
-				#end
 			}
 		}
 		
 		//actually update score text if it changed
 		if(scoreChanged)
 		{
-			if(!_player.alive) FlxG.score = 0;
-			_score.text = Std.string(FlxG.score);
+			if(!_player.alive) Reg.score = 0;
+			_score.text = Std.string(Reg.score);
 		}
 	}
 

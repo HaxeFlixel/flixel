@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<app title="XBox360 Controller Test" file="XBox360Test" main="Main" version="0.0.1" company="Zaphod" />
+	
+   	<window width="526" height="376" fps="60" orientation="landscape" fullscreen="false" if="desktop" />
+ 	
+    <classpath name="source" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="flixel"/>
+   	
+   	<assets path="assets" if="desktop" >
+   		<sound path="data/beep.wav" id="Beep" />
+   		
+   		<!-- Your sound embedding code here... -->
+   		
+   	</assets>
+	
+	<assets path="assets" if="desktop" />
+	
+    <icon name="Assets/HaxeFlixel.svg" />	
+</project>

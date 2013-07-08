@@ -26,6 +26,7 @@ class WrapSprite extends FlxSprite
 	override public function update():Void 
 	{
 		wrap();
+		super.update();
 	}
 	
 	public function wrap():Void

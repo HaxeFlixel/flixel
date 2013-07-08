@@ -1,33 +1,27 @@
 package;
 
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
+import org.flixel.system.input.FlxTouch;
 
 import org.flixel.FlxSprite;
-import org.flixel.system.input.TouchManager;
-
-
-import org.flixel.system.input.Touch;
+import org.flixel.system.input.FlxTouchManager;
 
 class MenuState extends FlxState
 {
-	private var activeSprites:IntHash<FlxSprite>;
+	private var activeSprites:Map<Int, FlxSprite>;
 	private var inactiveSprites:Array<FlxSprite>;
 	
 	private var touchSprite:FlxSprite;
-	private var touch:Touch;
-	private var touches:Array<Touch>;
+	private var touch:FlxTouch;
+	private var touches:Array<FlxTouch>;
 	
 	override public function create():Void
 	{
-		#if !neko
 		FlxG.bgColor = 0xff131c1b;
-		#else
-		FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
-		#end
 		
-		activeSprites = new IntHash<FlxSprite>();
+		activeSprites = new Map<Int, FlxSprite>();
 		inactiveSprites = new Array<FlxSprite>();
 		
 		/*touchSprite = new FlxSprite();

@@ -1,0 +1,11 @@
+{
+    "name": "flixel-samples",
+    "url": "http://www.haxeflixel.com",
+    "license": "MIT",
+    "tags": ["game", "openfl"],
+    "description": "Sample Projects for HaxeFlixel",
+    "version": "0.0.1",
+    "releasenote": "Initial release, includes the entire samples repository https://github.com/HaxeFlixel/flixel-samples/.",
+    "contributors": [ "haxeflixel" ],
+    "dependencies": { "flixel": "" }
+}

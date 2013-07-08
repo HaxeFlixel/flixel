@@ -4,7 +4,7 @@ import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxParticle;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
@@ -26,7 +26,7 @@ class PlayState extends FlxState
 	public static var shield:Bool = false;
 	private var random:Float;
 	private var random2:Int;
-	private var shieldTimer:Int;
+	private var shieldTimer:Int = 0;
 	
 	override public function create():Void 
 	{
@@ -62,7 +62,7 @@ class PlayState extends FlxState
 		
 		resetSpawnTimer();
 		
-		FlxG.score = 0;
+		Reg.score = 0;
 		_scoreText = new FlxText(10, 8, 200, "0");
 		_scoreText.setFormat(null, 32, 0xFFFFFF, "left");
 		add(_scoreText);
@@ -172,8 +172,8 @@ class PlayState extends FlxState
 	{
 		alien.kill();
 		bullet.kill();
-		FlxG.score += 1;
-		_scoreText.text = Std.string(FlxG.score);
+		Reg.score += 1;
+		_scoreText.text = Std.string(Reg.score);
 		FlxG.play("ExplosionAlien");
 		var emitter:FlxEmitter = createEmitter();
 		emitter.at(alien);
@@ -217,8 +217,8 @@ class PlayState extends FlxState
 			shield = true;
 			resetShieldTimer();
 		}
-		FlxG.score += 1;
-		_scoreText.text = Std.string(FlxG.score);
+		Reg.score += 1;
+		_scoreText.text = Std.string(Reg.score);
 		FlxG.play("ExplosionAlien");
 		var emitter:FlxEmitter = createEmitter();
 		emitter.at(alienShip);
@@ -250,11 +250,7 @@ class PlayState extends FlxState
 		for (i in 0...(particles)) 
 		{
 			var particle:FlxParticle = new FlxParticle();
-			#if !neko
 			particle.makeGraphic(3, 3, 0xFFFFFFFF);
-			#else
-			particle.makeGraphic(3, 3, {rgb: 0xFFFFFF, a: 0xFF});
-			#end
 			particle.exists = false;
 			emitter.add(particle);
 		}

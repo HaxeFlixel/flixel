@@ -1,7 +1,7 @@
 package;
 
 import flash.display.BlendMode;
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxButton;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
@@ -122,11 +122,7 @@ class PlayState extends FlxState
 		add(resetBtn);
 		
 		quitBtn = new FlxButton(FlxG.width - resetBtn.width - 4, FlxG.height - 24, "Quit",
-			#if !neko
 			function():Void { FlxG.fade(0xff000000, 0.22, false, function():Void { FlxG.switchState(new MenuState()); } ); } );
-			#else
-			function():Void { FlxG.fade({rgb: 0x000000, a: 0xff}, 0.22, false, function():Void { FlxG.switchState(new MenuState()); } ); } );
-			#end
 		add(quitBtn);
 		
 		helperTxt = new FlxText(12 + autoAltBtn.width * 2, FlxG.height - 30, 150, "Click to place tiles\nShift-Click to remove tiles\nArrow keys to move");

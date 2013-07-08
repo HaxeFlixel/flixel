@@ -36,19 +36,11 @@ class PlayState extends FlxState
 		pScoreLiteral = 0;
 		eScoreLiteral = 0;
 		
-		#if !neko
 		topLeftWall = new Wall(0, -16, 0xffccffaa);
 		topRightWall = new Wall(112, -16, 0xffffffaa);
 		
 		bottomRightWall = new Wall(112, Ball.BOTTOM, 0xffaaaacc);
 		bottomLeftWall = new Wall(0, Ball.BOTTOM, 0xff7777aa);
-		#else
-		topLeftWall = new Wall(0, -16, {rgb: 0xccffaa, a: 0xff});
-		topRightWall = new Wall(112, -16, {rgb: 0xffffaa, a: 0xff});
-		
-		bottomRightWall = new Wall(112, Ball.BOTTOM, {rgb: 0xaaaacc, a: 0xff});
-		bottomLeftWall = new Wall(0, Ball.BOTTOM, {rgb: 0x7777aa, a: 0xff});
-		#end
 		
 		add(topLeftWall);
 		add(topRightWall);
@@ -65,19 +57,11 @@ class PlayState extends FlxState
 	
 	private function textSettings(playerTxt:FlxText, enemyTxt:FlxText):Void 
 	{	
-		#if !neko
 		playerTxt.color = 0xffffffff;
-		#else
-		playerTxt.color = {rgb: 0xffffff, a: 0xff};
-		#end
 		playerTxt.text = "0";
 		playerTxt.size = 24;
 		
-		#if !neko
 		enemyTxt.color = 0xffffffff;
-		#else
-		enemyTxt.color = {rgb: 0xffffff, a: 0xff};
-		#end
 		enemyTxt.text = "0";
 		enemyTxt.size = 24;
 	}

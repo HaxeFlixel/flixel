@@ -1,14 +1,14 @@
 package;
 
 import org.flixel.FlxG;
-import org.flixel.FlxU;
+import org.flixel.util.FlxColor;
 
 class Colors
 {		
 	public static function random():Int
 	{
 		var flipped:Bool = FlxG.random() < 0.5;
-		return FlxU.makeColor(genPair(flipped), genPair(flipped), genPair(flipped));
+		return FlxColor.makeFromRGBA(genPair(flipped), genPair(flipped), genPair(flipped));
 	}
 	
 	public static function genPair(Flipped:Bool):Int

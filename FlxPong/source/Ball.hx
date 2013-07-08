@@ -1,6 +1,6 @@
 package;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 
 class Ball extends FlxSprite 
@@ -178,11 +178,7 @@ class Ball extends FlxSprite
 		this.speedX = 4;
 		this.speedY = 2;
 		this.hitCount = 0;
-		#if !neko
 		this.color = 0xffffffff;
-		#else
-		this.color = {rgb: 0xffffff, a: 0xff};
-		#end
 	}
 	
 	public function increaseTheNeedForSpeed():Void 
@@ -199,27 +195,15 @@ class Ball extends FlxSprite
 		
 		if ( this.hitCount == 3)
 		{
-			#if !neko
 			this.color = 0xff663333;
-			#else
-			this.color = {rgb: 0x663333, a: 0xff};
-			#end
 		}
 		if ( this.hitCount == 6)
 		{
-			#if !neko
 			this.color = 0xff993333;
-			#else
-			this.color = {rgb: 0x993333, a: 0xff};
-			#end
 		}
 		if ( this.hitCount == 9 )
 		{
-			#if !neko
 			this.color = 0xffcc3333;
-			#else
-			this.color = {rgb: 0xcc3333, a: 0xff};
-			#end
 		}
 	}
 	

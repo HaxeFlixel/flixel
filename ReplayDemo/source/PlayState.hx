@@ -1,9 +1,9 @@
 package;
 
 import flash.ui.Mouse;
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
@@ -53,19 +53,11 @@ class PlayState extends FlxState
 		simpleTilemap.y -= 15;
 		
 		//Set up the cursor
-		#if !neko
 		theCursor = new FlxSprite().makeGraphic(6, 6, 0xFFFF0000);
-		#else
-		theCursor = new FlxSprite().makeGraphic(6, 6, {rgb: 0xFF0000, a: 0xFF});
-		#end
 		add(theCursor);
 		
 		//Set up the Player
-		#if !neko
 		thePlayer = new FlxSprite().makeGraphic(12, 12, 0xFF8CF1FF);
-		#else
-		thePlayer = new FlxSprite().makeGraphic(12, 12, {rgb: 0x8CF1FF, a: 0xFF});
-		#end
 		thePlayer.maxVelocity.x = 80;   // Theses are pysics settings,
 		thePlayer.maxVelocity.y = 200;  // controling how the players behave
 		thePlayer.acceleration.y = 300; // in the game
@@ -76,11 +68,7 @@ class PlayState extends FlxState
 		
 		//Set up UI
 		hintText =  new FlxText(0, 268, 400);
-		#if !neko
 		hintText.color = 0xFF000000;
-		#else
-		hintText.color = {rgb: 0x000000, a: 0xFF};
-		#end
 		hintText.size = 12;
 		add(hintText);
 		

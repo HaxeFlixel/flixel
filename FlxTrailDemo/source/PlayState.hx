@@ -7,12 +7,13 @@ package;
 import flash.ui.Mouse;
 import org.flixel.addons.FlxTrail;
 import org.flixel.FlxG;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxMisc;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxAssets;
-import org.flixel.FlxU;
 import org.flixel.tweens.FlxTween;
 import org.flixel.tweens.misc.AngleTween;
 import org.flixel.tweens.misc.ColorTween;
@@ -25,6 +26,7 @@ import org.flixel.tweens.motion.LinearMotion;
 import org.flixel.tweens.motion.LinearPath;
 import org.flixel.tweens.motion.QuadMotion;
 import org.flixel.tweens.motion.QuadPath;
+import org.flixel.util.FlxString;
 
 import org.flixel.tweens.util.Ease;
 
@@ -49,11 +51,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		#if !neko
 		FlxG.bgColor = 0xFF01355F;
-		#else
-		FlxG.camera.bgColor = {rgb: 0x01355F, a: 0xFF};
-		#end
 		
 		easeInfo = new Array<EaseInfo>();
 		
@@ -122,11 +120,7 @@ class PlayState extends FlxState
 		}
 		else if (Std.is(tween, ColorTween))
 		{
-			#if !neko
 			sprite.color = cast(tween, ColorTween).color;
-			#else
-			sprite.color = {rgb: cast(tween, ColorTween).color, a: 0xff};
-			#end
 		}
 		else if (Std.is(tween, NumTween))
 		{
@@ -159,7 +153,7 @@ class PlayState extends FlxState
 			trail.resetTrail();
 			sprite.reset(min.x, min.y + (max.y - min.y) * 0.5);
 			sprite.angle = 0;
-			sprite.color = FlxG.WHITE;
+			sprite.color = FlxColor.WHITE;
 			sprite.alpha = 1;
 			
 			switch (currentTweenIndex)
@@ -217,7 +211,7 @@ class PlayState extends FlxState
 					tween = addTween(quadPath);
 			}
 			
-			tweenText.text = "Current tweening: " + FlxU.getClassName(tween, true);
+			tweenText.text = "Current tweening: " + FlxString.getClassName(tween, true);
 			easeText.text = "Current ease function: " + easeInfo[currentEaseIndex].name;
 		}
 	}

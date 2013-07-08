@@ -11,6 +11,8 @@ class ModeSelect extends FlxState
 	
 	override public function create():Void 
 	{	
+		FlxG.mouse.show();
+		
 		var title:FlxText;
 		title = new FlxText(0, 16, FlxG.width, "Space War");
 		title.setFormat(null, 16, 0xFFFFFF, "center");
@@ -21,7 +23,6 @@ class ModeSelect extends FlxState
 		
 		nyan = new FlxButton(275, 250, "Nyan Mode", nyanMode);
 		add(nyan);
-		
 	}
 	
 	override public function update():Void 

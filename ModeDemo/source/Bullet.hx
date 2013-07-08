@@ -1,9 +1,9 @@
 package;
 
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 
 class Bullet extends FlxSprite

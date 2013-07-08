@@ -43,7 +43,7 @@ class Brick extends FlxSprite
 		
 		if (FlxG.collide(this, ballMC)) 
 		{
-			FlxG.score++;
+			Reg.score++;
 			FlxG.play("BoopSound");
 			this.kill();
 			

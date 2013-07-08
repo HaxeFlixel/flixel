@@ -1,7 +1,8 @@
 package;
 
 import org.flixel.FlxCamera;
-import nme.events.Event;
+import flash.events.Event;
+import flash.Lib;
 import org.flixel.addons.FlxCaveGenerator;
 import org.flixel.FlxAssets;
 import org.flixel.FlxG;
@@ -25,11 +26,7 @@ class CaveGenerationState extends FlxState
 	
 	override public function create():Void 
 	{
-		#if !neko
 		FlxG.bgColor = 0xffffffff;
-		#else
-		FlxG.camera.bgColor = {rgb:0xffffff, a:0xff};
-		#end
 		
 		// Create cave of size 200x100 tiles
 		var cave:FlxCaveGenerator = new FlxCaveGenerator(200, 100);
@@ -46,13 +43,13 @@ class CaveGenerationState extends FlxState
 		tileMap.loadMap(dataStr, FlxAssets.imgAuto, 0, 0, FlxTilemap.AUTO);
 		add(tileMap);
 
-        nme.Lib.stage.addEventListener(Event.RESIZE, handleOnResize);
+        Lib.current.stage.addEventListener(Event.RESIZE, handleOnResize);
 	}
 
     public function handleOnResize(?e:Event):Void
     {
-        var stageWidth = nme.Lib.stage.stageWidth;
-        var stageHeight = nme.Lib.stage.stageHeight;
+        var stageWidth = Lib.current.stage.stageWidth;
+        var stageHeight = Lib.current.stage.stageHeight;
 
         FlxG.resetCameras(new FlxCamera(0, 0, stageWidth, stageHeight));
         FlxG.width = stageWidth;

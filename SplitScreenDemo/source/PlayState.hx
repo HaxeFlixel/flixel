@@ -21,15 +21,13 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
+		FlxG.mouse.show();
+		
 		FlxG.framerate = 50;
 		FlxG.flashFramerate = 50;
 
 		// set the background color to white
-		#if !neko
 		FlxG.bgColor = 0xffffffff;
-		#else
-		FlxG.camera.bgColor = {rgb: 0xffffff, a: 0xff};
-		#end
 		
 		//Setup the level (40 x 40 tiles) Addapted from Adam Atomic's EZPlatformer
 		var levelData:Array<Int> = [
@@ -80,22 +78,14 @@ class PlayState extends FlxState
 		add(level);
 
 		//Create the two players
-		#if !neko
 		player1 = new FlxSprite(65, 200).makeGraphic(10, 12, 0xFFFF0000); //player 1 is red and starts at 65, 200
-		#else
-		player1 = new FlxSprite(65, 200).makeGraphic(10, 12, {rgb: 0xFF0000, a: 0xFF});
-		#end
 		player1.maxVelocity.x = 80;   // Theses are pysics settings,
 		player1.maxVelocity.y = 200;  // controling how the players behave
 		player1.acceleration.y = 200; // in the game
 		player1.drag.x = player1.maxVelocity.x*4;
 		add(player1);
 		
-		#if !neko
 		player2 = new FlxSprite(265, 200).makeGraphic(10, 12, 0xFF0000FF); // player2 is blue and starts at 265, 200
-		#else
-		player2 = new FlxSprite(265, 200).makeGraphic(10, 12, {rgb: 0x0000FF, a: 0xFF});
-		#end
 		player2.maxVelocity.x = 80; // Same thing than player 1
 		player2.maxVelocity.y = 200;
 		player2.acceleration.y = 200;
@@ -109,22 +99,14 @@ class PlayState extends FlxState
 		cam.follow(player2);
 		// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 		cam.setBounds(0, 0, level.width, level.height);
-		#if !neko
 		cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
-		#else
-		cam.color = {rgb: 0xFFCCCC, a: 0xFF};
-		#end
 		FlxG.addCamera(cam);
 
 		// Almost the same thing as the first camera
 		cam = new FlxCamera(Math.floor(FlxG.width / 2), 0, Math.floor(FlxG.width / 2), FlxG.height);   // and the second one in the top middle of the screen
 		cam.follow(player1);
 		cam.setBounds(0, 0, level.width, level.height);
-		#if !neko
 		cam.color = 0xCCCCFF; // Add a light blue tint to the camera
-		#else
-		cam.color = {rgb: 0xCCCCFF, a: 0xFF};
-		#end
 		FlxG.addCamera(cam);
 
 		// add quit button

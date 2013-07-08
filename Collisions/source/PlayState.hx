@@ -4,7 +4,7 @@ import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxObject;
 import org.flixel.FlxPath;
-import org.flixel.FlxPoint;
+import org.flixel.util.FlxPoint;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
@@ -24,11 +24,7 @@ class PlayState extends FlxState
 	override public function create():Void
 	{			
 		//Background
-		#if !neko
 		FlxG.bgColor = 0xffacbcd7;
-		#else
-		FlxG.camera.bgColor = {rgb: 0xacbcd7, a: 0xff};
-		#end
 		var decoration:FlxSprite = new FlxSprite(256, 159, "assets/bg.png");
 		decoration.moves = false;
 		decoration.solid = false;
@@ -98,11 +94,7 @@ class PlayState extends FlxState
 		var tx:FlxText;
 		tx = new FlxText(2, 0, Std.int(FlxG.width / 4), FlxG.getLibraryName());
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
-		#if !neko
 		tx.color = 0x778ea1;
-		#else
-		tx.color = {rgb: 0x778ea1, a: 0xff};
-		#end
 		tx.shadow = 0x233e58;
 		tx.useShadow = true;
 		add(tx);
@@ -110,11 +102,7 @@ class PlayState extends FlxState
 		//Instructions
 		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS + SPACE, or press ENTER for next demo.");
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
-		#if !neko
 		tx.color = 0x778ea1;
-		#else
-		tx.color = {rgb: 0x778ea1, a: 0xff};
-		#end
 		tx.shadow = 0x233e58;
 		tx.useShadow = true;
 		add(tx);

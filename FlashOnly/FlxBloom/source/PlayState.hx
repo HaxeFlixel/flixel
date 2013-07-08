@@ -1,13 +1,15 @@
 package;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import nme.display.BlendMode;
+import flash.display.BlendMode;
 import org.flixel.FlxEmitter;
 import org.flixel.FlxG;
 import org.flixel.FlxParticle;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxRandom;
 
 class PlayState extends FlxState
 {
@@ -22,10 +24,10 @@ class PlayState extends FlxState
 		//Title text, nothing crazy here!
 		var text:FlxText;
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 - 20, Math.floor(FlxG.width / 2), "FlxBloom", true);
-		text.setFormat(null, 32, FlxG.WHITE, "center");
+		text.setFormat(null, 32, FlxColor.WHITE, "center");
 		add(text);
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 + 20, Math.floor(FlxG.width / 2), "press space to toggle", true);
-		text.setFormat(null, 16, FlxG.BLUE, "center");
+		text.setFormat(null, 16, FlxColor.BLUE, "center");
 		add(text);
 		
 		//This is the sprite we're going to use to help with the light bloom effect
@@ -56,11 +58,11 @@ class PlayState extends FlxState
 		emitter.setXSpeed(-20,20);
 		emitter.setYSpeed(-75,-25);
 		var particle:FlxParticle;
-		var colors:Array<Int> = [FlxG.BLUE, (FlxG.BLUE | FlxG.GREEN), FlxG.GREEN, (FlxG.GREEN | FlxG.RED), FlxG.RED];
+		var colors:Array<Int> = [FlxColor.BLUE, (FlxColor.BLUE | FlxColor.GREEN), FlxColor.GREEN, (FlxColor.GREEN | FlxColor.RED), FlxColor.RED];
 		for (i in 0...particles)
 		{
 			particle = new FlxParticle();
-			particle.makeGraphic(32, 32, colors[Std.int(FlxG.random() * colors.length)]);
+			particle.makeGraphic(32, 32, colors[Std.int(FlxRandom.float() * colors.length)]);
 			particle.exists = false;
 			emitter.add(particle);
 		}

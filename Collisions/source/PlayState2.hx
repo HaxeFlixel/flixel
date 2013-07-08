@@ -5,7 +5,6 @@ import org.flixel.FlxGroup;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxU;
 
 	
 class PlayState2 extends FlxState
@@ -24,22 +23,14 @@ class PlayState2 extends FlxState
 	override public function create():Void
 	{
 		//Background
-		#if !neko
 		FlxG.bgColor = 0xffacbcd7;
-		#else
-		FlxG.camera.bgColor = {rgb: 0xacbcd7, a: 0xff};
-		#end
 
 		//A bunch of blocks
 		var block:FlxSprite;
 		blocks = new FlxGroup();
 		for (i in 0...300)
 		{
-			#if !neko
-			block = new FlxSprite(FlxU.floor(FlxG.random() * 40) * 16, FlxU.floor(FlxG.random() * 30) * 16).makeGraphic(16, 16, 0xff233e58);
-			#else
-			block = new FlxSprite(FlxU.floor(FlxG.random() * 40) * 16, FlxU.floor(FlxG.random() * 30) * 16).makeGraphic(16, 16, {rgb: 0x233e58, a: 0xff});
-			#end
+			block = new FlxSprite(Math.floor(FlxG.random() * 40) * 16, Math.floor(FlxG.random() * 30) * 16).makeGraphic(16, 16, 0xff233e58);
 			block.immovable = true;
 			block.moves = false;
 			block.active = false;
@@ -70,11 +61,7 @@ class PlayState2 extends FlxState
 		var tx:FlxText;
 		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS + SPACE, or press ENTER for next demo.");
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
-		#if !neko
 		tx.color = 0x49637a;
-		#else
-		tx.color = {rgb: 0x49637a, a: 0xff};
-		#end
 		add(tx);
 	}
 	

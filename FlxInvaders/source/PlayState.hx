@@ -1,12 +1,12 @@
 package;
 
-import nme.display.BitmapInt32;
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
 import org.flixel.FlxObject;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
+import org.flixel.util.FlxColor;
 
 class PlayState extends FlxState		//The class declaration for the main game state
 {
@@ -30,16 +30,12 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 		// but FlxInvaders has no menu :P
 		FlxG.mouse.show();
 		
-		#if neko
-		FlxG.camera.bgColor = { rgb: 0x000000, a: 0xff };
-		#end
-		
 		var i:Int;
 		//We're using the global scores array to store a basic, state-independent status string.
 		//If there is no status string (the scores array is empty) then make a new welcome message.
-		if(FlxG.scores.length <= 0)
+		if(Reg.scores.length <= 0)
 		{
-			FlxG.scores[0] = "WELCOME TO FLX INVADERS";
+			Reg.scores[0] = "WELCOME TO FLX INVADERS";
 		}
 		
 		//First we will instantiate the bullets you fire at your enemies.
@@ -83,14 +79,10 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 		#if flash
 		var colors:Array<UInt>;
 		#else
-		var colors:Array<BitmapInt32>;
+		var colors:Array<Int>;
 		#end
 		
-		#if !neko
-		colors = [FlxG.BLUE, (FlxG.BLUE | FlxG.GREEN), FlxG.GREEN, (FlxG.GREEN | FlxG.RED), FlxG.RED];
-		#else
-		colors = [FlxG.BLUE, {rgb: (FlxG.BLUE.rgb | FlxG.GREEN.rgb), a: 0xFF}, FlxG.GREEN, {rgb: (FlxG.GREEN.rgb | FlxG.RED.rgb), a: 0xFF}, FlxG.RED];
-		#end
+		colors = [FlxColor.BLUE, (FlxColor.BLUE | FlxColor.GREEN), FlxColor.GREEN, (FlxColor.GREEN | FlxColor.RED), FlxColor.RED];
 		for (i in 0...(numAliens))
 		{
 			a = new Alien(	8 + (i % 10) * 32,		//The X position of the alien
@@ -127,7 +119,7 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 		vsAlienBullets.add(player);
 		
 		//Then we're going to add a text field to display the label we're storing in the scores array.
-		var t:FlxText = new FlxText(4, 4, FlxG.width - 8, FlxG.scores[0]);
+		var t:FlxText = new FlxText(4, 4, FlxG.width - 8, Reg.scores[0]);
 		t.alignment = "center";
 		add(t);
 	}
@@ -155,12 +147,12 @@ class PlayState extends FlxState		//The class declaration for the main game stat
 		// OR player kills all aliens.  First we check to see if the player is dead:
 		if(!player.exists)
 		{
-			FlxG.scores[0] = "YOU LOST";	//Player died, so set our label to YOU LOST
+			Reg.scores[0] = "YOU LOST";	//Player died, so set our label to YOU LOST
 			FlxG.resetState();
 		}
 		else if(aliens.getFirstExtant() == null)
 		{
-			FlxG.scores[0] = "YOU WON";		//No aliens left; you win!
+			Reg.scores[0] = "YOU WON";		//No aliens left; you win!
 			FlxG.resetState();
 		}
 	}

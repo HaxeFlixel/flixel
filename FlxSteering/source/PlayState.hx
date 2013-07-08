@@ -3,7 +3,6 @@ package;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxU;
 
 class PlayState extends FlxState
 {
@@ -14,12 +13,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		#if !neko
 		FlxG.bgColor = 0xffff0000;	
-		#else
-		FlxG.camera.bgColor = {rgb: 0xff0000, a: 0xff};	
-		#end
-		
 		FlxG.mouse.show();	
 		
 		_fps = new FlxText(FlxG.width - 40, 0, 40).setFormat(null, 8, 0xffffff, "right");
@@ -40,7 +34,7 @@ class PlayState extends FlxState
 		
 		FlxG.collide();
 		
-		_fps.text = FlxU.floor(1 / FlxG.elapsed) + " fps";
+		_fps.text = Math.floor(1 / FlxG.elapsed) + " fps";
 		
 		var v:Vector2D = new Vector2D(FlxG.mouse.screenX, FlxG.mouse.screenY);
 	

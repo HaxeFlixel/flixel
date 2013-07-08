@@ -1,11 +1,11 @@
 package com.chipacabra.jumper;
 
-import nme.Assets;
+import openfl.Assets;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
-import org.flixel.FlxU;
+import org.flixel.util.FlxMisc;
 
 /**
  * ...
@@ -126,13 +126,13 @@ class MenuState extends FlxState
 	
 	private function onFlixel():Void 
 	{
-		FlxU.openURL("http://flixel.org");
+		FlxMisc.openURL("http://flixel.org");
 	}
 	
 	
 	private function onURL():Void 
 	{
-		FlxU.openURL("http://chipacabra.blogspot.com");
+		FlxMisc.openURL("http://chipacabra.blogspot.com");
 	}
 	
 	private function startGame():Void

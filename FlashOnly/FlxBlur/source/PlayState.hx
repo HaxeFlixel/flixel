@@ -4,6 +4,8 @@ import org.flixel.FlxG;
 import org.flixel.FlxParticle;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
+import org.flixel.util.FlxColor;
+import org.flixel.util.FlxRandom;
 class PlayState extends FlxState
 {
 	public var toggle:Bool;
@@ -13,10 +15,10 @@ class PlayState extends FlxState
 		//Title text, nothing crazy here!
 		var text:FlxText;
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 - 20, Math.floor(FlxG.width / 2), "FlxBlur", true);
-		text.setFormat(null, 32, FlxG.WHITE, "center");
+		text.setFormat(null, 32, FlxColor.WHITE, "center");
 		add(text);
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 + 20, Math.floor(FlxG.width / 2), "press space to toggle", true);
-		text.setFormat(null, 16, FlxG.BLUE, "center");
+		text.setFormat(null, 16, FlxColor.BLUE, "center");
 		add(text);
 		
 		//This is the particle emitter that spews things off the bottom of the screen.
@@ -29,11 +31,11 @@ class PlayState extends FlxState
 		emitter.setYSpeed(-75,-25);
 		var particle:FlxParticle;
 		var particles:Int = 50;
-		var colors:Array<Int> = [FlxG.BLUE, (FlxG.BLUE | FlxG.GREEN), FlxG.GREEN, (FlxG.GREEN | FlxG.RED), FlxG.RED];
+		var colors:Array<Int> = [FlxColor.BLUE, (FlxColor.BLUE | FlxColor.GREEN), FlxColor.GREEN, (FlxColor.GREEN | FlxColor.RED), FlxColor.RED];
 		for (i in 0...particles)
 		{
 			particle = new FlxParticle();
-			particle.makeGraphic(32, 32, colors[Std.int(FlxG.random() * colors.length)]);
+			particle.makeGraphic(32, 32, colors[Std.int(FlxRandom.float() * colors.length)]);
 			particle.exists = false;
 			emitter.add(particle);
 		}
@@ -59,7 +61,7 @@ class PlayState extends FlxState
 		else
 		{
 			//Setting it to an opaque color will turn the effect back off.
-			FlxG.bgColor = FlxG.BLACK;
+			FlxG.bgColor = FlxColor.BLACK;
 		}
 		
 		super.update();
