@@ -3,7 +3,7 @@ package flixel.group;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.system.layer.Atlas;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 
 /**
  * This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.
@@ -179,7 +179,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		
 		// Don't bother adding an object twice.
-		if (FlxArray.indexOf(members, Object) >= 0)
+		if (FlxArrayUtil.indexOf(members, Object) >= 0)
 		{
 			return Object;
 		}
@@ -216,16 +216,16 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 			else if (members.length * 2 <= maxSize)
 			{
-				FlxArray.setLength(members, members.length * 2);
+				FlxArrayUtil.setLength(members, members.length * 2);
 			}
 			else
 			{
-				FlxArray.setLength(members, maxSize);
+				FlxArrayUtil.setLength(members, maxSize);
 			}
 		}
 		else
 		{
-			FlxArray.setLength(members, members.length * 2);
+			FlxArrayUtil.setLength(members, members.length * 2);
 		}
 		
 		// If we made it this far, then we successfully grew the group,
@@ -321,7 +321,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			return null;
 		}
 		
-		var index:Int = FlxArray.indexOf(members, Object);
+		var index:Int = FlxArrayUtil.indexOf(members, Object);
 		
 		if ((index < 0) || (index >= members.length))
 		{
@@ -348,7 +348,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function replace(OldObject:T, NewObject:T):T
 	{
-		var index:Int = FlxArray.indexOf(members, OldObject);
+		var index:Int = FlxArrayUtil.indexOf(members, OldObject);
 		
 		if ((index < 0) || (index >= members.length))
 		{
@@ -641,7 +641,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			Length = length;
 		}
 		
-		return FlxArray.getRandom(members, StartIndex, Length);
+		return FlxArrayUtil.getRandom(members, StartIndex, Length);
 	}
 	
 	/**
@@ -759,7 +759,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		
 		length = maxSize;
-		FlxArray.setLength(members, maxSize);
+		FlxArrayUtil.setLength(members, maxSize);
 		
 		return maxSize;
 	}

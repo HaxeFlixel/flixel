@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.system.replay.CodeValuePair;
 import flixel.system.replay.FrameRecord;
 import flixel.system.replay.MouseRecord;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 
 /**
  * The replay object both records and replays game recordings,
@@ -115,7 +115,7 @@ class FlxReplay
 				if(frameCount >= _capacity)
 				{
 					_capacity *= 2;
-					FlxArray.setLength(_frames, _capacity);
+					FlxArrayUtil.setLength(_frames, _capacity);
 				}
 			}
 		}
@@ -130,7 +130,7 @@ class FlxReplay
 	{
 		_capacity = 100;
 		_frames = new Array<FrameRecord>(/*_capacity*/);
-		FlxArray.setLength(_frames, _capacity);
+		FlxArrayUtil.setLength(_frames, _capacity);
 		frameCount = 0;
 	}
 	
@@ -190,7 +190,7 @@ class FlxReplay
 		if(frameCount >= _capacity)
 		{
 			_capacity *= 2;
-			FlxArray.setLength(_frames, _capacity);
+			FlxArrayUtil.setLength(_frames, _capacity);
 		}
 	}
 	

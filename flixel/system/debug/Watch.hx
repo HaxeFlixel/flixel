@@ -5,7 +5,7 @@ import flash.geom.Rectangle;
 import haxe.ds.StringMap;
 import flixel.FlxG;
 import flixel.system.FlxDebugger;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 
@@ -181,7 +181,7 @@ class Watch extends Window
 			var quickWatch:WatchEntry = _quickWatchList.get(QuickWatchName);
 			
 			if (quickWatch != null)
-				removeEntry(quickWatch, FlxArray.indexOf(_watching, quickWatch));
+				removeEntry(quickWatch, FlxArrayUtil.indexOf(_watching, quickWatch));
 			_quickWatchList.remove(QuickWatchName);
 			
 			// We're done here

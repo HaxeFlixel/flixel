@@ -4,7 +4,7 @@ package flixel.plugin;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPath;
 
 /**
@@ -110,7 +110,7 @@ class DebugPathDisplay extends FlxBasic
 	 */
 	public function remove(Path:FlxPath):Void
 	{
-		var index:Int = FlxArray.indexOf(_paths, Path);
+		var index:Int = FlxArrayUtil.indexOf(_paths, Path);
 		
 		if (index >= 0)
 		{

@@ -2,7 +2,7 @@ package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
 import flixel.tweens.util.Ease;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
@@ -39,9 +39,9 @@ class MultiVarTween extends FlxTween
 	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ease:EaseFunction = null):Void
 	{
 		_object = object;
-		FlxArray.setLength(_vars, 0);
-		FlxArray.setLength(_start, 0);
-		FlxArray.setLength(_range, 0);
+		FlxArrayUtil.setLength(_vars, 0);
+		FlxArrayUtil.setLength(_start, 0);
+		FlxArrayUtil.setLength(_range, 0);
 		_target = duration;
 		_ease = ease;
 		var p:String;

@@ -12,7 +12,7 @@ import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
@@ -388,7 +388,7 @@ class FlxTilemap extends FlxObject
 		#end
 		
 		_rects = new Array<Rectangle>();
-		FlxArray.setLength(_rects, totalTiles);
+		FlxArrayUtil.setLength(_rects, totalTiles);
 		i = 0;
 		
 		while (i < totalTiles)
@@ -808,7 +808,7 @@ class FlxTilemap extends FlxObject
 		var i:Int = 0;
 		var l:Int = _data.length;
 		var data:Array<Int> = new Array(/*l*/);
-		FlxArray.setLength(data, l);
+		FlxArrayUtil.setLength(data, l);
 		
 		while(i < l)
 		{
@@ -993,7 +993,7 @@ class FlxTilemap extends FlxObject
 		// All walls are flagged as -2, all open areas as -1.
 		var mapSize:Int = widthInTiles * heightInTiles;
 		var distances:Array<Int> = new Array<Int>(/*mapSize*/);
-		FlxArray.setLength(distances, mapSize);
+		FlxArrayUtil.setLength(distances, mapSize);
 		var i:Int = 0;
 		
 		while(i < mapSize)
@@ -2119,7 +2119,7 @@ class FlxTilemap extends FlxObject
 				
 				if (ColorMap != null)
 				{
-					pixel = FlxArray.indexOf(ColorMap, pixel);
+					pixel = FlxArrayUtil.indexOf(ColorMap, pixel);
 				}
 				else if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
 				{
@@ -2293,7 +2293,7 @@ class FlxTilemap extends FlxObject
 			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, new Point(0, 0), 0, 0, 0, 0, 1, 1);
 			
 			_rectIDs = new Array<Int>();
-			FlxArray.setLength(_rectIDs, totalTiles);
+			FlxArrayUtil.setLength(_rectIDs, totalTiles);
 			var i:Int = 0;
 			
 			while (i < totalTiles)

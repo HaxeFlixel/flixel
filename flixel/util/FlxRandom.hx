@@ -93,7 +93,7 @@ class FlxRandom
 					result = Math.floor(max + (Math.random() * (min + 1 - max)));
 				}
 			}
-			while (FlxArray.indexOf(excludes, result) >= 0);
+			while (FlxArrayUtil.indexOf(excludes, result) >= 0);
 			
 			return result;
 		}

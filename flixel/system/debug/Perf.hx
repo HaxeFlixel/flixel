@@ -9,7 +9,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 import openfl.Assets;
 
 /**
@@ -67,19 +67,19 @@ class Perf extends Window
 		addChild(_text);
 		
 		_flixelUpdate = new Array();
-		FlxArray.setLength(_flixelUpdate, 32);
+		FlxArrayUtil.setLength(_flixelUpdate, 32);
 		_flixelUpdateMarker = 0;
 		_flixelDraw = new Array();
-		FlxArray.setLength(_flixelDraw, 32);
+		FlxArrayUtil.setLength(_flixelDraw, 32);
 		_flixelDrawMarker = 0;
 		_flash = new Array();
-		FlxArray.setLength(_flash, 32);
+		FlxArrayUtil.setLength(_flash, 32);
 		_flashMarker = 0;
 		_activeObject = new Array();
-		FlxArray.setLength(_activeObject, 32);
+		FlxArrayUtil.setLength(_activeObject, 32);
 		_objectMarker = 0;
 		_visibleObject = new Array();
-		FlxArray.setLength(_visibleObject, 32);
+		FlxArrayUtil.setLength(_visibleObject, 32);
 		_visibleObjectMarker = 0;
 		
 		#if !flash
