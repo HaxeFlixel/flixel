@@ -6,6 +6,7 @@ import flash.geom.Rectangle;
 import flixel.FlxSprite;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxColorUtil;
 import flixel.util.FlxGradient;
 import flixel.util.FlxMisc;
 import flixel.system.layer.DrawStackItem;
@@ -220,7 +221,7 @@ class StarfieldFX extends BaseFX
 			canvas.setPixel32(star.x, star.y, _depthColours[Std.int(star.speed - 1)]);
 			#else
 			var starColor:Int = _depthColours[Std.int(star.speed - 1)];
-			var rgba:RGBA = FlxColor.getRGB(starColor);
+			var rgba:RGBA = FlxColorUtil.getRGB(starColor);
 			
 			var starDef:StarDef = starArray[i];
 			starDef.red = rgba.red / 255;
@@ -280,7 +281,7 @@ class StarfieldFX extends BaseFX
 			#if flash
 			canvas.setPixel32(star.x, star.y, 0xffffffff);
 			#else
-			var rgba:RGBA = FlxColor.getRGB(FlxColor.WHITE);
+			var rgba:RGBA = FlxColorUtil.getRGB(FlxColor.WHITE);
 			#end
 			
 			#if !flash
@@ -290,7 +291,7 @@ class StarfieldFX extends BaseFX
 			starDef.blue = rgba.blue / 255;
 			starDef.alpha = rgba.alpha / 255;
 			#end
-			// canvas.setPixel32(star.x, star.y, FlxColor.getColor32(255, star.alpha, star.alpha, star.alpha));
+			// canvas.setPixel32(star.x, star.y, FlxColorUtil.getColor32(255, star.alpha, star.alpha, star.alpha));
 			
 			if (star.x < 0 || star.x > sprite.width || star.y < 0 || star.y > sprite.height)
 			{
