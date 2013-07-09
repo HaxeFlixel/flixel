@@ -368,7 +368,10 @@ class FlxGame extends Sprite
 			}
 			#end
 			
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT = 0;
+			#end
+			
 			draw();
 			
 			#if !FLX_NO_DEBUG
@@ -512,8 +515,10 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		//finally actually step through the game physics
+		#if !FLX_NO_DEBUG
+		// Finally actually step through the game physics
 		FlxBasic._ACTIVECOUNT = 0;
+		#end
 		
 		#if (cpp && FLX_THREADING)
 		_threadSync.push(true);

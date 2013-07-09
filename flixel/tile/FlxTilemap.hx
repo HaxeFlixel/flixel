@@ -788,7 +788,9 @@ class FlxTilemap extends FlxObject
 			drawTilemap(buffer, camera);
 			#end
 			
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT++;
+			#end
 		}
 	}
 	

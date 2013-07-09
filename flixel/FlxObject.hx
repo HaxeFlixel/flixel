@@ -363,7 +363,9 @@ class FlxObject extends FlxBasic
 	
 	override public function update():Void 
 	{
+		#if !FLX_NO_DEBUG
 		FlxBasic._ACTIVECOUNT++;
+		#end
 		
 		if (_flickerTimer > 0)
 		{
@@ -441,7 +443,10 @@ class FlxObject extends FlxBasic
 			{
 				continue;
 			}
+			
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT++;
+			#end
 		}
 	}
 	

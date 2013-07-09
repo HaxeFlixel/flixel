@@ -103,7 +103,9 @@ class BGSprite extends FlxSprite
 			#end
 			drawItem.position = currIndex;
 			
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT++;
+			#end
 		}
 	}
 }

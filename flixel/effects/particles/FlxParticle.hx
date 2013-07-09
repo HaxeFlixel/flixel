@@ -1,5 +1,6 @@
 package flixel.effects.particles;
 
+import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
@@ -103,7 +104,9 @@ class FlxParticle extends FlxSprite
 	 */
 	override public function update():Void
 	{
+		#if !FLX_NO_DEBUG
 		FlxBasic._ACTIVECOUNT++;
+		#end
 		
 		if (_flickerTimer > 0)
 		{

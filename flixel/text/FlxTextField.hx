@@ -360,7 +360,9 @@ class FlxTextField extends FlxText
 		_textField.y = _point.y - FlxG.camera.height * 0.5;
 		#end
 		
+		#if !FLX_NO_DEBUG
 		FlxBasic._VISIBLECOUNT++;
+		#end
 	}
 	
 	/**

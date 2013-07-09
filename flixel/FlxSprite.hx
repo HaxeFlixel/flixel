@@ -955,7 +955,9 @@ class FlxSprite extends FlxObject
 			#end
 			drawItem.position = currIndex;
 #end
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT++;
+			#end
 		}
 	}
 	
