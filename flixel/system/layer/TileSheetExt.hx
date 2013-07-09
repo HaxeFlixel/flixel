@@ -65,16 +65,38 @@ class TileSheetExt extends Tilesheet
 		_tileSheetCache = new ObjectMap<BitmapData, TileSheetExt>();
 	}
 	
-	private var _numTiles:Int;
+	public var numTiles:Int;
 	
-	private var _tileIDs:Map<String, Int>;
+	public var tileIDs:Map<String, RectPointTileID>;
+	public var tileOrder:Array<String>;
 	
 	private function new(bitmap:BitmapData)
 	{
 		super(bitmap);
 		
-		_tileIDs = new Map<String, Int>();
-		_numTiles = 0;
+		tileIDs = new Map<String, RectPointTileID>();
+		tileOrder = new Array<String>();
+		numTiles = 0;
+	}
+	
+	// TODO: Check this
+	public function buildAfterContextLoss(old:TileSheetExt):Void
+	{
+		var num:Int = old.tileOrder.length;
+		for (i in 0...num)
+		{
+			var tileName:String = old.tileOrder[i];
+			var tileObj:RectPointTileID = old.tileIDs.get(tileName);
+			addTileRect(tileObj.rect, tileObj.point);
+		}
+		
+		tileIDs = old.tileIDs;
+		tileOrder = old.tileOrder;
+		numTiles = old.numTiles;
+		
+		old.tileIDs = null;
+		old.tileOrder = null;
+		old.destroy();
 	}
 	
 	private function getKey(rect:Rectangle, point:Point = null):String
@@ -95,15 +117,16 @@ class TileSheetExt extends Tilesheet
 	{
 		var key:String = getKey(rect, point);
 		
-		if (_tileIDs.exists(key))
+		if (tileIDs.exists(key))
 		{
-			return _tileIDs.get(key);
+			return tileIDs.get(key).id;
 		}
 		
 		addTileRect(rect, point);
-		var tileID:Int = _numTiles;
-		_numTiles++;
-		_tileIDs.set(key, tileID);
+		var tileID:Int = numTiles;
+		numTiles++;
+		tileOrder[tileID] = key;
+		tileIDs.set(key, new RectPointTileID(tileID, rect, point));
 		return tileID;
 	}
 	
@@ -114,7 +137,16 @@ class TileSheetExt extends Tilesheet
 		#else
 		nmeBitmap = null;
 		#end
-		_tileIDs = null;
+		
+		tileOrder = null;
+		if (tileIDs != null)
+		{
+			for (tileObj in tileIDs)
+			{
+				tileObj.destroy();
+			}
+		}
+		tileIDs = null;
 	}
 	
 	#if !(flash || js)
@@ -125,4 +157,24 @@ class TileSheetExt extends Tilesheet
 		return __bitmap;
 	}
 	#end
+}
+
+class RectPointTileID
+{
+	public var rect:Rectangle;
+	public var point:Point;
+	public var id:Int;
+	
+	public function new(id, rect, point)
+	{
+		this.id = id;
+		this.rect = rect;
+		this.point = point;
+	}
+	
+	public function destroy():Void
+	{
+		rect = null;
+		point = null;
+	}
 }
