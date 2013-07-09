@@ -384,7 +384,7 @@ private class StarSprite extends FlxSprite
 	
 	public function setBackgroundColor(bgColor:Int):Void
 	{
-		var rgba:RGBA = FlxColor.getRGB(bgColor);
+		var rgba:RGBA = FlxColorUtil.getRGB(bgColor);
 		bgRed = rgba.red / 255;
 		bgGreen = rgba.green / 255;
 		bgBlue = rgba.blue / 255;

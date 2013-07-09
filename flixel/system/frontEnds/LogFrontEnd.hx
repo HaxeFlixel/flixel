@@ -144,6 +144,16 @@ class LogFrontEnd
 	 */
 	private function processTraceData(Data:Dynamic, ?Inf:PosInfos):Void
 	{
-		add(Data);
+		var paramArray:Array<Dynamic> = [Data];
+		
+		if (Inf.customParams != null) 
+		{
+			for (i in Inf.customParams)
+			{
+				paramArray.push(i);
+			}
+		}
+		
+		Reflect.callMethod(this, add, paramArray);
 	}
 }
