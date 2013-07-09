@@ -41,7 +41,7 @@ class FlxSlider extends FlxSpriteGroup
 	 * A text under the slider that displays the current value.
 	 */
 	public var valueLabel:FlxText;
-		/**
+	/**
 	 * Stores the current value of the variable - updated each frame.
 	 */
 	public var value:Float;
@@ -227,8 +227,6 @@ class FlxSlider extends FlxSpriteGroup
 		
 		// No srolling for UI components
 		transformChildren(function (s:FlxSprite, v:Dynamic) { s.scrollFactor.make(0, 0); } );
-		
-		updateValue();
 	}
 
 	override public function update():Void
