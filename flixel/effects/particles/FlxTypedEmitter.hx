@@ -54,7 +54,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * Determines whether the emitter is currently emitting particles.
 	 * It is totally safe to directly toggle this.
 	 */
-	public var emitting:Bool = false;
+	public var on:Bool = false;
 	/**
 	 * How often a particle is emitted (if emitter is started with Explode == false).
 	 */
@@ -295,11 +295,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 */
 	override public function update():Void
 	{
-		if (emitting)
+		if (on)
 		{
 			if (_explode)
 			{
-				emitting = false;
+				on = false;
 				_waitForKill = true;
 				
 				var i:Int = 0;
@@ -327,7 +327,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 					
 					if((_quantity > 0) && (++_counter >= _quantity))
 					{
-						emitting = false;
+						on = false;
 						_waitForKill = true;
 						_quantity = 0;
 					}
@@ -343,7 +343,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 						
 						if ((_quantity > 0) && (++_counter >= _quantity))
 						{
-							emitting = false;
+							on = false;
 							_waitForKill = true;
 							_quantity = 0;
 						}
@@ -370,7 +370,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 */
 	override public function kill():Void
 	{
-		emitting = false;
+		on = false;
 		_waitForKill = false;
 		
 		super.kill();
@@ -388,7 +388,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	{
 		revive();
 		visible = true;
-		emitting = true;
+		on = true;
 		
 		_explode = Explode;
 		life.min = Lifespan;
