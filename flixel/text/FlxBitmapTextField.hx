@@ -331,7 +331,9 @@ class FlxBitmapTextField extends FlxSprite
 			
 			drawItem.position = currIndex;
 			
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT++;
+			#end
 		}
 	}
 	

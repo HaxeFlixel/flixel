@@ -3,6 +3,7 @@ package flixel.ui;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxBasic;
 import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -1168,7 +1169,9 @@ class FlxBar extends FlxSprite
 			
 			drawItem.position = currIndex;
 			
+			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT++;
+			#end
 		}
 	}
 	

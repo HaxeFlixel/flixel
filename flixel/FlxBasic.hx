@@ -15,8 +15,10 @@ import flixel.util.loaders.TexturePackerData;
  */
 class FlxBasic
 {
+	#if !FLX_NO_DEBUG
 	static public var _ACTIVECOUNT:Int = 0;
 	static public var _VISIBLECOUNT:Int = 0;
+	#end
 	
 	/**
 	 * IDs seem like they could be pretty useful, huh?
@@ -106,7 +108,9 @@ class FlxBasic
 	 */
 	public function update():Void 
 	{ 
+		#if !FLX_NO_DEBUG
 		_ACTIVECOUNT++;
+		#end
 	}
 	
 	/**
@@ -125,7 +129,10 @@ class FlxBasic
 		while(i < l)
 		{
 			camera = cameras[i++];
+			
+			#if !FLX_NO_DEBUG
 			_VISIBLECOUNT++;
+			#end
 		}
 	}
 	
