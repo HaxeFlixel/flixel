@@ -15,9 +15,8 @@ import flixel.util.loaders.TexturePackerData;
  */
 class FlxBasic
 {
-	
-	static public var _ACTIVECOUNT:Int;
-	static public var _VISIBLECOUNT:Int;
+	static public var _ACTIVECOUNT:Int = 0;
+	static public var _VISIBLECOUNT:Int = 0;
 	
 	/**
 	 * IDs seem like they could be pretty useful, huh?
