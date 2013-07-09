@@ -21,7 +21,7 @@ class VCRFrontEnd
 	 */
 	public function loadReplay(Data:String, State:FlxState = null, CancelKeys:Array<String> = null, Timeout:Float = 0, Callback:Void->Void = null):Void
 	{
-		FlxG._game._replay.load(Data);
+		FlxG.game.replay.load(Data);
 		if (State == null)
 		{
 			FlxG.resetGame();
@@ -30,10 +30,10 @@ class VCRFrontEnd
 		{
 			FlxG.switchState(State);
 		}
-		FlxG._game._replayCancelKeys = CancelKeys;
-		FlxG._game._replayTimer = Std.int(Timeout * 1000);
-		FlxG._game._replayCallback = Callback;
-		FlxG._game._replayRequested = true;
+		FlxG.game.replayCancelKeys = CancelKeys;
+		FlxG.game.replayTimer = Std.int(Timeout * 1000);
+		FlxG.game.replayCallback = Callback;
+		FlxG.game.replayRequested = true;
 	}
 
 	/**
@@ -52,9 +52,9 @@ class VCRFrontEnd
 			FlxG.resetState();
 		}
 		
-		if (FlxG._game._replay.frameCount > 0)
+		if (FlxG.game.replay.frameCount > 0)
 		{
-			FlxG._game._replayRequested = true;
+			FlxG.game.replayRequested = true;
 		}
 	}
 	
@@ -63,12 +63,12 @@ class VCRFrontEnd
 	 */
 	public function stopReplay():Void
 	{
-		FlxG._game._replaying = false;
+		FlxG.game.replaying = false;
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG._game._debugger != null)
+		if (FlxG.game.debugger != null)
 		{
-			FlxG._game._debugger.vcr.stopped();
+			FlxG.game.debugger.vcr.stopped();
 		}
 		#end
 		
@@ -90,7 +90,7 @@ class VCRFrontEnd
 		{
 			FlxG.resetState();
 		}
-		FlxG._game._recordingRequested = true;
+		FlxG.game.recordingRequested = true;
 	}
 	
 	/**
@@ -100,16 +100,16 @@ class VCRFrontEnd
 	 */
 	public function stopRecording():String
 	{
-		FlxG._game._recording = false;
+		FlxG.game.recording = false;
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG._game._debugger != null)
+		if (FlxG.game.debugger != null)
 		{
-			FlxG._game._debugger.vcr.stopped();
+			FlxG.game.debugger.vcr.stopped();
 		}
 		#end
 		
-		return FlxG._game._replay.save();
+		return FlxG.game.replay.save();
 	}
 	#end
 }

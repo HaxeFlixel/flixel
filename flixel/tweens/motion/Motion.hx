@@ -6,7 +6,7 @@ import flixel.tweens.util.Ease;
 
 typedef Movable = {
 	public var immovable:Bool;
-	public function move(x:Float, y:Float):Void;
+	public function setPosition(X:Float, Y:Float):Void;
 }
 
 /**
@@ -61,7 +61,7 @@ class Motion extends FlxTween
 	{
 		if (_object != null)
 		{
-			_object.move(x, y); 
+			_object.setPosition(x, y); 
 		}
 	}
 }

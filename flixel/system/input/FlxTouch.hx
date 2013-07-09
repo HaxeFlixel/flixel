@@ -111,7 +111,7 @@ class FlxTouch extends FlxPoint
 	{
 		_flashPoint.x = X;
 		_flashPoint.y = Y;
-		_flashPoint = FlxG._game.globalToLocal(_flashPoint);
+		_flashPoint = FlxG.game.globalToLocal(_flashPoint);
 		
 		_globalScreenPosition.x = _flashPoint.x;
 		_globalScreenPosition.y = _flashPoint.y;

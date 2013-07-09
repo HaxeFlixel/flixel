@@ -128,34 +128,34 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private function onMouseDown(FlashEvent:MouseEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		if(FlxG._game._debuggerUp)
+		if(FlxG.game.debuggerUp)
 		{
-			if (FlxG._game._debugger.hasMouse)
+			if (FlxG.game.debugger.hasMouse)
 			{
 				return;
 			}
-			if (FlxG._game._debugger.watch.editing)
+			if (FlxG.game.debugger.watch.editing)
 			{
-				FlxG._game._debugger.watch.submit();
+				FlxG.game.debugger.watch.submit();
 			}
 		}
 		#end
 		
 		#if FLX_RECORD
-		if(FlxG._game._replaying && (FlxG._game._replayCancelKeys != null))
+		if(FlxG.game.replaying && (FlxG.game.replayCancelKeys != null))
 		{
 			var replayCancelKey:String;
 			var i:Int = 0;
-			var l:Int = FlxG._game._replayCancelKeys.length;
+			var l:Int = FlxG.game.replayCancelKeys.length;
 			while(i < l)
 			{
-				replayCancelKey = FlxG._game._replayCancelKeys[i++];
+				replayCancelKey = FlxG.game.replayCancelKeys[i++];
 				if ((replayCancelKey == "MOUSE") || (replayCancelKey == "ANY"))
 				{
-					if(FlxG._game._replayCallback != null)
+					if(FlxG.game.replayCallback != null)
 					{
-						FlxG._game._replayCallback();
-						FlxG._game._replayCallback = null;
+						FlxG.game.replayCallback();
+						FlxG.game.replayCallback = null;
 					}
 					else
 					{
@@ -179,7 +179,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private function onMouseUp(FlashEvent:MouseEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG._game._debuggerUp && FlxG._game._debugger.hasMouse) #if FLX_RECORD|| FlxG._game._replaying#end)
+		if ((FlxG.game.debuggerUp && FlxG.game.debugger.hasMouse) #if FLX_RECORD|| FlxG.game.replaying#end)
 		{
 			return;
 		}
@@ -206,7 +206,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private function onMouseWheel(FlashEvent:MouseEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG._game._debuggerUp && FlxG._game._debugger.hasMouse) #if FLX_RECORD|| FlxG._game._replaying #end)
+		if ((FlxG.game.debuggerUp && FlxG.game.debugger.hasMouse) #if FLX_RECORD|| FlxG.game.replaying #end)
 		{
 			return;
 		}
@@ -391,8 +391,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public function update():Void
 	{
-		var X = Math.floor(FlxG._game.mouseX);
-		var Y = Math.floor(FlxG._game.mouseY);
+		var X = Math.floor(FlxG.game.mouseX);
+		var Y = Math.floor(FlxG.game.mouseY);
 		
 		_globalScreenPosition.x = X;
 		_globalScreenPosition.y = Y;
@@ -582,7 +582,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	public function onFocus( ):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (!FlxG._game._debuggerUp && !useSystemCursor)
+		if (!FlxG.game.debuggerUp && !useSystemCursor)
 		#else
 		if (!useSystemCursor)
 		#end

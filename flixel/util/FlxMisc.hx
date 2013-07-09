@@ -1,10 +1,10 @@
 package flixel.util;
 
+import flash.display.Sprite;
 import flash.Lib;
 import flash.net.URLRequest;
-import flash.display.Sprite;
-import flash.utils.ByteArray;
 import flixel.FlxG;
+import flixel.FlxGame;
 import haxe.io.Error;
 
 /**
@@ -30,7 +30,7 @@ class FlxMisc
 	 */
 	inline static public function getTicks():Int
 	{
-		return FlxGame._mark;
+		return FlxGame.mark;
 	}
 	
 	/**

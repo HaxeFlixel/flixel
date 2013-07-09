@@ -82,7 +82,7 @@ class FlxG
 	/**
 	 * Internal tracker for game object.
 	 */
-	static public var _game:FlxGame;
+	static public var game:FlxGame;
 	/**
 	 * Handy shared variable for implementing your own pause behavior.
 	 */
@@ -230,7 +230,7 @@ class FlxG
 		//FlxAssets.cacheSounds();
 		bitmap = new BitmapFrontEnd();
 		
-		FlxG._game = Game;
+		FlxG.game = Game;
 		FlxG.width = Std.int(Math.abs(Width));
 		FlxG.height = Std.int(Math.abs(Height));
 		
@@ -277,7 +277,7 @@ class FlxG
 	
 	static private function get_framerate():Int
 	{
-		return Std.int(1000 / _game._step);
+		return Std.int(1000 / game.stepMS);
 	}
 		
 	static private function set_framerate(Framerate:Int):Int
@@ -287,12 +287,14 @@ class FlxG
 			FlxG.log.warn("FlxG.framerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
-		_game._step = Std.int(Math.abs(1000 / Framerate));
-		_game._stepSeconds = (_game._step / 1000);
-		if (_game._maxAccumulation < _game._step)
+		game.stepMS = Std.int(Math.abs(1000 / Framerate));
+		game.stepSeconds = (game.stepMS / 1000);
+		
+		if (game.maxAccumulation < game.stepMS)
 		{
-			_game._maxAccumulation = _game._step;
+			game.maxAccumulation = game.stepMS;
 		}
+		
 		return Framerate;
 	}
 		
@@ -304,8 +306,11 @@ class FlxG
 		
 	static private function get_flashFramerate():Int
 	{
-		if (_game.stage != null)
-			return Std.int(_game.stage.frameRate);
+		if (game.stage != null)
+		{
+			return Std.int(game.stage.frameRate);
+		}
+		
 		return 0;
 	}
 		
@@ -316,16 +321,20 @@ class FlxG
 			FlxG.log.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
-		_game._flashFramerate = Std.int(Math.abs(Framerate));
-		if (_game.stage != null)
+		game.flashFramerate = Std.int(Math.abs(Framerate));
+		
+		if (game.stage != null)
 		{
-			_game.stage.frameRate = _game._flashFramerate;
+			game.stage.frameRate = game.flashFramerate;
 		}
-		_game._maxAccumulation = Std.int(2000 / _game._flashFramerate) - 1;
-		if (_game._maxAccumulation < _game._step)
+		
+		game.maxAccumulation = Std.int(2000 / game.flashFramerate) - 1;
+		
+		if (game.maxAccumulation < game.stepMS)
 		{
-			_game._maxAccumulation = _game._step;
+			game.maxAccumulation = game.stepMS;
 		}
+		
 		return Framerate;
 	}
 	
@@ -334,7 +343,7 @@ class FlxG
 	 */
 	static public function resetGame():Void
 	{
-		_game._requestedReset = true;
+		game.requestedReset = true;
 	}
 	
 	/**
@@ -353,9 +362,9 @@ class FlxG
 	 */
 	static private function get_stage():Stage
 	{
-		if (_game.stage != null)
+		if (game.stage != null)
 		{
-			return _game.stage;
+			return game.stage;
 		}
 		return null;
 	}
@@ -367,7 +376,7 @@ class FlxG
 	 */
 	static private function get_state():FlxState
 	{
-		return _game._state;
+		return game.state;
 	}
 	
 	/**
@@ -375,7 +384,7 @@ class FlxG
 	 */
 	static public function switchState(State:FlxState):Void
 	{
-		_game.requestNewState(State); 
+		game.requestNewState(State); 
 	}
 	
 	/**
@@ -383,10 +392,10 @@ class FlxG
 	 */
 	static public function resetState():Void
 	{
-		_game.requestNewState(Type.createInstance(Type.resolveClass(FlxStringUtil.getClassName(_game._state, false)), []));
+		game.requestNewState(Type.createInstance(Type.resolveClass(FlxStringUtil.getClassName(game.state, false)), []));
 		
 		#if !FLX_NO_DEBUG
-		if (Std.is(_game._requestedState, FlxSubState))
+		if (Std.is(game.requestedState, FlxSubState))
 		{
 			throw "You can't set FlxSubState class instance as the state for your game";
 		}
