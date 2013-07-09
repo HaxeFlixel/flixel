@@ -10,6 +10,7 @@ import flixel.util.FlxColor;
 
 import flixel.util.loaders.TexturePackerData;
 import flixel.system.layer.TileSheetExt;
+import flixel.system.layer.TileSheetData;
 
 class BitmapFrontEnd
 {
@@ -332,17 +333,77 @@ class BitmapFrontEnd
 
 class CachedObject
 {
+	/**
+	 * Key in BitmapFrontEnd cache
+	 */
 	public var key:String;
+	/**
+	 * Cached BitmapData object
+	 */
 	public var bitmap:BitmapData;
+	/**
+	 * TexturePackerData associated with bitmapdata
+	 */
 	public var data:TexturePackerData;
-	public var tilesheet:TileSheetExt;
+	
+	public var tilesheet:TileSheetData;
+	/**
+	 * Whether this Cached object should stay in cache after state change or not.
+	 */
 	public var persist:Bool = false;
+	/**
+	 * Asset name from openfl.Assets
+	 */
+	public var assetsKey:String;
+	/**
+	 * Class name for bitmapdata
+	 */
+	public var assetsClass:Class<BitmapData>;
+	
+	/**
+	 * Says if bitmapdata of this Cache object has been dumped or not
+	 */
+	public var isDumped:Bool = false;
+	
+	/**
+	 * Says if bitmapdata of this Cache object can be dumped for less memory usage
+	 */
+	public var canBeDumped(get, null):Bool;
 	
 	public function new(key:String, bitmap:BitmapData, persist:Bool = false)
 	{
 		this.key = key;
 		this.bitmap = bitmap;
 		this.persist = persist;
+	}
+	
+	/**
+	 * Dumps bits of bitmapdata = less memory, but you can't read / write pixels on it anymore 
+	 * (but you can call onContext() method which will restore it again)
+	 */
+	public function dump():Void
+	{
+		if (canBeDumped)
+		{
+			#if (desktop || mobile)
+			bitmap.dumpBits();
+			bitmap = null;
+			#end
+			isDumped = true;
+		}
+	}
+	
+	/**
+	 * Use this method to restore cached bitmapdata (it it's possible).
+	 * It's called automatically when RESIZE event occurs.
+	 */
+	public function onContext():Void
+	{
+		if (isDumped)
+		{
+			// TODO implement it
+			
+		}
 	}
 	
 	// TODO: check this later
@@ -364,5 +425,13 @@ class CachedObject
 			tilesheet.destroy();
 		}
 		tilesheet = null;
+		
+		assetsKey = null;
+		assetsClass = null;
+	}
+	
+	private function get_canBeDumped():Bool
+	{
+		return (assetsClass != null || assetsKey != null);
 	}
 }

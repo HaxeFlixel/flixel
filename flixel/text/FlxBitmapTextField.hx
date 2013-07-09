@@ -663,7 +663,7 @@ class FlxBitmapTextField extends FlxSprite
 		if (_background)
 		{
 			// Tile_ID
-			_bgDrawData.push(_font.bgTileID(nodeName));		
+			_bgDrawData.push(_font.bgTileID);		
 			_bgDrawData.push( -_halfWidth);
 			_bgDrawData.push( -_halfHeight);
 			
@@ -731,7 +731,7 @@ class FlxBitmapTextField extends FlxSprite
 							#if flash
 							_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 							#else
-							_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - _halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
+							_font.render(_drawData, t, _outlineColor, _color, alpha, px + ox + _padding - _halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 							#end
 						}
 					}
@@ -743,14 +743,14 @@ class FlxBitmapTextField extends FlxSprite
 					#if flash
 					_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 					#else
-					_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - _halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
+					_font.render(_drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - _halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 					#end
 				}
 				
 				#if flash
 				_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
-				_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - _halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale, _useTextColor);
+				_font.render(_drawData, t, _textColor, _color, alpha, ox + _padding - _halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale, _useTextColor);
 				#end
 				row++;
 			}

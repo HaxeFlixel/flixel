@@ -26,8 +26,6 @@ class PxBitmapFont
 	private var _glyphs:Map<Int, PxFontSymbol>;
 	private var _num_letters:Int = 0;
 	private var _bgTileID:Int = -1;
-	private var _atlasGlyphs:Map<String, Map<Int, PxFontSymbol>>;
-	private var _bgTiles:Map<String, Int>;
 	#end
 	
 	private var _glyphString:String;
@@ -61,8 +59,6 @@ class PxBitmapFont
 		_glyphs = [];
 		#else
 		_glyphs = new Map<Int, PxFontSymbol>();
-		_atlasGlyphs = new Map<String, Map<Int, PxFontSymbol>>();
-		_bgTiles = new Map<String, Int>();
 		#end
 	}
 	
@@ -135,12 +131,6 @@ class PxBitmapFont
 	public function updateGlyphData(?NodeObject:Node):Void
 	{
 		#if !flash
-		// There is already glyphs in this atlas, so don't do it again
-		if (_atlasGlyphs.exists(NodeObject.atlas.name))
-		{
-			return;
-		}
-		
 		_glyphs = new Map<Int, PxFontSymbol>();
 		#end
 		
@@ -208,8 +198,6 @@ class PxBitmapFont
 			
 			#if !flash
 			_bgTileID = NodeObject.addTileRect(new Rectangle(_pixels.width - 1, _pixels.height - 1, 1, 1), ZERO_POINT);
-			
-			updateAtlasGlyphs(NodeObject.atlas.name);
 			#end
 		}
 		else if (_tileRects != null)
@@ -232,29 +220,16 @@ class PxBitmapFont
 			
 			#if !flash
 			_bgTileID = NodeObject.addTileRect(new Rectangle(_pixels.width - 1, _pixels.height - 1, 1, 1), ZERO_POINT);
-			
-			updateAtlasGlyphs(NodeObject.atlas.name);
 			#end
 		}
 	}
-	
-	#if !flash
-	/**
-	 * Caches tile data for atlas named AtlasName
-	 */
-	private function updateAtlasGlyphs(AtlasName:String):Void
-	{	
-		_atlasGlyphs.set(AtlasName, _glyphs);
-		_bgTiles.set(AtlasName, _bgTileID);
-	}
-	#end
 	
 	/**
 	 * Internal function. Resets current font.
 	 */
 	private function reset():Void
 	{
-		dispose(false);
+		dispose();
 		_maxHeight = 0;
 		
 		#if flash
@@ -491,7 +466,7 @@ class PxBitmapFont
 	/**
 	 * Clears all resources used by the font.
 	 */
-	public function dispose(Total:Bool = true):Void 
+	public function dispose():Void 
 	{
 		#if flash
 		var bd:BitmapData;
@@ -511,14 +486,6 @@ class PxBitmapFont
 		_pixels = null;
 		_bitmapDataKey = null;
 		_glyphs = null;
-		
-		#if !flash
-		if (Total)
-		{
-			_atlasGlyphs = null;
-			_bgTiles = null;
-		}
-		#end
 	}
 	
 	#if flash
@@ -599,7 +566,7 @@ class PxBitmapFont
 	#if flash 
 	public function render(PxBitmapData:BitmapData, PxFontData:Array<BitmapData>, PxText:String, PxColor:UInt, PxOffsetX:Int, PxOffsetY:Int, PxLetterSpacing:Int):Void 
 	#else
-	public function render(AtlasName:String, DrawData:Array<Float>, PxText:String, PxColor:Int, PxSecondColor:Int, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
+	public function render(DrawData:Array<Float>, PxText:String, PxColor:Int, PxSecondColor:Int, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
 	#end
 	{
 		#if !flash
@@ -629,12 +596,6 @@ class PxBitmapFont
 		#else
 		var glyph:PxFontSymbol;
 		var glyphWidth:Int;
-		_glyphs = _atlasGlyphs.get(AtlasName);
-		
-		if (_glyphs == null)
-		{
-			return;
-		}
 		#end
 		
 		for (i in 0...PxText.length) 
@@ -735,16 +696,18 @@ class PxBitmapFont
 	public var numLetters(get, never):Int;
 	
 	#if !flash
-	public function bgTileID(AtlasName):Int 
-	{
-		return _bgTiles.get(AtlasName);
-	}
-	
 	public var pixels(get_pixels, null):BitmapData;
 	
 	private function get_pixels():BitmapData 
 	{
 		return _pixels;
+	}
+	
+	public var bgTileID(get_bgTileID, null):Int;
+	
+	function get_bgTileID():Int 
+	{
+		return _bgTileID;
 	}
 	
 	public var bitmapDataKey(get, never):String;
