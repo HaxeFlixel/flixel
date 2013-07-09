@@ -70,7 +70,7 @@ class TileSheetExt extends Tilesheet
 	public var tileIDs:Map<String, RectPointTileID>;
 	public var tileOrder:Array<String>;
 	
-	private function new(bitmap:BitmapData)
+	public function new(bitmap:BitmapData)
 	{
 		super(bitmap);
 		

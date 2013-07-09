@@ -104,7 +104,7 @@ class TileSheetData
 	 */
 	private var flxFrames:Map<String, FlxFrame>;
 	
-	private function new(tileSheet:TileSheetExt)
+	public function new(tileSheet:TileSheetExt)
 	{
 		this.tileSheet = tileSheet;
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
