@@ -225,6 +225,6 @@ class FlxRandom
 	 */
 	inline static public function color(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
 	{
-		return FlxColor.getRandomColor(min, max, alpha);
+		return FlxColorUtil.getRandomColor(min, max, alpha);
 	}
 }
