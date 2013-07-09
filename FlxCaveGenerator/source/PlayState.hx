@@ -1,0 +1,107 @@
+package;
+
+import flash.events.Event;
+import flash.Lib;
+import flixel.addons.tile.FlxCaveGenerator;
+import flixel.FlxCamera;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
+import flixel.ui.FlxButton;
+import flixel.ui.FlxSlider;
+import flixel.util.FlxColor;
+import flixel.util.FlxMath;
+import haxe.Timer;
+
+class PlayState extends FlxState
+{
+	private var _tilemap:FlxTilemap;
+	private var _smoothingIterations:Int = 6;
+	private var _wallRatio:Float = 0.5;
+	private var _generationTime:FlxText;
+	
+	override public function create():Void 
+	{
+		FlxG.cameras.bgColor = FlxColor.BROWN;
+		FlxG.mouse.useSystemCursor = true;
+		
+		// Create the tilemap for the cave
+		_tilemap = new FlxTilemap();
+		
+		// Create some UI
+		var UI_WIDTH:Int = 200;
+		var UI_POS_X:Int = FlxG.width - UI_WIDTH;
+		
+		var uiBackground:FlxSprite = new FlxSprite(UI_POS_X, 0);
+		uiBackground.makeGraphic(UI_WIDTH, 245, FlxColor.WHITE);
+		uiBackground.alpha = 0.85;
+		
+		var title:FlxText = new FlxText(UI_POS_X, 2, UI_WIDTH, "FlxCaveGenerator");
+		title.setFormat(null, 16, FlxColor.RED, "center", FlxColor.BLACK);
+		title.useShadow = true;
+		
+		var smoothingSlider:FlxSlider = new FlxSlider(this, "_smoothingIterations", FlxG.width - 180, 60, 0, 15, 150);
+		smoothingSlider.nameLabel.text = "Smoothing Iterations";
+		smoothingSlider.nameLabel.y -= 10;
+		
+		var wallRatioSlider:FlxSlider = new FlxSlider(this, "_wallRatio", FlxG.width - 180, 130 , 0.35, 0.65, 150);
+		wallRatioSlider.nameLabel.text = "Wall Ratio";
+		wallRatioSlider.nameLabel.y -= 10;
+		
+		var generationButton:FlxButton = new FlxButton(FlxG.width - 140, 190, "[R]egenerate", generateCave);
+		
+		_generationTime = new FlxText(UI_POS_X, 220, UI_WIDTH);
+		_generationTime.setFormat(null, 8, FlxColor.BLACK, "center");
+		
+		// Add all the stuff in correct order
+		add(_tilemap);
+		add(uiBackground);
+		add(title);
+		add(smoothingSlider);
+		add(wallRatioSlider);
+		add(generationButton);
+		add(_generationTime);
+		
+		// Finally, generate a cave
+		generateCave();
+	}
+	
+	override public function update():Void
+	{
+		// Keyboard shortcut
+		if (FlxG.keys.justReleased("R"))
+		{
+			generateCave();
+		}
+		// Just a little fading effect for the text
+		if (_generationTime.alpha < 1)
+		{
+			_generationTime.alpha += 0.05;
+		}
+		
+		super.update();
+	}
+	
+	private function generateCave():Void
+	{
+		// Determine the width and height (in tiles) needed to fill the screen with tiles that are 8x8 pixels 
+		var width:Int = Math.floor(FlxG.width / 8);
+		var height:Int = Math.floor((FlxG.height) / 8);
+		
+		// Get the time before starting the generation to calculate the timer later
+		var time1:Float = Timer.stamp();
+		
+		var caveData:String = FlxCaveGenerator.generateCaveString(width, height, _smoothingIterations, _wallRatio);
+		
+		// Calculate the time it took to create the cave and update the text
+		var timeDiff:Float = FlxMath.roundDecimal(Timer.stamp() - time1, 4);
+		_generationTime.text = "Generation time: " + Std.string(timeDiff) + "s";
+		_generationTime.alpha = 0;
+		
+		// Loads the cave to the tilemap
+		_tilemap.loadMap(caveData, FlxTilemap.imgAuto, 8, 8, FlxTilemap.AUTO);
+		_tilemap.updateBuffers();
+	}
+}
