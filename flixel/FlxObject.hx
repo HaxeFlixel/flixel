@@ -778,7 +778,7 @@ class FlxObject extends FlxBasic
 				angularAcceleration = 0;
 				angle = pathAngle;
 			}
-		}			
+		}      
 	}
 	
 	/**

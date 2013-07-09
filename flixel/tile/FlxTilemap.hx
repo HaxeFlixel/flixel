@@ -2365,7 +2365,7 @@ class FlxTilemap extends FlxObject
 		
 		return tileSprite;
 	}
-	
+
 	/**
 	 * Use this method so the tilemap buffers are updated, eg when resizing your game
 	 */
