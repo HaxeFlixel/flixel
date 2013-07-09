@@ -1,11 +1,11 @@
 {
-    "name": "flixel-samples",
+    "name": "flixel-demos",
     "url": "http://www.haxeflixel.com",
     "license": "MIT",
     "tags": ["game", "openfl"],
-    "description": "Sample Projects for HaxeFlixel",
+    "description": "Demo Projects for HaxeFlixel",
     "version": "0.0.1",
-    "releasenote": "Initial release, includes the entire samples repository https://github.com/HaxeFlixel/flixel-samples/.",
+    "releasenote": "Initial release, includes the entire demos repository https://github.com/HaxeFlixel/flixel-demos/.",
     "contributors": [ "haxeflixel" ],
     "dependencies": { "flixel": "" }
 }
