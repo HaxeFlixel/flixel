@@ -13,22 +13,30 @@ import flixel.ui.FlxButton;
 import flixel.ui.FlxSlider;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
+import flixel.util.FlxSave;
+import flixel.util.FlxSpriteUtil;
 import haxe.Timer;
 
 class PlayState extends FlxState
 {
 	private var _tilemap:FlxTilemap;
+	private var _player:Player;
 	private var _smoothingIterations:Int = 6;
 	private var _wallRatio:Float = 0.5;
 	private var _generationTime:FlxText;
 	
 	override public function create():Void 
 	{
-		FlxG.cameras.bgColor = FlxColor.BROWN;
+		FlxG.cameras.bgColor = FlxColor.BLACK;
 		FlxG.mouse.useSystemCursor = true;
 		
 		// Create the tilemap for the cave
 		_tilemap = new FlxTilemap();
+		
+		// A little player character
+		_player = new Player(0, 0);
 		
 		// Create some UI
 		var UI_WIDTH:Int = 200;
@@ -39,7 +47,7 @@ class PlayState extends FlxState
 		uiBackground.alpha = 0.85;
 		
 		var title:FlxText = new FlxText(UI_POS_X, 2, UI_WIDTH, "FlxCaveGenerator");
-		title.setFormat(null, 16, FlxColor.RED, "center", FlxColor.BLACK);
+		title.setFormat(null, 16, FlxColor.BROWN, "center", FlxColor.BLACK);
 		title.useShadow = true;
 		
 		var smoothingSlider:FlxSlider = new FlxSlider(this, "_smoothingIterations", FlxG.width - 180, 60, 0, 15, 150);
@@ -57,6 +65,7 @@ class PlayState extends FlxState
 		
 		// Add all the stuff in correct order
 		add(_tilemap);
+		add(_player);
 		add(uiBackground);
 		add(title);
 		add(smoothingSlider);
@@ -81,6 +90,12 @@ class PlayState extends FlxState
 			_generationTime.alpha += 0.05;
 		}
 		
+		// Collide the player with the walls
+		FlxG.collide(_tilemap, _player);
+		
+		// Make sure the player can't leave the screen area
+		FlxSpriteUtil.screenWrap(_player);
+		
 		super.update();
 	}
 	
@@ -101,7 +116,12 @@ class PlayState extends FlxState
 		_generationTime.alpha = 0;
 		
 		// Loads the cave to the tilemap
-		_tilemap.loadMap(caveData, FlxTilemap.imgAuto, 8, 8, FlxTilemap.AUTO);
+		_tilemap.loadMap(caveData, "assets/caveWallTiles.png", 8, 8, FlxTilemap.AUTO);
 		_tilemap.updateBuffers();
+		
+		// Find an empty tile for the player
+		var emptyTiles:Array<FlxPoint> = _tilemap.getTileCoords(0, false);
+		var randomEmptyTile:FlxPoint = emptyTiles[FlxRandom.intRanged(0, emptyTiles.length)];
+		_player.setPosition(randomEmptyTile);
 	}
 }

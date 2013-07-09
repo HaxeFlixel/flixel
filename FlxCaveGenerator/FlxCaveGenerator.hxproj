@@ -5,7 +5,7 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="FlxCaveGenerator.xml" />
-    <movie fps="30" />
+    <movie fps="60" />
     <movie width="640" />
     <movie height="480" />
     <movie version="3" />
@@ -22,7 +22,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1&#xA;openfl_ver=1.0.4&#xA;openfl&#xA;display&#xA;web" />
+    <option directives="FLX_NO_FOCUS_LOST_SCREEN&#xA;tools=1&#xA;openfl_ver=1.0.4&#xA;openfl&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
