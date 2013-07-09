@@ -1359,6 +1359,17 @@ class FlxObject extends FlxBasic
 		this.y = y;
 	}
 	
+	/**
+	 * Copy the coordinates of a <code>FlxPoint</code> to x and y of this <code>FlxObject</code>.
+	 * 
+	 * @param	Point	The <code>FlxPoint</code> to copy the coordinates from.
+	 */
+	public function setPosition(Point:FlxPoint):Void
+	{
+		x = Point.x;
+		y = Point.y;
+	}
+	
 	function set_forceComplexRender(value:Bool):Bool 
 	{
 		return forceComplexRender = value;
