@@ -1,31 +1,42 @@
-About
+﻿![](http://www.haxeflixel.com/sites/all/themes/haxeflixel_bootstrap/assets/images/haxeflixel-logo.png)
 =
-[HaxeFlixel](http://www.haxeflixel.com/) is an open source 2d game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Open Flash Library](https://github.com/openfl).
+###Related repos: [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-samples](https://github.com/HaxeFlixel/flixel-samples) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools)
+______________________________________________________
+[HaxeFlixel](http://www.haxeflixel.com/) is an open source 2D game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Open Flash Library](https://github.com/openfl).
 
-Please visit the official website for community support and resources at [www.haxeflixel.com](http://www.haxeflixel.com/).
 
-You can also chat with us on our [Forum](http://www.haxeflixel.com/forum/) or through IRC on the #haxeflixel on freenode channel.
+###Links
+
+In case you're looking for ressources, help, or just want to interact with the community:
+
+- [HaxeFlixel.com](http://www.haxeflixel.com/)
+- [Forums](http://www.haxeflixel.com/forum)
+- [Wiki](http://www.haxeflixel.com/wiki)
+- [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
+- [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
+
 ______________________________________________________
 
-HaxeFlixel founded and created by Alexander Hohlov also known on github as Beeblerox who continues to be the project lead and repository maintainer. The codebase started largely from a Haxe port of the As3 version of Flixel written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) , [Flixel Github](https://github.com/AdamAtomic/flixel).
+HaxeFlixel was founded and created by Alexander Hohlov, also known as [Beeblerox](https://github.com/beeblerox) who continues to be the project lead and repository maintainer. The codebase started largely from a Haxe port of the [AS3 version of Flixel](https://github.com/AdamAtomic/flixel) written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/).
 
-Special thanks to community contributors by github names Werdn, crazysam, impaler, ProG4mr, Gama11, sergey-miryanov and more.
+Special thanks go to the community contributors [Werdn](https://github.com/werdn), [crazysam](https://github.com/crazysam), [impaler](https://github.com/impaler), [ProG4mr](https://github.com/ProG4mr), [Gama11](https://github.com/Gama11), [sergey-miryanov](https://github.com/sergey-miryanov) and more.
 
-HaxeFlixel presents substantial enhancements from the original Flixel as3 code;
-<ul>
-<li>Use of a robust and powerfull opensource language</li>
-<li>Flexible Asset Management System</li>
-<li>Cross platform development Linux, Max and Windows</li>
-<li>Texture Atlas and Layer enhancement for cpp targets</li>
-<li>Integrated and robust Tween System</li>
-<li>Access to OpenFL native extensions</li>
-<li>Compile to Mobile and Desktop targets with native code through NME</li>
-<li>Impressive Native Performance using GPU accelerated drawTiles implimentation in cpp targets</li>
-</ul>
+HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
+
+- Use of a robust and powerful, opensource language
+- Flexible Asset Management System
+- Cross-platform development for Linux, Mac and Windows
+- Texture Atlas and Layer enhancement for cpp targets
+- Integrated and robust Tween System
+- Access to OpenFL native extensions
+- Compile to Mobile and Desktop targets with native code through OpenFL
+- Impressive Native Performance using GPU accelerated drawTiles implimentation in cpp targets
+- A powerful debugger with a console as well as an advanced logging system
+- A vibrant community that keeps updating the engine and adding new features to it
 
 
 ###Runtime Targets
-The current targets possible are;
+The current possible targets are:
 
 <table>
   <tr>
@@ -39,7 +50,7 @@ The current targets possible are;
     <td>Flash</td>
   </tr>
   <tr>
-    <td>IOS</td>
+    <td>iOS</td>
     <td>Mac</td>
     <td></td>
   </tr>
@@ -55,35 +66,52 @@ The current targets possible are;
   </tr>
 </table>
 
+There's also experimental support for HTML5.
+
 ______________________________________________________
 
-###Demos for HaxeFlixel
-https://github.com/HaxeFlixel/samples
+###Samples
+
+There exists a large amount of demos making it easier for you to understand the flixel workflow:
+
+[flixel-samples](https://github.com/HaxeFlixel/flixel-samples)
+
+______________________________________________________
+
+###Tools
+
+HaxeFlixel offers a powerful set of command-line tools for template / sample creation and more:
+
+[flixel-tools](https://github.com/HaxeFlixel/flixel-tools)
 
 ______________________________________________________
 
 ###Basic Features
 
-<ul>
-<li>Display thousands of moving objects</li>
-<li>Basic collisions between objects</li>
-<li>Group objects together for simplicity</li>
-<li>Easily generate and emit particles</li>
-<li>Create game levels using tilemaps</li>
-<li>Text display, save games, scrolling</li>
-<li>Mouse & keyboard input</li>
-<li>Math & color utilities</li>
-<li>Record and play back replays</li>
-<li>Powerful interactive debugger</li>
-<li>Camera system for split screen</li>
-<li>Pathfinding and following</li>
-<li>Easy object recycling</li>
-</ul>
+- Display thousands of moving objects
+- Basic collisions between objects
+- Group objects together for simplicity
+- Easily generate and emit particles
+- Create game levels using tilemaps
+- Text display, save games, scrolling
+- Mouse & keyboard input
+- Math & color utilities
+- Record and play back replays
+- Powerful interactive debugger
+- Camera system for split screen
+- Pathfinding and following
+- Easy object recycling
+
 ______________________________________________________
 
 ###Getting Started
 
-It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel)
+It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel).
 
-You can read our getting started docs here
-http://haxeflixel.com/wiki/getting-started
+Use this command line command to install HaxeFlixel:
+
+```batch
+haxelib install flixel
+```
+
+You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
