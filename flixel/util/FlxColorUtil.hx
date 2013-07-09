@@ -469,7 +469,7 @@ class FlxColorUtil
 	 */
 	static public function HSVtoRGB(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
 	{
-		var result = TRANSPARENT;
+		var result = FlxColor.TRANSPARENT;
 		
 		if (S == 0.0)
 		{
