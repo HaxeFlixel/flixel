@@ -93,7 +93,7 @@ class FlxRandom
 					result = Math.floor(max + (Math.random() * (min + 1 - max)));
 				}
 			}
-			while (FlxArray.indexOf(excludes, result) >= 0);
+			while (FlxArrayUtil.indexOf(excludes, result) >= 0);
 			
 			return result;
 		}
@@ -225,6 +225,6 @@ class FlxRandom
 	 */
 	inline static public function color(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
 	{
-		return FlxColor.getRandomColor(min, max, alpha);
+		return FlxColorUtil.getRandomColor(min, max, alpha);
 	}
 }

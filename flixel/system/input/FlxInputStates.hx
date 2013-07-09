@@ -2,7 +2,7 @@ package flixel.system.input;
 
 import flixel.FlxG;
 import flixel.system.replay.CodeValuePair;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 
 /**
  * Basic input class that manages the fast-access Booleans and detailed key-state tracking.
@@ -39,7 +39,7 @@ class FlxInputStates
 		_keyBools = new Map<String, Bool>();
 		
 		_keyMap = new Array<FlxMapObject>(/*_total*/);
-		FlxArray.setLength(_keyMap, _total);
+		FlxArrayUtil.setLength(_keyMap, _total);
 	}
 	
 	/**

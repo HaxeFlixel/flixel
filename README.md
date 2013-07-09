@@ -1,6 +1,6 @@
 ﻿![](http://www.haxeflixel.com/sites/all/themes/haxeflixel_bootstrap/assets/images/haxeflixel-logo.png)
 =
-###Related repos: [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-samples](https://github.com/HaxeFlixel/flixel-samples) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools)
+###Related repos: [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-demos](https://github.com/HaxeFlixel/flixel-demos) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools)
 ______________________________________________________
 [HaxeFlixel](http://www.haxeflixel.com/) is an open source 2D game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Open Flash Library](https://github.com/openfl).
 
@@ -67,22 +67,6 @@ The current possible targets are:
 </table>
 
 There's also experimental support for HTML5.
-
-______________________________________________________
-
-###Samples
-
-There exists a large amount of demos making it easier for you to understand the flixel workflow:
-
-[flixel-samples](https://github.com/HaxeFlixel/flixel-samples)
-
-______________________________________________________
-
-###Tools
-
-HaxeFlixel offers a powerful set of command-line tools for template / sample creation and more:
-
-[flixel-tools](https://github.com/HaxeFlixel/flixel-tools)
 
 ______________________________________________________
 

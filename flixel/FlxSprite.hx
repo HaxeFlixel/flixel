@@ -14,7 +14,7 @@ import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxAngle;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
@@ -1704,7 +1704,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function getFrameIndex(Frame:FlxFrame):Int
 	{
-		return FlxArray.indexOf(_framesData.frames, Frame);
+		return FlxArrayUtil.indexOf(_framesData.frames, Frame);
 	}
 	
 	/**

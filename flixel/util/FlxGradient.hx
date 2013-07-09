@@ -43,7 +43,7 @@ class FlxGradient
 		
 		for (ai in 0...colors.length)
 		{
-			alpha.push(FlxColor.getAlphaFloat(colors[ai]));
+			alpha.push(FlxColorUtil.getAlphaFloat(colors[ai]));
 		}
 		
 		var ratio:Array<Int> = new Array();

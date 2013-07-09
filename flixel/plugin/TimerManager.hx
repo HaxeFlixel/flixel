@@ -2,7 +2,7 @@ package flixel.plugin;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxTimer;
 
 /**
@@ -80,7 +80,7 @@ class TimerManager extends FlxBasic
 	 */
 	public function remove(Timer:FlxTimer):Void
 	{
-		var index:Int = FlxArray.indexOf(_timers, Timer);
+		var index:Int = FlxArrayUtil.indexOf(_timers, Timer);
 		
 		if (index >= 0)
 		{

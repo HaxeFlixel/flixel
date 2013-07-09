@@ -8,6 +8,7 @@ import flixel.FlxSprite;
 import flixel.system.layer.TileSheetData;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxColorUtil;
 
 // TODO: Add reduction from really high glitch value down to zero, will smooth the image into place and look cool :)
 // TODO: Add option to glitch vertically?
@@ -173,7 +174,7 @@ private class GlitchSprite extends FlxSprite
 		_frameID = _framesData.frameIDs[0];
 		_tileSheetData.isColored = true;
 		
-		var rgba:RGBA = FlxColor.getRGB(BgColor);
+		var rgba:RGBA = FlxColorUtil.getRGB(BgColor);
 		_bgRed = rgba.red / 255;
 		_bgGreen = rgba.green / 255;
 		_bgBlue = rgba.blue / 255;

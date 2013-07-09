@@ -3,7 +3,7 @@ package flixel.util;
 /**
  * A set of functions for array manipulation.
  */
-class FlxArray
+class FlxArrayUtil
 {
 	/**
 	 * Function to search for a specified element in an array.

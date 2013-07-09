@@ -4,7 +4,7 @@ import flash.display.StageDisplayState;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.util.FlxArray;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 
 class CameraFrontEnd
@@ -175,7 +175,7 @@ class CameraFrontEnd
 		if (Camera != null && FlxG._game.contains(Camera._flashSprite))
 		{
 			FlxG._game.removeChild(Camera._flashSprite);
-			var index = FlxArray.indexOf(FlxG.cameras.list, Camera);
+			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
 			if(index >= 0)
 				FlxG.cameras.list.splice(index, 1);
 		}
