@@ -200,7 +200,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	private function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG._game._debuggerUp && FlxG._game._debugger.watch.editing)
+		if (FlxG.game.debuggerUp && FlxG.game.debugger.watch.editing)
 		{
 			return;
 		}
@@ -210,14 +210,14 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			var c:Int = FlashEvent.keyCode;
 				
 			#if !FLX_NO_DEBUG
-			if ((FlxG._game._debugger != null) && (FlxG.debugger.toggleKeys != null && Lambda.indexOf(FlxG.debugger.toggleKeys, c) != -1))
+			if ((FlxG.game.debugger != null) && (FlxG.debugger.toggleKeys != null && Lambda.indexOf(FlxG.debugger.toggleKeys, c) != -1))
 			{
 				FlxG.debugger.visible = !FlxG.debugger.visible;
 				return;
 			}
 			#end
 				
-			if (!FlxG._game.tempDisableSoundHotKeys)
+			if (!FlxG.game.tempDisableSoundHotKeys)
 			{
 				var code:String = String.fromCharCode(FlashEvent.charCode);
 				if (FlxG.sound.keyMute != null && Lambda.indexOf(FlxG.sound.keyMute, c) != -1)
@@ -229,7 +229,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 					}
 					
 					#if !FLX_NO_SOUND_TRAY
-					FlxG._game.showSoundTray();
+					FlxG.game.showSoundTray();
 					#end
 					
 					return;
@@ -240,7 +240,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 					FlxG.sound.volume = FlxG.sound.volume - 0.1;
 						
 					#if !FLX_NO_SOUND_TRAY
-					FlxG._game.showSoundTray();
+					FlxG.game.showSoundTray();
 					#end
 					
 					return;
@@ -251,7 +251,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 					FlxG.sound.volume = FlxG.sound.volume + 0.1;
 					
 					#if !FLX_NO_SOUND_TRAY
-					FlxG._game.showSoundTray();
+					FlxG.game.showSoundTray();
 					#end
 						
 					return;
@@ -260,7 +260,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		#end
 		
 		#if FLX_RECORD
-		if (FlxG._game._replaying)
+		if (FlxG.game.replaying)
 		{
 			return;
 		}
@@ -286,28 +286,28 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	{
 		#if FLX_RECORD
 		#if !FLX_NO_DEBUG
-		if (FlxG._game._debuggerUp && FlxG._game._debugger.watch.editing)
+		if (FlxG.game.debuggerUp && FlxG.game.debugger.watch.editing)
 		{
 			return;
 		}
-		if (FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlxG._game._debugger == null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
+		if (FlxG.game.replaying && (FlxG.game.replayCancelKeys != null) && (FlxG.game.debugger == null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
 		#else
-		if (FlxG._game._replaying && (FlxG._game._replayCancelKeys != null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
+		if (FlxG.game.replaying && (FlxG.game.replayCancelKeys != null) && (FlashEvent.keyCode != 192) && (FlashEvent.keyCode != 220))
 		#end
 		{
 			var cancel:Bool = false;
 			var replayCancelKey:String;
 			var i:Int = 0;
-			var l:Int = FlxG._game._replayCancelKeys.length;
+			var l:Int = FlxG.game.replayCancelKeys.length;
 			while(i < l)
 			{
-				replayCancelKey = FlxG._game._replayCancelKeys[i++];
+				replayCancelKey = FlxG.game.replayCancelKeys[i++];
 				if ((replayCancelKey == "ANY") || (getKeyCode(replayCancelKey) == Std.int(FlashEvent.keyCode)))
 				{
-					if (FlxG._game._replayCallback != null)
+					if (FlxG.game.replayCallback != null)
 					{
-						FlxG._game._replayCallback();
-						FlxG._game._replayCallback = null;
+						FlxG.game.replayCallback();
+						FlxG.game.replayCallback = null;
 					}
 					else
 					{

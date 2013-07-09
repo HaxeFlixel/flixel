@@ -85,13 +85,13 @@ class Console extends Window
 		cmdHistory = new Array<String>();
 		
 		// Load old command history if existant
-		if (FlxG._game._prefsSave.data.history != null) {
-			cmdHistory = FlxG._game._prefsSave.data.history;
+		if (FlxG.game.prefsSave.data.history != null) {
+			cmdHistory = FlxG.game.prefsSave.data.history;
 			historyIndex = cmdHistory.length;
 		}
 		else {
 			cmdHistory = new Array<String>();
-			FlxG._game._prefsSave.data.history = cmdHistory;
+			FlxG.game.prefsSave.data.history = cmdHistory;
 		}
 		
 		// Create the input textfield
@@ -121,10 +121,10 @@ class Console extends Window
 		// Pause game
 		#if flash 
 		if (autoPause)
-			FlxG._game.debugger.vcr.onPause();
+			FlxG.game.debugger.vcr.onPause();
 		#end
 		// Shouldn't be able to trigger sound control when console has focus
-		FlxG._game.tempDisableSoundHotKeys = true;
+		FlxG.game.tempDisableSoundHotKeys = true;
 		
 		if (_input.text == defaultText) 
 			_input.text = "";
@@ -137,9 +137,9 @@ class Console extends Window
 		// Unpause game
 		#if flash
 		if (autoPause)
-			FlxG._game.debugger.vcr.onPlay();
+			FlxG.game.debugger.vcr.onPlay();
 		#end
-		FlxG._game.tempDisableSoundHotKeys = false;
+		FlxG.game.tempDisableSoundHotKeys = false;
 		
 		if (_input.text == "") 
 			_input.text = defaultText;
@@ -198,7 +198,7 @@ class Console extends Window
 			{
 				// Save the command to the history
 				cmdHistory.push(_input.text);
-				FlxG._game._prefsSave.flush();
+				FlxG.game.prefsSave.flush();
 					
 				// Set a maximum for commands you can save
 				if (cmdHistory.length > historyMax)

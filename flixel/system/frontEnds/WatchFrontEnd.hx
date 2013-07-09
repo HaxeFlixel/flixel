@@ -20,9 +20,9 @@ class WatchFrontEnd
 	inline public function add(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG._game != null && FlxG._game._debugger.watch != null)
+		if (FlxG.game != null && FlxG.game.debugger.watch != null)
 		{
-			FlxG._game._debugger.watch.add(AnyObject, VariableName, DisplayName);
+			FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
 		}
 		#end
 	}
@@ -37,9 +37,9 @@ class WatchFrontEnd
 	inline public function remove(AnyObject:Dynamic, VariableName:String = null):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG._game != null && FlxG._game._debugger.watch != null)
+		if (FlxG.game != null && FlxG.game.debugger.watch != null)
 		{
-			FlxG._game._debugger.watch.remove(AnyObject, VariableName);
+			FlxG.game.debugger.watch.remove(AnyObject, VariableName);
 		}
 		#end
 	}
@@ -55,9 +55,9 @@ class WatchFrontEnd
 	inline public function addQuick(Name:String, NewValue:Dynamic):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG._game != null && FlxG._game._debugger.watch != null)
+		if (FlxG.game != null && FlxG.game.debugger.watch != null)
 		{
-			FlxG._game.debugger.watch.updateQuickWatch(Name, NewValue);
+			FlxG.game.debugger.watch.updateQuickWatch(Name, NewValue);
 		}
 		#end
 	}
@@ -70,9 +70,9 @@ class WatchFrontEnd
 	inline public function removeQuick(Name:String):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG._game != null && FlxG._game._debugger.watch != null)
+		if (FlxG.game != null && FlxG.game.debugger.watch != null)
 		{
-			FlxG._game.debugger.watch.remove(null, null, Name);
+			FlxG.game.debugger.watch.remove(null, null, Name);
 		}
 		#end
 	}

@@ -136,7 +136,7 @@ class ConsoleCommands
 	private function clearHistory():Void
 	{
 		_console.cmdHistory = new Array<String>();
-		FlxG._game._prefsSave.flush();
+		FlxG.game.prefsSave.flush();
 		cLog("clearHistory: Command history cleared");
 	}
 	
@@ -147,7 +147,7 @@ class ConsoleCommands
 		
 		#if flash
 		if (_console.autoPause) 
-			FlxG._game.debugger.vcr.onStep();
+			FlxG.game.debugger.vcr.onStep();
 		#end
 	}
 	
@@ -162,7 +162,7 @@ class ConsoleCommands
 		
 		#if flash
 		if (_console.autoPause)
-			FlxG._game.debugger.vcr.onStep();
+			FlxG.game.debugger.vcr.onStep();
 		#end
 	}
 	
@@ -173,7 +173,7 @@ class ConsoleCommands
 		
 		#if flash
 		if (_console.autoPause)
-			FlxG._game.debugger.vcr.onStep();
+			FlxG.game.debugger.vcr.onStep();
 		#end
 	}
 	
@@ -181,13 +181,13 @@ class ConsoleCommands
 	{
 		if (!watchingMouse) {
 			// TODO: turn this into quickWatch to display both in one watch entry.
-			FlxG.watch.add(FlxG._game, "mouseX", "Mouse.x");
-			FlxG.watch.add(FlxG._game, "mouseY", "Mouse.y");
+			FlxG.watch.add(FlxG.game, "mouseX", "Mouse.x");
+			FlxG.watch.add(FlxG.game, "mouseY", "Mouse.y");
 			cLog("watchMouse: Mouse position added to watch window");
 		}
 		else {
-			FlxG.watch.remove(FlxG._game, "mouseX");
-			FlxG.watch.remove(FlxG._game, "mouseY");
+			FlxG.watch.remove(FlxG.game, "mouseX");
+			FlxG.watch.remove(FlxG.game, "mouseY");
 			cLog("watchMouse: Mouse position removed from watch window");
 		}
 		
@@ -206,12 +206,12 @@ class ConsoleCommands
 	
 	private function pause():Void
 	{
-		if (FlxG._game.debugger.vcr.paused) {
-			FlxG._game.debugger.vcr.onPlay();
+		if (FlxG.game.debugger.vcr.paused) {
+			FlxG.game.debugger.vcr.onPlay();
 			cLog("pause: Game unpaused");
 		}
 		else {
-			FlxG._game.debugger.vcr.onPause();
+			FlxG.game.debugger.vcr.onPause();
 			cLog("pause: Game paused");
 		}
 	}
@@ -278,8 +278,8 @@ class ConsoleCommands
 		var obj:FlxObject = instance;
 		
 		if (MousePos) {
-			obj.x = FlxG._game.mouseX;
-			obj.y = FlxG._game.mouseY;
+			obj.x = FlxG.game.mouseX;
+			obj.y = FlxG.game.mouseY;
 		}
 		
 		FlxG.state.add(instance);

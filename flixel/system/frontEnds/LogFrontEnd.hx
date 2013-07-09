@@ -30,7 +30,7 @@ class LogFrontEnd
 	inline private function _add(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
+		if ((FlxG.game != null) && (FlxG.game.debugger != null))
 			advanced(Data, Log.STYLE_NORMAL); 
 		#end
 	}
@@ -44,7 +44,7 @@ class LogFrontEnd
 	inline private function _warn(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
+		if ((FlxG.game != null) && (FlxG.game.debugger != null))
 			advanced(Data, Log.STYLE_WARNING); 
 		#end
 	}
@@ -58,7 +58,7 @@ class LogFrontEnd
 	inline private function _error(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
+		if ((FlxG.game != null) && (FlxG.game.debugger != null))
 			advanced(Data, Log.STYLE_ERROR); 
 		#end
 	}
@@ -72,7 +72,7 @@ class LogFrontEnd
 	inline private function _notice(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
+		if ((FlxG.game != null) && (FlxG.game.debugger != null))
 			advanced(Data, Log.STYLE_NOTICE); 
 		#end
 	}
@@ -86,17 +86,17 @@ class LogFrontEnd
 	public function advanced(Data:Dynamic, Style:LogStyle):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
+		if ((FlxG.game != null) && (FlxG.game.debugger != null))
 		{
 			if (!Std.is(Data, Array))
 				Data = [Data]; 
 			
-			FlxG._game.debugger.log.add(Data, Style);
+			FlxG.game.debugger.log.add(Data, Style);
 			
 			if (Style.errorSound != null)
 				FlxG.sound.play(Style.errorSound);
 			if (Style.openConsole) 
-				FlxG._game.debugger.visible = FlxG._game._debuggerUp = true;
+				FlxG.game.debugger.visible = FlxG.game.debuggerUp = true;
 			if (Reflect.isFunction(Style.callbackFunction))
 				Reflect.callMethod(null, Style.callbackFunction, []);
 		}
@@ -109,9 +109,9 @@ class LogFrontEnd
 	public function clear():Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG._game != null) && (FlxG._game.debugger != null))
+		if ((FlxG.game != null) && (FlxG.game.debugger != null))
 		{
-			FlxG._game.debugger.log.clear();
+			FlxG.game.debugger.log.clear();
 		}
 		#end
 	}

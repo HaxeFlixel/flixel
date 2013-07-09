@@ -135,7 +135,7 @@ class FlxInputs {
 	#if !FLX_NO_MOUSE
 	static public function initMouse():Void
 	{
-		var mouse = new FlxMouse(FlxG._game._inputContainer);
+		var mouse = new FlxMouse(FlxG.game.inputContainer);
 		FlxG.mouse = mouse;
 		inputs.push(mouse);
 	}
