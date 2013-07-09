@@ -101,7 +101,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		// This fixes the problem that you can not add two particle explosions in the same frame.
 		if (Explode)
 		{
-			emitting = false;
+			on = false;
 			
 			var i:Int = 0;
 			var l:Int = _quantity;
