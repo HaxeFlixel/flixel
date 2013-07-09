@@ -81,18 +81,25 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 		return NewAlpha;
     }
 	
-	public function move(NewX:Float, NewY:Float):Void
+	/**
+	 * Helper function to set the coordinates of this object.
+	 * Handy since it only requires one line of code.
+	 * 
+	 * @param	X	The new x position
+	 * @param	Y	The new y position
+	 */
+	public function setPosition(X:Float, Y:Float):Void
 	{
-		var xOffset:Float = NewX - x;
-		var yOffset:Float = NewY - y;
+		var xOffset:Float = X - x;
+		var yOffset:Float = Y - y;
 		
 		var valueArr:Array<Dynamic> = [xOffset, yOffset];
 		var lambdaArr:Array < FlxSprite-> Dynamic->Void > = [xTransform, yTransform];
 		
 		multiTransformChildren(lambdaArr, valueArr);
 		
-		x = NewX;
-		y = NewY;
+		x = X;
+		y = Y;
 	}
 	
 	/**

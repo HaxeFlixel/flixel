@@ -1358,21 +1358,17 @@ class FlxObject extends FlxBasic
 		}
 	}
 	
-	public function move(x:Float, y:Float):Void
-	{
-		this.x = x;
-		this.y = y;
-	}
-	
 	/**
-	 * Copy the coordinates of a <code>FlxPoint</code> to x and y of this <code>FlxObject</code>.
+	 * Helper function to set the coordinates of this object.
+	 * Handy since it only requires one line of code.
 	 * 
-	 * @param	Point	The <code>FlxPoint</code> to copy the coordinates from.
+	 * @param	X	The new x position
+	 * @param	Y	The new y position
 	 */
-	public function setPosition(Point:FlxPoint):Void
+	public function setPosition(X:Float, Y:Float):Void
 	{
-		x = Point.x;
-		y = Point.y;
+		x = X;
+		y = Y;
 	}
 	
 	function set_forceComplexRender(value:Bool):Bool 
