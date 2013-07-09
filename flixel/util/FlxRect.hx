@@ -162,4 +162,15 @@ class FlxRect
 	{
 		return (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
 	}
+	
+	/**
+	 * Returns true if this FlxRect contains the FlxPoint
+	 * 
+	 * @param	Point	The FlxPoint to check
+	 * @return	True if the FlxPoint is within this FlxRect, otherwise false
+	 */
+	inline public function containsFlxPoint(Point:FlxPoint):Bool
+	{
+		return FlxMath.pointInFlxRect(Point.x, Point.y, this);
+	}
 }
