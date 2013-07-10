@@ -1,11 +1,15 @@
 package flixel.system.input;
 
+import flash.Lib;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
-import flash.Lib;
 import flash.ui.Mouse;
+import flash.ui.MouseCursor;
+import flash.ui.MouseCursorData;
+import flash.Vector;
+import flash.geom.Point;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
@@ -76,7 +80,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private var _cursor:Bitmap;
 	
 	private var _cursorBitmapData:BitmapData;
-
 	/**
 	 * Helper variables for recording purposes.
 	 */
@@ -90,6 +93,15 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * @default false
 	 */
 	public var useSystemCursor(default, set_useSystemCursor):Bool;
+	
+	#if flash10_2
+	/**
+	 * Names for the Native Flash 10.2 Cursors
+	 */
+	private var _cursorDefaultName:String = "defaultCursor";
+	private var _currentNativeCursor:String;
+	private var _previousNativeCursor:String;
+	#end
 
 	/**
 	 * Constructor.
@@ -309,6 +321,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		_updateCursorContainer = false;
 		cursorContainer.visible = false;
+		#if flash10_2
+		Mouse.hide();
+		#end
 	}
 
 	/**
@@ -360,8 +375,71 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor.scaleX = Scale;
 		_cursor.scaleY = Scale;
 		
-		cursorContainer.addChild(_cursor);
+		#if flash10_2
+		if(!Mouse.supportsCursor)
+		{
+			cursorContainer.addChild(_cursor);
+		}
+		else
+		{
+			setSimpleNativeCursorData(_cursorDefaultName, _cursor.bitmapData);
+		}
+		#else
+			cursorContainer.addChild(_cursor);
+		#end
 	}
+
+	#if flash10_2
+	/**
+	 * Set a Native cursor that has been registered by Name
+	 * Warning, you need to use registerNativeCursor before you use it here 
+	 * @param Name The name ID used when registered
+	 */
+	public function setNativeCursor(Name:String):Void
+	{
+		if(_currentNativeCursor != Name)
+		{
+			_previousNativeCursor = _currentNativeCursor;
+			_currentNativeCursor = Name;
+			Mouse.cursor = _currentNativeCursor;
+		}
+	}
+
+	/**
+	 * Shortcut to register a Native cursor for > Flash 10.2
+	 * @param  Name       The ID name used for the cursor
+	 * @param  CursorData MouseCursorData contains the bitmap, hotspot etc
+	 */
+	public function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
+	{
+		Mouse.registerCursor(Name, CursorData);
+	}
+
+	/**
+	 * Shortcut to create and set a simple MouseCursorData
+	 * @param  Name       The ID name used for the cursor
+	 * @param  CursorData MouseCursorData contains the bitmap, hotspot etc
+	 */
+	public function setSimpleNativeCursorData(Name:String, CursorBitmap:BitmapData):MouseCursorData
+	{
+		var cursorVector = new Vector<BitmapData>();
+		cursorVector[0] = CursorBitmap;
+
+		if(_cursor.bitmapData.width > 32 ||_cursor.bitmapData.height > 32)
+			FlxG.log.warn ("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
+
+		var cursorData = new MouseCursorData();
+		cursorData.hotSpot = new Point(0, 0);
+		cursorData.data = cursorVector;
+
+		registerNativeCursor( Name, cursorData );
+		setNativeCursor( Name );
+
+		Mouse.show();
+		
+		return cursorData;
+	}
+	#end
 
 	/**
 	 * Unload the current cursor graphic. If the current cursor is visible,
@@ -579,35 +657,71 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		updateCursor();
 	}
 
+	/**
+	 * Called from the main onFocus event for when a Event.ACTIVATE is dispatched in FlxGame
+	 */
 	public function onFocus( ):Void
 	{
-		#if !FLX_NO_DEBUG
-		if (!FlxG.game.debuggerUp && !useSystemCursor)
-		#else
-		if (!useSystemCursor)
-		#end
-		{
-			Mouse.hide();
-		}
 		reset();
 	}
 
+	/**
+	 * Called from the onFocusLost event when a Event.DEACTIVATE is dispatched in FlxGame
+	 */
 	public function onFocusLost( ):Void
 	{
 		Mouse.show();
 	}
 
+	/**
+	 * Set the system cursor
+	 * @param value true to show, false to hide
+	 */
 	private function set_useSystemCursor(value:Bool):Bool
 	{
 		useSystemCursor = value;
+
 		if (!useSystemCursor)
 		{
-			Mouse.hide();
+			hideSystemCursor();
 		} 
 		else 
 		{
-			Mouse.show();
+			showSystemCursor();
 		}
 		return value;
+	}
+
+	/**
+	 * Show the default system cursor, if Flash 10.2 return to AUTO
+	 */
+	private function showSystemCursor():Void
+	{
+		Mouse.show();
+		#if flash10_2
+		setNativeCursor(MouseCursor.AUTO);
+		#else
+		cursorContainer.visible = false;
+		#end
+	}
+
+	/**
+	 * Hide the system cursor, if Flash 10.2 return to default
+	 */
+	private function hideSystemCursor():Void
+	{
+		#if flash10_2
+		if(Mouse.supportsCursor && _previousNativeCursor != null)
+		{
+			setNativeCursor(_previousNativeCursor);
+		} 
+		else 
+		{
+			Mouse.hide();
+		}
+		#else
+		Mouse.hide();
+		cursorContainer.visible = true;
+		#end
 	}
 }
