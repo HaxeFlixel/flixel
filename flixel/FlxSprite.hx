@@ -18,6 +18,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
+import flixel.util.FlxRect;
 import flixel.util.loaders.TexturePackerData;
 import openfl.display.Tilesheet;
 
@@ -27,6 +28,8 @@ import openfl.display.Tilesheet;
  */
 class FlxSprite extends FlxObject
 {
+	private static var VERTICES:Array<FlxPoint> = [new FlxPoint(), new FlxPoint(), new FlxPoint(), new FlxPoint()];
+	
 	/**
 	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>,
 	 * <code>UP</code>, and <code>DOWN</code> to take advantage of
@@ -215,6 +218,8 @@ class FlxSprite extends FlxObject
 	private var _halfHeight:Float;
 	#end
 	
+	private var _aabb:FlxRect; 
+	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
 	 * Optionally can load a simple, one-frame graphic instead.
@@ -240,8 +245,10 @@ class FlxSprite extends FlxObject
 		#else
 		_blend = null;
 		#end
+		
 		antialiasing = FlxG.antialiasByDefault;
 		cameras = null;
+		_aabb = new FlxRect();
 		
 		finished = false;
 		paused = true;
@@ -311,6 +318,7 @@ class FlxSprite extends FlxObject
 		#else
 		_blend = null;
 		#end
+		_aabb = null;
 		
 		_textureData = null;
 		_flxFrame = null;
@@ -750,12 +758,14 @@ class FlxSprite extends FlxObject
 		_halfWidth = frameWidth * 0.5;
 		_halfHeight = frameHeight * 0.5;
 		#end
+		calcAABB();
 	}
 	
 	override public function update():Void 
 	{
 		super.update();
 		updateAnimation();
+		calcAABB();
 	}
 	
 	/**
@@ -1745,44 +1755,72 @@ class FlxSprite extends FlxObject
 	
 	inline private function onScreenSprite(Camera:FlxCamera = null):Bool
 	{
-		if (Camera == null)
+		if(Camera == null)
 		{
 			Camera = FlxG.camera;
 		}
-		getScreenXY(_point, Camera);
-		_point.x = _point.x - offset.x;
-		_point.y = _point.y - offset.y;
 		
-		var result:Bool = false;
-		var notRotated = angle == 0.0;
-#if !flash
-		// TODO: make less checks in subclasses
-		if (_flxFrame != null)
+		var scx = Camera.scroll.x * scrollFactor.x;
+		var scy = Camera.scroll.y * scrollFactor.y;
+		
+		var minX:Float = _aabb.x - scx;
+		var minY:Float = _aabb.y - scy;
+		var maxX:Float = _aabb.x + _aabb.width - scx;
+		var maxY:Float = _aabb.y + _aabb.height - scy;
+		
+		return 	(maxX >= 0) &&
+				(minX <= Camera.width) &&
+				(maxY >= 0) &&
+				(minY <= Camera.height);
+	}
+
+	/**
+	 * calculate AABB of graphic frame
+	 * called internally once each update call
+	 */
+	inline private function calcAABB():Void
+	{
+		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
 		{
-			notRotated = notRotated && _flxFrame.additionalAngle != 0.0;
-		}
-#end
-		if ((notRotated || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
-		{
-			result = ((_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height));
+			_aabb.make(x - offset.x, y - offset.x, frameWidth, frameHeight);
 		}
 		else
 		{
-			var halfWidth:Float = 0.5 * frameWidth;
-			var halfHeight:Float = 0.5 * frameHeight;
-			var absScaleX:Float = (scale.x > 0)?scale.x: -scale.x;
-			var absScaleY:Float = (scale.y > 0)?scale.y: -scale.y;
-			#if flash
-			var radius:Float = Math.sqrt(halfWidth * halfWidth + halfHeight * halfHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
-			#else
-			var radius:Float = ((frameWidth >= frameHeight) ? frameWidth : frameHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
-			#end
-			_point.x += halfWidth * scale.x;
-			_point.y += halfHeight * scale.y;
-			result = ((_point.x + radius > 0) && (_point.x - radius < Camera.width) && (_point.y + radius > 0) && (_point.y - radius < Camera.height));
+			var sx:Float = ((_flipped != 0) && (facing == FlxObject.LEFT)) ? -scale.x : scale.x;
+			
+			var sox:Float = sx * origin.x;
+			var soy:Float = scale.y * origin.y;
+			var sfw:Float = sx * frameWidth;
+			var sfh:Float = scale.y * frameHeight;
+			
+			VERTICES[0].make( -sox, -soy);
+			VERTICES[1].make(sfw - sox, -soy);
+			VERTICES[2].make(-sox, sfh - soy);
+			VERTICES[3].make(sfw - sox, sfh - soy);
+			
+			var radians:Float = -angle * FlxAngle.TO_RAD;
+			var cos:Float = Math.cos(radians);
+			var sin:Float = Math.sin(radians);
+			
+			var genX:Float = x + origin.x - offset.x;
+			var genY:Float = y + origin.y - offset.y;
+			
+			for (i in 0...4) 
+			{
+				var cp:FlxPoint = VERTICES[i];
+				var xt:Float = cp.x * cos + cp.y * sin;
+				var yt:Float = -cp.x * sin + cp.y * cos;
+				
+				cp.x = xt + genX;
+				cp.y = yt + genY;
+			}
+			
+			var minX:Float = Math.min(Math.min(VERTICES[0].x, VERTICES[1].x), Math.min(VERTICES[2].x, VERTICES[3].x));
+			var minY:Float = Math.min(Math.min(VERTICES[0].y, VERTICES[1].y), Math.min(VERTICES[2].y, VERTICES[3].y));
+			var maxX:Float = Math.max(Math.max(VERTICES[0].x, VERTICES[1].x), Math.max(VERTICES[2].x, VERTICES[3].x));
+			var maxY:Float = Math.max(Math.max(VERTICES[0].y, VERTICES[1].y), Math.max(VERTICES[2].y, VERTICES[3].y));
+			_aabb.make(minX, minY, maxX - minX, maxY - minY);
 		}
-		
-		return result;
 	}
 	
 	/**
