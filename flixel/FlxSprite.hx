@@ -1779,24 +1779,21 @@ class FlxSprite extends FlxObject
 	 * calculate AABB of graphic frame
 	 * called internally once each update call
 	 */
-	private function calcAABB(){
-		//setOriginToCenter();
-
+	inline private function calcAABB(){
 		var notRotated = angle == 0.0;
 #if !flash
 		if(_flxFrame != null)
 			notRotated = notRotated && _flxFrame.additionalAngle != 0.0;
 #end
-		// if((notRotated || bakedRotation>0) && (scale.x==1) && (scale.y==1))
-		// {
-		// 	_aabb.make(x-offset.x, y-offset.x, frameWidth, frameHeight);
-		// }
-		// else
+		if((notRotated || bakedRotation>0) && (scale.x==1) && (scale.y==1))
+		{
+			_aabb.make(x-offset.x, y-offset.x, frameWidth, frameHeight);
+		}
+		else
 		{
 			// Matrix from local space to world space
 			var mat:Matrix = new Matrix();
 			mat.identity();
-			//mat.translate(-origin.x, -origin.y);
 			mat.scale(scale.x, scale.y);
 			if(!notRotated && bakedRotation<=0)
 				mat.rotate(angle * FlxAngle.TO_RAD);
