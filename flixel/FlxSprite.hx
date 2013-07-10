@@ -17,6 +17,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRect;
 import flixel.util.FlxRandom;
 import flixel.util.loaders.TexturePackerData;
 import openfl.display.Tilesheet;
@@ -215,6 +216,8 @@ class FlxSprite extends FlxObject
 	private var _halfHeight:Float;
 	#end
 	
+	private var _aabb:FlxRect;
+	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
 	 * Optionally can load a simple, one-frame graphic instead.
@@ -242,6 +245,7 @@ class FlxSprite extends FlxObject
 		#end
 		antialiasing = FlxG.antialiasByDefault;
 		cameras = null;
+		_aabb = new FlxRect();
 		
 		finished = false;
 		paused = true;
@@ -311,6 +315,7 @@ class FlxSprite extends FlxObject
 		#else
 		_blend = null;
 		#end
+		_aabb = null;
 		
 		_textureData = null;
 		_flxFrame = null;
@@ -750,12 +755,14 @@ class FlxSprite extends FlxObject
 		_halfWidth = frameWidth * 0.5;
 		_halfHeight = frameHeight * 0.5;
 		#end
+		calcAABB();
 	}
 	
 	override public function update():Void 
 	{
 		super.update();
 		updateAnimation();
+		calcAABB();
 	}
 	
 	/**
@@ -1005,7 +1012,7 @@ class FlxSprite extends FlxObject
 		_pixels.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		
 		resetFrameBitmapDatas();
-		
+
 		#if flash
 		calcFrame();
 		#end
@@ -1742,49 +1749,81 @@ class FlxSprite extends FlxObject
 	{
 		return onScreenSprite(Camera);
 	}
-	
-	inline private function onScreenSprite(Camera:FlxCamera = null):Bool
-	{
-		if (Camera == null)
-		{
+
+	inline private function onScreenSprite(Camera:FlxCamera = null):Bool{
+		if(Camera == null)
 			Camera = FlxG.camera;
-		}
-		getScreenXY(_point, Camera);
-		_point.x = _point.x - offset.x;
-		_point.y = _point.y - offset.y;
-		
-		var result:Bool = false;
+
+		var screenAABB : FlxRect = getScreenAABB(Camera);
+		return 
+			(screenAABB.x + screenAABB.width >= 0) &&
+			(screenAABB.x <= Camera.width) &&
+			(screenAABB.y + screenAABB.height >= 0) &&
+			(screenAABB.y <= Camera.height);
+	}
+
+	/**
+	 * Get camera space AABB of global AABB
+	 */
+	inline private function getScreenAABB(Camera:FlxCamera = null):FlxRect{
+		if(Camera == null)
+			Camera = FlxG.camera;
+
+		var screenAABB:FlxRect = new FlxRect();
+		screenAABB.x = _aabb.x - Camera.scroll.x * scrollFactor.x;
+		screenAABB.y = _aabb.y - Camera.scroll.y * scrollFactor.y;
+		screenAABB.width = _aabb.width * scrollFactor.x;
+		screenAABB.height = _aabb.height * scrollFactor.y;
+		return screenAABB;
+	}
+
+	/**
+	 * calculate AABB of graphic frame
+	 * called internally once each update call
+	 */
+	inline private function calcAABB(){
 		var notRotated = angle == 0.0;
 #if !flash
-		// TODO: make less checks in subclasses
-		if (_flxFrame != null)
-		{
+		if(_flxFrame != null)
 			notRotated = notRotated && _flxFrame.additionalAngle != 0.0;
-		}
 #end
-		if ((notRotated || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
+		if((notRotated || bakedRotation>0) && (scale.x==1) && (scale.y==1))
 		{
-			result = ((_point.x + frameWidth > 0) && (_point.x < Camera.width) && (_point.y + frameHeight > 0) && (_point.y < Camera.height));
+			_aabb.make(x-offset.x, y-offset.x, frameWidth, frameHeight);
 		}
 		else
 		{
-			var halfWidth:Float = 0.5 * frameWidth;
-			var halfHeight:Float = 0.5 * frameHeight;
-			var absScaleX:Float = (scale.x > 0)?scale.x: -scale.x;
-			var absScaleY:Float = (scale.y > 0)?scale.y: -scale.y;
-			#if flash
-			var radius:Float = Math.sqrt(halfWidth * halfWidth + halfHeight * halfHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
-			#else
-			var radius:Float = ((frameWidth >= frameHeight) ? frameWidth : frameHeight) * ((absScaleX >= absScaleY)?absScaleX:absScaleY);
-			#end
-			_point.x += halfWidth * scale.x;
-			_point.y += halfHeight * scale.y;
-			result = ((_point.x + radius > 0) && (_point.x - radius < Camera.width) && (_point.y + radius > 0) && (_point.y - radius < Camera.height));
+			// Matrix from local space to world space
+			var mat:Matrix = new Matrix();
+			mat.identity();
+			mat.scale(scale.x, scale.y);
+			if(!notRotated && bakedRotation<=0)
+				mat.rotate(angle * FlxAngle.TO_RAD);
+			mat.translate(x, y);
+			mat.translate(origin.x, origin.y);
+			mat.translate(-offset.x, -offset.y);
+
+			var halfWidth = frameWidth * 0.5;
+			var halfHeight = frameHeight * 0.5;
+			// 4 corner points in local space
+			var orgPoints:Array<Point> = [
+				new Point(-halfWidth, -halfHeight),
+				new Point(halfWidth, -halfHeight),
+				new Point(-halfWidth, halfHeight),
+				new Point(halfWidth, halfHeight)];
+			var transPoints:Array<Point> = [];
+			for (op in orgPoints) {
+				transPoints.push(mat.transformPoint(op));
+			}
+
+			var minX:Float = Math.min(Math.min(transPoints[0].x, transPoints[1].x), Math.min(transPoints[2].x,transPoints[3].x));
+			var minY:Float = Math.min(Math.min(transPoints[0].y, transPoints[1].y), Math.min(transPoints[2].y,transPoints[3].y));
+			var maxX:Float = Math.max(Math.max(transPoints[0].x, transPoints[1].x), Math.max(transPoints[2].x,transPoints[3].x));
+			var maxY:Float = Math.max(Math.max(transPoints[0].y, transPoints[1].y), Math.max(transPoints[2].y,transPoints[3].y));
+			_aabb.make(minX, minY, maxX-minX, maxY-minY);
 		}
-		
-		return result;
 	}
-	
+
 	/**
 	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
