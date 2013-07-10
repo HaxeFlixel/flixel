@@ -396,6 +396,11 @@ class FlxMath
 		return decimals;
 	}
 	
+	inline static public function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
+	{
+		return (Math.abs(aValueA - aValueB) <= aDiff);
+	}
+	
 	#if (flash || js)
 	/**
 	 * Minimum value of a floating point number.
