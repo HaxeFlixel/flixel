@@ -299,7 +299,7 @@ class FlxColorUtil
 		
 		for (c in 0...360)
 		{
-			colors[c] = HSVtoRGB(c, 1.0, 1.0, Alpha);
+			colors[c] = HSVtoRGBA(c, 1.0, 1.0, Alpha);
 		}
 		
 		return colors;
@@ -319,7 +319,7 @@ class FlxColorUtil
 		
 		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
 		
-		return HSVtoRGB(opposite, 1.0, 1.0);
+		return HSVtoRGBA(opposite, 1.0, 1.0);
 	}
 	
 	/**
@@ -343,7 +343,7 @@ class FlxColorUtil
 		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), 359 - Threshold, 359);
 		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), Threshold, 359);
 		
-		return { color1: Color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
+		return { color1: Color, color2: HSVtoRGBA(warmer, 1.0, 1.0), color3: HSVtoRGBA(colder, 1.0, 1.0), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
 	}
 	
 	/**
@@ -371,7 +371,7 @@ class FlxColorUtil
 		
 		FlxG.log.notice("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
-		return { color1: Color, color2: HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
+		return { color1: Color, color2: HSVtoRGBA(warmer, hsv.saturation, hsv.value), color3: HSVtoRGBA(colder, hsv.saturation, hsv.value), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
 	}
 	
 	/**
@@ -389,7 +389,7 @@ class FlxColorUtil
 		var triadic1:Int = FlxMath.wrapValue(Std.int(hsv.hue), 120, 359);
 		var triadic2:Int = FlxMath.wrapValue(triadic1, 120, 359);
 		
-		return { color1: Color, color2: HSVtoRGB(triadic1, 1.0, 1.0), color3: HSVtoRGB(triadic2, 1.0, 1.0) };
+		return { color1: Color, color2: HSVtoRGBA(triadic1, 1.0, 1.0), color3: HSVtoRGBA(triadic2, 1.0, 1.0) };
 	}
 	
 	/**
@@ -401,14 +401,14 @@ class FlxColorUtil
 	 */
 	inline static public function getColorInfo(Color:Int):String
 	{
-		var argb:RGBA = getRGB(Color);
+		var rgba:RGBA = getRGBA(Color);
 		var hsl:HSV = RGBtoHSV(Color);
 		
 		//	Hex format
-		var result:String = RGBtoHexString(Color) + "\n";
+		var result:String = RGBAtoHexString(Color) + "\n";
 		
 		//	RGB format
-		result += "Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue + "\n";
+		result += "Alpha: " + rgba.alpha + " Red: " + rgba.red + " Green: " + rgba.green + " Blue: " + rgba.blue + "\n";
 		
 		//	HSL info
 		result += "Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness;
@@ -422,11 +422,11 @@ class FlxColorUtil
 	 * @param	Color 	The color to get the String representation for
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	inline static public function RGBtoHexString(Color:Int):String
+	inline static public function RGBAtoHexString(Color:Int):String
 	{
-		var argb:RGBA = getRGB(Color);
+		var rgba:RGBA = getRGBA(Color);
 		
-		return "0x" + colorToHexString(Std.int(argb.alpha)) + colorToHexString(argb.red) + colorToHexString(argb.green) + colorToHexString(argb.blue);
+		return "0x" + colorToHexString(Std.int(rgba.alpha)) + colorToHexString(rgba.red) + colorToHexString(rgba.green) + colorToHexString(rgba.blue);
 	}
 	
 	/**
@@ -435,11 +435,11 @@ class FlxColorUtil
 	 * @param	Color 	The color to get the String representation for
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	inline static public function RGBtoWebString(Color:Int):String
+	inline static public function RGBAtoWebString(Color:Int):String
 	{
-		var argb:RGBA = getRGB(Color);
+		var rgba:RGBA = getRGBA(Color);
 		
-		return "#" + colorToHexString(argb.red) + colorToHexString(argb.green) + colorToHexString(argb.blue);
+		return "#" + colorToHexString(rgba.red) + colorToHexString(rgba.green) + colorToHexString(rgba.blue);
 	}
 
 	/**
@@ -465,9 +465,9 @@ class FlxColorUtil
 	 * @param	S 		Saturation, between 0.0 (grey) and 1.0
 	 * @param	V 		Value, between 0.0 (black) and 1.0
 	 * @param	Alpha	Alpha value to set per color (between 0 and 255)
-	 * @return	32-bit ARGB color value (0xAARRGGBB)
+	 * @return	32-bit RGBA color value (0xAARRGGBB)
 	 */
-	static public function HSVtoRGB(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
+	static public function HSVtoRGBA(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
 	{
 		var result = FlxColor.TRANSPARENT;
 		
@@ -513,7 +513,7 @@ class FlxColorUtil
 	 */
 	static public function RGBtoHSV(Color:Int):HSV
 	{
-		var rgb:RGBA = getRGB(Color);
+		var rgb:RGBA = getRGBA(Color);
 		
 		var red:Float = rgb.red / 255;
 		var green:Float = rgb.green / 255;
@@ -602,8 +602,8 @@ class FlxColorUtil
 	 */
 	inline static public function interpolateColor(Color1:Int, Color2:Int, Steps:Int, CurrentStep:Int, Alpha:Int = 255):Int
 	{
-		var src1:RGBA = getRGB(Color1);
-		var src2:RGBA = getRGB(Color2);
+		var src1:RGBA = getRGBA(Color1);
+		var src2:RGBA = getRGBA(Color2);
 		
 		var r:Int = Std.int((((src2.red - src1.red) * CurrentStep) / Steps) + src1.red);
 		var g:Int = Std.int((((src2.green - src1.green) * CurrentStep) / Steps) + src1.green);
@@ -626,7 +626,7 @@ class FlxColorUtil
 	 */
 	inline static public function interpolateColorWithRGB(Color:Int, R2:Int, G2:Int, B2:Int, Steps:Int, CurrentStep:Int):Int
 	{
-		var src:RGBA = getRGB(Color);
+		var src:RGBA = getRGBA(Color);
 		
 		var r:Int = Std.int((((R2 - src.red) * CurrentStep) / Steps) + src.red);
 		var g:Int = Std.int((((G2 - src.green) * CurrentStep) / Steps) + src.green);
@@ -656,23 +656,6 @@ class FlxColorUtil
 		var b:Int = Std.int((((B2 - B1) * CurrentStep) / Steps) + B1);
 		
 		return getColor24(r, g, b);
-	}
-	
-	/**
-	 * Return the component parts of a color as an Object with the properties alpha, red, green, blue
-	 * Alpha will only be set if it exist in the given color (0xAARRGGBB)
-	 * 
-	 * @param	Color 	The color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB)
-	 * @return	Object with properties: alpha, red, green, blue
-	 */
-	inline static public function getRGB(Color:Int):RGBA
-	{
-		var alpha:Int = (Color >> 24) & 0xFF;
-		var red:Int = Color >> 16 & 0xFF;
-		var green:Int = Color >> 8 & 0xFF;
-		var blue:Int = Color & 0xFF;
-		
-		return { alpha: alpha, red: red, green: green, blue: blue };
 	}
 }
 
