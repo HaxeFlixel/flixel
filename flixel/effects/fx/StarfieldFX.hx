@@ -221,7 +221,7 @@ class StarfieldFX extends BaseFX
 			canvas.setPixel32(star.x, star.y, _depthColours[Std.int(star.speed - 1)]);
 			#else
 			var starColor:Int = _depthColours[Std.int(star.speed - 1)];
-			var rgba:RGBA = FlxColorUtil.getRGB(starColor);
+			var rgba:RGBA = FlxColorUtil.getRGBA(starColor);
 			
 			var starDef:StarDef = starArray[i];
 			starDef.red = rgba.red / 255;
@@ -281,7 +281,7 @@ class StarfieldFX extends BaseFX
 			#if flash
 			canvas.setPixel32(star.x, star.y, 0xffffffff);
 			#else
-			var rgba:RGBA = FlxColorUtil.getRGB(FlxColor.WHITE);
+			var rgba:RGBA = FlxColorUtil.getRGBA(FlxColor.WHITE);
 			#end
 			
 			#if !flash
@@ -384,7 +384,7 @@ private class StarSprite extends FlxSprite
 	
 	public function setBackgroundColor(bgColor:Int):Void
 	{
-		var rgba:RGBA = FlxColorUtil.getRGB(bgColor);
+		var rgba:RGBA = FlxColorUtil.getRGBA(bgColor);
 		bgRed = rgba.red / 255;
 		bgGreen = rgba.green / 255;
 		bgBlue = rgba.blue / 255;
