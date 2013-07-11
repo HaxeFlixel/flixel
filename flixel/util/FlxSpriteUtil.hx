@@ -253,6 +253,7 @@ class FlxSpriteUtil
 		updateSpriteGraphic(Sprite);
 	}
 	
+	#if flash
 	/**
 	 * This function draws a rounded rectangle on a sprite. Same as <code>drawRoundRect</code>,
 	 * except it allows you to determine the radius of each corner individually.
@@ -278,6 +279,7 @@ class FlxSpriteUtil
 		
 		updateSpriteGraphic(Sprite);
 	}
+	#end
 	
 	/**
 	 * This function draws a circle on this sprite at position X,Y
