@@ -579,6 +579,18 @@ class FlxColorUtil
 	}
 	
 	/**
+	 * Turn a color with alpha and rgb values into a color without the alpha comoponent.
+	 * Example: 0x55ff0000 becomes 0xff0000
+	 * 
+	 * @param	Color	The Color to convert
+	 * @return	The color without its alpha component
+	 */
+	inline static public function RGBAtoRGB(Color:Int):Int
+	{
+		return getColor24(getRed(Color), getGreen(Color), getBlue(Color));
+	}
+	
+	/**
 	 * Get an interpolated color based on two different colors.
 	 * 
 	 * @param 	Color1			The first color

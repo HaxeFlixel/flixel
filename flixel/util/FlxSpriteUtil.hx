@@ -179,7 +179,7 @@ class FlxSpriteUtil
 	}
 	
 	/**
-	 * This function draws a line on this sprite from position X1,Y1
+	 * This function draws a line on a sprite from position X1,Y1
 	 * to position X2,Y2 with the specified color.
 	 * 
 	 * @param	Sprite		The <code>FlxSprite</code> to manipulate
@@ -192,7 +192,7 @@ class FlxSpriteUtil
 	 */
 	static public function drawLine(Sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
 	{
-		//Draw line
+		// Draw line
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
 		gfx.moveTo(StartX, StartY);
@@ -206,12 +206,77 @@ class FlxSpriteUtil
 		gfx.lineStyle(Thickness, Color, alphaComponent);
 		gfx.lineTo(EndX, EndY);
 		
-		//Cache line to bitmap
-		Sprite.pixels.draw(FlxG.flashGfxSprite);
-		Sprite.dirty = true;
+		updateSpriteGraphic(Sprite);
+	}
+	
+	/**
+	 * This function draws a rectangle on a sprite.
+	 * 
+	 * @param	Sprite		The <code>FlxSprite</code> to manipulate
+	 * @param	X			X coordinate of the rectangle's start point.
+	 * @param	Y			Y coordinate of the rectangle's start point.
+	 * @param	Width		Width of the rectangle
+	 * @param	Height		Height of the rectangle
+	 * @param	Color		The rectangle's color.
+	 */
+	static public function drawRect(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
+	{
+		var gfx:Graphics = FlxG.flashGfx;
+		gfx.clear();
+		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		gfx.drawRect(X, Y, Width, Height);
+		gfx.endFill();
 		
-		Sprite.resetFrameBitmapDatas();
-		Sprite.updateAtlasInfo(true);
+		updateSpriteGraphic(Sprite);
+	}
+	
+	/**
+	 * This function draws a rounded rectangle on a sprite.
+	 * 
+	 * @param	Sprite			The <code>FlxSprite</code> to manipulate
+	 * @param	X				X coordinate of the rectangle's start point.
+	 * @param	Y				Y coordinate of the rectangle's start point.
+	 * @param	Width			Width of the rectangle
+	 * @param	Height			Height of the rectangle
+	 * @param	EllipseWidth	The width of the ellipse used to draw the rounded corners
+	 * @param	EllipseHeight	The height of the ellipse used to draw the rounded corners
+	 * @param	Color			The rectangle's color.
+	 */
+	static public function drawRoundRect(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int):Void
+	{
+		var gfx:Graphics = FlxG.flashGfx;
+		gfx.clear();
+		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		gfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
+		gfx.endFill();
+		
+		updateSpriteGraphic(Sprite);
+	}
+	
+	/**
+	 * This function draws a rounded rectangle on a sprite. Same as <code>drawRoundRect</code>,
+	 * except it allows you to determine the radius of each corner individually.
+	 * 
+	 * @param	Sprite				The <code>FlxSprite</code> to manipulate
+	 * @param	X					X coordinate of the rectangle's start point.
+	 * @param	Y					Y coordinate of the rectangle's start point.
+	 * @param	Width				Width of the rectangle
+	 * @param	Height				Height of the rectangle
+	 * @param	TopLeftRadius		The radius of the top left corner of the rectangle
+	 * @param	TopRightRadius		The radius of the top right corner of the rectangle
+	 * @param	BottomLeftRadius	The radius of the bottom left corner of the rectangle
+	 * @param	BottomRightRadius	The radius of the bottom right corner of the rectangle
+	 * @param	Color				The rectangle's color.
+	 */
+	static public function drawRoundRectComplex(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int):Void
+	{
+		var gfx:Graphics = FlxG.flashGfx;
+		gfx.clear();
+		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		gfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
+		gfx.endFill();
+		
+		updateSpriteGraphic(Sprite);
 	}
 	
 	/**
@@ -228,13 +293,44 @@ class FlxSpriteUtil
 	{
 		var gfx:Graphics = FlxG.flashGfx;
 		gfx.clear();
-		gfx.beginFill(Color, 1);
+		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		gfx.drawCircle(X, Y, Radius);
 		gfx.endFill();
 		
+		updateSpriteGraphic(Sprite);
+	}
+	
+	/**
+	 * This function draws an ellipse on a sprite.
+	 * 
+	 * @param	Sprite		The <code>FlxSprite</code> to manipulate
+	 * @param	X			X coordinate of the ellipse's start point.
+	 * @param	Y			Y coordinate of the ellipse's start point.
+	 * @param	Width		Width of the ellipse
+	 * @param	Height		Height of the ellipse
+	 * @param	Color		The ellipse's color.
+	 */
+	static public function drawEllipse(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
+	{
+		var gfx:Graphics = FlxG.flashGfx;
+		gfx.clear();
+		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		gfx.drawEllipse(X, Y, Width, Height);
+		gfx.endFill();
+		
+		updateSpriteGraphic(Sprite);
+	}
+	
+	/**
+	 * Just a helper function that is called at the end of the draw functions
+	 * to handle a few things related to updating a sprite's graphic.
+	 * 
+	 * @param	Sprite	The <code>FlxSprite</code> to manipulate
+	 */
+	static public function updateSpriteGraphic(Sprite:FlxSprite):Void
+	{
 		Sprite.pixels.draw(FlxG.flashGfxSprite);
 		Sprite.dirty = true;
-		
 		Sprite.resetFrameBitmapDatas();
 		Sprite.updateAtlasInfo(true);
 	}
