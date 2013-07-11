@@ -147,22 +147,20 @@ class Watch extends Window
 			_watching.push(quickWatch);
 			_quickWatchList.set(Name, quickWatch);
 		}
-		// Otherwise just update its value
-		else 
-		{
-			var quickWatch:WatchEntry = _quickWatchList.get(Name);
+		
+		//  Update the value
+		var quickWatch:WatchEntry = _quickWatchList.get(Name);
 			
-			if (quickWatch != null) 
-			{
-				var text:String = Std.string(NewValue);
+		if (quickWatch != null) 
+		{
+			var text:String = Std.string(NewValue);
 				
-				if (Std.is(NewValue, StringMap))
-					text = FlxStringUtil.formatStringMap(NewValue);
-				else if (Std.is(NewValue, FlxPoint))
-					text = FlxStringUtil.formatFlxPoint(NewValue, FlxDebugger.pointPrecision);
+			if (Std.is(NewValue, StringMap))
+				text = FlxStringUtil.formatStringMap(NewValue);
+			else if (Std.is(NewValue, FlxPoint))
+				text = FlxStringUtil.formatFlxPoint(NewValue, FlxDebugger.pointPrecision);
 				
-				quickWatch.valueDisplay.text = text;
-			}
+			quickWatch.valueDisplay.text = text;
 		}
 	}
 	#end
