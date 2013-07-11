@@ -170,6 +170,13 @@ class FlxText extends FlxSprite
 		return this;
 	}
 	
+	override private function set_width(Width:Float):Float
+	{
+		super.set_width(Width);
+		_regen = true;
+		return Width;
+	}
+	
 	/**
 	 * The text being displayed.
 	 */
