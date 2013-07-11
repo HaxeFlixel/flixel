@@ -25,7 +25,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 			}
 			
 			label = new FlxBitmapTextField(PxBitmapFont.fetch("nokiafc22"));
-			label.setWidth(80);
+			label.width = 80;
 			label.text = Label;
 			label.fontScale = 0.7 * 10 / 11;
 			label.color = 0x333333;
@@ -46,7 +46,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 		
 		if (label != null)
 		{
-			label.setWidth(Std.int(width));
+			label.width = width;
 		}
 	}
 	

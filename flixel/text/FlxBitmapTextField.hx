@@ -44,7 +44,6 @@ class FlxBitmapTextField extends FlxSprite
 	private var _tabSpaces:String = "    ";
 	
 	private var _pendingTextChange:Bool = false;
-	private var _fieldWidth:Int = 2;
 	private var _multiLine:Bool = false;
 	
 	#if flash
@@ -64,6 +63,7 @@ class FlxBitmapTextField extends FlxSprite
 	{
 		super();
 		
+		width = 2;
 		alpha = 1;
 		
 		if (PxFont == null)
@@ -438,7 +438,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		
 		var preparedText:String = (_autoUpperCase) ? _text.toUpperCase() : _text;
-		var calcFieldWidth:Int = _fieldWidth;
+		var calcFieldWidth:Int = Std.int(width);
 		var rows:Array<String> = [];
 		
 		#if flash
@@ -499,7 +499,7 @@ class FlxBitmapTextField extends FlxSprite
 							var nextWord:String = (wordPos < words.length) ? words[wordPos + 1] : "";
 							if (prevWord != "\t") currentRow += " ";
 							
-							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > width) 
 							{
 								if (txt == "")
 								{
@@ -550,7 +550,7 @@ class FlxBitmapTextField extends FlxSprite
 						}
 						else
 						{
-							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > width) 
 							{
 								if (word != "")
 								{
@@ -561,7 +561,7 @@ class FlxBitmapTextField extends FlxSprite
 									{
 										currentRow = txt + word.charAt(j);
 										
-										if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+										if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > width) 
 										{
 											rows.push(txt.substr(0, txt.length - 1));
 											txt = "";
@@ -706,7 +706,7 @@ class FlxBitmapTextField extends FlxSprite
 				{
 					if (_fixedWidth)
 					{
-						ox = Std.int((_fieldWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
+						ox = Std.int((width - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
 					}
 					else
 					{
@@ -717,7 +717,7 @@ class FlxBitmapTextField extends FlxSprite
 				{
 					if (_fixedWidth)
 					{
-						ox = _fieldWidth - Std.int(_font.getTextWidth(t, _letterSpacing, _fontScale));
+						ox = Std.int(width) - Std.int(_font.getTextWidth(t, _letterSpacing, _fontScale));
 					}
 					else
 					{
@@ -880,19 +880,20 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
 	 */
-	public function setWidth(PxWidth:Int):Int 
+	override private function set_width(PxWidth:Float):Float
 	{
+		PxWidth = Std.int(PxWidth);
+		
 		if (PxWidth < 1) 
 		{
 			PxWidth = 1;
 		}
-		if (PxWidth != _fieldWidth)
+		if (PxWidth != width)
 		{
-			_fieldWidth = PxWidth;
 			_pendingTextChange = true;
 		}
 		
-		return PxWidth;
+		return super.set_width(PxWidth);
 	}
 	
 	/**
