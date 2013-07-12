@@ -16,7 +16,7 @@ class SoundFrontEnd
 	/**
 	 * A list of all the sounds being played in the game.
 	 */
-	public var list:FlxTypedGroup<FlxSound>;
+	public var list(default, null):FlxTypedGroup<FlxSound>;
 	/**
 	 * Whether or not the game sounds are muted.
 	 */

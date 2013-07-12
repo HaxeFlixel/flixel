@@ -9,11 +9,13 @@ class PluginFrontEnd
 {
 	/**
 	 * An array container for plugins.
-	 * By default flixel uses a couple of plugins:
-	 * DebugPathDisplay, and TimerManager.
 	 */
-	public var list:Array<FlxBasic>;
+	public var list(default, null):Array<FlxBasic>;
 	
+	/**
+	 * Sets up two plugins: <code>DebugPathDisplay</code> 
+	 * in debugging mode and <code>TimerManager</code>
+	 */
 	public function new() 
 	{
 		list = new Array<FlxBasic>();
