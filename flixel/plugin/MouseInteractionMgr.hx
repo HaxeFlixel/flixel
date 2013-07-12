@@ -57,9 +57,9 @@ class MouseInteractionMgr extends FlxBasic
 	*/
 	public static inline function init()
 	{
-		if (FlxG.plugins.get(MouseInteractionMgr) == null)
-			FlxG.plugins.add(new MouseInteractionMgr());
+		FlxG.plugins.add(new MouseInteractionMgr());
 	}
+	
 	/**
 	* Adds a sprite to MouseInteractionMgr registry.
 	* Even without any initialization, this is all that is needed to add mouse behaviour
@@ -75,10 +75,7 @@ class MouseInteractionMgr extends FlxBasic
 	*/
 	static public function addSprite(Sprite:FlxSprite, ?OnMouseDown:FlxSprite->Void, ?OnMouseUp:FlxSprite->Void, ?OnMouseOver:FlxSprite->Void, ?OnMouseOut:FlxSprite->Void, MouseChildren = false, MouseEnabled = true)
 	{
-		if (FlxG.plugins.get(MouseInteractionMgr) == null)
-		{
-			FlxG.plugins.add(new MouseInteractionMgr());
-		}
+		FlxG.plugins.add(new MouseInteractionMgr());
 		
 		var newReg:SpriteReg = {
 			sprite: Sprite,
