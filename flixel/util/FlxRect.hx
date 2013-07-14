@@ -180,6 +180,6 @@ class FlxRect
 		var minY:Float = Math.min(y, Rect.y);
 		var maxX:Float = Math.max(right, Rect.right);
 		var maxY:Float = Math.max(bottom, Rect.bottom);
-		return make(minX, minY, maxX - minX, maxY - minY);
+		return set(minX, minY, maxX - minX, maxY - minY);
 	}
 }
