@@ -360,12 +360,12 @@ class FlxSprite extends FlxObject
 			if (_region.tileWidth > 0)
 				Width = _region.tileWidth;
 			else
-				_region.tileWidth = Width;
+				_region.tileWidth = _region.width;
 			
 			if (_region.tileHeight > 0)
 				Height = _region.tileWidth;
 			else
-				_region.tileHeight = Height;
+				_region.tileHeight = _region.height;
 		}
 		
 		width = frameWidth = Width;
