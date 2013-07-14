@@ -8,6 +8,8 @@ import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.Frame;
+import flixel.util.loaders.Region;
+import flixel.util.loaders.SpriteSheetRegion;
 import flixel.util.loaders.TexturePackerData;
 
 /**
@@ -15,84 +17,9 @@ import flixel.util.loaders.TexturePackerData;
  */
 class TileSheetData
 {
-	/**
-	 * Cache for TileSheetData objects
-	 */
-	private static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
-	
-	/**
-	 * Adds new tileSheet to manager and returns it
-	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
-	 */
-	public static function addTileSheet(bitmapData:BitmapData):TileSheetData
-	{
-		if (containsTileSheet(bitmapData))
-		{
-			return getTileSheet(bitmapData);
-		}
-		
-		var tilesheet:TileSheetExt = TileSheetExt.addTileSheet(bitmapData);
-		var tempTileSheetData:TileSheetData = new TileSheetData(tilesheet);
-		tileSheetData.push(tempTileSheetData);
-		return tempTileSheetData;
-	}
-	
-	public static function containsTileSheet(bitmapData:BitmapData):Bool
-	{
-		for (tsd in tileSheetData)
-		{
-			if (tsd.tileSheet.nmeBitmap == bitmapData)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static function getTileSheet(bitmapData:BitmapData):TileSheetData
-	{
-		for (tsd in tileSheetData)
-		{
-			if (tsd.tileSheet.nmeBitmap == bitmapData)
-			{
-				return tsd;
-			}
-		}
-		return null;
-	}
-	
-	public static function removeTileSheet(tileSheetObj:TileSheetData):Void
-	{
-		for (i in 0...(tileSheetData.length))
-		{
-			if (tileSheetData[i] == tileSheetObj)
-			{
-				// Fast array removal (only do on arrays where order doesn't matter)
-				tileSheetData[i] = tileSheetData[tileSheetData.length - 1];
-				tileSheetData.pop();
-				
-				tileSheetObj.destroy();
-				return;
-			}
-		}
-	}
-	
-	public static function clear():Void
-	{
-		for (dataObject in tileSheetData)
-		{
-			dataObject.destroy();
-		}
-		tileSheetData = new Array<TileSheetData>();
-		
-		TileSheetExt.clear();
-	}
-	
-	
-	// END OF STATIC CONSTANTS AND METHODS
-	
-	
+	#if !flash
 	public var tileSheet:TileSheetExt;
+	#end
 	
 	/**
 	 * Storage for all groups of FlxFrames.
@@ -104,9 +31,14 @@ class TileSheetData
 	 */
 	private var flxFrames:Map<String, FlxFrame>;
 	
-	public function new(tileSheet:TileSheetExt)
+	public var bitmap:BitmapData;
+	
+	public function new(bitmap:BitmapData)
 	{
-		this.tileSheet = tileSheet;
+		this.bitmap = bitmap;
+		#if !flash
+		this.tileSheet = new TileSheetExt(bitmap);
+		#end
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
 		flxFrames = new Map<String, FlxFrame>();
 	}
@@ -122,19 +54,22 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	public function getSpriteSheetFrames(width:Int, height:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
+	public function getSpriteSheetFrames(region:Region, origin:Point = null):FlxSpriteFrames
 	{
-		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
-		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
+		var bitmapWidth:Int = region.width;
+		var bitmapHeight:Int = region.height;
 		
-		if (endX == 0)
-		{
-			endX = bitmapWidth;
-		}
-		if (endY == 0)
-		{
-			endY = bitmapHeight;
-		}
+		var startX:Int = region.startX;
+		var startY:Int = region.startY;
+		
+		var endX:Int = startX + bitmapWidth;
+		var endY:Int = startY + bitmapHeight;
+		
+		var xSpacing:Int = region.spacingX;
+		var ySpacing:Int = region.spacingY;
+		
+		var width:Int = (region.tileWidth == 0) ? bitmapWidth : region.tileWidth;
+		var height:Int = (region.tileHeight == 0) ? bitmapHeight : region.tileHeight;
 		
 		var pointX:Float = 0.5 * width;
 		var pointY:Float = 0.5 * height;
@@ -151,8 +86,8 @@ class TileSheetData
 			return flxSpriteFrames.get(key);
 		}
 		
-		var numRows:Int = Std.int((endY - startY) / (height + ySpacing));
-		var numCols:Int = Std.int((endX - startX) / (width + xSpacing));
+		var numRows:Int = region.numRows;
+		var numCols:Int = region.numCols;
 		
 		var tempPoint:Point = origin;
 		if (origin == null)
@@ -231,15 +166,19 @@ class TileSheetData
 		return flxFrames.exists(key);
 	}
 	
+	#if !flash
 	public function addTileRect(tileRect, point):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
 	}
+	#end
 	
 	public function destroy():Void
 	{
-		TileSheetExt.removeTileSheet(tileSheet);
+		#if !flash
+		tileSheet.destroy();
 		tileSheet = null;
+		#end
 		
 		for (spriteData in flxSpriteFrames)
 		{
@@ -258,6 +197,16 @@ class TileSheetData
 		}
 		flxFrames = null;
 	}
+	
+	#if !flash
+	public function onContext(bitmap:BitmapData):Void
+	{
+		this.bitmap = bitmap;
+		var newSheet:TileSheetExt = new TileSheetExt(bitmap);
+		newSheet.rebuildFromOld(tileSheet);
+		tileSheet = newSheet;
+	}
+	#end
 	
 	/**
 	 * Parses provided TexturePackerData object and returns generated FlxSpriteFrames object

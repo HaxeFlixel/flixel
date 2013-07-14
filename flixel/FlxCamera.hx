@@ -7,9 +7,9 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.system.layer.Atlas;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
+import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
@@ -272,16 +272,16 @@ class FlxCamera extends FlxBasic
 	private static var _storageHead:DrawStackItem;
 	
 	#if !js
-	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphicsObject, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
 	#else
-	inline public function getDrawStackItem(ObjAtlas:Atlas, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphicsObject, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
 	#end
 	{
 		var itemToReturn:DrawStackItem = null;
 		if (_currentStackItem.initialized == false)
 		{
 			_headOfDrawStack = _currentStackItem;
-			_currentStackItem.atlas = ObjAtlas;
+			_currentStackItem.graphics = ObjGraphics;
 			_currentStackItem.smoothing = ObjSmoothing;
 			#if !js
 			_currentStackItem.colored = ObjColored;
@@ -292,7 +292,7 @@ class FlxCamera extends FlxBasic
 			itemToReturn = _currentStackItem;
 		}
 	#if !js
-		else if (_currentStackItem.atlas == ObjAtlas 
+		else if (_currentStackItem.graphics == ObjGraphics 
 			&& _currentStackItem.colored == ObjColored 
 			&& _currentStackItem.blending == ObjBlending 
 		#if FLX_SPRITE_ANTIALIASING 
@@ -300,7 +300,7 @@ class FlxCamera extends FlxBasic
 		#end
 		)
 	#else
-		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.useAlpha == UseAlpha)
+		else if (_currentStackItem.graphics == ObjGraphics && _currentStackItem.useAlpha == UseAlpha)
 	#end
 		{
 			itemToReturn = _currentStackItem;
@@ -321,7 +321,7 @@ class FlxCamera extends FlxBasic
 				newItem = new DrawStackItem();
 			}
 			
-			newItem.atlas = ObjAtlas;
+			newItem.graphics = ObjGraphics;
 			newItem.smoothing = ObjSmoothing;
 			#if !js
 			newItem.colored = ObjColored;
@@ -338,7 +338,7 @@ class FlxCamera extends FlxBasic
 		return itemToReturn;
 	}
 	
-	inline public function clearDrawStack():Void
+	/*inline*/ public function clearDrawStack():Void
 	{	
 		var currItem:DrawStackItem = _headOfDrawStack.next;
 		while (currItem != null)
@@ -391,7 +391,7 @@ class FlxCamera extends FlxBasic
 					tempFlags |= Graphics.TILE_ALPHA;
 				}
 				#end
-				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing || currItem.smoothing), tempFlags);
+				currItem.graphics.tilesheet.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing || currItem.smoothing), tempFlags);
 				TileSheetExt._DRAWCALLS++;
 			}
 			currItem = currItem.next;

@@ -102,7 +102,7 @@ class FlxAssets
 	
 	inline static public function getBitmapData(id:String):BitmapData
 	{
-		return Assets.getBitmapData(id);
+		return Assets.getBitmapData(id, false);
 	}
 	
 	/**
@@ -127,14 +127,5 @@ class FlxAssets
 			}
 		}
 		#end
-	}
-	
-	static public function addBitmapDataToCache(Key:String, Bmd:BitmapData):Void
-	{
-		Reflect.callMethod(Assets, Reflect.field(Assets, "initialize"), []);
-		var resourceTypes:Map<String, String> = cast Reflect.getProperty(Assets, "resourceTypes");
-		
-		resourceTypes.set(Key, "image");
-		Assets.cachedBitmapData.set(Key, Bmd);
 	}
 }

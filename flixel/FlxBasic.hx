@@ -1,12 +1,7 @@
 package flixel;
 
-import flash.display.BitmapData;
-import flixel.system.layer.Atlas;
-import flixel.system.layer.frames.FlxSpriteFrames;
-import flixel.system.layer.Node;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
-import flixel.util.loaders.TexturePackerData;
 
 /**
  * This is a useful "generic" Flixel object.
@@ -95,11 +90,6 @@ class FlxBasic
 			clearTweens(true);
 			_tween = null;
 		}
-		
-		_framesData = null;
-		_bitmapDataKey = null;
-		_atlas = null;
-		_node = null;
 	}
 	
 	/**
@@ -281,135 +271,4 @@ class FlxBasic
 	}
 
 	private var _tween:FlxTween;
-	
-	
-	
-	private var _bitmapDataKey:String;
-	private var _framesData:FlxSpriteFrames;
-	private var _atlas:Atlas;
-	private var _node:Node;
-	
-	private var _textureData:TexturePackerData;
-	
-	/**
-	 * Atlas used for drawing this object.
-	 * You can "bake" several images in one atlas and this will decrease the number of draw calls which is especially important on mobile platforms
-	 */
-	public var atlas(get_atlas, set_atlas):Atlas;
-	
-	private function get_atlas():Atlas 
-	{
-		return _atlas;
-	}
-	
-	private function set_atlas(value:Atlas):Atlas 
-	{
-		if (_atlas != value)
-		{
-			if (value == null)
-			{
-				_atlas = value;
-				_node = null;
-				_framesData = null;
-			}
-			else
-			{
-				if (_bitmapDataKey != null)
-				{
-					if (!value.hasNodeWithName(_bitmapDataKey))
-					{
-						var bm:BitmapData = FlxG.bitmap._cache.get(_bitmapDataKey);
-						if (bm == null) 
-						{
-							#if debug
-							throw "There is no bitmapData with key: " + _bitmapDataKey + " in FlxG.bitmap._cache";
-							#end
-							return null;
-						}
-						else if (value.addNode(bm, _bitmapDataKey) == null)
-						{
-							#if debug
-							throw "Can't add object's graphic to atlas: " + value.name + ". There isn't enough space";
-							#end
-							return null;
-						}
-					}
-					
-					_atlas = value;
-					_node = value.getNodeByKey(_bitmapDataKey);
-				}
-				
-				updateFrameData();
-			}
-		}
-		
-		return value;
-	}
-	
-	public var bitmapDataKey(get_bitmapDataKey, null):String;
-	
-	private function get_bitmapDataKey():String 
-	{
-		return _bitmapDataKey;
-	}
-//	#end
-	
-	public function updateAtlasInfo(updateAtlas:Bool = false):Void
-	{
-	#if debug
-		#if !flash
-		if (_bitmapDataKey == null)
-		#else
-		if (_textureData != null && _bitmapDataKey == null)
-		#end
-		{
-			throw "Something went wrong: _bitmapDataKey var isn't initialized";
-		}
-	#end
-		
-	#if flash
-		if (_textureData != null && _bitmapDataKey != null)
-		{
-	#end
-			
-			if (_atlas == null)
-			{
-				_atlas = getAtlas();
-				_node = _atlas.getNodeByKey(_bitmapDataKey);
-			}
-			else if (_atlas.hasNodeWithName(_bitmapDataKey))
-			{
-				_node = _atlas.getNodeByKey(_bitmapDataKey);
-				if (updateAtlas)
-				{
-					_atlas.redrawNode(_node);
-				}
-			}
-			else
-			{
-				var bm:BitmapData = FlxG.bitmap._cache.get(_bitmapDataKey);
-				_node = _atlas.addNode(bm, _bitmapDataKey);
-				if (_node == null)
-				{
-					_atlas = getAtlas();
-					_node = _atlas.getNodeByKey(_bitmapDataKey);
-				}
-			}
-			updateFrameData();
-			
-	#if flash
-		}
-	#end
-	}
-	
-	public function getAtlas():Atlas
-	{
-		return FlxG.state.getAtlasFor(_bitmapDataKey);
-	}
-	
-	public function updateFrameData():Void
-	{
-		
-	}
-	
 }

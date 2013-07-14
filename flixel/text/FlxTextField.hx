@@ -10,7 +10,6 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
-import flixel.system.layer.Atlas;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import openfl.Assets;
@@ -218,14 +217,13 @@ class FlxTextField extends FlxText
 		#else
 		calcFrame();
 		#end
-		
-		return _pixels;
+		return _cachedGraphics.bitmap;
 	}
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		// This class doesn't support this operation
-		return _pixels;
+		return Pixels;
 	}
 	
 	override private function set_alpha(Alpha:Float):Float
@@ -378,7 +376,7 @@ class FlxTextField extends FlxText
 		if (AreYouSure && _addedToDisplay)
 		{
 		#end
-			_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
+			pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
 			frameHeight = Std.int(height);
 			_flashRect.x = 0;
 			_flashRect.y = 0;
@@ -403,7 +401,7 @@ class FlxTextField extends FlxText
 					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
 				}
 				// Actually draw the text onto the buffer
-				_pixels.draw(_textField, _matrix, _colorTransform);
+				_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
 				_textField.setTextFormat(_format);
 			}
 		#if !flash
@@ -619,11 +617,4 @@ class FlxTextField extends FlxText
 	{
 		return _textField;
 	}
-	
-	#if !flash
-	override private function set_atlas(Value:Atlas):Atlas 
-	{
-		return Value;
-	}
-	#end
 }

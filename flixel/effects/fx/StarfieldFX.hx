@@ -3,6 +3,7 @@ package flixel.effects.fx;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -11,6 +12,8 @@ import flixel.util.FlxGradient;
 import flixel.util.FlxMisc;
 import flixel.system.layer.DrawStackItem;
 import flixel.FlxBasic;
+import flixel.util.loaders.Region;
+import flixel.util.loaders.SpriteSheetRegion;
 
 
 /**
@@ -227,7 +230,7 @@ class StarfieldFX extends BaseFX
 			starDef.red = rgba.red / 255;
 			starDef.green = rgba.green / 255;
 			starDef.blue = rgba.blue / 255;
-			starDef.alpha = rgba.alpha / 255;
+			starDef.alpha = rgba.alpha;
 			#end
 			
 			if (star.x > sprite.width)
@@ -289,7 +292,7 @@ class StarfieldFX extends BaseFX
 			starDef.red = rgba.red / 255;
 			starDef.green = rgba.green / 255;
 			starDef.blue = rgba.blue / 255;
-			starDef.alpha = rgba.alpha / 255;
+			starDef.alpha = rgba.alpha;
 			#end
 			// canvas.setPixel32(star.x, star.y, FlxColorUtil.getColor32(255, star.alpha, star.alpha, star.alpha));
 			
@@ -369,7 +372,12 @@ private class StarSprite extends FlxSprite
 	{
 		super(X, Y);
 		
-		makeGraphic(1, 1, FlxColor.WHITE);
+		bakedRotation = 0;
+		_cachedGraphics = FlxG.bitmap.whitePixel;
+		_region = new Region(0, 0, 1, 1);
+		_region.width = _cachedGraphics.bitmap.width;
+		_region.height = _cachedGraphics.bitmap.height;
+		updateFrameData();
 		
 		setBackgroundColor(bgColor);
 		
@@ -388,7 +396,7 @@ private class StarSprite extends FlxSprite
 		bgRed = rgba.red / 255;
 		bgGreen = rgba.green / 255;
 		bgBlue = rgba.blue / 255;
-		bgAlpha = rgba.alpha / 255;
+		bgAlpha = rgba.alpha;
 	}
 	
 	override public function destroy():Void 
@@ -399,11 +407,6 @@ private class StarSprite extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if (_atlas == null)
-		{
-			return;
-		}
-		
 		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -444,9 +447,9 @@ private class StarSprite extends FlxSprite
 			}
 			
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt, antialiasing);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, true, _blendInt, antialiasing);
 			#else
-			drawItem = camera.getDrawStackItem(_atlas, true);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, true);
 			#end
 			
 			currDrawData = drawItem.drawData;
@@ -531,7 +534,7 @@ private class StarSprite extends FlxSprite
 				starBlue = starDef.blue;
 				
 			#if !js
-				if (_color < 0xffffff)
+				if (color < 0xffffff)
 				{
 					starRed *= _red;
 					starGreen *= _green;
@@ -556,11 +559,13 @@ private class StarSprite extends FlxSprite
 	
 	override public function updateFrameData():Void
 	{
-		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
+		if (_cachedGraphics == null)
 		{
-			_framesData = _node.getSpriteSheetFrames(Std.int(frameWidth), Std.int(frameHeight));
-			_flxFrame = _framesData.frames[0];
+			return;
 		}
+		
+		_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region, null);
+		_flxFrame = _framesData.frames[0];
 	}
 }
 

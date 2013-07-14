@@ -16,7 +16,6 @@ import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.input.FlxInputs;
-import flixel.system.layer.Atlas;
 import flixel.system.layer.TileSheetData;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
@@ -476,8 +475,6 @@ class FlxG
 	static public function reset():Void
 	{
 		PxBitmapFont.clearStorage();
-		Atlas.clearAtlasCache();
-		TileSheetData.clear();
 		
 		FlxG.bitmap.clearCache();
 		FlxG.resetInput();

@@ -6,64 +6,9 @@ import openfl.display.Tilesheet;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-// TODO: check image caching for tilesheets and their disposing
 class TileSheetExt extends Tilesheet
 {
-	private static var _tileSheetCache:ObjectMap<BitmapData, TileSheetExt> = new ObjectMap<BitmapData, TileSheetExt>();
-	
 	public static var _DRAWCALLS:Int = 0;
-	
-	/**
-	 * Adds new tileSheet to manager and returns it
-	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
-	 */
-	public static function addTileSheet(bitmapData:BitmapData):TileSheetExt
-	{
-		if (containsTileSheet(bitmapData))
-		{
-			return getTileSheet(bitmapData);
-		}
-		
-		var tempTileSheetData:TileSheetExt = new TileSheetExt(bitmapData);
-		_tileSheetCache.set(bitmapData, tempTileSheetData);
-		return tempTileSheetData;
-	}
-	
-	public static function containsTileSheet(bitmapData:BitmapData):Bool
-	{
-		return _tileSheetCache.exists(bitmapData);
-	}
-	
-	public static function getTileSheet(bitmapData:BitmapData):TileSheetExt
-	{
-		return _tileSheetCache.get(bitmapData);
-	}
-	
-	public static function removeTileSheet(tileSheetObj:TileSheetExt):Void
-	{
-		var key:BitmapData = tileSheetObj.nmeBitmap;
-		if (containsTileSheet(key))
-		{
-			var temp:TileSheetExt = _tileSheetCache.get(key);
-			_tileSheetCache.remove(key);
-			temp.destroy();
-		}
-	}
-	
-	public static function clear():Void
-	{
-		for (key in _tileSheetCache.keys())
-		{
-			if (key != null)
-			{
-				var temp:TileSheetExt = _tileSheetCache.get(key);
-				_tileSheetCache.remove(key);
-				temp.destroy();
-			}
-		}
-		
-		_tileSheetCache = new ObjectMap<BitmapData, TileSheetExt>();
-	}
 	
 	public var numTiles:Int;
 	
@@ -79,8 +24,7 @@ class TileSheetExt extends Tilesheet
 		numTiles = 0;
 	}
 	
-	// TODO: Check this
-	public function buildAfterContextLoss(old:TileSheetExt):Void
+	public function rebuildFromOld(old:TileSheetExt):Void
 	{
 		var num:Int = old.tileOrder.length;
 		for (i in 0...num)
@@ -134,6 +78,7 @@ class TileSheetExt extends Tilesheet
 	{
 		#if !(flash || js)
 		__bitmap = null;
+		__handle = null;
 		#else
 		nmeBitmap = null;
 		#end

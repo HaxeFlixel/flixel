@@ -1,12 +1,12 @@
 package flixel.util.loaders;
 
+import flixel.system.FlxAssets;
 import openfl.Assets;
 import flash.geom.Rectangle;
 import flash.geom.Point;
 import flash.display.BitmapData;
 import haxe.Json;
 import flixel.util.FlxPoint;
-import flixel.system.layer.Atlas;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.TileSheetData;
@@ -43,8 +43,8 @@ class TexturePackerData
 	{
 		// No need to parse data again
 		if (frames.length != 0)	return;
-		
-		this.asset = Assets.getBitmapData(this.assetName);
+		// TODO: cache this bitmapdata
+		this.asset = FlxAssets.getBitmapData(this.assetName);
 		var data:Dynamic = Json.parse(Assets.getText(description));
 		
 		for (frame in Lambda.array(data.frames))

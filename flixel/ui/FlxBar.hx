@@ -4,11 +4,16 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxBasic;
+import flixel.FlxG;
 import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxPoint;
+import flixel.util.loaders.SpriteSheetRegion;
+import flixel.util.loaders.Region;
+
+import flixel.system.frontEnds.BitmapFrontEnd.CachedGraphicsObject;
 
 /**
  * FlxBar is a quick and easy way to create a graphical bar which can
@@ -107,6 +112,9 @@ class FlxBar extends FlxSprite
 	private var _framesPosition:String;
 	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
 	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
+	
+	private var _cachedFrontGraphics:CachedGraphicsObject;
+	private var _frontRegion:Region;
 	#end
 	
 	/**
@@ -123,7 +131,7 @@ class FlxBar extends FlxSprite
 	 * @param	max			The maximum value the bar can reach. I.e. for a progress bar this would typically be 100.
 	 * @param	border		Include a 1px border around the bar? (if true it adds +2 to width and height to accommodate it)
 	 */
-	public function new(x:Int, y:Int, direction:Int = FILL_LEFT_TO_RIGHT, width:Int = 100, height:Int = 10, parentRef:Dynamic = null, variable:String = "", min:Float = 0, max:Float = 100, border:Bool = false)
+	public function new(x:Float, y:Float, direction:Int = FILL_LEFT_TO_RIGHT, width:Int = 100, height:Int = 10, parentRef:Dynamic = null, variable:String = "", min:Float = 0, max:Float = 100, border:Bool = false)
 	{
 		fixedPosition = true;
 		zeroOffset = new Point();
@@ -401,9 +409,7 @@ class FlxBar extends FlxSprite
 		var fillRGB:Int = fill & 0x00ffffff;
 		var borderA:Int = (border >> 24) & 255;
 		var borderRGB:Int = border & 0x00ffffff;
-		#end
 		
-		#if !flash
 		var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + emptyA + "." + emptyRGB + "showBorder: " + showBorder;
 		var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fillA + "." + fillRGB + "showBorder: " + showBorder;
 		if (showBorder)
@@ -411,8 +417,6 @@ class FlxBar extends FlxSprite
 			emptyKey = emptyKey + "border: " + borderA + "." + borderRGB;
 			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
 		}
-		
-		var key:String = emptyKey + "_" + filledKey;
 		
 		if (barWidth >= barHeight)
 		{
@@ -426,65 +430,64 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-		#if flash
+		#if !flash
+			if (FlxG.bitmap.checkCache(emptyKey) == false)
+			{
+				var emptyBar:BitmapData = new BitmapData(barWidth, barHeight, true, border);
+				emptyBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
+				
+				FlxG.bitmap.add(emptyBar, false, emptyKey);
+			}
+			
+			if (FlxG.bitmap.checkCache(filledKey) == false)
+			{
+				var filledBar:BitmapData = new BitmapData(barWidth, barHeight, true, border);
+				filledBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), fill);
+				
+				FlxG.bitmap.add(filledBar, false, filledKey);
+			}
+		#else
 			emptyBar = new BitmapData(barWidth, barHeight, true, border);
 			emptyBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
 			
 			filledBar = new BitmapData(barWidth, barHeight, true, border);
 			filledBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), fill);
-		#else
-			if (FlxG.bitmap._cache.exists(key) == false)
-			{
-				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
-				{
-					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
-					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
-					_pixels.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
-					
-					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), border);
-					_pixels.fillRect(new Rectangle(1, barHeight + 2, barWidth - 2, barHeight - 2), fill);
-				}
-				else
-				{
-					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
-					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
-					_pixels.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
-					
-					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), border);
-					_pixels.fillRect(new Rectangle(barWidth + 2, 1, barWidth - 2, barHeight - 2), fill);
-				}
-			}
-			pixels = FlxG.bitmap._cache.get(key);
 		#end
 		}
 		else
 		{
-		#if flash
+		#if !flash
+			if (FlxG.bitmap.checkCache(emptyKey) == false)
+			{
+				var emptyBar:BitmapData = new BitmapData(barWidth, barHeight, true, empty);
+				FlxG.bitmap.add(emptyBar, false, emptyKey);
+			}
+			
+			if (FlxG.bitmap.checkCache(filledKey) == false)
+			{
+				var filledBar:BitmapData = new BitmapData(barWidth, barHeight, true, fill);
+				FlxG.bitmap.add(filledBar, false, filledKey);
+			}
+		#else
 			emptyBar = new BitmapData(barWidth, barHeight, true, empty);
 			filledBar = new BitmapData(barWidth, barHeight, true, fill);
-		#else
-			if (FlxG.bitmap._cache.exists(key) == false)
-			{
-				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
-				{
-					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
-					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), empty);
-					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), fill);
-				}
-				else
-				{
-					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
-					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), empty);
-					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), fill);
-				}
-			}
-			pixels = FlxG.bitmap._cache.get(key);
 		#end
 		}
 		
 		#if flash
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
+		#else
+		_cachedGraphics = FlxG.bitmap.get(emptyKey);
+		_cachedFrontGraphics = FlxG.bitmap.get(filledKey);
+		
+		_region = new Region();
+		_region.width = _cachedGraphics.bitmap.width;
+		_region.height = _cachedGraphics.bitmap.height;
+		_frontRegion = new Region();
+		_frontRegion.width = _cachedFrontGraphics.bitmap.width;
+		_frontRegion.height = _cachedFrontGraphics.bitmap.height;
+		updateFrameData();
 		#end
 	}
 	
@@ -536,8 +539,6 @@ class FlxBar extends FlxSprite
 			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
 		}
 		
-		var key:String = emptyKey + "_" + filledKey;
-		
 		if (barWidth >= barHeight)
 		{
 			_framesPosition = FRAMES_POSITION_HORIZONTAL;
@@ -557,28 +558,19 @@ class FlxBar extends FlxSprite
 			filledBar = new BitmapData(barWidth, barHeight, true, border);
 			FlxGradient.overlayGradientOnBitmapData(filledBar, barWidth - 2, barHeight - 2, fill, 1, 1, chunkSize, rotation);
 			#else
-			if (FlxG.bitmap._cache.exists(key) == false)
+			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
-				{
-					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
-					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
-					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
-					
-					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), border);
-					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, fill, 1, barHeight + 2, chunkSize, rotation);
-				}
-				else
-				{
-					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
-					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), border);
-					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
-					
-					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), border);
-					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth - 2, barHeight - 2, fill, barWidth + 2, 1, chunkSize, rotation);
-				}
+				var emptyBar:BitmapData = new BitmapData(barWidth, barHeight, true, border);
+				FlxGradient.overlayGradientOnBitmapData(emptyBar, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
+				FlxG.bitmap.add(emptyBar, false, emptyKey);
 			}
-			pixels = FlxG.bitmap._cache.get(key);
+			
+			if (FlxG.bitmap.checkCache(filledKey) == false)
+			{
+				var filledBar:BitmapData = new BitmapData(barWidth, barHeight, true, border);
+				FlxGradient.overlayGradientOnBitmapData(filledBar, barWidth - 2, barHeight - 2, fill, 1, 1, chunkSize, rotation);
+				FlxG.bitmap.add(filledBar, false, filledKey);
+			}
 			#end
 		}
 		else
@@ -587,28 +579,34 @@ class FlxBar extends FlxSprite
 			emptyBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, empty, chunkSize, rotation);
 			filledBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, fill, chunkSize, rotation);
 			#else
-			if (FlxG.bitmap._cache.exists(key) == false)
+			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
-				{
-					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
-					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, empty, 0, 0, chunkSize, rotation);
-					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, fill, 0, barHeight + 1, chunkSize, rotation);
-				}
-				else
-				{
-					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
-					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, empty, 0, 0, chunkSize, rotation);
-					FlxGradient.overlayGradientOnBitmapData(_pixels, barWidth, barHeight, fill, barWidth + 1, 0, chunkSize, rotation);
-				}
+				var emptyBar:BitmapData = FlxGradient.createGradientBitmapData(barWidth, barHeight, empty, chunkSize, rotation);
+				FlxG.bitmap.add(emptyBar, false, emptyKey);
 			}
-			pixels = FlxG.bitmap._cache.get(key);
+			
+			if (FlxG.bitmap.checkCache(filledKey) == false)
+			{
+				var filledBar:BitmapData = FlxGradient.createGradientBitmapData(barWidth, barHeight, fill, chunkSize, rotation);
+				FlxG.bitmap.add(filledBar, false, filledKey);
+			}
 			#end
 		}
 		
 		#if flash
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
+		#else
+		_cachedGraphics = FlxG.bitmap.get(emptyKey);
+		_cachedFrontGraphics = FlxG.bitmap.get(filledKey);
+		
+		_region = new Region();
+		_region.width = _cachedGraphics.bitmap.width;
+		_region.height = _cachedGraphics.bitmap.height;
+		_frontRegion = new Region();
+		_frontRegion.width = _cachedFrontGraphics.bitmap.width;
+		_frontRegion.height = _cachedFrontGraphics.bitmap.height;
+		updateFrameData();
 		#end
 	}
 	
@@ -624,35 +622,37 @@ class FlxBar extends FlxSprite
 	 */
 	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, emptyBackground:Int = 0xff000000, fillBackground:Int = 0xff00ff00):Void
 	{
-		var emptyBitmapData:BitmapData = FlxG.bitmap.add(empty); 
-		var fillBitmapData:BitmapData = FlxG.bitmap.add(fill);
+		var emptyGraphics:CachedGraphicsObject = FlxG.bitmap.add(empty);
+		var filledGraphics:CachedGraphicsObject = FlxG.bitmap.add(fill);
+		
+		var emptyBitmapData:BitmapData = (emptyGraphics != null) ? emptyGraphics.bitmap : null; 
+		var fillBitmapData:BitmapData = (filledGraphics != null) ? filledGraphics.bitmap : null;
 		
 	#if !flash
-		var key:String = "";
+		var emptyKey:String = "";
+		var filledKey:String = "";
 		
 		if (empty != null)
 		{
 			if (Std.is(empty, Class))
 			{
-				key += Type.getClassName(cast(empty, Class<Dynamic>));
+				emptyKey += Type.getClassName(cast(empty, Class<Dynamic>));
 			}
 			else if (Std.is(empty, String))
 			{
-				key += empty;
+				emptyKey += empty;
 			}
 		}
-		
-		key += "_";
 		
 		if (fill != null)
 		{
 			if (Std.is(fill, Class))
 			{
-				key += Type.getClassName(cast(fill, Class<Dynamic>));
+				filledKey += Type.getClassName(cast(fill, Class<Dynamic>));
 			}
 			else if (Std.is(fill, String))
 			{
-				key += fill;
+				filledKey += fill;
 			}
 		}
 		
@@ -661,10 +661,8 @@ class FlxBar extends FlxSprite
 		var fillBackgroundA:Int = (fillBackground >> 24) & 255;
 		var fillBackgroundRGB:Int = fillBackground & 0x00ffffff;
 		
-		#if !flash
-		key = key + "emptyBackground: " + emptyBackgroundA + "." + emptyBackgroundRGB;
-		key = key + "fillBackground: " + fillBackgroundA + "." + fillBackgroundRGB;
-		#end
+		emptyKey += "emptyBackground: " + emptyBackgroundA + "." + emptyBackgroundRGB;
+		filledKey += "fillBackground: " + fillBackgroundA + "." + fillBackgroundRGB;
 	#end
 		
 		barType = BAR_IMAGE;
@@ -698,24 +696,17 @@ class FlxBar extends FlxSprite
 			{
 				_framesPosition = FRAMES_POSITION_VERTICAL;
 			}
-			
-			if (FlxG.bitmap._cache.exists(key) == false)
+			// TODO: continue from here
+			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
-				{
-					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
-					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point());
-					_pixels.fillRect(new Rectangle(0, barHeight + 1, barWidth, barHeight), fillBackground);
-				}
-				else
-				{
-					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
-					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point());
-					_pixels.fillRect(new Rectangle(barWidth + 1, 0, barWidth, barHeight), fillBackground);
-				}
-				
+				FlxG.bitmap.add(emptyBitmapData, false, emptyKey);
 			}
-			pixels = FlxG.bitmap._cache.get(key);
+			
+			if (FlxG.bitmap.checkCache(filledKey) == false)
+			{
+				var filledBar:BitmapData = new BitmapData(barWidth, barHeight, true, fillBackground);
+				FlxG.bitmap.add(filledBar, false, filledKey);
+			}
 		#end
 		}
 		else if (empty == null && fill != null)
@@ -743,22 +734,16 @@ class FlxBar extends FlxSprite
 				_framesPosition = FRAMES_POSITION_VERTICAL;
 			}
 			
-			if (FlxG.bitmap._cache.exists(key) == false)
+			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
-				{
-					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
-					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), emptyBackground);
-					_pixels.copyPixels(fillBitmapData, fillBitmapData.rect, new Point(0, barHeight + 1));
-				}
-				else
-				{
-					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
-					_pixels.fillRect(new Rectangle(0, 0, barWidth, barHeight), emptyBackground);
-					_pixels.copyPixels(fillBitmapData, fillBitmapData.rect, new Point(barWidth + 1, 0));
-				}
+				var emptyBar:BitmapData = new BitmapData(barWidth, barHeight, true, emptyBackground);
+				FlxG.bitmap.add(emptyBar, false, emptyKey);
 			}
-			pixels = FlxG.bitmap._cache.get(key);
+			
+			if (FlxG.bitmap.checkCache(filledKey) == false)
+			{
+				FlxG.bitmap.add(fillBitmapData, false, filledKey);
+			}
 			#end	
 		}
 		else if (empty != null && fill != null)
@@ -786,27 +771,31 @@ class FlxBar extends FlxSprite
 				_framesPosition = FRAMES_POSITION_VERTICAL;
 			}
 			
-			if (FlxG.bitmap._cache.exists(key) == false)
+			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
-				{
-					_pixels = FlxG.bitmap.create(barWidth + 1, 2 * (barHeight + 1), FlxColor.TRANSPARENT, false, key);
-					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point(0, 0));
-					_pixels.copyPixels(fillBitmapData, emptyBitmapData.rect, new Point(0, barHeight + 1));
-				}
-				else
-				{
-					_pixels = FlxG.bitmap.create(2 * (barWidth + 1), barHeight + 1, FlxColor.TRANSPARENT, false, key);
-					_pixels.copyPixels(emptyBitmapData, emptyBitmapData.rect, new Point(0, 0));
-					_pixels.copyPixels(fillBitmapData, emptyBitmapData.rect, new Point(barWidth + 1, 0));
-				}
+				FlxG.bitmap.add(emptyBitmapData, false, emptyKey);
 			}
-			pixels = FlxG.bitmap._cache.get(key);
+			
+			if (FlxG.bitmap.checkCache(filledKey) == false)
+			{
+				FlxG.bitmap.add(fillBitmapData, false, filledKey);
+			}
 			#end
 		}
 		
 		#if flash
 		canvas = new BitmapData(barWidth, barHeight, true, 0x0);
+		#else
+		_cachedGraphics = FlxG.bitmap.get(emptyKey);
+		_cachedFrontGraphics = FlxG.bitmap.get(filledKey);
+		
+		_region = new Region();
+		_region.width = _cachedGraphics.bitmap.width;
+		_region.height = _cachedGraphics.bitmap.height;
+		_frontRegion = new Region();
+		_frontRegion.width = _cachedFrontGraphics.bitmap.width;
+		_frontRegion.height = _cachedFrontGraphics.bitmap.height;
+		updateFrameData();
 		#end
 		
 		if (fillHorizontal)
@@ -1017,7 +1006,7 @@ class FlxBar extends FlxSprite
 	#if !flash
 	override public function draw():Void 
 	{
-		if (_atlas == null)
+		if (_cachedFrontGraphics == null || _cachedGraphics == null)
 		{
 			return;
 		}
@@ -1054,10 +1043,10 @@ class FlxBar extends FlxSprite
 				continue;
 			}
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt, antialiasing);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt, antialiasing);
 			#else
 			var useAlpha:Bool = (alpha < 0);
-			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
 			#end
 			
 			currDrawData = drawItem.drawData;
@@ -1122,8 +1111,20 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = alpha;
 			}
 			#end
-
+			
+			drawItem.position = currIndex;
+			
 			// Draw filled bar
+			#if !js
+			drawItem = camera.getDrawStackItem(_cachedFrontGraphics, isColored, _blendInt, antialiasing);
+			#else
+			var useAlpha:Bool = (alpha < 0);
+			drawItem = camera.getDrawStackItem(_cachedFrontGraphics, useAlpha);
+			#end
+			
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
+			
 			if (percentFrame >= 0)
 			{
 				var currTileX:Float = -x1;
@@ -1177,127 +1178,99 @@ class FlxBar extends FlxSprite
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData
 	{
-		_pixels = Pixels;
-		if (_framesPosition == FRAMES_POSITION_HORIZONTAL)
-		{
-			width = frameWidth = _pixels.width - 1;
-			height = frameHeight = Std.int(0.5 * (_pixels.height - 2));
-		}
-		else
-		{
-			width = frameWidth = Std.int(0.5 * (_pixels.width - 2));
-			height = frameHeight = _pixels.height - 1;
-		}
-		
-		resetHelpers();
-		_bitmapDataKey = FlxG.bitmap.getCacheKeyFor(_pixels);
-		if (_bitmapDataKey == null)
-		{
-			_bitmapDataKey = FlxG.bitmap.getUniqueKey();
-			FlxG.bitmap.add(Pixels, false, false, _bitmapDataKey);
-		}
-		
-		updateAtlasInfo(true);
-		return _pixels;
+		return Pixels;
 	}
 	#end
 	
 	override public function updateFrameData():Void 
 	{	
 	#if !flash
-		if (_node != null && barWidth >= 1 && barHeight >= 1)
+		if (_cachedGraphics == null || _cachedFrontGraphics == null)
 		{
-			_halfWidth = 0.5 * barWidth;
-			_halfHeight = 0.5 * barHeight;
+			return;
+		}
+		
+		_halfWidth = 0.5 * barWidth;
+		_halfHeight = 0.5 * barHeight;
+		
+		_emptyBarFrameID = _cachedGraphics.tilesheet.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
+		_filledBarFrames = [];
+		
+		var frameRelativePosition:Float;
+		var frameX:Float;
+		var frameY:Float;
+		var frameWidth:Float = 0;
+		var frameHeight:Float = 0;
+		
+		for (i in 1...(100 + 1))
+		{
+			frameX = 0;
+			frameY = 0;
 			
-			_emptyBarFrameID = _node.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
-			_filledBarFrames = [];
-			
-			var frameRelativePosition:Float;
-			var frameX:Float;
-			var frameY:Float;
-			var frameWidth:Float = 0;
-			var frameHeight:Float = 0;
-			
-			var startX:Int = 0;
-			var startY:Int = barHeight + 1;
-			
-			if (_framesPosition != FRAMES_POSITION_HORIZONTAL)
+			if (fillDirection == FILL_LEFT_TO_RIGHT)
 			{
-				startX = barWidth + 1;
-				startY = 0;
+				frameWidth = barWidth * i / 100;
+				frameHeight = barHeight;
+				
+				_filledBarFrames.push(-_halfWidth + frameWidth * 0.5);
+			}
+			else if (fillDirection == FILL_TOP_TO_BOTTOM)
+			{
+				frameWidth = barWidth;
+				frameHeight = barHeight * i / 100;
+				
+				_filledBarFrames.push(-_halfHeight + frameHeight * 0.5);
+			}
+			else if (fillDirection == FILL_BOTTOM_TO_TOP)
+			{
+				frameWidth = barWidth;
+				frameHeight = barHeight * i / 100;
+				frameY += (barHeight - frameHeight);
+				
+				_filledBarFrames.push(_halfHeight - 0.5 * frameHeight);
+			}
+			else if (fillDirection == FILL_RIGHT_TO_LEFT)
+			{
+				frameWidth = barWidth * i / 100;
+				frameHeight = barHeight;
+				frameX += (barWidth - frameWidth);
+				
+				_filledBarFrames.push(_halfWidth - 0.5 * frameWidth);
+			}
+			else if (fillDirection == FILL_HORIZONTAL_INSIDE_OUT)
+			{
+				frameWidth = barWidth * i / 100;
+				frameHeight = barHeight;
+				frameX += (0.5 * (barWidth - frameWidth));
+				
+				_filledBarFrames.push(0);
+			}
+			else if (fillDirection == FILL_HORIZONTAL_OUTSIDE_IN)
+			{
+				frameWidth = barWidth * (100 - i) / 100;
+				frameHeight = barHeight;
+				frameX += 0.5 * (barWidth - frameWidth);
+				
+				_filledBarFrames.push(0);
+			}
+			else if (fillDirection == FILL_VERTICAL_INSIDE_OUT)
+			{
+				frameWidth = barWidth;
+				frameHeight = barHeight * i / 100;
+				frameY += (0.5 * (barHeight - frameHeight));
+				
+				_filledBarFrames.push(0);
+			}
+			else if (fillDirection == FILL_VERTICAL_OUTSIDE_IN)
+			{
+				frameWidth = barWidth;
+				frameHeight = barHeight * (100 - i) / 100;
+				frameY += (0.5 * (barHeight - frameHeight));
+				
+				_filledBarFrames.push(0);
 			}
 			
-			for (i in 1...(100 + 1))
-			{
-				frameX = startX;
-				frameY = startY;
-				
-				if (fillDirection == FILL_LEFT_TO_RIGHT)
-				{
-					frameWidth = barWidth * i / 100;
-					frameHeight = barHeight;
-					
-					_filledBarFrames.push(-_halfWidth + frameWidth * 0.5);
-				}
-				else if (fillDirection == FILL_TOP_TO_BOTTOM)
-				{
-					frameWidth = barWidth;
-					frameHeight = barHeight * i / 100;
-					
-					_filledBarFrames.push(-_halfHeight + frameHeight * 0.5);
-				}
-				else if (fillDirection == FILL_BOTTOM_TO_TOP)
-				{
-					frameWidth = barWidth;
-					frameHeight = barHeight * i / 100;
-					frameY += (barHeight - frameHeight);
-					
-					_filledBarFrames.push(_halfHeight - 0.5 * frameHeight);
-				}
-				else if (fillDirection == FILL_RIGHT_TO_LEFT)
-				{
-					frameWidth = barWidth * i / 100;
-					frameHeight = barHeight;
-					frameX += (barWidth - frameWidth);
-					
-					_filledBarFrames.push(_halfWidth - 0.5 * frameWidth);
-				}
-				else if (fillDirection == FILL_HORIZONTAL_INSIDE_OUT)
-				{
-					frameWidth = barWidth * i / 100;
-					frameHeight = barHeight;
-					frameX += (0.5 * (barWidth - frameWidth));
-					
-					_filledBarFrames.push(0);
-				}
-				else if (fillDirection == FILL_HORIZONTAL_OUTSIDE_IN)
-				{
-					frameWidth = barWidth * (100 - i) / 100;
-					frameHeight = barHeight;
-					frameX += 0.5 * (barWidth - frameWidth);
-					
-					_filledBarFrames.push(0);
-				}
-				else if (fillDirection == FILL_VERTICAL_INSIDE_OUT)
-				{
-					frameWidth = barWidth;
-					frameHeight = barHeight * i / 100;
-					frameY += (0.5 * (barHeight - frameHeight));
-					
-					_filledBarFrames.push(0);
-				}
-				else if (fillDirection == FILL_VERTICAL_OUTSIDE_IN)
-				{
-					frameWidth = barWidth;
-					frameHeight = barHeight * (100 - i) / 100;
-					frameY += (0.5 * (barHeight - frameHeight));
-					
-					_filledBarFrames.push(0);
-				}
-				
-				_filledBarFrames.push(_node.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * frameWidth, 0.5 * frameHeight)));
-			}
+			_filledBarFrames.push(_cachedFrontGraphics.tilesheet.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * frameWidth, 0.5 * frameHeight)));
 		}
 	#end
 	}

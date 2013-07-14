@@ -59,7 +59,6 @@ class MouseInteractionMgr extends FlxBasic
 	{
 		FlxG.plugins.add(new MouseInteractionMgr());
 	}
-	
 	/**
 	* Adds a sprite to MouseInteractionMgr registry.
 	* Even without any initialization, this is all that is needed to add mouse behaviour

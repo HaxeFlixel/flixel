@@ -3,6 +3,8 @@ package flixel;
 import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxTypedGroup;
+import flixel.system.frontEnds.BitmapFrontEnd.CachedGraphicsObject;
+import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -10,6 +12,7 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+import flixel.util.loaders.Region;
 
 /**
  * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
@@ -358,6 +361,11 @@ class FlxObject extends FlxBasic
 			path.destroy();
 		}
 		path = null;
+		
+		_framesData = null;
+		_cachedGraphics = null;
+		_region = null;
+		
 		super.destroy();
 	}
 	
@@ -1374,5 +1382,28 @@ class FlxObject extends FlxBasic
 	function set_forceComplexRender(value:Bool):Bool 
 	{
 		return forceComplexRender = value;
+	}
+	
+	private var _framesData:FlxSpriteFrames;
+	private var _cachedGraphics:CachedGraphicsObject;
+	private var _region:Region;
+	
+	public function updateFrameData():Void
+	{
+		
+	}
+	
+	public var cachedGraphics(get_cachedGraphics, null):CachedGraphicsObject;
+	
+	private function get_cachedGraphics():CachedGraphicsObject 
+	{
+		return _cachedGraphics;
+	}
+	
+	public var region(get_region, null):Region;
+	
+	function get_region():Region 
+	{
+		return _region;
 	}
 }

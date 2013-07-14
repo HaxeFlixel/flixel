@@ -2,7 +2,6 @@ package flixel.group;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.layer.Atlas;
 import flixel.util.FlxArrayUtil;
 
 /**
@@ -199,9 +198,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 					length = i + 1;
 				}
 				
-				#if !flash
-				setGroupAtlas(Object);
-				#end
 				return Object;
 			}
 			i++;
@@ -230,9 +226,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		// If we made it this far, then we successfully grew the group,
 		// and we can go ahead and add the object at the first open slot.
-		#if !flash
-		setGroupAtlas(Object);
-		#end
 		members[i] = Object;
 		length = i + 1;
 		
@@ -763,41 +756,4 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		return maxSize;
 	}
-	
-	#if !flash
-	private function setGroupAtlas(Object:T):Void
-	{
-		if (_atlas != null)
-		{
-			Object.atlas = _atlas;
-		}
-	}
-	
-	override private function set_atlas(value:Atlas):Atlas 
-	{
-		if (_atlas != value)
-		{
-			if (value == null)
-			{
-				_node = null;
-				_framesData = null;
-			}
-		}
-		
-		if (_atlas != null)
-		{
-			for (basic in members)
-			{
-				if (basic != null)
-				{
-					setGroupAtlas(basic);
-				}
-			}
-		}
-		
-		_atlas = value;
-		
-		return value;
-	}
-	#end
 }

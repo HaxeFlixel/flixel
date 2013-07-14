@@ -1,42 +1,27 @@
 package flixel.util.loaders;
 
 import flash.display.BitmapData;
+import flixel.system.frontEnds.BitmapFrontEnd.CachedGraphicsObject;
 
 class SpriteSheetRegion
 {
-	public var bitmap:BitmapData;
+	public var data:CachedGraphicsObject;
+	public var region:Region;
 	
-	public var startX:Int;
-	public var startY:Int;
-	
-	public var width:Int;
-	public var height:Int;
-	
-	public var tileWidth:Int;
-	public var tileHeight:Int;
-	
-	public var spacingX:Int;
-	public var spacingY:Int;
-	
-	public function new(bitmap:BitmapData, startX:Int = 0, startY:Int = 0, tileWidth:Int = 0, tileHeight:Int = 0, spacingX:Int = 0, spacingY:Int = 0, width:Int = 0, height:Int = 0) 
+	public function new(data:CachedGraphicsObject, startX:Int = 0, startY:Int = 0, tileWidth:Int = 0, tileHeight:Int = 0, spacingX:Int = 0, spacingY:Int = 0, width:Int = 0, height:Int = 0) 
 	{ 
-		this.bitmap = bitmap;
-		
-		this.startX = startX;
-		this.startY = startY;
-		
-		this.tileWidth = tileWidth;
-		this.tileHeight = tileHeight;
-		
-		this.spacingX = spacingX;
-		this.spacingY = spacingY;
-		
-		this.width = (width == 0) ? bitmap.width : width;
-		this.height = (height == 0) ? bitmap.height : height;
+		this.data = data;
+		region = new Region(startX, startY, tileWidth, tileHeight, spacingX, spacingY, width, height);
+	}
+	
+	public function clone():SpriteSheetRegion 
+	{
+		return new SpriteSheetRegion(data, region.startX, region.startY, region.tileWidth, region.tileHeight, region.spacingX, region.spacingY, region.width, region.height);
 	}
 	
 	public function destroy():Void
 	{
-		bitmap = null;
+		data = null;
+		region = null;
 	}
 }
