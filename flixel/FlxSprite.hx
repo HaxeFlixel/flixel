@@ -1941,6 +1941,13 @@ class FlxSprite extends FlxObject
 		#end
 	}
 	
+	public var aabb(get_aabb, null):FlxRect;
+	
+	function get_aabb():FlxRect 
+	{
+		return _aabb;
+	}
+	
 	#if !flash
 	public var blend(get_blend, set_blend):BlendMode;
 	
