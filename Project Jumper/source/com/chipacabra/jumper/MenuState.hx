@@ -1,11 +1,11 @@
 package com.chipacabra.jumper;
 
 import openfl.Assets;
-import org.flixel.FlxG;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.util.FlxMisc;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.text.FlxText;
+import flixel.util.FlxMisc;
 
 /**
  * ...
@@ -13,45 +13,45 @@ import org.flixel.util.FlxMisc;
  */
 class MenuState extends FlxState 
 {
-	static public inline var OPTIONS:Int = 3; //How many menu options there are.
-	static public inline var TEXT_SPEED:Float = 200;
+	// How many menu options there are.
+	inline static public var OPTIONS:Int = 3; 
+	inline static public var TEXT_SPEED:Float = 600;
 	
+	// Augh, so many text objects. I should make arrays.
 	private var _text1:FlxText;
 	private var _text2:FlxText;
 	private var _text3:FlxText;
 	private var _text4:FlxText;
-	private var _text5:FlxText;  // augh so many text objects. I should make arrays.
-	private var _pointer:FlxSprite;
-	private var _option:Int;     // This will indicate what the pointer is pointing at
+	private var _text5:FlxText;  
 	
-	public function new()
-	{
-		super();
-	}
+	private var _pointer:FlxSprite;
+	
+	// This will indicate what the pointer is pointing at
+	private var _option:Int;     
 	
 	override public function create():Void 
 	{
-		FlxG.bgColor = 0xFF101414;
+		FlxG.state.bgColor = 0xFF101414;
 		
-		//Each word is its own object so we can position them independantly
-		//_text1 = new FlxText(FlxG.width/5, FlxG.height / 4, 320, "Project");
+		// Each word is its own object so we can position them independantly
 		_text1 = new FlxText( -220, FlxG.height / 4, 320, "Project");
 		_text1.moves = true;
 		_text1.size = 40;
 		_text1.color = 0xFFFF00;
 		_text1.antialiasing = true;
+		_text1.velocity.x = TEXT_SPEED;
 		add(_text1);
 		
-		//Base everything off of text1, so if we change color or size, only have to change one
-		//_text2 = new FlxText(FlxG.width / 2.5, FlxG.height / 2.5, 320, "Jumper");
+		// Base everything off of text1, so if we change color or size, only have to change one
 		_text2 = new FlxText(FlxG.width - 50, FlxG.height / 2.5, 320, "Jumper");
 		_text2.moves = true;
 		_text2.size = _text1.size;
 		_text2.color = _text1.color;
 		_text2.antialiasing = _text1.antialiasing;
+		_text2.velocity.x = - TEXT_SPEED;
 		add(_text2);
 		
-		//Set up the menu options
+		// Set up the menu options
 		_text3 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3, 150, "Play");
 		_text4 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 30, 150, "Visit NIWID");
 		_text5 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 60, 150, "Visit flixel.org");
@@ -67,30 +67,25 @@ class MenuState extends FlxState
 		_pointer.x = _text3.x - _pointer.width - 10;
 		add(_pointer);
 		_option = 0;
+		
 		super.create();
 	}
 	
 	override public function update():Void 
 	{
-		if (_text1.x < FlxG.width / 5)	
-		{
-			_text1.velocity.x = TEXT_SPEED;
-		}
-		else 
+		// Stop the texts when they reach their designated position
+		if (_text1.x > FlxG.width / 5)	
 		{
 			_text1.velocity.x = 0;
 		}
 		
-		if (_text2.x > FlxG.width / 2.5) 
-		{
-			_text2.velocity.x = -TEXT_SPEED;
-		}
-		else 
+		if (_text2.x < FlxG.width / 2.5) 
 		{
 			_text2.velocity.x = 0;
 		}
 		
-		switch(_option)    // this is the goofus way to do it. An array would be way better
+		// this is the goofus way to do it. An array would be way better
+		switch(_option)    
 		{
 			case 0:
 				_pointer.y = _text3.y;
@@ -99,27 +94,33 @@ class MenuState extends FlxState
 			case 2:
 				_pointer.y = _text5.y;
 		}
+		
 		if (FlxG.keys.justPressed("UP"))
-			{
-				_option = (_option + OPTIONS - 1) % OPTIONS; // A goofy format, because % doesn't work on negative numbers
-				FlxG.play(Assets.getSound("assets/sounds/menu" + Jumper.SoundExtension), 1, false);
-			}
+		{
+			// A goofy format, because % doesn't work on negative numbers
+			_option = (_option + OPTIONS - 1) % OPTIONS; 
+			FlxG.sound.play(Assets.getSound("assets/sounds/menu" + Reg.SoundExtension), 1, false);
+		}
+		
 		if (FlxG.keys.justPressed("DOWN"))
-			{
-				_option = (_option + OPTIONS + 1) % OPTIONS;
-				FlxG.play(Assets.getSound("assets/sounds/menu" + Jumper.SoundExtension), 1, false);
-			}
+		{
+			_option = (_option + OPTIONS + 1) % OPTIONS;
+			FlxG.sound.play(Assets.getSound("assets/sounds/menu" + Reg.SoundExtension), 1, false);
+		}
+		
 		if (FlxG.keys.justPressed("SPACE") || FlxG.keys.justPressed("ENTER"))
+		{
 			switch (_option) 
 			{
 				case 0:
-					FlxG.fade(0xff969867, 1, false, startGame);
-					FlxG.play(Assets.getSound("assets/sounds/coin" + Jumper.SoundExtension), 1, false);
+					FlxG.cameraFX.fade(0xff969867, 1, false, startGame);
+					FlxG.sound.play(Assets.getSound("assets/sounds/coin" + Reg.SoundExtension), 1, false);
 				case 1:
 					onURL();
 				case 2:
 					onFlixel();
 			}
+		}
 		
 		super.update();
 	}
@@ -128,7 +129,6 @@ class MenuState extends FlxState
 	{
 		FlxMisc.openURL("http://flixel.org");
 	}
-	
 	
 	private function onURL():Void 
 	{

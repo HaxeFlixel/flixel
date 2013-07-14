@@ -1,15 +1,15 @@
 package com.chipacabra.jumper;
 
+import flixel.effects.particles.FlxEmitter;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxState;
+import flixel.group.FlxGroup;
+import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
+import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
 import openfl.Assets;
-import org.flixel.FlxEmitter;
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.util.FlxPoint;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.FlxTilemap;
 
 class PlayState extends FlxState
 {
@@ -17,30 +17,24 @@ class PlayState extends FlxState
 	public var background:FlxTilemap;
 	public var ladders:FlxTilemap;
 	public var player:Player;
-	//public var skelmonsta:Enemy;
 
-	public var _gibs:FlxEmitter;
-	public var _mongibs:FlxEmitter;
-	public var _bullets:FlxGroup;
-	public var _badbullets:FlxGroup;
-	public var _restart:Bool;
-	public var _text1:FlxText;
-	public var _enemies:FlxGroup;
-	public var _coins:FlxGroup;
-	public var _score:FlxText;
+	private var _gibs:FlxEmitter;
+	private var _mongibs:FlxEmitter;
+	private var _bullets:FlxGroup;
+	private var _badbullets:FlxGroup;
+	private var _restart:Bool;
+	private var _text1:FlxText;
+	private var _enemies:FlxGroup;
+	private var _coins:FlxGroup;
+	private var _score:FlxText;
 	
-	public function new()
+	override public function create():Void
 	{
-		super();
-		
 		map = new FlxTilemap();
 		map.allowCollisions = FlxObject.ANY;
 		background = new FlxTilemap();
 		ladders = new FlxTilemap();
-	}
-	
-	override public function create():Void
-	{
+		
 		_restart = false;
 		
 		add(background.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1back.csv"), "assets/art/area02_level_tiles2.png", 16, 16, FlxTilemap.OFF));
@@ -50,19 +44,16 @@ class PlayState extends FlxState
 		add(ladders.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Ladders.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		
 		FlxG.camera.setBounds(0, 0, map.width, map.height);
-		
 		FlxG.worldBounds.make(0, 0, map.width, map.height);
 		
 		// Set up the gibs
 		_gibs = new FlxEmitter();
-		//_gibs.delay = 3;
 		_gibs.setXSpeed( -150, 150);
 		_gibs.setYSpeed( -200, 0);
 		_gibs.setRotation( -720, 720);
 		_gibs.makeParticles("assets/art/lizgibs.png", 25, 16, true, .5);
 		
 		_mongibs = new FlxEmitter();
-		//_mongibs.delay = 3;
 		_mongibs.setXSpeed( -150, 150);
 		_mongibs.setYSpeed( -200, 0);
 		_mongibs.setRotation( -720, 720);
@@ -75,9 +66,8 @@ class PlayState extends FlxState
 		
 		add(player = new Player(112, 92, this, _gibs, _bullets));
 		
-		FlxG.camera.follow(player, 1); // Attach the camera to the player. The number is how much to lag the camera to smooth things out
-		
-		//add(skelmonsta = new Enemy(1260, 640, player, _mongibs));// I used DAME to find the coordinates I want.
+		// Attach the camera to the player. The number is how much to lag the camera to smooth things out
+		FlxG.camera.follow(player, 1); 
 		
 		// Set up the enemies here
 		_enemies = new FlxGroup();
@@ -95,36 +85,34 @@ class PlayState extends FlxState
 		super.create();
 		
 		// Set up the individual bullets
-		for (i in 0...4)    // Allow 4 bullets at a time
+		// Allow 4 bullets at a time
+		for (i in 0...4)    
 		{
 			_bullets.add(new Bullet());
 		}
+		
 		add(_badbullets);
 		add(_bullets); 
 		add(_gibs);
 		add(_mongibs);
 		
-		//HUD - score
-		var ssf:FlxPoint = new FlxPoint(0, 0);
+		// HUD - score
 		_score = new FlxText(0, 0, FlxG.width);
-		_score.color = 0xFFFF00;
-		_score.size = 16;
-		_score.alignment = "center";
-		_score.scrollFactor = ssf;
-		_score.shadow = 0x131c1b;
+		_score.setFormat(null, 16, FlxColor.YELLOW, "center", 0x131c1b, true);
+		_score.scrollFactor.make(0, 0);
 		_score.useShadow = true;
 		add(_score);
 		
 		// Set up the game over text
-		_text1 = new FlxText(30, 30, 400, "Press R to Restart");
+		_text1 = new FlxText(0, 30, FlxG.width, "Press R to Restart");
+		_text1.setFormat(null, 40, FlxColor.RED, "center", FlxColor.BLACK, true);
 		_text1.visible = false;
-		_text1.size = 40;
-		_text1.color = 0xFFFF0000;
 		_text1.antialiasing = true;
-		_text1.scrollFactor.x = _text1.scrollFactor.y = 0;
-		add(_text1); // Add last so it goes on top, you know the drill.
+		_text1.scrollFactor.make(0, 0);
+		// Add last so it goes on top, you know the drill.
+		add(_text1); 
 		
-		FlxG.playMusic(Assets.getSound("assets/music/ScrollingSpace[1]" + Jumper.SoundExtension), .5);
+		FlxG.sound.playMusic(Assets.getSound("assets/music/ScrollingSpace[1]" + Reg.SoundExtension), .5);
 	}
 	
 	override public function update():Void 
@@ -142,25 +130,22 @@ class PlayState extends FlxState
 		if (!player.alive)
 		{
 			_text1.visible = true;
+			
 			if (FlxG.keys.justPressed("R")) 
 			{
 				_restart = true;
 			}
 		}
 		
-		//Check for impact!
-/*		if (player.overlaps(_enemies))
-		{
-			player.kill(); // This should probably be more interesting
-		}*/
-		
 		FlxG.overlap(player, _enemies, hitPlayer);
 		FlxG.overlap(_bullets, _enemies, hitmonster);
 		FlxG.overlap(player, _coins, collectCoin);
 		FlxG.overlap(player, _badbullets, hitPlayer);
 		
-		if (_restart) FlxG.switchState(new PlayState());
-		
+		if (_restart) 
+		{
+			FlxG.switchState(new PlayState());
+		}
 	}
 	
 	private function collectCoin(P:FlxObject, C:FlxObject):Void 
@@ -177,7 +162,8 @@ class PlayState extends FlxState
 		
 		if (Monster.health > 0)
 		{
-			P.hurt(1); // This should still be more interesting
+			// This should still be more interesting
+			P.hurt(1); 
 		}
 	}
 	
@@ -185,7 +171,8 @@ class PlayState extends FlxState
 	{
 		if (!Monster.alive) 
 		{ 
-			return; // Just in case
+			// Just in case
+			return; 
 		}  
 		
 		if (Monster.health > 0) 
@@ -198,10 +185,14 @@ class PlayState extends FlxState
 	private function placeMonsters(MonsterData:String, Monster:Class<FlxObject>):Void
 	{
 		var coords:Array<String>;
-		var entities:Array<String> = MonsterData.split("\n");   // Each line becomes an entry in the array of strings
+		// Each line becomes an entry in the array of strings
+		var entities:Array<String> = MonsterData.split("\n");   
+		
 		for (j in 0...(entities.length)) 
 		{
-			coords = entities[j].split(",");  //Split each line into two coordinates
+			// Split each line into two coordinates
+			coords = entities[j].split(","); 
+			
 			if (Monster == Enemy)
 			{
 				_enemies.add(new Enemy(Std.parseInt(coords[0]), Std.parseInt(coords[1]), player, _mongibs)); 
@@ -216,10 +207,14 @@ class PlayState extends FlxState
 	private function placeCoins(CoinData:String, Sparkle:Class<FlxObject>):Void 
 	{
 		var coords:Array<String>;
-		var entities:Array<String> = CoinData.split("\n");   // Each line becomes an entry in the array of strings
+		// Each line becomes an entry in the array of strings
+		var entities:Array<String> = CoinData.split("\n");   
+		
 		for (j in 0...(entities.length)) 
 		{
-			coords = entities[j].split(",");  //Split each line into two coordinates
+			//Split each line into two coordinates
+			coords = entities[j].split(",");  
+			
 			if (Sparkle == Coin)
 			{
 				_coins.add(new Coin(Std.parseInt(coords[0]), Std.parseInt(coords[1]))); 

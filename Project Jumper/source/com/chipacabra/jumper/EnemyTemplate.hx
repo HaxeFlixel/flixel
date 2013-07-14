@@ -1,6 +1,6 @@
 package com.chipacabra.jumper;
 
-import org.flixel.FlxSprite;
+import flixel.FlxSprite;
 
 /**
  * ...
@@ -8,7 +8,6 @@ import org.flixel.FlxSprite;
  */
 class EnemyTemplate extends FlxSprite 
 {
-	
 	private var _player:Player;
 	private var _startx:Float;
 	private var _starty:Float;
@@ -16,9 +15,9 @@ class EnemyTemplate extends FlxSprite
 	public function new(X:Float, Y:Float, ThePlayer:Player) 
 	{
 		super(X, Y);
+		
 		_startx = X;
 		_starty = Y;
 		_player = ThePlayer;
 	}
-	
 }

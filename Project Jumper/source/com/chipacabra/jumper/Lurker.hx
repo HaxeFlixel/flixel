@@ -2,25 +2,24 @@ package com.chipacabra.jumper;
 
 import com.chipacabra.jumper.Player;
 import openfl.Assets;
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.util.FlxPoint;
+import flixel.FlxG;
+import flixel.group.FlxGroup;
+import flixel.FlxObject;
+import flixel.util.FlxPoint;
 /**
  * ...
  * @author David Bell
  */
 class Lurker extends EnemyTemplate 
 {
-	
-	public static inline var RUN_SPEED:Int = 30;
-	public static inline var GRAVITY:Int = 300;
-	public static inline var HEALTH:Int = 2;
-	public static inline var SPAWNTIME:Float = 45;
-	public static inline var JUMP_SPEED:Int = 60;
-	public static inline var BURNTIME:Int = 5;
-	public static inline var GUN_DELAY:Int = 1;
-	public static inline var BULLET_SPEED:Int =100;
+	inline static public var RUN_SPEED:Int = 30;
+	inline static public var GRAVITY:Int = 300;
+	inline static public var HEALTH:Int = 2;
+	inline static public var SPAWNTIME:Float = 45;
+	inline static public var JUMP_SPEED:Int = 60;
+	inline static public var BURNTIME:Int = 5;
+	inline static public var GUN_DELAY:Int = 1;
+	inline static public var BULLET_SPEED:Int =100;
 	
 	private var _spawntimer:Float;
 	private var _burntimer:Float;
@@ -53,29 +52,18 @@ class Lurker extends EnemyTemplate
 		width = 10;
 	}
 	
-	/*override public function hitBottom(Contact:FlxObject, Velocity:Float):Void 
-	{
-		if (health <= 0 && _playdeathsound)
-		{
-			FlxG.play(Assets.getSound("assets/sounds/mondead2.mp3"), 1, false, 50);
-			_playdeathsound = false;
-		}
-		super.hitBottom(Contact, Velocity);
-	}*/
-	
 	override public function update():Void 
 	{
-		
 		if (touching == FlxObject.DOWN)
 		{
 			if (health <= 0 && _playdeathsound)
 			{
-				FlxG.play(Assets.getSound("assets/sounds/mondead2" + Jumper.SoundExtension), 1, false);
+				FlxG.sound.play(Assets.getSound("assets/sounds/mondead2" + Reg.SoundExtension), 1, false);
 				_playdeathsound = false;
 			}
 		}
 		
-		//Animation
+		// Animation
 		if ((velocity.x == 0) && (velocity.y == 0)) 
 		{ 
 			play("idle"); 
@@ -110,6 +98,7 @@ class Lurker extends EnemyTemplate
 			var xdistance:Float = _player.x - x;
 			var ydistance:Float = _player.y - y;
 			var distancesquared:Float = xdistance * xdistance + ydistance * ydistance;
+			
 			if (distancesquared < 45000)
 			{
 				shoot(_player);
@@ -122,6 +111,7 @@ class Lurker extends EnemyTemplate
 			acceleration.y = GRAVITY * 3;
 			velocity.x = 0;
 			_burntimer += FlxG.elapsed;
+			
 			if (_burntimer >= BURNTIME)
 			{
 				super.kill();
@@ -130,12 +120,15 @@ class Lurker extends EnemyTemplate
 				visible = false;
 				acceleration.y = 0;
 			}
+			
 			_spawntimer += FlxG.elapsed;
+			
 			if (_spawntimer >= SPAWNTIME)
 			{
 				reset(_startx,_starty);
 			}
 		}
+		
 		_cooldown += FlxG.elapsed;
 		super.update();
 	}
@@ -143,6 +136,7 @@ class Lurker extends EnemyTemplate
 	override public function reset(X:Float, Y:Float):Void 
 	{
 		super.reset(X, Y);
+		
 		health = HEALTH;
 		_spawntimer = 0;
 		_burntimer = 0;
@@ -161,11 +155,12 @@ class Lurker extends EnemyTemplate
 		{
 			velocity.x = -drag.x * 4;
 		}
+		
 		flicker(.5);
-		FlxG.play(Assets.getSound("assets/sounds/monhurt2" + Jumper.SoundExtension), 1, false);
+		FlxG.sound.play(Assets.getSound("assets/sounds/monhurt2" + Reg.SoundExtension), 1, false);
 		health -= 1;
-		//super.hurt(Damage);
 	}
+	
 	private function shoot(P:Player):Void 
 	{
 		// Bullet code will go here
@@ -175,6 +170,7 @@ class Lurker extends EnemyTemplate
 		if (_cooldown > GUN_DELAY)
 		{
 			var bullet:Dynamic = _bullets.getFirstAvailable();
+			
 			if (bullet == null)
 			{
 				bullet = new Bullet();
@@ -183,17 +179,21 @@ class Lurker extends EnemyTemplate
 			
 			if (P.x < x)
 			{
-				bulletX -= Math.floor(bullet.width - 8); // nudge it a little to the side so it doesn't emerge from the middle of helmutguy
+				 // nudge it a little to the side so it doesn't emerge from the middle of helmutguy
+				bulletX -= Math.floor(bullet.width - 8);
 			}
 			else
 			{
 				bulletX += Math.floor(width - 8);
 			}
+			
 			bullet.angleshoot(bulletX, bulletY, BULLET_SPEED, new FlxPoint(P.x, P.y));
-			FlxG.play(Assets.getSound("assets/sounds/badshoot" + Jumper.SoundExtension), 1, false);
-			_cooldown = 0; // reset the shot clock
+			FlxG.sound.play(Assets.getSound("assets/sounds/badshoot" + Reg.SoundExtension), 1, false);
+			// reset the shot clock
+			_cooldown = 0; 
 		}
 	}
+	
 	override public function kill():Void 
 	{
 		if (!alive) 
@@ -207,5 +207,4 @@ class Lurker extends EnemyTemplate
 		acceleration.y = GRAVITY;
 		velocity.x = 0;
 	}
-	
 }
