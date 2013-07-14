@@ -542,7 +542,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		{
 			particle.velocity.y = yVelocity.min;
 		}
-		particle.acceleration.make(acceleration.x, acceleration.y);
+		particle.acceleration.set(acceleration.x, acceleration.y);
 		
 		if (rotation.min != rotation.max)
 		{
@@ -557,7 +557,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 			particle.angle = FlxRandom.float() * 360 - 180;
 		}
 		
-		particle.drag.make(particleDrag.x, particleDrag.y);
+		particle.drag.set(particleDrag.x, particleDrag.y);
 		particle.onEmit();
 	}
 	

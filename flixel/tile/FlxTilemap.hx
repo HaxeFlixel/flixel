@@ -1757,7 +1757,7 @@ class FlxTilemap extends FlxObject
 			Bounds = new FlxRect();
 		}
 		
-		return Bounds.make(x, y, width, height);
+		return Bounds.set(x, y, width, height);
 	}
 	
 	/**

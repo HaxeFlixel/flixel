@@ -241,7 +241,7 @@ class FlxQuadTree extends FlxRect
 	{
 		exists = true;
 		
-		make(X, Y, Width, Height);
+		set(X, Y, Width, Height);
 		
 		_headA = _tailA = FlxList.recycle();
 		_headB = _tailB = FlxList.recycle();

@@ -20,7 +20,7 @@ class BGSprite extends FlxSprite
 	{
 		super();
 		makeGraphic(1, 1, FlxColor.TRANSPARENT, true, FlxG.bitmap.getUniqueKey("bg_graphic_"));
-		scrollFactor.make();
+		scrollFactor.set();
 	}
 	
 	/**

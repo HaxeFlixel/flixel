@@ -56,7 +56,7 @@ class TexturePackerData
 			
 			texFrame.sourceSize = new FlxPoint(frame.sourceSize.w, frame.sourceSize.h);
 			texFrame.offset = new FlxPoint(0, 0);
-			texFrame.offset.make(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
+			texFrame.offset.set(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
 			
 			if (frame.rotated)
 			{

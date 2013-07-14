@@ -698,7 +698,7 @@ class FlxSprite extends FlxObject
 	
 	public function setOriginToCenter():Void
 	{
-		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 	}
 	
 	/**
@@ -1782,7 +1782,7 @@ class FlxSprite extends FlxObject
 	{
 		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
 		{
-			_aabb.make(x - offset.x, y - offset.x, frameWidth, frameHeight);
+			_aabb.set(x - offset.x, y - offset.x, frameWidth, frameHeight);
 		}
 		else
 		{
@@ -1793,10 +1793,10 @@ class FlxSprite extends FlxObject
 			var sfw:Float = sx * frameWidth;
 			var sfh:Float = scale.y * frameHeight;
 			
-			VERTICES[0].make( -sox, -soy);
-			VERTICES[1].make(sfw - sox, -soy);
-			VERTICES[2].make(-sox, sfh - soy);
-			VERTICES[3].make(sfw - sox, sfh - soy);
+			VERTICES[0].set( -sox, -soy);
+			VERTICES[1].set(sfw - sox, -soy);
+			VERTICES[2].set(-sox, sfh - soy);
+			VERTICES[3].set(sfw - sox, sfh - soy);
 			
 			var radians:Float = -angle * FlxAngle.TO_RAD;
 			var cos:Float = Math.cos(radians);
@@ -1819,7 +1819,7 @@ class FlxSprite extends FlxObject
 			var minY:Float = Math.min(Math.min(VERTICES[0].y, VERTICES[1].y), Math.min(VERTICES[2].y, VERTICES[3].y));
 			var maxX:Float = Math.max(Math.max(VERTICES[0].x, VERTICES[1].x), Math.max(VERTICES[2].x, VERTICES[3].x));
 			var maxY:Float = Math.max(Math.max(VERTICES[0].y, VERTICES[1].y), Math.max(VERTICES[2].y, VERTICES[3].y));
-			_aabb.make(minX, minY, maxX - minX, maxY - minY);
+			_aabb.set(minX, minY, maxX - minX, maxY - minY);
 		}
 	}
 	
