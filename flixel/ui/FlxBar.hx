@@ -146,7 +146,7 @@ class FlxBar extends FlxSprite
 		#else
 		this.width = frameWidth = width;
 		this.height = frameHeight = height;
-		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 		_halfWidth = 0.5 * frameWidth;
 		_halfHeight = 0.5 * frameHeight;
 		

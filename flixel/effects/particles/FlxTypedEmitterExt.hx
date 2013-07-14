@@ -249,7 +249,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		
 		// Set particle motion
 		setParticleMotion(particle, angle, distance, angleRange, distanceRange);
-		particle.acceleration.make(acceleration.x, acceleration.y);
+		particle.acceleration.set(acceleration.x, acceleration.y);
 		
 		if (rotation.min != rotation.max)
 		{
@@ -264,7 +264,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 			particle.angle = FlxRandom.float() * 360 - 180;
 		}
 		
-		particle.drag.make(particleDrag.x, particleDrag.y);
+		particle.drag.set(particleDrag.x, particleDrag.y);
 		particle.onEmit();
 	}
 }

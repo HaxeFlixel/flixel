@@ -725,7 +725,7 @@ class FlxCamera extends FlxBasic
 			_fxShakeDuration -= FlxG.elapsed;
 			if(_fxShakeDuration <= 0)
 			{
-				_fxShakeOffset.make();
+				_fxShakeOffset.set();
 				if (_fxShakeComplete != null)
 				{
 					
@@ -814,7 +814,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public function focusOn(point:FlxPoint):Void
 	{
-		scroll.make(point.x - width * 0.5, point.y - height * 0.5);
+		scroll.set(point.x - width * 0.5, point.y - height * 0.5);
 	}
 	
 	/**
@@ -831,7 +831,7 @@ class FlxCamera extends FlxBasic
 		{
 			bounds = new FlxRect();
 		}
-		bounds.make(X, Y, Width, Height);
+		bounds.set(X, Y, Width, Height);
 		if (UpdateWorld)
 		{
 			FlxG.worldBounds.copyFrom(bounds);
@@ -914,7 +914,7 @@ class FlxCamera extends FlxBasic
 		_fxShakeDuration = Duration;
 		_fxShakeComplete = OnComplete;
 		_fxShakeDirection = Direction;
-		_fxShakeOffset.make();
+		_fxShakeOffset.set();
 	}
 	
 	/**
@@ -1077,7 +1077,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public function getScale():FlxPoint
 	{
-		return _point.make(_flashSprite.scaleX, _flashSprite.scaleY);
+		return _point.set(_flashSprite.scaleX, _flashSprite.scaleY);
 	}
 	
 	/**

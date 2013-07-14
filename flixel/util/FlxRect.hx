@@ -88,7 +88,7 @@ class FlxRect
 	 * @param	Height	Desired height of the rectangle.
 	 * @return	A reference to itself.
 	 */
-	inline public function make(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	inline public function set(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
 		x = X;
 		y = Y;

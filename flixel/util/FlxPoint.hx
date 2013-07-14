@@ -29,11 +29,11 @@ class FlxPoint
 	}
 	
 	/**
-	 * Instantiate a new point object.
+	 * Set the coordinates of this point object.
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	inline public function make(X:Float = 0, Y:Float = 0):FlxPoint
+	inline public function set(X:Float = 0, Y:Float = 0):FlxPoint
 	{
 		x = X;
 		y = Y;
