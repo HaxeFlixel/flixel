@@ -13,7 +13,7 @@ class CameraFrontEnd
 	 * An array listing <code>FlxCamera</code> objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
 	 */
-	public var list:Array<FlxCamera>;
+	public var list(default, null):Array<FlxCamera>;
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's <code>draw()</code> call.
