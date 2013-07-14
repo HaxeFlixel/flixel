@@ -44,7 +44,7 @@ class PlayState extends FlxState
 		add(ladders.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Ladders.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		
 		FlxG.camera.setBounds(0, 0, map.width, map.height);
-		FlxG.worldBounds.make(0, 0, map.width, map.height);
+		FlxG.worldBounds.set(0, 0, map.width, map.height);
 		
 		// Set up the gibs
 		_gibs = new FlxEmitter();
@@ -99,7 +99,7 @@ class PlayState extends FlxState
 		// HUD - score
 		_score = new FlxText(0, 0, FlxG.width);
 		_score.setFormat(null, 16, FlxColor.YELLOW, "center", 0x131c1b, true);
-		_score.scrollFactor.make(0, 0);
+		_score.scrollFactor.set(0, 0);
 		_score.useShadow = true;
 		add(_score);
 		
@@ -108,7 +108,7 @@ class PlayState extends FlxState
 		_text1.setFormat(null, 40, FlxColor.RED, "center", FlxColor.BLACK, true);
 		_text1.visible = false;
 		_text1.antialiasing = true;
-		_text1.scrollFactor.make(0, 0);
+		_text1.scrollFactor.set(0, 0);
 		// Add last so it goes on top, you know the drill.
 		add(_text1); 
 		

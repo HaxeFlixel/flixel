@@ -47,12 +47,12 @@ class Player extends FlxSprite
 		addAnimation("idle", [3]);
 		addAnimation("jump", [2]);
 		
-		drag.make(RUN_SPEED * 8, RUN_SPEED * 8);
-		maxVelocity.make(RUN_SPEED, JUMP_SPEED);
+		drag.set(RUN_SPEED * 8, RUN_SPEED * 8);
+		maxVelocity.set(RUN_SPEED, JUMP_SPEED);
 		acceleration.y = GRAVITY;
 		height = 16;
 		width = 12;
-		offset.make(3, 4);
+		offset.set(3, 4);
 		
 		// Initialize the cooldown so that helmutguy can shoot right away.
 		_cooldown = GUN_DELAY; 

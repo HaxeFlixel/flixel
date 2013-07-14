@@ -13,7 +13,7 @@ class PlayState3 extends FlxState
 	override public function create():Void
 	{
 		// Limit collision boundaries to just this screen (since we don't scroll in this one)
-		FlxG.worldBounds.make(0, 0, FlxG.width, FlxG.height);
+		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		
 		// Background
 		FlxG.cameras.bgColor = 0xffacbcd7;
