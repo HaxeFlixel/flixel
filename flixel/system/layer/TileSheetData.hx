@@ -175,6 +175,7 @@ class TileSheetData
 	
 	public function destroy():Void
 	{
+		bitmap = null;
 		#if !flash
 		tileSheet.destroy();
 		tileSheet = null;
