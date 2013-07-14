@@ -173,4 +173,13 @@ class FlxRect
 	{
 		return FlxMath.pointInFlxRect(Point.x, Point.y, this);
 	}
+	
+	inline public function union(Rect:FlxRect):FlxRect
+	{
+		var minX:Float = Math.min(x, Rect.x);
+		var minY:Float = Math.min(y, Rect.y);
+		var maxX:Float = Math.max(right, Rect.right);
+		var maxY:Float = Math.max(bottom, Rect.bottom);
+		return make(minX, minY, maxX - minX, maxY - minY);
+	}
 }
