@@ -50,13 +50,11 @@ class PlayState extends FlxState
 		title.setFormat(null, 16, FlxColor.BROWN, "center", FlxColor.BLACK);
 		title.useShadow = true;
 		
-		var smoothingSlider:FlxSlider = new FlxSlider(this, "_smoothingIterations", FlxG.width - 180, 60, 0, 15, 150);
+		var smoothingSlider:FlxSlider = new FlxSlider(this, "_smoothingIterations", FlxG.width - 180, 50, 0, 15, 150);
 		smoothingSlider.nameLabel.text = "Smoothing Iterations";
-		smoothingSlider.nameLabel.y -= 10;
 		
-		var wallRatioSlider:FlxSlider = new FlxSlider(this, "_wallRatio", FlxG.width - 180, 130 , 0.35, 0.65, 150);
+		var wallRatioSlider:FlxSlider = new FlxSlider(this, "_wallRatio", FlxG.width - 180, 120 , 0.35, 0.65, 150);
 		wallRatioSlider.nameLabel.text = "Wall Ratio";
-		wallRatioSlider.nameLabel.y -= 10;
 		
 		var generationButton:FlxButton = new FlxButton(FlxG.width - 140, 190, "[R]egenerate", generateCave);
 		
