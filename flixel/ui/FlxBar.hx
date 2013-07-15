@@ -1069,7 +1069,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-			if (!simpleRenderSprite())
+			if (!simpleRender)
 			{
 				var radians:Float = -angle * FlxAngle.TO_RAD;
 				var cos:Float = Math.cos(radians);
@@ -1179,6 +1179,11 @@ class FlxBar extends FlxSprite
 	override private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		return Pixels;
+	}
+	
+	override private function get_simpleRender():Bool
+	{ 
+		return ((angle == 0) && (scale.x == 1) && (scale.y == 1));
 	}
 	#end
 	

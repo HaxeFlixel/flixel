@@ -241,7 +241,7 @@ class BitmapFrontEnd
 			{
 				co.assetsClass = cast Graphic;
 			}
-			else if (!isBitmap && !isRegion && !Unique)
+			else if (!isClass && !isBitmap && !isRegion && !Unique)
 			{
 				co.assetsKey = cast Graphic;
 			}
