@@ -174,12 +174,20 @@ class FlxRect
 		return FlxMath.pointInFlxRect(Point.x, Point.y, this);
 	}
 	
+	/**
+	 * Add another rectangle to this one by filling in the 
+	 * horizontal and vertical space between the two rectangles.
+	 * 
+	 * @param	Rect	The second FlxRect to add to this one
+	 * @return	The changed FlxRect
+	 */
 	inline public function union(Rect:FlxRect):FlxRect
 	{
 		var minX:Float = Math.min(x, Rect.x);
 		var minY:Float = Math.min(y, Rect.y);
 		var maxX:Float = Math.max(right, Rect.right);
 		var maxY:Float = Math.max(bottom, Rect.bottom);
+		
 		return set(minX, minY, maxX - minX, maxY - minY);
 	}
 }
