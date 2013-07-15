@@ -265,7 +265,7 @@ class FlxGame extends Sprite
 		_soundTray.visible = true;
 		_updateSoundTray = true;
 		var globalVolume:Int = Math.round(FlxG.sound.volume * 10);
-		if (FlxG.sound.mute)
+		if (FlxG.sound.muted)
 		{
 			globalVolume = 0;
 		}
@@ -558,7 +558,7 @@ class FlxGame extends Sprite
 				_updateSoundTray = false;
 				
 				//Save sound preferences
-				prefsSave.data.mute = FlxG.sound.mute;
+				prefsSave.data.mute = FlxG.sound.muted;
 				prefsSave.data.volume = FlxG.sound.volume; 
 				prefsSave.flush(); 
 			}
@@ -871,9 +871,9 @@ class FlxGame extends Sprite
 			FlxG.sound.volume = 0.5; 
 		
 		if (prefsSave.data.mute != null)
-			FlxG.sound.mute = prefsSave.data.mute;
+			FlxG.sound.muted = prefsSave.data.mute;
 		else 
-			FlxG.sound.mute = false; 
+			FlxG.sound.muted = false; 
 	}
 	
 	#if !FLX_NO_FOCUS_LOST_SCREEN
