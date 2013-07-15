@@ -1,12 +1,13 @@
 package; 
 
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.FlxTilemap;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.group.FlxGroup;
+import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
+import flixel.util.FlxColor;
 
 /**
  * ...
@@ -14,18 +15,18 @@ import org.flixel.FlxTilemap;
  */
 class PlayState extends FlxState
 {
+	static private var _justDied:Bool = false;
 	
-	public var level:FlxTilemap;
-	public var player:FlxSprite;
-	public var exit:FlxSprite;
-	public var score:FlxText;
-	public var status:FlxText;
-	public var coins:FlxGroup;
+	private var _level:FlxTilemap;
+	private var _player:FlxSprite;
+	private var _exit:FlxSprite;
+	private var _scoreText:FlxText;
+	private var _status:FlxText;
+	private var _coins:FlxGroup;
 	
 	override public function create():Void 
 	{
-		//super.create();
-		FlxG.bgColor = 0xffaaaaaa;
+		FlxG.cameras.bgColor = 0xffaaaaaa;
 		
 		var data:Array<Int> = [
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -59,150 +60,152 @@ class PlayState extends FlxState
 			1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1,
 			1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ];
 	
-		level = new FlxTilemap();
-		level.loadMap(FlxTilemap.arrayToCSV(data, 40), FlxTilemap.imgAuto, 0, 0, FlxTilemap.AUTO);
-		add(level);
+		_level = new FlxTilemap();
+		_level.loadMap(FlxTilemap.arrayToCSV(data, 40), FlxTilemap.imgAuto, 0, 0, FlxTilemap.AUTO);
+		add(_level);
 		
-		// Create the level exit
-		exit = new FlxSprite(35 * 8 + 1 , 25 * 8);
-		exit.makeGraphic(14, 16, 0xff3f3f3f);
-		exit.exists = false;
-		add(exit);
+		// Create the _level _exit
+		_exit = new FlxSprite(35 * 8 + 1 , 25 * 8);
+		_exit.makeGraphic(14, 16, FlxColor.GREEN);
+		_exit.exists = false;
+		add(_exit);
 		
-		//Create coins to collect (see createCoin() function below for more info)
-		coins = new FlxGroup();
-		//Top left coins
-		createCoin(18,4);
-		createCoin(12,4);
-		createCoin(9,4);
-		createCoin(8,11);
-		createCoin(1,7);
-		createCoin(3,4);
-		createCoin(5,2);
-		createCoin(15,11);
-		createCoin(16,11);
+		// Create _coins to collect (see createCoin() function below for more info)
+		_coins = new FlxGroup();
 		
-		//Bottom left coins
-		createCoin(3,16);
-		createCoin(4,16);
-		createCoin(1,23);
-		createCoin(2,23);
-		createCoin(3,23);
-		createCoin(4,23);
-		createCoin(5,23);
-		createCoin(12,26);
-		createCoin(13,26);
-		createCoin(17,20);
-		createCoin(18,20);
+		// Top left _coins
+		createCoin(18, 4);
+		createCoin(12, 4);
+		createCoin(9, 4);
+		createCoin(8, 11);
+		createCoin(1, 7);
+		createCoin(3, 4);
+		createCoin(5, 2);
+		createCoin(15, 11);
+		createCoin(16, 11);
 		
-		//Top right coins
-		createCoin(21,4);
-		createCoin(26,2);
-		createCoin(29,2);
-		createCoin(31,5);
-		createCoin(34,5);
-		createCoin(36,8);
-		createCoin(33,11);
-		createCoin(31,11);
-		createCoin(29,11);
-		createCoin(27,11);
-		createCoin(25,11);
-		createCoin(36,14);
+		// Bottom left _coins
+		createCoin(3, 16);
+		createCoin(4, 16);
+		createCoin(1, 23);
+		createCoin(2, 23);
+		createCoin(3, 23);
+		createCoin(4, 23);
+		createCoin(5, 23);
+		createCoin(12, 26);
+		createCoin(13, 26);
+		createCoin(17, 20);
+		createCoin(18, 20);
 		
-		//Bottom right coins
-		createCoin(38,17);
-		createCoin(33,17);
-		createCoin(28,19);
-		createCoin(25,20);
-		createCoin(18,26);
-		createCoin(22,26);
-		createCoin(26,26);
-		createCoin(30,26);
+		// Top right _coins
+		createCoin(21, 4);
+		createCoin(26, 2);
+		createCoin(29, 2);
+		createCoin(31, 5);
+		createCoin(34, 5);
+		createCoin(36, 8);
+		createCoin(33, 11);
+		createCoin(31, 11);
+		createCoin(29, 11);
+		createCoin(27, 11);
+		createCoin(25, 11);
+		createCoin(36, 14);
+		
+		// Bottom right _coins
+		createCoin(38, 17);
+		createCoin(33, 17);
+		createCoin(28, 19);
+		createCoin(25, 20);
+		createCoin(18, 26);
+		createCoin(22, 26);
+		createCoin(26, 26);
+		createCoin(30, 26);
 
-		add(coins);
+		add(_coins);
 		
-		// Create player
-		player = new FlxSprite(FlxG.width / 2 -5);
-		player.makeGraphic(10, 12, 0xffaa1111);
-		player.maxVelocity.x = 80;
-		player.maxVelocity.y = 200;
-		player.acceleration.y = 200;
-		player.drag.x = player.maxVelocity.x * 4;
-		add(player);
+		// Create _player
+		_player = new FlxSprite(FlxG.width / 2 - 5);
+		_player.makeGraphic(8, 8, FlxColor.CRIMSON);
+		_player.maxVelocity.set(80, 200);
+		_player.acceleration.y = 200;
+		_player.drag.x = _player.maxVelocity.x * 4;
+		// Smoother movement by enabling subpixel rendering
+		_player.forceComplexRender = true;
+		add(_player);
 		
-		score = new FlxText(2, 2, 80);
-		score.shadow = 0xff000000;
-		score.useShadow = true;
-		score.text = "SCORE: " + (coins.countDead() * 100);
-		add(score);
+		_scoreText = new FlxText(2, 2, 80, "SCORE: " + (_coins.countDead() * 100));
+		_scoreText.setFormat(null, 8, FlxColor.WHITE, null, FlxColor.BLACK, true);
+		add(_scoreText);
 		
-		status = new FlxText(FlxG.width - 160 - 2, 2, 160);
-		status.shadow = 0xff000000;
-		status.useShadow = true;
-		status.alignment = "right";
-		switch(Reg.score)
+		_status = new FlxText(FlxG.width - 160 - 2, 2, 160, "Collect coins.");
+		_status.setFormat(null, 8, FlxColor.WHITE, "right", FlxColor.BLACK, true);
+		
+		if (_justDied)
 		{
-			case 0: status.text = "Collect coins.";
-			case 1: status.text = "Aww, you died!";
+			_status.text = "Aww, you died!";
 		}
-		add(status);
-
-	}
-	
-	//creates a new coin located on the specified tile
-	public function createCoin(X:Int,Y:Int):Void
-	{
-		var coin:FlxSprite = new FlxSprite(X * 8 + 3, Y * 8 + 2);
-		coin.makeGraphic(2, 4, 0xffffff00);
-		coins.add(coin);
+		
+		add(_status);
 	}
 	
 	override public function update():Void 
 	{
-		player.acceleration.x = 0;
-		if (FlxG.keys.LEFT)
+		_player.acceleration.x = 0;
+		
+		if (FlxG.keys.LEFT || FlxG.keys.A)
 		{
-			player.acceleration.x = -player.maxVelocity.x * 4;
+			_player.acceleration.x = -_player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.RIGHT)
+		
+		if (FlxG.keys.RIGHT || FlxG.keys.D)
 		{
-			player.acceleration.x = player.maxVelocity.x * 4;
+			_player.acceleration.x = _player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.SPACE && player.isTouching(FlxObject.FLOOR))
+		
+		if ((FlxG.keys.SPACE || FlxG.keys.UP || FlxG.keys.W) && _player.isTouching(FlxObject.FLOOR))
 		{
-			player.velocity.y = -player.maxVelocity.y / 2;
+			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}
+		
 		super.update();
 		
-		FlxG.overlap(coins, player, getCoin);
+		FlxG.overlap(_coins, _player, getCoin);
+		FlxG.collide(_level, _player);
+		FlxG.overlap(_exit, _player, win);
 		
-		FlxG.collide(level, player);
-		
-		FlxG.overlap(exit, player, win);
-		
-		if (player.y > FlxG.height)
+		if (_player.y > FlxG.height)
 		{
-			Reg.score = 1;
+			_justDied = true;
 			FlxG.resetState();
 		}
 	}
 	
-	public function win(Exit:FlxObject, Player:FlxObject):Void
+	/**
+	 * Creates a new coin located on the specified tile
+	 */
+	private function createCoin(X:Int,Y:Int):Void
 	{
-		status.text = "Yay, you won!";
-		score.text = "SCORE: 5000";
-		player.kill();
+		var coin:FlxSprite = new FlxSprite(X * 8 + 3, Y * 8 + 2);
+		coin.makeGraphic(2, 4, 0xffffff00);
+		_coins.add(coin);
 	}
 	
-	public function getCoin(Coin:FlxObject, Player:FlxObject):Void
+	private function win(Exit:FlxObject, Player:FlxObject):Void
+	{
+		_status.text = "Yay, you won!";
+		_scoreText.text = "SCORE: 5000";
+		_player.kill();
+	}
+	
+	private function getCoin(Coin:FlxObject, Player:FlxObject):Void
 	{
 		Coin.kill();
-		score.text = "SCORE: " + (coins.countDead() * 100);
-		if (coins.countLiving() == 0)
+		_scoreText.text = "SCORE: " + (_coins.countDead() * 100);
+		
+		if (_coins.countLiving() == 0)
 		{
-			status.text = "Find the exit";
-			exit.exists = true;
+			_status.text = "Find the exit";
+			_exit.exists = true;
 		}
 	}
-	
 }
