@@ -20,7 +20,7 @@ class SoundFrontEnd
 	/**
 	 * Whether or not the game sounds are muted.
 	 */
-	public var mute:Bool;
+	public var muted:Bool;
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
 	 * Function should take the form <code>myVolumeHandler(Volume:Number)</code>.
@@ -54,7 +54,7 @@ class SoundFrontEnd
 		keyMute = [48, 96]; 
 		#end
 		
-		mute = false;
+		muted = false;
 		volume = 0.5;
 		list = new FlxTypedGroup<FlxSound>();
 		volumeHandler = null;
@@ -158,7 +158,7 @@ class SoundFrontEnd
 	{
 		var sound:Sound = null;
 		
-		_soundTransform.volume = (FlxG.sound.mute ? 0 : 1) * FlxG.sound.volume * Volume;
+		_soundTransform.volume = (muted ? 0 : 1) * FlxG.sound.volume * Volume;
 		_soundTransform.pan = 0;
 		
 		if (_soundCache.exists(EmbeddedSound))
@@ -239,7 +239,7 @@ class SoundFrontEnd
 		}
 		if (volumeHandler != null)
 		{
-			var param:Float = FlxG.sound.mute ? 0 : volume;
+			var param:Float = muted ? 0 : volume;
 			volumeHandler(param);
 		}
 		return Volume;

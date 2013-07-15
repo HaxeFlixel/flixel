@@ -222,10 +222,10 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				var code:String = String.fromCharCode(FlashEvent.charCode);
 				if (FlxG.sound.keyMute != null && Lambda.indexOf(FlxG.sound.keyMute, c) != -1)
 				{
-					FlxG.sound.mute = !FlxG.sound.mute;
+					FlxG.sound.muted = !FlxG.sound.muted;
 					if (FlxG.sound.volumeHandler != null)
 					{
-						FlxG.sound.volumeHandler(FlxG.sound.mute?0:FlxG.sound.volume);
+						FlxG.sound.volumeHandler(FlxG.sound.muted?0:FlxG.sound.volume);
 					}
 					
 					#if !FLX_NO_SOUND_TRAY
@@ -236,7 +236,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				}
 				else if (FlxG.sound.keyVolumeDown != null && Lambda.indexOf(FlxG.sound.keyVolumeDown, c) != -1)
 				{
-					FlxG.sound.mute = false;
+					FlxG.sound.muted = false;
 					FlxG.sound.volume = FlxG.sound.volume - 0.1;
 						
 					#if !FLX_NO_SOUND_TRAY
@@ -247,7 +247,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				}
 				else if (FlxG.sound.keyVolumeUp != null && Lambda.indexOf(FlxG.sound.keyVolumeUp, c) != -1) 
 				{
-					FlxG.sound.mute = false;
+					FlxG.sound.muted = false;
 					FlxG.sound.volume = FlxG.sound.volume + 0.1;
 					
 					#if !FLX_NO_SOUND_TRAY

@@ -501,7 +501,7 @@ class FlxSound extends FlxBasic
 	 */
 	private function updateTransform():Void
 	{
-		_transform.volume = (FlxG.sound.mute ? 0 : 1) * FlxG.sound.volume * _volume * _volumeAdjust;
+		_transform.volume = (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * _volume * _volumeAdjust;
 		if (_channel != null)
 		{
 			_channel.soundTransform = _transform;
