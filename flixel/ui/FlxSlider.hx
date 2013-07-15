@@ -20,7 +20,7 @@ class FlxSlider extends FlxSpriteGroup
 	/**
 	 * The horizontal line in the background.
 	 */
-	public var backGround:FlxSprite;
+	public var body:FlxSprite;
 	/**
 	 * The dragable handle - loadGraphic() to change its graphic.
 	 */
@@ -183,23 +183,23 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	private function createSlider(X:Float, Y:Float):Void
 	{
-		_offset = new FlxPoint(7, 10); 
+		_offset = new FlxPoint(7, 18); 
 		_bounds = new FlxRect(X + _offset.x, Y + _offset.y, _width, _height);
 		
 		// Creating the "body" of the slider
-		backGround = new FlxSprite(_offset.x, _offset.y);
-		backGround.makeGraphic(_width, _height, 0);
-		FlxSpriteUtil.drawLine(backGround, 0, _height / 2, _width, _height / 2, _color, _thickness); 
+		body = new FlxSprite(_offset.x, _offset.y);
+		body.makeGraphic(_width, _height, 0);
+		FlxSpriteUtil.drawLine(body, 0, _height / 2, _width, _height / 2, _color, _thickness); 
 		
 		handle = new FlxSprite(_offset.x, _offset.y);
 		handle.makeGraphic(_thickness, _height, _handleColor);
 		
 		// Creating the texts
-		nameLabel = new FlxText(0, 0, _width, varString);
+		nameLabel = new FlxText(_offset.x, 0, _width, varString);
 		nameLabel.alignment = "center";
 		nameLabel.color = _color;
 		
-		var textOffset:Int = _height + 10;
+		var textOffset:Float = _height + _offset.y + 3;
 		
 		valueLabel = new FlxText(_offset.x, textOffset, _width);
 		valueLabel.alignment = "center";
@@ -214,7 +214,7 @@ class FlxSlider extends FlxSpriteGroup
 		maxLabel.color = _color;
 		
 		// Add all the objects
-		add(backGround);
+		add(body);
 		add(handle);
 		add(nameLabel);
 		add(valueLabel);
@@ -377,7 +377,7 @@ class FlxSlider extends FlxSpriteGroup
 	override public function destroy():Void
 	{
 		handle = null;
-		backGround = null;
+		body = null;
 		minLabel = null;
 		maxLabel = null;
 		nameLabel = null;
