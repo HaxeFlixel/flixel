@@ -15,6 +15,7 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.util.loaders.CachedGraphics;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -272,9 +273,9 @@ class FlxCamera extends FlxBasic
 	private static var _storageHead:DrawStackItem;
 	
 	#if !js
-	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphicsObject, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
 	#else
-	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphicsObject, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
 	#end
 	{
 		var itemToReturn:DrawStackItem = null;

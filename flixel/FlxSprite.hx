@@ -20,8 +20,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
-import flixel.util.loaders.Region;
-import flixel.util.loaders.SpriteSheetRegion;
+import flixel.system.layer.Region;
+import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TextureRegion;
 import flixel.util.loaders.TexturePackerData;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.display.Tilesheet;
@@ -347,7 +348,7 @@ class FlxSprite extends FlxObject
 			Height = (Animated == true) ? Width : _cachedGraphics.bitmap.height;
 		}
 		
-		if (!Std.is(Graphic, SpriteSheetRegion))
+		if (!Std.is(Graphic, TextureRegion))
 		{
 			_region = new Region(0, 0, Width, Height);
 			_region.width = _cachedGraphics.bitmap.width;
@@ -355,7 +356,7 @@ class FlxSprite extends FlxObject
 		}
 		else
 		{
-			_region = cast(Graphic, SpriteSheetRegion).region.clone();
+			_region = cast(Graphic, TextureRegion).region.clone();
 			
 			if (_region.tileWidth > 0)
 				Width = _region.tileWidth;
@@ -393,8 +394,8 @@ class FlxSprite extends FlxObject
 		//Create the brush and canvas
 		var rows:Int = Std.int(Math.sqrt(Rotations));
 		var brush:BitmapData = FlxG.bitmap.add(Graphic, false, Key).bitmap;
-		var isRegion:Bool = Std.is(Graphic, SpriteSheetRegion);
-		var spriteRegion:SpriteSheetRegion = (isRegion == true) ? cast Graphic : null;
+		var isRegion:Bool = Std.is(Graphic, TextureRegion);
+		var spriteRegion:TextureRegion = (isRegion == true) ? cast Graphic : null;
 		var tempRegion:Region = (isRegion == true) ? spriteRegion.region : null;
 		
 		if (Frame >= 0 || isRegion)
@@ -563,7 +564,7 @@ class FlxSprite extends FlxObject
 	{
 		bakedRotation = 0;
 		
-		if (Std.is(Data, CachedGraphicsObject))
+		if (Std.is(Data, CachedGraphics))
 		{
 			_cachedGraphics = cast Data;
 			if (_cachedGraphics.data == null)

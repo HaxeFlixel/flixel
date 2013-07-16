@@ -6,10 +6,10 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.system.frontEnds.BitmapFrontEnd.CachedGraphicsObject;
 import flixel.system.layer.TileSheetData;
 import flixel.util.FlxColor;
-import flixel.util.loaders.Region;
+import flixel.system.layer.Region;
+import flixel.util.loaders.CachedGraphics;
 
 /**
  * Holds information and bitmap glpyhs for a bitmap font.
@@ -46,7 +46,7 @@ class PxBitmapFont
 	private var _symbols:Array<HelperSymbol>;
 	// Prepared bitmapData with font glyphsW	
 	private var _region:Region;
-	private var _cachedGraphics:CachedGraphicsObject;
+	private var _cachedGraphics:CachedGraphics;
 	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.

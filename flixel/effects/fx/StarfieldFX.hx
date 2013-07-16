@@ -13,7 +13,7 @@ import flixel.util.FlxMisc;
 import flixel.system.layer.DrawStackItem;
 import flixel.FlxBasic;
 import flixel.util.loaders.Region;
-import flixel.util.loaders.SpriteSheetRegion;
+import flixel.util.loaders.TextureRegion;
 
 
 /**

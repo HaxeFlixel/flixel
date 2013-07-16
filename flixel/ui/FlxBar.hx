@@ -10,10 +10,8 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxPoint;
-import flixel.util.loaders.SpriteSheetRegion;
-import flixel.util.loaders.Region;
-
-import flixel.system.frontEnds.BitmapFrontEnd.CachedGraphicsObject;
+import flixel.system.layer.Region;
+import flixel.util.loaders.CachedGraphics;
 
 /**
  * FlxBar is a quick and easy way to create a graphical bar which can
@@ -113,7 +111,7 @@ class FlxBar extends FlxSprite
 	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
 	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
 	
-	private var _cachedFrontGraphics:CachedGraphicsObject;
+	private var _cachedFrontGraphics:CachedGraphics;
 	private var _frontRegion:Region;
 	#end
 	
@@ -622,8 +620,8 @@ class FlxBar extends FlxSprite
 	 */
 	public function createImageBar(empty:Dynamic = null, fill:Dynamic = null, emptyBackground:Int = 0xff000000, fillBackground:Int = 0xff00ff00):Void
 	{
-		var emptyGraphics:CachedGraphicsObject = FlxG.bitmap.add(empty);
-		var filledGraphics:CachedGraphicsObject = FlxG.bitmap.add(fill);
+		var emptyGraphics:CachedGraphics = FlxG.bitmap.add(empty);
+		var filledGraphics:CachedGraphics = FlxG.bitmap.add(fill);
 		
 		var emptyBitmapData:BitmapData = (emptyGraphics != null) ? emptyGraphics.bitmap : null; 
 		var fillBitmapData:BitmapData = (filledGraphics != null) ? filledGraphics.bitmap : null;

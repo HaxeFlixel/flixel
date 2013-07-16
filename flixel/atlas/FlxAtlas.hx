@@ -4,7 +4,8 @@ import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.util.FlxColor;
-import flixel.util.loaders.SpriteSheetRegion;
+import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TextureRegion;
 import flixel.atlas.FlxNode;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
@@ -177,12 +178,12 @@ class FlxAtlas
 		return root.height;
 	}
 	
-	public function getRegionFor(nodeName:String):SpriteSheetRegion
+	public function getRegionFor(nodeName:String):TextureRegion
 	{
 		if (hasNodeWithName(nodeName))
 		{
-			var cached:CachedGraphicsObject = FlxG.bitmap.add(this.atlasBitmapData, false, name);
-			var region:SpriteSheetRegion = new SpriteSheetRegion(cached);
+			var cached:CachedGraphics = FlxG.bitmap.add(this.atlasBitmapData, false, name);
+			var region:TextureRegion = new TextureRegion(cached);
 			var node:FlxNode = getNode(nodeName);
 			region.region.startX = node.x;
 			region.region.startY = node.y;

@@ -1,10 +1,10 @@
 package flixel.system.layer;
 
-import flixel.system.frontEnds.BitmapFrontEnd;
+import flixel.util.loaders.CachedGraphics;
 
 class DrawStackItem
 {
-	public var graphics:CachedGraphicsObject;
+	public var graphics:CachedGraphics;
 	public var drawData:Array<Float>;
 	public var position:Int = 0;
 	public var next:DrawStackItem;

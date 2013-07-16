@@ -11,15 +11,14 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxAssets;
-import flixel.system.frontEnds.BitmapFrontEnd.CachedGraphicsObject;
 import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
-import flixel.util.loaders.Region;
-import flixel.util.loaders.SpriteSheetRegion;
+import flixel.system.layer.Region;
+import flixel.util.loaders.TextureRegion;
 
 /**
  * This is a traditional tilemap display and collision class.
@@ -345,7 +344,7 @@ class FlxTilemap extends FlxObject
 			_tileHeight = _tileWidth;
 		}
 		
-		if (!Std.is(TileGraphic, SpriteSheetRegion))
+		if (!Std.is(TileGraphic, TextureRegion))
 		{
 			_region = new Region(0, 0, _tileWidth, _tileHeight);
 			_region.width = _cachedGraphics.bitmap.width;
@@ -353,7 +352,7 @@ class FlxTilemap extends FlxObject
 		}
 		else
 		{
-			var spriteRegion:SpriteSheetRegion = cast TileGraphic;
+			var spriteRegion:TextureRegion = cast TileGraphic;
 			_region = spriteRegion.region.clone();
 			if (_region.tileWidth > 0)
 			{

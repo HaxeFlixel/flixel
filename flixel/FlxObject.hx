@@ -3,7 +3,6 @@ package flixel;
 import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxTypedGroup;
-import flixel.system.frontEnds.BitmapFrontEnd.CachedGraphicsObject;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
@@ -12,7 +11,8 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
-import flixel.util.loaders.Region;
+import flixel.system.layer.Region;
+import flixel.util.loaders.CachedGraphics;
 
 /**
  * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
@@ -1385,7 +1385,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	private var _framesData:FlxSpriteFrames;
-	private var _cachedGraphics:CachedGraphicsObject;
+	private var _cachedGraphics:CachedGraphics;
 	private var _region:Region;
 	
 	public function updateFrameData():Void
@@ -1393,9 +1393,9 @@ class FlxObject extends FlxBasic
 		
 	}
 	
-	public var cachedGraphics(get_cachedGraphics, null):CachedGraphicsObject;
+	public var cachedGraphics(get_cachedGraphics, null):CachedGraphics;
 	
-	private function get_cachedGraphics():CachedGraphicsObject 
+	private function get_cachedGraphics():CachedGraphics
 	{
 		return _cachedGraphics;
 	}

@@ -13,7 +13,7 @@ import flixel.system.layer.TileSheetData;
 
 class TexturePackerData
 {
-	public var frames:Array<Frame>;
+	public var frames:Array<TextureAtlasFrame>;
 
 	public var assetName:String;
 	public var description:String;
@@ -30,7 +30,7 @@ class TexturePackerData
 		this.assetName = assetName;
 		this.description = description;
 		
-		this.frames = new Array<Frame>();
+		this.frames = new Array<TextureAtlasFrame>();
 		
 		parseData();
 	}
@@ -49,7 +49,7 @@ class TexturePackerData
 		
 		for (frame in Lambda.array(data.frames))
 		{
-			var texFrame:Frame = new Frame();
+			var texFrame:TextureAtlasFrame = new TextureAtlasFrame();
 			texFrame.trimmed = frame.trimmed;
 			texFrame.rotated = frame.rotated;
 			texFrame.name = frame.filename;

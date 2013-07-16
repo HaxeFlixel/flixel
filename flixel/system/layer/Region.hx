@@ -1,7 +1,6 @@
-package flixel.util.loaders;
+package flixel.system.layer;
 
 import flash.display.BitmapData;
-import flixel.system.frontEnds.BitmapFrontEnd.CachedGraphicsObject;
 
 class Region
 {

@@ -5,7 +5,8 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.system.layer.frames.FlxFrame;
-import flixel.util.loaders.SpriteSheetRegion;
+import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TextureRegion;
 import openfl.Assets;
 import flixel.FlxG;
 import flixel.util.FlxColor;
@@ -20,7 +21,7 @@ class BitmapFrontEnd
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	private var _cache:Map<String, CachedGraphicsObject>;
+	private var _cache:Map<String, CachedGraphics>;
 	
 	public function new()
 	{
@@ -28,16 +29,16 @@ class BitmapFrontEnd
 	}
 	
 	#if !flash
-	public var whitePixel(get, null):CachedGraphicsObject;
+	public var whitePixel(get, null):CachedGraphics;
 	
-	private var _whitePixel:CachedGraphicsObject;
+	private var _whitePixel:CachedGraphics;
 	
-	private function get_whitePixel():CachedGraphicsObject
+	private function get_whitePixel():CachedGraphics
 	{
 		if (_whitePixel == null)
 		{
 			var bd:BitmapData = new BitmapData(2, 2, true, FlxColor.WHITE);
-			_whitePixel = new CachedGraphicsObject("whitePixel", bd, true);
+			_whitePixel = new CachedGraphics("whitePixel", bd, true);
 			_whitePixel.tilesheet.addTileRect(new Rectangle(0, 0, 1, 1), new Point(0, 0));
 		}
 		
@@ -46,7 +47,7 @@ class BitmapFrontEnd
 	
 	public function onContext():Void
 	{
-		var obj:CachedGraphicsObject;
+		var obj:CachedGraphics;
 		
 		if (_cache != null)
 		{
@@ -65,7 +66,7 @@ class BitmapFrontEnd
 	public function dumpCache():Void
 	{
 		#if !(flash || js)
-		var obj:CachedGraphicsObject;
+		var obj:CachedGraphics;
 		
 		if (_cache != null)
 		{
@@ -102,7 +103,7 @@ class BitmapFrontEnd
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, Key:String = null):CachedGraphicsObject
+	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
 		var key:String = Key;
 		if (key == null)
@@ -115,7 +116,7 @@ class BitmapFrontEnd
 		}
 		if (!checkCache(key))
 		{
-			_cache.set(key, new CachedGraphicsObject(key, new BitmapData(Width, Height, true, Color)));
+			_cache.set(key, new CachedGraphics(key, new BitmapData(Width, Height, true, Color)));
 		}
 		
 		return _cache.get(key);
@@ -129,18 +130,18 @@ class BitmapFrontEnd
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	public function add(Graphic:Dynamic, Unique:Bool = false, Key:String = null):CachedGraphicsObject
+	public function add(Graphic:Dynamic, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
 		if (Graphic == null)
 		{
 			return null;
 		}
-		else if (Std.is(Graphic, CachedGraphicsObject))
+		else if (Std.is(Graphic, CachedGraphics))
 		{
 			return cast Graphic;
 		}
 		
-		var region:SpriteSheetRegion = null;
+		var region:TextureRegion = null;
 		
 		var isClass:Bool = true;
 		var isBitmap:Bool = true;
@@ -157,13 +158,13 @@ class BitmapFrontEnd
 			isBitmap = true;
 			isRegion = false;
 		}
-		else if (Std.is(Graphic, SpriteSheetRegion))
+		else if (Std.is(Graphic, TextureRegion))
 		{
 			isClass = false;
 			isBitmap = false;
 			isRegion = true;
 			
-			region = cast(Graphic, SpriteSheetRegion);
+			region = cast(Graphic, TextureRegion);
 		}
 		else if (Std.is(Graphic, String))
 		{
@@ -235,7 +236,7 @@ class BitmapFrontEnd
 				bd = bd.clone();
 			}
 			
-			var co:CachedGraphicsObject = new CachedGraphicsObject(key, bd);
+			var co:CachedGraphics = new CachedGraphics(key, bd);
 			
 			if (isClass && !Unique)
 			{
@@ -253,7 +254,7 @@ class BitmapFrontEnd
 	}
 	
 	// TODO: document it
-	public function get(key:String):CachedGraphicsObject
+	public function get(key:String):CachedGraphics
 	{
 		return _cache.get(key);
 	}
@@ -302,7 +303,7 @@ class BitmapFrontEnd
 	{
 		if (_cache.exists(key))
 		{
-			var obj:CachedGraphicsObject = _cache.get(key);
+			var obj:CachedGraphics = _cache.get(key);
 			_cache.remove(key);
 			obj.destroy();
 		}
@@ -313,8 +314,8 @@ class BitmapFrontEnd
 	 */
 	public function clearCache():Void
 	{
-		var newCache:Map<String, CachedGraphicsObject> = new Map();
-		var obj:CachedGraphicsObject;
+		var newCache:Map<String, CachedGraphics> = new Map();
+		var obj:CachedGraphics;
 		
 		if (_cache != null)
 		{
@@ -339,180 +340,5 @@ class BitmapFrontEnd
 		}
 		
 		_cache = newCache;
-	}
-}
-
-class CachedGraphicsObject
-{
-	/**
-	 * Key in BitmapFrontEnd cache
-	 */
-	public var key:String;
-	/**
-	 * Cached BitmapData object
-	 */
-	public var bitmap:BitmapData;
-	/**
-	 * TexturePackerData associated with bitmapdata
-	 */
-	public var data:TexturePackerData;
-	
-	private var _tilesheet:TileSheetData;
-	/**
-	 * Whether this Cached object should stay in cache after state change or not.
-	 */
-	public var persist:Bool = false;
-	/**
-	 * Asset name from openfl.Assets
-	 */
-	public var assetsKey:String;
-	/**
-	 * Class name for bitmapdata
-	 */
-	public var assetsClass:Class<BitmapData>;
-	
-	/**
-	 * Says if bitmapdata of this Cache object has been dumped or not
-	 */
-	public var isDumped(default, null):Bool = false;
-	
-	/**
-	 * Says if bitmapdata of this Cache object can be dumped for less memory usage
-	 */
-	public var canBeDumped(get, null):Bool;
-	
-	public var tilesheet(get_tilesheet, null):TileSheetData;
-	
-	public function new(key:String, bitmap:BitmapData, persist:Bool = false)
-	{
-		this.key = key;
-		this.bitmap = bitmap;
-		this.persist = persist;
-	}
-	
-	/**
-	 * Dumps bits of bitmapdata = less memory, but you can't read / write pixels on it anymore 
-	 * (but you can call onContext() method which will restore it again)
-	 */
-	public function dump():Void
-	{
-		#if !(flash || js)
-		if (canBeDumped)
-		{
-			bitmap.dumpBits();
-			bitmap = null;
-			isDumped = true;
-		}
-		#end
-	}
-	
-	// TODO: check this later
-	public function undump():Void
-	{
-		#if !(flash || js)
-		if (isDumped)
-		{
-			var newBitmap:BitmapData = getBitmapFromSystem();
-			
-			if (newBitmap != null)
-			{
-				bitmap = newBitmap;
-				if (_tilesheet != null)
-				{
-					// regenerate tilesheet
-					_tilesheet.onContext(newBitmap);
-				}
-			}
-			
-			isDumped = false;
-		}
-		#end
-	}
-	
-	/**
-	 * Use this method to restore cached bitmapdata (it it's possible).
-	 * It's called automatically when RESIZE event occurs.
-	 */
-	public function onContext():Void
-	{
-		// no need to restore tilesheet if it haven't been dumped
-		if (isDumped)
-		{
-			// restore everything
-			undump();
-			// and dump bitmapdata again
-			dump();
-		}
-	}
-	
-	private function get_tilesheet():TileSheetData 
-	{
-		if (_tilesheet == null) 
-		{
-			if (isDumped)
-				onContext();
-			
-			_tilesheet = new TileSheetData(bitmap);
-		}
-		
-		return _tilesheet;
-	}
-	
-	private function getBitmapFromSystem():BitmapData
-	{
-		var newBitmap:BitmapData = null;
-		if (assetsClass != null)
-		{
-			newBitmap = Type.createInstance(cast(assetsClass, Class<Dynamic>), []);
-		}
-		else if (assetsKey != null)
-		{
-			newBitmap = FlxAssets.getBitmapData(assetsKey);
-		}
-		
-		return newBitmap;
-	}
-	
-	public function getRegionForFrame(frameName:String):SpriteSheetRegion
-	{
-		var region:SpriteSheetRegion = new SpriteSheetRegion(this);
-		var frame:FlxFrame = tilesheet.getFrame(frameName);
-		if (frame != null)
-		{
-			region.region.startX = Std.int(frame.frame.x);
-			region.region.startY = Std.int(frame.frame.y);
-			region.region.width = Std.int(frame.frame.width);
-			region.region.height = Std.int(frame.frame.height);
-		}
-		
-		return region;
-	}
-	
-	public function destroy():Void
-	{
-		key = null;
-		if (bitmap != null)
-		{
-			bitmap.dispose();
-		}
-		bitmap = null;
-		if (data != null)
-		{
-			data.destroy();
-		}
-		data = null;
-		if (_tilesheet != null)
-		{
-			_tilesheet.destroy();
-		}
-		_tilesheet = null;
-		
-		assetsKey = null;
-		assetsClass = null;
-	}
-	
-	private function get_canBeDumped():Bool
-	{
-		return (assetsClass != null || assetsKey != null);
 	}
 }

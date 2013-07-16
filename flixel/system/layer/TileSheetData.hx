@@ -7,9 +7,8 @@ import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxPoint;
-import flixel.util.loaders.Frame;
-import flixel.util.loaders.Region;
-import flixel.util.loaders.SpriteSheetRegion;
+import flixel.util.loaders.TextureAtlasFrame;
+import flixel.system.layer.Region;
 import flixel.util.loaders.TexturePackerData;
 
 /**
@@ -237,7 +236,7 @@ class TileSheetData
 	/**
 	 * Parses frame TexturePacker data object and returns it
 	 */
-	private function addTexturePackerFrame(frameData:Frame, startX:Int = 0, startY:Int = 0):FlxFrame
+	private function addTexturePackerFrame(frameData:TextureAtlasFrame, startX:Int = 0, startY:Int = 0):FlxFrame
 	{
 		var key:String = frameData.name;
 		if (containsFrame(key))
