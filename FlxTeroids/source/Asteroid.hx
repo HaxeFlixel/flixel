@@ -1,35 +1,43 @@
 package;
 
-import org.flixel.FlxG;
-import org.flixel.FlxObject;
-import org.flixel.FlxSprite;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.util.FlxRandom;
+import flixel.util.FlxSpriteUtil;
 
 /**
  * ...
  * @author Zaphod
  */
-class Asteroid extends WrapSprite
+class Asteroid extends FlxSprite
 {
-	
 	public function new() 
 	{
 		super();
-		elasticity = 1; //bouncy!
-		antialiasing = true; //Smooth rotations
+		
+		// Bouncy!
+		elasticity = 1; 
+		// Smooth rotations
+		antialiasing = true; 
 	}
 	
-	public function create(?X:Int = 0, ?Y:Int = 0, ?VelocityX:Float = 0, ?VelocityY:Float = 0, ?Size:String = null):Asteroid
+	public function init(X:Int = 0, Y:Int = 0, VelocityX:Float = 0, VelocityY:Float = 0, ?Size:String):Asteroid
 	{
 		exists = true;
 		visible = true;
 		active = true;
 		solid = true;
+		
 		#if flash
 		loadRotatedGraphic((Size == null) ? "assets/large.png" : Size, 100, -1, false, true);
 		#else
 		loadGraphic((Size == null) ? "assets/large.png" : Size);
 		#end
-		alterBoundingBox();
+		
+		width *= 0.75;
+		height *= 0.75;
+		centerOffsets();
 		
 		if (Size == null)
 		{
@@ -44,62 +52,68 @@ class Asteroid extends WrapSprite
 			mass = 1;
 		}
 		
-		angle = FlxG.random() * 360;
+		angle = FlxRandom.float() * 360;
 		
-		if((X != 0) || (Y != 0))
+		if ((X != 0) || (Y != 0))
 		{
 			x = X;
 			y = Y;
 			velocity.x = VelocityX;
 			velocity.y = VelocityY;
 			angularVelocity = (Math.abs(velocity.x) + Math.abs(velocity.y));
+			
 			return this;
 		}
 		
-		var initial_velocity:Int = 20;
-		if(FlxG.random() < 0.5)
+		var initial_velocity:Int = 100;
+		
+		if (FlxRandom.float() < 0.5)
 		{
-			if(FlxG.random() < 0.5)	//Appears on the left
+			// Appears on the left
+			if (FlxRandom.float() < 0.5)	
 			{
-				x = -64 + offset.x;
-				velocity.x = initial_velocity / 2 + FlxG.random() * initial_velocity;
+				x = - 64 + offset.x;
+				velocity.x = initial_velocity / 2 + FlxRandom.float() * initial_velocity;
 			}
 			else
 			{
 				x = FlxG.width + offset.x;
-				velocity.x = -initial_velocity / 2 - FlxG.random() * initial_velocity;
+				velocity.x = -initial_velocity / 2 - FlxRandom.float() * initial_velocity;
 			}
-			y = FlxG.random()*(FlxG.height-height);
-			velocity.y = FlxG.random() * initial_velocity * 2 - initial_velocity;
+			
+			y = FlxRandom.float()*(FlxG.height-height);
+			velocity.y = FlxRandom.float() * initial_velocity * 2 - initial_velocity;
 		}
 		else
 		{
-			if(FlxG.random() < 0.5)
+			if (FlxRandom.float() < 0.5)
 			{
-				y = -64 + offset.y;
-				velocity.y = initial_velocity / 2 + FlxG.random() * initial_velocity;
+				y = - 64 + offset.y;
+				velocity.y = initial_velocity / 2 + FlxRandom.float() * initial_velocity;
 			}
 			else
 			{
 				y = FlxG.height + offset.y;
-				velocity.y = -initial_velocity / 2 + FlxG.random() * initial_velocity;
+				velocity.y = - initial_velocity / 2 + FlxRandom.float() * initial_velocity;
 			}
-			x = FlxG.random()*(FlxG.width-width);
-			velocity.x = FlxG.random() * initial_velocity * 2 - initial_velocity;
+			
+			x = FlxRandom.float()*(FlxG.width-width);
+			velocity.x = FlxRandom.float() * initial_velocity * 2 - initial_velocity;
 		}
 		
 		angularVelocity = (Math.abs(velocity.x) + Math.abs(velocity.y));
+		
 		return this;
 	}
 	
 	override public function update():Void 
 	{
-		wrap();
-		
 		if (justTouched(FlxObject.ANY))
 		{
 			angularVelocity = (Math.abs(velocity.x) + Math.abs(velocity.y));
 		}
+		
+		FlxSpriteUtil.screenWrap(this);
 		
 		super.update();
 	}
@@ -108,16 +122,16 @@ class Asteroid extends WrapSprite
 	{
 		super.kill();
 		
-		if(frameWidth <= 32)
+		if (frameWidth <= 32)
 		{
 			return;
 		}
 		
-		var initial_velocity:Int = 20;
+		var initial_velocity:Int = 25;
 		var slot:Int;
 		var size:String;
 		
-		if(frameWidth >= 64)
+		if (frameWidth >= 64)
 		{
 			size = "assets/medium.png";
 			initial_velocity *= 2;
@@ -128,17 +142,17 @@ class Asteroid extends WrapSprite
 			initial_velocity *= 3;
 		}
 		
-		var numChunks:Int = Math.floor(2 + FlxG.random() * 3);
-		for (i in 0...(numChunks))
+		var numChunks:Int = Math.floor(2 + FlxRandom.float() * 3);
+		
+		for (i in 0...numChunks)
 		{
 			var ax:Float = x + width / 2;
 			var ay:Float = y + height / 2;
-			var avx:Float = FlxG.random() * initial_velocity * 2 - initial_velocity;
-			var avy:Float = FlxG.random() * initial_velocity * 2 - initial_velocity;
+			var avx:Float = FlxRandom.float() * initial_velocity * 2 - initial_velocity;
+			var avy:Float = FlxRandom.float() * initial_velocity * 2 - initial_velocity;
 			
-			var asteroid:Asteroid = cast(cast(FlxG.state, PlayState).asteroids.recycle(Asteroid), Asteroid);
-			asteroid.create(Math.floor(ax), Math.floor(ay), avx, avy, size);
+			var asteroid:Asteroid = PlayState.asteroids.recycle(Asteroid);
+			asteroid.init(Math.floor(ax), Math.floor(ay), avx, avy, size);
 		}
 	}
-	
 }

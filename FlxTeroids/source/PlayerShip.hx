@@ -1,62 +1,66 @@
 package;
 
-import org.flixel.FlxG;
-import org.flixel.FlxSprite;
-import org.flixel.util.FlxAngle;
-import org.flixel.util.FlxMath;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxAngle;
+import flixel.util.FlxSpriteUtil;
 
 /**
  * ...
  * @author Zaphod
  */
-class PlayerShip extends WrapSprite
+class PlayerShip extends FlxSprite
 {
-	
-	private var _thrust:Float;
+	private var _thrust:Float = 0;
 	
 	public function new() 
 	{
 		super(Math.floor(FlxG.width / 2 - 8), Math.floor(FlxG.height / 2 - 8));
+		
 		#if flash
 		loadRotatedGraphic("assets/ship.png", 32, -1, false, true);
 		#else
 		loadGraphic("assets/ship.png");
 		#end
-		alterBoundingBox();
-		_thrust = 0;
+		
+		width *= 0.75;
+		height *= 0.75;
+		centerOffsets();
 	}
 	
 	override public function update():Void 
 	{
-		wrap();
 		angularVelocity = 0;
 		
 		if (FlxG.keys.LEFT)
 		{
 			angularVelocity -= 240;
 		}
-		if(FlxG.keys.RIGHT)
+		
+		if (FlxG.keys.RIGHT)
 		{
 			angularVelocity += 240;
 		}
 		
-		acceleration.x = 0;
-		acceleration.y = 0;
+		acceleration.set();
+		
 		if (FlxG.keys.UP)
 		{
-			FlxAngle.rotatePoint(90,0,0,0,angle,acceleration);
+			FlxAngle.rotatePoint(90, 0, 0, 0, angle, acceleration);
 		}
-
-		if(FlxG.keys.justPressed("SPACE"))
+		
+		if (FlxG.keys.justPressed("SPACE"))
 		{
-			var bullet:FlxSprite = cast(cast(FlxG.state, PlayState).bullets.recycle(), FlxSprite);
-			bullet.reset(x + (width - bullet.width)/2, y + (height - bullet.height)/2);
+			var bullet:FlxSprite = PlayState.bullets.recycle();
+			bullet.reset(x + (width - bullet.width) / 2, y + (height - bullet.height) / 2);
 			bullet.angle = angle;
-			FlxAngle.rotatePoint(150,0,0,0,bullet.angle,bullet.velocity);
-			bullet.velocity.x += velocity.x;
-			bullet.velocity.y += velocity.y;
+			FlxAngle.rotatePoint(150, 0, 0, 0, bullet.angle, bullet.velocity);
+			bullet.velocity.x *= 2;
+			bullet.velocity.y *= 2;
 		}
+		
+		FlxSpriteUtil.screenWrap(this);
+		
 		super.update();
 	}
-	
 }

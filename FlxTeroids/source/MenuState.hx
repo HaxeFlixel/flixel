@@ -1,8 +1,9 @@
 package;
 
-import org.flixel.FlxG;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
+import flixel.FlxG;
+import flixel.FlxState;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
 
 /**
  * ...
@@ -10,18 +11,15 @@ import org.flixel.FlxText;
  */
 class MenuState extends FlxState
 {
-	
 	override public function create():Void 
 	{
 		var t:FlxText;
 		t = new FlxText(0, FlxG.height / 2 - 20, FlxG.width, "FlxTeroids");
-		t.size = 32;
-		t.alignment = "center";
+		t.setFormat(null, 32, FlxColor.WHITE, "center", FlxColor.GRAY, true);
 		add(t);
 		
 		t = new FlxText(0, FlxG.height - 30, FlxG.width, "click to play");
-		t.size = 16;
-		t.alignment = "center";
+		t.setFormat(null, 16, FlxColor.WHITE, "center", FlxColor.GRAY, true);
 		add(t);
 		
 		FlxG.mouse.show();
@@ -34,5 +32,4 @@ class MenuState extends FlxState
 			FlxG.switchState(new PlayState());
 		}
 	}
-	
 }

@@ -1,10 +1,17 @@
 package;
 
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
+import flixel.effects.FlxSpecialFX;
+import flixel.effects.fx.StarfieldFX;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.group.FlxSpriteGroup;
+import flixel.group.FlxTypedGroup;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
+import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxTimer;
 
 /**
  * ...
@@ -12,85 +19,142 @@ import org.flixel.FlxState;
  */
 class PlayState extends FlxState
 {
+	static public var asteroids:FlxTypedGroup<Asteroid>;
+	static public var bullets:FlxSpriteGroup;
 	
-	public var playerShip:PlayerShip;
-	public var bullets:FlxGroup;
-	public var asteroids:FlxGroup;
-	public var timer:Float;
+	private var _playerShip:PlayerShip;
+	private var _scoreText:FlxText;
+	
+	private var _score:Int = 0;
 	
 	override public function create():Void 
 	{
 		FlxG.mouse.hide();
 		
-		var i:Int;
-		var sprite:FlxSprite;
+		// Create a starfield
+		FlxG.plugins.add(new FlxSpecialFX());
+		var starfield:StarfieldFX = FlxSpecialFX.starfield();
+		add(starfield.create(0, 0, FlxG.width, FlxG.height, 200, StarfieldFX.STARFIELD_TYPE_2D));
 		
-		for (i in 0...100)
-		{
-			sprite = new FlxSprite(FlxG.random() * FlxG.width, FlxG.random() * FlxG.height);
-			sprite.makeGraphic(2, 2, 0xffffffff);
-			sprite.active = false;
-			add(sprite);
-		}
-		
-		asteroids = new FlxGroup();
+		// Spawn 3 asteroids for a start
+		asteroids = new FlxTypedGroup<Asteroid>();
 		add(asteroids);
-		spawnAsteroid();
-		spawnAsteroid();
-		spawnAsteroid();
 		
-		playerShip = new PlayerShip();
-		add(playerShip);
-		
-		var numBullets:Int = 32;
-		bullets = new FlxGroup(numBullets);
-		for (i in 0...(numBullets))
-		{
-			sprite = new WrapSprite( -100, -100);
-			sprite.makeGraphic(8, 2);
-			sprite.width = 10;
-			sprite.height = 10;
-			sprite.offset.x = -1;
-			sprite.offset.y = -4;
-			sprite.exists = false;
-			bullets.add(sprite);
-		}
-		add(bullets);
-	}
-	
-	override public function update():Void 
-	{
-		timer -= FlxG.elapsed;
-		if (timer <= 0)
+		for (i in 0...2)
 		{
 			spawnAsteroid();
 		}
 		
-		super.update();
+		// Make sure we don't ever run out of asteroids! :)
+		var spawnCounter:FlxTimer = new FlxTimer();
+		resetTimer(spawnCounter);
 		
-		FlxG.overlap(bullets, asteroids, stuffHitStuff);
-		FlxG.overlap(asteroids, playerShip, stuffHitStuff);
-		FlxG.collide(asteroids);
+		// Create the player ship
+		_playerShip = new PlayerShip();
+		add(_playerShip);
 		
-		if (!playerShip.exists)
+		// There'll only ever be 32 bullets that we recycle over and over
+		var numBullets:Int = 32;
+		bullets = new FlxSpriteGroup(numBullets);
+		
+		var sprite:FlxSprite;
+		
+		for (i in 0...numBullets)
 		{
-			FlxG.resetState();
+			sprite = new FlxSprite( -100, -100);
+			sprite.makeGraphic(8, 2);
+			sprite.width = 10;
+			sprite.height = 10;
+			sprite.offset.set( -1, -4);
+			sprite.exists = false;
+			
+			bullets.add(sprite);
+		}
+		
+		// A text to display the score
+		_scoreText = new FlxText(0, 4, FlxG.width, "Score: " + 0);
+		_scoreText.setFormat(null, 16, FlxColor.WHITE, "center", FlxColor.GRAY, true);
+		add(_scoreText);
+		
+		add(bullets);
+	}
+	
+	override public function destroy():Void
+	{
+		super.destroy();
+		
+		_playerShip = null; 
+		bullets = null;
+		asteroids = null;
+		FlxSpecialFX.clear();
+	}
+	
+	override public function update():Void 
+	{
+		// Escape to the menu
+		if (FlxG.keys.ESCAPE)
+		{
+			FlxG.switchState(new MenuState());
 		}
 		
 		super.update();
+		
+		// Don't continue in case we lost
+		if (!_playerShip.alive) 
+		{
+			if (FlxG.keys.R)
+			{
+				FlxG.resetState();
+			}
+			
+			return;
+		}
+		
+		FlxG.overlap(bullets, asteroids, bulletHitsAsteroid);
+		FlxG.overlap(asteroids, _playerShip, asteroidHitsShip);
+		FlxG.collide(asteroids);
+		
+		for (bullet in bullets.members)
+		{
+			if (bullet.exists)
+			{
+				FlxSpriteUtil.screenWrap(bullet);
+			}
+		}
 	}
 	
-	private function stuffHitStuff(Object1:FlxObject, Object2:FlxObject):Void
+	private function increaseScore(Amount:Int = 10):Void
+	{
+		_score += Amount;
+		_scoreText.text = "Score: " + _score;
+		_scoreText.alpha = 0;
+		FlxG.tween(_scoreText, { alpha:1 }, 0.5);
+	}
+	
+	private function bulletHitsAsteroid(Object1:FlxObject, Object2:FlxObject):Void
 	{
 		Object1.kill();
 		Object2.kill();
+		increaseScore();
+	}
+	
+	private function asteroidHitsShip(Object1:FlxObject, Object2:FlxObject):Void
+	{
+		Object1.kill();
+		Object2.kill();
+		bullets.kill();
+		_scoreText.text = "Game Over! Final score: " + _score + " - Press R to retry.";
+	}
+	
+	private function resetTimer(Timer:FlxTimer):Void
+	{
+		Timer.start(5, 1, resetTimer);
+		spawnAsteroid();
 	}
 	
 	private function spawnAsteroid():Void
 	{
-		var asteroid:Asteroid = cast(asteroids.recycle(Asteroid), Asteroid);
-		asteroid.create();
-		timer = 1 + FlxG.random() * 4;
+		var asteroid:Asteroid = asteroids.recycle(Asteroid);
+		asteroid.init();
 	}
-	
 }
