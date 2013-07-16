@@ -1,25 +1,55 @@
-﻿/**
-* FlxSnake
-* @author Richard Davey
-*/
+﻿package;
 
-package;
-
-import org.flixel.FlxGame;
+import flash.display.Sprite;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
+import flash.events.Event;
+import flash.events.KeyboardEvent;
 import flash.Lib;
+import flash.ui.Keyboard;
+import flixel.FlxGame;
 
-class Main extends FlxGame
+/**
+ * @author Joshua Granick
+ */
+class Main extends Sprite 
 {
-	
-	public function new()
-	{
-		super(320, 240, FlxSnake, 2);
+	// Entry point
+	static public function main():Void
+	{	
+		Lib.current.addChild(new Main());
 	}
 	
-	public static function main() 
+	public function new() 
 	{
-		var snake = new Main();
-		Lib.current.stage.addChild(snake);
+		super();
+		
+		if (stage != null) 
+		{
+			init();
+		}
+		else 
+		{
+			addEventListener(Event.ADDED_TO_STAGE, init);
+		}
 	}
 	
+	private function init(?E:Event):Void 
+	{
+		if (hasEventListener(Event.ADDED_TO_STAGE))
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
+		}
+		
+		initialize();
+		
+		var game:FlxGame = new GameClass();
+		addChild(game);
+	}
+	
+	private function initialize():Void 
+	{
+		Lib.current.stage.align = StageAlign.TOP_LEFT;
+		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+	}
 }
