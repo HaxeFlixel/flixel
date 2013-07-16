@@ -100,24 +100,28 @@ class FlxSpriteUtil
 	/**
 	 * Checks the x/y coordinates of the source FlxSprite and keeps them within the area of 0, 0, FlxG.width, FlxG.height (i.e. wraps it around the screen)
 	 * 
-	 * @param	Sprite	The <code>FlxSprite</code> to keep within the screen
+	 * @param	Sprite		The <code>FlxSprite</code> to keep within the screen
+	 * @param	Left		Whether to activate screen wrapping on the left side of the screen
+	 * @param	Right		Whether to activate screen wrapping on the right side of the screen
+	 * @param	Top			Whether to activate screen wrapping on the top of the screen
+	 * @param	Bottom		Whether to activate screen wrapping on the bottom of the screen
 	 */
-	static public function screenWrap(Sprite:FlxSprite):Void
+	static public function screenWrap(Sprite:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):Void
 	{
-		if (Sprite.x < 0)
+		if (Left && Sprite.x < 0)
 		{
 			Sprite.x = FlxG.width;
 		}
-		else if (Sprite.x > FlxG.width)
+		else if (Right && Sprite.x > FlxG.width)
 		{
 			Sprite.x = 0;
 		}
 		
-		if (Sprite.y < 0)
+		if (Top && Sprite.y < 0)
 		{
 			Sprite.y = FlxG.height;
 		}
-		else if (Sprite.y > FlxG.height)
+		else if (Bottom && Sprite.y > FlxG.height)
 		{
 			Sprite.y = 0;
 		}
