@@ -1,8 +1,11 @@
 package;
 
+import flash.display.Bitmap;
+import flash.display.Sprite;
 import flash.Lib;
-import org.flixel.FlxG;
-import org.flixel.FlxGame;
+import flixel.FlxG;
+import flixel.FlxGame;
+import openfl.Assets;
 	
 class Mode extends FlxGame
 {
@@ -13,7 +16,6 @@ class Mode extends FlxGame
 		var ratioX:Float = stageWidth / 320;
 		var ratioY:Float = stageHeight / 240;
 		var ratio:Float = Math.min(ratioX, ratioY);
-		//var ratio:Float = 1;
 		#if (flash || desktop || neko)
 		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), MenuState, ratio, 60, 60);
 		#else
@@ -36,7 +38,5 @@ class Mode extends FlxGame
 		FlxG.addSound("MenuHit2");
 		FlxG.addSound("Shoot");
 		#end
-		
-	//	forceDebugger = true;
 	}
 }

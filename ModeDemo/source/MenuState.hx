@@ -1,19 +1,21 @@
 package;
 
+import flash.display.BitmapData;
+import flash.utils.ByteArray;
 import openfl.Assets;
 import flash.geom.Rectangle;
-import org.flixel.FlxButton;
-import org.flixel.FlxEmitter;
-import org.flixel.FlxG;
-import org.flixel.FlxSave;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.plugin.pxText.FlxBitmapTextField;
-import org.flixel.plugin.pxText.PxBitmapFont;
-import org.flixel.plugin.pxText.PxButton;
-import org.flixel.plugin.pxText.PxTextAlign;
-import org.flixel.util.FlxMisc;
+import flixel.ui.FlxButton;
+import flixel.effects.particles.FlxEmitter;
+import flixel.FlxG;
+import flixel.util.FlxSave;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.text.FlxText;
+import flixel.text.FlxBitmapTextField;
+import flixel.text.pxText.PxBitmapFont;
+import flixel.ui.PxButton;
+import flixel.text.pxText.PxTextAlign;
+import flixel.util.FlxMisc;
 
 class MenuState extends FlxState
 {
@@ -27,7 +29,7 @@ class MenuState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.bgColor = 0xff131c1b;
+		FlxG.cameras.bgColor = 0xff131c1b;
 		
 		//Simple use of flixel save game object.
 		//Tracks number of times the game has been played.
@@ -42,7 +44,7 @@ class MenuState extends FlxState
 			{
 				save.data.plays++;
 			}
-			FlxG.log("Number of plays: " + save.data.plays);
+			FlxG.log.add("Number of plays: " + save.data.plays);
 			//save.erase();
 			save.close();
 		}
@@ -93,6 +95,7 @@ class MenuState extends FlxState
 	override public function update():Void
 	{
 		super.update();
+		
 		if(title2.x > title1.x + title1.width - 4)
 		{
 			//Once mo and de cross each other, fix their positions
@@ -101,15 +104,15 @@ class MenuState extends FlxState
 			title2.velocity.x = 0;
 			
 			//Then, play a cool sound, change their color, and blow up pieces everywhere
-			FlxG.play("MenuHit");
+			FlxG.sound.play("MenuHit");
 			
-			FlxG.flash(0xffd8eba2, 0.5);
-			FlxG.shake(0.035, 0.5);
+			FlxG.cameraFX.flash(0xffd8eba2, 0.5);
+			FlxG.cameraFX.shake(0.035, 0.5);
 			title1.color = 0xd8eba2;
 			title2.color = 0xd8eba2;
 			gibs.start(true, 5);
-			title1.angle = FlxG.random() * 30 - 15;
-			title2.angle = FlxG.random() * 30 - 15;
+			title1.angle = Math.random() * 30 - 15;
+			title2.angle = Math.random() * 30 - 15;
 			
 			//Then we're going to add the text and buttons and things that appear
 			//If we were hip we'd use our own button animations, but we'll just recolor
@@ -151,10 +154,10 @@ class MenuState extends FlxState
 		if(!fading && ((FlxG.keys.X && FlxG.keys.C) || attractMode)) 
 		{
 			fading = true;
-			FlxG.play("MenuHit2");
+			FlxG.sound.play("MenuHit2");
 			
-			FlxG.flash(0xffd8eba2, 0.5);
-			FlxG.fade(0xff131c1b, 1, false, onFade);
+			FlxG.cameraFX.flash(0xffd8eba2, 0.5);
+			FlxG.cameraFX.fade(0xff131c1b, 1, false, onFade);
 		}
 	}
 	
@@ -175,7 +178,7 @@ class MenuState extends FlxState
 	{
 		//playButton.exists = false;
 		onFade();
-		FlxG.play("MenuHit2");
+		FlxG.sound.play("MenuHit2");
 	}
 	
 	//This function is passed to FlxG.fade() when we are ready to go to the next game state.
@@ -185,7 +188,7 @@ class MenuState extends FlxState
 	{
 		if(attractMode)
 		{
-			FlxG.loadReplay((FlxG.random() < 0.5)?(Assets.getText("assets/attract1.fgr")):(Assets.getText("assets/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
+			FlxG.vcr.loadReplay((Math.random() < 0.5)?(Assets.getText("assets/attract1.fgr")):(Assets.getText("assets/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
 		//	FlxG.loadReplay((FlxG.random() < 0.5)?(Assets.getText("assets/attract1.fgr")):(Assets.getText("assets/attract2.fgr")), new PlayStateOld(), ["ANY"], 22, onDemoComplete);
 		}
 		else
@@ -199,7 +202,7 @@ class MenuState extends FlxState
 	//Here, we initiate another fade effect.
 	private function onDemoComplete():Void
 	{
-		FlxG.fade(0xff131c1b, 1, false, onDemoFaded);
+		FlxG.cameraFX.fade(0xff131c1b, 1, false, onDemoFaded);
 	}
 	
 	//Finally, we have another function called by FlxG.fade(), this time
@@ -207,7 +210,7 @@ class MenuState extends FlxState
 	//once the gameplay demo has faded out.
 	private function onDemoFaded():Void
 	{
-		FlxG.stopReplay();
+		FlxG.vcr.stopReplay();
 		FlxG.resetGame();
 	}
 }

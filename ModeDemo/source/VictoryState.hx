@@ -1,11 +1,11 @@
 package;
 
 import openfl.Assets;
-import org.flixel.FlxEmitter;
-import org.flixel.FlxG;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.FlxTextField;
+import flixel.effects.particles.FlxEmitter;
+import flixel.FlxG;
+import flixel.FlxState;
+import flixel.text.FlxText;
+import flixel.text.FlxTextField;
 
 class VictoryState extends FlxState
 {
@@ -16,7 +16,7 @@ class VictoryState extends FlxState
 	{
 		_timer = 0;
 		_fading = false;
-		FlxG.flash(0xffd8eba2);
+		FlxG.cameraFX.flash(0xffd8eba2);
 		
 		//Gibs emitted upon death
 		var gibs:FlxEmitter = new FlxEmitter(0, -50);
@@ -47,9 +47,9 @@ class VictoryState extends FlxState
 			if((_timer > 0.35) && ((_timer > 10) || FlxG.keys.justPressed("X") || FlxG.keys.justPressed("C")))
 			{
 				_fading = true;
-				FlxG.play("MenuHit2");
+				FlxG.sound.play("MenuHit2");
 				
-				FlxG.fade(0xff131c1b, 2, false, onPlay);
+				FlxG.cameraFX.fade(0xff131c1b, 2, false, onPlay);
 			}
 		}
 	}

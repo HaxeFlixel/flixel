@@ -4,7 +4,7 @@
 	<app title="Mode Demo" file="ModeDemo" main="Test" version="0.0.1" company="Zaphod" />
 	
 	<window width="640" height="480" fps="30" orientation="portrait" background="0x000000" resizable="true" if="flash" />
-	<window width="640" height="480" fps="30" orientation="landscape" background="0x000000" fullscreen="false" unless="flash" />
+	<window width="640" height="480" fps="30" orientation="landscape" background="0xcccccc" fullscreen="false" unless="flash" />
  	
 	<classpath name="source" />
 	
@@ -67,6 +67,8 @@
 	
 	<assets path="assets" exclude="*.wav" if="flash" />
 	<assets path="assets" unless="flash" />
+	
+	<haxedef name="FLX_RECORD" />
 	
 	<icon name="assets/HaxeFlixel.svg" />
 </project>

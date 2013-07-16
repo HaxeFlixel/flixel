@@ -13,7 +13,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.Lib;
 import flash.ui.Keyboard;
-import org.flixel.FlxGame;
+import flixel.FlxGame;
 
 /**
  * @author Joshua Granick
