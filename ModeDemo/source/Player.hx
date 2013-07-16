@@ -2,12 +2,12 @@ package;
 
 import openfl.Assets;
 import flash.display.BlendMode;
-import org.flixel.FlxButton;
-import org.flixel.FlxEmitter;
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.FlxSprite;
+import flixel.ui.FlxButton;
+import flixel.effects.particles.FlxEmitter;
+import flixel.FlxG;
+import flixel.group.FlxGroup;
+import flixel.FlxObject;
+import flixel.FlxSprite;
 
 class Player extends FlxSprite
 {
@@ -80,7 +80,7 @@ class Player extends FlxSprite
 		//make a little noise if you just touched the floor
 		if(justTouched(FlxObject.FLOOR) && (velocity.y > 50))
 		{
-			FlxG.play("Land");
+			FlxG.sound.play("Land");
 		}
 		
 		//MOVEMENT
@@ -102,7 +102,7 @@ class Player extends FlxSprite
 	//	if((FlxG.keys.justPressed("X") || (PlayStateOld.JumpButton.status == FlxButton.PRESSED && isReadyToJump)) && velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
-			FlxG.play("Jump");
+			FlxG.sound.play("Jump");
 		}
 		
 		if (PlayState.JumpButton.status == FlxButton.PRESSED && isReadyToJump)
@@ -151,7 +151,7 @@ class Player extends FlxSprite
 		{
 			if(flickering)
 			{
-				FlxG.play("Jam");
+				FlxG.sound.play("Jam");
 			}
 			else
 			{
@@ -174,7 +174,7 @@ class Player extends FlxSprite
 		{
 			return;
 		}
-		FlxG.play("Hurt");
+		FlxG.sound.play("Hurt");
 		
 		flicker(1.3);
 		if(Reg.score > 1000) Reg.score -= 1000;
@@ -196,15 +196,15 @@ class Player extends FlxSprite
 			return;
 		}
 		solid = false;
-		FlxG.play("Asplode");
-		FlxG.play("MenuHit2");
+		FlxG.sound.play("Asplode");
+		FlxG.sound.play("MenuHit2");
 		
 		super.kill();
 		flicker(0);
 		exists = true;
 		visible = false;
-		velocity.make();
-		acceleration.make();
+		velocity.set();
+		acceleration.set();
 		FlxG.camera.shake(0.005, 0.35);
 		FlxG.camera.flash(0xffd8eba2, 0.35);
 		if(_gibs != null)

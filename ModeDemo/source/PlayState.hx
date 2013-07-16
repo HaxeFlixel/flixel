@@ -4,18 +4,18 @@ import openfl.Assets;
 import flash.display.Bitmap;
 import flash.events.MouseEvent;
 import flash.Lib;
-import org.flixel.FlxButton;
-import org.flixel.FlxCamera;
-import org.flixel.FlxEmitter;
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.util.FlxPoint;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.FlxTextField;
-import org.flixel.FlxTilemap;
+import flixel.ui.FlxButton;
+import flixel.FlxCamera;
+import flixel.effects.particles.FlxEmitter;
+import flixel.FlxG;
+import flixel.group.FlxGroup;
+import flixel.FlxObject;
+import flixel.util.FlxPoint;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.text.FlxText;
+import flixel.text.FlxTextField;
+import flixel.tile.FlxTilemap;
 
 class PlayState extends FlxState
 {
@@ -66,10 +66,6 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		#if (cpp || neko)
-		atlas = createAtlas("GeneralAtlas", 1024, 1024);
-		#end
-		
 		//FlxG.mouse.hide();
 		
 		//Here we are creating a pool of 100 little metal bits that can be exploded.
@@ -82,10 +78,6 @@ class PlayState extends FlxState
 		_littleGibs.bounce = 0.5;
 		_littleGibs.makeParticles(FlxAssets.imgGibs, 100, 10, true, 0.5);
 		
-		#if (cpp || neko)
-		_littleGibs.atlas = atlas;
-		#end
-		
 		//Next we create a smaller pool of larger metal bits for exploding.
 		_bigGibs = new FlxEmitter();
 		_bigGibs.setXSpeed( -200, 200);
@@ -94,10 +86,6 @@ class PlayState extends FlxState
 		_bigGibs.gravity = 350;
 		_bigGibs.bounce = 0.35;
 		_bigGibs.makeParticles(FlxAssets.imgSpawnerGibs, 50, 20, true, 0.5);
-		
-		#if (cpp || neko)
-		_bigGibs.atlas = atlas;
-		#end
 		
 		//Then we'll set up the rest of our object groups or pools
 		_decorations = new FlxGroup();
@@ -140,10 +128,6 @@ class PlayState extends FlxState
 		//Then we add the player and set up the scrolling camera,
 		//which will automatically set the boundaries of the world.
 		add(_player);
-		
-		#if (cpp || neko)
-		_player.atlas = atlas;
-		#end
 		
 		FlxG.camera.setBounds(0, 0, 640, 640, true);
 		FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
@@ -214,58 +198,49 @@ class PlayState extends FlxState
 		_hud.setAll("scrollFactor", new FlxPoint(0, 0));
 		_hud.setAll("cameras", [FlxG.camera]);
 		
-		FlxG.playMusic("Mode");
+		FlxG.sound.playMusic("Mode");
 		
-		FlxG.flash(0xff131c1b);
+		FlxG.cameraFX.flash(0xff131c1b);
 		_fading = false;
 		
-		FlxG.sounds.maxSize = 20;
+		FlxG.sound.list.maxSize = 20;
 		
 		//Debugger Watch examples
 		//FlxG.watch(_player, "x");
 		//FlxG.watch(_player, "y");
-		FlxG.watch(_enemies, "length", "numEnemies");
-		FlxG.watch(_enemyBullets, "length", "numEnemyBullets");
-		FlxG.watch(FlxG.sounds, "length", "numSounds");
+		FlxG.watch.add(_enemies, "length", "numEnemies");
+		FlxG.watch.add(_enemyBullets, "length", "numEnemyBullets");
+		FlxG.watch.add(FlxG.sound.list, "length", "numSounds");
 		
 		LeftButton = new FlxButton(1000, 0, "Left");
 		LeftButton.scrollFactor = new FlxPoint(1.0, 1.0);
 		LeftButton.color = 0xff729954;
 		LeftButton.label.color = 0xffd8eba2;
 		add(LeftButton);
-		#if (cpp || neko)
-		_bigGibs.atlas = atlas;
-		#end
 		
 		var leftCam:FlxCamera = new FlxCamera(Math.floor(10 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
 		leftCam.follow(LeftButton, FlxCamera.STYLE_NO_DEAD_ZONE);
-		FlxG.addCamera(leftCam);
+		FlxG.cameras.add(leftCam);
 		
 		RightButton = new FlxButton(1000, 100, "Right");
 		RightButton.scrollFactor = new FlxPoint(1.0, 1.0);
 		RightButton.color = 0xff729954;
 		RightButton.label.color = 0xffd8eba2;
 		add(RightButton);
-		#if (cpp || neko)
-		RightButton.atlas = atlas;
-		#end
 		
 		var rightCam:FlxCamera = new FlxCamera(Math.floor(100 * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
 		rightCam.follow(RightButton, FlxCamera.STYLE_NO_DEAD_ZONE);
-		FlxG.addCamera(rightCam);
+		FlxG.cameras.add(rightCam);
 		
 		JumpButton = new FlxButton(1000, 200, "Jump");
 		JumpButton.scrollFactor = new FlxPoint(1.0, 1.0);
 		JumpButton.color = 0xff729954;
 		JumpButton.label.color = 0xffd8eba2;
 		add(JumpButton);
-		#if (cpp || neko)
-		_bigGibs.atlas = atlas;
-		#end
 		
 		var jumpCam:FlxCamera = new FlxCamera(Math.floor((FlxG.width - 90) * FlxG.camera.zoom), Math.floor((FlxG.height - 20) * FlxG.camera.zoom), Math.floor(LeftButton.width), Math.floor(LeftButton.height));
 		jumpCam.follow(JumpButton, FlxCamera.STYLE_NO_DEAD_ZONE);
-		FlxG.addCamera(jumpCam);
+		FlxG.cameras.add(jumpCam);
 	}
 	
 	override public function destroy():Void
@@ -362,7 +337,7 @@ class PlayState extends FlxState
 					{
 						volume = 1.0;
 					}
-					FlxG.play("Countdown", volume);
+					FlxG.sound.play("Countdown", volume);
 				}
 			}
 		
@@ -370,7 +345,7 @@ class PlayState extends FlxState
 			if(_spawners.countLiving() <= 0)
 			{
 				_fading = true;
-				FlxG.fade(0xffd8eba2, 3, false, onVictory);
+				FlxG.cameraFX.fade(0xffd8eba2, 3, false, onVictory);
 			}
 		}
 		
@@ -440,12 +415,9 @@ class PlayState extends FlxState
 		buildRoom(r * 3, r * 3, true);
 		
 		tileMap = new FlxTilemap();
+		tileMap.tileScaleHack = 1.05;
 		tileMap.loadMap(FlxTilemap.arrayToCSV(map, MAP_WIDTH_IN_TILES), "assets/img_tiles.png", 8, 8, FlxTilemap.OFF);
 		add(tileMap);
-		
-		#if (cpp || neko)
-		tileMap.atlas = atlas;
-		#end
 	}
 	
 	//Just plops down a spawner and some blocks - haphazard and crappy atm but functional!
@@ -457,12 +429,12 @@ class PlayState extends FlxState
 		var sy:Int = 0;
 		if(Spawners)
 		{
-			sx = Math.floor(2 + FlxG.random() * (rw - 7));
-			sy = Math.floor(2 + FlxG.random() * (rw - 7));
+			sx = Math.floor(2 + Math.random() * (rw - 7));
+			sy = Math.floor(2 + Math.random() * (rw - 7));
 		}
 		
 		//then place a bunch of blocks
-		var numBlocks:Int = Math.floor(3 + FlxG.random() * 4);
+		var numBlocks:Int = Math.floor(3 + Math.random() * 4);
 		if(!Spawners) numBlocks++;
 		var maxW:Int = 10;
 		var minW:Int = 2;
@@ -478,10 +450,10 @@ class PlayState extends FlxState
 			do
 			{
 				//keep generating different specs if they overlap the spawner
-				bw = Math.floor(minW + FlxG.random() * (maxW - minW));
-				bh = Math.floor(minH + FlxG.random() * (maxH - minH));
-				bx = Math.floor( -1 + FlxG.random() * (rw + 1 - bw));
-				by = Math.floor( -1 + FlxG.random() * (rw + 1 - bh));
+				bw = Math.floor(minW + Math.random() * (maxW - minW));
+				bh = Math.floor(minH + Math.random() * (maxH - minH));
+				bx = Math.floor( -1 + Math.random() * (rw + 1 - bw));
+				by = Math.floor( -1 + Math.random() * (rw + 1 - bh));
 				if(Spawners)
 				{
 					check = ((sx>bx+bw) || (sx+3<bx) || (sy>by+bh) || (sy+3<by));
@@ -507,21 +479,15 @@ class PlayState extends FlxState
 			//Finally actually add the spawner
 			var sp:Spawner = new Spawner(RX + sx * 8, RY + sy * 8, _bigGibs, _enemies, _enemyBullets, _littleGibs, _player);
 			_spawners.add(sp);
-			#if (cpp || neko)
-			sp.atlas = atlas;
-			#end
 			
 			//Then create a dedicated camera to watch the spawner
 			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, FlxAssets.imgMiniFrame);
 			_hud.add(miniFrame);
-			#if (cpp || neko)
-			miniFrame.atlas = atlas;
-			#end
 			
 			var ratio:Float = FlxCamera.defaultZoom / 2;
 			var camera:FlxCamera = new FlxCamera(Math.floor(ratio * (10 + (_spawners.length - 1) * 32)), Math.floor(ratio * 10), 24, 24, ratio);
 			camera.follow(sp, FlxCamera.STYLE_NO_DEAD_ZONE);
-			FlxG.addCamera(camera);
+			FlxG.cameras.add(camera);
 		}
 	}
 	

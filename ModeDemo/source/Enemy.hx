@@ -3,14 +3,14 @@ package;
 import openfl.Assets;
 import flash.display.BlendMode;
 import flash.geom.Point;
-import org.flixel.FlxEmitter;
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.util.FlxAngle;
-import org.flixel.util.FlxMath;
-import org.flixel.util.FlxPoint;
-import org.flixel.FlxSprite;
+import flixel.effects.particles.FlxEmitter;
+import flixel.FlxG;
+import flixel.group.FlxGroup;
+import flixel.FlxObject;
+import flixel.util.FlxAngle;
+import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
+import flixel.FlxSprite;
 
 class Enemy extends FlxSprite
 {
@@ -44,11 +44,6 @@ class Enemy extends FlxSprite
 		loadRotatedGraphic("assets/bot.png", 64, 0, false, false);
 		#else
 		loadGraphic("assets/bot.png");
-		
-		if (FlxG.state.atlas != null)
-		{
-			atlas = FlxG.state.atlas;
-		}
 		#end
 
 		//We want the enemy's "hit box" or actual size to be
@@ -62,13 +57,6 @@ class Enemy extends FlxSprite
 		_jets = new FlxEmitter();
 		_jets.setRotation();
 		_jets.makeParticles(FlxAssets.imgJet, 15, 0, false, 0);
-		
-		#if (cpp || neko)
-		if (FlxG.state.atlas != null)
-		{
-			atlas = FlxG.state.atlas;
-		}
-		#end
 		
 		//These parameters help control the ship's
 		//speed and direction during the update() loop.
@@ -191,7 +179,7 @@ class Enemy extends FlxSprite
 				_jets.start(false, 0.5, 0.01);
 				if(onScreen())
 				{
-					FlxG.play("Jet");
+					FlxG.sound.play("Jet");
 				}
 			}
 			//Then, position the jets at the center of the Enemy,
@@ -221,7 +209,7 @@ class Enemy extends FlxSprite
 	//and damage is dealt to the Enemy.
 	override public function hurt(Damage:Float):Void
 	{
-		FlxG.play("Hit");
+		FlxG.sound.play("Hit");
 		
 		flicker(0.2);
 		Reg.score += 10;
@@ -236,7 +224,7 @@ class Enemy extends FlxSprite
 		{
 			return;
 		}
-		FlxG.play("Asplode");
+		FlxG.sound.play("Asplode");
 		
 		super.kill();
 		flicker(0);

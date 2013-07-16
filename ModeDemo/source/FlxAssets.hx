@@ -1,5 +1,6 @@
 package ;
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.media.Sound;
 import openfl.Assets;
 
@@ -11,83 +12,18 @@ import openfl.Assets;
 class FlxAssets 
 {
 
-	public static var imgBullet:Class<Bitmap> = ImgBullet;
-	public static var imgSpawnerGibs:Class<Bitmap> = ImgSpawnerGibs;
-	public static var imgSpawner:Class<Bitmap> = ImgSpawner;
-	public static var imgSpaceman:Class<Bitmap> = ImgSpaceman;
-	public static var imgBot:Class<Bitmap> = ImgBot;
-	public static var imgJet:Class<Bitmap> = ImgJet;
-	public static var imgBotBullet:Class<Bitmap> = ImgBotBullet;
-	public static var imgTechTiles:Class<Bitmap> = ImgTechTiles;
-	public static var imgDirtTop:Class<Bitmap> = ImgDirtTop;
-	public static var imgDirt:Class<Bitmap> = ImgDirt;
-	public static var imgGibs:Class<Bitmap> = ImgGibs;
-	public static var imgMiniFrame:Class<Bitmap> = ImgMiniFrame;
-	public static var imgCursor:Class<Bitmap> = ImgCursor;
+	public static var imgBullet:String = "assets/bullet.png";
+	public static var imgSpawnerGibs:String = "assets/spawner_gibs.png";
+	public static var imgSpawner:String = "assets/spawner.png";
+	public static var imgSpaceman:String = "assets/spaceman.png";
+	public static var imgBot:String = "assets/bot.png";
+	public static var imgJet:String = "assets/jet.png";
+	public static var imgBotBullet:String = "assets/bot_bullet.png";
+	public static var imgTechTiles:String = "assets/tech_tiles.png";
+	public static var imgDirtTop:String = "assets/dirt_top.png";
+	public static var imgDirt:String = "assets/dirt.png";
+	public static var imgGibs:String = "assets/gibs.png";
+	public static var imgMiniFrame:String = "assets/miniframe.png";
+	public static var imgCursor:String = "assets/cursor.png";
 	
-}
-
-class ImgBullet extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/bullet.png")); }
-}
-
-class ImgSpawnerGibs extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/spawner_gibs.png")); }
-}
-
-class ImgSpawner extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/spawner.png")); }
-}
-
-class ImgSpaceman extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/spaceman.png")); }
-}
-
-class ImgBot extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/bot.png")); }
-}
-
-class ImgJet extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/jet.png")); }
-}
-
-class ImgBotBullet extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/bot_bullet.png")); }
-}
-
-class ImgTechTiles extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/tech_tiles.png")); }
-}
-
-class ImgDirtTop extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/dirt_top.png")); }
-}
-
-class ImgDirt extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/dirt.png")); }
-}
-
-class ImgGibs extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/gibs.png")); }
-}
-
-class ImgMiniFrame extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/miniframe.png")); }
-}
-
-class ImgCursor extends Bitmap
-{
-	public function new() { super(Assets.getBitmapData("assets/cursor.png")); }
 }
