@@ -1,23 +1,21 @@
 package;
 
-import openfl.Assets;
-import flash.display.BlendMode;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
-import flixel.group.FlxGroup;
 import flixel.FlxSprite;
+import flixel.group.FlxTypedGroup;
 
 class Spawner extends FlxSprite
 {
 	private var _timer:Float;
-	private var _bots:FlxGroup;
-	private var _botBullets:FlxGroup;
+	private var _bots:FlxTypedGroup<Enemy>;
+	private var _botBullets:FlxTypedGroup<EnemyBullet>;
 	private var _botGibs:FlxEmitter;
 	private var _gibs:FlxEmitter;
 	private var _player:Player;
 	private var _open:Bool;
 	
-	public function new(X:Int, Y:Int, Gibs:FlxEmitter, Bots:FlxGroup, BotBullets:FlxGroup, BotGibs:FlxEmitter, ThePlayer:Player)
+	public function new(X:Int, Y:Int, Gibs:FlxEmitter, Bots:FlxTypedGroup<Enemy>, BotBullets:FlxTypedGroup<EnemyBullet>, BotGibs:FlxEmitter, ThePlayer:Player)
 	{
 		super(X, Y);
 		loadGraphic("assets/spawner.png", true);
@@ -49,54 +47,57 @@ class Spawner extends FlxSprite
 	{
 		_timer += FlxG.elapsed;
 		var limit:Int = 20;
-		if(onScreen())
+		
+		if (onScreen())
 		{
 			limit = 4;
 		}
-		if(_timer > limit)
+		if (_timer > limit)
 		{
 			_timer = 0;
 			makeBot();
 		}
-		else if(_timer > limit - 0.35)
+		else if (_timer > limit - 0.35)
 		{
-			if(!_open)
+			if (!_open)
 			{
 				_open = true;
 				play("open");
 			}
 		}
-		else if(_timer > 1)
+		else if (_timer > 1)
 		{
-			if(_open)
+			if (_open)
 			{
 				play("close");
 				_open = false;
 			}
 		}
-			
+		
 		super.update();
 	}
 	
 	override public function hurt(Damage:Float):Void
 	{
 		FlxG.sound.play("Hit");
-		
 		flicker(0.2);
 		Reg.score += 50;
+		
 		super.hurt(Damage);
 	}
 	
 	override public function kill():Void
 	{
-		if(!alive)
+		if (!alive)
 		{
 			return;
 		}
+		
 		FlxG.sound.play("Asplode");
 		FlxG.sound.play("MenuHit2");
 		
 		super.kill();
+		
 		active = false;
 		exists = true;
 		solid = false;
@@ -113,7 +114,7 @@ class Spawner extends FlxSprite
 	
 	private function makeBot():Void
 	{
-		cast(_bots.recycle(Enemy), Enemy).init(Math.floor(x + width / 2), Math.floor(y + height / 2), _botBullets, _botGibs, _player);
+		_bots.recycle(Enemy).init(Math.floor(x + width / 2), Math.floor(y + height / 2), _botBullets, _botGibs, _player);
 	}
 	
 	private function turnOffSlowMo():Void

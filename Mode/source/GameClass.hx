@@ -1,26 +1,23 @@
 package;
 
-import flash.display.Bitmap;
-import flash.display.Sprite;
 import flash.Lib;
-import flixel.FlxG;
 import flixel.FlxGame;
-import openfl.Assets;
+import flixel.FlxG;
 	
-class Mode extends FlxGame
-{
+class GameClass extends FlxGame
+{	
 	public function new()
 	{
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
+		
 		var ratioX:Float = stageWidth / 320;
 		var ratioY:Float = stageHeight / 240;
 		var ratio:Float = Math.min(ratioX, ratioY);
-		#if (flash || desktop || neko)
-		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), MenuState, ratio, 60, 60);
-		#else
-		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), MenuState, ratio, 60, 30);
-		#end
+		
+		var fps:Int = 60;
+		
+		super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), MenuState, ratio, fps, fps);
 		
 		#if android
 		FlxG.addSound("Beep");
