@@ -63,13 +63,14 @@ class CachedGraphics
 		if (canBeDumped)
 		{
 			bitmap.dumpBits();
-			bitmap = null;
 			isDumped = true;
 		}
 		#end
 	}
 	
-	// TODO: check this later
+	/**
+	 * Undumps bits of bitmapdata - regenerates it and regenerate tilesheet data for this object
+	 */
 	public function undump():Void
 	{
 		#if !(flash || js)

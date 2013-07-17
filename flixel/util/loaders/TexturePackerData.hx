@@ -1,5 +1,6 @@
 package flixel.util.loaders;
 
+import flixel.FlxG;
 import flixel.system.FlxAssets;
 import openfl.Assets;
 import flash.geom.Rectangle;
@@ -43,8 +44,10 @@ class TexturePackerData
 	{
 		// No need to parse data again
 		if (frames.length != 0)	return;
-		// TODO: cache this bitmapdata
-		this.asset = FlxAssets.getBitmapData(this.assetName);
+		
+		if (assetName == null || description == null)	return;
+		
+		this.asset = FlxG.bitmap.add(this.assetName).bitmap;
 		var data:Dynamic = Json.parse(Assets.getText(description));
 		
 		for (frame in Lambda.array(data.frames))
