@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="UIDemoClicheQuest" file="UIDemoClicheQuest" main="Main" version="0.0.0" company="Level Up Labs"/>
+	<app title="Menus" file="Menus" main="Main" version="0.0.0" company="Level Up Labs"/>
 	
 	<window width="800" height="600" fps="30" orientation="landscape" fullscreen="false"/>
  	
