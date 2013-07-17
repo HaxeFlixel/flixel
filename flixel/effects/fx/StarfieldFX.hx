@@ -11,9 +11,8 @@ import flixel.util.FlxColorUtil;
 import flixel.util.FlxGradient;
 import flixel.util.FlxMisc;
 import flixel.system.layer.DrawStackItem;
+import flixel.system.layer.Region;
 import flixel.FlxBasic;
-import flixel.util.loaders.Region;
-import flixel.util.loaders.TextureRegion;
 
 
 /**
