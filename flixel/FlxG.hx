@@ -353,20 +353,6 @@ class FlxG
 	{
 		FlxInputs.resetInputs();
 	}
-
-	/**
-	 * Disable/Enable keyboard input (useful when the console window is open).
-	 */
-	static public var keyboardInputEnabled(get, set):Bool;
-	static private function get_keyboardInputEnabled():Bool
-	{
-		return keys.enabled;
-	}
-	static private function set_keyboardInputEnabled(value:Bool):Bool
-	{
-		keys.enabled = value;
-		return value;
-	}
 	
 	public static var stage(get, never):Stage;
 	
