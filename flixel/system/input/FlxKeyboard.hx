@@ -102,6 +102,8 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	public var LEFT			(get_LEFT, never) : Bool; function get_LEFT()			{ return pressed("LEFT"); }
 	public var RIGHT		(get_RIGHT, never) : Bool; function get_RIGHT()		{ return pressed("RIGHT"); }
 	
+	public var enabled : Bool = true;
+
 	public function new()
 	{
 		super();
@@ -266,16 +268,19 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		}
 		#end
 		
-		var object:FlxMapObject = _keyMap[FlashEvent.keyCode];
-		
-		if (object == null) 
-			return;
-		if (object.current > 0) 
-			object.current = -1;
-		else 
-			object.current = 0;
+		if(enabled)
+		{
+			var object:FlxMapObject = _keyMap[FlashEvent.keyCode];
 			
-		_keyBools.set(object.name, false);
+			if (object == null) 
+				return;
+			if (object.current > 0) 
+				object.current = -1;
+			else 
+				object.current = 0;
+				
+			_keyBools.set(object.name, false);
+		}
 	}
 	
 	/**
@@ -319,12 +324,15 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			return;
 		}
 		#end
-		
-		var o:FlxMapObject = _keyMap[FlashEvent.keyCode];
-		if (o == null) return;
-		if(o.current > 0) o.current = 1;
-		else o.current = 2;
-		_keyBools.set(o.name, true);
+
+		if(enabled)
+		{
+			var o:FlxMapObject = _keyMap[FlashEvent.keyCode];
+			if (o == null) return;
+			if(o.current > 0) o.current = 1;
+			else o.current = 2;
+			_keyBools.set(o.name, true);
+		}
 	}
 
 	public function onFocus( ):Void
