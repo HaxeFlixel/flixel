@@ -4,7 +4,10 @@ import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TexturePackerData;
+import flixel.util.loaders.TextureAtlasFrame;
 import flixel.util.loaders.TextureRegion;
 import flixel.atlas.FlxNode;
 import flixel.system.FlxAssets;
@@ -178,6 +181,11 @@ class FlxAtlas
 		return root.height;
 	}
 	
+	/**
+	 * Generates TextureRegion object for node with specified name
+	 * @param	nodeName	name of the node to generate TextureRegion object for
+	 * @return	Generated TextureRegion
+	 */
 	public function getRegionFor(nodeName:String):TextureRegion
 	{
 		if (hasNodeWithName(nodeName))
@@ -194,6 +202,42 @@ class FlxAtlas
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Generates TexturePackerData object for this atlas. Where each frame represents one of the inserted images
+	 * @return TexturePackerData for this atlas
+	 */
+	public function getTextureData():TexturePackerData
+	{
+		var cached:CachedGraphics = FlxG.bitmap.add(this.atlasBitmapData, false, name);
+		
+		if (cached.data == null)
+		{
+			var packerData:TexturePackerData = new TexturePackerData(null, name);
+			var node:FlxNode;
+			for (key in nodes.keys())
+			{
+				node = nodes.get(key);
+				if (node.filled)
+				{
+					var texFrame:TextureAtlasFrame = new TextureAtlasFrame();
+					
+					texFrame.trimmed = false;
+					texFrame.rotated = false;
+					texFrame.name = key;
+					texFrame.sourceSize = new FlxPoint(node.width, node.height);
+					texFrame.offset = new FlxPoint(0, 0);
+					texFrame.frame = new Rectangle(node.x, node.y, node.width, node.height);
+					
+					packerData.frames.push(texFrame);
+				}
+			}
+			
+			cached.data = packerData;
+		}
+		
+		return cached.data;
 	}
 	
 	/**
