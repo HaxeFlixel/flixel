@@ -1,6 +1,6 @@
 ﻿![](http://www.haxeflixel.com/sites/all/themes/haxeflixel_bootstrap/assets/images/haxeflixel-logo.png)
 =
-###Related: [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-demos](https://github.com/HaxeFlixel/flixel-demos) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
+### [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-demos](https://github.com/HaxeFlixel/flixel-demos) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
 ______________________________________________________
 [HaxeFlixel](http://www.haxeflixel.com/) is an open source 2D game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Open Flash Library](https://github.com/openfl).
 
