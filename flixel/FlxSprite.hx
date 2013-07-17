@@ -298,7 +298,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
 	{
-		_cachedGraphics = Sprite.cachedGraphics;
+		setCachedGraphics(Sprite.cachedGraphics);
 		_region = Sprite.region.clone();
 		flipped = Sprite.flipped;
 		bakedRotation = Sprite.bakedRotation;
@@ -334,7 +334,7 @@ class FlxSprite extends FlxObject
 	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite
 	{
 		bakedRotation = 0;
-		_cachedGraphics = FlxG.bitmap.add(Graphic, Unique, Key);
+		setCachedGraphics(FlxG.bitmap.add(Graphic, Unique, Key));
 		
 		flipped = (Reverse == true) ? _cachedGraphics.bitmap.width : 0;
 		
@@ -474,7 +474,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		var skipGen:Bool = FlxG.bitmap.checkCache(key);
-		_cachedGraphics = FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.TRANSPARENT, true, key);
+		setCachedGraphics(FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.TRANSPARENT, true, key));
 		bakedRotation = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
@@ -540,7 +540,7 @@ class FlxSprite extends FlxObject
 	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
 	{
 		bakedRotation = 0;
-		_cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
+		setCachedGraphics(FlxG.bitmap.create(Width, Height, Color, Unique, Key));
 		_region = new Region();
 		_region.width = Width;
 		_region.height = Height;
@@ -566,7 +566,7 @@ class FlxSprite extends FlxObject
 		
 		if (Std.is(Data, CachedGraphics))
 		{
-			_cachedGraphics = cast Data;
+			setCachedGraphics(cast Data);
 			if (_cachedGraphics.data == null)
 			{
 				return null;
@@ -574,7 +574,7 @@ class FlxSprite extends FlxObject
 		}
 		else if (Std.is(Data, TexturePackerData))
 		{
-			_cachedGraphics = FlxG.bitmap.add(Data.assetName, Unique);
+			setCachedGraphics(FlxG.bitmap.add(Data.assetName, Unique));
 			_cachedGraphics.data = cast Data;
 		}
 		else
@@ -1405,7 +1405,7 @@ class FlxSprite extends FlxObject
 			FlxG.bitmap.add(Pixels, false, key);
 		}
 		
-		_cachedGraphics = FlxG.bitmap.get(key);
+		setCachedGraphics(FlxG.bitmap.get(key));
 		_region = new Region();
 		_region.width = _cachedGraphics.bitmap.width;
 		_region.height = _cachedGraphics.bitmap.height;

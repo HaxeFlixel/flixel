@@ -1,6 +1,7 @@
 package flixel.util.loaders;
 
 import flash.display.BitmapData;
+import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.TileSheetData;
@@ -45,6 +46,19 @@ class CachedGraphics
 	public var canBeDumped(get, null):Bool;
 	
 	public var tilesheet(get_tilesheet, null):TileSheetData;
+	
+	/**
+	 * Usage counter for this CachedGraphics object.
+	 */
+	public var useCount(get, set):Int;
+	
+	private var _useCount:Int = 0;
+	
+	/**
+	 * Whether we should destroy this CachedGraphics object when useCount become zero.
+	 * Default if false.
+	 */
+	public var destroyOnNoUse:Bool = false;
 	
 	public function new(key:String, bitmap:BitmapData, persist:Bool = false)
 	{
@@ -178,5 +192,22 @@ class CachedGraphics
 	private function get_canBeDumped():Bool
 	{
 		return (assetsClass != null || assetsKey != null);
+	}
+	
+	private function get_useCount():Int
+	{
+		return _useCount;
+	}
+	
+	private function set_useCount(Value:Int):Int
+	{
+		_useCount = Value;
+		
+		if (_useCount <= 0 && destroyOnNoUse)
+		{
+			FlxG.bitmap.remove(key);
+		}
+		
+		return Value;
 	}
 }

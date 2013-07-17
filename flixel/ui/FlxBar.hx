@@ -476,8 +476,8 @@ class FlxBar extends FlxSprite
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		#else
-		_cachedGraphics = FlxG.bitmap.get(emptyKey);
-		_cachedFrontGraphics = FlxG.bitmap.get(filledKey);
+		setCachedGraphics(FlxG.bitmap.get(emptyKey));
+		setCachedFrontGraphics(FlxG.bitmap.get(filledKey));
 		
 		_region = new Region();
 		_region.width = _cachedGraphics.bitmap.width;
@@ -595,8 +595,8 @@ class FlxBar extends FlxSprite
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		#else
-		_cachedGraphics = FlxG.bitmap.get(emptyKey);
-		_cachedFrontGraphics = FlxG.bitmap.get(filledKey);
+		setCachedGraphics(FlxG.bitmap.get(emptyKey));
+		setCachedFrontGraphics(FlxG.bitmap.get(filledKey));
 		
 		_region = new Region();
 		_region.width = _cachedGraphics.bitmap.width;
@@ -784,8 +784,8 @@ class FlxBar extends FlxSprite
 		#if flash
 		canvas = new BitmapData(barWidth, barHeight, true, 0x0);
 		#else
-		_cachedGraphics = FlxG.bitmap.get(emptyKey);
-		_cachedFrontGraphics = FlxG.bitmap.get(filledKey);
+		setCachedGraphics(FlxG.bitmap.get(emptyKey));
+		setCachedFrontGraphics(FlxG.bitmap.get(filledKey));
 		
 		_region = new Region();
 		_region.width = _cachedGraphics.bitmap.width;
@@ -1276,5 +1276,19 @@ class FlxBar extends FlxSprite
 			_filledBarFrames.push(_cachedFrontGraphics.tilesheet.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * frameWidth, 0.5 * frameHeight)));
 		}
 	#end
+	}
+	
+	private function setCachedFrontGraphics(value:CachedGraphics):Void
+	{
+		if (_cachedFrontGraphics != null && _cachedFrontGraphics != value)
+		{
+			_cachedFrontGraphics.useCount--;
+		}
+		
+		if (_cachedFrontGraphics != value && value != null)
+		{
+			value.useCount++;
+		}
+		_cachedFrontGraphics = value;
 	}
 }

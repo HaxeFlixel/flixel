@@ -363,7 +363,7 @@ class FlxObject extends FlxBasic
 		path = null;
 		
 		_framesData = null;
-		_cachedGraphics = null;
+		setCachedGraphics(null);
 		_region = null;
 		
 		super.destroy();
@@ -1398,6 +1398,25 @@ class FlxObject extends FlxBasic
 	private function get_cachedGraphics():CachedGraphics
 	{
 		return _cachedGraphics;
+	}
+	
+	/**
+	 * Internal function for setting cachedGraphics property for this object. 
+	 * It changes cachedGraphics' useCount also for better memory tracking.
+	 * @param	value
+	 */
+	private function setCachedGraphics(value:CachedGraphics):Void
+	{
+		if (_cachedGraphics != null && _cachedGraphics != value)
+		{
+			_cachedGraphics.useCount--;
+		}
+		
+		if (_cachedGraphics != value && value != null)
+		{
+			value.useCount++;
+		}
+		_cachedGraphics = value;
 	}
 	
 	public var region(get_region, null):Region;

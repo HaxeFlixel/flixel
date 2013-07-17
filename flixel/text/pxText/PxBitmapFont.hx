@@ -90,7 +90,7 @@ class PxBitmapFont
 			_tileRects = [];
 			var result:BitmapData = preparePixelizerBitmapData(PxBitmapData, _tileRects);
 			var key:String = FlxG.bitmap.getUniqueKey("font");
-			_cachedGraphics = FlxG.bitmap.add(result, false, key);
+			setCachedGraphics(FlxG.bitmap.add(result, false, key));
 			_region = new Region();
 			_region.width = _cachedGraphics.bitmap.width;
 			_region.height = _cachedGraphics.bitmap.height;
@@ -122,7 +122,7 @@ class PxBitmapFont
 			_symbols = new Array<HelperSymbol>();
 			var result:BitmapData = prepareAngelCodeBitmapData(pBitmapData, pXMLData, _symbols);
 			var key:String = FlxG.bitmap.getUniqueKey("font");
-			_cachedGraphics = FlxG.bitmap.add(result, false, key);
+			setCachedGraphics(FlxG.bitmap.add(result, false, key));
 			
 			#if flash
 			updateGlyphData();
@@ -436,7 +436,7 @@ class PxBitmapFont
 		
 		_symbols = null;
 		_tileRects = null;
-		_cachedGraphics = null;
+		setCachedGraphics(null);
 		_region = null;
 		_glyphs = null;
 	}
@@ -674,6 +674,20 @@ class PxBitmapFont
 		#else
 		return _num_letters;
 		#end
+	}
+	
+	private function setCachedGraphics(value:CachedGraphics):Void
+	{
+		if (_cachedGraphics != null && _cachedGraphics != value)
+		{
+			_cachedGraphics.useCount--;
+		}
+		
+		if (_cachedGraphics != value && value != null)
+		{
+			value.useCount++;
+		}
+		_cachedGraphics = value;
 	}
 	
 	/**

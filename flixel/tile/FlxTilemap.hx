@@ -329,7 +329,7 @@ class FlxTilemap extends FlxObject
 		}
 		
 		// Figure out the size of the tiles
-		_cachedGraphics = FlxG.bitmap.add(TileGraphic);
+		setCachedGraphics(FlxG.bitmap.add(TileGraphic));
 		_tileWidth = TileWidth;
 		
 		if (_tileWidth <= 0)

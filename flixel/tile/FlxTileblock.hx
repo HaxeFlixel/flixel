@@ -129,7 +129,7 @@ class FlxTileblock extends FlxSprite
 		frameWidth = Std.int(width);
 		frameHeight = Std.int(height);
 		
-		_cachedGraphics = sprite.cachedGraphics;
+		setCachedGraphics(sprite.cachedGraphics);
 		_region = sprite.region.clone();
 		updateFrameData();
 		resetHelpers();
