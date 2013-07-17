@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<app title="UIDemoClicheQuest" file="UIDemoClicheQuest" main="Main" version="0.0.0" company="Level Up Labs"/>
+	
+	<window width="800" height="600" fps="30" orientation="landscape" fullscreen="false"/>
+ 	
+	<set name="BUILD_DIR" value="export" />
+	
+	<!--<setenv name="no_console" value="1" />-->
+	
+	<classpath name="source" />
+	
+	<assets path="assets" if="android" >
+		<sound path="data/beep.wav" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		
+	</assets>
+	
+	<assets path="assets" if="desktop" >
+		<sound path="data/beep.wav" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		
+	</assets>
+	
+	<assets path="assets" if="flash" >
+		<sound path="data/beep.mp3" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		
+	</assets>
+	
+	<assets path="assets" if="target_js" >
+		<sound path="data/beep.mp3" id="Beep" />
+		
+		<!-- Your sound embedding code here... -->
+		`
+	</assets>
+	
+	<assets path="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" unless="flash" />
+	
+	<icon name="assets/HaxeFlixel.svg" />
+	
+	<haxedef name="swfstats"/>
+	<!--<haxedef name="kong"/>-->
+	
+	<haxelib name="flixel"/>
+	<haxelib name="flixel-ui"/>
+	<haxelib name="flixel-addons"/>
+	<haxelib name="openfl"/>
+	<haxelib name="openfl-compatibility"/>
+	<!--<haxelib name="flixel"/>-->
+</project>

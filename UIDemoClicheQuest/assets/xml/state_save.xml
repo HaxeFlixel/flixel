@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<definition id="save_slot">
+		
+		<definition id="chrome" src="ui/chrome/dark_grey" slice9="4,4,8,8"/>
+		<definition id="chrome_texture" src="ui/chrome/dark_grey_texture" slice9="4,4,8,8"/>
+		<definition id="chrome_inset" src="ui/chrome/dark_grey_inset" slice9="4,4,8,8"/>
+	
+		<definition id="sans18" font="vera" size="18" style="bold" color="0xffffff" shadow="1" align="left"/>
+		<definition id="sans14" font="vera" size="14" style="bold" color="0xffffff" shadow="1" align="left"/>
+		<definition id="sans14y" font="vera" size="14" style="bold" color="0xffcc00" shadow="1" align="left"/>
+		<definition id="sans14c" font="vera" size="14" style="bold" color="0xffffff" shadow="1" align="center" dropShadow="true"/>
+		<definition id="sans13c" font="vera" size="13" style="bold" color="0xffffff" shadow="1" align="center" dropShadow="true"/>
+		<definition id="sans12" font="vera" size="12" style="" color="0xffffff" shadow="1" align="left"/>
+		<definition id="sans12c" font="vera" size="12" style="" color="0xffffff" shadow="1" align="center" dropShadow="true"/>
+		
+		<definition id="pixel" font="pixelarial" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+		
+		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="0">
+			<text id="hilight" use_def="sans14c"/>
+			<text id="normal" use_def="sans14c"/>
+			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,12,12"/>
+		</definition>
+		
+		<definition id="big_button_gold" width="93" height="31" text_x="-2" text_y="0">
+			<text id="hilight" use_def="sans13c"/>
+			<text id="normal" use_def="sans13c"/>
+			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,12,12"/>
+		</definition>		
+		
+		<definition id="skinny_button_gold" width="93" height="20" text_x="-2" text_y="0">
+			<text id="hilight" use_def="pixel"/>
+			<text id="normal" use_def="pixel"/>
+			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,12,12"/>
+		</definition>	
+		
+		<definition id="skinny_button_red" width="93" height="20" text_x="-2" text_y="0">
+			<text id="hilight" use_def="pixel"/>
+			<text id="normal" use_def="pixel"/>
+			<graphic id="normal" image="ui/buttons/red" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/red_over" slice9="6,6,12,12"/>
+		</definition>	
+		
+		<definition id="skinny_button_blue" width="93" height="20" text_x="-2" text_y="0">
+			<text id="hilight" use_def="pixel"/>
+			<text id="normal" use_def="pixel"/>
+			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,12,12"/>
+		</definition>	
+		
+		<group id="shadow"/>
+		<group id="back"/>
+		<group id="icons"/>
+		<group id="icon_texts"/>			
+		<group id="top"/>	
+		
+		<chrome id="back" use_def="chrome" width="697" height="113" group="back"/>
+		<chrome id="back_inset" x="7" y="7" use_def="chrome_inset" width="574" height="99" group="back"/>
+		
+		<!--<sprite id="back" src="ui/saveslot" group="back"/>-->
+		
+		<sprite id="back_shadow" src="ui/saveslot_shadow" center_on="back" group="shadow"/>		
+				
+		<sprite id="icon" src="other/portrait_mane" x="10" y="11" group="icons"/>
+		<sprite id="icon" src="other/icon_party" x="18" y="63" group="icons"/>
+				
+		<text id="example" use_def="sans14y" x="300" y="30" width="200" text="Untextured 9-slice chrome w/ scaling" group="top"/>
+		
+		<text id="name" use_def="sans18" x="60" y="10" width="200" text="Mane Lionhair$NLevel 5" group="top"/>
+		<text id="time" use_def="sans14" x="60" y="61" width="400" text="10 Hours, 15 Min" group="top"/>
+		<text id="date" use_def="sans14" x="60" y="78" width="300" text="January 1, 1975" group="top"/>
+				
+		<button id="play_big" use_def="big_button_blue" x="594" y="11" group="top" label="Play">
+			<param type="string" value="play"/>
+		</button>
+		
+		<button id="new_game" use_def="big_button_gold" x="594" y="11" group="top" label="New Game" visible="false">
+			<param type="string" value="new"/>
+		</button>
+		
+		<button id="play_small" use_def="skinny_button_blue" x="594" y="12" group="top" label="Play" visible="false">
+			<param type="string" value="play"/>
+		</button>
+		
+		<button id="play+" use_def="skinny_button_blue" x="594" y="35" group="top" label="Play+" visible="false">
+			<param type="string" value="play+"/>
+		</button>
+
+		<button id="import" use_def="skinny_button_gold" x="594" y="58" group="top" label="Import" visible="false">
+			<param type="string" value="import"/>
+		</button>
+
+		<button id="export" use_def="skinny_button_gold" x="594" y="58" group="top" label="Export">
+			<param type="string" value="export"/>
+		</button>
+
+		<button id="delete" use_def="skinny_button_red" x="594" y="81" group="top" label="Delete">
+			<param type="string" value="delete"/>
+		</button>
+		
+		<!--butt_load = new FlxButtonX(578, 11, onPress);
+		butt_export = new FlxButtonX(578, 52, onExport);
+		butt_del = new FlxButtonX(578, 76, onDel);
+		butt_import = new FlxButtonX(578, 52, onImport);-->
+		
+	</definition>
+	
+	<definition id="save_slot_texture">
+		
+		<definition id="chrome" src="ui/chrome/dark_grey_texture" slice9="4,4,8,8" tile="true"/>
+		<definition id="chrome_inset" src="ui/chrome/dark_grey_inset" slice9="4,4,8,8"/>
+	
+		<definition id="sans18" font="vera" size="18" style="bold" color="0xffffff" shadow="1" align="left"/>
+		<definition id="sans14" font="vera" size="14" style="bold" color="0xffffff" shadow="1" align="left"/>
+		<definition id="sans14c" font="vera" size="14" style="bold" color="0xffffff" shadow="1" align="center" dropShadow="true"/>
+		<definition id="sans14y" font="vera" size="14" style="bold" color="0xffcc00" shadow="1" align="left"/>
+		<definition id="sans13c" font="vera" size="13" style="bold" color="0xffffff" shadow="1" align="center" dropShadow="true"/>
+		<definition id="sans12" font="vera" size="12" style="" color="0xffffff" shadow="1" align="left"/>
+		<definition id="sans12c" font="vera" size="12" style="" color="0xffffff" shadow="1" align="center" dropShadow="true"/>
+		
+		<definition id="pixel" font="pixelarial" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+		
+		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="0">
+			<text id="hilight" use_def="sans14c"/>
+			<text id="normal" use_def="sans14c"/>
+			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,11,11"/>
+			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,11,11"/>
+		</definition>
+		
+		<definition id="big_button_gold" width="93" height="31" text_x="-2" text_y="0">
+			<text id="hilight" use_def="sans13c"/>
+			<text id="normal" use_def="sans13c"/>
+			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,11,11"/>
+			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,11,11"/>
+		</definition>		
+		
+		<definition id="skinny_button_gold" width="93" height="20" text_x="-2" text_y="0">
+			<text id="hilight" use_def="pixel"/>
+			<text id="normal" use_def="pixel"/>
+			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,11,11"/>
+			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,11,11"/>
+		</definition>	
+		
+		<definition id="skinny_button_red" width="93" height="20" text_x="-2" text_y="0">
+			<text id="hilight" use_def="pixel"/>
+			<text id="normal" use_def="pixel"/>
+			<graphic id="normal" image="ui/buttons/red" slice9="6,6,11,11"/>
+			<graphic id="hilight" image="ui/buttons/red_over" slice9="6,6,11,11"/>
+		</definition>	
+		
+		<definition id="skinny_button_blue" width="93" height="20" text_x="-2" text_y="0">
+			<text id="hilight" use_def="pixel"/>
+			<text id="normal" use_def="pixel"/>
+			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,11,11"/>
+			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,11,11"/>
+		</definition>	
+		
+		<group id="shadow"/>
+		<group id="back"/>
+		<group id="icons"/>
+		<group id="icon_texts"/>			
+		<group id="top"/>	
+		
+		<chrome id="back" use_def="chrome" width="697" height="113" group="back"/>
+		<chrome id="back_inset" x="7" y="7" use_def="chrome_inset" width="574" height="99" group="back"/>
+				
+		<sprite id="back_shadow" src="ui/saveslot_shadow" center_on="back" group="shadow"/>		
+				
+		<sprite id="icon" src="other/portrait_mane" x="10" y="11" group="icons"/>
+		<sprite id="icon" src="other/icon_party" x="18" y="63" group="icons"/>
+		
+		<text id="example" use_def="sans14y" x="300" y="30" width="200" text="Textured 9-slice chrome w/ tiling" group="top"/>
+				
+		<text id="name" use_def="sans18" x="60" y="10" width="200" text="Mane Lionhair$NLevel 5" group="top"/>
+		<text id="time" use_def="sans14" x="60" y="61" width="400" text="10 Hours, 15 Min" group="top"/>
+		<text id="date" use_def="sans14" x="60" y="78" width="300" text="January 1, 1975" group="top"/>
+				
+		<button id="play_big" use_def="big_button_blue" x="594" y="11" group="top" label="Play">
+			<param type="string" value="play"/>
+		</button>
+		
+		<button id="new_game" use_def="big_button_gold" x="594" y="11" group="top" label="New Game" visible="false">
+			<param type="string" value="new"/>
+		</button>
+		
+		<button id="play_small" use_def="skinny_button_blue" x="594" y="12" group="top" label="Play" visible="false">
+			<param type="string" value="play"/>
+		</button>
+		
+		<button id="play+" use_def="skinny_button_blue" x="594" y="35" group="top" label="Play+" visible="false">
+			<param type="string" value="play+"/>
+		</button>
+
+		<button id="import" use_def="skinny_button_gold" x="594" y="58" group="top" label="Import" visible="false">
+			<param type="string" value="import"/>
+		</button>
+
+		<button id="export" use_def="skinny_button_gold" x="594" y="58" group="top" label="Export">
+			<param type="string" value="export"/>
+		</button>
+
+		<button id="delete" use_def="skinny_button_red" x="594" y="81" group="top" label="Delete">
+			<param type="string" value="delete"/>
+		</button>
+		
+		<!--butt_load = new FlxButtonX(578, 11, onPress);
+		butt_export = new FlxButtonX(578, 52, onExport);
+		butt_del = new FlxButtonX(578, 76, onDel);
+		butt_import = new FlxButtonX(578, 52, onImport);-->
+		
+	</definition>	
+	
+	<sprite x="0" y="0" src="ui/title_back"/>
+	<sprite x="0" y="0" src="ui/save_menu_overlay"/>
+		
+	<save_slot id="1" x="60" y="165" use_def="save_slot"/>
+	<save_slot id="2" x="60" y="285" use_def="save_slot_texture"/>
+		
+	<button center_x="true" y="535" width="64" height="32" label="Back" text_x="-3" text_y="-1">
+		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
+		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
+		<param type="string" value="back"/>
+		<graphic id="border" visible="false"/>
+		<graphic id="hilight" visible="false"/>
+		<graphic id="normal" visible="false"/>
+	</button>
+	
+	<!--/*var back : FlxSprite;
+	var shadow : FlxSprite;
+	var group_icons : FlxGroup;
+	var text_name : FlxText;
+	var text_time : FlxText;
+	var text_date : FlxText;
+	var text_party : FlxText;
+	var text_act : FlxText;
+	var text_loc : FlxText;
+	var group_icon_texts : FlxGroup;
+	var butt_load : FlxButtonPlusX;
+	var butt_plus : FlxButtonPlusX;
+	var butt_del : FlxButtonPlusX;
+	var butt_test : FlxButtonPlusX;
+	var butt_import : FlxButtonPlusX;
+	var butt_export : FlxButtonPlusX;*/
+	/*var star_blue : FlxSprite;
+	var star_gold : FlxSprite;
+	var star_blue_text : FlxText;
+	var star_gold_text : FlxText;
+	var star_easy : FlxSprite;
+	var star_normal : FlxSprite;
+	var star_hard : FlxSprite;*/-->
+	
+</data>

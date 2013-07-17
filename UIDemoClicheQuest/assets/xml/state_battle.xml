@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<!--This will eventually have some test menus in it-->
+	
+	<!--DEFS-->
+	
+	<definition id="grey" src="ui/chrome/dark_grey"/>
+	<definition id="grey_flat" src="ui/chrome/dark_grey_flat_top"/>
+	
+	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	
+	<definition id="tempesta8" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="tempesta8y" font="pf_tempesta_seven" size="8" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	
+	<definition id="tempesta8c" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+	<definition id="tempesta8yc" font="pf_tempesta_seven" size="8" style="bold" color="0xffcc00" shadow="1" align="center"/>
+	
+	<definition id="tempesta8dc" font="pf_tempesta_seven" size="8" style="bold" color="0xcccccc" shadow="1" align="center"/>
+	<definition id="tempesta8dyc" font="pf_tempesta_seven" size="8" style="bold" color="0xccaa00" shadow="1" align="center"/>
+		
+	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	
+	<definition id="chrome_flat" src="ui/chrome/dark_grey_flat_top" slice9="4,4,8,8"/>
+	
+	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
+		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
+		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
+		<graphic id="border" visible="false"/>
+		<graphic id="hilight" visible="false"/>
+		<graphic id="normal" visible="false"/>
+	</definition>
+
+	<definition id="spell_button" width="32" height="32">
+		<graphic id="normal" image="ui/buttons/grey" slice9="6,6,11,11"/>
+		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
+	</definition>	
+	
+	<definition id="options_button" width="192" height="24">
+		<text id="hilight" font="vera" size="14" style="bold" color="0xffff00" shadow="1" align="center"/>
+		<text id="normal" font="vera" size="14" style="bold" color="0xffffff" shadow="1" align="center"/>
+		<graphic id="normal" image="ui/buttons/grey" slice9="6,6,11,11"/>
+		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
+	</definition>	
+	
+	<definition id="time_button" width="48" height="24">
+		<text id="hilight" font="pf_tempesta_seven" size="8" style="bold" color="0xffff00" shadow="1" align="center"/>
+		<text id="normal" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+		<graphic id="normal" image="ui/buttons/grey" slice9="6,6,11,11"/>
+		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
+	</definition>
+	
+	<!--STUFF-->
+	
+	<layout id="tall">
+		<chrome id="wave_bar" x="0" y="0" width="600" height="40" use_def="grey">
+			<anchor x="left" y="top" x-flush="left" y-flush="top"/>
+			
+			<!--<anchor/>
+			
+			Use this to "anchor" a UI element to a specific part of the screen. 
+			Specify what you are anchoring it to, and then which side is flush with it (ie, touching).
+						
+			Legal values for x and y:
+			object_id.position
+				
+			where position is "left", "right", "center", "top", "bottom", etc. If no object_id is given,
+			the position is interpreted as an edge of the screen itself.
+						
+			x-flush and y-flush specify what side of this object is touching the anchored position. 
+			Use "left", "right", "center", "top", "bottom", etc. 
+			
+			So, in the above case, the wave_bar's anchored is the screen's upper-left (0,0), and 
+			the upper-left corner of the wave_bar is made flush with this position.
+			-->
+			
+			<min_size width="stretch:0,panel" height="stretch:0,battlefield"/>			
+		</chrome>		
+		
+		<chrome id="panel" x="0" y="0" width="200" height="600" use_def="grey">
+			<anchor x="right" y="top" x-flush="right" y-flush="top"/> 					
+			<min_size width="18%" height="100%"/>   
+			<min_size width="stretch:battlefield,right"/>
+			
+			<!--<min_size/>
+			
+			Minimum size lets you define variable sizes for things. 
+			(Right now this only works with certain	resizable UI elements)
+			
+			If the object is less than the given minimum size in a particular 
+			dimension, it will resize itself to that. You can specify more 
+			than one minimum size condition, and it will try to fulfill all 
+			of them. 
+			
+			So in this case, the Panel must always be at least 18% of the 
+			screen's width, and 100% of its height.
+			
+			In the absence of a trailing "%" sign the value is interpreted as raw pixels.
+			
+			The second condition has a "stretch" command. 
+			Here, the width is defined as the space between the battlefield's 
+			rightmost pixel and the right edge of the screen.
+			
+			"stretch" commands are used to close gaps, and work by measuring 
+			the distance between one object's furthest edge and another's 
+			closest edge. For width, the first object is assumed to be on
+			the left and the second on the right. For height, the first object
+			is assumed to be above the second one. 
+			
+			So this object will be re-sized to whichever is greater: 
+			18% of the total screen size, OR:
+			The gap between the battlefield and the right edge of the screen.			
+			-->
+		</chrome>
+				
+		<tile_test id="battlefield" x="0" y="0" width="600" height="560" tiles_w="24" tiles_h="15">
+			<anchor x="left" y="bottom" x-flush="left" y-flush="bottom"/>
+			<min_size width="stretch:0,panel" height="stretch:wave_bar,bottom"/>
+			
+			<!--
+			The battlefield is anchored to the bottom left AT it's bottom left.
+			
+			The battlefield stretches from x=0 to the left edge of the "panel."
+			
+			The battlefield stretches from the wave bar's bottom, to the bottom
+			of the screen.
+			-->
+			
+		</tile_test>		
+		
+		<failure target ="wave_bar" property="height" compare=">" value="10%"/>
+		
+		<!--<failure/>
+		No matter how much resizing you do, your layout may not be able to accomodate
+		just any resolution, so you can put in "failure" tests to check for this. 
+		
+		We figure if the wave_bar is not greater than 10% of the total height, this layout
+		will not work. We can then supply an alternate layout that may work better, and the
+		game will automatically pick the one that doesn't fail.
+		
+		target is the id of the object for the test.
+		property is the property that is tested. For now legal values are "width" and "height" (syn. "w" and "h")
+		compare is the comparison operator. "<", ">", "<=", ">=", and "=" (syn. "==") are allowed.
+		value is the number of pixels. Put in a "%" sign to indicate % of screen size.  
+		-->
+
+		<text center_x="true" y="500" label="TALL" id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
+		
+		<button center_x="true" x="0" y="500" id="start" use_def="text_button" group="top" label="TALL">
+		</button>		
+	</layout>
+		
+	<layout id="wide">
+		
+		<!--waves group-->
+		<group id="waves"/>
+			<chrome id="wave_bar" x="0" y="0" width="40" height="600" use_def="grey" group="back">
+				<anchor x="right" y="top" x-flush="right" y-flush="top"/>
+				<min_size width="5%"/>
+				<min_size width="stretch:battlefield,right" height="100%"/>
+				<!--Stretch from 0 to panel's left edge, and from top to the battlefield-->		
+			</chrome>		
+			
+			<button id="time_0" x="0" y="-5" use_def="time_button" group="spell" label="P">
+				<anchor x="wave_bar.center" y="wave_bar.bottom" x-flush="center" y-flush="bottom"/>
+				<!--Stretch from -->
+			</button>			
+			<button id="time_1" x="0" y="-5" use_def="time_button" group="spell" label="1/4x">
+				<anchor x="time_0.left" y="time_0.top" x-flush="left" y-flush="bottom"/>
+			</button>
+			<button id="time_2" x="0" y="-5" use_def="time_button" group="spell" label="1/2x">
+				<anchor x="time_1.left" y="time_1.top" x-flush="left" y-flush="bottom"/>
+			</button>
+			<button id="time_3" x="0" y="-5" use_def="time_button" group="spell" label="1x">
+				<anchor x="time_2.left" y="time_2.top" x-flush="left" y-flush="bottom"/>
+			</button>
+			<button id="time_4" x="0" y="-5" use_def="time_button" group="spell" label="2x">
+				<anchor x="time_3.left" y="time_3.top" x-flush="left" y-flush="bottom"/>
+			</button>
+			<button id="time_5" x="0" y="-5" use_def="time_button" group="spell" label="4x">
+				<anchor x="time_4.left" y="time_4.top" x-flush="left" y-flush="bottom"/>
+			</button>
+			<button id="time_6" x="0" y="-5" use_def="time_button" group="spell" label="8x">
+				<anchor x="time_5.left" y="time_5.top" x-flush="left" y-flush="bottom"/>
+			</button>
+		<!--end wave group-->	
+		
+		<group id="back"/>		
+		<!--back group-->					
+			<chrome id="panel" x="0" y="0" width="760" height="150" use_def="grey" group="back">
+				<anchor x="left" y="top" x-flush="left" y-flush="top"/>
+				<min_size height="20%"/>   
+				<min_size height="stretch:0,battlefield" width="stretch:0,wave_bar" />
+			</chrome>
+			
+			<tile_test id="battlefield" x="0" y="0" width="600" height="560" tiles_w="24" tiles_h="15" group="back">
+				<anchor x="left" y="bottom" x-flush="left" y-flush="bottom"/>
+				<min_size width="stretch:0,wave_bar" height="stretch:panel,bottom"/>
+			</tile_test>		
+		<!--end back group-->
+		
+		<group id="mcguffin"/>
+		<!--mcguffin group-->
+		
+			<sprite x="10" y="10" width="48" height="48" color="0xffffffff" group="mcguffin"/>
+			<sprite id="portrait" x="10" y="10" src="other/portrait_mane" group="mcguffin"/>
+		
+			<sprite id="health_bar" x="10" y="5" width="134" height="16" color="0xffff0000" group="mcguffin">
+				<anchor x="portrait.right" y="portrait.top" x-flush="left" y-flush="top"/>
+			</sprite>
+			
+			<sprite id="magic_bar" x="10" y="-5" width="134" height="16" color="0xff0000ff" group="mcguffin">
+				<anchor x="portrait.right" y="portrait.bottom" x-flush="left" y-flush="bottom"/>
+			</sprite>		
+		<!--end mcguffin group-->
+
+		<group id="spell"/>
+		<!-- begin spell group-->
+		
+			<button id="spell_0" x="0" y="10" use_def="spell_button" group="spell">
+				<anchor x="portrait.left" y="portrait.bottom" x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_1" x="0" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_0.right" y="spell_0.top" x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_2" x="0" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_1.right" y="spell_1.top"  x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_3" x="0" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_2.right" y="spell_2.top"  x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_4" x="0" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_3.right" y="spell_3.top"  x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_5" x="0" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_4.right" y="spell_4.top"  x-flush="left" y-flush="top"/>
+			</button>		
+		<!--end spell group-->
+		
+		<group id="top"/>
+		<!--begin top group-->
+			<button id="options" x="0" y="-10" use_def="options_button" group="top" label="Options">
+				<anchor x="spell_0.left" y="panel.bottom" x-flush="left" y-flush="bottom"/>
+			</button>
+		<!--end top group-->
+				
+		
+		<failure target="wave_bar" property="width" compare=">" value="10%"/>
+
+		<button center_x="true" x="0" y="500" id="start" use_def="text_button" group="top" label="WIDE">
+		</button>		
+		
+	</layout>	
+	
+	<button center_x="true" x="0" y="535" id="start" use_def="text_button" group="top" label="Back">
+		<param type="string" value="back"/>
+	</button>
+	
+	<mode id="tall">
+		<show id="tall"/>
+		<hide id="wide"/>
+	</mode>
+		
+	<mode id="wide">
+		<show id="wide"/>
+		<hide id="tall"/>
+	</mode>
+</data>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<!--This will eventually have some test menus in it-->
+	
+	<!--DEFS-->
+	
+	<definition id="grey" src="ui/chrome/dark_grey"/>
+	<definition id="grey_flat" src="ui/chrome/dark_grey_flat_top"/>
+	
+	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	
+	<definition id="tempesta8" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="tempesta8y" font="pf_tempesta_seven" size="8" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	
+	<definition id="tempesta8c" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+	<definition id="tempesta8yc" font="pf_tempesta_seven" size="8" style="bold" color="0xffcc00" shadow="1" align="center"/>
+	
+	<definition id="tempesta8dc" font="pf_tempesta_seven" size="8" style="bold" color="0xcccccc" shadow="1" align="center"/>
+	<definition id="tempesta8dyc" font="pf_tempesta_seven" size="8" style="bold" color="0xccaa00" shadow="1" align="center"/>
+		
+	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
+		
+	<definition id="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small">
+		<text id="hilight" use_def="sans12y" />
+		<text id="normal" use_def="sans12" />				
+	</definition>
+	
+	<definition id="check_big" box_src="ui/misc/check_box_big" check_src="ui/misc/check_big">
+		<text id="hilight" use_def="sans16y"/>
+		<text id="normal" use_def="sans16"/>				
+	</definition>
+	
+	<definition id="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot">
+		<text id="hilight" use_def="tempesta8y"/>
+		<text id="normal" use_def="tempesta8"/>
+	</definition>
+	
+	<definition id="tab_button_toggle" width="50" height="20" text_x="-2" text_y="0">		
+		<normal width="50" height="20" text_x="-2" text_y="0">
+			<text id="hilight" use_def="tempesta8dyc"/>
+			<text id="normal" use_def="tempesta8dc"/>
+			<graphic id="normal" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
+		</normal>
+		<toggle width="50" height="20" text_x="-2" text_y="0">
+			<text id="hilight" use_def="tempesta8yc"/>
+			<text id="normal" use_def="tempesta8c"/>
+			<graphic id="normal" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>		
+		</toggle>
+	</definition>
+	
+	<definition id="button_toggle" width="50" height="20">		
+		<normal width="50" height="20" text_x="-2" text_y="-1">
+			<text id="hilight" use_def="tempesta8c"/>
+			<text id="normal" use_def="tempesta8c"/>
+			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,12,12"/>		
+		</normal>
+		<toggle width="50" height="20" text_x="-1" text_y="0">
+			<text id="hilight" use_def="tempesta8c"/>
+			<text id="normal" use_def="tempesta8c"/>
+			<graphic id="normal" image="ui/buttons/blue_back" slice9="6,6,12,12"/>
+			<graphic id="hilight" image="ui/buttons/blue_back_over" slice9="6,6,12,12"/>
+		</toggle>
+	</definition>
+	
+	<!--<definition id="tab_button" width="50" height="20" text_x="-2" text_y="0">
+		<text id="hilight" use_def="tempesta8yc"/>
+		<text id="normal" use_def="tempesta8c"/>
+		<graphic id="normal" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
+		<graphic id="hilight" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>		
+	</definition>
+	
+	<definition id="tab_button_back" width="50" height="20" text_x="-2" text_y="0">
+		<text id="hilight" use_def="tempesta8dyc"/>
+		<text id="normal" use_def="tempesta8dc"/>
+		<graphic id="normal" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
+		<graphic id="hilight" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
+	</definition>-->
+	
+	<definition id="chrome_flat" src="ui/chrome/dark_grey_flat_top" slice9="4,4,8,8"/>
+		
+	<definition id="tab_menu_1" back_def="chrome_flat">
+		<tab use_def="tab_button_toggle"/>
+	</definition>
+	
+	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
+		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
+		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
+		<graphic id="border" visible="false"/>
+		<graphic id="hilight" visible="false"/>
+		<graphic id="normal" visible="false"/>
+	</definition>
+
+	<!--STUFF-->
+	
+	<sprite x="0" y="0" src="ui/title_back"/>
+
+	<button center_x="true" x="0" y="535" id="start" use_def="text_button" group="top" label="Back">
+		<param type="string" value="back"/>
+	</button>
+	
+	<chrome x="50" y="150" width="700" height="300" use_def="grey"/>
+
+	<checkbox x="60" y="170" use_def="check_small" label="Thing 1">
+		<param type="string" value="thing 1"/>
+	</checkbox>
+	
+	<checkbox x="60" y="200" use_def="check_big" label="Thing 2">
+		<param type="string" value="thing 2"/>
+	</checkbox>
+	
+	<radio_group x="170" y="170" use_def="radio_1">
+		<!--callback parameter for clicking anything in this group-->
+		<param type="string" value="dr_seuss"/>		
+		
+		<!--actual radio button elements-->
+		<radio id="1_fish" label="One Fish"/>
+		<radio id="2_fish" label="Two Fish"/>
+		<radio id="0xff0000_fish" label="Red Fish"/>
+		<radio id="0x0000ff_fish" label="Blue Fish"/>
+	</radio_group>
+	
+	<button_toggle x="300" y="170" use_def="button_toggle" label="Toggle"/>
+	<button_toggle x="300" y="200" use_def="button_toggle" label="Toggle"/>
+	<button_toggle x="300" y="230" use_def="button_toggle" label="Toggle"/>
+	<button_toggle x="300" y="260" use_def="button_toggle" label="Toggle"/>
+	
+	<tab_menu x="500" y="182" use_def="tab_menu_1" width="200" height="200">
+		<tab id="tab_1" label="Tab 1"/>
+		<tab id="tab_2" label="Tab 2"/>
+		<tab id="tab_3" label="Tab 3"/>
+		<tab id="tab_4" label="Tab 4"/>
+		<group id="tab_1">
+			<radio_group x="10" y="10" use_def="radio_1">
+				<param type="string" value="dr_seuss2"/>		
+		
+				<radio id="1_fish" label="One Fish"/>
+				<radio id="2_fish" label="Two Fish"/>
+				<radio id="0xff0000_fish" label="Red Fish"/>
+				<radio id="0x0000ff_fish" label="Blue Fish"/>
+			</radio_group>
+		</group>
+		<group id="tab_2">
+			<checkbox x="10" y="10" use_def="check_small" label="Thing 1">
+				<param type="string" value="thing 1"/>
+			</checkbox>
+	
+			<checkbox x="10" y="40" use_def="check_big" label="Thing 2">
+				<param type="string" value="thing 2"/>
+			</checkbox>
+		</group>
+		<group id="tab_3">			
+		</group>
+		<group id="tab_4">			
+		</group>
+	</tab_menu>
+	
+</data>

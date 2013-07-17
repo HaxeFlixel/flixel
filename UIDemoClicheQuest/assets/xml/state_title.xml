@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<sprite src="ui/title_back" x="0" y="0"/>
+	
+	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
+		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
+		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
+		<graphic id="border" visible="false"/>
+		<graphic id="hilight" visible="false"/>
+		<graphic id="normal" visible="false"/>
+	</definition>
+	
+	<button center_x="true" x="-100" y="505" id="saves" use_def="text_button" group="top" label="Saves">
+		<param type="string" value="saves"/>
+	</button>
+	
+	<button center_x="true" x="100" y="505" id="menu" use_def="text_button" group="top" label="Menus">
+		<param type="string" value="menu"/>
+	</button>
+	
+	<button center_x="true" x="0" y="505" id="battle" use_def="text_button" group="top" label="Battle">
+		<param type="string" value="battle"/>
+	</button>
+	
+</data>
