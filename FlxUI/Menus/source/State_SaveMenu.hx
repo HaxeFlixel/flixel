@@ -2,7 +2,6 @@ import haxe.xml.Fast;
 import nme.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxStateX;
-import flixel.addons.ui.FlxUI_SaveSlot;
 
 /**
  * ...
