@@ -63,7 +63,6 @@ class DebuggerFrontEnd
 	private function set_visible(Visible:Bool):Bool
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.game.debuggerUp = Visible;
 		FlxG.game.debugger.visible = Visible;
 		#end
 		

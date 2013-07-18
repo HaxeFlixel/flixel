@@ -94,10 +94,6 @@ class FlxGame extends Sprite
 	 * The debugger overlay object.
 	 */
 	public var debugger(default, null):FlxDebugger;
-	/**
-	 * A handy boolean that keeps track of whether the debugger exists and is currently visible.
-	 */
-	public var debuggerUp:Bool = false;
 	#end
 	
 	#if FLX_RECORD
@@ -370,7 +366,7 @@ class FlxGame extends Sprite
 			draw();
 			
 			#if !FLX_NO_DEBUG
-			if(debuggerUp)
+			if (FlxG.debugger.visible)
 			{
 				debugger.perf.flash(elapsedMS);
 				debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
@@ -526,7 +522,7 @@ class FlxGame extends Sprite
 		#end
 		
 		#if !FLX_NO_DEBUG
-		if (debuggerUp)
+		if (FlxG.debugger.visible)
 		{
 			debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
 		}
@@ -573,7 +569,7 @@ class FlxGame extends Sprite
 		}
 		
 		#if !FLX_NO_DEBUG
-		if (debuggerUp)
+		if (FlxG.debugger.visible)
 		{
 			// getTimer() is expensive, only do it if necessary
 			mark = Lib.getTimer(); 
@@ -597,8 +593,10 @@ class FlxGame extends Sprite
 		FlxG.cameras.update();
 		
 		#if !FLX_NO_DEBUG
-		if (debuggerUp)
+		if (FlxG.debugger.visible)
+		{
 			debugger.perf.flixelUpdate(Lib.getTimer() - mark);
+		}
 		#end
 	}
 	
@@ -676,7 +674,7 @@ class FlxGame extends Sprite
 	private function draw():Void
 	{
 		#if !FLX_NO_DEBUG
-		if (debuggerUp)
+		if (FlxG.debugger.visible)
 		{
 			// getTimer() is expensive, only do it if necessary
 			mark = Lib.getTimer(); 
@@ -707,7 +705,7 @@ class FlxGame extends Sprite
 		FlxG.cameras.render();
 		
 		#if !FLX_NO_DEBUG
-		if (debuggerUp)
+		if (FlxG.debugger.visible)
 		{
 			debugger.perf.drawCalls(TileSheetExt._DRAWCALLS);
 		}
@@ -726,7 +724,7 @@ class FlxGame extends Sprite
 		FlxG.cameras.unlock();
 		
 		#if !FLX_NO_DEBUG
-		if (debuggerUp)
+		if (FlxG.debugger.visible)
 		{
 			debugger.perf.flixelDraw(Lib.getTimer() - mark);
 		}

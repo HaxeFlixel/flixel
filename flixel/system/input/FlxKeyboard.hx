@@ -202,7 +202,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	private function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game.debuggerUp && FlxG.game.debugger.watch.editing)
+		if (FlxG.debugger.visible && FlxG.game.debugger.watch.editing)
 		{
 			return;
 		}
@@ -294,7 +294,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	{
 		#if FLX_RECORD
 		#if !FLX_NO_DEBUG
-		if (FlxG.game.debuggerUp && FlxG.game.debugger.watch.editing)
+		if (FlxG.debugger.visible && FlxG.game.debugger.watch.editing)
 		{
 			return;
 		}
