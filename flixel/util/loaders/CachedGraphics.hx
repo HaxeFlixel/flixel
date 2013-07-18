@@ -203,7 +203,7 @@ class CachedGraphics
 	{
 		_useCount = Value;
 		
-		if (_useCount <= 0 && destroyOnNoUse)
+		if (_useCount <= 0 && destroyOnNoUse && !persist)
 		{
 			FlxG.bitmap.remove(key);
 		}
