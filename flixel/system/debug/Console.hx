@@ -118,31 +118,44 @@ class Console extends Window
 	private function onFocus(e:FocusEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		// Pause game
+		
 		#if flash 
+		// Pause game
 		if (autoPause)
+		{
 			FlxG.game.debugger.vcr.onPause();
+		}
 		#end
-		// Shouldn't be able to trigger sound control when console has focus
-		FlxG.game.tempDisableSoundHotKeys = true;
+		
+		// Block keyboard input
+		FlxG.keys.enabled = false;
 		
 		if (_input.text == defaultText) 
+		{
 			_input.text = "";
+		}
 		#end
 	}
 	
 	private function onFocusLost(e:FocusEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		// Unpause game
+		
 		#if flash
+		// Unpause game
 		if (autoPause)
+		{
 			FlxG.game.debugger.vcr.onPlay();
+		}
 		#end
-		FlxG.game.tempDisableSoundHotKeys = false;
+		
+		// Unblock keyboard input
+		FlxG.keys.enabled = true;
 		
 		if (_input.text == "") 
+		{
 			_input.text = defaultText;
+		}
 		#end
 	}
 	

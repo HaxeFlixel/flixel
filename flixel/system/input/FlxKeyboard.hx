@@ -218,13 +218,16 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				return;
 			}
 			#end
-				
-			if (!FlxG.game.tempDisableSoundHotKeys)
+			
+			// Sound tray controls
+			if (enabled)
 			{
 				var code:String = String.fromCharCode(FlashEvent.charCode);
+				
 				if (FlxG.sound.keyMute != null && Lambda.indexOf(FlxG.sound.keyMute, c) != -1)
 				{
 					FlxG.sound.muted = !FlxG.sound.muted;
+					
 					if (FlxG.sound.volumeHandler != null)
 					{
 						FlxG.sound.volumeHandler(FlxG.sound.muted?0:FlxG.sound.volume);
@@ -240,7 +243,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				{
 					FlxG.sound.muted = false;
 					FlxG.sound.volume = FlxG.sound.volume - 0.1;
-						
+					
 					#if !FLX_NO_SOUND_TRAY
 					FlxG.game.showSoundTray();
 					#end
