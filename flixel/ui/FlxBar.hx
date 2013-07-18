@@ -1278,6 +1278,7 @@ class FlxBar extends FlxSprite
 	#end
 	}
 	
+	#if !flash
 	private function setCachedFrontGraphics(value:CachedGraphics):Void
 	{
 		if (_cachedFrontGraphics != null && _cachedFrontGraphics != value)
@@ -1291,4 +1292,5 @@ class FlxBar extends FlxSprite
 		}
 		_cachedFrontGraphics = value;
 	}
+	#end
 }
