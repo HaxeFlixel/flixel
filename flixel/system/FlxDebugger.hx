@@ -62,10 +62,6 @@ class FlxDebugger extends Sprite
 	inline static public var RIGHT:Int = 5;
 
 	/**
-	 * The amount of decimals FlxPoints are rounded to in log / watch.
-	 */
-	static public var pointPrecision:Int = 3; 
-	/**
 	 * Container for the performance monitor widget.
 	 */
 	public var perf:Perf;

@@ -204,7 +204,7 @@ class WatchEntry
 		var property:Dynamic = Reflect.getProperty(object, field);
 		
 		if (Std.is(property, FlxPoint)) 
-			valueDisplay.text = FlxStringUtil.formatFlxPoint(property, FlxDebugger.pointPrecision);
+			valueDisplay.text = FlxStringUtil.formatFlxPoint(property, FlxG.debugger.pointPrecision);
 		else
 			valueDisplay.text = Std.string(property); 
 		

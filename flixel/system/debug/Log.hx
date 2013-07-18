@@ -4,6 +4,7 @@ package flixel.system.debug;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.FlxDebugger;
 import flixel.util.FlxPoint;
@@ -93,7 +94,7 @@ class Log extends Window
 		// Format FlxPoints, Arrays, Maps or turn the Data entry into a String
 		for (i in 0...Data.length) {
 			if (Std.is(Data[i], FlxPoint)) 
-				texts[i] = FlxStringUtil.formatFlxPoint(Data[i], FlxDebugger.pointPrecision);
+				texts[i] = FlxStringUtil.formatFlxPoint(Data[i], FlxG.debugger.pointPrecision);
 			else if (Std.is(Data[i], StringMap))
 				texts[i] = FlxStringUtil.formatStringMap(Data[i]);
 			else 
