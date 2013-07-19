@@ -7,7 +7,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxTypedGroup;
-import flixel.system.layer.Atlas;
 import flixel.text.FlxBitmapTextField;
 import flixel.text.FlxText;
 import flixel.text.pxText.PxBitmapFont;
@@ -26,7 +25,7 @@ class PlayState extends FlxState
 {	
 	static public var complex:Bool = false;
 	
-	private var _changeAmount:Int = 250;
+	private var _changeAmount:Int = 30000;
 	private var _times:Array<Float>;
 	private var _collisions:Bool = false;
 	
@@ -55,9 +54,9 @@ class PlayState extends FlxState
 		add(_bunnies);
 		
 		// Add a jumping pirate
-		_pirate = new FlxSprite();
-		_pirate.loadGraphic("assets/pirate.png");
-		add(_pirate);
+		//_pirate = new FlxSprite();
+		//_pirate.loadGraphic("assets/pirate.png");
+		//add(_pirate);
 		
 		// All the GUI stuff
 		var uiBackground:FlxSprite = new FlxSprite();
@@ -103,6 +102,11 @@ class PlayState extends FlxState
 		
 		#if !mobile
 		FlxG.mouse.show();
+		#end
+		
+		// Profile code - disable <haxedef name="profile_cpp" if="target_cpp" /> before ship
+		#if (profile_cpp && !neko)
+		cpp.vm.Profiler.start("perf.txt");
 		#end
 	}
 	

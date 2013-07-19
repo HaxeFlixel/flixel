@@ -51,5 +51,21 @@ class Main extends Sprite
 	{
 		Lib.current.stage.align = StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		#if (cpp || neko)
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUP);
+		#end
 	}
+	
+	#if (cpp || neko)
+	private function onKeyUP(e:KeyboardEvent):Void 
+	{
+		if (e.keyCode == Keyboard.ESCAPE) 
+		{
+			#if (profile_cpp && !neko)
+			cpp.vm.Profiler.stop();
+			#end
+			Lib.exit();
+		}
+	}
+	#end
 }
