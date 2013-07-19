@@ -3,6 +3,7 @@ package;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.net.FileReference;
+	import flash.net.FileFilter;
 #elseif (cpp || neko)
 	import systools.Dialogs;
 #end
@@ -47,7 +48,7 @@ class PlayState extends FlxState
 		
 		_text = new FlxText(0, 0, FlxG.width, "Click the button to load a PNG or JPG!");
 		_text.y = (FlxG.height - _text.height) / 2;
-		_text.setFormat(null, 8, FlxColor.WHITE, "center", FlxColor.BLACK, true);
+		_text.setFormat(null, 16, FlxColor.WHITE, "center", FlxColor.BLACK, true);
 		
 		add(_text);
 		
@@ -63,12 +64,15 @@ class PlayState extends FlxState
 			var fr:FileReference = new FileReference();
 			fr.addEventListener(Event.SELECT, _onSelect, false, 0, true);
 			fr.addEventListener(Event.CANCEL, _onCancel, false, 0, true);
+			var filters:Array<FileFilter> = new Array<FileFilter>();
+			filters.push(new FileFilter("PNG Files", "*.png"));
+			filters.push(new FileFilter("JPEG Files", "*.jpg;*.jpeg"));
 			fr.browse();
 		#elseif (cpp || neko)
 			var filters: FILEFILTERS =
 			{ count: 2
-				, descriptions: ["Text files", "JPEG files"]
-				, extensions: ["*.txt","*.jpg;*.jpeg"]	
+				, descriptions: ["PNG files", "JPEG files"]
+				, extensions: ["*.png","*.jpg;*.jpeg"]	
 			};	
 			var result:Array<String> = Dialogs.openFile( 
 				"Select a file please!"
@@ -89,7 +93,7 @@ class PlayState extends FlxState
 		private function _onLoad(e:Event):Void {
 			var fr:FileReference = e.target;
 			fr.removeEventListener(Event.COMPLETE, _onLoad);
-			
+						
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onImgLoad);
 			loader.loadBytes(fr.data);

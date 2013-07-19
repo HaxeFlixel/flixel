@@ -1,26 +1,55 @@
-﻿import flash.text.TextField;			
-import flash.Lib;
+﻿package;
+
 import flash.display.Sprite;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
 import flash.events.Event;
-import flash.events.MouseEvent;
-	
-class Main extends Sprite
+import flash.events.KeyboardEvent;
+import flash.Lib;
+import flash.ui.Keyboard;
+import flixel.FlxGame;
+
+/**
+ * @author Joshua Granick
+ */
+class Main extends Sprite 
 {
-	public var tf:TextField; 
-   
-	public function new()
-	{
-		super ();		
-
-		//This is where to do your own stuff:
-		_entryPoint();
+	// Entry point
+	static public function main():Void
+	{	
+		Lib.current.addChild(new Main());
 	}
-
 	
-   /*********PRIVATE***********/    
-   
-	private function _entryPoint():Void {		
-		var game = new GameClass();
-		stage.addChild(game);
-	}		
+	public function new() 
+	{
+		super();
+		
+		if (stage != null) 
+		{
+			init();
+		}
+		else 
+		{
+			addEventListener(Event.ADDED_TO_STAGE, init);
+		}
+	}
+	
+	private function init(?E:Event):Void 
+	{
+		if (hasEventListener(Event.ADDED_TO_STAGE))
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
+		}
+		
+		initialize();
+		
+		var game:FlxGame = new GameClass();
+		addChild(game);
+	}
+	
+	private function initialize():Void 
+	{
+		Lib.current.stage.align = StageAlign.TOP_LEFT;
+		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+	}
 }
