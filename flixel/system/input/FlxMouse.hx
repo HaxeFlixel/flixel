@@ -77,6 +77,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	
 	private var _cursorBitmapData:BitmapData;
 
+	private var _wheelUsed:Bool = false;
+	
 	/**
 	 * Helper variables for recording purposes.
 	 */
@@ -205,13 +207,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	private function onMouseWheel(FlashEvent:MouseEvent):Void
 	{
-		#if !FLX_NO_DEBUG
-		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) #if FLX_RECORD|| FlxG.game.replaying #end)
+		#if FLX_RECORD
+		if (FlxG.game.replaying)
 		{
 			return;
 		}
 		#end
 		
+		_wheelUsed = true;
 		wheel = FlashEvent.delta;
 	}
 
@@ -410,6 +413,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 			_current = 0;
 		}
 		_last = _current;
+		
+		if (!_wheelUsed)
+		{
+			wheel = 0;
+		}
+		_wheelUsed = false;
 	}
 
 	/**
