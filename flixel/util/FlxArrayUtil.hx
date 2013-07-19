@@ -18,13 +18,17 @@ class FlxArrayUtil
 		#if flash
 		return untyped array.indexOf(whatToFind, fromIndex);
 		#else
+		var index:Int = -1;
 		var len:Int = array.length;
 		for (i in fromIndex...len)
 		{
-			if (array[i] == whatToFind) 
-				return i;
+			if (array[i] == whatToFind)
+			{
+				index = i;
+				break;
+			}
 		}
-		return -1;
+		return index;
 		#end
 	}
 	
