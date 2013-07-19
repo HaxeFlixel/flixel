@@ -63,6 +63,10 @@ class BitmapFrontEnd
 	}
 	#end
 	
+	/**
+	 * Dumps bits of all cached graphics. This restores memory, but you can't read / write pixels on those graphics anymore.
+	 * You can call onContext() method for each CachedGraphic object which will restore it again.
+	 */
 	public function dumpCache():Void
 	{
 		#if !(flash || js)
@@ -231,7 +235,7 @@ class BitmapFrontEnd
 				bd = FlxAssets.getBitmapData(Graphic);
 			}
 			
-			if (Unique)	
+			if (Unique)
 			{
 				bd = bd.clone();
 			}
