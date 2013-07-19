@@ -99,10 +99,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if ((basic != null) && basic.exists && basic.active)
 			{
@@ -128,10 +129,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if ((basic != null) && basic.exists && basic.visible)
 			{
@@ -145,10 +147,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if ((basic != null) && basic.exists && basic.visible)
 			{
