@@ -42,10 +42,10 @@ class PlayState extends FlxState
 		_img.makeGraphic(FlxG.width, FlxG.height, 0xffaaaaaa);
 		add(_img);
 		
-		var _button:FlxButton = new FlxButton(0, 0, "Browse", _onClick);
+		var _button:FlxButton = new FlxButton(0, 0, "Open Image", _onClick);
 		add(_button);
 		
-		_text = new FlxText(0, 0, FlxG.width, "Hello World!");
+		_text = new FlxText(0, 0, FlxG.width, "Click the button to load a PNG or JPG!");
 		_text.y = (FlxG.height - _text.height) / 2;
 		_text.setFormat(null, 8, FlxColor.WHITE, "center", FlxColor.BLACK, true);
 		
@@ -129,6 +129,7 @@ class PlayState extends FlxState
 		var matrix:Matrix = new Matrix();
 		matrix.identity();
 		matrix.scale(scale, scale);
+		data2.fillRect(data2.rect, 0xffaaaaaa);
 		data2.draw(data, matrix, null, null, null, true);
 		_img.pixels = data2;
 	}
