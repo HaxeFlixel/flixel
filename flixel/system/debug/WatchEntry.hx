@@ -110,12 +110,12 @@ class WatchEntry
 			field = tempVarName;
 		}
 		
-		var fontName:String = Assets.getFont(FlxAssets.debuggerFont).fontName;
+		var fontName:String = FlxAssets.debuggerFont;
 		// quickWatch is green, normal watch is white
 		var color:Int = 0xffffff;
 		if (quickWatch)
 			color = 0x008000;
-			
+		
 		_whiteText = new TextFormat(fontName, 12, color);
 		_blackText = new TextFormat(fontName, 12, 0);
 		
@@ -123,6 +123,7 @@ class WatchEntry
 		nameDisplay.y = Y;
 		nameDisplay.multiline = false;
 		nameDisplay.selectable = true;
+		nameDisplay.embedFonts = true;
 		nameDisplay.defaultTextFormat = _whiteText;
 		
 		valueDisplay = new TextField();
@@ -139,6 +140,7 @@ class WatchEntry
 		}
 		valueDisplay.background = false;
 		valueDisplay.backgroundColor = 0xffffff;
+		valueDisplay.embedFonts = true;
 		valueDisplay.defaultTextFormat = _whiteText;
 		
 		updateWidth(NameWidth, ValueWidth);

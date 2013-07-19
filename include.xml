@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<assets path="assets" rename="assets" exclude="*.wav" if="flash" />
+	<assets path="assets" rename="assets" exclude="*.svg" if="html5" />
+	<assets path="assets" rename="assets" if="desktop" />
+	<assets path="assets" rename="assets" if="mobile" />
+</project>

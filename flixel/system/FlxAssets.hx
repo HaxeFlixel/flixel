@@ -2,8 +2,14 @@ package flixel.system;
 
 import flash.display.BitmapData;
 import flash.display.Graphics;
+import flash.text.Font;
 import openfl.Assets;
 import flixel.FlxG;
+
+@:font("assets/data/nokiafc22.ttf") class DefaultFont extends Font { }
+#if !FLX_NO_DEBUG
+@:font("assets/data/arial.ttf") class DebuggerFont extends Font { }
+#end
 
 class FlxAssets
 {
@@ -39,10 +45,16 @@ class FlxAssets
 	inline static public var imgButtonLeft:String = "assets/data/button_left.png";
 	inline static public var imgButtonRight:String = "assets/data/button_right.png";
 	
-	inline static public var debuggerFont:String = "assets/data/courier.ttf";
-	inline static public var defaultFont:String = "assets/data/nokiafc22.ttf";
+	inline static public var defaultFont:String = "Nokia Cellphone FC Small";
+	#if !FLX_NO_DEBUG
+	inline static public var debuggerFont:String = "Arial";
+	#end
 	
-	inline static public var sndBeep:String = "Beep";
+	#if (flash || js)
+	inline static public var sndBeep:String = "assets/data/beep.mp3";
+	#else
+	inline static public var sndBeep:String = "assets/data/beep.wav";
+	#end
 	
 	static public function drawLogo(graph:Graphics):Void
 	{

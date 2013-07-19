@@ -132,7 +132,8 @@ class VCR extends Sprite
 		_runtimeDisplay.multiline = false;
 		_runtimeDisplay.wordWrap = false;
 		_runtimeDisplay.selectable = false;
-		var dtf:TextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 12, 0xffffff);
+		_runtimeDisplay.embedFonts = true;
+		var dtf:TextFormat = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		//_runtimeDisplay.defaultTextFormat = new TextFormat("Courier", 12, 0xffffff, null, null, null, null, null, "center");
 		_runtimeDisplay.defaultTextFormat = dtf;

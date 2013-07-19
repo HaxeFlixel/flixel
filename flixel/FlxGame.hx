@@ -825,7 +825,7 @@ class FlxGame extends Sprite
 		#else
 		
 		#end
-		var dtf:TextFormat = new TextFormat(Assets.getFont(FlxAssets.defaultFont).fontName, 8, 0xffffff);
+		var dtf:TextFormat = new TextFormat(FlxAssets.defaultFont, 8, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		text.defaultTextFormat = dtf;
 		_soundTray.addChild(text);

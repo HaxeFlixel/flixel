@@ -3,6 +3,9 @@ package flixel;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.display.Stage;
+import flash.text.Font;
+//import flixel.system.FlxAssets.DebuggerFont;
+import flixel.system.FlxAssets.DefaultFont;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
@@ -257,6 +260,12 @@ class FlxG
 		#if FLX_RECORD
 		vcr = new VCRFrontEnd();
 		#end
+		
+		// Register fonts
+		//#if !FLX_NO_DEBUG
+		//Font.registerFont(DebuggerFont);
+		//#end
+		Font.registerFont(DefaultFont);
 	}
 	
 	/**
