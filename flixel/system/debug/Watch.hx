@@ -158,7 +158,7 @@ class Watch extends Window
 			if (Std.is(NewValue, StringMap))
 				text = FlxStringUtil.formatStringMap(NewValue);
 			else if (Std.is(NewValue, FlxPoint))
-				text = FlxStringUtil.formatFlxPoint(NewValue, FlxDebugger.pointPrecision);
+				text = FlxStringUtil.formatFlxPoint(NewValue, FlxG.debugger.pointPrecision);
 				
 			quickWatch.valueDisplay.text = text;
 		}

@@ -63,7 +63,8 @@ class Perf extends Window
 		_text.multiline = true;
 		_text.wordWrap = true;
 		_text.selectable = true;
-		_text.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 12, 0xffffff);
+		//_text.embedFonts = true;
+		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		addChild(_text);
 		
 		_flixelUpdate = new Array();

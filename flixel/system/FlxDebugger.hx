@@ -62,10 +62,6 @@ class FlxDebugger extends Sprite
 	inline static public var RIGHT:Int = 5;
 
 	/**
-	 * The amount of decimals FlxPoints are rounded to in log / watch.
-	 */
-	static public var pointPrecision:Int = 3; 
-	/**
 	 * Container for the performance monitor widget.
 	 */
 	public var perf:Perf;
@@ -132,11 +128,12 @@ class FlxDebugger extends Sprite
 		
 		var txt:TextField = new TextField();
 		txt.x = 2;
-		txt.width = 170;
+		txt.width = 200;
 		txt.height = 20;
 		txt.selectable = false;
 		txt.multiline = false;
-		txt.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 12, 0xffffff);
+		txt.embedFonts = true;
+		txt.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		var str:String = FlxG.libraryName + " [debug]";
 		txt.text = str;
 		addChild(txt);

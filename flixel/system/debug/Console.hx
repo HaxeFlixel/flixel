@@ -97,7 +97,8 @@ class Console extends Window
 		// Create the input textfield
 		_input = new TextField();
 		_input.type = TextFieldType.INPUT;
-		_input.defaultTextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 14, 0xFFFFFF, false, false, false);
+		_input.embedFonts = true;
+		_input.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 14, 0xFFFFFF, false, false, false);
 		_input.text = defaultText;
 		_input.width = _width - 4;
 		_input.height = _height - 15;

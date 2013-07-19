@@ -30,7 +30,7 @@ class Vis extends Sprite
 		
 		var spacing:Int = 7;
 		
-		_bounds = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgBounds));
+		_bounds = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_VISUAL_DEBUG));
 		addChild(_bounds);
 		
 		unpress();

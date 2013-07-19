@@ -2,47 +2,74 @@ package flixel.system;
 
 import flash.display.BitmapData;
 import flash.display.Graphics;
+import flash.text.Font;
 import openfl.Assets;
 import flixel.FlxG;
 
+@:font("assets/fonts/nokiafc22.ttf") class DefaultFont extends Font { }
+#if !FLX_NO_DEBUG
+@:font("assets/fonts/arial.ttf") class DebuggerFont extends Font { }
+#end
+
 class FlxAssets
 {
-	inline static public var imgDefaultButton:String = "assets/data/button.png";
-	inline static public var imgLogo:String = "assets/data/logo.png";
-	inline static public var imgDefault:String = "assets/data/default.png";
-	inline static public var imgAuto:String = "assets/data/autotiles.png";
-	inline static public var imgAutoAlt:String = "assets/data/autotiles_alt.png";
-	inline static public var imgLogoCorners:String = "assets/data/logo_corners.png";
-	inline static public var imgLogoLight:String = "assets/data/logo_light.png";
-	inline static public var imgHandle:String = "assets/data/handle.png";
-	inline static public var imgDefaultCursor:String = "assets/data/cursor.png";
-	inline static public var imgBounds:String = "assets/data/vis/bounds.png";
-	inline static public var imgOpen:String = "assets/data/vcr/open.png";
-	inline static public var imgRecordOff:String = "assets/data/vcr/record_off.png";
-	inline static public var imgRecordOn:String = "assets/data/vcr/record_on.png";
-	inline static public var imgStop:String = "assets/data/vcr/stop.png";
-	inline static public var imgFlixel:String = "assets/data/vcr/flixel.png";
-	inline static public var imgRestart:String = "assets/data/vcr/restart.png";
-	inline static public var imgPause:String = "assets/data/vcr/pause.png";
-	inline static public var imgPlay:String = "assets/data/vcr/play.png";
-	inline static public var imgStep:String = "assets/data/vcr/step.png";
+	// debugger 
+	inline static public var IMG_WINDOW_HANDLE:String = "img/debugger/windowHandle.png";
+	inline static public var IMG_FLIXEL:String = "img/debugger/flixel.png";
 	
-	inline static public var imgBase:String = "assets/data/base.png";
-	inline static public var imgStick:String = "assets/data/stick.png";
-	inline static public var imgButtonA:String = "assets/data/button_a.png";
-	inline static public var imgButtonB:String = "assets/data/button_b.png";
-	inline static public var imgButtonC:String = "assets/data/button_c.png";
-	inline static public var imgButtonX:String = "assets/data/button_x.png";
-	inline static public var imgButtonY:String = "assets/data/button_y.png";
-	inline static public var imgButtonUp:String = "assets/data/button_up.png";
-	inline static public var imgButtonDown:String = "assets/data/button_down.png";
-	inline static public var imgButtonLeft:String = "assets/data/button_left.png";
-	inline static public var imgButtonRight:String = "assets/data/button_right.png";
+	// debugger/buttons
+	inline static public var IMG_VISUAL_DEBUG:String = "img/debugger/buttons/visualDebug.png";
+	inline static public var IMG_OPEN:String = "img/debugger/buttons/open.png";
+	inline static public var IMG_RECORD_OFF:String = "img/debugger/buttons/record_off.png";
+	inline static public var IMG_RECORD_ON:String = "img/debugger/buttons/record_on.png";
+	inline static public var IMG_STOP:String = "img/debugger/buttons/stop.png";
+	inline static public var IMG_RESTART:String = "img/debugger/buttons/restart.png";
+	inline static public var IMG_PAUSE:String = "img/debugger/buttons/pause.png";
+	inline static public var IMG_PLAY:String = "img/debugger/buttons/play.png";
+	inline static public var IMG_STEP:String = "img/debugger/buttons/step.png";
 	
-	inline static public var debuggerFont:String = "assets/data/courier.ttf";
-	inline static public var defaultFont:String = "assets/data/nokiafc22.ttf";
+	// logo
+	inline static public var IMG_LOGO:String = "img/logo/logo.png";
+	inline static public var IMG_DEFAULT:String = "img/logo/default.png";
 	
-	inline static public var sndBeep:String = "Beep";
+	// preloader
+	inline static public var IMG_CORNERS:String = "img/preloader/corners.png";
+	inline static public var IMG_LIGHT:String = "img/preloader/light.png";
+	
+	// tile
+	inline static public var IMG_AUTO:String = "img/tile/autotiles.png";
+	inline static public var IMG_AUTO_ALT:String = "img/tile/autotiles_alt.png";
+	
+	// ui
+	inline static public var IMG_BUTTON:String = "img/ui/button.png";
+	inline static public var IMG_CURSOR:String = "img/ui/cursor.png";
+	
+	// ui/analog
+	inline static public var IMG_BASE:String = "img/ui/analog/base.png";
+	inline static public var IMG_STICK:String = "img/ui/analog/stick.png";
+	// ui/gamepad
+	inline static public var IMG_BUTTON_A:String = "img/ui/gamepad/button_a.png";
+	inline static public var IMG_BUTTON_B:String = "img/ui/gamepad/button_b.png";
+	inline static public var IMG_BUTTON_C:String = "img/ui/gamepad/button_c.png";
+	inline static public var IMG_BUTTON_X:String = "img/ui/gamepad/button_x.png";
+	inline static public var IMG_BUTTON_Y:String = "img/ui/gamepad/button_y.png";
+	inline static public var IMG_BUTTON_UP:String = "img/ui/gamepad/button_up.png";
+	inline static public var IMG_BUTTON_DOWN:String = "img/ui/gamepad/button_down.png";
+	inline static public var IMG_BUTTON_LEFT:String = "img/ui/gamepad/button_left.png";
+	inline static public var IMG_BUTTON_RIGHT:String = "img/ui/gamepad/button_right.png";
+	
+	// fonts
+	inline static public var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
+	#if !FLX_NO_DEBUG
+	inline static public var FONT_DEBUGGER:String = "Arial";
+	#end
+	
+	// sounds
+	#if (flash || js)
+	inline static public var SND_BEEP:String = "snd/beep.mp3";
+	#else
+	inline static public var SND_BEEP:String = "snd/beep.wav";
+	#end
 	
 	static public function drawLogo(graph:Graphics):Void
 	{

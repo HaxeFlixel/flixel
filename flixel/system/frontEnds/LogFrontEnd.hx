@@ -96,7 +96,7 @@ class LogFrontEnd
 			if (Style.errorSound != null)
 				FlxG.sound.play(Style.errorSound);
 			if (Style.openConsole) 
-				FlxG.game.debugger.visible = FlxG.game.debuggerUp = true;
+				FlxG.debugger.visible = true;
 			if (Reflect.isFunction(Style.callbackFunction))
 				Reflect.callMethod(null, Style.callbackFunction, []);
 		}

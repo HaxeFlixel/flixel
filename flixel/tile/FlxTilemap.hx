@@ -32,11 +32,11 @@ class FlxTilemap extends FlxObject
 	/**
 	 * A set of generic tiles you can use. Useful for protyping.
 	 */
-	inline static public var imgAuto:String = FlxAssets.imgAuto;
+	inline static public var imgAuto:String = FlxAssets.IMG_AUTO;
 	/**
 	 * An alternate set of generic tiles you can use. Useful for protyping.
 	 */
-	inline static public var imgAutoAlt:String = FlxAssets.imgAutoAlt;
+	inline static public var imgAutoAlt:String = FlxAssets.IMG_AUTO_ALT;
 	
 	/**
 	 * No auto-tiling.

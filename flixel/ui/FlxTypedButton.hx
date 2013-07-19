@@ -108,7 +108,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic(FlxAssets.imgDefaultButton, true, false, 80, 20);
+		loadGraphic(FlxAssets.IMG_BUTTON, true, false, 80, 20);
 		
 		_onUp = OnClick;
 		_onDown = null;

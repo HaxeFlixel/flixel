@@ -69,38 +69,38 @@ class FlxGamePad extends FlxTypedGroup<FlxButton>
 		switch (DPad)
 		{
 			case FULL:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height - 116, 44, 45, FlxAssets.imgButtonUp)));	
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 81, 44, 45, FlxAssets.imgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(69, FlxG.height - 81, 44, 45, FlxAssets.imgButtonRight)));	
-				dPad.add(add(buttonDown = createButton(35, FlxG.height - 45, 44, 45, FlxAssets.imgButtonDown)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height - 116, 44, 45, FlxAssets.IMG_BUTTON_UP)));	
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 81, 44, 45, FlxAssets.IMG_BUTTON_LEFT)));
+				dPad.add(add(buttonRight = createButton(69, FlxG.height - 81, 44, 45, FlxAssets.IMG_BUTTON_RIGHT)));	
+				dPad.add(add(buttonDown = createButton(35, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_DOWN)));
 			case UP_DOWN:
-				dPad.add(add(buttonUp = createButton(0, FlxG.height - 85, 44, 45, FlxAssets.imgButtonUp)));
-				dPad.add(add(buttonDown = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.imgButtonDown)));
+				dPad.add(add(buttonUp = createButton(0, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_UP)));
+				dPad.add(add(buttonDown = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_DOWN)));
 			case LEFT_RIGHT:
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.imgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(42, FlxG.height - 45, 44, 45, FlxAssets.imgButtonRight)));
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_LEFT)));
+				dPad.add(add(buttonRight = createButton(42, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_RIGHT)));
 			case UP_LEFT_RIGHT:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height - 81, 44, 45, FlxAssets.imgButtonUp)));
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.imgButtonLeft)));
-				dPad.add(add(buttonRight = createButton(69, FlxG.height - 45, 44, 45, FlxAssets.imgButtonRight)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height - 81, 44, 45, FlxAssets.IMG_BUTTON_UP)));
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_LEFT)));
+				dPad.add(add(buttonRight = createButton(69, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_RIGHT)));
 		}
 		
 		switch (Action)
 		{
 			case FULL:
-				actions.add(add(buttonY = createButton(FlxG.width - 86, FlxG.height - 85, 44, 45, FlxAssets.imgButtonY)));	
-				actions.add(add(buttonX = createButton(FlxG.width - 44, FlxG.height - 85, 44, 45, FlxAssets.imgButtonX)));		
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.imgButtonB)));		
-				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.imgButtonA)));
+				actions.add(add(buttonY = createButton(FlxG.width - 86, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_Y)));	
+				actions.add(add(buttonX = createButton(FlxG.width - 44, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_X)));		
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));		
+				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
 			case A:
-				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.imgButtonA)));
+				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
 			case A_B:
-				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.imgButtonA)));
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.imgButtonB)));		
+				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));		
 			case A_B_C:
-				actions.add(add(buttonA = createButton(FlxG.width - 128, FlxG.height - 45, 44, 45, FlxAssets.imgButtonA)));				
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.imgButtonB)));		
-				actions.add(add(buttonC = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.imgButtonC)));
+				actions.add(add(buttonA = createButton(FlxG.width - 128, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));				
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));		
+				actions.add(add(buttonC = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_C)));
 		}
 		
 		alpha = 1.0;

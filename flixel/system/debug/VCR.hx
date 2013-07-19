@@ -81,14 +81,14 @@ class VCR extends Sprite
 		
 		var spacing:Int = 7;
 		
-		_open = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgOpen));
+		_open = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_OPEN));
 		addChild(_open);
 		
-		_recordOff = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgRecordOff));
+		_recordOff = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_RECORD_OFF));
 		_recordOff.x = _open.x + _open.width + spacing;
 		addChild(_recordOff);
 		
-		_recordOn = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgRecordOn));
+		_recordOn = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_RECORD_ON));
 		_recordOn.x = _recordOff.x;
 		_recordOn.visible = false;
 		addChild(_recordOn);
@@ -99,29 +99,29 @@ class VCR extends Sprite
 		_recordOn.visible = false;
 		#end
 		
-		_stop = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgStop));
+		_stop = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_STOP));
 		_stop.x = _recordOff.x;
 		_stop.visible = false;
 		addChild(_stop);
 		
-		_flixel = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgFlixel));
+		_flixel = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_FLIXEL));
 		_flixel.x = _recordOff.x + _recordOff.width + spacing;
 		addChild(_flixel);
 		
-		_restart = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgRestart));
+		_restart = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_RESTART));
 		_restart.x = _flixel.x + _flixel.width + spacing;
 		addChild(_restart);
 		
-		_pause = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgPause));
+		_pause = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_PAUSE));
 		_pause.x = _restart.x + _restart.width + spacing;
 		addChild(_pause);
 		
-		_play = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgPlay));
+		_play = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_PAUSE));
 		_play.x = _pause.x;
 		_play.visible = false;
 		addChild(_play);
 		
-		_step = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgStep));
+		_step = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_STEP));
 		_step.x = _pause.x + _pause.width + spacing;
 		addChild(_step);
 		
@@ -132,7 +132,8 @@ class VCR extends Sprite
 		_runtimeDisplay.multiline = false;
 		_runtimeDisplay.wordWrap = false;
 		_runtimeDisplay.selectable = false;
-		var dtf:TextFormat = new TextFormat(Assets.getFont(FlxAssets.debuggerFont).fontName, 12, 0xffffff);
+		_runtimeDisplay.embedFonts = true;
+		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		//_runtimeDisplay.defaultTextFormat = new TextFormat("Courier", 12, 0xffffff, null, null, null, null, null, "center");
 		_runtimeDisplay.defaultTextFormat = dtf;
