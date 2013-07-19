@@ -19,16 +19,12 @@ class FlxArrayUtil
 		return untyped array.indexOf(whatToFind, fromIndex);
 		#else
 		var len:Int = array.length;
-		var index:Int = -1;
 		for (i in fromIndex...len)
 		{
 			if (array[i] == whatToFind) 
-			{
-				index = i;
-				break;
-			}
+				return i;
 		}
-		return index;
+		return -1;
 		#end
 	}
 	

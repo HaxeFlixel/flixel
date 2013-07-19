@@ -376,7 +376,7 @@ class FlxCamera extends FlxBasic
 			{
 				if (dataLen != position)
 				{
-					data.splice(position, (dataLen - position));
+					untyped data.length = position; // optimized way of resizing an array
 				}
 				var tempFlags:Int = Graphics.TILE_TRANS_2x2;
 				#if !js

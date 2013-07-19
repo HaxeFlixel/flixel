@@ -244,7 +244,7 @@ class FlxBasic
 		}
 	}
 
-	inline public function updateTweens():Void
+	public function updateTweens():Void
 	{
 		var t:FlxTween;
 		var	ft:FriendTween = _tween;
@@ -263,12 +263,11 @@ class FlxBasic
 		}
 	}
 
-	public var hasTween(get_hasTween, never):Bool;
-	
-	private function get_hasTween():Bool 
+	public var hasTween(get, never):Bool;
+	inline private function get_hasTween():Bool 
 	{ 
 		return (_tween != null); 
 	}
-
+	
 	private var _tween:FlxTween;
 }
