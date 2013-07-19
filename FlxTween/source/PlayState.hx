@@ -50,7 +50,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void 
 	{
-		FlxG.cameras.bgColor = FlxColor.ROYAL_BLUE;
+		FlxG.cameras.bgColor = FlxColor.WHITE;
 		FlxG.mouse.show();
 		
 		_easeInfo = new Array<EaseInfo>();
@@ -98,16 +98,16 @@ class PlayState extends FlxState
 		// multi var tween shows off effect nicely
 		_currentTweenIndex = 1; 
 		
-		_min = new FlxPoint(FlxG.width * 0.25, FlxG.height * 0.25);
-		_max = new FlxPoint(FlxG.width * 0.6, FlxG.height * 0.6);
+		_min = new FlxPoint(FlxG.width * 0.1, FlxG.height * 0.2);
+		_max = new FlxPoint(FlxG.width * 0.7, FlxG.height * 0.55);
 		
-		_tweenText = new FlxText(10, 10, FlxG.width - 20, "");
-		_tweenText.size = 12;
-		_easeText = new FlxText(10, 30, FlxG.width - 20, "");
-		_easeText.size = 12;
+		_tweenText = new FlxText(10, 10, FlxG.width - 20);
+		_tweenText.setFormat(null, 16, FlxColor.BLACK);
+		_easeText = new FlxText(10, 35, FlxG.width - 20);
+		_easeText.setFormat(null, 16, FlxColor.BLACK);
 		
 		_helpText = new FlxText(10, FlxG.height - 20, FlxG.width - 20, "");
-		_helpText.alignment = "center";
+		_helpText.setFormat(null, 8, "center", FlxColor.BLACK);
 		_helpText.text = "Press UP or DOWN keys to change tweening. Press SPACE to change current ease function";
 		
 		add(_tweenText);
@@ -115,7 +115,7 @@ class PlayState extends FlxState
 		add(_helpText);
 		
 		// Create a button to toggle the trail
-		_toggleButton = new FlxButton(10, 55, "FlxTrail: On", onToggleTrail);
+		_toggleButton = new FlxButton(10, 65, "FlxTrail: On", onToggleTrail);
 		add(_toggleButton);
 	}
 	
