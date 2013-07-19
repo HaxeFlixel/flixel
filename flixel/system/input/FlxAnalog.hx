@@ -109,7 +109,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	 */
 	private function createBase():Void
 	{
-		_base = new FlxSprite(x, y).loadGraphic(FlxAssets.imgBase);
+		_base = new FlxSprite(x, y).loadGraphic(FlxAssets.IMG_BASE);
 		_base.cameras = [FlxG.camera];
 		_base.x += -_base.width * .5;
 		_base.y += -_base.height * .5;
@@ -129,7 +129,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	 */
 	private function createThumb():Void 
 	{
-		_stick = new FlxSprite(x, y).loadGraphic(FlxAssets.imgStick);
+		_stick = new FlxSprite(x, y).loadGraphic(FlxAssets.IMG_STICK);
 		_stick.cameras = [FlxG.camera];
 		_stick.scrollFactor.x = _stick.scrollFactor.y = 0;
 		_stick.solid = false;

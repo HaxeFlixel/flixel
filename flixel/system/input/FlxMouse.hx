@@ -335,7 +335,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		if (Graphic == null)
 		{
-			Graphic = FlxAssets.imgDefaultCursor;
+			Graphic = FlxAssets.IMG_CURSOR;
 		}
 		
 		if (Std.is(Graphic, Class))
@@ -352,7 +352,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		else
 		{
-			_cursor = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgDefaultCursor));
+			_cursor = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_CURSOR));
 		}
 		
 		_cursor.x = XOffset;

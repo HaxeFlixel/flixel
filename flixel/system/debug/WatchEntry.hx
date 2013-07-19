@@ -110,7 +110,7 @@ class WatchEntry
 			field = tempVarName;
 		}
 		
-		var fontName:String = FlxAssets.debuggerFont;
+		var fontName:String = FlxAssets.FONT_DEBUGGER;
 		// quickWatch is green, normal watch is white
 		var color:Int = 0xffffff;
 		if (quickWatch)

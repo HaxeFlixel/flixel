@@ -49,14 +49,14 @@ class Log extends Window
 		_text.wordWrap = true;
 		_text.selectable = true;
 		_text.embedFonts = true;
-		_text.defaultTextFormat = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
+		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		addChild(_text);
 		
 		_lines = new Array<String>();
 		
 		STYLE_NORMAL = new LogStyle();
-		STYLE_WARNING = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, FlxAssets.sndBeep, true);
-		STYLE_ERROR = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, FlxAssets.sndBeep, true);
+		STYLE_WARNING = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, FlxAssets.SND_BEEP, true);
+		STYLE_ERROR = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, FlxAssets.SND_BEEP, true);
 		STYLE_NOTICE = new LogStyle("[NOTICE] ", "008000", 12, true);
 		STYLE_CONSOLE = new LogStyle("&#62; ", "0000ff", 12, true);
 	}

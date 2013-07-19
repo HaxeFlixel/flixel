@@ -249,7 +249,7 @@ class FlxGame extends Sprite
 	{
 		if (!Silent)
 		{
-			FlxG.sound.play(FlxAssets.sndBeep);
+			FlxG.sound.play(FlxAssets.SND_BEEP);
 		}
 		_soundTrayTimer = 1;
 		_soundTray.y = 0;
@@ -825,7 +825,7 @@ class FlxGame extends Sprite
 		#else
 		
 		#end
-		var dtf:TextFormat = new TextFormat(FlxAssets.defaultFont, 8, 0xffffff);
+		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 8, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		text.defaultTextFormat = dtf;
 		_soundTray.addChild(text);

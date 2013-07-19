@@ -80,7 +80,7 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_format = new TextFormat(FlxAssets.defaultFont, size, 0xffffff);
+		_format = new TextFormat(FlxAssets.FONT_DEFAULT, size, 0xffffff);
 		_formatAdjusted = new TextFormat();
 		_textField.defaultTextFormat = _format;
 		_textField.text = Text;
@@ -153,7 +153,7 @@ class FlxText extends FlxSprite
 		
 		if (Font == null)
 		{
-			Font = FlxAssets.defaultFont;
+			Font = FlxAssets.FONT_DEFAULT;
 		}
 		
 		_format.font = Assets.getFont(Font).fontName;

@@ -141,13 +141,13 @@ class Window extends Sprite
 		_title.selectable = false;
 		_title.multiline = false;
 		_title.embedFonts = true;
-		_title.defaultTextFormat = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
+		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
 		addChild(_title);
 		
 		if (_resizable)
 		{
-			_handle = new Bitmap(FlxAssets.getBitmapData(FlxAssets.imgHandle));
+			_handle = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_WINDOW_HANDLE));
 			addChild(_handle);
 		}
 		

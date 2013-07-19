@@ -133,7 +133,7 @@ class FlxDebugger extends Sprite
 		txt.selectable = false;
 		txt.multiline = false;
 		txt.embedFonts = true;
-		txt.defaultTextFormat = new TextFormat(FlxAssets.debuggerFont, 12, 0xffffff);
+		txt.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		var str:String = FlxG.libraryName + " [debug]";
 		txt.text = str;
 		addChild(txt);

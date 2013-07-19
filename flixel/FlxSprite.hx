@@ -273,7 +273,7 @@ class FlxSprite extends FlxObject
 		
 		if (SimpleGraphic == null)
 		{
-			SimpleGraphic = FlxAssets.imgDefault;
+			SimpleGraphic = FlxAssets.IMG_DEFAULT;
 		}
 		loadGraphic(SimpleGraphic);
 	}
