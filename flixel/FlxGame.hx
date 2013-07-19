@@ -657,11 +657,6 @@ class FlxGame extends Sprite
 			#end
 		}
 		#end
-		
-		#if !FLX_NO_MOUSE
-		// TODO: Test why is this needed can it be put in FlxMouse
-		FlxG.mouse.wheel = 0;
-		#end
 	}
 	
 	/**
