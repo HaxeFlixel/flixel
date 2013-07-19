@@ -4,36 +4,36 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="project.xml" />
+    <movie path="FileBrowse.xml" />
     <movie fps="60" />
     <movie width="640" />
     <movie height="480" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="FFFFFF" />
+    <movie background="#FFFFFF" />
     <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
     <class path="C:\HaxeToolkit\haxe/lib\openfl/1,0,4/" />
-    <class path="T:\Development\Libraries\waxe/" />
-    <class path="export/flash/haxe" />
+    <class path="C:\HaxeToolkit\haxe\lib\flixel/git/" />
+    <class path="export/windows/cpp/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme4=1&#xA;tools=1&#xA;FLX_NO_DEBUG&#xA;nme_ver=4.0.2&#xA;nme&#xA;FLX_NO_SOUND_TRAY&#xA;nme_install_tool=1&#xA;display&#xA;web" />
+    <option directives="nme4=1&#xA;tools=1&#xA;nme_ver=4.0.2&#xA;nme&#xA;FLX_NO_SOUND_TRAY&#xA;nme_install_tool=1&#xA;display&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;--macro allowPackage(&quot;flash&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
     <library name="openfl" />
+    <library name="systools" />
     <library name="flixel" />
-    <library name="waxe" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

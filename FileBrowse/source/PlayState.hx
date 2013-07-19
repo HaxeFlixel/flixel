@@ -3,7 +3,6 @@ package;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.net.FileReference;
-	import sys.io.File;
 #elseif (cpp || neko)
 	import systools.Dialogs;
 #end
