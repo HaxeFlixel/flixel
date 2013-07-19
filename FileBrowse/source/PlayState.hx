@@ -37,7 +37,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void 
 	{
-		FlxG.cameras.bgColor = 0xffaaaaaa;
+		FlxG.cameras.bgColor = 0xff888888;
 		
 		_img = new FlxSprite(0, 0);
 		_img.makeGraphic(FlxG.width, FlxG.height, 0xffaaaaaa);
@@ -46,8 +46,8 @@ class PlayState extends FlxState
 		var _button:FlxButton = new FlxButton(0, 0, "Open Image", _onClick);
 		add(_button);
 		
-		_text = new FlxText(0, 0, FlxG.width, "Click the button to load a PNG or JPG!");
-		_text.y = (FlxG.height - _text.height) / 2;
+		var bw:Float = _button.width + 5;
+		_text = new FlxText(bw, 0, FlxG.width-(Std.int(bw)*2), "Click the button to load a PNG or JPG!");
 		_text.setFormat(null, 16, FlxColor.WHITE, "center", FlxColor.BLACK, true);
 		
 		add(_text);
@@ -129,7 +129,10 @@ class PlayState extends FlxState
 		var data2:BitmapData = _img.pixels.clone();
 		var dwidth:Float = _img.width / data.width;
 		var dheight:Float = _img.height / data.height;
-		var scale:Float = dwidth > dheight ? dwidth : dheight;
+				
+		var scale:Float = dwidth <= dheight ? dwidth : dheight;
+		if (scale > 1) { scale = 1;}
+		
 		var matrix:Matrix = new Matrix();
 		matrix.identity();
 		matrix.scale(scale, scale);
