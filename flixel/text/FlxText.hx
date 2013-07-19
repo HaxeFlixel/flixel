@@ -153,10 +153,13 @@ class FlxText extends FlxSprite
 		
 		if (Font == null)
 		{
-			Font = FlxAssets.FONT_DEFAULT;
+			_format.font = FlxAssets.FONT_DEFAULT;
+		}
+		else 
+		{
+			_format.font = Assets.getFont(Font).fontName;
 		}
 		
-		_format.font = Assets.getFont(Font).fontName;
 		_format.size = Size;
 		Color &= 0x00ffffff;
 		_format.color = Color;
