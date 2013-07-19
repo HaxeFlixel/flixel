@@ -46,11 +46,6 @@ class FlxGame extends Sprite
 	static public var mark(default, null):Int = 0;
 	
 	/**
-	 * Internal var used to temporarily disable sound hot keys without overriding useSoundHotKeys.
-	 * Used by the console window of the debugger.
-	 */
-	public var tempDisableSoundHotKeys:Bool = false;
-	/**
 	 * Current game state.
 	 */
 	public var state:FlxState = null;

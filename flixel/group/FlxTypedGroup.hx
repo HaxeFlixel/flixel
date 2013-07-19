@@ -1,7 +1,7 @@
 package flixel.group;
 
-import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.FlxBasic;
 import flixel.util.FlxArrayUtil;
 
 /**
@@ -71,8 +71,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		if (members != null)
 		{
-			var basic:T;
 			var i:Int = 0;
+			var basic:FlxBasic = null;
 			
 			while (i < length)
 			{
@@ -97,8 +97,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	override public function update():Void
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -126,8 +126,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	override public function draw():Void
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -143,8 +143,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	#if !FLX_NO_DEBUG
 	override public function drawDebug():Void 
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -259,7 +259,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			ContructorArgs = [];
 		}
 		
-		var basic:T;
+		var basic:T = null;
 		
 		if (maxSize > 0)
 		{
@@ -379,8 +379,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function setAll(VariableName:String, Value:Dynamic, Recurse:Bool = true):Void
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -409,8 +409,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */ 
 	public function callAll(FunctionName:String, Recurse:Bool = true):Void
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -439,16 +439,16 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstAvailable(ObjectClass:Class<T> = null):T
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = members[i++]; // we use basic as FlxBasic for performance reasons
 			
 			if ((basic != null) && !basic.exists && ((ObjectClass == null) || Std.is(basic, ObjectClass)))
 			{
-				return basic;
+				return members[i-1];
 			}
 		}
 		
@@ -463,7 +463,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstNull():Int
 	{
-		var basic:T;
 		var i:Int = 0;
 		var l:Int = members.length;
 		
@@ -488,18 +487,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * 
 	 * @return	A <code>FlxBasic</code> currently flagged as existing.
 	 */
-	public function getFirstExtant():T
+	public function getFirstExisting():T
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = members[i++]; // we use basic as FlxBasic for performance reasons
 			
 			if ((basic != null) && basic.exists)
 			{
-				return basic;
+				return members[i-1];
 			}
 		}
 		
@@ -514,16 +513,16 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstAlive():T
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = members[i++]; // we use basic as FlxBasic for performance reasons
 			
 			if ((basic != null) && basic.exists && basic.alive)
 			{
-				return basic;
+				return members[i-1];
 			}
 		}
 		
@@ -538,16 +537,16 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstDead():T
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = members[i++]; // we use basic as FlxBasic for performance reasons
 			
 			if ((basic != null) && !basic.alive)
 			{
-				return basic;
+				return members[i-1];
 			}
 		}
 		
@@ -561,9 +560,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function countLiving():Int
 	{
-		var count:Int = -1;
-		var basic:T;
 		var i:Int = 0;
+		var count:Int = -1;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -592,9 +591,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function countDead():Int	
 	{
-		var count:Int = -1;
-		var basic:T;
 		var i:Int = 0;
+		var count:Int = -1;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -653,8 +652,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	override public function kill():Void
 	{
-		var basic:T;
 		var i:Int = 0;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -679,8 +678,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		if (autoReviveMembers)
 		{
-			var basic:T;
 			var i:Int = 0;
+			var basic:FlxBasic = null;
 			
 			while (i < length)
 			{
@@ -737,9 +736,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		
 		// If the max size has shrunk, we need to get rid of some objects
-		var basic:T;
 		var i:Int = maxSize;
 		var l:Int = members.length;
+		var basic:FlxBasic = null;
 		
 		while (i < l)
 		{
