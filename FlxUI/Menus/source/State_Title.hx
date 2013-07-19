@@ -25,13 +25,16 @@ class State_Title extends FlxStateX
 	}
 	
 	public override function getEvent(id:String, sender:Dynamic, data:Dynamic):Void {
-		if (Std.is(data, String)) {
-			switch(cast(data, String)) {
+		var str:String = "";
+		if (Std.is(data, Array) && data != null && data.length > 0) {
+			switch(cast(data[0],String)) {
 				case "saves": FlxG.switchState(new State_SaveMenu());
 				case "menu": FlxG.switchState(new State_TestMenu());
 				case "battle": FlxG.switchState(new State_Battle());
 			}
 		}
+		
+		
 	}
 	
 }

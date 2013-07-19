@@ -32,9 +32,10 @@ class State_SaveMenu extends FlxStateX
 		return null;
 	}
 	
-	public override function getEvent(id:String,target:Dynamic,data:Dynamic):Void {
-		if (Std.is(data, String)) {
-			switch(cast(data, String)) {
+	public override function getEvent(id:String, target:Dynamic, data:Dynamic):Void 
+	{
+		if (Std.is(data, Array) && data != null && data.length > 0) {
+			switch(cast(data[0], String)) {
 				case "back": FlxG.switchState(new State_Title());
 			}
 		}
