@@ -15,43 +15,8 @@
 	<set name="BUILD_DIR" value="export" />
 	
 	<classpath name="source" />
-	
-	<assets path="assets" if="android" >
-		<sound path="data/beep.wav" id="Beep" />
-		
-		<!-- Your sound embedding code here... -->
-		
-	</assets>
-	
-	<assets path="assets" if="desktop" >
-		<sound path="data/beep.wav" id="Beep" />
-		
-		<!-- Your sound embedding code here... -->
-		
-	</assets>
-	
-	<assets path="assets" if="flash" >
-		<sound path="data/beep.mp3" id="Beep" />
-		
-		<!-- Your sound embedding code here... -->
-		
-	</assets>
-	
-	<assets path="assets" if="html5" >
-		<sound path="data/beep.mp3" id="Beep" />
-		
-		<!-- Your sound embedding code here... -->
-		
-	</assets>
-	
-	<assets path="assets" exclude="*.wav" if="flash" />
-	<assets path="assets" exclude="*.svg" if="html5" />
-	<assets path="assets" if="desktop" />
-	<assets path="assets" if="mobile" />
-	
-	<icon name="assets/HaxeFlixel.svg" />
-	
-	
+	<assets path ="assets" rename ="assets" />
+
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	

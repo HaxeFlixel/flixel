@@ -17,35 +17,19 @@
 	<classpath name="source" />
 	
 	<assets path="assets" if="android" >
-		<sound path="data/beep.wav" id="Beep" />
 		<sound path="flixel.wav" id="Flixel" />
-		
-		<!-- Your sound embedding code here... -->
-		
 	</assets>
 	
 	<assets path="assets" if="desktop" >
-		<sound path="data/beep.wav" id="Beep" />
 		<sound path="flixel.wav" id="Flixel" />
-		
-		<!-- Your sound embedding code here... -->
-		
 	</assets>
 	
 	<assets path="assets" if="flash" >
-		<sound path="data/beep.mp3" id="Beep" />
 		<sound path="flixel.mp3" id="Flixel" />
-		
-		<!-- Your sound embedding code here... -->
-		
 	</assets>
 	
 	<assets path="assets" if="html5" >
-		<sound path="data/beep.mp3" id="Beep" />
 		<sound path="flixel.mp3" id="Flixel" />
-		
-		<!-- Your sound embedding code here... -->
-		
 	</assets>
 	
 	<assets path="assets" exclude="*.wav" if="flash" />

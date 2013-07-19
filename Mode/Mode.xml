@@ -17,7 +17,6 @@
 	<classpath name="source" />
 	
 	<assets path="assets" if="android" >
-		<sound path="data/beep.wav" id="Beep" />
 		<sound path="asplode.wav" id="Asplode" />
 		<sound path="button.wav" id="Button" />
 		<sound path="countdown.wav" id="Countdown" />
@@ -35,7 +34,6 @@
 	</assets>
 	
 	<assets path="assets" if="desktop" >
-		<sound path="data/beep.wav" id="Beep" />
 		<sound path="asplode.wav" id="Asplode" />
 		<sound path="button.wav" id="Button" />
 		<sound path="countdown.wav" id="Countdown" />
@@ -53,7 +51,6 @@
 	</assets>
 	
 	<assets path="assets" if="flash" >
-		<sound path="data/beep.mp3" id="Beep" />
 		<sound path="asplode.mp3" id="Asplode" />
 		<sound path="button.mp3" id="Button" />
 		<sound path="countdown.mp3" id="Countdown" />
@@ -74,9 +71,6 @@
 	<assets path="assets" exclude="*.svg" if="html5" />
 	<assets path="assets" if="desktop" />
 	<assets path="assets" if="mobile" />
-	
-	<icon name="assets/HaxeFlixel.svg" />
-	
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>

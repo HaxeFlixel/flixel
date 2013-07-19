@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
+import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
@@ -47,7 +48,6 @@ class PlayState extends FlxState
 		_snakeHead.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.OLIVE);
 		_snakeHead.facing = FlxObject.LEFT;
 		offestSprite(_snakeHead);
-		add(_snakeHead);
 		
 		// This array stores the recent head positions to update the segment positions step by step
 		_headPositions = [new FlxPoint(_snakeHead.x, _snakeHead.y)];
@@ -63,6 +63,9 @@ class PlayState extends FlxState
 			// Move the snake to attach the segment to the head
 			moveSnake();
 		}
+		
+		// Add the snake's head last so it's on top
+		add(_snakeHead);
 		
 		// Something to eat. We only ever need one _fruit, we can just reposition it.
 		_fruit = new FlxSprite();
@@ -153,7 +156,7 @@ class PlayState extends FlxState
 		
 		// Our reward - a new segment! :)
 		addSegment();
-		FlxG.sound.play("Beep");
+		FlxG.sound.play(FlxAssets.SND_BEEP);
 		
 		// Become faster each pickup - set a max speed though!
 		if (_movementIntervall >= MIN_INTERVALL)
