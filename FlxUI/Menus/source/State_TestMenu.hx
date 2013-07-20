@@ -19,8 +19,8 @@ class State_TestMenu extends FlxStateX
 		return null;
 	}	
 	
-	public override function getEvent(id:String,target:Dynamic,data:Dynamic):Void {
-		if (Std.is(data, Array) && data != null && data.length > 0) {
+	public override function eventResponse(id:String,target:Dynamic,data:Array<Dynamic>):Void {
+		if (data != null) {
 			switch(cast(data[0], String)) {
 				case "back": FlxG.switchState(new State_Title());
 			}
