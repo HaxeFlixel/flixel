@@ -7,8 +7,8 @@
 	
 	<assets path="assets/fonts" rename="fonts" />
 	
-	<assets path="assets/sounds" rename="snd" exclude="*.wav" if="flash"  />
-	<assets path="assets/sounds" rename="snd" exclude="*.wav" if="html5"  />
-	<assets path="assets/sounds" rename="snd" exclude="*.mp3" if="desktop"  />
-	<assets path="assets/sounds" rename="snd" exclude="*.mp3" if="mobile"  />
+	<assets path="assets/sounds" rename="snd" exclude="*.wav" if="flash" />
+	<assets path="assets/sounds" rename="snd" exclude="*.wav" if="html5" />
+	<assets path="assets/sounds" rename="snd" if="desktop" />
+	<assets path="assets/sounds" rename="snd" if="mobile" />
 </project>
