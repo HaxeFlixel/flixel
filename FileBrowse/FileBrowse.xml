@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="BrowseFlixel" file="BrowseFlixel" main="Main" version="0.0.1" company="Level Up Labs" />
+	<app title="FileBrowse" file="FileBrowse" main="Main" version="0.0.1" company="Level Up Labs" />
 	
 	<window width="640" height="480" fps="60" orientation="portrait" resizable="true" if="web" />
 	<window width="640" height="480" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
@@ -15,7 +15,7 @@
 	<set name="BUILD_DIR" value="export" />
 	
 	<classpath name="source" />
-		
+	
 	<haxelib name="openfl" />
 	<haxelib name="systools"/>
 	<haxelib name="flixel"/>
@@ -38,9 +38,9 @@
 	
 	<!--Enables checks for antialiasing for sprite rendering on native targets. And could affect perfomance. -->
 	<!--<haxedef name="FLX_SPRITE_ANTIALIASING" />-->
-		
+	
     <!--Disable the Flixel core debugger-->
-    <!--<haxedef name="FLX_NO_DEBUG" />-->
+    <haxedef name="FLX_NO_DEBUG" />
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
     <!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->
@@ -52,6 +52,6 @@
 	<haxedef name="FLX_NO_SOUND_TRAY" />
 
 	<!--Disable the Flixel core focus lost screen-->
-	<!--<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />-->
+	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 	
 </project>
