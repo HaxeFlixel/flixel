@@ -1,0 +1,986 @@
+package flixel.effects.particles;
+
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+import nme.display.Bitmap;
+
+class FlxEmitter extends FlxTypedEmitter<FlxParticle>
+{
+	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
+	{
+		super(X, Y, Size);
+	}
+}
+=======
+import flash.display.BlendMode;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.group.FlxTypedGroup;
+import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+
+/**
+ * <code>FlxTypedEmitter</code> is a lightweight particle emitter.
+ * It can be used for one-time explosions or for
+ * continuous fx like rain and fire.  <code>FlxEmitter</code>
+ * is not optimized or anything; all it does is launch
+ * <code>FlxParticle</code> objects out at set intervals
+ * by setting their positions and velocities accordingly.
+ * It is easy to use and relatively efficient,
+ * relying on <code>FlxGroup</code>'s RECYCLE POWERS.
+ */
+class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
+{
+	/**
+	 * The X position of the top left corner of the emitter in world space.
+	 */
+	public var x:Float;
+	/**
+	 * The Y position of the top left corner of emitter in world space.
+	 */
+	public var y:Float;
+	/**
+	 * The width of the emitter.  Particles can be randomly generated from anywhere within this box.
+	 */
+	public var width:Float;
+	/**
+	 * The height of the emitter.  Particles can be randomly generated from anywhere within this box.
+	 */
+	public var height:Float;
+	/**
+	 * The minimum possible velocity of a particle.
+	 * The default value is (-100,-100).
+	 */
+	public var minParticleSpeed:FlxPoint;
+	/**
+	 * The maximum possible velocity of a particle.
+	 * The default value is (100,100).
+	 */
+	public var maxParticleSpeed:FlxPoint;
+	/**
+	 * The X and Y drag component of particles launched from the emitter.
+	 */
+	public var particleDrag:FlxPoint;
+	/**
+	 * The minimum possible angular velocity of a particle.  The default value is -360.
+	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 */
+	public var minRotation:Float;
+	/**
+	 * The maximum possible angular velocity of a particle.  The default value is 360.
+	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 */
+	public var maxRotation:Float;
+	/**
+	 * Sets the <code>acceleration.y</code> member of each particle to this value on launch.
+	 */
+	public var gravity:Float;
+	/**
+	 * Determines whether the emitter is currently emitting particles.
+	 * It is totally safe to directly toggle this.
+	 */
+	public var on:Bool = false;
+	/**
+	 * How often a particle is emitted (if emitter is started with Explode == false).
+	 */
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+	public var frequency:Float;
+	/**
+	 * How long each particle lives once it is emitted.
+	 * Set lifespan to 'zero' for particles to live forever.
+	 */
+	public var lifespan:Float;
+=======
+	public var frequency:Float = 0.1;
+	public var life:Bounds<Float>;
+	/**
+	 * Sets start scale range (when particle emits)
+	 */
+	public var startScale:Bounds<Float>;
+	/**
+	 * Sets end scale range (when particle dies)
+	 */
+	public var endScale:Bounds<Float>;
+	/**
+	 * Sets start alpha range (when particle emits)
+	 */
+	public var startAlpha:Bounds<Float>;
+	/**
+	 * Sets end alpha range (when particle emits)
+	 */
+	public var endAlpha:Bounds<Float>;
+	/**
+	 * Sets start red color component range (when particle emits)
+	 */
+	public var startRed:Bounds<Float>;
+	/**
+	 * Sets start green color component range (when particle emits)
+	 */
+	public var startGreen:Bounds<Float>;
+	/**
+	 * Sets start blue color component range (when particle emits)
+	 */
+	public var startBlue:Bounds<Float>;
+	/**
+	 * Sets end red color component range (when particle emits)
+	 */
+	public var endRed:Bounds<Float>;
+	/**
+	 * Sets end green color component range (when particle emits)
+	 */
+	public var endGreen:Bounds<Float>;
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+	/**
+	 * If this is set to true, particles will slowly fade away by 
+	 * decreasing their alpha value based on their lifespan.
+	 */
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+	public var fadingAway:Bool = false;
+=======
+	public var endBlue:Bounds<Float>;
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+	/**
+	 * If this is set to true, particles will slowly decrease in scale 
+	 * based on their lifespan.
+	 * WARNING: This severely impacts performance.
+	 */
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+	public var decreasingSize:Bool = false;
+=======
+	public var blend:BlendMode = null;
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+	/**
+	 * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
+	 */
+	public var bounce:Float = 0;
+	/**
+	 * Internal variable for tracking the class to create when generating particles.
+	 */
+	
+	private var _particleClass:Class<T>;
+	/**
+	 * Internal helper for deciding how many particles to launch.
+	 */
+	private var _quantity:Int = 0;
+	/**
+	 * Internal helper for the style of particle emission (all at once, or one at a time).
+	 */
+	private var _explode:Bool = true;
+	/**
+	 * Internal helper for deciding when to launch particles or kill them.
+	 */
+	private var _timer:Float = 0;
+	/**
+	 * Internal counter for figuring out how many particles to launch.
+	 */
+	private var _counter:Int = 0;
+	/**
+	 * Internal point object, handy for reusing for memory mgmt purposes.
+	 */
+	private var _point:FlxPoint;
+	/**
+	 * Internal helper for automatic call the kill() method
+	 */
+	private var _waitForKill:Bool = false;
+	
+	/**
+	 * Creates a new <code>FlxTypedEmitter</code> object at a specific position.
+	 * Does NOT automatically generate or attach particles!
+	 * 
+	 * @param	X		The X position of the emitter.
+	 * @param	Y		The Y position of the emitter.
+	 * @param	Size	Optional, specifies a maximum capacity for this emitter.
+	 */
+	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
+	{
+		super(Size);
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+		x = X;
+		y = Y;
+		width = 0;
+		height = 0;
+		minParticleSpeed = new FlxPoint( -100, -100);
+		maxParticleSpeed = new FlxPoint(100, 100);
+		minRotation = -360;
+		maxRotation = 360;
+		gravity = 0;
+		_particleClass = cast FlxParticle;
+		particleDrag = new FlxPoint();
+		frequency = 0.1;
+		lifespan = 3;
+		bounce = 0;
+		_quantity = 0;
+		_counter = 0;
+		_explode = true;
+		on = false;
+=======
+		
+		xPosition = new Bounds<Float>(X, 0);
+		yPosition = new Bounds<Float>(Y, 0);
+		xVelocity = new Bounds<Float>( -100, 100);
+		yVelocity = new Bounds<Float>( -100, 100);
+		rotation = new Bounds<Float>( -360, 360);
+		startScale = new Bounds<Float>(1, 1);
+		endScale = new Bounds<Float>(1, 1);
+		startAlpha = new Bounds<Float>(1.0, 1.0);
+		endAlpha = new Bounds<Float>(1.0, 1.0);
+		startRed = new Bounds<Float>(1.0, 1.0);
+		startGreen = new Bounds<Float>(1.0, 1.0);
+		startBlue = new Bounds<Float>(1.0, 1.0);
+		endRed = new Bounds<Float>(1.0, 1.0);
+		endGreen = new Bounds<Float>(1.0, 1.0);
+		endBlue = new Bounds<Float>(1.0, 1.0);
+		
+		acceleration = new FlxPoint(0, 0);
+		_particleClass = cast FlxParticle;
+		particleDrag = new FlxPoint();
+		
+		life = new Bounds<Float>(3, 3);
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+		exists = false;
+		_point = new FlxPoint();
+	}
+	
+	/**
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		minParticleSpeed = null;
+		maxParticleSpeed = null;
+		particleDrag = null;
+		_particleClass = null;
+		_point = null;
+		
+		super.destroy();
+	}
+	
+	/**
+	 * This function generates a new array of particle sprites to attach to the emitter.
+	 * 
+	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
+	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
+	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
+	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+	 */
+	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
+	{
+		maxSize = Quantity;
+		var totalFrames:Int = 1;
+		
+		if (Multiple)
+		{ 
+			var sprite:FlxSprite = new FlxSprite();
+			sprite.loadGraphic(Graphics, true);
+			totalFrames = sprite.frames;
+			sprite.destroy();
+		}
+		
+		var randomFrame:Int;
+		var particle:FlxParticle;
+		var i:Int = 0;
+		
+		while (i < Quantity)
+		{
+			particle = Type.createInstance(_particleClass, []);
+			
+			if (Multiple)
+			{
+				randomFrame = Std.int(FlxRandom.float() * totalFrames); 
+				
+				if (BakedRotations > 0)
+				{
+					#if flash
+					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame, false, AutoBuffer);
+					#else
+					particle.loadGraphic(Graphics, true);
+					particle.frame = randomFrame;
+					#end
+				}
+				else
+				{
+					particle.loadGraphic(Graphics, true);
+					particle.frame = randomFrame;
+				}
+			}
+			else
+			{
+				if (BakedRotations > 0)
+				{
+					#if flash
+					particle.loadRotatedGraphic(Graphics, BakedRotations, -1, false, AutoBuffer);
+					#else
+					particle.loadGraphic(Graphics);
+					#end
+				}
+				else
+				{
+					particle.loadGraphic(Graphics);
+				}
+			}
+			if (Collide > 0)
+			{
+				particle.width *= Collide;
+				particle.height *= Collide;
+				particle.centerOffsets();
+			}
+			else
+			{
+				particle.allowCollisions = FlxObject.NONE;
+			}
+			
+			particle.exists = false;
+			add(particle);
+			i++;
+		}
+		return this;
+	}
+	
+	/**
+	 * Called automatically by the game loop, decides when to launch particles and when to "die".
+	 */
+	override public function update():Void
+	{
+		if (on)
+		{
+			if (_explode)
+			{
+				on = false;
+				_waitForKill = true;
+				
+				var i:Int = 0;
+				var l:Int = _quantity;
+				
+				if ((l <= 0) || (l > length))
+				{
+					l = length;
+				}
+				
+				while(i < l)
+				{
+					emitParticle();
+					i++;
+				}
+				
+				_quantity = 0;
+			}
+			else
+			{
+				// Spawn a particle per frame
+				if (frequency <= 0)
+				{
+					emitParticle();
+					
+					if((_quantity > 0) && (++_counter >= _quantity))
+					{
+						on = false;
+						_waitForKill = true;
+						_quantity = 0;
+					}
+				}
+				else
+				{
+					_timer += FlxG.elapsed;
+					
+					while (_timer > frequency)
+					{
+						_timer -= frequency;
+						emitParticle();
+						
+						if ((_quantity > 0) && (++_counter >= _quantity))
+						{
+							on = false;
+							_waitForKill = true;
+							_quantity = 0;
+						}
+					}
+				}
+			}
+		}
+		else if (_waitForKill)
+		{
+			_timer += FlxG.elapsed;
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+			if ((lifespan > 0) && (_timer > lifespan))
+=======
+			
+			if ((life.max > 0) && (_timer > life.max))
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+			{
+				kill();
+				return;
+			}
+		}
+		
+		super.update();
+	}
+	
+	/**
+	 * Call this function to turn off all the particles and the emitter.
+	 */
+	override public function kill():Void
+	{
+		on = false;
+		_waitForKill = false;
+		
+		super.kill();
+	}
+	
+	/**
+	 * Call this function to start emitting particles.
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+	 * @param	Explode		Whether the particles should all burst out at once.
+	 * @param	Lifespan	How long each particle lives once emitted. 0 = forever.
+	 * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+	 * @param	Quantity	How many particles to launch. 0 = "all of the particles".
+=======
+	 * @param	Explode			Whether the particles should all burst out at once.
+	 * @param	Lifespan		How long each particle lives once emitted. 0 = forever.
+	 * @param	Frequency		Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+	 * @param	Quantity		How many particles to launch. 0 = "all of the particles".
+	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+	 */
+	public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0):Void
+	{
+		revive();
+		visible = true;
+		on = true;
+		
+		_explode = Explode;
+		lifespan = Lifespan;
+		frequency = Frequency;
+		_quantity += Quantity;
+		
+		_counter = 0;
+		_timer = 0;
+		
+		_waitForKill = false;
+	}
+	
+	/**
+	 * This function can be used both internally and externally to emit the next particle.
+	 */
+	public function emitParticle():Void
+	{
+		var particle:FlxParticle = recycle(cast _particleClass);
+		particle.lifespan = particle.maxLifespan = lifespan;
+		particle.elasticity = bounce;
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+		particle.decreasingSize = decreasingSize;
+		particle.fadingAway = fadingAway;
+		particle.reset(x - (Std.int(particle.width) >> 1) + FlxG.random() * width, y - (Std.int(particle.height) >> 1) + FlxG.random() * height);
+=======
+		
+		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+		particle.visible = true;
+		
+		if (minParticleSpeed.x != maxParticleSpeed.x)
+		{
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+			particle.velocity.x = minParticleSpeed.x + FlxG.random() * (maxParticleSpeed.x - minParticleSpeed.x);
+=======
+			particle.lifespan = particle.maxLifespan = life.min + FlxRandom.float() * (life.max - life.min);
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+		}
+		else
+		{
+			particle.velocity.x = minParticleSpeed.x;
+		}
+		if (minParticleSpeed.y != maxParticleSpeed.y)
+		{
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+			particle.velocity.y = minParticleSpeed.y + FlxG.random() * (maxParticleSpeed.y - minParticleSpeed.y);
+		}
+		else
+		{
+			particle.velocity.y = minParticleSpeed.y;
+=======
+			particle.startAlpha = startAlpha.min + FlxRandom.float() * (startAlpha.max - startAlpha.min);
+		}
+		else
+		{
+			particle.startAlpha = startAlpha.min;
+		}
+		particle.alpha = particle.startAlpha;
+		
+		var particleEndAlpha:Float = endAlpha.min;
+		if (endAlpha.min != endAlpha.max)
+		{
+			particleEndAlpha = endAlpha.min + FlxRandom.float() * (endAlpha.max - endAlpha.min);
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+		}
+		particle.acceleration.y = gravity;
+		
+		if (minRotation != maxRotation)
+		{
+			particle.angularVelocity = minRotation + FlxG.random() * (maxRotation - minRotation);
+		}
+		else
+		{
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+			particle.angularVelocity = minRotation;
+=======
+			particle.useFading = false;
+			particle.rangeAlpha = 0;
+		}
+		
+		// Particle color settings
+		var startRedComp:Float = particle.startRed = startRed.min;
+		var startGreenComp:Float = particle.startGreen = startGreen.min;
+		var startBlueComp:Float = particle.startBlue = startBlue.min;
+		
+		var endRedComp:Float = endRed.min;
+		var endGreenComp:Float = endGreen.min;
+		var endBlueComp:Float = endBlue.min;
+		
+		if (startRed.min != startRed.max)
+		{
+			particle.startRed = startRedComp = startRed.min + FlxRandom.float() * (startRed.max - startRed.min);
+		}
+		if (startGreen.min != startGreen.max)
+		{
+			particle.startGreen = startGreenComp = startGreen.min + FlxRandom.float() * (startGreen.max - startGreen.min);
+		}
+		if (startBlue.min != startBlue.max)
+		{
+			particle.startBlue = startBlueComp = startBlue.min + FlxRandom.float() * (startBlue.max - startBlue.min);
+		}
+		
+		if (endRed.min != endRed.max)
+		{
+			endRedComp = endRed.min + FlxRandom.float() * (endRed.max - endRed.min);
+		}
+		
+		if (endGreen.min != endGreen.max)
+		{
+			endGreenComp = endGreen.min + FlxRandom.float() * (endGreen.max - endGreen.min);
+		}
+		
+		if (endBlue.min != endBlue.max)
+		{
+			endBlueComp = endBlue.min + FlxRandom.float() * (endBlue.max - endBlue.min);
+		}
+		
+		particle.rangeRed = endRedComp - startRedComp;
+		particle.rangeGreen = endGreenComp - startGreenComp;
+		particle.rangeBlue = endBlueComp - startBlueComp;
+		
+		particle.useColoring = false;
+		
+		if (particle.rangeRed != 0 || particle.rangeGreen != 0 || particle.rangeBlue != 0)
+		{
+			particle.useColoring = true;
+		}
+		// End of particle color settings
+		if (startScale.min != startScale.max)
+		{
+			particle.startScale = startScale.min + FlxRandom.float() * (startScale.max - startScale.min);
+		}
+		else
+		{
+			particle.startScale = startScale.min;
+		}
+		particle.scale.x = particle.scale.y = particle.startScale;
+		
+		var particleEndScale:Float = endScale.min;
+		if (endScale.min != endScale.max)
+		{
+			particleEndScale = endScale.min + Std.int(FlxRandom.float() * (endScale.max - endScale.min));
+		}
+		
+		if (particleEndScale != particle.startScale)
+		{
+			particle.useScaling = true;
+			particle.rangeScale = particleEndScale - particle.startScale;
+		}
+		else
+		{
+			particle.useScaling = false;
+			particle.rangeScale = 0;
+		}
+		
+		particle.blend = blend;
+		
+		if (xVelocity.min != xVelocity.max)
+		{
+			particle.velocity.x = xVelocity.min + FlxRandom.float() * (xVelocity.max - xVelocity.min);
+		}
+		else
+		{
+			particle.velocity.x = xVelocity.min;
+		}
+		if (yVelocity.min != yVelocity.max)
+		{
+			particle.velocity.y = yVelocity.min + FlxRandom.float() * (yVelocity.max - yVelocity.min);
+		}
+		else
+		{
+			particle.velocity.y = yVelocity.min;
+		}
+		particle.acceleration.set(acceleration.x, acceleration.y);
+		
+		if (rotation.min != rotation.max)
+		{
+			particle.angularVelocity = rotation.min + FlxRandom.float() * (rotation.max - rotation.min);
+		}
+		else
+		{
+			particle.angularVelocity = rotation.min;
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+		}
+		if (particle.angularVelocity != 0)
+		{
+			particle.angle = FlxRandom.float() * 360 - 180;
+		}
+		
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+		particle.drag.x = particleDrag.x;
+		particle.drag.y = particleDrag.y;
+=======
+		particle.drag.set(particleDrag.x, particleDrag.y);
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+		particle.onEmit();
+	}
+	
+	/**
+	 * A more compact way of setting the width and height of the emitter.
+	 * 
+	 * @param	Width	The desired width of the emitter (particles are spawned randomly within these dimensions).
+	 * @param	Height	The desired height of the emitter.
+	 */
+	public function setSize(Width:Int, Height:Int):Void
+	{
+		width = Width;
+		height = Height;
+	}
+	
+	/**
+	 * A more compact way of setting the X velocity range of the emitter.
+	 * 
+	 * @param	Min		The minimum value for this range.
+	 * @param	Max		The maximum value for this range.
+	 */
+	public function setXSpeed(Min:Float = 0, Max:Float = 0):Void
+	{
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+		minParticleSpeed.x = Min;
+		maxParticleSpeed.x = Max;
+=======
+		if (Max < Min)
+		{
+			Max = Min;
+		}
+		
+		xVelocity.min = Min;
+		xVelocity.max = Max;
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+	}
+	
+	/**
+	 * A more compact way of setting the Y velocity range of the emitter.
+	 * 
+	 * @param	Min		The minimum value for this range.
+	 * @param	Max		The maximum value for this range.
+	 */
+	public function setYSpeed(Min:Float = 0, Max:Float = 0):Void
+	{
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+		minParticleSpeed.y = Min;
+		maxParticleSpeed.y = Max;
+=======
+		if (Max < Min)
+		{
+			Max = Min;
+		}
+			
+		yVelocity.min = Min;
+		yVelocity.max = Max;
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+	}
+	
+	/**
+	 * A more compact way of setting the angular velocity constraints of the emitter.
+	 * 
+	 * @param	Min		The minimum value for this range.
+	 * @param	Max		The maximum value for this range.
+	 */
+	public function setRotation(Min:Float = 0, Max:Float = 0):Void
+	{
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+		minRotation = Min;
+		maxRotation = Max;
+=======
+		if (Max < Min)
+		{
+			Max = Min;
+		}
+		
+		rotation.min = Min;
+		rotation.max = Max;
+	}
+	
+	/**
+	 * A more compact way of setting the scale constraints of the emitter.
+	 * 
+	 * @param	StartMin	The minimum value for particle scale at the start (emission).
+	 * @param	StartMax	The maximum value for particle scale at the start (emission).
+	 * @param	EndMin		The minimum value for particle scale at the end (death).
+	 * @param	EndMax		The maximum value for particle scale at the end (death).
+	 */
+	public function setScale(StartMin:Float = 1, StartMax:Float = 1, EndMin:Float = 1, EndMax:Float = 1):Void
+	{
+		if (StartMax < StartMin)
+		{
+			StartMax = StartMin;
+		}
+		
+		if (EndMax < EndMin)
+		{
+			EndMax = EndMin;
+		}
+		
+		startScale.min = StartMin;
+		startScale.max = StartMax;
+		endScale.min = EndMin;
+		endScale.max = EndMax;
+	}
+	
+	/**
+	 * A more compact way of setting the alpha constraints of the emitter.
+	 * 
+	 * @param	StartMin	The minimum value for particle alpha at the start (emission).
+	 * @param	StartMax	The maximum value for particle alpha at the start (emission).
+	 * @param	EndMin		The minimum value for particle alpha at the end (death).
+	 * @param	EndMax		The maximum value for particle alpha at the end (death).
+	 */
+	public function setAlpha(StartMin:Float = 1, StartMax:Float = 1, EndMin:Float = 1, EndMax:Float = 1):Void
+	{
+		if (StartMin < 0)
+		{
+			StartMin = 0;
+		}
+		
+		if (StartMax < StartMin)
+		{
+			StartMax = StartMin;
+		}
+		
+		if (EndMin < 0)
+		{
+			EndMin = 0;
+		}
+		
+		if (EndMax < EndMin)
+		{
+			EndMax = EndMin;
+		}
+		
+		startAlpha.min = StartMin;
+		startAlpha.max = StartMax;
+		endAlpha.min = EndMin;
+		endAlpha.max = EndMax;
+	}
+	
+	/**
+	 * A more compact way of setting the color constraints of the emitter.
+	 * But it's not so flexible as setting values of each color bounds objects.
+	 * 
+	 * @param	Start		The start particles color at the start (emission).
+	 * @param	EndMin		The end particles color at the end (death).
+	 */
+	public function setColor(Start:Int = 0xffffff, End:Int = 0xffffff):Void
+	{
+		Start &= 0xffffff;
+		End &= 0xffffff;
+		
+		var startRedComp:Float = (Start >> 16 & 0xFF) / 255;
+		var startGreenComp:Float = (Start >> 8 & 0xFF) / 255;
+		var startBlueComp:Float = (Start & 0xFF) / 255;
+		
+		var endRedComp:Float = (End >> 16 & 0xFF) / 255;
+		var endGreenComp:Float = (End >> 8 & 0xFF) / 255;
+		var endBlueComp:Float = (End & 0xFF) / 255;
+		
+		startRed.min = startRed.max = startRedComp;
+		startGreen.min = startGreen.max = startGreenComp;
+		startBlue.min = startBlue.max = startBlueComp;
+		
+		endRed.min = endRed.max = endRedComp;
+		endGreen.min = endGreen.max = endGreenComp;
+		endBlue.min = endBlue.max = endBlueComp;
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+	}
+	
+	/**
+	 * Change the emitter's midpoint to match the midpoint of a <code>FlxObject</code>.
+	 * 
+	 * @param	Object		The <code>FlxObject</code> that you want to sync up with.
+	 */
+	public function at(Object:FlxObject):Void
+	{
+		Object.getMidpoint(_point);
+		
+		x = _point.x - (Std.int(width) >> 1);
+		y = _point.y - (Std.int(height) >> 1);
+	}
+	
+	/**
+	 * Set your own particle class type here. The custom class must extend <code>FlxParticle</code>.
+	 * Default is <code>FlxParticle</code>.
+	 */
+	public var particleClass(get, set):Class<T>;
+	
+	private function get_particleClass():Class<T> 
+	{
+		return _particleClass;
+	}
+	
+	private function set_particleClass(Value:Class<T>):Class<T> 
+	{
+		return _particleClass = Value;
+	}
+<<<<<<< HEAD:src/org/flixel/FlxEmitter.hx
+=======
+	
+	/**
+	 * The width of the emitter.  Particles can be randomly generated from anywhere within this box.
+	 */
+	public var width(get, set):Float;
+	
+	private function get_width():Float
+	{
+		return xPosition.max;
+	}
+	
+	private function set_width(Value:Float):Float
+	{
+		return xPosition.max = Value;
+	}
+	
+	/**
+	 * The height of the emitter.  Particles can be randomly generated from anywhere within this box.
+	 */
+	public var height(get, set):Float;
+	
+	private function get_height():Float
+	{
+		return yPosition.max;
+	}
+	
+	private function set_height(Value:Float):Float
+	{
+		return yPosition.max = Value;
+	}
+	
+	public var x(get, set):Float;
+	
+	private function get_x():Float
+	{
+		return xPosition.min;
+	}
+	
+	private function set_x(Value:Float):Float
+	{
+		return xPosition.min = Value;
+	}
+	
+	public var y(get, set):Float;
+	
+	private function get_y():Float
+	{
+		return yPosition.min;
+	}
+	
+	private function set_y(Value:Float):Float
+	{
+		return yPosition.min = Value;
+	}
+	
+	/**
+	 * Sets the <code>acceleration.y</code> member of each particle to this value on launch.
+	 */
+	public var gravity(get, set):Float;
+	
+	private function get_gravity():Float
+	{
+		return acceleration.y;
+	}
+	
+	private function set_gravity(Value:Float):Float
+	{
+		return acceleration.y = Value;
+	}
+	
+	/**
+	 * The minimum possible angular velocity of a particle. The default value is -360.
+	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 */
+	public var minRotation(get, set):Float;
+	
+	private function get_minRotation():Float
+	{
+		return rotation.min;
+	}
+	
+	private function set_minRotation(Value:Float):Float
+	{
+		return rotation.min = Value;
+	}
+	
+	/**
+	 * The maximum possible angular velocity of a particle. The default value is 360.
+	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 */
+	public var maxRotation(get, set):Float;
+	
+	private function get_maxRotation():Float
+	{
+		return rotation.max;
+	}
+	
+	private function set_maxRotation(Value:Float):Float
+	{
+		return rotation.max = Value;
+	}
+	
+	/**
+	 * How long each particle lives once it is emitted.
+	 * Set lifespan to 'zero' for particles to live forever.
+	 */
+	public var lifespan(get, set):Float;
+	
+	private function get_lifespan():Float
+	{
+		return life.min;
+	}
+	
+	private function set_lifespan(Value:Float):Float
+	{
+		var dl:Float = life.max - life.min;
+		life.min = Value;
+		life.max = Value + dl;
+		
+		return Value;
+	}
+}
+
+/**
+ * Helper object for holding bounds of different variables
+ */
+class Bounds<T>
+{
+	public var min:T;
+	public var max:T;
+
+	public function new(min:T, max:Null<T> = null)
+	{
+		this.min = min;
+		this.max = max == null ? min : max;
+	}
+>>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+}
