@@ -26,7 +26,11 @@ import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Perf.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Perf.hx
+>>>>>>> experimental
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
@@ -68,7 +72,11 @@ class Perf extends Window
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
 =======
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Perf.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Perf.hx
+>>>>>>> experimental
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		resize(90, 110);

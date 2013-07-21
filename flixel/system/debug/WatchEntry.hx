@@ -22,7 +22,11 @@ import flixel.system.FlxDebugger;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/WatchEntry.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/WatchEntry.hx
+>>>>>>> experimental
 
 /**
  * Helper class for the debugger overlay's Watch window.
@@ -133,7 +137,11 @@ class WatchEntry
 			color = 0x008000;
 		
 		_whiteText = new TextFormat(fontName, 12, color);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/WatchEntry.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/WatchEntry.hx
+>>>>>>> experimental
 		_blackText = new TextFormat(fontName, 12, 0);
 		
 		nameDisplay = new TextField();
@@ -212,7 +220,11 @@ class WatchEntry
 =======
 				nameDisplay.appendText(FlxStringUtil.getClassName(object, (NameWidth < 240)) + ".");
 			
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/WatchEntry.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/WatchEntry.hx
+>>>>>>> experimental
 			nameDisplay.appendText(field);
 		}
 	}
@@ -240,7 +252,11 @@ class WatchEntry
 		else
 			valueDisplay.text = Std.string(property); 
 		
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/WatchEntry.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/WatchEntry.hx
+>>>>>>> experimental
 		return true;
 	}
 	#end

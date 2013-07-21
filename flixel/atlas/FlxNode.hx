@@ -10,17 +10,17 @@ import flash.geom.Rectangle;
  */
 class FlxNode
 {
-	public var item:BitmapData;
 	public var left:FlxNode;
 	public var right:FlxNode;
 	
 	public var rect:Rectangle;
 	public var point:Point;
 	public var key:String;
+	public var filled:Bool;
 	
-	public function new(rect:Rectangle, item:BitmapData = null, key:String = "") 
+	public function new(rect:Rectangle, filled:Bool = false, key:String = "") 
 	{
-		this.item = item;
+		this.filled = filled;
 		this.left = null;
 		this.right = null;
 		this.rect = rect;
@@ -32,7 +32,7 @@ class FlxNode
 	
 	private function get_isEmpty():Bool
 	{
-		return (item == null && left == null && right == null);
+		return (filled == false && left == null && right == null);
 	}
 	
 	public function canPlace(width:Int, height:Int):Bool
@@ -67,7 +67,6 @@ class FlxNode
 	
 	public function destroy():Void
 	{
-		this.item = null;
 		this.left = null;
 		this.right = null;
 		this.rect = null;

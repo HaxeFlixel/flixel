@@ -21,7 +21,11 @@ class FlxEmitterExt extends FlxTypedEmitterExt<FlxParticle>
 class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 =======
 class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle> 
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitterExt.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitterExt.hx
+>>>>>>> experimental
 {		
 	/**
 	 * 	Launch Direction.
@@ -50,7 +54,11 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 	 * Creates a new <code>FlxEmitterExt</code> object at a specific position.
 =======
 	 * Creates a new <code>FlxTypedEmitterExt</code> object at a specific position.
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitterExt.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitterExt.hx
+>>>>>>> experimental
 	 * Does NOT automatically generate or attach particles!
 	 * 
 	 * @param	X		The X position of the emitter.
@@ -66,7 +74,11 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		super(X, Y, Std.int(Size));
 		
 		// Set defaults
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitterExt.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitterExt.hx
+>>>>>>> experimental
 		setMotion(0, 0, 0.5, 360, 100, 1.5);
 	}
 	
@@ -96,7 +108,11 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		life.max = Lifespan + LifespanRange;
 		angleRange = AngleRange * 0.017453293;
 		distanceRange = DistanceRange;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitterExt.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitterExt.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -131,7 +147,11 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		
 		Particle.velocity.x = Math.cos(a) * d;
 		Particle.velocity.y = Math.sin(a) * d;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitterExt.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitterExt.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -148,7 +168,11 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 	 * @param	Frequency		Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity		How many particles to launch. 0 = "all of the particles".
 	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitterExt.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitterExt.hx
+>>>>>>> experimental
 	 */
 	override public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0):Void
 	{
@@ -345,7 +369,11 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		}
 		
 		particle.drag.set(particleDrag.x, particleDrag.y);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitterExt.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitterExt.hx
+>>>>>>> experimental
 		particle.onEmit();
 	}
 	

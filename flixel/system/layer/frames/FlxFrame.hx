@@ -17,7 +17,11 @@ import flixel.system.layer.TileSheetData;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/layer/frames/FlxFrame.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/frames/FlxFrame.hx
+>>>>>>> experimental
 
 class FlxFrame
 {
@@ -31,7 +35,11 @@ class FlxFrame
 =======
 	public var additionalAngle:Float = 0;
 	
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/layer/frames/FlxFrame.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/frames/FlxFrame.hx
+>>>>>>> experimental
 	private var _bitmapData:BitmapData;
 	private var _tileSheet:TileSheetData;
 	
@@ -61,7 +69,7 @@ class FlxFrame
 		{
 			var temp:BitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxColor.TRANSPARENT);
 			FlxFrame.POINT.x = FlxFrame.POINT.y = 0;
-			temp.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, FlxFrame.POINT);
+			temp.copyPixels(_tileSheet.bitmap, frame, FlxFrame.POINT);
 			
 			MATRIX.identity();
 			MATRIX.translate( -0.5 * frame.width, -0.5 * frame.height);
@@ -74,8 +82,13 @@ class FlxFrame
 		{
 			FlxFrame.POINT.x = offset.x;
 			FlxFrame.POINT.y = offset.y;
+<<<<<<< HEAD
 			_bitmapData.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, FlxFrame.POINT);
 >>>>>>> origin/dev:flixel/system/layer/frames/FlxFrame.hx
+=======
+			_bitmapData.copyPixels(_tileSheet.bitmap, frame, FlxFrame.POINT);
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/frames/FlxFrame.hx
+>>>>>>> experimental
 		}
 	}
 	
@@ -97,7 +110,11 @@ class FlxFrame
 		_reversedBitmapData.draw(normalFrame, MATRIX);
 		
 		return _reversedBitmapData;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/layer/frames/FlxFrame.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/frames/FlxFrame.hx
+>>>>>>> experimental
 	}
 	
 	public function getBitmap():BitmapData

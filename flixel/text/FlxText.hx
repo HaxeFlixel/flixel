@@ -19,10 +19,13 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
-import flixel.system.layer.Atlas;
 import flixel.util.FlxColor;
 import openfl.Assets;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/text/FlxText.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
+>>>>>>> experimental
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -130,13 +133,6 @@ class FlxText extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		#if !js
-		if (_pixels != null)
-		{
-			_pixels.dispose();
-		}
-		#end
-		
 		_textField = null;
 		_format = null;
 		_formatAdjusted = null;
@@ -175,7 +171,11 @@ class FlxText extends FlxSprite
 <<<<<<< HEAD:src/org/flixel/FlxText.hx
 =======
 		Color &= 0x00ffffff;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/text/FlxText.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
+>>>>>>> experimental
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
@@ -250,17 +250,25 @@ class FlxText extends FlxSprite
 	/**
 	 * The color of the text being displayed.
 	 */
+<<<<<<< HEAD:src/org/flixel/FlxText.hx
 	override private function get_color():Int
 	{
 		return _format.color;
 	}
 	
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxText.hx
+=======
+>>>>>>> experimental
 	/**
 	 * @private
 	 */
 =======
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/text/FlxText.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
+>>>>>>> experimental
 	override private function set_color(Color:Int):Int
 	{
 		if (_isStatic)
@@ -274,7 +282,12 @@ class FlxText extends FlxSprite
 =======
 		Color &= 0x00ffffff;
 		_format.color = Color;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/text/FlxText.hx
+=======
+		color = Color;
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
+>>>>>>> experimental
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
 		_regen = true;
@@ -481,8 +494,10 @@ class FlxText extends FlxSprite
 				// Need to generate a new buffer to store the text graphic
 				height = _textField.textHeight;
 				// Account for 2px gutter on top and bottom
-				height += 4; 
-				_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
+				height += 4;
+				var key:String = _cachedGraphics.key;
+				FlxG.bitmap.remove(key);
+				makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, false, key);
 				frameHeight = Std.int(height);
 				_textField.height = height * 1.2;
 				_flashRect.x = 0;
@@ -494,7 +509,7 @@ class FlxText extends FlxSprite
 			// Else just clear the old buffer before redrawing the text
 			else	
 			{
-				_pixels.fillRect(_flashRect, FlxColor.TRANSPARENT);
+				_cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
 			}
 			
 			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
@@ -528,7 +543,7 @@ class FlxText extends FlxSprite
 					_formatAdjusted.color = _shadow;
 					updateFormat(_formatAdjusted);
 					_matrix.translate(1, 1);
-					_pixels.draw(_textField, _matrix, _colorTransform);
+					_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
 					_matrix.translate( -1, -1);
 					_formatAdjusted.color = _format.color;
 					updateFormat(_formatAdjusted);
@@ -539,20 +554,18 @@ class FlxText extends FlxSprite
 				}
 				
 				//Actually draw the text onto the buffer
-				_pixels.draw(_textField, _matrix, _colorTransform);
+				_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
 				updateFormat(_format);
 			}
-			#if !flash
-			updateAtlasInfo();
-			#else
 			
+			#if flash
 			//Finally, update the visible pixels
-			if ((framePixels == null) || (framePixels.width != _pixels.width) || (framePixels.height != _pixels.height))
+			if ((framePixels == null) || (framePixels.width != _cachedGraphics.bitmap.width) || (framePixels.height != _cachedGraphics.bitmap.height))
 			{
-				framePixels = new BitmapData(_pixels.width, _pixels.height, true, 0);
+				framePixels = new BitmapData(_cachedGraphics.bitmap.width, _cachedGraphics.bitmap.height, true, 0);
 			}
 			
-			framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
+			framePixels.copyPixels(_cachedGraphics.bitmap, _flashRect, _flashPointZero);
 			#end
 			
 		#if !flash
@@ -562,12 +575,16 @@ class FlxText extends FlxSprite
 			_halfHeight = origin.y;
 =======
 			origin.set(frameWidth * 0.5, frameHeight * 0.5);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/text/FlxText.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
+>>>>>>> experimental
 		}
 		#end
 		
 		dirty = false;
-		
+		/*
 		// Updates the filter effects on framePixels.
 		if (filters != null)
 		{
@@ -586,6 +603,7 @@ class FlxText extends FlxSprite
 			}
 			#end
 		}
+		*/
 	}
 	
 	/**
@@ -613,7 +631,11 @@ class FlxText extends FlxSprite
 
 =======
 	override public function setClipping(Width:Int, Height:Int) {}
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/text/FlxText.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
+>>>>>>> experimental
 	
 	/**
 	 * A helper function for updating the <code>TextField</code> that we use for rendering.
@@ -657,52 +679,56 @@ class FlxText extends FlxSprite
 	}
 	#end
 	
+<<<<<<< HEAD:src/org/flixel/FlxText.hx
 	/**
 	 * FlxText objects can't be added on any atlas if isStatic property is true. 
 	*/
 	#if !flash
-	override private function set_atlas(Value:Atlas):Atlas 
+	override private function set_atlas(value:Atlas):Atlas 
 	{
 		if (!_isStatic)
 		{
-			return Value;
+			return value;
 		}
 		
-		return super.set_atlas(Value);
+		return super.set_atlas(value);
 	}
 	#end
 	
-	override public function updateAtlasInfo(UpdateAtlas:Bool = false):Void
+	override public function updateAtlasInfo(updateAtlas:Bool = false):Void
 	{
 		#if !flash
 		_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
-		var cachedBmd:BitmapData = FlxG.bitmap._cache.get(_bitmapDataKey);
-		
+		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
 		if (cachedBmd != _pixels)
 		{
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxText.hx
 			cachedBmd.dispose();
 			FlxG._cache.set(_bitmapDataKey, _pixels);
 =======
 			FlxG.bitmap._cache.set(_bitmapDataKey, _pixels);
 >>>>>>> origin/dev:flixel/text/FlxText.hx
+=======
+			cachedBmd.dispose();
+			FlxG._cache.set(_bitmapDataKey, _pixels);
+>>>>>>> experimental
 			_atlas.clearAndFillWith(_pixels);
 		}
-		
 		_node = _atlas.getNodeByKey(_bitmapDataKey);
 		updateFrameData();
 		#end
 	}
 	
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
 	override public function updateFrameData():Void
 	{
-		#if !flash
-		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
+		if (_cachedGraphics != null)
 		{
-			_framesData = _node.getSpriteSheetFrames(Std.int(width), Std.int(height));
+			_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region);
 			_flxFrame = _framesData.frames[0];
 		}
-		#end
 	}
 	
 	override public function draw():Void 

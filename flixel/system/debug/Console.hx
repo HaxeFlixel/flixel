@@ -30,7 +30,11 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.system.FlxAssets;
 import openfl.Assets;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Console.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
+>>>>>>> experimental
 
 /**
  * 
@@ -138,7 +142,11 @@ class Console extends Window
 		
 		#if flash 
 		// Pause game
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Console.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
+>>>>>>> experimental
 		if (autoPause)
 		{
 			FlxG.game.debugger.vcr.onPause();
@@ -155,7 +163,11 @@ class Console extends Window
 =======
 		}
 		#end
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Console.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
+>>>>>>> experimental
 	}
 	
 	private function onFocusLost(e:FocusEvent):Void
@@ -165,7 +177,11 @@ class Console extends Window
 =======
 		#if !FLX_NO_DEBUG
 		
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Console.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
+>>>>>>> experimental
 		#if flash
 		// Unpause game
 		if (autoPause)
@@ -184,7 +200,11 @@ class Console extends Window
 =======
 		}
 		#end
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Console.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
+>>>>>>> experimental
 	}
 	
 	private function onKeyPress(e:KeyboardEvent):Void
@@ -269,7 +289,11 @@ class Console extends Window
 			FlxG.log("> Invalid command: '" + command + "'");
 =======
 			FlxG.log.error("Console: Invalid command: '" + command + "'");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Console.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
+>>>>>>> experimental
 		}
 	}
 	
@@ -305,7 +329,11 @@ class Console extends Window
 =======
 					FlxG.log.error("Console: Invalid number or parameters: " + expected + " expected, " + args.length + " passed");
 					return false;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Console.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
+>>>>>>> experimental
 				}
 			}
 		}

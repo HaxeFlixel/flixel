@@ -338,7 +338,8 @@ class FlxSpriteUtil
 		Sprite.pixels.draw(FlxG.flashGfxSprite);
 		Sprite.dirty = true;
 		Sprite.resetFrameBitmapDatas();
-		Sprite.updateAtlasInfo(true);
+		// TODO: check this place
+	//	Sprite.updateAtlasInfo(true);
 	}
 	
 	/**
@@ -357,6 +358,7 @@ class FlxSpriteUtil
 		}
 		
 		Sprite.resetFrameBitmapDatas();
-		Sprite.updateAtlasInfo(true);
+		// TODO: check this place
+	//	Sprite.updateAtlasInfo(true);
 	}
 }

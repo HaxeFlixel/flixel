@@ -21,7 +21,11 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
 import openfl.Assets;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Log.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Log.hx
+>>>>>>> experimental
 
 /**
  * A simple trace output window for use in the debugger overlay.
@@ -52,7 +56,11 @@ class Log extends Window
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
 =======
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Log.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Log.hx
+>>>>>>> experimental
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		

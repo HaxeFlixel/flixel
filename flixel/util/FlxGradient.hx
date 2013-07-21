@@ -130,9 +130,9 @@ class FlxGradient
 		}
 		key = key + "], chunkSize: " + chunkSize + ", rotation: " + rotation;
 		
-		if (FlxG.bitmap._cache.exists(key))
+		if (FlxG.bitmap.checkCache(key))
 		{
-			return FlxG.bitmap._cache.get(key);
+			return FlxG.bitmap.get(key).bitmap;
 		}
 		#end
 		
@@ -177,7 +177,7 @@ class FlxGradient
 		}
 		
 		#if !flash
-		FlxG.bitmap._cache.set(key, data);
+		FlxG.bitmap.add(data, false, key);
 		#end
 		
 		return data;

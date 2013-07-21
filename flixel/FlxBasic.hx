@@ -8,14 +8,14 @@ import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.layer.frames.FlxSpriteFrames;
 import org.flixel.tweens.FlxTween;
 =======
-import flash.display.BitmapData;
-import flixel.system.layer.Atlas;
-import flixel.system.layer.frames.FlxSpriteFrames;
-import flixel.system.layer.Node;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
+<<<<<<< HEAD
 import flixel.util.loaders.TexturePackerData;
 >>>>>>> origin/dev:flixel/FlxBasic.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxBasic.hx
+>>>>>>> experimental
 
 /**
  * This is a useful "generic" Flixel object.
@@ -104,6 +104,7 @@ class FlxBasic
 			clearTweens(true);
 			_tween = null;
 		}
+<<<<<<< HEAD:src/org/flixel/FlxBasic.hx
 		
 		#if !flash
 		_framesData = null;
@@ -111,6 +112,8 @@ class FlxBasic
 		_atlas = null;
 		_node = null;
 		#end
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxBasic.hx
 	}
 	
 	/**
@@ -159,7 +162,11 @@ class FlxBasic
 			{
 				cameras = FlxG.cameras.list;
 			}
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxBasic.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxBasic.hx
+>>>>>>> experimental
 			var l:Int = cameras.length;
 			while (i < l)
 			{
@@ -268,7 +275,7 @@ class FlxBasic
 		}
 	}
 
-	inline public function updateTweens():Void
+	public function updateTweens():Void
 	{
 		var t:FlxTween;
 		var	ft:FriendTween = _tween;
@@ -287,12 +294,12 @@ class FlxBasic
 		}
 	}
 
-	public var hasTween(get_hasTween, never):Bool;
-	
-	private function get_hasTween():Bool 
+	public var hasTween(get, never):Bool;
+	inline private function get_hasTween():Bool 
 	{ 
 		return (_tween != null); 
 	}
+<<<<<<< HEAD:src/org/flixel/FlxBasic.hx
 
 	private var _tween:FlxTween;
 	
@@ -329,11 +336,11 @@ class FlxBasic
 				{
 					if (!value.hasNodeWithName(_bitmapDataKey))
 					{
-						var bm:BitmapData = FlxG.bitmap._cache.get(_bitmapDataKey);
+						var bm:BitmapData = FlxG._cache.get(_bitmapDataKey);
 						if (bm == null) 
 						{
 							#if debug
-							throw "There is no bitmapData with key: " + _bitmapDataKey + " in FlxG.bitmap._cache";
+							throw "There isn't bitmapData with key: " + _bitmapDataKey + " in FlxG._cache";
 							#end
 							return null;
 						}
@@ -384,6 +391,7 @@ class FlxBasic
 		{
 			if (updateAtlas)
 			{
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxBasic.hx
 				_atlas.redrawNode(_node);
 =======
@@ -393,6 +401,9 @@ class FlxBasic
 					_atlas.redrawNode(_node);
 				}
 >>>>>>> origin/dev:flixel/FlxBasic.hx
+=======
+				_atlas.redrawNode(_node);
+>>>>>>> experimental
 			}
 		}
 		else
@@ -401,6 +412,7 @@ class FlxBasic
 			_node = _atlas.addNode(bm, _bitmapDataKey);
 			if (_node == null)
 			{
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxBasic.hx
 				_atlas = getAtlas();
 				_node = _atlas.getNodeByKey(_bitmapDataKey);
@@ -413,6 +425,10 @@ class FlxBasic
 					_node = _atlas.getNodeByKey(_bitmapDataKey);
 				}
 >>>>>>> origin/dev:flixel/FlxBasic.hx
+=======
+				_atlas = getAtlas();
+				_node = _atlas.getNodeByKey(_bitmapDataKey);
+>>>>>>> experimental
 			}
 		}
 		updateFrameData();
@@ -430,5 +446,8 @@ class FlxBasic
 	{
 		
 	}
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxBasic.hx
 	
+	private var _tween:FlxTween;
 }

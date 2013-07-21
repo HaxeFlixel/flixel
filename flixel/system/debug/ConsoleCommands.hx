@@ -14,7 +14,11 @@ import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 
 class ConsoleCommands
 {
@@ -46,7 +50,11 @@ class ConsoleCommands
 		console.addCommand("pause", this, pause, "p");
 		console.addCommand("play", FlxG, FlxG.sound.play);
 		console.addCommand("playMusic", FlxG, FlxG.sound.playMusic, "pm");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		console.addCommand("bgColor", this, bgColor, "bg");
 		console.addCommand("shake", this, shake, "sh");
 		console.addCommand("close", this, close, "cl");
@@ -61,7 +69,11 @@ class ConsoleCommands
 <<<<<<< HEAD:src/org/flixel/system/debug/ConsoleCommands.hx
 =======
 		#end
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 	}
 	
 	private function help(Command:String = ""):Void
@@ -78,7 +90,11 @@ class ConsoleCommands
 =======
 			cLog("System commands: \nlog, clearLog, clearHistory, help, resetState, switchState, resetGame, " + fs + " watchMouse, visualDebug, pause, play, playMusic, bgColor, shake, create, set, call, close, listObjects, listFunctions, watch, unwatch");
 			cLog("help (Command) for more information about a specific command"); 
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		}
 		else {
 			switch (Command) {
@@ -117,7 +133,11 @@ class ConsoleCommands
 				case "switchState", "ss":
 					cLog("switchState: {ss} Calls FlxG.switchState() with specified FlxState");
 					cLog("switchState [FlxState]");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 				#if flash
 				case "fullscreen":
 					FlxG.log("> fullscreen: Enables fullscreen mode");
@@ -170,7 +190,11 @@ class ConsoleCommands
 =======
 		FlxG.game.prefsSave.flush();
 		cLog("clearHistory: Command history cleared");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 	}
 	
 	private function resetState():Void
@@ -232,7 +256,11 @@ class ConsoleCommands
 			FlxG.watch.remove(FlxG.game, "mouseX");
 			FlxG.watch.remove(FlxG.game, "mouseY");
 			cLog("watchMouse: Mouse position removed from watch window");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		}
 		
 		watchingMouse = !watchingMouse;
@@ -248,7 +276,11 @@ class ConsoleCommands
 =======
 		if (FlxG.debugger.visualDebug) 
 			cLog("visualDebug: Enbaled");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		else
 			FlxG.log("> visualDebug: Disabled");
 	}
@@ -271,7 +303,11 @@ class ConsoleCommands
 		else {
 			FlxG.game.debugger.vcr.onPause();
 			cLog("pause: Game paused");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		}
 	}
 	
@@ -304,7 +340,11 @@ class ConsoleCommands
 =======
 			FlxG.cameras.bgColor = color;
 			cLog("bgColor: Changed background color to '" + Color + "'");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		}
 		else 
 			FlxG.log("> bgColor: Invalid color '" + Color + "'");
@@ -327,7 +367,11 @@ class ConsoleCommands
 =======
 		FlxG.cameraFX.shake(Intensity, Duration);
 		cLog("shake: Shake started, Intensity: " + Intensity + " Duration: " + Duration);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 	}
 	
 	private function close():Void
@@ -367,7 +411,11 @@ class ConsoleCommands
 			obj.x = FlxG.game.mouseX;
 			obj.y = FlxG.game.mouseY;
 		}
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		
 		FlxG.state.add(instance);
 		FlxG.log("> create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y);
@@ -384,7 +432,11 @@ class ConsoleCommands
 		var object:Dynamic = _console.registeredObjects.get(ObjectAlias);
 =======
 		var info:Array<Dynamic> = resolveObjectAndVariable(ObjectAndVariable, "set");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		
 		if (!Reflect.isObject(object)) {
 			FlxG.log("> set: '" + Std.string(object) + "' is not a valid Object");
@@ -412,7 +464,11 @@ class ConsoleCommands
 		{
 			return;
 		}
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		
 		// Workaround to make Booleans work
 		if (Std.is(variable, Bool)) {
@@ -425,7 +481,11 @@ class ConsoleCommands
 				FlxG.log("> set: '" + NewValue + "' is not a valid value for Booelan '" + VariableName + "'");
 =======
 				FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 				return;
 			}
 		}
@@ -442,7 +502,11 @@ class ConsoleCommands
 		else if (!Std.is(variable, Float) && !Std.is(variable, Bool) && !Std.is(variable, String))
 		{
 			FlxG.log.error("set: '" + varName + ":" + Std.string(variable) + "' is not of a simple type (number, bool or string)");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 			return;
 		}
 		
@@ -453,7 +517,11 @@ class ConsoleCommands
 =======
 		if (WatchName != null) 
 			FlxG.watch.add(object, varName, WatchName);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 	}
 	
 	private function call(FunctionAlias:String, Params:Array<String>):Void
@@ -511,7 +579,11 @@ class ConsoleCommands
 				FlxG.log.error("call: " + Std.string(tempObj) + " does not have a method '" + searchArr[l] + "' to call");
 				return;
 			}
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		}
 			
 		var func:Dynamic = info[0];
@@ -530,7 +602,11 @@ class ConsoleCommands
 			FlxG.log("> call: '" + FunctionAlias + "' is not a valid function of object '" + Std.string(obj) + "'");
 =======
 			FlxG.log.error("call: '" + FunctionAlias + "' is not a valid function");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 		}
 	}
 	
@@ -541,7 +617,11 @@ class ConsoleCommands
 		listHash(_console.registeredObjects);
 =======
 		cLog("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 	}
 	
 	private function listFunctions():Void
@@ -579,7 +659,11 @@ class ConsoleCommands
 		var varName:String = info[1];
 		
 		FlxG.watch.remove(object, varName);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -594,7 +678,11 @@ class ConsoleCommands
 			FlxG.log("> " + CommandName + ": '" + ClassName + "' is not a valid class name. Try passing the full class path. Also make sure the class is being compiled.");
 =======
 			FlxG.log.error(CommandName + ": '" + ClassName + "' is not a valid class name. Try passing the full class path. Also make sure the class is being compiled.");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 			return null;
 		}
 		
@@ -605,7 +693,11 @@ class ConsoleCommands
 			FlxG.log("> " + CommandName + ": '" + ClassName + "' is not a " + Type.getClassName(_Type));
 =======
 			FlxG.log.error(CommandName + ": '" + ClassName + "' is not a " + Type.getClassName(_Type));
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 			return null;
 		}
 		
@@ -671,6 +763,10 @@ class ConsoleCommands
 	private function cLog(Text:Dynamic):Void
 	{
 		FlxG.log.advanced([Text], Log.STYLE_CONSOLE);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/ConsoleCommands.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/ConsoleCommands.hx
+>>>>>>> experimental
 	}
 }

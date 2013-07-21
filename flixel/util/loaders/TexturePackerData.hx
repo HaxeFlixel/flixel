@@ -1,19 +1,20 @@
 package flixel.util.loaders;
 
+import flixel.FlxG;
+import flixel.system.FlxAssets;
 import openfl.Assets;
 import flash.geom.Rectangle;
 import flash.geom.Point;
 import flash.display.BitmapData;
 import haxe.Json;
 import flixel.util.FlxPoint;
-import flixel.system.layer.Atlas;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.TileSheetData;
 
 class TexturePackerData
 {
-	public var frames:Array<Frame>;
+	public var frames:Array<TextureAtlasFrame>;
 
 	public var assetName:String;
 	public var description:String;
@@ -30,7 +31,7 @@ class TexturePackerData
 		this.assetName = assetName;
 		this.description = description;
 		
-		this.frames = new Array<Frame>();
+		this.frames = new Array<TextureAtlasFrame>();
 		
 		parseData();
 	}
@@ -44,12 +45,14 @@ class TexturePackerData
 		// No need to parse data again
 		if (frames.length != 0)	return;
 		
-		this.asset = Assets.getBitmapData(this.assetName);
+		if (assetName == null || description == null)	return;
+		
+		this.asset = FlxG.bitmap.add(this.assetName).bitmap;
 		var data:Dynamic = Json.parse(Assets.getText(description));
 		
 		for (frame in Lambda.array(data.frames))
 		{
-			var texFrame:Frame = new Frame();
+			var texFrame:TextureAtlasFrame = new TextureAtlasFrame();
 			texFrame.trimmed = frame.trimmed;
 			texFrame.rotated = frame.rotated;
 			texFrame.name = frame.filename;

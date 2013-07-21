@@ -876,8 +876,6 @@ import flixel.plugin.TimerManager;
 import flixel.system.FlxAssets;
 import flixel.system.FlxReplay;
 import flixel.system.input.FlxInputs;
-import flixel.system.layer.Atlas;
-import flixel.system.layer.TileSheetData;
 import flixel.system.layer.TileSheetExt;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxColor;
@@ -1195,7 +1193,7 @@ class FlxGame extends Sprite
 			#if !FLX_NO_DEBUG
 			if((debugger != null) && debugger.vcr.paused)
 			{
-				if(debugger.vcr.stepRequested)
+				if (debugger.vcr.stepRequested)
 				{
 					debugger.vcr.stepRequested = false;
 					step();
@@ -1283,8 +1281,6 @@ class FlxGame extends Sprite
 	{ 
 		// Basic reset stuff
 		PxBitmapFont.clearStorage();
-		Atlas.clearAtlasCache();
-		TileSheetData.clear();
 		
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
@@ -1653,7 +1649,20 @@ class FlxGame extends Sprite
 		
 		// Finally, set up an event for the actual game loop stuff.
 		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		
+		#if (desktop || mobile)
+		// We need to listen for resize event which means new context
+		// it means that we need to recreate bitmapdatas of dumped tilesheets
+		stage.addEventListener(Event.RESIZE, onContext);
+		#end
 	}
+	
+	#if (desktop || mobile)
+	private function onContext(e:Event):Void 
+	{
+		FlxG.bitmap.onContext();
+	}
+	#end
 	
 	#if !FLX_NO_SOUND_TRAY
 	/**
@@ -1770,5 +1779,9 @@ class FlxGame extends Sprite
 		addChild(_focus);
 	}
 	#end
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxGame.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxGame.hx
+>>>>>>> experimental
 }

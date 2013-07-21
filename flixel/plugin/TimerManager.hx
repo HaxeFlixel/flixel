@@ -49,7 +49,11 @@ class TimerManager extends FlxBasic
 			return;
 		}
 		
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/plugin/TimerManager.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/plugin/TimerManager.hx
+>>>>>>> experimental
 		var i:Int = _timers.length - 1;
 		var timer:FlxTimer;
 		

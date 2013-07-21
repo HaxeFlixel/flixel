@@ -59,9 +59,12 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.system.FlxSound;
 import flixel.system.input.FlxTouch;
-import flixel.system.layer.Atlas;
 import flixel.util.FlxPoint;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/ui/FlxTypedButton.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/ui/FlxTypedButton.hx
+>>>>>>> experimental
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -550,17 +553,4 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		status = FlxButton.NORMAL;
 	}
-	
-	#if !flash
-	override private function set_atlas(value:Atlas):Atlas 
-	{
-		var atl:Atlas = super.set_atlas(value);
-		if (atl == value && label != null)
-		{
-			// Maybe there is enough place for font image
-			label.atlas = value;
-		}
-		return value;
-	}
-	#end
 }

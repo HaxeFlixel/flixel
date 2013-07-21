@@ -21,7 +21,11 @@ import flixel.util.FlxPoint;
 * This class helps contain and track the mouse pointer in your game.
 * Automatically accounts for parallax scrolling, etc.
 */
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxMouse.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxMouse.hx
+>>>>>>> experimental
 class FlxMouse extends FlxPoint implements IFlxInput
 {
 	//  possible values for field '_current'
@@ -106,7 +110,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	
 =======
 
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxMouse.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxMouse.hx
+>>>>>>> experimental
 	/**
 	 * Constructor.
 	 */
@@ -166,7 +174,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 			var l:Int =FlxG._game._replayCancelKeys.length;
 =======
 			var l:Int = FlxG.game.replayCancelKeys.length;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxMouse.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxMouse.hx
+>>>>>>> experimental
 			while(i < l)
 			{
 				replayCancelKey = FlxG.game.replayCancelKeys[i++];
@@ -618,7 +630,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		if (!FlxG._game._debuggerUp  && !useSystemCursor)
 =======
 		if (!FlxG.debugger.visible && !useSystemCursor)
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxMouse.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxMouse.hx
+>>>>>>> experimental
 		#else
 		if (!useSystemCursor)
 		#end
@@ -639,7 +655,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 =======
 
 	private function set_useSystemCursor(value:Bool):Bool
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxMouse.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxMouse.hx
+>>>>>>> experimental
 	{
 		useSystemCursor = value;
 		if (!useSystemCursor)

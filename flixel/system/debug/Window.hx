@@ -29,7 +29,11 @@ import openfl.Assets;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Window.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Window.hx
+>>>>>>> experimental
 
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
@@ -48,7 +52,11 @@ class Window extends Sprite
 	 * The color used for the "handle" at the top of the window.
 	 */
 	inline static public var TOP_COLOR:Int = 0x7f000000;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Window.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Window.hx
+>>>>>>> experimental
 	
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
@@ -132,7 +140,11 @@ class Window extends Sprite
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
 =======
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/debug/Window.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Window.hx
+>>>>>>> experimental
 	{
 		super();
 		

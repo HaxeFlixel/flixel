@@ -4,7 +4,11 @@ package flixel.system;
 import org.flixel.FlxObject;
 =======
 import flixel.FlxObject;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/FlxList.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/FlxList.hx
+>>>>>>> experimental
 
 /**
  * A miniature linked list class.

@@ -89,7 +89,11 @@ class FlxInputStates
 		FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
 =======
 		FlxG.log.error("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxInputStates.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxInputStates.hx
+>>>>>>> experimental
 		return false; 
 	}
 	
@@ -110,7 +114,11 @@ class FlxInputStates
 			FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
 =======
 			FlxG.log.error("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxInputStates.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxInputStates.hx
+>>>>>>> experimental
 			return false;
 		}
 	}
@@ -132,7 +140,11 @@ class FlxInputStates
 			FlxG.log("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
 =======
 			FlxG.log.error("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxInputStates.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxInputStates.hx
+>>>>>>> experimental
 			return false;
 		}
 	}

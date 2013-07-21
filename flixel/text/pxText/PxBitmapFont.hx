@@ -1,5 +1,6 @@
 package flixel.text.pxText;
 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/plugin/pxText/PxBitmapFont.hx
 import nme.display.BitmapData;
 import nme.display.Graphics;
@@ -10,15 +11,23 @@ import nme.geom.Rectangle;
 import org.flixel.FlxG;
 import org.flixel.system.layer.Node;
 =======
+=======
+>>>>>>> experimental
 import flash.display.BitmapData;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.system.layer.TileSheetData;
 import flixel.util.FlxColor;
+<<<<<<< HEAD
 import flixel.system.layer.Node;
 >>>>>>> origin/dev:flixel/text/pxText/PxBitmapFont.hx
+=======
+import flixel.system.layer.Region;
+import flixel.util.loaders.CachedGraphics;
+>>>>>>> experimental
 
 /**
  * Holds information and bitmap glpyhs for a bitmap font.
@@ -27,11 +36,15 @@ import flixel.system.layer.Node;
  */
 class PxBitmapFont 
 {
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/plugin/pxText/PxBitmapFont.hx
 	private static var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
 =======
 	static private var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
 >>>>>>> origin/dev:flixel/text/pxText/PxBitmapFont.hx
+=======
+	static private var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
+>>>>>>> experimental
 	
 	static private var ZERO_POINT:Point = new Point();
 	
@@ -39,6 +52,7 @@ class PxBitmapFont
 	private var _glyphs:Array<BitmapData>;
 	#else
 	private var _glyphs:Map<Int, PxFontSymbol>;
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/plugin/pxText/PxBitmapFont.hx
 	private var _num_letters:Int;
 	private var _bgTileID:Int;
@@ -49,6 +63,10 @@ class PxBitmapFont
 >>>>>>> origin/dev:flixel/text/pxText/PxBitmapFont.hx
 	private var _atlasGlyphs:Map<String, Map<Int, PxFontSymbol>>;
 	private var _bgTiles:Map<String, Int>;
+=======
+	private var _num_letters:Int = 0;
+	private var _bgTileID:Int = -1;
+>>>>>>> experimental
 	#end
 	
 	private var _glyphString:String;
@@ -65,9 +83,9 @@ class PxBitmapFont
 	private var _tileRects:Array<Rectangle>;
 	// Helper for angel code format font
 	private var _symbols:Array<HelperSymbol>;
-	// Prepared bitmapData with font glyphs
-	private var _pixels:BitmapData;
-	private var _bitmapDataKey:String;
+	// Prepared bitmapData with font glyphsW	
+	private var _region:Region;
+	private var _cachedGraphics:CachedGraphics;
 	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
@@ -81,6 +99,7 @@ class PxBitmapFont
 		_colorTransform = new ColorTransform();
 		_glyphs = [];
 		#else
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/plugin/pxText/PxBitmapFont.hx
 		_bgTileID = -1;
 		_glyphs = new Map<Int, PxFontSymbol>();
@@ -91,6 +110,9 @@ class PxBitmapFont
 >>>>>>> origin/dev:flixel/text/pxText/PxBitmapFont.hx
 		_atlasGlyphs = new Map<String, Map<Int, PxFontSymbol>>();
 		_bgTiles = new Map<String, Int>();
+=======
+		_glyphs = new Map<Int, PxFontSymbol>();
+>>>>>>> experimental
 		#end
 	}
 	
@@ -115,16 +137,21 @@ class PxBitmapFont
 		}
 		#end
 		
-		if (PxBitmapData != null) 
+		if (PxBitmapData != null)
 		{
 			_tileRects = [];
 			var result:BitmapData = preparePixelizerBitmapData(PxBitmapData, _tileRects);
-			_bitmapDataKey = FlxG.bitmap.getUniqueKey("font");
-			_pixels = FlxG.bitmap.add(result, false, false, _bitmapDataKey);
+			var key:String = FlxG.bitmap.getUniqueKey("font");
+			setCachedGraphics(FlxG.bitmap.add(result, false, key));
+			_region = new Region();
+			_region.width = _cachedGraphics.bitmap.width;
+			_region.height = _cachedGraphics.bitmap.height;
 			var currRect:Rectangle;
 			
 			#if flash
 			updateGlyphData();
+			#else
+			updateGlyphData(_cachedGraphics.tilesheet);
 			#end
 		}
 		
@@ -146,11 +173,13 @@ class PxBitmapFont
 		{
 			_symbols = new Array<HelperSymbol>();
 			var result:BitmapData = prepareAngelCodeBitmapData(pBitmapData, pXMLData, _symbols);
-			_bitmapDataKey = FlxG.bitmap.getUniqueKey("font");
-			_pixels = FlxG.bitmap.add(result, false, false, _bitmapDataKey);
+			var key:String = FlxG.bitmap.getUniqueKey("font");
+			setCachedGraphics(FlxG.bitmap.add(result, false, key));
 			
 			#if flash
 			updateGlyphData();
+			#else
+			updateGlyphData(_cachedGraphics.tilesheet);
 			#end
 		}
 		
@@ -160,9 +189,10 @@ class PxBitmapFont
 	/**
 	 * Updates and caches tile data for passed node object
 	 */
-	public function updateGlyphData(?NodeObject:Node):Void
+	public function updateGlyphData(Tiles:TileSheetData = null):Void
 	{
 		#if !flash
+<<<<<<< HEAD
 		// There is already glyphs in this atlas, so don't do it again
 		if (_atlasGlyphs.exists(NodeObject.atlas.name))
 		{
@@ -172,6 +202,8 @@ class PxBitmapFont
 =======
 		
 >>>>>>> origin/dev:flixel/text/pxText/PxBitmapFont.hx
+=======
+>>>>>>> experimental
 		_glyphs = new Map<Int, PxFontSymbol>();
 		#end
 		
@@ -220,7 +252,7 @@ class PxBitmapFont
 					bd = new BitmapData(charWidth, 1, true, 0x0);
 				}
 				
-				bd.copyPixels(_pixels, rect, point, null, null, true);
+				bd.copyPixels(_cachedGraphics.bitmap, rect, point, null, null, true);
 				
 				// Store glyph
 				setGlyph(symbol.charCode, bd);
@@ -228,20 +260,14 @@ class PxBitmapFont
 				#else
 				if (charString != " " && charString != "")
 				{
-					setGlyph(NodeObject, symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), charWidth);
+					setGlyph(Tiles, symbol.charCode, rect, Math.floor(point.x), Math.floor(point.y), charWidth);
 				}
 				else
 				{
-					setGlyph(NodeObject, symbol.charCode, rect, Math.floor(point.x), 1, charWidth);
+					setGlyph(Tiles, symbol.charCode, rect, Math.floor(point.x), 1, charWidth);
 				}
 				#end
 			}
-			
-			#if !flash
-			_bgTileID = NodeObject.addTileRect(new Rectangle(_pixels.width - 1, _pixels.height - 1, 1, 1), ZERO_POINT);
-			
-			updateAtlasGlyphs(NodeObject.atlas.name);
-			#end
 		}
 		else if (_tileRects != null)
 		{
@@ -252,40 +278,23 @@ class PxBitmapFont
 				// Create glyph
 				#if flash
 				var bd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0x0);
-				bd.copyPixels(_pixels, rect, ZERO_POINT, null, null, true);
+				bd.copyPixels(_cachedGraphics.bitmap, rect, ZERO_POINT, null, null, true);
 				
 				// Store glyph
 				setGlyph(_glyphString.charCodeAt(letterID), bd);
 				#else
-				setGlyph(NodeObject, _glyphString.charCodeAt(letterID), rect, 0, 0, Std.int(rect.width));
+				setGlyph(Tiles, _glyphString.charCodeAt(letterID), rect, 0, 0, Std.int(rect.width));
 				#end
 			}
-			
-			#if !flash
-			_bgTileID = NodeObject.addTileRect(new Rectangle(_pixels.width - 1, _pixels.height - 1, 1, 1), ZERO_POINT);
-			
-			updateAtlasGlyphs(NodeObject.atlas.name);
-			#end
 		}
 	}
-	
-	#if !flash
-	/**
-	 * Caches tile data for atlas named AtlasName
-	 */
-	private function updateAtlasGlyphs(AtlasName:String):Void
-	{	
-		_atlasGlyphs.set(AtlasName, _glyphs);
-		_bgTiles.set(AtlasName, _bgTileID);
-	}
-	#end
 	
 	/**
 	 * Internal function. Resets current font.
 	 */
 	private function reset():Void
 	{
-		dispose(false);
+		dispose();
 		_maxHeight = 0;
 		
 		#if flash
@@ -356,6 +365,7 @@ class PxBitmapFont
 			cy += (rowHeight + 1);
 		}
 		
+<<<<<<< HEAD
 		var resultBitmapData:BitmapData = new BitmapData(PxBitmapData.width + 2, PxBitmapData.height, true, FlxColor.TRANSPARENT);
 		resultBitmapData.copyPixels(PxBitmapData, PxBitmapData.rect, ZERO_POINT);
 		
@@ -401,10 +411,14 @@ class PxBitmapFont
 		
 		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxColor.WHITE);
 		
+=======
+>>>>>>> experimental
 		// Fix for html5
-		resultBitmapData.floodFill(0, 0, FlxColor.TRANSPARENT);
+		#if (js)
+		PxBitmapData.floodFill(0, 0, FlxColor.TRANSPARENT);
+		#end
 		
-		return resultBitmapData;
+		return PxBitmapData;
 	}
 	
 	public function prepareAngelCodeBitmapData(PxBitmapData:BitmapData, PxXMLData:Xml, PxSymbols:Array<HelperSymbol>):BitmapData
@@ -454,23 +468,7 @@ class PxBitmapFont
 			}
 		}
 		
-		var newWidth:Int = PxBitmapData.width;
-		var newHeight:Int = PxBitmapData.height;
-		
-		if ((PxBitmapData.width - 2) < maxX)
-		{
-			newWidth += 2; 
-		}
-		else if ((PxBitmapData.height - 2) < maxY)
-		{
-			newHeight += 2;
-		}
-		
-		var resultBitmapData:BitmapData = new BitmapData(newWidth, newHeight, true, FlxColor.TRANSPARENT);
-		resultBitmapData.copyPixels(PxBitmapData, PxBitmapData.rect, ZERO_POINT);
-		resultBitmapData.setPixel32(resultBitmapData.width - 1, resultBitmapData.height - 1, FlxColor.WHITE);
-		
-		return resultBitmapData;
+		return PxBitmapData;
 	}
 	
 	#if flash
@@ -533,7 +531,7 @@ class PxBitmapFont
 	/**
 	 * Clears all resources used by the font.
 	 */
-	public function dispose(Total:Bool = true):Void 
+	public function dispose():Void 
 	{
 		#if flash
 		var bd:BitmapData;
@@ -550,17 +548,9 @@ class PxBitmapFont
 		
 		_symbols = null;
 		_tileRects = null;
-		_pixels = null;
-		_bitmapDataKey = null;
+		setCachedGraphics(null);
+		_region = null;
 		_glyphs = null;
-		
-		#if !flash
-		if (Total)
-		{
-			_atlasGlyphs = null;
-			_bgTiles = null;
-		}
-		#end
 	}
 	
 	#if flash
@@ -610,9 +600,9 @@ class PxBitmapFont
 		}
 	}
 	#else
-	private function setGlyph(NodeObject:Node, PxCharID:Int, PxRect:Rectangle, PxOffsetX:Int = 0, PxOffsetY:Int = 0, PxAdvanceX:Int = 0):Void
+	private function setGlyph(Tiles:TileSheetData, PxCharID:Int, PxRect:Rectangle, PxOffsetX:Int = 0, PxOffsetY:Int = 0, PxAdvanceX:Int = 0):Void
 	{
-		var tileID:Int = NodeObject.addTileRect(PxRect, ZERO_POINT);
+		var tileID:Int = Tiles.addTileRect(PxRect, ZERO_POINT);
 		var symbol:PxFontSymbol = new PxFontSymbol();
 		symbol.tileID = tileID;
 		symbol.xoffset = PxOffsetX;
@@ -639,6 +629,7 @@ class PxBitmapFont
 	 * @param	PxOffsetY		Y position of thext output.
 	 */
 	#if flash 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/plugin/pxText/PxBitmapFont.hx
 	public function render(pBitmapData:BitmapData, pFontData:Array<BitmapData>, pText:String, pColor:Int, pOffsetX:Int, pOffsetY:Int, pLetterSpacing:Int):Void 
 	#else
@@ -648,13 +639,18 @@ class PxBitmapFont
 		#if !flash
 		
 =======
+=======
+>>>>>>> experimental
 	public function render(PxBitmapData:BitmapData, PxFontData:Array<BitmapData>, PxText:String, PxColor:UInt, PxOffsetX:Int, PxOffsetY:Int, PxLetterSpacing:Int):Void 
 	#else
-	public function render(AtlasName:String, DrawData:Array<Float>, PxText:String, PxColor:Int, PxSecondColor:Int, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
+	public function render(DrawData:Array<Float>, PxText:String, PxColor:Int, PxSecondColor:Int, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
 	#end
 	{
 		#if !flash
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/text/pxText/PxBitmapFont.hx
+=======
+>>>>>>> experimental
 		var colorMultiplier:Float = 1 / 255;
 		var red:Float = colorMultiplier;
 		var green:Float = colorMultiplier;
@@ -667,6 +663,7 @@ class PxBitmapFont
 			blue = (PxColor & 0xff) * colorMultiplier;
 		}
 		
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/plugin/pxText/PxBitmapFont.hx
 		pSecondColor &= 0x00ffffff;
 		red *= (pSecondColor >> 16);
@@ -679,6 +676,8 @@ class PxBitmapFont
 		_point.y = pOffsetY;
 		
 =======
+=======
+>>>>>>> experimental
 		PxSecondColor &= 0x00ffffff;
 		red *= (PxSecondColor >> 16);
 		green *= (PxSecondColor >> 8 & 0xff);
@@ -688,18 +687,15 @@ class PxBitmapFont
 		_point.x = PxOffsetX;
 		_point.y = PxOffsetY;
 		
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/text/pxText/PxBitmapFont.hx
+=======
+>>>>>>> experimental
 		#if flash
 		var glyph:BitmapData;
 		#else
 		var glyph:PxFontSymbol;
 		var glyphWidth:Int;
-		_glyphs = _atlasGlyphs.get(AtlasName);
-		
-		if (_glyphs == null)
-		{
-			return;
-		}
 		#end
 		
 		for (i in 0...PxText.length) 
@@ -713,7 +709,6 @@ class PxBitmapFont
 			glyph = _glyphs.get(charCode);
 			if (_glyphs.exists(charCode))
 			#end
-			
 			{
 				#if flash
 				PxBitmapData.copyPixels(glyph, glyph.rect, _point, null, null, true);
@@ -800,23 +795,22 @@ class PxBitmapFont
 	public var numLetters(get, never):Int;
 	
 	#if !flash
-	public function bgTileID(AtlasName):Int 
-	{
-		return _bgTiles.get(AtlasName);
-	}
-	
 	public var pixels(get_pixels, null):BitmapData;
 	
 	private function get_pixels():BitmapData 
 	{
-		return _pixels;
+		if (!_cachedGraphics.isDumped)
+		{
+			return _cachedGraphics.bitmap;
+		}
+		return null;
 	}
 	
-	public var bitmapDataKey(get, never):String;
+	public var bgTileID(get_bgTileID, null):Int;
 	
-	private function get_bitmapDataKey():String 
+	function get_bgTileID():Int 
 	{
-		return _bitmapDataKey;
+		return _bgTileID;
 	}
 	#end
 	
@@ -827,6 +821,20 @@ class PxBitmapFont
 		#else
 		return _num_letters;
 		#end
+	}
+	
+	private function setCachedGraphics(value:CachedGraphics):Void
+	{
+		if (_cachedGraphics != null && _cachedGraphics != value)
+		{
+			_cachedGraphics.useCount--;
+		}
+		
+		if (_cachedGraphics != value && value != null)
+		{
+			value.useCount++;
+		}
+		_cachedGraphics = value;
 	}
 	
 	/**

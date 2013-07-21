@@ -13,7 +13,11 @@ typedef Movable = {
 	public var immovable:Bool;
 	public function setPosition(X:Float, Y:Float):Void;
 }
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/tweens/motion/Motion.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tweens/motion/Motion.hx
+>>>>>>> experimental
 
 /**
  * Base class for motion Tweens.
@@ -71,7 +75,11 @@ class Motion extends FlxTween
 			_object.move(x, y);
 =======
 			_object.setPosition(x, y); 
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/tweens/motion/Motion.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tweens/motion/Motion.hx
+>>>>>>> experimental
 		}
 	}
 }

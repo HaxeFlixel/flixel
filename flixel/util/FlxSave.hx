@@ -194,7 +194,11 @@ class FlxSave
 			case FlxSave.ERROR:
 				FlxG.log.error("There was a problem flushing\nthe shared object data from FlxSave.");
 			//default:
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/util/FlxSave.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/util/FlxSave.hx
+>>>>>>> experimental
 		}
 		if (_onComplete != null)
 		{

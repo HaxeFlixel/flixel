@@ -8,7 +8,11 @@ import org.flixel.system.layer.DrawStackItem;
 import org.flixel.system.layer.TileSheetData;
 =======
 import flixel.system.BGSprite;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSubState.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSubState.hx
+>>>>>>> experimental
 
 /**
  * This is the basic game "state" object - e.g. in a simple game
@@ -49,7 +53,11 @@ class FlxSubState extends FlxState
 	 * @param	useMouse	whether to show mouse pointer or not
 	 */
 	public function new(bgColor:Int = 0x00000000, useMouse:Bool = false)
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSubState.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSubState.hx
+>>>>>>> experimental
 	{
 		super();
 		
@@ -70,7 +78,11 @@ class FlxSubState extends FlxState
 	override private function set_bgColor(value:Int):Int 
 =======
 	override private function set_bgColor(value:Int):Int
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSubState.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSubState.hx
+>>>>>>> experimental
 	{
 		_bgColor = value;
 		#if !flash

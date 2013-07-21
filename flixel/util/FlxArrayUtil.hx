@@ -18,11 +18,11 @@ class FlxArrayUtil
 		#if flash
 		return untyped array.indexOf(whatToFind, fromIndex);
 		#else
-		var len:Int = array.length;
 		var index:Int = -1;
+		var len:Int = array.length;
 		for (i in fromIndex...len)
 		{
-			if (array[i] == whatToFind) 
+			if (array[i] == whatToFind)
 			{
 				index = i;
 				break;
@@ -40,21 +40,21 @@ class FlxArrayUtil
 	 */
 	static public function setLength(array:Array<Dynamic>, newLength:Int):Void
 	{
-		#if flash
-		untyped array.length = newLength;
-		#else
 		if (newLength < 0) return;
 		var oldLength:Int = array.length;
 		var diff:Int = newLength - oldLength;
 		if (diff < 0)
 		{
+			#if flash
+			untyped array.length = newLength;
+			#else
 			diff = -diff;
 			for (i in 0...diff)
 			{
 				array.pop();
 			}
+			#end
 		}
-		#end
 	}
 	
 	/**

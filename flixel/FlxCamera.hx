@@ -20,15 +20,20 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.system.layer.Atlas;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
+import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+import flixel.util.loaders.CachedGraphics;
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -286,16 +291,16 @@ class FlxCamera extends FlxBasic
 	private static var _storageHead:DrawStackItem;
 	
 	#if !js
-	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
 	#else
-	inline public function getDrawStackItem(ObjAtlas:Atlas, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
 	#end
 	{
 		var itemToReturn:DrawStackItem = null;
 		if (_currentStackItem.initialized == false)
 		{
 			_headOfDrawStack = _currentStackItem;
-			_currentStackItem.atlas = ObjAtlas;
+			_currentStackItem.graphics = ObjGraphics;
 			_currentStackItem.smoothing = ObjSmoothing;
 			#if !js
 			_currentStackItem.colored = ObjColored;
@@ -306,7 +311,7 @@ class FlxCamera extends FlxBasic
 			itemToReturn = _currentStackItem;
 		}
 	#if !js
-		else if (_currentStackItem.atlas == ObjAtlas 
+		else if (_currentStackItem.graphics == ObjGraphics 
 			&& _currentStackItem.colored == ObjColored 
 			&& _currentStackItem.blending == ObjBlending 
 		#if FLX_SPRITE_ANTIALIASING 
@@ -314,7 +319,7 @@ class FlxCamera extends FlxBasic
 		#end
 		)
 	#else
-		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.useAlpha == UseAlpha)
+		else if (_currentStackItem.graphics == ObjGraphics && _currentStackItem.useAlpha == UseAlpha)
 	#end
 		{
 			itemToReturn = _currentStackItem;
@@ -335,7 +340,7 @@ class FlxCamera extends FlxBasic
 				newItem = new DrawStackItem();
 			}
 			
-			newItem.atlas = ObjAtlas;
+			newItem.graphics = ObjGraphics;
 			newItem.smoothing = ObjSmoothing;
 			#if !js
 			newItem.colored = ObjColored;
@@ -352,7 +357,7 @@ class FlxCamera extends FlxBasic
 		return itemToReturn;
 	}
 	
-	inline public function clearDrawStack():Void
+	/*inline*/ public function clearDrawStack():Void
 	{	
 		var currItem:DrawStackItem = _headOfDrawStack.next;
 		while (currItem != null)
@@ -389,7 +394,7 @@ class FlxCamera extends FlxBasic
 			{
 				if (dataLen != position)
 				{
-					data.splice(position, (dataLen - position));
+					untyped data.length = position; // optimized way of resizing an array
 				}
 				var tempFlags:Int = Graphics.TILE_TRANS_2x2;
 				#if !js
@@ -410,9 +415,13 @@ class FlxCamera extends FlxBasic
 				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing/* || currItem.antialiasing*/), tempFlags);
 				TileSheetData._DRAWCALLS++;
 =======
-				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing || currItem.smoothing), tempFlags);
+				currItem.graphics.tilesheet.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing || currItem.smoothing), tempFlags);
 				TileSheetExt._DRAWCALLS++;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 			}
 			currItem = currItem.next;
 		}
@@ -870,7 +879,11 @@ class FlxCamera extends FlxBasic
 	public function flash(?Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
 =======
 	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -898,7 +911,11 @@ class FlxCamera extends FlxBasic
 	public function fade(?Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
 =======
 	public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -1081,7 +1098,11 @@ class FlxCamera extends FlxBasic
 		colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
 		colorTransform.blueMultiplier = (color & 0xff) / 255;
 		_canvas.transform.colorTransform = colorTransform;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 		#end
 		
 		return Color;
@@ -1132,7 +1153,11 @@ class FlxCamera extends FlxBasic
 		_flashSprite.y = y + _flashOffsetY;
 =======
 		_flashOffsetY = height * 0.5 * Y;	
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -1178,7 +1203,11 @@ class FlxCamera extends FlxBasic
 <<<<<<< HEAD:src/org/flixel/FlxCamera.hx
 		
 =======
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 		Color = Color & 0x00ffffff;
 		// end of fix
 		
@@ -1186,7 +1215,11 @@ class FlxCamera extends FlxBasic
 <<<<<<< HEAD:src/org/flixel/FlxCamera.hx
 		
 =======
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 		targetGraphics.drawRect(0, 0, width, height);
 		targetGraphics.endFill();
 	#end
@@ -1211,7 +1244,11 @@ class FlxCamera extends FlxBasic
 			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
 =======
 			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _canvas.graphics);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 			#end
 		}
 		
@@ -1227,7 +1264,11 @@ class FlxCamera extends FlxBasic
 			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
 =======
 			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _canvas.graphics);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
+>>>>>>> experimental
 			#end
 		}
 		
@@ -1236,9 +1277,22 @@ class FlxCamera extends FlxBasic
 			_flashSprite.x += _fxShakeOffset.x;
 			_flashSprite.y += _fxShakeOffset.y;
 		}
+<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
+		
+		#if !flash
+		if (fog > 0)
+		{
+			_effectsLayer.graphics.beginFill(0xffffff, fog);
+			_effectsLayer.graphics.drawRect(0, 0, width, height);
+			_effectsLayer.graphics.endFill();
+		}
+		#end
 	}
 	
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxCamera.hx
+=======
+>>>>>>> experimental
 	#if !flash
 	public var fog(default, default):Float;
 	#end
@@ -1247,11 +1301,15 @@ class FlxCamera extends FlxBasic
 	inline public function isColored():Bool
 	{
 		return (color < 0xffffff);
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 	}
-	#end
 	
+<<<<<<< HEAD
 =======
 >>>>>>> origin/dev:flixel/FlxCamera.hx
+=======
+>>>>>>> experimental
 	private function set_width(val:Int):Int
 	{
 		if (val > 0)

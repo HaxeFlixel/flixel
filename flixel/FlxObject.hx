@@ -3,6 +3,7 @@ package flixel;
 import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxTypedGroup;
+import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -10,6 +11,8 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+import flixel.system.layer.Region;
+import flixel.util.loaders.CachedGraphics;
 
 /**
  * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
@@ -173,7 +176,11 @@ class FlxObject extends FlxBasic
 	static private inline function _pZero() { return new FlxPoint(); }
 =======
 	static private var _pZero:FlxPoint = new FlxPoint();
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxObject.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxObject.hx
+>>>>>>> experimental
 	
 	/**
 	 * A point that can store numbers from 0 to 1 (for X and Y independently)
@@ -362,6 +369,11 @@ class FlxObject extends FlxBasic
 			path.destroy();
 		}
 		path = null;
+		
+		_framesData = null;
+		setCachedGraphics(null);
+		_region = null;
+		
 		super.destroy();
 	}
 	
@@ -505,7 +517,11 @@ class FlxObject extends FlxBasic
 			else
 			{
 				debugBoundingBoxColor = FlxColor.RED;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxObject.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxObject.hx
+>>>>>>> experimental
 			}
 		}
 		else if (!_boundingBoxColorOverritten)
@@ -514,7 +530,11 @@ class FlxObject extends FlxBasic
 			debugBoundingBoxColor = FlxG.BLUE;
 =======
 			debugBoundingBoxColor = FlxColor.BLUE;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxObject.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxObject.hx
+>>>>>>> experimental
 		}
 		
 		//fill static graphics object with square shape
@@ -960,7 +980,7 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		getScreenXY(_point,Camera);
+		getScreenXY(_point, Camera);
 		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
 	}
 	
@@ -1396,8 +1416,54 @@ class FlxObject extends FlxBasic
 	}
 	
 	function set_forceComplexRender(value:Bool):Bool 
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxObject.hx
+=======
+>>>>>>> experimental
 	{
 		return forceComplexRender = value;
+	}
+	
+	private var _framesData:FlxSpriteFrames;
+	private var _cachedGraphics:CachedGraphics;
+	private var _region:Region;
+	
+	public function updateFrameData():Void
+	{
+		
+	}
+	
+	public var cachedGraphics(get_cachedGraphics, null):CachedGraphics;
+	
+	private function get_cachedGraphics():CachedGraphics
+	{
+		return _cachedGraphics;
+	}
+	
+	/**
+	 * Internal function for setting cachedGraphics property for this object. 
+	 * It changes cachedGraphics' useCount also for better memory tracking.
+	 * @param	value
+	 */
+	private function setCachedGraphics(value:CachedGraphics):Void
+	{
+		if (_cachedGraphics != null && _cachedGraphics != value)
+		{
+			_cachedGraphics.useCount--;
+		}
+		
+		if (_cachedGraphics != value && value != null)
+		{
+			value.useCount++;
+		}
+		_cachedGraphics = value;
+	}
+	
+	public var region(get_region, null):Region;
+	
+	function get_region():Region 
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxObject.hx
+	{
+		return _region;
 	}
 }

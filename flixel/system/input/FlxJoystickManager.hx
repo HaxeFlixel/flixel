@@ -12,7 +12,11 @@ import flixel.FlxG;
 import flash.Lib;
 import openfl.events.JoystickEvent;
 import flixel.system.input.FlxJoystick;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxJoystickManager.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxJoystickManager.hx
+>>>>>>> experimental
 
 /**
  * ...

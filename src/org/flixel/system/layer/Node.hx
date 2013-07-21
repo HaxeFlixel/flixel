@@ -1,12 +1,16 @@
-package flixel.system.layer;
+package org.flixel.system.layer;
 
+<<<<<<< HEAD:flixel/system/layer/Node.hx
 <<<<<<< HEAD:src/org/flixel/system/layer/Node.hx
+=======
+>>>>>>> experimental:src/org/flixel/system/layer/Node.hx
 import nme.display.BitmapData;
 import nme.geom.Point;
 import nme.geom.Rectangle;
 
 import org.flixel.system.layer.TileSheetData;
 import org.flixel.system.layer.frames.FlxSpriteFrames;
+<<<<<<< HEAD:flixel/system/layer/Node.hx
 =======
 import flash.display.BitmapData;
 import flash.geom.Point;
@@ -14,6 +18,8 @@ import flash.geom.Rectangle;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.util.loaders.TexturePackerData;
 >>>>>>> origin/dev:flixel/system/layer/Node.hx
+=======
+>>>>>>> experimental:src/org/flixel/system/layer/Node.hx
 
 /**
  * Atlas Node holds BitmapData and it's position on Atlas

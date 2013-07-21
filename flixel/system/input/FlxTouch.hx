@@ -19,7 +19,11 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.util.FlxPoint;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/input/FlxTouch.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxTouch.hx
+>>>>>>> experimental
 
 /**
  * Helper class, contains and track touch points in your game.

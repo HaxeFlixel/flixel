@@ -17,7 +17,11 @@ import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 
 /**
  * <code>FlxTypedEmitter</code> is a lightweight particle emitter.
@@ -129,7 +133,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * Sets end green color component range (when particle emits)
 	 */
 	public var endGreen:Bounds<Float>;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 	/**
 	 * If this is set to true, particles will slowly fade away by 
 	 * decreasing their alpha value based on their lifespan.
@@ -138,7 +146,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	public var fadingAway:Bool = false;
 =======
 	public var endBlue:Bounds<Float>;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 	/**
 	 * If this is set to true, particles will slowly decrease in scale 
 	 * based on their lifespan.
@@ -148,7 +160,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	public var decreasingSize:Bool = false;
 =======
 	public var blend:BlendMode = null;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 	/**
 	 * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
 	 */
@@ -236,7 +252,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		particleDrag = new FlxPoint();
 		
 		life = new Bounds<Float>(3, 3);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 		exists = false;
 		_point = new FlxPoint();
 	}
@@ -408,7 +428,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 =======
 			
 			if ((life.max > 0) && (_timer > life.max))
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 			{
 				kill();
 				return;
@@ -442,7 +466,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 * @param	Frequency		Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
 	 * @param	Quantity		How many particles to launch. 0 = "all of the particles".
 	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 	 */
 	public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0):Void
 	{
@@ -476,7 +504,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 =======
 		
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 		particle.visible = true;
 		
 		if (minParticleSpeed.x != maxParticleSpeed.x)
@@ -485,7 +517,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 			particle.velocity.x = minParticleSpeed.x + FlxG.random() * (maxParticleSpeed.x - minParticleSpeed.x);
 =======
 			particle.lifespan = particle.maxLifespan = life.min + FlxRandom.float() * (life.max - life.min);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 		}
 		else
 		{
@@ -512,7 +548,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		if (endAlpha.min != endAlpha.max)
 		{
 			particleEndAlpha = endAlpha.min + FlxRandom.float() * (endAlpha.max - endAlpha.min);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 		}
 		particle.acceleration.y = gravity;
 		
@@ -631,7 +671,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		else
 		{
 			particle.angularVelocity = rotation.min;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 		}
 		if (particle.angularVelocity != 0)
 		{
@@ -643,7 +687,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		particle.drag.y = particleDrag.y;
 =======
 		particle.drag.set(particleDrag.x, particleDrag.y);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 		particle.onEmit();
 	}
 	
@@ -678,7 +726,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		
 		xVelocity.min = Min;
 		xVelocity.max = Max;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -700,7 +752,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 			
 		yVelocity.min = Min;
 		yVelocity.max = Max;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -813,7 +869,11 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		endRed.min = endRed.max = endRedComp;
 		endGreen.min = endGreen.max = endGreenComp;
 		endBlue.min = endBlue.max = endBlueComp;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -982,5 +1042,9 @@ class Bounds<T>
 		this.min = min;
 		this.max = max == null ? min : max;
 	}
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxTypedEmitter.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxTypedEmitter.hx
+>>>>>>> experimental
 }

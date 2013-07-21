@@ -83,7 +83,11 @@ class FlxParticle extends FlxSprite
 	 * Range of red color component change during particle's life
 	 */
 	public var rangeRed:Float;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxParticle.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxParticle.hx
+>>>>>>> experimental
 	/**
 	 * If this is set to true, particles will slowly decrease in scale 
 	 * based on their lifespan.
@@ -94,7 +98,11 @@ class FlxParticle extends FlxSprite
 	
 =======
 	public var rangeGreen:Float;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxParticle.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxParticle.hx
+>>>>>>> experimental
 	/**
 	 * Helper variable for fading and sizeDecreasing effects.
 	 */
@@ -144,7 +152,11 @@ class FlxParticle extends FlxSprite
 		//lifespan behavior
 =======
 		// Lifespan behavior
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxParticle.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxParticle.hx
+>>>>>>> experimental
 		if (lifespan > 0)
 		{
 			lifespan -= FlxG.elapsed;
@@ -170,7 +182,11 @@ class FlxParticle extends FlxSprite
 =======
 			
 			// Simpler bounce/spin behavior for now
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/effects/particles/FlxParticle.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxParticle.hx
+>>>>>>> experimental
 			if (touching != 0)
 			{
 				if (angularVelocity != 0)

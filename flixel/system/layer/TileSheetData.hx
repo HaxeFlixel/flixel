@@ -21,15 +21,21 @@ import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxPoint;
-import flixel.util.loaders.Frame;
+import flixel.util.loaders.TextureAtlasFrame;
+import flixel.system.layer.Region;
 import flixel.util.loaders.TexturePackerData;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/layer/TileSheetData.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
+>>>>>>> experimental
 
 /**
  * Object of this class holds information about single Tilesheet
  */
 class TileSheetData
 {
+<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
 	private static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
 	
 	public static var _DRAWCALLS:Int = 0;
@@ -103,7 +109,11 @@ class TileSheetData
 	}
 	
 	// TODO: make it work only on non-flash targets
+=======
+	#if !flash
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
 	public var tileSheet:TileSheetExt;
+	#end
 	
 	/**
 	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
@@ -113,30 +123,50 @@ class TileSheetData
 	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
 	// TODO: document this
+	private var flxFrames:Map<String, FlxFrame>;
 =======
 	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
 	/**
 	 * Storage for all FlxFrames in this TileSheetData object.
 	 */
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/layer/TileSheetData.hx
+=======
+>>>>>>> experimental
 	private var flxFrames:Map<String, FlxFrame>;
 	
-	private function new(tileSheet:TileSheetExt)
+	public var bitmap:BitmapData;
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
+	
+	public function new(bitmap:BitmapData)
 	{
+<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
 		this.tileSheet = tileSheet;
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
+=======
+>>>>>>> experimental
 		// TODO: fill this hash later
 		flxFrames = new Map<String, FlxFrame>();
 =======
+		this.bitmap = bitmap;
+		#if !flash
+		this.tileSheet = new TileSheetExt(bitmap);
+		#end
+		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
 		flxFrames = new Map<String, FlxFrame>();
 	}
 	
 	public function getFrame(name:String):FlxFrame
 	{
 		return flxFrames.get(name);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/layer/TileSheetData.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -145,19 +175,22 @@ class TileSheetData
 	 * @param	height	sprite height
 	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
 	 */
-	public function getSpriteSheetFrames(width:Int, height:Int, origin:Point = null, startX:Int = 0, startY:Int = 0, endX:Int = 0, endY:Int = 0, xSpacing:Int = 0, ySpacing:Int = 0):FlxSpriteFrames
+	public function getSpriteSheetFrames(region:Region, origin:Point = null):FlxSpriteFrames
 	{
-		var bitmapWidth:Int = tileSheet.nmeBitmap.width;
-		var bitmapHeight:Int = tileSheet.nmeBitmap.height;
+		var bitmapWidth:Int = region.width;
+		var bitmapHeight:Int = region.height;
 		
-		if (endX == 0)
-		{
-			endX = bitmapWidth;
-		}
-		if (endY == 0)
-		{
-			endY = bitmapHeight;
-		}
+		var startX:Int = region.startX;
+		var startY:Int = region.startY;
+		
+		var endX:Int = startX + bitmapWidth;
+		var endY:Int = startY + bitmapHeight;
+		
+		var xSpacing:Int = region.spacingX;
+		var ySpacing:Int = region.spacingY;
+		
+		var width:Int = (region.tileWidth == 0) ? bitmapWidth : region.tileWidth;
+		var height:Int = (region.tileHeight == 0) ? bitmapHeight : region.tileHeight;
 		
 		var pointX:Float = 0.5 * width;
 		var pointY:Float = 0.5 * height;
@@ -174,8 +207,8 @@ class TileSheetData
 			return flxSpriteFrames.get(key);
 		}
 		
-		var numRows:Int = Std.int((endY - startY) / (height + ySpacing));
-		var numCols:Int = Std.int((endX - startX) / (width + xSpacing));
+		var numRows:Int = region.numRows;
+		var numCols:Int = region.numCols;
 		
 		var tempPoint:Point = origin;
 		if (origin == null)
@@ -244,14 +277,23 @@ class TileSheetData
 		return flxFrames.exists(key);
 	}
 	
+	#if !flash
 	public function addTileRect(tileRect, point):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
 	}
+	#end
 	
 	public function destroy():Void
 	{
+<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
+=======
+		bitmap = null;
+		#if !flash
+		tileSheet.destroy();
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
 		tileSheet = null;
+		#end
 		
 		for (spriteData in flxSpriteFrames)
 		{
@@ -266,6 +308,16 @@ class TileSheetData
 <<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
 }
 =======
+	
+	#if !flash
+	public function onContext(bitmap:BitmapData):Void
+	{
+		this.bitmap = bitmap;
+		var newSheet:TileSheetExt = new TileSheetExt(bitmap);
+		newSheet.rebuildFromOld(tileSheet);
+		tileSheet = newSheet;
+	}
+	#end
 	
 	/**
 	 * Parses provided TexturePackerData object and returns generated FlxSpriteFrames object
@@ -295,7 +347,7 @@ class TileSheetData
 	/**
 	 * Parses frame TexturePacker data object and returns it
 	 */
-	private function addTexturePackerFrame(frameData:Frame, startX:Int = 0, startY:Int = 0):FlxFrame
+	private function addTexturePackerFrame(frameData:TextureAtlasFrame, startX:Int = 0, startY:Int = 0):FlxFrame
 	{
 		var key:String = frameData.name;
 		if (containsFrame(key))
@@ -336,4 +388,8 @@ class TileSheetData
 		}
 	}
 }
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/system/layer/TileSheetData.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
+>>>>>>> experimental

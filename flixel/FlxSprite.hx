@@ -23,6 +23,7 @@ import org.flixel.system.layer.TileSheetData;
 import org.flixel.FlxG;
 import org.flixel.system.FlxAnim;
 =======
+import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.display.Graphics;
@@ -42,9 +43,17 @@ import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.system.layer.Region;
+import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TextureRegion;
 import flixel.util.loaders.TexturePackerData;
+import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.display.Tilesheet;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 
 /**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
@@ -61,21 +70,19 @@ class FlxSprite extends FlxObject
 	 */
 	public var facing(default, set_facing):Int;
 	
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 	public var color(get_color, set_color):Int;
 	public var frame(get_frame, set_frame):Int;
+=======
+	public var color(default, set_color):Int = 0xffffff;
+	public var frame(default, set_frame):Int = 0;
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 	
 	/**
 	 * If the Sprite is flipped.
 	 * This property shouldn't be changed unless you know what are you doing.
 	 */
-	public var flipped(get_flipped, null):Int;
-	
-	private var _flipped:Int;
-	
-	private function get_flipped():Int 
-	{
-		return _flipped;
-	}
+	public var flipped(default, null):Int = 0;
 	
 	/**
 	 * Gets or sets the currently playing animation.
@@ -120,11 +127,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * Whether the current animation has finished its first (or only) loop.
 	 */
-	public var finished:Bool;
+	public var finished:Bool = false;
 	/**
 	 * Whether the current animation gets updated or not.
 	 */
-	public var paused(default, null):Bool;
+	public var paused(default, null):Bool = true;
 	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 * NOTE: Edit at your own risk!!  This is intended to be read-only.
@@ -166,15 +173,15 @@ class FlxSprite extends FlxObject
 	 * Internal, keeps track of the current frame of animation.
 	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
 	 */
-	private var _curFrame:Int;
+	private var _curFrame:Int = 0;
 	/**
 	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
 	 */
-	private var _curIndex:Int;
+	private var _curIndex:Int = 0;
 	/**
 	 * Internal, used to time each frame of animation.
 	 */
-	private var _frameTimer:Float;
+	private var _frameTimer:Float = 0;
 	/**
 	 * Internal tracker for the animation callback.  Default is null.
 	 * If assigned, will be called each time the current frame changes.
@@ -182,6 +189,7 @@ class FlxSprite extends FlxObject
 	 */
 	private var _callback:String->Int->Int->Void;
 	/**
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 	 * Internal tracker for color tint, used with Flash getter/setter.
 	 */
 	private var _color:Int;
@@ -190,6 +198,8 @@ class FlxSprite extends FlxObject
 	 */
 	private var _pixels:BitmapData;
 	/**
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 	 * Internal, reused frequently during drawing and animating.
 	 */
 	private var _flashPoint:Point;
@@ -230,10 +240,16 @@ class FlxSprite extends FlxObject
 	public var _pixelsBackup:BitmapData;
 	
 	#if !flash
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 	private var _flxFrame:FlxFrame;
 	private var _red:Float;
 	private var _green:Float;
 	private var _blue:Float;
+=======
+	private var _red:Float = 1.0;
+	private var _green:Float = 1.0;
+	private var _blue:Float = 1.0;
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 	
 	private var _halfWidth:Float;
 	private var _halfHeight:Float;
@@ -245,7 +261,7 @@ class FlxSprite extends FlxObject
 	
 	#end
 	
-	private var _aabb:FlxRect; 
+	private var _aabb:FlxRect;
 	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
@@ -265,6 +281,7 @@ class FlxSprite extends FlxObject
 		offset = new FlxPoint();
 		origin = new FlxPoint();
 		scale = new FlxPoint(1.0, 1.0);
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		_color = 0x00ffffff;
 		alpha = 1.0;
 		#if flash
@@ -272,15 +289,17 @@ class FlxSprite extends FlxObject
 		#else
 		_blend = null;
 		#end
+		antialiasing = false;
+		cameras = null;
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		
 		antialiasing = FlxG.antialiasByDefault;
-		cameras = null;
 		_aabb = new FlxRect();
 		
-		finished = false;
-		paused = true;
 		facing = FlxObject.RIGHT;
 		_animations = new Map<String, FlxAnim>();
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		_flipped = 0;
 		_curAnim = null;
 		_curFrame = 0;
@@ -298,6 +317,10 @@ class FlxSprite extends FlxObject
 		_flxFrame = null;
 		_additionalAngle = 0.0;
 		#end
+=======
+
+		_matrix = new Matrix();
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		
 		if (SimpleGraphic == null)
 		{
@@ -350,11 +373,13 @@ class FlxSprite extends FlxObject
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 =======
 		_aabb = null;
-		
-		_textureData = null;
 		_flxFrame = null;
 		
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 		super.destroy();
 	}
 	
@@ -366,13 +391,10 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
 	{
-		nullTextureData();
-		
-		_pixels = Sprite.pixels;
-		_flipped = Sprite.flipped;
+		setCachedGraphics(Sprite.cachedGraphics);
+		_region = Sprite.region.clone();
+		flipped = Sprite.flipped;
 		bakedRotation = Sprite.bakedRotation;
-		_bitmapDataKey = Sprite.bitmapDataKey;
-		_textureData = Sprite._textureData;
 		
 		width = frameWidth = Sprite.frameWidth;
 		height = frameHeight = Sprite.frameHeight;
@@ -383,7 +405,7 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
-		atlas = Sprite.atlas;
+		updateFrameData();
 		resetHelpers();
 		antialiasing = Sprite.antialiasing;
 		frame = Sprite.frame;
@@ -402,69 +424,52 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	// TODO: add ability to load Nodes. This will add sprite to layer automatically
 	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, Key:String = null):FlxSprite
 	{
 		bakedRotation = 0;
-		#if !flash
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
+		#if !flash
+<<<<<<< HEAD
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
+=======
+>>>>>>> experimental
 		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key);
 		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		
 		_calculatedPixelsIndex = -1;
+<<<<<<< HEAD
 =======
 		_pixels = FlxG.bitmap.add(Graphic, false, Unique, Key);
 		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> experimental
 		#else
-		_pixels = FlxG.bitmap.add(Graphic, Reverse, Unique, Key);
+		_pixels = FlxG.addBitmap(Graphic, Reverse, Unique, Key);
 		#end
+=======
+		setCachedGraphics(FlxG.bitmap.add(Graphic, Unique, Key));
 		
-		if (Reverse)
-		{
-			_flipped = _pixels.width >> 1;
-		}
-		else
-		{
-			_flipped = 0;
-		}
+		flipped = (Reverse == true) ? _cachedGraphics.bitmap.width : 0;
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+		
 		if (Width == 0)
 		{
-			if (Animated)
-			{
-				Width = _pixels.height;
-			}
-			else if (_flipped > 0)
-			{
-				#if flash
-				Width = Std.int(_pixels.width * 0.5);
-				#else
-				Width = _pixels.width;
-				#end
-			}
-			else
-			{
-				Width = _pixels.width;
-			}
-		}
-		width = frameWidth = Width;
-		if (Height == 0)
-		{
-			if (Animated)
-			{
-				Height = Std.int(width);
-			}
-			else
-			{
-				Height = _pixels.height;
-			}
+			Width = (Animated == true) ? _cachedGraphics.bitmap.height : _cachedGraphics.bitmap.width;
 		}
 		
-		#if !flash
-		if (Key != null && (Width != 0 || Height != 0))
+		if (Height == 0)
 		{
-			Key += "FrameSize:" + Width + "_" + Height;
+			Height = (Animated == true) ? Width : _cachedGraphics.bitmap.height;
 		}
+		
+		if (!Std.is(Graphic, TextureRegion))
+		{
+			_region = new Region(0, 0, Width, Height);
+			_region.width = _cachedGraphics.bitmap.width;
+			_region.height = _cachedGraphics.bitmap.height;
+		}
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key, Width, Height);
 		_bitmapDataKey = FlxG._lastBitmapDataKey;
@@ -474,11 +479,35 @@ class FlxSprite extends FlxObject
 		#else
 		nullTextureData();
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+		else
+		{
+			_region = cast(Graphic, TextureRegion).region.clone();
+			
+			if (_region.tileWidth > 0)
+				Width = _region.tileWidth;
+			else
+				_region.tileWidth = _region.width;
+			
+			if (_region.tileHeight > 0)
+				Height = _region.tileWidth;
+			else
+				_region.tileHeight = _region.height;
+		}
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
+		_pixels = FlxG.addBitmap(Graphic, false, Unique, Key, Width, Height);
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+>>>>>>> experimental
 		#end
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		
+		width = frameWidth = Width;
 		height = frameHeight = Height;
+		
+		updateFrameData();
 		resetHelpers();
-		updateAtlasInfo();
+		
 		return this;
 	}
 	
@@ -497,25 +526,42 @@ class FlxSprite extends FlxObject
 	{
 		//Create the brush and canvas
 		var rows:Int = Std.int(Math.sqrt(Rotations));
-		var brush:BitmapData = FlxG.bitmap.add(Graphic, false, false, Key);
-		if (Frame >= 0)
+		var brush:BitmapData = FlxG.bitmap.add(Graphic, false, Key).bitmap;
+		var isRegion:Bool = Std.is(Graphic, TextureRegion);
+		var spriteRegion:TextureRegion = (isRegion == true) ? cast Graphic : null;
+		var tempRegion:Region = (isRegion == true) ? spriteRegion.region : null;
+		
+		if (Frame >= 0 || isRegion)
 		{
 			//Using just a segment of the graphic - find the right bit here
 			var full:BitmapData = brush;
-			brush = new BitmapData(full.height, full.height);
-			var rx:Int = Frame * brush.width;
-			var ry:Int = 0;
-			var fw:Int = full.width;
-			if (rx >= fw)
+			
+			if (isRegion)
 			{
-				ry = Std.int(rx / fw) * brush.height;
-				rx %= fw;
+				brush = new BitmapData(tempRegion.width, tempRegion.height);
+				_flashRect.x = tempRegion.startX;
+				_flashRect.y = tempRegion.startY;
+				_flashRect.width = tempRegion.width;
+				_flashRect.height = tempRegion.height;
+				brush.copyPixels(full, _flashRect, _flashPointZero);
 			}
-			_flashRect.x = rx;
-			_flashRect.y = ry;
-			_flashRect.width = brush.width;
-			_flashRect.height = brush.height;
-			brush.copyPixels(full, _flashRect, _flashPointZero);
+			else
+			{
+				brush = new BitmapData(full.height, full.height);
+				var rx:Int = Frame * brush.width;
+				var ry:Int = 0;
+				var fw:Int = full.width;
+				if (rx >= fw)
+				{
+					ry = Std.int(rx / fw) * brush.height;
+					rx %= fw;
+				}
+				_flashRect.x = rx;
+				_flashRect.y = ry;
+				_flashRect.width = brush.width;
+				_flashRect.height = brush.height;
+				brush.copyPixels(full, _flashRect, _flashPointZero);
+			}
 		}
 		
 		var max:Int = brush.width;
@@ -545,34 +591,39 @@ class FlxSprite extends FlxObject
 		{
 			key = Key;
 		}
+		else if (isRegion)
+		{
+			key = spriteRegion.data.key;
+			key += ":" + tempRegion.startX + ":" + tempRegion.startY + ":" + tempRegion.width + ":" + tempRegion.height + ":" + Rotations;
+		}
 		else
 		{
 			return null;
 		}
-	#if flash
-		key += ":" + Frame + ":" + width + "x" + height;
-	#else
-		key += ":" + Frame + ":" + width + "x" + height + ":" + Rotations;
-	#end
-		var skipGen:Bool = FlxG.bitmap.checkCache(key);
 		
-		#if flash
-		_pixels = FlxG.bitmap.create(Std.int(width), Std.int(height), 0, true, key);
-		#else
-		_pixels = FlxG.bitmap.create(Std.int(width) + columns, Std.int(height) + rows, FlxColor.TRANSPARENT, true, key);
-		#end
-		
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		#if !flash
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		_calculatedPixelsIndex = -1;
 =======
 		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_calculatedPixelsIndex = -1;
+>>>>>>> experimental
 		#end
+=======
+		if (!isRegion)
+		{
+			key += ":" + Frame + ":" + width + "x" + height + ":" + Rotations;
+		}
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		
-		width = frameWidth = _pixels.width;
-		height = frameHeight = _pixels.height;
+		var skipGen:Bool = FlxG.bitmap.checkCache(key);
+		setCachedGraphics(FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.TRANSPARENT, true, key));
 		bakedRotation = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
@@ -585,21 +636,17 @@ class FlxSprite extends FlxObject
 			var halfBrushHeight:Int = Std.int(brush.height * 0.5);
 			var midpointX:Int = Std.int(max * 0.5);
 			var midpointY:Int = Std.int(max * 0.5);
-			while(row < rows)
+			while (row < rows)
 			{
 				column = 0;
-				while(column < columns)
+				while (column < columns)
 				{
 					_matrix.identity();
 					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
 					_matrix.rotate(bakedAngle * FlxAngle.TO_RAD);
-					#if flash
-					_matrix.translate(max * column + midpointX, midpointY);
-					#else
 					_matrix.translate(max * column + midpointX + column, midpointY + row);
-					#end
 					bakedAngle += bakedRotation;
-					_pixels.draw(brush, _matrix, null, null, null, AntiAliasing);
+					_cachedGraphics.bitmap.draw(brush, _matrix, null, null, null, AntiAliasing);
 					column++;
 				}
 				midpointY += max;
@@ -608,7 +655,18 @@ class FlxSprite extends FlxObject
 		}
 		frameWidth = frameHeight = max;
 		width = height = max;
+		
+		_region = new Region(0, 0, max, max, 1, 1);
+		_region.width = _cachedGraphics.bitmap.width;
+		_region.height = _cachedGraphics.bitmap.height;
+		
+		#if !flash
+		antialiasing = AntiAliasing;
+		#end
+		
+		updateFrameData();
 		resetHelpers();
+		
 		if (AutoBuffer)
 		{
 			width = brush.width;
@@ -616,12 +674,15 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		#if !flash
 		antialiasing = AntiAliasing;
 		#end
 		
 		updateAtlasInfo();
 		
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		return this;
 	}
 	
@@ -638,11 +699,17 @@ class FlxSprite extends FlxObject
 	public function makeGraphic(Width:Int, Height:Int, ?Color:Int = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
 =======
 	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, Key:String = null):FlxSprite
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 	{
 		bakedRotation = 0;
-		_pixels = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
+		_pixels = FlxG.createBitmap(Width, Height, Color, Unique, Key);
 		#if !flash
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		_bitmapDataKey = FlxG._lastBitmapDataKey;
 		_calculatedPixelsIndex = -1;
@@ -651,11 +718,23 @@ class FlxSprite extends FlxObject
 		#else
 		nullTextureData();
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+		_bitmapDataKey = FlxG._lastBitmapDataKey;
+		_calculatedPixelsIndex = -1;
+>>>>>>> experimental
 		#end
 		width = frameWidth = _pixels.width;
 		height = frameHeight = _pixels.height;
+=======
+		setCachedGraphics(FlxG.bitmap.create(Width, Height, Color, Unique, Key));
+		_region = new Region();
+		_region.width = Width;
+		_region.height = Height;
+		width = frameWidth = _cachedGraphics.bitmap.width;
+		height = frameHeight = _cachedGraphics.bitmap.height;
+		updateFrameData();
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		resetHelpers();
-		updateAtlasInfo();
 		return this;
 	}
 	
@@ -671,24 +750,35 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadImageFromTexture(Data:TexturePackerData, Reverse:Bool = false, Unique:Bool = false, FrameName:String = null):FlxSprite
+	public function loadImageFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, FrameName:String = null):FlxSprite
 	{
 		bakedRotation = 0;
-		_textureData = Data;
 		
-		_pixels = FlxG.bitmap.add(Data.assetName, false, Unique);
-		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
-		
-		if (Reverse)
+		if (Std.is(Data, CachedGraphics))
 		{
-			_flipped = _pixels.width >> 1;
+			setCachedGraphics(cast Data);
+			if (_cachedGraphics.data == null)
+			{
+				return null;
+			}
+		}
+		else if (Std.is(Data, TexturePackerData))
+		{
+			setCachedGraphics(FlxG.bitmap.add(Data.assetName, Unique));
+			_cachedGraphics.data = cast Data;
 		}
 		else
 		{
-			_flipped = 0;
+			return null;
 		}
 		
-		updateAtlasInfo();
+		_region = new Region();
+		_region.width = _cachedGraphics.bitmap.width;
+		_region.height = _cachedGraphics.bitmap.height;
+		
+		flipped = (Reverse == true) ? _cachedGraphics.bitmap.width : 0;
+		
+		updateFrameData();
 		resetHelpers();
 		
 		if (FrameName != null)
@@ -710,9 +800,15 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedImageFromTexture(Data:TexturePackerData, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
+	public function loadRotatedImageFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
 	{
-		loadImageFromTexture(Data);
+		var temp = loadImageFromTexture(Data);
+		
+		if (temp == null)
+		{
+			return null;
+		}
+		
 		frameName = Image;
 		
 		#if !flash
@@ -727,7 +823,11 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 	 */
 	private function resetHelpers():Void
 	{
@@ -736,6 +836,15 @@ class FlxSprite extends FlxObject
 		_flashRect.width = frameWidth;
 		_flashRect.height = frameHeight;
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
+<<<<<<< HEAD
+=======
+		_flashRect2.x = 0;
+		_flashRect2.y = 0;
+		_flashRect2.width = _pixels.width;
+		_flashRect2.height = _pixels.height;
+		
+		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+>>>>>>> experimental
 =======
 	}
 	
@@ -769,22 +878,26 @@ class FlxSprite extends FlxObject
 	private function resetHelpers():Void
 	{
 		resetSize();
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> experimental
 		_flashRect2.x = 0;
 		_flashRect2.y = 0;
-		_flashRect2.width = _pixels.width;
-		_flashRect2.height = _pixels.height;
-		
-		origin.make(frameWidth * 0.5, frameHeight * 0.5);
+		_flashRect2.width = _cachedGraphics.bitmap.width;
+		_flashRect2.height = _cachedGraphics.bitmap.height;
+		setOriginToCenter();
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		
 	#if flash
 		if ((framePixels == null) || (framePixels.width != width) || (framePixels.height != height))
 		{
 			framePixels = new BitmapData(Std.int(width), Std.int(height));
 		}
-		framePixels.copyPixels(_pixels, _flashRect, _flashPointZero);
+		framePixels.copyPixels(_cachedGraphics.bitmap, _flashRect, _flashPointZero);
 		if (_useColorTransform) framePixels.colorTransform(_flashRect, _colorTransform);
 		
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		frames = Std.int(_flashRect2.width / _flashRect.width * _flashRect2.height / _flashRect.height);
 	#else
 		frames = Std.int(_flashRect2.width / (_flashRect.width + 1) * _flashRect2.height / (_flashRect.height + 1));
@@ -794,13 +907,17 @@ class FlxSprite extends FlxObject
 			frames *= 2;
 		}
 	#end
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		_curIndex = 0;
-		#if !flash
+		
 		if (_framesData != null)
 		{
+			frames = _framesData.frames.length;
 			_flxFrame = _framesData.frames[_curIndex];
 		}
 		
+		#if !flash
 		_halfWidth = frameWidth * 0.5;
 		_halfHeight = frameHeight * 0.5;
 		#end
@@ -811,12 +928,15 @@ class FlxSprite extends FlxObject
 	{
 		super.update();
 		updateAnimation();
-		calcAABB();
 	}
 	
 	inline public function isColored():Bool
 	{
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		return (_color < 0xffffff);
+=======
+		return (color < 0xffffff);
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 	}
 	
 	/**
@@ -824,14 +944,7 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
-		#if !flash
-		if (_atlas == null)
-		{
-			return;
-		}
-		#end
-		
-		if(_flickerTimer != 0)
+		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
 			if (_flicker)
@@ -868,20 +981,20 @@ class FlxSprite extends FlxObject
 		var sin:Float;
 	#end
 		
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
 			
-			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
+			if (!camera.visible || !camera.exists || !onScreenSprite(camera))
 			{
 				continue;
 			}
 			
 		#if !flash
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt, antialiasing);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt, antialiasing);
 			#else
-			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
 			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
@@ -940,7 +1053,7 @@ class FlxSprite extends FlxObject
 			var x2:Float = x1;
 			var y2:Float = y1;
 			
-			var facingMult:Int = ((_flipped != 0) && (facing == FlxObject.LEFT)) ? -1 : 1;
+			var facingMult:Int = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -1 : 1;
 			
 			// transformation matrix coefficients
 			var a:Float = csx;
@@ -951,7 +1064,11 @@ class FlxSprite extends FlxObject
 			if (!simpleRenderSprite())
 			{
 				radians = -(angle + _flxFrame.additionalAngle) * FlxAngle.TO_RAD;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
@@ -995,7 +1112,11 @@ class FlxSprite extends FlxObject
 				y2 = -x1 * ssx + y1 * csy;
 				
 				a *= facingMult;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 			}
 
 			currDrawData[currIndex++] = _point.x - x2;
@@ -1024,7 +1145,11 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = c;
 			currDrawData[currIndex++] = d;
 			
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 			#if !js
 			if (isColored)
 			{
@@ -1062,13 +1187,22 @@ class FlxSprite extends FlxObject
 		//Simple draw
 		if (((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
 		{
-			_flashPoint.x = X;
-			_flashPoint.y = Y;
+			_flashPoint.x = X + _region.startX;
+			_flashPoint.y = Y + _region.startY;
 			_flashRect2.width = bitmapData.width;
 			_flashRect2.height = bitmapData.height;
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 			_pixels.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
 			_flashRect2.width = _pixels.width;
 			_flashRect2.height = _pixels.height;
+=======
+			_cachedGraphics.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
+			_flashRect2.width = _cachedGraphics.bitmap.width;
+			_flashRect2.height = _cachedGraphics.bitmap.height;
+			
+			resetFrameBitmapDatas();
+			
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 			#if flash
 			calcFrame();
 			#end
@@ -1083,8 +1217,9 @@ class FlxSprite extends FlxObject
 		{
 			_matrix.rotate(Brush.angle * FlxAngle.TO_RAD);
 		}
-		_matrix.translate(X + Brush.origin.x, Y + Brush.origin.y);
+		_matrix.translate(X + _region.startX + Brush.origin.x, Y + _region.startY + Brush.origin.y);
 		var brushBlend:BlendMode = Brush.blend;
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		#if !flash
 		_calculatedPixelsIndex = -1;
 		#end
@@ -1096,7 +1231,10 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
+=======
+>>>>>>> experimental
 	 * This function draws a line on this sprite from position X1,Y1
 	 * to position X2,Y2 with the specified color.
 	 * @param	StartX		X coordinate of the line's start point.
@@ -1172,11 +1310,21 @@ class FlxSprite extends FlxObject
 		_calculatedPixelsIndex = -1;
 		#end
 		updateAtlasInfo(true);
+=======
+		_cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
+		resetFrameBitmapDatas();
+		#if flash
+		calcFrame();
+		#end
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 	}
 	
 	/**
+<<<<<<< HEAD
 =======
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> experimental
 	 * Internal function for updating the sprite's animation.
 	 * Useful for cases when you need to update this but are buried down in too many supers.
 	 * This function is called automatically by <code>FlxSprite.postUpdate()</code>.
@@ -1194,29 +1342,25 @@ class FlxSprite extends FlxObject
 #end
 =======
 			var angleHelper:Int = Math.floor((angle) % 360);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 			
-			#if flash
-			if (angleHelper < 0)
-			{
-				angleHelper += 360;
-			}
-			#else 
 			while (angleHelper < 0)
 			{
 				angleHelper += 360;
 			}
-			#end
 			
 			_curIndex = Math.floor(angleHelper / bakedRotation + 0.5);
 			_curIndex = Std.int(_curIndex % frames);
 			
-			#if !flash
 			if (_framesData != null)
 			{
 				_flxFrame = _framesData.frames[_curIndex];
 			}
-			#end		
+			
 			if (oldIndex != _curIndex)
 			{
 				dirty = true;
@@ -1241,7 +1385,6 @@ class FlxSprite extends FlxObject
 					_curFrame++;
 				}
 				_curIndex = _curAnim.frames[_curFrame];
-				#if !flash
 				if (_framesData != null)
 				{
 					_flxFrame = _framesData.frames[_curIndex];
@@ -1298,6 +1441,112 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
+=======
+	 * Adds a new animation to the sprite.
+	 * @param	Name			What this animation should be called (e.g. "run").
+	 * @param	FrameNames		An array of image names from atlas indicating what frames to play in what order.
+	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
+	 * @param	Looped			Whether or not the animation is looped or just plays once.
+	 */
+	public function addAnimationByNamesFromTexture(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true):Void
+	{
+		if (_cachedGraphics != null && _cachedGraphics.data != null)
+		{
+			var indices:Array<Int> = new Array<Int>();
+			var l:Int = FrameNames.length;
+			for (i in 0...l)
+			{
+				var name:String = FrameNames[i];
+				if (_framesData.framesHash.exists(name))
+				{
+					var frameToAdd:FlxFrame = _framesData.framesHash.get(name);
+					indices.push(getFrameIndex(frameToAdd));
+				}
+			}
+			
+			if (indices.length > 0)
+			{
+				_animations.set(Name, new FlxAnim(Name, indices, FrameRate, Looped));
+			}
+		}
+	}
+	
+	/**
+	 * Adds a new animation to the sprite.
+	 * @param	Name			What this animation should be called (e.g. "run").
+	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * @param	Indicies		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
+	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
+	 * @param	Looped			Whether or not the animation is looped or just plays once.
+	 */
+	public function addAnimationByIndiciesFromTexture(Name:String, Prefix:String, Indicies:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	{
+		if (_cachedGraphics != null && _cachedGraphics.data != null)
+		{
+			var frameIndices:Array<Int> = new Array<Int>();
+			var l:Int = Indicies.length;
+			for (i in 0...l)
+			{
+				var name:String = Prefix + Indicies[i] + Postfix;
+				if (_framesData.framesHash.exists(name))
+				{
+					var frameToAdd:FlxFrame = _framesData.framesHash.get(name);
+					frameIndices.push(getFrameIndex(frameToAdd));
+				}
+			}
+			
+			if (frameIndices.length > 0)
+			{
+				_animations.set(Name, new FlxAnim(Name, frameIndices, FrameRate, Looped));
+			}
+		}
+	}
+	
+	/**
+	 * Adds a new animation to the sprite.
+	 * @param	Name			What this animation should be called (e.g. "run").
+	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
+	 * @param	Looped			Whether or not the animation is looped or just plays once.
+	*/
+	public function addAnimationByPrefixFromTexture(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	{
+		if (_cachedGraphics != null && _cachedGraphics.data != null)
+		{
+			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
+			var l:Int = _framesData.frames.length;
+			for (i in 0...l)
+			{
+				if (StringTools.startsWith(_framesData.frames[i].name, Prefix))
+				{
+					animFrames.push(_framesData.frames[i]);
+				}
+			}
+			
+			if (animFrames.length > 0)
+			{
+				var name:String = animFrames[0].name;
+				var postFix:String = name.substring(name.indexOf(".", Prefix.length), name.length);
+				FlxSprite.prefixLength = Prefix.length;
+				FlxSprite.postfixLength = postFix.length;
+				animFrames.sort(FlxSprite.frameSortFunction);
+				var frameIndices:Array<Int> = new Array<Int>();
+				
+				l = animFrames.length;
+				for (i in 0...l)
+				{
+					frameIndices.push(getFrameIndex(animFrames[i]));
+				}
+				
+				_animations.set(Name, new FlxAnim(Name, frameIndices, FrameRate, Looped));
+			}
+		}
+	}
+	
+	/**
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 	 * Pass in a function to be called whenever this sprite's animation changes.
 	 * @param	AnimationCallback		A function that has 3 parameters: a string name, a int frame number, and a int frame index.
 	 */
@@ -1322,7 +1571,11 @@ class FlxSprite extends FlxObject
 		}
 		_curFrame = 0;
 		_curIndex = 0;
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		#if !flash
+=======
+		
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		if (_framesData != null)
 		{
 			_flxFrame = _framesData.frames[_curIndex];
@@ -1351,7 +1604,11 @@ class FlxSprite extends FlxObject
 			}
 			
 			_curIndex = _curAnim.frames[_curFrame];
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 			#if !flash
+=======
+			
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 			if (_framesData != null)
 			{
 				_flxFrame = _framesData.frames[_curIndex];
@@ -1406,11 +1663,7 @@ class FlxSprite extends FlxObject
 		_curFrame = Frame;
 		_curIndex = _curAnim.frames[_curFrame];
 		
-		#if flash
-		if (_textureData != null)
-		#else
 		if (_framesData != null)
-		#end
 		{
 			_flxFrame = _framesData.frames[_curIndex];
 		}
@@ -1435,7 +1688,11 @@ class FlxSprite extends FlxObject
 	{
 		if (_curAnim != null && !finished)
 			paused = false;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 	}
 	
 	/**
@@ -1454,7 +1711,6 @@ class FlxSprite extends FlxObject
 	{
 		_curAnim = null;
 		_curIndex = Std.int(FlxRandom.float() * frames);
-		#if !flash
 		if (_framesData != null)
 		{
 			_flxFrame = _framesData.frames[_curIndex];
@@ -1464,7 +1720,11 @@ class FlxSprite extends FlxObject
 =======
 		
 		paused = true;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 		dirty = true;
 	}
 	
@@ -1500,7 +1760,11 @@ class FlxSprite extends FlxObject
 	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
 	 * @return	Array replaced pixels positions
 	 */
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 	public function replaceColor(Color:Int, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
@@ -1509,22 +1773,27 @@ class FlxSprite extends FlxObject
 			positions = new Array<FlxPoint>();
 		}
 		
-		var row:Int = 0;
+		var row:Int = _region.startY;
 		var column:Int;
-		var rows:Int = _pixels.height;
-		var columns:Int = _pixels.width;
+		var rows:Int = _region.height;
+		var columns:Int = _region.width;
 		while(row < rows)
 		{
-			column = 0;
-			while(column < columns)
+			column = _region.startX;
+			while (column < columns)
 			{
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 				if(_pixels.getPixel32(column,row) == cast Color)
 =======
+<<<<<<< HEAD
 				if(_pixels.getPixel32(column, row) == cast Color)
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+				if (_cachedGraphics.bitmap.getPixel32(column, row) == cast Color)
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 				{
-					_pixels.setPixel32(column,row,NewColor);
+					_cachedGraphics.bitmap.setPixel32(column, row, NewColor);
 					if (FetchPositions)
 					{
 						positions.push(new FlxPoint(column, row));
@@ -1536,7 +1805,11 @@ class FlxSprite extends FlxObject
 			row++;
 		}
 		
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		updateAtlasInfo(true);
+=======
+		resetFrameBitmapDatas();
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		return positions;
 	}
 	
@@ -1550,31 +1823,43 @@ class FlxSprite extends FlxObject
 =======
 	public var pixels(get, set):BitmapData;
 	
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 	private function get_pixels():BitmapData
 	{
-		return _pixels;
+		return _cachedGraphics.bitmap;
 	}
 	
 	private function set_pixels(Pixels:BitmapData):BitmapData
 	{
-		_pixels = Pixels;
-		width = frameWidth = _pixels.width;
-		height = frameHeight = _pixels.height;
-		resetHelpers();
-		#if !flash
-		_bitmapDataKey = FlxG.bitmap.getCacheKeyFor(_pixels);
-		if (_bitmapDataKey == null)
+		var key:String = FlxG.bitmap.getCacheKeyFor(Pixels);
+		
+		if (key == null)
 		{
-			_bitmapDataKey = FlxG.bitmap.getUniqueKey();
-			FlxG.bitmap.add(Pixels, false, false, _bitmapDataKey);
+			key = FlxG.bitmap.getUniqueKey();
+			FlxG.bitmap.add(Pixels, false, key);
 		}
 		
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		_calculatedPixelsIndex = -1;
 		#end
 		updateAtlasInfo(true);
-		
 		return _pixels;
+=======
+		setCachedGraphics(FlxG.bitmap.get(key));
+		_region = new Region();
+		_region.width = _cachedGraphics.bitmap.width;
+		_region.height = _cachedGraphics.bitmap.height;
+		
+		width = frameWidth = _cachedGraphics.bitmap.width;
+		height = frameHeight = _cachedGraphics.bitmap.height;
+		updateFrameData();
+		resetHelpers();
+		return Pixels;
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 	}
 	
 	/**
@@ -1593,7 +1878,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
 	 */
-	public var alpha(default, set_alpha):Float;
+	public var alpha(default, set_alpha):Float = 1.0;
 	
 	/**
 	 * @private
@@ -1614,17 +1899,17 @@ class FlxSprite extends FlxObject
 		}
 		alpha = Alpha;
 		#if flash
-		if ((alpha != 1) || (_color != 0x00ffffff))
+		if ((alpha != 1) || (color != 0xffffff))
 		{
 			if (_colorTransform == null)
 			{
-				_colorTransform = new ColorTransform((_color >> 16) / 255, (_color >> 8 & 0xff) / 255, (_color & 0xff) / 255, alpha);
+				_colorTransform = new ColorTransform((color >> 16) / 255, (color >> 8 & 0xff) / 255, (color & 0xff) / 255, alpha);
 			}
 			else
 			{
-				_colorTransform.redMultiplier = (_color >> 16) / 255;
-				_colorTransform.greenMultiplier = (_color >> 8 & 0xff) / 255;
-				_colorTransform.blueMultiplier = (_color & 0xff) / 255;
+				_colorTransform.redMultiplier = (color >> 16) / 255;
+				_colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
+				_colorTransform.blueMultiplier = (color & 0xff) / 255;
 				_colorTransform.alphaMultiplier = alpha;
 			}
 			_useColorTransform = true;
@@ -1651,6 +1936,7 @@ class FlxSprite extends FlxObject
 	 * <code>color</code> IGNORES ALPHA.  To change the opacity use <code>alpha</code>.
 	 * Tints the whole sprite to be this color (similar to OpenGL vertex colors).
 	 */
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 	private function get_color():Int
 	{
 		return _color;
@@ -1661,23 +1947,27 @@ class FlxSprite extends FlxObject
 	 */
 	private function set_color(Color:Int):Int
 	{
+=======
+	private function set_color(Color:Int):Int
+	{
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		Color &= 0x00ffffff;
-		if (_color == Color)
+		if (color == Color)
 		{
-			return _color;
+			return Color;
 		}
-		_color = Color;
-		if ((alpha != 1) || (_color != 0x00ffffff))
+		color = Color;
+		if ((alpha != 1) || (color != 0x00ffffff))
 		{
 			if (_colorTransform == null)
 			{
-				_colorTransform = new ColorTransform((_color >> 16) / 255, (_color >> 8 & 0xff) / 255, (_color & 0xff) / 255, alpha);
+				_colorTransform = new ColorTransform((color >> 16) / 255, (color >> 8 & 0xff) / 255, (color & 0xff) / 255, alpha);
 			}
 			else
 			{
-				_colorTransform.redMultiplier = (_color >> 16) / 255;
-				_colorTransform.greenMultiplier = (_color >> 8 & 0xff) / 255;
-				_colorTransform.blueMultiplier = (_color & 0xff) / 255;
+				_colorTransform.redMultiplier = (color >> 16) / 255;
+				_colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
+				_colorTransform.blueMultiplier = (color & 0xff) / 255;
 				_colorTransform.alphaMultiplier = alpha;
 			}
 			_useColorTransform = true;
@@ -1696,13 +1986,20 @@ class FlxSprite extends FlxObject
 		
 		dirty = true;
 		
-		#if !flash
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
+		#if (cpp || js)
 		_red = (_color >> 16) / 255;
 		_green = (_color >> 8 & 0xff) / 255;
 		_blue = (_color & 0xff) / 255;
+=======
+		#if !flash
+		_red = (color >> 16) / 255;
+		_green = (color >> 8 & 0xff) / 255;
+		_blue = (color & 0xff) / 255;
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		#end
 		
-		return _color;
+		return color;
 	}
 	
 	/**
@@ -1721,8 +2018,7 @@ class FlxSprite extends FlxObject
 	private function set_frame(Frame:Int):Int
 	{
 		_curAnim = null;
-		_curIndex = Frame % frames;
-		#if !flash
+		frame = _curIndex = Frame % frames;
 		if (_framesData != null)
 		{
 			_flxFrame = _framesData.frames[_curIndex];
@@ -1732,7 +2028,11 @@ class FlxSprite extends FlxObject
 =======
 		
 		paused = true;
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 		dirty = true;
 		return Frame;
 	}
@@ -1747,7 +2047,7 @@ class FlxSprite extends FlxObject
 	
 	private function get_frameName():String
 	{
-		if (_flxFrame != null && _textureData != null)
+		if (_flxFrame != null)
 		{
 			return _flxFrame.name;
 		}
@@ -1757,7 +2057,7 @@ class FlxSprite extends FlxObject
 	
 	private function set_frameName(value:String):String
 	{
-		if (_textureData != null && _framesData != null && _framesData.framesHash.exists(value))
+		if (_cachedGraphics.data != null && _framesData != null && _framesData.framesHash.exists(value))
 		{
 			_curAnim = null;
 			if (_framesData != null)
@@ -1784,7 +2084,11 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 	 * Gets the currently playing animation, or null if no animation is playing
 	 */
 	private function get_curAnim():String
@@ -1818,9 +2122,9 @@ class FlxSprite extends FlxObject
 		return onScreenSprite(Camera);
 	}
 	
-	inline private function onScreenSprite(Camera:FlxCamera = null):Bool
+	/*inline*/ private function onScreenSprite(Camera:FlxCamera = null):Bool
 	{
-		if(Camera == null)
+		if (Camera == null)
 		{
 			Camera = FlxG.camera;
 		}
@@ -1833,13 +2137,15 @@ class FlxSprite extends FlxObject
 #end
 		if ((notRotated || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1))
 =======
+		calcAABB();
+		
 		var scx = Camera.scroll.x * scrollFactor.x;
 		var scy = Camera.scroll.y * scrollFactor.y;
 		
 		var minX:Float = _aabb.x - scx;
 		var minY:Float = _aabb.y - scy;
-		var maxX:Float = _aabb.x + _aabb.width - scx;
-		var maxY:Float = _aabb.y + _aabb.height - scy;
+		var maxX:Float = minX + _aabb.width;
+		var maxY:Float = minY + _aabb.height;
 		
 		return 	(maxX >= 0) &&
 				(minX <= Camera.width) &&
@@ -1854,13 +2160,17 @@ class FlxSprite extends FlxObject
 	inline private function calcAABB():Void
 	{
 		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 		{
 			_aabb.set(x - offset.x, y - offset.x, frameWidth, frameHeight);
 		}
 		else
 		{
-			var sx:Float = ((_flipped != 0) && (facing == FlxObject.LEFT)) ? -scale.x : scale.x;
+			var sx:Float = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -scale.x : scale.x;
 			
 			var sox:Float = sx * origin.x;
 			var soy:Float = scale.y * origin.y;
@@ -1957,7 +2267,11 @@ class FlxSprite extends FlxObject
 			var pixelColor:Int = frameData.getPixel32(Std.int(_flashPoint.x), Std.int(_flashPoint.y));
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			return (pixelAlpha * alpha >= Mask);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 		}
 		#end
 	}
@@ -1974,8 +2288,10 @@ class FlxSprite extends FlxObject
 	#if !flash
 		if (AreYouSure)
 		{
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 			if (_calculatedPixelsIndex == _curIndex && _calculatedPixelsFacing == facing)
 			{
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 				return;
 =======
@@ -1985,6 +2301,9 @@ class FlxSprite extends FlxObject
 				}
 				framePixels = new BitmapData(Std.int(_flxFrame.sourceSize.x), Std.int(_flxFrame.sourceSize.y));
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+				return;
+>>>>>>> experimental
 			}
 			if ((framePixels == null) || (framePixels.width != width) || (framePixels.height != height))
 			{
@@ -2041,6 +2360,22 @@ class FlxSprite extends FlxObject
 			}
 			#end
 			_flashRect.x = _flashRect.y = 0;
+=======
+	#end
+			if (_flxFrame != null)
+			{
+				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
+				{
+					if (framePixels != null)
+						framePixels.dispose();
+					
+					framePixels = new BitmapData(Std.int(_flxFrame.sourceSize.x), Std.int(_flxFrame.sourceSize.y));
+				}
+				
+				framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
+			}
+			
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 			if (_useColorTransform) 
 			{
 				framePixels.colorTransform(_flashRect, _colorTransform);
@@ -2056,6 +2391,7 @@ class FlxSprite extends FlxObject
 		
 		dirty = false;
 		
+		/*
 		// Updates the filter effects on framePixels.
 		if (filters != null)
 		{
@@ -2072,6 +2408,7 @@ class FlxSprite extends FlxObject
 			}
 			#end
 		}
+		*/
 	}
 	
 	/**
@@ -2085,6 +2422,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0)
 	{	
+		/*
 		// This makes the sprite graphic unique, essential for native target that uses texture atlas,
 		setClipping(frameWidth + widthInc , frameHeight + heightInc);
 		
@@ -2102,11 +2440,16 @@ class FlxSprite extends FlxObject
 			_pixelsBackup.copyPixels(_pixels, _pixels.rect, _flashPointZero);
 			
 		}
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		_calculatedPixelsIndex = -1;
 		updateAtlasInfo(true);
+=======
+	//	updateAtlasInfo(true);
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		#end
 		
 		drawFrame(true); // at the end of calcframe() filters will be applied.
+		*/
 	}
 	
 	/**
@@ -2118,21 +2461,25 @@ class FlxSprite extends FlxObject
 	 */
 	public function setClipping(width:Int, height:Int)
 	{
-		var tempSpr:FlxSprite = new FlxSprite(0, 0, _pixels);
+		/*var tempSpr:FlxSprite = new FlxSprite(0, 0, _pixels);
 		var diffSize:FlxPoint = new FlxPoint(width - frameWidth, height - frameHeight);
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		makeGraphic(width, height, 0x0);
 =======
 		// TODO: check this later for flash target when sprite have _textureData
 		makeGraphic(width, height, 0x0, true);
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 		
 		stamp(tempSpr, Std.int(diffSize.x / 2), Std.int(diffSize.y / 2));
 		
 		this.x -= diffSize.x * 0.5;
 		this.y -= diffSize.y * 0.5;
 		
-		tempSpr.destroy();
+		tempSpr.destroy();*/
 	}
 	
 	/**
@@ -2142,7 +2489,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function removeFilter(filter:BitmapFilter)
 	{
-		if(filters == null || filter == null)
+		/*if(filters == null || filter == null)
 		{
 			return;
 		}
@@ -2154,7 +2501,7 @@ class FlxSprite extends FlxObject
 		if (filters.length == 0)
 		{
 			filters = null;
-		}
+		}*/
 	}
 	
 	/**
@@ -2163,22 +2510,26 @@ class FlxSprite extends FlxObject
 	 */
 	public function removeAllFilters()
 	{
-		if (filters == null) return;
+		/*if (filters == null) return;
 		
 		while (filters.length != 0) 
 		{
 			filters.pop();
 		}
 		
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		
 		#if !flash
 		_calculatedPixelsIndex = -1;
 		#end
 		
 		updateAtlasInfo(true);
+=======
+	//	updateAtlasInfo(true);
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		drawFrame(true);
 		
-		filters = null;
+		filters = null;*/
 	}
 	
 	/**
@@ -2203,8 +2554,19 @@ class FlxSprite extends FlxObject
 		#if flash
 		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (forceComplexRender == false));
 		#else
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		return (((angle == 0 && _additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+=======
+		return (((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 		#end
+	}
+	
+	public var aabb(get_aabb, null):FlxRect;
+	
+	function get_aabb():FlxRect 
+	{
+		return _aabb;
 	}
 	
 	#if !flash
@@ -2237,7 +2599,11 @@ class FlxSprite extends FlxObject
 			}
 		}
 		else
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 		{
 			case BlendMode.ADD:
 				_blendInt = Tilesheet.TILE_BLEND_ADD;
@@ -2256,6 +2622,7 @@ class FlxSprite extends FlxObject
 	 */
 	override public function updateFrameData():Void
 	{
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 	#if !flash
 		if (_node != null && frameWidth >= 1 && frameHeight >= 1)
 		{
@@ -2270,6 +2637,25 @@ class FlxSprite extends FlxObject
 			_flxFrame = _framesData.frames[_curIndex];
 		}
 	#end
+=======
+		if (_cachedGraphics == null)
+		{
+			return;
+		}
+		
+		if (_cachedGraphics.data != null && (_region.tileWidth == 0 && _region.tileHeight == 0))
+		{
+			_framesData = _cachedGraphics.tilesheet.getTexturePackerFrames(_cachedGraphics.data);
+		}
+		else
+		{
+			_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region, null);
+		}
+		
+		_flxFrame = _framesData.frames[0];
+		resetFrameSize();
+		resetSizeFromFrame();
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
 	}
 	
 	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
@@ -2284,6 +2670,7 @@ class FlxSprite extends FlxObject
 			return (point.x > x - 0.5 * width * (scale.x - 1)) && (point.x < x + width + 0.5 * width * (scale.x - 1)) && (point.y > y - 0.5 * height * (scale.y - 1)) && (point.y < y + height + 0.5 * height * (scale.y - 1));
 		}
 
+<<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
@@ -2294,22 +2681,46 @@ class FlxSprite extends FlxObject
 		return (X > _point.x - 0.5 * width * (scale.x - 1)) && (X < _point.x + width + 0.5 * width * (scale.x - 1)) && (Y > _point.y - 0.5 * height * (scale.y - 1)) && (Y < _point.y + height + 0.5 * height * (scale.y - 1));
 	}
 	
+<<<<<<< HEAD
 <<<<<<< HEAD:src/org/flixel/FlxSprite.hx
 =======
+>>>>>>> experimental
+=======
+		return 0;
+	}
+	
+	/**
+	 * Retrieves BitmapData of current FlxFrame
+	 */
+	public inline function getFlxFrameBitmapData():BitmapData
+	{
+		var frameBmd:BitmapData = null;
+		if (_flxFrame != null)
+		{
+			if (facing == FlxObject.LEFT && flipped > 0)
+			{
+				frameBmd = _flxFrame.getReversedBitmap();
+			}
+			else
+			{
+				frameBmd = _flxFrame.getBitmap();
+			}
+		}
+		
+		return frameBmd;
+	}
+	
 	/**
 	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
 	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
 	 */
 	public function resetFrameBitmapDatas():Void
 	{
-		#if flash
-		if (_textureData != null)
-		{
-		#end
-			_atlas._tileSheetData.destroyFrameBitmapDatas();
-		#if flash
-		}
-		#end
+		_cachedGraphics.tilesheet.destroyFrameBitmapDatas();
 	}
+<<<<<<< HEAD
 >>>>>>> origin/dev:flixel/FlxSprite.hx
+=======
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxSprite.hx
+>>>>>>> experimental
 }

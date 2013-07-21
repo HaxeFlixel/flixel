@@ -1,8 +1,10 @@
 package flixel.system.layer;
 
+import flixel.util.loaders.CachedGraphics;
+
 class DrawStackItem
 {
-	public var atlas:Atlas;
+	public var graphics:CachedGraphics;
 	public var drawData:Array<Float>;
 	public var position:Int = 0;
 	public var next:DrawStackItem;
@@ -25,7 +27,7 @@ class DrawStackItem
 	
 	inline public function reset():Void
 	{
-		atlas = null;
+		graphics = null;
 		initialized = false;
 		smoothing = false;
 		position = 0;
@@ -33,7 +35,7 @@ class DrawStackItem
 	
 	public function dispose():Void
 	{
-		atlas = null;
+		graphics = null;
 		drawData = null;
 		next = null;
 	}

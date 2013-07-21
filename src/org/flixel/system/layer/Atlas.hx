@@ -1,9 +1,11 @@
-package flixel.system.layer;
+package org.flixel.system.layer;
 
-import flash.display.BitmapData;
-import flash.geom.Rectangle;
-import flixel.system.layer.TileSheetData;
-import flixel.util.FlxColor;
+import nme.display.Bitmap;
+import nme.display.BitmapData;
+import nme.geom.Point;
+import nme.geom.Rectangle;
+import org.flixel.FlxG;
+import org.flixel.system.layer.TileSheetData;
 
 /**
  * Atlas class
@@ -14,6 +16,7 @@ class Atlas
 	/**
 	 * Storate for all created atlases in current state
 	 */
+<<<<<<< HEAD:flixel/system/layer/Atlas.hx
 <<<<<<< HEAD:src/org/flixel/system/layer/Atlas.hx
 =======
 	public var _useCount:Int;
@@ -22,6 +25,8 @@ class Atlas
 	 * Storage for all created atlases in current state
 	 */
 >>>>>>> origin/dev:flixel/system/layer/Atlas.hx
+=======
+>>>>>>> experimental:src/org/flixel/system/layer/Atlas.hx
 	private static var _atlasCache:Map<String, Atlas> = new Map<String, Atlas>();
 	
 	public var tempStorage:Array<TempAtlasObj>;
@@ -67,7 +72,7 @@ class Atlas
 		if (bitmapData == null)
 		{
 			root = new Node(this, new Rectangle(0, 0, width, height));
-			atlasBitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+			atlasBitmapData = new BitmapData(width, height, true, FlxG.TRANSPARENT);
 			_fromBitmapData = false;
 		}
 		else
@@ -221,7 +226,7 @@ class Atlas
 	{
 		if (hasNodeWithName(node.key) && atlasBitmapData != node.item)
 		{
-			atlasBitmapData.fillRect(node.rect, FlxColor.TRANSPARENT);
+			atlasBitmapData.fillRect(node.rect, FlxG.TRANSPARENT);
 			atlasBitmapData.copyPixels(node.item, node.rect, node.point);
 		}
 	}
@@ -231,7 +236,7 @@ class Atlas
 	 */
 	public function redrawAll():Void
 	{
-		atlasBitmapData.fillRect(atlasBitmapData.rect, FlxColor.TRANSPARENT);
+		atlasBitmapData.fillRect(atlasBitmapData.rect, FlxG.TRANSPARENT);
 		
 		for (node in nodes)
 		{
@@ -247,7 +252,7 @@ class Atlas
 		root.rect.width = newWidth;
 		root.rect.height = newHeight;
 		atlasBitmapData.dispose();
-		atlasBitmapData = new BitmapData(newWidth, newHeight, true, FlxColor.TRANSPARENT);
+		atlasBitmapData = new BitmapData(newWidth, newHeight, true, FlxG.TRANSPARENT);
 		rebuildAtlas();
 	}
 	
@@ -522,11 +527,15 @@ class Atlas
 		deleteSubtree(root);
 		
 		root = new Node(this, new Rectangle(0, 0, rootWidth, rootHeight));
+<<<<<<< HEAD:flixel/system/layer/Atlas.hx
 <<<<<<< HEAD:src/org/flixel/system/layer/Atlas.hx
 		atlasBitmapData.fillRect(root.rect, FlxG.TRANSPARENT);
 =======
 		atlasBitmapData.fillRect(root.rect, FlxColor.TRANSPARENT);
 >>>>>>> origin/dev:flixel/system/layer/Atlas.hx
+=======
+		atlasBitmapData.fillRect(root.rect, FlxG.TRANSPARENT);
+>>>>>>> experimental:src/org/flixel/system/layer/Atlas.hx
 		nodes = new Map<String, Node>();
 	}
 	
