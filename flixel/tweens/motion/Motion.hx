@@ -5,15 +5,9 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.util.Ease;
 
 typedef Movable = {
-<<<<<<< HEAD:src/org/flixel/tweens/motion/Motion.hx
-  public var immovable : Bool;
-  public function move(x : Float, y : Float):Void;
-};
-=======
 	public var immovable:Bool;
 	public function setPosition(X:Float, Y:Float):Void;
 }
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tweens/motion/Motion.hx
 
 /**
  * Base class for motion Tweens.
@@ -67,11 +61,7 @@ class Motion extends FlxTween
 	{
 		if (_object != null)
 		{
-<<<<<<< HEAD:src/org/flixel/tweens/motion/Motion.hx
-			_object.move(x, y);
-=======
 			_object.setPosition(x, y); 
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tweens/motion/Motion.hx
 		}
 	}
 }

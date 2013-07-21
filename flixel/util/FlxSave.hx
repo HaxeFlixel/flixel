@@ -183,18 +183,11 @@ class FlxSave
 	{
 		switch(Result)
 		{
-<<<<<<< HEAD:src/org/flixel/FlxSave.hx
-			case PENDING:
-				FlxG.warn("FlxSave is requesting extra storage space.");
-			case ERROR:
-				FlxG.error("There was a problem flushing\nthe shared object data from FlxSave.");
-=======
 			case FlxSave.PENDING:
 				FlxG.log.warn("FlxSave is requesting extra storage space.");
 			case FlxSave.ERROR:
 				FlxG.log.error("There was a problem flushing\nthe shared object data from FlxSave.");
 			//default:
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/util/FlxSave.hx
 		}
 		if (_onComplete != null)
 		{

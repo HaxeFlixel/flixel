@@ -1,18 +1,10 @@
 package flixel.system.input;
 
-<<<<<<< HEAD:src/org/flixel/system/input/FlxJoystickManager.hx
-#if (!FLX_NO_JOYSTICK && (cpp || neko))
-import org.flixel.FlxG;
-import nme.Lib;
-import nme.events.JoystickEvent;
-import org.flixel.system.input.FlxJoystick;
-=======
 #if (cpp || neko)
 import flixel.FlxG;
 import flash.Lib;
 import openfl.events.JoystickEvent;
 import flixel.system.input.FlxJoystick;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxJoystickManager.hx
 
 /**
  * ...
@@ -66,7 +58,7 @@ class FlxJoystickManager implements IFlxInput
 	
 	/**
 	 * Check to see if any button was pressed on any joystick
-	 */
+	*/
 	public function anyButton():Bool
 	{
 		var it = joysticks.iterator();
@@ -79,14 +71,14 @@ class FlxJoystickManager implements IFlxInput
 		}
 		return false;
 	}
-	
-		/**
+
+	/**
 	 * Check to see if this button is pressed on any joystick.
-	 * @param	buttonID		button id (from 0 to 7).
-	 * @return	Whether the button is pressed
-	 */
-	public function anyJoyPressed(buttonID:Int):Bool 
-	{ 
+	 * @param buttonID button id (from 0 to 7).
+	 * @return Whether the button is pressed
+	*/
+	public function anyJoyPressed(buttonID:Int):Bool
+	{
 		var it = joysticks.iterator();
 		var joy = it.next();
 		while(joy != null)
@@ -97,14 +89,14 @@ class FlxJoystickManager implements IFlxInput
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check to see if this button was just pressed on any joystick.
-	 * @param	buttonID		button id (from 0 to 7).
-	 * @return	Whether the button was just pressed
-	 */
-	public function anyJoyJustPressed(buttonID:Int):Bool 
-	{ 
+	 * @param buttonID button id (from 0 to 7).
+	 * @return Whether the button was just pressed
+	*/
+	public function anyJoyJustPressed(buttonID:Int):Bool
+	{
 		var it = joysticks.iterator();
 		var joy = it.next();
 		while(joy != null)
@@ -115,14 +107,14 @@ class FlxJoystickManager implements IFlxInput
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check to see if this button is just released on any joystick.
-	 * @param	buttonID		button id (from 0 to 7).
-	 * @return	Whether the button is just released.
-	 */
-	public function anyJoyJustReleased(buttonID:Int):Bool 
-	{ 
+	 * @param buttonID button id (from 0 to 7).
+	 * @return Whether the button is just released.
+	*/
+	public function anyJoyJustReleased(buttonID:Int):Bool
+	{
 		var it = joysticks.iterator();
 		var joy = it.next();
 		while(joy != null)
@@ -137,7 +129,7 @@ class FlxJoystickManager implements IFlxInput
 	/**
 	 * Gets the number of active joysticks
 	 */
-	public function get_numActiveJoysticks():Int
+	function get_numActiveJoysticks():Int
 	{
 		var count = 0;
 		for (joy in joysticks)

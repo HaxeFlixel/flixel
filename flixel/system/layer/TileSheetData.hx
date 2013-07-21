@@ -1,19 +1,5 @@
 package flixel.system.layer;
 
-<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
-import nme.display.BitmapData;
-import nme.display.Graphics;
-import nme.display.Tilesheet;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import org.flixel.FlxCamera;
-import org.flixel.FlxG;
-import org.flixel.FlxPoint;
-
-import org.flixel.system.layer.TileSheetExt;
-import org.flixel.system.layer.frames.FlxFrame;
-import org.flixel.system.layer.frames.FlxSpriteFrames;
-=======
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -24,103 +10,19 @@ import flixel.util.FlxPoint;
 import flixel.util.loaders.TextureAtlasFrame;
 import flixel.system.layer.Region;
 import flixel.util.loaders.TexturePackerData;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
 
 /**
  * Object of this class holds information about single Tilesheet
  */
 class TileSheetData
 {
-<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
-	private static var tileSheetData:Array<TileSheetData> = new Array<TileSheetData>();
-	
-	public static var _DRAWCALLS:Int = 0;
-	
-	/**
-	 * Adds new tileSheet to manager and returns it
-	 * If manager already contains tileSheet with the same bitmapData then it returns this tileSheetData object 
-	 */
-	public static function addTileSheet(bitmapData:BitmapData):TileSheetData
-	{
-		if (containsTileSheet(bitmapData))
-		{
-			return getTileSheet(bitmapData);
-		}
-		
-		var tilesheet:TileSheetExt = TileSheetExt.addTileSheet(bitmapData);
-		var tempTileSheetData:TileSheetData = new TileSheetData(tilesheet);
-		tileSheetData.push(tempTileSheetData);
-		return tempTileSheetData;
-	}
-	
-	public static function containsTileSheet(bitmapData:BitmapData):Bool
-	{
-		for (tsd in tileSheetData)
-		{
-			if (tsd.tileSheet.nmeBitmap == bitmapData)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static function getTileSheet(bitmapData:BitmapData):TileSheetData
-	{
-		for (tsd in tileSheetData)
-		{
-			if (tsd.tileSheet.nmeBitmap == bitmapData)
-			{
-				return tsd;
-			}
-		}
-		return null;
-	}
-	
-	public static function removeTileSheet(tileSheetObj:TileSheetData):Void
-	{
-		for (i in 0...(tileSheetData.length))
-		{
-			if (tileSheetData[i] == tileSheetObj)
-			{
-				// Fast array removal (only do on arrays where order doesn't matter)
-				tileSheetData[i] = tileSheetData[tileSheetData.length - 1];
-				tileSheetData.pop();
-				
-				tileSheetObj.destroy();
-				return;
-			}
-		}
-	}
-	
-	public static function clear():Void
-	{
-		for (dataObject in tileSheetData)
-		{
-			dataObject.destroy();
-		}
-		tileSheetData = new Array<TileSheetData>();
-		
-		TileSheetExt.clear();
-	}
-	
-	// TODO: make it work only on non-flash targets
-=======
 	#if !flash
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
 	public var tileSheet:TileSheetExt;
 	#end
 	
 	/**
-	 * special array to hold frame ids for FlxSprites with different sizes (width and height)
+	 * Storage for all groups of FlxFrames.
 	 */
-<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
-	// TODO: redocument this
-	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
-	
-	// TODO: document this
-	private var flxFrames:Map<String, FlxFrame>;
-=======
 	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
 	/**
@@ -129,16 +31,9 @@ class TileSheetData
 	private var flxFrames:Map<String, FlxFrame>;
 	
 	public var bitmap:BitmapData;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
 	
 	public function new(bitmap:BitmapData)
 	{
-<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
-		this.tileSheet = tileSheet;
-		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
-		// TODO: fill this hash later
-		flxFrames = new Map<String, FlxFrame>();
-=======
 		this.bitmap = bitmap;
 		#if !flash
 		this.tileSheet = new TileSheetExt(bitmap);
@@ -150,7 +45,6 @@ class TileSheetData
 	public function getFrame(name:String):FlxFrame
 	{
 		return flxFrames.get(name);
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
 	}
 	
 	/**
@@ -214,7 +108,7 @@ class TileSheetData
 			{
 				tempRect = new Rectangle(startX + i * spacedWidth, startY + j * spacedHeight, width, height);
 				frame = addSpriteSheetFrame(tempRect, tempPoint);
-				spriteData.frames.push(frame);
+				spriteData.addFrame(frame);
 			}
 		}
 		
@@ -233,13 +127,14 @@ class TileSheetData
 		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
 	}
 	
-	// TODO: document this
 	public function getSpriteSheetFrameKey(rect:Rectangle, point:Point):String
 	{
 		return rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_" + point.x + "_" + point.y;
 	}
 	
-	// TODO: document this
+	/**
+	 * Adds new FlxFrame to this TileSheetData object
+	 */
 	public function addSpriteSheetFrame(rect:Rectangle, point:Point):FlxFrame
 	{
 		var key:String = getSpriteSheetFrameKey(rect, point);
@@ -249,9 +144,18 @@ class TileSheetData
 		}
 		
 		var frame:FlxFrame = new FlxFrame(this);
+		#if !flash
 		frame.tileID = addTileRect(rect, point);
+		#end
 		frame.name = key;
 		frame.frame = rect;
+		
+		frame.rotated = false;
+		frame.trimmed = false;
+		frame.sourceSize = new FlxPoint(rect.width, rect.height);
+		frame.offset = new FlxPoint(0, 0);
+		
+		frame.center = new FlxPoint(0.5 * rect.width, 0.5 * rect.height);
 		flxFrames.set(key, frame);
 		return frame;
 	}
@@ -270,12 +174,9 @@ class TileSheetData
 	
 	public function destroy():Void
 	{
-<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
-=======
 		bitmap = null;
 		#if !flash
 		tileSheet.destroy();
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx
 		tileSheet = null;
 		#end
 		
@@ -284,14 +185,18 @@ class TileSheetData
 			spriteData.destroy();
 		}
 		
-		// TODO: destroy FlxSpriteFrames in flxSpriteFrames hash
+		for (frames in flxSpriteFrames)
+		{
+			frames.destroy();
+		}
 		flxSpriteFrames = null;
-		// TODO: destroy FlxFrames in flxFrames hash
+		
+		for (frame in flxFrames)
+		{
+			frame.destroy();
+		}
 		flxFrames = null;
 	}
-<<<<<<< HEAD:src/org/flixel/system/layer/TileSheetData.hx
-}
-=======
 	
 	#if !flash
 	public function onContext(bitmap:BitmapData):Void
@@ -372,4 +277,3 @@ class TileSheetData
 		}
 	}
 }
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/layer/TileSheetData.hx

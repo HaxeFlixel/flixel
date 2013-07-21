@@ -172,11 +172,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Should always represent (0,0) - useful for different things, for avoiding unnecessary <code>new</code> calls.
 	 */
-<<<<<<< HEAD:src/org/flixel/FlxObject.hx
-	static private inline function _pZero() { return new FlxPoint(); }
-=======
 	static private var _pZero:FlxPoint = new FlxPoint();
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxObject.hx
 	
 	/**
 	 * A point that can store numbers from 0 to 1 (for X and Y independently)
@@ -493,17 +489,6 @@ class FlxObject extends FlxBasic
 		{
 			if (allowCollisions != ANY)
 			{
-<<<<<<< HEAD:src/org/flixel/FlxObject.hx
-				debugBoundingBoxColor = FlxG.PINK;
-			}
-			if (immovable)
-			{
-				debugBoundingBoxColor = FlxG.GREEN;
-			}
-			else
-			{
-				debugBoundingBoxColor = FlxG.RED;
-=======
 				debugBoundingBoxColor = FlxColor.PINK;
 			}
 			if (immovable)
@@ -513,16 +498,11 @@ class FlxObject extends FlxBasic
 			else
 			{
 				debugBoundingBoxColor = FlxColor.RED;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxObject.hx
 			}
 		}
 		else if (!_boundingBoxColorOverritten)
 		{
-<<<<<<< HEAD:src/org/flixel/FlxObject.hx
-			debugBoundingBoxColor = FlxG.BLUE;
-=======
 			debugBoundingBoxColor = FlxColor.BLUE;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxObject.hx
 		}
 		
 		//fill static graphics object with square shape
@@ -811,7 +791,7 @@ class FlxObject extends FlxBasic
 				angularAcceleration = 0;
 				angle = pathAngle;
 			}
-		}
+		}			
 	}
 	
 	/**
@@ -1385,10 +1365,6 @@ class FlxObject extends FlxBasic
 			return false;
 		}
 	}
-<<<<<<< HEAD:src/org/flixel/FlxObject.hx
-
-	public function move(x:Float, y:Float):Void
-=======
 	
 	/**
 	 * Helper function to set the coordinates of this object.
@@ -1446,7 +1422,6 @@ class FlxObject extends FlxBasic
 	public var region(get_region, null):Region;
 	
 	function get_region():Region 
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxObject.hx
 	{
 		return _region;
 	}

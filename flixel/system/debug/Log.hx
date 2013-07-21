@@ -1,16 +1,6 @@
 package flixel.system.debug;
 #if !FLX_NO_DEBUG
 
-<<<<<<< HEAD:src/org/flixel/system/debug/Log.hx
-import nme.Assets;
-import nme.geom.Rectangle;
-import nme.text.TextField;
-import nme.text.TextFormat;
-import org.flixel.FlxAssets;
-import org.flixel.FlxU;
-
-import org.flixel.system.FlxWindow;
-=======
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
@@ -21,7 +11,6 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
 import openfl.Assets;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Log.hx
 
 /**
  * A simple trace output window for use in the debugger overlay.
@@ -34,6 +23,7 @@ class Log extends Window
 	static public var STYLE_WARNING:LogStyle;
 	static public var STYLE_ERROR:LogStyle;
 	static public var STYLE_NOTICE:LogStyle;
+	static public var STYLE_CONSOLE:LogStyle;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -48,11 +38,7 @@ class Log extends Window
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */	
-<<<<<<< HEAD:src/org/flixel/system/debug/Log.hx
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
-=======
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Log.hx
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		
@@ -72,6 +58,7 @@ class Log extends Window
 		STYLE_WARNING = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, FlxAssets.SND_BEEP, true);
 		STYLE_ERROR = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, FlxAssets.SND_BEEP, true);
 		STYLE_NOTICE = new LogStyle("[NOTICE] ", "008000", 12, true);
+		STYLE_CONSOLE = new LogStyle("&#62; ", "0000ff", 12, true);
 	}
 	
 	/**
@@ -89,6 +76,7 @@ class Log extends Window
 		STYLE_WARNING = null;
 		STYLE_ERROR = null;
 		STYLE_NOTICE = null;
+		STYLE_CONSOLE = null;
 		super.destroy();
 	}
 	
@@ -99,7 +87,6 @@ class Log extends Window
 	 */
 	public function add(Data:Array<Dynamic>, Style:LogStyle):Void
 	{
-		trace(Data);
 		if (Data == null) 
 			return;
 			
@@ -128,15 +115,15 @@ class Log extends Window
 		
 		if (Style.bold) {
 			prefix = "<b>" + prefix;
-			suffix = "</b>" + suffix;
+			suffix = suffix + "</b>";
 		}
 		if (Style.italic) {
 			prefix = "<i>" + prefix;
-			suffix = "</i>" + suffix;
+			suffix = suffix + "</i>";
 		}
 		if (Style.underlined) {
 			prefix = "<u>" + prefix;
-			suffix = "</u>" + suffix;
+			suffix = suffix + "</u>";
 		}
 		
 		// TODO: Make htmlText on HTML5 target

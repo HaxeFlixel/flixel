@@ -916,7 +916,7 @@ class FlxBar extends FlxSprite
 			else if (fillDirection == FILL_VERTICAL_OUTSIDE_IN)
 			{
 				filledBarRect.height = Std.int(100 - percent * pxPerPercent);
-				filledBarPoint.y = Std.int((barHeight- filledBarRect.height) / 2);
+				filledBarPoint.y = Std.int((barHeight - filledBarRect.height) / 2);
 			}
 			
 			canvas.copyPixels(filledBar, filledBarRect, filledBarPoint);
@@ -1036,6 +1036,10 @@ class FlxBar extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
+			{
+				continue;
+			}
 			#if !js
 			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt, antialiasing);
 			#else
@@ -1046,10 +1050,6 @@ class FlxBar extends FlxSprite
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
-			{
-				continue;
-			}
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
@@ -1067,11 +1067,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-<<<<<<< HEAD:src/org/flixel/plugin/photonstorm/FlxBar.hx
-			if (!simpleRenderSprite ())
-=======
 			if (!simpleRender)
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/ui/FlxBar.hx
 			{
 				var radians:Float = -angle * FlxAngle.TO_RAD;
 				var cos:Float = Math.cos(radians);
@@ -1282,9 +1278,6 @@ class FlxBar extends FlxSprite
 	#end
 	}
 	
-<<<<<<< HEAD:src/org/flixel/plugin/photonstorm/FlxBar.hx
-}
-=======
 	#if !flash
 	private function setCachedFrontGraphics(value:CachedGraphics):Void
 	{
@@ -1301,4 +1294,3 @@ class FlxBar extends FlxSprite
 	}
 	#end
 }
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/ui/FlxBar.hx

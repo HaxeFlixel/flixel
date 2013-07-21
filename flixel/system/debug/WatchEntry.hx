@@ -1,16 +1,5 @@
 package flixel.system.debug;
 
-<<<<<<< HEAD:src/org/flixel/system/debug/WatchEntry.hx
-import nme.Assets;
-import nme.events.KeyboardEvent;
-import nme.events.MouseEvent;
-import nme.text.TextField;
-import nme.text.TextFieldType;
-import nme.text.TextFormat;
-import org.flixel.FlxAssets;
-
-import org.flixel.FlxU;
-=======
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.text.TextField;
@@ -22,7 +11,6 @@ import flixel.system.FlxDebugger;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/WatchEntry.hx
 
 /**
  * Helper class for the debugger overlay's Watch window.
@@ -37,7 +25,7 @@ class WatchEntry
 	/**
 	 * The member variable of that object.
 	 */
-	public var field:String;
+	public var field:String;	
 	/**
 	 * A custom display name for this object, if there is any.
 	 */
@@ -87,10 +75,6 @@ class WatchEntry
 		
 		custom = Custom;
 		
-<<<<<<< HEAD:src/org/flixel/system/debug/WatchEntry.hx
-		var fontName:String = Assets.getFont(FlxAssets.debuggerFont).fontName;
-		_whiteText = new TextFormat(fontName, 12, 0xffffff);
-=======
 		// No need to retrieve a variable if this is a quickWatch
 		if (!quickWatch)
 		{
@@ -133,7 +117,6 @@ class WatchEntry
 			color = 0x008000;
 		
 		_whiteText = new TextFormat(fontName, 12, color);
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/WatchEntry.hx
 		_blackText = new TextFormat(fontName, 12, 0);
 		
 		nameDisplay = new TextField();
@@ -205,14 +188,8 @@ class WatchEntry
 		{
 			nameDisplay.text = "";
 			if (NameWidth > 120)
-<<<<<<< HEAD:src/org/flixel/system/debug/WatchEntry.hx
-			{
-				nameDisplay.appendText(FlxU.getClassName(object, (NameWidth < 240)) + ".");
-			}
-=======
 				nameDisplay.appendText(FlxStringUtil.getClassName(object, (NameWidth < 240)) + ".");
 			
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/WatchEntry.hx
 			nameDisplay.appendText(field);
 		}
 	}
@@ -223,13 +200,6 @@ class WatchEntry
 	 */
 	public function updateValue():Bool
 	{
-<<<<<<< HEAD:src/org/flixel/system/debug/WatchEntry.hx
-		if (editing)
-		{
-			return false;
-		}
-		valueDisplay.text = Std.string(Reflect.getProperty(object, field));
-=======
 		if (editing || quickWatch)
 			return false;
 		
@@ -240,7 +210,6 @@ class WatchEntry
 		else
 			valueDisplay.text = Std.string(property); 
 		
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/WatchEntry.hx
 		return true;
 	}
 	#end
@@ -256,7 +225,6 @@ class WatchEntry
 		valueDisplay.type = TextFieldType.INPUT;
 		valueDisplay.setTextFormat(_blackText);
 		valueDisplay.background = true;
-		
 	}
 	
 	/**

@@ -42,14 +42,11 @@ class TimerManager extends FlxBasic
 	 */
 	override public function update():Void
 	{
-<<<<<<< HEAD:src/org/flixel/plugin/TimerManager.hx
-=======
 		if (FlxG.paused) 
 		{
 			return;
 		}
 		
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/plugin/TimerManager.hx
 		var i:Int = _timers.length - 1;
 		var timer:FlxTimer;
 		

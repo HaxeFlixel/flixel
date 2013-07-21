@@ -1,20 +1,5 @@
 package flixel.system.debug;
 
-<<<<<<< HEAD:src/org/flixel/system/debug/Perf.hx
-import nme.Assets;
-import nme.geom.Rectangle;
-import nme.system.System;
-import nme.text.TextField;
-import nme.text.TextFormat;
-import nme.Lib;
-import org.flixel.FlxAssets;
-import org.flixel.system.FlxList;
-import org.flixel.system.FlxQuadTree;
-
-import org.flixel.FlxU;
-import org.flixel.FlxG;
-import org.flixel.system.FlxWindow;
-=======
 import flash.geom.Rectangle;
 import flash.Lib;
 import flash.system.System;
@@ -26,7 +11,6 @@ import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Perf.hx
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
@@ -64,11 +48,7 @@ class Perf extends Window
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-<<<<<<< HEAD:src/org/flixel/system/debug/Perf.hx
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
-=======
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Perf.hx
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		resize(90, 110);

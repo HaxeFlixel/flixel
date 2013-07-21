@@ -29,10 +29,6 @@ import flixel.util.loaders.TextureRegion;
  */
 class FlxTilemap extends FlxObject
 {
-<<<<<<< HEAD:src/org/flixel/FlxTilemap.hx
-	public static var imgAuto:String = FlxAssets.imgAuto;
-	public static var imgAutoAlt:String = FlxAssets.imgAutoAlt;
-=======
 	/**
 	 * A set of generic tiles you can use. Useful for protyping.
 	 */
@@ -41,7 +37,6 @@ class FlxTilemap extends FlxObject
 	 * An alternate set of generic tiles you can use. Useful for protyping.
 	 */
 	inline static public var imgAutoAlt:String = FlxAssets.IMG_AUTO_ALT;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tile/FlxTilemap.hx
 	
 	/**
 	 * No auto-tiling.
@@ -709,13 +704,6 @@ class FlxTilemap extends FlxObject
 					if (tile != null)
 					{
 						if (tile.allowCollisions <= FlxObject.NONE)
-<<<<<<< HEAD:src/org/flixel/FlxTilemap.hx
-							debugColor = FlxG.BLUE;
-						else if (tile.allowCollisions != FlxObject.ANY)
-							debugColor = FlxG.PINK;
-						else
-							debugColor = FlxG.GREEN;
-=======
 						{
 							debugColor = FlxColor.BLUE;
 						}
@@ -727,7 +715,6 @@ class FlxTilemap extends FlxObject
 						{
 							debugColor = FlxColor.GREEN;
 						}
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tile/FlxTilemap.hx
 						
 						// Copied from makeDebugTile
 						var gfx:Graphics = Camera._debugLayer.graphics;
@@ -2394,15 +2381,15 @@ class FlxTilemap extends FlxObject
 		
 		return tileSprite;
 	}
-
-    /**
+	
+	/**
 	 * Use this method so the tilemap buffers are updated, eg when resizing your game
 	 */
     public function updateBuffers():Void
     {
         var i:Int = 0;
         var l:Int;
-
+		
         if (_buffers != null)
         {
             i = 0;
@@ -2419,9 +2406,6 @@ class FlxTilemap extends FlxObject
         _buffers = new Array<FlxTilemapBuffer>();
     }
 	
-<<<<<<< HEAD:src/org/flixel/FlxTilemap.hx
-}
-=======
 	override private function set_forceComplexRender(Value:Bool):Bool 
 	{
 		var i:Int = 0;
@@ -2441,4 +2425,3 @@ class FlxTilemap extends FlxObject
 		return super.set_forceComplexRender(Value);
 	}
 }
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tile/FlxTilemap.hx

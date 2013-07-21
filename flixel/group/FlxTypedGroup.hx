@@ -252,28 +252,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * instead of a valid object!
 	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
-<<<<<<< HEAD:src/org/flixel/FlxTypedGroup.hx
-	 * @param	ContructorArgs	An array of arguments passed into a newly object if there aren't any dead members to recycle.
-=======
 	 * @param 	ContructorArgs  An array of arguments passed into a newly object if there aren't any dead members to recycle. 
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/group/FlxTypedGroup.hx
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
 	public function recycle(ObjectClass:Class<T> = null, ContructorArgs:Array<Dynamic> = null):T
 	{
 		if (ContructorArgs == null)
-<<<<<<< HEAD:src/org/flixel/FlxTypedGroup.hx
-			ContructorArgs = [];
-		
-		var basic:T;
-=======
 		{
 			ContructorArgs = [];
 		}
 		
 		var basic:T = null;
 		
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/group/FlxTypedGroup.hx
 		if (maxSize > 0)
 		{
 			if (length < maxSize)
@@ -282,10 +272,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				{
 					return null;
 				}
-<<<<<<< HEAD:src/org/flixel/FlxTypedGroup.hx
-=======
 				
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/group/FlxTypedGroup.hx
 				return add(Type.createInstance(ObjectClass, ContructorArgs));
 			}
 			else
@@ -312,10 +299,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			{
 				return null;
 			}
-<<<<<<< HEAD:src/org/flixel/FlxTypedGroup.hx
-=======
 			
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/group/FlxTypedGroup.hx
 			return add(Type.createInstance(ObjectClass, ContructorArgs));
 		}
 	}

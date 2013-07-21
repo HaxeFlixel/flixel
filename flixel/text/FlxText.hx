@@ -1,15 +1,5 @@
 package flixel.text;
 
-<<<<<<< HEAD:src/org/flixel/FlxText.hx
-import nme.Assets;
-import nme.display.BitmapData;
-import nme.filters.BitmapFilter;
-import nme.geom.Point;
-import nme.text.TextField;
-import nme.text.TextFormat;
-import nme.text.TextFormatAlign;
-import org.flixel.system.layer.Atlas;
-=======
 import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
 import flash.text.TextField;
@@ -21,7 +11,6 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Assets;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -164,10 +153,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_format.size = Size;
-<<<<<<< HEAD:src/org/flixel/FlxText.hx
-=======
 		Color &= 0x00ffffff;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
@@ -242,17 +228,6 @@ class FlxText extends FlxSprite
 	/**
 	 * The color of the text being displayed.
 	 */
-<<<<<<< HEAD:src/org/flixel/FlxText.hx
-	override private function get_color():Int
-	{
-		return _format.color;
-	}
-	
-	/**
-	 * @private
-	 */
-=======
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
 	override private function set_color(Color:Int):Int
 	{
 		if (_isStatic)
@@ -260,14 +235,9 @@ class FlxText extends FlxSprite
 			return Color;
 		}
 		
-<<<<<<< HEAD:src/org/flixel/FlxText.hx
-		_format.color = Color;
-		
-=======
 		Color &= 0x00ffffff;
 		_format.color = Color;
 		color = Color;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
 		_regen = true;
@@ -549,13 +519,7 @@ class FlxText extends FlxSprite
 			#end
 			
 		#if !flash
-<<<<<<< HEAD:src/org/flixel/FlxText.hx
-			origin.make(frameWidth * 0.5, frameHeight * 0.5);
-			_halfWidth = origin.x;
-			_halfHeight = origin.y;
-=======
 			origin.set(frameWidth * 0.5, frameHeight * 0.5);
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
 		}
 		#end
 		
@@ -601,13 +565,7 @@ class FlxText extends FlxSprite
 	 * Horizontally - set alignment to "center" and increase the sprite width.
 	 * Vertically   - add newlines ('\n') to the beggining and end of the text.
 	 */
-<<<<<<< HEAD:src/org/flixel/FlxText.hx
-	override public function setClipping(width:Int, height:Int)
-	{}
-
-=======
 	override public function setClipping(Width:Int, Height:Int) {}
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
 	
 	/**
 	 * A helper function for updating the <code>TextField</code> that we use for rendering.
@@ -651,40 +609,6 @@ class FlxText extends FlxSprite
 	}
 	#end
 	
-<<<<<<< HEAD:src/org/flixel/FlxText.hx
-	/**
-	 * FlxText objects can't be added on any atlas if isStatic property is true. 
-	*/
-	#if !flash
-	override private function set_atlas(value:Atlas):Atlas 
-	{
-		if (!_isStatic)
-		{
-			return value;
-		}
-		
-		return super.set_atlas(value);
-	}
-	#end
-	
-	override public function updateAtlasInfo(updateAtlas:Bool = false):Void
-	{
-		#if !flash
-		_atlas = FlxG.state.getAtlasFor(_bitmapDataKey);
-		var cachedBmd:BitmapData = FlxG._cache.get(_bitmapDataKey);
-		if (cachedBmd != _pixels)
-		{
-			cachedBmd.dispose();
-			FlxG._cache.set(_bitmapDataKey, _pixels);
-			_atlas.clearAndFillWith(_pixels);
-		}
-		_node = _atlas.getNodeByKey(_bitmapDataKey);
-		updateFrameData();
-		#end
-	}
-	
-=======
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxText.hx
 	override public function updateFrameData():Void
 	{
 		if (_cachedGraphics != null)

@@ -1,17 +1,5 @@
 package flixel.system.input;
 
-<<<<<<< HEAD:src/org/flixel/system/input/FlxTouch.hx
-import nme.events.TouchEvent;
-import nme.geom.Point;
-
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxBasic;
-import org.flixel.FlxObject;
-import org.flixel.FlxCamera;
-import org.flixel.FlxPoint;
-import org.flixel.FlxTypedGroup;
-=======
 import flash.geom.Point;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -19,7 +7,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.util.FlxPoint;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/input/FlxTouch.hx
 
 /**
  * Helper class, contains and track touch points in your game.
@@ -194,13 +181,13 @@ class FlxTouch extends FlxPoint
 	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> or <code>FlxGroup</code>.
 	 * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
-	 * @param	ObjectOrGroup	The object or group being tested.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-	 * @return	Whether or not the two objects overlap.
-	 */
+	 * @param ObjectOrGroup The object or group being tested.
+	 * @param Camera Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+	 * @return Whether or not the two objects overlap.
+	*/
 	public function overlaps(ObjectOrGroup:FlxBasic, Camera:FlxCamera = null):Bool
 	{
-		if(Std.is(ObjectOrGroup, FlxTypedGroup))
+		if (Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
 			var i:Int = 0;
 			var results:Bool = false;

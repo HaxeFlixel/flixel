@@ -1,21 +1,5 @@
 package flixel.system.debug;
 
-<<<<<<< HEAD:src/org/flixel/system/FlxWindow.hx
-import nme.Assets;
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.events.MouseEvent;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import nme.text.TextField;
-import nme.text.TextFormat;
-import org.flixel.FlxG;
-
-import org.flixel.FlxAssets;
-import org.flixel.FlxU;
-=======
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -29,17 +13,12 @@ import openfl.Assets;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Window.hx
 
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
  */
 class Window extends Sprite
 {
-<<<<<<< HEAD:src/org/flixel/system/FlxWindow.hx
-	static public inline var BG_COLOR:Int = 0x7f7f7f7f;
-	static public inline var TOP_COLOR:Int = 0x7f000000;
-=======
 	/**
 	 * The background color of the window.
 	 */
@@ -48,7 +27,6 @@ class Window extends Sprite
 	 * The color used for the "handle" at the top of the window.
 	 */
 	inline static public var TOP_COLOR:Int = 0x7f000000;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Window.hx
 	
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
@@ -128,11 +106,7 @@ class Window extends Sprite
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-<<<<<<< HEAD:src/org/flixel/system/FlxWindow.hx
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
-=======
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Window.hx
 	{
 		super();
 		

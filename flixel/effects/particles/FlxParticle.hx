@@ -27,13 +27,8 @@ class FlxParticle extends FlxSprite
 	 */
 	public var friction:Float = 500;
 	/**
-	 * If this is set to true, particles will slowly fade away by 
+	 * If this is set to true, particles will slowly fade away by
 	 * decreasing their alpha value based on their lifespan.
-<<<<<<< HEAD:src/org/flixel/FlxParticle.hx
-	 */
-	public var fadingAway:Bool = false;
-	
-=======
 	*/
 	public var useFading:Bool = false;
 	/**
@@ -83,22 +78,14 @@ class FlxParticle extends FlxSprite
 	 * Range of red color component change during particle's life
 	 */
 	public var rangeRed:Float;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxParticle.hx
 	/**
-	 * If this is set to true, particles will slowly decrease in scale 
-	 * based on their lifespan.
-	 * WARNING: This severely impacts performance.
+	 * Range of green color component change during particle's life
 	 */
-<<<<<<< HEAD:src/org/flixel/FlxParticle.hx
-	public var decreasingSize:Bool = false;
-	
-=======
 	public var rangeGreen:Float;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxParticle.hx
 	/**
-	 * Helper variable for fading and sizeDecreasing effects.
+	 * Range of blue color component change during particle's life
 	 */
-	public var maxLifespan:Float;
+	public var rangeBlue:Float;
 	
 	/**
 	 * Instantiate a new particle. Like <code>FlxSprite</code>, all meaningful creation
@@ -135,16 +122,7 @@ class FlxParticle extends FlxSprite
 		last.x = x;
 		last.y = y;
 		
-<<<<<<< HEAD:src/org/flixel/FlxParticle.hx
-		if ((path != null) && (pathSpeed != 0) && (path.nodes[_pathNodeIndex] != null))
-		{
-			updatePathMotion();
-		}
-		
-		//lifespan behavior
-=======
 		// Lifespan behavior
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxParticle.hx
 		if (lifespan > 0)
 		{
 			lifespan -= FlxG.elapsed;
@@ -153,24 +131,31 @@ class FlxParticle extends FlxSprite
 				kill();
 			}
 			
-			// Fading away
-			if (fadingAway)
+			var lifespanRatio:Float = (1 - lifespan / maxLifespan);
+			
+			// Fading
+			if (useFading)
 			{
-				alpha -= (FlxG.elapsed / maxLifespan);
+				alpha = startAlpha + lifespanRatio * rangeAlpha;
 			}
 			
-			// Decreasing size
-			if (decreasingSize) 
+			// Changing size
+			if (useScaling)
 			{
-				scale.x = scale.y -= (FlxG.elapsed / maxLifespan);
+				scale.x = scale.y = startScale + lifespanRatio * rangeScale;
 			}
-<<<<<<< HEAD:src/org/flixel/FlxParticle.hx
-		
-			//simpler bounce/spin behavior for now
-=======
+			
+			// Tinting
+			if (useColoring)
+			{
+				var redComp:Float = startRed + lifespanRatio * rangeRed;
+				var greenComp:Float = startGreen + lifespanRatio * rangeGreen;
+				var blueComp:Float = startBlue + lifespanRatio * rangeBlue;
+				
+				color = Std.int(255 * redComp) << 16 | Std.int(255 * greenComp) << 8 | Std.int(255 * blueComp);
+			}
 			
 			// Simpler bounce/spin behavior for now
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/effects/particles/FlxParticle.hx
 			if (touching != 0)
 			{
 				if (angularVelocity != 0)
@@ -210,11 +195,7 @@ class FlxParticle extends FlxSprite
 		
 		if (exists && alive)
 		{
-			if (moves)
-			{
-				updateMotion();
-			}
-			
+			updateMotion();
 			wasTouching = touching;
 			touching = FlxObject.NONE;
 			
@@ -223,10 +204,18 @@ class FlxParticle extends FlxSprite
 		}
 	}
 	
+	override public function reset(X:Float, Y:Float):Void 
+	{
+		super.reset(X, Y);
+		
+		alpha = 1.0;
+		scale.x = scale.y = 1.0;
+		color = 0xffffff;
+	}
+	
 	/**
 	 * Triggered whenever this object is launched by a <code>FlxEmitter</code>.
 	 * You can override this to add custom behavior like a sound or AI or something.
 	 */
-	public function onEmit():Void { }
-	
+	public function onEmit():Void { }	
 }

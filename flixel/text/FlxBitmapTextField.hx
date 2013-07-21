@@ -146,23 +146,17 @@ class FlxBitmapTextField extends FlxSprite
 		return Value;
 	}
 	
-	#if !flash
-	override private function set_color(Color:BitmapInt32):BitmapInt32
+	#if flash
+	override public function draw():Void 
 	{
-<<<<<<< HEAD:src/org/flixel/plugin/pxText/FlxBitmapTextField.hx
-		super.set_color(Color);
-		_pendingTextChange = true;
-		return _color;
-=======
 		if (_pendingTextChange)
 		{
 			updateBitmapData();
 		}
 		
 		super.draw();
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxBitmapTextField.hx
 	}
-	
+	#else
 	override public function draw():Void 
 	{
 		if (_flickerTimer != 0)
@@ -173,6 +167,11 @@ class FlxBitmapTextField extends FlxSprite
 			{
 				return;
 			}
+		}
+		
+		if (_pendingTextChange)
+		{
+			updateBitmapData();
 		}
 		
 		if (cameras == null)
@@ -347,8 +346,6 @@ class FlxBitmapTextField extends FlxSprite
 			#end
 		}
 	}
-<<<<<<< HEAD:src/org/flixel/plugin/pxText/FlxBitmapTextField.hx
-=======
 	
 	override private function set_color(Color:Int):Int
 	{
@@ -357,7 +354,6 @@ class FlxBitmapTextField extends FlxSprite
 		
 		return color;
 	}
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxBitmapTextField.hx
 	#end
 	
 	/**
@@ -688,16 +684,9 @@ class FlxBitmapTextField extends FlxSprite
 			var green:Float = (_backgroundColor >> 8 & 0xff) * colorMultiplier;
 			var blue:Float = (_backgroundColor & 0xff) * colorMultiplier;
 			
-<<<<<<< HEAD:src/org/flixel/plugin/pxText/FlxBitmapTextField.hx
-			#if (cpp || js)
-			red *= (_color >> 16);
-			green *= (_color >> 8 & 0xff);
-			blue *= (_color & 0xff);
-=======
 			red *= (color >> 16);
 			green *= (color >> 8 & 0xff);
 			blue *= (color & 0xff);
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxBitmapTextField.hx
 			#end
 			
 			_bgDrawData.push(red);

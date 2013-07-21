@@ -1,55 +1,5 @@
 package flixel.ui;
 
-<<<<<<< HEAD:src/org/flixel/FlxButton.hx
-import nme.events.Event;
-import nme.events.MouseEvent;
-import nme.events.TouchEvent;
-import nme.Lib;
-import nme.media.Sound;
-import org.flixel.system.input.FlxTouch;
-import org.flixel.FlxSprite;
-import org.flixel.system.layer.Atlas;
-
-class FlxButton extends FlxTypedButton<FlxText>
-{
-	/**
-	 * Used with public variable <code>status</code>, means not highlighted or pressed.
-	 */
-	static public inline var NORMAL:Int = 0;
-	/**
-	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
-	 */
-	static public inline var HIGHLIGHT:Int = 1;
-	/**
-	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
-	 */
-	static public inline var PRESSED:Int = 2;
-	
-	public function new(X:Float = 0, Y:Float = 0, Label:String = null, OnClick:Void->Void = null)
-	{
-		super(X, Y, Label, OnClick);
-		if(Label != null)
-		{
-			label = new FlxText(0, 0, 80, Label);
-			label.setFormat(null, 8, 0x333333, "center");
-			labelOffset = new FlxPoint( -1, 3);
-		}
-	}
-	
-	/**
-	 * Updates the size of the text field to match the button.
-	 */
-	override private function resetHelpers():Void
-	{
-		super.resetHelpers();
-		if (label != null)
-		{
-			label.width = label.frameWidth = Std.int(width);
-			label.size = label.size;
-		}
-	}
-}
-=======
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.TouchEvent;
@@ -60,7 +10,6 @@ import flixel.system.FlxAssets;
 import flixel.system.FlxSound;
 import flixel.system.input.FlxTouch;
 import flixel.util.FlxPoint;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/ui/FlxTypedButton.hx
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -283,7 +232,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		var continueUpdate = false;
 		
 		#if !FLX_NO_MOUSE
-			continueUpdate = FlxG.mouse.visible;
+			continueUpdate = true;
 		#end
 		
 		#if !FLX_NO_TOUCH

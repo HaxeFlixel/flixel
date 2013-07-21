@@ -148,12 +148,6 @@ class FlxTextField extends FlxText
 		return Size;
 	}
 	
-<<<<<<< HEAD:src/org/flixel/FlxTextField.hx
-	/**
-	 * @private
-	 */
-=======
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/text/FlxTextField.hx
 	override private function set_color(Color:Int):Int
 	{
 		_format.color = Color;

@@ -1,12 +1,5 @@
 package flixel.system.debug;
 
-<<<<<<< HEAD:src/org/flixel/system/debug/Watch.hx
-import nme.display.Sprite;
-import nme.geom.Rectangle;
-
-import org.flixel.FlxU;
-import org.flixel.system.FlxWindow;
-=======
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 import haxe.ds.StringMap;
@@ -15,7 +8,6 @@ import flixel.system.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Watch.hx
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
@@ -46,11 +38,7 @@ class Watch extends Window
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-<<<<<<< HEAD:src/org/flixel/system/debug/Watch.hx
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, ?BGColor:Int = 0x7f7f7f7f, ?TopColor:Int = 0x7f000000)
-=======
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Watch.hx
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
 		
@@ -127,6 +115,14 @@ class Watch extends Window
 		
 		// Good, no repeats, add away!
 		watchEntry = new WatchEntry(_watching.length * LINE_HEIGHT, _width / 2, _width / 2 - 10, AnyObject, VariableName, DisplayName);
+		
+		if (watchEntry.field == null)
+		{
+			watchEntry.destroy();
+			watchEntry = null;
+			return;
+		}
+		
 		_names.addChild(watchEntry.nameDisplay);
 		_values.addChild(watchEntry.valueDisplay);
 		_watching.push(watchEntry);

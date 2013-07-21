@@ -280,19 +280,11 @@ class FlxPath
 			{
 				if (i == 0)
 				{
-<<<<<<< HEAD:src/org/flixel/FlxPath.hx
-					nodeColor = FlxG.GREEN;
-				}
-				else if (i == l - 1)
-				{
-					nodeColor = FlxG.RED;
-=======
 					nodeColor = FlxColor.GREEN;
 				}
 				else if (i == l - 1)
 				{
 					nodeColor = FlxColor.RED;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/util/FlxPath.hx
 				}
 			}
 			

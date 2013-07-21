@@ -1,18 +1,5 @@
 package flixel;
 
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-import nme.display.Bitmap;
-import nme.display.BitmapData;
-import nme.display.Graphics;
-import nme.display.Sprite;
-import nme.display.Tilesheet;
-import nme.geom.ColorTransform;
-import nme.geom.Point;
-import nme.geom.Rectangle;
-import org.flixel.system.layer.Atlas;
-import org.flixel.system.layer.DrawStackItem;
-import org.flixel.system.layer.TileSheetData;
-=======
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
@@ -29,7 +16,6 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.loaders.CachedGraphics;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -406,14 +392,8 @@ class FlxCamera extends FlxBasic
 					tempFlags |= Graphics.TILE_ALPHA;
 				}
 				#end
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-				// TODO: currItem.antialiasing
-				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing/* || currItem.antialiasing*/), tempFlags);
-				TileSheetData._DRAWCALLS++;
-=======
 				currItem.graphics.tilesheet.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing || currItem.smoothing), tempFlags);
 				TileSheetExt._DRAWCALLS++;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 			}
 			currItem = currItem.next;
 		}
@@ -867,11 +847,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-	public function flash(?Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
-=======
 	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -895,11 +871,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-	public function fade(?Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
-=======
 	public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -1070,19 +1042,12 @@ class FlxCamera extends FlxBasic
 			colorTransform.blueMultiplier = (color & 0xff) / 255;
 			_flashBitmap.transform.colorTransform = colorTransform;
 		}
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-		#elseif
-		red = (color >> 16) / 255;
-		green = (color >> 8 & 0xff) / 255;
-		blue = (color & 0xff) / 255;
-=======
 		#else
 		var colorTransform:ColorTransform = _canvas.transform.colorTransform;
 		colorTransform.redMultiplier = (color >> 16) / 255;
 		colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
 		colorTransform.blueMultiplier = (color & 0xff) / 255;
 		_canvas.transform.colorTransform = colorTransform;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 		#end
 		
 		return Color;
@@ -1126,14 +1091,7 @@ class FlxCamera extends FlxBasic
 		
 		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
 		_flashOffsetX = width * 0.5 * X;
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-		_flashOffsetY = height * 0.5 * Y;
-		
-		_flashSprite.x = x + _flashOffsetX;
-		_flashSprite.y = y + _flashOffsetY;
-=======
 		_flashOffsetY = height * 0.5 * Y;	
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 	}
 	
 	/**
@@ -1176,18 +1134,10 @@ class FlxCamera extends FlxBasic
 		}
 		// This is temporal fix for camera's color
 		var targetGraphics:Graphics = (graphics == null) ? _canvas.graphics : graphics;
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-		
-=======
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 		Color = Color & 0x00ffffff;
 		// end of fix
 		
 		targetGraphics.beginFill(Color, FxAlpha);
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-		
-=======
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 		targetGraphics.drawRect(0, 0, width, height);
 		targetGraphics.endFill();
 	#end
@@ -1208,11 +1158,7 @@ class FlxCamera extends FlxBasic
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
 			#else
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _effectsLayer.graphics);
-=======
 			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, _canvas.graphics);
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 			#end
 		}
 		
@@ -1224,11 +1170,7 @@ class FlxCamera extends FlxBasic
 			#if flash
 			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
 			#else
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _effectsLayer.graphics);
-=======
 			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, _canvas.graphics);
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 			#end
 		}
 		
@@ -1237,28 +1179,6 @@ class FlxCamera extends FlxBasic
 			_flashSprite.x += _fxShakeOffset.x;
 			_flashSprite.y += _fxShakeOffset.y;
 		}
-<<<<<<< HEAD:src/org/flixel/FlxCamera.hx
-		
-		#if !flash
-		if (fog > 0)
-		{
-			_effectsLayer.graphics.beginFill(0xffffff, fog);
-			_effectsLayer.graphics.drawRect(0, 0, width, height);
-			_effectsLayer.graphics.endFill();
-		}
-		#end
-	}
-	
-	#if !flash
-	public var fog(default, default):Float;
-	#end
-	
-	#if !(flash || js)
-	inline public function isColored():Bool
-	{
-		return (color < 0xffffff);
-=======
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/FlxCamera.hx
 	}
 	
 	private function set_width(val:Int):Int

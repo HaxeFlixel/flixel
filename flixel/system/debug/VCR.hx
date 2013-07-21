@@ -30,7 +30,7 @@ class VCR extends Sprite
 	#if flash
 	static private var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 	#end
-	static private var DEFAULT_FILE_NAME:String = "replay.fgr";
+	static private inline var DEFAULT_FILE_NAME:String = "replay.fgr";
 	
 	/**
 	 * Whether the debugger has been paused. 

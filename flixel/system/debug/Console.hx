@@ -9,31 +9,17 @@ import flash.text.TextField;
 import flash.text.TextFieldType;
 import flash.text.TextFormat;
 import flash.ui.Keyboard;
-<<<<<<< HEAD:src/org/flixel/system/debug/Console.hx
-import nme.Assets;
-import nme.display.BitmapInt32;
-import nme.errors.ArgumentError;
-import nme.events.Event;
-import nme.geom.Rectangle;
-import nme.text.TextField;
-import nme.text.TextFormat;
-import org.flixel.FlxAssets;
-import org.flixel.FlxG;
-import org.flixel.system.FlxWindow;
-import org.flixel.FlxObject;
-
-#if haxe3
-private typedef Hash<T> = Map<String,T>;
-#end
-=======
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.system.FlxAssets;
 import openfl.Assets;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
 
 /**
- * 
+ * A powerful console for the flixel debugger screen with supports
+ * custom commands, registering objects and functions and saves the 
+ * last 25 commands used.
+ * Inspired by Eric Smith's "CoolConsole".
+ * @link http://www.youtube.com/watch?v=QWfpw7elWk8
  */
 class Console extends Window
 {
@@ -125,20 +111,17 @@ class Console extends Window
 		_input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		
 		// Install commands
+		#if !FLX_NO_DEBUG
 		var commands:ConsoleCommands = new ConsoleCommands(this);
+		#end
 	}
 	
 	private function onFocus(e:FocusEvent):Void
 	{
-<<<<<<< HEAD:src/org/flixel/system/debug/Console.hx
-		// Pause game
-		#if flash
-=======
 		#if !FLX_NO_DEBUG
 		
 		#if flash 
 		// Pause game
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
 		if (autoPause)
 		{
 			FlxG.game.debugger.vcr.onPause();
@@ -151,21 +134,14 @@ class Console extends Window
 		if (_input.text == defaultText) 
 		{
 			_input.text = "";
-<<<<<<< HEAD:src/org/flixel/system/debug/Console.hx
-=======
 		}
 		#end
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
 	}
 	
 	private function onFocusLost(e:FocusEvent):Void
 	{
-<<<<<<< HEAD:src/org/flixel/system/debug/Console.hx
-		// Unpause game
-=======
 		#if !FLX_NO_DEBUG
 		
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
 		#if flash
 		// Unpause game
 		if (autoPause)
@@ -180,11 +156,8 @@ class Console extends Window
 		if (_input.text == "") 
 		{
 			_input.text = defaultText;
-<<<<<<< HEAD:src/org/flixel/system/debug/Console.hx
-=======
 		}
 		#end
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
 	}
 	
 	private function onKeyPress(e:KeyboardEvent):Void
@@ -253,10 +226,14 @@ class Console extends Window
 				// Push all the strings into one param for the log command
 				if  (command == "log") 
 					args = [args.join(" ")];
-				// Make the second param of call an array of the ramining params to 
+				// Make the second param of call an array of the remaining params to 
 				// be passed to the function you call
 				else if (command == "call") 
 					args[1] = args.slice(1, args.length);
+				// Make the third param of create an array of the remaining params to 
+				// be passed to the constructor of the FlxObject to create
+				else if (command == "create" || command == "cr") 
+					args[2] = args.slice(2, args.length);
 					
 				callFunction(obj, func, args); 
 			}
@@ -265,19 +242,16 @@ class Console extends Window
 		}
 		// In case the command doesn't exist
 		else {
-<<<<<<< HEAD:src/org/flixel/system/debug/Console.hx
-			FlxG.log("> Invalid command: '" + command + "'");
-=======
 			FlxG.log.error("Console: Invalid command: '" + command + "'");
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
 		}
 	}
 	
-	public function callFunction(obj:Dynamic, func:Dynamic, args:Array<Dynamic>):Void
+	public function callFunction(obj:Dynamic, func:Dynamic, args:Array<Dynamic>):Bool
 	{
 		try 
 		{
 			Reflect.callMethod(obj, func, args);
+			return true;
 		}
 		catch(e:ArgumentError)
 		{
@@ -299,15 +273,14 @@ class Console extends Window
 				// ...but not with too few
 				else 
 				{
-<<<<<<< HEAD:src/org/flixel/system/debug/Console.hx
-					FlxG.log("> Invalid number or paramters: " + expected + " expected, " + args.length + " passed");
-					return;
-=======
 					FlxG.log.error("Console: Invalid number or parameters: " + expected + " expected, " + args.length + " passed");
 					return false;
->>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/system/debug/Console.hx
 				}
+				
+				return true;
 			}
+			
+			return false;
 		}
 	}
 	
@@ -378,11 +351,10 @@ class Console extends Window
 	 * Register a new function to use for the call command.
 	 * @param FunctionAlias	The name with which you want to access the function.
 	 * @param Function		The function to register.
-	 * @param AnyObject		The object that contains the function.
 	 */
-	public function registerFunction(FunctionAlias:String, Function:Dynamic, AnyObject:Dynamic):Void
+	public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
-		registeredFunctions.set(FunctionAlias, [Function, AnyObject]);
+		registeredFunctions.set(FunctionAlias, Function);
 	}
 	
 	/**
