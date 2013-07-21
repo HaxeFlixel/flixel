@@ -508,7 +508,6 @@ class FlxCamera extends FlxBasic
 		
 		alpha = 1.0;
 		angle = 0.0;
-		antialiasing = FlxG.antialiasByDefault;
 	}
 	
 	/**
@@ -1055,7 +1054,7 @@ class FlxCamera extends FlxBasic
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
 	 */
-	public var antialiasing(default, set_antialiasing):Bool;
+	public var antialiasing(default, set_antialiasing):Bool = false;
 	
 	/**
 	 * @private

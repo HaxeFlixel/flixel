@@ -121,7 +121,7 @@ class FlxSprite extends FlxObject
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
 	 */
-	public var antialiasing:Bool;
+	public var antialiasing:Bool = false;
 	
 	/**
 	 * Internal, stores all the animations that were added to this sprite.
@@ -229,12 +229,11 @@ class FlxSprite extends FlxObject
 		origin = new FlxPoint();
 		scale = new FlxPoint(1.0, 1.0);
 		
-		antialiasing = FlxG.antialiasByDefault;
 		_aabb = new FlxRect();
 		
 		facing = FlxObject.RIGHT;
 		_animations = new Map<String, FlxAnim>();
-
+		
 		_matrix = new Matrix();
 		
 		if (SimpleGraphic == null)
