@@ -18,7 +18,7 @@ class DrawStackItem
 	
 	public var initialized:Bool = false;
 	
-	public var smoothing:Bool = false;
+	public var antialiasing:Bool = false;
 	
 	public function new()
 	{
@@ -29,7 +29,7 @@ class DrawStackItem
 	{
 		graphics = null;
 		initialized = false;
-		smoothing = false;
+		antialiasing = false;
 		position = 0;
 	}
 	

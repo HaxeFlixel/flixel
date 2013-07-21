@@ -273,9 +273,9 @@ class FlxCamera extends FlxBasic
 	private static var _storageHead:DrawStackItem;
 	
 	#if !js
-	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
 	#else
-	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, UseAlpha:Bool, ObjAntialiasing:Bool = false):DrawStackItem
 	#end
 	{
 		var itemToReturn:DrawStackItem = null;
@@ -283,7 +283,7 @@ class FlxCamera extends FlxBasic
 		{
 			_headOfDrawStack = _currentStackItem;
 			_currentStackItem.graphics = ObjGraphics;
-			_currentStackItem.smoothing = ObjSmoothing;
+			_currentStackItem.antialiasing = ObjAntialiasing;
 			#if !js
 			_currentStackItem.colored = ObjColored;
 			_currentStackItem.blending = ObjBlending;
@@ -296,7 +296,7 @@ class FlxCamera extends FlxBasic
 		else if (_currentStackItem.graphics == ObjGraphics 
 			&& _currentStackItem.colored == ObjColored 
 			&& _currentStackItem.blending == ObjBlending 
-			&& _currentStackItem.smoothing == ObjSmoothing 
+			&& _currentStackItem.antialiasing == ObjAntialiasing 
 		)
 	#else
 		else if (_currentStackItem.graphics == ObjGraphics && _currentStackItem.useAlpha == UseAlpha)
@@ -321,7 +321,7 @@ class FlxCamera extends FlxBasic
 			}
 			
 			newItem.graphics = ObjGraphics;
-			newItem.smoothing = ObjSmoothing;
+			newItem.antialiasing = ObjAntialiasing;
 			#if !js
 			newItem.colored = ObjColored;
 			newItem.blending = ObjBlending;
@@ -390,7 +390,7 @@ class FlxCamera extends FlxBasic
 					tempFlags |= Graphics.TILE_ALPHA;
 				}
 				#end
-				currItem.graphics.tilesheet.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing || currItem.smoothing), tempFlags);
+				currItem.graphics.tilesheet.tileSheet.drawTiles(_canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags);
 				TileSheetExt._DRAWCALLS++;
 			}
 			currItem = currItem.next;
