@@ -90,14 +90,6 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 */
 	public function setPosition(X:Float, Y:Float):Void
 	{
-		var xOffset:Float = X - x;
-		var yOffset:Float = Y - y;
-		
-		var valueArr:Array<Dynamic> = [xOffset, yOffset];
-		var lambdaArr:Array < FlxSprite-> Dynamic->Void > = [xTransform, yTransform];
-		
-		multiTransformChildren(lambdaArr, valueArr);
-		
 		x = X;
 		y = Y;
 	}
