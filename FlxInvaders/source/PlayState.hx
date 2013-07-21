@@ -176,7 +176,7 @@ class PlayState extends FlxState
 			statusMessage = "YOU LOST";	
 			FlxG.resetState();
 		}
-		else if (_aliens.getFirstExtant() == null)
+		else if (_aliens.getFirstExisting() == null)
 		{
 			// No aliens left; you win!
 			statusMessage = "YOU WON";		

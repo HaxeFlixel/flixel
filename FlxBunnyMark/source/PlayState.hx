@@ -7,7 +7,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxTypedGroup;
-import flixel.system.layer.Atlas;
 import flixel.text.FlxBitmapTextField;
 import flixel.text.FlxText;
 import flixel.text.pxText.PxBitmapFont;

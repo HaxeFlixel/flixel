@@ -1,32 +1,32 @@
 package; 
 
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.events.Event;
+import flash.geom.Matrix;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.system.FlxAssets;
+import flixel.text.FlxText;
+import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
+import flixel.util.FlxMath;
+import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
+import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
+import flixel.system.FlxAssets;
+import flixel.util.FlxMath;
+
 #if flash
 import flash.display.Loader;
 import flash.display.LoaderInfo;
 import flash.net.FileReference;
 import flash.net.FileFilter;
-import flixel.system.FlxAssets;
-import flixel.util.FlxMath;
 #elseif (cpp || neko)
 import systools.Dialogs;
 #end
-
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.geom.Matrix;
-import flash.geom.Rectangle;
-import flash.utils.ByteArray;
-import flash.events.Event;
-import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.group.FlxGroup;
-import flixel.system.FlxAssets;
-import flixel.text.FlxText;
-import flixel.tile.FlxTilemap;
-import flixel.ui.FlxButton;
-import flixel.util.FlxColor;
 
 /**
  * ...
@@ -36,7 +36,7 @@ class PlayState extends FlxState
 {
 	inline static private var MIN_SCALE:Float = 0.1;
 	inline static private var MAX_SCALE:Float = 5;
-	inline static private var ZOOM_FACTOR:Int = 40;
+	inline static private var ZOOM_FACTOR:Int = 15;
 	
 	private var _text:FlxText;
 	private var _button:FlxButton;
@@ -74,7 +74,7 @@ class PlayState extends FlxState
 		_scaleText.setFormat(null, 16, FlxColor.WHITE, "right", FlxColor.GRAY, true);
 		add(_scaleText);
 		
-		_showImage(FlxG.bitmap.add(FlxAssets.IMG_LOGO));
+		_showImage(FlxG.bitmap.add(FlxAssets.IMG_LOGO).bitmap);
 	}
 	
 	override public function update():Void
