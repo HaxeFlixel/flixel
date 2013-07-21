@@ -386,6 +386,7 @@ class FlxAtlas
 	 */
 	public function destroy():Void
 	{
+		FlxG.bitmap.remove(name);
 		_tempStorage = null;
 		deleteSubtree(root);
 		root = null;
