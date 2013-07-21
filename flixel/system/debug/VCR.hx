@@ -93,7 +93,7 @@ class VCR extends Sprite
 		_recordOn.visible = false;
 		addChild(_recordOn);
 		
-		#if (!FLX_RECORD || FLX_NO_FIXED_TIMESTEP)
+		#if (!FLX_RECORD || FLX_VARIABLE_TIMESTEP)
 		_open.visible = false;
 		_recordOff.visible = false;
 		_recordOn.visible = false;
@@ -262,7 +262,7 @@ class VCR extends Sprite
 		}
 	}
 	
-	#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
+	#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
 	//*** ACTUAL BUTTON BEHAVIORS ***//
 	
 	/**
@@ -373,7 +373,7 @@ class VCR extends Sprite
 	 */
 	public function stopRecording():Void
 	{
-		#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
+		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
 		var data:String = FlxG.vcr.stopRecording();
 		#end
 	
@@ -452,7 +452,7 @@ class VCR extends Sprite
 	 */
 	public function onRestart(StandardMode:Bool = false):Void
 	{
-		#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
+		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
 		FlxG.vcr.reloadReplay(StandardMode);
 		// TODO: Fix this. I don't know where is the problem
 		/*
@@ -584,7 +584,7 @@ class VCR extends Sprite
 	 */
 	private function onMouseUp(E:MouseEvent = null):Void
 	{
-		#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
+		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
 		if (_overOpen && _pressingOpen)
 		{
 			onOpen();
