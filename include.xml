@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<assets path="assets/images" rename="img" if="flash" />
+	<assets path="assets/images" rename="img" exclude="*.svg" if="html5" />
+	<assets path="assets/images" rename="img" if="desktop" />
+	<assets path="assets/images" rename="img" if="mobile" />
+	
+	<assets path="assets/fonts" rename="fonts" />
+	
+	<assets path="assets/sounds" rename="snd" exclude="*.wav" if="flash"  />
+	<assets path="assets/sounds" rename="snd" exclude="*.wav" if="html5"  />
+	<assets path="assets/sounds" rename="snd" exclude="*.mp3" if="desktop"  />
+	<assets path="assets/sounds" rename="snd" exclude="*.mp3" if="mobile"  />
+</project>

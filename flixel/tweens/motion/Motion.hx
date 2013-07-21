@@ -1,0 +1,77 @@
+﻿package flixel.tweens.motion;
+
+import flixel.FlxObject;
+import flixel.tweens.FlxTween;
+import flixel.tweens.util.Ease;
+
+typedef Movable = {
+<<<<<<< HEAD:src/org/flixel/tweens/motion/Motion.hx
+  public var immovable : Bool;
+  public function move(x : Float, y : Float):Void;
+};
+=======
+	public var immovable:Bool;
+	public function setPosition(X:Float, Y:Float):Void;
+}
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tweens/motion/Motion.hx
+
+/**
+ * Base class for motion Tweens.
+ */
+class Motion extends FlxTween
+{
+	/**
+	 * Current x position of the Tween.
+	 */
+	public var x:Float;
+	
+	/**
+	 * Current y position of the Tween.
+	 */
+	public var y:Float;
+	
+	private var _object:Movable;
+	
+	/**
+	 * Constructor.
+	 * @param	duration	Duration of the Tween.
+	 * @param	complete	Optional completion callback.
+	 * @param	type		Tween type.
+	 * @param	ease		Optional easer function.
+	 */
+	public function new(duration:Float, complete:CompleteCallback = null, type:Int = 0, ease:EaseFunction = null) 
+	{
+		super(duration, type, complete, ease);
+		x = y = 0;
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		_object = null;
+	}
+	
+	public function setObject(object:Movable):Void
+	{
+		_object = object;
+		_object.immovable = true;
+	}
+	
+	override public function update():Void 
+	{
+		super.update();
+		postUpdate();
+	}
+	
+	public function postUpdate():Void
+	{
+		if (_object != null)
+		{
+<<<<<<< HEAD:src/org/flixel/tweens/motion/Motion.hx
+			_object.move(x, y);
+=======
+			_object.setPosition(x, y); 
+>>>>>>> 5a1503ca00e410df1bad6c3cb6c137b33f090265:flixel/tweens/motion/Motion.hx
+		}
+	}
+}
