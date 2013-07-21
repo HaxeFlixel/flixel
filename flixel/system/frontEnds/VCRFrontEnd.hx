@@ -9,7 +9,7 @@ class VCRFrontEnd
 	 */
 	public function new() { }
 	
-	#if FLX_RECORD
+	#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
 	/**
 	 * Load replay data from a string and play it back.
 	 * 

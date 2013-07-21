@@ -94,7 +94,7 @@ class FlxGame extends Sprite
 	public var debugger(default, null):FlxDebugger;
 	#end
 	
-	#if FLX_RECORD
+	#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
 	/**
 	 * Container for a game replay object.
 	 */
@@ -227,7 +227,7 @@ class FlxGame extends Sprite
 		prefsSave = new FlxSave();
 		prefsSave.bind("flixel");
 		
-		#if FLX_RECORD
+		#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
 		// Replay data
 		replay = new FlxReplay();
 		#end
@@ -317,7 +317,7 @@ class FlxGame extends Sprite
 	 * @param	FlashEvent	Flash event.
 	 */
 	private function onEnterFrame(FlashEvent:Event = null):Void
-	{			
+	{
 		mark = Lib.getTimer();
 		elapsedMS = mark - _total;
 		_total = mark;
@@ -341,6 +341,7 @@ class FlxGame extends Sprite
 			else
 			{
 			#end
+			#if !FLX_NO_FIXED_TIMESTEP
 				_accumulator += elapsedMS;
 				if (_accumulator > maxAccumulation)
 				{
@@ -353,6 +354,9 @@ class FlxGame extends Sprite
 					step();
 					_accumulator = _accumulator - stepMS; 
 				}
+			#else
+			step();
+			#end
 			#if !FLX_NO_DEBUG
 			}
 			#end
@@ -390,7 +394,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if FLX_RECORD
+		#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
 		replayTimer = 0;
 		replayCancelKeys = null;
 		#end
@@ -479,7 +483,7 @@ class FlxGame extends Sprite
 			requestedReset = false;
 		}
 		
-		#if FLX_RECORD
+		#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
 		// Handle replay-related requests
 		if (recordingRequested)
 		{
@@ -572,7 +576,11 @@ class FlxGame extends Sprite
 		}
 		#end
 		
+		#if !FLX_NO_FIXED_TIMESTEP
 		FlxG.elapsed = FlxG.timeScale * stepSeconds;
+		#else
+		FlxG.elapsed = FlxG.timeScale * (elapsedMS / 1000);
+		#end
 		
 		updateInput();
 		
@@ -603,7 +611,7 @@ class FlxGame extends Sprite
 	
 	private function updateInput():Void
 	{
-		#if FLX_RECORD
+		#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
 		if (replaying)
 		{
 			replay.playNextFrame();
@@ -646,7 +654,7 @@ class FlxGame extends Sprite
 		
 		FlxInputs.updateInputs();
 		
-		#if FLX_RECORD
+		#if (FLX_RECORD && !FLX_NO_FIXED_TIMESTEP)
 		}
 		if (recording)
 		{
