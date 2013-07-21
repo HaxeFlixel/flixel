@@ -296,9 +296,7 @@ class FlxCamera extends FlxBasic
 		else if (_currentStackItem.graphics == ObjGraphics 
 			&& _currentStackItem.colored == ObjColored 
 			&& _currentStackItem.blending == ObjBlending 
-		#if FLX_SPRITE_ANTIALIASING 
 			&& _currentStackItem.smoothing == ObjSmoothing 
-		#end
 		)
 	#else
 		else if (_currentStackItem.graphics == ObjGraphics && _currentStackItem.useAlpha == UseAlpha)
