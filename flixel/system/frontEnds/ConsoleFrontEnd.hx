@@ -5,6 +5,12 @@ import flixel.FlxG;
 class ConsoleFrontEnd
 {
 	/**
+	 * Whether the console should auto-pause or not when it's focused. Only works for flash atm.
+	 * @default true
+	 */
+	public var autoPause:Bool = true;
+	
+	/**
 	 * Just needed to create an instance.
 	 */
 	public function new() { }
