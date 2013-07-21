@@ -43,6 +43,11 @@ class Main extends Sprite
 		
 		initialize();
 		
+		// Profile code - disable <haxedef name="profile_cpp" if="target_cpp" /> before ship
+		#if (profile_cpp && !neko)
+		cpp.vm.Profiler.start("perf.txt");
+		#end
+		
 		var game:FlxGame = new GameClass();
 		addChild(game);
 	}

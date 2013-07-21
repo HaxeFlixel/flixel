@@ -54,9 +54,9 @@ class PlayState extends FlxState
 		add(_bunnies);
 		
 		// Add a jumping pirate
-		//_pirate = new FlxSprite();
-		//_pirate.loadGraphic("assets/pirate.png");
-		//add(_pirate);
+		_pirate = new FlxSprite();
+		_pirate.loadGraphic("assets/pirate.png");
+		add(_pirate);
 		
 		// All the GUI stuff
 		var uiBackground:FlxSprite = new FlxSprite();
@@ -103,11 +103,6 @@ class PlayState extends FlxState
 		#if !mobile
 		FlxG.mouse.show();
 		#end
-		
-		// Profile code - disable <haxedef name="profile_cpp" if="target_cpp" /> before ship
-		#if (profile_cpp && !neko)
-		cpp.vm.Profiler.start("perf.txt");
-		#end
 	}
 	
 	override public function update():Void
@@ -141,9 +136,11 @@ class PlayState extends FlxState
 		{
 			for (i in 0..._changeAmount)
 			{
-				var bunny:Bunny = _bunnies.recycle(Bunny);
-				bunny.init();
-				_bunnies.add(bunny);
+				// It's much slower to recycle objects, but keeps runtime costs of garbage collection low
+				//_bunnies.recycle(Bunny).init();
+				
+				// It's much faster to directly add new members to the array, but if removed they will incurr a GC penalty
+				_bunnies.members[_bunnies.length++] = new Bunny().init();
 			}
 		}
 		else 
@@ -155,7 +152,7 @@ class PlayState extends FlxState
 				if (bunny != null) 
 				{
 					bunny.destroy();
-					_bunnies.remove(bunny);
+					_bunnies.remove(bunny, true);
 				}
 			}
 		}

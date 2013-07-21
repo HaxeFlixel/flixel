@@ -6,8 +6,8 @@
     <movie input="" />
     <movie path="FlxBunnyMark.xml" />
     <movie fps="60" />
-    <movie width="800" />
-    <movie height="600" />
+    <movie width="640" />
+    <movie height="480" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
@@ -17,16 +17,17 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="C:\HaxeToolkit\haxe\lib/openfl/1,0,4/" />
-    <class path="export/flash/haxe" />
+    <class path="C:\HaxeToolkit\haxelib/openfl/1,0,4/" />
+    <class path="C:\HaxeToolkit\haxelib/flixel/git/" />
+    <class path="export/windows/cpp/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1&#xA;FLX_NO_DEBUG&#xA;openfl_ver=1.0.4&#xA;openfl&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;web" />
+    <option directives="HXCPP_DEBUG&#xA;tools=1&#xA;FLX_NO_DEBUG&#xA;HXCPP_STACK_TRACE&#xA;profile_cpp&#xA;openfl_ver=1.0.4&#xA;HXCPP_DEBUG_LINK&#xA;openfl&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
-    <option enabledebug="False" />
-    <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
+    <option enabledebug="True" />
+    <option additional="--no-output&#xA;--macro allowPackage(&quot;flash&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
