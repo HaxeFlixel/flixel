@@ -33,8 +33,6 @@ import openfl.display.Tilesheet;
  */
 class FlxSprite extends FlxObject
 {
-	private static var VERTICES:Array<FlxPoint> = [new FlxPoint(), new FlxPoint(), new FlxPoint(), new FlxPoint()];
-	
 	/**
 	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>,
 	 * <code>UP</code>, and <code>DOWN</code> to take advantage of
@@ -210,6 +208,9 @@ class FlxSprite extends FlxObject
 	
 	private var _aabb:FlxRect;
 	
+	private var _cosAngle:Float;
+	private var _sinAngle:Float; 
+	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
 	 * Optionally can load a simple, one-frame graphic instead.
@@ -230,6 +231,8 @@ class FlxSprite extends FlxObject
 		scale = new FlxPoint(1.0, 1.0);
 		
 		_aabb = new FlxRect();
+		_cosAngle = 1;
+		_sinAngle = 0;
 		
 		facing = FlxObject.RIGHT;
 		_animations = new Map<String, FlxAnim>();
@@ -757,6 +760,8 @@ class FlxSprite extends FlxObject
 		var sin:Float;
 	#end
 		
+		var isSimpleRender:Bool = simpleRenderSprite();
+		
 		while (i < l)
 		{
 			camera = cameras[i++];
@@ -790,7 +795,7 @@ class FlxSprite extends FlxObject
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
 #if flash
-			if (simpleRenderSprite())
+			if (isSimpleRender)
 			{
 				_flashPoint.x = _point.x;
 				_flashPoint.y = _point.y;
@@ -829,19 +834,18 @@ class FlxSprite extends FlxObject
 			var c:Float = ssy;
 			var d:Float = csy;
 			
-			if (!simpleRenderSprite())
+			if (!isSimpleRender)
 			{
-				radians = -(angle + _flxFrame.additionalAngle) * FlxAngle.TO_RAD;
-				cos = Math.cos(radians);
-				sin = Math.sin(radians);
-				
-				csx = cos * scale.x * facingMult;
-				ssy = sin * scale.y;
-				ssx = sin * scale.x * facingMult;
-				csy = cos * scale.y;
-				
 				if (_flxFrame.rotated)
 				{
+					cos = -_sinAngle;
+					sin = _cosAngle;
+					
+					csx = cos * scale.x * facingMult;
+					ssy = sin * scale.y;
+					ssx = sin * scale.x * facingMult;
+					csy = cos * scale.y;
+					
 					x2 = x1 * ssx - y1 * csy;
 					y2 = x1 * csx + y1 * ssy;
 					
@@ -852,6 +856,14 @@ class FlxSprite extends FlxObject
 				}
 				else
 				{
+					cos = _cosAngle;
+					sin = _sinAngle;
+					
+					csx = cos * scale.x * facingMult;
+					ssy = sin * scale.y;
+					ssx = sin * scale.x * facingMult;
+					csy = cos * scale.y;
+					
 					x2 = x1 * csx + y1 * ssy;
 					y2 = -x1 * ssx + y1 * csy;
 					
@@ -1655,14 +1667,22 @@ class FlxSprite extends FlxObject
 		var scy = Camera.scroll.y * scrollFactor.y;
 		
 		var minX:Float = _aabb.x - scx;
-		var minY:Float = _aabb.y - scy;
-		var maxX:Float = minX + _aabb.width;
-		var maxY:Float = minY + _aabb.height;
+		if (minX > Camera.width)
+			return false;
 		
-		return 	(maxX >= 0) &&
-				(minX <= Camera.width) &&
-				(maxY >= 0) &&
-				(minY <= Camera.height);
+		var maxX:Float = minX + _aabb.width;
+		if (maxX < 0)
+			return false;
+		
+		var minY:Float = _aabb.y - scy;
+		if (minY > Camera.height)
+			return false;
+		
+		var maxY:Float = minY + _aabb.height;
+		if (maxY < 0)
+			return false;
+		
+		return true;
 	}
 
 	/**
@@ -1684,33 +1704,44 @@ class FlxSprite extends FlxObject
 			var sfw:Float = sx * frameWidth;
 			var sfh:Float = scale.y * frameHeight;
 			
-			VERTICES[0].set( -sox, -soy);
-			VERTICES[1].set(sfw - sox, -soy);
-			VERTICES[2].set(-sox, sfh - soy);
-			VERTICES[3].set(sfw - sox, sfh - soy);
+			var p1x = -sox, p1y = -soy;
+			var p2x = sfw - sox, p2y = -soy;
+			var p3x = -sox, p3y = sfh - soy;
+			var p4x = sfw - sox, p4y = sfh - soy; 
 			
 			var radians:Float = -angle * FlxAngle.TO_RAD;
-			var cos:Float = Math.cos(radians);
-			var sin:Float = Math.sin(radians);
+			var cos:Float = _cosAngle = Math.cos(radians);
+			var sin:Float = _sinAngle = Math.sin(radians);
 			
 			var genX:Float = x + origin.x - offset.x;
 			var genY:Float = y + origin.y - offset.y;
 			
-			for (i in 0...4) 
-			{
-				var cp:FlxPoint = VERTICES[i];
-				var xt:Float = cp.x * cos + cp.y * sin;
-				var yt:Float = -cp.x * sin + cp.y * cos;
-				
-				cp.x = xt + genX;
-				cp.y = yt + genY;
-			}
+			var tx:Float = p1x * cos + p1y * sin;
+			var ty:Float = -p1x * sin + p1y * cos;
+			p1x = tx;
+			p1y = ty;
 			
-			var minX:Float = Math.min(Math.min(VERTICES[0].x, VERTICES[1].x), Math.min(VERTICES[2].x, VERTICES[3].x));
-			var minY:Float = Math.min(Math.min(VERTICES[0].y, VERTICES[1].y), Math.min(VERTICES[2].y, VERTICES[3].y));
-			var maxX:Float = Math.max(Math.max(VERTICES[0].x, VERTICES[1].x), Math.max(VERTICES[2].x, VERTICES[3].x));
-			var maxY:Float = Math.max(Math.max(VERTICES[0].y, VERTICES[1].y), Math.max(VERTICES[2].y, VERTICES[3].y));
-			_aabb.set(minX, minY, maxX - minX, maxY - minY);
+			tx = p2x * cos + p2y * sin;
+			ty = -p2x * sin + p2y * cos;
+			p2x = tx;
+			p2y = ty;
+			
+			tx = p3x * cos + p3y * sin;
+			ty = -p3x * sin + p3y * cos;
+			p3x = tx;
+			p3y = ty;
+			
+			tx = p4x * cos + p4y * sin;
+			ty = -p4x * sin + p4y * cos;
+			p4x = tx;
+			p4y = ty;
+			
+			var minX:Float = Math.min(Math.min(p1x, p2x), Math.min(p3x, p4x));
+			var minY:Float = Math.min(Math.min(p1y, p2y), Math.min(p3y, p4y));
+			var maxX:Float = Math.max(Math.max(p1x, p2x), Math.max(p3x, p4x));
+			var maxY:Float = Math.max(Math.max(p1y, p2y), Math.max(p3y, p4y));
+			
+			_aabb.set(genX + minX, genY + minY, maxX - minX, maxY - minY);
 		}
 	}
 	
