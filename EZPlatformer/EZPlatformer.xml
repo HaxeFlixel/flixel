@@ -16,6 +16,8 @@
 	
 	<classpath name="source" />
 	
+	<assets path="assets" />
+	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
