@@ -115,6 +115,8 @@ class CameraFrontEnd
 			{
 				cam.buffer.unlock();
 			}
+			
+			cam.screen.resetFrameBitmapDatas();
 			#end
 		}
 	}
