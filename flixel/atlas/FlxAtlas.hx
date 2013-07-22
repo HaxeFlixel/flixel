@@ -32,8 +32,8 @@ class FlxAtlas
 	/**
 	 * Offsets between nodes in atlas
 	 */
-	public var borderX:Int;
-	public var borderY:Int;
+	public var borderX(default, null):Int;
+	public var borderY(default, null):Int;
 	
 	private var _tempStorage:Array<TempAtlasObj>;
 	
@@ -195,8 +195,8 @@ class FlxAtlas
 			var node:FlxNode = getNode(nodeName);
 			region.region.startX = node.x;
 			region.region.startY = node.y;
-			region.region.width = node.width;
-			region.region.height = node.height;
+			region.region.width = (node.width == width) ? width : node.width - borderX;
+			region.region.height = (node.height == height) ? height : node.height - borderY;
 			
 			return region;
 		}
