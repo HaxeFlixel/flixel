@@ -252,9 +252,7 @@ class FlxG
 		#end
 		
 		// Register fonts
-		#if !FLX_NO_DEBUG
 		Font.registerFont(DebuggerFont);
-		#end
 		Font.registerFont(DefaultFont);
 	}
 	

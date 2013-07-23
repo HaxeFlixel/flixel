@@ -7,9 +7,7 @@ import openfl.Assets;
 import flixel.FlxG;
 
 @:font("assets/fonts/nokiafc22.ttf") class DefaultFont extends Font { }
-#if !FLX_NO_DEBUG
 @:font("assets/fonts/arial.ttf") class DebuggerFont extends Font { }
-#end
 
 class FlxAssets
 {
@@ -60,9 +58,7 @@ class FlxAssets
 	
 	// fonts
 	inline static public var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
-	#if !FLX_NO_DEBUG
 	inline static public var FONT_DEBUGGER:String = "Arial";
-	#end
 	
 	// sounds
 	#if (flash || js)
