@@ -483,7 +483,7 @@ class FlxG
 		FlxG.timeScale = 1.0;
 		FlxG.elapsed = 0;
 		FlxRandom.globalSeed = Math.random();
-		FlxG.worldBounds.set( -10, -10, FlxG.width + 20, FlxG.height + 20);
+		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
 		
 		#if !FLX_NO_DEBUG
