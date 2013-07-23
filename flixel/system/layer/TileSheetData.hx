@@ -166,7 +166,7 @@ class TileSheetData
 	}
 	
 	#if !flash
-	public function addTileRect(tileRect, point):Int
+	public function addTileRect(tileRect:Rectangle, point:Point = null):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
 	}
