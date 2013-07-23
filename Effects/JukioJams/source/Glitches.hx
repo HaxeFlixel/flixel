@@ -1,8 +1,9 @@
 package;
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
 
-class Glitches extends FlxGroup
+import flixel.group.FlxTypedGroup;
+import flixel.util.FlxRandom;
+
+class Glitches extends FlxTypedGroup<Glitch>
 {
 	public function new()
 	{
@@ -17,10 +18,10 @@ class Glitches extends FlxGroup
 	public function onBeat():Void
 	{
 		var sprite:Glitch;
+		
 		for (i in 0...length)
 		{
-			sprite = cast(members[i], Glitch);
-			sprite.reset(Std.int(FlxG.random() * 16) * 16, Std.int(FlxG.random() * 12) * 16);
+			members[i].reset(Std.int(FlxRandom.float() * 16) * 16, Std.int(FlxRandom.float() * 12) * 16);
 		}
 	}
 }

@@ -88,7 +88,7 @@ class PlayState extends FlxState
 		_player.loadGraphic("assets/spaceman.png", true, true, 16);
 		
 		// Bounding box tweaks
-		_player.setDimensions(14, 14);
+		_player.setSize(14, 14);
 		_player.offset.set(1, 1);
 		
 		// Basic player physics

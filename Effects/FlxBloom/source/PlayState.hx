@@ -15,7 +15,7 @@ class PlayState extends FlxState
 	/**
 	 * Allows users to toggle the effect on and off with the space bar.
 	 */
-	private var toggle:Bool = true;
+	private var _enabled:Bool = true;
 	/**
 	 * How much light bloom to have - larger numbers = more
 	 */
@@ -88,7 +88,7 @@ class PlayState extends FlxState
 	{
 		if (FlxG.keys.justPressed("SPACE"))
 		{
-			toggle = !toggle;
+			_enabled = !_enabled;
 		}
 		
 		super.update();
@@ -102,7 +102,7 @@ class PlayState extends FlxState
 		// This draws all the game objects
 		super.draw();
 		
-		if (toggle)
+		if (_enabled)
 		{
 			//The actual blur process is quite simple now.
 			//First we draw the contents of the screen onto the tiny FX buffer:

@@ -1,7 +1,6 @@
 package;
-
-import flixel.FlxSprite;
-import flixel.util.FlxRandom;
+import org.flixel.FlxG;
+import org.flixel.FlxSprite;
 
 class Glitch extends FlxSprite
 {
@@ -25,12 +24,15 @@ class Glitch extends FlxSprite
 		color2 = Colors.random();
 		color3 = Colors.random();
 		
-		frame1 = Std.int(1 + FlxRandom.float() * 20);
-		frame2 = Std.int(1 + FlxRandom.float() * 20);
+		frame1 = Std.int(1 + FlxG.random() * 20);
+		frame2 = Std.int(1 + FlxG.random() * 20);
 	}
 	
 	override public function draw():Void
 	{
+		//color = color1;
+		//frame = 0;
+		//super.draw();
 		color = color2;
 		frame = frame1;
 		super.draw();

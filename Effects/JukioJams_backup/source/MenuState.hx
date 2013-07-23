@@ -1,8 +1,7 @@
 package;
-
-import flixel.FlxG;
-import flixel.FlxState;
-import flixel.text.FlxText;
+import org.flixel.FlxG;
+import org.flixel.FlxState;
+import org.flixel.FlxText;
 
 class MenuState extends FlxState
 {
@@ -24,7 +23,7 @@ class MenuState extends FlxState
 	{
 		super.update();
 
-		if (FlxG.mouse.justPressed())
+		if(FlxG.mouse.justPressed())
 		{
 			FlxG.mouse.hide();
 			FlxG.switchState(new PlayState());

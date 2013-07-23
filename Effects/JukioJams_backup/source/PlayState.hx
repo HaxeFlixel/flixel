@@ -1,13 +1,13 @@
 package;
-
-import flixel.FlxG;
-import flixel.FlxState;
-import flixel.group.FlxGroup;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
+import flash.display.BitmapData;
+import org.flixel.FlxG;
+import org.flixel.FlxGroup;
+import org.flixel.FlxState;
+import org.flixel.FlxText;
 
 class PlayState extends FlxState
 {
+	//farts
 	public var debug:FlxText;
 	
 	public var tempo:TempoController;
@@ -35,7 +35,7 @@ class PlayState extends FlxState
 		
 		triangles = new Triangles();
 		add(triangles);
-		
+
 		a = cast(add(new FlxGroup()), FlxGroup);
 		_oldA = a.visible;
 		addStuff(a,false);
@@ -49,34 +49,37 @@ class PlayState extends FlxState
 		
 		glitches = new Glitches();
 		
-		FlxG.cameras.fullscreen();
+		FlxG.fullscreen();
 		FlxG.mouse.hide();
+		
+		//farts
+		//debug = add(new FlxText(0,0,FlxG.width)) as FlxText;
 	}
 	
 	override public function update():Void
 	{
-		if (FlxG.keys.justPressed("F"))
+		if(FlxG.keys.justPressed("F"))
 		{
-			FlxG.cameras.fullscreen();
+			FlxG.fullscreen();
 		}
 		
 		super.update();
 		
-		// Shift drop
+		//shift drop
 		if(FlxG.keys.justPressed("SHIFT"))
 		{
 			_oldA = a.visible;
 			_oldB = b.visible;
 			a.visible = b.visible = false;
-			FlxG.cameras.bgColor = 0x50000000;
+			FlxG.bgColor = 0x50000000;
 			triangles.visible = false;
 			glitches.visible = false;
 		}
-		if (FlxG.keys.justReleased("SHIFT"))
+		if(FlxG.keys.justReleased("SHIFT"))
 		{
 			a.visible = _oldA;
 			b.visible = _oldB;
-			FlxG.cameraFX.flash(FlxColor.WHITE, 0.5);
+			FlxG.flash(0xffffffff,0.5);
 			triangles.visible = true;
 			glitches.visible = true;
 		}
@@ -86,7 +89,7 @@ class PlayState extends FlxState
 			firetext.exists = true;
 			firetext.resetText(FireText.FISH);
 		}
-		else if (FlxG.keys.G)
+		else if(FlxG.keys.G)
 		{
 			firetext.exists = true;
 			firetext.resetText(FireText.GAMECITY);
@@ -111,13 +114,18 @@ class PlayState extends FlxState
 			firetext.exists = false;
 		}
 		
+		//farts
+		//debug.text = "BEAT GAP: "+tempo.timing+" ("+int(60/tempo.timing)+"bpm)";
+		
+		FlxG.flashFramerate = 60;
+		FlxG.framerate = 60;
+		
 		glitches.update();
 	}
 	
 	override public function draw():Void
 	{
 		super.draw();
-		
 		if (!firetext.exists)
 		{
 			Mirror.flip(FlxG.camera.buffer);
@@ -138,16 +146,16 @@ class PlayState extends FlxState
 	
 	public function onBeat():Void
 	{
-		if (FlxG.keys.SHIFT)
+		if(FlxG.keys.SHIFT)
 		{
 			return;
 		}
 		
-		// Basic visibility toggle
+		//basic visibility toggle
 		a.visible = !a.visible;
 		b.visible = !b.visible;
 		
-		FlxG.cameras.bgColor = Colors.random();
+		FlxG.bgColor = Colors.random();
 
 		triangles.onBeat();
 		glitches.onBeat();
