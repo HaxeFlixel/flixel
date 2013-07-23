@@ -4,7 +4,7 @@ import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.display.Stage;
 import flash.text.Font;
-//import flixel.system.FlxAssets.DebuggerFont;
+import flixel.system.FlxAssets.DebuggerFont;
 import flixel.system.FlxAssets.DefaultFont;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.system.FlxQuadTree;
@@ -225,29 +225,25 @@ class FlxG
 	{	
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
-		bitmap = new BitmapFrontEnd();
 		
 		FlxG.game = Game;
 		FlxG.width = Std.int(Math.abs(Width));
 		FlxG.height = Std.int(Math.abs(Height));
-		
 		FlxCamera.defaultZoom = Zoom;
-		sound = new SoundFrontEnd();
 		
 		if (flashGfxSprite == null)
 		{
 			flashGfxSprite = new Sprite();
 			flashGfx = flashGfxSprite.graphics;
 		}
-
+		
+		bitmap = new BitmapFrontEnd();
 		cameras = new CameraFrontEnd();
 		plugins = new PluginFrontEnd();
-		
-		// Most of the front ends
+		debugger = new DebuggerFrontEnd();
 		console = new ConsoleFrontEnd();
 		log = new LogFrontEnd();
 		watch = new WatchFrontEnd();
-		debugger = new DebuggerFrontEnd();
 		cameraFX = new CameraFXFrontEnd();
 		sound = new SoundFrontEnd();
 		
@@ -256,9 +252,9 @@ class FlxG
 		#end
 		
 		// Register fonts
-		//#if !FLX_NO_DEBUG
-		//Font.registerFont(DebuggerFont);
-		//#end
+		#if !FLX_NO_DEBUG
+		Font.registerFont(DebuggerFont);
+		#end
 		Font.registerFont(DefaultFont);
 	}
 	
@@ -487,7 +483,7 @@ class FlxG
 		FlxG.timeScale = 1.0;
 		FlxG.elapsed = 0;
 		FlxRandom.globalSeed = Math.random();
-		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
+		FlxG.worldBounds.set( -10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
 		
 		#if !FLX_NO_DEBUG
