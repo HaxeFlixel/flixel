@@ -15,7 +15,7 @@ class VictoryState extends FlxState
 	{
 		_timer = 0;
 		_fading = false;
-		FlxG.cameraFX.flash(0xffd8eba2);
+		FlxG.cameras.flash(0xffd8eba2);
 		
 		// Gibs emitted upon death
 		var gibs:FlxEmitter = new FlxEmitter(0, -50);
@@ -50,7 +50,7 @@ class VictoryState extends FlxState
 			{
 				_fading = true;
 				FlxG.sound.play("MenuHit2");
-				FlxG.cameraFX.fade(0xff131c1b, 2, false, onPlay);
+				FlxG.cameras.fade(0xff131c1b, 2, false, onPlay);
 			}
 		}
 	}

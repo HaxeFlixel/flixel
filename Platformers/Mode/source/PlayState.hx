@@ -183,7 +183,7 @@ class PlayState extends FlxState
 		
 		FlxG.sound.playMusic("Mode");
 		
-		FlxG.cameraFX.flash(0xff131c1b);
+		FlxG.cameras.flash(0xff131c1b);
 		_fading = false;
 		
 		FlxG.sound.list.maxSize = 20;
@@ -303,7 +303,7 @@ class PlayState extends FlxState
 			if (_spawners.countLiving() <= 0)
 			{
 				_fading = true;
-				FlxG.cameraFX.fade(0xffd8eba2, 3, false, onVictory);
+				FlxG.cameras.fade(0xffd8eba2, 3, false, onVictory);
 			}
 		}
 		

@@ -36,7 +36,7 @@ class EndState extends FlxState
 	override public function create():Void 
 	{
 		// Fade in to the scene from black
-		FlxG.cameraFX.flash(FlxColor.BLACK, 1);
+		FlxG.cameras.flash(FlxColor.BLACK, 1);
 		
 		// Show our mouse!
 		FlxG.mouse.show();
@@ -67,7 +67,7 @@ class EndState extends FlxState
 	
 	private function onStart():Void
 	{
-		FlxG.cameraFX.fade(FlxColor.BLACK, 1, false, onFade);
+		FlxG.cameras.fade(FlxColor.BLACK, 1, false, onFade);
 	}
 	
 	private function onFade():Void

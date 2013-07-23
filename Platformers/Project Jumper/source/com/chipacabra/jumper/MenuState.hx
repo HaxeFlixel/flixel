@@ -113,7 +113,7 @@ class MenuState extends FlxState
 			switch (_option) 
 			{
 				case 0:
-					FlxG.cameraFX.fade(0xff969867, 1, false, startGame);
+					FlxG.cameras.fade(0xff969867, 1, false, startGame);
 					FlxG.sound.play(Assets.getSound("assets/sounds/coin" + Reg.SoundExtension), 1, false);
 				case 1:
 					onURL();

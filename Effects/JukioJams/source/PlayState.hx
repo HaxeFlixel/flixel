@@ -76,7 +76,7 @@ class PlayState extends FlxState
 		{
 			a.visible = _oldA;
 			b.visible = _oldB;
-			FlxG.cameraFX.flash(FlxColor.WHITE, 0.5);
+			FlxG.cameras.flash(FlxColor.WHITE, 0.5);
 			triangles.visible = true;
 			glitches.visible = true;
 		}

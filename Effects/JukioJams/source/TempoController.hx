@@ -65,7 +65,7 @@ class TempoController extends FlxObject
 			FlxG.keys.justPressed("LEFT") ||
 			FlxG.keys.justPressed("RIGHT") )
 		{
-			FlxG.cameraFX.flash(0xffffff, 0.2, null, true);
+			FlxG.cameras.flash(0xffffff, 0.2, null, true);
 		}
 		
 		if (FlxG.keys.justPressed("ONE"))

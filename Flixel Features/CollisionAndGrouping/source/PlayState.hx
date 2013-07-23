@@ -136,7 +136,7 @@ class PlayState extends FlxState
 		_groupCollision = new FlxButton(320, buttonYPos, "Collide Groups", onCollideGroups);
 		add(_groupCollision);
 		
-		FlxG.cameraFX.flash();
+		FlxG.cameras.flash();
 		FlxG.mouse.useSystemCursor = true;
 	}
 	

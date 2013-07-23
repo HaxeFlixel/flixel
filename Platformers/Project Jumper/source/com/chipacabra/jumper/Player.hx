@@ -277,8 +277,8 @@ class Player extends FlxSprite
 		
 		super.kill();
 		
-		FlxG.cameraFX.shake(0.005, 0.35);
-		FlxG.cameraFX.flash(0xffDB3624, 0.35);
+		FlxG.cameras.shake(0.005, 0.35);
+		FlxG.cameras.flash(0xffDB3624, 0.35);
 		
 		if (_gibs != null)
 		{

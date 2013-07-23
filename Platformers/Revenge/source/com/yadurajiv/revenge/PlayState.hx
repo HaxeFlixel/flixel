@@ -54,7 +54,7 @@ class PlayState extends FlxState
 		FlxG.mouse.hide();
 		
 		// Fade in from black :P
-		FlxG.cameraFX.flash(FlxColor.BLACK);
+		FlxG.cameras.flash(FlxColor.BLACK);
 		
 		// Loading a map!
 		// The FlxTilemap class takes in a string of numbers and converts them into a map, you can either pass
@@ -178,7 +178,7 @@ class PlayState extends FlxState
 	
 	private function onOverlap(Obj1:FlxObject, Obj2:FlxObject):Void 
 	{
-		FlxG.cameraFX.fade(FlxColor.BLACK, 1, false, onFade);
+		FlxG.cameras.fade(FlxColor.BLACK, 1, false, onFade);
 	}
 	
 	private function onFade():Void

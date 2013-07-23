@@ -105,8 +105,8 @@ class MenuState extends FlxState
 			// Then, play a cool sound, change their color, and blow up pieces everywhere
 			FlxG.sound.play("MenuHit");
 			
-			FlxG.cameraFX.flash(0xffd8eba2, 0.5);
-			FlxG.cameraFX.shake(0.035, 0.5);
+			FlxG.cameras.flash(0xffd8eba2, 0.5);
+			FlxG.cameras.shake(0.035, 0.5);
 			_title1.color = _title2.color = 0xd8eba2;
 			_gibs.start(true, 5);
 			_title1.angle = Math.random() * 30 - 15;
@@ -156,8 +156,8 @@ class MenuState extends FlxState
 			_fading = true;
 			FlxG.sound.play("MenuHit2");
 			
-			FlxG.cameraFX.flash(0xffd8eba2, 0.5);
-			FlxG.cameraFX.fade(0xff131c1b, 1, false, onFade);
+			FlxG.cameras.flash(0xffd8eba2, 0.5);
+			FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
 		}
 	}
 	
@@ -204,7 +204,7 @@ class MenuState extends FlxState
 	 */
 	private function onDemoComplete():Void
 	{
-		FlxG.cameraFX.fade(0xff131c1b, 1, false, onDemoFaded);
+		FlxG.cameras.fade(0xff131c1b, 1, false, onDemoFaded);
 	}
 	
 	/**

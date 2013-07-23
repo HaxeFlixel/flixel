@@ -39,7 +39,7 @@ class MenuState extends FlxState
 	override public function create():Void 
 	{
 		// Fade in from black
-		FlxG.cameraFX.flash(FlxColor.BLACK, 3);
+		FlxG.cameras.flash(FlxColor.BLACK, 3);
 		
 		// Show the mouse
 		FlxG.mouse.show();
@@ -77,7 +77,7 @@ class MenuState extends FlxState
 	
 	private function onStart():Void
 	{
-		FlxG.cameraFX.fade(FlxColor.BLACK, 1, false, onFade);
+		FlxG.cameras.fade(FlxColor.BLACK, 1, false, onFade);
 	}
 	
 	private function onFade():Void
