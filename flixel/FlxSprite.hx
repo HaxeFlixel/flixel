@@ -1911,7 +1911,7 @@ class FlxSprite extends FlxObject
 	 * @param	Width	The new sprite width.
 	 * @param	Height	The new sprite height.
 	 */
-	public function setDimensions(Width:Float, Height:Float)
+	public function setSize(Width:Float, Height:Float)
 	{
 		width = Width;
 		height = Height;
