@@ -12,6 +12,7 @@ import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.system.layer.Region;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.CachedGraphics;
 
 /**
@@ -507,7 +508,7 @@ class FlxObject extends FlxBasic
 		
 		//fill static graphics object with square shape
 		#if flash
-		var gfx:Graphics = FlxG.flashGfx;
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.moveTo(boundingBoxX, boundingBoxY);
 		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
@@ -516,7 +517,7 @@ class FlxObject extends FlxBasic
 		gfx.lineTo(boundingBoxX, boundingBoxY + boundingBoxHeight);
 		gfx.lineTo(boundingBoxX, boundingBoxY);
 		//draw graphics shape to camera buffer
-		Camera.buffer.draw(FlxG.flashGfxSprite);
+		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		#else
 		var gfx:Graphics = Camera._debugLayer.graphics;
 		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);

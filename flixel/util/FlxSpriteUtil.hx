@@ -3,6 +3,7 @@ package flixel.util;
 import flash.display.BitmapData;
 import flash.display.BitmapDataChannel;
 import flash.display.Graphics;
+import flash.display.Sprite;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
@@ -18,6 +19,13 @@ import flixel.system.FlxAssets;
 */
 class FlxSpriteUtil
 {
+	/**
+	 * Useful helper objects for doing Flash-specific rendering.
+	 * Primarily used for "debug visuals" like drawing bounding boxes directly to the screen buffer.
+	 */
+	static public var flashGfxSprite:Sprite;
+	static public var flashGfx:Graphics;
+	
 	/**
 	 * Takes two source images (typically from Embedded bitmaps) and puts the resulting image into the output FlxSprite.<br>
 	 * Note: It assumes the source and mask are the same size. Different sizes may result in undesired results.<br>
@@ -197,7 +205,7 @@ class FlxSpriteUtil
 	static public function drawLine(Sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
 	{
 		// Draw line
-		var gfx:Graphics = FlxG.flashGfx;
+		var gfx:Graphics = flashGfx;
 		gfx.clear();
 		gfx.moveTo(StartX, StartY);
 		var alphaComponent:Float = ((Color >> 24) & 255) / 255;
@@ -225,11 +233,10 @@ class FlxSpriteUtil
 	 */
 	static public function drawRect(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
 	{
-		var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
-		gfx.drawRect(X, Y, Width, Height);
-		gfx.endFill();
+		flashGfx.clear();
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.drawRect(X, Y, Width, Height);
+		flashGfx.endFill();
 		
 		updateSpriteGraphic(Sprite);
 	}
@@ -248,11 +255,10 @@ class FlxSpriteUtil
 	 */
 	static public function drawRoundRect(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int):Void
 	{
-		var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
-		gfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
-		gfx.endFill();
+		flashGfx.clear();
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
+		flashGfx.endFill();
 		
 		updateSpriteGraphic(Sprite);
 	}
@@ -275,11 +281,10 @@ class FlxSpriteUtil
 	 */
 	static public function drawRoundRectComplex(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int):Void
 	{
-		var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
-		gfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
-		gfx.endFill();
+		flashGfx.clear();
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
+		flashGfx.endFill();
 		
 		updateSpriteGraphic(Sprite);
 	}
@@ -297,11 +302,10 @@ class FlxSpriteUtil
 	*/
 	static public function drawCircle(Sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int):Void
 	{
-		var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
-		gfx.drawCircle(X, Y, Radius);
-		gfx.endFill();
+		flashGfx.clear();
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.drawCircle(X, Y, Radius);
+		flashGfx.endFill();
 		
 		updateSpriteGraphic(Sprite);
 	}
@@ -318,11 +322,10 @@ class FlxSpriteUtil
 	 */
 	static public function drawEllipse(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
 	{
-		var gfx:Graphics = FlxG.flashGfx;
-		gfx.clear();
-		gfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
-		gfx.drawEllipse(X, Y, Width, Height);
-		gfx.endFill();
+		flashGfx.clear();
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.drawEllipse(X, Y, Width, Height);
+		flashGfx.endFill();
 		
 		updateSpriteGraphic(Sprite);
 	}
@@ -335,11 +338,9 @@ class FlxSpriteUtil
 	 */
 	static public function updateSpriteGraphic(Sprite:FlxSprite):Void
 	{
-		Sprite.pixels.draw(FlxG.flashGfxSprite);
+		Sprite.pixels.draw(flashGfxSprite);
 		Sprite.dirty = true;
 		Sprite.resetFrameBitmapDatas();
-		// TODO: check this place
-	//	Sprite.updateAtlasInfo(true);
 	}
 	
 	/**
@@ -358,7 +359,5 @@ class FlxSpriteUtil
 		}
 		
 		Sprite.resetFrameBitmapDatas();
-		// TODO: check this place
-	//	Sprite.updateAtlasInfo(true);
 	}
 }

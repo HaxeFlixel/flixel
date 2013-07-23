@@ -18,6 +18,7 @@ import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.system.layer.Region;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.TextureRegion;
 
 /**
@@ -425,7 +426,7 @@ class FlxTilemap extends FlxObject
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
 
-		var gfx:Graphics = FlxG.flashGfx;
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.moveTo(0, 0);
 		gfx.lineStyle(1, Color, 0.5);
@@ -434,7 +435,7 @@ class FlxTilemap extends FlxObject
 		gfx.lineTo(0, _tileHeight - 1);
 		gfx.lineTo(0, 0);
 		
-		debugTile.draw(FlxG.flashGfxSprite);
+		debugTile.draw(FlxSpriteUtil.flashGfxSprite);
 		
 		return debugTile;
 	}

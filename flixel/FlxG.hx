@@ -26,6 +26,7 @@ import flixel.tweens.util.Ease.EaseFunction;
 import flixel.util.FlxCollision;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
@@ -124,13 +125,6 @@ class FlxG
 	 * array but you can do what you like with it.
 	 */
 	static public var camera:FlxCamera;
-	
-	/**
-	 * Useful helper objects for doing Flash-specific rendering.
-	 * Primarily used for "debug visuals" like drawing bounding boxes directly to the screen buffer.
-	 */
-	static public var flashGfxSprite:Sprite;
-	static public var flashGfx:Graphics;
 
 	#if !FLX_NO_MOUSE
 	/**
@@ -231,12 +225,6 @@ class FlxG
 		FlxG.height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
-		if (flashGfxSprite == null)
-		{
-			flashGfxSprite = new Sprite();
-			flashGfx = flashGfxSprite.graphics;
-		}
-		
 		bitmap = new BitmapFrontEnd();
 		cameras = new CameraFrontEnd();
 		plugins = new PluginFrontEnd();
@@ -254,6 +242,9 @@ class FlxG
 		// Register fonts
 		Font.registerFont(DebuggerFont);
 		Font.registerFont(DefaultFont);
+		
+		FlxSpriteUtil.flashGfxSprite = new Sprite();
+		FlxSpriteUtil.flashGfx = FlxSpriteUtil.flashGfxSprite.graphics;
 	}
 	
 	/**
