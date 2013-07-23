@@ -473,7 +473,7 @@ class VCR extends Sprite
 	public function onPause():Void
 	{
 		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = true;
+		FlxG.mouse.show();
 		#end
 		
 		paused = true;
@@ -488,7 +488,7 @@ class VCR extends Sprite
 	public function onPlay():Void
 	{
 		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = false;
+		FlxG.mouse.hide();
 		#end
 	
 		paused = false;
