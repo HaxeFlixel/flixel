@@ -10,7 +10,6 @@ import flixel.text.pxText.PxBitmapFont;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
-import flixel.system.frontEnds.CameraFXFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
@@ -197,11 +196,6 @@ class FlxG
 	 */
 	static public var cameras:CameraFrontEnd;
 	/**
-	 * A reference to the <code>CameraFXFrontEnd</code> object. Contains the <code>fade()</code>, 
-	 * <code>flash()</code> and <code>shake()</code> effects.
-	 */
-	static public var cameraFX:CameraFXFrontEnd;
-	/**
 	 * A reference to the <code>PluginFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
 	 */
@@ -232,7 +226,6 @@ class FlxG
 		console = new ConsoleFrontEnd();
 		log = new LogFrontEnd();
 		watch = new WatchFrontEnd();
-		cameraFX = new CameraFXFrontEnd();
 		sound = new SoundFrontEnd();
 		
 		#if FLX_RECORD

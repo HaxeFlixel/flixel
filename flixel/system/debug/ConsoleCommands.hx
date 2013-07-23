@@ -263,7 +263,7 @@ class ConsoleCommands
 			return;
 		}
 		
-		FlxG.cameraFX.shake(Intensity, Duration);
+		FlxG.cameras.shake(Intensity, Duration);
 		cLog("shake: Shake started, Intensity: " + Intensity + " Duration: " + Duration);
 	}
 	
