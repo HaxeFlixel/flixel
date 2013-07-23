@@ -229,7 +229,7 @@ class FlxDebugger extends Sprite
 		hasMouse = true;
 		
 		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = true;
+		Mouse.show();
 		#end
 	}
 	
@@ -242,7 +242,8 @@ class FlxDebugger extends Sprite
 		hasMouse = false;
 		
 		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = false;
+		if (!FlxG.mouse.useSystemCursor && !FlxG.game.debugger.vcr.paused)
+			Mouse.hide();
 		#end
 	}
 	
