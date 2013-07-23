@@ -20,7 +20,7 @@ class Bunny extends FlxSprite
 		#end
 	}
 	
-	public function init()
+	public function init():Bunny
 	{
 		velocity.x = 50 * (Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1);
 		velocity.y = 50 * ((Math.random() * 5) - 2.5) * (Math.random() < 0.5 ? 1 : -1);
@@ -29,6 +29,8 @@ class Bunny extends FlxSprite
 		angularVelocity = 30 * (Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1);
 		complex = PlayState.complex;
 		elasticity = 1;
+		
+		return this;
 	}
 	
 	override public function update():Void 

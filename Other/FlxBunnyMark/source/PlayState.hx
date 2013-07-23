@@ -68,13 +68,13 @@ class PlayState extends FlxState
 		amountSlider.nameLabel.text = "Change amount by:";
 		add(amountSlider);
 		
-		var addButton:FlxButton = new FlxButton(15, 65, "Add");
-		addButton.setOnDownCallback(changeBunnyNumber, [true]);
-		add(addButton);
-		
-		var removeButton:FlxButton = new FlxButton(100, 65, "Remove");
+		var removeButton:FlxButton = new FlxButton(15, 65, "Remove");
 		removeButton.setOnDownCallback(changeBunnyNumber, [false]);
 		add(removeButton);
+		
+		var addButton:FlxButton = new FlxButton(100, 65, "Add");
+		addButton.setOnDownCallback(changeBunnyNumber, [true]);
+		add(addButton);
 		
 		var rightButtonX:Float = FlxG.width - 100; 
 		
@@ -136,9 +136,11 @@ class PlayState extends FlxState
 		{
 			for (i in 0..._changeAmount)
 			{
-				var bunny:Bunny = _bunnies.recycle(Bunny);
-				bunny.init();
-				_bunnies.add(bunny);
+				// It's much slower to recycle objects, but keeps runtime costs of garbage collection low
+				//_bunnies.recycle(Bunny).init();
+				
+				// It's much faster to directly add new members to the array, but if removed they will incurr a GC penalty
+				_bunnies.members[_bunnies.length++] = new Bunny().init();
 			}
 		}
 		else 
@@ -150,7 +152,7 @@ class PlayState extends FlxState
 				if (bunny != null) 
 				{
 					bunny.destroy();
-					_bunnies.remove(bunny);
+					_bunnies.remove(bunny, true);
 				}
 			}
 		}

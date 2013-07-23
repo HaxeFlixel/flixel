@@ -43,6 +43,11 @@ class Main extends Sprite
 		
 		initialize();
 		
+		// Profile code - disable <haxedef name="profile_cpp" if="target_cpp" /> before ship
+		#if (profile_cpp && !neko)
+		cpp.vm.Profiler.start("perf.txt");
+		#end
+		
 		var game:FlxGame = new GameClass();
 		addChild(game);
 	}
@@ -51,5 +56,21 @@ class Main extends Sprite
 	{
 		Lib.current.stage.align = StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		#if (cpp || neko)
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUP);
+		#end
 	}
+	
+	#if (cpp || neko)
+	private function onKeyUP(e:KeyboardEvent):Void 
+	{
+		if (e.keyCode == Keyboard.ESCAPE) 
+		{
+			#if (profile_cpp && !neko)
+			cpp.vm.Profiler.stop();
+			#end
+			Lib.exit();
+		}
+	}
+	#end
 }
