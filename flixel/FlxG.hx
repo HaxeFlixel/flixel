@@ -256,7 +256,7 @@ class FlxG
 		cameraFX = new CameraFXFrontEnd();
 		sound = new SoundFrontEnd();
 		
-		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
+		#if FLX_RECORD
 		vcr = new VCRFrontEnd();
 		#end
 		
