@@ -197,14 +197,15 @@ class FlxSprite extends FlxObject
 	private var _red:Float = 1.0;
 	private var _green:Float = 1.0;
 	private var _blue:Float = 1.0;
+	#end
 	
 	/**
 	 * These vars are being used for rendering in some of FlxSprite subclasses 
 	 * (FlxTileblock, FlxBar, FlxBitmapFont and FlxBitmapTextField)
+	 * and for checks if the sprite is in camera's view
 	 */
 	private var _halfWidth:Float;
 	private var _halfHeight:Float;
-	#end
 	
 	private var _aabb:FlxRect;
 	
@@ -697,10 +698,8 @@ class FlxSprite extends FlxObject
 			_flxFrame = _framesData.frames[_curIndex];
 		}
 		
-		#if !flash
 		_halfWidth = frameWidth * 0.5;
 		_halfHeight = frameHeight * 0.5;
-		#end
 	}
 	
 	override public function update():Void 
@@ -1672,39 +1671,57 @@ class FlxSprite extends FlxObject
 		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
 		{
 			maxX = minX + frameWidth;
-			maxX = minY + frameHeight;
+			maxY = minY + frameHeight;
 		}
 		else
 		{
-			var sox:Float = scale.x * origin.x;
-			var soy:Float = scale.y * origin.y;
-			var sfw:Float = scale.x * frameWidth;
-			var sfh:Float = scale.y * frameHeight;
+			var radiusX:Float = _halfWidth;
+			var radiusY:Float = _halfHeight;
 			
-			var x1:Float = Math.abs(sox);
-			var x2:Float = Math.abs(sfw - sox);
-			var y1:Float = Math.abs(soy);
-			var y2:Float = Math.abs(sfh - soy);
+			if (origin.x == _halfWidth)
+			{
+				radiusX = Math.abs(_halfWidth * scale.x);
+			}
+			else
+			{
+				var sox:Float = scale.x * origin.x;
+				var sfw:Float = scale.x * frameWidth;
+				var x1:Float = Math.abs(sox);
+				var x2:Float = Math.abs(sfw - sox);
+				radiusX = (x2 > x1) ? x2 : x1;
+			}
 			
-			var radiusX:Float = (x2 > x1) ? x2 : x1;
-			var radiusY:Float = (y2 > y1) ? y2 : y1;
+			if (origin.y == _halfHeight)
+			{
+				radiusY = Math.abs(_halfHeight * scale.y);
+			}
+			else
+			{
+				var soy:Float = scale.y * origin.y;
+				var sfh:Float = scale.y * frameHeight;
+				var y1:Float = Math.abs(soy);
+				var y2:Float = Math.abs(sfh - soy);
+				radiusY = (y2 > y1) ? y2 : y1;
+			}
+			
 			var radius:Float = (radiusX > radiusY) ? radiusX : radiusY;
 			radius *= 1.415; // Math.sqrt(2);
 			
 			minX += origin.x;
-			minY += origin.y;
 			maxX = minX + radius;
 			minX -= radius;
+			
+			minY += origin.y;
 			maxY = minY + radius;
 			minY -= radius;
 		}
 		
 		if (minX > Camera.width)
 			return false;
-		
+			
 		if (maxX < 0)
 			return false;
-		
+			
 		if (minY > Camera.height)
 			return false;
 		
