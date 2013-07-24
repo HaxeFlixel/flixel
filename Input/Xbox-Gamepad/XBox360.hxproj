@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="project.xml" />
+    <movie path="Project.xml" />
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
@@ -17,16 +17,17 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="C:\HaxeToolkit\haxe/lib\flixel/2,0,0-alpha/" />
+    <class path="C:\HaxeToolkit\haxe\lib/openfl/1,0,5/" />
+    <class path="C:\HaxeToolkit\haxe\lib/flixel/git/" />
     <class path="bin/flash/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme_ver=3.5.6&#xA;nme_install_tool=1&#xA;nme3=1&#xA;web" />
+    <option directives="tools=1&#xA;openfl_ver=1.0.5&#xA;openfl&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="-swf-version 10.1" />
+    <option additional="--no-output&#xA;-swf-version 11&#xA;#--remap nme:flash" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -60,8 +61,7 @@
     <hidden path=".hgignore" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxelib run openfl test "project.xml" neko
-haxelib run openfl test "project.xml" windows</preBuildCommand>
+  <preBuildCommand />
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

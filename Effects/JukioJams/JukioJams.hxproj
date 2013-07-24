@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="JukioJams.xml" />
+    <movie path="Project.xml" />
     <movie fps="60" />
     <movie width="1024" />
     <movie height="768" />
