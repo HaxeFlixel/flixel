@@ -258,13 +258,13 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 					#if !FLX_NO_SOUND_TRAY
 					FlxG.game.showSoundTray();
 					#end
-						
+					
 					return;
 				}
 			}
 		#end
 		
-		#if FLX_RECORD
+		#if (FLX_RECORD)
 		if (FlxG.game.replaying)
 		{
 			return;
@@ -307,6 +307,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			var replayCancelKey:String;
 			var i:Int = 0;
 			var l:Int = FlxG.game.replayCancelKeys.length;
+			
 			while(i < l)
 			{
 				replayCancelKey = FlxG.game.replayCancelKeys[i++];
@@ -328,7 +329,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		}
 		#end
 
-		if(enabled)
+		if (enabled)
 		{
 			var o:FlxMapObject = _keyMap[FlashEvent.keyCode];
 			if (o == null) return;
