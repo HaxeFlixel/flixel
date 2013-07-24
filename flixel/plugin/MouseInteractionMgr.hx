@@ -18,6 +18,10 @@ import flixel.util.FlxPoint;
 * 		var spr:FlxSprite = new FlxSprite();
 * 		MouseInteractionMgr.addSprite(spr, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
 * 
+* 
+* Or simply add a new sprite the manager will initialize itself: 
+*      MouseInteractionMgr.addSprite(spr, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+* 
 * Also implement the callbacks with FlxSprite return:
 * 
 * 		function onMouseDown(sprite:FlxSprite) {}
@@ -57,7 +61,8 @@ class MouseInteractionMgr extends FlxBasic
 	*/
 	public static inline function init()
 	{
-		FlxG.plugins.add(new MouseInteractionMgr());
+		if (FlxG.plugins.get(MouseInteractionMgr) == null)
+			FlxG.plugins.add(new MouseInteractionMgr());
 	}
 	
 	/**
@@ -75,7 +80,8 @@ class MouseInteractionMgr extends FlxBasic
 	*/
 	static public function addSprite(Sprite:FlxSprite, ?OnMouseDown:FlxSprite->Void, ?OnMouseUp:FlxSprite->Void, ?OnMouseOver:FlxSprite->Void, ?OnMouseOut:FlxSprite->Void, MouseChildren = false, MouseEnabled = true)
 	{
-		FlxG.plugins.add(new MouseInteractionMgr());
+		if (FlxG.plugins.get(MouseInteractionMgr) == null)
+			FlxG.plugins.add(new MouseInteractionMgr());
 		
 		var newReg:SpriteReg = {
 			sprite: Sprite,
