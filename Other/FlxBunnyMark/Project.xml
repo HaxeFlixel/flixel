@@ -41,7 +41,7 @@
 	
 	
 	<!--Disable the Flixel core debugger-->
-	<haxedef name="FLX_NO_DEBUG" />
+	<!--<haxedef name="FLX_NO_DEBUG" />
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
 	<!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->
@@ -56,12 +56,12 @@
 	<!--<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />-->
 	
 	<!-- debug and profiling defines for CPP targets - COMMENT OUT FOR RELEASE -->
-	<haxedef name="profile_cpp" if="windows" />
-	<haxedef name="HXCPP_DEBUG" if="windows" />
-	<haxedef name="HXCPP_DEBUG_LINK" if="windows" />
-	<haxedef name="HXCPP_STACK_TRACE" if="windows" />
+	<!--<haxedef name="profile_cpp" if="windows" />-->
+	<!--<haxedef name="HXCPP_DEBUG" if="windows" />-->
+	<!--<haxedef name="HXCPP_DEBUG_LINK" if="windows" />-->
+	<!--<haxedef name="HXCPP_STACK_TRACE" if="windows" />-->
 	
 	<!-- provides accurate memory data on flash target to use with Adobe Scout -->
-	<haxedef name="advanced-telemetry" if="flash" />
+	<!--<haxedef name="advanced-telemetry" if="flash" />-->
 	
 </project>

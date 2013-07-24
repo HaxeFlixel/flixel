@@ -22,10 +22,13 @@ import openfl.Assets;
  * @author Zaphod
  */
 class PlayState extends FlxState
-{	
-	static public var complex:Bool = false;
+{
+	inline static public var INITIAL_AMOUNT:Int = 1000;
 	
-	private var _changeAmount:Int = 250;
+	static public var complex:Bool = false;
+	static public var offScreen:Bool = false;
+	
+	private var _changeAmount:Int = Std.int(INITIAL_AMOUNT / 2);
 	private var _times:Array<Float>;
 	private var _collisions:Bool = false;
 	
@@ -34,6 +37,8 @@ class PlayState extends FlxState
 	private var _complexityButton:FlxButton;
 	private var _pirateButton:FlxButton;
 	private var _collisionButton:FlxButton;
+	private var _timestepButton:FlxButton;
+	private var _offScreenButton:FlxButton;
 	private var _bunnyCounter:FlxText;
 	private var _fpsCounter:FlxText;
 
@@ -64,7 +69,9 @@ class PlayState extends FlxState
 		uiBackground.alpha = 0.7;
 		add(uiBackground);
 		
-		var amountSlider:FlxSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, 500);
+		// Left UI
+		
+		var amountSlider:FlxSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, INITIAL_AMOUNT);
 		amountSlider.nameLabel.text = "Change amount by:";
 		add(amountSlider);
 		
@@ -76,9 +83,11 @@ class PlayState extends FlxState
 		addButton.setOnDownCallback(changeBunnyNumber, [true]);
 		add(addButton);
 		
+		// Right UI
+		// Column2 1
 		var rightButtonX:Float = FlxG.width - 100; 
 		
-		_complexityButton = new FlxButton(rightButtonX, 10, "Simple", onComplexityChange);
+		_complexityButton = new FlxButton(rightButtonX, 10, "Simple", onComplexityToggle);
 		add(_complexityButton);
 		
 		_pirateButton = new FlxButton(rightButtonX, 35, "Pirate: On", onPirateToggle);
@@ -87,18 +96,25 @@ class PlayState extends FlxState
 		_collisionButton = new FlxButton(rightButtonX, 60, "Collisons: Off", onCollisionToggle);
 		add(_collisionButton);
 		
+		// Column2
+		rightButtonX -= 100;
+		
+		_timestepButton = new FlxButton(rightButtonX, 10, "Step: Fixed", onTimestepToggle);
+		add(_timestepButton);
+		
+		_offScreenButton = new FlxButton(rightButtonX, 35, "On-Screen", onOffScreenToggle);
+		add(_offScreenButton);
+		
 		// The texts
 		_bunnyCounter = new FlxText(0, 10, FlxG.width, "Bunnies: " + _changeAmount);
-		_bunnyCounter.setFormat(null, 22, 0x000000, "center");
+		_bunnyCounter.setFormat(null, 22, FlxColor.BLACK, "center");
 		add(_bunnyCounter);
 		
 		_fpsCounter = new FlxText(0, _bunnyCounter.y + _bunnyCounter.height + 20, FlxG.width, "FPS: " + 30);
-		_fpsCounter.setFormat(null, 22, 0x000000, "center");
+		_fpsCounter.setFormat(null, 22, FlxColor.BLACK, "center");
 		add(_fpsCounter);
 		
 		_times = [];
-		
-		Mouse.hide();
 		
 		#if !mobile
 		FlxG.mouse.show();
@@ -171,18 +187,10 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function onComplexityChange():Void
+	private function onComplexityToggle():Void
 	{
 		complex = !complex;
-		
-		if (_complexityButton.label.text == "Complex")
-		{
-			_complexityButton.label.text = "Simple";
-		}
-		else 
-		{
-			_complexityButton.label.text = "Complex";
-		}
+		toggleHelper(_complexityButton, "Complex", "Simple");
 		
 		// Update the bunnies
 		for (bunny in _bunnies.members)
@@ -197,28 +205,48 @@ class PlayState extends FlxState
 	private function onPirateToggle():Void
 	{
 		_pirate.visible = !_pirate.visible;
-		
-		if (_pirateButton.label.text == "Pirate: On")
-		{
-			_pirateButton.label.text = "Pirate: Off";
-		}
-		else 
-		{
-			_pirateButton.label.text = "Pirate: On";
-		}
+		toggleHelper(_pirateButton, "Pirate: On", "Pirate: Off");
 	}
 	
 	private function onCollisionToggle():Void
 	{
 		_collisions = !_collisions;
+		toggleHelper(_collisionButton, "Collisions: Off", "Collisions: On");
+	}
+	
+	private function onTimestepToggle():Void
+	{
+		FlxG.fixedTimestep = !FlxG.fixedTimestep;
+		toggleHelper(_timestepButton, "Step: Fixed", "Step: Variable");
+	}
+	
+	private function onOffScreenToggle():Void
+	{
+		offScreen = !offScreen;
+		toggleHelper(_offScreenButton, "On-Screen", "Off-Screen");
 		
-		if (_collisionButton.label.text == "Collisions: Off")
+		// Update the bunnies
+		for (bunny in _bunnies.members)
 		{
-			_collisionButton.label.text = "Collisions: On";
+			if (bunny != null)
+			{
+				bunny.init(offScreen);
+			}
+		}
+	}
+	
+	/**
+	 * Just a little helper function for some toggle button behaviour.
+	 */
+	private function toggleHelper(Button:FlxButton, Text1:String, Text2:String):Void
+	{
+		if (Button.label.text == Text1)
+		{
+			Button.label.text = Text2;
 		}
 		else 
 		{
-			_collisionButton.label.text = "Collisions: Off";
+			Button.label.text = Text1;
 		}
 	}
 }

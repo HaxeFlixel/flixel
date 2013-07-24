@@ -20,10 +20,17 @@ class Bunny extends FlxSprite
 		#end
 	}
 	
-	public function init():Bunny
+	public function init(Offscreen:Bool = false):Bunny
 	{
-		velocity.x = 50 * (Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1);
-		velocity.y = 50 * ((Math.random() * 5) - 2.5) * (Math.random() < 0.5 ? 1 : -1);
+		var speedMultiplier:Int = 50;
+		
+		if (Offscreen)
+		{
+			speedMultiplier = 5000;
+		}
+		
+		velocity.x = speedMultiplier * (Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1);
+		velocity.y = speedMultiplier * ((Math.random() * 5) - 2.5) * (Math.random() < 0.5 ? 1 : -1);
 		acceleration.y = 5;
 		angle = 15 - Math.random() * 30;
 		angularVelocity = 30 * (Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1);
@@ -42,6 +49,14 @@ class Bunny extends FlxSprite
 			alpha = 0.3 + 0.7 * y / FlxG.height;
 		}
 		
+		if (!PlayState.offScreen)
+		{
+			setBounds();
+		}
+	}
+	
+	private function setBounds():Void
+	{
 		if (x > FlxG.width)
 		{
 			velocity.x *= -1;
