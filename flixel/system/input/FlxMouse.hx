@@ -143,7 +143,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		#end
 		
-		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
+		#if FLX_RECORD
 		if(FlxG.game.replaying && (FlxG.game.replayCancelKeys != null))
 		{
 			var replayCancelKey:String;
@@ -182,7 +182,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		#if !FLX_NO_DEBUG
 		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 
-			#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP) || FlxG.game.replaying #end)
+			#if (FLX_RECORD) || FlxG.game.replaying #end)
 		{
 			return;
 		}
@@ -210,7 +210,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		#if !FLX_NO_DEBUG
 		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 
-			#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP) || FlxG.game.replaying #end)
+			#if (FLX_RECORD) || FlxG.game.replaying #end)
 		{
 			return;
 		}

@@ -44,6 +44,12 @@ class FlxGame extends Sprite
 	 * Helper variable to help calculate elapsed time.
 	 */
 	static public var mark(default, null):Int = 0;
+	/**
+	 * Whether to use variable or fixed timesteps. 
+	 * "True", or "fixed timesteps" by default.
+	 * @default true
+	 */
+	static public var fixedTimestep:Bool = true;
 	
 	/**
 	 * Current game state.
@@ -94,7 +100,7 @@ class FlxGame extends Sprite
 	public var debugger(default, null):FlxDebugger;
 	#end
 	
-	#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
+	#if FLX_RECORD
 	/**
 	 * Container for a game replay object.
 	 */
@@ -227,7 +233,7 @@ class FlxGame extends Sprite
 		prefsSave = new FlxSave();
 		prefsSave.bind("flixel");
 		
-		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
+		#if FLX_RECORD
 		// Replay data
 		replay = new FlxReplay();
 		#end
@@ -324,13 +330,15 @@ class FlxGame extends Sprite
 		
 		#if !FLX_NO_SOUND_TRAY
 		if (_updateSoundTray)
+		{
 			updateSoundTray(elapsedMS);
+		}
 		#end
 		
-		if(!_lostFocus)
+		if (!_lostFocus)
 		{
 			#if !FLX_NO_DEBUG
-			if((debugger != null) && debugger.vcr.paused)
+			if ((debugger != null) && debugger.vcr.paused)
 			{
 				if (debugger.vcr.stepRequested)
 				{
@@ -338,10 +346,11 @@ class FlxGame extends Sprite
 					step();
 				}
 			}
-			else
-			{
 			#end
-			#if !FLX_VARIABLE_TIMESTEP
+			
+			if (fixedTimestep)
+			{
+				
 				_accumulator += elapsedMS;
 				if (_accumulator > maxAccumulation)
 				{
@@ -354,12 +363,12 @@ class FlxGame extends Sprite
 					step();
 					_accumulator = _accumulator - stepMS; 
 				}
-			#else
-			step();
-			#end
-			#if !FLX_NO_DEBUG
 			}
-			#end
+			else
+			{
+				step();
+			}
+			
 			
 			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT = 0;
@@ -394,7 +403,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
+		#if FLX_RECORD
 		replayTimer = 0;
 		replayCancelKeys = null;
 		#end
@@ -483,7 +492,7 @@ class FlxGame extends Sprite
 			requestedReset = false;
 		}
 		
-		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
+		#if FLX_RECORD
 		// Handle replay-related requests
 		if (recordingRequested)
 		{
@@ -576,11 +585,14 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if !FLX_VARIABLE_TIMESTEP
-		FlxG.elapsed = FlxG.timeScale * stepSeconds; // fixed timestep
-		#else
-		FlxG.elapsed = FlxG.timeScale * (elapsedMS / 1000); // variable timestep
-		#end
+		if (fixedTimestep)
+		{
+			FlxG.elapsed = FlxG.timeScale * stepSeconds; // fixed timestep
+		}
+		else
+		{
+			FlxG.elapsed = FlxG.timeScale * (elapsedMS / 1000); // variable timestep
+		}
 		
 		updateInput();
 		
@@ -611,7 +623,7 @@ class FlxGame extends Sprite
 	
 	private function updateInput():Void
 	{
-		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
+		#if FLX_RECORD
 		if (replaying)
 		{
 			replay.playNextFrame();
@@ -654,7 +666,7 @@ class FlxGame extends Sprite
 		
 		FlxInputs.updateInputs();
 		
-		#if (FLX_RECORD && !FLX_VARIABLE_TIMESTEP)
+		#if FLX_RECORD
 		}
 		if (recording)
 		{
