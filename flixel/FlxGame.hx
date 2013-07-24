@@ -43,14 +43,7 @@ class FlxGame extends Sprite
 	/**
 	 * Helper variable to help calculate elapsed time.
 	 */
-	static public var mark(default, null):Int = 0;
-	/**
-	 * Whether to use variable or fixed timesteps. 
-	 * "True", or "fixed timesteps" by default.
-	 * @default true
-	 */
-	static public var fixedTimestep:Bool = true;
-	
+	public var mark(default, null):Int = 0;
 	/**
 	 * Current game state.
 	 */
@@ -348,7 +341,7 @@ class FlxGame extends Sprite
 			}
 			#end
 			
-			if (fixedTimestep)
+			if (FlxG.fixedTimestep)
 			{
 				
 				_accumulator += elapsedMS;
@@ -585,7 +578,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		if (fixedTimestep)
+		if (FlxG.fixedTimestep)
 		{
 			FlxG.elapsed = FlxG.timeScale * stepSeconds; // fixed timestep
 		}

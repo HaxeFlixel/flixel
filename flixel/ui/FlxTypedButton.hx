@@ -5,6 +5,7 @@ import flash.events.MouseEvent;
 import flash.events.TouchEvent;
 import flash.Lib;
 import flash.media.Sound;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.system.FlxSound;

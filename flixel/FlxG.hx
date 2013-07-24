@@ -95,6 +95,11 @@ class FlxG
 	 */
 	static public var autoPause:Bool;
 	/**
+	 * WARNING: Changing this can lead to issues with physcis and the recording system. Setting this to 
+	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
+	 */
+	static public var fixedTimestep:Bool = true;
+	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
 	static public var elapsed:Float;
@@ -331,7 +336,12 @@ class FlxG
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
 	 * Will be null if it's not safe/useful yet.
 	 */
-	public static var stage(default, never):Stage;
+	public static var stage(get, never):Stage;
+	
+	static private function get_stage():Stage
+	{
+		return game.stage;
+	}
 	
 	/**
 	 * Read-only: access the current game state from anywhere.
