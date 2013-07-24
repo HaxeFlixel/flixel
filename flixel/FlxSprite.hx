@@ -701,7 +701,6 @@ class FlxSprite extends FlxObject
 		_halfWidth = frameWidth * 0.5;
 		_halfHeight = frameHeight * 0.5;
 		#end
-		calcAABB();
 	}
 	
 	override public function update():Void 
@@ -836,6 +835,10 @@ class FlxSprite extends FlxObject
 			
 			if (!isSimpleRender)
 			{
+				var radians:Float = -angle * FlxAngle.TO_RAD;
+				_cosAngle = Math.cos(radians);
+				_sinAngle = Math.sin(radians);
+				
 				if (_flxFrame.rotated)
 				{
 					cos = -_sinAngle;
@@ -1654,7 +1657,64 @@ class FlxSprite extends FlxObject
 		return onScreenSprite(Camera);
 	}
 	
-	/*inline*/ private function onScreenSprite(Camera:FlxCamera = null):Bool
+	private function onScreenSprite(Camera:FlxCamera = null):Bool
+	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		
+		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
+		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
+		var maxX:Float = 0;
+		var maxY:Float = 0;
+		
+		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
+		{
+			maxX = minX + frameWidth;
+			maxX = minY + frameHeight;
+		}
+		else
+		{
+			var sox:Float = scale.x * origin.x;
+			var soy:Float = scale.y * origin.y;
+			var sfw:Float = scale.x * frameWidth;
+			var sfh:Float = scale.y * frameHeight;
+			
+			var x1:Float = Math.abs(sox);
+			var x2:Float = Math.abs(sfw - sox);
+			var y1:Float = Math.abs(soy);
+			var y2:Float = Math.abs(sfh - soy);
+			
+			var radiusX:Float = (x2 > x1) ? x2 : x1;
+			var radiusY:Float = (y2 > y1) ? y2 : y1;
+			var radius:Float = (radiusX > radiusY) ? radiusX : radiusY;
+			radius *= 1.415; // Math.sqrt(2);
+			
+			minX += origin.x;
+			minY += origin.y;
+			maxX = minX + radius;
+			minX -= radius;
+			maxY = minY + radius;
+			minY -= radius;
+		}
+		
+		if (minX > Camera.width)
+			return false;
+		
+		if (maxX < 0)
+			return false;
+		
+		if (minY > Camera.height)
+			return false;
+		
+		if (maxY < 0)
+			return false;
+		
+		return true;
+	}
+	
+	/*inline*/ /*private function onScreenSprite(Camera:FlxCamera = null):Bool
 	{
 		if (Camera == null)
 		{
@@ -1683,7 +1743,7 @@ class FlxSprite extends FlxObject
 			return false;
 		
 		return true;
-	}
+	}*/
 
 	/**
 	 * calculate AABB of graphic frame
@@ -1693,7 +1753,7 @@ class FlxSprite extends FlxObject
 	{
 		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
 		{
-			_aabb.set(x - offset.x, y - offset.x, frameWidth, frameHeight);
+			_aabb.set(x - offset.x, y - offset.y, frameWidth, frameHeight);
 		}
 		else
 		{
