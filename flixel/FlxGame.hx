@@ -423,7 +423,7 @@ class FlxGame extends Sprite
 		
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
-		FlxG.resetInput();
+		FlxInputs.resetInputs();
 		FlxG.sound.destroySounds();
 		
 		#if !FLX_NO_DEBUG

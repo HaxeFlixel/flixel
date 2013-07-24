@@ -442,7 +442,7 @@ class FlxG
 		PxBitmapFont.clearStorage();
 		
 		FlxG.bitmap.clearCache();
-		FlxG.resetInput();
+		FlxInputs.resetInputs();
 		FlxG.sound.destroySounds(true);
 		FlxG.paused = false;
 		FlxG.timeScale = 1.0;
