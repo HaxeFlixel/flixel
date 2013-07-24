@@ -8,7 +8,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.nape.FlxPhysSprite;
 import flixel.addons.nape.FlxPhysState;
-import flixel.plugin.MouseInteractionMgr;
+import flixel.plugin.MouseEventManager;
 #if flash
 #end
 
@@ -38,14 +38,14 @@ class PlayState extends FlxPhysState
 		
 		FlxG.mouse.show();
 		
-		FlxG.plugins.add(new MouseInteractionMgr());
+		FlxG.plugins.add(new MouseEventManager());
 		
 		createWalls();
 		createCards();
 		
 		fan = new FlxSprite(340, -280, Assets.getBitmapData("assets/Fan.png"));
 		fan.antialiasing = true;
-		MouseInteractionMgr.addSprite(fan, null,null, onOverSprite, onOutSprite);
+		MouseEventManager.addSprite(fan, null,null, onOverSprite, onOutSprite);
 		add(fan);
 	}
 	
@@ -76,7 +76,7 @@ class PlayState extends FlxPhysState
 		add(spr);
 		
 		cards.push(spr);
-		MouseInteractionMgr.addSprite(spr, onMouseDown, null, onOverSprite, onOutSprite);
+		MouseEventManager.addSprite(spr, onMouseDown, null, onOverSprite, onOutSprite);
 	}
 	
 	public function onOverSprite(spr:FlxSprite) 

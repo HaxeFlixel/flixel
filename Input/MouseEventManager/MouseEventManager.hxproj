@@ -4,29 +4,29 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="application.nmml" />
+    <movie path="project.xml" />
     <movie fps="60" />
     <movie width="640" />
     <movie height="480" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="000000" />
+    <movie background="FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
     <class path="C:\HaxeToolkit\haxe/lib\openfl/1,0,4/" />
     <class path="C:\HaxeToolkit\haxe\lib\flixel\git/" />
-    <class path="bin/flash/haxe" />
+    <class path="export/flash/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme4=1&#xA;tools=1&#xA;nme_ver=4.0.0&#xA;nme&#xA;nme_install_tool=1&#xA;display&#xA;web" />
+    <option directives="nme4=1&#xA;tools=1&#xA;FLX_NO_DEBUG&#xA;nme_ver=4.0.0&#xA;nme&#xA;nme_install_tool=1&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;-swf-version 10.1&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -34,7 +34,6 @@
     <library name="flixel" />
     <library name="nape" />
     <library name="flixel-addons" />
-    <library name="hxcpp" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

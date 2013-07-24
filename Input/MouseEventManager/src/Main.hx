@@ -23,7 +23,7 @@ class Main extends Sprite
 
 	private function init(e) 
 	{
-		addChild(new SprMouseEvents());
+		addChild(new MouseEventManager());
 	}
 	
 	static public function main() 

@@ -7,7 +7,7 @@ import states.PlayState;
  * @author 
  */
 
-class SprMouseEvents extends FlxGame
+class MouseEventManager extends FlxGame
 {
 
 	public function new() 
