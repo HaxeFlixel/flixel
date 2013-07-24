@@ -59,8 +59,7 @@ class FlxSprite extends FlxObject
 	 * If you change this, the visuals and the collisions will likely be
 	 * pretty out-of-sync if you do any rotation.
 	 */
-	public var originX(default, set):Float = 0;
-	public var originY(default, set):Float = 0;
+	public var origin:FlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
      * changing a sprite's <code>width</code> or <code>height</code>.
@@ -73,8 +72,7 @@ class FlxSprite extends FlxObject
 	 * you will need to adjust the width, height and offset manually.
 	 * WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
 	 */
-	public var scaleX(default, set):Float = 1.0;
-	public var scaleY(default, set):Float = 1.0;
+	public var scale:FlxPoint;
 	/**
 	 * Blending modes, just like Photoshop or whatever.
 	 * E.g. "multiply", "screen", etc.
@@ -209,11 +207,10 @@ class FlxSprite extends FlxObject
 	private var _halfWidth:Float;
 	private var _halfHeight:Float;
 	
-	private var _cosAngle:Float;
-	private var _sinAngle:Float;
+	private var _aabb:FlxRect;
 	
-	private var _radiusDirty:Bool = true;
-	private var _radius:Float = 0;
+	private var _cosAngle:Float;
+	private var _sinAngle:Float; 
 	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
@@ -231,7 +228,10 @@ class FlxSprite extends FlxObject
 		_flashRect2 = new Rectangle();
 		_flashPointZero = new Point();
 		offset = new FlxPoint();
+		origin = new FlxPoint();
+		scale = new FlxPoint(1.0, 1.0);
 		
+		_aabb = new FlxRect();
 		_cosAngle = 1;
 		_sinAngle = 0;
 		
@@ -271,6 +271,8 @@ class FlxSprite extends FlxObject
 		_flashRect2 = null;
 		_flashPointZero = null;
 		offset = null;
+		origin = null;
+		scale = null;
 		_curAnim = null;
 		_matrix = null;
 		_callback = null;
@@ -285,6 +287,7 @@ class FlxSprite extends FlxObject
 		#else
 		_blend = null;
 		#end
+		_aabb = null;
 		_flxFrame = null;
 		
 		super.destroy();
@@ -650,7 +653,6 @@ class FlxSprite extends FlxObject
 		frameWidth = Std.int(_flxFrame.sourceSize.x);
 		frameHeight = Std.int(_flxFrame.sourceSize.y);
 		resetSize();
-		_radiusDirty = true; 
 	}
 	
 	/**
@@ -664,8 +666,7 @@ class FlxSprite extends FlxObject
 	
 	public function setOriginToCenter():Void
 	{
-		originX = frameWidth * 0.5;
-		originY = frameHeight * 0.5;
+		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 	}
 	
 	/**
@@ -763,7 +764,7 @@ class FlxSprite extends FlxObject
 		{
 			camera = cameras[i++];
 			
-			if (!camera.visible || !camera.exists || !onScreen(camera))
+			if (!camera.visible || !camera.exists || !onScreenSprite(camera))
 			{
 				continue;
 			}
@@ -780,8 +781,8 @@ class FlxSprite extends FlxObject
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 			
-			_point.x = (_point.x) + originX;
-			_point.y = (_point.y) + originY;
+			_point.x = (_point.x) + origin.x;
+			_point.y = (_point.y) + origin.y;
 			
 			#if js
 			_point.x = Math.floor(_point.x);
@@ -802,13 +803,13 @@ class FlxSprite extends FlxObject
 			else
 			{
 				_matrix.identity();
-				_matrix.translate( -originX, -originY);
-				_matrix.scale(scaleX, scaleY);
+				_matrix.translate( -origin.x, -origin.y);
+				_matrix.scale(scale.x, scale.y);
 				if ((angle != 0) && (bakedRotation <= 0))
 				{
 					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
-				_matrix.translate(_point.x + originX, _point.y + originY);
+				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 			}
 #else
@@ -817,8 +818,8 @@ class FlxSprite extends FlxObject
 			var ssx:Float = 0;
 			var csy:Float = 1;
 			
-			var x1:Float = (originX - _flxFrame.center.x);
-			var y1:Float = (originY - _flxFrame.center.y);
+			var x1:Float = (origin.x - _flxFrame.center.x);
+			var y1:Float = (origin.y - _flxFrame.center.y);
 			
 			var x2:Float = x1;
 			var y2:Float = y1;
@@ -834,18 +835,18 @@ class FlxSprite extends FlxObject
 			if (!isSimpleRender)
 			{
 				var radians:Float = -angle * FlxAngle.TO_RAD;
-				_cosAngle = FlxAngle.getCos(radians);
-				_sinAngle = FlxAngle.getSin(radians);
+				_cosAngle = Math.cos(radians);
+				_sinAngle = Math.sin(radians);
 				
 				if (_flxFrame.rotated)
 				{
 					cos = -_sinAngle;
 					sin = _cosAngle;
 					
-					csx = cos * scaleX * facingMult;
-					ssy = sin * scaleY;
-					ssx = sin * scaleX * facingMult;
-					csy = cos * scaleY;
+					csx = cos * scale.x * facingMult;
+					ssy = sin * scale.y;
+					ssx = sin * scale.x * facingMult;
+					csy = cos * scale.y;
 					
 					x2 = x1 * ssx - y1 * csy;
 					y2 = x1 * csx + y1 * ssy;
@@ -860,10 +861,10 @@ class FlxSprite extends FlxObject
 					cos = _cosAngle;
 					sin = _sinAngle;
 					
-					csx = cos * scaleX * facingMult;
-					ssy = sin * scaleY;
-					ssx = sin * scaleX * facingMult;
-					csy = cos * scaleY;
+					csx = cos * scale.x * facingMult;
+					ssy = sin * scale.y;
+					ssx = sin * scale.x * facingMult;
+					csy = cos * scale.y;
 					
 					x2 = x1 * csx + y1 * ssy;
 					y2 = -x1 * ssx + y1 * csy;
@@ -929,7 +930,7 @@ class FlxSprite extends FlxObject
 		var bitmapData:BitmapData = Brush.framePixels;
 		
 		//Simple draw
-		if (((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush.scaleX == 1) && (Brush.scaleX == 1) && (Brush.blend == null))
+		if (((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
 		{
 			_flashPoint.x = X + _region.startX;
 			_flashPoint.y = Y + _region.startY;
@@ -949,13 +950,13 @@ class FlxSprite extends FlxObject
 		
 		//Advanced draw
 		_matrix.identity();
-		_matrix.translate(-Brush.originX, -Brush.originY);
-		_matrix.scale(Brush.scaleX, Brush.scaleY);
+		_matrix.translate(-Brush.origin.x, -Brush.origin.y);
+		_matrix.scale(Brush.scale.x, Brush.scale.y);
 		if (Brush.angle != 0)
 		{
 			_matrix.rotate(Brush.angle * FlxAngle.TO_RAD);
 		}
-		_matrix.translate(X + _region.startX + Brush.originX, Y + _region.startY + Brush.originY);
+		_matrix.translate(X + _region.startX + Brush.origin.x, Y + _region.startY + Brush.origin.y);
 		var brushBlend:BlendMode = Brush.blend;
 		_cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		resetFrameBitmapDatas();
@@ -1336,7 +1337,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function setOriginToCorner():Void
 	{
-		originX = originY = 0;
+		origin.x = origin.y = 0;
 	}
 	
 	/**
@@ -1439,7 +1440,6 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		facing = Direction;
-		_radiusDirty = true;
 		return Direction;
 	}
 	
@@ -1653,6 +1653,11 @@ class FlxSprite extends FlxObject
 	 */
 	override public function onScreen(Camera:FlxCamera = null):Bool
 	{
+		return onScreenSprite(Camera);
+	}
+	
+	inline private function onScreenSprite(Camera:FlxCamera = null):Bool
+	{
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
@@ -1663,70 +1668,157 @@ class FlxSprite extends FlxObject
 		var maxX:Float = 0;
 		var maxY:Float = 0;
 		
-		if ((angle == 0 || bakedRotation > 0) && (scaleX == 1) && (scaleY == 1))
+		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
 		{
 			maxX = minX + frameWidth;
 			maxY = minY + frameHeight;
 		}
 		else
 		{
-			if (_radiusDirty)
+			var radiusX:Float = _halfWidth;
+			var radiusY:Float = _halfHeight;
+			
+			if (origin.x == _halfWidth)
 			{
-				var radiusX:Float = _halfWidth;
-				var radiusY:Float = _halfHeight;
-				
-				if (originX == _halfWidth)
-				{
-					radiusX = Math.abs(_halfWidth * scaleX);
-				}
-				else
-				{
-					var sox:Float = scaleX * originX;
-					var sfw:Float = scaleX * frameWidth;
-					var x1:Float = Math.abs(sox);
-					var x2:Float = Math.abs(sfw - sox);
-					radiusX = (x2 > x1) ? x2 : x1;
-				}
-				
-				if (originY == _halfHeight)
-				{
-					radiusY = Math.abs(_halfHeight * scaleY);
-				}
-				else
-				{
-					var soy:Float = scaleY * originY;
-					var sfh:Float = scaleY * frameHeight;
-					var y1:Float = Math.abs(soy);
-					var y2:Float = Math.abs(sfh - soy);
-					radiusY = (y2 > y1) ? y2 : y1;
-				}
-				
-				_radius = (radiusX > radiusY) ? radiusX : radiusY;
-				_radius *= 1.415; // Math.sqrt(2);
-				
-				_radiusDirty = false;
+				radiusX = Math.abs(_halfWidth * scale.x);
+			}
+			else
+			{
+				var sox:Float = scale.x * origin.x;
+				var sfw:Float = scale.x * frameWidth;
+				var x1:Float = Math.abs(sox);
+				var x2:Float = Math.abs(sfw - sox);
+				radiusX = (x2 > x1) ? x2 : x1;
 			}
 			
-			minX += originX;
-			maxX = minX + _radius;
-			minX -= _radius;
+			if (origin.y == _halfHeight)
+			{
+				radiusY = Math.abs(_halfHeight * scale.y);
+			}
+			else
+			{
+				var soy:Float = scale.y * origin.y;
+				var sfh:Float = scale.y * frameHeight;
+				var y1:Float = Math.abs(soy);
+				var y2:Float = Math.abs(sfh - soy);
+				radiusY = (y2 > y1) ? y2 : y1;
+			}
 			
-			minY += originY;
-			maxY = minY + _radius;
-			minY -= _radius;
+			var radius:Float = (radiusX > radiusY) ? radiusX : radiusY;
+			radius *= 1.415; // Math.sqrt(2);
+			
+			minX += origin.x;
+			maxX = minX + radius;
+			minX -= radius;
+			
+			minY += origin.y;
+			maxY = minY + radius;
+			minY -= radius;
 		}
 		
+		var result:Bool = true;
 		if (minX > Camera.width || maxX < 0)
 		{
-			return false;
+			result = false;
 		}
 		
 		if (minY > Camera.height || maxY < 0)
 		{
-			return false;
+			result = false;
 		}
 		
+		return result;
+	}
+	
+	/*inline*/ /*private function onScreenSprite(Camera:FlxCamera = null):Bool
+	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		
+		calcAABB();
+		
+		var scx = Camera.scroll.x * scrollFactor.x;
+		var scy = Camera.scroll.y * scrollFactor.y;
+		
+		var minX:Float = _aabb.x - scx;
+		if (minX > Camera.width)
+			return false;
+		
+		var maxX:Float = minX + _aabb.width;
+		if (maxX < 0)
+			return false;
+		
+		var minY:Float = _aabb.y - scy;
+		if (minY > Camera.height)
+			return false;
+		
+		var maxY:Float = minY + _aabb.height;
+		if (maxY < 0)
+			return false;
+		
 		return true;
+	}*/
+
+	/**
+	 * calculate AABB of graphic frame
+	 * called internally once each update call
+	 */
+	inline private function calcAABB():Void
+	{
+		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
+		{
+			_aabb.set(x - offset.x, y - offset.y, frameWidth, frameHeight);
+		}
+		else
+		{
+			var sx:Float = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -scale.x : scale.x;
+			
+			var sox:Float = sx * origin.x;
+			var soy:Float = scale.y * origin.y;
+			var sfw:Float = sx * frameWidth;
+			var sfh:Float = scale.y * frameHeight;
+			
+			var p1x = -sox, p1y = -soy;
+			var p2x = sfw - sox, p2y = -soy;
+			var p3x = -sox, p3y = sfh - soy;
+			var p4x = sfw - sox, p4y = sfh - soy; 
+			
+			var radians:Float = -angle * FlxAngle.TO_RAD;
+			var cos:Float = _cosAngle = Math.cos(radians);
+			var sin:Float = _sinAngle = Math.sin(radians);
+			
+			var genX:Float = x + origin.x - offset.x;
+			var genY:Float = y + origin.y - offset.y;
+			
+			var tx:Float = p1x * cos + p1y * sin;
+			var ty:Float = -p1x * sin + p1y * cos;
+			p1x = tx;
+			p1y = ty;
+			
+			tx = p2x * cos + p2y * sin;
+			ty = -p2x * sin + p2y * cos;
+			p2x = tx;
+			p2y = ty;
+			
+			tx = p3x * cos + p3y * sin;
+			ty = -p3x * sin + p3y * cos;
+			p3x = tx;
+			p3y = ty;
+			
+			tx = p4x * cos + p4y * sin;
+			ty = -p4x * sin + p4y * cos;
+			p4x = tx;
+			p4y = ty;
+			
+			var minX:Float = Math.min(Math.min(p1x, p2x), Math.min(p3x, p4x));
+			var minY:Float = Math.min(Math.min(p1y, p2y), Math.min(p3y, p4y));
+			var maxX:Float = Math.max(Math.max(p1x, p2x), Math.max(p3x, p4x));
+			var maxY:Float = Math.max(Math.max(p1y, p2y), Math.max(p3y, p4y));
+			
+			_aabb.set(genX + minX, genY + minY, maxX - minX, maxY - minY);
+		}
 	}
 	
 	/**
@@ -1962,38 +2054,17 @@ class FlxSprite extends FlxObject
 	inline private function simpleRenderSprite():Bool
 	{
 		#if flash
-		return (((angle == 0) || (bakedRotation > 0)) && (scaleX == 1) && (scaleY == 1) && (blend == null) && (forceComplexRender == false));
+		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (forceComplexRender == false));
 		#else
-		return (((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)) && (scaleX == 1) && (scaleY == 1));
+		return (((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
 	}
 	
-	private function set_originX(value:Float):Float
-	{
-		originX = value;
-		_radiusDirty = true;
-		return value;
-	}
+	public var aabb(get_aabb, null):FlxRect;
 	
-	private function set_originY(value:Float):Float
+	function get_aabb():FlxRect 
 	{
-		originY = value;
-		_radiusDirty = true;
-		return value;
-	}
-	
-	private function set_scaleX(value:Float):Float
-	{
-		scaleX = value;
-		_radiusDirty = true;
-		return value;
-	}
-	
-	private function set_scaleY(value:Float):Float
-	{
-		scaleY = value;
-		_radiusDirty = true;
-		return value;
+		return _aabb;
 	}
 	
 	#if !flash
@@ -2034,14 +2105,14 @@ class FlxSprite extends FlxObject
 	
 	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, Camera:FlxCamera = null):Bool
 	{
-		if (scaleX == 1 && scaleY == 1)
+		if (scale.x == 1 && scale.y == 1)
 		{
 			return super.overlapsPoint(point, InScreenSpace, Camera);
 		}
 		
 		if (!InScreenSpace)
 		{
-			return (point.x > x - 0.5 * width * (scaleX - 1)) && (point.x < x + width + 0.5 * width * (scaleX - 1)) && (point.y > y - 0.5 * height * (scaleY - 1)) && (point.y < y + height + 0.5 * height * (scaleY - 1));
+			return (point.x > x - 0.5 * width * (scale.x - 1)) && (point.x < x + width + 0.5 * width * (scale.x - 1)) && (point.y > y - 0.5 * height * (scale.y - 1)) && (point.y < y + height + 0.5 * height * (scale.y - 1));
 		}
 
 		if (Camera == null)
@@ -2051,7 +2122,7 @@ class FlxSprite extends FlxObject
 		var X:Float = point.x - Camera.scroll.x;
 		var Y:Float = point.y - Camera.scroll.y;
 		getScreenXY(_point, Camera);
-		return (X > _point.x - 0.5 * width * (scaleX - 1)) && (X < _point.x + width + 0.5 * width * (scaleX - 1)) && (Y > _point.y - 0.5 * height * (scaleY - 1)) && (Y < _point.y + height + 0.5 * height * (scaleY - 1));
+		return (X > _point.x - 0.5 * width * (scale.x - 1)) && (X < _point.x + width + 0.5 * width * (scale.x - 1)) && (Y > _point.y - 0.5 * height * (scale.y - 1)) && (Y < _point.y + height + 0.5 * height * (scale.y - 1));
 	}
 	
 	/**

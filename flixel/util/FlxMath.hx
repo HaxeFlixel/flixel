@@ -322,8 +322,8 @@ class FlxMath
 	 */
 	inline static public function distanceBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Int
 	{
-		var dx:Float = (SpriteA.x + SpriteA.originX) - (SpriteB.x + SpriteB.originX);
-		var dy:Float = (SpriteA.y + SpriteA.originY) - (SpriteB.y + SpriteB.originY);
+		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
+		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
 		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
@@ -338,8 +338,8 @@ class FlxMath
 	 */
 	inline static public function distanceToPoint(Sprite:FlxSprite, Target:FlxPoint):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.originX) - (Target.x);
-		var dy:Float = (Sprite.y + Sprite.originY) - (Target.y);
+		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
+		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
 		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
@@ -353,8 +353,8 @@ class FlxMath
 	 */
 	inline static public function distanceToMouse(Sprite:FlxSprite):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.originX) - FlxG.mouse.screenX;
-		var dy:Float = (Sprite.y + Sprite.originY) - FlxG.mouse.screenY;
+		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
 		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
@@ -370,8 +370,8 @@ class FlxMath
 	 */
 	inline static public function distanceToTouch(Sprite:FlxSprite, Touch:FlxTouch):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.originX) - Touch.screenX;
-		var dy:Float = (Sprite.y + Sprite.originY) - Touch.screenY;
+		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
 		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}

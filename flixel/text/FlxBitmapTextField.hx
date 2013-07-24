@@ -228,13 +228,13 @@ class FlxBitmapTextField extends FlxSprite
 			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
 			#end
 			
-			if (!onScreen(camera) || !camera.visible || !camera.exists)
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
 			
-			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + originX;
-			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + originY;
+			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
+			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
 			
 			#if js
 			_point.x = Math.floor(_point.x);
@@ -248,19 +248,19 @@ class FlxBitmapTextField extends FlxSprite
 			var x1:Float = 0;
 			var y1:Float = 0;
 
-			if (!simpleRenderSprite())
+			if (!simpleRenderSprite ())
 			{
 				radians = angle * FlxAngle.TO_RAD;
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				csx = cos * scaleX;
-				ssy = sin * scaleY;
-				ssx = sin * scaleX;
-				csy = cos * scaleY;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				
-				x1 = (originX - _halfWidth);
-				y1 = (originY - _halfHeight);
+				x1 = (origin.x - _halfWidth);
+				y1 = (origin.y - _halfHeight);
 			}
 
 			if (_background)
@@ -636,11 +636,11 @@ class FlxBitmapTextField extends FlxSprite
 		width = frameWidth = finalWidth;
 		height = frameHeight = finalHeight;
 		frames = 1;
-		originX = width * 0.5;
-		originY = height * 0.5;
+		origin.x = width * 0.5;
+		origin.y = height * 0.5;
 		
-		_halfWidth = originX;
-		_halfHeight = originY;
+		_halfWidth = origin.x;
+		_halfHeight = origin.y;
 		#end
 		
 		#if flash

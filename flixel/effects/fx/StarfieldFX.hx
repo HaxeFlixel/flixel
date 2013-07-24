@@ -440,7 +440,7 @@ private class StarSprite extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
-			if (!onScreen(camera) || !camera.visible || !camera.exists)
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
@@ -476,10 +476,10 @@ private class StarSprite extends FlxSprite
 				cos = Math.cos(radians);
 				sin = Math.sin(radians);
 				
-				csx = cos * scaleX;
-				ssy = sin * scaleY;
-				ssx = sin * scaleX;
-				csy = cos * scaleY;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				// yes, zero
 				x1 = 0; 
 				y1 = 0;

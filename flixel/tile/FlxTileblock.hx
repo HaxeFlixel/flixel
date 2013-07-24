@@ -219,13 +219,13 @@ class FlxTileblock extends FlxSprite
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			if (!camera.visible || !camera.exists || !onScreen(camera))
+			if (!camera.visible || !camera.exists || !onScreenSprite(camera))
 			{
 				continue;
 			}
 			
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + originX;
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + originY;
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
 			if (_tileData != null)
 			{
@@ -243,16 +243,16 @@ class FlxTileblock extends FlxSprite
 					sin = Math.sin(radians);
 					
 					// Tilemap tearing hack
-					var sx:Float = tileScaleHack * scaleX;
-					var sy:Float = tileScaleHack * scaleY;
+					var sx:Float = tileScaleHack * scale.x;
+					var sy:Float = tileScaleHack * scale.y;
 					
 					csx = cos * sx;
 					ssy = sin * sy;
 					ssx = sin * sx;
 					csy = cos * sy;
 					
-					x1 = (originX - _halfWidth);
-					y1 = (originY - _halfHeight);
+					x1 = (origin.x - _halfWidth);
+					y1 = (origin.y - _halfHeight);
 				}
 				
 				while (j < numTiles)

@@ -144,8 +144,7 @@ class FlxBar extends FlxSprite
 		#else
 		this.width = frameWidth = width;
 		this.height = frameHeight = height;
-		originX = frameWidth * 0.5;
-		originY = frameHeight * 0.5;
+		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 		_halfWidth = 0.5 * frameWidth;
 		_halfHeight = 0.5 * frameHeight;
 		
@@ -1037,7 +1036,7 @@ class FlxBar extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
-			if (!onScreen(camera) || !camera.visible || !camera.exists)
+			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
 				continue;
 			}
@@ -1051,8 +1050,8 @@ class FlxBar extends FlxSprite
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + originX;
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + originY;
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
 			
 			#if js
 			_point.x = Math.floor(_point.x);
@@ -1074,13 +1073,13 @@ class FlxBar extends FlxSprite
 				var cos:Float = Math.cos(radians);
 				var sin:Float = Math.sin(radians);
 				
-				csx = cos * scaleX;
-				ssy = sin * scaleY;
-				ssx = sin * scaleX;
-				csy = cos * scaleY;
+				csx = cos * scale.x;
+				ssy = sin * scale.y;
+				ssx = sin * scale.x;
+				csy = cos * scale.y;
 				
-				x1 = (originX - _halfWidth);
-				y1 = (originY - _halfHeight);
+				x1 = (origin.x - _halfWidth);
+				y1 = (origin.y - _halfHeight);
 				x2 = x1 * csx + y1 * ssy;
 				y2 = -x1 * ssx + y1 * csy;
 			}
@@ -1182,7 +1181,7 @@ class FlxBar extends FlxSprite
 	
 	override private function get_simpleRender():Bool
 	{ 
-		return ((angle == 0) && (scaleX == 1) && (scaleY == 1));
+		return ((angle == 0) && (scale.x == 1) && (scale.y == 1));
 	}
 	#end
 	

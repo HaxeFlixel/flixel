@@ -142,7 +142,7 @@ class FlxParticle extends FlxSprite
 			// Changing size
 			if (useScaling)
 			{
-				scaleX = scaleY = startScale + lifespanRatio * rangeScale;
+				scale.x = scale.y = startScale + lifespanRatio * rangeScale;
 			}
 			
 			// Tinting
@@ -209,7 +209,7 @@ class FlxParticle extends FlxSprite
 		super.reset(X, Y);
 		
 		alpha = 1.0;
-		scaleX = scaleY = 1.0;
+		scale.x = scale.y = 1.0;
 		color = 0xffffff;
 	}
 	

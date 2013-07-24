@@ -132,7 +132,7 @@ class MouseEventManager extends FlxBasic
 		for (reg in _registeredSprites)
 		{
 			// Sprite destroyed check.
-			if (reg.sprite.offset == null)
+			if (reg.sprite.scale == null)
 			{
 				removeSprite(reg.sprite);
 				continue;
@@ -217,7 +217,7 @@ class MouseEventManager extends FlxBasic
 			
 			if (Sprite.angle != 0)
 			{
-				FlxAngle.rotatePoint(_point.x, _point.y, Sprite.x + Sprite.originX, Sprite.y + Sprite.originY, -180 + Sprite.angle, _point);	
+				FlxAngle.rotatePoint(_point.x, _point.y, Sprite.x + Sprite.origin.x, Sprite.y + Sprite.origin.y, -180 + Sprite.angle, _point);	
 			}
 			
 			if (Sprite.overlapsPoint(_point, true, camera))
@@ -241,7 +241,7 @@ class MouseEventManager extends FlxBasic
 				
 				if (Sprite.angle != 0)
 				{
-					FlxAngle.rotatePoint(_point.x, _point.y, Sprite.x + Sprite.originX, Sprite.y + Sprite.originY, -180 + Sprite.angle, _point);	
+					FlxAngle.rotatePoint(_point.x, _point.y, Sprite.x + Sprite.origin.x, Sprite.y + Sprite.origin.y, -180 + Sprite.angle, _point);	
 				}
 				
 				if (Sprite.overlapsPoint(_point, true, camera))

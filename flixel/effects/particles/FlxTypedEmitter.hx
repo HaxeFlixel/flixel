@@ -505,7 +505,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		{
 			particle.startScale = startScale.min;
 		}
-		particle.scaleX = particle.scaleY = particle.startScale;
+		particle.scale.x = particle.scale.y = particle.startScale;
 		
 		var particleEndScale:Float = endScale.min;
 		if (endScale.min != endScale.max)
