@@ -519,7 +519,8 @@ class FlxText extends FlxSprite
 			#end
 			
 		#if !flash
-			origin.set(frameWidth * 0.5, frameHeight * 0.5);
+			originX = frameWidth * 0.5;
+			originY = frameHeight * 0.5;
 		}
 		#end
 		

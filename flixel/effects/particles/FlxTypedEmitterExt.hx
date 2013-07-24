@@ -225,7 +225,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 		{
 			particle.startScale = startScale.min;
 		}
-		particle.scale.x = particle.scale.y = particle.startScale;
+		particle.scaleX = particle.scaleY = particle.startScale;
 		
 		var particleEndScale:Float = endScale.min;
 		

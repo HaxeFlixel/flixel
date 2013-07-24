@@ -346,7 +346,7 @@ class FlxTextField extends FlxText
 			return;
 		}
 		
-		if (!onScreenSprite(_camera) || !_camera.visible || !_camera.exists)
+		if (!onScreen(_camera) || !_camera.visible || !_camera.exists)
 		{
 			_textField.visible = false;
 		}

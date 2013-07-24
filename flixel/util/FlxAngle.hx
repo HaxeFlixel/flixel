@@ -155,6 +155,80 @@ class FlxAngle
 	}
 	
 	/**
+	 * Fast sine calculation using quadratic curve.
+	 * See lab.polygonal.de/?p=205
+	 * @param radians The angle in radians
+	 * @return Sine of the angle
+	 */
+	static inline public function getSin(radians:Float):Float
+	{
+		while (radians < -3.14159265)
+		{
+			radians += 6.28318531;
+		}
+		while (radians > 3.14159265)
+		{
+			radians -= 6.28318531;
+		}
+		
+		var s:Float = 0;
+		if (radians < 0)
+		{
+			s = 1.27323954 * radians + 0.405284735 * radians * radians;
+		}
+		else
+		{
+			s = 1.27323954 * radians - 0.405284735 * radians * radians;
+		}
+		
+		if(s < 0)
+			s = .255 * (s * -s - s) + s;
+		else
+			s = .255 * (s * s - s) + s;
+		
+		return s;
+	}
+
+	/**
+	 * Fast cosine calculation using quadratic curve.
+	 * See lab.polygonal.de/?p=205
+	 * @param radians The angle in radians
+	 * @return Cosine of the angle
+	 */
+	static inline public function getCos(radians:Float):Float
+	{
+		while (radians < -3.14159265)
+		{
+			radians += 6.28318531;
+		}
+		while (radians > 3.14159265)
+		{
+			radians -= 6.28318531;
+		}
+
+		radians += 1.57079632;
+		if (radians > 3.14159265)
+			radians -= 6.28318531;
+
+		var c:Float = 0;
+		if (radians < 0)
+		{
+			c = 1.27323954 * radians + 0.405284735 * radians * radians;
+		}
+		else
+		{
+			c = 1.27323954 * radians - 0.405284735 * radians * radians;
+		}
+		
+		if (c < 0)
+			c = .255 * (c * -c - c) + c;
+		else
+			c = .255 * (c * c - c) + c;
+		
+		return c;
+	}
+	
+	/**
 	 * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
 	 * 
 	 * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
@@ -273,8 +347,8 @@ class FlxAngle
 	 */
 	inline static public function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
 	{
-		var dx:Float = (SpriteB.x + SpriteB.origin.x) - (SpriteA.x + SpriteA.origin.x);
-		var dy:Float = (SpriteB.y + SpriteB.origin.y) - (SpriteA.y + SpriteA.origin.y);
+		var dx:Float = (SpriteB.x + SpriteB.originX) - (SpriteA.x + SpriteA.originX);
+		var dy:Float = (SpriteB.y + SpriteB.originY) - (SpriteA.y + SpriteA.originY);
 		
 		if (AsDegrees)
 			return asDegrees(Math.atan2(dy, dx));
@@ -293,8 +367,8 @@ class FlxAngle
 	 */
 	static public function angleBetweenPoint(Sprite:FlxSprite, Target:FlxPoint, AsDegrees:Bool = false):Float
 	{
-		var dx:Float = (Target.x) - (Sprite.x + Sprite.origin.x);
-		var dy:Float = (Target.y) - (Sprite.y + Sprite.origin.y);
+		var dx:Float = (Target.x) - (Sprite.x + Sprite.originX);
+		var dy:Float = (Target.y) - (Sprite.y + Sprite.originY);
 		
 		if (AsDegrees)
 			return asDegrees(Math.atan2(dy, dx));
