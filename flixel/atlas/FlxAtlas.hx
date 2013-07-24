@@ -2,9 +2,16 @@ package flixel.atlas;
 
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
+import flixel.FlxG;
 import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
+import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TexturePackerData;
+import flixel.util.loaders.TextureAtlasFrame;
+import flixel.util.loaders.TextureRegion;
 import flixel.atlas.FlxNode;
 import flixel.system.FlxAssets;
+import flixel.system.frontEnds.BitmapFrontEnd;
 
 /**
  * Atlas class
@@ -17,14 +24,16 @@ class FlxAtlas
 	 */
 	public var root:FlxNode;
 	
+	public var name:String;
+	
 	public var nodes:Map<String, FlxNode>;
 	public var atlasBitmapData:BitmapData;
 	
 	/**
 	 * Offsets between nodes in atlas
 	 */
-	public var borderX:Int;
-	public var borderY:Int;
+	public var borderX(default, null):Int;
+	public var borderY(default, null):Int;
 	
 	private var _tempStorage:Array<TempAtlasObj>;
 	
@@ -35,69 +44,16 @@ class FlxAtlas
 	 * @param	borderX		horizontal distance between nodes
 	 * @param	borderY		vertical distance between nodes
 	 */
-	public function new(width:Int, height:Int, borderX:Int = 1, borderY:Int = 1) 
+	public function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1) 
 	{
 		nodes = new Map<String, FlxNode>();
+		this.name = name;
 		
 		root = new FlxNode(new Rectangle(0, 0, width, height));
 		atlasBitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		
 		this.borderX = borderX;
 		this.borderY = borderY;
-	}
-	
-	/**
-	 * This method could optimize atlas after adding new nodes with addNode() method.
-	 * Don't use it!!!
-	 */
-	public function rebuildAtlas():Void
-	{
-		createQueue();
-		for (node in nodes)
-		{
-			addToQueue(node.item, node.key);
-		}
-		
-		clear();
-		generateAtlasFromQueue();
-	}
-	
-	/**
-	 * This method will update atlas bitmapData 
-	 * so it will show changes in node's bitmapDatas
-	 */
-	public function redrawNode(node:FlxNode):Void
-	{
-		if (hasNodeWithName(node.key) && atlasBitmapData != node.item)
-		{
-			atlasBitmapData.fillRect(node.rect, FlxColor.TRANSPARENT);
-			atlasBitmapData.copyPixels(node.item, node.rect, node.point);
-		}
-	}
-	
-	/**
-	 * Redraws all nodes on atlasBitmapData
-	 */
-	public function redrawAll():Void
-	{
-		atlasBitmapData.fillRect(atlasBitmapData.rect, FlxColor.TRANSPARENT);
-		
-		for (node in nodes)
-		{
-			atlasBitmapData.copyPixels(node.item, node.rect, node.point);
-		}
-	}
-	
-	/**
-	 * Resizes atlas to new dimensions. Don't use it
-	 */
-	public function resize(newWidth:Int, newHeight:Int):Void
-	{
-		root.rect.width = newWidth;
-		root.rect.height = newHeight;
-		atlasBitmapData.dispose();
-		atlasBitmapData = new BitmapData(newWidth, newHeight, true, FlxColor.TRANSPARENT);
-		rebuildAtlas();
 	}
 	
 	/**
@@ -177,7 +133,7 @@ class FlxAtlas
 				firstChild = new FlxNode(new Rectangle(nodeToInsert.x, nodeToInsert.y, insertWidth, nodeToInsert.height));
 				secondChild = new FlxNode(new Rectangle(nodeToInsert.x + insertWidth, nodeToInsert.y, nodeToInsert.width - insertWidth, nodeToInsert.height));
 				
-				firstGrandChild = new FlxNode(new Rectangle(firstChild.x, firstChild.y, insertWidth, insertHeight), data, key);
+				firstGrandChild = new FlxNode(new Rectangle(firstChild.x, firstChild.y, insertWidth, insertHeight), true, key);
 				secondGrandChild = new FlxNode(new Rectangle(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight));
 			}
 			else // divide vertically
@@ -185,7 +141,7 @@ class FlxAtlas
 				firstChild = new FlxNode(new Rectangle(nodeToInsert.x, nodeToInsert.y, nodeToInsert.width, insertHeight));
 				secondChild = new FlxNode(new Rectangle(nodeToInsert.x, nodeToInsert.y + insertHeight, nodeToInsert.width, nodeToInsert.height - insertHeight));
 				
-				firstGrandChild = new FlxNode(new Rectangle(firstChild.x, firstChild.y, insertWidth, insertHeight), data, key);
+				firstGrandChild = new FlxNode(new Rectangle(firstChild.x, firstChild.y, insertWidth, insertHeight), true, key);
 				secondGrandChild = new FlxNode(new Rectangle(firstChild.x + insertWidth, firstChild.y, firstChild.width - insertWidth, insertHeight));
 			}
 			
@@ -226,6 +182,65 @@ class FlxAtlas
 	}
 	
 	/**
+	 * Generates TextureRegion object for node with specified name
+	 * @param	nodeName	name of the node to generate TextureRegion object for
+	 * @return	Generated TextureRegion
+	 */
+	public function getRegionFor(nodeName:String):TextureRegion
+	{
+		if (hasNodeWithName(nodeName))
+		{
+			var cached:CachedGraphics = FlxG.bitmap.add(this.atlasBitmapData, false, name);
+			var region:TextureRegion = new TextureRegion(cached);
+			var node:FlxNode = getNode(nodeName);
+			region.region.startX = node.x;
+			region.region.startY = node.y;
+			region.region.width = (node.width == width) ? width : node.width - borderX;
+			region.region.height = (node.height == height) ? height : node.height - borderY;
+			
+			return region;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Generates TexturePackerData object for this atlas. Where each frame represents one of the inserted images
+	 * @return TexturePackerData for this atlas
+	 */
+	public function getTextureData():TexturePackerData
+	{
+		var cached:CachedGraphics = FlxG.bitmap.add(this.atlasBitmapData, false, name);
+		
+		if (cached.data == null)
+		{
+			var packerData:TexturePackerData = new TexturePackerData(null, name);
+			var node:FlxNode;
+			for (key in nodes.keys())
+			{
+				node = nodes.get(key);
+				if (node.filled)
+				{
+					var texFrame:TextureAtlasFrame = new TextureAtlasFrame();
+					
+					texFrame.trimmed = false;
+					texFrame.rotated = false;
+					texFrame.name = key;
+					texFrame.sourceSize = new FlxPoint(node.width, node.height);
+					texFrame.offset = new FlxPoint(0, 0);
+					texFrame.frame = new Rectangle(node.x, node.y, node.width, node.height);
+					
+					packerData.frames.push(texFrame);
+				}
+			}
+			
+			cached.data = packerData;
+		}
+		
+		return cached.data;
+	}
+	
+	/**
 	 * Checks if atlas already contains node with the same name
 	 * @param	nodeName	node name to check
 	 * @return				true if atlas already contains node with the name
@@ -240,29 +255,11 @@ class FlxAtlas
 	 * @param	key		node name to search
 	 * @return	node with searched name. Null if atlas doesn't contain node with a such name
 	 */
-	public function getNodeByKey(key:String):FlxNode
+	public function getNode(key:String):FlxNode
 	{
 		if (hasNodeWithName(key) == true)
 		{
 			return nodes.get(key);
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * Get's node by bitmapData
-	 * @param	bitmap	bitmapdata to search
-	 * @return			node with searched bitmapData. Null if atlas doesn't contain node with a such bitmapData
-	 */
-	public function getNodeByBitmap(bitmap:BitmapData):FlxNode
-	{
-		for (node in nodes)
-		{
-			if (node.item == bitmap)
-			{
-				return node;
-			}
 		}
 		
 		return null;
@@ -389,6 +386,7 @@ class FlxAtlas
 	 */
 	public function destroy():Void
 	{
+		FlxG.bitmap.remove(name);
 		_tempStorage = null;
 		deleteSubtree(root);
 		root = null;
@@ -412,22 +410,6 @@ class FlxAtlas
 		root = new FlxNode(new Rectangle(0, 0, rootWidth, rootHeight));
 		atlasBitmapData.fillRect(root.rect, FlxColor.TRANSPARENT);
 		nodes = new Map<String, FlxNode>();
-	}
-	
-	/**
-	 * Gets cloned atlas.
-	 * @return	atlas clone
-	 */
-	public function clone():FlxAtlas
-	{
-		var cloneAtlas:FlxAtlas = new FlxAtlas(this.width, this.height, this.borderX, this.borderY);
-		cloneAtlas.createQueue();
-		for (node in nodes)
-		{
-			cloneAtlas.addToQueue(node.item, node.key);
-		}
-		cloneAtlas.generateAtlasFromQueue();
-		return cloneAtlas;
 	}
 	
 	private function deleteSubtree(node:FlxNode):Void

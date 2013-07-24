@@ -10,7 +10,6 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
-import flixel.system.layer.Atlas;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import openfl.Assets;
@@ -70,9 +69,11 @@ class FlxTextField extends FlxText
 		#if flash
 		_textField.sharpness = 100;
 		#end
-
+		
+		#if !js
 		_type = TextFieldType.DYNAMIC;
 		_autosize = TextFieldAutoSize.NONE;
+		#end
 		
 		_camera = Camera;
 		dirty = false;
@@ -108,10 +109,13 @@ class FlxTextField extends FlxText
 	{
 		if (Font == null)
 		{
-			Font = Assets.getFont(FlxAssets.defaultFont).fontName;
+			_format.font = FlxAssets.FONT_DEFAULT;
+		}
+		else 
+		{
+			_format.font = Assets.getFont(Font).fontName;
 		}
 		
-		_format.font = Assets.getFont(Font).fontName;
 		_format.size = Size;
 		_format.color = Color;
 		_format.align = convertTextAlignmentFromString(Alignment);
@@ -218,14 +222,13 @@ class FlxTextField extends FlxText
 		#else
 		calcFrame();
 		#end
-		
-		return _pixels;
+		return _cachedGraphics.bitmap;
 	}
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		// This class doesn't support this operation
-		return _pixels;
+		return Pixels;
 	}
 	
 	override private function set_alpha(Alpha:Float):Float
@@ -249,8 +252,10 @@ class FlxTextField extends FlxText
 	{
 		if (_addedToDisplay)
 		{
+			#if !js
 			_textField.type = _type;
 			_textField.autoSize = _autosize;
+			#end
 			_textField.selectable = _selectable;
 			_textField.border = _border;
 			_textField.borderColor = _borderColor;
@@ -327,11 +332,13 @@ class FlxTextField extends FlxText
 			updateTextField();
 		}
 		
+		#if !js
 		if (_type == TextFieldType.INPUT && _text != _textField.text)
 		{
 			_text = _textField.text;
 			updateTextField();
 		}
+		#end
 		
 		if (visible == false)
 		{
@@ -378,7 +385,7 @@ class FlxTextField extends FlxText
 		if (AreYouSure && _addedToDisplay)
 		{
 		#end
-			_pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
+			pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
 			frameHeight = Std.int(height);
 			_flashRect.x = 0;
 			_flashRect.y = 0;
@@ -396,14 +403,16 @@ class FlxTextField extends FlxText
 				_matrix.identity();
 				
 				// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
+				#if !js
 				if ((_format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
 				{
 					_formatAdjusted.align = TextFormatAlign.LEFT;
 					_textField.setTextFormat(_formatAdjusted);
 					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
 				}
+				#end
 				// Actually draw the text onto the buffer
-				_pixels.draw(_textField, _matrix, _colorTransform);
+				_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
 				_textField.setTextFormat(_format);
 			}
 		#if !flash
@@ -619,11 +628,4 @@ class FlxTextField extends FlxText
 	{
 		return _textField;
 	}
-	
-	#if !flash
-	override private function set_atlas(Value:Atlas):Atlas 
-	{
-		return Value;
-	}
-	#end
 }

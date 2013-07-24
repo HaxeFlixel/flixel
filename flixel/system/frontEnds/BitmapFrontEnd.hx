@@ -4,21 +4,86 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.system.layer.frames.FlxFrame;
+import flixel.util.loaders.CachedGraphics;
+import flixel.util.loaders.TextureRegion;
 import openfl.Assets;
 import flixel.FlxG;
 import flixel.util.FlxColor;
+
+import flixel.util.loaders.TexturePackerData;
+import flixel.system.FlxAssets;
+import flixel.system.layer.TileSheetExt;
+import flixel.system.layer.TileSheetData;
 
 class BitmapFrontEnd
 {
 	/**
 	 * Internal storage system to prevent graphics from being used repeatedly in memory.
 	 */
-	public var _cache:Map<String, BitmapData>;
-	public var _lastBitmapDataKey:String;
+	private var _cache:Map<String, CachedGraphics>;
 	
 	public function new()
 	{
 		clearCache();
+	}
+	
+	#if !flash
+	public var whitePixel(get, null):CachedGraphics;
+	
+	private var _whitePixel:CachedGraphics;
+	
+	private function get_whitePixel():CachedGraphics
+	{
+		if (_whitePixel == null)
+		{
+			var bd:BitmapData = new BitmapData(2, 2, true, FlxColor.WHITE);
+			_whitePixel = new CachedGraphics("whitePixel", bd, true);
+			_whitePixel.tilesheet.addTileRect(new Rectangle(0, 0, 1, 1), new Point(0, 0));
+		}
+		
+		return _whitePixel;
+	}
+	
+	public function onContext():Void
+	{
+		var obj:CachedGraphics;
+		
+		if (_cache != null)
+		{
+			for (key in _cache.keys())
+			{
+				obj = _cache.get(key);
+				if (obj != null && obj.isDumped)
+				{
+					obj.onContext();
+				}
+			}
+		}
+	}
+	#end
+	
+	/**
+	 * Dumps bits of all cached graphics. This restores memory, but you can't read / write pixels on those graphics anymore.
+	 * You can call onContext() method for each CachedGraphic object which will restore it again.
+	 */
+	public function dumpCache():Void
+	{
+		#if !(flash || js)
+		var obj:CachedGraphics;
+		
+		if (_cache != null)
+		{
+			for (key in _cache.keys())
+			{
+				obj = _cache.get(key);
+				if (obj != null && obj.canBeDumped)
+				{
+					obj.dump();
+				}
+			}
+		}
+		#end
 	}
 	
 	/**
@@ -31,7 +96,7 @@ class BitmapFrontEnd
 	{
 		return (_cache.exists(Key) && _cache.get(Key) != null);
 	}
-		
+	
 	/**
 	 * Generates a new <code>BitmapData</code> object (a colored square) and caches it.
 	 * 
@@ -42,7 +107,7 @@ class BitmapFrontEnd
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, Key:String = null):BitmapData
+	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
 		var key:String = Key;
 		if (key == null)
@@ -55,9 +120,9 @@ class BitmapFrontEnd
 		}
 		if (!checkCache(key))
 		{
-			_cache.set(key, new BitmapData(Width, Height, true, Color));
+			_cache.set(key, new CachedGraphics(key, new BitmapData(Width, Height, true, Color)));
 		}
-		_lastBitmapDataKey = key;
+		
 		return _cache.get(key);
 	}
 	
@@ -65,51 +130,56 @@ class BitmapFrontEnd
 	 * Loads a bitmap from a file, caches it, and generates a horizontally flipped version if necessary.
 	 * 
 	 * @param	Graphic		The image file that you want to load.
-	 * @param	Reverse		Whether to generate a flipped version.
 	 * @param	Unique		Ensures that the bitmap data uses a new slot in the cache.
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
-	 * @param	FrameWidth
-	 * @param	FrameHeight
-	 * @param 	SpacingX
-	 * @param 	SpacingY
 	 * @return	The <code>BitmapData</code> we just created.
 	 */
-	public function add(Graphic:Dynamic, Reverse:Bool = false, Unique:Bool = false, Key:String = null, FrameWidth:Int = 0, FrameHeight:Int = 0, SpacingX:Int = 1, SpacingY:Int = 1):BitmapData
+	public function add(Graphic:Dynamic, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
 		if (Graphic == null)
 		{
 			return null;
 		}
+		else if (Std.is(Graphic, CachedGraphics))
+		{
+			return cast Graphic;
+		}
+		
+		var region:TextureRegion = null;
 		
 		var isClass:Bool = true;
 		var isBitmap:Bool = true;
+		var isRegion:Bool = true;
 		if (Std.is(Graphic, Class))
 		{
 			isClass = true;
 			isBitmap = false;
+			isRegion = false;
 		}
 		else if (Std.is(Graphic, BitmapData))
 		{
 			isClass = false;
 			isBitmap = true;
+			isRegion = false;
+		}
+		else if (Std.is(Graphic, TextureRegion))
+		{
+			isClass = false;
+			isBitmap = false;
+			isRegion = true;
+			
+			region = cast(Graphic, TextureRegion);
 		}
 		else if (Std.is(Graphic, String))
 		{
 			isClass = false;
 			isBitmap = false;
+			isRegion = false;
 		}
 		else
 		{
 			return null;
 		}
-		
-		var additionalKey:String = "";
-		#if !flash
-		if (FrameWidth != 0 || FrameHeight != 0 || SpacingX != 1 || SpacingY != 1)
-		{
-			additionalKey = "FrameSize:" + FrameWidth + "_" + FrameHeight + "_Spacing:" + SpacingX + "_" + SpacingY;
-		}
-		#end
 		
 		var key:String = Key;
 		if (key == null)
@@ -129,12 +199,14 @@ class BitmapFrontEnd
 					}
 				}
 			}
+			else if (isRegion)
+			{
+				key = region.data.key;
+			}
 			else
 			{
 				key = Graphic;
 			}
-			key += (Reverse ? "_REVERSE_" : "");
-			key += additionalKey;
 			
 			if (Unique)
 			{
@@ -142,76 +214,52 @@ class BitmapFrontEnd
 			}
 		}
 		
-		var tempBitmap:BitmapData;
-		
 		// If there is no data for this key, generate the requested graphic
 		if (!checkCache(key))
 		{
 			var bd:BitmapData = null;
 			if (isClass)
 			{
-				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), []).bitmapData;
+				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), []);
 			}
 			else if (isBitmap)
 			{
 				bd = cast Graphic;
+			}
+			else if (isRegion)
+			{
+				bd = region.data.bitmap;
 			}
 			else
 			{
 				bd = FlxAssets.getBitmapData(Graphic);
 			}
 			
-			#if !flash
-			if (additionalKey != "")
-			{
-				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
-				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
-				
-				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
-				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
-				
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColor.TRANSPARENT);
-				
-				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
-				var tempPoint:Point = new Point();
-				
-				for (i in 0...(numHorizontalFrames))
-				{
-					tempPoint.x = i * (FrameWidth + SpacingX);
-					tempRect.x = i * FrameWidth;
-					
-					for (j in 0...(numVerticalFrames))
-					{
-						tempPoint.y = j * (FrameHeight + SpacingY);
-						tempRect.y = j * FrameHeight;
-						tempBitmap.copyPixels(bd, tempRect, tempPoint);
-					}
-				}
-				
-				bd = tempBitmap;
-			}
-			#else
-			if (Reverse)
-			{
-				var newPixels:BitmapData = new BitmapData(bd.width * 2, bd.height, true, 0x00000000);
-				newPixels.draw(bd);
-				var mtx:Matrix = new Matrix();
-				mtx.scale( -1, 1);
-				mtx.translate(newPixels.width, 0);
-				newPixels.draw(bd, mtx);
-				bd = newPixels;
-				
-			}
-			#end
-			else if (Unique)	
+			if (Unique)
 			{
 				bd = bd.clone();
 			}
 			
-			_cache.set(key, bd);
+			var co:CachedGraphics = new CachedGraphics(key, bd);
+			
+			if (isClass && !Unique)
+			{
+				co.assetsClass = cast Graphic;
+			}
+			else if (!isClass && !isBitmap && !isRegion && !Unique)
+			{
+				co.assetsKey = cast Graphic;
+			}
+			
+			_cache.set(key, co);
 		}
 		
-		_lastBitmapDataKey = key;
+		return _cache.get(key);
+	}
+	
+	// TODO: document it
+	public function get(key:String):CachedGraphics
+	{
 		return _cache.get(key);
 	}
 	
@@ -225,7 +273,7 @@ class BitmapFrontEnd
 	{
 		for (key in _cache.keys())
 		{
-			var data:BitmapData = _cache.get(key);
+			var data:BitmapData = _cache.get(key).bitmap;
 			if (data == bmd)
 			{
 				return key;
@@ -255,39 +303,13 @@ class BitmapFrontEnd
 		return baseKey;
 	}
 	
-	private function fromAssetsCache(bmd:BitmapData):Bool
+	public function remove(key:String):Void
 	{
-		var cachedBitmapData:Map<String, BitmapData> = Assets.cachedBitmapData;
-		if (cachedBitmapData != null)
+		if (_cache.exists(key))
 		{
-			for (key in cachedBitmapData.keys())
-			{
-				var cacheBmd:BitmapData = cachedBitmapData.get(key);
-				if (cacheBmd == bmd)
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Removes bitmapdata from cache
-	 * 
-	 * @param	Graphic	bitmapdata's key to remove
-	 */
-	public function remove(Graphic:String):Void
-	{
-		if (_cache.exists(Graphic))
-		{
-			var bmd:BitmapData = _cache.get(Graphic);
-			_cache.remove(Graphic);
-			if (fromAssetsCache(bmd) == false)
-			{
-				bmd.dispose();
-				bmd = null;
-			}
+			var obj:CachedGraphics = _cache.get(key);
+			_cache.remove(key);
+			obj.destroy();
 		}
 	}
 	
@@ -296,33 +318,31 @@ class BitmapFrontEnd
 	 */
 	public function clearCache():Void
 	{
-		var bmd:BitmapData;
+		var newCache:Map<String, CachedGraphics> = new Map();
+		var obj:CachedGraphics;
+		
 		if (_cache != null)
 		{
 			for (key in _cache.keys())
 			{
-				bmd = _cache.get(key);
+				obj = _cache.get(key);
 				_cache.remove(key);
-				if (bmd != null && fromAssetsCache(bmd) == false)
+				
+				if (!obj.persist)
 				{
-					bmd.dispose();
-					bmd = null;
+					if (obj != null)
+					{
+						obj.destroy();
+						obj = null;
+					}
+				}
+				else
+				{
+					newCache.set(key, obj);
 				}
 			}
 		}
-		_cache = new Map();
-	}
-	
-	/**
-	 * Clears flash.Assests.cachedBitmapData. Use it only when you need it and know what are you doing.
-	 */
-	public function clearAssetsCache():Void
-	{
-		for (key in Assets.cachedBitmapData.keys())
-		{
-			var bmd:BitmapData = Assets.cachedBitmapData.get(key);
-			bmd.dispose();
-			Assets.cachedBitmapData.remove(key);
-		}
+		
+		_cache = newCache;
 	}
 }

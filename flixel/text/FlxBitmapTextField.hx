@@ -44,7 +44,6 @@ class FlxBitmapTextField extends FlxSprite
 	private var _tabSpaces:String = "    ";
 	
 	private var _pendingTextChange:Bool = false;
-	private var _fieldWidth:Int = 2;
 	private var _multiLine:Bool = false;
 	
 	#if flash
@@ -64,6 +63,7 @@ class FlxBitmapTextField extends FlxSprite
 	{
 		super();
 		
+		width = 2;
 		alpha = 1;
 		
 		if (PxFont == null)
@@ -82,7 +82,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		#if flash
 		updateGlyphs(true, _shadow, _outline);
-		_pixels = new BitmapData(1, 1, true);
+		pixels = new BitmapData(1, 1, true);
 		#else
 		pixels = _font.pixels;
 		_drawData = [];
@@ -159,11 +159,6 @@ class FlxBitmapTextField extends FlxSprite
 	#else
 	override public function draw():Void 
 	{
-		if (_atlas == null)
-		{
-			return;
-		}
-		
 		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -185,6 +180,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		
 		var camera:FlxCamera;
+		var bgDrawItem:DrawStackItem = null;
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
@@ -217,14 +213,20 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			camera = cameras[i++];
 			
-			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, true, _blendInt, antialiasing);
-			#else
-			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
-			#end
+			if (_background)
+			{
+				#if !js
+				bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, true, _blendInt, antialiasing);
+				#else
+				bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, useAlpha);
+				#end
+			}
 			
-			currDrawData = drawItem.drawData;
-			currIndex = drawItem.position;
+			#if !js
+			drawItem = camera.getDrawStackItem(_cachedGraphics, true, _blendInt, antialiasing);
+			#else
+			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
+			#end
 			
 			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
 			{
@@ -263,6 +265,9 @@ class FlxBitmapTextField extends FlxSprite
 
 			if (_background)
 			{
+				currDrawData = bgDrawItem.drawData;
+				currIndex = bgDrawItem.position;
+				
 				currTileX = _bgDrawData[1] - x1;
 				currTileY = _bgDrawData[2] - y1;
 				
@@ -290,8 +295,13 @@ class FlxBitmapTextField extends FlxSprite
 					currDrawData[currIndex++] = alpha;
 				}
 				#end
+				
+				bgDrawItem.position = currIndex;
 			}
-
+			
+			currDrawData = drawItem.drawData;
+			currIndex = drawItem.position;
+			
 			while (j < textLength)
 			{
 				currPosInArr = j * 6;
@@ -342,7 +352,7 @@ class FlxBitmapTextField extends FlxSprite
 		super.set_color(Color);
 		_pendingTextChange = true;
 		
-		return _color;
+		return color;
 	}
 	#end
 	
@@ -438,7 +448,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		
 		var preparedText:String = (_autoUpperCase) ? _text.toUpperCase() : _text;
-		var calcFieldWidth:Int = _fieldWidth;
+		var calcFieldWidth:Int = Std.int(width);
 		var rows:Array<String> = [];
 		
 		#if flash
@@ -499,7 +509,7 @@ class FlxBitmapTextField extends FlxSprite
 							var nextWord:String = (wordPos < words.length) ? words[wordPos + 1] : "";
 							if (prevWord != "\t") currentRow += " ";
 							
-							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > width) 
 							{
 								if (txt == "")
 								{
@@ -550,7 +560,7 @@ class FlxBitmapTextField extends FlxSprite
 						}
 						else
 						{
-							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+							if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > width) 
 							{
 								if (word != "")
 								{
@@ -561,7 +571,7 @@ class FlxBitmapTextField extends FlxSprite
 									{
 										currentRow = txt + word.charAt(j);
 										
-										if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > _fieldWidth) 
+										if (_font.getTextWidth(currentRow, _letterSpacing, _fontScale) > width) 
 										{
 											rows.push(txt.substr(0, txt.length - 1));
 											txt = "";
@@ -634,38 +644,36 @@ class FlxBitmapTextField extends FlxSprite
 		#end
 		
 		#if flash
-		if (_pixels != null) 
+		if (_cachedGraphics != null) 
 		{
-			if (finalWidth != _pixels.width || finalHeight != _pixels.height) 
+			if (finalWidth != _cachedGraphics.bitmap.width || finalHeight != _cachedGraphics.bitmap.height) 
 			{
-				_pixels.dispose();
-				_pixels = null;
+				_cachedGraphics.bitmap.dispose();
 			}
 		}
 		
-		if (_pixels == null) 
+		if (_cachedGraphics.bitmap == null) 
 		{
-			_pixels = new BitmapData(finalWidth, finalHeight, !_background, _backgroundColor);
+			_cachedGraphics.bitmap = new BitmapData(finalWidth, finalHeight, !_background, _backgroundColor);
 		} 
 		else 
 		{
-			_pixels.fillRect(_pixels.rect, _backgroundColor);
+			_cachedGraphics.bitmap.fillRect(_cachedGraphics.bitmap.rect, _backgroundColor);
 		}
 		#else
 		_drawData.splice(0, _drawData.length);
 		_bgDrawData.splice(0, _bgDrawData.length);
 		
-		if (_node == null || _node.atlas == null)
+		if (_cachedGraphics == null)
 		{
 			return;
 		}
-		var nodeName:String = _node.atlas.name;
 		
 		// Draw background
 		if (_background)
 		{
 			// Tile_ID
-			_bgDrawData.push(_font.bgTileID(nodeName));		
+			_bgDrawData.push(_font.bgTileID);		
 			_bgDrawData.push( -_halfWidth);
 			_bgDrawData.push( -_halfHeight);
 			
@@ -676,9 +684,9 @@ class FlxBitmapTextField extends FlxSprite
 			var green:Float = (_backgroundColor >> 8 & 0xff) * colorMultiplier;
 			var blue:Float = (_backgroundColor & 0xff) * colorMultiplier;
 			
-			red *= (_color >> 16);
-			green *= (_color >> 8 & 0xff);
-			blue *= (_color & 0xff);
+			red *= (color >> 16);
+			green *= (color >> 8 & 0xff);
+			blue *= (color & 0xff);
 			#end
 			
 			_bgDrawData.push(red);
@@ -690,7 +698,7 @@ class FlxBitmapTextField extends FlxSprite
 		if (_fontScale > 0)
 		{
 			#if flash
-			_pixels.lock();
+			_cachedGraphics.bitmap.lock();
 			#end
 			
 			// Render text
@@ -706,7 +714,7 @@ class FlxBitmapTextField extends FlxSprite
 				{
 					if (_fixedWidth)
 					{
-						ox = Std.int((_fieldWidth - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
+						ox = Std.int((width - _font.getTextWidth(t, _letterSpacing, _fontScale)) / 2);
 					}
 					else
 					{
@@ -717,7 +725,7 @@ class FlxBitmapTextField extends FlxSprite
 				{
 					if (_fixedWidth)
 					{
-						ox = _fieldWidth - Std.int(_font.getTextWidth(t, _letterSpacing, _fontScale));
+						ox = Std.int(width) - Std.int(_font.getTextWidth(t, _letterSpacing, _fontScale));
 					}
 					else
 					{
@@ -731,9 +739,9 @@ class FlxBitmapTextField extends FlxSprite
 						for (px in 0...(2 + 1)) 
 						{
 							#if flash
-							_font.render(_pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+							_font.render(_cachedGraphics.bitmap, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 							#else
-							_font.render(nodeName, _drawData, t, _outlineColor, _color, alpha, px + ox + _padding - _halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
+							_font.render(_drawData, t, _outlineColor, color, alpha, px + ox + _padding - _halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 							#end
 						}
 					}
@@ -743,23 +751,24 @@ class FlxBitmapTextField extends FlxSprite
 				if (_shadow) 
 				{
 					#if flash
-					_font.render(_pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+					_font.render(_cachedGraphics.bitmap, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 					#else
-					_font.render(nodeName, _drawData, t, _shadowColor, _color, alpha, 1 + ox + _padding - _halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
+					_font.render(_drawData, t, _shadowColor, color, alpha, 1 + ox + _padding - _halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 					#end
 				}
 				
 				#if flash
-				_font.render(_pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+				_font.render(_cachedGraphics.bitmap, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
-				_font.render(nodeName, _drawData, t, _textColor, _color, alpha, ox + _padding - _halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale, _useTextColor);
+				_font.render(_drawData, t, _textColor, color, alpha, ox + _padding - _halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale, _useTextColor);
 				#end
 				row++;
 			}
 			
 			#if flash
-			_pixels.unlock();
-			pixels = _pixels;
+			_cachedGraphics.bitmap.unlock();
+		//	pixels = _pixels;
+			dirty = true;
 			#end
 		}
 		
@@ -880,19 +889,20 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
 	 */
-	public function setWidth(PxWidth:Int):Int 
+	override private function set_width(PxWidth:Float):Float
 	{
+		PxWidth = Std.int(PxWidth);
+		
 		if (PxWidth < 1) 
 		{
 			PxWidth = 1;
 		}
-		if (PxWidth != _fieldWidth)
+		if (PxWidth != width)
 		{
-			_fieldWidth = PxWidth;
 			_pendingTextChange = true;
 		}
 		
-		return PxWidth;
+		return super.set_width(PxWidth);
 	}
 	
 	/**
@@ -1168,14 +1178,4 @@ class FlxBitmapTextField extends FlxSprite
 		}
 	}
 	#end
-	
-	override public function updateFrameData():Void
-	{
-		#if !flash
-		if (_node != null && _font != null)
-		{
-			_font.updateGlyphData(_node);
-		}
-		#end
-	}
 }

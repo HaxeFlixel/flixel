@@ -146,8 +146,10 @@ class ConsoleCommands
 		cLog("resetState: State has been reset");
 		
 		#if flash
-		if (_console.autoPause) 
+		if (FlxG.console.autoPause) 
+		{
 			FlxG.game.debugger.vcr.onStep();
+		}
 		#end
 	}
 	
@@ -161,8 +163,10 @@ class ConsoleCommands
 		cLog("switchState: New '" + ClassName + "' created");  
 		
 		#if flash
-		if (_console.autoPause)
+		if (FlxG.console.autoPause)
+		{
 			FlxG.game.debugger.vcr.onStep();
+		}
 		#end
 	}
 	
@@ -172,8 +176,10 @@ class ConsoleCommands
 		cLog("resetGame: Game has been reset");
 		
 		#if flash
-		if (_console.autoPause)
+		if (FlxG.console.autoPause)
+		{
 			FlxG.game.debugger.vcr.onStep();
+		}
 		#end
 	}
 	
@@ -257,7 +263,7 @@ class ConsoleCommands
 			return;
 		}
 		
-		FlxG.cameraFX.shake(Intensity, Duration);
+		FlxG.cameras.shake(Intensity, Duration);
 		cLog("shake: Shake started, Intensity: " + Intensity + " Duration: " + Duration);
 	}
 	

@@ -3,6 +3,7 @@ package flixel;
 import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxTypedGroup;
+import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -10,6 +11,9 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+import flixel.system.layer.Region;
+import flixel.util.FlxSpriteUtil;
+import flixel.util.loaders.CachedGraphics;
 
 /**
  * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
@@ -358,6 +362,11 @@ class FlxObject extends FlxBasic
 			path.destroy();
 		}
 		path = null;
+		
+		_framesData = null;
+		setCachedGraphics(null);
+		_region = null;
+		
 		super.destroy();
 	}
 	
@@ -499,7 +508,7 @@ class FlxObject extends FlxBasic
 		
 		//fill static graphics object with square shape
 		#if flash
-		var gfx:Graphics = FlxG.flashGfx;
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.moveTo(boundingBoxX, boundingBoxY);
 		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
@@ -508,7 +517,7 @@ class FlxObject extends FlxBasic
 		gfx.lineTo(boundingBoxX, boundingBoxY + boundingBoxHeight);
 		gfx.lineTo(boundingBoxX, boundingBoxY);
 		//draw graphics shape to camera buffer
-		Camera.buffer.draw(FlxG.flashGfxSprite);
+		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		#else
 		var gfx:Graphics = Camera._debugLayer.graphics;
 		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
@@ -940,7 +949,7 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		getScreenXY(_point,Camera);
+		getScreenXY(_point, Camera);
 		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
 	}
 	
@@ -1374,5 +1383,47 @@ class FlxObject extends FlxBasic
 	function set_forceComplexRender(value:Bool):Bool 
 	{
 		return forceComplexRender = value;
+	}
+	
+	private var _framesData:FlxSpriteFrames;
+	private var _cachedGraphics:CachedGraphics;
+	private var _region:Region;
+	
+	public function updateFrameData():Void
+	{
+		
+	}
+	
+	public var cachedGraphics(get_cachedGraphics, null):CachedGraphics;
+	
+	private function get_cachedGraphics():CachedGraphics
+	{
+		return _cachedGraphics;
+	}
+	
+	/**
+	 * Internal function for setting cachedGraphics property for this object. 
+	 * It changes cachedGraphics' useCount also for better memory tracking.
+	 * @param	value
+	 */
+	private function setCachedGraphics(value:CachedGraphics):Void
+	{
+		if (_cachedGraphics != null && _cachedGraphics != value)
+		{
+			_cachedGraphics.useCount--;
+		}
+		
+		if (_cachedGraphics != value && value != null)
+		{
+			value.useCount++;
+		}
+		_cachedGraphics = value;
+	}
+	
+	public var region(get_region, null):Region;
+	
+	function get_region():Region 
+	{
+		return _region;
 	}
 }

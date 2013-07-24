@@ -4,13 +4,12 @@ import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.display.Stage;
 import flash.text.Font;
-//import flixel.system.FlxAssets.DebuggerFont;
+import flixel.system.FlxAssets.DebuggerFont;
 import flixel.system.FlxAssets.DefaultFont;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
-import flixel.system.frontEnds.CameraFXFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
@@ -19,7 +18,6 @@ import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.input.FlxInputs;
-import flixel.system.layer.Atlas;
 import flixel.system.layer.TileSheetData;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
@@ -27,6 +25,7 @@ import flixel.tweens.util.Ease.EaseFunction;
 import flixel.util.FlxCollision;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
@@ -96,10 +95,10 @@ class FlxG
 	 */
 	static public var autoPause:Bool;
 	/**
-	 * Applies smoothing to rotated / scaled sprites by default. Set this to true for smooth high resolution games, leave it off for pixelated games.
-	 * Setting this to true will slow down rendering on the Flash target (native targets are hardware accellerated, so this isn't much of a problem).
+	 * WARNING: Changing this can lead to issues with physcis and the recording system. Setting this to 
+	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
 	 */
-	static public var antialiasByDefault:Bool;
+	static public var fixedTimestep:Bool = true;
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
@@ -130,13 +129,6 @@ class FlxG
 	 * array but you can do what you like with it.
 	 */
 	static public var camera:FlxCamera;
-	
-	/**
-	 * Useful helper objects for doing Flash-specific rendering.
-	 * Primarily used for "debug visuals" like drawing bounding boxes directly to the screen buffer.
-	 */
-	static public var flashGfxSprite:Sprite;
-	static public var flashGfx:Graphics;
 
 	#if !FLX_NO_MOUSE
 	/**
@@ -209,11 +201,6 @@ class FlxG
 	 */
 	static public var cameras:CameraFrontEnd;
 	/**
-	 * A reference to the <code>CameraFXFrontEnd</code> object. Contains the <code>fade()</code>, 
-	 * <code>flash()</code> and <code>shake()</code> effects.
-	 */
-	static public var cameraFX:CameraFXFrontEnd;
-	/**
 	 * A reference to the <code>PluginFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
 	 */
@@ -231,30 +218,19 @@ class FlxG
 	{	
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
-		bitmap = new BitmapFrontEnd();
 		
 		FlxG.game = Game;
 		FlxG.width = Std.int(Math.abs(Width));
 		FlxG.height = Std.int(Math.abs(Height));
-		
 		FlxCamera.defaultZoom = Zoom;
-		sound = new SoundFrontEnd();
 		
-		if (flashGfxSprite == null)
-		{
-			flashGfxSprite = new Sprite();
-			flashGfx = flashGfxSprite.graphics;
-		}
-
+		bitmap = new BitmapFrontEnd();
 		cameras = new CameraFrontEnd();
 		plugins = new PluginFrontEnd();
-		
-		// Most of the front ends
+		debugger = new DebuggerFrontEnd();
 		console = new ConsoleFrontEnd();
 		log = new LogFrontEnd();
 		watch = new WatchFrontEnd();
-		debugger = new DebuggerFrontEnd();
-		cameraFX = new CameraFXFrontEnd();
 		sound = new SoundFrontEnd();
 		
 		#if FLX_RECORD
@@ -262,10 +238,11 @@ class FlxG
 		#end
 		
 		// Register fonts
-		//#if !FLX_NO_DEBUG
-		//Font.registerFont(DebuggerFont);
-		//#end
+		Font.registerFont(DebuggerFont);
 		Font.registerFont(DefaultFont);
+		
+		FlxSpriteUtil.flashGfxSprite = new Sprite();
+		FlxSpriteUtil.flashGfx = FlxSpriteUtil.flashGfxSprite.graphics;
 	}
 	
 	/**
@@ -356,33 +333,21 @@ class FlxG
 	}
 	
 	/**
-	 * Reset the input helper objects (useful when changing screens or states)
-	 */
-	static public function resetInput():Void
-	{
-		FlxInputs.resetInputs();
-	}
-	
-	public static var stage(get, never):Stage;
-	
-	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
 	 * Will be null if it's not safe/useful yet.
 	 */
+	public static var stage(get, never):Stage;
+	
 	static private function get_stage():Stage
 	{
-		if (game.stage != null)
-		{
-			return game.stage;
-		}
-		return null;
+		return game.stage;
 	}
-	
-	public static var state(get, never):FlxState;
 	
 	/**
 	 * Read-only: access the current game state from anywhere.
 	 */
+	public static var state(get, never):FlxState;
+	
 	static private function get_state():FlxState
 	{
 		return game.state;
@@ -485,11 +450,9 @@ class FlxG
 	static public function reset():Void
 	{
 		PxBitmapFont.clearStorage();
-		Atlas.clearAtlasCache();
-		TileSheetData.clear();
 		
 		FlxG.bitmap.clearCache();
-		FlxG.resetInput();
+		FlxInputs.resetInputs();
 		FlxG.sound.destroySounds(true);
 		FlxG.paused = false;
 		FlxG.timeScale = 1.0;

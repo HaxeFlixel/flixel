@@ -5,8 +5,6 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.system.layer.DrawStackItem;
-import flixel.system.layer.Node;
-import flixel.system.layer.TileSheetData;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 
@@ -28,13 +26,6 @@ class BGSprite extends FlxSprite
 	 */
 	override public function draw():Void
 	{
-		#if !flash
-		if (_atlas == null)
-		{
-			return;
-		}
-		#end
-		
 		if (cameras == null)
 		{
 			cameras = FlxG.cameras.list;
@@ -62,9 +53,9 @@ class BGSprite extends FlxSprite
 			}
 			
 			#if !js
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt);
 			#else
-			drawItem = camera.getDrawStackItem(_atlas, useAlpha);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
 			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;

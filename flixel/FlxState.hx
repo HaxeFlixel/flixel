@@ -1,8 +1,7 @@
 package flixel;
 
-import flash.display.BitmapData;
-import flixel.system.layer.Atlas;
 import flixel.group.FlxGroup;
+import flixel.system.input.FlxInputs;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game
@@ -187,7 +186,7 @@ class FlxState extends FlxGroup
 			//Reset the input so things like "justPressed" won't interfere
 			if (!persistantUpdate) 
 			{ 
-				FlxG.resetInput();
+				FlxInputs.resetInputs();
 			}
 			
 			if (!_subState.initialized)
@@ -224,52 +223,6 @@ class FlxState extends FlxGroup
 			this.closeSubState();
 			
 		super.destroy();
-	}
-	
-	/**
-	 * Gets the atlas for specified key from bitmap cache in FlxG. Creates new atlas for it if there wasn't such a atlas 
-	 * @param	KeyInBitmapCache	key from bitmap cache in FlxG
-	 * @return	required atlas
-	 */
-	public function getAtlasFor(KeyInBitmapCache:String):Atlas
-	{
-		var bm:BitmapData = FlxG.bitmap._cache.get(KeyInBitmapCache);
-		if (bm != null)
-		{
-			var tempAtlas:Atlas = Atlas.getAtlas(KeyInBitmapCache, bm);
-			return tempAtlas;
-		}
-		else
-		{
-			#if !FLX_NO_DEBUG
-			throw "There isn't bitmapdata in cache with key: " + KeyInBitmapCache;
-			#end
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * Creates and adds new atlas to atlas cache, so it can be drawn
-	 * @param	atlasName		name of atlas to be created 
-	 * @param	atlasWidth		width of atlas
-	 * @param	atlasHeight		height of atlas
-	 * @return					new empty atlas object
-	 */
-	public function createAtlas(atlasName:String, atlasWidth:Int, atlasHeight:Int):Atlas
-	{
-		var key:String = Atlas.getUniqueKey(atlasName);
-		return Atlas.getAtlas(key, null, false, atlasWidth, atlasHeight);
-	}
-	
-	/**
-	 * Removes atlas from cache.
-	 * @param	atlas		atlas to remove
-	 * @param	destroy		if true then atlas will be completely destroyed also (be carefull with this parameter)
-	 */
-	public function removeAtlas(atlas:Atlas, destroy:Bool = false):Void
-	{
-		Atlas.removeAtlas(atlas, destroy);
 	}
 	
 	/**

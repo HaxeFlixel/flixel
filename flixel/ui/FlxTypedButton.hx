@@ -5,11 +5,11 @@ import flash.events.MouseEvent;
 import flash.events.TouchEvent;
 import flash.Lib;
 import flash.media.Sound;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.system.FlxSound;
 import flixel.system.input.FlxTouch;
-import flixel.system.layer.Atlas;
 import flixel.util.FlxPoint;
 
 /**
@@ -499,17 +499,4 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		status = FlxButton.NORMAL;
 	}
-	
-	#if !flash
-	override private function set_atlas(value:Atlas):Atlas 
-	{
-		var atl:Atlas = super.set_atlas(value);
-		if (atl == value && label != null)
-		{
-			// Maybe there is enough place for font image
-			label.atlas = value;
-		}
-		return value;
-	}
-	#end
 }

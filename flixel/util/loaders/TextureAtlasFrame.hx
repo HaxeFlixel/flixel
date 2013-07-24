@@ -3,7 +3,7 @@ package flixel.util.loaders;
 import flash.geom.Rectangle;
 import flixel.util.FlxPoint;
 
-class Frame
+class TextureAtlasFrame
 {
 	public var name:String = null;
 	public var frame:Rectangle = null;

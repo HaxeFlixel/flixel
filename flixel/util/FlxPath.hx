@@ -249,7 +249,7 @@ class FlxPath
 		
 		//Set up our global flash graphics object to draw out the path
 		#if flash
-		var gfx:Graphics = FlxG.flashGfx;
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		#else
 		var gfx:Graphics = Camera._debugLayer.graphics;
@@ -318,7 +318,7 @@ class FlxPath
 		
 		#if flash
 		//then stamp the path down onto the game buffer
-		Camera.buffer.draw(FlxG.flashGfxSprite);
+		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		#end
 	}
 

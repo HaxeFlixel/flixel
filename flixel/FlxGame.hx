@@ -15,8 +15,6 @@ import flixel.plugin.TimerManager;
 import flixel.system.FlxAssets;
 import flixel.system.FlxReplay;
 import flixel.system.input.FlxInputs;
-import flixel.system.layer.Atlas;
-import flixel.system.layer.TileSheetData;
 import flixel.system.layer.TileSheetExt;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxColor;
@@ -45,8 +43,7 @@ class FlxGame extends Sprite
 	/**
 	 * Helper variable to help calculate elapsed time.
 	 */
-	static public var mark(default, null):Int = 0;
-	
+	public var mark(default, null):Int = 0;
 	/**
 	 * Current game state.
 	 */
@@ -319,30 +316,34 @@ class FlxGame extends Sprite
 	 * @param	FlashEvent	Flash event.
 	 */
 	private function onEnterFrame(FlashEvent:Event = null):Void
-	{			
+	{
 		mark = Lib.getTimer();
 		elapsedMS = mark - _total;
 		_total = mark;
 		
 		#if !FLX_NO_SOUND_TRAY
 		if (_updateSoundTray)
+		{
 			updateSoundTray(elapsedMS);
+		}
 		#end
 		
-		if(!_lostFocus)
+		if (!_lostFocus)
 		{
 			#if !FLX_NO_DEBUG
-			if((debugger != null) && debugger.vcr.paused)
+			if ((debugger != null) && debugger.vcr.paused)
 			{
-				if(debugger.vcr.stepRequested)
+				if (debugger.vcr.stepRequested)
 				{
 					debugger.vcr.stepRequested = false;
 					step();
 				}
 			}
-			else
-			{
 			#end
+			
+			if (FlxG.fixedTimestep)
+			{
+				
 				_accumulator += elapsedMS;
 				if (_accumulator > maxAccumulation)
 				{
@@ -355,9 +356,12 @@ class FlxGame extends Sprite
 					step();
 					_accumulator = _accumulator - stepMS; 
 				}
-			#if !FLX_NO_DEBUG
 			}
-			#end
+			else
+			{
+				step();
+			}
+			
 			
 			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT = 0;
@@ -422,12 +426,10 @@ class FlxGame extends Sprite
 	{ 
 		// Basic reset stuff
 		PxBitmapFont.clearStorage();
-		Atlas.clearAtlasCache();
-		TileSheetData.clear();
 		
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
-		FlxG.resetInput();
+		FlxInputs.resetInputs();
 		FlxG.sound.destroySounds();
 		
 		#if !FLX_NO_DEBUG
@@ -576,7 +578,14 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		FlxG.elapsed = FlxG.timeScale * stepSeconds;
+		if (FlxG.fixedTimestep)
+		{
+			FlxG.elapsed = FlxG.timeScale * stepSeconds; // fixed timestep
+		}
+		else
+		{
+			FlxG.elapsed = FlxG.timeScale * (elapsedMS / 1000); // variable timestep
+		}
 		
 		updateInput();
 		
@@ -660,11 +669,6 @@ class FlxGame extends Sprite
 			debugger.vcr.updateRuntime(stepMS);
 			#end
 		}
-		#end
-		
-		#if !FLX_NO_MOUSE
-		// TODO: Test why is this needed can it be put in FlxMouse
-		FlxG.mouse.wheel = 0;
 		#end
 	}
 	
@@ -797,7 +801,20 @@ class FlxGame extends Sprite
 		
 		// Finally, set up an event for the actual game loop stuff.
 		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		
+		#if (desktop || mobile)
+		// We need to listen for resize event which means new context
+		// it means that we need to recreate bitmapdatas of dumped tilesheets
+		stage.addEventListener(Event.RESIZE, onContext);
+		#end
 	}
+	
+	#if (desktop || mobile)
+	private function onContext(e:Event):Void 
+	{
+		FlxG.bitmap.onContext();
+	}
+	#end
 	
 	#if !FLX_NO_SOUND_TRAY
 	/**

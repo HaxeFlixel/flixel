@@ -67,7 +67,7 @@ class FlxFrame
 		{
 			var temp:BitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxColor.TRANSPARENT);
 			FlxFrame.POINT.x = FlxFrame.POINT.y = 0;
-			temp.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, FlxFrame.POINT);
+			temp.copyPixels(_tileSheet.bitmap, frame, FlxFrame.POINT);
 			
 			MATRIX.identity();
 			MATRIX.translate( -0.5 * frame.width, -0.5 * frame.height);
@@ -80,7 +80,7 @@ class FlxFrame
 		{
 			FlxFrame.POINT.x = offset.x;
 			FlxFrame.POINT.y = offset.y;
-			_bitmapData.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, FlxFrame.POINT);
+			_bitmapData.copyPixels(_tileSheet.bitmap, frame, FlxFrame.POINT);
 		}
 		
 		return _bitmapData;

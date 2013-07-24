@@ -123,14 +123,16 @@ class FlxTileblock extends FlxSprite
 			_tileIndices = [];
 		}
 		
+		
 		_tileWidth = sprite.frameWidth;
 		_tileHeight = sprite.frameHeight;
-		_pixels = FlxG.bitmap.add(TileGraphic, false, false, null, _tileWidth, _tileHeight);
-		_bitmapDataKey = FlxG.bitmap._lastBitmapDataKey;
 		frameWidth = Std.int(width);
 		frameHeight = Std.int(height);
+		
+		setCachedGraphics(sprite.cachedGraphics);
+		_region = sprite.region.clone();
+		updateFrameData();
 		resetHelpers();
-		updateAtlasInfo();
 		#end
 		while (row < heightInTiles)
 		{
@@ -139,14 +141,14 @@ class FlxTileblock extends FlxSprite
 			
 			while(column < widthInTiles)
 			{
-				if (FlxRandom.float() * total > Empties)
+				if (Math.random() * total > Empties)
 				{
 					#if (flash || js)
 					sprite.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 					#else
-					var tileIndex:Int = Std.int(FlxRandom.float() * _framesData.frames.length);
+					var tileIndex:Int = Std.int(Math.random() * _framesData.frames.length);
 					_tileIndices.push(tileIndex);
 					_tileData.push(_framesData.frames[tileIndex].tileID);
 					_tileData.push(destinationX - _halfWidth + 0.5 * _tileWidth);
@@ -162,21 +164,13 @@ class FlxTileblock extends FlxSprite
 			row++;
 		}
 		
-		#if !(flash || js)
-		updateFrameData();
-		#end
-		
+		sprite.destroy();
 		return this;
 	}
 	
 	#if !(flash || js)
 	override public function draw():Void 
 	{
-		if (_atlas == null)
-		{
-			return;
-		}
-		
 		if (_flickerTimer != 0)
 		{
 			_flicker = !_flicker;
@@ -221,11 +215,11 @@ class FlxTileblock extends FlxSprite
 		while(i < l)
 		{
 			camera = cameras[i++];
-			drawItem = camera.getDrawStackItem(_atlas, isColored, _blendInt, antialiasing);
+			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt, antialiasing);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
+			if (!camera.visible || !camera.exists || !onScreenSprite(camera))
 			{
 				continue;
 			}
@@ -287,7 +281,6 @@ class FlxTileblock extends FlxSprite
 					}
 					
 					currDrawData[currIndex++] = alpha;
-					
 					j++;
 				}
 				
@@ -310,9 +303,9 @@ class FlxTileblock extends FlxSprite
 	
 	override public function updateFrameData():Void
 	{
-		if (_node != null && _tileWidth >= 1 && _tileHeight >= 1)
+		if (_cachedGraphics != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _node.getSpriteSheetFrames(_tileWidth, _tileHeight, null, 0, 0, 0, 0, 1, 1);
+			_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region, null);
 			
 			if (_tileData != null)
 			{

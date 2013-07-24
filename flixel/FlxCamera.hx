@@ -7,14 +7,15 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.system.layer.Atlas;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
+import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.util.loaders.CachedGraphics;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -272,17 +273,17 @@ class FlxCamera extends FlxBasic
 	private static var _storageHead:DrawStackItem;
 	
 	#if !js
-	inline public function getDrawStackItem(ObjAtlas:Atlas, ObjColored:Bool, ObjBlending:Int, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
 	#else
-	inline public function getDrawStackItem(ObjAtlas:Atlas, UseAlpha:Bool, ObjSmoothing:Bool = false):DrawStackItem
+	/*inline*/ public function getDrawStackItem(ObjGraphics:CachedGraphics, UseAlpha:Bool, ObjAntialiasing:Bool = false):DrawStackItem
 	#end
 	{
 		var itemToReturn:DrawStackItem = null;
 		if (_currentStackItem.initialized == false)
 		{
 			_headOfDrawStack = _currentStackItem;
-			_currentStackItem.atlas = ObjAtlas;
-			_currentStackItem.smoothing = ObjSmoothing;
+			_currentStackItem.graphics = ObjGraphics;
+			_currentStackItem.antialiasing = ObjAntialiasing;
 			#if !js
 			_currentStackItem.colored = ObjColored;
 			_currentStackItem.blending = ObjBlending;
@@ -292,15 +293,13 @@ class FlxCamera extends FlxBasic
 			itemToReturn = _currentStackItem;
 		}
 	#if !js
-		else if (_currentStackItem.atlas == ObjAtlas 
+		else if (_currentStackItem.graphics == ObjGraphics 
 			&& _currentStackItem.colored == ObjColored 
 			&& _currentStackItem.blending == ObjBlending 
-		#if FLX_SPRITE_ANTIALIASING 
-			&& _currentStackItem.smoothing == ObjSmoothing 
-		#end
+			&& _currentStackItem.antialiasing == ObjAntialiasing 
 		)
 	#else
-		else if (_currentStackItem.atlas == ObjAtlas && _currentStackItem.useAlpha == UseAlpha)
+		else if (_currentStackItem.graphics == ObjGraphics && _currentStackItem.useAlpha == UseAlpha)
 	#end
 		{
 			itemToReturn = _currentStackItem;
@@ -321,8 +320,8 @@ class FlxCamera extends FlxBasic
 				newItem = new DrawStackItem();
 			}
 			
-			newItem.atlas = ObjAtlas;
-			newItem.smoothing = ObjSmoothing;
+			newItem.graphics = ObjGraphics;
+			newItem.antialiasing = ObjAntialiasing;
 			#if !js
 			newItem.colored = ObjColored;
 			newItem.blending = ObjBlending;
@@ -338,7 +337,7 @@ class FlxCamera extends FlxBasic
 		return itemToReturn;
 	}
 	
-	inline public function clearDrawStack():Void
+	/*inline*/ public function clearDrawStack():Void
 	{	
 		var currItem:DrawStackItem = _headOfDrawStack.next;
 		while (currItem != null)
@@ -375,7 +374,7 @@ class FlxCamera extends FlxBasic
 			{
 				if (dataLen != position)
 				{
-					data.splice(position, (dataLen - position));
+					untyped data.length = position; // optimized way of resizing an array
 				}
 				var tempFlags:Int = Graphics.TILE_TRANS_2x2;
 				#if !js
@@ -391,7 +390,7 @@ class FlxCamera extends FlxBasic
 					tempFlags |= Graphics.TILE_ALPHA;
 				}
 				#end
-				currItem.atlas._tileSheetData.tileSheet.drawTiles(this._canvas.graphics, data, (this.antialiasing || currItem.smoothing), tempFlags);
+				currItem.graphics.tilesheet.tileSheet.drawTiles(_canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags);
 				TileSheetExt._DRAWCALLS++;
 			}
 			currItem = currItem.next;
@@ -509,7 +508,6 @@ class FlxCamera extends FlxBasic
 		
 		alpha = 1.0;
 		angle = 0.0;
-		antialiasing = FlxG.antialiasByDefault;
 	}
 	
 	/**
@@ -1056,7 +1054,7 @@ class FlxCamera extends FlxBasic
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
 	 */
-	public var antialiasing(default, set_antialiasing):Bool;
+	public var antialiasing(default, set_antialiasing):Bool = false;
 	
 	/**
 	 * @private

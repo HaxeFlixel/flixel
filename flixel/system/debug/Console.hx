@@ -49,12 +49,6 @@ class Console extends Window
 	 */
 	public var cmdHistory:Array<String>;
 	
-	/**
-	 * Whether the console should auto-pause or not when it's focused. Only works for flash atm.
-	 * @default true
-	 */
-	public var autoPause:Bool = true;
-	
 	private var historyIndex:Int = 0;
 	private var historyMax:Int = 25;
 	
@@ -122,7 +116,7 @@ class Console extends Window
 		
 		#if flash 
 		// Pause game
-		if (autoPause)
+		if (FlxG.console.autoPause)
 		{
 			FlxG.game.debugger.vcr.onPause();
 		}
@@ -144,7 +138,7 @@ class Console extends Window
 		
 		#if flash
 		// Unpause game
-		if (autoPause)
+		if (FlxG.console.autoPause)
 		{
 			FlxG.game.debugger.vcr.onPlay();
 		}

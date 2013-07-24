@@ -1,11 +1,15 @@
 package flixel.system.input;
 
+import flash.Lib;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
-import flash.Lib;
+import flash.geom.Point;
+import flash.Vector;
+import flash.ui.MouseCursorData;
 import flash.ui.Mouse;
+import flash.ui.MouseCursor;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
@@ -77,6 +81,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	
 	private var _cursorBitmapData:BitmapData;
 
+	private var _wheelUsed:Bool = false;
+	
 	/**
 	 * Helper variables for recording purposes.
 	 */
@@ -90,6 +96,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * @default false
 	 */
 	public var useSystemCursor(default, set_useSystemCursor):Bool;
+	/**
+	 * Names for the Native Flash 10.2 Cursors
+	 */
+	#if (flash && !FLX_NO_NATIVE_CURSOR)
+	private var _cursorDefaultName:String = "defaultCursor";
+	private var _currentNativeCursor:String;
+	private var _previousNativeCursor:String;
+	#end
 
 	/**
 	 * Constructor.
@@ -179,7 +193,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private function onMouseUp(FlashEvent:MouseEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) #if FLX_RECORD|| FlxG.game.replaying#end)
+		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 
+			#if (FLX_RECORD) || FlxG.game.replaying #end)
 		{
 			return;
 		}
@@ -206,12 +221,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private function onMouseWheel(FlashEvent:MouseEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) #if FLX_RECORD|| FlxG.game.replaying #end)
+		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 
+			#if (FLX_RECORD) || FlxG.game.replaying #end)
 		{
 			return;
 		}
 		#end
 		
+		_wheelUsed = true;
 		wheel = FlashEvent.delta;
 	}
 
@@ -359,8 +376,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor.y = YOffset;
 		_cursor.scaleX = Scale;
 		_cursor.scaleY = Scale;
-		
+
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		setSimpleNativeCursorData(_cursorDefaultName, _cursor.bitmapData);
+		#else
 		cursorContainer.addChild(_cursor);
+		#end
 	}
 
 	/**
@@ -382,6 +403,58 @@ class FlxMouse extends FlxPoint implements IFlxInput
 			}
 		}
 	}
+
+	#if (flash && !FLX_NO_NATIVE_CURSOR)
+	/**
+	 * Set a Native cursor that has been registered by Name
+	 * Warning, you need to use registerNativeCursor before you use it here
+	 * @param Name The name ID used when registered
+	 */
+	public function setNativeCursor(Name:String):Void
+	{
+		if(_currentNativeCursor != Name)
+		{
+			_previousNativeCursor = _currentNativeCursor;
+			_currentNativeCursor = Name;
+			Mouse.cursor = _currentNativeCursor;
+		}
+	}
+
+	/**
+	 * Shortcut to register a Native cursor for > Flash 10.2
+	 * @param  Name       The ID name used for the cursor
+	 * @param  CursorData MouseCursorData contains the bitmap, hotspot etc
+	 */
+	public function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
+	{
+		untyped Mouse.registerCursor(Name, CursorData);
+	}
+
+	/**
+	 * Shortcut to create and set a simple MouseCursorData
+	 * @param  Name       The ID name used for the cursor
+	 * @param  CursorData MouseCursorData contains the bitmap, hotspot etc
+	 */
+	public function setSimpleNativeCursorData(Name:String, CursorBitmap:BitmapData):MouseCursorData
+	{
+		var cursorVector = new Vector<BitmapData>();
+		cursorVector[0] = CursorBitmap;
+
+		if(_cursor.bitmapData.width > 32 ||_cursor.bitmapData.height > 32)
+			FlxG.log.warn ("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
+
+		var cursorData = new MouseCursorData();
+		cursorData.hotSpot = new Point(0, 0);
+		cursorData.data = cursorVector;
+
+		registerNativeCursor( Name, cursorData );
+		setNativeCursor( Name );
+
+		Mouse.show();
+
+		return cursorData;
+	}
+	#end
 
 	/**
 	 * Called by the internal game loop to update the mouse pointer's position in the game world.
@@ -410,6 +483,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 			_current = 0;
 		}
 		_last = _current;
+		
+		if (!_wheelUsed)
+		{
+			wheel = 0;
+		}
+		_wheelUsed = false;
 	}
 
 	/**
@@ -579,34 +658,61 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		updateCursor();
 	}
 
+	/**
+	 * Called from the main Event.ACTIVATE is dispatched in FlxGame
+	 */
 	public function onFocus( ):Void
 	{
-		#if !FLX_NO_DEBUG
-		if (!FlxG.debugger.visible && !useSystemCursor)
-		#else
-		if (!useSystemCursor)
-		#end
-		{
-			Mouse.hide();
-		}
 		reset();
 	}
 
+	/**
+	 * Called from the main Event.DEACTIVATE is dispatched in FlxGame
+	 */
 	public function onFocusLost( ):Void
 	{
 		Mouse.show();
 	}
 
+	/**
+	 * Show the default system cursor, if Flash 10.2 return to AUTO
+	 */
+	private function showSystemCursor():Void
+	{
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		setNativeCursor(MouseCursor.AUTO);
+		#else
+		Mouse.show();
+		cursorContainer.visible = false;
+		#end
+	}
+
+	/**
+	 * Hide the system cursor, if Flash 10.2 return to default
+	 */
+	private function hideSystemCursor():Void
+	{
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		if(Mouse.supportsCursor && _previousNativeCursor != null)
+		{
+			setNativeCursor(_previousNativeCursor);
+		}
+		#else
+		Mouse.hide();
+		cursorContainer.visible = true;
+		#end
+	}
+	
 	private function set_useSystemCursor(value:Bool):Bool
 	{
 		useSystemCursor = value;
 		if (!useSystemCursor)
 		{
-			Mouse.hide();
+			hideSystemCursor();
 		} 
 		else 
 		{
-			Mouse.show();
+			showSystemCursor();
 		}
 		return value;
 	}
