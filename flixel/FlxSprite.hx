@@ -1656,7 +1656,7 @@ class FlxSprite extends FlxObject
 		return onScreenSprite(Camera);
 	}
 	
-	private function onScreenSprite(Camera:FlxCamera = null):Bool
+	inline private function onScreenSprite(Camera:FlxCamera = null):Bool
 	{
 		if (Camera == null)
 		{
@@ -1716,19 +1716,18 @@ class FlxSprite extends FlxObject
 			minY -= radius;
 		}
 		
-		if (minX > Camera.width)
-			return false;
-			
-		if (maxX < 0)
-			return false;
-			
-		if (minY > Camera.height)
-			return false;
+		var result:Bool = true;
+		if (minX > Camera.width || maxX < 0)
+		{
+			result = false;
+		}
 		
-		if (maxY < 0)
-			return false;
+		if (minY > Camera.height || maxY < 0)
+		{
+			result = false;
+		}
 		
-		return true;
+		return result;
 	}
 	
 	/*inline*/ /*private function onScreenSprite(Camera:FlxCamera = null):Bool
