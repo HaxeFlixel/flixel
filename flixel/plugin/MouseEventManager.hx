@@ -16,11 +16,11 @@ import flixel.util.FlxPoint;
 * 
 * 		FlxG.plugins.add(new MouseInteractionMgr());
 * 		var spr:FlxSprite = new FlxSprite();
-* 		MouseInteractionMgr.addSprite(spr, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+* 		MouseEventManager.addSprite(spr, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
 * 
 * 
 * Or simply add a new sprite the manager will initialize itself: 
-*      MouseInteractionMgr.addSprite(spr, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+*      MouseEventManager.addSprite(spr, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
 * 
 * Also implement the callbacks with FlxSprite return:
 * 
@@ -31,7 +31,7 @@ import flixel.util.FlxPoint;
 * 
 * @author TiagoLr (~~~ ProG4mr ~~~)
 */
-class MouseInteractionMgr extends FlxBasic
+class MouseEventManager extends FlxBasic
 {
 	static private var _registeredSprites:Array<SpriteReg>;
 	static private var _mouseOverSprites:Array<SpriteReg>;
@@ -39,7 +39,7 @@ class MouseInteractionMgr extends FlxBasic
 	static private var _point:FlxPoint;
 
 	/**
-	* Call this using FlxG.plugins.add(new MouseInteractionMgr()).
+	* Call this using FlxG.plugins.add(new MouseEventMgr()).
 	*/
 	public function new()
 	{
@@ -57,12 +57,12 @@ class MouseInteractionMgr extends FlxBasic
 	}
 	
 	/**
-	* As alternative you can call MouseInteractionMgr.init().
+	* As alternative you can call MouseEventManager.init().
 	*/
 	public static inline function init()
 	{
-		if (FlxG.plugins.get(MouseInteractionMgr) == null)
-			FlxG.plugins.add(new MouseInteractionMgr());
+		if (FlxG.plugins.get(MouseEventManager) == null)
+			FlxG.plugins.add(new MouseEventManager());
 	}
 	/**
 	* Adds a sprite to MouseInteractionMgr registry.
@@ -79,8 +79,7 @@ class MouseInteractionMgr extends FlxBasic
 	*/
 	static public function addSprite(Sprite:FlxSprite, ?OnMouseDown:FlxSprite->Void, ?OnMouseUp:FlxSprite->Void, ?OnMouseOver:FlxSprite->Void, ?OnMouseOut:FlxSprite->Void, MouseChildren = false, MouseEnabled = true)
 	{
-		if (FlxG.plugins.get(MouseInteractionMgr) == null)
-			FlxG.plugins.add(new MouseInteractionMgr());
+		init(); // MEManager is initialized and added to pluggins if it was not there already.
 		
 		var newReg:SpriteReg = {
 			sprite: Sprite,
@@ -428,7 +427,7 @@ class MouseInteractionMgr extends FlxBasic
 		}
 		else
 		{
-			throw new Error("MouseInteractionManager , isSpriteMouseChildren() : sprite not found");
+			throw new Error("MouseEventManager , isSpriteMouseChildren() : sprite not found");
 		}
 	}
 
