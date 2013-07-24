@@ -328,33 +328,16 @@ class FlxG
 	}
 	
 	/**
-	 * Reset the input helper objects (useful when changing screens or states)
-	 */
-	static public function resetInput():Void
-	{
-		FlxInputs.resetInputs();
-	}
-	
-	public static var stage(get, never):Stage;
-	
-	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
 	 * Will be null if it's not safe/useful yet.
 	 */
-	static private function get_stage():Stage
-	{
-		if (game.stage != null)
-		{
-			return game.stage;
-		}
-		return null;
-	}
-	
-	public static var state(get, never):FlxState;
+	public static var stage(default, never):Stage;
 	
 	/**
 	 * Read-only: access the current game state from anywhere.
 	 */
+	public static var state(get, never):FlxState;
+	
 	static private function get_state():FlxState
 	{
 		return game.state;
