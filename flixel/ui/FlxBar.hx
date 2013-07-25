@@ -1068,14 +1068,18 @@ class FlxBar extends FlxSprite
 
 			if (!simpleRender)
 			{
-				var radians:Float = -angle * FlxAngle.TO_RAD;
-				var cos:Float = Math.cos(radians);
-				var sin:Float = Math.sin(radians);
+				if (_angleChanged)
+				{
+					var radians:Float = -angle * FlxAngle.TO_RAD;
+					_sinAngle = Math.sin(radians);
+					_cosAngle = Math.cos(radians);
+					_angleChanged = false;
+				}
 				
-				csx = cos * scale.x;
-				ssy = sin * scale.y;
-				ssx = sin * scale.x;
-				csy = cos * scale.y;
+				csx = _cosAngle * scale.x;
+				ssy = _sinAngle * scale.y;
+				ssx = _sinAngle * scale.x;
+				csy = _cosAngle * scale.y;
 				
 				x1 = (origin.x - _halfWidth);
 				y1 = (origin.y - _halfHeight);

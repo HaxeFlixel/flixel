@@ -699,6 +699,7 @@ class FlxSprite extends FlxObject
 	override public function update():Void 
 	{
 		super.update();
+		// TODO: add check if currAnim isn't null
 		updateAnimation();
 	}
 	
@@ -741,7 +742,7 @@ class FlxSprite extends FlxObject
 		
 		var isSimpleRender:Bool = simpleRenderSprite();
 		
-		for( camera in cameras )
+		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists || !onScreen(camera))
 			{
@@ -813,12 +814,19 @@ class FlxSprite extends FlxObject
 			
 			if (!isSimpleRender)
 			{
-				var radians:Float = -angle * FlxAngle.TO_RAD;
+				if (_angleChanged)
+				{
+					var radians:Float = -angle * FlxAngle.TO_RAD;
+					_sinAngle = Math.sin(radians);
+					_cosAngle = Math.cos(radians);
+					_angleChanged = false;
+				}
+				
 				
 				if (_flxFrame.rotated)
 				{
-					cos = Math.sin(radians) * -1;
-					sin = Math.cos(radians);
+					cos = -_sinAngle;
+					sin = _cosAngle;
 					
 					csx = cos * scale.x * facingMult;
 					ssy = sin * scale.y;
@@ -835,8 +843,8 @@ class FlxSprite extends FlxObject
 				}
 				else
 				{
-					cos = Math.cos(radians);
-					sin = Math.sin(radians);
+					cos = _cosAngle;
+					sin = _sinAngle;
 					
 					csx = cos * scale.x * facingMult;
 					ssy = sin * scale.y;
@@ -1935,6 +1943,16 @@ class FlxSprite extends FlxObject
 		#else
 		return (((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
+	}
+	
+	private var _angleChanged:Bool = false;
+	private var _sinAngle:Float = 0;
+	private var _cosAngle:Float = 1;
+	
+	override private function set_angle(value:Float):Float
+	{
+		_angleChanged = (angle != value);
+		return angle = value;
 	}
 	
 	#if !flash

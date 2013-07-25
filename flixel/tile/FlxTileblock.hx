@@ -205,13 +205,10 @@ class FlxTileblock extends FlxSprite
 		var currTileX:Float;
 		var currTileY:Float;
 		
-		var radians:Float;
-		var cos:Float;
-		var sin:Float;
 		var relativeX:Float;
 		var relativeY:Float;
 		
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
 			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt, antialiasing);
@@ -228,27 +225,31 @@ class FlxTileblock extends FlxSprite
 			
 			if (_tileData != null)
 			{
-				var csx : Float = tileScaleHack;
-				var ssy : Float = 0;
-				var ssx : Float = 0;
-				var csy : Float = tileScaleHack;
-				var x1 : Float = 0;
-				var y1 : Float = 0;
+				var csx:Float = tileScaleHack;
+				var ssy:Float = 0;
+				var ssx:Float = 0;
+				var csy:Float = tileScaleHack;
+				var x1:Float = 0;
+				var y1:Float = 0;
 				
 				if (!simpleRenderSprite())
 				{
-					radians = angle * FlxAngle.TO_RAD;
-					cos = Math.cos(radians);
-					sin = Math.sin(radians);
+					if (_angleChanged)
+					{
+						var radians:Float = -angle * FlxAngle.TO_RAD;
+						_sinAngle = Math.sin(radians);
+						_cosAngle = Math.cos(radians);
+						_angleChanged = false;
+					}
 					
 					// Tilemap tearing hack
 					var sx:Float = tileScaleHack * scale.x;
 					var sy:Float = tileScaleHack * scale.y;
 					
-					csx = cos * sx;
-					ssy = sin * sy;
-					ssx = sin * sx;
-					csy = cos * sy;
+					csx = _cosAngle * sx;
+					ssy = _sinAngle * sy;
+					ssx = _sinAngle * sx;
+					csy = _cosAngle * sy;
 					
 					x1 = (origin.x - _halfWidth);
 					y1 = (origin.y - _halfHeight);
