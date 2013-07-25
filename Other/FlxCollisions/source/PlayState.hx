@@ -42,7 +42,7 @@ class PlayState extends FlxState
 		destination = sprite.getMidpoint();
 		destination.x += 56;
 		path = new FlxPath([sprite.getMidpoint(),destination]);
-		sprite.followPath(path, 40, FlxObject.PATH_YOYO);
+		sprite.followPath(path, 40, FlxPath.YOYO);
 		add(sprite);
 		
 		// Then add the player, its own class with its own logic
