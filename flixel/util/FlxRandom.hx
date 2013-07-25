@@ -53,60 +53,59 @@ class FlxRandom
 	 * If you want a random number between 5 and 15, for example, (inclusive) use rand(5, 15)
 	 * Parameter order is insignificant, the return will always be between the lowest and highest value.
 	 * 
-	 * @param 	min 		The lowest value to return (default: 0)
-	 * @param 	max 		The highest value to return (default: MAX_RANGE)
-	 * @param 	excludes 	An Array of integers that will NOT be returned (default: null)
+	 * @param 	Min 		The lowest value to return (default: 0)
+	 * @param 	Max 		The highest value to return (default: MAX_RANGE)
+	 * @param 	Excludes 	An Array of integers that will NOT be returned (default: null)
 	 * @return A pseudo-random value between min (or 0) and max (or MAX_RANGE, inclusive)
 	 */
-	static public function intRanged(?min:Float, ?max:Float, ?excludes:Array<Float> = null):Int
+	static public function intRanged(?Min:Int, ?Max:Int, ?Excludes:Array<Int>):Int
 	{
-		if (min == null)
+		if (Min == null)
 		{
-			min = 0;
+			Min = 0;
 		}
 		
-		if (max == null)
+		if (Max == null)
 		{
-			max = MAX_RANGE;
+			Max = MAX_RANGE;
 		}
 		
-		if (min == max)
+		if (Min == Max)
 		{
-			return Math.floor(min);
+			return Math.floor(Min);
 		}
 		
-		if (excludes != null)
+		if (Excludes != null)
 		{
-			//	Sort the exclusion array
-			//excludes.sort(Array.NUMERIC);
-			excludes.sort(FlxMath.numericComparison);
+			// Sort the exclusion array
+			Excludes.sort(FlxMath.numericComparison);
 			
 			var result:Int;
 			
 			do {
-				if (min < max)
+				if (Min < Max)
 				{
-					result = Math.floor(min + (Math.random() * (max + 1 - min)));
+					result = Math.floor(Min + (Math.random() * (Max + 1 - Min)));
 				}
 				else
 				{
-					result = Math.floor(max + (Math.random() * (min + 1 - max)));
+					result = Math.floor(Max + (Math.random() * (Min + 1 - Max)));
 				}
 			}
-			while (FlxArrayUtil.indexOf(excludes, result) >= 0);
+			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
 			
 			return result;
 		}
 		else
 		{
-			//	Reverse check
-			if (min < max)
+			// Reverse check
+			if (Min < Max)
 			{
-				return Math.floor(min + (Math.random() * (max + 1 - min)));
+				return Math.floor(Min + (Math.random() * (Max + 1 - Min)));
 			}
 			else
 			{
-				return Math.floor(max + (Math.random() * (min + 1 - max)));
+				return Math.floor(Max + (Math.random() * (Min + 1 - Max)));
 			}
 		}
 	}
