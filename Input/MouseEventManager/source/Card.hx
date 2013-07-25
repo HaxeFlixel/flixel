@@ -1,0 +1,94 @@
+package;
+
+import flixel.addons.nape.FlxPhysSprite;
+import flixel.addons.nape.FlxPhysState;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.plugin.MouseEventManager;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
+import flixel.util.FlxRandom;
+import nape.constraint.DistanceJoint;
+import nape.dynamics.InteractionFilter;
+import nape.geom.Vec2;
+import nape.phys.Body;
+
+class Card extends FlxPhysSprite
+{
+	/**
+	 * How long the turning animation takes
+	 */
+	inline static private var TURNING_TIME:Float = 0.2;
+	
+	/**
+	 * This is a helper Array to keep track of the cards that have 
+	 * been picked so far, to avoid the same card being shown twice!
+	 */
+	static public var pickedCards:Array<Int> = new Array<Int>();
+	
+	/**
+	 * Whether the card has been turned around yet or not
+	 */
+	private var _turned:Bool = false;
+	
+	public function new(X:Int, Y:Int, OffsetX:Int, OffsetY:Int, Index:Int):Void
+	{
+		super(X + OffsetX * Index, Y + OffsetY * Index);
+		loadGraphic("assets/Deck.png", true, false, 123, 123);
+		
+		// The card starts out being turned around
+		frame = 54;
+		// So the card still looks smooth when rotated
+		antialiasing = true;
+		setDrag(0.95, 0.95);
+		// Creating a nape body
+		createRectangularBody(79, 123);
+		// To make sure cards don't interact with each other
+		body.setShapeFilters(new InteractionFilter(2, ~2));
+		
+		// Setup the mouse events
+		MouseEventManager.addSprite(this, onDown, null, onOver, onOut);
+	}
+	
+	private function onDown(Sprite:FlxSprite)
+	{
+		// Play the turning animation if the card hasn't been turned around yet
+		if (!_turned)
+		{
+			_turned = true;
+			FlxG.tween(scale, { x: 0 }, TURNING_TIME / 2, { complete: pickCard } );
+		}
+		
+		var body:Body = cast(Sprite, FlxPhysSprite).body;
+		
+		PlayState.cardJoint = new DistanceJoint(FlxPhysState.space.world, body, Vec2.weak(FlxG.mouse.x, FlxG.mouse.y),
+						body.worldPointToLocal(Vec2.weak(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
+						
+		PlayState.cardJoint.stiff = false;
+		PlayState.cardJoint.damping = 1;
+		PlayState.cardJoint.frequency = 2;
+		PlayState.cardJoint.space = FlxPhysState.space;
+	}
+	
+	
+	private function onOver(Sprite:FlxSprite) 
+	{
+		color = 0x00FF00;
+	}
+	
+	private function onOut(Sprite:FlxSprite)
+	{
+		color = FlxColor.WHITE;
+	}
+	
+	private function pickCard(Tween:FlxTween):Void
+	{
+		// Choose a random card from the first 52 cards on the spritesheet 
+		// - excluding those who have already been picked!
+		frame = FlxRandom.intRanged(0, 51, pickedCards);
+		pickedCards.push(frame);
+		
+		// Finish the card animation
+		FlxG.tween(scale, { x: 1 }, TURNING_TIME / 2);
+	}
+}
