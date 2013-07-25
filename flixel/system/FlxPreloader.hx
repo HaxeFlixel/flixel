@@ -28,10 +28,10 @@ class FlxPreloader extends NMEPreloader
 	}
 }
 #else
-@:font("assets/data/nokiafc22.ttf") class PreloaderFont extends Font { }
+@:font("assets/fonts/nokiafc22.ttf") class PreloaderFont extends Font { }
 
-@:bitmap("assets/data/logo_light.png") class LogoLight extends BitmapData {}
-@:bitmap("assets/data/logo_corners.png") class LogoCorners extends BitmapData {}
+@:bitmap("assets/images/preloader/light.png") class LogoLight extends BitmapData {}
+@:bitmap("assets/images/preloader/corners.png") class LogoCorners extends BitmapData {}
 
 /**
  * This class handles the 8-bit style preloader.
