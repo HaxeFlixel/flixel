@@ -320,7 +320,7 @@ class StarfieldFX extends BaseFX
 	
 	override public function draw():Void
 	{
-		if (FlxMisc.getTicks() > _tick)
+		if (FlxG.game.ticks > _tick)
 		{
 			#if flash
 			canvas.lock();
@@ -343,7 +343,7 @@ class StarfieldFX extends BaseFX
 			
 			if (_updateSpeed > 0)
 			{
-				_tick = FlxMisc.getTicks() + _updateSpeed;
+				_tick = FlxG.game.ticks + _updateSpeed;
 			}
 		}
 	}

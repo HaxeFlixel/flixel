@@ -23,16 +23,6 @@ class FlxMisc
 	}
 	
 	/**
-	 * Just grabs the current "ticks" or time in milliseconds that has passed since Flash Player started up.
-	 * Useful for finding out how long it takes to execute specific blocks of code.
-	 * @return	Time in milliseconds that has passed since Flash Player started up.
-	 */
-	inline static public function getTicks():Int
-	{
-		return FlxG.game.mark;
-	}
-	
-	/**
 	 * Check to see if two objects have the same class name.
 	 * @param	Object1		The first object you want to check.
 	 * @param	Object2		The second object you want to check.

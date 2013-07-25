@@ -41,9 +41,9 @@ import flixel.system.FlxDebugger;
 class FlxGame extends Sprite
 {
 	/**
-	 * Helper variable to help calculate elapsed time.
+	 * Time in milliseconds that has passed (amount of "ticks" passed) since the game has started.
 	 */
-	public var mark(default, null):Int = 0;
+	public var ticks(default, null):Int = 0;
 	/**
 	 * Current game state.
 	 */
@@ -317,9 +317,9 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(FlashEvent:Event = null):Void
 	{
-		mark = Lib.getTimer();
-		elapsedMS = mark - _total;
-		_total = mark;
+		ticks = Lib.getTimer();
+		elapsedMS = ticks - _total;
+		_total = ticks;
 		
 		#if !FLX_NO_SOUND_TRAY
 		if (_updateSoundTray)
@@ -574,7 +574,7 @@ class FlxGame extends Sprite
 		if (FlxG.debugger.visible)
 		{
 			// getTimer() is expensive, only do it if necessary
-			mark = Lib.getTimer(); 
+			ticks = Lib.getTimer(); 
 		}
 		#end
 		
@@ -604,7 +604,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.flixelUpdate(Lib.getTimer() - mark);
+			debugger.perf.flixelUpdate(Lib.getTimer() - ticks);
 		}
 		#end
 	}
@@ -681,7 +681,7 @@ class FlxGame extends Sprite
 		if (FlxG.debugger.visible)
 		{
 			// getTimer() is expensive, only do it if necessary
-			mark = Lib.getTimer(); 
+			ticks = Lib.getTimer(); 
 		}
 		#end
 
@@ -730,7 +730,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.flixelDraw(Lib.getTimer() - mark);
+			debugger.perf.flixelDraw(Lib.getTimer() - ticks);
 		}
 		#end
 	}
