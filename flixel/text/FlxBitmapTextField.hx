@@ -228,7 +228,7 @@ class FlxBitmapTextField extends FlxSprite
 			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
 			#end
 			
-			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
+			if (!camera.visible || !camera.exists || !onScreen(camera))
 			{
 				continue;
 			}

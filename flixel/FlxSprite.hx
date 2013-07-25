@@ -207,11 +207,6 @@ class FlxSprite extends FlxObject
 	private var _halfWidth:Float;
 	private var _halfHeight:Float;
 	
-	private var _aabb:FlxRect;
-	
-	private var _cosAngle:Float;
-	private var _sinAngle:Float; 
-	
 	/**
 	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position.
 	 * Optionally can load a simple, one-frame graphic instead.
@@ -230,10 +225,6 @@ class FlxSprite extends FlxObject
 		offset = new FlxPoint();
 		origin = new FlxPoint();
 		scale = new FlxPoint(1.0, 1.0);
-		
-		_aabb = new FlxRect();
-		_cosAngle = 1;
-		_sinAngle = 0;
 		
 		facing = FlxObject.RIGHT;
 		_animations = new Map<String, FlxAnim>();
@@ -287,7 +278,6 @@ class FlxSprite extends FlxObject
 		#else
 		_blend = null;
 		#end
-		_aabb = null;
 		_flxFrame = null;
 		
 		super.destroy();
@@ -739,9 +729,6 @@ class FlxSprite extends FlxObject
 		{
 			cameras = FlxG.cameras.list;
 		}
-		var camera:FlxCamera;
-		var i:Int = 0;
-		var l:Int = cameras.length;
 		
 	#if !flash
 		var drawItem:DrawStackItem;
@@ -760,11 +747,9 @@ class FlxSprite extends FlxObject
 		
 		var isSimpleRender:Bool = simpleRenderSprite();
 		
-		while (i < l)
+		for( camera in cameras )
 		{
-			camera = cameras[i++];
-			
-			if (!camera.visible || !camera.exists || !onScreenSprite(camera))
+			if (!camera.visible || !camera.exists || !onScreen(camera))
 			{
 				continue;
 			}
@@ -835,13 +820,11 @@ class FlxSprite extends FlxObject
 			if (!isSimpleRender)
 			{
 				var radians:Float = -angle * FlxAngle.TO_RAD;
-				_cosAngle = Math.cos(radians);
-				_sinAngle = Math.sin(radians);
 				
 				if (_flxFrame.rotated)
 				{
-					cos = -_sinAngle;
-					sin = _cosAngle;
+					cos = Math.sin(radians) * -1;
+					sin = Math.cos(radians);
 					
 					csx = cos * scale.x * facingMult;
 					ssy = sin * scale.y;
@@ -858,8 +841,8 @@ class FlxSprite extends FlxObject
 				}
 				else
 				{
-					cos = _cosAngle;
-					sin = _sinAngle;
+					cos = Math.cos(radians);
+					sin = Math.sin(radians);
 					
 					csx = cos * scale.x * facingMult;
 					ssy = sin * scale.y;
@@ -1653,11 +1636,6 @@ class FlxSprite extends FlxObject
 	 */
 	override public function onScreen(Camera:FlxCamera = null):Bool
 	{
-		return onScreenSprite(Camera);
-	}
-	
-	inline private function onScreenSprite(Camera:FlxCamera = null):Bool
-	{
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
@@ -1716,109 +1694,13 @@ class FlxSprite extends FlxObject
 			minY -= radius;
 		}
 		
-		var result:Bool = true;
-		if (minX > Camera.width || maxX < 0)
-		{
-			result = false;
-		}
-		
-		if (minY > Camera.height || maxY < 0)
-		{
-			result = false;
-		}
-		
-		return result;
-	}
-	
-	/*inline*/ /*private function onScreenSprite(Camera:FlxCamera = null):Bool
-	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		
-		calcAABB();
-		
-		var scx = Camera.scroll.x * scrollFactor.x;
-		var scy = Camera.scroll.y * scrollFactor.y;
-		
-		var minX:Float = _aabb.x - scx;
-		if (minX > Camera.width)
+		if (maxX < 0 || minX > Camera.width)
 			return false;
 		
-		var maxX:Float = minX + _aabb.width;
-		if (maxX < 0)
-			return false;
-		
-		var minY:Float = _aabb.y - scy;
-		if (minY > Camera.height)
-			return false;
-		
-		var maxY:Float = minY + _aabb.height;
-		if (maxY < 0)
+		if (maxY < 0 || minY > Camera.height)
 			return false;
 		
 		return true;
-	}*/
-
-	/**
-	 * calculate AABB of graphic frame
-	 * called internally once each update call
-	 */
-	inline private function calcAABB():Void
-	{
-		if ((angle == 0 || bakedRotation > 0) && (scale.x == 1) && (scale.y == 1))
-		{
-			_aabb.set(x - offset.x, y - offset.y, frameWidth, frameHeight);
-		}
-		else
-		{
-			var sx:Float = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -scale.x : scale.x;
-			
-			var sox:Float = sx * origin.x;
-			var soy:Float = scale.y * origin.y;
-			var sfw:Float = sx * frameWidth;
-			var sfh:Float = scale.y * frameHeight;
-			
-			var p1x = -sox, p1y = -soy;
-			var p2x = sfw - sox, p2y = -soy;
-			var p3x = -sox, p3y = sfh - soy;
-			var p4x = sfw - sox, p4y = sfh - soy; 
-			
-			var radians:Float = -angle * FlxAngle.TO_RAD;
-			var cos:Float = _cosAngle = Math.cos(radians);
-			var sin:Float = _sinAngle = Math.sin(radians);
-			
-			var genX:Float = x + origin.x - offset.x;
-			var genY:Float = y + origin.y - offset.y;
-			
-			var tx:Float = p1x * cos + p1y * sin;
-			var ty:Float = -p1x * sin + p1y * cos;
-			p1x = tx;
-			p1y = ty;
-			
-			tx = p2x * cos + p2y * sin;
-			ty = -p2x * sin + p2y * cos;
-			p2x = tx;
-			p2y = ty;
-			
-			tx = p3x * cos + p3y * sin;
-			ty = -p3x * sin + p3y * cos;
-			p3x = tx;
-			p3y = ty;
-			
-			tx = p4x * cos + p4y * sin;
-			ty = -p4x * sin + p4y * cos;
-			p4x = tx;
-			p4y = ty;
-			
-			var minX:Float = Math.min(Math.min(p1x, p2x), Math.min(p3x, p4x));
-			var minY:Float = Math.min(Math.min(p1y, p2y), Math.min(p3y, p4y));
-			var maxX:Float = Math.max(Math.max(p1x, p2x), Math.max(p3x, p4x));
-			var maxY:Float = Math.max(Math.max(p1y, p2y), Math.max(p3y, p4y));
-			
-			_aabb.set(genX + minX, genY + minY, maxX - minX, maxY - minY);
-		}
 	}
 	
 	/**
@@ -2058,13 +1940,6 @@ class FlxSprite extends FlxObject
 		#else
 		return (((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
-	}
-	
-	public var aabb(get_aabb, null):FlxRect;
-	
-	function get_aabb():FlxRect 
-	{
-		return _aabb;
 	}
 	
 	#if !flash

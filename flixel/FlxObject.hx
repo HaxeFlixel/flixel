@@ -448,7 +448,7 @@ class FlxObject extends FlxBasic
 		while (i < l)
 		{
 			camera = cameras[i++];
-			if (!onScreenObject(camera) || !camera.visible || !camera.exists)
+			if (!camera.visible || !camera.exists || !onScreen(camera))
 			{
 				continue;
 			}
@@ -473,7 +473,7 @@ class FlxObject extends FlxBasic
 			Camera = FlxG.camera;
 		}
 		
-		if (!onScreenObject(Camera) || !Camera.visible || !Camera.exists)
+		if (!Camera.visible || !Camera.exists || !onScreen(Camera))
 		{
 			return;
 		}
@@ -792,7 +792,7 @@ class FlxObject extends FlxBasic
 				angularAcceleration = 0;
 				angle = pathAngle;
 			}
-		}			
+		}
 	}
 	
 	/**
@@ -939,11 +939,6 @@ class FlxObject extends FlxBasic
 	 * @return	Whether the object is on screen or not.
 	 */
 	public function onScreen(Camera:FlxCamera = null):Bool
-	{
-		return onScreenObject(Camera);
-	}
-	
-	inline private function onScreenObject(Camera:FlxCamera = null):Bool
 	{
 		if (Camera == null)
 		{

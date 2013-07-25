@@ -219,7 +219,7 @@ class FlxTileblock extends FlxSprite
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			if (!camera.visible || !camera.exists || !onScreenSprite(camera))
+			if (!camera.visible || !camera.exists || !onScreen(camera))
 			{
 				continue;
 			}

@@ -327,7 +327,7 @@ private class GlitchSprite extends FlxSprite
 		{
 			camera = cameras[i++];
 			
-			if (!onScreenSprite(camera) || !camera.visible || !camera.exists)
+			if (!camera.visible || !camera.exists || !onScreen(camera))
 			{
 				continue;
 			}
