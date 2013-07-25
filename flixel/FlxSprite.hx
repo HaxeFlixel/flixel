@@ -43,6 +43,10 @@ class FlxSprite extends FlxObject
 	public var color(default, set_color):Int = 0xffffff;
 	public var frame(default, set_frame):Int = 0;
 	
+	#if !flash
+	public var isColored(default, null):Bool = false;
+	#end
+	
 	/**
 	 * If the Sprite is flipped.
 	 * This property shouldn't be changed unless you know what are you doing.
@@ -699,14 +703,6 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Checks if we need to use tinting for rendering
-	 */
-	inline public function isColored():Bool
-	{
-		return (color < 0xffffff);
-	}
-	
-	/**
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
 	override public function draw():Void
@@ -734,9 +730,7 @@ class FlxSprite extends FlxObject
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		#if !js
-		var isColored:Bool = isColored();
-		#else
+		#if js
 		var useAlpha:Bool = (alpha < 1);
 		#end
 		
@@ -1528,6 +1522,7 @@ class FlxSprite extends FlxObject
 		_red = (color >> 16) / 255;
 		_green = (color >> 8 & 0xff) / 255;
 		_blue = (color & 0xff) / 255;
+		isColored = color < 0xffffff;
 		#end
 		
 		return color;

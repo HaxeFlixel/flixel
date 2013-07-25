@@ -190,7 +190,6 @@ class FlxTileblock extends FlxSprite
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		var drawItem:DrawStackItem;
-		var isColored:Bool = isColored();
 		var l:Int = cameras.length;
 		
 		var j:Int = 0;

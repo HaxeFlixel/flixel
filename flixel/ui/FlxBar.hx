@@ -1031,7 +1031,6 @@ class FlxBar extends FlxSprite
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		var drawItem:DrawStackItem;
-		var isColored:Bool = isColored();
 		
 		while (i < l)
 		{

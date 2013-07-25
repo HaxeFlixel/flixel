@@ -37,9 +37,7 @@ class BGSprite extends FlxSprite
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		#if !js
-		var isColored:Bool = isColored();
-		#else
+		#if js
 		var useAlpha:Bool = (alpha < 1);
 		#end
 		
