@@ -1425,7 +1425,9 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		facing = Direction;
+		#if !flash
 		_facingMult = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -1 : 1;
+		#end
 		return Direction;
 	}
 	
