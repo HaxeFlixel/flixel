@@ -794,7 +794,7 @@ class FlxSprite extends FlxObject
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
 			}
 #else
-			var csx:Float = 1;
+			var csx:Float = _facingMult;
 			var ssy:Float = 0;
 			var ssx:Float = 0;
 			var csy:Float = 1;
@@ -862,12 +862,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{
-				csx *= _facingMult;
-				
-				x2 = x1 * csx + y1 * ssy;
-				y2 = -x1 * ssx + y1 * csy;
-				
-				a *= _facingMult;
+				x2 = x1 * csx;
 			}
 			
 			currDrawData[currIndex++] = _point.x - x2;
