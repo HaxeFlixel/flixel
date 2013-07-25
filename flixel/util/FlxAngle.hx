@@ -168,7 +168,7 @@ class FlxAngle
 	 * @see getSinTable
 	 * @see getCosTable
 	 */
-	static public function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Array<Float>
+	static public function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Void
 	{
 		var sin:Float = sinAmplitude;
 		var cos:Float = cosAmplitude;
@@ -185,8 +185,6 @@ class FlxAngle
 			cosTable[c] = cos;
 			sinTable[c] = sin;
 		}
-		
-		return sinTable;
 	}
 	
 	/**
