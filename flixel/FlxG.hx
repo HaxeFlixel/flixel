@@ -1,12 +1,10 @@
 package flixel;
 
-import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.display.Stage;
 import flash.text.Font;
 import flixel.system.FlxAssets.DebuggerFont;
 import flixel.system.FlxAssets.DefaultFont;
-import flixel.text.pxText.PxBitmapFont;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
@@ -18,7 +16,7 @@ import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.input.FlxInputs;
-import flixel.system.layer.TileSheetData;
+import flixel.text.pxText.PxBitmapFont;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
 import flixel.tweens.util.Ease.EaseFunction;

@@ -94,11 +94,11 @@ class FlxSpriteUtil
 	 * @param	output		The FlxSprite you wish the resulting image to be placed in (will adjust width/height of image)
 	 * @return	The output FlxSprite for those that like chaining
 	 */
-	static public function alphaMaskFlxSprite(Sprite:FlxSprite, mask:FlxSprite, output:FlxSprite):FlxSprite
+	static public function alphaMaskFlxSprite(sprite:FlxSprite, mask:FlxSprite, output:FlxSprite):FlxSprite
 	{
-		var data:BitmapData = Sprite.pixels;
+		var data:BitmapData = sprite.pixels;
 		
-		data.copyChannel(mask.pixels, new Rectangle(0, 0, Sprite.width, Sprite.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
+		data.copyChannel(mask.pixels, new Rectangle(0, 0, sprite.width, sprite.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
 		
 		output.pixels = data;
 		
@@ -114,24 +114,24 @@ class FlxSpriteUtil
 	 * @param	Top			Whether to activate screen wrapping on the top of the screen
 	 * @param	Bottom		Whether to activate screen wrapping on the bottom of the screen
 	 */
-	static public function screenWrap(Sprite:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):Void
+	static public function screenWrap(sprite:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):Void
 	{
-		if (Left && Sprite.x < 0)
+		if (Left && sprite.x < 0)
 		{
-			Sprite.x = FlxG.width;
+			sprite.x = FlxG.width;
 		}
-		else if (Right && Sprite.x > FlxG.width)
+		else if (Right && sprite.x > FlxG.width)
 		{
-			Sprite.x = 0;
+			sprite.x = 0;
 		}
 		
-		if (Top && Sprite.y < 0)
+		if (Top && sprite.y < 0)
 		{
-			Sprite.y = FlxG.height;
+			sprite.y = FlxG.height;
 		}
-		else if (Bottom && Sprite.y > FlxG.height)
+		else if (Bottom && sprite.y > FlxG.height)
 		{
-			Sprite.y = 0;
+			sprite.y = 0;
 		}
 	}
 	
@@ -170,24 +170,24 @@ class FlxSpriteUtil
 	/**
 	 * Centers the given FlxSprite on the screen, either by the X axis, Y axis, or both
 	 * 
-	 * @param	Sprite	The <code>FlxSprite<code> to center
-	 * @param	xAxis	Boolean true if you want it centered on X (i.e. in the middle of the screen)
-	 * @param	yAxis	Boolean	true if you want it centered on Y
+	 * @param	Sprite			The <code>FlxSprite<code> to center
+	 * @param	Horizontally	Boolean true if you want it centered horizontally
+	 * @param	Vertically		Boolean	true if you want it centered vertically
 	 * @return	The FlxSprite for chaining
 	 */
-	static public function screenCenter(Sprite:FlxSprite, xAxis:Bool = true, yAxis:Bool = false):FlxSprite
+	static public function screenCenter(sprite:FlxSprite, xAxis:Bool = true, yAxis:Bool = true):FlxSprite
 	{
 		if (xAxis)
 		{
-			Sprite.x = (FlxG.width / 2) - (Sprite.width / 2);
+			sprite.x = (FlxG.width / 2) - (sprite.width / 2);
 		}
 		
 		if (yAxis)
 		{
-			Sprite.y = (FlxG.height / 2) - (Sprite.height / 2);
+			sprite.y = (FlxG.height / 2) - (sprite.height / 2);
 		}
 		
-		return Sprite;
+		return sprite;
 	}
 	
 	/**
@@ -202,7 +202,7 @@ class FlxSpriteUtil
 	 * @param	Color		The line's color.
 	 * @param	Thickness	How thick the line is in pixels (default value is 1).
 	 */
-	static public function drawLine(Sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
+	static public function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
 	{
 		// Draw line
 		var gfx:Graphics = flashGfx;
@@ -218,7 +218,7 @@ class FlxSpriteUtil
 		gfx.lineStyle(Thickness, Color, alphaComponent);
 		gfx.lineTo(EndX, EndY);
 		
-		updateSpriteGraphic(Sprite);
+		updateSpriteGraphic(sprite);
 	}
 	
 	/**
@@ -231,14 +231,14 @@ class FlxSpriteUtil
 	 * @param	Height		Height of the rectangle
 	 * @param	Color		The rectangle's color.
 	 */
-	static public function drawRect(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
+	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
 	{
 		flashGfx.clear();
 		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawRect(X, Y, Width, Height);
 		flashGfx.endFill();
 		
-		updateSpriteGraphic(Sprite);
+		updateSpriteGraphic(sprite);
 	}
 	
 	/**
@@ -253,14 +253,14 @@ class FlxSpriteUtil
 	 * @param	EllipseHeight	The height of the ellipse used to draw the rounded corners
 	 * @param	Color			The rectangle's color.
 	 */
-	static public function drawRoundRect(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int):Void
+	static public function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int):Void
 	{
 		flashGfx.clear();
 		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
 		flashGfx.endFill();
 		
-		updateSpriteGraphic(Sprite);
+		updateSpriteGraphic(sprite);
 	}
 	
 	#if flash
@@ -279,14 +279,14 @@ class FlxSpriteUtil
 	 * @param	BottomRightRadius	The radius of the bottom right corner of the rectangle
 	 * @param	Color				The rectangle's color.
 	 */
-	static public function drawRoundRectComplex(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int):Void
+	static public function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int):Void
 	{
 		flashGfx.clear();
 		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
 		flashGfx.endFill();
 		
-		updateSpriteGraphic(Sprite);
+		updateSpriteGraphic(sprite);
 	}
 	#end
 	
@@ -300,14 +300,14 @@ class FlxSpriteUtil
 	 * @param 	Radius 	Radius of the circle
 	 * @param 	Color 	Color of the circle
 	*/
-	static public function drawCircle(Sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int):Void
+	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int):Void
 	{
 		flashGfx.clear();
 		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawCircle(X, Y, Radius);
 		flashGfx.endFill();
 		
-		updateSpriteGraphic(Sprite);
+		updateSpriteGraphic(sprite);
 	}
 	
 	/**
@@ -320,14 +320,14 @@ class FlxSpriteUtil
 	 * @param	Height		Height of the ellipse
 	 * @param	Color		The ellipse's color.
 	 */
-	static public function drawEllipse(Sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
+	static public function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
 	{
 		flashGfx.clear();
 		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawEllipse(X, Y, Width, Height);
 		flashGfx.endFill();
 		
-		updateSpriteGraphic(Sprite);
+		updateSpriteGraphic(sprite);
 	}
 	
 	/**
@@ -336,11 +336,11 @@ class FlxSpriteUtil
 	 * 
 	 * @param	Sprite	The <code>FlxSprite</code> to manipulate
 	 */
-	static public function updateSpriteGraphic(Sprite:FlxSprite):Void
+	static public function updateSpriteGraphic(sprite:FlxSprite):Void
 	{
-		Sprite.pixels.draw(flashGfxSprite);
-		Sprite.dirty = true;
-		Sprite.resetFrameBitmapDatas();
+		sprite.pixels.draw(flashGfxSprite);
+		sprite.dirty = true;
+		sprite.resetFrameBitmapDatas();
 	}
 	
 	/**
@@ -349,15 +349,15 @@ class FlxSpriteUtil
 	 * @param	Sprite	The <code>FlxSprite</code> to manipulate
 	 * @param	Color	The color with which to fill the graphic, format 0xAARRGGBB.
 	 */
-	static public function fill(Sprite:FlxSprite, Color:Int):Void
+	static public function fill(sprite:FlxSprite, Color:Int):Void
 	{
-		Sprite.pixels.fillRect(Sprite.pixels.rect, Color);
+		sprite.pixels.fillRect(sprite.pixels.rect, Color);
 		
-		if (Sprite.pixels != Sprite.framePixels)
+		if (sprite.pixels != sprite.framePixels)
 		{
-			Sprite.dirty = true;
+			sprite.dirty = true;
 		}
 		
-		Sprite.resetFrameBitmapDatas();
+		sprite.resetFrameBitmapDatas();
 	}
 }
