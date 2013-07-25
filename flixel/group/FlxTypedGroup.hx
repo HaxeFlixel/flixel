@@ -73,10 +73,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			var i:Int = 0;
 			var basic:FlxBasic = null;
+			var mmbrs:Array<FlxBasic> = cast members;
 			
 			while (i < length)
 			{
-				basic = members[i++];
+				basic = mmbrs[i++];
 				
 				if (basic != null)
 				{
@@ -99,10 +100,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if ((basic != null) && basic.exists && basic.active)
 			{
@@ -128,10 +130,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if ((basic != null) && basic.exists && basic.visible)
 			{
@@ -145,10 +148,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if ((basic != null) && basic.exists && basic.visible)
 			{
@@ -381,10 +385,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if (basic != null)
 			{
@@ -411,10 +416,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if (basic != null)
 			{
@@ -441,14 +447,15 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++]; // we use basic as FlxBasic for performance reasons
+			basic = mmbrs[i++]; // we use basic as FlxBasic for performance reasons
 			
 			if ((basic != null) && !basic.exists && ((ObjectClass == null) || Std.is(basic, ObjectClass)))
 			{
-				return members[i-1];
+				return members[i - 1];
 			}
 		}
 		
@@ -563,10 +570,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		var i:Int = 0;
 		var count:Int = -1;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if (basic != null)
 			{
@@ -594,12 +602,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		var i:Int = 0;
 		var count:Int = -1;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
-			if(basic != null)
+			if (basic != null)
 			{
 				if (count < 0)
 				{
@@ -654,10 +663,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < length)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if ((basic != null) && basic.exists)
 			{
@@ -680,10 +690,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			var i:Int = 0;
 			var basic:FlxBasic = null;
+			var mmbrs:Array<FlxBasic> = cast members;
 			
 			while (i < length)
 			{
-				basic = members[i++];
+				basic = mmbrs[i++];
 				
 				if ((basic != null) && !basic.exists)
 				{
@@ -739,10 +750,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		var i:Int = maxSize;
 		var l:Int = members.length;
 		var basic:FlxBasic = null;
+		var mmbrs:Array<FlxBasic> = cast members;
 		
 		while (i < l)
 		{
-			basic = members[i++];
+			basic = mmbrs[i++];
 			
 			if (basic != null)
 			{
