@@ -98,6 +98,11 @@ class FlxObject extends FlxBasic
 	static private var _secondSeparateFlxRect:FlxRect = new FlxRect();
 	
 	/**
+	 * Should always represent (0,0) - useful for different things, for avoiding unnecessary <code>new</code> calls.
+	 */
+	static private var _pZero:FlxPoint = new FlxPoint();
+	
+	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
 	public var x:Float;
@@ -113,28 +118,25 @@ class FlxObject extends FlxBasic
 	 * The height of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
 	public var height(default, set_height):Float;
-
 	/**
 	 * Whether an object will move/alter position after a collision.
 	 */
 	public var immovable:Bool;
-	
 	/**
-	 * The basic speed of this object.
+	 * The basic speed of this object (in pixels per second).
 	 */
 	public var velocity:FlxPoint;
 	/**
-	 * The virtual mass of the object. Default value is 1.
-	 * Currently only used with <code>elasticity</code> during collision resolution.
-	 * Change at your own risk; effects seem crazy unpredictable so far!
+	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
+	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
 	 */
 	public var mass:Float;
 	/**
-	 * The bounciness of this object.  Only affects collisions.  Default value is 0, or "not bouncy at all."
+	 * The bounciness of this object. Only affects collisions. Default value is 0, or "not bouncy at all."
 	 */
 	public var elasticity:Float;
 	/**
-	 * How fast the speed of this object is changing.
+	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
 	public var acceleration:FlxPoint;
@@ -149,17 +151,16 @@ class FlxObject extends FlxBasic
 	 */
 	public var maxVelocity:FlxPoint;
 	/**
-	 * Set the angle of a sprite to rotate it.
-	 * WARNING: rotating sprites decreases rendering
+	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
 	 */
 	public var angle:Float;
 	/**
-	 * This is how fast you want this sprite to spin.
+	 * This is how fast you want this sprite to spin (in degrees per second).
 	 */
 	public var angularVelocity:Float;
 	/**
-	 * How fast the spin speed should change.
+	 * How fast the spin speed should change (in degrees per second).
 	 */
 	public var angularAcceleration:Float;
 	/**
@@ -170,11 +171,6 @@ class FlxObject extends FlxBasic
 	 * Use in conjunction with <code>angularAcceleration</code> for fluid spin speed control.
 	 */
 	public var maxAngular:Float;
-	/**
-	 * Should always represent (0,0) - useful for different things, for avoiding unnecessary <code>new</code> calls.
-	 */
-	static private var _pZero:FlxPoint = new FlxPoint();
-	
 	/**
 	 * A point that can store numbers from 0 to 1 (for X and Y independently)
 	 * that governs how much this object is affected by the camera subsystem.
