@@ -65,35 +65,6 @@ class FlxObject extends FlxBasic
 	 */
 	static public inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
 	
-	/**
-	 * Path behavior controls: move from the start of the path to the end then stop.
-	 */
-	static public inline var PATH_FORWARD:Int			= 0x000000;
-	/**
-	 * Path behavior controls: move from the end of the path to the start then stop.
-	 */
-	static public inline var PATH_BACKWARD:Int			= 0x000001;
-	/**
-	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
-	 */
-	static public inline var PATH_LOOP_FORWARD:Int		= 0x000010;
-	/**
-	 * Path behavior controls: move from the end of the path to the start then directly back to the end, and start over.
-	 */
-	static public inline var PATH_LOOP_BACKWARD:Int		= 0x000100;
-	/**
-	 * Path behavior controls: move from the start of the path to the end then turn around and go back to the start, over and over.
-	 */
-	static public inline var PATH_YOYO:Int				= 0x001000;
-	/**
-	 * Path behavior controls: ignores any vertical component to the path data, only follows side to side.
-	 */
-	static public inline var PATH_HORIZONTAL_ONLY:Int	= 0x010000;
-	/**
-	 * Path behavior controls: ignores any horizontal component to the path data, only follows up and down.
-	 */
-	static public inline var PATH_VERTICAL_ONLY:Int		= 0x100000;
-	
 	static private var _firstSeparateFlxRect:FlxRect = new FlxRect();
 	static private var _secondSeparateFlxRect:FlxRect = new FlxRect();
 	
@@ -545,7 +516,7 @@ class FlxObject extends FlxBasic
 		_pathRotate = AutoRotate;
 		
 		//get starting node
-		if((_pathMode == PATH_BACKWARD) || (_pathMode == PATH_LOOP_BACKWARD))
+		if((_pathMode == FlxPath.BACKWARD) || (_pathMode == FlxPath.LOOP_BACKWARD))
 		{
 			_pathNodeIndex = path.nodes.length - 1;
 			_pathInc = -1;
@@ -603,13 +574,13 @@ class FlxObject extends FlxBasic
 			var oldNode:FlxPoint = path.nodes[_pathNodeIndex];
 			if (oldNode != null)
 			{
-				if ((_pathMode & PATH_VERTICAL_ONLY) == 0)
+				if ((_pathMode & FlxPath.VERTICAL_ONLY) == 0)
 				{
 					x = oldNode.x;
 					if (pathAutoCenter) 
 						x -= width * 0.5; 
 				}
-				if ((_pathMode & PATH_HORIZONTAL_ONLY) == 0)
+				if ((_pathMode & FlxPath.HORIZONTAL_ONLY) == 0)
 				{
 					y = oldNode.y;
 					if (pathAutoCenter) 
@@ -620,7 +591,7 @@ class FlxObject extends FlxBasic
 		
 		_pathNodeIndex += _pathInc;
 		
-		if ((_pathMode & PATH_BACKWARD) > 0)
+		if ((_pathMode & FlxPath.BACKWARD) > 0)
 		{
 			if (_pathNodeIndex < 0)
 			{
@@ -628,14 +599,14 @@ class FlxObject extends FlxBasic
 				stopFollowingPath(false);
 			}
 		}
-		else if ((_pathMode & PATH_LOOP_FORWARD) > 0)
+		else if ((_pathMode & FlxPath.LOOP_FORWARD) > 0)
 		{
 			if (_pathNodeIndex >= path.nodes.length)
 			{
 				_pathNodeIndex = 0;
 			}
 		}
-		else if ((_pathMode & PATH_LOOP_BACKWARD) > 0)
+		else if ((_pathMode & FlxPath.LOOP_BACKWARD) > 0)
 		{
 			if (_pathNodeIndex < 0)
 			{
@@ -646,7 +617,7 @@ class FlxObject extends FlxBasic
 				}
 			}
 		}
-		else if ((_pathMode & PATH_YOYO) > 0)
+		else if ((_pathMode & FlxPath.YOYO) > 0)
 		{
 			if (_pathInc > 0)
 			{
@@ -706,8 +677,8 @@ class FlxObject extends FlxBasic
 		var deltaX:Float = node.x - _point.x;
 		var deltaY:Float = node.y - _point.y;
 		
-		var horizontalOnly:Bool = (_pathMode & PATH_HORIZONTAL_ONLY) > 0;
-		var verticalOnly:Bool = (_pathMode & PATH_VERTICAL_ONLY) > 0;
+		var horizontalOnly:Bool = (_pathMode & FlxPath.HORIZONTAL_ONLY) > 0;
+		var verticalOnly:Bool = (_pathMode & FlxPath.VERTICAL_ONLY) > 0;
 		
 		if (horizontalOnly)
 		{
