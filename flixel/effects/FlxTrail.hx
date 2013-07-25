@@ -107,7 +107,7 @@ class FlxTrail extends FlxSpriteGroup
 		_recentScales = new Array<FlxPoint>();
 		_recentFrames = new Array<Int>();
 		_recentFacings = new Array<Int>();
-		_spriteOrigin = Sprite.origin;
+		_spriteOrigin = new FlxPoint(Sprite.origin.x, Sprite.origin.y);
 
 		// Sync the vars 
 		sprite = Sprite;
@@ -149,16 +149,21 @@ class FlxTrail extends FlxSpriteGroup
 		if (_counter >= delay && _trailLength >= 1)
 		{
 			_counter = 0;
-
+			
 			// Push the current position into the positons array and drop one.
-			var spritePosition:FlxPoint = new FlxPoint(sprite.x - sprite.offset.x, sprite.y - sprite.offset.y);
+			var spritePosition:FlxPoint = null;
+			if (_recentPositions.length == _trailLength)
+			{
+				spritePosition = _recentPositions.pop();
+			}
+			else
+			{
+				spritePosition = new FlxPoint();
+			}
+			
+			spritePosition.set(sprite.x - sprite.offset.x, sprite.y - sprite.offset.y);
 			_recentPositions.unshift(spritePosition);
 			
-			if (_recentPositions.length > _trailLength) 
-			{
-				_recentPositions.pop();
-			}
-
 			// Also do the same thing for the Sprites angle if rotationsEnabled 
 			if (rotationsEnabled) 
 			{
@@ -174,13 +179,18 @@ class FlxTrail extends FlxSpriteGroup
 			// Again the same thing for Sprites scales if scalesEnabled
 			if (scalesEnabled)
 			{
-				var spriteScale:FlxPoint = sprite.scale;
-				_recentScales.unshift(spriteScale);
-				
-				if (_recentScales.length > _trailLength) 
+				var spriteScale:FlxPoint = null; // sprite.scale;
+				if (_recentScales.length == _trailLength)
 				{
-					_recentScales.pop();
+					spriteScale = _recentScales.pop();
 				}
+				else
+				{
+					spriteScale = new FlxPoint();
+				}
+				
+				spriteScale.set(sprite.scale.x, sprite.scale.y);
+				_recentScales.unshift(spriteScale);
 			}
 			
 			// Again the same thing for Sprites frames if framesEnabled
@@ -216,13 +226,15 @@ class FlxTrail extends FlxSpriteGroup
 				if (rotationsEnabled) 
 				{
 					trailSprite.angle = _recentAngles[i];
-					trailSprite.origin = _spriteOrigin;
+					trailSprite.origin.x = _spriteOrigin.x;
+					trailSprite.origin.y = _spriteOrigin.y;
 				}
 				
 				// the scale...
 				if (scalesEnabled) 
 				{
-					trailSprite.scale = _recentScales[i];
+					trailSprite.scale.x = _recentScales[i].x;
+					trailSprite.scale.y = _recentScales[i].y;
 				}
 				
 				// and frame...
