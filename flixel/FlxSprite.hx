@@ -201,6 +201,8 @@ class FlxSprite extends FlxObject
 	private var _red:Float = 1.0;
 	private var _green:Float = 1.0;
 	private var _blue:Float = 1.0;
+	
+	private var _facingMult:Int = 1;
 	#end
 	
 	/**
@@ -735,7 +737,6 @@ class FlxSprite extends FlxObject
 		var useAlpha:Bool = (alpha < 1);
 		#end
 		
-		var radians:Float;
 		var cos:Float;
 		var sin:Float;
 	#end
@@ -804,8 +805,6 @@ class FlxSprite extends FlxObject
 			var x2:Float = x1;
 			var y2:Float = y1;
 			
-			var facingMult:Int = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -1 : 1;
-			
 			// transformation matrix coefficients
 			var a:Float = csx;
 			var b:Float = ssx;
@@ -822,15 +821,16 @@ class FlxSprite extends FlxObject
 					_angleChanged = false;
 				}
 				
+				var sx:Float = scale.x * _facingMult;
 				
 				if (_flxFrame.rotated)
 				{
 					cos = -_sinAngle;
 					sin = _cosAngle;
 					
-					csx = cos * scale.x * facingMult;
+					csx = cos * sx;
 					ssy = sin * scale.y;
-					ssx = sin * scale.x * facingMult;
+					ssx = sin * sx;
 					csy = cos * scale.y;
 					
 					x2 = x1 * ssx - y1 * csy;
@@ -846,9 +846,9 @@ class FlxSprite extends FlxObject
 					cos = _cosAngle;
 					sin = _sinAngle;
 					
-					csx = cos * scale.x * facingMult;
+					csx = cos * sx;
 					ssy = sin * scale.y;
-					ssx = sin * scale.x * facingMult;
+					ssx = sin * sx;
 					csy = cos * scale.y;
 					
 					x2 = x1 * csx + y1 * ssy;
@@ -862,12 +862,12 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{
-				csx *= facingMult;
+				csx *= _facingMult;
 				
 				x2 = x1 * csx + y1 * ssy;
 				y2 = -x1 * ssx + y1 * csy;
 				
-				a *= facingMult;
+				a *= _facingMult;
 			}
 			
 			currDrawData[currIndex++] = _point.x - x2;
@@ -1425,6 +1425,7 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		facing = Direction;
+		_facingMult = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -1 : 1;
 		return Direction;
 	}
 	
