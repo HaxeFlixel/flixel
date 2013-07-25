@@ -9,6 +9,11 @@ import flixel.FlxSprite;
  */
 class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 {
+	/**
+	 * Optimization to allow setting position of group without transforming children twice.
+	 */
+	private var _skipTransformChildren:Bool = false;
+	
 	public function new(MaxSize:Int = 0)
 	{
 		super(MaxSize);
@@ -23,63 +28,72 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 */
 	public var x(default, set):Float;
 	
-    private function set_x(NewX:Float):Float
-    {
-        #if neko
-		if (x == null)	
+	private function set_x(NewX:Float):Float
+	{
+		#if neko
+		if (x == null)
 		{
 			x = 0;
 		}
 		#end
 		
-		var offset:Float = NewX - x;
-        transformChildren(xTransform, offset);
+		if (!_skipTransformChildren)
+		{
+			var offset:Float = NewX - x;
+			transformChildren(xTransform, offset);
+		}
 		
 		return x = NewX;
-    }
+	}
 	
 	/**
 	 * The y position of this group.
 	 */
 	public var y(default, set):Float;
 	
-    private function set_y(NewY:Float):Float
-    {
-        #if neko
-		if (y == null)	
+	private function set_y(NewY:Float):Float
+	{
+		#if neko
+		if (y == null)
 		{
 			y = 0;
 		}
 		#end
 		
-		var offset:Float = NewY - y;
-        transformChildren(yTransform, offset);
+		if (!_skipTransformChildren)
+		{
+			var offset:Float = NewY - y;
+			transformChildren(yTransform, offset);
+		}
 		
 		return y = NewY;
-    }
+	}
 	
 	/**
 	 * The alpha value of this group.
 	 */
 	public var alpha(default, set):Float;
 	
-    private function set_alpha(NewAlpha:Float):Float 
-    {
-        alpha = NewAlpha;
+	private function set_alpha(NewAlpha:Float):Float 
+	{
+		alpha = NewAlpha;
 		
-        if (alpha > 1)  
+		if (alpha > 1)  
 		{
 			alpha = 1;
 		}
-        else if (alpha < 0)  
+		else if (alpha < 0)  
 		{
 			alpha = 0;
 		}
 		
-        transformChildren(alphaTransform, alpha);
+		if (!_skipTransformChildren)
+		{
+			transformChildren(alphaTransform, alpha);
+		}
 		
 		return NewAlpha;
-    }
+	}
 	
 	/**
 	 * Helper function to set the coordinates of this object.
@@ -90,8 +104,15 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 */
 	public function setPosition(X:Float, Y:Float):Void
 	{
-		x = X;
-		y = Y;
+		var dx:Float = X - x;
+		var dy:Float = Y - y;
+		multiTransformChildren([xTransform, yTransform], [dx, dy]);
+		
+		// don't transform children twice
+		_skipTransformChildren = true;
+		x = X; // this calls set_x
+		y = Y; // this calls set_y
+		_skipTransformChildren = false;
 	}
 	
 	/**
@@ -100,20 +121,20 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 * @param 	Function 	Function to transform the sprites. Example: <code>function(s:FlxSprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }</code>
 	 * @param 	Value  		Value which will passed to lambda function
 	 */
-    public function transformChildren(Function:FlxSprite->Dynamic->Void, Value:Dynamic = 0):Void
-    {
-        var sprite:FlxSprite;
+	public function transformChildren(Function:FlxSprite->Dynamic->Void, Value:Dynamic = 0):Void
+	{
+		var sprite:FlxSprite;
 		
-        for (i in 0...length)
-        {
-            sprite = members[i];
+		for (i in 0...length)
+		{
+			sprite = members[i];
 			
-            if (sprite != null && sprite.exists)
-            {
+			if (sprite != null && sprite.exists)
+			{
 				Function(sprite, Value);
 			}
-        }
-    }
+		}
+	}
 	
 	/**
 	 * Handy function that allows you to quickly transform multiple properties of sprites in this group at a time.
@@ -122,8 +143,8 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 * @param	ValueArray		Array of values which will be passed to lambda functions
 	 */
 	public function multiTransformChildren(FunctionArray:Array<FlxSprite->Dynamic->Void>, ValueArray:Array<Dynamic>):Void
-    {
-        var numProps:Int = FunctionArray.length;
+	{
+		var numProps:Int = FunctionArray.length;
 		
 		if (numProps > ValueArray.length)
 		{
@@ -132,22 +153,21 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 		
 		var sprite:FlxSprite;
 		var lambda:FlxSprite->Dynamic->Void;
-		var j:Int;
 		
-        for (i in 0...length)
-        {
-            sprite = members[i];
+		for (i in 0...length)
+		{
+			sprite = members[i];
 			
-            if (sprite != null && sprite.exists)
-            {
+			if (sprite != null && sprite.exists)
+			{
 				for (j in 0...numProps)
 				{
 					lambda = FunctionArray[j];
 					lambda(sprite, ValueArray[j]);
 				}
 			}
-        }
-    }
+		}
+	}
 	
 	/**
 	 * Helper function for transformation of sprite's x coordinate
