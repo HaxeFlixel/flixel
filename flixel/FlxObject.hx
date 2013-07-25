@@ -125,7 +125,7 @@ class FlxObject extends FlxBasic
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
 	 */
-	public var angle:Float;
+	public var angle(default, set):Float;
 	/**
 	 * This is how fast you want this sprite to spin (in degrees per second).
 	 */
@@ -1345,6 +1345,11 @@ class FlxObject extends FlxBasic
 	function set_forceComplexRender(value:Bool):Bool 
 	{
 		return forceComplexRender = value;
+	}
+	
+	private function set_angle(value:Float):Float
+	{
+		return angle = value;
 	}
 	
 	private var _framesData:FlxSpriteFrames;
