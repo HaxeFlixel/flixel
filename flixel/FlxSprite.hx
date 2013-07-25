@@ -1666,7 +1666,7 @@ class FlxSprite extends FlxObject
 				var sfw:Float = scale.x * frameWidth;
 				var x1:Float = Math.abs(sox);
 				var x2:Float = Math.abs(sfw - sox);
-				radiusX = (x2 > x1) ? x2 : x1;
+				radiusX = Math.max(x2, x1);
 			}
 			
 			if (origin.y == _halfHeight)
@@ -1679,10 +1679,10 @@ class FlxSprite extends FlxObject
 				var sfh:Float = scale.y * frameHeight;
 				var y1:Float = Math.abs(soy);
 				var y2:Float = Math.abs(sfh - soy);
-				radiusY = (y2 > y1) ? y2 : y1;
+				radiusY = Math.max(y2, y1);
 			}
 			
-			var radius:Float = (radiusX > radiusY) ? radiusX : radiusY;
+			var radius:Float = Math.max(radiusX, radiusY);
 			radius *= 1.415; // Math.sqrt(2);
 			
 			minX += origin.x;
