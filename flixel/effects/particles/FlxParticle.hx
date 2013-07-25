@@ -200,7 +200,6 @@ class FlxParticle extends FlxSprite
 			touching = FlxObject.NONE;
 			
 			updateAnimation();
-			calcAABB();
 		}
 	}
 	
