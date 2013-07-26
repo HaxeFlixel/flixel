@@ -3,7 +3,8 @@ package flixel;
 import flash.display.Sprite;
 import flash.display.Stage;
 import flash.text.Font;
-import flixel.system.FlxAssets;
+import flixel.system.FlxAssets.DebuggerFont;
+import flixel.system.FlxAssets.DefaultFont;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
@@ -234,7 +235,9 @@ class FlxG
 		vcr = new VCRFrontEnd();
 		#end
 		
-		FlxAssets.init();
+		// Register fonts
+		Font.registerFont(DebuggerFont);
+		Font.registerFont(DefaultFont);
 		
 		FlxSpriteUtil.flashGfxSprite = new Sprite();
 		FlxSpriteUtil.flashGfx = FlxSpriteUtil.flashGfxSprite.graphics;
