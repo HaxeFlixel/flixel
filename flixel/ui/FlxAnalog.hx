@@ -1,75 +1,112 @@
-package flixel.system.input;
+package flixel.ui;
 
+import flash.display.BitmapData;
 import flash.geom.Rectangle;
+import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxAssets;
 import flixel.system.input.FlxTouch;
+import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRect;
+
+@:bitmap("assets/images/ui/analog/base.png") private class ImgBase extends BitmapData { }
+@:bitmap("assets/images/ui/analog/stick.png") private class ImgStick extends BitmapData { }
 
 /**
+ * A virtual thumbstick - useful for input on mobile devices.
  * 
  * @author Ka Wing Chin
  */
-class FlxAnalog extends FlxTypedGroup<FlxSprite>
+class FlxAnalog extends FlxSpriteGroup
 {
-	// From radians to degrees.
-	private static var DEGREES:Float = (180 / Math.PI);
+	/**
+	 * Shows the current state of the button.
+	 */ 
+	public var status:Int = NORMAL;
+	/**
+	 * The thumb 
+	 */
+	public var thumb:FlxSprite;
+	/**
+	 * The background of the joystick, also known as the base.
+	 */ 
+	public var base:FlxSprite;
+	/**
+	 * This function is called when the button is released.
+	 */ 
+	public var onUp:Void->Void;
+	/**
+	 * This function is called when the button is pressed down.
+	 */ 
+	public var onDown:Void->Void;
+	/**
+	 * This function is called when the mouse goes over the button.
+	 */ 
+	public var onOver:Void->Void;
+	/**
+	 * This function is called when the button is hold down.
+	 */ 
+	public var onPressed:Void->Void;
+	/**
+	 * How fast the speed of this object is changing.
+	 */ 
+	public var acceleration:FlxPoint;
 	
-	// Used with public variable <code>status</code>, means not highlighted or pressed.
-	private static inline var NORMAL:Int = 0;
-	// Used with public variable <code>status</code>, means highlighted (usually from mouse over).
-	private static inline var HIGHLIGHT:Int = 1;
-	// Used with public variable <code>status</code>, means pressed (usually from mouse click).
-	private static inline var PRESSED:Int = 2;		
-	// Shows the current state of the button.
-	public var status:Int;
+	/**
+	 * Used with public variable <code>status</code>, means not highlighted or pressed.
+	 */ 
+	inline static private var NORMAL:Int = 0;
+	/**
+	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	 */ 
+	inline static private var HIGHLIGHT:Int = 1;
+	/**
+	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	 */ 
+	inline static private var PRESSED:Int = 2;	
 	
-	// X position of the upper left corner of this object in world space.
-	public var x:Float;
-	// Y position of the upper left corner of this object in world space.
-	public var y:Float;
+	/**
+	 * A list of analogs that are currently active.
+	 */ 
+	static private var _analogs:Array<FlxAnalog>;
 	
-	// An list of analogs that are currently active.
-	private static var _analogs:Array<FlxAnalog>;
 	#if !FLX_NO_TOUCH
-	// The current pointer that's active on the analog.
+	/**
+	 * The current pointer that's active on the analog.
+	 */ 
 	private var _currentTouch:FlxTouch;
-	// Helper array for checking touches
+	/**
+	 * Helper array for checking touches
+	 */ 
 	private var _tempTouches:Array<FlxTouch>;
 	#end
-	// Helper FlxPoint object
+	
+	/**
+	 * Helper FlxPoint object
+	 */ 
 	private var _point:FlxPoint;
+	/**
+	 * The area which the joystick will react.
+	 */
+	private var _zone:FlxRect;
 	
-	// This function is called when the button is released.
-	public var onUp:Void->Void;
-	// This function is called when the button is pressed down.
-	public var onDown:Void->Void;
-	// This function is called when the mouse goes over the button.
-	public var onOver:Void->Void;
-	// This function is called when the button is hold down.
-	public var onPressed:Void->Void;
-	
-	// The area which the joystick will react.
-	private var _pad:Rectangle;
-	// The background of the joystick, also known as the base.
-	private var _base:FlxSprite;
-	// The thumb 
-	public var _stick:FlxSprite;
-	
-	// The radius where the thumb can move.
+	/**
+	 * The radius in which the stick can move.
+	 */ 
 	private var _radius:Float;
-	private var _direction:Float;
-	private var _amount:Float;		
-	
-	// How fast the speed of this object is changing.
-	public var acceleration:FlxPoint;
-	// The speed of easing when the thumb is released.
+	private var _direction:Float = 0;
+	private var _amount:Float = 0;		
+	/**
+	 * The speed of easing when the thumb is released.
+	 */ 
 	private var _ease:Float;
 	
 	/**
-	 * Constructor
+	 * Create a virtual thumbstick - useful for input on mobile devices.
+	 *  
 	 * @param	X		The X-coordinate of the point in space.
  	 * @param	Y		The Y-coordinate of the point in space.
  	 * @param	radius	The radius where the thumb can move. If 0, the background will be use as radius.
@@ -77,10 +114,10 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	 */
 	public function new(X:Float, Y:Float, Radius:Float = 0, Ease:Float = 0.25)
 	{
+		_zone = new FlxRect();
+		
 		super();
 		
-		x = X;
-		y = Y;
 		_radius = Radius;
 		_ease = Ease;
 		
@@ -90,17 +127,17 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		}
 		_analogs.push(this);
 		
-		status = NORMAL;
-		_direction = 0;
-		_amount = 0;
 		acceleration = new FlxPoint();
 		#if !FLX_NO_TOUCH
 		_tempTouches = [];
 		#end
 		_point = new FlxPoint();
+		
 		createBase();
 		createThumb();
-		createZone();
+		
+		x = X;
+		y = Y;
 	}
 	
 	/**
@@ -109,18 +146,18 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	 */
 	private function createBase():Void
 	{
-		_base = new FlxSprite(x, y).loadGraphic(FlxAssets.IMG_BASE);
-		_base.cameras = [FlxG.camera];
-		_base.x += -_base.width * .5;
-		_base.y += -_base.height * .5;
-		_base.scrollFactor.x = _base.scrollFactor.y = 0;
-		_base.solid = false;
+		base = new FlxSprite(x, y);
+		base.loadGraphic(ImgBase);
+		base.x += -base.width * 0.5;
+		base.y += -base.height * 0.5;
+		base.scrollFactor.set();
+		base.solid = false;
 		
 		#if !FLX_NO_DEBUG
-		_base.ignoreDrawDebug = true;
+		base.ignoreDrawDebug = true;
 		#end
 		
-		add(_base);	
+		add(base);	
 	}
 	
 	/**
@@ -129,16 +166,16 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	 */
 	private function createThumb():Void 
 	{
-		_stick = new FlxSprite(x, y).loadGraphic(FlxAssets.IMG_STICK);
-		_stick.cameras = [FlxG.camera];
-		_stick.scrollFactor.x = _stick.scrollFactor.y = 0;
-		_stick.solid = false;
+		thumb = new FlxSprite(x, y);
+		thumb.loadGraphic(ImgStick);
+		thumb.scrollFactor.set();
+		thumb.solid = false;
 		
 		#if !FLX_NO_DEBUG
-		_stick.ignoreDrawDebug = true;
+		thumb.ignoreDrawDebug = true;
 		#end
 		
-		add(_stick);
+		add(thumb);
 	}
 	
 	/**
@@ -148,11 +185,12 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	 */
 	private function createZone():Void
 	{
-		if (_radius == 0)			
+		if (base != null)			
 		{
-			_radius = _base.width / 2;
+			_radius = base.width / 2;
 		}
-		_pad = new Rectangle(x - _radius, y - _radius, 2 * _radius, 2 * _radius);
+		
+		_zone.set(x - _radius, y - _radius, 2 * _radius, 2 * _radius);
 	}
 	
 	/**
@@ -161,20 +199,22 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	override public function destroy():Void
 	{
 		super.destroy();
+		
 		_analogs = null;
 		onUp = null;
 		onDown = null;
 		onOver = null;
 		onPressed = null;
 		acceleration = null;
-		_stick = null;
-		_base = null;
-		_pad = null;
+		thumb = null;
+		base = null;
+		_zone = null;
+		_point = null;
+		
 		#if !FLX_NO_TOUCH
 		_currentTouch = null;
 		_tempTouches = null;
 		#end
-		_point = null;
 	}
 	
 	/**
@@ -198,9 +238,10 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 				for (touch in FlxG.touchManager.touches)
 				{		
 					var touchInserted:Bool = false;
+					
 					for (analog in _analogs)
 					{
-						// check whether the pointer is already taken by another analog.
+						// Check whether the pointer is already taken by another analog.
 						// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
 						if (analog == this && analog._currentTouch != touch && touchInserted == false) 
 						{		
@@ -214,6 +255,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 			for (touch in _tempTouches)
 			{
 				_point = touch.getWorldPosition(FlxG.camera, _point);
+				
 				if (updateAnalog(_point, touch.pressed(), touch.justPressed(), touch.justReleased(), touch) == false)
 				{
 					offAll = false;
@@ -223,8 +265,7 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		#end
 		
 		#if !FLX_NO_MOUSE
-			_point.x = FlxG.mouse.screenX;
-			_point.y = FlxG.mouse.screenY;
+			_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			
 			if (updateAnalog(_point, FlxG.mouse.pressed(), FlxG.mouse.justPressed(), FlxG.mouse.justReleased()) == false)
 			{
@@ -235,52 +276,57 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
 		{
 			_amount *= _ease;
+			
 			if (Math.abs(_amount) < 0.1) 
 			{
 				_amount = 0;
 			}
 		}
 		
-		_stick.x = x + Math.cos(_direction) * _amount * _radius - (_stick.width * 0.5);
-		_stick.y = y + Math.sin(_direction) * _amount * _radius - (_stick.height * 0.5);
+		thumb.x = x + Math.cos(_direction) * _amount * _radius - (thumb.width * 0.5);
+		thumb.y = y + Math.sin(_direction) * _amount * _radius - (thumb.height * 0.5);
 		
 		if (offAll)
 		{
 			status = NORMAL;
 		}
+		
 		#if !FLX_NO_TOUCH
 		_tempTouches.splice(0, _tempTouches.length);
 		#end
+		
 		super.update();
 	}
 	
-	private function updateAnalog(touchPoint:FlxPoint, pressed:Bool, justPressed:Bool, justReleased:Bool, touch:FlxTouch = null):Bool
+	private function updateAnalog(TouchPoint:FlxPoint, Pressed:Bool, JustPressed:Bool, JustReleased:Bool, ?Touch:FlxTouch):Bool
 	{
 		var offAll:Bool = true;
+		
 		#if !FLX_NO_TOUCH
 		// Use the touch to figure out the world position if it's passed in, as 
 		// the screen coordinates passed in touchPoint are wrong
 		// if the control is used in a group, for example.
-		if (touch != null)
+		if (Touch != null)
 		{
-			touchPoint.x = touch.screenX;
-			touchPoint.y = touch.screenY;
+			TouchPoint.set(Touch.screenX, Touch.screenY);
 		}
 		#end
-		if (_pad.contains(touchPoint.x, touchPoint.y) || (status == PRESSED))
+		
+		if (_zone.containsFlxPoint(TouchPoint) || (status == PRESSED))
 		{
 			offAll = false;
 			
-			if (pressed)
+			if (Pressed)
 			{
 				#if !FLX_NO_TOUCH
-				if (touch != null)
+				if (Touch != null)
 				{
-					_currentTouch = touch;
+					_currentTouch = Touch;
 				}
 				#end
-				status = PRESSED;			
-				if (justPressed)
+				status = PRESSED;	
+				
+				if (JustPressed)
 				{
 					if (onDown != null)
 					{
@@ -295,14 +341,16 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 						onPressed();						
 					}
 					
-					var dx:Float = touchPoint.x - x;
-					var dy:Float = touchPoint.y - y;
+					var dx:Float = TouchPoint.x - x;
+					var dy:Float = TouchPoint.y - y;
 					
 					var dist:Float = Math.sqrt(dx * dx + dy * dy);
+					
 					if (dist < 1) 
 					{
 						dist = 0;
 					}
+					
 					_direction = Math.atan2(dy, dx);
 					_amount = Math.min(_radius, dist) / _radius;
 					
@@ -310,23 +358,26 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 					acceleration.y = Math.sin(_direction) * _amount * _radius;			
 				}					
 			}
-			else if (justReleased && status == PRESSED)
+			else if (JustReleased && status == PRESSED)
 			{				
 				#if !FLX_NO_TOUCH
 				_currentTouch = null;
 				#end
+				
 				status = HIGHLIGHT;
+				
 				if (onUp != null)
 				{
 					onUp();
 				}
-				acceleration.x = 0;
-				acceleration.y = 0;
+				
+				acceleration.set();
 			}					
 			
 			if (status == NORMAL)
 			{
 				status = HIGHLIGHT;
+				
 				if (onOver != null)
 				{
 					onOver();
@@ -339,11 +390,12 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	
 	/**
 	 * Returns the angle in degrees.
+	 * 
 	 * @return	The angle.
 	 */
 	public function getAngle():Float
 	{
-		return Math.atan2(acceleration.y, acceleration.x) * DEGREES;
+		return Math.atan2(acceleration.y, acceleration.x) * FlxAngle.TO_DEG;
 	}
 	
 	/**
@@ -361,11 +413,15 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	{
 		#if !FLX_NO_TOUCH
 		if (_currentTouch != null)
+		{
 			return _currentTouch.justPressed() && status == PRESSED;
+		}
 		#end
+		
 		#if !FLX_NO_MOUSE
 		return FlxG.mouse.justPressed() && status == PRESSED;
 		#end
+		
 		return false;
 	}
 	
@@ -376,22 +432,31 @@ class FlxAnalog extends FlxTypedGroup<FlxSprite>
 	{
 		#if !FLX_NO_TOUCH
 		if (_currentTouch != null)
+		{
 			return _currentTouch.justReleased() && status == HIGHLIGHT;
+		}
 		#end
+		
 		#if !FLX_NO_MOUSE
 		return FlxG.mouse.justReleased() && status == HIGHLIGHT;
 		#end
+		
 		return false;
 	}
-
-	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the analog.
-	 * @param Alpha
-	 */
-	public function set_alpha(Alpha:Float):Void
+	
+	override public function set_x(X:Float):Float
 	{
-		_base.alpha = Alpha;
-		_stick.alpha = Alpha;
+		super.set_x(X);
+		createZone();
+		
+		return X;
 	}
 	
+	override public function set_y(Y:Float):Float
+	{
+		super.set_y(Y);
+		createZone();
+		
+		return Y;
+	}
 }

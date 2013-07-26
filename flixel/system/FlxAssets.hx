@@ -43,10 +43,7 @@ class FlxAssets
 	// ui
 	inline static public var IMG_BUTTON:String = "img/ui/button.png";
 	inline static public var IMG_CURSOR:String = "img/ui/cursor.png";
-	
-	// ui/analog
-	inline static public var IMG_BASE:String = "img/ui/analog/base.png";
-	inline static public var IMG_STICK:String = "img/ui/analog/stick.png";
+
 	// ui/gamepad
 	inline static public var IMG_BUTTON_A:String = "img/ui/gamepad/button_a.png";
 	inline static public var IMG_BUTTON_B:String = "img/ui/gamepad/button_b.png";
