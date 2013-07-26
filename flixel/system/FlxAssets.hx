@@ -12,46 +12,46 @@ import flixel.FlxG;
 class FlxAssets
 {
 	// debugger 
-	inline static public var IMG_WINDOW_HANDLE:String = "img/debugger/windowHandle.png";
-	inline static public var IMG_FLIXEL:String = "img/debugger/flixel.png";
+	inline static public var IMG_WINDOW_HANDLE:String = "images/debugger/windowHandle.png";
+	inline static public var IMG_FLIXEL:String = "images/debugger/flixel.png";
 	
 	// debugger/buttons
-	inline static public var IMG_VISUAL_DEBUG:String = "img/debugger/buttons/visualDebug.png";
-	inline static public var IMG_OPEN:String = "img/debugger/buttons/open.png";
-	inline static public var IMG_RECORD_OFF:String = "img/debugger/buttons/record_off.png";
-	inline static public var IMG_RECORD_ON:String = "img/debugger/buttons/record_on.png";
-	inline static public var IMG_STOP:String = "img/debugger/buttons/stop.png";
-	inline static public var IMG_RESTART:String = "img/debugger/buttons/restart.png";
-	inline static public var IMG_PAUSE:String = "img/debugger/buttons/pause.png";
-	inline static public var IMG_PLAY:String = "img/debugger/buttons/play.png";
-	inline static public var IMG_STEP:String = "img/debugger/buttons/step.png";
+	inline static public var IMG_VISUAL_DEBUG:String = "images/debugger/buttons/visualDebug.png";
+	inline static public var IMG_OPEN:String = "images/debugger/buttons/open.png";
+	inline static public var IMG_RECORD_OFF:String = "images/debugger/buttons/record_off.png";
+	inline static public var IMG_RECORD_ON:String = "images/debugger/buttons/record_on.png";
+	inline static public var IMG_STOP:String = "images/debugger/buttons/stop.png";
+	inline static public var IMG_RESTART:String = "images/debugger/buttons/restart.png";
+	inline static public var IMG_PAUSE:String = "images/debugger/buttons/pause.png";
+	inline static public var IMG_PLAY:String = "images/debugger/buttons/play.png";
+	inline static public var IMG_STEP:String = "images/debugger/buttons/step.png";
 	
 	// logo
-	inline static public var IMG_LOGO:String = "img/logo/logo.png";
-	inline static public var IMG_DEFAULT:String = "img/logo/default.png";
+	inline static public var IMG_LOGO:String = "images/logo/logo.png";
+	inline static public var IMG_DEFAULT:String = "images/logo/default.png";
 	
 	// preloader
-	inline static public var IMG_CORNERS:String = "img/preloader/corners.png";
-	inline static public var IMG_LIGHT:String = "img/preloader/light.png";
+	inline static public var IMG_CORNERS:String = "images/preloader/corners.png";
+	inline static public var IMG_LIGHT:String = "images/preloader/light.png";
 	
 	// tile
-	inline static public var IMG_AUTO:String = "img/tile/autotiles.png";
-	inline static public var IMG_AUTO_ALT:String = "img/tile/autotiles_alt.png";
+	inline static public var IMG_AUTO:String = "images/tile/autotiles.png";
+	inline static public var IMG_AUTO_ALT:String = "images/tile/autotiles_alt.png";
 	
 	// ui
-	inline static public var IMG_BUTTON:String = "img/ui/button.png";
-	inline static public var IMG_CURSOR:String = "img/ui/cursor.png";
+	inline static public var IMG_BUTTON:String = "images/ui/button.png";
+	inline static public var IMG_CURSOR:String = "images/ui/cursor.png";
 
 	// ui/gamepad
-	inline static public var IMG_BUTTON_A:String = "img/ui/gamepad/button_a.png";
-	inline static public var IMG_BUTTON_B:String = "img/ui/gamepad/button_b.png";
-	inline static public var IMG_BUTTON_C:String = "img/ui/gamepad/button_c.png";
-	inline static public var IMG_BUTTON_X:String = "img/ui/gamepad/button_x.png";
-	inline static public var IMG_BUTTON_Y:String = "img/ui/gamepad/button_y.png";
-	inline static public var IMG_BUTTON_UP:String = "img/ui/gamepad/button_up.png";
-	inline static public var IMG_BUTTON_DOWN:String = "img/ui/gamepad/button_down.png";
-	inline static public var IMG_BUTTON_LEFT:String = "img/ui/gamepad/button_left.png";
-	inline static public var IMG_BUTTON_RIGHT:String = "img/ui/gamepad/button_right.png";
+	inline static public var IMG_BUTTON_A:String = "images/ui/gamepad/button_a.png";
+	inline static public var IMG_BUTTON_B:String = "images/ui/gamepad/button_b.png";
+	inline static public var IMG_BUTTON_C:String = "images/ui/gamepad/button_c.png";
+	inline static public var IMG_BUTTON_X:String = "images/ui/gamepad/button_x.png";
+	inline static public var IMG_BUTTON_Y:String = "images/ui/gamepad/button_y.png";
+	inline static public var IMG_BUTTON_UP:String = "images/ui/gamepad/button_up.png";
+	inline static public var IMG_BUTTON_DOWN:String = "images/ui/gamepad/button_down.png";
+	inline static public var IMG_BUTTON_LEFT:String = "images/ui/gamepad/button_left.png";
+	inline static public var IMG_BUTTON_RIGHT:String = "images/ui/gamepad/button_right.png";
 	
 	// fonts
 	inline static public var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
@@ -59,9 +59,9 @@ class FlxAssets
 	
 	// sounds
 	#if (flash || js)
-	inline static public var SND_BEEP:String = "snd/beep.mp3";
+	inline static public var SND_BEEP:String = "sounds/beep.mp3";
 	#else
-	inline static public var SND_BEEP:String = "snd/beep.wav";
+	inline static public var SND_BEEP:String = "sounds/beep.wav";
 	#end
 	
 	static public function drawLogo(graph:Graphics):Void
