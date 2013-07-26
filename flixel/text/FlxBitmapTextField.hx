@@ -197,9 +197,6 @@ class FlxBitmapTextField extends FlxSprite
 		var currTileGreen:Float;
 		var currTileBlue:Float;
 		
-		var radians:Float;
-		var cos:Float;
-		var sin:Float;
 		var relativeX:Float;
 		var relativeY:Float;
 		
@@ -248,16 +245,20 @@ class FlxBitmapTextField extends FlxSprite
 			var x1:Float = 0;
 			var y1:Float = 0;
 
-			if (!simpleRenderSprite ())
+			if (!simpleRenderSprite())
 			{
-				radians = angle * FlxAngle.TO_RAD;
-				cos = Math.cos(radians);
-				sin = Math.sin(radians);
+				if (_angleChanged)
+				{
+					var radians:Float = angle * FlxAngle.TO_RAD;
+					_sinAngle = Math.sin(radians);
+					_cosAngle = Math.cos(radians);
+					_angleChanged = false;
+				}
 				
-				csx = cos * scale.x;
-				ssy = sin * scale.y;
-				ssx = sin * scale.x;
-				csy = cos * scale.y;
+				csx = _cosAngle * scale.x;
+				ssy = _sinAngle * scale.y;
+				ssx = _sinAngle * scale.x;
+				csy = _cosAngle * scale.y;
 				
 				x1 = (origin.x - _halfWidth);
 				y1 = (origin.y - _halfHeight);
