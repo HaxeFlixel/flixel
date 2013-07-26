@@ -220,7 +220,7 @@ class BitmapFrontEnd
 			var bd:BitmapData = null;
 			if (isClass)
 			{
-				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), []);
+				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), [0, 0]);
 			}
 			else if (isBitmap)
 			{
