@@ -6,8 +6,10 @@ import flash.text.Font;
 import openfl.Assets;
 import flixel.FlxG;
 
-@:font("assets/fonts/nokiafc22.ttf") class DefaultFont extends Font { }
-@:font("assets/fonts/arial.ttf") class DebuggerFont extends Font { }
+@:font("assets/fonts/nokiafc22.ttf") private class FontDefault extends Font { }
+#if !FLX_NO_DEBUG
+@:font("assets/fonts/arial.ttf") private class FontDebugger extends Font { }
+#end
 
 class FlxAssets
 {
@@ -66,6 +68,15 @@ class FlxAssets
 	#else
 	inline static public var SND_BEEP:String = "snd/beep.wav";
 	#end
+	
+	static public function init():Void
+	{
+		Font.registerFont(FontDefault);
+		
+		#if !FLX_NO_DEBUG
+		Font.registerFont(FontDebugger);
+		#end
+	}
 	
 	static public function drawLogo(graph:Graphics):Void
 	{
