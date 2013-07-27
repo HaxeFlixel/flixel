@@ -51,7 +51,7 @@ class FlxTimer
 	 */
 	public function new(Time:Float = -1, ?Callback:FlxTimer->Void, Loops:Int = 1)
 	{
-		if (Time != -1)
+		if (Time > 0)
 		{
 			start(Time, Callback, Loops);
 		}
@@ -91,6 +91,15 @@ class FlxTimer
 				_callback(this);
 			}
 		}
+	}
+	
+	/**
+	 * Restart the timer using the new duration
+	 * @param	NewDuration	The duration of this timer in ms.
+	 */
+	public function reset(NewTime:Float = 1):FlxTimer
+	{
+		return start(NewTime, _callback, loops);
 	}
 	
 	/**
@@ -160,6 +169,16 @@ class FlxTimer
 	}
 	
 	/**
+	 * Read-only: The amount of milliseconds that have elapsed since the timer was started
+	 */
+	public var elapsedTime(get, never):Float;
+	
+	private function get_elapsedTime():Float
+	{
+		return _timeCounter;
+	}
+	
+	/**
 	 * Read-only: check how many loops are left on the timer.
 	 */
 	public var loopsLeft(get, never):Int;
@@ -167,6 +186,16 @@ class FlxTimer
 	inline private function get_loopsLeft():Int
 	{
 		return loops - _loopsCounter;
+	}
+	
+	/**
+	 * Read-only: how many loops that have elapsed since the timer was started.
+	 */
+	public var elapsedLoops(get, never):Int;
+	
+	private function get_elapsedLoops():Int
+	{
+		return _loopsCounter;
 	}
 	
 	/**
