@@ -45,7 +45,7 @@ class FlxTimer
 	/**
 	 * Instantiate a new timer and starts it if a Time different from -1 is passed.
 	 * 
-	 * @param	Time		How many seconds it takes for the timer to go off.
+	 * @param	Time		How many seconds it takes for the timer to go off. This timer will start automatically if pass positive value for this argument.
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
 	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
 	 */
