@@ -5,8 +5,6 @@
 	<assets path="assets/images" rename="img" if="desktop" />
 	<assets path="assets/images" rename="img" if="mobile" />
 	
-	<assets path="assets/fonts" rename="fonts" />
-	
 	<assets path="assets/sounds" rename="snd" exclude="*.wav" if="flash"  />
 	<assets path="assets/sounds" rename="snd" exclude="*.wav" if="html5"  />
 	<assets path="assets/sounds" rename="snd" if="desktop"  />
