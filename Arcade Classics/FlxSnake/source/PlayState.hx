@@ -179,7 +179,7 @@ class PlayState extends FlxState
 	{
 		_snakeHead.alive = false;
 		updateText("Game Over - Space to restart!");
-		FlxG.sound.play("Flixel");
+		FlxG.sound.play("assets/flixel.mp3");
 	}
 	
 	private function addSegment():Void
@@ -200,7 +200,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		Timer.start(_movementIntervall / FlxG.framerate, 1, resetTimer);
+		Timer.start(_movementIntervall / FlxG.framerate, resetTimer);
 		moveSnake();
 	}
 	

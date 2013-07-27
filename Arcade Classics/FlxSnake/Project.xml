@@ -16,29 +16,7 @@
 	
 	<classpath name="source" />
 	
-	<assets path="assets" if="android" >
-		<sound path="flixel.wav" id="Flixel" />
-	</assets>
-	
-	<assets path="assets" if="desktop" >
-		<sound path="flixel.wav" id="Flixel" />
-	</assets>
-	
-	<assets path="assets" if="flash" >
-		<sound path="flixel.mp3" id="Flixel" />
-	</assets>
-	
-	<assets path="assets" if="html5" >
-		<sound path="flixel.mp3" id="Flixel" />
-	</assets>
-	
-	<assets path="assets" exclude="*.wav" if="flash" />
-	<assets path="assets" exclude="*.svg" if="html5" />
-	<assets path="assets" if="desktop" />
-	<assets path="assets" if="mobile" />
-	
-	<icon name="assets/HaxeFlixel.svg" />
-	
+	<assets path="assets" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>

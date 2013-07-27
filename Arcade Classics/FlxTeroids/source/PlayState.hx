@@ -148,7 +148,7 @@ class PlayState extends FlxState
 	
 	private function resetTimer(Timer:FlxTimer):Void
 	{
-		Timer.start(5, 1, resetTimer);
+		Timer.start(5, resetTimer);
 		spawnAsteroid();
 	}
 	
