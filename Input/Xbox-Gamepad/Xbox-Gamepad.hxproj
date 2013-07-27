@@ -5,29 +5,27 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="Project.xml" />
-    <movie fps="30" />
-    <movie width="800" />
-    <movie height="600" />
+    <movie fps="60" />
+    <movie width="640" />
+    <movie height="480" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="FFFFFF" />
+    <movie background="#FFFFFF" />
     <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="C:\HaxeToolkit\haxe\lib/openfl/1,0,5/" />
-    <class path="C:\HaxeToolkit\haxe\lib/flixel/git/" />
-    <class path="bin/flash/haxe" />
+    <class path="export\windows\cpp\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1&#xA;openfl_ver=1.0.5&#xA;openfl&#xA;display&#xA;web" />
+    <option directives="tools=1&#xA;openfl_ver=1.0.6&#xA;openfl&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;-swf-version 11&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;--macro allowPackage(&quot;flash&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -59,6 +57,7 @@
     <hidden path="source\flixel\d" />
     <hidden path=".build" />
     <hidden path=".hgignore" />
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />

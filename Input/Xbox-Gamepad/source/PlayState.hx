@@ -1,256 +1,241 @@
 package;
 
-import org.flixel.FlxG;
-import org.flixel.util.FlxColor;
-import org.flixel.util.FlxPoint;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.system.input.FlxJoystick;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.system.input.gamepad.FlxGamepad;
+import flixel.system.input.gamepad.XboxButtonID;
+import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
 
 class PlayState extends FlxState
 {	
-	private var controllerBg:FlxSprite;
-	private var leftStick:FlxSprite;
-	private var rightStick:FlxSprite;
-	private var dPad:FlxSprite;
+	inline static private var STICK_MOVEMENT_RANGE:Float = 10;
 	
-	private var xButton:FlxSprite;
-	private var yButton:FlxSprite;
-	private var aButton:FlxSprite;
-	private var bButton:FlxSprite;
+	inline static private var ALPHA_OFF:Float = 0.5;
+	inline static private var ALPHA_ON:Float = 1;
 	
-	private var back:FlxSprite;
-	private var start:FlxSprite;
+	inline static private var LB_Y:Float = 2;
+	inline static private var RB_Y:Float = 2;
 	
-	private var LB:FlxSprite;
-	private var RB:FlxSprite;
-	private var gamePad:FlxJoystick;
+	static private var LEFT_STICK_POS:FlxPoint = new FlxPoint(80, 48);
+	static private var RIGHT_STICK_POS:FlxPoint = new FlxPoint(304, 136);
 	
-	private var offAlpha:Float = 0.5;
-	private var onAlpha:Float = 1.0;
+	private var _controllerBg:FlxSprite;
+	private var _leftStick:FlxSprite;
+	private var _rightStick:FlxSprite;
+	private var _dPad:FlxSprite;
 	
-	private static var LB_Y:Float = 2;
-	private static var RB_Y:Float = 2;
+	private var _xButton:FlxSprite;
+	private var _yButton:FlxSprite;
+	private var _aButton:FlxSprite;
+	private var _bButton:FlxSprite;
 	
-	private static var LEFT_STICK_POS:FlxPoint = new FlxPoint(80, 48);
-	private static var RIGHT_STICK_POS:FlxPoint = new FlxPoint(304, 136);
-	private static var STICK_MOVEMENT_RANGE:Float = 10;
+	private var _backButton:FlxSprite;
+	private var _startButton:FlxSprite;
+	
+	private var _LB:FlxSprite;
+	private var _RB:FlxSprite;
+	private var _gamePad:FlxGamepad;
 	
 	override public function create():Void 
 	{
-		super.create();
+		FlxG.cameras.bgColor = FlxColor.GRAY;
 		
-		FlxG.bgColor = FlxColor.WHITE;
+		// Getting first availble gamepad
+		_gamePad = FlxG.gamepadManager.getGamepad(0);
 		
-		// getting first availble gamepad
-		gamePad = FlxG.joystickManager.joystick(0);
+		_LB = createSprite(71, LB_Y, "assets/LB.png", 0.8);
+		_RB = createSprite(367, RB_Y, "assets/RB.png", 0.8);
 		
-		LB = new FlxSprite(71, LB_Y, "assets/LB.png");
-		LB.alpha = 0.8;
-		add(LB);
+		_controllerBg = createSprite(0, 0, "assets/xbox360_gamepad.png", 1);
 		
-		RB = new FlxSprite(367, RB_Y, "assets/RB.png");
-		RB.alpha = 0.8;
-		add(RB);
+		_leftStick = createSprite(LEFT_STICK_POS.x, LEFT_STICK_POS.y, "assets/Stick.png");
+		_rightStick = createSprite(RIGHT_STICK_POS.x, RIGHT_STICK_POS.y, "assets/Stick.png");
 		
-		controllerBg = new FlxSprite(0, 0, "assets/xbox360_gamepad.png");
-		add(controllerBg);
+		_dPad = new FlxSprite(144, 126);
+		_dPad.loadGraphic("assets/DPad.png", true, false, 87, 87);
+		_dPad.alpha = ALPHA_OFF;
+		add(_dPad);
 		
-		leftStick = new FlxSprite(LEFT_STICK_POS.x, LEFT_STICK_POS.y, "assets/Stick.png");
-		leftStick.alpha = offAlpha;
-		add(leftStick);
+		_xButton = createSprite(357, 70, "assets/X.png");
+		_yButton = createSprite(395, 34, "assets/Y.png");
+		_aButton = createSprite(395, 109, "assets/A.png");
+		_bButton = createSprite(433, 70, "assets/B.png");	
 		
-		rightStick = new FlxSprite(RIGHT_STICK_POS.x, RIGHT_STICK_POS.y, "assets/Stick.png");
-		rightStick.alpha = offAlpha;
-		add(rightStick);
+		_backButton = createSprite(199, 79, "assets/Back.png");
+		_startButton = createSprite(306, 79, "assets/Start.png");
+	}
+	
+	private function createSprite(X:Float, Y:Float, Graphic:String, Alpha:Float = -1):FlxSprite
+	{
+		if (Alpha == -1)
+		{
+			Alpha = ALPHA_OFF;
+		}
 		
-		dPad = new FlxSprite(144, 126);
-		dPad.loadGraphic("assets/DPad.png", true, false, 87, 87);
-		dPad.alpha = offAlpha;
-		add(dPad);
+		var button:FlxSprite = new FlxSprite(X, Y, Graphic);
+		button.alpha = Alpha;
+		add(button);
 		
-		xButton = new FlxSprite(357, 70, "assets/X.png");
-		xButton.alpha = offAlpha;
-		add(xButton);
-		
-		yButton = new FlxSprite(395, 34, "assets/Y.png");
-		yButton.alpha = offAlpha;
-		add(yButton);
-		
-		aButton = new FlxSprite(395, 109, "assets/A.png");
-		aButton.alpha = offAlpha;
-		add(aButton);
-		
-		bButton = new FlxSprite(433, 70, "assets/B.png");
-		bButton.alpha = offAlpha;
-		add(bButton);
-		
-		back = new FlxSprite(199, 79, "assets/Back.png");
-		back.alpha = offAlpha;
-		add(back);
-		
-		start = new FlxSprite(306, 79, "assets/Start.png");
-		start.alpha = offAlpha;
-		add(start);
+		return button;
 	}
 	
 	override public function update():Void 
 	{
 		super.update();
 		
-		var gray:Int = 0xffcccccc;
-		
-		if (gamePad.pressed(XBOX_BUTTON_IDS.A_BUTTON))
+		if (_gamePad.pressed(XboxButtonID.A))
 		{
-			aButton.alpha = onAlpha;
+			_aButton.alpha = ALPHA_ON;
 		}
 		else
 		{
-			aButton.alpha = offAlpha;
+			_aButton.alpha = ALPHA_OFF;
 		}
 		
-		if (gamePad.pressed(XBOX_BUTTON_IDS.B_BUTTON))
+		if (_gamePad.pressed(XboxButtonID.B))
 		{
-			bButton.alpha = onAlpha;
+			_bButton.alpha = ALPHA_ON;
 		}
 		else
 		{
-			bButton.alpha = offAlpha;
+			_bButton.alpha = ALPHA_OFF;
 		}
 		
-		if (gamePad.pressed(XBOX_BUTTON_IDS.X_BUTTON))
+		if (_gamePad.pressed(XboxButtonID.X))
 		{
-			xButton.alpha = onAlpha;
+			_xButton.alpha = ALPHA_ON;
 		}
 		else
 		{
-			xButton.alpha = offAlpha;
+			_xButton.alpha = ALPHA_OFF;
 		}
 		
-		if (gamePad.pressed(XBOX_BUTTON_IDS.Y_BUTTON))
+		if (_gamePad.pressed(XboxButtonID.Y))
 		{
-			yButton.alpha = onAlpha;
+			_yButton.alpha = ALPHA_ON;
 		}
 		else
 		{
-			yButton.alpha = offAlpha;
+			_yButton.alpha = ALPHA_OFF;
 		}
 		
-		if (gamePad.pressed(XBOX_BUTTON_IDS.LB_BUTTON))
+		if (_gamePad.pressed(XboxButtonID.LB))
 		{
-			LB.y = LB_Y + 5;
+			_LB.y = LB_Y + 5;
 		}
 		else
 		{
-			LB.y = LB_Y;
+			_LB.y = LB_Y;
 		}
 		
-		if (gamePad.pressed(XBOX_BUTTON_IDS.RB_BUTTON))
+		if (_gamePad.pressed(XboxButtonID.RB))
 		{
-			RB.y = RB_Y + 5;
+			_RB.y = RB_Y + 5;
 		}
 		else
 		{
-			RB.y = RB_Y;
+			_RB.y = RB_Y;
 		}
 		
-		if (gamePad.pressed(XBOX_BUTTON_IDS.START_BUTTON))
+		if (_gamePad.pressed(XboxButtonID.START))
 		{
-			start.alpha = onAlpha;
+			_startButton.alpha = ALPHA_ON;
 		}
 		else
 		{
-			start.alpha = offAlpha;
+			_startButton.alpha = ALPHA_OFF;
 		}
 		
-		if (gamePad.pressed(XBOX_BUTTON_IDS.BACK_BUTTON))
+		if (_gamePad.pressed(XboxButtonID.BACK))
 		{
-			back.alpha = onAlpha;
+			_backButton.alpha = ALPHA_ON;
 		}
 		else
 		{
-			back.alpha = offAlpha;
+			_backButton.alpha = ALPHA_OFF;
 		}
 		
 		var angle:Float = 0;
 		
-		if (Math.abs(gamePad.getAxis(XBOX_BUTTON_IDS.LEFT_ANALOGUE_X)) > gamePad.deadZone || Math.abs(gamePad.getAxis(XBOX_BUTTON_IDS.LEFT_ANALOGUE_Y)) > gamePad.deadZone)
+		if (Math.abs(_gamePad.getAxis(XboxButtonID.LEFT_ANALOGUE_X)) > _gamePad.deadZone || Math.abs(_gamePad.getAxis(XboxButtonID.LEFT_ANALOGUE_Y)) > _gamePad.deadZone)
 		{
-			angle = Math.atan2(gamePad.getAxis(XBOX_BUTTON_IDS.LEFT_ANALOGUE_Y), gamePad.getAxis(XBOX_BUTTON_IDS.LEFT_ANALOGUE_X));
-			leftStick.x = LEFT_STICK_POS.x + STICK_MOVEMENT_RANGE * Math.cos(angle);
-			leftStick.y = LEFT_STICK_POS.y + STICK_MOVEMENT_RANGE * Math.sin(angle);
-			leftStick.alpha = onAlpha;
+			angle = Math.atan2(_gamePad.getAxis(XboxButtonID.LEFT_ANALOGUE_Y), _gamePad.getAxis(XboxButtonID.LEFT_ANALOGUE_X));
+			_leftStick.x = LEFT_STICK_POS.x + STICK_MOVEMENT_RANGE * Math.cos(angle);
+			_leftStick.y = LEFT_STICK_POS.y + STICK_MOVEMENT_RANGE * Math.sin(angle);
+			_leftStick.alpha = ALPHA_ON;
 		}
 		else
 		{
-			leftStick.x = LEFT_STICK_POS.x;
-			leftStick.y = LEFT_STICK_POS.y;
-			leftStick.alpha = offAlpha;
+			_leftStick.x = LEFT_STICK_POS.x;
+			_leftStick.y = LEFT_STICK_POS.y;
+			_leftStick.alpha = ALPHA_OFF;
 		}
 		
-		if (Math.abs(gamePad.getAxis(XBOX_BUTTON_IDS.RIGHT_ANALOGUE_X)) > gamePad.deadZone || Math.abs(gamePad.getAxis(XBOX_BUTTON_IDS.RIGHT_ANALOGUE_Y)) > gamePad.deadZone)
+		if (Math.abs(_gamePad.getAxis(XboxButtonID.RIGHT_ANALOGUE_X)) > _gamePad.deadZone || Math.abs(_gamePad.getAxis(XboxButtonID.RIGHT_ANALOGUE_Y)) > _gamePad.deadZone)
 		{
-			angle = Math.atan2(gamePad.getAxis(XBOX_BUTTON_IDS.RIGHT_ANALOGUE_Y), gamePad.getAxis(XBOX_BUTTON_IDS.RIGHT_ANALOGUE_X));
-			rightStick.x = RIGHT_STICK_POS.x + STICK_MOVEMENT_RANGE * Math.cos(angle);
-			rightStick.y = RIGHT_STICK_POS.y + STICK_MOVEMENT_RANGE * Math.sin(angle);
-			rightStick.alpha = onAlpha;
+			angle = Math.atan2(_gamePad.getAxis(XboxButtonID.RIGHT_ANALOGUE_Y), _gamePad.getAxis(XboxButtonID.RIGHT_ANALOGUE_X));
+			_rightStick.x = RIGHT_STICK_POS.x + STICK_MOVEMENT_RANGE * Math.cos(angle);
+			_rightStick.y = RIGHT_STICK_POS.y + STICK_MOVEMENT_RANGE * Math.sin(angle);
+			_rightStick.alpha = ALPHA_ON;
 		}
 		else
 		{
-			rightStick.x = RIGHT_STICK_POS.x;
-			rightStick.y = RIGHT_STICK_POS.y;
-			rightStick.alpha = offAlpha;
+			_rightStick.x = RIGHT_STICK_POS.x;
+			_rightStick.y = RIGHT_STICK_POS.y;
+			_rightStick.alpha = ALPHA_OFF;
 		}
 		
-		if (gamePad.hat.x != 0 || gamePad.hat.y != 0)
+		if (_gamePad.hat.x != 0 || _gamePad.hat.y != 0)
 		{
-			if (gamePad.hat.x > 0)
+			if (_gamePad.hat.x > 0)
 			{
-				if (gamePad.hat.y > 0)
+				if (_gamePad.hat.y > 0)
 				{
-					dPad.frame = 6;
+					_dPad.frame = 6;
 				}
-				else if (gamePad.hat.y < 0)
+				else if (_gamePad.hat.y < 0)
 				{
-					dPad.frame = 5;
+					_dPad.frame = 5;
 				}
 				else	// gamePad.hat.y == 0
 				{
-					dPad.frame = 2;
+					_dPad.frame = 2;
 				}
 			}
-			else if (gamePad.hat.x < 0)
+			else if (_gamePad.hat.x < 0)
 			{
-				if (gamePad.hat.y > 0)
+				if (_gamePad.hat.y > 0)
 				{
-					dPad.frame = 7;
+					_dPad.frame = 7;
 				}
-				else if (gamePad.hat.y < 0)
+				else if (_gamePad.hat.y < 0)
 				{
-					dPad.frame = 8;
+					_dPad.frame = 8;
 				}
 				else	// gamePad.hat.y == 0
 				{
-					dPad.frame = 4;
+					_dPad.frame = 4;
 				}
 			}
 			else	// gamePad.hat.x == 0
 			{
-				if (gamePad.hat.y > 0)
+				if (_gamePad.hat.y > 0)
 				{
-					dPad.frame = 3;
+					_dPad.frame = 3;
 				}
-				else if (gamePad.hat.y < 0)
+				else if (_gamePad.hat.y < 0)
 				{
-					dPad.frame = 1;
+					_dPad.frame = 1;
 				}
 			}
-			dPad.alpha = onAlpha;
+			_dPad.alpha = ALPHA_ON;
 		}
 		else
 		{
-			dPad.frame = 0;
-			dPad.alpha = offAlpha;
+			_dPad.frame = 0;
+			_dPad.alpha = ALPHA_OFF;
 		}
 	}
 }
