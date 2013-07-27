@@ -42,16 +42,19 @@ class FlxAssets
 	inline static public var IMG_BUTTON:String = "img/ui/button.png";
 	inline static public var IMG_CURSOR:String = "img/ui/cursor.png";
 
-	// ui/gamepad
-	inline static public var IMG_BUTTON_A:String = "img/ui/gamepad/button_a.png";
-	inline static public var IMG_BUTTON_B:String = "img/ui/gamepad/button_b.png";
-	inline static public var IMG_BUTTON_C:String = "img/ui/gamepad/button_c.png";
-	inline static public var IMG_BUTTON_X:String = "img/ui/gamepad/button_x.png";
-	inline static public var IMG_BUTTON_Y:String = "img/ui/gamepad/button_y.png";
-	inline static public var IMG_BUTTON_UP:String = "img/ui/gamepad/button_up.png";
-	inline static public var IMG_BUTTON_DOWN:String = "img/ui/gamepad/button_down.png";
-	inline static public var IMG_BUTTON_LEFT:String = "img/ui/gamepad/button_left.png";
-	inline static public var IMG_BUTTON_RIGHT:String = "img/ui/gamepad/button_right.png";
+	// ui/analog
+	inline static public var IMG_BASE:String = "img/ui/analog/base.png";
+	inline static public var IMG_THUMB:String = "img/ui/analog/thumb.png";
+	// ui/virtualpad
+	inline static public var IMG_BUTTON_A:String = "img/ui/virtualpad/a.png";
+	inline static public var IMG_BUTTON_B:String = "img/ui/virtualpad/b.png";
+	inline static public var IMG_BUTTON_C:String = "img/ui/virtualpad/c.png";
+	inline static public var IMG_BUTTON_X:String = "img/ui/virtualpad/x.png";
+	inline static public var IMG_BUTTON_Y:String = "img/ui/virtualpad/y.png";
+	inline static public var IMG_BUTTON_UP:String = "img/ui/virtualpad/up.png";
+	inline static public var IMG_BUTTON_DOWN:String = "img/ui/virtualpad/down.png";
+	inline static public var IMG_BUTTON_LEFT:String = "img/ui/virtualpad/left.png";
+	inline static public var IMG_BUTTON_RIGHT:String = "img/ui/virtualpad/right.png";
 	
 	// fonts
 	inline static public var FONT_DEFAULT:String = "Nokia Cellphone FC Small";

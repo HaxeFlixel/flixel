@@ -12,9 +12,6 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 
-@:bitmap("assets/images/ui/analog/base.png") private class ImgBase extends BitmapData { }
-@:bitmap("assets/images/ui/analog/stick.png") private class ImgStick extends BitmapData { }
-
 /**
  * A virtual thumbstick - useful for input on mobile devices.
  * 
@@ -147,7 +144,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createBase():Void
 	{
 		base = new FlxSprite(x, y);
-		base.loadGraphic(ImgBase);
+		base.loadGraphic(FlxAssets.IMG_BASE);
 		base.x += -base.width * 0.5;
 		base.y += -base.height * 0.5;
 		base.scrollFactor.set();
@@ -167,7 +164,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createThumb():Void 
 	{
 		thumb = new FlxSprite(x, y);
-		thumb.loadGraphic(ImgStick);
+		thumb.loadGraphic(FlxAssets.IMG_THUMB);
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		
