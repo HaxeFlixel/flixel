@@ -2,7 +2,6 @@ package;
 
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
@@ -33,7 +32,7 @@ class PlayState extends FlxState
 		destination = sprite.getMidpoint();
 		destination.y += 112;
 		path = new FlxPath([sprite.getMidpoint(),destination]);
-		sprite.followPath(path, 40, FlxObject.PATH_YOYO);
+		sprite.followPath(path, 40, FlxPath.YOYO);
 		add(sprite);
 		
 		// Create the side-to-side pusher object and put it on a different path
