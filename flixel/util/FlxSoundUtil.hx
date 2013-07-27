@@ -12,8 +12,7 @@ class FlxSoundUtil
 	{
 		var sound = FlxG.sound.play(EmbeddedSound, Volume, false, true, OnComplete);
 		#if !(flash || desktop)
-		var timer:FlxTimer = new FlxTimer().start(Duration, 1, timerCallback);
-		FlxTimer.manager.add(timer);
+		var timer:FlxTimer = new FlxTimer(Duration, timerCallback);
 		timerCallbackMap.set(timer, OnComplete);
 		#end
 		return sound;
