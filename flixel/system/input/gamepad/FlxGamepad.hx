@@ -1,44 +1,50 @@
-package flixel.system.input;
+package flixel.system.input.gamepad;
 
 import flixel.util.FlxPoint;
 
-class FlxJoystick 
+class FlxGamepad 
 {
-	
-	public var buttons:Map<Int, FlxJoyButton>;
+	public var buttons:Map<Int, FlxGamepadButton>;
 	public var axis(null, default):Array<Float>;
-	public var hat:FlxPoint;	// DPAD on Xbox Gamepad
+	/**
+	 * DPAD on Xbox Gamepad
+	 */
+	public var hat:FlxPoint;	
 	public var ball:FlxPoint;
 	public var id:Int;
 	
 	/**
-	 * Joystick deadzone. Sets the sensibility. 
-	 * Less this number the more Joystick is sensible.
+	 * Gamepad deadzone. Sets the sensibility. 
+	 * Less this number the more gamepad is sensible.
 	 * Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
 	
-	public function new(id:Int, globalDeadZone:Float = 0) 
+	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
-		buttons = new Map<Int, FlxJoyButton>();
+		buttons = new Map<Int, FlxGamepadButton>();
 		ball = new FlxPoint();
 		axis = new Array<Float>();
 		hat = new FlxPoint();
-		this.id = id;
+		id = ID;
 		
-		if (globalDeadZone != 0)
-			deadZone = globalDeadZone;
+		if (GlobalDeadZone != 0)
+		{
+			deadZone = GlobalDeadZone;
+		}
 	}
 	
-	public function getButton(buttonID:Int):FlxJoyButton
+	public function getButton(ButtonID:Int):FlxGamepadButton
 	{
-		var joyButton:FlxJoyButton = buttons.get(buttonID);
-		if (joyButton == null)
+		var gamepadButton:FlxGamepadButton = buttons.get(ButtonID);
+		
+		if (gamepadButton == null)
 		{
-			joyButton = new FlxJoyButton(buttonID);
-			buttons.set(buttonID, joyButton);
+			gamepadButton = new FlxGamepadButton(ButtonID);
+			buttons.set(ButtonID, gamepadButton);
 		}
-		return joyButton;
+		
+		return gamepadButton;
 	}
 	
 	/**
@@ -56,6 +62,7 @@ class FlxJoystick
 			{
 				button.current = 1;
 			}
+
 			button.last = button.current;
 		}
 	}
@@ -69,13 +76,14 @@ class FlxJoystick
 		}
 		
 		var numAxis:Int = axis.length;
+		
 		for (i in 0...numAxis)
 		{
 			axis[i] = 0;
 		}
 		
-		hat.x = hat.y = 0;
-		ball.x = ball.y = 0;
+		hat.set();
+		ball.set();
 	}
 	
 	public function destroy():Void
@@ -88,14 +96,15 @@ class FlxJoystick
 	
 	/**
 	 * Check to see if this button is pressed.
-	 * @param	buttonID		button id (from 0 to 7).
+	 * 
+	 * @param	ButtonID	The button id (from 0 to 7).
 	 * @return	Whether the button is pressed
 	 */
-	public function pressed(buttonID:Int):Bool 
+	public function pressed(ButtonID:Int):Bool 
 	{ 
-		if (buttons.exists(buttonID))
+		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(buttonID).current > 0);
+			return (buttons.get(ButtonID).current > 0);
 		}
 		
 		return false;
@@ -103,14 +112,15 @@ class FlxJoystick
 	
 	/**
 	 * Check to see if this button was just pressed.
-	 * @param	buttonID		button id (from 0 to 7).
+	 * 
+	 * @param	ButtonID	The button id (from 0 to 7).
 	 * @return	Whether the button was just pressed
 	 */
-	public function justPressed(buttonID:Int):Bool 
+	public function justPressed(ButtonID:Int):Bool 
 	{ 
-		if (buttons.exists(buttonID))
+		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(buttonID).current == 2);
+			return (buttons.get(ButtonID).current == 2);
 		}
 		
 		return false;
@@ -118,32 +128,38 @@ class FlxJoystick
 	
 	/**
 	 * Check to see if this button is just released.
-	 * @param	buttonID		button id (from 0 to 7).
+	 * 
+	 * @param	buttonID	The button id (from 0 to 7).
 	 * @return	Whether the button is just released.
 	 */
-	public function justReleased(buttonID:Int):Bool 
+	public function justReleased(ButtonID:Int):Bool 
 	{ 
-		if (buttons.exists(buttonID))
+		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(buttonID).current == -1);
+			return (buttons.get(ButtonID).current == -1);
 		}
 		
 		return false;
 	}
 	
-	public function getAxis(axeID:Int):Float
+	public function getAxis(AxisID:Int):Float
 	{
-		if (axeID < 0 || axeID >= axis.length)
+		if (AxisID < 0 || AxisID >= axis.length)
+		{
 			return 0;
-			
-		if (Math.abs(axis[axeID]) > deadZone)
-			return axis[axeID];
+		}
+		
+		if (Math.abs(axis[AxisID]) > deadZone)
+		{
+			return axis[AxisID];
+		}
 		
 		return 0;
 	}
 	
 	/**
 	 * Check to see if any buttons are pressed right now.
+	 * 
 	 * @return	Whether any buttons are currently pressed.
 	 */
 	public function anyButton():Bool
@@ -161,6 +177,7 @@ class FlxJoystick
 	
 	/**
 	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved now.
+	 * 
 	 * @return	Whether any buttons are currently pressed.
 	 */
 	public function anyInput():Bool
@@ -174,6 +191,7 @@ class FlxJoystick
 		}
 		
 		var numAxis:Int = axis.length;
+		
 		for (i in 0...numAxis)
 		{
 			if (axis[0] != 0)
@@ -194,5 +212,4 @@ class FlxJoystick
 		
 		return false;
 	}
-	
 }

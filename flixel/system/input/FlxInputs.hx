@@ -5,6 +5,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flash.ui.Multitouch;
 import flash.ui.MultitouchInputMode;
+import flixel.system.input.gamepad.FlxGamepadManager;
 
 class FlxInputs {
 	
@@ -35,8 +36,8 @@ class FlxInputs {
 			initTouch();
 		#end
 		
-		#if (!FLX_NO_JOYSTICK && (cpp||neko))
-			initJoystick();
+		#if (!FLX_NO_GAMEPAD && (cpp||neko))
+			initGamepad();
 		#end
 		
 	}
@@ -114,12 +115,12 @@ class FlxInputs {
 		}
 	}
 	
-	#if (!FLX_NO_JOYSTICK && (cpp||neko))
-	static public function initJoystick():Void
+	#if (!FLX_NO_GAMEPAD && (cpp||neko))
+	static public function initGamepad():Void
 	{
-		var joy = new FlxJoystickManager();
-		FlxG.joystickManager = joy;
-		inputs.push(joy);
+		var gamepad = new FlxGamepadManager();
+		FlxG.gamepadManager = gamepad;
+		inputs.push(gamepad);
 	}
 	#end
 	

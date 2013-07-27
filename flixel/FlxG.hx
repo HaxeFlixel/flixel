@@ -38,8 +38,8 @@ import flixel.system.input.FlxKeyboard;
 #if !FLX_NO_MOUSE
 import flixel.system.input.FlxMouse;
 #end
-#if !FLX_NO_JOYSTICK
-import flixel.system.input.FlxJoystickManager;
+#if !FLX_NO_GAMEPAD
+import flixel.system.input.gamepad.FlxGamepadManager;
 #end
 
 /**
@@ -148,12 +148,12 @@ class FlxG
 	public static var touchManager:FlxTouchManager;
 	#end
 	
-	#if (!FLX_NO_JOYSTICK && (cpp||neko))
+	#if (!FLX_NO_GAMEPAD && (cpp||neko))
 	/**
-	 * A reference to a <code>JoystickManager</code> object. Important for input!
-	 * Set the instance in the FlxInputs class
+	 * A reference to a <code>FlxGamepadManager</code> object.
+	 * Set the instance in the FlxInputs class.
 	 */
-	public static var joystickManager:FlxJoystickManager;
+	public static var gamepadManager:FlxGamepadManager;
 	#end
 	
 	// From here on: frontEnds
