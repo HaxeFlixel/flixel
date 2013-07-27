@@ -51,7 +51,13 @@ class Perf extends Window
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
 	{
 		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
+		
+		// Need to account for the additional drawCalls stat on non-flash targets
+		#if flash
 		resize(90, 110);
+		#else
+		resize(90, 118);
+		#end
 		
 		_lastTime = 0;
 		_updateTimer = 0;
@@ -63,7 +69,7 @@ class Perf extends Window
 		_text.multiline = true;
 		_text.wordWrap = true;
 		_text.selectable = true;
-		//_text.embedFonts = true;
+		_text.embedFonts = true;
 		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		addChild(_text);
 		
