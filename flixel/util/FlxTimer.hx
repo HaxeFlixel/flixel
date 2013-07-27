@@ -97,8 +97,12 @@ class FlxTimer
 	 * Restart the timer using the new duration
 	 * @param	NewDuration	The duration of this timer in ms.
 	 */
-	public function reset(NewTime:Float = 1):FlxTimer
+	public function reset(NewTime:Float = -1):FlxTimer
 	{
+		if (NewTime < 0)
+		{
+			NewTime = time;
+		}
 		return start(NewTime, _callback, loops);
 	}
 	
@@ -129,7 +133,7 @@ class FlxTimer
 		
 		paused = false;
 		finished = false;
-		time = Time;
+		time = Math.abs(Time);
 		
 		if (Loops < 1) 
 		{
