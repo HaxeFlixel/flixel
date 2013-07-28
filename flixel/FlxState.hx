@@ -228,20 +228,18 @@ class FlxState extends FlxGroup
 	/**
 	 * This method is called after application losts its focus.
 	 * Can be useful if you using third part libraries, such as tweening engines.
-	 * Override it in subclasses
 	 */
-	public function onFocusLost():Void
-	{
-		
-	}
+	public function onFocusLost():Void { }
 	
 	/**
 	 * This method is called after application gets focus.
 	 * Can be useful if you using third part libraries, such as tweening engines.
-	 * Override it in subclasses
 	 */
-	public function onFocus():Void
-	{
-		
-	}
+	public function onFocus():Void { }
+	
+	/**
+	 * This method is called after application gets resized.
+	 * Can be useful to update the game based on the new dimensions.
+	 */
+	public function onResize():Void { }
 }

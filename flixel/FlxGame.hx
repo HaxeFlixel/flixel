@@ -311,6 +311,15 @@ class FlxGame extends Sprite
 		FlxInputs.onFocusLost();
 	}
 	
+	private function onResize(E:Event):Void 
+	{
+		#if (desktop || mobile)
+		FlxG.bitmap.onContext();
+		#end
+		
+		state.onResize();
+	}
+	
 	/**
 	 * Handles the onEnterFrame call and figures out how many updates and draw calls to do.
 	 * @param	FlashEvent	Flash event.
@@ -802,19 +811,10 @@ class FlxGame extends Sprite
 		// Finally, set up an event for the actual game loop stuff.
 		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		
-		#if (desktop || mobile)
 		// We need to listen for resize event which means new context
 		// it means that we need to recreate bitmapdatas of dumped tilesheets
-		stage.addEventListener(Event.RESIZE, onContext);
-		#end
+		stage.addEventListener(Event.RESIZE, onResize);
 	}
-	
-	#if (desktop || mobile)
-	private function onContext(e:Event):Void 
-	{
-		FlxG.bitmap.onContext();
-	}
-	#end
 	
 	#if !FLX_NO_SOUND_TRAY
 	/**
