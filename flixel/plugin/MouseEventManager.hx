@@ -1,5 +1,6 @@
 package flixel.plugin;
 
+#if !FLX_NO_MOUSE
 import flash.errors.Error;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -471,3 +472,4 @@ typedef SpriteReg = {
 	var onMouseOver:FlxSprite->Void;
 	var onMouseOut:FlxSprite->Void;
 }
+#end
