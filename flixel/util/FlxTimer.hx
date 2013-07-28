@@ -62,7 +62,6 @@ class FlxTimer
 	 */
 	public function destroy():Void
 	{
-		stop();
 		_callback = null;
 	}
 	
@@ -81,14 +80,16 @@ class FlxTimer
 			_timeCounter -= time;
 			_loopsCounter++;
 			
+			var callback:FlxTimer->Void = _callback;
+			
 			if ((loops > 0) && (_loopsCounter >= loops))
 			{
 				stop();
 			}
 			
-			if (_callback != null)
+			if (callback != null)
 			{
-				_callback(this);
+				callback(this);
 			}
 		}
 	}
