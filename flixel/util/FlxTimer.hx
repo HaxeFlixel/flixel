@@ -167,7 +167,7 @@ class FlxTimer
 	 */
 	public var timeLeft(get, never):Float;
 	
-	private function get_timeLeft():Float
+	inline private function get_timeLeft():Float
 	{
 		return time - _timeCounter;
 	}
@@ -177,7 +177,7 @@ class FlxTimer
 	 */
 	public var elapsedTime(get, never):Float;
 	
-	private function get_elapsedTime():Float
+	inline private function get_elapsedTime():Float
 	{
 		return _timeCounter;
 	}
@@ -197,7 +197,7 @@ class FlxTimer
 	 */
 	public var elapsedLoops(get, never):Int;
 	
-	private function get_elapsedLoops():Int
+	inline private function get_elapsedLoops():Int
 	{
 		return _loopsCounter;
 	}
@@ -207,7 +207,7 @@ class FlxTimer
 	 */
 	public var progress(get_progress, never):Float;
 	
-	private function get_progress():Float
+	inline private function get_progress():Float
 	{
 		if (time > 0)
 		{
