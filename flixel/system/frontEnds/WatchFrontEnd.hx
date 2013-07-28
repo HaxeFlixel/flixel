@@ -76,4 +76,33 @@ class WatchFrontEnd
 		}
 		#end
 	}
+	
+	/**
+	 * Add the mouse coords to the watch window. Useful for quickly 
+	 * getting coordinates for object placement during prototyping!
+	 */
+	inline public function addMouse():Void
+	{
+		#if !FLX_NO_DEBUG
+		if (FlxG.game != null && FlxG.game.debugger.watch != null)
+		{
+			add(FlxG.game, "mouseX", "Mouse.x");
+			add(FlxG.game, "mouseY", "Mouse.y");
+		}
+		#end
+	}
+	
+	/**
+	 * Removes the mouse coords from the watch window.
+	 */
+	inline public function removeMouse():Void
+	{
+		#if !FLX_NO_DEBUG
+		if (FlxG.game != null && FlxG.game.debugger.watch != null)
+		{
+			remove(FlxG.game, "mouseX");
+			remove(FlxG.game, "mouseY");
+		}
+		#end
+	}
 }

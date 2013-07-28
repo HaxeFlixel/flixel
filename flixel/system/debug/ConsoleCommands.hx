@@ -185,15 +185,14 @@ class ConsoleCommands
 	
 	private function watchMouse():Void
 	{
-		if (!watchingMouse) {
-			// TODO: turn this into quickWatch to display both in one watch entry.
-			FlxG.watch.add(FlxG.game, "mouseX", "Mouse.x");
-			FlxG.watch.add(FlxG.game, "mouseY", "Mouse.y");
+		if (!watchingMouse) 
+		{
+			FlxG.watch.addMouse();
 			cLog("watchMouse: Mouse position added to watch window");
 		}
-		else {
-			FlxG.watch.remove(FlxG.game, "mouseX");
-			FlxG.watch.remove(FlxG.game, "mouseY");
+		else 
+		{
+			FlxG.watch.removeMouse();
 			cLog("watchMouse: Mouse position removed from watch window");
 		}
 		
