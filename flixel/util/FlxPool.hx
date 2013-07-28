@@ -39,6 +39,14 @@ package flixel.util;
 		}
 	}
 	
+	public function putUnsafe(obj:T):Void
+	{
+		if (obj != null)
+		{
+			_pool.push(obj);
+		}
+	}
+	
 	public function clear():Array<T>
 	{
 		var oldPool = _pool;
