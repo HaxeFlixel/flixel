@@ -1,5 +1,6 @@
 package flixel.system.input;
 
+#if !FLX_NO_KEYBOARD
 import flixel.FlxG;
 import flixel.FlxGame;
 import flash.Lib;
@@ -353,5 +354,5 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	{
 		return "Keyboard";
 	}
-
 }
+#end
