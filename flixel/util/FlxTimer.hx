@@ -228,4 +228,9 @@ class FlxTimer
 	{
 		return cast(FlxG.plugins.get(TimerManager), TimerManager);
 	}
+	
+	static public function getTimer():FlxTimer
+	{
+		return FlxTimer.manager.get();
+	}
 }

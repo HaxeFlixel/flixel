@@ -12,6 +12,8 @@ class TimerManager extends FlxBasic
 {
 	private var _timers:Array<FlxTimer>;
 	
+	private var _pool:FlxPool<FlxTimer>;
+	
 	/**
 	 * Instantiates a new timer manager.
 	 */
@@ -20,6 +22,7 @@ class TimerManager extends FlxBasic
 		super();
 		
 		_timers = new Array<FlxTimer>();
+		_pool = new FlxPool<FlxTimer>();
 		
 		// Don't call draw on this plugin
 		visible = false; 
@@ -32,6 +35,14 @@ class TimerManager extends FlxBasic
 	{
 		clear();
 		_timers = null;
+		var pooled:Array<FlxTimer> = _pool.destroy();
+		var i:Int = pooled.length - 1;
+		while (i >= 0)
+		{
+			var timer:FlxTimer = pooled.pop();
+			timer.destroy();
+			i--;
+		}
 		
 		super.destroy();
 	}
@@ -73,6 +84,21 @@ class TimerManager extends FlxBasic
 	}
 	
 	/**
+	 * Gets new or recycled FlxTimer object.
+	 * It is recommended to use this method instead of creating new FlxTimer objects all the time.
+	 */
+	public function get():FlxTimer
+	{
+		var timer:FlxTimer = _pool.get();
+		if (timer == null)
+		{
+			timer = new FlxTimer();
+		}
+		
+		return timer;
+	}
+	
+	/**
 	 * Remove a timer from the timer manager.
 	 * Usually called automatically by <code>FlxTimer</code>'s <code>stop()</code> function.
 	 * 
@@ -86,7 +112,7 @@ class TimerManager extends FlxBasic
 		{
 			// Fast array removal (only do on arrays where order doesn't matter)
 			_timers[index] = _timers[_timers.length - 1];
-			_timers.pop();
+			_pool.put(_timers.pop());
 		}
 	}
 	
@@ -100,17 +126,10 @@ class TimerManager extends FlxBasic
 			var i:Int = _timers.length - 1;
 			var timer:FlxTimer;
 			
-			while(i >= 0)
+			while (i >= 0)
 			{
-				timer = _timers[i--];
-				
-				if (timer != null)
-				{
-					timer.destroy();
-				}
+				_pool.put(_timers.pop());
 			}
 		}
-		
-		_timers = [];
 	}
 }
