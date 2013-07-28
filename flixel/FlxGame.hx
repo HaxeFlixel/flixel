@@ -114,19 +114,6 @@ class FlxGame extends Sprite
 	 * Flag for whether a new recording is being made.
 	 */
 	public var recording:Bool = false;
-	/**
-	 * Array that keeps track of keypresses that can cancel a replay.
-	 * Handy for skipping cutscenes or getting out of attract modes!
-	 */
-	public var replayCancelKeys:Array<String>;
-	/**
-	 * Helps time out a replay if necessary.
-	 */
-	public var replayTimer:Int;
-	/**
-	 * This function, if set, is triggered when the callback stops playing.
-	 */
-	public var replayCallback:Void->Void;
 	#end
 	
 	/**
@@ -405,11 +392,6 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if FLX_RECORD
-		replayTimer = 0;
-		replayCancelKeys = null;
-		#end
-		
 		FlxG.reset();
 	}
 	
@@ -630,16 +612,16 @@ class FlxGame extends Sprite
 		{
 			replay.playNextFrame();
 			
-			if (replayTimer > 0)
+			if (FlxG.vcr.timeout > 0)
 			{
-				replayTimer -= stepMS;
+				FlxG.vcr.timeout -= stepMS;
 				
-				if (replayTimer <= 0)
+				if (FlxG.vcr.timeout <= 0)
 				{
-					if(replayCallback != null)
+					if (FlxG.vcr.replayCallback != null)
 					{
-						replayCallback();
-						replayCallback = null;
+						FlxG.vcr.replayCallback();
+						FlxG.vcr.replayCallback = null;
 					}
 					else
 					{
@@ -647,14 +629,15 @@ class FlxGame extends Sprite
 					}
 				}
 			}
+			
 			if (replaying && replay.finished)
 			{
 				FlxG.vcr.stopReplay();
 				
-				if (replayCallback != null)
+				if (FlxG.vcr.replayCallback != null)
 				{
-					replayCallback();
-					replayCallback = null;
+					FlxG.vcr.replayCallback();
+					FlxG.vcr.replayCallback = null;
 				}
 			}
 			

@@ -1,11 +1,8 @@
 package flixel.system.input;
 
-import flixel.FlxGame;
-import flixel.FlxBasic;
 import flixel.FlxG;
-import flash.ui.Multitouch;
-import flash.ui.MultitouchInputMode;
 import flixel.system.input.gamepad.FlxGamepadManager;
+import flixel.system.input.keyboard.FlxKeyboard;
 
 class FlxInputs {
 	
@@ -165,5 +162,4 @@ class FlxInputs {
 			input = null;
 		}
 	}
-
 }

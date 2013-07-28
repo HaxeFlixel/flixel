@@ -155,21 +155,18 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		#end
 		
+		// Check for replay cancel keys
 		#if FLX_RECORD
-		if(FlxG.game.replaying && (FlxG.game.replayCancelKeys != null))
+		if (FlxG.game.replaying && FlxG.vcr.cancelKeys != null)
 		{
-			var replayCancelKey:String;
-			var i:Int = 0;
-			var l:Int = FlxG.game.replayCancelKeys.length;
-			while(i < l)
+			for (key in FlxG.vcr.cancelKeys)
 			{
-				replayCancelKey = FlxG.game.replayCancelKeys[i++];
-				if ((replayCancelKey == "MOUSE") || (replayCancelKey == "ANY"))
+				if ((key == "MOUSE") || (key == "ANY"))
 				{
-					if(FlxG.game.replayCallback != null)
+					if(FlxG.vcr.replayCallback != null)
 					{
-						FlxG.game.replayCallback();
-						FlxG.game.replayCallback = null;
+						FlxG.vcr.replayCallback();
+						FlxG.vcr.replayCallback = null;
 					}
 					else
 					{
@@ -182,8 +179,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		#end
 		
-		if (_current > 0) _current = 1;
-		else _current = 2;
+		if (_current > 0) 
+		{
+			_current = 1;
+		}
+		else 
+		{
+			_current = 2;
+		}
 	}
 
 	/**
