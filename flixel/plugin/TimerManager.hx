@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxTimer;
+import flixel.util.FlxPool;
 
 /**
  * A simple manager for tracking and updating game timer objects.
