@@ -61,7 +61,7 @@ class TimerManager extends FlxBasic
 		var i:Int = _timers.length - 1;
 		var timer:FlxTimer;
 		
-		while(i >= 0)
+		while (i >= 0)
 		{
 			timer = _timers[i--];
 			
@@ -80,7 +80,10 @@ class TimerManager extends FlxBasic
 	 */
 	public function add(Timer:FlxTimer):Void
 	{
-		_timers.push(Timer);
+		if (FlxArrayUtil.indexOf(_timers, Timer) < 0) 
+		{
+			_timers.push(Timer);
+		}
 	}
 	
 	/**
