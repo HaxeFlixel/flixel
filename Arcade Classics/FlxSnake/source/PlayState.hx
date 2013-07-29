@@ -79,8 +79,7 @@ class PlayState extends FlxState
 		add(_scoreText);
 		
 		// Setup the movement timer
-		var movementTimer:FlxTimer = new FlxTimer();
-		resetTimer(movementTimer);
+		resetTimer();
 	}
 	
 	override public function update():Void
@@ -191,16 +190,16 @@ class PlayState extends FlxState
 		_snakeBody.add(segment);
 	}
 	
-	private function resetTimer(Timer:FlxTimer):Void
+	private function resetTimer(?Timer:FlxTimer):Void
 	{
 		// Stop the movement cycle if we're dead
-		if (!_snakeHead.alive)
+		if (!_snakeHead.alive && Timer != null)
 		{
 			Timer.destroy();
 			return;
 		}
 		
-		Timer.start(_movementIntervall / FlxG.framerate, resetTimer);
+		FlxTimer.start(_movementIntervall / FlxG.framerate, resetTimer);
 		moveSnake();
 	}
 	

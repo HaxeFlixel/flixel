@@ -46,8 +46,7 @@ class PlayState extends FlxState
 		}
 		
 		// Make sure we don't ever run out of asteroids! :)
-		var spawnCounter:FlxTimer = new FlxTimer();
-		resetTimer(spawnCounter);
+		resetTimer();
 		
 		// Create the player ship
 		_playerShip = new PlayerShip();
@@ -146,9 +145,9 @@ class PlayState extends FlxState
 		_scoreText.text = "Game Over! Final score: " + _score + " - Press R to retry.";
 	}
 	
-	private function resetTimer(Timer:FlxTimer):Void
+	private function resetTimer(?Timer:FlxTimer):Void
 	{
-		Timer.start(5, resetTimer);
+		FlxTimer.start(5, resetTimer);
 		spawnAsteroid();
 	}
 	
