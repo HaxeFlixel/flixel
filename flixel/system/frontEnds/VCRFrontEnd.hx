@@ -1,6 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
+import flixel.FlxState;
 import flixel.system.input.FlxInputs;
 
 class VCRFrontEnd
@@ -12,17 +13,32 @@ class VCRFrontEnd
 	
 	#if FLX_RECORD
 	/**
+	 * This function, if set, is triggered when the callback stops playing.
+	 */
+	public var replayCallback:Void->Void = null;
+	/**
+	 * The key codes used to toggle the debugger (via <code>flash.ui.Keyboard</code>). 
+	 * "0" means "any key". Handy for skipping cutscenes or getting out of attract modes!
+	 */
+	public var cancelKeys:Array<String> = null;
+	/**
+	 * Helps time out a replay if necessary.
+	 */
+	public var timeout:Int = 0;
+	
+	/**
 	 * Load replay data from a string and play it back.
 	 * 
 	 * @param	Data		The replay that you want to load.
 	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
 	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
-	 * @param	Timeout		Optional parameter: set a time limit for the replay.  CancelKeys will override this if pressed.
-	 * @param	Callback	Optional parameter: if set, called when the replay finishes.  Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
+	 * @param	Timeout		Optional parameter: set a time limit for the replay. CancelKeys will override this if pressed.
+	 * @param	Callback	Optional parameter: if set, called when the replay finishes. Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
 	 */
-	public function loadReplay(Data:String, State:FlxState = null, CancelKeys:Array<String> = null, Timeout:Float = 0, Callback:Void->Void = null):Void
+	public function loadReplay(Data:String, ?State:FlxState, ?CancelKeys:Array<String>, ?Timeout:Float = 0, ?Callback:Void->Void):Void
 	{
 		FlxG.game.replay.load(Data);
+		
 		if (State == null)
 		{
 			FlxG.resetGame();
@@ -31,10 +47,12 @@ class VCRFrontEnd
 		{
 			FlxG.switchState(State);
 		}
-		FlxG.game.replayCancelKeys = CancelKeys;
-		FlxG.game.replayTimer = Std.int(Timeout * 1000);
-		FlxG.game.replayCallback = Callback;
+		
+		cancelKeys = CancelKeys;
+		timeout = Std.int(Timeout * 1000);
+		replayCallback = Callback;
 		FlxG.game.replayRequested = true;
+		FlxG.keys.enabled = false;
 	}
 
 	/**
@@ -74,6 +92,7 @@ class VCRFrontEnd
 		#end
 		
 		FlxInputs.resetInputs();
+		FlxG.keys.enabled = true;
 	}
 		
 	/**
@@ -91,6 +110,7 @@ class VCRFrontEnd
 		{
 			FlxG.resetState();
 		}
+		
 		FlxG.game.recordingRequested = true;
 	}
 	

@@ -221,6 +221,7 @@ class WatchEntry
 	public function onMouseUp(FlashEvent:MouseEvent):Void
 	{
 		editing = true;
+		FlxG.keys.enabled = false;
 		oldValue = Reflect.getProperty(object, field);
 		valueDisplay.type = TextFieldType.INPUT;
 		valueDisplay.setTextFormat(_blackText);
@@ -294,5 +295,6 @@ class WatchEntry
 		valueDisplay.defaultTextFormat = _whiteText;
 		valueDisplay.background = false;
 		editing = false;
+		FlxG.keys.enabled = true;
 	}
 }
