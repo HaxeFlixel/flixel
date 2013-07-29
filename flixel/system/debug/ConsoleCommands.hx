@@ -136,7 +136,7 @@ class ConsoleCommands
 	private function clearHistory():Void
 	{
 		_console.cmdHistory = new Array<String>();
-		FlxG.game.prefsSave.flush();
+		FlxG.save.flush();
 		cLog("clearHistory: Command history cleared");
 	}
 	

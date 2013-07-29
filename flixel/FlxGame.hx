@@ -19,7 +19,6 @@ import flixel.system.layer.TileSheetExt;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
-import flixel.util.FlxSave;
 import flixel.util.FlxTimer;
 import openfl.Assets;
 
@@ -81,10 +80,6 @@ class FlxGame extends Sprite
 	 * A flag for keeping track of whether a game reset was requested or not.
 	 */
 	public var requestedReset:Bool = true;
-	/**
-	 * A FlxSave used for saving the volume and the console's command history.
-	 */
-	public var prefsSave:FlxSave;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -210,8 +205,6 @@ class FlxGame extends Sprite
 		FlxG.framerate = GameFramerate;
 		FlxG.flashFramerate = FlashFramerate;
 		_accumulator = stepMS;
-		prefsSave = new FlxSave();
-		prefsSave.bind("flixel");
 		
 		#if FLX_RECORD
 		// Replay data
@@ -542,9 +535,9 @@ class FlxGame extends Sprite
 				_updateSoundTray = false;
 				
 				//Save sound preferences
-				prefsSave.data.mute = FlxG.sound.muted;
-				prefsSave.data.volume = FlxG.sound.volume; 
-				prefsSave.flush(); 
+				FlxG.save.data.mute = FlxG.sound.muted;
+				FlxG.save.data.volume = FlxG.sound.volume; 
+				FlxG.save.flush(); 
 			}
 		}
 	}
@@ -858,13 +851,13 @@ class FlxGame extends Sprite
 	 */
 	private function loadSoundPrefs():Void
 	{
-		if (prefsSave.data.volume != null)
-			FlxG.sound.volume = prefsSave.data.volume;
+		if (FlxG.save.data.volume != null)
+			FlxG.sound.volume = FlxG.save.data.volume;
 		else 
 			FlxG.sound.volume = 0.5; 
 		
-		if (prefsSave.data.mute != null)
-			FlxG.sound.muted = prefsSave.data.mute;
+		if (FlxG.save.data.mute != null)
+			FlxG.sound.muted = FlxG.save.data.mute;
 		else 
 			FlxG.sound.muted = false; 
 	}

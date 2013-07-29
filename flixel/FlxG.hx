@@ -22,6 +22,7 @@ import flixel.tweens.util.Ease.EaseFunction;
 import flixel.util.FlxCollision;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.util.FlxSave;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
@@ -126,7 +127,12 @@ class FlxG
 	 * array but you can do what you like with it.
 	 */
 	static public var camera:FlxCamera;
-
+	/**
+	 * A <code>FlxSave</code> used internally by flixel to save sound preferences and 
+	 * the history of the console window, but no reason you can't use it for your own stuff too!
+	 */
+	static public var save(default, null):FlxSave = new FlxSave();
+	
 	#if !FLX_NO_MOUSE
 	/**
 	 * A reference to a <code>FlxMouse</code> object. Important for input!
@@ -162,51 +168,51 @@ class FlxG
 	 * A reference to the <code>ConsoleFrontEnd</code> object. Use it to register functions and objects
 	 * or add new commands to the console window.
 	 */
-	static public var console:ConsoleFrontEnd;
+	static public var console:ConsoleFrontEnd = new ConsoleFrontEnd();
 	/**
 	 * A reference to the <code>LogFrontEnd</code> object. Use it to <code>add</code> messages to the log window. It is recommended 
 	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
 	 */
-	static public var log:LogFrontEnd;
+	static public var log:LogFrontEnd = new LogFrontEnd();
 	/**
 	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
 	 * watch window.
 	 */
-	static public var watch:WatchFrontEnd;
+	static public var watch:WatchFrontEnd = new WatchFrontEnd();
 	/**
 	 * A reference to the <code>DebuggerFrontEnd</code> object. Use it to show / hide / toggle the debguger
 	 * change its layout, activate visual debugging or change the key used to toggle it.
 	 */
-	static public var debugger:DebuggerFrontEnd;
+	static public var debugger:DebuggerFrontEnd = new DebuggerFrontEnd();
 	
 	#if FLX_RECORD
 	/**
 	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
 	 * and replaying.
 	 */
-	static public var vcr:VCRFrontEnd;
+	static public var vcr:VCRFrontEnd = new VCRFrontEnd();
 	#end
 	
 	/**
 	 * A reference to the <code>BitmapFrontEnd</code> object. Contains things related to bimtaps,
 	 * for example regarding the bitmap cache and the cache itself.
 	 */
-	static public var bitmap:BitmapFrontEnd;
+	static public var bitmap:BitmapFrontEnd = new BitmapFrontEnd();
 	/**
 	 * A reference to the <code>CameraFrontEnd</code> object. Contains things related to cameras,
 	 * a <code>list</code> of all cameras and the <code>defaultCamera</code> amongst other things.
 	 */
-	static public var cameras:CameraFrontEnd;
+	static public var cameras:CameraFrontEnd = new CameraFrontEnd();
 	/**
 	 * A reference to the <code>PluginFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
 	 */
-	static public var plugins:PluginFrontEnd;
+	static public var plugins:PluginFrontEnd = new PluginFrontEnd();
 	/**
 	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * sounds and other things to manage or <code>play()</code> sounds.
 	 */
-	static public var sound:SoundFrontEnd;
+	static public var sound:SoundFrontEnd = new SoundFrontEnd();
 	
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
@@ -216,27 +222,14 @@ class FlxG
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
 		
-		FlxG.game = Game;
-		FlxG.width = Std.int(Math.abs(Width));
-		FlxG.height = Std.int(Math.abs(Height));
+		game = Game;
+		width = Std.int(Math.abs(Width));
+		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
-		bitmap = new BitmapFrontEnd();
-		cameras = new CameraFrontEnd();
-		plugins = new PluginFrontEnd();
-		debugger = new DebuggerFrontEnd();
-		console = new ConsoleFrontEnd();
-		log = new LogFrontEnd();
-		watch = new WatchFrontEnd();
-		sound = new SoundFrontEnd();
-		
-		#if FLX_RECORD
-		vcr = new VCRFrontEnd();
-		#end
+		save.bind("flixel");
 		
 		FlxAssets.init();
-		
-		FlxSpriteUtil.flashGfxSprite = new Sprite();
 		FlxSpriteUtil.flashGfx = FlxSpriteUtil.flashGfxSprite.graphics;
 	}
 	

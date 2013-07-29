@@ -79,13 +79,13 @@ class Console extends Window
 		cmdHistory = new Array<String>();
 		
 		// Load old command history if existant
-		if (FlxG.game.prefsSave.data.history != null) {
-			cmdHistory = FlxG.game.prefsSave.data.history;
+		if (FlxG.save.data.history != null) {
+			cmdHistory = FlxG.save.data.history;
 			historyIndex = cmdHistory.length;
 		}
 		else {
 			cmdHistory = new Array<String>();
-			FlxG.game.prefsSave.data.history = cmdHistory;
+			FlxG.save.data.history = cmdHistory;
 		}
 		
 		// Create the input textfield
@@ -210,8 +210,8 @@ class Console extends Window
 			{
 				// Save the command to the history
 				cmdHistory.push(_input.text);
-				FlxG.game.prefsSave.flush();
-					
+				FlxG.save.flush();
+				
 				// Set a maximum for commands you can save
 				if (cmdHistory.length > historyMax)
 					cmdHistory.shift();
