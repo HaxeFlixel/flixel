@@ -20,8 +20,8 @@ class DebuggerFrontEnd
 	
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * The key codes used to open the debugger (via <code>flash.ui.Keyboard</code>). 
-	 * Doesn't exist in <code>FLX_NO_KEYBOARD</code> mode.
+	 * The key codes used to toggle the debugger (via <code>flash.ui.Keyboard</code>). 
+	 * Default keys: ` and \. Set to <code>null</code> to deactivate.
 	 * @default [192, 220]
 	 */
 	public var toggleKeys:Array<Int>;

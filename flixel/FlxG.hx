@@ -33,7 +33,7 @@ import flixel.plugin.DebugPathDisplay;
 import flixel.system.input.FlxTouchManager;
 #end
 #if !FLX_NO_KEYBOARD
-import flixel.system.input.FlxKeyboard;
+import flixel.system.input.keyboard.FlxKeyboard;
 #end
 #if !FLX_NO_MOUSE
 import flixel.system.input.FlxMouse;
