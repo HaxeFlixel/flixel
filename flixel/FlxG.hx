@@ -68,10 +68,6 @@ class FlxG
 	static public inline var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
 	
 	/**
-	 * Indicates whether the current environment supports basic touch input, such as a single finger tap.
-	 */
-	static public var supportsTouchEvents:Bool = false;
-	/**
 	 * Internal tracker for game object.
 	 */
 	static public var game:FlxGame;

@@ -46,7 +46,6 @@ class FlxTouchManager implements IFlxInput
 		_touchesCache = new Map<Int, FlxTouch>();
 		maxTouchPoints = Multitouch.maxTouchPoints;
 		Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
-		FlxG.supportsTouchEvents = true;
 		
 		Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN, handleTouchBegin);
 		Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, handleTouchEnd);
