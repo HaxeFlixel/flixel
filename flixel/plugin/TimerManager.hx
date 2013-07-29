@@ -138,6 +138,7 @@ class TimerManager extends FlxBasic
 				var timer:FlxTimer = _timers.pop();
 				timer.destroy();
 				_pool.put(timer);
+				i--;
 			}
 		}
 	}
