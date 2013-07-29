@@ -220,12 +220,25 @@ class FlxTimer
 		return cast(FlxG.plugins.get(TimerManager), TimerManager);
 	}
 	
-	static public function getTimer():FlxTimer
+	/**
+	 * Returns a recycled timer and starts it if a Time different from -1 is passed.
+	 * 
+	 * @param	Time		How many seconds it takes for the timer to go off. This timer will start automatically if pass positive value for this argument.
+	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
+	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
+	 * Instantiate a new timer.
+ 	 */
+	static public function get(Time:Float = -1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
 		var timer:FlxTimer = FlxTimer.manager.get();
 		if (timer == null)
 		{
 			timer = new FlxTimer();
+		}
+		
+		if (Time > 0)
+		{
+			timer.start(Time, Callback, Loops);
 		}
 		
 		return timer;
