@@ -226,7 +226,6 @@ class FlxTimer
 	 * @param	Time		How many seconds it takes for the timer to go off. This timer will start automatically if pass positive value for this argument.
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
 	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
-	 * Instantiate a new timer.
  	 */
 	static public function get(Time:Float = -1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
