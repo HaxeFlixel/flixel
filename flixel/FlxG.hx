@@ -52,33 +52,25 @@ import flixel.system.input.gamepad.FlxGamepadManager;
 class FlxG 
 {
 	/**
-	 * Indicates whether the current environment supports basic touch input, such as a single finger tap.
-	 */
-	public static var supportsTouchEvents:Bool = false;
-
-	/**
-	 * Global tweener for tweening between multiple worlds
-	 */
-	public static var tweener:FlxBasic = new FlxBasic();
-	
-	/**
 	 * If you build and maintain your own version of flixel,
 	 * you can give it your own name here.
 	 */
 	static public inline var LIBRARY_NAME:String = "HaxeFlixel";
-	
 	/**
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
 	static public inline var LIBRARY_MAJOR_VERSION:String = "2";
-	
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
 	static public inline var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
 	
+	/**
+	 * Indicates whether the current environment supports basic touch input, such as a single finger tap.
+	 */
+	static public var supportsTouchEvents:Bool = false;
 	/**
 	 * Internal tracker for game object.
 	 */
@@ -115,13 +107,18 @@ class FlxG
 	static public var height:Int;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
+	 * Use <code>.set()</code> instead of creating a new object!
 	 */
-	static public var worldBounds:FlxRect;
+	static public var worldBounds(default, null):FlxRect;
 	/**
 	 * How many times the quad tree should divide the world on each axis. Generally, sparse collisions can have fewer divisons,
 	 * while denser collision activity usually profits from more. Default value is 6.
 	 */
 	static public var worldDivisions:Int;
+	/**
+	 * Global tweener for tweening between multiple worlds
+	 */
+	static public var tweener(default, null):FlxBasic = new FlxBasic();
 	/**
 	 * By default this just refers to the first entry in the <code>FlxG.cameras.list</code> 
 	 * array but you can do what you like with it.
@@ -168,51 +165,51 @@ class FlxG
 	 * A reference to the <code>ConsoleFrontEnd</code> object. Use it to register functions and objects
 	 * or add new commands to the console window.
 	 */
-	static public var console:ConsoleFrontEnd = new ConsoleFrontEnd();
+	static public var console(default, null):ConsoleFrontEnd = new ConsoleFrontEnd();
 	/**
 	 * A reference to the <code>LogFrontEnd</code> object. Use it to <code>add</code> messages to the log window. It is recommended 
 	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
 	 */
-	static public var log:LogFrontEnd = new LogFrontEnd();
+	static public var log(default, null):LogFrontEnd = new LogFrontEnd();
 	/**
 	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
 	 * watch window.
 	 */
-	static public var watch:WatchFrontEnd = new WatchFrontEnd();
+	static public var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
 	/**
 	 * A reference to the <code>DebuggerFrontEnd</code> object. Use it to show / hide / toggle the debguger
 	 * change its layout, activate visual debugging or change the key used to toggle it.
 	 */
-	static public var debugger:DebuggerFrontEnd = new DebuggerFrontEnd();
+	static public var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
 	
 	#if FLX_RECORD
 	/**
 	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
 	 * and replaying.
 	 */
-	static public var vcr:VCRFrontEnd = new VCRFrontEnd();
+	static public var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
 	#end
 	
 	/**
 	 * A reference to the <code>BitmapFrontEnd</code> object. Contains things related to bimtaps,
 	 * for example regarding the bitmap cache and the cache itself.
 	 */
-	static public var bitmap:BitmapFrontEnd = new BitmapFrontEnd();
+	static public var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
 	/**
 	 * A reference to the <code>CameraFrontEnd</code> object. Contains things related to cameras,
 	 * a <code>list</code> of all cameras and the <code>defaultCamera</code> amongst other things.
 	 */
-	static public var cameras:CameraFrontEnd = new CameraFrontEnd();
+	static public var cameras(default, null):CameraFrontEnd = new CameraFrontEnd();
 	/**
 	 * A reference to the <code>PluginFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
 	 */
-	static public var plugins:PluginFrontEnd = new PluginFrontEnd();
+	static public var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	/**
 	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * sounds and other things to manage or <code>play()</code> sounds.
 	 */
-	static public var sound:SoundFrontEnd = new SoundFrontEnd();
+	static public var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
@@ -230,7 +227,6 @@ class FlxG
 		save.bind("flixel");
 		
 		FlxAssets.init();
-		FlxSpriteUtil.flashGfx = FlxSpriteUtil.flashGfxSprite.graphics;
 	}
 	
 	/**

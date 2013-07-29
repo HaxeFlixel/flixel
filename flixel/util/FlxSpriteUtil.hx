@@ -23,8 +23,8 @@ class FlxSpriteUtil
 	 * Useful helper objects for doing Flash-specific rendering.
 	 * Primarily used for "debug visuals" like drawing bounding boxes directly to the screen buffer.
 	 */
-	static public var flashGfxSprite:Sprite = new Sprite();
-	static public var flashGfx:Graphics;
+	static public var flashGfxSprite(default, null):Sprite = new Sprite();
+	static public var flashGfx(default, null):Graphics = flashGfxSprite.graphics;
 	
 	/**
 	 * Takes two source images (typically from Embedded bitmaps) and puts the resulting image into the output FlxSprite.<br>

@@ -271,7 +271,7 @@ class FlxCollision
 				
 				if (AdjustWorldBounds)
 				{
-					FlxG.worldBounds = new FlxRect(Camera.x - Thickness, Camera.y - Thickness, Camera.width + Thickness * 2, Camera.height + Thickness * 2);
+					FlxG.worldBounds.set(Camera.x - Thickness, Camera.y - Thickness, Camera.width + Thickness * 2, Camera.height + Thickness * 2);
 				}
 			case FlxCollision.CAMERA_WALL_INSIDE:
 				left = new FlxTileblock(Math.floor(Camera.x), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
@@ -281,7 +281,7 @@ class FlxCollision
 				
 				if (AdjustWorldBounds)
 				{
-					FlxG.worldBounds = new FlxRect(Camera.x, Camera.y, Camera.width, Camera.height);
+					FlxG.worldBounds.set(Camera.x, Camera.y, Camera.width, Camera.height);
 				}
 		}
 		
