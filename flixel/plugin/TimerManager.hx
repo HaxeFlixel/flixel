@@ -36,6 +36,7 @@ class TimerManager extends FlxBasic
 	{
 		clear();
 		_timers = null;
+		_pool = null;
 		var pooled:Array<FlxTimer> = _pool.destroy();
 		var i:Int = pooled.length - 1;
 		while (i >= 0)
