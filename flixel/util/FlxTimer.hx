@@ -43,19 +43,9 @@ class FlxTimer
 	private var _loopsCounter:Int = 0;
 	
 	/**
-	 * Instantiate a new timer and starts it if a Time different from -1 is passed.
-	 * 
-	 * @param	Time		How many seconds it takes for the timer to go off. This timer will start automatically if pass positive value for this argument.
-	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
-	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
+	 * Instantiate a new timer.
 	 */
-	public function new(Time:Float = -1, ?Callback:FlxTimer->Void, Loops:Int = 1)
-	{
-		if (Time > 0)
-		{
-			start(Time, Callback, Loops);
-		}
-	}
+	private function new() {  }
 	
 	/**
 	 * Clean up memory.
@@ -232,6 +222,12 @@ class FlxTimer
 	
 	static public function getTimer():FlxTimer
 	{
-		return FlxTimer.manager.get();
+		var timer:FlxTimer = FlxTimer.manager.get();
+		if (timer == null)
+		{
+			timer = new FlxTimer();
+		}
+		
+		return timer;
 	}
 }

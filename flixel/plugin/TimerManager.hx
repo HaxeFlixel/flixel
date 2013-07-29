@@ -94,13 +94,7 @@ class TimerManager extends FlxBasic
 	 */
 	public function get():FlxTimer
 	{
-		var timer:FlxTimer = _pool.get();
-		if (timer == null)
-		{
-			timer = new FlxTimer();
-		}
-		
-		return timer;
+		return _pool.get();
 	}
 	
 	/**
