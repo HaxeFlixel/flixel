@@ -110,8 +110,8 @@ class TimerManager extends FlxBasic
 		if (index >= 0)
 		{
 			// Fast array removal (only do on arrays where order doesn't matter)
-			_timers[index] = _timers[_timers.length - 1];
-			var timer:FlxTimer = _timers.pop();
+			var timer:FlxTimer = _timers[index];
+			_timers[index] = _timers.pop();
 			timer.destroy();
 			_pool.put(timer);
 		}

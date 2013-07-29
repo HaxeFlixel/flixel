@@ -45,7 +45,7 @@ class FlxTimer
 	/**
 	 * Instantiate a new timer.
 	 */
-	private function new() {  }
+	private function new() { }
 	
 	/**
 	 * Clean up memory.
@@ -107,7 +107,7 @@ class FlxTimer
 	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
 	 * @return	A reference to itself (handy for chaining or whatever).
 	 */
-	public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
+	private function run(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
 		var timerManager:TimerManager = manager;
 		
@@ -227,9 +227,10 @@ class FlxTimer
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
 	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
  	 */
-	static public function get(Time:Float = -1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
+	static public function start(Time:Float = -1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
 		var timer:FlxTimer = FlxTimer.manager.get();
+		
 		if (timer == null)
 		{
 			timer = new FlxTimer();
@@ -237,7 +238,7 @@ class FlxTimer
 		
 		if (Time > 0)
 		{
-			timer.start(Time, Callback, Loops);
+			timer.run(Time, Callback, Loops);
 		}
 		
 		return timer;
