@@ -24,7 +24,7 @@ import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
-import flixel.system.FlxDebugger;
+import flixel.system.debug.FlxDebugger;
 import flixel.plugin.DebugPathDisplay;
 #end
 #if !FLX_NO_TOUCH

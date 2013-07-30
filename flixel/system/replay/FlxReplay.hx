@@ -1,4 +1,4 @@
-package flixel.system;
+package flixel.system.replay;
 
 import flixel.FlxG;
 import flixel.system.replay.CodeValuePair;

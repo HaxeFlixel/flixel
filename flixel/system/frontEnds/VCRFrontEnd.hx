@@ -84,10 +84,7 @@ class VCRFrontEnd
 		FlxG.game.replaying = false;
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.game.debugger != null)
-		{
 			FlxG.game.debugger.vcr.stopped();
-		}
 		#end
 		
 		FlxG.inputs.reset();
@@ -123,10 +120,7 @@ class VCRFrontEnd
 		FlxG.game.recording = false;
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.game.debugger != null)
-		{
 			FlxG.game.debugger.vcr.stopped();
-		}
 		#end
 		
 		return FlxG.game.replay.save();

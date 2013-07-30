@@ -13,7 +13,7 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.plugin.TimerManager;
 import flixel.system.FlxAssets;
-import flixel.system.FlxReplay;
+import flixel.system.replay.FlxReplay;
 import flixel.system.layer.TileSheetExt;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxColor;
@@ -27,7 +27,7 @@ import flash.text.GridFitType;
 #end
 
 #if !FLX_NO_DEBUG
-import flixel.system.FlxDebugger;
+import flixel.system.debug.FlxDebugger;
 #end
 
 /**

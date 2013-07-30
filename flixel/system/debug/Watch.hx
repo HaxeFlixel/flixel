@@ -4,7 +4,6 @@ import flash.display.Sprite;
 import flash.geom.Rectangle;
 import haxe.ds.StringMap;
 import flixel.FlxG;
-import flixel.system.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
