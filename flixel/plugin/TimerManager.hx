@@ -12,7 +12,6 @@ import flixel.util.FlxPool;
 class TimerManager extends FlxBasic
 {
 	private var _timers:Array<FlxTimer>;
-	
 	private var _pool:FlxPool<FlxTimer>;
 	
 	/**
@@ -34,17 +33,14 @@ class TimerManager extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
-		clear();
-		_timers = null;
+		// pooled objects are already destroyed, look at remove function
 		_pool = null;
-		var pooled:Array<FlxTimer> = _pool.destroy();
-		var i:Int = pooled.length - 1;
-		while (i >= 0)
+		
+		while (_timers.length > 0)
 		{
-			var timer:FlxTimer = pooled.pop();
-			timer.destroy();
-			i--;
+			_timers.pop().destroy();
 		}
+		_timers = null;
 		
 		super.destroy();
 	}
@@ -60,14 +56,9 @@ class TimerManager extends FlxBasic
 			return;
 		}
 		
-		var i:Int = _timers.length - 1;
-		var timer:FlxTimer;
-		
-		while (i >= 0)
+		for (timer in _timers)
 		{
-			timer = _timers[i--];
-			
-			if ((timer != null) && !timer.paused && !timer.finished && (timer.time > 0))
+			if (!timer.paused && !timer.finished && timer.time > 0)
 			{
 				timer.update();
 			}
@@ -92,7 +83,7 @@ class TimerManager extends FlxBasic
 	 * Gets new or recycled FlxTimer object.
 	 * It is recommended to use this method instead of creating new FlxTimer objects all the time.
 	 */
-	public function get():FlxTimer
+	inline public function get():FlxTimer
 	{
 		return _pool.get();
 	}
@@ -105,15 +96,15 @@ class TimerManager extends FlxBasic
 	 */
 	public function remove(Timer:FlxTimer):Void
 	{
-		var index:Int = FlxArrayUtil.indexOf(_timers, Timer);
+		Timer.destroy();
+		_pool.put(Timer);
 		
+		var index:Int = FlxArrayUtil.indexOf(_timers, Timer);
 		if (index >= 0)
 		{
 			// Fast array removal (only do on arrays where order doesn't matter)
-			var timer:FlxTimer = _timers[index];
-			_timers[index] = _timers.pop();
-			timer.destroy();
-			_pool.put(timer);
+			_timers[index] = _timers[_timers.length - 1];
+			_timers.pop();
 		}
 	}
 	
@@ -122,18 +113,11 @@ class TimerManager extends FlxBasic
 	 */
 	public function clear():Void
 	{
-		if (_timers != null)
+		while (_timers.length > 0)
 		{
-			var i:Int = _timers.length - 1;
-			var timer:FlxTimer;
-			
-			while (i >= 0)
-			{
-				var timer:FlxTimer = _timers.pop();
-				timer.destroy();
-				_pool.put(timer);
-				i--;
-			}
+			var timer:FlxTimer = _timers.pop();
+			timer.destroy();
+			_pool.put(timer);
 		}
 	}
 }
