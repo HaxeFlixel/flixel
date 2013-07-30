@@ -51,7 +51,7 @@ class SoundFrontEnd
 	public function new() 
 	{
 		#if !FLX_NO_KEYBOARD
-		//Assign default values to the keys used by core flixel
+		// Assign default values to the keys used by core flixel
 		volumeUpKeys = [107, 187];
 		volumeDownKeys = [109, 189];
 		muteKeys = [48, 96]; 
@@ -327,6 +327,31 @@ class SoundFrontEnd
 			{
 				sound.resume();
 			}
+		}
+	}
+	
+	/**
+	 * Called by FlxG, you shouldn't need to.
+	 * Loads saved sound preferences if they exist.
+	 */
+	public function loadSavedPrefs():Void
+	{
+		if (FlxG.save.data.volume != null)
+		{
+			volume = FlxG.save.data.volume;
+		}
+		else 
+		{
+			volume = 0.5; 
+		}
+		
+		if (FlxG.save.data.mute != null)
+		{
+			muted = FlxG.save.data.mute;
+		}
+		else 
+		{
+			muted = false; 
 		}
 	}
 }

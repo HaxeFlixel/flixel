@@ -30,6 +30,14 @@ import flash.text.GridFitType;
 import flixel.system.debug.FlxDebugger;
 #end
 
+#if !FLX_NO_SOUND_TRAY
+import flixel.system.ui.FlxSoundTray;
+#end
+
+#if !FLX_NO_FOCUS_LOST_SCREEN
+import flixel.system.ui.FlxFocusLostScreen;
+#end
+
 /**
  * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
  * It is a long and sloppy file that you shouldn't have to worry about too much!
@@ -110,6 +118,13 @@ class FlxGame extends Sprite
 	public var recording:Bool = false;
 	#end
 	
+	#if !FLX_NO_SOUND_TRAY
+	/**
+	 * The sound tray display container (see <code>createSoundTray()</code>).
+	 */
+	public var soundTray(default, null):FlxSoundTray;
+	#end
+	
 	/**
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
@@ -132,27 +147,17 @@ class FlxGame extends Sprite
 	/**
 	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
 	 */
-	private var _focus:Sprite;
+	private var _focusLostScreen:FlxFocusLostScreen;
 	#end
 	
-	#if !FLX_NO_SOUND_TRAY
 	/**
-	 * The sound tray display container (see <code>createSoundTray()</code>).
+	 * Change this afterr calling super() in the FlxGame constructor to use a customized sound tray based on FlxSoundTray.
 	 */
-	private var _soundTray:Sprite;
+	private var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
 	/**
-	 * Helps us auto-hide the sound tray after a volume change.
+	 * Change this afterr calling super() in the FlxGame constructor to use a customized sound tray based on FlxFocusLostScreen.
 	 */
-	private var _soundTrayTimer:Float;
-	/**
-	 * Because reading any data from DisplayObject is insanely expensive in hxcpp, keep track of whether we need to update it or not.
-	 */
-	private var _updateSoundTray:Bool;
-	/**
-	 * Helps display the volume bars on the sound tray.
-	 */
-	private var _soundTrayBars:Array<Bitmap>;
-	#end
+	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	
 	#if (cpp && FLX_THREADING)
 	// push 'true' into this array to trigger an update. push 'false' to terminate update thread.
@@ -181,19 +186,10 @@ class FlxGame extends Sprite
 	{
 		super();
 		
-		// Super high priority init stuff (focus, mouse, etc)
-		#if !FLX_NO_FOCUS_LOST_SCREEN 
-		_focus = new Sprite();
-		_focus.visible = false;
-		#end
-		
-		#if !FLX_NO_SOUND_TRAY 
-		_soundTray = new Sprite();
-		#end
-		
+		// Super high priority init stuff
 		inputContainer = new Sprite();
 		
-		//basic display and update setup stuff
+		// Basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		
 		if (GameFramerate < FlashFramerate)
@@ -206,8 +202,7 @@ class FlxGame extends Sprite
 		_accumulator = stepMS;
 		
 		#if FLX_RECORD
-		// Replay data
-		replay = new FlxReplay();
+			replay = new FlxReplay();
 		#end
 		
 		// Then get ready to create the game object for real
@@ -216,34 +211,73 @@ class FlxGame extends Sprite
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
 	
-	#if !FLX_NO_SOUND_TRAY 
 	/**
-	 * Makes the little volume tray slide out.
-	 * @param	Silent	Whether or not it should beep.
+	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
+	 * 
+	 * @param	FlashEvent	Just a Flash system event, not too important for our purposes.
 	 */
-	public function showSoundTray(Silent:Bool = false):Void
+	private function create(FlashEvent:Event):Void
 	{
-		if (!Silent)
+		if (stage == null)
 		{
-			FlxG.sound.play(FlxAssets.SND_BEEP);
+			return;
 		}
-		_soundTrayTimer = 1;
-		_soundTray.y = 0;
-		_soundTray.visible = true;
-		_updateSoundTray = true;
-		var globalVolume:Int = Math.round(FlxG.sound.volume * 10);
-		if (FlxG.sound.muted)
+		removeEventListener(Event.ADDED_TO_STAGE, create);
+		
+		_total = Lib.getTimer();
+		
+		// Set up the view window and double buffering
+		stage.scaleMode = StageScaleMode.NO_SCALE;
+		stage.align = StageAlign.TOP_LEFT;
+		stage.frameRate = flashFramerate;
+		
+		addChild(inputContainer);
+		
+		// Creating the debugger overlay
+		#if !FLX_NO_DEBUG
+			debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
+			addChild(debugger);
+		#end
+		
+		// Let mobile devs opt out of unnecessary overlays.
+		#if !mobile	
+			// Volume display tab
+			#if !FLX_NO_SOUND_TRAY
+				soundTray = Type.createInstance(_customSoundTray, []);
+				addChild(soundTray);
+			#end
+			
+			// Focus gained/lost monitoring
+			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
+			stage.addEventListener(Event.ACTIVATE, onFocus);
+			
+			#if !FLX_NO_DEBUG
+				_focusLostScreen = Type.createInstance(_customFocusLostScreen, []);
+				addChild(_focusLostScreen);
+			#end
+		#end
+		
+		// Instantiate the initial state
+		if (requestedReset)
 		{
-			globalVolume = 0;
+			resetGame();
+			switchState();
+			requestedReset = false;
 		}
-		for (i in 0...(_soundTrayBars.length))
-		{
-			if (i < globalVolume) _soundTrayBars[i].alpha = 1;
-			else _soundTrayBars[i].alpha = 0.5;
-		}
+		
+		#if (cpp && FLX_THREADING)
+			_threadSync = new cpp.vm.Deque();
+			cpp.vm.Thread.create(threadedUpdate);
+		#end
+		
+		// Finally, set up an event for the actual game loop stuff.
+		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		
+		// We need to listen for resize event which means new context
+		// it means that we need to recreate bitmapdatas of dumped tilesheets
+		stage.addEventListener(Event.RESIZE, onResize);
 	}
-	#end
-
+	
 	/**
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
@@ -259,7 +293,7 @@ class FlxGame extends Sprite
 		_lostFocus = false;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-		_focus.visible = false;
+		_focusLostScreen.visible = false;
 		#end 
 		
 		stage.frameRate = flashFramerate;
@@ -282,7 +316,7 @@ class FlxGame extends Sprite
 		_lostFocus = true;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-		_focus.visible = true;
+		_focusLostScreen.visible = true;
 		#end 
 		
 		stage.frameRate = 10;
@@ -303,16 +337,16 @@ class FlxGame extends Sprite
 	 * Handles the onEnterFrame call and figures out how many updates and draw calls to do.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onEnterFrame(FlashEvent:Event = null):Void
+	private function onEnterFrame(?FlashEvent:Event):Void
 	{
 		ticks = Lib.getTimer();
 		elapsedMS = ticks - _total;
 		_total = ticks;
 		
 		#if !FLX_NO_SOUND_TRAY
-		if (_updateSoundTray)
+		if (soundTray.active)
 		{
-			updateSoundTray(elapsedMS);
+			soundTray.update(elapsedMS);
 		}
 		#end
 		
@@ -514,34 +548,6 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	#if !FLX_NO_SOUND_TRAY
-	/**
-	 * This function just updates the soundtray object.
-	 */
-	private function updateSoundTray(MS:Float):Void
-	{
-		//animate stupid sound tray thing
-		if (_soundTrayTimer > 0)
-		{
-			_soundTrayTimer -= MS/1000;
-		}
-		else if (_soundTray.y > -_soundTray.height)
-		{
-			_soundTray.y -= (MS / 1000) * FlxG.height * 2;
-			if (_soundTray.y <= -_soundTray.height)
-			{
-				_soundTray.visible = false;
-				_updateSoundTray = false;
-				
-				//Save sound preferences
-				FlxG.save.data.mute = FlxG.sound.muted;
-				FlxG.save.data.volume = FlxG.sound.volume; 
-				FlxG.save.flush(); 
-			}
-		}
-	}
-	#end
-	
 	/**
 	 * This function is called by step() and updates the actual game state.
 	 * May be called multiple times per "frame" or draw call.
@@ -718,188 +724,4 @@ class FlxGame extends Sprite
 		}
 		#end
 	}
-	
-	/**
-	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
-	 * 
-	 * @param	FlashEvent	Just a Flash system event, not too important for our purposes.
-	 */
-	private function create(FlashEvent:Event):Void
-	{
-		if (stage == null)
-		{
-			return;
-		}
-		removeEventListener(Event.ADDED_TO_STAGE, create);
-		
-		_total = Lib.getTimer();
-		
-		// Set up the view window and double buffering
-		stage.scaleMode = StageScaleMode.NO_SCALE;
-		stage.align = StageAlign.TOP_LEFT;
-		stage.frameRate = flashFramerate;
-		
-		addChild(inputContainer);
-		
-		// Creating the debugger overlay
-		#if !FLX_NO_DEBUG
-		debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
-		addChild(debugger);
-		#end
-		
-		// Let mobile devs opt out of unnecessary overlays.
-		#if !mobile	
-			// Volume display tab
-			#if !FLX_NO_SOUND_TRAY
-			createSoundTray();
-			#end
-				
-			loadSoundPrefs();
-				
-			// Focus gained/lost monitoring
-			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
-			stage.addEventListener(Event.ACTIVATE, onFocus);
-				
-			#if !FLX_NO_FOCUS_LOST_SCREEN
-			createFocusScreen();
-			#end
-			
-		#end
-		
-		// Instantiate the initial state
-		if (requestedReset)
-		{
-			resetGame();
-			switchState();
-			requestedReset = false;
-		}
-		
-		#if (cpp && FLX_THREADING)
-		_threadSync = new cpp.vm.Deque();
-		cpp.vm.Thread.create(threadedUpdate);
-		#end
-		
-		// Finally, set up an event for the actual game loop stuff.
-		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		
-		// We need to listen for resize event which means new context
-		// it means that we need to recreate bitmapdatas of dumped tilesheets
-		stage.addEventListener(Event.RESIZE, onResize);
-	}
-	
-	#if !FLX_NO_SOUND_TRAY
-	/**
-	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
-	 */
-	private function createSoundTray():Void
-	{
-		_soundTray.visible = false;
-		_soundTray.scaleX = 2;
-		_soundTray.scaleY = 2;
-		var tmp:Bitmap = new Bitmap(new BitmapData(80, 30, true, 0x7F000000));
-		_soundTray.x = (FlxG.width / 2) * FlxCamera.defaultZoom - (tmp.width / 2) * _soundTray.scaleX;
-		_soundTray.addChild(tmp);
-		
-		var text:TextField = new TextField();
-		text.width = tmp.width;
-		text.height = tmp.height;
-		text.multiline = true;
-		text.wordWrap = true;
-		text.selectable = false;
-		#if flash
-		text.embedFonts = true;
-		text.antiAliasType = AntiAliasType.NORMAL;
-		text.gridFitType = GridFitType.PIXEL;
-		#else
-		
-		#end
-		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 8, 0xffffff);
-		dtf.align = TextFormatAlign.CENTER;
-		text.defaultTextFormat = dtf;
-		_soundTray.addChild(text);
-		text.text = "VOLUME";
-		text.y = 16;
-		
-		var bx:Int = 10;
-		var by:Int = 14;
-		_soundTrayBars = new Array();
-		var i:Int = 0;
-		while(i < 10)
-		{
-			tmp = new Bitmap(new BitmapData(4, ++i, false, FlxColor.WHITE));
-			tmp.x = bx;
-			tmp.y = by;
-			_soundTray.addChild(tmp);
-			_soundTrayBars.push(tmp);
-			bx += 6;
-			by--;
-		}
-		
-		_soundTray.y = -_soundTray.height;
-		_soundTray.visible = false;
-		addChild(_soundTray);
-	}
-	#end
-	
-	/**
-	 * Loads sound preferences if they exist.
-	 */
-	private function loadSoundPrefs():Void
-	{
-		if (FlxG.save.data.volume != null)
-			FlxG.sound.volume = FlxG.save.data.volume;
-		else 
-			FlxG.sound.volume = 0.5; 
-		
-		if (FlxG.save.data.mute != null)
-			FlxG.sound.muted = FlxG.save.data.mute;
-		else 
-			FlxG.sound.muted = false; 
-	}
-	
-	#if !FLX_NO_FOCUS_LOST_SCREEN
-	/**
-	 * Sets up the darkened overlay with the big white "play" button that appears when a flixel game loses focus.
-	 */
-	public function createFocusScreen():Void
-	{
-		var gfx:Graphics = _focus.graphics;
-		var screenWidth:Int = Std.int(FlxG.width * FlxCamera.defaultZoom);
-		var screenHeight:Int = Std.int(FlxG.height * FlxCamera.defaultZoom);
-		
-		//draw transparent black backdrop
-		gfx.moveTo(0, 0);
-		gfx.beginFill(0, 0.5);
-		gfx.lineTo(screenWidth, 0);
-		gfx.lineTo(screenWidth, screenHeight);
-		gfx.lineTo(0, screenHeight);
-		gfx.lineTo(0, 0);
-		gfx.endFill();
-		
-		//draw white arrow
-		var halfWidth:Int = Std.int(screenWidth / 2);
-		var halfHeight:Int = Std.int(screenHeight / 2);
-		var helper:Int = Std.int(Math.min(halfWidth, halfHeight) / 3);
-		gfx.moveTo(halfWidth - helper, halfHeight - helper);
-		gfx.beginFill(0xffffff, 0.65);
-		gfx.lineTo(halfWidth + helper, halfHeight);
-		gfx.lineTo(halfWidth - helper, halfHeight + helper);
-		gfx.lineTo(halfWidth - helper, halfHeight - helper);
-		gfx.endFill();
-		
-		var logo:Sprite = new Sprite();
-		FlxAssets.drawLogo(logo.graphics);
-		logo.scaleX = helper / 1000;
-		if (logo.scaleX < 0.2)
-		{
-			logo.scaleX = 0.2;
-		}
-		logo.scaleY = logo.scaleX;
-		logo.x = logo.y = 5;
-		logo.alpha = 0.35;
-		_focus.addChild(logo);
-		
-		addChild(_focus);
-	}
-	#end
 }

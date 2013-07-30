@@ -239,6 +239,7 @@ class FlxG
 		#end
 		
 		save.bind("flixel");
+		sound.loadSavedPrefs();
 		
 		FlxAssets.init();
 	}

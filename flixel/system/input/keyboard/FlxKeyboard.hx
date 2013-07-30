@@ -240,7 +240,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			}
 			
 			#if !FLX_NO_SOUND_TRAY
-			FlxG.game.showSoundTray();
+			FlxG.game.soundTray.show();
 			#end
 			
 			return;
@@ -252,7 +252,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			FlxG.sound.volume -= 0.1;
 			
 			#if !FLX_NO_SOUND_TRAY
-			FlxG.game.showSoundTray();
+			FlxG.game.soundTray.show();
 			#end
 			
 			return;
@@ -264,7 +264,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			FlxG.sound.volume += 0.1;
 			
 			#if !FLX_NO_SOUND_TRAY
-			FlxG.game.showSoundTray();
+			FlxG.game.soundTray.show();
 			#end
 			
 			return;
