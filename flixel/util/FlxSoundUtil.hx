@@ -6,24 +6,23 @@ import haxe.ds.ObjectMap;
 
 class FlxSoundUtil
 {
-	private static var timerCallbackMap:ObjectMap<FlxTimer, Void->Void> = new ObjectMap<FlxTimer, Void->Void>();
+	static private var timerCallbackMap:ObjectMap<FlxTimer, Void->Void> = new ObjectMap<FlxTimer, Void->Void>();
 	
-	public static function playWithCallback(EmbeddedSound:String, OnComplete:Void->Void = null, Duration:Float = 0, Volume:Float = 1.0):FlxSound
+	static public function playWithCallback(EmbeddedSound:String, ?OnComplete:Void->Void, Duration:Float = 0, Volume:Float = 1):FlxSound
 	{
 		var sound = FlxG.sound.play(EmbeddedSound, Volume, false, true, OnComplete);
 		#if !(flash || desktop)
-		var timer:FlxTimer = new FlxTimer(Duration, timerCallback);
-		timerCallbackMap.set(timer, OnComplete);
+		timerCallbackMap.set(FlxTimer.start(Duration, timerCallback), OnComplete);
 		#end
 		return sound;
 	}
 	
-	public static function clear():Void
+	static public function clear():Void
 	{
 		timerCallbackMap = new ObjectMap<FlxTimer, Void->Void>();
 	}
 	
-	private static function timerCallback(timer:FlxTimer):Void
+	static private function timerCallback(timer:FlxTimer):Void
 	{
 		if (timerCallbackMap.exists(timer))
 		{
