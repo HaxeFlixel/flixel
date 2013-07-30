@@ -6,7 +6,7 @@ import flixel.FlxG;
 class InputFrontEnd
 {
 	/**
-	 * An array container for plugins.
+	 * A read-only list of all inputs.
 	 */
 	public var list(default, null):Array<IFlxInput>;
 	
