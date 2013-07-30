@@ -139,9 +139,9 @@ class FlxG
 
 	#if !FLX_NO_TOUCH
 	/**
-	 * A reference to a <code>TouchManager</code> object. Useful for devices with multitouch support
+	 * A reference to a <code>FlxTouchManager</code> object. Useful for devices with multitouch support
 	 */
-	public static var touchManager:FlxTouchManager;
+	public static var touches:FlxTouchManager;
 	#end
 	
 	#if (!FLX_NO_GAMEPAD && (cpp||neko))
@@ -149,7 +149,7 @@ class FlxG
 	 * A reference to a <code>FlxGamepadManager</code> object.
 	 * Set the instance in the FlxInputs class.
 	 */
-	public static var gamepadManager:FlxGamepadManager;
+	public static var gamepads:FlxGamepadManager;
 	#end
 	
 	// From here on: frontEnds

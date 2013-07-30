@@ -213,7 +213,7 @@ class MouseEventManager extends FlxBasic
 		while (i < l)
 		{
 			camera = FlxG.cameras.list[i++];
-
+			
 			#if !FLX_NO_MOUSE
 			FlxG.mouse.getWorldPosition(camera, _point);
 			
@@ -234,11 +234,10 @@ class MouseEventManager extends FlxBasic
 				}
 			}
 			#end
-
+			
 			#if !FLX_NO_TOUCH
-			for (j in 0...FlxG.touchManager.touches.length)
+			for (touch in FlxG.touches.list)
 			{
-				var touch:FlxTouch = FlxG.touchManager.touches[j];
 				touch.getWorldPosition(camera, _point);
 				
 				if (Sprite.angle != 0)
@@ -256,7 +255,7 @@ class MouseEventManager extends FlxBasic
 			}
 			#end
 		}
-
+		
 		return false;
 	}
 

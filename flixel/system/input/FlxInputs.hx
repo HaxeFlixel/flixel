@@ -118,7 +118,7 @@ class FlxInputs {
 	static public function initGamepad():Void
 	{
 		var gamepad = new FlxGamepadManager();
-		FlxG.gamepadManager = gamepad;
+		FlxG.gamepads = gamepad;
 		inputs.push(gamepad);
 	}
 	#end
@@ -145,7 +145,7 @@ class FlxInputs {
 	static public function initTouch():Void
 	{
 		var touch =  new FlxTouchManager();
-		FlxG.touchManager = touch;
+		FlxG.touches = touch;
 		inputs.push(touch);
 	}
 	#end

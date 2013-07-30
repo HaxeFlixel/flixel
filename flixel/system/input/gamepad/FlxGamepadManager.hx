@@ -33,7 +33,7 @@ class FlxGamepadManager implements IFlxInput
 	/**
 	 * Get a particular Gamepad object
 	 */
-	public function getGamepad(GamepadID:Int):FlxGamepad
+	public function get(GamepadID:Int):FlxGamepad
 	{
 		var gamepad:FlxGamepad = _gamepads.get(GamepadID);
 		
@@ -73,7 +73,7 @@ class FlxGamepadManager implements IFlxInput
 	 * @param 	ButtonID  The button id (from 0 to 7).
 	 * @return 	Whether the button is pressed
 	 */
-	public function anyGamepadPressed(ButtonID:Int):Bool
+	public function anyPressed(ButtonID:Int):Bool
 	{
 		var it = _gamepads.iterator();
 		var gamepad = it.next();
@@ -97,7 +97,7 @@ class FlxGamepadManager implements IFlxInput
 	 * @param 	ButtonID 	The button id (from 0 to 7).
 	 * @return 	Whether the button was just pressed
 	*/
-	public function anyGamepadJustPressed(ButtonID:Int):Bool
+	public function anyJustPressed(ButtonID:Int):Bool
 	{
 		var it = _gamepads.iterator();
 		var gamepad = it.next();
@@ -120,7 +120,7 @@ class FlxGamepadManager implements IFlxInput
 	 * @param 	ButtonID 	The Button id (from 0 to 7).
 	 * @return 	Whether the button is just released.
 	*/
-	public function anyGamepadJustReleased(ButtonID:Int):Bool
+	public function anyJustReleased(ButtonID:Int):Bool
 	{
 		var it = _gamepads.iterator();
 		var gamepad = it.next();
@@ -178,9 +178,9 @@ class FlxGamepadManager implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
 	 */
-	public function handleButtonDown(FlashEvent:JoystickEvent):Void
+	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getGamepad(FlashEvent.device);
+		var gamepad:FlxGamepad = get(FlashEvent.device);
 		var o:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		
 		if (o == null) 
@@ -203,9 +203,9 @@ class FlxGamepadManager implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
 	 */
-	public function handleButtonUp(FlashEvent:JoystickEvent):Void
+	private function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getGamepad(FlashEvent.device);
+		var gamepad:FlxGamepad = get(FlashEvent.device);
 		var object:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		
 		if (object == null) 
@@ -228,9 +228,9 @@ class FlxGamepadManager implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
 	 */
-	public function handleAxisMove(FlashEvent:JoystickEvent):Void
+	private function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getGamepad(FlashEvent.device);
+		var gamepad:FlxGamepad = get(FlashEvent.device);
 		gamepad.axis = FlashEvent.axis;
 	}
 	
@@ -239,9 +239,9 @@ class FlxGamepadManager implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
 	 */
-	public function handleBallMove(FlashEvent:JoystickEvent):Void
+	private function handleBallMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getGamepad(FlashEvent.device);
+		var gamepad:FlxGamepad = get(FlashEvent.device);
 		gamepad.ball.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.ball.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
@@ -251,21 +251,21 @@ class FlxGamepadManager implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
 	 */
-	public function handleHatMove(FlashEvent:JoystickEvent):Void
+	private function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getGamepad(FlashEvent.device);
+		var gamepad:FlxGamepad = get(FlashEvent.device);
 		gamepad.hat.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.hat.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
 	
-	public function onFocus():Void { }
+	inline public function onFocus():Void { }
 
-	public function onFocusLost():Void
+	inline public function onFocusLost():Void
 	{
 		reset();
 	}
 
-	public function toString():String
+	inline public function toString():String
 	{
 		return 'FlxGamepadManager';
 	}

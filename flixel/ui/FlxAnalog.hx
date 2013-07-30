@@ -232,7 +232,7 @@ class FlxAnalog extends FlxSpriteGroup
 			}
 			else
 			{
-				for (touch in FlxG.touchManager.touches)
+				for (touch in FlxG.touches.list)
 				{		
 					var touchInserted:Bool = false;
 					

@@ -258,9 +258,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
 				#end
 				#if !FLX_NO_TOUCH
-					for (j in 0...FlxG.touchManager.touches.length)
+					for (touch in FlxG.touches.list)
 					{
-						var touch:FlxTouch = FlxG.touchManager.touches[j];
 						touch.getWorldPosition(camera, _point);
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
 					}
