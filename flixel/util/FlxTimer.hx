@@ -43,7 +43,8 @@ class FlxTimer
 	private var _loopsCounter:Int = 0;
 	
 	/**
-	 * Instantiate a new timer.
+	 * Internal constructor.
+	 * This is private, use recycle() or start() to get timers instead.
 	 */
 	private function new() { }
 	
@@ -56,45 +57,33 @@ class FlxTimer
 	}
 	
 	/**
-	 * Called by the timer manager plugin to update the timer.
-	 * If time runs out, the loop counter is advanced, the timer reset, and the callback called if it exists.
-	 * If the timer runs out of loops, then the timer calls <code>stop()</code>.
-	 * However, callbacks are called AFTER <code>stop()</code> is called.
+	 * Returns a recycled timer.
 	 */
-	public function update():Void
+	static public function recycle():FlxTimer
 	{
-		_timeCounter += FlxG.elapsed;
+		var timer:FlxTimer = FlxTimer.manager.get();
 		
-		while ((_timeCounter >= time) && !paused && !finished)
+		if (timer == null)
 		{
-			_timeCounter -= time;
-			_loopsCounter++;
-			
-			var callback:FlxTimer->Void = _callback;
-			
-			if ((loops > 0) && (_loopsCounter >= loops))
-			{
-				abort();
-			}
-			
-			if (callback != null)
-			{
-				callback(this);
-			}
+			timer = new FlxTimer();
 		}
+		return timer;
 	}
 	
 	/**
-	 * Restart the timer using the new duration
-	 * @param	NewDuration	The duration of this timer in ms.
-	 */
-	public function reset(NewTime:Float = -1):FlxTimer
+	 * Returns a recycled timer and starts it.
+	 * 
+	 * @param	Time		How many seconds it takes for the timer to go off.
+	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
+	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
+ 	 */
+	static public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
-		if (NewTime < 0)
-		{
-			NewTime = time;
-		}
-		return start(NewTime, _callback, loops);
+		var timer:FlxTimer = recycle();
+		
+		timer.run(Time, Callback, Loops);
+		
+		return timer;
 	}
 	
 	/**
@@ -105,13 +94,11 @@ class FlxTimer
 	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
 	 * @return	A reference to itself (handy for chaining or whatever).
 	 */
-	private function run(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):Void
+	public function run(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):Void
 	{
-		var timerManager:TimerManager = manager;
-		
-		if (timerManager != null)
+		if (manager != null)
 		{
-			timerManager.add(this);
+			manager.add(this);
 		}
 		
 		paused = false;
@@ -130,16 +117,54 @@ class FlxTimer
 	}
 	
 	/**
+	 * Restart the timer using the new duration
+	 * @param	NewDuration	The duration of this timer in ms.
+	 */
+	public function reset(NewTime:Float = -1):FlxTimer
+	{
+		if (NewTime < 0)
+		{
+			NewTime = time;
+		}
+		return start(NewTime, _callback, loops);
+	}
+	
+	/**
 	 * Stops the timer and removes it from the timer manager.
 	 */
 	public function abort():Void
 	{
 		finished = true;
-		var timerManager:TimerManager = manager;
-		
-		if (timerManager != null)
+		if (manager != null)
 		{
-			timerManager.remove(this);
+			manager.remove(this);
+		}
+	}
+	
+	/**
+	 * Called by the timer manager plugin to update the timer.
+	 * If time runs out, the loop counter is advanced, the timer reset, and the callback called if it exists.
+	 * If the timer runs out of loops, then the timer calls <code>stop()</code>.
+	 * However, callbacks are called AFTER <code>stop()</code> is called.
+	 */
+	public function update():Void
+	{
+		_timeCounter += FlxG.elapsed;
+		
+		while ((_timeCounter >= time) && !paused && !finished)
+		{
+			_timeCounter -= time;
+			_loopsCounter++;
+			
+			if ((loops > 0) && (_loopsCounter >= loops))
+			{
+				abort();
+			}
+			
+			if (_callback != null)
+			{
+				_callback(this);
+			}
 		}
 	}
 	
@@ -204,30 +229,13 @@ class FlxTimer
 	 * Read-only: The <code>TimerManager</code> instance.
 	 */
 	static public var manager(get, never):TimerManager;
-	
+	static private var _manager:TimerManager;
 	inline static private function get_manager():TimerManager
 	{
-		return cast(FlxG.plugins.get(TimerManager), TimerManager);
-	}
-	
-	/**
-	 * Returns a recycled timer and starts it.
-	 * 
-	 * @param	Time		How many seconds it takes for the timer to go off.
-	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
-	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
- 	 */
-	static public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
-	{
-		var timer:FlxTimer = FlxTimer.manager.get();
-		
-		if (timer == null)
+		if (_manager == null)
 		{
-			timer = new FlxTimer();
+			_manager = cast(FlxG.plugins.get(TimerManager), TimerManager);
 		}
-		
-		timer.run(Time, Callback, Loops);
-		
-		return timer;
+		return _manager;
 	}
 }
