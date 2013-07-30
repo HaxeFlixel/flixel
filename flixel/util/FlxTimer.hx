@@ -27,6 +27,11 @@ class FlxTimer
 	 * Check to see if the timer is finished.
 	 */
 	public var finished:Bool = false;
+	/**
+	 * Useful to store values you want to access within your callback function, ex:
+	 * FlxTimer.start(1, function(t) { trace(t.userData); } ).userData = "Hello World!";
+	 */
+	public var userData:Dynamic = null;
 	
 	/**
 	 * Internal tracker for the time's-up callback function.
@@ -54,6 +59,7 @@ class FlxTimer
 	public function destroy():Void
 	{
 		_callback = null;
+		userData = null;
 	}
 	
 	/**
@@ -62,7 +68,6 @@ class FlxTimer
 	static public function recycle():FlxTimer
 	{
 		var timer:FlxTimer = FlxTimer.manager.get();
-		
 		if (timer == null)
 		{
 			timer = new FlxTimer();
@@ -156,14 +161,14 @@ class FlxTimer
 			_timeCounter -= time;
 			_loopsCounter++;
 			
-			if ((loops > 0) && (_loopsCounter >= loops))
+			if (_loopsCounter >= loops)
 			{
+				if (_callback != null)
+				{
+					_callback(this);
+				}
+				
 				abort();
-			}
-			
-			if (_callback != null)
-			{
-				_callback(this);
 			}
 		}
 	}
