@@ -93,11 +93,15 @@ class TimerManager extends FlxBasic
 	 * Usually called automatically by <code>FlxTimer</code>'s <code>stop()</code> function.
 	 * 
 	 * @param	Timer	The <code>FlxTimer</code> you want to remove from the manager.
+	 * @param	ReturnInPool Whether to reset and put Timer into internal _pool.
 	 */
-	public function remove(Timer:FlxTimer):Void
+	public function remove(Timer:FlxTimer, ReturnInPool:Bool = true):Void
 	{
-		Timer.destroy();
-		_pool.put(Timer);
+		if (ReturnInPool)
+		{
+			Timer.destroy();
+			_pool.put(Timer);
+		}
 		
 		var index:Int = FlxArrayUtil.indexOf(_timers, Timer);
 		if (index >= 0)

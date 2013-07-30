@@ -34,6 +34,11 @@ class FlxTimer
 	public var userData:Dynamic = null;
 	
 	/**
+	 * Whether to reset and put this FlxTimer object into internal timers pool automatically after it finishes it's work.
+	 */
+	public var usePooling:Bool = true;
+	
+	/**
 	 * Internal tracker for the time's-up callback function.
 	 * Callback should be formed "onTimer(Timer:FlxTimer);"
 	 */
@@ -143,7 +148,7 @@ class FlxTimer
 		finished = true;
 		if (manager != null)
 		{
-			manager.remove(this);
+			manager.remove(this, usePooling);
 		}
 	}
 	
