@@ -110,9 +110,9 @@ class FlxTimer
 		finished = false;
 		time = Math.abs(Time);
 		
-		if (Loops < 1) 
+		if (Loops < 0) 
 		{
-			Loops = 1;
+			Loops *= -1;
 		}
 		
 		loops = Loops;
@@ -162,13 +162,13 @@ class FlxTimer
 			_timeCounter -= time;
 			_loopsCounter++;
 			
-			if (_loopsCounter >= loops)
+			if (_callback != null)
 			{
-				if (_callback != null)
-				{
-					_callback(this);
-				}
-				
+				_callback(this);
+			}
+			
+			if (loops > 0 && _loopsCounter >= loops)
+			{
 				abort();
 			}
 		}
