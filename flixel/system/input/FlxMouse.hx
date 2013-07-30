@@ -348,10 +348,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public function load(Graphic:Dynamic = null, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
+		#if (!flash || FLX_NO_NATIVE_CURSOR)
 		if (_cursor != null)
 		{
 			cursorContainer.removeChild(_cursor);
 		}
+		#end
 		
 		if (Graphic == null)
 		{
