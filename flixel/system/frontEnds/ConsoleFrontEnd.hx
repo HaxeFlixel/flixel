@@ -24,10 +24,7 @@ class ConsoleFrontEnd
 	inline public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.console != null)
-		{
-			FlxG.game.debugger.console.registerFunction(FunctionAlias, Function);
-		}
+		FlxG.game.debugger.console.registerFunction(FunctionAlias, Function);
 		#end
 	}
 	
@@ -40,10 +37,7 @@ class ConsoleFrontEnd
 	inline public function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.console != null)
-		{
-			FlxG.game.debugger.console.registerObject(ObjectAlias, AnyObject);
-		}
+		FlxG.game.debugger.console.registerObject(ObjectAlias, AnyObject);
 		#end
 	}
 	
@@ -58,10 +52,7 @@ class ConsoleFrontEnd
 	inline public function addCommand(Command:String, AnyObject:Dynamic, Function:Dynamic, Alt:String = ""):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.console != null)
-		{
-			FlxG.game.debugger.console.addCommand(Command, AnyObject, Function, Alt);
-		}
+		FlxG.game.debugger.console.addCommand(Command, AnyObject, Function, Alt);
 		#end
 	}
 }

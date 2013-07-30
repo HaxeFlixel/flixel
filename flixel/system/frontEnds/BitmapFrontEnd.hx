@@ -1,20 +1,12 @@
 package flixel.system.frontEnds;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.system.layer.frames.FlxFrame;
+import flixel.system.FlxAssets;
+import flixel.util.FlxColor;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
-import openfl.Assets;
-import flixel.FlxG;
-import flixel.util.FlxColor;
-
-import flixel.util.loaders.TexturePackerData;
-import flixel.system.FlxAssets;
-import flixel.system.layer.TileSheetExt;
-import flixel.system.layer.TileSheetData;
 
 class BitmapFrontEnd
 {

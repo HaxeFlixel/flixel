@@ -65,7 +65,7 @@ class DebuggerFrontEnd
 	 */
 	public var visible(default, set):Bool = false;
 	
-	private function set_visible(Visible:Bool):Bool
+	inline private function set_visible(Visible:Bool):Bool
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.visible = Visible;
@@ -73,27 +73,4 @@ class DebuggerFrontEnd
 		
 		return visible = Visible;
 	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * You shouldn't need to call this. Used to Draw the debug graphics for any installed plugins.
-	 */
-	public function drawDebugPlugins():Void
-	{
-		var plugin:FlxBasic;
-		var pluginList:Array<FlxBasic> = FlxG.plugins.list;
-		var i:Int = 0;
-		var l:Int = pluginList.length;
-		
-		while(i < l)
-		{
-			plugin = pluginList[i++];
-			
-			if (plugin.exists && plugin.visible && !plugin.ignoreDrawDebug)
-			{
-				plugin.drawDebug();
-			}
-		}
-	}
-	#end
 }

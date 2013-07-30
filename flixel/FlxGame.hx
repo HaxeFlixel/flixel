@@ -706,7 +706,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visualDebug)
 		{
-			FlxG.debugger.drawDebugPlugins();
+			FlxG.plugins.drawDebug();
 		}
 		#end
 		
@@ -743,8 +743,6 @@ class FlxGame extends Sprite
 		addChild(inputContainer);
 		
 		FlxInputs.init();
-		
-		FlxG.autoPause = true;
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG

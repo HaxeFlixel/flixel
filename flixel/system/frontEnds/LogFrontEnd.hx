@@ -1,9 +1,9 @@
 package flixel.system.frontEnds;
 
-import haxe.PosInfos;
 import flixel.FlxG;
-import flixel.system.debug.LogStyle; 
 import flixel.system.debug.Log;
+import flixel.system.debug.LogStyle;
+import haxe.PosInfos;
 
 class LogFrontEnd
 {
@@ -30,8 +30,7 @@ class LogFrontEnd
 	inline private function _add(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG.game != null) && (FlxG.game.debugger != null))
-			advanced(Data, Log.STYLE_NORMAL); 
+		advanced(Data, Log.STYLE_NORMAL); 
 		#end
 	}
 	
@@ -44,8 +43,7 @@ class LogFrontEnd
 	inline private function _warn(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG.game != null) && (FlxG.game.debugger != null))
-			advanced(Data, Log.STYLE_WARNING); 
+		advanced(Data, Log.STYLE_WARNING); 
 		#end
 	}
 	
@@ -58,8 +56,7 @@ class LogFrontEnd
 	inline private function _error(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG.game != null) && (FlxG.game.debugger != null))
-			advanced(Data, Log.STYLE_ERROR); 
+		advanced(Data, Log.STYLE_ERROR); 
 		#end
 	}
 	
@@ -72,8 +69,7 @@ class LogFrontEnd
 	inline private function _notice(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG.game != null) && (FlxG.game.debugger != null))
-			advanced(Data, Log.STYLE_NOTICE); 
+		advanced(Data, Log.STYLE_NOTICE); 
 		#end
 	}
 	
@@ -86,19 +82,26 @@ class LogFrontEnd
 	public function advanced(Data:Dynamic, Style:LogStyle):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG.game != null) && (FlxG.game.debugger != null))
+		if (!Std.is(Data, Array))
 		{
-			if (!Std.is(Data, Array))
-				Data = [Data]; 
-			
-			FlxG.game.debugger.log.add(Data, Style);
-			
-			if (Style.errorSound != null)
-				FlxG.sound.play(Style.errorSound);
-			if (Style.openConsole) 
-				FlxG.debugger.visible = true;
-			if (Reflect.isFunction(Style.callbackFunction))
-				Reflect.callMethod(null, Style.callbackFunction, []);
+			Data = [Data]; 
+		}
+		
+		FlxG.game.debugger.log.add(Data, Style);
+		
+		if (Style.errorSound != null)
+		{
+			FlxG.sound.play(Style.errorSound);
+		}
+		
+		if (Style.openConsole) 
+		{
+			FlxG.debugger.visible = true;
+		}
+		
+		if (Reflect.isFunction(Style.callbackFunction))
+		{
+			Reflect.callMethod(null, Style.callbackFunction, []);
 		}
 		#end
 	}
@@ -106,13 +109,10 @@ class LogFrontEnd
 	/**
 	 * Clears the log output.
 	 */
-	public function clear():Void
+	inline public function clear():Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((FlxG.game != null) && (FlxG.game.debugger != null))
-		{
-			FlxG.game.debugger.log.clear();
-		}
+		FlxG.game.debugger.log.clear();
 		#end
 	}
 	
@@ -129,10 +129,14 @@ class LogFrontEnd
 	private function set_redirectTraces(Redirect:Bool):Bool
 	{
 		if (Redirect)
+		{
 			haxe.Log.trace = processTraceData;
+		}
 		else 
+		{
 			haxe.Log.trace = _oldTrace;
-			
+		}
+		
 		return redirectTraces = Redirect;
 	}
 	

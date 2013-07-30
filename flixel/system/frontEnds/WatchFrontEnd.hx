@@ -17,13 +17,10 @@ class WatchFrontEnd
 	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
 	 * @param	DisplayName		Optional, display your own string instead of the class name + variable name: e.g. "enemy count".
 	 */
-	inline public function add(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
+	inline public function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.watch != null)
-		{
-			FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
-		}
+		FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
 		#end
 	}
 	
@@ -34,13 +31,10 @@ class WatchFrontEnd
 	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
 	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
 	 */
-	inline public function remove(AnyObject:Dynamic, VariableName:String = null):Void
+	inline public function remove(AnyObject:Dynamic, ?VariableName:String):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.watch != null)
-		{
-			FlxG.game.debugger.watch.remove(AnyObject, VariableName);
-		}
+		FlxG.game.debugger.watch.remove(AnyObject, VariableName);
 		#end
 	}
 	
@@ -55,10 +49,7 @@ class WatchFrontEnd
 	inline public function addQuick(Name:String, NewValue:Dynamic):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.watch != null)
-		{
-			FlxG.game.debugger.watch.updateQuickWatch(Name, NewValue);
-		}
+		FlxG.game.debugger.watch.updateQuickWatch(Name, NewValue);
 		#end
 	}
 	
@@ -70,10 +61,7 @@ class WatchFrontEnd
 	inline public function removeQuick(Name:String):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.watch != null)
-		{
-			FlxG.game.debugger.watch.remove(null, null, Name);
-		}
+		FlxG.game.debugger.watch.remove(null, null, Name);
 		#end
 	}
 	
@@ -84,11 +72,8 @@ class WatchFrontEnd
 	inline public function addMouse():Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.watch != null)
-		{
-			add(FlxG.game, "mouseX", "Mouse.x");
-			add(FlxG.game, "mouseY", "Mouse.y");
-		}
+		add(FlxG.game, "mouseX", "Mouse.x");
+		add(FlxG.game, "mouseY", "Mouse.y");
 		#end
 	}
 	
@@ -98,11 +83,8 @@ class WatchFrontEnd
 	inline public function removeMouse():Void
 	{
 		#if !FLX_NO_DEBUG
-		if (FlxG.game != null && FlxG.game.debugger.watch != null)
-		{
-			remove(FlxG.game, "mouseX");
-			remove(FlxG.game, "mouseY");
-		}
+		remove(FlxG.game, "mouseX");
+		remove(FlxG.game, "mouseY");
 		#end
 	}
 }

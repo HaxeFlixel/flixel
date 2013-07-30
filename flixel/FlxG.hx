@@ -1,8 +1,6 @@
 package flixel;
 
-import flash.display.Sprite;
 import flash.display.Stage;
-import flash.text.Font;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
@@ -23,7 +21,6 @@ import flixel.util.FlxCollision;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
-import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
@@ -55,17 +52,17 @@ class FlxG
 	 * If you build and maintain your own version of flixel,
 	 * you can give it your own name here.
 	 */
-	static public inline var LIBRARY_NAME:String = "HaxeFlixel";
+	inline static public var LIBRARY_NAME:String = "HaxeFlixel";
 	/**
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
-	static public inline var LIBRARY_MAJOR_VERSION:String = "2";
+	inline static public var LIBRARY_MAJOR_VERSION:String = "2";
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public inline var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
+	inline static public var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
 	
 	/**
 	 * Internal tracker for game object.
@@ -79,7 +76,7 @@ class FlxG
 	 * Whether the game should be paused when focus is lost or not. Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
 	 * pause screen. Override onFocus() and onFocusLost() for your own behaviour in your state.
 	 */
-	static public var autoPause:Bool;
+	static public var autoPause:Bool = true;
 	/**
 	 * WARNING: Changing this can lead to issues with physcis and the recording system. Setting this to 
 	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.

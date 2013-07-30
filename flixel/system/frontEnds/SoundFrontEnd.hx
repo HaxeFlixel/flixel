@@ -20,12 +20,12 @@ class SoundFrontEnd
 	/**
 	 * Whether or not the game sounds are muted.
 	 */
-	public var muted:Bool;
+	public var muted:Bool = false;
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
 	 * Function should take the form <code>myVolumeHandler(Volume:Number)</code>.
 	 */
-	public var volumeHandler:Float->Void;
+	public var volumeHandler:Float->Void = null;
 	
 	#if !FLX_NO_KEYBOARD
 	/**
@@ -57,10 +57,7 @@ class SoundFrontEnd
 		muteKeys = [48, 96]; 
 		#end
 		
-		muted = false;
-		volume = 0.5;
 		list = new FlxTypedGroup<FlxSound>();
-		volumeHandler = null;
 		
 		#if android
 		_soundCache = new Map<String, Sound>();
@@ -75,7 +72,7 @@ class SoundFrontEnd
 	 * @param	Music		The sound file you want to loop in the background.
 	 * @param	Volume		How loud the sound should be, from 0 to 1.
 	 */
-	public function playMusic(Music:Dynamic, Volume:Float = 1.0):Void
+	public function playMusic(Music:Dynamic, Volume:Float = 1):Void
 	{
 		#if !js
 		if (music == null)
@@ -86,6 +83,7 @@ class SoundFrontEnd
 		{
 			music.stop();
 		}
+		
 		music.loadEmbedded(Music, true);
 		music.volume = Volume;
 		music.survive = true;
@@ -104,15 +102,17 @@ class SoundFrontEnd
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	public function load(EmbeddedSound:Dynamic = null, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, URL:String = null, OnComplete:Void->Void = null):FlxSound
+	public function load(?EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
 	{
 		#if !js
-		if((EmbeddedSound == null) && (URL == null))
+		if (EmbeddedSound == null && URL == null)
 		{
 			FlxG.log.warn("FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
+		
 		var sound:FlxSound = list.recycle(FlxSound);
+		
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
@@ -121,11 +121,14 @@ class SoundFrontEnd
 		{
 			sound.loadStream(URL, Looped, AutoDestroy, OnComplete);
 		}
+		
 		sound.volume = Volume;
+		
 		if (AutoPlay)
 		{
 			sound.play();
 		}
+		
 		return sound;
 		#else
 		return null;
@@ -153,11 +156,12 @@ class SoundFrontEnd
 		{
 			var sound:Sound = Assets.getSound(EmbeddedSound);
 			_soundCache.set(EmbeddedSound, sound);
+			
 			return sound;
 		}
 	}
 	
-	public function play(EmbeddedSound:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true, OnComplete:Void->Void = null):FlxSound
+	public function play(EmbeddedSound:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		var sound:Sound = null;
 		
@@ -189,7 +193,7 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	public function play(EmbeddedSound:Dynamic, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true, OnComplete:Void->Void = null):FlxSound
+	inline public function play(EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		#if !js
 		return load(EmbeddedSound, Volume, Looped, AutoDestroy, true, null, OnComplete);
@@ -209,7 +213,7 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A FlxSound object.
 	 */
-	public function stream(URL:String, Volume:Float = 1.0, Looped:Bool = false, AutoDestroy:Bool = true, OnComplete:Void->Void = null):FlxSound
+	inline public function stream(URL:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		#if !js
 		return load(null, Volume, Looped, AutoDestroy, true, URL, OnComplete);
@@ -224,7 +228,7 @@ class SoundFrontEnd
 	 * 
 	 * @default 0.5
 	 */
-	public var volume(default, set_volume):Float;
+	public var volume(default, set_volume):Float = 0.5;
 	
 	/**
 	 * @private
@@ -232,6 +236,7 @@ class SoundFrontEnd
 	private function set_volume(Volume:Float):Float
 	{
 		volume = Volume;
+		
 		if (volume < 0)
 		{
 			volume = 0;
@@ -240,6 +245,7 @@ class SoundFrontEnd
 		{
 			volume = 1;
 		}
+		
 		if (volumeHandler != null)
 		{
 			var param:Float = muted ? 0 : volume;
@@ -255,18 +261,15 @@ class SoundFrontEnd
 	 */
 	public function destroySounds(ForceDestroy:Bool = false):Void
 	{
-		if((music != null) && (ForceDestroy || !music.survive))
+		if (music != null && (ForceDestroy || !music.survive))
 		{
 			music.destroy();
 			music = null;
 		}
-		var i:Int = 0;
-		var sound:FlxSound;
-		var l:Int = list.members.length;
-		while(i < l)
+		
+		for (sound in list.members)
 		{
-			sound = list.members[i++];
-			if ((sound != null) && (ForceDestroy || !sound.survive))
+			if (sound != null && (ForceDestroy || !sound.survive))
 			{
 				sound.destroy();
 			}
@@ -278,11 +281,12 @@ class SoundFrontEnd
 	 */
 	public function updateSounds():Void
 	{
-		if ((music != null) && music.active)
+		if (music != null && music.active)
 		{
 			music.update();
 		}
-		if ((list != null) && list.active)
+		
+		if (list != null && list.active)
 		{
 			list.update();
 		}
@@ -293,17 +297,14 @@ class SoundFrontEnd
 	 */
 	public function pauseSounds():Void
 	{
-		if ((music != null) && music.exists && music.active)
+		if (music != null && music.exists && music.active)
 		{
 			music.pause();
 		}
-		var i:Int = 0;
-		var sound:FlxSound;
-		var l:Int = list.length;
-		while(i < l)
+		
+		for (sound in list.members)
 		{
-			sound = list.members[i++];
-			if ((sound != null) && sound.exists && sound.active)
+			if (sound != null && sound.exists && sound.active)
 			{
 				sound.pause();
 			}
@@ -315,17 +316,14 @@ class SoundFrontEnd
 	 */
 	public function resumeSounds():Void
 	{
-		if ((music != null) && music.exists)
+		if (music != null && music.exists)
 		{
 			music.play();
 		}
-		var i:Int = 0;
-		var sound:FlxSound;
-		var l:Int = list.length;
-		while(i < l)
+		
+		for (sound in list.members)
 		{
-			sound = list.members[i++];
-			if ((sound != null) && sound.exists)
+			if (sound != null && sound.exists)
 			{
 				sound.resume();
 			}

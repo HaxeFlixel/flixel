@@ -35,19 +35,17 @@ class PluginFrontEnd
 	 */
 	public function add(Plugin:FlxBasic):FlxBasic
 	{
-		//Don't add repeats
-		var pluginList:Array<FlxBasic> = list;
-		var l:Int = pluginList.length;
-		for (i in 0...l)
+		// Don't add repeats
+		for (plugin in list)
 		{
-			if (pluginList[i].toString() == Plugin.toString())
+			if (plugin.toString() == Plugin.toString())
 			{
 				return Plugin;
 			}
 		}
 		
-		//no repeats! safe to add a new instance of this plugin
-		pluginList.push(Plugin);
+		// No repeats! safe to add a new instance of this plugin
+		list.push(Plugin);
 		return Plugin;
 	}
 	
@@ -59,17 +57,14 @@ class PluginFrontEnd
 	 */
 	public function get(ClassType:Class<FlxBasic>):FlxBasic
 	{
-		var pluginList:Array<FlxBasic> = list;
-		var i:Int = 0;
-		var l:Int = pluginList.length;
-		while(i < l)
+		for (plugin in list)
 		{
-			if (Std.is(pluginList[i], ClassType))
+			if (Std.is(plugin, ClassType))
 			{
-				return list[i];
+				return plugin;
 			}
-			i++;
 		}
+		
 		return null;
 	}
 	
@@ -81,18 +76,19 @@ class PluginFrontEnd
 	 */
 	public function remove(Plugin:FlxBasic):FlxBasic
 	{
-		//Don't add repeats
-		var pluginList:Array<FlxBasic> = list;
-		var i:Int = pluginList.length-1;
+		// Don't add repeats
+		var i:Int = list.length - 1;
+		
 		while(i >= 0)
 		{
-			if (pluginList[i] == Plugin)
+			if (list[i] == Plugin)
 			{
-				pluginList.splice(i, 1);
+				list.splice(i, 1);
 				return Plugin;
 			}
 			i--;
 		}
+		
 		return Plugin;
 	}
 	
@@ -104,19 +100,20 @@ class PluginFrontEnd
 	 */
 	public function removeType(ClassType:Class<FlxBasic>):Bool
 	{
-		//Don't add repeats
+		// Don't add repeats
 		var results:Bool = false;
-		var pluginList:Array<FlxBasic> = list;
-		var i:Int = pluginList.length - 1;
+		var i:Int = list.length - 1;
+		
 		while(i >= 0)
 		{
-			if (Std.is(pluginList[i], ClassType))
+			if (Std.is(list[i], ClassType))
 			{
-				pluginList.splice(i,1);
+				list.splice(i,1);
 				results = true;
 			}
 			i--;
 		}
+		
 		return results;
 	}
 	
@@ -125,13 +122,8 @@ class PluginFrontEnd
 	 */
 	inline public function update():Void
 	{
-		var plugin:FlxBasic;
-		var pluginList:Array<FlxBasic> = list;
-		var i:Int = 0;
-		var l:Int = pluginList.length;
-		while(i < l)
+		for (plugin in list)
 		{
-			plugin = pluginList[i++];
 			if (plugin.exists && plugin.active)
 			{
 				plugin.update();
@@ -144,17 +136,28 @@ class PluginFrontEnd
 	 */
 	inline public function draw():Void
 	{
-		var plugin:FlxBasic;
-		var pluginList:Array<FlxBasic> = list;
-		var i:Int = 0;
-		var l:Int = pluginList.length;
-		while(i < l)
+		for (plugin in list)
 		{
-			plugin = pluginList[i++];
 			if (plugin.exists && plugin.visible)
 			{
 				plugin.draw();
 			}
 		}
 	}
+	
+	#if !FLX_NO_DEBUG
+	/**
+	 * You shouldn't need to call this. Used to Draw the debug graphics for any installed plugins.
+	 */
+	public function drawDebug():Void
+	{
+		for (plugin in list)
+		{
+			if (plugin.exists && plugin.visible && !plugin.ignoreDrawDebug)
+			{
+				plugin.drawDebug();
+			}
+		}
+	}
+	#end
 }

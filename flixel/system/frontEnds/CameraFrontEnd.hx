@@ -19,7 +19,7 @@ class CameraFrontEnd
 	 * you are not doing any pre-processing in your game state's <code>draw()</code> call.
 	 * @default false
 	 */
-	public var useBufferLocking:Bool;
+	public var useBufferLocking:Bool = false;
 	/**
 	 * Internal helper variable for clearing the cameras each frame.
 	 */
@@ -29,7 +29,6 @@ class CameraFrontEnd
 	{
 		_cameraRect = new Rectangle();
 		list = new Array<FlxCamera>();
-		useBufferLocking = false;
 	}
 	
 	/**
@@ -37,14 +36,9 @@ class CameraFrontEnd
 	 */
 	inline public function lock():Void
 	{
-		var cam:FlxCamera;
-		var cams:Array<FlxCamera> = list;
-		var i:Int = 0;
-		var l:Int = cams.length;
-		while(i < l)
+		for (camera in list)
 		{
-			cam = cams[i++];
-			if ((cam == null) || !cam.exists || !cam.visible)
+			if (camera == null || !camera.exists || !camera.visible)
 			{
 				continue;
 			}
@@ -52,22 +46,22 @@ class CameraFrontEnd
 			#if flash
 			if (useBufferLocking)
 			{
-				cam.buffer.lock();
+				camera.buffer.lock();
 			}
 			#end
 			
 			#if !flash
-			cam.clearDrawStack();
-			cam._canvas.graphics.clear();
-			// clearing camera's debug sprite
-			cam._debugLayer.graphics.clear();
+			camera.clearDrawStack();
+			camera._canvas.graphics.clear();
+			// Clearing camera's debug sprite
+			camera._debugLayer.graphics.clear();
 			#end
 			
 			#if flash
-			cam.fill(cam.bgColor, cam.useBgAlphaBlending);
-			cam.screen.dirty = true;
+			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
+			camera.screen.dirty = true;
 			#else
-			cam.fill((cam.bgColor & 0x00ffffff), cam.useBgAlphaBlending, ((cam.bgColor >> 24) & 255) / 255);
+			camera.fill((camera.bgColor & 0x00ffffff), camera.useBgAlphaBlending, ((camera.bgColor >> 24) & 255) / 255);
 			#end
 		}
 	}
@@ -75,19 +69,12 @@ class CameraFrontEnd
 	#if !flash
 	inline public function render():Void
 	{
-		var cam:FlxCamera;
-		var cams:Array<FlxCamera> = FlxG.cameras.list;
-		var i:Int = 0;
-		var l:Int = cams.length;
-		while(i < l)
+		for (camera in list)
 		{
-			cam = cams[i++];
-			if ((cam == null) || !cam.exists || !cam.visible)
+			if (camera != null && camera.exists && camera.visible)
 			{
-				continue;
+				camera.render();
 			}
-			
-			cam.render();
 		}
 	}
 	#end
@@ -97,26 +84,22 @@ class CameraFrontEnd
 	 */
 	inline public function unlock():Void
 	{
-		var cam:FlxCamera;
-		var cams:Array<FlxCamera> = list;
-		var i:Int = 0;
-		var l:Int = cams.length;
-		while(i < l)
+		for (camera in list)
 		{
-			cam = cams[i++];
-			if ((cam == null) || !cam.exists || !cam.visible)
+			if (camera == null || !camera.exists || !camera.visible)
 			{
 				continue;
 			}
-			cam.drawFX();
+			
+			camera.drawFX();
 			
 			#if flash
 			if (useBufferLocking)
 			{
-				cam.buffer.unlock();
+				camera.buffer.unlock();
 			}
 			
-			cam.screen.resetFrameBitmapDatas();
+			camera.screen.resetFrameBitmapDatas();
 			#end
 		}
 	}
@@ -126,27 +109,22 @@ class CameraFrontEnd
 	 */
 	inline public function update():Void
 	{
-		var cam:FlxCamera;
-		var cams:Array<FlxCamera> = list;
-		var i:Int = 0;
-		var l:Int = cams.length;
-		while (i < l)
+		for (camera in list)
 		{
-			cam = cams[i++];
-			if ((cam != null) && cam.exists)
+			if (camera != null && camera.exists)
 			{
-				if (cam.active)
+				if (camera.active)
 				{
-					cam.update();
-				}
-
-				if (cam.target == null) 
-				{
-					cam._flashSprite.x = cam.x + cam._flashOffsetX;
-					cam._flashSprite.y = cam.y + cam._flashOffsetY;
+					camera.update();
 				}
 				
-				cam._flashSprite.visible = cam.visible;
+				if (camera.target == null) 
+				{
+					camera._flashSprite.x = camera.x + camera._flashOffsetX;
+					camera._flashSprite.y = camera.y + camera._flashOffsetY;
+				}
+				
+				camera._flashSprite.visible = camera.visible;
 			}
 		}
 	}
@@ -158,11 +136,12 @@ class CameraFrontEnd
 	 * @param	NewCamera	The camera you want to add.
 	 * @return	This <code>FlxCamera</code> instance.
 	 */
-	public function add(NewCamera:FlxCamera):FlxCamera
+	inline public function add(NewCamera:FlxCamera):FlxCamera
 	{
 		FlxG.game.addChildAt(NewCamera._flashSprite, FlxG.game.getChildIndex(FlxG.game.inputContainer));
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
+		
 		return NewCamera;
 	}
 	
@@ -178,8 +157,11 @@ class CameraFrontEnd
 		{
 			FlxG.game.removeChild(Camera._flashSprite);
 			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
-			if(index >= 0)
+			
+			if (index >= 0)
+			{
 				FlxG.cameras.list.splice(index, 1);
+			}
 		}
 		else
 		{
@@ -187,9 +169,9 @@ class CameraFrontEnd
 		}
 		
 		#if !flash
-		for (i in 0...(FlxG.cameras.list.length))
+		for (i in 0...list.length)
 		{
-			FlxG.cameras.list[i].ID = i;
+			list[i].ID = i;
 		}
 		#end
 		
@@ -205,21 +187,20 @@ class CameraFrontEnd
 	 * 
 	 * @param	NewCamera	Optional; specify a specific camera object to be the new main camera.
 	 */
-	public function reset(NewCamera:FlxCamera = null):Void
+	public function reset(?NewCamera:FlxCamera):Void
 	{
-		var cam:FlxCamera;
-		var i:Int = 0;
-		var l:Int = list.length;
-		while(i < l)
+		for (camera in list)
 		{
-			cam = list[i++];
-			FlxG.game.removeChild(cam._flashSprite);
-			cam.destroy();
+			FlxG.game.removeChild(camera._flashSprite);
+			camera.destroy();
 		}
-		list.splice(0, FlxG.cameras.list.length);
+		
+		list.splice(0, list.length);
 		
 		if (NewCamera == null)	
+		{
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+		}
 		
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
@@ -298,7 +279,7 @@ class CameraFrontEnd
 	 * Get functionality is equivalent to FlxG.camera.bgColor.
 	 * Set functionality sets the background color of all the current cameras.
 	 */
-	private function get_bgColor():Int
+	inline private function get_bgColor():Int
 	{
 		if (FlxG.camera == null)
 		{
