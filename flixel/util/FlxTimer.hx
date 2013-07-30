@@ -67,7 +67,7 @@ class FlxTimer
 	 */
 	static public function recycle():FlxTimer
 	{
-		var timer:FlxTimer = FlxTimer.manager.get();
+		var timer:FlxTimer = manager.get();
 		if (timer == null)
 		{
 			timer = new FlxTimer();
@@ -131,7 +131,8 @@ class FlxTimer
 		{
 			NewTime = time;
 		}
-		return start(NewTime, _callback, loops);
+		run(NewTime, _callback, loops);
+		return this;
 	}
 	
 	/**
