@@ -43,7 +43,7 @@ class PlayState extends FlxState
 		FlxG.cameras.bgColor = FlxColor.GRAY;
 		
 		// Getting first availble gamepad
-		_gamePad = FlxG.gamepadManager.getGamepad(0);
+		_gamePad = FlxG.gamepads.get(0);
 		
 		_LB = createSprite(71, LB_Y, "assets/LB.png", 0.8);
 		_RB = createSprite(367, RB_Y, "assets/RB.png", 0.8);

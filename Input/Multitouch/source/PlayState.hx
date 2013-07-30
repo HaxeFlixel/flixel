@@ -3,16 +3,12 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.system.input.FlxTouch;
 
-class MenuState extends FlxState
+class PlayState extends FlxState
 {
 	private var _activeSprites:Map<Int, FlxSprite>;
 	private var _inactiveSprites:Array<FlxSprite>;
-	
 	private var _touchSprite:FlxSprite;
-	private var _touch:FlxTouch;
-	private var _touches:Array<FlxTouch>;
 	
 	override public function create():Void
 	{
@@ -26,13 +22,11 @@ class MenuState extends FlxState
 	{
 		super.update();
 		
-		_touches = FlxG.touchManager.touches;
-		
-		for (_touch in _touches)
+		for (touch in FlxG.touches.list)
 		{
 			_touchSprite = null;
 			
-			if (_touch.justPressed() == true && _activeSprites.exists(_touch.touchPointID) == false)
+			if (touch.justPressed() == true && _activeSprites.exists(touch.touchPointID) == false)
 			{
 				if (_inactiveSprites.length > 0)
 				{
@@ -47,25 +41,24 @@ class MenuState extends FlxState
 				}
 				
 				_touchSprite.color = Std.int(Math.random() * 0xffffff);
-				_activeSprites.set(_touch.touchPointID, _touchSprite);
+				_activeSprites.set(touch.touchPointID, _touchSprite);
 			}
-			else if (_touch.justReleased() == true && _activeSprites.exists(_touch.touchPointID) == true)
+			else if (touch.justReleased() == true && _activeSprites.exists(touch.touchPointID) == true)
 			{
-				_touchSprite = _activeSprites.get(_touch.touchPointID);
+				_touchSprite = _activeSprites.get(touch.touchPointID);
 				_touchSprite.visible = false;
-				_activeSprites.remove(_touch.touchPointID);
+				_activeSprites.remove(touch.touchPointID);
 				_inactiveSprites.push(_touchSprite);
 				_touchSprite = null;
 			}
 			else
 			{
-				_touchSprite = _activeSprites.get(_touch.touchPointID);
+				_touchSprite = _activeSprites.get(touch.touchPointID);
 			}
 			
 			if (_touchSprite != null)
 			{
-				_touchSprite.x = _touch.x;
-				_touchSprite.y = _touch.y;
+				_touchSprite.setPosition(touch.x, touch.y);
 			}
 		}
 	}
