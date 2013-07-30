@@ -22,19 +22,9 @@ package flixel.util;
 	
 	public function put(obj:T):Void
 	{
-		if (obj != null)
+		// we don't want to have the same object in pool twice
+		if (obj != null && FlxArrayUtil.indexOf(_pool, obj) < 0)
 		{
-			var l:Int = length;
-			var i:Int = 0;
-			while (i < l)
-			{
-				if (_pool[i++] == obj)
-				{
-					// we don't want to have the same object in pool twice
-					return;
-				}
-			}
-			
 			_pool.push(obj);
 		}
 	}
@@ -51,13 +41,6 @@ package flixel.util;
 	{
 		var oldPool = _pool;
 		_pool = [];
-		return oldPool;
-	}
-	
-	inline public function destroy():Array<T>
-	{
-		var oldPool = _pool;
-		_pool = null;
 		return oldPool;
 	}
 	
