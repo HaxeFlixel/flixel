@@ -7,12 +7,12 @@ import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
+import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
-import flixel.system.input.FlxInputs;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
@@ -67,7 +67,7 @@ class FlxG
 	/**
 	 * Internal tracker for game object.
 	 */
-	static public var game:FlxGame;
+	static public var game(default, null):FlxGame;
 	/**
 	 * Handy shared variable for implementing your own pause behavior.
 	 */
@@ -127,33 +127,37 @@ class FlxG
 	/**
 	 * A reference to a <code>FlxMouse</code> object. Important for input!
 	 */
-	static public var mouse:FlxMouse;
+	static public var mouse(default, null):FlxMouse;
 	#end
 
 	#if !FLX_NO_KEYBOARD
 	/**
 	 * A reference to a <code>FlxKeyboard</code> object. Important for input!
 	 */
-	static public var keys:FlxKeyboard;
+	static public var keys(default, null):FlxKeyboard;
 	#end
 
 	#if !FLX_NO_TOUCH
 	/**
 	 * A reference to a <code>FlxTouchManager</code> object. Useful for devices with multitouch support
 	 */
-	public static var touches:FlxTouchManager;
+	public static var touches(default, null):FlxTouchManager;
 	#end
 	
 	#if (!FLX_NO_GAMEPAD && (cpp||neko))
 	/**
 	 * A reference to a <code>FlxGamepadManager</code> object.
-	 * Set the instance in the FlxInputs class.
 	 */
-	public static var gamepads:FlxGamepadManager;
+	public static var gamepads(default, null):FlxGamepadManager;
 	#end
 	
 	// From here on: frontEnds
 	
+	/**
+	 * A reference to the <code>InputFrontEnd</code> object. Mostly used internally, 
+	 * but you can use it too to reset inputs and create input classes of your own.
+	 */
+	static public var inputs(default, null):InputFrontEnd = new InputFrontEnd();
 	/**
 	 * A reference to the <code>ConsoleFrontEnd</code> object. Use it to register functions and objects
 	 * or add new commands to the console window.
@@ -216,6 +220,23 @@ class FlxG
 		width = Std.int(Math.abs(Width));
 		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
+		
+		// Instantiate inputs
+		#if !FLX_NO_KEYBOARD
+			keys = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
+		#end
+		
+		#if !FLX_NO_MOUSE
+			mouse = cast(inputs.add(new FlxMouse(game.inputContainer)), FlxMouse);
+		#end
+		
+		#if !FLX_NO_TOUCH
+			touches = cast(inputs.add(new FlxTouchManager()), FlxTouchManager);
+		#end
+		
+		#if (!FLX_NO_GAMEPAD && (cpp||neko))
+			gamepads = cast(inputs.add(new FlxGamepadManager()), FlxGamepadManager);
+		#end
 		
 		save.bind("flixel");
 		
@@ -429,7 +450,7 @@ class FlxG
 		PxBitmapFont.clearStorage();
 		
 		FlxG.bitmap.clearCache();
-		FlxInputs.resetInputs();
+		inputs.reset();
 		FlxG.sound.destroySounds(true);
 		FlxG.paused = false;
 		FlxG.timeScale = 1.0;

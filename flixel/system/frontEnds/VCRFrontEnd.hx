@@ -2,7 +2,6 @@ package flixel.system.frontEnds;
 
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.system.input.FlxInputs;
 
 class VCRFrontEnd
 {
@@ -91,7 +90,7 @@ class VCRFrontEnd
 		}
 		#end
 		
-		FlxInputs.resetInputs();
+		FlxG.inputs.reset();
 		FlxG.keys.enabled = true;
 	}
 		

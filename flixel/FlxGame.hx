@@ -14,7 +14,6 @@ import flash.text.TextFormatAlign;
 import flixel.plugin.TimerManager;
 import flixel.system.FlxAssets;
 import flixel.system.FlxReplay;
-import flixel.system.input.FlxInputs;
 import flixel.system.layer.TileSheetExt;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxColor;
@@ -265,7 +264,7 @@ class FlxGame extends Sprite
 		
 		stage.frameRate = flashFramerate;
 		FlxG.sound.resumeSounds();
-		FlxInputs.onFocus();
+		FlxG.inputs.onFocus();
 	}
 	
 	/**
@@ -288,7 +287,7 @@ class FlxGame extends Sprite
 		
 		stage.frameRate = 10;
 		FlxG.sound.pauseSounds();
-		FlxInputs.onFocusLost();
+		FlxG.inputs.onFocusLost();
 	}
 	
 	private function onResize(E:Event):Void 
@@ -413,7 +412,7 @@ class FlxGame extends Sprite
 		
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
-		FlxInputs.resetInputs();
+		FlxG.inputs.reset();
 		FlxG.sound.destroySounds();
 		
 		#if !FLX_NO_DEBUG
@@ -642,7 +641,7 @@ class FlxGame extends Sprite
 		{
 		#end
 		
-		FlxInputs.updateInputs();
+		FlxG.inputs.update();
 		
 		#if FLX_RECORD
 		}
@@ -741,8 +740,6 @@ class FlxGame extends Sprite
 		stage.frameRate = flashFramerate;
 		
 		addChild(inputContainer);
-		
-		FlxInputs.init();
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG

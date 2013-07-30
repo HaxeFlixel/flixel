@@ -1,7 +1,6 @@
 package flixel;
 
 import flixel.group.FlxGroup;
-import flixel.system.input.FlxInputs;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game
@@ -186,7 +185,7 @@ class FlxState extends FlxGroup
 			//Reset the input so things like "justPressed" won't interfere
 			if (!persistantUpdate) 
 			{ 
-				FlxInputs.resetInputs();
+				FlxG.inputs.reset();
 			}
 			
 			if (!_subState.initialized)

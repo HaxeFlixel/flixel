@@ -1,7 +1,6 @@
 package flixel.system;
 
 import flixel.FlxG;
-import flixel.system.input.FlxInputs;
 import flixel.system.replay.CodeValuePair;
 import flixel.system.replay.FrameRecord;
 import flixel.system.replay.MouseRecord;
@@ -200,7 +199,7 @@ class FlxReplay
 	 */
 	public function playNextFrame():Void
 	{
-		FlxInputs.resetInputs();
+		FlxG.inputs.reset();
 		
 		if(_marker >= frameCount)
 		{
