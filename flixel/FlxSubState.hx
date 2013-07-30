@@ -1,6 +1,6 @@
 package flixel;
 
-import flixel.system.BGSprite;
+import flixel.system.FlxBGSprite;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game
@@ -24,7 +24,7 @@ class FlxSubState extends FlxState
 	/**
 	 * Helper sprite object for non-flash targets. Draws background
 	 */
-	private var _bgSprite:BGSprite;
+	private var _bgSprite:FlxBGSprite;
 	#end
 	
 	/**
@@ -52,7 +52,7 @@ class FlxSubState extends FlxState
 		closeCallback = null;
 		
 		#if !flash
-		_bgSprite = new BGSprite();
+		_bgSprite = new FlxBGSprite();
 		#end
 		this.bgColor = bgColor;
 		this.useMouse = useMouse;

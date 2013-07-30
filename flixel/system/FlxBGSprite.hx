@@ -12,7 +12,7 @@ import flixel.util.FlxColor;
  * The main "game object" class, the sprite is a <code>FlxObject</code>
  * with a bunch of graphics options and abilities, like animation and stamping.
  */
-class BGSprite extends FlxSprite
+class FlxBGSprite extends FlxSprite
 {
 	public function new()
 	{
