@@ -3,6 +3,8 @@ package flixel.system.input;
 import flixel.FlxG;
 import flixel.system.input.gamepad.FlxGamepadManager;
 import flixel.system.input.keyboard.FlxKeyboard;
+import flixel.system.input.mouse.FlxMouse;
+import flixel.system.input.touch.FlxTouchManager;
 
 class FlxInputs {
 	

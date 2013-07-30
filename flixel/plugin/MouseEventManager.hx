@@ -1,13 +1,12 @@
 package flixel.plugin;
 
-#if !FLX_NO_MOUSE
 import flash.errors.Error;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.system.input.FlxTouch;
+import flixel.system.input.touch.FlxTouch;
 import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
 
@@ -178,6 +177,7 @@ class MouseEventManager extends FlxBasic
 			}
 		}
 		// MouseDown - Look for sprites with mouse over when user presses mouse button.
+		#if !FLX_NO_MOUSE
 		if (FlxG.mouse.justPressed())
 		{
 			for (current in currentOverSprites)
@@ -199,7 +199,8 @@ class MouseEventManager extends FlxBasic
 				}
 			}
 		}
-
+		#end
+		
 		_mouseOverSprites = currentOverSprites;
 	}
 
@@ -472,4 +473,3 @@ typedef SpriteReg = {
 	var onMouseOver:FlxSprite->Void;
 	var onMouseOut:FlxSprite->Void;
 }
-#end

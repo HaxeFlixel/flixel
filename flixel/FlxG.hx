@@ -28,13 +28,13 @@ import flixel.system.FlxDebugger;
 import flixel.plugin.DebugPathDisplay;
 #end
 #if !FLX_NO_TOUCH
-import flixel.system.input.FlxTouchManager;
+import flixel.system.input.touch.FlxTouchManager;
 #end
 #if !FLX_NO_KEYBOARD
 import flixel.system.input.keyboard.FlxKeyboard;
 #end
 #if !FLX_NO_MOUSE
-import flixel.system.input.FlxMouse;
+import flixel.system.input.mouse.FlxMouse;
 #end
 #if !FLX_NO_GAMEPAD
 import flixel.system.input.gamepad.FlxGamepadManager;

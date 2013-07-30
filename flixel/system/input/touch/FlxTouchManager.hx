@@ -1,4 +1,4 @@
-package flixel.system.input;
+package flixel.system.input.touch;
 
 import flash.ui.MultitouchInputMode;
 import flash.ui.Multitouch;

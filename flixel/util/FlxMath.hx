@@ -1,7 +1,7 @@
 package flixel.util;
 
 import flash.geom.Rectangle;
-import flixel.system.input.FlxTouch;
+import flixel.system.input.touch.FlxTouch;
 
 /**
  * A class containing a set of math-related functions.

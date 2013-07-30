@@ -1,6 +1,6 @@
 package flixel.util;
 
-import flixel.system.input.FlxTouch;
+import flixel.system.input.touch.FlxTouch;
 
 class FlxVelocity 
 {	

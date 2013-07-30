@@ -1,4 +1,4 @@
-package flixel.system.input;
+package flixel.system.input.mouse;
 
 import flash.Lib;
 import flash.display.Bitmap;
