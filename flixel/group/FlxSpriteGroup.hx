@@ -201,4 +201,23 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	{
 		Sprite.alpha = NewAlpha;
 	}
+	
+	/**
+	 * Adds a new <code>FlxBasic</code> subclass (FlxBasic, FlxSprite, Enemy, etc) to the group.
+	 * FlxGroup will try to replace a null member of the array first.
+	 * Object is translated to coordinates relative to group.
+	 * Failing that, FlxGroup will add it to the end of the member array,
+	 * assuming there is room for it, and doubling the size of the array if necessary.
+	 * WARNING: If the group has a maxSize that has already been met,
+	 * the object will NOT be added to the group!
+	 * 
+	 * @param	Object		The object you want to add to the group.
+	 * @return	The same <code>FlxBasic</code> object that was passed in.
+	 */
+	override public function add(Object:FlxSprite):FlxSprite
+	{
+		xTransform(Object, this.x);
+		yTransform(Object, this.y);
+		return super.add(Object);
+	}
 }
