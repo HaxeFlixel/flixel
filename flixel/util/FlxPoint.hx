@@ -57,8 +57,12 @@ class FlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	inline public function copyTo(point:FlxPoint):FlxPoint
+	inline public function copyTo(point:FlxPoint = null):FlxPoint
 	{
+		if (point == null)
+		{
+			point = new FlxPoint();
+		}
 		point.x = x;
 		point.y = y;
 		return point;
