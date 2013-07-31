@@ -217,7 +217,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, c))
 		{
 			FlxG.debugger.visible = !FlxG.debugger.visible;
-			return;
 		}
 		#end
 		
@@ -242,8 +241,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			#if !FLX_NO_SOUND_TRAY
 			FlxG.game.soundTray.show();
 			#end
-			
-			return;
 		}
 		// Volume down
 		else if (inKeyArray(FlxG.sound.volumeDownKeys, c))
@@ -254,8 +251,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			#if !FLX_NO_SOUND_TRAY
 			FlxG.game.soundTray.show();
 			#end
-			
-			return;
 		}
 		// Volume up
 		else if (inKeyArray(FlxG.sound.volumeUpKeys, c)) 
@@ -266,8 +261,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			#if !FLX_NO_SOUND_TRAY
 			FlxG.game.soundTray.show();
 			#end
-			
-			return;
 		}
 		
 		updateKeyStates(c, false);
@@ -303,7 +296,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 					break;
 				}
 			}
-			return;
 		}
 		#end
 		
