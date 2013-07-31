@@ -218,6 +218,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	{
 		xTransform(Object, this.x);
 		yTransform(Object, this.y);
+		alphaTransform(Object, this.alpha);
 		return super.add(Object);
 	}
 }
