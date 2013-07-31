@@ -58,6 +58,8 @@ class Log extends Window
 		STYLE_ERROR = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, FlxAssets.SND_BEEP, true);
 		STYLE_NOTICE = new LogStyle("[NOTICE] ", "008000", 12, true);
 		STYLE_CONSOLE = new LogStyle("&#62; ", "0000ff", 12, true);
+		
+		FlxG.log.redirectTraces = true;
 	}
 	
 	/**
