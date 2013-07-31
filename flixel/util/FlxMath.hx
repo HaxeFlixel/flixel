@@ -401,7 +401,7 @@ class FlxMath
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}
 	
-	#if (flash || js)
+	#if (flash || js || ios)
 	/**
 	 * Minimum value of a floating point number.
 	 */
