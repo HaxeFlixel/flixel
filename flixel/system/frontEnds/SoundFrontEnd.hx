@@ -29,32 +29,32 @@ class SoundFrontEnd
 	
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * The key codes used to increase volume. (via <code>flash.ui.Keyboard</code>)
+	 * The key codes used to increase volume (see <code>FlxG.keys</code> for the keys available).
 	 * Default keys: + (and numpad +). Set to <code>null</code> to deactivate.
-	 * @default [107, 187]
+	 * @default ["PLUS", "NUMPADPLUS"]
 	 */
-	public var volumeUpKeys:Array<Int>;
+	public var volumeUpKeys:Array<String>;
 	/**
-	 * The key codes used to decrease volume. (via <code>flash.ui.Keyboard</code>)
+	 * The keys to decrease volume (see <code>FlxG.keys</code> for the keys available).
 	 * Default keys: - (and numpad -). Set to <code>null</code> to deactivate.
-	 * @default [109, 189]
+	 * @default ["MINUS", "NUMPASMINUS"]
 	 */
-	public var volumeDownKeys:Array<Int>;
+	public var volumeDownKeys:Array<String>;
 	/**
-	 * The key codes used to mute / unmute the game. (via <code>flash.ui.Keyboard</code>)
+	 * The keys used to mute / unmute the game (see <code>FlxG.keys</code> for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to <code>null</code> to deactivate.
-	 * @default [48, 96]
+	 * @default ["ZERO", "NUMPADZERO"]
 	*/
-	public var muteKeys:Array<Int>; 
+	public var muteKeys:Array<String>; 
 	#end
 	
 	public function new() 
 	{
 		#if !FLX_NO_KEYBOARD
 		// Assign default values to the keys used by core flixel
-		volumeUpKeys = [107, 187];
-		volumeDownKeys = [109, 189];
-		muteKeys = [48, 96]; 
+		volumeUpKeys = ["PLUS", "NUMPADPLUS"];
+		volumeDownKeys = ["MINUS", "NUMPASMINUS"];
+		muteKeys = ["ZERO", "NUMPADZERO"]; 
 		#end
 		
 		list = new FlxTypedGroup<FlxSound>();
