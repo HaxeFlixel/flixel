@@ -19,5 +19,7 @@
 	<haxelib name="flixel-addons"/>
 	<haxelib name="openfl"/>
 	<haxelib name="openfl-compatibility"/>
+	<haxelib name="firetongue"/>
+	<haxelib name="task"/>
 	<!--<haxelib name="flixel"/>-->
 </project>

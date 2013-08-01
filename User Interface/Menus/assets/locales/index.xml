@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<!--Add list of files you're including in your localization here
+	    The engine will NOT load any files that are not listed.	
+	-->
+	
+	<file id="ui" value="ui.csv"/>
+	<file id="fonts" value="fonts.xml"/>
+	
+	
+	<!--Add locale entries here. 
+	
+	The locale id is the ISO 639-1 country language code with 2-letter country suffix:
+	http://en.wikipedia.org/wiki/ISO_639-1
+	
+	1) Add the locale entry
+	2) Add a corresponding folder with localization content matching the id
+	3) Add a corresponding flag image in the _flags folder matching the id
+	4) Add any labels you want to display the language text in the menu
+	
+	-->
+	
+	<!--American English-->
+	<locale id="en-US" is_default="true" sort="0">	
+		<contributors value="Lars Doucet, Level Up Labs"/>
+		<ui language="Language" region="Region" accept="Okay" />
+		<label id="en-US,en-GB,en-CA" language="English" region="United States"/>	
+        <label id="nb-NO" language="Engelsk" region="U.S.A."/>
+    </locale>    
+	
+	<!--Norwegian Bokmål-->
+    <locale id="nb-NO" sort="6">
+        <ui language="Språk" region="Område"/>                
+        <label id="en-US,en-GB,en-CA" language="Norwegian Bokmål" region="Norway"/>
+        <label id="nb-NO" language="Norsk Bokmål" region="Norge"/>
+    </locale>
+	
+	<!---
+	Any text blurbs that the translation interface itself needs are stored here rather than
+	in text files, to avoid the boot-strapping problem of having to load a locale in order
+	to display locale interface text in that locale.
+	
+	The note will always display in the currently selected locale as a tooltip over various
+	translations.
+	-->
+	
+	<note id="beta">
+		<!--This means that the translation has not been properly integrated yet-->
+		<text id="en-US,en-GB,en-CA" title="BETA" body="This translation is still in beta. Untranslated text, missing characters, and other visual glitches are very likely not the fault of the translator."/>
+		<text id="nb-NO" title="BETA" body="Denne oversettelsen er fortsatt i beta. Uoversatt tekst, manglende bokstaver, og andre visuelle problemer er svært sannsynlig ikke feil av oversetteren."/>
+	</note>
+	
+	<note id="volunteer">
+		<!--This means that a fan or other volunteer submitted this to us-->
+		<text id="en-US,en-GB,en-CA" title="VOLUNTEER" body="This is a volunteer fan translation.$N$NContributors:"/>
+		<text id="nb-NO" title="FRIVILLIG" body="Dette er en frivillig oversettelse.$N$NBidragsytere:"/>
+	</note>
+	
+	<note id="official">
+		<!--This means that we solicited and paid the translator for an official translation-->
+		<text id="en-US,en-GB,en-CA" title="OFFICIAL" body="This is an official (paid) translation.$N$NContributors:"/>
+		<text id="nb-US" title="OFFISIELL" body="Dette er en offisiell (betalt) oversettelse.$N$NBidragsytere:"/>
+	</note>
+	
+</data>

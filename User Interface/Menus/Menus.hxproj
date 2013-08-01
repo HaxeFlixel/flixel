@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="Project.nmml" />
+    <movie path="project.xml" />
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
@@ -16,9 +16,6 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="C:\HaxeToolkit\haxe\lib/flixel/git/" />
-    <class path="C:\HaxeToolkit\haxe\lib/openfl/1,0,5/" />
-    <class path="C:\HaxeToolkit\haxe\lib/openfl-compatibility/1,0,1/" />
     <class path="export/flash/haxe" />
   </classpaths>
   <!-- Build options -->
@@ -37,6 +34,8 @@
     <library name="openfl" />
     <library name="openfl-compatibility" />
     <library name="openfl" />
+    <library name="firetongue" />
+    <library name="task" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

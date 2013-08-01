@@ -2,9 +2,12 @@ import flash.Lib;
 import flixel.FlxG;
 import flixel.FlxGame;
 import State_Title;
+import firetongue.FireTongue;
 	
 class Main extends FlxGame
 {	
+	public static var tongue:FireTongueEx;
+	
 	public function new()
 	{
 		var stageWidth:Int = Lib.current.stage.stageWidth;

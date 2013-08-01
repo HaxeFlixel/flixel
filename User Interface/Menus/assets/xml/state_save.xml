@@ -74,31 +74,31 @@
 		<text id="time" use_def="sans14" x="60" y="61" width="400" text="10 Hours, 15 Min" group="top"/>
 		<text id="date" use_def="sans14" x="60" y="78" width="300" text="January 1, 1975" group="top"/>
 				
-		<button id="play_big" use_def="big_button_blue" x="594" y="11" group="top" label="Play">
+		<button id="play_big" use_def="big_button_blue" x="594" y="11" group="top" label="$SAVE_PLAY">
 			<param type="string" value="play"/>
 		</button>
 		
-		<button id="new_game" use_def="big_button_gold" x="594" y="11" group="top" label="New Game" visible="false">
+		<button id="new_game" use_def="big_button_gold" x="594" y="11" group="top" label="$SAVE_NEW_GAME" visible="false">
 			<param type="string" value="new"/>
 		</button>
 		
-		<button id="play_small" use_def="skinny_button_blue" x="594" y="12" group="top" label="Play" visible="false">
+		<button id="play_small" use_def="skinny_button_blue" x="594" y="12" group="top" label="$SAVE_PLAY" visible="false">
 			<param type="string" value="play"/>
 		</button>
 		
-		<button id="play+" use_def="skinny_button_blue" x="594" y="35" group="top" label="Play+" visible="false">
+		<button id="play+" use_def="skinny_button_blue" x="594" y="35" group="top" label="$SAVE_PLAY+" visible="false">
 			<param type="string" value="play+"/>
 		</button>
 
-		<button id="import" use_def="skinny_button_gold" x="594" y="58" group="top" label="Import" visible="false">
+		<button id="import" use_def="skinny_button_gold" x="594" y="58" group="top" label="$SAVE_IMPORT" visible="false">
 			<param type="string" value="import"/>
 		</button>
 
-		<button id="export" use_def="skinny_button_gold" x="594" y="58" group="top" label="Export">
+		<button id="export" use_def="skinny_button_gold" x="594" y="58" group="top" label="$SAVE_EXPORT">
 			<param type="string" value="export"/>
 		</button>
 
-		<button id="delete" use_def="skinny_button_red" x="594" y="81" group="top" label="Delete">
+		<button id="delete" use_def="skinny_button_red" x="594" y="81" group="top" label="$SAVE_DELETE">
 			<param type="string" value="delete"/>
 		</button>
 		
@@ -179,31 +179,31 @@
 		<text id="time" use_def="sans14" x="60" y="61" width="400" text="10 Hours, 15 Min" group="top"/>
 		<text id="date" use_def="sans14" x="60" y="78" width="300" text="January 1, 1975" group="top"/>
 				
-		<button id="play_big" use_def="big_button_blue" x="594" y="11" group="top" label="Play">
+		<button id="play_big" use_def="big_button_blue" x="594" y="11" group="top" label="$SAVE_PLAY">
 			<param type="string" value="play"/>
 		</button>
 		
-		<button id="new_game" use_def="big_button_gold" x="594" y="11" group="top" label="New Game" visible="false">
+		<button id="new_game" use_def="big_button_gold" x="594" y="11" group="top" label="$SAVE_NEW_GAME" visible="false">
 			<param type="string" value="new"/>
 		</button>
 		
-		<button id="play_small" use_def="skinny_button_blue" x="594" y="12" group="top" label="Play" visible="false">
+		<button id="play_small" use_def="skinny_button_blue" x="594" y="12" group="top" label="$SAVE_PLAY" visible="false">
 			<param type="string" value="play"/>
 		</button>
 		
-		<button id="play+" use_def="skinny_button_blue" x="594" y="35" group="top" label="Play+" visible="false">
+		<button id="play+" use_def="skinny_button_blue" x="594" y="35" group="top" label="$SAVE_PLAY+" visible="false">
 			<param type="string" value="play+"/>
 		</button>
 
-		<button id="import" use_def="skinny_button_gold" x="594" y="58" group="top" label="Import" visible="false">
+		<button id="import" use_def="skinny_button_gold" x="594" y="58" group="top" label="$SAVE_IMPORT" visible="false">
 			<param type="string" value="import"/>
 		</button>
 
-		<button id="export" use_def="skinny_button_gold" x="594" y="58" group="top" label="Export">
+		<button id="export" use_def="skinny_button_gold" x="594" y="58" group="top" label="$SAVE_EXPORT">
 			<param type="string" value="export"/>
 		</button>
 
-		<button id="delete" use_def="skinny_button_red" x="594" y="81" group="top" label="Delete">
+		<button id="delete" use_def="skinny_button_red" x="594" y="81" group="top" label="$SAVE_DELETE">
 			<param type="string" value="delete"/>
 		</button>
 		
@@ -220,7 +220,7 @@
 	<save_slot id="1" x="60" y="165" use_def="save_slot"/>
 	<save_slot id="2" x="60" y="285" use_def="save_slot_texture"/>
 		
-	<button center_x="true" y="535" width="64" height="32" label="Back" text_x="-3" text_y="-1">
+	<button center_x="true" y="535" width="64" height="32" label="$MISC_BACK" text_x="-3" text_y="-1">
 		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
 		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
 		<param type="string" value="back"/>

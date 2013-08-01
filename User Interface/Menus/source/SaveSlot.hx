@@ -56,8 +56,14 @@ class SaveSlot extends FlxUI
 	public var valid : Bool;
 	
 	
-	public function new(data:Fast, definition:Fast = null, _ptr:Dynamic=null) {
+	public function new(data:Fast, definition:Fast = null, _ptr:Dynamic = null) {
 		super(null, _ptr);		
+		if (_ptr != null) {
+			if (Std.is(_ptr, FlxUI)) {
+				var ui:FlxUI = cast _ptr;
+				_ptr_tongue = ui.tongue;
+			}
+		}
 		loadStuff(data, definition, _ptr);
 		valid = true;
 		FlxG.log.add("SaveSlot(" + str_id + "" + _ptr + ")");

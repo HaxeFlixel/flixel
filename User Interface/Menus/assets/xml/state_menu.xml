@@ -23,17 +23,17 @@
 	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
 	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
 		
-	<definition id="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small">
+	<definition id="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small" text_y="1">
 		<text id="hilight" use_def="sans12y" />
 		<text id="normal" use_def="sans12" />				
 	</definition>
 	
-	<definition id="check_big" box_src="ui/misc/check_box_big" check_src="ui/misc/check_big">
+	<definition id="check_big" box_src="ui/misc/check_box_big" check_src="ui/misc/check_big" text_y="-1">
 		<text id="hilight" use_def="sans16y"/>
 		<text id="normal" use_def="sans16"/>				
 	</definition>
 	
-	<definition id="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot">
+	<definition id="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot" text_y="-1">
 		<text id="hilight" use_def="tempesta8y"/>
 		<text id="normal" use_def="tempesta8"/>
 	</definition>
@@ -100,17 +100,17 @@
 	
 	<sprite x="0" y="0" src="ui/title_back"/>
 
-	<button center_x="true" x="0" y="535" id="start" use_def="text_button" group="top" label="Back">
+	<button center_x="true" x="0" y="535" id="start" use_def="text_button" group="top" label="$MISC_BACK">
 		<param type="string" value="back"/>
 	</button>
 	
 	<chrome x="50" y="150" width="700" height="300" use_def="grey"/>
 
-	<checkbox x="60" y="170" use_def="check_small" label="Thing 1">
+	<checkbox x="60" y="170" use_def="check_small" label="$MENU_THING_1">
 		<param type="string" value="thing 1"/>
 	</checkbox>
 	
-	<checkbox x="60" y="200" use_def="check_big" label="Thing 2">
+	<checkbox x="60" y="200" use_def="check_big" label="$MENU_THING_2">
 		<param type="string" value="thing 2"/>
 	</checkbox>
 	
@@ -119,38 +119,38 @@
 		<param type="string" value="dr_seuss"/>		
 		
 		<!--actual radio button elements-->
-		<radio id="1_fish" label="One Fish"/>
-		<radio id="2_fish" label="Two Fish"/>
-		<radio id="0xff0000_fish" label="Red Fish"/>
-		<radio id="0x0000ff_fish" label="Blue Fish"/>
+		<radio id="1_fish" label="$MENU_1_FISH"/>
+		<radio id="2_fish" label="$MENU_2_FISH"/>
+		<radio id="0xff0000_fish" label="$MENU_RED_FISH"/>
+		<radio id="0x0000ff_fish" label="$MENU_BLUE_FISH"/>
 	</radio_group>
 	
-	<button_toggle x="300" y="170" use_def="button_toggle" label="Toggle"/>
-	<button_toggle x="300" y="200" use_def="button_toggle" label="Toggle"/>
-	<button_toggle x="300" y="230" use_def="button_toggle" label="Toggle"/>
-	<button_toggle x="300" y="260" use_def="button_toggle" label="Toggle"/>
+	<button_toggle x="300" y="170" use_def="button_toggle" label="$MENU_TOGGLE"/>
+	<button_toggle x="300" y="200" use_def="button_toggle" label="$MENU_TOGGLE"/>
+	<button_toggle x="300" y="230" use_def="button_toggle" label="$MENU_TOGGLE"/>
+	<button_toggle x="300" y="260" use_def="button_toggle" label="$MENU_TOGGLE"/>
 	
 	<tab_menu x="500" y="182" use_def="tab_menu_1" width="200" height="200">
-		<tab id="tab_1" label="Tab 1"/>
-		<tab id="tab_2" label="Tab 2"/>
-		<tab id="tab_3" label="Tab 3"/>
-		<tab id="tab_4" label="Tab 4"/>
+		<tab id="tab_1" label="$MENU_TAB_1"/>
+		<tab id="tab_2" label="$MENU_TAB_2"/>
+		<tab id="tab_3" label="$MENU_TAB_3"/>
+		<tab id="tab_4" label="$MENU_TAB_4"/>
 		<group id="tab_1">
 			<radio_group x="10" y="10" use_def="radio_1">
 				<param type="string" value="dr_seuss2"/>		
 		
-				<radio id="1_fish" label="One Fish"/>
-				<radio id="2_fish" label="Two Fish"/>
-				<radio id="0xff0000_fish" label="Red Fish"/>
-				<radio id="0x0000ff_fish" label="Blue Fish"/>
+				<radio id="1_fish" label="$MENU_1_FISH"/>
+				<radio id="2_fish" label="$MENU_2_FISH"/>
+				<radio id="0xff0000_fish" label="$MENU_RED_FISH"/>
+				<radio id="0x0000ff_fish" label="$MENU_BLUE_FISH"/>
 			</radio_group>
 		</group>
 		<group id="tab_2">
-			<checkbox x="10" y="10" use_def="check_small" label="Thing 1">
+			<checkbox x="10" y="10" use_def="check_small" label="$MENU_THING_1">
 				<param type="string" value="thing 1"/>
 			</checkbox>
 	
-			<checkbox x="10" y="40" use_def="check_big" label="Thing 2">
+			<checkbox x="10" y="40" use_def="check_big" label="$MENU_THING_2">
 				<param type="string" value="thing 2"/>
 			</checkbox>
 		</group>
