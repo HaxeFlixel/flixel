@@ -41,7 +41,7 @@ class FlxVector extends FlxPoint
 	 */
 	public function scaleNew(k:Float):FlxVector
 	{
-		return setTo().scale(k);
+		return clone().scale(k);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ class FlxVector extends FlxPoint
 	 */
 	public function addNew(v:FlxVector):FlxVector
 	{
-		return setTo().add(v);
+		return clone().add(v);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ class FlxVector extends FlxPoint
 	 */
 	public function substractNew(v:FlxVector):FlxVector
 	{
-		return setTo().substract(v);
+		return clone().substract(v);
 	}
 	
 	/**
@@ -105,7 +105,7 @@ class FlxVector extends FlxPoint
 	 */
 	public function dotProdWithNormalizing(v:FlxVector):Float
 	{
-		var normalized:FlxVector = v.setTo(_vector1).normalize();
+		var normalized:FlxVector = v.clone(_vector1).normalize();
 		return dotProduct(normalized);
 	}
 	
@@ -395,7 +395,7 @@ class FlxVector extends FlxPoint
 	
 	public function negateNew():FlxVector
 	{
-		return this.setTo().negate();
+		return this.clone().negate();
 	}
 	
 	/**
@@ -456,7 +456,7 @@ class FlxVector extends FlxPoint
 		if (this.isParallel(v)) return Math.NaN;
 		if (this.lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
 		
-		_vector1 = b.setTo(_vector1);
+		_vector1 = b.clone(_vector1);
 		_vector1.substract(a);
 		
 		return _vector1.perpProduct(v) / this.perpProduct(v);
@@ -527,8 +527,8 @@ class FlxVector extends FlxPoint
 	 */
 	public function radiansBetween(v:FlxVector):Float
 	{
-		_vector1 = this.setTo(_vector1);
-		_vector2 = this.setTo(_vector2);
+		_vector1 = this.clone(_vector1);
+		_vector2 = this.clone(_vector2);
 		
 		if (!this.isNormalized())
 		{
@@ -627,7 +627,12 @@ class FlxVector extends FlxPoint
 		return !Math.isNaN(x) && !Math.isNaN(y) && Math.isFinite(x) && Math.isFinite(y); 
 	}
 	
-	public function setTo(vec:FlxVector = null):FlxVector
+	/**
+	 * Copies this vector
+	 * @param	vec		optional vector to copy this vector to
+	 * @return	copy	of this vector
+	 */
+	public function clone(vec:FlxVector = null):FlxVector
 	{
 		if (vec == null)
 		{
@@ -640,6 +645,12 @@ class FlxVector extends FlxPoint
 		return vec;
 	}
 	
+	/**
+	 * Set both components of this vector 
+	 * @param	X	new x value
+	 * @param	Y	new y value
+	 * @return	this vector
+	 */
 	public function reset(X:Float = 0, Y:Float = 0):FlxVector
 	{
 		x = X;
