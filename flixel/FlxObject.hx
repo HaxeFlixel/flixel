@@ -17,8 +17,7 @@ import flixel.util.loaders.CachedGraphics;
 
 /**
  * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
- * It includes some basic attributes about game objects, including retro-style flickering,
- * basic state information, sizes, scrolling, and basic physics and motion.
+ * It includes some basic attributes about game objects, basic state information, sizes, scrolling, and basic physics and motion.
  */
 
 class FlxObject extends FlxBasic
@@ -150,14 +149,6 @@ class FlxObject extends FlxBasic
 	 * scrollFactor is initialized as (1,1) by default.
 	 */
 	public var scrollFactor:FlxPoint;
-	/**
-	 * Internal helper used for retro-style flickering.
-	 */
-	private var _flicker:Bool;
-	/**
-	 * Internal helper used for retro-style flickering.
-	 */
-	private var _flickerTimer:Float;
 	/**
 	 * Handy for storing health percentage or armor points or whatever.
 	 */
@@ -296,8 +287,6 @@ class FlxObject extends FlxBasic
 		maxAngular = 10000;
 		
 		scrollFactor = new FlxPoint(1.0, 1.0);
-		_flicker = false;
-		_flickerTimer = 0;
 		
 		_point = new FlxPoint();
 		
@@ -342,16 +331,6 @@ class FlxObject extends FlxBasic
 		#if !FLX_NO_DEBUG
 		FlxBasic._ACTIVECOUNT++;
 		#end
-		
-		if (_flickerTimer > 0)
-		{
-			_flickerTimer -= FlxG.elapsed;
-			if(_flickerTimer <= 0)
-			{
-				_flickerTimer = 0;
-				_flicker = false;
-			}
-		}
 		
 		last.x = x;
 		last.y = y;
@@ -934,31 +913,6 @@ class FlxObject extends FlxBasic
 		point.x = x - (Camera.scroll.x * scrollFactor.x);
 		point.y = y - (Camera.scroll.y * scrollFactor.y);
 		return point;
-	}
-	
-	/**
-	 * Tells this object to flicker, retro-style.
-	 * Pass a negative value to flicker forever.
-	 * @param	Duration	How many seconds to flicker for.
-	 */
-	public function flicker(Duration:Float = 1):Void
-	{
-		_flickerTimer = Duration;
-		if (_flickerTimer == 0)
-		{
-			_flicker = false;
-		}
-	}
-	
-	/**
-	 * Check to see if the object is still flickering.
-	 * @return	Whether the object is flickering or not.
-	 */
-	public var flickering(get_flickering, null):Bool;
-	
-	private function get_flickering():Bool
-	{
-		return _flickerTimer != 0;
 	}
 	
 	public var solid(get_solid, set_solid):Bool;

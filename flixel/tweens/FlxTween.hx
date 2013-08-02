@@ -41,7 +41,7 @@ class FlxTween
 	/**
 	 * Useful to store values you want to access within your callback function.
 	 */
-	public var userData:Dynamic<Dynamic>;
+	public var userData:Dynamic = null;
 
 	/**
 	 * Constructor. Specify basic information about the Tween.

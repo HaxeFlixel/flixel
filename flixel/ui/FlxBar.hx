@@ -1009,15 +1009,6 @@ class FlxBar extends FlxSprite
 			return;
 		}
 		
-		if (_flickerTimer != 0)
-		{
-			_flicker = !_flicker;
-			if (_flicker)
-			{
-				return;
-			}
-		}
-		
 		if (cameras == null)
 		{
 			cameras = FlxG.cameras.list;

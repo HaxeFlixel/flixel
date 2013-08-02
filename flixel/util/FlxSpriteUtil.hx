@@ -9,6 +9,8 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
+import flixel.tweens.FlxTween;
+import flixel.tweens.misc.MultiVarTween;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
 // TODO: flip(): Flip image data horizontally / vertically without changing the angle (mirror / reverse)
@@ -359,5 +361,37 @@ class FlxSpriteUtil
 		}
 		
 		sprite.resetFrameBitmapDatas();
+	}
+	
+	/**
+	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
+	 * 
+	 * @param	sprite		The sprite.
+	 * @param	Duration	How long to flicker for.
+	 * @param	Intervall	In what intervall to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
+	 */
+	inline static public function flicker(sprite:FlxSprite, Duration:Float = 1, Intervall:Float = 0.02):Void
+	{
+		if (Intervall <= 0) 
+		{
+			Intervall = FlxG.elapsed;
+		}
+		
+		var t:MultiVarTween = FlxG.tween(sprite, { visible : false }, Intervall, { type:FlxTween.PINGPONG,  complete:flickerComplete } );
+		t.userData = { sprite:sprite, loops:(Duration / Intervall) };
+	}
+	
+	/**
+	 * Just a helper function for flicker() to stop the tween afterwards.
+	 */
+	inline static private function flickerComplete(Tween:FlxTween):Void
+	{
+		if (Tween.executions >= Tween.userData.loops)
+		{
+			// Making sure the sprite is visible at the end
+			cast(Tween.userData.sprite, FlxSprite).visible = true;
+			Tween.cancel();
+			Tween.destroy();
+		}
 	}
 }
