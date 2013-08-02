@@ -1,7 +1,7 @@
 package flixel.util;
-
+#if !FLX_NO_TOUCH
 import flixel.system.input.touch.FlxTouch;
-
+#end
 class FlxVelocity 
 {	
 	/**
