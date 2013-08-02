@@ -657,12 +657,60 @@ class FlxColorUtil
 		
 		return getColor24(r, g, b);
 	}
+	
+	/**
+	 * Darken an RGBA color.
+	 * 
+	 * @param	Color	In the format 0xAARRGGBB
+	 * @param	Factor	The higher, the darker! Number from 0 to 1.0.
+	 * @return 	The darkened color
+	 */
+	inline static public function darken(Color:Int, Factor:Float = 0.2):Int
+	{
+		FlxMath.bound(Factor, 0, 1);
+		
+		var r:Int = getRed(Color);
+		var g:Int = getGreen(Color);
+		var b:Int = getBlue(Color);
+		var a:Float = getAlphaFloat(Color);
+		
+		Factor = (1 - Factor);
+		
+		r = Std.int(r * Factor);
+		g = Std.int(g * Factor);
+		b = Std.int(b * Factor);
+		
+		return makeFromRGBA(r, g, b, a);
+	}
+	
+	/**
+	 * Lighten an RGBA color.
+	 * 
+	 * @param	Color	In the format 0xAARRGGBB
+	 * @param	Factor	The higher, the lighter! Number from 0 to 1.0.
+	 * @return 	The lightened color
+	 */
+	inline static public function brighten(Color:Int, Factor:Float = 0.2):Int
+	{
+		FlxMath.bound(Factor, 0, 1);
+		
+		var r:Int = getRed(Color);
+		var g:Int = getGreen(Color);
+		var b:Int = getBlue(Color);
+		var a:Float = getAlphaFloat(Color);
+		
+		r += Std.int((255 - r) * Factor);
+		g += Std.int((255 - g) * Factor);
+		b += Std.int((255 - b) * Factor);
+		
+		return makeFromRGBA(r, g, b, a);
+	}
 }
 
 typedef RGBA = {
-    var red:Int;
-    var green:Int;
-    var blue:Int;
+	var red:Int;
+	var green:Int;
+	var blue:Int;
 	var alpha:Float;
 }
 
@@ -674,23 +722,23 @@ typedef HSBA = {
 }
 
 typedef HSV = {
-    var hue:Float;
-    var saturation:Float;
-    var lightness:Float;
-    var value:Float;
+	var hue:Float;
+	var saturation:Float;
+	var lightness:Float;
+	var value:Float;
 }
 
 typedef Harmony = {
 	var color1:Int;
-    var color2:Int;
-    var color3:Int;
+	var color2:Int;
+	var color3:Int;
 	var hue1:Int;
-    var hue2:Int;
-    var hue3:Int;
+	var hue2:Int;
+	var hue3:Int;
 }
 
 typedef TriadicHarmony = {
 	var color1:Int;
-    var color2:Int;
-    var color3:Int;
+	var color2:Int;
+	var color3:Int;
 }
