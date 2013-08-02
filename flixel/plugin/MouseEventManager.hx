@@ -6,7 +6,6 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.system.input.touch.FlxTouch;
 import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
 
