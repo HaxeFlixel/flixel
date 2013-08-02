@@ -12,6 +12,7 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
+import flixel.util.helpers.FlickerData;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
 // TODO: flip(): Flip image data horizontally / vertically without changing the angle (mirror / reverse)
@@ -378,21 +379,22 @@ class FlxSpriteUtil
 			Interval = FlxG.elapsed;
 		}
 		
-		var t:MultiVarTween = FlxG.tween(object, { visible : false }, Interval, { type:FlxTween.PINGPONG,  complete:flickerComplete } );
-		t.userData = { object:object, loops:(Duration / Interval) };
+		var t:FlxTimer = FlxTimer.start(Interval, flickerProgress, Std.int(Duration / Interval));
+		t.userData = FlickerData.recycle(object);
 	}
 	
 	/**
-	 * Just a helper function for flicker() to stop the tween afterwards.
+	 * Just a helper function for flicker() to update object's visibility.
 	 */
-	inline static private function flickerComplete(Tween:FlxTween):Void
+	inline static private function flickerProgress(Timer:FlxTimer):Void
 	{
-		if (Tween.executions >= Tween.userData.loops)
+		var object:FlxObject = Timer.userData.object;
+		object.visible = !object.visible;
+		
+		if (Timer.loops > 0 && Timer.loopsLeft == 0)
 		{
-			// Making sure the sprite is visible at the end
-			cast(Tween.userData.object, FlxObject).visible = true;
-			Tween.cancel();
-			Tween.destroy();
+			object.visible = Timer.userData.startVisibility;
+			FlickerData.put(Timer.userData);
 		}
 	}
 }
