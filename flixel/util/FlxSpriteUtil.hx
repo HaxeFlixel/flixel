@@ -7,6 +7,7 @@ import flash.display.Sprite;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.tweens.FlxTween;
@@ -366,19 +367,19 @@ class FlxSpriteUtil
 	/**
 	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
 	 * 
-	 * @param	sprite		The sprite.
+	 * @param	object		The sprite.
 	 * @param	Duration	How long to flicker for.
-	 * @param	Intervall	In what intervall to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
+	 * @param	Interval	In what intervall to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
 	 */
-	inline static public function flicker(sprite:FlxSprite, Duration:Float = 1, Intervall:Float = 0.02):Void
+	inline static public function flicker(object:FlxObject, Duration:Float = 1, Interval:Float = 0.02):Void
 	{
-		if (Intervall <= 0) 
+		if (Interval <= 0) 
 		{
-			Intervall = FlxG.elapsed;
+			Interval = FlxG.elapsed;
 		}
 		
-		var t:MultiVarTween = FlxG.tween(sprite, { visible : false }, Intervall, { type:FlxTween.PINGPONG,  complete:flickerComplete } );
-		t.userData = { sprite:sprite, loops:(Duration / Intervall) };
+		var t:MultiVarTween = FlxG.tween(object, { visible : false }, Interval, { type:FlxTween.PINGPONG,  complete:flickerComplete } );
+		t.userData = { object:object, loops:(Duration / Interval) };
 	}
 	
 	/**
@@ -389,7 +390,7 @@ class FlxSpriteUtil
 		if (Tween.executions >= Tween.userData.loops)
 		{
 			// Making sure the sprite is visible at the end
-			cast(Tween.userData.sprite, FlxSprite).visible = true;
+			cast(Tween.userData.object, FlxObject).visible = true;
 			Tween.cancel();
 			Tween.destroy();
 		}
