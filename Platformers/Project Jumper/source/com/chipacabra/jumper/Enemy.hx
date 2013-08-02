@@ -1,5 +1,6 @@
 package com.chipacabra.jumper;
 
+import flixel.util.FlxSpriteUtil;
 import openfl.Assets;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
@@ -128,7 +129,7 @@ class Enemy extends EnemyTemplate
 			velocity.x = -drag.x * 4;
 		}
 		
-		flicker(0.5);
+		FlxSpriteUtil.flicker(this, 0.5);
 		FlxG.sound.play(Assets.getSound("assets/sounds/monhurt2" + Reg.SoundExtension), 1, false);
 		
 		super.hurt(Damage);

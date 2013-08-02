@@ -4,6 +4,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
+import flixel.util.FlxSpriteUtil;
 
 class Spawner extends FlxSprite
 {
@@ -80,7 +81,7 @@ class Spawner extends FlxSprite
 	override public function hurt(Damage:Float):Void
 	{
 		FlxG.sound.play("Hit");
-		flicker(0.2);
+		FlxSpriteUtil.flicker(this, 0.2);
 		Reg.score += 50;
 		
 		super.hurt(Damage);
@@ -101,7 +102,6 @@ class Spawner extends FlxSprite
 		active = false;
 		exists = true;
 		solid = false;
-		flicker(0);
 		play("dead");
 		FlxG.camera.shake(0.007, 0.25);
 		FlxG.camera.flash(0xffd8eba2, 0.65, turnOffSlowMo);

@@ -1,6 +1,7 @@
 package com.chipacabra.jumper;
 
 import com.chipacabra.jumper.Player;
+import flixel.util.FlxSpriteUtil;
 import openfl.Assets;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
@@ -156,7 +157,7 @@ class Lurker extends EnemyTemplate
 			velocity.x = -drag.x * 4;
 		}
 		
-		flicker(.5);
+		FlxSpriteUtil.flicker(this, 0.5);
 		FlxG.sound.play(Assets.getSound("assets/sounds/monhurt2" + Reg.SoundExtension), 1, false);
 		health -= 1;
 	}

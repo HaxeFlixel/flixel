@@ -6,10 +6,13 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.ui.FlxButton;
+import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxTimer;
 
 class Player extends FlxSprite
 {
 	public var isReadyToJump:Bool = true;
+	public var flickering:Bool = false;
 
 	private var _jumpPower:Int = 200;
 	private var _aim:Int;
@@ -207,6 +210,13 @@ class Player extends FlxSprite
 		super.hurt(Damage);
 	}
 	
+	private function flicker(Duration:Float):Void
+	{
+		FlxSpriteUtil.flicker(this, Duration);
+		FlxTimer.start(Duration, function f(T:FlxTimer) { flickering = false; } );
+		flickering = true;
+	}
+	
 	override public function kill():Void
 	{
 		if (!alive)
@@ -220,7 +230,6 @@ class Player extends FlxSprite
 		
 		super.kill();
 		
-		flicker(0);
 		exists = true;
 		visible = false;
 		velocity.set();

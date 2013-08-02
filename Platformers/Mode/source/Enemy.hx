@@ -7,6 +7,7 @@ import flixel.group.FlxTypedGroup;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxSpriteUtil;
 
 class Enemy extends FlxSprite
 {
@@ -245,7 +246,7 @@ class Enemy extends FlxSprite
 	override public function hurt(Damage:Float):Void
 	{
 		FlxG.sound.play("Hit");
-		flicker(0.2);
+		FlxSpriteUtil.flicker(this, 0.2);
 		Reg.score += 10;
 		
 		super.hurt(Damage);
@@ -266,7 +267,7 @@ class Enemy extends FlxSprite
 		
 		super.kill();
 		
-		flicker(0);
+		FlxSpriteUtil.flicker(this, 0);
 		_jets.kill();
 		_gibs.at(this);
 		_gibs.start(true, 3, 0, 20);
