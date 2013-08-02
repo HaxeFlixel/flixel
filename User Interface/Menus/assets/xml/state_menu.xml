@@ -11,43 +11,43 @@
 	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
 	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" shadow="1" align="left"/>
 	
-	<definition id="tempesta8" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="tempesta8y" font="pf_tempesta_seven" size="8" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="px8" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="px8y" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="left"/>
 	
-	<definition id="tempesta8c" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
-	<definition id="tempesta8yc" font="pf_tempesta_seven" size="8" style="bold" color="0xffcc00" shadow="1" align="center"/>
+	<definition id="px8c" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
+	<definition id="px8yc" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="center"/>
 	
-	<definition id="tempesta8dc" font="pf_tempesta_seven" size="8" style="bold" color="0xcccccc" shadow="1" align="center"/>
-	<definition id="tempesta8dyc" font="pf_tempesta_seven" size="8" style="bold" color="0xccaa00" shadow="1" align="center"/>
+	<definition id="px8dc" font="vera" size="10" style="bold" color="0xcccccc" shadow="1" align="center"/>
+	<definition id="px8dyc" font="vera" size="10" style="bold" color="0xccaa00" shadow="1" align="center"/>
 		
 	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
 	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
 		
-	<definition id="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small" text_y="1">
+	<definition id="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small" text_y="0">
 		<text id="hilight" use_def="sans12y" />
 		<text id="normal" use_def="sans12" />				
 	</definition>
 	
-	<definition id="check_big" box_src="ui/misc/check_box_big" check_src="ui/misc/check_big" text_y="-1">
+	<definition id="check_big" box_src="ui/misc/check_box_big" check_src="ui/misc/check_big" text_y="0">
 		<text id="hilight" use_def="sans16y"/>
 		<text id="normal" use_def="sans16"/>				
 	</definition>
 	
-	<definition id="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot" text_y="-1">
-		<text id="hilight" use_def="tempesta8y"/>
-		<text id="normal" use_def="tempesta8"/>
+	<definition id="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot">
+		<text id="hilight" use_def="px8y"/>
+		<text id="normal" use_def="px8"/>
 	</definition>
 	
 	<definition id="tab_button_toggle" width="50" height="20" text_x="-2" text_y="0">		
 		<normal width="50" height="20" text_x="-2" text_y="0">
-			<text id="hilight" use_def="tempesta8dyc"/>
-			<text id="normal" use_def="tempesta8dc"/>
+			<text id="hilight" use_def="px8dyc"/>
+			<text id="normal" use_def="px8dc"/>
 			<graphic id="normal" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
 			<graphic id="hilight" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
 		</normal>
 		<toggle width="50" height="20" text_x="-2" text_y="0">
-			<text id="hilight" use_def="tempesta8yc"/>
-			<text id="normal" use_def="tempesta8c"/>
+			<text id="hilight" use_def="px8yc"/>
+			<text id="normal" use_def="px8c"/>
 			<graphic id="normal" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
 			<graphic id="hilight" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>		
 		</toggle>
@@ -55,29 +55,29 @@
 	
 	<definition id="button_toggle" width="50" height="20">		
 		<normal width="50" height="20" text_x="-2" text_y="-1">
-			<text id="hilight" use_def="tempesta8c"/>
-			<text id="normal" use_def="tempesta8c"/>
+			<text id="hilight" use_def="px8c"/>
+			<text id="normal" use_def="px8c"/>
 			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
 			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,12,12"/>		
 		</normal>
 		<toggle width="50" height="20" text_x="-1" text_y="0">
-			<text id="hilight" use_def="tempesta8c"/>
-			<text id="normal" use_def="tempesta8c"/>
+			<text id="hilight" use_def="px8c"/>
+			<text id="normal" use_def="px8c"/>
 			<graphic id="normal" image="ui/buttons/blue_back" slice9="6,6,12,12"/>
 			<graphic id="hilight" image="ui/buttons/blue_back_over" slice9="6,6,12,12"/>
 		</toggle>
 	</definition>
 	
 	<!--<definition id="tab_button" width="50" height="20" text_x="-2" text_y="0">
-		<text id="hilight" use_def="tempesta8yc"/>
-		<text id="normal" use_def="tempesta8c"/>
+		<text id="hilight" use_def="px8yc"/>
+		<text id="normal" use_def="px8c"/>
 		<graphic id="normal" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
 		<graphic id="hilight" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>		
 	</definition>
 	
 	<definition id="tab_button_back" width="50" height="20" text_x="-2" text_y="0">
-		<text id="hilight" use_def="tempesta8dyc"/>
-		<text id="normal" use_def="tempesta8dc"/>
+		<text id="hilight" use_def="px8dyc"/>
+		<text id="normal" use_def="px8dc"/>
 		<graphic id="normal" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
 		<graphic id="hilight" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
 	</definition>-->
@@ -102,6 +102,9 @@
 
 	<button center_x="true" x="0" y="535" id="start" use_def="text_button" group="top" label="$MISC_BACK">
 		<param type="string" value="back"/>
+		<locale id="nb-NO">
+			<change width="96"/>
+		</locale>	
 	</button>
 	
 	<chrome x="50" y="150" width="700" height="300" use_def="grey"/>

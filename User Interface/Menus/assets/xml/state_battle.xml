@@ -11,14 +11,14 @@
 	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
 	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" shadow="1" align="left"/>
 	
-	<definition id="tempesta8" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="tempesta8y" font="pf_tempesta_seven" size="8" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="px8" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="px8y" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="left"/>
 	
-	<definition id="tempesta8c" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
-	<definition id="tempesta8yc" font="pf_tempesta_seven" size="8" style="bold" color="0xffcc00" shadow="1" align="center"/>
+	<definition id="px8c" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
+	<definition id="px8yc" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="center"/>
 	
-	<definition id="tempesta8dc" font="pf_tempesta_seven" size="8" style="bold" color="0xcccccc" shadow="1" align="center"/>
-	<definition id="tempesta8dyc" font="pf_tempesta_seven" size="8" style="bold" color="0xccaa00" shadow="1" align="center"/>
+	<definition id="px8dc" font="vera" size="10" style="bold" color="0xcccccc" shadow="1" align="center"/>
+	<definition id="px8dyc" font="vera" size="10" style="bold" color="0xccaa00" shadow="1" align="center"/>
 		
 	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
 	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
@@ -46,8 +46,8 @@
 	</definition>	
 	
 	<definition id="time_button" width="48" height="24">
-		<text id="hilight" font="pf_tempesta_seven" size="8" style="bold" color="0xffff00" shadow="1" align="center"/>
-		<text id="normal" font="pf_tempesta_seven" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+		<text id="hilight" font="pixelarial" size="8" style="bold" color="0xffff00" shadow="1" align="center"/>
+		<text id="normal" font="pixelarial" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
 		<graphic id="normal" image="ui/buttons/grey" slice9="6,6,11,11"/>
 		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
 	</definition>

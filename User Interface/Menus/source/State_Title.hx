@@ -1,7 +1,9 @@
+import flash.text.Font;
 import flixel.FlxG;
 import flixel.addons.ui.FlxStateX;
 import flixel.addons.ui.FlxRadioGroup;
 import firetongue.FireTongue;
+import openfl.Assets;
 
 /**
  * @author Lars Doucet
@@ -19,20 +21,21 @@ class State_Title extends FlxStateX
 		FlxG.cameras.bgColor = {rgb: 0x131c1b, a: 0xff};
 		#end		
 		
+		FlxG.log.redirectTraces = false;
 		FlxG.mouse.show();		
 		//FlxG.mouse.useSystemCursor = true;
 	
 		if (Main.tongue == null) {
 			Main.tongue = new FireTongueEx();
-			Main.tongue.init("nb-NO");
+			Main.tongue.init("en-US");
 			FlxStateX.static_tongue = Main.tongue;
 		}
 		
 		_xml_id = "state_title";
 		_tongue = Main.tongue;		
-		super.create();		
+		super.create();	
 	}
-	
+		
 	public override function getEvent(id:String, sender:Dynamic, data:Dynamic):Void {
 		var str:String = "";
 		

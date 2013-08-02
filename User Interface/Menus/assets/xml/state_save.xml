@@ -15,7 +15,7 @@
 		<definition id="sans12" font="vera" size="12" style="" color="0xffffff" shadow="1" align="left"/>
 		<definition id="sans12c" font="vera" size="12" style="" color="0xffffff" shadow="1" align="center" dropShadow="true"/>
 		
-		<definition id="pixel" font="pixelarial" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+		<definition id="pixel" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
 		
 		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="0">
 			<text id="hilight" use_def="sans14c"/>
@@ -68,11 +68,11 @@
 		<sprite id="icon" src="other/portrait_mane" x="10" y="11" group="icons"/>
 		<sprite id="icon" src="other/icon_party" x="18" y="63" group="icons"/>
 				
-		<text id="example" use_def="sans14y" x="300" y="30" width="200" text="Untextured 9-slice chrome w/ scaling" group="top"/>
+		<text id="example" use_def="sans14y" x="300" y="30" width="200" text="$SAVE_SLOT_1_MSG" group="top"/>
 		
-		<text id="name" use_def="sans18" x="60" y="10" width="200" text="Mane Lionhair$NLevel 5" group="top"/>
-		<text id="time" use_def="sans14" x="60" y="61" width="400" text="10 Hours, 15 Min" group="top"/>
-		<text id="date" use_def="sans14" x="60" y="78" width="300" text="January 1, 1975" group="top"/>
+		<text id="name" use_def="sans18" x="60" y="10" width="200" text="$SAVE_SLOT_DATA" group="top"/>
+		<text id="time" use_def="sans14" x="60" y="61" width="400" text="$SAVE_SLOT_TIME" group="top"/>
+		<text id="date" use_def="sans14" x="60" y="78" width="300" text="$SAVE_SLOT_DATE" group="top"/>
 				
 		<button id="play_big" use_def="big_button_blue" x="594" y="11" group="top" label="$SAVE_PLAY">
 			<param type="string" value="play"/>
@@ -122,7 +122,7 @@
 		<definition id="sans12" font="vera" size="12" style="" color="0xffffff" shadow="1" align="left"/>
 		<definition id="sans12c" font="vera" size="12" style="" color="0xffffff" shadow="1" align="center" dropShadow="true"/>
 		
-		<definition id="pixel" font="pixelarial" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+		<definition id="pixel" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
 		
 		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="0">
 			<text id="hilight" use_def="sans14c"/>
@@ -173,11 +173,11 @@
 		<sprite id="icon" src="other/portrait_mane" x="10" y="11" group="icons"/>
 		<sprite id="icon" src="other/icon_party" x="18" y="63" group="icons"/>
 		
-		<text id="example" use_def="sans14y" x="300" y="30" width="200" text="Textured 9-slice chrome w/ tiling" group="top"/>
+		<text id="example" use_def="sans14y" x="300" y="30" width="200" text="$SAVE_SLOT_2_MSG" group="top"/>
 				
-		<text id="name" use_def="sans18" x="60" y="10" width="200" text="Mane Lionhair$NLevel 5" group="top"/>
-		<text id="time" use_def="sans14" x="60" y="61" width="400" text="10 Hours, 15 Min" group="top"/>
-		<text id="date" use_def="sans14" x="60" y="78" width="300" text="January 1, 1975" group="top"/>
+		<text id="name" use_def="sans18" x="60" y="10" width="200" text="$SAVE_SLOT_DATA" group="top"/>
+		<text id="time" use_def="sans14" x="60" y="61" width="400" text="$SAVE_SLOT_TIME" group="top"/>
+		<text id="date" use_def="sans14" x="60" y="78" width="300" text="$SAVE_SLOT_DATE" group="top"/>
 				
 		<button id="play_big" use_def="big_button_blue" x="594" y="11" group="top" label="$SAVE_PLAY">
 			<param type="string" value="play"/>
@@ -207,11 +207,6 @@
 			<param type="string" value="delete"/>
 		</button>
 		
-		<!--butt_load = new FlxButtonX(578, 11, onPress);
-		butt_export = new FlxButtonX(578, 52, onExport);
-		butt_del = new FlxButtonX(578, 76, onDel);
-		butt_import = new FlxButtonX(578, 52, onImport);-->
-		
 	</definition>	
 	
 	<sprite x="0" y="0" src="ui/title_back"/>
@@ -227,30 +222,9 @@
 		<graphic id="border" visible="false"/>
 		<graphic id="hilight" visible="false"/>
 		<graphic id="normal" visible="false"/>
+		<locale id="nb-NO">
+			<change width="96"/>
+		</locale>	
 	</button>
-	
-	<!--/*var back : FlxSprite;
-	var shadow : FlxSprite;
-	var group_icons : FlxGroup;
-	var text_name : FlxText;
-	var text_time : FlxText;
-	var text_date : FlxText;
-	var text_party : FlxText;
-	var text_act : FlxText;
-	var text_loc : FlxText;
-	var group_icon_texts : FlxGroup;
-	var butt_load : FlxButtonPlusX;
-	var butt_plus : FlxButtonPlusX;
-	var butt_del : FlxButtonPlusX;
-	var butt_test : FlxButtonPlusX;
-	var butt_import : FlxButtonPlusX;
-	var butt_export : FlxButtonPlusX;*/
-	/*var star_blue : FlxSprite;
-	var star_gold : FlxSprite;
-	var star_blue_text : FlxText;
-	var star_gold_text : FlxText;
-	var star_easy : FlxSprite;
-	var star_normal : FlxSprite;
-	var star_hard : FlxSprite;*/-->
 	
 </data>
