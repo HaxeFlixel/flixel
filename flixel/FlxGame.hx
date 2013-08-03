@@ -349,7 +349,7 @@ class FlxGame extends Sprite
 		_total = ticks;
 		
 		#if !FLX_NO_SOUND_TRAY
-		if (soundTray.active)
+		if (soundTray != null && soundTray.active)
 		{
 			soundTray.update(elapsedMS);
 		}
