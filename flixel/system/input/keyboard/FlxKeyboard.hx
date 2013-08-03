@@ -240,7 +240,10 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			}
 			
 			#if !FLX_NO_SOUND_TRAY
-			FlxG.game.soundTray.show();
+			if(FlxG.game.soundTray != null)
+			{
+				FlxG.game.soundTray.show();
+			}
 			#end
 		}
 		// Volume down
@@ -250,7 +253,10 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			FlxG.sound.volume -= 0.1;
 			
 			#if !FLX_NO_SOUND_TRAY
-			FlxG.game.soundTray.show();
+			if(FlxG.game.soundTray != null)
+			{
+				FlxG.game.soundTray.show();
+			}
 			#end
 		}
 		// Volume up
@@ -260,7 +266,10 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			FlxG.sound.volume += 0.1;
 			
 			#if !FLX_NO_SOUND_TRAY
-			FlxG.game.soundTray.show();
+			if(FlxG.game.soundTray != null)
+			{
+				FlxG.game.soundTray.show();
+			}
 			#end
 		}
 		
