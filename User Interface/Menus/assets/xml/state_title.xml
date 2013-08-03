@@ -3,7 +3,7 @@
 	
 	<sprite src="ui/title_back" x="0" y="0"/>
 		
-	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
+	<definition id="text_button" width="64" height="32" text_x="0" text_y="0">
 		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
 		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
 		<graphic id="border" visible="false"/>

@@ -17,35 +17,35 @@
 		
 		<definition id="pixel" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
 		
-		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="0">
+		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="sans14c"/>
 			<text id="normal" use_def="sans14c"/>
 			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
 			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,12,12"/>
 		</definition>
 		
-		<definition id="big_button_gold" width="93" height="31" text_x="-2" text_y="0">
+		<definition id="big_button_gold" width="93" height="31" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="sans13c"/>
 			<text id="normal" use_def="sans13c"/>
 			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,12,12"/>
 			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,12,12"/>
 		</definition>		
 		
-		<definition id="skinny_button_gold" width="93" height="20" text_x="-2" text_y="0">
+		<definition id="skinny_button_gold" width="93" height="20" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="pixel"/>
 			<text id="normal" use_def="pixel"/>
 			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,12,12"/>
 			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,12,12"/>
 		</definition>	
 		
-		<definition id="skinny_button_red" width="93" height="20" text_x="-2" text_y="0">
+		<definition id="skinny_button_red" width="93" height="20" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="pixel"/>
 			<text id="normal" use_def="pixel"/>
 			<graphic id="normal" image="ui/buttons/red" slice9="6,6,12,12"/>
 			<graphic id="hilight" image="ui/buttons/red_over" slice9="6,6,12,12"/>
 		</definition>	
 		
-		<definition id="skinny_button_blue" width="93" height="20" text_x="-2" text_y="0">
+		<definition id="skinny_button_blue" width="93" height="20" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="pixel"/>
 			<text id="normal" use_def="pixel"/>
 			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
@@ -124,35 +124,35 @@
 		
 		<definition id="pixel" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
 		
-		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="0">
+		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="sans14c"/>
 			<text id="normal" use_def="sans14c"/>
 			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,11,11"/>
 			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,11,11"/>
 		</definition>
 		
-		<definition id="big_button_gold" width="93" height="31" text_x="-2" text_y="0">
+		<definition id="big_button_gold" width="93" height="31" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="sans13c"/>
 			<text id="normal" use_def="sans13c"/>
 			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,11,11"/>
 			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,11,11"/>
 		</definition>		
 		
-		<definition id="skinny_button_gold" width="93" height="20" text_x="-2" text_y="0">
+		<definition id="skinny_button_gold" width="93" height="20" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="pixel"/>
 			<text id="normal" use_def="pixel"/>
 			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,11,11"/>
 			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,11,11"/>
 		</definition>	
 		
-		<definition id="skinny_button_red" width="93" height="20" text_x="-2" text_y="0">
+		<definition id="skinny_button_red" width="93" height="20" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="pixel"/>
 			<text id="normal" use_def="pixel"/>
 			<graphic id="normal" image="ui/buttons/red" slice9="6,6,11,11"/>
 			<graphic id="hilight" image="ui/buttons/red_over" slice9="6,6,11,11"/>
 		</definition>	
 		
-		<definition id="skinny_button_blue" width="93" height="20" text_x="-2" text_y="0">
+		<definition id="skinny_button_blue" width="93" height="20" text_x="-2" text_y="-2">
 			<text id="hilight" use_def="pixel"/>
 			<text id="normal" use_def="pixel"/>
 			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,11,11"/>
