@@ -60,7 +60,7 @@ class FlxObject extends FlxBasic
 	 */
 	static public inline var WALL:Int	= LEFT | RIGHT;
 	/**
-	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
+	 * Special-case constant meaning up, down and left, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	static public inline var PLATFORM:Int	= LEFT | RIGHT | UP;
 	/**
