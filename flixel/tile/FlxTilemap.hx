@@ -1556,6 +1556,17 @@ class FlxTilemap extends FlxObject
 	}
 	
 	/**
+	 * Gets the collision flags of tile by index.
+	 * 
+	 * @param	Index	Tile index returned by getTile or getTileByIndex
+	 * @return	The internal collision flag for the requested tile.
+	 */
+	public function getTileCollisions(Index:Int):Int
+	{
+		return _tileObjects[Index].allowCollisions;
+	}
+	
+	/**
 	 * Returns a new Flash <code>Array</code> full of every map index of the requested tile type.
 	 * 
 	 * @param	Index	The requested tile type.
