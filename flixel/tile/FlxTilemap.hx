@@ -836,6 +836,7 @@ class FlxTilemap extends FlxObject
 		return data;
 	}
 	
+	
 	/**
 	 * Set the dirty flag on all the tilemap buffers.
 	 * Basically forces a reset of the drawn tilemaps, even if it wasn'tile necessary.
@@ -1563,6 +1564,17 @@ class FlxTilemap extends FlxObject
 	public function getTileByIndex(Index:Int):Int
 	{
 		return _data[Index];
+	}
+	
+	/**
+	 * Gets the collision flags of tile by index.
+	 * 
+	 * @param	Index	Tile index returned by getTile or getTileByIndex
+	 * @return	The internal collision flag for the requested tile.
+	 */
+	public function getTileCollisions(Index:Int):Int
+	{
+		return _tileObjects[Index].allowCollisions;
 	}
 	
 	/**
