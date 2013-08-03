@@ -10,25 +10,23 @@ class FlickerData
 	public static function recycle(object:FlxObject):FlickerData
 	{
 		var data:FlickerData = _pool.get();
-		
-		if (data == null)	data = new FlickerData(object);
-		else				data.reset(object);
-		
+		data.reset(object);
 		return data;
 	}
 	
 	public static function put(data:FlickerData):Void
 	{
-		data.object = null;
 		_pool.put(data);
 	}
 	
 	public var object:FlxObject;
 	public var startVisibility:Bool;
 	
-	private function new(object:FlxObject)
+	private function new() {  }
+	
+	public function destroy():Void
 	{
-		reset(object);
+		object = null;
 	}
 	
 	public function reset(object:FlxObject):Void

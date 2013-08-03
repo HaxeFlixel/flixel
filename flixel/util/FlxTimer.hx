@@ -11,6 +11,8 @@ import flixel.plugin.TimerManager;
  */
 class FlxTimer
 {
+	private static var pool:FlxPool<FlxTimer> = new FlxPool<FlxTimer>();
+	
 	/**
 	 * How much time the timer was set for.
 	 */
@@ -72,12 +74,7 @@ class FlxTimer
 	 */
 	static public function recycle():FlxTimer
 	{
-		var timer:FlxTimer = manager.get();
-		if (timer == null)
-		{
-			timer = new FlxTimer();
-		}
-		return timer;
+		return pool.get();
 	}
 	
 	/**
@@ -90,9 +87,7 @@ class FlxTimer
 	static public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
 		var timer:FlxTimer = recycle();
-		
 		timer.run(Time, Callback, Loops);
-		
 		return timer;
 	}
 	
@@ -234,6 +229,11 @@ class FlxTimer
 		{
 			return 0;
 		}
+	}
+	
+	static public function put(timer:FlxTimer):Void
+	{
+		pool.put(timer);
 	}
 	
 	/**
