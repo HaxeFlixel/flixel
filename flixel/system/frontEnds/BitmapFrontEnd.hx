@@ -310,31 +310,22 @@ class BitmapFrontEnd
 	 */
 	public function clearCache():Void
 	{
-		var newCache:Map<String, CachedGraphics> = new Map();
 		var obj:CachedGraphics;
 		
-		if (_cache != null)
+		if (_cache == null)
 		{
-			for (key in _cache.keys())
+			_cache = new Map();
+		}
+
+		for (key in _cache.keys())
+		{
+			obj = _cache.get(key);
+			if(obj != null && !obj.persist)
 			{
-				obj = _cache.get(key);
 				_cache.remove(key);
-				
-				if (!obj.persist)
-				{
-					if (obj != null)
-					{
-						obj.destroy();
-						obj = null;
-					}
-				}
-				else
-				{
-					newCache.set(key, obj);
-				}
+				obj.destroy();
+				obj = null;
 			}
 		}
-		
-		_cache = newCache;
 	}
 }

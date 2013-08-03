@@ -67,10 +67,6 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	public var hoverSound:String;
 	/**
-	 * Whether you can also click on the slider to change the value or not.
-	 */
-	public var clickable:Bool = true;
-	/**
 	 * The alpha value the slider uses when it's hovered over. 1 to turn the effect off.
 	 */
 	public var hoverAlpha:Float = 0.5;
@@ -148,6 +144,9 @@ class FlxSlider extends FlxSpriteGroup
 	{
 		super();
 		
+		x = X; 
+		y = Y;
+		
 		if (MinValue == MaxValue)
 		{
 			FlxG.log.error("FlxSlider: MinValue and MaxValue can't be the same (" + MinValue + ")");
@@ -175,16 +174,16 @@ class FlxSlider extends FlxSpriteGroup
 		_handleColor = HandleColor;
 		
 		// Create the slider
-		createSlider(X, Y);
+		createSlider();
 	}	
 
 	/**
 	 * Initially creates the slider with all its objects.
 	 */
-	private function createSlider(X:Float, Y:Float):Void
+	private function createSlider():Void
 	{
 		_offset = new FlxPoint(7, 18); 
-		_bounds = new FlxRect(X + _offset.x, Y + _offset.y, _width, _height);
+		_bounds = new FlxRect(x + _offset.x, y +_offset.y, _width, _height);
 		
 		// Creating the "body" of the slider
 		body = new FlxSprite(_offset.x, _offset.y);
@@ -221,10 +220,6 @@ class FlxSlider extends FlxSpriteGroup
 		add(minLabel);
 		add(maxLabel);
 		
-		// Position the objects
-		x = X;
-		y = Y;
-		
 		// No srolling for UI components
 		transformChildren(function (s:FlxSprite, v:Dynamic) { s.scrollFactor.set(0, 0); } );
 	}
@@ -246,7 +241,7 @@ class FlxSlider extends FlxSpriteGroup
 			
 			_justHovered = true;
 			
-			if (clickable && FlxG.mouse.pressed()) 
+			if (FlxG.mouse.pressed()) 
 			{
 				handle.x = FlxG.mouse.screenX;
 				updateValue();

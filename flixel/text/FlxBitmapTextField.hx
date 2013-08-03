@@ -159,16 +159,6 @@ class FlxBitmapTextField extends FlxSprite
 	#else
 	override public function draw():Void 
 	{
-		if (_flickerTimer != 0)
-		{
-			_flicker = !_flicker;
-			
-			if (_flicker)
-			{
-				return;
-			}
-		}
-		
 		if (_pendingTextChange)
 		{
 			updateBitmapData();

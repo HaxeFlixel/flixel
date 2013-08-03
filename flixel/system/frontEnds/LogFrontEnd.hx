@@ -16,9 +16,6 @@ class LogFrontEnd
 		notice = Reflect.makeVarArgs(_notice);
 		
 		_oldTrace = haxe.Log.trace;
-		#if !FLX_NO_DEBUG
-		redirectTraces = true;
-		#end
 	}
 	
 	/**
@@ -82,6 +79,12 @@ class LogFrontEnd
 	public function advanced(Data:Dynamic, Style:LogStyle):Void
 	{
 		#if !FLX_NO_DEBUG
+		if (FlxG.game.debugger == null)
+		{
+			trace(Data);
+			return;
+		}
+		
 		if (!Std.is(Data, Array))
 		{
 			Data = [Data]; 

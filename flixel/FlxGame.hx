@@ -150,14 +150,19 @@ class FlxGame extends Sprite
 	private var _focusLostScreen:FlxFocusLostScreen;
 	#end
 	
+	#if !FLX_NO_SOUND_TRAY
 	/**
 	 * Change this afterr calling super() in the FlxGame constructor to use a customized sound tray based on FlxSoundTray.
 	 */
 	private var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
+	#end
+	
+	#if !FLX_NO_FOCUS_LOST_SCREEN
 	/**
 	 * Change this afterr calling super() in the FlxGame constructor to use a customized sound tray based on FlxFocusLostScreen.
 	 */
 	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
+	#end
 	
 	#if (cpp && FLX_THREADING)
 	// push 'true' into this array to trigger an update. push 'false' to terminate update thread.
@@ -251,7 +256,7 @@ class FlxGame extends Sprite
 			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 			stage.addEventListener(Event.ACTIVATE, onFocus);
 			
-			#if !FLX_NO_DEBUG
+			#if !FLX_NO_FOCUS_LOST_SCREEN
 				_focusLostScreen = Type.createInstance(_customFocusLostScreen, []);
 				addChild(_focusLostScreen);
 			#end

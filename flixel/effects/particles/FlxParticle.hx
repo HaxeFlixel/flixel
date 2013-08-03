@@ -108,17 +108,6 @@ class FlxParticle extends FlxSprite
 		FlxBasic._ACTIVECOUNT++;
 		#end
 		
-		if (_flickerTimer > 0)
-		{
-			_flickerTimer -= FlxG.elapsed;
-			
-			if(_flickerTimer <= 0)
-			{
-				_flickerTimer = 0;
-				_flicker = false;
-			}
-		}
-		
 		last.x = x;
 		last.y = y;
 		

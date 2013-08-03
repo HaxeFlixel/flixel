@@ -406,15 +406,6 @@ private class StarSprite extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if (_flickerTimer != 0)
-		{
-			_flicker = !_flicker;
-			if (_flicker)
-			{
-				return;
-			}
-		}
-		
 		if (cameras == null)
 		{
 			cameras = FlxG.cameras.list;

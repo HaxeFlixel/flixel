@@ -20,11 +20,11 @@ class DebuggerFrontEnd
 	
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * The key codes used to toggle the debugger (via <code>flash.ui.Keyboard</code>). 
+	 * The key codes used to toggle the debugger (see <code>FlxG.keys</code> for the keys available).
 	 * Default keys: ` and \. Set to <code>null</code> to deactivate.
-	 * @default [192, 220]
+	 * @default ["GRAVEACCENT", "BACKSLASH"]
 	 */
-	public var toggleKeys:Array<Int>;
+	public var toggleKeys:Array<String>;
 	#end
 	
 	/**
@@ -33,7 +33,7 @@ class DebuggerFrontEnd
 	public function new() 
 	{
 		#if !FLX_NO_KEYBOARD
-		toggleKeys = [192, 220];
+		toggleKeys = ["GRAVEACCENT", "BACKSLASH"];
 		#end
 	}
 	

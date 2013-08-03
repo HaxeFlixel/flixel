@@ -7,8 +7,12 @@ import flash.display.Sprite;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
+import flixel.tweens.FlxTween;
+import flixel.tweens.misc.MultiVarTween;
+import flixel.util.helpers.FlickerData;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
 // TODO: flip(): Flip image data horizontally / vertically without changing the angle (mirror / reverse)
@@ -359,5 +363,38 @@ class FlxSpriteUtil
 		}
 		
 		sprite.resetFrameBitmapDatas();
+	}
+	
+	/**
+	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
+	 * 
+	 * @param	object		The sprite.
+	 * @param	Duration	How long to flicker for.
+	 * @param	Interval	In what intervall to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
+	 */
+	inline static public function flicker(object:FlxObject, Duration:Float = 1, Interval:Float = 0.02):Void
+	{
+		if (Interval <= 0) 
+		{
+			Interval = FlxG.elapsed;
+		}
+		
+		var t:FlxTimer = FlxTimer.start(Interval, flickerProgress, Std.int(Duration / Interval));
+		t.userData = FlickerData.recycle(object);
+	}
+	
+	/**
+	 * Just a helper function for flicker() to update object's visibility.
+	 */
+	inline static private function flickerProgress(Timer:FlxTimer):Void
+	{
+		var object:FlxObject = Timer.userData.object;
+		object.visible = !object.visible;
+		
+		if (Timer.loops > 0 && Timer.loopsLeft == 0)
+		{
+			object.visible = Timer.userData.startVisibility;
+			FlickerData.put(Timer.userData);
+		}
 	}
 }

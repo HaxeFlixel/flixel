@@ -1,8 +1,8 @@
 package flixel.tweens;
 
-import flixel.tweens.util.Ease;
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.tweens.util.Ease.EaseFunction;
 
 class FlxTween
 {
@@ -33,15 +33,24 @@ class FlxTween
 	
 	public var active:Bool;
 	public var complete:CompleteCallback;
+	/**
+	 * How many times this tween has been executed / has finished so far - useful to 
+	 * stop the LOOPING and PINGPONG types after a certain amount of time
+	 */
+	public var executions(default, null):Int;
+	/**
+	 * Useful to store values you want to access within your callback function.
+	 */
+	public var userData:Dynamic = null;
 
 	/**
 	 * Constructor. Specify basic information about the Tween.
-	 * @param	duration		Duration of the tween (in seconds or frames).
-	 * @param	type			Tween type, one of Tween.PERSIST (default), Tween.LOOPING, or Tween.ONESHOT.
-	 * @param	complete		Optional callback for when the Tween completes.
-	 * @param	ease			Optional easer function to apply to the Tweened value.
+	 * @param	duration	Duration of the tween (in seconds or frames).
+	 * @param	type		Tween type, one of Tween.PERSIST (default), Tween.LOOPING, or Tween.ONESHOT.
+	 * @param	complete	Optional callback for when the Tween completes.
+	 * @param	ease		Optional easer function to apply to the Tweened value.
 	 */
-	public function new(duration:Float, type:Int = 0, complete:CompleteCallback = null, ease:EaseFunction = null)
+	public function new(duration:Float, type:Int = 0, ?complete:CompleteCallback, ?ease:EaseFunction)
 	{
 		_target = duration;
 		if (type == 0) 
@@ -58,6 +67,7 @@ class FlxTween
 		_t = 0;
 		
 		_backward = (_type & BACKWARD) > 0;
+		userData = { };
 	}
 	
 	public function destroy():Void
@@ -65,6 +75,7 @@ class FlxTween
 		complete = null;
 		_parent = null;
 		_ease = null;
+		userData = null;
 	}
 
 	/**
@@ -125,7 +136,12 @@ class FlxTween
 	/** @private Called when the Tween completes. */
 	private function finish():Void
 	{
-		if (complete != null) complete(this);
+		executions++;
+		
+		if (complete != null) 
+		{
+			complete(this);
+		}
 		
 		switch ((_type & ~ FlxTween.BACKWARD))
 		{

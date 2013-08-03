@@ -184,6 +184,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		addKey("PERIOD",190);
 		addKey("SLASH", 191);
 		addKey("NUMPADSLASH", 191);
+		addKey("GRAVEACCENT", 192);
 		addKey("CONTROL", 17);
 		addKey("ALT", 18);
 		addKey("SPACE", 32);
@@ -217,7 +218,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, c))
 		{
 			FlxG.debugger.visible = !FlxG.debugger.visible;
-			return;
 		}
 		#end
 		
@@ -242,8 +242,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			#if !FLX_NO_SOUND_TRAY
 			FlxG.game.soundTray.show();
 			#end
-			
-			return;
 		}
 		// Volume down
 		else if (inKeyArray(FlxG.sound.volumeDownKeys, c))
@@ -254,8 +252,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			#if !FLX_NO_SOUND_TRAY
 			FlxG.game.soundTray.show();
 			#end
-			
-			return;
 		}
 		// Volume up
 		else if (inKeyArray(FlxG.sound.volumeUpKeys, c)) 
@@ -266,8 +262,6 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			#if !FLX_NO_SOUND_TRAY
 			FlxG.game.soundTray.show();
 			#end
-			
-			return;
 		}
 		
 		updateKeyStates(c, false);
@@ -282,28 +276,19 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	{
 		var c:Int = FlashEvent.keyCode;
 		
-		// Look for replay cancel keys
+		// Attempted to cancel the replay?
 		#if FLX_RECORD
-		if (FlxG.game.replaying && FlxG.vcr.cancelKeys != null && !inKeyArray(FlxG.debugger.toggleKeys, c))
+		if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, c) && inKeyArray(FlxG.vcr.cancelKeys, c))
 		{
-			for (key in FlxG.vcr.cancelKeys)
+			if (FlxG.vcr.replayCallback != null)
 			{
-				if (key == "ANY" || getKeyCode(key) == Std.int(c))
-				{
-					if (FlxG.vcr.replayCallback != null)
-					{
-						FlxG.vcr.replayCallback();
-						FlxG.vcr.replayCallback = null;
-					}
-					else
-					{
-						FlxG.vcr.stopReplay();
-					}
-					
-					break;
-				}
+				FlxG.vcr.replayCallback();
+				FlxG.vcr.replayCallback = null;
 			}
-			return;
+			else
+			{
+				FlxG.vcr.stopReplay();
+			}	
 		}
 		#end
 		
@@ -317,9 +302,24 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */
-	inline private function inKeyArray(KeyArray:Array<Int>, KeyCode:Int):Bool
+	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
 	{
-		return (KeyArray != null && Lambda.indexOf(KeyArray, KeyCode) != -1);
+		if (KeyArray == null)
+		{
+			return false;
+		}
+		else
+		{
+			for (keyString in KeyArray)
+			{
+				if (keyString == "ANY" || getKeyCode(keyString) == KeyCode)
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

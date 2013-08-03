@@ -4,7 +4,7 @@ package flixel.util;
  * ...
  * @author Zaphod
  */
-@:generic class FlxPool<T>
+@:generic class FlxPool<T:({ private function new():Void; function destroy():Void; })>
 {
 	private var _pool:Array<T>;
 	
@@ -17,7 +17,9 @@ package flixel.util;
 	
 	inline public function get():T
 	{
-		return _pool.pop();
+		var obj:T = _pool.pop();
+		if (obj == null)	obj = new T();
+		return obj;
 	}
 	
 	public function put(obj:T):Void
@@ -25,6 +27,7 @@ package flixel.util;
 		// we don't want to have the same object in pool twice
 		if (obj != null && FlxArrayUtil.indexOf(_pool, obj) < 0)
 		{
+			obj.destroy();
 			_pool.push(obj);
 		}
 	}
@@ -33,6 +36,7 @@ package flixel.util;
 	{
 		if (obj != null)
 		{
+			obj.destroy();
 			_pool.push(obj);
 		}
 	}
