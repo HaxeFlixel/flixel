@@ -13,6 +13,7 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.plugin.TimerManager;
 import flixel.system.FlxAssets;
+import flixel.system.FlxSplash;
 import flixel.system.replay.FlxReplay;
 import flixel.system.layer.TileSheetExt;
 import flixel.text.pxText.PxBitmapFont;
@@ -178,6 +179,8 @@ class FlxGame extends Sprite
 	}
 	#end
 	
+	private var _skipSplash:Bool = false;
+	
 	/**
 	 * Instantiate a new game object.
 	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
@@ -186,8 +189,9 @@ class FlxGame extends Sprite
 	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
 	 * @param	GameFramerate	How frequently the game should update (default is 60 times per second).
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 60 times per second).
+	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60)
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60, SkipSplash:Bool = false)
 	{
 		super();
 		
@@ -205,6 +209,7 @@ class FlxGame extends Sprite
 		FlxG.framerate = GameFramerate;
 		FlxG.flashFramerate = FlashFramerate;
 		_accumulator = stepMS;
+		_skipSplash = SkipSplash;
 		
 		#if FLX_RECORD
 			replay = new FlxReplay();
@@ -414,7 +419,18 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
+		#if !FLX_NO_DEBUG
 		requestNewState(Type.createInstance(_iState, []));
+		#else
+		if (_skipSplash)
+		{
+			requestNewState(Type.createInstance(_iState, []));
+		}
+		else
+		{
+			requestNewState(new FlxSplash(_iState));
+		}
+		#end
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(requestedState, FlxSubState))

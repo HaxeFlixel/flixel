@@ -63,6 +63,8 @@ class FlxAssets
 	inline static public var FONT_DEBUGGER:String = "Arial";
 	
 	// sounds
+	inline static public var SND_FLIXEL:String = "flixel/snd/flixel.mp3";
+	
 	#if (flash || js)
 	inline static public var SND_BEEP:String = "flixel/snd/beep.mp3";
 	#else
