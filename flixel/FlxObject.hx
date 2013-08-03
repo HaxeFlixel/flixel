@@ -62,6 +62,10 @@ class FlxObject extends FlxBasic
 	/**
 	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
+	static public inline var PLATFORM:Int	= LEFT | RIGHT | UP;
+	/**
+	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
+	 */
 	static public inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
 	
 	static private var _firstSeparateFlxRect:FlxRect = new FlxRect();
