@@ -826,7 +826,6 @@ class FlxTilemap extends FlxObject
 		return data;
 	}
 	
-	
 	/**
 	 * Set the dirty flag on all the tilemap buffers.
 	 * Basically forces a reset of the drawn tilemaps, even if it wasn'tile necessary.
