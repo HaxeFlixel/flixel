@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Tweens a numeric value.
@@ -31,13 +31,14 @@ class NumTween extends FlxTween
 	 * @param	duration		Duration of the tween.
 	 * @param	ease			Optional easer function.
 	 */
-	public function tween(fromValue:Float, toValue:Float, duration:Float, ease:EaseFunction = null):Void
+	public function tween(fromValue:Float, toValue:Float, duration:Float, ease:EaseFunction = null):NumTween
 	{
 		_start = value = fromValue;
 		_range = toValue - value;
 		_target = duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 	
 	/** @private Updates the Tween. */

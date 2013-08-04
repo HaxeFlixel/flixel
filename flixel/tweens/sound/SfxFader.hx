@@ -2,7 +2,7 @@
 
 import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Sound effect fader.
@@ -36,7 +36,7 @@ class SfxFader extends FlxTween
 	 * @param	duration	Duration of the fade.
 	 * @param	ease		Optional easer function.
 	 */
-	public function fadeTo(volume:Float, duration:Float, ease:EaseFunction = null):Void
+	public function fadeTo(volume:Float, duration:Float, ease:EaseFunction = null):SfxFader
 	{
 		if (volume < 0) 
 		{
@@ -47,6 +47,7 @@ class SfxFader extends FlxTween
 		_target = duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 
 	/**
@@ -56,7 +57,7 @@ class SfxFader extends FlxTween
 	 * @param	volume		The volume to fade in the new Sfx to.
 	 * @param	ease		Optional easer function.
 	 */
-	public function crossFade(play:FlxSound, duration:Float, volume:Float = 1, ease:EaseFunction = null):Void
+	public function crossFade(play:FlxSound, duration:Float, volume:Float = 1, ease:EaseFunction = null):SfxFader
 	{
 		_crossSfx = play;
 		_crossRange = volume;
@@ -66,6 +67,7 @@ class SfxFader extends FlxTween
 		_ease = ease;
 		_crossSfx.play(true);
 		start();
+		return this;
 	}
 
 	/** @private Updates the Tween. */

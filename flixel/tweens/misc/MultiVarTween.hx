@@ -1,7 +1,7 @@
 package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 import flixel.util.FlxArrayUtil;
 
 /**
@@ -36,7 +36,7 @@ class MultiVarTween extends FlxTween
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ease:EaseFunction = null):Void
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ease:EaseFunction = null):MultiVarTween
 	{
 		_object = object;
 		FlxArrayUtil.setLength(_vars, 0);
@@ -74,6 +74,7 @@ class MultiVarTween extends FlxTween
 			_range.push(Reflect.getProperty(properties, p) - a);
 		}
 		start();
+		return this;
 	}
 	
 	/** @private Updates the Tween. */

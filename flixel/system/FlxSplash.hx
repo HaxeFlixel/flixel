@@ -9,7 +9,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
@@ -66,7 +66,7 @@ class FlxSplash extends FlxState
 		_text.alpha = 0;
 		FlxG.stage.addChild(_text);
 		
-		FlxG.tween(_text, { alpha: 1 }, 1 );
+		FlxTween.varTween(_text, { alpha: 1 }, 1 );
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
 	}
 	
@@ -78,8 +78,8 @@ class FlxSplash extends FlxState
 		
 		if (_curPart == 5)
 		{
-			FlxG.tween(_sprite, { alpha: 0 }, 2.3, { ease: Ease.quadOut, complete: onComplete } );
-			FlxG.tween(_text, { alpha: 0 }, 2.3, { ease: Ease.quadOut } );
+			FlxTween.varTween(_sprite, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut, complete: onComplete } );
+			FlxTween.varTween(_text, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut } );
 		}
 	}
 	

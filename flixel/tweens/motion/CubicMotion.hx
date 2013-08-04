@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.motion;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Determines motion along a cubic curve.
@@ -33,7 +33,7 @@ class CubicMotion extends Motion
 	 * @param	duration	Duration of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):Void
+	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):CubicMotion
 	{
 		x = _fromX = fromX;
 		y = _fromY = fromY;
@@ -46,6 +46,7 @@ class CubicMotion extends Motion
 		_target = duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 	
 	/** @private Updates the Tween. */

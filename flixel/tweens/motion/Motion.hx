@@ -2,7 +2,7 @@
 
 import flixel.FlxObject;
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 typedef Movable = {
 	public var immovable:Bool;
@@ -45,10 +45,11 @@ class Motion extends FlxTween
 		_object = null;
 	}
 	
-	public function setObject(object:Movable):Void
+	public function setObject(object:Movable):Dynamic
 	{
 		_object = object;
 		_object.immovable = true;
+		return this;
 	}
 	
 	override public function update():Void 

@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 import flixel.util.FlxRandom;
 
 /**
@@ -32,7 +32,7 @@ class AngleTween extends FlxTween
 	 * @param	duration		Duration of the tween.
 	 * @param	ease			Optional easer function.
 	 */
-	public function tween(fromAngle:Float, toAngle:Float, duration:Float, ease:EaseFunction = null):Void
+	public function tween(fromAngle:Float, toAngle:Float, duration:Float, ease:EaseFunction = null):AngleTween
 	{
 		_start = angle = fromAngle;
 		var d:Float = toAngle - angle;
@@ -52,6 +52,7 @@ class AngleTween extends FlxTween
 		_target = duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 	
 	/** @private Updates the Tween. */

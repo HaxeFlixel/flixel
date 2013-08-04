@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.motion;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Determines motion along a line, from one point to another.
@@ -29,7 +29,7 @@ class LinearMotion extends Motion
 	 * @param	duration	Duration of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):Void
+	public function setMotion(fromX:Float, fromY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):LinearMotion
 	{
 		_distance = -1;
 		x = _fromX = fromX;
@@ -39,6 +39,7 @@ class LinearMotion extends Motion
 		_target = duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 
 	/**
@@ -50,7 +51,7 @@ class LinearMotion extends Motion
 	 * @param	speed		Speed of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotionSpeed(fromX:Float, fromY:Float, toX:Float, toY:Float, speed:Float, ease:EaseFunction = null):Void
+	public function setMotionSpeed(fromX:Float, fromY:Float, toX:Float, toY:Float, speed:Float, ease:EaseFunction = null):LinearMotion
 	{
 		_distance = -1;
 		x = _fromX = fromX;
@@ -60,6 +61,7 @@ class LinearMotion extends Motion
 		_target = distance / speed;
 		_ease = ease;
 		start();
+		return this;
 	}
 
 	/** @private Updates the Tween. */

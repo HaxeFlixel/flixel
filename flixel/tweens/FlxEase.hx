@@ -1,9 +1,9 @@
-package flixel.tweens.util;
+package flixel.tweens;
 
 /**
  * Static class with useful easer functions that can be used by Tweens.
  */
-class Ease 
+class FlxEase 
 {
 	/** Quadratic in. */
 	public static function quadIn(t:Float):Float

@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Tweens a numeric public property of an Object.
@@ -32,7 +32,7 @@ class VarTween extends FlxTween
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, property:String, to:Float, duration:Float, ease:EaseFunction = null):Void
+	public function tween(object:Dynamic, property:String, to:Float, duration:Float, ease:EaseFunction = null):VarTween
 	{
 		_object = object;
 		_ease = ease;
@@ -62,6 +62,7 @@ class VarTween extends FlxTween
 		_range = to - _start;
 		_target = duration;
 		start();
+		return this;
 	}
 	
 	/** @private Updates the Tween. */

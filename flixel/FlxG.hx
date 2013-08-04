@@ -16,7 +16,7 @@ import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
-import flixel.tweens.util.Ease.EaseFunction;
+import flixel.tweens.FlxEase.EaseFunction;
 import flixel.util.FlxCollision;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
@@ -467,42 +467,5 @@ class FlxG
 			debugPathDisplay.clear();
 		}
 		#end
-	}
-	
-	/**
-	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.
-	 * @param	object		The object containing the properties to tween.
-	 * @param	values		An object containing key/value pairs of properties and target values.
-	 * @param	duration	Duration of the tween.
-	 * @param	options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 * 						tweener		The Tweener to add this Tween to.
-	 * @return	The added MultiVarTween object.
-	 *
-	 * Example: FlxG.tween(object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete } );
-	 */
-	public static function tween(object:Dynamic, values:Dynamic, duration:Float, options:Dynamic = null):MultiVarTween
-	{
-		var type:Int = FlxTween.ONESHOT,
-			complete:CompleteCallback = null,
-			ease:EaseFunction = null,
-			tweener:FlxBasic = FlxG.tweener;
-		if (Std.is(object, FlxBasic)) 
-		{
-			tweener = cast(object, FlxBasic);
-		}
-		if (options != null)
-		{
-			if (Reflect.hasField(options, "type")) type = options.type;
-			if (Reflect.hasField(options, "complete")) complete = options.complete;
-			if (Reflect.hasField(options, "ease")) ease = options.ease;
-			if (Reflect.hasField(options, "tweener")) tweener = options.tweener;
-		}
-		var tween:MultiVarTween = new MultiVarTween(complete, type);
-		tween.tween(object, values, duration, ease);
-		tweener.addTween(tween);
-		return tween;
 	}
 }

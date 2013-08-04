@@ -2,7 +2,7 @@
 
 import flixel.FlxG;
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Global volume fader.
@@ -20,7 +20,7 @@ class Fader extends FlxTween
 	}
 	
 	/**
-	 * Fades FP.volume to the target volume.
+	 * Fades FlxG.volume to the target volume.
 	 * @param	volume		The volume to fade to.
 	 * @param	duration	Duration of the fade.
 	 * @param	ease		Optional easer function.

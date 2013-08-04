@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Tweens a color's red, green, and blue properties
@@ -39,7 +39,7 @@ class ColorTween extends FlxTween
 	 * @param	toAlpha			End alpha.
 	 * @param	ease			Optional easer function.
 	 */
-	public function tween(duration:Float, fromColor:Int, toColor:Int, fromAlpha:Float = 1, toAlpha:Float = 1, ease:EaseFunction = null):Void
+	public function tween(duration:Float, fromColor:Int, toColor:Int, fromAlpha:Float = 1, toAlpha:Float = 1, ease:EaseFunction = null):ColorTween
 	{
 		fromColor &= 0xFFFFFF;
 		toColor &= 0xFFFFFF;
@@ -58,6 +58,7 @@ class ColorTween extends FlxTween
 		_target = duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 
 	/** @private Updates the Tween. */

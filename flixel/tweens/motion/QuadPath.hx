@@ -1,7 +1,8 @@
 ﻿package flixel.tweens.motion;
 
+import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.CompleteCallback;
-import flixel.tweens.util.Ease.EaseFunction;
+import flixel.tweens.FlxEase.EaseFunction;
 import flixel.util.FlxPoint;
 
 /**
@@ -45,13 +46,14 @@ class QuadPath extends Motion
 	 * @param	duration	Duration of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotion(duration:Float, ease:EaseFunction = null):Void
+	public function setMotion(duration:Float, ease:EaseFunction = null):QuadPath
 	{
 		updatePath();
 		_target = duration;
 		_speed = _distance / duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 	
 	/**
@@ -59,13 +61,14 @@ class QuadPath extends Motion
 	 * @param	speed		Speed of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotionSpeed(speed:Float, ease:EaseFunction = null):Void
+	public function setMotionSpeed(speed:Float, ease:EaseFunction = null):QuadPath
 	{
 		updatePath();
 		_target = _distance / speed;
 		_speed = speed;
 		_ease = ease;
 		start();
+		return this;
 	}
 	
 	/**
@@ -73,11 +76,12 @@ class QuadPath extends Motion
 	 * @param	x		X position.
 	 * @param	y		Y position.
 	 */
-	public function addPoint(x:Float = 0, y:Float = 0):Void
+	public function addPoint(x:Float = 0, y:Float = 0):QuadPath
 	{
 		_updateCurve = true;
 		if (_points.length == 0) _curve[0] = new FlxPoint(x, y);
 		_points[_points.length] = new FlxPoint(x, y);
+		return this;
 	}
 	
 	/**
@@ -95,7 +99,7 @@ class QuadPath extends Motion
 	}
 	
 	/** @private Starts the Tween. */
-	override public function start():Void
+	override public function start():Dynamic
 	{
 		if (!_backward)
 		{
@@ -107,6 +111,7 @@ class QuadPath extends Motion
 		}
 		
 		super.start();
+		return this;
 	}
 	
 	/** @private Updates the Tween. */

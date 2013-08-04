@@ -2,7 +2,7 @@
 
 import flixel.util.FlxPoint;
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Determines motion along a quadratic curve.
@@ -37,7 +37,7 @@ class QuadMotion extends Motion
 	 * @param	duration	Duration of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):Void
+	public function setMotion(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):QuadMotion
 	{
 		_distance = -1;
 		x = _fromX = fromX;
@@ -49,6 +49,7 @@ class QuadMotion extends Motion
 		_target = duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 	
 	/**
@@ -62,7 +63,7 @@ class QuadMotion extends Motion
 	 * @param	speed		Speed of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotionSpeed(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, speed:Float, ease:EaseFunction = null):Void
+	public function setMotionSpeed(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, speed:Float, ease:EaseFunction = null):QuadMotion
 	{
 		_distance = -1;
 		x = _fromX = fromX;
@@ -74,6 +75,7 @@ class QuadMotion extends Motion
 		_target = distance / speed;
 		_ease = ease;
 		start();
+		return this;
 	}
 	
 	/** @private Updates the Tween. */

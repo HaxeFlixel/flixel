@@ -2,7 +2,7 @@ package flixel.tweens.motion;
 
 import flixel.util.FlxPoint;
 import flixel.tweens.FlxTween;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 
 /**
  * Determines linear motion along a set of points.
@@ -42,13 +42,14 @@ class LinearPath extends Motion
 	 * @param	duration		Duration of the movement.
 	 * @param	ease			Optional easer function.
 	 */
-	public function setMotion(duration:Float, ease:EaseFunction = null):Void
+	public function setMotion(duration:Float, ease:EaseFunction = null):LinearPath
 	{
 		updatePath();
 		_target = duration;
 		_speed = distance / duration;
 		_ease = ease;
 		start();
+		return this;
 	}
 
 	/**
@@ -56,14 +57,14 @@ class LinearPath extends Motion
 	 * @param	speed		Speed of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotionSpeed(speed:Float, ease:EaseFunction = null):Void
+	public function setMotionSpeed(speed:Float, ease:EaseFunction = null):LinearPath
 	{
 		updatePath();
 		_target = distance / speed;
 		_speed = speed;
 		_ease = ease;
-
 		start();
+		return this;
 	}
 
 	/**
@@ -71,7 +72,7 @@ class LinearPath extends Motion
 	 * @param	x		X position.
 	 * @param	y		Y position.
 	 */
-	public function addPoint(x:Float = 0, y:Float = 0):Void
+	public function addPoint(x:Float = 0, y:Float = 0):LinearPath
 	{
 		if (_last != null)
 		{
@@ -79,6 +80,7 @@ class LinearPath extends Motion
 			_pointD[_points.length] = distance;
 		}
 		_points[_points.length] = _last = new FlxPoint(x, y);
+		return this;
 	}
 
 	/**
@@ -96,7 +98,7 @@ class LinearPath extends Motion
 	}
 
 	/** @private Starts the Tween. */
-	override public function start():Void
+	override public function start():Dynamic
 	{
 		if (!_backward)
 		{
@@ -108,6 +110,7 @@ class LinearPath extends Motion
 		}
 		
 		super.start();
+		return this;
 	}
 
 	/** @private Updates the Tween. */
