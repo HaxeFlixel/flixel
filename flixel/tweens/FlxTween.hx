@@ -1,6 +1,7 @@
 package flixel.tweens;
 
 import flixel.FlxBasic;
+import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
@@ -198,11 +199,12 @@ class FlxTween
 	/**
 	 * Creates new Motion object. The type of it depends on motionType value. It could be LinearMotion, CircularMotion, QuadMotion or CubicMotion.
 	 * @param	motionType	type of motion
+	 * @param	tweener		object to add Motion tween to.
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 * @return	Newly created Motion object.
 	 */
-	public static function motionTween(motionType:MotionType, complete:CompleteCallback = null, type:Int = 0):Dynamic
+	public static function motionTween(motionType:MotionType, tweener:FlxObject, complete:CompleteCallback = null, type:Int = 0):Dynamic
 	{
 		var motion:Motion = null;
 		switch (motionType)
@@ -216,17 +218,21 @@ class FlxTween
 			case MotionType.CUBIC:
 				motion = new CubicMotion(complete, type);
 		}
+		
+		tweener.addTween(motion);
+		motion.setObject(tweener);
 		return motion;
 	}
 	
 	/**
 	 * Creates new Motion object. The type of it depends on pathType value. It could be LinearPath or QuadPath.
 	 * @param	pathType	type of motion
+	 * @param	tweener		object to add Motion tween to.
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 * @return	Newly created Motion object.
 	 */
-	public static function pathTween(pathType:PathType, complete:CompleteCallback = null, type:Int = 0):Dynamic
+	public static function pathTween(pathType:PathType, tweener:FlxObject, complete:CompleteCallback = null, type:Int = 0):Dynamic
 	{
 		var motion:Motion = null;
 		
@@ -238,6 +244,8 @@ class FlxTween
 				motion = new QuadPath(complete, type);
 		}
 		
+		tweener.addTween(motion);
+		motion.setObject(tweener);
 		return motion;
 	}
 	
