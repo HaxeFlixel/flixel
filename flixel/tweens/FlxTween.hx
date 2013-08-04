@@ -37,7 +37,7 @@ class FlxTween
 	 * How many times this tween has been executed / has finished so far - useful to 
 	 * stop the LOOPING and PINGPONG types after a certain amount of time
 	 */
-	public var executions(default, null):Int;
+	public var executions(default, null):Int = 0;
 	/**
 	 * Useful to store values you want to access within your callback function.
 	 */
