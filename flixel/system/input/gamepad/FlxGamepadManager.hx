@@ -6,6 +6,11 @@ import flixel.system.input.gamepad.FlxGamepad;
 import flixel.system.input.IFlxInput;
 import openfl.events.JoystickEvent;
 
+#if android
+import openfl.utils.JNI;
+import tv.ouya.console.api.OuyaController;
+#end
+
 /**
  * ...
  * @author Zaphod
@@ -22,6 +27,11 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function new() 
 	{
+		#if android
+		var getContext = JNI.createStaticMethod ("org.haxe.nme.GameActivity", "getContext", "()Landroid/content/Context;", true);
+		OuyaController.init(getContext());
+		#end
+		
 		_gamepads = new Map<Int, FlxGamepad>();
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
