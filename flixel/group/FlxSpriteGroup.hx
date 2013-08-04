@@ -14,15 +14,6 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 */
 	private var _skipTransformChildren:Bool = false;
 	
-	public function new(MaxSize:Int = 0)
-	{
-		super(MaxSize);
-		
-		x = 0;
-		y = 0;
-		alpha = 1;
-	}
-	
 	/**
 	 * Adds a new <code>FlxBasic</code> subclass (FlxBasic, FlxSprite, Enemy, etc) to the group.
 	 * FlxGroup will try to replace a null member of the array first.
@@ -47,17 +38,10 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	/**
 	 * The x position of this group.
 	 */
-	public var x(default, set):Float;
+	public var x(default, set):Float = 0;
 	
 	private function set_x(NewX:Float):Float
 	{
-		#if neko
-		if (x == null)
-		{
-			x = 0;
-		}
-		#end
-		
 		if (!_skipTransformChildren)
 		{
 			var offset:Float = NewX - x;
@@ -70,7 +54,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	/**
 	 * The y position of this group.
 	 */
-	public var y(default, set):Float;
+	public var y(default, set):Float = 0;
 	
 	private function set_y(NewY:Float):Float
 	{
@@ -93,7 +77,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	/**
 	 * The alpha value of this group.
 	 */
-	public var alpha(default, set):Float;
+	public var alpha(default, set):Float = 1;
 	
 	private function set_alpha(NewAlpha:Float):Float 
 	{
