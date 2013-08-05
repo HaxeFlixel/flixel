@@ -132,6 +132,8 @@ class FlxCamera extends FlxBasic
 	 * The actual bitmap data of the camera display itself.
 	 */
 	public var buffer:BitmapData;
+	
+	public var regen:Bool = false;
 	#end
 	
 	/**
@@ -1182,10 +1184,11 @@ class FlxCamera extends FlxBasic
 	{
 		if (val > 0)
 		{
-			width = val;
+			width = val; 
 			#if flash
 			if ( _flashBitmap != null )
 			{
+				regen = (val != buffer.width);
 				_flashOffsetX = width * 0.5 * zoom;
 				_flashBitmap.x = -width * 0.5;
 			}
@@ -1216,6 +1219,7 @@ class FlxCamera extends FlxBasic
 			#if flash
 			if (_flashBitmap != null)
 			{
+				regen = (val != buffer.height);
 				_flashOffsetY = height * 0.5 * zoom;
 				_flashBitmap.y = -height * 0.5;
 			}
@@ -1249,4 +1253,27 @@ class FlxCamera extends FlxBasic
 		useBgAlphaBlending = value;
 		return value;
 	}
+	
+	#if flash
+	public function checkResize():Void
+	{
+		if (regen)
+		{
+			if (width != buffer.width || height != buffer.height)
+			{
+				FlxG.bitmap.remove(screen.cachedGraphics.key);
+				buffer = new BitmapData(width, height, true, 0);
+				screen.pixels = buffer;
+				screen.setOriginToCorner();
+				_flashBitmap.bitmapData = buffer;
+				_flashRect.width = width;
+				_flashRect.height = height;
+				_fill.dispose();
+				_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+			}
+			
+			regen = false;
+		}
+	}
+	#end
 }

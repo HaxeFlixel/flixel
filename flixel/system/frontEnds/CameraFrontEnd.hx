@@ -44,6 +44,8 @@ class CameraFrontEnd
 			}
 			
 			#if flash
+			camera.checkResize();
+			
 			if (useBufferLocking)
 			{
 				camera.buffer.lock();
