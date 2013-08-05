@@ -6,7 +6,7 @@ import flixel.system.input.gamepad.FlxGamepad;
 import flixel.system.input.IFlxInput;
 import openfl.events.JoystickEvent;
 
-#if android
+#if (android && openfl_ouya)
 import openfl.utils.JNI;
 import tv.ouya.console.api.OuyaController;
 #end
@@ -27,7 +27,7 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function new() 
 	{
-		#if android
+		#if (android && openfl_ouya)
 		var getContext = JNI.createStaticMethod ("org.haxe.nme.GameActivity", "getContext", "()Landroid/content/Context;", true);
 		OuyaController.init(getContext());
 		#end
