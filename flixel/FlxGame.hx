@@ -303,7 +303,10 @@ class FlxGame extends Sprite
 		_lostFocus = false;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-		_focusLostScreen.visible = false;
+		if (_focusLostScreen != null)
+		{
+			_focusLostScreen.visible = false;
+		}
 		#end 
 		
 		stage.frameRate = flashFramerate;
@@ -326,7 +329,10 @@ class FlxGame extends Sprite
 		_lostFocus = true;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-		_focusLostScreen.visible = true;
+		if (_focusLostScreen != null)
+		{
+			_focusLostScreen.visible = true;
+		}
 		#end 
 		
 		stage.frameRate = 10;

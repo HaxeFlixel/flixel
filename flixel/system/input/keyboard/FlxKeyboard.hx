@@ -239,7 +239,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 				FlxG.sound.volumeHandler(FlxG.sound.muted ? 0 : FlxG.sound.volume);
 			}
 			
-			#if !FLX_NO_SOUND_TRAY
+			#if !(mobile && FLX_NO_SOUND_TRAY)
 			if(FlxG.game.soundTray != null)
 			{
 				FlxG.game.soundTray.show();
@@ -252,7 +252,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			FlxG.sound.muted = false;
 			FlxG.sound.volume -= 0.1;
 			
-			#if !FLX_NO_SOUND_TRAY
+			#if !(mobile && FLX_NO_SOUND_TRAY)
 			if(FlxG.game.soundTray != null)
 			{
 				FlxG.game.soundTray.show();
@@ -265,7 +265,7 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 			FlxG.sound.muted = false;
 			FlxG.sound.volume += 0.1;
 			
-			#if !FLX_NO_SOUND_TRAY
+			#if !(mobile && FLX_NO_SOUND_TRAY)
 			if(FlxG.game.soundTray != null)
 			{
 				FlxG.game.soundTray.show();
