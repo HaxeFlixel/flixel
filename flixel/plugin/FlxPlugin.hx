@@ -17,6 +17,8 @@ class FlxPlugin extends FlxBasic
 	
 	/**
 	 * This function is called whenever the window size has been changed.
+	 * @param 	Width	The new window width
+	 * @param 	Height	The new window Height
 	 */  
-	public function onResize():Void { }
+	public function onResize(Width:Int, Height:Int):Void { }
 }

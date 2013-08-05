@@ -1856,18 +1856,6 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Shortcut for setting both width and Height.
-	 * 
-	 * @param	Width	The new sprite width.
-	 * @param	Height	The new sprite height.
-	 */
-	public function setSize(Width:Float, Height:Float)
-	{
-		width = Width;
-		height = Height;
-	}
-	
-	/**
 	 * Removes a filter from the sprite.
 	 * 
 	 * @param	filter	The filter to be removed.

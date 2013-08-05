@@ -237,8 +237,9 @@ class FlxState extends FlxGroup
 	public function onFocus():Void { }
 
 	/**
-	 * This method is called after application gets resized.
-	 * Can be useful to update the game based on the new dimensions.
-	 */
-	public function onResize():Void { }
+	 * This function is called whenever the window size has been changed.
+	 * @param 	Width	The new window width
+	 * @param 	Height	The new window Height
+	 */  
+	public function onResize(Width:Int, Height:Int):Void { }
 }

@@ -164,14 +164,16 @@ class PluginFrontEnd
 	
 	/**
 	 * Used by the game object to call <code>onResize()</code> on all the plugins.
+	 * @param 	Width	The new window width
+	 * @param 	Height	The new window Height
 	 */
-	inline public function onResize():Void
+	inline public function onResize(Width:Int, Height:Int):Void
 	{
 		for (plugin in list)
 		{
 			if (plugin.exists)
 			{
-				plugin.onResize();
+				plugin.onResize(Width, Height);
 			}
 		}
 	}

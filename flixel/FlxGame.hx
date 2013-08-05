@@ -331,12 +331,20 @@ class FlxGame extends Sprite
 	
 	private function onResize(E:Event):Void 
 	{
+		var width:Int = Lib.current.stage.stageWidth;
+		var height:Int = Lib.current.stage.stageHeight;
+		
 		#if (desktop || mobile)
 		FlxG.bitmap.onContext();
 		#end
 		
-		state.onResize();
-		FlxG.plugins.onResize();
+		state.onResize(width, height);
+		FlxG.plugins.onResize(width, height);
+		
+		if (FlxG.autoResize)
+		{
+			FlxG.resizeGame(width, height);
+		}
 	}
 	
 	/**

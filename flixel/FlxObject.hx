@@ -1286,14 +1286,24 @@ class FlxObject extends FlxBasic
 	/**
 	 * Helper function to set the coordinates of this object.
 	 * Handy since it only requires one line of code.
-	 * 
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	public function setPosition(X:Float, Y:Float):Void
+	inline public function setPosition(X:Float, Y:Float):Void
 	{
 		x = X;
 		y = Y;
+	}
+	
+	/**
+	 * Shortcut for setting both width and Height.
+	 * @param	Width	The new sprite width.
+	 * @param	Height	The new sprite height.
+	 */
+	inline public function setSize(Width:Float, Height:Float)
+	{
+		width = Width;
+		height = Height;
 	}
 	
 	function set_forceComplexRender(value:Bool):Bool 
@@ -1317,7 +1327,7 @@ class FlxObject extends FlxBasic
 	
 	public var cachedGraphics(get_cachedGraphics, null):CachedGraphics;
 	
-	private function get_cachedGraphics():CachedGraphics
+	inline private function get_cachedGraphics():CachedGraphics
 	{
 		return _cachedGraphics;
 	}

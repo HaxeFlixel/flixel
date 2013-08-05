@@ -1276,4 +1276,15 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	#end
+	
+	/**
+	 * Shortcut for setting both width and Height.
+	 * @param	Width	The new sprite width.
+	 * @param	Height	The new sprite height.
+	 */
+	inline public function setSize(Width:Int, Height:Int)
+	{
+		width = Width;
+		height = Height;
+	}
 }

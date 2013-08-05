@@ -75,6 +75,10 @@ class FlxG
 	 */
 	static public var autoPause:Bool = true;
 	/**
+	 * Whether <code>FlxG.resizeGame()</code> should be called whenever the game is resized. False by default.
+	 */
+	static public var autoResize:Bool = false;
+	/**
 	 * WARNING: Changing this can lead to issues with physcis and the recording system. Setting this to 
 	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
 	 */
@@ -253,7 +257,7 @@ class FlxG
 	 */
 	static public var framerate(get, set):Int;
 	
-	static private function get_framerate():Int
+	inline static private function get_framerate():Int
 	{
 		return Std.int(1000 / game.stepMS);
 	}
@@ -319,9 +323,20 @@ class FlxG
 	/**
 	 * Like hitting the reset button a game console, this will re-launch the game as if it just started.
 	 */
-	static public function resetGame():Void
+	inline static public function resetGame():Void
 	{
 		game.requestedReset = true;
+	}
+	
+	/**
+	 * Handy helper functions that takes care of all the things to resize the game. 
+	 * Use <code>FlxG.autoResize</code> to call this function automtically when the window is resized!
+	 */
+	inline static public function resizeGame(Width:Int, Height:Int):Void
+	{
+        camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
+        width = Width;
+        height = Height; 
 	}
 	
 	/**
@@ -330,7 +345,7 @@ class FlxG
 	 */
 	public static var stage(get, never):Stage;
 	
-	static private function get_stage():Stage
+	inline static private function get_stage():Stage
 	{
 		return game.stage;
 	}
@@ -340,7 +355,7 @@ class FlxG
 	 */
 	public static var state(get, never):FlxState;
 	
-	static private function get_state():FlxState
+	inline static private function get_state():FlxState
 	{
 		return game.state;
 	}
@@ -348,7 +363,7 @@ class FlxG
 	/**
 	 * Switch from the current game state to the one specified here.
 	 */
-	static public function switchState(State:FlxState):Void
+	inline static public function switchState(State:FlxState):Void
 	{
 		game.requestNewState(State); 
 	}
@@ -356,7 +371,7 @@ class FlxG
 	/**
 	 * Request a reset of the current game state.
 	 */
-	static public function resetState():Void
+	inline static public function resetState():Void
 	{
 		game.requestNewState(Type.createInstance(Type.resolveClass(FlxStringUtil.getClassName(game.state, false)), []));
 		
