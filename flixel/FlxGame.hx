@@ -1,26 +1,15 @@
 package flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.Lib;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
-import flixel.plugin.TimerManager;
-import flixel.system.FlxAssets;
 import flixel.system.FlxSplash;
-import flixel.system.replay.FlxReplay;
 import flixel.system.layer.TileSheetExt;
+import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
-import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
-import flixel.util.FlxTimer;
-import openfl.Assets;
 
 #if flash
 import flash.text.AntiAliasType;
