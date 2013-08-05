@@ -9,6 +9,7 @@ import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
@@ -127,7 +128,7 @@ class PlayState extends FlxState
 		_score += Amount;
 		_scoreText.text = "Score: " + _score;
 		_scoreText.alpha = 0;
-		FlxG.tween(_scoreText, { alpha:1 }, 0.5);
+		FlxTween.multiVar(_scoreText, { alpha:1 }, 0.5);
 	}
 	
 	private function bulletHitsAsteroid(Object1:FlxObject, Object2:FlxObject):Void
