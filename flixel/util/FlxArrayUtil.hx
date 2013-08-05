@@ -6,7 +6,8 @@ package flixel.util;
 class FlxArrayUtil
 {
 	/**
-	 * Function to search for a specified element in an array.
+	 * Function to search for a specified element in an array. This is faster than <code>Lambda.indexOf()</code>
+	 * on the flash target because it uses the the native array <code>indexOf()</code> method.
 	 * 
 	 * @param	array		The array.
 	 * @param	whatToFind	The element you're looking for.
