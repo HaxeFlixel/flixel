@@ -257,15 +257,15 @@ class FlxGame extends Sprite
 				addChild(soundTray);
 			#end
 			
-			// Focus gained/lost monitoring
-			stage.addEventListener(Event.DEACTIVATE, onFocusLost);
-			stage.addEventListener(Event.ACTIVATE, onFocus);
-			
 			#if !FLX_NO_FOCUS_LOST_SCREEN
 				_focusLostScreen = Type.createInstance(_customFocusLostScreen, []);
 				addChild(_focusLostScreen);
 			#end
 		#end
+		
+		// Focus gained/lost monitoring
+		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
+		stage.addEventListener(Event.ACTIVATE, onFocus);
 		
 		// Instantiate the initial state
 		if (requestedReset)
