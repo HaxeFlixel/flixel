@@ -292,7 +292,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onFocus(FlashEvent:Event = null):Void
+	private function onFocus(?FlashEvent:Event):Void
 	{
 		if (!FlxG.autoPause) 
 		{
@@ -318,7 +318,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onFocusLost(FlashEvent:Event = null):Void
+	private function onFocusLost(?FlashEvent:Event):Void
 	{
 		if (!FlxG.autoPause) 
 		{
@@ -347,6 +347,7 @@ class FlxGame extends Sprite
 		#end
 		
 		state.onResize();
+		FlxG.plugins.onResize();
 	}
 	
 	/**
@@ -470,11 +471,11 @@ class FlxGame extends Sprite
 	{ 
 		// Basic reset stuff
 		PxBitmapFont.clearStorage();
-		
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
 		FlxG.inputs.reset();
 		FlxG.sound.destroySounds();
+		FlxG.plugins.onStateSwitch();
 		
 		#if !FLX_NO_DEBUG
 		// Clear the debugger overlay's Watch window
@@ -483,13 +484,6 @@ class FlxGame extends Sprite
 			debugger.watch.removeAll();
 		}
 		#end
-		
-		// Clear any timers left in the timer manager
-		var timerManager:TimerManager = FlxTimer.manager;
-		if (timerManager != null)
-		{
-			timerManager.clear();
-		}
 		
 		#if !FLX_NO_MOUSE
 		var mouseVisibility:Bool = FlxG.mouse.visible || ((state != null) ? state.useMouse : false);
@@ -523,7 +517,7 @@ class FlxGame extends Sprite
 	private function step():Void
 	{
 		// Handle game reset request
-		if(requestedReset)
+		if (requestedReset)
 		{
 			resetGame();
 			requestedReset = false;
@@ -608,7 +602,7 @@ class FlxGame extends Sprite
 		FlxG.sound.updateSounds();
 		FlxG.plugins.update();
 		
-		updateState();
+		state.tryUpdate(); // Update the current state
 		
 		if (FlxG.tweener.active && FlxG.tweener.hasTween) 
 		{
@@ -623,11 +617,6 @@ class FlxGame extends Sprite
 			debugger.perf.flixelUpdate(Lib.getTimer() - ticks);
 		}
 		#end
-	}
-	
-	private function updateState():Void
-	{
-		state.tryUpdate();
 	}
 	
 	private function updateInput():Void

@@ -1,8 +1,8 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.plugin.DebugPathDisplay;
+import flixel.plugin.FlxPlugin;
 import flixel.plugin.TimerManager;
 
 class PluginFrontEnd
@@ -10,7 +10,7 @@ class PluginFrontEnd
 	/**
 	 * An array container for plugins.
 	 */
-	public var list(default, null):Array<FlxBasic>;
+	public var list(default, null):Array<FlxPlugin>;
 	
 	/**
 	 * Sets up two plugins: <code>DebugPathDisplay</code> 
@@ -18,7 +18,7 @@ class PluginFrontEnd
 	 */
 	public function new() 
 	{
-		list = new Array<FlxBasic>();
+		list = new Array<FlxPlugin>();
 		
 		#if !FLX_NO_DEBUG
 		add(new DebugPathDisplay());
@@ -33,7 +33,7 @@ class PluginFrontEnd
 	 * @param	Plugin	Any object that extends FlxBasic. Useful for managers and other things.  See flixel.plugin for some examples!
 	 * @return	The same <code>FlxBasic</code>-based plugin you passed in.
 	 */
-	public function add(Plugin:FlxBasic):FlxBasic
+	public function add(Plugin:FlxPlugin):FlxPlugin
 	{
 		// Don't add repeats
 		for (plugin in list)
@@ -55,7 +55,7 @@ class PluginFrontEnd
 	 * @param	ClassType	The class name of the plugin you want to retrieve. See the <code>FlxPath</code> or <code>FlxTimer</code> constructors for example usage.
 	 * @return	The plugin object, or null if no matching plugin was found.
 	 */
-	public function get(ClassType:Class<FlxBasic>):FlxBasic
+	public function get(ClassType:Class<FlxPlugin>):FlxPlugin
 	{
 		for (plugin in list)
 		{
@@ -74,7 +74,7 @@ class PluginFrontEnd
 	 * @param	Plugin	The plugin instance you want to remove.
 	 * @return	The same <code>FlxBasic</code>-based plugin you passed in.
 	 */
-	public function remove(Plugin:FlxBasic):FlxBasic
+	public function remove(Plugin:FlxPlugin):FlxPlugin
 	{
 		// Don't add repeats
 		var i:Int = list.length - 1;
@@ -98,7 +98,7 @@ class PluginFrontEnd
 	 * @param	ClassType	The class name of the plugin type you want removed from the array.
 	 * @return	Whether or not at least one instance of this plugin type was removed.
 	 */
-	public function removeType(ClassType:Class<FlxBasic>):Bool
+	public function removeType(ClassType:Class<FlxPlugin>):Bool
 	{
 		// Don't add repeats
 		var results:Bool = false;
@@ -145,11 +145,39 @@ class PluginFrontEnd
 		}
 	}
 	
+	/**
+	 * Used by the game object to call <code>onStateSwitch()</code> on all the plugins.
+	 */
+	inline public function onStateSwitch():Void
+	{
+		for (plugin in list)
+		{
+			if (plugin.exists)
+			{
+				plugin.onStateSwitch();
+			}
+		}
+	}
+	
+	/**
+	 * Used by the game object to call <code>onResize()</code> on all the plugins.
+	 */
+	inline public function onResize():Void
+	{
+		for (plugin in list)
+		{
+			if (plugin.exists)
+			{
+				plugin.onResize();
+			}
+		}
+	}
+	
 	#if !FLX_NO_DEBUG
 	/**
-	 * You shouldn't need to call this. Used to Draw the debug graphics for any installed plugins.
+	 * You shouldn't need to call this. Used to draw the debug graphics for any installed plugins.
 	 */
-	public function drawDebug():Void
+	inline public function drawDebug():Void
 	{
 		for (plugin in list)
 		{

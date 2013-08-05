@@ -1,7 +1,6 @@
 package flixel.plugin;
 
 #if !FLX_NO_DEBUG
-import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxArrayUtil;
@@ -10,7 +9,7 @@ import flixel.util.FlxPath;
 /**
  * A simple manager for tracking and drawing FlxPath debug data to the screen.
  */
-class DebugPathDisplay extends FlxBasic
+class DebugPathDisplay extends FlxPlugin
 {
 	private var _paths:Array<FlxPath>;
 	

@@ -30,7 +30,7 @@ import flixel.util.FlxPoint;
 * 
 * @author TiagoLr (~~~ ProG4mr ~~~)
 */
-class MouseEventManager extends FlxBasic
+class MouseEventManager extends FlxPlugin
 {
 	static private var _registeredSprites:Array<SpriteReg>;
 	static private var _mouseOverSprites:Array<SpriteReg>;

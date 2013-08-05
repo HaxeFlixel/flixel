@@ -1,15 +1,13 @@
 package flixel.plugin;
 
-import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxTimer;
-import flixel.util.FlxPool;
 
 /**
  * A simple manager for tracking and updating game timer objects.
  */
-class TimerManager extends FlxBasic
+class TimerManager extends FlxPlugin
 {
 	private var _timers:Array<FlxTimer>;
 	
@@ -104,5 +102,10 @@ class TimerManager extends FlxBasic
 			var timer:FlxTimer = _timers.pop();
 			FlxTimer.put(timer);
 		}
+	}
+	
+	override inline public function onStateSwitch():Void
+	{
+		clear();
 	}
 }
