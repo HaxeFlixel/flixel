@@ -583,8 +583,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			// getTimer() is expensive, only do it if necessary
-			ticks = Lib.getTimer(); 
+			ticks = Lib.getTimer(); // getTimer() is expensive, only do it if necessary
 		}
 		#end
 		
@@ -603,11 +602,6 @@ class FlxGame extends Sprite
 		FlxG.plugins.update();
 		
 		state.tryUpdate(); // Update the current state
-		
-		if (FlxG.tweener.active && FlxG.tweener.hasTween) 
-		{
-			FlxG.tweener.updateTweens();
-		}
 		
 		FlxG.cameras.update();
 		

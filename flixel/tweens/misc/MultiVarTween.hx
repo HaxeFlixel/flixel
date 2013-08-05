@@ -77,14 +77,19 @@ class MultiVarTween extends FlxTween
 		return this;
 	}
 	
-	/** @private Updates the Tween. */
+	/**
+	 * Updates the Tween. 
+	 */
 	override public function update():Void
 	{
 		super.update();
 		var i:Int = _vars.length;
 		while (i-- > 0) 
 		{
-			Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
+			if (_object != null)
+			{
+				Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
+			}
 		}
 	}
 

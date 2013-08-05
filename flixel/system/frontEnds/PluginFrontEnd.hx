@@ -4,6 +4,8 @@ import flixel.FlxG;
 import flixel.plugin.DebugPathDisplay;
 import flixel.plugin.FlxPlugin;
 import flixel.plugin.TimerManager;
+import flixel.plugin.TweenManager;
+import flixel.tweens.FlxTween;
 
 class PluginFrontEnd
 {
@@ -25,13 +27,14 @@ class PluginFrontEnd
 		#end
 		
 		add(new TimerManager());
+		add(FlxTween.plugin = new TweenManager());
 	}
 	
 	/**
 	 * Adds a new plugin to the global plugin array.
 	 * 
-	 * @param	Plugin	Any object that extends FlxBasic. Useful for managers and other things.  See flixel.plugin for some examples!
-	 * @return	The same <code>FlxBasic</code>-based plugin you passed in.
+	 * @param	Plugin	Any object that extends FlxPlugin. Useful for managers and other things. See flixel.plugin for some examples!
+	 * @return	The same <code>FlxPlugin</code>-based plugin you passed in.
 	 */
 	public function add(Plugin:FlxPlugin):FlxPlugin
 	{
@@ -72,7 +75,7 @@ class PluginFrontEnd
 	 * Removes an instance of a plugin from the global plugin array.
 	 * 
 	 * @param	Plugin	The plugin instance you want to remove.
-	 * @return	The same <code>FlxBasic</code>-based plugin you passed in.
+	 * @return	The same <code>FlxPlugin</code>-based plugin you passed in.
 	 */
 	public function remove(Plugin:FlxPlugin):FlxPlugin
 	{

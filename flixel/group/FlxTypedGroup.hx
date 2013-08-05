@@ -109,17 +109,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			if ((basic != null) && basic.exists && basic.active)
 			{
 				basic.update();
-				
-				if (basic.hasTween) 
-				{
-					basic.updateTweens();
-				}
 			}
-		}
-		
-		if (hasTween)
-		{
-			updateTweens();
 		}
 	}
 	

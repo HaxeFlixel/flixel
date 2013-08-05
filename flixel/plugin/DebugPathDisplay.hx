@@ -140,5 +140,10 @@ class DebugPathDisplay extends FlxPlugin
 		
 		_paths = [];
 	}
+	
+	override inline public function onStateSwitch():Void
+	{
+		clear();
+	}
 }
 #end

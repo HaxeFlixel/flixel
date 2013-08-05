@@ -14,9 +14,6 @@ import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.text.pxText.PxBitmapFont;
-import flixel.tweens.FlxTween;
-import flixel.tweens.misc.MultiVarTween;
-import flixel.tweens.FlxEase.EaseFunction;
 import flixel.util.FlxCollision;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
@@ -108,10 +105,6 @@ class FlxG
 	 * while denser collision activity usually profits from more. Default value is 6.
 	 */
 	static public var worldDivisions:Int;
-	/**
-	 * Global tweener for tweening between multiple worlds
-	 */
-	static public var tweener(default, null):FlxBasic = new FlxBasic();
 	/**
 	 * By default this just refers to the first entry in the <code>FlxG.cameras.list</code> 
 	 * array but you can do what you like with it.
@@ -459,13 +452,5 @@ class FlxG
 		FlxRandom.globalSeed = Math.random();
 		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
 		FlxG.worldDivisions = 6;
-		
-		#if !FLX_NO_DEBUG
-		var debugPathDisplay:DebugPathDisplay = cast(FlxG.plugins.get(DebugPathDisplay), DebugPathDisplay);
-		if (debugPathDisplay != null)
-		{
-			debugPathDisplay.clear();
-		}
-		#end
 	}
 }

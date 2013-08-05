@@ -3,6 +3,7 @@ package flixel.tweens;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxG;
+import flixel.plugin.TweenManager;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.MultiVarTween;
@@ -23,7 +24,12 @@ import flixel.tweens.FlxEase.EaseFunction;
 class FlxTween
 {
 	/**
-	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to a Tweener.
+	 * The tweening plugin that handles all the tweens.
+	 */
+	static public var plugin:TweenManager;
+	
+	/**
+	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to the TweenPlugin.
 	 * @param	object		The object containing the properties to tween.
 	 * @param	values		An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
@@ -31,36 +37,31 @@ class FlxTween
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
-	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added MultiVarTween object.
 	 *
-	 * Example: FlxTween.multiVar(object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.multiVar(object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 */
 	public static function multiVar(object:Dynamic, values:Dynamic, duration:Float, options:Dynamic = null):MultiVarTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
-			ease:EaseFunction = null,
-			tweener:FlxBasic = FlxG.tweener;
-		if (Std.is(object, FlxBasic)) 
-		{
-			tweener = cast(object, FlxBasic);
-		}
+			ease:EaseFunction = null;
+			
 		if (options != null)
 		{
 			if (Reflect.hasField(options, "type")) type = options.type;
 			if (Reflect.hasField(options, "complete")) complete = options.complete;
 			if (Reflect.hasField(options, "ease")) ease = options.ease;
-			if (Reflect.hasField(options, "tweener")) tweener = options.tweener;
 		}
 		var tween:MultiVarTween = new MultiVarTween(complete, type);
 		tween.tween(object, values, duration, ease);
-		tweener.addTween(tween);
+		plugin.add(tween);
+		
 		return tween;
 	}
 	
 	/**
-	 * Tweens some numeric value. Shorthand for creating a NumTween objects, starting it and adding it to a Tweener.
+	 * Tweens some numeric value. Shorthand for creating a NumTween objects, starting it and adding it to the TweenPlugin.
 	 * @param	fromValue	Start value.
 	 * @param	toValue		End value.
 	 * @param	duration	Duration of the tween.
@@ -68,33 +69,31 @@ class FlxTween
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
-	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added NumTween object.
 	 *
-	 * Example: FlxTween.num(-1000, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.num(-1000, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 */
 	public static function num(fromValue:Float, toValue:Float, duration:Float, options:Dynamic = null):NumTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
-			ease:EaseFunction = null,
-			tweener:FlxBasic = FlxG.tweener;
+			ease:EaseFunction = null;
 		
 		if (options != null)
 		{
 			if (Reflect.hasField(options, "type")) type = options.type;
 			if (Reflect.hasField(options, "complete")) complete = options.complete;
 			if (Reflect.hasField(options, "ease")) ease = options.ease;
-			if (Reflect.hasField(options, "tweener")) tweener = options.tweener;
 		}
 		var tween:NumTween = new NumTween(complete, type);
 		tween.tween(fromValue, toValue, duration, ease);
-		tweener.addTween(tween);
+		plugin.add(tween);
+		
 		return tween;
 	}
 	
 	/**
-	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween objects, starting it and adding it to a Tweener.
+	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween objects, starting it and adding it to the TweenManager.
 	 * @param	fromAngle	Start angle.
 	 * @param	toAngle		End angle.
 	 * @param	duration	Duration of the tween.
@@ -102,33 +101,31 @@ class FlxTween
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
-	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added AngleTween object.
 	 *
-	 * Example: FlxTween.angle(-90, 90, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.angle(-90, 90, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 */
 	public static function angle(fromAngle:Float, toAngle:Float, duration:Float, options:Dynamic = null):AngleTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
-			ease:EaseFunction = null,
-			tweener:FlxBasic = FlxG.tweener;
+			ease:EaseFunction = null;
 		
 		if (options != null)
 		{
 			if (Reflect.hasField(options, "type")) type = options.type;
 			if (Reflect.hasField(options, "complete")) complete = options.complete;
 			if (Reflect.hasField(options, "ease")) ease = options.ease;
-			if (Reflect.hasField(options, "tweener")) tweener = options.tweener;
 		}
 		var tween:AngleTween = new AngleTween(complete, type);
 		tween.tween(fromAngle, toAngle, duration, ease);
-		tweener.addTween(tween);
+		plugin.add(tween);
+		
 		return tween;
 	}
 	
 	/**
-	 * Tweens numeric value which represents color. Shorthand for creating a ColorTween objects, starting it and adding it to a Tweener.
+	 * Tweens numeric value which represents color. Shorthand for creating a ColorTween objects, starting it and adding it to a TweenPlugin.
 	 * @param	duration	Duration of the tween.
 	 * @param	fromColor	Start color.
 	 * @param	toColor		End color.
@@ -138,61 +135,57 @@ class FlxTween
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
-	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added ColorTween object.
 	 *
-	 * Example: FlxTween.color(2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.color(2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 */
 	public static function color(duration:Float, fromColor:Int, toColor:Int, fromAlpha:Float = 1, toAlpha:Float = 1, options:Dynamic = null):ColorTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
-			ease:EaseFunction = null,
-			tweener:FlxBasic = FlxG.tweener;
+			ease:EaseFunction = null;
 		
 		if (options != null)
 		{
 			if (Reflect.hasField(options, "type")) type = options.type;
 			if (Reflect.hasField(options, "complete")) complete = options.complete;
 			if (Reflect.hasField(options, "ease")) ease = options.ease;
-			if (Reflect.hasField(options, "tweener")) tweener = options.tweener;
 		}
 		var tween:ColorTween = new ColorTween(complete, type);
 		tween.tween(duration, fromColor, toColor, fromAlpha, toAlpha, ease);
-		tweener.addTween(tween);
+		plugin.add(tween);
+		
 		return tween;
 	}
 	
 	/**
-	 * Tweens <code>FlxG.sound.volume</code> . Shorthand for creating a Fader tweens, starting it and adding it to a Tweener.
+	 * Tweens <code>FlxG.sound.volume</code> . Shorthand for creating a Fader tweens, starting it and adding it to the TweenManager.
 	 * @param	volume		The volume to fade to.
 	 * @param	duration	Duration of the fade.
 	 * @param	options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
-	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added Fader object.
 	 *
-	 * Example: FlxTween.fader(0.5, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.fader(0.5, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 */
 	public static function fader(volume:Float, duration:Float, options:Dynamic = null):Fader
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
-			ease:EaseFunction = null,
-			tweener:FlxBasic = FlxG.tweener;
+			ease:EaseFunction = null;
 		
 		if (options != null)
 		{
 			if (Reflect.hasField(options, "type")) type = options.type;
 			if (Reflect.hasField(options, "complete")) complete = options.complete;
 			if (Reflect.hasField(options, "ease")) ease = options.ease;
-			if (Reflect.hasField(options, "tweener")) tweener = options.tweener;
 		}
 		var tween:Fader = new Fader(complete, type);
 		tween.fadeTo(volume, duration, ease);
-		tweener.addTween(tween);
+		plugin.add(tween);
+		
 		return tween;
 	}
 	
@@ -207,6 +200,7 @@ class FlxTween
 	public static function motion(motionType:MotionType, tweener:FlxObject, complete:CompleteCallback = null, type:Int = 0):Dynamic
 	{
 		var motion:Motion = null;
+		
 		switch (motionType)
 		{
 			case MotionType.LINEAR:
@@ -219,8 +213,9 @@ class FlxTween
 				motion = new CubicMotion(complete, type);
 		}
 		
-		tweener.addTween(motion);
+		plugin.add(motion);
 		motion.setObject(tweener);
+		
 		return motion;
 	}
 	
@@ -244,8 +239,9 @@ class FlxTween
 				motion = new QuadPath(complete, type);
 		}
 		
-		tweener.addTween(motion);
+		plugin.add(motion);
 		motion.setObject(tweener);
+		
 		return motion;
 	}
 	
@@ -316,7 +312,6 @@ class FlxTween
 	public function destroy():Void
 	{
 		complete = null;
-		_parent = null;
 		_ease = null;
 		userData = null;
 	}
@@ -346,7 +341,8 @@ class FlxTween
 			{
 				_t = 0;
 			}
-			_finish = true;
+			
+			finish();
 		}
 	}
 
@@ -371,10 +367,7 @@ class FlxTween
 	public function cancel():Void
 	{
 		active = false;
-		if (_parent != null)
-		{
-			_parent.removeTween(this);
-		}
+		plugin.remove(this);
 	}
 
 	/** @private Called when the Tween completes. */
@@ -407,9 +400,8 @@ class FlxTween
 			case FlxTween.ONESHOT:
 				_time = _target;
 				active = false;
-				_parent.removeTween(this, true);
+				plugin.remove(this, true);
 		}
-		_finish = false;
 	}
 
 	public var percent(get_percent, set_percent):Float;
@@ -425,25 +417,8 @@ class FlxTween
 
 	private var _time:Float;
 	private var _target:Float;
-
-	private var _finish:Bool;
-	private var _parent:FlxBasic;
-	private var _prev:FriendTween;
-	private var _next:FriendTween;
 	
 	private var _backward:Bool;
 }
 
 typedef CompleteCallback = FlxTween->Void;
-
-/**
- * Friend class for access to Tween private members
- */
-typedef FriendTween = {
-	private function finish():Void;
-
-	private var _finish:Bool;
-	private var _parent:FlxBasic;
-	private var _prev:FriendTween;
-	private var _next:FriendTween;
-}
