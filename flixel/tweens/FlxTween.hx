@@ -34,9 +34,9 @@ class FlxTween
 	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added MultiVarTween object.
 	 *
-	 * Example: FlxTween.varTween(object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.multiVar(object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
 	 */
-	public static function varTween(object:Dynamic, values:Dynamic, duration:Float, options:Dynamic = null):MultiVarTween
+	public static function multiVar(object:Dynamic, values:Dynamic, duration:Float, options:Dynamic = null):MultiVarTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
@@ -71,9 +71,9 @@ class FlxTween
 	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added NumTween object.
 	 *
-	 * Example: FlxTween.numTween(-1000, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.num(-1000, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
 	 */
-	public static function numTween(fromValue:Float, toValue:Float, duration:Float, options:Dynamic = null):NumTween
+	public static function num(fromValue:Float, toValue:Float, duration:Float, options:Dynamic = null):NumTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
@@ -95,9 +95,9 @@ class FlxTween
 	
 	/**
 	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween objects, starting it and adding it to a Tweener.
-	 * @param	fromAngle		Start angle.
-	 * @param	toAngle			End angle.
-	 * @param	duration		Duration of the tween.
+	 * @param	fromAngle	Start angle.
+	 * @param	toAngle		End angle.
+	 * @param	duration	Duration of the tween.
 	 * @param	options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
@@ -105,9 +105,9 @@ class FlxTween
 	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added AngleTween object.
 	 *
-	 * Example: FlxTween.angleTween(-90, 90, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.angle(-90, 90, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
 	 */
-	public static function angleTween(fromAngle:Float, toAngle:Float, duration:Float, options:Dynamic = null):AngleTween
+	public static function angle(fromAngle:Float, toAngle:Float, duration:Float, options:Dynamic = null):AngleTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
@@ -141,9 +141,9 @@ class FlxTween
 	 * 						tweener		The Tweener to add this Tween to.
 	 * @return	The added ColorTween object.
 	 *
-	 * Example: FlxTween.colorTween(2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
+	 * Example: FlxTween.color(2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT, tweener: SomeOtherGameObject });
 	 */
-	public static function colorTween(duration:Float, fromColor:Int, toColor:Int, fromAlpha:Float = 1, toAlpha:Float = 1, options:Dynamic = null):ColorTween
+	public static function color(duration:Float, fromColor:Int, toColor:Int, fromAlpha:Float = 1, toAlpha:Float = 1, options:Dynamic = null):ColorTween
 	{
 		var type:Int = FlxTween.ONESHOT,
 			complete:CompleteCallback = null,
@@ -164,7 +164,7 @@ class FlxTween
 	}
 	
 	/**
-	 * Tweens FlxG.volume value. Shorthand for creating a Fader tweens, starting it and adding it to a Tweener.
+	 * Tweens <code>FlxG.sound.volume</code> . Shorthand for creating a Fader tweens, starting it and adding it to a Tweener.
 	 * @param	volume		The volume to fade to.
 	 * @param	duration	Duration of the fade.
 	 * @param	options		An object containing key/value pairs of the following optional parameters:
@@ -204,7 +204,7 @@ class FlxTween
 	 * @param	type		Tween type.
 	 * @return	Newly created Motion object.
 	 */
-	public static function motionTween(motionType:MotionType, tweener:FlxObject, complete:CompleteCallback = null, type:Int = 0):Dynamic
+	public static function motion(motionType:MotionType, tweener:FlxObject, complete:CompleteCallback = null, type:Int = 0):Dynamic
 	{
 		var motion:Motion = null;
 		switch (motionType)
@@ -232,7 +232,7 @@ class FlxTween
 	 * @param	type		Tween type.
 	 * @return	Newly created Motion object.
 	 */
-	public static function pathTween(pathType:PathType, tweener:FlxObject, complete:CompleteCallback = null, type:Int = 0):Dynamic
+	public static function path(pathType:PathType, tweener:FlxObject, complete:CompleteCallback = null, type:Int = 0):Dynamic
 	{
 		var motion:Motion = null;
 		

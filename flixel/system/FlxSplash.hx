@@ -66,7 +66,7 @@ class FlxSplash extends FlxState
 		_text.alpha = 0;
 		FlxG.stage.addChild(_text);
 		
-		FlxTween.varTween(_text, { alpha: 1 }, 1 );
+		FlxTween.multiVar(_text, { alpha: 1 }, 1 );
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
 	}
 	
@@ -78,8 +78,8 @@ class FlxSplash extends FlxState
 		
 		if (_curPart == 5)
 		{
-			FlxTween.varTween(_sprite, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut, complete: onComplete } );
-			FlxTween.varTween(_text, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut } );
+			FlxTween.multiVar(_sprite, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut, complete: onComplete } );
+			FlxTween.multiVar(_text, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut } );
 		}
 	}
 	
