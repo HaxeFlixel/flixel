@@ -1,7 +1,7 @@
 package;
 
-import flixel.effects.FlxSpecialFX;
-import flixel.effects.fx.StarfieldFX;
+import flixel.addons.effects.FlxSpecialFX;
+import flixel.addons.effects.fx.StarfieldFX;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
