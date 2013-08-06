@@ -1248,6 +1248,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal helper function, handles the actual drawing of all the special effects.
 	 */
+	//TODO: inline help perf at all?
 	public function drawFX():Void
 	{
 		//For flash and fade fx
@@ -1256,7 +1257,7 @@ class FlxCamera extends FlxBasic
 		//For later restriction of blend effect: change source of rect (to be implemented)
 		var bufferRect:Rectangle = buffer.rect;
 		var bufferWidth:Int = buffer.width;
-		var pixel:Int;
+		var pixbuf:Int;
 		var a:Int;
 		var r:Int;
 		var g:Int;
@@ -1266,6 +1267,9 @@ class FlxCamera extends FlxBasic
 		var rbmp:Int;
 		var gbmp:Int;
 		var bbmp:Int;
+		var rres:Int;
+		var gres:Int;
+		var bres:Int;
 			
 		//Process custom effect from bitmap onto the buffer
 		//based in part on http://stackoverflow.com/questions/10157787/haxe-nme-fastest-method-for-per-pixel-bitmap-manipulation
@@ -1283,73 +1287,84 @@ class FlxCamera extends FlxBasic
 			_fxCustomPixels.position = 0;
 			_fxCustomPixels.writeBytes( buffer.getPixels(bufferRect) ); // changed from assign, not sure if that's going to work.
 			
-			// for each pixel in bmp that has a corresponding pixel in buffer
-			for ( y in 0...bufferZoneHeight)
+			// select blend operation and process buffer, needs to be outside loops for efficiency
+			switch( fxCustomBlendMode )
 			{
-				for ( x in 0...bufferZoneWidth)
-				{
-					// Color is in BGRA mode, nme.Memory can only be used in little endian mode.
-					// If testing with FlxColor or 0x.... will need to switch order of bytes pulled for color channels
-					pixel = Memory.getI32((y * bufferWidth + x) * 4);
-					a = pixel & 0xFF; // keep buffer opacity
-					r = pixel >>>  8 & 0xFF;
-					g = pixel >>> 16 & 0xFF;
-					b = pixel >>> 24 & 0xFF;
+				// Multiply
+				case 1:
 					
-					//if(_first && x < 2 && y < 2) FlxG.log.add();
-					//if(_first && x < 2 && y < 2) FlxG.log.add("read buffer: (" + x + "," + y + ") ", a, r, g, b );
-					
-					//if (x == 0 && y == 0) FlxG.log.add();
-					//if (x == 0 && y == 0) FlxG.log.add("source: ", a, r, g, b);
-					
-					pixbmp = Memory.getI32((y * bmpWidth + x) * 4 + _fxCustomBuffSize);
-					abmp = pixbmp & 0xFF; // keep buffer opacity
-					rbmp = pixbmp >>>  8 & 0xFF;
-					gbmp = pixbmp >>> 16 & 0xFF;
-					bbmp = pixbmp >>> 24 & 0xFF;
+					// for each pixel in bmp that has a corresponding pixel in buffer
+					for ( y in 0...bufferZoneHeight)
+					{
+						for ( x in 0...bufferZoneWidth)
+						{
+							// Color is in BGRA mode, nme.Memory can only be used in little endian mode.
+							// If testing with FlxColor or 0x.... will need to switch order of bytes pulled for color channels
 							
-					//if(_first && x < 2 && y < 2) FlxG.log.add("read source: (" + x + "," + y + ") ", abmp, rbmp, gbmp, bbmp );
-						
-					// do blend operations and write blended value
-					//switch( fxCustomBlendMode )
-					//{
-						//case 1: // multiply
-						// create full blend color, multiply, then divide (approximated, /256 not /255)
-						rbmp *= r;
-						rbmp >>= 8;
-						gbmp *= g;
-						gbmp >>= 8;
-						bbmp *= b;
-						bbmp >>= 8;
-						
-						//if(_first && x < 2 && y < 2) FlxG.log.add("max blend: (" + x + "," + y + ") ", abmp, rbmp, gbmp, bbmp );
-						
-						// get original color component based on "1 - strength" of bmp alpha
-						var rres:Int = (255 - abmp) * r;
-						rres >>= 8;
-						var gres:Int = (255 - abmp) * g;
-						gres >>= 8;
-						var bres:Int = (255 - abmp) * b;
-						bres >>= 8;
-						// get blend color component based on strength of bmp alpha
-						rbmp = abmp * rbmp;
-						rbmp >>= 8;
-						gbmp = abmp * gbmp;
-						gbmp >>= 8;
-						bbmp = abmp * bbmp;
-						bbmp >>= 8;
-						// add together to get "true" result
-						rres += rbmp + 1;
-						gres += gbmp + 1;
-						bres += bbmp + 1;
-						
-						//if(_first && x < 2 && y < 2) FlxG.log.add("result:  (" + x + "," + y + ") ", a, rres, gres, bres );
-						
-						// set combined result color using alpha of original source
-						Memory.setI32((y * bufferWidth + x) * 4, a | rres << 8 | gres << 16 | (bres & 0xFF) << 24);
-						
-					//}
-				}
+							// get buffer vals
+							pixbuf = Memory.getI32((y * bufferWidth + x) * 4);
+							a = pixbuf & 0xFF; // keep buffer opacity
+							
+							// no point multiplying a transparent pixel, it will still be transparent
+							if (a == 0) continue;
+							
+							r = pixbuf >>>  8 & 0xFF;
+							g = pixbuf >>> 16 & 0xFF;
+							b = pixbuf >>> 24 & 0xFF;
+							
+							// no point multiplying black, it can't get any darker
+							// TODO: which is the more efficient?
+							//if (r == 0 && g == 0 && b == 0) continue;
+							if (r + g + b == 0) continue;
+							
+							// get bmp vals
+							pixbmp = Memory.getI32((y * bmpWidth + x) * 4 + _fxCustomBuffSize);
+							abmp = pixbmp & 0xFF; // keep buffer opacity
+							
+							// no point multiplying with a transparent pixel, it won't change anything
+							if (abmp == 0) continue;
+								
+							rbmp = pixbmp >>>  8 & 0xFF;
+							gbmp = pixbmp >>> 16 & 0xFF;
+							bbmp = pixbmp >>> 24 & 0xFF;
+							
+							// no point multiplying with white, it won't change anything -> this is only useful if you might have white in your bmp
+							// maybe have optimization flags you can set? That's getting pretty specific for core functionality though.
+							// TODO: which is the more efficient?
+							//if (rbmp == 255 && gbmp == 255 && bbmp == 255) continue;
+							if (rbmp + gbmp + bbmp == 765) continue;
+							
+							// create full blend color, multiply, then divide (approximated, /256 not /255)
+							rbmp *= r;
+							rbmp >>= 8;
+							gbmp *= g;
+							gbmp >>= 8;
+							bbmp *= b;
+							bbmp >>= 8;
+							
+							// get original color component based on "1 - strength" of bmp alpha
+							rres = (255 - abmp) * r;
+							rres >>= 8;
+							gres = (255 - abmp) * g;
+							gres >>= 8;
+							bres = (255 - abmp) * b;
+							bres >>= 8;
+							// get blend color component based on strength of bmp alpha
+							rbmp = abmp * rbmp;
+							rbmp >>= 8;
+							gbmp = abmp * gbmp;
+							gbmp >>= 8;
+							bbmp = abmp * bbmp;
+							bbmp >>= 8;
+							// add together to get "true" result
+							rres += rbmp + 1;
+							gres += gbmp + 1;
+							bres += bbmp + 1;
+							
+							// set combined result color using alpha of original source
+							Memory.setI32((y * bufferWidth + x) * 4, a | rres << 8 | gres << 16 | (bres & 0xFF) << 24);
+						}
+					}
 			}
 			// output the blended pixels back into the buffer
 			_fxCustomPixels.position = 0;
