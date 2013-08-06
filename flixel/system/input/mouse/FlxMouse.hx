@@ -23,62 +23,54 @@ import flixel.util.FlxPoint;
 */
 class FlxMouse extends FlxPoint implements IFlxInput
 {
-	// possible values for field '_current'
-	// 2 - just pressed
-	// 1 - pressed
-	// 0 - released
-	// -1 - just released
-	// -2 - fast press and release
-
 	/**
-	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, it will have a positive value. If it was just scrolled down, it will have a negative value. If it wasn't just scroll this frame, it will be 0.
+	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, it will have a positive value. 
+	 * If it was just scrolled down, it will have a negative value. If it wasn't just scroll this frame, it will be 0.
 	 */
-	public var wheel:Int;
+	public var wheel:Int = 0;
 	/**
 	 * Current X position of the mouse pointer on the screen.
 	 */
-	public var screenX:Int;
+	public var screenX:Int = 0;
 	/**
 	 * Current Y position of the mouse pointer on the screen.
 	 */
-	public var screenY:Int;
+	public var screenY:Int = 0;
 	/**
 	 * Property to check if the cursor is visible or not.
 	 */
 	public var visible(get_visible, null):Bool;
-	/**
-	 * Helper variable for tracking whether the mouse was just pressed or just released.
-	 */
-	private var _current:Int;
 
+	/**
+	 * The left mouse button.
+	 */
+	private var _leftButton:FlxMouseButton;
+	
 	#if (FLX_MOUSE_ADVANCED && !js)
 	/**
-	 * Helper variable for tracking whether the right mouse button was just pressed or just released.
+	 * The middle mouse button.
 	 */
-	private var _currentRight:Int;
+	private var _middleButton:FlxMouseButton;
 	/**
-	 * Helper variable for tracking whether the left mouse button was just pressed or just released.
+	 * The right mouse button.
 	 */
-	private var _currentMiddle:Int;
+	private var _rightButton:FlxMouseButton;
 	#end
-
-	/**
-	 * Helper variable for tracking whether the mouse was just pressed or just released.
-	 */
-	private var _last:Int;
+	
 	/**
 	 * A display container for the mouse cursor.
 	 * This container is a child of FlxGame and sits at the right "height".
 	 */
 	public var cursorContainer:Sprite;
 	/**
-	 * Don't update cursor unless we have to (this is essentially a "visible" bool, so we avoid checking the visible property in the Sprite which is slow in cpp).
+	 * Don't update cursor unless we have to (this is essentially a "visible" bool, 
+	 * so we avoid checking the visible property in the Sprite which is slow in cpp).
 	 */
 	private var _updateCursorContainer:Bool;
 	/**
 	 * This is just a reference to the current cursor image, if there is one.
 	 */
-	private var _cursor:Bitmap;
+	private var _cursor:Bitmap = null;
 	
 	private var _cursorBitmapData:BitmapData;
 
@@ -87,16 +79,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Helper variables for recording purposes.
 	 */
-	private var _lastX:Int;
-	private var _lastY:Int;
-	private var _lastWheel:Int;
+	private var _lastX:Int = 0;
+	private var _lastY:Int = 0;
+	private var _lastWheel:Int = 0;
 	private var _point:FlxPoint;
 	private var _globalScreenPosition:FlxPoint;
-	/**
-	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
-	 * @default false
-	 */
-	public var useSystemCursor(default, set_useSystemCursor):Bool;
+	
 	/**
 	 * Names for the Native Flash 10.2 Cursors
 	 */
@@ -112,110 +100,27 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	public function new(CursorContainer:Sprite)
 	{
 		super();
+		
 		cursorContainer = CursorContainer;
 		cursorContainer.mouseChildren = false;
 		cursorContainer.mouseEnabled = false;
-		_lastX = screenX = 0;
-		_lastY = screenY = 0;
-		_lastWheel = wheel = 0;
-		_current = 0;
-		_last = 0;
-		_cursor = null;
 		_point = new FlxPoint();
 		_globalScreenPosition = new FlxPoint();
-		useSystemCursor = false;
 		
-		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		_leftButton = new FlxMouseButton(true);
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
+		
 		#if (FLX_MOUSE_ADVANCED && !js)
-		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, onMouseDownRight);
-		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, onMouseUpRight);
-		Lib.current.stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, onMouseDownMiddle);
-		Lib.current.stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, onMouseUpMiddle);
-		#end
-	}
-
-	/**
-	 * Internal event handler for input and focus.
-	 * @param FlashEvent Flash mouse event.
-	 */
-	private function onMouseDown(FlashEvent:MouseEvent):Void
-	{
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			if (FlxG.game.debugger.hasMouse)
-			{
-				return;
-			}
-			if (FlxG.game.debugger.watch.editing)
-			{
-				FlxG.game.debugger.watch.submit();
-			}
-		}
+		_middleButton = new FlxMouseButton();
+		_rightButton = new FlxMouseButton();
+		Lib.current.stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
+		Lib.current.stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
+		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
+		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
 		#end
 		
-		// Check for replay cancel keys
-		#if FLX_RECORD
-		if (FlxG.game.replaying && FlxG.vcr.cancelKeys != null)
-		{
-			for (key in FlxG.vcr.cancelKeys)
-			{
-				if ((key == "MOUSE") || (key == "ANY"))
-				{
-					if(FlxG.vcr.replayCallback != null)
-					{
-						FlxG.vcr.replayCallback();
-						FlxG.vcr.replayCallback = null;
-					}
-					else
-					{
-						FlxG.vcr.stopReplay();
-					}
-					break;
-				}
-			}
-			return;
-		}
-		#end
-		
-		if (_current > 0) 
-		{
-			_current = 1;
-		}
-		else 
-		{
-			_current = 2;
-		}
-	}
-
-	/**
-	 * Internal event handler for input and focus.
-	 * @param FlashEvent Flash mouse event.
-	 */
-	private function onMouseUp(FlashEvent:MouseEvent):Void
-	{
-		#if !FLX_NO_DEBUG
-		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 
-			#if (FLX_RECORD) || FlxG.game.replaying #end)
-		{
-			return;
-		}
-		#end
-		
-		if (_current > 0)
-		{
-			_current = -1;
-		}
-		else if (_current == -2)
-		{
-			_current == -2;
-		}
-		else
-		{
-			_current = 0;
-		}
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 	}
 
 	/**
@@ -236,52 +141,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		wheel = FlashEvent.delta;
 	}
 
-	#if (FLX_MOUSE_ADVANCED && !js)
-	private function onMouseDownRight(FlashEvent:MouseEvent):Void
-	{
-		if (_currentRight > 0) _currentRight = 1;
-		else _currentRight = 2;
-	}
-
-	private function onMouseUpRight(FlashEvent:MouseEvent):Void
-	{
-		if (_currentRight > 0)
-		{
-			_currentRight = -1;
-		}
-		else if (_currentRight == -2)
-		{
-			_currentRight == -2;
-		}
-		else
-		{
-			_currentRight = 0;
-		}
-	}
-
-	private function onMouseDownMiddle(FlashEvent:MouseEvent):Void
-	{
-		if (_currentMiddle > 0) _currentMiddle = 1;
-		else _currentMiddle = 2;
-	}
-
-	private function onMouseUpMiddle(FlashEvent:MouseEvent):Void
-	{
-		if (_currentMiddle > 0)
-		{
-			_currentMiddle = -1;
-		}
-		else if (_currentMiddle == -2)
-		{
-			_currentMiddle == -2;
-		}
-		else
-		{
-			_currentMiddle = 0;
-		}
-	}
-	#end
-
 	/**
 	 * Clean up memory.
 	 */
@@ -291,6 +150,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor = null;
 		_point = null;
 		_globalScreenPosition = null;
+		
 		if (_cursorBitmapData != null)
 		{
 			_cursorBitmapData.dispose();
@@ -300,15 +160,16 @@ class FlxMouse extends FlxPoint implements IFlxInput
 
 	/**
 	 * Either show an existing cursor or load a new one.
-	 * @param Graphic The image you want to use for the cursor.
-	 * @param Scale Change the size of the cursor. Default = 1, or native size. 2 = 2x as big, 0.5 = half size, etc.
-	 * @param XOffset The number of pixels between the mouse's screen position and the graphic's top left corner.
-	 * @param YOffset The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 * @param 	Graphic 	The image you want to use for the cursor.
+	 * @param 	Scale 		Change the size of the cursor. Default = 1, or native size. 2 = 2x as big, 0.5 = half size, etc.
+	 * @param 	XOffset 	The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 * @param 	YOffset 	The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 */
-	public function show(Graphic:Dynamic = null, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
+	public function show(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		_updateCursorContainer = true;
 		cursorContainer.visible = true;
+		
 		if (Graphic != null)
 		{
 			load(Graphic, Scale, XOffset, YOffset);
@@ -342,12 +203,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 
 	/**
 	 * Load a new mouse cursor graphic
-	 * @param Graphic The image you want to use for the cursor.
-	 * @param Scale Change the size of the cursor.
-	 * @param XOffset The number of pixels between the mouse's screen position and the graphic's top left corner.
-	 * @param YOffset The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 * @param 	Graphic 	The image you want to use for the cursor.
+	 * @param 	Scale 		Change the size of the cursor.
+	 * @param 	XOffset 	The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 * @param 	YOffset 	The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 */
-	public function load(Graphic:Dynamic = null, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
+	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		#if (!flash || FLX_NO_NATIVE_CURSOR)
 		if (_cursor != null)
@@ -382,7 +243,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor.y = YOffset;
 		_cursor.scaleX = Scale;
 		_cursor.scaleY = Scale;
-
+		
 		#if (flash && !FLX_NO_NATIVE_CURSOR)
 		setSimpleNativeCursorData(_cursorDefaultName, _cursor.bitmapData);
 		#else
@@ -396,7 +257,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public function unload():Void
 	{
-		if(_cursor != null)
+		if (_cursor != null)
 		{
 			if (cursorContainer.visible)
 			{
@@ -414,7 +275,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Set a Native cursor that has been registered by Name
 	 * Warning, you need to use registerNativeCursor before you use it here
-	 * @param Name The name ID used when registered
+	 * @param 	Name 	The name ID used when registered
 	 */
 	public function setNativeCursor(Name:String):Void
 	{
@@ -431,7 +292,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * @param  Name       The ID name used for the cursor
 	 * @param  CursorData MouseCursorData contains the bitmap, hotspot etc
 	 */
-	public function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
+	inline public function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
 	{
 		untyped Mouse.registerCursor(Name, CursorData);
 	}
@@ -445,19 +306,21 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		var cursorVector = new Vector<BitmapData>();
 		cursorVector[0] = CursorBitmap;
-
+		
 		if(_cursor.bitmapData.width > 32 ||_cursor.bitmapData.height > 32)
+		{
 			FlxG.log.warn ("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
-
+		}
+		
 		var cursorData = new MouseCursorData();
 		cursorData.hotSpot = new Point(0, 0);
 		cursorData.data = cursorVector;
-
+		
 		registerNativeCursor( Name, cursorData );
 		setNativeCursor( Name );
-
+		
 		Mouse.show();
-
+		
 		return cursorData;
 	}
 	#end
@@ -465,8 +328,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Called by the internal game loop to update the mouse pointer's position in the game world.
 	 * Also updates the just pressed/just released flags.
-	 * @param X The current X position of the mouse in the window.
-	 * @param Y The current Y position of the mouse in the window.
+	 * @param 	X 	The current X position of the mouse in the window.
+	 * @param 	Y 	The current Y position of the mouse in the window.
 	 */
 	public function update():Void
 	{
@@ -476,19 +339,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_globalScreenPosition.x = X;
 		_globalScreenPosition.y = Y;
 		updateCursor();
-		if ((_last == -1) && (_current == -1))
-		{
-			_current = 0;
-		}
-		else if ((_last == 2) && (_current == 2))
-		{
-			_current = 1;
-		}
-		else if ((_last == -2) && (_current == -2))
-		{
-			_current = 0;
-		}
-		_last = _current;
+		
+		// Update the button states
+		_leftButton.update();
+		
+		#if (FLX_MOUSE_ADVANCED && !js)
+		_middleButton.update();
+		_rightButton.update();
+		#end
 		
 		if (!_wheelUsed)
 		{
@@ -521,11 +379,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Fetch the world position of the mouse on any given camera.
 	 * NOTE: Mouse.x and Mouse.y also store the world position of the mouse cursor on the main camera.
-	 * @param Camera If unspecified, first/main global camera is used instead.
-	 * @param point An existing point object to store the results (if you don't want a new one created).
-	 * @return The mouse's location in world space.
+	 * @param 	Camera 	If unspecified, first/main global camera is used instead.
+	 * @param 	point 	An existing point object to store the results (if you don't want a new one created).
+	 * @return 	The mouse's location in world space.
 	 */
-	public function getWorldPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
+	public function getWorldPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
 	{
 		if (Camera == null)
 		{
@@ -544,11 +402,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Fetch the screen position of the mouse on any given camera.
 	 * NOTE: Mouse.screenX and Mouse.screenY also store the screen position of the mouse cursor on the main camera.
-	 * @param Camera If unspecified, first/main global camera is used instead.
-	 * @param point An existing point object to store the results (if you don't want a new one created).
-	 * @return The mouse's location in screen space.
+	 * @param 	Camera 	If unspecified, first/main global camera is used instead.
+	 * @param 	point 	An existing point object to store the results (if you don't want a new one created).
+	 * @return 	The mouse's location in screen space.
 	 */
-	public function getScreenPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
+	public function getScreenPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
 	{
 		if (Camera == null)
 		{
@@ -558,8 +416,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		{
 			point = new FlxPoint();
 		}
-		point.x = (_globalScreenPosition.x - Camera.x)/Camera.zoom;
-		point.y = (_globalScreenPosition.y - Camera.y)/Camera.zoom;
+		point.x = (_globalScreenPosition.x - Camera.x) / Camera.zoom;
+		point.y = (_globalScreenPosition.y - Camera.y) / Camera.zoom;
 		return point;
 	}
 
@@ -568,70 +426,74 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public function reset():Void
 	{
-		_current = 0;
-		_last = 0;
+		_leftButton.reset();
+		
+		#if (FLX_MOUSE_ADVANCED && !js)
+		_middleButton.reset();
+		_rightButton.reset();
+		#end
 	}
 
 	/**
 	 * Check to see if the mouse is pressed.
-	 * @return Whether the mouse is pressed.
+	 * @return 	Whether the mouse is pressed.
 	 */
-	public function pressed():Bool { return _current > 0; }
+	inline public function pressed():Bool { return _leftButton.pressed(); }
 
 	/**
 	 * Check to see if the mouse was just pressed.
-	 * @return Whether the mouse was just pressed.
+	 * @return 	Whether the mouse was just pressed.
 	 */
-	public function justPressed():Bool { return (_current == 2 || _current == -2); }
+	inline public function justPressed():Bool { return _leftButton.justPressed(); }
 
 	/**
 	 * Check to see if the mouse was just released.
-	 * @return Whether the mouse was just released.
+	 * @return 	Whether the mouse was just released.
 	 */
-	public function justReleased():Bool { return (_current == -1 || _current == -2); }
+	inline public function justReleased():Bool { return _leftButton.justReleased(); }
 
 	#if (FLX_MOUSE_ADVANCED && !js)
 	/**
 	 * Check to see if the right mouse button is pressed.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
-	 * @return Whether the right mouse button is pressed.
+	 * @return 	Whether the right mouse button is pressed.
 	 */
-	public function pressedRight():Bool { return _currentRight > 0; }
+	inline public function pressedRight():Bool { return _rightButton.pressed(); }
 
 	/**
 	 * Check to see if the right mouse button was just pressed.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
-	 * @return Whether the right mouse button was just pressed.
+	 * @return 	Whether the right mouse button was just pressed.
 	 */
-	public function justPressedRight():Bool { return (_currentRight == 2 || _currentRight == -2); }
+	inline public function justPressedRight():Bool { return _rightButton.justPressed(); }
 
 	/**
 	 * Check to see if the right mouse button was just released.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
-	 * @return Whether the right mouse button was just released.
+	 * @return 	Whether the right mouse button was just released.
 	 */
-	public function justReleasedRight():Bool { return (_currentRight == -1 || _currentRight == -2); }
+	inline public function justReleasedRight():Bool { return _rightButton.justReleased(); }
 
 	/**
 	 * Check to see if the middle mouse button is pressed.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
-	 * @return Whether the middle mouse button is pressed.
+	 * @return 	Whether the middle mouse button is pressed.
 	 */
-	public function pressedMiddle():Bool { return _currentMiddle > 0; }
+	inline public function pressedMiddle():Bool { return _middleButton.pressed(); }
 
 	/**
 	 * Check to see if the middle mouse button was just pressed.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
-	 * @return Whether the middle mouse button was just pressed.
+	 * @return 	Whether the middle mouse button was just pressed.
 	 */
-	public function justPressedMiddle():Bool { return (_currentMiddle == 2 || _currentMiddle == -2); }
+	inline public function justPressedMiddle():Bool { return _middleButton.justPressed();  }
 
 	/**
 	 * Check to see if the middle mouse button was just released.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
-	 * @return Whether the middle mouse button was just released.
+	 * @return 	Whether the middle mouse button was just released.
 	 */
-	public function justReleasedMiddle ():Bool { return (_currentMiddle == -1 || _currentMiddle == -2); }
+	inline public function justReleasedMiddle():Bool { return _middleButton.justReleased(); }
 	#end
 
 	/**
@@ -640,14 +502,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public function record():MouseRecord
 	{
-		if ((_lastX == _globalScreenPosition.x) && (_lastY == _globalScreenPosition.y) && (_current == 0) && (_lastWheel == wheel))
+		if ((_lastX == _globalScreenPosition.x) && (_lastY == _globalScreenPosition.y) && (_leftButton.current == 0) && (_lastWheel == wheel))
 		{
 			return null;
 		}
 		_lastX = Math.floor(_globalScreenPosition.x);
 		_lastY = Math.floor(_globalScreenPosition.y);
 		_lastWheel = wheel;
-		return new MouseRecord(_lastX,_lastY,_current,_lastWheel);
+		return new MouseRecord(_lastX, _lastY, _leftButton.current, _lastWheel);
 	}
 
 	/**
@@ -657,7 +519,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public function playback(Record:MouseRecord):Void
 	{
-		_current = Record.button;
+		_leftButton.current = Record.button;
 		wheel = Record.wheel;
 		_globalScreenPosition.x = Record.x;
 		_globalScreenPosition.y = Record.y;
@@ -667,7 +529,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Called from the main Event.ACTIVATE is dispatched in FlxGame
 	 */
-	public function onFocus( ):Void
+	inline public function onFocus():Void
 	{
 		reset();
 		useSystemCursor = useSystemCursor;
@@ -676,7 +538,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Called from the main Event.DEACTIVATE is dispatched in FlxGame
 	 */
-	public function onFocusLost( ):Void
+	inline public function onFocusLost():Void
 	{
 		Mouse.show();
 	}
@@ -709,6 +571,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		cursorContainer.visible = true;
 		#end
 	}
+	
+	/**
+	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
+	 * @default false
+	 */
+	public var useSystemCursor(default, set):Bool = false;
 	
 	private function set_useSystemCursor(value:Bool):Bool
 	{

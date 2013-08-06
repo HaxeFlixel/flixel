@@ -17,16 +17,14 @@ class FlxKey
 	/**
 	 * The current state of this key.
 	 */
-	public var current:Int;
+	public var current:Int = RELEASED;
 	/**
 	 * The last state of this key.
 	 */
-	public var last:Int;
+	public var last:Int = RELEASED;
 	
-	public function new(Name:String, Current:Int = RELEASED, Last:Int = RELEASED)
+	public function new(Name:String)
 	{
 		name = Name;
-		current = Current;
-		last = Last;
 	}
 }
