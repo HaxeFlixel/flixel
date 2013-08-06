@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
+import flixel.tweens.FlxEase.EaseFunction;
+import flixel.tweens.FlxTween.CompleteCallback;
 
 /**
  * Determines a circular motion.
@@ -13,7 +13,7 @@ class CircularMotion extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0)
+	public function new(?complete:CompleteCallback, type:Int = 0)
 	{
 		_centerX = _centerY = 0;
 		_radius = angle = 0;
@@ -23,46 +23,33 @@ class CircularMotion extends Motion
 
 	/**
 	 * Starts moving along a circle.
-	 * @param	centerX		X position of the circle's center.
-	 * @param	centerY		Y position of the circle's center.
-	 * @param	radius		Radius of the circle.
-	 * @param	angle		Starting position on the circle.
-	 * @param	clockwise	If the motion is clockwise.
-	 * @param	duration	Duration of the movement.
-	 * @param	ease		Optional easer function.
+	 * @param	CenterX			X position of the circle's center.
+	 * @param	CenterY			Y position of the circle's center.
+	 * @param	Radius			Radius of the circle.
+	 * @param	Angle			Starting position on the circle.
+	 * @param	Clockwise		If the motion is clockwise.
+	 * @param	DurationOrSpeed	Duration of the movement.
+	 * @param	UseDuration		Duration of the movement.
+	 * @param	Eease			Optional easer function.
 	 */
-	public function setMotion(centerX:Float, centerY:Float, radius:Float, angle:Float, clockwise:Bool, duration:Float, ease:EaseFunction = null):CircularMotion
+	public function setMotion(CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):CircularMotion
 	{
-		_centerX = centerX;
-		_centerY = centerY;
-		_radius = radius;
-		this.angle = _angleStart = angle * Math.PI / ( -180);
-		_angleFinish = _CIRC * (clockwise ? 1 : -1);
-		_target = duration;
-		_ease = ease;
-		start();
-		return this;
-	}
-
-	/**
-	 * Starts moving along a circle at the speed.
-	 * @param	centerX		X position of the circle's center.
-	 * @param	centerY		Y position of the circle's center.
-	 * @param	radius		Radius of the circle.
-	 * @param	angle		Starting position on the circle.
-	 * @param	clockwise	If the motion is clockwise.
-	 * @param	speed		Speed of the movement.
-	 * @param	ease		Optional easer function.
-	 */
-	public function setMotionSpeed(centerX:Float, centerY:Float, radius:Float, angle:Float, clockwise:Bool, speed:Float, ease:EaseFunction = null):CircularMotion
-	{
-		_centerX = centerX;
-		_centerY = centerY;
-		_radius = radius;
-		this.angle = _angleStart = angle * Math.PI / ( -180);
-		_angleFinish = _CIRC * (clockwise ? 1 : -1);
-		_target = (_radius * _CIRC) / speed;
-		_ease = ease;
+		_centerX = CenterX;
+		_centerY = CenterY;
+		_radius = Radius;
+		this.angle = _angleStart = Angle * Math.PI / ( -180);
+		_angleFinish = _CIRC * (Clockwise ? 1 : -1);
+		
+		if (UseDuration)
+		{
+			_target = DurationOrSpeed;
+		}
+		else
+		{
+			_target = (_radius * _CIRC) / DurationOrSpeed;
+		}
+		
+		_ease = Ease;
 		start();
 		return this;
 	}

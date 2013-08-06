@@ -1,8 +1,7 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
-
+import flixel.tweens.FlxEase.EaseFunction;
+import flixel.tweens.FlxTween.CompleteCallback;
 /**
  * Determines motion along a line, from one point to another.
  */
@@ -13,7 +12,7 @@ class LinearMotion extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0)
+	public function new(?complete:CompleteCallback, type:Int = 0)
 	{
 		super(0, complete, type, null);
 		_fromX = _fromY = _moveX = _moveY = 0;
@@ -22,45 +21,34 @@ class LinearMotion extends Motion
 
 	/**
 	 * Starts moving along a line.
-	 * @param	fromX		X start.
-	 * @param	fromY		Y start.
-	 * @param	toX			X finish.
-	 * @param	toY			Y finish.
-	 * @param	duration	Duration of the movement.
-	 * @param	ease		Optional easer function.
+	 * @param	FromX			X start.
+	 * @param	FromY			Y start.
+	 * @param	ToX				X finish.
+	 * @param	ToY				Y finish.
+	 * @param	DurationOrSpeed	Duration or speed of the movement.
+	 * @param	UseDuration		Whether to use the previous param as duration or speed.
+	 * @param	Ease			Optional easer function.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):LinearMotion
+	public function setMotion(FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):LinearMotion
 	{
 		_distance = -1;
-		x = _fromX = fromX;
-		y = _fromY = fromY;
-		_moveX = toX - fromX;
-		_moveY = toY - fromY;
-		_target = duration;
-		_ease = ease;
+		x = _fromX = FromX;
+		y = _fromY = FromY;
+		_moveX = ToX - FromX;
+		_moveY = ToY - FromY;
+		
+		if (UseDuration)
+		{
+			_target = DurationOrSpeed;
+		}
+		else
+		{
+			_target = distance / DurationOrSpeed;
+		}
+		
+		_ease = Ease;
 		start();
-		return this;
-	}
-
-	/**
-	 * Starts moving along a line at the speed.
-	 * @param	fromX		X start.
-	 * @param	fromY		Y start.
-	 * @param	toX			X finish.
-	 * @param	toY			Y finish.
-	 * @param	speed		Speed of the movement.
-	 * @param	ease		Optional easer function.
-	 */
-	public function setMotionSpeed(fromX:Float, fromY:Float, toX:Float, toY:Float, speed:Float, ease:EaseFunction = null):LinearMotion
-	{
-		_distance = -1;
-		x = _fromX = fromX;
-		y = _fromY = fromY;
-		_moveX = toX - fromX;
-		_moveY = toY - fromY;
-		_target = distance / speed;
-		_ease = ease;
-		start();
+		
 		return this;
 	}
 

@@ -1,8 +1,8 @@
 package flixel.tweens.motion;
 
+import flixel.tweens.FlxEase.EaseFunction;
+import flixel.tweens.FlxTween.CompleteCallback;
 import flixel.util.FlxPoint;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 
 /**
  * Determines linear motion along a set of points.
@@ -14,7 +14,7 @@ class LinearPath extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0)
+	public function new(?complete:CompleteCallback, type:Int = 0)
 	{
 		super(0, complete, type, null);
 		_points = new Array<FlxPoint>();
@@ -39,30 +39,26 @@ class LinearPath extends Motion
 
 	/**
 	 * Starts moving along the path.
-	 * @param	duration		Duration of the movement.
-	 * @param	ease			Optional easer function.
+	 * @param	DurationOrSpeed		Duration or speed of the movement.
+	 * @param	UseDuration			Whether to use the previous param as duration or speed.
+	 * @param	Ease				Optional easer function.
 	 */
-	public function setMotion(duration:Float, ease:EaseFunction = null):LinearPath
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):LinearPath
 	{
 		updatePath();
-		_target = duration;
-		_speed = distance / duration;
-		_ease = ease;
-		start();
-		return this;
-	}
-
-	/**
-	 * Starts moving along the path at the speed.
-	 * @param	speed		Speed of the movement.
-	 * @param	ease		Optional easer function.
-	 */
-	public function setMotionSpeed(speed:Float, ease:EaseFunction = null):LinearPath
-	{
-		updatePath();
-		_target = distance / speed;
-		_speed = speed;
-		_ease = ease;
+		
+		if (UseDuration)
+		{
+			_target = DurationOrSpeed;
+			_speed = distance / DurationOrSpeed;
+		}
+		else
+		{
+			_target = distance / DurationOrSpeed;
+			_speed = DurationOrSpeed;
+		}
+		
+		_ease = Ease;
 		start();
 		return this;
 	}
@@ -120,7 +116,7 @@ class LinearPath extends Motion
 		var td:Float;
 		var	tt:Float;
 		
-		if (!_backward)
+		if (!_backward && _points != null)
 		{
 			if (_index < _points.length - 1)
 			{
@@ -142,7 +138,7 @@ class LinearPath extends Motion
 			x = _prevPoint.x + (_nextPoint.x - _prevPoint.x) * td;
 			y = _prevPoint.y + (_nextPoint.y - _prevPoint.y) * td;
 		}
-		else
+		else if (_points != null)
 		{
 			if (_index > 0) 
 			{

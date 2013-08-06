@@ -17,12 +17,11 @@ class Motion extends FlxTween
 	/**
 	 * Current x position of the Tween.
 	 */
-	public var x:Float;
-	
+	public var x:Float = 0;
 	/**
 	 * Current y position of the Tween.
 	 */
-	public var y:Float;
+	public var y:Float = 0;
 	
 	private var _object:Movable;
 	
@@ -33,10 +32,9 @@ class Motion extends FlxTween
 	 * @param	type		Tween type.
 	 * @param	ease		Optional easer function.
 	 */
-	public function new(duration:Float, complete:CompleteCallback = null, type:Int = 0, ease:EaseFunction = null) 
+	public function new(duration:Float, ?complete:CompleteCallback, type:Int = 0, ?ease:EaseFunction) 
 	{
 		super(duration, type, complete, ease);
-		x = y = 0;
 	}
 	
 	override public function destroy():Void 

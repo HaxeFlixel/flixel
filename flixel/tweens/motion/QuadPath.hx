@@ -16,7 +16,7 @@ class QuadPath extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0) 
+	public function new(?complete:CompleteCallback, type:Int = 0) 
 	{
 		super(0, complete, type, null);
 		_points = new Array<FlxPoint>();
@@ -43,30 +43,26 @@ class QuadPath extends Motion
 	
 	/**
 	 * Starts moving along the path.
-	 * @param	duration	Duration of the movement.
-	 * @param	ease		Optional easer function.
+	 * @param	DurationOrSpeed		Duration or speed of the movement.
+	 * @param	UseDuration			Whether to use the previous param as duration or speed.
+	 * @param	Ease				Optional easer function.
 	 */
-	public function setMotion(duration:Float, ease:EaseFunction = null):QuadPath
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):QuadPath
 	{
 		updatePath();
-		_target = duration;
-		_speed = _distance / duration;
-		_ease = ease;
-		start();
-		return this;
-	}
-	
-	/**
-	 * Starts moving along the path at the speed.
-	 * @param	speed		Speed of the movement.
-	 * @param	ease		Optional easer function.
-	 */
-	public function setMotionSpeed(speed:Float, ease:EaseFunction = null):QuadPath
-	{
-		updatePath();
-		_target = _distance / speed;
-		_speed = speed;
-		_ease = ease;
+		
+		if (UseDuration)
+		{
+			_target = DurationOrSpeed;
+			_speed = _distance / DurationOrSpeed;
+		}
+		else
+		{
+			_target = _distance / DurationOrSpeed;
+			_speed = DurationOrSpeed;
+		}
+		
+		_ease = Ease;
 		start();
 		return this;
 	}
@@ -121,7 +117,7 @@ class QuadPath extends Motion
 		var td:Float;
 		var tt:Float;
 		
-		if (!_backward)
+		if (!_backward && _points != null)
 		{
 			if (_index < _curve.length - 1)
 			{
@@ -144,7 +140,7 @@ class QuadPath extends Motion
 			x = _a.x * (1 - td) * (1 - td) + _b.x * 2 * (1 - td) * td + _c.x * td * td;
 			y = _a.y * (1 - td) * (1 - td) + _b.y * 2 * (1 - td) * td + _c.y * td * td;
 		}
-		else
+		else if (_points != null)
 		{
 			if (_index > 0)
 			{

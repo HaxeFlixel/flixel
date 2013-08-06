@@ -1,8 +1,8 @@
 ﻿package flixel.tweens.motion;
 
 import flixel.util.FlxPoint;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
+import flixel.tweens.FlxEase.EaseFunction;
+import flixel.tweens.FlxTween.CompleteCallback;
 
 /**
  * Determines motion along a quadratic curve.
@@ -18,7 +18,7 @@ class QuadMotion extends Motion
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0)
+	public function new(?complete:CompleteCallback, type:Int = 0)
 	{
 		_distance = -1;
 		_fromX = _fromY = _toX = _toY = 0;
@@ -28,53 +28,38 @@ class QuadMotion extends Motion
 	
 	/**
 	 * Starts moving along the curve.
-	 * @param	fromX		X start.
-	 * @param	fromY		Y start.
-	 * @param	controlX	X control, used to determine the curve.
-	 * @param	controlY	Y control, used to determine the curve.
-	 * @param	toX			X finish.
-	 * @param	toY			Y finish.
-	 * @param	duration	Duration of the movement.
-	 * @param	ease		Optional easer function.
+	 * @param	FromX			X start.
+	 * @param	FromY			Y start.
+	 * @param	ControlX		X control, used to determine the curve.
+	 * @param	ControlY		Y control, used to determine the curve.
+	 * @param	ToX				X finish.
+	 * @param	ToY				Y finish.
+	 * @param	DurationOrSpeed	Duration or speed of the movement.
+	 * @param	UseDuration		Duration of the movement.
+	 * @param	Ease			Optional easer function.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, duration:Float, ease:EaseFunction = null):QuadMotion
+	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):QuadMotion
 	{
 		_distance = -1;
-		x = _fromX = fromX;
-		y = _fromY = fromY;
-		_controlX = controlX;
-		_controlY = controlY;
-		_toX = toX;
-		_toY = toY;
-		_target = duration;
-		_ease = ease;
+		x = _fromX = FromX;
+		y = _fromY = FromY;
+		_controlX = ControlX;
+		_controlY = ControlY;
+		_toX = ToX;
+		_toY = ToY;
+		
+		if (UseDuration)
+		{
+			_target = DurationOrSpeed;
+		}
+		else
+		{
+			_target = distance / DurationOrSpeed;
+		}
+		
+		_ease = Ease;
 		start();
-		return this;
-	}
-	
-	/**
-	 * Starts moving along the curve at the speed.
-	 * @param	fromX		X start.
-	 * @param	fromY		Y start.
-	 * @param	controlX	X control, used to determine the curve.
-	 * @param	controlY	Y control, used to determine the curve.
-	 * @param	toX			X finish.
-	 * @param	toY			Y finish.
-	 * @param	speed		Speed of the movement.
-	 * @param	ease		Optional easer function.
-	 */
-	public function setMotionSpeed(fromX:Float, fromY:Float, controlX:Float, controlY:Float, toX:Float, toY:Float, speed:Float, ease:EaseFunction = null):QuadMotion
-	{
-		_distance = -1;
-		x = _fromX = fromX;
-		y = _fromY = fromY;
-		_controlX = controlX;
-		_controlY = controlY;
-		_toX = toX;
-		_toY = toY;
-		_target = distance / speed;
-		_ease = ease;
-		start();
+		
 		return this;
 	}
 	
