@@ -56,7 +56,7 @@ class Card extends FlxPhysSprite
 		if (!_turned)
 		{
 			_turned = true;
-			FlxG.tween(scale, { x: 0 }, TURNING_TIME / 2, { complete: pickCard } );
+			FlxTween.multiVar(scale, { x: 0 }, TURNING_TIME / 2, { complete: pickCard } );
 		}
 		
 		var body:Body = cast(Sprite, FlxPhysSprite).body;
