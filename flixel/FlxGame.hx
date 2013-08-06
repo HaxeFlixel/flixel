@@ -4,6 +4,7 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
+import flash.events.FocusEvent;
 import flash.Lib;
 import flixel.system.FlxSplash;
 import flixel.system.layer.TileSheetExt;
@@ -253,8 +254,13 @@ class FlxGame extends Sprite
 		#end
 		
 		// Focus gained/lost monitoring
+		#if flash
 		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 		stage.addEventListener(Event.ACTIVATE, onFocus);
+		#else
+		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
+		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
+		#end
 		
 		// Instantiate the initial state
 		if (requestedReset)
