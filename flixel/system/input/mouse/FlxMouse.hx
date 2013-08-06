@@ -670,6 +670,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	public function onFocus( ):Void
 	{
 		reset();
+		useSystemCursor = useSystemCursor;
 	}
 
 	/**
