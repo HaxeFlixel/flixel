@@ -20,6 +20,5 @@
 	<haxelib name="openfl-compatibility"/>
 	<haxelib name="firetongue"/>
 	<haxelib name="task"/>
-	<haxelib name="hscript"/>
 	<!--<haxelib name="flixel"/>-->
 </project>
