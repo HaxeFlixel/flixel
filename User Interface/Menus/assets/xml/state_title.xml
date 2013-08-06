@@ -34,12 +34,12 @@
 		</locale>			
 	</button>
 	
-	<!--<button center_x="true" x="0" y="505" id="battle" use_def="text_button" group="top" label="$TITLE_BATTLES">
+	<button center_x="true" x="0" y="505" id="battle" use_def="text_button" group="top" label="$TITLE_BATTLES">
 		<param type="string" value="battle"/>
 		<locale id="nb-NO">
 			<change width="96"/>
 		</locale>			
-	</button>-->
+	</button>
 	
 	<radio_group x="10" y="10" use_def="radio_1" id="locale_radio">
 		<radio id="en-US" label="$LANGUAGE_BILINGUAL:EN-US" context="index"/>

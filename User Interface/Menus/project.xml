@@ -11,7 +11,6 @@
 	<classpath name="source" />
 	<assets path="assets" rename="assets" />
 	
-	<haxedef name="swfstats"/>
 	<!--<haxedef name="kong"/>-->
 	
 	<haxelib name="flixel"/>
@@ -21,5 +20,6 @@
 	<haxelib name="openfl-compatibility"/>
 	<haxelib name="firetongue"/>
 	<haxelib name="task"/>
+	<haxelib name="hscript"/>
 	<!--<haxelib name="flixel"/>-->
 </project>

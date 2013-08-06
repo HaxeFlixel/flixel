@@ -25,8 +25,9 @@ class State_Battle extends FlxStateX
 		
 		var ui_wide:FlxUI = cast _ui.getAsset("wide");
 		var ui_tall:FlxUI = cast _ui.getAsset("tall");
-		
-		
+
+		trace("ui_tall.failed = " + ui_tall.failed + " by = " + ui_tall.failed_by);
+		trace("ui_wide.failed = " + ui_wide.failed + " by = " + ui_wide.failed_by);
 		
 		if (ui_tall.failed && !ui_wide.failed) {		//Show the tall layout
 			_ui.setMode("wide");			
@@ -44,6 +45,14 @@ class State_Battle extends FlxStateX
 		}else {
 			_ui.setMode("tall");	//If all else fails, default to "tall"
 		}
+		
+		//var thing:flixel.FlxSprite = cast ui_wide.getAsset("wave_bar");
+		//trace("width = " + thing.width);
+	}
+	
+	private override function reloadUI():Void {
+		super.reloadUI();
+		hideFailedUI();
 	}
 	
 	public override function getRequest(id:String, target:Dynamic, data:Dynamic):Dynamic {

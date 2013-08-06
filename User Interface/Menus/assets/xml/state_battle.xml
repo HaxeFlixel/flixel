@@ -7,6 +7,8 @@
 	
 	<definition id="grey" src="ui/chrome/dark_grey"/>
 	<definition id="grey_flat" src="ui/chrome/dark_grey_flat_top"/>
+	<definition id="health" src="ui/misc/health_bar" slice9="1,1,14,14"/>
+	<definition id="mana" src="ui/misc/mana_bar" slice9="1,1,14,14"/>
 	
 	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
 	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" shadow="1" align="left"/>
@@ -45,43 +47,53 @@
 		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
 	</definition>	
 	
-	<definition id="time_button" width="48" height="24">
-		<text id="hilight" font="pixelarial" size="8" style="bold" color="0xffff00" shadow="1" align="center"/>
-		<text id="normal" font="pixelarial" size="8" style="bold" color="0xffffff" shadow="1" align="center"/>
+	<definition id="time_button" width="48" height="24" text_y="-2" text_x="-2">
+		<text id="hilight" font="vera" size="12" style="bold" color="0xffff00" shadow="1" align="center"/>
+		<text id="normal" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="center"/>
 		<graphic id="normal" image="ui/buttons/grey" slice9="6,6,11,11"/>
 		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
 	</definition>
-	
+		
 	<!--STUFF-->
 	
 	<layout id="tall">
-		<chrome id="wave_bar" x="0" y="0" width="600" height="40" use_def="grey">
-			<anchor x="left" y="top" x-flush="left" y-flush="top"/>
-			
-			<!--<anchor/>
-			
-			Use this to "anchor" a UI element to a specific part of the screen. 
-			Specify what you are anchoring it to, and then which side is flush with it (ie, touching).
-						
-			Legal values for x and y:
-			object_id.position
-				
-			where position is "left", "right", "center", "top", "bottom", etc. If no object_id is given,
-			the position is interpreted as an edge of the screen itself.
-						
-			x-flush and y-flush specify what side of this object is touching the anchored position. 
-			Use "left", "right", "center", "top", "bottom", etc. 
-			
-			So, in the above case, the wave_bar's anchored is the screen's upper-left (0,0), and 
-			the upper-left corner of the wave_bar is made flush with this position.
-			-->
-			
-			<min_size width="stretch:0,panel" height="stretch:0,battlefield"/>			
-		</chrome>		
 		
-		<chrome id="panel" x="0" y="0" width="200" height="600" use_def="grey">
+		<group id="waves"/>
+		<!--waves group-->
+		
+			<chrome id="wave_bar" x="0" y="0" width="600" height="40" use_def="grey" group="waves">
+				<anchor x="left" y="top" x-flush="left" y-flush="top"/>
+				
+				<!--<anchor/>
+				
+				Use this to "anchor" a UI element to a specific part of the screen. 
+				Specify what you are anchoring it to, and then which side is flush with it (ie, touching).
+							
+				Legal values for x and y:
+				object_id.position
+					
+				where position is "left", "right", "center", "top", "bottom", etc. If no object_id is given,
+				the position is interpreted as an edge of the screen itself.
+							
+				x-flush and y-flush specify what side of this object is touching the anchored position. 
+				Use "left", "right", "center", "top", "bottom", etc. 
+				
+				So, in the above case, the wave_bar's anchored is the screen's upper-left (0,0), and 
+				the upper-left corner of the wave_bar is made flush with this position.
+				-->
+			
+				<min_size width="stretch:0,battlefield.right" height="stretch:0,battlefield"/>			
+				<min_size height="6%"/>
+			</chrome>		
+		
+		<!--end wave group-->	
+		
+		
+		<group id="back"/>		
+		<!--back group-->						
+		<chrome id="panel" x="0" y="0" width="200" height="600" use_def="grey" group="back">
 			<anchor x="right" y="top" x-flush="right" y-flush="top"/> 					
-			<min_size width="18%" height="100%"/>   
+			<min_size width="200" height="100%"/>   
 			<min_size width="stretch:battlefield,right"/>
 			
 			<!--<min_size/>
@@ -112,12 +124,69 @@
 			So this object will be re-sized to whichever is greater: 
 			18% of the total screen size, OR:
 			The gap between the battlefield and the right edge of the screen.			
-			-->
+			-->			
 		</chrome>
+		
+		<group id="mcguffin"/>
+		<!--mcguffin group-->
+		
+			<sprite id="portrait_back" x="10" y="10" width="48" height="48" color="0xffffffff" group="mcguffin">
+				<anchor x="panel.left" y="panel.top" x-flush="left" y-flush="top"/>
+			</sprite>
 				
+			<sprite id="portrait" x="10" y="10" src="other/portrait_mane" group="mcguffin">
+				<anchor x="panel.left" y="panel.top" x-flush="left" y-flush="top"/>
+			</sprite>
+		
+			<9slicesprite id="health_bar" x="10" y="5" width="134" height="16" use_def="health" group="mcguffin">
+				<anchor x="portrait.right" y="portrait.top" x-flush="left" y-flush="top"/>
+				<!--
+				You can do simple operands in stretch commands, too!
+				
+				Here the health bar stretches from 10 pixels right of the
+				portrait to 10 pixels left of the screen's right edge. 
+				
+				Since min_size and max_size are identical, the health bar will
+				always be exactly this size.
+				-->
+				<min_size width="stretch:portrait.right+10,right-10"/>
+				<max_size width="stretch:portrait.right+10,right-10"/>
+			</9slicesprite>
+			
+			<9slicesprite id="magic_bar" x="10" y="-5" width="134" height="16" use_def="mana" group="mcguffin">
+				<anchor x="portrait.right" y="portrait.bottom" x-flush="left" y-flush="bottom"/>				
+				<min_size width="stretch:portrait.right+10,right-10"/>
+				<max_size width="stretch:portrait.right+10,right-10"/>
+			</9slicesprite>		
+		<!--end mcguffin group-->
+				
+		<group id="spell"/>
+		<!-- begin spell group-->
+		
+			<button id="spell_0" x="0" y="10" use_def="spell_button" group="spell">
+				<anchor x="options.left" y="portrait.bottom" x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_1" x="2" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_0.right" y="spell_0.top" x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_2" x="2" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_1.right" y="spell_1.top"  x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_3" x="2" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_2.right" y="spell_2.top"  x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_4" x="2" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_3.right" y="spell_3.top"  x-flush="left" y-flush="top"/>
+			</button>
+			<button id="spell_5" x="2" y="0" use_def="spell_button" group="spell">
+				<anchor x="spell_4.right" y="spell_4.top"  x-flush="left" y-flush="top"/>
+			</button>		
+		<!--end spell group-->
+		
 		<tile_test id="battlefield" x="0" y="0" width="600" height="560" tiles_w="24" tiles_h="15">
 			<anchor x="left" y="bottom" x-flush="left" y-flush="bottom"/>
 			<min_size width="stretch:0,panel" height="stretch:wave_bar,bottom"/>
+			<max_size width="1536"/>	<!--tiles should be no larger than 64x64-->
 			
 			<!--
 			The battlefield is anchored to the bottom left AT it's bottom left.
@@ -130,7 +199,67 @@
 			
 		</tile_test>		
 		
-		<failure target ="wave_bar" property="height" compare=">" value="10%"/>
+		<group id="top"/>
+		<!--begin top group-->
+			<button id="options" x="5" y="-5" use_def="options_button" group="top" label="Options">
+				<anchor x="panel.left" y="panel.bottom" x-flush="left" y-flush="bottom"/>
+				<min_size width="stretch:panel.left+5,panel.right-5"/>
+				<max_size width="stretch:panel.left+5,panel.right-5"/>
+			</button>
+			
+			<button id="time_0" x="0" y="-5" use_def="time_button" group="top" label="P">
+				<anchor x="options.left" y="options.top" x-flush="left" y-flush="bottom"/>
+			</button>			
+			<button id="time_1" x="2" y="-5" use_def="time_button" group="top" label="¼x">
+				<anchor x="time_0.right" y="options.top" x-flush="left" y-flush="bottom"/>
+			</button>
+			<button id="time_2" x="2" y="-5" use_def="time_button" group="top" label="½x">
+				<anchor x="time_1.right" y="options.top" x-flush="left" y-flush="bottom"/>				
+			</button>
+			<button id="time_3" x="2" y="-5" use_def="time_button" group="top" label="1x">
+				<anchor x="time_2.right" y="options.top" x-flush="left" y-flush="bottom"/>								
+			</button>
+			<button id="time_4" x="2" y="-5" use_def="time_button" group="top" label="2x">
+				<anchor x="time_3.right" y="options.top" x-flush="left" y-flush="bottom"/>								
+			</button>
+			<button id="time_5" x="2" y="-5" use_def="time_button" group="top" label="4x">
+				<anchor x="time_4.right" y="options.top" x-flush="left" y-flush="bottom"/>								
+			</button>
+			<button id="time_6" x="2" y="-5" use_def="time_button" group="top" label="8x">
+				<anchor x="time_5.right" y="options.top" x-flush="right" y-flush="bottom"/>								
+			</button>-->
+				
+		<!--end top group-->
+
+		<button center_x="true" x="0" y="500" id="start" use_def="text_button" group="top" label="TALL">
+		</button>		
+				
+		<align axis="horizontal" spacing="2" resize="true">
+			<bounds left="options.left" right="options.right"/>
+			<objects value="time_0,time_1,time_2,time_3,time_4,time_5,time_6"/>
+		</align>
+				
+		<align axis="horizontal" spacing="2" resize="true">
+			<bounds left="options.left" right="options.right"/>
+			<objects value="spell_0,spell_1,spell_2,spell_3,spell_4,spell_5"/>
+		</align>
+		<!--<align/>
+		Sometimes you want to be able to align and space certain elements. 
+		The <align> tag handles this. First you set these properties:
+		
+		axis: "horizontal" or "vertical" - determines how you want to align them
+		spacing: how much of a gap to put between objects. If resize=false, this is ignored and the elements are spaced equally
+		resize: if true, whether to resize all objects equally to fill the total area (accounts for spacing)
+		
+		<bounds>
+			left/right: specify this like an anchor tag - either the name of an asset or asset property, a stage %, or a raw number
+			It looks for left/right if the axis is horizontal, and top/bottom if vertical
+		
+		<objects>
+			value: the list of asset id's, separated by commas. They are arranged in the supplied order.
+		-->
+		
+		<failure target ="wave_bar" property="height" compare=">" value="15%"/>
 		
 		<!--<failure/>
 		No matter how much resizing you do, your layout may not be able to accomodate
@@ -145,11 +274,6 @@
 		compare is the comparison operator. "<", ">", "<=", ">=", and "=" (syn. "==") are allowed.
 		value is the number of pixels. Put in a "%" sign to indicate % of screen size.  
 		-->
-
-		<text center_x="true" y="500" label="TALL" id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
-		
-		<button center_x="true" x="0" y="500" id="start" use_def="text_button" group="top" label="TALL">
-		</button>		
 	</layout>
 		
 	<layout id="wide">
@@ -159,45 +283,25 @@
 			<chrome id="wave_bar" x="0" y="0" width="40" height="600" use_def="grey" group="back">
 				<anchor x="right" y="top" x-flush="right" y-flush="top"/>
 				<min_size width="5%"/>
-				<min_size width="stretch:battlefield,right" height="100%"/>
+				<min_size width="stretch:battlefield.right,right" height="100%"/>
 				<!--Stretch from 0 to panel's left edge, and from top to the battlefield-->		
 			</chrome>		
 			
-			<button id="time_0" x="0" y="-5" use_def="time_button" group="spell" label="P">
-				<anchor x="wave_bar.center" y="wave_bar.bottom" x-flush="center" y-flush="bottom"/>
-				<!--Stretch from -->
-			</button>			
-			<button id="time_1" x="0" y="-5" use_def="time_button" group="spell" label="1/4x">
-				<anchor x="time_0.left" y="time_0.top" x-flush="left" y-flush="bottom"/>
-			</button>
-			<button id="time_2" x="0" y="-5" use_def="time_button" group="spell" label="1/2x">
-				<anchor x="time_1.left" y="time_1.top" x-flush="left" y-flush="bottom"/>
-			</button>
-			<button id="time_3" x="0" y="-5" use_def="time_button" group="spell" label="1x">
-				<anchor x="time_2.left" y="time_2.top" x-flush="left" y-flush="bottom"/>
-			</button>
-			<button id="time_4" x="0" y="-5" use_def="time_button" group="spell" label="2x">
-				<anchor x="time_3.left" y="time_3.top" x-flush="left" y-flush="bottom"/>
-			</button>
-			<button id="time_5" x="0" y="-5" use_def="time_button" group="spell" label="4x">
-				<anchor x="time_4.left" y="time_4.top" x-flush="left" y-flush="bottom"/>
-			</button>
-			<button id="time_6" x="0" y="-5" use_def="time_button" group="spell" label="8x">
-				<anchor x="time_5.left" y="time_5.top" x-flush="left" y-flush="bottom"/>
-			</button>
 		<!--end wave group-->	
 		
+		
 		<group id="back"/>		
-		<!--back group-->					
-			<chrome id="panel" x="0" y="0" width="760" height="150" use_def="grey" group="back">
+		<!--back group-->				
+			<chrome id="panel" x="0" y="0" width="720" height="150" use_def="grey" group="back">
 				<anchor x="left" y="top" x-flush="left" y-flush="top"/>
 				<min_size height="20%"/>   
-				<min_size height="stretch:0,battlefield" width="stretch:0,wave_bar" />
+				<min_size height="stretch:0,battlefield.top" width="stretch:0,wave_bar.left"/>
+				<max_size width="stretch:0,wave_bar.left"/>
 			</chrome>
 			
-			<tile_test id="battlefield" x="0" y="0" width="600" height="560" tiles_w="24" tiles_h="15" group="back">
+			<tile_test id="battlefield" x="0" y="0" width="720" height="450" tiles_w="24" tiles_h="15" group="back">
 				<anchor x="left" y="bottom" x-flush="left" y-flush="bottom"/>
-				<min_size width="stretch:0,wave_bar" height="stretch:panel,bottom"/>
+				<min_size width="stretch:0,wave_bar.left" height="stretch:panel.bottom,bottom"/>
 			</tile_test>		
 		<!--end back group-->
 		
@@ -207,13 +311,13 @@
 			<sprite x="10" y="10" width="48" height="48" color="0xffffffff" group="mcguffin"/>
 			<sprite id="portrait" x="10" y="10" src="other/portrait_mane" group="mcguffin"/>
 		
-			<sprite id="health_bar" x="10" y="5" width="134" height="16" color="0xffff0000" group="mcguffin">
+			<9slicesprite id="health_bar" x="10" y="5" width="134" height="16" use_def="health" group="mcguffin">
 				<anchor x="portrait.right" y="portrait.top" x-flush="left" y-flush="top"/>
-			</sprite>
+			</9slicesprite>
 			
-			<sprite id="magic_bar" x="10" y="-5" width="134" height="16" color="0xff0000ff" group="mcguffin">
+			<9slicesprite id="magic_bar" x="10" y="-5" width="134" height="16" use_def="mana" group="mcguffin">
 				<anchor x="portrait.right" y="portrait.bottom" x-flush="left" y-flush="bottom"/>
-			</sprite>		
+			</9slicesprite>		
 		<!--end mcguffin group-->
 
 		<group id="spell"/>
@@ -244,13 +348,45 @@
 			<button id="options" x="0" y="-10" use_def="options_button" group="top" label="Options">
 				<anchor x="spell_0.left" y="panel.bottom" x-flush="left" y-flush="bottom"/>
 			</button>
+						
+			<button id="time_0" x="5" y="-5" use_def="time_button" group="top" label="P">
+				<anchor x="wave_bar.left" y="wave_bar.bottom" x-flush="left" y-flush="bottom"/>
+				<min_size width="stretch:wave_bar.left+5,wave_bar.right-5"/>
+				<max_size width="stretch:wave_bar.left+5,wave_bar.right-5"/>				
+			</button>			
+			<button id="time_1" x="0" y="-2" use_def="time_button" group="top" label="1/4x">
+				<anchor x="time_0.left" y="time_0.top" x-flush="left" y-flush="bottom"/>
+				<min_size width="asset:time_0.width"/>
+				<max_size width="asset:time_0.width"/>				
+			</button>
+			<button id="time_2" x="0" y="-2" use_def="time_button" group="top" label="1/2x">
+				<anchor x="time_1.left" y="time_1.top" x-flush="left" y-flush="bottom"/>
+				<min_size width="asset:time_0.width"/>
+				<max_size width="asset:time_0.width"/>				
+			</button>
+			<button id="time_3" x="0" y="-2" use_def="time_button" group="top" label="1x">
+				<anchor x="time_2.left" y="time_2.top" x-flush="left" y-flush="bottom"/>
+				<min_size width="asset:time_0.width"/>
+				<max_size width="asset:time_0.width"/>				
+			</button>
+			<button id="time_4" x="0" y="-2" use_def="time_button" group="top" label="2x">
+				<anchor x="time_3.left" y="time_3.top" x-flush="left" y-flush="bottom"/>
+				<min_size width="asset:time_0.width"/>
+				<max_size width="asset:time_0.width"/>				
+			</button>
+			<button id="time_5" x="0" y="-2" use_def="time_button" group="top" label="4x">
+				<anchor x="time_4.left" y="time_4.top" x-flush="left" y-flush="bottom"/>
+				<min_size width="asset:time_0.width"/>
+				<max_size width="asset:time_0.width"/>				
+			</button>
+			<button id="time_6" x="0" y="-2" use_def="time_button" group="top" label="8x">
+				<anchor x="time_5.left" y="time_5.top" x-flush="left" y-flush="bottom"/>
+				<min_size width="asset:time_0.width"/>
+				<max_size width="asset:time_0.width"/>				
+			</button>
 		<!--end top group-->
-				
-		
-		<failure target="wave_bar" property="width" compare=">" value="10%"/>
-
-		<button center_x="true" x="0" y="500" id="start" use_def="text_button" group="top" label="WIDE">
-		</button>		
+						
+		<failure target="wave_bar" property="width" compare=">" value="15%"/>
 		
 	</layout>	
 	
