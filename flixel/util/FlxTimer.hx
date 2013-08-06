@@ -239,14 +239,5 @@ class FlxTimer
 	/**
 	 * Read-only: The <code>TimerManager</code> instance.
 	 */
-	static public var manager(get, never):TimerManager;
-	static private var _manager:TimerManager;
-	inline static private function get_manager():TimerManager
-	{
-		if (_manager == null)
-		{
-			_manager = cast(FlxG.plugins.get(TimerManager), TimerManager);
-		}
-		return _manager;
-	}
+	static public var manager:TimerManager;
 }

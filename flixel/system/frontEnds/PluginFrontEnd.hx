@@ -6,6 +6,7 @@ import flixel.plugin.FlxPlugin;
 import flixel.plugin.TimerManager;
 import flixel.plugin.TweenManager;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
 
 class PluginFrontEnd
 {
@@ -26,8 +27,8 @@ class PluginFrontEnd
 		add(new DebugPathDisplay());
 		#end
 		
-		add(new TimerManager());
-		add(FlxTween.plugin = new TweenManager());
+		add(FlxTimer.manager = new TimerManager());
+		add(FlxTween.manager = new TweenManager());
 	}
 	
 	/**

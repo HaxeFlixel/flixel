@@ -26,7 +26,7 @@ class FlxTween
 	/**
 	 * The tweening plugin that handles all the tweens.
 	 */
-	static public var plugin:TweenManager;
+	static public var manager:TweenManager;
 	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to the TweenPlugin.
@@ -55,7 +55,7 @@ class FlxTween
 		}
 		var tween:MultiVarTween = new MultiVarTween(complete, type);
 		tween.tween(object, values, duration, ease);
-		plugin.add(tween);
+		manager.add(tween);
 		
 		return tween;
 	}
@@ -87,7 +87,7 @@ class FlxTween
 		}
 		var tween:NumTween = new NumTween(complete, type);
 		tween.tween(fromValue, toValue, duration, ease);
-		plugin.add(tween);
+		manager.add(tween);
 		
 		return tween;
 	}
@@ -119,7 +119,7 @@ class FlxTween
 		}
 		var tween:AngleTween = new AngleTween(complete, type);
 		tween.tween(fromAngle, toAngle, duration, ease);
-		plugin.add(tween);
+		manager.add(tween);
 		
 		return tween;
 	}
@@ -153,7 +153,7 @@ class FlxTween
 		}
 		var tween:ColorTween = new ColorTween(complete, type);
 		tween.tween(duration, fromColor, toColor, fromAlpha, toAlpha, ease);
-		plugin.add(tween);
+		manager.add(tween);
 		
 		return tween;
 	}
@@ -184,7 +184,7 @@ class FlxTween
 		}
 		var tween:Fader = new Fader(complete, type);
 		tween.fadeTo(volume, duration, ease);
-		plugin.add(tween);
+		manager.add(tween);
 		
 		return tween;
 	}
@@ -213,7 +213,7 @@ class FlxTween
 				motion = new CubicMotion(complete, type);
 		}
 		
-		plugin.add(motion);
+		manager.add(motion);
 		motion.setObject(tweener);
 		
 		return motion;
@@ -239,7 +239,7 @@ class FlxTween
 				motion = new QuadPath(complete, type);
 		}
 		
-		plugin.add(motion);
+		manager.add(motion);
 		motion.setObject(tweener);
 		
 		return motion;
@@ -367,7 +367,7 @@ class FlxTween
 	public function cancel():Void
 	{
 		active = false;
-		plugin.remove(this);
+		manager.remove(this);
 	}
 
 	/** @private Called when the Tween completes. */
@@ -400,7 +400,7 @@ class FlxTween
 			case FlxTween.ONESHOT:
 				_time = _target;
 				active = false;
-				plugin.remove(this, true);
+				manager.remove(this, true);
 		}
 	}
 
