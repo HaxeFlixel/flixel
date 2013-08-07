@@ -113,7 +113,7 @@ class PlayState extends FlxState
 		_highlightBox.x = Math.floor(FlxG.mouse.x / TILE_WIDTH) * TILE_WIDTH;
 		_highlightBox.y = Math.floor(FlxG.mouse.y / TILE_HEIGHT) * TILE_HEIGHT;
 		
-		if (FlxG.mouse.pressed())
+		if (FlxG.mouse.pressed)
 		{
 			// FlxTilemaps can be manually edited at runtime as well.
 			// Setting a tile to 0 removes it, and setting it to anything else will place a tile.

@@ -62,7 +62,7 @@ class PlayState extends FlxState
 		}
 		
 		// Spawn explosion
-		if (FlxG.mouse.justPressed()) 
+		if (FlxG.mouse.justPressed) 
 		{
 			explode(FlxG.mouse.x, FlxG.mouse.y);
 		}

@@ -26,7 +26,7 @@ class PlayState extends FlxState
 		{
 			_touchSprite = null;
 			
-			if (touch.justPressed() == true && _activeSprites.exists(touch.touchPointID) == false)
+			if (touch.justPressed && !_activeSprites.exists(touch.touchPointID))
 			{
 				if (_inactiveSprites.length > 0)
 				{
@@ -43,7 +43,7 @@ class PlayState extends FlxState
 				_touchSprite.color = Std.int(Math.random() * 0xffffff);
 				_activeSprites.set(touch.touchPointID, _touchSprite);
 			}
-			else if (touch.justReleased() == true && _activeSprites.exists(touch.touchPointID) == true)
+			else if (touch.justReleased && _activeSprites.exists(touch.touchPointID))
 			{
 				_touchSprite = _activeSprites.get(touch.touchPointID);
 				_touchSprite.visible = false;

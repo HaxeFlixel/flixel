@@ -83,7 +83,7 @@ class PlayState extends FlxPhysState
 		}
 		
 		// Remove the joint again if the mouse is not down
-		if (FlxG.mouse.justReleased())
+		if (FlxG.mouse.justReleased)
 		{
 			if (cardJoint == null)
 			{

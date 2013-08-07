@@ -163,7 +163,7 @@ class PlayState extends FlxState
 		FlxG.collide(_unit, _map);
 		
 		// Check mouse pressed and unit action
-		if (FlxG.mouse.justPressed()) 
+		if (FlxG.mouse.justReleased) 
 		{
 			// Get data map coordinate
 			var mx:Int = Std.int(FlxG.mouse.screenX / TILE_WIDTH);

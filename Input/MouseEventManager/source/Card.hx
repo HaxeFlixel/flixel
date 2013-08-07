@@ -89,6 +89,6 @@ class Card extends FlxPhysSprite
 		pickedCards.push(frame);
 		
 		// Finish the card animation
-		FlxG.tween(scale, { x: 1 }, TURNING_TIME / 2);
+		FlxTween.multiVar(scale, { x: 1 }, TURNING_TIME / 2);
 	}
 }

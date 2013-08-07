@@ -119,7 +119,7 @@ class PlayState extends FlxState
 		
 		// If you've clicked, lets see if you clicked on a button
 		// Note something like this needs to be after super.update() that way the button's state has updated to reflect the mouse event
-		if (FlxG.mouse.justPressed()) 
+		if (FlxG.mouse.justPressed) 
 		{
 			for (i in 0...NUM_BOXES) 
 			{
@@ -136,7 +136,7 @@ class PlayState extends FlxState
 		}
 		
 		// If you let go, then release that box!
-		if (FlxG.mouse.justReleased()) 
+		if (FlxG.mouse.justReleased) 
 		{
 			_dragTarget = null;
 			_dragging = false;
