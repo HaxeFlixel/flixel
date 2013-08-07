@@ -23,6 +23,18 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
+	 * Set the coordinates of this point object.
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	override public function set(X:Float = 0, Y:Float = 0):FlxVector
+	{
+		x = X;
+		y = Y;
+		return this;
+	}
+	
+	/**
 	 * scaling of the vector
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
@@ -326,7 +338,7 @@ class FlxVector extends FlxPoint
 		{
 			vec = new FlxVector();
 		}
-		vec.reset( -y, x);
+		vec.set( -y, x);
 		return vec; 
 	}
 		
@@ -359,7 +371,7 @@ class FlxVector extends FlxPoint
 		{
 			vec = new FlxVector();
 		}
-		vec.reset(y, -x);
+		vec.set(y, -x);
 		return vec; 
 	}
 		
@@ -415,7 +427,7 @@ class FlxVector extends FlxPoint
 			proj = new FlxVector();
 		}
 		
-		return proj.reset(dp * v.x / lenSq, dp * v.y / lenSq);
+		return proj.set(dp * v.x / lenSq, dp * v.y / lenSq);
 	}
 		
 	/**
@@ -433,7 +445,7 @@ class FlxVector extends FlxPoint
 			proj = new FlxVector();
 		}
 		
-		return proj.reset(dp * v.x, dp * v.y);
+		return proj.set(dp * v.x, dp * v.y);
 	}
 		
 	/**
@@ -480,10 +492,10 @@ class FlxVector extends FlxPoint
 		
 		if (Math.isNaN(t))
 		{
-			return intersection.reset(Math.NaN, Math.NaN);
+			return intersection.set(Math.NaN, Math.NaN);
 		}
 		
-		return intersection.reset(a.x + t * this.x, a.y + t * this.y);
+		return intersection.set(a.x + t * this.x, a.y + t * this.y);
 	}
 	
 	/**
@@ -504,10 +516,10 @@ class FlxVector extends FlxPoint
 		var t2:Float = v.ratio(b, a, this);
 		if (!Math.isNaN(t1) && !Math.isNaN(t2) && t1 > 0 && t1 <= 1 && t2 > 0 && t2 <= 1)
 		{
-			return intersection.reset(a.x + t1 * this.x, a.y + t1 * this.y);
+			return intersection.set(a.x + t1 * this.x, a.y + t1 * this.y);
 		}
 		
-		return intersection.reset(Math.NaN, Math.NaN);
+		return intersection.set(Math.NaN, Math.NaN);
 	}
 	
 	/**
@@ -643,18 +655,5 @@ class FlxVector extends FlxPoint
 		vec.y = y;
 		
 		return vec;
-	}
-	
-	/**
-	 * Set both components of this vector 
-	 * @param	X	new x value
-	 * @param	Y	new y value
-	 * @return	this vector
-	 */
-	inline public function reset(X:Float = 0, Y:Float = 0):FlxVector
-	{
-		x = X;
-		y = Y;
-		return this;
 	}
 }
