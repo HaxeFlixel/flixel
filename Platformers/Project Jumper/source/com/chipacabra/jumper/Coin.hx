@@ -23,7 +23,7 @@ class Coin extends FlxSprite
 	{
 		super.kill();
 		
-		FlxG.sound.play(Assets.getSound("assets/sounds/coin" + Reg.SoundExtension), 3, false);
+		FlxG.sound.play("assets/sounds/coin" + Reg.SoundExtension, 3, false);
 		Reg.score++;
 	}
 }

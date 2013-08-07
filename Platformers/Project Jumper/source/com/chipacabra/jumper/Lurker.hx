@@ -59,7 +59,7 @@ class Lurker extends EnemyTemplate
 		{
 			if (health <= 0 && _playdeathsound)
 			{
-				FlxG.sound.play(Assets.getSound("assets/sounds/mondead2" + Reg.SoundExtension), 1, false);
+				FlxG.sound.play("assets/sounds/mondead2" + Reg.SoundExtension, 1, false);
 				_playdeathsound = false;
 			}
 		}
@@ -158,7 +158,7 @@ class Lurker extends EnemyTemplate
 		}
 		
 		FlxSpriteUtil.flicker(this, 0.5);
-		FlxG.sound.play(Assets.getSound("assets/sounds/monhurt2" + Reg.SoundExtension), 1, false);
+		FlxG.sound.play("assets/sounds/monhurt2" + Reg.SoundExtension, 1, false);
 		health -= 1;
 	}
 	
@@ -189,7 +189,7 @@ class Lurker extends EnemyTemplate
 			}
 			
 			bullet.angleshoot(bulletX, bulletY, BULLET_SPEED, new FlxPoint(P.x, P.y));
-			FlxG.sound.play(Assets.getSound("assets/sounds/badshoot" + Reg.SoundExtension), 1, false);
+			FlxG.sound.play("assets/sounds/badshoot" + Reg.SoundExtension, 1, false);
 			// reset the shot clock
 			_cooldown = 0; 
 		}

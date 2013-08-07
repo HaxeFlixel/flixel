@@ -127,18 +127,18 @@ class Player extends FlxSprite
 			{
 				_jump = 0;
 				climbing = false;
-				FlxG.sound.play(Assets.getSound("assets/sounds/jump" + Reg.SoundExtension), 1, false);
+				FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
 			}
 			
 			if (velocity.y == 0)
 			{
-				FlxG.sound.play(Assets.getSound("assets/sounds/jump" + Reg.SoundExtension), 1, false);
+				FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
 			}
 		}
 		
 		if (FlxG.keys.justPressed("C") && (velocity.y > 0) && _canDJump == true)
 		{
-			FlxG.sound.play(Assets.getSound("assets/sounds/jump" + Reg.SoundExtension), 1, false);
+			FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
 			_jump = 0;
 			_canDJump = false;
 		}
@@ -261,7 +261,7 @@ class Player extends FlxSprite
 				}
 				
 				_blt.shoot(bulletX, bulletY, bXVeloc, bYVeloc);
-				FlxG.sound.play(Assets.getSound("assets/sounds/shoot2" + Reg.SoundExtension), 1, false);
+				FlxG.sound.play("assets/sounds/shoot2" + Reg.SoundExtension, 1, false);
 				// reset the shot clock
 				_cooldown = 0; 
 			}
@@ -286,6 +286,6 @@ class Player extends FlxSprite
 			_gibs.start(true, 2.80);
 		}
 		
-		FlxG.sound.play(Assets.getSound("assets/sounds/death" + Reg.SoundExtension), 1, false);
+		FlxG.sound.play("assets/sounds/death" + Reg.SoundExtension, 1, false);
 	}
 }

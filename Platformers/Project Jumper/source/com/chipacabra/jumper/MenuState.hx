@@ -99,13 +99,13 @@ class MenuState extends FlxState
 		{
 			// A goofy format, because % doesn't work on negative numbers
 			_option = (_option + OPTIONS - 1) % OPTIONS; 
-			FlxG.sound.play(Assets.getSound("assets/sounds/menu" + Reg.SoundExtension), 1, false);
+			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
 		}
 		
 		if (FlxG.keys.justPressed("DOWN"))
 		{
 			_option = (_option + OPTIONS + 1) % OPTIONS;
-			FlxG.sound.play(Assets.getSound("assets/sounds/menu" + Reg.SoundExtension), 1, false);
+			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
 		}
 		
 		if (FlxG.keys.justPressed("SPACE") || FlxG.keys.justPressed("ENTER"))
@@ -114,7 +114,7 @@ class MenuState extends FlxState
 			{
 				case 0:
 					FlxG.cameras.fade(0xff969867, 1, false, startGame);
-					FlxG.sound.play(Assets.getSound("assets/sounds/coin" + Reg.SoundExtension), 1, false);
+					FlxG.sound.play("assets/sounds/coin" + Reg.SoundExtension, 1, false);
 				case 1:
 					onURL();
 				case 2:

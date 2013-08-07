@@ -112,7 +112,7 @@ class PlayState extends FlxState
 		// Add last so it goes on top, you know the drill.
 		add(_text1); 
 		
-		FlxG.sound.playMusic(Assets.getSound("assets/music/ScrollingSpace[1]" + Reg.SoundExtension), .5);
+		FlxG.sound.playMusic("assets/music/ScrollingSpace.mp3", 0.5);
 	}
 	
 	override public function update():Void 

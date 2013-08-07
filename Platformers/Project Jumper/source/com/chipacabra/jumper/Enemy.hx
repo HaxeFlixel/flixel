@@ -130,7 +130,7 @@ class Enemy extends EnemyTemplate
 		}
 		
 		FlxSpriteUtil.flicker(this, 0.5);
-		FlxG.sound.play(Assets.getSound("assets/sounds/monhurt2" + Reg.SoundExtension), 1, false);
+		FlxG.sound.play("assets/sounds/monhurt2" + Reg.SoundExtension, 1, false);
 		
 		super.hurt(Damage);
 	}
@@ -146,7 +146,7 @@ class Enemy extends EnemyTemplate
 		{
 			_gibs.at(this);
 			_gibs.start(true, 2.80);
-			FlxG.sound.play(Assets.getSound("assets/sounds/mondead2" + Reg.SoundExtension), 1, false);
+			FlxG.sound.play("assets/sounds/mondead2" + Reg.SoundExtension, 1, false);
 		}
 		
 		super.kill();
