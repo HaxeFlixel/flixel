@@ -13,6 +13,7 @@ import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
+import flixel.system.input.keyboard.FlxKeyAccess;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxRandom;
@@ -131,7 +132,12 @@ class FlxG
 	/**
 	 * A reference to a <code>FlxKeyboard</code> object. Important for input!
 	 */
-	static public var keys(default, null):FlxKeyboard;
+	static public var keyboard(default, null):FlxKeyboard;
+	/**
+	 * A reference to a <code>FlxKeyAccess</code> object. Handy for quickly 
+	 * getting information about keys pressed / just pressed or just released!
+	 */
+	static public var keys(default, null):FlxKeyAccess;
 	#end
 
 	#if !FLX_NO_TOUCH
@@ -220,7 +226,8 @@ class FlxG
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
-			keys = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
+			keyboard = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
+			keys = new FlxKeyAccess();
 		#end
 		
 		#if !FLX_NO_MOUSE
