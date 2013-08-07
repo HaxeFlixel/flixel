@@ -8,7 +8,6 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
-import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.system.layer.Region;
@@ -154,7 +153,7 @@ class FlxObject extends FlxBasic
 	 */
 	public var health:Float;
 	/**
-	 * This is just a pre-allocated x-y point container used internally for pathing and overlapping
+	 * This is just a pre-allocated x-y point container used internally for overlapping
 	 */
 	private var _point:FlxPoint;
 	/**
@@ -189,48 +188,11 @@ class FlxObject extends FlxBasic
 	public var last:FlxPoint;
 	
 	/**
-	 * A reference to a path object.  Null by default, assigned by <code>followPath()</code>.
-	 */
-	public var path:FlxPath;
-	/**
-	 * The speed at which the object is moving on the path.
-	 * When an object completes a non-looping path circuit,
-	 * the pathSpeed will be zeroed out, but the <code>path</code> reference
-	 * will NOT be nulled out.  So <code>pathSpeed</code> is a good way
-	 * to check if this object is currently following a path or not.
-	 */
-	public var pathSpeed:Float;
-	/**
-	 * The angle in degrees between this object and the next node, where 0 is directly upward, and 90 is to the right.
-	 */
-	public var pathAngle:Float;
-	/**
-	 * Whether the object should auto-center the path or at its origin.
-	 * @default true
-	 */
-	public var pathAutoCenter:Bool;
-	/**
 	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
 	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
 	 * @default false
 	 */
 	public var forceComplexRender(default, set_forceComplexRender):Bool = false;
-	/**
-	 * Internal helper, tracks which node of the path this object is moving toward.
-	 */
-	private var _pathNodeIndex:Int;
-	/**
-	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
-	 */
-	private var _pathMode:Int;
-	/**
-	 * Internal helper for node navigation, specifically yo-yo and backwards movement.
-	 */
-	private var _pathInc:Int;
-	/**
-	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
-	 */
-	private var _pathRotate:Bool;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -289,11 +251,6 @@ class FlxObject extends FlxBasic
 		scrollFactor = new FlxPoint(1.0, 1.0);
 		
 		_point = new FlxPoint();
-		
-		path = null;
-		pathSpeed = 0;
-		pathAngle = 0;
-		pathAutoCenter = true;
 	}
 	
 	/**
@@ -313,11 +270,6 @@ class FlxObject extends FlxBasic
 		_point = null;
 		last = null;
 		cameras = null;
-		if (path != null)
-		{
-			path.destroy();
-		}
-		path = null;
 		
 		_framesData = null;
 		setCachedGraphics(null);
@@ -334,11 +286,6 @@ class FlxObject extends FlxBasic
 		
 		last.x = x;
 		last.y = y;
-		
-		if ((path != null) && (pathSpeed != 0) && (path.nodes[_pathNodeIndex] != null))
-		{
-			updatePathMotion();
-		}
 		
 		if (moves)
 		{
@@ -471,275 +418,6 @@ class FlxObject extends FlxBasic
 		#end
 	}
 	#end
-	
-	/**
-	 * Call this function to give this object a path to follow.
-	 * If the path does not have at least one node in it, this function
-	 * will log a warning message and return.
-	 * @param	Path		The <code>FlxPath</code> you want this object to follow.
-	 * @param	Speed		How fast to travel along the path in pixels per second.
-	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
-	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
-	 */
-	public function followPath(Path:FlxPath, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false):Void
-	{
-		if(Path.nodes.length <= 0)
-		{
-			FlxG.log.warn("Paths need at least one node in them to be followed.");
-			return;
-		}
-		
-		path = Path;
-		pathSpeed = Math.abs(Speed);
-		_pathMode = Mode;
-		_pathRotate = AutoRotate;
-		
-		//get starting node
-		if((_pathMode == FlxPath.BACKWARD) || (_pathMode == FlxPath.LOOP_BACKWARD))
-		{
-			_pathNodeIndex = path.nodes.length - 1;
-			_pathInc = -1;
-		}
-		else
-		{
-			_pathNodeIndex = 0;
-			_pathInc = 1;
-		}
-	}
-	
-	/**
-	 * Tells this object to stop following the path its on.
-	 * @param	DestroyPath		Tells this function whether to call destroy on the path object.  Default value is false.
-	 */
-	public function stopFollowingPath(DestroyPath:Bool = false):Void
-	{
-		pathSpeed = 0;
-		velocity.x = 0;
-		velocity.y = 0;
-		
-		if(DestroyPath && (path != null))
-		{
-			path.destroy();
-			path = null;
-		}
-	}
-	
-	/**
-	 * Change the path node this object is currently at.
-	 * @param  NodeIndex    The index of the new node out of <code>path.nodes</code>.
-	 */
-	public function setPathNode(NodeIndex:Int):Void
-	{
-		if (path == null) 
-			return;
-		
-		if (NodeIndex < 0) 
-			NodeIndex = 0;
-		else if (NodeIndex > path.nodes.length - 1)
-			NodeIndex = path.nodes.length - 1;
-		
-		_pathNodeIndex = NodeIndex; 
-		advancePath();
-	} 
-	
-	/**
-	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
-	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
-	 */
-	private function advancePath(Snap:Bool = true):FlxPoint
-	{
-		if (Snap)
-		{
-			var oldNode:FlxPoint = path.nodes[_pathNodeIndex];
-			if (oldNode != null)
-			{
-				if ((_pathMode & FlxPath.VERTICAL_ONLY) == 0)
-				{
-					x = oldNode.x;
-					if (pathAutoCenter) 
-						x -= width * 0.5; 
-				}
-				if ((_pathMode & FlxPath.HORIZONTAL_ONLY) == 0)
-				{
-					y = oldNode.y;
-					if (pathAutoCenter) 
-						y -= height * 0.5; 
-				}
-			}
-		}
-		
-		_pathNodeIndex += _pathInc;
-		
-		if ((_pathMode & FlxPath.BACKWARD) > 0)
-		{
-			if (_pathNodeIndex < 0)
-			{
-				_pathNodeIndex = 0;
-				stopFollowingPath(false);
-			}
-		}
-		else if ((_pathMode & FlxPath.LOOP_FORWARD) > 0)
-		{
-			if (_pathNodeIndex >= path.nodes.length)
-			{
-				_pathNodeIndex = 0;
-			}
-		}
-		else if ((_pathMode & FlxPath.LOOP_BACKWARD) > 0)
-		{
-			if (_pathNodeIndex < 0)
-			{
-				_pathNodeIndex = path.nodes.length - 1;
-				if (_pathNodeIndex < 0)
-				{
-					_pathNodeIndex = 0;
-				}
-			}
-		}
-		else if ((_pathMode & FlxPath.YOYO) > 0)
-		{
-			if (_pathInc > 0)
-			{
-				if (_pathNodeIndex >= path.nodes.length)
-				{
-					_pathNodeIndex = path.nodes.length - 2;
-					if (_pathNodeIndex < 0)
-					{
-						_pathNodeIndex = 0;
-					}
-					_pathInc = -_pathInc;
-				}
-			}
-			else if (_pathNodeIndex < 0)
-			{
-				_pathNodeIndex = 1;
-				if (_pathNodeIndex >= path.nodes.length)
-				{
-					_pathNodeIndex = path.nodes.length - 1;
-				}
-				if (_pathNodeIndex < 0)
-				{
-					_pathNodeIndex = 0;
-				}
-				_pathInc = -_pathInc;
-			}
-		}
-		else
-		{
-			if (_pathNodeIndex >= path.nodes.length)
-			{
-				_pathNodeIndex = path.nodes.length - 1;
-				stopFollowingPath(false);
-			}
-		}
-
-		return path.nodes[_pathNodeIndex];
-	}
-	
-	/**
-	 * Internal function for moving the object along the path.
-	 * Generally this function is called automatically by <code>preUpdate()</code>.
-	 * The first half of the function decides if the object can advance to the next node in the path,
-	 * while the second half handles actually picking a velocity toward the next node.
-	 */
-	inline private function updatePathMotion():Void
-	{
-		//first check if we need to be pointing at the next node yet
-		_point.x = x;
-		_point.y = y;
-		if (pathAutoCenter)
-		{
-			_point.x += width * 0.5;
-			_point.y += height * 0.5;
-		}
-		var node:FlxPoint = path.nodes[_pathNodeIndex];
-		var deltaX:Float = node.x - _point.x;
-		var deltaY:Float = node.y - _point.y;
-		
-		var horizontalOnly:Bool = (_pathMode & FlxPath.HORIZONTAL_ONLY) > 0;
-		var verticalOnly:Bool = (_pathMode & FlxPath.VERTICAL_ONLY) > 0;
-		
-		if (horizontalOnly)
-		{
-			if (((deltaX > 0) ? deltaX : -deltaX) < pathSpeed * FlxG.elapsed)
-			{
-				node = advancePath();
-			}
-		}
-		else if(verticalOnly)
-		{
-			if (((deltaY > 0) ? deltaY : -deltaY) < pathSpeed * FlxG.elapsed)
-			{
-				node = advancePath();
-			}
-		}
-		else
-		{
-			if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) < pathSpeed * FlxG.elapsed)
-			{
-				node = advancePath();
-			}
-		}
-		
-		//then just move toward the current node at the requested speed
-		if (pathSpeed != 0)
-		{
-			//set velocity based on path mode
-			_point.x = x;
-			_point.y = y;
-			if (pathAutoCenter)
-			{
-				_point.x += width * 0.5;
-				_point.y += height * 0.5;
-			}
-			
-			if (horizontalOnly || (_point.y == node.y))
-			{
-				velocity.x = (_point.x < node.x) ? pathSpeed : -pathSpeed;
-				if (velocity.x < 0)
-				{
-					pathAngle = -90;
-				}
-				else
-				{
-					pathAngle = 90;
-				}
-				if (!horizontalOnly)
-				{
-					velocity.y = 0;
-				}
-			}
-			else if (verticalOnly || (_point.x == node.x))
-			{
-				velocity.y = (_point.y < node.y) ? pathSpeed : -pathSpeed;
-				if (velocity.y < 0)
-				{
-					pathAngle = 0;
-				}
-				else
-				{
-					pathAngle = 180;
-				}
-				if (!verticalOnly)
-				{
-					velocity.x = 0;
-				}
-			}
-			else
-			{
-				pathAngle = FlxAngle.getAngle(_point, node);
-				FlxAngle.rotatePoint(0, pathSpeed, 0, 0, pathAngle, velocity);
-			}
-			
-			//then set object rotation if necessary
-			if (_pathRotate)
-			{
-				angularVelocity = 0;
-				angularAcceleration = 0;
-				angle = pathAngle;
-			}
-		}
-	}
 	
 	/**
 	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> or <code>FlxGroup</code>.

@@ -852,9 +852,9 @@ class FlxTilemap extends FlxObject
 	 * @param	Simplify	Whether to run a basic simplification algorithm over the path data, removing extra points that are on the same line.  Default value is true.
 	 * @param	RaySimplify	Whether to run an extra raycasting simplification algorithm over the remaining path data.  This can result in some close corners being cut, and should be used with care if at all (yet).  Default value is false.
 	 * @param   WideDiagonal   Whether to require an additional tile to make diagonal movement. Default value is true;
-	 * @return	A <code>FlxPath</code> from the start to the end.  If no path could be found, then a null reference is returned.
+	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found, then a null reference is returned.
 	 */
-	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, WideDiagonal:Bool = true):FlxPath
+	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, WideDiagonal:Bool = true):Array<FlxPoint>
 	{
 		// Figure out what tile we are starting and ending on.
 		var startIndex:Int = Std.int((Start.y - y) / _tileHeight) * widthInTiles + Std.int((Start.x - x) / _tileWidth);
@@ -898,7 +898,7 @@ class FlxTilemap extends FlxObject
 		}
 		
 		// Finally load the remaining points into a new path object and return it
-		var path:FlxPath = new FlxPath();
+		var path:Array<FlxPoint> = [];
 		var i:Int = points.length - 1;
 		
 		while(i >= 0)
@@ -907,7 +907,7 @@ class FlxTilemap extends FlxObject
 			
 			if (node != null)
 			{
-				path.addPoint(node,true);
+				path.push(node, true);
 			}
 		}
 		

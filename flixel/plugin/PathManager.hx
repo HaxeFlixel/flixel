@@ -1,15 +1,11 @@
 package flixel.plugin;
 
-#if !FLX_NO_DEBUG
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPath;
 
-/**
- * A simple manager for tracking and drawing FlxPath debug data to the screen.
- */
-class DebugPathDisplay extends FlxPlugin
+class PathManager extends FlxPlugin
 {
 	private var _paths:Array<FlxPath>;
 	
@@ -21,9 +17,6 @@ class DebugPathDisplay extends FlxPlugin
 		super();
 		
 		_paths = new Array<FlxPath>();
-		
-		// Don't call update on this plugin
-		active = false; 
 	}
 	
 	/**
@@ -35,6 +28,22 @@ class DebugPathDisplay extends FlxPlugin
 		_paths = null;
 		
 		super.destroy();
+	}
+	
+	override public function update():Void
+	{
+		if (FlxG.paused) 
+		{
+			return;
+		}
+		
+		for (path in _paths)
+		{
+			if (!path.paused)
+			{
+				path.update();
+			}
+		}
 	}
 	
 	/**
@@ -98,7 +107,10 @@ class DebugPathDisplay extends FlxPlugin
 	 */
 	public function add(Path:FlxPath):Void
 	{
-		_paths.push(Path);
+		if (FlxArrayUtil.indexOf(_paths, Path) < 0) 
+		{
+			_paths.push(Path);
+		}
 	}
 	
 	/**
@@ -107,13 +119,19 @@ class DebugPathDisplay extends FlxPlugin
 	 * 
 	 * @param	Path	The <code>FlxPath</code> you want to remove from the manager.
 	 */
-	public function remove(Path:FlxPath):Void
+	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
 	{
+		if (ReturnInPool)
+		{
+			FlxPath.put(Path);
+		}
+		
 		var index:Int = FlxArrayUtil.indexOf(_paths, Path);
 		
 		if (index >= 0)
 		{
-			_paths.splice(index,1);
+			_paths[index] = _paths[_paths.length - 1];
+			_paths.pop();
 		}
 	}
 	
@@ -122,23 +140,11 @@ class DebugPathDisplay extends FlxPlugin
 	 */
 	public function clear():Void
 	{
-		if (_paths != null)
+		while (_paths.length > 0)
 		{
-			var i:Int = _paths.length - 1;
-			var path:FlxPath;
-			
-			while(i >= 0)
-			{
-				path = _paths[i--];
-				
-				if (path != null)
-				{
-					path.destroy();
-				}
-			}
+			var path:FlxPath = _paths.pop();
+			FlxPath.put(path);
 		}
-		
-		_paths = [];
 	}
 	
 	override inline public function onStateSwitch():Void
@@ -146,4 +152,3 @@ class DebugPathDisplay extends FlxPlugin
 		clear();
 	}
 }
-#end
