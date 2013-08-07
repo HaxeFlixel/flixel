@@ -232,20 +232,26 @@ class FlxMath
 	}
 	
 	/**
-	 * Adds the given amount to the value, but never lets the value go over the specified maximum
+	 * Adds the given amount to the value, but never lets the value
+	 * go over the specified maximum or under the specified minimum.
 	 * 
 	 * @param 	value 	The value to add the amount to
 	 * @param 	amount 	The amount to add to the value
 	 * @param 	max 	The maximum the value is allowed to be
+	 * @param 	min 	The minimum the value is allowed to be
 	 * @return The new value
 	 */
-	static public function maxAdd(value:Int, amount:Int, max:Int):Int
+	inline static public function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
 	{
 		value += amount;
 		
 		if (value > max)
 		{
 			value = max;
+		}
+		else if (value <= min)
+		{
+			value = min;
 		}
 		
 		return value;
