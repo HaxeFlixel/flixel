@@ -22,7 +22,7 @@ import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
-import flixel.plugin.DebugPathDisplay;
+import flixel.plugin.PathManager;
 #end
 #if !FLX_NO_TOUCH
 import flixel.system.input.touch.FlxTouchManager;
