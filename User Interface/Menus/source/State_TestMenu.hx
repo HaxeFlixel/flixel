@@ -2,6 +2,7 @@ import haxe.xml.Fast;
 import nme.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxStateX;
+import flixel.addons.ui.FlxInputText;
 /**
  * @author Lars Doucet
  */
@@ -13,6 +14,7 @@ class State_TestMenu extends FlxStateX
 	{
 		_xml_id = "state_menu";
 		super.create();
+		
 	}
 	
 	public override function getRequest(id:String, target:Dynamic, data:Dynamic):Dynamic {

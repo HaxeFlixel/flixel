@@ -2,6 +2,8 @@ import flash.text.Font;
 import flixel.FlxG;
 import flixel.addons.ui.FlxStateX;
 import flixel.addons.ui.FlxRadioGroup;
+import flixel.addons.ui.FlxInputText;
+import flixel.text.FlxText;
 import firetongue.FireTongue;
 import openfl.Assets;
 
@@ -35,7 +37,7 @@ class State_Title extends FlxStateX
 		_tongue = Main.tongue;		
 		super.create();	
 	}
-		
+	
 	public override function getEvent(id:String, sender:Dynamic, data:Dynamic):Void {
 		var str:String = "";
 		
