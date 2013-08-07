@@ -907,7 +907,7 @@ class FlxTilemap extends FlxObject
 			
 			if (node != null)
 			{
-				path.push(node, true);
+				path.push(node);
 			}
 		}
 		
