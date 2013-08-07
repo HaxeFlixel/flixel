@@ -2,9 +2,13 @@
 =
 ###Related:    [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-demos](https://github.com/HaxeFlixel/flixel-demos) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
 ______________________________________________________
-[HaxeFlixel](http://www.haxeflixel.com/) is an open source 2D game library written in the [Haxe Language](http://www.haxe.org/), it is completely free for personal or commercial use. This library features integration with the powerful [Open Flash Library](https://github.com/openfl).
 
+###Getting Started
 
+It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel). Just run `haxelib install flixel` once you have it installed.
+
+You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
+______________________________________________________
 ###Links
 
 In case you're looking for ressources, help, or just want to interact with the community:
@@ -85,17 +89,3 @@ ______________________________________________________
 - Camera system for split screen
 - Pathfinding and following
 - Easy object recycling
-
-______________________________________________________
-
-###Getting Started
-
-It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel).
-
-Use this command line command to install HaxeFlixel:
-
-```batch
-haxelib install flixel
-```
-
-You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
