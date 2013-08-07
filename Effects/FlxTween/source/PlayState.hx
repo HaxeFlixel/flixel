@@ -20,9 +20,12 @@ import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
-import flixel.tweens.util.Ease;
+import flixel.tweens.FlxEase;
 import flixel.util.FlxStringUtil;
+import flixel.tweens.FlxEase.EaseFunction;
+import flixel.tweens.FlxTween.TweenOptions;
 
 /**
  * Tweening demo. 
@@ -33,12 +36,28 @@ import flixel.util.FlxStringUtil;
 class PlayState extends FlxState
 {
 	inline static private var MAX_TWEEN:Int = 8;
+	/**
+	 * The duration of the tween
+	 */
 	inline static private var DURATION:Float = 1;
 	inline static private var INSTRUCTIONS:String = "Press UP or DOWN keys to change tweening. Press SPACE to change current ease function";
 	
+	/**
+	 * The tween types
+	 */
+	inline static private var VAR:Int = 0;
+	inline static private var MULTI_VAR:Int = 1;
+	inline static private var ANGLE:Int = 2;
+	inline static private var LINEAR_MOTION:Int = 3;
+	inline static private var LINEAR_PATH:Int = 4;
+	inline static private var CIRCULAR_MOTION:Int = 5;
+	inline static private var CUBIC_MOTION:Int = 6;
+	inline static private var QUAD_MOTION:Int = 7;
+	inline static private var QUAD_PATH:Int = 8;
+	
 	private var _easeInfo:Array<EaseInfo>;
 	private var _currentEaseIndex:Int;
-	private var _tweener:FlxTween;
+	private var _tween:FlxTween;
 	private var _currentTweenIndex:Int;
 	private var _sprite:FlxSprite;
 	private var _trail:FlxTrail;
@@ -54,40 +73,39 @@ class PlayState extends FlxState
 		FlxG.cameras.bgColor = FlxColor.BLACK;
 		FlxG.mouse.show();
 		
+		// Set up an array containing all the different ease functions there are
 		_easeInfo = new Array<EaseInfo>();
 		
-		_easeInfo.push(new EaseInfo("quadIn", Ease.quadIn));
-		_easeInfo.push(new EaseInfo("quadOut", Ease.quadOut));
-		_easeInfo.push(new EaseInfo("cubeIn", Ease.cubeIn));
-		_easeInfo.push(new EaseInfo("cubeOut", Ease.cubeOut));
-		_easeInfo.push(new EaseInfo("cubeInOut", Ease.cubeInOut));
-		_easeInfo.push(new EaseInfo("quartIn", Ease.quartIn));
-		_easeInfo.push(new EaseInfo("quartOut", Ease.quartOut));
-		_easeInfo.push(new EaseInfo("quartInOut", Ease.quartInOut));
-		_easeInfo.push(new EaseInfo("quintIn", Ease.quintIn));
-		_easeInfo.push(new EaseInfo("quintOut", Ease.quintOut));
-		_easeInfo.push(new EaseInfo("quintInOut", Ease.quintInOut));
-		_easeInfo.push(new EaseInfo("sineIn", Ease.sineIn));
-		_easeInfo.push(new EaseInfo("sineOut", Ease.sineOut));
-		_easeInfo.push(new EaseInfo("sineInOut", Ease.sineInOut));
-		_easeInfo.push(new EaseInfo("bounceIn", Ease.bounceIn));
-		_easeInfo.push(new EaseInfo("bounceOut", Ease.bounceOut));
-		_easeInfo.push(new EaseInfo("bounceInOut", Ease.bounceInOut));
-		_easeInfo.push(new EaseInfo("circIn", Ease.circIn));
-		_easeInfo.push(new EaseInfo("circOut", Ease.circOut));
-		_easeInfo.push(new EaseInfo("circInOut", Ease.circInOut));
-		_easeInfo.push(new EaseInfo("expoIn", Ease.expoIn));
-		_easeInfo.push(new EaseInfo("expoOut", Ease.expoOut));
-		_easeInfo.push(new EaseInfo("expoInOut", Ease.expoInOut));
-		_easeInfo.push(new EaseInfo("backIn", Ease.backIn));
-		_easeInfo.push(new EaseInfo("backOut", Ease.backOut));
-		_easeInfo.push(new EaseInfo("backInOut", Ease.backInOut));
+		_easeInfo.push( { name: "quadIn",  		ease: FlxEase.quadIn 		} );
+		_easeInfo.push( { name: "quadOut",  	ease: FlxEase.quadOut 		} );
+		_easeInfo.push( { name: "cubeIn",  		ease: FlxEase.cubeIn 		} );
+		_easeInfo.push( { name: "cubeOut",  	ease: FlxEase.cubeOut 		} );
+		_easeInfo.push( { name: "cubeInOut", 	ease: FlxEase.cubeInOut 	} );
+		_easeInfo.push( { name: "quartIn",  	ease: FlxEase.quartIn 		} );
+		_easeInfo.push( { name: "quartOut",  	ease: FlxEase.quartOut 		} );
+		_easeInfo.push( { name: "quartInOut",  	ease: FlxEase.quartInOut 	} );
+		_easeInfo.push( { name: "quintIn",  	ease: FlxEase.quintIn 		} );
+		_easeInfo.push( { name: "quintOut",  	ease: FlxEase.quintOut 		} );
+		_easeInfo.push( { name: "quintInOut",  	ease: FlxEase.quintInOut 	} );
+		_easeInfo.push( { name: "sineIn", 	 	ease: FlxEase.sineIn 		} );
+		_easeInfo.push( { name: "sineOut",  	ease: FlxEase.sineOut 		} );
+		_easeInfo.push( { name: "sineInOut",  	ease: FlxEase.sineInOut 	} );
+		_easeInfo.push( { name: "bounceIn",  	ease: FlxEase.bounceIn 		} );
+		_easeInfo.push( { name: "bounceOut",  	ease: FlxEase.bounceOut 	} );
+		_easeInfo.push( { name: "bounceInOut",  ease: FlxEase.bounceInOut 	} );
+		_easeInfo.push( { name: "circIn",  		ease: FlxEase.circIn 		} );
+		_easeInfo.push( { name: "circOut",  	ease: FlxEase.circOut 		} );
+		_easeInfo.push( { name: "circInOut",  	ease: FlxEase.circInOut 	} );
+		_easeInfo.push( { name: "expoIn",  		ease: FlxEase.expoIn 		} );
+		_easeInfo.push( { name: "expoOut",  	ease: FlxEase.expoOut 		} );
+		_easeInfo.push( { name: "expoInOut",  	ease: FlxEase.expoInOut 	} );
+		_easeInfo.push( { name: "backIn",  		ease: FlxEase.backIn 		} );
+		_easeInfo.push( { name: "backOut",  	ease: FlxEase.backOut 		} );
+		_easeInfo.push( { name: "backInOut",  	ease: FlxEase.backInOut 	} );
 		
 		_sprite = new FlxSprite();
 		_sprite.loadGraphic(FlxAssets.IMG_LOGO, true);
-		// Make it look a bit better
 		_sprite.antialiasing = true;
-		_sprite.forceComplexRender = true;
 		
 		// Add a trail
 		_trail = new FlxTrail(_sprite, FlxAssets.IMG_LOGO, 12, 0, 0.4, 0.02);
@@ -96,7 +114,7 @@ class PlayState extends FlxState
 		add(_sprite);
 		
 		_currentEaseIndex = 0;
-		// multi var tween shows off effect nicely
+		// multi var tween shows off effect nicely, so start with that
 		_currentTweenIndex = 1; 
 		
 		_min = new FlxPoint(FlxG.width * 0.1, FlxG.height * 0.2);
@@ -121,136 +139,123 @@ class PlayState extends FlxState
 		// Create a button to toggle the trail
 		_toggleButton = new FlxButton(10, 65, "FlxTrail: On", onToggleTrail);
 		add(_toggleButton);
+		
+		// Start the tween
+		startTween();
 	}
 	
 	override public function update():Void 
 	{
 		super.update();
 		
-		if (Std.is(_tweener, AngleTween))
-		{
-			_sprite.angle = cast(_tweener, AngleTween).angle;
-		}
-		else if (Std.is(_tweener, ColorTween))
-		{
-			_sprite.color = cast(_tweener, ColorTween).color;
-		}
-		else if (Std.is(_tweener, NumTween))
-		{
-			_sprite.alpha = cast(_tweener, NumTween).value;
-		}
-		
 		if (FlxG.keys.justPressed("SPACE"))
 		{
-			_currentEaseIndex++;
+			_currentEaseIndex = FlxMath.wrapValue(_currentEaseIndex, 1, _easeInfo.length - 1);			
 			
-			if (_currentEaseIndex == _easeInfo.length) 
+			if (_tween != null)
 			{
-				_currentEaseIndex = 0;
-			}
-			
-			if (hasTween) 
-			{
-				_tweener.cancel();
+				startTween();
 			}
 		}
 		
 		if (FlxG.keys.justPressed("UP"))
 		{
-			_currentTweenIndex++;
+			_currentTweenIndex = FlxMath.wrapValue(_currentTweenIndex, 1, MAX_TWEEN);
 			
-			if (_currentTweenIndex == MAX_TWEEN + 1)
+			if (_tween != null)
 			{
-				_currentTweenIndex = 0;
-			}
-			
-			if (hasTween) 
-			{
-				_tweener.cancel();
+				startTween();
 			}
 		}
 		
 		if (FlxG.keys.justPressed("DOWN"))
 		{
-			_currentTweenIndex--;
+			_currentTweenIndex = FlxMath.wrapValue(_currentTweenIndex, -1, MAX_TWEEN);
 			
-			if (_currentTweenIndex < 0) 
+			if (_tween != null)
 			{
-				_currentTweenIndex = MAX_TWEEN;
+				startTween();
 			}
-			
-			if (hasTween) 
-			{
-				_tweener.cancel();
-			}
+		}
+	}
+	
+	private function startTween():Void
+	{
+		var options:TweenOptions = { type: FlxTween.PINGPONG, ease: _currentEase }
+		_trail.resetTrail();
+		_sprite.setPosition(_min.x, _min.y + (_max.y - _min.y) * 0.5);
+		_sprite.angle = 0;
+		_sprite.color = FlxColor.WHITE;
+		_sprite.alpha = 1;
+		
+		// Cancel the old tween
+		if (_tween != null)
+		{
+			_tween.cancel();
 		}
 		
-		if (!hasTween || !_tweener.active)
+		switch (_currentTweenIndex)
 		{
-			_trail.resetTrail();
-			_sprite.reset(_min.x, _min.y + (_max.y - _min.y) * 0.5);
-			_sprite.angle = 0;
-			_sprite.color = FlxColor.WHITE;
-			_sprite.alpha = 1;
+			case VAR:
+				_tween = FlxTween.multiVar(_sprite, { x: _max.x }, DURATION, options);
 			
-			switch (_currentTweenIndex)
-			{
-				case 0:
-					var varTween:VarTween = new VarTween(null, FlxTween.PINGPONG);
-					varTween.tween(_sprite, "x", _max.x, DURATION, _easeInfo[_currentEaseIndex].ease);
-					_tweener = addTween(varTween);
-				case 1:
-					var multiVarTween:MultiVarTween = new MultiVarTween(null, FlxTween.PINGPONG);
-					var properties:Dynamic = { x: _max.x, angle: 180 };
-					multiVarTween.tween(_sprite, properties, DURATION, _easeInfo[_currentEaseIndex].ease);
-					_tweener = addTween(multiVarTween);
-				case 2:
-					_sprite.reset(FlxG.width * 0.5, FlxG.height * 0.5);
-					var angleTween:AngleTween = new AngleTween(null, FlxTween.PINGPONG);
-					angleTween.tween(0, 90, DURATION, _easeInfo[_currentEaseIndex].ease);
-					_tweener = addTween(angleTween);
-				case 3:
-					var linearMotionTween:LinearMotion = new LinearMotion(null, FlxTween.PINGPONG);
-					linearMotionTween.setMotion(_sprite.x, _sprite.y, _max.x, _sprite.y, DURATION, _easeInfo[_currentEaseIndex].ease);
-					linearMotionTween.setObject(_sprite);
-					_tweener = addTween(linearMotionTween);
-				case 4:
-					var linearPath:LinearPath = new LinearPath(null, FlxTween.PINGPONG);
-					linearPath.addPoint(_sprite.x, _sprite.y);
-					linearPath.addPoint(_sprite.x + (_max.x - _min.x) * 0.5, _min.y);
-					linearPath.addPoint(_max.x, _sprite.y);
-					linearPath.setMotion(DURATION, _easeInfo[_currentEaseIndex].ease);
-					linearPath.setObject(_sprite);
-					_tweener = addTween(linearPath, true);
-				case 5:
-					var circularMotion:CircularMotion = new CircularMotion(null, FlxTween.PINGPONG);
-					circularMotion.setMotion(FlxG.width * 0.5, FlxG.height * 0.5, _sprite.width, 359, true, DURATION, _easeInfo[_currentEaseIndex].ease);
-					circularMotion.setObject(_sprite);
-					_tweener = addTween(circularMotion);
-				case 6:
-					var cubicMotion:CubicMotion = new CubicMotion(null, FlxTween.PINGPONG);
-					cubicMotion.setMotion(_sprite.x, _sprite.y, _sprite.x + (_max.x - _min.x) * 0.25, _max.y, _sprite.x + (_max.x - _min.x) * 0.75, _max.y, _max.x, _sprite.y, DURATION, _easeInfo[_currentEaseIndex].ease);
-					cubicMotion.setObject(_sprite);
-					_tweener = addTween(cubicMotion);
-				case 7:
-					var quadMotion:QuadMotion = new QuadMotion(null, FlxTween.PINGPONG);
-					quadMotion.setMotion(_sprite.x, _sprite.y, _sprite.x + (_max.x - _min.x) * 0.5, _min.y, _max.x, _sprite.y, DURATION, _easeInfo[_currentEaseIndex].ease);
-					quadMotion.setObject(_sprite);
-					_tweener = addTween(quadMotion);
-				case 8:
-					var quadPath:QuadPath = new QuadPath(null, FlxTween.PINGPONG);
-					quadPath.addPoint(_sprite.x, _sprite.y);
-					quadPath.addPoint(_sprite.x + (_max.x - _min.x) * 0.5, _min.y);
-					quadPath.addPoint(_sprite.x + (_max.x - _min.x) * 0.5, _max.y);
-					quadPath.addPoint(_max.x, _sprite.y);
-					quadPath.setMotion(DURATION * 1.5, _easeInfo[_currentEaseIndex].ease);
-					quadPath.setObject(_sprite);
-					_tweener = addTween(quadPath);
-			}
+			case MULTI_VAR:
+				_tween = FlxTween.multiVar(_sprite, { x: _max.x, angle: 180 }, DURATION, options);
 			
-			_tweenText.text = "Current tweening: " + FlxStringUtil.getClassName(_tweener, true);
-			_easeText.text = "Current ease function: " + _easeInfo[_currentEaseIndex].name;
+			case ANGLE:
+				_tween = FlxTween.multiVar(_sprite, { angle: 90 }, DURATION, options);
+			
+			case LINEAR_MOTION:
+				_tween = FlxTween.linearMotion(_sprite, 
+												_sprite.x, _sprite.y, 
+												_max.x, _sprite.y, 
+												DURATION, true, options);
+			
+			case LINEAR_PATH:
+				var path:Array<FlxPoint> = [new FlxPoint(_sprite.x, _sprite.y), 
+											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _min.y), 
+											new FlxPoint(_max.x, _sprite.y)];
+				_tween = FlxTween.linearPath(_sprite, path, DURATION, true, options);
+			
+			case CIRCULAR_MOTION:
+				_tween = FlxTween.circularMotion(_sprite, 
+													FlxG.width * 0.5, FlxG.height * 0.5, 
+													_sprite.width, 359, 
+													true, DURATION, true, options);
+			
+			case CUBIC_MOTION:
+				_tween = FlxTween.cubicMotion(_sprite, 
+												_sprite.x, _sprite.y, 
+												_sprite.x + (_max.x - _min.x) * 0.25, _max.y, 
+												_sprite.x + (_max.x - _min.x) * 0.75, _max.y, 
+												_max.x, _sprite.y, 
+												DURATION, options);
+			
+			case QUAD_MOTION:
+				_tween = FlxTween.quadMotion(_sprite, 
+											_sprite.x, _sprite.y, 
+											_sprite.x + (_max.x - _min.x) * 0.5, _min.y, 
+											_max.x, _sprite.y, 
+											DURATION, true, options);
+			
+			case QUAD_PATH:
+				var path:Array<FlxPoint> = [new FlxPoint(_sprite.x, _sprite.y), 
+											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _min.y), 
+											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _max.y), 
+											new FlxPoint(_max.x, _sprite.y)];
+				_tween = FlxTween.quadPath(_sprite, path, DURATION, true, options);
 		}
+		
+		// Update the texts
+		_tweenText.text = "Current tweening: " + FlxStringUtil.getClassName(_tween, true);
+		_easeText.text = "Current ease function: " + _currentEase;
+	}
+	
+	private var _currentEase(get, never):EaseFunction;
+	
+	inline private function get__currentEase():EaseFunction
+	{
+		return _easeInfo[_currentEaseIndex].ease;
 	}
 	
 	private function onToggleTrail():Void
@@ -268,14 +273,7 @@ class PlayState extends FlxState
 	}
 }
 
-private class EaseInfo
-{
-	public var name:String;
-	public var ease:EaseFunction;
-	
-	public function new(Name:String, EaseFunc:EaseFunction)
-	{
-		name = Name;
-		ease = EaseFunc;
-	}
+typedef EaseInfo = {
+	name:String,
+	ease:EaseFunction
 }
