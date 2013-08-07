@@ -804,7 +804,7 @@ class FlxSprite extends FlxObject
 			
 			if (!isSimpleRender)
 			{
-				if (_angleChanged)
+				if (_angleChanged == true)
 				{
 					var radians:Float = -angle * FlxAngle.TO_RAD;
 					_sinAngle = Math.sin(radians);
@@ -1928,8 +1928,9 @@ class FlxSprite extends FlxObject
 	
 	override private function set_angle(value:Float):Float
 	{
-		_angleChanged = (angle != value);
-		return angle = value;
+		_angleChanged = (angle != value) || _angleChanged;
+		angle = value;
+		return value;
 	}
 	
 	#if !flash
