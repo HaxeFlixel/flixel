@@ -5,7 +5,7 @@ import flixel.FlxG;
 /**
  * A helper class for keyboard input.
  */
-class FlxKeyAccess
+class FlxKeyShortcuts
 {
 	/**
 	 * Helper class to check if a keys is pressed.
