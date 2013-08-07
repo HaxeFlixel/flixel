@@ -133,7 +133,7 @@ class Watch extends Window
 	 * Extremely useful when called in <code>update()</code> functions when there 
 	 * doesn't exist a variable for a value you want to watch - so you won't have to create one.
 	 * @param	Name		The name of the quickWatch entry, for example "mousePressed".
-	 * @param	NewValue	The new value for this entry, for example <code>FlxG.mouse.pressed()</code>.
+	 * @param	NewValue	The new value for this entry, for example <code>FlxG.mouse.pressed</code>.
 	 */
 	public function updateQuickWatch(Name:String, NewValue:Dynamic):Void
 	{

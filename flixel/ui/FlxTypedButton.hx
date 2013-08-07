@@ -254,13 +254,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				camera = cameras[i++];
 				#if !FLX_NO_MOUSE
 					FlxG.mouse.getWorldPosition(camera, _point);
-					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed()) == false) ? false : offAll;
+					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed) == false) ? false : offAll;
 				#end
 				#if !FLX_NO_TOUCH
 					for (touch in FlxG.touches.list)
 					{
 						touch.getWorldPosition(camera, _point);
-						offAll = (updateButtonStatus(_point, camera, touch.justPressed()) == false) ? false : offAll;
+						offAll = (updateButtonStatus(_point, camera, touch.justPressed) == false) ? false : offAll;
 					}
 				#end
 			}

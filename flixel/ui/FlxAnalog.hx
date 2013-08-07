@@ -253,7 +253,7 @@ class FlxAnalog extends FlxSpriteGroup
 			{
 				_point = touch.getWorldPosition(FlxG.camera, _point);
 				
-				if (updateAnalog(_point, touch.pressed(), touch.justPressed(), touch.justReleased(), touch) == false)
+				if (updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch) == false)
 				{
 					offAll = false;
 					break;
@@ -264,7 +264,7 @@ class FlxAnalog extends FlxSpriteGroup
 		#if !FLX_NO_MOUSE
 			_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			
-			if (updateAnalog(_point, FlxG.mouse.pressed(), FlxG.mouse.justPressed(), FlxG.mouse.justReleased()) == false)
+			if (updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased) == false)
 			{
 				offAll = false;
 			}
@@ -398,7 +398,9 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Whether the thumb is pressed or not.
 	 */
-	public function pressed():Bool
+	public var pressed(get, never):Bool;
+	
+	inline private function get_pressed():Bool
 	{
 		return status == PRESSED;
 	}
@@ -406,17 +408,19 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Whether the thumb is just pressed or not.
 	 */
-	public function justPressed():Bool
+	public var justPressed(get, never):Bool;
+	
+	private function get_justPressed():Bool
 	{
 		#if !FLX_NO_TOUCH
 		if (_currentTouch != null)
 		{
-			return _currentTouch.justPressed() && status == PRESSED;
+			return _currentTouch.justPressed && status == PRESSED;
 		}
 		#end
 		
 		#if !FLX_NO_MOUSE
-		return FlxG.mouse.justPressed() && status == PRESSED;
+		return FlxG.mouse.justPressed && status == PRESSED;
 		#end
 		
 		return false;
@@ -425,17 +429,19 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Whether the thumb is just released or not.
 	 */
-	public function justReleased():Bool
+	public var justReleased(get, never):Bool;
+	
+	private function get_justReleased():Bool
 	{
 		#if !FLX_NO_TOUCH
 		if (_currentTouch != null)
 		{
-			return _currentTouch.justReleased() && status == HIGHLIGHT;
+			return _currentTouch.justReleased && status == HIGHLIGHT;
 		}
 		#end
 		
 		#if !FLX_NO_MOUSE
-		return FlxG.mouse.justReleased() && status == HIGHLIGHT;
+		return FlxG.mouse.justReleased && status == HIGHLIGHT;
 		#end
 		
 		return false;

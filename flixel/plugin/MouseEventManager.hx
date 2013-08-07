@@ -177,7 +177,7 @@ class MouseEventManager extends FlxPlugin
 		}
 		// MouseDown - Look for sprites with mouse over when user presses mouse button.
 		#if !FLX_NO_MOUSE
-		if (FlxG.mouse.justPressed())
+		if (FlxG.mouse.justPressed)
 		{
 			for (current in currentOverSprites)
 			{
@@ -188,7 +188,7 @@ class MouseEventManager extends FlxPlugin
 			}
 		}
 		// MouseUp - Look for sprites with mouse over when user releases mouse button.
-		if (FlxG.mouse.justReleased())
+		if (FlxG.mouse.justReleased)
 		{
 			for (current in currentOverSprites)
 			{

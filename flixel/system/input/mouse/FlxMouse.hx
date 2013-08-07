@@ -438,19 +438,25 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Check to see if the mouse is pressed.
 	 * @return 	Whether the mouse is pressed.
 	 */
-	inline public function pressed():Bool { return _leftButton.pressed(); }
-
+	public var pressed(get, never):Bool; 			
+	
+	inline private function get_pressed():Bool { return _leftButton.pressed(); }
+	
 	/**
 	 * Check to see if the mouse was just pressed.
 	 * @return 	Whether the mouse was just pressed.
 	 */
-	inline public function justPressed():Bool { return _leftButton.justPressed(); }
+	public var justPressed(get, never):Bool;  		
+	
+	inline private function get_justPressed():Bool { return _leftButton.justPressed(); }
 
 	/**
 	 * Check to see if the mouse was just released.
 	 * @return 	Whether the mouse was just released.
 	 */
-	inline public function justReleased():Bool { return _leftButton.justReleased(); }
+	public var justReleased(get, never):Bool;  		
+	
+	inline private function get_justReleased():Bool { return _leftButton.justReleased(); }
 
 	#if (FLX_MOUSE_ADVANCED && !js)
 	/**
@@ -458,42 +464,54 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return 	Whether the right mouse button is pressed.
 	 */
-	inline public function pressedRight():Bool { return _rightButton.pressed(); }
+	public var pressedRight(get, never):Bool;
+	
+	inline private function get_pressedRight():Bool { return _rightButton.pressed(); }
 
 	/**
 	 * Check to see if the right mouse button was just pressed.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return 	Whether the right mouse button was just pressed.
 	 */
-	inline public function justPressedRight():Bool { return _rightButton.justPressed(); }
+	public var justPressedRight(get, never):Bool;
+	
+	inline private function get_justPressedRight():Bool { return _rightButton.justPressed(); }
 
 	/**
 	 * Check to see if the right mouse button was just released.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return 	Whether the right mouse button was just released.
 	 */
-	inline public function justReleasedRight():Bool { return _rightButton.justReleased(); }
+	public var justReleasedRight(get, never):Bool;
+	
+	inline private function get_justReleasedRight():Bool { return _rightButton.justReleased(); }
 
 	/**
 	 * Check to see if the middle mouse button is pressed.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return 	Whether the middle mouse button is pressed.
 	 */
-	inline public function pressedMiddle():Bool { return _middleButton.pressed(); }
+	public var pressedMiddle(get, never):Bool;
+	
+	inline private function get_pressedMiddle():Bool { return _middleButton.pressed(); }
 
 	/**
 	 * Check to see if the middle mouse button was just pressed.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return 	Whether the middle mouse button was just pressed.
 	 */
-	inline public function justPressedMiddle():Bool { return _middleButton.justPressed();  }
+	public var justPressedMiddle(get, never):Bool;
+	
+	inline private function get_justPressedMiddle():Bool { return _middleButton.justPressed();  }
 
 	/**
 	 * Check to see if the middle mouse button was just released.
 	 * Requires the <code>FLX_MOUSE_ADVANCED</code> flag in the .nmml to be set.
 	 * @return 	Whether the middle mouse button was just released.
 	 */
-	inline public function justReleasedMiddle():Bool { return _middleButton.justReleased(); }
+	public var justReleasedMiddle(get, never):Bool;
+	
+	inline private function get_justReleasedMiddle():Bool { return _middleButton.justReleased(); }
 	#end
 
 	/**

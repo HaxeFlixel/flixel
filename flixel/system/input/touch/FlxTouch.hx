@@ -229,24 +229,31 @@ class FlxTouch extends FlxPoint
 	 * Check to see if the touch is pressed.
 	 * @return	Whether the touch is pressed.
 	 */
-	public function pressed():Bool { return _current > 0; }
+	public var pressed(get, never):Bool;
+	
+	inline private function get_pressed():Bool { return _current > 0; }
 	
 	/**
 	 * Check to see if the touch was just began.
 	 * @return Whether the touch was just began.
 	 */
-	public function justPressed():Bool { return _current == 2; }
+	public var justPressed(get, never):Bool;
+	
+	inline private function get_justPressed():Bool { return _current == 2; }
 	
 	/**
 	 * Check to see if the touch was just ended.
 	 * @return	Whether the touch was just ended.
 	 */
-	public function justReleased():Bool { return _current == -1; }
+	public var justReleased(get, never):Bool;
+	
+	inline private function get_justReleased():Bool { return _current == -1; }
 	
 	/**
 	 * Check to see if the touch is active.
 	 * @return	Whether the touch is active.
 	 */
-	public function isActive():Bool { return _current != 0; }
+	public var isActive(get, never):Bool;
 	
+	inline private function get_isActive():Bool { return _current != 0; }
 }

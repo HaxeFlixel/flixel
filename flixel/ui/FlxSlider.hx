@@ -241,7 +241,7 @@ class FlxSlider extends FlxSpriteGroup
 			
 			_justHovered = true;
 			
-			if (FlxG.mouse.pressed()) 
+			if (FlxG.mouse.pressed) 
 			{
 				handle.x = FlxG.mouse.screenX;
 				updateValue();
@@ -252,7 +252,7 @@ class FlxSlider extends FlxSpriteGroup
 					_justClicked = true;
 				}
 			}
-			if (!FlxG.mouse.pressed())
+			if (!FlxG.mouse.pressed)
 			{
 				_justClicked = false;
 			}
@@ -268,7 +268,7 @@ class FlxSlider extends FlxSpriteGroup
 		}
 		
 		// Update the target value whenever the slider is being used
-		if (FlxG.mouse.pressed() && FlxMath.mouseInFlxRect(false, _bounds))
+		if (FlxG.mouse.pressed && FlxMath.mouseInFlxRect(false, _bounds))
 		{
 			updateValue();
 		}
