@@ -20,10 +20,6 @@ import flixel.util.FlxRect;
 import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
 
-#if !FLX_NO_DEBUG
-import flixel.system.debug.FlxDebugger;
-import flixel.plugin.PathManager;
-#end
 #if !FLX_NO_TOUCH
 import flixel.system.input.touch.FlxTouchManager;
 #end
@@ -50,17 +46,17 @@ class FlxG
 	 * If you build and maintain your own version of flixel,
 	 * you can give it your own name here.
 	 */
-	inline static public var LIBRARY_NAME:String = "HaxeFlixel";
+	static public var LIBRARY_NAME:String = "HaxeFlixel";
 	/**
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
-	inline static public var LIBRARY_MAJOR_VERSION:String = "2";
+	static public var LIBRARY_MAJOR_VERSION:String = "2";
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	inline static public var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
+	static public var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
 	
 	/**
 	 * Internal tracker for game object.
@@ -104,7 +100,7 @@ class FlxG
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use <code>.set()</code> instead of creating a new object!
 	 */
-	static public var worldBounds(default, null):FlxRect;
+	static public var worldBounds(default, null):FlxRect = new FlxRect();
 	/**
 	 * How many times the quad tree should divide the world on each axis. Generally, sparse collisions can have fewer divisons,
 	 * while denser collision activity usually profits from more. Default value is 6.
@@ -154,7 +150,9 @@ class FlxG
 	public static var gamepads(default, null):FlxGamepadManager;
 	#end
 	
-	// From here on: frontEnds
+	/**
+	 * From here on: frontEnd classes.
+	 */ 
 	
 	/**
 	 * A reference to the <code>InputFrontEnd</code> object. Mostly used internally, 
@@ -214,7 +212,8 @@ class FlxG
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
-	static public function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	@:allow(flixel.FlxGame) // Access to this function is only need in FlxGame::new()
+	inline static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
@@ -249,13 +248,32 @@ class FlxG
 	}
 	
 	/**
+	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
+	 */
+	@:allow(flixel.FlxGame.resetGame) // Access to this function is only need in FlxGame::resetGame()
+	inline static private function reset():Void
+	{
+		PxBitmapFont.clearStorage();
+		FlxRandom.globalSeed = Math.random();
+		
+		bitmap.clearCache();
+		inputs.reset();
+		sound.destroySounds(true);
+		paused = false;
+		timeScale = 1.0;
+		elapsed = 0;
+		worldBounds.set( -10, -10, width + 20, height + 20);
+		worldDivisions = 6;
+	}
+	
+	/**
 	 * The library name, which is "HaxeFlixel v.(major version).(minor version)"
 	 */
 	static public var libraryName(get, never):String;
 	
 	inline static private function get_libraryName():String
 	{
-		return FlxG.LIBRARY_NAME + " v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION;
+		return LIBRARY_NAME + " v" + LIBRARY_MAJOR_VERSION + "." + LIBRARY_MINOR_VERSION;
 	}
 	
 	/**
@@ -271,9 +289,9 @@ class FlxG
 		
 	static private function set_framerate(Framerate:Int):Int
 	{
-		if (Framerate < FlxG.flashFramerate)
+		if (Framerate < flashFramerate)
 		{
-			FlxG.log.warn("FlxG.framerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
+			log.warn("FlxG.framerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
 		game.stepMS = Std.int(Math.abs(1000 / Framerate));
@@ -305,9 +323,9 @@ class FlxG
 		
 	static private function set_flashFramerate(Framerate:Int):Int
 	{
-		if (Framerate > FlxG.framerate)
+		if (Framerate > framerate)
 		{
-			FlxG.log.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
+			log.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
 		game.flashFramerate = Std.int(Math.abs(Framerate));
@@ -403,18 +421,18 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any overlaps were detected.
 	 */
-	inline static public function overlap(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:Dynamic->Dynamic->Void = null, ProcessCallback:Dynamic->Dynamic->Bool = null):Bool
+	inline static public function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
-			ObjectOrGroup1 = FlxG.state;
+			ObjectOrGroup1 = state;
 		}
 		if (ObjectOrGroup2 == ObjectOrGroup1)
 		{
 			ObjectOrGroup2 = null;
 		}
-		FlxQuadTree.divisions = FlxG.worldDivisions;
-		var quadTree:FlxQuadTree = FlxQuadTree.recycle(FlxG.worldBounds.x, FlxG.worldBounds.y, FlxG.worldBounds.width, FlxG.worldBounds.height);
+		FlxQuadTree.divisions = worldDivisions;
+		var quadTree:FlxQuadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
 		quadTree.load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, ProcessCallback);
 		var result:Bool = quadTree.execute();
 		quadTree.destroy();
@@ -453,26 +471,8 @@ class FlxG
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	inline static public function collide(ObjectOrGroup1:FlxBasic = null, ObjectOrGroup2:FlxBasic = null, NotifyCallback:Dynamic->Dynamic->Void = null):Bool
+	inline static public function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
 	{
-		return FlxG.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
-	}
-	
-	/**
-	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
-	 */
-	static public function reset():Void
-	{
-		PxBitmapFont.clearStorage();
-		
-		FlxG.bitmap.clearCache();
-		inputs.reset();
-		FlxG.sound.destroySounds(true);
-		FlxG.paused = false;
-		FlxG.timeScale = 1.0;
-		FlxG.elapsed = 0;
-		FlxRandom.globalSeed = Math.random();
-		FlxG.worldBounds = new FlxRect( -10, -10, FlxG.width + 20, FlxG.height + 20);
-		FlxG.worldDivisions = 6;
+		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
 	}
 }

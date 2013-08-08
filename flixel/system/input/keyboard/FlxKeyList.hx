@@ -1,4 +1,5 @@
 package flixel.system.input.keyboard;
+
 import flixel.FlxG;
 
 /**
@@ -107,8 +108,6 @@ class FlxKeyList
 	
 	public var ANY(get, never):Bool; 
 	
-	// So we can get access to _keyList
-	@:access(flixel.system.input.keyboard.FlxKeyboard._keyList)
 	private function get_ANY():Bool			
 	{ 
 		for (key in FlxG.keyboard._keyList)

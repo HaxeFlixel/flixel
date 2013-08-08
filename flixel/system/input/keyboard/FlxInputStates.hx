@@ -27,6 +27,7 @@ class FlxInputStates
 	/**
 	 * An array of FlxKey objects.
 	 */
+	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY) // Need to access the var there
 	private var _keyList:Array<FlxKey>;
 	
 	public function new()
