@@ -123,17 +123,17 @@ class PathManager extends FlxPlugin
 	 */
 	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
 	{
-		if (ReturnInPool)
-		{
-			FlxPath.put(Path);
-		}
-		
 		var index:Int = FlxArrayUtil.indexOf(_paths, Path);
 		
 		if (index >= 0)
 		{
 			_paths[index] = _paths[_paths.length - 1];
 			_paths.pop();
+		}
+		
+		if (ReturnInPool)
+		{
+			FlxPath.put(Path);
 		}
 	}
 	
