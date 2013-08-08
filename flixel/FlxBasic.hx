@@ -1,12 +1,10 @@
 package flixel;
 
-import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 
 /**
- * This is a useful "generic" Flixel object.
- * Both <code>FlxObject</code> and <code>FlxGroup</code> extend this class,
- * as do the plugins.  Has no size, position or graphical data.
+ * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 
+ * <code>FlxGroup</code> extend this class. Has no size, position or graphical data.
  */
 class FlxBasic
 {
@@ -38,10 +36,8 @@ class FlxBasic
 	 */
 	public var alive:Bool = true;
 	/**
-	 * An array of camera objects that this object will use during <code>draw()</code>.
-	 * This value will initialize itself during the first draw to automatically
-	 * point at the main camera list out in <code>FlxG</code> unless you already set it.
-	 * You can also change it afterward too, very flexible!
+	 * An array of camera objects that this object will use during <code>draw()</code>. This value will initialize itself during the first draw to automatically
+	 * point at the main camera list out in <code>FlxG</code> unless you already set it. You can also change it afterward too, very flexible!
 	 */
 	public var cameras:Array<FlxCamera>;
 	
@@ -56,11 +52,8 @@ class FlxBasic
 	public function new() { }
 
 	/**
-	 * WARNING: This will remove this <code>FlxBasic</code> entirely. Use <code>kill()</code> if you 
-	 * want to disable it temporarily only and be able to <code>revive()</code> it later.
-	 * Override this function to null out variables or manually call
-	 * <code>destroy()</code> on class members if necessary.
-	 * Don't forget to call <code>super.destroy()</code>!
+	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>reset()</code> it later to revive it.
+	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
 	public function destroy():Void { }
 	
@@ -125,11 +118,8 @@ class FlxBasic
 	#end
 	
 	/**
-	 * Handy function for "killing" game objects. Use <code>reset()</code> to revive them.
-	 * Default behavior is to flag them as nonexistent AND dead.
-	 * However, if you want the "corpse" to remain in the game,
-	 * like to animate an effect or whatever, you should override this,
-	 * setting only alive to false, and leaving exists true.
+	 * Handy function for "killing" game objects. Use <code>reset()</code> to revive them. Default behavior is to flag them as nonexistent AND dead. However, if you want the 
+	 * "corpse" to remain in the game, like to animate an effect or whatever, you should override this, setting only alive to false, and leaving exists true.
 	 */
 	public function kill():Void
 	{

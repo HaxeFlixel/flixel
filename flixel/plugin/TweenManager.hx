@@ -29,6 +29,10 @@ class TweenManager extends FlxPlugin
 			if (tween.active)
 			{
 				tween.update();
+				if(tween.finished)
+				{
+					tween.finish();
+				}
 			}
 		}
 	}

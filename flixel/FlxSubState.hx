@@ -3,10 +3,8 @@ package flixel;
 import flixel.system.FlxBGSprite;
 
 /**
- * This is the basic game "state" object - e.g. in a simple game
- * you might have a menu state and a play state.
- * It is for all intents and purpose a fancy FlxGroup.
- * And really, it's not even that fancy.
+ * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
+ * It is for all intents and purpose a fancy FlxGroup. And really, it's not even that fancy.
  */
 class FlxSubState extends FlxState
 {
@@ -14,7 +12,6 @@ class FlxSubState extends FlxState
 	 * Internal helper
 	 */
 	public var _parentState:FlxState;
-	
 	/**
 	 * Callback method for state close event
 	 */
@@ -32,21 +29,27 @@ class FlxSubState extends FlxState
 	 */
 	private var _initialized:Bool = false;
 	
-	public var initialized(get_initialized, null):Bool;
+	public var initialized(get, null):Bool;
 	
-	private function get_initialized():Bool { return _initialized; }
+	inline private function get_initialized():Bool 
+	{ 
+		return _initialized; 
+	}
 	
 	/**
 	 * Internal helper method
 	 */
-	public function initialize():Void { _initialized = true; }
+	inline public function initialize():Void 
+	{ 
+		_initialized = true; 
+	}
 	
 	/**
 	 * Substate constructor
-	 * @param	bgColor		background color for this substate
-	 * @param	useMouse	whether to show mouse pointer or not
+	 * @param	BGColor		background color for this substate
+	 * @param	UseMouse	whether to show mouse pointer or not
 	 */
-	public function new(bgColor:Int = 0x00000000, useMouse:Bool = false)
+	public function new(BGColor:Int = 0x00000000, UseMouse:Bool = false)
 	{
 		super();
 		closeCallback = null;
@@ -54,8 +57,8 @@ class FlxSubState extends FlxState
 		#if !flash
 		_bgSprite = new FlxBGSprite();
 		#end
-		this.bgColor = bgColor;
-		this.useMouse = useMouse;
+		bgColor = BGColor;
+		useMouse = UseMouse;
 	}
 	
 	override private function get_bgColor():Int 
@@ -63,17 +66,16 @@ class FlxSubState extends FlxState
 		return _bgColor;
 	}
 	
-	override private function set_bgColor(value:Int):Int
+	override private function set_bgColor(Value:Int):Int
 	{
-		_bgColor = value;
 		#if !flash
 		if (_bgSprite != null)
 		{
-			_bgSprite.pixels.setPixel32(0, 0, _bgColor);
+			_bgSprite.pixels.setPixel32(0, 0, Value);
 		}
 		#end
 		
-		return value;
+		return _bgColor = Value;
 	}
 	
 	override public function draw():Void
@@ -91,7 +93,7 @@ class FlxSubState extends FlxState
 		#else
 		_bgSprite.draw();
 		#end
-
+		
 		//Now draw all children
 		super.draw();
 	}
@@ -100,19 +102,19 @@ class FlxSubState extends FlxState
 	 * Use this method to close this substate
 	 * @param	destroy	whether to destroy this state or leave it in memory
 	 */
-	public function close(destroy:Bool = true):Void
+	public function close(Destroy:Bool = true):Void
 	{
 		if (_parentState != null) 
 		{ 
-			_parentState.subStateCloseHandler(destroy); 
+			_parentState.subStateCloseHandler(Destroy); 
 		}
+		#if !FLX_NO_DEBUG
 		else 
 		{ 
-			/* Missing parent from this state! Do something!!" */ 
-			#if !FLX_NO_DEBUG
+			// Missing parent from this state! Do something!!
 			throw "This subState haven't any parent state";
-			#end
 		}
+		#end
 	}
 	
 	override public function destroy():Void 
@@ -122,5 +124,4 @@ class FlxSubState extends FlxState
 		_parentState = null;
 		closeCallback = null;
 	}
-
 }

@@ -473,7 +473,7 @@ class FlxTween
 				_t = 0;
 			}
 			
-			finish();
+			finished = true;
 		}
 	}
 
@@ -502,7 +502,7 @@ class FlxTween
 	}
 
 	/** @private Called when the Tween completes. */
-	private function finish():Void
+	public function finish():Void
 	{
 		executions++;
 		
@@ -525,14 +525,16 @@ class FlxTween
 				_time %= _target;
 				_t = _time / _target;
 				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
-				if (_backward) _t = 1 - _t;
 				_backward = !_backward;
+				if (_backward) _t = 1 - _t;
 				start();
 			case FlxTween.ONESHOT:
 				_time = _target;
 				active = false;
 				manager.remove(this, true);
 		}
+
+		finished = false;
 	}
 
 	public var percent(get_percent, set_percent):Float;
@@ -541,6 +543,8 @@ class FlxTween
 
 	public var scale(get_scale, null):Float;
 	private function get_scale():Float { return _t; }
+
+	public var finished(default, null):Bool;
 
 	private var _type:Int;
 	private var _ease:EaseFunction;

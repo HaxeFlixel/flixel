@@ -554,10 +554,10 @@ class FlxText extends FlxSprite
 	 * @param	WidthInc	Not used for FlxText, see FlxText.setClipping().
 	 * @param	HeightInc	Not used for FlxText, see FlxText.setClipping().
 	 */
-	override public function addFilter(Filter:BitmapFilter, WidthInc:Int = 0, HeightInc:Int = 0)
+	/*override public function addFilter(Filter:BitmapFilter, WidthInc:Int = 0, HeightInc:Int = 0)
 	{
 		super.addFilter(Filter);
-	}
+	}*/
 	
 	/**
 	 * Set clipping does not work properly for FlxText, however the size of the text rendering 
@@ -565,7 +565,7 @@ class FlxText extends FlxSprite
 	 * Horizontally - set alignment to "center" and increase the sprite width.
 	 * Vertically   - add newlines ('\n') to the beggining and end of the text.
 	 */
-	override public function setClipping(Width:Int, Height:Int) {}
+	/*override public function setClipping(Width:Int, Height:Int) {}*/
 	
 	/**
 	 * A helper function for updating the <code>TextField</code> that we use for rendering.
