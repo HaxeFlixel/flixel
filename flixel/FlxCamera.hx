@@ -9,7 +9,6 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
-import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
@@ -71,49 +70,38 @@ class FlxCamera extends FlxBasic
 	 * Measured in pixels from the left side of the flash window.
 	 */
 	public var x:Float;
-	
 	/**
 	 * The Y position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the top of the flash window.
 	 */
 	public var y:Float;
-	
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
-	public var width(default, set_width):Int;
-	
+	public var width(default, set):Int;
 	/**
 	 * How tall the camera display is, in game pixels.
 	 */
-	public var height(default, set_height):Int;
-	
+	public var height(default, set):Int;
 	/**
 	 * Tells the camera to use this following style.
 	 */
 	public var style:Int;
-	
 	/**
 	 * Tells the camera to follow this <code>FlxObject</code> object around.
 	 */
 	public var target:FlxObject;
-	
 	/**
 	 * Used to force the camera to look ahead of the <code>followTarget</code>.
 	 */
 	public var followLead:Point;
-	
 	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
 	public var followLerp:Float;
-	
 	/**
-	 * You can assign a "dead zone" to the camera in order to better control its movement.
-	 * The camera will always keep the focus object inside the dead zone,
-	 * unless it is bumping up against the bounds rectangle's edges.
-	 * The deadzone's coordinates are measured from the camera's upper left corner in game pixels.
-	 * For rapid prototyping, you can use the preset deadzones (e.g. <code>STYLE_PLATFORMER</code>) with <code>follow()</code>.
+	 * You can assign a "dead zone" to the camera in order to better control its movement. The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
+	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels. For rapid prototyping, you can use the preset deadzones (e.g. <code>STYLE_PLATFORMER</code>) with <code>follow()</code>.
 	 */
 	public var deadzone:FlxRect;
 	/**
@@ -121,7 +109,6 @@ class FlxCamera extends FlxBasic
 	 * Measured in game pixels and world coordinates.
 	 */
 	public var bounds:FlxRect;
-	
 	/**
 	 * Stores the basic parallax scrolling values.
 	 */
@@ -144,9 +131,8 @@ class FlxCamera extends FlxBasic
 	
 	#if flash
 	/**
-	 * Sometimes it's easier to just work with a <code>FlxSprite</code> than it is to work
-	 * directly with the <code>BitmapData</code> buffer.  This sprite reference will
-	 * allow you to do exactly that.
+	 * Sometimes it's easier to just work with a <code>FlxSprite</code> than it is to work directly with the <code>BitmapData</code> buffer.  
+	 * This sprite reference will allow you to do exactly that.
 	 */
 	public var screen:FlxSprite;
 	#end
@@ -432,7 +418,7 @@ class FlxCamera extends FlxBasic
 		screen = new FlxSprite();
 		buffer = new BitmapData(width, height, true, 0);
 		screen.pixels = buffer;
-		screen.setOriginToCorner();
+		screen.origin.set();
 		#end
 		
 		#if flash
@@ -571,13 +557,16 @@ class FlxCamera extends FlxBasic
 	 */
 	override public function update():Void
 	{
-		if (FlxG.paused)	return;
+		if (FlxG.paused)
+		{
+			return;
+		}
 		
 		//Either follow the object closely, 
 		//or doublecheck our deadzone and update accordingly.
-		if(target != null)
+		if (target != null)
 		{
-			if(deadzone == null)
+			if (deadzone == null)
 			{
 				focusOn(target.getMidpoint(_point));
 			}
@@ -610,23 +599,23 @@ class FlxCamera extends FlxBasic
 				else
 				{
 					edge = targetX - deadzone.x;
-					if(_scrollTarget.x > edge)
+					if (_scrollTarget.x > edge)
 					{
 						_scrollTarget.x = edge;
 					} 
 					edge = targetX + target.width - deadzone.x - deadzone.width;
-					if(_scrollTarget.x < edge)
+					if (_scrollTarget.x < edge)
 					{
 						_scrollTarget.x = edge;
 					}
 
 					edge = targetY - deadzone.y;
-					if(_scrollTarget.y > edge)
+					if (_scrollTarget.y > edge)
 					{
 						_scrollTarget.y = edge;
 					}
 					edge = targetY + target.height - deadzone.y - deadzone.height;
-					if(_scrollTarget.y < edge)
+					if (_scrollTarget.y < edge)
 					{
 						_scrollTarget.y = edge;
 					}
@@ -660,7 +649,7 @@ class FlxCamera extends FlxBasic
 		}
 		
 		//Make sure we didn't go outside the camera's bounds
-		if(bounds != null)
+		if (bounds != null)
 		{
 			if (scroll.x < bounds.left)
 			{
@@ -681,7 +670,7 @@ class FlxCamera extends FlxBasic
 		}
 		
 		//Update the "flash" special effect
-		if(_fxFlashAlpha > 0.0)
+		if (_fxFlashAlpha > 0.0)
 		{
 			_fxFlashAlpha -= FlxG.elapsed / _fxFlashDuration;
 			if ((_fxFlashAlpha <= 0) && (_fxFlashComplete != null))
@@ -691,12 +680,12 @@ class FlxCamera extends FlxBasic
 		}
 		
 		//Update the "fade" special effect
-		if((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
+		if ((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
 		{
 			if (_fxFadeIn)
 			{
 				_fxFadeAlpha -= FlxG.elapsed /_fxFadeDuration;
-                if(_fxFadeAlpha <= 0.0)
+                if (_fxFadeAlpha <= 0.0)
                 {
                     _fxFadeAlpha = 0.0;
                     if(_fxFadeComplete != null)
@@ -708,7 +697,7 @@ class FlxCamera extends FlxBasic
 			else
 			{
 				_fxFadeAlpha += FlxG.elapsed / _fxFadeDuration;
-				if(_fxFadeAlpha >= 1.0)
+				if (_fxFadeAlpha >= 1.0)
 				{
 					_fxFadeAlpha = 1.0;
 					if (_fxFadeComplete != null)
@@ -720,10 +709,10 @@ class FlxCamera extends FlxBasic
 		}
 		
 		//Update the "shake" special effect
-		if(_fxShakeDuration > 0)
+		if (_fxShakeDuration > 0)
 		{
 			_fxShakeDuration -= FlxG.elapsed;
-			if(_fxShakeDuration <= 0)
+			if (_fxShakeDuration <= 0)
 			{
 				_fxShakeOffset.set();
 				if (_fxShakeComplete != null)
@@ -757,10 +746,10 @@ class FlxCamera extends FlxBasic
 	 * Tells this camera object what <code>FlxObject</code> to track.
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
-	 * @param  Offset    Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
+	 * @param	Offset		Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
 	 * @param	Lerp		How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, Style:Int = 0/*STYLE_LOCKON*/, Offset:FlxPoint = null, Lerp:Float = 0):Void
+	public function follow(Target:FlxObject, Style:Int = STYLE_LOCKON, ?Offset:FlxPoint, Lerp:Float = 0):Void
 	{
 		style = Style;
 		target = Target;
@@ -803,7 +792,7 @@ class FlxCamera extends FlxBasic
 	 * @param	LeadX		Percentage of X velocity to add to the camera's motion.
 	 * @param	LeadY		Percentage of Y velocity to add to the camera's motion.
 	 */
-    public function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
+    inline public function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
     {
 	   followLead = new Point(LeadX,LeadY);
     }
@@ -812,7 +801,7 @@ class FlxCamera extends FlxBasic
 	 * Move the camera focus to this location instantly.
 	 * @param	Point		Where you want the camera to focus.
 	 */
-	public function focusOn(point:FlxPoint):Void
+	inline public function focusOn(point:FlxPoint):Void
 	{
 		scroll.set(point.x - width * 0.5, point.y - height * 0.5);
 	}
@@ -846,7 +835,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, OnComplete:Void->Void = null, Force:Bool = false):Void
+	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -870,7 +859,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, OnComplete:Void->Void = null, Force:Bool = false):Void
+	public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -904,7 +893,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, OnComplete:Void->Void = null, Force:Bool = true, Direction:Int = 0/*SHAKE_BOTH_AXES*/):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, Direction:Int = SHAKE_BOTH_AXES):Void
 	{
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
@@ -990,7 +979,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * The alpha value of this camera display (a Number between 0.0 and 1.0).
 	 */
-	public var alpha(default, set_alpha):Float;
+	public var alpha(default, set):Float;
 	
 	/**
 	 * @private
@@ -1011,7 +1000,7 @@ class FlxCamera extends FlxBasic
 	 * Currently yields weird display results,
 	 * since cameras aren't nested in an extra display object yet.
 	 */
-	public var angle(default, set_angle):Float;
+	public var angle(default, set):Float;
 	
 	private function set_angle(Angle:Float):Float
 	{
@@ -1056,11 +1045,8 @@ class FlxCamera extends FlxBasic
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
 	 */
-	public var antialiasing(default, set_antialiasing):Bool = false;
+	public var antialiasing(default, set):Bool = false;
 	
-	/**
-	 * @private
-	 */
 	private function set_antialiasing(Antialiasing:Bool):Bool
 	{
 		antialiasing = Antialiasing;
@@ -1075,14 +1061,11 @@ class FlxCamera extends FlxBasic
 	 * Currently yields weird display results,
 	 * since cameras aren't nested in an extra display object yet.
 	 */
-	public function getScale():FlxPoint
+	inline public function getScale():FlxPoint
 	{
 		return _point.set(_flashSprite.scaleX, _flashSprite.scaleY);
 	}
 	
-	/**
-	 * @private
-	 */
 	public function setScale(X:Float, Y:Float):Void
 	{
 		_flashSprite.scaleX = X;
@@ -1103,7 +1086,7 @@ class FlxCamera extends FlxBasic
 	 * using the existing <code>FlxCamera</code> variables.
 	 * @return	A Flash <code>Sprite</code> object containing the camera display.
 	 */
-	public function getContainerSprite():Sprite
+	inline public function getContainerSprite():Sprite
 	{
 		return _flashSprite;
 	}
@@ -1150,7 +1133,7 @@ class FlxCamera extends FlxBasic
 		var alphaComponent:Float;
 		
 		//Draw the "flash" special effect onto the buffer
-		if(_fxFlashAlpha > 0.0)
+		if (_fxFlashAlpha > 0.0)
 		{
 			alphaComponent = (_fxFlashColor >> 24) & 255;
 			
@@ -1162,7 +1145,7 @@ class FlxCamera extends FlxBasic
 		}
 		
 		//Draw the "fade" special effect onto the buffer
-		if(_fxFadeAlpha > 0.0)
+		if (_fxFadeAlpha > 0.0)
 		{
 			alphaComponent = (_fxFadeColor >> 24) & 255;
 			
@@ -1173,22 +1156,22 @@ class FlxCamera extends FlxBasic
 			#end
 		}
 		
-		if((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
+		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
 			_flashSprite.x += _fxShakeOffset.x;
 			_flashSprite.y += _fxShakeOffset.y;
 		}
 	}
 	
-	private function set_width(val:Int):Int
+	private function set_width(Value:Int):Int
 	{
-		if (val > 0)
+		if (Value > 0)
 		{
-			width = val; 
+			width = Value; 
 			#if flash
 			if ( _flashBitmap != null )
 			{
-				regen = (val != buffer.width);
+				regen = (Value != buffer.width);
 				_flashOffsetX = width * 0.5 * zoom;
 				_flashBitmap.x = -width * 0.5;
 			}
@@ -1197,9 +1180,9 @@ class FlxCamera extends FlxBasic
 			{
 				var rect:Rectangle = _canvas.scrollRect;
 				#if !js
-				rect.width = val;
+				rect.width = Value;
 				#else
-				rect.width = val * zoom;
+				rect.width = Value * zoom;
 				#end
 				_canvas.scrollRect = rect;
 				
@@ -1208,18 +1191,18 @@ class FlxCamera extends FlxBasic
 			}
 			#end
 		}
-		return val;
+		return Value;
 	}
 	
-	private function set_height(val:Int):Int
+	private function set_height(Value:Int):Int
 	{
-		if (val > 0)
+		if (Value > 0)
 		{
-			height = val;
+			height = Value;
 			#if flash
 			if (_flashBitmap != null)
 			{
-				regen = (val != buffer.height);
+				regen = (Value != buffer.height);
 				_flashOffsetY = height * 0.5 * zoom;
 				_flashBitmap.y = -height * 0.5;
 			}
@@ -1228,9 +1211,9 @@ class FlxCamera extends FlxBasic
 			{
 				var rect:Rectangle = _canvas.scrollRect;
 				#if !js
-				rect.height = val;
+				rect.height = Value;
 				#else
-				rect.height = val * zoom;
+				rect.height = Value * zoom;
 				#end
 				_canvas.scrollRect = rect;
 				
@@ -1239,19 +1222,18 @@ class FlxCamera extends FlxBasic
 			}
 			#end
 		}
-		return val;
+		return Value;
 	}
 	
 	/**
 	 * Whether to use alpha blending for camera's background fill or not. 
 	 * Useful for flash target (and works only on this target). Default value is true.
 	 */
-	@:isVar public var useBgAlphaBlending(default, set_useBgAlphaBlending):Bool = true;
+	@:isVar public var useBgAlphaBlending(default, set):Bool = true;
 	
-	private function set_useBgAlphaBlending(value:Bool):Bool
+	private function set_useBgAlphaBlending(Value:Bool):Bool
 	{
-		useBgAlphaBlending = value;
-		return value;
+		return useBgAlphaBlending = Value;
 	}
 	
 	#if flash
@@ -1264,7 +1246,7 @@ class FlxCamera extends FlxBasic
 				FlxG.bitmap.remove(screen.cachedGraphics.key);
 				buffer = new BitmapData(width, height, true, 0);
 				screen.pixels = buffer;
-				screen.setOriginToCorner();
+				screen.origin.set();
 				_flashBitmap.bitmapData = buffer;
 				_flashRect.width = width;
 				_flashRect.height = height;
