@@ -525,8 +525,8 @@ class FlxTween
 				_time %= _target;
 				_t = _time / _target;
 				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
-				if (_backward) _t = 1 - _t;
 				_backward = !_backward;
+				if (_backward) _t = 1 - _t;
 				start();
 			case FlxTween.ONESHOT:
 				_time = _target;
