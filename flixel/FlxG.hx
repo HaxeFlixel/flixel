@@ -29,6 +29,7 @@ import flixel.system.input.touch.FlxTouchManager;
 #end
 #if !FLX_NO_KEYBOARD
 import flixel.system.input.keyboard.FlxKeyboard;
+import flixel.system.input.keyboard.FlxKeyShortcuts;
 #end
 #if !FLX_NO_MOUSE
 import flixel.system.input.mouse.FlxMouse;
@@ -131,7 +132,12 @@ class FlxG
 	/**
 	 * A reference to a <code>FlxKeyboard</code> object. Important for input!
 	 */
-	static public var keys(default, null):FlxKeyboard;
+	static public var keyboard(default, null):FlxKeyboard;
+	/**
+	 * A reference to a <code>FlxKeyAccess</code> object. Handy for quickly 
+	 * getting information about keys pressed / just pressed or just released!
+	 */
+	static public var keys(default, null):FlxKeyShortcuts;
 	#end
 
 	#if !FLX_NO_TOUCH
@@ -220,7 +226,8 @@ class FlxG
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
-			keys = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
+			keyboard = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
+			keys = new FlxKeyShortcuts();
 		#end
 		
 		#if !FLX_NO_MOUSE

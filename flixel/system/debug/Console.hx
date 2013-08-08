@@ -124,7 +124,7 @@ class Console extends Window
 		
 		// Block keyboard input
 		#if !FLX_NO_KEYBOARD
-		FlxG.keys.enabled = false;
+		FlxG.keyboard.enabled = false;
 		#end
 		
 		if (_input.text == defaultText) 
@@ -148,7 +148,7 @@ class Console extends Window
 		
 		// Unblock keyboard input
 		#if !FLX_NO_KEYBOARD
-		FlxG.keys.enabled = true;
+		FlxG.keyboard.enabled = true;
 		#end
 		
 		if (_input.text == "") 
