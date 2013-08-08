@@ -76,19 +76,19 @@ class PlayState2 extends FlxState
 		_focus.velocity.y = 0;
 		var focusSpeed:Float = 200;
 		
-		if (FlxG.keys.LEFT || FlxG.keys.A)
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
 		{
 			_focus.velocity.x -= focusSpeed;
 		}
-		if (FlxG.keys.RIGHT || FlxG.keys.D)
+		if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
 		{
 			_focus.velocity.x += focusSpeed;
 		}
-		if (FlxG.keys.UP || FlxG.keys.W)
+		if (FlxG.keys.pressed.UP || FlxG.keys.pressed.W)
 		{
 			_focus.velocity.y -= focusSpeed;
 		}
-		if (FlxG.keys.DOWN || FlxG.keys.S)
+		if (FlxG.keys.pressed.DOWN || FlxG.keys.pressed.S)
 		{
 			_focus.velocity.y += focusSpeed;
 		}
@@ -97,7 +97,7 @@ class PlayState2 extends FlxState
 		
 		FlxG.collide();
 		
-		if (FlxG.keys.justReleased("ENTER"))
+		if (FlxG.keys.justReleased.ENTER)
 		{
 			FlxG.switchState(new PlayState3());
 		}

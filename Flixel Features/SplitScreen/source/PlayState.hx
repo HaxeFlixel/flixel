@@ -5,10 +5,8 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.system.input.FlxJoystickManager;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
-import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import openfl.Assets;
 
@@ -89,17 +87,17 @@ class PlayState extends FlxState
 		// Player 1 controls
 		_player1.acceleration.x = 0;
 		
-		if (FlxG.keys.LEFT)
+		if (FlxG.keys.pressed.LEFT)
 		{
 			_player1.acceleration.x = -_player1.maxVelocity.x * 4;
 		}
 		
-		if (FlxG.keys.RIGHT)
+		if (FlxG.keys.pressed.RIGHT)
 		{
 			_player1.acceleration.x = _player1.maxVelocity.x * 4;
 		}
 		
-		if (FlxG.keys.justPressed("UP") && _player1.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.justPressed.UP && _player1.isTouching(FlxObject.FLOOR))
 		{
 			_player1.velocity.y -= _player1.maxVelocity.y / 1.5;
 		}
@@ -107,17 +105,17 @@ class PlayState extends FlxState
 		// Player 2 controls
 		_player2.acceleration.x = 0;
 		
-		if (FlxG.keys.A)
+		if (FlxG.keys.pressed.A)
 		{
 			_player2.acceleration.x = -_player2.maxVelocity.x*4;
 		}
 		
-		if (FlxG.keys.D)
+		if (FlxG.keys.pressed.D)
 		{
 			_player2.acceleration.x = _player2.maxVelocity.x*4;
 		}
 		
-		if (FlxG.keys.justPressed("W") && _player2.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.justPressed.W && _player2.isTouching(FlxObject.FLOOR))
 		{
 			_player2.velocity.y -= _player2.maxVelocity.y/1.5;
 		}

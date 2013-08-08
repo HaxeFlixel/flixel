@@ -88,29 +88,29 @@ class Player extends FlxSprite
 		// MOVEMENT
 		acceleration.x = 0;
 		
-		if (FlxG.keys.LEFT)
+		if (FlxG.keys.pressed.LEFT)
 		{
 			facing = FlxObject.LEFT;
 			acceleration.x -= drag.x;
 		}
-		else if (FlxG.keys.RIGHT)
+		else if (FlxG.keys.pressed.RIGHT)
 		{
 			facing = FlxObject.RIGHT;
 			acceleration.x += drag.x;
 		}
 		
-		if (FlxG.keys.justPressed("X") && isReadyToJump && velocity.y == 0)
+		if (FlxG.keys.justPressed.X && isReadyToJump && velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
 			FlxG.sound.play("Jump");
 		}
 		
 		// AIMING
-		if (FlxG.keys.UP)
+		if (FlxG.keys.pressed.UP)
 		{
 			_aim = FlxObject.UP;
 		}
-		else if (FlxG.keys.DOWN)
+		else if (FlxG.keys.pressed.DOWN)
 		{
 			_aim = FlxObject.DOWN;
 		}
@@ -159,7 +159,7 @@ class Player extends FlxSprite
 		}
 		
 		// SHOOTING
-		if (FlxG.keys.justPressed("C"))
+		if (FlxG.keys.justPressed.C)
 		{
 			if (flickering)
 			{

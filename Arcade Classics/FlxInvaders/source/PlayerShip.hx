@@ -29,12 +29,12 @@ class PlayerShip extends FlxSprite
 		velocity.x = 0;	
 		
 		// If the player is pressing left, set velocity to left 100
-		if (FlxG.keys.LEFT || FlxG.keys.A)
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
 		{
 			velocity.x -= 100;		
 		}
 		// If the player is pressing right, then right 100
-		if (FlxG.keys.RIGHT || FlxG.keys.D)	
+		if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)	
 		{
 			velocity.x += 100;		
 		}
@@ -60,7 +60,7 @@ class PlayerShip extends FlxSprite
 		
 		// Finally, we gotta shoot some bullets amirite? First we check to see if the
 		// space bar was just pressed (no autofire in space invaders you guys)
-		if (FlxG.keys.justPressed("SPACE"))
+		if (FlxG.keys.justPressed.SPACE)
 		{
 			// Space bar was pressed! FIRE A BULLET
 			var bullet:FlxSprite = cast(cast(FlxG.state, PlayState).playerBullets.recycle(), FlxSprite);

@@ -118,7 +118,7 @@ class PlayState extends FlxState
 			// FlxTilemaps can be manually edited at runtime as well.
 			// Setting a tile to 0 removes it, and setting it to anything else will place a tile.
 			// If auto map is on, the map will automatically update all surrounding tiles.
-			_collisionMap.setTile(Std.int(FlxG.mouse.x / TILE_WIDTH), Std.int(FlxG.mouse.y / TILE_HEIGHT), FlxG.keys.SHIFT?0:1);
+			_collisionMap.setTile(Std.int(FlxG.mouse.x / TILE_WIDTH), Std.int(FlxG.mouse.y / TILE_HEIGHT), FlxG.keys.pressed.SHIFT ? 0 : 1);
 		}
 		
 		updatePlayer();
@@ -132,17 +132,17 @@ class PlayState extends FlxState
 		// MOVEMENT
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.LEFT || FlxG.keys.A)
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
 		{
 			_player.facing = FlxObject.LEFT;
 			_player.acceleration.x -= _player.drag.x;
 		}
-		else if (FlxG.keys.RIGHT || FlxG.keys.D)
+		else if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
 		{
 			_player.facing = FlxObject.RIGHT;
 			_player.acceleration.x += _player.drag.x;
 		}
-		if ((FlxG.keys.justPressed("UP") || FlxG.keys.justPressed("W")) && _player.velocity.y == 0)
+		if ((FlxG.keys.justPressed.UP || FlxG.keys.justPressed.W) && _player.velocity.y == 0)
 		{
 			_player.y -= 1;
 			_player.velocity.y = -200;

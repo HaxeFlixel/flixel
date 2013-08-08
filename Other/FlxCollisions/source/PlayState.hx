@@ -107,7 +107,7 @@ class PlayState extends FlxState
 		
 		FlxG.collide();
 		
-		if (FlxG.keys.justReleased("ENTER"))
+		if (FlxG.keys.justReleased.ENTER)
 		{
 			FlxG.switchState(new PlayState2());
 		}

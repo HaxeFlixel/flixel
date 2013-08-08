@@ -27,7 +27,7 @@ class TempoController extends FlxObject
 	{
 		_gap += FlxG.elapsed;
 		
-		if (FlxG.keys.justPressed("SPACE"))
+		if (FlxG.keys.justPressed.SPACE)
 		{
 			if (_gap > SLOWEST_TIME)
 			{
@@ -50,7 +50,7 @@ class TempoController extends FlxObject
 		
 		_check += FlxG.elapsed;
 		
-		if ((_check >= timing) || FlxG.keys.UP || FlxG.keys.DOWN || FlxG.keys.LEFT || FlxG.keys.RIGHT)
+		if ((_check >= timing) || FlxG.keys.pressed.UP || FlxG.keys.pressed.DOWN || FlxG.keys.pressed.LEFT || FlxG.keys.pressed.RIGHT)
 		{
 			if (_check > 0)
 			{
@@ -60,19 +60,19 @@ class TempoController extends FlxObject
 			beat();
 		}
 		
-		if( FlxG.keys.justPressed("UP") ||
-			FlxG.keys.justPressed("DOWN") ||
-			FlxG.keys.justPressed("LEFT") ||
-			FlxG.keys.justPressed("RIGHT") )
+		if( FlxG.keys.justPressed.UP ||
+			FlxG.keys.justPressed.DOWN ||
+			FlxG.keys.justPressed.LEFT ||
+			FlxG.keys.justPressed.RIGHT )
 		{
 			FlxG.cameras.flash(0xffffff, 0.2, null, true);
 		}
 		
-		if (FlxG.keys.justPressed("ONE"))
+		if (FlxG.keys.justPressed.ONE)
 		{
 			timing *= 2;
 		}
-		if (FlxG.keys.justPressed("TWO"))
+		if (FlxG.keys.justPressed.TWO)
 		{
 			timing *= 0.5;
 		}

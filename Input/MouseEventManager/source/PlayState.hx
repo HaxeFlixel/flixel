@@ -95,7 +95,7 @@ class PlayState extends FlxPhysState
 		}
 		
 		// Keyboard hotkey to reset the state
-		if (FlxG.keys.R)
+		if (FlxG.keys.pressed.R)
 		{
 			FlxG.resetState();
 		}

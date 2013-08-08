@@ -131,7 +131,7 @@ class PlayState extends FlxState
 		{
 			_text1.visible = true;
 			
-			if (FlxG.keys.justPressed("R")) 
+			if (FlxG.keys.justPressed.R) 
 			{
 				_restart = true;
 			}

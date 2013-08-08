@@ -81,19 +81,19 @@ class Player extends FlxSprite
 			acceleration.y = GRAVITY;
 		}
 		
-		if (FlxG.keys.LEFT || FlxG.keys.A)
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
 		{
 			facing = FlxObject.LEFT; 
 			acceleration.x = -drag.x;
 		}
-		else if (FlxG.keys.RIGHT || FlxG.keys.D)
+		else if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
 		{
 			facing = FlxObject.RIGHT;
 			acceleration.x = drag.x;				
 		}
 		
 		// Climbing
-		if (FlxG.keys.UP || FlxG.keys.W)
+		if (FlxG.keys.pressed.UP || FlxG.keys.pressed.W)
 		{
 			if (_onladder) 
 			{
@@ -107,7 +107,7 @@ class Player extends FlxSprite
 			}
 		}
 		
-		if (FlxG.keys.DOWN || FlxG.keys.S) 
+		if (FlxG.keys.pressed.DOWN || FlxG.keys.pressed.S) 
 		{
 			if (_onladder) 
 			{
@@ -121,7 +121,7 @@ class Player extends FlxSprite
 			}
 		}
 		
-		if (FlxG.keys.justPressed("C") || FlxG.keys.justPressed("K"))
+		if (FlxG.keys.justPressed.C || FlxG.keys.justPressed.K)
 		{
 			if (climbing)
 			{
@@ -136,7 +136,7 @@ class Player extends FlxSprite
 			}
 		}
 		
-		if (FlxG.keys.justPressed("C") && (velocity.y > 0) && _canDJump == true)
+		if (FlxG.keys.justPressed.C && (velocity.y > 0) && _canDJump == true)
 		{
 			FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
 			_jump = 0;
@@ -144,7 +144,7 @@ class Player extends FlxSprite
 		}
 		
 		// You can also use space or any other key you want
-		if ((_jump >= 0) && (FlxG.keys.C || FlxG.keys.K)) 
+		if ((_jump >= 0) && (FlxG.keys.pressed.C || FlxG.keys.pressed.K)) 
 		{
 			climbing = false;
 			_jump += FlxG.elapsed;
@@ -176,7 +176,7 @@ class Player extends FlxSprite
 		}
 		
 		// Shooting
-		if (FlxG.keys.X || FlxG.keys.J)
+		if (FlxG.keys.pressed.X || FlxG.keys.pressed.J)
 		{
 			//Let's put the shooting code in its own function to keep things organized
 			shoot();  
@@ -224,7 +224,7 @@ class Player extends FlxSprite
 			climbing = false;
 		}
 		
-		if (isTouching(FlxObject.FLOOR) && (!FlxG.keys.C || !FlxG.keys.K))
+		if (isTouching(FlxObject.FLOOR) && (!FlxG.keys.pressed.C || !FlxG.keys.pressed.K))
 		{
 			_jump = 0;
 			// Reset the double jump flag

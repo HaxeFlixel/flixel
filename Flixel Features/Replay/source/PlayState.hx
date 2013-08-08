@@ -76,15 +76,15 @@ class PlayState extends FlxState
 		// Update the player
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.LEFT || FlxG.keys.A)
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
 		{
 			_player.acceleration.x -= _player.drag.x;
 		}
-		else if (FlxG.keys.RIGHT || FlxG.keys.D)
+		else if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
 		{
 			_player.acceleration.x += _player.drag.x;
 		}
-		if ((FlxG.keys.justPressed("UP") || FlxG.keys.justPressed("W")) && _player.velocity.y == 0)
+		if ((FlxG.keys.justPressed.UP || FlxG.keys.justPressed.W) && _player.velocity.y == 0)
 		{
 			_player.velocity.y = -200;
 		}
@@ -100,7 +100,7 @@ class PlayState extends FlxState
 		 * be triggered at replaying
 		 * Please pay attention to the inputs that are not supposed to be recorded
 		 */
-		if (FlxG.keys.justPressed("R") && recording)
+		if (FlxG.keys.justPressed.R && recording)
 		{
 			start_play();
 		}

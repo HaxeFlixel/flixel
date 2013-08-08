@@ -54,18 +54,18 @@ class PlayState3 extends FlxState
 		// Platform controls
 		var v:Float = 50;
 		
-		if (FlxG.keys.SPACE)
+		if (FlxG.keys.pressed.SPACE)
 		{
 			v *= 3;
 		}
 		
 		_platform.velocity.x = 0;
 		
-		if (FlxG.keys.LEFT || FlxG.keys.A)
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
 		{
 			_platform.velocity.x -= v;
 		}
-		if (FlxG.keys.RIGHT || FlxG.keys.D)
+		if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
 		{
 			_platform.velocity.x += v;
 		}
@@ -74,7 +74,7 @@ class PlayState3 extends FlxState
 		
 		FlxG.collide();
 		
-		if (FlxG.keys.justReleased("ENTER"))
+		if (FlxG.keys.justReleased.ENTER)
 		{
 			FlxG.switchState(new PlayState());
 		}

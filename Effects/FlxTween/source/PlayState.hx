@@ -148,7 +148,7 @@ class PlayState extends FlxState
 	{
 		super.update();
 
-		if (FlxG.keys.justPressed("SPACE"))
+		if (FlxG.keys.justPressed.SPACE)
 		{
 			_currentEaseIndex = FlxMath.wrapValue(_currentEaseIndex, 1, _easeInfo.length - 1);
 
@@ -158,7 +158,7 @@ class PlayState extends FlxState
 			}
 		}
 
-		if (FlxG.keys.justPressed("UP"))
+		if (FlxG.keys.justPressed.UP)
 		{
 			_currentTweenIndex = FlxMath.wrapValue(_currentTweenIndex, 1, MAX_TWEEN);
 
@@ -168,7 +168,7 @@ class PlayState extends FlxState
 			}
 		}
 
-		if (FlxG.keys.justPressed("DOWN"))
+		if (FlxG.keys.justPressed.DOWN)
 		{
 			_currentTweenIndex = FlxMath.wrapValue(_currentTweenIndex, -1, MAX_TWEEN);
 

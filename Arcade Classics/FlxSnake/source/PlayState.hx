@@ -95,7 +95,7 @@ class PlayState extends FlxState
 		// Only continue if we're still alive
 		if (!_snakeHead.alive)
 		{
-			if (FlxG.keys.SPACE || FlxG.keys.R)
+			if (FlxG.keys.pressed.SPACE || FlxG.keys.pressed.R)
 			{
 				FlxG.resetState();
 			}
@@ -112,19 +112,19 @@ class PlayState extends FlxState
 		// WASD / arrow keys to control the snake
 		// Also make sure you can't travel in the opposite direction,
 		// because that causes quick and frustrating deaths!
-		if ((FlxG.keys.UP || FlxG.keys.W) && _snakeHead.facing != FlxObject.DOWN)
+		if ((FlxG.keys.pressed.UP || FlxG.keys.pressed.W) && _snakeHead.facing != FlxObject.DOWN)
 		{
 			_snakeHead.facing = FlxObject.UP;
 		}
-		else if ((FlxG.keys.DOWN || FlxG.keys.S) && _snakeHead.facing != FlxObject.UP)
+		else if ((FlxG.keys.pressed.DOWN || FlxG.keys.pressed.S) && _snakeHead.facing != FlxObject.UP)
 		{
 			_snakeHead.facing = FlxObject.DOWN;
 		}
-		else if ((FlxG.keys.LEFT || FlxG.keys.A) && _snakeHead.facing != FlxObject.RIGHT)
+		else if ((FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) && _snakeHead.facing != FlxObject.RIGHT)
 		{
 			_snakeHead.facing = FlxObject.LEFT;
 		}
-		else if ((FlxG.keys.RIGHT || FlxG.keys.D) && _snakeHead.facing != FlxObject.LEFT)
+		else if ((FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D) && _snakeHead.facing != FlxObject.LEFT)
 		{
 			_snakeHead.facing = FlxObject.RIGHT;
 		}

@@ -105,15 +105,15 @@ class PlayState extends FlxState
 	{
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.LEFT || FlxG.keys.A)
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
 		{
 			_player.acceleration.x = -_player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.RIGHT || FlxG.keys.D)
+		if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
 		{
 			_player.acceleration.x = _player.maxVelocity.x * 4;
 		}
-		if ((FlxG.keys.SPACE || FlxG.keys.W || FlxG.keys.UP) && _player.isTouching(FlxObject.FLOOR))
+		if ((FlxG.keys.pressed.SPACE || FlxG.keys.pressed.W || FlxG.keys.pressed.UP) && _player.isTouching(FlxObject.FLOOR))
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}

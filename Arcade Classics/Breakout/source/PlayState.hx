@@ -97,16 +97,16 @@ class PlayState extends FlxState
 		
 		_bat.velocity.x = 0;
 		
-		if ((FlxG.keys.LEFT || FlxG.keys.D) && _bat.x > 10)
+		if ((FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) && _bat.x > 10)
 		{
 			_bat.velocity.x = - BAT_SPEED;
 		}
-		else if ((FlxG.keys.RIGHT || FlxG.keys.A) && _bat.x < 270)
+		else if ((FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D) && _bat.x < 270)
 		{
 			_bat.velocity.x = BAT_SPEED;
 		}
 		
-		if (FlxG.keys.justReleased("R"))
+		if (FlxG.keys.justReleased.R)
 		{
 			FlxG.resetState();
 		}

@@ -55,7 +55,7 @@ class PlayState extends FlxState
 	
 	override public function update():Void
 	{
-		if (FlxG.keys.justPressed("F"))
+		if (FlxG.keys.justPressed.F)
 		{
 			FlxG.cameras.fullscreen();
 		}
@@ -63,7 +63,7 @@ class PlayState extends FlxState
 		super.update();
 		
 		// Shift drop
-		if(FlxG.keys.justPressed("SHIFT"))
+		if(FlxG.keys.justPressed.SHIFT)
 		{
 			_oldA = a.visible;
 			_oldB = b.visible;
@@ -72,7 +72,7 @@ class PlayState extends FlxState
 			triangles.visible = false;
 			glitches.visible = false;
 		}
-		if (FlxG.keys.justReleased("SHIFT"))
+		if (FlxG.keys.justReleased.SHIFT)
 		{
 			a.visible = _oldA;
 			b.visible = _oldB;
@@ -81,27 +81,27 @@ class PlayState extends FlxState
 			glitches.visible = true;
 		}
 		
-		if (FlxG.keys.P)
+		if (FlxG.keys.pressed.P)
 		{
 			firetext.exists = true;
 			firetext.resetText(FireText.FISH);
 		}
-		else if (FlxG.keys.G)
+		else if (FlxG.keys.pressed.G)
 		{
 			firetext.exists = true;
 			firetext.resetText(FireText.GAMECITY);
 		}
-		else if (FlxG.keys.K)
+		else if (FlxG.keys.pressed.K)
 		{
 			firetext.exists = true;
 			firetext.resetText(FireText.KOZILEK);
 		}
-		else if (FlxG.keys.M)
+		else if (FlxG.keys.pressed.M)
 		{
 			firetext.exists = true;
 			firetext.resetText(FireText.MM);
 		}
-		else if (FlxG.keys.Z)
+		else if (FlxG.keys.pressed.Z)
 		{
 			firetext.exists = true;
 			firetext.resetText(FireText.GUNGOD);
@@ -138,7 +138,7 @@ class PlayState extends FlxState
 	
 	public function onBeat():Void
 	{
-		if (FlxG.keys.SHIFT)
+		if (FlxG.keys.pressed.SHIFT)
 		{
 			return;
 		}

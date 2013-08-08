@@ -239,7 +239,7 @@ class PlayState extends FlxState
 		var scoreChanged:Bool = oldScore != Reg.score;
 		
 		// Jammed message
-		if (FlxG.keys.justPressed("C") && _player.flickering)
+		if (FlxG.keys.justPressed.C && _player.flickering)
 		{
 			_jamTimer = 1;
 			//_gunjam.visible = true;
@@ -319,7 +319,7 @@ class PlayState extends FlxState
 		}
 		
 		// Escape to the main menu
-		if (FlxG.keys.ESCAPE)
+		if (FlxG.keys.pressed.ESCAPE)
 		{
 			FlxG.switchState(new MenuState());
 		}

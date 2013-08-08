@@ -1,7 +1,7 @@
 package;
 
-import flixel.addons.effects.FlxSpecialFX;
-import flixel.addons.effects.fx.StarfieldFX;
+import flixel.addons.plugin.effects.FlxSpecialFX;
+import flixel.addons.plugin.effects.fx.StarfieldFX;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -92,7 +92,7 @@ class PlayState extends FlxState
 	override public function update():Void 
 	{
 		// Escape to the menu
-		if (FlxG.keys.ESCAPE)
+		if (FlxG.keys.pressed.ESCAPE)
 		{
 			FlxG.switchState(new MenuState());
 		}
@@ -102,7 +102,7 @@ class PlayState extends FlxState
 		// Don't continue in case we lost
 		if (!_playerShip.alive) 
 		{
-			if (FlxG.keys.R)
+			if (FlxG.keys.pressed.R)
 			{
 				FlxG.resetState();
 			}

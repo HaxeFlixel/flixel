@@ -78,7 +78,7 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		// Keyboard shortcut
-		if (FlxG.keys.justReleased("R"))
+		if (FlxG.keys.justReleased.R)
 		{
 			generateCave();
 		}

@@ -68,7 +68,7 @@ class PlayState extends FlxState
 		}
 		
 		// Toggle gravity
-		if (FlxG.keys.justPressed("G")) 
+		if (FlxG.keys.justPressed.G) 
 		{
 			if (_explosion.gravity == 0)
 			{
@@ -83,7 +83,7 @@ class PlayState extends FlxState
 		}
 		
 		// Toggle emitter type
-		if (FlxG.keys.justPressed("SPACE")) 
+		if (FlxG.keys.justPressed.SPACE) 
 		{
 			_explosion.visible = !_explosion.visible;
 			_explosionOld.visible = !_explosionOld.visible;

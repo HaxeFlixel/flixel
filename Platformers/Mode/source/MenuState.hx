@@ -151,7 +151,7 @@ class MenuState extends FlxState
 			_attractMode = true;
 		}
 		
-		if (!_fading && ((FlxG.keys.X && FlxG.keys.C) || _attractMode)) 
+		if (!_fading && ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _attractMode)) 
 		{
 			_fading = true;
 			FlxG.sound.play("MenuHit2");

@@ -32,24 +32,24 @@ class PlayerShip extends FlxSprite
 	{
 		angularVelocity = 0;
 		
-		if (FlxG.keys.LEFT)
+		if (FlxG.keys.pressed.LEFT)
 		{
 			angularVelocity -= 240;
 		}
 		
-		if (FlxG.keys.RIGHT)
+		if (FlxG.keys.pressed.RIGHT)
 		{
 			angularVelocity += 240;
 		}
 		
 		acceleration.set();
 		
-		if (FlxG.keys.UP)
+		if (FlxG.keys.pressed.UP)
 		{
 			FlxAngle.rotatePoint(90, 0, 0, 0, angle, acceleration);
 		}
 		
-		if (FlxG.keys.justPressed("SPACE"))
+		if (FlxG.keys.justPressed.SPACE)
 		{
 			var bullet:FlxSprite = PlayState.bullets.recycle();
 			bullet.reset(x + (width - bullet.width) / 2, y + (height - bullet.height) / 2);

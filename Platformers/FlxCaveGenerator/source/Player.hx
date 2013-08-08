@@ -41,18 +41,18 @@ class Player extends FlxSprite
 		// MOVEMENT
 		acceleration.x = 0;
 		
-		if (FlxG.keys.LEFT || FlxG.keys.A)
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
 		{
 			facing = FlxObject.LEFT;
 			acceleration.x -= drag.x;
 		}
-		else if (FlxG.keys.RIGHT || FlxG.keys.D)
+		else if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
 		{
 			facing = FlxObject.RIGHT;
 			acceleration.x += drag.x;
 		}
 		
-		var jumpKeyPressed:Bool = (FlxG.keys.justPressed("W") || FlxG.keys.justPressed("SPACE") || FlxG.keys.justPressed("UP"));
+		var jumpKeyPressed:Bool = (FlxG.keys.justPressed.W || FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.UP);
 		
 		if ((jumpKeyPressed && _isReadyToJump) && velocity.y == 0)
 		{

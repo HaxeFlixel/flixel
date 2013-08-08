@@ -127,7 +127,7 @@ class PlayState extends FlxState
 		}
 		
 		// Check input and move left
-		if (FlxG.keys.LEFT || FlxG.keys.A) 
+		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) 
 		{
 			_player.velocity.x = -_playerSpeed;
 			_player.facing = FlxObject.LEFT;
@@ -145,7 +145,7 @@ class PlayState extends FlxState
 		}
 		
 		// Check input and move right
-		if (FlxG.keys.RIGHT || FlxG.keys.D) 
+		if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D) 
 		{
 			_player.velocity.x = _playerSpeed;
 			_player.facing = FlxObject.RIGHT;
@@ -163,7 +163,7 @@ class PlayState extends FlxState
 		}
 		
 		// Jump! when you hit Z or Space or UP
-		if (FlxG.keys.Z|| FlxG.keys.SPACE || FlxG.keys.UP || FlxG.keys.W) 
+		if (FlxG.keys.pressed.Z|| FlxG.keys.pressed.SPACE || FlxG.keys.pressed.UP || FlxG.keys.pressed.W) 
 		{
 			if (_player.isTouching(FlxObject.FLOOR)) 
 			{

@@ -95,20 +95,20 @@ class MenuState extends FlxState
 				_pointer.y = _text5.y;
 		}
 		
-		if (FlxG.keys.justPressed("UP"))
+		if (FlxG.keys.justPressed.UP)
 		{
 			// A goofy format, because % doesn't work on negative numbers
 			_option = (_option + OPTIONS - 1) % OPTIONS; 
 			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
 		}
 		
-		if (FlxG.keys.justPressed("DOWN"))
+		if (FlxG.keys.justPressed.DOWN)
 		{
 			_option = (_option + OPTIONS + 1) % OPTIONS;
 			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
 		}
 		
-		if (FlxG.keys.justPressed("SPACE") || FlxG.keys.justPressed("ENTER"))
+		if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER)
 		{
 			switch (_option) 
 			{

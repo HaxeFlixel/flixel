@@ -86,7 +86,7 @@ class PlayState extends FlxState
 	
 	override public function update():Void
 	{
-		if (FlxG.keys.justPressed("SPACE"))
+		if (FlxG.keys.justPressed.SPACE)
 		{
 			_enabled = !_enabled;
 		}
