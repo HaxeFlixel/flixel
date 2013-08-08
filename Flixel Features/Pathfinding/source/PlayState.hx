@@ -209,7 +209,7 @@ class PlayState extends FlxState
 		_action = ACTION_IDLE;
 		if (path != null && !path.finished)
 		{
-			path.finish();
+			path.abort();
 			path = null;
 		}
 		_unit.velocity.x = _unit.velocity.y = 0;
