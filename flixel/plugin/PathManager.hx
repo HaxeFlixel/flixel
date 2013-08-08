@@ -46,6 +46,7 @@ class PathManager extends FlxPlugin
 		}
 	}
 	
+	#if !FLX_NO_DEBUG
 	/**
 	 * Called by <code>FlxG.plugins.draw()</code> after the game state has been drawn.
 	 * Cycles through cameras and calls <code>drawDebug()</code> on each one.
@@ -98,6 +99,7 @@ class PathManager extends FlxPlugin
 			}
 		}
 	}
+	#end
 	
 	/**
 	 * Add a path to the path debug display manager.
