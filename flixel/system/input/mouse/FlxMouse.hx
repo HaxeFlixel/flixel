@@ -438,7 +438,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Check to see if the mouse is pressed.
 	 * @return 	Whether the mouse is pressed.
 	 */
-	public var pressed(get, never):Bool; 			
+	public var pressed(get, never):Bool;
 	
 	inline private function get_pressed():Bool { return _leftButton.pressed(); }
 	
@@ -446,7 +446,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Check to see if the mouse was just pressed.
 	 * @return 	Whether the mouse was just pressed.
 	 */
-	public var justPressed(get, never):Bool;  		
+	public var justPressed(get, never):Bool;
 	
 	inline private function get_justPressed():Bool { return _leftButton.justPressed(); }
 
@@ -454,7 +454,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Check to see if the mouse was just released.
 	 * @return 	Whether the mouse was just released.
 	 */
-	public var justReleased(get, never):Bool;  		
+	public var justReleased(get, never):Bool;
 	
 	inline private function get_justReleased():Bool { return _leftButton.justReleased(); }
 

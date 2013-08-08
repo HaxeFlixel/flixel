@@ -984,7 +984,7 @@ class FlxObject extends FlxBasic
 		height = Height;
 	}
 	
-	function set_forceComplexRender(value:Bool):Bool 
+	private function set_forceComplexRender(value:Bool):Bool 
 	{
 		return forceComplexRender = value;
 	}

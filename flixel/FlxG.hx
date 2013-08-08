@@ -20,6 +20,9 @@ import flixel.util.FlxRect;
 import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
 
+// TEMP
+import flixel.plugin.JobsManager;
+
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
 import flixel.plugin.PathManager;
@@ -199,6 +202,10 @@ class FlxG
 	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
 	 */
 	static public var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
+	
+	// TEMP
+	static public var jobs(default, null):JobsManager;
+	
 	/**
 	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * sounds and other things to manage or <code>play()</code> sounds.
