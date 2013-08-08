@@ -75,6 +75,7 @@ class PlayState extends FlxState
 	 * Instructions
 	 */
 	private var _instructions:FlxText;
+	var path:FlxPath;
 	
 	override public function create():Void
 	{
@@ -149,9 +150,9 @@ class PlayState extends FlxState
 		super.draw();
 		
 		// To draw path
-		if (_unit.path != null)
+		if (path != null && !path.finished)
 		{
-			_unit.path.drawDebug();
+			path.drawDebug();
 		}
 	}
 	
@@ -163,7 +164,7 @@ class PlayState extends FlxState
 		FlxG.collide(_unit, _map);
 		
 		// Check mouse pressed and unit action
-		if (FlxG.mouse.justReleased) 
+		if (FlxG.mouse.justPressed) 
 		{
 			// Get data map coordinate
 			var mx:Int = Std.int(FlxG.mouse.screenX / TILE_WIDTH);
@@ -171,18 +172,12 @@ class PlayState extends FlxState
 			
 			// Change tile toogle
 			_map.setTile(mx, my, 1 - _map.getTile(mx, my), true);
-			
-			// Re-calculate the path
-			if (_action == ACTION_GO)
-			{
-				moveToGoal();
-			}
 		}
 		
 		// Check if reach goal
 		if (_action == ACTION_GO)
 		{
-			if (_unit.pathSpeed == 0)
+			if (path != null && path.finished)
 			{
 				resetUnit();
 				stopUnit();
@@ -193,12 +188,12 @@ class PlayState extends FlxState
 	private function moveToGoal():Void
 	{
 		// Find path to goal from unit to goal
-		var path:FlxPath = _map.findPath(new FlxPoint(_unit.x + _unit.width / 2, _unit.y + _unit.height / 2), new FlxPoint(_goal.x + _goal.width / 2, _goal.y + _goal.height / 2));
+		var pathPoints:Array<FlxPoint> = _map.findPath(new FlxPoint(_unit.x + _unit.width / 2, _unit.y + _unit.height / 2), new FlxPoint(_goal.x + _goal.width / 2, _goal.y + _goal.height / 2));
 		
 		// Tell unit to follow path
-		if (path != null) 
+		if (pathPoints != null) 
 		{
-			_unit.followPath(path);
+			path = FlxPath.start(_unit, pathPoints);
 			_action = ACTION_GO;
 			_instructions.text = INSTRUCTION_1;
 		}
@@ -212,7 +207,11 @@ class PlayState extends FlxState
 	{
 		// Stop unit and destroy unit path
 		_action = ACTION_IDLE;
-		_unit.stopFollowingPath(true);
+		if (path != null && !path.finished)
+		{
+			path.finish();
+			path = null;
+		}
 		_unit.velocity.x = _unit.velocity.y = 0;
 	}
 	

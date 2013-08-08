@@ -31,8 +31,7 @@ class PlayState extends FlxState
 		sprite.immovable = true;
 		destination = sprite.getMidpoint();
 		destination.y += 112;
-		path = new FlxPath([sprite.getMidpoint(),destination]);
-		sprite.followPath(path, 40, FlxPath.YOYO);
+		path = FlxPath.start(sprite, [sprite.getMidpoint(),destination], 40, FlxPath.YOYO);
 		add(sprite);
 		
 		// Create the side-to-side pusher object and put it on a different path
@@ -40,8 +39,7 @@ class PlayState extends FlxState
 		sprite.immovable = true;
 		destination = sprite.getMidpoint();
 		destination.x += 56;
-		path = new FlxPath([sprite.getMidpoint(),destination]);
-		sprite.followPath(path, 40, FlxPath.YOYO);
+		var path:FlxPath = FlxPath.start(sprite, [sprite.getMidpoint(),destination], 40, FlxPath.YOYO);
 		add(sprite);
 		
 		// Then add the player, its own class with its own logic
