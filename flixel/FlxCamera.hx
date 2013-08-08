@@ -1287,4 +1287,16 @@ class FlxCamera extends FlxBasic
 		width = Width;
 		height = Height;
 	}
+	
+	/**
+	 * Helper function to set the coordinates of this camera.
+	 * Handy since it only requires one line of code.
+	 * @param	X	The new x position
+	 * @param	Y	The new y position
+	 */
+	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	{
+		x = X;
+		y = Y;
+	}
 }
