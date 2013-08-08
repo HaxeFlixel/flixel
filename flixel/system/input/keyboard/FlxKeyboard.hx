@@ -134,6 +134,10 @@ class FlxKeyboard implements IFlxInput
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		
+		pressed = Reflect.makeVarArgs(anyPressed);
+		justPressed = Reflect.makeVarArgs(anyJustPressed);
+		justReleased = Reflect.makeVarArgs(anyJustReleased);
 	}
 	
 	/**
@@ -190,58 +194,126 @@ class FlxKeyboard implements IFlxInput
 	}
 	
 	/**
-	 * Check to see if this key is pressed.
-	 * 
-	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
-	 * @return	Whether the key is pressed
+	 * Check to see if a key, or one key from a list of mutliple keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.pressed("UP", "W", "SPACE")</code>
 	 */
-	public function pressed(Key:String):Bool 
+	public var pressed:Dynamic;
+	
+	/**
+	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.anyPressed(["UP", "W", "SPACE"])</code>
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed in is pressed.
+	 */
+	public function anyPressed(KeyArray:Array<Dynamic>):Bool 
 	{ 
-		if (_keyBools.exists(Key))
+		if (KeyArray == null)
 		{
-			return _keyBools.get(Key);
+			return false;
 		}
 		
-		FlxG.log.error("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
+		for (key in KeyArray)
+		{
+			key = Std.string(key).toUpperCase();
+			
+			if (_keyBools.exists(key))
+			{
+				if (_keyBools.get(key))
+				{
+					return true;
+				}
+			}
+			#if !FLX_NO_DEBUG
+			else
+			{
+				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+			}
+			#end
+		}
+		
 		return false; 
 	}
 	
 	/**
-	 * Check to see if this key was just pressed.
-	 * 
-	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
-	 * @return	Whether the key was just pressed
+	 * Check to see if a key, or one key from a list of mutliple keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.justPressed("UP", "W", "SPACE")</code>
 	 */
-	public function justPressed(Key:String):Bool 
+	public var justPressed:Dynamic;
+	
+	/**
+	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.anyJustPressed(["UP", "W", "SPACE"])</code>
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed was just pressed.
+	 */
+	public function anyJustPressed(KeyArray:Array<Dynamic>):Bool 
 	{ 
-		if (_keyList[_keyLookup.get(Key)] != null) 
+		if (KeyArray == null)
 		{
-			return _keyList[_keyLookup.get(Key)].current == FlxKey.JUST_PRESSED;
-		}
-		else
-		{
-			FlxG.log.error("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
 			return false;
 		}
+		
+		for (key in KeyArray)
+		{
+			key = Std.string(key).toUpperCase();
+			
+			if (_keyList[_keyLookup.get(key)] != null)
+			{
+				if (_keyList[_keyLookup.get(key)].current == FlxKey.JUST_PRESSED)
+				{
+					return true;
+				}
+			}
+			#if !FLX_NO_DEBUG
+			else
+			{
+				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+			}
+			#end
+		}
+		
+		return false;
 	}
 	
 	/**
-	 * Check to see if this key is just released.
-	 * 
-	 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
-	 * @return	Whether the key is just released.
+	 * Check to see if a key, or one key from a list of mutliple keys was just released. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.justReleased("UP", "W", "SPACE")</code>
 	 */
-	public function justReleased(Key:String):Bool 
+	public var justReleased:Dynamic;
+	
+	/**
+	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.anyJustReleased(["UP", "W", "SPACE"])</code>
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed was just released.
+	 */
+	public function anyJustReleased(KeyArray:Array<Dynamic>):Bool 
 	{ 
-		if (_keyList[_keyLookup.get(Key)] != null) 
+		if (KeyArray == null)
 		{
-			return _keyList[_keyLookup.get(Key)].current == FlxKey.JUST_RELEASED;
-		}
-		else
-		{
-			FlxG.log.error("Invalid Key: `" + Key + "`. Note that function and numpad keys can only be used in flash and js.");
 			return false;
 		}
+		
+		for (key in KeyArray)
+		{
+			key = Std.string(key).toUpperCase();
+			
+			if (_keyList[_keyLookup.get(key)] != null)
+			{
+				if (_keyList[_keyLookup.get(key)].current == FlxKey.JUST_RELEASED)
+				{
+					return true;
+				}
+			}
+			#if !FLX_NO_DEBUG
+			else
+			{
+				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+			}
+			#end
+		}
+		
+		return false;
 	}
 	
 	/**
