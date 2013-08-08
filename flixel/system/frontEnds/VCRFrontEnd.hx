@@ -51,7 +51,7 @@ class VCRFrontEnd
 		timeout = Std.int(Timeout * 1000);
 		replayCallback = Callback;
 		FlxG.game.replayRequested = true;
-		FlxG.keys.enabled = false;
+		FlxG.keyboard.enabled = false;
 	}
 
 	/**
@@ -88,7 +88,7 @@ class VCRFrontEnd
 		#end
 		
 		FlxG.inputs.reset();
-		FlxG.keys.enabled = true;
+		FlxG.keyboard.enabled = true;
 	}
 		
 	/**
