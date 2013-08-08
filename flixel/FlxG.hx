@@ -1,6 +1,7 @@
 package flixel;
 
 import flash.display.Stage;
+import flash.display.StageDisplayState;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
@@ -363,6 +364,30 @@ class FlxG
         width = Width;
         height = Height; 
 	}
+	
+	#if flash
+	/**
+	 * Use this to toggle between fullscreen and normal mode.
+	 */
+	static public var fullscreen(default, set):Bool = false;
+	 
+	inline static private function set_fullscreen(Value:Bool):Bool
+	{
+		if (Value)
+		{
+			stage.displayState = StageDisplayState.FULL_SCREEN;
+			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
+			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
+		}
+		else
+		{
+			stage.displayState = StageDisplayState.NORMAL;
+			//camera.setPosition();
+		}
+		
+		return Value;
+	}
+	#end
 	
 	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)

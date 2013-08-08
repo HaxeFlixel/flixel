@@ -1,6 +1,5 @@
 package flixel.system.frontEnds;
 
-import flash.display.StageDisplayState;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -257,22 +256,6 @@ class CameraFrontEnd
 			camera.shake(Intensity, Duration, OnComplete, Force, Direction);
 		}
 	}
-	
-	#if flash
-	/**
-	 * Switch to full-screen display.
-	 */
-	public function fullscreen():Void
-	{
-		FlxG.stage.displayState = StageDisplayState.FULL_SCREEN;
-		
-		var fsw:Int = Std.int(FlxG.width * FlxG.camera.zoom);
-		var fsh:Int = Std.int(FlxG.height * FlxG.camera.zoom);
-		
-		FlxG.camera.x = (FlxG.stage.fullScreenWidth - fsw) / 2;
-		FlxG.camera.y = (FlxG.stage.fullScreenHeight - fsh) / 2;
-	}
-	#end
 	
 	public var bgColor(get, set):Int;
 

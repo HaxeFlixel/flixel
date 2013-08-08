@@ -24,9 +24,6 @@ class ConsoleCommands
 		console.addCommand("resetState", this, resetState, "rs");
 		console.addCommand("switchState", this, switchState, "ss");
 		console.addCommand("resetGame", this, resetGame, "rg");
-		#if flash
-		console.addCommand("fullscreen", FlxG, FlxG.cameras.fullscreen, "fs");
-		#end
 		console.addCommand("watchMouse", this, watchMouse, "wm");
 		console.addCommand("visualDebug", this, visualDebug, "vd");
 		console.addCommand("pause", this, pause, "p");
@@ -52,13 +49,7 @@ class ConsoleCommands
 	private function help(Command:String = ""):Void
 	{
 		if (Command == "") {
-			// Don't include the fullscreen command for non-flash targets
-			var fs:String = "";
-			#if flash
-			fs = "fullscreen,";
-			#end
-			
-			cLog("System commands: \nlog, clearLog, clearHistory, help, resetState, switchState, resetGame, " + fs + " watchMouse, visualDebug, pause, play, playMusic, bgColor, shake, create, set, call, close, listObjects, listFunctions, watch, unwatch");
+			cLog("System commands: \nlog, clearLog, clearHistory, help, resetState, switchState, resetGame, watchMouse, visualDebug, pause, play, playMusic, bgColor, shake, create, set, call, close, listObjects, listFunctions, watch, unwatch");
 			cLog("help (Command) for more information about a specific command"); 
 		}
 		else {
@@ -82,10 +73,6 @@ class ConsoleCommands
 				case "switchState", "ss":
 					cLog("switchState: {ss} Calls FlxG.switchState() with specified FlxState");
 					cLog("switchState [FlxState]");
-				#if flash
-				case "fullscreen", "fs":
-					cLog("fullscreen: {fs} Enables fullscreen mode");
-				#end
 				case "watchMouse", "wm":
 					cLog("watchMouse: {wm} Adds the x and y pos of the mosue to the watch window. Super useful for GUI-Building stuff.");
 				case "visualDebug", "vd":
