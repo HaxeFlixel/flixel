@@ -257,9 +257,10 @@ class FlxKeyboard implements IFlxInput
 		{
 			key = Std.string(key).toUpperCase();
 			
-			if (_keyList[_keyLookup.get(key)] != null)
+			var k : FlxKey = _keyList[_keyLookup.get(key)];
+			if (k != null)
 			{
-				if (_keyList[_keyLookup.get(key)].current == FlxKey.JUST_PRESSED)
+				if (k.current == FlxKey.JUST_PRESSED)
 				{
 					return true;
 				}
@@ -298,9 +299,10 @@ class FlxKeyboard implements IFlxInput
 		{
 			key = Std.string(key).toUpperCase();
 			
-			if (_keyList[_keyLookup.get(key)] != null)
+			var k : FlxKey = _keyList[_keyLookup.get(key)];
+			if (k != null)
 			{
-				if (_keyList[_keyLookup.get(key)].current == FlxKey.JUST_RELEASED)
+				if (k.current == FlxKey.JUST_RELEASED)
 				{
 					return true;
 				}
