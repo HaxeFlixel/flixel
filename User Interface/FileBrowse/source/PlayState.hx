@@ -91,25 +91,25 @@ class PlayState extends FlxState
 		}
 		
 		// Reset to a scale of x1
-		if (FlxG.keys.justReleased.R || FlxG.keys.justReleased.SPACE || FlxG.keys.justReleased.ONE)
+		if (FlxG.keyboard.justPressed("R", "SPACE", "ONE"))
 		{
 			_updateScale(1);
 		}
 		
 		// Scale shortcuts
-		if (FlxG.keys.justReleased.TWO)
+		if (FlxG.keys.justPressed.TWO)
 		{
 			_updateScale(2);
 		}
-		else if (FlxG.keys.justReleased.THREE)
+		else if (FlxG.keys.justPressed.THREE)
 		{
 			_updateScale(3);
 		}
-		else if (FlxG.keys.justReleased.FOUR)
+		else if (FlxG.keys.justPressed.FOUR)
 		{
 			_updateScale(4);
 		}
-		else if (FlxG.keys.justReleased.FIVE)
+		else if (FlxG.keys.justPressed.FIVE)
 		{
 			_updateScale(5);
 		}

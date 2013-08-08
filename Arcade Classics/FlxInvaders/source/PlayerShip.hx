@@ -29,12 +29,12 @@ class PlayerShip extends FlxSprite
 		velocity.x = 0;	
 		
 		// If the player is pressing left, set velocity to left 100
-		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
+		if (FlxG.keyboard.pressed("LEFT", "A"))
 		{
 			velocity.x -= 100;		
 		}
 		// If the player is pressing right, then right 100
-		if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)	
+		if (FlxG.keyboard.pressed("RIGHT", "D"))
 		{
 			velocity.x += 100;		
 		}

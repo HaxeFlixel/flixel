@@ -50,7 +50,7 @@ class TempoController extends FlxObject
 		
 		_check += FlxG.elapsed;
 		
-		if ((_check >= timing) || FlxG.keys.pressed.UP || FlxG.keys.pressed.DOWN || FlxG.keys.pressed.LEFT || FlxG.keys.pressed.RIGHT)
+		if ((_check >= timing) || FlxG.keyboard.justPressed("UP", "DOWN", "LEFT", "RIGHT"))
 		{
 			if (_check > 0)
 			{
@@ -60,10 +60,7 @@ class TempoController extends FlxObject
 			beat();
 		}
 		
-		if( FlxG.keys.justPressed.UP ||
-			FlxG.keys.justPressed.DOWN ||
-			FlxG.keys.justPressed.LEFT ||
-			FlxG.keys.justPressed.RIGHT )
+		if (FlxG.keyboard.justPressed("UP", "DOWN", "LEFT", "RIGHT"))
 		{
 			FlxG.cameras.flash(0xffffff, 0.2, null, true);
 		}

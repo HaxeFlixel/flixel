@@ -61,11 +61,11 @@ class PlayState3 extends FlxState
 		
 		_platform.velocity.x = 0;
 		
-		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
+		if (FlxG.keyboard.pressed("LEFT", "A"))
 		{
 			_platform.velocity.x -= v;
 		}
-		if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
+		if (FlxG.keyboard.pressed("RIGHT", "D"))
 		{
 			_platform.velocity.x += v;
 		}

@@ -76,19 +76,19 @@ class PlayState2 extends FlxState
 		_focus.velocity.y = 0;
 		var focusSpeed:Float = 200;
 		
-		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A)
+		if (FlxG.keyboard.pressed("LEFT", "A"))
 		{
 			_focus.velocity.x -= focusSpeed;
 		}
-		if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D)
+		if (FlxG.keyboard.pressed("RIGHT", "D"))
 		{
 			_focus.velocity.x += focusSpeed;
 		}
-		if (FlxG.keys.pressed.UP || FlxG.keys.pressed.W)
+		if (FlxG.keyboard.pressed("UP", "W"))
 		{
 			_focus.velocity.y -= focusSpeed;
 		}
-		if (FlxG.keys.pressed.DOWN || FlxG.keys.pressed.S)
+		if (FlxG.keyboard.pressed("DOWN", "S"))
 		{
 			_focus.velocity.y += focusSpeed;
 		}
