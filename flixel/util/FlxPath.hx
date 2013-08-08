@@ -342,7 +342,7 @@ class FlxPath
 			
 			if (finished)
 			{
-				finish();
+				abort();
 			}
 		}
 	}
@@ -451,7 +451,10 @@ class FlxPath
 		return nodes[_nodeIndex];
 	}
 	
-	public function finish():Void
+	/**
+	 * Stops path movement and removes this path it from the path manager.
+	 */
+	public function abort():Void
 	{
 		finished = true;
 		
