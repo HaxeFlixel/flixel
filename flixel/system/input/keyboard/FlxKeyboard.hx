@@ -1,119 +1,51 @@
 package flixel.system.input.keyboard;
 
 #if !FLX_NO_KEYBOARD
-import flixel.FlxG;
-import flixel.FlxGame;
-import flash.Lib;
 import flash.events.KeyboardEvent;
+import flash.Lib;
+import flixel.FlxG;
+import flixel.system.input.IFlxInput;
 import flixel.system.input.keyboard.FlxKey;
+import flixel.system.replay.CodeValuePair;
+import flixel.util.FlxArrayUtil;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
  */
-class FlxKeyboard extends FlxInputStates implements IFlxInput
+class FlxKeyboard implements IFlxInput
 {
-	public var ESCAPE		(get, never):Bool;	inline function get_ESCAPE()		{ return pressed("ESCAPE"); }
-	public var F1			(get, never):Bool;	inline function get_F1()			{ return pressed("F1"); }
-	public var F2			(get, never):Bool;	inline function get_F2()			{ return pressed("F2"); }
-	public var F3			(get, never):Bool;	inline function get_F3()			{ return pressed("F3"); }
-	public var F4			(get, never):Bool;	inline function get_F4()			{ return pressed("F4"); }
-	public var F5			(get, never):Bool;	inline function get_F5()			{ return pressed("F5"); }
-	public var F6			(get, never):Bool;	inline function get_F6()			{ return pressed("F6"); }
-	public var F7			(get, never):Bool;	inline function get_F7()			{ return pressed("F7"); }
-	public var F8			(get, never):Bool;	inline function get_F8()			{ return pressed("F8"); }
-	public var F9			(get, never):Bool;	inline function get_F9()			{ return pressed("F9"); }
-	public var F10			(get, never):Bool;	inline function get_F10()			{ return pressed("F10"); }
-	public var F11			(get, never):Bool;	inline function get_F11()			{ return pressed("F11"); }
-	public var F12			(get, never):Bool;	inline function get_F12()			{ return pressed("F12"); }
-	public var ONE			(get, never):Bool;	inline function get_ONE()			{ return pressed("ONE"); }
-	public var TWO			(get, never):Bool;	inline function get_TWO()			{ return pressed("TWO"); }
-	public var THREE		(get, never):Bool;	inline function get_THREE()			{ return pressed("THREE"); }
-	public var FOUR			(get, never):Bool;	inline function get_FOUR()			{ return pressed("FOUR"); }
-	public var FIVE			(get, never):Bool;	inline function get_FIVE()			{ return pressed("FIVE"); }
-	public var SIX			(get, never):Bool;	inline function get_SIX()			{ return pressed("SIX"); }
-	public var SEVEN		(get, never):Bool;	inline function get_SEVEN()			{ return pressed("SEVEN"); }
-	public var EIGHT		(get, never):Bool;	inline function get_EIGHT()			{ return pressed("EIGHT"); }
-	public var NINE			(get, never):Bool;	inline function get_NINE()			{ return pressed("NINE"); }
-	public var ZERO			(get, never):Bool;	inline function get_ZERO()			{ return pressed("ZERO"); }
-	public var NUMPADONE	(get, never):Bool;	inline function get_NUMPADONE()		{ return pressed("NUMPADONE"); }
-	public var NUMPADTWO	(get, never):Bool;	inline function get_NUMPADTWO()		{ return pressed("NUMPADTWO"); }
-	public var NUMPADTHREE	(get, never):Bool;	inline function get_NUMPADTHREE()	{ return pressed("NUMPADTHREE"); }
-	public var NUMPADFOUR	(get, never):Bool;	inline function get_NUMPADFOUR()	{ return pressed("NUMPADFOUR"); }
-	public var NUMPADFIVE	(get, never):Bool;	inline function get_NUMPADFIVE()	{ return pressed("NUMPADFIVE"); }
-	public var NUMPADSIX	(get, never):Bool;	inline function get_NUMPADSIX()		{ return pressed("NUMPADSIX"); }
-	public var NUMPADSEVEN	(get, never):Bool;	inline function get_NUMPADSEVEN()	{ return pressed("NUMPADSEVEN"); }
-	public var NUMPADEIGHT	(get, never):Bool;	inline function get_NUMPADEIGHT()	{ return pressed("NUMPADEIGHT"); }
-	public var NUMPADNINE	(get, never):Bool;	inline function get_NUMPADNINE()	{ return pressed("NUMPADNINE"); }
-	public var NUMPADZERO	(get, never):Bool;	inline function get_NUMPADZERO()	{ return pressed("NUMPADZERO"); }
-	public var PAGEUP		(get, never):Bool;	inline function get_PAGEUP()		{ return pressed("PAGEUP"); }
-	public var PAGEDOWN		(get, never):Bool;	inline function get_PAGEDOWN()		{ return pressed("PAGEDOWN"); }
-	public var HOME			(get, never):Bool;	inline function get_HOME()			{ return pressed("HOME"); }
-	public var END			(get, never):Bool;	inline function get_END()			{ return pressed("END"); }
-	public var INSERT		(get, never):Bool;	inline function get_INSERT()		{ return pressed("INSERT"); }
-	public var MINUS		(get, never):Bool;	inline function get_MINUS()			{ return pressed("MINUS"); }
-	public var NUMPADMINUS	(get, never):Bool;	inline function get_NUMPADMINUS()	{ return pressed("NUMPADMINUS"); }
-	public var PLUS			(get, never):Bool;	inline function get_PLUS()			{ return pressed("PLUS"); }
-	public var NUMPADPLUS	(get, never):Bool;	inline function get_NUMPADPLUS()	{ return pressed("NUMPADPLUS"); }
-	public var DELETE		(get, never):Bool;	inline function get_DELETE()		{ return pressed("DELETE"); }
-	public var BACKSPACE	(get, never):Bool;	inline function get_BACKSPACE()		{ return pressed("BACKSPACE"); }
-	public var TAB			(get, never):Bool;	inline function get_TAB()			{ return pressed("TAB"); }
-	public var Q			(get, never):Bool;	inline function get_Q()				{ return pressed("Q"); }
-	public var W			(get, never):Bool;	inline function get_W()				{ return pressed("W"); }
-	public var E			(get, never):Bool;	inline function get_E()				{ return pressed("E"); }
-	public var R			(get, never):Bool;	inline function get_R()				{ return pressed("R"); }
-	public var T			(get, never):Bool;	inline function get_T()				{ return pressed("T"); }
-	public var Y			(get, never):Bool;	inline function get_Y()				{ return pressed("Y"); }
-	public var U			(get, never):Bool;	inline function get_U()				{ return pressed("U"); }
-	public var I			(get, never):Bool;	inline function get_I()				{ return pressed("I"); }
-	public var O			(get, never):Bool;	inline function get_O()				{ return pressed("O"); }
-	public var P			(get, never):Bool;	inline function get_P()				{ return pressed("P"); }
-	public var LBRACKET		(get, never):Bool;	inline function get_LBRACKET()		{ return pressed("LBRACKET"); }
-	public var RBRACKET		(get, never):Bool;	inline function get_RBRACKET()		{ return pressed("RBRACKET"); }
-	public var BACKSLASH	(get, never):Bool;	inline function get_BACKSLASH()		{ return pressed("BACKSLASH"); }
-	public var CAPSLOCK		(get, never):Bool;	inline function get_CAPSLOCK()		{ return pressed("CAPSLOCK"); }
-	public var A			(get, never):Bool;	inline function get_A()				{ return pressed("A"); }
-	public var S			(get, never):Bool;	inline function get_S()				{ return pressed("S"); }
-	public var D			(get, never):Bool;	inline function get_D()				{ return pressed("D"); }
-	public var F			(get, never):Bool;	inline function get_F()				{ return pressed("F"); }
-	public var G			(get, never):Bool;	inline function get_G()				{ return pressed("G"); }
-	public var H			(get, never):Bool;	inline function get_H()				{ return pressed("H"); }
-	public var J			(get, never):Bool;	inline function get_J()				{ return pressed("J"); }
-	public var K			(get, never):Bool;	inline function get_K()				{ return pressed("K"); }
-	public var L			(get, never):Bool;	inline function get_L()				{ return pressed("L"); }
-	public var SEMICOLON	(get, never):Bool;	inline function get_SEMICOLON()		{ return pressed("SEMICOLON"); }
-	public var QUOTE		(get, never):Bool;	inline function get_QUOTE()			{ return pressed("QUOTE"); }
-	public var ENTER		(get, never):Bool;	inline function get_ENTER()			{ return pressed("ENTER"); }
-	public var SHIFT		(get, never):Bool;	inline function get_SHIFT()			{ return pressed("SHIFT"); }
-	public var Z			(get, never):Bool;	inline function get_Z()				{ return pressed("Z"); }
-	public var X			(get, never):Bool;	inline function get_X()				{ return pressed("X"); }
-	public var C			(get, never):Bool;	inline function get_C()				{ return pressed("C"); }
-	public var V			(get, never):Bool;	inline function get_V()				{ return pressed("V"); }
-	public var B			(get, never):Bool;	inline function get_B()				{ return pressed("B"); }
-	public var N			(get, never):Bool;	inline function get_N()				{ return pressed("N"); }
-	public var M			(get, never):Bool;	inline function get_M()				{ return pressed("M"); }
-	public var COMMA		(get, never):Bool;	inline function get_COMMA()			{ return pressed("COMMA"); }
-	public var PERIOD		(get, never):Bool;	inline function get_PERIOD()		{ return pressed("PERIOD"); }
-	public var NUMPADPERIOD	(get, never):Bool;	inline function get_NUMPADPERIOD()	{ return pressed("NUMPADPERIOD"); }
-	public var SLASH		(get, never):Bool;	inline function get_SLASH()			{ return pressed("SLASH"); }
-	public var NUMPADSLASH	(get, never):Bool;	inline function get_NUMPADSLASH()	{ return pressed("NUMPADSLASH"); }
-	public var CONTROL		(get, never):Bool;	inline function get_CONTROL()		{ return pressed("CONTROL"); }
-	public var ALT			(get, never):Bool;	inline function get_ALT()			{ return pressed("ALT"); }
-	public var SPACE		(get, never):Bool;	inline function get_SPACE()			{ return pressed("SPACE"); }
-	public var UP			(get, never):Bool;	inline function get_UP()			{ return pressed("UP"); }
-	public var DOWN			(get, never):Bool;	inline function get_DOWN()			{ return pressed("DOWN"); }
-	public var LEFT			(get, never):Bool;	inline function get_LEFT()			{ return pressed("LEFT"); }
-	public var RIGHT		(get, never):Bool;	inline function get_RIGHT()			{ return pressed("RIGHT"); }
-	
-	public var ANY			(get, never):Bool;	inline function get_ANY()			{ return anyKey(); }
-	
 	/**
 	 * Whether or not keyboard input is currently enabled.
 	 */
 	public var enabled:Bool = true;
 
+	/**
+	 * Total amount of keys.
+	 */
+	inline static private var TOTAL:Int = 256;
+	
+	/**
+	 * A map for key lookup.
+	 */
+	private var _keyLookup:Map<String, Int>;
+	/**
+	 * A map that stores a Boolean for each key, 
+	 * indicating whether it has been pressed or not.
+	 */
+	private var _keyBools:Map<String, Bool>;
+	/**
+	 * An array of FlxKey objects.
+	 */
+	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY) // Need to access the var there
+	private var _keyList:Array<FlxKey>;
+	
 	public function new()
 	{
-		super();
+		_keyLookup = new Map<String, Int>();
+		_keyBools = new Map<String, Bool>();
+		
+		_keyList = new Array<FlxKey>();
+		FlxArrayUtil.setLength(_keyList, TOTAL);
 		
 		var i:Int;
 		
@@ -202,6 +134,283 @@ class FlxKeyboard extends FlxInputStates implements IFlxInput
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		
+		pressed = Reflect.makeVarArgs(anyPressed);
+		justPressed = Reflect.makeVarArgs(anyJustPressed);
+		justReleased = Reflect.makeVarArgs(anyJustReleased);
+	}
+	
+	/**
+	 * An internal helper function used to build the key array.
+	 * 
+	 * @param	KeyName		String name of the key (e.g. "LEFT" or "A")
+	 * @param	KeyCode		The numeric Flash code for this key.
+	 */
+	private function addKey(KeyName:String, KeyCode:Int):Void
+	{
+		_keyLookup.set(KeyName, KeyCode);
+		_keyList[KeyCode] = new FlxKey(KeyName);
+	}
+	
+	/**
+	 * Updates the key states (for tracking just pressed, just released, etc).
+	 */
+	public function update():Void
+	{
+		for (key in _keyList)
+		{
+			if (key == null) 
+			{
+				continue;
+			}
+			
+			if (key.last == FlxKey.JUST_RELEASED && key.current == FlxKey.JUST_RELEASED) 
+			{
+				key.current = FlxKey.RELEASED;
+			}
+			else if (key.last == FlxKey.JUST_PRESSED && key.current == FlxKey.JUST_PRESSED) 
+			{
+				key.current = FlxKey.PRESSED;
+			}
+			
+			key.last = key.current;
+		}
+	}
+	
+	/**
+	 * Resets all the keys.
+	 */
+	public function reset():Void
+	{
+		for (key in _keyList)
+		{
+			if (key != null)
+			{
+				_keyBools.set(key.name, false);
+				key.current = FlxKey.RELEASED;
+				key.last = FlxKey.RELEASED;
+			}
+		}
+	}
+	
+	/**
+	 * Check to see if a key, or one key from a list of mutliple keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.pressed("UP", "W", "SPACE")</code>
+	 */
+	public var pressed:Dynamic;
+	
+	/**
+	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.anyPressed(["UP", "W", "SPACE"])</code>
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed in is pressed.
+	 */
+	public function anyPressed(KeyArray:Array<Dynamic>):Bool 
+	{ 
+		if (KeyArray == null)
+		{
+			return false;
+		}
+		
+		for (key in KeyArray)
+		{
+			key = Std.string(key).toUpperCase();
+			
+			if (_keyBools.exists(key))
+			{
+				if (_keyBools.get(key))
+				{
+					return true;
+				}
+			}
+			#if !FLX_NO_DEBUG
+			else
+			{
+				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+			}
+			#end
+		}
+		
+		return false; 
+	}
+	
+	/**
+	 * Check to see if a key, or one key from a list of mutliple keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.justPressed("UP", "W", "SPACE")</code>
+	 */
+	public var justPressed:Dynamic;
+	
+	/**
+	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.anyJustPressed(["UP", "W", "SPACE"])</code>
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed was just pressed.
+	 */
+	public function anyJustPressed(KeyArray:Array<Dynamic>):Bool 
+	{ 
+		if (KeyArray == null)
+		{
+			return false;
+		}
+		
+		for (key in KeyArray)
+		{
+			key = Std.string(key).toUpperCase();
+			
+			if (_keyList[_keyLookup.get(key)] != null)
+			{
+				if (_keyList[_keyLookup.get(key)].current == FlxKey.JUST_PRESSED)
+				{
+					return true;
+				}
+			}
+			#if !FLX_NO_DEBUG
+			else
+			{
+				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+			}
+			#end
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Check to see if a key, or one key from a list of mutliple keys was just released. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.justReleased("UP", "W", "SPACE")</code>
+	 */
+	public var justReleased:Dynamic;
+	
+	/**
+	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: <code>FlxG.keyboard.anyJustReleased(["UP", "W", "SPACE"])</code>
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed was just released.
+	 */
+	public function anyJustReleased(KeyArray:Array<Dynamic>):Bool 
+	{ 
+		if (KeyArray == null)
+		{
+			return false;
+		}
+		
+		for (key in KeyArray)
+		{
+			key = Std.string(key).toUpperCase();
+			
+			if (_keyList[_keyLookup.get(key)] != null)
+			{
+				if (_keyList[_keyLookup.get(key)].current == FlxKey.JUST_RELEASED)
+				{
+					return true;
+				}
+			}
+			#if !FLX_NO_DEBUG
+			else
+			{
+				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+			}
+			#end
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * If any keys are not "released" (0),
+	 * this function will return an array indicating
+	 * which keys are pressed and what state they are in.
+	 * 
+	 * @return	An array of key state data.  Null if there is no data.
+	 */
+	public function record():Array<CodeValuePair>
+	{
+		var data:Array<CodeValuePair> = null;
+		var i:Int = 0;
+		
+		while (i < TOTAL)
+		{
+			var key:FlxKey = _keyList[i++];
+			
+			if (key == null || key.current == FlxKey.RELEASED)
+			{
+				continue;
+			}
+			
+			if (data == null)
+			{
+				data = new Array<CodeValuePair>();
+			}
+			
+			data.push(new CodeValuePair(i - 1, key.current));
+		}
+		return data;
+	}
+	
+	/**
+	 * Part of the keystroke recording system.
+	 * Takes data about key presses and sets it into array.
+	 * 
+	 * @param	Record	Array of data about key states.
+	 */
+	public function playback(Record:Array<CodeValuePair>):Void
+	{
+		var i:Int = 0;
+		var l:Int = Record.length;
+		var o:CodeValuePair;
+		var o2:FlxKey;
+		
+		while (i < l)
+		{
+			o = Record[i++];
+			o2 = _keyList[o.code];
+			o2.current = o.value;
+			
+			if (o.value > FlxKey.RELEASED)
+			{
+				_keyBools.set(o2.name, true);
+			}
+		}
+	}
+	
+	/**
+	 * Look up the key code for any given string name of the key or button.
+	 * 
+	 * @param	KeyName		The <code>String</code> name of the key.
+	 * @return	The key code for that key.
+	 */
+	inline public function getKeyCode(KeyName:String):Int
+	{
+		return _keyLookup.get(KeyName);
+	}
+
+	/**
+	 * Get an Array of FlxMapObjects that are in a pressed state
+	 * 
+	 * @return	Array<FlxMapObject> of keys that are currently pressed.
+	 */
+	public function getIsDown():Array<FlxKey>
+	{
+		var keysDown:Array<FlxKey> = new Array<FlxKey>();
+		
+		for (key in _keyList)
+		{
+			if (key != null && key.current > FlxKey.RELEASED)
+			{
+				keysDown.push(key);
+			}
+		}
+		return keysDown;
+	}
+
+	/**
+	 * Clean up memory.
+	 */
+	public function destroy():Void
+	{
+		_keyList = null;
+		_keyBools = null;
+		_keyLookup = null;
 	}
 	
 	/**

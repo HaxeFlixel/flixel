@@ -72,8 +72,7 @@ class WatchFrontEnd
 	inline public function addMouse():Void
 	{
 		#if !FLX_NO_DEBUG
-		add(FlxG.game, "mouseX", "Mouse.x");
-		add(FlxG.game, "mouseY", "Mouse.y");
+		add(FlxG, "mouse", "Mouse Position");
 		#end
 	}
 	
@@ -83,8 +82,7 @@ class WatchFrontEnd
 	inline public function removeMouse():Void
 	{
 		#if !FLX_NO_DEBUG
-		remove(FlxG.game, "mouseX");
-		remove(FlxG.game, "mouseY");
+		remove(FlxG, "mouse");
 		#end
 	}
 }

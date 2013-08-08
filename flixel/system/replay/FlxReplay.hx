@@ -162,7 +162,7 @@ class FlxReplay
 		var continueFrame = true;
 		
 		#if !FLX_NO_KEYBOARD
-		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
+		var keysRecord:Array<CodeValuePair> = FlxG.keyboard.record();
 		if (keysRecord == null) continueFrame = false;
 		#end
 		
@@ -216,7 +216,7 @@ class FlxReplay
 		#if !FLX_NO_KEYBOARD
 		if (fr.keys != null)
 		{
-			FlxG.keys.playback(fr.keys);
+			FlxG.keyboard.playback(fr.keys);
 		}
 		#end
 		

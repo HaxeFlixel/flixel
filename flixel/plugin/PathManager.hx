@@ -46,6 +46,7 @@ class PathManager extends FlxPlugin
 		}
 	}
 	
+	#if !FLX_NO_DEBUG
 	/**
 	 * Called by <code>FlxG.plugins.draw()</code> after the game state has been drawn.
 	 * Cycles through cameras and calls <code>drawDebug()</code> on each one.
@@ -98,6 +99,7 @@ class PathManager extends FlxPlugin
 			}
 		}
 	}
+	#end
 	
 	/**
 	 * Add a path to the path debug display manager.
@@ -121,17 +123,17 @@ class PathManager extends FlxPlugin
 	 */
 	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
 	{
-		if (ReturnInPool)
-		{
-			FlxPath.put(Path);
-		}
-		
 		var index:Int = FlxArrayUtil.indexOf(_paths, Path);
 		
 		if (index >= 0)
 		{
 			_paths[index] = _paths[_paths.length - 1];
 			_paths.pop();
+		}
+		
+		if (ReturnInPool)
+		{
+			FlxPath.put(Path);
 		}
 	}
 	

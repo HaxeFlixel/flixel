@@ -3,6 +3,7 @@ package flixel.system;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.plugin.JobsManager;
 
 // For static typing and safe storage in JobManager
 interface IJob {
@@ -22,6 +23,11 @@ class FlxJob implements IJob
 	
 	var _target:FlxBasic;
 	function new(target:FlxBasic) { _target = target; }
+	
+	/**
+	 * Read-only: The <code>TimerManager</code> instance.
+	 */
+	static public var manager:JobsManager;
 }
 
 class UpdateJob implements FlxJob<FlxBasic>
