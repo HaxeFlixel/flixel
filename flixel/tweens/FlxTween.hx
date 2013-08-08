@@ -473,7 +473,7 @@ class FlxTween
 				_t = 0;
 			}
 			
-			finish();
+			finished = true;
 		}
 	}
 
@@ -502,7 +502,7 @@ class FlxTween
 	}
 
 	/** @private Called when the Tween completes. */
-	private function finish():Void
+	public function finish():Void
 	{
 		executions++;
 		
@@ -533,6 +533,8 @@ class FlxTween
 				active = false;
 				manager.remove(this, true);
 		}
+
+		finished = false;
 	}
 
 	public var percent(get_percent, set_percent):Float;
@@ -541,6 +543,8 @@ class FlxTween
 
 	public var scale(get_scale, null):Float;
 	private function get_scale():Float { return _t; }
+
+	public var finished(default, null):Bool;
 
 	private var _type:Int;
 	private var _ease:EaseFunction;
