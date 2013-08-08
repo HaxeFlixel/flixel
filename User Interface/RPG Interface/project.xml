@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="Menus" file="Menus" main="Main" version="0.0.0" company="Level Up Labs"/>
+	<app title="RPG Interface" file="RPGInterface" main="Main" version="0.0.0" company="Level Up Labs"/>
 	
 	<window width="800" height="600" fps="30" orientation="landscape" fullscreen="false"/>
  	
@@ -20,5 +20,6 @@
 	<haxelib name="openfl-compatibility"/>
 	<haxelib name="firetongue"/>
 	<haxelib name="task"/>
-	<!--<haxelib name="flixel"/>-->
+	
+	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 </project>

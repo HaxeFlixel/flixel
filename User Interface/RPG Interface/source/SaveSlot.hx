@@ -579,12 +579,16 @@ class SaveSlot extends FlxUI
 		/*if(ptr_state != null)  {
 			ptr_state.onPlus(as3hx.Compat.parseInt(id));
 		}*/
+		#if debug
 		//trace("press plus " + id);
+		#end
 	}
 
 	function onPress() : Void {
-		/*trace("press " + id);
-		if(ptr_state != null)  {
+		#if debug
+		/*trace("press " + id);*/
+		#end
+		/*if(ptr_state != null)  {
 			ptr_state.onPress(as3hx.Compat.parseInt(id));
 		}*/
 	}

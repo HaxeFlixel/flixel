@@ -10,23 +10,14 @@ import openfl.Assets;
 /**
  * @author Lars Doucet
  */
-
 class State_Title extends FlxStateX
 {
-	
-	
 	override public function create():Void
 	{
-		#if !neko
 		FlxG.cameras.bgColor = 0xff131c1b;
-		#else
-		FlxG.cameras.bgColor = {rgb: 0x131c1b, a: 0xff};
-		#end		
-		
 		FlxG.log.redirectTraces = false;
 		FlxG.mouse.show();		
-		//FlxG.mouse.useSystemCursor = true;
-	
+		
 		if (Main.tongue == null) {
 			Main.tongue = new FireTongueEx();
 			Main.tongue.init("en-US");
