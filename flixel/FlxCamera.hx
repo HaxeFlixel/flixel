@@ -16,6 +16,9 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.loaders.CachedGraphics;
+import Math;
+import flash.utils.ByteArray;
+import flash.Memory;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -182,6 +185,40 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to render buffer to screen space.
 	 */
 	private var _flashPoint:Point;
+	
+	
+	
+	/**
+	 * Internal, for custom bitmap blending, ByteArray that stores the bytes of the blending bitmap.
+	 */
+	private var _fxCustomBmpBytes:ByteArray;
+	/**
+	 * Internal, for custom bitmap blending, ByteArray that stores:
+		 * bytes of the current buffer  (0 -> _fxCustomBuffSize - 1)
+		 * bytes of the blending bitmap (_fxCustomBuffSize -> _fxCustomBuffSize + _fxCustomBmpSize - 1)
+	 */
+	private var _fxCustomPixels:ByteArray;
+	/**
+	 * Internal, for custom bitmap blending, stores an integer corresponding to a predetermined blend mode, or zero for no blending.
+	 */
+	//TODO: change to read only
+	public var fxCustomBlendMode:Int;
+	/**
+	 * Internal, for custom bitmap blending, stores size in bytes of custom bitmap pixel data.
+	 */
+	private var _fxCustomBmpSize:Int;
+	/**
+	 * Internal, for custom bitmap blending, dimensions of custom blending bitmap.
+	 */
+	private var _fxCustomBmpRect:Rectangle;
+	/**
+	 * Internal, for custom bitmap blending, stores size in bytes of camera display buffer pixel data.
+	 */
+	private var _fxCustomBuffSize:Int;
+	
+	private var _first:Bool = true;
+	
+	
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -468,6 +505,14 @@ class FlxCamera extends FlxBasic
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
+		// debug set to 1, live set to 0 ******************************************************
+		// TODO: undo any debug changes
+		fxCustomBlendMode = 0;
+		_fxCustomBmpBytes = new ByteArray();
+		_fxCustomPixels = new ByteArray();
+		_fxCustomBmpSize = 0;
+		rebuildBlendByteArrays();
+			
 		_fxFlashColor = FlxColor.TRANSPARENT;
 		_fxFlashDuration = 0.0;
 		_fxFlashComplete = null;
@@ -538,6 +583,12 @@ class FlxCamera extends FlxBasic
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
+		_fxCustomBmpBytes.clear();
+		_fxCustomBmpBytes = null;
+		_fxCustomPixels.clear();
+		_fxCustomPixels = null;
+		_fxCustomBmpSize = 0;
+		fxCustomBlendMode = 0;
 		#if flash
 		if (_fill != null)
 		{
@@ -840,6 +891,59 @@ class FlxCamera extends FlxBasic
 	}
 	
 	/**
+	 * Blend a bitmap image with the camera display.
+	 * @param	bmp         The bitmap image to blend with the camera's buffer.
+	 * @param	blendMode   Which of the available blending modes to use.
+	 * @param	?targetRect	(To be implemented.) The region of the cameras FOV to apply the blend to (defaults to entire buffer).
+	 */
+	public function blend( bmp:BitmapData, blendMode:Int, ?targetRect:Rectangle ):Void
+	{
+		_fxCustomBmpSize = bmp.width * bmp.height * 4;
+		_fxCustomBmpRect = bmp.rect;
+		
+		// write pizels to bytearray
+		_fxCustomBmpBytes = bmp.getPixels(_fxCustomBmpRect);
+		
+		//FlxG.log.add(fxCustomBlendMode, _fxCustomBmpSize, _fxCustomBmpRect, _fxCustomBmpBytes.length );
+		
+		fxCustomBlendMode = blendMode;
+		rebuildBlendByteArrays();
+	}
+
+	/**
+	 * Stop any bitmap blending that may be active.
+	 */
+	public function stopBlend():Void
+	{
+		fxCustomBlendMode = _fxCustomBmpSize = 0;
+		_fxCustomBmpBytes.clear();
+	}
+	
+	/**
+	 * Rebuild the byte array(s) used by custom bitmap bitmap blending.
+	 */
+	//TODO: making assumption that if I call this at the end of the set_width and set_height functions 
+	//      the buffer will have been resized already by super cal or something. Need to verify.
+	private function rebuildBlendByteArrays():Void
+	{
+		_fxCustomBuffSize = buffer.width * buffer.height * 4; // 32bits integer = 4 bytes
+		//flixel.FlxG.log.add("size buff, bmp: ", _fxCustomBuffSize, _fxCustomBmpSize);
+		// Set the virtual memory space we'll use
+		// CPP does not support setting the length property directly
+		var newlength:Int = _fxCustomBuffSize + _fxCustomBmpSize;
+		#if (cpp) _fxCustomPixels.setLength(newlength);
+		#else _fxCustomPixels.length = newlength; #end
+		// if we are blending rewrite the pixel data into correct place
+		if (fxCustomBlendMode > 0) {
+			_fxCustomPixels.position = _fxCustomBuffSize;
+			_fxCustomPixels.writeBytes(_fxCustomBmpBytes);
+		}
+		//flixel.FlxG.log.add("length buffer: ", _fxCustomPixels.length);
+		// (re)Select the memory space
+			Memory.select(_fxCustomPixels);
+	}
+	
+	/**
 	 * The screen is filled with this color and gradually returns to normal.
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the flash to fade.
@@ -925,6 +1029,7 @@ class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
+		fxCustomBlendMode = 0;
 		_flashSprite.x = x + _flashOffsetX;
 		_flashSprite.y = y + _flashOffsetY;
 	}
@@ -1145,9 +1250,128 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal helper function, handles the actual drawing of all the special effects.
 	 */
+	//TODO: inline help perf at all?
 	public function drawFX():Void
 	{
+		//For flash and fade fx
 		var alphaComponent:Float;
+		
+		//For later restriction of blend effect: change source of rect (to be implemented)
+		var bufferRect:Rectangle = buffer.rect;
+		var bufferWidth:Int = buffer.width;
+		var pixbuf:Int;
+		var a:Int;
+		var r:Int;
+		var g:Int;
+		var b:Int;
+		var pixbmp:Int;
+		var abmp:Int;
+		var rbmp:Int;
+		var gbmp:Int;
+		var bbmp:Int;
+		var rres:Int;
+		var gres:Int;
+		var bres:Int;
+			
+		//Process custom effect from bitmap onto the buffer
+		//based in part on http://stackoverflow.com/questions/10157787/haxe-nme-fastest-method-for-per-pixel-bitmap-manipulation
+			//TODO: allow multiple blend modes
+			//not sure about the following:
+			//TODO: allow for source and target rectangles, so we could modify to apply only part of source bitmap to only part of camera field - may not be all that useful, since you can use multiple cameras instead
+			//TODO: then allow for multiple effects per camera, each with their own bmp, source rect, target rect, blend mode - may not be acceptable performance-wise
+		if(fxCustomBlendMode > 0 )
+		{
+			var bufferZoneWidth:Int = Std.int(Math.min(buffer.width, _fxCustomBmpRect.width));
+			var bufferZoneHeight:Int = Std.int(Math.min(buffer.height, _fxCustomBmpRect.height));
+			var bmpWidth:Int = Std.int(_fxCustomBmpRect.width);
+			
+			// write buffer to bytearray -> this needs to happen in drawFX
+			_fxCustomPixels.position = 0;
+			_fxCustomPixels.writeBytes( buffer.getPixels(bufferRect) ); // changed from assign, not sure if that's going to work.
+			
+			// select blend operation and process buffer, needs to be outside loops for efficiency
+			switch( fxCustomBlendMode )
+			{
+				// Multiply
+				case 1:
+					
+					// for each pixel in bmp that has a corresponding pixel in buffer
+					for ( y in 0...bufferZoneHeight)
+					{
+						for ( x in 0...bufferZoneWidth)
+						{
+							// Color is in BGRA mode, nme.Memory can only be used in little endian mode.
+							// If testing with FlxColor or 0x.... will need to switch order of bytes pulled for color channels
+							
+							// get buffer vals
+							pixbuf = Memory.getI32((y * bufferWidth + x) * 4);
+							a = pixbuf & 0xFF; // keep buffer opacity
+							
+							// no point multiplying a transparent pixel, it will still be transparent
+							if (a == 0) continue;
+							
+							r = pixbuf >>>  8 & 0xFF;
+							g = pixbuf >>> 16 & 0xFF;
+							b = pixbuf >>> 24 & 0xFF;
+							
+							// no point multiplying black, it can't get any darker
+							// TODO: which is the more efficient?
+							//if (r == 0 && g == 0 && b == 0) continue;
+							if (r + g + b == 0) continue;
+							
+							// get bmp vals
+							pixbmp = Memory.getI32((y * bmpWidth + x) * 4 + _fxCustomBuffSize);
+							abmp = pixbmp & 0xFF; // keep buffer opacity
+							
+							// no point multiplying with a transparent pixel, it won't change anything
+							if (abmp == 0) continue;
+								
+							rbmp = pixbmp >>>  8 & 0xFF;
+							gbmp = pixbmp >>> 16 & 0xFF;
+							bbmp = pixbmp >>> 24 & 0xFF;
+							
+							// no point multiplying with white, it won't change anything -> this is only useful if you might have white in your bmp
+							// maybe have optimization flags you can set? That's getting pretty specific for core functionality though.
+							// TODO: which is the more efficient?
+							//if (rbmp == 255 && gbmp == 255 && bbmp == 255) continue;
+							if (rbmp + gbmp + bbmp == 765) continue;
+							
+							// create full blend color, multiply, then divide (approximated, /256 not /255)
+							rbmp *= r;
+							rbmp >>= 8;
+							gbmp *= g;
+							gbmp >>= 8;
+							bbmp *= b;
+							bbmp >>= 8;
+							
+							// get original color component based on "1 - strength" of bmp alpha
+							rres = (255 - abmp) * r;
+							rres >>= 8;
+							gres = (255 - abmp) * g;
+							gres >>= 8;
+							bres = (255 - abmp) * b;
+							bres >>= 8;
+							// get blend color component based on strength of bmp alpha
+							rbmp = abmp * rbmp;
+							rbmp >>= 8;
+							gbmp = abmp * gbmp;
+							gbmp >>= 8;
+							bbmp = abmp * bbmp;
+							bbmp >>= 8;
+							// add together to get "true" result
+							rres += rbmp + 1;
+							gres += gbmp + 1;
+							bres += bbmp + 1;
+							
+							// set combined result color using alpha of original source
+							Memory.setI32((y * bufferWidth + x) * 4, a | rres << 8 | gres << 16 | (bres & 0xFF) << 24);
+						}
+					}
+			}
+			// output the blended pixels back into the buffer
+			_fxCustomPixels.position = 0;
+			buffer.setPixels(bufferRect, _fxCustomPixels);
+		}
 		
 		//Draw the "flash" special effect onto the buffer
 		if(_fxFlashAlpha > 0.0)
@@ -1208,6 +1432,7 @@ class FlxCamera extends FlxBasic
 			}
 			#end
 		}
+		if( fxCustomBlendMode > 0) rebuildBlendByteArrays();
 		return val;
 	}
 	
@@ -1239,6 +1464,7 @@ class FlxCamera extends FlxBasic
 			}
 			#end
 		}
+		if( fxCustomBlendMode > 0) rebuildBlendByteArrays();
 		return val;
 	}
 	
