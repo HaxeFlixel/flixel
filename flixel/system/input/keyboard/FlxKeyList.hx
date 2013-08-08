@@ -1,4 +1,5 @@
 package flixel.system.input.keyboard;
+import flixel.FlxG;
 
 /**
  * A helper class for keyboard input.
@@ -103,4 +104,24 @@ class FlxKeyList
 	public var DOWN			(get, never):Bool;	inline function get_DOWN()			{ return check("DOWN"); 		}
 	public var LEFT			(get, never):Bool;	inline function get_LEFT()			{ return check("LEFT"); 		}
 	public var RIGHT		(get, never):Bool;	inline function get_RIGHT()			{ return check("RIGHT"); 		}
+	
+	public var ANY(get, never):Bool; 
+	
+	// So we can get access to _keyList
+	@:access(flixel.system.input.keyboard.FlxKeyboard._keyList)
+	private function get_ANY():Bool			
+	{ 
+		for (key in FlxG.keyboard._keyList)
+		{
+			if (key != null)
+			{
+				if (check(key.name))
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 }

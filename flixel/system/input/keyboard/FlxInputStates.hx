@@ -213,23 +213,6 @@ class FlxInputStates
 	{
 		return _keyLookup.get(KeyName);
 	}
-	
-	/**
-	 * Check to see if any keys are pressed right now.
-	 * 
-	 * @return	Whether any keys are currently pressed.
-	 */
-	public function anyKey():Bool
-	{
-		for (key in _keyList)
-		{
-			if (key != null && key.current > FlxKey.RELEASED)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * Get an Array of FlxMapObjects that are in a pressed state
