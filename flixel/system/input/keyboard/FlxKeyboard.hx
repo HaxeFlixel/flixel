@@ -29,11 +29,6 @@ class FlxKeyboard implements IFlxInput
 	 */
 	private var _keyLookup:Map<String, Int>;
 	/**
-	 * A map that stores a Boolean for each key, 
-	 * indicating whether it has been pressed or not.
-	 */
-	private var _keyBools:Map<String, Bool>;
-	/**
 	 * An array of FlxKey objects.
 	 */
 	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY) // Need to access the var there
@@ -42,7 +37,6 @@ class FlxKeyboard implements IFlxInput
 	public function new()
 	{
 		_keyLookup = new Map<String, Int>();
-		_keyBools = new Map<String, Bool>();
 		
 		_keyList = new Array<FlxKey>();
 		FlxArrayUtil.setLength(_keyList, TOTAL);
@@ -186,7 +180,6 @@ class FlxKeyboard implements IFlxInput
 		{
 			if (key != null)
 			{
-				_keyBools.set(key.name, false);
 				key.current = FlxKey.RELEASED;
 				key.last = FlxKey.RELEASED;
 			}
@@ -205,33 +198,9 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	public function anyPressed(KeyArray:Array<Dynamic>):Bool 
+	inline public function anyPressed(KeyArray:Array<Dynamic>):Bool 
 	{ 
-		if (KeyArray == null)
-		{
-			return false;
-		}
-		
-		for (key in KeyArray)
-		{
-			key = Std.string(key).toUpperCase();
-			
-			if (_keyBools.exists(key))
-			{
-				if (_keyBools.get(key))
-				{
-					return true;
-				}
-			}
-			#if !FLX_NO_DEBUG
-			else
-			{
-				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
-			}
-			#end
-		}
-		
-		return false; 
+		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
 	}
 	
 	/**
@@ -246,34 +215,9 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	public function anyJustPressed(KeyArray:Array<Dynamic>):Bool 
+	inline public function anyJustPressed(KeyArray:Array<Dynamic>):Bool 
 	{ 
-		if (KeyArray == null)
-		{
-			return false;
-		}
-		
-		for (key in KeyArray)
-		{
-			key = Std.string(key).toUpperCase();
-			
-			var k : FlxKey = _keyList[_keyLookup.get(key)];
-			if (k != null)
-			{
-				if (k.current == FlxKey.JUST_PRESSED)
-				{
-					return true;
-				}
-			}
-			#if !FLX_NO_DEBUG
-			else
-			{
-				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
-			}
-			#end
-		}
-		
-		return false;
+		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
 	}
 	
 	/**
@@ -288,8 +232,19 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	public function anyJustReleased(KeyArray:Array<Dynamic>):Bool 
+	inline public function anyJustReleased(KeyArray:Array<Dynamic>):Bool 
 	{ 
+		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
+	}
+	
+	/**
+	 * Helper function to check the status of an array of keys
+	 * @param	KeyArray	An array of keys as Strings
+	 * @param	Status		The key state to check for
+	 * @return	Whether at least one of the keys has the specified status
+	 */
+	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
+	{
 		if (KeyArray == null)
 		{
 			return false;
@@ -297,12 +252,13 @@ class FlxKeyboard implements IFlxInput
 		
 		for (key in KeyArray)
 		{
+			// Also make lowercase keys work, like "space" or "sPaCe"
 			key = Std.string(key).toUpperCase();
 			
-			var k : FlxKey = _keyList[_keyLookup.get(key)];
+			var k:FlxKey = _keyList[_keyLookup.get(key)];
 			if (k != null)
 			{
-				if (k.current == FlxKey.JUST_RELEASED)
+				if (k.current == Status)
 				{
 					return true;
 				}
@@ -367,11 +323,6 @@ class FlxKeyboard implements IFlxInput
 			o = Record[i++];
 			o2 = _keyList[o.code];
 			o2.current = o.value;
-			
-			if (o.value > FlxKey.RELEASED)
-			{
-				_keyBools.set(o2.name, true);
-			}
 		}
 	}
 	
@@ -411,7 +362,6 @@ class FlxKeyboard implements IFlxInput
 	public function destroy():Void
 	{
 		_keyList = null;
-		_keyBools = null;
 		_keyLookup = null;
 	}
 	
@@ -573,8 +523,6 @@ class FlxKeyboard implements IFlxInput
 					obj.current = FlxKey.RELEASED;
 				}
 			}
-			
-			_keyBools.set(obj.name, Down);
 		}
 	}
 	
