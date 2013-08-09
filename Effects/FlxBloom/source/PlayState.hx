@@ -45,7 +45,7 @@ class PlayState extends FlxState
 		_fx = new FlxSprite();
 		_fx.makeGraphic(Math.floor(FlxG.width / _bloom), Math.floor(FlxG.height / _bloom), 0, true);
 		// Zero out the origin so scaling goes from top-left, not from center
-		_fx.setOriginToCorner();
+		_fx.origin.set();
 		// Scale it up to be the same size as the screen again
 		_fx.scale.set(_bloom, _bloom);
 		// Set AA to true for maximum blurry
