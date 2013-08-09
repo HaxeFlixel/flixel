@@ -81,7 +81,7 @@ class LogFrontEnd
 		#if !FLX_NO_DEBUG
 		if (FlxG.game.debugger == null)
 		{
-			trace(Data);
+			_oldTrace(Data);
 			return;
 		}
 		
