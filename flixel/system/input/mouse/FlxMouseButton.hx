@@ -141,8 +141,8 @@ class FlxMouseButton
 	 */
 	inline public function reset():Void
 	{
-		current = 0;
-		last = 0;
+		current = RELEASED;
+		last = RELEASED;
 	}
 	
 	/**
@@ -155,7 +155,7 @@ class FlxMouseButton
 	 * Check to see if the button was just pressed.
 	 * @return 	Whether the button was just pressed.
 	 */
-	inline public function justPressed():Bool { return (current == JUST_PRESSED || current == JUST_RELEASED); }
+	inline public function justPressed():Bool { return (current == JUST_PRESSED || current == FAST_PRESS_RELEASE); }
 
 	/**
 	 * Check to see if the button was just released.
