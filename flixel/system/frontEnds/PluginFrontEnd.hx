@@ -5,9 +5,7 @@ import flixel.plugin.FlxPlugin;
 import flixel.plugin.PathManager;
 import flixel.plugin.TimerManager;
 import flixel.plugin.TweenManager;
-import flixel.plugin.JobsManager;
 import flixel.tweens.FlxTween;
-import flixel.system.FlxJob;
 import flixel.util.FlxPath;
 import flixel.util.FlxTimer;
 
@@ -29,7 +27,6 @@ class PluginFrontEnd
 		add(FlxTimer.manager = new TimerManager());
 		add(FlxTween.manager = new TweenManager());
 		add(FlxPath.manager = new PathManager());
-		add(FlxJob.manager = new JobsManager());
 	}
 	
 	/**

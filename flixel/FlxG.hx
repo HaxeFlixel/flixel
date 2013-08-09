@@ -205,9 +205,6 @@ class FlxG
 	 */
 	static public var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	
-	// TEMP
-	static public var jobs(default, null):JobsManager;
-	
 	/**
 	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * sounds and other things to manage or <code>play()</code> sounds.
