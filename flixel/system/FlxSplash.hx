@@ -63,10 +63,8 @@ class FlxSplash extends FlxState
 		_text.defaultTextFormat = dtf;
 		_text.text = "HaxeFlixel";
 		_text.y = _sprite.y + 130;
-		_text.alpha = 0;
 		FlxG.stage.addChild(_text);
 		
-		FlxTween.multiVar(_text, { alpha: 1 }, 1 );
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
 	}
 	
