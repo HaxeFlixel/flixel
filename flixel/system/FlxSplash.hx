@@ -37,7 +37,9 @@ class FlxSplash extends FlxState
 		FlxG.cameras.bgColor = FlxColor.BLACK;
 		FlxG.fixedTimestep = false;
 		FlxG.autoPause = false;
-		FlxG.keyboard.enabled = false;
+		#if !FLX_NO_KEYOARD
+			FlxG.keyboard.enabled = false;
+		#end
 		
 		_times = [0.041, 0.184, 0.334, 0.495, 0.636];
 		_colors = [0x00b922, 0xffc132, 0xf5274e, 0x3641ff, 0x04cdfb];
@@ -148,7 +150,9 @@ class FlxSplash extends FlxState
 	{
 		FlxG.fixedTimestep = true;
 		FlxG.autoPause = true;
-		FlxG.keyboard.enabled = true;
+		#if !FLX_NO_KEYOARD
+			FlxG.keyboard.enabled = true;
+		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(Type.createInstance(_nextState, []));

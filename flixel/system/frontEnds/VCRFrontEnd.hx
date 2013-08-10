@@ -51,7 +51,9 @@ class VCRFrontEnd
 		timeout = Std.int(Timeout * 1000);
 		replayCallback = Callback;
 		FlxG.game.replayRequested = true;
-		FlxG.keyboard.enabled = false;
+		#if !FLX_NO_KEYBOARD
+			FlxG.keyboard.enabled = false;
+		#end
 	}
 
 	/**
@@ -82,13 +84,15 @@ class VCRFrontEnd
 	inline public function stopReplay():Void
 	{
 		FlxG.game.replaying = false;
+		FlxG.inputs.reset();
 		
 		#if !FLX_NO_DEBUG
 			FlxG.game.debugger.vcr.stopped();
 		#end
 		
-		FlxG.inputs.reset();
-		FlxG.keyboard.enabled = true;
+		#if !FLX_NO_KEYBOARD
+			FlxG.keyboard.enabled = true;
+		#end
 	}
 		
 	/**
