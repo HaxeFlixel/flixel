@@ -8,6 +8,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.group.IFlxSprite;
 import flixel.system.FlxAnim;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
@@ -27,7 +28,7 @@ import openfl.display.Tilesheet;
  * The main "game object" class, the sprite is a <code>FlxObject</code>
  * with a bunch of graphics options and abilities, like animation and stamping.
  */
-class FlxSprite extends FlxObject
+class FlxSprite extends FlxObject implements IFlxSprite
 {
 	/**
 	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>, <code>UP</code>, 

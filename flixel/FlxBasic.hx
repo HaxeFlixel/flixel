@@ -1,12 +1,13 @@
 package flixel;
 
+import flixel.group.IFlxBasic;
 import flixel.util.FlxStringUtil;
 
 /**
  * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 
  * <code>FlxGroup</code> extend this class. Has no size, position or graphical data.
  */
-class FlxBasic
+class FlxBasic implements IFlxBasic
 {
 	#if !FLX_NO_DEBUG
 	static public var _ACTIVECOUNT:Int = 0;

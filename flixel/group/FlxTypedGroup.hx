@@ -1,7 +1,6 @@
 package flixel.group;
 
 import flixel.FlxG;
-import flixel.FlxBasic;
 import flixel.util.FlxArrayUtil;
 
 /**
@@ -9,7 +8,7 @@ import flixel.util.FlxArrayUtil;
  * NOTE: Although <code>FlxGroup</code> extends <code>FlxBasic</code>, it will not automatically
  * add itself to the global collisions quad tree, it will only add its members.
  */
-class FlxTypedGroup<T:FlxBasic> extends FlxBasic
+class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 {	
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.
@@ -487,7 +486,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function getFirstExisting():T
 	{
 		var i:Int = 0;
-		var basic:FlxBasic = null;
+		var basic:IFlxBasic = null;
 		
 		while (i < length)
 		{
@@ -511,7 +510,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function getFirstAlive():T
 	{
 		var i:Int = 0;
-		var basic:FlxBasic = null;
+		var basic:IFlxBasic = null;
 		
 		while (i < length)
 		{
@@ -535,7 +534,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function getFirstDead():T
 	{
 		var i:Int = 0;
-		var basic:FlxBasic = null;
+		var basic:IFlxBasic = null;
 		
 		while (i < length)
 		{
