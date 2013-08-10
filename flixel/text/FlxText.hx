@@ -508,16 +508,21 @@ class FlxText extends FlxSprite
 				updateFormat(_format);
 			}
 			
-			#if flash
 			//Finally, update the visible pixels
 			if ((framePixels == null) || (framePixels.width != _cachedGraphics.bitmap.width) || (framePixels.height != _cachedGraphics.bitmap.height))
 			{
+				if (framePixels != null)
+					framePixels.dispose();
+				
 				framePixels = new BitmapData(_cachedGraphics.bitmap.width, _cachedGraphics.bitmap.height, true, 0);
 			}
 			
 			framePixels.copyPixels(_cachedGraphics.bitmap, _flashRect, _flashPointZero);
-			#end
 			
+			if (_useColorTransform) 
+			{
+				framePixels.colorTransform(_flashRect, _colorTransform);
+			}
 		#if !flash
 			origin.set(frameWidth * 0.5, frameHeight * 0.5);
 		}
