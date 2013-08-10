@@ -22,12 +22,12 @@ class Window extends Sprite
 	/**
 	 * The background color of the window.
 	 */
-	inline static public var BG_COLOR:Int = 0x7f7f7f7f;
+	inline static public var BG_COLOR:Int = 0xDD5F5F5F;
 	/**
 	 * The color used for the "handle" at the top of the window.
 	 */
-	inline static public var TOP_COLOR:Int = 0x7f000000;
-	
+	inline static public var TOP_COLOR:Int = 0xAA000000;
+
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
 	 */
@@ -106,7 +106,7 @@ class Window extends Sprite
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
 		super();
 		
@@ -128,10 +128,10 @@ class Window extends Sprite
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
 		addChild(_shadow);
-		_background = new Bitmap(new BitmapData(1, 1, true, BGColor));
+		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
 		_background.y = 15;
 		addChild(_background);
-		_header = new Bitmap(new BitmapData(1, 15, true, TopColor));
+		_header = new Bitmap(new BitmapData(1, 15, true, TOP_COLOR));
 		addChild(_header);
 		
 		_title = new TextField();

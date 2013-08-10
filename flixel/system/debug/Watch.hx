@@ -37,9 +37,9 @@ class Watch extends Window
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
-		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
+		super(Title, Width, Height, Resizable, Bounds);
 		
 		_names = new Sprite();
 		_names.x = 2;

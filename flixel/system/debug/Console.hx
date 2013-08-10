@@ -64,9 +64,9 @@ class Console extends Window
 	 * @param BGColor		What color the window background should be, default is gray and transparent.
 	 * @param TopColor		What color the window header bar should be, default is black and transparent.
 	 */	
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0xAA000000, TopColor:Int = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{	
-		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
+		super(Title, Width, Height, Resizable, Bounds);
 		
 		cmdFunctions = new Map<String, Dynamic>();
 		cmdObjects = new Map<String, Dynamic>();
@@ -92,7 +92,7 @@ class Console extends Window
 		_input = new TextField();
 		_input.type = TextFieldType.INPUT;
 		_input.embedFonts = true;
-		_input.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 14, 0xFFFFFF, false, false, false);
+		_input.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 13, 0xFFFFFF, false, false, false);
 		_input.text = defaultText;
 		_input.width = _width - 4;
 		_input.height = _height - 15;

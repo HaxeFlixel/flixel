@@ -116,8 +116,10 @@ class FlxDebugger extends Sprite
 		hasMouse = false;
 		_screen = new Point(Width, Height);
 		
+		var topHeight:Int = 18;
+		
 		#if (flash || js)
-		addChild(new Bitmap(new BitmapData(Std.int(Width), 15, true, 0x7f000000)));
+		addChild(new Bitmap(new BitmapData(Std.int(Width), topHeight, true, Window.TOP_COLOR)));
 		#else
 		var bg:Sprite = new Sprite();
 		bg.graphics.beginFill(0x000000, 0x7f / 255);
@@ -127,19 +129,19 @@ class FlxDebugger extends Sprite
 		#end
 		
 		var txt:TextField = new TextField();
-		txt.x = 2;
+		txt.x = 3;
 		txt.width = 200;
 		txt.height = 20;
 		txt.selectable = false;
 		txt.multiline = false;
 		txt.embedFonts = true;
 		txt.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
-		var str:String = FlxG.libraryName + " [debug]";
+		var str:String = FlxG.libraryName;
 		txt.text = str;
 		addChild(txt);
 		
-		_gutter = 8;
-		var screenBounds:Rectangle = new Rectangle(_gutter, 15 + _gutter / 2, _screen.x - _gutter * 2, _screen.y - _gutter * 1.5 - 15);
+		_gutter = 2;
+		var screenBounds:Rectangle = new Rectangle(_gutter, topHeight + _gutter / 2, _screen.x - _gutter * 2, _screen.y - _gutter * 1.5 - topHeight);
 		
 		log = new Log("log", 0, 0, true, screenBounds);
 		addChild(log);
