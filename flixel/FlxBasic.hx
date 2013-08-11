@@ -1,7 +1,16 @@
 package flixel;
 
-import flixel.group.IFlxBasic;
 import flixel.util.FlxStringUtil;
+
+/**
+ *  This class is for <code>FlxTypedGroup</code> to work with interface instead of <code>FlxBasic</code>, which is needed
+ *  so that <code>FlxSpriteGroup</code> could extend <code>FlxTypedGroup</code> and be typed with <code>IFlxSprite</code>
+ **/
+interface IFlxBasic {
+    public var exists:Bool;
+    public var alive:Bool;
+}
+
 
 /**
  * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 

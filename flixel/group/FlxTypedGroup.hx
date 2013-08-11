@@ -1,6 +1,7 @@
 package flixel.group;
 
 import flixel.FlxG;
+import flixel.FlxBasic;
 import flixel.util.FlxArrayUtil;
 
 /**
