@@ -73,11 +73,21 @@ class FlxObject extends FlxBasic
 	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
-	public var x:Float;
+    public var x(default, set):Float;
+
+   	public function set_x(NewX:Float):Float
+   	{
+   		return x = NewX;
+   	}
 	/**
 	 * Y position of the upper left corner of this object in world space.
 	 */
-	public var y:Float;
+    public var y(default, set):Float;
+
+   	public function set_y(NewY:Float):Float
+   	{
+   		return y = NewY;
+   	}
 	/**
 	 * Whether an object will move/alter position after a collision.
 	 */
