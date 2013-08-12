@@ -40,6 +40,32 @@ class FlxMath
 	}
 	
 	/**
+	 * Returns linear interpolated value between Max and Min numbers
+	 *
+	 * @param Min 		Lower bound.
+	 * @param Max	 	Higher bound.
+	 * @param Ratio 	Defines which number is closer to desired value.
+	 * @return 			Interpolated number.
+	 */
+	inline static public function lerp(Min:Float, Max:Float, Ratio:Float):Float
+	{
+		return Min + Ratio * (Max - Min);
+	}
+	
+	/**
+	 * Checks if number is in defined range.
+	 *
+	 * @param Value		Number to check.
+	 * @param Min		Lower bound of range.
+	 * @param Max 		Higher bound of range.
+	 * @return Returns true if Value is in range.
+	 */
+	inline static public function inBounds(Value:Float, Min:Float, Max:Float):Bool
+	{
+		return ((Value > Min) && (Value < Max));
+	}
+	
+	/**
 	 * A tween-like function that takes a starting velocity
 	 * and some other factors and returns an altered velocity.
 	 * @param	Velocity		Any component of velocity (e.g. 20).
