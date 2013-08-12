@@ -112,7 +112,7 @@ class FlxMouseButton
 	 * Internal event handler for input and focus.
 	 * @param FlashEvent Flash mouse event.
 	 */
-	public function onUp(FlashEvent:MouseEvent):Void
+	public function onUp(?FlashEvent:MouseEvent):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 

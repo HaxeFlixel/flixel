@@ -1,5 +1,6 @@
 package flixel.system.input.mouse;
 
+import flash.events.Event;
 import flash.Lib;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -118,6 +119,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		Lib.current.stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
 		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
 		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
+		Lib.current.stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
 		#end
 		
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -140,6 +142,19 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_wheelUsed = true;
 		wheel = FlashEvent.delta;
 	}
+	
+	#if (FLX_MOUSE_ADVANCED && !js)
+	/**
+	 * We're detecting the mouse leave event to prevent a bug where `pressed` remains true 
+	 * for the middle and right mouse button when pressed and dragged outside the window.
+	 * @param 	E 	Flash event.
+	 */
+	private function onMouseLeave(E:Event):Void
+	{
+		_rightButton.onUp();
+		_middleButton.onUp();
+	}
+	#end
 
 	/**
 	 * Clean up memory.
