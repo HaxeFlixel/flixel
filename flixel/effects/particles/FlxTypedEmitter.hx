@@ -3,6 +3,7 @@ package flixel.effects.particles;
 import flash.display.BlendMode;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
@@ -17,7 +18,7 @@ import flixel.util.FlxRandom;
  * It is easy to use and relatively efficient,
  * relying on <code>FlxGroup</code>'s RECYCLE POWERS.
  */
-class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
+class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxParticle>
 {
 	/**
 	 * The x position range of the emitter in world space.
@@ -112,7 +113,6 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	/**
 	 * Internal variable for tracking the class to create when generating particles.
 	 */
-	
 	private var _particleClass:Class<T>;
 	/**
 	 * Internal helper for deciding how many particles to launch.
@@ -231,7 +231,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 		}
 		
 		var randomFrame:Int;
-		var particle:FlxParticle;
+		var particle:T;
 		var i:Int = 0;
 		
 		while (i < Quantity)
@@ -407,7 +407,7 @@ class FlxTypedEmitter<T:FlxParticle> extends FlxTypedGroup<FlxParticle>
 	 */
 	public function emitParticle():Void
 	{
-		var particle:FlxParticle = recycle(cast _particleClass);
+		var particle:T = cast recycle(cast _particleClass);
 		particle.elasticity = bounce;
 		
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);

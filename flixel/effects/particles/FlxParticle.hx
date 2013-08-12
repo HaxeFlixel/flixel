@@ -12,7 +12,7 @@ import flixel.FlxSprite;
  * used to work with just any old sprite, it now requires a
  * <code>FlxParticle</code> based class.
 */
-class FlxParticle extends FlxSprite
+class FlxParticle extends FlxSprite implements IFlxParticle
 {
 	/**
 	 * How long this particle lives before it disappears.

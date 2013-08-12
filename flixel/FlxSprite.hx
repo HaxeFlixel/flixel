@@ -32,6 +32,8 @@ interface IFlxSprite extends IFlxBasic {
     public var x(default, set):Float;
     public var y(default, set):Float;
     public var alpha(default, set):Float;
+	
+	public function reset(X:Float, Y:Float):Void;
 }
 
 /**

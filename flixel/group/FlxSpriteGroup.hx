@@ -120,6 +120,23 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		_skipTransformChildren = false;
 	}
 	
+	public function reset(X:Float, Y:Float):Void
+	{
+		revive();
+		setPosition(X, Y);
+		
+		var sprite:IFlxSprite;
+		for (i in 0...length)
+		{
+			sprite = members[i];
+			
+			if (sprite != null)
+			{
+				sprite.reset(X, Y);
+			}
+		}
+	}
+	
 	/**
 	 * Handy function that allows you to quickly transform one property of sprites in this group at a time.
 	 * 

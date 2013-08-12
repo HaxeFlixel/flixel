@@ -1,5 +1,6 @@
 package flixel.effects.particles;
 
+import flixel.FlxSprite;
 import flixel.util.FlxRandom;
 
 /**
@@ -8,7 +9,7 @@ import flixel.util.FlxRandom;
  * This was inspired by the way Chevy Ray Johnston implemented his particle emitter in Flashpunk.
  * @author Dirk Bunk
  */
-class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle> 
+class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 {		
 	/**
 	 * 	Launch Direction.
@@ -74,7 +75,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 	 * @param	DistanceRange	Random amount to add to the particle's distance.
 	 * @param	LifespanRange	Random amount to add to the particle's duration.
 	 */
-	private function setParticleMotion(Particle:FlxParticle, Angle:Float, Distance:Float, AngleRange:Float = 0, DistanceRange:Float = 0):Void
+	private function setParticleMotion(Particle:T, Angle:Float, Distance:Float, AngleRange:Float = 0, DistanceRange:Float = 0):Void
 	{			
 		//set particle direction and speed
 		var a:Float = Angle + FlxRandom.float() * AngleRange;
@@ -126,7 +127,7 @@ class FlxTypedEmitterExt<T:FlxParticle> extends FlxTypedEmitter<FlxParticle>
 	 */
 	override public function emitParticle():Void
 	{
-		var particle:FlxParticle = recycle(cast _particleClass);
+		var particle:T = cast recycle(cast _particleClass);
 		particle.elasticity = bounce;
 		
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);

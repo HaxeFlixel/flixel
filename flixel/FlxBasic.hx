@@ -6,9 +6,29 @@ import flixel.util.FlxStringUtil;
  *  This class is for <code>FlxTypedGroup</code> to work with interface instead of <code>FlxBasic</code>, which is needed
  *  so that <code>FlxSpriteGroup</code> could extend <code>FlxTypedGroup</code> and be typed with <code>IFlxSprite</code>
  **/
-interface IFlxBasic {
-    public var exists:Bool;
+interface IFlxBasic 
+{
+	public var ID:Int;
+	public var exists:Bool;
     public var alive:Bool;
+	public var active:Bool;
+	public var visible:Bool;
+	public var cameras:Array<FlxCamera>;
+	#if !FLX_NO_DEBUG
+	public var ignoreDrawDebug:Bool;
+	#end
+	
+	public function destroy():Void;
+	public function update():Void;
+	public function draw():Void;
+	#if !FLX_NO_DEBUG
+	public function drawDebug():Void;
+	public function drawDebugOnCamera(?Camera:FlxCamera):Void;
+	#end
+	
+	public function kill():Void;
+	public function revive():Void;
+	public function toString():String;
 }
 
 
