@@ -8,6 +8,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.FlxBasic;
 import flixel.system.FlxAnim;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
@@ -24,10 +25,20 @@ import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
 /**
+ * The interface for properties of <code>FlxSprite</code>
+ * It makes possible to add <code>FlxSpriteGroup</code> to <code>FlxSpriteGroup</code>
+ **/
+interface IFlxSprite extends IFlxBasic {
+    public var x(default, set):Float;
+    public var y(default, set):Float;
+    public var alpha(default, set):Float;
+}
+
+/**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
  * with a bunch of graphics options and abilities, like animation and stamping.
  */
-class FlxSprite extends FlxObject
+class FlxSprite extends FlxObject implements IFlxSprite
 {
 	/**
 	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>, <code>UP</code>, 
