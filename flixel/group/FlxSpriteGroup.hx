@@ -1,6 +1,7 @@
 package flixel.group;
 
 import flixel.FlxSprite;
+import flixel.util.FlxPoint;
 
 /**
  * <code>FlxSpriteGroup</code> is a special <code>FlxGroup</code>
@@ -9,7 +10,68 @@ import flixel.FlxSprite;
  */
 class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 {
-	/**
+    /**
+     * This field is added to match se IFlxSprite structure, if it needs to update children todo: update scrollFactor for children
+     **/
+    public var scrollFactor:FlxPoint;
+
+    /**
+     * This field is added to match se IFlxSprite structure, if it needs to update children todo: update it for children
+     **/
+    public var angle(default, set):Float = 0;
+
+    private function set_angle(Value:Float):Float
+    {
+        return Value;//do nothing, if will be needed - set the value for all child sprites
+    }
+    /**
+     * This field is added to match se IFlxSprite structure, if it needs to update children todo: update it for children
+     **/
+    public var origin:FlxPoint;
+    /**
+     * This field is added to match se IFlxSprite structure, if it needs to update children todo: update it for children
+     **/
+    public var scale:FlxPoint;
+
+    /**
+     * This field is added to match se IFlxSprite structure, if it needs to update children todo: update it for children
+     **/
+    public var frame(default, set):Int;
+
+    private function set_frame(Frame:Int):Int
+    {
+    	return Frame; //do nothing, if will be needed - set the value for all child sprites
+    }
+    /**
+     * This field is added to match se IFlxSprite structure, if it needs to update children todo: update it for children
+     **/
+    public var facing(default, set):Int;
+    private function set_facing(Direction:Int):Int
+    {
+        return Direction;
+    }
+
+    @:isVar public var solid(get, set):Bool = false;
+
+   	private function get_solid():Bool
+   	{
+   		return solid;
+   	}
+
+   	private function set_solid(Solid:Bool):Bool
+   	{
+        return solid=Solid;
+   	}
+
+
+    /**
+     * This field is added to match se IFlxSprite structure, if it needs to update children todo: update it for children
+     **/
+    public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite {
+        return null;
+    }
+
+    /**
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
 	private var _skipTransformChildren:Bool = false;

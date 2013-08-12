@@ -214,7 +214,7 @@ class FlxTrail extends FlxSpriteGroup
 			}
 
 			// Now we need to update the all the Trailsprites' values
-			var trailSprite:FlxSprite;
+			var trailSprite:IFlxSprite;
 			
 			for (i in 0..._recentPositions.length) 
 			{
@@ -345,15 +345,18 @@ class FlxTrail extends FlxSpriteGroup
 	/**
 	 * Determines whether trailsprites are solid or not. False by default.
 	 */
-	public var solid(default, set):Bool = false;
-	
-	private function set_solid(Value:Bool):Bool
+    override private function get_solid():Bool
+   	{
+   		return super.get_solid();
+   	}
+
+    override private function set_solid(Value:Bool):Bool
 	{
 		for (i in 0..._trailLength)
 		{
 			members[i].solid = Value; 
 		}
 		
-		return solid = Value;
+		return super.set_solid(Value);
 	}
 }

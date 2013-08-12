@@ -32,6 +32,17 @@ interface IFlxSprite extends IFlxBasic {
     public var x(default, set):Float;
     public var y(default, set):Float;
     public var alpha(default, set):Float;
+
+    public var scrollFactor:FlxPoint;   //This field is added so that FlxSpriteGroup could be used in FlxSlider
+
+    //These members are added so that FlxSpriteGroup could be used in FlxTrail:
+    public var angle(default, set):Float;
+    public var origin:FlxPoint;
+    public var scale:FlxPoint;
+    public var frame(default, set):Int;
+    public var facing(default, set):Int;
+    public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite;
+    public var solid(get, set):Bool;
 }
 
 /**

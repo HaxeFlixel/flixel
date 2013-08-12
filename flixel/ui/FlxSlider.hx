@@ -221,7 +221,7 @@ class FlxSlider extends FlxSpriteGroup
 		add(maxLabel);
 		
 		// No srolling for UI components
-		transformChildren(function (s:FlxSprite, v:Dynamic) { s.scrollFactor.set(0, 0); } );
+		transformChildren(function (s:IFlxSprite, v:Dynamic) { s.scrollFactor.set(0, 0); } );
 	}
 
 	override public function update():Void
