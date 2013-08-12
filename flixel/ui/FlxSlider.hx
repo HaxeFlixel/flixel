@@ -12,7 +12,6 @@ import flixel.util.FlxSpriteUtil;
 
 /**
  * A slider GUI element for float and integer manipulation. 
- * 
  * @author Gama11
  */
 class FlxSlider extends FlxSpriteGroup
@@ -188,29 +187,35 @@ class FlxSlider extends FlxSpriteGroup
 		// Creating the "body" of the slider
 		body = new FlxSprite(_offset.x, _offset.y);
 		body.makeGraphic(_width, _height, 0);
+		body.scrollFactor.set();
 		FlxSpriteUtil.drawLine(body, 0, _height / 2, _width, _height / 2, _color, _thickness); 
 		
 		handle = new FlxSprite(_offset.x, _offset.y);
 		handle.makeGraphic(_thickness, _height, _handleColor);
+		handle.scrollFactor.set();
 		
 		// Creating the texts
 		nameLabel = new FlxText(_offset.x, 0, _width, varString);
 		nameLabel.alignment = "center";
 		nameLabel.color = _color;
+		nameLabel.scrollFactor.set();
 		
 		var textOffset:Float = _height + _offset.y + 3;
 		
 		valueLabel = new FlxText(_offset.x, textOffset, _width);
 		valueLabel.alignment = "center";
 		valueLabel.color = _handleColor;
+		valueLabel.scrollFactor.set();
 		
 		minLabel = new FlxText( -50 + _offset.x, textOffset, 100, Std.string(minValue));
 		minLabel.alignment = "center";
 		minLabel.color = _color;
+		minLabel.scrollFactor.set();
 		
 		maxLabel = new FlxText(_width - 50 + _offset.x, textOffset, 100, Std.string(maxValue));
 		maxLabel.alignment = "center";
 		maxLabel.color = _color;
+		maxLabel.scrollFactor.set();
 		
 		// Add all the objects
 		add(body);
@@ -219,9 +224,6 @@ class FlxSlider extends FlxSpriteGroup
 		add(valueLabel);
 		add(minLabel);
 		add(maxLabel);
-		
-		// No srolling for UI components
-		transformChildren(function (s:FlxSprite, v:Dynamic) { s.scrollFactor.set(0, 0); } );
 	}
 
 	override public function update():Void
