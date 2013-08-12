@@ -104,13 +104,6 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	override public function update():Void
 	{
-		#if !FLX_NO_DEBUG
-		FlxBasic._ACTIVECOUNT++;
-		#end
-		
-		last.x = x;
-		last.y = y;
-		
 		// Lifespan behavior
 		if (lifespan > 0)
 		{
@@ -184,11 +177,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		
 		if (exists && alive)
 		{
-			updateMotion();
-			wasTouching = touching;
-			touching = FlxObject.NONE;
-			
-			updateAnimation();
+			super.update();
 		}
 	}
 	
