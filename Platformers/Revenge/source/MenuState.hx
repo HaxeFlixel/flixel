@@ -1,4 +1,4 @@
-package com.yadurajiv.revenge;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
