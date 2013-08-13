@@ -127,7 +127,7 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 	 */
 	override public function emitParticle():Void
 	{
-		var particle:T = cast recycle(cast _particleClass);
+		var particle:T = cast recycle(_particleClass);
 		particle.elasticity = bounce;
 		
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);

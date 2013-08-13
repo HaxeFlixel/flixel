@@ -113,7 +113,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 	/**
 	 * Internal variable for tracking the class to create when generating particles.
 	 */
-	private var _particleClass:Class<T>;
+	private var _particleClass:Class<IFlxParticle>;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -232,11 +232,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 		
 		var randomFrame:Int;
 		var particle:T;
+		var pClass:Class<T> = cast _particleClass;
 		var i:Int = 0;
 		
 		while (i < Quantity)
 		{
-			particle = Type.createInstance(_particleClass, []);
+			particle = Type.createInstance(pClass, []);
 			
 			if (Multiple)
 			{
@@ -407,7 +408,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 	 */
 	public function emitParticle():Void
 	{
-		var particle:T = cast recycle(cast _particleClass);
+		var particle:T = cast recycle(_particleClass);
 		particle.elasticity = bounce;
 		
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);
@@ -732,14 +733,14 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 	 * Set your own particle class type here. The custom class must extend <code>FlxParticle</code>.
 	 * Default is <code>FlxParticle</code>.
 	 */
-	public var particleClass(get, set):Class<T>;
+	public var particleClass(get, set):Class<IFlxParticle>;
 	
-	private function get_particleClass():Class<T> 
+	private function get_particleClass():Class<IFlxParticle> 
 	{
 		return _particleClass;
 	}
 	
-	private function set_particleClass(Value:Class<T>):Class<T> 
+	private function set_particleClass(Value:Class<IFlxParticle>):Class<IFlxParticle> 
 	{
 		return _particleClass = Value;
 	}
