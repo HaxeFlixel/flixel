@@ -7,6 +7,12 @@ package flixel.system.debug;
  */
 class LogStyle
 {
+	static public var NORMAL:LogStyle = new LogStyle();
+	static public var WARNING:LogStyle = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, FlxAssets.SND_BEEP, true);
+	static public var ERROR:LogStyle = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, FlxAssets.SND_BEEP, true);
+	static public var NOTICE:LogStyle = new LogStyle("[NOTICE] ", "008000", 12, true);
+	static public var CONSOLE:LogStyle = new LogStyle("&#62; ", "0000ff", 12, true);
+	
 	/**
 	 * A prefix which is always attached to the start of the logged data.
 	 * @default ""

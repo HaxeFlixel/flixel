@@ -510,7 +510,7 @@ class ConsoleCommands
 	
 	private function cLog(Text:Dynamic):Void
 	{
-		FlxG.log.advanced([Text], Log.STYLE_CONSOLE);
+		FlxG.log.advanced([Text], LogStyle.CONSOLE);
 	}
 	#end
 }
