@@ -519,7 +519,7 @@ class FlxText extends FlxSprite
 			
 			framePixels.copyPixels(_cachedGraphics.bitmap, _flashRect, _flashPointZero);
 			
-			if (_useColorTransform) 
+			if (useColorTransform) 
 			{
 				framePixels.colorTransform(_flashRect, _colorTransform);
 			}

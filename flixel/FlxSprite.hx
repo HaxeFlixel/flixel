@@ -116,6 +116,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	public var antialiasing:Bool = false;
 	
+	public var colorTransform(get_colorTransform, never):ColorTransform;
+	
 	/**
 	 * Internal, stores all the animations that were added to this sprite.
 	 */
@@ -165,7 +167,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	/**
 	 * Internal, reflects the need to use _colorTransform object
 	 */
-	private var _useColorTransform:Bool;
+	public var useColorTransform(default, null):Bool = false;
 	/**
 	 * Internal, helps with animation, caching and drawing.
 	 */
@@ -685,7 +687,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			framePixels = new BitmapData(Std.int(width), Std.int(height));
 		}
 		framePixels.copyPixels(_cachedGraphics.bitmap, _flashRect, _flashPointZero);
-		if (_useColorTransform) framePixels.colorTransform(_flashRect, _colorTransform);
+		if (useColorTransform) framePixels.colorTransform(_flashRect, _colorTransform);
 	#end
 		
 		_curIndex = 0;
@@ -1434,36 +1436,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			return alpha;
 		}
 		alpha = Alpha;
-		#if flash
-		if ((alpha != 1) || (color != 0xffffff))
-		{
-			if (_colorTransform == null)
-			{
-				_colorTransform = new ColorTransform((color >> 16) / 255, (color >> 8 & 0xff) / 255, (color & 0xff) / 255, alpha);
-			}
-			else
-			{
-				_colorTransform.redMultiplier = (color >> 16) / 255;
-				_colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
-				_colorTransform.blueMultiplier = (color & 0xff) / 255;
-				_colorTransform.alphaMultiplier = alpha;
-			}
-			_useColorTransform = true;
-		}
-		else
-		{
-			if (_colorTransform != null)
-			{
-				_colorTransform.redMultiplier = 1;
-				_colorTransform.greenMultiplier = 1;
-				_colorTransform.blueMultiplier = 1;
-				_colorTransform.alphaMultiplier = 1;
-			}
-			
-			_useColorTransform = false;
-		}
-		dirty = true;
-		#end
+		updateColorTransform();
 		return alpha;
 	}
 	
@@ -1481,7 +1454,21 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			return Color;
 		}
 		color = Color;
-		if ((alpha != 1) || (color != 0x00ffffff))
+		updateColorTransform();
+		
+		#if !flash
+		_red = (color >> 16) / 255;
+		_green = (color >> 8 & 0xff) / 255;
+		_blue = (color & 0xff) / 255;
+		isColored = color < 0xffffff;
+		#end
+		
+		return color;
+	}
+	
+	private function updateColorTransform():Void
+	{
+		if ((alpha != 1) || (color != 0xffffff))
 		{
 			if (_colorTransform == null)
 			{
@@ -1494,7 +1481,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 				_colorTransform.blueMultiplier = (color & 0xff) / 255;
 				_colorTransform.alphaMultiplier = alpha;
 			}
-			_useColorTransform = true;
+			useColorTransform = true;
 		}
 		else
 		{
@@ -1505,19 +1492,10 @@ class FlxSprite extends FlxObject implements IFlxSprite
 				_colorTransform.blueMultiplier = 1;
 				_colorTransform.alphaMultiplier = 1;
 			}
-			_useColorTransform = false;
+			
+			useColorTransform = false;
 		}
-		
 		dirty = true;
-		
-		#if !flash
-		_red = (color >> 16) / 255;
-		_green = (color >> 8 & 0xff) / 255;
-		_blue = (color & 0xff) / 255;
-		isColored = color < 0xffffff;
-		#end
-		
-		return color;
 	}
 	
 	/**
@@ -1752,7 +1730,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 				framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
 			}
 			
-			if (_useColorTransform) 
+			if (useColorTransform) 
 			{
 				framePixels.colorTransform(_flashRect, _colorTransform);
 			}
@@ -1920,6 +1898,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	{
 		_angleChanged = (angle != Value) || _angleChanged;
 		return angle = Value;
+	}
+	
+	function get_colorTransform():ColorTransform 
+	{
+		return _colorTransform;
 	}
 	
 	#if !flash
