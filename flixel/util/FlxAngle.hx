@@ -36,18 +36,18 @@ class FlxAngle
 	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
 	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
 	 */
-	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, point:FlxPoint = null):FlxPoint
+	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint):FlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
-		var radians:Float = Angle * -0.017453293;
-		while (radians < -3.14159265)
+		var radians:Float = Angle * -TO_RAD;
+		while (radians < -Math.PI)
 		{
-			radians += 6.28318531;
+			radians += Math.PI * 2;
 		}
-		while (radians >  3.14159265)
+		while (radians >  Math.PI)
 		{
-			radians = radians - 6.28318531;
+			radians = radians - Math.PI * 2;
 		}
 		
 		if (radians < 0)
@@ -75,10 +75,10 @@ class FlxAngle
 			}
 		}
 		
-		radians += 1.57079632;
-		if (radians >  3.14159265)
+		radians += Math.PI / 2;
+		if (radians >  Math.PI)
 		{
-			radians = radians - 6.28318531;
+			radians = radians - Math.PI * 2;
 		}
 		if (radians < 0)
 		{
@@ -131,7 +131,7 @@ class FlxAngle
 		var angle:Float = 0;
 		if ((x != 0) || (y != 0))
 		{
-			var c1:Float = 3.14159265 * 0.25;
+			var c1:Float = Math.PI * 0.25;
 			var c2:Float = 3 * c1;
 			var ay:Float = (y < 0) ? -y : y;
 			if (x >= 0)
@@ -142,7 +142,7 @@ class FlxAngle
 			{
 				angle = c2 - c1 * ((x + ay) / (ay - x));
 			}
-			angle = ((y < 0)? -angle:angle) * 57.2957796;
+			angle = ((y < 0)? -angle:angle) * TO_DEG;
 			if (angle > 90)
 			{
 				angle = angle - 270;
