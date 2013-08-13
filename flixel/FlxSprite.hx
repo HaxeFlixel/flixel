@@ -1523,12 +1523,17 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	/**
 	 * Tell the sprite to change to a specific frame of animation.
 	 */
-	public var frame(default, set):Int = 0;
+	public var frame(get, set):Int;
+	
+	private function get_frame():Int
+	{
+		return _curIndex;
+	}
 	
 	private function set_frame(Frame:Int):Int
 	{
 		_curAnim = null;
-		frame = _curIndex = Frame % frames;
+		_curIndex = Frame % frames;
 		if (_framesData != null)
 		{
 			_flxFrame = _framesData.frames[_curIndex];
