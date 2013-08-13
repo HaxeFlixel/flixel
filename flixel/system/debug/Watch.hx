@@ -76,11 +76,9 @@ class Watch extends Window
 		_values = null;
 		if (_watching != null)
 		{
-			var i:Int = 0;
-			var l:Int = _watching.length;
-			while (i < l)
+			for (watchEntry in _watching)
 			{
-				_watching[i++].destroy();
+				watchEntry.destroy();
 			}
 			_watching = null;
 		}
@@ -242,8 +240,8 @@ class Watch extends Window
 			watchEntry.destroy();
 			i++;
 		}
-		//_watching.length = 0;
 		_watching = [];
+		_quickWatchList = new Map<String, WatchEntry>();
 	}
 
 	/**
