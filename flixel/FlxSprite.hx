@@ -220,7 +220,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		scale = new FlxPoint(1, 1);
 		
 		facing = FlxObject.RIGHT;
-		_animations = new Map<String, FlxAnim>();
 		
 		_matrix = new Matrix();
 		
@@ -237,17 +236,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	override public function destroy():Void
 	{
-		if (_animations != null)
-		{
-			for (anim in _animations)
-			{
-				if (anim != null)
-				{
-					anim.destroy();
-				}
-			}
-			_animations = null;
-		}
+		destroyAnimations();
 		
 		_flashPoint = null;
 		_flashRect = null;
@@ -256,7 +245,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		offset = null;
 		origin = null;
 		scale = null;
-		_curAnim = null;
 		_matrix = null;
 		_callback = null;
 		_colorTransform = null;
@@ -273,6 +261,23 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		_flxFrame = null;
 		
 		super.destroy();
+	}
+	
+	private function destroyAnimations():Void
+	{
+		if (_animations != null)
+		{
+			for (anim in _animations)
+			{
+				if (anim != null)
+				{
+					anim.destroy();
+				}
+			}
+		}
+		
+		_animations = null;
+		_curAnim = null;
 	}
 	
 	/**
@@ -296,6 +301,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			height = Sprite.height;
 			centerOffsets();
 		}
+		
+		destroyAnimations();
+		_animations = new Map<String, FlxAnim>();
 		
 		updateFrameData();
 		resetHelpers();
@@ -356,6 +364,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		
 		width = frameWidth = Width;
 		height = frameHeight = Height;
+		
+		destroyAnimations();
+		_animations = new Map<String, FlxAnim>();
 		
 		updateFrameData();
 		resetHelpers();
@@ -500,6 +511,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		antialiasing = AntiAliasing;
 		#end
 		
+		destroyAnimations();
+		_animations = new Map<String, FlxAnim>();
+		
 		updateFrameData();
 		resetHelpers();
 		
@@ -531,6 +545,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		_region.height = Height;
 		width = frameWidth = _cachedGraphics.bitmap.width;
 		height = frameHeight = _cachedGraphics.bitmap.height;
+		destroyAnimations();
+		_animations = new Map<String, FlxAnim>();
 		updateFrameData();
 		resetHelpers();
 		return this;
