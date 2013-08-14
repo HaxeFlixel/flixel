@@ -394,7 +394,7 @@ class FlxG
 	 */
 	public static var stage(get, never):Stage;
 	
-	inline static private function get_stage():stage
+	inline static private function get_stage():Stage
 	{
 		return game.stage;
 	}
