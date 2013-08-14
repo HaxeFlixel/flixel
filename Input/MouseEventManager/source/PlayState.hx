@@ -1,6 +1,6 @@
 package;
 
-import flixel.addons.nape.FlxPhysState;
+import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
@@ -13,7 +13,7 @@ import nape.geom.Vec2;
  * @author TiagoLr (~~~~ ProG4mr ~~~~)
  * Improvements by @author Gama11
  */
-class PlayState extends FlxPhysState
+class PlayState extends FlxNapeState
 {
 	static public var cardJoint:DistanceJoint;
 	
