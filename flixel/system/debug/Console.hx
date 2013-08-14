@@ -233,7 +233,7 @@ class Console extends Window
 				else if (command == "create" || command == "cr") 
 					args[2] = args.slice(2, args.length);
 					
-				callFunction(obj, func, args); 
+				callFunction(obj, func, args, command); 
 			}
 			
 			_input.text = "";
@@ -244,9 +244,25 @@ class Console extends Window
 		}
 	}
 	
-	public function callFunction(obj:Dynamic, func:Dynamic, args:Array<Dynamic>):Bool
+	public function callFunction(obj:Dynamic, func:Dynamic, args:Array<Dynamic>, ?cmd:String):Bool
 	{
-		try 
+		#if neko
+		/**
+		 * Ugly fix to prevent a crash with optional params on neko - requires padding with nulls. 
+		 * @link https://github.com/HaxeFoundation/haxe/issues/976
+		 */
+		if (((cmd == "help" || cmd == "h") && args.length == 0)
+		|| ((cmd == "create" || cmd == "cr") && args.length == 2)
+		|| (cmd == "call" && args.length == 2)
+		|| (cmd == "set" && args.length == 2)
+		|| ((cmd == "unwatch" || cmd == "uw") && args.length == 1)
+		|| ((cmd == "watch" || cmd == "w") && args.length == 1))
+		{
+			args[args.length] = null;	
+		}
+		#end
+		
+		try
 		{
 			Reflect.callMethod(obj, func, args);
 			return true;
@@ -319,10 +335,10 @@ class Console extends Window
 	
 	/**
 	 * Add a custom command to the console on the debugging screen.
-	 * @param Command	The command's name.
-	 * @param AnyObject Object containing the function (<code>this</code> if function is within the class you're calling this from).
-	 * @param Function	Function to be called with params when the command is entered.
-	 * @param Alt		Alternative name for the command, useful as a shortcut.
+	 * @param 	Command		The command's name.
+	 * @param 	AnyObject 	Object containing the function (<code>this</code> if function is within the class you're calling this from).
+	 * @param 	Function	Function to be called with params when the command is entered.
+	 * @param 	Alt			Alternative name for the command, useful as a shortcut.
 	 */
 	public function addCommand(Command:String, AnyObject:Dynamic, Function:Dynamic, Alt:String = ""):Void
 	{
