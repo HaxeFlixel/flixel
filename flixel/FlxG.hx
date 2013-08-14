@@ -66,7 +66,7 @@ class FlxG
 	/**
 	 * Handy shared variable for implementing your own pause behavior.
 	 */
-	static public var paused:Bool;
+	static public var paused:Bool = false;
 	/**
 	 * Whether the game should be paused when focus is lost or not. Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
 	 * pause screen. Override onFocus() and onFocusLost() for your own behaviour in your state.
@@ -84,19 +84,19 @@ class FlxG
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
-	static public var elapsed:Float;
+	static public var elapsed:Float = 0;
 	/**
 	 * How fast or slow time should pass in the game; default is 1.0.
 	 */
-	static public var timeScale:Float;
+	static public var timeScale:Float = 1;
 	/**
-	 * The width of the screen in game pixels.
+	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	static public var width:Int;
+	static public var width(default, null):Int;
 	/**
-	 * The height of the screen in game pixels.
+	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	static public var height:Int;
+	static public var height(default, null):Int;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use <code>.set()</code> instead of creating a new object!
@@ -213,7 +213,7 @@ class FlxG
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
-	@:allow(flixel.FlxGame) // Access to this function is only need in FlxGame::new()
+	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
 	inline static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
@@ -251,7 +251,7 @@ class FlxG
 	/**
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
-	@:allow(flixel.FlxGame.resetGame) // Access to this function is only need in FlxGame::resetGame()
+	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
 	inline static private function reset():Void
 	{
 		PxBitmapFont.clearStorage();
@@ -362,7 +362,7 @@ class FlxG
 	{
         camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
         width = Width;
-        height = Height; 
+        height = Height;
 	}
 	
 	#if flash
@@ -382,7 +382,6 @@ class FlxG
 		else
 		{
 			stage.displayState = StageDisplayState.NORMAL;
-			//camera.setPosition();
 		}
 		
 		return Value;
@@ -395,7 +394,7 @@ class FlxG
 	 */
 	public static var stage(get, never):Stage;
 	
-	inline static private function get_stage():Stage
+	inline static private function get_stage():stage
 	{
 		return game.stage;
 	}
