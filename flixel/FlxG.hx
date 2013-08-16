@@ -52,12 +52,12 @@ class FlxG
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
-	static public var LIBRARY_MAJOR_VERSION:String = "2";
+	static public var LIBRARY_MAJOR_VERSION:String = "3";
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
+	static public var LIBRARY_MINOR_VERSION:String = "0.0-dev";
 	
 	/**
 	 * Internal tracker for game object.
