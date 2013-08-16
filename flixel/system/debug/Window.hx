@@ -112,16 +112,7 @@ class Window extends Sprite
 		
 		_width = Std.int(Math.abs(Width));
 		_height = Std.int(Math.abs(Height));
-		_bounds = Bounds;
-		minSize = new Point(50, 30);
-		if (_bounds != null)
-		{
-			maxSize = new Point(_bounds.width,_bounds.height);
-		}
-		else
-		{
-			maxSize = new Point(FlxMath.MAX_VALUE, FlxMath.MAX_VALUE);
-		}
+		updateBounds(Bounds);
 		_drag = new Point();
 		
 		_resizable = Resizable;
@@ -365,6 +356,20 @@ class Window extends Sprite
 			{
 				_title.alpha = 0.65;
 			}
+		}
+	}
+	
+	public function updateBounds(Bounds:Rectangle):Void
+	{
+		_bounds = Bounds;
+		minSize = new Point(50, 30);
+		if (_bounds != null)
+		{
+			maxSize = new Point(_bounds.width,_bounds.height);
+		}
+		else
+		{
+			maxSize = new Point(FlxMath.MAX_VALUE, FlxMath.MAX_VALUE);
 		}
 	}
 }

@@ -346,6 +346,7 @@ class FlxGame extends Sprite
 		
 		state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
+		debugger.onResize(width, height);
 		
 		if (FlxG.autoResize)
 		{
