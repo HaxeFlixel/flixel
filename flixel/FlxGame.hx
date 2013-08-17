@@ -700,6 +700,15 @@ class FlxGame extends Sprite
 		if (!_stateSwitchRequested)
 		#end 
 		
+		FlxG.plugins.draw();
+		
+		#if !FLX_NO_DEBUG
+		if (FlxG.debugger.visualDebug)
+		{
+			FlxG.plugins.drawDebug();
+		}
+		#end
+		
 		state.draw();
 		
 		#if !FLX_NO_DEBUG
@@ -718,15 +727,6 @@ class FlxGame extends Sprite
 			debugger.stats.drawCalls(TileSheetExt._DRAWCALLS);
 		}
 		#end
-		#end
-		
-		FlxG.plugins.draw();
-		
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visualDebug)
-		{
-			FlxG.plugins.drawDebug();
-		}
 		#end
 		
 		FlxG.cameras.unlock();
