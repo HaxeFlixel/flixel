@@ -388,7 +388,6 @@ class FlxGame extends Sprite
 			
 			if (FlxG.fixedTimestep)
 			{
-				
 				_accumulator += elapsedMS;
 				if (_accumulator > maxAccumulation)
 				{
@@ -407,7 +406,6 @@ class FlxGame extends Sprite
 				step();
 			}
 			
-			
 			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT = 0;
 			#end
@@ -417,9 +415,9 @@ class FlxGame extends Sprite
 			#if !FLX_NO_DEBUG
 			if (FlxG.debugger.visible)
 			{
-				debugger.perf.flash(elapsedMS);
-				debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
-				debugger.perf.update();
+				debugger.stats.flash(elapsedMS);
+				debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
+				debugger.stats.update();
 				debugger.watch.update();
 			}
 			#end	
@@ -570,7 +568,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
+			debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
 		}
 		#end
 	}
@@ -614,7 +612,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.flixelUpdate(Lib.getTimer() - ticks);
+			debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
 		}
 		#end
 	}
@@ -717,7 +715,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.drawCalls(TileSheetExt._DRAWCALLS);
+			debugger.stats.drawCalls(TileSheetExt._DRAWCALLS);
 		}
 		#end
 		#end
@@ -736,7 +734,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.flixelDraw(Lib.getTimer() - ticks);
+			debugger.stats.flixelDraw(Lib.getTimer() - ticks);
 		}
 		#end
 	}

@@ -13,16 +13,11 @@ import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.debug.Console;
 import flixel.system.debug.Log;
-import flixel.system.debug.Perf;
+import flixel.system.debug.Stats;
 import flixel.system.debug.VCR;
 import flixel.system.debug.Vis;
 import flixel.system.debug.Watch;
 import flixel.system.FlxAssets;
-import openfl.Assets;
-
-#if !FLX_NO_MOUSE
-import flash.ui.Mouse;
-#end
 
 /**
  * Container for the new debugger overlay.
@@ -73,7 +68,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Container for the performance monitor widget.
 	 */
-	public var perf:Perf;
+	public var stats:Stats;
 	/**
 	 * Container for the trace output widget.
 	 */
@@ -156,8 +151,8 @@ class FlxDebugger extends Sprite
 		console = new Console("console", 0, 0, false);
 		addChild(console);
 		
-		perf = new Perf("stats", 0, 0, false);
-		addChild(perf);
+		stats = new Stats("stats", 0, 0, false);
+		addChild(stats);
 		
 		vcr = new VCR();
 		vcr.x = (Width - vcr.width / 2) / 2;
@@ -194,11 +189,11 @@ class FlxDebugger extends Sprite
 			watch.destroy();
 			watch = null;
 		}
-		if (perf != null)
+		if (stats != null)
 		{
-			removeChild(perf);
-			perf.destroy();
-			perf = null;
+			removeChild(stats);
+			stats.destroy();
+			stats = null;
 		}
 		if (vcr != null)
 		{
@@ -276,7 +271,7 @@ class FlxDebugger extends Sprite
 				console.reposition(log.x + log.width + GUTTER, _screen.y);
 				watch.resize(_screen.x / 4, 68);
 				watch.reposition(_screen.x,_screen.y);
-				perf.reposition(_screen.x, 0);
+				stats.reposition(_screen.x, 0);
 			case BIG:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -284,7 +279,7 @@ class FlxDebugger extends Sprite
 				log.reposition(0, _screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
 				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
-				perf.reposition(_screen.x, 0);
+				stats.reposition(_screen.x, 0);
 			case TOP:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(0,0);
@@ -292,7 +287,7 @@ class FlxDebugger extends Sprite
 				log.reposition(0,console.height + GUTTER + 15);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,console.height + GUTTER + 15);
-				perf.reposition(_screen.x,_screen.y);
+				stats.reposition(_screen.x,_screen.y);
 			case LEFT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -300,7 +295,7 @@ class FlxDebugger extends Sprite
 				log.reposition(0,0);
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
 				watch.reposition(0,log.y + log.height + GUTTER);
-				perf.reposition(_screen.x,0);
+				stats.reposition(_screen.x,0);
 			case RIGHT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -308,7 +303,7 @@ class FlxDebugger extends Sprite
 				log.reposition(_screen.x,0);
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
 				watch.reposition(_screen.x,log.y + log.height + GUTTER);
-				perf.reposition(0,0);
+				stats.reposition(0,0);
 			case STANDARD:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -316,7 +311,7 @@ class FlxDebugger extends Sprite
 				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
-				perf.reposition(_screen.x, 0);
+				stats.reposition(_screen.x, 0);
 			default:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -324,7 +319,7 @@ class FlxDebugger extends Sprite
 				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
-				perf.reposition(_screen.x, 0);
+				stats.reposition(_screen.x, 0);
 		}
 	}
 	
@@ -332,8 +327,8 @@ class FlxDebugger extends Sprite
 	{
 		_screen.x = Width;
 		_screen.y = Height;
-		_screenBounds = new Rectangle(GUTTER, TOP_HEIGHT + GUTTER / 2, _screen.x - GUTTER * 2, _screen.y - GUTTER * 1.5 - TOP_HEIGHT);
-		perf.updateBounds(_screenBounds);
+		_screenBounds = new Rectangle(GUTTER, TOP_HEIGHT + GUTTER / 2, _screen.x - GUTTER * 2, _screen.y - GUTTER * 2 - TOP_HEIGHT);
+		stats.updateBounds(_screenBounds);
 		log.updateBounds(_screenBounds);
 		watch.updateBounds(_screenBounds);
 		console.updateBounds(_screenBounds);
