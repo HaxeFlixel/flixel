@@ -1,7 +1,6 @@
 package flixel.text;
 
 import flash.display.BitmapData;
-import flash.filters.BitmapFilter;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
@@ -11,6 +10,8 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Assets;
+
+// TODO: implement filters for FlxText separately (apply filters not on pixels, but on textfield)
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -529,48 +530,7 @@ class FlxText extends FlxSprite
 		#end
 		
 		dirty = false;
-		/*
-		// Updates the filter effects on framePixels.
-		if (filters != null)
-		{
-			#if flash 
-			for (filter in filters) 
-			{
-				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
-			}
-			#else
-			
-			_pixels.copyPixels(_pixelsBackup, _flashRect, _flashPointZero);
-			
-			for (filter in filters) 
-			{
-				_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
-			}
-			#end
-		}
-		*/
 	}
-	
-	/**
-	 * Adds a bitmap filter to the textField.
-	 * See FlxText.setClipping() for tips on how to increase the FlxText render area.
-	 * 
-	 * @param	Filter		The filter to be applied.
-	 * @param	WidthInc	Not used for FlxText, see FlxText.setClipping().
-	 * @param	HeightInc	Not used for FlxText, see FlxText.setClipping().
-	 */
-	/*override public function addFilter(Filter:BitmapFilter, WidthInc:Int = 0, HeightInc:Int = 0)
-	{
-		super.addFilter(Filter);
-	}*/
-	
-	/**
-	 * Set clipping does not work properly for FlxText, however the size of the text rendering 
-	 * can be increased in two ways:
-	 * Horizontally - set alignment to "center" and increase the sprite width.
-	 * Vertically   - add newlines ('\n') to the beggining and end of the text.
-	 */
-	/*override public function setClipping(Width:Int, Height:Int) {}*/
 	
 	/**
 	 * A helper function for updating the <code>TextField</code> that we use for rendering.
