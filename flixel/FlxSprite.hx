@@ -118,7 +118,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
 	 */
-	public var antialiasing:Bool = false;
+	public var antialiasing:Bool;
 	
 	public var colorTransform(get_colorTransform, never):ColorTransform;
 	
@@ -208,10 +208,13 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		_flashPointZero = new Point();
 		offset = new FlxPoint();
 		origin = new FlxPoint();
+
 		scale = new FlxPoint(1, 1);
 		
 		facing = FlxObject.RIGHT;
 		
+		antialiasing = FlxG.antialiasByDefault;
+
 		_matrix = new Matrix();
 		
 		if (SimpleGraphic == null)
