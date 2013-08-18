@@ -1,4 +1,5 @@
-package util;
+package flixel.effects;
+
 import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
 import flash.geom.Point;
