@@ -272,7 +272,7 @@ class FlxGame extends Sprite
 		
 		if (FlxG.framerate < FlxG.flashFramerate)
 		{
-			log.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
+			FlxG.log.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
 		// Finally, set up an event for the actual game loop stuff.
