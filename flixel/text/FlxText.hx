@@ -1,6 +1,7 @@
 package flixel.text;
 
 import flash.display.BitmapData;
+import flash.filters.BitmapFilter;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
@@ -10,8 +11,6 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Assets;
-
-// TODO: implement filters for FlxText separately (apply filters not on pixels, but on textfield)
 
 /**
  * Extends <code>FlxSprite</code> to support rendering text.
@@ -66,6 +65,8 @@ class FlxText extends FlxSprite
 	public function new(X:Float, Y:Float, Width:Int, ?Text:String, size:Int = 8, EmbeddedFont:Bool = true, IsStatic:Bool = false)
 	{
 		super(X, Y);
+		
+		_filters = [];
 		
 		var key:String = FlxG.bitmap.getUniqueKey("text");
 		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
@@ -122,6 +123,7 @@ class FlxText extends FlxSprite
 		_textField = null;
 		_format = null;
 		_formatAdjusted = null;
+		_filters = null;
 		
 		super.destroy();
 	}
@@ -168,8 +170,16 @@ class FlxText extends FlxSprite
 	
 	override private function set_width(Width:Float):Float
 	{
-		super.set_width(Width);
-		_regen = true;
+		if (Width != width)
+		{
+			var newWidth:Float = super.set_width(Width);
+			if (_textField != null)
+			{
+				_textField.width = newWidth;
+			}
+			_regen = true;
+		}
+		
 		return Width;
 	}
 	
@@ -440,6 +450,12 @@ class FlxText extends FlxSprite
 		{
 			_regen = true;
 		#end
+			
+			if (_filters != null)
+			{
+				_textField.filters = _filters;
+			}
+		
 			if (_regen)
 			{
 				// Need to generate a new buffer to store the text graphic
@@ -448,13 +464,13 @@ class FlxText extends FlxSprite
 				height += 4;
 				var key:String = _cachedGraphics.key;
 				FlxG.bitmap.remove(key);
-				makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, false, key);
+				makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
 				frameHeight = Std.int(height);
 				_textField.height = height * 1.2;
 				_flashRect.x = 0;
 				_flashRect.y = 0;
-				_flashRect.width = width;
-				_flashRect.height = height;
+				_flashRect.width = width + _widthInc;
+				_flashRect.height = height + _heightInc;
 				_regen = false;
 			}
 			// Else just clear the old buffer before redrawing the text
@@ -472,6 +488,8 @@ class FlxText extends FlxSprite
 				_formatAdjusted.align = _format.align;
 				_matrix.identity();
 				
+				_matrix.translate(Std.int(0.5 * _widthInc), Std.int(0.5 * _heightInc));
+				
 				// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 				#if js
 				if (_format.align == TextFormatAlign.CENTER)
@@ -488,6 +506,7 @@ class FlxText extends FlxSprite
 					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
 					#end
 				}
+				
 				// Render a single pixel shadow beneath the text
 				if (_useShadow)
 				{
@@ -605,5 +624,39 @@ class FlxText extends FlxSprite
 		#else
 		_textField.setTextFormat(Format);
 		#end
+	}
+	
+	private var _filters:Array<BitmapFilter>;
+	
+	private var _widthInc:Int = 0;
+	private var _heightInc:Int = 0;
+	
+	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
+	{
+		if (_widthInc != widthInc || _heightInc != heightInc)
+		{
+			_regen = true;
+		}
+		
+		_filters.push(filter);
+		dirty = true;
+	}
+	
+	public function removeFilter(filter:BitmapFilter):Void
+	{
+		var removed:Bool = _filters.remove(filter);
+		if (removed)
+		{
+			dirty = true;
+		}
+	}
+	
+	public function clearFilters():Void
+	{
+		if (_filters.length > 0)
+		{
+			dirty = true;
+		}
+		_filters = [];
 	}
 }
