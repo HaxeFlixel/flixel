@@ -85,6 +85,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	public var finished:Bool = false;
 	/**
+	 * Internal, keeps track of the current frame of animation.
+	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
+	 */
+	public var curFrame(default, null):Int = 0;
+	/**
 	 * Whether the current animation gets updated or not.
 	 */
 	public var paused(default, null):Bool = true;
@@ -125,11 +130,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * Internal, keeps track of the current animation being played.
 	 */
 	private var _curAnim:FlxAnim;
-	/**
-	 * Internal, keeps track of the current frame of animation.
-	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
-	 */
-	private var _curFrame:Int = 0;
 	/**
 	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
 	 */
@@ -965,19 +965,19 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			while (_frameTimer > _curAnim.delay)
 			{
 				_frameTimer = _frameTimer - _curAnim.delay;
-				if (_curFrame == _curAnim.frames.length - 1)
+				if (curFrame == _curAnim.frames.length - 1)
 				{
 					if (_curAnim.looped)
 					{
-						_curFrame = 0;
+						curFrame = 0;
 					}
 					finished = true;
 				}
 				else
 				{
-					_curFrame++;
+					curFrame++;
 				}
-				_curIndex = _curAnim.frames[_curFrame];
+				_curIndex = _curAnim.frames[curFrame];
 				if (_framesData != null)
 				{
 					_flxFrame = _framesData.frames[_curIndex];
@@ -1160,7 +1160,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			paused = false;
 			return;
 		}
-		_curFrame = 0;
+		curFrame = 0;
 		_curIndex = 0;
 		
 		if (_framesData != null)
@@ -1183,14 +1183,14 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			
 			if (Frame < 0)
 			{
-				_curFrame = Std.int(Math.random() * _curAnim.frames.length);
+				curFrame = Std.int(Math.random() * _curAnim.frames.length);
 			}
 			else if (_curAnim.frames.length > Frame)
 			{
-				_curFrame = Frame;
+				curFrame = Frame;
 			}
 			
-			_curIndex = _curAnim.frames[_curFrame];
+			_curIndex = _curAnim.frames[curFrame];
 			
 			if (_framesData != null)
 			{
@@ -1240,8 +1240,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			finished = false;
 		}
 		
-		_curFrame = Frame;
-		_curIndex = _curAnim.frames[_curFrame];
+		curFrame = Frame;
+		_curIndex = _curAnim.frames[curFrame];
 		
 		if (_framesData != null)
 		{
@@ -1736,7 +1736,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		
 		if (_callback != null)
 		{
-			_callback(((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex);
+			_callback(((_curAnim != null) ? (_curAnim.name) : null), curFrame, _curIndex);
 		}
 		
 		dirty = false;
