@@ -1278,6 +1278,13 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		return _animations.get(Name); 
 	}
 	
+	public var animations(get, never):Map<String, FlxAnim>;
+	
+	private function get_animations():Map<String, FlxAnim>
+	{
+		return _animations;
+	}
+	
 	/**
 	 * Tell the sprite to change to a random frame of animation
 	 * Useful for instantiating particles or other weird things.

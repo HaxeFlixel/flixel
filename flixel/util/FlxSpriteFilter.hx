@@ -5,6 +5,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.system.FlxAnim;
 import flixel.system.layer.Region;
 import flixel.text.FlxText;
 import flixel.util.loaders.CachedGraphics;
@@ -50,7 +51,7 @@ class FlxSpriteFilter
 	{
 		if (Std.is(Sprite, FlxText))
 		{
-			throw "FlxText objects aren't supported. Use FlxText's filter functionality"
+			throw "FlxText objects aren't supported. Use FlxText's filter functionality";
 		}
 		
 		sprite = Sprite;
@@ -64,7 +65,29 @@ class FlxSpriteFilter
 			throw "FlxSprites with full atlas animation aren't supported";
 		}
 		
+		var frame:Int = sprite.frame;
+		var currAnim:String = sprite.curAnim;
+		var animations:Array<FlxAnim> = [];
+		for (anim in sprite.animations)
+		{
+			animations.push(anim.clone());
+		}
+		
 		setClipping(sprite.frameWidth + WidthInc , sprite.frameHeight + HeightInc);
+		
+		for (anim in animations)
+		{
+			sprite.animations.set(anim.name, anim);
+		}
+		
+		if (currAnim != null)
+		{
+			sprite.play(currAnim, true, frame);
+		}
+		else
+		{
+			sprite.frame = frame;
+		}
 	}
 	
 	public function destroy():Void
