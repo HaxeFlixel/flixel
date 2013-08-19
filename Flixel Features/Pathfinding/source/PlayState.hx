@@ -75,7 +75,10 @@ class PlayState extends FlxState
 	 * Instructions
 	 */
 	private var _instructions:FlxText;
-	var path:FlxPath;
+	/**
+	 * Path to follow
+	 */
+	private var path:FlxPath;
 	
 	override public function create():Void
 	{
@@ -130,6 +133,9 @@ class PlayState extends FlxState
 		
 		var legends:FlxText = new FlxText(textX, 140, textWidth, "Legends:\nRed: Unit\nYellow: Goal\nBlue: Wall\nWhite: Path");
 		add(legends);
+		
+		path = FlxPath.recycle();
+		path.usePooling = false;
 	}
 	
 	override public function destroy():Void
@@ -150,7 +156,7 @@ class PlayState extends FlxState
 		super.draw();
 		
 		// To draw path
-		if (path != null && !path.finished)
+		if (!path.finished)
 		{
 			path.drawDebug();
 		}
@@ -177,7 +183,7 @@ class PlayState extends FlxState
 		// Check if reach goal
 		if (_action == ACTION_GO)
 		{
-			if (path != null && path.finished)
+			if (path.finished)
 			{
 				resetUnit();
 				stopUnit();
@@ -193,7 +199,7 @@ class PlayState extends FlxState
 		// Tell unit to follow path
 		if (pathPoints != null) 
 		{
-			path = FlxPath.start(_unit, pathPoints);
+			path.run(_unit, pathPoints);
 			_action = ACTION_GO;
 			_instructions.text = INSTRUCTION_1;
 		}
@@ -207,11 +213,7 @@ class PlayState extends FlxState
 	{
 		// Stop unit and destroy unit path
 		_action = ACTION_IDLE;
-		if (path != null && !path.finished)
-		{
-			path.abort();
-			path = null;
-		}
+		path.abort();
 		_unit.velocity.x = _unit.velocity.y = 0;
 	}
 	
