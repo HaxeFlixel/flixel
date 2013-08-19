@@ -49,7 +49,7 @@ class PlayState extends FlxState
 		
 		glitches = new Glitches();
 		
-		FlxG.cameras.fullscreen();
+		FlxG.fullscreen = true;
 		FlxG.mouse.hide();
 	}
 	
@@ -57,7 +57,7 @@ class PlayState extends FlxState
 	{
 		if (FlxG.keys.justPressed.F)
 		{
-			FlxG.cameras.fullscreen();
+			FlxG.fullscreen = !FlxG.fullscreen;
 		}
 		
 		super.update();

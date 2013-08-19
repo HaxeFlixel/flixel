@@ -1,7 +1,7 @@
 package;
 
-import flixel.addons.nape.FlxPhysSprite;
-import flixel.addons.nape.FlxPhysState;
+import flixel.addons.nape.FlxNapeSprite;
+import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.plugin.MouseEventManager;
@@ -13,7 +13,7 @@ import nape.dynamics.InteractionFilter;
 import nape.geom.Vec2;
 import nape.phys.Body;
 
-class Card extends FlxPhysSprite
+class Card extends FlxNapeSprite
 {
 	/**
 	 * How long the turning animation takes
@@ -59,15 +59,15 @@ class Card extends FlxPhysSprite
 			FlxTween.multiVar(scale, { x: 0 }, TURNING_TIME / 2, { complete: pickCard } );
 		}
 		
-		var body:Body = cast(Sprite, FlxPhysSprite).body;
+		var body:Body = cast(Sprite, FlxNapeSprite).body;
 		
-		PlayState.cardJoint = new DistanceJoint(FlxPhysState.space.world, body, Vec2.weak(FlxG.mouse.x, FlxG.mouse.y),
+		PlayState.cardJoint = new DistanceJoint(FlxNapeState.space.world, body, Vec2.weak(FlxG.mouse.x, FlxG.mouse.y),
 						body.worldPointToLocal(Vec2.weak(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
 						
 		PlayState.cardJoint.stiff = false;
 		PlayState.cardJoint.damping = 1;
 		PlayState.cardJoint.frequency = 2;
-		PlayState.cardJoint.space = FlxPhysState.space;
+		PlayState.cardJoint.space = FlxNapeState.space;
 	}
 	
 	

@@ -2,7 +2,6 @@ package;
 
 import flash.Lib;
 import flixel.FlxGame;
-import com.yadurajiv.revenge.MenuState;
 	
 class GameClass extends FlxGame
 {	

@@ -72,7 +72,8 @@ class PlayState extends FlxState
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
 		FlxG.mouse.show();
-
+		FlxG.autoPause = false;
+		
 		// Set up an array containing all the different ease functions there are
 		_easeInfo = new Array<EaseInfo>();
 

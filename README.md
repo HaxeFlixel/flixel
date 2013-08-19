@@ -4,4 +4,6 @@
 ______________________________________________________
 A large set of demos using the HaxeFlixel engine and demonstrating its capabilities.
 
-#### Due to a large refactor these demos currently require the latest dev branch of HaxeFlixel.
+#### If you are installing flixel from haxelib please use the following release:
+
+https://github.com/HaxeFlixel/flixel-demos/releases/tag/flixel-2.0.0-alpha.3
