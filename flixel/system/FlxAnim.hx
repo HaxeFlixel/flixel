@@ -60,4 +60,9 @@ class FlxAnim
 		}
 		return value;
 	}
+	
+	public function clone():FlxAnim
+	{
+		return new FlxAnim(this.name, this.frames, this.frameRate);
+	}
 }

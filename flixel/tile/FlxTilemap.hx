@@ -2285,15 +2285,15 @@ class FlxTilemap extends FlxObject
 		}
 		
 		#if flash
-		var rx:Int = (_data[Index] - _startingIndex) * _tileWidth + _region.startX;
+		var rx:Int = (_data[Index] - _startingIndex) * (_tileWidth + _region.spacingX);
 		var ry:Int = 0;
 		
 		if (Std.int(rx) >= _region.width)
 		{
-			ry = Std.int(rx / _region.width) * _tileHeight + _region.startY;
+			ry = Std.int(rx / _region.width) * (_tileHeight + _region.spacingY);
 			rx %= _region.width;
 		}
-		_rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
+		_rects[Index] = (new Rectangle(rx + _region.startX, ry + _region.startY, _tileWidth, _tileHeight));
 		#else
 		_rectIDs[Index] = _framesData.frames[_data[Index] - _startingIndex].tileID;
 		#end
