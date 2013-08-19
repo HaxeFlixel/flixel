@@ -8,64 +8,72 @@
 	<definition id="grey" src="ui/chrome/dark_grey"/>
 	<definition id="grey_flat" src="ui/chrome/dark_grey_flat_top"/>
 	
+	<definition id="sans10" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>	
+	<definition id="sans10c" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>	
 	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
 	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" shadow="1" align="left"/>
 	
-	<definition id="px8" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="px8y" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="sans8" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>
+	<definition id="sans8y" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="left"/>
 	
-	<definition id="px8c" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
-	<definition id="px8yc" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="center"/>
+	<definition id="sans8c" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
+	<definition id="sans8yc" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="center"/>
 	
-	<definition id="px8dc" font="vera" size="10" style="bold" color="0xcccccc" shadow="1" align="center"/>
-	<definition id="px8dyc" font="vera" size="10" style="bold" color="0xccaa00" shadow="1" align="center"/>
+	<definition id="sans8dc" font="vera" size="10" style="bold" color="0xcccccc" shadow="1" align="center"/>
+	<definition id="sans8dyc" font="vera" size="10" style="bold" color="0xccaa00" shadow="1" align="center"/>
 		
 	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
 	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
 		
 	<definition id="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small" text_y="0">
-		<text id="hilight" use_def="sans12y" />
-		<text id="normal" use_def="sans12" />				
+		<text use_def="sans12" color="0xffffff">				
+			<color id="over" value="0xffff00"/>
+		</text>				
 	</definition>
 	
 	<definition id="check_big" box_src="ui/misc/check_box_big" check_src="ui/misc/check_big" text_y="0">
-		<text id="hilight" use_def="sans16y"/>
-		<text id="normal" use_def="sans16"/>				
+		<text use_def="sans16" color="0xffffff">				
+			<color id="over" value="0xffff00"/>
+		</text>				
 	</definition>
 	
 	<definition id="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot">
-		<text id="hilight" use_def="px8y"/>
-		<text id="normal" use_def="px8"/>
+		<text use_def="sans10" color="0xffffff">				
+			<color id="over" value="0xffff00"/>
+		</text>				
 	</definition>
 	
-	<definition id="tab_button_toggle" width="50" height="20" text_x="-2" text_y="0">		
-		<normal width="50" height="20" text_x="-2" text_y="0">
-			<text id="hilight" use_def="px8dyc"/>
-			<text id="normal" use_def="px8dc"/>
-			<graphic id="normal" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
-		</normal>
-		<toggle width="50" height="20" text_x="-2" text_y="0">
-			<text id="hilight" use_def="px8yc"/>
-			<text id="normal" use_def="px8c"/>
-			<graphic id="normal" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>		
-		</toggle>
+	<definition id="tab_button_toggle" width="50" height="20" text_x="-2" text_y="0">			
+		<text use_def="sans10c" color="0xcccccc">
+			<color id="over" value="0xccaa00"/>
+			<color id="up" toggle="true" value="0xffffff"/>
+			<color id="over" toggle="true" value="0xffff00"/>
+		</text>
+		
+		<graphic id="up" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
+		<graphic id="over" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
+		<graphic id="down" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
+		
+		<graphic id="up" toggle="true" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
+		<graphic id="over" toggle="true" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>				
+		<graphic id="down" toggle="true" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>				
 	</definition>
+	
+	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
+		<text use_def="sans16" color="0xffffff">
+			<color id="over" value="0xffff00"/>
+		</text>
+		<graphic id="hilight" visible="false"/>
+		<graphic id="normal" visible="false"/>
+	</definition>
+
 	
 	<definition id="button_toggle" width="50" height="20">		
-		<normal width="50" height="20" text_x="-2" text_y="-1">
-			<text id="hilight" use_def="px8c"/>
-			<text id="normal" use_def="px8c"/>
-			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,12,12"/>		
-		</normal>
-		<toggle width="50" height="20" text_x="-1" text_y="0">
-			<text id="hilight" use_def="px8c"/>
-			<text id="normal" use_def="px8c"/>
-			<graphic id="normal" image="ui/buttons/blue_back" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/blue_back_over" slice9="6,6,12,12"/>
-		</toggle>
+		<text use_def="sans10c" color="0xffffff">
+			<color id="over" value="0xffff00"/>
+		</text>
+		
+		<graphic id="all" image="ui/buttons/button_blue_toggle" slice9="6,6,12,12"/>		
 	</definition>
 	
 	<!--<definition id="tab_button" width="50" height="20" text_x="-2" text_y="0">
@@ -89,8 +97,9 @@
 	</definition>
 	
 	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
-		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
-		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
+		<text use_def="sans16" color="0xffffff">
+			<color id="over" value="0xffff00"/>
+		</text>
 		<graphic id="border" visible="false"/>
 		<graphic id="hilight" visible="false"/>
 		<graphic id="normal" visible="false"/>

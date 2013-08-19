@@ -1,5 +1,5 @@
 import haxe.xml.Fast;
-import nme.Lib;
+import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxStateX;
 import flixel.addons.ui.FlxUI;
@@ -27,8 +27,8 @@ class State_Battle extends FlxStateX
 		var ui_tall:FlxUI = cast _ui.getAsset("tall");
 		
 		#if debug
-		trace("ui_tall.failed = " + ui_tall.failed + " by = " + ui_tall.failed_by);
-		trace("ui_wide.failed = " + ui_wide.failed + " by = " + ui_wide.failed_by);
+			trace("ui_tall.failed = " + ui_tall.failed + " by = " + ui_tall.failed_by);
+			trace("ui_wide.failed = " + ui_wide.failed + " by = " + ui_wide.failed_by);
 		#end
 		
 		if (ui_tall.failed && !ui_wide.failed) {		//Show the tall layout

@@ -17,9 +17,9 @@
 	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="openfl"/>
-	<haxelib name="openfl-compatibility"/>
 	<haxelib name="firetongue"/>
 	<haxelib name="task"/>
-	
-	<haxedef name="FLX_NO_DEBUG" unless="debug" />
+
+	<haxedef name="FLX_BMP_DEBUG"/>
+	<!--<haxedef name="FLX_NO_DEBUG" unless="debug"/>-->
 </project>

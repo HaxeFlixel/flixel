@@ -1,4 +1,6 @@
 import flash.text.Font;
+import flixel.addons.ui.FlxTextX;
+import flixel.addons.ui.U;
 import flixel.FlxG;
 import flixel.addons.ui.FlxStateX;
 import flixel.addons.ui.FlxRadioGroup;
@@ -15,7 +17,7 @@ class State_Title extends FlxStateX
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
-		FlxG.log.redirectTraces = false;
+		FlxG.log.redirectTraces = false; 
 		FlxG.mouse.show();		
 		
 		if (Main.tongue == null) {
@@ -26,6 +28,7 @@ class State_Title extends FlxStateX
 		
 		_xml_id = "state_title";
 		_tongue = Main.tongue;		
+		
 		super.create();	
 	}
 	
@@ -35,7 +38,9 @@ class State_Title extends FlxStateX
 		switch(id) {
 			case "finish_load":
 				var radio:FlxRadioGroup = cast _ui.getAsset("locale_radio");
-				radio.selectedId = Main.tongue.locale.toLowerCase();
+				if(radio != null){
+					radio.selectedId = Main.tongue.locale.toLowerCase();
+				}
 			case "click_button":
 				if (Std.is(data, Array) && data != null && data.length > 0) {
 					switch(cast(data[0],String)) {
@@ -46,8 +51,8 @@ class State_Title extends FlxStateX
 				}
 			case "click_radio_group":
 				if (Std.is(data, Array) && data != null && data.length > 0) {
-					var id:String = cast(data[0], String);
-					var value:String = cast(data[1], String);
+					var id:String = ""; if(data[0] != null){ id = cast(data[0], String);}
+					var value:String = ""; if(data[1] != null){value = cast(data[1], String);}
 					if (value == "checked:true") {
 						Main.tongue.init(id, reloadState);
 					}

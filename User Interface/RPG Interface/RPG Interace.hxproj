@@ -16,11 +16,11 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="export/flash/haxe" />
+    <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="nme4=1&#xA;tools=1&#xA;swfstats&#xA;nme&#xA;nme_ver=4.0.2&#xA;nme_install_tool=1&#xA;display&#xA;web" />
+    <option directives="tools=1&#xA;openfl_ver=1.0.8&#xA;openfl&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
@@ -31,8 +31,6 @@
     <library name="flixel" />
     <library name="flixel-ui" />
     <library name="flixel-addons" />
-    <library name="openfl" />
-    <library name="openfl-compatibility" />
     <library name="openfl" />
     <library name="firetongue" />
     <library name="task" />
@@ -47,7 +45,7 @@
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />

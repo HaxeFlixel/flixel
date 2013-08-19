@@ -17,39 +17,29 @@
 		
 		<definition id="pixel" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
 		
-		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="sans14c"/>
-			<text id="normal" use_def="sans14c"/>
-			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,12,12"/>
+		<definition id="big_button_blue" width="93" height="31" text_x="0" text_y="2">
+			<text use_def="sans14c"/>
+			<graphic id="all" image="ui/buttons/button_blue" slice9="6,6,12,12"/>
 		</definition>
 		
-		<definition id="big_button_gold" width="93" height="31" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="sans13c"/>
-			<text id="normal" use_def="sans13c"/>
-			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,12,12"/>
+		<definition id="big_button_gold" width="93" height="31" text_x="0" text_y="2">
+			<text use_def="sans13c"/>
+			<graphic id="all" image="ui/buttons/button_gold" slice9="6,6,12,12"/>
 		</definition>		
 		
-		<definition id="skinny_button_gold" width="93" height="20" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="pixel"/>
-			<text id="normal" use_def="pixel"/>
-			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,12,12"/>
+		<definition id="skinny_button_gold" width="93" height="20" text_x="0" text_y="-1">
+			<text use_def="pixel"/>
+			<graphic id="all" image="ui/buttons/button_gold" slice9="6,6,12,12"/>
 		</definition>	
 		
-		<definition id="skinny_button_red" width="93" height="20" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="pixel"/>
-			<text id="normal" use_def="pixel"/>
-			<graphic id="normal" image="ui/buttons/red" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/red_over" slice9="6,6,12,12"/>
+		<definition id="skinny_button_red" width="93" height="20" text_x="0" text_y="-1">
+			<text use_def="pixel"/>
+			<graphic id="all" image="ui/buttons/button_red" slice9="6,6,12,12"/>
 		</definition>	
 		
-		<definition id="skinny_button_blue" width="93" height="20" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="pixel"/>
-			<text id="normal" use_def="pixel"/>
-			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,12,12"/>
-			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,12,12"/>
+		<definition id="skinny_button_blue" width="93" height="20" text_x="0" text_y="-1">
+			<text use_def="pixel"/>
+			<graphic id="all" image="ui/buttons/button_blue" slice9="6,6,12,12"/>
 		</definition>	
 		
 		<group id="shadow"/>
@@ -60,8 +50,6 @@
 		
 		<chrome id="back" use_def="chrome" width="697" height="113" group="back"/>
 		<chrome id="back_inset" x="7" y="7" use_def="chrome_inset" width="574" height="99" group="back"/>
-		
-		<!--<sprite id="back" src="ui/saveslot" group="back"/>-->
 		
 		<sprite id="back_shadow" src="ui/saveslot_shadow" center_on="back" group="shadow"/>		
 				
@@ -102,11 +90,6 @@
 			<param type="string" value="delete"/>
 		</button>
 		
-		<!--butt_load = new FlxButtonX(578, 11, onPress);
-		butt_export = new FlxButtonX(578, 52, onExport);
-		butt_del = new FlxButtonX(578, 76, onDel);
-		butt_import = new FlxButtonX(578, 52, onImport);-->
-		
 	</definition>
 	
 	<definition id="save_slot_texture">
@@ -124,39 +107,29 @@
 		
 		<definition id="pixel" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
 		
-		<definition id="big_button_blue" width="93" height="31" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="sans14c"/>
-			<text id="normal" use_def="sans14c"/>
-			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,11,11"/>
-			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,11,11"/>
+		<definition id="big_button_blue" width="93" height="31" text_x="0" text_y="2">
+			<text use_def="sans14c"/>
+			<graphic id="all" image="ui/buttons/button_blue" slice9="6,6,12,12"/>
 		</definition>
 		
-		<definition id="big_button_gold" width="93" height="31" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="sans13c"/>
-			<text id="normal" use_def="sans13c"/>
-			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,11,11"/>
-			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,11,11"/>
+		<definition id="big_button_gold" width="93" height="31" text_x="0" text_y="2">
+			<text use_def="sans13c"/>
+			<graphic id="all" image="ui/buttons/button_gold" slice9="6,6,12,12"/>
 		</definition>		
 		
-		<definition id="skinny_button_gold" width="93" height="20" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="pixel"/>
-			<text id="normal" use_def="pixel"/>
-			<graphic id="normal" image="ui/buttons/gold" slice9="6,6,11,11"/>
-			<graphic id="hilight" image="ui/buttons/gold_over" slice9="6,6,11,11"/>
+		<definition id="skinny_button_gold" width="93" height="20" text_x="0" text_y="-1">
+			<text use_def="pixel"/>
+			<graphic id="all" image="ui/buttons/button_gold" slice9="6,6,12,12"/>
 		</definition>	
 		
-		<definition id="skinny_button_red" width="93" height="20" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="pixel"/>
-			<text id="normal" use_def="pixel"/>
-			<graphic id="normal" image="ui/buttons/red" slice9="6,6,11,11"/>
-			<graphic id="hilight" image="ui/buttons/red_over" slice9="6,6,11,11"/>
+		<definition id="skinny_button_red" width="93" height="20" text_x="0" text_y="-1">
+			<text use_def="pixel"/>
+			<graphic id="all" image="ui/buttons/button_red" slice9="6,6,12,12"/>
 		</definition>	
 		
-		<definition id="skinny_button_blue" width="93" height="20" text_x="-2" text_y="-2">
-			<text id="hilight" use_def="pixel"/>
-			<text id="normal" use_def="pixel"/>
-			<graphic id="normal" image="ui/buttons/blue" slice9="6,6,11,11"/>
-			<graphic id="hilight" image="ui/buttons/blue_over" slice9="6,6,11,11"/>
+		<definition id="skinny_button_blue" width="93" height="20" text_x="0" text_y="-1">
+			<text use_def="pixel"/>
+			<graphic id="all" image="ui/buttons/button_blue" slice9="6,6,12,12"/>
 		</definition>	
 		
 		<group id="shadow"/>
@@ -216,12 +189,10 @@
 	<save_slot id="2" x="60" y="285" use_def="save_slot_texture"/>
 		
 	<button center_x="true" y="535" width="64" height="32" label="$MISC_BACK" text_x="-3" text_y="-1">
-		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
-		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
+		<text font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center">		
+			<color id="over" value="0xffff00"/>
+		</text>
 		<param type="string" value="back"/>
-		<graphic id="border" visible="false"/>
-		<graphic id="hilight" visible="false"/>
-		<graphic id="normal" visible="false"/>
 		<locale id="nb-NO">
 			<change width="96"/>
 		</locale>	

@@ -28,30 +28,27 @@
 	<definition id="chrome_flat" src="ui/chrome/dark_grey_flat_top" slice9="4,4,8,8"/>
 	
 	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
-		<text id="hilight" font="vera" size="16" style="bold" color="0xffff00" shadow="1" align="center"/>
-		<text id="normal" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center"/>		
-		<graphic id="border" visible="false"/>
-		<graphic id="hilight" visible="false"/>
-		<graphic id="normal" visible="false"/>
+		<text font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center">		
+			<color id="over" value="0xffff00"/>
+		</text>
 	</definition>
 
 	<definition id="spell_button" width="32" height="32">
-		<graphic id="normal" image="ui/buttons/grey" slice9="6,6,11,11"/>
-		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
+		<graphic id="all" image="ui/buttons/button_grey" slice9="6,6,11,11"/>
 	</definition>	
 	
 	<definition id="options_button" width="192" height="24">
-		<text id="hilight" font="vera" size="14" style="bold" color="0xffff00" shadow="1" align="center"/>
-		<text id="normal" font="vera" size="14" style="bold" color="0xffffff" shadow="1" align="center"/>
-		<graphic id="normal" image="ui/buttons/grey" slice9="6,6,11,11"/>
-		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
+		<text font="vera" size="14" style="bold" color="0xffffff" shadow="1" align="center">
+			<color id="over" value="0xffff00"/>
+		</text>
+		<graphic id="all" image="ui/buttons/button_grey" slice9="6,6,11,11"/>
 	</definition>	
 	
 	<definition id="time_button" width="48" height="24" text_y="-2" text_x="-2">
-		<text id="hilight" font="vera" size="12" style="bold" color="0xffff00" shadow="1" align="center"/>
-		<text id="normal" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="center"/>
-		<graphic id="normal" image="ui/buttons/grey" slice9="6,6,11,11"/>
-		<graphic id="hilight" image="ui/buttons/grey_over" slice9="6,6,11,11"/>
+		<text font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="center">
+			<color id="over" value="0xffff00"/>
+		</text>
+		<graphic id="all" image="ui/buttons/button_grey" slice9="6,6,11,11"/>
 	</definition>
 		
 	<!--STUFF-->
@@ -227,7 +224,7 @@
 			</button>
 			<button id="time_6" x="2" y="-5" use_def="time_button" group="top" label="8x">
 				<anchor x="time_5.right" y="options.top" x-flush="right" y-flush="bottom"/>								
-			</button>-->
+			</button>
 				
 		<!--end top group-->
 
