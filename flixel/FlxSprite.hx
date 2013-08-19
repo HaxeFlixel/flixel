@@ -775,7 +775,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
-				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
+				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
 			var csx:Float = _facingMult;
