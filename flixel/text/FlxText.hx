@@ -441,6 +441,9 @@ class FlxText extends FlxSprite
 		#end
 			if (_regen)
 			{
+				//update the internal _textField's width to match the bounding box
+				_textField.width = width;
+				
 				// Need to generate a new buffer to store the text graphic
 				height = _textField.textHeight;
 				// Account for 2px gutter on top and bottom

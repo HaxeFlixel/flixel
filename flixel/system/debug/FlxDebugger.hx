@@ -70,8 +70,12 @@ class FlxDebugger extends Sprite
 	 */
 	public var stats:Stats;
 	/**
-	 * Container for the trace output widget.
+	 * Container for the bitmap output widget
 	 */
+	public var bmpLog:BmpLog;	
+	/**
+	 * Container for the trace output widget.
+	 */	 
 	public var log:Log;
 	/**
 	 * Container for the watch window widget.
@@ -141,7 +145,7 @@ class FlxDebugger extends Sprite
 		var str:String = FlxG.libraryName;
 		txt.text = str;
 		addChild(txt);
-		
+					
 		log = new Log("log", 0, 0, true);
 		addChild(log);
 		
@@ -153,6 +157,11 @@ class FlxDebugger extends Sprite
 		
 		stats = new Stats("stats", 0, 0, false);
 		addChild(stats);
+
+		#if FLX_BMP_DEBUG
+			bmpLog = new BmpLog("bmplog", 0, 0, true);
+			addChild(bmpLog);
+		#end
 		
 		vcr = new VCR();
 		vcr.x = (Width - vcr.width / 2) / 2;
@@ -177,6 +186,12 @@ class FlxDebugger extends Sprite
 	public function destroy():Void
 	{
 		_screen = null;
+		if (bmpLog != null) 
+		{
+			removeChild(bmpLog);
+			bmpLog.destroy();
+			bmpLog = null;
+		}		
 		if (log != null)
 		{
 			removeChild(log);
@@ -312,6 +327,10 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
+				if (bmpLog != null) {
+					bmpLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+					bmpLog.reposition(_screen.x, _screen.y - watch.height - bmpLog.height - console.height - GUTTER * 1.5);
+				}
 			default:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -319,7 +338,7 @@ class FlxDebugger extends Sprite
 				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
-				stats.reposition(_screen.x, 0);
+				stats.reposition(_screen.x, 0);				
 		}
 	}
 	
@@ -332,6 +351,9 @@ class FlxDebugger extends Sprite
 		log.updateBounds(_screenBounds);
 		watch.updateBounds(_screenBounds);
 		console.updateBounds(_screenBounds);
+		if (bmpLog != null) {
+			bmpLog.updateBounds(_screenBounds);
+		}
 		resetLayout();
 	}
 }

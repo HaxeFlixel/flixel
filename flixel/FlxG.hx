@@ -5,6 +5,7 @@ import flash.display.StageDisplayState;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
+import flixel.system.frontEnds.BmpLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
@@ -170,6 +171,14 @@ class FlxG
 	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
 	 */
 	static public var log(default, null):LogFrontEnd = new LogFrontEnd();
+	
+	#if FLX_BMP_DEBUG
+	/**
+	 * A reference to the <code>BmpLogFrontEnd</code> object. Use it to <code>add</code> images to the bmplog window. 
+	 */	
+	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();	
+	#end
+	
 	/**
 	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
 	 * watch window.
