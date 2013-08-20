@@ -63,13 +63,6 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	
 	private function set_y(NewY:Float):Float
 	{
-		#if neko
-		if (y == null)
-		{
-			y = 0;
-		}
-		#end
-		
 		if (!_skipTransformChildren)
 		{
 			var offset:Float = NewY - y;
