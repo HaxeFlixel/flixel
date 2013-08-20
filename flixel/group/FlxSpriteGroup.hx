@@ -28,11 +28,16 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	 */
 	override public function add(Sprite:IFlxSprite):IFlxSprite
 	{
-		Sprite.x += x;
-		Sprite.y += y;
-		Sprite.alpha = alpha;
+		Sprite.x = Sprite.x + this.x;
+		Sprite.y = Sprite.y + this.y;
+		Sprite.alpha = this.alpha;
 		
-		return super.add(Sprite);
+		if (Std.is(Sprite, FlxSpriteGroup))
+		{
+			return super.add(cast(Sprite, FlxSpriteGroup));
+		}
+		
+		return super.add(cast(Sprite, FlxSprite));
 	}
 	
 	/**
