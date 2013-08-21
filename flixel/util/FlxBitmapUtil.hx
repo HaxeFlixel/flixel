@@ -67,9 +67,9 @@ class FlxBitmapUtil
 							diffG = g1 - g2;
 							diffB = b1 - b2;
 							
-							resultR = (diffR > 0) ? diffR : (256 + diffR);
-							resultG = (diffG > 0) ? diffG : (256 + diffG);
-							resultB = (diffB > 0) ? diffB : (256 + diffB);
+							resultR = (diffR >= 0) ? diffR : (256 + diffR);
+							resultG = (diffG >= 0) ? diffG : (256 + diffG);
+							resultB = (diffB >= 0) ? diffB : (256 + diffB);
 							
 							resultColor = (0xFF << 24 | resultR << 16 | resultG << 8 | resultB);
 							result.setPixel32(i, j, resultColor);
@@ -82,7 +82,7 @@ class FlxBitmapUtil
 							alpha1 = (pixel1 >> 24) & 0xff;
 							alpha2 = (pixel2 >> 24) & 0xff;
 							diffA = alpha1 - alpha2;
-							resultAlpha = (diffA > 0) ? diffA : (256 + diffA);
+							resultAlpha = (diffA >= 0) ? diffA : (256 + diffA);
 							resultColor = (resultAlpha | 0xFF << 16 | 0xFF << 8 | 0xFF);
 							
 							if (alpha1 != alpha2)
