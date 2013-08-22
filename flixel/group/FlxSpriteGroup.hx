@@ -32,12 +32,12 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		Sprite.y = Sprite.y + this.y;
 		Sprite.alpha = this.alpha;
 		
-		if (Std.is(Sprite, FlxSpriteGroup))
+		if (Std.is(Sprite, FlxSprite))
 		{
-			return super.add(cast(Sprite, FlxSpriteGroup));
+			return super.add(cast(Sprite, FlxSprite));
 		}
 		
-		return super.add(cast(Sprite, FlxSprite));
+		return super.add(cast(Sprite, FlxSpriteGroup));
 	}
 	
 	/**
