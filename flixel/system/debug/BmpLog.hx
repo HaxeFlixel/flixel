@@ -1,4 +1,5 @@
 package flixel.system.debug;
+#if !FLX_NO_DEBUG
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -7,6 +8,7 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
+import flixel.util.FlxBitmapUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
@@ -33,7 +35,7 @@ class BmpLog extends Window
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
 		super(Title, Width, Height, Resizable, Bounds);
-				
+		
 		/*_text = new TextField();
 		_text.x = 2;
 		_text.y = 15;
@@ -73,23 +75,18 @@ class BmpLog extends Window
 		{
 			return false;
 		}
-				
+		
 		// Check if the text has been added yet already
 		if (FireOnce)
 		{
 			for (bmp in _bmps)
 			{
-				if (bmp.bitmapData != null) {
-					#if flash
-						if (Data.compare(bmp.bitmapData) == 0)
-						{
-							return false;
-						}
-					#elseif cpp
-						//TODO:
-						//Why does openfl-native's BitmapData not have a compare function?
-						//Seems like an oversight, maybe I'll add it later.
-					#end
+				if (bmp.bitmapData != null)
+				{
+					if (FlxBitmapUtil.compare(Data, bmp.bitmapData) == 0)
+					{
+						return false;
+					}
 				}
 			}
 		}
@@ -97,10 +94,13 @@ class BmpLog extends Window
 		// Actually add it 
 		var bmp:Bitmap = new Bitmap(Data.clone());
 		bmp.x = 2;			
-		if (_bmps.length > 0) {
+		if (_bmps.length > 0) 
+		{
 			var last:Bitmap = _bmps[_bmps.length - 1];
 			bmp.y = last.y + last.height + 2;
-		}else {
+		}
+		else 
+		{
 			bmp.y = 15;
 		}
 		
@@ -109,13 +109,18 @@ class BmpLog extends Window
 		return true;
 	}
 	
-	public function clear():Void {
-		if(_bmps != null){
-			while (_bmps.length > 0) {
+	public function clear():Void 
+	{
+		if (_bmps != null)
+		{
+			while (_bmps.length > 0) 
+			{
 				var bmp:Bitmap = _bmps.pop();
 				removeChild(bmp);
-				if (bmp != null) { 
-					if(bmp.bitmapData != null){
+				if (bmp != null) 
+				{ 
+					if (bmp.bitmapData != null)
+					{
 						bmp.bitmapData.dispose(); 
 						bmp.bitmapData = null;
 					}
@@ -133,3 +138,4 @@ class BmpLog extends Window
 		super.updateSize();
 	}
 }
+#end
