@@ -1,5 +1,4 @@
 package flixel.system.debug;
-#if !FLX_NO_DEBUG
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -80,11 +79,17 @@ class BmpLog extends Window
 		{
 			for (bmp in _bmps)
 			{
-				if(bmp.bitmapData != null){
-					if (Data.compare(bmp.bitmapData) == 0)
-					{
-						return false;
-					}
+				if (bmp.bitmapData != null) {
+					#if flash
+						if (Data.compare(bmp.bitmapData) == 0)
+						{
+							return false;
+						}
+					#elseif cpp
+						//TODO:
+						//Why does openfl-native's BitmapData not have a compare function?
+						//Seems like an oversight, maybe I'll add it later.
+					#end
 				}
 			}
 		}
@@ -128,4 +133,3 @@ class BmpLog extends Window
 		super.updateSize();
 	}
 }
-#end
