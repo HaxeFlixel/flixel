@@ -1,12 +1,10 @@
-package com.chipacabra.jumper;
+package;
 
-import com.chipacabra.jumper.Player;
-import flixel.util.FlxSpriteUtil;
-import openfl.Assets;
 import flixel.FlxG;
-import flixel.group.FlxGroup;
 import flixel.FlxObject;
+import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
+import flixel.util.FlxSpriteUtil;
 /**
  * ...
  * @author David Bell

@@ -1,4 +1,4 @@
-package com.chipacabra.jumper;
+package;
 
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
