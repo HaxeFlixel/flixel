@@ -1570,8 +1570,10 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	
 	private function get_curAnim():String
 	{
-		if (_curAnim != null && !finished)
+		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished))
+		{
 			return _curAnim.name;
+		}
 		return null;
 	}
 	
