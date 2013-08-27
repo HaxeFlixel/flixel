@@ -2,6 +2,7 @@
 "$TITLE_SAVES","Fortsette",
 "$TITLE_MENUS","Menyer",
 "$TITLE_BATTLES","Kamp",
+"$TITLE_DEFAULT","Standard-bilde test",
 "$SAVE_PLAY","Spill",
 "$SAVE_PLAY+","Spill+",
 "$SAVE_IMPORT","Importere",
@@ -25,4 +26,5 @@
 "$MENU_TAB_3","Tab 3",
 "$MENU_TAB_4","Tab 4",
 "$MENU_TOGGLE","Endre",
+"$DEFAULT_DESC","Widget'ene du ser her bruker BARE standard-bilder fra FlxUI!",
 "$MISC_BACK","Tilbake",

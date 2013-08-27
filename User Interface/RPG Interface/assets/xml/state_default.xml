@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>		
+	<include id="_ui_globals"/>
+
+	<!--Definitions-->
+		
+	<!--STUFF-->
+
+	<sprite src="ui/title_back" x="0" y="0"/>
+	
+	<text center_x="true" x="0" y="150" width="300" text="$DEFAULT_DESC" align="center"/>
+	
+	<chrome x="50" y="180" width="700" height="300"/>
+
+	<checkbox id="check_1" x="60" y="200" label="$MENU_THING_1">
+		<param type="string" value="thing 1"/>
+	</checkbox>	
+	
+	<checkbox id="check_2" x="0" y="20" label="$MENU_THING_2">
+		<anchor x="check_1.left" y="check_1.top" x-flush="left" y-flush="top"/>
+		<param type="string" value="thing 1"/>
+	</checkbox>
+	
+	<radio_group id="radio_1" x="170" y="200">
+		<param type="string" value="dr_seuss"/>		
+		
+		<!--actual radio button elements-->
+		<radio id="1_fish" label="$MENU_1_FISH"/>
+		<radio id="2_fish" label="$MENU_2_FISH"/>
+		<radio id="0xff0000_fish" label="$MENU_RED_FISH"/>
+		<radio id="0x0000ff_fish" label="$MENU_BLUE_FISH"/>
+	</radio_group>
+	
+	<button_toggle x="300" y="200" label="$MENU_TOGGLE"/>
+	<button_toggle x="300" y="230" label="$MENU_TOGGLE"/>
+	<button_toggle x="300" y="260" label="$MENU_TOGGLE"/>
+	<button_toggle x="300" y="290" label="$MENU_TOGGLE"/>
+	
+	<tab_menu x="500" y="212" width="200" height="200">
+		<tab id="tab_1" label="$MENU_TAB_1"/>
+		<tab id="tab_2" label="$MENU_TAB_2"/>
+		<tab id="tab_3" label="$MENU_TAB_3"/>
+		<tab id="tab_4" label="$MENU_TAB_4"/>
+		<group id="tab_1">
+			<radio_group x="10" y="10">
+				<param type="string" value="dr_seuss2"/>				
+				<radio id="1_fish" label="$MENU_1_FISH"/>
+				<radio id="2_fish" label="$MENU_2_FISH"/>
+				<radio id="0xff0000_fish" label="$MENU_RED_FISH"/>
+				<radio id="0x0000ff_fish" label="$MENU_BLUE_FISH"/>
+			</radio_group>
+		</group>
+		<group id="tab_2">
+			<checkbox x="10" y="10"label="$MENU_THING_1">
+				<param type="string" value="thing 1"/>
+			</checkbox>	
+			<checkbox x="10" y="40"label="$MENU_THING_2">
+				<param type="string" value="thing 2"/>
+			</checkbox>
+		</group>
+		<group id="tab_3">			
+		</group>
+		<group id="tab_4">			
+		</group>
+	</tab_menu>
+	
+	<button center_x="true" x="0" y="535" id="start" label="$MISC_BACK">		
+		<param type="string" value="back"/>
+		<locale id="nb-NO">
+			<change width="96"/>
+		</locale>	
+	</button>
+</data>

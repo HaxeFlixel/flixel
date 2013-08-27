@@ -189,6 +189,7 @@
 	<save_slot id="2" x="60" y="285" use_def="save_slot_texture"/>
 		
 	<button center_x="true" y="535" width="64" height="32" label="$MISC_BACK" text_x="-3" text_y="-1">
+		<graphic id="blank"/>
 		<text font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center">		
 			<color id="over" value="0xffff00"/>
 		</text>

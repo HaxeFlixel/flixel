@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
 	
-	<!--This will eventually have some test menus in it-->
+	<include id="_ui_globals"/>
 	
 	<!--DEFS-->
 	
@@ -58,15 +58,6 @@
 		<graphic id="over" toggle="true" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>				
 		<graphic id="down" toggle="true" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>				
 	</definition>
-	
-	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
-		<text use_def="sans16" color="0xffffff">
-			<color id="over" value="0xffff00"/>
-		</text>
-		<graphic id="hilight" visible="false"/>
-		<graphic id="normal" visible="false"/>
-	</definition>
-
 	
 	<definition id="button_toggle" width="50" height="20">		
 		<text use_def="sans10c" color="0xffffff">

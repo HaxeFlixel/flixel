@@ -1,5 +1,5 @@
 import flash.text.Font;
-import flixel.addons.ui.FlxTextX;
+import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.U;
 import flixel.FlxG;
 import flixel.addons.ui.FlxStateX;
@@ -47,6 +47,7 @@ class State_Title extends FlxStateX
 						case "saves": FlxG.switchState(new State_SaveMenu());
 						case "menu": FlxG.switchState(new State_TestMenu());
 						case "battle": FlxG.switchState(new State_Battle());
+						case "default_test": FlxG.switchState(new State_DefaultTest());
 					}
 				}
 			case "click_radio_group":

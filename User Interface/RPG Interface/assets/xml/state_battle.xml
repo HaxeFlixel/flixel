@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
 	
-	<!--This will eventually have some test menus in it-->
+	<include id="_ui_globals"/>
 	
 	<!--DEFS-->
 	
@@ -26,13 +26,7 @@
 	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
 	
 	<definition id="chrome_flat" src="ui/chrome/dark_grey_flat_top" slice9="4,4,8,8"/>
-	
-	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
-		<text font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="center">		
-			<color id="over" value="0xffff00"/>
-		</text>
-	</definition>
-
+		
 	<definition id="spell_button" width="32" height="32">
 		<graphic id="all" image="ui/buttons/button_grey" slice9="6,6,11,11"/>
 	</definition>	

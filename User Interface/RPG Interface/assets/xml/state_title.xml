@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<data>
+<data>	
+	<include id="_ui_globals"/>
 	
 	<sprite src="ui/title_back" x="0" y="0"/>
 		
-	<definition id="text_button" width="64" height="32" text_x="0" text_y="0">
-		<text id="normal" font="vera" color="0xffffff" size="16" style="bold" shadow="1" align="center">		
-			<color id="over" value="0xffff00"/>
-		</text>
-	</definition>
-	
-	<definition id="sans10" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
-	
 	<definition id="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot" radio_w="11" radio_h="11" label_width="100" space_y="16">
 		<text use_def="sans10" color="0xffffff">
 			<color id="over" value="0xffff00"/>
@@ -46,6 +37,10 @@
 		</locale>
 	</button>
 		
+	<button center_x="true" x="0" y="535" id="menu" use_def="text_button_wide" group="top" label="$TITLE_DEFAULT">
+		<param type="string" value="default_test"/>
+	</button>
+	
 	<button center_x="true" x="0" y="505" id="battle" use_def="text_button" group="top" label="$TITLE_BATTLES">
 		<param type="string" value="battle"/>
 		<locale id="nb-NO">

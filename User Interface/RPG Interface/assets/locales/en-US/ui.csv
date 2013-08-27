@@ -2,6 +2,7 @@
 "$TITLE_SAVES","Saves",
 "$TITLE_MENUS","Menus",
 "$TITLE_BATTLES","Battle",
+"$TITLE_DEFAULT","Default asset test",
 "$SAVE_PLAY","Play",
 "$SAVE_PLAY+","Play+",
 "$SAVE_IMPORT","Import",
@@ -25,4 +26,5 @@
 "$MENU_TAB_3","Tab 3",
 "$MENU_TAB_4","Tab 4",
 "$MENU_TOGGLE","Toggle",
+"$DEFAULT_DESC","The widgets you see here use ONLY default FlxUI Assets!",
 "$MISC_BACK","Back",
