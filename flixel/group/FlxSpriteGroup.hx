@@ -36,8 +36,13 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		{
 			return super.add(cast(Sprite, FlxSprite));
 		}
+		else if (Std.is(Sprite, FlxSpriteGroup))
+		{
+			return super.add(cast(Sprite, FlxSpriteGroup));
+		}
 		
-		return super.add(cast(Sprite, FlxSpriteGroup));
+		throw "Unsupported type of object. Please extend FlxSpriteGroup class and override its 'add' method to support it."
+		return null;
 	}
 	
 	/**
