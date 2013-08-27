@@ -151,11 +151,11 @@ class FlxRandom
 		}
 		else if (min < max)
 		{
-			return min + (Math.random() * (max - min + 1));
+			return min + (Math.random() * (max - min));
 		}
 		else
 		{
-			return max + (Math.random() * (min - max + 1));
+			return max + (Math.random() * (min - max));
 		}
 	}
 	

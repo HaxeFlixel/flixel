@@ -214,9 +214,9 @@ class FlxSpriteUtil
 		gfx.moveTo(StartX, StartY);
 		var alphaComponent:Float = ((Color >> 24) & 255) / 255;
 		
-		if (alphaComponent <= 0)
+		if (alphaComponent < 0)
 		{
-			alphaComponent = 1;
+			alphaComponent = 0;
 		}
 		
 		gfx.lineStyle(Thickness, Color, alphaComponent);

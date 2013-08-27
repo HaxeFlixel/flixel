@@ -2,11 +2,11 @@ package flixel.system.debug;
 
 import flash.display.Sprite;
 import flash.geom.Rectangle;
-import haxe.ds.StringMap;
 import flixel.FlxG;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
+import haxe.ds.StringMap;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
@@ -29,13 +29,11 @@ class Watch extends Window
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param Title			The name of the window, displayed in the header bar.
-	 * @param Width			The initial width of the window.
-	 * @param Height		The initial height of the window.
-	 * @param Resizable		Whether you can change the size of the window with a drag handle.
-	 * @param Bounds		A rectangle indicating the valid screen area for the window.
-	 * @param BGColor		What color the window background should be, default is gray and transparent.
-	 * @param TopColor		What color the window header bar should be, default is black and transparent.
+	 * @param 	Title		The name of the window, displayed in the header bar.
+	 * @param 	Width		The initial width of the window.
+	 * @param 	Height		The initial height of the window.
+	 * @param 	Resizable	Whether you can change the size of the window with a drag handle.
+	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
 	 */
 	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{

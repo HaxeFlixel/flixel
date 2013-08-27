@@ -66,6 +66,8 @@ class FlxText extends FlxSprite
 	{
 		super(X, Y);
 		
+		_filters = [];
+		
 		var key:String = FlxG.bitmap.getUniqueKey("text");
 		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
 		
@@ -121,6 +123,7 @@ class FlxText extends FlxSprite
 		_textField = null;
 		_format = null;
 		_formatAdjusted = null;
+		_filters = null;
 		
 		super.destroy();
 	}
@@ -167,8 +170,16 @@ class FlxText extends FlxSprite
 	
 	override private function set_width(Width:Float):Float
 	{
-		super.set_width(Width);
-		_regen = true;
+		if (Width != width)
+		{
+			var newWidth:Float = super.set_width(Width);
+			if (_textField != null)
+			{
+				_textField.width = newWidth;
+			}
+			_regen = true;
+		}
+		
 		return Width;
 	}
 	
@@ -439,6 +450,12 @@ class FlxText extends FlxSprite
 		{
 			_regen = true;
 		#end
+			
+			if (_filters != null)
+			{
+				_textField.filters = _filters;
+			}
+		
 			if (_regen)
 			{
 				// Need to generate a new buffer to store the text graphic
@@ -447,13 +464,13 @@ class FlxText extends FlxSprite
 				height += 4;
 				var key:String = _cachedGraphics.key;
 				FlxG.bitmap.remove(key);
-				makeGraphic(Std.int(width), Std.int(height), FlxColor.TRANSPARENT, false, key);
+				makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
 				frameHeight = Std.int(height);
 				_textField.height = height * 1.2;
 				_flashRect.x = 0;
 				_flashRect.y = 0;
-				_flashRect.width = width;
-				_flashRect.height = height;
+				_flashRect.width = width + _widthInc;
+				_flashRect.height = height + _heightInc;
 				_regen = false;
 			}
 			// Else just clear the old buffer before redrawing the text
@@ -471,6 +488,8 @@ class FlxText extends FlxSprite
 				_formatAdjusted.align = _format.align;
 				_matrix.identity();
 				
+				_matrix.translate(Std.int(0.5 * _widthInc), Std.int(0.5 * _heightInc));
+				
 				// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 				#if js
 				if (_format.align == TextFormatAlign.CENTER)
@@ -487,6 +506,7 @@ class FlxText extends FlxSprite
 					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
 					#end
 				}
+				
 				// Render a single pixel shadow beneath the text
 				if (_useShadow)
 				{
@@ -529,48 +549,7 @@ class FlxText extends FlxSprite
 		#end
 		
 		dirty = false;
-		/*
-		// Updates the filter effects on framePixels.
-		if (filters != null)
-		{
-			#if flash 
-			for (filter in filters) 
-			{
-				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
-			}
-			#else
-			
-			_pixels.copyPixels(_pixelsBackup, _flashRect, _flashPointZero);
-			
-			for (filter in filters) 
-			{
-				_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
-			}
-			#end
-		}
-		*/
 	}
-	
-	/**
-	 * Adds a bitmap filter to the textField.
-	 * See FlxText.setClipping() for tips on how to increase the FlxText render area.
-	 * 
-	 * @param	Filter		The filter to be applied.
-	 * @param	WidthInc	Not used for FlxText, see FlxText.setClipping().
-	 * @param	HeightInc	Not used for FlxText, see FlxText.setClipping().
-	 */
-	/*override public function addFilter(Filter:BitmapFilter, WidthInc:Int = 0, HeightInc:Int = 0)
-	{
-		super.addFilter(Filter);
-	}*/
-	
-	/**
-	 * Set clipping does not work properly for FlxText, however the size of the text rendering 
-	 * can be increased in two ways:
-	 * Horizontally - set alignment to "center" and increase the sprite width.
-	 * Vertically   - add newlines ('\n') to the beggining and end of the text.
-	 */
-	/*override public function setClipping(Width:Int, Height:Int) {}*/
 	
 	/**
 	 * A helper function for updating the <code>TextField</code> that we use for rendering.
@@ -645,5 +624,39 @@ class FlxText extends FlxSprite
 		#else
 		_textField.setTextFormat(Format);
 		#end
+	}
+	
+	private var _filters:Array<BitmapFilter>;
+	
+	private var _widthInc:Int = 0;
+	private var _heightInc:Int = 0;
+	
+	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
+	{
+		if (_widthInc != widthInc || _heightInc != heightInc)
+		{
+			_regen = true;
+		}
+		
+		_filters.push(filter);
+		dirty = true;
+	}
+	
+	public function removeFilter(filter:BitmapFilter):Void
+	{
+		var removed:Bool = _filters.remove(filter);
+		if (removed)
+		{
+			dirty = true;
+		}
+	}
+	
+	public function clearFilters():Void
+	{
+		if (_filters.length > 0)
+		{
+			dirty = true;
+		}
+		_filters = [];
 	}
 }

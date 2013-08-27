@@ -2,7 +2,6 @@ package flixel;
 
 import flash.display.BitmapData;
 import flash.display.BlendMode;
-import flash.filters.BitmapFilter;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
@@ -98,6 +97,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	public var finished:Bool = false;
 	/**
+	 * Internal, keeps track of the current frame of animation.
+	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
+	 */
+	public var curFrame(default, null):Int = 0;
+	/**
 	 * Whether the current animation gets updated or not.
 	 */
 	public var paused(default, null):Bool = true;
@@ -139,11 +143,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	private var _curAnim:FlxAnim;
 	/**
-	 * Internal, keeps track of the current frame of animation.
-	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
-	 */
-	private var _curFrame:Int = 0;
-	/**
 	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
 	 */
 	private var _curIndex:Int = 0;
@@ -184,16 +183,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * Internal, helps with animation, caching and drawing.
 	 */
 	private var _matrix:Matrix;
-	
-	/**
-	 * An array that contains each filter object currently associated with this sprite.
-	 */
-	public var filters:Array<BitmapFilter>;
-	/**
-	 * Stores a copy of pixels before any bitmap filter is applied, this is necessary for native targets where bitmap filters only show when applied 
-	 * directly to pixels, so a backup is needed to clear filters when removeFilter() is called or when filters are reapplied during calcFrame().
-	 */
-	public var _pixelsBackup:BitmapData;
 	
 	/**
 	 * Link to current FlxFrame from loaded atlas
@@ -798,7 +787,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
 				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
-				camera.buffer.draw(framePixels, _matrix, null, blend, null, antialiasing);
+				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
 			var csx:Float = _facingMult;
@@ -988,19 +977,19 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			while (_frameTimer > _curAnim.delay)
 			{
 				_frameTimer = _frameTimer - _curAnim.delay;
-				if (_curFrame == _curAnim.frames.length - 1)
+				if (curFrame == _curAnim.frames.length - 1)
 				{
 					if (_curAnim.looped)
 					{
-						_curFrame = 0;
+						curFrame = 0;
 					}
 					finished = true;
 				}
 				else
 				{
-					_curFrame++;
+					curFrame++;
 				}
-				_curIndex = _curAnim.frames[_curFrame];
+				_curIndex = _curAnim.frames[curFrame];
 				if (_framesData != null)
 				{
 					_flxFrame = _framesData.frames[_curIndex];
@@ -1183,7 +1172,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			paused = false;
 			return;
 		}
-		_curFrame = 0;
+		curFrame = 0;
 		_curIndex = 0;
 		
 		if (_framesData != null)
@@ -1206,14 +1195,14 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			
 			if (Frame < 0)
 			{
-				_curFrame = Std.int(Math.random() * _curAnim.frames.length);
+				curFrame = Std.int(Math.random() * _curAnim.frames.length);
 			}
 			else if (_curAnim.frames.length > Frame)
 			{
-				_curFrame = Frame;
+				curFrame = Frame;
 			}
 			
-			_curIndex = _curAnim.frames[_curFrame];
+			_curIndex = _curAnim.frames[curFrame];
 			
 			if (_framesData != null)
 			{
@@ -1263,8 +1252,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			finished = false;
 		}
 		
-		_curFrame = Frame;
-		_curIndex = _curAnim.frames[_curFrame];
+		curFrame = Frame;
+		_curIndex = _curAnim.frames[curFrame];
 		
 		if (_framesData != null)
 		{
@@ -1299,6 +1288,13 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	inline public function getAnimation(Name:String):FlxAnim
 	{
 		return _animations.get(Name); 
+	}
+	
+	public var animations(get, never):Map<String, FlxAnim>;
+	
+	private function get_animations():Map<String, FlxAnim>
+	{
+		return _animations;
 	}
 	
 	/**
@@ -1586,8 +1582,10 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	
 	private function get_curAnim():String
 	{
-		if (_curAnim != null && !finished)
+		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished))
+		{
 			return _curAnim.name;
+		}
 		return null;
 	}
 	
@@ -1752,130 +1750,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		
 		if (_callback != null)
 		{
-			_callback(((_curAnim != null) ? (_curAnim.name) : null), _curFrame, _curIndex);
+			_callback(((_curAnim != null) ? (_curAnim.name) : null), curFrame, _curIndex);
 		}
 		
 		dirty = false;
-		
-		/*
-		// Updates the filter effects on framePixels.
-		if (filters != null)
-		{
-			#if flash 
-			for (filter in filters) 
-			{
-				framePixels.applyFilter(framePixels, _flashRect, _flashPointZero, filter);
-			}
-			#else
-			_pixels.copyPixels(_pixelsBackup, _pixels.rect, _flashPointZero);
-			for (filter in filters) 
-			{
-				_pixels.applyFilter(_pixels, _flashRect, _flashPointZero, filter);
-			}
-			#end
-		}
-		*/
 	}
-	
-	/**
-	 * Adds a filter to this sprite, the sprite becomes unique and won't share its graphics with other sprites.
-	 * Note that for effects like outer glow, or drop shadow, updating the sprite clipping
-	 * area may be required, use widthInc or heightInc to increase the sprite area.
-	 * 
-	 * @param	filter		The filter to be added.
-	 * @param	widthInc	The ammount of pixels to increase the width of the sprite.
-	 * @param	heightInc	The ammount of pixels to increase the height of the sprite.
-	 */
-	/*public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0)
-	{	
-		// This makes the sprite graphic unique, essential for native target that uses texture atlas,
-		setClipping(frameWidth + widthInc , frameHeight + heightInc);
-		
-		if (filters == null) 
-		{
-			filters = new Array<BitmapFilter>();
-		}
-		
-		filters.push(filter);
-		
-		#if !flash
-		if (_pixelsBackup == null) 
-		{
-			_pixelsBackup = new BitmapData(Std.int(_pixels.rect.width), Std.int(_pixels.rect.height));
-			_pixelsBackup.copyPixels(_pixels, _pixels.rect, _flashPointZero);
-			
-		}
-	//	updateAtlasInfo(true);
-		#end
-		
-		// TODO: check this later
-		resetFrameBitmapDatas();
-		
-		drawFrame(true); // at the end of calcframe() filters will be applied.
-	}*/
-	
-	/**
-	 * Sets this sprite clipping width and height, the current graphic is centered
-	 * at the middle.
-	 * 
-	 * @param	width	The new sprite width.
-	 * @param	height	The new sprite height.
-	 */
-	/*public function setClipping(width:Int, height:Int)
-	{
-		/*var tempSpr:FlxSprite = new FlxSprite(0, 0, _pixels);
-		var diffSize:FlxPoint = new FlxPoint(width - frameWidth, height - frameHeight);
-		// TODO: check this later for flash target when sprite have _textureData
-		makeGraphic(width, height, 0x0, true);
-		
-		stamp(tempSpr, Std.int(diffSize.x / 2), Std.int(diffSize.y / 2));
-		
-		this.x -= diffSize.x * 0.5;
-		this.y -= diffSize.y * 0.5;
-		
-		tempSpr.destroy();
-	}*/
-	
-	/**
-	 * Removes a filter from the sprite.
-	 * 
-	 * @param	filter	The filter to be removed.
-	 */
-	/*public function removeFilter(filter:BitmapFilter)
-	{
-		/*if(filters == null || filter == null)
-		{
-			return;
-		}
-		
-		filters.remove(filter);
-		
-		drawFrame(true);
-		
-		if (filters.length == 0)
-		{
-			filters = null;
-		}
-	}*/
-	
-	/**
-	 * Removes all filters from the sprite, additionally you may call loadGraphic() after removing
-	 * the filters to reuse cached graphics/bitmaps and stop this sprite from being unique.
-	 */
-	/*public function removeAllFilters()
-	{
-		if (filters == null) return;
-		
-		while (filters.length != 0) 
-		{
-			filters.pop();
-		}
-		
-	//	updateAtlasInfo(true);
-		drawFrame(true);
-		
-		filters = null;
-	}*/
 	
 	/**
 	 * How many frames of "baked" rotation there are (if any).

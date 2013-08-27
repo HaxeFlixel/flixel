@@ -5,6 +5,7 @@ import flash.display.StageDisplayState;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
+import flixel.system.frontEnds.BmpLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
@@ -52,12 +53,12 @@ class FlxG
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
-	static public var LIBRARY_MAJOR_VERSION:String = "2";
+	static public var LIBRARY_MAJOR_VERSION:String = "3";
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
+	static public var LIBRARY_MINOR_VERSION:String = "0.0-dev";
 	
 	/**
 	 * Internal tracker for game object.
@@ -170,6 +171,14 @@ class FlxG
 	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
 	 */
 	static public var log(default, null):LogFrontEnd = new LogFrontEnd();
+	
+	#if FLX_BMP_DEBUG
+	/**
+	 * A reference to the <code>BmpLogFrontEnd</code> object. Use it to <code>add</code> images to the bmplog window. 
+	 */	
+	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();	
+	#end
+	
 	/**
 	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
 	 * watch window.

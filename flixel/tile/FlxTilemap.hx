@@ -1445,7 +1445,6 @@ class FlxTilemap extends FlxObject
 			
 			while (column < selectionWidth)
 			{
-				overlapFound = false;
 				var dataIndex:Int = _data[rowStart + column];
 				
 				if (dataIndex < 0)
@@ -1455,14 +1454,14 @@ class FlxTilemap extends FlxObject
 				}
 				
 				tile = _tileObjects[dataIndex];
+				tile.x = X + column * _tileWidth;
+				tile.y = Y + row * _tileHeight;
+				tile.last.x = tile.x - deltaX;
+				tile.last.y = tile.y - deltaY;
+				overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
 				
 				if (tile.allowCollisions != FlxObject.NONE)
 				{
-					tile.x = X + column * _tileWidth;
-					tile.y = Y + row * _tileHeight;
-					tile.last.x = tile.x - deltaX;
-					tile.last.y = tile.y - deltaY;
-					
 					if (Callback != null)
 					{
 						if (FlipCallbackParams)
@@ -1474,25 +1473,20 @@ class FlxTilemap extends FlxObject
 							overlapFound = Callback(tile, Object);
 						}
 					}
-					else
+				}
+				
+				if (overlapFound)
+				{
+					if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
 					{
-						overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
+						tile.mapIndex = rowStart + column;
+						tile.callbackFunction(tile, Object);
 					}
-					if (overlapFound)
+					
+					if (tile.allowCollisions != FlxObject.NONE)
 					{
-						if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
-						{
-							tile.mapIndex = rowStart + column;
-							tile.callbackFunction(tile, Object);
-						}
-						
 						results = true;
 					}
-				}
-				else if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
-				{
-					tile.mapIndex = rowStart + column;
-					tile.callbackFunction(tile, Object);
 				}
 				
 				column++;
@@ -2285,15 +2279,15 @@ class FlxTilemap extends FlxObject
 		}
 		
 		#if flash
-		var rx:Int = (_data[Index] - _startingIndex) * _tileWidth + _region.startX;
+		var rx:Int = (_data[Index] - _startingIndex) * (_tileWidth + _region.spacingX);
 		var ry:Int = 0;
 		
 		if (Std.int(rx) >= _region.width)
 		{
-			ry = Std.int(rx / _region.width) * _tileHeight + _region.startY;
+			ry = Std.int(rx / _region.width) * (_tileHeight + _region.spacingY);
 			rx %= _region.width;
 		}
-		_rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
+		_rects[Index] = (new Rectangle(rx + _region.startX, ry + _region.startY, _tileWidth, _tileHeight));
 		#else
 		_rectIDs[Index] = _framesData.frames[_data[Index] - _startingIndex].tileID;
 		#end

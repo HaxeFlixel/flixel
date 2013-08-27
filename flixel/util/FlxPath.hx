@@ -628,7 +628,7 @@ class FlxPath
 	 */
 	public function drawDebug(Camera:FlxCamera = null):Void
 	{
-		if (nodes.length <= 0)
+		if (nodes == null || nodes.length <= 0)
 		{
 			return;
 		}
