@@ -1,13 +1,13 @@
 import haxe.xml.Fast;
 import flash.Lib;
 import flixel.FlxG;
-import flixel.addons.ui.FlxStateX;
+import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUI;
 /**
  * @author Lars Doucet
  */
 
-class State_Battle extends FlxStateX
+class State_Battle extends FlxUIState
 {
 
 	override public function create() 

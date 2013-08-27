@@ -1,13 +1,13 @@
 import haxe.xml.Fast;
 import flash.Lib;
 import flixel.FlxG;
-import flixel.addons.ui.FlxStateX;
+import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxInputText;
 /**
  * @author Lars Doucet
  */
 
-class State_DefaultTest extends FlxStateX
+class State_DefaultTest extends FlxUIState
 {
 
 	override public function create() 

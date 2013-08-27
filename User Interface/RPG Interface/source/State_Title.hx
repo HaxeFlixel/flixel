@@ -2,9 +2,9 @@ import flash.text.Font;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.U;
 import flixel.FlxG;
-import flixel.addons.ui.FlxStateX;
-import flixel.addons.ui.FlxRadioGroup;
-import flixel.addons.ui.FlxInputText;
+import flixel.addons.ui.FlxUIState;
+import flixel.addons.ui.FlxUIRadioGroup;
+import flixel.addons.ui.FlxUIInputText;
 import flixel.text.FlxText;
 import firetongue.FireTongue;
 import openfl.Assets;
@@ -12,7 +12,7 @@ import openfl.Assets;
 /**
  * @author Lars Doucet
  */
-class State_Title extends FlxStateX
+class State_Title extends FlxUIState
 {
 	override public function create():Void
 	{
@@ -23,7 +23,7 @@ class State_Title extends FlxStateX
 		if (Main.tongue == null) {
 			Main.tongue = new FireTongueEx();
 			Main.tongue.init("en-US");
-			FlxStateX.static_tongue = Main.tongue;
+			FlxUIState.static_tongue = Main.tongue;
 		}
 		
 		_xml_id = "state_title";
@@ -37,7 +37,7 @@ class State_Title extends FlxStateX
 		
 		switch(id) {
 			case "finish_load":
-				var radio:FlxRadioGroup = cast _ui.getAsset("locale_radio");
+				var radio:FlxUIRadioGroup = cast _ui.getAsset("locale_radio");
 				if(radio != null){
 					radio.selectedId = Main.tongue.locale.toLowerCase();
 				}

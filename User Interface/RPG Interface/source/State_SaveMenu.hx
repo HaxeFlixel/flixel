@@ -1,14 +1,14 @@
 import haxe.xml.Fast;
 import flash.Lib;
 import flixel.FlxG;
-import flixel.addons.ui.FlxStateX;
+import flixel.addons.ui.FlxUIState;
 
 /**
  * ...
  * @author Lars Doucet
  */
 
-class State_SaveMenu extends FlxStateX
+class State_SaveMenu extends FlxUIState
 {
 
 	override public function create() 
