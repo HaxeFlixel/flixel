@@ -36,6 +36,7 @@ class LinearMotion extends Motion
 		y = _fromY = FromY;
 		_moveX = ToX - FromX;
 		_moveY = ToY - FromY;
+		_useDuration = UseDuration;
 		
 		if (UseDuration)
 		{
@@ -56,11 +57,21 @@ class LinearMotion extends Motion
 	override public function update():Void
 	{
 		super.update();
-		x = _fromX + _moveX * _t;
-		y = _fromY + _moveY * _t;
-		if (x == _fromX + _moveX && y == _fromY + _moveY && active)
+		if( !_waitingForDuration )
 		{
-			finished = true;
+			x = _fromX + _moveX * _t;
+			y = _fromY + _moveY * _t;
+			if (x == _fromX + _moveX && y == _fromY + _moveY && active)
+			{
+				if(!_useDuration)
+				{
+					finished = true;
+				}
+				else
+				{
+					_waitingForDuration = true;
+				}
+			}
 		}
 		if(finished)
 		{
@@ -84,4 +95,6 @@ class LinearMotion extends Motion
 	private var _moveX:Float;
 	private var _moveY:Float;
 	private var _distance:Float;
+	private var _useDuration:Bool;
+	private var _waitingForDuration:Bool;
 }
