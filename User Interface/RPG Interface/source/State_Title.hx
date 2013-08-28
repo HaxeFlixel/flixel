@@ -27,7 +27,7 @@ class State_Title extends FlxUIState
 		}
 		
 		_xml_id = "state_title";
-		_tongue = Main.tongue;		
+		//_tongue = Main.tongue;		
 		
 		super.create();	
 	}
@@ -48,6 +48,7 @@ class State_Title extends FlxUIState
 						case "menu": FlxG.switchState(new State_TestMenu());
 						case "battle": FlxG.switchState(new State_Battle());
 						case "default_test": FlxG.switchState(new State_DefaultTest());
+						case "code_test": FlxG.switchState(new State_CodeTest());
 					}
 				}
 			case "click_radio_group":

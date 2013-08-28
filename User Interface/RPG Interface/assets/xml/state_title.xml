@@ -41,6 +41,10 @@
 		<param type="string" value="default_test"/>
 	</button>
 	
+	<button center_x="true" x="0" y="565" id="menu" use_def="text_button_wide" group="top" label="$TITLE_CODE">
+		<param type="string" value="code_test"/>
+	</button>	
+	
 	<button center_x="true" x="0" y="505" id="battle" use_def="text_button" group="top" label="$TITLE_BATTLES">
 		<param type="string" value="battle"/>
 		<locale id="nb-NO">
