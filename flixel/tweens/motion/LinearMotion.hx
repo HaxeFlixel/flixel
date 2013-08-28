@@ -58,11 +58,11 @@ class LinearMotion extends Motion
 		super.update();
 		x = _fromX + _moveX * _t;
 		y = _fromY + _moveY * _t;
-		if (x == _fromX + _moveX && y == _fromY + _moveY && active)
+		if (x == _fromX + _moveX && y == _fromY + _moveY && active && (_time >= _target))
 		{
 			finished = true;
 		}
-		if(finished)
+		if (finished)
 		{
 			postUpdate();
 		}

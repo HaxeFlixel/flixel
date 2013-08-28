@@ -425,7 +425,7 @@ class FlxTween
 		_target = duration;
 		if (type == 0) 
 		{
-			type = FlxTween.PERSIST;
+			type = FlxTween.ONESHOT;
 		}
 		else if (type == FlxTween.BACKWARD)
 		{
