@@ -262,6 +262,14 @@ class FlxKeyboard implements IFlxInput
 				{
 					return true;
 				}
+				else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
+				{
+					return true;
+				}
+				else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
+				{
+					return true;
+				}
 			}
 			#if !FLX_NO_DEBUG
 			else
