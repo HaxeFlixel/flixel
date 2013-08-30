@@ -191,7 +191,7 @@ class ConsoleCommands
 		FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
 		
 		if (FlxG.debugger.visualDebug) 
-			cLog("visualDebug: Enbaled");
+			cLog("visualDebug: Enabled");
 		else
 			cLog("visualDebug: Disabled");
 	}
