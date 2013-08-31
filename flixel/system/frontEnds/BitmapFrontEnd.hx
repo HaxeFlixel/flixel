@@ -7,6 +7,7 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
+import openfl.Assets;
 
 class BitmapFrontEnd
 {
@@ -320,12 +321,22 @@ class BitmapFrontEnd
 		for (key in _cache.keys())
 		{
 			obj = _cache.get(key);
-			if(obj != null && !obj.persist)
+			if ((obj != null && !obj.persist) && inOpenFlAssets(key) == false)
 			{
 				_cache.remove(key);
 				obj.destroy();
 				obj = null;
 			}
 		}
+	}
+	
+	public function inOpenFlAssets(key:String):Bool
+	{
+		if (Assets.cachedBitmapData != null)
+		{
+			return Assets.cachedBitmapData.exists(key);
+		}
+		
+		return false;
 	}
 }
