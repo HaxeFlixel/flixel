@@ -45,3 +45,5 @@
 "$POPUP_DEMO_1_BODY","En enkelt pop-up instans kan inneholde flere varianter.",
 "$POPUP_SIMPLE_TITLE","Også en Popup!",
 "$POPUP_SIMPLE_BODY","Du kan åpne flere popup'er!",
+"$POPUP_DEMO_2_TITLE","Popup - Demo 2",
+"$POPUP_DEMO_2_BODY","Denne popup bruker 'default_popup.xml' filen fra FlxUIAssets",

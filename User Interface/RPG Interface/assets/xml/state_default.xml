@@ -3,7 +3,7 @@
 	<include id="_ui_globals"/>
 
 	<!--Definitions-->
-		
+	
 	<!--STUFF-->
 
 	<sprite src="ui/title_back" x="0" y="0"/>
@@ -20,6 +20,7 @@
 		<anchor x="check_1.left" y="check_1.top" x-flush="left" y-flush="top"/>
 		<param type="string" value="thing 1"/>
 	</checkbox>
+	
 	
 	<radio_group id="radio_1" x="170" y="200">
 		<param type="string" value="dr_seuss"/>		
@@ -63,6 +64,10 @@
 		<group id="tab_4">			
 		</group>
 	</tab_menu>
+		
+	<button center_x="true" x="0" y="505" id="start" label="$TITLE_POPUP">		
+		<param type="string" value="popup"/>
+	</button>
 	
 	<button center_x="true" x="0" y="535" id="start" label="$MISC_BACK">		
 		<param type="string" value="back"/>

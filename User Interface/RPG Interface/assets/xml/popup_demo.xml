@@ -1,28 +1,41 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>	
+	<include id="_ui_globals"/>
+	
+	<!--Definitions-->
+	
+	<definition id="button" width="50" height="25">		
+		<text use_def="sans12c" color="0xffffff">
+			<color id="over" value="0xffff00"/>
+		</text>		
+		<graphic id="all" image="ui/buttons/button_blue" slice9="6,6,12,12"/>		
+	</definition>
+	
+	<!--STUFF-->
+	
 	<sprite id="black" x="0" y="0" width="100%" height="100%" color="0x88000000"/>
 	
-	<chrome id="back" center_x="true" center_y="true" width="400" height="100"/>		
+	<chrome id="back" src="ui/chrome/dark_grey" slice9="4,4,8,8" center_x="true" center_y="true" width="400" height="200"/>		
 	
-	<text id="title" x="0" y="5" width="back.width" text="$POPUP_DEMO_0_TITLE" align="center">
+	<text id="title" use_def="sans12c" x="0" y="5" width="back.width" text="$POPUP_DEMO_0_TITLE" align="center">
 		<anchor x="back.left" x-flush="left" y="back.top" y-flush="top"/>		
 	</text>
 	
-	<text id="body" x="5" y="5" width="back.width-10" text="$POPUP_DEMO_0_BODY" align="center">
+	<text id="body" use_def="sans12c" x="5" y="5" width="back.width-10" text="$POPUP_DEMO_0_BODY" align="center">
 		<anchor x="back.left" x-flush="left" y="title.bottom" y-flush="top"/>		
 	</text>
 	
-	<button id="btn0" y="-5" label="$POPUP_YES">
+	<button id="btn0" use_def="button" y="-5" label="$POPUP_YES">
 		<anchor y="back.bottom" y-flush="bottom"/>
 		<param type="int" value="0"/>		
 	</button>
 	
-	<button id="btn1" label="$POPUP_NO">
+	<button id="btn1" use_def="button" label="$POPUP_NO">
 		<anchor y="btn0.top" y-flush="top"/>
 		<param type="int" value="1"/>
 	</button>
 		
-	<button id="btn2" label="$POPUP_CANCEL">
+	<button id="btn2" use_def="button" label="$POPUP_CANCEL">
 		<anchor y="btn0.top" y-flush="top"/>		
 		<param type="int" value="2"/>
 	</button>

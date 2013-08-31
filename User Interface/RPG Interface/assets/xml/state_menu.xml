@@ -87,14 +87,6 @@
 		<tab use_def="tab_button_toggle"/>
 	</definition>
 	
-	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
-		<text use_def="sans16" color="0xffffff">
-			<color id="over" value="0xffff00"/>
-		</text>
-		<graphic id="border" visible="false"/>
-		<graphic id="hilight" visible="false"/>
-		<graphic id="normal" visible="false"/>
-	</definition>
 
 	<!--STUFF-->
 	

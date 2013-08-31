@@ -45,3 +45,5 @@
 "$POPUP_DEMO_1_BODY","A single pop-up instance can contain multiple layouts.",
 "$POPUP_SIMPLE_TITLE","Another Popup!",
 "$POPUP_SIMPLE_BODY","You can open multiple pop-ups!",
+"$POPUP_DEMO_2_TITLE","Popup - Demo 2",
+"$POPUP_DEMO_2_BODY","This popup uses FlxUIAsset's 'default_popup.xml' file",
