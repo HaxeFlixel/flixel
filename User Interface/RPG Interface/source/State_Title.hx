@@ -1,4 +1,5 @@
 import flash.text.Font;
+import flixel.addons.ui.FlxUIPopup;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.U;
 import flixel.FlxG;
@@ -27,7 +28,6 @@ class State_Title extends FlxUIState
 		}
 		
 		_xml_id = "state_title";
-		//_tongue = Main.tongue;		
 		
 		super.create();	
 	}
@@ -38,8 +38,10 @@ class State_Title extends FlxUIState
 		switch(id) {
 			case "finish_load":
 				var radio:FlxUIRadioGroup = cast _ui.getAsset("locale_radio");
-				if(radio != null){
-					radio.selectedId = Main.tongue.locale.toLowerCase();
+				if (radio != null) {
+					if(Main.tongue != null){
+						radio.selectedId = Main.tongue.locale.toLowerCase();
+					}
 				}
 			case "click_button":
 				if (Std.is(data, Array) && data != null && data.length > 0) {
@@ -49,6 +51,7 @@ class State_Title extends FlxUIState
 						case "battle": FlxG.switchState(new State_Battle());
 						case "default_test": FlxG.switchState(new State_DefaultTest());
 						case "code_test": FlxG.switchState(new State_CodeTest());
+						case "popup": setSubState(new Popup_Demo());
 					}
 				}
 			case "click_radio_group":
@@ -56,7 +59,9 @@ class State_Title extends FlxUIState
 					var id:String = ""; if(data[0] != null){ id = cast(data[0], String);}
 					var value:String = ""; if(data[1] != null){value = cast(data[1], String);}
 					if (value == "checked:true") {
-						Main.tongue.init(id, reloadState);
+						if(Main.tongue != null){
+							Main.tongue.init(id, reloadState);
+						}
 					}
 				}
 		}		

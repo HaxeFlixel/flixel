@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>	
+	<sprite id="black" x="0" y="0" width="100%" height="100%" color="0x88000000"/>
+	
+	<chrome id="back" x="25" y="25" width="400" height="100">		
+		<anchor x="center" x-flush="center" y="center" y-flush="center"/>
+	</chrome>
+	
+	<text id="title" x="0" y="5" width="back.width" text="$POPUP_SIMPLE_TITLE" align="center">
+		<anchor x="back.left" x-flush="left" y="back.top" y-flush="top"/>		
+	</text>
+	
+	<text id="body" x="5" y="5" width="back.width-10" text="$POPUP_SIMPLE_BODY" align="center">
+		<anchor x="back.left" x-flush="left" y="title.bottom" y-flush="top"/>		
+	</text>
+	
+	<button id="btn0" x="0" y="-5" label="$POPUP_OK">
+		<anchor x="back.center" x-flush="center" y="back.bottom" y-flush="bottom"/>
+		<param type="int" value="0"/>		
+	</button>
+	
+</data>
