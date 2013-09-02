@@ -47,10 +47,18 @@ class FlxText extends FlxSprite
 	 */
 	private var _useShadow:Bool = false;
 	
-	private var _outline:Int = 0;
-	
+	private var _outline:Int = 0;	
 	private var _useOutline:Bool = false;
 	
+	private var _borderStyle:Int = 0;
+	private var _borderColor:Int = 0;
+	private var _borderSize:Float = 0;
+	
+	public static inline var NONE:Int = 0;				//no border style
+	public static inline var SHADOW:Int = 1;			//shadow to the lower-right
+	public static inline var OUTLINE:Int = 2;			//outline on all 8 sides
+	public static inline var OUTLINE_FAST:Int = 3;		//outline, optimized using only 4 draw calls, might not work for 1-pixel fonts
+		
 	private var _isStatic:Bool = false;
 	
 	/**
@@ -136,10 +144,12 @@ class FlxText extends FlxSprite
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
+	 * @param	BorderStyle	A uint representing the desired text border stle - FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST
+	 * @param   BorderColor A uint representing the desired text border color in flash 0xRRGGBB format.
+	 * @param 	BorderSize	The size of the text border, in pixels.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=NONE, BorderColor:Int=0, BorderSize:Int=1):FlxText
 	{
 		if (_isStatic)
 		{
@@ -161,8 +171,7 @@ class FlxText extends FlxSprite
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
-		_shadow = ShadowColor;
-		_useShadow = UseShadow;
+		setBorderStyle(BorderStyle, BorderColor, BorderSize);
 		_regen = true;
 		
 		return this;
@@ -308,6 +317,90 @@ class FlxText extends FlxSprite
 	}
 	
 	/**
+	 * Set border's style (shadow, outline, etc), color, and size all in one go!
+	 * @param	style outline style - FlxText.NONE, SHADOW, OUTLINE, OUTLINE_FAST
+	 * @param	color outline color in flash 0xRRGGBB format
+	 * @param	size outline size in pixels
+	 */
+	
+	public function setBorderStyle(style:Int, color:Int, size:Float = 1):Void {
+		borderStyle = style;
+		borderColor = color;
+		borderSize = size;
+	}
+	
+	/**
+	 * Use a border style like FlxText.SHADOW or FlxText.OUTLINE
+	 */	
+	public var borderStyle(get, set):Int;
+	
+	private function get_borderStyle():Int {
+		return _borderStyle;
+	}
+	
+	private function set_borderStyle(style:Int):Int 
+	{		
+		if (_isStatic)
+		{
+			return style;
+		}
+		
+		if (style != _borderStyle)
+		{
+			_borderStyle = style;
+			dirty = true;
+		}
+		
+		return _borderStyle;
+	}
+	
+	public var borderColor(get, set):Int;
+	
+	private function get_borderColor():Int 
+	{
+		return _borderColor;
+	}
+	
+	private function set_borderColor(Color:Int):Int 
+	{
+		if (_isStatic) {
+			return Color;
+		}
+		
+		Color &= 0x00ffffff;
+		
+		if (_shadow != Color && _borderStyle != NONE)
+		{
+			dirty = true;
+		}
+		_borderColor = Color;
+		
+		return Color;
+	}
+	
+	public var borderSize(get, set):Float;
+	
+	private function get_borderSize():Float 
+	{
+		return _borderSize;
+	}
+	
+	private function set_borderSize(Value:Float):Float
+	{
+		if (_isStatic)
+		{
+			return Value;
+		}
+		if (Value != _borderSize && _borderStyle != NONE)
+		{
+			dirty = true;
+		}
+		_borderSize = Value;
+		
+		return Value;
+	}
+	
+	/**
 	 * The color of the text shadow in 0xAARRGGBB hex format.
 	 */
 	public var shadow(get, set):Int;
@@ -361,6 +454,9 @@ class FlxText extends FlxSprite
 		return _useShadow;
 	}
 	
+	/**
+	 * The color of the text outline in 0xAARRGGBB hex format.
+	 */	
 	public var outline(get, set):Int;
 	
 	private function get_outline():Int
@@ -374,6 +470,7 @@ class FlxText extends FlxSprite
 	// TODO: implement this
 	private function set_outline(Color:Int):Int
 	{
+		return Color;
 		/*if (_isStatic)
 		{
 			return Color;
@@ -381,13 +478,13 @@ class FlxText extends FlxSprite
 		
 		Color &= 0x00ffffff;
 		
-		if (_shadow != Color && useShadow == true)
+		if (_outline != Color && useOutline == true)
 		{
 			dirty = true;
 		}
-		_shadow = Color;*/
+		_outline = Color;
 		
-		return Color;
+		return Color;*/
 	}
 	
 	public var useOutline(get, set):Bool;
@@ -399,18 +496,19 @@ class FlxText extends FlxSprite
 	
 	private function set_useOutline(value:Bool):Bool
 	{
+		return value;
 		/*if (_isStatic)
 		{
 			return value;
 		}
 		
-		if (value != _useShadow)
+		if (value != _useOutline)
 		{
-			_useShadow = value;
+			_useOutline = value;
 			dirty = true;
-		}*/
+		}
 		
-		return _useOutline;
+		return _useOutline;*/
 	}
 	
 	/**
@@ -507,20 +605,59 @@ class FlxText extends FlxSprite
 					#end
 				}
 				
-				// Render a single pixel shadow beneath the text
-				if (_useShadow)
-				{
-					_formatAdjusted.color = _shadow;
-					updateFormat(_formatAdjusted);
-					_matrix.translate(1, 1);
-					_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-					_matrix.translate( -1, -1);
-					_formatAdjusted.color = _format.color;
-					updateFormat(_formatAdjusted);
-				}
-				else if (_useOutline)
-				{
-					// TODO: implement this
+				if(_borderStyle != NONE){				
+					if (_borderStyle == SHADOW) {
+						//Render a shadow beneath the text
+						//(do one lower-right offset draw call)
+						_formatAdjusted.color = _borderColor;
+						updateFormat(_formatAdjusted);
+						_matrix.translate(_borderSize, _borderSize);
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate( -_borderSize, -_borderSize);
+						_formatAdjusted.color = _format.color;
+						updateFormat(_formatAdjusted);
+					}else if (_borderStyle == OUTLINE) {
+						//Render an outline around the text
+						//(do 8 offset draw calls)
+						_formatAdjusted.color = _borderColor;
+						updateFormat(_formatAdjusted);
+						_matrix.translate( -borderSize, -borderSize);	//upper-left
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(borderSize, 0);				//upper-middle
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(borderSize, 0);				//upper-right
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(0, borderSize);				//middle-right
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(0, borderSize);				//lower-right
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(-borderSize, 0);			//lower-middle
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(-borderSize, 0);			//lower-left
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(0, -borderSize);			//middle-left
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(borderSize, 0);				//return to center
+						_formatAdjusted.color = _format.color;
+						updateFormat(_formatAdjusted);			
+					}else if (_borderStyle == OUTLINE_FAST) {
+						//Render an outline around the text
+						//(do 4 diagonal offset draw calls)
+						//(this method might not work with certain narrow fonts)
+					    _formatAdjusted.color = _borderColor;						
+						updateFormat(_formatAdjusted);
+						_matrix.translate( -borderSize, -borderSize);		//upper-left
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate( borderSize*2, 0);				//upper-right
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate( 0,borderSize*2);					//lower-right
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(-borderSize*2, 0);				//lower-left
+						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(borderSize, -borderSize);			//return to center
+						_formatAdjusted.color = _format.color;
+						updateFormat(_formatAdjusted);
+					}
 				}
 				
 				//Actually draw the text onto the buffer
