@@ -8,22 +8,22 @@
 	<definition id="grey" src="ui/chrome/dark_grey"/>
 	<definition id="grey_flat" src="ui/chrome/dark_grey_flat_top"/>
 	
-	<definition id="sans10" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>	
-	<definition id="sans10c" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>	
-	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="sans10" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>	
+	<definition id="sans10c" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="center"/>	
+	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
 	
-	<definition id="sans8" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="sans8y" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="sans8" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans8y" font="vera" size="10" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
 	
-	<definition id="sans8c" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
-	<definition id="sans8yc" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="center"/>
+	<definition id="sans8c" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="center"/>
+	<definition id="sans8yc" font="vera" size="10" style="bold" color="0xffcc00" outline="0x000000" align="center"/>
 	
-	<definition id="sans8dc" font="vera" size="10" style="bold" color="0xcccccc" shadow="1" align="center"/>
-	<definition id="sans8dyc" font="vera" size="10" style="bold" color="0xccaa00" shadow="1" align="center"/>
+	<definition id="sans8dc" font="vera" size="10" style="bold" color="0xcccccc" outline="0x000000" align="center"/>
+	<definition id="sans8dyc" font="vera" size="10" style="bold" color="0xccaa00" outline="0x000000" align="center"/>
 		
-	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
 		
 	<definition id="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small" text_y="0">
 		<text use_def="sans12" color="0xffffff">				
@@ -66,21 +66,7 @@
 		
 		<graphic id="all" image="ui/buttons/button_blue_toggle" slice9="6,6,12,12"/>		
 	</definition>
-	
-	<!--<definition id="tab_button" width="50" height="20" text_x="-2" text_y="0">
-		<text id="hilight" use_def="px8yc"/>
-		<text id="normal" use_def="px8c"/>
-		<graphic id="normal" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
-		<graphic id="hilight" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>		
-	</definition>
-	
-	<definition id="tab_button_back" width="50" height="20" text_x="-2" text_y="0">
-		<text id="hilight" use_def="px8dyc"/>
-		<text id="normal" use_def="px8dc"/>
-		<graphic id="normal" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
-		<graphic id="hilight" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
-	</definition>-->
-	
+		
 	<definition id="chrome_flat" src="ui/chrome/dark_grey_flat_top" slice9="4,4,8,8"/>
 		
 	<definition id="tab_menu_1" back_def="chrome_flat">

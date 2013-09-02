@@ -10,20 +10,20 @@
 	<definition id="health" src="ui/misc/health_bar" slice9="1,1,14,14"/>
 	<definition id="mana" src="ui/misc/mana_bar" slice9="1,1,14,14"/>
 	
-	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
 	
-	<definition id="px8" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="px8y" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="px8" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="px8y" font="vera" size="10" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
 	
-	<definition id="px8c" font="vera" size="10" style="bold" color="0xffffff" shadow="1" align="center"/>
-	<definition id="px8yc" font="vera" size="10" style="bold" color="0xffcc00" shadow="1" align="center"/>
+	<definition id="px8c" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="center"/>
+	<definition id="px8yc" font="vera" size="10" style="bold" color="0xffcc00" outline="0x000000" align="center"/>
 	
-	<definition id="px8dc" font="vera" size="10" style="bold" color="0xcccccc" shadow="1" align="center"/>
-	<definition id="px8dyc" font="vera" size="10" style="bold" color="0xccaa00" shadow="1" align="center"/>
+	<definition id="px8dc" font="vera" size="10" style="bold" color="0xcccccc" outline="0x000000" align="center"/>
+	<definition id="px8dyc" font="vera" size="10" style="bold" color="0xccaa00" outline="0x000000" align="center"/>
 		
-	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" shadow="1" align="left"/>
-	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" shadow="1" align="left"/>
+	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
 	
 	<definition id="chrome_flat" src="ui/chrome/dark_grey_flat_top" slice9="4,4,8,8"/>
 		
@@ -32,14 +32,14 @@
 	</definition>	
 	
 	<definition id="options_button" width="192" height="24">
-		<text font="vera" size="14" style="bold" color="0xffffff" shadow="1" align="center">
+		<text font="vera" size="14" style="bold" color="0xffffff" outline="0x000000" align="center">
 			<color id="over" value="0xffff00"/>
 		</text>
 		<graphic id="all" image="ui/buttons/button_grey" slice9="6,6,11,11"/>
 	</definition>	
 	
-	<definition id="time_button" width="48" height="24" text_y="-2" text_x="-2">
-		<text font="vera" size="12" style="bold" color="0xffffff" shadow="1" align="center">
+	<definition id="time_button" width="48" height="24">
+		<text font="vera" size="12" style="bold" color="0xffffff" outline="0x000000" align="center">
 			<color id="over" value="0xffff00"/>
 		</text>
 		<graphic id="all" image="ui/buttons/button_grey" slice9="6,6,11,11"/>
