@@ -147,9 +147,10 @@ class FlxText extends FlxSprite
 	 * @param	BorderStyle	An int representing the desired text border stle - FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST
 	 * @param   BorderColor An int representing the desired text border color in flash 0xRRGGBB format.
 	 * @param 	BorderSize	The size of the text border, in pixels.
+	 * @param	BorderQuality Float from 0-1, how many iterations to use for drawing the border. 0:just 1 iteration, 1:equal number to BorderSize
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=NONE, BorderColor:Int=0, BorderSize:Int=1):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=NONE, BorderColor:Int=0, BorderSize:Int=1, BorderQuality:Float=0):FlxText
 	{
 		if (_isStatic)
 		{
@@ -171,7 +172,7 @@ class FlxText extends FlxSprite
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
-		setBorderStyle(BorderStyle, BorderColor, BorderSize);
+		setBorderStyle(BorderStyle, BorderColor, BorderSize, BorderQuality);
 		_regen = true;
 		
 		return this;
@@ -260,6 +261,7 @@ class FlxText extends FlxSprite
 		color = Color;
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
+
 		_regen = true;
 		
 		return Color;
@@ -321,20 +323,22 @@ class FlxText extends FlxSprite
 	 * @param	Style outline style - FlxText.NONE, SHADOW, OUTLINE, OUTLINE_FAST
 	 * @param	Color outline color in flash 0xRRGGBB format
 	 * @param	Size outline size in pixels
+	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
 	
-	public function setBorderStyle(Style:Int, Color:Int=0x000000, Size:Float = 1):Void {
+	public function setBorderStyle(Style:Int, Color:Int=0x000000, Size:Float = 1, Quality:Float = 0):Void {
 		borderStyle = Style;
 		borderColor = Color;
 		borderSize = Size;
+		borderQuality = Quality;
 	}
 	
 	/**
 	 * Use a border style like FlxText.SHADOW or FlxText.OUTLINE
 	 */	
-	public var borderStyle(default, set):Int;
+	public var borderStyle(default, set):Int = NONE;
 	
-	private function set_borderStyle(style:Int=NONE):Int 
+	private function set_borderStyle(style:Int):Int
 	{		
 		if (_isStatic)
 		{
@@ -350,9 +354,12 @@ class FlxText extends FlxSprite
 		return borderStyle;
 	}
 	
-	public var borderColor(default, set):Int;
+	/**
+	 * The color of the border in 0xRRGGBB format
+	 */	
+	public var borderColor(default, set):Int = 0x000000;
 	
-	private function set_borderColor(Color:Int=0x000000):Int 
+	private function set_borderColor(Color:Int):Int
 	{
 		if (_isStatic) {
 			return Color;
@@ -369,19 +376,48 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	public var borderSize(default, set):Float;
+	/**
+	 * The size of the border, in pixels.
+	 */
+	
+	public var borderSize(default, set):Float = 0;
 		
-	private function set_borderSize(Value:Float=0):Float
+	private function set_borderSize(Value:Float):Float
 	{
 		if (_isStatic)
 		{
 			return Value;
 		}
 		if (Value != borderSize && borderStyle != NONE)
+		{			
+			_regen = true;
+			dirty = true;
+		}
+		borderSize = Value;		
+		
+		return Value;
+	}
+	
+	/**
+	 * How many iterations do use when drawing the border. 0: only 1 iteration, 1: one iteration for every pixel in borderSize
+	 * A value of 1 will have the best quality for large border sizes, but might reduce performance when changing text. 
+	 * NOTE: If the borderSize is 1, borderQuality of 0 or 1 will have the exact same effect (and performance).
+	 */
+	
+	public var borderQuality(default, set):Float = 0;
+	
+	private function set_borderQuality(Value:Float):Float
+	{
+		if (Value < 0)
+			Value = 0;
+		else if (Value > 1)
+			Value = 1;
+		
+		if (Value != borderQuality && borderStyle != NONE)
 		{
 			dirty = true;
 		}
-		borderSize = Value;
+		borderQuality = Value;
 		
 		return Value;
 	}
@@ -437,6 +473,7 @@ class FlxText extends FlxSprite
 				height += 4;
 				var key:String = _cachedGraphics.key;
 				FlxG.bitmap.remove(key);
+				
 				makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
 				frameHeight = Std.int(height);
 				_textField.height = height * 1.2;
@@ -482,17 +519,29 @@ class FlxText extends FlxSprite
 				
 				if (borderStyle != NONE)
 				{				
+					var iterations:Int = Std.int(borderSize * borderQuality);
+					if (iterations <= 0) 
+					{ 
+						iterations = 1;
+					}
+					var delta:Float = (borderSize / iterations);
+					
 					if (borderStyle == SHADOW) 
 					{
 						//Render a shadow beneath the text
 						//(do one lower-right offset draw call)
 						_formatAdjusted.color = borderColor;
 						updateFormat(_formatAdjusted);
-						_matrix.translate(borderSize, borderSize);
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate( -borderSize, -borderSize);
+						
+						for (iter in 0...iterations)
+						{
+							_matrix.translate(delta, delta);
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						}
+						
+						_matrix.translate(-borderSize, -borderSize);
 						_formatAdjusted.color = _format.color;
-						updateFormat(_formatAdjusted);
+						updateFormat(_formatAdjusted);							
 					}
 					else if (borderStyle == OUTLINE) 
 					{
@@ -500,23 +549,30 @@ class FlxText extends FlxSprite
 						//(do 8 offset draw calls)
 						_formatAdjusted.color = borderColor;
 						updateFormat(_formatAdjusted);
-						_matrix.translate( -borderSize, -borderSize);	//upper-left
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(borderSize, 0);				//upper-middle
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(borderSize, 0);				//upper-right
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(0, borderSize);				//middle-right
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(0, borderSize);				//lower-right
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(-borderSize, 0);			//lower-middle
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(-borderSize, 0);			//lower-left
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(0, -borderSize);			//middle-left
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(borderSize, 0);				//return to center
+						
+						var itd:Float = delta;
+						for (iter in 1...iterations + 1)
+						{							
+							_matrix.translate(-itd, -itd);		//upper-left
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(itd, 0);			//upper-middle
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(itd, 0);			//upper-right
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(0, itd);			//middle-right
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(0, itd);			//lower-right
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(-itd, 0);			//lower-middle
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(-itd, 0);			//lower-left
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(0, -itd);			//middle-left
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(itd, 0);			//return to center
+							itd += delta;
+						} 
+						
 						_formatAdjusted.color = _format.color;
 						updateFormat(_formatAdjusted);			
 					}
@@ -527,15 +583,22 @@ class FlxText extends FlxSprite
 						//(this method might not work with certain narrow fonts)
 					    _formatAdjusted.color = borderColor;						
 						updateFormat(_formatAdjusted);
-						_matrix.translate( -borderSize, -borderSize);		//upper-left
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate( borderSize*2, 0);				//upper-right
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate( 0,borderSize*2);					//lower-right
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(-borderSize*2, 0);				//lower-left
-						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate(borderSize, -borderSize);			//return to center
+						
+						var itd:Float = delta;
+						for (iter in 1...iterations + 1)
+						{
+							_matrix.translate(-itd, -itd);		//upper-left
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(itd*2, 0);			//upper-right
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(0, itd*2);			//lower-right
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(-itd*2, 0);			//lower-left
+							_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+							_matrix.translate(itd, -itd);			//return to center
+							itd += delta;
+						}
+						
 						_formatAdjusted.color = _format.color;
 						updateFormat(_formatAdjusted);
 					}
