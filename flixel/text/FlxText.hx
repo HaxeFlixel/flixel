@@ -53,11 +53,26 @@ class FlxText extends FlxSprite
 	private var _borderStyle:Int = 0;
 	private var _borderColor:Int = 0;
 	private var _borderSize:Float = 0;
+
+	/**
+	 * No border style
+	 */	
+	public static inline var NONE:Int = 0;				
 	
-	public static inline var NONE:Int = 0;				//no border style
-	public static inline var SHADOW:Int = 1;			//shadow to the lower-right
-	public static inline var OUTLINE:Int = 2;			//outline on all 8 sides
-	public static inline var OUTLINE_FAST:Int = 3;		//outline, optimized using only 4 draw calls, might not work for 1-pixel fonts
+	/**
+	 * A simple shadow to the lower-right
+	 */
+	public static inline var SHADOW:Int = 1;			
+	
+	/**
+	 * Outline on all 8 sides
+	 */
+	public static inline var OUTLINE:Int = 2;			
+	
+	/**
+	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
+	 */
+	public static inline var OUTLINE_FAST:Int = 3;		
 		
 	private var _isStatic:Bool = false;
 	
@@ -144,8 +159,8 @@ class FlxText extends FlxSprite
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	BorderStyle	A uint representing the desired text border stle - FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST
-	 * @param   BorderColor A uint representing the desired text border color in flash 0xRRGGBB format.
+	 * @param	BorderStyle	An int representing the desired text border stle - FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST
+	 * @param   BorderColor An int representing the desired text border color in flash 0xRRGGBB format.
 	 * @param 	BorderSize	The size of the text border, in pixels.
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -318,25 +333,21 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * Set border's style (shadow, outline, etc), color, and size all in one go!
-	 * @param	style outline style - FlxText.NONE, SHADOW, OUTLINE, OUTLINE_FAST
-	 * @param	color outline color in flash 0xRRGGBB format
-	 * @param	size outline size in pixels
+	 * @param	Style outline style - FlxText.NONE, SHADOW, OUTLINE, OUTLINE_FAST
+	 * @param	Color outline color in flash 0xRRGGBB format
+	 * @param	Size outline size in pixels
 	 */
 	
-	public function setBorderStyle(style:Int, color:Int, size:Float = 1):Void {
-		borderStyle = style;
-		borderColor = color;
-		borderSize = size;
+	public function setBorderStyle(Style:Int, Color:Int, Size:Float = 1):Void {
+		borderStyle = Style;
+		borderColor = Color;
+		borderSize = Size;
 	}
 	
 	/**
 	 * Use a border style like FlxText.SHADOW or FlxText.OUTLINE
 	 */	
-	public var borderStyle(get, set):Int;
-	
-	private function get_borderStyle():Int {
-		return _borderStyle;
-	}
+	public var borderStyle(default, set):Int;
 	
 	private function set_borderStyle(style:Int):Int 
 	{		
@@ -354,12 +365,7 @@ class FlxText extends FlxSprite
 		return _borderStyle;
 	}
 	
-	public var borderColor(get, set):Int;
-	
-	private function get_borderColor():Int 
-	{
-		return _borderColor;
-	}
+	public var borderColor(default, set):Int;
 	
 	private function set_borderColor(Color:Int):Int 
 	{
@@ -378,13 +384,8 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	public var borderSize(get, set):Float;
-	
-	private function get_borderSize():Float 
-	{
-		return _borderSize;
-	}
-	
+	public var borderSize(default, set):Float;
+		
 	private function set_borderSize(Value:Float):Float
 	{
 		if (_isStatic)
@@ -605,8 +606,10 @@ class FlxText extends FlxSprite
 					#end
 				}
 				
-				if(_borderStyle != NONE){				
-					if (_borderStyle == SHADOW) {
+				if (_borderStyle != NONE)
+				{				
+					if (_borderStyle == SHADOW) 
+					{
 						//Render a shadow beneath the text
 						//(do one lower-right offset draw call)
 						_formatAdjusted.color = _borderColor;
@@ -616,7 +619,9 @@ class FlxText extends FlxSprite
 						_matrix.translate( -_borderSize, -_borderSize);
 						_formatAdjusted.color = _format.color;
 						updateFormat(_formatAdjusted);
-					}else if (_borderStyle == OUTLINE) {
+					}
+					else if (_borderStyle == OUTLINE) 
+					{
 						//Render an outline around the text
 						//(do 8 offset draw calls)
 						_formatAdjusted.color = _borderColor;
@@ -640,7 +645,9 @@ class FlxText extends FlxSprite
 						_matrix.translate(borderSize, 0);				//return to center
 						_formatAdjusted.color = _format.color;
 						updateFormat(_formatAdjusted);			
-					}else if (_borderStyle == OUTLINE_FAST) {
+					}
+					else if (_borderStyle == OUTLINE_FAST) 
+					{
 						//Render an outline around the text
 						//(do 4 diagonal offset draw calls)
 						//(this method might not work with certain narrow fonts)
