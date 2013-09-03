@@ -38,22 +38,7 @@ class FlxText extends FlxSprite
 	 * This is NOT the same thing as <code>FlxSprite.dirty</code>.
 	 */
 	private var _regen:Bool = true;
-	/**
-	 * Internal tracker for the text shadow color, default is clear/transparent.
-	 */
-	private var _shadow:Int = 0;
-	/**
-	 * Internal tracker for shadow usage, default is false
-	 */
-	private var _useShadow:Bool = false;
 	
-	private var _outline:Int = 0;	
-	private var _useOutline:Bool = false;
-	
-	private var _borderStyle:Int = 0;
-	private var _borderColor:Int = 0;
-	private var _borderSize:Float = 0;
-
 	/**
 	 * No border style
 	 */	
@@ -338,7 +323,7 @@ class FlxText extends FlxSprite
 	 * @param	Size outline size in pixels
 	 */
 	
-	public function setBorderStyle(Style:Int, Color:Int, Size:Float = 1):Void {
+	public function setBorderStyle(Style:Int, Color:Int=0x000000, Size:Float = 1):Void {
 		borderStyle = Style;
 		borderColor = Color;
 		borderSize = Size;
@@ -349,25 +334,25 @@ class FlxText extends FlxSprite
 	 */	
 	public var borderStyle(default, set):Int;
 	
-	private function set_borderStyle(style:Int):Int 
+	private function set_borderStyle(style:Int=NONE):Int 
 	{		
 		if (_isStatic)
 		{
 			return style;
 		}
 		
-		if (style != _borderStyle)
+		if (style != borderStyle)
 		{
-			_borderStyle = style;
+			borderStyle = style;
 			dirty = true;
 		}
 		
-		return _borderStyle;
+		return borderStyle;
 	}
 	
 	public var borderColor(default, set):Int;
 	
-	private function set_borderColor(Color:Int):Int 
+	private function set_borderColor(Color:Int=0x000000):Int 
 	{
 		if (_isStatic) {
 			return Color;
@@ -375,143 +360,32 @@ class FlxText extends FlxSprite
 		
 		Color &= 0x00ffffff;
 		
-		if (_shadow != Color && _borderStyle != NONE)
+		if (borderColor != Color && borderStyle != NONE)
 		{
 			dirty = true;
 		}
-		_borderColor = Color;
+		borderColor = Color;
 		
 		return Color;
 	}
 	
 	public var borderSize(default, set):Float;
 		
-	private function set_borderSize(Value:Float):Float
+	private function set_borderSize(Value:Float=0):Float
 	{
 		if (_isStatic)
 		{
 			return Value;
 		}
-		if (Value != _borderSize && _borderStyle != NONE)
+		if (Value != borderSize && borderStyle != NONE)
 		{
 			dirty = true;
 		}
-		_borderSize = Value;
+		borderSize = Value;
 		
 		return Value;
 	}
-	
-	/**
-	 * The color of the text shadow in 0xAARRGGBB hex format.
-	 */
-	public var shadow(get, set):Int;
-	
-	private function get_shadow():Int
-	{
-		return _shadow;
-	}
-	
-	private function set_shadow(Color:Int):Int
-	{
-		if (_isStatic)
-		{
-			return Color;
-		}
 		
-		Color &= 0x00ffffff;
-		
-		if (_shadow != Color && useShadow == true)
-		{
-			dirty = true;
-		}
-		_shadow = Color;
-		
-		return Color;
-	}
-	
-	/**
-	 * Whether to draw shadow or not
-	 */
-	public var useShadow(get, set):Bool;
-	
-	private function get_useShadow():Bool
-	{
-		return _useShadow;
-	}
-	
-	private function set_useShadow(value:Bool):Bool
-	{
-		if (_isStatic)
-		{
-			return value;
-		}
-		
-		if (value != _useShadow)
-		{
-			_useShadow = value;
-			dirty = true;
-		}
-		
-		return _useShadow;
-	}
-	
-	/**
-	 * The color of the text outline in 0xAARRGGBB hex format.
-	 */	
-	public var outline(get, set):Int;
-	
-	private function get_outline():Int
-	{
-		return _outline;
-	}
-	
-	/**
-	 * @private
-	 */
-	// TODO: implement this
-	private function set_outline(Color:Int):Int
-	{
-		return Color;
-		/*if (_isStatic)
-		{
-			return Color;
-		}
-		
-		Color &= 0x00ffffff;
-		
-		if (_outline != Color && useOutline == true)
-		{
-			dirty = true;
-		}
-		_outline = Color;
-		
-		return Color;*/
-	}
-	
-	public var useOutline(get, set):Bool;
-	
-	private function get_useOutline():Bool
-	{
-		return _useOutline;
-	}
-	
-	private function set_useOutline(value:Bool):Bool
-	{
-		return value;
-		/*if (_isStatic)
-		{
-			return value;
-		}
-		
-		if (value != _useOutline)
-		{
-			_useOutline = value;
-			dirty = true;
-		}
-		
-		return _useOutline;*/
-	}
-	
 	/**
 	 * Whether this text field can be changed (text or appearance).
 	 * Once set to true it can't be changed anymore.
@@ -606,25 +480,25 @@ class FlxText extends FlxSprite
 					#end
 				}
 				
-				if (_borderStyle != NONE)
+				if (borderStyle != NONE)
 				{				
-					if (_borderStyle == SHADOW) 
+					if (borderStyle == SHADOW) 
 					{
 						//Render a shadow beneath the text
 						//(do one lower-right offset draw call)
-						_formatAdjusted.color = _borderColor;
+						_formatAdjusted.color = borderColor;
 						updateFormat(_formatAdjusted);
-						_matrix.translate(_borderSize, _borderSize);
+						_matrix.translate(borderSize, borderSize);
 						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						_matrix.translate( -_borderSize, -_borderSize);
+						_matrix.translate( -borderSize, -borderSize);
 						_formatAdjusted.color = _format.color;
 						updateFormat(_formatAdjusted);
 					}
-					else if (_borderStyle == OUTLINE) 
+					else if (borderStyle == OUTLINE) 
 					{
 						//Render an outline around the text
 						//(do 8 offset draw calls)
-						_formatAdjusted.color = _borderColor;
+						_formatAdjusted.color = borderColor;
 						updateFormat(_formatAdjusted);
 						_matrix.translate( -borderSize, -borderSize);	//upper-left
 						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
@@ -646,12 +520,12 @@ class FlxText extends FlxSprite
 						_formatAdjusted.color = _format.color;
 						updateFormat(_formatAdjusted);			
 					}
-					else if (_borderStyle == OUTLINE_FAST) 
+					else if (borderStyle == OUTLINE_FAST) 
 					{
 						//Render an outline around the text
 						//(do 4 diagonal offset draw calls)
 						//(this method might not work with certain narrow fonts)
-					    _formatAdjusted.color = _borderColor;						
+					    _formatAdjusted.color = borderColor;						
 						updateFormat(_formatAdjusted);
 						_matrix.translate( -borderSize, -borderSize);		//upper-left
 						_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
