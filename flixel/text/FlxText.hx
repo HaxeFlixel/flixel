@@ -379,7 +379,7 @@ class FlxText extends FlxSprite
 	 * The size of the border, in pixels.
 	 */
 	
-	public var borderSize(default, set):Float = 0;
+	public var borderSize(default, set):Float = 1;
 		
 	private function set_borderSize(Value:Float):Float
 	{
