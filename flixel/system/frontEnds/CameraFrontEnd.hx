@@ -51,12 +51,14 @@ class CameraFrontEnd
 			}
 			#end
 			
-			#if !flash
+		#if !flash
 			camera.clearDrawStack();
 			camera._canvas.graphics.clear();
 			// Clearing camera's debug sprite
+			#if !FLX_NO_DEBUG
 			camera._debugLayer.graphics.clear();
 			#end
+		#end
 			
 			#if flash
 			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
