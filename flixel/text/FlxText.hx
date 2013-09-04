@@ -170,7 +170,8 @@ class FlxText extends FlxSprite
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
-		setBorderStyle(BorderStyle, BorderColor);
+		borderStyle = BorderStyle;
+		borderColor = BorderColor;
 		_regen = true;
 		
 		return this;
