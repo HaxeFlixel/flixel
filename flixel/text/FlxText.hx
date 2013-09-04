@@ -144,13 +144,11 @@ class FlxText extends FlxSprite
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	BorderStyle	An int representing the desired text border stle - FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST
-	 * @param   BorderColor An int representing the desired text border color in flash 0xRRGGBB format.
-	 * @param 	BorderSize	The size of the text border, in pixels.
-	 * @param	BorderQuality Float from 0-1, how many iterations to use for drawing the border. 0:just 1 iteration, 1:equal number to BorderSize
+	 * @param	BorderStyle	FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat
+	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=NONE, BorderColor:Int=0, BorderSize:Int=1, BorderQuality:Float=0):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=NONE, BorderColor:Int=0x000000):FlxText
 	{
 		if (_isStatic)
 		{
@@ -172,7 +170,8 @@ class FlxText extends FlxSprite
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
-		setBorderStyle(BorderStyle, BorderColor, BorderSize, BorderQuality);
+		borderStyle = BorderStyle;
+		//setBorderStyle(BorderStyle, BorderColor, BorderSize, BorderQuality);
 		_regen = true;
 		
 		return this;
@@ -326,7 +325,7 @@ class FlxText extends FlxSprite
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
 	
-	public function setBorderStyle(Style:Int, Color:Int=0x000000, Size:Float = 1, Quality:Float = 0):Void {
+	public function setBorderStyle(Style:Int, Color:Int=0x000000, Size:Float = 1, Quality:Float = 1):Void {
 		borderStyle = Style;
 		borderColor = Color;
 		borderSize = Size;
@@ -404,7 +403,7 @@ class FlxText extends FlxSprite
 	 * NOTE: If the borderSize is 1, borderQuality of 0 or 1 will have the exact same effect (and performance).
 	 */
 	
-	public var borderQuality(default, set):Float = 0;
+	public var borderQuality(default, set):Float = 1;
 	
 	private function set_borderQuality(Value:Float):Float
 	{
