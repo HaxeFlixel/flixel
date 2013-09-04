@@ -298,11 +298,14 @@ class BitmapFrontEnd
 	
 	public function remove(key:String):Void
 	{
-		if (_cache.exists(key) && inOpenFlAssets(key) == false)
+		if (_cache.exists(key))
 		{
 			var obj:CachedGraphics = _cache.get(key);
-			_cache.remove(key);
-			obj.destroy();
+			if (inOpenFlAssets(obj.bitmap) == false)
+			{
+				_cache.remove(key);
+				obj.destroy();
+			}
 		}
 	}
 	
@@ -321,7 +324,7 @@ class BitmapFrontEnd
 		for (key in _cache.keys())
 		{
 			obj = _cache.get(key);
-			if ((obj != null && !obj.persist) && inOpenFlAssets(key) == false)
+			if ((obj != null && !obj.persist) && inOpenFlAssets(obj.bitmap) == false)
 			{
 				_cache.remove(key);
 				obj.destroy();
@@ -330,11 +333,17 @@ class BitmapFrontEnd
 		}
 	}
 	
-	public function inOpenFlAssets(key:String):Bool
+	public function inOpenFlAssets(bitmap:BitmapData):Bool
 	{
 		if (Assets.cachedBitmapData != null)
 		{
-			return Assets.cachedBitmapData.exists(key);
+			for (bd in Assets.cachedBitmapData)
+			{
+				if (bd == bitmap)
+				{
+					return true;
+				}
+			}
 		}
 		
 		return false;
