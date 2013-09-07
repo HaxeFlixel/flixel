@@ -30,15 +30,14 @@ class SaveSlot extends FlxUI
 		}
 		loadStuff(data, definition, _ptr);
 		valid = true;
-		FlxG.log.add("SaveSlot(" + str_id + "" + _ptr + ")");		
+		FlxG.log.add("SaveSlot(" + id + "" + _ptr + ")");		
 
 		init();
 	}
 
 	public function loadStuff(data:Fast, definition:Fast, _ptr:Dynamic):Void {		
 		load(definition);
-		str_id = U.xml_str(data.x,"id");
-		instant_update = true;
+		id = U.xml_str(data.x,"id");
 	}
 	
 	public override function update():Void {

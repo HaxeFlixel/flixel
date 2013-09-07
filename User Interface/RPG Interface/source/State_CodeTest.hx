@@ -126,7 +126,7 @@ class State_CodeTest extends FlxUIState
 				_onClickRadioGroup);		
 			
 			var tab_group_1:FlxUI = new FlxUI(null, tab_menu, null, _tongue);
-			tab_group_1.str_id = "tab_1";
+			tab_group_1.id = "tab_1";
 			tab_group_1.add(tabs_radio_1);
 		
 			/***TAB GROUP 2***/
@@ -134,7 +134,7 @@ class State_CodeTest extends FlxUIState
 			var tabs_check_2 = new FlxUICheckBox(10, 40, null, null, _tongue.get("$MENU_THING_2", "ui"), 100, _onClickCheckBox, ["thing 2"]);
 				
 			var tab_group_2:FlxUI = new FlxUI(null, tab_menu, null, _tongue);
-			tab_group_2.str_id = "tab_2";
+			tab_group_2.id = "tab_2";
 			tab_group_2.add(tabs_check_1);
 			tab_group_2.add(tabs_check_2);
 		
