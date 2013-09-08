@@ -12,7 +12,7 @@ import flixel.FlxSprite;
  * used to work with just any old sprite, it now requires a
  * <code>FlxParticle</code> based class.
 */
-class FlxParticle extends FlxSprite
+class FlxParticle extends FlxSprite implements IFlxParticle
 {
 	/**
 	 * How long this particle lives before it disappears.
@@ -104,13 +104,6 @@ class FlxParticle extends FlxSprite
 	 */
 	override public function update():Void
 	{
-		#if !FLX_NO_DEBUG
-		FlxBasic._ACTIVECOUNT++;
-		#end
-		
-		last.x = x;
-		last.y = y;
-		
 		// Lifespan behavior
 		if (lifespan > 0)
 		{
@@ -184,11 +177,7 @@ class FlxParticle extends FlxSprite
 		
 		if (exists && alive)
 		{
-			updateMotion();
-			wasTouching = touching;
-			touching = FlxObject.NONE;
-			
-			updateAnimation();
+			super.update();
 		}
 	}
 	

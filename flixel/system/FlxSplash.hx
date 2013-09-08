@@ -37,7 +37,9 @@ class FlxSplash extends FlxState
 		FlxG.cameras.bgColor = FlxColor.BLACK;
 		FlxG.fixedTimestep = false;
 		FlxG.autoPause = false;
-		FlxG.keyboard.enabled = false;
+		#if !FLX_NO_KEYBOARD
+			FlxG.keyboard.enabled = false;
+		#end
 		
 		_times = [0.041, 0.184, 0.334, 0.495, 0.636];
 		_colors = [0x00b922, 0xffc132, 0xf5274e, 0x3641ff, 0x04cdfb];
@@ -63,10 +65,8 @@ class FlxSplash extends FlxState
 		_text.defaultTextFormat = dtf;
 		_text.text = "HaxeFlixel";
 		_text.y = _sprite.y + 130;
-		_text.alpha = 0;
 		FlxG.stage.addChild(_text);
 		
-		FlxTween.multiVar(_text, { alpha: 1 }, 1 );
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
 	}
 	
@@ -74,6 +74,7 @@ class FlxSplash extends FlxState
 	{
 		_functions[_curPart]();
 		_text.textColor = _colors[_curPart];
+		_text.text = "HaxeFlixel";
 		_curPart ++;
 		
 		if (_curPart == 5)
@@ -150,7 +151,9 @@ class FlxSplash extends FlxState
 	{
 		FlxG.fixedTimestep = true;
 		FlxG.autoPause = true;
-		FlxG.keyboard.enabled = true;
+		#if !FLX_NO_KEYBOARD
+			FlxG.keyboard.enabled = true;
+		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(Type.createInstance(_nextState, []));

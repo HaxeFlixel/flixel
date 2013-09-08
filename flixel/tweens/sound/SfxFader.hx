@@ -85,7 +85,7 @@ class SfxFader extends FlxTween
 	}
 
 	/** @private When the tween completes. */
-	override private function finish():Void 
+	override public function finish():Void 
 	{ 
 		finishCallback(this);
 	}

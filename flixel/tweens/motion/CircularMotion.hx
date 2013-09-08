@@ -61,6 +61,10 @@ class CircularMotion extends Motion
 		angle = _angleStart + _angleFinish * _t;
 		x = _centerX + Math.cos(angle) * _radius;
 		y = _centerY + Math.sin(angle) * _radius;
+		if(finished)
+		{
+			postUpdate();
+		}
 	}
 
 	/**

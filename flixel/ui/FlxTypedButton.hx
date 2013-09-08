@@ -263,6 +263,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed) == false) ? false : offAll;
 					}
 				#end
+				
+				if (!offAll)
+				{
+					break;
+				}
 			}
 			if (offAll)
 			{

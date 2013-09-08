@@ -7,7 +7,7 @@ import flixel.FlxSprite;
  * that can be treated like a <code>FlxSprite</code> due to having
  * x, y and alpha values. It can only contain <code>FlxSprites</code>.
  */
-class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
+class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 {
 	/**
 	 * Optimization to allow setting position of group without transforming children twice.
@@ -26,13 +26,23 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 * @param	Object		The object you want to add to the group.
 	 * @return	The same <code>FlxBasic</code> object that was passed in.
 	 */
-	override public function add(Sprite:FlxSprite):FlxSprite
+	override public function add(Sprite:IFlxSprite):IFlxSprite
 	{
-		Sprite.x += x;
-		Sprite.y += y;
-		Sprite.alpha = alpha;
+		Sprite.x = Sprite.x + this.x;
+		Sprite.y = Sprite.y + this.y;
+		Sprite.alpha = this.alpha;
 		
-		return super.add(Sprite);
+		if (Std.is(Sprite, FlxSprite))
+		{
+			return super.add(cast(Sprite, FlxSprite));
+		}
+		else if (Std.is(Sprite, FlxSpriteGroup))
+		{
+			return super.add(cast(Sprite, FlxSpriteGroup));
+		}
+		
+		throw "Unsupported type of object. Please extend FlxSpriteGroup class and override its 'add' method to support it.";
+		return null;
 	}
 	
 	/**
@@ -58,13 +68,6 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	
 	private function set_y(NewY:Float):Float
 	{
-		#if neko
-		if (y == null)
-		{
-			y = 0;
-		}
-		#end
-		
 		if (!_skipTransformChildren)
 		{
 			var offset:Float = NewY - y;
@@ -120,15 +123,32 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 		_skipTransformChildren = false;
 	}
 	
+	public function reset(X:Float, Y:Float):Void
+	{
+		revive();
+		setPosition(X, Y);
+		
+		var sprite:IFlxSprite;
+		for (i in 0...length)
+		{
+			sprite = members[i];
+			
+			if (sprite != null)
+			{
+				sprite.reset(X, Y);
+			}
+		}
+	}
+	
 	/**
 	 * Handy function that allows you to quickly transform one property of sprites in this group at a time.
 	 * 
-	 * @param 	Function 	Function to transform the sprites. Example: <code>function(s:FlxSprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }</code>
+	 * @param 	Function 	Function to transform the sprites. Example: <code>function(s:IFlxSprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }</code>
 	 * @param 	Value  		Value which will passed to lambda function
 	 */
-	public function transformChildren(Function:FlxSprite->Dynamic->Void, Value:Dynamic = 0):Void
+	public function transformChildren(Function:IFlxSprite->Dynamic->Void, Value:Dynamic = 0):Void
 	{
-		var sprite:FlxSprite;
+		var sprite:IFlxSprite;
 		
 		for (i in 0...length)
 		{
@@ -147,7 +167,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 * @param	FunctionArray	Array of functions to transform sprites in this group.
 	 * @param	ValueArray		Array of values which will be passed to lambda functions
 	 */
-	public function multiTransformChildren(FunctionArray:Array<FlxSprite->Dynamic->Void>, ValueArray:Array<Dynamic>):Void
+	public function multiTransformChildren(FunctionArray:Array<IFlxSprite->Dynamic->Void>, ValueArray:Array<Dynamic>):Void
 	{
 		var numProps:Int = FunctionArray.length;
 		
@@ -156,8 +176,8 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 			return;
 		}
 		
-		var sprite:FlxSprite;
-		var lambda:FlxSprite->Dynamic->Void;
+		var sprite:IFlxSprite;
+		var lambda:IFlxSprite->Dynamic->Void;
 		
 		for (i in 0...length)
 		{
@@ -180,7 +200,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 * @param	Sprite	Sprite to manipulate
 	 * @param	X		Value to add to sprite's x coordinate
 	 */
-	private function xTransform(Sprite:FlxSprite, X:Float):Void
+	private function xTransform(Sprite:IFlxSprite, X:Float):Void
 	{
 		Sprite.x += X;
 	}
@@ -191,7 +211,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 * @param	Sprite	Sprite to manipulate
 	 * @param	Y		Value to add to sprite's y coordinate
 	 */
-	private function yTransform(Sprite:FlxSprite, Y:Float):Void
+	private function yTransform(Sprite:IFlxSprite, Y:Float):Void
 	{
 		Sprite.y += Y;
 	}
@@ -202,7 +222,7 @@ class FlxSpriteGroup extends FlxTypedGroup<FlxSprite>
 	 * @param	Sprite		Aprite to manipulate
 	 * @param	NewAlpha	Alpha value to set
 	 */
-	private function alphaTransform(Sprite:FlxSprite, NewAlpha:Float):Void
+	private function alphaTransform(Sprite:IFlxSprite, NewAlpha:Float):Void
 	{
 		Sprite.alpha = NewAlpha;
 	}

@@ -158,7 +158,7 @@ class MouseEventManager extends FlxPlugin
 		{
 			if (getRegister(current.sprite, _mouseOverSprites) == null)
 			{
-				if (current.onMouseOver != null)
+				if (current.onMouseOver != null && current.sprite.exists  && current.sprite.visible)
 				{
 					current.onMouseOver(current.sprite);
 				}
@@ -169,7 +169,7 @@ class MouseEventManager extends FlxPlugin
 		{
 			if (getRegister(over.sprite, currentOverSprites) == null)
 			{
-				if (over.onMouseOut != null)
+				if (over.onMouseOut != null && over.sprite.exists  && over.sprite.visible)
 				{
 					over.onMouseOut(over.sprite);
 				}
@@ -181,7 +181,7 @@ class MouseEventManager extends FlxPlugin
 		{
 			for (current in currentOverSprites)
 			{
-				if (current.onMouseDown != null)
+				if (current.onMouseDown != null && current.sprite.exists  && current.sprite.visible)
 				{
 					current.onMouseDown(current.sprite);
 				}
@@ -192,7 +192,7 @@ class MouseEventManager extends FlxPlugin
 		{
 			for (current in currentOverSprites)
 			{
-				if (current.onMouseUp != null)
+				if (current.onMouseUp != null && current.sprite.exists  && current.sprite.visible)
 				{
 					current.onMouseUp(current.sprite);
 				}

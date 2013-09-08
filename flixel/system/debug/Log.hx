@@ -9,7 +9,6 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
-import openfl.Assets;
 
 /**
  * A simple trace output window for use in the debugger overlay.
@@ -17,29 +16,21 @@ import openfl.Assets;
 class Log extends Window
 {
 	static public var MAX_LOG_LINES:Int = 200;
-	
-	static public var STYLE_NORMAL:LogStyle;
-	static public var STYLE_WARNING:LogStyle;
-	static public var STYLE_ERROR:LogStyle;
-	static public var STYLE_NOTICE:LogStyle;
-	static public var STYLE_CONSOLE:LogStyle;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param Title			The name of the window, displayed in the header bar.
-	 * @param Width			The initial width of the window.
-	 * @param Height		The initial height of the window.
-	 * @param Resizable		Whether you can change the size of the window with a drag handle.
-	 * @param Bounds		A rectangle indicating the valid screen area for the window.
-	 * @param BGColor		What color the window background should be, default is gray and transparent.
-	 * @param TopColor		What color the window header bar should be, default is black and transparent.
+	 * @param 	Title		The name of the window, displayed in the header bar.
+	 * @param 	Width		The initial width of the window.
+	 * @param 	Height		The initial height of the window.
+	 * @param 	Resizable	Whether you can change the size of the window with a drag handle.
+	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
 	 */	
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
-		super(Title, Width, Height, Resizable, Bounds, BGColor, TopColor);
+		super(Title, Width, Height, Resizable, Bounds);
 		
 		_text = new TextField();
 		_text.x = 2;
@@ -52,12 +43,6 @@ class Log extends Window
 		addChild(_text);
 		
 		_lines = new Array<String>();
-		
-		STYLE_NORMAL = new LogStyle();
-		STYLE_WARNING = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, FlxAssets.SND_BEEP, true);
-		STYLE_ERROR = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, FlxAssets.SND_BEEP, true);
-		STYLE_NOTICE = new LogStyle("[NOTICE] ", "008000", 12, true);
-		STYLE_CONSOLE = new LogStyle("&#62; ", "0000ff", 12, true);
 		
 		FlxG.log.redirectTraces = true;
 	}
@@ -73,35 +58,40 @@ class Log extends Window
 		}
 		_text = null;
 		_lines = null;
-		STYLE_NORMAL = null;
-		STYLE_WARNING = null;
-		STYLE_ERROR = null;
-		STYLE_NOTICE = null;
-		STYLE_CONSOLE = null;
 		super.destroy();
 	}
 	
 	/**
 	 * Adds a new line to the log window.
-	 * @param Data		The data being logged.
-	 * @param Style		The <code>LogStyle</code> to be used for the log
+	 * @param 	Data		The data being logged.
+	 * @param 	Style		The <code>LogStyle</code> to be used for the log
+	 * @param 	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
 	 */
-	public function add(Data:Array<Dynamic>, Style:LogStyle):Void
+	public function add(Data:Array<Dynamic>, Style:LogStyle, FireOnce:Bool = false):Bool
 	{
 		if (Data == null) 
-			return;
-			
+		{
+			return false;
+		}
+		
 		var texts:Array<String> = new Array<String>();
 		
 		// Format FlxPoints, Arrays, Maps or turn the Data entry into a String
-		for (i in 0...Data.length) {
+		for (i in 0...Data.length) 
+		{
 			if (Std.is(Data[i], FlxPoint)) 
+			{
 				texts[i] = FlxStringUtil.formatFlxPoint(Data[i], FlxG.debugger.pointPrecision);
+			}
 			else if (Std.is(Data[i], StringMap))
+			{
 				texts[i] = FlxStringUtil.formatStringMap(Data[i]);
+			}
 			else 
+			{
 				texts[i] = Std.string(Data[i]);
-				
+			}
+			
 			// Make sure you can't insert html tags
 			texts[i] = StringTools.replace(texts[i], "<", "");
 			texts[i] = StringTools.replace(texts[i], ">", "");
@@ -114,15 +104,18 @@ class Log extends Window
 		var prefix:String = "<font size='" + Style.size + "' color='#" + Style.color + "'>";
 		var suffix:String = "</font>";
 		
-		if (Style.bold) {
+		if (Style.bold) 
+		{
 			prefix = "<b>" + prefix;
 			suffix = suffix + "</b>";
 		}
-		if (Style.italic) {
+		if (Style.italic) 
+		{
 			prefix = "<i>" + prefix;
 			suffix = suffix + "</i>";
 		}
-		if (Style.underlined) {
+		if (Style.underlined) 
+		{
 			prefix = "<u>" + prefix;
 			suffix = suffix + "</u>";
 		}
@@ -133,6 +126,18 @@ class Log extends Window
 		text = Style.prefix + text;
 		#end
 		
+		// Check if the text has been added yet already
+		if (FireOnce)
+		{
+			for (line in _lines)
+			{
+				if (text == line)
+				{
+					return false;
+				}
+			}
+		}
+		
 		// Actually add it to the textfield
 		if (_lines.length <= 0)
 		{
@@ -141,7 +146,7 @@ class Log extends Window
 		
 		_lines.push(text);
 		
-		if(_lines.length > MAX_LOG_LINES)
+		if (_lines.length > MAX_LOG_LINES)
 		{
 			_lines.shift();
 			var newText:String = "";
@@ -170,6 +175,8 @@ class Log extends Window
 		#elseif !js
 		_text.scrollV = _text.maxScrollV - Std.int(_text.height / _text.defaultTextFormat.size) + 1;
 		#end
+		
+		return true;
 	}
 	
 	public function clear():Void

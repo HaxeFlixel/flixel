@@ -13,16 +13,11 @@ import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.debug.Console;
 import flixel.system.debug.Log;
-import flixel.system.debug.Perf;
+import flixel.system.debug.Stats;
 import flixel.system.debug.VCR;
 import flixel.system.debug.Vis;
 import flixel.system.debug.Watch;
 import flixel.system.FlxAssets;
-import openfl.Assets;
-
-#if !FLX_NO_MOUSE
-import flash.ui.Mouse;
-#end
 
 /**
  * Container for the new debugger overlay.
@@ -62,12 +57,25 @@ class FlxDebugger extends Sprite
 	inline static public var RIGHT:Int = 5;
 
 	/**
+	 * Internal, used to space out windows from the edges.
+	 */
+	inline static public var GUTTER:Int = 2;
+	/**
+	 * Internal, used to space out windows from the edges.
+	 */
+	inline static public var TOP_HEIGHT:Int = 18;
+	
+	/**
 	 * Container for the performance monitor widget.
 	 */
-	public var perf:Perf;
+	public var stats:Stats;
+	/**
+	 * Container for the bitmap output widget
+	 */
+	public var bmpLog:BmpLog;	
 	/**
 	 * Container for the trace output widget.
-	 */
+	 */	 
 	public var log:Log;
 	/**
 	 * Container for the watch window widget.
@@ -99,9 +107,9 @@ class FlxDebugger extends Sprite
 	 */
 	private var _screen:Point;
 	/**
-	 * Internal, used to space out windows from the edges.
+	 * Stores the bounds in which the windows can move.
 	 */
-	private var _gutter:Int;
+	private var _screenBounds:Rectangle;
 	
 	/**
 	 * Instantiates the debugger overlay.
@@ -114,10 +122,10 @@ class FlxDebugger extends Sprite
 		super();
 		visible = false;
 		hasMouse = false;
-		_screen = new Point(Width, Height);
+		_screen = new Point();
 		
 		#if (flash || js)
-		addChild(new Bitmap(new BitmapData(Std.int(Width), 15, true, 0x7f000000)));
+		addChild(new Bitmap(new BitmapData(Std.int(Width), TOP_HEIGHT, true, Window.TOP_COLOR)));
 		#else
 		var bg:Sprite = new Sprite();
 		bg.graphics.beginFill(0x000000, 0x7f / 255);
@@ -127,31 +135,33 @@ class FlxDebugger extends Sprite
 		#end
 		
 		var txt:TextField = new TextField();
-		txt.x = 2;
+		txt.x = 3;
 		txt.width = 200;
 		txt.height = 20;
 		txt.selectable = false;
 		txt.multiline = false;
 		txt.embedFonts = true;
 		txt.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
-		var str:String = FlxG.libraryName + " [debug]";
+		var str:String = FlxG.libraryName;
 		txt.text = str;
 		addChild(txt);
-		
-		_gutter = 8;
-		var screenBounds:Rectangle = new Rectangle(_gutter, 15 + _gutter / 2, _screen.x - _gutter * 2, _screen.y - _gutter * 1.5 - 15);
-		
-		log = new Log("log", 0, 0, true, screenBounds);
+					
+		log = new Log("log", 0, 0, true);
 		addChild(log);
 		
-		watch = new Watch("watch", 0, 0, true, screenBounds);
+		watch = new Watch("watch", 0, 0, true);
 		addChild(watch);
 		
-		console = new Console("console", 0, 0, false, screenBounds);
+		console = new Console("console", 0, 0, false);
 		addChild(console);
 		
-		perf = new Perf("stats", 0, 0, false, screenBounds);
-		addChild(perf);
+		stats = new Stats("stats", 0, 0, false);
+		addChild(stats);
+
+		#if FLX_BMP_DEBUG
+			bmpLog = new BmpLog("bmplog", 0, 0, true);
+			addChild(bmpLog);
+		#end
 		
 		vcr = new VCR();
 		vcr.x = (Width - vcr.width / 2) / 2;
@@ -163,7 +173,7 @@ class FlxDebugger extends Sprite
 		vis.y = 2;
 		addChild(vis);
 		
-		setLayout(STANDARD);
+		onResize(Width, Height);
 		
 		//Should help with fake mouse focus type behavior
 		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
@@ -176,6 +186,12 @@ class FlxDebugger extends Sprite
 	public function destroy():Void
 	{
 		_screen = null;
+		if (bmpLog != null) 
+		{
+			removeChild(bmpLog);
+			bmpLog.destroy();
+			bmpLog = null;
+		}		
 		if (log != null)
 		{
 			removeChild(log);
@@ -188,11 +204,11 @@ class FlxDebugger extends Sprite
 			watch.destroy();
 			watch = null;
 		}
-		if (perf != null)
+		if (stats != null)
 		{
-			removeChild(perf);
-			perf.destroy();
-			perf = null;
+			removeChild(stats);
+			stats.destroy();
+			stats = null;
 		}
 		if (vcr != null)
 		{
@@ -266,60 +282,79 @@ class FlxDebugger extends Sprite
 			case MICRO:
 				log.resize(_screen.x / 4, 68);
 				log.reposition(0, _screen.y);
-				console.resize((_screen.x / 2) - _gutter * 4, 35);
-				console.reposition(log.x + log.width + _gutter, _screen.y);
+				console.resize((_screen.x / 2) - GUTTER * 4, 35);
+				console.reposition(log.x + log.width + GUTTER, _screen.y);
 				watch.resize(_screen.x / 4, 68);
 				watch.reposition(_screen.x,_screen.y);
-				perf.reposition(_screen.x, 0);
+				stats.reposition(_screen.x, 0);
 			case BIG:
-				console.resize(_screen.x - _gutter * 2, 35);
-				console.reposition(_gutter, _screen.y);
-				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
-				log.reposition(0, _screen.y - log.height - console.height - _gutter * 1.5);
-				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 2);
-				watch.reposition(_screen.x, _screen.y - watch.height - console.height - _gutter * 1.5);
-				perf.reposition(_screen.x, 0);
+				console.resize(_screen.x - GUTTER * 2, 35);
+				console.reposition(GUTTER, _screen.y);
+				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
+				log.reposition(0, _screen.y - log.height - console.height - GUTTER * 1.5);
+				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
+				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
+				stats.reposition(_screen.x, 0);
 			case TOP:
-				console.resize(_screen.x - _gutter * 2, 35);
+				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(0,0);
-				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				log.reposition(0,console.height + _gutter + 15);
-				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,console.height + _gutter + 15);
-				perf.reposition(_screen.x,_screen.y);
+				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+				log.reposition(0,console.height + GUTTER + 15);
+				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+				watch.reposition(_screen.x,console.height + GUTTER + 15);
+				stats.reposition(_screen.x,_screen.y);
 			case LEFT:
-				console.resize(_screen.x - _gutter * 2, 35);
-				console.reposition(_gutter, _screen.y);
-				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2 - _gutter);
+				console.resize(_screen.x - GUTTER * 2, 35);
+				console.reposition(GUTTER, _screen.y);
+				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
 				log.reposition(0,0);
-				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2);
-				watch.reposition(0,log.y + log.height + _gutter);
-				perf.reposition(_screen.x,0);
+				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
+				watch.reposition(0,log.y + log.height + GUTTER);
+				stats.reposition(_screen.x,0);
 			case RIGHT:
-				console.resize(_screen.x - _gutter * 2, 35);
-				console.reposition(_gutter, _screen.y);
-				log.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2 - _gutter);
+				console.resize(_screen.x - GUTTER * 2, 35);
+				console.reposition(GUTTER, _screen.y);
+				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
 				log.reposition(_screen.x,0);
-				watch.resize(_screen.x / 3, (_screen.y - 15 - _gutter * 2.5) / 2 - console.height / 2);
-				watch.reposition(_screen.x,log.y + log.height + _gutter);
-				perf.reposition(0,0);
+				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
+				watch.reposition(_screen.x,log.y + log.height + GUTTER);
+				stats.reposition(0,0);
 			case STANDARD:
-				console.resize(_screen.x - _gutter * 2, 35);
-				console.reposition(_gutter, _screen.y);
-				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				log.reposition(0,_screen.y - log.height - console.height - _gutter * 1.5);
-				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,_screen.y - watch.height - console.height - _gutter * 1.5);
-				perf.reposition(_screen.x, 0);
+				console.resize(_screen.x - GUTTER * 2, 35);
+				console.reposition(GUTTER, _screen.y);
+				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
+				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
+				stats.reposition(_screen.x, 0);
+				if (bmpLog != null) {
+					bmpLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+					bmpLog.reposition(_screen.x, _screen.y - watch.height - bmpLog.height - console.height - GUTTER * 1.5);
+				}
 			default:
-				console.resize(_screen.x - _gutter * 2, 35);
-				console.reposition(_gutter, _screen.y);
-				log.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				log.reposition(0,_screen.y - log.height - console.height - _gutter * 1.5);
-				watch.resize((_screen.x - _gutter * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,_screen.y - watch.height - console.height - _gutter * 1.5);
-				perf.reposition(_screen.x, 0);
+				console.resize(_screen.x - GUTTER * 2, 35);
+				console.reposition(GUTTER, _screen.y);
+				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
+				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
+				stats.reposition(_screen.x, 0);				
 		}
+	}
+	
+	inline public function onResize(Width:Float, Height:Float):Void
+	{
+		_screen.x = Width;
+		_screen.y = Height;
+		_screenBounds = new Rectangle(GUTTER, TOP_HEIGHT + GUTTER / 2, _screen.x - GUTTER * 2, _screen.y - GUTTER * 2 - TOP_HEIGHT);
+		stats.updateBounds(_screenBounds);
+		log.updateBounds(_screenBounds);
+		watch.updateBounds(_screenBounds);
+		console.updateBounds(_screenBounds);
+		if (bmpLog != null) {
+			bmpLog.updateBounds(_screenBounds);
+		}
+		resetLayout();
 	}
 }
 #end

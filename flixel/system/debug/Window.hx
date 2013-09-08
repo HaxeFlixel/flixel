@@ -9,7 +9,6 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import openfl.Assets;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
@@ -22,12 +21,12 @@ class Window extends Sprite
 	/**
 	 * The background color of the window.
 	 */
-	inline static public var BG_COLOR:Int = 0x7f7f7f7f;
+	inline static public var BG_COLOR:Int = 0xDD5F5F5F;
 	/**
 	 * The color used for the "handle" at the top of the window.
 	 */
-	inline static public var TOP_COLOR:Int = 0x7f000000;
-	
+	inline static public var TOP_COLOR:Int = 0xAA000000;
+
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
 	 */
@@ -98,40 +97,29 @@ class Window extends Sprite
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param Title			The name of the window, displayed in the header bar.
-	 * @param Width			The initial width of the window.
-	 * @param Height		The initial height of the window.
-	 * @param Resizable		Whether you can change the size of the window with a drag handle.
-	 * @param Bounds		A rectangle indicating the valid screen area for the window.
-	 * @param BGColor		What color the window background should be, default is gray and transparent.
-	 * @param TopColor		What color the window header bar should be, default is black and transparent.
+	 * @param	Title		The name of the window, displayed in the header bar.
+	 * @param	Width		The initial width of the window.
+	 * @param	Height		The initial height of the window.
+	 * @param	Resizable	Whether you can change the size of the window with a drag handle.
+	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
 	 */
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, Bounds:Rectangle = null, BGColor:Int = 0x7f7f7f7f, TopColor:Int = 0x7f000000)
+	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
 		super();
 		
 		_width = Std.int(Math.abs(Width));
 		_height = Std.int(Math.abs(Height));
-		_bounds = Bounds;
-		minSize = new Point(50, 30);
-		if (_bounds != null)
-		{
-			maxSize = new Point(_bounds.width,_bounds.height);
-		}
-		else
-		{
-			maxSize = new Point(FlxMath.MAX_VALUE, FlxMath.MAX_VALUE);
-		}
+		updateBounds(Bounds);
 		_drag = new Point();
 		
 		_resizable = Resizable;
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
 		addChild(_shadow);
-		_background = new Bitmap(new BitmapData(1, 1, true, BGColor));
+		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
 		_background.y = 15;
 		addChild(_background);
-		_header = new Bitmap(new BitmapData(1, 15, true, TopColor));
+		_header = new Bitmap(new BitmapData(1, 15, true, TOP_COLOR));
 		addChild(_header);
 		
 		_title = new TextField();
@@ -198,8 +186,8 @@ class Window extends Sprite
 	
 	/**
 	 * Resize the window.  Subject to pre-specified minimums, maximums, and bounding rectangles.
-	 * @param Width		How wide to make the window.
-	 * @param Height	How tall to make the window.
+	 * @param 	Width	How wide to make the window.
+	 * @param 	Height	How tall to make the window.
 	 */
 	public function resize(Width:Float, Height:Float):Void
 	{
@@ -210,8 +198,8 @@ class Window extends Sprite
 	
 	/**
 	 * Change the position of the window.  Subject to pre-specified bounding rectangles.
-	 * @param X		Desired X position of top left corner of the window.
-	 * @param Y		Desired Y position of top left corner of the window.
+	 * @param 	X	Desired X position of top left corner of the window.
+	 * @param 	Y	Desired Y position of top left corner of the window.
 	 */
 	public function reposition(X:Float, Y:Float):Void
 	{
@@ -365,6 +353,20 @@ class Window extends Sprite
 			{
 				_title.alpha = 0.65;
 			}
+		}
+	}
+	
+	public function updateBounds(Bounds:Rectangle):Void
+	{
+		_bounds = Bounds;
+		minSize = new Point(50, 30);
+		if (_bounds != null)
+		{
+			maxSize = new Point(_bounds.width,_bounds.height);
+		}
+		else
+		{
+			maxSize = new Point(FlxMath.MAX_VALUE, FlxMath.MAX_VALUE);
 		}
 	}
 }
