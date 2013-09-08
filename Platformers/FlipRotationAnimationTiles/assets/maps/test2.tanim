@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animations>
+	<tileset firstGID="1">
+		<tile id="437">
+			<animation id="cascade1" speed="5">
+				<frame id="405" />
+				<frame id="437" />
+				<frame id="469" />
+				<frame id="469" />
+				<frame id="469" />
+			</animation>
+		</tile>
+		<tile id="438">
+			<animation id="cascade2" speed="5">
+				<frame id="406" />
+				<frame id="438" />
+				<frame id="470" />
+				<frame id="470" />
+				<frame id="470" />
+			</animation>
+		</tile>
+		<tile id="439">
+			<animation id="cascade3" speed="5">
+				<frame id="407" />
+				<frame id="439" />
+				<frame id="471" />
+				<frame id="471" />
+				<frame id="471" />
+			</animation>
+		</tile>
+		<tile id="451">
+			<animation id="bubbles1" speed="1">
+				<frame id="456" />
+				<frame id="456" />
+				<frame id="451" />
+				<frame id="453" />
+				<frame id="451" flipHorizontal="true" rotation="90" />
+				<frame id="451" rotation="270" />
+			</animation>
+		</tile>
+		<tile id="452">
+			<animation id="bubbles2" speed="1.7">
+				<frame id="452" />
+				<frame id="453" />
+				<frame id="453" flipVertical="true" />
+			</animation>
+		</tile>
+		<tile id="501">
+			<animation id="cascade6" speed="5">
+				<frame id="501" />
+				<frame id="503" flipHorizontal="true" />
+			</animation>
+		</tile>
+		<tile id="502">
+			<animation id="cascade7" speed="5">
+				<frame id="502" />
+				<frame id="502" flipHorizontal="true" />
+			</animation>
+		</tile>
+		<tile id="503">
+			<animation id="cascade8" speed="5">
+				<frame id="503"    />
+				<frame id="501" flipHorizontal="true"   />
+			</animation>
+		</tile>
+		<tile id="533">
+			<animation id="cascade9" speed="5">
+				<frame id="533" />
+				<frame id="535" flipHorizontal="true" />
+			</animation>
+		</tile>
+		<tile id="534">
+			<animation id="cascade10" speed="5">
+				<frame id="534" />
+				<frame id="534" flipHorizontal="true" />
+			</animation>
+		</tile>
+		<tile id="535">
+			<animation id="cascade11" speed="5">
+				<frame id="535" />
+				<frame id="533" flipHorizontal="true" />
+			</animation>
+		</tile>
+		<tile id="565">
+			<animation id="cascade5" speed="5">
+				<frame id="566" />
+				<frame id="565" />
+			</animation>
+		</tile>
+		<tile id="567">
+			<animation id="cascade4" speed="5">
+				<frame id="565" />
+				<frame id="567" />
+			</animation>
+		</tile>
+	</tileset>
+	<tileset firstGID="1025">
+		<tile id="732">
+			<animation id="torch2" speed="8" randomizeSpeed="3">
+				<frame id="732" />
+				<frame id="732" flipHorizontal="true" />
+			</animation>
+		</tile>
+		<tile id="800">
+			<animation id="torch" speed="8" randomizeSpeed="3">
+				<frame id="800" />
+				<frame id="800" />
+				<frame id="800" />
+				<frame id="800" />
+				<frame id="800" />
+				<frame id="800" />
+				<frame id="800" />
+				<frame id="832" />
+			</animation>
+		</tile>
+	</tileset>
+</animations>
