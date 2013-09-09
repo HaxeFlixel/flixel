@@ -215,7 +215,7 @@
     <property name="facing" value="down"/>
    </properties>
   </object>
-  <object name="soldier" type="npc" x="256" y="384" width="32" height="32"/>
+  <object name="soldier" type="npc" x="384" y="288" width="32" height="32"/>
  </objectgroup>
  <layer name="fg" width="20" height="20">
   <properties>
@@ -232,7 +232,7 @@
    <property name="tileset" value="objects"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYCAdHGBlaJBnY2BgZMfE5IAHUPMc2RFYEUpTYl4ikn4QO5FM8+5DzaMmWMDKsIC6Jo4CWgBgWk94QCUMNEsBlI6oidnZqYtHwSggBQAAr54m1Q==
+   eJxjYCAdHGBlaJBnY2BgZMfE5IAHUPMc2RFYEUpTYl4ikn4QO5FM8+5DzaMmWMDKsIC6Jo4CWgBgWk94QEUMSkfUxOzs1MWjYBSQAgC+bSc1
   </data>
  </layer>
  <layer name="fg3" width="20" height="20">

@@ -50,8 +50,7 @@ class Level extends TiledMap
 		var layer:TiledLayer;
 		
 		// Prepare the tile animations
-		var tilesAnims:TileAnims = new TileAnims(animFile);
-		var animations = tilesAnims.getAnimations();
+		var animations = TileAnims.getAnimations(animFile);
 		
 		for (layer in layers) {
 			if (layer.properties.contains("tileset")) {
@@ -85,7 +84,7 @@ class Level extends TiledMap
 			// For each tile in the layer
 			for ( i in 0...layer.tiles.length) { 
 				tile = layer.tiles[i];
-				if (tile != null) {
+				if (tile != null && isSpecialTile(tile, animations)) {
 					specialTile = new FlxTileSpecial(tile.tilesetID, tile.isFlipHorizontally, tile.isFlipVertically, tile.rotate);
 					// add animations if exists
 					if (animations.exists(tile.tilesetID)) {
@@ -170,5 +169,9 @@ class Level extends TiledMap
 	public function getBounds():FlxRect 
 	{
 		return bounds;
+	}
+	
+	private inline function isSpecialTile(tile:TiledTile, animations:Dynamic):Bool {
+		return (tile.isFlipHorizontally || tile.isFlipVertically || tile.rotate != FlxTileSpecial.ROTATE_0 || animations.exists(tile.tilesetID));
 	}
 }

@@ -12,11 +12,18 @@ typedef AnimData = { name:String, speed:Float, randomizeSpeed:Float, frames:Arra
  */
 class TileAnims
 {
-
-	var source:Fast;
 	
-	public function new(Data:Dynamic) 
+	/**
+	 * Parse the animations in the *.tanim file.
+	 * Returns a map with:
+	 *	- Key: the tilesetID of the tile
+	 * 	- Value: An array with the differents animations of the tile
+	 * @return A Map<Int, Array<AnimData>> 
+	 */
+	public static function getAnimations(Data:Dynamic):Map<Int, Array<AnimData>>
 	{
+		//load the xml file
+		var source:Fast;
 		if (Std.is(Data, String)) {
 			source = new Fast(Xml.parse(Assets.getText(Data)));
 		} else if (Std.is(Data, Xml)) {
@@ -26,17 +33,8 @@ class TileAnims
 		}
 		
 		source = source.node.animations;
-	}
-	
-	/**
-	 * Parse the animations in the *.tanim file.
-	 * Returns a map with:
-	 *	- Key: the tilesetID of the tile
-	 * 	- Value: An array with the differents animations of the tile
-	 * @return A Map<Int, Array<AnimData>> 
-	 */
-	public function getAnimations():Map<Int, Array<AnimData>>
-	{
+		
+		// parse the file
 		var anims:Map<Int, Array<AnimData>> = new Map();
 		var node:Fast;
 		
@@ -55,6 +53,9 @@ class TileAnims
 				animsData = new Array<AnimData>();
 				for (animation in node.nodes.animation) {
 					var name:String = "[animation]";
+					if (animation.has.id) {
+						name = animation.att.id;
+					}
 					var randomizeSpeed:Float = 0;
 					if (animation.has.randomizeSpeed) {
 						randomizeSpeed = Std.parseFloat(animation.att.randomizeSpeed);
