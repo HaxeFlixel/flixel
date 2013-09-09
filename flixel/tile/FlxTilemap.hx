@@ -74,6 +74,33 @@ class FlxTilemap extends FlxObject
 	public var tileScaleHack:Float = 1.01;
 	
 	/**
+	 * Set this to create your own image index remapper,
+	 * So you can create your own tile layouts.
+	 * 
+	 * Mostly useful in combination with the auto-tilers
+	 */	
+	public var customTileRemap:Array<Int> = null;
+	
+	public var randomize_indeces:Array<Int> = null;
+	public var randomize_choices:Array<Array<Int>>= null;
+	
+	/**
+	 * Input a custom tile map as a comma-separated int string
+	 * @param	str
+	 * @return
+	 */	
+	public function setCustomTileRemapStr(str:String):Array<Int>{
+		var arr:Array<String> = str.split(",");
+		if (customTileRemap == null) {
+			customTileRemap = new Array<Int>();
+		}
+		for (istr in arr) {
+			customTileRemap.push(Std.parseInt(istr));
+		}
+		return customTileRemap;
+	}
+	
+	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
 	private var _flashPoint:Point;
@@ -279,9 +306,9 @@ class FlxTilemap extends FlxObject
 			widthInTiles = 0;
 			var row:Int = 0;
 			var column:Int;
-			
+						
 			while (row < heightInTiles)
-			{
+			{					
 				columns = rows[row++].split(",");
 				
 				if (columns.length <= 1)
@@ -328,6 +355,44 @@ class FlxTilemap extends FlxObject
 				autoTile(i++);
 			}
 		}
+		
+		trace("before data = " + _data);
+		
+		if (customTileRemap != null) {
+			i = 0;
+			while ( i < totalTiles) 
+			{
+				var old_index = _data[i];
+				var new_index = old_index;
+				if (old_index < customTileRemap.length)
+				{
+					new_index = customTileRemap[old_index];
+				}
+				_data[i] = new_index;
+				i++;
+			}
+		}
+		
+		if (randomize_indeces != null) {
+			i = 0;
+			while (i < totalTiles)
+			{
+				var old_index = _data[i];
+				var j = 0;
+				var new_index = old_index;
+				for (rand in randomize_indeces) {					
+					if (old_index == rand) {
+						var k:Int = Std.int(Math.random() * randomize_choices[j].length);
+						new_index = randomize_choices[j][k];
+					}
+					j++;
+				}
+				_data[i] = new_index;
+				i++;
+			}
+		}
+		
+		trace("after data = " + _data);
 		
 		// Figure out the size of the tiles
 		setCachedGraphics(FlxG.bitmap.add(TileGraphic));
@@ -1679,7 +1744,7 @@ class FlxTilemap extends FlxObject
 			return ok;
 		}
 		
-		// If this map is autotiled and it changes, locally update the arrangement
+		// If this map is autotiled and it changes, locally update the arranrangement
 		var i:Int;
 		var row:Int = Std.int(Index / widthInTiles) - 1;
 		var rowLength:Int = row + 3;
