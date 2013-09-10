@@ -133,8 +133,8 @@ class Character extends FlxExtendedSprite {
 		}			
 		
 		
-		if (_curAnim == null || _curAnim.name != anim) {
-			play(anim);
+		if (animator.animation == null || animator.animationName != anim) {
+			animator.play(anim);
 		}
 	}
 	
@@ -201,7 +201,7 @@ class Character extends FlxExtendedSprite {
 					default:
 						tmp = v_def;
 				}
-				addAnimation(type + "_" + dir, t, tmp, true);
+				animator.add(type + "_" + dir, t, tmp, true);
 			}
 			
 		}
