@@ -12,7 +12,6 @@ import flash.events.MouseEvent;
 */
 class FlxSystemButton extends Sprite
 {
-
 	private var downHandler:Dynamic;
 	private var enabled:Bool = true;
 	private var icon:Bitmap;
@@ -32,9 +31,9 @@ class FlxSystemButton extends Sprite
 			this.downHandler = DownHandler;
 		}
 
-		addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
-		addEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
-		addEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
+		addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 
 		alpha = 0.8;
 	}
@@ -50,8 +49,6 @@ class FlxSystemButton extends Sprite
 		if (this.icon != null)
 			removeChild(this.icon);
 
-		this.icon = null;
-
 		this.icon = new Bitmap(NewIcon);
 		addChild(this.icon);
 	}
@@ -64,7 +61,6 @@ class FlxSystemButton extends Sprite
 	**/
 	public function changeHandler (NewHandler:Dynamic):Void
 	{
-		this.downHandler = null;
 		this.downHandler = NewHandler;
 	}
 
@@ -96,9 +92,9 @@ class FlxSystemButton extends Sprite
 
 	public function destroy():Void
 	{
-		removeEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
-		removeEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
-		removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+		removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		icon = null;
 		downHandler = null;
 	}

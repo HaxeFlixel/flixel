@@ -148,9 +148,6 @@ class FlxDebugger extends Sprite
 
 		var txt = new TextField();
 		txt.height = 20;
-		//txt.width = 200;
-		//txt.x = 2;
-		//txt.y = (TOP_HEIGHT*.5) - (txt.height*.5);
 		txt.selectable = false;
 		txt.multiline = false;
 		txt.embedFonts = true;
@@ -182,11 +179,7 @@ class FlxDebugger extends Sprite
 		_middleButtons = new Array<FlxSystemButton>();
 		_rightButtons = new Array<FlxSystemButton>();
 
-		var _flixel = new FlxSystemButton(FlxAssets.getBitmapData(FlxAssets.IMG_FLIXEL), null);
-		_flixel.x = 10;
-		_flixel.y = (TOP_HEIGHT*.5) - (_flixel.height*.5);
-		_leftButtons.push(_flixel);
-		addChild(_flixel);
+		addCreateLeftButton(FlxAssets.IMG_FLIXEL, null, false);
 
 		var display = new FlxSystemButton(null, null);
 		display.addChild(txt);
@@ -198,13 +191,19 @@ class FlxDebugger extends Sprite
 		addCreateRightButton(FlxAssets.IMG_STATS_DEBUG, toggleStatsWindow, false);
 		addCreateRightButton(FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, false);
 
-		addMiddleButton(vcr.restartBtn);
+		addMiddleButton(vcr.restartBtn, false);
 		#if FLX_RECORD
-		//addMiddleButton(vcr.recordBtn);
-		//addMiddleButton(vcr.stopBtn);
+		addMiddleButton(vcr.openBtn, false);
+		addMiddleButton(vcr.recordBtn, false);
 		#end
-		addMiddleButton(vcr.playbackToggleBtn);
-		addMiddleButton(vcr.stepBtn);
+		addMiddleButton(vcr.playbackToggleBtn, false);
+		addMiddleButton(vcr.stepBtn, false);
+
+		#if FLX_RECORD
+		var runtimeDisplay = new FlxSystemButton(null, null);
+		runtimeDisplay.addChild(vcr.runtimeDisplay);
+		addMiddleButton(runtimeDisplay, false);
+		#end
 
 		onResize(Width, Height);
 
@@ -264,11 +263,6 @@ class FlxDebugger extends Sprite
 			stats.destroy();
 			stats = null;
 		}
-		if (vcr != null)
-		{
-			vcr.destroy();
-			vcr = null;
-		}
 		if (console != null) 
 		{
 			removeChild(console);
@@ -302,7 +296,7 @@ class FlxDebugger extends Sprite
 		hasMouse = false;
 		
 		#if !FLX_NO_MOUSE
-		if(!FlxG.game.debugger.vcr.paused)
+		if(!FlxG.vcr.paused)
 			FlxG.mouse.useSystemCursor = false;
 		#end
 	}
@@ -458,6 +452,16 @@ class FlxDebugger extends Sprite
 		var button = new FlxSystemButton(FlxAssets.getBitmapData(BitmapUrl), Handler);
 
 		return addRightButton(button, UpdateLayout);
+	}
+
+	/**
+	* Add a debugger button the the right layout
+	*/
+	public function addCreateLeftButton (BitmapUrl:String, ?Handler:Dynamic, UpdateLayout:Bool = true):FlxSystemButton
+	{
+		var button = new FlxSystemButton(FlxAssets.getBitmapData(BitmapUrl), Handler);
+
+		return addLeftButton(button, UpdateLayout);
 	}
 
 	/**

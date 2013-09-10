@@ -189,14 +189,12 @@ class FlxG
 	 * change its layout, activate visual debugging or change the key used to toggle it.
 	 */
 	static public var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
-	
-	#if FLX_RECORD
+
 	/**
 	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
 	 * and replaying.
 	 */
 	static public var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
-	#end
 	
 	/**
 	 * A reference to the <code>BitmapFrontEnd</code> object. Contains things related to bimtaps,
