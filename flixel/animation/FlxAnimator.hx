@@ -23,7 +23,9 @@ class FlxAnimator
 	/**
 	 * Gets or sets the currently playing animation.
 	 */
-	public var curAnim(get_curAnim, set_curAnim):String;
+	public var animationName(get_animationName, set_animationName):String;
+	
+	public var animation(get, set):FlxAnimation;
 	
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
@@ -459,7 +461,7 @@ class FlxAnimator
 		return Value;
 	}
 	
-	private function get_curAnim():String
+	private function get_animationName():String
 	{
 		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
 		{
@@ -472,10 +474,29 @@ class FlxAnimator
 	 * Plays a specified animation (same as calling play)
 	 * @param	AnimName	The name of the animation you want to play.
 	 */
-	inline private function set_curAnim(AnimName:String):String
+	inline private function set_animationName(AnimName:String):String
 	{
 		play(AnimName);
 		return AnimName;
+	}
+	
+	private function get_animation():FlxAnimation
+	{
+		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
+		{
+			return _curAnim;
+		}
+		return null;
+	}
+	
+	/**
+	 * Plays a specified animation (same as calling play)
+	 * @param	AnimName	The name of the animation you want to play.
+	 */
+	inline private function set_animation(Anim:FlxAnimation):FlxAnimation
+	{
+		play(Anim.name);
+		return Anim;
 	}
 	
 	private function get_frames():Int
