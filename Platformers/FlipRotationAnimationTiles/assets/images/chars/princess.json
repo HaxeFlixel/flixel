@@ -1,0 +1,59 @@
+{
+	"sprite": {
+		"texture": "princess.png",
+		"framewidth": 64,
+		"frameheight": 64
+	},
+	"velocity": {
+		"max_x": 160,
+		"max_y": 160
+	},
+	"collision": {
+		"x": 18,
+		"y": 34,
+		"width": 28,
+		"height": 30
+	},
+	"collision_map": {
+		"x": 0,
+		"y": -30,
+		"width": 32,
+		"height": 60		
+	},
+	"trigger": {
+		"x": 2,
+		"y": -10,
+		"width": 60,
+		"height": 50	
+	},
+	"animations": {
+		"velocities": {
+			"def": 0,
+			"idle": 1,
+			"walking": 8,
+			"running": 12
+		},
+		"frames": {
+			"up": {
+				"def": [0],
+				"idle": [0,8],
+				"walking":[1,2,3,4,5,6,7,8]
+			},
+			"down": {
+				"def": [18],
+				"idle": [18,26],
+				"walking":[19,20,21,22,23,24,25,26]
+			},
+			"left": {
+				"def": [9],
+				"idle": [9,17],
+				"walking":[10,11,12,13,14,15,16,17]
+			},
+			"right": {
+				"def": [27],
+				"idle": [27,35],
+				"walking":[28,29,30,31,32,33,34,35]
+			}
+		}
+	}
+}

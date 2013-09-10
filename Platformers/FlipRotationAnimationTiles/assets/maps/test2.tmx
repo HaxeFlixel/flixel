@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="terrain" tilewidth="32" tileheight="32">
+  <properties>
+   <property name="anim10" value="cascade6:5"/>
+   <property name="anim11" value="cascade7:5"/>
+   <property name="anim12" value="cascade8:5"/>
+   <property name="anim13" value="cascade9:5"/>
+   <property name="anim14" value="cascade10:5"/>
+   <property name="anim15" value="cascade11:5"/>
+   <property name="anim3" value="bubbles1:1"/>
+   <property name="anim4" value="bubbles2:1.7"/>
+   <property name="anim5" value="cascade1:5"/>
+   <property name="anim6" value="cascade2:5"/>
+   <property name="anim7" value="cascade3:5"/>
+   <property name="anim8" value="cascade4:5"/>
+   <property name="anim9" value="cascade5:5"/>
+  </properties>
+  <image source="Atlas_0/terrain_atlas.png" trans="2991b3" width="1024" height="1024"/>
+  <tile id="405">
+   <properties>
+    <property name="anim1" value="cascade1:1"/>
+   </properties>
+  </tile>
+  <tile id="406">
+   <properties>
+    <property name="anim1" value="cascade2:1"/>
+   </properties>
+  </tile>
+  <tile id="407">
+   <properties>
+    <property name="anim1" value="cascade3:1"/>
+   </properties>
+  </tile>
+  <tile id="437">
+   <properties>
+    <property name="anim" value="cascade1"/>
+    <property name="anim1" value="cascade1:2"/>
+   </properties>
+  </tile>
+  <tile id="438">
+   <properties>
+    <property name="anim" value="cascade2"/>
+    <property name="anim1" value="cascade2:2"/>
+   </properties>
+  </tile>
+  <tile id="439">
+   <properties>
+    <property name="anim" value="cascade3"/>
+    <property name="anim1" value="cascade3:2"/>
+   </properties>
+  </tile>
+  <tile id="449">
+   <properties>
+    <property name="tileset" value="terrain"/>
+   </properties>
+  </tile>
+  <tile id="451">
+   <properties>
+    <property name="anim" value="bubbles1"/>
+    <property name="anim1" value="bubbles1:3|r90,h,5|r270,10"/>
+   </properties>
+  </tile>
+  <tile id="452">
+   <properties>
+    <property name="anim" value="bubbles2"/>
+    <property name="anim1" value="bubbles2:1"/>
+   </properties>
+  </tile>
+  <tile id="453">
+   <properties>
+    <property name="anim1" value="bubbles1:4"/>
+    <property name="anim2" value="bubbles2:2|v,3"/>
+   </properties>
+  </tile>
+  <tile id="456">
+   <properties>
+    <property name="anim1" value="bubbles1:1|2"/>
+   </properties>
+  </tile>
+  <tile id="469">
+   <properties>
+    <property name="anim1" value="cascade1:3|4|5"/>
+   </properties>
+  </tile>
+  <tile id="470">
+   <properties>
+    <property name="anim1" value="cascade2:3|4|5"/>
+   </properties>
+  </tile>
+  <tile id="471">
+   <properties>
+    <property name="anim1" value="cascade3:3|4|5"/>
+   </properties>
+  </tile>
+  <tile id="501">
+   <properties>
+    <property name="anim" value="cascade6"/>
+    <property name="anim1" value="cascade6:1"/>
+    <property name="anim2" value="cascade8:h,2"/>
+   </properties>
+  </tile>
+  <tile id="502">
+   <properties>
+    <property name="anim" value="cascade7"/>
+    <property name="anim1" value="cascade7:1|h,2"/>
+   </properties>
+  </tile>
+  <tile id="503">
+   <properties>
+    <property name="anim" value="cascade8"/>
+    <property name="anim1" value="cascade8:1"/>
+    <property name="anim2" value="cascade6:h,2"/>
+   </properties>
+  </tile>
+  <tile id="533">
+   <properties>
+    <property name="anim" value="cascade9"/>
+    <property name="anim1" value="cascade9:1"/>
+    <property name="anim2" value="cascade11:h,2"/>
+   </properties>
+  </tile>
+  <tile id="534">
+   <properties>
+    <property name="anim" value="cascade10"/>
+    <property name="anim1" value="cascade10:1|h,2"/>
+   </properties>
+  </tile>
+  <tile id="535">
+   <properties>
+    <property name="anim" value="cascade11"/>
+    <property name="anim1" value="cascade11:1"/>
+    <property name="anim2" value="cascade9:h,2"/>
+   </properties>
+  </tile>
+  <tile id="565">
+   <properties>
+    <property name="anim" value="cascade5"/>
+    <property name="anim1" value="cascade4:1"/>
+    <property name="anim2" value="cascade5:2"/>
+   </properties>
+  </tile>
+  <tile id="566">
+   <properties>
+    <property name="anim1" value="cascade5:1"/>
+   </properties>
+  </tile>
+  <tile id="567">
+   <properties>
+    <property name="anim" value="cascade4"/>
+    <property name="anim1" value="cascade4:2"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="1025" name="objects" tilewidth="32" tileheight="32">
+  <properties>
+   <property name="anim1" value="torch:8"/>
+   <property name="anim2" value="torch2:8"/>
+  </properties>
+  <image source="Atlas_0/base_out_atlas.png" trans="2991b3" width="1024" height="1024"/>
+  <tile id="732">
+   <properties>
+    <property name="anim" value="torch2"/>
+    <property name="anim1" value="torch2:1|h,2"/>
+   </properties>
+  </tile>
+  <tile id="800">
+   <properties>
+    <property name="anim" value="torch"/>
+    <property name="anim1" value="torch:1|2|3|4|5|6|7|9|10|11"/>
+   </properties>
+  </tile>
+  <tile id="832">
+   <properties>
+    <property name="anim1" value="torch:8|12"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="bg" width="20" height="20">
+  <properties>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxrYmRgaILiFkaGAx1AGoSPMDIkwNggrILEbgOqa0LShwu3QcyB67NgQmBks1uIMAvdfdjMO0qiea5AnArESxkZHFIR7AMwGibuhqbvEJHmo+PDjAwNpJpDSM1hKL2UGTsmx52UmofuTyDfgRruO4Rm7kDjwwNs/ygexQONAZTT1ps=
+  </data>
+ </layer>
+ <layer name="bg2" width="20" height="20">
+  <properties>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgF9AYtzAwMrTgwNvCWkaHhDRDjMm8JUN8TIH6KpB/IdoCxgXpBZuAF25gQ5i9BMucZM0IcyD6A3xTc7kMHT5lx+wfqHqxgB9CdR4DmHcWB0cFmoL+3oPl9Ow6zsYELQL0XIbjhAp44GAWjYCQCALhoIN0=
+  </data>
+ </layer>
+ <layer name="bg3" width="20" height="20" opacity="0.74">
+  <properties>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYKA+SGKkrnmLKDBPiZHBgWoOoRAoMSJoYBg5NAFpGF7EiOlPZyL93QxVt5iRoWER1OzFFIRZI9Ac8nVjgmYqpwcniB9B4eWQhMReROe4dh5EaWsUjIKBAACvdQ8X
+  </data>
+ </layer>
+ <layer name="bg4" width="20" height="20">
+  <properties>
+   <property name="tileset" value="objects"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBjegJWdgYGNnTpmOQLNUQViNXYI25FCcxOB+l2B2I0dwk6kkjtHwSggFzCyUxeD8ogiUn6hFptaOJHKeKQBAIs3Fjw=
+  </data>
+ </layer>
+ <objectgroup draworder="topdown" name="events" width="20" height="20">
+  <object name="princess" type="player" x="256" y="192" width="32" height="32">
+   <properties>
+    <property name="facing" value="down"/>
+   </properties>
+  </object>
+  <object name="soldier" type="npc" x="384" y="288" width="32" height="32"/>
+ </objectgroup>
+ <layer name="fg" width="20" height="20">
+  <properties>
+   <property name="fg" value=""/>
+   <property name="tileset" value="terrain"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYMANtjEyMGwH4h2MeBSRAL4BzfkOxD+oZJ4YEwODOBBLMFHHPGqBs4wMDWeAmFz9QL0gM0YEmAD050QIbgCyGyYD2VMo8PsGoN6NENywgYI4GAWjYBQQBgBUHRHH
+  </data>
+ </layer>
+ <layer name="fg2" width="20" height="20">
+  <properties>
+   <property name="fg" value=""/>
+   <property name="tileset" value="objects"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYCAdHGBlaJBnY2BgZMfE5IAHUPMc2RFYEUpTYl4ikn4QO5FM8+5DzaMmWMDKsIC6Jo4CWgBgWk94QEUMSkfUxOzs1MWjYBSQAgC+bSc1
+  </data>
+ </layer>
+ <layer name="fg3" width="20" height="20">
+  <properties>
+   <property name="fg" value=""/>
+   <property name="tileset" value="objects"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBic4C4bdc37S2XzRsEoGAXEAeS8TA02cl6mFnsUkAcAFFEPMQ==
+  </data>
+ </layer>
+ <objectgroup draworder="topdown" name="collisions" width="20" height="20">
+  <object type="collision" x="568" y="128" width="72" height="32"/>
+  <object name="c3" type="collision" x="320" y="194" width="30" height="29"/>
+  <object name="c4" type="collision" x="71" y="320" width="56" height="24"/>
+  <object name="c1" type="collision" x="104" y="0" width="336" height="120"/>
+  <object name="c4" type="collision" x="0" y="320" width="56" height="24"/>
+  <object type="collision" x="480" y="64" width="160" height="64"/>
+  <object name="c2" type="collision" x="40" y="192" width="40" height="24"/>
+  <object name="c4" type="collision" x="128" y="288" width="56" height="24"/>
+  <object type="collision" x="480" y="128" width="40" height="32"/>
+  <object name="c2" type="collision" x="176" y="160" width="40" height="24"/>
+  <object name="c3" type="collision" x="192" y="258" width="30" height="29"/>
+  <object type="collision" x="0" y="416" width="640" height="224"/>
+ </objectgroup>
+</map>
