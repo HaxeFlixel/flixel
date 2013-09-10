@@ -250,8 +250,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		}
 		
 		animator.destroy();
-		animator = Sprite.animator.clone();
-		animator.sprite = this;
+		animator = Sprite.animator.clone(this);
 		
 		updateFrameData();
 		resetHelpers();

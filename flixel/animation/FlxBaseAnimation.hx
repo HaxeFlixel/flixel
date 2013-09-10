@@ -1,4 +1,5 @@
 package flixel.animation;
+import flixel.FlxSprite;
 
 /**
  * ...
@@ -11,14 +12,16 @@ class FlxBaseAnimation
 	 */
 	private var _curIndex:Int = 0;
 	
-	public function new()
+	public var sprite:FlxSprite;
+	
+	public function new(Sprite:FlxSprite)
 	{
-		
+		sprite = Sprite;
 	}
 	
 	public function destroy():Void
 	{
-		
+		sprite = null;
 	}
 	
 	public function update():Bool
@@ -33,7 +36,7 @@ class FlxBaseAnimation
 		return _curIndex;
 	}
 	
-	public function clone():FlxBaseAnimation
+	public function clone(Sprite:FlxSprite):FlxBaseAnimation
 	{
 		return null;
 	}

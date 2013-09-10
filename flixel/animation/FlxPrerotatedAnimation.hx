@@ -8,15 +8,11 @@ import flixel.FlxSprite;
  */
 class FlxPrerotatedAnimation extends FlxBaseAnimation
 {
-	public var sprite:FlxSprite;
-	
 	private var rotations:Int;
 	
 	public function new(Sprite:FlxSprite)
 	{
-		super();
-		
-		sprite = Sprite;
+		super(Sprite);
 		rotations = Math.round(360 / sprite.bakedRotation);
 	}
 	
@@ -42,15 +38,9 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 		return dirty;
 	}
 	
-	override public function destroy():Void 
+	override public function clone(Sprite:FlxSprite):FlxPrerotatedAnimation 
 	{
-		sprite = null;
-		super.destroy();
-	}
-	
-	override public function clone():FlxPrerotatedAnimation 
-	{
-		return new FlxPrerotatedAnimation(sprite);
+		return new FlxPrerotatedAnimation(Sprite);
 	}
 	
 }

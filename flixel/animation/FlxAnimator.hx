@@ -109,9 +109,9 @@ class FlxAnimator
 		callback = null;
 	}
 	
-	public function clone():FlxAnimator
+	public function clone(Sprite:FlxSprite):FlxAnimator
 	{
-		var animator:FlxAnimator = new FlxAnimator(_sprite);
+		var animator:FlxAnimator = new FlxAnimator(Sprite);
 		for (anim in _animations)
 		{
 			animator.add(anim.name, anim.frames, anim.frameRate, anim.looped);
@@ -125,10 +125,10 @@ class FlxAnimator
 		return animator;
 	}
 	
-	public function createPrerotated():Void
+	public function createPrerotated(Sprite:FlxSprite = null):Void
 	{
 		destroyAnimations();
-		_prerotated = new FlxPrerotatedAnimation(_sprite);
+		_prerotated = new FlxPrerotatedAnimation((Sprite != null) ? Sprite : _sprite);
 	}
 	
 	/**
@@ -154,8 +154,7 @@ class FlxAnimator
 		
 		if (Frames.length > 0)
 		{
-			var anim:FlxAnimation = new FlxAnimation(Name, Frames, FrameRate, Looped);
-			anim.sprite = _sprite;
+			var anim:FlxAnimation = new FlxAnimation(_sprite, Name, Frames, FrameRate, Looped);
 			_animations.set(Name, anim);
 		}
 	}
@@ -185,8 +184,7 @@ class FlxAnimator
 			
 			if (indices.length > 0)
 			{
-				var anim:FlxAnimation = new FlxAnimation(Name, indices, FrameRate, Looped);
-				anim.sprite = _sprite;
+				var anim:FlxAnimation = new FlxAnimation(_sprite, Name, indices, FrameRate, Looped);
 				_animations.set(Name, anim);
 			}
 		}
@@ -219,8 +217,7 @@ class FlxAnimator
 			
 			if (frameIndices.length > 0)
 			{
-				var anim:FlxAnimation = new FlxAnimation(Name, frameIndices, FrameRate, Looped);
-				anim.sprite = _sprite;
+				var anim:FlxAnimation = new FlxAnimation(_sprite, Name, frameIndices, FrameRate, Looped);
 				_animations.set(Name, anim);
 			}
 		}
@@ -264,8 +261,7 @@ class FlxAnimator
 				
 				if (frameIndices.length > 0)
 				{
-					var anim:FlxAnimation = new FlxAnimation(Name, frameIndices, FrameRate, Looped);
-					anim.sprite = _sprite;
+					var anim:FlxAnimation = new FlxAnimation(_sprite, Name, frameIndices, FrameRate, Looped);
 					_animations.set(Name, anim);
 				}
 			}
