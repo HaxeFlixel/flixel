@@ -6,9 +6,9 @@ import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.animation.FlxAnimator;
 import flixel.FlxG;
 import flixel.FlxBasic;
-import flixel.system.FlxAnim;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
@@ -41,6 +41,8 @@ interface IFlxSprite extends IFlxBasic {
  */
 class FlxSprite extends FlxObject implements IFlxSprite
 {
+	public var animator:FlxAnimator;
+	
 	/**
 	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>, <code>UP</code>, 
 	 * and <code>DOWN</code> to take advantage of flipped sprites and/or just track player orientation more easily.
@@ -81,19 +83,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	private var _blendInt:Int = 0;
 	#end
 	/**
-	 * Whether the current animation has finished its first (or only) loop.
-	 */
-	public var finished:Bool = false;
-	/**
-	 * Internal, keeps track of the current frame of animation.
-	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
-	 */
-	public var curFrame(default, null):Int = 0;
-	/**
-	 * Whether the current animation gets updated or not.
-	 */
-	public var paused(default, null):Bool = true;
-	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
 	public var frameWidth(default, null):Int;
@@ -123,26 +112,15 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public var colorTransform(get_colorTransform, never):ColorTransform;
 	
 	/**
-	 * Internal, stores all the animations that were added to this sprite.
-	 */
-	private var _animations:Map<String, FlxAnim>;
-	/**
-	 * Internal, keeps track of the current animation being played.
-	 */
-	private var _curAnim:FlxAnim;
-	/**
 	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
 	 */
 	private var _curIndex:Int = 0;
+	
 	/**
-	 * Internal, used to time each frame of animation.
+	 * Link to current FlxFrame from loaded atlas
 	 */
-	private var _frameTimer:Float = 0;
-	/**
-	 * Internal tracker for the animation callback.  Default is null. If assigned, will be called each time the current frame changes.
-	 * A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
-	 */
-	private var _callback:String->Int->Int->Void;
+	private var _flxFrame:FlxFrame;
+	
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
@@ -172,11 +150,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	private var _matrix:Matrix;
 	
-	/**
-	 * Link to current FlxFrame from loaded atlas
-	 */
-	private var _flxFrame:FlxFrame;
-	
 	#if !flash
 	private var _red:Float = 1.0;
 	private var _green:Float = 1.0;
@@ -201,6 +174,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:Dynamic)
 	{
 		super(X, Y);
+		
+		animator = new FlxAnimator(this);
 		
 		_flashPoint = new Point();
 		_flashRect = new Rectangle();
@@ -227,7 +202,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	override public function destroy():Void
 	{
-		destroyAnimations();
+		if (animator != null)
+		{
+			animator.destroy();
+		}
+		animator = null;
 		
 		_flashPoint = null;
 		_flashRect = null;
@@ -237,7 +216,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		origin = null;
 		scale = null;
 		_matrix = null;
-		_callback = null;
 		_colorTransform = null;
 		if (framePixels != null)
 		{
@@ -252,23 +230,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		_flxFrame = null;
 		
 		super.destroy();
-	}
-	
-	private function destroyAnimations():Void
-	{
-		if (_animations != null)
-		{
-			for (anim in _animations)
-			{
-				if (anim != null)
-				{
-					anim.destroy();
-				}
-			}
-		}
-		
-		_animations = null;
-		_curAnim = null;
 	}
 	
 	/**
@@ -293,8 +254,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			centerOffsets();
 		}
 		
-		destroyAnimations();
-		_animations = new Map<String, FlxAnim>();
+		animator.destroy();
+		animator = Sprite.animator.clone();
+		animator.sprite = this;
 		
 		updateFrameData();
 		resetHelpers();
@@ -356,8 +318,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		width = frameWidth = Width;
 		height = frameHeight = Height;
 		
-		destroyAnimations();
-		_animations = new Map<String, FlxAnim>();
+		animator.destroyAnimations();
 		
 		updateFrameData();
 		resetHelpers();
@@ -502,9 +463,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		antialiasing = AntiAliasing;
 		#end
 		
-		destroyAnimations();
-		_animations = new Map<String, FlxAnim>();
-		
 		updateFrameData();
 		resetHelpers();
 		
@@ -514,6 +472,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			height = brush.height;
 			centerOffsets();
 		}
+		
+		animator.destroyAnimations();
+		animator.createPrerotated();
 		
 		return this;
 	}
@@ -536,8 +497,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		_region.height = Height;
 		width = frameWidth = _cachedGraphics.bitmap.width;
 		height = frameHeight = _cachedGraphics.bitmap.height;
-		destroyAnimations();
-		_animations = new Map<String, FlxAnim>();
+		animator.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
 		return this;
@@ -580,12 +540,13 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		
 		flipped = (Reverse == true) ? _cachedGraphics.bitmap.width : 0;
 		
+		animator.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
 		
 		if (FrameName != null)
 		{
-			frameName = FrameName;
+			animator.frameName = FrameName;
 		}
 		
 		return this;
@@ -611,7 +572,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			return null;
 		}
 		
-		frameName = Image;
+		animator.frameName = Image;
 		
 		#if !flash
 		antialiasing = AntiAliasing;
@@ -694,8 +655,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	override public function update():Void 
 	{
 		super.update();
-		// TODO: add check if currAnim isn't null
-		updateAnimation();
+		animator.update();
 	}
 	
 	/**
@@ -930,71 +890,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	}
 	
 	/**
-	 * Internal function for updating the sprite's animation.
-	 * Useful for cases when you need to update this but are buried down in too many supers.
-	 * This function is called automatically by <code>FlxSprite.postUpdate()</code>.
-	 */
-	private function updateAnimation():Void
-	{
-		if (bakedRotation > 0)
-		{
-			var oldIndex:Int = _curIndex;
-			var angleHelper:Int = Math.floor((angle) % 360);
-			
-			while (angleHelper < 0)
-			{
-				angleHelper += 360;
-			}
-			
-			_curIndex = Math.floor(angleHelper / bakedRotation + 0.5);
-			_curIndex = Std.int(_curIndex % frames);
-			
-			if (_framesData != null)
-			{
-				_flxFrame = _framesData.frames[_curIndex];
-			}
-			
-			if (oldIndex != _curIndex)
-			{
-				dirty = true;
-			}
-		}
-		else if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished) && !paused)
-		{
-			_frameTimer += FlxG.elapsed;
-			while (_frameTimer > _curAnim.delay)
-			{
-				_frameTimer = _frameTimer - _curAnim.delay;
-				if (curFrame == _curAnim.frames.length - 1)
-				{
-					if (_curAnim.looped)
-					{
-						curFrame = 0;
-					}
-					finished = true;
-				}
-				else
-				{
-					curFrame++;
-				}
-				_curIndex = _curAnim.frames[curFrame];
-				if (_framesData != null)
-				{
-					_flxFrame = _framesData.frames[_curIndex];
-					resetFrameSize();
-				}
-				
-				dirty = true;
-			}
-		}
-		
-		if (dirty)
-		{
-			calcFrame();
-		}
-	}
-	
-	/**
 	 * Request (or force) that the sprite update the frame before rendering.
 	 * Useful if you are doing procedural generation or other weirdness!
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
@@ -1011,296 +906,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		#end
 	}
 	
-	/**
-	 * Adds a new animation to the sprite.
-	 * @param	Name		What this animation should be called (e.g. "run").
-	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
-	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
-	 * @param	Looped		Whether or not the animation is looped or just plays once.
-	 */
-	public function addAnimation(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
-	{
-		// Check animation frames
-		var numFrames:Int = Frames.length - 1;
-		var i:Int = numFrames;
-		while (i >= 0)
-		{
-			if (Frames[i] >= frames)
-			{
-				Frames.splice(i, 1);
-			}
-			i--;
-		}
-		_animations.set(Name, new FlxAnim(Name, Frames, FrameRate, Looped));
-	}
+	public var flxFrame(get, null):FlxFrame;
 	
-	/**
-	 * Adds a new animation to the sprite.
-	 * @param	Name			What this animation should be called (e.g. "run").
-	 * @param	FrameNames		An array of image names from atlas indicating what frames to play in what order.
-	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
-	 * @param	Looped			Whether or not the animation is looped or just plays once.
-	 */
-	public function addAnimationByNamesFromTexture(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true):Void
+	private function get_flxFrame():FlxFrame
 	{
-		if (_cachedGraphics != null && _cachedGraphics.data != null)
-		{
-			var indices:Array<Int> = new Array<Int>();
-			var l:Int = FrameNames.length;
-			for (i in 0...l)
-			{
-				var name:String = FrameNames[i];
-				if (_framesData.framesHash.exists(name))
-				{
-					var frameToAdd:FlxFrame = _framesData.framesHash.get(name);
-					indices.push(getFrameIndex(frameToAdd));
-				}
-			}
-			
-			if (indices.length > 0)
-			{
-				_animations.set(Name, new FlxAnim(Name, indices, FrameRate, Looped));
-			}
-		}
-	}
-	
-	/**
-	 * Adds a new animation to the sprite.
-	 * @param	Name			What this animation should be called (e.g. "run").
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indicies		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
-	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
-	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
-	 * @param	Looped			Whether or not the animation is looped or just plays once.
-	 */
-	public function addAnimationByIndiciesFromTexture(Name:String, Prefix:String, Indicies:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
-	{
-		if (_cachedGraphics != null && _cachedGraphics.data != null)
-		{
-			var frameIndices:Array<Int> = new Array<Int>();
-			var l:Int = Indicies.length;
-			for (i in 0...l)
-			{
-				var name:String = Prefix + Indicies[i] + Postfix;
-				if (_framesData.framesHash.exists(name))
-				{
-					var frameToAdd:FlxFrame = _framesData.framesHash.get(name);
-					frameIndices.push(getFrameIndex(frameToAdd));
-				}
-			}
-			
-			if (frameIndices.length > 0)
-			{
-				_animations.set(Name, new FlxAnim(Name, frameIndices, FrameRate, Looped));
-			}
-		}
-	}
-	
-	/**
-	 * Adds a new animation to the sprite.
-	 * @param	Name			What this animation should be called (e.g. "run").
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
-	 * @param	Looped			Whether or not the animation is looped or just plays once.
-	*/
-	public function addAnimationByPrefixFromTexture(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true):Void
-	{
-		if (_cachedGraphics != null && _cachedGraphics.data != null)
-		{
-			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
-			var l:Int = _framesData.frames.length;
-			for (i in 0...l)
-			{
-				if (StringTools.startsWith(_framesData.frames[i].name, Prefix))
-				{
-					animFrames.push(_framesData.frames[i]);
-				}
-			}
-			
-			if (animFrames.length > 0)
-			{
-				var name:String = animFrames[0].name;
-				var postFix:String = name.substring(name.indexOf(".", Prefix.length), name.length);
-				FlxSprite.prefixLength = Prefix.length;
-				FlxSprite.postfixLength = postFix.length;
-				animFrames.sort(FlxSprite.frameSortFunction);
-				var frameIndices:Array<Int> = new Array<Int>();
-				
-				l = animFrames.length;
-				for (i in 0...l)
-				{
-					frameIndices.push(getFrameIndex(animFrames[i]));
-				}
-				
-				_animations.set(Name, new FlxAnim(Name, frameIndices, FrameRate, Looped));
-			}
-		}
-	}
-	
-	/**
-	 * Pass in a function to be called whenever this sprite's animation changes.
-	 * @param	AnimationCallback		A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
-	 */
-	public function addAnimationCallback(AnimationCallback:String->Int->Int->Void):Void
-	{
-		_callback = AnimationCallback;
-	}
-	
-	/**
-	 * Plays an existing animation (e.g. "run").
-	 * If you call an animation that is already playing it will be ignored.
-	 * @param	AnimName	The string name of the animation you want to play.
-	 * @param	Force		Whether to force the animation to restart.
-	 * @param	Frame		The frame number in animation you want to start from (0 by default). If you pass negative value then it will start from random frame
-	 */
-	public function play(AnimName:String, Force:Bool = false, Frame:Int = 0):Void
-	{
-		if (!Force && (_curAnim != null) && (AnimName == _curAnim.name) && (_curAnim.looped || !finished)) 
-		{
-			paused = false;
-			return;
-		}
-		curFrame = 0;
-		_curIndex = 0;
-		
-		if (_framesData != null)
-		{
-			_flxFrame = _framesData.frames[_curIndex];
-		}
-		
-		_frameTimer = 0;
-		if (_animations.exists(AnimName))
-		{
-			_curAnim = _animations.get(AnimName);
-			if (_curAnim.delay <= 0)
-			{
-				finished = true;
-			}
-			else
-			{
-				finished = false;
-			}
-			
-			if (Frame < 0)
-			{
-				curFrame = Std.int(Math.random() * _curAnim.frames.length);
-			}
-			else if (_curAnim.frames.length > Frame)
-			{
-				curFrame = Frame;
-			}
-			
-			_curIndex = _curAnim.frames[curFrame];
-			
-			if (_framesData != null)
-			{
-				_flxFrame = _framesData.frames[_curIndex];
-			}
-			
-			dirty = true;
-			paused = false;
-			return;
-		}
-		
-		FlxG.log.warn("No animation called \"" + AnimName + "\"");
-	}
-	
-	/**
-	 * Sends the playhead to the specified frame in current animation and plays from that frame.
-	 * @param	Frame	frame number in current animation
-	 */
-	public function gotoAndPlay(Frame:Int = 0):Void
-	{
-		if (_curAnim == null || _curAnim.frames.length <= Frame)
-		{
-			return;
-		}
-		
-		play(_curAnim.name, true, Frame);
-	}
-	
-	/**
-	 * Sends the playhead to the specified frame in current animation and pauses it there.
-	 * @param	Frame	frame number in current animation
-	 */
-	public function gotoAndStop(Frame:Int = 0):Void
-	{
-		if (_curAnim == null || _curAnim.frames.length <= Frame)
-		{
-			return;
-		}
-		
-		_frameTimer = 0;
-		if (_curAnim.delay <= 0)
-		{
-			finished = true;
-		}
-		else
-		{
-			finished = false;
-		}
-		
-		curFrame = Frame;
-		_curIndex = _curAnim.frames[curFrame];
-		
-		if (_framesData != null)
-		{
-			_flxFrame = _framesData.frames[_curIndex];
-		}
-		
-		dirty = true;
-		paused = true;
-		return;
-	}
-	
-	/**
-	 * Pauses current animation
-	 */
-	inline public function pauseAnimation():Void
-	{
-		paused = true;
-	}
-	
-	/**
-	 * Resumes current animation if it's exist and not finished
-	 */
-	inline public function resumeAnimation():Void
-	{
-		if (_curAnim != null && !finished)
-			paused = false;
-	}
-	
-	/**
-  	 * Gets the FlxAnim object with the specified name.
-	*/
-	inline public function getAnimation(Name:String):FlxAnim
-	{
-		return _animations.get(Name); 
-	}
-	
-	public var animations(get, never):Map<String, FlxAnim>;
-	
-	private function get_animations():Map<String, FlxAnim>
-	{
-		return _animations;
-	}
-	
-	/**
-	 * Tell the sprite to change to a random frame of animation
-	 * Useful for instantiating particles or other weird things.
-	 */
-	public function randomFrame():Void
-	{
-		_curAnim = null;
-		_curIndex = Std.int(FlxRandom.float() * frames);
-		if (_framesData != null)
-		{
-			_flxFrame = _framesData.frames[_curIndex];
-			resetFrameSize();
-		}
-		
-		paused = true;
-		dirty = true;
+		return _flxFrame;
 	}
 	
 	/**
@@ -1388,6 +998,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		
 		width = frameWidth = _cachedGraphics.bitmap.width;
 		height = frameHeight = _cachedGraphics.bitmap.height;
+		animator.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
 		return Pixels;
@@ -1506,7 +1117,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	
 	private function set_frame(Frame:Int):Int
 	{
-		_curAnim = null;
 		_curIndex = Frame % frames;
 		if (_framesData != null)
 		{
@@ -1514,77 +1124,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			resetFrameSize();
 		}
 		
-		paused = true;
 		dirty = true;
 		return Frame;
-	}
-	
-	/**
-	 * Tell the sprite to change to a frame with specific name.
-	 * Useful for sprites with loaded TexturePacker atlas.
-	 */
-	public var frameName(get, set):String;
-	
-	private function get_frameName():String
-	{
-		if (_flxFrame != null)
-		{
-			return _flxFrame.name;
-		}
-		
-		return null;
-	}
-	
-	private function set_frameName(Value:String):String
-	{
-		if (_cachedGraphics.data != null && _framesData != null && _framesData.framesHash.exists(Value))
-		{
-			_curAnim = null;
-			if (_framesData != null)
-			{
-				_flxFrame = _framesData.framesHash.get(Value);
-				_curIndex = getFrameIndex(_flxFrame);
-				resetFrameSize();
-			}
-			paused = true;
-			dirty = true;
-		}
-		
-		return Value;
-	}
-	
-	/**
-	 * Helper function used for finding index of FlxFrame in _framesData's frames array
-	 * @param	Frame	FlxFrame to find
-	 * @return	position of specified FlxFrame object.
-	 */
-	inline public function getFrameIndex(Frame:FlxFrame):Int
-	{
-		return FlxArrayUtil.indexOf(_framesData.frames, Frame);
-	}
-	
-	/**
-	 * The currently playing animation, or null if no animation is playing
-	 */
-	public var curAnim(get, set):String;
-	
-	private function get_curAnim():String
-	{
-		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !finished))
-		{
-			return _curAnim.name;
-		}
-		return null;
-	}
-	
-	/**
-	 * Plays a specified animation (same as calling play)
-	 * @param	AnimName	The name of the animation you want to play.
-	 */
-	inline private function set_curAnim(AnimName:String):String
-	{
-		play(AnimName);
-		return AnimName;
 	}
 	
 	/**
@@ -1736,11 +1277,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		}
 	#end
 		
-		if (_callback != null)
-		{
-			_callback(((_curAnim != null) ? (_curAnim.name) : null), curFrame, _curIndex);
-		}
-		
 		dirty = false;
 	}
 	
@@ -1865,35 +1401,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		_flxFrame = _framesData.frames[0];
 		resetFrameSize();
 		resetSizeFromFrame();
-	}
-	
-	/**
-	 * Helper constants used for animation's frame sorting
-	 */
-	private static var prefixLength:Int = 0;
-	private static var postfixLength:Int = 0;
-	
-	/**
-	 * Helper frame sorting function used by addAnimationByPrefixFromTexture() method
-	 */
-	static function frameSortFunction(frame1:FlxFrame, frame2:FlxFrame):Int
-	{
-		var name1:String = frame1.name;
-		var name2:String = frame2.name;
-		
-		var num1:Int = Std.parseInt(name1.substring(prefixLength, name1.length - postfixLength));
-		var num2:Int = Std.parseInt(name2.substring(prefixLength, name2.length - postfixLength));
-		
-		if (num1 > num2)
-		{
-			return 1;
-		}
-		else if (num2 > num1)
-		{
-			return -1;
-		}
-
-		return 0;
 	}
 	
 	/**

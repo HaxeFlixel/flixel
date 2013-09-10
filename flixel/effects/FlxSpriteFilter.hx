@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.animation.FlxAnimator;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAnim;
@@ -67,27 +68,22 @@ class FlxSpriteFilter
 		}
 		
 		var frame:Int = sprite.frame;
-		var currAnim:String = sprite.curAnim;
+		var currAnim:String = sprite.animator.curAnim;
 		if (currAnim != null)
 		{
 			frame = sprite.curFrame;
 		}
-		var animations:Map<String, FlxAnim> = new Map<String, FlxAnim>();
-		for (anim in sprite.animations)
-		{
-			animations.set(anim.name, anim.clone());
-		}
+		
+		var animator:FlxAnimator = sprite.animator.clone();
 		
 		setClipping(sprite.frameWidth + WidthInc , sprite.frameHeight + HeightInc);
 		
-		for (anim in animations)
-		{
-			sprite.animations.set(anim.name, anim);
-		}
+		sprite.animator = animator;
+		animator.sprite = sprite;
 		
 		if (currAnim != null)
 		{
-			sprite.play(currAnim, true, frame);
+			sprite.animator.play(currAnim, true, frame);
 		}
 		else
 		{

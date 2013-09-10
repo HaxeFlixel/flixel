@@ -1018,4 +1018,11 @@ class FlxObject extends FlxBasic
 	{
 		return _region;
 	}
+	
+	public var framesData(get_framesData, null):FlxSpriteFrames;
+	
+	function get_framesData():FlxSpriteFrames 
+	{
+		return _framesData;
+	}
 }

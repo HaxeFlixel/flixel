@@ -381,7 +381,10 @@ class FlxGame extends Sprite
 				if (debugger.vcr.stepRequested)
 				{
 					debugger.vcr.stepRequested = false;
-					step();
+				}
+				else
+				{
+					return;
 				}
 			}
 			#end
