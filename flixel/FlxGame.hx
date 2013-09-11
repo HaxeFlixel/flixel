@@ -220,7 +220,7 @@ class FlxGame extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
 		_total = Lib.getTimer();
-		
+
 		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
@@ -375,19 +375,17 @@ class FlxGame extends Sprite
 		
 		if (!_lostFocus)
 		{
-			#if !FLX_NO_DEBUG
-			if ((debugger != null) && debugger.vcr.paused)
+			if(FlxG.vcr.paused)
 			{
-				if (debugger.vcr.stepRequested)
+				if (FlxG.vcr.stepRequested)
 				{
-					debugger.vcr.stepRequested = false;
+					FlxG.vcr.stepRequested = false;
 				}
 				else
 				{
 					return;
 				}
 			}
-			#end
 			
 			if (FlxG.fixedTimestep)
 			{
@@ -550,7 +548,7 @@ class FlxGame extends Sprite
 			FlxRandom.globalSeed = replay.seed;
 			
 			#if !FLX_NO_DEBUG
-			debugger.vcr.playing();
+			debugger.vcr.playingReplay();
 			#end
 			
 			replaying = true;

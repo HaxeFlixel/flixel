@@ -2,6 +2,10 @@ package flixel.system.debug;
 
 #if !FLX_NO_DEBUG
 
+import flash.text.TextFieldAutoSize;
+import flash.Lib;
+import flash.text.TextFormatAlign;
+import flixel.util.FlxColor;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -15,9 +19,9 @@ import flixel.system.debug.Console;
 import flixel.system.debug.Log;
 import flixel.system.debug.Stats;
 import flixel.system.debug.VCR;
-import flixel.system.debug.Vis;
 import flixel.system.debug.Watch;
 import flixel.system.FlxAssets;
+import flixel.system.ui.FlxSystemButton;
 
 /**
  * Container for the new debugger overlay.
@@ -63,7 +67,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
-	inline static public var TOP_HEIGHT:Int = 18;
+	inline static public var TOP_HEIGHT:Int = 20;
 	
 	/**
 	 * Container for the performance monitor widget.
@@ -86,10 +90,6 @@ class FlxDebugger extends Sprite
 	 */
 	public var vcr:VCR;
 	/**
-	 * Container for the visual debug mode toggle.
-	 */
-	public var vis:Vis;
-	/**
 	 * Container for console.
 	 */
 	public var console:Console;
@@ -110,6 +110,22 @@ class FlxDebugger extends Sprite
 	 * Stores the bounds in which the windows can move.
 	 */
 	private var _screenBounds:Rectangle;
+	/**
+	* Internal, used to store the middle debugger buttons for laying them out.
+	*/
+	private var _middleButtons:Array<FlxSystemButton>;
+	/**
+	* Internal, used to store the left debugger buttons for laying them out.
+	*/
+	private var _leftButtons:Array<FlxSystemButton>;
+	/**
+	* Internal, used to store the right debugger buttons for laying them out.
+	*/
+	private var _rightButtons:Array<FlxSystemButton>;
+	/**
+	* The flash Sprite used for the top bar of the debugger ui
+	**/
+	private var _topBar:Sprite;
 	
 	/**
 	 * Instantiates the debugger overlay.
@@ -123,29 +139,23 @@ class FlxDebugger extends Sprite
 		visible = false;
 		hasMouse = false;
 		_screen = new Point();
-		
-		#if (flash || js)
-		addChild(new Bitmap(new BitmapData(Std.int(Width), TOP_HEIGHT, true, Window.TOP_COLOR)));
-		#else
-		var bg:Sprite = new Sprite();
-		bg.graphics.beginFill(0x000000, 0x7f / 255);
-		bg.graphics.drawRect(0, 0, Std.int(Width), 15);
-		bg.graphics.endFill();
-		addChild(bg);
-		#end
-		
-		var txt:TextField = new TextField();
-		txt.x = 3;
-		txt.width = 200;
+
+		_topBar = new Sprite();
+		_topBar.graphics.beginFill(0x000000, 0x7f / 255);
+		_topBar.graphics.drawRect(0, 0, FlxG.stage.stageWidth, TOP_HEIGHT);
+		_topBar.graphics.endFill();
+		addChild(_topBar);
+
+		var txt = new TextField();
 		txt.height = 20;
 		txt.selectable = false;
 		txt.multiline = false;
 		txt.embedFonts = true;
-		txt.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
-		var str:String = FlxG.libraryName;
-		txt.text = str;
-		addChild(txt);
-					
+		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
+		txt.defaultTextFormat = format;
+		txt.autoSize = TextFieldAutoSize.LEFT;
+		txt.text = FlxG.libraryName;
+
 		log = new Log("log", 0, 0, true);
 		addChild(log);
 		
@@ -159,33 +169,76 @@ class FlxDebugger extends Sprite
 		addChild(stats);
 
 		#if FLX_BMP_DEBUG
-			bmpLog = new BmpLog("bmplog", 0, 0, true);
-			addChild(bmpLog);
+		bmpLog = new BmpLog("bmplog", 0, 0, true);
+		addChild(bmpLog);
 		#end
 		
 		vcr = new VCR();
-		vcr.x = (Width - vcr.width / 2) / 2;
-		vcr.y = 2;
-		addChild(vcr);
-		
-		vis = new Vis();
-		vis.x = Width - vis.width - 4;
-		vis.y = 2;
-		addChild(vis);
-		
+
+		_leftButtons = new Array<FlxSystemButton>();
+		_middleButtons = new Array<FlxSystemButton>();
+		_rightButtons = new Array<FlxSystemButton>();
+
+		addCreateLeftButton(FlxAssets.IMG_FLIXEL, null, false);
+
+		var display = new FlxSystemButton(null, null);
+		display.addChild(txt);
+		addLeftButton(display);
+
+		addCreateRightButton(FlxAssets.IMG_LOG_DEBUG, toggleLogWindow, false);
+		addCreateRightButton(FlxAssets.IMG_WATCH_DEBUG, toggleWatchWindow, false);
+		addCreateRightButton(FlxAssets.IMG_CONSOLE, toggleConsoleWindow, false);
+		addCreateRightButton(FlxAssets.IMG_STATS_DEBUG, toggleStatsWindow, false);
+		addCreateRightButton(FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, false);
+
+		addMiddleButton(vcr.restartBtn, false);
+		#if FLX_RECORD
+		addMiddleButton(vcr.openBtn, false);
+		addMiddleButton(vcr.recordBtn, false);
+		#end
+		addMiddleButton(vcr.playbackToggleBtn, false);
+		addMiddleButton(vcr.stepBtn, false);
+
+		#if FLX_RECORD
+		var runtimeDisplay = new FlxSystemButton(null, null);
+		runtimeDisplay.addChild(vcr.runtimeDisplay);
+		addMiddleButton(runtimeDisplay, false);
+		#end
+
 		onResize(Width, Height);
-		
-		//Should help with fake mouse focus type behavior
+
 		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
 	public function destroy():Void
 	{
 		_screen = null;
+
+		for (o in _rightButtons)
+		{
+			o.destroy();
+		}
+		_rightButtons = null;
+
+		for (o in _leftButtons)
+		{
+			o.destroy();
+		}
+		_leftButtons = null;
+
+		for (o in _middleButtons)
+		{
+			o.destroy();
+		}
+		_middleButtons = null;
+
+		removeChild(_topBar);
+		_topBar = null;
+
 		if (bmpLog != null) 
 		{
 			removeChild(bmpLog);
@@ -209,18 +262,6 @@ class FlxDebugger extends Sprite
 			removeChild(stats);
 			stats.destroy();
 			stats = null;
-		}
-		if (vcr != null)
-		{
-			removeChild(vcr);
-			vcr.destroy();
-			vcr = null;
-		}
-		if (vis != null)
-		{
-			removeChild(vis);
-			vis.destroy();
-			vis = null;
 		}
 		if (console != null) 
 		{
@@ -255,7 +296,7 @@ class FlxDebugger extends Sprite
 		hasMouse = false;
 		
 		#if !FLX_NO_MOUSE
-		if(!FlxG.game.debugger.vcr.paused)
+		if(!FlxG.vcr.paused)
 			FlxG.mouse.useSystemCursor = false;
 		#end
 	}
@@ -354,7 +395,143 @@ class FlxDebugger extends Sprite
 		if (bmpLog != null) {
 			bmpLog.updateBounds(_screenBounds);
 		}
+		_topBar.width = FlxG.stage.stageWidth;
+		resetButtonLayout();
 		resetLayout();
+	}
+
+	/**
+	* Align an array of debugger buttons, used for the middle and right layouts
+	*/
+	public function hAlignSprites (Sprites:Array<Dynamic>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
+	{
+		var width:Float = 0;
+		var last:Float = LeftOffset;
+
+		for (i in 0...Sprites.length)
+		{
+			var o:Sprite = Sprites[i];
+			width += o.width + Padding;
+			if (Set)
+				o.x = last;
+			last = o.x + o.width + Padding;
+		}
+
+		return width;
+	}
+
+	/**
+	* Position the debugger buttons
+	*/
+	private function resetButtonLayout ():Void
+	{
+		hAlignSprites(_leftButtons, 10, true, 10);
+
+		var offset = FlxG.stage.stageWidth*.5 - hAlignSprites(_middleButtons, 10, false)*.5;
+		hAlignSprites(_middleButtons, 10, true, offset);
+
+		var offset = FlxG.stage.stageWidth - hAlignSprites(_rightButtons, 10, false);
+		hAlignSprites(_rightButtons, 10, true, offset);
+	}
+
+	/**
+	* Add a debugger button the the middle layout
+	*/
+	public function addCreateMiddleButton (BitmapUrl:String, ?Handler:Dynamic, UpdateLayout:Bool = true):FlxSystemButton
+	{
+		var button = new FlxSystemButton(FlxAssets.getBitmapData(BitmapUrl), Handler);
+
+		return addMiddleButton(button, UpdateLayout);
+	}
+
+	/**
+	* Add a debugger button the the right layout
+	*/
+	public function addCreateRightButton (BitmapUrl:String, ?Handler:Dynamic, UpdateLayout:Bool = true):FlxSystemButton
+	{
+		var button = new FlxSystemButton(FlxAssets.getBitmapData(BitmapUrl), Handler);
+
+		return addRightButton(button, UpdateLayout);
+	}
+
+	/**
+	* Add a debugger button the the right layout
+	*/
+	public function addCreateLeftButton (BitmapUrl:String, ?Handler:Dynamic, UpdateLayout:Bool = true):FlxSystemButton
+	{
+		var button = new FlxSystemButton(FlxAssets.getBitmapData(BitmapUrl), Handler);
+
+		return addLeftButton(button, UpdateLayout);
+	}
+
+	/**
+	* Add a debugger button the the middle layout
+	*/
+	public function addMiddleButton (Button:FlxSystemButton, UpdateLayout:Bool = true):FlxSystemButton
+	{
+		Button.y = (TOP_HEIGHT*.5) - (Button.height*.5);
+		_middleButtons.push(Button);
+		addChild(Button);
+
+		if (UpdateLayout)
+			resetButtonLayout();
+
+		return Button;
+	}
+
+	/**
+	* Add a debugger button the the middle layout
+	*/
+	public function addLeftButton (Button:FlxSystemButton, UpdateLayout:Bool = true):FlxSystemButton
+	{
+		Button.y = (TOP_HEIGHT*.5) - (Button.height*.5);
+		_leftButtons.push(Button);
+		addChild(Button);
+
+		if (UpdateLayout)
+			resetButtonLayout();
+
+		return Button;
+	}
+
+	/**
+	* Add a debugger button the the right layout
+	*/
+	public function addRightButton (Button:FlxSystemButton, UpdateLayout:Bool = true):FlxSystemButton
+	{
+		Button.y = (TOP_HEIGHT*.5) - (Button.height*.5);
+		_rightButtons.push(Button);
+		addChild(Button);
+
+		if (UpdateLayout)
+			resetButtonLayout();
+
+		return Button;
+	}
+
+	public function toggleConsoleWindow ():Void
+	{
+		console.visible ? console.visible = false : console.visible = true;
+	}
+
+	public function toggleWatchWindow ():Void
+	{
+		watch.visible ? watch.visible = false : watch.visible = true;
+	}
+
+	public function toggleLogWindow ():Void
+	{
+		log.visible ? log.visible = false : log.visible = true;
+	}
+
+	public function toggleStatsWindow ():Void
+	{
+		stats.visible ? stats.visible = false : stats.visible = true;
+	}
+
+	public function toggleVisualDebug ():Void
+	{
+		FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
 	}
 }
 #end
