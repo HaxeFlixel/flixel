@@ -68,13 +68,13 @@ class FlxSpriteFilter
 		}
 		
 		var frame:Int = sprite.frame;
-		var currAnim:String = sprite.animator.curAnim;
+		var currAnim:String = sprite.animator.animationName;
 		if (currAnim != null)
 		{
 			frame = sprite.curFrame;
 		}
 		
-		var animator:FlxAnimator = sprite.animator.clone();
+		var animator:FlxAnimator = sprite.animator.clone(sprite);
 		
 		setClipping(sprite.frameWidth + WidthInc , sprite.frameHeight + HeightInc);
 		

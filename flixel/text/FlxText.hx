@@ -679,6 +679,7 @@ class FlxText extends FlxSprite
 		{
 			_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region);
 			_flxFrame = _framesData.frames[0];
+			frames = 1;
 		}
 	}
 	

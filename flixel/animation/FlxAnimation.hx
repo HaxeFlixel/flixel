@@ -32,8 +32,6 @@ class FlxAnimation extends FlxBaseAnimation
 	 */
 	public var paused:Bool;
 	
-	public var sprite:FlxSprite;
-	
 	/**
 	 * Internal, used to time each frame of animation.
 	 */
@@ -48,9 +46,9 @@ class FlxAnimation extends FlxBaseAnimation
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40)
 	 * @param	Looped		Whether or not the animation is looped or just plays once
 	 */
-	public function new(Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true)
+	public function new(Sprite:FlxSprite, Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true)
 	{
-		super();
+		super(Sprite);
 		
 		name = Name;
 		frameRate = FrameRate;
@@ -70,7 +68,6 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		frames = null;
 		name = null;
-		sprite = null;
 		super.destroy();
 	}
 	
@@ -206,15 +203,11 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		
 		_curIndex = frames[_curFrame];
-		if (sprite != null)
-		{
-			sprite.frame = _curIndex;
-		}
 		return Frame;
 	}
 	
-	override public function clone():FlxAnimation
+	override public function clone(Sprite:FlxSprite):FlxAnimation
 	{
-		return new FlxAnimation(name, frames, frameRate, looped);
+		return new FlxAnimation(Sprite, name, frames, frameRate, looped);
 	}
 }

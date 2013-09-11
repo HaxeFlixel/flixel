@@ -112,11 +112,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public var colorTransform(get_colorTransform, never):ColorTransform;
 	
 	/**
-	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
-	 */
-	private var _curIndex:Int = 0;
-	
-	/**
 	 * Link to current FlxFrame from loaded atlas
 	 */
 	private var _flxFrame:FlxFrame;
@@ -255,8 +250,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		}
 		
 		animator.destroy();
-		animator = Sprite.animator.clone();
-		animator.sprite = this;
+		animator = Sprite.animator.clone(this);
 		
 		updateFrameData();
 		resetHelpers();
@@ -640,13 +634,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		if (useColorTransform) framePixels.colorTransform(_flashRect, _colorTransform);
 	#end
 		
-		_curIndex = 0;
-		
-		if (_framesData != null)
-		{
-			frames = _framesData.frames.length;
-			_flxFrame = _framesData.frames[_curIndex];
-		}
+		frame = 0;
 		
 		_halfWidth = frameWidth * 0.5;
 		_halfHeight = frameHeight * 0.5;
@@ -1108,19 +1096,14 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	/**
 	 * Tell the sprite to change to a specific frame of animation.
 	 */
-	public var frame(get, set):Int;
-	
-	private function get_frame():Int
-	{
-		return _curIndex;
-	}
+	public var frame(default, set):Int = 0;
 	
 	private function set_frame(Frame:Int):Int
 	{
-		_curIndex = Frame % frames;
+		frame = Frame % frames;
 		if (_framesData != null)
 		{
-			_flxFrame = _framesData.frames[_curIndex];
+			_flxFrame = _framesData.frames[frame];
 			resetFrameSize();
 		}
 		
@@ -1398,6 +1381,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region, null);
 		}
 		
+		frames = _framesData.frames.length;
 		_flxFrame = _framesData.frames[0];
 		resetFrameSize();
 		resetSizeFromFrame();
