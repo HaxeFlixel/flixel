@@ -117,6 +117,23 @@ class FlxAnimation extends FlxBaseAnimation
 		paused = true;
 	}
 	
+	public function gotoAndPlay(Frame:Int = 0):Void
+	{
+		play(true, Frame);
+	}
+	
+	public function gotoAndPause(Frame:Int = 0):Void
+	{
+		curFrame = Frame;
+		paused = true;
+	}
+	
+	public function gotoAndStop(Frame:Int = 0):Void
+	{
+		curFrame = Frame;
+		stop();
+	}
+	
 	override public function update():Bool
 	{
 		var dirty:Bool = false;
@@ -203,6 +220,7 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		
 		_curIndex = frames[_curFrame];
+		sprite.frame = _curIndex;
 		return Frame;
 	}
 	

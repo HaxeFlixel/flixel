@@ -309,7 +309,7 @@ class FlxAnimator
 			return;
 		}
 		
-		_curAnim.play(true, Frame);
+		_curAnim.gotoAndPlay(Frame);
 	}
 	
 	/**
@@ -323,8 +323,7 @@ class FlxAnimator
 			return;
 		}
 		
-		_curAnim.curFrame = Frame;
-		_curAnim.paused = true;
+		_curAnim.gotoAndPause(Frame);
 	}
 	
 	public function gotoAndStop(Frame:Int = 0):Void
@@ -334,8 +333,7 @@ class FlxAnimator
 			return;
 		}
 		
-		_curAnim.curFrame = Frame;
-		_curAnim.stop();
+		_curAnim.gotoAndStop(Frame);
 	}
 	
 	/**
