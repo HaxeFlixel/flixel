@@ -349,6 +349,36 @@ class FlxAnimator
 		}
 	}
 	
+	public var finished(get, null):Bool;
+	
+	private function get_finished():Bool
+	{
+		if (_curAnim != null)
+		{
+			return _curAnim.finished;
+		}
+		
+		return true;
+	}
+	
+	public var paused(get, set):Bool;
+	
+	private function get_paused():Bool
+	{
+		if (_curAnim != null)
+		{
+			return _curAnim.paused;
+		}
+		
+		return true;
+	}
+	
+	private function set_paused(Value:Bool):Bool
+	{
+		pause();
+		return Value;
+	}
+	
 	/**
   	 * Gets the FlxAnim object with the specified name.
 	*/
