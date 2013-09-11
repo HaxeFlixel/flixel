@@ -115,7 +115,7 @@ class Console extends Window
 		// Pause game
 		if (FlxG.console.autoPause)
 		{
-			FlxG.game.debugger.vcr.onPause();
+			FlxG.vcr.pause();
 		}
 		#end
 		
@@ -139,10 +139,9 @@ class Console extends Window
 		// Unpause game
 		if (FlxG.console.autoPause)
 		{
-			FlxG.game.debugger.vcr.onPlay();
+			FlxG.vcr.resume();
 		}
 		#end
-		
 		// Unblock keyboard input
 		#if !FLX_NO_KEYBOARD
 		FlxG.keyboard.enabled = true;
