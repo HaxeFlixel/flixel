@@ -318,13 +318,24 @@ class FlxAnimator
 	 */
 	public function gotoAndPause(Frame:Int = 0):Void
 	{
-		if (_curAnim == null || _curAnim.frames.length <= Frame)
+		if (_curAnim == null || _curAnim.frames.length <= Frame || Frame < 0)
 		{
 			return;
 		}
 		
 		_curAnim.curFrame = Frame;
 		_curAnim.paused = true;
+	}
+	
+	public function gotoAndStop(Frame:Int = 0):Void
+	{
+		if (_curAnim == null || _curAnim.frames.length <= Frame || Frame < 0)
+		{
+			return;
+		}
+		
+		_curAnim.curFrame = Frame;
+		_curAnim.stop();
 	}
 	
 	/**
@@ -346,6 +357,14 @@ class FlxAnimator
 		if (_curAnim != null)
 		{
 			_curAnim.paused = false;
+		}
+	}
+	
+	public function stop():Void
+	{
+		if (_curAnim != null)
+		{
+			_curAnim.stop();
 		}
 	}
 	
