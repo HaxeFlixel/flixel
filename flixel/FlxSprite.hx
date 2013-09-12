@@ -1,18 +1,18 @@
 package flixel;
 
-import flash.display.BitmapData;
-import flash.display.BlendMode;
-import flash.geom.ColorTransform;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flixel.animation.FlxAnimator;
 import flixel.FlxG;
 import flixel.FlxBasic;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.Region;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import flash.display.BitmapData;
+import flash.display.BlendMode;
+import flixel.animation.FlxAnimationController;
 import flixel.util.FlxAngle;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
@@ -41,7 +41,10 @@ interface IFlxSprite extends IFlxBasic {
  */
 class FlxSprite extends FlxObject implements IFlxSprite
 {
-	public var animator:FlxAnimator;
+	/**
+	 * Class that handles adding and playing animations on this sprite.
+	 */
+	public var animation:FlxAnimationController;
 	
 	/**
 	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>, <code>UP</code>, 
@@ -64,7 +67,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public var origin:FlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
-     * changing a sprite's <code>width</code> or <code>height</code>.
+	 * changing a sprite's <code>width</code> or <code>height</code>.
 	 */
 	public var offset:FlxPoint;
 	/**
@@ -82,27 +85,38 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	private var _blend:BlendMode;
 	private var _blendInt:Int = 0;
 	#end
+	
 	/**
-	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
+	 * Link to current FlxFrame from loaded atlas
 	 */
-	public var frameWidth(default, null):Int;
-	/**
-	 * The height of the actual graphic or image being displayed (not necessarily the game object/bounding box).
-	 */
-	public var frameHeight(default, null):Int;
-	/**
-	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
-	 */
-	public var frames(default, null):Int;
+	public var frame(default, set):FlxFrame;
+	
 	/**
 	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
 	 */
 	public var framePixels:BitmapData;
+	
+	/**
+	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
+	 */
+	public var frameWidth(default, null):Int;
+	
+	/**
+	 * The height of the actual graphic or image being displayed (not necessarily the game object/bounding box).
+	 */
+	public var frameHeight(default, null):Int;
+	
+	/**
+	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
+	 */
+	public var frames(default, null):Int;
+	
 	/**
 	 * Set this flag to true to force the sprite to update during the draw() call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
 	public var dirty:Bool;
+	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
@@ -110,11 +124,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public var antialiasing:Bool = false;
 	
 	public var colorTransform(get_colorTransform, never):ColorTransform;
-	
-	/**
-	 * Link to current FlxFrame from loaded atlas
-	 */
-	private var _flxFrame:FlxFrame;
 	
 	/**
 	 * Internal, reused frequently during drawing and animating.
@@ -170,7 +179,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	{
 		super(X, Y);
 		
-		animator = new FlxAnimator(this);
+		animation = new FlxAnimationController(this);
 		
 		_flashPoint = new Point();
 		_flashRect = new Rectangle();
@@ -197,11 +206,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	override public function destroy():Void
 	{
-		if (animator != null)
+		if (animation != null)
 		{
-			animator.destroy();
+			animation.destroy();
 		}
-		animator = null;
+		animation = null;
 		
 		_flashPoint = null;
 		_flashRect = null;
@@ -222,7 +231,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		#else
 		_blend = null;
 		#end
-		_flxFrame = null;
+		frame = null;
 		
 		super.destroy();
 	}
@@ -233,12 +242,12 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * @param	Sprite	The FlxSprite from which you want to load graphic data
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
+	public function clone(Sprite:FlxSprite):FlxSprite
 	{
-		setCachedGraphics(Sprite.cachedGraphics);
-		_region = Sprite.region.clone();
+		region = Sprite.region.clone();
 		flipped = Sprite.flipped;
 		bakedRotation = Sprite.bakedRotation;
+		cachedGraphics = Sprite.cachedGraphics;
 		
 		width = frameWidth = Sprite.frameWidth;
 		height = frameHeight = Sprite.frameHeight;
@@ -249,13 +258,12 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			centerOffsets();
 		}
 		
-		animator.destroy();
-		animator = Sprite.animator.clone(this);
+		animation.destroy();
+		animation.clone(Sprite.animation);
 		
 		updateFrameData();
 		resetHelpers();
 		antialiasing = Sprite.antialiasing;
-		frame = Sprite.frame;
 		
 		return this;
 	}
@@ -274,45 +282,45 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotation = 0;
-		setCachedGraphics(FlxG.bitmap.add(Graphic, Unique, Key));
+		cachedGraphics = FlxG.bitmap.add(Graphic, Unique, Key);
 		
-		flipped = (Reverse == true) ? _cachedGraphics.bitmap.width : 0;
+		flipped = (Reverse == true) ? cachedGraphics.bitmap.width : 0;
 		
 		if (Width == 0)
 		{
-			Width = (Animated == true) ? _cachedGraphics.bitmap.height : _cachedGraphics.bitmap.width;
+			Width = (Animated == true) ? cachedGraphics.bitmap.height : cachedGraphics.bitmap.width;
 		}
 		
 		if (Height == 0)
 		{
-			Height = (Animated == true) ? Width : _cachedGraphics.bitmap.height;
+			Height = (Animated == true) ? Width : cachedGraphics.bitmap.height;
 		}
 		
 		if (!Std.is(Graphic, TextureRegion))
 		{
-			_region = new Region(0, 0, Width, Height);
-			_region.width = _cachedGraphics.bitmap.width;
-			_region.height = _cachedGraphics.bitmap.height;
+			region = new Region(0, 0, Width, Height);
+			region.width = cachedGraphics.bitmap.width;
+			region.height = cachedGraphics.bitmap.height;
 		}
 		else
 		{
-			_region = cast(Graphic, TextureRegion).region.clone();
+			region = cast(Graphic, TextureRegion).region.clone();
 			
-			if (_region.tileWidth > 0)
-				Width = _region.tileWidth;
+			if (region.tileWidth > 0)
+				Width = region.tileWidth;
 			else
-				_region.tileWidth = _region.width;
+				region.tileWidth = region.width;
 			
-			if (_region.tileHeight > 0)
-				Height = _region.tileWidth;
+			if (region.tileHeight > 0)
+				Height = region.tileWidth;
 			else
-				_region.tileHeight = _region.height;
+				region.tileHeight = region.height;
 		}
 		
 		width = frameWidth = Width;
 		height = frameHeight = Height;
 		
-		animator.destroyAnimations();
+		animation.destroyAnimations();
 		
 		updateFrameData();
 		resetHelpers();
@@ -416,7 +424,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		}
 		
 		var skipGen:Bool = FlxG.bitmap.checkCache(key);
-		setCachedGraphics(FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.TRANSPARENT, true, key));
+		cachedGraphics = FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.TRANSPARENT, true, key);
 		bakedRotation = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
@@ -439,7 +447,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 					_matrix.rotate(bakedAngle * FlxAngle.TO_RAD);
 					_matrix.translate(max * column + midpointX + column, midpointY + row);
 					bakedAngle += bakedRotation;
-					_cachedGraphics.bitmap.draw(brush, _matrix, null, null, null, AntiAliasing);
+					cachedGraphics.bitmap.draw(brush, _matrix, null, null, null, AntiAliasing);
 					column++;
 				}
 				midpointY += max;
@@ -449,9 +457,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		frameWidth = frameHeight = max;
 		width = height = max;
 		
-		_region = new Region(0, 0, max, max, 1, 1);
-		_region.width = _cachedGraphics.bitmap.width;
-		_region.height = _cachedGraphics.bitmap.height;
+		region = new Region(0, 0, max, max, 1, 1);
+		region.width = cachedGraphics.bitmap.width;
+		region.height = cachedGraphics.bitmap.height;
 		
 		#if !flash
 		antialiasing = AntiAliasing;
@@ -467,8 +475,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			centerOffsets();
 		}
 		
-		animator.destroyAnimations();
-		animator.createPrerotated();
+		animation.destroyAnimations();
+		animation.createPrerotated();
 		
 		return this;
 	}
@@ -485,13 +493,13 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotation = 0;
-		setCachedGraphics(FlxG.bitmap.create(Width, Height, Color, Unique, Key));
-		_region = new Region();
-		_region.width = Width;
-		_region.height = Height;
-		width = frameWidth = _cachedGraphics.bitmap.width;
-		height = frameHeight = _cachedGraphics.bitmap.height;
-		animator.destroyAnimations();
+		cachedGraphics = (FlxG.bitmap.create(Width, Height, Color, Unique, Key));
+		region = new Region();
+		region.width = Width;
+		region.height = Height;
+		width = frameWidth = cachedGraphics.bitmap.width;
+		height = frameHeight = cachedGraphics.bitmap.height;
+		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
 		return this;
@@ -512,35 +520,35 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		
 		if (Std.is(Data, CachedGraphics))
 		{
-			setCachedGraphics(cast Data);
-			if (_cachedGraphics.data == null)
+			cachedGraphics = cast Data;
+			if (cachedGraphics.data == null)
 			{
 				return null;
 			}
 		}
 		else if (Std.is(Data, TexturePackerData))
 		{
-			setCachedGraphics(FlxG.bitmap.add(Data.assetName, Unique));
-			_cachedGraphics.data = cast Data;
+			cachedGraphics = FlxG.bitmap.add(Data.assetName, Unique);
+			cachedGraphics.data = cast Data;
 		}
 		else
 		{
 			return null;
 		}
 		
-		_region = new Region();
-		_region.width = _cachedGraphics.bitmap.width;
-		_region.height = _cachedGraphics.bitmap.height;
+		region = new Region();
+		region.width = cachedGraphics.bitmap.width;
+		region.height = cachedGraphics.bitmap.height;
 		
-		flipped = (Reverse == true) ? _cachedGraphics.bitmap.width : 0;
+		flipped = (Reverse == true) ? cachedGraphics.bitmap.width : 0;
 		
-		animator.destroyAnimations();
+		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
 		
 		if (FrameName != null)
 		{
-			animator.frameName = FrameName;
+			animation.frameName = FrameName;
 		}
 		
 		return this;
@@ -566,7 +574,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			return null;
 		}
 		
-		animator.frameName = Image;
+		animation.frameName = Image;
 		
 		#if !flash
 		antialiasing = AntiAliasing;
@@ -581,7 +589,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
 	 */
-	inline private function resetSize():Void
+	inline public function resetSize():Void
 	{
 		_flashRect.x = 0;
 		_flashRect.y = 0;
@@ -590,12 +598,12 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	}
 	
 	/**
-	 * Resets frame size to _flxFrame dimensions
+	 * Resets frame size to frame dimensions
 	 */
-	inline private function resetFrameSize():Void
+	inline public function resetFrameSize():Void
 	{
-		frameWidth = Std.int(_flxFrame.sourceSize.x);
-		frameHeight = Std.int(_flxFrame.sourceSize.y);
+		frameWidth = Std.int(frame.sourceSize.x);
+		frameHeight = Std.int(frame.sourceSize.y);
 		resetSize();
 	}
 	
@@ -621,8 +629,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		resetSize();
 		_flashRect2.x = 0;
 		_flashRect2.y = 0;
-		_flashRect2.width = _cachedGraphics.bitmap.width;
-		_flashRect2.height = _cachedGraphics.bitmap.height;
+		_flashRect2.width = cachedGraphics.bitmap.width;
+		_flashRect2.height = cachedGraphics.bitmap.height;
 		setOriginToCenter();
 		
 	#if flash
@@ -630,11 +638,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		{
 			framePixels = new BitmapData(Std.int(width), Std.int(height));
 		}
-		framePixels.copyPixels(_cachedGraphics.bitmap, _flashRect, _flashPointZero);
+		framePixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
 		if (useColorTransform) framePixels.colorTransform(_flashRect, _colorTransform);
 	#end
 		
-		frame = 0;
+		animation.frameIndex = 0;
 		
 		_halfWidth = frameWidth * 0.5;
 		_halfHeight = frameHeight * 0.5;
@@ -643,7 +651,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	override public function update():Void 
 	{
 		super.update();
-		animator.update();
+		animation.update();
 	}
 	
 	/**
@@ -684,9 +692,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			
 		#if !flash
 			#if !js
-			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt, antialiasing);
+			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
 			#else
-			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
+			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
 			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
@@ -731,8 +739,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			var ssx:Float = 0;
 			var csy:Float = 1;
 			
-			var x1:Float = (origin.x - _flxFrame.center.x);
-			var y1:Float = (origin.y - _flxFrame.center.y);
+			var x1:Float = (origin.x - frame.center.x);
+			var y1:Float = (origin.y - frame.center.y);
 			
 			var x2:Float = x1;
 			var y2:Float = y1;
@@ -755,7 +763,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 				
 				var sx:Float = scale.x * _facingMult;
 				
-				if (_flxFrame.rotated)
+				if (frame.rotated)
 				{
 					cos = -_sinAngle;
 					sin = _cosAngle;
@@ -800,7 +808,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			currDrawData[currIndex++] = _point.x - x2;
 			currDrawData[currIndex++] = _point.y - y2;
 			
-			currDrawData[currIndex++] = _flxFrame.tileID;
+			currDrawData[currIndex++] = frame.tileID;
 			
 			currDrawData[currIndex++] = a;
 			currDrawData[currIndex++] = -b;
@@ -844,13 +852,13 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		//Simple draw
 		if (((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
 		{
-			_flashPoint.x = X + _region.startX;
-			_flashPoint.y = Y + _region.startY;
+			_flashPoint.x = X + region.startX;
+			_flashPoint.y = Y + region.startY;
 			_flashRect2.width = bitmapData.width;
 			_flashRect2.height = bitmapData.height;
-			_cachedGraphics.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
-			_flashRect2.width = _cachedGraphics.bitmap.width;
-			_flashRect2.height = _cachedGraphics.bitmap.height;
+			cachedGraphics.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
+			_flashRect2.width = cachedGraphics.bitmap.width;
+			_flashRect2.height = cachedGraphics.bitmap.height;
 			
 			resetFrameBitmapDatas();
 			
@@ -868,9 +876,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		{
 			_matrix.rotate(Brush.angle * FlxAngle.TO_RAD);
 		}
-		_matrix.translate(X + _region.startX + Brush.origin.x, Y + _region.startY + Brush.origin.y);
+		_matrix.translate(X + region.startX + Brush.origin.x, Y + region.startY + Brush.origin.y);
 		var brushBlend:BlendMode = Brush.blend;
-		_cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
+		cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		resetFrameBitmapDatas();
 		#if flash
 		calcFrame();
@@ -882,7 +890,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * Useful if you are doing procedural generation or other weirdness!
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
 	 */
-	public function drawFrame(Force:Bool = false):Void
+	inline public function drawFrame(Force:Bool = false):Void
 	{
 		#if flash
 		if (Force || dirty)
@@ -894,11 +902,20 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		#end
 	}
 	
-	public var flxFrame(get, null):FlxFrame;
-	
-	private function get_flxFrame():FlxFrame
+	inline private function set_frame(Value:FlxFrame):FlxFrame
 	{
-		return _flxFrame;
+		frame = Value;
+		if (frame != null)
+		{
+			resetFrameSize();
+			dirty = true;
+		}
+		else if(framesData != null && framesData.frames != null && framesData.frames.length > 0)
+		{
+			frame = framesData.frames[0];
+			dirty = true;
+		}
+		return frame;
 	}
 	
 	/**
@@ -931,18 +948,18 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			positions = new Array<FlxPoint>();
 		}
 		
-		var row:Int = _region.startY;
+		var row:Int = region.startY;
 		var column:Int;
-		var rows:Int = _region.height;
-		var columns:Int = _region.width;
+		var rows:Int = region.height;
+		var columns:Int = region.width;
 		while(row < rows)
 		{
-			column = _region.startX;
+			column = region.startX;
 			while (column < columns)
 			{
-				if (_cachedGraphics.bitmap.getPixel32(column, row) == cast Color)
+				if (cachedGraphics.bitmap.getPixel32(column, row) == cast Color)
 				{
-					_cachedGraphics.bitmap.setPixel32(column, row, NewColor);
+					cachedGraphics.bitmap.setPixel32(column, row, NewColor);
 					if (FetchPositions)
 					{
 						positions.push(new FlxPoint(column, row));
@@ -966,7 +983,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	
 	private function get_pixels():BitmapData
 	{
-		return _cachedGraphics.bitmap;
+		return cachedGraphics.bitmap;
 	}
 	
 	private function set_pixels(Pixels:BitmapData):BitmapData
@@ -979,14 +996,14 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			FlxG.bitmap.add(Pixels, false, key);
 		}
 		
-		setCachedGraphics(FlxG.bitmap.get(key));
-		_region = new Region();
-		_region.width = _cachedGraphics.bitmap.width;
-		_region.height = _cachedGraphics.bitmap.height;
+		cachedGraphics = FlxG.bitmap.get(key);
+		region = new Region();
+		region.width = cachedGraphics.bitmap.width;
+		region.height = cachedGraphics.bitmap.height;
 		
-		width = frameWidth = _cachedGraphics.bitmap.width;
-		height = frameHeight = _cachedGraphics.bitmap.height;
-		animator.destroyAnimations();
+		width = frameWidth = cachedGraphics.bitmap.width;
+		height = frameHeight = cachedGraphics.bitmap.height;
+		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
 		return Pixels;
@@ -1091,24 +1108,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			useColorTransform = false;
 		}
 		dirty = true;
-	}
-	
-	/**
-	 * Tell the sprite to change to a specific frame of animation.
-	 */
-	public var frame(default, set):Int = 0;
-	
-	private function set_frame(Frame:Int):Int
-	{
-		frame = Frame % frames;
-		if (_framesData != null)
-		{
-			_flxFrame = _framesData.frames[frame];
-			resetFrameSize();
-		}
-		
-		dirty = true;
-		return Frame;
 	}
 	
 	/**
@@ -1239,14 +1238,14 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		if (AreYouSure)
 		{
 	#end
-			if (_flxFrame != null)
+			if (frame != null)
 			{
 				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
 				{
 					if (framePixels != null)
 						framePixels.dispose();
 					
-					framePixels = new BitmapData(Std.int(_flxFrame.sourceSize.x), Std.int(_flxFrame.sourceSize.y));
+					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
 				}
 				
 				framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
@@ -1284,7 +1283,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		#if flash
 		return (((angle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (forceComplexRender == false));
 		#else
-		return (((angle == 0 && _flxFrame.additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
+		
+		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotation > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
 	}
 	
@@ -1365,24 +1365,24 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic or loadRotatedGraphic().
 	 * If you forget to call it then you will not see this FlxSprite on c++ target
 	 */
-	override public function updateFrameData():Void
+	public function updateFrameData():Void
 	{
-		if (_cachedGraphics == null)
+		if (cachedGraphics == null)
 		{
 			return;
 		}
 		
-		if (_cachedGraphics.data != null && (_region.tileWidth == 0 && _region.tileHeight == 0))
+		if (cachedGraphics.data != null && (region.tileWidth == 0 && region.tileHeight == 0))
 		{
-			_framesData = _cachedGraphics.tilesheet.getTexturePackerFrames(_cachedGraphics.data);
+			framesData = cachedGraphics.tilesheet.getTexturePackerFrames(cachedGraphics.data);
 		}
 		else
 		{
-			_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region, null);
+			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region, null);
 		}
 		
-		frames = _framesData.frames.length;
-		_flxFrame = _framesData.frames[0];
+		frame = framesData.frames[0];
+		frames = framesData.frames.length;
 		resetFrameSize();
 		resetSizeFromFrame();
 	}
@@ -1393,15 +1393,15 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public inline function getFlxFrameBitmapData():BitmapData
 	{
 		var frameBmd:BitmapData = null;
-		if (_flxFrame != null)
+		if (frame != null)
 		{
 			if (facing == FlxObject.LEFT && flipped > 0)
 			{
-				frameBmd = _flxFrame.getReversedBitmap();
+				frameBmd = frame.getReversedBitmap();
 			}
 			else
 			{
-				frameBmd = _flxFrame.getBitmap();
+				frameBmd = frame.getBitmap();
 			}
 		}
 		
@@ -1414,6 +1414,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	inline public function resetFrameBitmapDatas():Void
 	{
-		_cachedGraphics.tilesheet.destroyFrameBitmapDatas();
+		cachedGraphics.tilesheet.destroyFrameBitmapDatas();
 	}
 }

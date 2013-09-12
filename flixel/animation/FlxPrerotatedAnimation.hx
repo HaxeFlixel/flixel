@@ -19,7 +19,7 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 	override public function update():Bool 
 	{
 		var dirty:Bool = false;
-		var oldIndex:Int = _curIndex;
+		var oldIndex:Int = curIndex;
 		var angleHelper:Int = Math.floor((sprite.angle) % 360);
 		
 		while (angleHelper < 0)
@@ -27,10 +27,10 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 			angleHelper += 360;
 		}
 		
-		_curIndex = Math.floor(angleHelper / sprite.bakedRotation + 0.5);
-		_curIndex = Std.int(_curIndex % rotations);
+		curIndex = Math.floor(angleHelper / sprite.bakedRotation + 0.5);
+		curIndex = Std.int(curIndex % rotations);
 		
-		if (oldIndex != _curIndex)
+		if (oldIndex != curIndex)
 		{
 			dirty = true;
 		}

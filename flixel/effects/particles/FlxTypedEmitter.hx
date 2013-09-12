@@ -249,14 +249,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics, true);
-					particle.frame = randomFrame;
 					#end
 				}
 				else
 				{
 					particle.loadGraphic(Graphics, true);
-					particle.frame = randomFrame;
 				}
+				particle.animation.frameIndex = randomFrame;
 			}
 			else
 			{

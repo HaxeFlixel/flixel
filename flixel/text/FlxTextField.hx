@@ -222,7 +222,7 @@ class FlxTextField extends FlxText
 		#else
 		calcFrame();
 		#end
-		return _cachedGraphics.bitmap;
+		return cachedGraphics.bitmap;
 	}
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData
@@ -402,7 +402,7 @@ class FlxTextField extends FlxText
 				}
 				#end
 				// Actually draw the text onto the buffer
-				_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+				cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
 				_textField.setTextFormat(_format);
 			}
 		#if !flash

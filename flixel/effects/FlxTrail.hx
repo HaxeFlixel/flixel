@@ -195,7 +195,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			// Again the same thing for Sprites frames if framesEnabled
 			if (framesEnabled && _image == null) 
 			{
-				var spriteFrame:Int = sprite.frame;
+				var spriteFrame:Int = sprite.animation.frameIndex;
 				_recentFrames.unshift(spriteFrame);
 				
 				if (_recentFrames.length > _trailLength) 
@@ -239,7 +239,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 				// and frame...
 				if (framesEnabled && _image == null) 
 				{
-					trailSprite.frame = _recentFrames[i];
+					trailSprite.animation.frameIndex = _recentFrames[i];
 					trailSprite.facing = _recentFacings[i];
 				}
 
@@ -291,7 +291,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			
 			if (_image == null) 
 			{
-				trailSprite.loadFromSprite(sprite);
+				trailSprite.clone(sprite);
 			}
 			else 
 			{

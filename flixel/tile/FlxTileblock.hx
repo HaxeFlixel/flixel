@@ -93,7 +93,7 @@ class FlxTileblock extends FlxSprite
 			{
 				if (Math.random() * total > Empties)
 				{
-					sprite.animator.randomFrame();
+					sprite.animation.randomFrame();
 					sprite.drawFrame();
 					stamp(sprite, destinationX, destinationY);
 				}

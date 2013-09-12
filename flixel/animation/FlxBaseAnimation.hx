@@ -1,4 +1,5 @@
 package flixel.animation;
+
 import flixel.FlxSprite;
 
 /**
@@ -7,12 +8,13 @@ import flixel.FlxSprite;
  */
 class FlxBaseAnimation
 {
-	/**
-	 * Internal, keeps track of the current index into the tile sheet based on animation or rotation.
-	 */
-	private var _curIndex:Int = 0;
-	
 	public var sprite:FlxSprite;
+	
+	/**
+	 * Keeps track of the current index into the tile sheet based on animation or rotation.
+	 * Allow access to private var from FlxAnimationController.
+	 */
+	public var curIndex:Int = 0;
 	
 	public function new(Sprite:FlxSprite)
 	{
@@ -27,13 +29,6 @@ class FlxBaseAnimation
 	public function update():Bool
 	{
 		return false;
-	}
-	
-	public var curIndex(get_curIndex, null):Int;
-	
-	function get_curIndex():Int 
-	{
-		return _curIndex;
 	}
 	
 	public function clone(Sprite:FlxSprite):FlxBaseAnimation

@@ -330,12 +330,12 @@ class FlxTilemap extends FlxObject
 		}
 		
 		// Figure out the size of the tiles
-		setCachedGraphics(FlxG.bitmap.add(TileGraphic));
+		cachedGraphics = FlxG.bitmap.add(TileGraphic);
 		_tileWidth = TileWidth;
 		
 		if (_tileWidth <= 0)
 		{
-			_tileWidth = _cachedGraphics.bitmap.height;
+			_tileWidth = cachedGraphics.bitmap.height;
 		}
 		
 		_tileHeight = TileHeight;
@@ -347,37 +347,37 @@ class FlxTilemap extends FlxObject
 		
 		if (!Std.is(TileGraphic, TextureRegion))
 		{
-			_region = new Region(0, 0, _tileWidth, _tileHeight);
-			_region.width = _cachedGraphics.bitmap.width;
-			_region.height = _cachedGraphics.bitmap.height;
+			region = new Region(0, 0, _tileWidth, _tileHeight);
+			region.width = cachedGraphics.bitmap.width;
+			region.height = cachedGraphics.bitmap.height;
 		}
 		else
 		{
 			var spriteRegion:TextureRegion = cast TileGraphic;
-			_region = spriteRegion.region.clone();
-			if (_region.tileWidth > 0)
+			region = spriteRegion.region.clone();
+			if (region.tileWidth > 0)
 			{
-				_tileWidth = _region.tileWidth;
+				_tileWidth = region.tileWidth;
 			}
 			else
 			{
-				_region.tileWidth = _tileWidth;
+				region.tileWidth = _tileWidth;
 			}
 			
-			if (_region.tileHeight > 0)
+			if (region.tileHeight > 0)
 			{
-				_tileHeight = _region.tileWidth;
+				_tileHeight = region.tileWidth;
 			}
 			else
 			{
-				_region.tileHeight = _tileHeight;
+				region.tileHeight = _tileHeight;
 			}
 		}
 		
 		// Create some tile objects that we'll use for overlap checks (one for each tile)
 		_tileObjects = new Array<FlxTile>();
 		
-		var length:Int = _region.numTiles;
+		var length:Int = region.numTiles;
 		length += _startingIndex;
 		
 		for (i in 0...length)
@@ -478,9 +478,9 @@ class FlxTilemap extends FlxObject
 		var drawY:Float;
 		
 		#if !js
-		var drawItem:DrawStackItem = Camera.getDrawStackItem(_cachedGraphics, false, 0);
+		var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, false, 0);
 		#else
-		var drawItem:DrawStackItem = Camera.getDrawStackItem(_cachedGraphics, false);
+		var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, false);
 		#end
 		var currDrawData:Array<Float> = drawItem.drawData;
 		var currIndex:Int = drawItem.position;
@@ -536,7 +536,7 @@ class FlxTilemap extends FlxObject
 				
 				if (_flashRect != null)
 				{
-					Buffer.pixels.copyPixels(_cachedGraphics.bitmap, _flashRect, _flashPoint, null, null, true);
+					Buffer.pixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPoint, null, null, true);
 					
 					#if !FLX_NO_DEBUG
 					if (FlxG.debugger.visualDebug && !ignoreDrawDebug) 
@@ -2279,17 +2279,17 @@ class FlxTilemap extends FlxObject
 		}
 		
 		#if flash
-		var rx:Int = (_data[Index] - _startingIndex) * (_tileWidth + _region.spacingX);
+		var rx:Int = (_data[Index] - _startingIndex) * (_tileWidth + region.spacingX);
 		var ry:Int = 0;
 		
-		if (Std.int(rx) >= _region.width)
+		if (Std.int(rx) >= region.width)
 		{
-			ry = Std.int(rx / _region.width) * (_tileHeight + _region.spacingY);
-			rx %= _region.width;
+			ry = Std.int(rx / region.width) * (_tileHeight + region.spacingY);
+			rx %= region.width;
 		}
-		_rects[Index] = (new Rectangle(rx + _region.startX, ry + _region.startY, _tileWidth, _tileHeight));
+		_rects[Index] = (new Rectangle(rx + region.startX, ry + region.startY, _tileWidth, _tileHeight));
 		#else
-		_rectIDs[Index] = _framesData.frames[_data[Index] - _startingIndex].tileID;
+		_rectIDs[Index] = framesData.frames[_data[Index] - _startingIndex].tileID;
 		#end
 	}
 	
@@ -2297,11 +2297,11 @@ class FlxTilemap extends FlxObject
 	 * Use this method for creating tileSheet for FlxTilemap. Must be called after loadMap() method.
 	 * If you forget to call it then you will not see this FlxTilemap on c++ target
 	 */
-	override public function updateFrameData():Void
+	public function updateFrameData():Void
 	{
-		if (_cachedGraphics != null && _tileWidth >= 1 && _tileHeight >= 1)
+		if (cachedGraphics != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region, new Point(0, 0));
+			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region, new Point(0, 0));
 			#if !flash
 			_rectIDs = new Array<Int>();
 			FlxArrayUtil.setLength(_rectIDs, totalTiles);
@@ -2342,16 +2342,16 @@ class FlxTilemap extends FlxObject
 		}
 		else
 		{
-			var rx:Int = (_data[rowIndex] - _startingIndex) * (_tileWidth + _region.spacingX);
+			var rx:Int = (_data[rowIndex] - _startingIndex) * (_tileWidth + region.spacingX);
 			var ry:Int = 0;
 			
-			if(Std.int(rx) >= _region.width)
+			if(Std.int(rx) >= region.width)
 			{
-				ry = Std.int(rx / _region.width) * (_tileHeight + _region.spacingY);
-				rx %= _region.width;
+				ry = Std.int(rx / region.width) * (_tileHeight + region.spacingY);
+				rx %= region.width;
 			}
 			
-			rect = new Rectangle(rx + _region.startX, ry + _region.startY, _tileWidth, _tileHeight);
+			rect = new Rectangle(rx + region.startX, ry + region.startY, _tileWidth, _tileHeight);
 		}
 		#end
 		
@@ -2364,7 +2364,7 @@ class FlxTilemap extends FlxObject
 		
 		if (rect != null) 
 		{
-			tileSprite.pixels.copyPixels(_cachedGraphics.bitmap, rect, pt);
+			tileSprite.pixels.copyPixels(cachedGraphics.bitmap, rect, pt);
 		}
 		
 		tileSprite.dirty = true;

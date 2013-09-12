@@ -51,9 +51,9 @@ class FlxBGSprite extends FlxSprite
 			}
 			
 			#if !js
-			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt);
 			#else
-			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
+			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
 			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
@@ -69,7 +69,7 @@ class FlxBGSprite extends FlxSprite
 			currDrawData[currIndex++] = _point.x;
 			currDrawData[currIndex++] = _point.y;
 			
-			currDrawData[currIndex++] = _flxFrame.tileID;
+			currDrawData[currIndex++] = frame.tileID;
 			
 			currDrawData[currIndex++] = csx;
 			currDrawData[currIndex++] = ssx;

@@ -11,33 +11,52 @@ class FlxAnimation extends FlxBaseAnimation
 	 * String name of the animation (e.g. "walk")
 	 */
 	public var name:String;
-	/**
-	 * Seconds between frames (basically the framerate)
-	 */
-	private var _delay:Float;
+	
 	/**
 	 * A list of frames stored as <code>int</code> objects
 	 */
 	public var frames:Array<Int>;
+	
 	/**
-	 * Whether or not the animation is looped
+	 * Accesor for frames.length
 	 */
-	public var looped:Bool;
+	public var numFrames(get, null):Int;
+	
+	/**
+	 * Animation frameRate - the speed in frames per second that the animation should play at.
+	 */
+	public var frameRate(default, set):Int;
+	
+	/**
+	 * Keeps track of the current frame of animation.
+	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
+	 */
+	public var curFrame(default, set):Int;
+	
 	/**
 	 * Whether the current animation has finished its first (or only) loop.
 	 */
 	public var finished(default, null):Bool;
+	
+	/**
+	 * Seconds between frames (basically the framerate)
+	 */
+	public var delay(default, null):Float;
+	
 	/**
 	 * Whether the current animation gets updated or not.
 	 */
 	public var paused:Bool;
 	
 	/**
+	 * Whether or not the animation is looped
+	 */
+	public var looped:Bool;
+	
+	/**
 	 * Internal, used to time each frame of animation.
 	 */
 	private var _frameTimer:Float;
-	
-	private var _curFrame:Int;
 	
 	/**
 	 * Constructor
@@ -56,8 +75,8 @@ class FlxAnimation extends FlxBaseAnimation
 		looped = Looped;
 		finished = false;
 		paused = true;
-		_curFrame = 0;
-		_curIndex = 0;
+		curFrame = 0;
+		curIndex = 0;
 		_frameTimer = 0;
 	}
 	
@@ -96,7 +115,7 @@ class FlxAnimation extends FlxBaseAnimation
 			curFrame = 0;
 		}
 		
-		if (_delay <= 0)
+		if (delay <= 0)
 		{
 			finished = true;
 		}
@@ -121,17 +140,17 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		var dirty:Bool = false;
 		
-		if (_delay > 0 && (looped || !finished) && !paused)
+		if (delay > 0 && (looped || !finished) && !paused)
 		{
 			_frameTimer += FlxG.elapsed;
-			while (_frameTimer > _delay)
+			while (_frameTimer > delay)
 			{
-				_frameTimer = _frameTimer - _delay;
+				_frameTimer = _frameTimer - delay;
 				if (curFrame == frames.length - 1)
 				{
 					if (looped)
 					{
-						_curFrame = 0;
+						curFrame = 0;
 					}
 					else
 					{
@@ -140,9 +159,10 @@ class FlxAnimation extends FlxBaseAnimation
 				}
 				else
 				{
-					_curFrame++;
+					curFrame++;
 				}
-				_curIndex = frames[curFrame];
+				curIndex = frames[curFrame];
+				sprite.frame = sprite.framesData.frames[curIndex];
 				dirty = true;
 			}
 		}
@@ -150,59 +170,34 @@ class FlxAnimation extends FlxBaseAnimation
 		return dirty;
 	}
 	
-	/**
-	 * Animation frameRate - the speed in frames per second that the animation should play at.
-	 */
-	public var frameRate(default, set_frameRate):Int;
-	
 	private function set_frameRate(value:Int):Int
 	{
-		_delay = 0;
+		delay = 0;
 		frameRate = value;
 		if (value > 0)
 		{
-			_delay = 1.0 / value;
+			delay = 1.0 / value;
 		}
 		return value;
 	}
 	
-	public var numFrames(get, null):Int;
-	
-	private function get_numFrames():Int
+	inline private function get_numFrames():Int
 	{
 		return frames.length;
-	}
-	
-	public var delay(get_delay, null):Float;
-	
-	function get_delay():Float 
-	{
-		return _delay;
-	}
-	
-	/**
-	 * Keeps track of the current frame of animation.
-	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
-	 */
-	public var curFrame(get, set):Int;
-	
-	private function get_curFrame():Int
-	{
-		return _curFrame;
 	}
 	
 	private function set_curFrame(Frame:Int):Int
 	{
 		if (Frame >= 0 && Frame < frames.length)
 		{
-			_curFrame = Frame;
+			curFrame = Frame;
 		}
 		else if (Frame < 0)
 		{
-			_curFrame = Std.int(Math.random() * frames.length);
+			curFrame = Std.int(Math.random() * frames.length);
 		}
 		
-		_curIndex = frames[_curFrame];
+		curIndex = frames[curFrame];
 		return Frame;
 	}
 	

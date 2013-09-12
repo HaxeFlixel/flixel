@@ -182,20 +182,12 @@ class FlxObject extends FlxBasic
 	 */
 	public var forceComplexRender(default, set):Bool = false;
 	
-	#if !FLX_NO_DEBUG
 	/**
-	 * Overriding this will force a specific color to be used for debug rect.
+	 * Rendering stuffs.
 	 */
-	public var debugBoundingBoxColor(default, set):Int;
-	
-	private function set_debugBoundingBoxColor(Value:Int):Int 
-	{
-		_boundingBoxColorOverritten = true;
-		return debugBoundingBoxColor = Value; 
-	}
-	
-	private var _boundingBoxColorOverritten:Bool = false;
-	#end
+	public var region(default, null):Region;
+	public var framesData(default, null):FlxSpriteFrames;
+	public var cachedGraphics(default, set):CachedGraphics;
 	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
@@ -237,9 +229,9 @@ class FlxObject extends FlxBasic
 		last = null;
 		cameras = null;
 		
-		_framesData = null;
-		setCachedGraphics(null);
-		_region = null;
+		framesData = null;
+		cachedGraphics = null;
+		region = null;
 		
 		super.destroy();
 	}
@@ -977,52 +969,37 @@ class FlxObject extends FlxBasic
 		return angle = Value;
 	}
 	
-	private var _framesData:FlxSpriteFrames;
-	private var _cachedGraphics:CachedGraphics;
-	private var _region:Region;
-	
-	public function updateFrameData():Void
-	{
-		
-	}
-	
-	public var cachedGraphics(get, null):CachedGraphics;
-	
-	inline private function get_cachedGraphics():CachedGraphics
-	{
-		return _cachedGraphics;
-	}
-	
 	/**
 	 * Internal function for setting cachedGraphics property for this object. 
 	 * It changes cachedGraphics' useCount also for better memory tracking.
 	 * @param	value
 	 */
-	private function setCachedGraphics(Value:CachedGraphics):Void
+	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
-		if (_cachedGraphics != null && _cachedGraphics != Value)
+		if (cachedGraphics != null && cachedGraphics != Value)
 		{
-			_cachedGraphics.useCount--;
+			cachedGraphics.useCount--;
 		}
 		
-		if (_cachedGraphics != Value && Value != null)
+		if (cachedGraphics != Value && Value != null)
 		{
 			Value.useCount++;
 		}
-		_cachedGraphics = Value;
+		return cachedGraphics = Value;
 	}
 	
-	public var region(get, null):Region;
+	#if !FLX_NO_DEBUG
+	/**
+	 * Overriding this will force a specific color to be used for debug rect.
+	 */
+	public var debugBoundingBoxColor(default, set):Int;
 	
-	inline private function get_region():Region 
+	private function set_debugBoundingBoxColor(Value:Int):Int 
 	{
-		return _region;
+		_boundingBoxColorOverritten = true;
+		return debugBoundingBoxColor = Value; 
 	}
 	
-	public var framesData(get_framesData, null):FlxSpriteFrames;
-	
-	function get_framesData():FlxSpriteFrames 
-	{
-		return _framesData;
-	}
+	private var _boundingBoxColorOverritten:Bool = false;
+	#end
 }
