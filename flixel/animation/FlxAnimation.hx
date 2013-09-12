@@ -162,7 +162,6 @@ class FlxAnimation extends FlxBaseAnimation
 					curFrame++;
 				}
 				curIndex = frames[curFrame];
-				sprite.frame = sprite.framesData.frames[curIndex];
 				dirty = true;
 			}
 		}
@@ -198,7 +197,13 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		
 		curIndex = frames[curFrame];
-		return Frame;
+		
+		if (sprite.framesData != null)
+		{
+			sprite.frame = sprite.framesData.frames[curIndex];
+			sprite.dirty = true;
+		}
+		return curFrame;
 	}
 	
 	override public function clone(Sprite:FlxSprite):FlxAnimation

@@ -23,7 +23,6 @@ class FlxAnimationController
 	/**
 	 * Tell the sprite to change to a specific frame of the _curAnim.
 	 */
-	private var _frameIndex:Int;
 	public var frameIndex(get, set):Int;
 	
 	/**
@@ -82,23 +81,18 @@ class FlxAnimationController
 	{
 		if (_curAnim != null)
 		{
-			if (_curAnim.update())
+			if (_curAnim.update() && callback != null)
 			{
-				if (callback != null)
-				{
-					callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
-				}
+				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
 			}
 		}
 		else if (_prerotated != null)
 		{
-			if (_prerotated.update())
+			if(_prerotated.update() && callback != null)
 			{
-				_frameIndex = _prerotated.curIndex;
+				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
 			}
 		}
-		else
-			_frameIndex = -1;
 	}
 	
 	public function clone(controller:FlxAnimationController):FlxAnimationController
@@ -114,7 +108,7 @@ class FlxAnimationController
 		}
 		
 		name = controller.name;
-		_frameIndex = controller._frameIndex;
+		frameIndex = controller.frameIndex;
 		
 		return this;
 	}
@@ -410,34 +404,23 @@ class FlxAnimationController
 			_curAnim.stop();
 			_curAnim = null;
 		}
-		_frameIndex = Std.int(Math.random() * frames);
+		frameIndex = Std.int(Math.random() * frames);
 	}
 	
 	inline private function get_frameIndex():Int
 	{
-		return _frameIndex;
+		return _curAnim != null ? _curAnim.curIndex : 0;
 	}
 	
 	private function set_frameIndex(Frame:Int):Int
 	{
-		_frameIndex = Frame % frames;
-		
-		if (Frame < 0)
-		{
-			_frameIndex = Std.int(Math.random() * frames);
-		}
+		Frame = Frame % frames;
 		
 		if (_curAnim != null)
 		{
-			_curAnim.curIndex = _frameIndex;
+			_curAnim.curIndex = Frame;
 		}
-		
-		if (_sprite.framesData != null)
-		{
-			_sprite.frame = _sprite.framesData.frames[_frameIndex];
-		}
-		
-		return _frameIndex;
+		return Frame;
 	}
 	
 	inline private function get_frameName():String
@@ -455,8 +438,8 @@ class FlxAnimationController
 				_curAnim = null;
 			}
 			
-			var flxFrame = _sprite.framesData.framesHash.get(Value);
-			_frameIndex = getFrameIndex(flxFrame);
+			var frame = _sprite.framesData.framesHash.get(Value);
+			frameIndex = getFrameIndex(frame);
 		}
 		
 		return Value;
