@@ -17,13 +17,13 @@ class FlxAnimationController
 	/**
 	 * Currently playing FlxAnimation (warning: can be null).
 	 */
-	@:isVar
+	private var _curAnim:FlxAnimation;
 	public var curAnim(get, set):FlxAnimation;
 	
 	/**
-	 * Tell the sprite to change to a specific frame of the curAnim.
+	 * Tell the sprite to change to a specific frame of the _curAnim.
 	 */
-	@:isVar
+	private var _frameIndex:Int;
 	public var frameIndex(get, set):Int;
 	
 	/**
@@ -38,7 +38,7 @@ class FlxAnimationController
 	public var name(get, set):String;
 	
 	/**
-	 * Pause & resume curAnim.
+	 * Pause & resume _curAnim.
 	 */
 	public var paused(get, set):Bool;
 	
@@ -80,15 +80,13 @@ class FlxAnimationController
 	
 	public function update():Void
 	{
-		if (curAnim != null)
+		if (_curAnim != null)
 		{
-			if (curAnim.update())
+			if (_curAnim.update())
 			{
-				_sprite.frame = _sprite.framesData.frames[frameIndex];
-				
 				if (callback != null)
 				{
-					callback(((curAnim != null) ? (curAnim.name) : null), curAnim.curFrame, curAnim.curIndex);
+					callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
 				}
 			}
 		}
@@ -96,11 +94,11 @@ class FlxAnimationController
 		{
 			if (_prerotated.update())
 			{
-				frameIndex = _prerotated.curIndex;
+				_frameIndex = _prerotated.curIndex;
 			}
 		}
 		else
-			frameIndex = -1;
+			_frameIndex = -1;
 	}
 	
 	public function clone(controller:FlxAnimationController):FlxAnimationController
@@ -116,7 +114,7 @@ class FlxAnimationController
 		}
 		
 		name = controller.name;
-		frameIndex = controller.frameIndex;
+		_frameIndex = controller._frameIndex;
 		
 		return this;
 	}
@@ -162,7 +160,7 @@ class FlxAnimationController
 				}
 			}
 		}
-		curAnim = null;
+		_curAnim = null;
 	}
 	
 	/**
@@ -327,18 +325,18 @@ class FlxAnimationController
 			return;
 		}
 		
-		if (!Force && curAnim != null && AnimName == curAnim.name && (curAnim.looped || !curAnim.finished)) 
+		if (!Force && _curAnim != null && AnimName == _curAnim.name && (_curAnim.looped || !_curAnim.finished)) 
 		{
-			curAnim.paused = false;
+			_curAnim.paused = false;
 			return;
 		}
 		
-		if (curAnim != null && AnimName != curAnim.name)
+		if (_curAnim != null && AnimName != _curAnim.name)
 		{
-			curAnim.stop();
+			_curAnim.stop();
 		}
-		curAnim = _animations.get(AnimName);
-		curAnim.play(Force, Frame);
+		_curAnim = _animations.get(AnimName);
+		_curAnim.play(Force, Frame);
 	}
 	
 	/**
@@ -347,13 +345,13 @@ class FlxAnimationController
 	 */
 	public function gotoAndPlay(Frame:Int = 0):Void
 	{
-		if (curAnim == null || curAnim.frames.length <= Frame)
+		if (_curAnim == null || _curAnim.frames.length <= Frame)
 		{
 			return;
 		}
 		
-		curAnim.play(true, Frame);
-		curAnim.play(true, Frame);
+		_curAnim.play(true, Frame);
+		_curAnim.play(true, Frame);
 	}
 	
 	/**
@@ -362,13 +360,13 @@ class FlxAnimationController
 	 */
 	public function gotoAndPause(Frame:Int = 0):Void
 	{
-		if (curAnim == null || curAnim.frames.length <= Frame)
+		if (_curAnim == null || _curAnim.frames.length <= Frame)
 		{
 			return;
 		}
 		
-		curAnim.curIndex = Frame;
-		curAnim.paused = true;
+		_curAnim.curIndex = Frame;
+		_curAnim.paused = true;
 	}
 	
 	/**
@@ -376,9 +374,9 @@ class FlxAnimationController
 	 */
 	inline public function pause():Void
 	{
-		if (curAnim != null)
+		if (_curAnim != null)
 		{
-			curAnim.paused = true;
+			_curAnim.paused = true;
 		}
 	}
 	
@@ -387,9 +385,9 @@ class FlxAnimationController
 	 */
 	inline public function resume():Void
 	{
-		if (curAnim != null)
+		if (_curAnim != null)
 		{
-			curAnim.paused = false;
+			_curAnim.paused = false;
 		}
 	}
 	
@@ -407,42 +405,39 @@ class FlxAnimationController
 	 */
 	public function randomFrame():Void
 	{
-		if (curAnim != null)
+		if (_curAnim != null)
 		{
-			curAnim.stop();
-			curAnim = null;
+			_curAnim.stop();
+			_curAnim = null;
 		}
-		frameIndex = Std.int(Math.random() * frames);
+		_frameIndex = Std.int(Math.random() * frames);
 	}
 	
 	inline private function get_frameIndex():Int
 	{
-		var index = 0;
-		if (curAnim != null)
-			index = curAnim.curIndex;
-		return index;
+		return _frameIndex;
 	}
 	
 	private function set_frameIndex(Frame:Int):Int
 	{
-		frameIndex = Frame % frames;
+		_frameIndex = Frame % frames;
 		
 		if (Frame < 0)
 		{
-			frameIndex = Std.int(Math.random() * frames);
+			_frameIndex = Std.int(Math.random() * frames);
 		}
 		
-		if (curAnim != null)
+		if (_curAnim != null)
 		{
-			curAnim.curIndex = frameIndex;
+			_curAnim.curIndex = _frameIndex;
 		}
 		
 		if (_sprite.framesData != null)
 		{
-			_sprite.frame = _sprite.framesData.frames[frameIndex];
+			_sprite.frame = _sprite.framesData.frames[_frameIndex];
 		}
 		
-		return frameIndex;
+		return _frameIndex;
 	}
 	
 	inline private function get_frameName():String
@@ -454,14 +449,14 @@ class FlxAnimationController
 	{
 		if (_sprite.framesData != null && _sprite.framesData.framesHash.exists(Value))
 		{
-			if (curAnim != null)
+			if (_curAnim != null)
 			{
-				curAnim.stop();
-				curAnim = null;
+				_curAnim.stop();
+				_curAnim = null;
 			}
 			
 			var flxFrame = _sprite.framesData.framesHash.get(Value);
-			frameIndex = getFrameIndex(flxFrame);
+			_frameIndex = getFrameIndex(flxFrame);
 		}
 		
 		return Value;
@@ -473,9 +468,9 @@ class FlxAnimationController
 	inline private function get_name():String
 	{
 		var animName:String = null;
-		if ((curAnim != null) && (curAnim.delay > 0) && (curAnim.looped || !curAnim.finished))
+		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
 		{
-			animName = curAnim.name;
+			animName = _curAnim.name;
 		}
 		return animName;
 	}
@@ -496,9 +491,9 @@ class FlxAnimationController
 	inline private function get_curAnim():FlxAnimation
 	{
 		var anim:FlxAnimation = null;
-		if ((curAnim != null) && (curAnim.delay > 0) && (curAnim.looped || !curAnim.finished))
+		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
 		{
-			anim = curAnim;
+			anim = _curAnim;
 		}
 		return anim;
 	}
@@ -509,32 +504,32 @@ class FlxAnimationController
 	 */
 	inline private function set_curAnim(Anim:FlxAnimation):FlxAnimation
 	{
-		if (Anim != null && Anim != curAnim)
+		if (Anim != null && Anim != _curAnim)
 		{
-			if (curAnim != null) 
+			if (_curAnim != null) 
 			{
-				curAnim.stop();
+				_curAnim.stop();
 			}
 			Anim.play();
 		}
-		return curAnim = Anim;
+		return _curAnim = Anim;
 	}
 	
 	inline private function get_paused():Bool
 	{
 		var paused:Bool = false;
-		if (curAnim != null)
+		if (_curAnim != null)
 		{
-			paused = curAnim.paused;
+			paused = _curAnim.paused;
 		}
 		return paused;
 	}
 	
 	inline private function set_paused(Value:Bool):Bool
 	{
-		if (curAnim != null)
+		if (_curAnim != null)
 		{
-			curAnim.paused = Value;
+			_curAnim.paused = Value;
 		}
 		return Value;
 	}
@@ -542,17 +537,19 @@ class FlxAnimationController
 	inline private function get_finished():Bool
 	{
 		var finished:Bool = true;
-		if (curAnim != null)
+		if (_curAnim != null)
 		{
-			finished = curAnim.finished;
+			finished = _curAnim.finished;
 		}
 		return finished;
 	}
 	
 	inline private function set_finished(Value:Bool):Bool
 	{
-		if (Value == true && curAnim != null)
-			frameIndex = curAnim.numFrames - 1;
+		if (Value == true && _curAnim != null)
+		{
+			frameIndex = _curAnim.numFrames - 1;
+		}
 		return Value;
 	}
 	
