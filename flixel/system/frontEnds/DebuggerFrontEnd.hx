@@ -7,6 +7,11 @@ class DebuggerFrontEnd
 {	
 	#if !FLX_NO_DEBUG
 	/**
+	 * Whether the debugger is visible or not.
+	 * @default false
+	 */
+	public var visible(default, set):Bool = false;
+	/**
 	 * Whether to show visual debug displays or not. Doesn't exist in <code>FLX_NO_DEBUG</code> mode.
 	 * @default false
 	 */
@@ -58,12 +63,6 @@ class DebuggerFrontEnd
 		FlxG.game.debugger.resetLayout();
 		#end
 	}
-	
-	/**
-	 * Whether the debugger is visible or not.
-	 * @default false
-	 */
-	public var visible(default, set):Bool = false;
 	
 	inline private function set_visible(Visible:Bool):Bool
 	{

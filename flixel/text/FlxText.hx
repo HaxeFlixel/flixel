@@ -677,8 +677,8 @@ class FlxText extends FlxSprite
 	{
 		if (cachedGraphics != null)
 		{
-			_framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(_region);
-			frame = _framesData.frames[0];
+			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region);
+			frame = framesData.frames[0];
 			frames = 1;
 		}
 	}
@@ -686,7 +686,7 @@ class FlxText extends FlxSprite
 	override public function draw():Void 
 	{
 		// Rarely
-		if (_regen)		
+		if (_regen)
 		{
 			#if !flash
 			calcFrame(true);
