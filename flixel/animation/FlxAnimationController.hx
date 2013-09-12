@@ -451,7 +451,7 @@ class FlxAnimationController
 	inline private function get_name():String
 	{
 		var animName:String = null;
-		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
+		if (_curAnim != null)
 		{
 			animName = _curAnim.name;
 		}

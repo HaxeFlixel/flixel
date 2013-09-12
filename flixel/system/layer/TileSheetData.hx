@@ -30,6 +30,8 @@ class TileSheetData
 	 */
 	private var flxFrames:Map<String, FlxFrame>;
 	
+	private var frameNames:Array<String>;
+	
 	public var bitmap:BitmapData;
 	
 	public function new(bitmap:BitmapData)
@@ -40,6 +42,8 @@ class TileSheetData
 		#end
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
 		flxFrames = new Map<String, FlxFrame>();
+		
+		frameNames = [];
 	}
 	
 	public function getFrame(name:String):FlxFrame
@@ -157,6 +161,7 @@ class TileSheetData
 		
 		frame.center = new FlxPoint(0.5 * rect.width, 0.5 * rect.height);
 		flxFrames.set(key, frame);
+		frameNames.push(key);
 		return frame;
 	}
 	
@@ -196,6 +201,8 @@ class TileSheetData
 			frame.destroy();
 		}
 		flxFrames = null;
+		
+		frameNames = null;
 	}
 	
 	#if !flash
@@ -266,14 +273,20 @@ class TileSheetData
 		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
 		#end
 		flxFrames.set(key, texFrame);
+		frameNames.push(key);
 		return texFrame;
 	}
 	
 	public function destroyFrameBitmapDatas():Void
 	{
-		for (frame in flxFrames)
+		var numFrames:Int = frameNames.length;
+		for (i in 0...numFrames)
+		{
+			flxFrames.get(frameNames[i]).destroyBitmapDatas();
+		}
+		/*for (frame in flxFrames)
 		{
 			frame.destroyBitmapDatas();
-		}
+		}*/
 	}
 }
