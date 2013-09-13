@@ -95,7 +95,7 @@ class FlxArrayUtil
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	@:generic static public function getRandom(Objects:Array<T>, StartIndex:Int = 0, Length:Int = 0):T
+	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, Length:Int = 0):T
 	{
 		if (Objects != null)
 		{

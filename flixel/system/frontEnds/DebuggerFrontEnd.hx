@@ -4,18 +4,28 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 
 class DebuggerFrontEnd
-{	
+{
+    /**
+ 	 * Whether the debugger is visible or not.
+ 	 * @default false
+ 	 */
+    public var visible(default, set):Bool = false;
+
+    inline private function set_visible(Visible:Bool):Bool
+    {
+        #if !FLX_NO_DEBUG
+ 		FlxG.game.debugger.visible = Visible;
+        #end
+        return visible = Visible;
+    }
+
 	#if !FLX_NO_DEBUG
-	/**
-	 * Whether the debugger is visible or not.
-	 * @default false
-	 */
-	public var visible(default, set):Bool = false;
 	/**
 	 * Whether to show visual debug displays or not. Doesn't exist in <code>FLX_NO_DEBUG</code> mode.
 	 * @default false
 	 */
-	public var visualDebug:Bool = false;
+    public var visualDebug:Bool = false;
+
 	/**
 	 * The amount of decimals FlxPoints are rounded to in log / watch.
 	 * @default 3
@@ -62,14 +72,5 @@ class DebuggerFrontEnd
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.resetLayout();
 		#end
-	}
-	
-	inline private function set_visible(Visible:Bool):Bool
-	{
-		#if !FLX_NO_DEBUG
-		FlxG.game.debugger.visible = Visible;
-		#end
-		
-		return visible = Visible;
 	}
 }
