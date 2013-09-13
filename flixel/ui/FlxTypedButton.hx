@@ -303,7 +303,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		
 		// Then pick the appropriate frame of animation
-		frame = status;
+		frame = framesData.frames[status];
 	}
 	
 	/**
