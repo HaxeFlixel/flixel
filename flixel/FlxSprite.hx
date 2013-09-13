@@ -37,7 +37,7 @@ interface IFlxSprite extends IFlxBasic {
 	
 	public var offset:IFlxPoint;
 	public var origin:IFlxPoint;
-	public var scale:IFlxPoint;	
+	public var scale:IFlxPoint;
 	public var velocity:IFlxPoint;
 	public var maxVelocity:IFlxPoint;
 	public var acceleration:IFlxPoint;
