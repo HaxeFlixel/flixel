@@ -10,7 +10,7 @@ interface IFlxBasic
 {
 	public var ID:Int;
 	public var exists:Bool;
-    public var alive:Bool;
+	public var alive:Bool;
 	public var active:Bool;
 	public var visible:Bool;
 	public var cameras:Array<FlxCamera>;

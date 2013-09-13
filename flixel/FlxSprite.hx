@@ -26,11 +26,23 @@ import openfl.display.Tilesheet;
 /**
  * The interface for properties of <code>FlxSprite</code>
  * It makes possible to add <code>FlxSpriteGroup</code> to <code>FlxSpriteGroup</code>
- **/
+ */
 interface IFlxSprite extends IFlxBasic {
-    public var x(default, set):Float;
-    public var y(default, set):Float;
-    public var alpha(default, set):Float;
+	public var x(default, set):Float;
+	public var y(default, set):Float;
+	public var alpha(default, set):Float;
+	public var immovable(default, set):Bool;
+	public var angle(default, set):Float;
+	public var facing(default, set):Int;
+	
+	public var offset:IFlxPoint;
+	public var origin:IFlxPoint;
+	public var scale:IFlxPoint;	
+	public var velocity:IFlxPoint;
+	public var maxVelocity:IFlxPoint;
+	public var acceleration:IFlxPoint;
+	public var drag:IFlxPoint;
+	public var scrollFactor:IFlxPoint;
 	
 	public function reset(X:Float, Y:Float):Void;
 }
@@ -64,17 +76,17 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
 	 */
-	public var origin:FlxPoint;
+	public var origin:IFlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
 	 * changing a sprite's <code>width</code> or <code>height</code>.
 	 */
-	public var offset:FlxPoint;
+	public var offset:IFlxPoint;
 	/**
 	 * Change the size of your sprite's graphic. NOTE: Scale doesn't currently affect collisions automatically, you will need to adjust the width, 
 	 * height and offset manually. WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
 	 */
-	public var scale:FlxPoint;
+	public var scale:IFlxPoint;
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 * @default null
