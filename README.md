@@ -82,7 +82,7 @@ ______________________________________________________
 - Easily generate and emit particles
 - Create game levels using tilemaps
 - Text display, save games, scrolling
-- Mouse & keyboard input
+- Mouse, keyboard, controller, and touch inputs
 - Math & color utilities
 - Record and play back replays
 - Powerful interactive debugger
