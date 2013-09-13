@@ -73,29 +73,35 @@ class FlxObject extends FlxBasic
 	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
-    public var x(default, set):Float;
-
-   	public function set_x(NewX:Float):Float
-   	{
-   		return x = NewX;
-   	}
+	public var x(default, set):Float = 0;
+	
+	public function set_x(NewX:Float):Float
+	{
+		return x = NewX;
+	}
 	/**
 	 * Y position of the upper left corner of this object in world space.
 	 */
-    public var y(default, set):Float;
-
-   	public function set_y(NewY:Float):Float
-   	{
-   		return y = NewY;
-   	}
+	public var y(default, set):Float = 0;
+	
+	public function set_y(NewY:Float):Float
+	{
+		return y = NewY;
+	}
 	/**
 	 * Whether an object will move/alter position after a collision.
 	 */
-	public var immovable:Bool = false;
+	public var immovable(default, set):Bool = false;
+	
+	private function set_immovable(Value:Bool):Bool
+	{
+		return immovable = Value;
+	}
+	
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity:FlxPoint;
+	public var velocity:IFlxPoint;
 	/**
 	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
@@ -109,17 +115,17 @@ class FlxObject extends FlxBasic
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration:FlxPoint;
+	public var acceleration:IFlxPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
 	 */
-	public var drag:FlxPoint;
+	public var drag:IFlxPoint;
 	/**
 	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity:FlxPoint;
+	public var maxVelocity:IFlxPoint;
 	/**
 	 * This is how fast you want this sprite to spin (in degrees per second).
 	 */
@@ -140,7 +146,7 @@ class FlxObject extends FlxBasic
 	 * Controls how much this object is affected by camera scrolling.
 	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
 	 */
-	public var scrollFactor:FlxPoint;
+	public var scrollFactor:IFlxPoint;
 	/**
 	 * Handy for storing health percentage or armor points or whatever.
 	 */

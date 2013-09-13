@@ -159,7 +159,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Clean up memory.
 	 */
-	public function destroy():Void
+	override public function destroy():Void
 	{
 		cursorContainer = null;
 		_cursor = null;
