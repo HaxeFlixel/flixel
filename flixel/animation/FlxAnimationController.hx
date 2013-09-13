@@ -89,14 +89,14 @@ class FlxAnimationController
 	{
 		if (_curAnim != null)
 		{
-			if (callback != null && (callbackEveryFrame || _curAnim.update()))
+			if ((_curAnim.update() || callbackEveryFrame) && callback != null)
 			{
-				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
+				callback(_curAnim.name, _curAnim.curFrame, _curAnim.curIndex);
 			}
 		}
 		else if (_prerotated != null)
 		{
-			if (callback != null && (callbackEveryFrame || _prerotated.update()))
+			if ((_prerotated.update() || callbackEveryFrame) && callback != null)
 			{
 				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
 			}
