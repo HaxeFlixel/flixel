@@ -243,7 +243,7 @@ class FlxAnimationController
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
 	 */
-	public function addByIndicies(Name:String, Prefix:String, Indicies:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	public function addByIndicies(Name:String, Prefix:String, Indicies:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
