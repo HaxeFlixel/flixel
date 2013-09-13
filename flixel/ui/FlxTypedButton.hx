@@ -211,7 +211,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			return;
 		}
-		switch (frame)
+		switch (status)
 		{
 			case FlxButton.HIGHLIGHT:
 				label.alpha = 1.0;
