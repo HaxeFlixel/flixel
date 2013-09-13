@@ -9,7 +9,8 @@ It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel). 
 
 ###For Developers
 
-Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel`. It's recommended that you use a GUI application to manage your changes. We recommend [SourceTree](http://www.sourcetreeapp.com/).
+Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel`.
+We recommended that you use a GUI application to manage your changes ([SourceTree](http://www.sourcetreeapp.com/)).
 
 You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
 ______________________________________________________
