@@ -10,14 +10,8 @@ import flixel.util.FlxRandom;
 class FlxAnimationController  
 {
 	/**
-	 * Internal, reference to owner sprite.
+	 * Property access for currently playing FlxAnimation (warning: can be null).
 	 */
-	private var _sprite:FlxSprite;
-	
-	/**
-	 * Currently playing FlxAnimation (warning: can be null).
-	 */
-	private var _curAnim:FlxAnimation;
 	public var curAnim(get, set):FlxAnimation;
 	
 	/**
@@ -52,17 +46,31 @@ class FlxAnimationController
 	public var frames(get, null):Int;
 	
 	/**
-	 * Internal, store all the _animations that were added to this sprite.
-	 */
-	private var _animations(default, null):Map<String, FlxAnimation>;
-	
-	/**
-	 * Internal tracker for the _animations callback.  Default is null.
 	 * If assigned, will be called each time the current frame changes.
-	 * A function that has 3 parameters: a string name, a uint frame number, and a uint frame index.
+	 * A function that has 3 parameters: a string name, a frame number, and a frame index.
 	 */
 	public var callback:String->Int->Int->Void;
 	
+	/**
+	 * If set to true, the animation callback will trigger every frame instead of when the frame changes.
+	 * WARNING: You can slow down you application if you do this on many sprites.
+	 */
+	public var callbackEveryFrame:Bool;
+	
+	/**
+	 * Internal, reference to owner sprite.
+	 */
+	private var _sprite:FlxSprite;
+	
+	/**
+	 * Internal, currently playing animation.
+	 */
+	private var _curAnim:FlxAnimation;
+	
+	/**
+	 * Internal, store all the _animations that were added to this sprite.
+	 */
+	private var _animations(default, null):Map<String, FlxAnimation>;
 	/**
 	 * Internal helper constants used for _animations's frame sorting.
 	 */
@@ -81,14 +89,14 @@ class FlxAnimationController
 	{
 		if (_curAnim != null)
 		{
-			if (_curAnim.update() && callback != null)
+			if (callback != null && (callbackEveryFrame || _curAnim.update())
 			{
 				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
 			}
 		}
 		else if (_prerotated != null)
 		{
-			if(_prerotated.update() && callback != null)
+			if (callback != null && (callbackEveryFrame || _prerotated.update())
 			{
 				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
 			}
