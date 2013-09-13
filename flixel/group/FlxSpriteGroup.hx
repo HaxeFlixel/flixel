@@ -104,8 +104,8 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		velocity		= new FlxPointHelper(this, velocityTransform );
 		maxVelocity		= new FlxPointHelper(this, maxVelocityTransform );
 		acceleration	= new FlxPointHelper(this, accelerationTranform );
-		drag			= new FlxPointHelper(this, dragTranform );
 		scrollFactor	= new FlxPointHelper(this, scrollFactorTranform );
+		drag			= new FlxPointHelper(this, dragTranform );
 	}
 	
 	override public function destroy():Void
@@ -117,8 +117,8 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		velocity.destroy(); velocity = null;
 		maxVelocity.destroy(); maxVelocity = null;
 		acceleration.destroy(); acceleration = null;
-		drag.destroy(); drag = null;
 		scrollFactor.destroy(); scrollFactor = null;
+		drag.destroy(); drag = null;
 	}
 	
 	/**
