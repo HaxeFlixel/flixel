@@ -5,7 +5,7 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
 typedef Movable = {
-	public var immovable:Bool;
+	public var immovable(default, set):Bool;
 	public function setPosition(X:Float, Y:Float):Void;
 }
 
