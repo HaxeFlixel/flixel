@@ -15,6 +15,26 @@ class FlxAnimationController
 	public var curAnim(get, set):FlxAnimation;
 	
 	/**
+	 * Index of current frame in sprite's spritesheet
+	 */
+	public var index(default, set):Int = 0;
+	
+	private function set_index(Value:Int):Int
+	{
+		if (_sprite.framesData != null)
+		{
+			_sprite.frame = _sprite.framesData.frames[Value];
+			
+			if ((index != Value || callbackEveryFrame) && callback != null)
+			{
+				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
+			}
+		}
+		
+		return index = Value;
+	}
+	
+	/**
 	 * Tell the sprite to change to a specific frame of the _curAnim.
 	 */
 	public var frameIndex(get, set):Int;
@@ -55,7 +75,7 @@ class FlxAnimationController
 	 * If set to true, the animation callback will trigger every frame instead of when the frame changes.
 	 * WARNING: You can slow down you application if you do this on many sprites.
 	 */
-	public var callbackEveryFrame:Bool;
+	public var callbackEveryFrame:Bool = false;
 	
 	/**
 	 * Internal, reference to owner sprite.
@@ -89,17 +109,11 @@ class FlxAnimationController
 	{
 		if (_curAnim != null)
 		{
-			if ((_curAnim.update() || callbackEveryFrame) && callback != null)
-			{
-				callback(_curAnim.name, _curAnim.curFrame, _curAnim.curIndex);
-			}
+			_curAnim.update();
 		}
 		else if (_prerotated != null)
 		{
-			if ((_prerotated.update() || callbackEveryFrame) && callback != null)
-			{
-				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
-			}
+			_prerotated.update();
 		}
 	}
 	
@@ -121,10 +135,11 @@ class FlxAnimationController
 		return this;
 	}
 	
-	public function createPrerotated(Sprite:FlxSprite = null):Void
+	public function createPrerotated(Controller:FlxAnimationController = null):Void
 	{
 		destroyAnimations();
-		_prerotated = new FlxPrerotatedAnimation((Sprite != null) ? Sprite : _sprite);
+		Controller = (Controller != null) ? Controller : this;
+		_prerotated = new FlxPrerotatedAnimation(Controller, Controller._sprite.bakedRotation);
 	}
 	
 	public function destroyAnimations():Void
@@ -198,7 +213,7 @@ class FlxAnimationController
 		
 		if (Frames.length > 0)
 		{
-			var anim:FlxAnimation = new FlxAnimation(_sprite, Name, Frames, FrameRate, Looped);
+			var anim:FlxAnimation = new FlxAnimation(this, Name, Frames, FrameRate, Looped);
 			_animations.set(Name, anim);
 		}
 	}
@@ -228,7 +243,7 @@ class FlxAnimationController
 			
 			if (indices.length > 0)
 			{
-				var anim:FlxAnimation = new FlxAnimation(_sprite, Name, indices, FrameRate, Looped);
+				var anim:FlxAnimation = new FlxAnimation(this, Name, indices, FrameRate, Looped);
 				_animations.set(Name, anim);
 			}
 		}
@@ -261,7 +276,7 @@ class FlxAnimationController
 			
 			if (frameIndices.length > 0)
 			{
-				var anim:FlxAnimation = new FlxAnimation(_sprite, Name, frameIndices, FrameRate, Looped);
+				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped);
 				_animations.set(Name, anim);
 			}
 		}
@@ -305,7 +320,7 @@ class FlxAnimationController
 				
 				if (frameIndices.length > 0)
 				{
-					var anim:FlxAnimation = new FlxAnimation(_sprite, Name, frameIndices, FrameRate, Looped);
+					var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped);
 					_animations.set(Name, anim);
 				}
 			}
@@ -353,7 +368,6 @@ class FlxAnimationController
 		}
 		
 		_curAnim.play(true, Frame);
-		_curAnim.play(true, Frame);
 	}
 	
 	/**
@@ -396,7 +410,7 @@ class FlxAnimationController
 	/**
   	 * Gets the FlxAnim object with the specified name.
 	*/
-	inline public function getAnimationByName(Name:String):FlxAnimation
+	inline public function getByName(Name:String):FlxAnimation
 	{
 		return _animations.get(Name); 
 	}

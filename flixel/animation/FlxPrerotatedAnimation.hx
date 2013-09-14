@@ -8,39 +8,44 @@ import flixel.FlxSprite;
  */
 class FlxPrerotatedAnimation extends FlxBaseAnimation
 {
+	public static inline var PREROTATED:String = "prerotated_animation";
+	
 	private var rotations:Int;
 	
-	public function new(Sprite:FlxSprite)
+	private var baked:Float;
+	
+	public function new(Parent:FlxAnimationController, Baked:Float)
 	{
-		super(Sprite);
-		rotations = Math.round(360 / sprite.bakedRotation);
+		super(Parent, PREROTATED);
+		baked = Baked;
+		rotations = Math.round(360 / Baked);
 	}
 	
-	override public function update():Bool 
+	public var angle(default, set):Float = 0;
+	
+	private function set_angle(Value:Float):Float
 	{
-		var dirty:Bool = false;
 		var oldIndex:Int = curIndex;
-		var angleHelper:Int = Math.floor((sprite.angle) % 360);
+		var angleHelper:Int = Math.floor(Value % 360);
 		
 		while (angleHelper < 0)
 		{
 			angleHelper += 360;
 		}
 		
-		curIndex = Math.floor(angleHelper / sprite.bakedRotation + 0.5);
-		curIndex = Std.int(curIndex % rotations);
+		var newIndex:Int = Math.floor(angleHelper / baked + 0.5);
+		newIndex = Std.int(curIndex % rotations);
 		
-		if (oldIndex != curIndex)
+		if (oldIndex != newIndex)
 		{
-			dirty = true;
+			curIndex = newIndex;
 		}
 		
-		return dirty;
+		return angle = Value;
 	}
 	
-	override public function clone(Sprite:FlxSprite):FlxPrerotatedAnimation 
+	override public function clone(Parent:FlxAnimationController):FlxPrerotatedAnimation 
 	{
-		return new FlxPrerotatedAnimation(Sprite);
+		return new FlxPrerotatedAnimation(Parent, baked);
 	}
-	
 }

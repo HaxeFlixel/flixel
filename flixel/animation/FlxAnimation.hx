@@ -8,11 +8,6 @@ import flixel.FlxSprite;
 class FlxAnimation extends FlxBaseAnimation
 {
 	/**
-	 * String name of the animation (e.g. "walk")
-	 */
-	public var name:String;
-	
-	/**
 	 * A list of frames stored as <code>int</code> objects
 	 */
 	public var frames:Array<Int>;
@@ -31,7 +26,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 * Keeps track of the current frame of animation.
 	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
 	 */
-	public var curFrame(default, set):Int;
+	public var curFrame(default, set):Int = 0;
 	
 	/**
 	 * Whether the current animation has finished its first (or only) loop.
@@ -65,11 +60,10 @@ class FlxAnimation extends FlxBaseAnimation
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40)
 	 * @param	Looped		Whether or not the animation is looped or just plays once
 	 */
-	public function new(Sprite:FlxSprite, Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true)
+	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true)
 	{
-		super(Sprite);
+		super(Parent, Name);
 		
-		name = Name;
 		frameRate = FrameRate;
 		frames = Frames;
 		looped = Looped;
@@ -136,10 +130,8 @@ class FlxAnimation extends FlxBaseAnimation
 		paused = true;
 	}
 	
-	override public function update():Bool
+	override public function update():Void
 	{
-		var dirty:Bool = false;
-		
 		if (delay > 0 && (looped || !finished) && !paused)
 		{
 			_frameTimer += FlxG.elapsed;
@@ -161,12 +153,8 @@ class FlxAnimation extends FlxBaseAnimation
 				{
 					curFrame++;
 				}
-				curIndex = frames[curFrame];
-				dirty = true;
 			}
 		}
-		
-		return dirty;
 	}
 	
 	private function set_frameRate(value:Int):Int
@@ -197,17 +185,11 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		
 		curIndex = frames[curFrame];
-		
-		if (sprite.framesData != null)
-		{
-			sprite.frame = sprite.framesData.frames[curIndex];
-			sprite.dirty = true;
-		}
-		return curFrame;
+		return Frame;
 	}
 	
-	override public function clone(Sprite:FlxSprite):FlxAnimation
+	override public function clone(Parent:FlxAnimationController):FlxAnimation
 	{
-		return new FlxAnimation(Sprite, name, frames, frameRate, looped);
+		return new FlxAnimation(Parent, name, frames, frameRate, looped);
 	}
 }
