@@ -25,7 +25,7 @@ class FlxAnimationController
 		{
 			_sprite.frame = _sprite.framesData.frames[Value];
 			
-			if ((index != Value || callbackEveryFrame) && callback != null)
+			if (callback != null)
 			{
 				callback(((_curAnim != null) ? (_curAnim.name) : null), _curAnim.curFrame, _curAnim.curIndex);
 			}
@@ -70,12 +70,6 @@ class FlxAnimationController
 	 * A function that has 3 parameters: a string name, a frame number, and a frame index.
 	 */
 	public var callback:String->Int->Int->Void;
-	
-	/**
-	 * If set to true, the animation callback will trigger every frame instead of when the frame changes.
-	 * WARNING: You can slow down you application if you do this on many sprites.
-	 */
-	public var callbackEveryFrame:Bool = false;
 	
 	/**
 	 * Internal, reference to owner sprite.
