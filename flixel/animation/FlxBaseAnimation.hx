@@ -28,7 +28,7 @@ class FlxBaseAnimation
 	{
 		if (parent != null && parent.curAnim == this)
 		{
-			parent.index = Value;
+			parent.frameIndex = Value;
 		}
 		
 		return curIndex = Value;

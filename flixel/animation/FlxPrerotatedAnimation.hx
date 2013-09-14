@@ -48,7 +48,7 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 	{
 		if (parent != null)
 		{
-			parent.index = Value;
+			parent.frameIndex = Value;
 		}
 		
 		return curIndex = Value;

@@ -67,7 +67,7 @@ class FlxAnimation extends FlxBaseAnimation
 		frameRate = FrameRate;
 		frames = Frames;
 		looped = Looped;
-		finished = false;
+		finished = true;
 		paused = true;
 		curFrame = 0;
 		curIndex = 0;
@@ -89,6 +89,8 @@ class FlxAnimation extends FlxBaseAnimation
 		if (!Force && (looped || !finished))
 		{
 			paused = false;
+			finished = false;
+			curFrame = curFrame;
 			return;
 		}
 		
