@@ -107,7 +107,7 @@ class FlxAnimationController
 		}
 		else if (_prerotated != null)
 		{
-			_prerotated.update();
+			_prerotated.angle = _sprite.angle;
 		}
 	}
 	

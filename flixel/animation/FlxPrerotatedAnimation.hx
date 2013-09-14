@@ -44,6 +44,16 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 		return angle = Value;
 	}
 	
+	override private function set_curIndex(Value:Int):Int
+	{
+		if (parent != null)
+		{
+			parent.index = Value;
+		}
+		
+		return curIndex = Value;
+	}
+	
 	override public function clone(Parent:FlxAnimationController):FlxPrerotatedAnimation 
 	{
 		return new FlxPrerotatedAnimation(Parent, baked);
