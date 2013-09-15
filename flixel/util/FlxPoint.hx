@@ -7,6 +7,8 @@ interface IFlxPoint {
 	public var y(default, set):Float;
 	
 	public function set(X:Float = 0, Y:Float = 0):FlxPoint;
+	public function copyFrom(point:FlxPoint):FlxPoint;
+	public function copyTo(point:FlxPoint = null):FlxPoint;
 	public function destroy():Void;
 }
 
@@ -63,7 +65,7 @@ class FlxPoint implements IFlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to itself.
 	 */
-	inline public function copyFrom(point:FlxPoint):FlxPoint
+	public function copyFrom(point:FlxPoint):FlxPoint
 	{
 		x = point.x;
 		y = point.y;
@@ -75,7 +77,7 @@ class FlxPoint implements IFlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	inline public function copyTo(point:FlxPoint = null):FlxPoint
+	public function copyTo(point:FlxPoint = null):FlxPoint
 	{
 		if (point == null)
 		{
@@ -91,7 +93,7 @@ class FlxPoint implements IFlxPoint
 	 * @param	Point	Any <code>Point</code>.
 	 * @return	A reference to itself.
 	 */
-	inline public function copyFromFlash(FlashPoint:Point):FlxPoint
+	public function copyFromFlash(FlashPoint:Point):FlxPoint
 	{
 		x = FlashPoint.x;
 		y = FlashPoint.y;
@@ -103,7 +105,7 @@ class FlxPoint implements IFlxPoint
 	 * @param	Point	Any <code>Point</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	inline public function copyToFlash(FlashPoint:Point):Point
+	public function copyToFlash(FlashPoint:Point):Point
 	{
 		FlashPoint.x = x;
 		FlashPoint.y = y;
@@ -113,7 +115,7 @@ class FlxPoint implements IFlxPoint
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
-	inline public function toString():String
+	public function toString():String
 	{
 		return FlxStringUtil.getClassName(this, true);
 	}

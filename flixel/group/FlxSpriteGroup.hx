@@ -179,7 +179,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		// Transform children by the movement delta
 		var dx:Float = X - x;
 		var dy:Float = Y - y;
-		multiTransformChildren<Float>([xTransform, yTransform], [dx, dy]);
+		multiTransformChildren([xTransform, yTransform], [dx, dy]);
 		
 		// don't transform children twice
 		_skipTransformChildren = true;
@@ -193,13 +193,13 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	 * @param 	Function 	Function to transform the sprites. Example: <code>function(s:IFlxSprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }</code>
 	 * @param 	Value  		Value which will passed to lambda function
 	 */
-	@generic public function transformChildren<T>(Function:IFlxSprite->T->Void, Value:T = 0):Void
+	@:generic public function transformChildren<T>(Function:FlxSprite->T->Void, Value:T):Void
 	{
-		var sprite:IFlxSprite;
+		var sprite:FlxSprite;
 		
 		for (i in 0...length)
 		{
-			sprite = members[i];
+			sprite = cast members[i];
 			
 			if (sprite != null && sprite.exists)
 			{
@@ -213,7 +213,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	 * @param	FunctionArray	Array of functions to transform sprites in this group.
 	 * @param	ValueArray		Array of values which will be passed to lambda functions
 	 */
-	@generic public function multiTransformChildren<T>(FunctionArray:Array<IFlxSprite->T->Void>, ValueArray:Array<T>):Void
+	@:generic public function multiTransformChildren<T>(FunctionArray:Array<FlxSprite->T->Void>, ValueArray:Array<T>):Void
 	{
 		var numProps:Int = FunctionArray.length;
 		
@@ -222,12 +222,12 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 			return;
 		}
 		
-		var sprite:IFlxSprite;
-		var lambda:IFlxSprite->T->Void;
+		var sprite:FlxSprite;
+		var lambda:FlxSprite->T->Void;
 		
 		for (i in 0...length)
 		{
-			sprite = members[i];
+			sprite = cast members[i];
 			
 			if (sprite != null && sprite.exists)
 			{
@@ -247,7 +247,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		if (!_skipTransformChildren)
 		{
 			var offset:Float = NewX - x;
-			transformChildren<Float>(xTransform, offset);
+			transformChildren(xTransform, offset);
 		}
 		
 		return x = NewX;
@@ -258,7 +258,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		if (!_skipTransformChildren)
 		{
 			var offset:Float = NewY - y;
-			transformChildren<Float>(yTransform, offset);
+			transformChildren(yTransform, offset);
 		}
 		
 		return y = NewY;
@@ -285,7 +285,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		
 		if (!_skipTransformChildren)
 		{
-			transformChildren<Float>(alphaTransform, alpha);
+			transformChildren(alphaTransform, alpha);
 		}
 		
 		return NewAlpha;
@@ -293,32 +293,32 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	
 	private function set_facing(Value:Int):Int
 	{
-		transformChildren<Int>(facingTransform, Value);
+		transformChildren(facingTransform, Value);
 		return facing = Value;
 	}
 	
 	private function set_immovable(Value:Bool):Bool
 	{
-		transformChildren<Bool>(immovableTransform, Value);
+		transformChildren(immovableTransform, Value);
 		return immovable = Value;
 	}
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
 	
-	private function xTransform(Sprite:IFlxSprite, X:Float)							{ Sprite.x += X; }							// addition
-	private function yTransform(Sprite:IFlxSprite, Y:Float)							{ Sprite.y += Y; }							// addition
-	private function angleTransform(Sprite:IFlxSprite, angle:Float)					{ Sprite.angle += Y; }						// addition
-	private function alphaTransform(Sprite:IFlxSprite, alpha:Float)					{ Sprite.alpha += Alpha; }					// addition
-	private function facingTransform(Sprite:IFlxSprite, Facing:Int)					{ Sprite.facing = Facing; }					// set
-	private function immovableTransform(Sprite:IFlxSprite, Immovable:Bool)			{ Sprite.immovable = Immovable; }			// set
-	private function offsetTransform(Sprite:IFlxSprite, Offset:FlxPoint)			{ Sprite.offset.set(Offset); }				// set
-	private function originTransform(Sprite:IFlxSprite, Origin:FlxPoint)			{ Sprite.origin.set(Origin); }				// set
-	private function scaleTransform(Sprite:IFlxSprite, Scale:FlxPoint)				{ Sprite.scale.set(Scale); }				// set
-	private function velocityTransform(Sprite:IFlxSprite, Selocity:FlxPoint)		{ Sprite.velocity.set(Velocity); }			// set
-	private function maxVelocityTransform(Sprite:IFlxSprite, MaxVelocity:FlxPoint)	{ Sprite.maxVelocity.set(MaxVelocity); }	// set
-	private function accelerationTranform(Sprite:IFlxSprite, Acceleration:FlxPoint)	{ Sprite.acceleration.set(Acceleration); }	// set
-	private function scrollFactorTranform(Sprite:IFlxSprite, ScrollFactor:FlxPoint)	{ Sprite.scrollFactor.set(ScrollFactor); }	// set
-	private function dragTranform(Sprite:IFlxSprite, Drag:FlxPoint)					{ Sprite.drag.set(Drag); }					// set
+	private function xTransform(Sprite:FlxSprite, X:Float)							{ Sprite.x += X; }								// addition
+	private function yTransform(Sprite:FlxSprite, Y:Float)							{ Sprite.y += Y; }								// addition
+	private function angleTransform(Sprite:FlxSprite, Angle:Float)					{ Sprite.angle += Angle; }						// addition
+	private function alphaTransform(Sprite:FlxSprite, Alpha:Float)					{ Sprite.alpha += Alpha; }						// addition
+	private function facingTransform(Sprite:FlxSprite, Facing:Int)					{ Sprite.facing = Facing; }						// set
+	private function immovableTransform(Sprite:FlxSprite, Immovable:Bool)			{ Sprite.immovable = Immovable; }				// set
+	private function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)				{ Sprite.offset.copyFrom(Offset); }				// set
+	private function originTransform(Sprite:FlxSprite, Origin:FlxPoint)				{ Sprite.origin.copyFrom(Origin); }				// set
+	private function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)				{ Sprite.scale.copyFrom(Scale); }				// set
+	private function velocityTransform(Sprite:FlxSprite, Velocity:FlxPoint)			{ Sprite.velocity.copyFrom(Velocity); }			// set
+	private function maxVelocityTransform(Sprite:FlxSprite, MaxVelocity:FlxPoint)	{ Sprite.maxVelocity.copyFrom(MaxVelocity); }	// set
+	private function accelerationTranform(Sprite:FlxSprite, Acceleration:FlxPoint)	{ Sprite.acceleration.copyFrom(Acceleration); }	// set
+	private function scrollFactorTranform(Sprite:FlxSprite, ScrollFactor:FlxPoint)	{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
+	private function dragTranform(Sprite:FlxSprite, Drag:FlxPoint)					{ Sprite.drag.copyFrom(Drag); }					// set
 }
 
 /**
@@ -329,9 +329,9 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 private class FlxPointHelper extends FlxPoint
 {
 	private var _parent:FlxSpriteGroup;
-	private var _transformFunc:IFlxSprite->FlxPoint->Void;
+	private var _transformFunc:FlxSprite->FlxPoint->Void;
 	
-	public function new(parent:FlxSpriteGroup, transformFunc:IFlxSprite->FlxPoint->Void)
+	public function new(parent:FlxSpriteGroup, transformFunc:FlxSprite->FlxPoint->Void)
 	{
 		_parent = parent;
 		super(0, 0);
@@ -340,21 +340,21 @@ private class FlxPointHelper extends FlxPoint
 	inline override public function set(X:Float = 0, Y:Float = 0):FlxPointHelper
 	{
 		super.set(X, Y);
-		_parent.transformChildren<FlxPoint>(_transformFunc, this);
+		_parent.transformChildren(_transformFunc, this);
 		return this;
 	}
 	
 	inline override private function set_x(Value:Float):Float
 	{
 		x = Value;
-		_parent.transformChildren<FlxPoint>(_transformFunc, this);
+		_parent.transformChildren(_transformFunc, this);
 		return x;
 	}
 	
 	inline override private function set_y(Value:Float):Float
 	{
-		y = Value
-		_parent.transformChildren<FlxPoint>(_transformFunc, this);
+		y = Value;
+		_parent.transformChildren(_transformFunc, this);
 		return y;
 	}
 	
