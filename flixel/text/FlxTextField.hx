@@ -102,25 +102,14 @@ class FlxTextField extends FlxText
 	 * @param	Size		The size of the font (in pixels essentially).
 	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
+	 * @param	BorderStyle	FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat
+	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	override public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
+	override public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=FlxText.BORDER_NONE, BorderColor:Int=0x000000):FlxText
 	{
-		if (Font == null)
-		{
-			_format.font = FlxAssets.FONT_DEFAULT;
-		}
-		else 
-		{
-			_format.font = Assets.getFont(Font).fontName;
-		}
-		
-		_format.size = Size;
-		_format.color = Color;
-		_format.align = convertTextAlignmentFromString(Alignment);
+		super.setFormat(Font, Size, Color, Alignment, BorderStyle, BorderColor);
 		updateTextField();
-		
 		return this;
 	}
 	
@@ -136,7 +125,6 @@ class FlxTextField extends FlxText
 	{
 		_text = Text;
 		updateTextField();
-		
 		return text;
 	}
 	
@@ -144,7 +132,6 @@ class FlxTextField extends FlxText
 	{
 		_format.size = Size;
 		updateTextField();
-		
 		return Size;
 	}
 	
@@ -152,20 +139,13 @@ class FlxTextField extends FlxText
 	{
 		_format.color = Color;
 		updateTextField();
-		
 		return Color;
-	}
-	
-	override private function set_useShadow(Value:Bool):Bool
-	{
-		return Value;
 	}
 	
 	override private function set_font(Font:String):String
 	{
 		_format.font = Assets.getFont(Font).fontName;
 		updateTextField();
-		
 		return Font;
 	}
 	
@@ -173,26 +153,7 @@ class FlxTextField extends FlxText
 	{
 		_format.align = convertTextAlignmentFromString(Alignment);
 		updateTextField();
-		
 		return Alignment;
-	}
-	
-	/**
-	 * The color of the text shadow in 0xAARRGGBB hex format.
-	 */
-	override private function get_shadow():Int
-	{
-		// Shadows are not supported
-		return 0;
-	}
-	
-	/**
-	 * @private
-	 */
-	override private function set_shadow(Color:Int):Int
-	{
-		// Shadows are not supported
-		return 0;
 	}
 	
 	override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void 
@@ -504,17 +465,7 @@ class FlxTextField extends FlxText
 		return Value;
 	}
 	
-	/**
-	 * Defines the color of border around text field. Default is 0x000000 (black).
-	 */
-	public var borderColor(get, set):Int;
-	
-	private function get_borderColor():Int 
-	{
-		return _textField.borderColor;
-	}
-	
-	private function set_borderColor(Value:Int):Int 
+	override private function set_borderColor(Value:Int):Int 
 	{
 		_borderColor = Value;
 		updateTextField();

@@ -20,7 +20,77 @@ import openfl.Assets;
  * as long as they are only one liners.
  */
 class FlxText extends FlxSprite
-{			
+{
+	/**
+	 * The text being displayed.
+	 */
+	public var text(get, set):String;
+	
+	/**
+	 * The size of the text being displayed.
+	 */
+	public var size(get, set):Float;
+	
+	/**
+	 * The font used for this text.
+	 */
+	public var font(get, set):String;
+	
+	/**
+	 * The alignment of the font ("left", "right", or "center").
+	 */
+	public var alignment(get, set):String;
+	
+	/**
+	 * Whether this text field can be changed (text or appearance).
+	 * Once set to true it can't be changed anymore.
+	 * Maybe usefull for cpp and neko targets, 
+	 * since if you set it to true then you can insert text's image into other atlas.
+	 */
+	public var isStatic(get, set):Bool;
+	
+	/**
+	 * Use a border style like FlxText.SHADOW or FlxText.OUTLINE
+	 */	
+	public var borderStyle(default, set):Int = BORDER_NONE;
+	
+	/**
+	 * The color of the border in 0xRRGGBB format
+	 */	
+	public var borderColor(default, set):Int = 0x000000;
+	
+	/**
+	 * The size of the border, in pixels.
+	 */
+	public var borderSize(default, set):Float = 1;
+	
+	/**
+	 * How many iterations do use when drawing the border. 0: only 1 iteration, 1: one iteration for every pixel in borderSize
+	 * A value of 1 will have the best quality for large border sizes, but might reduce performance when changing text. 
+	 * NOTE: If the borderSize is 1, borderQuality of 0 or 1 will have the exact same effect (and performance).
+	 */
+	public var borderQuality(default, set):Float = 1;
+	
+	/**
+	 * No border style
+	 */	
+	public static inline var BORDER_NONE:Int = 0;
+	
+	/**
+	 * A simple shadow to the lower-right
+	 */
+	public static inline var BORDER_SHADOW:Int = 1;
+	
+	/**
+	 * Outline on all 8 sides
+	 */
+	public static inline var BORDER_OUTLINE:Int = 2;
+	
+	/**
+	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
+	 */
+	public static inline var BORDER_OUTLINE_FAST:Int = 3;
+	
 	/**
 	 * Internal reference to a Flash <code>TextField</code> object.
 	 */
@@ -39,26 +109,6 @@ class FlxText extends FlxSprite
 	 */
 	private var _regen:Bool = true;
 	
-	/**
-	 * No border style
-	 */	
-	public static inline var NONE:Int = 0;				
-	
-	/**
-	 * A simple shadow to the lower-right
-	 */
-	public static inline var SHADOW:Int = 1;			
-	
-	/**
-	 * Outline on all 8 sides
-	 */
-	public static inline var OUTLINE:Int = 2;			
-	
-	/**
-	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
-	 */
-	public static inline var OUTLINE_FAST:Int = 3;		
-		
 	private var _isStatic:Bool = false;
 	
 	/**
@@ -148,7 +198,7 @@ class FlxText extends FlxSprite
 	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=NONE, BorderColor:Int=0x000000):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=BORDER_NONE, BorderColor:Int=0x000000):FlxText
 	{
 		if (_isStatic)
 		{
@@ -192,11 +242,6 @@ class FlxText extends FlxSprite
 		return Width;
 	}
 	
-	/**
-	 * The text being displayed.
-	 */
-	public var text(get, set):String;
-	
 	private function get_text():String
 	{
 		return _textField.text;
@@ -219,11 +264,6 @@ class FlxText extends FlxSprite
 		
 		return _textField.text;
 	}
-	
-	/**
-	 * The size of the text being displayed.
-	 */
-	public var size(get, set):Float;
 	
 	private function get_size():Float
 	{
@@ -266,11 +306,6 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	/**
-	 * The font used for this text.
-	 */
-	public var font(get, set):String;
-	
 	private function get_font():String
 	{
 		return _format.font;
@@ -290,11 +325,6 @@ class FlxText extends FlxSprite
 		
 		return Font;
 	}
-	
-	/**
-	 * The alignment of the font ("left", "right", or "center").
-	 */
-	public var alignment(get, set):String;
 	
 	private function get_alignment():String
 	{
@@ -332,11 +362,6 @@ class FlxText extends FlxSprite
 		borderQuality = Quality;
 	}
 	
-	/**
-	 * Use a border style like FlxText.SHADOW or FlxText.OUTLINE
-	 */	
-	public var borderStyle(default, set):Int = NONE;
-	
 	private function set_borderStyle(style:Int):Int
 	{		
 		if (_isStatic)
@@ -353,11 +378,6 @@ class FlxText extends FlxSprite
 		return borderStyle;
 	}
 	
-	/**
-	 * The color of the border in 0xRRGGBB format
-	 */	
-	public var borderColor(default, set):Int = 0x000000;
-	
 	private function set_borderColor(Color:Int):Int
 	{
 		if (_isStatic) {
@@ -366,7 +386,7 @@ class FlxText extends FlxSprite
 		
 		Color &= 0x00ffffff;
 		
-		if (borderColor != Color && borderStyle != NONE)
+		if (borderColor != Color && borderStyle != BORDER_NONE)
 		{
 			dirty = true;
 		}
@@ -375,35 +395,21 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	/**
-	 * The size of the border, in pixels.
-	 */
-	
-	public var borderSize(default, set):Float = 1;
-		
 	private function set_borderSize(Value:Float):Float
 	{
 		if (_isStatic)
 		{
 			return Value;
 		}
-		if (Value != borderSize && borderStyle != NONE)
+		if (Value != borderSize && borderStyle != BORDER_NONE)
 		{			
 			_regen = true;
 			dirty = true;
 		}
-		borderSize = Value;		
+		borderSize = Value;
 		
 		return Value;
 	}
-	
-	/**
-	 * How many iterations do use when drawing the border. 0: only 1 iteration, 1: one iteration for every pixel in borderSize
-	 * A value of 1 will have the best quality for large border sizes, but might reduce performance when changing text. 
-	 * NOTE: If the borderSize is 1, borderQuality of 0 or 1 will have the exact same effect (and performance).
-	 */
-	
-	public var borderQuality(default, set):Float = 1;
 	
 	private function set_borderQuality(Value:Float):Float
 	{
@@ -412,7 +418,7 @@ class FlxText extends FlxSprite
 		else if (Value > 1)
 			Value = 1;
 		
-		if (Value != borderQuality && borderStyle != NONE)
+		if (Value != borderQuality && borderStyle != BORDER_NONE)
 		{
 			dirty = true;
 		}
@@ -420,14 +426,6 @@ class FlxText extends FlxSprite
 		
 		return Value;
 	}
-		
-	/**
-	 * Whether this text field can be changed (text or appearance).
-	 * Once set to true it can't be changed anymore.
-	 * Maybe usefull for cpp and neko targets, 
-	 * since if you set it to true then you can insert text's image into other atlas.
-	 */
-	public var isStatic(get, set):Bool;
 	
 	private function get_isStatic():Bool 
 	{
@@ -463,7 +461,7 @@ class FlxText extends FlxSprite
 			{
 				_textField.filters = _filters;
 			}
-		
+			
 			if (_regen)
 			{
 				// Need to generate a new buffer to store the text graphic
@@ -483,7 +481,7 @@ class FlxText extends FlxSprite
 				_regen = false;
 			}
 			// Else just clear the old buffer before redrawing the text
-			else	
+			else
 			{
 				cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
 			}
@@ -516,8 +514,8 @@ class FlxText extends FlxSprite
 					#end
 				}
 				
-				if (borderStyle != NONE)
-				{				
+				if (borderStyle != BORDER_NONE)
+				{
 					var iterations:Int = Std.int(borderSize * borderQuality);
 					if (iterations <= 0) 
 					{ 
@@ -525,7 +523,7 @@ class FlxText extends FlxSprite
 					}
 					var delta:Float = (borderSize / iterations);
 					
-					if (borderStyle == SHADOW) 
+					if (borderStyle == BORDER_SHADOW) 
 					{
 						//Render a shadow beneath the text
 						//(do one lower-right offset draw call)
@@ -540,9 +538,9 @@ class FlxText extends FlxSprite
 						
 						_matrix.translate(-borderSize, -borderSize);
 						_formatAdjusted.color = _format.color;
-						updateFormat(_formatAdjusted);							
+						updateFormat(_formatAdjusted);
 					}
-					else if (borderStyle == OUTLINE) 
+					else if (borderStyle == BORDER_OUTLINE) 
 					{
 						//Render an outline around the text
 						//(do 8 offset draw calls)
@@ -573,14 +571,14 @@ class FlxText extends FlxSprite
 						} 
 						
 						_formatAdjusted.color = _format.color;
-						updateFormat(_formatAdjusted);			
+						updateFormat(_formatAdjusted);
 					}
-					else if (borderStyle == OUTLINE_FAST) 
+					else if (borderStyle == BORDER_OUTLINE_FAST) 
 					{
 						//Render an outline around the text
 						//(do 4 diagonal offset draw calls)
 						//(this method might not work with certain narrow fonts)
-					    _formatAdjusted.color = borderColor;						
+					    _formatAdjusted.color = borderColor;
 						updateFormat(_formatAdjusted);
 						
 						var itd:Float = delta;
