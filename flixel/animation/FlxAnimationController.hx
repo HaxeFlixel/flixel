@@ -10,14 +10,29 @@ import flixel.util.FlxRandom;
 class FlxAnimationController  
 {
 	/**
-	 * Property access for currently playing FlxAnimation (warning: can be null).
+	 * Property access for currently playing animation (warning: can be null).
 	 */
 	public var curAnim(get, set):FlxAnimation;
 	
 	/**
-	 * Tell the sprite to change to a specific frame of the _curAnim.
+	 * Gets or sets the currently playing animation (warning: can be null).
 	 */
-	@:isVar public var frameIndex(default, set):Int = 0;
+	public var name(get, set):String;
+	
+	/**
+	 * Pause & resume currently playing animation (if any).
+	 */
+	public var paused(get, set):Bool;
+	
+	/**
+	 * Returns whether an animation is finished playing.
+	 */
+	public var finished(get, set):Bool;
+	
+	/**
+	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
+	 */
+	public var frames(get, null):Int;
 	
 	/**
 	 * Tell the sprite to change to a frame with specific name.
@@ -26,24 +41,9 @@ class FlxAnimationController
 	public var frameName(get, set):String;
 	
 	/**
-	 * Gets or sets the currently playing _animations (warning: can be null).
+	 * Gets ot sets the frame of the currently playing animation.
 	 */
-	public var name(get, set):String;
-	
-	/**
-	 * Pause & resume _curAnim.
-	 */
-	public var paused(get, set):Bool;
-	
-	/**
-	 * Returns whether an _animations is finished playing.
-	 */
-	public var finished(get, set):Bool;
-	
-	/**
-	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
-	 */
-	public var frames(get, null):Int;
+	@:isVar public var frameIndex(default, set):Int = 0;
 	
 	/**
 	 * If assigned, will be called each time the current frame changes.
@@ -315,11 +315,12 @@ class FlxAnimationController
 			if (_curAnim != null)
 			{
 				_curAnim.stop();
+				FlxG.log.warn("Passed 'null' to animation.play() - stopped existing animation \"" + _curAnim.name + "\"");
 			}
 			_curAnim = null;
+			return;
 		}
-		
-		if (_animations.get(AnimName) == null)
+		else if (_animations.get(AnimName) == null)
 		{
 			FlxG.log.warn("No animation called \"" + AnimName + "\"");
 			return;
