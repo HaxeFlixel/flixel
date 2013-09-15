@@ -15,8 +15,8 @@ class Coin extends FlxSprite
 		super(X, Y);
 		
 		loadGraphic("assets/art/coinspin.png", true, false);
-		addAnimation("spinning", [0, 1, 2, 3, 4, 5], 10, true);
-		play("spinning");
+		animation.add("spinning", [0, 1, 2, 3, 4, 5], 10, true);
+		animation.play("spinning");
 	}
 	
 	override public function kill():Void 
