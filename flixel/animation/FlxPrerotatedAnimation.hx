@@ -25,7 +25,7 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 	
 	private function set_angle(Value:Float):Float
 	{
-		var oldIndex:Int = curIndex;
+		var oldIndex:Int = frameIndex;
 		var angleHelper:Int = Math.floor(Value % 360);
 		
 		while (angleHelper < 0)
@@ -34,24 +34,14 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 		}
 		
 		var newIndex:Int = Math.floor(angleHelper / baked + 0.5);
-		newIndex = Std.int(curIndex % rotations);
+		newIndex = Std.int(frameIndex % rotations);
 		
 		if (oldIndex != newIndex)
 		{
-			curIndex = newIndex;
+			frameIndex = newIndex;
 		}
 		
 		return angle = Value;
-	}
-	
-	override private function set_curIndex(Value:Int):Int
-	{
-		if (parent != null)
-		{
-			parent.frameIndex = Value;
-		}
-		
-		return curIndex = Value;
 	}
 	
 	override public function clone(Parent:FlxAnimationController):FlxPrerotatedAnimation 

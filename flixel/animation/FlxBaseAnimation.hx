@@ -20,18 +20,17 @@ class FlxBaseAnimation
 	
 	/**
 	 * Keeps track of the current index into the tile sheet based on animation or rotation.
-	 * Allow access to private var from FlxAnimationController.
+	 * Setting this triggers a callback to be fired on the parent controller.
 	 */
-	public var curIndex(default, set):Int = 0;
+	public var frameIndex(default, set):Int = 0;
 	
-	private function set_curIndex(Value:Int):Int
+	private function set_frameIndex(Value:Int):Int
 	{
-		if (parent != null && parent.curAnim == this)
+		if (parent != null && parent._curAnim == this)
 		{
 			parent.frameIndex = Value;
 		}
-		
-		return curIndex = Value;
+		return frameIndex = Value;
 	}
 	
 	public function new(Parent:FlxAnimationController, Name:String)
@@ -40,19 +39,9 @@ class FlxBaseAnimation
 		name = Name;
 	}
 	
-	public function destroy():Void
-	{
-		parent = null;
-	}
+	public function destroy():Void { parent = null; }
 	
-	public function update():Void
-	{
-		
-	}
+	public function update():Void { }
 	
-	public function clone(Parent:FlxAnimationController):FlxBaseAnimation
-	{
-		return null;
-	}
-	
+	public function clone(Parent:FlxAnimationController):FlxBaseAnimation { return null; }
 }

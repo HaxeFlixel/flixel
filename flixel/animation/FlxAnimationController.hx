@@ -2,10 +2,10 @@ package flixel.animation;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxRandom;
+import flixel.util.FlxArrayUtil;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxRandom;
 
 class FlxAnimationController  
 {
@@ -57,9 +57,9 @@ class FlxAnimationController
 	private var _sprite:FlxSprite;
 	
 	/**
-	 * Internal, currently playing animation.
+	 * Internal, currently playing animation. FlxAnimationBase needs access to this.
 	 */
-	private var _curAnim:FlxAnimation;
+	@:allow(flixel.animation) private var _curAnim:FlxAnimation;
 	
 	/**
 	 * Internal, store all the _animations that were added to this sprite.
@@ -430,7 +430,7 @@ class FlxAnimationController
 			{
 				var anim:FlxAnimation = _curAnim;
 				_curAnim = null;
-				anim.curIndex = Frame;
+				anim.frameIndex = Frame;
 				_curAnim = anim;
 			}
 			

@@ -70,7 +70,7 @@ class FlxAnimation extends FlxBaseAnimation
 		finished = true;
 		paused = true;
 		curFrame = 0;
-		curIndex = 0;
+		frameIndex = 0;
 		_frameTimer = 0;
 	}
 	
@@ -140,21 +140,7 @@ class FlxAnimation extends FlxBaseAnimation
 			while (_frameTimer > delay)
 			{
 				_frameTimer = _frameTimer - delay;
-				if (curFrame == frames.length - 1)
-				{
-					if (looped)
-					{
-						curFrame = 0;
-					}
-					else
-					{
-						finished = true;
-					}
-				}
-				else
-				{
-					curFrame++;
-				}
+				curFrame++;
 			}
 		}
 	}
@@ -181,19 +167,25 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		if (Frame >= 0 && Frame < num)
 		{
-			if (!looped && (Frame == num - 1))
-			{
-				finished = true;
-			}
-			
 			curFrame = Frame;
+			if (curFrame == num - 1)
+			{
+				if (looped)
+				{
+					curFrame = 0;
+				}
+				else
+				{
+					finished = true;
+				}
+			}
 		}
 		else if (Frame < 0)
 		{
 			curFrame = Std.int(Math.random() * frames.length);
 		}
 		
-		curIndex = frames[curFrame];
+		frameIndex = frames[curFrame];
 		return Frame;
 	}
 	
