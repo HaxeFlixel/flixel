@@ -31,9 +31,9 @@ class Player extends FlxSprite
 		maxVelocity.y = _jumpPower;
 		
 		//animations
-		addAnimation("idle", [0]);
-		addAnimation("run", [1, 2, 3, 0], 12);
-		addAnimation("jump", [4]);
+		animation.add("idle", [0]);
+		animation.add("run", [1, 2, 3, 0], 12);
+		animation.add("jump", [4]);
 	}
 	
 	override public function update():Void
@@ -60,15 +60,15 @@ class Player extends FlxSprite
 		// ANIMATION
 		if (velocity.y != 0)
 		{
-			play("jump");
+			animation.play("jump");
 		}
 		else if (velocity.x == 0)
 		{
-			play("idle");
+			animation.play("idle");
 		}
 		else
 		{
-			play("run");
+			animation.play("run");
 		}
 		
         super.update();
