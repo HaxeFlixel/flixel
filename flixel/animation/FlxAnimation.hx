@@ -177,8 +177,15 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	private function set_curFrame(Frame:Int):Int
 	{
-		if (Frame >= 0 && Frame < frames.length)
+		var num:Int = frames.length;
+		
+		if (Frame >= 0 && Frame < num)
 		{
+			if (!looped && (Frame == num - 1))
+			{
+				finished = true;
+			}
+			
 			curFrame = Frame;
 		}
 		else if (Frame < 0)
