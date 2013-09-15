@@ -75,10 +75,10 @@ class PlayState extends FlxState
 		// Creating the player sprite, loading the sprite sheet and adding animations
 		_player = new FlxSprite(240, 200);
 		_player.loadGraphic("assets/aye.png", true, true, 32, 32);
-		_player.addAnimation("idle", [0]);
-		_player.addAnimation("walk", [1, 2, 3, 4, 5, 6], 6, true);
-		_player.addAnimation("down", [7]);
-		_player.addAnimation("jump", [8]);
+		_player.animation.add("idle", [0]);
+		_player.animation.add("walk", [1, 2, 3, 4, 5, 6], 6, true);
+		_player.animation.add("down", [7]);
+		_player.animation.add("jump", [8]);
 		add(_player);
 		
 		// Setting some gravity and speed along with a drag for the player
@@ -117,13 +117,13 @@ class PlayState extends FlxState
 		// If the player is moving in the y direction and not on the floor, he is jumping or falling
 		if (_player.velocity.y == 0 && !_player.isTouching(FlxObject.FLOOR)) 
 		{
-			_player.play("jump");
+			_player.animation.play("jump");
 		}
 		
 		// If the player is on the floor and not walking and the last animation has not finished then be idle
-		if (_player.isTouching(FlxObject.FLOOR) && !_flagWalking && _player.finished) 
+		if (_player.isTouching(FlxObject.FLOOR) && !_flagWalking && _player.animation.finished) 
 		{
-			_player.play("idle");
+			_player.animation.play("idle");
 		}
 		
 		// Check input and move left
@@ -136,7 +136,7 @@ class PlayState extends FlxState
 			if (_player.isTouching(FlxObject.FLOOR)) 
 			{
 				_flagWalking = true;
-				_player.play("walk");
+				_player.animation.play("walk");
 			}	
 		} 
 		else 
@@ -154,7 +154,7 @@ class PlayState extends FlxState
 			if (_player.isTouching(FlxObject.FLOOR)) 
 			{
 				_flagWalking = true;
-				_player.play("walk");
+				_player.animation.play("walk");
 			}
 		} 
 		else 
@@ -168,7 +168,7 @@ class PlayState extends FlxState
 			if (_player.isTouching(FlxObject.FLOOR)) 
 			{
 				_player.velocity.y = -_playerJump;
-				_player.play("jump");
+				_player.animation.play("jump");
 			}	
 		}
 		

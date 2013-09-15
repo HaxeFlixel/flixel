@@ -85,16 +85,16 @@ class PlayState extends FlxState
 		tx = new FlxText(2, 0, Std.int(FlxG.width / 2), FlxG.libraryName);
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
 		tx.color = 0x778ea1;
-		tx.shadow = 0x233e58;
-		tx.useShadow = true;
+		//tx.shadow = 0x233e58;
+		//tx.useShadow = true;
 		add(tx);
 		
 		// Instructions
 		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS / WASD, or press ENTER for next demo.");
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
 		tx.color = 0x778ea1;
-		tx.shadow = 0x233e58;
-		tx.useShadow = true;
+		//tx.shadow = 0x233e58;
+		//tx.useShadow = true;
 		tx.alignment = "center";
 		add(tx);
 	}
