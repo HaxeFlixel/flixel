@@ -1,5 +1,6 @@
 package;
 
+import flixel.text.FlxText;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -140,9 +141,9 @@ class PlayState extends FlxState
 		// that is, the player score, number of spawners left, etc.
 		// First, we'll create a text field for the current score
 		_score = new FlxText(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
-		_score.setFormat(null, 16, 0xd8eba2, "center", 0x131c1b, true);
+		_score.setFormat(null, 16, 0xd8eba2, "center", FlxText.OUTLINE, 0x131c1b );
 		_hud.add(_score);
-		
+
 		if (Reg.scores.length < 2)
 		{
 			Reg.scores.push(0);
@@ -158,7 +159,7 @@ class PlayState extends FlxState
 		if (Reg.scores[0] != 0)
 		{
 			_score2 = new FlxText(FlxG.width / 2, 0, Math.floor(FlxG.width / 2));
-			_score2.setFormat(null, 8, 0xd8eba2, "right", _score.shadow, true);
+			_score2.setFormat(null, 8, 0xd8eba2, "right", FlxText.SHADOW);
 			_hud.add(_score2);
 			_score2.text = "HIGHEST: " + Reg.scores[0] + "\nLAST: " + Reg.score;
 		}

@@ -37,10 +37,10 @@ class Lurker extends EnemyTemplate
 		_cooldown = 0;
 		
 		loadGraphic("assets/art/lurkmonsta.png", true, true, 16, 17);
-		addAnimation("walking", [0, 1], 18, true);
-		addAnimation("burning", [2, 3], 18, true);
-		addAnimation("wrecked", [4, 5], 18, true);
-		addAnimation("idle", [0]);
+		animation.add("walking", [0, 1], 18, true);
+		animation.add("burning", [2, 3], 18, true);
+		animation.add("wrecked", [4, 5], 18, true);
+		animation.add("idle", [0]);
 		drag.x = RUN_SPEED * 9;
 		drag.y = JUMP_SPEED * 7;
 		acceleration.y = GRAVITY;
@@ -64,23 +64,23 @@ class Lurker extends EnemyTemplate
 		
 		// Animation
 		if ((velocity.x == 0) && (velocity.y == 0)) 
-		{ 
-			play("idle"); 
+		{
+			animation.play("idle");
 		}
 		else if (health < HEALTH) 
 		{ 
 			if (velocity.y == 0) 
-			{ 
-				play("wrecked");
+			{
+				animation.play("wrecked");
 			}
 			else 
 			{
-				play("burning");
+				animation.play("burning");
 			} 
 		}
 		else 
-		{ 
-			play("walking"); 
+		{
+			animation.play("walking");
 		}	
 		
 		if (health > 0)
