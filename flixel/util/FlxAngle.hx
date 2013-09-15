@@ -37,7 +37,7 @@ class FlxAngle
 	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
 	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
 	 */
-	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:IFlxPoint):FlxPoint
+	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:IFlxPoint):IFlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
@@ -116,7 +116,7 @@ class FlxAngle
 		}
 		point.x = PivotX + cos * dx - sin * dy;
 		point.y = PivotY - sin * dx - cos * dy;
-		return cast point;
+		return point;
 	}
 	
 	/**
