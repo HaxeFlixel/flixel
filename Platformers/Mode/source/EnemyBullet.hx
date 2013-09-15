@@ -14,8 +14,8 @@ class EnemyBullet extends FlxSprite
 	{
 		super();
 		loadGraphic("assets/bot_bullet.png", true);
-		addAnimation("idle",[0, 1], 50);
-		addAnimation("poof",[2, 3, 4], 50, false);
+		animation.add("idle",[0, 1], 50);
+		animation.add("poof",[2, 3, 4], 50, false);
 		speed = 120;
 	}
 	
@@ -23,7 +23,7 @@ class EnemyBullet extends FlxSprite
 	{
 		if(!alive)
 		{
-			if(finished)
+			if(animation.finished)
 			{
 				exists = false;
 			}
@@ -50,7 +50,7 @@ class EnemyBullet extends FlxSprite
 		}
 		alive = false;
 		solid = false;
-		play("poof");
+		animation.play("poof");
 	}
 	
 	public function shoot(Location:FlxPoint, Angle:Float):Void
@@ -62,6 +62,6 @@ class EnemyBullet extends FlxSprite
 		velocity.x = _point.x;
 		velocity.y = _point.y;
 		solid = true;
-		play("idle");
+		animation.play("idle");
 	}
 }
