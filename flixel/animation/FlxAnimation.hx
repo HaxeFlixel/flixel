@@ -111,7 +111,7 @@ class FlxAnimation extends FlxBaseAnimation
 			curFrame = 0;
 		}
 		
-		if (delay <= 0)
+		if (delay <= 0 || (Frame == numFrames - 1))
 		{
 			finished = true;
 		}
@@ -140,7 +140,7 @@ class FlxAnimation extends FlxBaseAnimation
 			while (_frameTimer > delay)
 			{
 				_frameTimer = _frameTimer - delay;
-				if ((curFrame == numFrames - 1) && looped)
+				if (looped && (curFrame == numFrames - 1))
 				{
 					curFrame = 0;
 				}
@@ -165,16 +165,19 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	private function set_curFrame(Frame:Int):Int
 	{
-		if (Frame >= 0 && Frame < numFrames)
+		if (Frame >= 0)
 		{
-			if (!looped && (Frame == numFrames - 1))
+			if (!looped && Frame == numFrames)
 			{
 				finished = true;
+				curFrame = numFrames - 1;
 			}
-			
-			curFrame = Frame;
+			else
+			{
+				curFrame = Frame;
+			}
 		}
-		else if (Frame < 0)
+		else
 		{
 			curFrame = Std.int(Math.random() * numFrames);
 		}
