@@ -226,11 +226,11 @@ class VCRFrontEnd
 
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.vcr.stoppedRecording();
-		#end
-
-		var data:String = FlxG.game.replay.save();
-
 		FlxG.game.debugger.vcr.stoppedReplay();
+		#end
+		
+		var data:String = FlxG.game.replay.save();
+		
 		if((data != null) && (data.length > 0))
 		{
 			#if flash
