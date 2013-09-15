@@ -98,13 +98,13 @@ class PlayState extends FlxState
 		
 		// HUD - score
 		_score = new FlxText(0, 0, FlxG.width);
-		_score.setFormat(null, 16, FlxColor.YELLOW, "center",FlxText.OUTLINE, 0x131c1b);
+		_score.setFormat(null, 16, FlxColor.YELLOW, "center",FlxText.BORDER_OUTLINE, 0x131c1b);
 		_score.scrollFactor.set(0, 0);
 		add(_score);
 		
 		// Set up the game over text
 		_text1 = new FlxText(0, 30, FlxG.width, "Press R to Restart");
-		_text1.setFormat(null, 40, FlxColor.RED, "center", FlxText.OUTLINE, FlxColor.BLACK);
+		_text1.setFormat(null, 40, FlxColor.RED, "center", FlxText.BORDER_OUTLINE, FlxColor.BLACK);
 		_text1.visible = false;
 		_text1.antialiasing = true;
 		_text1.scrollFactor.set(0, 0);
