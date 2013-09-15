@@ -59,7 +59,7 @@ class FlxAnimationController
 	/**
 	 * Internal, currently playing animation.
 	 */
-	private var _curAnim:FlxAnimation;
+	@:allow(flixel.animation) private var _curAnim:FlxAnimation;
 	
 	/**
 	 * Internal, store all the _animations that were added to this sprite.
