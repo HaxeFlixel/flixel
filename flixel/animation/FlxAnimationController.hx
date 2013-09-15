@@ -2,37 +2,22 @@ package flixel.animation;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
-import flixel.util.FlxArrayUtil;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
+import flixel.util.FlxArrayUtil;
+import flixel.util.FlxRandom;
 
 class FlxAnimationController  
 {
 	/**
-	 * Property access for currently playing animation (warning: can be null).
+	 * Property access for currently playing FlxAnimation (warning: can be null).
 	 */
 	public var curAnim(get, set):FlxAnimation;
 	
 	/**
-	 * Gets or sets the currently playing animation (warning: can be null).
+	 * Tell the sprite to change to a specific frame of the _curAnim.
 	 */
-	public var name(get, set):String;
-	
-	/**
-	 * Pause & resume currently playing animation (if any).
-	 */
-	public var paused(get, set):Bool;
-	
-	/**
-	 * Returns whether an animation is finished playing.
-	 */
-	public var finished(get, set):Bool;
-	
-	/**
-	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
-	 */
-	public var frames(get, null):Int;
+	@:isVar public var frameIndex(default, set):Int = 0;
 	
 	/**
 	 * Tell the sprite to change to a frame with specific name.
@@ -41,9 +26,24 @@ class FlxAnimationController
 	public var frameName(get, set):String;
 	
 	/**
-	 * Gets ot sets the frame of the currently playing animation.
+	 * Gets or sets the currently playing _animations (warning: can be null).
 	 */
-	@:isVar public var frameIndex(default, set):Int = 0;
+	public var name(get, set):String;
+	
+	/**
+	 * Pause & resume _curAnim.
+	 */
+	public var paused(get, set):Bool;
+	
+	/**
+	 * Returns whether an _animations is finished playing.
+	 */
+	public var finished(get, set):Bool;
+	
+	/**
+	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
+	 */
+	public var frames(get, null):Int;
 	
 	/**
 	 * If assigned, will be called each time the current frame changes.
@@ -57,9 +57,9 @@ class FlxAnimationController
 	private var _sprite:FlxSprite;
 	
 	/**
-	 * Internal, currently playing animation. FlxAnimationBase needs access to this.
+	 * Internal, currently playing animation.
 	 */
-	@:allow(flixel.animation) private var _curAnim:FlxAnimation;
+	private var _curAnim:FlxAnimation;
 	
 	/**
 	 * Internal, store all the _animations that were added to this sprite.
@@ -315,12 +315,11 @@ class FlxAnimationController
 			if (_curAnim != null)
 			{
 				_curAnim.stop();
-				FlxG.log.warn("Passed 'null' to animation.play() - stopped existing animation \"" + _curAnim.name + "\"");
 			}
 			_curAnim = null;
-			return;
 		}
-		else if (_animations.get(AnimName) == null)
+		
+		if (_animations.get(AnimName) == null)
 		{
 			FlxG.log.warn("No animation called \"" + AnimName + "\"");
 			return;
@@ -425,14 +424,6 @@ class FlxAnimationController
 		if (_sprite.framesData != null)
 		{
 			_sprite.frame = _sprite.framesData.frames[Frame];
-			
-			if (_curAnim != null)
-			{
-				var anim:FlxAnimation = _curAnim;
-				_curAnim = null;
-				anim.frameIndex = Frame;
-				_curAnim = anim;
-			}
 			
 			if (callback != null)
 			{

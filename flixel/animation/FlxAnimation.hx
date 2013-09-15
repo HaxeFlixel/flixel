@@ -26,7 +26,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 * Keeps track of the current frame of animation.
 	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
 	 */
-	public var curFrame(default, set):Int = 0;
+	@:isVar public var curFrame(default, set):Int = 0;
 	
 	/**
 	 * Whether the current animation has finished its first (or only) loop.
@@ -70,7 +70,6 @@ class FlxAnimation extends FlxBaseAnimation
 		finished = true;
 		paused = true;
 		curFrame = 0;
-		frameIndex = 0;
 		_frameTimer = 0;
 	}
 	
@@ -140,7 +139,14 @@ class FlxAnimation extends FlxBaseAnimation
 			while (_frameTimer > delay)
 			{
 				_frameTimer = _frameTimer - delay;
-				curFrame++;
+				if ((curFrame == frames.length - 1) && looped)
+				{
+					curFrame = 0;
+				}
+				else
+				{
+					curFrame++;
+				}
 			}
 		}
 	}
@@ -167,25 +173,19 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		if (Frame >= 0 && Frame < num)
 		{
-			curFrame = Frame;
-			if (curFrame == num - 1)
+			if (!looped && (Frame == num - 1))
 			{
-				if (looped)
-				{
-					curFrame = 0;
-				}
-				else
-				{
-					finished = true;
-				}
+				finished = true;
 			}
+			
+			curFrame = Frame;
 		}
 		else if (Frame < 0)
 		{
-			curFrame = Std.int(Math.random() * frames.length);
+			curFrame = Std.int(Math.random() * num);
 		}
 		
-		frameIndex = frames[curFrame];
+		curIndex = frames[curFrame];
 		return Frame;
 	}
 	
