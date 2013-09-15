@@ -95,7 +95,7 @@ class FlxAnimationController
 	{
 		for (anim in controller._animations)
 		{
-			add(anim.name, anim.frames, anim.frameRate, anim.looped);
+			add(anim.name, anim._frames, anim.frameRate, anim.looped);
 		}
 		
 		if (controller._prerotated != null)
@@ -339,7 +339,7 @@ class FlxAnimationController
 	 */
 	public function gotoAndPlay(Frame:Int = 0):Void
 	{
-		if (_curAnim == null || _curAnim.frames.length <= Frame)
+		if (_curAnim == null || _curAnim.numFrames <= Frame)
 		{
 			return;
 		}
@@ -353,7 +353,7 @@ class FlxAnimationController
 	 */
 	public function gotoAndPause(Frame:Int = 0):Void
 	{
-		if (_curAnim == null || _curAnim.frames.length <= Frame)
+		if (_curAnim == null || _curAnim.numFrames <= Frame)
 		{
 			return;
 		}
@@ -364,7 +364,7 @@ class FlxAnimationController
 	
 	public function gotoAndStop(Frame:Int = 0):Void
 	{
-		if (_curAnim == null || _curAnim.frames.length <= Frame)
+		if (_curAnim == null || _curAnim.numFrames <= Frame)
 		{
 			return;
 		}
