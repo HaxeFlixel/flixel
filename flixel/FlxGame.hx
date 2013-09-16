@@ -335,7 +335,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocusLost();
 	}
 	
-	private function onResize(E:Event):Void 
+	public function onResize(E:Event = null):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
