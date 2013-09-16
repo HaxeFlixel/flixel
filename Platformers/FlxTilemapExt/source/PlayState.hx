@@ -84,7 +84,7 @@ class PlayState extends FlxState
 		add(_hud);
 		
 		_levelText = new FlxText(FlxG.width - 100, 0, 100);
-		_levelText.setFormat(null, 8, 0xaaaaff, "right", 0x111122, true);
+		_levelText.setFormat(null, 8, 0xFFFFFFFF, "right");
 		_levelText.text = "Slope Test";
 		_levelText.scrollFactor.set();
 		_hud.add(_levelText);

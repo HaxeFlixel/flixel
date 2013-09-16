@@ -104,7 +104,7 @@ class PlayState extends FlxState
 		
 		// Set up the game over text
 		_text1 = new FlxText(0, 30, FlxG.width, "Press R to Restart");
-		_text1.setFormat(null, 40, FlxColor.RED, "center", FlxText.BORDER_NONE);
+		_text1.setFormat(null, 40, FlxColor.RED, "center", FlxText.BORDER_OUTLINE, FlxColor.BLACK);
 		_text1.visible = false;
 		_text1.antialiasing = true;
 		_text1.scrollFactor.set(0, 0);

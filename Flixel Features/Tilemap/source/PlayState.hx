@@ -97,9 +97,9 @@ class PlayState extends FlxState
 		_player.maxVelocity.set(120, 200);
 		
 		// Animations
-		_player.addAnimation("idle", [0]);
-		_player.addAnimation("run", [1, 2, 3, 0], 12);
-		_player.addAnimation("jump", [4]);
+		_player.animation.add("idle", [0]);
+		_player.animation.add("run", [1, 2, 3, 0], 12);
+		_player.animation.add("jump", [4]);
 		
 		add(_player);
 	}
@@ -151,22 +151,24 @@ class PlayState extends FlxState
 		// ANIMATION
 		if (_player.velocity.y != 0)
 		{
-			_player.play("jump");
+			_player.animation.play("jump");
 		}
 		else if (_player.velocity.x == 0)
 		{
-			_player.play("idle");
+			_player.animation.play("idle");
 		}
 		else
 		{
-			_player.play("run");
+			_player.animation.play("run");
 		}
 	}
 	
 	override public function draw():Void
 	{
 		super.draw();
-		_highlightBox.drawDebug();
+		#if !FLX_NO_DEBUG
+		_highlightBox.drawDebugOnCamera(FlxG.camera);
+		#end
 	}
 	
 	private function onAlt():Void

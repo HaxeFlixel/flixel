@@ -47,7 +47,7 @@ class PlayState2 extends FlxState
 		// Camera tracker
 		_focus = new FlxSprite(FlxG.width / 2, FlxG.height / 2);
 		_focus.loadGraphic("assets/gibs.png", true);
-		_focus.frame = 3;
+		_focus.animation.frameIndex = 3;
 		_focus.solid = false;
 		add(_focus);
 		
