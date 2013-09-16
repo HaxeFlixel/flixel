@@ -95,8 +95,16 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		
 		paused = false;
-		finished = false;
 		_frameTimer = 0;
+		
+		if (delay <= 0 || (Frame == numFrames - 1))
+		{
+			finished = true;
+		}
+		else
+		{
+			finished = false;
+		}
 		
 		if (Frame < 0)
 		{
@@ -109,15 +117,6 @@ class FlxAnimation extends FlxBaseAnimation
 		else
 		{
 			curFrame = 0;
-		}
-		
-		if (delay <= 0 || (Frame == numFrames - 1))
-		{
-			finished = true;
-		}
-		else
-		{
-			finished = false;
 		}
 	}
 	
@@ -167,7 +166,7 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		if (Frame >= 0)
 		{
-			if (!looped && Frame == numFrames)
+			if (!looped && Frame >= (numFrames - 1))
 			{
 				finished = true;
 				curFrame = numFrames - 1;
