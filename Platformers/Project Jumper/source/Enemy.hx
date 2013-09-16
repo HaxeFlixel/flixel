@@ -30,7 +30,7 @@ class Enemy extends EnemyTemplate
 		_spawntimer = 0;
 		
 		// Set up the graphics
-		loadGraphic("assets/art/spikemonsta.png", true, true);
+		loadGraphic("assets/art/spikemonsta.png", true, true); 
 		animation.add("walking", [0, 1], 10, true);
 		animation.add("idle", [0]);
 		
@@ -96,8 +96,8 @@ class Enemy extends EnemyTemplate
 		
 		// Animation
 		if ((velocity.x == 0) && (velocity.y == 0)) 
-		{
-			animation.play("idle");
+		{ 
+			animation.play("idle"); 
 		}
 		else 
 		{

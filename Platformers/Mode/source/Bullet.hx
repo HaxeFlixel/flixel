@@ -17,7 +17,7 @@ class Bullet extends FlxSprite
 		width = 6;
 		height = 6;
 		offset.set(1, 1);
-
+		
 		animation.add("up", [0]);
 		animation.add("down", [1]);
 		animation.add("left", [2]);
@@ -40,8 +40,7 @@ class Bullet extends FlxSprite
 		{
 			kill();
 		}
-
-        super.update();
+		super.update();
 	}
 	
 	override public function kill():Void

@@ -15,11 +15,16 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
+<<<<<<< HEAD
 	<!--<assets path="assets/data" rename ="data" />-->
 	<assets path="assets/images" rename ="images" />
 	<assets path="assets/maps" rename ="maps" />
 	<!--<assets path="assets/music" rename ="music"  />-->
 	<!--<assets path="assets/sounds" rename ="sounds" />-->
+=======
+	<assets path="assets/images" rename ="images" />
+	<assets path="assets/maps" rename ="maps" />
+>>>>>>> f09fd932f11aa2f4eebc32e1ebbfb55073f378a2
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>

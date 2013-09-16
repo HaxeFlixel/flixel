@@ -64,13 +64,13 @@ class Lurker extends EnemyTemplate
 		
 		// Animation
 		if ((velocity.x == 0) && (velocity.y == 0)) 
-		{
-			animation.play("idle");
+		{ 
+			animation.play("idle"); 
 		}
 		else if (health < HEALTH) 
 		{ 
 			if (velocity.y == 0) 
-			{
+			{ 
 				animation.play("wrecked");
 			}
 			else 
@@ -79,9 +79,9 @@ class Lurker extends EnemyTemplate
 			} 
 		}
 		else 
-		{
-			animation.play("walking");
-		}	
+		{ 
+			animation.play("walking"); 
+		}
 		
 		if (health > 0)
 		{

@@ -29,9 +29,9 @@ class Spawner extends FlxSprite
 		_open = false;
 		health = 8;
 
-		animation.add("dead", [6]);
-		animation.add("close", [4, 3, 2, 1, 0], 40, false);
 		animation.add("open", [1, 2, 3, 4, 5], 40, false);
+		animation.add("close", [4, 3, 2, 1, 0], 40, false);
+		animation.add("dead", [6]);
 	}
 	
 	override public function destroy():Void

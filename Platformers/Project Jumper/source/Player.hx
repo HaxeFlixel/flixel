@@ -42,7 +42,7 @@ class Player extends FlxSprite
 		_bullets = Bullets;
 		
 		//Set up the graphics
-		loadGraphic("assets/art/lizardhead3.png", true, true, 16, 20);
+		loadGraphic("assets/art/lizardhead3.png", true, true, 16, 20);  
 		animation.add("walking", [0, 1, 2, 3], 12, true);
 		animation.add("idle", [3]);
 		animation.add("jump", [2]);
@@ -184,16 +184,16 @@ class Player extends FlxSprite
 		
 		// Animations
 		if (velocity.x > 0 || velocity.x < 0 ) 
-		{
-			animation.play("walking");
+		{ 
+			animation.play("walking"); 
 		}
 		else if (velocity.x == 0) 
-		{
-			animation.play("idle");
+		{ 
+			animation.play("idle"); 
 		}
 		if (velocity.y < 0) 
-		{
-			animation.play("jump");
+		{ 
+			animation.play("jump"); 
 		}
 		
 		_cooldown += FlxG.elapsed;
@@ -244,7 +244,7 @@ class Player extends FlxSprite
 		
 		if (_cooldown >= GUN_DELAY)
 		{
-			_blt = cast(_bullets.recycle(), Bullet);	
+			_blt = cast(_bullets.recycle(), Bullet);
 			
 			if (_blt != null)
 			{
