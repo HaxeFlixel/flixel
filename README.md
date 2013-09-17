@@ -13,7 +13,7 @@ It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel). 
 
 Make sure you're using latest version of [Haxe, HaxeLib and OpenFl](http://haxeflixel.com/comment/2584#comment-2584). Also bookmark the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
 
-Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel`.
+Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel dev`.
 
 We recommended that you use a GUI application to manage your changes ([SourceTree](http://www.sourcetreeapp.com/)).
 
