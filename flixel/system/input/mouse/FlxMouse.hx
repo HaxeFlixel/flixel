@@ -183,7 +183,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	public function show(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		_updateCursorContainer = true;
-		cursorContainer.visible = true;
+
+		if (!useSystemCursor)
+			cursorContainer.visible = true;
 		
 		if (Graphic != null)
 		{
@@ -193,10 +195,19 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		{
 			load();
 		}
+
 		if (useSystemCursor)
 		{
 			Mouse.show();
 		}
+
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		if(Mouse.supportsCursor)
+		{
+			if(_previousNativeCursor!=null)
+				setNativeCursor(_previousNativeCursor);
+		}
+		#end
 	}
 
 	/**
@@ -206,6 +217,15 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		_updateCursorContainer = false;
 		cursorContainer.visible = false;
+
+		Mouse.hide();
+
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		if(Mouse.supportsCursor)
+		{
+			_previousNativeCursor = _currentNativeCursor;
+		}
+		#end
 	}
 
 	/**
@@ -294,12 +314,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public function setNativeCursor(Name:String):Void
 	{
-		if(_currentNativeCursor != Name)
-		{
-			_previousNativeCursor = _currentNativeCursor;
-			_currentNativeCursor = Name;
-			Mouse.cursor = _currentNativeCursor;
-		}
+		_previousNativeCursor = _currentNativeCursor;
+		_currentNativeCursor = Name;
+
+		Mouse.show();
+
+		//Flash requires the use of AUTO before a custom cursor to work
+		Mouse.cursor = MouseCursor.AUTO;
+		Mouse.cursor = _currentNativeCursor;
 	}
 
 	/**
@@ -333,7 +355,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		registerNativeCursor( Name, cursorData );
 		setNativeCursor( Name );
-		
+
 		Mouse.show();
 		
 		return cursorData;
