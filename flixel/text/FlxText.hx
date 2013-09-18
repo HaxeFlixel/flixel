@@ -222,7 +222,12 @@ class FlxText extends FlxSprite
 		updateFormat(_format);
 		borderStyle = BorderStyle;
 		borderColor = BorderColor;
-		_regen = true;
+		
+		#if flash
+		calcFrame();
+		#else
+		calcFrame(true);
+		#end
 		
 		return this;
 	}
