@@ -419,7 +419,12 @@ class FlxAnimationController
 	
 	private function set_frameIndex(Frame:Int):Int
 	{
-		if (frames == null) {
+		#if (js || neko)
+		if (frames == null) 
+		#else
+		if (frames == 0)
+		#end
+		{
 			return 0;
 		}
 		Frame = Frame % frames;
