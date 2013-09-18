@@ -34,8 +34,7 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 		}
 		
 		var newIndex:Int = Math.floor(angleHelper / baked + 0.5);
-		newIndex = Std.int(curIndex % rotations);
-		
+		newIndex = Std.int(newIndex % rotations);
 		if (oldIndex != newIndex)
 		{
 			curIndex = newIndex;
