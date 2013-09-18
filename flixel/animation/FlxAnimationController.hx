@@ -419,6 +419,9 @@ class FlxAnimationController
 	
 	private function set_frameIndex(Frame:Int):Int
 	{
+		if (frames == null) {
+			return 0;
+		}
 		Frame = Frame % frames;
 		
 		if (_sprite.framesData != null)
