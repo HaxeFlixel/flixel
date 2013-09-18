@@ -16,6 +16,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.system.layer.Region;
 import flixel.util.FlxSpriteUtil;
@@ -82,13 +83,18 @@ class FlxTilemap extends FlxObject
 	public var customTileRemap:Array<Int> = null;
 	
 	public var randomize_indeces:Array<Int> = null;
-	public var randomize_choices:Array<Array<Int>>= null;
+	public var randomize_choices:Array<Array<Int>> = null;
+	
+	public var randomize_seed:Int = 0;					//custom random seed, if any
+	public var randomize_init:Int->Void	= null;			//custom random initializer
+	public var randomize_lambda:Void->Float = null;		//custom random function, returns 0->1
 	
 	/**
 	 * Input a custom tile map as a comma-separated int string
 	 * @param	str
 	 * @return
 	 */	
+	
 	public function setCustomTileRemapStr(str:String):Array<Int>{
 		var arr:Array<String> = str.split(",");
 		if (customTileRemap == null) {
@@ -356,8 +362,6 @@ class FlxTilemap extends FlxObject
 			}
 		}
 		
-		trace("before data = " + _data);
-		
 		if (customTileRemap != null) {
 			i = 0;
 			while ( i < totalTiles) 
@@ -374,6 +378,17 @@ class FlxTilemap extends FlxObject
 		}
 		
 		if (randomize_indeces != null) {
+			
+			if (randomize_init != null) {
+				randomize_init(randomize_seed);
+			}
+			
+			var randLambda:Void->Float = Math.random;
+			
+			if (randomize_lambda != null) {
+				randLambda = randomize_lambda;
+			}
+			
 			i = 0;
 			while (i < totalTiles)
 			{
@@ -382,7 +397,7 @@ class FlxTilemap extends FlxObject
 				var new_index = old_index;
 				for (rand in randomize_indeces) {					
 					if (old_index == rand) {
-						var k:Int = Std.int(Math.random() * randomize_choices[j].length);
+						var k:Int = Std.int(randLambda() * randomize_choices[j].length);
 						new_index = randomize_choices[j][k];
 					}
 					j++;
@@ -391,9 +406,7 @@ class FlxTilemap extends FlxObject
 				i++;
 			}
 		}
-		
-		trace("after data = " + _data);
-		
+				
 		// Figure out the size of the tiles
 		setCachedGraphics(FlxG.bitmap.add(TileGraphic));
 		_tileWidth = TileWidth;
@@ -409,7 +422,7 @@ class FlxTilemap extends FlxObject
 		{
 			_tileHeight = _tileWidth;
 		}
-		
+				
 		if (!Std.is(TileGraphic, TextureRegion))
 		{
 			_region = new Region(0, 0, _tileWidth, _tileHeight);
@@ -524,7 +537,7 @@ class FlxTilemap extends FlxObject
 		super.update();
 	}
 	#end
-
+	
 	/**
 	 * Internal function that actually renders the tilemap to the tilemap buffer.  Called by draw().
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
