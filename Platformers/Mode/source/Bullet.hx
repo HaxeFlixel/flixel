@@ -18,11 +18,11 @@ class Bullet extends FlxSprite
 		height = 6;
 		offset.set(1, 1);
 		
-		addAnimation("up", [0]);
-		addAnimation("down", [1]);
-		addAnimation("left", [2]);
-		addAnimation("right", [3]);
-		addAnimation("poof", [4, 5, 6, 7], 50, false);
+		animation.add("up", [0]);
+		animation.add("down", [1]);
+		animation.add("left", [2]);
+		animation.add("right", [3]);
+		animation.add("poof", [4, 5, 6, 7], 50, false);
 		
 		_speed = 360;
 	}
@@ -31,7 +31,7 @@ class Bullet extends FlxSprite
 	{
 		if (!alive)
 		{
-			if (finished)
+			if (animation.finished)
 			{
 				exists = false;
 			}
@@ -40,8 +40,7 @@ class Bullet extends FlxSprite
 		{
 			kill();
 		}
-
-        super.update();
+		super.update();
 	}
 	
 	override public function kill():Void
@@ -60,7 +59,7 @@ class Bullet extends FlxSprite
 		
 		alive = false;
 		solid = false;
-		play("poof");
+		animation.play("poof");
 	}
 	
 	public function shoot(Location:FlxPoint, Aim:Int):Void
@@ -74,16 +73,16 @@ class Bullet extends FlxSprite
 		switch (Aim)
 		{
 			case FlxObject.UP:
-				play("up");
+				animation.play("up");
 				velocity.y = - _speed;
 			case FlxObject.DOWN:
-				play("down");
+				animation.play("down");
 				velocity.y = _speed;
 			case FlxObject.LEFT:
-				play("left");
+				animation.play("left");
 				velocity.x = - _speed;
 			case FlxObject.RIGHT:
-				play("right");
+				animation.play("right");
 				velocity.x = _speed;
 		}
 	}

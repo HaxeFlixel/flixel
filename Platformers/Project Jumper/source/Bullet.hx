@@ -22,7 +22,7 @@ class Bullet extends FlxSprite
 	override public function update():Void 
 	{
 		// Finished refers to animation, only included here in case I add animation later
-		if (!alive && finished) 
+		if (!alive && animation.finished) 
 		{
 			// Stop paying attention when the bullet dies. 
 			exists = false;   

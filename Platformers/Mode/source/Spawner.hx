@@ -29,9 +29,9 @@ class Spawner extends FlxSprite
 		_open = false;
 		health = 8;
 
-		addAnimation("open", [1, 2, 3, 4, 5], 40, false);
-		addAnimation("close", [4, 3, 2, 1, 0], 40, false);
-		addAnimation("dead", [6]);
+		animation.add("open", [1, 2, 3, 4, 5], 40, false);
+		animation.add("close", [4, 3, 2, 1, 0], 40, false);
+		animation.add("dead", [6]);
 	}
 	
 	override public function destroy():Void
@@ -63,14 +63,14 @@ class Spawner extends FlxSprite
 			if (!_open)
 			{
 				_open = true;
-				play("open");
+				animation.play("open");
 			}
 		}
 		else if (_timer > 1)
 		{
 			if (_open)
 			{
-				play("close");
+				animation.play("close");
 				_open = false;
 			}
 		}
@@ -102,7 +102,7 @@ class Spawner extends FlxSprite
 		active = false;
 		exists = true;
 		solid = false;
-		play("dead");
+		animation.play("dead");
 		FlxG.camera.shake(0.007, 0.25);
 		FlxG.camera.flash(0xffd8eba2, 0.65, turnOffSlowMo);
 		FlxG.timeScale = 0.35;

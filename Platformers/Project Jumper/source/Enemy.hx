@@ -31,8 +31,8 @@ class Enemy extends EnemyTemplate
 		
 		// Set up the graphics
 		loadGraphic("assets/art/spikemonsta.png", true, true); 
-		addAnimation("walking", [0, 1], 10, true);
-		addAnimation("idle", [0]);
+		animation.add("walking", [0, 1], 10, true);
+		animation.add("idle", [0]);
 		
 		drag.x = RUN_SPEED * 7;
 		drag.y = JUMP_SPEED * 7;
@@ -97,11 +97,11 @@ class Enemy extends EnemyTemplate
 		// Animation
 		if ((velocity.x == 0) && (velocity.y == 0)) 
 		{ 
-			play("idle"); 
+			animation.play("idle"); 
 		}
 		else 
 		{
-			play("walking");
+			animation.play("walking");
 		}
 		
 		super.update();

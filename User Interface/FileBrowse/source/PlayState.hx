@@ -67,11 +67,11 @@ class PlayState extends FlxState
 		
 		var bw:Float = _button.width + 15;
 		_text = new FlxText(bw, gutter, Std.int(FlxG.width - bw - 5), "Click the button to load a PNG or JPG!");
-		_text.setFormat(null, 16, FlxColor.WHITE, "left", FlxColor.GRAY, true);
+		_text.setFormat(null, 16, FlxColor.WHITE, "left");
 		add(_text);
 		
 		_scaleText = new FlxText(FlxG.width - 100, FlxG.height - 20, 100, 100);
-		_scaleText.setFormat(null, 16, FlxColor.WHITE, "right", FlxColor.GRAY, true);
+		_scaleText.setFormat(null, 16, FlxColor.WHITE, "right");
 		add(_scaleText);
 		
 		_showImage(FlxG.bitmap.add(FlxAssets.IMG_LOGO).bitmap);

@@ -43,13 +43,13 @@ class Player extends FlxSprite
 		maxVelocity.set(runSpeed, _jumpPower);
 		
 		// Animations
-		addAnimation("idle", [0]);
-		addAnimation("run", [1, 2, 3, 0], 12);
-		addAnimation("jump", [4]);
-		addAnimation("idle_up", [5]);
-		addAnimation("run_up", [6, 7, 8, 5], 12);
-		addAnimation("jump_up", [9]);
-		addAnimation("jump_down", [10]);
+		animation.add("idle", [0]);
+		animation.add("run", [1, 2, 3, 0], 12);
+		animation.add("jump", [4]);
+		animation.add("idle_up", [5]);
+		animation.add("run_up", [6, 7, 8, 5], 12);
+		animation.add("jump_up", [9]);
+		animation.add("jump_down", [10]);
 		
 		// Bullet stuff
 		_bullets = Bullets;
@@ -124,37 +124,37 @@ class Player extends FlxSprite
 		{
 			if (_aim == FlxObject.UP) 
 			{
-				play("jump_up");
+				animation.play("jump_up");
 			}
 			else if (_aim == FlxObject.DOWN) 
 			{
-				play("jump_down");
+				animation.play("jump_down");
 			}
 			else 
 			{
-				play("jump");
+				animation.play("jump");
 			}
 		}
 		else if (velocity.x == 0)
 		{
 			if (_aim == FlxObject.UP) 
 			{
-				play("idle_up");
+				animation.play("idle_up");
 			}
 			else 
 			{
-				play("idle");
+				animation.play("idle");
 			}
 		}
 		else
 		{
 			if (_aim == FlxObject.UP) 
 			{
-				play("run_up");
+				animation.play("run_up");
 			}
 			else 
 			{
-				play("run");
+				animation.play("run");
 			}
 		}
 		

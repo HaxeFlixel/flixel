@@ -24,11 +24,11 @@ class Player extends FlxSprite
 		offset.x = 3;
 		offset.y = 3;
 		
-		addAnimation("idle", [0], 0, false);
-		addAnimation("walk", [1, 2, 3, 0], 10, true);
-		addAnimation("walk_back", [3, 2, 1, 0], 10, true);
-		addAnimation("flail", [1, 2, 3, 0], 18, true);
-		addAnimation("jump", [4], 0, false);
+		animation.add("idle", [0], 0, false);
+		animation.add("walk", [1, 2, 3, 0], 10, true);
+		animation.add("walk_back", [3, 2, 1, 0], 10, true);
+		animation.add("flail", [1, 2, 3, 0], 18, true);
+		animation.add("jump", [4], 0, false);
 	}
 	
 	override public function update():Void
@@ -51,29 +51,29 @@ class Player extends FlxSprite
 			if (FlxG.keyboard.justPressed.SPACE || FlxG.keyboard.justPressed("UP", "W"))
 			{
 				velocity.y = -acceleration.y*0.51;
-				play("jump");
+				animation.play("jump");
 			}
 			// Animations
 			else if (velocity.x > 0)
 			{
-				play("walk");
+				animation.play("walk");
 			}
 			else if (velocity.x < 0)
 			{
-				play("walk_back");
+				animation.play("walk_back");
 			}
 			else
 			{
-				play("idle");
+				animation.play("idle");
 			}
 		}
 		else if (velocity.y < 0)
 		{
-			play("jump");
+			animation.play("jump");
 		}
 		else
 		{
-			play("flail");
+			animation.play("flail");
 		}
 		
         super.update();

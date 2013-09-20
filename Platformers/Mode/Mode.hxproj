@@ -17,16 +17,14 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="C:\HaxeToolkit\haxe\lib/openfl/1,0,5/" />
-    <class path="C:\HaxeToolkit\haxe\lib/flixel/git/" />
-    <class path="export/flash/haxe" />
+    <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="FLX_RECORD&#xA;tools=1&#xA;FLX_NO_DEBUG&#xA;openfl_ver=1.0.5&#xA;openfl&#xA;display&#xA;web" />
+    <option directives="FLX_RECORD&#xA;tools=1&#xA;FLX_NO_DEBUG&#xA;openfl_ver=1.0.10&#xA;openfl&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option mainClass="ApplicationMain" />
-    <option enabledebug="False" />
+    <option enabledebug="True" />
     <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
   </build>
   <!-- haxelib libraries -->
@@ -44,7 +42,7 @@
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
