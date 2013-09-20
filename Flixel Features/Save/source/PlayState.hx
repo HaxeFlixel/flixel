@@ -190,6 +190,7 @@ class PlayState extends FlxState
 			_topText.text = "Overwrote old positions";
 			_topText.alpha = 1;
 		}
+		_gameSave.flush();
 	}
 	
 	/**
@@ -230,6 +231,7 @@ class PlayState extends FlxState
 	{
 		// Lets just wipe the whole boxPositions array
 		_gameSave.data.boxPositions = null;
+		_gameSave.flush();
 		_topText.text = "Save erased";
 		_topText.alpha = 1;
 	}
