@@ -5,6 +5,7 @@ import flash.events.MouseEvent;
 import flash.events.TouchEvent;
 import flash.Lib;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.util.FlxPoint;
