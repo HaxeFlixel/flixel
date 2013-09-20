@@ -253,42 +253,51 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		return y = NewY;
 	}
 	
-	private function set_angle(Value:Float):Float
+	private function set_angle(NewAngle:Float):Float
 	{
-		transformChildren(angleTransform, Value);
-		return angle = Value;
+		if (!_skipTransformChildren)
+		{
+			var offset:Float = NewAngle - angle;
+			transformChildren(angleTransform, offset);
+		}
+		return angle = NewAngle;
 	}
 	
 	private function set_alpha(NewAlpha:Float):Float 
 	{
-		alpha = NewAlpha;
-		
-		if (alpha > 1)  
+		if (NewAlpha > 1)  
 		{
-			alpha = 1;
+			NewAlpha = 1;
 		}
-		else if (alpha < 0)  
+		else if (NewAlpha < 0)  
 		{
-			alpha = 0;
+			NewAlpha = 0;
 		}
 		
 		if (!_skipTransformChildren)
 		{
-			transformChildren(alphaTransform, alpha);
+			var factor:Float = NewAlpha / alpha;
+			transformChildren(alphaTransform, factor);
 		}
 		
-		return NewAlpha;
+		return alpha = NewAlpha;
 	}
 	
 	private function set_facing(Value:Int):Int
 	{
-		transformChildren(facingTransform, Value);
+		if (!_skipTransformChildren)
+		{
+			transformChildren(facingTransform, Value);
+		}
 		return facing = Value;
 	}
 	
 	private function set_immovable(Value:Bool):Bool
 	{
-		transformChildren(immovableTransform, Value);
+		if (!_skipTransformChildren)
+		{
+			transformChildren(immovableTransform, Value);
+		}
 		return immovable = Value;
 	}
 	
@@ -297,7 +306,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	private function xTransform(Sprite:IFlxSprite, X:Float)							{ Sprite.x += X; }								// addition
 	private function yTransform(Sprite:IFlxSprite, Y:Float)							{ Sprite.y += Y; }								// addition
 	private function angleTransform(Sprite:IFlxSprite, Angle:Float)					{ Sprite.angle += Angle; }						// addition
-	private function alphaTransform(Sprite:IFlxSprite, Alpha:Float)					{ Sprite.alpha += Alpha; }						// addition
+	private function alphaTransform(Sprite:IFlxSprite, Alpha:Float)					{ Sprite.alpha *= Alpha; }						// multiplication
 	private function facingTransform(Sprite:IFlxSprite, Facing:Int)					{ Sprite.facing = Facing; }						// set
 	private function immovableTransform(Sprite:IFlxSprite, Immovable:Bool)			{ Sprite.immovable = Immovable; }				// set
 	private function offsetTransform(Sprite:IFlxSprite, Offset:FlxPoint)			{ Sprite.offset.copyFrom(Offset); }				// set
