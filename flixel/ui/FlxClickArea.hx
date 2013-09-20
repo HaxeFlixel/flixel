@@ -12,7 +12,7 @@ import flixel.util.FlxPoint;
 /**
  * Trimmed-down button, invisible click area, only responds to onUP
  */
-class FlxClickArea extends Object
+class FlxClickArea extends FlxObject
 {
 	/**
 	 * Shows the current state of the button, either <code>NORMAL</code>, 
