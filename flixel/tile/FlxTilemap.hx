@@ -16,6 +16,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.system.layer.Region;
 import flixel.util.FlxSpriteUtil;
@@ -72,6 +73,38 @@ class FlxTilemap extends FlxObject
 	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
 	 */
 	public var tileScaleHack:Float = 1.01;
+	
+	/**
+	 * Set this to create your own image index remapper,
+	 * So you can create your own tile layouts.
+	 * 
+	 * Mostly useful in combination with the auto-tilers
+	 */	
+	public var customTileRemap:Array<Int> = null;
+	
+	public var randomize_indeces:Array<Int> = null;
+	public var randomize_choices:Array<Array<Int>> = null;
+	
+	public var randomize_seed:Int = 0;					//custom random seed, if any
+	public var randomize_init:Int->Void	= null;			//custom random initializer
+	public var randomize_lambda:Void->Float = null;		//custom random function, returns 0->1
+	
+	/**
+	 * Input a custom tile map as a comma-separated int string
+	 * @param	str
+	 * @return
+	 */	
+	
+	public function setCustomTileRemapStr(str:String):Array<Int>{
+		var arr:Array<String> = str.split(",");
+		if (customTileRemap == null) {
+			customTileRemap = new Array<Int>();
+		}
+		for (istr in arr) {
+			customTileRemap.push(Std.parseInt(istr));
+		}
+		return customTileRemap;
+	}
 	
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
@@ -279,9 +312,9 @@ class FlxTilemap extends FlxObject
 			widthInTiles = 0;
 			var row:Int = 0;
 			var column:Int;
-			
+						
 			while (row < heightInTiles)
-			{
+			{					
 				columns = rows[row++].split(",");
 				
 				if (columns.length <= 1)
@@ -329,6 +362,51 @@ class FlxTilemap extends FlxObject
 			}
 		}
 		
+		if (customTileRemap != null) {
+			i = 0;
+			while ( i < totalTiles) 
+			{
+				var old_index = _data[i];
+				var new_index = old_index;
+				if (old_index < customTileRemap.length)
+				{
+					new_index = customTileRemap[old_index];
+				}
+				_data[i] = new_index;
+				i++;
+			}
+		}
+		
+		if (randomize_indeces != null) {
+			
+			if (randomize_init != null) {
+				randomize_init(randomize_seed);
+			}
+			
+			var randLambda:Void->Float = Math.random;
+			
+			if (randomize_lambda != null) {
+				randLambda = randomize_lambda;
+			}
+			
+			i = 0;
+			while (i < totalTiles)
+			{
+				var old_index = _data[i];
+				var j = 0;
+				var new_index = old_index;
+				for (rand in randomize_indeces) {					
+					if (old_index == rand) {
+						var k:Int = Std.int(randLambda() * randomize_choices[j].length);
+						new_index = randomize_choices[j][k];
+					}
+					j++;
+				}
+				_data[i] = new_index;
+				i++;
+			}
+		}
+				
 		// Figure out the size of the tiles
 		cachedGraphics = FlxG.bitmap.add(TileGraphic);
 		_tileWidth = TileWidth;
@@ -344,7 +422,7 @@ class FlxTilemap extends FlxObject
 		{
 			_tileHeight = _tileWidth;
 		}
-		
+				
 		if (!Std.is(TileGraphic, TextureRegion))
 		{
 			region = new Region(0, 0, _tileWidth, _tileHeight);
@@ -459,7 +537,7 @@ class FlxTilemap extends FlxObject
 		super.update();
 	}
 	#end
-
+	
 	/**
 	 * Internal function that actually renders the tilemap to the tilemap buffer.  Called by draw().
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
@@ -1679,7 +1757,7 @@ class FlxTilemap extends FlxObject
 			return ok;
 		}
 		
-		// If this map is autotiled and it changes, locally update the arrangement
+		// If this map is autotiled and it changes, locally update the arranrangement
 		var i:Int;
 		var row:Int = Std.int(Index / widthInTiles) - 1;
 		var rowLength:Int = row + 3;
