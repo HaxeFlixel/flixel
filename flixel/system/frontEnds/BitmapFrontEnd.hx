@@ -335,9 +335,9 @@ class BitmapFrontEnd
 	
 	public function inOpenFlAssets(bitmap:BitmapData):Bool
 	{
-		if (Assets.cachedBitmapData != null)
+		if (Assets.cache.bitmapData != null)
 		{
-			for (bd in Assets.cachedBitmapData)
+			for (bd in Assets.cache.bitmapData)
 			{
 				if (bd == bitmap)
 				{
