@@ -419,19 +419,22 @@ class FlxAnimationController
 	
 	private function set_frameIndex(Frame:Int):Int
 	{
-		Frame = Frame % frames;
-		
-		if (_sprite.framesData != null)
-		{
-			_sprite.frame = _sprite.framesData.frames[Frame];
-			
-			if (callback != null)
-			{
-				callback(((_curAnim != null) ? (_curAnim.name) : null), ((_curAnim != null) ? (_curAnim.curFrame) : Frame), Frame);
-			}
-		}
-		
-		return frameIndex = Frame;
+        if (frames != 0) 
+        {
+            Frame = Frame % frames;
+
+            if (_sprite.framesData != null)
+            {
+                _sprite.frame = _sprite.framesData.frames[Frame];
+                
+                if (callback != null)
+                {
+                    callback(((_curAnim != null) ? (_curAnim.name) : null), ((_curAnim != null) ? (_curAnim.curFrame) : Frame), Frame);
+                }
+            }
+		    return frameIndex = Frame;
+        }
+        return 0;
 	}
 	
 	inline private function get_frameName():String
