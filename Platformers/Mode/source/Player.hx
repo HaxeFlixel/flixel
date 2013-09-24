@@ -212,7 +212,7 @@ class Player extends FlxSprite
 	
 	private function flicker(Duration:Float):Void
 	{
-		FlxSpriteUtil.flicker(this, Duration);
+		FlxSpriteUtil.flicker(this, Duration, 0.02, true);
 		FlxTimer.start(Duration, function f(T:FlxTimer) { flickering = false; } );
 		flickering = true;
 	}
