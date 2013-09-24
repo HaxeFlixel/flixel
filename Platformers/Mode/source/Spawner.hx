@@ -81,7 +81,7 @@ class Spawner extends FlxSprite
 	override public function hurt(Damage:Float):Void
 	{
 		FlxG.sound.play("Hit");
-		FlxSpriteUtil.flicker(this, 0.2);
+		FlxSpriteUtil.flicker(this, 0.2, 0.02, true);
 		Reg.score += 50;
 		
 		super.hurt(Damage);

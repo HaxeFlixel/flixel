@@ -246,7 +246,7 @@ class Enemy extends FlxSprite
 	override public function hurt(Damage:Float):Void
 	{
 		FlxG.sound.play("Hit");
-		FlxSpriteUtil.flicker(this, 0.2);
+		FlxSpriteUtil.flicker(this, 0.2, 0.02, true);
 		Reg.score += 10;
 		
 		super.hurt(Damage);
@@ -267,7 +267,7 @@ class Enemy extends FlxSprite
 		
 		super.kill();
 		
-		FlxSpriteUtil.flicker(this, 0);
+		FlxSpriteUtil.flicker(this, 0, 0.02, true);
 		_jets.kill();
 		_gibs.at(this);
 		_gibs.start(true, 3, 0, 20);
