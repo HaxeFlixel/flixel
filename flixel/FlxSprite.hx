@@ -1142,8 +1142,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			Camera = FlxG.camera;
 		}
 		
-		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
-		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
+		var minX:Float = x + offset.x - Camera.scroll.x * scrollFactor.x;
+		var minY:Float = y + offset.y - Camera.scroll.y * scrollFactor.y;
 		var maxX:Float = 0;
 		var maxY:Float = 0;
 		
