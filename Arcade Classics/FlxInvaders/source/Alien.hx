@@ -38,10 +38,10 @@ class Alien extends FlxSprite
 		// We want to play them in the order 1, 2, 3, 1 (but of course this stuff is 0-index).
 		// To avoid a weird, annoying appearance the framerate is randomized a little bit
 		// to a value between 6 and 10 (6+4) frames per second.
-		addAnimation("Default", [0, 1, 0, 2], Math.floor(6 + FlxRandom.float() * 4));
-		
+		this.animation.add("Default", [0, 1, 0, 2], Math.floor(6 + FlxRandom.float() * 4));
+
 		// Now that the animation is set up, it's very easy to play it back!
-		play("Default");
+		this.animation.play("Default");
 		
 		// Everybody move to the right!
 		velocity.x = 10;
