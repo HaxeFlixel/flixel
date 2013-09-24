@@ -1132,6 +1132,11 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 */
 	override public function onScreen(Camera:FlxCamera = null):Bool
 	{
+        if (!exists) 
+        {
+            return false;
+        }
+
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
