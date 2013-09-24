@@ -226,6 +226,17 @@ class FlxText extends FlxSprite
 		
 		return this;
 	}
+
+	#if (cpp || neko)
+	override private function set_alpha(Alpha:Float):Float
+	{
+
+		_regen = true;
+		super.set_alpha(Alpha);
+
+		return alpha;
+	}
+	#end
 	
 	override private function set_width(Width:Float):Float
 	{
