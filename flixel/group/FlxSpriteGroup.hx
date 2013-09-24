@@ -174,7 +174,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	public function setPosition(X:Float, Y:Float):Void
+	public function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		// Transform children by the movement delta
 		var dx:Float = X - x;
