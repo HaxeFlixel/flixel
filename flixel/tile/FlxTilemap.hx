@@ -95,26 +95,23 @@ class FlxTilemap extends FlxObject
 	 * If these next two arrays are not null, you're telling FlxTilemap to 
 	 * draw random tiles in certain places. 
 	 * 
-	 * randomize_indeces is a list of tilemap values that should be replaced
+	 * _randomIndices is a list of tilemap values that should be replaced
 	 * by a randomly selected value. The available values are chosen from
 	 * the corresponding array in randomize_choices
 	 * 
 	 * So if you have:
-	 *   randomize_indeces = [12,14]
-	 *   randomize_choices = [[0,1,2],[3,4,5,6,7]]
+	 *   randomIndices = [12,14]
+	 *   randomChoices = [[0,1,2],[3,4,5,6,7]]
 	 * 
 	 * Everywhere the tilemap has a value of 12 it will be replaced by 0, 1, or, 2
 	 * Everywhere the tilemap has a value of 14 it will be replaced by 3, 4, 5, 6, 7
 	 *
-	 *  randomize_seed, randomize_init, and randomize_lambda let you control this further
+	 * see prepareCustomTileMappings for more info
 	 * 
 	 */
-	public var randomize_indeces:Array<Int> = null;
-	public var randomize_choices:Array<Array<Int>> = null;
-	
-	public var randomize_seed:Int = 0;					//custom random seed, if any
-	public var randomize_init:Int->Void	= null;			//custom random initializer function
-	public var randomize_lambda:Void->Float = null;		//custom random function, returns 0->1
+	private var _randomIndices:Array<Int> = null;			//tile indices that should be randomized
+	private var _randomChoices:Array<Array<Int>> = null;	//corresponding lists of random values to choose from
+	private var _randomLambda:Void->Float = null;			//custom random function, returns 0->1
 		
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
@@ -388,16 +385,12 @@ class FlxTilemap extends FlxObject
 			}
 		}
 		
-		if (randomize_indeces != null) {
-			
-			if (randomize_init != null) {
-				randomize_init(randomize_seed);
-			}
+		if (_randomIndices != null) {
 			
 			var randLambda:Void->Float = Math.random;
 			
-			if (randomize_lambda != null) {
-				randLambda = randomize_lambda;
+			if (_randomLambda != null) {
+				randLambda = _randomLambda;
 			}
 			
 			i = 0;
@@ -406,10 +399,10 @@ class FlxTilemap extends FlxObject
 				var old_index = _data[i];
 				var j = 0;
 				var new_index = old_index;
-				for (rand in randomize_indeces) {					
+				for (rand in _randomIndices) {
 					if (old_index == rand) {
-						var k:Int = Std.int(randLambda() * randomize_choices[j].length);
-						new_index = randomize_choices[j][k];
+						var k:Int = Std.int(randLambda() * _randomChoices[j].length);
+						new_index = _randomChoices[j][k];
 					}
 					j++;
 				}
@@ -417,7 +410,7 @@ class FlxTilemap extends FlxObject
 				i++;
 			}
 		}
-				
+		
 		// Figure out the size of the tiles
 		cachedGraphics = FlxG.bitmap.add(TileGraphic);
 		_tileWidth = TileWidth;
@@ -2512,7 +2505,7 @@ class FlxTilemap extends FlxObject
 	
 	/**
 	 * Input a custom tile map as a comma-separated int string, such as "3,6,7,9,12"
-	 * This will remap the tilemaps values to those indeces in your source tilesheet. 
+	 * This will remap the tilemaps values to those indices in your source tilesheet. 
 	 * So, if the remap string is "3,6,7,9,12", that means:
 	 *   0-->3, 1-->6, 2-->7, 3-->9, 4-->12
 	 * @param	str a comma-separated string of int values, ie, "3,6,7,9,12"
@@ -2521,6 +2514,22 @@ class FlxTilemap extends FlxObject
 	public function setCustomTileRemapStr(str:String):Array<Int>{
 		customTileRemap = FlxArrayUtil.intFromString(str);
 		return customTileRemap;
+	}
+	
+	/**
+	 * Set custom tile mapping and/or randomization rules prior to loading. 
+	 * This MUST be called BEFORE loadMap() for it to work.
+	 * @param	mappings		array of ints for remapping tiles. Ex: [7,4,12] means "0-->7, 1-->4, 2-->12"
+	 * @param	randomIndices	(optional) array of ints indicating which tile indices should be randmoized. Ex: [7,4,12] means "replace tile index of 7, 4, or 12 with a randomized value"
+	 * @param	randomChoices	(optional) a list of int-arrays that serve as the corresponding choices to randomly choose from. Ex: indices = [7,4], choices = [[1,2],[3,4,5]], 7 will be replaced by either 1 or 2, 4 will be replaced by 3, 4, or 5.
+	 * @param	randomLambda	(optional) a custom randomizer function, should return value between 0.0 and 1.0. Initialize your random seed before passing this in! If not defined, will default to unseeded Math.random() calls.
+	 */
+	public function prepareCustomTileMappings(mappings:Array<Int>, randomIndices:Array<Int> = null, randomChoices:Array<Array<Int>>= null, randomLambda:Void->Float=null):Void
+	{
+		customTileRemap = mappings;
+		_randomIndices = randomIndices;
+		_randomChoices = randomChoices;
+		_randomLambda = randomLambda;
 	}
 	
 }
