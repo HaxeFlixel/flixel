@@ -504,7 +504,8 @@ class FlxAnimationController
 	{
 		if (Value == true && _curAnim != null)
 		{
-			gotoAndStop(_curAnim.numFrames - 1);
+			_curAnim.finished = true;
+			frameIndex = _curAnim.numFrames - 1;
 		}
 		return Value;
 	}
