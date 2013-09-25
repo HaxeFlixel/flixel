@@ -78,7 +78,16 @@ class FlxTilemap extends FlxObject
 	 * Set this to create your own image index remapper,
 	 * So you can create your own tile layouts.
 	 * 
-	 * Mostly useful in combination with the auto-tilers
+	 * Mostly useful in combination with the auto-tilers.
+	 * 
+	 * Normally, each tile's int value in _data corresponds to the index of a 
+	 * tile frame in the tilesheet. With this active, each int value in _data
+	 * is a lookup value @ that index in customTileRemap.
+	 * 
+	 * Example:
+	 *  customTileRemap = [10,9,8,7,6]
+	 *  means: 0=10, 1=9, 2=8, 3=7, 4=6
+	 * 
 	 */	
 	public var customTileRemap:Array<Int> = null;
 	
@@ -90,9 +99,12 @@ class FlxTilemap extends FlxObject
 	public var randomize_lambda:Void->Float = null;		//custom random function, returns 0->1
 	
 	/**
-	 * Input a custom tile map as a comma-separated int string
-	 * @param	str
-	 * @return
+	 * Input a custom tile map as a comma-separated int string, such as "3,6,7,9,12"
+	 * This will remap the tilemaps values to those indeces in your source tilesheet. 
+	 * So, if the remap string is "3,6,7,9,12", that means:
+	 *   0-->3, 1-->6, 2-->7, 3-->9, 4-->12
+	 * @param	str a comma-separated string of int values, ie, "3,6,7,9,12"
+	 * @return  array of ints representing the resulting custom remap array
 	 */	
 	
 	public function setCustomTileRemapStr(str:String):Array<Int>{
@@ -312,9 +324,9 @@ class FlxTilemap extends FlxObject
 			widthInTiles = 0;
 			var row:Int = 0;
 			var column:Int;
-						
+			
 			while (row < heightInTiles)
-			{					
+			{
 				columns = rows[row++].split(",");
 				
 				if (columns.length <= 1)
@@ -1757,7 +1769,7 @@ class FlxTilemap extends FlxObject
 			return ok;
 		}
 		
-		// If this map is autotiled and it changes, locally update the arranrangement
+		// If this map is autotiled and it changes, locally update the arrangement
 		var i:Int;
 		var row:Int = Std.int(Index / widthInTiles) - 1;
 		var rowLength:Int = row + 3;
