@@ -16,6 +16,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.system.layer.Region;
 import flixel.util.FlxSpriteUtil;
@@ -73,6 +74,48 @@ class FlxTilemap extends FlxObject
 	 */
 	public var tileScaleHack:Float = 1.01;
 	
+	/**
+	 * Set this to create your own image index remapper,
+	 * So you can create your own tile layouts.
+	 * 
+	 * Mostly useful in combination with the auto-tilers.
+	 * 
+	 * Normally, each tile's int value in _data corresponds to the index of a 
+	 * tile frame in the tilesheet. With this active, each int value in _data
+	 * is a lookup value @ that index in customTileRemap.
+	 * 
+	 * Example:
+	 *  customTileRemap = [10,9,8,7,6]
+	 *  means: 0=10, 1=9, 2=8, 3=7, 4=6
+	 * 
+	 */	
+	public var customTileRemap:Array<Int> = null;
+	
+	/**
+	 * If these next two arrays are not null, you're telling FlxTilemap to 
+	 * draw random tiles in certain places. 
+	 * 
+	 * randomize_indeces is a list of tilemap values that should be replaced
+	 * by a randomly selected value. The available values are chosen from
+	 * the corresponding array in randomize_choices
+	 * 
+	 * So if you have:
+	 *   randomize_indeces = [12,14]
+	 *   randomize_choices = [[0,1,2],[3,4,5,6,7]]
+	 * 
+	 * Everywhere the tilemap has a value of 12 it will be replaced by 0, 1, or, 2
+	 * Everywhere the tilemap has a value of 14 it will be replaced by 3, 4, 5, 6, 7
+	 *
+	 *  randomize_seed, randomize_init, and randomize_lambda let you control this further
+	 * 
+	 */
+	public var randomize_indeces:Array<Int> = null;
+	public var randomize_choices:Array<Array<Int>> = null;
+	
+	public var randomize_seed:Int = 0;					//custom random seed, if any
+	public var randomize_init:Int->Void	= null;			//custom random initializer function
+	public var randomize_lambda:Void->Float = null;		//custom random function, returns 0->1
+		
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
@@ -329,6 +372,52 @@ class FlxTilemap extends FlxObject
 			}
 		}
 		
+		if (customTileRemap != null) 
+		{
+			i = 0;
+			while ( i < totalTiles) 
+			{
+				var old_index = _data[i];
+				var new_index = old_index;
+				if (old_index < customTileRemap.length)
+				{
+					new_index = customTileRemap[old_index];
+				}
+				_data[i] = new_index;
+				i++;
+			}
+		}
+		
+		if (randomize_indeces != null) {
+			
+			if (randomize_init != null) {
+				randomize_init(randomize_seed);
+			}
+			
+			var randLambda:Void->Float = Math.random;
+			
+			if (randomize_lambda != null) {
+				randLambda = randomize_lambda;
+			}
+			
+			i = 0;
+			while (i < totalTiles)
+			{
+				var old_index = _data[i];
+				var j = 0;
+				var new_index = old_index;
+				for (rand in randomize_indeces) {					
+					if (old_index == rand) {
+						var k:Int = Std.int(randLambda() * randomize_choices[j].length);
+						new_index = randomize_choices[j][k];
+					}
+					j++;
+				}
+				_data[i] = new_index;
+				i++;
+			}
+		}
+				
 		// Figure out the size of the tiles
 		cachedGraphics = FlxG.bitmap.add(TileGraphic);
 		_tileWidth = TileWidth;
@@ -344,7 +433,7 @@ class FlxTilemap extends FlxObject
 		{
 			_tileHeight = _tileWidth;
 		}
-		
+				
 		if (!Std.is(TileGraphic, TextureRegion))
 		{
 			region = new Region(0, 0, _tileWidth, _tileHeight);
@@ -459,7 +548,7 @@ class FlxTilemap extends FlxObject
 		super.update();
 	}
 	#end
-
+	
 	/**
 	 * Internal function that actually renders the tilemap to the tilemap buffer.  Called by draw().
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
@@ -2420,4 +2509,18 @@ class FlxTilemap extends FlxObject
 		
 		return super.set_forceComplexRender(Value);
 	}
+	
+	/**
+	 * Input a custom tile map as a comma-separated int string, such as "3,6,7,9,12"
+	 * This will remap the tilemaps values to those indeces in your source tilesheet. 
+	 * So, if the remap string is "3,6,7,9,12", that means:
+	 *   0-->3, 1-->6, 2-->7, 3-->9, 4-->12
+	 * @param	str a comma-separated string of int values, ie, "3,6,7,9,12"
+	 * @return  array of ints representing the resulting custom remap array
+	 */
+	public function setCustomTileRemapStr(str:String):Array<Int>{
+		customTileRemap = FlxArrayUtil.intFromString(str);
+		return customTileRemap;
+	}
+	
 }
