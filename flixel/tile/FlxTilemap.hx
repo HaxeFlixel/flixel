@@ -115,20 +115,7 @@ class FlxTilemap extends FlxObject
 	public var randomize_seed:Int = 0;					//custom random seed, if any
 	public var randomize_init:Int->Void	= null;			//custom random initializer function
 	public var randomize_lambda:Void->Float = null;		//custom random function, returns 0->1
-	
-	/**
-	 * Input a custom tile map as a comma-separated int string, such as "3,6,7,9,12"
-	 * This will remap the tilemaps values to those indeces in your source tilesheet. 
-	 * So, if the remap string is "3,6,7,9,12", that means:
-	 *   0-->3, 1-->6, 2-->7, 3-->9, 4-->12
-	 * @param	str a comma-separated string of int values, ie, "3,6,7,9,12"
-	 * @return  array of ints representing the resulting custom remap array
-	 */
-	public function setCustomTileRemapStr(str:String):Array<Int>{
-		customTileRemap = FlxArrayUtil.intFromString(str);
-		return customTileRemap;
-	}
-	
+		
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
@@ -385,7 +372,8 @@ class FlxTilemap extends FlxObject
 			}
 		}
 		
-		if (customTileRemap != null) {
+		if (customTileRemap != null) 
+		{
 			i = 0;
 			while ( i < totalTiles) 
 			{
@@ -2521,4 +2509,18 @@ class FlxTilemap extends FlxObject
 		
 		return super.set_forceComplexRender(Value);
 	}
+	
+	/**
+	 * Input a custom tile map as a comma-separated int string, such as "3,6,7,9,12"
+	 * This will remap the tilemaps values to those indeces in your source tilesheet. 
+	 * So, if the remap string is "3,6,7,9,12", that means:
+	 *   0-->3, 1-->6, 2-->7, 3-->9, 4-->12
+	 * @param	str a comma-separated string of int values, ie, "3,6,7,9,12"
+	 * @return  array of ints representing the resulting custom remap array
+	 */
+	public function setCustomTileRemapStr(str:String):Array<Int>{
+		customTileRemap = FlxArrayUtil.intFromString(str);
+		return customTileRemap;
+	}
+	
 }
