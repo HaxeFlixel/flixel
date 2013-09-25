@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxColorUtil;
 import flixel.FlxSprite;
 import flixel.util.FlxRandom;
 
@@ -20,10 +21,10 @@ class Glitch extends FlxSprite
 	override public function reset(X:Float, Y:Float):Void
 	{
 		super.reset(X,Y);
-		
-		color1 = Colors.random();
-		color2 = Colors.random();
-		color3 = Colors.random();
+
+		color1 = FlxColorUtil.getRandomColor();
+		color2 = FlxColorUtil.getRandomColor();
+		color3 = FlxColorUtil.getRandomColor();
 		
 		frame1 = Std.int(1 + FlxRandom.float() * 20);
 		frame2 = Std.int(1 + FlxRandom.float() * 20);
@@ -32,10 +33,10 @@ class Glitch extends FlxSprite
 	override public function draw():Void
 	{
 		color = color2;
-		frame = frame1;
+		this.animation.frameIndex = frame1;
 		super.draw();
 		color = color3;
-		frame = frame2;
+		this.animation.frameIndex = frame2;
 		super.draw();
 	}
 }

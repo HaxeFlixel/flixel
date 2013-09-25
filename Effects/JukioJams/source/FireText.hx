@@ -48,21 +48,21 @@ class FireText extends FlxGroup
 		
 		kozilek = new FlxSprite();
 		kozilek.loadGraphic("assets/text_kozilek.png", true, false, 256, 192);
-		kozilek.addAnimation("idle", [0, 1, 2, 3, 2, 1], 12);
-		kozilek.play("idle");
+		kozilek.animation.add("idle", [0, 1, 2, 3, 2, 1], 12);
+		kozilek.animation.play("idle");
 		add(kozilek);
 		
 		fish = new FlxSprite();
 		fish.loadGraphic("assets/text_fish.png", true, false, 256, 192);
-		fish.frame = 7;
+		fish.animation.frameIndex = 7;
 		add(fish);
 		
 		gameCity = new FlxSprite(0, 0, "assets/text_gc.png");
 		add(gameCity);
 		
 		gunGod = new FlxSprite().loadGraphic("assets/gungod.png", true, false, 256, 192);
-		gunGod.addAnimation("idle", [0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 3, 4, 5, 3, 4, 5, 3, 4, 5, 3, 4, 5], 12);
-		gunGod.play("idle");
+		gunGod.animation.add("idle", [0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 3, 4, 5, 3, 4, 5, 3, 4, 5, 3, 4, 5], 12);
+		gunGod.animation.play("idle");
 		add(gunGod);
 	}
 	
