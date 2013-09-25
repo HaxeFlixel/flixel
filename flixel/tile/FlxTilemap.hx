@@ -91,11 +91,29 @@ class FlxTilemap extends FlxObject
 	 */	
 	public var customTileRemap:Array<Int> = null;
 	
+	/**
+	 * If these next two arrays are not null, you're telling FlxTilemap to 
+	 * draw random tiles in certain places. 
+	 * 
+	 * randomize_indeces is a list of tilemap values that should be replaced
+	 * by a randomly selected value. The available values are chosen from
+	 * the corresponding array in randomize_choices
+	 * 
+	 * So if you have:
+	 *   randomize_indeces = [12,14]
+	 *   randomize_choices = [[0,1,2],[3,4,5,6,7]]
+	 * 
+	 * Everywhere the tilemap has a value of 12 it will be replaced by 0, 1, or, 2
+	 * Everywhere the tilemap has a value of 14 it will be replaced by 3, 4, 5, 6, 7
+	 *
+	 *  randomize_seed, randomize_init, and randomize_lambda let you control this further
+	 * 
+	 */
 	public var randomize_indeces:Array<Int> = null;
 	public var randomize_choices:Array<Array<Int>> = null;
 	
 	public var randomize_seed:Int = 0;					//custom random seed, if any
-	public var randomize_init:Int->Void	= null;			//custom random initializer
+	public var randomize_init:Int->Void	= null;			//custom random initializer function
 	public var randomize_lambda:Void->Float = null;		//custom random function, returns 0->1
 	
 	/**
@@ -105,16 +123,9 @@ class FlxTilemap extends FlxObject
 	 *   0-->3, 1-->6, 2-->7, 3-->9, 4-->12
 	 * @param	str a comma-separated string of int values, ie, "3,6,7,9,12"
 	 * @return  array of ints representing the resulting custom remap array
-	 */	
-	
+	 */
 	public function setCustomTileRemapStr(str:String):Array<Int>{
-		var arr:Array<String> = str.split(",");
-		if (customTileRemap == null) {
-			customTileRemap = new Array<Int>();
-		}
-		for (istr in arr) {
-			customTileRemap.push(Std.parseInt(istr));
-		}
+		customTileRemap = FlxArrayUtil.intFromString(str);
 		return customTileRemap;
 	}
 	
