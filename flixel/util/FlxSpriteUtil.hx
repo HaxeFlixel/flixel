@@ -371,9 +371,9 @@ class FlxSpriteUtil
 	 * @param	object          The sprite.
 	 * @param	Duration	    How long to flicker for.
 	 * @param	Interval        In what interval to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
-	 * @param	ForceVisible	Force the visible value when the flicker completes, useful with fast repetitive use.
+	 * @param	EndVisibility	Force the visible value when the flicker completes, useful with fast repetitive use.
 	 */
-	inline static public function flicker(object:FlxObject, Duration:Float = 1, Interval:Float = 0.02, ?ForceVisible:Bool):Void
+	inline static public function flicker(object:FlxObject, Duration:Float = 1, Interval:Float = 0.02, EndVisibility:Bool = true):Void
 	{
 		if (Interval <= 0) 
 		{
@@ -381,7 +381,7 @@ class FlxSpriteUtil
 		}
 		
 		var t:FlxTimer = FlxTimer.recycle();
-		t.userData = FlickerData.recycle(object, ForceVisible);
+		t.userData = FlickerData.recycle(object, EndVisibility);
 		t.run(Interval, flickerProgress, Std.int(Duration / Interval));
 	}
 
@@ -395,7 +395,7 @@ class FlxSpriteUtil
 		
 		if (Timer.loops > 0 && Timer.loopsLeft == 0)
 		{
-			object.visible = Timer.userData.startVisibility;
+			object.visible = Timer.userData.endVisibility;
 			FlickerData.put(Timer.userData);
 		}
 	}
