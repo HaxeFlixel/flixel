@@ -334,46 +334,6 @@ class FlxAnimationController
 	}
 	
 	/**
-	 * Sends the playhead to the specified frame in current _animations and plays from that frame.
-	 * @param	Frame	frame number in current _animations
-	 */
-	public function gotoAndPlay(Frame:Int = 0):Void
-	{
-		if (_curAnim == null || _curAnim.numFrames <= Frame)
-		{
-			return;
-		}
-		
-		_curAnim.play(true, Frame);
-	}
-	
-	/**
-	 * Sends the playhead to the specified frame in current _animations and pauses it there.
-	 * @param	Frame	frame number in current _animations
-	 */
-	public function gotoAndPause(Frame:Int = 0):Void
-	{
-		if (_curAnim == null || _curAnim.numFrames <= Frame)
-		{
-			return;
-		}
-		
-		_curAnim.curFrame = Frame;
-		_curAnim.paused = true;
-	}
-	
-	public function gotoAndStop(Frame:Int = 0):Void
-	{
-		if (_curAnim == null || _curAnim.numFrames <= Frame)
-		{
-			return;
-		}
-		
-		_curAnim.curFrame = Frame;
-		_curAnim.stop();
-	}
-	
-	/**
 	 * Pauses current _animations
 	 */
 	inline public function pause():Void
