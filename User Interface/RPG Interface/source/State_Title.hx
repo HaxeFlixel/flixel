@@ -21,15 +21,17 @@ class State_Title extends FlxUIState
 		FlxG.log.redirectTraces = false; 
 		FlxG.mouse.show();		
 		
+		
 		if (Main.tongue == null) {
 			Main.tongue = new FireTongueEx();
 			Main.tongue.init("en-US");
 			FlxUIState.static_tongue = Main.tongue;
 		}
 		
+		
 		_xml_id = "state_title";
 		
-		super.create();	
+		super.create();
 	}
 	
 	public override function getEvent(id:String, sender:Dynamic, data:Dynamic):Void {
