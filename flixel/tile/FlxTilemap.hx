@@ -73,24 +73,19 @@ class FlxTilemap extends FlxObject
 	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
 	 */
 	public var tileScaleHack:Float = 1.01;
-	
 	/**
-	 * Set this to create your own image index remapper,
-	 * So you can create your own tile layouts.
-	 * 
+	 * Set this to create your own image index remapper, so you can create your own tile layouts.
 	 * Mostly useful in combination with the auto-tilers.
 	 * 
-	 * Normally, each tile's int value in _data corresponds to the index of a 
-	 * tile frame in the tilesheet. With this active, each int value in _data
-	 * is a lookup value @ that index in customTileRemap.
+	 * Normally, each tile's value in _data corresponds to the index of a 
+	 * tile frame in the tilesheet. With this active, each value in _data
+	 * is a lookup value to that index in customTileRemap.
 	 * 
 	 * Example:
 	 *  customTileRemap = [10,9,8,7,6]
 	 *  means: 0=10, 1=9, 2=8, 3=7, 4=6
-	 * 
-	 */	
+	 */
 	public var customTileRemap:Array<Int> = null;
-	
 	/**
 	 * If these next two arrays are not null, you're telling FlxTilemap to 
 	 * draw random tiles in certain places. 
@@ -105,14 +100,14 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * Everywhere the tilemap has a value of 12 it will be replaced by 0, 1, or, 2
 	 * Everywhere the tilemap has a value of 14 it will be replaced by 3, 4, 5, 6, 7
-	 *
-	 * see prepareCustomTileMappings for more info
-	 * 
 	 */
-	private var _randomIndices:Array<Int> = null;			//tile indices that should be randomized
-	private var _randomChoices:Array<Array<Int>> = null;	//corresponding lists of random values to choose from
-	private var _randomLambda:Void->Float = null;			//custom random function, returns 0->1
-		
+	private var _randomIndices:Array<Int> = null;
+	private var _randomChoices:Array<Array<Int>> = null;
+	/**
+	 * Setting this function allows you to control which choice will be selected for each element within _randomIndices array.
+	 * Must return a 0-1 value that gets multiplied by _randomChoices[randIndex].length;
+	 */
+	private var _randomLambda:Void->Float = null;
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
@@ -167,19 +162,16 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _debugRect:Rectangle;
 	#end
-	
 	/**
 	 * Internal flag for checking to see if we need to refresh
 	 * the tilemap display to show or hide the bounding boxes.
 	 */
 	private var _lastVisualDebug:Bool;
 	#end
-	
 	/**
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
 	private var _startingIndex:Int;
-	
 	#if !flash
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
@@ -300,8 +292,8 @@ class FlxTilemap extends FlxObject
 	 * @param	AutoTile		Whether to load the map using an automatic tile placement algorithm.  Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
 	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
 	 * @param	DrawIndex		Initializes all tile objects equal to and after this index as visible. Default value is 1.  Ignored if AutoTile is set.
-	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.	
-	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
+	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.
+	 * @return	A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
 	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, AutoTile:Int = 0, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
@@ -385,13 +377,9 @@ class FlxTilemap extends FlxObject
 			}
 		}
 		
-		if (_randomIndices != null) {
-			
-			var randLambda:Void->Float = Math.random;
-			
-			if (_randomLambda != null) {
-				randLambda = _randomLambda;
-			}
+		if (_randomIndices != null)
+		{
+			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : Math.random;
 			
 			i = 0;
 			while (i < totalTiles)
@@ -399,8 +387,10 @@ class FlxTilemap extends FlxObject
 				var old_index = _data[i];
 				var j = 0;
 				var new_index = old_index;
-				for (rand in _randomIndices) {
-					if (old_index == rand) {
+				for (rand in _randomIndices) 
+				{
+					if (old_index == rand) 
+					{
 						var k:Int = Std.int(randLambda() * _randomChoices[j].length);
 						new_index = _randomChoices[j][k];
 					}
@@ -496,6 +486,29 @@ class FlxTilemap extends FlxObject
 		#end
 		
 		return this;
+	}
+	
+	/**
+	 * Set custom tile mapping and/or randomization rules prior to loading. This MUST be called BEFORE <code>loadMap()</code>.
+	 * WARNING: Using this will cause your maps to take longer to load. Be careful using this in very large tilemaps.
+	 * 
+	 * @param	mappings		Array of ints for remapping tiles. Ex: [7,4,12] means "0-->7, 1-->4, 2-->12"
+	 * @param	randomIndices	(optional) Array of ints indicating which tile indices should be randmoized. Ex: [7,4,12] means "replace tile index of 7, 4, or 12 with a randomized value"
+	 * @param	randomChoices	(optional) A list of int-arrays that serve as the corresponding choices to randomly choose from. Ex: indices = [7,4], choices = [[1,2],[3,4,5]], 7 will be replaced by either 1 or 2, 4 will be replaced by 3, 4, or 5.
+	 * @param	randomLambda	(optional) A custom randomizer function, should return value between 0.0 and 1.0. Initialize your random seed before passing this in! If not defined, will default to unseeded Math.random() calls.
+	 */
+	public function setCustomTileMappings(mappings:Array<Int>, randomIndices:Array<Int> = null, randomChoices:Array<Array<Int>> = null, randomLambda:Void->Float = null):Void
+	{
+		customTileRemap = mappings;
+		_randomIndices = randomIndices;
+		_randomChoices = randomChoices;
+		_randomLambda = randomLambda;
+		
+		// make sure users provide all that data required if they wish to randomize tile mappings.
+		if (_randomIndices != null && (_randomChoices == null || _randomChoices.length == 0))
+		{
+			throw "You must provide valid 'randomChoices' if you wish to randomize tilemap indicies, please read documentation of 'setCustomTileMappings' function.";
+		}
 	}
 	
 	/**
@@ -2292,12 +2305,12 @@ class FlxTilemap extends FlxObject
 		_data[Index] = 0;
 		
 		// UP
-		if ((Index-widthInTiles < 0) || (_data[Index-widthInTiles] > 0)) 		
+		if ((Index-widthInTiles < 0) || (_data[Index-widthInTiles] > 0))
 		{
 			_data[Index] += 1;
 		}
 		// RIGHT
-		if ((Index%widthInTiles >= widthInTiles-1) || (_data[Index+1] > 0)) 		
+		if ((Index%widthInTiles >= widthInTiles-1) || (_data[Index+1] > 0))
 		{
 			_data[Index] += 2;
 		}
@@ -2307,33 +2320,33 @@ class FlxTilemap extends FlxObject
 			_data[Index] += 4;
 		}
 		// LEFT
-		if ((Index%widthInTiles <= 0) || (_data[Index-1] > 0)) 					
+		if ((Index%widthInTiles <= 0) || (_data[Index-1] > 0))
 		{
 			_data[Index] += 8;
 		}
 		
 		// The alternate algo checks for interior corners
-		if ((auto == ALT) && (_data[Index] == 15))	
+		if ((auto == ALT) && (_data[Index] == 15))
 		{
 			// BOTTOM LEFT OPEN
 			if ((Index%widthInTiles > 0) && (Std.int(Index+widthInTiles) < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
 			{
-				_data[Index] = 1;		
+				_data[Index] = 1;
 			}
 			// TOP LEFT OPEN
 			if ((Index%widthInTiles > 0) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles-1] <= 0))
 			{
-				_data[Index] = 2;		
+				_data[Index] = 2;
 			}
 			// TOP RIGHT OPEN
 			if ((Index%widthInTiles < widthInTiles-1) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles+1] <= 0))
 			{
-				_data[Index] = 4;		
+				_data[Index] = 4;
 			}
 			// BOTTOM RIGHT OPEN
 			if ((Index%widthInTiles < widthInTiles-1) && (Std.int(Index+widthInTiles) < totalTiles) && (_data[Index+widthInTiles+1] <= 0))
 			{
-				_data[Index] = 8; 		
+				_data[Index] = 8;
 			}
 		}
 		
@@ -2463,73 +2476,43 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Use this method so the tilemap buffers are updated, eg when resizing your game
 	 */
-    public function updateBuffers():Void
-    {
-        var i:Int = 0;
-        var l:Int;
+	public function updateBuffers():Void
+	{
+		var i:Int = 0;
+		var l:Int;
 		
-        if (_buffers != null)
-        {
-            i = 0;
-            l = _buffers.length;
+		if (_buffers != null)
+		{
+			i = 0;
+			l = _buffers.length;
 			
-            for (i in 0...l)
-            {
-                _buffers[i].destroy();
-            }
+			for (i in 0...l)
+			{
+				_buffers[i].destroy();
+			}
 			
-            _buffers = null;
-        }
+			_buffers = null;
+		}
 		
-        _buffers = new Array<FlxTilemapBuffer>();
-    }
+		_buffers = new Array<FlxTilemapBuffer>();
+	}
 	
 	override private function set_forceComplexRender(Value:Bool):Bool 
 	{
 		var i:Int = 0;
-        var l:Int;
+		var l:Int;
 		
-        if (_buffers != null)
-        {
-            i = 0;
-            l = _buffers.length;
+		if (_buffers != null)
+		{
+			i = 0;
+			l = _buffers.length;
 			
-            for (i in 0...l)
-            {
-                _buffers[i].forceComplexRender = Value;
-            }
-        }
+			for (i in 0...l)
+			{
+				_buffers[i].forceComplexRender = Value;
+			}
+		}
 		
 		return super.set_forceComplexRender(Value);
 	}
-	
-	/**
-	 * Input a custom tile map as a comma-separated int string, such as "3,6,7,9,12"
-	 * This will remap the tilemaps values to those indices in your source tilesheet. 
-	 * So, if the remap string is "3,6,7,9,12", that means:
-	 *   0-->3, 1-->6, 2-->7, 3-->9, 4-->12
-	 * @param	str a comma-separated string of int values, ie, "3,6,7,9,12"
-	 * @return  array of ints representing the resulting custom remap array
-	 */
-	public function setCustomTileRemapStr(str:String):Array<Int>{
-		customTileRemap = FlxArrayUtil.intFromString(str);
-		return customTileRemap;
-	}
-	
-	/**
-	 * Set custom tile mapping and/or randomization rules prior to loading. 
-	 * This MUST be called BEFORE loadMap() for it to work.
-	 * @param	mappings		array of ints for remapping tiles. Ex: [7,4,12] means "0-->7, 1-->4, 2-->12"
-	 * @param	randomIndices	(optional) array of ints indicating which tile indices should be randmoized. Ex: [7,4,12] means "replace tile index of 7, 4, or 12 with a randomized value"
-	 * @param	randomChoices	(optional) a list of int-arrays that serve as the corresponding choices to randomly choose from. Ex: indices = [7,4], choices = [[1,2],[3,4,5]], 7 will be replaced by either 1 or 2, 4 will be replaced by 3, 4, or 5.
-	 * @param	randomLambda	(optional) a custom randomizer function, should return value between 0.0 and 1.0. Initialize your random seed before passing this in! If not defined, will default to unseeded Math.random() calls.
-	 */
-	public function prepareCustomTileMappings(mappings:Array<Int>, randomIndices:Array<Int> = null, randomChoices:Array<Array<Int>>= null, randomLambda:Void->Float=null):Void
-	{
-		customTileRemap = mappings;
-		_randomIndices = randomIndices;
-		_randomChoices = randomChoices;
-		_randomLambda = randomLambda;
-	}
-	
 }
