@@ -1,5 +1,7 @@
 package;
 
+import flixel.util.FlxColorUtil;
+import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
@@ -30,8 +32,9 @@ class Triangles extends FlxSpriteGroup
 		
 		for (i in 0...length)
 		{
-			members[i].randomFrame();
-			members[i].color = Colors.random();
+			sprite = cast members[i];
+			sprite.animation.randomFrame();
+			sprite.color = FlxColorUtil.getRandomColor();
 		}
 	}
 }

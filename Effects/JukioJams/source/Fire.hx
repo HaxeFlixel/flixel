@@ -10,14 +10,14 @@ class Fire extends FlxParticle
 		super();
 		
 		loadGraphic("assets/fire.png", true);
-		addAnimation("burn", [0, 1, 2, 3, 4, 5, 6, 7], 15, false);
+		this.animation.add("burn", [0, 1, 2, 3, 4, 5, 6, 7], 15, false);
 		scale.set(2, 2);
 		exists = false;
 	}
 	
 	override public function update():Void
 	{
-		if (finished)
+		if (this.animation.finished)
 		{
 			exists = false;
 		}
@@ -25,7 +25,7 @@ class Fire extends FlxParticle
 	
 	override public function onEmit():Void
 	{
-		play("burn", true);
+		this.animation.play("burn", true);
 		
 		if (angularVelocity == 0)
 		{
