@@ -29,24 +29,24 @@ class SinThing extends FlxSprite
 				{
 					base = 5;
 				}
-				this.animation.add("idle", [base + 0, base + 1, base + 2, base + 3, base + 4, base + 3, base + 2, base + 1], 20);
+				animation.add("idle", [base + 0, base + 1, base + 2, base + 3, base + 4, base + 3, base + 2, base + 1], 20);
 			case 1:
 				loadGraphic("assets/particle_circloid.png", true, false, 18, 18);
 				if(Toggled)
 				{
 					base = 5;
 				}
-				this.animation.add("idle", [base + 0, base + 1, base + 2, base + 3, base + 4, base + 3, base + 2, base + 1], 20);
+				animation.add("idle", [base + 0, base + 1, base + 2, base + 3, base + 4, base + 3, base + 2, base + 1], 20);
 			case 2:
 				loadGraphic("assets/particle_diamond_big.png", true, false, 31, 31);
 				if(Toggled)
 				{
 					base = 8;
 				}
-				this.animation.add("idle", [base + 0, base + 1, base + 2, base + 3, base + 4, base + 5, base + 6, base + 7, base + 6, base + 5, base + 4, base + 3, base + 2, base + 1], 20);
+				animation.add("idle", [base + 0, base + 1, base + 2, base + 3, base + 4, base + 5, base + 6, base + 7, base + 6, base + 5, base + 4, base + 3, base + 2, base + 1], 20);
 		}
 
-		this.animation.play("idle");
+		animation.play("idle");
 		
 		s = new FlxPoint(FlxG.width * FlxRandom.float(), FlxG.height * FlxRandom.float());
 		

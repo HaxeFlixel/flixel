@@ -33,10 +33,10 @@ class Glitch extends FlxSprite
 	override public function draw():Void
 	{
 		color = color2;
-		this.animation.frameIndex = frame1;
+		animation.frameIndex = frame1;
 		super.draw();
 		color = color3;
-		this.animation.frameIndex = frame2;
+		animation.frameIndex = frame2;
 		super.draw();
 	}
 }
