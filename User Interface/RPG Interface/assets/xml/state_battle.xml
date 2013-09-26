@@ -129,7 +129,7 @@
 				<anchor x="panel.left" y="panel.top" x-flush="left" y-flush="top"/>
 			</sprite>
 		
-			<9slicesprite id="health_bar" x="10" y="5" width="134" height="16" use_def="health" group="mcguffin">
+			<chrome id="health_bar" x="10" y="5" width="134" height="16" use_def="health" group="mcguffin">
 				<anchor x="portrait.right" y="portrait.top" x-flush="left" y-flush="top"/>
 				<!--
 				You can do simple operands in stretch commands, too!
@@ -142,13 +142,13 @@
 				-->
 				<min_size width="stretch:portrait.right+10,right-10"/>
 				<max_size width="stretch:portrait.right+10,right-10"/>
-			</9slicesprite>
+			</chrome>
 			
-			<9slicesprite id="magic_bar" x="10" y="-5" width="134" height="16" use_def="mana" group="mcguffin">
+			<chrome id="magic_bar" x="10" y="-5" width="134" height="16" use_def="mana" group="mcguffin">
 				<anchor x="portrait.right" y="portrait.bottom" x-flush="left" y-flush="bottom"/>				
 				<min_size width="stretch:portrait.right+10,right-10"/>
 				<max_size width="stretch:portrait.right+10,right-10"/>
-			</9slicesprite>		
+			</chrome>		
 		<!--end mcguffin group-->
 				
 		<group id="spell"/>
@@ -302,13 +302,13 @@
 			<sprite x="10" y="10" width="48" height="48" color="0xffffffff" group="mcguffin"/>
 			<sprite id="portrait" x="10" y="10" src="other/portrait_mane" group="mcguffin"/>
 		
-			<9slicesprite id="health_bar" x="10" y="5" width="134" height="16" use_def="health" group="mcguffin">
+			<chrome id="health_bar" x="10" y="5" width="134" height="16" use_def="health" group="mcguffin">
 				<anchor x="portrait.right" y="portrait.top" x-flush="left" y-flush="top"/>
-			</9slicesprite>
+			</chrome>
 			
-			<9slicesprite id="magic_bar" x="10" y="-5" width="134" height="16" use_def="mana" group="mcguffin">
+			<chrome id="magic_bar" x="10" y="-5" width="134" height="16" use_def="mana" group="mcguffin">
 				<anchor x="portrait.right" y="portrait.bottom" x-flush="left" y-flush="bottom"/>
-			</9slicesprite>		
+			</chrome>		
 		<!--end mcguffin group-->
 
 		<group id="spell"/>

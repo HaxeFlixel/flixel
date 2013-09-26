@@ -20,7 +20,7 @@ class SaveSlot extends FlxUI
 	private var ptr:IEventGetter;
 	public var valid : Bool;
 	
-	public function new(data:Fast, definition:Fast = null, _ptr:Dynamic = null) {
+	public function new(data:Fast, _ptr:Dynamic = null) {
 		super(null, _ptr);		
 		if (_ptr != null) {
 			if (Std.is(_ptr, FlxUI)) {
@@ -28,15 +28,15 @@ class SaveSlot extends FlxUI
 				_ptr_tongue = ui.tongue;
 			}
 		}
-		loadStuff(data, definition, _ptr);
+		loadStuff(data, _ptr);
 		valid = true;
 		FlxG.log.add("SaveSlot(" + id + "" + _ptr + ")");		
 
 		init();
 	}
 
-	public function loadStuff(data:Fast, definition:Fast, _ptr:Dynamic):Void {		
-		load(definition);
+	public function loadStuff(data:Fast, _ptr:Dynamic):Void {		
+		load(data);
 		id = U.xml_str(data.x,"id");
 	}
 	

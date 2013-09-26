@@ -26,7 +26,7 @@ class State_SaveMenu extends FlxUIState
 			var str:String = StringTools.replace(id,"ui_get:","");
 			switch(str) {
 				case "save_slot": 					
-					return new SaveSlot(data.data, data.definition, _ui);
+					return new SaveSlot(data, _ui);
 			}
 		}
 		return null;
