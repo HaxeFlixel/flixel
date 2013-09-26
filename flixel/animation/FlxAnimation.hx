@@ -19,14 +19,14 @@ class FlxAnimation extends FlxBaseAnimation
 	@:isVar public var curFrame(default, set):Int = 0;
 	
 	/**
-	 * Whether the current animation has finished its first (or only) loop.
-	 */
-	public var finished(default, null):Bool;
-	
-	/**
 	 * Seconds between frames (basically the framerate)
 	 */
 	public var delay(default, null):Float;
+	
+	/**
+	 * Whether the current animation has finished.
+	 */
+	public var finished:Bool;
 	
 	/**
 	 * Whether the current animation gets updated or not.
