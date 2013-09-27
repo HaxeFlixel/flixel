@@ -255,11 +255,8 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	
 	private function set_angle(NewAngle:Float):Float
 	{
-		if (!_skipTransformChildren)
-		{
-			var offset:Float = NewAngle - angle;
-			transformChildren(angleTransform, offset);
-		}
+		var offset:Float = NewAngle - angle;
+		transformChildren(angleTransform, offset);
 		return angle = NewAngle;
 	}
 	
@@ -274,30 +271,20 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 			NewAlpha = 0;
 		}
 		
-		if (!_skipTransformChildren)
-		{
-			var factor:Float = NewAlpha / alpha;
-			transformChildren(alphaTransform, factor);
-		}
-		
+		var factor:Float = NewAlpha / alpha;
+		transformChildren(alphaTransform, factor);
 		return alpha = NewAlpha;
 	}
 	
 	private function set_facing(Value:Int):Int
 	{
-		if (!_skipTransformChildren)
-		{
-			transformChildren(facingTransform, Value);
-		}
+		transformChildren(facingTransform, Value);
 		return facing = Value;
 	}
 	
 	private function set_immovable(Value:Bool):Bool
 	{
-		if (!_skipTransformChildren)
-		{
-			transformChildren(immovableTransform, Value);
-		}
+		transformChildren(immovableTransform, Value);
 		return immovable = Value;
 	}
 	
