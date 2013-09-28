@@ -15,11 +15,11 @@ class MenuState extends FlxState
 	{
 		var t:FlxText;
 		t = new FlxText(0, FlxG.height / 2 - 20, FlxG.width, "FlxTeroids");
-		t.setFormat(null, 32, FlxColor.WHITE, "center", FlxColor.GRAY, true);
+		t.setFormat(null, 32, FlxColor.WHITE, "center", FlxText.BORDER_OUTLINE);
 		add(t);
 		
 		t = new FlxText(0, FlxG.height - 30, FlxG.width, "click to play");
-		t.setFormat(null, 16, FlxColor.WHITE, "center", FlxColor.GRAY, true);
+		t.setFormat(null, 16, FlxColor.WHITE, "center", FlxText.BORDER_OUTLINE);
 		add(t);
 		
 		FlxG.mouse.show();

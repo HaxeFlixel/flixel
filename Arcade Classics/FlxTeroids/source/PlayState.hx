@@ -21,7 +21,7 @@ import flixel.util.FlxTimer;
 class PlayState extends FlxState
 {
 	static public var asteroids:FlxTypedGroup<Asteroid>;
-	static public var bullets:FlxSpriteGroup;
+	static public var bullets:FlxTypedGroup<FlxSprite>;
 	
 	private var _playerShip:PlayerShip;
 	private var _scoreText:FlxText;
@@ -55,10 +55,10 @@ class PlayState extends FlxState
 		
 		// There'll only ever be 32 bullets that we recycle over and over
 		var numBullets:Int = 32;
-		bullets = new FlxSpriteGroup(numBullets);
-		
+		bullets = new FlxTypedGroup<FlxSprite>(numBullets);
+
 		var sprite:FlxSprite;
-		
+
 		for (i in 0...numBullets)
 		{
 			sprite = new FlxSprite( -100, -100);
@@ -73,7 +73,7 @@ class PlayState extends FlxState
 		
 		// A text to display the score
 		_scoreText = new FlxText(0, 4, FlxG.width, "Score: " + 0);
-		_scoreText.setFormat(null, 16, FlxColor.WHITE, "center", FlxColor.GRAY, true);
+		_scoreText.setFormat(null, 16, FlxColor.WHITE, "center", FlxText.BORDER_OUTLINE);
 		add(_scoreText);
 		
 		add(bullets);
@@ -96,17 +96,17 @@ class PlayState extends FlxState
 		{
 			FlxG.switchState(new MenuState());
 		}
-		
+
 		super.update();
 		
 		// Don't continue in case we lost
-		if (!_playerShip.alive) 
+		if (!_playerShip.alive)
 		{
 			if (FlxG.keys.pressed.R)
 			{
 				FlxG.resetState();
 			}
-			
+
 			return;
 		}
 		
@@ -118,7 +118,7 @@ class PlayState extends FlxState
 		{
 			if (bullet.exists)
 			{
-				FlxSpriteUtil.screenWrap(bullet);
+				FlxSpriteUtil.screenWrap(cast (bullet,FlxSprite));
 			}
 		}
 	}
