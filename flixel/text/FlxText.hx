@@ -42,14 +42,6 @@ class FlxText extends FlxSprite
 	public var alignment(get, set):String;
 	
 	/**
-	 * Whether this text field can be changed (text or appearance).
-	 * Once set to true it can't be changed anymore.
-	 * Maybe usefull for cpp and neko targets, 
-	 * since if you set it to true then you can insert text's image into other atlas.
-	 */
-	public var isStatic(get, set):Bool;
-	
-	/**
 	 * Use a border style like FlxText.SHADOW or FlxText.OUTLINE
 	 */	
 	public var borderStyle(default, set):Int = BORDER_NONE;
@@ -109,8 +101,6 @@ class FlxText extends FlxSprite
 	 */
 	private var _regen:Bool = true;
 	
-	private var _isStatic:Bool = false;
-	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
 	 * @param	X				The X position of the text.
@@ -118,9 +108,8 @@ class FlxText extends FlxSprite
 	 * @param	Width			The width of the text object (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
-	 * @param	IsStatic		Whether this text field can't be changed (text or appearance)
 	 */
-	public function new(X:Float, Y:Float, Width:Int, ?Text:String, size:Int = 8, EmbeddedFont:Bool = true, IsStatic:Bool = false)
+	public function new(X:Float, Y:Float, Width:Int, ?Text:String, size:Int = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
 		
@@ -169,8 +158,6 @@ class FlxText extends FlxSprite
 			calcFrame(true);
 		}
 		#end
-		
-		_isStatic = IsStatic;
 	}
 	
 	/**
@@ -200,11 +187,6 @@ class FlxText extends FlxSprite
 	 */
 	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=BORDER_NONE, BorderColor:Int=0x000000):FlxText
 	{
-		if (_isStatic)
-		{
-			return this;
-		}
-		
 		if (Font == null)
 		{
 			_format.font = FlxAssets.FONT_DEFAULT;
@@ -260,11 +242,6 @@ class FlxText extends FlxSprite
 	
 	private function set_text(Text:String):String
 	{
-		if (_isStatic)
-		{
-			return Text;
-		}
-		
 		var ot:String = _textField.text;
 		_textField.text = Text;
 		
@@ -283,11 +260,6 @@ class FlxText extends FlxSprite
 	
 	private function set_size(Size:Float):Float
 	{
-		if (_isStatic)
-		{
-			return Size;
-		}
-		
 		_format.size = Size;
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
@@ -301,11 +273,6 @@ class FlxText extends FlxSprite
 	 */
 	override private function set_color(Color:Int):Int
 	{
-		if (_isStatic)
-		{
-			return Color;
-		}
-		
 		Color &= 0x00ffffff;
 		_format.color = Color;
 		color = Color;
@@ -324,11 +291,6 @@ class FlxText extends FlxSprite
 	
 	private function set_font(Font:String):String
 	{
-		if (_isStatic)
-		{
-			return Font;
-		}
-		
 		_format.font = Assets.getFont(Font).fontName;
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
@@ -344,11 +306,6 @@ class FlxText extends FlxSprite
 	
 	private function set_alignment(Alignment:String):String
 	{
-		if (_isStatic)
-		{
-			return Alignment;
-		}
-		
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
@@ -375,11 +332,6 @@ class FlxText extends FlxSprite
 	
 	private function set_borderStyle(style:Int):Int
 	{		
-		if (_isStatic)
-		{
-			return style;
-		}
-		
 		if (style != borderStyle)
 		{
 			borderStyle = style;
@@ -391,10 +343,6 @@ class FlxText extends FlxSprite
 	
 	private function set_borderColor(Color:Int):Int
 	{
-		if (_isStatic) {
-			return Color;
-		}
-		
 		Color &= 0x00ffffff;
 		
 		if (borderColor != Color && borderStyle != BORDER_NONE)
@@ -408,10 +356,6 @@ class FlxText extends FlxSprite
 	
 	private function set_borderSize(Value:Float):Float
 	{
-		if (_isStatic)
-		{
-			return Value;
-		}
 		if (Value != borderSize && borderStyle != BORDER_NONE)
 		{			
 			_regen = true;
@@ -436,21 +380,6 @@ class FlxText extends FlxSprite
 		borderQuality = Value;
 		
 		return Value;
-	}
-	
-	private function get_isStatic():Bool 
-	{
-		return _isStatic;
-	}
-	
-	private function set_isStatic(Value:Bool):Bool 
-	{
-		if (_isStatic)
-		{
-			return Value;
-		}
-		
-		return _isStatic = Value;
 	}
 	
 	/**
