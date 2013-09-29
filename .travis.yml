@@ -1,0 +1,21 @@
+language: c++
+
+before_script:
+  - sudo apt-get install python-software-properties -y
+  - sudo add-apt-repository ppa:eyecreate/haxe -y
+  - sudo apt-get update
+  - sudo apt-get install haxe -y
+  - mkdir ~/haxelib
+  - haxelib setup ~/haxelib
+  - haxelib install openfl
+  - haxelib install openfl-native
+  - haxelib install openfl-tools
+  - haxelib run openfl setup
+  - haxelib run openfl setup linux
+  - haxelib git flixel https://github.com/HaxeFlixel/flixel
+  - haxelib git flixel-demos https://github.com/HaxeFlixel/flixel-demos
+  - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
+  - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools
+
+script:
+  - haxelib run flixel-tools testdemos
