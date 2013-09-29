@@ -12,3 +12,6 @@ We're tracking compatibility of demos on a [shared google spreadsheet](https://d
 #### If you are installing flixel from haxelib please use the following release:
 
 https://github.com/HaxeFlixel/flixel-demos/releases/tag/flixel-2.0.0-alpha.3
+______________________________________________________
+
+###Current Build Status [![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos)
