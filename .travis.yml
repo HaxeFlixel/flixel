@@ -5,8 +5,7 @@ before_script:
   - sudo add-apt-repository ppa:eyecreate/haxe -y
   - sudo apt-get update
   - sudo apt-get install haxe -y
-  - sudo dpkg --add-architecture i386
-  - sudo apt-get install ia32-libs
+  - sudo apt-get install ia32-libs ia32-libs-multiarch
   - mkdir ~/haxelib
   - haxelib setup ~/haxelib
   - haxelib install openfl
