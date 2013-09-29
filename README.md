@@ -17,6 +17,8 @@ Clone this repository by running `haxelib git flixel https://github.com/HaxeFlix
 
 We recommended that you use a GUI application to manage your changes ([SourceTree](http://www.sourcetreeapp.com/)).
 
+###Current Build Status [![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel)
+
 ______________________________________________________
 ###Links
 
