@@ -1,12 +1,12 @@
 ﻿package;
 
+import flash.Lib;
+import flash.ui.Keyboard;
+import flash.events.Event;
+import flash.events.KeyboardEvent;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
-import flash.events.Event;
-import flash.events.KeyboardEvent;
-import flash.Lib;
-import flash.ui.Keyboard;
 import flixel.FlxGame;
 
 /**
