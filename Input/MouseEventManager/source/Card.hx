@@ -37,7 +37,7 @@ class Card extends FlxNapeSprite
 		loadGraphic("assets/Deck.png", true, false, 123, 123);
 		
 		// The card starts out being turned around
-		frame = 54;
+		animation.frameIndex = 54;
 		// So the card still looks smooth when rotated
 		antialiasing = true;
 		setDrag(0.95, 0.95);
@@ -85,8 +85,8 @@ class Card extends FlxNapeSprite
 	{
 		// Choose a random card from the first 52 cards on the spritesheet 
 		// - excluding those who have already been picked!
-		frame = FlxRandom.intRanged(0, 51, pickedCards);
-		pickedCards.push(frame);
+		animation.frameIndex = FlxRandom.intRanged(0, 51, pickedCards);
+		pickedCards.push(animation.frameIndex);
 		
 		// Finish the card animation
 		FlxTween.multiVar(scale, { x: 1 }, TURNING_TIME / 2);

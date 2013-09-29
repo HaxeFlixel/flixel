@@ -36,8 +36,8 @@ class PlayState extends FlxNapeState
 		_cardGroup = new FlxTypedGroup<Card>();
 		createCards();
 		add(_cardGroup);
-		
-		disablePhysDebug();
+
+		napeDebugEnabled = false;
 		createWalls();
 		
 		_fan = new FlxSprite(340, -280, "assets/Fan.png");
