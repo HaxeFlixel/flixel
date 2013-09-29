@@ -1,11 +1,11 @@
-language: c++
+language: java
 
 before_script:
   - sudo apt-get install python-software-properties -y
   - sudo add-apt-repository ppa:eyecreate/haxe -y
   - sudo apt-get update
   - sudo apt-get install haxe -y
-  - sudo apt-get install ia32-libs ia32-libs-multiarch
+  - sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   - mkdir ~/haxelib
   - haxelib setup ~/haxelib
   - haxelib install openfl
