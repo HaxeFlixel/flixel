@@ -14,6 +14,8 @@ before_script:
   - haxelib install openfl-tools
   - haxelib run openfl setup linux
   - haxelib install systools
+  - haxelib install spinehx
+  - haxelib install hxcpp
   - haxelib install nape
   - haxelib install task
   - haxelib git firetongue https://github.com/larsiusprime/firetongue
@@ -24,4 +26,4 @@ before_script:
   - haxelib git flixel https://github.com/HaxeFlixel/flixel
 
 script:
-  - haxelib run flixel-tools testdemos
+  - haxelib run flixel-tools testdemos -neko
