@@ -15,6 +15,7 @@ before_script:
   - haxelib run openfl setup linux
   - haxelib install systools
   - haxelib install spinehx
+  - haxelib install actuate
   - haxelib install hxcpp
   - haxelib install nape
   - haxelib install task
@@ -26,4 +27,4 @@ before_script:
   - haxelib git flixel https://github.com/HaxeFlixel/flixel
 
 script:
-  - haxelib run flixel-tools testdemos -neko
+  - haxelib run flixel-tools testdemos
