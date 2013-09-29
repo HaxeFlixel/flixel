@@ -166,7 +166,7 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		if (Frame >= 0)
 		{
-			if (!looped && Frame >= (numFrames - 1))
+			if (!looped && Frame >= numFrames)
 			{
 				finished = true;
 				curFrame = numFrames - 1;
