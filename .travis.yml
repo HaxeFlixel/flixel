@@ -9,8 +9,8 @@ before_script:
   - haxelib setup ~/haxelib
   - haxelib install openfl
   - haxelib install openfl-native
+  - haxelib install openfl-html5
   - haxelib install openfl-tools
-  - haxelib run openfl setup
   - haxelib run openfl setup linux
   - haxelib git flixel https://github.com/HaxeFlixel/flixel
   - haxelib git flixel-demos https://github.com/HaxeFlixel/flixel-demos
