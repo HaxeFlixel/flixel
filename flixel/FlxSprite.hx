@@ -28,6 +28,7 @@ import openfl.display.Tilesheet;
  * It makes possible to add <code>FlxSpriteGroup</code> to <code>FlxSpriteGroup</code>
  */
 interface IFlxSprite extends IFlxBasic {
+	public function setPosition(X:Float = 0, Y:Float = 0):Void;
 	public var x(default, set):Float;
 	public var y(default, set):Float;
 	public var alpha(default, set):Float;
@@ -43,7 +44,7 @@ interface IFlxSprite extends IFlxBasic {
 	public var acceleration:IFlxPoint;
 	public var drag:IFlxPoint;
 	public var scrollFactor:IFlxPoint;
-	
+
 	public function reset(X:Float, Y:Float):Void;
 }
 
