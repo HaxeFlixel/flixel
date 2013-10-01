@@ -47,6 +47,16 @@ class FlxText extends FlxSprite
 	public var systemFont(get, set):String;
 	
 	/**
+	 * Whether to use bold text or not (false by default).
+	 */
+	public var bold(get, set):Bool;
+	
+	/**
+	 * Whether to use word wrapping and multiline or not (true by default).
+	 */
+	public var wordWrap(get, set):Bool;
+	
+	/**
 	 * The alignment of the font ("left", "right", or "center").
 	 */
 	public var alignment(get, set):String;
@@ -323,6 +333,40 @@ class FlxText extends FlxSprite
 		updateFormat(_format);
 		_regen = true;
 		return Font;
+	}
+	
+	private function get_bold():Bool 
+	{ 
+		return _format.bold; 
+	}
+	
+	private function set_bold(value:Bool):Bool
+	{
+		if (_format.bold != value)
+		{
+			_format.bold = value;
+			_textField.defaultTextFormat = _format;
+			updateFormat(_format);
+			_regen = true;
+		}
+		
+		return value;
+	}
+	
+	private function get_wordWrap():Bool 
+	{ 
+		return _textField.wordWrap; 
+	}
+	
+	private function set_wordWrap(value:Bool):Bool
+	{
+		if (_textField.wordWrap != value)
+		{
+			_textField.wordWrap = value;
+			_textField.multiline = value;
+			_regen = true;
+		}
+		return value;
 	}
 	
 	private function get_alignment():String
