@@ -161,7 +161,7 @@ class FlxGamePad extends FlxTypedGroup<FlxButton>
 	private function set_alpha(Alpha:Float):Float
 	{
 		alpha = Alpha;
-		for (i in 0...members.length)
+		for (i in 0...this.length)
 		{
 			members[i].alpha = Alpha;
 		}
