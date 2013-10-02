@@ -134,7 +134,7 @@ class TileSheetData
 		hash = hash * 31 + rect.height;
 		hash = hash * 31 + point.x;
 		hash = hash * 31 + point.y;
-		return cast hash;
+		return Std.string(hash);
 	}
 	
 	public inline function getKeyForSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
@@ -151,7 +151,7 @@ class TileSheetData
 		hash = hash * 31 + ySpacing;
 		hash = hash * 31 + pointX;
 		hash = hash * 31 + pointY;
-		return cast hash;
+		return Std.string(hash);
 	}
 	
 	public function containsSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool

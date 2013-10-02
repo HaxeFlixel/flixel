@@ -61,7 +61,7 @@ class TileSheetExt extends Tilesheet
 			hash = hash * 31 + point.x;
 			hash = hash * 31 + point.y;
 		}
-		return cast hash;
+		return Std.string(hash);
 	}
 	
 	/**
