@@ -9,7 +9,7 @@ class FlxGamepad
 	/**
 	 * DPAD on Xbox Gamepad
 	 */
-	public var hat:FlxPoint;	
+	public var hat:FlxPoint;
 	public var ball:FlxPoint;
 	public var id:Int;
 	
