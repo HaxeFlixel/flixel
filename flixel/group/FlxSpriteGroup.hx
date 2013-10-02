@@ -1,5 +1,6 @@
 package flixel.group;
 
+import flixel.FlxBasic;
 import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 
@@ -8,7 +9,7 @@ import flixel.util.FlxPoint;
  * that can be treated like a <code>FlxSprite</code> due to having
  * x, y and alpha values. It can only contain <code>FlxSprites</code>.
  */
-class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
+class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 {
 	/**
 	 * The x position of this group.
@@ -133,12 +134,17 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 	 * @param	Object		The object you want to add to the group.
 	 * @return	The same <code>FlxBasic</code> object that was passed in.
 	 */
-	override public function add(Sprite:IFlxSprite):IFlxSprite
+	override public function add(Basic:FlxBasic):FlxBasic
 	{
-		Sprite.x += x;
-		Sprite.y += y;
-		Sprite.alpha += alpha;
-		return super.add(Sprite);
+		if (Std.is(Basic, IFlxSprite))
+		{
+			var Sprite:IFlxSprite = cast Basic;
+			Sprite.x += x;
+			Sprite.y += y;
+			Sprite.alpha += alpha;
+		}
+		
+		return super.add(Basic);
 	}
 	
 	public function reset(X:Float, Y:Float):Void
@@ -149,7 +155,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		var sprite:IFlxSprite;
 		for (i in 0...length)
 		{
-			sprite = members[i];
+			sprite = cast members[i];
 			if (sprite != null)
 			{
 				sprite.reset(X, Y);
@@ -188,7 +194,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		
 		for (i in 0...length)
 		{
-			sprite = members[i];
+			sprite = cast members[i];
 			
 			if (sprite != null && sprite.exists)
 			{
@@ -216,7 +222,7 @@ class FlxSpriteGroup extends FlxTypedGroup<IFlxSprite> implements IFlxSprite
 		
 		for (i in 0...length)
 		{
-			sprite = members[i];
+			sprite = cast members[i];
 			
 			if (sprite != null && sprite.exists)
 			{
