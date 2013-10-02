@@ -12,7 +12,7 @@ interface IFlxBasic
 	public var exists:Bool;
 	public var alive:Bool;
 	public var active:Bool;
-	public var visible:Bool;
+	public var visible(default, set):Bool;
 	public var cameras:Array<FlxCamera>;
 	#if !FLX_NO_DEBUG
 	public var ignoreDrawDebug:Bool;
@@ -59,7 +59,7 @@ class FlxBasic implements IFlxBasic
 	/**
 	 * Controls whether <code>draw()</code> is automatically called by FlxState/FlxGroup.
 	 */
-	public var visible:Bool = true;
+	public var visible(default, set):Bool = true;
 	/**
 	 * Useful state for many game objects - "dead" (!alive) vs alive.
 	 * <code>kill()</code> and <code>revive()</code> both flip this switch (along with exists, but you can override that).
@@ -86,9 +86,9 @@ class FlxBasic implements IFlxBasic
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
 	public function destroy():Void 
-    { 
-        exists = false;
-    }
+	{
+		exists = false;
+	}
 	
 	/**
 	 * Override this function to update your class's position and appearance.
@@ -176,5 +176,10 @@ class FlxBasic implements IFlxBasic
 	public function toString():String
 	{
 		return FlxStringUtil.getClassName(this, true);
+	}
+	
+	private function set_visible(Value:Bool):Bool
+	{
+		return visible = Value;
 	}
 }
