@@ -119,7 +119,6 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 		if(acceleration != null)	{ acceleration.destroy(); acceleration = null; }
 		if(scrollFactor != null)	{ scrollFactor.destroy(); scrollFactor = null; }
 		if(drag != null)			{ drag.destroy(); drag = null; }
-		
 		super.destroy();
 	}
 	
@@ -136,13 +135,13 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	 */
 	override public function add(Basic:FlxBasic):FlxBasic
 	{
-		if (Std.is(Basic, IFlxSprite))
-		{
-			var Sprite:IFlxSprite = cast Basic;
-			Sprite.x += x;
-			Sprite.y += y;
-			Sprite.alpha += alpha;
-		}
+		if (!Std.is(Basic, IFlxSprite))
+			throw "FlxSpriteGroups can only contain objects that implement IFlxSprite.";
+		
+		var sprite:IFlxSprite = cast Basic;
+		sprite.x += x;
+		sprite.y += y;
+		sprite.alpha *= alpha;
 		
 		return super.add(Basic);
 	}
@@ -190,15 +189,15 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	 */
 	@:generic public function transformChildren<T>(Function:IFlxSprite->T->Void, Value:T):Void
 	{
-		var sprite:IFlxSprite;
+		var basic:FlxBasic;
 		
 		for (i in 0...length)
 		{
-			sprite = cast members[i];
+			basic = members[i];
 			
-			if (sprite != null && sprite.exists)
+			if (basic != null && basic.exists)
 			{
-				Function(sprite, Value);
+				Function(cast basic, Value);
 			}
 		}
 	}
@@ -217,19 +216,19 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 			return;
 		}
 		
-		var sprite:IFlxSprite;
+		var basic:FlxBasic;
 		var lambda:IFlxSprite->T->Void;
 		
 		for (i in 0...length)
 		{
-			sprite = cast members[i];
+			basic = members[i];
 			
-			if (sprite != null && sprite.exists)
+			if (basic != null && basic.exists)
 			{
 				for (j in 0...numProps)
 				{
 					lambda = FunctionArray[j];
-					lambda(sprite, ValueArray[j]);
+					lambda(cast basic, ValueArray[j]);
 				}
 			}
 		}
@@ -277,7 +276,7 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 			NewAlpha = 0;
 		}
 		
-		var factor:Float = NewAlpha / alpha;
+		var factor:Float = (alpha > 0) ? NewAlpha / alpha : 0;
 		transformChildren(alphaTransform, factor);
 		return alpha = NewAlpha;
 	}
