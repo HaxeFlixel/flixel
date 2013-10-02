@@ -506,7 +506,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotation = 0;
-		cachedGraphics = (FlxG.bitmap.create(Width, Height, Color, Unique, Key));
+		cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
 		region = new Region();
 		region.width = Width;
 		region.height = Height;
@@ -654,8 +654,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		framePixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
 		if (useColorTransform) framePixels.colorTransform(_flashRect, _colorTransform);
 	#end
-		
-		animation.frameIndex = 0;
 		
 		_halfWidth = frameWidth * 0.5;
 		_halfHeight = frameHeight * 0.5;
@@ -1396,7 +1394,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		
 		frame = framesData.frames[0];
 		frames = framesData.frames.length;
-		resetFrameSize();
 		resetSizeFromFrame();
 	}
 	
