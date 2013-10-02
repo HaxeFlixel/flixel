@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<assets path="assets/images" rename="flixel/img" if="flash" />
-	<assets path="assets/images" rename="flixel/img" exclude="*.svg" if="html5" />
-	<assets path="assets/images" rename="flixel/img" if="desktop" />
-	<assets path="assets/images" rename="flixel/img" if="mobile" />
-	
-	<assets path="assets/sounds" rename="flixel/snd" exclude="*.wav" if="flash"  />
-	<assets path="assets/sounds" rename="flixel/snd" exclude="*.wav" if="html5"  />
-	<assets path="assets/sounds" rename="flixel/snd" if="desktop"  />
-	<assets path="assets/sounds" rename="flixel/snd" if="mobile"  />
+	<assets path="assets/images" rename="flixel/img" />
+	<assets path="assets/sounds" rename="flixel/snd" />
 </project>

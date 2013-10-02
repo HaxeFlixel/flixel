@@ -68,8 +68,8 @@ class FlxAssets
 	inline static public var FONT_DEBUGGER:String = "Arial";
 	
 	// sounds
-	inline static public var SND_FLIXEL:String = "flixel/snd/flixel.ogg";
-	inline static public var SND_BEEP:String = "flixel/snd/beep.ogg";
+	inline static public var SND_BEEP:String = "flixel/snd/beep.wav";
+	inline static public var SND_FLIXEL:String = "flixel/snd/flixel.wav";
 	
 	static public function init():Void
 	{
