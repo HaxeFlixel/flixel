@@ -18,7 +18,7 @@ class FlxMath
 	 * @param	Precision	Number of decimal points to leave in float.
 	 * @return	The rounded value of that number.
 	 */
-	inline static public function roundDecimal(Value:Float, Precision:Int):Float
+	static public function roundDecimal(Value:Float, Precision:Int):Float
 	{
 		var num = Value * Math.pow(10, Precision);
 		return Math.round( num ) / Math.pow(10, Precision);
@@ -417,7 +417,7 @@ class FlxMath
 	 * @param	Number	The floating point number
 	 * @return	Amount of decimals
 	 */
-	inline static public function getDecimals(Number:Float):Int
+	static public function getDecimals(Number:Float):Int
 	{
 		var helperArray:Array<String> = Std.string(Number).split(".");
 		var decimals:Int = 0;
@@ -430,7 +430,7 @@ class FlxMath
 		return decimals;
 	}
 	
-	inline static public function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
+	static public function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}
