@@ -85,7 +85,10 @@ class FlxBasic implements IFlxBasic
 	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>reset()</code> it later to revive it.
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
-	public function destroy():Void { }
+	public function destroy():Void 
+    { 
+        exists = false;
+    }
 	
 	/**
 	 * Override this function to update your class's position and appearance.
