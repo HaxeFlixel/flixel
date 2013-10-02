@@ -22,8 +22,6 @@ import openfl.Assets;
 class FlxTextField extends FlxText
 {
 	private var _selectable:Bool = false;
-	private var _multiline:Bool = true;
-	private var _wordWrap:Bool = true;
 	
 	private var _text:String;
 	
@@ -106,9 +104,9 @@ class FlxTextField extends FlxText
 	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	override public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=FlxText.BORDER_NONE, BorderColor:Int=0x000000):FlxText
+	override public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=FlxText.BORDER_NONE, BorderColor:Int=0x000000, Embedded:Bool = true):FlxTextField
 	{
-		super.setFormat(Font, Size, Color, Alignment, BorderStyle, BorderColor);
+		super.setFormat(Font, Size, Color, Alignment, BorderStyle, BorderColor, Embedded);
 		updateTextField();
 		return this;
 	}
@@ -226,8 +224,6 @@ class FlxTextField extends FlxText
 			_textField.defaultTextFormat = _format;
 			_textField.setTextFormat(_format);
 			_textField.selectable = _selectable;
-			_textField.wordWrap = _wordWrap;
-			_textField.multiline = _multiline;
 			_textField.text = _text;
 			height = _textField.textHeight;
 			height += 4;
@@ -474,24 +470,6 @@ class FlxTextField extends FlxText
 	}
 	
 	/**
-	 * Defines whether this text field is multiline or not. Default is true.
-	 */
-	public var multiline(get, set):Bool;
-	
-	private function get_multiline():Bool 
-	{
-		return _multiline;
-	}
-	
-	private function set_multiline(Value:Bool):Bool 
-	{
-		_multiline = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
 	 * Defines background color for this text field. Default is 0xffffff (white).
 	 */
 	public var bgColor(get, set):Int;
@@ -522,24 +500,6 @@ class FlxTextField extends FlxText
 	private function set_background(Value:Bool):Bool 
 	{
 		_background = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines whether this text field is using word wrap. Default is true
-	 */
-	public var wordWrap(get, set):Bool;
-	
-	private function get_wordWrap():Bool 
-	{
-		return _wordWrap;
-	}
-	
-	private function set_wordWrap(Value:Bool):Bool 
-	{
-		_wordWrap = Value;
 		updateTextField();
 		
 		return Value;

@@ -32,9 +32,29 @@ class FlxText extends FlxSprite
 	public var size(get, set):Float;
 	
 	/**
-	 * The font used for this text.
+	 * The font used for this text (assuming that it's using embedded font).
 	 */
 	public var font(get, set):String;
+	
+	/**
+	 * Whether this text field uses embedded font (by default) or not
+	 */
+	public var embedded(get, null):Bool;
+	
+	/**
+	 * The system font for this text (not embedded).
+	 */
+	public var systemFont(get, set):String;
+	
+	/**
+	 * Whether to use bold text or not (false by default).
+	 */
+	public var bold(get, set):Bool;
+	
+	/**
+	 * Whether to use word wrapping and multiline or not (true by default).
+	 */
+	public var wordWrap(get, set):Bool;
 	
 	/**
 	 * The alignment of the font ("left", "right", or "center").
@@ -185,16 +205,25 @@ class FlxText extends FlxSprite
 	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int=BORDER_NONE, BorderColor:Int=0x000000):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int = BORDER_NONE, BorderColor:Int = 0x000000, Embedded:Bool = true):FlxText
 	{
-		if (Font == null)
+		if (Embedded)
 		{
-			_format.font = FlxAssets.FONT_DEFAULT;
+			if (Font == null)
+			{
+				_format.font = FlxAssets.FONT_DEFAULT;
+			}
+			else 
+			{
+				_format.font = Assets.getFont(Font).fontName;
+			}
 		}
-		else 
+		else if (Font != null)
 		{
-			_format.font = Assets.getFont(Font).fontName;
+			_format.font = Font;
 		}
+		
+		_textField.embedFonts = Embedded;
 		
 		_format.size = Size;
 		Color &= 0x00ffffff;
@@ -208,17 +237,6 @@ class FlxText extends FlxSprite
 		
 		return this;
 	}
-
-	#if (cpp || neko)
-	override private function set_alpha(Alpha:Float):Float
-	{
-
-		_regen = true;
-		super.set_alpha(Alpha);
-
-		return alpha;
-	}
-	#end
 	
 	override private function set_width(Width:Float):Float
 	{
@@ -278,9 +296,7 @@ class FlxText extends FlxSprite
 		color = Color;
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
-
-		_regen = true;
-		
+		dirty = true;
 		return Color;
 	}
 	
@@ -291,12 +307,66 @@ class FlxText extends FlxSprite
 	
 	private function set_font(Font:String):String
 	{
+		_textField.embedFonts = true;
 		_format.font = Assets.getFont(Font).fontName;
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
 		_regen = true;
-		
 		return Font;
+	}
+	
+	private function get_embedded():Bool
+	{
+		return _textField.embedFonts = true;
+	}
+	
+	private function get_systemFont():String
+	{
+		return _format.font;
+	}
+	
+	private function set_systemFont(Font:String):String
+	{
+		_textField.embedFonts = false;
+		_format.font = Font;
+		_textField.defaultTextFormat = _format;
+		updateFormat(_format);
+		_regen = true;
+		return Font;
+	}
+	
+	private function get_bold():Bool 
+	{ 
+		return _format.bold; 
+	}
+	
+	private function set_bold(value:Bool):Bool
+	{
+		if (_format.bold != value)
+		{
+			_format.bold = value;
+			_textField.defaultTextFormat = _format;
+			updateFormat(_format);
+			_regen = true;
+		}
+		
+		return value;
+	}
+	
+	private function get_wordWrap():Bool 
+	{ 
+		return _textField.wordWrap; 
+	}
+	
+	private function set_wordWrap(value:Bool):Bool
+	{
+		if (_textField.wordWrap != value)
+		{
+			_textField.wordWrap = value;
+			_textField.multiline = value;
+			_regen = true;
+		}
+		return value;
 	}
 	
 	private function get_alignment():String
@@ -323,7 +393,8 @@ class FlxText extends FlxSprite
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
 	
-	public function setBorderStyle(Style:Int, Color:Int=0x000000, Size:Float = 1, Quality:Float = 1):Void {
+	public function setBorderStyle(Style:Int, Color:Int = 0x000000, Size:Float = 1, Quality:Float = 1):Void 
+	{
 		borderStyle = Style;
 		borderColor = Color;
 		borderSize = Size;
@@ -394,9 +465,7 @@ class FlxText extends FlxSprite
 		#if !flash
 		if (AreYouSure)
 		{
-			_regen = true;
 		#end
-			
 			if (_filters != null)
 			{
 				_textField.filters = _filters;
@@ -624,14 +693,11 @@ class FlxText extends FlxSprite
 	override public function draw():Void 
 	{
 		// Rarely
-		if (_regen)
-		{
-			#if !flash
-			calcFrame(true);
-			#else
-			calcFrame();
-			#end
-		}
+		#if !flash
+		if (_regen || dirty)	calcFrame(true);
+		#else
+		if (_regen)	calcFrame();
+		#end
 		
 		super.draw();
 	}
