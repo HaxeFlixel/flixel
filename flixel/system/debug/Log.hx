@@ -170,12 +170,8 @@ class Log extends Window
 			_text.text += text + "\n";
 			#end
 		}
-		#if flash
-		_text.scrollV = Std.int(_text.maxScrollV);
-		#elseif !js
-		_text.scrollV = _text.maxScrollV - Std.int(_text.height / _text.defaultTextFormat.size) + 1;
-		#end
 		
+		_text.scrollV = Std.int(_text.maxScrollV);
 		return true;
 	}
 	
