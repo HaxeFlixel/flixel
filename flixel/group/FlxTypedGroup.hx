@@ -81,6 +81,8 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
+		super.destroy();
+		
 		if (_basics != null)
 		{
 			var i:Int = 0;
@@ -101,8 +103,6 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 		}
 		
 		_sortIndex = null;
-		
-		super.destroy();
 	}
 	
 	/**

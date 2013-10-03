@@ -111,6 +111,7 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	
 	override public function destroy():Void
 	{
+		super.destroy();
 		if(offset != null)			{ offset.destroy(); offset = null; }
 		if(origin != null)			{ origin.destroy(); origin = null; }
 		if(scale != null)			{ scale.destroy(); scale = null; }
@@ -119,7 +120,6 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 		if(acceleration != null)	{ acceleration.destroy(); acceleration = null; }
 		if(scrollFactor != null)	{ scrollFactor.destroy(); scrollFactor = null; }
 		if(drag != null)			{ drag.destroy(); drag = null; }
-		super.destroy();
 	}
 	
 	/**
@@ -289,8 +289,37 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	
 	private function set_immovable(Value:Bool):Bool
 	{
-		transformChildren(immovableTransform, Value);
+		if(immovable != Value)
+			transformChildren(immovableTransform, Value);
 		return immovable = Value;
+	}
+	
+	private override function set_visible(Value:Bool):Bool
+	{
+		if(visible != Value)
+			transformChildren(visibleTransform, Value);
+		return super.set_visible(Value);
+	}
+	
+	private override function set_active(Value:Bool):Bool
+	{
+		if(active != Value)
+			transformChildren(activeTransform, Value);
+		return super.set_active(Value);
+	}
+	
+	private override function set_alive(Value:Bool):Bool
+	{
+		if(alive != Value)
+			transformChildren(aliveTransform, Value);
+		return super.set_alive(Value);
+	}
+	
+	private override function set_exists(Value:Bool):Bool
+	{
+		if (exists != Value)
+			transformChildren(existsTransform, Value);
+		return super.set_exists(Value);
 	}
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
@@ -301,6 +330,10 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	private function alphaTransform(Sprite:IFlxSprite, Alpha:Float)					{ Sprite.alpha *= Alpha; }						// multiplication
 	private function facingTransform(Sprite:IFlxSprite, Facing:Int)					{ Sprite.facing = Facing; }						// set
 	private function immovableTransform(Sprite:IFlxSprite, Immovable:Bool)			{ Sprite.immovable = Immovable; }				// set
+	private function visibleTransform(Sprite:IFlxSprite, Visible:Bool)				{ Sprite.visible = Visible; }					// set
+	private function activeTransform(Sprite:IFlxSprite, Active:Bool)				{ Sprite.active = Active; }						// set
+	private function aliveTransform(Sprite:IFlxSprite, Alive:Bool)					{ Sprite.alive = Alive; }						// set
+	private function existsTransform(Sprite:IFlxSprite, Exists:Bool)				{ Sprite.exists = Exists; }						// set
 	private function offsetTransform(Sprite:IFlxSprite, Offset:FlxPoint)			{ Sprite.offset.copyFrom(Offset); }				// set
 	private function originTransform(Sprite:IFlxSprite, Origin:FlxPoint)			{ Sprite.origin.copyFrom(Origin); }				// set
 	private function scaleTransform(Sprite:IFlxSprite, Scale:FlxPoint)				{ Sprite.scale.copyFrom(Scale); }				// set

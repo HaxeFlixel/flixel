@@ -9,25 +9,26 @@ import flixel.util.FlxStringUtil;
 interface IFlxBasic 
 {
 	public var ID:Int;
-	public var exists:Bool;
-	public var alive:Bool;
-	public var active:Bool;
-	public var visible(default, set):Bool;
 	public var cameras:Array<FlxCamera>;
+	public var exists(default, set):Bool;
+	public var alive(default, set):Bool;
+	public var active(default, set):Bool;
+	public var visible(default, set):Bool;
+	
+	public function draw():Void;
+	public function update():Void;
+	public function destroy():Void;
+	
+	public function kill():Void;
+	public function revive():Void;
+
 	#if !FLX_NO_DEBUG
 	public var ignoreDrawDebug:Bool;
-	#end
-	
-	public function destroy():Void;
-	public function update():Void;
-	public function draw():Void;
-	#if !FLX_NO_DEBUG
 	public function drawDebug():Void;
 	public function drawDebugOnCamera(?Camera:FlxCamera):Void;
 	#end
 	
-	public function kill():Void;
-	public function revive():Void;
+	
 	public function toString():String;
 }
 
@@ -38,24 +39,24 @@ interface IFlxBasic
  */
 class FlxBasic implements IFlxBasic
 {
-	#if !FLX_NO_DEBUG
-	static public var _ACTIVECOUNT:Int = 0;
-	static public var _VISIBLECOUNT:Int = 0;
-	#end
-	
 	/**
 	 * IDs seem like they could be pretty useful, huh?
 	 * They're not actually used for anything yet though.
 	 */
 	public var ID:Int = -1;
 	/**
+	 * An array of camera objects that this object will use during <code>draw()</code>. This value will initialize itself during the first draw to automatically
+	 * point at the main camera list out in <code>FlxG</code> unless you already set it. You can also change it afterward too, very flexible!
+	 */
+	public var cameras:Array<FlxCamera>;
+	/**
 	 * Controls whether <code>update()</code> and <code>draw()</code> are automatically called by FlxState/FlxGroup.
 	 */
-	public var exists:Bool = true;
+	public var exists(default, set):Bool = true;
 	/**
 	 * Controls whether <code>update()</code> is automatically called by FlxState/FlxGroup.
 	 */
-	public var active:Bool = true;
+	public var active(default, set):Bool = true;
 	/**
 	 * Controls whether <code>draw()</code> is automatically called by FlxState/FlxGroup.
 	 */
@@ -64,12 +65,7 @@ class FlxBasic implements IFlxBasic
 	 * Useful state for many game objects - "dead" (!alive) vs alive.
 	 * <code>kill()</code> and <code>revive()</code> both flip this switch (along with exists, but you can override that).
 	 */
-	public var alive:Bool = true;
-	/**
-	 * An array of camera objects that this object will use during <code>draw()</code>. This value will initialize itself during the first draw to automatically
-	 * point at the main camera list out in <code>FlxG</code> unless you already set it. You can also change it afterward too, very flexible!
-	 */
-	public var cameras:Array<FlxCamera>;
+	public var alive(default, set):Bool = true;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -77,10 +73,15 @@ class FlxBasic implements IFlxBasic
 	 * when the visual debug mode in the debugger overlay is toggled on.
 	 */
 	public var ignoreDrawDebug:Bool = false;
+	/**
+	 * Static counters for performance tracking.
+	 */
+	static public var _ACTIVECOUNT:Int = 0;
+	static public var _VISIBLECOUNT:Int = 0;
 	#end
 	
 	public function new() { }
-
+	
 	/**
 	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>reset()</code> it later to revive it.
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
@@ -88,6 +89,26 @@ class FlxBasic implements IFlxBasic
 	public function destroy():Void 
 	{
 		exists = false;
+	}
+	
+	/**
+	 * Handy function for "killing" game objects. Use <code>reset()</code> to revive them. Default behavior is to flag them as nonexistent AND dead. However, if you want the 
+	 * "corpse" to remain in the game, like to animate an effect or whatever, you should override this, setting only alive to false, and leaving exists true.
+	 */
+	public function kill():Void
+	{
+		alive = false;
+		exists = false;
+	}
+	
+	/**
+	 * Handy function for bringing game objects "back to life". Just sets alive and exists back to true.
+	 * In practice, this function is most often called by <code>FlxObject.reset()</code>.
+	 */
+	public function revive():Void
+	{
+		alive = true;
+		exists = true;
 	}
 	
 	/**
@@ -151,23 +172,23 @@ class FlxBasic implements IFlxBasic
 	#end
 	
 	/**
-	 * Handy function for "killing" game objects. Use <code>reset()</code> to revive them. Default behavior is to flag them as nonexistent AND dead. However, if you want the 
-	 * "corpse" to remain in the game, like to animate an effect or whatever, you should override this, setting only alive to false, and leaving exists true.
+	 * Property setters, to provide override functionality in sub-classes
 	 */
-	public function kill():Void
+	private function set_visible(Value:Bool):Bool
 	{
-		alive = false;
-		exists = false;
+		return visible = Value;
 	}
-	
-	/**
-	 * Handy function for bringing game objects "back to life". Just sets alive and exists back to true.
-	 * In practice, this function is most often called by <code>FlxObject.reset()</code>.
-	 */
-	public function revive():Void
+	private function set_active(Value:Bool):Bool
 	{
-		alive = true;
-		exists = true;
+		return active = Value;
+	}
+	private function set_alive(Value:Bool):Bool
+	{
+		return alive = Value;
+	}
+	private function set_exists(Value:Bool):Bool
+	{
+		return exists = Value;
 	}
 	
 	/**
@@ -176,10 +197,5 @@ class FlxBasic implements IFlxBasic
 	public function toString():String
 	{
 		return FlxStringUtil.getClassName(this, true);
-	}
-	
-	private function set_visible(Value:Bool):Bool
-	{
-		return visible = Value;
 	}
 }
