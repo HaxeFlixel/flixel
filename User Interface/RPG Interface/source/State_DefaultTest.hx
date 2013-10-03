@@ -47,9 +47,9 @@ class State_DefaultTest extends FlxUIState
 					}
 				case "click_popup":
 					switch(cast(data[0], Int)) {
-						case 0:	trace("Yes was clicked");
-						case 1: trace("No was clicked");
-						case 2: trace("Cancel was clicked");
+						case 0: FlxG.log.add("Yes was clicked");
+						case 1: FlxG.log.add("No was clicked");
+						case 2: FlxG.log.add("Cancel was clicked");
 					}
 			}
 		}
