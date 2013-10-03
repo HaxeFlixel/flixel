@@ -158,14 +158,7 @@ class FlxText extends FlxSprite
 		_textField.sharpness = 100;
 		#end
 		
-		if (Text.length <= 0)
-		{
-			_textField.height = 1;
-		}
-		else
-		{
-			_textField.height = 10;
-		}
+		_textField.height = (Text.length <= 0) ? 1 : 10;
 		
 		allowCollisions = FlxObject.NONE;
 		moves = false;
@@ -453,6 +446,33 @@ class FlxText extends FlxSprite
 		return Value;
 	}
 	
+	private function regenGraphics():Void
+	{
+		if (_regen)
+		{
+			// Need to generate a new buffer to store the text graphic
+			height = _textField.textHeight;
+			// Account for 2px gutter on top and bottom
+			height += 4;
+			var key:String = cachedGraphics.key;
+			FlxG.bitmap.remove(key);
+			
+			makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
+			frameHeight = Std.int(height);
+			_textField.height = height * 1.2;
+			_flashRect.x = 0;
+			_flashRect.y = 0;
+			_flashRect.width = width + _widthInc;
+			_flashRect.height = height + _heightInc;
+			_regen = false;
+		}
+		// Else just clear the old buffer before redrawing the text
+		else
+		{
+			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
+		}
+	}
+	
 	/**
 	 * Internal function to update the current animation frame.
 	 */
@@ -471,29 +491,7 @@ class FlxText extends FlxSprite
 				_textField.filters = _filters;
 			}
 			
-			if (_regen)
-			{
-				// Need to generate a new buffer to store the text graphic
-				height = _textField.textHeight;
-				// Account for 2px gutter on top and bottom
-				height += 4;
-				var key:String = cachedGraphics.key;
-				FlxG.bitmap.remove(key);
-				
-				makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
-				frameHeight = Std.int(height);
-				_textField.height = height * 1.2;
-				_flashRect.x = 0;
-				_flashRect.y = 0;
-				_flashRect.width = width + _widthInc;
-				_flashRect.height = height + _heightInc;
-				_regen = false;
-			}
-			// Else just clear the old buffer before redrawing the text
-			else
-			{
-				cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
-			}
+			regenGraphics();
 			
 			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
 			{

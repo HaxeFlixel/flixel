@@ -37,7 +37,8 @@ class FlxTextField extends FlxText
 	{
 		super(X, Y, Width, Text, Size, EmbeddedFont);
 		
-		height = height;
+		height = (Text.length <= 0) ? 1 : 10;
+		
 		_textField.multiline = false;
 		_textField.wordWrap = false;
 		
@@ -187,6 +188,28 @@ class FlxTextField extends FlxText
 		#if !FLX_NO_DEBUG
 		FlxBasic._VISIBLECOUNT++;
 		#end
+	}
+	
+	override private function regenGraphics():Void
+	{
+		if (_regen)
+		{
+			var key:String = cachedGraphics.key;
+			FlxG.bitmap.remove(key);
+			
+			makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
+			frameHeight = Std.int(height);
+			_flashRect.x = 0;
+			_flashRect.y = 0;
+			_flashRect.width = width + _widthInc;
+			_flashRect.height = height + _heightInc;
+			_regen = false;
+		}
+		// Else just clear the old buffer before redrawing the text
+		else
+		{
+			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
+		}
 	}
 	
 	/**
