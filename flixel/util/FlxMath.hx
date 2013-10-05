@@ -18,7 +18,7 @@ class FlxMath
 	 * @param	Precision	Number of decimal points to leave in float.
 	 * @return	The rounded value of that number.
 	 */
-	static public function roundDecimal(Value:Float, Precision:Int):Float
+	inline static public function roundDecimal(Value:Float, Precision:Int):Float
 	{
 		var num = Value * Math.pow(10, Precision);
 		return Math.round( num ) / Math.pow(10, Precision);
@@ -74,7 +74,7 @@ class FlxMath
 	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
 	 * @return	The altered Velocity value.
 	 */
-	inline static public function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
+	static public function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
 	{
 		if (Acceleration != 0)
 		{
@@ -117,7 +117,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is odd. False if the given number is even.
 	 */
-	inline static public function isOdd(n:Float):Bool
+	static public function isOdd(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -136,7 +136,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is even. False if the given number is odd.
 	 */
-	inline static public function isEven(n:Float):Bool
+	static public function isEven(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -190,7 +190,6 @@ class FlxMath
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
@@ -208,7 +207,6 @@ class FlxMath
 		{
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -253,7 +251,6 @@ class FlxMath
 		{
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -267,7 +264,7 @@ class FlxMath
 	 * @param 	min 	The minimum the value is allowed to be
 	 * @return The new value
 	 */
-	inline static public function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
+	static public function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
 	{
 		value += amount;
 		
@@ -358,7 +355,6 @@ class FlxMath
 	{
 		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
 		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
-		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
@@ -374,7 +370,6 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
-		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
@@ -389,7 +384,6 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
-		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	#end
@@ -406,7 +400,6 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
-		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	#end
@@ -430,7 +423,7 @@ class FlxMath
 		return decimals;
 	}
 	
-	static public function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
+	inline static public function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}
