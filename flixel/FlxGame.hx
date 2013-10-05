@@ -381,7 +381,7 @@ class FlxGame extends Sprite
 				{
 					FlxG.vcr.stepRequested = false;
 				}
-				else
+				else if(state == requestedState) // don't pause a state switch request
 				{
 					return;
 				}
@@ -421,7 +421,7 @@ class FlxGame extends Sprite
 				debugger.stats.update();
 				debugger.watch.update();
 			}
-			#end	
+			#end
 		}
 	}
 	

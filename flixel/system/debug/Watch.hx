@@ -288,7 +288,7 @@ class Watch extends Window
 	{
 		if (Std.int(_height) < _watching.length * LINE_HEIGHT + 17)
 		{
-			_height = _watching.length*LINE_HEIGHT + 17;
+			_height = _watching.length * LINE_HEIGHT + 17;
 		}
 
 		super.updateSize();

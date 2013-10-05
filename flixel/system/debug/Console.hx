@@ -372,6 +372,8 @@ class Console extends Window
 	 */
 	override public function destroy():Void
 	{
+		super.destroy();
+		
 		_input.removeEventListener(FocusEvent.FOCUS_IN, onFocus);
 		_input.removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		_input.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -387,8 +389,6 @@ class Console extends Window
 		registeredFunctions = null;
 		
 		objectStack = null;
-		
-		super.destroy();
 	}
 	
 	/**
@@ -396,9 +396,9 @@ class Console extends Window
 	 */
 	override private function updateSize():Void
 	{
+		super.updateSize();
+		
 		_input.width = _width - 4;
 		_input.height = _height - 15;
-		
-		super.updateSize();
 	}
 }

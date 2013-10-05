@@ -76,7 +76,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Container for the bitmap output widget
 	 */
-	public var bmpLog:BmpLog;	
+	public var bmpLog:BmpLog;
 	/**
 	 * Container for the trace output widget.
 	 */	 
@@ -379,7 +379,7 @@ class FlxDebugger extends Sprite
 				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
-				stats.reposition(_screen.x, 0);				
+				stats.reposition(_screen.x, 0);
 		}
 	}
 	

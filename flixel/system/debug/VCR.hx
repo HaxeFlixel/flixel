@@ -139,7 +139,7 @@ class VCR
 	{
 		if (!FlxG.vcr.paused)
 		{
-			onPause();
+			FlxG.vcr.pause();
 		}
 		FlxG.vcr.stepRequested = true;
 	}
