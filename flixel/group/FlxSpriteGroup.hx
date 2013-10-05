@@ -279,7 +279,7 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	
 	private function set_angle(NewAngle:Float):Float
 	{
-		if (extists && angle != NewAngle)
+		if (exists && angle != NewAngle)
 		{
 			var offset:Float = NewAngle - angle;
 			transformChildren(angleTransform, offset);
@@ -298,7 +298,7 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 			NewAlpha = 0;
 		}
 		
-		if (extists && alpha != NewAlpha)
+		if (exists && alpha != NewAlpha)
 		{
 			var factor:Float = (alpha > 0) ? NewAlpha / alpha : 0;
 			transformChildren(alphaTransform, factor);
@@ -308,77 +308,77 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	
 	private function set_facing(Value:Int):Int
 	{
-		if(extists && facing != Value)
+		if(exists && facing != Value)
 			transformChildren(facingTransform, Value);
 		return facing = Value;
 	}
 	
 	private function set_moves(Value:Bool):Bool
 	{
-		if (extists && moves != Value)
+		if (exists && moves != Value)
 			transformChildren(movesTransform, Value);
 		return moves = Value;
 	}
 	
 	private function set_immovable(Value:Bool):Bool
 	{
-		if(extists && immovable != Value)
+		if(exists && immovable != Value)
 			transformChildren(immovableTransform, Value);
 		return immovable = Value;
 	}
 	
 	private function set_origin(Value:IFlxPoint):IFlxPoint
 	{
-		if (extists && origin != Value)
+		if (exists && origin != Value)
 			transformChildren(originTransform, cast Value);
 		return origin = Value;
 	}
 	
 	private function set_offset(Value:IFlxPoint):IFlxPoint
 	{
-		if (extists && offset != Value)
+		if (exists && offset != Value)
 			transformChildren(offsetTransform, cast Value);
 		return offset = Value;
 	}
 	
 	private function set_scale(Value:IFlxPoint):IFlxPoint
 	{
-		if (extists && scale != Value)
+		if (exists && scale != Value)
 			transformChildren(scaleTransform, cast Value);
 		return scale = Value;
 	}
 	
 	private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
 	{
-		if (extists && scrollFactor != Value)
+		if (exists && scrollFactor != Value)
 			transformChildren(scrollFactorTranform, cast Value);
 		return scrollFactor = Value;
 	}
 	
 	private function set_velocity(Value:IFlxPoint):IFlxPoint 
 	{
-		if (extists && velocity != Value)
+		if (exists && velocity != Value)
 			transformChildren(velocityTransform,cast  Value);
 		return velocity = Value;
 	}
 	
 	private function set_acceleration(Value:IFlxPoint):IFlxPoint 
 	{
-		if (extists && acceleration != Value)
+		if (exists && acceleration != Value)
 			transformChildren(accelerationTranform, cast Value);
 		return acceleration = Value;
 	}
 	
 	private function set_drag(Value:IFlxPoint):IFlxPoint 
 	{
-		if (extists && drag != Value)
+		if (exists && drag != Value)
 			transformChildren(dragTranform, cast Value);
 		return drag = Value;
 	}
 	
 	private function set_maxVelocity(Value:IFlxPoint):IFlxPoint 
 	{
-		if (extists && maxVelocity != Value)
+		if (exists && maxVelocity != Value)
 			transformChildren(maxVelocityTransform, cast Value);
 		return maxVelocity = Value;
 	}
