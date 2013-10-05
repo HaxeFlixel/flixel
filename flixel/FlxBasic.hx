@@ -1,20 +1,21 @@
 package flixel;
 
+import flixel.FlxG;
 import flixel.util.FlxStringUtil;
 
 /**
- *  This class is for <code>FlxTypedGroup</code> to work with interface instead of <code>FlxBasic</code>, which is needed
+ *  This class is for <code>FlxSpriteGroup</code> to work with interface instead of <code>FlxBasic</code>, which is needed
  *  so that <code>FlxSpriteGroup</code> could extend <code>FlxTypedGroup</code> and be typed with <code>IFlxSprite</code>
  **/
-interface IFlxBasic 
+interface IFlxBasic
 {
 	public var ID:Int;
 	public var cameras:Array<FlxCamera>;
-	public var exists(default, set):Bool;
-	public var alive(default, set):Bool;
 	public var active(default, set):Bool;
 	public var visible(default, set):Bool;
-	
+	public var alive(default, set):Bool;
+	public var exists(default, set):Bool;
+
 	public function draw():Void;
 	public function update():Void;
 	public function destroy():Void;
@@ -28,16 +29,14 @@ interface IFlxBasic
 	public function drawDebugOnCamera(?Camera:FlxCamera):Void;
 	#end
 	
-	
 	public function toString():String;
 }
-
 
 /**
  * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 
  * <code>FlxGroup</code> extend this class. Has no size, position or graphical data.
  */
-class FlxBasic implements IFlxBasic
+class FlxBasic implements IFlxBasic implements IDestroyable
 {
 	/**
 	 * IDs seem like they could be pretty useful, huh?
@@ -49,10 +48,6 @@ class FlxBasic implements IFlxBasic
 	 * point at the main camera list out in <code>FlxG</code> unless you already set it. You can also change it afterward too, very flexible!
 	 */
 	public var cameras:Array<FlxCamera>;
-	/**
-	 * Controls whether <code>update()</code> and <code>draw()</code> are automatically called by FlxState/FlxGroup.
-	 */
-	public var exists(default, set):Bool = true;
 	/**
 	 * Controls whether <code>update()</code> is automatically called by FlxState/FlxGroup.
 	 */
@@ -66,6 +61,10 @@ class FlxBasic implements IFlxBasic
 	 * <code>kill()</code> and <code>revive()</code> both flip this switch (along with exists, but you can override that).
 	 */
 	public var alive(default, set):Bool = true;
+	/**
+	 * This flag indicates whether this objects has been destroyed or not. Cannot be set, use <code>destroy()</code> and <code>revive()</code>.
+	 */
+	public var exists(default, set):Bool = true;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -83,7 +82,7 @@ class FlxBasic implements IFlxBasic
 	public function new() { }
 	
 	/**
-	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>reset()</code> it later to revive it.
+	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>revive()</code> it later.
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
 	public function destroy():Void 
@@ -98,7 +97,6 @@ class FlxBasic implements IFlxBasic
 	public function kill():Void
 	{
 		alive = false;
-		exists = false;
 	}
 	
 	/**

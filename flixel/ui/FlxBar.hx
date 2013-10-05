@@ -1059,7 +1059,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-			if (!simpleRender)
+			if (!simpleRenderSprite())
 			{
 				if (_angleChanged)
 				{
@@ -1175,7 +1175,7 @@ class FlxBar extends FlxSprite
 		return Pixels;
 	}
 	
-	override private function get_simpleRender():Bool
+	override private function simpleRenderSprite():Bool
 	{ 
 		return ((angle == 0) && (scale.x == 1) && (scale.y == 1));
 	}

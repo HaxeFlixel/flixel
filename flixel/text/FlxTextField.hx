@@ -70,15 +70,16 @@ class FlxTextField extends FlxText
 		// This class doesn't support this operation
 	}
 	
-	override private function get_simpleRender():Bool
-	{ 
-		return true;
-	}
-	
 	override public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool
 	{
 		// This class doesn't support this operation
 		return false;
+	}
+	
+	override private function simpleRenderSprite():Bool
+	{
+		// This class doesn't support this operation
+		return true;
 	}
 	
 	/**

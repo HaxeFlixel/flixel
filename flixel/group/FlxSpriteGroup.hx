@@ -15,81 +15,72 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	 * The x position of this group.
 	 */
 	public var x(default, set):Float = 0;
-	
 	/**
 	 * The y position of this group.
 	 */
 	public var y(default, set):Float = 0;
-	
 	/**
 	 * The alpha value of this group.
 	 */
 	public var alpha(default, set):Float = 1;
-	
 	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
 	 */
 	public var angle(default, set):Float = 0;
-	
 	/**
 	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>, <code>UP</code>, 
 	 * and <code>DOWN</code> to take advantage of flipped sprites and/or just track player orientation more easily.
 	 */
 	public var facing(default, set):Int = 0;
-	
+	/**
+	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
+	 * FlxObject and FlxSprite default to true. FlxText, FlxTileblock and FlxTilemap default to false.
+	 */
+	public var moves(default, set):Bool = true;
 	/**
 	 * Whether an object will move/alter position after a collision.
 	 */
 	public var immovable(default, set):Bool = false;
-	
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
      * changing a sprite's <code>width</code> or <code>height</code>.
 	 */
-	public var offset:IFlxPoint;
-	
+	public var offset(default, set):IFlxPoint;
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
 	 */
-	public var origin:IFlxPoint;
-	
+	public var origin(default, set):IFlxPoint;
 	/**
 	 * Change the size of your sprite's graphic. NOTE: Scale doesn't currently affect collisions automatically, you will need to adjust the width, 
 	 * height and offset manually. WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
 	 */
-	public var scale:IFlxPoint;
-	
+	public var scale(default, set):IFlxPoint;
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity:IFlxPoint;
-	
+	public var velocity(default, set):IFlxPoint;
 	/**
 	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity:IFlxPoint;
-	
+	public var maxVelocity(default, set):IFlxPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration:IFlxPoint;
-	
+	public var acceleration(default, set):IFlxPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
 	 */
-	public var drag:IFlxPoint;
-	
+	public var drag(default, set):IFlxPoint;
 	/**
 	 * Controls how much this object is affected by camera scrolling.
 	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
 	 */
-	public var scrollFactor:IFlxPoint;
-	
+	public var scrollFactor(default, set):IFlxPoint;
 	/**
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
@@ -236,9 +227,37 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	
 	// PROPERTIES
 	
+	override private function set_exists(Value:Bool):Bool
+	{
+		if (exists != Value)
+			transformChildren(existsTransform, Value);
+		return super.set_exists(Value);
+	}
+	
+	override private function set_visible(Value:Bool):Bool
+	{
+		if(exists && visible != Value)
+			transformChildren(visibleTransform, Value);
+		return super.set_visible(Value);
+	}
+	
+	override private function set_active(Value:Bool):Bool
+	{
+		if(exists && active != Value)
+			transformChildren(activeTransform, Value);
+		return super.set_active(Value);
+	}
+	
+	override private function set_alive(Value:Bool):Bool
+	{
+		if(exists && alive != Value)
+			transformChildren(aliveTransform, Value);
+		return super.set_alive(Value);
+	}
+	
 	private function set_x(NewX:Float):Float
 	{
-		if (!_skipTransformChildren)
+		if (!_skipTransformChildren && exists && x != NewX)
 		{
 			var offset:Float = NewX - x;
 			transformChildren(xTransform, offset);
@@ -249,7 +268,7 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	
 	private function set_y(NewY:Float):Float
 	{
-		if (!_skipTransformChildren)
+		if (!_skipTransformChildren && exists && y != NewY)
 		{
 			var offset:Float = NewY - y;
 			transformChildren(yTransform, offset);
@@ -260,8 +279,11 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	
 	private function set_angle(NewAngle:Float):Float
 	{
-		var offset:Float = NewAngle - angle;
-		transformChildren(angleTransform, offset);
+		if (extists && angle != NewAngle)
+		{
+			var offset:Float = NewAngle - angle;
+			transformChildren(angleTransform, offset);
+		}
 		return angle = NewAngle;
 	}
 	
@@ -276,50 +298,89 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 			NewAlpha = 0;
 		}
 		
-		var factor:Float = (alpha > 0) ? NewAlpha / alpha : 0;
-		transformChildren(alphaTransform, factor);
+		if (extists && alpha != NewAlpha)
+		{
+			var factor:Float = (alpha > 0) ? NewAlpha / alpha : 0;
+			transformChildren(alphaTransform, factor);
+		}
 		return alpha = NewAlpha;
 	}
 	
 	private function set_facing(Value:Int):Int
 	{
-		transformChildren(facingTransform, Value);
+		if(extists && facing != Value)
+			transformChildren(facingTransform, Value);
 		return facing = Value;
+	}
+	
+	private function set_moves(Value:Bool):Bool
+	{
+		if (extists && moves != Value)
+			transformChildren(movesTransform, Value);
+		return moves = Value;
 	}
 	
 	private function set_immovable(Value:Bool):Bool
 	{
-		if(immovable != Value)
+		if(extists && immovable != Value)
 			transformChildren(immovableTransform, Value);
 		return immovable = Value;
 	}
 	
-	private override function set_visible(Value:Bool):Bool
+	private function set_origin(Value:IFlxPoint):IFlxPoint
 	{
-		if(visible != Value)
-			transformChildren(visibleTransform, Value);
-		return super.set_visible(Value);
+		if (extists && origin != Value)
+			transformChildren(originTransform, cast Value);
+		return origin = Value;
 	}
 	
-	private override function set_active(Value:Bool):Bool
+	private function set_offset(Value:IFlxPoint):IFlxPoint
 	{
-		if(active != Value)
-			transformChildren(activeTransform, Value);
-		return super.set_active(Value);
+		if (extists && offset != Value)
+			transformChildren(offsetTransform, cast Value);
+		return offset = Value;
 	}
 	
-	private override function set_alive(Value:Bool):Bool
+	private function set_scale(Value:IFlxPoint):IFlxPoint
 	{
-		if(alive != Value)
-			transformChildren(aliveTransform, Value);
-		return super.set_alive(Value);
+		if (extists && scale != Value)
+			transformChildren(scaleTransform, cast Value);
+		return scale = Value;
 	}
 	
-	private override function set_exists(Value:Bool):Bool
+	private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
 	{
-		if (exists != Value)
-			transformChildren(existsTransform, Value);
-		return super.set_exists(Value);
+		if (extists && scrollFactor != Value)
+			transformChildren(scrollFactorTranform, cast Value);
+		return scrollFactor = Value;
+	}
+	
+	private function set_velocity(Value:IFlxPoint):IFlxPoint 
+	{
+		if (extists && velocity != Value)
+			transformChildren(velocityTransform,cast  Value);
+		return velocity = Value;
+	}
+	
+	private function set_acceleration(Value:IFlxPoint):IFlxPoint 
+	{
+		if (extists && acceleration != Value)
+			transformChildren(accelerationTranform, cast Value);
+		return acceleration = Value;
+	}
+	
+	private function set_drag(Value:IFlxPoint):IFlxPoint 
+	{
+		if (extists && drag != Value)
+			transformChildren(dragTranform, cast Value);
+		return drag = Value;
+	}
+	
+	private function set_maxVelocity(Value:IFlxPoint):IFlxPoint 
+	{
+		if (extists && maxVelocity != Value)
+			transformChildren(maxVelocityTransform, cast Value);
+		return maxVelocity = Value;
 	}
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
@@ -329,6 +390,7 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	private function angleTransform(Sprite:IFlxSprite, Angle:Float)					{ Sprite.angle += Angle; }						// addition
 	private function alphaTransform(Sprite:IFlxSprite, Alpha:Float)					{ Sprite.alpha *= Alpha; }						// multiplication
 	private function facingTransform(Sprite:IFlxSprite, Facing:Int)					{ Sprite.facing = Facing; }						// set
+	private function movesTransform(Sprite:IFlxSprite, Moves:Bool)					{ Sprite.moves = Moves; }						// set
 	private function immovableTransform(Sprite:IFlxSprite, Immovable:Bool)			{ Sprite.immovable = Immovable; }				// set
 	private function visibleTransform(Sprite:IFlxSprite, Visible:Bool)				{ Sprite.visible = Visible; }					// set
 	private function activeTransform(Sprite:IFlxSprite, Active:Bool)				{ Sprite.active = Active; }						// set
