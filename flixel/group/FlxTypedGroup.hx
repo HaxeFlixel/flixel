@@ -10,7 +10,7 @@ import flixel.util.FlxArrayUtil;
  * add itself to the global collisions quad tree, it will only add its members.
  */
 class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
-{	
+{
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.
 	 */
@@ -19,21 +19,14 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 	 * Use with <code>sort()</code> to sort in descending order.
 	 */
 	inline static public var DESCENDING:Int = 1;
-
 	/**
-	 * Array of all the <code>FlxBasic</code>s that exist in this group.
+	 * Array of all the members in this group.
 	 */
 	public var members(get, never):Array<T>;
-	
-	private function get_members():Array<T>
-	{
-		return _members;
-	}
-	
-	private var _members:Array<T>;
-	
-	private var _basics:Array<FlxBasic>;
-	
+	/**
+	 * The maximum capacity of this group. Default is 0, meaning no max capacity, and the group can just grow.
+	 */
+	public var maxSize(default, set):Int;
 	/**
 	 * The number of entries in the members array. For performance and safety you should check this 
 	 * variable instead of <code>members.length</code> unless you really know what you're doing!
@@ -44,7 +37,6 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 	 * False by default.
 	 */
 	public var autoReviveMembers:Bool = false;
-	
 	/**
 	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
@@ -57,6 +49,15 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 	 * Helper for sort.
 	 */
 	private var _sortOrder:Int;
+	
+	/**
+	 * Array of all the <code>FlxBasic</code>s that exist in this group.
+	 */
+	private var _basics:Array<FlxBasic>;
+	/**
+	 * Array of all the members in this group.
+	 */
+	private var _members:Array<T>;
 
 	/**
 	 * Create a new <code>FlxTypedGroup</code>
@@ -720,11 +721,6 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 		return 0;
 	}
 	
-	/**
-	 * The maximum capacity of this group. Default is 0, meaning no max capacity, and the group can just grow.
-	 */
-	public var maxSize(default, set):Int;
-	
 	private function set_maxSize(Size:Int):Int
 	{
 		maxSize = Std.int(Math.abs(Size));
@@ -757,5 +753,10 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 		FlxArrayUtil.setLength(_members, maxSize);
 		
 		return maxSize;
+	}
+	
+	private function get_members():Array<T>
+	{
+		return _members;
 	}
 }
