@@ -30,6 +30,9 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		#if !flash
+		FlxG.log.error("FlxBloom is only supported on Flash target for now.");
+		#else
 		// Title text, nothing crazy here!
 		var text:FlxText;
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 - 20, Math.floor(FlxG.width / 2), "FlxBloom", true);
@@ -49,7 +52,7 @@ class PlayState extends FlxState
 		// Scale it up to be the same size as the screen again
 		_fx.scale.set(_bloom, _bloom);
 		// Set AA to true for maximum blurry
-		_fx.antialiasing = true;	
+		_fx.antialiasing = true;
 		// Set blend mode to "screen" to make the blurred copy transparent and brightening
 		_fx.blend = BlendMode.SCREEN;
 		// Note that we do not add it to the game state!  It's just a helper, not a "real" sprite.
@@ -82,6 +85,7 @@ class PlayState extends FlxState
 		
 		emitter.start(false, 0, 0.1);
 		add(emitter);
+		#end
 	}
 	
 	override public function update():Void
@@ -101,7 +105,7 @@ class PlayState extends FlxState
 	{
 		// This draws all the game objects
 		super.draw();
-		
+		#if flash
 		if (_enabled)
 		{
 			//The actual blur process is quite simple now.
@@ -110,5 +114,6 @@ class PlayState extends FlxState
 			//Then we draw the scaled-up contents of the FX buffer back onto the screen:
 			_fx.draw();
 		}
+		#end
 	}
 }
