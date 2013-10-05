@@ -21,6 +21,7 @@ import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
+import flixel.FlxBasic;
 
 #if !FLX_NO_TOUCH
 import flixel.system.input.touch.FlxTouchManager;
@@ -35,6 +36,11 @@ import flixel.system.input.mouse.FlxMouse;
 #if !FLX_NO_GAMEPAD
 import flixel.system.input.gamepad.FlxGamepadManager;
 #end
+
+interface IDestroyable
+{
+	public function destroy():Void;
+}
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -506,5 +512,20 @@ class FlxG
 	inline static public function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
 	{
 		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
+	}
+	
+	/**
+	 * Checks if an object is not null before calling destroy(), always returns null.
+	 * 
+	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
+	 * @return	Null
+	 */
+	inline public static function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
+	{
+		if (Object != null)
+		{
+			Object.destroy(); 
+		}
+		return null;
 	}
 }
