@@ -330,6 +330,7 @@ class FlxPath
 			{
 				object.velocity.x = (_point.x < node.x) ? speed : -speed;
 				object.velocity.y = (_point.y < node.y) ? speed : -speed;
+				_point.set(object.velocity.x, object.velocity.y);
 				angle = FlxAngle.getAngle(_point, node);
 				FlxAngle.rotatePoint(0, speed, 0, 0, angle, _point);
 			}
