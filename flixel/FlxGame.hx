@@ -206,6 +206,8 @@ class FlxGame extends Sprite
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
 	
+	fail in travis!
+	
 	/**
 	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
 	 * 
