@@ -97,6 +97,7 @@ class FlxBasic implements IFlxBasic implements IDestroyable
 	public function kill():Void
 	{
 		alive = false;
+		exists = false;
 	}
 	
 	/**
