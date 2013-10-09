@@ -52,4 +52,5 @@ class FlxButton extends FlxTypedButton<FlxText>
 			label.size = label.size;
 		}
 	}
+	
 }

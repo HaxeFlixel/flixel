@@ -43,14 +43,25 @@ class TileSheetExt extends Tilesheet
 		old.destroy();
 	}
 	
+	/**
+	 * Hashing Functionality (TODO: use numbers as Map keys):
+	 * 
+	 * http://stackoverflow.com/questions/892618/create-a-hashcode-of-two-numbers
+	 * http://stackoverflow.com/questions/299304/why-does-javas-hashcode-in-string-use-31-as-a-multiplier
+	*/
 	private function getKey(rect:Rectangle, point:Point = null):String
 	{
-		var key:String = rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_";
+		var hash:Float = 23;
+		hash = hash * 31 + rect.x;
+		hash = hash * 31 + rect.y;
+		hash = hash * 31 + rect.width;
+		hash = hash * 31 + rect.height;
 		if (point != null)
 		{
-			key = key + point.x + "_" + point.y;
+			hash = hash * 31 + point.x;
+			hash = hash * 31 + point.y;
 		}
-		return key;
+		return Std.string(hash);
 	}
 	
 	/**

@@ -69,7 +69,7 @@ class FlxTouch extends FlxPoint
 	/**
 	 * Clean up memory.
 	 */
-	public function destroy():Void
+	override public function destroy():Void
 	{
 		_point = null;
 		_globalScreenPosition = null;

@@ -1,7 +1,6 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.system.debug.Log;
 import flixel.system.debug.LogStyle;
 import haxe.PosInfos;
 
@@ -27,7 +26,7 @@ class LogFrontEnd
 	inline private function _add(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		advanced(Data, Log.STYLE_NORMAL); 
+		advanced(Data, LogStyle.NORMAL); 
 		#end
 	}
 	
@@ -40,7 +39,7 @@ class LogFrontEnd
 	inline private function _warn(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		advanced(Data, Log.STYLE_WARNING); 
+		advanced(Data, LogStyle.WARNING, true); 
 		#end
 	}
 	
@@ -53,7 +52,7 @@ class LogFrontEnd
 	inline private function _error(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		advanced(Data, Log.STYLE_ERROR); 
+		advanced(Data, LogStyle.ERROR, true); 
 		#end
 	}
 	
@@ -66,23 +65,28 @@ class LogFrontEnd
 	inline private function _notice(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
-		advanced(Data, Log.STYLE_NOTICE); 
+		advanced(Data, LogStyle.NOTICE); 
 		#end
 	}
 	
 	/**
 	 * Add an advanced log message to the debugger by also specifying a <code>LogStyle</code>. Backend to <code>FlxG.log.add(), FlxG.log.warn(), FlxG.log.error() and FlxG.log.notice()</code>.
-	 * 
-	 * @param  Data  Any Data to log.
-	 * @param  Style   The <code>LogStyle</code> to use, for example <code>Log.STYLE_WARNING</code>. You can also create your own by importing the <code>LogStyle</code> class.
+	 * @param	Data  		Any Data to log.
+	 * @param  	Style   	The <code>LogStyle</code> to use, for example <code>LogStyle.WARNING</code>. You can also create your own by importing the <code>LogStyle</code> class.
+	 * @param  	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
 	 */ 
-	public function advanced(Data:Dynamic, Style:LogStyle):Void
+	public function advanced(Data:Dynamic, ?Style:LogStyle, FireOnce:Bool = false):Void
 	{
 		#if !FLX_NO_DEBUG
 		if (FlxG.game.debugger == null)
 		{
-			trace(Data);
+			_oldTrace(Data);
 			return;
+		}
+		
+		if (Style == null)
+		{
+			Style = LogStyle.NORMAL;
 		}
 		
 		if (!Std.is(Data, Array))
@@ -90,21 +94,22 @@ class LogFrontEnd
 			Data = [Data]; 
 		}
 		
-		FlxG.game.debugger.log.add(Data, Style);
-		
-		if (Style.errorSound != null)
+		if (FlxG.game.debugger.log.add(Data, Style, FireOnce))
 		{
-			FlxG.sound.play(Style.errorSound);
-		}
-		
-		if (Style.openConsole) 
-		{
-			FlxG.debugger.visible = true;
-		}
-		
-		if (Reflect.isFunction(Style.callbackFunction))
-		{
-			Reflect.callMethod(null, Style.callbackFunction, []);
+			if (Style.errorSound != null)
+			{
+				FlxG.sound.play(Style.errorSound);
+			}
+			
+			if (Style.openConsole) 
+			{
+				FlxG.debugger.visible = true;
+			}
+			
+			if (Reflect.isFunction(Style.callbackFunction))
+			{
+				Reflect.callMethod(null, Style.callbackFunction, []);
+			}
 		}
 		#end
 	}
@@ -145,7 +150,6 @@ class LogFrontEnd
 	
 	/**
 	 * Internal function used as a interface between <code>trace()</code> and <code>add()</code>.
-	 * 
 	 * @param	Data	The data that has been traced
 	 * @param	Inf		Information about the position at which <code>trace()</code> was called
 	 */

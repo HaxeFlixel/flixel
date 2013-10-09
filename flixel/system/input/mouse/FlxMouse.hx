@@ -1,5 +1,6 @@
 package flixel.system.input.mouse;
 
+import flash.events.Event;
 import flash.Lib;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -118,6 +119,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		Lib.current.stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
 		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
 		Lib.current.stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
+		Lib.current.stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
 		#end
 		
 		Lib.current.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -140,11 +142,24 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_wheelUsed = true;
 		wheel = FlashEvent.delta;
 	}
+	
+	#if (FLX_MOUSE_ADVANCED && !js)
+	/**
+	 * We're detecting the mouse leave event to prevent a bug where `pressed` remains true 
+	 * for the middle and right mouse button when pressed and dragged outside the window.
+	 * @param 	E 	Flash event.
+	 */
+	private function onMouseLeave(E:Event):Void
+	{
+		_rightButton.onUp();
+		_middleButton.onUp();
+	}
+	#end
 
 	/**
 	 * Clean up memory.
 	 */
-	public function destroy():Void
+	override public function destroy():Void
 	{
 		cursorContainer = null;
 		_cursor = null;
@@ -168,7 +183,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	public function show(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		_updateCursorContainer = true;
-		cursorContainer.visible = true;
+
+		if (!useSystemCursor)
+			cursorContainer.visible = true;
 		
 		if (Graphic != null)
 		{
@@ -178,10 +195,19 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		{
 			load();
 		}
+
 		if (useSystemCursor)
 		{
 			Mouse.show();
 		}
+
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		if(Mouse.supportsCursor)
+		{
+			if(_previousNativeCursor!=null)
+				setNativeCursor(_previousNativeCursor);
+		}
+		#end
 	}
 
 	/**
@@ -191,6 +217,15 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		_updateCursorContainer = false;
 		cursorContainer.visible = false;
+
+		Mouse.hide();
+
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		if(Mouse.supportsCursor)
+		{
+			_previousNativeCursor = _currentNativeCursor;
+		}
+		#end
 	}
 
 	/**
@@ -279,12 +314,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public function setNativeCursor(Name:String):Void
 	{
-		if(_currentNativeCursor != Name)
-		{
-			_previousNativeCursor = _currentNativeCursor;
-			_currentNativeCursor = Name;
-			Mouse.cursor = _currentNativeCursor;
-		}
+		_previousNativeCursor = _currentNativeCursor;
+		_currentNativeCursor = Name;
+
+		Mouse.show();
+
+		//Flash requires the use of AUTO before a custom cursor to work
+		Mouse.cursor = MouseCursor.AUTO;
+		Mouse.cursor = _currentNativeCursor;
 	}
 
 	/**
@@ -318,7 +355,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		registerNativeCursor( Name, cursorData );
 		setNativeCursor( Name );
-		
+
 		Mouse.show();
 		
 		return cursorData;

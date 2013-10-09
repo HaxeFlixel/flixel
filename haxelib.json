@@ -2,9 +2,9 @@
 	"name": "flixel",
 	"url" : "http://haxeflixel.com",
 	"license": "MIT",
-	"tags": ["flash", "game", "cpp", "openfl"],
-	"description": "Flixel is a popular free game engine. This is a port of Flixel 2.55.",
-	"version": "2.0.0-alpha.3",
+	"tags": ["flash", "game", "cpp", "openfl", "cross", "neko", "android", "ios"],
+	"description": "HaxeFlixel is a 2D game framework built with OpenFL and Haxe that delivers cross platform games.",
+	"version": "3.0.0",
 	"releasenote": "Third alpha release with openfl 1.0.0 compatibility and lots of bug fixes, refactoring and small additions",
 	"contributors": ["haxeflixel"],
 	"dependencies": { "openfl": "" }

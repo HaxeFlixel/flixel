@@ -170,17 +170,16 @@ class SoundFrontEnd
 		
 		if (_soundCache.exists(EmbeddedSound))
 		{
-			_soundCache.get(EmbeddedSound).play(0, 0, _soundTransform);
+			sound = _soundCache.get(EmbeddedSound);
 		}
 		else
 		{
 			sound = Assets.getSound(EmbeddedSound);
-			
 			_soundCache.set(EmbeddedSound, sound);
-			sound.play(0, 0, _soundTransform);
 		}
-		
-		return null;
+		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
+		flixelSound.play();
+		return flixelSound;
 	}
 	#else
 	/**

@@ -61,31 +61,71 @@ class FlxObject extends FlxBasic
 	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
 	 */
 	static public inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
-	
-	static private var _firstSeparateFlxRect:FlxRect = new FlxRect();
-	static private var _secondSeparateFlxRect:FlxRect = new FlxRect();
-	
-	/**
-	 * Should always represent (0,0) - useful for different things, for avoiding unnecessary <code>new</code> calls.
-	 */
-	static private var _pZero:FlxPoint = new FlxPoint();
-	
 	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
-	public var x:Float;
+	public var x(default, set):Float = 0;
 	/**
 	 * Y position of the upper left corner of this object in world space.
 	 */
-	public var y:Float;
+	public var y(default, set):Float = 0;
+	/**
+	 * The width of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
+	 */
+	public var width(default, set):Float;
+	/**
+	 * The height of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
+	 */
+	public var height(default, set):Float;
+	/**
+	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
+	 * performance for this sprite by a factor of 10x (in Flash target)!
+	 */
+	public var angle(default, set):Float = 0;
+	/**
+	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
+	 * FlxObject and FlxSprite default to true. FlxText, FlxTileblock and FlxTilemap default to false.
+	 */
+	public var moves(default, set):Bool = true;
 	/**
 	 * Whether an object will move/alter position after a collision.
 	 */
-	public var immovable:Bool = false;
+	public var immovable(default, set):Bool = false;
+	/**
+	 * Whether the object collides or not.  For more control over what directions the object will collide from, 
+	 * use collision constants (like LEFT, FLOOR, etc) to set the value of allowCollisions directly.
+	 */
+	public var solid(get, set):Bool;
+	/**
+	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
+	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
+	 * @default false
+	 */
+	public var forceComplexRender(default, set):Bool = false;
+	/**
+	 * Controls how much this object is affected by camera scrolling.
+	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
+	 */
+	public var scrollFactor(default, set):IFlxPoint;
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity:FlxPoint;
+	public var velocity(default, set):IFlxPoint;
+	/**
+	 * How fast the speed of this object is changing (in pixels per second).
+	 * Useful for smooth movement and gravity.
+	 */
+	public var acceleration(default, set):IFlxPoint;
+	/**
+	 * This isn't drag exactly, more like deceleration that is only applied
+	 * when acceleration is not affecting the sprite.
+	 */
+	public var drag(default, set):IFlxPoint;
+	/**
+	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
+	 * to cap the speed automatically (very useful!).
+	 */
+	public var maxVelocity(default, set):IFlxPoint;
 	/**
 	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
@@ -95,21 +135,6 @@ class FlxObject extends FlxBasic
 	 * The bounciness of this object. Only affects collisions. Default value is 0, or "not bouncy at all."
 	 */
 	public var elasticity:Float = 0;
-	/**
-	 * How fast the speed of this object is changing (in pixels per second).
-	 * Useful for smooth movement and gravity.
-	 */
-	public var acceleration:FlxPoint;
-	/**
-	 * This isn't drag exactly, more like deceleration that is only applied
-	 * when acceleration is not affecting the sprite.
-	 */
-	public var drag:FlxPoint;
-	/**
-	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
-	 * to cap the speed automatically (very useful!).
-	 */
-	public var maxVelocity:FlxPoint;
 	/**
 	 * This is how fast you want this sprite to spin (in degrees per second).
 	 */
@@ -127,23 +152,9 @@ class FlxObject extends FlxBasic
 	 */
 	public var maxAngular:Float = 10000;
 	/**
-	 * Controls how much this object is affected by camera scrolling.
-	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
-	 */
-	public var scrollFactor:FlxPoint;
-	/**
 	 * Handy for storing health percentage or armor points or whatever.
 	 */
 	public var health:Float = 1;
-	/**
-	 * This is just a pre-allocated x-y point container used internally for overlapping
-	 */
-	private var _point:FlxPoint;
-	/**
-	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
-	 * FlxObject and FlxSprite default to true. FlxText, FlxTileblock and FlxTilemap default to false.
-	 */
-	public var moves:Bool = true;
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values 
 	 * stored here, or use touching(), justStartedTouching(), etc. You can even use them broadly as boolean values if you're feeling saucy!
@@ -164,28 +175,28 @@ class FlxObject extends FlxBasic
 	 * By default this value is set automatically during <code>preUpdate()</code>.
 	 */
 	public var last:FlxPoint;
-	
 	/**
-	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
-	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
-	 * @default false
+	 * Rendering variables.
 	 */
-	public var forceComplexRender(default, set):Bool = false;
-	
-	#if !FLX_NO_DEBUG
+	public var region(default, null):Region;
+	public var framesData(default, null):FlxSpriteFrames;
+	public var cachedGraphics(default, set):CachedGraphics;
 	/**
-	 * Overriding this will force a specific color to be used for debug rect.
+	 * Internal statically typed FlxPoint vars, for performance reasons.
 	 */
-	public var debugBoundingBoxColor(default, set):Int;
+	private var _point:FlxPoint;
+	private var _velocity:FlxPoint;
+	private var _drag:FlxPoint;
+	private var _acceleration:FlxPoint;
+	private var _maxVelocity:FlxPoint;
+	private var _scrollFactor:FlxPoint;
+	/**
+	 * Internal static private variables, for performance reasons.
+	 */
+	static private var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
+	static private var _firstSeparateFlxRect:FlxRect = new FlxRect();
+	static private var _secondSeparateFlxRect:FlxRect = new FlxRect();
 	
-	private function set_debugBoundingBoxColor(Value:Int):Int 
-	{
-		_boundingBoxColorOverritten = true;
-		return debugBoundingBoxColor = Value; 
-	}
-	
-	private var _boundingBoxColorOverritten:Bool = false;
-	#end
 	
 	/**
 	 * Instantiates a <code>FlxObject</code>.
@@ -203,6 +214,14 @@ class FlxObject extends FlxBasic
 		width = Width;
 		height = Height;
 		
+		initVars();
+	}
+	
+	/**
+	 * Internal function for initialization of some object's variables
+	 */
+	private function initVars():Void
+	{
 		last = new FlxPoint(x, y);
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
@@ -218,20 +237,25 @@ class FlxObject extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
+		super.destroy();
+		
 		velocity = null;
 		acceleration = null;
 		drag = null;
 		maxVelocity = null;
 		scrollFactor = null;
-		_point = null;
 		last = null;
 		cameras = null;
+		_point = null;
+		_velocity = null;
+		_drag = null;
+		_acceleration = null;
+		_maxVelocity = null;
+		_scrollFactor = null;
 		
-		_framesData = null;
-		setCachedGraphics(null);
-		_region = null;
-		
-		super.destroy();
+		framesData = null;
+		cachedGraphics = null;
+		region = null;
 	}
 	
 	/**
@@ -272,16 +296,16 @@ class FlxObject extends FlxBasic
 		angle += angularVelocity * dt;
 		angularVelocity += velocityDelta;
 		
-		velocityDelta = 0.5 * (FlxMath.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
-		velocity.x += velocityDelta;
-		delta = velocity.x * dt;
-		velocity.x += velocityDelta;
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(_velocity.x, _acceleration.x, _drag.x, _maxVelocity.x) - _velocity.x);
+		_velocity.x += velocityDelta;
+		delta = _velocity.x * dt;
+		_velocity.x += velocityDelta;
 		x += delta;
 		
-		velocityDelta = 0.5 * (FlxMath.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
-		velocity.y += velocityDelta;
-		delta = velocity.y * dt;
-		velocity.y += velocityDelta;
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(_velocity.y, _acceleration.y, _drag.y, _maxVelocity.y) - _velocity.y);
+		_velocity.y += velocityDelta;
+		delta = _velocity.y * dt;
+		_velocity.y += velocityDelta;
 		y += delta;
 	}
 	
@@ -331,8 +355,8 @@ class FlxObject extends FlxBasic
 		}
 
 		//get bounding box coordinates
-		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
-		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
+		var boundingBoxX:Float = x - (Camera.scroll.x * _scrollFactor.x); //copied from getScreenXY()
+		var boundingBoxY:Float = y - (Camera.scroll.y * _scrollFactor.y);
 		#if flash
 		var boundingBoxWidth:Int = Std.int(width);
 		var boundingBoxHeight:Int = Std.int(height);
@@ -534,7 +558,7 @@ class FlxObject extends FlxBasic
 	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	inline public function getScreenXY(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
+	public function getScreenXY(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
 	{
 		if (point == null)
 		{
@@ -544,77 +568,7 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		return point.set(x - (Camera.scroll.x * scrollFactor.x), y - (Camera.scroll.y * scrollFactor.y));
-	}
-	
-	/**
-	 * The width of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
-	 */
-	public var width(default, set):Float;
-	
-	private function set_width(Width:Float):Float
-	{
-		#if !FLX_NO_DEBUG
-		if (Width < 0) 
-		{
-			FlxG.log.warn("An object's width cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
-		}
-		else
-		{
-		#end
-			width = Width;
-		#if !FLX_NO_DEBUG
-		}
-		#end
-      
-		return Width;
-	}
-	
-	/**
-	 * The height of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
-	 */
-	public var height(default, set):Float;
-  
-	private function set_height(Height:Float):Float
-	{
-		#if !FLX_NO_DEBUG
-		if (Height < 0) 
-		{
-			FlxG.log.warn("An object's height cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
-		}
-		else
-		{
-		#end
-			height = Height;
-		#if !FLX_NO_DEBUG
-		}
-		#end
-		
-		return Height;
-	}
-
-	/**
-	 * Whether the object collides or not.  For more control over what directions the object will collide from, 
-	 * use collision constants (like LEFT, FLOOR, etc) to set the value of allowCollisions directly.
-	 */
-	public var solid(get, set):Bool;
-	
-	inline private function get_solid():Bool
-	{
-		return (allowCollisions & ANY) > NONE;
-	}
-	
-	inline private function set_solid(Solid:Bool):Bool
-	{
-		if (Solid)
-		{
-			allowCollisions = ANY;
-		}
-		else
-		{
-			allowCollisions = NONE;
-		}
-		return Solid;
+		return point.set(x - (Camera.scroll.x * _scrollFactor.x), y - (Camera.scroll.y * _scrollFactor.y));
 	}
 	
 	/**
@@ -687,7 +641,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated.
 	 */
-	inline static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
+	static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		var separatedX:Bool = separateX(Object1, Object2);
 		var separatedY:Bool = separateY(Object1, Object2);
@@ -771,8 +725,8 @@ class FlxObject extends FlxBasic
 		//Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1v:Float = Object1.velocity.x;
-			var obj2v:Float = Object2.velocity.x;
+			var obj1v:Float = Object1._velocity.x;
+			var obj2v:Float = Object2._velocity.x;
 			
 			if (!obj1immovable && !obj2immovable)
 			{
@@ -785,18 +739,18 @@ class FlxObject extends FlxBasic
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
-				Object1.velocity.x = average + obj1velocity * Object1.elasticity;
-				Object2.velocity.x = average + obj2velocity * Object2.elasticity;
+				Object1._velocity.x = average + obj1velocity * Object1.elasticity;
+				Object2._velocity.x = average + obj2velocity * Object2.elasticity;
 			}
 			else if (!obj1immovable)
 			{
 				Object1.x = Object1.x - overlap;
-				Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
+				Object1._velocity.x = obj2v - obj1v * Object1.elasticity;
 			}
 			else if (!obj2immovable)
 			{
 				Object2.x += overlap;
-				Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
+				Object2._velocity.x = obj1v - obj2v * Object2.elasticity;
 			}
 			return true;
 		}
@@ -883,8 +837,8 @@ class FlxObject extends FlxBasic
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1v:Float = Object1.velocity.y;
-			var obj2v:Float = Object2.velocity.y;
+			var obj1v:Float = Object1._velocity.y;
+			var obj2v:Float = Object2._velocity.y;
 			
 			if (!obj1immovable && !obj2immovable)
 			{
@@ -897,13 +851,13 @@ class FlxObject extends FlxBasic
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
-				Object1.velocity.y = average + obj1velocity * Object1.elasticity;
-				Object2.velocity.y = average + obj2velocity * Object2.elasticity;
+				Object1._velocity.y = average + obj1velocity * Object1.elasticity;
+				Object2._velocity.y = average + obj2velocity * Object2.elasticity;
 			}
 			else if (!obj1immovable)
 			{
 				Object1.y = Object1.y - overlap;
-				Object1.velocity.y = obj2v - obj1v*Object1.elasticity;
+				Object1._velocity.y = obj2v - obj1v*Object1.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object2.active && Object2.moves && (obj1delta > obj2delta))
 				{
@@ -913,7 +867,7 @@ class FlxObject extends FlxBasic
 			else if (!obj2immovable)
 			{
 				Object2.y += overlap;
-				Object2.velocity.y = obj1v - obj2v*Object2.elasticity;
+				Object2._velocity.y = obj1v - obj2v*Object2.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object1.active && Object1.moves && (obj1delta < obj2delta))
 				{
@@ -951,61 +905,154 @@ class FlxObject extends FlxBasic
 		height = Height;
 	}
 	
-	private function set_forceComplexRender(Value:Bool):Bool 
+	/**
+	 * Internal function for setting cachedGraphics property for this object. 
+	 * It changes cachedGraphics' useCount also for better memory tracking.
+	 * @param	value
+	 */
+	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
-		return forceComplexRender = Value;
+		if (cachedGraphics != null && cachedGraphics != Value)
+		{
+			cachedGraphics.useCount--;
+		}
+		
+		if (cachedGraphics != Value && Value != null)
+		{
+			Value.useCount++;
+		}
+		return cachedGraphics = Value;
 	}
 	
 	/**
-	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
-	 * performance for this sprite by a factor of 10x (in Flash target)!
+	 * Internal
 	 */
-	public var angle(default, set):Float = 0;
+	public function set_x(NewX:Float):Float
+	{
+		return x = NewX;
+	}
+	
+	public function set_y(NewY:Float):Float
+	{
+		return y = NewY;
+	}
+	
+	private function set_width(Width:Float):Float
+	{
+		#if !FLX_NO_DEBUG
+		if (Width < 0) 
+		{
+			FlxG.log.warn("An object's width cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
+		}
+		else
+		{
+		#end
+			width = Width;
+		#if !FLX_NO_DEBUG
+		}
+		#end
+		
+		return Width;
+	}
+	
+	private function set_height(Height:Float):Float
+	{
+		#if !FLX_NO_DEBUG
+		if (Height < 0) 
+		{
+			FlxG.log.warn("An object's height cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
+		}
+		else
+		{
+		#end
+			height = Height;
+		#if !FLX_NO_DEBUG
+		}
+		#end
+		
+		return Height;
+	}
+	
+	inline private function get_solid():Bool
+	{
+		return (allowCollisions & ANY) > NONE;
+	}
+	
+	private function set_solid(Solid:Bool):Bool
+	{
+		if (Solid)
+		{
+			allowCollisions = ANY;
+		}
+		else
+		{
+			allowCollisions = NONE;
+		}
+		return Solid;
+	}
 	
 	private function set_angle(Value:Float):Float
 	{
 		return angle = Value;
 	}
 	
-	private var _framesData:FlxSpriteFrames;
-	private var _cachedGraphics:CachedGraphics;
-	private var _region:Region;
-	
-	public function updateFrameData():Void
+	private function set_moves(Value:Bool):Bool
 	{
-		
+		return moves = Value;
 	}
 	
-	public var cachedGraphics(get, null):CachedGraphics;
-	
-	inline private function get_cachedGraphics():CachedGraphics
+	private function set_immovable(Value:Bool):Bool
 	{
-		return _cachedGraphics;
+		return immovable = Value;
 	}
 	
+	private function set_forceComplexRender(Value:Bool):Bool 
+	{
+		return forceComplexRender = Value;
+	}
+	
+	private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
+	{
+		_scrollFactor = cast Value;
+		return scrollFactor = Value;
+	}
+	
+	private function set_velocity(Value:IFlxPoint):IFlxPoint 
+	{
+		_velocity = cast Value;
+		return velocity = Value;
+	}
+	
+	private function set_acceleration(Value:IFlxPoint):IFlxPoint 
+	{
+		_acceleration = cast Value;
+		return acceleration = Value;
+	}
+	
+	private function set_drag(Value:IFlxPoint):IFlxPoint 
+	{
+		_drag = cast Value;
+		return drag = Value;
+	}
+	
+	private function set_maxVelocity(Value:IFlxPoint):IFlxPoint 
+	{
+		_maxVelocity = cast Value;
+		return maxVelocity = Value;
+	}
+	
+	#if !FLX_NO_DEBUG
 	/**
-	 * Internal function for setting cachedGraphics property for this object. 
-	 * It changes cachedGraphics' useCount also for better memory tracking.
-	 * @param	value
+	 * Overriding this will force a specific color to be used for debug rect.
 	 */
-	private function setCachedGraphics(Value:CachedGraphics):Void
+	public var debugBoundingBoxColor(default, set):Int;
+	
+	private function set_debugBoundingBoxColor(Value:Int):Int 
 	{
-		if (_cachedGraphics != null && _cachedGraphics != Value)
-		{
-			_cachedGraphics.useCount--;
-		}
-		
-		if (_cachedGraphics != Value && Value != null)
-		{
-			Value.useCount++;
-		}
-		_cachedGraphics = Value;
+		_boundingBoxColorOverritten = true;
+		return debugBoundingBoxColor = Value; 
 	}
 	
-	public var region(get, null):Region;
-	
-	inline private function get_region():Region 
-	{
-		return _region;
-	}
+	private var _boundingBoxColorOverritten:Bool = false;
+	#end
 }

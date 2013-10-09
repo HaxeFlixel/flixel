@@ -6,32 +6,35 @@ import flixel.util.FlxPool;
 class FlickerData
 {
 	private static var _pool:FlxPool<FlickerData> = new FlxPool<FlickerData>();
-	
-	public static function recycle(object:FlxObject):FlickerData
+
+	public var object:FlxObject;
+	public var endVisibility:Bool;
+
+	private function new() {  }
+
+	public static function recycle(Object:FlxObject, EndVisibility:Bool = true):FlickerData
 	{
 		var data:FlickerData = _pool.get();
-		data.reset(object);
+		data.reset(Object, EndVisibility);
 		return data;
 	}
 	
-	public static function put(data:FlickerData):Void
+	public static function put(Data:FlickerData):Void
 	{
-		_pool.put(data);
+		_pool.put(Data);
 	}
-	
-	public var object:FlxObject;
-	public var startVisibility:Bool;
-	
-	private function new() {  }
 	
 	public function destroy():Void
 	{
 		object = null;
 	}
 	
-	public function reset(object:FlxObject):Void
+	public function reset(Object:FlxObject, EndVisibility:Bool = true):Void
 	{
-		this.object = object;
-		if (object != null)	this.startVisibility = object.visible;
+		this.object = Object;
+		if (Object != null)
+		{
+			endVisibility = EndVisibility;
+		}
 	}
 }

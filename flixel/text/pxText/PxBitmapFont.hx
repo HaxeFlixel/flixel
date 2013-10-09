@@ -46,7 +46,7 @@ class PxBitmapFont
 	private var _symbols:Array<HelperSymbol>;
 	// Prepared bitmapData with font glyphsW	
 	private var _region:Region;
-	private var _cachedGraphics:CachedGraphics;
+	private var cachedGraphics:CachedGraphics;
 	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
@@ -92,14 +92,14 @@ class PxBitmapFont
 			var key:String = FlxG.bitmap.getUniqueKey("font");
 			setCachedGraphics(FlxG.bitmap.add(result, false, key));
 			_region = new Region();
-			_region.width = _cachedGraphics.bitmap.width;
-			_region.height = _cachedGraphics.bitmap.height;
+			_region.width = cachedGraphics.bitmap.width;
+			_region.height = cachedGraphics.bitmap.height;
 			var currRect:Rectangle;
 			
 			#if flash
 			updateGlyphData();
 			#else
-			updateGlyphData(_cachedGraphics.tilesheet);
+			updateGlyphData(cachedGraphics.tilesheet);
 			#end
 		}
 		
@@ -127,7 +127,7 @@ class PxBitmapFont
 			#if flash
 			updateGlyphData();
 			#else
-			updateGlyphData(_cachedGraphics.tilesheet);
+			updateGlyphData(cachedGraphics.tilesheet);
 			#end
 		}
 		
@@ -188,7 +188,7 @@ class PxBitmapFont
 					bd = new BitmapData(charWidth, 1, true, 0x0);
 				}
 				
-				bd.copyPixels(_cachedGraphics.bitmap, rect, point, null, null, true);
+				bd.copyPixels(cachedGraphics.bitmap, rect, point, null, null, true);
 				
 				// Store glyph
 				setGlyph(symbol.charCode, bd);
@@ -214,7 +214,7 @@ class PxBitmapFont
 				// Create glyph
 				#if flash
 				var bd:BitmapData = new BitmapData(Std.int(rect.width), Std.int(rect.height), true, 0x0);
-				bd.copyPixels(_cachedGraphics.bitmap, rect, ZERO_POINT, null, null, true);
+				bd.copyPixels(cachedGraphics.bitmap, rect, ZERO_POINT, null, null, true);
 				
 				// Store glyph
 				setGlyph(_glyphString.charCodeAt(letterID), bd);
@@ -652,9 +652,9 @@ class PxBitmapFont
 	
 	private function get_pixels():BitmapData 
 	{
-		if (!_cachedGraphics.isDumped)
+		if (!cachedGraphics.isDumped)
 		{
-			return _cachedGraphics.bitmap;
+			return cachedGraphics.bitmap;
 		}
 		return null;
 	}
@@ -678,16 +678,16 @@ class PxBitmapFont
 	
 	private function setCachedGraphics(value:CachedGraphics):Void
 	{
-		if (_cachedGraphics != null && _cachedGraphics != value)
+		if (cachedGraphics != null && cachedGraphics != value)
 		{
-			_cachedGraphics.useCount--;
+			cachedGraphics.useCount--;
 		}
 		
-		if (_cachedGraphics != value && value != null)
+		if (cachedGraphics != value && value != null)
 		{
 			value.useCount++;
 		}
-		_cachedGraphics = value;
+		cachedGraphics = value;
 	}
 	
 	/**

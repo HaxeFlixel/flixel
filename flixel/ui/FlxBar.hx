@@ -1,16 +1,18 @@
 package flixel.ui;
 
-import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxBasic;
+import flash.display.BitmapData;
+
 import flixel.FlxG;
-import flixel.system.layer.DrawStackItem;
+import flixel.FlxBasic;
+import flixel.FlxSprite;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxPoint;
 import flixel.system.layer.Region;
+import flixel.system.layer.DrawStackItem;
 import flixel.util.loaders.CachedGraphics;
 
 /**
@@ -479,9 +481,9 @@ class FlxBar extends FlxSprite
 		setCachedGraphics(FlxG.bitmap.get(emptyKey));
 		setCachedFrontGraphics(FlxG.bitmap.get(filledKey));
 		
-		_region = new Region();
-		_region.width = _cachedGraphics.bitmap.width;
-		_region.height = _cachedGraphics.bitmap.height;
+		region = new Region();
+		region.width = cachedGraphics.bitmap.width;
+		region.height = cachedGraphics.bitmap.height;
 		_frontRegion = new Region();
 		_frontRegion.width = _cachedFrontGraphics.bitmap.width;
 		_frontRegion.height = _cachedFrontGraphics.bitmap.height;
@@ -598,9 +600,9 @@ class FlxBar extends FlxSprite
 		setCachedGraphics(FlxG.bitmap.get(emptyKey));
 		setCachedFrontGraphics(FlxG.bitmap.get(filledKey));
 		
-		_region = new Region();
-		_region.width = _cachedGraphics.bitmap.width;
-		_region.height = _cachedGraphics.bitmap.height;
+		region = new Region();
+		region.width = cachedGraphics.bitmap.width;
+		region.height = cachedGraphics.bitmap.height;
 		_frontRegion = new Region();
 		_frontRegion.width = _cachedFrontGraphics.bitmap.width;
 		_frontRegion.height = _cachedFrontGraphics.bitmap.height;
@@ -787,9 +789,9 @@ class FlxBar extends FlxSprite
 		setCachedGraphics(FlxG.bitmap.get(emptyKey));
 		setCachedFrontGraphics(FlxG.bitmap.get(filledKey));
 		
-		_region = new Region();
-		_region.width = _cachedGraphics.bitmap.width;
-		_region.height = _cachedGraphics.bitmap.height;
+		region = new Region();
+		region.width = cachedGraphics.bitmap.width;
+		region.height = cachedGraphics.bitmap.height;
 		_frontRegion = new Region();
 		_frontRegion.width = _cachedFrontGraphics.bitmap.width;
 		_frontRegion.height = _cachedFrontGraphics.bitmap.height;
@@ -1004,7 +1006,7 @@ class FlxBar extends FlxSprite
 	#if !flash
 	override public function draw():Void 
 	{
-		if (_cachedFrontGraphics == null || _cachedGraphics == null)
+		if (_cachedFrontGraphics == null || cachedGraphics == null)
 		{
 			return;
 		}
@@ -1031,10 +1033,10 @@ class FlxBar extends FlxSprite
 				continue;
 			}
 			#if !js
-			drawItem = camera.getDrawStackItem(_cachedGraphics, isColored, _blendInt, antialiasing);
+			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
 			#else
 			var useAlpha:Bool = (alpha < 0);
-			drawItem = camera.getDrawStackItem(_cachedGraphics, useAlpha);
+			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
 			#end
 			
 			currDrawData = drawItem.drawData;
@@ -1057,7 +1059,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-			if (!simpleRender)
+			if (!simpleRenderSprite())
 			{
 				if (_angleChanged)
 				{
@@ -1173,7 +1175,7 @@ class FlxBar extends FlxSprite
 		return Pixels;
 	}
 	
-	override private function get_simpleRender():Bool
+	override private function simpleRenderSprite():Bool
 	{ 
 		return ((angle == 0) && (scale.x == 1) && (scale.y == 1));
 	}
@@ -1182,7 +1184,7 @@ class FlxBar extends FlxSprite
 	override public function updateFrameData():Void 
 	{	
 	#if !flash
-		if (_cachedGraphics == null || _cachedFrontGraphics == null)
+		if (cachedGraphics == null || _cachedFrontGraphics == null)
 		{
 			return;
 		}
@@ -1190,7 +1192,7 @@ class FlxBar extends FlxSprite
 		_halfWidth = 0.5 * barWidth;
 		_halfHeight = 0.5 * barHeight;
 		
-		_emptyBarFrameID = _cachedGraphics.tilesheet.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
+		_emptyBarFrameID = cachedGraphics.tilesheet.addTileRect(new Rectangle(0, 0, barWidth, barHeight), new Point(0.5 * barWidth, 0.5 * barHeight));
 		_filledBarFrames = [];
 		
 		var frameRelativePosition:Float;
@@ -1273,6 +1275,10 @@ class FlxBar extends FlxSprite
 	}
 	
 	#if !flash
+	inline private function setCachedGraphics(value:CachedGraphics):Void
+	{
+		cachedGraphics = value;
+	}
 	private function setCachedFrontGraphics(value:CachedGraphics):Void
 	{
 		if (_cachedFrontGraphics != null && _cachedFrontGraphics != value)

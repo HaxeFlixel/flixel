@@ -191,18 +191,13 @@ class FlxGame extends Sprite
 		// Basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		
-		if (GameFramerate < FlashFramerate)
-		{
-			GameFramerate = FlashFramerate;
-		}
-		
 		FlxG.framerate = GameFramerate;
 		FlxG.flashFramerate = FlashFramerate;
 		_accumulator = stepMS;
 		_skipSplash = SkipSplash;
 		
 		#if FLX_RECORD
-			replay = new FlxReplay();
+		replay = new FlxReplay();
 		#end
 		
 		// Then get ready to create the game object for real
@@ -225,7 +220,7 @@ class FlxGame extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
 		_total = Lib.getTimer();
-		
+
 		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
@@ -235,23 +230,23 @@ class FlxGame extends Sprite
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG
-			debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
-			addChild(debugger);
+		debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
+		addChild(debugger);
 		#end
 		
-		// Let mobile devs opt out of unnecessary overlays.
-		#if !mobile	
-			// Volume display tab
-			#if !FLX_NO_SOUND_TRAY
-				soundTray = Type.createInstance(_customSoundTray, []);
-				addChild(soundTray);
-			#end
-			
-			#if !FLX_NO_FOCUS_LOST_SCREEN
-				_focusLostScreen = Type.createInstance(_customFocusLostScreen, []);
-				addChild(_focusLostScreen);
-			#end
+	// Let mobile devs opt out of unnecessary overlays.
+	#if !mobile	
+		// Volume display tab
+		#if !FLX_NO_SOUND_TRAY
+		soundTray = Type.createInstance(_customSoundTray, []);
+		addChild(soundTray);
 		#end
+		
+		#if !FLX_NO_FOCUS_LOST_SCREEN
+		_focusLostScreen = Type.createInstance(_customFocusLostScreen, []);
+		addChild(_focusLostScreen);
+		#end
+	#end
 		
 		// Focus gained/lost monitoring
 		#if flash
@@ -271,9 +266,14 @@ class FlxGame extends Sprite
 		}
 		
 		#if (cpp && FLX_THREADING)
-			_threadSync = new cpp.vm.Deque();
-			cpp.vm.Thread.create(threadedUpdate);
+		_threadSync = new cpp.vm.Deque();
+		cpp.vm.Thread.create(threadedUpdate);
 		#end
+		
+		if (FlxG.framerate < FlxG.flashFramerate)
+		{
+			FlxG.log.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
+		}
 		
 		// Finally, set up an event for the actual game loop stuff.
 		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -335,7 +335,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocusLost();
 	}
 	
-	private function onResize(E:Event):Void 
+	public function onResize(E:Event = null):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
@@ -346,6 +346,9 @@ class FlxGame extends Sprite
 		
 		state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
+		#if !FLX_NO_DEBUG
+		debugger.onResize(width, height);
+		#end
 		
 		if (FlxG.autoResize)
 		{
@@ -372,20 +375,20 @@ class FlxGame extends Sprite
 		
 		if (!_lostFocus)
 		{
-			#if !FLX_NO_DEBUG
-			if ((debugger != null) && debugger.vcr.paused)
+			if(FlxG.vcr.paused)
 			{
-				if (debugger.vcr.stepRequested)
+				if (FlxG.vcr.stepRequested)
 				{
-					debugger.vcr.stepRequested = false;
-					step();
+					FlxG.vcr.stepRequested = false;
+				}
+				else if(state == requestedState) // don't pause a state switch request
+				{
+					return;
 				}
 			}
-			#end
 			
 			if (FlxG.fixedTimestep)
 			{
-				
 				_accumulator += elapsedMS;
 				if (_accumulator > maxAccumulation)
 				{
@@ -404,7 +407,6 @@ class FlxGame extends Sprite
 				step();
 			}
 			
-			
 			#if !FLX_NO_DEBUG
 			FlxBasic._VISIBLECOUNT = 0;
 			#end
@@ -414,12 +416,12 @@ class FlxGame extends Sprite
 			#if !FLX_NO_DEBUG
 			if (FlxG.debugger.visible)
 			{
-				debugger.perf.flash(elapsedMS);
-				debugger.perf.visibleObjects(FlxBasic._VISIBLECOUNT);
-				debugger.perf.update();
+				debugger.stats.flash(elapsedMS);
+				debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
+				debugger.stats.update();
 				debugger.watch.update();
 			}
-			#end	
+			#end
 		}
 	}
 	
@@ -546,7 +548,7 @@ class FlxGame extends Sprite
 			FlxRandom.globalSeed = replay.seed;
 			
 			#if !FLX_NO_DEBUG
-			debugger.vcr.playing();
+			debugger.vcr.playingReplay();
 			#end
 			
 			replaying = true;
@@ -567,7 +569,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.activeObjects(FlxBasic._ACTIVECOUNT);
+			debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
 		}
 		#end
 	}
@@ -611,7 +613,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.flixelUpdate(Lib.getTimer() - ticks);
+			debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
 		}
 		#end
 	}
@@ -699,6 +701,15 @@ class FlxGame extends Sprite
 		if (!_stateSwitchRequested)
 		#end 
 		
+		FlxG.plugins.draw();
+		
+		#if !FLX_NO_DEBUG
+		if (FlxG.debugger.visualDebug)
+		{
+			FlxG.plugins.drawDebug();
+		}
+		#end
+		
 		state.draw();
 		
 		#if !FLX_NO_DEBUG
@@ -714,18 +725,9 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.drawCalls(TileSheetExt._DRAWCALLS);
+			debugger.stats.drawCalls(TileSheetExt._DRAWCALLS);
 		}
 		#end
-		#end
-		
-		FlxG.plugins.draw();
-		
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visualDebug)
-		{
-			FlxG.plugins.drawDebug();
-		}
 		#end
 		
 		FlxG.cameras.unlock();
@@ -733,7 +735,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			debugger.perf.flixelDraw(Lib.getTimer() - ticks);
+			debugger.stats.flixelDraw(Lib.getTimer() - ticks);
 		}
 		#end
 	}

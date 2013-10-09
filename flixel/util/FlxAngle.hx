@@ -1,5 +1,6 @@
 package flixel.util;
 
+import flixel.util.FlxPoint;
 #if !FLX_NO_TOUCH
 import flixel.system.input.touch.FlxTouch;
 #end
@@ -36,18 +37,18 @@ class FlxAngle
 	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
 	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
 	 */
-	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, point:FlxPoint = null):FlxPoint
+	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:IFlxPoint):IFlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
-		var radians:Float = Angle * -0.017453293;
-		while (radians < -3.14159265)
+		var radians:Float = Angle * -TO_RAD;
+		while (radians < -Math.PI)
 		{
-			radians += 6.28318531;
+			radians += Math.PI * 2;
 		}
-		while (radians >  3.14159265)
+		while (radians >  Math.PI)
 		{
-			radians = radians - 6.28318531;
+			radians = radians - Math.PI * 2;
 		}
 		
 		if (radians < 0)
@@ -75,10 +76,10 @@ class FlxAngle
 			}
 		}
 		
-		radians += 1.57079632;
-		if (radians >  3.14159265)
+		radians += Math.PI / 2;
+		if (radians >  Math.PI)
 		{
-			radians = radians - 6.28318531;
+			radians = radians - Math.PI * 2;
 		}
 		if (radians < 0)
 		{
@@ -124,14 +125,14 @@ class FlxAngle
 	 * @param	Point2		The Y coordinate of the point.
 	 * @return	The angle in degrees, between -180 and 180.
 	 */
-	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
+	inline static public function getAngle(Point1:IFlxPoint, Point2:IFlxPoint):Float
 	{
 		var x:Float = Point2.x - Point1.x;
 		var y:Float = Point2.y - Point1.y;
 		var angle:Float = 0;
 		if ((x != 0) || (y != 0))
 		{
-			var c1:Float = 3.14159265 * 0.25;
+			var c1:Float = Math.PI * 0.25;
 			var c2:Float = 3 * c1;
 			var ay:Float = (y < 0) ? -y : y;
 			if (x >= 0)
@@ -142,7 +143,7 @@ class FlxAngle
 			{
 				angle = c2 - c1 * ((x + ay) / (ay - x));
 			}
-			angle = ((y < 0)? -angle:angle) * 57.2957796;
+			angle = ((y < 0)? -angle:angle) * TO_DEG;
 			if (angle > 90)
 			{
 				angle = angle - 270;
@@ -291,7 +292,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	static public function angleBetweenPoint(Sprite:FlxSprite, Target:FlxPoint, AsDegrees:Bool = false):Float
+	static public function angleBetweenPoint(Sprite:FlxSprite, Target:IFlxPoint, AsDegrees:Bool = false):Float
 	{
 		var dx:Float = (Target.x) - (Sprite.x + Sprite.origin.x);
 		var dy:Float = (Target.y) - (Sprite.y + Sprite.origin.y);

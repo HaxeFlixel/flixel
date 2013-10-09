@@ -1,8 +1,7 @@
 package flixel.util;
 
 /**
- * ...
- * @author Zaphod
+ * A generic container that facilitates pooling and recycling of objects.
  */
 @:generic class FlxPool<T:({ private function new():Void; function destroy():Void; })>
 {

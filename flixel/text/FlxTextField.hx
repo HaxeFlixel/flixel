@@ -21,21 +21,8 @@ import openfl.Assets;
  */
 class FlxTextField extends FlxText
 {
-	private var _selectable:Bool = false;
-	private var _multiline:Bool = true;
-	private var _wordWrap:Bool = true;
-	
-	private var _text:String;
-	
 	private var _camera:FlxCamera;
-	private var _addedToDisplay:Bool;
-	
-	private var _type:TextFieldType;
-	private var _border:Bool = false;
-	private var _borderColor:Int = 0x000000;
-	private var _bgColor:Int = 0xffffff;
-	private var _background:Bool = false;
-	private var _autosize:TextFieldAutoSize;
+	private var _addedToDisplay:Bool = false;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -46,37 +33,22 @@ class FlxTextField extends FlxText
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @param	Camera			Camera to display. FlxG.camera is used by default (if you pass null)
 	 */
-	public function new(X:Float, Y:Float, Width:Int, ?Text:String, EmbeddedFont:Bool = true, ?Camera:FlxCamera)
+	public function new(X:Float, Y:Float, Width:Int, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true, ?Camera:FlxCamera)
 	{
-		super(X, Y, Width);
+		super(X, Y, Width, Text, Size, EmbeddedFont);
+		
+		height = (Text.length <= 0) ? 1 : 10;
+		
+		_textField.multiline = false;
+		_textField.wordWrap = false;
 		
 		if (Camera == null)
 		{
 			Camera = FlxG.camera;
 		}
 		
-		_addedToDisplay = false;
-		width = Width;
-		
-		if (Text == null)
-		{
-			Text = "";
-		}
-		
-		_text = Text;
-		_textField.embedFonts = EmbeddedFont;
-		
-		#if flash
-		_textField.sharpness = 100;
-		#end
-		
-		#if !js
-		_type = TextFieldType.DYNAMIC;
-		_autosize = TextFieldAutoSize.NONE;
-		#end
-		
 		_camera = Camera;
-		dirty = false;
+		_regen = dirty = false;
 	}
 	
 	/**
@@ -89,110 +61,8 @@ class FlxTextField extends FlxText
 			_textField.parent.removeChild(_textField);
 		}
 		
-		_type = null;
 		_camera = null;
 		super.destroy();
-	}
-	
-	/**
-	 * You can use this if you have a lot of text parameters
-	 * to set instead of the individual properties.
-	 * 
-	 * @param	Font		The name of the font face for the text display.
-	 * @param	Size		The size of the font (in pixels essentially).
-	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
-	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	ShadowColor	A uint representing the desired text shadow color in flash 0xRRGGBB format.
-	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
-	 */
-	override public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, ShadowColor:Int = 0, UseShadow:Bool = false):FlxText
-	{
-		if (Font == null)
-		{
-			_format.font = FlxAssets.FONT_DEFAULT;
-		}
-		else 
-		{
-			_format.font = Assets.getFont(Font).fontName;
-		}
-		
-		_format.size = Size;
-		_format.color = Color;
-		_format.align = convertTextAlignmentFromString(Alignment);
-		updateTextField();
-		
-		return this;
-	}
-	
-	/**
-	 * The text being displayed.
-	 */
-	override private function get_text():String
-	{
-		return _text;
-	}
-	
-	override private function set_text(Text:String):String
-	{
-		_text = Text;
-		updateTextField();
-		
-		return text;
-	}
-	
-	override private function set_size(Size:Float):Float
-	{
-		_format.size = Size;
-		updateTextField();
-		
-		return Size;
-	}
-	
-	override private function set_color(Color:Int):Int
-	{
-		_format.color = Color;
-		updateTextField();
-		
-		return Color;
-	}
-	
-	override private function set_useShadow(Value:Bool):Bool
-	{
-		return Value;
-	}
-	
-	override private function set_font(Font:String):String
-	{
-		_format.font = Assets.getFont(Font).fontName;
-		updateTextField();
-		
-		return Font;
-	}
-	
-	override private function set_alignment(Alignment:String):String
-	{
-		_format.align = convertTextAlignmentFromString(Alignment);
-		updateTextField();
-		
-		return Alignment;
-	}
-	
-	/**
-	 * The color of the text shadow in 0xAARRGGBB hex format.
-	 */
-	override private function get_shadow():Int
-	{
-		// Shadows are not supported
-		return 0;
-	}
-	
-	/**
-	 * @private
-	 */
-	override private function set_shadow(Color:Int):Int
-	{
-		// Shadows are not supported
-		return 0;
 	}
 	
 	override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void 
@@ -200,15 +70,16 @@ class FlxTextField extends FlxText
 		// This class doesn't support this operation
 	}
 	
-	override private function get_simpleRender():Bool
-	{ 
-		return true;
-	}
-	
 	override public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool
 	{
 		// This class doesn't support this operation
 		return false;
+	}
+	
+	override private function simpleRenderSprite():Bool
+	{
+		// This class doesn't support this operation
+		return true;
 	}
 	
 	/**
@@ -222,7 +93,7 @@ class FlxTextField extends FlxText
 		#else
 		calcFrame();
 		#end
-		return _cachedGraphics.bitmap;
+		return cachedGraphics.bitmap;
 	}
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData
@@ -243,60 +114,33 @@ class FlxTextField extends FlxText
 		}
 		
 		alpha = Alpha;
-		updateTextField();
+		_textField.alpha = alpha;
 		
 		return Alpha;
 	}
 	
-	private function updateTextField():Void
+	override private function set_height(Height:Float):Float
 	{
-		if (_addedToDisplay)
-		{
-			#if !js
-			_textField.type = _type;
-			_textField.autoSize = _autosize;
-			#end
-			_textField.selectable = _selectable;
-			_textField.border = _border;
-			_textField.borderColor = _borderColor;
-			_textField.background = _background;
-			_textField.backgroundColor = _bgColor;
-			_textField.width = width;
-			_textField.defaultTextFormat = _format;
-			_textField.setTextFormat(_format);
-			_textField.selectable = _selectable;
-			_textField.wordWrap = _wordWrap;
-			_textField.multiline = _multiline;
-			_textField.text = _text;
-			height = _textField.textHeight;
-			height += 4;
-			_textField.height = height;
-			_textField.alpha = alpha;
-		}
+		Height = super.set_height(Height);
+		if (_textField != null)	_textField.height = Height;
+		return Height;
 	}
 	
-	public function setVisibility(Visible:Bool):Void
+	override private function set_visible(Value:Bool):Bool
 	{
-		visible = Visible;
-		_textField.visible = Visible;
-	}
-	
-	public function getVisibility():Bool
-	{
-		return visible;
+		_textField.visible = Value;
+		return super.set_visible(Value);
 	}
 	
 	override public function kill():Void 
 	{
-		setVisibility(false);
-		
+		visible = false;
 		super.kill();
 	}
 	
 	override public function revive():Void 
 	{
-		setVisibility(true);
-		
+		visible = true;
 		super.revive();
 	}
 	
@@ -319,21 +163,7 @@ class FlxTextField extends FlxText
 			#end
 			
 			_addedToDisplay = true;
-			updateTextField();
-		}
-		
-		#if !js
-		if (_type == TextFieldType.INPUT && _text != _textField.text)
-		{
-			_text = _textField.text;
-			updateTextField();
-		}
-		#end
-		
-		if (visible == false)
-		{
-			setVisibility(false);
-			return;
+			updateFormat(_format);
 		}
 		
 		if (!_camera.visible || !_camera.exists || !onScreen(_camera))
@@ -348,7 +178,6 @@ class FlxTextField extends FlxText
 		_point.x = x - (_camera.scroll.x * scrollFactor.x) - (offset.x);
 		_point.y = y - (_camera.scroll.y * scrollFactor.y) - (offset.y);
 		
-		// Simple render
 		#if !flash
 		_textField.x = _point.x;
 		_textField.y = _point.y;
@@ -362,52 +191,26 @@ class FlxTextField extends FlxText
 		#end
 	}
 	
-	/**
-	 * Internal function to update the current animation frame.
-	 */
-	#if !flash
-	override private function calcFrame(AreYouSure:Bool = false):Void
-	#else
-	override private function calcFrame():Void
-	#end
+	override private function regenGraphics():Void
 	{
-		#if !flash
-		if (AreYouSure && _addedToDisplay)
+		if (_regen)
 		{
-		#end
-			pixels = new BitmapData(Std.int(width), Std.int(height), true, FlxColor.TRANSPARENT);
+			var key:String = cachedGraphics.key;
+			FlxG.bitmap.remove(key);
+			
+			makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
 			frameHeight = Std.int(height);
 			_flashRect.x = 0;
 			_flashRect.y = 0;
-			_flashRect.width = width;
-			_flashRect.height = height;
-			
-			if ((_textField.text != null) && (_textField.text.length > 0))
-			{
-				// Now that we've cleared a buffer, we need to actually render the text to it
-				updateTextField();
-				_formatAdjusted.font = _format.font;
-				_formatAdjusted.size = _format.size;
-				_formatAdjusted.color = _format.color;
-				_formatAdjusted.align = _format.align;
-				_matrix.identity();
-				
-				// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-				#if !js
-				if ((_format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
-				{
-					_formatAdjusted.align = TextFormatAlign.LEFT;
-					_textField.setTextFormat(_formatAdjusted);
-					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
-				}
-				#end
-				// Actually draw the text onto the buffer
-				_cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-				_textField.setTextFormat(_format);
-			}
-		#if !flash
+			_flashRect.width = width + _widthInc;
+			_flashRect.height = height + _heightInc;
+			_regen = false;
 		}
-		#end
+		// Else just clear the old buffer before redrawing the text
+		else
+		{
+			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
+		}
 	}
 	
 	/**
@@ -433,7 +236,6 @@ class FlxTextField extends FlxText
 				#end
 				
 				_addedToDisplay = true;
-				updateTextField();
 			}
 			else
 			{
@@ -447,168 +249,6 @@ class FlxTextField extends FlxText
 			
 			_camera = Value;
 		}
-		return Value;
-	}
-	
-	/**
-	 * Type of text field. Can be TextFieldType.DYNAMIC or TextFieldType.INPUT. Default is TextFieldType.DYNAMIC.
-	 */
-	public var type(get, set):TextFieldType;
-	
-	private function get_type():TextFieldType 
-	{
-		return _type;
-	}
-	
-	private function set_type(Value:TextFieldType):TextFieldType 
-	{
-		_type = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines whether this text field is selectable or not. Default is false.
-	 */
-	public var selectable(get, set):Bool;
-	
-	private function get_selectable():Bool 
-	{
-		return _selectable;
-	}
-	
-	private function set_selectable(Value:Bool):Bool 
-	{
-		_selectable = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines whether to show border around text field or not. Default is false.
-	 */
-	public var border(get, set):Bool;
-	
-	private function get_border():Bool 
-	{
-		return _border;
-	}
-	
-	private function set_border(Value:Bool):Bool 
-	{
-		_border = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines the color of border around text field. Default is 0x000000 (black).
-	 */
-	public var borderColor(get, set):Int;
-	
-	private function get_borderColor():Int 
-	{
-		return _textField.borderColor;
-	}
-	
-	private function set_borderColor(Value:Int):Int 
-	{
-		_borderColor = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines whether this text field is multiline or not. Default is true.
-	 */
-	public var multiline(get, set):Bool;
-	
-	private function get_multiline():Bool 
-	{
-		return _multiline;
-	}
-	
-	private function set_multiline(Value:Bool):Bool 
-	{
-		_multiline = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines background color for this text field. Default is 0xffffff (white).
-	 */
-	public var bgColor(get, set):Int;
-	
-	private function get_bgColor():Int 
-	{
-		return _bgColor;
-	}
-	
-	private function set_bgColor(Value:Int):Int 
-	{
-		_bgColor = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines whether to show background of this text field or not. Default is false.
-	 */
-	public var background(get, set):Bool;
-	
-	private function get_background():Bool 
-	{
-		return _background;
-	}
-	
-	private function set_background(Value:Bool):Bool 
-	{
-		_background = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines whether this text field is using word wrap. Default is true
-	 */
-	public var wordWrap(get, set):Bool;
-	
-	private function get_wordWrap():Bool 
-	{
-		return _wordWrap;
-	}
-	
-	private function set_wordWrap(Value:Bool):Bool 
-	{
-		_wordWrap = Value;
-		updateTextField();
-		
-		return Value;
-	}
-	
-	/**
-	 * Defines textfield's autosize behavior. Default is TextFieldAutoSize.NONE
-	 */
-	public var autosize(get, set):TextFieldAutoSize;
-	
-	private function get_autosize():TextFieldAutoSize 
-	{
-		return _autosize;
-	}
-	
-	private function set_autosize(Value:TextFieldAutoSize):TextFieldAutoSize 
-	{
-		_autosize = Value;
-		updateTextField();
-		
 		return Value;
 	}
 	

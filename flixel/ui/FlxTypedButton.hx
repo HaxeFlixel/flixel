@@ -211,7 +211,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			return;
 		}
-		switch (frame)
+		switch (status)
 		{
 			case FlxButton.HIGHLIGHT:
 				label.alpha = 1.0;
@@ -263,6 +263,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 						offAll = (updateButtonStatus(_point, camera, touch.justPressed) == false) ? false : offAll;
 					}
 				#end
+				
+				if (!offAll)
+				{
+					break;
+				}
 			}
 			if (offAll)
 			{
@@ -298,7 +303,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		
 		// Then pick the appropriate frame of animation
-		frame = status;
+		frame = framesData.frames[status];
 	}
 	
 	/**

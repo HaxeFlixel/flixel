@@ -2,20 +2,40 @@ package flixel.util;
 
 import flash.geom.Point;
 
+interface IFlxPoint {
+	public var x(default, set):Float;
+	public var y(default, set):Float;
+	
+	public function set(X:Float = 0, Y:Float = 0):FlxPoint;
+	public function copyFrom(point:FlxPoint):FlxPoint;
+	public function copyTo(point:FlxPoint = null):FlxPoint;
+	public function destroy():Void;
+}
+
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint 
+class FlxPoint implements IFlxPoint
 {
 	/**
 	 * @default 0
 	 */
-	public var x:Float;
+	public var x(default, set):Float = 0;
+	
+	private function set_x(Value:Float):Float
+	{
+		return x = Value;
+	}
 	
 	/**
 	 * @default 0
 	 */
-	public var y:Float;
+	public var y(default, set):Float;
+	
+	private function set_y(Value:Float):Float
+	{
+		return y = Value;
+	}
 	
 	/**
 	 * Instantiate a new point object.
@@ -45,7 +65,7 @@ class FlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to itself.
 	 */
-	inline public function copyFrom(point:FlxPoint):FlxPoint
+	public function copyFrom(point:FlxPoint):FlxPoint
 	{
 		x = point.x;
 		y = point.y;
@@ -57,7 +77,7 @@ class FlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	inline public function copyTo(point:FlxPoint = null):FlxPoint
+	public function copyTo(point:FlxPoint = null):FlxPoint
 	{
 		if (point == null)
 		{
@@ -73,7 +93,7 @@ class FlxPoint
 	 * @param	Point	Any <code>Point</code>.
 	 * @return	A reference to itself.
 	 */
-	inline public function copyFromFlash(FlashPoint:Point):FlxPoint
+	public function copyFromFlash(FlashPoint:Point):FlxPoint
 	{
 		x = FlashPoint.x;
 		y = FlashPoint.y;
@@ -85,7 +105,7 @@ class FlxPoint
 	 * @param	Point	Any <code>Point</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	inline public function copyToFlash(FlashPoint:Point):Point
+	public function copyToFlash(FlashPoint:Point):Point
 	{
 		FlashPoint.x = x;
 		FlashPoint.y = y;
@@ -95,7 +115,7 @@ class FlxPoint
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
-	inline public function toString():String
+	public function toString():String
 	{
 		return FlxStringUtil.getClassName(this, true);
 	}
@@ -135,4 +155,6 @@ class FlxPoint
 	{
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
+	
+	public function destroy() { }
 }

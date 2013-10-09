@@ -40,6 +40,32 @@ class FlxMath
 	}
 	
 	/**
+	 * Returns linear interpolated value between Max and Min numbers
+	 *
+	 * @param Min 		Lower bound.
+	 * @param Max	 	Higher bound.
+	 * @param Ratio 	Defines which number is closer to desired value.
+	 * @return 			Interpolated number.
+	 */
+	inline static public function lerp(Min:Float, Max:Float, Ratio:Float):Float
+	{
+		return Min + Ratio * (Max - Min);
+	}
+	
+	/**
+	 * Checks if number is in defined range.
+	 *
+	 * @param Value		Number to check.
+	 * @param Min		Lower bound of range.
+	 * @param Max 		Higher bound of range.
+	 * @return Returns true if Value is in range.
+	 */
+	inline static public function inBounds(Value:Float, Min:Float, Max:Float):Bool
+	{
+		return ((Value > Min) && (Value < Max));
+	}
+	
+	/**
 	 * A tween-like function that takes a starting velocity
 	 * and some other factors and returns an altered velocity.
 	 * @param	Velocity		Any component of velocity (e.g. 20).
@@ -48,7 +74,7 @@ class FlxMath
 	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
 	 * @return	The altered Velocity value.
 	 */
-	inline static public function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
+	static public function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
 	{
 		if (Acceleration != 0)
 		{
@@ -91,7 +117,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is odd. False if the given number is even.
 	 */
-	inline static public function isOdd(n:Float):Bool
+	static public function isOdd(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -110,7 +136,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is even. False if the given number is odd.
 	 */
-	inline static public function isEven(n:Float):Bool
+	static public function isEven(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -164,7 +190,6 @@ class FlxMath
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
@@ -182,7 +207,6 @@ class FlxMath
 		{
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -227,7 +251,6 @@ class FlxMath
 		{
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -241,7 +264,7 @@ class FlxMath
 	 * @param 	min 	The minimum the value is allowed to be
 	 * @return The new value
 	 */
-	inline static public function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
+	static public function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
 	{
 		value += amount;
 		
@@ -332,7 +355,6 @@ class FlxMath
 	{
 		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
 		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
-		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
@@ -348,7 +370,6 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
-		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
@@ -363,7 +384,6 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
-		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	#end
@@ -380,7 +400,6 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
-		
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	#end
@@ -391,7 +410,7 @@ class FlxMath
 	 * @param	Number	The floating point number
 	 * @return	Amount of decimals
 	 */
-	inline static public function getDecimals(Number:Float):Int
+	static public function getDecimals(Number:Float):Int
 	{
 		var helperArray:Array<String> = Std.string(Number).split(".");
 		var decimals:Int = 0;

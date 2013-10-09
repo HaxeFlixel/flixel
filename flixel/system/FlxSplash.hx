@@ -25,6 +25,10 @@ class FlxSplash extends FlxState
 	private var _colors:Array<Int>;
 	private var _functions:Array<Void->Void>;
 	private var _curPart:Int = 0;
+	private var _cachedBgColor:Int;
+	private var _cachedTimestep:Bool;
+	private var _cachedAutoPause:Bool;
+	
 	
 	public function new(NextState:Class<FlxState>)
 	{
@@ -34,10 +38,17 @@ class FlxSplash extends FlxState
 	
 	override public function create():Void
 	{
+		_cachedBgColor = FlxG.cameras.bgColor;
 		FlxG.cameras.bgColor = FlxColor.BLACK;
+		
+		_cachedTimestep = FlxG.fixedTimestep;
 		FlxG.fixedTimestep = false;
+		
+		_cachedAutoPause = FlxG.autoPause;
 		FlxG.autoPause = false;
-		FlxG.keyboard.enabled = false;
+		#if !FLX_NO_KEYBOARD
+			FlxG.keyboard.enabled = false;
+		#end
 		
 		_times = [0.041, 0.184, 0.334, 0.495, 0.636];
 		_colors = [0x00b922, 0xffc132, 0xf5274e, 0x3641ff, 0x04cdfb];
@@ -63,17 +74,16 @@ class FlxSplash extends FlxState
 		_text.defaultTextFormat = dtf;
 		_text.text = "HaxeFlixel";
 		_text.y = _sprite.y + 130;
-		_text.alpha = 0;
 		FlxG.stage.addChild(_text);
 		
-		FlxTween.multiVar(_text, { alpha: 1 }, 1 );
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
 	}
 	
-	inline private function timerCallback(Timer:FlxTimer):Void
+	private function timerCallback(Timer:FlxTimer):Void
 	{
 		_functions[_curPart]();
 		_text.textColor = _colors[_curPart];
+		_text.text = "HaxeFlixel";
 		_curPart ++;
 		
 		if (_curPart == 5)
@@ -83,7 +93,7 @@ class FlxSplash extends FlxState
 		}
 	}
 	
-	inline private function drawGreen():Void
+	private function drawGreen():Void
 	{
 		_gfx.beginFill(0x00b922);
 		_gfx.moveTo(50, 13);
@@ -98,7 +108,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	inline private function drawYellow():Void
+	private function drawYellow():Void
 	{
 		_gfx.beginFill(0xffc132);
 		_gfx.moveTo(0, 0);
@@ -110,7 +120,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	inline private function drawRed():Void
+	private function drawRed():Void
 	{
 		_gfx.beginFill(0xf5274e);
 		_gfx.moveTo(100, 0);
@@ -122,7 +132,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	inline private function drawBlue():Void
+	private function drawBlue():Void
 	{
 		_gfx.beginFill(0x3641ff);
 		_gfx.moveTo(0, 100);
@@ -134,7 +144,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	inline private function drawLightBlue():Void
+	private function drawLightBlue():Void
 	{
 		_gfx.beginFill(0x04cdfb);
 		_gfx.moveTo(100, 100);
@@ -146,11 +156,14 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	inline private function onComplete(Tween:FlxTween):Void
+	private function onComplete(Tween:FlxTween):Void
 	{
-		FlxG.fixedTimestep = true;
-		FlxG.autoPause = true;
-		FlxG.keyboard.enabled = true;
+		FlxG.cameras.bgColor = _cachedBgColor;
+		FlxG.fixedTimestep = _cachedTimestep;
+		FlxG.autoPause = _cachedAutoPause;
+		#if !FLX_NO_KEYBOARD
+			FlxG.keyboard.enabled = true;
+		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(Type.createInstance(_nextState, []));

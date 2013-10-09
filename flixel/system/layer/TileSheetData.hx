@@ -30,16 +30,19 @@ class TileSheetData
 	 */
 	private var flxFrames:Map<String, FlxFrame>;
 	
+	private var frameNames:Array<String>;
+	
 	public var bitmap:BitmapData;
 	
-	public function new(bitmap:BitmapData)
+	public function new(Bitmap:BitmapData)
 	{
-		this.bitmap = bitmap;
+		bitmap = Bitmap;
 		#if !flash
-		this.tileSheet = new TileSheetExt(bitmap);
+		tileSheet = new TileSheetExt(bitmap);
 		#end
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
 		flxFrames = new Map<String, FlxFrame>();
+		frameNames = new Array<String>();
 	}
 	
 	public function getFrame(name:String):FlxFrame
@@ -96,8 +99,8 @@ class TileSheetData
 		
 		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(key);
 		
-		var tempRect:Rectangle;
 		var frame:FlxFrame;
+		var tempRect:Rectangle;
 		
 		var spacedWidth:Int = width + xSpacing;
 		var spacedHeight:Int = height + ySpacing;
@@ -116,20 +119,45 @@ class TileSheetData
 		return spriteData;
 	}
 	
+	/**
+	 * Hashing Functionality - TODO: use numbers as keys!
+	 * 
+	 * http://stackoverflow.com/questions/892618/create-a-hashcode-of-two-numbers
+	 * http://stackoverflow.com/questions/299304/why-does-javas-hashcode-in-string-use-31-as-a-multiplier
+	*/
+	public inline function getSpriteSheetFrameKey(rect:Rectangle, point:Point):String
+	{
+		var hash:Float = 23;
+		hash = hash * 31 + rect.x;
+		hash = hash * 31 + rect.y;
+		hash = hash * 31 + rect.width;
+		hash = hash * 31 + rect.height;
+		hash = hash * 31 + point.x;
+		hash = hash * 31 + point.y;
+		return Std.string(hash);
+	}
+	
+	public inline function getKeyForSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
+	{
+		
+		var hash:Float = 23;
+		hash = hash * 31 + width;
+		hash = hash * 31 + height;
+		hash = hash * 31 + startX;
+		hash = hash * 31 + startY;
+		hash = hash * 31 + endX;
+		hash = hash * 31 + endY;
+		hash = hash * 31 + xSpacing;
+		hash = hash * 31 + ySpacing;
+		hash = hash * 31 + pointX;
+		hash = hash * 31 + pointY;
+		return Std.string(hash);
+	}
+	
 	public function containsSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
 	{
-		var key:String = getKeyForSpriteSheetFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		var key = getKeyForSpriteSheetFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
 		return flxSpriteFrames.exists(key);
-	}
-	
-	public function getKeyForSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
-	{
-		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
-	}
-	
-	public function getSpriteSheetFrameKey(rect:Rectangle, point:Point):String
-	{
-		return rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_" + point.x + "_" + point.y;
 	}
 	
 	/**
@@ -157,6 +185,7 @@ class TileSheetData
 		
 		frame.center = new FlxPoint(0.5 * rect.width, 0.5 * rect.height);
 		flxFrames.set(key, frame);
+		frameNames.push(key);
 		return frame;
 	}
 	
@@ -196,6 +225,8 @@ class TileSheetData
 			frame.destroy();
 		}
 		flxFrames = null;
+		
+		frameNames = null;
 	}
 	
 	#if !flash
@@ -220,12 +251,14 @@ class TileSheetData
 		}
 		
 		data.parseData();
+		
+		var frame:FlxFrame;
 		var packerFrames:FlxSpriteFrames = new FlxSpriteFrames(data.assetName);
 		
 		var l:Int = data.frames.length;
 		for (i in 0...l)
 		{
-			var frame:FlxFrame = addTexturePackerFrame(data.frames[i], startX, startY);
+			frame = addTexturePackerFrame(data.frames[i], startX, startY);
 			packerFrames.addFrame(frame);
 		}
 		
@@ -266,14 +299,20 @@ class TileSheetData
 		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
 		#end
 		flxFrames.set(key, texFrame);
+		frameNames.push(key);
 		return texFrame;
 	}
 	
 	public function destroyFrameBitmapDatas():Void
 	{
-		for (frame in flxFrames)
+		var numFrames:Int = frameNames.length;
+		for (i in 0...numFrames)
+		{
+			flxFrames.get(frameNames[i]).destroyBitmapDatas();
+		}
+		/*for (frame in flxFrames)
 		{
 			frame.destroyBitmapDatas();
-		}
+		}*/
 	}
 }

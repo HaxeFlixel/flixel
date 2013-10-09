@@ -5,9 +5,20 @@ ______________________________________________________
 
 ###Getting Started
 
+You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
+
 It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel). Just run `haxelib install flixel` once you have it installed.
 
-You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
+###For Developers
+
+Make sure you're using latest version of [Haxe, HaxeLib and OpenFl](http://haxeflixel.com/comment/2584#comment-2584). Also bookmark the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
+
+Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel dev`.
+
+We recommended that you use a GUI application to manage your changes ([SourceTree](http://www.sourcetreeapp.com/)).
+
+###Current Build Status [![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel)
+
 ______________________________________________________
 ###Links
 
@@ -21,7 +32,7 @@ In case you're looking for ressources, help, or just want to interact with the c
 
 ______________________________________________________
 
-HaxeFlixel was founded and created by Alexander Hohlov, also known as [Beeblerox](https://github.com/beeblerox) who continues to be the project lead and repository maintainer. The codebase started largely from a Haxe port of the [AS3 version of Flixel](https://github.com/AdamAtomic/flixel) written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/).
+HaxeFlixel was created by Alexander Hohlov, also known as [Beeblerox](https://github.com/beeblerox) who continues to be the project lead. The codebase started largely from a Haxe port of the [AS3 version of Flixel](https://github.com/AdamAtomic/flixel) written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) and [Richard Davey's](http://www.photonstorm.com/flixel-power-tools) [Power Tools](https://github.com/photonstorm/Flixel-Power-Tools)
 
 Special thanks go to the community contributors [Werdn](https://github.com/werdn), [crazysam](https://github.com/crazysam), [impaler](https://github.com/impaler), [ProG4mr](https://github.com/ProG4mr), [Gama11](https://github.com/Gama11), [sergey-miryanov](https://github.com/sergey-miryanov) and more.
 
@@ -82,7 +93,7 @@ ______________________________________________________
 - Easily generate and emit particles
 - Create game levels using tilemaps
 - Text display, save games, scrolling
-- Mouse & keyboard input
+- Mouse, keyboard, controller, and touch inputs
 - Math & color utilities
 - Record and play back replays
 - Powerful interactive debugger

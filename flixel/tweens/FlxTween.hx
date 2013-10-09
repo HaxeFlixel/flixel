@@ -199,7 +199,7 @@ class FlxTween
 	
 	/**
 	 * Create a new QuadMotion tween.
-	 * Example: FlxTween.quadMotion(Object, 0, 100, 0, 300, 500, 100, 2, 5, false, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.quadMotion(Object, 0, 100, 300, 500, 100, 2, 5, false, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	FromX			X start.
@@ -425,7 +425,7 @@ class FlxTween
 		_target = duration;
 		if (type == 0) 
 		{
-			type = FlxTween.PERSIST;
+			type = FlxTween.ONESHOT;
 		}
 		else if (type == FlxTween.BACKWARD)
 		{

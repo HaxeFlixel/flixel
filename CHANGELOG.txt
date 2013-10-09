@@ -1,5 +1,13 @@
 flixel CHANGELOG
 
+v.3.0.0
+------------------------------
+* New Front End classes to better encapsulate FlxG functionality.
+* Refactored the animation system.
+* Better support for nested sprites via FlxSpriteGroup.
+* Moved lots of stuff into utility classe to reduce clutter in core classes.
+* Continued optimizations for cpp targets.
+
 v.2.0.0-alpha.3
 ------------------------------
 * Fix for FLX_MOUSE_ADVANCED (won't compiled earlier)

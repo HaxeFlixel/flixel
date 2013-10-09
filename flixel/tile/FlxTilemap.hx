@@ -16,6 +16,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.system.layer.Region;
 import flixel.util.FlxSpriteUtil;
@@ -72,7 +73,41 @@ class FlxTilemap extends FlxObject
 	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
 	 */
 	public var tileScaleHack:Float = 1.01;
-	
+	/**
+	 * Set this to create your own image index remapper, so you can create your own tile layouts.
+	 * Mostly useful in combination with the auto-tilers.
+	 * 
+	 * Normally, each tile's value in _data corresponds to the index of a 
+	 * tile frame in the tilesheet. With this active, each value in _data
+	 * is a lookup value to that index in customTileRemap.
+	 * 
+	 * Example:
+	 *  customTileRemap = [10,9,8,7,6]
+	 *  means: 0=10, 1=9, 2=8, 3=7, 4=6
+	 */
+	public var customTileRemap:Array<Int> = null;
+	/**
+	 * If these next two arrays are not null, you're telling FlxTilemap to 
+	 * draw random tiles in certain places. 
+	 * 
+	 * _randomIndices is a list of tilemap values that should be replaced
+	 * by a randomly selected value. The available values are chosen from
+	 * the corresponding array in randomize_choices
+	 * 
+	 * So if you have:
+	 *   randomIndices = [12,14]
+	 *   randomChoices = [[0,1,2],[3,4,5,6,7]]
+	 * 
+	 * Everywhere the tilemap has a value of 12 it will be replaced by 0, 1, or, 2
+	 * Everywhere the tilemap has a value of 14 it will be replaced by 3, 4, 5, 6, 7
+	 */
+	private var _randomIndices:Array<Int> = null;
+	private var _randomChoices:Array<Array<Int>> = null;
+	/**
+	 * Setting this function allows you to control which choice will be selected for each element within _randomIndices array.
+	 * Must return a 0-1 value that gets multiplied by _randomChoices[randIndex].length;
+	 */
+	private var _randomLambda:Void->Float = null;
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
@@ -127,19 +162,16 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _debugRect:Rectangle;
 	#end
-	
 	/**
 	 * Internal flag for checking to see if we need to refresh
 	 * the tilemap display to show or hide the bounding boxes.
 	 */
 	private var _lastVisualDebug:Bool;
 	#end
-	
 	/**
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
 	private var _startingIndex:Int;
-	
 	#if !flash
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
@@ -260,8 +292,8 @@ class FlxTilemap extends FlxObject
 	 * @param	AutoTile		Whether to load the map using an automatic tile placement algorithm.  Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
 	 * @param	StartingIndex	Used to sort of insert empty tiles in front of the provided graphic.  Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
 	 * @param	DrawIndex		Initializes all tile objects equal to and after this index as visible. Default value is 1.  Ignored if AutoTile is set.
-	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.	
-	 * @return	A pointer this instance of FlxTilemap, for chaining as usual :)
+	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using <code>setTileProperties()</code>.
+	 * @return	A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
 	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, AutoTile:Int = 0, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
@@ -329,13 +361,53 @@ class FlxTilemap extends FlxObject
 			}
 		}
 		
+		if (customTileRemap != null) 
+		{
+			i = 0;
+			while ( i < totalTiles) 
+			{
+				var old_index = _data[i];
+				var new_index = old_index;
+				if (old_index < customTileRemap.length)
+				{
+					new_index = customTileRemap[old_index];
+				}
+				_data[i] = new_index;
+				i++;
+			}
+		}
+		
+		if (_randomIndices != null)
+		{
+			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : Math.random;
+			
+			i = 0;
+			while (i < totalTiles)
+			{
+				var old_index = _data[i];
+				var j = 0;
+				var new_index = old_index;
+				for (rand in _randomIndices) 
+				{
+					if (old_index == rand) 
+					{
+						var k:Int = Std.int(randLambda() * _randomChoices[j].length);
+						new_index = _randomChoices[j][k];
+					}
+					j++;
+				}
+				_data[i] = new_index;
+				i++;
+			}
+		}
+		
 		// Figure out the size of the tiles
-		setCachedGraphics(FlxG.bitmap.add(TileGraphic));
+		cachedGraphics = FlxG.bitmap.add(TileGraphic);
 		_tileWidth = TileWidth;
 		
 		if (_tileWidth <= 0)
 		{
-			_tileWidth = _cachedGraphics.bitmap.height;
+			_tileWidth = cachedGraphics.bitmap.height;
 		}
 		
 		_tileHeight = TileHeight;
@@ -344,40 +416,40 @@ class FlxTilemap extends FlxObject
 		{
 			_tileHeight = _tileWidth;
 		}
-		
+				
 		if (!Std.is(TileGraphic, TextureRegion))
 		{
-			_region = new Region(0, 0, _tileWidth, _tileHeight);
-			_region.width = _cachedGraphics.bitmap.width;
-			_region.height = _cachedGraphics.bitmap.height;
+			region = new Region(0, 0, _tileWidth, _tileHeight);
+			region.width = cachedGraphics.bitmap.width;
+			region.height = cachedGraphics.bitmap.height;
 		}
 		else
 		{
 			var spriteRegion:TextureRegion = cast TileGraphic;
-			_region = spriteRegion.region.clone();
-			if (_region.tileWidth > 0)
+			region = spriteRegion.region.clone();
+			if (region.tileWidth > 0)
 			{
-				_tileWidth = _region.tileWidth;
+				_tileWidth = region.tileWidth;
 			}
 			else
 			{
-				_region.tileWidth = _tileWidth;
+				region.tileWidth = _tileWidth;
 			}
 			
-			if (_region.tileHeight > 0)
+			if (region.tileHeight > 0)
 			{
-				_tileHeight = _region.tileWidth;
+				_tileHeight = region.tileWidth;
 			}
 			else
 			{
-				_region.tileHeight = _tileHeight;
+				region.tileHeight = _tileHeight;
 			}
 		}
 		
 		// Create some tile objects that we'll use for overlap checks (one for each tile)
 		_tileObjects = new Array<FlxTile>();
 		
-		var length:Int = _region.numTiles;
+		var length:Int = region.numTiles;
 		length += _startingIndex;
 		
 		for (i in 0...length)
@@ -414,6 +486,29 @@ class FlxTilemap extends FlxObject
 		#end
 		
 		return this;
+	}
+	
+	/**
+	 * Set custom tile mapping and/or randomization rules prior to loading. This MUST be called BEFORE <code>loadMap()</code>.
+	 * WARNING: Using this will cause your maps to take longer to load. Be careful using this in very large tilemaps.
+	 * 
+	 * @param	mappings		Array of ints for remapping tiles. Ex: [7,4,12] means "0-->7, 1-->4, 2-->12"
+	 * @param	randomIndices	(optional) Array of ints indicating which tile indices should be randmoized. Ex: [7,4,12] means "replace tile index of 7, 4, or 12 with a randomized value"
+	 * @param	randomChoices	(optional) A list of int-arrays that serve as the corresponding choices to randomly choose from. Ex: indices = [7,4], choices = [[1,2],[3,4,5]], 7 will be replaced by either 1 or 2, 4 will be replaced by 3, 4, or 5.
+	 * @param	randomLambda	(optional) A custom randomizer function, should return value between 0.0 and 1.0. Initialize your random seed before passing this in! If not defined, will default to unseeded Math.random() calls.
+	 */
+	public function setCustomTileMappings(mappings:Array<Int>, randomIndices:Array<Int> = null, randomChoices:Array<Array<Int>> = null, randomLambda:Void->Float = null):Void
+	{
+		customTileRemap = mappings;
+		_randomIndices = randomIndices;
+		_randomChoices = randomChoices;
+		_randomLambda = randomLambda;
+		
+		// make sure users provide all that data required if they wish to randomize tile mappings.
+		if (_randomIndices != null && (_randomChoices == null || _randomChoices.length == 0))
+		{
+			throw "You must provide valid 'randomChoices' if you wish to randomize tilemap indicies, please read documentation of 'setCustomTileMappings' function.";
+		}
 	}
 	
 	/**
@@ -459,7 +554,7 @@ class FlxTilemap extends FlxObject
 		super.update();
 	}
 	#end
-
+	
 	/**
 	 * Internal function that actually renders the tilemap to the tilemap buffer.  Called by draw().
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
@@ -478,9 +573,9 @@ class FlxTilemap extends FlxObject
 		var drawY:Float;
 		
 		#if !js
-		var drawItem:DrawStackItem = Camera.getDrawStackItem(_cachedGraphics, false, 0);
+		var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, false, 0);
 		#else
-		var drawItem:DrawStackItem = Camera.getDrawStackItem(_cachedGraphics, false);
+		var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, false);
 		#end
 		var currDrawData:Array<Float> = drawItem.drawData;
 		var currIndex:Int = drawItem.position;
@@ -536,7 +631,7 @@ class FlxTilemap extends FlxObject
 				
 				if (_flashRect != null)
 				{
-					Buffer.pixels.copyPixels(_cachedGraphics.bitmap, _flashRect, _flashPoint, null, null, true);
+					Buffer.pixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPoint, null, null, true);
 					
 					#if !FLX_NO_DEBUG
 					if (FlxG.debugger.visualDebug && !ignoreDrawDebug) 
@@ -1445,7 +1540,6 @@ class FlxTilemap extends FlxObject
 			
 			while (column < selectionWidth)
 			{
-				overlapFound = false;
 				var dataIndex:Int = _data[rowStart + column];
 				
 				if (dataIndex < 0)
@@ -1455,14 +1549,14 @@ class FlxTilemap extends FlxObject
 				}
 				
 				tile = _tileObjects[dataIndex];
+				tile.x = X + column * _tileWidth;
+				tile.y = Y + row * _tileHeight;
+				tile.last.x = tile.x - deltaX;
+				tile.last.y = tile.y - deltaY;
+				overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
 				
 				if (tile.allowCollisions != FlxObject.NONE)
 				{
-					tile.x = X + column * _tileWidth;
-					tile.y = Y + row * _tileHeight;
-					tile.last.x = tile.x - deltaX;
-					tile.last.y = tile.y - deltaY;
-					
 					if (Callback != null)
 					{
 						if (FlipCallbackParams)
@@ -1474,25 +1568,20 @@ class FlxTilemap extends FlxObject
 							overlapFound = Callback(tile, Object);
 						}
 					}
-					else
+				}
+				
+				if (overlapFound)
+				{
+					if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
 					{
-						overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
+						tile.mapIndex = rowStart + column;
+						tile.callbackFunction(tile, Object);
 					}
-					if (overlapFound)
+					
+					if (tile.allowCollisions != FlxObject.NONE)
 					{
-						if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
-						{
-							tile.mapIndex = rowStart + column;
-							tile.callbackFunction(tile, Object);
-						}
-						
 						results = true;
 					}
-				}
-				else if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
-				{
-					tile.mapIndex = rowStart + column;
-					tile.callbackFunction(tile, Object);
 				}
 				
 				column++;
@@ -2216,12 +2305,12 @@ class FlxTilemap extends FlxObject
 		_data[Index] = 0;
 		
 		// UP
-		if ((Index-widthInTiles < 0) || (_data[Index-widthInTiles] > 0)) 		
+		if ((Index-widthInTiles < 0) || (_data[Index-widthInTiles] > 0))
 		{
 			_data[Index] += 1;
 		}
 		// RIGHT
-		if ((Index%widthInTiles >= widthInTiles-1) || (_data[Index+1] > 0)) 		
+		if ((Index%widthInTiles >= widthInTiles-1) || (_data[Index+1] > 0))
 		{
 			_data[Index] += 2;
 		}
@@ -2231,33 +2320,33 @@ class FlxTilemap extends FlxObject
 			_data[Index] += 4;
 		}
 		// LEFT
-		if ((Index%widthInTiles <= 0) || (_data[Index-1] > 0)) 					
+		if ((Index%widthInTiles <= 0) || (_data[Index-1] > 0))
 		{
 			_data[Index] += 8;
 		}
 		
 		// The alternate algo checks for interior corners
-		if ((auto == ALT) && (_data[Index] == 15))	
+		if ((auto == ALT) && (_data[Index] == 15))
 		{
 			// BOTTOM LEFT OPEN
 			if ((Index%widthInTiles > 0) && (Std.int(Index+widthInTiles) < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
 			{
-				_data[Index] = 1;		
+				_data[Index] = 1;
 			}
 			// TOP LEFT OPEN
 			if ((Index%widthInTiles > 0) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles-1] <= 0))
 			{
-				_data[Index] = 2;		
+				_data[Index] = 2;
 			}
 			// TOP RIGHT OPEN
 			if ((Index%widthInTiles < widthInTiles-1) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles+1] <= 0))
 			{
-				_data[Index] = 4;		
+				_data[Index] = 4;
 			}
 			// BOTTOM RIGHT OPEN
 			if ((Index%widthInTiles < widthInTiles-1) && (Std.int(Index+widthInTiles) < totalTiles) && (_data[Index+widthInTiles+1] <= 0))
 			{
-				_data[Index] = 8; 		
+				_data[Index] = 8;
 			}
 		}
 		
@@ -2285,17 +2374,17 @@ class FlxTilemap extends FlxObject
 		}
 		
 		#if flash
-		var rx:Int = (_data[Index] - _startingIndex) * _tileWidth + _region.startX;
+		var rx:Int = (_data[Index] - _startingIndex) * (_tileWidth + region.spacingX);
 		var ry:Int = 0;
 		
-		if (Std.int(rx) >= _region.width)
+		if (Std.int(rx) >= region.width)
 		{
-			ry = Std.int(rx / _region.width) * _tileHeight + _region.startY;
-			rx %= _region.width;
+			ry = Std.int(rx / region.width) * (_tileHeight + region.spacingY);
+			rx %= region.width;
 		}
-		_rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
+		_rects[Index] = (new Rectangle(rx + region.startX, ry + region.startY, _tileWidth, _tileHeight));
 		#else
-		_rectIDs[Index] = _framesData.frames[_data[Index] - _startingIndex].tileID;
+		_rectIDs[Index] = framesData.frames[_data[Index] - _startingIndex].tileID;
 		#end
 	}
 	
@@ -2303,11 +2392,11 @@ class FlxTilemap extends FlxObject
 	 * Use this method for creating tileSheet for FlxTilemap. Must be called after loadMap() method.
 	 * If you forget to call it then you will not see this FlxTilemap on c++ target
 	 */
-	override public function updateFrameData():Void
+	public function updateFrameData():Void
 	{
-		if (_cachedGraphics != null && _tileWidth >= 1 && _tileHeight >= 1)
+		if (cachedGraphics != null && _tileWidth >= 1 && _tileHeight >= 1)
 		{
-			_framesData = _cachedGraphics.tilesheet.getSpriteSheetFrames(_region, new Point(0, 0));
+			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region, new Point(0, 0));
 			#if !flash
 			_rectIDs = new Array<Int>();
 			FlxArrayUtil.setLength(_rectIDs, totalTiles);
@@ -2348,16 +2437,16 @@ class FlxTilemap extends FlxObject
 		}
 		else
 		{
-			var rx:Int = (_data[rowIndex] - _startingIndex) * (_tileWidth + _region.spacingX);
+			var rx:Int = (_data[rowIndex] - _startingIndex) * (_tileWidth + region.spacingX);
 			var ry:Int = 0;
 			
-			if(Std.int(rx) >= _region.width)
+			if(Std.int(rx) >= region.width)
 			{
-				ry = Std.int(rx / _region.width) * (_tileHeight + _region.spacingY);
-				rx %= _region.width;
+				ry = Std.int(rx / region.width) * (_tileHeight + region.spacingY);
+				rx %= region.width;
 			}
 			
-			rect = new Rectangle(rx + _region.startX, ry + _region.startY, _tileWidth, _tileHeight);
+			rect = new Rectangle(rx + region.startX, ry + region.startY, _tileWidth, _tileHeight);
 		}
 		#end
 		
@@ -2370,7 +2459,7 @@ class FlxTilemap extends FlxObject
 		
 		if (rect != null) 
 		{
-			tileSprite.pixels.copyPixels(_cachedGraphics.bitmap, rect, pt);
+			tileSprite.pixels.copyPixels(cachedGraphics.bitmap, rect, pt);
 		}
 		
 		tileSprite.dirty = true;
@@ -2387,42 +2476,42 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Use this method so the tilemap buffers are updated, eg when resizing your game
 	 */
-    public function updateBuffers():Void
-    {
-        var i:Int = 0;
-        var l:Int;
+	public function updateBuffers():Void
+	{
+		var i:Int = 0;
+		var l:Int;
 		
-        if (_buffers != null)
-        {
-            i = 0;
-            l = _buffers.length;
+		if (_buffers != null)
+		{
+			i = 0;
+			l = _buffers.length;
 			
-            for (i in 0...l)
-            {
-                _buffers[i].destroy();
-            }
+			for (i in 0...l)
+			{
+				_buffers[i].destroy();
+			}
 			
-            _buffers = null;
-        }
+			_buffers = null;
+		}
 		
-        _buffers = new Array<FlxTilemapBuffer>();
-    }
+		_buffers = new Array<FlxTilemapBuffer>();
+	}
 	
 	override private function set_forceComplexRender(Value:Bool):Bool 
 	{
 		var i:Int = 0;
-        var l:Int;
+		var l:Int;
 		
-        if (_buffers != null)
-        {
-            i = 0;
-            l = _buffers.length;
+		if (_buffers != null)
+		{
+			i = 0;
+			l = _buffers.length;
 			
-            for (i in 0...l)
-            {
-                _buffers[i].forceComplexRender = Value;
-            }
-        }
+			for (i in 0...l)
+			{
+				_buffers[i].forceComplexRender = Value;
+			}
+		}
 		
 		return super.set_forceComplexRender(Value);
 	}

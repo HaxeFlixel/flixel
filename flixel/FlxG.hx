@@ -5,6 +5,7 @@ import flash.display.StageDisplayState;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
+import flixel.system.frontEnds.BmpLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
@@ -20,6 +21,7 @@ import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
+import flixel.FlxBasic;
 
 #if !FLX_NO_TOUCH
 import flixel.system.input.touch.FlxTouchManager;
@@ -34,6 +36,11 @@ import flixel.system.input.mouse.FlxMouse;
 #if !FLX_NO_GAMEPAD
 import flixel.system.input.gamepad.FlxGamepadManager;
 #end
+
+interface IDestroyable
+{
+	public function destroy():Void;
+}
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -52,12 +59,12 @@ class FlxG
 	 * Assign a major version to your library.
 	 * Appears before the decimal in the console.
 	 */
-	static public var LIBRARY_MAJOR_VERSION:String = "2";
+	static public var LIBRARY_MAJOR_VERSION:String = "3";
 	/**
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public var LIBRARY_MINOR_VERSION:String = "0.0-alpha.3";
+	static public var LIBRARY_MINOR_VERSION:String = "0.0-dev";
 	
 	/**
 	 * Internal tracker for game object.
@@ -66,7 +73,7 @@ class FlxG
 	/**
 	 * Handy shared variable for implementing your own pause behavior.
 	 */
-	static public var paused:Bool;
+	static public var paused:Bool = false;
 	/**
 	 * Whether the game should be paused when focus is lost or not. Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
 	 * pause screen. Override onFocus() and onFocusLost() for your own behaviour in your state.
@@ -84,19 +91,19 @@ class FlxG
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
-	static public var elapsed:Float;
+	static public var elapsed:Float = 0;
 	/**
 	 * How fast or slow time should pass in the game; default is 1.0.
 	 */
-	static public var timeScale:Float;
+	static public var timeScale:Float = 1;
 	/**
-	 * The width of the screen in game pixels.
+	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	static public var width:Int;
+	static public var width(default, null):Int;
 	/**
-	 * The height of the screen in game pixels.
+	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	static public var height:Int;
+	static public var height(default, null):Int;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use <code>.set()</code> instead of creating a new object!
@@ -170,6 +177,14 @@ class FlxG
 	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
 	 */
 	static public var log(default, null):LogFrontEnd = new LogFrontEnd();
+	
+	#if FLX_BMP_DEBUG
+	/**
+	 * A reference to the <code>BmpLogFrontEnd</code> object. Use it to <code>add</code> images to the bmplog window. 
+	 */	
+	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();	
+	#end
+	
 	/**
 	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
 	 * watch window.
@@ -180,14 +195,12 @@ class FlxG
 	 * change its layout, activate visual debugging or change the key used to toggle it.
 	 */
 	static public var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
-	
-	#if FLX_RECORD
+
 	/**
 	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
 	 * and replaying.
 	 */
 	static public var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
-	#end
 	
 	/**
 	 * A reference to the <code>BitmapFrontEnd</code> object. Contains things related to bimtaps,
@@ -214,7 +227,7 @@ class FlxG
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
-	@:allow(flixel.FlxGame) // Access to this function is only need in FlxGame::new()
+	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
 	inline static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
@@ -252,7 +265,7 @@ class FlxG
 	/**
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
-	@:allow(flixel.FlxGame.resetGame) // Access to this function is only need in FlxGame::resetGame()
+	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
 	inline static private function reset():Void
 	{
 		PxBitmapFont.clearStorage();
@@ -363,7 +376,7 @@ class FlxG
 	{
         camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
         width = Width;
-        height = Height; 
+        height = Height;
 	}
 	
 	#if flash
@@ -383,7 +396,6 @@ class FlxG
 		else
 		{
 			stage.displayState = StageDisplayState.NORMAL;
-			//camera.setPosition();
 		}
 		
 		return Value;
@@ -500,5 +512,20 @@ class FlxG
 	inline static public function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
 	{
 		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
+	}
+	
+	/**
+	 * Checks if an object is not null before calling destroy(), always returns null.
+	 * 
+	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
+	 * @return	Null
+	 */
+	inline public static function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
+	{
+		if (Object != null)
+		{
+			Object.destroy(); 
+		}
+		return null;
 	}
 }

@@ -14,7 +14,7 @@ class FlxArrayUtil
 	 * @param 	fromIndex	The index to start the search from (optional, for optimization).
 	 * @return	The index of the element within the array. -1 if it wasn't found.
 	 */
-	inline static public function indexOf(array:Array<Dynamic>, whatToFind:Dynamic, fromIndex:Int = 0):Int
+	@:generic static public function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
 	{
 		#if flash
 		return untyped array.indexOf(whatToFind, fromIndex);
@@ -39,7 +39,7 @@ class FlxArrayUtil
 	 * @param	array		The array.
 	 * @param	newLength	The length you want the array to have.
 	 */
-	static public function setLength(array:Array<Dynamic>, newLength:Int):Void
+	@:generic static public function setLength<T>(array:Array<T>, newLength:Int):Void
 	{
 		if (newLength < 0) return;
 		var oldLength:Int = array.length;
@@ -66,7 +66,7 @@ class FlxArrayUtil
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
 	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
 	 */
-	inline static public function shuffle(Objects:Array<Dynamic>, HowManyTimes:Int):Array<Dynamic>
+	@:generic static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
 		var i:Int = 0;
@@ -95,7 +95,7 @@ class FlxArrayUtil
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	The random object that was selected.
 	 */
-	static public function getRandom(Objects:Array<Dynamic>, StartIndex:Int = 0, Length:Int = 0):Dynamic
+	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, Length:Int = 0):T
 	{
 		if (Objects != null)
 		{
@@ -111,6 +111,45 @@ class FlxArrayUtil
 			{
 				return Objects[StartIndex + Std.int(FlxRandom.float() * l)];
 			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Split a comma-separated string into an array of ints
+	 * @param	data string formatted like this: "1,2,5,-10,120,27"
+	 * @return	an array of ints
+	 */
+	
+	static public function intFromString(data:String):Array<Int>
+	{
+		if (data != null && data != "") 
+		{
+			var strArray:Array<String> = data.split(",");
+			var iArray:Array<Int> = new Array<Int>();
+			for (str in strArray) {
+				iArray.push(Std.parseInt(str));
+			}
+			return iArray;
+		}
+		return null;
+	}
+	
+	/**
+	 * Split a comma-separated string into an array of floats
+	 * @param	data string formatted like this: "1.0,2.1,5.6,1245587.9,-0.00354"
+	 * @return
+	 */	
+	static public function floatFromString(data:String):Array<Float>
+	{
+		if (data != null && data != "") 
+		{
+			var strArray:Array<String> = data.split(",");
+			var fArray:Array<Float> = new Array<Float>();
+			for (str in strArray) {
+				fArray.push(Std.parseFloat(str));
+			}
+			return fArray;
 		}
 		return null;
 	}

@@ -214,9 +214,9 @@ class FlxSpriteUtil
 		gfx.moveTo(StartX, StartY);
 		var alphaComponent:Float = ((Color >> 24) & 255) / 255;
 		
-		if (alphaComponent <= 0)
+		if (alphaComponent < 0)
 		{
-			alphaComponent = 1;
+			alphaComponent = 0;
 		}
 		
 		gfx.lineStyle(Thickness, Color, alphaComponent);
@@ -368,21 +368,23 @@ class FlxSpriteUtil
 	/**
 	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
 	 * 
-	 * @param	object		The sprite.
-	 * @param	Duration	How long to flicker for.
-	 * @param	Interval	In what intervall to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
+	 * @param	object          The sprite.
+	 * @param	Duration	    How long to flicker for.
+	 * @param	Interval        In what interval to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
+	 * @param	EndVisibility	Force the visible value when the flicker completes, useful with fast repetitive use.
 	 */
-	inline static public function flicker(object:FlxObject, Duration:Float = 1, Interval:Float = 0.02):Void
+	inline static public function flicker(object:FlxObject, Duration:Float = 1, Interval:Float = 0.02, EndVisibility:Bool = true):Void
 	{
 		if (Interval <= 0) 
 		{
 			Interval = FlxG.elapsed;
 		}
 		
-		var t:FlxTimer = FlxTimer.start(Interval, flickerProgress, Std.int(Duration / Interval));
-		t.userData = FlickerData.recycle(object);
+		var t:FlxTimer = FlxTimer.recycle();
+		t.userData = FlickerData.recycle(object, EndVisibility);
+		t.run(Interval, flickerProgress, Std.int(Duration / Interval));
 	}
-	
+
 	/**
 	 * Just a helper function for flicker() to update object's visibility.
 	 */
@@ -393,7 +395,7 @@ class FlxSpriteUtil
 		
 		if (Timer.loops > 0 && Timer.loopsLeft == 0)
 		{
-			object.visible = Timer.userData.startVisibility;
+			object.visible = Timer.userData.endVisibility;
 			FlickerData.put(Timer.userData);
 		}
 	}

@@ -100,6 +100,11 @@ class FlxVirtualPad extends FlxTypedGroup<FlxButton>
 	public var actions:FlxTypedGroup<FlxButton>;
 	
 	/**
+	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the gamepad.
+	 */
+	public var alpha(default, set):Float;
+	
+	/**
 	 * Create a gamepad which contains 4 directional buttons and 4 action buttons.
 	 * 
 	 * @param 	DPadMode	The D-Pad mode. FlxGamePad.DPAD_FULL for example.
@@ -137,15 +142,15 @@ class FlxVirtualPad extends FlxTypedGroup<FlxButton>
 				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
 			case ACTION_A_B:
 				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));		
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));
 			case ACTION_A_B_C:
-				actions.add(add(buttonA = createButton(FlxG.width - 128, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));				
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));		
+				actions.add(add(buttonA = createButton(FlxG.width - 128, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));
 				actions.add(add(buttonC = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_C)));
 			case ACTION_A_B_X_Y:
-				actions.add(add(buttonY = createButton(FlxG.width - 86, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_Y)));	
-				actions.add(add(buttonX = createButton(FlxG.width - 44, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_X)));		
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));		
+				actions.add(add(buttonY = createButton(FlxG.width - 86, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_Y)));
+				actions.add(add(buttonX = createButton(FlxG.width - 44, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_X)));
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));
 				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
 		}
 		
@@ -153,7 +158,7 @@ class FlxVirtualPad extends FlxTypedGroup<FlxButton>
 	}
 	
 	override public function destroy():Void
-	{		
+	{
 		super.destroy();
 		
 		if (dPad != null)
@@ -208,12 +213,7 @@ class FlxVirtualPad extends FlxTypedGroup<FlxButton>
 		}
 		
 		return button;
-	}	
-	
-	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the gamepad.
-	 */
-	public var alpha(default, set_alpha):Float;
+	}
 	
 	private function set_alpha(Alpha:Float):Float
 	{
@@ -221,7 +221,10 @@ class FlxVirtualPad extends FlxTypedGroup<FlxButton>
 		
 		for (member in members)
 		{
-			member.alpha = Alpha;
+			if (member != null)
+			{
+				member.alpha = Alpha;
+			}
 		}
 		
 		return Alpha;

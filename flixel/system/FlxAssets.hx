@@ -19,6 +19,10 @@ class FlxAssets
 	
 	// debugger/buttons
 	inline static public var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/visualDebug.png";
+	inline static public var IMG_WATCH_DEBUG:String = "flixel/img/debugger/buttons/watchDebug.png";
+	inline static public var IMG_STATS_DEBUG:String = "flixel/img/debugger/buttons/statsDebug.png";
+	inline static public var IMG_LOG_DEBUG:String = "flixel/img/debugger/buttons/logDebug.png";
+	inline static public var IMG_CONSOLE:String = "flixel/img/debugger/buttons/console.png";
 	inline static public var IMG_OPEN:String = "flixel/img/debugger/buttons/open.png";
 	inline static public var IMG_RECORD_OFF:String = "flixel/img/debugger/buttons/record_off.png";
 	inline static public var IMG_RECORD_ON:String = "flixel/img/debugger/buttons/record_on.png";
@@ -47,6 +51,7 @@ class FlxAssets
 	// ui/analog
 	inline static public var IMG_BASE:String = "flixel/img/ui/analog/base.png";
 	inline static public var IMG_THUMB:String = "flixel/img/ui/analog/thumb.png";
+
 	// ui/virtualpad
 	inline static public var IMG_BUTTON_A:String = "flixel/img/ui/virtualpad/a.png";
 	inline static public var IMG_BUTTON_B:String = "flixel/img/ui/virtualpad/b.png";
@@ -63,13 +68,8 @@ class FlxAssets
 	inline static public var FONT_DEBUGGER:String = "Arial";
 	
 	// sounds
-	inline static public var SND_FLIXEL:String = "flixel/snd/flixel.mp3";
-	
-	#if (flash || js)
-	inline static public var SND_BEEP:String = "flixel/snd/beep.mp3";
-	#else
 	inline static public var SND_BEEP:String = "flixel/snd/beep.wav";
-	#end
+	inline static public var SND_FLIXEL:String = "flixel/snd/flixel.wav";
 	
 	static public function init():Void
 	{

@@ -191,19 +191,19 @@ class ConsoleCommands
 		FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
 		
 		if (FlxG.debugger.visualDebug) 
-			cLog("visualDebug: Enbaled");
+			cLog("visualDebug: Enabled");
 		else
 			cLog("visualDebug: Disabled");
 	}
 	
 	private function pause():Void
 	{
-		if (FlxG.game.debugger.vcr.paused) {
-			FlxG.game.debugger.vcr.onPlay();
+		if (FlxG.vcr.paused) {
+			FlxG.vcr.resume();
 			cLog("pause: Game unpaused");
 		}
 		else {
-			FlxG.game.debugger.vcr.onPause();
+			FlxG.vcr.pause();
 			cLog("pause: Game paused");
 		}
 	}
@@ -510,7 +510,7 @@ class ConsoleCommands
 	
 	private function cLog(Text:Dynamic):Void
 	{
-		FlxG.log.advanced([Text], Log.STYLE_CONSOLE);
+		FlxG.log.advanced([Text], LogStyle.CONSOLE);
 	}
 	#end
 }

@@ -242,10 +242,12 @@ class FlxCamera extends FlxBasic
 	 */
 	public var _canvas:Sprite;
 	
+	#if !FLX_NO_DEBUG
 	/**
 	 * sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
 	 */
 	public var _debugLayer:Sprite;
+	#end
 	
 	/**
 	 * Currently used draw stack item
@@ -480,11 +482,13 @@ class FlxCamera extends FlxBasic
 		_canvas.scrollRect = new Rectangle(0, 0, width * zoom, height * zoom);
 		#end
 		
+		#if !FLX_NO_DEBUG
 		_debugLayer = new Sprite();
 		_debugLayer.x = -width * 0.5;
 		_debugLayer.y = -height * 0.5;
 		_debugLayer.scaleX = 1;
 		_flashSprite.addChild(_debugLayer);
+		#end
 		
 		_currentStackItem = new DrawStackItem();
 		_headOfDrawStack = _currentStackItem;
@@ -531,14 +535,17 @@ class FlxCamera extends FlxBasic
 		}
 		_fill = null;
 		#else
+		
+		#if !FLX_NO_DEBUG
 		_flashSprite.removeChild(_debugLayer);
+		_debugLayer = null;
+		#end
 		_flashSprite.removeChild(_canvas);
 		var canvasNumChildren:Int = _canvas.numChildren;
 		for (i in 0...(canvasNumChildren))
 		{
 			_canvas.removeChildAt(0);
 		}
-		_debugLayer = null;
 		_canvas = null;
 		
 		clearDrawStack();
@@ -1187,7 +1194,10 @@ class FlxCamera extends FlxBasic
 				_canvas.scrollRect = rect;
 				
 				_flashOffsetX = width * 0.5 * zoom;
-				_debugLayer.x = _canvas.x = -width * 0.5;
+				_canvas.x = -width * 0.5;
+				#if !FLX_NO_DEBUG
+				_debugLayer.x = _canvas.x;
+				#end
 			}
 			#end
 		}
@@ -1218,7 +1228,10 @@ class FlxCamera extends FlxBasic
 				_canvas.scrollRect = rect;
 				
 				_flashOffsetY = height * 0.5 * zoom;
-				_debugLayer.y = _canvas.y = -height * 0.5;
+				_canvas.y = -height * 0.5;
+				#if !FLX_NO_DEBUG
+				_debugLayer.y = _canvas.y;
+				#end
 			}
 			#end
 		}

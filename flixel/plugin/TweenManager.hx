@@ -19,23 +19,36 @@ class TweenManager extends FlxPlugin
 		
 		list = new Array<FlxTween>();
 	}
-	
-	override public function update():Void
-	{
-		super.update();
-		
-		for (tween in list)
-		{
-			if (tween.active)
-			{
-				tween.update();
-				if(tween.finished)
-				{
-					tween.finish();
-				}
-			}
-		}
-	}
+
+    override public function update():Void
+    {
+        super.update();
+
+        // process finished tweens after iterating through main list, since finish() can manipulate FlxTween.list
+        var finishedTweens:Array<FlxTween> = null;
+
+        for (tween in list)
+        {
+            if (tween.active)
+            {
+                tween.update();
+                if(tween.finished)
+                {
+                    if(finishedTweens == null)
+                        finishedTweens = new Array<FlxTween>();
+                    finishedTweens.push(tween);
+                }
+            }
+        }
+
+        if(finishedTweens != null)
+        {
+            while(finishedTweens.length > 0)
+            {
+                finishedTweens.shift().finish();
+            }
+        }
+    }
 	
 	/**
 	 * Add a <code>FlxTween</code>.

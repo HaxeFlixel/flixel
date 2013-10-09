@@ -1,7 +1,7 @@
 package flixel.effects;
 
 import flixel.FlxSprite;
-import flixel.group.FlxSpriteGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.util.FlxPoint;
 
 /**
@@ -9,10 +9,9 @@ import flixel.util.FlxPoint;
  * Inspired by the way "Buck" from the inofficial #flixel IRC channel 
  * creates a trail effect for the character in his game.
  * Feel free to use this class and adjust it to your needs.
- * 
  * @author Gama11
  */
-class FlxTrail extends FlxSpriteGroup
+class FlxTrail extends FlxTypedGroup<FlxSprite>
 {		
 	/**
 	 * Stores the FlxSprite the trail is attached to.
@@ -196,7 +195,7 @@ class FlxTrail extends FlxSpriteGroup
 			// Again the same thing for Sprites frames if framesEnabled
 			if (framesEnabled && _image == null) 
 			{
-				var spriteFrame:Int = sprite.frame;
+				var spriteFrame:Int = sprite.animation.frameIndex;
 				_recentFrames.unshift(spriteFrame);
 				
 				if (_recentFrames.length > _trailLength) 
@@ -240,7 +239,7 @@ class FlxTrail extends FlxSpriteGroup
 				// and frame...
 				if (framesEnabled && _image == null) 
 				{
-					trailSprite.frame = _recentFrames[i];
+					trailSprite.animation.frameIndex = _recentFrames[i];
 					trailSprite.facing = _recentFacings[i];
 				}
 
@@ -292,7 +291,7 @@ class FlxTrail extends FlxSpriteGroup
 			
 			if (_image == null) 
 			{
-				trailSprite.loadFromSprite(sprite);
+				trailSprite.clone(sprite);
 			}
 			else 
 			{
