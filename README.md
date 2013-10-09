@@ -9,6 +9,19 @@ You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-
 
 It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel). Just run `haxelib install flixel` once you have it installed.
 
+###Changes for HaxeFlixel 3.0
+
+This is the third big update to HaxeFlixel. Here are the biggest changes:
+- New [Front End](https://github.com/HaxeFlixel/flixel/tree/master/flixel/system/frontEnds) classes to better encapsulate FlxG functionality.
+- Refactored the [animation system](https://github.com/HaxeFlixel/flixel/tree/master/flixel/animation).
+- Better support for nested sprites via [FlxSpriteGroup](https://github.com/HaxeFlixel/flixel/blob/master/flixel/group/FlxSpriteGroup.hx). FlxSpriteGroups can be contained within other groups, and behave like FlxSprites. They are expensive though, use them sparringly.
+- Moved lots of stuff into [utility classes](https://github.com/HaxeFlixel/flixel/tree/master/flixel/util) to reduce clutter in core classes.
+- Continued optimizations for cpp targets.
+
+###Upgrading from previous versions
+
+// TODO
+
 ###For Developers
 
 Make sure you're using latest version of [Haxe, HaxeLib and OpenFl](http://haxeflixel.com/comment/2584#comment-2584). Also bookmark the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
