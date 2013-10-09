@@ -121,14 +121,14 @@ class FlxMouseButton
 			return;
 		}
 		#end
-		
-		if (current > RELEASED)
+
+		if (current == JUST_PRESSED)
+		{
+			current = FAST_PRESS_RELEASE;
+		}
+		else if (current > RELEASED)
 		{
 			current = JUST_RELEASED;
-		}
-		else if (current == FAST_PRESS_RELEASE)
-		{
-			current == FAST_PRESS_RELEASE;
 		}
 		else
 		{
