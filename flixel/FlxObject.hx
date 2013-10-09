@@ -214,6 +214,14 @@ class FlxObject extends FlxBasic
 		width = Width;
 		height = Height;
 		
+		initVars();
+	}
+	
+	/**
+	 * Internal function for initialization of some object's variables
+	 */
+	private function initVars():Void
+	{
 		last = new FlxPoint(x, y);
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
