@@ -1,6 +1,7 @@
 flixel CHANGELOG
 
 v.3.0.0
+------------------------------
 * New Front End classes to better encapsulate FlxG functionality.
 * Refactored the animation system.
 * Better support for nested sprites via FlxSpriteGroup.
