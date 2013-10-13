@@ -747,6 +747,10 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		#else
 			_point.x = x - (camera.scroll.x * _scrollFactor.x) - (_offset.x);
 			_point.y = y - (camera.scroll.y * _scrollFactor.y) - (_offset.y);
+			
+			_point.x = Math.floor(_point.x);
+			_point.y = Math.floor(_point.y);
+
 		#end
 #if flash
 			if (isSimpleRender)
