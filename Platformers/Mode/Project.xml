@@ -3,7 +3,8 @@
 	<app title="Mode" file="Mode" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
 	<window width="640" height="480" fps="60" orientation="portrait" resizable="true" if="web" />
-	<window width="640" height="480" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
+	<window width="640" height="480" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" if="desktop" />
+	<window width="0" height="0" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" if="mobile" />
 	
 	<!--The flixel preloader gets stuck in Chrome, so it's disabled by default for now. 
 	Safe to use if you embed the swf into a html file!-->
@@ -15,7 +16,7 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<assets path="assets" if="android" >
+	<assets path="assets" if="mobile" >
 		<sound path="asplode.wav" id="Asplode" />
 		<sound path="button.wav" id="Button" />
 		<sound path="countdown.wav" id="Countdown" />
