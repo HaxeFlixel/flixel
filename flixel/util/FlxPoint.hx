@@ -30,7 +30,7 @@ class FlxPoint implements IFlxPoint
 	/**
 	 * @default 0
 	 */
-	public var y(default, set):Float;
+	public var y(default, set):Float = 0;
 	
 	private function set_y(Value:Float):Float
 	{

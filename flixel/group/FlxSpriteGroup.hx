@@ -419,6 +419,7 @@ private class FlxPointHelper extends FlxPoint
 	public function new(parent:FlxSpriteGroup, transformFunc:IFlxSprite->FlxPoint->Void)
 	{
 		_parent = parent;
+		_transformFunc = transformFunc;
 		super(0, 0);
 	}
 	

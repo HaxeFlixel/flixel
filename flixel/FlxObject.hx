@@ -927,12 +927,12 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal
 	 */
-	public function set_x(NewX:Float):Float
+	private function set_x(NewX:Float):Float
 	{
 		return x = NewX;
 	}
 	
-	public function set_y(NewY:Float):Float
+	private function set_y(NewY:Float):Float
 	{
 		return y = NewY;
 	}
