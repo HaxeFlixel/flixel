@@ -12,7 +12,7 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
-import flixel.util.helpers.FlickerData;
+import flixel.effects.FlxFlicker;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
 // TODO: flip(): Flip image data horizontally / vertically without changing the angle (mirror / reverse)
@@ -366,37 +366,36 @@ class FlxSpriteUtil
 	}
 	
 	/**
-	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
+	 * A simple flicker effect for sprites achieved by toggling visibility.
 	 * 
-	 * @param	object          The sprite.
-	 * @param	Duration	    How long to flicker for.
-	 * @param	Interval        In what interval to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
-	 * @param	EndVisibility	Force the visible value when the flicker completes, useful with fast repetitive use.
+	 * @param	Object				The sprite.
+	 * @param	Duration			How long to flicker for.
+	 * @param	Interval			In what interval to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
+	 * @param	EndVisibility		Force the visible value when the flicker completes, useful with fast repetitive use.
+	 * @param	ForceRestart		Force the flicker to restart from beginnig, discarding the flickering effect already in progress if there is one.
+	 * @param	?CompletionCallback	An optional callback that will be triggered when a flickering has finished.
+	 * @param	?ProgressCallback	An optional callback that will be triggered when visibility is toggled.
 	 */
-	inline static public function flicker(object:FlxObject, Duration:Float = 1, Interval:Float = 0.02, EndVisibility:Bool = true):Void
+	inline static public function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
 	{
-		if (Interval <= 0) 
-		{
-			Interval = FlxG.elapsed;
-		}
-		
-		var t:FlxTimer = FlxTimer.recycle();
-		t.userData = FlickerData.recycle(object, EndVisibility);
-		t.run(Interval, flickerProgress, Std.int(Duration / Interval));
+		FlxFlicker.flicker(Object, Duration, Interval, EndVisibility, ForceRestart, CompletionCallback, ProgressCallback);
 	}
-
+	
 	/**
-	 * Just a helper function for flicker() to update object's visibility.
+	 * Returns whether an object is flickering or not.
+	 * @param  Object The object to check if is flickering.
 	 */
-	inline static private function flickerProgress(Timer:FlxTimer):Void
+	inline static public function isFlickering(Object:FlxObject):Bool
 	{
-		var object:FlxObject = Timer.userData.object;
-		object.visible = !object.visible;
-		
-		if (Timer.loops > 0 && Timer.loopsLeft == 0)
-		{
-			object.visible = Timer.userData.endVisibility;
-			FlickerData.put(Timer.userData);
-		}
+		return FlxFlicker.isFlickering(Object);
+	}
+	
+	/**
+	* Stops flickering of the object. Also it will make the object visible.
+	* @param  Object The object to stop flickering.
+	*/
+	inline static public function stopFlickering(Object:FlxObject):Void
+	{
+		FlxFlicker.stopFlickering(Object);
 	}
 }
