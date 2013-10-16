@@ -418,9 +418,9 @@ private class FlxPointHelper extends FlxPoint
 	
 	public function new(parent:FlxSpriteGroup, transformFunc:IFlxSprite->FlxPoint->Void)
 	{
+		super(0, 0);
 		_parent = parent;
 		_transformFunc = transformFunc;
-		super(0, 0);
 	}
 	
 	inline override public function set(X:Float = 0, Y:Float = 0):FlxPointHelper
@@ -432,20 +432,21 @@ private class FlxPointHelper extends FlxPoint
 	
 	inline override private function set_x(Value:Float):Float
 	{
-		x = Value;
+		super.set_x(Value);
 		_parent.transformChildren(_transformFunc, this);
-		return x;
+		return Value;
 	}
 	
 	inline override private function set_y(Value:Float):Float
 	{
-		y = Value;
+		super.set_y(Value);
 		_parent.transformChildren(_transformFunc, this);
-		return y;
+		return Value;
 	}
 	
 	inline override public function destroy():Void
 	{
+		super.destroy();
 		_parent = null;
 		_transformFunc = null;
 	}
