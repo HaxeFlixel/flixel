@@ -358,7 +358,7 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	private function set_velocity(Value:IFlxPoint):IFlxPoint 
 	{
 		if (exists && velocity != Value)
-			transformChildren(velocityTransform,cast  Value);
+			transformChildren(velocityTransform, cast Value);
 		return velocity = Value;
 	}
 	
@@ -418,33 +418,33 @@ private class FlxPointHelper extends FlxPoint
 	
 	public function new(parent:FlxSpriteGroup, transformFunc:IFlxSprite->FlxPoint->Void)
 	{
-		super(0, 0);
 		_parent = parent;
 		_transformFunc = transformFunc;
+		super(0, 0);
 	}
 	
-	inline override public function set(X:Float = 0, Y:Float = 0):FlxPointHelper
+	override public function set(X:Float = 0, Y:Float = 0):FlxPointHelper
 	{
 		super.set(X, Y);
 		_parent.transformChildren(_transformFunc, this);
 		return this;
 	}
 	
-	inline override private function set_x(Value:Float):Float
+	override private function set_x(Value:Float):Float
 	{
 		super.set_x(Value);
 		_parent.transformChildren(_transformFunc, this);
 		return Value;
 	}
 	
-	inline override private function set_y(Value:Float):Float
+	override private function set_y(Value:Float):Float
 	{
 		super.set_y(Value);
 		_parent.transformChildren(_transformFunc, this);
 		return Value;
 	}
 	
-	inline override public function destroy():Void
+	override public function destroy():Void
 	{
 		super.destroy();
 		_parent = null;
