@@ -240,14 +240,13 @@ class FlxAnimationController
 			var l:Int = Indicies.length;
 			for (i in 0...l)
 			{
-				var name:String = Prefix + Indicies[i] + Postfix;
-				if (_sprite.framesData.framesHash.exists(name))
+                var frameToAdd:FlxFrame = findSpriteFrame(Prefix, Indicies[i], Postfix);
+				if (frameToAdd != null)
 				{
-					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
 					frameIndices.push(getFrameIndex(frameToAdd));
 				}
 			}
-			
+
 			if (frameIndices.length > 0)
 			{
 				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped);
@@ -255,6 +254,23 @@ class FlxAnimationController
 			}
 		}
 	}
+
+	/**
+     * Find a sprite frame so that for Prefix = "file"; Indice = 5; Postfix = ".png"
+     * It will find frame with name "file5.png", but if it desn't exist it will try
+     * to find "file05.png" so allowing 99 frames per animation
+     * Returns found frame and null if nothing is found
+     **/
+    private function findSpriteFrame(Prefix:String, Indicie:Int, Postfix:String) {
+        var name:String = Prefix + Indicie + Postfix;
+        if (!_sprite.framesData.framesHash.exists(name)) {
+            name = Prefix + "0"+Indicie + Postfix;
+            if (!_sprite.framesData.framesHash.exists(name)) {
+                return null;
+            }
+        }
+        return _sprite.framesData.framesHash.get(name);
+    }
 	
 	/**
 	 * Adds a new _animations to the sprite.
