@@ -224,6 +224,39 @@ class FlxAnimationController
 	}
 	
 	/**
+	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndicies()
+	 * @param	Name			What this _animations should be called (e.g. "run").
+	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * @param	Indicies		An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
+	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
+	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
+	 * @param	Looped			Whether or not the _animations is looped or just plays once.
+	 */
+	public function addByStringIndicies(Name:String, Prefix:String, Indicies:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	{
+		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		{
+			var frameIndices:Array<Int> = new Array<Int>();
+			var l:Int = Indicies.length;
+			for (i in 0...l)
+			{
+				var name:String = Prefix + Indicies[i] + Postfix;
+				if (_sprite.framesData.framesHash.exists(name))
+				{
+					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+					frameIndices.push(getFrameIndex(frameToAdd));
+				}
+			}
+			
+			if (frameIndices.length > 0)
+			{
+				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped);
+				_animations.set(Name, anim);
+			}
+		}
+	}
+	
+	/**
 	 * Adds a new _animations to the sprite.
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
