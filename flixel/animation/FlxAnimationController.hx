@@ -234,15 +234,15 @@ class FlxAnimationController
 	}
 	
 	/**
-	 * Adds a new _animations to the sprite.
+	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndicies()
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indicies		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Indicies		An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
 	 */
-	public function addByIndicies(Name:String, Prefix:String, Indicies:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	public function addByStringIndicies(Name:String, Prefix:String, Indicies:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
@@ -264,6 +264,64 @@ class FlxAnimationController
 				_animations.set(Name, anim);
 			}
 		}
+	}
+	
+	/**
+	 * Adds a new _animations to the sprite.
+	 * @param	Name			What this _animations should be called (e.g. "run").
+	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * @param	Indicies		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
+	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
+	 * @param	Looped			Whether or not the _animations is looped or just plays once.
+	 */
+	public function addByIndicies(Name:String, Prefix:String, Indicies:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	{
+		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		{
+			var frameIndices:Array<Int> = new Array<Int>();
+			var l:Int = Indicies.length;
+			for (i in 0...l)
+			{
+				var indexToAdd:Int = findSpriteFrame(Prefix, Indicies[i], Postfix);
+				if (indexToAdd != -1) 
+				{
+					frameIndices.push(indexToAdd);
+				}
+			}
+			
+			if (frameIndices.length > 0)
+			{
+				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped);
+				_animations.set(Name, anim);
+			}
+		}
+	}
+	
+	/**
+	 * Find a sprite frame so that for Prefix = "file"; Indice = 5; Postfix = ".png"
+	 * It will find frame with name "file5.png", but if it desn't exist it will try
+	 * to find "file05.png" so allowing 99 frames per animation
+	 * Returns found frame and null if nothing is found
+	 */
+	private function findSpriteFrame(Prefix:String, Index:Int, Postfix:String):Int
+	{
+		var numFrames:Int = frames;
+		var flxFrames:Array<FlxFrame> = _sprite.framesData.frames;
+		for (i in 0...numFrames)
+		{
+			var name:String = flxFrames[i].name;
+			if (StringTools.startsWith(name, Prefix) && StringTools.endsWith(name, Postfix))
+			{
+				var index:Null<Int> = Std.parseInt(name.substring(Prefix.length, name.length - Postfix.length));
+				if (index != null && index == Index)
+				{
+					return i;
+				}
+			}
+		}
+		
+		return -1;
 	}
 	
 	/**
