@@ -54,7 +54,7 @@ class FlxAnimationController
 	/**
 	 * Internal, reference to owner sprite.
 	 */
-	private var _sprite:FlxSprite;
+	@:allow(flixel.FlxSprite) private var _sprite:FlxSprite;
 	
 	/**
 	 * Internal, currently playing animation.
@@ -93,20 +93,30 @@ class FlxAnimationController
 	
 	public function clone(controller:FlxAnimationController):FlxAnimationController
 	{
-		for (anim in controller._animations)
+		if (controller == null) 
 		{
-			add(anim.name, anim._frames, anim.frameRate, anim.looped);
+			controller = new FlxAnimationController(_sprite);
 		}
 		
-		if (controller._prerotated != null)
+		if (controller._animations == null) 
 		{
-			createPrerotated();
+			controller._animations = new Map<String, FlxAnimation>();
+		}
+
+		for (anim in _animations)
+		{
+			controller.add(anim.name, anim._frames, anim.frameRate, anim.looped);
 		}
 		
-		name = controller.name;
-		frameIndex = controller.frameIndex;
+		if (_prerotated != null)
+		{
+			controller.createPrerotated();
+		}
 		
-		return this;
+		controller.name = name;
+		controller.frameIndex = frameIndex;
+		
+		return controller;
 	}
 	
 	public function createPrerotated(Controller:FlxAnimationController = null):Void
@@ -317,8 +327,15 @@ class FlxAnimationController
 				_curAnim.stop();
 			}
 			_curAnim = null;
+			return;
 		}
 		
+		if (_animations == null)
+		{
+			FlxG.log.warn("No animations");
+			return;
+		}
+
 		if (_animations.get(AnimName) == null)
 		{
 			FlxG.log.warn("No animation called \"" + AnimName + "\"");

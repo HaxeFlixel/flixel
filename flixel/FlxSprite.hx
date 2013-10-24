@@ -269,40 +269,48 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	}
 	
 	/**
-	 * Load graphic from another FlxSprite and copy its tileSheet data. 
+	 * Load graphic to another FlxSprite and copy its tileSheet data. 
 	 * This method can useful for non-flash targets (and is used by the FlxTrail effect).
-	 * @param	Sprite	The FlxSprite from which you want to load graphic data
+	 * @param	Sprite	The FlxSprite to which you want to load graphic data
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function clone(Sprite:FlxSprite):FlxSprite
 	{
-		if (!exists)
+		if (Sprite == null) 
 		{
-			FlxG.log.warn("Warning, trying to clone " + Type.getClassName(Type.getClass(this)) + " object that doesn't exist.");
+			Sprite = new FlxSprite();
 		}
 		
-		region = Sprite.region.clone();
-		flipped = Sprite.flipped;
-		bakedRotation = Sprite.bakedRotation;
-		cachedGraphics = Sprite.cachedGraphics;
+		if (!Sprite.exists)
+		{
+			FlxG.log.warn("Warning, trying to clone " + Type.getClassName(Type.getClass(Sprite)) + " object that doesn't exist.");
+		}
 		
-		width = frameWidth = Sprite.frameWidth;
-		height = frameHeight = Sprite.frameHeight;
+		Sprite.region = region.clone();
+		Sprite.flipped = flipped;
+		Sprite.bakedRotation = bakedRotation;
+		Sprite.cachedGraphics = cachedGraphics;
+		
+		Sprite.width = Sprite.frameWidth = frameWidth;
+		Sprite.height = Sprite.frameHeight = frameHeight;
 		if (bakedRotation > 0)
 		{
-			width = Sprite.width;
-			height = Sprite.height;
-			centerOffsets();
+			Sprite.width = width;
+			Sprite.height = height;
+			Sprite.centerOffsets();
 		}
+
+		Sprite.updateFrameData();
+		Sprite.resetHelpers();
+		Sprite.antialiasing = antialiasing;
 		
-		animation.destroy();
+		Sprite.animation.destroy();
+		Sprite.animation = null;
+		Sprite.animation = new FlxAnimationController(Sprite);
+		//Sprite.animation._sprite = Sprite;
 		animation.clone(Sprite.animation);
 		
-		updateFrameData();
-		resetHelpers();
-		antialiasing = Sprite.antialiasing;
-		
-		return this;
+		return Sprite;
 	}
 	
 	/**
