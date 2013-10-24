@@ -295,12 +295,12 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			centerOffsets();
 		}
 		
-		animation.destroy();
-		animation.clone(Sprite.animation);
-		
 		updateFrameData();
 		resetHelpers();
 		antialiasing = Sprite.antialiasing;
+		
+		animation.destroyAnimations();
+		animation.clone(Sprite.animation);
 		
 		return this;
 	}
