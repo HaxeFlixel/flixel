@@ -268,13 +268,24 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		frame = null;
 	}
 	
+	public function clone(NewSprite:FlxSprite = null):FlxSprite
+	{
+		if (NewSprite == null)
+		{
+			NewSprite = new FlxSprite();
+		}
+		
+		NewSprite.loadfromSprite(this);
+		return NewSprite;
+	}
+	
 	/**
 	 * Load graphic from another FlxSprite and copy its tileSheet data. 
 	 * This method can useful for non-flash targets (and is used by the FlxTrail effect).
 	 * @param	Sprite	The FlxSprite from which you want to load graphic data
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function clone(Sprite:FlxSprite):FlxSprite
+	public function loadfromSprite(Sprite:FlxSprite):FlxSprite
 	{
 		if (!exists)
 		{
@@ -300,7 +311,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		antialiasing = Sprite.antialiasing;
 		
 		animation.destroyAnimations();
-		animation.clone(Sprite.animation);
+		animation.copyFrom(Sprite.animation);
 		
 		return this;
 	}

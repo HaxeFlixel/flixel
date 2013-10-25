@@ -4,7 +4,7 @@ import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.animation.FlxAnimator;
+import flixel.animation.FlxAnimationController;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAnim;
@@ -67,27 +67,28 @@ class FlxSpriteFilter
 			throw "FlxSprites with full atlas animation aren't supported";
 		}
 		
-		var frame:Int = sprite.frame;
-		var currAnim:String = sprite.animator.animationName;
+		var frame:Int = sprite.animation.frameIndex;
+		var currAnim:String = sprite.animation.name;
 		if (currAnim != null)
 		{
-			frame = sprite.curFrame;
+			frame = sprite.animation.curAnim.curFrame;
 		}
 		
-		var animator:FlxAnimator = sprite.animator.clone(sprite);
+		var animator:FlxAnimationController = new FlxAnimationController(sprite);
+		animator.copyFrom(sprite.animation);
 		
-		setClipping(sprite.frameWidth + WidthInc , sprite.frameHeight + HeightInc);
+		setClipping(sprite.frameWidth + WidthInc, sprite.frameHeight + HeightInc);
 		
-		sprite.animator = animator;
-		animator.sprite = sprite;
+		sprite.animation.destroy();
+		sprite.animation = animator;
 		
 		if (currAnim != null)
 		{
-			sprite.animator.play(currAnim, true, frame);
+			sprite.animation.play(currAnim, true, frame);
 		}
 		else
 		{
-			sprite.frame = frame;
+			sprite.animation.frameIndex = frame;
 		}
 	}
 	

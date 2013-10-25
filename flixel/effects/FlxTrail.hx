@@ -291,7 +291,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			
 			if (_image == null) 
 			{
-				trailSprite.clone(sprite);
+				trailSprite.loadfromSprite(sprite);
 			}
 			else 
 			{
