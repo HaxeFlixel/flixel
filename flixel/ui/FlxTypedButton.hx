@@ -93,6 +93,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	private var _initialized:Bool;
 	
+	private var _touchPointID:Int;
+	
 	// TODO: Implement checkbox-style behaviour.
 	
 	/**
@@ -131,6 +133,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		scrollFactor.x = 0;
 		scrollFactor.y = 0;
+		
+		_touchPointID = -1;
 	}
 	
 	/**
@@ -196,7 +200,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 					Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				#end
 				#if !FLX_NO_TOUCH
-					Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
+					//Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
 				#end
 				_initialized = true;
 			}
@@ -254,13 +258,30 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				camera = cameras[i++];
 				#if !FLX_NO_MOUSE
 					FlxG.mouse.getWorldPosition(camera, _point);
-					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed) == false) ? false : offAll;
+					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed, 1) == false) ? false : offAll;
 				#end
 				#if !FLX_NO_TOUCH
 					for (touch in FlxG.touches.list)
 					{
-						touch.getWorldPosition(camera, _point);
-						offAll = (updateButtonStatus(_point, camera, touch.justPressed) == false) ? false : offAll;
+						if (_touchPointID == -1)
+						{
+							if (touch.justPressed)
+							{
+								touch.getWorldPosition(camera, _point);
+								offAll = (updateButtonStatus(_point, camera, touch.justPressed, touch.touchPointID) == false) ? false : offAll;
+							}
+						}
+						else if (touch.touchPointID == _touchPointID)
+						{
+							touch.getWorldPosition(camera, _point);
+							offAll = false;
+							
+							if (touch.justReleased || !overlapsPoint(_point, true, camera))
+							{
+								offAll = true;
+								this.onMouseUp(null);
+							}
+						}
 					}
 				#end
 				
@@ -282,6 +303,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 						soundOut.play(true);
 					}
 				}
+				
 				status = FlxButton.NORMAL;
 			}
 		}
@@ -309,7 +331,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Updates status and handles the onDown and onOver logic (callback functions + playing sounds).
 	 */
-	private function updateButtonStatus(Point:FlxPoint, Camera:FlxCamera, JustPressed:Bool):Bool
+	private function updateButtonStatus(Point:FlxPoint, Camera:FlxCamera, JustPressed:Bool, touchID:Int):Bool
 	{
 		var offAll:Bool = true;
 		
@@ -328,6 +350,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				{
 					soundDown.play(true);
 				}
+				
+				_touchPointID = touchID;
 			}
 			if (status == FlxButton.NORMAL)
 			{
@@ -492,6 +516,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			return;
 		}
+
 		if (_onUp != null)
 		{
 			Reflect.callMethod(null, _onUp, _onUpParams);
@@ -500,6 +525,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			soundUp.play(true);
 		}
+		
+		_touchPointID = -1;
 		status = FlxButton.NORMAL;
 	}
 }
