@@ -15,12 +15,16 @@ class FlxMath
 	 * Ex: roundDecimal(1.2485, 2) -> 1.25
 	 * 
 	 * @param	Value		Any number.
-	 * @param	Precision	Number of decimal points to leave in float.
+	 * @param	Precision	Number of decimal points to leave in float. Should be a positive number
 	 * @return	The rounded value of that number.
 	 */
 	inline static public function roundDecimal(Value:Float, Precision:Int):Float
 	{
-		var mult:Float = Math.pow(10, Precision);
+		var mult:Float = 1;
+		for (i in 0...Precision)
+		{
+			mult *= 10;
+		}
 		return Math.round(Value * mult) / mult;
 	}
 	
