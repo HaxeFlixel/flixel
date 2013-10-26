@@ -18,7 +18,7 @@ class FlxMath
 	 * @param	Precision	Number of decimal points to leave in float. Should be a positive number
 	 * @return	The rounded value of that number.
 	 */
-	inline static public function roundDecimal(Value:Float, Precision:Int):Float
+	static public function roundDecimal(Value:Float, Precision:Int):Float
 	{
 		var mult:Float = 1;
 		for (i in 0...Precision)
