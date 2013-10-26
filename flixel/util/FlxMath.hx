@@ -20,8 +20,8 @@ class FlxMath
 	 */
 	inline static public function roundDecimal(Value:Float, Precision:Int):Float
 	{
-		var num = Value * Math.pow(10, Precision);
-		return Math.round( num ) / Math.pow(10, Precision);
+		var mult:Float = Math.pow(10, Precision);
+		return Math.round(Value * mult) / mult;
 	}
 	
 	/**
