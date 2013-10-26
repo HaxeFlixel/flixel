@@ -147,10 +147,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			#if !FLX_NO_MOUSE
 				Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			#end
-			
-			#if !FLX_NO_TOUCH
-				Lib.current.stage.removeEventListener(TouchEvent.TOUCH_END, onMouseUp);
-			#end
 		}
 		if (label != null)
 		{
@@ -198,9 +194,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			{
 				#if !FLX_NO_MOUSE
 					Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#end
-				#if !FLX_NO_TOUCH
-					//Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, onMouseUp);
 				#end
 				_initialized = true;
 			}
