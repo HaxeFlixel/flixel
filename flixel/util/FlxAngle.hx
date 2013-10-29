@@ -19,7 +19,7 @@ class FlxAngle
 	 */
 	static public var sinTable:Array<Float> = new Array<Float>();
 	/**
-	 * Convert radions to degrees by multiplying it with this value.
+	 * Convert radians to degrees by multiplying it with this value.
 	 */
 	static public var TO_DEG:Float = 180 / Math.PI;
 	/**
