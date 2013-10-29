@@ -18,6 +18,7 @@ import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.system.FlxCollisionType;
 import flixel.system.layer.Region;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.TextureRegion;
@@ -189,6 +190,8 @@ class FlxTilemap extends FlxObject
 	public function new()
 	{
 		super();
+		
+		collisionType = FlxCollisionType.TILEMAP;
 		
 		auto = OFF;
 		widthInTiles = 0;
@@ -416,7 +419,7 @@ class FlxTilemap extends FlxObject
 		{
 			_tileHeight = _tileWidth;
 		}
-				
+		
 		if (!Std.is(TileGraphic, TextureRegion))
 		{
 			region = new Region(0, 0, _tileWidth, _tileHeight);
@@ -1375,7 +1378,7 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (Std.is(ObjectOrGroup, FlxTypedGroup))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
@@ -1383,13 +1386,13 @@ class FlxTilemap extends FlxObject
 			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = grp.members;
 			
-			while(i < grp.length)
+			while (i < grp.length)
 			{
 				basic = members[i++];
 				
 				if ((basic != null) && basic.exists)
 				{
-					if (Std.is(basic, FlxObject))
+					if (basic.collisionType == FlxCollisionType.OBJECT || basic.collisionType == FlxCollisionType.TILEMAP)
 					{
 						if (overlapsWithCallback(cast(basic, FlxObject)))
 						{
@@ -1408,7 +1411,7 @@ class FlxTilemap extends FlxObject
 			
 			return results;
 		}
-		else if (Std.is(ObjectOrGroup, FlxObject))
+		else if (ObjectOrGroup.collisionType == FlxCollisionType.OBJECT || ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject));
 		}
@@ -1430,7 +1433,7 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (Std.is(ObjectOrGroup, FlxTypedGroup))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
@@ -1444,7 +1447,7 @@ class FlxTilemap extends FlxObject
 				
 				if ((basic != null) && basic.exists)
 				{
-					if (Std.is(basic, FlxObject))
+					if (basic.collisionType == FlxCollisionType.OBJECT || basic.collisionType == FlxCollisionType.TILEMAP)
 					{
 						_point.x = X;
 						_point.y = Y;
@@ -1466,7 +1469,7 @@ class FlxTilemap extends FlxObject
 			
 			return results;
 		}
-		else if(Std.is(ObjectOrGroup, FlxObject))
+		else if (ObjectOrGroup.collisionType == FlxCollisionType.OBJECT || ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
 		{
 			_point.x = X;
 			_point.y = Y;

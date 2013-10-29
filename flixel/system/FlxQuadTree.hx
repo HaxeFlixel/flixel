@@ -3,6 +3,7 @@ package flixel.system;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxCollisionType;
 import flixel.util.FlxRect;
 
 /**
@@ -395,7 +396,7 @@ class FlxQuadTree extends FlxRect
 	public function add(ObjectOrGroup:FlxBasic, list:Int):Void
 	{
 		_list = list;
-		if(Std.is(ObjectOrGroup, FlxTypedGroup))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var i:Int = 0;
 			var basic:FlxBasic;
@@ -407,11 +408,11 @@ class FlxQuadTree extends FlxRect
 				basic = members[i++];
 				if((basic != null) && basic.exists)
 				{
-					if (Std.is(basic, FlxTypedGroup))
+					if (basic.collisionType == FlxCollisionType.GROUP)
 					{
 						add(basic, list);
 					}
-					else if(Std.is(basic, FlxObject))
+					else if (basic.collisionType == FlxCollisionType.OBJECT || basic.collisionType == FlxCollisionType.TILEMAP)
 					{
 						_object = cast(basic, FlxObject);
 						if(_object.exists && _object.allowCollisions != FlxObject.NONE)

@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.FlxG;
+import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -66,6 +67,8 @@ class FlxBasic implements IFlxBasic implements IDestroyable
 	 */
 	public var exists(default, set):Bool = true;
 	
+	public var collisionType:FlxCollisionType;
+	
 	#if !FLX_NO_DEBUG
 	/**
 	 * Setting this to true will prevent the object from appearing
@@ -79,7 +82,10 @@ class FlxBasic implements IFlxBasic implements IDestroyable
 	static public var _VISIBLECOUNT:Int = 0;
 	#end
 	
-	public function new() { }
+	public function new() 
+	{ 
+		collisionType = FlxCollisionType.NULL;
+	}
 	
 	/**
 	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>revive()</code> it later.
@@ -88,6 +94,7 @@ class FlxBasic implements IFlxBasic implements IDestroyable
 	public function destroy():Void 
 	{
 		exists = false;
+		collisionType = null;
 	}
 	
 	/**

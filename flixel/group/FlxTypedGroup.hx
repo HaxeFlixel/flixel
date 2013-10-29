@@ -2,6 +2,7 @@ package flixel.group;
 
 import flixel.FlxG;
 import flixel.FlxBasic;
+import flixel.system.FlxCollisionType;
 import flixel.util.FlxArrayUtil;
 
 /**
@@ -72,6 +73,7 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 		
 		_members = new Array<T>();
 		_basics = cast _members;
+		collisionType = FlxCollisionType.GROUP;
 	}
 	
 	/**
@@ -392,7 +394,7 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 			
 			if (basic != null)
 			{
-				if (Recurse && Std.is(basic, FlxTypedGroup))
+				if (Recurse && basic.collisionType == FlxCollisionType.GROUP)
 				{
 					(cast basic).setAll(VariableName, Value, Recurse);
 				}
@@ -422,7 +424,7 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 			
 			if (basic != null)
 			{
-				if (Recurse && Std.is(basic, FlxTypedGroup))
+				if (Recurse && basic.collisionType == FlxCollisionType.GROUP)
 				{
 					(cast basic).callAll(FunctionName, Recurse);
 				}
