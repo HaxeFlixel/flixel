@@ -1309,15 +1309,28 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		}
 		
 		cachedGraphics = FlxG.bitmap.get(key);
-		region = new Region();
+		
+		if (region == null)	
+		{
+			region = new Region();
+		}
+		
+		region.startX = 0;
+		region.startY = 0;
+		region.tileWidth = 0;
+		region.tileHeight = 0;
+		region.spacingX = 0;
+		region.spacingY = 0;
 		region.width = cachedGraphics.bitmap.width;
 		region.height = cachedGraphics.bitmap.height;
 		
 		width = frameWidth = cachedGraphics.bitmap.width;
 		height = frameHeight = cachedGraphics.bitmap.height;
 		animation.destroyAnimations();
+		
 		updateFrameData();
 		resetHelpers();
+		
 		return Pixels;
 	}
 	
