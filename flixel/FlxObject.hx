@@ -414,6 +414,11 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
@@ -469,6 +474,11 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
@@ -890,7 +900,7 @@ class FlxObject extends FlxBasic
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	public function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;
 		y = Y;

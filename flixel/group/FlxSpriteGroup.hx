@@ -86,7 +86,6 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	 */
 	private var _skipTransformChildren:Bool = false;
 	
-	
 	public function new(MaxSize:Int = 0)
 	{
 		super(MaxSize);

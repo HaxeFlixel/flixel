@@ -6,9 +6,9 @@ interface IFlxPoint {
 	public var x(default, set):Float;
 	public var y(default, set):Float;
 	
-	public function set(X:Float = 0, Y:Float = 0):FlxPoint;
-	public function copyFrom(point:FlxPoint):FlxPoint;
-	public function copyTo(point:FlxPoint = null):FlxPoint;
+	public function set(X:Float = 0, Y:Float = 0):IFlxPoint;
+	public function copyFrom(point:IFlxPoint):IFlxPoint;
+	public function copyTo(point:IFlxPoint = null):IFlxPoint;
 	public function destroy():Void;
 }
 
@@ -65,7 +65,7 @@ class FlxPoint implements IFlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to itself.
 	 */
-	public function copyFrom(point:FlxPoint):FlxPoint
+	public function copyFrom(point:IFlxPoint):FlxPoint
 	{
 		x = point.x;
 		y = point.y;
@@ -77,7 +77,7 @@ class FlxPoint implements IFlxPoint
 	 * @param	Point	Any <code>FlxPoint</code>.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyTo(point:FlxPoint = null):FlxPoint
+	public function copyTo(point:IFlxPoint = null):IFlxPoint
 	{
 		if (point == null)
 		{

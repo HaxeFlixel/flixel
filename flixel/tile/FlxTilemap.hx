@@ -1378,6 +1378,11 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
@@ -1433,6 +1438,11 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;

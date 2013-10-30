@@ -131,11 +131,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 * @default null
 	 */
-	#if flash
-	public var blend:BlendMode;
-	#else
 	public var blend(get, set):BlendMode;
 	private var _blend:BlendMode;
+	#if !flash
 	private var _blendInt:Int = 0;
 	#end
 	/**
@@ -211,6 +209,19 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	{
 		super(X, Y);
 		
+		facing = FlxObject.RIGHT;
+		
+		if (SimpleGraphic == null)
+		{
+			SimpleGraphic = FlxAssets.IMG_DEFAULT;
+		}
+		loadGraphic(SimpleGraphic);
+	}
+	
+	override private function initVars():Void 
+	{
+		super.initVars();
+		
 		animation = new FlxAnimationController(this);
 		
 		_flashPoint = new Point();
@@ -220,16 +231,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		offset = new FlxPoint();
 		origin = new FlxPoint();
 		scale = new FlxPoint(1, 1);
-		
-		facing = FlxObject.RIGHT;
-		
 		_matrix = new Matrix();
-		
-		if (SimpleGraphic == null)
-		{
-			SimpleGraphic = FlxAssets.IMG_DEFAULT;
-		}
-		loadGraphic(SimpleGraphic);
 	}
 	
 	/**
@@ -1431,7 +1433,6 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		return scale = Value;
 	}
 	
-	#if !flash
 	inline private function get_blend():BlendMode 
 	{
 		return _blend;
@@ -1439,6 +1440,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
+		#if !flash
 		if (Value != null)
 		{
 			switch (Value)
@@ -1459,9 +1461,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		{
 			_blendInt = 0;
 		}
-		
+		#end
 		_blend = Value;
 		return Value;
 	}
-	#end
 }
