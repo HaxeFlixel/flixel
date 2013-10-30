@@ -46,9 +46,9 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 		scale			= new FlxPointHelper(this, scaleTransform);
 		velocity		= new FlxPointHelper(this, velocityTransform);
 		maxVelocity		= new FlxPointHelper(this, maxVelocityTransform);
-		acceleration	= new FlxPointHelper(this, accelerationTranform);
-		scrollFactor	= new FlxPointHelper(this, scrollFactorTranform);
-		drag			= new FlxPointHelper(this, dragTranform);
+		acceleration	= new FlxPointHelper(this, accelerationTransform);
+		scrollFactor	= new FlxPointHelper(this, scrollFactorTransform);
+		drag			= new FlxPointHelper(this, dragTransform);
 	}
 	
 	override public function destroy():Void
@@ -565,7 +565,7 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 	override private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
 	{
 		if (exists && scrollFactor != Value)
-			transformChildren(scrollFactorTranform, Value);
+			transformChildren(scrollFactorTransform, Value);
 		return scrollFactor = Value;
 	}
 	
@@ -579,14 +579,14 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 	override private function set_acceleration(Value:IFlxPoint):IFlxPoint 
 	{
 		if (exists && acceleration != Value)
-			transformChildren(accelerationTranform, Value);
+			transformChildren(accelerationTransform, Value);
 		return acceleration = Value;
 	}
 	
 	override private function set_drag(Value:IFlxPoint):IFlxPoint 
 	{
 		if (exists && drag != Value)
-			transformChildren(dragTranform, Value);
+			transformChildren(dragTransform, Value);
 		return drag = Value;
 	}
 	
@@ -678,29 +678,29 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
 	
-	private function xTransform(Sprite:FlxSprite, X:Float)							{ Sprite.x += X; }								// addition
-	private function yTransform(Sprite:FlxSprite, Y:Float)							{ Sprite.y += Y; }								// addition
-	private function angleTransform(Sprite:FlxSprite, Angle:Float)					{ Sprite.angle += Angle; }						// addition
-	private function alphaTransform(Sprite:FlxSprite, Alpha:Float)					{ Sprite.alpha *= Alpha; }						// multiplication
-	private function facingTransform(Sprite:FlxSprite, Facing:Int)					{ Sprite.facing = Facing; }						// set
-	private function movesTransform(Sprite:FlxSprite, Moves:Bool)					{ Sprite.moves = Moves; }						// set
-	private function complexRenderTransform(Sprite:FlxSprite, Complex:Bool)			{ Sprite.forceComplexRender = Complex; }		// set
-	private function colorTransformF(Sprite:FlxSprite, Color:Int)					{ Sprite.color = Color; }						// set
-	private function blenfTransform(Sprite:FlxSprite, Blend:BlendMode)				{ Sprite.blend = Blend; }						// set
-	private function immovableTransform(Sprite:FlxSprite, Immovable:Bool)			{ Sprite.immovable = Immovable; }				// set
-	private function visibleTransform(Sprite:FlxSprite, Visible:Bool)				{ Sprite.visible = Visible; }					// set
-	private function activeTransform(Sprite:FlxSprite, Active:Bool)					{ Sprite.active = Active; }						// set
-	private function solidTransform(Sprite:FlxSprite, Solid:Bool)					{ Sprite.solid = Solid; }						// set
-	private function aliveTransform(Sprite:FlxSprite, Alive:Bool)					{ Sprite.alive = Alive; }						// set
-	private function existsTransform(Sprite:FlxSprite, Exists:Bool)					{ Sprite.exists = Exists; }						// set
-	private function offsetTransform(Sprite:FlxSprite, Offset:IFlxPoint)			{ Sprite.offset.copyFrom(Offset); }				// set
-	private function originTransform(Sprite:FlxSprite, Origin:IFlxPoint)			{ Sprite.origin.copyFrom(Origin); }				// set
-	private function scaleTransform(Sprite:FlxSprite, Scale:IFlxPoint)				{ Sprite.scale.copyFrom(Scale); }				// set
-	private function velocityTransform(Sprite:FlxSprite, Velocity:IFlxPoint)		{ Sprite.velocity.copyFrom(Velocity); }			// set
-	private function maxVelocityTransform(Sprite:FlxSprite, MaxVelocity:IFlxPoint)	{ Sprite.maxVelocity.copyFrom(MaxVelocity); }	// set
-	private function accelerationTranform(Sprite:FlxSprite, Acceleration:IFlxPoint)	{ Sprite.acceleration.copyFrom(Acceleration); }	// set
-	private function scrollFactorTranform(Sprite:FlxSprite, ScrollFactor:IFlxPoint)	{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
-	private function dragTranform(Sprite:FlxSprite, Drag:IFlxPoint)					{ Sprite.drag.copyFrom(Drag); }					// set
+	private function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
+	private function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
+	private function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
+	private function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
+	private function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
+	private function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
+	private function complexRenderTransform(Sprite:FlxSprite, Complex:Bool)				{ Sprite.forceComplexRender = Complex; }		// set
+	private function colorTransformF(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
+	private function blenfTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
+	private function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
+	private function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
+	private function activeTransform(Sprite:FlxSprite, Active:Bool)						{ Sprite.active = Active; }						// set
+	private function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
+	private function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
+	private function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
+	private function offsetTransform(Sprite:FlxSprite, Offset:IFlxPoint)				{ Sprite.offset.copyFrom(Offset); }				// set
+	private function originTransform(Sprite:FlxSprite, Origin:IFlxPoint)				{ Sprite.origin.copyFrom(Origin); }				// set
+	private function scaleTransform(Sprite:FlxSprite, Scale:IFlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
+	private function velocityTransform(Sprite:FlxSprite, Velocity:IFlxPoint)			{ Sprite.velocity.copyFrom(Velocity); }			// set
+	private function maxVelocityTransform(Sprite:FlxSprite, MaxVelocity:IFlxPoint)		{ Sprite.maxVelocity.copyFrom(MaxVelocity); }	// set
+	private function accelerationTransform(Sprite:FlxSprite, Acceleration:IFlxPoint)	{ Sprite.acceleration.copyFrom(Acceleration); }	// set
+	private function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:IFlxPoint)	{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
+	private function dragTransform(Sprite:FlxSprite, Drag:IFlxPoint)					{ Sprite.drag.copyFrom(Drag); }					// set
 }
 
 /**
