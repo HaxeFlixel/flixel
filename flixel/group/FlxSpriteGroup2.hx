@@ -23,6 +23,10 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 	
 	public var members(get, null):Array<FlxSprite>;
 	
+	public var length(get, null):Int;
+	
+	public var maxSize(get, set):Int;
+	
 	/**
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
@@ -81,67 +85,6 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 			}
 		}
 		return cloned;
-	}
-	
-	override public function loadfromSprite(Sprite:FlxSprite):FlxSprite 
-	{
-		return this;
-	}
-	
-	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite 
-	{
-		return this;
-	}
-	
-	override public function loadRotatedGraphic(Graphic:Dynamic, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
-	{
-		return this;
-	}
-	
-	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
-	{
-		return this;
-	}
-	
-	override public function loadImageFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite 
-	{
-		return this;
-	}
-	
-	override public function loadRotatedImageFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite 
-	{
-		return this;
-	}
-	
-	override private function resetHelpers():Void 
-	{
-		// Nothing to do here
-	}
-	
-	override public function update():Void 
-	{
-		group.update();
-	}
-	
-	override public function draw():Void 
-	{
-		group.draw();
-	}
-	
-	override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void 
-	{
-		// Nothing to do here
-	}
-	
-	override public function replaceColor(Color:Int, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint> 
-	{
-		// TODO: maybe implement this later?
-		return null;
-	}
-	
-	override private function updateColorTransform():Void 
-	{
-		// Nothing to do here
 	}
 	
 	override public function onScreen(Camera:FlxCamera = null):Bool 
@@ -208,62 +151,88 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 		}
 	}
 	
-	override public function updateFrameData():Void 
+	override public function update():Void 
+	{
+		group.update();
+	}
+	
+	override public function draw():Void 
+	{
+		group.draw();
+	}
+	
+	override public function loadfromSprite(Sprite:FlxSprite):FlxSprite 
+	{
+		return this;
+	}
+	
+	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite 
+	{
+		return this;
+	}
+	
+	override public function loadRotatedGraphic(Graphic:Dynamic, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
+	{
+		return this;
+	}
+	
+	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
+	{
+		return this;
+	}
+	
+	override public function loadImageFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite 
+	{
+		return this;
+	}
+	
+	override public function loadRotatedImageFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite 
+	{
+		return this;
+	}
+	
+	override private function resetHelpers():Void 
 	{
 		// Nothing to do here
 	}
 	
-	override private function get_pixels():BitmapData 
+	override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void 
 	{
-		return null;
+		// Nothing to do here
 	}
 	
-	override private function set_pixels(Pixels:BitmapData):BitmapData 
+	override public function replaceColor(Color:Int, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint> 
 	{
-		return Pixels;
+		var positions:Array<FlxPoint> = null;
+		if (FetchPositions)
+		{
+			positions = new Array<FlxPoint>();
+		}
+		
+		var spritePositions:Array<FlxPoint>;
+		for (sprite in group.members)
+		{
+			if (sprite != null)
+			{
+				spritePositions = sprite.replaceColor(Color, NewColor, FetchPositions);
+				if (FetchPositions)
+				{
+					positions = positions.concat(spritePositions);
+				}
+			}
+		}
+		
+		return positions;
 	}
 	
-	override private function set_frame(Value:FlxFrame):FlxFrame 
+	override private function updateColorTransform():Void 
 	{
-		return Value;
+		// Nothing to do here
 	}
 	
-	override private function set_color(Color:Int):Int 
+	override public function updateFrameData():Void 
 	{
-		if (exists && color != Color)
-			transformChildren(colorTransformF, Color);
-		return color = Color;
-	}
-	
-	override private function get_colorTransform():ColorTransform 
-	{
-		return null;
-	}
-	
-	override private function set_blend(Blend:BlendMode):BlendMode 
-	{
-		if (exists && _blend != Blend)
-			transformChildren(blenfTransform, Blend);
-		return _blend = Blend;
-	}
-	
-	override private function set_solid(Solid:Bool):Bool 
-	{
-		if (exists && solid != Solid)
-			transformChildren(solidTransform, Solid);
-		return super.set_solid(Solid);
-	}
-	
-	/**
-	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
-	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
-	 * @default false
-	 */
-	override private function set_forceComplexRender(Value:Bool):Bool
-	{
-		if (exists && forceComplexRender != Value)
-			transformChildren(complexRenderTransform, Value);
-		return super.set_forceComplexRender(Value);
+		// Nothing to do here
 	}
 	
 	#if !FLX_NO_DEBUG
@@ -410,8 +379,6 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 		y = Y; // this calls set_y
 		_skipTransformChildren = false;
 	}
-	
-	
 	
 	/**
 	 * Handy function that allows you to quickly transform one property of sprites in this group at a time.
@@ -627,14 +594,63 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 		return maxVelocity = Value;
 	}
 	
-	public var length(get, null):Int;
+	override private function get_pixels():BitmapData 
+	{
+		return null;
+	}
+	
+	override private function set_pixels(Pixels:BitmapData):BitmapData 
+	{
+		return Pixels;
+	}
+	
+	override private function set_frame(Value:FlxFrame):FlxFrame 
+	{
+		return Value;
+	}
+	
+	override private function set_color(Color:Int):Int 
+	{
+		if (exists && color != Color)
+			transformChildren(colorTransformF, Color);
+		return color = Color;
+	}
+	
+	override private function get_colorTransform():ColorTransform 
+	{
+		return null;
+	}
+	
+	override private function set_blend(Blend:BlendMode):BlendMode 
+	{
+		if (exists && _blend != Blend)
+			transformChildren(blenfTransform, Blend);
+		return _blend = Blend;
+	}
+	
+	override private function set_solid(Solid:Bool):Bool 
+	{
+		if (exists && solid != Solid)
+			transformChildren(solidTransform, Solid);
+		return super.set_solid(Solid);
+	}
+	
+	/**
+	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
+	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
+	 * @default false
+	 */
+	override private function set_forceComplexRender(Value:Bool):Bool
+	{
+		if (exists && forceComplexRender != Value)
+			transformChildren(complexRenderTransform, Value);
+		return super.set_forceComplexRender(Value);
+	}
 	
 	private function get_length():Int
 	{
 		return group.length;
 	}
-	
-	public var maxSize(get, set):Int;
 	
 	private function get_maxSize():Int
 	{
