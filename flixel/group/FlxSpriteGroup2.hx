@@ -35,12 +35,12 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 	public function new(X:Float = 0, Y:Float = 0, MaxSize:Int = 0)
 	{
 		super(X, Y);
-		group = new FlxTypedGroup<FlxSprite>(MaxSize);
-		collisionType = FlxCollisionType.SPRITEGROUP;
+		maxSize = MaxSize;
 	}
 	
 	override private function initVars():Void 
 	{
+		collisionType = FlxCollisionType.SPRITEGROUP;
 		offset			= new FlxPointHelper(this, offsetTransform);
 		origin			= new FlxPointHelper(this, originTransform);
 		scale			= new FlxPointHelper(this, scaleTransform);
@@ -387,7 +387,10 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 	 */
 	@:generic public function transformChildren<T>(Function:FlxSprite->T->Void, Value:T):Void
 	{
-		if (group == null) return;
+		if (group == null) 
+		{
+			return;
+		}
 		
 		var sprite:FlxSprite;
 		
@@ -514,7 +517,7 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 			var factor:Float = (alpha > 0) ? NewAlpha / alpha : 0;
 			transformChildren(alphaTransform, factor);
 		}
-		return alpha = NewAlpha;
+		return super.set_alpha(NewAlpha);
 	}
 	
 	override private function set_facing(Value:Int):Int
@@ -659,6 +662,12 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 	
 	private function set_maxSize(Size:Int):Int
 	{
+		if (group == null)
+		{
+			group = new FlxTypedGroup<FlxSprite>(Size);
+			return Size;
+		}
+		
 		return group.maxSize = Size;
 	}
 	
