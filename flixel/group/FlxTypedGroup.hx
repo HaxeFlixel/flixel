@@ -413,8 +413,11 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
 	 * @param	Recurse			Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
 	 */ 
-	public function callAll(FunctionName:String, Recurse:Bool = true):Void
+	public function callAll(FunctionName:String, Args:Array<Dynamic> = null, Recurse:Bool = true):Void
 	{
+		if (Args == null) 	
+			Args = [];
+		
 		var i:Int = 0;
 		var basic:FlxBasic = null;
 		
@@ -430,7 +433,7 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 				}
 				else
 				{
-					Reflect.callMethod(basic, Reflect.getProperty(basic, FunctionName), []);
+					Reflect.callMethod(basic, Reflect.getProperty(basic, FunctionName), Args);
 				}
 			}
 		}

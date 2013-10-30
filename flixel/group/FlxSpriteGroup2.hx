@@ -282,7 +282,7 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 		group.setAll(VariableName, Value, Recurse);
 	}
 	
-	public function callAll(FunctionName:String, Recurse:Bool = true):Void
+	public function callAll(FunctionName:String, Args:Array<Dynamic> = null, Recurse:Bool = true):Void
 	{
 		group.callAll(FunctionName, Recurse);
 	}
