@@ -406,6 +406,7 @@ class FlxQuadTree extends FlxRect
 		{
 			var i:Int = 0;
 			var basic:FlxBasic;
+			var collisionType:FlxCollisionType;
 			var group:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = group.members;
 			var l:Int = group.length;
@@ -414,16 +415,17 @@ class FlxQuadTree extends FlxRect
 				basic = members[i++];
 				if ((basic != null) && basic.exists)
 				{
-					if (basic.collisionType == FlxCollisionType.SPRITEGROUP)
+					collisionType = basic.collisionType;
+					if (collisionType == FlxCollisionType.SPRITEGROUP)
 					{
 						basic = Reflect.field(ObjectOrGroup, "group");
 					}
 					
-					if (basic.collisionType == FlxCollisionType.GROUP)
+					if (collisionType == FlxCollisionType.GROUP)
 					{
 						add(basic, list);
 					}
-					else if (basic.collisionType == FlxCollisionType.OBJECT || basic.collisionType == FlxCollisionType.TILEMAP)
+					else if (collisionType == FlxCollisionType.OBJECT || collisionType == FlxCollisionType.TILEMAP)
 					{
 						_object = cast(basic, FlxObject);
 						if(_object.exists && _object.allowCollisions != FlxObject.NONE)

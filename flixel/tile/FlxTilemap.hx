@@ -1378,12 +1378,14 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		var objType:FlxCollisionType = ObjectOrGroup.collisionType;
+		if (objType == FlxCollisionType.SPRITEGROUP)
 		{
 			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+			objType = FlxCollisionType.GROUP;
 		}
 		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
+		if (objType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
@@ -1397,7 +1399,8 @@ class FlxTilemap extends FlxObject
 				
 				if ((basic != null) && basic.exists)
 				{
-					if (basic.collisionType == FlxCollisionType.OBJECT || basic.collisionType == FlxCollisionType.TILEMAP)
+					objType = basic.collisionType;
+					if (objType == FlxCollisionType.OBJECT || objType == FlxCollisionType.TILEMAP)
 					{
 						if (overlapsWithCallback(cast(basic, FlxObject)))
 						{
@@ -1416,7 +1419,7 @@ class FlxTilemap extends FlxObject
 			
 			return results;
 		}
-		else if (ObjectOrGroup.collisionType == FlxCollisionType.OBJECT || ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		else if (objType == FlxCollisionType.OBJECT || objType == FlxCollisionType.TILEMAP)
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject));
 		}
@@ -1438,12 +1441,14 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
+		var objType:FlxCollisionType = ObjectOrGroup.collisionType;
 		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
 		{
 			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+			objType = FlxCollisionType.GROUP;
 		}
 		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
+		if (objType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
@@ -1457,7 +1462,8 @@ class FlxTilemap extends FlxObject
 				
 				if ((basic != null) && basic.exists)
 				{
-					if (basic.collisionType == FlxCollisionType.OBJECT || basic.collisionType == FlxCollisionType.TILEMAP)
+					objType = basic.collisionType;
+					if (objType == FlxCollisionType.OBJECT || objType == FlxCollisionType.TILEMAP)
 					{
 						_point.x = X;
 						_point.y = Y;
@@ -1479,7 +1485,7 @@ class FlxTilemap extends FlxObject
 			
 			return results;
 		}
-		else if (ObjectOrGroup.collisionType == FlxCollisionType.OBJECT || ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		else if (objType == FlxCollisionType.OBJECT || objType == FlxCollisionType.TILEMAP)
 		{
 			_point.x = X;
 			_point.y = Y;
