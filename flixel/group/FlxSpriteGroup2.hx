@@ -541,56 +541,56 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 		return immovable = Value;
 	}
 	
-	override private function set_origin(Value:IFlxPoint):IFlxPoint
+	override private function set_origin(Value:FlxPoint):FlxPoint
 	{
 		if (exists && origin != Value)
 			transformChildren(originTransform, Value);
 		return origin = Value;
 	}
 	
-	override private function set_offset(Value:IFlxPoint):IFlxPoint
+	override private function set_offset(Value:FlxPoint):FlxPoint
 	{
 		if (exists && offset != Value)
 			transformChildren(offsetTransform, Value);
 		return offset = Value;
 	}
 	
-	override private function set_scale(Value:IFlxPoint):IFlxPoint
+	override private function set_scale(Value:FlxPoint):FlxPoint
 	{
 		if (exists && scale != Value)
 			transformChildren(scaleTransform, Value);
 		return scale = Value;
 	}
 	
-	override private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
+	override private function set_scrollFactor(Value:FlxPoint):FlxPoint
 	{
 		if (exists && scrollFactor != Value)
 			transformChildren(scrollFactorTransform, Value);
 		return scrollFactor = Value;
 	}
 	
-	override private function set_velocity(Value:IFlxPoint):IFlxPoint 
+	override private function set_velocity(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && velocity != Value)
 			transformChildren(velocityTransform, Value);
 		return velocity = Value;
 	}
 	
-	override private function set_acceleration(Value:IFlxPoint):IFlxPoint 
+	override private function set_acceleration(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && acceleration != Value)
 			transformChildren(accelerationTransform, Value);
 		return acceleration = Value;
 	}
 	
-	override private function set_drag(Value:IFlxPoint):IFlxPoint 
+	override private function set_drag(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && drag != Value)
 			transformChildren(dragTransform, Value);
 		return drag = Value;
 	}
 	
-	override private function set_maxVelocity(Value:IFlxPoint):IFlxPoint 
+	override private function set_maxVelocity(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && maxVelocity != Value)
 			transformChildren(maxVelocityTransform, Value);
@@ -693,14 +693,14 @@ class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
 	private function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
 	private function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
 	private function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
-	private function offsetTransform(Sprite:FlxSprite, Offset:IFlxPoint)				{ Sprite.offset.copyFrom(Offset); }				// set
-	private function originTransform(Sprite:FlxSprite, Origin:IFlxPoint)				{ Sprite.origin.copyFrom(Origin); }				// set
-	private function scaleTransform(Sprite:FlxSprite, Scale:IFlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
-	private function velocityTransform(Sprite:FlxSprite, Velocity:IFlxPoint)			{ Sprite.velocity.copyFrom(Velocity); }			// set
-	private function maxVelocityTransform(Sprite:FlxSprite, MaxVelocity:IFlxPoint)		{ Sprite.maxVelocity.copyFrom(MaxVelocity); }	// set
-	private function accelerationTransform(Sprite:FlxSprite, Acceleration:IFlxPoint)	{ Sprite.acceleration.copyFrom(Acceleration); }	// set
-	private function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:IFlxPoint)	{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
-	private function dragTransform(Sprite:FlxSprite, Drag:IFlxPoint)					{ Sprite.drag.copyFrom(Drag); }					// set
+	private function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
+	private function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
+	private function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
+	private function velocityTransform(Sprite:FlxSprite, Velocity:FlxPoint)				{ Sprite.velocity.copyFrom(Velocity); }			// set
+	private function maxVelocityTransform(Sprite:FlxSprite, MaxVelocity:FlxPoint)		{ Sprite.maxVelocity.copyFrom(MaxVelocity); }	// set
+	private function accelerationTransform(Sprite:FlxSprite, Acceleration:FlxPoint)		{ Sprite.acceleration.copyFrom(Acceleration); }	// set
+	private function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
+	private function dragTransform(Sprite:FlxSprite, Drag:FlxPoint)						{ Sprite.drag.copyFrom(Drag); }					// set
 }
 
 /**
@@ -713,7 +713,7 @@ private class FlxPointHelper extends FlxPoint
 	private var _parent:FlxSpriteGroup2;
 	private var _transformFunc:FlxSprite->FlxPoint->Void;
 	
-	public function new(parent:FlxSpriteGroup2, transformFunc:FlxSprite->IFlxPoint->Void)
+	public function new(parent:FlxSpriteGroup2, transformFunc:FlxSprite->FlxPoint->Void)
 	{
 		_parent = parent;
 		_transformFunc = transformFunc;

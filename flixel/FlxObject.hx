@@ -107,26 +107,26 @@ class FlxObject extends FlxBasic
 	 * Controls how much this object is affected by camera scrolling.
 	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
 	 */
-	public var scrollFactor(default, set):IFlxPoint;
+	public var scrollFactor(default, set):FlxPoint;
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity(default, set):IFlxPoint;
+	public var velocity(default, set):FlxPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration(default, set):IFlxPoint;
+	public var acceleration(default, set):FlxPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
 	 */
-	public var drag(default, set):IFlxPoint;
+	public var drag(default, set):FlxPoint;
 	/**
 	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity(default, set):IFlxPoint;
+	public var maxVelocity(default, set):FlxPoint;
 	/**
 	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
@@ -1023,31 +1023,31 @@ class FlxObject extends FlxBasic
 		return forceComplexRender = Value;
 	}
 	
-	private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
+	private function set_scrollFactor(Value:FlxPoint):FlxPoint
 	{
 		_scrollFactor = cast Value;
 		return scrollFactor = Value;
 	}
 	
-	private function set_velocity(Value:IFlxPoint):IFlxPoint 
+	private function set_velocity(Value:FlxPoint):FlxPoint 
 	{
 		_velocity = cast Value;
 		return velocity = Value;
 	}
 	
-	private function set_acceleration(Value:IFlxPoint):IFlxPoint 
+	private function set_acceleration(Value:FlxPoint):FlxPoint 
 	{
 		_acceleration = cast Value;
 		return acceleration = Value;
 	}
 	
-	private function set_drag(Value:IFlxPoint):IFlxPoint 
+	private function set_drag(Value:FlxPoint):FlxPoint 
 	{
 		_drag = cast Value;
 		return drag = Value;
 	}
 	
-	private function set_maxVelocity(Value:IFlxPoint):IFlxPoint 
+	private function set_maxVelocity(Value:FlxPoint):FlxPoint 
 	{
 		_maxVelocity = cast Value;
 		return maxVelocity = Value;

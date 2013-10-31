@@ -46,41 +46,41 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
      * changing a sprite's <code>width</code> or <code>height</code>.
 	 */
-	public var offset(default, set):IFlxPoint;
+	public var offset(default, set):FlxPoint;
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
 	 */
-	public var origin(default, set):IFlxPoint;
+	public var origin(default, set):FlxPoint;
 	/**
 	 * Change the size of your sprite's graphic. NOTE: Scale doesn't currently affect collisions automatically, you will need to adjust the width, 
 	 * height and offset manually. WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
 	 */
-	public var scale(default, set):IFlxPoint;
+	public var scale(default, set):FlxPoint;
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity(default, set):IFlxPoint;
+	public var velocity(default, set):FlxPoint;
 	/**
 	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity(default, set):IFlxPoint;
+	public var maxVelocity(default, set):FlxPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration(default, set):IFlxPoint;
+	public var acceleration(default, set):FlxPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
 	 */
-	public var drag(default, set):IFlxPoint;
+	public var drag(default, set):FlxPoint;
 	/**
 	 * Controls how much this object is affected by camera scrolling.
 	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
 	 */
-	public var scrollFactor(default, set):IFlxPoint;
+	public var scrollFactor(default, set):FlxPoint;
 	/**
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
@@ -326,56 +326,56 @@ class FlxSpriteGroup extends FlxGroup implements IFlxSprite
 		return immovable = Value;
 	}
 	
-	private function set_origin(Value:IFlxPoint):IFlxPoint
+	private function set_origin(Value:FlxPoint):FlxPoint
 	{
 		if (exists && origin != Value)
 			transformChildren(originTransform, cast Value);
 		return origin = Value;
 	}
 	
-	private function set_offset(Value:IFlxPoint):IFlxPoint
+	private function set_offset(Value:FlxPoint):FlxPoint
 	{
 		if (exists && offset != Value)
 			transformChildren(offsetTransform, cast Value);
 		return offset = Value;
 	}
 	
-	private function set_scale(Value:IFlxPoint):IFlxPoint
+	private function set_scale(Value:FlxPoint):FlxPoint
 	{
 		if (exists && scale != Value)
 			transformChildren(scaleTransform, cast Value);
 		return scale = Value;
 	}
 	
-	private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
+	private function set_scrollFactor(Value:FlxPoint):FlxPoint
 	{
 		if (exists && scrollFactor != Value)
 			transformChildren(scrollFactorTranform, cast Value);
 		return scrollFactor = Value;
 	}
 	
-	private function set_velocity(Value:IFlxPoint):IFlxPoint 
+	private function set_velocity(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && velocity != Value)
 			transformChildren(velocityTransform, cast Value);
 		return velocity = Value;
 	}
 	
-	private function set_acceleration(Value:IFlxPoint):IFlxPoint 
+	private function set_acceleration(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && acceleration != Value)
 			transformChildren(accelerationTranform, cast Value);
 		return acceleration = Value;
 	}
 	
-	private function set_drag(Value:IFlxPoint):IFlxPoint 
+	private function set_drag(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && drag != Value)
 			transformChildren(dragTranform, cast Value);
 		return drag = Value;
 	}
 	
-	private function set_maxVelocity(Value:IFlxPoint):IFlxPoint 
+	private function set_maxVelocity(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && maxVelocity != Value)
 			transformChildren(maxVelocityTransform, cast Value);

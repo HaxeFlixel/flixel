@@ -37,14 +37,14 @@ interface IFlxSprite extends IFlxBasic
 	public var moves(default, set):Bool;
 	public var immovable(default, set):Bool;
 	
-	public var offset(default, set):IFlxPoint;
-	public var origin(default, set):IFlxPoint;
-	public var scale(default, set):IFlxPoint;
-	public var velocity(default, set):IFlxPoint;
-	public var maxVelocity(default, set):IFlxPoint;
-	public var acceleration(default, set):IFlxPoint;
-	public var drag(default, set):IFlxPoint;
-	public var scrollFactor(default, set):IFlxPoint;
+	public var offset(default, set):FlxPoint;
+	public var origin(default, set):FlxPoint;
+	public var scale(default, set):FlxPoint;
+	public var velocity(default, set):FlxPoint;
+	public var maxVelocity(default, set):FlxPoint;
+	public var acceleration(default, set):FlxPoint;
+	public var drag(default, set):FlxPoint;
+	public var scrollFactor(default, set):FlxPoint;
 
 	public function reset(X:Float, Y:Float):Void;
 	public function setPosition(X:Float = 0, Y:Float = 0):Void;
@@ -106,17 +106,17 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
 	 */
-	public var origin(default, set):IFlxPoint;
+	public var origin(default, set):FlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
 	 * changing a sprite's <code>width</code> or <code>height</code>.
 	 */
-	public var offset(default, set):IFlxPoint;
+	public var offset(default, set):FlxPoint;
 	/**
 	 * Change the size of your sprite's graphic. NOTE: Scale doesn't currently affect collisions automatically, you will need to adjust the width, 
 	 * height and offset manually. WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
 	 */
-	public var scale(default, set):IFlxPoint;
+	public var scale(default, set):FlxPoint;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
@@ -1415,19 +1415,19 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		return super.set_angle(Value);
 	}
 	
-	private function set_origin(Value:IFlxPoint):IFlxPoint
+	private function set_origin(Value:FlxPoint):FlxPoint
 	{
 		_origin = cast Value;
 		return origin = Value;
 	}
 	
-	private function set_offset(Value:IFlxPoint):IFlxPoint
+	private function set_offset(Value:FlxPoint):FlxPoint
 	{
 		_offset = cast Value;
 		return offset = Value;
 	}
 	
-	private function set_scale(Value:IFlxPoint):IFlxPoint
+	private function set_scale(Value:FlxPoint):FlxPoint
 	{
 		_scale = cast Value;
 		return scale = Value;
