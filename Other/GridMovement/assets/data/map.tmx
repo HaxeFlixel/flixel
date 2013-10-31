@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="21" height="15" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="level" tilewidth="16" tileheight="16">
+  <image source="tilesheet.png" width="48" height="16"/>
+ </tileset>
+ <layer name="Background" width="21" height="15">
+  <properties>
+   <property name="nocollide" value="true"/>
+   <property name="tileset" value="level"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYmBgYBrFo3gUj+JhjgEYlgJ3
+  </data>
+ </layer>
+ <layer name="Foreground" width="21" height="15">
+  <properties>
+   <property name="tileset" value="level"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjZmBgYKYBpiZANhOdRpZHF8OljlgzSRHDZT4hd6KbMRDupMRMbO6kFiAUDuhq0Wli3Iyun5CZ2NQT405S4oJUc8h1Jz5xQuFJj3inNgYARqwBug==
+  </data>
+ </layer>
+ <objectgroup color="#b83333" draworder="topdown" name="player start" width="21" height="15">
+  <object name="start" type="player_start" x="128" y="128" width="16" height="16"/>
+ </objectgroup>
+</map>
