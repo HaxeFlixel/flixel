@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 
 /**
@@ -18,12 +17,24 @@ enum MoveDirection
 
 class Player extends FlxSprite
 {
-	inline static private var MOVEMENT_SPEED:Int = 2;
+	/**
+	 * How big the tiles of the tilemap are.
+	 */
 	inline static private var TILE_SIZE:Int = 16;
+	/**
+	 * How many pixels to move each frame. Has to be a divider of TILE_SIZE 
+	 * to work as expected (move one block at a time), because we use the
+	 * modulo-operator to check whether the next block has been reached.
+	 */
+	inline static private var MOVEMENT_SPEED:Int = 2;
 	
-	// Flag used to check if char is moving.
+	/**
+	 * Flag used to check if char is moving.
+	 */ 
 	public var moveToNextTile:Bool;
-	// Var used to hold moving direction.
+	/**
+	 * Var used to hold moving direction.
+	 */ 
 	private var moveDirection:MoveDirection;
 	
 	public function new(X:Int, Y:Int)
@@ -31,8 +42,8 @@ class Player extends FlxSprite
 		// X,Y: Starting coordinates
 		super(X, Y);
 		
-		// Make the player.
-		makeGraphic(16, 16, 0xffc04040, true);
+		// Make the player graphic.
+		makeGraphic(TILE_SIZE, TILE_SIZE, 0xffc04040);
 	}
 	
 	override public function update():Void
@@ -45,13 +56,13 @@ class Player extends FlxSprite
 			switch(moveDirection)
 			{
 				case UP:
-				y -= MOVEMENT_SPEED;
+					y -= MOVEMENT_SPEED;
 				case DOWN:
-				y += MOVEMENT_SPEED;
+					y += MOVEMENT_SPEED;
 				case LEFT:
-				x -= MOVEMENT_SPEED;
+					x -= MOVEMENT_SPEED;
 				case RIGHT:
-				x += MOVEMENT_SPEED;
+					x += MOVEMENT_SPEED;
 			}
 		}
 		
@@ -61,37 +72,32 @@ class Player extends FlxSprite
 			moveToNextTile = false;
 		}
 		
-		// Determine which direction to move
-		if (FlxG.keys.pressed.DOWN)
+		// Check for WASD or arrow key presses and move accordingly
+		if (FlxG.keyboard.pressed("DOWN", "S"))
 		{
-			move(MoveDirection.DOWN);
+			moveTo(MoveDirection.DOWN);
 		}
-		else if (FlxG.keys.pressed.UP)
+		else if (FlxG.keyboard.pressed("UP", "W"))
 		{
-			move(MoveDirection.UP);
+			moveTo(MoveDirection.UP);
 		}
-		else if (FlxG.keys.pressed.LEFT)
+		else if (FlxG.keyboard.pressed("LEFT", "A"))
 		{
-			move(MoveDirection.LEFT);
+			moveTo(MoveDirection.LEFT);
 		}
-		else if (FlxG.keys.pressed.RIGHT)
+		else if (FlxG.keyboard.pressed("RIGHT", "D"))
 		{
-			move(MoveDirection.RIGHT);
+			moveTo(MoveDirection.RIGHT);
 		}
 	}
 	
-	public function move(dir:MoveDirection):Void
+	public function moveTo(Direction:MoveDirection):Void
 	{
 		// Only change direction if not already moving
 		if (!moveToNextTile)
 		{
-			moveDirection = dir;
+			moveDirection = Direction;
 			moveToNextTile = true;
 		}
-	}
-	
-	override public function destroy():Void
-	{
-		super.destroy();
 	}
 }

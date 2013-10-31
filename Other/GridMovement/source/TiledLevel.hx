@@ -1,8 +1,6 @@
 package;
 
-import openfl.Assets;
 import haxe.io.Path;
-import haxe.xml.Parser;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -102,14 +100,15 @@ class TiledLevel extends TiledMap
 		
 		// objects in tiled are aligned bottom-left (top-left in flixel)
 		if (o.gid != -1)
+		{
 			y -= g.map.getGidOwner(o.gid).tileHeight;
+		}
 		
 		switch (o.type.toLowerCase())
 		{
 			case "player_start":
 				// define and set the player 
 				var player = new Player(x, y);
-				//player.forceComplexRender = true;
 				state.player = player;
 				state.add(player);
 		}

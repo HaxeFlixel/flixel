@@ -2,7 +2,6 @@ package;
  
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.FlxSprite;
 import flixel.text.FlxText;
  
 /**
@@ -12,18 +11,13 @@ import flixel.text.FlxText;
 class PlayState extends FlxState
 {
 	public var player:Player;
-	public var _level:TiledLevel;
+	private var _level:TiledLevel;
 	private var _howto:FlxText;
 	
 	override public function create():Void
 	{
-		//Set the background color
+		// Set the background color
 		bgColor = 0xff000000;
-		
-		// Show the mouse (in case it hasn't been disabled)
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.show();
-		#end
 		
 		// Load the level's tilemaps
 		_level = new TiledLevel("assets/data/map.tmx");
@@ -38,7 +32,8 @@ class PlayState extends FlxState
 		_level.loadObjects(this);
 		
 		// Set and create Txt Howto
-		_howto = new FlxText(FlxG.width / 2 - 93, 225, 374).setFormat(null, 8, 0xffffff, 'left');
+		_howto = new FlxText(0, 225, FlxG.width);
+		_howto.alignment = "center";
 		_howto.text = "Use the ARROW KEYS to move around.";
 		_howto.scrollFactor.set(0, 0);
 		add(_howto);
@@ -51,6 +46,8 @@ class PlayState extends FlxState
 		// Collide with foreground tile layer
 		if (_level.collideWithLevel(player))
 		{
+			// Resetting the movement flag if the player hits the wall 
+			// is crucial, otherwise you can get stuck in the wall
 			player.moveToNextTile = false;
 		}
 	}
