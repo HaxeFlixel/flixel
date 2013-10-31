@@ -256,9 +256,10 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * @param 	ContructorArgs  An array of arguments passed into a newly object if there aren't any dead members to recycle. 
+	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
-	public function recycle(ObjectClass:Class<T> = null, ContructorArgs:Array<Dynamic> = null):T
+	public function recycle(ObjectClass:Class<T> = null, ContructorArgs:Array<Dynamic> = null, Force:Bool = false):T
 	{
 		if (ContructorArgs == null)
 		{
@@ -292,7 +293,7 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 		}
 		else
 		{
-			basic = getFirstAvailable(ObjectClass);
+			basic = getFirstAvailable(ObjectClass, Force);
 			
 			if (basic != null)
 			{
@@ -444,9 +445,10 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 	 * This is handy for recycling in general, e.g. respawning enemies.
 	 * 
 	 * @param	ObjectClass		An optional parameter that lets you narrow the results to instances of this particular class.
+	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
 	 * @return	A <code>FlxBasic</code> currently flagged as not existing.
 	 */
-	public function getFirstAvailable(ObjectClass:Class<T> = null):T
+	public function getFirstAvailable(ObjectClass:Class<T> = null, Force:Bool = false):T
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -457,6 +459,10 @@ class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
 			
 			if ((basic != null) && !basic.exists && ((ObjectClass == null) || Std.is(basic, ObjectClass)))
 			{
+				if (Force && Type.getClassName(Type.getClass(basic)) != Type.getClassName(ObjectClass)) 
+				{
+					continue;
+				}
 				return _members[i - 1];
 			}
 		}
