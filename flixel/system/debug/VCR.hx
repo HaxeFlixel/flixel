@@ -1,16 +1,14 @@
 package flixel.system.debug;
 
-import flixel.util.FlxColor;
-import flash.text.TextFieldAutoSize;
-import flixel.system.ui.FlxSystemButton;
-import flash.display.BitmapData;
+#if !FLX_NO_DEBUG
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
-import flixel.system.FlxAssets;
 import flixel.FlxG;
+import flixel.system.FlxAssets;
+import flixel.system.ui.FlxSystemButton;
+import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
-import openfl.Assets;
 
 /**
  * This class contains the record, stop, play, and step 1 frame buttons seen on the top edge of the debugger overlay.
@@ -19,7 +17,7 @@ class VCR
 {
 	/**
 	* Texfield that displays the runtime display data for a game replay
-	**/
+	*/
 	public var runtimeDisplay:TextField;
 	
 	public var runtime:Int = 0;
@@ -33,18 +31,20 @@ class VCR
 	/**
 	 * Creates the "VCR" control panel for debugger pausing, stepping, and recording.
 	 */
-	public function new()
+	public function new(Debugger:FlxDebugger)
 	{
-		playbackToggleBtn = new FlxSystemButton(FlxAssets.getBitmapData(FlxAssets.IMG_PAUSE), FlxG.vcr.pause);
-		stepBtn = new FlxSystemButton(FlxAssets.getBitmapData(FlxAssets.IMG_STEP), onStep);
-		restartBtn = new FlxSystemButton(FlxAssets.getBitmapData(FlxAssets.IMG_RESTART), FlxG.resetState);
-
+		restartBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_RESTART, FlxG.resetState);
 		#if FLX_RECORD
-		recordBtn = new FlxSystemButton(FlxAssets.getBitmapData(FlxAssets.IMG_RECORD_OFF), FlxG.vcr.startRecording);
-		openBtn = new FlxSystemButton(FlxAssets.getBitmapData(FlxAssets.IMG_OPEN), FlxG.vcr.onOpen);
-
+		recordBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_RECORD_OFF, FlxG.vcr.startRecording);
+		openBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_OPEN, FlxG.vcr.onOpen);
+		#end
+		playbackToggleBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_PAUSE, FlxG.vcr.pause);
+		stepBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_STEP, onStep);
+		
+		#if FLX_RECORD
 		runtimeDisplay = new TextField();
 		runtimeDisplay.height = 10;
+		runtimeDisplay.y = -9;
 		runtimeDisplay.selectable = false;
 		runtimeDisplay.multiline = false;
 		runtimeDisplay.embedFonts = true;
@@ -52,6 +52,9 @@ class VCR
 		runtimeDisplay.defaultTextFormat = format;
 		runtimeDisplay.autoSize = TextFieldAutoSize.LEFT;
 		updateRuntime(0);
+		
+		var runtimeBtn = Debugger.addButton(MIDDLE);
+		runtimeBtn.addChild(runtimeDisplay);
 		#end
 	}
 
@@ -60,40 +63,40 @@ class VCR
 	 * Usually called by FlxGame when a requested recording has begun.
 	 * Just updates the VCR GUI so the buttons are in the right state.
 	 */
-	public function recording():Void
+	inline public function recording():Void
 	{
-		recordBtn.changeIcon(FlxAssets.getBitmapData(FlxAssets.IMG_RECORD_ON));
-		recordBtn.changeHandler(FlxG.vcr.stopRecording);
+		recordBtn.changeIcon(FlxAssets.IMG_RECORD_ON);
+		recordBtn.downHandler = FlxG.vcr.stopRecording;
 	}
 
 	/**
 	 * Usually called by FlxGame when a requested recording has stopped.
 	 * Just updates the VCR GUI so the buttons are in the right state.
 	 */
-	public function stoppedRecording():Void
+	inline public function stoppedRecording():Void
 	{
-		recordBtn.changeIcon(FlxAssets.getBitmapData(FlxAssets.IMG_RECORD_ON));
-		recordBtn.changeHandler(FlxG.vcr.startRecording);
+		recordBtn.changeIcon(FlxAssets.IMG_RECORD_ON);
+		recordBtn.downHandler = FlxG.vcr.startRecording;
 	}
 	
 	/**
 	 * Usually called by FlxGame when a replay has been stopped.
 	 * Just updates the VCR GUI so the buttons are in the right state.
 	 */
-	public function stoppedReplay():Void
+	inline public function stoppedReplay():Void
 	{
-		recordBtn.changeIcon(FlxAssets.getBitmapData(FlxAssets.IMG_RECORD_OFF));
-		recordBtn.changeHandler(FlxG.vcr.startRecording);
+		recordBtn.changeIcon(FlxAssets.IMG_RECORD_OFF);
+		recordBtn.downHandler = FlxG.vcr.startRecording;
 	}
 	
 	/**
 	 * Usually called by FlxGame when a requested replay has begun.
 	 * Just updates the VCR GUI so the buttons are in the right state.
 	 */
-	public function playingReplay():Void
+	inline public function playingReplay():Void
 	{
-		recordBtn.changeIcon(FlxAssets.getBitmapData(FlxAssets.IMG_STOP));
-		recordBtn.changeHandler(FlxG.vcr.stopReplay);
+		recordBtn.changeIcon(FlxAssets.IMG_STOP);
+		recordBtn.downHandler = FlxG.vcr.stopReplay;
 	}
 	
 	/**
@@ -115,20 +118,20 @@ class VCR
 	 * This is different from user-defined pause behavior, or focus lost behavior.
 	 * Does NOT pause music playback!!
 	 */
-	public function onPause():Void
+	inline public function onPause():Void
 	{
-		playbackToggleBtn.changeHandler(FlxG.vcr.resume);
-		playbackToggleBtn.changeIcon(FlxAssets.getBitmapData(FlxAssets.IMG_PLAY));
+		playbackToggleBtn.downHandler = FlxG.vcr.resume;
+		playbackToggleBtn.changeIcon(FlxAssets.IMG_PLAY);
 	}
 
 	/**
 	 * Called when the user presses the Play button.
 	 * This is different from user-defined unpause behavior, or focus gained behavior.
 	 */
-	public function onResume():Void
+	inline public function onResume():Void
 	{
-		playbackToggleBtn.changeHandler(FlxG.vcr.pause);
-		playbackToggleBtn.changeIcon(FlxAssets.getBitmapData(FlxAssets.IMG_PAUSE));
+		playbackToggleBtn.downHandler = FlxG.vcr.pause;
+		playbackToggleBtn.changeIcon(FlxAssets.IMG_PAUSE);
 	}
 
 	/**
@@ -144,3 +147,4 @@ class VCR
 		FlxG.vcr.stepRequested = true;
 	}
 }
+#end

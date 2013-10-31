@@ -9,9 +9,11 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
+import openfl.Assets;
 
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
@@ -26,6 +28,10 @@ class Window extends Sprite
 	 * The color used for the "handle" at the top of the window.
 	 */
 	inline static public var TOP_COLOR:Int = 0xAA000000;
+	/**
+	 * How many windows there are currently in total.
+	 */
+	private static var WINDOW_AMOUNT:Int = 0;
 
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
@@ -94,16 +100,21 @@ class Window extends Sprite
 	 * Helper for interaction.
 	 */
 	private var _resizable:Bool;
+	/**
+	 * The ID of this window.
+	 */
+	private var _id:Int;
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * @param	Title		The name of the window, displayed in the header bar.
+	 * @param	IconPath	Path to the icon to use for the window header.
 	 * @param	Width		The initial width of the window.
 	 * @param	Height		The initial height of the window.
 	 * @param	Resizable	Whether you can change the size of the window with a drag handle.
 	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
 	 */
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
 		super();
 		
@@ -125,6 +136,7 @@ class Window extends Sprite
 		_title = new TextField();
 		_title.x = 2;
 		_title.y = -1;
+		_title.alpha = 0.8;
 		_title.height = 20;
 		_title.selectable = false;
 		_title.multiline = false;
@@ -132,6 +144,16 @@ class Window extends Sprite
 		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
 		addChild(_title);
+		
+		if (IconPath != null)
+		{
+			var _icon = new Bitmap(Assets.getBitmapData(IconPath));
+			_icon.x = 5;
+			_icon.y = 2;
+			_icon.alpha = 0.8;
+			_title.x = _icon.x + _icon.width + 2;
+			addChild(_icon);
+		}
 		
 		if (_resizable)
 		{
@@ -146,6 +168,16 @@ class Window extends Sprite
 		bound();
 		
 		addEventListener(Event.ENTER_FRAME, init);
+		
+		_id = WINDOW_AMOUNT++;
+		if (FlxG.save.data.windowSettings != null)
+		{
+			visible = FlxG.save.data.windowSettings[_id];
+		}
+		else
+		{
+			FlxG.save.data.windowSettings = new Array<Bool>();
+		}
 	}
 	
 	/**
@@ -265,8 +297,6 @@ class Window extends Sprite
 		{	//not dragging, mouse is NOT over window
 			_overHandle = _overHeader = false;
 		}
-		
-		updateGUI();
 	}
 	
 	/**
@@ -335,27 +365,6 @@ class Window extends Sprite
 		}
 	}
 	
-	/**
-	 * Figure out if the header or handle are highlighted.
-	 */
-	private function updateGUI():Void
-	{
-		if(_overHeader || _overHandle)
-		{
-			if (_title.alpha != 1.0)
-			{
-				_title.alpha = 1.0;
-			}
-		}
-		else
-		{
-			if (_title.alpha != 0.65)
-			{
-				_title.alpha = 0.65;
-			}
-		}
-	}
-	
 	public function updateBounds(Bounds:Rectangle):Void
 	{
 		_bounds = Bounds;
@@ -368,5 +377,11 @@ class Window extends Sprite
 		{
 			maxSize = new Point(FlxMath.MAX_VALUE, FlxMath.MAX_VALUE);
 		}
+	}
+	
+	public function toggleVisibility():Void
+	{
+		visible = !visible;
+		FlxG.save.data.windowSettings[_id] = visible;
 	}
 }
