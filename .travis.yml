@@ -13,6 +13,8 @@ before_script:
   - haxelib install openfl-html5
   - haxelib install openfl-tools
   - haxelib run openfl setup linux
+  - haxelib install hxtools
+  - haxelib install hxlibc
   - haxelib install systools
   - haxelib install spinehx
   - haxelib install actuate
