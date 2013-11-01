@@ -19,6 +19,7 @@ class MultiVarTween extends FlxTween
 		_vars = new Array<String>();
 		_start = new Array<Float>();
 		_range = new Array<Float>();
+		_isInt = new Array<Bool>();
 		
 		super(0, type, complete);
 	}
@@ -27,6 +28,11 @@ class MultiVarTween extends FlxTween
 	{
 		super.destroy();
 		_object = null;
+		
+		_vars = null;
+		_start = null;
+		_range = null;
+		_isInt = null;
 	}
 	
 	/**
@@ -42,6 +48,7 @@ class MultiVarTween extends FlxTween
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);
 		FlxArrayUtil.setLength(_range, 0);
+		FlxArrayUtil.setLength(_isInt, 0);
 		_target = duration;
 		_ease = ease;
 		var p:String;
@@ -63,8 +70,8 @@ class MultiVarTween extends FlxTween
 				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
 			}
 			
-			var a:Float = Reflect.getProperty(object, p);
-		
+			var a:Dynamic = Reflect.getProperty(object, p);
+			
 			if (Math.isNaN(a)) 
 			{
 				throw "The property \"" + p + "\" is not numeric.";
@@ -72,6 +79,7 @@ class MultiVarTween extends FlxTween
 			_vars.push(p);
 			_start.push(a);
 			_range.push(Reflect.getProperty(properties, p) - a);
+			_isInt.push(Std.is(a, Int));
 		}
 		start();
 		return this;
@@ -88,14 +96,22 @@ class MultiVarTween extends FlxTween
 		{
 			if (_object != null)
 			{
-				Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
+				if (!_isInt[i])
+				{
+					Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
+				}
+				else 
+				{
+					Reflect.setProperty(_object, _vars[i], Std.int(_start[i] + _range[i] * _t));
+				}
 			}
 		}
 	}
-
+	
 	// Tween information.
 	private var _object:Dynamic;
 	private var _vars:Array<String>;
 	private var _start:Array<Float>;
 	private var _range:Array<Float>;
+	private var _isInt:Array<Bool>;
 }
