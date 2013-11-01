@@ -108,10 +108,6 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	private var _object:Dynamic;
 	/**
-	 * The offset of the slider from x and y.
-	 */
-	private var _offset:FlxPoint;
-	/**
 	 * Helper var for callbacks.
 	 */
 	private var _lastPos:Float;
