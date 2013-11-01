@@ -291,7 +291,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param	Splice	Whether the object should be cut from the array entirely or not.
 	 * @return	The removed object.
 	 */
-	inline public function remove(Object:FlxSprite, Splice:Bool = false):FlxSprite
+	public function remove(Object:FlxSprite, Splice:Bool = false):FlxSprite
 	{
 		return group.remove(Object, Splice);
 	}
