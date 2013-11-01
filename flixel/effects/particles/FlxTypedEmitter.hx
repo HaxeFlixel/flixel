@@ -18,7 +18,7 @@ import flixel.util.FlxRandom;
  * It is easy to use and relatively efficient,
  * relying on <code>FlxGroup</code>'s RECYCLE POWERS.
  */
-class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxParticle>
+class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSprite>
 {
 	/**
 	 * The x position range of the emitter in world space.

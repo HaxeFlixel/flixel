@@ -5,39 +5,10 @@ import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
 
 /**
- *  This class is for <code>FlxSpriteGroup</code> to work with interface instead of <code>FlxBasic</code>, which is needed
- *  so that <code>FlxSpriteGroup</code> could extend <code>FlxTypedGroup</code> and be typed with <code>IFlxSprite</code>
- **/
-interface IFlxBasic
-{
-	public var ID:Int;
-	public var cameras:Array<FlxCamera>;
-	public var active(default, set):Bool;
-	public var visible(default, set):Bool;
-	public var alive(default, set):Bool;
-	public var exists(default, set):Bool;
-
-	public function draw():Void;
-	public function update():Void;
-	public function destroy():Void;
-	
-	public function kill():Void;
-	public function revive():Void;
-
-	#if !FLX_NO_DEBUG
-	public var ignoreDrawDebug:Bool;
-	public function drawDebug():Void;
-	public function drawDebugOnCamera(?Camera:FlxCamera):Void;
-	#end
-	
-	public function toString():String;
-}
-
-/**
  * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 
  * <code>FlxGroup</code> extend this class. Has no size, position or graphical data.
  */
-class FlxBasic implements IFlxBasic implements IDestroyable
+class FlxBasic implements IDestroyable
 {
 	/**
 	 * IDs seem like they could be pretty useful, huh?

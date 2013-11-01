@@ -10,7 +10,7 @@ import flixel.util.FlxArrayUtil;
  * NOTE: Although <code>FlxGroup</code> extends <code>FlxBasic</code>, it will not automatically
  * add itself to the global collisions quad tree, it will only add its members.
  */
-class FlxTypedGroup<T:IFlxBasic> extends FlxBasic
+class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 {
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.

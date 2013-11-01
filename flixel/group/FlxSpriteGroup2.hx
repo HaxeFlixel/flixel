@@ -17,7 +17,7 @@ import flixel.system.FlxCollisionType;
  * that can be treated like a <code>FlxSprite</code> due to having
  * x, y and alpha values. It can only contain <code>FlxSprites</code>.
  */
-class FlxSpriteGroup2 extends FlxSprite implements IFlxSprite
+class FlxSpriteGroup2 extends FlxSprite
 {
 	/**
 	 * The actual group which holds all sprites

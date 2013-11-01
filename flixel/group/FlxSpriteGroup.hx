@@ -9,7 +9,7 @@ import flixel.util.FlxPoint;
  * that can be treated like a <code>FlxSprite</code> due to having
  * x, y and alpha values. It can only contain <code>FlxSprites</code>.
  */
-class FlxSpriteGroup extends FlxGroup implements IFlxSprite
+class FlxSpriteGroup extends FlxGroup
 {
 	/**
 	 * The x position of this group.

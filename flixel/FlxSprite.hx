@@ -24,37 +24,10 @@ import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
 /**
- * The interface for properties of <code>FlxSprite</code>
- * It makes possible to add <code>FlxSpriteGroup</code> to <code>FlxSpriteGroup</code>
- */
-interface IFlxSprite extends IFlxBasic 
-{
-	public var x(default, set):Float;
-	public var y(default, set):Float;
-	public var alpha(default, set):Float;
-	public var angle(default, set):Float;
-	public var facing(default, set):Int;
-	public var moves(default, set):Bool;
-	public var immovable(default, set):Bool;
-	
-	public var offset(default, set):FlxPoint;
-	public var origin(default, set):FlxPoint;
-	public var scale(default, set):FlxPoint;
-	public var velocity(default, set):FlxPoint;
-	public var maxVelocity(default, set):FlxPoint;
-	public var acceleration(default, set):FlxPoint;
-	public var drag(default, set):FlxPoint;
-	public var scrollFactor(default, set):FlxPoint;
-
-	public function reset(X:Float, Y:Float):Void;
-	public function setPosition(X:Float = 0, Y:Float = 0):Void;
-}
-
-/**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
  * with a bunch of graphics options and abilities, like animation and stamping.
  */
-class FlxSprite extends FlxObject implements IFlxSprite
+class FlxSprite extends FlxObject
 {
 	/**
 	 * Class that handles adding and playing animations on this sprite.
