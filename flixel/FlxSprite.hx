@@ -734,15 +734,15 @@ class FlxSprite extends FlxObject
 			_point.x = x - (camera.scroll.x * _scrollFactor.x) - (_offset.x);
 			_point.y = y - (camera.scroll.y * _scrollFactor.y) - (_offset.y);
 			
-			_point.x = Math.floor(_point.x);
-			_point.y = Math.floor(_point.y);
+			_point.x = _point.x;
+			_point.y = _point.y;
 
 		#end
 #if flash
 			if (isSimpleRender)
 			{
-				_flashPoint.x = _point.x;
-				_flashPoint.y = _point.y;
+				_flashPoint.x = Math.floor(_point.x);
+				_flashPoint.y = Math.floor(_point.y);
 				
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 			}
