@@ -88,7 +88,11 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		if (offset != null)			{ offset.destroy(); offset = null; }
+		if (offset != null)			
+		{ 
+			offset.destroy(); 
+			offset = null; 
+		}
 		if (origin != null)			{ origin.destroy(); origin = null; }
 		if (scale != null)			{ scale.destroy(); scale = null; }
 		if (velocity != null)		{ velocity.destroy(); velocity = null; }
@@ -671,56 +675,56 @@ class FlxSpriteGroup extends FlxSprite
 	
 	override private function set_origin(Value:FlxPoint):FlxPoint
 	{
-		if (exists && origin != Value)
+		if (exists && origin != Value && Value != null)
 			transformChildren(originTransform, Value);
 		return origin = Value;
 	}
 	
 	override private function set_offset(Value:FlxPoint):FlxPoint
 	{
-		if (exists && offset != Value)
+		if (exists && offset != Value && Value != null)
 			transformChildren(offsetTransform, Value);
 		return offset = Value;
 	}
 	
 	override private function set_scale(Value:FlxPoint):FlxPoint
 	{
-		if (exists && scale != Value)
+		if (exists && scale != Value && Value != null)
 			transformChildren(scaleTransform, Value);
 		return scale = Value;
 	}
 	
 	override private function set_scrollFactor(Value:FlxPoint):FlxPoint
 	{
-		if (exists && scrollFactor != Value)
+		if (exists && scrollFactor != Value && Value != null)
 			transformChildren(scrollFactorTransform, Value);
 		return scrollFactor = Value;
 	}
 	
 	override private function set_velocity(Value:FlxPoint):FlxPoint 
 	{
-		if (exists && velocity != Value)
+		if (exists && velocity != Value && Value != null)
 			transformChildren(velocityTransform, Value);
 		return velocity = Value;
 	}
 	
 	override private function set_acceleration(Value:FlxPoint):FlxPoint 
 	{
-		if (exists && acceleration != Value)
+		if (exists && acceleration != Value && Value != null)
 			transformChildren(accelerationTransform, Value);
 		return acceleration = Value;
 	}
 	
 	override private function set_drag(Value:FlxPoint):FlxPoint 
 	{
-		if (exists && drag != Value)
+		if (exists && drag != Value && Value != null)
 			transformChildren(dragTransform, Value);
 		return drag = Value;
 	}
 	
 	override private function set_maxVelocity(Value:FlxPoint):FlxPoint 
 	{
-		if (exists && maxVelocity != Value)
+		if (exists && maxVelocity != Value && Value != null)
 			transformChildren(maxVelocityTransform, Value);
 		return maxVelocity = Value;
 	}
