@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.addons.nape.FlxNapeState;
 import states.Balls;
+import states.Cutup;
 import states.Explosions;
 import states.Piramid;
 import states.Pixelizer;
@@ -45,14 +46,14 @@ class FlxPhysicsDemo extends FlxGame
 	public static function nextState()
 	{
 		currentState++;
-		currentState %= 4;
+		currentState %= 5;
 		changeState();
 	}
 	
 	public static function prevState()
 	{
 		currentState--;
-		currentState < 0 ? currentState = 3 : null;
+		currentState < 0 ? currentState = 4 : null;
 		changeState();
 	}
 	
@@ -65,6 +66,7 @@ class FlxPhysicsDemo extends FlxGame
 			case 1: FlxG.switchState(new Balloons());
 			case 2: FlxG.switchState(new Blob());
 			case 3: FlxG.switchState(new Fight());
+			case 4: FlxG.switchState(new Cutup());
 			//case 1: FlxG.switchState(new Balls());
 			//case 2: FlxG.switchState(new SolarSystem());
 			//case 3: FlxG.switchState(new Explosions());
