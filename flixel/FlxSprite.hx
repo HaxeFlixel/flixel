@@ -1232,7 +1232,7 @@ class FlxSprite extends FlxObject
 		{
 			if (facing == FlxObject.LEFT && flipped > 0)
 			{
-				frameBmd = frame.getReversedBitmap();
+				frameBmd = frame.getHReversedBitmap();
 			}
 			else
 			{
