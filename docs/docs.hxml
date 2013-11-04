@@ -1,0 +1,10 @@
+-swf all.swf
+-swf-version 11
+-lib openfl
+#-lib flixel-addons
+--no-output
+-D doc
+-D desktop
+-xml all.xml
+-cp ..
+--macro include('flixel')
