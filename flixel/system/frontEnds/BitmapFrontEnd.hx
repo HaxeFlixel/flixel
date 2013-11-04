@@ -129,125 +129,7 @@ class BitmapFrontEnd
 	 */
 	public function add(Graphic:Dynamic, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
-		if (Graphic == null)
-		{
-			return null;
-		}
-		else if (Std.is(Graphic, CachedGraphics))
-		{
-			return cast Graphic;
-		}
-		
-		var region:TextureRegion = null;
-		
-		var isClass:Bool = true;
-		var isBitmap:Bool = true;
-		var isRegion:Bool = true;
-		if (Std.is(Graphic, Class))
-		{
-			isClass = true;
-			isBitmap = false;
-			isRegion = false;
-		}
-		else if (Std.is(Graphic, BitmapData))
-		{
-			isClass = false;
-			isBitmap = true;
-			isRegion = false;
-		}
-		else if (Std.is(Graphic, TextureRegion))
-		{
-			isClass = false;
-			isBitmap = false;
-			isRegion = true;
-			
-			region = cast(Graphic, TextureRegion);
-		}
-		else if (Std.is(Graphic, String))
-		{
-			isClass = false;
-			isBitmap = false;
-			isRegion = false;
-		}
-		else
-		{
-			return null;
-		}
-		
-		var key:String = Key;
-		if (key == null)
-		{
-			if (isClass)
-			{
-				key = Type.getClassName(cast(Graphic, Class<Dynamic>));
-			}
-			else if (isBitmap)
-			{
-				if (!Unique)
-				{
-					key = getCacheKeyFor(cast Graphic);
-					if (key == null)
-					{
-						key = getUniqueKey();
-					}
-				}
-			}
-			else if (isRegion)
-			{
-				key = region.data.key;
-			}
-			else
-			{
-				key = Graphic;
-			}
-			
-			if (Unique)
-			{
-				key = getUniqueKey((key == null) ? "pixels" : key);
-			}
-		}
-		
-		// If there is no data for this key, generate the requested graphic
-		if (!checkCache(key))
-		{
-			var bd:BitmapData = null;
-			if (isClass)
-			{
-				bd = Type.createInstance(cast(Graphic, Class<Dynamic>), [0, 0]);
-			}
-			else if (isBitmap)
-			{
-				bd = cast Graphic;
-			}
-			else if (isRegion)
-			{
-				bd = region.data.bitmap;
-			}
-			else
-			{
-				bd = FlxAssets.getBitmapData(Graphic);
-			}
-			
-			if (Unique)
-			{
-				bd = bd.clone();
-			}
-			
-			var co:CachedGraphics = new CachedGraphics(key, bd);
-			
-			if (isClass && !Unique)
-			{
-				co.assetsClass = cast Graphic;
-			}
-			else if (!isClass && !isBitmap && !isRegion && !Unique)
-			{
-				co.assetsKey = cast Graphic;
-			}
-			
-			_cache.set(key, co);
-		}
-		
-		return _cache.get(key);
+		return addWithSpaces(Graphic, 0, 0, 1, 1, Unique, Key);
 	}
 	
 	/**
@@ -270,11 +152,6 @@ class BitmapFrontEnd
 			return null;
 		}
 		
-		if (FrameWidth <= 0 && FrameHeight <= 0)
-		{
-			return add(Graphic, Unique, Key);
-		}
-		
 		var region:TextureRegion = null;
 		var graphic:CachedGraphics = null;
 		
@@ -282,7 +159,22 @@ class BitmapFrontEnd
 		var isBitmap:Bool = true;
 		var isRegion:Bool = true;
 		var isGraphics:Bool = true;
-		if (Std.is(Graphic, Class))
+		
+		if (Std.is(Graphic, CachedGraphics))
+		{
+			isClass = false;
+			isBitmap = false;
+			isRegion = false;
+			isGraphics = true;
+			
+			graphic = cast (Graphic, CachedGraphics);
+			
+			if (!Unique && (FrameWidth <= 0 && FrameHeight <= 0))
+			{
+				return graphic;
+			}
+		}
+		else if (Std.is(Graphic, Class))
 		{
 			isClass = true;
 			isBitmap = false;
@@ -305,15 +197,6 @@ class BitmapFrontEnd
 			
 			region = cast(Graphic, TextureRegion);
 		}
-		else if (Std.is(Graphic, CachedGraphics))
-		{
-			isClass = false;
-			isBitmap = false;
-			isRegion = false;
-			isGraphics = true;
-			
-			graphic = cast (Graphic, CachedGraphics);
-		}
 		else if (Std.is(Graphic, String))
 		{
 			isClass = false;
@@ -326,8 +209,14 @@ class BitmapFrontEnd
 			return null;
 		}
 		
+		var additionalKey:String = "";
+		
+		if (FrameWidth > 0 || FrameHeight > 0)
+		{
+			additionalKey = "FrameSize:" + FrameWidth + "_" + FrameHeight + "_Spacing:" + SpacingX + "_" + SpacingY;
+		}
+		
 		var key:String = Key;
-		var additionalKey:String = "FrameSize:" + FrameWidth + "_" + FrameHeight + "_Spacing:" + SpacingX + "_" + SpacingY;
 		if (key == null)
 		{
 			if (isClass)
@@ -391,31 +280,34 @@ class BitmapFrontEnd
 				bd = FlxAssets.getBitmapData(Graphic);
 			}
 			
-			var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
-			var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
-			
-			FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
-			FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
-			
-			var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColor.TRANSPARENT);
-			
-			var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
-			var tempPoint:Point = new Point();
-			
-			for (i in 0...numHorizontalFrames)
+			if (FrameWidth > 0 || FrameHeight > 0)
 			{
-				tempPoint.x = i * (FrameWidth + SpacingX);
-				tempRect.x = i * FrameWidth;
+				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
+				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
 				
-				for (j in 0...(numVerticalFrames))
+				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
+				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
+				
+				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColor.TRANSPARENT);
+				
+				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
+				var tempPoint:Point = new Point();
+				
+				for (i in 0...numHorizontalFrames)
 				{
-					tempPoint.y = j * (FrameHeight + SpacingY);
-					tempRect.y = j * FrameHeight;
-					tempBitmap.copyPixels(bd, tempRect, tempPoint);
+					tempPoint.x = i * (FrameWidth + SpacingX);
+					tempRect.x = i * FrameWidth;
+					
+					for (j in 0...(numVerticalFrames))
+					{
+						tempPoint.y = j * (FrameHeight + SpacingY);
+						tempRect.y = j * FrameHeight;
+						tempBitmap.copyPixels(bd, tempRect, tempPoint);
+					}
 				}
+				
+				bd = tempBitmap;
 			}
-			
-			bd = tempBitmap;
 			
 			if (Unique)
 			{
