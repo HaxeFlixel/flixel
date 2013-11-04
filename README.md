@@ -20,7 +20,7 @@ This is the third big update to HaxeFlixel. Here are the biggest changes:
 
 ###Upgrading from previous versions
 
-// TODO
+Eventually the upgrade documentation will be hosted on [haxeflixel.com](http://haxeflixel.com/), but for now you can [read the upgrade docs on github](https://github.com/HaxeFlixel/haxeflixel.com/blob/cfaf4c1b74dbb34b39333ad67a8e0ce9b7fdc203/src/documents/documentation/01_community/11-upgrade-guide.html.md).
 
 ###For Developers
 
