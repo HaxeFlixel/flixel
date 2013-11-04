@@ -7,7 +7,6 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.system.FlxAnim;
 import flixel.system.layer.Region;
 import flixel.text.FlxText;
 import flixel.util.loaders.CachedGraphics;

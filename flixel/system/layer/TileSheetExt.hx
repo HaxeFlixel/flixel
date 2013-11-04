@@ -90,8 +90,6 @@ class TileSheetExt extends Tilesheet
 		#if !(flash || js)
 		__bitmap = null;
 		__handle = null;
-		#else
-		nmeBitmap = null;
 		#end
 		
 		tileOrder = null;

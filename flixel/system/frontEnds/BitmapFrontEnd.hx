@@ -9,11 +9,11 @@ import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
 import openfl.Assets;
 
+/**
+ * Internal storage system to prevent graphics from being used repeatedly in memory.
+ */
 class BitmapFrontEnd
 {
-	/**
-	 * Internal storage system to prevent graphics from being used repeatedly in memory.
-	 */
 	private var _cache:Map<String, CachedGraphics>;
 	
 	public function new()
@@ -335,6 +335,7 @@ class BitmapFrontEnd
 	
 	public function inOpenFlAssets(bitmap:BitmapData):Bool
 	{
+		#if !doc
 		// Openfl 1.0 backwards compatibility
 		#if (openfl < 1.1)
 		var bitmapDataCache = Assets.cachedBitmapData;
@@ -352,7 +353,7 @@ class BitmapFrontEnd
 				}
 			}
 		}
-		
+		#end
 		return false;
 	}
 }

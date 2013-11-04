@@ -10,6 +10,8 @@
 
 package flixel.plugin;
 
+#if !flash
+
 #if neko
 import neko.vm.Mutex;
 #elseif cpp
@@ -162,3 +164,4 @@ class CopyOnWriteArray<T> implements ArrayAccess<T> {
 	}
 	
 }
+#end
