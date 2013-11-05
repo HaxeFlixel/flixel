@@ -3,6 +3,8 @@
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
+import Type;
+
 /**
  * Tweens a numeric public property of an Object.
  */
@@ -61,7 +63,7 @@ class VarTween extends FlxTween
 		_start = a;
 		_range = to - _start;
 		_target = duration;
-		_isInt = Std.is(a, Int);
+		_isInt = Type.typeof(a) == ValueType.TInt;
 		start();
 		return this;
 	}

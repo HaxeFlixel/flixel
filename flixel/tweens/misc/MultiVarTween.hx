@@ -4,6 +4,8 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxArrayUtil;
 
+import Type;
+
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
  */
@@ -79,7 +81,7 @@ class MultiVarTween extends FlxTween
 			_vars.push(p);
 			_start.push(a);
 			_range.push(Reflect.getProperty(properties, p) - a);
-			_isInt.push(Std.is(a, Int));
+			_isInt.push(Type.typeof(a) == ValueType.TInt);
 		}
 		start();
 		return this;
