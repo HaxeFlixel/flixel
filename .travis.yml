@@ -21,12 +21,12 @@ before_script:
   - haxelib install hxcpp
   - haxelib install nape
   - haxelib install task
+  - haxelib dev flixel-demos .
   - haxelib git firetongue https://github.com/larsiusprime/firetongue
   - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
   - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools
   - haxelib git flixel-ui https://github.com/HaxeFlixel/flixel-ui dev
-  - haxelib git flixel https://github.com/HaxeFlixel/flixel
-  - haxelib dev flixel-demos .
+  - haxelib git flixel https://github.com/HaxeFlixel/flixel dev
 
 script:
   - haxelib run flixel-tools testdemos
