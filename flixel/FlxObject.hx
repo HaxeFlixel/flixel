@@ -568,7 +568,7 @@ class FlxObject extends FlxBasic
 	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
 	 * @return	Whether the object is within the Worldbounds or not.
 	 */
-	public function inWorldbounds():Bool
+	inline public function inWorldBounds():Bool
 	{
 		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
 	}
