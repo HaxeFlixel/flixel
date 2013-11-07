@@ -565,6 +565,15 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
+	 * @return	Whether the object is within the Worldbounds or not.
+	 */
+	public function inWorldbounds():Bool
+	{
+		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
+	}
+	
+	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
