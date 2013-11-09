@@ -5,6 +5,8 @@ import flixel.util.FlxPoint;
 class FlxGamepad 
 {
 	public var buttons:Map<Int, FlxGamepadButton>;
+	
+	@:allow(flixel.system.input.gamepad)
 	public var axis(default, null):Array<Float>;
 	/**
 	 * DPAD on Xbox Gamepad
