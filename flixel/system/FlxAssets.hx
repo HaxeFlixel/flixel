@@ -63,13 +63,13 @@ class FlxAssets
 	inline static public var IMG_BUTTON_LEFT:String = "flixel/img/ui/virtualpad/left.png";
 	inline static public var IMG_BUTTON_RIGHT:String = "flixel/img/ui/virtualpad/right.png";
 	
-	// fonts
-	inline static public var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
-	inline static public var FONT_DEBUGGER:String = "Arial";
-	
 	// sounds
 	inline static public var SND_BEEP:String = "flixel/snd/beep.wav";
 	inline static public var SND_FLIXEL:String = "flixel/snd/flixel.wav";
+	
+	// fonts
+	static public var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
+	static public var FONT_DEBUGGER:String = "Arial";
 	
 	static public function init():Void
 	{
