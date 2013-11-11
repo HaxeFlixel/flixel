@@ -370,12 +370,15 @@ class FlxMath
 	 * @param	Distance	The distance to check
 	 * @return	True if the distance between the sprites is less than the Distance provided 
 	 */
-	
-	inline static public function distanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float):Bool
+	inline static public function distanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
 		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
 		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
-		return dx * dx + dy * dy < Distance * Distance;
+		
+		if(IncludeEqual)
+			return dx * dx + dy * dy <= Distance * Distance;
+		else
+			return dx * dx + dy * dy < Distance * Distance;
 	}
 	
 	/**
