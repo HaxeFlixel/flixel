@@ -363,6 +363,22 @@ class FlxMath
 	}
 	
 	/**
+	 * Check if the distance between two FlxSprites is within a specified number. 
+	 * A faster algoritm than distanceBetween because the Math.sqrt() is avoided.
+	 * @param	SpriteA		The first FlxSprite
+	 * @param	SpriteB		The second FlxSprite
+	 * @param	Distance	The distance to check
+	 * @return	True if the distance between the sprites is less than the Distance provided 
+	 */
+	
+	inline static public function distanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float):Bool
+	{
+		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
+		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
+		return dx * dx + dy * dy < Distance * Distance;
+	}
+	
+	/**
 	 * Find the distance (in pixels, rounded) from an <code>FlxSprite</code>
 	 * to the given <code>FlxPoint</code>, taking the source origin into account.
 	 * 
