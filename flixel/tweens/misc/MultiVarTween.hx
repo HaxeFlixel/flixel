@@ -21,7 +21,6 @@ class MultiVarTween extends FlxTween
 		_vars = new Array<String>();
 		_start = new Array<Float>();
 		_range = new Array<Float>();
-		_isInt = new Array<Bool>();
 		
 		super(0, type, complete);
 	}
@@ -30,11 +29,9 @@ class MultiVarTween extends FlxTween
 	{
 		super.destroy();
 		_object = null;
-		
 		_vars = null;
 		_start = null;
 		_range = null;
-		_isInt = null;
 	}
 	
 	/**
@@ -50,7 +47,6 @@ class MultiVarTween extends FlxTween
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);
 		FlxArrayUtil.setLength(_range, 0);
-		FlxArrayUtil.setLength(_isInt, 0);
 		_target = duration;
 		_ease = ease;
 		var p:String;
@@ -81,7 +77,6 @@ class MultiVarTween extends FlxTween
 			_vars.push(p);
 			_start.push(a);
 			_range.push(Reflect.getProperty(properties, p) - a);
-			_isInt.push(Type.typeof(a) == ValueType.TInt);
 		}
 		start();
 		return this;
@@ -98,14 +93,7 @@ class MultiVarTween extends FlxTween
 		{
 			if (_object != null)
 			{
-				if (!_isInt[i])
-				{
-					Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
-				}
-				else 
-				{
-					Reflect.setProperty(_object, _vars[i], Std.int(_start[i] + _range[i] * _t));
-				}
+				Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
 			}
 		}
 	}
@@ -115,5 +103,4 @@ class MultiVarTween extends FlxTween
 	private var _vars:Array<String>;
 	private var _start:Array<Float>;
 	private var _range:Array<Float>;
-	private var _isInt:Array<Bool>;
 }
