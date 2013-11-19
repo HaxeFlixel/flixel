@@ -5,7 +5,7 @@ package flixel.system;
  */
 enum FlxCollisionType
 {
-	NULL;
+	NONE;
 	OBJECT;
 	GROUP;
 	TILEMAP;

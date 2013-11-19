@@ -38,7 +38,10 @@ class FlxBasic implements IDestroyable
 	 */
 	public var exists(default, set):Bool = true;
 	
-	public var collisionType:FlxCollisionType;
+	/**
+	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
+	 */
+	public var collisionType(default, null):FlxCollisionType;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -55,7 +58,7 @@ class FlxBasic implements IDestroyable
 	
 	public function new() 
 	{ 
-		collisionType = FlxCollisionType.NULL;
+		collisionType = FlxCollisionType.NONE;
 	}
 	
 	/**

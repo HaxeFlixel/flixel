@@ -1,5 +1,11 @@
 flixel CHANGELOG
 
+v.3.0.1
+------------------------------
+* Fixes to gamepad API.
+* Added tilemap scaling.
+* Compiler fix for Blackberry target.
+
 v.3.0.0
 ------------------------------
 * New Front End classes to better encapsulate FlxG functionality.
