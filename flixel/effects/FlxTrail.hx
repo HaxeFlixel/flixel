@@ -287,7 +287,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 		for (i in 0...Amount)
 		{
 			var trailSprite:FlxSprite = new FlxSprite(0, 0);
-			trailSprite.exists = false;
+			
 			
 			if (_image == null) 
 			{
@@ -297,7 +297,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 			{
 				trailSprite.loadGraphic(_image);
 			}
-			
+			trailSprite.exists = false;
 			add(trailSprite);
 			trailSprite.alpha = _transp;
 			_transp -= _difference;
