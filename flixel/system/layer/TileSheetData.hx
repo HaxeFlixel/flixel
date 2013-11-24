@@ -127,31 +127,12 @@ class TileSheetData
 	*/
 	public inline function getSpriteSheetFrameKey(rect:Rectangle, point:Point):String
 	{
-		var hash:Float = 23;
-		hash = hash * 31 + rect.x;
-		hash = hash * 31 + rect.y;
-		hash = hash * 31 + rect.width;
-		hash = hash * 31 + rect.height;
-		hash = hash * 31 + point.x;
-		hash = hash * 31 + point.y;
-		return Std.string(hash);
+		return rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_" + point.x + "_" + point.y;
 	}
 	
 	public inline function getKeyForSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
 	{
-		
-		var hash:Float = 23;
-		hash = hash * 31 + width;
-		hash = hash * 31 + height;
-		hash = hash * 31 + startX;
-		hash = hash * 31 + startY;
-		hash = hash * 31 + endX;
-		hash = hash * 31 + endY;
-		hash = hash * 31 + xSpacing;
-		hash = hash * 31 + ySpacing;
-		hash = hash * 31 + pointX;
-		hash = hash * 31 + pointY;
-		return Std.string(hash);
+		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
 	}
 	
 	public function containsSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
