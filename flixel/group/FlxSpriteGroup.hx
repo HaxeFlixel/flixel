@@ -297,6 +297,9 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	public function remove(Object:FlxSprite, Splice:Bool = false):FlxSprite
 	{
+		Sprite.x -= x;
+		Sprite.y -= y;
+		Sprite.alpha /= alpha;
 		return group.remove(Object, Splice);
 	}
 	
