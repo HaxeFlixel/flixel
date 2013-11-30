@@ -115,15 +115,18 @@ class FlxSpriteUtil
 	 * 
 	 * @param	BottomSprite	The <code>FlxSprite</code> that you want to draw onto.
 	 * @param	TopSprite		The <code>FlxSprite</code> that will be copied onto the BottomSprite.
+	 * @param	output			The FlxSprite you wish the resulting image to be placed in (will adjust width/height of image)
 	 * @return	The output FlxSprite for those that like chainging.
 	 */
-	static public function mergeFlxSprite(BottomSprite:FlxSprite, TopSprite:FlxSprite):FlxSprite
+	static public function mergeFlxSprite(BottomSprite:FlxSprite, TopSprite:FlxSprite, Output:FlxSprite):FlxSprite
 	{
 		var data:BitmapData = BottomSprite.pixels;
 		
 		data.copyPixels(TopSprite.pixels, new Rectangle(0, 0, BottomSprite.width, BottomSprite.height), new Point());
 		
-		return data;
+		Output.pixels = data;
+		
+		return Output;
 	}
 	
 	/**
