@@ -110,6 +110,23 @@ class FlxSpriteUtil
 	}
 	
 	/**
+	 * Takes the image data from two FlxSprites and draws one on top of the other.<br>
+	 * Note: It assumes the source and mask are the same size. Different sizes may result in undesired results.<br>
+	 * 
+	 * @param	BottomSprite	The <code>FlxSprite</code> that you want to draw onto.
+	 * @param	TopSprite		The <code>FlxSprite</code> that will be copied onto the BottomSprite.
+	 * @return	The output FlxSprite for those that like chainging.
+	 */
+	static public function mergeFlxSprite(BottomSprite:FlxSprite, TopSprite:FlxSprite):FlxSprite
+	{
+		var data:BitmapData = BottomSprite.pixels;
+		
+		data.copyPixels(TopSprite.pixels, new Rectangle(0, 0, BottomSprite.width, BottomSprite.height), new Point());
+		
+		return data;
+	}
+	
+	/**
 	 * Checks the x/y coordinates of the source FlxSprite and keeps them within the area of 0, 0, FlxG.width, FlxG.height (i.e. wraps it around the screen)
 	 * 
 	 * @param	Sprite		The <code>FlxSprite</code> to keep within the screen
