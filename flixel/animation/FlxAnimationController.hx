@@ -277,6 +277,8 @@ class FlxAnimationController
 				if (indexToAdd != -1) 
 				{
 					frameIndices.push(indexToAdd);
+				} else {
+					throw 'Unable to find sprite "$Name" with index ${Indicies[i]}';
 				}
 			}
 			
