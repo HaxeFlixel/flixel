@@ -823,7 +823,7 @@ class FlxSpriteGroup extends FlxSprite
 	private function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
 	private function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
 	private function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
-	private function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
+	private function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha = 1 * Alpha; }					// multiplication
 	private function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
 	private function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
 	private function complexRenderTransform(Sprite:FlxSprite, Complex:Bool)				{ Sprite.forceComplexRender = Complex; }		// set
