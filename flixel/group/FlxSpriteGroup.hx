@@ -677,7 +677,7 @@ class FlxSpriteGroup extends FlxSprite
 	{
 		if (exists && solid != Value)
 			transformChildren(solidTransform, Value);
-		return solid = Value;
+		return super.set_solid(Value);
 	}
 	
 	override private function set_origin(Value:FlxPoint):FlxPoint
@@ -739,7 +739,7 @@ class FlxSpriteGroup extends FlxSprite
 	override private function set_color(Value:Int):Int 
 	{
 		if (exists && color != Value)
-			transformChildren(colorTransform, Value);
+			transformChildren(gColorTransform, Value);
 		return color = Value;
 	}
 	
@@ -809,7 +809,7 @@ class FlxSpriteGroup extends FlxSprite
 	private function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
 	private function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
 	private function complexRenderTransform(Sprite:FlxSprite, Complex:Bool)				{ Sprite.forceComplexRender = Complex; }		// set
-	private function colorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
+	private function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
 	private function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
 	private function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
 	private function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
