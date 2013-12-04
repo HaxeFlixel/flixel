@@ -59,45 +59,15 @@ class FlxTilemapBuffer
 	 * @param HeightInTiles	How many tiles tall the tilemap is.
 	 * @param Camera		Which camera this buffer relates to.
 	 */
-	public function new(TileWidth:Float, TileHeight:Float, WidthInTiles:Int, HeightInTiles:Int, ?Camera:FlxCamera)
+	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int, Camera:FlxCamera = null, ScaleX:Float = 1.0, ScaleY:Float = 1.0)
 	{
-		if (WidthInTiles < 0) 
-		{
-			WidthInTiles = 0;
-		}
-		if (HeightInTiles < 0) 
-		{
-			HeightInTiles = 0;
-		}
-		
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-
-		columns = Math.ceil(Camera.width / TileWidth) + 1;
-		
-		if (columns > WidthInTiles)
-		{
-			columns = WidthInTiles;
-		}
-		
-		rows = Math.ceil(Camera.height / TileHeight) + 1;
-		
-		if (rows > HeightInTiles)
-		{
-			rows = HeightInTiles;
-		}
+		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
+		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
 		
 		#if flash
 		_pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
-		width = _pixels.width;
-		height = _pixels.height;	
-		_flashRect = new Rectangle(0, 0, width, height);
+		_flashRect = new Rectangle(0, 0, _pixels.width, _pixels.height);
 		_matrix = new Matrix();
-		#else
-		width = Std.int(columns * TileWidth);
-		height = Std.int(rows * TileHeight);
 		#end
 		
 		dirty = true;
@@ -144,18 +114,63 @@ class FlxTilemapBuffer
 	 * @param	Camera		Which camera to draw the buffer onto.
 	 * @param	FlashPoint	Where to draw the buffer at in camera coordinates.
 	 */
-	public function draw(Camera:FlxCamera, FlashPoint:Point):Void
+	public function draw(Camera:FlxCamera, FlashPoint:Point, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
 	{
-		if (!forceComplexRender)
+		if (!forceComplexRender && (ScaleX == 1.0 && ScaleY == 1.0))
 		{
 			Camera.buffer.copyPixels(_pixels, _flashRect, FlashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
+			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
 			Camera.buffer.draw(_pixels, _matrix);
 		}
 	}
 	#end
+	
+	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, Camera:FlxCamera = null):Void
+	{
+		if (WidthInTiles < 0) 
+		{
+			WidthInTiles = 0;
+		}
+		
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+
+		columns = Math.ceil(Camera.width / (TileWidth * ScaleX)) + 1;
+		
+		if (columns > WidthInTiles)
+		{
+			columns = WidthInTiles;
+		}
+		
+		width = Std.int(columns * TileWidth * ScaleX);
+	}
+	
+	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, Camera:FlxCamera = null):Void
+	{
+		if (HeightInTiles < 0) 
+		{
+			HeightInTiles = 0;
+		}
+		
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		
+		rows = Math.ceil(Camera.height / (TileHeight * ScaleY)) + 1;
+		
+		if (rows > HeightInTiles)
+		{
+			rows = HeightInTiles;
+		}
+		
+		height = Std.int(rows * TileHeight * ScaleY);
+	}
 }

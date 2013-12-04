@@ -91,7 +91,7 @@ class FlxAnimationController
 		}
 	}
 	
-	public function clone(controller:FlxAnimationController):FlxAnimationController
+	public function copyFrom(controller:FlxAnimationController):FlxAnimationController
 	{
 		for (anim in controller._animations)
 		{

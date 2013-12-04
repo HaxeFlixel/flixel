@@ -28,7 +28,11 @@ class FlxFrame
 	
 	private var _bitmapData:BitmapData;
 	
-	private var _reversedBitmapData:BitmapData;
+	private var _hReversedBitmapData:BitmapData;
+	
+	private var _vReversedBitmapData:BitmapData;
+	
+	private var _hvReversedBitmapData:BitmapData;
 	
 	private var _tileSheet:TileSheetData;
 	
@@ -75,6 +79,7 @@ class FlxFrame
 			MATRIX.translate(offset.x + 0.5 * frame.height, offset.y + 0.5 * frame.width);
 			
 			_bitmapData.draw(temp, MATRIX);
+			temp.dispose();
 		}
 		else
 		{
@@ -86,21 +91,55 @@ class FlxFrame
 		return _bitmapData;
 	}
 	
-	public function getReversedBitmap():BitmapData
+	public function getHReversedBitmap():BitmapData
 	{
-		if (_reversedBitmapData != null)
+		if (_hReversedBitmapData != null)
 		{
-			return _reversedBitmapData;
+			return _hReversedBitmapData;
 		}
 		
 		var normalFrame:BitmapData = getBitmap();
 		MATRIX.identity();
 		MATRIX.scale( -1, 1);
 		MATRIX.translate(Std.int(sourceSize.x), 0);
-		_reversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
-		_reversedBitmapData.draw(normalFrame, MATRIX);
+		_hReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+		_hReversedBitmapData.draw(normalFrame, MATRIX);
 		
-		return _reversedBitmapData;
+		return _hReversedBitmapData;
+	}
+	
+	public function getVReversedBitmap():BitmapData
+	{
+		if (_vReversedBitmapData != null)
+		{
+			return _vReversedBitmapData;
+		}
+		
+		var normalFrame:BitmapData = getBitmap();
+		MATRIX.identity();
+		MATRIX.scale(1, -1);
+		MATRIX.translate(0, Std.int(sourceSize.y));
+		_vReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+		_vReversedBitmapData.draw(normalFrame, MATRIX);
+		
+		return _vReversedBitmapData;
+	}
+	
+	public function getHVReversedBitmap():BitmapData
+	{
+		if (_hvReversedBitmapData != null)
+		{
+			return _hvReversedBitmapData;
+		}
+		
+		var normalFrame:BitmapData = getBitmap();
+		MATRIX.identity();
+		MATRIX.scale( -1, -1);
+		MATRIX.translate(Std.int(sourceSize.x), Std.int(sourceSize.y));
+		_hvReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+		_hvReversedBitmapData.draw(normalFrame, MATRIX);
+		
+		return _hvReversedBitmapData;
 	}
 	
 	public function destroyBitmapDatas():Void
@@ -111,10 +150,22 @@ class FlxFrame
 			_bitmapData = null;
 		}
 		
-		if (_reversedBitmapData != null)
+		if (_hReversedBitmapData != null)
 		{
-			_reversedBitmapData.dispose();
-			_reversedBitmapData = null;
+			_hReversedBitmapData.dispose();
+			_hReversedBitmapData = null;
+		}
+		
+		if (_vReversedBitmapData != null)
+		{
+			_vReversedBitmapData.dispose();
+			_vReversedBitmapData = null;
+		}
+		
+		if (_hvReversedBitmapData != null)
+		{
+			_hvReversedBitmapData.dispose();
+			_hvReversedBitmapData = null;
 		}
 	}
 }

@@ -34,7 +34,7 @@ class TexturePackerFrame extends FlxFrame
 		}
 		
 		_bitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
-		
+		#if !doc
 		if (rotated)
 		{
 			// TODO: fix this for non-square sprites
@@ -53,7 +53,7 @@ class TexturePackerFrame extends FlxFrame
 			FlxFrame.POINT.y = offset.y;
 			_bitmapData.copyPixels(_tileSheet.tileSheet.nmeBitmap, frame, FlxFrame.POINT);
 		}
-		
+		#end
 		return _bitmapData;
 	}
 	

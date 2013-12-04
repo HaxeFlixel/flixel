@@ -1,4 +1,5 @@
 package flixel.system;
+#if !doc
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -456,4 +457,5 @@ class FlxPreloader extends NMEPreloader
 		}
 	}
 }
+#end
 #end

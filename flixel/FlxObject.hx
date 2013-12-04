@@ -3,6 +3,7 @@ package flixel;
 import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxCollisionType;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.tile.FlxTilemap;
@@ -106,26 +107,26 @@ class FlxObject extends FlxBasic
 	 * Controls how much this object is affected by camera scrolling.
 	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
 	 */
-	public var scrollFactor(default, set):IFlxPoint;
+	public var scrollFactor(default, set):FlxPoint;
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity(default, set):IFlxPoint;
+	public var velocity(default, set):FlxPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration(default, set):IFlxPoint;
+	public var acceleration(default, set):FlxPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
 	 */
-	public var drag(default, set):IFlxPoint;
+	public var drag(default, set):FlxPoint;
 	/**
 	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity(default, set):IFlxPoint;
+	public var maxVelocity(default, set):FlxPoint;
 	/**
 	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
@@ -222,6 +223,7 @@ class FlxObject extends FlxBasic
 	 */
 	private function initVars():Void
 	{
+		collisionType = FlxCollisionType.OBJECT;
 		last = new FlxPoint(x, y);
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
@@ -412,7 +414,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (Std.is(ObjectOrGroup, FlxTypedGroup))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
+		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
 			var i:Int = 0;
@@ -431,7 +438,7 @@ class FlxObject extends FlxBasic
 			return results;
 		}
 		
-		if (Std.is(ObjectOrGroup, FlxTilemap))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
@@ -467,7 +474,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (Std.is(ObjectOrGroup, FlxTypedGroup))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
+		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
@@ -486,7 +498,7 @@ class FlxObject extends FlxBasic
 			return results;
 		}
 		
-		if (Std.is(ObjectOrGroup, FlxTilemap))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
@@ -550,6 +562,15 @@ class FlxObject extends FlxBasic
 		}
 		getScreenXY(_point, Camera);
 		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
+	}
+	
+	/**
+	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
+	 * @return	Whether the object is within the Worldbounds or not.
+	 */
+	inline public function inWorldBounds():Bool
+	{
+		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
 	}
 	
 	/**
@@ -665,11 +686,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Std.is(Object1, FlxTilemap))
+		if (Object1.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateX);
 		}
-		if (Std.is(Object2, FlxTilemap))
+		if (Object2.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateX, true);
 		}
@@ -777,11 +798,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Std.is(Object1, FlxTilemap))
+		if (Object1.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateY);
 		}
-		if (Std.is(Object2, FlxTilemap))
+		if (Object2.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateY, true);
 		}
@@ -888,7 +909,7 @@ class FlxObject extends FlxBasic
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	public function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;
 		y = Y;
@@ -1011,31 +1032,31 @@ class FlxObject extends FlxBasic
 		return forceComplexRender = Value;
 	}
 	
-	private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
+	private function set_scrollFactor(Value:FlxPoint):FlxPoint
 	{
 		_scrollFactor = cast Value;
 		return scrollFactor = Value;
 	}
 	
-	private function set_velocity(Value:IFlxPoint):IFlxPoint 
+	private function set_velocity(Value:FlxPoint):FlxPoint 
 	{
 		_velocity = cast Value;
 		return velocity = Value;
 	}
 	
-	private function set_acceleration(Value:IFlxPoint):IFlxPoint 
+	private function set_acceleration(Value:FlxPoint):FlxPoint 
 	{
 		_acceleration = cast Value;
 		return acceleration = Value;
 	}
 	
-	private function set_drag(Value:IFlxPoint):IFlxPoint 
+	private function set_drag(Value:FlxPoint):FlxPoint 
 	{
 		_drag = cast Value;
 		return drag = Value;
 	}
 	
-	private function set_maxVelocity(Value:IFlxPoint):IFlxPoint 
+	private function set_maxVelocity(Value:FlxPoint):FlxPoint 
 	{
 		_maxVelocity = cast Value;
 		return maxVelocity = Value;

@@ -228,7 +228,7 @@ class FlxG
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
 	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
-	inline static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
@@ -266,7 +266,7 @@ class FlxG
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
 	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
-	inline static private function reset():Void
+	static private function reset():Void
 	{
 		PxBitmapFont.clearStorage();
 		FlxRandom.globalSeed = Math.random();
@@ -374,33 +374,38 @@ class FlxG
 	 */
 	inline static public function resizeGame(Width:Int, Height:Int):Void
 	{
-        camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
-        width = Width;
-        height = Height;
+		camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
+		width = Width;
+		height = Height;
 	}
 	
-	#if flash
 	/**
 	 * Use this to toggle between fullscreen and normal mode.
+	 * You can easily toggle fullscreen with eg:
+	 * FlxG.fullscreen ? FlxG.fullscreen = false : FlxG.fullscreen = true;
 	 */
-	static public var fullscreen(default, set):Bool = false;
+	@isVar static public var fullscreen(default, set):Bool = false;
 	 
-	inline static private function set_fullscreen(Value:Bool):Bool
+	static private function set_fullscreen(Value:Bool):Bool
 	{
+
 		if (Value)
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN;
+			#if flash
 			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
 			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
+			#end
 		}
 		else
 		{
 			stage.displayState = StageDisplayState.NORMAL;
 		}
+
+		fullscreen = Value;
 		
-		return Value;
+		return fullscreen;
 	}
-	#end
 	
 	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
@@ -459,7 +464,7 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any overlaps were detected.
 	 */
-	inline static public function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
+	static public function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -520,7 +525,7 @@ class FlxG
 	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
 	 * @return	Null
 	 */
-	inline public static function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
+	public static function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
 	{
 		if (Object != null)
 		{

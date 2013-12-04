@@ -3,6 +3,7 @@ package flixel.system;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxCollisionType;
 import flixel.util.FlxRect;
 
 /**
@@ -395,23 +396,36 @@ class FlxQuadTree extends FlxRect
 	public function add(ObjectOrGroup:FlxBasic, list:Int):Void
 	{
 		_list = list;
-		if(Std.is(ObjectOrGroup, FlxTypedGroup))
+		
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
+		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var i:Int = 0;
 			var basic:FlxBasic;
+			var collisionType:FlxCollisionType;
 			var group:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = group.members;
 			var l:Int = group.length;
-			while(i < l)
+			while (i < l)
 			{
 				basic = members[i++];
-				if((basic != null) && basic.exists)
+				if ((basic != null) && basic.exists)
 				{
-					if (Std.is(basic, FlxTypedGroup))
+					collisionType = basic.collisionType;
+					if (collisionType == FlxCollisionType.SPRITEGROUP)
+					{
+						basic = Reflect.field(ObjectOrGroup, "group");
+					}
+					
+					if (collisionType == FlxCollisionType.GROUP)
 					{
 						add(basic, list);
 					}
-					else if(Std.is(basic, FlxObject))
+					else if (collisionType == FlxCollisionType.OBJECT || collisionType == FlxCollisionType.TILEMAP)
 					{
 						_object = cast(basic, FlxObject);
 						if(_object.exists && _object.allowCollisions != FlxObject.NONE)

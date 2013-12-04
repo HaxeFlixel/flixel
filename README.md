@@ -20,11 +20,13 @@ This is the third big update to HaxeFlixel. Here are the biggest changes:
 
 ###Upgrading from previous versions
 
-// TODO
+You can find [upgrade instructions here](http://haxeflixel.com/documentation/upgrade-guide/).
+
+If you wish to contribute to our documentation, you can edit the [upgrade docs on github](https://github.com/HaxeFlixel/haxeflixel.com/blob/cfaf4c1b74dbb34b39333ad67a8e0ce9b7fdc203/src/documents/documentation/01_community/11-upgrade-guide.html.md).
 
 ###For Developers
 
-Make sure you're using latest version of [Haxe, HaxeLib and OpenFl](http://haxeflixel.com/comment/2584#comment-2584). Also bookmark the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
+Make sure you're using latest version of [Haxe, HaxeLib and OpenFl](http://haxeflixel.com/comment/2584#comment-2584). You should also read the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
 
 Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel dev`.
 

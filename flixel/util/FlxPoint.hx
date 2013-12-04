@@ -2,20 +2,10 @@ package flixel.util;
 
 import flash.geom.Point;
 
-interface IFlxPoint {
-	public var x(default, set):Float;
-	public var y(default, set):Float;
-	
-	public function set(X:Float = 0, Y:Float = 0):FlxPoint;
-	public function copyFrom(point:FlxPoint):FlxPoint;
-	public function copyTo(point:FlxPoint = null):FlxPoint;
-	public function destroy():Void;
-}
-
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint implements IFlxPoint
+class FlxPoint
 {
 	/**
 	 * @default 0

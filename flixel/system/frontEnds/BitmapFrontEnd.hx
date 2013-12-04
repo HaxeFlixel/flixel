@@ -9,11 +9,11 @@ import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
 import openfl.Assets;
 
+/**
+ * Internal storage system to prevent graphics from being used repeatedly in memory.
+ */
 class BitmapFrontEnd
 {
-	/**
-	 * Internal storage system to prevent graphics from being used repeatedly in memory.
-	 */
 	private var _cache:Map<String, CachedGraphics>;
 	
 	public function new()
@@ -120,46 +120,80 @@ class BitmapFrontEnd
 	}
 	
 	/**
-	 * Loads a bitmap from a file, caches it, and generates a horizontally flipped version if necessary.
+	 * Loads a bitmap from a file, clones it if necessary and caches it.
 	 * 
 	 * @param	Graphic		The image file that you want to load.
 	 * @param	Unique		Ensures that the bitmap data uses a new slot in the cache.
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
-	 * @return	The <code>BitmapData</code> we just created.
+	 * @return	The <code>CachedGraphics</code> we just created.
 	 */
 	public function add(Graphic:Dynamic, Unique:Bool = false, Key:String = null):CachedGraphics
+	{
+		return addWithSpaces(Graphic, 0, 0, 1, 1, Unique, Key);
+	}
+	
+	/**
+	 * Loads a bitmap from a file, inserts spaces between frames and caches it.
+	 * Could be useful for native targets to remove possible glitches.
+	 * 
+	 * @param	Graphic			The image file that you want to load.
+	 * @param	FrameWidth		The width of frames in image
+	 * @param	FrameHeight		The height of frames in image
+	 * @param	SpacingX		Horizontal spaces to insert between frames in image
+	 * @param	SpacingY		Vertical spaces to insert between frames in image
+	 * @param	Unique			Ensures that the bitmap data uses a new slot in the cache.
+	 * @param	Key				Force the cache to use a specific Key to index the bitmap.
+	 * @return	The <code>CachedGraphics</code> we just created.
+	 */
+	public function addWithSpaces(Graphic:Dynamic, FrameWidth:Int, FrameHeight:Int, SpacingX:Int = 1, SpacingY:Int = 1, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
 		if (Graphic == null)
 		{
 			return null;
 		}
-		else if (Std.is(Graphic, CachedGraphics))
-		{
-			return cast Graphic;
-		}
 		
 		var region:TextureRegion = null;
+		var graphic:CachedGraphics = null;
 		
 		var isClass:Bool = true;
 		var isBitmap:Bool = true;
 		var isRegion:Bool = true;
-		if (Std.is(Graphic, Class))
+		var isGraphics:Bool = true;
+		
+		if (Std.is(Graphic, CachedGraphics))
+		{
+			isClass = false;
+			isBitmap = false;
+			isRegion = false;
+			isGraphics = true;
+			
+			graphic = cast (Graphic, CachedGraphics);
+			
+			if (!Unique && (FrameWidth <= 0 && FrameHeight <= 0))
+			{
+				return graphic;
+			}
+		}
+		else if (Std.is(Graphic, Class))
 		{
 			isClass = true;
 			isBitmap = false;
 			isRegion = false;
+			isGraphics = false;
 		}
 		else if (Std.is(Graphic, BitmapData))
 		{
 			isClass = false;
 			isBitmap = true;
 			isRegion = false;
+			isGraphics = false;
 		}
 		else if (Std.is(Graphic, TextureRegion))
 		{
 			isClass = false;
 			isBitmap = false;
 			isRegion = true;
+			isGraphics = false;
 			
 			region = cast(Graphic, TextureRegion);
 		}
@@ -168,10 +202,18 @@ class BitmapFrontEnd
 			isClass = false;
 			isBitmap = false;
 			isRegion = false;
+			isGraphics = false;
 		}
 		else
 		{
 			return null;
+		}
+		
+		var additionalKey:String = "";
+		
+		if (FrameWidth > 0 || FrameHeight > 0)
+		{
+			additionalKey = "FrameSize:" + FrameWidth + "_" + FrameHeight + "_Spacing:" + SpacingX + "_" + SpacingY;
 		}
 		
 		var key:String = Key;
@@ -196,10 +238,16 @@ class BitmapFrontEnd
 			{
 				key = region.data.key;
 			}
+			else if (isGraphics)
+			{
+				key = graphic.key; 
+			}
 			else
 			{
 				key = Graphic;
 			}
+			
+			key += additionalKey;
 			
 			if (Unique)
 			{
@@ -223,9 +271,42 @@ class BitmapFrontEnd
 			{
 				bd = region.data.bitmap;
 			}
+			else if (isGraphics)
+			{
+				bd = graphic.bitmap;
+			}
 			else
 			{
 				bd = FlxAssets.getBitmapData(Graphic);
+			}
+			
+			if (FrameWidth > 0 || FrameHeight > 0)
+			{
+				var numHorizontalFrames:Int = (FrameWidth == 0) ? 1 : Std.int(bd.width / FrameWidth);
+				var numVerticalFrames:Int = (FrameHeight == 0) ? 1 : Std.int(bd.height / FrameHeight);
+				
+				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
+				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
+				
+				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColor.TRANSPARENT);
+				
+				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
+				var tempPoint:Point = new Point();
+				
+				for (i in 0...numHorizontalFrames)
+				{
+					tempPoint.x = i * (FrameWidth + SpacingX);
+					tempRect.x = i * FrameWidth;
+					
+					for (j in 0...(numVerticalFrames))
+					{
+						tempPoint.y = j * (FrameHeight + SpacingY);
+						tempRect.y = j * FrameHeight;
+						tempBitmap.copyPixels(bd, tempRect, tempPoint);
+					}
+				}
+				
+				bd = tempBitmap;
 			}
 			
 			if (Unique)
@@ -250,7 +331,11 @@ class BitmapFrontEnd
 		return _cache.get(key);
 	}
 	
-	// TODO: document it
+	/**
+	 * Gets cached graphics object from this storage by specified key. 
+	 * @param	key	Key for CachedGraphics object (it's name)
+	 * @return	CachedGraphics with the key name, or null if there is no such object
+	 */
 	public function get(key:String):CachedGraphics
 	{
 		return _cache.get(key);
@@ -335,13 +420,13 @@ class BitmapFrontEnd
 	
 	public function inOpenFlAssets(bitmap:BitmapData):Bool
 	{
+		#if !doc
 		// Openfl 1.0 backwards compatibility
 		#if (openfl < 1.1)
 		var bitmapDataCache = Assets.cachedBitmapData;
 		#else
 		var bitmapDataCache = Assets.cache.bitmapData;
 		#end
-		
 		if (bitmapDataCache != null)
 		{
 			for (bd in bitmapDataCache)
@@ -352,7 +437,7 @@ class BitmapFrontEnd
 				}
 			}
 		}
-		
+		#end
 		return false;
 	}
 }

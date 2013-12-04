@@ -18,7 +18,7 @@ import flixel.util.FlxRandom;
  * It is easy to use and relatively efficient,
  * relying on <code>FlxGroup</code>'s RECYCLE POWERS.
  */
-class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxParticle>
+class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSprite>
 {
 	/**
 	 * The x position range of the emitter in world space.
@@ -113,7 +113,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 	/**
 	 * Internal variable for tracking the class to create when generating particles.
 	 */
-	private var _particleClass:Class<IFlxParticle>;
+	private var _particleClass:Class<T>;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -232,7 +232,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 		
 		var randomFrame:Int;
 		var particle:T;
-		var pClass:Class<T> = cast _particleClass;
+		var pClass:Class<T> = _particleClass;
 		var i:Int = 0;
 		
 		while (i < Quantity)
@@ -407,7 +407,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 	 */
 	public function emitParticle():Void
 	{
-		var particle:T = cast recycle(_particleClass);
+		var particle:T = cast recycle(cast _particleClass);
 		particle.elasticity = bounce;
 		
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);
@@ -732,14 +732,14 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<IFlxPar
 	 * Set your own particle class type here. The custom class must extend <code>FlxParticle</code>.
 	 * Default is <code>FlxParticle</code>.
 	 */
-	public var particleClass(get, set):Class<IFlxParticle>;
+	public var particleClass(get, set):Class<T>;
 	
-	private function get_particleClass():Class<IFlxParticle> 
+	private function get_particleClass():Class<T> 
 	{
 		return _particleClass;
 	}
 	
-	private function set_particleClass(Value:Class<IFlxParticle>):Class<IFlxParticle> 
+	private function set_particleClass(Value:Class<T>):Class<T> 
 	{
 		return _particleClass = Value;
 	}

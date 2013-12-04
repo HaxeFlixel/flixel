@@ -1,42 +1,14 @@
 package flixel;
 
 import flixel.FlxG;
+import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
-
-/**
- *  This class is for <code>FlxSpriteGroup</code> to work with interface instead of <code>FlxBasic</code>, which is needed
- *  so that <code>FlxSpriteGroup</code> could extend <code>FlxTypedGroup</code> and be typed with <code>IFlxSprite</code>
- **/
-interface IFlxBasic
-{
-	public var ID:Int;
-	public var cameras:Array<FlxCamera>;
-	public var active(default, set):Bool;
-	public var visible(default, set):Bool;
-	public var alive(default, set):Bool;
-	public var exists(default, set):Bool;
-
-	public function draw():Void;
-	public function update():Void;
-	public function destroy():Void;
-	
-	public function kill():Void;
-	public function revive():Void;
-
-	#if !FLX_NO_DEBUG
-	public var ignoreDrawDebug:Bool;
-	public function drawDebug():Void;
-	public function drawDebugOnCamera(?Camera:FlxCamera):Void;
-	#end
-	
-	public function toString():String;
-}
 
 /**
  * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 
  * <code>FlxGroup</code> extend this class. Has no size, position or graphical data.
  */
-class FlxBasic implements IFlxBasic implements IDestroyable
+class FlxBasic implements IDestroyable
 {
 	/**
 	 * IDs seem like they could be pretty useful, huh?
@@ -66,6 +38,8 @@ class FlxBasic implements IFlxBasic implements IDestroyable
 	 */
 	public var exists(default, set):Bool = true;
 	
+	public var collisionType:FlxCollisionType;
+	
 	#if !FLX_NO_DEBUG
 	/**
 	 * Setting this to true will prevent the object from appearing
@@ -79,7 +53,10 @@ class FlxBasic implements IFlxBasic implements IDestroyable
 	static public var _VISIBLECOUNT:Int = 0;
 	#end
 	
-	public function new() { }
+	public function new() 
+	{ 
+		collisionType = FlxCollisionType.NULL;
+	}
 	
 	/**
 	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>revive()</code> it later.
@@ -88,6 +65,7 @@ class FlxBasic implements IFlxBasic implements IDestroyable
 	public function destroy():Void 
 	{
 		exists = false;
+		collisionType = null;
 	}
 	
 	/**
