@@ -363,6 +363,27 @@ class FlxMath
 	}
 	
 	/**
+	 * Check if the distance between two FlxSprites is within a specified number. 
+	 * A faster algoritm than distanceBetween because the Math.sqrt() is avoided.
+	 *
+	 * @param	SpriteA		The first FlxSprite
+	 * @param	SpriteB		The second FlxSprite
+	 * @param	Distance	The distance to check
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
+	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 */
+	inline static public function isDistanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
+	{
+		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
+		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
+		
+		if(IncludeEqual)
+			return dx * dx + dy * dy <= Distance * Distance;
+		else
+			return dx * dx + dy * dy < Distance * Distance;
+	}
+	
+	/**
 	 * Find the distance (in pixels, rounded) from an <code>FlxSprite</code>
 	 * to the given <code>FlxPoint</code>, taking the source origin into account.
 	 * 
@@ -377,6 +398,28 @@ class FlxMath
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
+	/**
+	 * Check if the distance from an <code>FlxSprite</code> to the given
+	 * <code>FlxPoint</code> is within a specified number. 
+	 * A faster algoritm than distanceToPoint because the Math.sqrt() is avoided.
+	 * 
+	 * @param	Sprite	The FlxSprite
+	 * @param	Target	The FlxPoint
+	 * @param	Distance	The distance to check
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
+	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 */
+	inline static public function isDistanceToPointWithin(Sprite:FlxSprite, Target:FlxPoint, Distance:Float, IncludeEqual:Bool = false):Bool
+	{
+		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
+		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
+		
+		if(IncludeEqual)
+			return dx * dx + dy * dy <= Distance * Distance;
+		else
+			return dx * dx + dy * dy < Distance * Distance;
+	}
+	
 	#if !FLX_NO_MOUSE
 	/**
 	 * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
@@ -389,6 +432,26 @@ class FlxMath
 		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
 		return Std.int(FlxMath.vectorLength(dx, dy));
+	}
+	
+	/**
+	 * Check if the distance from the object x/y and the mouse x/y is within a specified number. 
+	 * A faster algoritm than distanceToMouse because the Math.sqrt() is avoided.
+	 *
+	 * @param	Sprite		The FlxSprite to test against
+	 * @param	Distance	The distance to check
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
+	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 */
+	inline static public function isDistanceToMouseWithin(Sprite:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
+	{
+		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
+		
+		if(IncludeEqual)
+			return dx * dx + dy * dy <= Distance * Distance;
+		else
+			return dx * dx + dy * dy < Distance * Distance;
 	}
 	#end
 	
@@ -405,6 +468,26 @@ class FlxMath
 		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
 		return Std.int(FlxMath.vectorLength(dx, dy));
+	}
+	
+	/**
+	 * Check if the distance from the object x/y and the FlxPoint screen x/y is within a specified number. 
+	 * A faster algoritm than distanceToTouch because the Math.sqrt() is avoided.
+	 *
+	 * @param	Sprite	The FlxSprite to test against
+	 * @param	Distance	The distance to check
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
+	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 */
+	inline static public function isDistanceToTouchWithin(Sprite:FlxSprite, Touch:FlxTouch, Distance:Float, IncludeEqual:Bool = false):Bool
+	{
+		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
+		
+		if(IncludeEqual)
+			return dx * dx + dy * dy <= Distance * Distance;
+		else
+			return dx * dx + dy * dy < Distance * Distance;
 	}
 	#end
 	
