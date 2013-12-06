@@ -38,10 +38,7 @@ class FlxAndroidKeys implements IFlxInput
 	private var _keyList:Array<FlxKey>;
 	
 	public var preventDefaultBackAction:Bool = false;
-	
-	public var LastKeyUp:String;
-	public var LastKeyDown:String;
-	
+
 	public function new()
 	{
 		_keyLookup = new Map<String, Int>();
@@ -309,7 +306,7 @@ class FlxAndroidKeys implements IFlxInput
 	private function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
 		var c:Int = FlashEvent.keyCode;
-		LastKeyUp = Std.string(c);
+		
 		if (preventDefaultBackAction && c == getKeyCode("BACK"))
 		{
 			
