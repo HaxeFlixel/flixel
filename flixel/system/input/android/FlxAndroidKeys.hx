@@ -8,6 +8,7 @@ import flixel.system.input.IFlxInput;
 import flixel.system.input.keyboard.FlxKey;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArrayUtil;
+import haxe.ds.HashMap.HashMap;
 import haxe.Log;
 
 /**
@@ -24,7 +25,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
-	inline static private var TOTAL:Int = 1;
+	inline static private var TOTAL:Int = 2;
 	
 	/**
 	 * A map for key lookup.
@@ -35,21 +36,20 @@ class FlxAndroidKeys implements IFlxInput
 	 * And array of FlxKey objects.
 	 */
 	@:allow(flixel.system.input.keyboard.FlxAndroidKeyList.get_ANY) // Need to access the var there
-	private var _keyList:Array<FlxKey>;
+	private var _keyList:Map<Int, FlxKey>;
 	
 	public var preventDefaultBackAction:Bool = false;
 
+	
 	public function new()
 	{
 		_keyLookup = new Map<String, Int>();
 		
-		_keyList = new Array<FlxKey>();
-		FlxArrayUtil.setLength(_keyList, TOTAL);
-		
-		var i:Int;
-		
+		_keyList = new Map<Int, FlxKey>();
+
 		addKey("BACK", 27);
 		addKey("MENU", 16777234); // wow, really?
+		
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -69,7 +69,7 @@ class FlxAndroidKeys implements IFlxInput
 	private function addKey(KeyName:String, KeyCode:Int):Void
 	{
 		_keyLookup.set(KeyName, KeyCode);
-		_keyList[KeyCode] = new FlxKey(KeyName);
+		_keyList.set(KeyCode, new FlxKey(KeyName));
 	}
 	
 	/**
@@ -181,7 +181,7 @@ class FlxAndroidKeys implements IFlxInput
 			// Also make lowercase keys work, like "space" or "sPaCe"
 			key = Std.string(key).toUpperCase();
 			
-			var k:FlxKey = _keyList[_keyLookup.get(key)];
+			var k:FlxKey = _keyList.get(_keyLookup.get(key));
 			if (k != null)
 			{
 				if (k.current == Status)
@@ -200,64 +200,14 @@ class FlxAndroidKeys implements IFlxInput
 			#if !FLX_NO_DEBUG
 			else
 			{
-				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+				//FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
 			}
 			#end
 		}
 		
 		return false;
 	}
-	/**
-	 * If any keys are not "released" (0),
-	 * this function will return an array indicating
-	 * which keys are pressed and what state they are in.
-	 *
-	 * @return	An array of key state data.  Null if there is no data.
-	 */
-	public function record():Array<CodeValuePair>
-	{
-		var data:Array<CodeValuePair> = null;
-		var i:Int = 0;
-		
-		while (i < TOTAL)
-		{
-			var key:FlxKey = _keyList[i++];
-			
-			if (key == null || key.current == FlxKey.RELEASED)
-			{
-				continue;
-			}
-			
-			if (data == null)
-			{
-				data = new Array<CodeValuePair>();
-			}
-			
-			data.push(new CodeValuePair(i - 1, key.current));
-		}
-		return data;
-	}
 	
-	/**
-	 * Part of the keystroke recording system.
-	 * Takes data about key presses and sets it into array.
-	 *
-	 * @param	Record	Array of data about key states.
-	 */
-	public function playback(Record:Array<CodeValuePair>):Void
-	{
-		var i:Int = 0;
-		var l:Int = Record.length;
-		var o:CodeValuePair;
-		var o2:FlxKey;
-		
-		while (i < l)
-		{
-			o = Record[i++];
-			o2 = _keyList[o.code];
-			o2.current = o.value;
-		}
-	}
 	
 	/**
 	 * Look up the key code for any given string name of the key or button.
@@ -331,27 +281,12 @@ class FlxAndroidKeys implements IFlxInput
 	private function onKeyDown(FlashEvent:KeyboardEvent):Void
 	{
 		var c:Int = FlashEvent.keyCode;
+		
 		if (preventDefaultBackAction && c == getKeyCode("BACK"))
 		{
 			FlashEvent.stopImmediatePropagation();
 			FlashEvent.stopPropagation();
 		}
-		
-		// Attempted to cancel the replay?
-		#if FLX_RECORD
-		if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, c) && inKeyArray(FlxG.vcr.cancelKeys, c))
-		{
-			if (FlxG.vcr.replayCallback != null)
-			{
-				FlxG.vcr.replayCallback();
-				FlxG.vcr.replayCallback = null;
-			}
-			else
-			{
-				FlxG.vcr.stopReplay();
-			}
-		}
-		#end
 		
 		if (enabled)
 		{
