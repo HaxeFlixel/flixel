@@ -277,6 +277,9 @@ class FlxAnimationController
 				if (indexToAdd != -1) 
 				{
 					frameIndices.push(indexToAdd);
+				} else {
+					trace('Unable to find sprite "$Name${Indicies[i]}$Postfix" ');
+					throw 'Unable to find sprite "$Name${Indicies[i]}$Postfix" ';
 				}
 			}
 			
@@ -376,10 +379,9 @@ class FlxAnimationController
 			}
 			_curAnim = null;
 		}
-		
 		if (_animations.get(AnimName) == null)
 		{
-			FlxG.log.warn("No animation called \"" + AnimName + "\"");
+			FlxG.log.warn('No animation called  $AnimName ');
 			return;
 		}
 		
@@ -479,7 +481,7 @@ class FlxAnimationController
 	/**
 	 * Gets the name of the currently playing _animations (warning: can be null)
 	 */
-	inline private function get_name():String
+	private function get_name():String
 	{
 		var animName:String = null;
 		if (_curAnim != null)
@@ -548,7 +550,7 @@ class FlxAnimationController
 		return Value;
 	}
 	
-	inline private function get_finished():Bool
+	private function get_finished():Bool
 	{
 		var finished:Bool = true;
 		if (_curAnim != null)
