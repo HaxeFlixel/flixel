@@ -67,14 +67,4 @@ class Enemy extends FlxSprite
 		
 		super.kill();
 	}
-	
-	public function flicker( Duration:Float ):Void
-	{
-		FlxFlicker.flicker( this, Duration );
-	}
-	
-	public function followPath( Path:FlxPath, one:Int, two:Int, three:Bool ):Void
-	{
-		
-	}
 }

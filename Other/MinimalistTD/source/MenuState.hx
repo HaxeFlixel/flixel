@@ -11,8 +11,8 @@ import flixel.util.FlxPoint;
 
 class MenuState extends FlxState
 {
-	private var path:FlxPath;
 	private var enemy:Enemy;
+	private var path:FlxPath;
 	
 	override public function create():Void
 	{
@@ -37,11 +37,10 @@ class MenuState extends FlxState
 		playButton.x = ( FlxG.width - playButton.width ) / 2;
 		add(playButton);
 		
+		enemy = new Enemy(8 * 5, 0);
 		path = FlxPath.recycle();
 		path.nodes = map.findPath(new FlxPoint(5 * 8 + 4, 0), new FlxPoint(34 * 8 + 4, 29 * 8));
-		
-		enemy = new Enemy(8 * 5, 0);
-		enemy.followPath(path, 50, 0, true);
+		FlxPath.start( enemy, path.nodes, 50, 0, true);
 		add(enemy);
 	}
 	
@@ -57,10 +56,10 @@ class MenuState extends FlxState
 
 	override public function update():Void
 	{
-		if (enemy.y >= 28 * 8) {
+		if (enemy.y >= FlxG.height) {
 			enemy.x = 5 * 8 + 4;
 			enemy.y = 0;
-			enemy.followPath(path, 50, 0, true);
+			FlxPath.start( enemy, path.nodes, 50, 0, true);
 		}
 		
 		super.update();

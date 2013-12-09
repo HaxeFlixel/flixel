@@ -457,7 +457,7 @@ class GameState extends FlxState
 		enemiesToSpawn --;
 		
 		var enemy:Enemy = new Enemy(3 * 8 + 4, - 20);
-		enemy.followPath(path, 20 + wave, 0, true);
+		FlxPath.start( enemy, path.nodes, 20 + wave, 0, true);
 		enemyGroup.add(enemy);
 		spawnCounter = 0;
 	}
