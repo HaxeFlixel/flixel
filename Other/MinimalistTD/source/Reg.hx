@@ -2,5 +2,5 @@ package;
 
 class Reg
 {
-	static public var GS:GameState;
+	static public var PS:PlayState;
 }

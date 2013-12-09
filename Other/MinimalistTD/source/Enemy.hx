@@ -16,10 +16,17 @@ class Enemy extends FlxSprite
 	
 	public function new(X:Int, Y:Int) 
 	{
-		super(X, Y, Assets.getBitmapData("images/enemy.png"));
-		if (Reg.GS != null) {
-			health = Math.floor(Reg.GS.wave / 3) + 1;
+		super(0, 0,"images/enemy.png");
+	}
+	
+	public function init(X:Int, Y:Int):Void
+	{
+		reset(X, Y);
+		
+		if (Reg.PS != null) {
+			health = Math.floor(R.PS.wave / 3) + 1;
 		}
+		
 		maxHealth = health;
 	}
 	
@@ -37,7 +44,9 @@ class Enemy extends FlxSprite
 	
 	override public function kill():Void
 	{
-		FlxG.sound.play(Assets.getSound("enemykill"));
+		#if !js
+		FlxG.sound.play("enemykill");
+		#end
 		
 		var emitter:FlxTypedEmitter<FlxParticle> = new FlxTypedEmitter<FlxParticle>(x, y);
 		emitter.makeParticles(Assets.getBitmapData("images/enemy.png"), 10);
