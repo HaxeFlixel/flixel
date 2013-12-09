@@ -1,5 +1,7 @@
 package;
 
+import flixel.effects.FlxFlicker;
+import flixel.util.FlxPath;
 import openfl.Assets;
 import flash.display.BlendMode;
 import flixel.FlxG;
@@ -14,9 +16,9 @@ class Enemy extends FlxSprite
 	
 	public function new(X:Int, Y:Int) 
 	{
-		super(X, Y, "images/enemy.png");
-		if (R.GS != null) {
-			health = Math.floor(R.GS.wave / 3) + 1;
+		super(X, Y, Assets.getBitmapData("images/enemy.png"));
+		if (Reg.GS != null) {
+			health = Math.floor(Reg.GS.wave / 3) + 1;
 		}
 		maxHealth = health;
 	}
@@ -44,25 +46,35 @@ class Enemy extends FlxSprite
 		emitter.setYSpeed( -speed, speed);
 		
 		for (i in 0...10) {
-			var p:FlxParticle = emitter.members[i];
+			var p:FlxParticle = cast(emitter.members[i]);
 			p.blend = BlendMode.INVERT;
 			p.makeGraphic(2, 2, 0xff000000);
 			emitter.add(p);
 		}
-		R.GS.emitterGroup.add(emitter);
+		Reg.GS.emitterGroup.add(emitter);
 		emitter.start(true);
 		
-		R.GS.enemiesToKill --;
-		if (R.GS.enemiesToKill <= 0) R.GS.killedWave();
-		R.GS.enemyGroup.remove(this, true);
+		Reg.GS.enemiesToKill --;
+		if (Reg.GS.enemiesToKill <= 0) Reg.GS.killedWave();
+		Reg.GS.enemyGroup.remove(this, true);
 		if (moneyGain) {
 			var money:Int = 1;
-			if (R.GS.wave < 5) money = 2;
+			if (Reg.GS.wave < 5) money = 2;
 			
-			R.GS.money += money;
-			R.GS.moneyText.size = 16;
+			Reg.GS.money += money;
+			Reg.GS.moneyText.size = 16;
 		}
 		
 		super.kill();
+	}
+	
+	public function flicker( Duration:Float ):Void
+	{
+		FlxFlicker.flicker( this, Duration );
+	}
+	
+	public function followPath( Path:FlxPath, one:Int, two:Int, three:Bool ):Void
+	{
+		
 	}
 }

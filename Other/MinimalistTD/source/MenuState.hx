@@ -8,7 +8,6 @@ import flixel.tile.FlxTilemap;
 import flixel.text.FlxText;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
-import flixel.addons.ui.FlxButtonPlus;
 
 class MenuState extends FlxState
 {
@@ -18,7 +17,7 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.show();
-		//FlxG.mouse._cursorContainer.blendMode = BlendMode.INVERT;
+		FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT;
 		FlxG.camera.bgColor = 0xffFFFFFF;
 		
 		var map:FlxTilemap = new FlxTilemap();
@@ -33,13 +32,13 @@ class MenuState extends FlxState
 		var credits:FlxText = new FlxText(2, FlxG.height - 12, FlxG.width, "Made in 48h for Ludum Dare 26");
 		add(credits);
 		
-		var playButton:FlxButtonPlus = new FlxButtonPlus(0, cast(FlxG.height / 2), playButtonCallback, null, "Play");
-		R.modifyButton(playButton, 25);
+		var playButton:Button = new Button(0, Std.int( FlxG.height / 2 ), "Play", playButtonCallback);
 		playButton.textNormal.color = 0xffFFFFFF;
-		playButton.x = Std.int(FlxG.width / 2 - 12);
+		playButton.x = ( FlxG.width - playButton.width ) / 2;
 		add(playButton);
 		
-		path = map.findPath(new FlxPoint(5 * 8 + 4, 0), new FlxPoint(34 * 8 + 4, 29 * 8));
+		path = FlxPath.recycle();
+		path.nodes = map.findPath(new FlxPoint(5 * 8 + 4, 0), new FlxPoint(34 * 8 + 4, 29 * 8));
 		
 		enemy = new Enemy(8 * 5, 0);
 		enemy.followPath(path, 50, 0, true);

@@ -33,7 +33,7 @@ class Tower extends FlxSprite
 		
 		indicator = new FlxSprite(getMidpoint().x - 1, getMidpoint().y - 1);
 		indicator.makeGraphic(2, 2);
-		R.GS.towerIndicators.add(indicator);
+		Reg.GS.towerIndicators.add(indicator);
 	}
 	
 	override public function update():Void
@@ -59,7 +59,7 @@ class Tower extends FlxSprite
 		if (target == null) return;
 		
 		var bullet:Bullet = new Bullet(getMidpoint().x, getMidpoint().y, target, damage);
-		R.GS.bulletGroup.add(bullet);
+		Reg.GS.bulletGroup.add(bullet);
 		
 		FlxG.sound.play(Assets.getSound("shoot"));
 		shootCounter = 0;
@@ -68,7 +68,7 @@ class Tower extends FlxSprite
 	private function getNearestEnemy():Enemy
 	{
 		var firstEnemy:Enemy = null;
-		var enemies:FlxTypedGroup<Enemy> = R.GS.enemyGroup;
+		var enemies:FlxTypedGroup<Enemy> = Reg.GS.enemyGroup;
 		
 		for (i in 0...enemies.members.length) 
 		{

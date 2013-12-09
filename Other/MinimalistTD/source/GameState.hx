@@ -1,6 +1,8 @@
 package;
 
+import flixel.util.FlxSpriteUtil;
 import openfl.Assets;
+import flash.display.Graphics;
 import flash.display.BlendMode;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -11,12 +13,13 @@ import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
+import flixel.effects.FlxFlicker;
 import flixel.effects.particles.FlxParticle;
 import flixel.effects.particles.FlxTypedEmitter;
-import flixel.addons.ui.FlxButtonPlus;
 
 class GameState extends FlxState
 {
@@ -44,12 +47,12 @@ class GameState extends FlxState
 	private var tutText:FlxText;
 	
 	// Buttons
-	private var towerButton:FlxButtonPlus;
-	private var rangeButton:FlxButtonPlus;
-	private var damageButton:FlxButtonPlus;
-	private var firerateButton:FlxButtonPlus;
-	private var nextWaveButton:FlxButtonPlus;
-	private var speedButton:FlxButtonPlus;
+	private var towerButton:Button;
+	private var rangeButton:Button;
+	private var damageButton:Button;
+	private var firerateButton:Button;
+	private var nextWaveButton:Button;
+	private var speedButton:Button;
 	
 	// Other objects
 	private var tween:FlxTween;
@@ -81,7 +84,7 @@ class GameState extends FlxState
 	
 	override public function create():Void
 	{
-		R.GS = this;
+		Reg.GS = this;
 		
 		FlxG.sound.play("select");
 		FlxG.sound.playMusic("td2");
@@ -90,7 +93,7 @@ class GameState extends FlxState
 		
 		map = new FlxTilemap();
 		map.loadMap(Assets.getText("tilemaps/mapCSV_Group2_Map1.csv"), "images/tileset.png");
-		path = map.findPath(new FlxPoint(8 * 3 + 4, 0), new FlxPoint(8 * 32 + 4, 8 * 6));
+		path.nodes = map.findPath( new FlxPoint(8 * 3 + 4, 0), new FlxPoint(8 * 32 + 4, 8 * 6) );
 		
 		enemyGroup = new FlxTypedGroup();
 		towerGroup = new FlxTypedGroup();
@@ -111,9 +114,7 @@ class GameState extends FlxState
 		
 		centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16); 
 		centerText.alignment = "center";
-		centerText.shadow = 0xff000000;
-		centerText.color = 0xffFFFFFF;
-		centerText.useShadow = true;
+		centerText.setBorderStyle( FlxText.BORDER_SHADOW, 0xff000000 );
 		centerText.blend = BlendMode.INVERT;
 		
 		buildHelper = new FlxSprite(0, 0);
@@ -171,13 +172,9 @@ class GameState extends FlxState
 		
 		var buttonYOffset:Int = 18;
 		
-		towerButton = new FlxButtonPlus(2, FlxG.height - buttonYOffset, buildTowerCallback, null, "Buy [T]ower ($" + towerPrice + ")", 120);
-		nextWaveButton = new FlxButtonPlus(120, FlxG.height - buttonYOffset, nextWaveCallback, null, "[N]ext Wave");
-		speedButton = new FlxButtonPlus(FlxG.width - 20, FlxG.height - buttonYOffset, speedButtonCallback, null, "x1", 20);
-		
-		R.modifyButton(towerButton, 100);
-		R.modifyButton(nextWaveButton);
-		R.modifyButton(speedButton);
+		towerButton = new Button(2, FlxG.height - buttonYOffset,"Buy [T]ower ($" + towerPrice + ")",buildTowerCallback);
+		speedButton = new Button(FlxG.width - 20, FlxG.height - buttonYOffset, "x1",speedButtonCallback);
+		nextWaveButton = new Button(120, FlxG.height - buttonYOffset, "[N]ext Wave", nextWaveCallback);
 		
 		tutText = new FlxText(nextWaveButton.x, nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!");
 		tutText.visible = false;
@@ -193,17 +190,12 @@ class GameState extends FlxState
 	{
 		upgradeMenu = new FlxGroup();
 		
-		var backButton:FlxButtonPlus = new FlxButtonPlus(2, FlxG.height - 18, toggleUpgradeMenu, [false], "<", 20);
-		R.modifyButton(backButton, 20);
+		var buttonHeight:Int = FlxG.height - 18;
 		
-		rangeButton = new FlxButtonPlus(30, FlxG.height - 18, upgradeRangeCallback, null, "Range ++");
-		R.modifyButton(rangeButton);
-		
-		damageButton = new FlxButtonPlus(120, FlxG.height - 18, upgradeDamageCallback, null, "Damage ++");
-		R.modifyButton(damageButton);
-		
-		firerateButton = new FlxButtonPlus(220, FlxG.height - 18, upgradeFirerateCallback, null, "Firerate ++");
-		R.modifyButton(firerateButton);
+		var backButton:Button = new Button(2, FlxG.height - 18, "<",toggleUpgradeMenu);
+		rangeButton = new Button(30, FlxG.height - 18,"Range ++", upgradeRangeCallback);
+		damageButton = new Button(120, FlxG.height - 18, "Damage ++",upgradeDamageCallback);
+		firerateButton = new Button( 220, buttonHeight, "Firerate ++", upgradeFirerateCallback );
 		
 		upgradeMenu.add(backButton);
 		upgradeMenu.add(rangeButton);
@@ -313,10 +305,10 @@ class GameState extends FlxState
 		
 		enemy.hurt(_bullet.damage);
 		bullet.kill();
-		enemy.flicker(0.1);
+		FlxFlicker.flicker( enemy, 0.1 );
 		FlxG.sound.play( Assets.getSound("enemyhit"));
 		
-		if (!enemy.alive) enemyText.flicker(0.2);
+		if (!enemy.alive) FlxFlicker.flicker( enemyText, 0.2 );
 	}
 	
 	private function buildTowerCallback(Skip:Bool = false):Void
@@ -406,7 +398,7 @@ class GameState extends FlxState
 		
 		FlxG.sound.play(Assets.getSound("build"));
 		
-		moneyText.flicker(0.1);
+		FlxFlicker.flicker( moneyText, 0.1 );
 		money -= towerPrice;
 		towerPrice += cast(towerPrice * 0.3);
 		towerButton.text = "Buy [T]ower ($" + towerPrice + ")";
@@ -424,9 +416,10 @@ class GameState extends FlxState
 		var completeFunction:Dynamic = hideText;
 		if (End) completeFunction = null;
 		
-		var xTween:VarTween = new VarTween(completeFunction);
-		xTween.tween(centerText, "x", 0, 2, Ease.expoOut);
-		tween = addTween(xTween);
+		//var xTween:VarTween = new VarTween(completeFunction);
+		//xTween.tween(centerText, "x", 0, 2, FlxEase.expoOut);
+		//tween.
+		//tween = addTween(xTween);
 		
 		waveText.text = "Wave: " + wave;
 		waveText.size = 16;
@@ -435,9 +428,12 @@ class GameState extends FlxState
 	
 	private function hideText():Void
 	{
-		var xTween:VarTween = new VarTween();
-		xTween.tween(centerText, "x", FlxG.width, 2, Ease.expoIn);
-		tween = addTween(xTween);
+		//var xTween:FlxTween = 
+		//new FlxTween(2, FlxTween.ONESHOT, centerText, 
+		
+		//xTween.
+		//xTween.tween(centerText, "x", FlxG.width, 2, Ease.expoIn);
+		//tween = addTween(xTween);
 	}
 	
 	private function spawnWave():Void
@@ -511,13 +507,13 @@ class GameState extends FlxState
 		towerRange.alpha = 0.2;
 		towerRange.visible = true;
 		
-		var gfx:Graphics = FlxG.flashGfx;
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.beginFill(0xFFFFFF);
 		gfx.drawCircle(spriteToAttach.getMidpoint().x, spriteToAttach.getMidpoint().y, range);
 		gfx.endFill();
 		
-		towerRange.pixels.draw(FlxG.flashGfxSprite);
+		towerRange.pixels.draw( FlxSpriteUtil.flashGfxSprite );
 		towerRange.dirty = true;
 		
 		add(towerRange);
@@ -572,7 +568,7 @@ class GameState extends FlxState
 	
 	private function upgradHelper():Void
 	{
-		moneyText.flicker(0.2);
+		FlxFlicker.flicker( moneyText, 0.2 );
 		updateUpgradeLabels();
 		playSelectSound();
 		upgradeHasBeenBought = true;
