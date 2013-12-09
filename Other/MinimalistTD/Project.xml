@@ -15,14 +15,40 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<assets path="assets" />
+	<assets path="assets/sounds" if="flash">
+		<sound path="build.mp3" name="build" />
+		<sound path="deny.mp3" name="deny" />
+		<sound path="enemyhit.mp3" name="enemyhit" />
+		<sound path="enemykill.mp3" name="enemykill" />
+		<sound path="gameover.mp3" name="gameover" />
+		<sound path="hurt.mp3" name="hurt" />
+		<sound path="select.mp3" name="select" />
+		<sound path="shoot.mp3" name="shoot" />
+		<sound path="td2.mp3" name="td2" />
+		<sound path="wavedefeated.mp3" name="wavedefeated" />
+	</assets>
+	
+	<assets path="assets/sounds" unless="flash">
+		<sound path="build.ogg" name="build" />
+		<sound path="deny.ogg" name="deny" />
+		<sound path="enemyhit.ogg" name="enemyhit" />
+		<sound path="enemykill.ogg" name="enemykill" />
+		<sound path="gameover.ogg" name="gameover" />
+		<sound path="hurt.ogg" name="hurt" />
+		<sound path="select.ogg" name="select" />
+		<sound path="shoot.ogg" name="shoot" />
+		<sound path="td2.ogg" name="td2" />
+		<sound path="wavedefeated.ogg" name="wavedefeated" />
+	</assets>
+	
+	<assets path="assets/images" rename="images" />
+	<assets path="assets/tilemaps" rename="tilemaps" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
-	<haxelib name="flixel-addons" />
 	
 	<!--In case you want to use the addons package-->
-	<!--<haxelib name="flixel-addons" />-->
+	<haxelib name="flixel-addons" />
 	
 	<!--In case you want to use the ui package-->
 	<!--<haxelib name="flixel-ui"/>-->
@@ -51,7 +77,7 @@
 	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
 	
 	<!--Disable the Flixel core sound tray-->
-	<haxedef name="FLX_NO_SOUND_TRAY" />
+	<!-- <haxedef name="FLX_NO_SOUND_TRAY" /> -->
 	
 	<!--Disable the Flixel core focus lost screen-->
 	<!--<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />-->

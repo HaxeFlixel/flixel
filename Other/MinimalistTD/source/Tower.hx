@@ -1,14 +1,11 @@
 package;
 
-import org.flixel.FlxGroup;
-import org.flixel.FlxPoint;
-import org.flixel.FlxSprite;
-import org.flixel.FlxG;
-import org.flixel.plugin.photonstorm.FlxVelocity;
-import org.flixel.FlxU;
-import org.flixel.plugin.photonstorm.FlxMath;
-import org.flixel.FlxTypedGroup;
-import nme.display.BlendMode;
+import openfl.Assets;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
+import flixel.group.FlxTypedGroup;
 
 class Tower extends FlxSprite 
 {
@@ -32,7 +29,7 @@ class Tower extends FlxSprite
 	
 	public function new(X:Float, Y:Float) 
 	{
-		super(X, Y, "assets/img/tower.png");
+		super(X, Y, Assets.getBitmapData("images/tower.png"));
 		
 		indicator = new FlxSprite(getMidpoint().x - 1, getMidpoint().y - 1);
 		indicator.makeGraphic(2, 2);
@@ -64,7 +61,7 @@ class Tower extends FlxSprite
 		var bullet:Bullet = new Bullet(getMidpoint().x, getMidpoint().y, target, damage);
 		R.GS.bulletGroup.add(bullet);
 		
-		FlxG.play("assets/sfx/Shoot.mp3");
+		FlxG.sound.play(Assets.getSound("shoot"));
 		shootCounter = 0;
 	}
 	
@@ -76,7 +73,7 @@ class Tower extends FlxSprite
 		for (i in 0...enemies.members.length) 
 		{
 			var enemy:Enemy = cast(enemies.members[i]);
-			var distance:Float = FlxU.getDistance(new FlxPoint(x, y), new FlxPoint(enemy.x, enemy.y));
+			var distance:Float = FlxMath.getDistance(new FlxPoint(x, y), new FlxPoint(enemy.x, enemy.y));
 			
 			if (distance <= range && enemy.alive) {
 				firstEnemy = enemy;

@@ -1,11 +1,11 @@
 package;
 
-import org.flixel.FlxEmitter;
-import org.flixel.FlxParticle;
-import org.flixel.FlxPoint;
-import org.flixel.FlxSprite;
-import org.flixel.FlxG;
-import nme.display.BlendMode;
+import openfl.Assets;
+import flash.display.BlendMode;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.effects.particles.FlxParticle;
+import flixel.effects.particles.FlxTypedEmitter;
 
 class Enemy extends FlxSprite 
 {
@@ -14,7 +14,7 @@ class Enemy extends FlxSprite
 	
 	public function new(X:Int, Y:Int) 
 	{
-		super(X, Y, "assets/img/enemy.png");
+		super(X, Y, "images/enemy.png");
 		if (R.GS != null) {
 			health = Math.floor(R.GS.wave / 3) + 1;
 		}
@@ -35,10 +35,10 @@ class Enemy extends FlxSprite
 	
 	override public function kill():Void
 	{
-		FlxG.play("assets/sfx/EnemyKill.mp3");
+		FlxG.sound.play(Assets.getSound("enemykill"));
 		
-		var emitter:FlxTypedEmitter<FlxParticle> = new FlxTypedEmitter(x, y);
-		emitter.makeParticles("assets/img/enemy.png", 10);
+		var emitter:FlxTypedEmitter<FlxParticle> = new FlxTypedEmitter<FlxParticle>(x, y);
+		emitter.makeParticles(Assets.getBitmapData("images/enemy.png"), 10);
 		var speed:Int = 10;
 		emitter.setXSpeed( -speed, speed);
 		emitter.setYSpeed( -speed, speed);
@@ -46,7 +46,7 @@ class Enemy extends FlxSprite
 		for (i in 0...10) {
 			var p:FlxParticle = emitter.members[i];
 			p.blend = BlendMode.INVERT;
-			p.makeGraphic(2, 2, FlxG.BLACK);
+			p.makeGraphic(2, 2, 0xff000000);
 			emitter.add(p);
 		}
 		R.GS.emitterGroup.add(emitter);

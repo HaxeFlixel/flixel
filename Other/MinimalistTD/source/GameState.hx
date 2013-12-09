@@ -1,27 +1,22 @@
 package;
 
-import flash.display.BitmapData;
-import nme.Assets;
-import nme.display.BlendMode;
-import nme.display.Graphics;
-import nme.display.Sprite;
-import org.flixel.FlxG;
-import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
-import org.flixel.FlxPath;
-import org.flixel.FlxPoint;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.FlxTilemap;
-import org.flixel.FlxTypedGroup;
-import org.flixel.plugin.photonstorm.FlxButtonPlus;
-import org.flixel.tweens.FlxTween;
-import org.flixel.tweens.misc.VarTween;
-import org.flixel.tweens.util.Ease;
-import org.flixel.FlxEmitter;
-import org.flixel.FlxParticle;
-import org.flixel.plugin.photonstorm.FlxMath;
+import openfl.Assets;
+import flash.display.BlendMode;
+import flixel.FlxG;
+import flixel.FlxState;
+import flixel.FlxSprite;
+import flixel.FlxObject;
+import flixel.util.FlxMath;
+import flixel.util.FlxPath;
+import flixel.util.FlxPoint;
+import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
+import flixel.tweens.FlxTween;
+import flixel.group.FlxGroup;
+import flixel.group.FlxTypedGroup;
+import flixel.effects.particles.FlxParticle;
+import flixel.effects.particles.FlxTypedEmitter;
+import flixel.addons.ui.FlxButtonPlus;
 
 class GameState extends FlxState
 {
@@ -55,7 +50,7 @@ class GameState extends FlxState
 	private var firerateButton:FlxButtonPlus;
 	private var nextWaveButton:FlxButtonPlus;
 	private var speedButton:FlxButtonPlus;
-		
+	
 	// Other objects
 	private var tween:FlxTween;
 	private var map:FlxTilemap;
@@ -88,13 +83,13 @@ class GameState extends FlxState
 	{
 		R.GS = this;
 		
-		FlxG.play("assets/sfx/Select.mp3");
-		FlxG.playMusic("assets/sfx/TD2.mp3");
-		FlxG.bgColor = FlxG.WHITE;
+		FlxG.sound.play("select");
+		FlxG.sound.playMusic("td2");
+		FlxG.camera.bgColor = 0xffFFFFFF;
 		FlxG.timeScale = 1;
 		
 		map = new FlxTilemap();
-		map.loadMap(Assets.getText("assets/tilemap/mapCSV_Group2_Map1.csv"), "assets/img/tileset.png");
+		map.loadMap(Assets.getText("tilemaps/mapCSV_Group2_Map1.csv"), "images/tileset.png");
 		path = map.findPath(new FlxPoint(8 * 3 + 4, 0), new FlxPoint(8 * 32 + 4, 8 * 6));
 		
 		enemyGroup = new FlxTypedGroup();
@@ -105,10 +100,10 @@ class GameState extends FlxState
 		lifeGroup = new FlxGroup();
 		topGui = new FlxGroup();
 		
-		goal = new FlxSprite(245, 43, "assets/img/goal.png");
+		goal = new FlxSprite(245, 43, "images/goal.png");
 		
 		var guiUnderlay:FlxSprite = new FlxSprite(0, FlxG.height - 16);
-		guiUnderlay.makeGraphic(FlxG.width, 16, FlxG.WHITE);
+		guiUnderlay.makeGraphic(FlxG.width, 16, 0xffFFFFFF);
 		
 		createGUI();
 		createUpradeMenu();
@@ -116,8 +111,8 @@ class GameState extends FlxState
 		
 		centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16); 
 		centerText.alignment = "center";
-		centerText.shadow = FlxG.BLACK;
-		centerText.color = FlxG.WHITE;
+		centerText.shadow = 0xff000000;
+		centerText.color = 0xffFFFFFF;
 		centerText.useShadow = true;
 		centerText.blend = BlendMode.INVERT;
 		
@@ -127,17 +122,17 @@ class GameState extends FlxState
 		buildHelper.alpha = 0.5;
 		
 		moneyText = new FlxText(0, 2, FlxG.width - 2, "$: " + money, 8);
-		moneyText.color = FlxG.WHITE;
+		moneyText.color = 0xffFFFFFF;
 		moneyText.alignment = "right";
 		topGui.add(moneyText);
 		
 		enemyText = new FlxText(120, 2, FlxG.width, "Wave");
-		enemyText.color = FlxG.WHITE;
+		enemyText.color = 0xffFFFFFF;
 		enemyText.visible = false;
 		topGui.add(enemyText);
 		
 		waveText = new FlxText(222, 2, FlxG.width, "Wave");
-		waveText.color = FlxG.WHITE;
+		waveText.color = 0xffFFFFFF;
 		waveText.visible = false;
 		topGui.add(waveText);
 		
@@ -163,9 +158,8 @@ class GameState extends FlxState
 		add(topGui);	
 		add(centerText);
 		
-		// watches
-		FlxG.watch(FlxG.mouse, "x");
-		FlxG.watch(FlxG.mouse, "y");
+		// watch
+		FlxG.watch.addMouse();
 		
 		tween = new FlxTween(3);
 		killedWave();
@@ -187,7 +181,7 @@ class GameState extends FlxState
 		
 		tutText = new FlxText(nextWaveButton.x, nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!");
 		tutText.visible = false;
-		tutText.color = FlxG.BLACK;
+		tutText.color = 0xff000000;
 		
 		guiGroup.add(towerButton);
 		guiGroup.add(nextWaveButton);
@@ -232,7 +226,7 @@ class GameState extends FlxState
 			var yPos:Float = goal.y + 5 + 4 * (row - 1);
 		
 			var life:FlxSprite = new FlxSprite(xPos, yPos);
-			life.makeGraphic(2, 2, FlxG.WHITE);
+			life.makeGraphic(2, 2, 0xffFFFFFF);
 			lifeGroup.add(life);
 		}
 	}
@@ -245,20 +239,20 @@ class GameState extends FlxState
 	override public function update():Void
 	{
 		moneyText.text = "$: " + money;
-		enemyText.text = "Enemies left: " + (enemiesToKill);
+		enemyText.text = "Enemies left: " + enemiesToKill;
 		
 		if (moneyText.size > 8) moneyText.size --;
 		if (enemyText.size > 8) enemyText.size --;
 		if (waveText.size > 8) waveText.size --;
-			
-		if (FlxG.keys.justReleased("T")) buildTowerCallback(true); 
-		if (FlxG.keys.justReleased("SPACE")) speedButtonCallback(true); 
-		if (FlxG.keys.justReleased("R")) FlxG.resetState(); 
-		if (FlxG.keys.justReleased("N")) nextWaveCallback(true); 
-		if (FlxG.keys.justReleased("ESCAPE")) escapeBuilding(); 
-		if (FlxG.keys.justReleased("ONE")) upgradeRangeCallback(); 
-		if (FlxG.keys.justReleased("TWO")) upgradeDamageCallback(); 
-		if (FlxG.keys.justReleased("THREE")) upgradeFirerateCallback(); 
+		
+		if (FlxG.keys.justReleased.T) buildTowerCallback(true); 
+		if (FlxG.keys.justReleased.SPACE) speedButtonCallback(true); 
+		if (FlxG.keys.justReleased.R) FlxG.resetState(); 
+		if (FlxG.keys.justReleased.N) nextWaveCallback(true); 
+		if (FlxG.keys.justReleased.ESCAPE) escapeBuilding(); 
+		if (FlxG.keys.justReleased.ONE) upgradeRangeCallback(); 
+		if (FlxG.keys.justReleased.TWO) upgradeDamageCallback(); 
+		if (FlxG.keys.justReleased.THREE) upgradeFirerateCallback(); 
 		
 		if (buildingMode) {
 			buildHelper.x = FlxG.mouse.x - (FlxG.mouse.x % 8);
@@ -266,11 +260,10 @@ class GameState extends FlxState
 			updateRangeSprite();
 		}
 		
-		if (FlxG.mouse.justReleased()) {
-			if (buildingMode) 
+		if (FlxG.mouse.justReleased) {
+			if (buildingMode) {
 				buildTower();
-			else {
-				
+			} else {
 				for (i in 0...towerGroup.length) {
 					var tower = towerGroup.members[i];
 					if (FlxMath.pointInCoordinates(cast(FlxG.mouse.x), cast(FlxG.mouse.y), cast(tower.x), cast(tower.y), 8, 8)) {
@@ -278,8 +271,7 @@ class GameState extends FlxState
 						toggleUpgradeMenu(true);
 						updateUpgradeLabels();
 						break;
-					}
-					else if (FlxG.mouse.y < FlxG.height - 20) {
+					} else if (FlxG.mouse.y < FlxG.height - 20) {
 						toggleUpgradeMenu(false);
 					}
 				}
@@ -296,8 +288,7 @@ class GameState extends FlxState
 		}
 		else {
 			spawnCounter += cast(FlxG.timeScale);
-			if (spawnCounter > spawnIntervall * FlxG.framerate && enemiesToSpawn > 0)
-				spawnEnemy();
+			if (spawnCounter > spawnIntervall * FlxG.framerate && enemiesToSpawn > 0) spawnEnemy();
 		}
 		
 		super.update();
@@ -313,7 +304,7 @@ class GameState extends FlxState
 		if (lives >= 0) lifeGroup.members[lives].kill();
 		if (lives == 0) loseGame();
 		
-		FlxG.play("assets/sfx/Hurt.mp3");
+		FlxG.sound.play( Assets.getSound("hurt"));
 	}
 	
 	private function hitEnemy(bullet:FlxObject, enemy:FlxObject):Void
@@ -323,7 +314,7 @@ class GameState extends FlxState
 		enemy.hurt(_bullet.damage);
 		bullet.kill();
 		enemy.flicker(0.1);
-		FlxG.play("assets/sfx/EnemyHit.mp3");
+		FlxG.sound.play( Assets.getSound("enemyhit"));
 		
 		if (!enemy.alive) enemyText.flicker(0.2);
 	}
@@ -383,7 +374,7 @@ class GameState extends FlxState
 		
 		// Can't buy towers without money
 		if (money < towerPrice) {
-			FlxG.play("assets/sfx/Deny.mp3");
+			FlxG.sound.play(Assets.getSound("deny"));
 			escapeBuilding();
 			return;
 		}
@@ -396,7 +387,7 @@ class GameState extends FlxState
 		for (i in 0...towerGroup.length) {
 			var tower:Tower = towerGroup.members[i];
 			if (tower.x == xPos && tower.y == yPos) {
-				FlxG.play("assets/sfx/Deny.mp3");
+				FlxG.sound.play(Assets.getSound("deny"));
 				escapeBuilding();
 				return;
 			}
@@ -404,7 +395,7 @@ class GameState extends FlxState
 		
 		//Can't place towers on the road
 		if (map.getTile(cast(xPos / 8), cast(yPos / 8)) == 0) {
-			FlxG.play("assets/sfx/Deny.mp3");
+			FlxG.sound.play(Assets.getSound("deny"));
 			escapeBuilding();
 			return;
 		}
@@ -413,7 +404,7 @@ class GameState extends FlxState
 		tower.index = towerGroup.length - 1;
 		towerGroup.add(tower); 
 		
-		FlxG.play("assets/sfx/Build.mp3");
+		FlxG.sound.play(Assets.getSound("build"));
 		
 		moneyText.flicker(0.1);
 		money -= towerPrice;
@@ -422,14 +413,14 @@ class GameState extends FlxState
 		escapeBuilding();
 	}
 	
-	private function playSelectSound():Void { FlxG.play("assets/sfx/Select.mp3"); } 
+	private function playSelectSound():Void { FlxG.sound.play(Assets.getSound("select")); } 
 	
 	private function announceWave(End:Bool = false):Void
 	{
 		centerText.x = -200;
 		centerText.text = "Wave " + wave;
 		if (End) centerText.text = "Game Over! :(";
-	
+		
 		var completeFunction:Dynamic = hideText;
 		if (End) completeFunction = null;
 		
@@ -477,7 +468,7 @@ class GameState extends FlxState
 	
 	public function killedWave():Void
 	{
-		if (wave != 0) FlxG.play("assets/sfx/WaveDefeated.mp3");
+		if (wave != 0) FlxG.sound.play(Assets.getSound("wavedefeated"));
 		
 		waveCounter = 3 * FlxG.framerate;
 		
@@ -502,7 +493,7 @@ class GameState extends FlxState
 		towerButton.text = "[R]estart";
 		towerButton.setOnClickCallback(resetCallback);
 		
-		FlxG.play("assets/sfx/GameOver.mp3");
+		FlxG.sound.play(Assets.getSound("gameover"));
 	}
 	
 	private function updateRangeSprite():Void

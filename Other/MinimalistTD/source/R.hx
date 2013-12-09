@@ -9,8 +9,8 @@ class R
 	
 	static public function modifyButton(B:FlxButtonPlus, Width:Int = 70):Void
 	{
-		B.textNormal.color = FlxG.BLACK;
-		B.textHighlight.color = 0xFF808080 ;
+		B.textNormal.color = 0xff000000;
+		B.textHighlight.color = 0xFF808080;
 		B.buttonHighlight.makeGraphic(Width, 20, 0);
 		B.buttonNormal.makeGraphic(Width, 20, 0);
 		B.textNormal.width = FlxG.width;

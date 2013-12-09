@@ -18,15 +18,15 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.show();
-		FlxG.mouse._cursorContainer.blendMode = BlendMode.INVERT;
-		FlxG.bgColor = FlxG.WHITE;
+		//FlxG.mouse._cursorContainer.blendMode = BlendMode.INVERT;
+		FlxG.camera.bgColor = 0xffFFFFFF;
 		
 		var map:FlxTilemap = new FlxTilemap();
-		map.loadMap( Assets.getText("assets/tilemap/mapCSV_Group3_Map1.csv"), "assets/img/tileset.png", 8, 8);
+		map.loadMap( Assets.getText("tilemaps/mapCSV_Group3_Map1.csv"), Assets.getBitmapData("images/tileset.png"), 8, 8);
 		add(map);
 		
 		var headline:FlxText = new FlxText(0, 40, FlxG.width, "Minimalist TD", 16);
-		headline.color = FlxG.WHITE;
+		headline.color = 0xffFFFFFF;
 		headline.alignment = "center";
 		add(headline);
 		
@@ -35,7 +35,7 @@ class MenuState extends FlxState
 		
 		var playButton:FlxButtonPlus = new FlxButtonPlus(0, cast(FlxG.height / 2), playButtonCallback, null, "Play");
 		R.modifyButton(playButton, 25);
-		playButton.textNormal.color = FlxG.WHITE;
+		playButton.textNormal.color = 0xffFFFFFF;
 		playButton.x = Std.int(FlxG.width / 2 - 12);
 		add(playButton);
 		
