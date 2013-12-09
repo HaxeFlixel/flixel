@@ -1,13 +1,7 @@
 package;
 
-import flixel.effects.FlxFlicker;
-import flixel.util.FlxPath;
-import openfl.Assets;
-import flash.display.BlendMode;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.effects.particles.FlxParticle;
-import flixel.effects.particles.FlxTypedEmitter;
 
 class Enemy extends FlxSprite 
 {
@@ -24,7 +18,7 @@ class Enemy extends FlxSprite
 		reset(X, Y);
 		
 		if (Reg.PS != null) {
-			health = Math.floor(R.PS.wave / 3) + 1;
+			health = Math.floor(Reg.PS.wave / 3) + 1;
 		}
 		
 		maxHealth = health;
@@ -48,30 +42,19 @@ class Enemy extends FlxSprite
 		FlxG.sound.play("enemykill");
 		#end
 		
-		var emitter:FlxTypedEmitter<FlxParticle> = new FlxTypedEmitter<FlxParticle>(x, y);
-		emitter.makeParticles(Assets.getBitmapData("images/enemy.png"), 10);
-		var speed:Int = 10;
-		emitter.setXSpeed( -speed, speed);
-		emitter.setYSpeed( -speed, speed);
+		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle(EnemyGibs);
+		emitter.init(x, y);
+		emitter.start(true, 2);
 		
-		for (i in 0...10) {
-			var p:FlxParticle = cast(emitter.members[i]);
-			p.blend = BlendMode.INVERT;
-			p.makeGraphic(2, 2, 0xff000000);
-			emitter.add(p);
-		}
-		Reg.GS.emitterGroup.add(emitter);
-		emitter.start(true);
+		Reg.PS.enemiesToKill--;
 		
-		Reg.GS.enemiesToKill --;
-		if (Reg.GS.enemiesToKill <= 0) Reg.GS.killedWave();
-		Reg.GS.enemyGroup.remove(this, true);
+		if (Reg.PS.enemiesToKill <= 0) Reg.PS.killedWave();
+		
 		if (moneyGain) {
 			var money:Int = 1;
-			if (Reg.GS.wave < 5) money = 2;
-			
-			Reg.GS.money += money;
-			Reg.GS.moneyText.size = 16;
+			if (Reg.PS.wave < 5) money = 2;
+			Reg.PS.money += money;
+			Reg.PS.moneyText.size = 16;
 		}
 		
 		super.kill();

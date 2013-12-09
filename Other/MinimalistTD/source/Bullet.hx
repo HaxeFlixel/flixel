@@ -17,6 +17,13 @@ class Bullet extends FlxSprite
 		blend = BlendMode.INVERT;
 	}
 	
+	public function init(X:Float, Y:Float, Target:Enemy, Damage:Int):Void
+	{
+		reset(X, Y);
+		target = Target;
+		damage = Damage;
+	}
+ 
 	override public function update():Void
 	{
 		if (!onScreen(FlxG.camera)) kill();
