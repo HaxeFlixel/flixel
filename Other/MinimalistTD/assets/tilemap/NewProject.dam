@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+  <version>3.1.0</version>
+  <bgColor>0x777777</bgColor>
+  <viewPos x="-1" y="27"/>
+  <firstLayersTop>false</firstLayersTop>
+  <spriteEntries currentId="1"/>
+  <layers>
+    <group name="Group1" id="0" xScroll="1" yScroll="1" visible="true" open="true" locked="false" exports="true"/>
+    <group name="Group2" id="2" xScroll="1" yScroll="1" visible="true" open="true" locked="false" exports="true">
+      <maplayer name="Map1" id="0" xScroll="1" yScroll="1" x="0" y="0" width="40" height="30" tileset="../../../Minismalism TD/assets/img/tileset.png" tileWidth="8" tileHeight="8" visible="false" hasHits="false" drawIdx="1" collideIdx="1" eraseIdx="0" locked="false" exports="true" tileSpacingX="8" tileSpacingY="8" xStagger="0" tileOffsetX="0" tileOffsetY="0" isMaster="false" mapType="2d" hasHeight="false" repeatX="false" repeatY="false">
+        <row>1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+      </maplayer>
+    </group>
+    <group name="Group3" id="2" xScroll="1" yScroll="1" visible="true" open="true" locked="false" exports="true">
+      <maplayer name="Map1" id="3" xScroll="1" yScroll="1" x="0" y="0" width="40" height="30" tileset="../../../Minismalism TD/assets/img/tileset.png" tileWidth="8" tileHeight="8" visible="true" hasHits="false" drawIdx="1" collideIdx="1" eraseIdx="0" locked="false" exports="true" tileSpacingX="8" tileSpacingY="8" xStagger="0" tileOffsetX="0" tileOffsetY="0" isMaster="false" mapType="2d" hasHeight="false" repeatX="false" repeatY="false" selected="true">
+        <row>1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,0,0,1,1,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1</row>
+        <row>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1</row>
+      </maplayer>
+    </group>
+  </layers>
+  <layerTemplates/>
+  <tileMatrix currentMatrix="0" rows="3" cols="3" randomizeMiddle="true" ignoreClear="false" ignoreMapEdges="true" allowSpecialTiles="false" tileset="../../../Minismalism TD/assets/tilemap">
+    <row>
+      <tile>0</tile>
+      <tile>0</tile>
+      <tile>0</tile>
+    </row>
+    <row>
+      <tile>0</tile>
+      <tile>0</tile>
+      <tile>0</tile>
+    </row>
+    <row>
+      <tile>0</tile>
+      <tile>0</tile>
+      <tile>0</tile>
+    </row>
+    <specialConnections>
+      <sets>
+        <connections name="Single Inside Corners">
+          <entry green="0x1111111" red="0x10000000"/>
+          <entry green="0x11011111" red="0x100000"/>
+          <entry green="0x11111110" red="0x1"/>
+          <entry green="0x11111011" red="0x100"/>
+        </connections>
+        <connections name="Double Inside Corners">
+          <entry green="0x1011111" red="0x10100000"/>
+          <entry green="0x11011110" red="0x100001"/>
+          <entry green="0x11111010" red="0x101"/>
+          <entry green="0x1111011" red="0x10000100"/>
+        </connections>
+        <connections name="Triple Inside Corners">
+          <entry green="0x1011011" red="0x10100100"/>
+          <entry green="0x1011110" red="0x10100001"/>
+          <entry green="0x11011010" red="0x100101"/>
+          <entry green="0x1111010" red="0x10000101"/>
+        </connections>
+        <connections name="Quad Inside Corners">
+          <entry green="0x1011010" red="0x10100101"/>
+          <entry green="0x0" red="0x0"/>
+          <entry green="0x0" red="0x0"/>
+          <entry green="0x0" red="0x0"/>
+        </connections>
+        <connections name="Double Outside Corners">
+          <entry green="0x10" red="0x1011000"/>
+          <entry green="0x1000" red="0x1010010"/>
+          <entry green="0x1000000" red="0x11010"/>
+          <entry green="0x10000" red="0x1001010"/>
+        </connections>
+        <connections name="Double Outside Edges">
+          <entry green="0x1000010" red="0x11000"/>
+          <entry green="0x11000" red="0x1000010"/>
+          <entry green="0x0" red="0x0"/>
+          <entry green="0x0" red="0x0"/>
+        </connections>
+        <connections name="Opposing Double Inside Corners">
+          <entry green="0x1111110" red="0x10000001"/>
+          <entry green="0x11011011" red="0x100100"/>
+          <entry green="0x0" red="0x0"/>
+          <entry green="0x0" red="0x0"/>
+        </connections>
+      </sets>
+      <rows>
+        <row set="0">
+          <tiles>
+            <id>0</id>
+            <id>0</id>
+            <id>0</id>
+            <id>0</id>
+          </tiles>
+        </row>
+        <row set="0">
+          <tiles>
+            <id>0</id>
+            <id>0</id>
+            <id>0</id>
+            <id>0</id>
+          </tiles>
+        </row>
+      </rows>
+    </specialConnections>
+  </tileMatrix>
+  <tileMatrixData name="matrix1" rows="3" cols="3" randomizeMiddle="true" ignoreClear="false" ignoreMapEdges="true" allowSpecialTiles="false" tileset="../../../Minismalism TD/assets/tilemap">
+    <tiles>0,0,0,0,0,0,0,0,0</tiles>
+    <connections set="0">
+      <tiles>0,0,0,0</tiles>
+    </connections>
+    <connections set="0">
+      <tiles>0,0,0,0</tiles>
+    </connections>
+  </tileMatrixData>
+  <tileBrushes/>
+  <colorSwatches/>
+  <bookmarks>
+    <bookmark enabled="false"/>
+    <bookmark enabled="false"/>
+    <bookmark enabled="false"/>
+    <bookmark enabled="false"/>
+    <bookmark enabled="false"/>
+    <bookmark enabled="false"/>
+    <bookmark enabled="false"/>
+    <bookmark enabled="false"/>
+    <bookmark enabled="false"/>
+  </bookmarks>
+  <colourGrid>
+    <colour>0x000000</colour>
+    <colour>0x9c9c9c</colour>
+    <colour>0xffffff</colour>
+    <colour>0xbe2532</colour>
+    <colour>0xe06e8a</colour>
+    <colour>0x483b2a</colour>
+    <colour>0xa36323</colour>
+    <colour>0xeb8833</colour>
+    <colour>0xf6e16d</colour>
+    <colour>0x2e474d</colour>
+    <colour>0x42881e</colour>
+    <colour>0xa2cd2e</colour>
+    <colour>0x1a2531</colour>
+    <colour>0x025683</colour>
+    <colour>0x33a2f1</colour>
+    <colour>0xb2dcee</colour>
+  </colourGrid>
+  <options>
+    <AllowEditingTemplateLayerList>true</AllowEditingTemplateLayerList>
+    <ForceAddingTemplatedMapsOnly>false</ForceAddingTemplatedMapsOnly>
+    <PreventEditingMapTileset>false</PreventEditingMapTileset>
+    <PreventEditingSprites>false</PreventEditingSprites>
+  </options>
+  <exporter name="C:\Program Files (x86)\DAME\lua\Exporters\csvTilemap.lua" spritepos="Top Left" rotatedSpritePos="false" relativePaths="false" useProjectExporterOnly="false">
+    <setting name="FileExt">csv</setting>
+    <setting name="CSVDir">C:\Users\Jens\Dropbox\Flash\Minismalism TD\assets\tilemap</setting>
+  </exporter>
+  <customPropertyTypes/>
+  <guides>
+    <snap>false</snap>
+    <visible>false</visible>
+    <x>0</x>
+    <y>0</y>
+    <xspace>30</xspace>
+    <yspace>30</yspace>
+    <gridcolour>0x77ff0000</gridcolour>
+    <snaptype>Anchor</snaptype>
+    <paintcontinuous>false</paintcontinuous>
+    <showgameregion>false</showgameregion>
+    <gameregionwidth>400</gameregionwidth>
+    <gameregionheight>400</gameregionheight>
+    <gameregionopacity>0.5</gameregionopacity>
+    <gameregioncentered>false</gameregioncentered>
+    <minGridSpace>10</minGridSpace>
+    <showregiongrid>false</showregiongrid>
+    <regiongridx>0</regiongridx>
+    <regiongridy>0</regiongridy>
+    <regiongridcolour>0xccffffff</regiongridcolour>
+  </guides>
+</project>
