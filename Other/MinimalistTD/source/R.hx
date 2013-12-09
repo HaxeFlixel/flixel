@@ -1,7 +1,7 @@
 package;
 
-import org.flixel.plugin.photonstorm.FlxButtonPlus;
-import org.flixel.FlxG;
+import flixel.FlxG;
+import flixel.addons.ui.FlxButtonPlus;
 
 class R 
 {

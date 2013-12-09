@@ -1,20 +1,14 @@
 package;
 
-import nme.Assets;
-import nme.geom.Rectangle;
-import nme.net.SharedObject;
-import org.flixel.FlxButton;
-import org.flixel.FlxG;
-import org.flixel.FlxPath;
-import org.flixel.FlxPoint;
-import org.flixel.FlxSave;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.FlxTilemap;
-import org.flixel.FlxU;
-import org.flixel.plugin.photonstorm.FlxButtonPlus;
-import nme.display.BlendMode;
+import openfl.Assets;
+import flash.display.BlendMode;
+import flixel.FlxG;
+import flixel.FlxState;
+import flixel.tile.FlxTilemap;
+import flixel.text.FlxText;
+import flixel.util.FlxPath;
+import flixel.util.FlxPoint;
+import flixel.addons.ui.FlxButtonPlus;
 
 class MenuState extends FlxState
 {
@@ -28,7 +22,7 @@ class MenuState extends FlxState
 		FlxG.bgColor = FlxG.WHITE;
 		
 		var map:FlxTilemap = new FlxTilemap();
-		map.loadMap(Assets.getText("assets/tilemap/mapCSV_Group3_Map1.csv"), "assets/img/tileset.png", 8, 8);
+		map.loadMap( Assets.getText("assets/tilemap/mapCSV_Group3_Map1.csv"), "assets/img/tileset.png", 8, 8);
 		add(map);
 		
 		var headline:FlxText = new FlxText(0, 40, FlxG.width, "Minimalist TD", 16);
@@ -42,7 +36,7 @@ class MenuState extends FlxState
 		var playButton:FlxButtonPlus = new FlxButtonPlus(0, cast(FlxG.height / 2), playButtonCallback, null, "Play");
 		R.modifyButton(playButton, 25);
 		playButton.textNormal.color = FlxG.WHITE;
-		playButton.x = cast(FlxG.width / 2- 12);
+		playButton.x = Std.int(FlxG.width / 2 - 12);
 		add(playButton);
 		
 		path = map.findPath(new FlxPoint(5 * 8 + 4, 0), new FlxPoint(34 * 8 + 4, 29 * 8));
