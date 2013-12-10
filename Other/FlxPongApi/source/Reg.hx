@@ -11,31 +11,70 @@ import flixel.util.FlxSave;
 
 class Reg
 {
-	/**
-	 * The currently active state. Used by trophyToast to add the toast.
-	 */
 	static public var CS:FlxState;
 	
-	static public var halfWidth:Int = Std.int( FlxG.width / 2 );
-	static public var halfHeight:Int = Std.int( FlxG.height / 2 );
+	static public var colorArray:Array<Int> = [];
 	
-	inline public static var LITE:Int = 0xffEFF5E0;
-	inline public static var MED_LITE:Int = 0xffA5CA53;
-	inline public static var MED_DARK:Int = 0xff3D4E18;
-	inline public static var DARK:Int = 0xff0C1005;
+	inline static public var GAME_ID:Int = 19975;
 	
-	inline public static var GAME_ID:Int = 19975;
+	static public var lite(get, null):Int;
 	
-	/**
-	 * Horizontally center any FlxObject on the stage.
-	 * 
-	 * @param	Object	The object to center.
-	 */
-	static public function centerX( Object:FlxObject ):Void
+	static private function get_lite():Int
 	{
-		Object.x = ( FlxG.width - Object.width ) / 2;
+		return colorArray[3];
 	}
 	
+	static public var med_lite(get, null):Int;
+	
+	static private function get_med_lite():Int
+	{
+		return colorArray[2];
+	}
+	
+	static public var med_dark(get, null):Int;
+	
+	static private function get_med_dark():Int
+	{
+		return colorArray[1];
+	}
+	
+	static public var dark(get, null):Int;
+	
+	static private function get_dark():Int
+	{
+		return colorArray[0];
+	}
+	
+	static public function genColors():Void
+	{
+		var base:Array<Int> = [];
+		base.push( FlxRandom.intRanged( 64, 192 ) ); // red
+		base.push( FlxRandom.intRanged( 64, 192 ) ); // green
+		base.push( FlxRandom.intRanged( 64, 192 ) ); // blue
+		
+		// wipe or initiate colorArray
+		
+		colorArray = [];
+		
+		// generate four colors
+		
+		for ( i in 0...4 ) {
+			var dist:Int = FlxRandom.intRanged( 32 * ( i - 2 ), 24 * ( i - 2 ) );
+			colorArray.push( 255 << 24 ); // alpha
+			colorArray[i] += base[0] + dist << 16; //red
+			colorArray[i] += base[1] + dist << 8; //green
+			colorArray[i] += base[2] + dist; // blue
+		}
+		
+		trace( StringTools.hex( colorArray[0] ) );
+		trace( StringTools.hex( colorArray[1] ) );
+		trace( StringTools.hex( colorArray[2] ) );
+		trace( StringTools.hex( colorArray[3] ) );
+	}
+	
+	/**
+	 * Returns a random color from the currently active color array.
+	 */
 	static public function randomColor():Int
 	{
 		var i:Int = FlxRandom.intRanged( 0, 3 );
@@ -43,13 +82,13 @@ class Reg
 		
 		switch ( i ) {
 			case 0:
-				r = LITE;
+				r = lite;
 			case 1:
-				r = MED_LITE;
+				r = med_lite;
 			case 2:
-				r = MED_DARK;
+				r = med_dark;
 			case 3:
-				r = DARK;
+				r = dark;
 		}
 		
 		return r;
@@ -61,20 +100,10 @@ class Reg
 	 * @param	Object
 	 * @param	Num
 	 */
-	static public function quarterX( Object:FlxObject, Num:Int = 1 ):Void {
+	static public function quarterX( Object:FlxObject, Num:Int = 2 ):Void {
 		Object.x = ( FlxG.width * Num / 2 - Object.width ) / 2;
 	}
 	
-	static public function trophyToast( Data:Dynamic ):Void {
-		if ( CS == null ) {
-			return;
-		}
-		trace("yep");
-		var toast:FlxSprite = new FlxSprite( FlxG.width, FlxG.height - 40 );
-		toast.makeGraphic( 30, 30, 0xffFF0000 );
-		CS.add( toast );
-		FlxTween.linearMotion( toast, toast.x, toast.y, FlxG.width - 40, toast.y, 5 );
-	}
 	/**
 	 * Generic levels Array that can be used for cross-state stuff.
 	 * Example usage: Storing the levels of a platformer.

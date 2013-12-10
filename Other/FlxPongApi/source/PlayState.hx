@@ -14,14 +14,13 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.cameras.bgColor = Reg.LITE;
+		FlxG.cameras.bgColor = Reg.lite;
 		
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.hide();
 		#end
 		
-		_player = new FlxSprite( 16, Reg.halfHeight );
-		_player.makeGraphic( 4, 16, Reg.DARK );
+		_player = new PongSprite( 16, Std.int( ( FlxG.height - 16 ) / 2 ), 4, 4, Reg.med_dark );
 		
 		_playerBullets = new Emitter( Std.int( _player.x + _player.width ), Std.int( _player.y + _player.height / 2 ), 4 );
 		
