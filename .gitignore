@@ -165,3 +165,6 @@ pip-log.txt
 # export directories
 export
 bin
+
+# private keys (for testing FlxPong's FlxGameJolt integration)
+*.privatekey

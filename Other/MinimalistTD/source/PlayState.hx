@@ -20,7 +20,6 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxSpriteUtil;
-import openfl.Assets;
 
 // TODO: add the ability to destroy towers
 
@@ -102,14 +101,14 @@ class PlayState extends FlxState
 	{
 		R.PS = this;
 		
-		FlxG.sound.play("Select");
-		FlxG.sound.playMusic("TD2");
+		FlxG.sound.play("select");
+		FlxG.sound.playMusic("td2");
 		
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		FlxG.timeScale = 1;
 		
 		map = new FlxTilemap();
-		map.loadMap(Assets.getText("assets/tilemap/mapCSV_Group2_Map1.csv"), "assets/img/tileset.png");
+		map.loadMap(Assets.getText("assets/tilemap/mapCSV_Group2_Map1.csv"), "images/tileset.png");
 		path = map.findPath(new FlxPoint(8 * 3 + 4, 0), new FlxPoint(8 * 32 + 4, 8 * 6));
 		
 		enemyGroup = new FlxTypedGroup();
@@ -120,7 +119,7 @@ class PlayState extends FlxState
 		lifeGroup = new FlxGroup();
 		topGui = new FlxGroup();
 		
-		goal = new FlxSprite(245, 43, "assets/img/goal.png");
+		goal = new FlxSprite(245, 43, "images/goal.png");
 		
 		var guiUnderlay:FlxSprite = new FlxSprite(0, FlxG.height - 16);
 		guiUnderlay.makeGraphic(FlxG.width, 16, FlxColor.WHITE);
@@ -186,15 +185,10 @@ class PlayState extends FlxState
 	{
 		guiGroup = new FlxGroup();
 		
-		var buttonYOffset:Int = 18;
-		
-		towerButton = new FlxButtonPlus(2, FlxG.height - buttonYOffset, buildTowerCallback, [false], "Buy [T]ower ($" + towerPrice + ")", 120);
-		nextWaveButton = new FlxButtonPlus(120, FlxG.height - buttonYOffset, nextWaveCallback, [false], "[N]ext Wave");
-		speedButton = new FlxButtonPlus(FlxG.width - 20, FlxG.height - buttonYOffset, speedButtonCallback, [false], "x1", 20);
-		
-		R.modifyButton(towerButton, 100);
-		R.modifyButton(nextWaveButton);
-		R.modifyButton(speedButton);
+		var height:Int = FlxG.height - 18;
+		towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback );
+		nextWaveButton = new Button( 120, height, nextWaveCallback, "[N]ext Wave", [false] );
+		speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback );
 		
 		tutText = new FlxText(nextWaveButton.x, nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!");
 		tutText.visible = false;
@@ -210,17 +204,11 @@ class PlayState extends FlxState
 	{
 		upgradeMenu = new FlxGroup();
 		
-		var backButton:FlxButtonPlus = new FlxButtonPlus(2, FlxG.height - 18, toggleUpgradeMenu, [false], "<", 20);
-		R.modifyButton(backButton, 20);
-		
-		rangeButton = new FlxButtonPlus(30, FlxG.height - 18, upgradeRangeCallback, null, "Range ++");
-		R.modifyButton(rangeButton);
-		
-		damageButton = new FlxButtonPlus(120, FlxG.height - 18, upgradeDamageCallback, null, "Damage ++");
-		R.modifyButton(damageButton);
-		
-		firerateButton = new FlxButtonPlus(220, FlxG.height - 18, upgradeFirerateCallback, null, "Firerate ++");
-		R.modifyButton(firerateButton);
+		var height:Int = FlxG.height - 18;
+		var backButton:Button = new Button( 2, height, "<", toggleUpgradeMenu, [false] );
+		var rangeButton:Button = new Button( 30, height, "Range ++", upgradeRangeCallback );
+		var damageButton:Button = new Button( 120, height, "Damage ++", upgradeDamageCallback );
+		var firerateButton:Button = new Button( 220, height, "Firerate ++", upgradeFirerateCallback );
 		
 		upgradeMenu.add(backButton);
 		upgradeMenu.add(rangeButton);
@@ -281,11 +269,11 @@ class PlayState extends FlxState
 		firerateButton = null;
 		nextWaveButton = null;
 		speedButton = null;
-
+		
 		tween = null;
 		map = null;
 		path = null;
-	
+		
 		towerSelected = null;
 		
 		super.destroy();
@@ -301,14 +289,14 @@ class PlayState extends FlxState
 		if (waveText.size > 8) waveText.size--;
 		
 		#if !mobile
-		if (FlxG.keys.justReleased("T")) buildTowerCallback(true); 
-		if (FlxG.keys.justReleased("SPACE")) speedButtonCallback(true); 
-		if (FlxG.keys.justReleased("R")) FlxG.resetState(); 
-		if (FlxG.keys.justReleased("N")) nextWaveCallback(true); 
-		if (FlxG.keys.justReleased("ESCAPE")) escapeBuilding(); 
-		if (FlxG.keys.justReleased("ONE")) upgradeRangeCallback(); 
-		if (FlxG.keys.justReleased("TWO")) upgradeDamageCallback(); 
-		if (FlxG.keys.justReleased("THREE")) upgradeFirerateCallback(); 
+		if (FlxG.keys.justReleased.T) buildTowerCallback(true); 
+		if (FlxG.keys.justReleased.SPACE) speedButtonCallback(true); 
+		if (FlxG.keys.justReleased.R) FlxG.resetState(); 
+		if (FlxG.keys.justReleased.N) nextWaveCallback(true); 
+		if (FlxG.keys.justReleased.ESCAPE) escapeBuilding(); 
+		if (FlxG.keys.justReleased.ONE) upgradeRangeCallback(); 
+		if (FlxG.keys.justReleased.TWO) upgradeDamageCallback(); 
+		if (FlxG.keys.justReleased.THREE) upgradeFirerateCallback(); 
 		#end
 		
 		if (buildingMode) {
@@ -332,8 +320,7 @@ class PlayState extends FlxState
 						toggleUpgradeMenu(true);
 						updateUpgradeLabels();
 						break;
-					}
-					else if (FlxG.mouse.y < FlxG.height - 20) {
+					} else if (FlxG.mouse.y < FlxG.height - 20) {
 						toggleUpgradeMenu(false);
 					}
 				}
@@ -343,8 +330,7 @@ class PlayState extends FlxState
 					towerSelected = nearestTower;
 					toggleUpgradeMenu(true);
 					updateUpgradeLabels();
-				}
-				else if (FlxG.mouse.y < FlxG.height - 20) {
+				} else if (FlxG.mouse.y < FlxG.height - 20) {
 					toggleUpgradeMenu(false);
 				}
 				#end
@@ -408,7 +394,7 @@ class PlayState extends FlxState
 	{
 		enemy.hurt(bullet.damage);
 		bullet.kill();
-		//FlxG.sound.play("EnemyHit");
+		FlxG.sound.play("enemyhit");
 	}
 	
 	private function buildTowerCallback(Skip:Bool = false):Void
@@ -551,7 +537,7 @@ class PlayState extends FlxState
 	
 	public function killedWave():Void
 	{
-		if (wave != 0) FlxG.sound.play("WaveDefeated");
+		if (wave != 0) FlxG.sound.play("wavedefeated");
 		waveCounter = 3 * FlxG.framerate;
 		
 		nextWaveButton.visible = true;
@@ -574,7 +560,7 @@ class PlayState extends FlxState
 		
 		towerButton.text = "[R]estart";
 		towerButton.setOnClickCallback(resetCallback);
-		FlxG.sound.play("GameOver");
+		FlxG.sound.play("gameover");
 	}
 	
 	private function updateRangeSprite():Void

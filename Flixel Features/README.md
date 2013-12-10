@@ -4,7 +4,7 @@ These are all the demos that can be found on [flixel.org/features](http://flixel
 
 ###[CollisionAndGrouping](http://www.haxeflixel.com/demos/collision-and-grouping)
 
-Shows off the flixel collision system in combination with sprite organiatzion in [FlxGroup](https://github.com/HaxeFlixel/flixel/blob/dev/flixel/group/FlxTypedGroup.hx?source=cc)s.
+Shows off the flixel collision system in combination with sprite organization in [FlxGroup](https://github.com/HaxeFlixel/flixel/blob/dev/flixel/group/FlxTypedGroup.hx?source=cc)s.
 
 ###[Particles](http://www.haxeflixel.com/demos/particles)
 
