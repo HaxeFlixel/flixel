@@ -5,11 +5,12 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.effects.particles.FlxEmitter;
 
 class PlayState extends FlxState
 {
 	private var _player:FlxSprite;
-	private var _playerBullets:FlxEmitter;
+	private var _playerBullets:Emitter;
 	
 	override public function create():Void
 	{
@@ -19,15 +20,13 @@ class PlayState extends FlxState
 		FlxG.mouse.hide();
 		#end
 		
-		_player = new FlxSprite( 10, Reg.halfHeight );
-		_player.makeGraphic( 10, 10, Reg.DARK );
+		_player = new FlxSprite( 16, Reg.halfHeight );
+		_player.makeGraphic( 4, 16, Reg.DARK );
 		
-		_playerBullets = new FlxEmitter( _player.x + _player.width, _player.y + Std.int( _player.y / 2 ), 100 );
-		var bullet:FlxSprite = new FlxSprite(0, 0);
-		bullet.makeGraphic( 2, 2, Reg.MED_DARK );
-		_playerBullets.makeParticles( bullet, 100 );
+		_playerBullets = new Emitter( Std.int( _player.x + _player.width ), Std.int( _player.y + _player.height / 2 ), 4 );
 		
 		add( _player );
+		add( _playerBullets );
 		
 		super.create();
 	}

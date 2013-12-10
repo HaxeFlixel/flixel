@@ -3,10 +3,19 @@ package;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxRandom;
 import flixel.util.FlxSave;
 
 class Reg
 {
+	/**
+	 * The currently active state. Used by trophyToast to add the toast.
+	 */
+	static public var CS:FlxState;
+	
 	static public var halfWidth:Int = Std.int( FlxG.width / 2 );
 	static public var halfHeight:Int = Std.int( FlxG.height / 2 );
 	
@@ -15,8 +24,56 @@ class Reg
 	inline public static var MED_DARK:Int = 0xff3D4E18;
 	inline public static var DARK:Int = 0xff0C1005;
 	
-	static public function centerX( Object:FlxObject ):Void {
+	inline public static var GAME_ID:Int = 19975;
+	
+	/**
+	 * Horizontally center any FlxObject on the stage.
+	 * 
+	 * @param	Object	The object to center.
+	 */
+	static public function centerX( Object:FlxObject ):Void
+	{
 		Object.x = ( FlxG.width - Object.width ) / 2;
+	}
+	
+	static public function randomColor():Int
+	{
+		var i:Int = FlxRandom.intRanged( 0, 3 );
+		var r:Int = 0;
+		
+		switch ( i ) {
+			case 0:
+				r = LITE;
+			case 1:
+				r = MED_LITE;
+			case 2:
+				r = MED_DARK;
+			case 3:
+				r = DARK;
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * Align any FlxObject to a vertical line at 1/4, 2/4, or 3/4 of the stage.
+	 * 
+	 * @param	Object
+	 * @param	Num
+	 */
+	static public function quarterX( Object:FlxObject, Num:Int = 1 ):Void {
+		Object.x = ( FlxG.width * Num / 2 - Object.width ) / 2;
+	}
+	
+	static public function trophyToast( Data:Dynamic ):Void {
+		if ( CS == null ) {
+			return;
+		}
+		trace("yep");
+		var toast:FlxSprite = new FlxSprite( FlxG.width, FlxG.height - 40 );
+		toast.makeGraphic( 30, 30, 0xffFF0000 );
+		CS.add( toast );
+		FlxTween.linearMotion( toast, toast.x, toast.y, FlxG.width - 40, toast.y, 5 );
 	}
 	/**
 	 * Generic levels Array that can be used for cross-state stuff.
