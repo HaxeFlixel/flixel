@@ -1,4 +1,4 @@
-﻿![](http://www.haxeflixel.com/sites/all/themes/haxeflixel_bootstrap/assets/images/haxeflixel-logo.png)
+﻿![](http://www.haxeflixel.com/images/haxeflixel-logo-black.png)
 =
 ###Related:    [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-demos](https://github.com/HaxeFlixel/flixel-demos) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
 ______________________________________________________
