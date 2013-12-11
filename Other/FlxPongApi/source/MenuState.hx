@@ -29,6 +29,16 @@ class MenuState extends FlxState
 	private var _main:FlxGroup;
 	private var _highScores:FlxGroup;
 	private var _apiTest:FlxGroup;
+	private var _apiPages:Array<FlxGroup>;
+	private var _apiCurrentPage:Int;
+	
+	inline static private function API_TEST_BUTTONS():Array<Array<String>> {
+		return [ 	[ "fetchUser", "authUser", "openSession", "pingSession" ],
+					[ "closeSession", "fetchTrophy", "addTrophy", "fetchScore" ],
+					[ "addScore", "getTables", "fetchData", "setData" ],
+					[ "updateData", "removeData", "getAllKeys" ]
+				];
+	}
 	
 	override public function create():Void
 	{
@@ -67,7 +77,7 @@ class MenuState extends FlxState
 		var play:Button = new Button( 0, 50, "Play!", playCallback );
 		Reg.quarterX( play, 2 );
 		
-		var test:Button = new Button( 0, 80, "API Functions", testCallback );
+		var test:Button = new Button( 0, 80, "API Functions", switchMenu );
 		Reg.quarterX( test, 1 );
 		
 		var high:Button = new Button( 0, 80, "High Scores", scoresCallback );
@@ -94,8 +104,6 @@ class MenuState extends FlxState
 		_main.add( hf );
 		_main.add( doc );
 		
-		_main.visible = false;
-		
 		// End main group.
 		
 		// Set up the "high scores" screen.
@@ -111,62 +119,76 @@ class MenuState extends FlxState
 		var xpos:Int = 10;
 		var ypos:Array<Int> = [ 20, 42, 64, 86, 108, 130 ];
 		
-		// Set up the first page of this screen.
+		// Set up the pages of this screen.
 		
-		var page1:FlxGroup = new FlxGroup();
+		_apiPages = [];
+		_apiCurrentPage = 0;
 		
-		var fetchUser:Button = new Button( xpos, ypos[0], "fetchUser", apiCallback );
-		var authUser:Button = new Button( xpos, ypos[1], "authUser", apiCallback );
-		var openSession:Button = new Button( xpos, ypos[2], "openSession", apiCallback );
-		var pingSession:Button = new Button( xpos, ypos[3], "pingSession", apiCallback );
+		for ( i in 0...API_TEST_BUTTONS().length ) {
+			_apiPages.push( new FlxGroup() );
+			
+			var button1:Button;
+			var button2:Button;
+			var button3:Button;
+			var button4:Button;
+			
+			if ( API_TEST_BUTTONS()[i][0] != null ) {
+				button1 = new Button( xpos, ypos[0], API_TEST_BUTTONS()[i][0], apiCallback );
+				_apiPages[i].add( button1 );
+			}
+			
+			if ( API_TEST_BUTTONS()[i][1] != null ) {
+				button2 = new Button( xpos, ypos[1], API_TEST_BUTTONS()[i][1], apiCallback );
+				_apiPages[i].add( button2 );
+			}
+			
+			if ( API_TEST_BUTTONS()[i][2] != null ) {
+				button3 = new Button( xpos, ypos[2], API_TEST_BUTTONS()[i][2], apiCallback );
+				_apiPages[i].add( button3 );
+			}
+			
+			if ( API_TEST_BUTTONS()[i][3] != null ) {
+				button4 = new Button( xpos, ypos[3], API_TEST_BUTTONS()[i][3], apiCallback );
+				_apiPages[i].add( button4 );
+			}
+			
+			_apiPages[i].visible = false;
+			_apiPages[i].active = false;
+		}
 		
-		page1.add( fetchUser );
-		page1.add( authUser );
-		page1.add( openSession );
-		page1.add( pingSession );
+		// We do want to see the first page, once apiTest is added
 		
-		page1.visible = false;
-		
-		var page2:FlxGroup = new FlxGroup();
-		
-		var closeSession:Button = new Button( xpos, ypos[0], "closeSession", apiCallback );
-		
-		page2.add( closeSession );
-		
-		page2.visible = false;
-		
-		// We start on page 1.
-		
-		page1.visible = true;
+		_apiPages[0].visible = true;
+		_apiPages[0].active = true;
 		
 		// Add elements aside from the per-screen buttons
 		
-		var prev:Button = new Button( xpos, ypos[4], "<", testMove, 30 );
-		var next:Button = new Button( xpos + 80 - 30, ypos[4], ">", testMove, 30 );
+		var prev:Button = new Button( xpos, ypos[4], "<<", testMove, 39 );
+		var next:Button = new Button( xpos + 80 - 39, ypos[4], ">>", testMove, 39 );
 		var testSpace:PongSprite = new PongSprite( xpos + 90, ypos[0], FlxG.width - 10 - xpos - 90, ypos[4] + 20 - ypos[0], Reg.med_lite );
 		_return = new FlxText( testSpace.x + 4, testSpace.y + 4, Std.int( testSpace.width - 8 ), "Return data will display here." );
 		_return.color = Reg.lite;
+		var exit:Button = new Button( Std.int( testSpace.x + testSpace.width - 40 ), Std.int( testSpace.y + testSpace.height - 20 ), "Back", switchMenu, 40 );
 		
-		// Add everything to the screen
+		// Add everything to this screen
 		
-		_apiTest.add( page1 );
-		_apiTest.add( page2 );
+		for ( g in _apiPages ) {
+			_apiTest.add( g );
+		}
+		
 		_apiTest.add( prev );
 		_apiTest.add( next );
 		_apiTest.add( testSpace );
 		_apiTest.add( _return );
+		_apiTest.add( exit );
 		
+		_apiTest.active = false;
 		_apiTest.visible = false;
 		
-		// End API return.
+		// End API test.
 		
 		add( _main );
 		add( _apiTest );
-		// add ( _highScores );
-		
-		// Initially we can see the main menu.
-		
-		_main.visible = true;
 		
 		em.start( false );
 		
@@ -226,10 +248,23 @@ class MenuState extends FlxState
 		// stuff
 	}
 	
-	private function testCallback( Name:String ):Void
+	private function switchMenu( Name:String ):Void
 	{
-		_main.visible = false;
-		_apiTest.visible = true;
+		if ( Name == "Back" ) {
+			_main.visible = true;
+			_main.active = true;
+		} else {
+			_main.visible = false;
+			_main.active = false;
+		}
+		
+		if ( Name == "API Functions" ) {
+			_apiTest.visible = true;
+			_apiTest.active = true;
+		} else {
+			_apiTest.visible = false;
+			_apiTest.active = false;
+		}
 	}
 	
 	private function mineCallback( Name:String ):Void
@@ -239,21 +274,83 @@ class MenuState extends FlxState
 	
 	private function apiCallback( Name:String ):Void
 	{
-		trace( "Button label: " + Name + "..." );
+		_return.text = "Sending " + Name + " request to GameJolt...";
+		
+		switch ( Name ) {
+			case "fetchUser":
+				FlxGameJolt.fetchUser( 0, FlxGameJolt.username, [], apiReturn );
+			case "authUser":
+				//this is disabled for now, i might remove it from this screen
+				//FlxGameJolt.authUser( null, null, apiReturn );
+			case "openSession":
+				FlxGameJolt.openSession( apiReturn );
+			case "pingSession":
+				FlxGameJolt.pingSession( true, apiReturn );
+			case "closeSession":
+				FlxGameJolt.closeSession( apiReturn );
+			case "fetchTrophy":
+				FlxGameJolt.fetchTrophy( 0, apiReturn );
+			case "addTrophy":
+				FlxGameJolt.addTrophy( 5079, apiReturn );
+			case "fetchScore":
+				FlxGameJolt.fetchScore( 10, apiReturn );
+			case "addScore":
+				//FlxGameJolt.addScore( Std.string(
+			default:
+				_return.text = "Sorry, there was an error. :(";
+		}
+	}
+	
+	private function apiReturn( ReturnMap:Map<String,String> ):Void
+	{
+		_return.text = "Received from GameJolt:\n" + ReturnMap.toString();
 	}
 	
 	private function testMove( Name:String ):Void
 	{
-		trace( "Button label: " + Name + "..." );
+		_apiPages[ _apiCurrentPage ].visible = false;
+		_apiPages[ _apiCurrentPage ].active = false;
+		
+		if ( Name.charCodeAt( 0 ) == 60 ) {
+			_apiCurrentPage--;
+		} else if ( Name.charCodeAt( 0 ) == 62 ) {
+			_apiCurrentPage++;
+		}
+		
+		if ( _apiCurrentPage < 0 ) {
+			_apiCurrentPage = _apiPages.length - 1;
+		}
+		
+		if ( _apiCurrentPage > _apiPages.length - 1 ) {
+			_apiCurrentPage = 0;
+		}
+		
+		_apiPages[ _apiCurrentPage ].visible = true;
+		_apiPages[ _apiCurrentPage ].active = true;
 	}
 	
-	private function initCallback( m:Map<String,String> ):Void
+	private function initCallback( Result:Bool ):Void
 	{
-		if ( m.exists( "success" ) && m.get( "success" ) == "true" ) {
+		if ( Result ) {
 			_connection.text = "Successfully connected to GameJolt API! Hi " + FlxGameJolt.username + "!";
-			FlxGameJolt.addAchievedTrophy( 5072 );
+			FlxGameJolt.fetchTrophy( 0, trophiesFetched );
+			
+			//FlxGameJolt.addAchievedTrophy( 5072, trophyToast );
 		} else {
 			_connection.text = "Unable to connect to the GameJolt API! :(";
 		}
+	}
+	
+	private function trophyToast( ResultMap:Map<String,String> ):Void
+	{
+		trace( ResultMap );
+		var toast:Toast = new Toast( 5072 );
+		add( toast );
+	}
+	
+	private function trophiesFetched( ResultMap:Map<String,String> ):Void
+	{
+		Reg.trophyMap = ResultMap;
+		FlxGameJolt.addTrophy( 5072, trophyToast );
 	}
 }

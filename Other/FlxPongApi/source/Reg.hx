@@ -12,7 +12,7 @@ import flixel.util.FlxSave;
 class Reg
 {
 	static public var CS:FlxState;
-	
+	static public var trophyMap:Map<String,String> = new Map<String,String>();
 	static public var colorArray:Array<Int> = [];
 	
 	inline static public var GAME_ID:Int = 19975;
@@ -65,11 +65,6 @@ class Reg
 			colorArray[i] += base[1] + dist << 8; //green
 			colorArray[i] += base[2] + dist; // blue
 		}
-		
-		trace( StringTools.hex( colorArray[0] ) );
-		trace( StringTools.hex( colorArray[1] ) );
-		trace( StringTools.hex( colorArray[2] ) );
-		trace( StringTools.hex( colorArray[3] ) );
 	}
 	
 	/**
@@ -77,21 +72,7 @@ class Reg
 	 */
 	static public function randomColor():Int
 	{
-		var i:Int = FlxRandom.intRanged( 0, 3 );
-		var r:Int = 0;
-		
-		switch ( i ) {
-			case 0:
-				r = lite;
-			case 1:
-				r = med_lite;
-			case 2:
-				r = med_dark;
-			case 3:
-				r = dark;
-		}
-		
-		return r;
+		return colorArray[ FlxRandom.intRanged( 0, 3 ) ];
 	}
 	
 	/**
