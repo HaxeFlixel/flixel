@@ -22,29 +22,29 @@
 	<haxelib name="flixel-addons" />
 	
 	<assets path="assets/sounds" if="flash">
-		<sound path="build.mp3" rename="build" />
-		<sound path="deny.mp3" rename="deny" />
-		<sound path="enemyhit.mp3" rename="enemyhit" />
-		<sound path="enemykill.mp3" rename="enemykill" />
-		<sound path="gameover.mp3" rename="gameover" />
-		<sound path="hurt.mp3" rename="hurt" />
-		<sound path="select.mp3" rename="select" />
-		<sound path="shoot.mp3" rename="shoot" />
-		<sound path="td2.mp3" rename="td2" />
-		<sound path="wavedefeated.mp3" rename="wavedefeated" />
+		<sound path="build.mp3" id="build" />
+		<sound path="deny.mp3" id="deny" />
+		<sound path="enemyhit.mp3" id="enemyhit" />
+		<sound path="enemykill.mp3" id="enemykill" />
+		<sound path="gameover.mp3" id="gameover" />
+		<sound path="hurt.mp3" id="hurt" />
+		<sound path="select.mp3" id="select" />
+		<sound path="shoot.mp3" id="shoot" />
+		<sound path="td2.mp3" id="td2" />
+		<sound path="wavedefeated.mp3" id="wavedefeated" />
 	</assets>
 	
 	<assets path="assets/sounds" unless="flash">
-		<sound path="build.ogg" name="build" />
-		<sound path="deny.ogg" name="deny" />
-		<sound path="enemyhit.ogg" name="enemyhit" />
-		<sound path="enemykill.ogg" name="enemykill" />
-		<sound path="gameover.ogg" name="gameover" />
-		<sound path="hurt.ogg" name="hurt" />
-		<sound path="select.ogg" name="select" />
-		<sound path="shoot.ogg" name="shoot" />
-		<sound path="td2.ogg" name="td2" />
-		<sound path="wavedefeated.ogg" name="wavedefeated" />
+		<sound path="build.ogg" id="build" />
+		<sound path="deny.ogg" id="deny" />
+		<sound path="enemyhit.ogg" id="enemyhit" />
+		<sound path="enemykill.ogg" id="enemykill" />
+		<sound path="gameover.ogg" id="gameover" />
+		<sound path="hurt.ogg" id="hurt" />
+		<sound path="select.ogg" id="select" />
+		<sound path="shoot.ogg" id="shoot" />
+		<sound path="td2.ogg" id="td2" />
+		<sound path="wavedefeated.ogg" id="wavedefeated" />
 	</assets>
 	
 	<assets path="assets/images" rename="images" />

@@ -1,90 +1,82 @@
 package;
 
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Sprite;
 import openfl.Assets;
-import flash.geom.Rectangle;
 import flash.display.BlendMode;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.ui.FlxButton;
-import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
-import flixel.util.FlxSave;
 import flixel.util.FlxColor;
-import flixel.util.FlxVector;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 
 class MenuState extends FlxState
 {
 	inline static private var TILE_SIZE:Int = 8;
+	inline static private var START_X:Int = TILE_SIZE * 5 + 1;
+	inline static private var START_Y:Int = 0;
+	inline static private var END_X:Int = 34 * TILE_SIZE + 2;
+	inline static private var END_Y:Int = 29 * TILE_SIZE;
 	
-	private var path:FlxPath;
-	private var enemy:Enemy;
+	private var _enemy:Enemy;
+	private var _map:FlxTilemap;
+	private var _cursor:Bitmap;
 	
 	override public function create():Void
 	{
-		useMouse = true;
-		
-		#if flash
-		FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT;
-		#end
-		
 		#if mobile
-		useMouse = false;
+		FlxG.mouse.hide();
+		#else
+		// I can't get FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT; to work, so I'm using this minimalist cursor for now
+		FlxG.mouse.show( "images/mouse.png" );
 		#end
 		
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		
-		var map:FlxTilemap = new FlxTilemap();
-		map.loadMap(Assets.getText("assets/tilemap/mapCSV_Group3_Map1.csv"), "images/tileset.png", TILE_SIZE, TILE_SIZE);
-		add(map);
+		_map = new FlxTilemap();
+		_map.loadMap( Assets.getText( "tilemaps/menu_tilemap.csv" ), "images/tileset.png" );
 		
 		var headline:FlxText = new FlxText(0, 40, FlxG.width, "Minimalist TD", 16);
-		headline.color = FlxColor.WHITE;
 		headline.alignment = "center";
-		add(headline);
 		
 		var credits:FlxText = new FlxText(2, FlxG.height - 12, FlxG.width, "Made in 48h for Ludum Dare 26 by Gama11");
-		add(credits);
 		
-		var playButton:Button = new Button( 0, Std.int(FlxG.height / 2), "Play", playButtonCallback );
+		var playButton:Button = new Button( 0, Std.int( FlxG.height / 2 ), "Play", playButtonCallback );
 		playButton.textNormal.color = FlxColor.WHITE;
-		playButton.x = Std.int(FlxG.width / 2 - 12);
-		add(playButton);
+		playButton.x = Std.int( ( FlxG.width - playButton.width ) / 2 );
 		
-		path = map.findPath(new FlxPoint(5 * TILE_SIZE + 4, 0), new FlxPoint(34 * TILE_SIZE + 4, 29 * TILE_SIZE));
+		_enemy = new Enemy( START_X, START_Y );
+		_enemy.followPath( getMapPath() );
 		
-		enemy = new Enemy();
-		enemy.init(8 * 5, 0);
-		enemy.followPath(path, 50, 0, true);
-		add(enemy); 
+		add( _map );
+		add( headline );
+		add( credits );
+		add( playButton );
+		add( _enemy );
 	}
 	
 	private function playButtonCallback():Void
 	{
-		//FlxG.switchState(new PlayState());
+		FlxG.switchState(new PlayState());
 	}
 	
-	override public function destroy():Void
-	{
-		path = null;
-		enemy = null;
-		
-		super.destroy();
-	}
-
 	override public function update():Void
 	{
 		// Check if the enemy has reached the end of the path yet
-		if (enemy.y >= 28 * TILE_SIZE) 
-		{
-			// If so, reset his position to the start
-			enemy.x = 5 * TILE_SIZE + 4;
-			enemy.y = 0;
-			enemy.followPath(path, 50, 0, true);
+		
+		if ( _enemy.y >= 28 * TILE_SIZE ) {
+			// If so, reset them to the beginning of the path
+			_enemy.followPath( getMapPath() );
 		}
 		
 		super.update();
-	}	
+	}
+	
+	public function getMapPath():Array<FlxPoint>
+	{
+		return _map.findPath( new FlxPoint( START_X, START_Y ), new FlxPoint( END_X, END_Y ) );
+	}
 }

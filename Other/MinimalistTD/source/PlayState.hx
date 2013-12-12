@@ -1,5 +1,6 @@
 package;
 
+import openfl.Assets;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.display.Graphics;
@@ -17,7 +18,6 @@ import flixel.tweens.misc.VarTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
-import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
@@ -62,17 +62,16 @@ class PlayState extends FlxState
 	private var tutText:FlxText;
 	
 	// Buttons
-	private var towerButton:FlxButtonPlus;
-	private var rangeButton:FlxButtonPlus;
-	private var damageButton:FlxButtonPlus;
-	private var firerateButton:FlxButtonPlus;
-	private var nextWaveButton:FlxButtonPlus;
-	private var speedButton:FlxButtonPlus;
-		
+	private var towerButton:Button;
+	private var rangeButton:Button;
+	private var damageButton:Button;
+	private var firerateButton:Button;
+	private var nextWaveButton:Button;
+	private var speedButton:Button;
+	
 	// Other objects
 	private var tween:FlxTween;
 	private var map:FlxTilemap;
-	private var path:FlxPath;
 	
 	private var towerSelected:Tower = null;
 	
@@ -99,17 +98,17 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		R.PS = this;
+		Reg.PS = this;
 		
+		#if !js
 		FlxG.sound.play("select");
-		FlxG.sound.playMusic("td2");
+		FlxG.sound.playMusic( "td2" );
+		#end
 		
-		FlxG.cameras.bgColor = FlxColor.WHITE;
 		FlxG.timeScale = 1;
 		
 		map = new FlxTilemap();
-		map.loadMap(Assets.getText("assets/tilemap/mapCSV_Group2_Map1.csv"), "images/tileset.png");
-		path = map.findPath(new FlxPoint(8 * 3 + 4, 0), new FlxPoint(8 * 32 + 4, 8 * 6));
+		map.loadMap( Assets.getText( "tilemaps/play_tilemap.csv" ), "images/tileset.png" );
 		
 		enemyGroup = new FlxTypedGroup();
 		towerGroup = new FlxTypedGroup();
@@ -130,9 +129,9 @@ class PlayState extends FlxState
 		
 		centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16); 
 		centerText.alignment = "center";
-		centerText.shadow = FlxColor.BLACK;
+		centerText.borderStyle = FlxText.BORDER_SHADOW;
+		centerText.borderColor = FlxColor.BLACK;
 		centerText.color = FlxColor.WHITE;
-		centerText.useShadow = true;
 		centerText.blend = BlendMode.INVERT;
 		
 		buildHelper = new FlxSprite(0, 0);
@@ -187,7 +186,7 @@ class PlayState extends FlxState
 		
 		var height:Int = FlxG.height - 18;
 		towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback );
-		nextWaveButton = new Button( 120, height, nextWaveCallback, "[N]ext Wave", [false] );
+		nextWaveButton = new Button( 120, height, "[N]ext Wave", nextWaveCallback, [ false ] );
 		speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback );
 		
 		tutText = new FlxText(nextWaveButton.x, nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!");
@@ -272,7 +271,6 @@ class PlayState extends FlxState
 		
 		tween = null;
 		map = null;
-		path = null;
 		
 		towerSelected = null;
 		
@@ -305,12 +303,10 @@ class PlayState extends FlxState
 			updateRangeSprite();
 		}
 		
-		if (FlxG.mouse.justReleased()) {
+		if ( FlxG.mouse.justReleased ) {
 			if (buildingMode) {
 				buildTower();
-			}
-			else 
-			{
+			} else {
 				#if !mobile
 				var l:Int = towerGroup.length;
 				for (i in 0...l) {
@@ -474,7 +470,10 @@ class PlayState extends FlxState
 		
 		//Can't place towers on the road
 		if (map.getTile(Std.int(xPos / 8), Std.int(yPos / 8)) == 0) {
-			FlxG.sound.play("Deny");
+			#if !js
+			FlxG.sound.play("deny");
+			#end
+			
 			escapeBuilding();
 			return;
 		}
@@ -482,14 +481,23 @@ class PlayState extends FlxState
 		var tower:Tower = new Tower(xPos, yPos);
 		tower.index = towerGroup.length - 1;
 		towerGroup.add(tower); 
-		FlxG.sound.play("Build");
+		
+		#if !js
+		FlxG.sound.play( "build" );
+		#end
+		
 		money -= towerPrice;
 		towerPrice += Std.int(towerPrice * 0.3);
 		towerButton.text = "Buy [T]ower ($" + towerPrice + ")";
 		escapeBuilding();
 	}
 	
-	private function playSelectSound():Void { FlxG.sound.play("Select"); } 
+	private function playSelectSound():Void
+	{
+		#if !js
+		FlxG.sound.play("select");
+		#end
+	} 
 	
 	private function announceWave(End:Bool = false):Void
 	{
@@ -531,13 +539,17 @@ class PlayState extends FlxState
 		
 		var enemy:Enemy = enemyGroup.recycle(Enemy);
 		enemy.init(3 * 8 + 4, -20);
-		enemy.followPath(path, 20 + wave, 0, true);
+		enemy.followPath( map.findPath( new FlxPoint(8 * 3 + 4, 0), new FlxPoint(8 * 32 + 4, 8 * 6) ) );
 		spawnCounter = 0;
 	}
 	
 	public function killedWave():Void
 	{
-		if (wave != 0) FlxG.sound.play("wavedefeated");
+		if ( wave != 0 ) {
+			#if !js
+			FlxG.sound.play("wavedefeated");
+			#end
+		}
 		waveCounter = 3 * FlxG.framerate;
 		
 		nextWaveButton.visible = true;
@@ -560,7 +572,10 @@ class PlayState extends FlxState
 		
 		towerButton.text = "[R]estart";
 		towerButton.setOnClickCallback(resetCallback);
+		
+		#if !js
 		FlxG.sound.play("gameover");
+		#end
 	}
 	
 	private function updateRangeSprite():Void
