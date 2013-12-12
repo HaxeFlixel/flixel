@@ -11,8 +11,9 @@ import flixel.util.FlxSave;
 
 class Reg
 {
+	inline static public var VERSION:String = "0.1a";
+	
 	static public var CS:FlxState;
-	static public var trophyMap:Map<String,String> = new Map<String,String>();
 	static public var colorArray:Array<Int> = [];
 	
 	inline static public var GAME_ID:Int = 19975;
@@ -83,6 +84,19 @@ class Reg
 	 */
 	static public function quarterX( Object:FlxObject, Num:Int = 2 ):Void {
 		Object.x = ( FlxG.width * Num / 2 - Object.width ) / 2;
+	}
+	
+	static public function createToast( ReturnMap:Dynamic ):Void
+	{
+		try {
+			cast( CS, MenuState ).createToast( ReturnMap );
+			return;
+		}
+		
+		try {
+			cast( CS, PlayState ).createToast( ReturnMap );
+			return;
+		}
 	}
 	
 	/**

@@ -51,7 +51,8 @@
 	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
 	
 	<!--Disable the Flixel core sound tray-->
-	<!--<haxedef name="FLX_NO_SOUND_TRAY" />-->
+	<!-- This is disabled so that the user can enter hyphens for their login, if needed -->
+	<haxedef name="FLX_NO_SOUND_TRAY" />
 	
 	<!--Disable the Flixel core focus lost screen-->
 	<!--<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />-->

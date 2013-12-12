@@ -9,7 +9,7 @@ import flixel.util.FlxRandom;
  */
 class Emitter extends FlxEmitter
 {
-	public function new( X:Int, Y:Int, PixelSize:Int = 0 )
+	public function new( X:Int, Y:Int, PixelSize:Int = 0, Color:Int = 0 )
 	{
 		super( X, Y, 100 );
 		setRotation( 0, 0 );
@@ -20,7 +20,13 @@ class Emitter extends FlxEmitter
 		
 		for ( i in 0...100 ) {
 			var fp:FlxParticle = new FlxParticle();
-			fp.makeGraphic( PixelSize, PixelSize, Reg.randomColor() );
+			var col:Int = 0;
+			if ( Color == 0 ) {
+				col = Reg.randomColor();
+			} else {
+				col = Color;
+			}
+			fp.makeGraphic( PixelSize, PixelSize, col );
 			add( fp );
 		}
 	}

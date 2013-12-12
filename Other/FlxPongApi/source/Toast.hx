@@ -1,6 +1,8 @@
 package;
 
+import flash.display.Bitmap;
 import flash.display.BitmapData;
+import flash.display.Loader;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 import flash.events.Event;
@@ -10,42 +12,61 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.addons.api.FlxGameJolt;
+import flixel.util.FlxTimer;
 
 class Toast extends FlxSpriteGroup
 {
-	inline static private var SIZE:Int = 80;
+	inline static private var WIDTH:Int = 105;
+	inline static private var HEIGHT:Int = 115;
 	private var _name:String;
+	private var _id:Int;
+	private var _had:String;
 	
+	/**
+	 * Just a handy class to unlock a trophy, and provide visual notification of such to the player.
+	 * 
+	 * @param	TrophyID
+	 */
 	public function new( TrophyID:Int )
 	{
-		super( FlxG.width, FlxG.height - SIZE - 10 );
-		FlxGameJolt.fetchTrophy( TrophyID, setUpTrophy );
+		super( FlxG.width, FlxG.height - HEIGHT - 10 );
+		_id = TrophyID;
+		//FlxGameJolt.addTrophy( TrophyID, fetchImage );
+		FlxGameJolt.fetchTrophy( _id, setUpTrophy );
 	}
 	
 	private function setUpTrophy( Return:Map<String,String> ):Void
 	{
 		_name = Return.get( "title" );
-		var request:URLRequest = new URLRequest( Return.get( "image_url" ) );
-		var loader = new URLLoader();
-		loader.addEventListener( Event.COMPLETE, awardTrophy );
-		loader.load( request );
+		FlxGameJolt.fetchTrophyImage( _id, awardTrophy );
 	}
 	
-	private function awardTrophy( e:Event ):Void
+	private function awardTrophy( bd:BitmapData ):Void
 	{
-		trace( e.currentTarget.data );
-		var bg:PongSprite = new PongSprite( 0, 0, SIZE, SIZE, Reg.dark );
-		var top:FlxText = new FlxText( 1, 1, SIZE - 2, "Trophy Get!" );
+		var bg:PongSprite = new PongSprite( 0, 0, WIDTH, HEIGHT, Reg.dark );
+		var top:FlxText = new FlxText( 0, -2, WIDTH, "Trophy Get!" );
 		top.color = Reg.med_lite;
-		var mid:FlxText = new FlxText( 1, 12, SIZE - 2, _name );
-		mid.color = Reg.lite;
-		//var img:FlxSprite = new FlxSprite( 1, 22, e.currentTarget.data );
+		top.alignment = "center";
+		var img:FlxSprite = new FlxSprite( Math.round( ( WIDTH - 75 ) / 2 ), 16, bd );
+		var bottom:FlxText = new FlxText( 0, HEIGHT - 23, WIDTH - 1, _name );
+		bottom.color = Reg.lite;
+		bottom.alignment = "center";
 		
 		add( bg );
-		//add( img );
+		add( img );
 		add( top );
-		add( mid );
+		add( bottom );
 		
-		FlxTween.linearMotion( this, this.x, this.y, this.x - SIZE - 10, this.y, 1 );
+		FlxTween.linearMotion( this, this.x, this.y, this.x - WIDTH - 10, this.y, 1 );
+		FlxTimer.start( 6, removeThis, 1 );
+	}
+	
+	private function removeThis( t:FlxTimer ):Void
+	{
+		visible = false;
+		active = false;
+		exists = false;
+		alive = false;
+		destroy();
 	}
 }

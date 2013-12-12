@@ -1,10 +1,12 @@
 package;
 
+import flash.text.TextFieldType;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
+import flixel.text.FlxTextField;
 import flixel.ui.FlxButton;
 import flixel.addons.api.FlxGameJolt;
 import flash.utils.ByteArray;
@@ -29,8 +31,14 @@ class MenuState extends FlxState
 	private var _main:FlxGroup;
 	private var _highScores:FlxGroup;
 	private var _apiTest:FlxGroup;
+	private var _loginGroup:FlxGroup;
+	private var _allScreens:FlxGroup;
 	private var _apiPages:Array<FlxGroup>;
+	private var _login:Button;
 	private var _apiCurrentPage:Int;
+	private var _mainMenuTime:Float = 0.0;
+	private var _input1:FlxTextField;
+	private var _input2:FlxTextField;
 	
 	inline static private function API_TEST_BUTTONS():Array<Array<String>> {
 		return [ 	[ "fetchUser", "authUser", "openSession", "pingSession" ],
@@ -44,14 +52,14 @@ class MenuState extends FlxState
 	{
 		Reg.CS = this;
 		Reg.genColors();
-		
+		//FlxGameJolt.addTrophyCallback( Reg.createToast );
 		FlxG.cameras.bgColor = Reg.lite;
 		
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.show();
 		#end
 		
-		// The background emitter, connection info, and blurb are always present.
+		// The background emitter, connection info, version, and blurb are always present.
 		
 		var em:Emitter = new Emitter( Std.int( FlxG.width / 2 ), Std.int( FlxG.height / 2 ), 4 );
 		
@@ -62,9 +70,14 @@ class MenuState extends FlxState
 		info.color = Reg.med_lite;
 		info.alignment = "center";
 		
+		var ver:FlxText = new FlxText( 0, 0, FlxG.width, Reg.VERSION );
+		ver.color = Reg.med_lite;
+		ver.alignment = "right";
+		
 		add( em );
 		add( _connection );
 		add( info );
+		add( ver );
 		
 		// Set up the "main" screen/buttons.
 		
@@ -76,6 +89,11 @@ class MenuState extends FlxState
 		
 		var play:Button = new Button( 0, 50, "Play!", playCallback );
 		Reg.quarterX( play, 2 );
+		
+		_login = new Button( 0, 50, "Log in", switchMenu, 60 );
+		Reg.quarterX( _login, 3 );
+		_login.visible = false;
+		_login.active = false;
 		
 		var test:Button = new Button( 0, 80, "API Functions", switchMenu );
 		Reg.quarterX( test, 1 );
@@ -97,9 +115,10 @@ class MenuState extends FlxState
 		
 		_main.add( title );
 		_main.add( play );
+		_main.add( _login );
 		_main.add( test );
-		_main.add( high );
-		_main.add( mine );
+		//_main.add( high );
+		//_main.add( mine );
 		_main.add( source );
 		_main.add( hf );
 		_main.add( doc );
@@ -187,8 +206,58 @@ class MenuState extends FlxState
 		
 		// End API test.
 		
-		add( _main );
-		add( _apiTest );
+		// Login screen
+		
+		_loginGroup = new FlxGroup();
+		
+		var instruct:FlxText = new FlxText( 0, 50, FlxG.width, "Log in to GameJolt to get trophies and stuff:" );
+		instruct.alignment = "center";
+		instruct.color = Reg.med_dark;
+		
+		var word1:FlxText = new FlxText( 0, 70, 60, "Username:" );
+		var word2:FlxText = new FlxText( 0, 90, 60, "Token:" );
+		Reg.quarterX( word1, 1 );
+		Reg.quarterX( word2, 1 );
+		word1.color = word2.color = Reg.med_dark;
+		
+		_input1 = new FlxTextField( 0, 70, 240, " " );
+		_input2 = new FlxTextField( 0, 90, 240, " " );
+		Reg.quarterX( _input1, 3 );
+		Reg.quarterX( _input2, 3 );
+		_input2.color = _input1.color = Reg.med_lite;
+		_input2.textField.selectable = _input1.textField.selectable = true;
+		_input2.textField.multiline = _input1.textField.multiline = false;
+		_input2.textField.wordWrap = _input1.textField.wordWrap = false;
+		_input2.textField.maxChars = _input1.textField.maxChars = 30;
+		_input2.textField.restrict = _input1.textField.restrict = "A-Za-z0-9_";
+		_input2.textField.type = _input1.textField.type = TextFieldType.INPUT;
+		var input1bg:PongSprite = new PongSprite( Std.int( _input1.x ), Std.int( _input1.y ), Std.int( _input1.width - 40 ), Std.int( _input1.height + 4 ), Reg.dark );
+		var input2bg:PongSprite = new PongSprite( Std.int( _input2.x ), Std.int( _input2.y ), Std.int( _input2.width - 40 ), Std.int( _input2.height + 4 ), Reg.dark );
+		var trylogin:Button = new Button( 0, 110, "Log in", loginCallback );
+		Reg.quarterX( trylogin, 2 );
+		var back:Button = new Button( 400, 108, "Back", switchMenu, 40 );
+		
+		_loginGroup.add( word1 );
+		_loginGroup.add( word2 );
+		_loginGroup.add( input1bg );
+		_loginGroup.add( input2bg );
+		_loginGroup.add( _input1 );
+		_loginGroup.add( _input2 );
+		_loginGroup.add( instruct );
+		_loginGroup.add( trylogin );
+		_loginGroup.add( back );
+		
+		_loginGroup.active = false;
+		_loginGroup.visible = false;
+		
+		// End Login.
+		
+		_allScreens = new FlxGroup();
+		_allScreens.add( _main );
+		_allScreens.add( _apiTest );
+		_allScreens.add( _loginGroup );
+		
+		add( _allScreens );
 		
 		em.start( false );
 		
@@ -203,8 +272,8 @@ class MenuState extends FlxState
 		#end
 		
 		#if debug
-		var newcol:Button = new Button( FlxG.width - 10, 0, "C", colorCallback, 10 );
-		add( newcol );
+		//var newcol:Button = new Button( FlxG.width - 10, 0, "C", colorCallback, 10 );
+		//add( newcol );
 		#end
 		
 		super.create();
@@ -212,6 +281,8 @@ class MenuState extends FlxState
 	
 	override public function update():Void
 	{
+		_mainMenuTime += FlxG.elapsed;
+		
 		super.update();
 	}
 	
@@ -250,21 +321,36 @@ class MenuState extends FlxState
 	
 	private function switchMenu( Name:String ):Void
 	{
+		if ( _loginGroup.visible ) {
+			_input1.text = " ";
+			_input2.text = " ";
+		}
+		
+		for ( g in _allScreens.members ) {
+			g.visible = false;
+			g.active = false;
+		}
+		
 		if ( Name == "Back" ) {
 			_main.visible = true;
 			_main.active = true;
-		} else {
-			_main.visible = false;
-			_main.active = false;
 		}
 		
 		if ( Name == "API Functions" ) {
 			_apiTest.visible = true;
 			_apiTest.active = true;
-		} else {
-			_apiTest.visible = false;
-			_apiTest.active = false;
 		}
+		
+		if ( Name == "Log in" ) {
+			_loginGroup.visible = true;
+			_loginGroup.active = true;
+		}
+	}
+	
+	private function loginCallback( Name:String ):Void
+	{
+		_connection.text = "Attempting to log in...";
+		FlxGameJolt.authUser( StringTools.trim( _input1.text ), StringTools.trim( _input2.text ), initCallback );
 	}
 	
 	private function mineCallback( Name:String ):Void
@@ -280,8 +366,7 @@ class MenuState extends FlxState
 			case "fetchUser":
 				FlxGameJolt.fetchUser( 0, FlxGameJolt.username, [], apiReturn );
 			case "authUser":
-				//this is disabled for now, i might remove it from this screen
-				//FlxGameJolt.authUser( null, null, apiReturn );
+				FlxGameJolt.authUser( null, null, authReturn );
 			case "openSession":
 				FlxGameJolt.openSession( apiReturn );
 			case "pingSession":
@@ -295,7 +380,19 @@ class MenuState extends FlxState
 			case "fetchScore":
 				FlxGameJolt.fetchScore( 10, apiReturn );
 			case "addScore":
-				//FlxGameJolt.addScore( Std.string(
+				FlxGameJolt.addScore( Std.string( _mainMenuTime ) + " seconds in menu", _mainMenuTime, false, null, "FlxPong is a great game.", 0, apiReturn );
+			case "getTables":
+				FlxGameJolt.getTables( apiReturn );
+			case "fetchData":
+				FlxGameJolt.fetchData( "testkey", true, apiReturn );
+			case "setData":
+				FlxGameJolt.setData( "testkey", "I like bacon quite a bit.", true, apiReturn );
+			case "updateData":
+				FlxGameJolt.updateData( "testkey", "append", " But sausage is nice too.", true, apiReturn );
+			case "removeData":
+				FlxGameJolt.removeData( "testkey", true, apiReturn );
+			case "getAllKeys":
+				FlxGameJolt.getAllKeys( true, apiReturn );
 			default:
 				_return.text = "Sorry, there was an error. :(";
 		}
@@ -304,6 +401,11 @@ class MenuState extends FlxState
 	private function apiReturn( ReturnMap:Map<String,String> ):Void
 	{
 		_return.text = "Received from GameJolt:\n" + ReturnMap.toString();
+	}
+	
+	private function authReturn( Success:Bool ):Void
+	{
+		_return.text = "The user authentication returned: " + Success;
 	}
 	
 	private function testMove( Name:String ):Void
@@ -331,26 +433,35 @@ class MenuState extends FlxState
 	
 	private function initCallback( Result:Bool ):Void
 	{
-		if ( Result ) {
-			_connection.text = "Successfully connected to GameJolt API! Hi " + FlxGameJolt.username + "!";
-			FlxGameJolt.fetchTrophy( 0, trophiesFetched );
-			
-			//FlxGameJolt.addAchievedTrophy( 5072, trophyToast );
-		} else {
-			_connection.text = "Unable to connect to the GameJolt API! :(";
+		if ( _connection != null ) {
+			if ( Result ) {
+				if ( _connection != null ) {
+					_connection.text = "Successfully connected to GameJolt! Hi " + FlxGameJolt.username + "!";
+				}
+				
+				//FlxGameJolt.addTrophy( 5072 );
+				
+				if ( _login.visible ) {
+					_login.visible = false;
+					_login.active = false;
+				}
+				
+				if ( _loginGroup.visible == true ) {
+					switchMenu( "Back" );
+				}
+			} else {
+				if ( _connection != null ) {
+					_connection.text = "Unable to verify your information with GameJolt.";
+				}
+				_login.visible = true;
+				_login.active = true;
+			}
 		}
 	}
 	
-	private function trophyToast( ResultMap:Map<String,String> ):Void
+	public function createToast( ReturnMap:Dynamic ):Void
 	{
-		trace( ResultMap );
-		var toast:Toast = new Toast( 5072 );
+		var toast:Toast = new Toast( ReturnMap.get( "id" ) );
 		add( toast );
-	}
-	
-	private function trophiesFetched( ResultMap:Map<String,String> ):Void
-	{
-		Reg.trophyMap = ResultMap;
-		FlxGameJolt.addTrophy( 5072, trophyToast );
 	}
 }
