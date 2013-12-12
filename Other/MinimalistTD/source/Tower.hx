@@ -24,33 +24,35 @@ class Tower extends FlxSprite
 	
 	public var index:Int;
 	
-	private var shootInvertall:Int = 2;
-	private var shootCounter:Int = 0;
-	private var indicator:FlxSprite;
+	private var _shootInvertall:Int = 2;
+	private var _shootCounter:Int = 0;
+	private var _indicator:FlxSprite;
 	
 	private static var HELPER_POINT:FlxPoint = new FlxPoint();
 	private static var HELPER_POINT_2:FlxPoint = new FlxPoint();
 	
-	public function new(X:Float, Y:Float) 
+	public function new( X:Float, Y:Float, Index:Int )
 	{
 		super( X, Y, "images/tower.png" );
 		
-		indicator = new FlxSprite( getMidpoint().x - 1, getMidpoint().y - 1 );
-		indicator.makeGraphic( 2, 2 );
-		Reg.PS.towerIndicators.add( indicator );
+		_indicator = new FlxSprite( getMidpoint().x - 1, getMidpoint().y - 1 );
+		_indicator.makeGraphic( 2, 2 );
+		Reg.PS.towerIndicators.add( _indicator );
+		
+		index = Index;
 	}
 	
 	override public function update():Void
 	{	
 		if ( getNearestEnemy() == null ) {
-			indicator.visible = false;
+			_indicator.visible = false;
 		} else {
-			indicator.visible = true;
-			indicator.alpha = shootCounter / ( shootInvertall * FlxG.framerate );
+			_indicator.visible = true;
+			_indicator.alpha = _shootCounter / ( _shootInvertall * FlxG.framerate );
 			
-			shootCounter += Std.int(FlxG.timeScale);
+			_shootCounter += Std.int( FlxG.timeScale );
 			
-			if ( shootCounter > ( shootInvertall * FlxG.framerate ) * fireRate) {
+			if ( _shootCounter > ( _shootInvertall * FlxG.framerate ) * fireRate ) {
 				shoot();
 			}
 		}
@@ -74,7 +76,7 @@ class Tower extends FlxSprite
 		FlxG.sound.play( "shoot" );
 		#end
 		
-		shootCounter = 0;
+		_shootCounter = 0;
 	}
 	
 	private function getNearestEnemy():Enemy

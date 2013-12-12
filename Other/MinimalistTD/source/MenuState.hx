@@ -1,13 +1,9 @@
 package;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import openfl.Assets;
 import flash.display.BlendMode;
+import openfl.Assets;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.ui.FlxButton;
 import flixel.util.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
@@ -23,15 +19,14 @@ class MenuState extends FlxState
 	
 	private var _enemy:Enemy;
 	private var _map:FlxTilemap;
-	private var _cursor:Bitmap;
 	
 	override public function create():Void
 	{
 		#if mobile
 		FlxG.mouse.hide();
 		#else
-		// I can't get FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT; to work, so I'm using this minimalist cursor for now
 		FlxG.mouse.show( "images/mouse.png" );
+		FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT;
 		#end
 		
 		FlxG.cameras.bgColor = FlxColor.WHITE;
@@ -45,7 +40,7 @@ class MenuState extends FlxState
 		var credits:FlxText = new FlxText(2, FlxG.height - 12, FlxG.width, "Made in 48h for Ludum Dare 26 by Gama11");
 		
 		var playButton:Button = new Button( 0, Std.int( FlxG.height / 2 ), "Play", playButtonCallback );
-		playButton.textNormal.color = FlxColor.WHITE;
+		//playButton.textNormal.color = FlxColor.WHITE;
 		playButton.x = Std.int( ( FlxG.width - playButton.width ) / 2 );
 		
 		_enemy = new Enemy( START_X, START_Y );
@@ -60,7 +55,7 @@ class MenuState extends FlxState
 	
 	private function playButtonCallback():Void
 	{
-		FlxG.switchState(new PlayState());
+		FlxG.switchState( new PlayState() );
 	}
 	
 	override public function update():Void
@@ -78,5 +73,13 @@ class MenuState extends FlxState
 	public function getMapPath():Array<FlxPoint>
 	{
 		return _map.findPath( new FlxPoint( START_X, START_Y ), new FlxPoint( END_X, END_Y ) );
+	}
+	
+	override public function destroy():Void
+	{
+		_enemy = null;
+		_map = null;
+		
+		super.destroy();
 	}
 }

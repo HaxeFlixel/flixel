@@ -7,8 +7,9 @@ import flixel.util.FlxVelocity;
 
 class Bullet extends FlxSprite 
 {
-	public var target:Enemy;
 	public var damage:Int;
+	
+	private var _target:Enemy;
 	
 	public function new() 
 	{
@@ -17,17 +18,22 @@ class Bullet extends FlxSprite
 		blend = BlendMode.INVERT;
 	}
 	
-	public function init(X:Float, Y:Float, Target:Enemy, Damage:Int):Void
+	public function init( X:Float, Y:Float, Target:Enemy, Damage:Int ):Void
 	{
-		reset(X, Y);
-		target = Target;
+		reset( X, Y );
+		_target = Target;
 		damage = Damage;
 	}
  
 	override public function update():Void
 	{
-		if (!onScreen(FlxG.camera)) kill();
-		if (target.alive) FlxVelocity.moveTowardsObject(this, target, 200);
+		if ( !onScreen( FlxG.camera ) ) {
+			kill();
+		}
+		
+		if ( _target.alive ) {
+			FlxVelocity.moveTowardsObject( this, _target, 200 );
+		}
 		
 		super.update();
 	}

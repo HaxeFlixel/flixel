@@ -25,6 +25,61 @@ import flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
 {
+	// Public variables
+	public var enemiesToKill:Int = 0;
+	public var enemiesToSpawn:Int = 0;
+	public var towerPrice:Int = 8;
+	public var wave:Int = 0;
+	
+	// Public groups
+	public var bulletGroup:FlxTypedGroup<Bullet>;
+	public var emitterGroup:FlxTypedGroup<EnemyGibs>;
+	public var enemyGroup:FlxTypedGroup<Enemy>;
+	public var towerIndicators:FlxTypedGroup<FlxSprite>;
+	
+	// Groups
+	private var _guiGroup:FlxGroup;
+	private var _lifeGroup:FlxGroup;
+	private var _topGui:FlxGroup;
+	private var _towerGroup:FlxTypedGroup<Tower>;
+	private var _upgradeMenu:FlxGroup;
+	
+	// Sprites
+	private var _buildHelper:FlxSprite;
+	private var _goal:FlxSprite;
+	private var _towerRange:FlxSprite;
+	
+	// Texts
+	private var _centerText:FlxText;
+	private var _enemyText:FlxText;
+    private var _moneyText:FlxText;
+	private var _tutText:FlxText;
+	private var _waveText:FlxText;
+	
+	// Buttons
+	private var _damageButton:Button;
+	private var _firerateButton:Button;
+	private var _nextWaveButton:Button;
+	private var _rangeButton:Button;
+	private var _speedButton:Button;
+	private var _towerButton:Button;
+	
+	// Other objects
+	private var _map:FlxTilemap;
+	private var _towerSelected:Tower;
+	
+	// Vars
+	
+	private var _buildingMode:Bool = false;
+	private var _gameOver:Bool = false;
+	private var _lives:Int = 9;
+	private var _money:Int = 50;
+	private var _spawnCounter:Int = 0;
+	private var _spawnInterval:Int = 1;
+	private var _speed:Int = 1;
+	private var _upgradeHasBeenBought:Bool = false;
+	private var _waveCounter:Int = 0;
+	
 	/**
 	 * Helper BitmapData object to draw tower's range graphic
 	 */
@@ -38,396 +93,329 @@ class PlayState extends FlxState
 	 */
 	private static var HELPER_POINT:FlxPoint = new FlxPoint();
 	
-	// Groups
-	private var guiGroup:FlxGroup;
-	public var enemyGroup:FlxTypedGroup<Enemy>;
-	private var towerGroup:FlxTypedGroup<Tower>;
-	public var bulletGroup:FlxTypedGroup<Bullet>;
-	public var emitterGroup:FlxTypedGroup<EnemyGibs>;
-	public var towerIndicators:FlxTypedGroup<FlxSprite>;
-	private var lifeGroup:FlxGroup;
-	private var upgradeMenu:FlxGroup;
-	private var topGui:FlxGroup;
-	
-	// Sprites
-	private var goal:FlxSprite;
-	private var towerRange:FlxSprite;
-	private var buildHelper:FlxSprite;
-	
-	//Texts
-    public var moneyText:FlxText;
-	private var centerText:FlxText;
-	private var enemyText:FlxText;
-	private var waveText:FlxText;
-	private var tutText:FlxText;
-	
-	// Buttons
-	private var towerButton:Button;
-	private var rangeButton:Button;
-	private var damageButton:Button;
-	private var firerateButton:Button;
-	private var nextWaveButton:Button;
-	private var speedButton:Button;
-	
-	// Other objects
-	private var tween:FlxTween;
-	private var map:FlxTilemap;
-	
-	private var towerSelected:Tower = null;
-	
-	// Vars
-	private var speed:Int = 1;
-	public var money:Int = 50;
-	private var lives:Int = 9;
-	
-	public var wave:Int = 0;
-	private var waveCounter:Int = 0;
-	
-	public var enemiesToKill:Int = 0;
-	public var enemiesToSpawn:Int = 0;
-	
-	private var spawnCounter:Int = 0;
-	private var spawnIntervall:Int = 1;
-	
-	public var towerPrice:Int = 8;
-	
-	private var buildingMode:Bool = false;
-	private var gameOver:Bool = false;
-	
-	private var upgradeHasBeenBought:Bool = false;
+	inline private static var SPAWN_X:Int = 28;
+	inline private static var GOAL_X:Int = 260;
+	inline private static var GOAL_Y:Int = 48;
 	
 	override public function create():Void
 	{
 		Reg.PS = this;
 		
 		#if !js
-		FlxG.sound.play("select");
 		FlxG.sound.playMusic( "td2" );
 		#end
 		
 		FlxG.timeScale = 1;
 		
-		map = new FlxTilemap();
-		map.loadMap( Assets.getText( "tilemaps/play_tilemap.csv" ), "images/tileset.png" );
+		_map = new FlxTilemap();
+		_map.loadMap( Assets.getText( "tilemaps/play_tilemap.csv" ), "images/tileset.png" );
 		
-		enemyGroup = new FlxTypedGroup();
-		towerGroup = new FlxTypedGroup();
-		towerIndicators = new FlxTypedGroup();
-		bulletGroup = new FlxTypedGroup();
-		emitterGroup = new FlxTypedGroup();
-		lifeGroup = new FlxGroup();
-		topGui = new FlxGroup();
+		bulletGroup = new FlxTypedGroup<Bullet>();
+		emitterGroup = new FlxTypedGroup<EnemyGibs>();
+		enemyGroup = new FlxTypedGroup<Enemy>();
+		_towerGroup = new FlxTypedGroup<Tower>();
+		towerIndicators = new FlxTypedGroup<FlxSprite>();
 		
-		goal = new FlxSprite(245, 43, "images/goal.png");
+		// Set up bottom GUI
 		
-		var guiUnderlay:FlxSprite = new FlxSprite(0, FlxG.height - 16);
-		guiUnderlay.makeGraphic(FlxG.width, 16, FlxColor.WHITE);
+		var guiUnderlay:FlxSprite = new FlxSprite( 0, FlxG.height - 16 );
+		guiUnderlay.makeGraphic( FlxG.width, 16, FlxColor.WHITE );
 		
-		createGUI();
-		createUpradeMenu();
-		createLives();
+		_guiGroup = new FlxGroup();
 		
-		centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16); 
-		centerText.alignment = "center";
-		centerText.borderStyle = FlxText.BORDER_SHADOW;
-		centerText.borderColor = FlxColor.BLACK;
-		centerText.color = FlxColor.WHITE;
-		centerText.blend = BlendMode.INVERT;
+		var height:Int = FlxG.height - 18;
+		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback );
+		_nextWaveButton = new Button( 120, height, "[N]ext Wave", nextWaveCallback, [ false ] );
+		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback );
 		
-		buildHelper = new FlxSprite(0, 0);
-		buildHelper.makeGraphic(8, 8);
-		buildHelper.visible = false;
-		buildHelper.alpha = 0.5;
+		_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!" );
+		_tutText.visible = false;
+		_tutText.color = FlxColor.BLACK;
 		
-		moneyText = new FlxText(0, 2, FlxG.width - 2, "$: " + money, 8);
-		moneyText.color = FlxColor.WHITE;
-		moneyText.alignment = "right";
-		topGui.add(moneyText);
+		_guiGroup.add( _towerButton );
+		_guiGroup.add( _nextWaveButton );
+		_guiGroup.add( _speedButton );
+		_guiGroup.add( _tutText );
 		
-		enemyText = new FlxText(120, 2, FlxG.width, "Wave");
-		enemyText.color = FlxColor.WHITE;
-		enemyText.visible = false;
-		topGui.add(enemyText);
+		// End GUI setup
 		
-		waveText = new FlxText(222, 2, FlxG.width, "Wave");
-		waveText.color = FlxColor.WHITE;
-		waveText.visible = false;
-		topGui.add(waveText);
+		// Set up upgrade menu, hidden initially, also part of bottom GUI
 		
-		towerRange = new FlxSprite(0, 0);
-		towerRange.visible = false;
+		_upgradeMenu = new FlxGroup();
 		
-		// Add things in correct order
-		add(map);
+		_upgradeMenu.add( new Button( 2, height, "<", toggleUpgradeMenu, [false] ) );
+		_upgradeMenu.add( new Button( 30, height, "Range ++", upgradeRangeCallback ) );
+		_upgradeMenu.add( new Button( 120, height, "Damage ++", upgradeDamageCallback ) );
+		_upgradeMenu.add( new Button( 220, height, "Firerate ++", upgradeFirerateCallback ) );
 		
-		add(bulletGroup);
-		add(emitterGroup);
-		add(enemyGroup);
-		add(towerRange);
-		add(towerGroup);
-		add(towerIndicators);
-		add(goal);
-		add(lifeGroup);
+		_upgradeMenu.visible = false;
 		
-		add(buildHelper);
-		add(guiUnderlay);
-		add(guiGroup);
-		add(upgradeMenu);
-		add(topGui);	
-		add(centerText);
+		// End upgrade setup
 		
-		tween = new FlxTween(3);
+		// Set up top GUI
+		
+		_topGui = new FlxGroup();
+		
+		_moneyText = new FlxText( 0, 2, FlxG.width - 4, "$: " + _money );
+		_moneyText.alignment = "right";
+		
+		_enemyText = new FlxText( 120, 2, FlxG.width, "Wave" );
+		_enemyText.visible = false;
+		
+		_waveText = new FlxText( 222, 2, FlxG.width, "Wave" );
+		_waveText.visible = false;
+		
+		_topGui.add( _moneyText );
+		_topGui.add( _enemyText );
+		_topGui.add( _waveText );
+		
+		// Set up goal
+		
+		_goal = new FlxSprite( 245, 43, "images/goal.png" );
+		
+		_lifeGroup = new FlxGroup();
+		
+		for ( xPos in 0...3 ) {
+			for ( yPos in 0...3 ) {
+				var life:FlxSprite = new FlxSprite( _goal.x + 5 + 4 * xPos, _goal.y + 5 + 4 * yPos );
+				life.makeGraphic( 2, 2, FlxColor.WHITE );
+				_lifeGroup.add( life );
+			}
+		}
+		
+		// End goal setup
+		
+		// Set up miscellaneous items: center text, buildhelper, and the tower range image
+		
+		_centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16 );
+		_centerText.alignment = "center";
+		_centerText.borderStyle = FlxText.BORDER_SHADOW;
+		_centerText.blend = BlendMode.INVERT;
+		
+		_buildHelper = new FlxSprite( 0, 0 );
+		_buildHelper.makeGraphic( 8, 8 );
+		_buildHelper.visible = false;
+		_buildHelper.alpha = 0.5;
+		
+		_towerRange = new FlxSprite( 0, 0 );
+		_towerRange.visible = false;
+		
+		// End miscellaneous set up
+		
+		// Add everything to the state
+		
+		add( _map );
+		add( bulletGroup );
+		add( emitterGroup );
+		add( enemyGroup );
+		add( _towerRange );
+		add( _towerGroup );
+		add( towerIndicators );
+		add( _goal );
+		add( _lifeGroup );
+		add( _buildHelper );
+		add( guiUnderlay );
+		add( _guiGroup );
+		add( _upgradeMenu );
+		add( _topGui );	
+		add( _centerText );
+		
+		// Call this to set up for first wave
+		
 		killedWave();
 	}
 	
-	private function createGUI():Void
-	{
-		guiGroup = new FlxGroup();
-		
-		var height:Int = FlxG.height - 18;
-		towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback );
-		nextWaveButton = new Button( 120, height, "[N]ext Wave", nextWaveCallback, [ false ] );
-		speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback );
-		
-		tutText = new FlxText(nextWaveButton.x, nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!");
-		tutText.visible = false;
-		tutText.color = FlxColor.BLACK;
-		
-		guiGroup.add(towerButton);
-		guiGroup.add(nextWaveButton);
-		guiGroup.add(speedButton);
-		guiGroup.add(tutText);
-	}
-	
-	private function createUpradeMenu():Void
-	{
-		upgradeMenu = new FlxGroup();
-		
-		var height:Int = FlxG.height - 18;
-		var backButton:Button = new Button( 2, height, "<", toggleUpgradeMenu, [false] );
-		var rangeButton:Button = new Button( 30, height, "Range ++", upgradeRangeCallback );
-		var damageButton:Button = new Button( 120, height, "Damage ++", upgradeDamageCallback );
-		var firerateButton:Button = new Button( 220, height, "Firerate ++", upgradeFirerateCallback );
-		
-		upgradeMenu.add(backButton);
-		upgradeMenu.add(rangeButton);
-		upgradeMenu.add(damageButton);
-		upgradeMenu.add(firerateButton);
-		
-		upgradeMenu.visible = false;
-	}
-	
-	private function createLives():Void
-	{
-		for (i in 0...9) {
-			var cur:Int = lifeGroup.length + 1;
-			
-			var row:Int = Math.ceil(cur / 3);
-			var colnum:Int = cur;
-			while (colnum > 3) colnum -= 3;
-			
-			var xPos:Float = goal.x + 5 + 4 * (colnum - 1);
-			var yPos:Float = goal.y + 5 + 4 * (row - 1);
-		
-			var life:FlxSprite = new FlxSprite(xPos, yPos);
-			life.makeGraphic(2, 2, FlxColor.WHITE);
-			lifeGroup.add(life);
-		}
-	}
-	
-	override public function destroy():Void
-	{
-		// We should null all links to objects for better work of garbage collector
-		RANGE_BITMAP = null;
-		HELPER_POINT = null;
-		STAGE_RECTANGLE = null;
-		
-		guiGroup = null;
-		enemyGroup = null;
-		towerGroup = null;
-		bulletGroup = null;
-		emitterGroup = null;
-		towerIndicators = null;
-		lifeGroup = null;
-		upgradeMenu = null;
-		topGui = null;
-		
-		goal = null;
-		towerRange = null;
-		buildHelper = null;
-		
-		moneyText = null;
-		centerText = null;
-		enemyText = null;
-		waveText = null;
-		tutText = null;
-		
-		towerButton = null;
-		rangeButton = null;
-		damageButton = null;
-		firerateButton = null;
-		nextWaveButton = null;
-		speedButton = null;
-		
-		tween = null;
-		map = null;
-		
-		towerSelected = null;
-		
-		super.destroy();
-	}
-
 	override public function update():Void
 	{
-		moneyText.text = "$: " + money;
-		enemyText.text = "Enemies left: " + (enemiesToKill);
+		// Update enemies left indicator
 		
-		if (moneyText.size > 8) moneyText.size--;
-		if (enemyText.size > 8) enemyText.size--;
-		if (waveText.size > 8) waveText.size--;
+		_enemyText.text = "Enemies left: " + enemiesToKill;
+		
+		// These elements expand when increased; this somewhat slowly reduces their size back to normal
+		
+		if ( _moneyText.size > 8 ) {
+			_moneyText.size--;
+		}
+		
+		if ( _enemyText.size > 8 ) {
+			_enemyText.size--;
+		}
+		
+		if ( _waveText.size > 8 ) {
+			_waveText.size--;
+		}
+		
+		// Check for key presses
 		
 		#if !mobile
-		if (FlxG.keys.justReleased.T) buildTowerCallback(true); 
-		if (FlxG.keys.justReleased.SPACE) speedButtonCallback(true); 
-		if (FlxG.keys.justReleased.R) FlxG.resetState(); 
-		if (FlxG.keys.justReleased.N) nextWaveCallback(true); 
-		if (FlxG.keys.justReleased.ESCAPE) escapeBuilding(); 
-		if (FlxG.keys.justReleased.ONE) upgradeRangeCallback(); 
-		if (FlxG.keys.justReleased.TWO) upgradeDamageCallback(); 
-		if (FlxG.keys.justReleased.THREE) upgradeFirerateCallback(); 
+		if ( FlxG.keys.justReleased.T ) buildTowerCallback( true ); 
+		if ( FlxG.keys.justReleased.SPACE ) speedButtonCallback( true ); 
+		if ( FlxG.keys.justReleased.R ) FlxG.resetState(); 
+		if ( FlxG.keys.justReleased.N ) nextWaveCallback( true ); 
+		if ( FlxG.keys.justReleased.ESCAPE ) escapeBuilding(); 
+		if ( FlxG.keys.justReleased.ONE ) upgradeRangeCallback(); 
+		if ( FlxG.keys.justReleased.TWO ) upgradeDamageCallback(); 
+		if ( FlxG.keys.justReleased.THREE ) upgradeFirerateCallback(); 
 		#end
 		
-		if (buildingMode) {
-			buildHelper.x = FlxG.mouse.x - (FlxG.mouse.x % 8);
-			buildHelper.y = FlxG.mouse.y - (FlxG.mouse.y % 8);
+		// If needed, updates the grid highlight square buildHelper
+		
+		if ( _buildingMode ) {
+			_buildHelper.x = FlxG.mouse.x - (FlxG.mouse.x % 8);
+			_buildHelper.y = FlxG.mouse.y - (FlxG.mouse.y % 8);
 			updateRangeSprite();
 		}
 		
 		if ( FlxG.mouse.justReleased ) {
-			if (buildingMode) {
+			if ( _buildingMode ) {
 				buildTower();
 			} else {
 				#if !mobile
-				var l:Int = towerGroup.length;
-				for (i in 0...l) {
-					var tower = towerGroup.members[i];
-					if (FlxMath.pointInCoordinates(Std.int(FlxG.mouse.x), Std.int(FlxG.mouse.y), Std.int(tower.x), Std.int(tower.y), Std.int(tower.width), Std.int(tower.height))) {
-						towerSelected = towerGroup.members[i];
-						toggleUpgradeMenu(true);
+				// If the user clicked on a tower, they get the upgrade menu
+				for ( tower in _towerGroup.members ) {
+					if ( FlxMath.pointInCoordinates( Std.int(FlxG.mouse.x), Std.int(FlxG.mouse.y), Std.int(tower.x), Std.int(tower.y), Std.int(tower.width), Std.int(tower.height))) {
+						_towerSelected = tower;
+						toggleUpgradeMenu( true );
 						updateUpgradeLabels();
-						break;
-					} else if (FlxG.mouse.y < FlxG.height - 20) {
-						toggleUpgradeMenu(false);
+						break; // We've found the selected tower, can stop cycling through them
+					} else if ( FlxG.mouse.y < FlxG.height - 20 ) {
+						toggleUpgradeMenu( false );
 					}
 				}
 				#else
-				var nearestTower:Tower = getNearestTower(FlxG.mouse.x, FlxG.mouse.y, 20);
-				if (nearestTower != null) {
-					towerSelected = nearestTower;
-					toggleUpgradeMenu(true);
+				// If the user tapped NEAR a tower, they get the upgrade menu.
+				var nearestTower:Tower = getNearestTower( FlxG.mouse.x, FlxG.mouse.y, 20 );
+				if ( nearestTower != null ) {
+					_towerSelected = nearestTower;
+					toggleUpgradeMenu( true );
 					updateUpgradeLabels();
-				} else if (FlxG.mouse.y < FlxG.height - 20) {
+				} else if ( FlxG.mouse.y < FlxG.height - 20 ) {
 					toggleUpgradeMenu(false);
 				}
 				#end
 			}
 		}
 		
-		FlxG.overlap(enemyGroup, goal, hitGoal);
-		FlxG.overlap(bulletGroup, enemyGroup, hitEnemy);
+		// If an enemy hits the goal, it will lose life
 		
-		if (enemiesToKill == 0 && towerGroup.length > 0) {
-			waveCounter -= Std.int(FlxG.timeScale);
-			nextWaveButton.text = "[N]ext Wave in " + Math.ceil(waveCounter / FlxG.framerate);
-			if (waveCounter <= 0) spawnWave();
-		}
-		else {
-			spawnCounter += Std.int(FlxG.timeScale);
-			if (spawnCounter > spawnIntervall * FlxG.framerate && enemiesToSpawn > 0)
+		FlxG.overlap( enemyGroup, _goal, hitGoal );
+		
+		// If a bullet hits an enemy, it will lose health
+		
+		FlxG.overlap( bulletGroup, enemyGroup, hitEnemy );
+		
+		if ( enemiesToKill == 0 && _towerGroup.length > 0 ) {
+			_waveCounter -= Std.int( FlxG.timeScale );
+			_nextWaveButton.text = "[N]ext Wave in " + Math.ceil( _waveCounter / FlxG.framerate );
+			
+			if ( _waveCounter <= 0 ) {
+				spawnWave();
+			}
+		} else {
+			_spawnCounter += Std.int( FlxG.timeScale );
+			
+			if ( _spawnCounter > _spawnInterval * FlxG.framerate && enemiesToSpawn > 0 ) {
 				spawnEnemy();
+			}
 		}
 		
 		super.update();
 	}	
 	
-	private function getNearestTower(x:Float, y:Float, searchRadius:Float):Tower
+	private function getNearestTower( X:Float, Y:Float, SearchRadius:Float ):Tower
 	{
-		var minSquaredDist:Float = searchRadius * searchRadius;
-		var towerToFind:Tower = null;
-		var l:Int = towerGroup.length;
-		for (i in 0...l)
-		{
-			var tower:Tower = towerGroup.members[i];
-			tower.getMidpoint(HELPER_POINT);
-			var dx:Float = Math.abs(HELPER_POINT.x - x);
-			var dy:Float = Math.abs(HELPER_POINT.y - y);
-			if (dx <= searchRadius && dy <= searchRadius)
-			{
-				var distSquared:Float = dx * dx + dy * dy;
-				if (distSquared <= minSquaredDist)
-				{
-					minSquaredDist = distSquared;
-					towerToFind = tower;
-				}
+		var minDistance:Float = SearchRadius;
+		var closestTower:Tower = null;
+		var searchPoint:FlxPoint = new FlxPoint( X, Y );
+		
+		for ( tower in _towerGroup.members ) {
+			var dist:Float = FlxMath.getDistance( searchPoint, tower.getMidpoint() );
+			
+			if ( dist < minDistance ) {
+				closestTower = tower;
+				minDistance = dist;
 			}
 		}
 		
-		return towerToFind;
+		return closestTower;
 	}
 	
-	private function hitGoal(enemy:Dynamic, goal:Dynamic):Void
+	private function hitGoal( enemy:Dynamic, goal:Dynamic ):Void
 	{
-		lives--;
-		enemy.moneyGain = false;
-		enemy.kill();
+		_lives--;
+		//enemy.moneyGain = false;
+		//enemy.kill();
 		
-		if (lives >= 0) lifeGroup.members[lives].kill();
-		if (lives == 0) loseGame();
-		FlxG.sound.play("Hurt");
+		if ( _lives >= 0 ) {
+			_lifeGroup.members[ _lives ].kill();
+		}
+		
+		if ( _lives == 0 ) {
+			loseGame();
+		}
+		
+		#if !js
+		FlxG.sound.play( "hurt" );
+		#end
 	}
 	
-	private function hitEnemy(bullet:Dynamic, enemy:Dynamic):Void
+	private function hitEnemy( bullet:Dynamic, enemy:Dynamic ):Void
 	{
-		enemy.hurt(bullet.damage);
+		//enemy.hurt( bullet.damage );
 		bullet.kill();
-		FlxG.sound.play("enemyhit");
+		
+		#if !js
+		FlxG.sound.play( "enemyhit" );
+		#end
 	}
 	
-	private function buildTowerCallback(Skip:Bool = false):Void
+	private function buildTowerCallback( Skip:Bool = false ):Void
 	{
-		if ((!guiGroup.visible || towerPrice > money) && !Skip) return;
+		if ( ( !_guiGroup.visible || towerPrice > money ) && !Skip ) {
+			return;
+		}
 		
-		buildingMode = !buildingMode;
-		towerRange.visible = !towerRange.visible;
+		_buildingMode = !_buildingMode;
+		_towerRange.visible = !_towerRange.visible;
+		_buildHelper.visible = _buildingMode;
 		
 		playSelectSound();
-		buildHelper.visible = buildingMode;
 	}
 	
 	private function speedButtonCallback(Skip:Bool = false):Void
 	{
-		if (!guiGroup.visible && !Skip) return;
+		if ( !_guiGroup.visible && !Skip ) {
+			return;
+		}
 		
-		if (speed < 3) speed += 1;
-		else speed = 1;
+		if ( _speed < 3 ) {
+			_speed += 1;
+		} else {
+			_speed = 1;
+		}
 		
-		FlxG.timeScale = speed;
-		speedButton.text = "x" + speed;
+		FlxG.timeScale = _speed;
+		_speedButton.text = "x" + _speed;
 		
 		playSelectSound();
 	}
 	
 	private function escapeBuilding():Void
 	{
-		toggleUpgradeMenu(false);
-		buildingMode = false;
-		buildHelper.visible = buildingMode;
+		toggleUpgradeMenu( false );
+		_buildingMode = false;
+		_buildHelper.visible = _buildingMode;
 	}
 	
 	private function nextWaveCallback(Skip:Bool = false):Void
 	{
-		if (!guiGroup.visible && !Skip) return;
-		if (enemiesToKill > 0) return;
+		if ( !_guiGroup.visible && !Skip ) {
+			return;
+		}
+		
+		if ( enemiesToKill > 0 ) {
+			return;
+		}
 		
 		spawnWave();
 		playSelectSound();
@@ -435,7 +423,9 @@ class PlayState extends FlxState
 	
 	private function resetCallback(Skip:Bool = false):Void
 	{
-		if (!guiGroup.visible && !Skip) return;
+		if ( !_guiGroup.visible && !Skip ) {
+			return;
+		}
 		
 		FlxG.resetState();
 		playSelectSound();
@@ -444,32 +434,14 @@ class PlayState extends FlxState
 	private function buildTower():Void
 	{
 		// Can't place towers on GUI
-		if (FlxG.mouse.y > FlxG.height - 16) return;
 		
-		// Can't buy towers without money
-		if (money < towerPrice) {
-			FlxG.sound.play("Deny");
-			escapeBuilding();
+		if ( FlxG.mouse.y > FlxG.height - 16 ) {
 			return;
 		}
 		
-		// Snap to grid
-		var xPos:Float = FlxG.mouse.x - (FlxG.mouse.x % 8);
-		var yPos:Float = FlxG.mouse.y - (FlxG.mouse.y % 8);
+		// Can't buy towers without money
 		
-		// Can't place towers on other towers
-		var l:Int = towerGroup.length;
-		for (i in 0...l) {
-			var tower:Tower = towerGroup.members[i];
-			if (tower.x == xPos && tower.y == yPos) {
-				FlxG.sound.play("Deny");
-				escapeBuilding();
-				return;
-			}
-		}
-		
-		//Can't place towers on the road
-		if (map.getTile(Std.int(xPos / 8), Std.int(yPos / 8)) == 0) {
+		if ( money < towerPrice ) {
 			#if !js
 			FlxG.sound.play("deny");
 			#end
@@ -478,59 +450,93 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		var tower:Tower = new Tower(xPos, yPos);
-		tower.index = towerGroup.length - 1;
-		towerGroup.add(tower); 
+		// Snap to grid
+		
+		var xPos:Float = FlxG.mouse.x - ( FlxG.mouse.x % 8 );
+		var yPos:Float = FlxG.mouse.y - ( FlxG.mouse.y % 8 );
+		
+		// Can't place towers on other towers
+		
+		for ( tower in _towerGroup.members ) {
+			if ( tower.x == xPos && tower.y == yPos ) {
+				#if !js
+				FlxG.sound.play("deny");
+				#end
+				escapeBuilding();
+				return;
+			}
+		}
+		
+		//Can't place towers on the road
+		
+		if ( _map.getTile( Std.int( xPos / 8 ), Std.int( yPos / 8 ) ) == 0 ) {
+			#if !js
+			FlxG.sound.play("deny");
+			#end
+			
+			escapeBuilding();
+			return;
+		}
+		
+		_towerGroup.add( new Tower( xPos, yPos, _towerGroup.length - 1 ) ); 
 		
 		#if !js
 		FlxG.sound.play( "build" );
 		#end
 		
 		money -= towerPrice;
-		towerPrice += Std.int(towerPrice * 0.3);
-		towerButton.text = "Buy [T]ower ($" + towerPrice + ")";
+		towerPrice += Std.int( towerPrice * 0.3 );
+		_towerButton.text = "Buy [T]ower ($" + towerPrice + ")";
 		escapeBuilding();
 	}
 	
 	private function playSelectSound():Void
 	{
 		#if !js
-		FlxG.sound.play("select");
+		FlxG.sound.play( "select" );
 		#end
 	} 
 	
-	private function announceWave(End:Bool = false):Void
+	private function announceWave( End:Bool = false ):Void
 	{
-		centerText.x = -200;
-		centerText.text = "Wave " + wave;
-		if (End) centerText.text = "Game Over! :(";
+		_centerText.x = -200;
+		_centerText.text = "Wave " + wave;
 		
-		FlxTween.multiVar(centerText, { x: 0 }, 2, { ease: FlxEase.expoOut, complete: hideText } );
+		if ( End ) {
+			_centerText.text = "Game Over! :(";
+		}
 		
-		waveText.text = "Wave: " + wave;
-		waveText.size = 16;
-		waveText.visible = true;
+		FlxTween.multiVar( _centerText, { x: 0 }, 2, { ease: FlxEase.expoOut, complete: hideText } );
+		
+		_waveText.text = "Wave: " + wave;
+		_waveText.size = 16;
+		_waveText.visible = true;
 	}
 	
-	private function hideText(Tween:FlxTween):Void
+	private function hideText( Tween:FlxTween ):Void
 	{
-		FlxTween.multiVar(centerText, { x: FlxG.width }, 2, { ease: FlxEase.expoIn } );
+		FlxTween.multiVar( _centerText, { x: FlxG.width }, 2, { ease: FlxEase.expoIn } );
 	}
 	
 	private function spawnWave():Void
 	{
-		if (gameOver) return;
+		if ( _gameOver ) {
+			return;
+		}
 		
 		wave ++;
 		announceWave();
 		enemiesToKill = 5 + wave;
 		enemiesToSpawn = enemiesToKill;
 		
-		nextWaveButton.visible = false;
-		if (!upgradeHasBeenBought) tutText.visible = true;
+		_nextWaveButton.visible = false;
 		
-		enemyText.visible = true;
-		enemyText.size = 16;
+		if ( !_upgradeHasBeenBought ) {
+			_tutText.visible = true;
+		}
+		
+		_enemyText.visible = true;
+		_enemyText.size = 16;
 	}
 	
 	private function spawnEnemy():Void
@@ -538,40 +544,40 @@ class PlayState extends FlxState
 		enemiesToSpawn--;
 		
 		var enemy:Enemy = enemyGroup.recycle(Enemy);
-		enemy.init(3 * 8 + 4, -20);
-		enemy.followPath( map.findPath( new FlxPoint(8 * 3 + 4, 0), new FlxPoint(8 * 32 + 4, 8 * 6) ) );
-		spawnCounter = 0;
+		enemy.init( SPAWN_X, -20 );
+		enemy.followPath( _map.findPath( new FlxPoint( SPAWN_X, 0), new FlxPoint( GOAL_X, GOAL_Y ) ) );
+		_spawnCounter = 0;
 	}
 	
 	public function killedWave():Void
 	{
 		if ( wave != 0 ) {
 			#if !js
-			FlxG.sound.play("wavedefeated");
+			FlxG.sound.play( "wavedefeated" );
 			#end
 		}
-		waveCounter = 3 * FlxG.framerate;
 		
-		nextWaveButton.visible = true;
-		tutText.visible = false;
+		_waveCounter = 3 * FlxG.framerate;
 		
-		enemyText.visible = false;
+		_nextWaveButton.visible = true;
+		_tutText.visible = false;
+		_enemyText.visible = false;
 	}
 	
 	private function loseGame():Void
 	{
-		gameOver = true;
+		_gameOver = true;
 		
 		enemyGroup.kill();
-		towerGroup.kill();
-		upgradeMenu.kill();
 		towerIndicators.kill();
-		towerRange.kill();
+		_towerGroup.kill();
+		_upgradeMenu.kill();
+		_towerRange.kill();
 		
-		announceWave(true);
+		announceWave( true );
 		
-		towerButton.text = "[R]estart";
-		towerButton.setOnClickCallback(resetCallback);
+		_towerButton.text = "[R]estart";
+		_towerButton.setOnClickCallback( resetCallback );
 		
 		#if !js
 		FlxG.sound.play("gameover");
@@ -580,85 +586,93 @@ class PlayState extends FlxState
 	
 	private function updateRangeSprite():Void
 	{
-		var spriteToAttach:FlxSprite = buildHelper; 
+		var spriteToAttach:FlxSprite = _buildHelper; 
 		var range:Int = 40;
 		
-		if (!buildingMode) {
-			spriteToAttach = towerSelected;
-			range = towerSelected.range;
+		if ( !_buildingMode ) {
+			spriteToAttach = _towerSelected;
+			range = _towerSelected.range;
 		}
 		
-		if (RANGE_BITMAP == null)
-		{
-			towerRange.makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT, true);
-			RANGE_BITMAP = towerRange.pixels;
-		}
-		else
-		{
+		if ( RANGE_BITMAP == null ) {
+			_towerRange.makeGraphic( FlxG.width, FlxG.height, FlxColor.TRANSPARENT, true );
+			RANGE_BITMAP = _towerRange.pixels;
+		} else {
 			STAGE_RECTANGLE.width = FlxG.width;
 			STAGE_RECTANGLE.height = FlxG.height;
-			towerRange.pixels.fillRect(STAGE_RECTANGLE, FlxColor.TRANSPARENT);
+			_towerRange.pixels.fillRect( STAGE_RECTANGLE, FlxColor.TRANSPARENT );
 		}
 		
-		towerRange.alpha = 0.2;
-		towerRange.visible = true;
+		_towerRange.alpha = 0.2;
+		_towerRange.visible = true;
 		
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
-		gfx.beginFill(0xFFFFFF);
-		spriteToAttach.getMidpoint(HELPER_POINT);
-		gfx.drawCircle(HELPER_POINT.x, HELPER_POINT.y, range);
+		gfx.beginFill( 0xFFFFFF );
+		spriteToAttach.getMidpoint( HELPER_POINT );
+		gfx.drawCircle( HELPER_POINT.x, HELPER_POINT.y, range );
 		gfx.endFill();
 		
-		towerRange.pixels.draw(FlxSpriteUtil.flashGfxSprite);
-		towerRange.dirty = true;
+		_towerRange.pixels.draw( FlxSpriteUtil.flashGfxSprite );
+		_towerRange.dirty = true;
 		
-		add(towerRange);
+		add( _towerRange );
 	}
 	
 	// Tower upgrades 
 	
 	private function toggleUpgradeMenu(On:Bool):Void
 	{
-		upgradeMenu.visible = On;
-		guiGroup.visible = !On;
-		towerRange.visible = On;
+		_upgradeMenu.visible = On;
+		_guiGroup.visible = !On;
+		_towerRange.visible = On;
 		
-		if (!On) towerSelected = null;
-		else updateUpgradeLabels();
+		if ( !On ) {
+			_towerSelected = null;
+		} else {
+			updateUpgradeLabels();
+		}
 		
-		if (On) playSelectSound();
+		if ( On ) {
+			playSelectSound();
+		}
 	}
 	
 	private function upgradeRangeCallback():Void
 	{
-		if (!upgradeMenu.visible) return;
+		if ( !_upgradeMenu.visible ) {
+			return;
+		}
 		
-		if (money >= towerSelected.range_PRIZE) {
-			money -= towerSelected.range_PRIZE;
-			towerSelected.upgradeRange();
+		if ( _money >= _towerSelected.range_PRIZE ) {
+			money -= _towerSelected.range_PRIZE;
+			_towerSelected.upgradeRange();
 			upgradeHelper();
 		}
 	}
 	
 	private function upgradeDamageCallback():Void
 	{
-		if (!upgradeMenu.visible) return;
+		if ( !_upgradeMenu.visible ) {
+			return;
+		}
 		
-		if (money >= towerSelected.damage_PRIZE) {
-			money -= towerSelected.damage_PRIZE;
-			towerSelected.upgradeDamage();
+		if ( _money >= _towerSelected.damage_PRIZE ) {
+			money -= _towerSelected.damage_PRIZE;
+			_towerSelected.upgradeDamage();
 			upgradeHelper();
 		}
 	}
 	
 	private function upgradeFirerateCallback():Void
 	{
-		if (!upgradeMenu.visible) return;
+		if ( !_upgradeMenu.visible ) {
+			return;
+		}
 		
-		if (money >= towerSelected.firerate_PRIZE) {
-			money -= towerSelected.firerate_PRIZE;
-			towerSelected.upgradeFirerate();
+		if ( _money >= _towerSelected.firerate_PRIZE ) {
+			money -= _towerSelected.firerate_PRIZE;
+			_towerSelected.upgradeFirerate();
 			upgradeHelper();
 		}
 	}
@@ -667,15 +681,30 @@ class PlayState extends FlxState
 	{
 		updateUpgradeLabels();
 		playSelectSound();
-		upgradeHasBeenBought = true;
+		_upgradeHasBeenBought = true;
 	}
 	
 	private function updateUpgradeLabels():Void
 	{
-		rangeButton.text = "Range (" + towerSelected.range_LEVEL + "): $" + towerSelected.range_PRIZE; 
-		damageButton.text = "Damage (" + towerSelected.damage_LEVEL + "): $" + towerSelected.damage_PRIZE; 
-		firerateButton.text = "Firerate (" + towerSelected.firerate_LEVEL + "): $" + towerSelected.firerate_PRIZE; 
+		_rangeButton.text = "Range (" + _towerSelected.range_LEVEL + "): $" + _towerSelected.range_PRIZE; 
+		_damageButton.text = "Damage (" + _towerSelected.damage_LEVEL + "): $" + _towerSelected.damage_PRIZE; 
+		_firerateButton.text = "Firerate (" + _towerSelected.firerate_LEVEL + "): $" + _towerSelected.firerate_PRIZE; 
 		
 		updateRangeSprite();
+	}
+	
+	public var money(get, set):Int;
+	
+	private function get_money():Int
+	{
+		return _money;
+	}
+	
+	private function set_money( Increase:Int ):Int
+	{
+		_money += Increase;
+		_moneyText.size = 16;
+		
+		return _money;
 	}
 }

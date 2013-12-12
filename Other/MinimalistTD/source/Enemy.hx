@@ -48,13 +48,14 @@ class Enemy extends FlxSprite
 		
 		Reg.PS.enemiesToKill--;
 		
-		if ( Reg.PS.enemiesToKill <= 0 ) Reg.PS.killedWave();
+		if ( Reg.PS.enemiesToKill <= 0 ) {
+			Reg.PS.killedWave();
+		}
 		
 		if ( moneyGain ) {
-			var money:Int = 1;
-			if ( Reg.PS.wave < 5 ) money = 2;
+			var money:Int = ( Reg.PS.wave < 5 ) ? 2 : 1;
+			
 			Reg.PS.money += money;
-			Reg.PS.moneyText.size = 16;
 		}
 		
 		super.kill();
