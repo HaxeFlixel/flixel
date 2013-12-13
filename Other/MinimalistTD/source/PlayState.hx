@@ -1,5 +1,6 @@
 package;
 
+import flash.display.Sprite;
 import openfl.Assets;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
@@ -125,8 +126,8 @@ class PlayState extends FlxState
 		
 		var height:Int = FlxG.height - 18;
 		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback );
-		_nextWaveButton = new Button( 120, height, "[N]ext Wave", nextWaveCallback, [ false ] );
-		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback );
+		_nextWaveButton = new Button( 120, height, "[N]ext Wave", nextWaveCallback, [ false ], 143 );
+		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback, null, 21 );
 		
 		_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!" );
 		_tutText.visible = false;
@@ -156,7 +157,7 @@ class PlayState extends FlxState
 		
 		_topGui = new FlxGroup();
 		
-		_moneyText = new FlxText( 0, 2, FlxG.width - 4, "$: " + _money );
+		_moneyText = new FlxText( 0, 2, FlxG.width - 4, "$: " + money );
 		_moneyText.alignment = "right";
 		
 		_enemyText = new FlxText( 120, 2, FlxG.width, "Wave" );
@@ -192,10 +193,8 @@ class PlayState extends FlxState
 		_centerText.borderStyle = FlxText.BORDER_SHADOW;
 		_centerText.blend = BlendMode.INVERT;
 		
-		_buildHelper = new FlxSprite( 0, 0 );
-		_buildHelper.makeGraphic( 8, 8 );
+		_buildHelper = new FlxSprite( 0, 0, "images/checker.png" );
 		_buildHelper.visible = false;
-		_buildHelper.alpha = 0.5;
 		
 		_towerRange = new FlxSprite( 0, 0 );
 		_towerRange.visible = false;
@@ -223,6 +222,24 @@ class PlayState extends FlxState
 		// Call this to set up for first wave
 		
 		killedWave();
+	}
+	
+	/**
+	 * Called before each wave to set up _waveCounter and some UI elements.
+	 */
+	public function killedWave():Void
+	{
+		if ( wave != 0 ) {
+			#if !js
+			FlxG.sound.play( "wavedefeated" );
+			#end
+		}
+		
+		_waveCounter = 3 * FlxG.framerate;
+		
+		_nextWaveButton.visible = true;
+		_tutText.visible = false;
+		_enemyText.visible = false;
 	}
 	
 	override public function update():Void
@@ -258,13 +275,15 @@ class PlayState extends FlxState
 		if ( FlxG.keys.justReleased.THREE ) upgradeFirerateCallback(); 
 		#end
 		
-		// If needed, updates the grid highlight square buildHelper
+		// If needed, updates the grid highlight square buildHelper and the range indicator
 		
 		if ( _buildingMode ) {
 			_buildHelper.x = FlxG.mouse.x - (FlxG.mouse.x % 8);
 			_buildHelper.y = FlxG.mouse.y - (FlxG.mouse.y % 8);
-			updateRangeSprite();
+			updateRangeSprite( _buildHelper.getMidpoint(), 40 );
 		}
+		
+		// Controls mouse clicks, which either build a tower or offer the option to upgrade a tower.
 		
 		if ( FlxG.mouse.justReleased ) {
 			if ( _buildingMode ) {
@@ -304,6 +323,8 @@ class PlayState extends FlxState
 		
 		FlxG.overlap( bulletGroup, enemyGroup, hitEnemy );
 		
+		// Controls wave spawning, enemy spawning, 
+		
 		if ( enemiesToKill == 0 && _towerGroup.length > 0 ) {
 			_waveCounter -= Std.int( FlxG.timeScale );
 			_nextWaveButton.text = "[N]ext Wave in " + Math.ceil( _waveCounter / FlxG.framerate );
@@ -322,6 +343,15 @@ class PlayState extends FlxState
 		super.update();
 	}	
 	
+	#if mobile
+	/**
+	 * Used to get the nearest tower within a particular search radius. Makes selecting towers easier for touch screens.
+	 * 
+	 * @param	X				The X position of the screen touch.
+	 * @param	Y				The Y position of the screen touch.
+	 * @param	SearchRadius	How far from the touch point to search.
+	 * @return	The nearest tower, as a Tower object.
+	 */
 	private function getNearestTower( X:Float, Y:Float, SearchRadius:Float ):Tower
 	{
 		var minDistance:Float = SearchRadius;
@@ -339,12 +369,15 @@ class PlayState extends FlxState
 		
 		return closestTower;
 	}
+	#end
 	
+	/**
+	 * Called when an enemy collides with a goal. Explodes the enemy, damages the goal.
+	 */
 	private function hitGoal( enemy:Dynamic, goal:Dynamic ):Void
 	{
 		_lives--;
-		//enemy.moneyGain = false;
-		//enemy.kill();
+		enemy.explode( false );
 		
 		if ( _lives >= 0 ) {
 			_lifeGroup.members[ _lives ].kill();
@@ -359,9 +392,14 @@ class PlayState extends FlxState
 		#end
 	}
 	
+	/**
+	 * Called when a bullet hits an enemy. Damages the enemy, kills the bullet.
+	 * @param	bullet
+	 * @param	enemy
+	 */
 	private function hitEnemy( bullet:Dynamic, enemy:Dynamic ):Void
 	{
-		//enemy.hurt( bullet.damage );
+		enemy.hurt( bullet.damage );
 		bullet.kill();
 		
 		#if !js
@@ -549,21 +587,6 @@ class PlayState extends FlxState
 		_spawnCounter = 0;
 	}
 	
-	public function killedWave():Void
-	{
-		if ( wave != 0 ) {
-			#if !js
-			FlxG.sound.play( "wavedefeated" );
-			#end
-		}
-		
-		_waveCounter = 3 * FlxG.framerate;
-		
-		_nextWaveButton.visible = true;
-		_tutText.visible = false;
-		_enemyText.visible = false;
-	}
-	
 	private function loseGame():Void
 	{
 		_gameOver = true;
@@ -584,44 +607,28 @@ class PlayState extends FlxState
 		#end
 	}
 	
-	private function updateRangeSprite():Void
+	/**
+	 * Called either when building, or upgrading, a tower.
+	 */
+	private function updateRangeSprite( Center:FlxPoint, Range:Int ):Void
 	{
-		var spriteToAttach:FlxSprite = _buildHelper; 
-		var range:Int = 40;
+		_towerRange.setPosition( Center.x - Range, Center.y - Range );
+		_towerRange.makeGraphic( Range * 2, Range * 2, FlxColor.TRANSPARENT );
 		
-		if ( !_buildingMode ) {
-			spriteToAttach = _towerSelected;
-			range = _towerSelected.range;
-		}
+		var sprite:Sprite = new Sprite();
+		sprite.graphics.beginFill( 0xFFFFFF );
+		sprite.graphics.drawCircle( Range, Range, Range );
+		sprite.graphics.endFill();
 		
-		if ( RANGE_BITMAP == null ) {
-			_towerRange.makeGraphic( FlxG.width, FlxG.height, FlxColor.TRANSPARENT, true );
-			RANGE_BITMAP = _towerRange.pixels;
-		} else {
-			STAGE_RECTANGLE.width = FlxG.width;
-			STAGE_RECTANGLE.height = FlxG.height;
-			_towerRange.pixels.fillRect( STAGE_RECTANGLE, FlxColor.TRANSPARENT );
-		}
-		
-		_towerRange.alpha = 0.2;
+		_towerRange.pixels.draw( sprite );
+		_towerRange.blend = BlendMode.INVERT;
 		_towerRange.visible = true;
-		
-		var gfx:Graphics = FlxSpriteUtil.flashGfx;
-		gfx.clear();
-		gfx.beginFill( 0xFFFFFF );
-		spriteToAttach.getMidpoint( HELPER_POINT );
-		gfx.drawCircle( HELPER_POINT.x, HELPER_POINT.y, range );
-		gfx.endFill();
-		
-		_towerRange.pixels.draw( FlxSpriteUtil.flashGfxSprite );
-		_towerRange.dirty = true;
-		
-		add( _towerRange );
 	}
 	
-	// Tower upgrades 
-	
-	private function toggleUpgradeMenu(On:Bool):Void
+	/**
+	 * Toggles the upgrade menu and tower range indicator.
+	 */
+	private function toggleUpgradeMenu( On:Bool ):Void
 	{
 		_upgradeMenu.visible = On;
 		_guiGroup.visible = !On;
@@ -644,7 +651,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		if ( _money >= _towerSelected.range_PRIZE ) {
+		if ( money >= _towerSelected.range_PRIZE ) {
 			money -= _towerSelected.range_PRIZE;
 			_towerSelected.upgradeRange();
 			upgradeHelper();
@@ -657,7 +664,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		if ( _money >= _towerSelected.damage_PRIZE ) {
+		if ( money >= _towerSelected.damage_PRIZE ) {
 			money -= _towerSelected.damage_PRIZE;
 			_towerSelected.upgradeDamage();
 			upgradeHelper();
@@ -670,7 +677,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		if ( _money >= _towerSelected.firerate_PRIZE ) {
+		if ( money >= _towerSelected.firerate_PRIZE ) {
 			money -= _towerSelected.firerate_PRIZE;
 			_towerSelected.upgradeFirerate();
 			upgradeHelper();
@@ -690,9 +697,12 @@ class PlayState extends FlxState
 		_damageButton.text = "Damage (" + _towerSelected.damage_LEVEL + "): $" + _towerSelected.damage_PRIZE; 
 		_firerateButton.text = "Firerate (" + _towerSelected.firerate_LEVEL + "): $" + _towerSelected.firerate_PRIZE; 
 		
-		updateRangeSprite();
+		updateRangeSprite( _towerSelected.getMidpoint(), _towerSelected.range );
 	}
 	
+	/**
+	 * Controls how money is handled. Setting money automatically "balloons" the money HUD indicator.
+	 */
 	public var money(get, set):Int;
 	
 	private function get_money():Int
@@ -700,9 +710,10 @@ class PlayState extends FlxState
 		return _money;
 	}
 	
-	private function set_money( Increase:Int ):Int
+	private function set_money( NewMoney:Int ):Int
 	{
-		_money += Increase;
+		_money = NewMoney;
+		_moneyText.text = "$: " + _money;
 		_moneyText.size = 16;
 		
 		return _money;

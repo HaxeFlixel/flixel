@@ -36,15 +36,24 @@ class Enemy extends FlxSprite
 		super.update();
 	}
 	
-	override public function kill():Void
+	override public function hurt( Damage:Float ):Void
+	{
+		health -= Damage;
+		
+		if ( health <= 0 ) {
+			explode( true );
+		}
+	}
+	
+	public function explode( GainMoney:Bool ):Void
 	{
 		#if !js
 		FlxG.sound.play("enemykill");
 		#end
 		
-		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle(EnemyGibs);
-		emitter.init(x, y);
-		emitter.start(true, 2);
+		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle( EnemyGibs );
+		emitter.init( x, y );
+		emitter.explode();
 		
 		Reg.PS.enemiesToKill--;
 		
@@ -52,7 +61,7 @@ class Enemy extends FlxSprite
 			Reg.PS.killedWave();
 		}
 		
-		if ( moneyGain ) {
+		if ( GainMoney ) {
 			var money:Int = ( Reg.PS.wave < 5 ) ? 2 : 1;
 			
 			Reg.PS.money += money;

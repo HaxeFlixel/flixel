@@ -50,10 +50,10 @@ class MenuState extends FlxState
 	
 	override public function create():Void
 	{
-		Reg.CS = this;
 		Reg.genColors();
 		//FlxGameJolt.addTrophyCallback( Reg.createToast );
 		FlxG.cameras.bgColor = Reg.lite;
+		Reg.level = 1;
 		
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.show();

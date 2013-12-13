@@ -39,8 +39,7 @@ class MenuState extends FlxState
 		
 		var credits:FlxText = new FlxText(2, FlxG.height - 12, FlxG.width, "Made in 48h for Ludum Dare 26 by Gama11");
 		
-		var playButton:Button = new Button( 0, Std.int( FlxG.height / 2 ), "Play", playButtonCallback );
-		//playButton.textNormal.color = FlxColor.WHITE;
+		var playButton:Button = new Button( 0, Std.int( FlxG.height / 2 ), "[P]lay", playButtonCallback );
 		playButton.x = Std.int( ( FlxG.width - playButton.width ) / 2 );
 		
 		_enemy = new Enemy( START_X, START_Y );
@@ -65,6 +64,10 @@ class MenuState extends FlxState
 		if ( _enemy.y >= 28 * TILE_SIZE ) {
 			// If so, reset them to the beginning of the path
 			_enemy.followPath( getMapPath() );
+		}
+		
+		if ( FlxG.keys.justReleased.P ) {
+			playButtonCallback();
 		}
 		
 		super.update();

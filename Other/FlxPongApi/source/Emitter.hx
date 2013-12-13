@@ -9,7 +9,7 @@ import flixel.util.FlxRandom;
  */
 class Emitter extends FlxEmitter
 {
-	public function new( X:Int, Y:Int, PixelSize:Int = 0, Color:Int = 0 )
+	public function new( X:Int, Y:Int, PixelSize:Int = 1, Color:Int = 0 )
 	{
 		super( X, Y, 100 );
 		setRotation( 0, 0 );

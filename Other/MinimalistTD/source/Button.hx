@@ -6,9 +6,16 @@ import flixel.addons.ui.FlxButtonPlus;
 
 class Button extends FlxButtonPlus
 {
-	public function new( X:Int = 0, Y:Int = 0, Label:String, ?Callback:Dynamic, ?Params:Array<Dynamic> )
+	public function new( X:Int = 0, Y:Int = 0, Label:String, ?Callback:Dynamic, ?Params:Array<Dynamic>, ?Width:Int )
 	{
-		var width:Int = Label.length * 7;
+		var width:Int = 0;
+		
+		if ( Width == null || Width == 0 ) {
+			width = Label.length * 7;
+		} else {
+			width = Width;
+		}
+		
 		super( X, Y, Callback, Params, Label, width, 20 );
 		textNormal.color = FlxColor.BLACK;
 		textNormal.borderStyle = FlxText.BORDER_OUTLINE;
