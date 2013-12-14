@@ -709,6 +709,42 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
+	 * Iterate through every members
+	 * @return An iterator
+	 */
+	public function iterator():FlxGroupIterator<T>
+	{
+		return new FlxGroupIterator(_members);
+	}
+	
+	/**
+	 * Iterate through every dead members
+	 * @return An iterator
+	 */
+	public function iteratorAlive()
+	{
+		return new FlxGroupIterator(_members, function(m : T) { return m.alive; } );
+	}
+	
+	/**
+	 * Iterate through every dead members
+	 * @return An iterator
+	 */
+	public function iteratorDead()
+	{
+		return new FlxGroupIterator(_members, function(m : T) { return !m.alive; } );
+	}
+	
+	/**
+	 * Iterate through every dead members
+	 * @return An iterator
+	 */
+	public function iteratorExists()
+	{
+		return new FlxGroupIterator(_members, function(m : T) { return m.exists; } );
+	}
+	
+	/**
 	 * Helper function for the sort process.
 	 * 
 	 * @param 	Obj1	The first object being sorted.
