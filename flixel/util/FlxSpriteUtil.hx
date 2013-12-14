@@ -238,7 +238,7 @@ class FlxSpriteUtil
 	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRect(X, Y, Width, Height);
 		flashGfx.endFill();
 		
@@ -260,7 +260,7 @@ class FlxSpriteUtil
 	static public function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
 		flashGfx.endFill();
 		
@@ -286,7 +286,7 @@ class FlxSpriteUtil
 	static public function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
 		flashGfx.endFill();
 		
@@ -307,7 +307,7 @@ class FlxSpriteUtil
 	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawCircle(X, Y, Radius);
 		flashGfx.endFill();
 		
@@ -327,7 +327,7 @@ class FlxSpriteUtil
 	static public function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawEllipse(X, Y, Width, Height);
 		flashGfx.endFill();
 		
