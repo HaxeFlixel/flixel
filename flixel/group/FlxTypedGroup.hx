@@ -723,7 +723,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function iteratorAlive()
 	{
-		return new FlxGroupIterator(_members, function(m : T) { return m.alive; } );
+		return new FlxGroupIterator(_members, function(m : T) { return m.exists && m.alive; } );
 	}
 	
 	/**
