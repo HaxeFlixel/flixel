@@ -1,0 +1,19 @@
+-swf all.swf
+-swf-version 11
+
+-lib openfl
+-lib spinehx
+-lib nape
+-lib flixel-addons
+
+-debug
+-v
+-prompt
+--macro include('flixel')
+
+-D doc
+-D desktop
+-xml all.xml
+-cp ..
+
+-cmd ./chxdoc -f all.xml

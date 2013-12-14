@@ -1,5 +1,87 @@
 flixel CHANGELOG
 
+v.3.0.1
+------------------------------
+* Fixes to gamepad API.
+* Added tilemap scaling.
+* Compiler fix for Blackberry target.
+
+v.3.0.0
+------------------------------
+* New Front End classes to better encapsulate FlxG functionality.
+* Refactored the animation system.
+* Better support for nested sprites via FlxSpriteGroup.
+* Moved lots of stuff into utility classe to reduce clutter in core classes.
+* Continued optimizations for cpp targets.
+
+v.2.0.0-alpha.3
+------------------------------
+* Fix for FLX_MOUSE_ADVANCED (won't compiled earlier)
+* FlxMath functions are Float-compatible. Thanks @Gama11
+* Fix for negative object width and height. Thanks @Gama11
+* Fix for FlxPath and FlxObject
+* Added Frame parameter for FlxSprite's play(). Now you can start animation from specified Frame
+* Added gotoAndPlay(), gotoAndStop(), pauseAnimation() and resumeAnimation() methods for FlxSprite
+* Added frameRate property for FlxAnim
+* Fixed camera scrollrect on html5 target
+* Fixes for reflection which caused crashes
+* Added tileScaleHack var for tilemaps and tileblocks. It should help with tilemap tearing problem
+* Fixed FlxWindow dragging bug
+* Fix null error bug with logging functions. Thanks @Gama11
+* Projects now use .xml instead of .nmml. Thanks @Gama11
+* Fixed facing for FlxSprite with TextureAtlas
+* FlxTrail improvements from Andrei Regiani (now it supports origin and scaling)
+* FlxSlider refactoring and fixes. Thanks @Gama11
+* Fixed FlxTextField.setFormat() to load font correctly
+* Fixed AntTaskManager. Thanks @Henry.T
+* Blocked sounds for html5 target (until i'll make them work there)
+* Fixed FlxU.formatTime to correctly display milliseconds. Thanks @jayrobin
+* Big refactoring regarding FlxPoint, FlxRect, FlxU (now it splitted into FlxAngle, FlxArray, FlxColor, FlxMath, FlxMisc, FlxRandom and FlxVelocity classes). Huge thanks @Gama11
+* Merged FlxMath, FlxColor and FlxVelocity plugins from FlixelPowerTools into utility classes from org.flixel.util package. Thanks @Gama11
+* Fixed FlxTypedGroup atlas setter
+* Fixed FlxBasic updateAtlasInfo() method
+* Added @:isVar to FlxButtonPlus x and y so they can be accessed from a derived class. Thanks @ProG4mr
+* Temp fix for logging on HTML5 / disable htmlText. Thanks @Gama11
+* Moved all color constants to FlxColor util and totally removed them from FlxG. Thanks @Gama11
+* Improved nape classes documentation. Thanks @Gama11
+* Added forceComplexRender property for FlxObject on flash target. It forces to use BitmapData's draw() method for rendering (smoother, but slower)
+* Added onComplete callback for FlxSound. Works on flash and desktop
+* Fixed for PxBitmapont's loadPixelizer() on html5. Now it should render without artifacts
+* Added FlxG.quickWatch() and renamed FlxString.formatHash() to FlxString.formatStringMap(). Thanks @Gama11
+* Added loadFromSprite() method for FlxSprite 
+* Added support for animated sprites in FlxTrail
+* Added functions to hide, show and toggle the debugger to FlxG. Thanks @Gama11
+* Slightly better texture atlas handling. Now you can easily add support for new atlas format
+* Fixed tilesheet rendering (for latest openfl release) 
+
+v.2.0.0-alpha.2
+------------------------------
+* openfl compatibility
+* Removed isColored() method from FlxCamera, since Sprite's colorTransform is working properly with drawTiles() now
+* Added XBox controller button definitions for Mac (took from HaxePunk)
+* FlxPath enhancement, it has pathAutoCenter property now (true by default) and setPathNode() method for direct change of current path node. Thanks @Gama11
+* Little fixes regarding new compiler conditionals and mouse input
+
+v.2.0.0-alpha
+------------------------------
+* Perfomance optimization: merged preUpdate(), update() and postUpdate() methods. So you should call super.update(); from your classes.
+* A little bit better TexturePacker format support for FlxSprite
+* Added missing button definitions for XBox controller to FlxJoystick. Thanks @volvis
+* Bitmap filters for FlxSprite and FlxText now works on native targets. Thanks @ProG4mr
+* Added experimental update thread. Thanks @crazysam
+* Fixed FlxTilemap for multiple map loading. Thanks @SeanHogan
+* Added FlxAssets.addBitmapDataToCache() method for more control over image caching
+* Added drawCircle() function to FlxSprite. Thanks @Gama11
+* Added method for updating tilemap buffers, usefull for camera resizing. Thanks @impaler
+* FlxEmitter Improvements: added scaling, fading and coloring. Thanks @Gama11 for the idea and help
+* Added powerfull Console to FlxDebugger. Thanks @Gama11
+* Improved logging and variable watching functionality. Thanks @Gama11
+* Added move function to FlxObject. Thanks @sergey-miryanov
+* Fixed FlxTilemap's arrayToCSV() method on neko target. Thanks @pentaphobe
+* Added optional right and middle mouse button support. Use FLX_MOUSE_ADVANCED compiler conditional. Thanks @Gama11
+* Added FlxColorUtils class. Thanks @Gama11
+* Added new compiler conditionals: FLX_NO_FOCUS_LOST_SCREEN and FLX_NO_SOUND_TRAY compiler conditionals. See template.nmml file for details. Thanks @Gama11
+
 v1.09
 ------------------------------
 * Fix for FlxSprite.fill() on cpp targets
