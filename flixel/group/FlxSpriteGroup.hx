@@ -200,6 +200,9 @@ class FlxSpriteGroup extends FlxSprite
 	
 	override public function update():Void 
 	{
+		if (_velocity != null && moves) {
+			updateMotion();
+		}
 		group.update();
 	}
 	
@@ -712,28 +715,28 @@ class FlxSpriteGroup extends FlxSprite
 	{
 		if (exists && velocity != Value && Value != null)
 			transformChildren(velocityTransform, Value);
-		return velocity = Value;
+		return super.set_velocity(Value);
 	}
 	
 	override private function set_acceleration(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && acceleration != Value && Value != null)
 			transformChildren(accelerationTransform, Value);
-		return acceleration = Value;
+		return super.set_acceleration(Value);
 	}
 	
 	override private function set_drag(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && drag != Value && Value != null)
 			transformChildren(dragTransform, Value);
-		return drag = Value;
+		return super.set_drag(Value);
 	}
 	
 	override private function set_maxVelocity(Value:FlxPoint):FlxPoint 
 	{
 		if (exists && maxVelocity != Value && Value != null)
 			transformChildren(maxVelocityTransform, Value);
-		return maxVelocity = Value;
+		return super.set_maxVelocity(Value);
 	}
 	
 	override private function set_color(Value:Int):Int 
@@ -820,7 +823,7 @@ class FlxSpriteGroup extends FlxSprite
 	private function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
 	private function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
 	private function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
-	private function velocityTransform(Sprite:FlxSprite, Velocity:FlxPoint)				{ Sprite.velocity.copyFrom(Velocity); }			// set
+	private function velocityTransform(Sprite:FlxSprite, Velocity:FlxPoint)				{ /*Sprite.velocity.copyFrom(Velocity);*/ }			// set
 	private function maxVelocityTransform(Sprite:FlxSprite, MaxVelocity:FlxPoint)		{ Sprite.maxVelocity.copyFrom(MaxVelocity); }	// set
 	private function accelerationTransform(Sprite:FlxSprite, Acceleration:FlxPoint)		{ Sprite.acceleration.copyFrom(Acceleration); }	// set
 	private function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
