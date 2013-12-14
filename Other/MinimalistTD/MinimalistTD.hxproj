@@ -21,7 +21,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1.2.1&#xA;FLX_NO_DEBUG&#xA;openfl=1.2&#xA;display&#xA;web" />
+    <option directives="tools=1.1.6&#xA;FLX_NO_DEBUG&#xA;openfl=1.2&#xA;FLX_NO_NATIVE_CURSOR&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />

@@ -144,10 +144,14 @@ class PlayState extends FlxState
 		
 		_upgradeMenu = new FlxGroup();
 		
-		_upgradeMenu.add( new Button( 2, height, "<", toggleUpgradeMenu, [false] ) );
-		_upgradeMenu.add( new Button( 30, height, "Range ++", upgradeRangeCallback ) );
-		_upgradeMenu.add( new Button( 120, height, "Damage ++", upgradeDamageCallback ) );
-		_upgradeMenu.add( new Button( 220, height, "Firerate ++", upgradeFirerateCallback ) );
+		_rangeButton = new Button( 14, height, "Range (##): $##", upgradeRangeCallback );
+		_damageButton = new Button( 100, height, "Damage (##): $##", upgradeDamageCallback );
+		_firerateButton = new Button( 200, height, "Firerate (##): $##", upgradeFirerateCallback );
+		
+		_upgradeMenu.add( new Button( 2, height, "<", toggleUpgradeMenu, [false], 10 ) );
+		_upgradeMenu.add( _rangeButton );
+		_upgradeMenu.add( _damageButton );
+		_upgradeMenu.add( _firerateButton );
 		
 		_upgradeMenu.visible = false;
 		
@@ -295,7 +299,6 @@ class PlayState extends FlxState
 					if ( FlxMath.pointInCoordinates( Std.int(FlxG.mouse.x), Std.int(FlxG.mouse.y), Std.int(tower.x), Std.int(tower.y), Std.int(tower.width), Std.int(tower.height))) {
 						_towerSelected = tower;
 						toggleUpgradeMenu( true );
-						updateUpgradeLabels();
 						break; // We've found the selected tower, can stop cycling through them
 					} else if ( FlxG.mouse.y < FlxG.height - 20 ) {
 						toggleUpgradeMenu( false );
@@ -307,7 +310,6 @@ class PlayState extends FlxState
 				if ( nearestTower != null ) {
 					_towerSelected = nearestTower;
 					toggleUpgradeMenu( true );
-					updateUpgradeLabels();
 				} else if ( FlxG.mouse.y < FlxG.height - 20 ) {
 					toggleUpgradeMenu(false);
 				}
@@ -341,7 +343,7 @@ class PlayState extends FlxState
 		}
 		
 		super.update();
-	}	
+	} // End update
 	
 	#if mobile
 	/**
@@ -693,6 +695,8 @@ class PlayState extends FlxState
 	
 	private function updateUpgradeLabels():Void
 	{
+		trace( _towerSelected.x );
+		
 		_rangeButton.text = "Range (" + _towerSelected.range_LEVEL + "): $" + _towerSelected.range_PRIZE; 
 		_damageButton.text = "Damage (" + _towerSelected.damage_LEVEL + "): $" + _towerSelected.damage_PRIZE; 
 		_firerateButton.text = "Firerate (" + _towerSelected.firerate_LEVEL + "): $" + _towerSelected.firerate_PRIZE; 

@@ -8,7 +8,7 @@ import flixel.util.FlxPoint;
 import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
 
-class Tower extends FlxSprite 
+class Tower extends FlxSprite
 {
 	public var range:Int = 40;
 	public var fireRate:Float = 1;
