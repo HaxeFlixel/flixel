@@ -200,7 +200,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	override public function update():Void 
 	{
-		if (_velocity != null && moves) {
+		if (moves) {
 			updateMotion();
 		}
 		group.update();
