@@ -381,8 +381,7 @@ class FlxG
 	
 	/**
 	 * Use this to toggle between fullscreen and normal mode.
-	 * You can easily toggle fullscreen with eg:
-	 * FlxG.fullscreen ? FlxG.fullscreen = false : FlxG.fullscreen = true;
+	 * You can easily toggle fullscreen with eg: <code>FlxG.fullscreen = !FlxG.fullscreen;</code>
 	 */
 	@isVar static public var fullscreen(default, set):Bool = false;
 	 
