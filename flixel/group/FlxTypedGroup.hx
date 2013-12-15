@@ -59,7 +59,20 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Array of all the members in this group.
 	 */
 	private var _members:Array<T>;
-
+	
+	/**
+	 * Iterator of members alive
+	 */
+	public var iteratorAlive(get, null):FlxTypedGroupIterator<T>;
+	/**
+	 * Iterator of members alive
+	 */
+	public var iteratorDead(get, null):FlxTypedGroupIterator<T>;
+	/**
+	 * Iterator of members alive
+	 */
+	public var iteratorExists(get, null):FlxTypedGroupIterator<T>;
+	
 	/**
 	 * Create a new <code>FlxTypedGroup</code>
 	 * 
@@ -709,41 +722,89 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Iterate through every members
+	 * Iterate through every member
 	 * @return An iterator
 	 */
-	public function iterator():FlxGroupIterator<T>
+	public inline function iterator():FlxTypedGroupIterator<T>
 	{
-		return new FlxGroupIterator(_members);
+		return new FlxTypedGroupIterator(_members);
 	}
 	
 	/**
-	 * Iterate through every dead members
+	 * Iterate through every dead member
 	 * @return An iterator
 	 */
-	public function iteratorAlive()
+	private function get_iteratorAlive()
 	{
-		return new FlxGroupIterator(_members, function(m : T) { return m.exists && m.alive; } );
+		return new FlxTypedGroupIterator(_members, function(m : T) { return m.exists && m.alive; } );
 	}
 	
 	/**
-	 * Iterate through every dead members
+	 * Iterate through every dead member
 	 * @return An iterator
 	 */
-	public function iteratorDead()
+	private function get_iteratorDead()
 	{
-		return new FlxGroupIterator(_members, function(m : T) { return !m.alive; } );
+		return new FlxTypedGroupIterator(_members, function(m : T) { return !m.alive; } );
 	}
 	
 	/**
-	 * Iterate through every dead members
+	 * Iterate through every dead member
 	 * @return An iterator
 	 */
-	public function iteratorExists()
+	private function get_iteratorExists()
 	{
-		return new FlxGroupIterator(_members, function(m : T) { return m.exists; } );
+		return new FlxTypedGroupIterator(_members, function(m : T) { return m.exists; } );
 	}
 	
+	/**
+	 * Applies a function to all members
+	 * @param Function A function that modify one element at a time
+	 */
+	public function forEach(Function : T -> Void)
+	{
+		for (member in _members)
+		{
+			Function(member);
+		}
+	}
+
+	/**
+	 * Applies a function to all alive members
+	 * @param Function A function that modify one element at a time
+	 */
+	public function forEachAlive(Function : T -> Void)
+	{
+		for (member in iteratorAlive)
+		{
+			Function(member);
+		}
+	}
+
+	/**
+	 * Applies a function to all dead members
+	 * @param Function A function that modify one element at a time
+	 */
+	public function forEachDead(Function : T -> Void)
+	{
+		for (member in iteratorDead)
+		{
+			Function(member);
+		}
+	}
+
+	/**
+	 * Applies a function to all existing members
+	 * @param Function A function that modify one element at a time
+	 */
+	public function forEachExists(Function : T -> Void)
+	{
+		for (member in iteratorExists)
+		{
+			Function(member);
+		}
+	}
+
 	/**
 	 * Helper function for the sort process.
 	 * 
