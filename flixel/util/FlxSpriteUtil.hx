@@ -2,7 +2,10 @@ package flixel.util;
 
 import flash.display.BitmapData;
 import flash.display.BitmapDataChannel;
+import flash.display.CapsStyle;
 import flash.display.Graphics;
+import flash.display.JointStyle;
+import flash.display.LineScaleMode;
 import flash.display.Sprite;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -21,6 +24,7 @@ import flixel.effects.FlxFlicker;
 /**
  * Some handy functions for <code>FlxSprite</code>s manipulation.
 */
+
 class FlxSpriteUtil
 {
 	/**
@@ -234,14 +238,29 @@ class FlxSpriteUtil
 	 * @param	Width		Width of the rectangle
 	 * @param	Height		Height of the rectangle
 	 * @param	Color		The rectangle's color.
+	 * @param	Alpha		The rectangle's alpha.
 	 */
-	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
+	static public function drawRect(sprite:FlxSprite, Filled:Bool, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?Alpha:Float = 1, ?Options:LineOptions):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
-		flashGfx.drawRect(X, Y, Width, Height);
-		flashGfx.endFill();
-		
+		if (Filled)
+		{
+			flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+			flashGfx.drawRect(X, Y, Width, Height);
+			flashGfx.endFill();
+		}
+		else
+		{
+			if (Options == null) flashGfx.lineStyle(1, Color);
+			else
+			{
+				if (Options.thickness == null) Options.thickness = 1;
+				if (Options.pixelHinting == null) Options.pixelHinting = false;
+				if (Options.miterLimit == null) Options.miterLimit = 3;
+				flashGfx.lineStyle(Options.thickness, Color, Alpha, Options.pixelHinting, Options.scaleMode, Options.capsStyle, Options.jointStyle, Options.miterLimit);
+			}
+			flashGfx.drawRect(X, Y, Width, Height);
+		}
 		updateSpriteGraphic(sprite);
 	}
 	
@@ -260,7 +279,7 @@ class FlxSpriteUtil
 	static public function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
 		flashGfx.endFill();
 		
@@ -286,7 +305,7 @@ class FlxSpriteUtil
 	static public function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
 		flashGfx.endFill();
 		
@@ -307,7 +326,7 @@ class FlxSpriteUtil
 	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawCircle(X, Y, Radius);
 		flashGfx.endFill();
 		
@@ -327,7 +346,7 @@ class FlxSpriteUtil
 	static public function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
 		flashGfx.drawEllipse(X, Y, Width, Height);
 		flashGfx.endFill();
 		
@@ -398,4 +417,13 @@ class FlxSpriteUtil
 	{
 		FlxFlicker.stopFlickering(Object);
 	}
+}
+
+typedef LineOptions = {
+	@:optional var pixelHinting:Null<Bool>;
+	@:optional var scaleMode:LineScaleMode;
+	@:optional var capsStyle:CapsStyle;
+	@:optional var jointStyle:JointStyle;
+	@:optional var miterLimit:Null<Float>;
+	@:optional var thickness:Null<Float>;
 }
