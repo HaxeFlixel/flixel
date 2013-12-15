@@ -25,7 +25,7 @@ class FlxTypedGroupIterator<T>
 	
 	public function hasNext() : Bool
 	{
-		while (_cursor < _groupMembers.length && _filter != null && !_filter(_groupMembers[_cursor]))
+		while (_cursor < _groupMembers.length && (_groupMembers[_cursor] == null || _filter != null && !_filter(_groupMembers[_cursor])))
 		{
 			_cursor++;
 		}
