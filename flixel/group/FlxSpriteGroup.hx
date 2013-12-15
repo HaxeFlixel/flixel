@@ -742,17 +742,29 @@ class FlxSpriteGroup extends FlxSprite
 	
 	override public function get_width():Float
 	{
-		var maxWidth:Float = 0;
+		if (length == 0)
+		{
+			return 0;
+		}
+		
+		var minX:Float = Math.POSITIVE_INFINITY;
+		var maxX:Float = Math.NEGATIVE_INFINITY;
+		
 		for (member in group.members)
 		{
-			var maxMemberX:Float = (member.x - x) + member.width + member.offset.x;
+			var minMemberX:Float = member.x;
+			var maxMemberX:Float = minMemberX + member.width;
 			
-			if (maxMemberX > maxWidth)
+			if (maxMemberX > maxX)
 			{
-				maxWidth = maxMemberX;
+				maxX = maxMemberX;
+			}
+			if (minMemberX < minX)
+			{
+				minX = minMemberX;
 			}
 		}
-		return maxWidth;
+		return (maxX - minX);
 	}
 	
 	/**
@@ -765,17 +777,29 @@ class FlxSpriteGroup extends FlxSprite
 	
 	override public function get_height():Float
 	{
-		var maxHeight:Float = 0;
+		if (length == 0)
+		{
+			return 0;
+		}
+		
+		var minY:Float = Math.POSITIVE_INFINITY;
+		var maxY:Float = Math.NEGATIVE_INFINITY;
+		
 		for (member in group.members)
 		{
-			var maxMemberY:Float = (member.y - y) + member.height + member.offset.y;
+			var minMemberY:Float = member.y;
+			var maxMemberY:Float = minMemberY + member.height;
 			
-			if (maxMemberY > maxHeight)
+			if (maxMemberY > maxY)
 			{
-				maxHeight = maxMemberY;
+				maxY = maxMemberY;
+			}
+			if (minMemberY < minY)
+			{
+				minY = minMemberY;
 			}
 		}
-		return maxHeight;
+		return (maxY - minY);
 	}
 	
 	// GROUP FUNCTIONS
