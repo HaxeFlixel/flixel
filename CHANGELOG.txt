@@ -8,6 +8,7 @@ v.3.0.2
 * FlxPreloader: Workaround for issue in Chrome, enabled by default again
 * FlxCollision.pixelPerfectCheck(): Now correctly works with rotated sprites
 * FlxSpriteUtil drawing functions: Support for RGBA colors, new lineStyle param
+* MouseEventManager: Fix pixel-perfect checks for touchscreens
 
 v.3.0.1
 ------------------------------
