@@ -9,6 +9,7 @@ v.3.0.2
 * FlxCollision.pixelPerfectCheck(): Now correctly works with rotated sprites
 * FlxSpriteUtil drawing functions: Support for RGBA colors, new lineStyle param
 * MouseEventManager: Fix pixel-perfect checks for touchscreens
+* FlxSpriteGroup: Get rid of motion variable (velocity etc) overrides to fix a bug with FlxPath, add width and height getters
 
 v.3.0.1
 ------------------------------
