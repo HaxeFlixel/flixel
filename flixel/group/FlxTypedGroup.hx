@@ -63,15 +63,15 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Iterator of members alive
 	 */
-	public var iteratorAlive(get, null):FlxTypedGroupIterator<T>;
+	public var iteratorAlive(get, null):FlxTypedGroupIterator;
 	/**
 	 * Iterator of members alive
 	 */
-	public var iteratorDead(get, null):FlxTypedGroupIterator<T>;
+	public var iteratorDead(get, null):FlxTypedGroupIterator;
 	/**
 	 * Iterator of members alive
 	 */
-	public var iteratorExists(get, null):FlxTypedGroupIterator<T>;
+	public var iteratorExists(get, null):FlxTypedGroupIterator;
 	
 	/**
 	 * Create a new <code>FlxTypedGroup</code>
@@ -725,9 +725,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Iterate through every member
 	 * @return An iterator
 	 */
-	public inline function iterator():FlxTypedGroupIterator<T>
+	public inline function iterator():FlxTypedGroupIterator
 	{
-		return new FlxTypedGroupIterator(_members);
+		return new FlxTypedGroupIterator(_basics);
 	}
 	
 	/**
@@ -736,7 +736,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	private function get_iteratorAlive()
 	{
-		return new FlxTypedGroupIterator(_members, function(m : T) { return m.exists && m.alive; } );
+		return new FlxTypedGroupIterator(_basics, function(m : FlxBasic) { return m.exists && m.alive; } );
 	}
 	
 	/**
@@ -745,7 +745,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	private function get_iteratorDead()
 	{
-		return new FlxTypedGroupIterator(_members, function(m : T) { return !m.alive; } );
+		return new FlxTypedGroupIterator(_basics, function(m : FlxBasic) { return !m.alive; } );
 	}
 	
 	/**
@@ -754,7 +754,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	private function get_iteratorExists()
 	{
-		return new FlxTypedGroupIterator(_members, function(m : T) { return m.exists; } );
+		return new FlxTypedGroupIterator(_basics, function(m : FlxBasic) { return m.exists; } );
 	}
 	
 	/**
@@ -773,7 +773,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all alive members
 	 * @param Function A function that modify one element at a time
 	 */
-	public function forEachAlive(Function : T -> Void)
+	public function forEachAlive(Function : FlxBasic -> Void)
 	{
 		for (member in iteratorAlive)
 		{
@@ -785,7 +785,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all dead members
 	 * @param Function A function that modify one element at a time
 	 */
-	public function forEachDead(Function : T -> Void)
+	public function forEachDead(Function : FlxBasic -> Void)
 	{
 		for (member in iteratorDead)
 		{
@@ -797,7 +797,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all existing members
 	 * @param Function A function that modify one element at a time
 	 */
-	public function forEachExists(Function : T -> Void)
+	public function forEachExists(Function : FlxBasic -> Void)
 	{
 		for (member in iteratorExists)
 		{
