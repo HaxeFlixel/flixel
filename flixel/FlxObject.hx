@@ -73,11 +73,11 @@ class FlxObject extends FlxBasic
 	/**
 	 * The width of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
-	public var width(default, set):Float;
+	@:isVar public var width(get, set):Float;
 	/**
 	 * The height of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
-	public var height(default, set):Float;
+	@:isVar public var height(get, set):Float;
 	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
@@ -111,22 +111,22 @@ class FlxObject extends FlxBasic
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity(default, set):FlxPoint;
+	public var velocity:FlxPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration(default, set):FlxPoint;
+	public var acceleration:FlxPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
 	 */
-	public var drag(default, set):FlxPoint;
+	public var drag:FlxPoint;
 	/**
 	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity(default, set):FlxPoint;
+	public var maxVelocity:FlxPoint;
 	/**
 	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
@@ -186,10 +186,6 @@ class FlxObject extends FlxBasic
 	 * Internal statically typed FlxPoint vars, for performance reasons.
 	 */
 	private var _point:FlxPoint;
-	private var _velocity:FlxPoint;
-	private var _drag:FlxPoint;
-	private var _acceleration:FlxPoint;
-	private var _maxVelocity:FlxPoint;
 	private var _scrollFactor:FlxPoint;
 	/**
 	 * Internal static private variables, for performance reasons.
@@ -225,12 +221,21 @@ class FlxObject extends FlxBasic
 	{
 		collisionType = FlxCollisionType.OBJECT;
 		last = new FlxPoint(x, y);
+		scrollFactor = new FlxPoint(1, 1);
+		_point = new FlxPoint();
+		
+		initMotionVars();
+	}
+	
+	/**
+	 * Internal function for initialization of some variables that are used in updateMotion()
+	 */
+	inline private function initMotionVars():Void
+	{
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
 		drag = new FlxPoint();
 		maxVelocity = new FlxPoint(10000, 10000);
-		scrollFactor = new FlxPoint(1, 1);
-		_point = new FlxPoint();
 	}
 	
 	/**
@@ -249,10 +254,6 @@ class FlxObject extends FlxBasic
 		last = null;
 		cameras = null;
 		_point = null;
-		_velocity = null;
-		_drag = null;
-		_acceleration = null;
-		_maxVelocity = null;
 		_scrollFactor = null;
 		
 		framesData = null;
@@ -298,16 +299,16 @@ class FlxObject extends FlxBasic
 		angle += angularVelocity * dt;
 		angularVelocity += velocityDelta;
 		
-		velocityDelta = 0.5 * (FlxMath.computeVelocity(_velocity.x, _acceleration.x, _drag.x, _maxVelocity.x) - _velocity.x);
-		_velocity.x += velocityDelta;
-		delta = _velocity.x * dt;
-		_velocity.x += velocityDelta;
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
+		velocity.x += velocityDelta;
+		delta = velocity.x * dt;
+		velocity.x += velocityDelta;
 		x += delta;
 		
-		velocityDelta = 0.5 * (FlxMath.computeVelocity(_velocity.y, _acceleration.y, _drag.y, _maxVelocity.y) - _velocity.y);
-		_velocity.y += velocityDelta;
-		delta = _velocity.y * dt;
-		_velocity.y += velocityDelta;
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
+		velocity.y += velocityDelta;
+		delta = velocity.y * dt;
+		velocity.y += velocityDelta;
 		y += delta;
 	}
 	
@@ -746,8 +747,8 @@ class FlxObject extends FlxBasic
 		//Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1v:Float = Object1._velocity.x;
-			var obj2v:Float = Object2._velocity.x;
+			var obj1v:Float = Object1.velocity.x;
+			var obj2v:Float = Object2.velocity.x;
 			
 			if (!obj1immovable && !obj2immovable)
 			{
@@ -760,18 +761,18 @@ class FlxObject extends FlxBasic
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
-				Object1._velocity.x = average + obj1velocity * Object1.elasticity;
-				Object2._velocity.x = average + obj2velocity * Object2.elasticity;
+				Object1.velocity.x = average + obj1velocity * Object1.elasticity;
+				Object2.velocity.x = average + obj2velocity * Object2.elasticity;
 			}
 			else if (!obj1immovable)
 			{
 				Object1.x = Object1.x - overlap;
-				Object1._velocity.x = obj2v - obj1v * Object1.elasticity;
+				Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
 			}
 			else if (!obj2immovable)
 			{
 				Object2.x += overlap;
-				Object2._velocity.x = obj1v - obj2v * Object2.elasticity;
+				Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
 			}
 			return true;
 		}
@@ -858,8 +859,8 @@ class FlxObject extends FlxBasic
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1v:Float = Object1._velocity.y;
-			var obj2v:Float = Object2._velocity.y;
+			var obj1v:Float = Object1.velocity.y;
+			var obj2v:Float = Object2.velocity.y;
 			
 			if (!obj1immovable && !obj2immovable)
 			{
@@ -872,13 +873,13 @@ class FlxObject extends FlxBasic
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
-				Object1._velocity.y = average + obj1velocity * Object1.elasticity;
-				Object2._velocity.y = average + obj2velocity * Object2.elasticity;
+				Object1.velocity.y = average + obj1velocity * Object1.elasticity;
+				Object2.velocity.y = average + obj2velocity * Object2.elasticity;
 			}
 			else if (!obj1immovable)
 			{
 				Object1.y = Object1.y - overlap;
-				Object1._velocity.y = obj2v - obj1v*Object1.elasticity;
+				Object1.velocity.y = obj2v - obj1v*Object1.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object2.active && Object2.moves && (obj1delta > obj2delta))
 				{
@@ -888,7 +889,7 @@ class FlxObject extends FlxBasic
 			else if (!obj2immovable)
 			{
 				Object2.y += overlap;
-				Object2._velocity.y = obj1v - obj2v*Object2.elasticity;
+				Object2.velocity.y = obj1v - obj2v*Object2.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object1.active && Object1.moves && (obj1delta < obj2delta))
 				{
@@ -994,6 +995,16 @@ class FlxObject extends FlxBasic
 		return Height;
 	}
 	
+	private function get_width():Float
+	{
+		return width;
+	}
+	
+	private function get_height():Float
+	{
+		return height;
+	}
+	
 	inline private function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
@@ -1036,30 +1047,6 @@ class FlxObject extends FlxBasic
 	{
 		_scrollFactor = cast Value;
 		return scrollFactor = Value;
-	}
-	
-	private function set_velocity(Value:FlxPoint):FlxPoint 
-	{
-		_velocity = cast Value;
-		return velocity = Value;
-	}
-	
-	private function set_acceleration(Value:FlxPoint):FlxPoint 
-	{
-		_acceleration = cast Value;
-		return acceleration = Value;
-	}
-	
-	private function set_drag(Value:FlxPoint):FlxPoint 
-	{
-		_drag = cast Value;
-		return drag = Value;
-	}
-	
-	private function set_maxVelocity(Value:FlxPoint):FlxPoint 
-	{
-		_maxVelocity = cast Value;
-		return maxVelocity = Value;
 	}
 	
 	#if !FLX_NO_DEBUG

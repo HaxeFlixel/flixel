@@ -3,14 +3,13 @@ package flixel.group;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
-import flixel.FlxBasic;
 import flixel.FlxCamera;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.util.FlxPoint;
-
-import flixel.system.layer.frames.FlxFrame;
 import flixel.system.FlxCollisionType;
+import flixel.system.layer.frames.FlxFrame;
+import flixel.util.FlxPoint;
 
 /**
  * <code>FlxSpriteGroup</code> is a special <code>FlxGroup</code>
@@ -75,11 +74,9 @@ class FlxSpriteGroup extends FlxSprite
 		offset			= new FlxPointHelper(this, offsetTransform);
 		origin			= new FlxPointHelper(this, originTransform);
 		scale			= new FlxPointHelper(this, scaleTransform);
-		velocity		= new FlxPointHelper(this, velocityTransform);
-		maxVelocity		= new FlxPointHelper(this, maxVelocityTransform);
-		acceleration	= new FlxPointHelper(this, accelerationTransform);
 		scrollFactor	= new FlxPointHelper(this, scrollFactorTransform);
-		drag			= new FlxPointHelper(this, dragTransform);
+	 	
+		initMotionVars();
 	}
 	
 	/**
@@ -95,11 +92,7 @@ class FlxSpriteGroup extends FlxSprite
 		}
 		if (origin != null)			{ origin.destroy(); origin = null; }
 		if (scale != null)			{ scale.destroy(); scale = null; }
-		if (velocity != null)		{ velocity.destroy(); velocity = null; }
-		if (maxVelocity != null)	{ maxVelocity.destroy(); maxVelocity = null; }
-		if (acceleration != null)	{ acceleration.destroy(); acceleration = null; }
 		if (scrollFactor != null)	{ scrollFactor.destroy(); scrollFactor = null; }
-		if (drag != null)			{ drag.destroy(); drag = null; }
 		
 		if (group != null)			{ group.destroy(); group = null; }
 		
@@ -200,6 +193,11 @@ class FlxSpriteGroup extends FlxSprite
 	
 	override public function update():Void 
 	{
+		if (moves)
+		{
+			updateMotion();
+		}
+		
 		group.update();
 	}
 	
@@ -708,34 +706,6 @@ class FlxSpriteGroup extends FlxSprite
 		return scrollFactor = Value;
 	}
 	
-	override private function set_velocity(Value:FlxPoint):FlxPoint 
-	{
-		if (exists && velocity != Value && Value != null)
-			transformChildren(velocityTransform, Value);
-		return velocity = Value;
-	}
-	
-	override private function set_acceleration(Value:FlxPoint):FlxPoint 
-	{
-		if (exists && acceleration != Value && Value != null)
-			transformChildren(accelerationTransform, Value);
-		return acceleration = Value;
-	}
-	
-	override private function set_drag(Value:FlxPoint):FlxPoint 
-	{
-		if (exists && drag != Value && Value != null)
-			transformChildren(dragTransform, Value);
-		return drag = Value;
-	}
-	
-	override private function set_maxVelocity(Value:FlxPoint):FlxPoint 
-	{
-		if (exists && maxVelocity != Value && Value != null)
-			transformChildren(maxVelocityTransform, Value);
-		return maxVelocity = Value;
-	}
-	
 	override private function set_color(Value:Int):Int 
 	{
 		if (exists && color != Value)
@@ -762,14 +732,60 @@ class FlxSpriteGroup extends FlxSprite
 		return super.set_forceComplexRender(Value);
 	}
 	
+	/**
+	 * This functionality isn't supported in SpriteGroup
+	 */
+	override public function set_width(Value:Float):Float
+	{
+		return Value;
+	}
+	
+	override public function get_width():Float
+	{
+		var maxWidth:Float = 0;
+		for (member in group.members)
+		{
+			var maxMemberX:Float = (member.x - x) + member.width + member.offset.x;
+			
+			if (maxMemberX > maxWidth)
+			{
+				maxWidth = maxMemberX;
+			}
+		}
+		return maxWidth;
+	}
+	
+	/**
+	 * This functionality isn't supported in SpriteGroup
+	 */
+	override public function set_height(Value:Float):Float
+	{
+		return Value;
+	}
+	
+	override public function get_height():Float
+	{
+		var maxHeight:Float = 0;
+		for (member in group.members)
+		{
+			var maxMemberY:Float = (member.y - y) + member.height + member.offset.y;
+			
+			if (maxMemberY > maxHeight)
+			{
+				maxHeight = maxMemberY;
+			}
+		}
+		return maxHeight;
+	}
+	
 	// GROUP FUNCTIONS
 	
-	private function get_length():Int
+	inline private function get_length():Int
 	{
 		return group.length;
 	}
 	
-	private function get_maxSize():Int
+	inline private function get_maxSize():Int
 	{
 		return group.maxSize;
 	}
@@ -785,17 +801,17 @@ class FlxSpriteGroup extends FlxSprite
 		return group.maxSize = Size;
 	}
 	
-	private function get_members():Array<FlxSprite>
+	inline private function get_members():Array<FlxSprite>
 	{
 		return group.members;
 	}
 	
-	private function get_autoReviveMembers():Bool
+	inline private function get_autoReviveMembers():Bool
 	{
 		return group.autoReviveMembers;
 	}
 	
-	private function set_autoReviveMembers(Value:Bool):Bool
+	inline private function set_autoReviveMembers(Value:Bool):Bool
 	{
 		return group.autoReviveMembers = Value;
 	}
@@ -820,11 +836,7 @@ class FlxSpriteGroup extends FlxSprite
 	private function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
 	private function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
 	private function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
-	private function velocityTransform(Sprite:FlxSprite, Velocity:FlxPoint)				{ Sprite.velocity.copyFrom(Velocity); }			// set
-	private function maxVelocityTransform(Sprite:FlxSprite, MaxVelocity:FlxPoint)		{ Sprite.maxVelocity.copyFrom(MaxVelocity); }	// set
-	private function accelerationTransform(Sprite:FlxSprite, Acceleration:FlxPoint)		{ Sprite.acceleration.copyFrom(Acceleration); }	// set
 	private function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
-	private function dragTransform(Sprite:FlxSprite, Drag:FlxPoint)						{ Sprite.drag.copyFrom(Drag); }					// set
 	// NOT SUPPORTED FUNCTIONALITY
 	// THESE METHODS OVERRIDEN FOR SAFETY PURPOSES
 	
@@ -834,6 +846,9 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	override public function loadfromSprite(Sprite:FlxSprite):FlxSprite 
 	{
+		#if !FLX_NO_DEBUG
+		FlxG.log.error("loadfromSprite() is not supported in FlxSpriteGroups.");
+		#end
 		return this;
 	}
 	
@@ -852,6 +867,9 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	override public function loadRotatedGraphic(Graphic:Dynamic, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
 	{
+		#if !FLX_NO_DEBUG
+		FlxG.log.error("loadRotatedGraphic() is not supported in FlxSpriteGroups.");
+		#end
 		return this;
 	}
 	
@@ -861,6 +879,9 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
+		#if !FLX_NO_DEBUG
+		FlxG.log.error("makeGraphic() is not supported in FlxSpriteGroups.");
+		#end
 		return this;
 	}
 	
@@ -870,6 +891,9 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	override public function loadImageFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite 
 	{
+		#if !FLX_NO_DEBUG
+		FlxG.log.error("loadImageFromTexture() is not supported in FlxSpriteGroups.");
+		#end
 		return this;
 	}
 	
@@ -879,6 +903,9 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	override public function loadRotatedImageFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite 
 	{
+		#if !FLX_NO_DEBUG
+		FlxG.log.error("loadRotatedImageFromTexture() is not supported in FlxSpriteGroups.");
+		#end
 		return this;
 	}
 	
