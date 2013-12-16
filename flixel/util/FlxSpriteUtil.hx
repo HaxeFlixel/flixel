@@ -2,7 +2,10 @@ package flixel.util;
 
 import flash.display.BitmapData;
 import flash.display.BitmapDataChannel;
+import flash.display.CapsStyle;
 import flash.display.Graphics;
+import flash.display.JointStyle;
+import flash.display.LineScaleMode;
 import flash.display.Sprite;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -13,6 +16,7 @@ import flixel.system.FlxAssets;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
 import flixel.effects.FlxFlicker;
+import flixel.util.FlxSpriteUtil.LineStyle;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
 // TODO: flip(): Flip image data horizontally / vertically without changing the angle (mirror / reverse)
@@ -21,6 +25,7 @@ import flixel.effects.FlxFlicker;
 /**
  * Some handy functions for <code>FlxSprite</code>s manipulation.
 */
+
 class FlxSpriteUtil
 {
 	/**
@@ -107,26 +112,6 @@ class FlxSpriteUtil
 		output.pixels = data;
 		
 		return output;
-	}
-	
-	/**
-	 * Takes the image data from two FlxSprites and draws one on top of the other.<br>
-	 * Note: It assumes the source and mask are the same size. Different sizes may result in undesired results.<br>
-	 * 
-	 * @param	BottomSprite	The <code>FlxSprite</code> that you want to draw onto.
-	 * @param	TopSprite		The <code>FlxSprite</code> that will be copied onto the BottomSprite.
-	 * @param	output			The FlxSprite you wish the resulting image to be placed in (will adjust width/height of image)
-	 * @return	The output FlxSprite for those that like chainging.
-	 */
-	static public function mergeFlxSprite(BottomSprite:FlxSprite, TopSprite:FlxSprite, Output:FlxSprite):FlxSprite
-	{
-		var data:BitmapData = BottomSprite.pixels;
-		
-		data.copyPixels(TopSprite.pixels, new Rectangle(0, 0, BottomSprite.width, BottomSprite.height), new Point());
-		
-		Output.pixels = data;
-		
-		return Output;
 	}
 	
 	/**
@@ -254,11 +239,13 @@ class FlxSpriteUtil
 	 * @param	Width		Width of the rectangle
 	 * @param	Height		Height of the rectangle
 	 * @param	Color		The rectangle's color.
+	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	 */
-	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
+	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		setLineStyle(lineStyle);
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRect(X, Y, Width, Height);
 		flashGfx.endFill();
 		
@@ -276,11 +263,13 @@ class FlxSpriteUtil
 	 * @param	EllipseWidth	The width of the ellipse used to draw the rounded corners
 	 * @param	EllipseHeight	The height of the ellipse used to draw the rounded corners
 	 * @param	Color			The rectangle's color.
+	 * @param	lineStyle		A LineStyle typedef containing the params of Graphics.lineStyle()
 	 */
-	static public function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int):Void
+	static public function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		setLineStyle(lineStyle);
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
 		flashGfx.endFill();
 		
@@ -302,11 +291,13 @@ class FlxSpriteUtil
 	 * @param	BottomLeftRadius	The radius of the bottom left corner of the rectangle
 	 * @param	BottomRightRadius	The radius of the bottom right corner of the rectangle
 	 * @param	Color				The rectangle's color.
+	 * @param	lineStyle			A LineStyle typedef containing the params of Graphics.lineStyle()
 	 */
-	static public function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int):Void
+	static public function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		setLineStyle(lineStyle);
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
 		flashGfx.endFill();
 		
@@ -318,16 +309,18 @@ class FlxSpriteUtil
 	 * This function draws a circle on this sprite at position X,Y
 	 * with the specified color.
 	 * 
-	 * @param	Sprite	The <code>FlxSprite</code> to manipulate
-	 * @param 	X 		X coordinate of the circle's center
-	 * @param 	Y 		Y coordinate of the circle's center
-	 * @param 	Radius 	Radius of the circle
-	 * @param 	Color 	Color of the circle
+	 * @param	Sprite		The <code>FlxSprite</code> to manipulate
+	 * @param 	X 			X coordinate of the circle's center
+	 * @param 	Y 			Y coordinate of the circle's center
+	 * @param 	Radius 		Radius of the circle
+	 * @param 	Color 		Color of the circle
+	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	*/
-	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int):Void
+	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		setLineStyle(lineStyle);
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawCircle(X, Y, Radius);
 		flashGfx.endFill();
 		
@@ -343,11 +336,13 @@ class FlxSpriteUtil
 	 * @param	Width		Width of the ellipse
 	 * @param	Height		Height of the ellipse
 	 * @param	Color		The ellipse's color.
+	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	 */
-	static public function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int):Void
+	static public function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
 		flashGfx.clear();
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color));
+		setLineStyle(lineStyle);
+		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawEllipse(X, Y, Width, Height);
 		flashGfx.endFill();
 		
@@ -365,6 +360,44 @@ class FlxSpriteUtil
 		sprite.pixels.draw(flashGfxSprite);
 		sprite.dirty = true;
 		sprite.resetFrameBitmapDatas();
+	}
+	
+	/**
+	 * Just a helper function that is called in the draw functions
+	 * to set the lineStyle via Graphics.lineStyle()
+	 * 
+	 * @param	lineStyle	The lineStyle typedef
+	 */
+	inline static public function setLineStyle(lineStyle:LineStyle):Void
+	{
+		if (lineStyle != null)
+		{
+			var color:Int; 
+			var alpha:Float;	
+			
+			if (lineStyle.color == null) 
+			{ 
+				color = 0;
+				alpha = 1;
+			}
+			else 
+			{
+				color = FlxColorUtil.RGBAtoRGB(lineStyle.color);
+				alpha = FlxColorUtil.getAlphaFloat(lineStyle.color);
+			}
+			
+			if (lineStyle.pixelHinting == null) { lineStyle.pixelHinting = false; }
+			if (lineStyle.miterLimit == null) 	{ lineStyle.miterLimit = 3; }
+			
+			flashGfx.lineStyle(lineStyle.thickness, 
+							color, 
+							alpha,
+							lineStyle.pixelHinting,
+							lineStyle.scaleMode,
+							lineStyle.capsStyle,
+							lineStyle.jointStyle,
+							lineStyle.miterLimit);
+		}
 	}
 	
 	/**
@@ -418,4 +451,14 @@ class FlxSpriteUtil
 	{
 		FlxFlicker.stopFlickering(Object);
 	}
+}
+
+typedef LineStyle = {
+	?thickness:Float,
+	?color:Int,
+	?pixelHinting:Bool,
+	?scaleMode:LineScaleMode,
+	?capsStyle:CapsStyle,
+	?jointStyle:JointStyle,
+	?miterLimit:Float
 }

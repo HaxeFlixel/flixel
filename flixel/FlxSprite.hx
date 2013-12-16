@@ -16,6 +16,7 @@ import flixel.animation.FlxAnimationController;
 import flixel.util.FlxAngle;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxColorUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.loaders.CachedGraphics;
@@ -733,10 +734,6 @@ class FlxSprite extends FlxObject
 		#else
 			_point.x = x - (camera.scroll.x * _scrollFactor.x) - (_offset.x);
 			_point.y = y - (camera.scroll.y * _scrollFactor.y) - (_offset.y);
-			
-			_point.x = _point.x;
-			_point.y = _point.y;
-
 		#end
 #if flash
 			if (isSimpleRender)
@@ -982,6 +979,42 @@ class FlxSprite extends FlxObject
 		
 		resetFrameBitmapDatas();
 		return positions;
+	}
+	
+	/**
+	 * Set sprite's color transformation with control over color offsets. Works only on flash target
+	 * @param	redMultiplier		The value for the red multiplier, in the range from 0 to 1. 
+	 * @param	greenMultiplier		The value for the green multiplier, in the range from 0 to 1. 
+	 * @param	blueMultiplier		The value for the blue multiplier, in the range from 0 to 1. 
+	 * @param	alphaMultiplier		The value for the alpha transparency multiplier, in the range from 0 to 1. 
+	 * @param	redOffset			The offset value for the red color channel, in the range from -255 to 255.
+	 * @param	greenOffset			The offset value for the green color channel, in the range from -255 to 255. 
+	 * @param	blueOffset			The offset for the blue color channel value, in the range from -255 to 255. 
+	 * @param	alphaOffset			The offset for alpha transparency channel value, in the range from -255 to 255. 
+	 */
+	public function setColorTransformation(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0, alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
+	{
+		color = FlxColorUtil.getColor24(Std.int(redMultiplier * 255), Std.int(greenMultiplier * 255), Std.int(blueMultiplier * 255));
+		alpha = alphaMultiplier;
+		
+		if (_colorTransform == null)
+		{
+			_colorTransform = new ColorTransform();
+		}
+		else
+		{
+			_colorTransform.redMultiplier = redMultiplier;
+			_colorTransform.greenMultiplier = greenMultiplier;
+			_colorTransform.blueMultiplier = blueMultiplier;
+			_colorTransform.alphaMultiplier = alphaMultiplier;
+			_colorTransform.redOffset = redOffset;
+			_colorTransform.greenOffset = greenOffset;
+			_colorTransform.blueOffset = blueOffset;
+			_colorTransform.alphaOffset = alphaOffset;
+		}
+		
+		useColorTransform = ((alpha != 1) || (color != 0xffffff) || (redOffset != 0) || (greenOffset != 0) || (blueOffset != 0) || (alphaOffset != 0));
+		dirty = true;
 	}
 	
 	private function updateColorTransform():Void

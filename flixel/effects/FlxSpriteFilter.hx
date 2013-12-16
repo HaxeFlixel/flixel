@@ -13,7 +13,11 @@ import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
 
 /**
- * ...
+ * This class allows you to add sprite filters to FlxSprites
+ * Create a new instance and pass it an FlxSprite then add new bitmapFilters using addFilter()
+ * 
+ * To refresh the filters applied to a sprite use applyFilters().
+ * 
  * @author Zaphod
  */
 class FlxSpriteFilter
@@ -180,7 +184,11 @@ class FlxSpriteFilter
 		}
 	}
 	
-	private function applyFilters():Void
+	/**
+	 * Use this to update the sprite when filters are changed.
+	 * Its also called automatically when adding a new filter.
+	 */
+	public function applyFilters():Void
 	{
 		regenBitmapData();
 		helperPoint.setTo(0, 0);

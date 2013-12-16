@@ -374,7 +374,7 @@ class FlxTilemap extends FlxObject
 		if (customTileRemap != null) 
 		{
 			i = 0;
-			while ( i < totalTiles) 
+			while (i < totalTiles) 
 			{
 				var old_index = _data[i];
 				var new_index = old_index;
@@ -430,8 +430,8 @@ class FlxTilemap extends FlxObject
 		if (!Std.is(TileGraphic, TextureRegion))
 		{
 			region = new Region(0, 0, _tileWidth, _tileHeight);
-			region.width = cachedGraphics.bitmap.width;
-			region.height = cachedGraphics.bitmap.height;
+			region.width = Std.int(cachedGraphics.bitmap.width / _tileWidth) * _tileWidth;
+			region.height = Std.int(cachedGraphics.bitmap.height / _tileHeight) * _tileHeight;
 		}
 		else
 		{
@@ -2415,7 +2415,7 @@ class FlxTilemap extends FlxObject
 		var rx:Int = (_data[Index] - _startingIndex) * (_tileWidth + region.spacingX);
 		var ry:Int = 0;
 		
-		if (Std.int(rx) >= region.width)
+		if (rx >= region.width)
 		{
 			ry = Std.int(rx / region.width) * (_tileHeight + region.spacingY);
 			rx %= region.width;
@@ -2478,7 +2478,7 @@ class FlxTilemap extends FlxObject
 			var rx:Int = (_data[rowIndex] - _startingIndex) * (_tileWidth + region.spacingX);
 			var ry:Int = 0;
 			
-			if (Std.int(rx) >= region.width)
+			if (rx >= region.width)
 			{
 				ry = Std.int(rx / region.width) * (_tileHeight + region.spacingY);
 				rx %= region.width;

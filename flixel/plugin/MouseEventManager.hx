@@ -246,7 +246,7 @@ class MouseEventManager extends FlxPlugin
 				
 				if (Sprite.overlapsPoint(_point, true, camera))
 				{
-					if (Sprite.pixelsOverlapPoint(_point, 0x0, camera))
+					if (Sprite.pixelsOverlapPoint(_point, 0x01, camera))
 					{
 						return true;
 					}

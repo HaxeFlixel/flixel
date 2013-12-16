@@ -1,5 +1,30 @@
 flixel CHANGELOG
 
+v.3.0.2
+------------------------------
+* FlxTilemap: Region size checks added to fix a bug
+* FlxSprite.setColorTransformation() added
+* FlxAngle.getAngle(): Round parameter added
+* FlxPreloader: Workaround for issue in Chrome, enabled by default again
+* FlxCollision.pixelPerfectCheck(): Now correctly works with rotated sprites
+* FlxSpriteUtil drawing functions: Support for RGBA colors, new lineStyle param
+* MouseEventManager: Fix pixel-perfect checks for touchscreens
+* FlxSpriteGroup: Get rid of motion variable (velocity etc) overrides to fix a bug with FlxPath, add width and height getters
+
+v.3.0.1
+------------------------------
+* Fixes to gamepad API.
+* Added tilemap scaling.
+* FlxSpriteGroup has been reworked and now extends FlxSprite instead of FlxTypedGroup<FlxSprite>
+* FlxCollisionType introduced
+* FlxDebugger: UI improvements, now remembers visibility settings of the windows
+* Compiler fix for Blackberry target.
+* FlxAssets: Fonts are no longer inlined so they can be changed
+* FlxMath: distanceWithin(), distanceToPointWithin(), distanceToMouseWithin() and  distanceToTouchWithin() added
+* FlxG.fullscreen now works on cpp targets
+* FlxObject.inWorldBounds() added
+* LICENSE.txt cleanup
+
 v.3.0.0
 ------------------------------
 * New Front End classes to better encapsulate FlxG functionality.
@@ -10,7 +35,7 @@ v.3.0.0
 
 v.2.0.0-alpha.3
 ------------------------------
-* Fix for FLX_MOUSE_ADVANCED (won't compiled earlier)
+* Fix for FLX_MOUSE_ADVANCED (wouldn't compile earlier)
 * FlxMath functions are Float-compatible. Thanks @Gama11
 * Fix for negative object width and height. Thanks @Gama11
 * Fix for FlxPath and FlxObject

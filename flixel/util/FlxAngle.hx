@@ -125,12 +125,18 @@ class FlxAngle
 	 * Calculates the angle between two points.  0 degrees points straight up.
 	 * @param	Point1		The X coordinate of the point.
 	 * @param	Point2		The Y coordinate of the point.
+	 * @param	Round		Round x and y coordinates or not.
 	 * @return	The angle in degrees, between -180 and 180.
 	 */
-	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
+	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint, Round:Bool = false):Float
 	{
 		var x:Float = Point2.x - Point1.x;
 		var y:Float = Point2.y - Point1.y;
+		if(Round)
+		{
+			x = Math.fround(x);
+			y = Math.fround(y);
+		}
 		var angle:Float = 0;
 		if ((x != 0) || (y != 0))
 		{
