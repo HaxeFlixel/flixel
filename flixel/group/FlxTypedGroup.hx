@@ -63,15 +63,15 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Iterator of members alive
 	 */
-	public var iteratorAlive(get, null):FlxTypedGroupIterator;
+	public var iteratorAlive(get, null):FlxTypedGroupIterator<T>;
 	/**
 	 * Iterator of members alive
 	 */
-	public var iteratorDead(get, null):FlxTypedGroupIterator;
+	public var iteratorDead(get, null):FlxTypedGroupIterator<T>;
 	/**
 	 * Iterator of members alive
 	 */
-	public var iteratorExists(get, null):FlxTypedGroupIterator;
+	public var iteratorExists(get, null):FlxTypedGroupIterator<T>;
 	
 	/**
 	 * Create a new <code>FlxTypedGroup</code>
@@ -725,36 +725,36 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Iterate through every member
 	 * @return An iterator
 	 */
-	public inline function iterator():FlxTypedGroupIterator
+	public inline function iterator(?filter : T -> Bool):FlxTypedGroupIterator<T>
 	{
-		return new FlxTypedGroupIterator(_basics);
+		return new FlxTypedGroupIterator<T>(_members, filter == null ? function(m) { return true; } : filter);
 	}
 	
 	/**
 	 * Iterate through every dead member
 	 * @return An iterator
 	 */
-	private function get_iteratorAlive()
+	private inline function get_iteratorAlive()
 	{
-		return new FlxTypedGroupIterator(_basics, function(m : FlxBasic) { return m.exists && m.alive; } );
+		return new FlxTypedGroupIterator<T>(_members, function(m : FlxBasic) { return m.exists && m.alive; } );
 	}
 	
 	/**
 	 * Iterate through every dead member
 	 * @return An iterator
 	 */
-	private function get_iteratorDead()
+	private inline function get_iteratorDead()
 	{
-		return new FlxTypedGroupIterator(_basics, function(m : FlxBasic) { return !m.alive; } );
+		return new FlxTypedGroupIterator<T>(_members, function(m : FlxBasic) { return !m.alive; } );
 	}
 	
 	/**
 	 * Iterate through every dead member
 	 * @return An iterator
 	 */
-	private function get_iteratorExists()
+	private inline function get_iteratorExists()
 	{
-		return new FlxTypedGroupIterator(_basics, function(m : FlxBasic) { return m.exists; } );
+		return new FlxTypedGroupIterator<T>(_members, function(m : FlxBasic) { return m.exists; } );
 	}
 	
 	/**
