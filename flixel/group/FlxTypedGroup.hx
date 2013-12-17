@@ -796,7 +796,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all dead members
 	 * @param Function A function that modify one element at a time
 	 */
-	public function forEachDead(Function : FlxBasic -> Void)
+	public function forEachDead(Function : T -> Void)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -816,7 +816,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all existing members
 	 * @param Function A function that modify one element at a time
 	 */
-	public function forEachExists(Function : FlxBasic -> Void)
+	public function forEachExists(Function : T -> Void)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
