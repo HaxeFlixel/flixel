@@ -10,6 +10,12 @@ class HTML5FrontEnd
 	public var browserWidth(get, null):Int;
 	public var browserHeight(get, null):Int;
 	
+	inline static public var IE:String = "IE";
+	inline static public var FIREFOX:String = "firefox";
+	inline static public var CHROME:String = "chrome";
+	inline static public var SAFARI:String = "safari";
+	inline static public var OPERA:String = "opera";
+	
 	public function new()
 	{
 		
