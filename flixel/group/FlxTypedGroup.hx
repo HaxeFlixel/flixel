@@ -61,19 +61,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	private var _members:Array<T>;
 	
 	/**
-	 * Iterator of members alive
-	 */
-	public var iteratorAlive(get, null):FlxTypedGroupIterator<T>;
-	/**
-	 * Iterator of members alive
-	 */
-	public var iteratorDead(get, null):FlxTypedGroupIterator<T>;
-	/**
-	 * Iterator of members alive
-	 */
-	public var iteratorExists(get, null):FlxTypedGroupIterator<T>;
-	
-	/**
 	 * Create a new <code>FlxTypedGroup</code>
 	 * 
 	 * @param	MaxSize		Maximum amount of members allowed
@@ -728,33 +715,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public inline function iterator(?filter : T -> Bool):FlxTypedGroupIterator<T>
 	{
 		return new FlxTypedGroupIterator<T>(_members, filter == null ? function(m) { return true; } : filter);
-	}
-	
-	/**
-	 * Iterate through every dead member
-	 * @return An iterator
-	 */
-	private inline function get_iteratorAlive()
-	{
-		return new FlxTypedGroupIterator<T>(_members, function(m : FlxBasic) { return m.exists && m.alive; } );
-	}
-	
-	/**
-	 * Iterate through every dead member
-	 * @return An iterator
-	 */
-	private inline function get_iteratorDead()
-	{
-		return new FlxTypedGroupIterator<T>(_members, function(m : FlxBasic) { return !m.alive; } );
-	}
-	
-	/**
-	 * Iterate through every dead member
-	 * @return An iterator
-	 */
-	private inline function get_iteratorExists()
-	{
-		return new FlxTypedGroupIterator<T>(_members, function(m : FlxBasic) { return m.exists; } );
 	}
 	
 	/**
