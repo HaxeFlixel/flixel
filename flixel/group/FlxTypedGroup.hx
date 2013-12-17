@@ -765,7 +765,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		for (member in _members)
 		{
-			Function(member);
+			if(member != null)
+			{
+				Function(member);
+			}
 		}
 	}
 
@@ -773,11 +776,19 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all alive members
 	 * @param Function A function that modify one element at a time
 	 */
-	public function forEachAlive(Function : FlxBasic -> Void)
+	public function forEachAlive(Function : T -> Void)
 	{
-		for (member in iteratorAlive)
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+
+		while (i < length)
 		{
-			Function(member);
+			basic = _basics[i];
+			if ((basic != null) && basic.exists && basic.alive)
+			{
+				Function(_members[i]);
+			}
+			i++;
 		}
 	}
 
@@ -787,9 +798,17 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function forEachDead(Function : FlxBasic -> Void)
 	{
-		for (member in iteratorDead)
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+
+		while (i < length)
 		{
-			Function(member);
+			basic = _basics[i];
+			if ((basic != null) && !basic.alive)
+			{
+				Function(_members[i]);
+			}
+			i++;
 		}
 	}
 
@@ -799,9 +818,17 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function forEachExists(Function : FlxBasic -> Void)
 	{
-		for (member in iteratorExists)
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+
+		while (i < length)
 		{
-			Function(member);
+			basic = _basics[i];
+			if ((basic != null) && basic.exists)
+			{
+				Function(_members[i]);
+			}
+			i++;
 		}
 	}
 
