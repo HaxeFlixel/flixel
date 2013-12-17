@@ -78,6 +78,13 @@ class FlxGame extends Sprite
 	 * A flag for keeping track of whether a game reset was requested or not.
 	 */
 	public var requestedReset:Bool = true;
+
+	#if desktop
+	/**
+	 * Should we start Fullscreen or not? This is useful if you want to load Fullscreen settings from a FlxSave and set it when the game starts, instead of having it hard-set in your project XML.
+	 */
+	private var _startFullscreen:Bool = false; 
+	#end
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -181,9 +188,17 @@ class FlxGame extends Sprite
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 60 times per second).
 	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
 	 */
+	#if desktop
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
+	#else
 	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60, SkipSplash:Bool = false)
+	#end
 	{
 		super();
+		
+		#if desktop
+		_startFullscreen = StartFullscreen;
+		#end
 		
 		// Super high priority init stuff
 		inputContainer = new Sprite();
@@ -220,6 +235,10 @@ class FlxGame extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
 		_total = Lib.getTimer();
+
+		#if desktop
+		FlxG.fullscreen = _startFullscreen;
+		#end
 
 		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;

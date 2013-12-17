@@ -36,6 +36,9 @@ import flixel.system.input.mouse.FlxMouse;
 #if !FLX_NO_GAMEPAD
 import flixel.system.input.gamepad.FlxGamepadManager;
 #end
+#if android
+import flixel.system.input.android.FlxAndroidKeys;
+#end
 
 interface IDestroyable
 {
@@ -158,6 +161,13 @@ class FlxG
 	public static var gamepads(default, null):FlxGamepadManager;
 	#end
 	
+	#if android
+	/**
+	 * A reference to a <code>FlxAndroidKeys</code> object. Useful for tracking Back, Home, etc on Android devices.
+	 */
+	public static var android(default, null):FlxAndroidKeys;
+	#end
+	
 	/**
 	 * From here on: frontEnd classes.
 	 */ 
@@ -254,6 +264,10 @@ class FlxG
 		
 		#if (!FLX_NO_GAMEPAD && (cpp||neko||js))
 			gamepads = cast(inputs.add(new FlxGamepadManager()), FlxGamepadManager);
+		#end
+		
+		#if android
+			android = cast(inputs.add(new FlxAndroidKeys()), FlxAndroidKeys);
 		#end
 		
 		save.bind("flixel");
