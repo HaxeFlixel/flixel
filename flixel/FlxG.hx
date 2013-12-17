@@ -64,7 +64,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public var LIBRARY_MINOR_VERSION:String = "0.0-dev";
+	static public var LIBRARY_MINOR_VERSION:String = "0.2-dev";
 	
 	/**
 	 * Internal tracker for game object.
@@ -155,7 +155,7 @@ class FlxG
 	/**
 	 * A reference to a <code>FlxGamepadManager</code> object.
 	 */
-	public static var gamepads(default, null):FlxGamepadManager = new FlxGamepadManager();
+	public static var gamepads(default, null):FlxGamepadManager;
 	#end
 	
 	/**
@@ -379,28 +379,30 @@ class FlxG
 		height = Height;
 	}
 	
-	#if flash
 	/**
-	 * Use this to toggle between fullscreen and normal mode.
+	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
+	 * You can easily toggle fullscreen with eg: <code>FlxG.fullscreen = !FlxG.fullscreen;</code>
 	 */
-	static public var fullscreen(default, set):Bool = false;
+	@isVar static public var fullscreen(default, set):Bool = false;
 	 
 	static private function set_fullscreen(Value:Bool):Bool
 	{
+
 		if (Value)
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN;
+			#if flash
 			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
 			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
+			#end
 		}
 		else
 		{
 			stage.displayState = StageDisplayState.NORMAL;
 		}
-		
-		return Value;
+
+		return fullscreen = Value;
 	}
-	#end
 	
 	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)

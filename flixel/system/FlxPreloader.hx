@@ -283,17 +283,21 @@ class FlxPreloader extends NMEPreloader
 	
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
 	{
+		#if !desktop
 		//in case there is a problem with reading the bytesTotal (like on Chrome, or a Gzipped swf)
 		if (root.loaderInfo.bytesTotal == 0) 
-    		{
-        	 //Set Any value (650000>x>0) in bytesTotal to avoid "stucking" the preloader. 
-        	 //Attention! try to find the actual size of your file for better accuracy on Chrome.
-        	 var bytesTotal:Int = 50000; 
-        	 _percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
-    		}
-		else //Continue regulary
-         	_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
+		{
+			//Set Any value (650000>x>0) in bytesTotal to avoid "stucking" the preloader. 
+			//Attention! try to find the actual size of your file for better accuracy on Chrome.
+			var bytesTotal:Int = 50000; 
+			_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
 		}
+		else //Continue regulary
+		{
+			_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
+		}
+		#end
+	}
 	
 	private function onEnterFrame(event:Event):Void
 	{
