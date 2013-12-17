@@ -6,7 +6,6 @@ import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.display.Graphics;
 import flash.geom.Rectangle;
-import flixel.addons.ui.FlxButtonPlus;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -98,6 +97,10 @@ class PlayState extends FlxState
 	inline private static var GOAL_X:Int = 260;
 	inline private static var GOAL_Y:Int = 48;
 	
+	#if debug
+	inline private static var MONEY_CHEAT:Bool = true;
+	#end
+	
 	override public function create():Void
 	{
 		Reg.PS = this;
@@ -129,7 +132,8 @@ class PlayState extends FlxState
 		_nextWaveButton = new Button( 120, height, "[N]ext Wave", nextWaveCallback, [ false ], 143 );
 		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback, null, 21 );
 		
-		_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!" );
+		//_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!" );
+		_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.y, FlxG.width, "Click on a Tower to Upgrade it!" );
 		_tutText.visible = false;
 		_tutText.color = FlxColor.BLACK;
 		
@@ -602,7 +606,7 @@ class PlayState extends FlxState
 		announceWave( true );
 		
 		_towerButton.text = "[R]estart";
-		_towerButton.setOnClickCallback( resetCallback );
+		_towerButton.setOnDownCallback( resetCallback );
 		
 		#if !js
 		FlxG.sound.play("gameover");
@@ -716,6 +720,9 @@ class PlayState extends FlxState
 	
 	private function set_money( NewMoney:Int ):Int
 	{
+		#if debug
+		if ( MONEY_CHEAT ) return _money;
+		#end
 		_money = NewMoney;
 		_moneyText.text = "$: " + _money;
 		_moneyText.size = 16;

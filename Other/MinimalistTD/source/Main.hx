@@ -7,6 +7,11 @@ import flash.events.Event;
 import flash.Lib;
 import flixel.FlxGame;
 
+#if (cpp || neko)
+import flash.events.KeyboardEvent;
+import flash.ui.Keyboard;
+#end
+
 /**
  * @author Joshua Granick
  */
