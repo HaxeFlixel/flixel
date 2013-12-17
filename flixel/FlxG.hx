@@ -4,6 +4,7 @@ import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
+import flixel.system.frontEnds.HTML5FrontEnd;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.BmpLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
@@ -177,6 +178,13 @@ class FlxG
 	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
 	 */
 	static public var log(default, null):LogFrontEnd = new LogFrontEnd();
+	/**
+	 * A reference to the <code>HTML5FrontEnd</code> object.
+	 * It allows you to use some HTML5-specific stuff.
+	 */
+	#if js
+	static public var html5(default, null):HTML5FrontEnd = new HTML5FrontEnd();
+	#end
 	
 	#if FLX_BMP_DEBUG
 	/**
