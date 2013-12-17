@@ -7,13 +7,13 @@ import flixel.FlxBasic;
  * Support a filter method (used for iteratorAlive, iteratorDead and iteratorExists)
  * @author Masadow
  */
-class FlxTypedGroupIterator
+class FlxTypedGroupIterator<T>
 {
-	private var _groupMembers : Array<FlxBasic>;
+	private var _groupMembers : Array<T>;
 	private var _cursor : Int;
-	private var _filter : FlxBasic -> Bool;
+	private var _filter : T -> Bool;
 
-	public function new(GroupMembers : Array<FlxBasic>, filter : FlxBasic -> Bool = null)
+	public function new(GroupMembers : Array<T>, filter : T -> Bool = null)
 	{
 		_groupMembers = GroupMembers;
 		_cursor = 0;
