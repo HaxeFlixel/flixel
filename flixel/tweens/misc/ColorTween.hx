@@ -1,5 +1,6 @@
 ﻿package flixel.tweens.misc;
 
+import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
@@ -18,6 +19,11 @@ class ColorTween extends FlxTween
 	 * The current alpha.
 	 */
 	public var alpha:Float;
+	
+	/**
+	 * Optional sprite object which will have tweened color
+	 */
+	public var sprite:FlxSprite;
 
 	/**
 	 * Constructor.
@@ -29,6 +35,12 @@ class ColorTween extends FlxTween
 		alpha = 1;
 		super(0, type, complete);
 	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		sprite = null;
+	}
 
 	/**
 	 * Tweens the color to a new color and an alpha to a new alpha.
@@ -39,7 +51,7 @@ class ColorTween extends FlxTween
 	 * @param	toAlpha			End alpha.
 	 * @param	ease			Optional easer function.
 	 */
-	public function tween(duration:Float, fromColor:Int, toColor:Int, fromAlpha:Float = 1, toAlpha:Float = 1, ease:EaseFunction = null):ColorTween
+	public function tween(duration:Float, fromColor:Int, toColor:Int, fromAlpha:Float = 1, toAlpha:Float = 1, ease:EaseFunction = null, sprite:FlxSprite = null):ColorTween
 	{
 		fromColor &= 0xFFFFFF;
 		toColor &= 0xFFFFFF;
@@ -57,6 +69,7 @@ class ColorTween extends FlxTween
 		_rangeA = toAlpha - alpha;
 		_target = duration;
 		_ease = ease;
+		this.sprite = sprite;
 		start();
 		return this;
 	}
@@ -70,6 +83,12 @@ class ColorTween extends FlxTween
 		green = Std.int((_startG + _rangeG * _t) * 255);
 		blue = Std.int((_startB + _rangeB * _t) * 255);
 		color = red << 16 | green << 8 | blue;
+		
+		if (sprite != null)
+		{
+			sprite.color = color;
+			sprite.alpha = alpha;
+		}
 	}
 
 	/**

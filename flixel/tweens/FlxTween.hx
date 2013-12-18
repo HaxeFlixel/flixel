@@ -3,6 +3,7 @@ package flixel.tweens;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.plugin.TweenManager;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
@@ -126,7 +127,7 @@ class FlxTween
 	 * 						ease		Optional easer function.
 	 * @return	The added ColorTween object.
 	 */
-	static public function color(Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
+	static public function color(Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions, ?Sprite:FlxSprite):ColorTween
 	{
 		if (Options == null)
 		{
@@ -134,7 +135,7 @@ class FlxTween
 		}
 		
 		var tween:ColorTween = new ColorTween(Options.complete, Options.type);
-		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease);
+		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease, Sprite);
 		manager.add(tween);
 		
 		return tween;
