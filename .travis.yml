@@ -8,6 +8,8 @@ before_script:
   - sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   - mkdir ~/haxelib
   - haxelib setup ~/haxelib
+  - haxelib install lime
+  - haxelib install lime-tools
   - haxelib install openfl
   - haxelib install openfl-native
   - haxelib install openfl-html5
