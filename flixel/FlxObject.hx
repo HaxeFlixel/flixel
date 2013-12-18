@@ -598,7 +598,7 @@ class FlxObject extends FlxBasic
 	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined.  Otherwise a new one is created.
 	 * @return	A <code>FlxPoint</code> object containing the midpoint of this object in world coordinates.
 	 */
-	inline public function getMidpoint(?point:FlxPoint):FlxPoint
+	public function getMidpoint(?point:FlxPoint):FlxPoint
 	{
 		if (point == null)
 		{
