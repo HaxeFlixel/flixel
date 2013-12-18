@@ -21,8 +21,6 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
-// TODO: add the ability to destroy towers
-
 class PlayState extends FlxState
 {
 	// Public variables
@@ -68,7 +66,7 @@ class PlayState extends FlxState
 	private var _map:FlxTilemap;
 	private var _towerSelected:Tower;
 	
-	// Vars
+	// Private variables
 	
 	private var _buildingMode:Bool = false;
 	private var _gameOver:Bool = false;
@@ -79,6 +77,11 @@ class PlayState extends FlxState
 	private var _speed:Int = 1;
 	private var _upgradeHasBeenBought:Bool = false;
 	private var _waveCounter:Int = 0;
+	
+	private var _enemySpawnX:Int = 28;
+	private var _enemySpawnY:Int = -20;
+	private var _goalX:Int = 245;
+	private var _goalY:Int = 43;
 	
 	/**
 	 * Helper BitmapData object to draw tower's range graphic
@@ -93,14 +96,13 @@ class PlayState extends FlxState
 	 */
 	private static var HELPER_POINT:FlxPoint = new FlxPoint();
 	
-	inline private static var SPAWN_X:Int = 28;
-	inline private static var GOAL_X:Int = 260;
-	inline private static var GOAL_Y:Int = 48;
-	
 	#if debug
 	inline private static var MONEY_CHEAT:Bool = true;
 	#end
 	
+	/**
+	 * Create a new playable game state.
+	 */
 	override public function create():Void
 	{
 		Reg.PS = this;
@@ -111,8 +113,21 @@ class PlayState extends FlxState
 		
 		FlxG.timeScale = 1;
 		
+		// Create map
+		
 		_map = new FlxTilemap();
-		_map.loadMap( Assets.getText( "tilemaps/play_tilemap.csv" ), Reg.tileImage );
+		
+		if ( Reg.randomMode ) {
+			_map.widthInTiles = 40;
+			_map.heightInTiles = 30;
+			_map.loadMap( Reg.generateRandomLevel(), Reg.tileImage );
+			_enemySpawnX = Reg.enemySpawnX;
+			_enemySpawnY = Reg.enemySpawnY;
+			_goalX = Reg.goalX;
+			_goalY = Reg.goalY;
+		} else {
+			_map.loadMap( Assets.getText( "tilemaps/play_tilemap.csv" ), Reg.tileImage );
+		}
 		
 		bulletGroup = new FlxTypedGroup<Bullet>();
 		emitterGroup = new FlxTypedGroup<EnemyGibs>();
@@ -132,8 +147,7 @@ class PlayState extends FlxState
 		_nextWaveButton = new Button( 120, height, "[N]ext Wave", nextWaveCallback, [ false ], 143 );
 		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback, null, 21 );
 		
-		//_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.textNormal.y, FlxG.width, "Click on a Tower to Upgrade it!" );
-		_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.y, FlxG.width, "Click on a Tower to Upgrade it!" );
+		_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.y + 3, FlxG.width, "Click on a Tower to Upgrade it!" );
 		_tutText.visible = false;
 		_tutText.color = FlxColor.BLACK;
 		
@@ -180,7 +194,7 @@ class PlayState extends FlxState
 		
 		// Set up goal
 		
-		_goal = new FlxSprite( 245, 43, "images/goal.png" );
+		_goal = new FlxSprite( _goalX, _goalY, "images/goal.png" );
 		
 		_lifeGroup = new FlxGroup();
 		
@@ -513,7 +527,8 @@ class PlayState extends FlxState
 		
 		//Can't place towers on the road
 		
-		if ( _map.getTile( Std.int( xPos / 8 ), Std.int( yPos / 8 ) ) == 0 ) {
+		if ( _map.getTile( Std.int( xPos / 8 ), Std.int( yPos / 8 ) ) == 0 )
+		{
 			#if !js
 			FlxG.sound.play("deny");
 			#end
@@ -522,7 +537,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		_towerGroup.add( new Tower( xPos, yPos, _towerGroup.length - 1 ) ); 
+		_towerGroup.add( new Tower( xPos, yPos ) ); 
 		
 		#if !js
 		FlxG.sound.play( "build" );
@@ -588,8 +603,8 @@ class PlayState extends FlxState
 		enemiesToSpawn--;
 		
 		var enemy:Enemy = enemyGroup.recycle(Enemy);
-		enemy.init( SPAWN_X, -20 );
-		enemy.followPath( _map.findPath( new FlxPoint( SPAWN_X, 0), new FlxPoint( GOAL_X, GOAL_Y ) ) );
+		enemy.init( _enemySpawnX, _enemySpawnY );
+		enemy.followPath( _map.findPath( new FlxPoint( SPAWN_X, 0), new FlxPoint( _goalX + 5, _goalY + 5 ) ) );
 		_spawnCounter = 0;
 	}
 	

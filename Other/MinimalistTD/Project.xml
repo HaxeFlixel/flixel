@@ -49,6 +49,9 @@
 
 	<assets path="assets/images" rename="images" />
 	<assets path="assets/tilemaps" rename="tilemaps" />
+	
+	<!-- Link to custom SVG which will be used to generate all sizes of icons -->
+	<icon path="assets/MinimalistTD.svg" />
 
 	<!--In case you want to use the ui package-->
 	<!--<haxelib name="flixel-ui"/>-->

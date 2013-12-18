@@ -8,11 +8,12 @@ import flixel.FlxCamera;
 	
 class GameClass extends FlxGame
 {
-	private var _ratio:Float;
-	
 	inline static private var GAME_WIDTH:Int = 320;
 	inline static private var GAME_HEIGHT:Int = 240;
 	
+	/**
+	 * Sets up our FlxGame class and loads into the MenuState.
+	 */
 	public function new()
 	{
 		var stageWidth:Int = Lib.current.stage.stageWidth;
@@ -21,16 +22,16 @@ class GameClass extends FlxGame
 		var ratioX:Float = stageWidth / GAME_WIDTH;
 		var ratioY:Float = stageHeight / GAME_HEIGHT;
 		
-		_ratio = Math.min(ratioX, ratioY);
+		var ratio:Float = Math.min( ratioX, ratioY );
 		
 		var fps:Int = 60;
 		
-		super(Math.ceil(stageWidth / _ratio), Math.ceil(stageHeight / _ratio), MenuState, _ratio, fps, fps);
+		super( Math.ceil( stageWidth / ratio ), Math.ceil( stageHeight / ratio ), MenuState, ratio, fps, fps );
 		
 		// Center game on screen.
 		
-		x = 0.5 * ( stageWidth - GAME_WIDTH * _ratio);
-		y = 0.5 * ( stageHeight - GAME_HEIGHT * _ratio);
+		x = 0.5 * ( stageWidth - GAME_WIDTH * ratio );
+		y = 0.5 * ( stageHeight - GAME_HEIGHT * ratio );
 		
 		// Load sounds for Android target.
 		
@@ -50,6 +51,7 @@ class GameClass extends FlxGame
 	
 	/**
 	 * Override the base onResize function to center and stretch the game to fit the screen.
+	 * Called on Ctrl+F for Flash, and Alt-Enter for Windows.
 	 */
 	override public function onResize( ?E:Event ):Void
 	{

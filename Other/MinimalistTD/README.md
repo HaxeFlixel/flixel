@@ -16,4 +16,4 @@ Given that this is a port, very little was changed. However, this version has th
 # TODO
 
 * Back button in tower upgrade menu causes error
-* Click on a tower to upgrade it text is misaligned
+* Add ability to sell/destroy towers (S for sell mode? button?)

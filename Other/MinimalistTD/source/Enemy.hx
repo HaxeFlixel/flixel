@@ -103,6 +103,10 @@ class Enemy extends FlxSprite
 	 */
 	public function followPath( Path:Array<FlxPoint> ):Void
 	{
+		if ( Path == null ) {
+			throw( "No valid path was passed to the enemy! Does the tilemap provide a valid path from start to finish?" );
+		}
+		
 		x = Path[0].x;
 		y = Path[0].y;
 		
