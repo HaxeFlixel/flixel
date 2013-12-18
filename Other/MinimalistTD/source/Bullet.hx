@@ -47,9 +47,13 @@ class Bullet extends FlxSprite
 	
 	override public function update():Void
 	{
+		// This bullet missed its target and flew off-screen; no reason to keep it around.
+		
 		if ( !onScreen( FlxG.camera ) ) {
 			kill();
 		}
+		
+		// Move toward the target that was assigned in init().
 		
 		if ( _target.alive ) {
 			FlxVelocity.moveTowardsObject( this, _target, 200 );

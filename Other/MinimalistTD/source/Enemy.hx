@@ -1,6 +1,5 @@
 package;
 
-import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxPath;
@@ -9,15 +8,27 @@ import flixel.util.FlxPoint;
 class Enemy extends FlxSprite 
 {
 	public var moneyGain:Bool = true;
-	public var maxHealth:Float = 0.0;
+	public var maxHealth:Float = 1.0;
 	
+	/**
+	 * Create a new enemy. Used in the menu and playstate.
+	 * 
+	 * @param	X	The X position for the enemy.
+	 * @param	Y	The Y position for the enemy.
+	 */
 	override public function new( X:Int, Y:Int ) 
 	{
-		super( X, Y, "images/enemy.png" );
+		super( X, Y, Reg.enemyImage );
 		
-		health = maxHealth = 1;
+		health = maxHealth;
 	}
 	
+	/**
+	 * Reset this enemy at X,Y and reset their health. Used for object pooling in the PlayState.
+	 * 
+	 * @param	X	The X position for the enemy.
+	 * @param	Y	The Y position for the enemy.
+	 */
 	public function init( X:Int, Y:Int )
 	{
 		reset( X, Y );
@@ -29,6 +40,9 @@ class Enemy extends FlxSprite
 		maxHealth = health;
 	}
 	
+	/**
+	 * The alpha of the enmy is dependent on health.
+	 */
 	override public function update():Void
 	{
 		alpha = health / maxHealth; 
@@ -36,6 +50,11 @@ class Enemy extends FlxSprite
 		super.update();
 	}
 	
+	/**
+	 * Inflict horrible pain on this adorable square. How could you?!
+	 * 
+	 * @param	Damage	The damage to deal to this enemy.
+	 */
 	override public function hurt( Damage:Float ):Void
 	{
 		health -= Damage;
@@ -45,6 +64,12 @@ class Enemy extends FlxSprite
 		}
 	}
 	
+	/**
+	 * Called on this enemy's death. Recycles and emits particles, updates the number of enemies left,
+	 * finishes the wave if it was the last enemy, and awards money as appropriate.
+	 * 
+	 * @param	GainMoney	Whether or not this enemy should give the player money. True if killed by a tower, false if killed by colliding with the goal.
+	 */
 	public function explode( GainMoney:Bool ):Void
 	{
 		#if !js
@@ -70,6 +95,13 @@ class Enemy extends FlxSprite
 		super.kill();
 	}
 	
+	/**
+	 * Start this enemy on a path, as represented by an array of FlxPoints. Updates position to the first node
+	 * and then uses FlxPath.start() to set this enemy on the path. Speed is determined by wave number, unless
+	 * in the menu, in which case it's arbitrary.
+	 * 
+	 * @param	Path	The path to follow.
+	 */
 	public function followPath( Path:Array<FlxPoint> ):Void
 	{
 		x = Path[0].x;

@@ -1,6 +1,8 @@
 package;
 
+import flash.display.BitmapData;
 import flash.display.BlendMode;
+import flash.geom.Matrix;
 import openfl.Assets;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -32,7 +34,7 @@ class MenuState extends FlxState
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		
 		_map = new FlxTilemap();
-		_map.loadMap( Assets.getText( "tilemaps/menu_tilemap.csv" ), "images/tileset.png" );
+		_map.loadMap( Assets.getText( "tilemaps/menu_tilemap.csv" ), Reg.tileImage );
 		
 		var headline:FlxText = new FlxText(0, 40, FlxG.width, "Minimalist TD", 16);
 		headline.alignment = "center";
