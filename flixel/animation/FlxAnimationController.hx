@@ -479,7 +479,7 @@ class FlxAnimationController
 	/**
 	 * Gets the name of the currently playing _animations (warning: can be null)
 	 */
-	inline private function get_name():String
+	private function get_name():String
 	{
 		var animName:String = null;
 		if (_curAnim != null)
@@ -493,7 +493,7 @@ class FlxAnimationController
 	 * Plays a specified _animations (same as calling play)
 	 * @param	AnimName	The name of the _animations you want to play.
 	 */
-	inline private function set_name(AnimName:String):String
+	private function set_name(AnimName:String):String
 	{
 		play(AnimName);
 		return AnimName;
