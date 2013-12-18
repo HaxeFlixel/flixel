@@ -422,7 +422,7 @@ class BitmapFrontEnd
 	{
 		#if !doc
 		// Openfl 1.0 backwards compatibility
-		#if (openfl < 1.1)
+		#if (openfl < 1)
 		var bitmapDataCache = Assets.cachedBitmapData;
 		#else
 		var bitmapDataCache = Assets.cache.bitmapData;
