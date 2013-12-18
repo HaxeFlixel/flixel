@@ -68,7 +68,7 @@ class Button extends FlxButton
 				label.borderStyle = FlxText.BORDER_OUTLINE_FAST;
 				label.borderColor = FlxColor.BLACK;
 			case FlxButton.PRESSED:
-				//label.y++;
+				label.y++;
 			default:
 				label.color = FlxColor.BLACK;
 				label.borderStyle = FlxText.BORDER_OUTLINE_FAST;

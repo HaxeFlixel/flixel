@@ -77,8 +77,7 @@ class Enemy extends FlxSprite
 		#end
 		
 		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle( EnemyGibs );
-		emitter.init( x, y );
-		emitter.explode();
+		emitter.explode( x, y );
 		
 		Reg.PS.enemiesToKill--;
 		

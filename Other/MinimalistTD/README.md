@@ -8,5 +8,12 @@ This was ported to the latest version of HaxeFlixel and OpenFL by [Steve Richey]
 Given that this is a port, very little was changed. However, this version has the following differences:
 * Use of inverted circle for tower range, as opposed to grey circle
 * Use of black/white bordered text in buttons instead of grey text.
+* Buttons are now their own class that extends FlxButton instead of FlxButtonPlus.
 * Enemy gib emitters are inverted.
-* 
+* As to be expected with a Ludum Dare game, there was some redundant/unnecessary code that has been reduced.
+* All functions have been commented, hopefully with enough information that this can serve as a useful demo for those learning HaxeFlixel.
+
+# TODO
+
+* Back button in tower upgrade menu causes error
+* Click on a tower to upgrade it text is misaligned
