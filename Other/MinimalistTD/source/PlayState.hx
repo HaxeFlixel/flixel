@@ -41,6 +41,7 @@ class PlayState extends FlxState
 	private var _topGui:FlxGroup;
 	private var _towerGroup:FlxTypedGroup<Tower>;
 	private var _upgradeMenu:FlxGroup;
+	private var _sellMenu:FlxGroup;
 	
 	// Sprites
 	private var _buildHelper:FlxSprite;
@@ -53,6 +54,7 @@ class PlayState extends FlxState
     private var _moneyText:FlxText;
 	private var _tutText:FlxText;
 	private var _waveText:FlxText;
+	private var _sellMessage:FlxText;
 	
 	// Buttons
 	private var _damageButton:Button;
@@ -61,6 +63,7 @@ class PlayState extends FlxState
 	private var _rangeButton:Button;
 	private var _speedButton:Button;
 	private var _towerButton:Button;
+	private var _sellButton:Button;
 	
 	// Other objects
 	private var _map:FlxTilemap;
@@ -135,6 +138,7 @@ class PlayState extends FlxState
 		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback );
 		_nextWaveButton = new Button( 120, height, "[N]ext Wave", nextWaveCallback, [ false ], 143 );
 		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback, null, 21 );
+		_sellButton = new Button( 240, height - 18, "[S]ell Mode", sellButtonCallback, [ false ] );
 		
 		_tutText = new FlxText( _nextWaveButton.x, _nextWaveButton.y + 3, FlxG.width, "Click on a Tower to Upgrade it!" );
 		_tutText.visible = false;
@@ -143,6 +147,7 @@ class PlayState extends FlxState
 		_guiGroup.add( _towerButton );
 		_guiGroup.add( _nextWaveButton );
 		_guiGroup.add( _speedButton );
+		_guiGroup.add( _sellButton );
 		_guiGroup.add( _tutText );
 		
 		// End GUI setup
@@ -163,6 +168,20 @@ class PlayState extends FlxState
 		_upgradeMenu.visible = false;
 		
 		// End upgrade setup
+		
+		// Set up the sell mode display
+		
+		_sellMenu = new FlxGroup();
+		
+		_sellMessage = new FlxText( 0, height, FlxG.width, "Click on a tower to sell it" );
+		_sellMessage.color = FlxColor.BLACK;
+		
+		_sellMenu.add( _sellMessage );
+		_sellMenu.add( new Button( 2, height, "<", toggleSellMenu, [false], 10 ) );
+		
+		_sellMenu.visible = false;
+		
+		// End sell mode setup
 		
 		// Set up top GUI
 		
@@ -278,6 +297,7 @@ class PlayState extends FlxState
 		#if !mobile
 		if ( FlxG.keys.justReleased.T ) buildTowerCallback( true ); 
 		if ( FlxG.keys.justReleased.SPACE ) speedButtonCallback( true ); 
+		if ( FlxG.keys.justReleased.S ) sellButtonCallback( true );
 		if ( FlxG.keys.justReleased.R ) FlxG.resetState(); 
 		if ( FlxG.keys.justReleased.N ) nextWaveCallback( true ); 
 		if ( FlxG.keys.justReleased.ESCAPE ) escapeBuilding(); 
@@ -448,6 +468,20 @@ class PlayState extends FlxState
 		
 		FlxG.timeScale = _speed;
 		_speedButton.text = "x" + _speed;
+		
+		playSelectSound();
+	}
+	
+	/**
+	 * A function that is called when the user wants to sell a tower.
+	 */
+	private function sellButtonCallback( Skip:Bool = false ):Void
+	{
+		if ( !_guiGroup.visible && !Skip ) {
+			return;
+		}
+		
+		toggleSellMenu( true );
 		
 		playSelectSound();
 	}
@@ -690,6 +724,19 @@ class PlayState extends FlxState
 		} else {
 			updateUpgradeLabels();
 		}
+		
+		if ( On ) {
+			playSelectSound();
+		}
+	}
+	
+	/**
+	 * Toggles the sell menu.
+	 */
+	private function toggleSellMenu( On:Bool ):Void
+	{
+		_sellMenu.visible = On;
+		_guiGroup.visible = !On;
 		
 		if ( On ) {
 			playSelectSound();

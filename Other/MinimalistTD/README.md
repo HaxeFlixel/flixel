@@ -13,6 +13,7 @@ Given that this is a port, very little was changed. However, this version has th
 * As to be expected with a Ludum Dare game, there was some redundant/unnecessary code that has been reduced.
 * All functions have been commented, hopefully with enough information that this can serve as a useful demo for those learning HaxeFlixel.
 * Created a MinimalistTD icon.
+* Enemy and tilemap images are drawn dynamically via Reg functions, as opposed to being images. This is to demonstrate that FlxSprite graphics do not need to be image files.
 * Added a debug-only option to have unlimited money.
 
 # TODO
