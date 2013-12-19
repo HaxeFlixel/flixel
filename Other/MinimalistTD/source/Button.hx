@@ -2,7 +2,6 @@ package;
 
 import flash.Lib;
 import flash.events.MouseEvent;
-import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -36,7 +35,7 @@ class Button extends FlxButton
 		width = wid;
 		height = 20;
 		
-		loadGraphic( new BitmapData( Std.int( width ), Std.int( height ), true, 0 ) );
+		makeGraphic( Std.int( width ), Std.int( height ), 0 );
 		
 		label.color = FlxColor.BLACK;
 		label.borderStyle = FlxText.BORDER_OUTLINE;

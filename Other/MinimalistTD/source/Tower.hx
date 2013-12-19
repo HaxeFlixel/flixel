@@ -51,15 +51,19 @@ class Tower extends FlxSprite
 	 */
 	override public function update():Void
 	{	
-		if ( getNearestEnemy() == null ) {
+		if ( getNearestEnemy() == null )
+		{
 			_indicator.visible = false;
-		} else {
+		}
+		else
+		{
 			_indicator.visible = true;
 			_indicator.alpha = _shootCounter / ( _shootInvertall * FlxG.framerate );
 			
 			_shootCounter += Std.int( FlxG.timeScale );
 			
-			if ( _shootCounter > ( _shootInvertall * FlxG.framerate ) * fireRate ) {
+			if ( _shootCounter > ( _shootInvertall * FlxG.framerate ) * fireRate )
+			{
 				shoot();
 			}
 		}

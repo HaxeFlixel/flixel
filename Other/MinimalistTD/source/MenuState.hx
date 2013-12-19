@@ -30,7 +30,9 @@ class MenuState extends FlxState
 		#else
 		// Change the default mouse to an inverted triangle.
 		FlxG.mouse.show( "images/mouse.png" );
+		#if !(cpp || neko)
 		FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT;
+		#end
 		#end
 		
 		FlxG.cameras.bgColor = FlxColor.WHITE;

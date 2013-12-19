@@ -1,11 +1,9 @@
 package;
 
 import flash.display.Sprite;
+import flash.geom.ColorTransform;
 import openfl.Assets;
-import flash.display.BitmapData;
 import flash.display.BlendMode;
-import flash.display.Graphics;
-import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -14,12 +12,10 @@ import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
-import flixel.tweens.misc.VarTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
-import flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
 {
@@ -48,7 +44,7 @@ class PlayState extends FlxState
 	private var _goal:FlxSprite;
 	private var _towerRange:FlxSprite;
 	
-	// Texts
+	// Text
 	private var _centerText:FlxText;
 	private var _enemyText:FlxText;
     private var _moneyText:FlxText;
@@ -81,23 +77,15 @@ class PlayState extends FlxState
 	private var _upgradeHasBeenBought:Bool = false;
 	private var _waveCounter:Int = 0;
 	
-	private var _enemySpawnX:Int = 28;
-	private var _enemySpawnY:Int = -20;
+	private var _enemySpawnX:Int = 25;
+	private var _enemySpawnY:Int = -6;
 	private var _goalX:Int = 245;
 	private var _goalY:Int = 43;
 	
 	/**
-	 * Helper BitmapData object to draw tower's range graphic
+	 * Helper Sprite object to draw tower's range graphic
 	 */
-	private static var RANGE_BITMAP:BitmapData = null;
-	/**
-	 * Helper Rectangle object for faster tower's range graphic drawing
-	 */
-	private static var STAGE_RECTANGLE:Rectangle = new Rectangle();
-	/**
-	 * Helper FlxPoint object for less garbage creation
-	 */
-	private static var HELPER_POINT:FlxPoint = new FlxPoint();
+	private static var RANGE_SPRITE:Sprite = null;
 	
 	#if debug
 	inline private static var MONEY_CHEAT:Bool = true;
@@ -221,7 +209,10 @@ class PlayState extends FlxState
 		_centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16 );
 		_centerText.alignment = "center";
 		_centerText.borderStyle = FlxText.BORDER_SHADOW;
+		
+		#if !(cpp || neko)
 		_centerText.blend = BlendMode.INVERT;
+		#end
 		
 		_buildHelper = new FlxSprite( 0, 0, "images/checker.png" );
 		_buildHelper.visible = false;
@@ -665,7 +656,7 @@ class PlayState extends FlxState
 		
 		var enemy:Enemy = enemyGroup.recycle(Enemy);
 		enemy.init( _enemySpawnX, _enemySpawnY );
-		enemy.followPath( _map.findPath( new FlxPoint( _enemySpawnX, 0), new FlxPoint( _goalX + 5, _goalY + 5 ) ) );
+		enemy.followPath( _map.findPath( new FlxPoint( _enemySpawnX, _enemySpawnY ), new FlxPoint( _goalX + 5, _goalY + 5 ) ) );
 		_spawnCounter = 0;
 	}
 	
@@ -700,13 +691,21 @@ class PlayState extends FlxState
 		_towerRange.setPosition( Center.x - Range, Center.y - Range );
 		_towerRange.makeGraphic( Range * 2, Range * 2, FlxColor.TRANSPARENT );
 		
-		var sprite:Sprite = new Sprite();
-		sprite.graphics.beginFill( 0xFFFFFF );
-		sprite.graphics.drawCircle( Range, Range, Range );
-		sprite.graphics.endFill();
+		// Using and re-using a static sprite like this reduces garbage creation.
 		
-		_towerRange.pixels.draw( sprite );
+		RANGE_SPRITE = new Sprite();
+		RANGE_SPRITE.graphics.beginFill( 0xFFFFFF );
+		RANGE_SPRITE.graphics.drawCircle( Range, Range, Range );
+		RANGE_SPRITE.graphics.endFill();
+		
+		_towerRange.pixels.draw( RANGE_SPRITE );
+		
+		#if !(cpp || neko)
 		_towerRange.blend = BlendMode.INVERT;
+		#else
+		_towerRange.alpha = 0.5;
+		#end
+		
 		_towerRange.visible = true;
 	}
 	

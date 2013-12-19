@@ -3,7 +3,6 @@ package;
 import flash.geom.Matrix;
 import flash.display.BitmapData;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
 
 class Reg
 {

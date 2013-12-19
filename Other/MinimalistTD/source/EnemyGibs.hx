@@ -5,6 +5,7 @@ import flixel.util.FlxColor;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
 import flixel.effects.particles.FlxTypedEmitter.Bounds;
+import flixel.util.FlxRandom;
 
 class EnemyGibs extends FlxEmitter
 {
@@ -20,12 +21,27 @@ class EnemyGibs extends FlxEmitter
 		
 		setXSpeed( -SPEED, SPEED );
 		setYSpeed( -SPEED, SPEED );
+		
+		#if !(cpp || neko)
 		blend = BlendMode.INVERT;
+		#end
 		
 		for ( i in 0...SIZE )
 		{
 			var p:FlxParticle = new FlxParticle();
+			
+			#if !(cpp || neko)
 			p.makeGraphic( 2, 2, FlxColor.BLACK );
+			#else
+			if ( FlxRandom.chanceRoll() )
+			{
+				p.makeGraphic( 2, 2, FlxColor.BLACK );
+			}
+			else
+			{
+				p.makeGraphic( 2, 2, FlxColor.WHITE );
+			}
+			#end
 			add( p );
 		}
 		

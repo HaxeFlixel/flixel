@@ -1,5 +1,6 @@
 package;
 
+import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.Lib;
 import flixel.FlxG;
