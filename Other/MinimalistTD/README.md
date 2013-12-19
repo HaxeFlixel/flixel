@@ -12,6 +12,8 @@ Given that this is a port, very little was changed. However, this version has th
 * Enemy gib emitters are inverted.
 * As to be expected with a Ludum Dare game, there was some redundant/unnecessary code that has been reduced.
 * All functions have been commented, hopefully with enough information that this can serve as a useful demo for those learning HaxeFlixel.
+* Created a MinimalistTD icon.
+* Added a new feature: random levels. Currently activated by pressing R on the title screen. **WIP**
 
 # TODO
 

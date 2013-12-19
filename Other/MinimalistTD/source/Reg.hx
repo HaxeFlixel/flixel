@@ -90,9 +90,32 @@ class Reg
 			lastY = FlxRandom.intRanged( 1, 29 );
 		}
 		
+		var upWeight:Float = 0;
+		var downWeight:Float = 0;
+		var leftWeight:Float = 0;
+		var rightWeight:Float = 0;
+		
 		while ( !reachedGoal )
 		{
+			if ( lastX < 4 ) {
+				upWeight = 0.01;
+			} else {
+				upWeight = 0.3;
+			}
 			
+			if ( lastX > 26 ) {
+				downWeight = 0.01;
+			} else {
+				downWeight = 0.3;
+			}
+			
+			if ( lastY < 4 ) {
+				leftWeight = 0.01;
+			} else {
+				leftWeight = 0.1;
+			}
+			
+			if ( lastY > 
 		}
 		
 		return levelArray;
