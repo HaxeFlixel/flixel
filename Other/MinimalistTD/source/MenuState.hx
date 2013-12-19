@@ -93,13 +93,6 @@ class MenuState extends FlxState
 			playButtonCallback();
 		}
 		
-		// Begin the game in random level mode with an R keypress.
-		
-		if ( FlxG.keys.justReleased.R ) {
-			Reg.randomMode = true;
-			playButtonCallback();
-		}
-		
 		super.update();
 	}
 	

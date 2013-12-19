@@ -116,18 +116,7 @@ class PlayState extends FlxState
 		// Create map
 		
 		_map = new FlxTilemap();
-		
-		if ( Reg.randomMode ) {
-			_map.widthInTiles = 40;
-			_map.heightInTiles = 30;
-			_map.loadMap( Reg.generateRandomLevel(), Reg.tileImage );
-			_enemySpawnX = Reg.enemySpawnX;
-			_enemySpawnY = Reg.enemySpawnY;
-			_goalX = Reg.goalX;
-			_goalY = Reg.goalY;
-		} else {
-			_map.loadMap( Assets.getText( "tilemaps/play_tilemap.csv" ), Reg.tileImage );
-		}
+		_map.loadMap( Assets.getText( "tilemaps/play_tilemap.csv" ), Reg.tileImage );
 		
 		bulletGroup = new FlxTypedGroup<Bullet>();
 		emitterGroup = new FlxTypedGroup<EnemyGibs>();
@@ -270,7 +259,7 @@ class PlayState extends FlxState
 		
 		_enemyText.text = "Enemies left: " + enemiesToKill;
 		
-		// These elements expand when increased; this somewhat slowly reduces their size back to normal
+		// These elements expand when increased; this reduces their size back to normal
 		
 		if ( _moneyText.size > 8 ) {
 			_moneyText.size--;
@@ -284,7 +273,7 @@ class PlayState extends FlxState
 			_waveText.size--;
 		}
 		
-		// Check for key presses
+		// Check for key presses, which can substitute for button clicks.
 		
 		#if !mobile
 		if ( FlxG.keys.justReleased.T ) buildTowerCallback( true ); 
@@ -300,8 +289,8 @@ class PlayState extends FlxState
 		// If needed, updates the grid highlight square buildHelper and the range indicator
 		
 		if ( _buildingMode ) {
-			_buildHelper.x = FlxG.mouse.x - (FlxG.mouse.x % 8);
-			_buildHelper.y = FlxG.mouse.y - (FlxG.mouse.y % 8);
+			_buildHelper.x = FlxG.mouse.x - ( FlxG.mouse.x % 8 );
+			_buildHelper.y = FlxG.mouse.y - ( FlxG.mouse.y % 8 );
 			updateRangeSprite( _buildHelper.getMidpoint(), 40 );
 		}
 		
@@ -335,7 +324,7 @@ class PlayState extends FlxState
 			}
 		}
 		
-		// If an enemy hits the goal, it will lose life
+		// If an enemy hits the goal, it will lose life and the enemy explodes
 		
 		FlxG.overlap( enemyGroup, _goal, hitGoal );
 		
@@ -414,8 +403,6 @@ class PlayState extends FlxState
 	
 	/**
 	 * Called when a bullet hits an enemy. Damages the enemy, kills the bullet.
-	 * @param	bullet
-	 * @param	enemy
 	 */
 	private function hitEnemy( bullet:Dynamic, enemy:Dynamic ):Void
 	{
@@ -427,6 +414,10 @@ class PlayState extends FlxState
 		#end
 	}
 	
+	/**
+	 * A function that is called when the user enters build mode.
+	 * @param	Skip
+	 */
 	private function buildTowerCallback( Skip:Bool = false ):Void
 	{
 		if ( ( !_guiGroup.visible || towerPrice > money ) && !Skip ) {
@@ -440,6 +431,9 @@ class PlayState extends FlxState
 		playSelectSound();
 	}
 	
+	/**
+	 * A function that is called when the user changes game speed.
+	 */
 	private function speedButtonCallback(Skip:Bool = false):Void
 	{
 		if ( !_guiGroup.visible && !Skip ) {
@@ -458,13 +452,19 @@ class PlayState extends FlxState
 		playSelectSound();
 	}
 	
-	private function escapeBuilding():Void
+	/**
+	 * A function that is called when the user leaves building mode.
+	 */
+	private function escapeBuilding( Skip:Bool = false ):Void
 	{
 		toggleUpgradeMenu( false );
 		_buildingMode = false;
 		_buildHelper.visible = _buildingMode;
 	}
 	
+	/**
+	 * A function that is called when the user selects to call the next wave.
+	 */
 	private function nextWaveCallback(Skip:Bool = false):Void
 	{
 		if ( !_guiGroup.visible && !Skip ) {
@@ -479,6 +479,9 @@ class PlayState extends FlxState
 		playSelectSound();
 	}
 	
+	/**
+	 * A function that is called when the user elects to restart, which is only possible after losing.
+	 */
 	private function resetCallback(Skip:Bool = false):Void
 	{
 		if ( !_guiGroup.visible && !Skip ) {
@@ -489,6 +492,10 @@ class PlayState extends FlxState
 		playSelectSound();
 	}
 	
+	/**
+	 * A function that attempts to build a tower when the user clicks on the playable space. Must have money,
+	 * and be building in a valid place (not on another tower, the road, or the GUI).
+	 */
 	private function buildTower():Void
 	{
 		// Can't place towers on GUI
@@ -549,6 +556,9 @@ class PlayState extends FlxState
 		escapeBuilding();
 	}
 	
+	/**
+	 * The select sound gets played from a lot of places, so it's in a convenient function.
+	 */
 	private function playSelectSound():Void
 	{
 		#if !js
@@ -556,6 +566,11 @@ class PlayState extends FlxState
 		#end
 	} 
 	
+	/**
+	 * Used to display either the wave number or Game Over message via the animated fly-in, fly-out text.
+	 * 
+	 * @param	End		Whether or not this is the end of the game. If true, message will say "Game Over! :("
+	 */
 	private function announceWave( End:Bool = false ):Void
 	{
 		_centerText.x = -200;
@@ -572,11 +587,19 @@ class PlayState extends FlxState
 		_waveText.visible = true;
 	}
 	
+	/**
+	 * Hides the center text message display on announceWave, once the first tween is complete.
+	 */
 	private function hideText( Tween:FlxTween ):Void
 	{
 		FlxTween.multiVar( _centerText, { x: FlxG.width }, 2, { ease: FlxEase.expoIn } );
 	}
 	
+	/**
+	 * Spawns the next wave. This increments the wave variable, displays the center text message,
+	 * sets the number of enemies to spawn and kill, hides the next wave button, and shows the
+	 * notification of the number of enemies.
+	 */
 	private function spawnWave():Void
 	{
 		if ( _gameOver ) {
@@ -598,16 +621,23 @@ class PlayState extends FlxState
 		_enemyText.size = 16;
 	}
 	
+	/**
+	 * Spawns an enemy. Decrements the enemiesToSpawn variable, and recycles an enemy from enemyGroup and then initiates
+	 * it and gives it a path to follow.
+	 */
 	private function spawnEnemy():Void
 	{
 		enemiesToSpawn--;
 		
 		var enemy:Enemy = enemyGroup.recycle(Enemy);
 		enemy.init( _enemySpawnX, _enemySpawnY );
-		enemy.followPath( _map.findPath( new FlxPoint( SPAWN_X, 0), new FlxPoint( _goalX + 5, _goalY + 5 ) ) );
+		enemy.followPath( _map.findPath( new FlxPoint( _enemySpawnX, 0), new FlxPoint( _goalX + 5, _goalY + 5 ) ) );
 		_spawnCounter = 0;
 	}
 	
+	/**
+	 * Called when you lose. Of course!
+	 */
 	private function loseGame():Void
 	{
 		_gameOver = true;
@@ -666,6 +696,10 @@ class PlayState extends FlxState
 		}
 	}
 	
+	/**
+	 * Called when the user attempts to update range. If they have enough money, the upgradeRange() function
+	 * for this tower is called, and the money is decreased.
+	 */
 	private function upgradeRangeCallback():Void
 	{
 		if ( !_upgradeMenu.visible ) {
@@ -679,6 +713,10 @@ class PlayState extends FlxState
 		}
 	}
 	
+	/**
+	 * Called when the user attempts to update damage. If they have enough money, the upgradeDamage() function
+	 * for this tower is called, and the money is decreased.
+	 */
 	private function upgradeDamageCallback():Void
 	{
 		if ( !_upgradeMenu.visible ) {
@@ -692,6 +730,10 @@ class PlayState extends FlxState
 		}
 	}
 	
+	/**
+	 * Called when the user attempts to update fire rate. If they have enough money, the upgradeFirerate() function
+	 * for this tower is called, and the money is decreased.
+	 */
 	private function upgradeFirerateCallback():Void
 	{
 		if ( !_upgradeMenu.visible ) {
@@ -705,6 +747,9 @@ class PlayState extends FlxState
 		}
 	}
 	
+	/**
+	 * Called after an upgrade. Updates button text, plays a sound, and sets the upgrade bought flag to true.
+	 */
 	private function upgradeHelper():Void
 	{
 		updateUpgradeLabels();
@@ -712,10 +757,11 @@ class PlayState extends FlxState
 		_upgradeHasBeenBought = true;
 	}
 	
+	/**
+	 * Update button labels for upgrades, and makes sure the range indicator sprite is updated.
+	 */
 	private function updateUpgradeLabels():Void
 	{
-		trace( _towerSelected.x );
-		
 		_rangeButton.text = "Range (" + _towerSelected.range_LEVEL + "): $" + _towerSelected.range_PRIZE; 
 		_damageButton.text = "Damage (" + _towerSelected.damage_LEVEL + "): $" + _towerSelected.damage_PRIZE; 
 		_firerateButton.text = "Firerate (" + _towerSelected.firerate_LEVEL + "): $" + _towerSelected.firerate_PRIZE; 

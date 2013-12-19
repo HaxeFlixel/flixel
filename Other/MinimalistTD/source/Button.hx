@@ -31,14 +31,15 @@ class Button extends FlxButton
 			wid = Width;
 		}
 		
-		super( X, Y, Label, Callback );
+		super( X, Y, Label );
+		setOnUpCallback( Callback, Params );
 		width = wid;
 		height = 20;
 		
 		loadGraphic( new BitmapData( Std.int( width ), Std.int( height ), true, 0 ) );
 		
 		label.color = FlxColor.BLACK;
-		label.borderStyle = FlxText.BORDER_OUTLINE_FAST;
+		label.borderStyle = FlxText.BORDER_OUTLINE;
 		label.borderColor = FlxColor.WHITE;
 	}
 	
