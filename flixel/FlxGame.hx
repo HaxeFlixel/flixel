@@ -187,12 +187,9 @@ class FlxGame extends Sprite
 	 * @param	GameFramerate	How frequently the game should update (default is 60 times per second).
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 60 times per second).
 	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
+	 * @param	StartFullscreen	Whether to start the game in fullscreen mode (desktop targets only), false by default
 	 */
-	#if desktop
 	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
-	#else
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60, SkipSplash:Bool = false)
-	#end
 	{
 		super();
 		
