@@ -14,6 +14,7 @@ before_script:
   - haxelib install openfl-native
   - haxelib install openfl-html5
   - haxelib install openfl-tools
+  - haxelib install openfl-samples
   - haxelib run openfl setup linux
   - haxelib install systools
   - haxelib install spinehx
