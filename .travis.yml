@@ -8,13 +8,9 @@ before_script:
   - sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   - mkdir ~/haxelib
   - haxelib setup ~/haxelib
-  - haxelib install openfl
-  - haxelib install openfl-native
-  - haxelib install openfl-html5
-  - haxelib install openfl-tools
-  - haxelib run openfl setup linux
-  - haxelib install hxtools
-  - haxelib install hxlibc
+  - haxelib install lime
+  - haxelib install lime-tools
+  - haxelib run lime install openfl
   - haxelib install systools
   - haxelib install spinehx
   - haxelib install actuate
