@@ -1,5 +1,9 @@
 flixel CHANGELOG
 
+v.3.0.3
+------------------------------
+* Removed experimental FLX_THREADING conditional
+
 v.3.0.2
 ------------------------------
 * FlxTilemap: Region size checks added to fix a bug
@@ -17,7 +21,7 @@ v.3.0.2
 * FlxColorTween now accepts FlxSprite as a parameter and it will change its color automatically
 * QuadPath doesn't generate control points anymore
 
-v.3.0.1
+v.3.0.1-alpha
 ------------------------------
 * Fixes to gamepad API.
 * Added tilemap scaling.
@@ -31,7 +35,7 @@ v.3.0.1
 * FlxObject.inWorldBounds() added
 * LICENSE.txt cleanup
 
-v.3.0.0
+v.3.0.0-alpha
 ------------------------------
 * New Front End classes to better encapsulate FlxG functionality.
 * Refactored the animation system.

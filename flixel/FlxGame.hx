@@ -162,20 +162,6 @@ class FlxGame extends Sprite
 	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	#end
 	
-	#if (cpp && FLX_THREADING)
-	// push 'true' into this array to trigger an update. push 'false' to terminate update thread.
-	private var _stateSwitchRequested:Bool;
-	private var _threadSync:cpp.vm.Deque<Bool>;
-	
-	private function threadedUpdate():Void 
-	{
-		while (_threadSync.pop(true))
-		{
-			update();
-		}
-	}
-	#end
-	
 	private var _skipSplash:Bool = false;
 	
 	/**
@@ -280,11 +266,6 @@ class FlxGame extends Sprite
 			switchState();
 			requestedReset = false;
 		}
-		
-		#if (cpp && FLX_THREADING)
-		_threadSync = new cpp.vm.Deque();
-		cpp.vm.Thread.create(threadedUpdate);
-		#end
 		
 		if (FlxG.framerate < FlxG.flashFramerate)
 		{
@@ -477,10 +458,6 @@ class FlxGame extends Sprite
 	public inline function requestNewState(newState:FlxState):Void
 	{
 		requestedState = newState;
-		
-		#if (cpp && FLX_THREADING)
-		_stateSwitchRequested = true;
-		#end
 	} 
 
 	/**
@@ -523,10 +500,6 @@ class FlxGame extends Sprite
 		#end
 		
 		state.create();
-		
-		#if (cpp && FLX_THREADING) 
-		_stateSwitchRequested = false; 
-		#end
 	}
 	
 	/**
@@ -576,11 +549,7 @@ class FlxGame extends Sprite
 		FlxBasic._ACTIVECOUNT = 0;
 		#end
 		
-		#if (cpp && FLX_THREADING)
-		_threadSync.push(true);
-		#else
 		update();
-		#end
 		
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
@@ -711,11 +680,6 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.cameras.lock();
-		
-		#if (cpp && FLX_THREADING)
-		// Only draw the state if a new state hasn't been requested
-		if (!_stateSwitchRequested)
-		#end 
 		
 		FlxG.plugins.draw();
 		
