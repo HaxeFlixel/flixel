@@ -32,21 +32,6 @@ class Tower extends FlxSprite
 	
 	inline private static var COST_INCREASE:Float = 1.5;
 	inline private static var BASE_PRIZE:Int = 10;
-	inline private static function LOOKUP_ARRAY():Array<Int>
-	{
-		var valueLookup:Array<Int> = [ 0, BASE_PRIZE ];
-		
-		for ( i in 2...7 ) {
-			var nextCost:Int = Std.int( valueLookup[i - 1] * COST_INCREASE );
-			valueLookup.push( nextCost );
-		}
-		
-		for ( i in 2...7 ) {
-			valueLookup[i] = valueLookup[i] + valueLookup[i - 1];
-		}
-		
-		return valueLookup;
-	}
 	
 	/**
 	 * Create a new tower at X and Y with default range, fire rate, and damage; create this tower's indicator.
@@ -93,7 +78,7 @@ class Tower extends FlxSprite
 	}
 	
 	/**
-	 * Used to determine value of a tower when selling it. Equivalent to half its upgrade cost plus half its base cost.
+	 * Used to determine value of a tower when selling it. Equivalent to half its next upgrade costs plus half its base cost.
 	 */
 	public var value(get, null):Int;
 	
@@ -101,9 +86,9 @@ class Tower extends FlxSprite
 	{
 		var val:Float = _initialCost;
 		
-		val += LOOKUP_ARRAY()[ range_LEVEL - 1 ];
-		val += LOOKUP_ARRAY()[ firerate_LEVEL - 1];
-		val += LOOKUP_ARRAY()[ damage_LEVEL - 1 ];
+		val += range_PRIZE - BASE_PRIZE;
+		val += firerate_PRIZE - BASE_PRIZE;
+		val += damage_PRIZE - BASE_PRIZE;
 		val = Math.round( val / 2 );
 		
 		return Std.int( val );

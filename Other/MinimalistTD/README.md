@@ -18,3 +18,5 @@ Given that this is a port, very little was changed. However, this version has th
 * Support for HTML5, although it's a bit wonky and blurry.
 * Can sell towers; [S]ell Mode added as soon as one tower is bought.
 * Press P to play.
+* Added an enum for menus to demonstrate at least one way to use them.
+* Created a general toggleMenu function

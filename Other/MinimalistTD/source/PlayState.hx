@@ -17,6 +17,14 @@ import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 
+enum MenuType
+{
+	General;
+	Upgrade;
+	Sell;
+	ConfirmSell;
+}
+
 class PlayState extends FlxState
 {
 	// Public variables
@@ -115,7 +123,7 @@ class PlayState extends FlxState
 		_towerGroup = new FlxTypedGroup<Tower>();
 		towerIndicators = new FlxTypedGroup<FlxSprite>();
 		
-		// Set up bottom GUI
+		// Set up bottom default GUI
 		
 		var guiUnderlay:FlxSprite = new FlxSprite( 0, FlxG.height - 16 );
 		guiUnderlay.makeGraphic( FlxG.width, 16, FlxColor.WHITE );
@@ -123,7 +131,7 @@ class PlayState extends FlxState
 		_guiGroup = new FlxGroup();
 		
 		var height:Int = FlxG.height - 18;
-		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback );
+		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback, null, 120 );
 		_nextWaveButton = new Button( 100, height, "[N]ext Wave", nextWaveCallback, [ false ], 143 );
 		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback, null, 21 );
 		_sellButton = new Button( 220, height, "[S]ell Mode", sellButtonCallback, [ true ] );
@@ -149,7 +157,7 @@ class PlayState extends FlxState
 		_damageButton = new Button( 100, height, "Damage (##): $##", upgradeDamageCallback );
 		_firerateButton = new Button( 200, height, "Firerate (##): $##", upgradeFirerateCallback );
 		
-		_upgradeMenu.add( new Button( 2, height, "<", toggleUpgradeMenu, [false], 10 ) );
+		_upgradeMenu.add( new Button( 2, height, "<", toggleMenus, [ General ], 10 ) );
 		_upgradeMenu.add( _rangeButton );
 		_upgradeMenu.add( _damageButton );
 		_upgradeMenu.add( _firerateButton );
@@ -177,9 +185,10 @@ class PlayState extends FlxState
 		
 		_sellConfirm = new FlxGroup();
 		
-		_areYouSure = new FlxText( 10, height + 3, 200, "Tower value $###, really sell?" );
+		_areYouSure = new FlxText( 20, height + 3, 200, "Tower value $###, really sell?" );
 		_areYouSure.color = FlxColor.BLACK;
 		
+		_sellConfirm.add( new Button( 2, height, "<", sellMenuCancel, [false], 10 ) );
 		_sellConfirm.add( _areYouSure );
 		_sellConfirm.add( new Button( 220, height, "[Y]es", sellConfirmCallback, [ true ] ) );
 		_sellConfirm.add( new Button( 280, height, "[N]o", sellConfirmCallback, [ false ] ) );
@@ -265,7 +274,7 @@ class PlayState extends FlxState
 		
 		// This is a good place to put watch statements during development.
 		#if debug
-		FlxG.watch.add( _sellMenu, "visible" );
+		//FlxG.watch.add( _sellMenu, "visible" );
 		#end
 	}
 	
@@ -321,7 +330,7 @@ class PlayState extends FlxState
 				nextWaveCallback( true ); 
 			}
 		}
-		if ( FlxG.keys.justReleased.ESCAPE ) escapeBuilding(); 
+		if ( FlxG.keys.justReleased.ESCAPE ) toggleMenus( General ); 
 		if ( FlxG.keys.justReleased.ONE ) upgradeRangeCallback(); 
 		if ( FlxG.keys.justReleased.TWO ) upgradeDamageCallback(); 
 		if ( FlxG.keys.justReleased.THREE ) upgradeFirerateCallback(); 
@@ -344,29 +353,37 @@ class PlayState extends FlxState
 			}
 			else
 			{
+				var selectedTower:Bool = false;
+				
 				#if !mobile
-				// If the user clicked on a tower, they get the upgrade menu
+				// If the user clicked on a tower, they get the upgrade menu, or the sell menu
 				for ( tower in _towerGroup.members )
 				{
 					if ( FlxMath.pointInCoordinates( Std.int(FlxG.mouse.x), Std.int(FlxG.mouse.y), Std.int(tower.x), Std.int(tower.y), Std.int(tower.width), Std.int(tower.height)))
 					{
 						_towerSelected = tower;
 						
-						if ( !_sellMenu.visible && !_sellConfirm.visible )
+						if ( _sellMenu.visible || _sellConfirm.visible )
 						{
-							toggleUpgradeMenu( true );
+							sellConfirmCheck();
+							
 						}
 						else
 						{
-							sellConfirmCheck();
+							toggleMenus( Upgrade );
 						}
+						
+						selectedTower = true;
 						
 						break; // We've found the selected tower, can stop cycling through them
 					}
-					else if ( FlxG.mouse.y < FlxG.height - 20 )
-					{
-						toggleUpgradeMenu( false );
-					}
+				}
+				
+				// If the user didn't click on any towers, we go back to the general menu
+				
+				if ( !selectedTower && FlxG.mouse.y < FlxG.height - 20 )
+				{
+					toggleMenus( General );
 				}
 				#else
 				// If the user tapped NEAR a tower, they get the upgrade menu.
@@ -376,19 +393,26 @@ class PlayState extends FlxState
 				{
 					_towerSelected = nearestTower;
 					
-					if ( !_sellMenu.visible )
+					if ( _sellMenu.visible || _sellConfirm.visible )
 					{
-						toggleUpgradeMenu( true );
+						sellConfirmCheck();
+						
 					}
 					else
 					{
-						sellConfirmCheck();
+						toggleMenus( Upgrade );
 					}
+					
+					selectedTower = true;
+					
+					break;
 				}
-				else if
-				( FlxG.mouse.y < FlxG.height - 20 )
+				
+				// If the user didn't click near any towers, we go back to the general menu
+				
+				if ( !selectedTower && FlxG.mouse.y < FlxG.height - 20 )
 				{
-					toggleUpgradeMenu(false);
+					toggleMenus( General );
 				}
 				#end
 			}
@@ -490,12 +514,46 @@ class PlayState extends FlxState
 	}
 	
 	/**
+	 * Controls the displayed menu.
+	 * 
+	 * @param	Menu	The desired menu; one of the enum constructors above this class.
+	 */
+	private function toggleMenus( Menu:MenuType ):Void
+	{
+		trace( Menu );
+		
+		_sellConfirm.visible = false;
+		_sellMenu.visible = false;
+		_upgradeMenu.visible = false;
+		_guiGroup.visible = false;
+		_towerRange.visible = false;
+		
+		switch ( Menu )
+		{
+			case General:
+				_towerSelected = null;
+				_guiGroup.visible = true;
+				_buildingMode = false;
+				_buildHelper.visible = false;
+			case Upgrade:
+				updateUpgradeLabels();
+				_upgradeMenu.visible = true;
+			case Sell:
+				_sellMenu.visible = true;
+			case ConfirmSell:
+				_sellConfirm.visible = true;
+		}
+		
+		playSelectSound();
+	}
+	
+	/**
 	 * A function that is called when the user enters build mode.
 	 * @param	Skip
 	 */
 	private function buildTowerCallback( Skip:Bool = false ):Void
 	{
-		if ( ( !_guiGroup.visible || towerPrice > money ) && !Skip ) {
+		if ( !_guiGroup.visible || towerPrice > money ) {
 			return;
 		}
 		
@@ -532,12 +590,15 @@ class PlayState extends FlxState
 	 */
 	private function sellButtonCallback( Skip:Bool = false ):Void
 	{
-		if ( ( !_guiGroup.visible && !Skip ) || _towerGroup.length == 0 ) {
+		trace( "yep" );
+		
+		if ( !_guiGroup.visible || _towerGroup.length == 0 ) {
 			return;
 		}
 		
-		_sellMenu.visible = true;
-		_guiGroup.visible = false;
+		trace( "nope" );
+		
+		toggleMenus( Sell );
 		
 		if ( _buildingMode ) {
 			_buildingMode = false;
@@ -549,21 +610,21 @@ class PlayState extends FlxState
 	
 	private function sellConfirmCheck():Void
 	{
-		_sellMenu.visible = false;
-		_guiGroup.visible = false;
-		
 		_areYouSure.text = "Tower value $" + _towerSelected.value + ", really sell?";
-		_sellConfirm.visible = true;
+		
+		toggleMenus( ConfirmSell );
 		
 		updateRangeSprite( _towerSelected.getMidpoint(), _towerSelected.range );
 	}
 	
 	private function sellConfirmCallback( Sure:Bool ):Void
 	{
+		if ( !_sellConfirm.visible )
+		{
+			return;
+		}
+		
 		_towerRange.visible = false;
-		_sellConfirm.visible = false;
-		_sellMenu.visible = false;
-		_guiGroup.visible = true;
 		
 		if ( Sure )
 		{
@@ -603,27 +664,20 @@ class PlayState extends FlxState
 			// Null out the removed tower
 			
 			_towerSelected = null;
+			
+			// Go back to the general menu
+			
+			toggleMenus( General );
 		}
 		else
 		{
-			escapeBuilding( true );
+			toggleMenus( General );
 		}
 	}
 	
 	private function sellMenuCancel( Skip:Bool = false ):Void
 	{
-		_sellMenu.visible = false;
-		_guiGroup.visible = true;
-	}
-	
-	/**
-	 * A function that is called when the user leaves building mode.
-	 */
-	private function escapeBuilding( Skip:Bool = false ):Void
-	{
-		toggleUpgradeMenu( false );
-		_buildingMode = false;
-		_buildHelper.visible = _buildingMode;
+		toggleMenus( General );
 	}
 	
 	/**
@@ -675,7 +729,7 @@ class PlayState extends FlxState
 			FlxG.sound.play("deny");
 			#end
 			
-			escapeBuilding();
+			toggleMenus( General );
 			return;
 		}
 		
@@ -691,7 +745,8 @@ class PlayState extends FlxState
 				#if !js
 				FlxG.sound.play("deny");
 				#end
-				escapeBuilding();
+				
+				toggleMenus( General );
 				return;
 			}
 		}
@@ -704,7 +759,7 @@ class PlayState extends FlxState
 			FlxG.sound.play("deny");
 			#end
 			
-			escapeBuilding();
+			toggleMenus( General );
 			return;
 		}
 		
@@ -730,7 +785,7 @@ class PlayState extends FlxState
 		money -= towerPrice;
 		towerPrice += Std.int( towerPrice * 0.3 );
 		_towerButton.text = "Buy [T]ower ($" + towerPrice + ")";
-		escapeBuilding();
+		toggleMenus( General );
 	}
 	
 	/**
@@ -855,26 +910,6 @@ class PlayState extends FlxState
 		#end
 		
 		_towerRange.visible = true;
-	}
-	
-	/**
-	 * Toggles the upgrade menu and tower range indicator.
-	 */
-	private function toggleUpgradeMenu( On:Bool ):Void
-	{
-		_upgradeMenu.visible = On;
-		_guiGroup.visible = !On;
-		_towerRange.visible = On;
-		
-		if ( !On ) {
-			_towerSelected = null;
-		} else {
-			updateUpgradeLabels();
-		}
-		
-		if ( On ) {
-			playSelectSound();
-		}
 	}
 	
 	/**
