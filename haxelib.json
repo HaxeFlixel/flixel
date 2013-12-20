@@ -7,5 +7,5 @@
 	"version": "3.0.2",
 	"releasenote": "Adding openfl 1.2.1 compatibility, several API improvements, and lots of bug fixes.",
 	"contributors": ["haxeflixel"],
-	"dependencies": { "openfl": "" }
+	"dependencies": { "lime": "", "openfl": "" }
 }
