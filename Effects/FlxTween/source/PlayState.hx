@@ -245,7 +245,6 @@ class PlayState extends FlxState
 
 			case QUAD_PATH:
 				var path:Array<FlxPoint> = [new FlxPoint(_sprite.x, _sprite.y),
-											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
 											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
 											new FlxPoint(_max.x, _sprite.y)];
 				_tween = FlxTween.quadPath(_sprite, path, DURATION, true, options);
