@@ -43,7 +43,7 @@ class QuadPath extends Motion
 	 * @param	UseDuration			Whether to use the previous param as duration or speed.
 	 * @param	Ease				Optional easer function.
 	 */
-	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):QuadPath2
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):QuadPath
 	{
 		updatePath();
 		
@@ -68,7 +68,7 @@ class QuadPath extends Motion
 	 * @param	x		X position.
 	 * @param	y		Y position.
 	 */
-	public function addPoint(x:Float = 0, y:Float = 0):QuadPath2
+	public function addPoint(x:Float = 0, y:Float = 0):QuadPath
 	{
 		_updateCurve = true;
 		_points[_points.length] = new FlxPoint(x, y);
@@ -210,8 +210,8 @@ class QuadPath extends Motion
 	/** @private Calculates the lenght of the curve. */
 	private function curveLength(start:FlxPoint, control:FlxPoint, finish:FlxPoint):Float
 	{
-		var a:FlxPoint = QuadPath2._Point,
-			b:FlxPoint = QuadPath2._Point2;
+		var a:FlxPoint = QuadPath._Point,
+			b:FlxPoint = QuadPath._Point2;
 		a.x = start.x - 2 * control.x + finish.x;
 		a.y = start.y - 2 * control.y + finish.y;
 		b.x = 2 * control.x - 2 * start.x;

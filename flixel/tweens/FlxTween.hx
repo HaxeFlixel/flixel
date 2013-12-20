@@ -341,7 +341,6 @@ class FlxTween
 	
 	/**
 	 * Create a new QuadPath tween.
-	 * The main difference from QuadPath tween is that this tween doesn't generate control points of the path.
 	 * Example: FlxTween.quadPath(Object, [new FlxPoint(0, 0), new FlxPoint(200, 200), new FlxPoint(400, 0)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
@@ -352,7 +351,7 @@ class FlxTween
 	 * 							type		Tween type.
 	 * 							complete	Optional completion callback function.
 	 * 							ease		Optional easer function.
-	 * @return	The LinearPath object.
+	 * @return	The QuadPath object.
 	 */
 	static public function quadPath(Object:Movable, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
 	{
