@@ -25,7 +25,7 @@ class Bullet extends FlxSprite
 		super();
 		makeGraphic(3, 3);
 		
-		#if !(cpp || neko)
+		#if !(cpp || neko || js)
 		blend = BlendMode.INVERT;
 		#end
 	}

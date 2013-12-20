@@ -22,7 +22,7 @@ class EnemyGibs extends FlxEmitter
 		setXSpeed( -SPEED, SPEED );
 		setYSpeed( -SPEED, SPEED );
 		
-		#if !(cpp || neko)
+		#if !(cpp || neko || js)
 		blend = BlendMode.INVERT;
 		#end
 		
@@ -30,7 +30,7 @@ class EnemyGibs extends FlxEmitter
 		{
 			var p:FlxParticle = new FlxParticle();
 			
-			#if !(cpp || neko)
+			#if !(cpp || neko || js)
 			p.makeGraphic( 2, 2, FlxColor.BLACK );
 			#else
 			if ( FlxRandom.chanceRoll() )

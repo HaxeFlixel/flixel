@@ -18,30 +18,51 @@ class Tower extends FlxSprite
 	public var firerate_LEVEL:Int = 1;
 	public var damage_LEVEL:Int = 1;
 	
-	public var range_PRIZE:Int = 10;
-	public var firerate_PRIZE:Int = 10;
-	public var damage_PRIZE:Int =  10;
+	public var range_PRIZE:Int = BASE_PRIZE;
+	public var firerate_PRIZE:Int = BASE_PRIZE;
+	public var damage_PRIZE:Int =  BASE_PRIZE;
 	
 	private var _shootInvertall:Int = 2;
 	private var _shootCounter:Int = 0;
+	private var _initialCost:Int = 0;
 	private var _indicator:FlxSprite;
 	
 	private static var HELPER_POINT:FlxPoint = new FlxPoint();
 	private static var HELPER_POINT_2:FlxPoint = new FlxPoint();
 	
+	inline private static var COST_INCREASE:Float = 1.5;
+	inline private static var BASE_PRIZE:Int = 10;
+	inline private static function LOOKUP_ARRAY():Array<Int>
+	{
+		var valueLookup:Array<Int> = [ 0, BASE_PRIZE ];
+		
+		for ( i in 2...7 ) {
+			var nextCost:Int = Std.int( valueLookup[i - 1] * COST_INCREASE );
+			valueLookup.push( nextCost );
+		}
+		
+		for ( i in 2...7 ) {
+			valueLookup[i] = valueLookup[i] + valueLookup[i - 1];
+		}
+		
+		return valueLookup;
+	}
+	
 	/**
-	 * Create a new tower at X and Y with default range, fire rate, and damage; store this tower's index.
+	 * Create a new tower at X and Y with default range, fire rate, and damage; create this tower's indicator.
 	 * 
 	 * @param	X		The X position for this tower.
 	 * @param	Y		The Y position for this tower.
 	 */
-	public function new( X:Float, Y:Float )
+	public function new( X:Float, Y:Float, Cost:Int )
 	{
 		super( X, Y, "images/tower.png" );
 		
 		_indicator = new FlxSprite( getMidpoint().x - 1, getMidpoint().y - 1 );
 		_indicator.makeGraphic( 2, 2 );
 		Reg.PS.towerIndicators.add( _indicator );
+		
+		_initialCost = Cost;
 	}
 	
 	/**
@@ -69,6 +90,23 @@ class Tower extends FlxSprite
 		}
 		
 		super.update();
+	}
+	
+	/**
+	 * Used to determine value of a tower when selling it. Equivalent to half its upgrade cost plus half its base cost.
+	 */
+	public var value(get, null):Int;
+	
+	private function get_value():Int
+	{
+		var val:Float = _initialCost;
+		
+		val += LOOKUP_ARRAY()[ range_LEVEL - 1 ];
+		val += LOOKUP_ARRAY()[ firerate_LEVEL - 1];
+		val += LOOKUP_ARRAY()[ damage_LEVEL - 1 ];
+		val = Math.round( val / 2 );
+		
+		return Std.int( val );
 	}
 	
 	/**
@@ -131,7 +169,7 @@ class Tower extends FlxSprite
 	{
 		range += 10;
 		range_LEVEL++;
-		range_PRIZE = Std.int( range_PRIZE * 1.5 );
+		range_PRIZE = Std.int( range_PRIZE * COST_INCREASE );
 	}
 	
 	/**
@@ -142,7 +180,7 @@ class Tower extends FlxSprite
 	{
 		damage++;
 		damage_LEVEL++;
-		damage_PRIZE = Std.int( damage_PRIZE * 1.5 );
+		damage_PRIZE = Std.int( damage_PRIZE * COST_INCREASE );
 	}
 	
 	/**
@@ -153,6 +191,6 @@ class Tower extends FlxSprite
 	{
 		fireRate *= 0.9;
 		firerate_LEVEL++;
-		firerate_PRIZE = Std.int( firerate_PRIZE * 1.5 );
+		firerate_PRIZE = Std.int( firerate_PRIZE * COST_INCREASE );
 	}
 }

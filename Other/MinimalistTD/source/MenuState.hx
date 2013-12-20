@@ -25,7 +25,7 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
-		#if mobile
+		#if (mobile || js)
 		FlxG.mouse.hide();
 		#else
 		// Change the default mouse to an inverted triangle.
