@@ -14,6 +14,7 @@ v.3.0.2
 * FlxG.android added (supports the back and menu keys for now)
 * FlxGame constructor: Added StartFullscreen param for desktop targets
 * FlxTypedGroup: Added iterators / iterator(), forEach(), forEachAlive(), forEachDead(), forEachExists()
+* FlxColorTween now accepts FlxSprite as a parameter and it will change its color automatically
 
 v.3.0.1
 ------------------------------
