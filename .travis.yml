@@ -9,7 +9,7 @@ before_script:
   - mkdir ~/haxelib
   - haxelib setup ~/haxelib
   - haxelib install lime
-  - haxelib run lime setup
+  - haxelib install lime-tools
   - haxelib run lime install openfl
   - haxelib install systools
   - haxelib install spinehx
