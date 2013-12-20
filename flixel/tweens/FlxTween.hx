@@ -20,7 +20,6 @@ import flixel.tweens.motion.MotionType;
 import flixel.tweens.motion.PathType;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
-import flixel.tweens.motion.QuadPath2;
 import flixel.tweens.sound.Fader;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.util.FlxPoint;
@@ -342,6 +341,7 @@ class FlxTween
 	
 	/**
 	 * Create a new QuadPath tween.
+	 * The main difference from QuadPath tween is that this tween doesn't generate control points of the path.
 	 * Example: FlxTween.quadPath(Object, [new FlxPoint(0, 0), new FlxPoint(200, 200), new FlxPoint(400, 0)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
@@ -362,45 +362,6 @@ class FlxTween
 		}
 		
 		var tween:QuadPath = new QuadPath(Options.complete, Options.type);
-		
-		if (Points != null)
-		{
-			for (point in Points)
-			{
-				tween.addPoint(point.x, point.y);
-			}
-		}
-		
-		tween.setObject(Object);
-		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
-		
-		return tween;
-	}
-	
-	/**
-	 * Create a new QuadPath2 tween.
-	 * The main difference from QuadPath tween is that this tween doesn't generate control points of the path.
-	 * Example: FlxTween.quadPath2(Object, [new FlxPoint(0, 0), new FlxPoint(200, 200), new FlxPoint(400, 0)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
-	 * 
-	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
-	 * @param	Points			An array of at least 3 FlxPoints defining the path
-	 * @param	DurationOrSpeed	Duration or speed of the movement.
-	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 * 							complete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 * @return	The LinearPath object.
-	 */
-	static public function quadPath2(Object:Movable, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath2
-	{
-		if (Options == null)
-		{
-			Options = { type : ONESHOT };
-		}
-		
-		var tween:QuadPath2 = new QuadPath2(Options.complete, Options.type);
 		
 		if (Points != null)
 		{
