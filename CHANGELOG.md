@@ -1,7 +1,7 @@
 v.3.0.3
 ------------------------------
 * Removed experimental FLX_THREADING conditional
-* Renamed CHANGELOG.txt and LICENSE.txt to CHANGELOG.md and LICENSE.md - makes it more readable on github
+* Changes type of CHANGELOG and LICENSE files from .txt to .md - makes it more readable on github
 
 v.3.0.2
 ------------------------------
