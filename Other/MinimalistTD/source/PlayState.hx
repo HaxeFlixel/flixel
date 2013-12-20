@@ -520,8 +520,6 @@ class PlayState extends FlxState
 	 */
 	private function toggleMenus( Menu:MenuType ):Void
 	{
-		trace( Menu );
-		
 		_sellConfirm.visible = false;
 		_sellMenu.visible = false;
 		_upgradeMenu.visible = false;
@@ -590,13 +588,9 @@ class PlayState extends FlxState
 	 */
 	private function sellButtonCallback( Skip:Bool = false ):Void
 	{
-		trace( "yep" );
-		
 		if ( !_guiGroup.visible || _towerGroup.length == 0 ) {
 			return;
 		}
-		
-		trace( "nope" );
 		
 		toggleMenus( Sell );
 		
