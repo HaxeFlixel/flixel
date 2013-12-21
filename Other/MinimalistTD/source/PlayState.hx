@@ -322,7 +322,10 @@ class PlayState extends FlxState
 		if ( FlxG.keys.justReleased.SPACE ) speedButtonCallback( true ); 
 		if ( FlxG.keys.justReleased.S ) sellButtonCallback( true );
 		if ( FlxG.keys.justReleased.Y ) sellConfirmCallback( true );
-		if ( FlxG.keys.justReleased.R ) FlxG.resetState(); 
+		if ( FlxG.keys.justReleased.ESCAPE ) {
+			FlxG.sound.destroySounds( true );
+			FlxG.switchState( new MenuState() );
+		}
 		if ( FlxG.keys.justReleased.N ) {
 			if ( _sellConfirm.visible ) {
 				sellConfirmCallback( false );
