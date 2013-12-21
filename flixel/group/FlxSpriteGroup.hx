@@ -75,6 +75,8 @@ class FlxSpriteGroup extends FlxSprite
 		origin			= new FlxPointHelper(this, originTransform);
 		scale			= new FlxPointHelper(this, scaleTransform);
 		scrollFactor	= new FlxPointHelper(this, scrollFactorTransform);
+		
+		scrollFactor.set(1, 1);
 	 	
 		initMotionVars();
 	}
@@ -271,8 +273,9 @@ class FlxSpriteGroup extends FlxSprite
 		Sprite.x += x;
 		Sprite.y += y;
 		Sprite.alpha *= alpha;
-		group.add(Sprite);
-		return Sprite;
+		Sprite.scrollFactor.copyFrom(scrollFactor);
+		
+		return group.add(Sprite);
 	}
 	
 	/**
