@@ -5,6 +5,7 @@ package flixel.system.debug;
 import flash.text.TextFieldAutoSize;
 import flash.Lib;
 import flash.text.TextFormatAlign;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -355,33 +356,34 @@ class FlxDebugger extends Sprite
 	/**
 	 * Align an array of debugger buttons, used for the middle and right layouts
 	 */
-	public function hAlignSprites (Sprites:Array<Dynamic>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
+	public function hAlignSprites(Sprites:Array<Dynamic>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
 	{
 		var width:Float = 0;
 		var last:Float = LeftOffset;
-
+		
 		for (i in 0...Sprites.length)
 		{
 			var o:Sprite = Sprites[i];
 			width += o.width + Padding;
-			if (Set)
+			if (Set) {
 				o.x = last;
+			}
 			last = o.x + o.width + Padding;
 		}
-
+		
 		return width;
 	}
 
 	/**
 	 * Position the debugger buttons
-	*/
-	private function resetButtonLayout ():Void
+	 */
+	public function resetButtonLayout():Void
 	{
 		hAlignSprites(_leftButtons, 10, true, 10);
-
-		var offset = FlxG.stage.stageWidth*.5 - hAlignSprites(_middleButtons, 10, false)*.5;
+		
+		var offset = FlxG.stage.stageWidth * 0.5 - hAlignSprites(_middleButtons, 10, false) * 0.5;
 		hAlignSprites(_middleButtons, 10, true, offset);
-
+		
 		var offset = FlxG.stage.stageWidth - hAlignSprites(_rightButtons, 10, false);
 		hAlignSprites(_rightButtons, 10, true, offset);
 	}
@@ -419,6 +421,34 @@ class FlxDebugger extends Sprite
 		}
 		
 		return button;
+	}
+	
+	/**
+	 * Removes and destroys a button from the debugger.
+	 * @param	Button			The FlxSystemButton instance to remove.
+	 * @param	UpdateLayout	Whether to update the button layout.
+	 */
+	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
+	{
+		removeChild(Button);
+		Button.destroy();
+		removeButtonFromArray(_leftButtons, Button);
+		removeButtonFromArray(_middleButtons, Button);
+		removeButtonFromArray(_rightButtons, Button);
+		
+		if (UpdateLayout)
+		{
+			resetButtonLayout();
+		}
+	}
+	
+	private function removeButtonFromArray(Arr:Array<FlxSystemButton>, Button:FlxSystemButton):Void
+	{
+		var index = FlxArrayUtil.indexOf(Arr, Button);
+		if (index != -1)
+		{
+			Arr.splice(index, 1);
+		}
 	}
 
 	inline private function toggleVisualDebug ():Void

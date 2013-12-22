@@ -91,4 +91,16 @@ class DebuggerFrontEnd
 		return null;
 		#end
 	}
+	
+	/**
+	 * Removes and destroys a button from the debugger.
+	 * @param	Button			The FlxSystemButton instance to remove.
+	 * @param	UpdateLayout	Whether to update the button layout.
+	 */
+	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
+	{
+		#if !FLX_NO_DEBUG
+		FlxG.game.debugger.removeButton(Button, UpdateLayout);
+		#end
+	}
 }
