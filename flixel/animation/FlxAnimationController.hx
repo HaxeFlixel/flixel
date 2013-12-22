@@ -377,7 +377,7 @@ class FlxAnimationController
 			_curAnim = null;
 		}
 		
-		if (_animations.get(AnimName) == null)
+		if (AnimName == null || _animations.get(AnimName) == null)
 		{
 			FlxG.log.warn("No animation called \"" + AnimName + "\"");
 			return;
