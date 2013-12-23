@@ -107,7 +107,7 @@ class FlxPoint
 	 */
 	public function toString():String
 	{
-		return FlxStringUtil.getClassName(this, true);
+		return "[FlxPoint: {x = " + x + ", y = " + y + "}]"; 
 	}
 	
 	/**
