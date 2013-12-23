@@ -575,6 +575,8 @@ class FlxSprite extends FlxObject
 			animation.frameName = FrameName;
 		}
 		
+		resetSizeFromFrame();
+		setOriginToCenter();
 		return this;
 	}
 	
