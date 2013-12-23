@@ -103,7 +103,11 @@ class FlxAnimationController
 			createPrerotated();
 		}
 		
-		name = controller.name;
+		if (controller.name != null)
+		{
+			name = controller.name;
+		}
+		
 		frameIndex = controller.frameIndex;
 		
 		return this;
