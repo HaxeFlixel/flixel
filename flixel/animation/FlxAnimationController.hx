@@ -93,6 +93,8 @@ class FlxAnimationController
 	
 	public function copyFrom(controller:FlxAnimationController):FlxAnimationController
 	{
+		destroyAnimations();
+		
 		for (anim in controller._animations)
 		{
 			add(anim.name, anim._frames, anim.frameRate, anim.looped);

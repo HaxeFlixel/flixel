@@ -285,10 +285,7 @@ class FlxSprite extends FlxObject
 		updateFrameData();
 		resetHelpers();
 		antialiasing = Sprite.antialiasing;
-		
-		animation.destroyAnimations();
 		animation.copyFrom(Sprite.animation);
-		
 		return this;
 	}
 	
@@ -499,9 +496,7 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
-		animation.destroyAnimations();
 		animation.createPrerotated();
-		
 		return this;
 	}
 	
