@@ -1,5 +1,6 @@
 package flixel;
 
+import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flixel.system.FlxAssets;
@@ -17,6 +18,7 @@ import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
+import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
@@ -430,7 +432,8 @@ class FlxG
 	}
 	
 	/**
-	 * Read-only: access the current game state from anywhere.
+	 * Read-only: access the current game state from anywhere. Consider using <code>addChildBelowMouse()</code>
+	 * if you want to add a DisplayObject to the stage instead of directly adding it here!
 	 */
 	public static var state(get, never):FlxState;
 	
@@ -543,5 +546,33 @@ class FlxG
 			Object.destroy(); 
 		}
 		return null;
+	}
+	
+	/**
+	 * Regular DisplayObjects are normally displayed over the flixel cursor and the flixel debugger if simply 
+	 * added to stage. This function simplifies things by adding a DisplayObject directly below mouse level.
+	 * 
+	 * @param 	Child			The DisplayObject to add
+	 * @param 	IndexModifier	Amount to add to the index - makes sure the index stays within bounds!
+	 * @return	The added DisplayObject
+	 */
+	static public function addChildBelowMouse(Child:DisplayObject, IndexModifier:Int = 0):DisplayObject
+	{
+		var index = game.getChildIndex(game.inputContainer);
+		var max = game.numChildren;
+		
+		index = FlxMath.maxAdd(index, IndexModifier, max);
+		return game.addChildAt(Child, index);
+	}
+	
+	/**
+	 * Removes a child from the flixel display list.
+	 * 
+	 * @param 	Child	The DisplayObject to add
+	 * @return	The removed DisplayObject
+	 */
+	inline static public function removeChild(Child:DisplayObject):DisplayObject
+	{
+		return game.removeChild(Child);
 	}
 }
