@@ -23,7 +23,7 @@ class ConsoleFrontEnd
 	 */
 	inline public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if !(FLX_NO_DEBUG || mobile)
 		FlxG.game.debugger.console.registerFunction(FunctionAlias, Function);
 		#end
 	}
@@ -36,7 +36,7 @@ class ConsoleFrontEnd
 	 */
 	inline public function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if !(FLX_NO_DEBUG || mobile)
 		FlxG.game.debugger.console.registerObject(ObjectAlias, AnyObject);
 		#end
 	}
@@ -53,7 +53,7 @@ class ConsoleFrontEnd
 	 */
 	inline public function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if !(FLX_NO_DEBUG || mobile)
 		FlxG.game.debugger.console.addCommand(Aliases, ProcessFunction, Help, ParamHelp, NumParams, ParamCutoff);
 		#end
 	}
