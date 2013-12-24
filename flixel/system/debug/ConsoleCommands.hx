@@ -3,13 +3,19 @@ package flixel.system.debug;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
-import flixel.util.FlxColor;
+import flixel.system.debug.Console.Command;
 import flixel.util.FlxStringUtil;
 
 class ConsoleCommands
 {
+	/**
+	 * Reference to the console window.
+	 */
 	private var _console:Console;
-	private var watchingMouse:Bool = false;
+	/**
+	 * Helper variable for toggling the mouse coords in the watch window.
+	 */
+	private var _watchingMouse:Bool = false;
 	
 	public function new(console:Console):Void
 	{
@@ -17,162 +23,108 @@ class ConsoleCommands
 		_console = console;
 		
 		// Install commands
-		console.addCommand("help", this, help, "h");
-		console.addCommand("log", FlxG, FlxG.log.add);
-		console.addCommand("clearLog", FlxG, FlxG.log.clear, "clear");
-		console.addCommand("clearHistory", this, clearHistory, "ch");
-		console.addCommand("resetState", this, resetState, "rs");
-		console.addCommand("switchState", this, switchState, "ss");
-		console.addCommand("resetGame", this, resetGame, "rg");
-		console.addCommand("watchMouse", this, watchMouse, "wm");
-		console.addCommand("visualDebug", this, visualDebug, "vd");
-		console.addCommand("pause", this, pause, "p");
-		console.addCommand("play", FlxG, FlxG.sound.play);
-		console.addCommand("playMusic", FlxG, FlxG.sound.playMusic, "pm");
-		console.addCommand("bgColor", this, bgColor, "bg");
-		console.addCommand("shake", this, shake, "sh");
-		console.addCommand("close", this, close, "cl");
-		console.addCommand("create", this, create, "cr");
-		console.addCommand("set", this, set);
-		console.addCommand("call", this, call);
-		console.addCommand("listObjects", this, listObjects, "lo");
-		console.addCommand("listFunctions", this, listFunctions, "lf");
-		console.addCommand("watch", this, watch, "w");
-		console.addCommand("unwatch", this, unwatch, "uw");
+		console.addCommand(["help", "h"], help, null, "(Command)", 1);
+		console.addCommand(["close", "cl"], close, "Closes the debugger overlay.");
+		console.addCommand(["clearHistory", "ch"], clearHistory, "Clears the command history.");
 		
-		// Registration
+		console.addCommand(["clearLog", "clear"], FlxG.log.clear, "Clears the log window.");
+		
+		console.addCommand(["resetState", "rs"], resetState, "Resets the current state.");
+		console.addCommand(["switchState", "ss"], switchState, "Switches to a specified state.", "[FlxState]");
+		console.addCommand(["resetGame", "rg"], resetGame, "Resets the game.");
+		
+		console.addCommand(["create", "cr"], create, "Creates a new FlxObject and registers it - by default at the mouse position.", 
+							"[FlxObject] (MousePos = true)", 3, 3);
+		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to function]", 3);
+		console.addCommand(["call", "c"], call, "Calls a registered function / function within a registered object.", 3, 2);
+		
+		console.addCommand(["listObjects", "lo"], listObjects, "Lists all the aliases of the registered objects.");
+		console.addCommand(["listFunctions", "lf"], listFunctions, "Lists all the aliases of the registered objects.");
+		
+		console.addCommand(["watchMouse", "wm"], watchMouse, "Adds the mouse coordinates to the watch window.");
+		
+		console.addCommand(["pause", "p"], pause, "Toggle between paused and unpaused");
+		
+		// Default registration
 		console.registerObject("FlxG", FlxG);
 		#end
 	}
 	
 	#if !FLX_NO_DEBUG
-	private function help(Command:String = ""):Void
+	private function help(?Alias:String):Void
 	{
-		if (Command == "") {
-			cLog("System commands: \nlog, clearLog, clearHistory, help, resetState, switchState, resetGame, watchMouse, visualDebug, pause, play, playMusic, bgColor, shake, create, set, call, close, listObjects, listFunctions, watch, unwatch");
+		if (Alias == null) 
+		{
+			var output:String = "System commands: ";
+			for (command in _console.commands)
+			{
+				output += command.aliases[0] + ", ";
+			}
+			cLog(output);
 			cLog("help (Command) for more information about a specific command"); 
 		}
-		else {
-			cLog("help: " + Command);
+		else 
+		{
+			var command:Command = _console.findCommand(Alias);
 			
-			switch (Command) {
-				case "log":
-					cLog("log: Calls FlxG.log.add() with the text you enter");
-					cLog("log [Text]");
-				case "clearLog", "clear":
-					cLog("clearLog: {clear} Clears the log window");
-				case "clearHistory", "ch":
-					cLog("clearHistory: {ch} Clears the command history");
-				case "help", "h":
-					cLog("help: {h} Lists all system commands or provides more info on a specified command");
-					cLog("help (Command)");
-				case "resetState", "rs":
-					cLog("resetState: {rs} Calls FlxG.resetState()");
-				case "resetGame", "rg":
-					cLog("resetGame: {rg} Calls FlxG.resetGame()");
-				case "switchState", "ss":
-					cLog("switchState: {ss} Calls FlxG.switchState() with specified FlxState");
-					cLog("switchState [FlxState]");
-				case "watchMouse", "wm":
-					cLog("watchMouse: {wm} Adds the x and y pos of the mosue to the watch window. Super useful for GUI-Building stuff.");
-				case "visualDebug", "vd":
-					cLog("visualDebug: {vd} Toggles visual debugging");
-				case "pause", "p":
-					cLog("pause: {p} Pauses / unpauses the game");
-				case "play":
-					cLog("play: Plays a sound");
-					cLog("play [Sound] (Volume = 1)");
-				case "playMusic", "pm":
-					cLog("playMusic: {pm} Sets up and plays a looping background soundtrack.");
-					cLog("playMusic [Music] (Volume = 1)");
-				case "bgColor", "bg":
-					cLog("bgColor: {bg} Changes the background color to a specified color. You can also pass the colors 'red, green, blue, pink, white,  and black'");
-					cLog("bgColor [Color]");
-				case "shake", "sh":
-					cLog("shake: {sh} Calls FlxG.shake()");
-					cLog("shake (Intensity = 0.05) (Duration = 0.5)");
-				case "close", "cl":
-					cLog("close: {cl} Close the debugger overlay");
-				case "create", "cr": 
-					cLog("create: {cr} Creates a new FlxObject and registers it - by default at the mouse position.");
-					cLog("create [FlxObject] (MousePos = true) (param0...paramX)");
-				case "set":
-					cLog("set: Changes a var within a previosuly registered object via FlxG.console.registerObject(). Supports nesting (a field within an object within a registered object). Set a WatchName if you want to add the var to the watch window.");
-					cLog("set [Object.VariableName] [NewValue] (WatchName)");
-				case "call":
-					cLog("call: Calls a function previously registered via FlxG.console.registerFunction() with a set of params (or a function of a registered object");
-					cLog("call [(Object.)Function] [param0...paramX]");
-				case "listObjects", "lo":
-					cLog("listObjects: {lo} Lists all the aliases of the objects registered");
-				case "listFunctions", "lf":
-					cLog("listFunctions: {lf} Lists all the aliases of the functions registered");
-				case "watch", "w":
-					cLog("watch: {w} Calls FlxG.watch()");
-					cLog("watch [Object.VariableName] (DisplayName)");
-				case "unwatch", "uw":
-					cLog("unwatch: {uw} Calls FlxG.unwatch()");
-					cLog("unwatch [Object(.VariableName)]");
-				default:
-					cLog("help: Couldn't find command '" + Command + "'");
+			if (command != null)
+			{
+				FlxG.log.add("");
+				cLog(command.aliases);
+				
+				if (command.help != null) {
+					cLog(command.help);
+				}
+				
+				var cutoffHelp:String = "";
+				if (command.paramCutoff > 0) {
+					cutoffHelp = " [param0...paramX]";
+				}
+				
+				if (command.paramHelp != null || cutoffHelp != "") {
+					cLog("Params: " + command.paramHelp + cutoffHelp);
+				}
 			}
-			
-			cLog("{shortcut} [required param] (optional param)");
+			else 
+			{
+				FlxG.log.error("A command named '" + Alias + "' does not exist");
+			}
 		}
 	}
 	
-	private function clearHistory():Void
+	inline private function clearHistory():Void
 	{
 		_console.cmdHistory = new Array<String>();
 		FlxG.save.flush();
 		cLog("clearHistory: Command history cleared");
 	}
 	
-	private function resetState():Void
+	inline private function resetState():Void
 	{
 		FlxG.resetState();
 		cLog("resetState: State has been reset");
-		
-		#if flash
-		if (FlxG.console.autoPause) 
-		{
-			FlxG.game.debugger.vcr.onStep();
-		}
-		#end
 	}
 	
 	private function switchState(ClassName:String):Void 
 	{
 		var instance:Dynamic = attemptToCreateInstance(ClassName, FlxState, "switchState");
-		if (instance == null) 
+		if (instance == null) {
 			return;
+		}
 		
 		FlxG.switchState(instance);
 		cLog("switchState: New '" + ClassName + "' created");  
-		
-		#if flash
-		if (FlxG.console.autoPause)
-		{
-			FlxG.game.debugger.vcr.onStep();
-		}
-		#end
 	}
 	
-	private function resetGame():Void
+	inline private function resetGame():Void
 	{
 		FlxG.resetGame();
 		cLog("resetGame: Game has been reset");
-		
-		#if flash
-		if (FlxG.console.autoPause)
-		{
-			FlxG.game.debugger.vcr.onStep();
-		}
-		#end
 	}
 	
 	private function watchMouse():Void
 	{
-		if (!watchingMouse) 
+		if (!_watchingMouse) 
 		{
 			FlxG.watch.addMouse();
 			cLog("watchMouse: Mouse position added to watch window");
@@ -183,17 +135,7 @@ class ConsoleCommands
 			cLog("watchMouse: Mouse position removed from watch window");
 		}
 		
-		watchingMouse = !watchingMouse;
-	}
-	
-	private function visualDebug():Void
-	{		
-		FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
-		
-		if (FlxG.debugger.visualDebug) 
-			cLog("visualDebug: Enabled");
-		else
-			cLog("visualDebug: Disabled");
+		_watchingMouse = !_watchingMouse;
 	}
 	
 	private function pause():Void
@@ -208,92 +150,52 @@ class ConsoleCommands
 		}
 	}
 	
-	private function bgColor(Color:Dynamic):Void
-	{
-		var colorString:String = Std.string(Color);
-		var color:Int = Std.parseInt(Color);
-		
-		if (colorString != null) {
-			switch (colorString) {
-				case "red":
-					color = FlxColor.RED;
-				case "green":
-					color = FlxColor.GREEN;
-				case "blue":
-					color = FlxColor.BLUE;
-				case "pink":
-					color = FlxColor.PINK;
-				case "white":
-					color = FlxColor.WHITE;
-				case "black":
-					color = FlxColor.BLACK;
-			}
-		}
-		
-		if (!Math.isNaN(color)) {
-			FlxG.cameras.bgColor = color;
-			cLog("bgColor: Changed background color to '" + Color + "'");
-		}
-		else 
-			cLog("bgColor: Invalid color '" + Color + "'");
-	}
-	
-	private function shake(Intensity:Float = 0.05, Duration:Float = 0.5):Void
-	{
-		if (Math.isNaN(Intensity)) {
-			cLog("shake: Intensity is not a number");
-			return;
-		}
-		if (Math.isNaN(Duration)) {
-			cLog("shake: Duration is not a number");
-			return;
-		}
-		
-		FlxG.cameras.shake(Intensity, Duration);
-		cLog("shake: Shake started, Intensity: " + Intensity + " Duration: " + Duration);
-	}
-	
-	private function close():Void
+	inline private function close():Void
 	{
 		FlxG.debugger.visible = false;
 	}
 	
-	private function create(ClassName:String, MousePos:Bool = true, Params:Array<String> = null):Void
-	{
-		if (Params == null)
+	private function create(ClassName:String, MousePos:String = "true", ?Params:Array<String>):Void
+	{	
+		if (Params == null) {
 			Params = [];
-			
+		}
+		
 		var instance:Dynamic = attemptToCreateInstance(ClassName, FlxObject, "create", Params);
-		if (instance == null) 
+		if (instance == null) {
 			return;
+		}
 		
 		var obj:FlxObject = instance;
 		
-		if (MousePos) {
+		if (MousePos == "true") {
 			obj.x = FlxG.game.mouseX;
 			obj.y = FlxG.game.mouseY;
 		}
 		
 		FlxG.state.add(instance);
 		
-		if (Params.length == 0)
+		if (Params.length == 0) {
 			cLog("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y);
-		else 
+		}
+		else {
 			cLog("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
+		}
 			
 		_console.objectStack.push(instance);
 		_console.registerObject(Std.string(_console.objectStack.length), instance);
 		
-		cLog("create: " + ClassName + " registered as object '" + _console.objectStack.length);
+		cLog("create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
 	}
 	
-	private function set(ObjectAndVariable:String, NewVariableValue:Dynamic, WatchName:String = null):Void
+	private function set(ObjectAndVariable:String, NewVariableValue:Dynamic, ?WatchName:String):Void
 	{
 		var info:Array<Dynamic> = resolveObjectAndVariable(ObjectAndVariable, "set");
 		
 		// In case resolving failed
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 			
 		var object:Dynamic = info[0];
 		var varName:String = info[1];
@@ -309,18 +211,23 @@ class ConsoleCommands
 		}
 		
 		// Workaround to make Booleans work
-		if (Std.is(variable, Bool)) {
-			if (NewVariableValue == "false" || NewVariableValue == "0") 
+		if (Std.is(variable, Bool)) 
+		{
+			if (NewVariableValue == "false" || NewVariableValue == "0") { 
 				NewVariableValue = false;
-			else if (NewVariableValue == "true" || NewVariableValue == "1") 
+			}
+			else if (NewVariableValue == "true" || NewVariableValue == "1") {
 				NewVariableValue = true;
+			}
 			else {
 				FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
 				return;
 			}
 		}
+		
 		// Prevent turning numbers into NaN
-		else if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) {
+		else if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
+		{
 			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for number '" + varName + "'");
 			return;
 		}
@@ -334,15 +241,17 @@ class ConsoleCommands
 		Reflect.setProperty(object, varName, NewVariableValue);
 		cLog("set: " + Std.string(object) + "." + varName + " is now " + NewVariableValue);
 		
-		if (WatchName != null) 
+		if (WatchName != null) {
 			FlxG.watch.add(object, varName, WatchName);
+		}
 	}
 	
-	private function call(FunctionAlias:String, Params:Array<String> = null):Void
-	{
-		if (Params == null)
+	private function call(FunctionAlias:String, ?Params:Array<String>):Void
+	{	
+		if (Params == null) {
 			Params = [];
-			
+		}
+		
 		// Search for function in registeredFunctions hash
 		var func:Dynamic = _console.registeredFunctions.get(FunctionAlias);
 		
@@ -390,65 +299,40 @@ class ConsoleCommands
 		}
 		
 		if (Reflect.isFunction(func)) {
-			var success:Bool = _console.callFunction(null, func, Params);
+			var success:Bool = _console.callFunction(func, Params);
 			
-			if (Params.length == 0 && success) 
+			if (Params.length == 0 && success) {
 				cLog("call: Called '" + FunctionAlias + "'");
-			else if (success)
+			}
+			else if (success) {
 				cLog("call: Called '" + FunctionAlias + "' with params " + Params);
+			}
 		}
 		else {
 			FlxG.log.error("call: '" + FunctionAlias + "' is not a valid function");
 		}
 	}
 	
-	private function listObjects():Void
+	inline private function listObjects():Void
 	{
 		cLog("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
 	}
 	
-	private function listFunctions():Void
+	inline private function listFunctions():Void
 	{
 		cLog("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
-	}
-	
-	private function watch(ObjectAndVariable:String, DisplayName:String = null):Void
-	{
-		var info:Array<Dynamic> = resolveObjectAndVariable(ObjectAndVariable, "watch");
-		
-		// In case resolving failed
-		if (info == null)
-			return;
-			
-		var object:Dynamic = info[0];
-		var varName:String = info[1];
-		
-		FlxG.watch.add(object, varName);
-	}
-	
-	private function unwatch(ObjectAndVariable:String, VariableName:String = null):Void
-	{
-		var info:Array<Dynamic> = resolveObjectAndVariable(ObjectAndVariable, "watch");
-		
-		// In case resolving failed
-		if (info == null)
-			return;
-			
-		var object:Dynamic = info[0];
-		var varName:String = info[1];
-		
-		FlxG.watch.remove(object, varName);
 	}
 	
 	/**
 	 * Helper functions
 	 */
 	
-	private function attemptToCreateInstance(ClassName:String, _Type:Dynamic, CommandName:String, Params:Array<String> = null):Dynamic
+	private function attemptToCreateInstance(ClassName:String, _Type:Dynamic, CommandName:String, ?Params:Array<String>):Dynamic
 	{
-		if (Params == null) 
+		if (Params == null) {
 			Params = [];
-			
+		}
+		
 		var obj:Dynamic = Type.resolveClass(ClassName);
 		if (!Reflect.isObject(obj)) {
 			FlxG.log.error(CommandName + ": '" + ClassName + "' is not a valid class name. Try passing the full class path. Also make sure the class is being compiled.");
@@ -508,7 +392,7 @@ class ConsoleCommands
 		return [tempObj, tempVarName];
 	}
 	
-	private function cLog(Text:Dynamic):Void
+	inline private function cLog(Text:Dynamic):Void
 	{
 		FlxG.log.advanced([Text], LogStyle.CONSOLE);
 	}
