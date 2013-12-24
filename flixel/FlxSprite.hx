@@ -1335,6 +1335,8 @@ class FlxSprite extends FlxObject
 		
 		updateFrameData();
 		resetHelpers();
+		// not sure if i should add this line...
+		resetFrameBitmapDatas();
 		
 		return Pixels;
 	}
