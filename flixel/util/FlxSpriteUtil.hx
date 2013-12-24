@@ -245,7 +245,7 @@ class FlxSpriteUtil
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRect(X, Y, Width, Height);
 		flashGfx.endFill();
 		
@@ -269,7 +269,7 @@ class FlxSpriteUtil
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
 		flashGfx.endFill();
 		
@@ -297,7 +297,7 @@ class FlxSpriteUtil
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
 		flashGfx.endFill();
 		
@@ -320,7 +320,7 @@ class FlxSpriteUtil
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawCircle(X, Y, Radius);
 		flashGfx.endFill();
 		
@@ -342,7 +342,7 @@ class FlxSpriteUtil
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.RGBAtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
 		flashGfx.drawEllipse(X, Y, Width, Height);
 		flashGfx.endFill();
 		
@@ -382,7 +382,7 @@ class FlxSpriteUtil
 			}
 			else 
 			{
-				color = FlxColorUtil.RGBAtoRGB(lineStyle.color);
+				color = FlxColorUtil.ARGBtoRGB(lineStyle.color);
 				alpha = FlxColorUtil.getAlphaFloat(lineStyle.color);
 			}
 			

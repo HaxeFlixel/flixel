@@ -504,7 +504,7 @@ class FlxSprite extends FlxObject
 	 * This function creates a flat colored square image dynamically.
 	 * @param	Width		The width of the sprite you want to generate.
 	 * @param	Height		The height of the sprite you want to generate.
-	 * @param	Color		Specifies the color of the generated block.
+	 * @param	Color		Specifies the color of the generated block (ARGB format).
 	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
