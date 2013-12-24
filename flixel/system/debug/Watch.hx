@@ -146,17 +146,10 @@ class Watch extends Window
 		
 		//  Update the value
 		var quickWatch:WatchEntry = _quickWatchList.get(Name);
-			
+		
 		if (quickWatch != null) 
 		{
-			var text:String = Std.string(NewValue);
-				
-			if (Std.is(NewValue, StringMap))
-				text = FlxStringUtil.formatStringMap(NewValue);
-			else if (Std.is(NewValue, FlxPoint))
-				text = FlxStringUtil.formatFlxPoint(NewValue, FlxG.debugger.pointPrecision);
-				
-			quickWatch.valueDisplay.text = text;
+			quickWatch.valueDisplay.text = Std.string(NewValue);
 		}
 	}
 	#end

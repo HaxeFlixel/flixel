@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flash.geom.Point;
+import flixel.FlxG;
 
 /**
  * Stores a 2D floating point coordinate.
@@ -103,14 +104,6 @@ class FlxPoint
 	}
 	
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
-	 */
-	public function toString():String
-	{
-		return "[FlxPoint: {x = " + x + ", y = " + y + "}]"; 
-	}
-	
-	/**
 	 * Returns true if this point is within the given rectangular block
 	 * 
 	 * @param	RectX		The X value of the region to test within
@@ -147,4 +140,13 @@ class FlxPoint
 	}
 	
 	public function destroy() { }
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	inline public function toString():String
+	{
+		var p = FlxG.debugger.precision;
+		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " +  FlxMath.roundDecimal(y, p) + ")"; 
+	}
 }

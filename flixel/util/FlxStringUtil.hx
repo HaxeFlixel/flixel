@@ -73,27 +73,6 @@ class FlxStringUtil
 		}
 		return string;
 	}
-	
-	/**
-	 * Generate a string representation of a FlxPoint.
-	 * 
-	 * @param  Point    A <code>FlxPoint</code> object.
-	 * @param  Precison  To how many decimals x and y should be rounded.
-	 * @return  A <code>String</code> formatted like this: <code>x: Point.x | y: Point.y</code>
-	 */
-	inline static public function formatFlxPoint(Point:FlxPoint, Precision:Int):String
-	{
-		var string:String = "";
-		if (Point != null) 
-		{
-			var xValue:Float = FlxMath.roundDecimal(Point.x, Precision);
-			var yValue:Float = FlxMath.roundDecimal(Point.y, Precision);
-
-			string = "x: " + xValue + " | y: " + yValue;
-		}
-		
-		return string;
-	}
 
 	 /**
 	 * Generate a comma-seperated string representation of the keys of a <code>StringMap</code>.

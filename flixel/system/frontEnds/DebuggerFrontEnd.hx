@@ -13,12 +13,13 @@ class DebuggerFrontEnd
 	 * @default false
 	 */
 	public var visualDebug:Bool = false;
+	#end
+	
 	/**
-	 * The amount of decimals FlxPoints are rounded to in log / watch.
+	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
 	 * @default 3
 	 */
-	public var pointPrecision:Int = 3; 
-	#end
+	public var precision:Int = 3; 
 	
 	#if !FLX_NO_KEYBOARD
 	/**

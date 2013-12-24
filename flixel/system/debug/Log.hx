@@ -15,13 +15,14 @@ import haxe.ds.StringMap;
  */
 class Log extends Window
 {
-	static public var MAX_LOG_LINES:Int = 200;
+	inline static public var MAX_LOG_LINES:Int = 200;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * 
 	 * @param 	Title		The name of the window, displayed in the header bar.
 	 * @param	IconPath	Path to the icon to use for the window header.
 	 * @param 	Width		The initial width of the window.
@@ -56,8 +57,9 @@ class Log extends Window
 		if (_text != null)
 		{
 			removeChild(_text);
+			_text = null;
 		}
-		_text = null;
+		
 		_lines = null;
 		super.destroy();
 	}
@@ -80,18 +82,7 @@ class Log extends Window
 		// Format FlxPoints, Arrays, Maps or turn the Data entry into a String
 		for (i in 0...Data.length) 
 		{
-			if (Std.is(Data[i], FlxPoint)) 
-			{
-				texts[i] = FlxStringUtil.formatFlxPoint(Data[i], FlxG.debugger.pointPrecision);
-			}
-			else if (Std.is(Data[i], StringMap))
-			{
-				texts[i] = FlxStringUtil.formatStringMap(Data[i]);
-			}
-			else 
-			{
-				texts[i] = Std.string(Data[i]);
-			}
+			texts[i] = Std.string(Data[i]);
 			
 			// Make sure you can't insert html tags
 			texts[i] = StringTools.replace(texts[i], "<", "");
@@ -155,7 +146,7 @@ class Log extends Window
 			{
 				newText += _lines[i] + "<br>";
 			}
-			// TODO: Make htmlText on HTML5 target
+			// TODO: Make htmlText work on HTML5 target
 			#if !js
 			_text.htmlText = newText;
 			#else
@@ -164,7 +155,7 @@ class Log extends Window
 		}
 		else
 		{
-			// TODO: Make htmlText on HTML5 target
+			// TODO: Make htmlText work on HTML5 target
 			#if !js
 			_text.htmlText += (text + "<br>");
 			#else

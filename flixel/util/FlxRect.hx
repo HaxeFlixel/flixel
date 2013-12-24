@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flash.geom.Rectangle;
+import flixel.FlxG;
 
 /**
  * Stores a rectangle.
@@ -194,8 +195,9 @@ class FlxRect
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
-	public function toString():String
+	inline public function toString():String
 	{
-		return "[FlxRect: {x = " + x + ", y = " + y + ", w = " + width + ", h = " + height + "}]"; 
+		var p = FlxG.debugger.precision;
+		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " + FlxMath.roundDecimal(y, p) + " | w: " + FlxMath.roundDecimal(width, p) + " | h: " + FlxMath.roundDecimal(height, p) + ")"; 
 	}
 }
