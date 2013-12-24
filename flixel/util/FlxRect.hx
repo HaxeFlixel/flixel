@@ -190,4 +190,12 @@ class FlxRect
 		
 		return set(minX, minY, maxX - minX, maxY - minY);
 	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	public function toString():String
+	{
+		return "[FlxRect: {x = " + x + ", y = " + y + ", w = " + width + ", h = " + height + "}]"; 
+	}
 }
