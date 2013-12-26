@@ -196,7 +196,7 @@ class Console extends Window
 			_input.text = getPreviousCommand();
 			
 			// Workaround to override default behaviour of selection jumping to 0 when pressing up
-			addEventListener(Event.RENDER, overrideDefaultSelection, false, 0, true);
+			addEventListener(Event.RENDER, overrideDefaultSelection);
 			FlxG.stage.invalidate();
 		}
 		// Show next command in history

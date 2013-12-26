@@ -68,7 +68,6 @@ class FlxSystemButton extends Sprite
 			addChild(icon);
 		}
 		
-		buttonMode = true;
 		#if flash
 		tabEnabled = false;
 		#end

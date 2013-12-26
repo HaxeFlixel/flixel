@@ -169,6 +169,42 @@ class FlxStringUtil
 	}
 	
 	/**
+	 * Format a text with html tags - useful for <code>TextField.htmlText</code>. 
+	 * Used by the log window of the debugger.
+	 * 
+	 * @param	Text		The text to format
+	 * @param	Size		The text size, using <font size>
+	 * @param	Color		The text color, using <font color>
+	 * @param	Bold		Whether the text should be bold (<b> tag)
+	 * @param	Italic		Whether the text should be italic (<i> tag)
+	 * @param	Underlined 	Whether the text should be underlined (<u> tag)
+	 * @return	The html-formatted text.
+	 */
+	static public function htmlFormat(Text:String, Size:Int = 12, Color:String = "FFFFFF", Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false):String
+	{
+		var prefix:String = "<font size='" + Size + "' color='#" + Color + "'>";
+		var suffix:String = "</font>";
+		
+		if (Bold) 
+		{
+			prefix = "<b>" + prefix;
+			suffix = suffix + "</b>";
+		}
+		if (Italic) 
+		{
+			prefix = "<i>" + prefix;
+			suffix = suffix + "</i>";
+		}
+		if (Underlined) 
+		{
+			prefix = "<u>" + prefix;
+			suffix = suffix + "</u>";
+		}
+		
+		return prefix + Text + suffix;
+	}
+	
+	/**
 	 * Get the <code>String</code> name of any <code>Object</code>.
 	 * 
 	 * @param	Obj		The <code>Object</code> object in question.

@@ -85,37 +85,14 @@ class Log extends Window
 			texts[i] = Std.string(Data[i]);
 			
 			// Make sure you can't insert html tags
-			texts[i] = StringTools.replace(texts[i], "<", "");
-			texts[i] = StringTools.replace(texts[i], ">", "");
+			texts[i] = StringTools.htmlEscape(texts[i]);
 		}
 		
-		var text:String = texts.join(" ");
-
+		var text:String = Style.prefix + texts.join(" ");
+		
+		// Apply text formatting
 		#if !js
-		// Create the text and apply color and styles
-		var prefix:String = "<font size='" + Style.size + "' color='#" + Style.color + "'>";
-		var suffix:String = "</font>";
-		
-		if (Style.bold) 
-		{
-			prefix = "<b>" + prefix;
-			suffix = suffix + "</b>";
-		}
-		if (Style.italic) 
-		{
-			prefix = "<i>" + prefix;
-			suffix = suffix + "</i>";
-		}
-		if (Style.underlined) 
-		{
-			prefix = "<u>" + prefix;
-			suffix = suffix + "</u>";
-		}
-		
-		// TODO: Make htmlText on HTML5 target
-		text = prefix + Style.prefix + text + suffix;
-		#else
-		text = Style.prefix + text;
+		text = FlxStringUtil.htmlFormat(text, Style.size, Style.color, Style.bold, Style.italic, Style.underlined);
 		#end
 		
 		// Check if the text has been added yet already
