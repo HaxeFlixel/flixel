@@ -61,14 +61,10 @@ class FlxDebugger extends Sprite
 	 * Container for the record, stop and play buttons.
 	 */
 	public var vcr:VCR;
-	
-	#if !mobile
 	/**
 	 * Container for console.
 	 */
 	public var console:Console;
-	#end
-	
 	/**
 	 * Whether the mouse is currently over one of the debugger windows or not.
 	 */
@@ -143,10 +139,8 @@ class FlxDebugger extends Sprite
 		watch = new Watch("watch", FlxAssets.IMG_WATCH_DEBUG, 0, 0, true);
 		addChild(watch);
 		
-		#if !mobile
 		console = new Console("console", FlxAssets.IMG_CONSOLE, 0, 0, false);
 		addChild(console);
-		#end
 		
 		stats = new Stats("stats", FlxAssets.IMG_STATS_DEBUG, 0, 0, false);
 		addChild(stats);
@@ -163,9 +157,7 @@ class FlxDebugger extends Sprite
 		
 		addButton(RIGHT, FlxAssets.IMG_LOG_DEBUG, log.toggleVisibility, true).toggled = !log.visible; 
 		addButton(RIGHT, FlxAssets.IMG_WATCH_DEBUG, watch.toggleVisibility, true).toggled = !watch.visible; 
-		#if !mobile
 		addButton(RIGHT, FlxAssets.IMG_CONSOLE, console.toggleVisibility, true).toggled = !console.visible; 
-		#end
 		addButton(RIGHT, FlxAssets.IMG_STATS_DEBUG, stats.toggleVisibility, true).toggled = !stats.visible; 
 		addButton(RIGHT, FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, true).toggled = !FlxG.debugger.visualDebug;
 		
@@ -231,14 +223,12 @@ class FlxDebugger extends Sprite
 			stats.destroy();
 			stats = null;
 		}
-		#if !mobile
 		if (console != null) 
 		{
 			removeChild(console);
 			console.destroy();
 			console = null;
 		}
-		#end
 		
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
@@ -294,66 +284,54 @@ class FlxDebugger extends Sprite
 			case MICRO:
 				log.resize(_screen.x / 4, 68);
 				log.reposition(0, _screen.y);
-				#if !mobile
 				console.resize((_screen.x / 2) - GUTTER * 4, 35);
 				console.reposition(log.x + log.width + GUTTER, _screen.y);
-				#end
 				watch.resize(_screen.x / 4, 68);
 				watch.reposition(_screen.x,_screen.y);
 				stats.reposition(_screen.x, 0);
 			case BIG:
-				#if !mobile
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
-				#end
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
-				log.reposition(0, _screen.y - log.height #if !mobile - console.height #end - GUTTER * 1.5);
+				log.reposition(0, _screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
-				watch.reposition(_screen.x, _screen.y - watch.height #if !mobile - console.height #end - GUTTER * 1.5);
+				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
 			case TOP:
-				#if !mobile
 				console.resize(_screen.x - GUTTER * 2, 35);
-				console.reposition(0, 0);
-				#end
+				console.reposition(0,0);
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				log.reposition(0, #if !mobile console.height + #end GUTTER + 15);
+				log.reposition(0,console.height + GUTTER + 15);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x, #if !mobile console.height + #end GUTTER + 15);
+				watch.reposition(_screen.x,console.height + GUTTER + 15);
 				stats.reposition(_screen.x,_screen.y);
 			case LEFT:
-				#if !mobile
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
-				#end
-				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 #if !mobile - (console.height / 2) #end - GUTTER);
+				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
 				log.reposition(0,0);
-				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 #if !mobile - (console.height / 2) #end);
+				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
 				watch.reposition(0,log.y + log.height + GUTTER);
 				stats.reposition(_screen.x,0);
 			case RIGHT:
-				#if !mobile
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
-				#end
-				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 #if !mobile - (console.height / 2) #end - GUTTER);
+				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
 				log.reposition(_screen.x,0);
-				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 #if !mobile  - (console.height / 2) #end);
+				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
 				watch.reposition(_screen.x,log.y + log.height + GUTTER);
 				stats.reposition(0,0);
 			case STANDARD:
-				#if !mobile
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
-				#end
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				log.reposition(0,_screen.y - log.height #if !mobile - console.height #end - GUTTER * 1.5);
+				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,_screen.y - watch.height #if !mobile - console.height #end - GUTTER * 1.5);
+				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
 				if (bmpLog != null) {
 					bmpLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-					bmpLog.reposition(_screen.x, _screen.y - watch.height - bmpLog.height #if !mobile - console.height #end - GUTTER * 1.5);
+					bmpLog.reposition(_screen.x, _screen.y - watch.height - bmpLog.height - console.height - GUTTER * 1.5);
 				}
 		}
 	}
@@ -366,9 +344,7 @@ class FlxDebugger extends Sprite
 		stats.updateBounds(_screenBounds);
 		log.updateBounds(_screenBounds);
 		watch.updateBounds(_screenBounds);
-		#if !mobile
 		console.updateBounds(_screenBounds);
-		#end
 		if (bmpLog != null) {
 			bmpLog.updateBounds(_screenBounds);
 		}
