@@ -63,7 +63,7 @@ class FlxTrailArea extends FlxSprite {
 	 * 
 	 * @param	Width		The width of the area
 	 * @param	Height		The height of the area
-	 * @param	FadeSpeed		The height of the area
+	 * @param	AlphaFactor	How fast the alpha gets decreased
 	 * @param	Delay		How often to update the trail. 0 updates every frame.
 	 */
 	public function new(Width:Int, Height:Int, AlphaFactor:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, ?TrailBlendMode:BlendMode = null, Smoothing:Bool = false) {
