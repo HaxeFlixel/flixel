@@ -200,13 +200,14 @@ class FlxRandom
 	}
 	
 	/**
-	 * Randomly returns either a 1 or -1
+	 * Randomly returns either a 1 or -1. 
 	 * 
+	 * @param	Chance	The chance of receiving a positive value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return	1 or -1
 	 */
-	inline static public function sign():Float
+	inline static public function sign(Chance:Float = 50):Float
 	{
-		return (Math.random() > 0.5) ? 1 : -1;
+		return chanceRoll(Chance) ? 1 : -1;
 	}
 	
 	/**
