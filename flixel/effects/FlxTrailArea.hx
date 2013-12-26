@@ -35,7 +35,7 @@ class FlxTrailArea extends FlxSprite {
 	/**
 	 * Specifies the blendMode for the trails
 	 * Ignored in simple render mode
-	 * Not sure if this really does anything
+	 * Only works on the flash target
 	 */
 	public var blendMode:BlendMode;
 	
@@ -66,7 +66,7 @@ class FlxTrailArea extends FlxSprite {
 	 * @param	AlphaFactor	How fast the alpha gets decreased
 	 * @param	Delay		How often to update the trail. 0 updates every frame.
 	 */
-	public function new(Width:Int, Height:Int, AlphaFactor:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, ?TrailBlendMode:BlendMode = null, Smoothing:Bool = false) {
+	public function new(Width:Int, Height:Int, AlphaFactor:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, , Smoothing:Bool = false, ?TrailBlendMode:BlendMode = null) {
 		super();
 		
 		group = new FlxSpriteGroup();
