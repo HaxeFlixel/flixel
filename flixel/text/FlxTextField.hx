@@ -251,11 +251,4 @@ class FlxTextField extends FlxText
 		}
 		return Value;
 	}
-	
-	public var textField(get, never):TextField;
-	
-	private function get_textField():TextField 
-	{
-		return _textField;
-	}
 }
