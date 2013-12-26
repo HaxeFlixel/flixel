@@ -21,6 +21,8 @@ class ConsoleUtil
 	 */
 	static public function callFunction(Function:Dynamic, Args:Array<Dynamic>):Bool
 	{
+		Args = parseDataArray(Args);
+		
 		try
 		{
 			Reflect.callMethod(null, Function, Args);
@@ -162,25 +164,28 @@ class ConsoleUtil
 	}
 	
 	/**
-	 * Attempts to parse a String into a Bool. "false"
-	 * will return false, "true" will return true.
+	 * Attempts to parse an array of Strings and Arrays into standard types (mostly needed for Bools -  
+	 * Ints and Floats should work out of the box with Reflect.callMethod()). Used by callFunction().
 	 * 
-	 * @param	Data	The String to parse
-	 * @return	The parsed Bool, or null.
+	 * @param	Data	The data array to parse
+	 * @return	The parsed Data.
 	 */
-	static public function parseBool(Data:String):Null<Bool>
+	static public function parseDataArray(Data:Array<Dynamic>):Array<Dynamic>
 	{
-		var b:Null<Bool>;
-		if (Data == "false") { 
-			b = false;
+		var parsedData:Array<Dynamic> = Data;
+		for (i in 0...parsedData.length)
+		{
+			if (parsedData[i] == "true") {
+				parsedData[i] = true;
+			}
+			else if (parsedData[i] == "false") {
+				parsedData[i] = false;
+			}
+			else if (Std.is(parsedData[i], Array)) {
+				parsedData[i] = parseDataArray(parsedData[i]);
+			}
 		}
-		else if (Data == "true") {
-			b = true;
-		}
-		else {
-			b = null;
-		}
-		return b;
+		return parsedData;
 	}
 	
 	/**

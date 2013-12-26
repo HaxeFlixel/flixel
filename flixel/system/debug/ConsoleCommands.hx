@@ -48,7 +48,6 @@ class ConsoleCommands
 		
 		// Default registration
 		console.registerObject("FlxG", FlxG);
-		console.registerObject("state", null);
 		#end
 	}
 	
@@ -188,16 +187,11 @@ class ConsoleCommands
 			return;
 		}
 		
-		// Workaround to make Booleans work
-		if (Std.is(variable, Bool)) 
+		// Prevent from assigning non-boolean values to bools
+		if (Std.is(variable, Bool) && !Std.is(NewVariableValue, Bool)) 
 		{
-			NewVariableValue = ConsoleUtil.parseBool(NewVariableValue);
-			
-			if (NewVariableValue == null)
-			{
-				FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
-				return;
-			}
+			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
+			return;
 		}
 		
 		// Prevent turning numbers into NaN

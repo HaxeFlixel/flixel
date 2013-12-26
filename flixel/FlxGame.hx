@@ -500,6 +500,10 @@ class FlxGame extends Sprite
 		#end
 		
 		state.create();
+		
+		#if !(FLX_NO_DEBUG || mobile)
+		debugger.console.registerObject("state", FlxG.state);
+		#end
 	}
 	
 	/**
