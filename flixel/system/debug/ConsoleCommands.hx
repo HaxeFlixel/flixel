@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.system.debug.Console.Command;
+import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.util.FlxStringUtil;
 
 class ConsoleCommands
@@ -47,8 +48,13 @@ class ConsoleCommands
 		
 		// Default registration
 		console.registerObject("FlxG", FlxG);
+		console.registerObject("state", null);
 		#end
 	}
+	
+	/**
+	 * Commands
+	 */
 	
 	#if !FLX_NO_DEBUG
 	private function help(?Alias:String):Void
@@ -60,20 +66,20 @@ class ConsoleCommands
 			{
 				output += command.aliases[0] + ", ";
 			}
-			cLog(output);
-			cLog("help (Command) for more information about a specific command"); 
+			ConsoleUtil.log(output);
+			ConsoleUtil.log("help (Command) for more information about a specific command"); 
 		}
 		else 
 		{
-			var command:Command = _console.findCommand(Alias);
+			var command:Command = ConsoleUtil.findCommand(Alias, _console.commands);
 			
 			if (command != null)
 			{
 				FlxG.log.add("");
-				cLog(command.aliases);
+				ConsoleUtil.log(command.aliases);
 				
 				if (command.help != null) {
-					cLog(command.help);
+					ConsoleUtil.log(command.help);
 				}
 				
 				var cutoffHelp:String = "";
@@ -82,7 +88,7 @@ class ConsoleCommands
 				}
 				
 				if (command.paramHelp != null || cutoffHelp != "") {
-					cLog("Params: " + command.paramHelp + cutoffHelp);
+					ConsoleUtil.log("Params: " + command.paramHelp + cutoffHelp);
 				}
 			}
 			else 
@@ -92,67 +98,39 @@ class ConsoleCommands
 		}
 	}
 	
+	inline private function close():Void
+	{
+		FlxG.debugger.visible = false;
+	}
+	
 	inline private function clearHistory():Void
 	{
 		_console.cmdHistory = new Array<String>();
 		FlxG.save.flush();
-		cLog("clearHistory: Command history cleared");
+		ConsoleUtil.log("clearHistory: Command history cleared");
 	}
 	
 	inline private function resetState():Void
 	{
 		FlxG.resetState();
-		cLog("resetState: State has been reset");
+		ConsoleUtil.log("resetState: State has been reset");
 	}
 	
 	private function switchState(ClassName:String):Void 
 	{
-		var instance:Dynamic = attemptToCreateInstance(ClassName, FlxState, "switchState");
+		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxState);
 		if (instance == null) {
 			return;
 		}
 		
 		FlxG.switchState(instance);
-		cLog("switchState: New '" + ClassName + "' created");  
+		ConsoleUtil.log("switchState: New '" + ClassName + "' created");  
 	}
 	
 	inline private function resetGame():Void
 	{
 		FlxG.resetGame();
-		cLog("resetGame: Game has been reset");
-	}
-	
-	private function watchMouse():Void
-	{
-		if (!_watchingMouse) 
-		{
-			FlxG.watch.addMouse();
-			cLog("watchMouse: Mouse position added to watch window");
-		}
-		else 
-		{
-			FlxG.watch.removeMouse();
-			cLog("watchMouse: Mouse position removed from watch window");
-		}
-		
-		_watchingMouse = !_watchingMouse;
-	}
-	
-	private function pause():Void
-	{
-		if (FlxG.vcr.paused) {
-			FlxG.vcr.resume();
-			cLog("pause: Game unpaused");
-		}
-		else {
-			FlxG.vcr.pause();
-			cLog("pause: Game paused");
-		}
-	}
-	
-	inline private function close():Void
-	{
-		FlxG.debugger.visible = false;
+		ConsoleUtil.log("resetGame: Game has been reset");
 	}
 	
 	private function create(ClassName:String, MousePos:String = "true", ?Params:Array<String>):Void
@@ -161,7 +139,7 @@ class ConsoleCommands
 			Params = [];
 		}
 		
-		var instance:Dynamic = attemptToCreateInstance(ClassName, FlxObject, "create", Params);
+		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxObject, Params);
 		if (instance == null) {
 			return;
 		}
@@ -176,29 +154,29 @@ class ConsoleCommands
 		FlxG.state.add(instance);
 		
 		if (Params.length == 0) {
-			cLog("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y);
+			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y);
 		}
 		else {
-			cLog("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
+			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
 		}
-			
+		
 		_console.objectStack.push(instance);
 		_console.registerObject(Std.string(_console.objectStack.length), instance);
 		
-		cLog("create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
+		ConsoleUtil.log("create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
 	}
 	
 	private function set(ObjectAndVariable:String, NewVariableValue:Dynamic, ?WatchName:String):Void
 	{
-		var info:Array<Dynamic> = resolveObjectAndVariable(ObjectAndVariable, "set");
+		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariable(ObjectAndVariable, _console.registeredObjects);
 		
 		// In case resolving failed
-		if (info == null) {
+		if (pathToVariable == null) {
 			return;
 		}
-			
-		var object:Dynamic = info[0];
-		var varName:String = info[1];
+		
+		var object:Dynamic = pathToVariable.object;
+		var varName:String = pathToVariable.variableName;
 		var variable:Dynamic = null;
 		
 		try
@@ -213,13 +191,10 @@ class ConsoleCommands
 		// Workaround to make Booleans work
 		if (Std.is(variable, Bool)) 
 		{
-			if (NewVariableValue == "false" || NewVariableValue == "0") { 
-				NewVariableValue = false;
-			}
-			else if (NewVariableValue == "true" || NewVariableValue == "1") {
-				NewVariableValue = true;
-			}
-			else {
+			NewVariableValue = ConsoleUtil.parseBool(NewVariableValue);
+			
+			if (NewVariableValue == null)
+			{
 				FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
 				return;
 			}
@@ -239,7 +214,7 @@ class ConsoleCommands
 		}
 		
 		Reflect.setProperty(object, varName, NewVariableValue);
-		cLog("set: " + Std.string(object) + "." + varName + " is now " + NewVariableValue);
+		ConsoleUtil.log("set: " + Std.string(object) + "." + varName + " is now " + NewVariableValue);
 		
 		if (WatchName != null) {
 			FlxG.watch.add(object, varName, WatchName);
@@ -264,7 +239,7 @@ class ConsoleCommands
 			
 			if (!Reflect.isObject(object)) 
 			{
-				FlxG.log.error("call: '" + Std.string(object) + "' is not a valid Object to call function from");
+				FlxG.log.error("call: '" + FlxStringUtil.getClassName(object) + "' is not a valid Object to call");
 				return;
 			}
 			
@@ -282,7 +257,7 @@ class ConsoleCommands
 				}
 				catch (e:Dynamic) 
 				{
-					FlxG.log.error("call: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "' to call function from");
+					FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj) + " does not have a field '" + tempVarName + "' to call");
 					return;
 				}
 				
@@ -293,19 +268,20 @@ class ConsoleCommands
 			
 			if (func == null)
 			{
-				FlxG.log.error("call: " + Std.string(tempObj) + " does not have a method '" + searchArr[l] + "' to call");
+				FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj) + " does not have a method '" + searchArr[l] + "' to call");
 				return;
 			}
 		}
 		
-		if (Reflect.isFunction(func)) {
-			var success:Bool = _console.callFunction(func, Params);
+		if (Reflect.isFunction(func)) 
+		{
+			var success:Bool = ConsoleUtil.callFunction(func, Params);
 			
 			if (Params.length == 0 && success) {
-				cLog("call: Called '" + FunctionAlias + "'");
+				ConsoleUtil.log("call: Called '" + FunctionAlias + "()'");
 			}
 			else if (success) {
-				cLog("call: Called '" + FunctionAlias + "' with params " + Params);
+				ConsoleUtil.log("call: Called '" + FunctionAlias + "()' with params " + Params);
 			}
 		}
 		else {
@@ -315,86 +291,42 @@ class ConsoleCommands
 	
 	inline private function listObjects():Void
 	{
-		cLog("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
+		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
 	}
 	
 	inline private function listFunctions():Void
 	{
-		cLog("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
+		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
 	}
 	
-	/**
-	 * Helper functions
-	 */
-	
-	private function attemptToCreateInstance(ClassName:String, _Type:Dynamic, CommandName:String, ?Params:Array<String>):Dynamic
+	private function watchMouse():Void
 	{
-		if (Params == null) {
-			Params = [];
-		}
-		
-		var obj:Dynamic = Type.resolveClass(ClassName);
-		if (!Reflect.isObject(obj)) {
-			FlxG.log.error(CommandName + ": '" + ClassName + "' is not a valid class name. Try passing the full class path. Also make sure the class is being compiled.");
-			return null;
-		}
-		
-		var instance:Dynamic = Type.createInstance(obj, Params);
-		
-		if (!Std.is(instance, _Type)) {
-			FlxG.log.error(CommandName + ": '" + ClassName + "' is not a " + Type.getClassName(_Type));
-			return null;
-		}
-		
-		return instance;
-	}
-	
-	private function resolveObjectAndVariable(ObjectAndVariable:String, CommandName:String):Array<Dynamic>
-	{
-		var searchArr:Array<String> = ObjectAndVariable.split(".");
-		
-		// In case there's not dot in the string
-		if (searchArr[0].length == ObjectAndVariable.length) {
-			FlxG.log.error(CommandName + ": '" + ObjectAndVariable + "' does not refer to an object's field");
-			return null;
-		}
-		
-		var object:Dynamic = _console.registeredObjects.get(searchArr.shift());
-		var variableName:String = searchArr.join(".");
-		
-		if (!Reflect.isObject(object)) {
-			FlxG.log.error(CommandName + ": '" + Std.string(object) + "' is not a valid Object");
-			return null;
-		}
-		
-		// Searching for property...
-		var l:Int = searchArr.length;
-		var tempObj:Dynamic = object;
-		var tempVarName:String = "";
-		for (i in 0...l)
+		if (!_watchingMouse) 
 		{
-			tempVarName = searchArr[i];
-			
-			try 
-			{
-				if (i < (l - 1))
-				{
-					tempObj = Reflect.getProperty(tempObj, tempVarName);
-				}
-			}
-			catch (e:Dynamic) 
-			{
-				FlxG.log.error(CommandName + ": " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
-				return null;
-			}
+			FlxG.watch.addMouse();
+			ConsoleUtil.log("watchMouse: Mouse position added to watch window");
+		}
+		else 
+		{
+			FlxG.watch.removeMouse();
+			ConsoleUtil.log("watchMouse: Mouse position removed from watch window");
 		}
 		
-		return [tempObj, tempVarName];
+		_watchingMouse = !_watchingMouse;
 	}
 	
-	inline private function cLog(Text:Dynamic):Void
+	private function pause():Void
 	{
-		FlxG.log.advanced([Text], LogStyle.CONSOLE);
+		if (FlxG.vcr.paused) 
+		{
+			FlxG.vcr.resume();
+			ConsoleUtil.log("pause: Game unpaused");
+		}
+		else 
+		{
+			FlxG.vcr.pause();
+			ConsoleUtil.log("pause: Game paused");
+		}
 	}
 	#end
 }

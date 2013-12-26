@@ -214,7 +214,7 @@ class Console extends Window
 	{
 		var args:Array<Dynamic> = StringTools.rtrim(_input.text).split(" ");
 		var alias:String = args.shift();
-		var command:Command = findCommand(alias);
+		var command:Command = ConsoleUtil.findCommand(alias, commands);
 		
 		// Only if the command exists
 		if (command != null) 
@@ -257,7 +257,7 @@ class Console extends Window
 					args = args.slice(0, command.paramCutoff);
 				}
 				
-				callFunction(func, args); 
+				ConsoleUtil.callFunction(func, args); 
 				
 				// Skip to the next step if the game is paused to see the effects of the command
 				#if flash
@@ -274,69 +274,6 @@ class Console extends Window
 		else 
 		{
 			FlxG.log.error("Console: Invalid command: '" + alias + "'");
-		}
-	}
-	
-	/**
-	 * Searches for the Command typedef for a given Alias.
-	 * 
-	 * @param	Alias	The Alias to search for.
-	 * @return	The Command typdef - null if none was found.
-	 */
-	public function findCommand(Alias:String):Command
-	{
-		for (i in 0...commands.length)
-		{
-			if (FlxArrayUtil.indexOf(commands[i].aliases, Alias) != -1) {
-				return commands[i];
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Safely calls a function via Reflection with an array of dynamic arguments. Prevents a crash from happening
-	 * if there are too many Arguments (the additional ones are removed and the function is called anyway) or too few
-	 * 
-	 * @param	Function	The reference to the function to call.
-	 * @param	Args		An array of arguments.
-	 * @return	Whether or not it was possible to safely call the function.
-	 */
-	public function callFunction(Function:Dynamic, Args:Array<Dynamic>):Bool
-	{
-		try
-		{
-			Reflect.callMethod(null, Function, Args);
-			return true;
-		}
-		catch (e:ArgumentError)
-		{
-			if (e.errorID == 1063)
-			{
-				/* Retrieve the number of expected arguments from the error message
-				The first 4 digits in the message are the error-type (1063), 5th is 
-				the one we are looking for */
-				var expected:Int = Std.parseInt(FlxStringUtil.filterDigits(e.message).charAt(4));
-				
-				// We can deal with too many parameters...
-				if (expected < Args.length) 
-				{
-					// Shorten args accordingly
-					var shortenedArgs:Array<Dynamic> = Args.slice(0, expected);
-					// Try again
-					Reflect.callMethod(null, Function, shortenedArgs);
-				}
-				// ...but not with too few
-				else 
-				{
-					FlxG.log.error("Console: Invalid number or parameters: " + expected + " expected, " + Args.length + " passed");
-					return false;
-				}
-				
-				return true;
-			}
-			
-			return false;
 		}
 	}
 	
