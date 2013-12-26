@@ -47,7 +47,7 @@ class FlxTrailArea extends FlxSprite {
 	/**
 	 * Stores all sprites that have a trail.
 	 */
-	private var _group:FlxSpriteGroup;
+	public var group:FlxSpriteGroup;
 	/**
 	 * The bitmap used internally for trail rendering.
 	 */
@@ -69,8 +69,7 @@ class FlxTrailArea extends FlxSprite {
 	public function new(Width:Int, Height:Int, AlphaFactor:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, ?TrailBlendMode:BlendMode = null, Smoothing:Bool = false) {
 		super();
 		
-		//makeGraphic(Width, Height, 0x00000000);
-		_group = new FlxSpriteGroup();
+		group = new FlxSpriteGroup();
 		_renderBitmap = new BitmapData(Width, Height, 0x00000000);
 		
 		//Sync variables
@@ -83,7 +82,7 @@ class FlxTrailArea extends FlxSprite {
 	
 	override public function destroy():Void 
 	{
-		_group = null;
+		group = null;
 		_renderBitmap = null;
 		
 		super.destroy();
@@ -102,19 +101,19 @@ class FlxTrailArea extends FlxSprite {
 			
 			//Copy the graphics of all sprites on the renderBitmap
 			var i:Int = 0;
-			while (i < _group.members.length) {
-				if (_group.members[i].exists) {
+			while (i < group.members.length) {
+				if (group.members[i].exists) {
 					if (simpleRender) {
-							_renderBitmap.copyPixels(_group.members[i].pixels, new Rectangle(0, 0, _group.members[i].frameWidth, _group.members[i].frameHeight), new Point(_group.members[i].x - x, _group.members[i].y - y), null, null, true);
+							_renderBitmap.copyPixels(group.members[i].pixels, new Rectangle(0, 0, group.members[i].frameWidth, group.members[i].frameHeight), new Point(group.members[i].x - x, group.members[i].y - y), null, null, true);
 					}
 					else {
 						var matrix:Matrix = new Matrix();
-						matrix.scale(_group.members[i].scale.x, _group.members[i].scale.y);
-						matrix.translate(-(_group.members[i].frameWidth / 2), -(_group.members[i].frameHeight / 2)); 
-						matrix.rotate(-_group.members[i].angle * FlxAngle.TO_RAD);
-						matrix.translate((_group.members[i].frameWidth / 2), (_group.members[i].frameHeight / 2)); 
-						matrix.translate(_group.members[i].x - x, _group.members[i].y - y);
-						_renderBitmap.draw(_group.members[i].pixels, matrix, _group.members[i].colorTransform, blendMode, null, smoothing);
+						matrix.scale(group.members[i].scale.x, group.members[i].scale.y);
+						matrix.translate(-(group.members[i].frameWidth / 2), -(group.members[i].frameHeight / 2)); 
+						matrix.rotate(-group.members[i].angle * FlxAngle.TO_RAD);
+						matrix.translate((group.members[i].frameWidth / 2), (group.members[i].frameHeight / 2)); 
+						matrix.translate(group.members[i].x - x, group.members[i].y - y);
+						_renderBitmap.draw(group.members[i].pixels, matrix, group.members[i].colorTransform, blendMode, null, smoothing);
 					}
 					
 				}
@@ -129,7 +128,7 @@ class FlxTrailArea extends FlxSprite {
 	/**
 	 * Wipes the trail area
 	 */
-	public function clear():Void {
+	public function resetTrail():Void {
 		_renderBitmap.fillRect(new Rectangle(0, 0, _renderBitmap.width, _renderBitmap.height), 0x00000000);
 	}
 	
@@ -137,8 +136,8 @@ class FlxTrailArea extends FlxSprite {
 	 * Adds a <code>FlxSprite</code> to the <code>FlxTrailArea</code>
 	 * @param	Sprite		The sprite to add
 	 */
-	public function add(Sprite:FlxSprite):Void {
-		_group.add(Sprite);
+	public function add(Sprite:FlxSprite):FlxSprite {
+		return group.add(Sprite);
 	}
 	
 	
