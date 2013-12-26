@@ -83,7 +83,7 @@ class FlxSprite extends FlxObject
 	public var origin(default, set):FlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
-	 * changing a sprite's <code>width</code> or <code>height</code>.
+	 * changing a sprite's <code>width</code>, <code>height</code> or <code>scale</code>.
 	 */
 	public var offset(default, set):FlxPoint;
 	/**
@@ -637,9 +637,50 @@ class FlxSprite extends FlxObject
 		height = frameHeight;
 	}
 	
+	/**
+	 * Sets the sprite's origin to its center - useful after adjusting 
+	 * <code>scale</code> to make sure rotations work as expected.
+	 */
 	inline public function setOriginToCenter():Void
 	{
 		_origin.set(frameWidth * 0.5, frameHeight * 0.5);
+	}
+	
+	/**
+	 * Helper function to set the graphic's dimenions by using scale, allowing you to keep the current aspect ratio
+	 * should one of the Integers be <= 0. Also updates the sprite's hitbox, offset and origin for you by default!
+	 * 
+	 * @param	Width			How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
+	 * @param	Height			How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
+	 * @param	UpdateHitbox	Whether or not to update the hitbox dimensions, offset and origin accordingly.
+	 */
+	public function setGraphicDimensions(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
+	{
+		if (Width <= 0 && Height <= 0) {
+			return;
+		}
+		
+		var newScaleX:Float = Width / frameWidth;
+		var newScaleY:Float = Height / frameHeight;
+		scale.set(newScaleX, newScaleY);
+		
+		if (Width <= 0) {
+			scale.x = newScaleY;
+		}
+		else if (Height <= 0) {
+			scale.y = newScaleX;
+		}
+		
+		if (UpdateHitbox) 
+		{
+			var newWidth:Float = scale.x * frameWidth;
+			var newHeight:Float = scale.y * frameHeight;
+			
+			width = newWidth;
+			height = newHeight;
+			offset.set( - ((newWidth - frameWidth) * 0.5), - ((newHeight - frameHeight) * 0.5));
+			setOriginToCenter();
+		}	
 	}
 	
 	/**
