@@ -87,8 +87,8 @@ class FlxSprite extends FlxObject
 	 */
 	public var offset(default, set):FlxPoint;
 	/**
-	 * Change the size of your sprite's graphic. NOTE: Scale doesn't currently affect collisions automatically, you will need to adjust the width, 
-	 * height and offset manually. WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
+	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use <code>updateHitbox</code> for that
+	 * (or <code>setGraphicDimensions()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
 	 */
 	public var scale(default, set):FlxPoint;
 	/**
@@ -647,7 +647,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Helper function to set the graphic's dimenions by using scale, allowing you to keep the current aspect ratio
+	 * Helper function to set the graphic's dimensions by using scale, allowing you to keep the current aspect ratio
 	 * should one of the Integers be <= 0. Also updates the sprite's hitbox, offset and origin for you by default!
 	 * 
 	 * @param	Width			How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
@@ -673,14 +673,23 @@ class FlxSprite extends FlxObject
 		
 		if (UpdateHitbox) 
 		{
-			var newWidth:Float = scale.x * frameWidth;
-			var newHeight:Float = scale.y * frameHeight;
-			
-			width = newWidth;
-			height = newHeight;
-			offset.set( - ((newWidth - frameWidth) * 0.5), - ((newHeight - frameHeight) * 0.5));
-			setOriginToCenter();
+			updateHitbox();
 		}	
+	}
+	
+	/**
+	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
+	 * Also calls setOriginToCenter(). Called by setGraphicDimensions().
+	 */
+	public function updateHitbox():Void
+	{
+		var newWidth:Float = scale.x * frameWidth;
+		var newHeight:Float = scale.y * frameHeight;
+		
+		width = newWidth;
+		height = newHeight;
+		offset.set( - ((newWidth - frameWidth) * 0.5), - ((newHeight - frameHeight) * 0.5));
+		setOriginToCenter();
 	}
 	
 	/**
