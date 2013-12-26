@@ -215,11 +215,12 @@ class Console extends Window
 		var args:Array<Dynamic> = StringTools.rtrim(_input.text).split(" ");
 		var alias:String = args.shift();
 		var command:Command = findCommand(alias);
-		var func:Dynamic = command.processFunction;
 		
 		// Only if the command exists
 		if (command != null) 
 		{
+			var func:Dynamic = command.processFunction;
+			
 			#if neko
 			/**
 			 * Ugly fix to prevent a crash with optional params on neko - requires padding with nulls. 
