@@ -29,10 +29,10 @@ class FlxTrailAreaTest extends FlxSprite {
 	public var simpleRender:Bool;
 	
 	/**
-	 * Specifies the blendMode for the trails
-	 * Ignored in simple render mode
-	 * Not sure if this really does anything
-	 */
+         * Specifies the blendMode for the trails
+         * Ignored in simple render mode
+         * Only works on the flash target
+         */
 	public var blendMode:BlendMode;
 	
 	/**
@@ -113,12 +113,11 @@ class FlxTrailAreaTest extends FlxSprite {
 		group = new FlxSpriteGroup();
 		_renderBitmap = new BitmapData(Width, Height, 0x00000000);
 		
+		//Sync variables
 		delay = Delay;
 		simpleRender = SimpleRender;
 		blendMode = TrailBlendMode;
 		smoothing = Smoothing;
-		
-		//Sync variables
 		alphaMultiplier = AlphaMultiplier;
 		
 	}
@@ -138,7 +137,7 @@ class FlxTrailAreaTest extends FlxSprite {
 		
 		if (_counter >= delay) {
 			_counter = 0;
-			//Fade out the bitmap
+			//Color transform bitmap
 			var cTrans:ColorTransform = new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
 			_renderBitmap.colorTransform(new Rectangle(0, 0, _renderBitmap.width, _renderBitmap.height), cTrans);
 			
