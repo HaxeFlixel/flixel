@@ -25,12 +25,14 @@ class FlxBitmapUtil
 			if (sourceRect.x < 0)	
 			{
 				destPoint.x = destPoint.x - sourceRect.x;
+				sourceRect.width = sourceRect.width + sourceRect.x;
 				sourceRect.x = 0;
 			}
 			
 			if (sourceRect.y < 0)	
 			{
 				destPoint.y = destPoint.y - sourceRect.y;
+				sourceRect.height = sourceRect.height + sourceRect.y;
 				sourceRect.y = 0;
 			}
 			
