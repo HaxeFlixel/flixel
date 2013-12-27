@@ -65,6 +65,9 @@ class FlxBitmapUtil
 		var destX:Int = Math.round(destPoint.x);
 		var destY:Int = Math.round(destPoint.y);
 		
+		var currX:Int = destX;
+		var currY:Int = destY;
+		
 		var sourceColor:Int;
 		var destColor:Int;
 		
@@ -91,8 +94,14 @@ class FlxBitmapUtil
 		{
 			for (j in 0...height)
 			{
+				sourceX = startSourceX + i;
+				sourceY = startSourceY + j;
+				
+				currX = destX + i;
+				currY = destY + j;
+				
 				sourceColor = sourceBitmapData.getPixel32(sourceX, sourceY);
-				destColor = destBitmapData.getPixel32(destX, destY);
+				destColor = destBitmapData.getPixel32(currX, currY);
 				
 				// get color components
 				sourceRed = FlxColorUtil.getRed(sourceColor);
@@ -115,14 +124,8 @@ class FlxBitmapUtil
 				resultColor = FlxColorUtil.getColor32(resultAlpha, resultRed, resultGreen, resultBlue);
 				
 				// set merged color for current pixel
-				destBitmapData.setPixel32(destX, destY, resultColor);
-				
-				sourceY++;
-				destY++;
+				destBitmapData.setPixel32(currX, currY, resultColor);
 			}
-			
-			sourceX++;
-			destX++;
 		}
 		#end
 	}
