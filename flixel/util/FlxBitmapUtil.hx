@@ -1,9 +1,137 @@
 package flixel.util;
 
 import flash.display.BitmapData;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 
 class FlxBitmapUtil
 {
+	public static function merge(sourceBitmapData:BitmapData, sourceRect:Rectangle, destBitmapData:BitmapData, destPoint:Point, redMultiplier:UInt, greenMultiplier:UInt, blueMultiplier:UInt, alphaMultiplier:UInt):Void
+	{
+		#if flash
+		destBitmapData.merge(sourceBitmapData, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
+		#else
+		// need to cut off sourceRect if it too big...
+		while (	sourceRect.x + sourceRect.width > sourceBitmapData.width ||
+				sourceRect.y + sourceRect.height > sourceBitmapData.height ||
+				sourceRect.x < 0 ||
+				sourceRect.y < 0 ||
+				destPoint.x < 0 ||
+				destPoint.y < 0 )
+		{
+			if (sourceRect.x + sourceRect.width > sourceBitmapData.width)	sourceRect.width = sourceBitmapData.width - sourceRect.x;
+			if (sourceRect.y + sourceRect.height > sourceBitmapData.height)	sourceRect.height = sourceBitmapData.height - sourceRect.y;
+			
+			if (sourceRect.x < 0)	
+			{
+				destPoint.x = destPoint.x - sourceRect.x;
+				sourceRect.x = 0;
+			}
+			
+			if (sourceRect.y < 0)	
+			{
+				destPoint.y = destPoint.y - sourceRect.y;
+				sourceRect.y = 0;
+			}
+			
+			if (destPoint.x >= destBitmapData.width || destPoint.y >= destBitmapData.height)	return;
+			
+			if (destPoint.x < 0)
+			{
+				sourceRect.x = sourceRect.x - destPoint.x;
+				sourceRect.width = sourceRect.width + destPoint.x;
+				destPoint.x = 0;
+			}
+			
+			if (destPoint.y < 0)
+			{
+				sourceRect.y = sourceRect.y - destPoint.y;
+				sourceRect.height = sourceRect.height + destPoint.y;
+				destPoint.y = 0;
+			}
+		}
+		
+		var startSourceX:Int = Math.round(sourceRect.x);
+		var startSourceY:Int = Math.round(sourceRect.y);
+		var endSourceX:Int = Math.round(sourceRect.x + sourceRect.width); 
+		var endSourceY:Int = Math.round(sourceRect.y + sourceRect.height); 
+		
+		var width:Int = Math.round(sourceRect.width);
+		var height:Int = Math.round(sourceRect.height); 
+		
+		var sourceX:Int = startSourceX;
+		var sourceY:Int = startSourceY;
+		
+		var destX:Int = Math.round(destPoint.x);
+		var destY:Int = Math.round(destPoint.y);
+		
+		var sourceColor:Int;
+		var destColor:Int;
+		
+		var sourceRed:Int;
+		var sourceGreen:Int;
+		var sourceBlue:Int;
+		var sourceAlpha:Int;
+		
+		var destRed:Int;
+		var destGreen:Int;
+		var destBlue:Int;
+		var destAlpha:Int;
+		
+		var resultRed:Int;
+		var resultGreen:Int;
+		var resultBlue:Int;
+		var resultAlpha:Int;
+		
+		var resultColor:Int = 0x0;
+		
+		// iterate througn pixels using following rule:
+		// new redDest = [(redSrc * redMultiplier) + (redDest * (256 - redMultiplier))] / 256; 
+		for (i in 0...width)
+		{
+			for (j in 0...height)
+			{
+				sourceColor = sourceBitmapData.getPixel32(sourceX, sourceY);
+				destColor = destBitmapData.getPixel32(destX, destY);
+				
+				// get color components
+				sourceRed = FlxColorUtil.getRed(sourceColor);
+				sourceGreen = FlxColorUtil.getGreen(sourceColor);
+				sourceBlue = FlxColorUtil.getBlue(sourceColor);
+				sourceAlpha = FlxColorUtil.getAlpha(sourceColor);
+				
+				destRed = FlxColorUtil.getRed(destColor);
+				destGreen = FlxColorUtil.getGreen(destColor);
+				destBlue = FlxColorUtil.getBlue(destColor);
+				destAlpha = FlxColorUtil.getAlpha(destColor);
+				
+				// calculate merged color components
+				resultRed = mergeColorComponent(sourceRed, destRed, redMultiplier);
+				resultGreen = mergeColorComponent(sourceGreen, destGreen, greenMultiplier);
+				resultBlue = mergeColorComponent(sourceBlue, destBlue, blueMultiplier);
+				resultAlpha = mergeColorComponent(sourceAlpha, destAlpha, alphaMultiplier);
+				
+				// calculate merged color
+				resultColor = FlxColorUtil.getColor32(resultAlpha, resultRed, resultGreen, resultBlue);
+				
+				// set merged color for current pixel
+				destBitmapData.setPixel32(destX, destY, resultColor);
+				
+				sourceY++;
+				destY++;
+			}
+			
+			sourceX++;
+			destX++;
+		}
+		#end
+	}
+	
+	inline static private function mergeColorComponent(source:Int, dest:Int, multiplier:UInt):Int
+	{
+		return Std.int(((source * multiplier) + (dest * (256 - multiplier))) / 256);
+	}
+	
 	public static function compare(Bitmap1:BitmapData,  Bitmap2:BitmapData):Dynamic
 	{
 		#if flash
