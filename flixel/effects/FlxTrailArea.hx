@@ -1,4 +1,4 @@
-package flixel.effects;
+package ;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
@@ -16,11 +16,7 @@ import flixel.group.FlxSpriteGroup;
  * Then add all sprites that should have a trail effect via the add function.
  * @author KeyMaster
  */
-class FlxTrailArea extends FlxSprite {
-	/**
-	 * The factor by which the area's alpha is multiplied by every update.
-	 */
-	public var alphaFactor:Float;
+class FlxTrailAreaTest extends FlxSprite {
 	/**
 	 * How often the trail is updated
 	 */
@@ -35,7 +31,7 @@ class FlxTrailArea extends FlxSprite {
 	/**
 	 * Specifies the blendMode for the trails
 	 * Ignored in simple render mode
-	 * Only works on the flash target
+	 * Not sure if this really does anything
 	 */
 	public var blendMode:BlendMode;
 	
@@ -44,10 +40,52 @@ class FlxTrailArea extends FlxSprite {
 	 * Ignored in simple render mode
 	 */
 	public var smoothing:Bool;
+	
 	/**
 	 * Stores all sprites that have a trail.
 	 */
 	public var group:FlxSpriteGroup;
+	
+	/**
+	 * The bitmap's red value is multiplied by this every update
+	 */
+	public var redMultiplier:Float = 1;
+	
+	/**
+	 * The bitmap's green value is multiplied by this every update
+	 */
+	public var greenMultiplier:Float = 1;
+	
+	/**
+	 * The bitmap's blue value is multiplied by this every update
+	 */
+	public var blueMultiplier:Float = 1;
+	
+	/**
+	 * The bitmap's alpha value is multiplied by this every update
+	 */
+	public var alphaMultiplier:Float;
+	
+	/**
+	 * The bitmap's red value is offsettet by this every update
+	 */
+	public var redOffset:Float = 0;
+	
+	/**
+	 * The bitmap's green value is offsettet by this every update
+	 */
+	public var greenOffset:Float = 0;
+	
+	/**
+	 * The bitmap's blue value is offsettet by this every update
+	 */
+	public var blueOffset:Float = 0;
+	
+	/**
+	 * The bitmap's alpha value is offsettet by this every update
+	 */
+	public var alphaOffset:Float = 0;
+	
 	/**
 	 * The bitmap used internally for trail rendering.
 	 */
@@ -63,21 +101,36 @@ class FlxTrailArea extends FlxSprite {
 	 * 
 	 * @param	Width		The width of the area
 	 * @param	Height		The height of the area
-	 * @param	AlphaFactor	How fast the alpha gets decreased
+	 * @param	AlphaMultiplier	How fast the alpha gets decreased
 	 * @param	Delay		How often to update the trail. 0 updates every frame.
+	 * 
 	 */
-	public function new(Width:Int, Height:Int, AlphaFactor:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, , Smoothing:Bool = false, ?TrailBlendMode:BlendMode = null) {
+	
+	 /**
+	  * Creates a new <code>FlxTrailArea</code>
+	  * 
+	  * @param	Width		The width of the area
+	  * @param	Height		The height of the area
+	  * @param	AlphaMultiplier By what the area's alpha is multiplied per update
+	  * @param	Delay		How often to update the trail. 0 updates every frame
+	  * @param	SimpleRender If simple rendering should be used. Ignores all sprite transformations
+	  * @param	Smoothing	If sprites should be smoothed when drawn to the area. Ignored when simple rendering is on
+	  * @param	?TrailBlendMode The blend mode used for the area. Only works in flash
+	  */
+	public function new(Width:Int, Height:Int, AlphaMultiplier:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, Smoothing:Bool = false, ?TrailBlendMode:BlendMode = null) {
 		super();
 		
 		group = new FlxSpriteGroup();
 		_renderBitmap = new BitmapData(Width, Height, 0x00000000);
 		
-		//Sync variables
-		alphaFactor = AlphaFactor;
 		delay = Delay;
 		simpleRender = SimpleRender;
 		blendMode = TrailBlendMode;
 		smoothing = Smoothing;
+		
+		//Sync variables
+		alphaMultiplier = AlphaMultiplier;
+		
 	}
 	
 	override public function destroy():Void 
@@ -96,7 +149,7 @@ class FlxTrailArea extends FlxSprite {
 		if (_counter >= delay) {
 			_counter = 0;
 			//Fade out the bitmap
-			var cTrans:ColorTransform = new ColorTransform(1, 1, 1, alphaFactor);
+			var cTrans:ColorTransform = new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
 			_renderBitmap.colorTransform(new Rectangle(0, 0, _renderBitmap.width, _renderBitmap.height), cTrans);
 			
 			//Copy the graphics of all sprites on the renderBitmap
