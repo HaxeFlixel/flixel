@@ -75,8 +75,8 @@ class FlxArrayUtil
 		var object:Dynamic;
 		while (i < HowManyTimes)
 		{
-			index1 = Std.int(FlxRandom.float() * Objects.length);
-			index2 = Std.int(FlxRandom.float() * Objects.length);
+			index1 = FlxRandom.intRanged( 0, Objects.length - 1 );
+			index2 = FlxRandom.intRanged( 0, Objects.length - 1 );
 			object = Objects[index2];
 			Objects[index2] = Objects[index1];
 			Objects[index1] = object;
@@ -109,7 +109,7 @@ class FlxArrayUtil
 			}
 			if (l > 0)
 			{
-				return Objects[StartIndex + Std.int(FlxRandom.float() * l)];
+				return Objects[ FlxRandom.intRanged( StartIndex, StartIndex + l - 1 ) ];
 			}
 		}
 		return null;

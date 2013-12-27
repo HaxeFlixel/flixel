@@ -1,7 +1,7 @@
 package flixel.util;
 
 /**
- * A class containing a set of functions for randomn generation.
+ * A class containing a set of functions for random generation.
  */
 class FlxRandom
 {
@@ -63,7 +63,7 @@ class FlxRandom
 	/**
 	 * Returns a pseudorandom number between 0 and 33,554,429, inclusive.
 	 */
-	static public function int():Int
+	inline static public function int():Int
 	{
 		return generate();
 	}
@@ -242,11 +242,12 @@ class FlxRandom
 	}
 	
 	/**
-	 * Internal method to quickly generate a number between 1 and 2,147,483,647 inclusive. Used only by other functions of this class.
+	 * Internal method to quickly generate a number between 0 and 33,554,429 inclusive. Used only by other functions of this class.
+	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
 	 * 
 	 * @return	A new pseudorandom number.
 	 */
-	static private function generate():Int
+	inline static private function generate():Int
 	{
 		return internalSeed = ( internalSeed * MULTIPLIER + INCREMENT ) % MODULUS + MODULUS;
 	}
