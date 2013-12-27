@@ -1,4 +1,4 @@
-package ;
+package flixel.effects;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
@@ -95,16 +95,6 @@ class FlxTrailAreaTest extends FlxSprite {
 	 * Counts the frames passed.
 	 */
 	private var _counter:Int = 0;
-	
-	/**
-	 * Creates a new <code>FlxTrailArea</code>
-	 * 
-	 * @param	Width		The width of the area
-	 * @param	Height		The height of the area
-	 * @param	AlphaMultiplier	How fast the alpha gets decreased
-	 * @param	Delay		How often to update the trail. 0 updates every frame.
-	 * 
-	 */
 	
 	 /**
 	  * Creates a new <code>FlxTrailArea</code>
