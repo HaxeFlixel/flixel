@@ -186,8 +186,9 @@ class FlxTrailArea extends FlxSprite
 	}
 	
 	/**
-	 * Adds a <code>FlxSprite</code> to the <code>FlxTrailArea</code>
-	 * @param	Sprite		The sprite to add
+	 * Adds a <code>FlxSprite</code> to the <code>FlxTrailArea</code>. Not an <code>add()</code> in the traditional sense,
+	 * this just enables the trail effect for the sprite. You still need to add it to your state for it to update!
+	 * @param	Sprite		The sprite to enable the trail effect for
 	 * @return 	The FlxSprite, useful for chaining stuff together
 	 */
 	inline public function add(Sprite:FlxSprite):FlxSprite 
