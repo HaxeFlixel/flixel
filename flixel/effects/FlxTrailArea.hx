@@ -10,6 +10,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.util.FlxAngle;
+import flixel.util.FlxColor;
 
 /**
  * This provides an area in which the added sprites have a trail effect. Usage: Create the FlxTrailArea and 
@@ -99,6 +100,8 @@ class FlxTrailArea extends FlxSprite
 	 /**
 	  * Creates a new <code>FlxTrailArea</code>, in which all added sprites get a trail effect.
 	  * 
+	  * @param	X				x position of the trail area
+	  * @param	Y				y position of the trail area
 	  * @param	Width			The width of the area - defaults to <code>FlxG.width</code>
 	  * @param	Height			The height of the area - defaults to <code>FlxG.height</code>
 	  * @param	AlphaMultiplier By what the area's alpha is multiplied per update
@@ -107,9 +110,9 @@ class FlxTrailArea extends FlxSprite
 	  * @param	Smoothing		If sprites should be smoothed when drawn to the area. Ignored when simple rendering is on
 	  * @param	?TrailBlendMode The blend mode used for the area. Only works in flash
 	  */
-	public function new(Width:Int = 0, Height:Int = 0, AlphaMultiplier:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, Smoothing:Bool = false, ?TrailBlendMode:BlendMode) 
+	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, AlphaMultiplier:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, Smoothing:Bool = false, ?TrailBlendMode:BlendMode) 
 	{
-		super();
+		super(X, Y);
 		
 		if (Width <= 0) {
 			Width = FlxG.width;
@@ -119,7 +122,7 @@ class FlxTrailArea extends FlxSprite
 		}
 		
 		group = new FlxTypedGroup<FlxSprite>();
-		_renderBitmap = new BitmapData(Width, Height, 0x00000000);
+		_renderBitmap = new BitmapData(Width, Height, true, FlxColor.TRANSPARENT);
 		
 		//Sync variables
 		delay = Delay;
@@ -145,7 +148,8 @@ class FlxTrailArea extends FlxSprite
 		//Count the frame
 		_counter++;
 		
-		if (_counter >= delay) {
+		if (_counter >= delay) 
+		{
 			_counter = 0;
 			//Color transform bitmap
 			var cTrans:ColorTransform = new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
@@ -153,12 +157,16 @@ class FlxTrailArea extends FlxSprite
 			
 			//Copy the graphics of all sprites on the renderBitmap
 			var i:Int = 0;
-			while (i < group.members.length) {
-				if (group.members[i].exists) {
-					if (simpleRender) {
-							_renderBitmap.copyPixels(group.members[i].pixels, new Rectangle(0, 0, group.members[i].frameWidth, group.members[i].frameHeight), new Point(group.members[i].x - x, group.members[i].y - y), null, null, true);
+			while (i < group.members.length) 
+			{
+				if (group.members[i].exists) 
+				{
+					if (simpleRender) 
+					{
+						_renderBitmap.copyPixels(group.members[i].pixels, new Rectangle(0, 0, group.members[i].frameWidth, group.members[i].frameHeight), new Point(group.members[i].x - x, group.members[i].y - y), null, null, true);
 					}
-					else {
+					else 
+					{
 						var matrix:Matrix = new Matrix();
 						matrix.scale(group.members[i].scale.x, group.members[i].scale.y);
 						matrix.translate(-(group.members[i].frameWidth / 2), -(group.members[i].frameHeight / 2)); 
