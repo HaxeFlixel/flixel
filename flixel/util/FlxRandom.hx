@@ -1,228 +1,253 @@
 package flixel.util;
 
 /**
- * A class containing a set of functions for randomnly 
- * generating numbers or other random things.
+ * A class containing a set of functions for randomn generation.
  */
 class FlxRandom
 {
 	/**
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
+	 * If you want, you can set the seed with an integer between 1 and 2,147,483,647 inclusive.
+	 * However, FlxG automatically sets this with a new random seed when starting your game.
 	 */
-	static public var globalSeed:Float;
-	/**
-	 * Internal helper for <code>FlxRandom.int()</code>
-	 */
-	static private var intHelper:Int = 0;
-	/**
-	 * Maximum value returned by <code>FlxRandom.intRanged</code> and <code>FlxRandom.floatRanged</code> by default.
-	 */
-	static public inline var MAX_RANGE:Int = 0xffffff;
+	static public var globalSeed(default, set):Int = 1;
 	
 	/**
-	 * Generates a small random number between 0 and 65535 very quickly
+	 * Internal function to update the internal seed whenever the global seed is reset, and keep the global seed's value in range.
+	 */
+	static private function set_globalSeed( NewSeed:Int ):Int
+	{
+		if ( NewSeed < 1 )
+		{
+			NewSeed = 1;
+		}
+		
+		if ( NewSeed > MODULUS )
+		{
+			NewSeed = MODULUS;
+		}
+		
+		internalSeed = NewSeed;
+		globalSeed = NewSeed;
+		
+		return globalSeed;
+	}
+	
+	/**
+	 * Internal seed used to generate new random numbers.
+	 */
+	static private var internalSeed:Int = 1;
+	
+	/**
+	 * Constants used in the pseudorandom number generation equation.
+	 * These are identical to the constants for Microsoft Visual Basic 6 as they are well-tested, produce a wide period of results, and can be used to produce only positive numbers without exceeding 31 bits.
 	 * 
-	 * Generates a small random number between 0 and 65535 using an extremely fast cyclical generator, 
-	 * with an even spread of numbers. After the 65536th call to this function the value resets.
+	 * @see 	http://en.wikipedia.org/wiki/Linear_congruential_generator
+	 * @see 	http://support.microsoft.com/kb/231847
+	 */
+	inline static private var MULTIPLIER:Int = 1140671485;
+	inline static private var INCREMENT:Int = 12820163;
+	inline static private var MODULUS:Int = 16777216;
+	
+	/**
+	 * Function to easily set the global seed to a new random number. Used primarily by FlxG whenever the game is reset.
+	 * Please note that this function is not deterministic! If you call it in your game, recording may not work.
 	 * 
-	 * @return A pseudo random value between 0 and 65536 inclusive.
+	 * @return	The new global seed.
+	 */
+	static public function resetGlobalSeed():Int
+	{
+		return globalSeed = Std.int( Math.random() * MODULUS );
+	}
+	
+	/**
+	 * Returns a pseudorandom number between 0 and 33,554,429, inclusive.
 	 */
 	static public function int():Int
 	{
-		var result:Int = Std.int(intHelper);
+		return generate();
+	}
+	
+	/**
+	 * Returns a pseudorandom number between 0 and 1, inclusive.
+	 */
+	inline static public function float():Float
+	{
+		return generate() / ( MODULUS + MODULUS );
+	}
+	
+	/**
+	 * Returns a pseudorandom integer between Min and Max, inclusive. Will not return a number in the Excludes array, if provided.
+	 * Please note that large Excludes arrays can slow calculations.
+	 * 
+	 * @param	Min			The minimum value that should be returned. 0 by default.
+	 * @param	Max			The maximum value that should be returned. 33,554,429 by default.
+	 * @param	?Excludes	An optional array of values that should not be returned.
+	 */
+	inline static public function intRanged( Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int> ):Int
+	{
+		var result:Int = 0;
 		
-		result++;
-		result *= 75;
-		result %= 65537;
-		result--;
-		
-		intHelper++;
-		
-		if (intHelper == 65536)
+		if ( Min == Max )
 		{
-			intHelper = 0;
+			result = Min;
+		}
+		else
+		{
+			// Swap values if reversed
+			
+			if ( Min > Max )
+			{
+				Min = Min + Max;
+				Max = Min - Max;
+				Min = Min - Max;
+			}
+			
+			if ( Excludes == null )
+			{
+				Excludes = [];
+			}
+			
+			do
+			{
+				result = Math.round( Min + float() * ( Max - Min ) );
+			}
+			while ( FlxArrayUtil.indexOf( Excludes, result ) >= 0 );
 		}
 		
 		return result;
 	}
 	
 	/**
-	 * Generate a random integer
+	 * Returns a pseudorandom float value between Min and Max, inclusive. Will not return a number in the Excludes array, if provided.
+	 * Please note that large Excludes arrays can slow calculations.
 	 * 
-	 * If called without the optional min, max arguments rand() returns a peudo-random integer between 0 and MAX_RANGE.
-	 * If you want a random number between 5 and 15, for example, (inclusive) use rand(5, 15)
-	 * Parameter order is insignificant, the return will always be between the lowest and highest value.
-	 * 
-	 * @param 	Min 		The lowest value to return (default: 0)
-	 * @param 	Max 		The highest value to return (default: MAX_RANGE)
-	 * @param 	Excludes 	An Array of integers that will NOT be returned (default: null)
-	 * @return A pseudo-random value between min (or 0) and max (or MAX_RANGE, inclusive)
+	 * @param	Min			The minimum value that should be returned. 0 by default.
+	 * @param	Max			The maximum value that should be returned. 33,554,429 by default.
+	 * @param	?Excludes	An optional array of values that should not be returned.
 	 */
-	static public function intRanged(?Min:Int, ?Max:Int, ?Excludes:Array<Int>):Int
+	inline static public function floatRanged( Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float> ):Float
 	{
-		if (Min == null)
-		{
-			Min = 0;
-		}
+		var result:Float = 0;
 		
-		if (Max == null)
+		if ( Min == Max )
 		{
-			Max = MAX_RANGE;
-		}
-		
-		if (Min == Max)
-		{
-			return Math.floor(Min);
-		}
-		
-		if (Excludes != null)
-		{
-			// Sort the exclusion array
-			Excludes.sort(FlxMath.numericComparison);
-			
-			var result:Int;
-			
-			do {
-				if (Min < Max)
-				{
-					result = Math.floor(Min + (Math.random() * (Max + 1 - Min)));
-				}
-				else
-				{
-					result = Math.floor(Max + (Math.random() * (Min + 1 - Max)));
-				}
-			}
-			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
-			
-			return result;
+			result = Min;
 		}
 		else
 		{
-			// Reverse check
-			if (Min < Max)
+			// Swap values if reversed.
+			
+			if ( Min > Max )
 			{
-				return Math.floor(Min + (Math.random() * (Max + 1 - Min)));
+				Min = Min + Max;
+				Max = Min - Max;
+				Min = Min - Max;
 			}
-			else
+			
+			if ( Excludes == null )
 			{
-				return Math.floor(Max + (Math.random() * (Min + 1 - Max)));
+				Excludes = [];
 			}
-		}
-	}
-	
-	/**
-	 * Generates a random number.  Deterministic, meaning safe
-	 * to use if you want to record replays in random environments.
-	 * @return	A <code>Number</code> between 0 and 1.
-	 */
-	inline static public function float():Float
-	{
-		globalSeed = srand(globalSeed);
-		if (globalSeed <= 0) globalSeed += 1;
-		return globalSeed;
-	}
-	
-	/**
-	 * Generate a random float (number)
-	 * 
-	 * If called without the optional min, max arguments rand() returns a peudo-random float between 0 and MAX_RANGE().
-	 * If you want a random number between 5 and 15, for example, (inclusive) use rand(5, 15)
-	 * Parameter order is insignificant, the return will always be between the lowest and highest value.
-	 * 
-	 * @param 	min 	The lowest value to return (default: 0)
-	 * @param 	max 	The highest value to return (default: MAX_RANGE)
-	 * @return A pseudo random value between min (or 0) and max (or MAX_RANGE, inclusive)
-	 */
-	static public function floatRanged(?min:Float, ?max:Float):Float
-	{
-		if (min == null)
-		{
-			min = 0;
+			
+			do
+			{
+				result = Min + float() * ( Max - Min );
+			}
+			while ( FlxArrayUtil.indexOf( Excludes, result ) >= 0 );
 		}
 		
-		if (max == null)
-		{
-			max = MAX_RANGE;
-		}
-		
-		if (min == max)
-		{
-			return min;
-		}
-		else if (min < max)
-		{
-			return min + (Math.random() * (max - min));
-		}
-		else
-		{
-			return max + (Math.random() * (min - max));
-		}
+		return result;
 	}
 	
 	/**
-	 * Generates a random number based on the seed provided.
-	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
-	 * @return	A <code>Number</code> between 0 and 1.
-	 */
-	inline static public function srand(Seed:Float):Float
-	{
-		return ((69621 * Std.int(Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
-	}
-	
-	/**
-	 * Generate a random boolean result based on the chance value. Returns true or false based on the chance value (default 50%). 
+	 * Returns true or false based on the chance value (default 50%). 
 	 * For example if you wanted a player to have a 30% chance of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
 	 * 
 	 * @param 	Chance 	The chance of receiving the value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return 	Whether the roll passed or not.
 	 */
-	static public function chanceRoll(Chance:Float = 50):Bool
+	inline static public function chanceRoll( Chance:Float = 50 ):Bool
 	{
-		if (Chance <= 0)
+		var result:Bool = false;
+		
+		if ( floatRanged( 0, 100 ) < Chance )
 		{
-			return false;
+			result = true;
 		}
-		else if (Chance >= 100)
-		{
-			return true;
-		}
-		else
-		{
-			if (Math.random() * 100 >= Chance)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
+		
+		return result;
 	}
 	
 	/**
-	 * Randomly returns either a 1 or -1. 
+	 * Returns either a 1 or -1. 
 	 * 
 	 * @param	Chance	The chance of receiving a positive value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return	1 or -1
 	 */
-	inline static public function sign(Chance:Float = 50):Float
+	inline static public function sign( Chance:Float = 50 ):Int
 	{
-		return chanceRoll(Chance) ? 1 : -1;
+		return chanceRoll( Chance ) ? 1 : -1;
 	}
 	
 	/**
-	 * Returns a random color value between black and white
-	 * <p>Set the min value to start each channel from the given offset.</p>
-	 * <p>Set the max value to restrict the maximum color used per channel</p>
+	 * Pseudorandomly select from an array of weighted options.
+	 * For example, if you passed in an array of [ 50, 30, 20 ] there would be a 50% chance of returning a 0, a 30% chance of returning a 1, and a 20% chance of returning a 2.
+	 * Note that the values in the array do not have to add to 100 or any other number. The percent chance will be equal to a given value in the array divided by the total of all values in the array.
 	 * 
-	 * @param	min		The lowest value to use for the color
-	 * @param	max 	The highest value to use for the color
-	 * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
-	 * 
-	 * @return 32-bit color value with alpha
+	 * @param	SelectionArray		An array of weights.
+	 * @return	A value between 0 and ( SelectionArray.length - 1 ), with a probability equivalent to the values in SelectionArray.
 	 */
-	inline static public function color(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
+	inline static public function weightedPick( SelectionArray:Array<Float> ):Int
 	{
-		return FlxColorUtil.getRandomColor(min, max, alpha);
+		var pick:Int = 0;
+		var sumOfWeights:Float = 0;
+		
+		for ( i in SelectionArray )
+		{
+			sumOfWeights += i;
+		}
+		
+		var randSelect:Float = floatRanged( 0, sumOfWeights );
+		
+		for ( i in 0...SelectionArray.length - 1 )
+		{
+			if ( randSelect < SelectionArray[i] )
+			{
+				pick = i;
+				break;
+			}
+			
+			randSelect -= SelectionArray[i];
+		}
+		
+		return pick;
+	}
+	
+	/**
+	 * Returns a pseudorandom color value in hex ARGB format.
+	 * 
+	 * @param	Min		The lowest value to use for each channel.
+	 * @param	Max 	The highest value to use for each channel.
+	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
+	 * @return 	A color value in hex ARGB format.
+	 */
+	inline static public function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255 ):Int
+	{
+		var red:Int = intRanged( Min, Max );
+		var green:Int = intRanged( Min, Max );
+		var blue:Int = intRanged( Min, Max );
+		
+		return FlxColorUtil.makeFromARGB( Alpha, red, green, blue );
+	}
+	
+	/**
+	 * Internal method to quickly generate a number between 1 and 2,147,483,647 inclusive. Used only by other functions of this class.
+	 * 
+	 * @return	A new pseudorandom number.
+	 */
+	static private function generate():Int
+	{
+		return internalSeed = ( internalSeed * MULTIPLIER + INCREMENT ) % MODULUS + MODULUS;
 	}
 }
