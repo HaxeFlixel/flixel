@@ -554,7 +554,7 @@ class PlayState extends FlxState
 	 */
 	private function buildTowerCallback( Skip:Bool = false ):Void
 	{
-		if ( !_guiGroup.visible || towerPrice > money ) {
+		if ( towerPrice > money ) {
 			return;
 		}
 		
