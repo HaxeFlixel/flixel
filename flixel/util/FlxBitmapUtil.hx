@@ -11,6 +11,14 @@ class FlxBitmapUtil
 		#if flash
 		destBitmapData.merge(sourceBitmapData, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		#else
+		if (	destPoint.x >= destBitmapData.width ||
+				destPoint.y >= destBitmapData.height ||
+				sourceRect.x >= sourceBitmapData.width ||
+				sourceRect.y >= sourceBitmapData.height)
+		{
+			return;
+		}
+		
 		// need to cut off sourceRect if it too big...
 		while (	sourceRect.x + sourceRect.width > sourceBitmapData.width ||
 				sourceRect.y + sourceRect.height > sourceBitmapData.height ||
@@ -53,8 +61,10 @@ class FlxBitmapUtil
 			}
 		}
 		
+		if (sourceRect.width <= 0 || sourceRect.height <= 0) return;
+		
 		var startSourceX:Int = Math.round(sourceRect.x);
-		var startSourceY:Int = Math.round(sourceRect.y);
+		var startSourceY:Int = Math.round(sourceRect.y); 
 		
 		var width:Int = Math.round(sourceRect.width);
 		var height:Int = Math.round(sourceRect.height); 
