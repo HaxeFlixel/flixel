@@ -510,7 +510,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		var particleEndScale:Float = endScale.min;
 		if (endScale.min != endScale.max)
 		{
-			particleEndScale = endScale.min + FlxRandom.intRanged( endScale.min, endScale.max );
+		particleEndScale = endScale.min + FlxRandom.intRanged( 0, Std.int( endScale.max - endScale.min ) );
 		}
 		
 		if (particleEndScale != particle.startScale)
