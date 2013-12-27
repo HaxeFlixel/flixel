@@ -7,6 +7,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import openfl.Assets;
 
@@ -26,7 +27,7 @@ class PlayState extends FlxState
 	/**
 	 * Box to show the user where they're placing stuff
 	 */ 
-	private var _highlightBox:FlxObject;
+	private var _highlightBox:FlxSprite;
 	
 	/**
 	 * Player modified from "Mode" demo
@@ -66,7 +67,10 @@ class PlayState extends FlxState
 		_collisionMap.loadMap(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 		add(_collisionMap);
 		
-		_highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
+		_highlightBox = new FlxSprite(0, 0);
+		_highlightBox.makeGraphic(TILE_WIDTH, TILE_HEIGHT, FlxColor.TRANSPARENT);
+		FlxSpriteUtil.drawRect(_highlightBox, 0, 0, TILE_WIDTH - 1, TILE_HEIGHT - 1, FlxColor.TRANSPARENT, { thickness: 1, color: FlxColor.RED } );
+		add(_highlightBox);
 		
 		setupPlayer();
 		
@@ -161,14 +165,6 @@ class PlayState extends FlxState
 		{
 			_player.animation.play("run");
 		}
-	}
-	
-	override public function draw():Void
-	{
-		super.draw();
-		#if !FLX_NO_DEBUG
-		_highlightBox.drawDebugOnCamera(FlxG.camera);
-		#end
 	}
 	
 	private function onAlt():Void
