@@ -55,8 +55,6 @@ class FlxBitmapUtil
 		
 		var startSourceX:Int = Math.round(sourceRect.x);
 		var startSourceY:Int = Math.round(sourceRect.y);
-		var endSourceX:Int = Math.round(sourceRect.x + sourceRect.width); 
-		var endSourceY:Int = Math.round(sourceRect.y + sourceRect.height); 
 		
 		var width:Int = Math.round(sourceRect.width);
 		var height:Int = Math.round(sourceRect.height); 
