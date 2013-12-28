@@ -84,35 +84,19 @@ class FlxArrayUtil
 		}
 		return Objects;
 	}
-		
+	
 	/**
-	 * Fetch a random entry from the given array.
-	 * Will return null if random selection is missing, or array has no entries.
-	 * Deterministic and safe for use with replays/recordings.
+	 * Deprecated; please use FlxRandom.getObject() instead.
+	 * Fetch a random entry from an array.
 	 * 
 	 * @param	Objects		A Flash array of objects.
 	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
+	 * @param	Length		Optional restriction on the number of values you want to randomly select from. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
 	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, Length:Int = 0):T
 	{
-		if (Objects != null)
-		{
-			if (StartIndex < 0) StartIndex = 0;
-			if (Length < 0) Length = 0;
-			
-			var l:Int = Length;
-			if ((l == 0) || (l > Objects.length - StartIndex))
-			{
-				l = Objects.length - StartIndex;
-			}
-			if (l > 0)
-			{
-				return Objects[ FlxRandom.intRanged( StartIndex, StartIndex + l - 1 ) ];
-			}
-		}
-		return null;
+		return FlxRandom.getObject( Objects, StartIndex, Length );
 	}
 	
 	/**
