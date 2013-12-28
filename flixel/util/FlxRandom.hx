@@ -382,6 +382,48 @@ class FlxRandom
 	}
 	
 	/**
+	 * Much like FlxRandom.color(), but with much finer control over the output color.
+	 * 
+	 * @param	RedMinimum		The minimum amount of red in the output color, from 0 to 255.
+	 * @param	RedMaximum		The maximum amount of red in the output color, from 0 to 255.
+	 * @param	GreedMinimum	The minimum amount of green in the output color, from 0 to 255.
+	 * @param	GreenMaximum	The maximum amount of green in the output color, from 0 to 255.
+	 * @param	BlueMinimum		The minimum amount of blue in the output color, from 0 to 255.
+	 * @param	BlueMaximum		The maximum amount of blue in the output color, from 0 to 255.
+	 * @param	AlphaMinimum	The minimum alpha value for the output color, from 0 (fully transparent) to 255 (fully opaque). Set to -1 or ignore for the output to be always fully opaque.
+	 * @param	AlphaMaximum	The maximum alpha value for the output color, from 0 (fully transparent) to 255 (fully opaque). Set to -1 or ignore for the output to be always fully opaque.
+	 * @return	A pseudorandomly generated color within the ranges specified.
+	 */
+	inline static public function colorExt( RedMinimum:Int = 0, RedMaximum:Int = 255, GreenMinimum:Int = 0, GreenMaximum:Int = 255, BlueMinimum:Int = 0, BlueMaximum:Int = 255, AlphaMinimum:Int = -1, AlphaMaximum:Int = -1 ):Int
+	{
+		if ( RedMinimum < 0 ) RedMinimum = 0;
+		if ( RedMinimum > 255 ) RedMinimum = 255;
+		if ( RedMaximum < 0 ) RedMaximum = 0;
+		if ( RedMaximum > 255 ) RedMaximum = 255;
+		if ( GreenMinimum < 0 ) GreenMinimum = 0;
+		if ( GreenMinimum > 255 ) GreenMinimum = 255;
+		if ( GreenMaximum < 0 ) GreenMaximum = 0;
+		if ( GreenMaximum > 255 ) GreenMaximum = 255;
+		if ( BlueMinimum < 0 ) BlueMinimum = 0;
+		if ( BlueMinimum > 255 ) BlueMinimum = 255;
+		if ( BlueMaximum < 0 ) BlueMaximum = 0;
+		if ( BlueMaximum > 255 ) BlueMaximum = 255;
+		if ( AlphaMinimum == -1 ) AlphaMinimum = 255;
+		if ( AlphaMaximum == -1 ) AlphaMaximum = 255;
+		if ( AlphaMinimum < 0 ) AlphaMinimum = 0;
+		if ( AlphaMinimum > 255 ) AlphaMinimum = 255;
+		if ( AlphaMaximum < 0 ) AlphaMaximum = 0;
+		if ( AlphaMaximum > 255 ) AlphaMaximum = 255;
+		
+		var red:Int = intRanged( RedMinimum, RedMaximum );
+		var green:Int = intRanged( GreenMinimum, GreenMaximum );
+		var blue:Int = intRanged( BlueMinimum, BlueMaximum );
+		var alpha:Int = intRanged( AlphaMinimum, AlphaMaximum );
+		
+		return FlxColorUtil.makeFromARGB( alpha, red, green, blue );
+	}
+	
+	/**
 	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
 	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
 	 * 
