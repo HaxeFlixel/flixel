@@ -264,6 +264,33 @@ class FlxRandom
 	
 	
 	/**
+	 * Shuffles the entries in an array into a new pseudorandom order.
+	 * 
+	 * @param	Objects			An array to shuffle.
+	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
+	 * @return	The newly shuffled array.
+	 */
+	@:generic inline static public function shuffleArray<T>( Objects:Array<T>, HowManyTimes:Int ):Array<T>
+	{
+		HowManyTimes = Std.int( Math.max( HowManyTimes, 0 ) );
+		
+		var index1:Int = 0;
+		var index2:Int = 0;
+		var tempObject:Null<T> = null;
+		
+		for ( i in 0...HowManyTimes )
+		{
+			index1 = FlxRandom.intRanged( 0, Objects.length - 1 );
+			index2 = FlxRandom.intRanged( 0, Objects.length - 1 );
+			tempObject = Objects[index1];
+			Objects[index1] = Objects[index2];
+			Objects[index2] = tempObject;
+		}
+		
+		return Objects;
+	}
+	
+	/**
 	 * Returns an object pseudorandomly from an array between StartIndex and EndIndex with a weighted chance from WeightsArray.
 	 * This function is essentially a combination of weightedPick and getObject.
 	 * 
@@ -293,28 +320,16 @@ class FlxRandom
 				StartIndex = StartIndex - EndIndex;
 			}
 			
-			if ( ( EndIndex <= 0 ) || ( EndIndex > Objects.length - 1 ) || ( EndIndex > WeightsArray.length - 1 ) )
+			if ( ( EndIndex <= 0 ) || ( EndIndex > Objects.length - 1 ) )
 			{
 				EndIndex = Objects.length - 1;
 			}
 			
-			var subArray:Array<T> = [];
+			var weightedSubArray:Array<Float> = [ for ( i in StartIndex...EndIndex ) WeightsArray[i] ];
 			
-			for ( i in StartIndex...EndIndex )
-			{
-				subArray.push( Objects[ i ] );
-			}
+			var weightedSelect:Int = FlxRandom.weightedPick( weightedSubArray );
 			
-			var weightedSubArray:Array<Float> = [];
-			
-			for ( i in StartIndex...EndIndex )
-			{
-				weightedSubArray.push( WeightsArray[ i ] );
-			}
-			
-			var selectionInt:Int = FlxRandom.weightedPick( weightedSubArray );
-			
-			selected = Objects[ selectionInt ];
+			selected = Objects[ weightedSelect ];
 		}
 		
 		return selected;
@@ -330,6 +345,35 @@ class FlxRandom
 	 */
 	inline static public function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255 ):Int
 	{
+		if ( Min < 0 )
+		{
+			Min = 0;
+		}
+		
+		if ( Min > 255 )
+		{
+			Min = 255;
+		}
+		
+		if ( Max < 0 )
+		{
+			Max = 0;
+		}
+		
+		if ( Max > 255 )
+		{
+			Max = 255;
+		}
+		
+		// Swap values if reversed
+		
+		if ( Max < Min )
+		{
+			Min = Min + Max;
+			Max = Min - Max;
+			Min = Min - Max;
+		}
+		
 		var red:Int = intRanged( Min, Max );
 		var green:Int = intRanged( Min, Max );
 		var blue:Int = intRanged( Min, Max );

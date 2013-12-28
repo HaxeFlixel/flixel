@@ -59,30 +59,16 @@ class FlxArrayUtil
 	}
 	
 	/**
+	 * Deprecated; please use FlxRandom.shuffleArray() instead.
 	 * Shuffles the entries in an array into a new random order.
-	 * Deterministic and safe for use with replays/recordings.
 	 * 
-	 * @param	A				A Flash <code>Array</code> object containing...stuff.
-	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
-	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
+	 * @param	Objects			An array to shuffle.
+	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
+	 * @return	The newly shuffled array.
 	 */
 	@:generic static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
-		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
-		var i:Int = 0;
-		var index1:Int;
-		var index2:Int;
-		var object:Dynamic;
-		while (i < HowManyTimes)
-		{
-			index1 = FlxRandom.intRanged( 0, Objects.length - 1 );
-			index2 = FlxRandom.intRanged( 0, Objects.length - 1 );
-			object = Objects[index2];
-			Objects[index2] = Objects[index1];
-			Objects[index1] = object;
-			i++;
-		}
-		return Objects;
+		return FlxRandom.shuffleArray( Objects, HowManyTimes );
 	}
 	
 	/**
