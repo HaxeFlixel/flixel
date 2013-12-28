@@ -109,7 +109,7 @@ class FlxRandom
 			
 			do
 			{
-				result = Math.round( Min + float() * ( Max - Min ) );
+				result = Math.floor( Min + float() * ( Max - Min + 1 ) );
 			}
 			while ( FlxArrayUtil.indexOf( Excludes, result ) >= 0 );
 		}
