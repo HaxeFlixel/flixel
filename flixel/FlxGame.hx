@@ -21,7 +21,7 @@ import flash.text.GridFitType;
 import flixel.system.debug.FlxDebugger;
 #end
 
-#if !FLX_NO_SOUND_TRAY
+#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 import flixel.system.ui.FlxSoundTray;
 #end
 
@@ -116,7 +116,7 @@ class FlxGame extends Sprite
 	public var recording:Bool = false;
 	#end
 	
-	#if !FLX_NO_SOUND_TRAY
+	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 	/**
 	 * The sound tray display container (see <code>createSoundTray()</code>).
 	 */
@@ -148,16 +148,16 @@ class FlxGame extends Sprite
 	private var _focusLostScreen:FlxFocusLostScreen;
 	#end
 	
-	#if !FLX_NO_SOUND_TRAY
+	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 	/**
-	 * Change this afterr calling super() in the FlxGame constructor to use a customized sound tray based on FlxSoundTray.
+	 * Change this after calling super() in the FlxGame constructor to use a customized sound tray based on FlxSoundTray.
 	 */
 	private var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
 	#end
 	
 	#if !FLX_NO_FOCUS_LOST_SCREEN
 	/**
-	 * Change this afterr calling super() in the FlxGame constructor to use a customized sound tray based on FlxFocusLostScreen.
+	 * Change this after calling super() in the FlxGame constructor to use a customized screen which will be show when the application lost focus.
 	 */
 	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	#end
@@ -239,7 +239,7 @@ class FlxGame extends Sprite
 	// Let mobile devs opt out of unnecessary overlays.
 	#if !mobile	
 		// Volume display tab
-		#if !FLX_NO_SOUND_TRAY
+		#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 		soundTray = Type.createInstance(_customSoundTray, []);
 		addChild(soundTray);
 		#end
@@ -302,7 +302,9 @@ class FlxGame extends Sprite
 		#end 
 		
 		stage.frameRate = flashFramerate;
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.resumeSounds();
+		#end
 		FlxG.inputs.onFocus();
 	}
 	
@@ -328,7 +330,9 @@ class FlxGame extends Sprite
 		#end 
 		
 		stage.frameRate = 10;
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.pauseSounds();
+		#end
 		FlxG.inputs.onFocusLost();
 	}
 	
@@ -363,7 +367,7 @@ class FlxGame extends Sprite
 		elapsedMS = ticks - _total;
 		_total = ticks;
 		
-		#if !FLX_NO_SOUND_TRAY
+		#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 		if (soundTray != null && soundTray.active)
 		{
 			soundTray.update(elapsedMS);
@@ -472,7 +476,9 @@ class FlxGame extends Sprite
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
 		FlxG.inputs.reset();
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroySounds();
+		#end
 		FlxG.plugins.onStateSwitch();
 		
 		#if !FLX_NO_DEBUG
@@ -592,7 +598,9 @@ class FlxGame extends Sprite
 		
 		updateInput();
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.updateSounds();
+		#end
 		FlxG.plugins.update();
 		
 		state.tryUpdate(); // Update the current state

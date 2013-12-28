@@ -13,7 +13,6 @@ import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
-import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.text.pxText.PxBitmapFont;
@@ -37,6 +36,9 @@ import flixel.system.input.mouse.FlxMouse;
 #end
 #if !FLX_NO_GAMEPAD
 import flixel.system.input.gamepad.FlxGamepadManager;
+#end
+#if !FLX_NO_SOUND_SYSTEM
+import flixel.system.frontEnds.SoundFrontEnd;
 #end
 #if android
 import flixel.system.input.android.FlxAndroidKeys;
@@ -230,11 +232,13 @@ class FlxG
 	 */
 	static public var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * sounds and other things to manage or <code>play()</code> sounds.
 	 */
 	static public var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
+	#end
 	
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
@@ -273,7 +277,10 @@ class FlxG
 		#end
 		
 		save.bind("flixel");
+		
+		#if !FLX_NO_SOUND_SYSTEM
 		sound.loadSavedPrefs();
+		#end
 		
 		FlxAssets.init();
 	}
@@ -289,7 +296,9 @@ class FlxG
 		
 		bitmap.clearCache();
 		inputs.reset();
+		#if !FLX_NO_SOUND_SYSTEM
 		sound.destroySounds(true);
+		#end
 		paused = false;
 		timeScale = 1.0;
 		elapsed = 0;

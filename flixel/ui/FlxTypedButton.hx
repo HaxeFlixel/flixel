@@ -4,7 +4,9 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.TouchEvent;
 import flash.Lib;
+#if !FLX_NO_SOUND_SYSTEM
 import flash.media.Sound;
+#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
@@ -29,6 +31,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * <code>HIGHLIGHT</code> or <code>PRESSED</code>
 	 */
 	public var status:Int;
+	
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * Set this to play a sound when the mouse goes over the button.
 	 * We recommend using the helper function setSounds()!
@@ -49,6 +53,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * We recommend using the helper function setSounds()!
 	 */
 	public var soundUp:FlxSound;
+	#end
 	
 	/**
 	 * This function is called when the button is released.
@@ -122,10 +127,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		_onOutParams = [];
 		_onOverParams = [];
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		soundOver = null;
 		soundOut = null;
 		soundDown = null;
 		soundUp = null;
+		#end
 		
 		status = FlxButton.NORMAL;
 		_pressed = false;
@@ -164,6 +171,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		_onOutParams = null;
 		_onOverParams = null;
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		if (soundOver != null)
 		{
 			soundOver.destroy();
@@ -180,6 +188,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			soundUp.destroy();
 		}
+		#end
 		super.destroy();
 	}
 	
@@ -291,10 +300,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 					{
 						Reflect.callMethod(null, _onOut, _onOutParams);
 					}
+					#if !FLX_NO_SOUND_SYSTEM
 					if (soundOut != null)
 					{
 						soundOut.play(true);
 					}
+					#end
 				}
 				
 				status = FlxButton.NORMAL;
@@ -339,11 +350,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				{
 					Reflect.callMethod(null, _onDown, _onDownParams);
 				}
+				#if !FLX_NO_SOUND_SYSTEM
 				if (soundDown != null)
 				{
 					soundDown.play(true);
 				}
-				
+				#end
 				_touchPointID = touchID;
 			}
 			if (status == FlxButton.NORMAL)
@@ -353,10 +365,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				{
 					Reflect.callMethod(null, _onOver, _onOverParams);
 				}
+				#if !FLX_NO_SOUND_SYSTEM
 				if (soundOver != null)
 				{
 					soundOver.play(true);
 				}
+				#end
 			}
 		}
 		
@@ -392,6 +406,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	}
 	#end
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	// TODO: Return from Sound -> Class<Sound>
 	/**
 	 * Set sounds to play during mouse-button interactions.
@@ -427,6 +442,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			soundUp = FlxG.sound.load(SoundUp, SoundUpVolume);
 		}
 	}
+	#end
 	
 	/**
 	 * Set the callback function for when the button is released.
@@ -514,11 +530,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			Reflect.callMethod(null, _onUp, _onUpParams);
 		}
+		#if !FLX_NO_SOUND_SYSTEM
 		if (soundUp != null)
 		{
 			soundUp.play(true);
 		}
-		
+		#end
 		_touchPointID = -1;
 		status = FlxButton.NORMAL;
 	}

@@ -82,7 +82,9 @@ class FlxSplash extends FlxState
 		_text.y = _sprite.y + 130;
 		FlxG.stage.addChild(_text);
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
+		#end
 	}
 	
 	private function timerCallback(Timer:FlxTimer):Void

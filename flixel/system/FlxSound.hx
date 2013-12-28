@@ -1,5 +1,6 @@
 package flixel.system;
 
+#if !FLX_NO_SOUND_SYSTEM
 import flash.events.Event;
 import flash.media.Sound;
 import flash.media.SoundChannel;
@@ -601,3 +602,4 @@ class FlxSound extends FlxBasic
 		_sound.removeEventListener(Event.ID3, gotID3);
 	}
 }
+#end

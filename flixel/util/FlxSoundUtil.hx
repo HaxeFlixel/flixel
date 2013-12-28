@@ -1,5 +1,6 @@
 package flixel.util;
 
+#if !FLX_NO_SOUND_SYSTEM
 import flixel.FlxG;
 import flixel.system.FlxSound;
 import haxe.ds.ObjectMap;
@@ -25,3 +26,4 @@ class FlxSoundUtil
 		}
 	}
 }
+#end

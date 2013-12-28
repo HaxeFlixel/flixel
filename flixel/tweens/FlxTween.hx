@@ -20,9 +20,12 @@ import flixel.tweens.motion.MotionType;
 import flixel.tweens.motion.PathType;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
-import flixel.tweens.sound.Fader;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.util.FlxPoint;
+
+#if !FLX_NO_SOUND_SYSTEM
+import flixel.tweens.sound.Fader;
+#end
 
 class FlxTween
 {
@@ -140,6 +143,7 @@ class FlxTween
 		return tween;
 	}
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * Tweens <code>FlxG.sound.volume</code> . Shorthand for creating a Fader tweens, starting it and adding it to the TweenManager.
 	 * Example: FlxTween.fader(0.5, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
@@ -165,6 +169,7 @@ class FlxTween
 		
 		return tween;
 	}
+	#end
 	
 	/**
 	 * Create a new LinearMotion tween.

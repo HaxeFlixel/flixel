@@ -96,10 +96,12 @@ class LogFrontEnd
 		
 		if (FlxG.game.debugger.log.add(Data, Style, FireOnce))
 		{
+			#if !FLX_NO_SOUND_SYSTEM
 			if (Style.errorSound != null)
 			{
 				FlxG.sound.play(Style.errorSound);
 			}
+			#end
 			
 			if (Style.openConsole) 
 			{

@@ -396,8 +396,8 @@ class FlxKeyboard implements IFlxInput
 			return;
 		}
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		// Sound tray controls
-		
 		// Mute key
 		if (inKeyArray(FlxG.sound.muteKeys, c))
 		{
@@ -441,6 +441,7 @@ class FlxKeyboard implements IFlxInput
 			}
 			#end
 		}
+		#end
 		
 		updateKeyStates(c, false);
 	}
