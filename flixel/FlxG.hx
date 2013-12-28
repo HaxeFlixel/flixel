@@ -69,7 +69,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public var LIBRARY_MINOR_VERSION:String = "0.4-dev";
+	static public var LIBRARY_MINOR_VERSION:String = "0.5-dev";
 	
 	/**
 	 * Internal tracker for game object.
