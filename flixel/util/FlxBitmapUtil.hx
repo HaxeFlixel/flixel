@@ -14,7 +14,9 @@ class FlxBitmapUtil
 		if (	destPoint.x >= destBitmapData.width ||
 				destPoint.y >= destBitmapData.height ||
 				sourceRect.x >= sourceBitmapData.width ||
-				sourceRect.y >= sourceBitmapData.height)
+				sourceRect.y >= sourceBitmapData.height ||
+				sourceRect.x + sourceRect.width <= 0 ||
+				sourceRect.y + sourceRect.height <= 0)
 		{
 			return;
 		}
@@ -97,7 +99,7 @@ class FlxBitmapUtil
 		var resultAlpha:Int;
 		
 		var resultColor:Int = 0x0;
-		
+		destBitmapData.lock();
 		// iterate througn pixels using following rule:
 		// new redDest = [(redSrc * redMultiplier) + (redDest * (256 - redMultiplier))] / 256; 
 		for (i in 0...width)
@@ -137,6 +139,7 @@ class FlxBitmapUtil
 				destBitmapData.setPixel32(currX, currY, resultColor);
 			}
 		}
+		destBitmapData.unlock();
 		#end
 	}
 	
