@@ -208,7 +208,7 @@ class FlxRandom
 		
 		var randSelect:Float = floatRanged( 0, sumOfWeights );
 		
-		for ( i in 0...WeightsArray.length - 1 )
+		for ( i in 0...WeightsArray.length )
 		{
 			if ( randSelect < WeightsArray[i] )
 			{

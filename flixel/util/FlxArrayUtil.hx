@@ -96,7 +96,7 @@ class FlxArrayUtil
 	 */
 	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
-		return FlxRandom.getObject( Objects, StartIndex, Length );
+		return FlxRandom.getObject( Objects, StartIndex, EndIndex );
 	}
 	
 	/**
