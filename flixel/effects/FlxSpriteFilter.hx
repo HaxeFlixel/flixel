@@ -138,6 +138,7 @@ class FlxSpriteFilter
 	
 	private function regenBitmapData(fill:Bool = true):Void
 	{
+		pixels.lock();
 		if (fill)
 		{
 			pixels.fillRect(pixels.rect, 0x0);
@@ -165,6 +166,7 @@ class FlxSpriteFilter
 				pixels.copyPixels(backupGraphics.bitmap, helperRect, helperPoint);
 			}
 		}
+		pixels.unlock();
 	}
 	
 	/**

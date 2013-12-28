@@ -151,6 +151,7 @@ class FlxTrailArea extends FlxSprite
 		if (_counter >= delay) 
 		{
 			_counter = 0;
+			_renderBitmap.lock();
 			//Color transform bitmap
 			var cTrans:ColorTransform = new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
 			_renderBitmap.colorTransform(new Rectangle(0, 0, _renderBitmap.width, _renderBitmap.height), cTrans);
@@ -179,6 +180,8 @@ class FlxTrailArea extends FlxSprite
 				}
 				i++;
 			}
+			
+			_renderBitmap.unlock();
 			//Apply the updated bitmap
 			pixels = _renderBitmap;
 		}

@@ -1005,6 +1005,7 @@ class FlxSprite extends FlxObject
 		var column:Int;
 		var rows:Int = region.height;
 		var columns:Int = region.width;
+		cachedGraphics.bitmap.lock();
 		while(row < rows)
 		{
 			column = region.startX;
@@ -1023,7 +1024,7 @@ class FlxSprite extends FlxObject
 			}
 			row++;
 		}
-		
+		cachedGraphics.bitmap.unlock();
 		resetFrameBitmapDatas();
 		return positions;
 	}
