@@ -87,14 +87,14 @@ class FlxArrayUtil
 	
 	/**
 	 * Deprecated; please use FlxRandom.getObject() instead.
-	 * Fetch a random entry from an array.
+	 * Fetch a random entry from the given array from StartIndex to EndIndex.
 	 * 
-	 * @param	Objects		A Flash array of objects.
-	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	 * @param	Length		Optional restriction on the number of values you want to randomly select from. Ignored if 0, which is the default value.
+	 * @param	Objects			An array from which to select a random entry.
+	 * @param	StartIndex		Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
+	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, Length:Int = 0):T
+	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		return FlxRandom.getObject( Objects, StartIndex, Length );
 	}
