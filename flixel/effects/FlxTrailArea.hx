@@ -171,7 +171,7 @@ class FlxTrailArea extends FlxSprite
 						var matrix:Matrix = new Matrix();
 						matrix.scale(group.members[i].scale.x, group.members[i].scale.y);
 						matrix.translate(-(group.members[i].frameWidth / 2), -(group.members[i].frameHeight / 2)); 
-						matrix.rotate(-group.members[i].angle * FlxAngle.TO_RAD);
+						matrix.rotate(group.members[i].angle * FlxAngle.TO_RAD);
 						matrix.translate((group.members[i].frameWidth / 2), (group.members[i].frameHeight / 2)); 
 						matrix.translate(group.members[i].x - x, group.members[i].y - y);
 						_renderBitmap.draw(group.members[i].pixels, matrix, group.members[i].colorTransform, blendMode, null, smoothing);
