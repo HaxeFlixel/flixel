@@ -1,4 +1,5 @@
 package flixel.util;
+import flash.Lib;
 
 /**
  * A class containing a set of functions for random generation.
@@ -256,7 +257,7 @@ class FlxRandom
 				EndIndex = Objects.length - 1;
 			}
 			
-			selected = Objects[ FlxRandom.intRanged( StartIndex, EndIndex ) ];
+			selected = Objects[ intRanged( StartIndex, EndIndex ) ];
 		}
 		
 		return selected;
@@ -280,8 +281,8 @@ class FlxRandom
 		
 		for ( i in 0...HowManyTimes )
 		{
-			index1 = FlxRandom.intRanged( 0, Objects.length - 1 );
-			index2 = FlxRandom.intRanged( 0, Objects.length - 1 );
+			index1 = intRanged( 0, Objects.length - 1 );
+			index2 = intRanged( 0, Objects.length - 1 );
 			tempObject = Objects[index1];
 			Objects[index1] = Objects[index2];
 			Objects[index2] = tempObject;
@@ -327,7 +328,7 @@ class FlxRandom
 			
 			var weightedSubArray:Array<Float> = [ for ( i in StartIndex...EndIndex ) WeightsArray[i] ];
 			
-			var weightedSelect:Int = FlxRandom.weightedPick( weightedSubArray );
+			var weightedSelect:Int = weightedPick( weightedSubArray );
 			
 			selected = Objects[ weightedSelect ];
 		}
@@ -382,7 +383,7 @@ class FlxRandom
 	}
 	
 	/**
-	 * Much like FlxRandom.color(), but with much finer control over the output color.
+	 * Much like color(), but with much finer control over the output color.
 	 * 
 	 * @param	RedMinimum		The minimum amount of red in the output color, from 0 to 255.
 	 * @param	RedMaximum		The maximum amount of red in the output color, from 0 to 255.
@@ -421,6 +422,56 @@ class FlxRandom
 		var alpha:Int = intRanged( AlphaMinimum, AlphaMaximum );
 		
 		return FlxColorUtil.makeFromARGB( alpha, red, green, blue );
+	}
+	
+	/**
+	 * A generic function for handling chance, for example loot drops in an RPG-style game. Could be used for any repeated event which should have a modified probability of success based on past events.
+	 * 
+	 * @param	Chance		A FlxChance object, with the properties defining this chanceCheck's probability of success.
+	 * @return	True if the chance passed, false otherwise. Note that if blockTimer or blockTimes are non-zero, blocking will automatically be enabled for true returns.
+	 */
+	inline static public function chanceCheck( Chance:FlxChance ):Bool
+	{
+		var success:Bool = false;
+		
+		if ( Chance.blocking )
+		{
+			if ( Chance.blockTimes > 0 )
+			{
+				Chance.blockTimes --;
+				
+				if ( Chance.blockTimes == 0 )
+				{
+					Chance.blocking = false;
+				}
+			}
+			
+			if ( Chance.blockTimer > 0 )
+			{
+				Chance.blockTimer -= Lib.getTimer();
+				
+				if ( Chance.blockTimer < 0 )
+				{
+					Chance.blockTimer = 0;
+					Chance.blocking = false;
+				}
+			}
+		}
+		else
+		{
+			var odds:Float = Chance.numerator / Chance.denominatorCurrent;
+			odds *= Chance.buff;
+			odds *= Chance.areaEffect;
+			
+			success = chanceRoll( odds * 100 );
+			
+			if ( success )
+			{
+				Chance.denominatorCurrent -= Chance.decrement;
+			}
+		}
+		
+		return success;
 	}
 	
 	/**
