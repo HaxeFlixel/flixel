@@ -345,8 +345,8 @@ class GameState extends FlxNapeState
 		FlxG.camera = FlxG.cameras.add(new FlxCamera(0, 0, 640, 480, 1));
 		
 		#end
-		FlxG.game.swapChildren(FlxG.camera._flashSprite, hudCam._flashSprite);
-		FlxG.game.swapChildren(FlxG.camera._flashSprite, overlayCamera._flashSprite);
+		FlxG.game.swapChildren(FlxG.camera.flashSprite, hudCam.flashSprite);
+		FlxG.game.swapChildren(FlxG.camera.flashSprite, overlayCamera.flashSprite);
 		
 		FlxG.camera.follow(orb, newCamStyle, null, oldCam.followLerp);
 		FlxG.camera.followAdjust(oldCam.followLead.x, oldCam.followLead.y);
