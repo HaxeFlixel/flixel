@@ -425,56 +425,6 @@ class FlxRandom
 	}
 	
 	/**
-	 * A generic function for handling chance, for example loot drops in an RPG-style game. Could be used for any repeated event which should have a modified probability of success based on past events.
-	 * 
-	 * @param	Chance		A FlxChance object, with the properties defining this chanceCheck's probability of success.
-	 * @return	True if the chance passed, false otherwise. Note that if blockTimer or blockTimes are non-zero, blocking will automatically be enabled for true returns.
-	 */
-	inline static public function chanceCheck( Chance:FlxChance ):Bool
-	{
-		var success:Bool = false;
-		
-		if ( Chance.blocking )
-		{
-			if ( Chance.blockTimes > 0 )
-			{
-				Chance.blockTimes --;
-				
-				if ( Chance.blockTimes == 0 )
-				{
-					Chance.blocking = false;
-				}
-			}
-			
-			if ( Chance.blockTimer > 0 )
-			{
-				Chance.blockTimer -= Lib.getTimer();
-				
-				if ( Chance.blockTimer < 0 )
-				{
-					Chance.blockTimer = 0;
-					Chance.blocking = false;
-				}
-			}
-		}
-		else
-		{
-			var odds:Float = Chance.numerator / Chance.denominatorCurrent;
-			odds *= Chance.buff;
-			odds *= Chance.areaEffect;
-			
-			success = chanceRoll( odds * 100 );
-			
-			if ( success )
-			{
-				Chance.denominatorCurrent -= Chance.decrement;
-			}
-		}
-		
-		return success;
-	}
-	
-	/**
 	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
 	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
 	 * 
