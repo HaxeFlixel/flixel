@@ -72,35 +72,4 @@ class FlxMisc
 		} 
 		return null; 
 	} 
-	
-	/**
-	 * The Display List index of the mouse pointer
-	 */
-	static public var mouseIndex(get, never):Int;
-	
-	static private function get_mouseIndex():Int
-	{
-		var mouseIndex:Int = -1;
-		
-		try
-		{
-			mouseIndex = FlxG.camera.getContainerSprite().parent.numChildren - 4;
-		}
-		catch (e:Error)
-		{
-			//trace
-		}
-		
-		return mouseIndex;
-	}
-	
-	/**
-	 * Returns the Sprite that FlxGame extends (which contains the cameras, mouse, etc)
-	 */
-	static public var gameContainer(get, never):Sprite;
-	
-	inline static private function get_gameContainer():Sprite
-	{
-		return cast(FlxG.camera.getContainerSprite().parent, Sprite);
-	}
 }
