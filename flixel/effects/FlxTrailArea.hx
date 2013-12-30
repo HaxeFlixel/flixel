@@ -114,15 +114,9 @@ class FlxTrailArea extends FlxSprite
 	{
 		super(X, Y);
 		
-		if (Width <= 0) {
-			Width = FlxG.width;
-		}
-		if (Height <= 0) {
-			Height = FlxG.height;
-		}
+		makeGraphic(Width, Height);
 		
 		group = new FlxTypedGroup<FlxSprite>();
-		_renderBitmap = new BitmapData(Width, Height, true, FlxColor.TRANSPARENT);
 		
 		//Sync variables
 		delay = Delay;
@@ -131,6 +125,22 @@ class FlxTrailArea extends FlxSprite
 		smoothing = Smoothing;
 		alphaMultiplier = AlphaMultiplier;
 		
+	}
+	/**
+	 * Creates the rennder bitmap for the <code>FlxTrailArea</code>
+	 * @param	Width		The width of the area - defaults to <code>FlxG.width</code>
+	 * @param	Height		The height of the area - defaults to <code>FlxG.height</code>
+	 */
+	public function makeGraphic(Width:Int = 0, Height:Int = 0):Void
+	{
+		if (Width <= 0) {
+			Width = FlxG.width;
+		}
+		if (Height <= 0) {
+			Height = FlxG.height;
+		}
+		
+		_renderBitmap = new BitmapData(Width, Height, true, FlxColor.TRANSPARENT);
 	}
 	
 	override public function destroy():Void 
