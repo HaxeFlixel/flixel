@@ -114,7 +114,7 @@ class FlxTrailArea extends FlxSprite
 	{
 		super(X, Y);
 		
-		makeGraphic(Width, Height);
+		createBitmap(Width, Height);
 		
 		group = new FlxTypedGroup<FlxSprite>();
 		
@@ -127,11 +127,11 @@ class FlxTrailArea extends FlxSprite
 		
 	}
 	/**
-	 * Creates the rennder bitmap for the <code>FlxTrailArea</code>
+	 * Creates the render bitmap for the <code>FlxTrailArea</code>, also usable to set the area to a new size
 	 * @param	Width		The width of the area - defaults to <code>FlxG.width</code>
 	 * @param	Height		The height of the area - defaults to <code>FlxG.height</code>
 	 */
-	public function makeGraphic(Width:Int = 0, Height:Int = 0):Void
+	public function createBitmap(Width:Int = 0, Height:Int = 0):Void
 	{
 		if (Width <= 0) {
 			Width = FlxG.width;
