@@ -90,7 +90,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Tells the camera to follow this <code>FlxObject</code> object around.
 	 */
-	public var target:FlxObject;
+	public var target:FlxObject = null;
 	/**
 	 * Used to force the camera to look ahead of the <code>followTarget</code>.
 	 */
@@ -103,12 +103,12 @@ class FlxCamera extends FlxBasic
 	 * You can assign a "dead zone" to the camera in order to better control its movement. The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
 	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels. For rapid prototyping, you can use the preset deadzones (e.g. <code>STYLE_PLATFORMER</code>) with <code>follow()</code>.
 	 */
-	public var deadzone:FlxRect;
+	public var deadzone:FlxRect = null;
 	/**
 	 * The edges of the camera's range, i.e. where to stop scrolling.
 	 * Measured in game pixels and world coordinates.
 	 */
-	public var bounds:FlxRect;
+	public var bounds:FlxRect = null;
 	/**
 	 * Stores the basic parallax scrolling values.
 	 */
@@ -163,23 +163,23 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashColor:Int;
+	private var _fxFlashColor:Int = FlxColor.TRANSPARENT;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashDuration:Float;
+	private var _fxFlashDuration:Float = 0;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashComplete:Void->Void;
+	private var _fxFlashComplete:Void->Void = null;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashAlpha:Float;
+	private var _fxFlashAlpha:Float = 0;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeColor:Int;
+	private var _fxFadeColor:Int = FlxColor.TRANSPARENT;
 	/**
 	 * Used to calculate the following target current velocity.
 	 */
@@ -191,31 +191,31 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeDuration:Float;
+	private var _fxFadeDuration:Float = 0;
 	/**
      * Internal, used to control the "fade" special effect.
      */
-    private var _fxFadeIn:Bool;
+    private var _fxFadeIn:Bool = false;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeComplete:Void->Void;
+	private var _fxFadeComplete:Void->Void = null;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeAlpha:Float;
+	private var _fxFadeAlpha:Float = 0;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeIntensity:Float;
+	private var _fxShakeIntensity:Float = 0;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeDuration:Float;
+	private var _fxShakeDuration:Float = 0;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeComplete:Void->Void;
+	private var _fxShakeComplete:Void->Void = null;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
@@ -223,7 +223,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeDirection:Int;
+	private var _fxShakeDirection:Int = 0;
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
@@ -242,13 +242,13 @@ class FlxCamera extends FlxBasic
 	
 #if !flash
 	/**
-	 * sprite for drawing (instead of _flashBitmap in flash)
+	 * Sprite for drawing (instead of _flashBitmap in flash)
 	 */
-	public var canvas:Sprite;
+	public var canvas:Sprite = null;
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
+	 * Sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
 	 */
 	public var debugLayer:Sprite;
 	#end
@@ -394,13 +394,14 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
-	 * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-	 * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-	 * @param Width		The width of the camera display in pixels.
-	 * @param Height	The height of the camera display in pixels.
-	 * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
+	 * 
+	 * @param 	X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param 	Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+	 * @param 	Width		The width of the camera display in pixels.
+	 * @param 	Height	The height of the camera display in pixels.
+	 * @param 	Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
 	 */
-	public function new(X:Int, Y:Int, Width:Int, Height:Int, Zoom:Float = 0)
+	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, Zoom:Float = 0)
 	{
 		super();
 		
@@ -408,13 +409,12 @@ class FlxCamera extends FlxBasic
 		
 		x = X;
 		y = Y;
-		width = Width;
-		height = Height;
-		target = null;
-		deadzone = null;
+		// Use the game dimensions if width / height are <= 0
+		width = (Width <= 0) ? FlxG.width : Width;
+		height = (Height <= 0) ? FlxG.height : Height;
+		
 		scroll = new FlxPoint();
 		_point = new FlxPoint();
-		bounds = null;
 		#if flash
 		screen = new FlxSprite();
 		buffer = new BitmapData(width, height, true, 0);
@@ -434,13 +434,11 @@ class FlxCamera extends FlxBasic
 		
 		#if flash
 		color = 0xffffff;
-		#else
-		color = FlxColor.WHITE;
 		#end
 		
 		flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
-	
+		
 		flashOffsetX = width * 0.5 * zoom;
 		flashOffsetY = height * 0.5 * zoom;
 		
@@ -455,21 +453,7 @@ class FlxCamera extends FlxBasic
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
-		_fxFlashColor = FlxColor.TRANSPARENT;
-		_fxFlashDuration = 0.0;
-		_fxFlashComplete = null;
-		_fxFlashAlpha = 0.0;
-		
-		_fxFadeColor = FlxColor.TRANSPARENT;
-		_fxFadeDuration = 0.0;
-		_fxFadeComplete = null;
-		_fxFadeAlpha = 0.0;
-		
-		_fxShakeIntensity = 0.0;
-		_fxShakeDuration = 0.0;
-		_fxShakeComplete = null;
 		_fxShakeOffset = new FlxPoint();
-		_fxShakeDirection = 0;
 		
 		#if flash
 		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
@@ -494,11 +478,6 @@ class FlxCamera extends FlxBasic
 		#end
 		
 		bgColor = FlxG.cameras.bgColor;
-		
-		_fxFadeIn = false;
-		
-		alpha = 1.0;
-		angle = 0.0;
 	}
 	
 	/**
@@ -985,7 +964,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * The alpha value of this camera display (a Number between 0.0 and 1.0).
 	 */
-	public var alpha(default, set):Float;
+	public var alpha(default, set):Float = 0;
 	
 	/**
 	 * @private
@@ -1006,7 +985,7 @@ class FlxCamera extends FlxBasic
 	 * Currently yields weird display results,
 	 * since cameras aren't nested in an extra display object yet.
 	 */
-	public var angle(default, set):Float;
+	public var angle(default, set):Float = 0;
 	
 	private function set_angle(Angle:Float):Float
 	{
@@ -1019,7 +998,7 @@ class FlxCamera extends FlxBasic
 	 * The color tint of the camera display.
 	 * (Internal, help with color transforming the flash bitmap.)
 	 */
-	public var color(default, set_color):Int;
+	public var color(default, set_color):Int = FlxColor.WHITE;
 	
 	/**
 	 * @private
