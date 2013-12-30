@@ -98,7 +98,7 @@ class FlxSpriteUtil
 	 * have an alpha color value in the mask image. So if you draw a big black circle in your mask with a transparent edge, you'll<br>
 	 * get a circular image appear. Look at the mask PNG files in the assets/pics folder for examples.
 	 * 
-	 * @param	Sprite		The source <code>FlxSprite</code>. Typically the one with the image / picture / texture in it.
+	 * @param	sprite		The source <code>FlxSprite</code>. Typically the one with the image / picture / texture in it.
 	 * @param	mask		The FlxSprite containing the mask to apply. Remember the non-alpha zero areas are the parts that will display.
 	 * @param	output		The FlxSprite you wish the resulting image to be placed in (will adjust width/height of image)
 	 * @return	The output FlxSprite for those that like chaining
@@ -117,7 +117,7 @@ class FlxSpriteUtil
 	/**
 	 * Checks the x/y coordinates of the source FlxSprite and keeps them within the area of 0, 0, FlxG.width, FlxG.height (i.e. wraps it around the screen)
 	 * 
-	 * @param	Sprite		The <code>FlxSprite</code> to keep within the screen
+	 * @param	sprite		The <code>FlxSprite</code> to keep within the screen
 	 * @param	Left		Whether to activate screen wrapping on the left side of the screen
 	 * @param	Right		Whether to activate screen wrapping on the right side of the screen
 	 * @param	Top			Whether to activate screen wrapping on the top of the screen
@@ -179,7 +179,7 @@ class FlxSpriteUtil
 	/**
 	 * Centers the given FlxSprite on the screen, either by the X axis, Y axis, or both
 	 * 
-	 * @param	Sprite			The <code>FlxSprite<code> to center
+	 * @param	sprite			The <code>FlxSprite<code> to center
 	 * @param	Horizontally	Boolean true if you want it centered horizontally
 	 * @param	Vertically		Boolean	true if you want it centered vertically
 	 * @return	The FlxSprite for chaining
@@ -200,40 +200,30 @@ class FlxSpriteUtil
 	}
 	
 	/**
-	 * This function draws a line on a sprite from position X1,Y1
+	 * This function draws a line on a FlxSprite from position X1,Y1
 	 * to position X2,Y2 with the specified color.
 	 * 
-	 * @param	Sprite		The <code>FlxSprite</code> to manipulate
+	 * @param	sprite		The <code>FlxSprite</code> to manipulate
 	 * @param	StartX		X coordinate of the line's start point.
 	 * @param	StartY		Y coordinate of the line's start point.
 	 * @param	EndX		X coordinate of the line's end point.
 	 * @param	EndY		Y coordinate of the line's end point.
 	 * @param	Color		The line's color.
 	 * @param	Thickness	How thick the line is in pixels (default value is 1).
+	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	 */
-	static public function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, Color:Int, Thickness:Int = 1):Void
+	static public function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ?lineStyle:LineStyle):Void
 	{
-		// Draw line
-		var gfx:Graphics = flashGfx;
-		gfx.clear();
-		gfx.moveTo(StartX, StartY);
-		var alphaComponent:Float = ((Color >> 24) & 255) / 255;
-		
-		if (alphaComponent < 0)
-		{
-			alphaComponent = 0;
-		}
-		
-		gfx.lineStyle(Thickness, Color, alphaComponent);
-		gfx.lineTo(EndX, EndY);
-		
-		updateSpriteGraphic(sprite);
+		beginDraw(0, lineStyle);
+		flashGfx.moveTo(StartX, StartY);
+		flashGfx.lineTo(EndX, EndY);
+		endDraw(sprite);
 	}
 	
 	/**
-	 * This function draws a rectangle on a sprite.
+	 * This function draws a rectangle on a FlxSprite.
 	 * 
-	 * @param	Sprite		The <code>FlxSprite</code> to manipulate
+	 * @param	sprite		The <code>FlxSprite</code> to manipulate
 	 * @param	X			X coordinate of the rectangle's start point.
 	 * @param	Y			Y coordinate of the rectangle's start point.
 	 * @param	Width		Width of the rectangle
@@ -243,19 +233,15 @@ class FlxSpriteUtil
 	 */
 	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
-		flashGfx.clear();
-		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		beginDraw(Color, lineStyle);
 		flashGfx.drawRect(X, Y, Width, Height);
-		flashGfx.endFill();
-		
-		updateSpriteGraphic(sprite);
+		endDraw(sprite);
 	}
 	
 	/**
-	 * This function draws a rounded rectangle on a sprite.
+	 * This function draws a rounded rectangle on a FlxSprite.
 	 * 
-	 * @param	Sprite			The <code>FlxSprite</code> to manipulate
+	 * @param	sprite			The <code>FlxSprite</code> to manipulate
 	 * @param	X				X coordinate of the rectangle's start point.
 	 * @param	Y				Y coordinate of the rectangle's start point.
 	 * @param	Width			Width of the rectangle
@@ -267,21 +253,17 @@ class FlxSpriteUtil
 	 */
 	static public function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
-		flashGfx.clear();
-		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		beginDraw(Color, lineStyle);
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
-		flashGfx.endFill();
-		
-		updateSpriteGraphic(sprite);
+		endDraw(sprite);
 	}
 	
 	#if flash
 	/**
-	 * This function draws a rounded rectangle on a sprite. Same as <code>drawRoundRect</code>,
+	 * This function draws a rounded rectangle on a FlxSprite. Same as <code>drawRoundRect</code>,
 	 * except it allows you to determine the radius of each corner individually.
 	 * 
-	 * @param	Sprite				The <code>FlxSprite</code> to manipulate
+	 * @param	sprite				The <code>FlxSprite</code> to manipulate
 	 * @param	X					X coordinate of the rectangle's start point.
 	 * @param	Y					Y coordinate of the rectangle's start point.
 	 * @param	Width				Width of the rectangle
@@ -295,21 +277,16 @@ class FlxSpriteUtil
 	 */
 	static public function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
-		flashGfx.clear();
-		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		beginDraw(Color, lineStyle);
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
-		flashGfx.endFill();
-		
-		updateSpriteGraphic(sprite);
+		endDraw(sprite);
 	}
 	#end
 	
 	/**
-	 * This function draws a circle on this sprite at position X,Y
-	 * with the specified color.
+	 * This function draws a circle on a FlxSprite at position X,Y with the specified color.
 	 * 
-	 * @param	Sprite		The <code>FlxSprite</code> to manipulate
+	 * @param	sprite		The <code>FlxSprite</code> to manipulate
 	 * @param 	X 			X coordinate of the circle's center
 	 * @param 	Y 			Y coordinate of the circle's center
 	 * @param 	Radius 		Radius of the circle
@@ -318,19 +295,15 @@ class FlxSpriteUtil
 	*/
 	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
-		flashGfx.clear();
-		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		beginDraw(Color, lineStyle);
 		flashGfx.drawCircle(X, Y, Radius);
-		flashGfx.endFill();
-		
-		updateSpriteGraphic(sprite);
+		endDraw(sprite);
 	}
 	
 	/**
-	 * This function draws an ellipse on a sprite.
+	 * This function draws an ellipse on a FlxSprite.
 	 * 
-	 * @param	Sprite		The <code>FlxSprite</code> to manipulate
+	 * @param	sprite		The <code>FlxSprite</code> to manipulate
 	 * @param	X			X coordinate of the ellipse's start point.
 	 * @param	Y			Y coordinate of the ellipse's start point.
 	 * @param	Width		Width of the ellipse
@@ -340,15 +313,75 @@ class FlxSpriteUtil
 	 */
 	static public function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle):Void
 	{
+		beginDraw(Color, lineStyle);
+		flashGfx.drawEllipse(X, Y, Width, Height);
+		endDraw(sprite);
+	}
+	
+	/**
+	 * This function draws a simple, equilateral triangle on a FlxSprite.
+	 * 
+	 * @param	sprite		The <code>FlxSprite</code> to manipulate
+	 * @param	X			X position of the triangle
+	 * @param	Y			Y position of the triangle
+	 * @param	Height		Height of the triangle
+	 * @param	Color		Color of the triangle
+	 * @param	?lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 */
+	static public function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:Int, ?lineStyle:LineStyle):Void
+	{
+		beginDraw(Color, lineStyle);
+		flashGfx.moveTo(Height / 2, Y);
+		flashGfx.lineTo(Height, Height + Y);
+		flashGfx.lineTo(X, Height + Y);
+		flashGfx.lineTo(Height / 2, Y);
+		endDraw(sprite);
+	}
+	
+	/**
+	 * This function draws a polygon on a FlxSprite.
+	 * 
+	 * @param	sprite		The <code>FlxSprite</code> to manipulate
+	 * @param	Vertices	Array of Vertices to use for drawing the polygon
+	 * @param	Color		Color of the polygon
+	 * @param	?lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 */
+	static public function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:Int, ?lineStyle:LineStyle):Void
+	{
+		beginDraw(Color, lineStyle);
+		var p:FlxPoint = Vertices.shift();
+		flashGfx.moveTo(p.x, p.y);
+		for (p in Vertices)
+		{
+			flashGfx.lineTo(p.x, p.y);
+		}
+		endDraw(sprite);
+	}
+
+	/**
+	 * Helper function that the drawing functions use at the start to set the color and lineStyle.
+	 * 
+	 * @param	Color		The color to use for drawing
+	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 */
+	inline static public function beginDraw(Color:Int, ?lineStyle:LineStyle):Void
+	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
 		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
-		flashGfx.drawEllipse(X, Y, Width, Height);
-		flashGfx.endFill();
-		
-		updateSpriteGraphic(sprite);
 	}
 	
+	/**
+	 * Helper function that the drawing functions use at the end.
+	 * 
+	 * @param	sprite	The FlxSprite to draw to
+	 */
+	inline static public function endDraw(sprite:FlxSprite):Void
+	{
+		flashGfx.endFill();
+		updateSpriteGraphic(sprite);
+	}
+
 	/**
 	 * Just a helper function that is called at the end of the draw functions
 	 * to handle a few things related to updating a sprite's graphic.

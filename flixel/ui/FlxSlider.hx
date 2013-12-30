@@ -184,7 +184,7 @@ class FlxSlider extends FlxSpriteGroup
 		body = new FlxSprite(_offset.x, _offset.y);
 		body.makeGraphic(_width, _height, 0);
 		body.scrollFactor.set();
-		FlxSpriteUtil.drawLine(body, 0, _height / 2, _width, _height / 2, _color, _thickness); 
+		FlxSpriteUtil.drawLine(body, 0, _height / 2, _width, _height / 2, { color:_color, thickness:_thickness }); 
 		
 		handle = new FlxSprite(_offset.x, _offset.y);
 		handle.makeGraphic(_thickness, _height, _handleColor);
