@@ -35,7 +35,6 @@ import flixel.tweens.FlxTween.TweenOptions;
  */
 class PlayState extends FlxState
 {
-	inline static private var MAX_TWEEN:Int = 8;
 	/**
 	 * The duration of the tween
 	 */
@@ -54,6 +53,10 @@ class PlayState extends FlxState
 	inline static private var CUBIC_MOTION:Int = 6;
 	inline static private var QUAD_MOTION:Int = 7;
 	inline static private var QUAD_PATH:Int = 8;
+	/**
+	 * How many different tween types there are.
+	 */
+	inline static private var TWEEN_AMOUNT:Int = 9;
 
 	private var _easeInfo:Array<EaseInfo>;
 	private var _currentEaseIndex:Int;
@@ -103,6 +106,7 @@ class PlayState extends FlxState
 		_easeInfo.push( { name: "backIn",  		ease: FlxEase.backIn 		} );
 		_easeInfo.push( { name: "backOut",  	ease: FlxEase.backOut 		} );
 		_easeInfo.push( { name: "backInOut",  	ease: FlxEase.backInOut 	} );
+		_easeInfo.push( { name: "none",  		ease: null 	} );
 
 		_sprite = new FlxSprite();
 		_sprite.loadGraphic(FlxAssets.IMG_LOGO, true);
@@ -136,7 +140,7 @@ class PlayState extends FlxState
 		add(_tweenText);
 		add(_easeText);
 		add(_helpText);
-
+		
 		// Create a button to toggle the trail
 		_toggleButton = new FlxButton(10, 65, "FlxTrail: On", onToggleTrail);
 		add(_toggleButton);
@@ -151,7 +155,7 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.SPACE)
 		{
-			_currentEaseIndex = FlxMath.wrapValue(_currentEaseIndex, 1, _easeInfo.length - 1);
+			_currentEaseIndex = FlxMath.wrapValue(_currentEaseIndex, 1, _easeInfo.length);
 
 			if (_tween != null)
 			{
@@ -161,8 +165,8 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.UP)
 		{
-			_currentTweenIndex = FlxMath.wrapValue(_currentTweenIndex, 1, MAX_TWEEN);
-
+			_currentTweenIndex = FlxMath.wrapValue(_currentTweenIndex, 1, TWEEN_AMOUNT);
+			
 			if (_tween != null)
 			{
 				startTween();
@@ -171,7 +175,7 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.DOWN)
 		{
-			_currentTweenIndex = FlxMath.wrapValue(_currentTweenIndex, -1, MAX_TWEEN);
+			_currentTweenIndex = FlxMath.wrapValue(_currentTweenIndex, -1, TWEEN_AMOUNT);
 
 			if (_tween != null)
 			{
@@ -241,7 +245,6 @@ class PlayState extends FlxState
 
 			case QUAD_PATH:
 				var path:Array<FlxPoint> = [new FlxPoint(_sprite.x, _sprite.y),
-											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
 											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
 											new FlxPoint(_max.x, _sprite.y)];
 				_tween = FlxTween.quadPath(_sprite, path, DURATION, true, options);

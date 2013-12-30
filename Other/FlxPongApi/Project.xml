@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="GridMovement" file="GridMovement" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="FlxPongApi" file="FlxPongApi" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
-	<window width="672" height="480" fps="60" orientation="portrait" resizable="true" if="web" />
-	<window width="672" height="480" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
+	<window width="900" height="300" fps="60" orientation="portrait" resizable="true" if="web" />
+	<window width="900" height="300" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
 	
 	<!--The flixel preloader gets stuck in Chrome, so it's disabled by default for now. 
 	Safe to use if you embed the swf into a html file!-->
@@ -15,8 +15,17 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<!--You can use rename="newName" to shorten the paths to the individual subdirectories!-->
-	<assets path="assets" />
+	<assets path="assets/sounds" if="flash">
+		<sound path="plip.mp3" id="plip" />
+		<sound path="kaboom.mp3" id="kaboom" />
+	</assets>
+	
+	<assets path="assets/sounds" unless="flash">
+		<sound path="plip.ogg" id="plip" />
+		<sound path="kaboom.ogg" id="kaboom" />
+	</assets>
+	
+	<icon path="assets/HaxeFlixel_Addons.svg" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
@@ -42,19 +51,20 @@
 	<!--<haxedef name="FLX_MOUSE_ADVANCED" />-->
 	
 	<!--Disable the Native cursor api for Flash target-->
-	<!-- <haxedef name="FLX_NO_NATIVE_CURSOR" /> -->
+	<haxedef name="FLX_NO_NATIVE_CURSOR" />
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-	<!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->
-	<!--<haxedef name="FLX_NO_KEYBOARD" if="mobile" />-->
-	<!--<haxedef name="FLX_NO_TOUCH" if="desktop" />-->
-	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
+	<haxedef name="FLX_NO_MOUSE" if="mobile" />
+	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
+	<haxedef name="FLX_NO_TOUCH" if="desktop" />
+	<haxedef name="FLX_NO_GAMEPAD" />
 	
 	<!--Disable the Flixel core sound tray-->
+	<!-- This is disabled so that the user can enter hyphens for their login, if needed -->
 	<haxedef name="FLX_NO_SOUND_TRAY" />
 	
 	<!--Disable the Flixel core focus lost screen-->
-	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
+	<!--<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />-->
 	
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<app title="MinimalistTD" file="MinimalistTD" main="Main" version="0.0.1" company="HaxeFlixel" />  
+	
+	<window width="640" height="480" fps="60" orientation="portrait" background="#000000" resizable="true" if="web" />
+	<window width="640" height="480" fps="60" orientation="landscape" background="#000000" fullscreen="false" hardware="true" vsync="true" unless="web" />
+
+	<!--The flixel preloader gets stuck in Chrome, so it's disabled by default for now. 
+	Safe to use if you embed the swf into a html file!-->
+	<!--<app preloader="flixel.system.FlxPreloader" />-->
+
+	<!--The swf version should be at least 11.2 if you want to use the FLX_MOUSE_ADVANCED option-->
+	<set name="SWF_VERSION" value="11.2" />
+	<set name="BUILD_DIR" value="export" />
+
+	<classpath name="source" />
+
+	<haxelib name="openfl" />
+	<haxelib name="flixel"/>
+
+	<!--In case you want to use the addons package-->
+	<!--<haxelib name="flixel-addons" />-->
+
+	<assets path="assets/sounds" if="flash">
+		<sound path="build.mp3" id="build" />
+		<sound path="deny.mp3" id="deny" />
+		<sound path="enemyhit.mp3" id="enemyhit" />
+		<sound path="enemykill.mp3" id="enemykill" />
+		<sound path="gameover.mp3" id="gameover" />
+		<sound path="hurt.mp3" id="hurt" />
+		<sound path="select.mp3" id="select" />
+		<sound path="shoot.mp3" id="shoot" />
+		<sound path="td2.mp3" id="td2" />
+		<sound path="wavedefeated.mp3" id="wavedefeated" />
+	</assets>
+
+	<assets path="assets/sounds" unless="flash">
+		<sound path="build.ogg" id="build" />
+		<sound path="deny.ogg" id="deny" />
+		<sound path="enemyhit.ogg" id="enemyhit" />
+		<sound path="enemykill.ogg" id="enemykill" />
+		<sound path="gameover.ogg" id="gameover" />
+		<sound path="hurt.ogg" id="hurt" />
+		<sound path="select.ogg" id="select" />
+		<sound path="shoot.ogg" id="shoot" />
+		<sound path="td2.ogg" id="td2" />
+		<sound path="wavedefeated.ogg" id="wavedefeated" />
+	</assets>
+
+	<assets path="assets/images" rename="images" />
+	<assets path="assets/tilemaps" rename="tilemaps" />
+	
+	<!-- Link to custom SVG which will be used to generate all sizes of icons -->
+	<icon path="assets/MinimalistTD.svg" />
+
+	<!--In case you want to use the ui package-->
+	<!--<haxelib name="flixel-ui"/>-->
+
+	<!--In case you want to use nape with flixel-->
+	<!--<haxelib name="nape" />-->
+	<!--Enable this for nape release builds for a serious peformance improvement-->
+	<!--<haxedef name="NAPE_RELEASE_BUILD" />--> 
+
+	<!--Enable experimental threading support for cpp targets-->
+	<!--<haxedef name="FLX_THREADING" />-->
+
+	<!--Enable the flixel core recording system-->
+	<!--<haxedef name="FLX_RECORD" />-->
+
+	<!--Enable right and middle click support for the mouse. Flash player version 11.2+, no HTML5 support -->
+	<!--<haxedef name="FLX_MOUSE_ADVANCED" />-->
+
+	<!--Disable the Native cursor api for Flash target-->
+	<!--This is required for MinimalistTD in order to set the cursor to invert-->
+	<haxedef name="FLX_NO_NATIVE_CURSOR" />
+
+	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
+	<!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->
+	<!--<haxedef name="FLX_NO_KEYBOARD" if="mobile" />-->
+	<!--<haxedef name="FLX_NO_TOUCH" if="desktop" />-->
+	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
+
+	<!--Disable the Flixel core sound tray-->
+	<!-- <haxedef name="FLX_NO_SOUND_TRAY" /> -->
+
+	<!--Disable the Flixel core focus lost screen-->
+	<!--<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />-->
+
+	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
+	<haxedef name="FLX_NO_DEBUG" unless="debug" />
+</project>
