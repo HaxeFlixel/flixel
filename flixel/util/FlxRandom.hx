@@ -1,5 +1,4 @@
 package flixel.util;
-import flash.Lib;
 
 /**
  * A class containing a set of functions for random generation.
