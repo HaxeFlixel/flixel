@@ -1,4 +1,5 @@
 import flash.text.Font;
+import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIPopup;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.U;
@@ -28,6 +29,8 @@ class State_Title extends FlxUIState
 			FlxUIState.static_tongue = Main.tongue;
 		}
 		
+		/*var b:FlxUIButton = cast _ui.getAsset("saves");
+		var t:FlxUIText = cast b.label;*/
 		
 		_xml_id = "state_title";
 		

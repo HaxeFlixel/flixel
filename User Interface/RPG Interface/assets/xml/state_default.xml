@@ -8,7 +8,7 @@
 
 	<sprite src="ui/title_back" x="0" y="0"/>
 	
-	<text center_x="true" x="0" y="150" width="300" text="$DEFAULT_DESC" align="center"/>
+	<text center_x="true" id="default_desc" x="0" y="150" width="300" text="$DEFAULT_DESC" align="center"/>
 	
 	<chrome x="50" y="180" width="700" height="300"/>
 

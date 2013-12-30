@@ -16,6 +16,7 @@ class State_DefaultTest extends FlxUIState
 		_xml_id = "state_default";
 		super.create();
 		
+		
 	}
 	
 	public override function getRequest(id:String, target:Dynamic, data:Dynamic):Dynamic {

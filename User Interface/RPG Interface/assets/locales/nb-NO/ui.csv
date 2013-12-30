@@ -28,6 +28,7 @@
 "$MENU_TAB_3","Tab 3",
 "$MENU_TAB_4","Tab 4",
 "$MENU_TOGGLE","Endre",
+"$MENU_DROPDOWN","Drop-down",
 "$DEFAULT_DESC","Widget'ene du ser her bruker BARE standard-bilder fra FlxUI!",
 "$CODE_DESC","Widget'ene du ser her var laget bare med kode og ingen xml-fil!",
 "$MISC_BACK","Tilbake",

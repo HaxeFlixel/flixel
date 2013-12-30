@@ -28,6 +28,7 @@
 "$MENU_TAB_3","Tab 3",
 "$MENU_TAB_4","Tab 4",
 "$MENU_TOGGLE","Toggle",
+"$MENU_DROPDOWN","Drop-down",
 "$DEFAULT_DESC","The widgets you see here use ONLY default FlxUI Assets!",
 "$CODE_DESC","The widgets you see here were created with code and no xml file!",
 "$MISC_BACK","Back",
