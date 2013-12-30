@@ -31,7 +31,9 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * An array of FlxKey objects.
 	 */
-	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY) // Need to access the var there
+	@:allow(flixel.system.input.android.FlxAndroidKeyList.get_ANY)
+	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY)
+	
 	private var _keyList:Array<FlxKey>;
 	
 	public function new()
