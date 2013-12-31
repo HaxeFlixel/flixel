@@ -347,7 +347,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			}
 			if (status == FlxButton.NORMAL)
 			{
-				status = FlxButton.HIGHLIGHT;
+				#if !mobile
+					status = FlxButton.HIGHLIGHT;
+				#end
 				if (_onOver != null)
 				{
 					Reflect.callMethod(null, _onOver, _onOverParams);
