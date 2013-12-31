@@ -52,6 +52,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Create a new <code>FlxSpriteGroup</code>
+	 * 
 	 * @param	X			The initial X position of the group.
 	 * @param	Y			The initial Y position of the group
 	 * @param	MaxSize		Maximum amount of members allowed
@@ -103,6 +104,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Recursive cloning method: it will create copy of this group which will hold copies of all sprites
+	 * 
 	 * @param	NewSprite	optional sprite group to copy to
 	 * @return	copy of this sprite group
 	 */
@@ -128,6 +130,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Check and see if any sprite in this group is currently on screen.
+	 * 
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
@@ -152,6 +155,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Checks to see if a point in 2D world space overlaps any <code>FlxSprite</code> object from this group.
+	 * 
 	 * @param	Point			The point in world space you want to check.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -174,6 +178,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Checks to see if a point in 2D world space overlaps any of <code>FlxSprite</code> object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
+	 * 
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -213,6 +218,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Replaces all pixels with specified Color with NewColor pixels. This operation is applied to every nested sprite from this group
+	 * 
 	 * @param	Color				Color to replace
 	 * @param	NewColor			New color
 	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
@@ -251,6 +257,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
+	 * 
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
 	override public function drawDebugOnCamera(?Camera:FlxCamera):Void
@@ -265,6 +272,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Adds a new <code>FlxSprite</code> subclass to the group.
+	 * 
 	 * @param	Object		The sprite or sprite group you want to add to the group.
 	 * @return	The same object that was passed in.
 	 */
@@ -280,6 +288,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
+	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * @param 	ContructorArgs  An array of arguments passed into a newly object if there aren't any dead members to recycle. 
 	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
@@ -292,6 +301,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Removes specified sprite from the group.
+	 * 
 	 * @param	Object	The <code>FlxSprite</code> you want to remove.
 	 * @param	Splice	Whether the object should be cut from the array entirely or not.
 	 * @return	The removed object.
@@ -442,6 +452,46 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
+	 * Applies a function to all members
+	 * 
+	 * @param Function A function that modify one element at a time
+	 */
+	inline public function forEach(Function:FlxSprite->Void):Void
+	{
+		group.forEach(Function);
+	}
+
+	/**
+	 * Applies a function to all alive members
+	 * 
+	 * @param Function A function that modify one element at a time
+	 */
+	inline public function forEachAlive(Function:FlxSprite->Void):Void
+	{
+		group.forEachAlive(Function);
+	}
+
+	/**
+	 * Applies a function to all dead members
+	 * 
+	 * @param Function A function that modify one element at a time
+	 */
+	inline public function forEachDead(Function:FlxSprite->Void):Void
+	{
+		group.forEachDead(Function);
+	}
+
+	/**
+	 * Applies a function to all existing members
+	 * 
+	 * @param Function A function that modify one element at a time
+	 */
+	public function forEachExists(Function:FlxSprite->Void):Void
+	{
+		group.forEachExists(Function);
+	}
+	
+	/**
 	 * Remove all instances of <code>FlxSprite</code> from the list.
 	 * WARNING: does not destroy() or kill() any of these objects!
 	 */
@@ -496,6 +546,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Helper function to set the coordinates of this object.
 	 * Handy since it only requires one line of code.
+	 * 
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
@@ -540,6 +591,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Handy function that allows you to quickly transform multiple properties of sprites in this group at a time.
+	 * 
 	 * @param	FunctionArray	Array of functions to transform sprites in this group.
 	 * @param	ValueArray		Array of values which will be passed to lambda functions
 	 */
@@ -726,7 +778,6 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
 	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
-	 * @default false
 	 */
 	override private function set_forceComplexRender(Value:Bool):Bool
 	{
