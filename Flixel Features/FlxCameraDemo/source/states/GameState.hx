@@ -130,18 +130,21 @@ class GameState extends FlxNapeState
 		//cameraOverlay.scrollFactor.make(0, 0);
 		cameraOverlay.antialiasing = true;
 		var offset:Int = 100;
+		
+		var lineStyle:LineStyle = { color: 0xFFFFFFFF, thickness: 3 };
+		
 		// Left Up Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, offset, offset, offset + 50, offset, 0xFFFFFFFF, 3);
-		FlxSpriteUtil.drawLine(cameraOverlay, offset, offset, offset, offset + 50, 0xFFFFFFFF, 3);
+		FlxSpriteUtil.drawLine(cameraOverlay, offset, offset, offset + 50, offset, lineStyle);
+		FlxSpriteUtil.drawLine(cameraOverlay, offset, offset, offset, offset + 50, lineStyle);
 		// Right Up Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, offset, 640 - offset - 50, offset, 0xFFFFFFFF, 3);
-		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, offset, 640 - offset, offset + 50, 0xFFFFFFFF, 3);
+		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, offset, 640 - offset - 50, offset, lineStyle);
+		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, offset, 640 - offset, offset + 50, lineStyle);
 		// Bottom Left Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, offset, 480 - offset, offset + 50, 480 - offset, 0xFFFFFFFF, 3);
-		FlxSpriteUtil.drawLine(cameraOverlay, offset, 480 - offset, offset, 480 - offset - 50, 0xFFFFFFFF, 3);
+		FlxSpriteUtil.drawLine(cameraOverlay, offset, 480 - offset, offset + 50, 480 - offset, lineStyle);
+		FlxSpriteUtil.drawLine(cameraOverlay, offset, 480 - offset, offset, 480 - offset - 50, lineStyle);
 		// Bottom Right Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, 480 - offset, 640 - offset - 50, 480 - offset, 0xFFFFFFFF, 3);
-		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, 480 - offset, 640 - offset, 480 - offset - 50, 0xFFFFFFFF, 3);
+		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, 480 - offset, 640 - offset - 50, 480 - offset, lineStyle);
+		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, 480 - offset, 640 - offset, 480 - offset - 50, lineStyle);
 		
 		overlayCamera = new FlxCamera(0, 0, 640, 720);
 		overlayCamera.follow(cameraOverlay);
@@ -345,8 +348,8 @@ class GameState extends FlxNapeState
 		FlxG.camera = FlxG.cameras.add(new FlxCamera(0, 0, 640, 480, 1));
 		
 		#end
-		FlxG.game.swapChildren(FlxG.camera._flashSprite, hudCam._flashSprite);
-		FlxG.game.swapChildren(FlxG.camera._flashSprite, overlayCamera._flashSprite);
+		FlxG.game.swapChildren(FlxG.camera.flashSprite, hudCam.flashSprite);
+		FlxG.game.swapChildren(FlxG.camera.flashSprite, overlayCamera.flashSprite);
 		
 		FlxG.camera.follow(orb, newCamStyle, null, oldCam.followLerp);
 		FlxG.camera.followAdjust(oldCam.followLead.x, oldCam.followLead.y);
