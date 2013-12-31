@@ -871,10 +871,10 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadfromSprite(Sprite:FlxSprite):FlxSprite 
+	override public function loadFromSprite(Sprite:FlxSprite):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadfromSprite() is not supported in FlxSpriteGroups.");
+		FlxG.log.error("loadFromSprite() is not supported in FlxSpriteGroups.");
 		#end
 		return this;
 	}
