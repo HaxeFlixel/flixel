@@ -6,7 +6,7 @@ import flixel.FlxG;
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint
+class FlxPoint implements IDestroyable
 {
 	/**
 	 * @default 0

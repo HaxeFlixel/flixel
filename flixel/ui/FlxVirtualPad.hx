@@ -209,7 +209,7 @@ class FlxVirtualPad extends FlxTypedGroup<FlxButton>
 		
 		if (OnClick != null)
 		{
-			button.setOnDownCallback(OnClick);
+			button.onDown.callback = OnClick;
 		}
 		
 		return button;
