@@ -20,27 +20,27 @@ import flixel.util.FlxColor;
 class FlxTrailArea extends FlxSprite 
 {
 	/**
-	 * How often the trail is updated, in frames. Default value is 1, or "every frame".
+	 * How often the trail is updated, in frames. Default value is 2, or "every frame".
 	 */
-	public var delay:Int;
+	public var delay:Int = 2;
 	
 	/**
 	 * If this is true, the render process ignores any color/scale/rotation manipulation of the sprites
 	 * with the advantage of being faster
 	 */
-	public var simpleRender:Bool;
+	public var simpleRender:Bool = false;
 	
 	/**
 	 * Specifies the blendMode for the trails.
 	 * Ignored in simple render mode. Only works on the flash target.
 	 */
-	public var blendMode:BlendMode;
+	public var blendMode:BlendMode = null;
 	
 	/**
 	 * If smoothing should be used for drawing the sprite
 	 * Ignored in simple render mode
 	 */
-	public var smoothing:Bool;
+	public var smoothing:Bool = false;
 	
 	/**
 	 * Stores all sprites that have a trail.
@@ -97,6 +97,18 @@ class FlxTrailArea extends FlxSprite
 	 */
 	private var _counter:Int = 0;
 	
+	/**
+	 * Internal width variable
+	 * Initialized to 1 to prevent invalid bitmapData during construction
+	 */
+	private var _width:Float = 1;
+	
+	/**
+	 * Internal height variable
+	 * Initialized to 1 to prevent invalid bitmapData during construction
+	 */
+	private var _height:Float = 1;
+	
 	 /**
 	  * Creates a new <code>FlxTrailArea</code>, in which all added sprites get a trail effect.
 	  * 
@@ -105,24 +117,18 @@ class FlxTrailArea extends FlxSprite
 	  * @param	Width			The width of the area - defaults to <code>FlxG.width</code>
 	  * @param	Height			The height of the area - defaults to <code>FlxG.height</code>
 	  * @param	AlphaMultiplier By what the area's alpha is multiplied per update
-	  * @param	Delay			How often to update the trail. 0 updates every frame
+	  * @param	Delay			How often to update the trail. 1 updates every frame
 	  * @param	SimpleRender 	If simple rendering should be used. Ignores all sprite transformations
 	  * @param	Smoothing		If sprites should be smoothed when drawn to the area. Ignored when simple rendering is on
 	  * @param	?TrailBlendMode The blend mode used for the area. Only works in flash
 	  */
-	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, AlphaMultiplier:Float = 0.8, Delay:Int = 1, SimpleRender:Bool = false, Smoothing:Bool = false, ?TrailBlendMode:BlendMode) 
+	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, AlphaMultiplier:Float = 0.8, Delay:Int = 2, SimpleRender:Bool = false, Smoothing:Bool = false, ?TrailBlendMode:BlendMode) 
 	{
 		super(X, Y);
 		
-		if (Width <= 0) {
-			Width = FlxG.width;
-		}
-		if (Height <= 0) {
-			Height = FlxG.height;
-		}
+		setSize(Width, Height);
 		
 		group = new FlxTypedGroup<FlxSprite>();
-		_renderBitmap = new BitmapData(Width, Height, true, FlxColor.TRANSPARENT);
 		
 		//Sync variables
 		delay = Delay;
@@ -130,13 +136,31 @@ class FlxTrailArea extends FlxSprite
 		blendMode = TrailBlendMode;
 		smoothing = Smoothing;
 		alphaMultiplier = AlphaMultiplier;
-		
+	}
+	
+	/**
+	 * Sets the <code>FlxTrailArea</code> to a new size. Clears the area!
+	 * @param	Width		The new width
+	 * @param	Height		The new height
+	 */
+	override public function setSize(Width:Float, Height:Float)
+	{
+		if (Width <= 0) {
+			Width = FlxG.width;
+		}
+		if (Height <= 0) {
+			Height = FlxG.height;
+		}
+		if ((Width != _width) || (Height != _height)) {
+			_width = Width;
+			_height = Height;
+			_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
+		}
 	}
 	
 	override public function destroy():Void 
 	{
-		group.destroy();
-		group = null;
+		FlxG.safeDestroy(group);
 		blendMode = null;
 		_renderBitmap = null;
 		
@@ -205,5 +229,49 @@ class FlxTrailArea extends FlxSprite
 	inline public function add(Sprite:FlxSprite):FlxSprite 
 	{
 		return group.add(Sprite);
+	}
+	
+	/**
+	 * Redirects width to _width
+	 */
+	override inline private function get_width():Float 
+	{
+		return _width;
+	}
+	
+	/**
+	 * Setter for width, defaults to FlxG.width, creates new _rendeBitmap if neccessary
+	 */
+	override private function set_width(Width:Float):Float 
+	{
+		if (Width <= 0) {
+			Width = FlxG.width;
+		}
+		if (Width != _width) {
+			_renderBitmap = new BitmapData(Std.int(Width), Std.int(_height), true, FlxColor.TRANSPARENT);
+		}
+		return _width = Width;
+	}
+	
+	/**
+	 * Redirects height to _height
+	 */
+	override inline private function get_height():Float 
+	{
+		return _height;
+	}
+	
+	/**
+	 * Setter for height, defaults to FlxG.height, creates new _rendeBitmap if neccessary
+	 */
+	override private function set_height(Height:Float):Float
+	{
+		if (Height <= 0) {
+			Height = FlxG.height;
+		}
+		if (Height != _height) {
+			_renderBitmap = new BitmapData(Std.int(_width), Std.int(Height), true, FlxColor.TRANSPARENT);
+		}
+		return _height = Height;
 	}
 }
