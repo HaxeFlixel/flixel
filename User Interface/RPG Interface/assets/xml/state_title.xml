@@ -43,18 +43,23 @@
 	
 	<button center_x="true" x="0" y="565" id="menu" use_def="text_button_wide" group="top" label="$TITLE_CODE">
 		<param type="string" value="code_test"/>
-	</button>	
+	</button>
 	
 	<button center_x="true" x="0" y="505" id="battle" use_def="text_button" group="top" label="$TITLE_BATTLES">
 		<param type="string" value="battle"/>
 		<locale id="nb-NO">
 			<change width="96"/>
-		</locale>			
+		</locale>
 	</button>
-		
+	
+	<button center_x="true" x="-100" y="450" id="popup" use_def="text_button_wide" group="top" label="$TITLE_SHAPES">
+		<param type="string" value="shapes"/>
+	</button>
+	
 	<button center_x="true" x="0" y="450" id="popup" use_def="text_button" group="top" label="$TITLE_POPUP">
 		<param type="string" value="popup"/>
 	</button>
+	
 	
 	<radio_group x="10" y="10" use_def="radio_1" id="locale_radio">
 		<radio id="en-US" label="$LANGUAGE_BILINGUAL:EN-US" context="index"/>

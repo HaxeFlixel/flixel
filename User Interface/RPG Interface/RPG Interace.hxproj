@@ -16,15 +16,16 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="export\flash\haxe" />
+    <class path="export\windows\cpp\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="FLX_BMP_DEBUG&#xA;tools=1&#xA;openfl_ver=1.0.9&#xA;openfl&#xA;display&#xA;web" />
+    <option directives="FLX_BMP_DEBUG&#xA;tools=1.1.6&#xA;lime_native&#xA;no-compilation&#xA;openfl=1.2&#xA;display&#xA;windows&#xA;desktop&#xA;no-compilation" />
     <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;-swf-version 11&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;--macro allowPackage(&quot;flash&quot;)&#xA;--macro keep(&quot;Main&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

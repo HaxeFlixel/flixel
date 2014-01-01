@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<include id="_ui_globals"/>
+	
+	<!--DEFS-->
+	
+	<definition id="grey" src="ui/chrome/dark_grey"/>
+
+	<!--STUFF-->
+	
+	<chrome x="0" y="0" width="100%" height="100%" use_def="grey"/>
+
+	<button center_x="true" x="0" y="535" id="start" use_def="text_button" group="top" label="$MISC_BACK">
+		<param type="string" value="back"/>
+		<locale id="nb-NO">
+			<change width="96"/>
+		</locale>
+	</button>
+	
+</data>
