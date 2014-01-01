@@ -5,6 +5,8 @@
 
 A large set of demos (**currently 40!**) using the HaxeFlixel engine and demonstrating its capabilities. Almost all of them can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
+![](demoSelection.png)
+
 ##Contents
 
 * **Arcade Classics**
