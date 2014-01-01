@@ -1,17 +1,64 @@
 ![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/flixel-demos.png)
 =======
 ###Related:   [flixel](https://github.com/HaxeFlixel/flixel) | [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
-______________________________________________________
+=======
 
-A large set of demos using the HaxeFlixel engine and demonstrating its capabilities.
+A large set of demos (**currently 40!**) using the HaxeFlixel engine and demonstrating its capabilities. Almost all of them can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
-### We need your help testing [flixel dev branch](https://github.com/HaxeFlixel/flixel).
+##Contents
 
-We're tracking compatibility of demos on a [shared google spreadsheet](https://docs.google.com/spreadsheet/ccc?key=0Ajgc8tTc8zKmdE9xcXRScjRROVYxdXYtamcxcjBIdUE#gid=3). Please help us find bugs and prepare a great v3 release!
+* **Arcade Classics**
+  * Breakout
+  * FlxInvaders
+  * FlxSnake
+  * FlxTeroids
+* **Editors**
+  * FlxSpine
+  * TiledEditor 
+* **Effects**
+  * FlxBloom
+  * FlxBlur
+  * FlxSkewedSprite
+  * FlxSpriteFilters
+  * FlxTrailArea
+  * FlxTween
+  * ParticlesExt
+* **Flixel Features**
+  * CollisionAndGrouping
+  * FlxCameraDemo
+  * FlxNapeDemo
+  * Particles
+  * Pathfinding
+  * Replay
+  * Save
+  * SplitScreen
+  * Tilemap
+* **Input**
+  * GridMovement
+  * MouseEventManager
+  * Multitouch *(cpp only)*
+  * Xbox-Gamepad *(cpp only)*
+* **Other**
+  * FlxBunnyMark
+  * FlxCollisions
+  * FlxPongAPI
+  * MinimalistTD
+* **Platformers**
+  * EZPlatformer
+  * FlipAnimationRotationTiles
+  * FlxCaveGenerator
+  * FlxTilemapExt
+  * Mode
+  * Project Jumper
+  * Revenge
+* **User Interface**
+  * FileBrowse
+  * FlxTypeText
+  * RPG Interface
+  
 
-#### If you are installing flixel from haxelib please use the following release:
+=======
 
-https://github.com/HaxeFlixel/flixel-demos/releases/tag/flixel-2.0.0-alpha.3
-______________________________________________________
+###Current Build Status 
 
-###Current Build Status [![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos)
+[![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos)
