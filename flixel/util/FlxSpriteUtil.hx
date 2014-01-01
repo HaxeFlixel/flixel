@@ -2,11 +2,13 @@ package flixel.util;
 
 import flash.display.BitmapData;
 import flash.display.BitmapDataChannel;
+import flash.display.BlendMode;
 import flash.display.CapsStyle;
 import flash.display.Graphics;
 import flash.display.JointStyle;
 import flash.display.LineScaleMode;
 import flash.display.Sprite;
+import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
@@ -211,13 +213,16 @@ class FlxSpriteUtil
 	 * @param	Color		The line's color.
 	 * @param	Thickness	How thick the line is in pixels (default value is 1).
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 * @param	matrix		A transformation matrix (optional)
+	 * @param	blend		Blending mode (optional)
+	 * @param	smooth		Draw smooth or not (optional)
 	 */
-	static public function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ?lineStyle:LineStyle):Void
+	static public function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ?lineStyle:LineStyle, ?matrix:Matrix, ?blend:BlendMode, smooth:Bool=false):Void
 	{
 		beginDraw(0, lineStyle);
 		flashGfx.moveTo(StartX, StartY);
 		flashGfx.lineTo(EndX, EndY);
-		endDraw(sprite);
+		endDraw(sprite,matrix,blend,smooth);
 	}
 	
 	/**
@@ -230,12 +235,15 @@ class FlxSpriteUtil
 	 * @param	Height		Height of the rectangle
 	 * @param	Color		The rectangle's color.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 * @param	matrix		A transformation matrix (optional)
+	 * @param	matrix		Blending mode (optional)
+	 * @param	smooth		Draw smooth or not(optional)
 	 */
-	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle):Void
+	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?matrix:Matrix, ?blend:BlendMode, smooth:Bool=false):Void
 	{
 		beginDraw(Color, lineStyle);
 		flashGfx.drawRect(X, Y, Width, Height);
-		endDraw(sprite);
+		endDraw(sprite,matrix,blend,smooth);
 	}
 	
 	/**
@@ -292,12 +300,15 @@ class FlxSpriteUtil
 	 * @param 	Radius 		Radius of the circle
 	 * @param 	Color 		Color of the circle
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 * @param	matrix		A transformation matrix (optional)
+	 * @param	blend		Blending mode (optional)
+	 * @param	smooth		Draw smooth or not (optional)
 	*/
-	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int, ?lineStyle:LineStyle):Void
+	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int, ?lineStyle:LineStyle, ?matrix:Matrix, ?blend:BlendMode, smooth:Bool=false):Void
 	{
 		beginDraw(Color, lineStyle);
 		flashGfx.drawCircle(X, Y, Radius);
-		endDraw(sprite);
+		endDraw(sprite, matrix, blend, smooth);
 	}
 	
 	/**
@@ -376,10 +387,10 @@ class FlxSpriteUtil
 	 * 
 	 * @param	sprite	The FlxSprite to draw to
 	 */
-	inline static public function endDraw(sprite:FlxSprite):Void
+	inline static public function endDraw(sprite:FlxSprite,?matrix:Matrix,?blend:BlendMode,smooth:Bool=false):Void
 	{
 		flashGfx.endFill();
-		updateSpriteGraphic(sprite);
+		updateSpriteGraphic(sprite,matrix,blend,smooth);
 	}
 
 	/**
@@ -388,9 +399,9 @@ class FlxSpriteUtil
 	 * 
 	 * @param	Sprite	The <code>FlxSprite</code> to manipulate
 	 */
-	static public function updateSpriteGraphic(sprite:FlxSprite):Void
+	static public function updateSpriteGraphic(sprite:FlxSprite,?matrix:Matrix,?blend:BlendMode,smooth:Bool=false):Void
 	{
-		sprite.pixels.draw(flashGfxSprite);
+		sprite.pixels.draw(flashGfxSprite,matrix,blend,smooth);
 		sprite.dirty = true;
 		sprite.resetFrameBitmapDatas();
 	}
@@ -494,4 +505,10 @@ typedef LineStyle = {
 	?capsStyle:CapsStyle,
 	?jointStyle:JointStyle,
 	?miterLimit:Float
+}
+
+typedef FillStyle = {
+	?hasFill:Bool,
+	?color:Int,
+	?alpha:Float
 }
