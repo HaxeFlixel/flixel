@@ -232,6 +232,20 @@ class FlxColorUtil
 	}
 	
 	/**
+	 * Deprecated; please use FlxRandom.color() instead.
+	 * Returns a random color value between black and white
+	 * 
+	 * @param	Min		The lowest value to use for each channel.
+	 * @param	Max 	The highest value to use for each channel.
+	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
+	 * @return 	A color value in hex ARGB format.
+	 */
+	inline static public function getRandomColor(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
+	{
+		return FlxRandom.color( Min, Max, Alpha );
+	}
+	
+	/**
 	 * Given an alpha and 3 color values this will return an integer representation of it (ARGB format)
 	 * 
 	 * @param	Alpha	The Alpha value (between 0 and 255)

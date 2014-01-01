@@ -66,7 +66,7 @@ class FlxArrayUtil
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
 	 * @return	The newly shuffled array.
 	 */
-	@:generic static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
+	@:generic inline static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		return FlxRandom.shuffleArray( Objects, HowManyTimes );
 	}
@@ -80,7 +80,7 @@ class FlxArrayUtil
 	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
+	@:generic inline static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		return FlxRandom.getObject( Objects, StartIndex, EndIndex );
 	}
