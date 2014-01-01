@@ -152,9 +152,11 @@ class FlxTrailArea extends FlxSprite
 		if (Height <= 0) {
 			Height = FlxG.height;
 		}
-		_width = Width;
-		_height = Height;
-		_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
+		if ((Width != _width) || (Height != _height)) {
+			_width = Width;
+			_height = Height;
+			_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
+		}
 	}
 	
 	override public function destroy():Void 
@@ -244,10 +246,10 @@ class FlxTrailArea extends FlxSprite
 	 */
 	override private function set_width(Width:Float):Float 
 	{
+		if (Width <= 0) {
+			Width = FlxG.width;
+		}
 		if (Width != _width) {
-			if (Width <= 0) {
-				Width = FlxG.width;
-			}
 			_width = Width;
 			_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
 		}
@@ -267,10 +269,10 @@ class FlxTrailArea extends FlxSprite
 	 */
 	override private function set_height(Height:Float):Float
 	{
+		if (Height <= 0) {
+			Height = FlxG.height;
+		}
 		if (Height != _height) {
-			if (Height <= 0) {
-				Height = FlxG.height;
-			}
 			_height = Height;
 			_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
 		}
