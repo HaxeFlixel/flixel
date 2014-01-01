@@ -97,6 +97,18 @@ class FlxTrailArea extends FlxSprite
 	 */
 	private var _counter:Int = 0;
 	
+	/**
+	 * Internal width variable
+	 * Initialized to 1 to prevent invalid bitmapData during construction
+	 */
+	private var _width:Float = 1;
+	
+	/**
+	 * Internal height variable
+	 * Initialized to 1 to prevent invalid bitmapData during construction
+	 */
+	private var _height:Float = 1;
+	
 	 /**
 	  * Creates a new <code>FlxTrailArea</code>, in which all added sprites get a trail effect.
 	  * 
@@ -114,15 +126,9 @@ class FlxTrailArea extends FlxSprite
 	{
 		super(X, Y);
 		
-		if (Width <= 0) {
-			Width = FlxG.width;
-		}
-		if (Height <= 0) {
-			Height = FlxG.height;
-		}
+		setSize(Width, Height);
 		
 		group = new FlxTypedGroup<FlxSprite>();
-		_renderBitmap = new BitmapData(Width, Height, true, FlxColor.TRANSPARENT);
 		
 		//Sync variables
 		delay = Delay;
@@ -131,6 +137,26 @@ class FlxTrailArea extends FlxSprite
 		smoothing = Smoothing;
 		alphaMultiplier = AlphaMultiplier;
 		
+	}
+	
+	/**
+	 * Sets the <code>FlxTrailArea</code> to a new size. Clears the area!
+	 * @param	Width		The new width
+	 * @param	Height		The new height
+	 */
+	override public function setSize(Width:Float, Height:Float)
+	{
+		if (Width <= 0) {
+			Width = FlxG.width;
+		}
+		if (Height <= 0) {
+			Height = FlxG.height;
+		}
+		if ((Width != _width) || (Height != _height)) {
+			_width = Width;
+			_height = Height;
+			_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
+		}
 	}
 	
 	override public function destroy():Void 
@@ -205,5 +231,51 @@ class FlxTrailArea extends FlxSprite
 	inline public function add(Sprite:FlxSprite):FlxSprite 
 	{
 		return group.add(Sprite);
+	}
+	
+	/**
+	 * Redirects width to _width
+	 */
+	override private function get_width():Float 
+	{
+		return _width;
+	}
+	
+	/**
+	 * Setter for width, defaults to FlxG.width, creates new _rendeBitmap if neccessary
+	 */
+	override private function set_width(Width:Float):Float 
+	{
+		if (Width <= 0) {
+			Width = FlxG.width;
+		}
+		if (Width != _width) {
+			_width = Width;
+			_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
+		}
+		return _width;
+	}
+	
+	/**
+	 * Redirects height to _height
+	 */
+	override private function get_height():Float 
+	{
+		return _height;
+	}
+	
+	/**
+	 * Setter for height, defaults to FlxG.height, creates new _rendeBitmap if neccessary
+	 */
+	override private function set_height(Height:Float):Float
+	{
+		if (Height <= 0) {
+			Height = FlxG.height;
+		}
+		if (Height != _height) {
+			_height = Height;
+			_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
+		}
+		return _height;
 	}
 }
