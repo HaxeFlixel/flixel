@@ -1195,9 +1195,7 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - _offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
-		#if flash
-		return untyped framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
-		#else
+
 		// 1. Check to see if the point is outside of framePixels rectangle
 		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
 		{
@@ -1210,7 +1208,6 @@ class FlxSprite extends FlxObject
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			return (pixelAlpha * alpha >= Mask);
 		}
-		#end
 	}
 	
 	/**
