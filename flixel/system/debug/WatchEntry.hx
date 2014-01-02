@@ -199,15 +199,12 @@ class WatchEntry
 	 */
 	public function updateValue():Bool
 	{
-		if (editing || quickWatch)
+		if (editing || quickWatch) {
 			return false;
+		}
 		
 		var property:Dynamic = Reflect.getProperty(object, field);
-		
-		if (Std.is(property, FlxPoint)) 
-			valueDisplay.text = FlxStringUtil.formatFlxPoint(property, FlxG.debugger.pointPrecision);
-		else
-			valueDisplay.text = Std.string(property); 
+		valueDisplay.text = Std.string(property);
 		
 		return true;
 	}

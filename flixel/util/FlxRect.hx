@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flash.geom.Rectangle;
+import flixel.FlxG;
 
 /**
  * Stores a rectangle.
@@ -189,5 +190,14 @@ class FlxRect
 		var maxY:Float = Math.max(bottom, Rect.bottom);
 		
 		return set(minX, minY, maxX - minX, maxY - minY);
+	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	inline public function toString():String
+	{
+		var p = FlxG.debugger.precision;
+		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " + FlxMath.roundDecimal(y, p) + " | w: " + FlxMath.roundDecimal(width, p) + " | h: " + FlxMath.roundDecimal(height, p) + ")"; 
 	}
 }

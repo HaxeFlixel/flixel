@@ -4,90 +4,114 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
+import flixel.system.FlxAssets;
 
 /**
-* A basic button for the debugger, extends flash.display.Sprite
-* Cannot be used in a FlxState
-*
+* A basic button for the debugger, extends flash.display.Sprite.
+* Cannot be used in a FlxState.
 */
 class FlxSystemButton extends Sprite
 {
-	private var downHandler:Dynamic;
-	private var enabled:Bool = true;
+	/**
+	 * The function to be called when the button is pressed.
+	 */
+	public var downHandler:Dynamic;
+	/**
+	 * Whether or not the downHandler function will be called when 
+	 * the button is clicked.
+	 */
+	public var enabled:Bool = true;
+	/**
+	 * The icon this button uses.
+	 */
 	private var icon:Bitmap;
-
-	public function new(?Icon:BitmapData, ?DownHandler:Dynamic)
+	/**
+	 * Whether this is a toggle button or not. If so, a Boolean representing the current
+	 * state will be passed to the callback function, and the alpha value will be lowered when toggled.
+	 */
+	public var toggleMode:Bool = false;
+	/**
+	 * Whether the button has been toggled in toggleMode.
+	 */
+	public var toggled(default, set):Bool = false;
+	
+	private function set_toggled(Value:Bool):Bool
+	{
+		if (toggleMode)
+		{
+			if (Value)
+			{
+				alpha = 0.3;
+			}
+			else
+			{
+				alpha = 1;
+			}
+		}
+		return toggled = Value;
+	}
+	
+	/**
+	 * Create a new FlxSystemButton
+	 * 
+	 * @param	IconPath	The path to the icon to use for the button.
+	 * @param	DownHandler	The function to be called when the button is pressed.
+	 * @param	ToggleMode	Whether this is a toggle button or not.
+	 */
+	public function new(IconPath:String, ?DownHandler:Dynamic, ToggleMode:Bool = false)
 	{
 		super();
-
-		if(Icon != null)
+		
+		if (IconPath != null)
 		{
-			this.icon = new Bitmap(Icon);
-			addChild(this.icon);
+			icon = new Bitmap(FlxAssets.getBitmapData(IconPath));
+			addChild(icon);
 		}
-
-		if(DownHandler != null)
-		{
-			this.downHandler = DownHandler;
-		}
-
+		
+		#if flash
+		tabEnabled = false;
+		#end
+		downHandler = DownHandler;
+		toggleMode = ToggleMode;
+		
 		addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-
-		alpha = 0.8;
 	}
 
 	/**
-	* Change the Icon of a button
-	*
-	* @NewIcon:Bitmap pass a new bitmap for the icon to be changed
-	*
-	**/
-	public function changeIcon (NewIcon:BitmapData):Void
+	 * Change the Icon of the button
+	 * 
+	 * @param	IconPath The path to the icon to use for the button.
+ 	 */
+	public function changeIcon(IconPath:String):Void
 	{
-		if (this.icon != null)
-			removeChild(this.icon);
-
-		this.icon = new Bitmap(NewIcon);
-		addChild(this.icon);
+		if (icon != null)
+		{
+			removeChild(icon);
+		}
+		
+		icon = new Bitmap(FlxAssets.getBitmapData(IconPath));
+		addChild(icon);
 	}
 
-	/**
-	* Change the Button action Handler
-	*
-	* @NewHandler:Dynamic the new function to change for the button's action
-	*
-	**/
-	public function changeHandler (NewHandler:Dynamic):Void
-	{
-		this.downHandler = NewHandler;
-	}
-
-	public function enable():Void
-	{
-		enabled = true;
-	}
-
-	public function disable():Void
-	{
-		enabled = false;
-	}
-
-	private function onMouseUp(E:MouseEvent = null):Void
+	inline private function onMouseUp(?E:MouseEvent):Void
 	{
 		if (downHandler != null && enabled)
-			Reflect.callMethod (this, downHandler, []);
+		{
+			toggled = !toggled;
+			Reflect.callMethod (null, downHandler, []);
+		}
 	}
 
-	private function onMouseOver(E:MouseEvent = null):Void
+	inline private function onMouseOver(?E:MouseEvent):Void
 	{
-		alpha = 1;
+		alpha -= 0.2;
 	}
 
-	private function onMouseOut(E:MouseEvent = null):Void
+	inline private function onMouseOut(?E:MouseEvent):Void
 	{
-		alpha = 0.8;
+		alpha += 0.2;
 	}
 
 	public function destroy():Void

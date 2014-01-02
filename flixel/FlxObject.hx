@@ -3,6 +3,7 @@ package flixel;
 import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxCollisionType;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.tile.FlxTilemap;
@@ -72,11 +73,11 @@ class FlxObject extends FlxBasic
 	/**
 	 * The width of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
-	public var width(default, set):Float;
+	@:isVar public var width(get, set):Float;
 	/**
 	 * The height of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
 	 */
-	public var height(default, set):Float;
+	@:isVar public var height(get, set):Float;
 	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
@@ -106,26 +107,26 @@ class FlxObject extends FlxBasic
 	 * Controls how much this object is affected by camera scrolling.
 	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
 	 */
-	public var scrollFactor(default, set):IFlxPoint;
+	public var scrollFactor(default, set):FlxPoint;
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity(default, set):IFlxPoint;
+	public var velocity:FlxPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration(default, set):IFlxPoint;
+	public var acceleration:FlxPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
 	 */
-	public var drag(default, set):IFlxPoint;
+	public var drag:FlxPoint;
 	/**
 	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity(default, set):IFlxPoint;
+	public var maxVelocity:FlxPoint;
 	/**
 	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
@@ -185,10 +186,6 @@ class FlxObject extends FlxBasic
 	 * Internal statically typed FlxPoint vars, for performance reasons.
 	 */
 	private var _point:FlxPoint;
-	private var _velocity:FlxPoint;
-	private var _drag:FlxPoint;
-	private var _acceleration:FlxPoint;
-	private var _maxVelocity:FlxPoint;
 	private var _scrollFactor:FlxPoint;
 	/**
 	 * Internal static private variables, for performance reasons.
@@ -222,13 +219,23 @@ class FlxObject extends FlxBasic
 	 */
 	private function initVars():Void
 	{
+		collisionType = FlxCollisionType.OBJECT;
 		last = new FlxPoint(x, y);
+		scrollFactor = new FlxPoint(1, 1);
+		_point = new FlxPoint();
+		
+		initMotionVars();
+	}
+	
+	/**
+	 * Internal function for initialization of some variables that are used in updateMotion()
+	 */
+	inline private function initMotionVars():Void
+	{
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
 		drag = new FlxPoint();
 		maxVelocity = new FlxPoint(10000, 10000);
-		scrollFactor = new FlxPoint(1, 1);
-		_point = new FlxPoint();
 	}
 	
 	/**
@@ -247,10 +254,6 @@ class FlxObject extends FlxBasic
 		last = null;
 		cameras = null;
 		_point = null;
-		_velocity = null;
-		_drag = null;
-		_acceleration = null;
-		_maxVelocity = null;
 		_scrollFactor = null;
 		
 		framesData = null;
@@ -296,16 +299,16 @@ class FlxObject extends FlxBasic
 		angle += angularVelocity * dt;
 		angularVelocity += velocityDelta;
 		
-		velocityDelta = 0.5 * (FlxMath.computeVelocity(_velocity.x, _acceleration.x, _drag.x, _maxVelocity.x) - _velocity.x);
-		_velocity.x += velocityDelta;
-		delta = _velocity.x * dt;
-		_velocity.x += velocityDelta;
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
+		velocity.x += velocityDelta;
+		delta = velocity.x * dt;
+		velocity.x += velocityDelta;
 		x += delta;
 		
-		velocityDelta = 0.5 * (FlxMath.computeVelocity(_velocity.y, _acceleration.y, _drag.y, _maxVelocity.y) - _velocity.y);
-		_velocity.y += velocityDelta;
-		delta = _velocity.y * dt;
-		_velocity.y += velocityDelta;
+		velocityDelta = 0.5 * (FlxMath.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
+		velocity.y += velocityDelta;
+		delta = velocity.y * dt;
+		velocity.y += velocityDelta;
 		y += delta;
 	}
 	
@@ -395,7 +398,7 @@ class FlxObject extends FlxBasic
 		//draw graphics shape to camera buffer
 		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		#else
-		var gfx:Graphics = Camera._debugLayer.graphics;
+		var gfx:Graphics = Camera.debugLayer.graphics;
 		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
 		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
 		#end
@@ -412,7 +415,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (Std.is(ObjectOrGroup, FlxTypedGroup))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
+		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
 			var i:Int = 0;
@@ -431,7 +439,7 @@ class FlxObject extends FlxBasic
 			return results;
 		}
 		
-		if (Std.is(ObjectOrGroup, FlxTilemap))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
@@ -467,7 +475,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (Std.is(ObjectOrGroup, FlxTypedGroup))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		{
+			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
+		}
+		
+		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
 		{
 			var results:Bool = false;
 			var basic:FlxBasic;
@@ -486,7 +499,7 @@ class FlxObject extends FlxBasic
 			return results;
 		}
 		
-		if (Std.is(ObjectOrGroup, FlxTilemap))
+		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
@@ -553,6 +566,15 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
+	 * @return	Whether the object is within the Worldbounds or not.
+	 */
+	inline public function inWorldBounds():Bool
+	{
+		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
+	}
+	
+	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
@@ -576,7 +598,7 @@ class FlxObject extends FlxBasic
 	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined.  Otherwise a new one is created.
 	 * @return	A <code>FlxPoint</code> object containing the midpoint of this object in world coordinates.
 	 */
-	inline public function getMidpoint(?point:FlxPoint):FlxPoint
+	public function getMidpoint(?point:FlxPoint):FlxPoint
 	{
 		if (point == null)
 		{
@@ -665,11 +687,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Std.is(Object1, FlxTilemap))
+		if (Object1.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateX);
 		}
-		if (Std.is(Object2, FlxTilemap))
+		if (Object2.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateX, true);
 		}
@@ -725,8 +747,8 @@ class FlxObject extends FlxBasic
 		//Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1v:Float = Object1._velocity.x;
-			var obj2v:Float = Object2._velocity.x;
+			var obj1v:Float = Object1.velocity.x;
+			var obj2v:Float = Object2.velocity.x;
 			
 			if (!obj1immovable && !obj2immovable)
 			{
@@ -739,18 +761,18 @@ class FlxObject extends FlxBasic
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
-				Object1._velocity.x = average + obj1velocity * Object1.elasticity;
-				Object2._velocity.x = average + obj2velocity * Object2.elasticity;
+				Object1.velocity.x = average + obj1velocity * Object1.elasticity;
+				Object2.velocity.x = average + obj2velocity * Object2.elasticity;
 			}
 			else if (!obj1immovable)
 			{
 				Object1.x = Object1.x - overlap;
-				Object1._velocity.x = obj2v - obj1v * Object1.elasticity;
+				Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
 			}
 			else if (!obj2immovable)
 			{
 				Object2.x += overlap;
-				Object2._velocity.x = obj1v - obj2v * Object2.elasticity;
+				Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
 			}
 			return true;
 		}
@@ -777,11 +799,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Std.is(Object1, FlxTilemap))
+		if (Object1.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateY);
 		}
-		if (Std.is(Object2, FlxTilemap))
+		if (Object2.collisionType == FlxCollisionType.TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateY, true);
 		}
@@ -837,8 +859,8 @@ class FlxObject extends FlxBasic
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1v:Float = Object1._velocity.y;
-			var obj2v:Float = Object2._velocity.y;
+			var obj1v:Float = Object1.velocity.y;
+			var obj2v:Float = Object2.velocity.y;
 			
 			if (!obj1immovable && !obj2immovable)
 			{
@@ -851,13 +873,13 @@ class FlxObject extends FlxBasic
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
-				Object1._velocity.y = average + obj1velocity * Object1.elasticity;
-				Object2._velocity.y = average + obj2velocity * Object2.elasticity;
+				Object1.velocity.y = average + obj1velocity * Object1.elasticity;
+				Object2.velocity.y = average + obj2velocity * Object2.elasticity;
 			}
 			else if (!obj1immovable)
 			{
 				Object1.y = Object1.y - overlap;
-				Object1._velocity.y = obj2v - obj1v*Object1.elasticity;
+				Object1.velocity.y = obj2v - obj1v*Object1.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object2.active && Object2.moves && (obj1delta > obj2delta))
 				{
@@ -867,7 +889,7 @@ class FlxObject extends FlxBasic
 			else if (!obj2immovable)
 			{
 				Object2.y += overlap;
-				Object2._velocity.y = obj1v - obj2v*Object2.elasticity;
+				Object2.velocity.y = obj1v - obj2v*Object2.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object1.active && Object1.moves && (obj1delta < obj2delta))
 				{
@@ -888,7 +910,7 @@ class FlxObject extends FlxBasic
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	public function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;
 		y = Y;
@@ -899,7 +921,7 @@ class FlxObject extends FlxBasic
 	 * @param	Width	The new sprite width.
 	 * @param	Height	The new sprite height.
 	 */
-	inline public function setSize(Width:Float, Height:Float)
+	public function setSize(Width:Float, Height:Float)
 	{
 		width = Width;
 		height = Height;
@@ -927,12 +949,12 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal
 	 */
-	public function set_x(NewX:Float):Float
+	private function set_x(NewX:Float):Float
 	{
 		return x = NewX;
 	}
 	
-	public function set_y(NewY:Float):Float
+	private function set_y(NewY:Float):Float
 	{
 		return y = NewY;
 	}
@@ -973,6 +995,16 @@ class FlxObject extends FlxBasic
 		return Height;
 	}
 	
+	private function get_width():Float
+	{
+		return width;
+	}
+	
+	private function get_height():Float
+	{
+		return height;
+	}
+	
 	inline private function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
@@ -1011,34 +1043,10 @@ class FlxObject extends FlxBasic
 		return forceComplexRender = Value;
 	}
 	
-	private function set_scrollFactor(Value:IFlxPoint):IFlxPoint
+	private function set_scrollFactor(Value:FlxPoint):FlxPoint
 	{
 		_scrollFactor = cast Value;
 		return scrollFactor = Value;
-	}
-	
-	private function set_velocity(Value:IFlxPoint):IFlxPoint 
-	{
-		_velocity = cast Value;
-		return velocity = Value;
-	}
-	
-	private function set_acceleration(Value:IFlxPoint):IFlxPoint 
-	{
-		_acceleration = cast Value;
-		return acceleration = Value;
-	}
-	
-	private function set_drag(Value:IFlxPoint):IFlxPoint 
-	{
-		_drag = cast Value;
-		return drag = Value;
-	}
-	
-	private function set_maxVelocity(Value:IFlxPoint):IFlxPoint 
-	{
-		_maxVelocity = cast Value;
-		return maxVelocity = Value;
 	}
 	
 	#if !FLX_NO_DEBUG

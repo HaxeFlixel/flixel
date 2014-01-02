@@ -77,6 +77,11 @@ class FlxText extends FlxSprite
 	public var borderSize(default, set):Float = 1;
 	
 	/**
+	 * Internal reference to a Flash <code>TextField</code> object.
+	 */
+	public var textField(get, never):TextField;
+	
+	/**
 	 * How many iterations do use when drawing the border. 0: only 1 iteration, 1: one iteration for every pixel in borderSize
 	 * A value of 1 will have the best quality for large border sizes, but might reduce performance when changing text. 
 	 * NOTE: If the borderSize is 1, borderQuality of 0 or 1 will have the exact same effect (and performance).
@@ -444,6 +449,11 @@ class FlxText extends FlxSprite
 		borderQuality = Value;
 		
 		return Value;
+	}
+	
+	private function get_textField():TextField 
+	{
+		return _textField;
 	}
 	
 	private function regenGraphics():Void

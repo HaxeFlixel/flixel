@@ -1,21 +1,12 @@
 package flixel.util;
 
 import flash.geom.Point;
-
-interface IFlxPoint {
-	public var x(default, set):Float;
-	public var y(default, set):Float;
-	
-	public function set(X:Float = 0, Y:Float = 0):FlxPoint;
-	public function copyFrom(point:FlxPoint):FlxPoint;
-	public function copyTo(point:FlxPoint = null):FlxPoint;
-	public function destroy():Void;
-}
+import flixel.FlxG;
 
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint implements IFlxPoint
+class FlxPoint
 {
 	/**
 	 * @default 0
@@ -30,7 +21,7 @@ class FlxPoint implements IFlxPoint
 	/**
 	 * @default 0
 	 */
-	public var y(default, set):Float;
+	public var y(default, set):Float = 0;
 	
 	private function set_y(Value:Float):Float
 	{
@@ -113,14 +104,6 @@ class FlxPoint implements IFlxPoint
 	}
 	
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
-	 */
-	public function toString():String
-	{
-		return FlxStringUtil.getClassName(this, true);
-	}
-	
-	/**
 	 * Returns true if this point is within the given rectangular block
 	 * 
 	 * @param	RectX		The X value of the region to test within
@@ -157,4 +140,13 @@ class FlxPoint implements IFlxPoint
 	}
 	
 	public function destroy() { }
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	inline public function toString():String
+	{
+		var p = FlxG.debugger.precision;
+		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " +  FlxMath.roundDecimal(y, p) + ")"; 
+	}
 }

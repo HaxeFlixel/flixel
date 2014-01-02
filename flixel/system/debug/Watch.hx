@@ -30,14 +30,15 @@ class Watch extends Window
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * @param 	Title		The name of the window, displayed in the header bar.
+	 * @param	IconPath	Path to the icon to use for the window header.
 	 * @param 	Width		The initial width of the window.
 	 * @param 	Height		The initial height of the window.
 	 * @param 	Resizable	Whether you can change the size of the window with a drag handle.
 	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
 	 */
-	public function new(Title:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
-		super(Title, Width, Height, Resizable, Bounds);
+		super(Title, IconPath, Width, Height, Resizable, Bounds);
 		
 		_names = new Sprite();
 		_names.x = 2;
@@ -145,17 +146,10 @@ class Watch extends Window
 		
 		//  Update the value
 		var quickWatch:WatchEntry = _quickWatchList.get(Name);
-			
+		
 		if (quickWatch != null) 
 		{
-			var text:String = Std.string(NewValue);
-				
-			if (Std.is(NewValue, StringMap))
-				text = FlxStringUtil.formatStringMap(NewValue);
-			else if (Std.is(NewValue, FlxPoint))
-				text = FlxStringUtil.formatFlxPoint(NewValue, FlxG.debugger.pointPrecision);
-				
-			quickWatch.valueDisplay.text = text;
+			quickWatch.valueDisplay.text = Std.string(NewValue);
 		}
 	}
 	#end

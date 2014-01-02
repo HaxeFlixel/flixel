@@ -2,6 +2,7 @@ package flixel.system;
 
 import flash.display.Graphics;
 import flash.display.Sprite;
+import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
@@ -41,11 +42,13 @@ class FlxSplash extends FlxState
 		_cachedBgColor = FlxG.cameras.bgColor;
 		FlxG.cameras.bgColor = FlxColor.BLACK;
 		
+		// This is required for sound and animation to synch up properly
 		_cachedTimestep = FlxG.fixedTimestep;
-		FlxG.fixedTimestep = false;
+		FlxG.fixedTimestep = false; 
 		
 		_cachedAutoPause = FlxG.autoPause;
 		FlxG.autoPause = false;
+		
 		#if !FLX_NO_KEYBOARD
 			FlxG.keyboard.enabled = false;
 		#end
@@ -59,16 +62,19 @@ class FlxSplash extends FlxState
 			FlxTimer.start(time, timerCallback);
 		}
 		
+		var stageWidth:Int = Lib.current.stage.stageWidth;
+		var stageHeight:Int = Lib.current.stage.stageHeight;
+		
 		_sprite = new Sprite();
-		_sprite.x = FlxG.width * FlxCamera.defaultZoom / 2 - 50;
-		_sprite.y = FlxG.height * FlxCamera.defaultZoom / 2 - 70;
+		_sprite.x = (stageWidth / 2) - 50;
+		_sprite.y = (stageHeight / 2) - 70;
 		FlxG.stage.addChild(_sprite);
 		_gfx = _sprite.graphics;
 		
 		_text = new TextField();
 		_text.selectable = false;
 		_text.embedFonts = true;
-		_text.width = FlxG.width * FlxCamera.defaultZoom;
+		_text.width = stageWidth;
 		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 16, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		_text.defaultTextFormat = dtf;
@@ -76,7 +82,9 @@ class FlxSplash extends FlxState
 		_text.y = _sprite.y + 130;
 		FlxG.stage.addChild(_text);
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
+		#end
 	}
 	
 	private function timerCallback(Timer:FlxTimer):Void

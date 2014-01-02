@@ -1,6 +1,59 @@
-flixel CHANGELOG
+v.3.0.4
+------------------------------
+* Removed experimental FLX_THREADING conditional
+* Changes type of CHANGELOG and LICENSE files from .txt to .md - makes it more readable on github
+* FlxSpriteGroup: Default scrollFactor is now (1, 1) and upon adding sprites, their scrollFactor is snychronized
+* Now using the HaxeFlixel logo as an icon for the application by default again
+* FlxAnimationController: Additional null checks to prevent erros with FlxSpriteFilter
+* FlxG: addChildBelowMouse() and removeChild() added
+* FlxG.debugger.removeButton() added
+* Added toString() functions to FlxPoint and FlxRect
+* Console: Refactor which includes removing some commands and making it more flexible
+* FlxColorUtil: Now uses proper terminology (ARGB instead of the misleading RGBA)
+* FlxSprite: setGraphicDimensions() and updateHitbox() helper functions for working with scale added
+* FlxStringUtil: htmlFormat() and filterDigits() added
+* FlxMath: Improvements to sign() and chanceRoll()
+* FlxClickArea: Has been moved to flixel-addons
+* FlxText: Internal TextField is now accesible via textField
+* FlxTrailArea added, an alternative to FlxTrail which should be more performant
+* FlxBitmapUtil.merge() added
 
-v.3.0.0
+v.3.0.3
+------------------------------
+* No changes to 3.0.2, just a fix for the faulty 3.0.2 haxelib release
+
+v.3.0.2
+------------------------------
+* FlxTilemap: Region size checks added to fix a bug
+* FlxSprite.setColorTransformation() added
+* FlxAngle.getAngle(): Round parameter added
+* FlxPreloader: Workaround for issue in Chrome, enabled by default again
+* FlxCollision.pixelPerfectCheck(): Now correctly works with rotated sprites
+* FlxSpriteUtil drawing functions: Support for RGBA colors, new lineStyle param
+* MouseEventManager: Fix pixel-perfect checks for touchscreens
+* FlxSpriteGroup: Get rid of motion variable (velocity etc) overrides to fix a bug with FlxPath, add width and height getters
+* Basic HTML5 gamepad support (Chrome and Opera)
+* FlxG.android added (supports the back and menu keys for now)
+* FlxGame constructor: Added StartFullscreen param for desktop targets
+* FlxTypedGroup: Added iterators / iterator(), forEach(), forEachAlive(), forEachDead(), forEachExists()
+* FlxColorTween now accepts FlxSprite as a parameter and it will change its color automatically
+* QuadPath doesn't generate control points anymore
+
+v.3.0.1-alpha
+------------------------------
+* Fixes to gamepad API.
+* Added tilemap scaling.
+* FlxSpriteGroup has been reworked and now extends FlxSprite instead of FlxTypedGroup<FlxSprite>
+* FlxCollisionType introduced
+* FlxDebugger: UI improvements, now remembers visibility settings of the windows
+* Compiler fix for Blackberry target.
+* FlxAssets: Fonts are no longer inlined so they can be changed
+* FlxMath: distanceWithin(), distanceToPointWithin(), distanceToMouseWithin() and  distanceToTouchWithin() added
+* FlxG.fullscreen now works on cpp targets
+* FlxObject.inWorldBounds() added
+* LICENSE.txt cleanup
+
+v.3.0.0-alpha
 ------------------------------
 * New Front End classes to better encapsulate FlxG functionality.
 * Refactored the animation system.
@@ -10,7 +63,7 @@ v.3.0.0
 
 v.2.0.0-alpha.3
 ------------------------------
-* Fix for FLX_MOUSE_ADVANCED (won't compiled earlier)
+* Fix for FLX_MOUSE_ADVANCED (wouldn't compile earlier)
 * FlxMath functions are Float-compatible. Thanks @Gama11
 * Fix for negative object width and height. Thanks @Gama11
 * Fix for FlxPath and FlxObject

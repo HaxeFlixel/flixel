@@ -16,6 +16,7 @@ import flixel.animation.FlxAnimationController;
 import flixel.util.FlxAngle;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxColorUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.loaders.CachedGraphics;
@@ -24,37 +25,10 @@ import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
 /**
- * The interface for properties of <code>FlxSprite</code>
- * It makes possible to add <code>FlxSpriteGroup</code> to <code>FlxSpriteGroup</code>
- */
-interface IFlxSprite extends IFlxBasic 
-{
-	public var x(default, set):Float;
-	public var y(default, set):Float;
-	public var alpha(default, set):Float;
-	public var angle(default, set):Float;
-	public var facing(default, set):Int;
-	public var moves(default, set):Bool;
-	public var immovable(default, set):Bool;
-	
-	public var offset(default, set):IFlxPoint;
-	public var origin(default, set):IFlxPoint;
-	public var scale(default, set):IFlxPoint;
-	public var velocity(default, set):IFlxPoint;
-	public var maxVelocity(default, set):IFlxPoint;
-	public var acceleration(default, set):IFlxPoint;
-	public var drag(default, set):IFlxPoint;
-	public var scrollFactor(default, set):IFlxPoint;
-
-	public function reset(X:Float, Y:Float):Void;
-	public function setPosition(X:Float = 0, Y:Float = 0):Void;
-}
-
-/**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
  * with a bunch of graphics options and abilities, like animation and stamping.
  */
-class FlxSprite extends FlxObject implements IFlxSprite
+class FlxSprite extends FlxObject
 {
 	/**
 	 * Class that handles adding and playing animations on this sprite.
@@ -106,17 +80,17 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
 	 */
-	public var origin(default, set):IFlxPoint;
+	public var origin(default, set):FlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
-	 * changing a sprite's <code>width</code> or <code>height</code>.
+	 * changing a sprite's <code>width</code>, <code>height</code> or <code>scale</code>.
 	 */
-	public var offset(default, set):IFlxPoint;
+	public var offset(default, set):FlxPoint;
 	/**
-	 * Change the size of your sprite's graphic. NOTE: Scale doesn't currently affect collisions automatically, you will need to adjust the width, 
-	 * height and offset manually. WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
+	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use <code>updateHitbox</code> for that
+	 * (or <code>setGraphicDimensions()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
 	 */
-	public var scale(default, set):IFlxPoint;
+	public var scale(default, set):FlxPoint;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @default false
@@ -131,11 +105,9 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 * @default null
 	 */
-	#if flash
-	public var blend:BlendMode;
-	#else
 	public var blend(get, set):BlendMode;
 	private var _blend:BlendMode;
+	#if !flash
 	private var _blendInt:Int = 0;
 	#end
 	/**
@@ -211,6 +183,19 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	{
 		super(X, Y);
 		
+		facing = FlxObject.RIGHT;
+		
+		if (SimpleGraphic == null)
+		{
+			SimpleGraphic = FlxAssets.IMG_DEFAULT;
+		}
+		loadGraphic(SimpleGraphic);
+	}
+	
+	override private function initVars():Void 
+	{
+		super.initVars();
+		
 		animation = new FlxAnimationController(this);
 		
 		_flashPoint = new Point();
@@ -220,16 +205,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		offset = new FlxPoint();
 		origin = new FlxPoint();
 		scale = new FlxPoint(1, 1);
-		
-		facing = FlxObject.RIGHT;
-		
 		_matrix = new Matrix();
-		
-		if (SimpleGraphic == null)
-		{
-			SimpleGraphic = FlxAssets.IMG_DEFAULT;
-		}
-		loadGraphic(SimpleGraphic);
 	}
 	
 	/**
@@ -268,13 +244,25 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		frame = null;
 	}
 	
+	public function clone(?NewSprite:FlxSprite):FlxSprite
+	{
+		if (NewSprite == null)
+		{
+			NewSprite = new FlxSprite();
+		}
+		
+		NewSprite.loadFromSprite(this);
+		return NewSprite;
+	}
+	
 	/**
 	 * Load graphic from another FlxSprite and copy its tileSheet data. 
 	 * This method can useful for non-flash targets (and is used by the FlxTrail effect).
+	 * 
 	 * @param	Sprite	The FlxSprite from which you want to load graphic data
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function clone(Sprite:FlxSprite):FlxSprite
+	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
 	{
 		if (!exists)
 		{
@@ -295,18 +283,16 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			centerOffsets();
 		}
 		
-		animation.destroy();
-		animation.clone(Sprite.animation);
-		
 		updateFrameData();
 		resetHelpers();
 		antialiasing = Sprite.antialiasing;
-		
+		animation.copyFrom(Sprite.animation);
 		return this;
 	}
 	
 	/**
 	 * Load an image from an embedded graphic file.
+	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
 	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
@@ -512,9 +498,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			centerOffsets();
 		}
 		
-		animation.destroyAnimations();
 		animation.createPrerotated();
-		
 		return this;
 	}
 	
@@ -522,7 +506,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	 * This function creates a flat colored square image dynamically.
 	 * @param	Width		The width of the sprite you want to generate.
 	 * @param	Height		The height of the sprite you want to generate.
-	 * @param	Color		Specifies the color of the generated block.
+	 * @param	Color		Specifies the color of the generated block (ARGB format).
 	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
@@ -588,6 +572,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			animation.frameName = FrameName;
 		}
 		
+		resetSizeFromFrame();
+		setOriginToCenter();
 		return this;
 	}
 	
@@ -653,9 +639,59 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		height = frameHeight;
 	}
 	
+	/**
+	 * Sets the sprite's origin to its center - useful after adjusting 
+	 * <code>scale</code> to make sure rotations work as expected.
+	 */
 	inline public function setOriginToCenter():Void
 	{
 		_origin.set(frameWidth * 0.5, frameHeight * 0.5);
+	}
+	
+	/**
+	 * Helper function to set the graphic's dimensions by using scale, allowing you to keep the current aspect ratio
+	 * should one of the Integers be <= 0. Also updates the sprite's hitbox, offset and origin for you by default!
+	 * 
+	 * @param	Width			How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
+	 * @param	Height			How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
+	 * @param	UpdateHitbox	Whether or not to update the hitbox dimensions, offset and origin accordingly.
+	 */
+	public function setGraphicDimensions(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
+	{
+		if (Width <= 0 && Height <= 0) {
+			return;
+		}
+		
+		var newScaleX:Float = Width / frameWidth;
+		var newScaleY:Float = Height / frameHeight;
+		scale.set(newScaleX, newScaleY);
+		
+		if (Width <= 0) {
+			scale.x = newScaleY;
+		}
+		else if (Height <= 0) {
+			scale.y = newScaleX;
+		}
+		
+		if (UpdateHitbox) 
+		{
+			updateHitbox();
+		}	
+	}
+	
+	/**
+	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
+	 * Also calls setOriginToCenter(). Called by setGraphicDimensions().
+	 */
+	public function updateHitbox():Void
+	{
+		var newWidth:Float = scale.x * frameWidth;
+		var newHeight:Float = scale.y * frameHeight;
+		
+		width = newWidth;
+		height = newHeight;
+		offset.set( - ((newWidth - frameWidth) * 0.5), - ((newHeight - frameHeight) * 0.5));
+		setOriginToCenter();
 	}
 	
 	/**
@@ -751,8 +787,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 #if flash
 			if (isSimpleRender)
 			{
-				_flashPoint.x = _point.x;
-				_flashPoint.y = _point.y;
+				_flashPoint.x = Math.floor(_point.x);
+				_flashPoint.y = Math.floor(_point.y);
 				
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 			}
@@ -971,6 +1007,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		var column:Int;
 		var rows:Int = region.height;
 		var columns:Int = region.width;
+		cachedGraphics.bitmap.lock();
 		while(row < rows)
 		{
 			column = region.startX;
@@ -989,9 +1026,45 @@ class FlxSprite extends FlxObject implements IFlxSprite
 			}
 			row++;
 		}
-		
+		cachedGraphics.bitmap.unlock();
 		resetFrameBitmapDatas();
 		return positions;
+	}
+	
+	/**
+	 * Set sprite's color transformation with control over color offsets. Works only on flash target
+	 * @param	redMultiplier		The value for the red multiplier, in the range from 0 to 1. 
+	 * @param	greenMultiplier		The value for the green multiplier, in the range from 0 to 1. 
+	 * @param	blueMultiplier		The value for the blue multiplier, in the range from 0 to 1. 
+	 * @param	alphaMultiplier		The value for the alpha transparency multiplier, in the range from 0 to 1. 
+	 * @param	redOffset			The offset value for the red color channel, in the range from -255 to 255.
+	 * @param	greenOffset			The offset value for the green color channel, in the range from -255 to 255. 
+	 * @param	blueOffset			The offset for the blue color channel value, in the range from -255 to 255. 
+	 * @param	alphaOffset			The offset for alpha transparency channel value, in the range from -255 to 255. 
+	 */
+	public function setColorTransformation(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0, alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
+	{
+		color = FlxColorUtil.getColor24(Std.int(redMultiplier * 255), Std.int(greenMultiplier * 255), Std.int(blueMultiplier * 255));
+		alpha = alphaMultiplier;
+		
+		if (_colorTransform == null)
+		{
+			_colorTransform = new ColorTransform();
+		}
+		else
+		{
+			_colorTransform.redMultiplier = redMultiplier;
+			_colorTransform.greenMultiplier = greenMultiplier;
+			_colorTransform.blueMultiplier = blueMultiplier;
+			_colorTransform.alphaMultiplier = alphaMultiplier;
+			_colorTransform.redOffset = redOffset;
+			_colorTransform.greenOffset = greenOffset;
+			_colorTransform.blueOffset = blueOffset;
+			_colorTransform.alphaOffset = alphaOffset;
+		}
+		
+		useColorTransform = ((alpha != 1) || (color != 0xffffff) || (redOffset != 0) || (greenOffset != 0) || (blueOffset != 0) || (alphaOffset != 0));
+		dirty = true;
 	}
 	
 	private function updateColorTransform():Void
@@ -1242,7 +1315,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		{
 			if (facing == FlxObject.LEFT && flipped > 0)
 			{
-				frameBmd = frame.getReversedBitmap();
+				frameBmd = frame.getHReversedBitmap();
 			}
 			else
 			{
@@ -1294,15 +1367,30 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		}
 		
 		cachedGraphics = FlxG.bitmap.get(key);
-		region = new Region();
+		
+		if (region == null)	
+		{
+			region = new Region();
+		}
+		
+		region.startX = 0;
+		region.startY = 0;
+		region.tileWidth = 0;
+		region.tileHeight = 0;
+		region.spacingX = 0;
+		region.spacingY = 0;
 		region.width = cachedGraphics.bitmap.width;
 		region.height = cachedGraphics.bitmap.height;
 		
 		width = frameWidth = cachedGraphics.bitmap.width;
 		height = frameHeight = cachedGraphics.bitmap.height;
 		animation.destroyAnimations();
+		
 		updateFrameData();
 		resetHelpers();
+		// not sure if i should add this line...
+		resetFrameBitmapDatas();
+		
 		return Pixels;
 	}
 	
@@ -1385,25 +1473,24 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		return super.set_angle(Value);
 	}
 	
-	private function set_origin(Value:IFlxPoint):IFlxPoint
+	private function set_origin(Value:FlxPoint):FlxPoint
 	{
 		_origin = cast Value;
 		return origin = Value;
 	}
 	
-	private function set_offset(Value:IFlxPoint):IFlxPoint
+	private function set_offset(Value:FlxPoint):FlxPoint
 	{
 		_offset = cast Value;
 		return offset = Value;
 	}
 	
-	private function set_scale(Value:IFlxPoint):IFlxPoint
+	private function set_scale(Value:FlxPoint):FlxPoint
 	{
 		_scale = cast Value;
 		return scale = Value;
 	}
 	
-	#if !flash
 	inline private function get_blend():BlendMode 
 	{
 		return _blend;
@@ -1411,6 +1498,7 @@ class FlxSprite extends FlxObject implements IFlxSprite
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
+		#if !flash
 		if (Value != null)
 		{
 			switch (Value)
@@ -1431,9 +1519,8 @@ class FlxSprite extends FlxObject implements IFlxSprite
 		{
 			_blendInt = 0;
 		}
-		
+		#end
 		_blend = Value;
 		return Value;
 	}
-	#end
 }

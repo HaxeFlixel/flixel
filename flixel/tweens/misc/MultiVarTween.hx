@@ -4,6 +4,8 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxArrayUtil;
 
+import Type;
+
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
  */
@@ -27,6 +29,9 @@ class MultiVarTween extends FlxTween
 	{
 		super.destroy();
 		_object = null;
+		_vars = null;
+		_start = null;
+		_range = null;
 	}
 	
 	/**
@@ -63,8 +68,8 @@ class MultiVarTween extends FlxTween
 				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
 			}
 			
-			var a:Float = Reflect.getProperty(object, p);
-		
+			var a:Dynamic = Reflect.getProperty(object, p);
+			
 			if (Math.isNaN(a)) 
 			{
 				throw "The property \"" + p + "\" is not numeric.";
@@ -92,7 +97,7 @@ class MultiVarTween extends FlxTween
 			}
 		}
 	}
-
+	
 	// Tween information.
 	private var _object:Dynamic;
 	private var _vars:Array<String>;

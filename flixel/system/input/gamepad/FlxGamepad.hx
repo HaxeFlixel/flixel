@@ -5,7 +5,9 @@ import flixel.util.FlxPoint;
 class FlxGamepad 
 {
 	public var buttons:Map<Int, FlxGamepadButton>;
-	public var axis(null, default):Array<Float>;
+	
+	@:allow(flixel.system.input.gamepad)
+	public var axis(default, null):Array<Float>;
 	/**
 	 * DPAD on Xbox Gamepad
 	 */
@@ -25,6 +27,7 @@ class FlxGamepad
 		buttons = new Map<Int, FlxGamepadButton>();
 		ball = new FlxPoint();
 		axis = new Array<Float>();
+		axis = [for (i in 0...4) 0];
 		hat = new FlxPoint();
 		id = ID;
 		
@@ -101,11 +104,16 @@ class FlxGamepad
 	 * @return	Whether the button is pressed
 	 */
 	public function pressed(ButtonID:Int):Bool 
-	{ 
+	{
+		#if (cpp || neko)
 		if (buttons.exists(ButtonID))
 		{
 			return (buttons.get(ButtonID).current > 0);
 		}
+		#elseif js
+			var v = untyped navigator.webkitGetGamepads().item(id).buttons[ButtonID];
+			return if (Math.round(v) == 1) true else false;
+		#end
 		
 		return false;
 	}
@@ -149,11 +157,18 @@ class FlxGamepad
 			return 0;
 		}
 		
+		#if (cpp || neko)
 		if (Math.abs(axis[AxisID]) > deadZone)
 		{
 			return axis[AxisID];
 		}
-		
+		#elseif js
+		var v:Float = untyped navigator.webkitGetGamepads().item(id).axes[AxisID];
+		if (Math.abs(v) > deadZone)
+		{
+			return Math.round(v);
+		}
+		#end
 		return 0;
 	}
 	

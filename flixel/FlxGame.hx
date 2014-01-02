@@ -21,7 +21,7 @@ import flash.text.GridFitType;
 import flixel.system.debug.FlxDebugger;
 #end
 
-#if !FLX_NO_SOUND_TRAY
+#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 import flixel.system.ui.FlxSoundTray;
 #end
 
@@ -78,6 +78,13 @@ class FlxGame extends Sprite
 	 * A flag for keeping track of whether a game reset was requested or not.
 	 */
 	public var requestedReset:Bool = true;
+
+	#if desktop
+	/**
+	 * Should we start Fullscreen or not? This is useful if you want to load Fullscreen settings from a FlxSave and set it when the game starts, instead of having it hard-set in your project XML.
+	 */
+	private var _startFullscreen:Bool = false; 
+	#end
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -109,7 +116,7 @@ class FlxGame extends Sprite
 	public var recording:Bool = false;
 	#end
 	
-	#if !FLX_NO_SOUND_TRAY
+	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 	/**
 	 * The sound tray display container (see <code>createSoundTray()</code>).
 	 */
@@ -141,32 +148,18 @@ class FlxGame extends Sprite
 	private var _focusLostScreen:FlxFocusLostScreen;
 	#end
 	
-	#if !FLX_NO_SOUND_TRAY
+	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 	/**
-	 * Change this afterr calling super() in the FlxGame constructor to use a customized sound tray based on FlxSoundTray.
+	 * Change this after calling super() in the FlxGame constructor to use a customized sound tray based on FlxSoundTray.
 	 */
 	private var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
 	#end
 	
 	#if !FLX_NO_FOCUS_LOST_SCREEN
 	/**
-	 * Change this afterr calling super() in the FlxGame constructor to use a customized sound tray based on FlxFocusLostScreen.
+	 * Change this after calling super() in the FlxGame constructor to use a customized screen which will be show when the application lost focus.
 	 */
 	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
-	#end
-	
-	#if (cpp && FLX_THREADING)
-	// push 'true' into this array to trigger an update. push 'false' to terminate update thread.
-	private var _stateSwitchRequested:Bool;
-	private var _threadSync:cpp.vm.Deque<Bool>;
-	
-	private function threadedUpdate():Void 
-	{
-		while (_threadSync.pop(true))
-		{
-			update();
-		}
-	}
 	#end
 	
 	private var _skipSplash:Bool = false;
@@ -180,10 +173,15 @@ class FlxGame extends Sprite
 	 * @param	GameFramerate	How frequently the game should update (default is 60 times per second).
 	 * @param	FlashFramerate	Sets the actual display framerate for Flash player (default is 60 times per second).
 	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
+	 * @param	StartFullscreen	Whether to start the game in fullscreen mode (desktop targets only), false by default
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60, SkipSplash:Bool = false)
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, GameFramerate:Int = 60, FlashFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
 	{
 		super();
+		
+		#if desktop
+		_startFullscreen = StartFullscreen;
+		#end
 		
 		// Super high priority init stuff
 		inputContainer = new Sprite();
@@ -221,6 +219,10 @@ class FlxGame extends Sprite
 		
 		_total = Lib.getTimer();
 
+		#if desktop
+		FlxG.fullscreen = _startFullscreen;
+		#end
+
 		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
@@ -237,7 +239,7 @@ class FlxGame extends Sprite
 	// Let mobile devs opt out of unnecessary overlays.
 	#if !mobile	
 		// Volume display tab
-		#if !FLX_NO_SOUND_TRAY
+		#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 		soundTray = Type.createInstance(_customSoundTray, []);
 		addChild(soundTray);
 		#end
@@ -264,11 +266,6 @@ class FlxGame extends Sprite
 			switchState();
 			requestedReset = false;
 		}
-		
-		#if (cpp && FLX_THREADING)
-		_threadSync = new cpp.vm.Deque();
-		cpp.vm.Thread.create(threadedUpdate);
-		#end
 		
 		if (FlxG.framerate < FlxG.flashFramerate)
 		{
@@ -305,7 +302,9 @@ class FlxGame extends Sprite
 		#end 
 		
 		stage.frameRate = flashFramerate;
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.resumeSounds();
+		#end
 		FlxG.inputs.onFocus();
 	}
 	
@@ -331,7 +330,9 @@ class FlxGame extends Sprite
 		#end 
 		
 		stage.frameRate = 10;
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.pauseSounds();
+		#end
 		FlxG.inputs.onFocusLost();
 	}
 	
@@ -339,8 +340,8 @@ class FlxGame extends Sprite
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
-		
-		#if (desktop || mobile)
+
+		#if !flash
 		FlxG.bitmap.onContext();
 		#end
 		
@@ -366,7 +367,7 @@ class FlxGame extends Sprite
 		elapsedMS = ticks - _total;
 		_total = ticks;
 		
-		#if !FLX_NO_SOUND_TRAY
+		#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 		if (soundTray != null && soundTray.active)
 		{
 			soundTray.update(elapsedMS);
@@ -461,10 +462,6 @@ class FlxGame extends Sprite
 	public inline function requestNewState(newState:FlxState):Void
 	{
 		requestedState = newState;
-		
-		#if (cpp && FLX_THREADING)
-		_stateSwitchRequested = true;
-		#end
 	} 
 
 	/**
@@ -479,7 +476,9 @@ class FlxGame extends Sprite
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
 		FlxG.inputs.reset();
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroySounds();
+		#end
 		FlxG.plugins.onStateSwitch();
 		
 		#if !FLX_NO_DEBUG
@@ -508,8 +507,8 @@ class FlxGame extends Sprite
 		
 		state.create();
 		
-		#if (cpp && FLX_THREADING) 
-		_stateSwitchRequested = false; 
+		#if !FLX_NO_DEBUG
+		debugger.console.registerObject("state", FlxG.state);
 		#end
 	}
 	
@@ -560,11 +559,7 @@ class FlxGame extends Sprite
 		FlxBasic._ACTIVECOUNT = 0;
 		#end
 		
-		#if (cpp && FLX_THREADING)
-		_threadSync.push(true);
-		#else
 		update();
-		#end
 		
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
@@ -603,7 +598,9 @@ class FlxGame extends Sprite
 		
 		updateInput();
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.updateSounds();
+		#end
 		FlxG.plugins.update();
 		
 		state.tryUpdate(); // Update the current state
@@ -695,11 +692,6 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.cameras.lock();
-		
-		#if (cpp && FLX_THREADING)
-		// Only draw the state if a new state hasn't been requested
-		if (!_stateSwitchRequested)
-		#end 
 		
 		FlxG.plugins.draw();
 		

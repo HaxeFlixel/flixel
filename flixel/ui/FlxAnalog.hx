@@ -48,11 +48,6 @@ class FlxAnalog extends FlxSpriteGroup
 	 */ 
 	public var onPressed:Void->Void;
 	/**
-	 * How fast the speed of this object is changing.
-	 */ 
-	public var acceleration:FlxPoint;
-	
-	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */ 
 	inline static private var NORMAL:Int = 0;
@@ -81,10 +76,6 @@ class FlxAnalog extends FlxSpriteGroup
 	private var _tempTouches:Array<FlxTouch>;
 	#end
 	
-	/**
-	 * Helper FlxPoint object
-	 */ 
-	private var _point:FlxPoint;
 	/**
 	 * The area which the joystick will react.
 	 */

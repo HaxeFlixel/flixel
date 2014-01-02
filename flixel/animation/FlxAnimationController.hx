@@ -91,8 +91,10 @@ class FlxAnimationController
 		}
 	}
 	
-	public function clone(controller:FlxAnimationController):FlxAnimationController
+	public function copyFrom(controller:FlxAnimationController):FlxAnimationController
 	{
+		destroyAnimations();
+		
 		for (anim in controller._animations)
 		{
 			add(anim.name, anim._frames, anim.frameRate, anim.looped);
@@ -103,7 +105,11 @@ class FlxAnimationController
 			createPrerotated();
 		}
 		
-		name = controller.name;
+		if (controller.name != null)
+		{
+			name = controller.name;
+		}
+		
 		frameIndex = controller.frameIndex;
 		
 		return this;
@@ -224,15 +230,15 @@ class FlxAnimationController
 	}
 	
 	/**
-	 * Adds a new _animations to the sprite.
+	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndicies()
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indicies		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Indicies		An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
 	 */
-	public function addByIndicies(Name:String, Prefix:String, Indicies:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	public function addByStringIndicies(Name:String, Prefix:String, Indicies:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
@@ -254,6 +260,64 @@ class FlxAnimationController
 				_animations.set(Name, anim);
 			}
 		}
+	}
+	
+	/**
+	 * Adds a new _animations to the sprite.
+	 * @param	Name			What this _animations should be called (e.g. "run").
+	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * @param	Indicies		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
+	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
+	 * @param	Looped			Whether or not the _animations is looped or just plays once.
+	 */
+	public function addByIndicies(Name:String, Prefix:String, Indicies:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	{
+		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		{
+			var frameIndices:Array<Int> = new Array<Int>();
+			var l:Int = Indicies.length;
+			for (i in 0...l)
+			{
+				var indexToAdd:Int = findSpriteFrame(Prefix, Indicies[i], Postfix);
+				if (indexToAdd != -1) 
+				{
+					frameIndices.push(indexToAdd);
+				}
+			}
+			
+			if (frameIndices.length > 0)
+			{
+				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped);
+				_animations.set(Name, anim);
+			}
+		}
+	}
+	
+	/**
+	 * Find a sprite frame so that for Prefix = "file"; Indice = 5; Postfix = ".png"
+	 * It will find frame with name "file5.png", but if it desn't exist it will try
+	 * to find "file05.png" so allowing 99 frames per animation
+	 * Returns found frame and null if nothing is found
+	 */
+	private function findSpriteFrame(Prefix:String, Index:Int, Postfix:String):Int
+	{
+		var numFrames:Int = frames;
+		var flxFrames:Array<FlxFrame> = _sprite.framesData.frames;
+		for (i in 0...numFrames)
+		{
+			var name:String = flxFrames[i].name;
+			if (StringTools.startsWith(name, Prefix) && StringTools.endsWith(name, Postfix))
+			{
+				var index:Null<Int> = Std.parseInt(name.substring(Prefix.length, name.length - Postfix.length));
+				if (index != null && index == Index)
+				{
+					return i;
+				}
+			}
+		}
+		
+		return -1;
 	}
 	
 	/**
@@ -319,7 +383,7 @@ class FlxAnimationController
 			_curAnim = null;
 		}
 		
-		if (_animations.get(AnimName) == null)
+		if (AnimName == null || _animations.get(AnimName) == null)
 		{
 			FlxG.log.warn("No animation called \"" + AnimName + "\"");
 			return;
@@ -421,7 +485,7 @@ class FlxAnimationController
 	/**
 	 * Gets the name of the currently playing _animations (warning: can be null)
 	 */
-	inline private function get_name():String
+	private function get_name():String
 	{
 		var animName:String = null;
 		if (_curAnim != null)
@@ -435,7 +499,7 @@ class FlxAnimationController
 	 * Plays a specified _animations (same as calling play)
 	 * @param	AnimName	The name of the _animations you want to play.
 	 */
-	inline private function set_name(AnimName:String):String
+	private function set_name(AnimName:String):String
 	{
 		play(AnimName);
 		return AnimName;

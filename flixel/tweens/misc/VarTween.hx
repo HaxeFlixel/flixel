@@ -77,4 +77,5 @@ class VarTween extends FlxTween
 	private var _property:String;
 	private var _start:Float;
 	private var _range:Float;
+	private var _isInt:Bool;
 }

@@ -170,27 +170,25 @@ class FlxRandom
 	}
 	
 	/**
-	 * Generate a random boolean result based on the chance value
+	 * Generate a random boolean result based on the chance value. Returns true or false based on the chance value (default 50%). 
+	 * For example if you wanted a player to have a 30% chance of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
 	 * 
-	 * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
-	 * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
-	 * 
-	 * @param 	chance 	The chance of receiving the value. Should be given as a uint between 0 and 100 (effectively 0% to 100%)
-	 * @return true if the roll passed, or false
+	 * @param 	Chance 	The chance of receiving the value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
+	 * @return 	Whether the roll passed or not.
 	 */
-	static public function chanceRoll(chance:Int = 50):Bool
+	static public function chanceRoll(Chance:Float = 50):Bool
 	{
-		if (chance <= 0)
+		if (Chance <= 0)
 		{
 			return false;
 		}
-		else if (chance >= 100)
+		else if (Chance >= 100)
 		{
 			return true;
 		}
 		else
 		{
-			if (Math.random() * 100 >= chance)
+			if (Math.random() * 100 >= Chance)
 			{
 				return false;
 			}
@@ -202,13 +200,14 @@ class FlxRandom
 	}
 	
 	/**
-	 * Randomly returns either a 1 or -1
+	 * Randomly returns either a 1 or -1. 
 	 * 
+	 * @param	Chance	The chance of receiving a positive value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return	1 or -1
 	 */
-	inline static public function sign():Float
+	inline static public function sign(Chance:Float = 50):Float
 	{
-		return (Math.random() > 0.5) ? 1 : -1;
+		return chanceRoll(Chance) ? 1 : -1;
 	}
 	
 	/**

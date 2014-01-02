@@ -108,10 +108,6 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	private var _object:Dynamic;
 	/**
-	 * The offset of the slider from x and y.
-	 */
-	private var _offset:FlxPoint;
-	/**
 	 * Helper var for callbacks.
 	 */
 	private var _lastPos:Float;
@@ -188,7 +184,7 @@ class FlxSlider extends FlxSpriteGroup
 		body = new FlxSprite(_offset.x, _offset.y);
 		body.makeGraphic(_width, _height, 0);
 		body.scrollFactor.set();
-		FlxSpriteUtil.drawLine(body, 0, _height / 2, _width, _height / 2, _color, _thickness); 
+		FlxSpriteUtil.drawLine(body, 0, _height / 2, _width, _height / 2, { color:_color, thickness:_thickness }); 
 		
 		handle = new FlxSprite(_offset.x, _offset.y);
 		handle.makeGraphic(_thickness, _height, _handleColor);
@@ -236,10 +232,12 @@ class FlxSlider extends FlxSpriteGroup
 				alpha = hoverAlpha;
 			}
 			
+			#if !FLX_NO_SOUND_SYSTEM
 			if (hoverSound != null && !_justHovered)
 			{
 				FlxG.sound.play(hoverSound);
 			}
+			#end
 			
 			_justHovered = true;
 			
@@ -248,11 +246,13 @@ class FlxSlider extends FlxSpriteGroup
 				handle.x = FlxG.mouse.screenX;
 				updateValue();
 				
+				#if !FLX_NO_SOUND_SYSTEM
 				if (clickSound != null && !_justClicked) 
 				{
 					FlxG.sound.play(clickSound);
 					_justClicked = true;
 				}
+				#end
 			}
 			if (!FlxG.mouse.pressed)
 			{

@@ -40,6 +40,9 @@ class FlxCollision
 	 */
 	static public function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
 	{
+		//if either of the angles are non-zero, consider the angles of the sprites in the pixel check
+		var considerRotation:Bool = Contact.angle != 0 || Target.angle != 0;
+		
 		var pointA:Point = new Point();
 		var pointB:Point = new Point();
 		
@@ -60,13 +63,34 @@ class FlxCollision
 			pointB.y = Target.y - Std.int(FlxG.camera.scroll.y * Target.scrollFactor.y) - Target.offset.y;
 		}
 		
-		#if flash
-		var boundsA:Rectangle = new Rectangle(pointA.x, pointA.y, Contact.framePixels.width, Contact.framePixels.height);
-		var boundsB:Rectangle = new Rectangle(pointB.x, pointB.y, Target.framePixels.width, Target.framePixels.height);
-		#else
-		var boundsA:Rectangle = new Rectangle(pointA.x, pointA.y, Contact.frameWidth, Contact.frameHeight);
-		var boundsB:Rectangle = new Rectangle(pointB.x, pointB.y, Target.frameWidth, Target.frameHeight);
-		#end
+		var boundsA:Rectangle = null;
+		var boundsB:Rectangle = null;
+		if (considerRotation)
+		{
+			// find the center of both sprites
+			var centerA:Point = new Point(Contact.origin.x, Contact.origin.y);
+			var centerB:Point = new Point(Target.origin.x, Target.origin.y);			
+			
+			// now make a bounding box that allows for the sprite to be rotated in 360 degrees
+			boundsA = new Rectangle(
+				(pointA.x + centerA.x - centerA.length), 
+				(pointA.y + centerA.y - centerA.length), 
+				centerA.length*2, centerA.length*2);
+			boundsB = new Rectangle(
+				(pointB.x + centerB.x - centerB.length), 
+				(pointB.y + centerB.y - centerB.length), 
+				centerB.length*2, centerB.length*2);			
+		}
+		else
+		{
+			#if flash
+			boundsA = new Rectangle(pointA.x, pointA.y, Contact.framePixels.width, Contact.framePixels.height);
+			boundsB = new Rectangle(pointB.x, pointB.y, Target.framePixels.width, Target.framePixels.height);
+			#else
+			boundsA = new Rectangle(pointA.x, pointA.y, Contact.frameWidth, Contact.frameHeight);
+			boundsB = new Rectangle(pointB.x, pointB.y, Target.frameWidth, Target.frameHeight);
+			#end
+		}
 		
 		var intersect:Rectangle = boundsA.intersection(boundsB);
 		
@@ -101,6 +125,40 @@ class FlxCollision
 		var testA:BitmapData = Contact.framePixels;
 		var testB:BitmapData = Target.framePixels;
 		var overlapArea:BitmapData = new BitmapData(Std.int(intersect.width), Std.int(intersect.height), false);
+		
+		// More complicated case, if either of the sprites is rotated
+		if (considerRotation)
+		{
+			var testAMatrix:Matrix = new Matrix();
+			testAMatrix.identity();
+			
+			// translate the matrix to the center of the sprite
+			testAMatrix.translate( -Contact.origin.x, -Contact.origin.y);
+			
+			// rotate the matrix according to angle
+			testAMatrix.rotate(Contact.angle * 0.017453293 );  // degrees to rad
+			
+			// translate it back!
+			testAMatrix.translate(boundsA.width / 2, boundsA.height / 2);
+			
+			// prepare an empty canvas
+			var testA2:BitmapData = new BitmapData(Math.floor(boundsA.width) , Math.floor(boundsA.height), true, 0x00000000);
+			
+			// plot the sprite using the matrix
+			testA2.draw(testA, testAMatrix, null, null, null, false);
+			testA = testA2;
+			
+			// (same as above)
+			var testBMatrix:Matrix = new Matrix();
+			testBMatrix.identity();
+			testBMatrix.translate(-Target.origin.x,-Target.origin.y);
+			testBMatrix.rotate(Target.angle * 0.017453293 );  // degrees to rad
+			testBMatrix.translate(boundsB.width/2,boundsB.height/2);
+			var testB2:BitmapData = new BitmapData(Math.floor(boundsB.width), Math.floor(boundsB.height), true, 0x00000000);
+			testB2.draw(testB, testBMatrix, null, null, null, false);			
+			testB = testB2;
+		}
+		
 		
 		#if flash
 		overlapArea.draw(testA, matrixA, new ColorTransform(1, 1, 1, 1, 255, -255, -255, AlphaTolerance), BlendMode.NORMAL);
@@ -191,16 +249,7 @@ class FlxCollision
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
 		overlap.offset(intersect.x, intersect.y);
 		
-		if (overlap.isEmpty())
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-		
-		return false;
+		return(!overlap.isEmpty());
 	}
 	
 	/**

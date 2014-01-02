@@ -11,6 +11,10 @@ class TextureRegion
 	public function new(data:CachedGraphics, startX:Int = 0, startY:Int = 0, tileWidth:Int = 0, tileHeight:Int = 0, spacingX:Int = 0, spacingY:Int = 0, width:Int = 0, height:Int = 0) 
 	{ 
 		this.data = data;
+		
+		if (width <= 0)		width = data.bitmap.width;
+		if (height <= 0)	height = data.bitmap.height;
+		
 		region = new Region(startX, startY, tileWidth, tileHeight, spacingX, spacingY, width, height);
 	}
 	

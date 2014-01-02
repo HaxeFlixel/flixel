@@ -1,10 +1,12 @@
 package flixel.system.input.gamepad;
 
 #if (cpp || neko)
+import openfl.events.JoystickEvent;
+#end
+#if (cpp || neko || js)
 import flash.Lib;
 import flixel.system.input.gamepad.FlxGamepad;
 import flixel.system.input.IFlxInput;
-import openfl.events.JoystickEvent;
 
 #if (android && openfl_ouya)
 import openfl.utils.JNI;
@@ -33,11 +35,13 @@ class FlxGamepadManager implements IFlxInput
 		#end
 		
 		_gamepads = new Map<Int, FlxGamepad>();
+		#if (cpp || neko)
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
 		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
 		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
+		#end
 	}
 	
 	/**
@@ -183,6 +187,7 @@ class FlxGamepadManager implements IFlxInput
 		numActiveGamepads = 0;
 	}
 	
+	#if (cpp || neko)
 	/**
 	 * Event handler so FlxGame can toggle buttons.
 	 * 
@@ -267,6 +272,7 @@ class FlxGamepadManager implements IFlxInput
 		gamepad.hat.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.hat.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
+	#end
 	
 	inline public function onFocus():Void { }
 

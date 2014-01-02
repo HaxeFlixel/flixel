@@ -31,7 +31,9 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * An array of FlxKey objects.
 	 */
-	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY) // Need to access the var there
+	@:allow(flixel.system.input.android.FlxAndroidKeyList.get_ANY)
+	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY)
+	
 	private var _keyList:Array<FlxKey>;
 	
 	public function new()
@@ -396,8 +398,8 @@ class FlxKeyboard implements IFlxInput
 			return;
 		}
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		// Sound tray controls
-		
 		// Mute key
 		if (inKeyArray(FlxG.sound.muteKeys, c))
 		{
@@ -441,6 +443,7 @@ class FlxKeyboard implements IFlxInput
 			}
 			#end
 		}
+		#end
 		
 		updateKeyStates(c, false);
 	}

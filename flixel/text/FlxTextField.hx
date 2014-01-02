@@ -157,9 +157,9 @@ class FlxTextField extends FlxText
 		if (!_addedToDisplay)
 		{
 			#if !flash
-			_camera._canvas.addChild(_textField);
+			_camera.canvas.addChild(_textField);
 			#else
-			_camera._flashSprite.addChild(_textField);
+			_camera.flashSprite.addChild(_textField);
 			#end
 			
 			_addedToDisplay = true;
@@ -230,9 +230,9 @@ class FlxTextField extends FlxText
 			if (Value != null)
 			{
 				#if !flash
-				Value._canvas.addChild(_textField);
+				Value.canvas.addChild(_textField);
 				#else
-				Value._flashSprite.addChild(_textField);
+				Value.flashSprite.addChild(_textField);
 				#end
 				
 				_addedToDisplay = true;
@@ -250,12 +250,5 @@ class FlxTextField extends FlxText
 			_camera = Value;
 		}
 		return Value;
-	}
-	
-	public var textField(get, never):TextField;
-	
-	private function get_textField():TextField 
-	{
-		return _textField;
 	}
 }

@@ -143,6 +143,8 @@ class FlxTouchManager implements IFlxInput
 		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
 		{
+			touch.updateTouchPosition(FlashEvent.stageX, FlashEvent.stageY); 
+			
 			if (touch._current > 0) 
 			{
 				touch._current = 1;

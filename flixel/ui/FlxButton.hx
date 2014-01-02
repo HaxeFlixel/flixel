@@ -3,6 +3,9 @@ package flixel.ui;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 
+/**
+ * A simple button class that calls a function when clicked by the mouse.
+ */
 class FlxButton extends FlxTypedButton<FlxText>
 {
 	/**
@@ -52,5 +55,4 @@ class FlxButton extends FlxTypedButton<FlxText>
 			label.size = label.size;
 		}
 	}
-	
 }

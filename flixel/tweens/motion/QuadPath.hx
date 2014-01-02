@@ -20,20 +20,16 @@ class QuadPath extends Motion
 	{
 		super(0, complete, type, null);
 		_points = new Array<FlxPoint>();
-		_curve = new Array<FlxPoint>();
 		_curveD = new Array<Float>();
 		_curveT = new Array<Float>();
-		_distance = _speed = _index = 0;
+		_distance = _speed = _index = _numSegs = 0;
 		_updateCurve = true;
-		
-		_curveT[0] = 0;
 	}
 	
 	override public function destroy():Void 
 	{
 		super.destroy();
 		_points = null;
-		_curve = null;
 		_curveD = null;
 		_curveT = null;
 		_a = null;
@@ -75,7 +71,6 @@ class QuadPath extends Motion
 	public function addPoint(x:Float = 0, y:Float = 0):QuadPath
 	{
 		_updateCurve = true;
-		if (_points.length == 0) _curve[0] = new FlxPoint(x, y);
 		_points[_points.length] = new FlxPoint(x, y);
 		return this;
 	}
@@ -103,7 +98,7 @@ class QuadPath extends Motion
 		}
 		else
 		{
-			_index = _curve.length - 1;
+			_index = _numSegs - 1;
 		}
 		
 		super.start();
@@ -119,14 +114,13 @@ class QuadPath extends Motion
 		
 		if (!_backward && _points != null)
 		{
-			if (_index < _curve.length - 1)
+			if (_index < _numSegs - 1)
 			{
 				while (_t > _curveT[_index + 1]) 
 				{
 					_index++;
-					if (_index == _curve.length - 1)
+					if (_index == _numSegs - 1)
 					{
-						_index -= 1;
 						break;
 					}
 				}
@@ -134,9 +128,10 @@ class QuadPath extends Motion
 			td = _curveT[_index];
 			tt = _curveT[_index + 1] - td;
 			td = (_t - td) / tt;
-			_a = _curve[_index];
-			_b = _points[_index + 1];
-			_c = _curve[_index + 1];
+			_a = _points[_index * 2];
+			_b = _points[_index * 2 + 1];
+			_c = _points[_index * 2 + 2];
+			
 			x = _a.x * (1 - td) * (1 - td) + _b.x * 2 * (1 - td) * td + _c.x * td * td;
 			y = _a.y * (1 - td) * (1 - td) + _b.y * 2 * (1 - td) * td + _c.y * td * td;
 		}
@@ -144,23 +139,23 @@ class QuadPath extends Motion
 		{
 			if (_index > 0)
 			{
-				while (_t < _curveT[_index - 1])
+				while (_t < _curveT[_index])
 				{
-					_index -= 1;
+					_index--;
 					if (_index == 0)
 					{
-						_index += 1;
 						break;
 					}
 				}
 			}
 			
-			td = _curveT[_index];
-			tt = _curveT[_index - 1] - td;
+			td = _curveT[_index+1];
+			tt = _curveT[_index] - td;
 			td = (_t - td) / tt;
-			_a = _curve[_index];
-			_b = _points[_index];
-			_c = _curve[_index - 1];
+			_a = _points[_index * 2 + 2];
+			_b = _points[_index * 2 + 1];
+			_c = _points[_index * 2];
+			
 			x = _a.x * (1 - td) * (1 - td) + _b.x * 2 * (1 - td) * td + _c.x * td * td;
 			y = _a.y * (1 - td) * (1 - td) + _b.y * 2 * (1 - td) * td + _c.y * td * td;
 		}
@@ -169,60 +164,41 @@ class QuadPath extends Motion
 	}
 	
 	/** @private Updates the path, preparing the curve. */
+	// [from, control, to, control, to, control, to, control, to ...]
 	private function updatePath():Void
 	{
-		if (_points.length < 3)	
+		if ((_points.length - 1) % 2 != 0 || _points.length < 3)	
 		{
-			throw "A QuadPath must have at least 3 points to operate.";
-		}
+			throw "A QuadPath must have at least 3 points to operate and number of points must be a odd.";
+		} 
 		if (!_updateCurve) 
 		{
 			return;
 		}
 		_updateCurve = false;
 		
-		// produce the curve points
-		var p:FlxPoint,
-			c:FlxPoint,
-			l:FlxPoint = _points[1],
-			i:Int = 2;
-		while (i < _points.length)
-		{
-			p = _points[i];
-			if (_curve.length > i - 1) c = _curve[i - 1];
-			else c = _curve[i - 1] = new FlxPoint();
-			if (i < _points.length - 1)
-			{
-				c.x = l.x + (p.x - l.x) / 2;
-				c.y = l.y + (p.y - l.y) / 2;
-			}
-			else
-			{
-				c.x = p.x;
-				c.y = p.y;
-			}
-			l = p;
-			i ++;
-		}
-		
 		// find the total distance of the path
-		i = 0;
+		var i:Int = 0;
+		var j:Int = 0;
 		_distance = 0;
-		while (i < _curve.length - 1)
+		_numSegs = Std.int((_points.length - 1) / 2);
+		while (i < _numSegs)
 		{
-			_curveD[i] = curveLength(_curve[i], _points[i + 1], _curve[i + 1]);
-			_distance += _curveD[i ++];
+			j = i * 2;
+			_curveD[i] = curveLength(_points[j], _points[j + 1], _points[j + 2]);
+			_distance += _curveD[i++];
 		}
 		
 		// find t for each point on the curve
-		i = 1;
+		i = 0;
 		var d:Float = 0;
-		while (i < _curve.length - 1)
+		while (i < _numSegs)
 		{
 			d += _curveD[i];
-			_curveT[i ++] = d / _distance;
+			_curveT[i++] = d / _distance;
 		}
-		_curveT[_curve.length - 1] = 1;
+		_curveT[_numSegs - 1] = 1;
+		_curveT.unshift(0);
 	}
 	
 	/**
@@ -256,10 +232,10 @@ class QuadPath extends Motion
 	private var _distance:Float;
 	private var _speed:Float;
 	private var _index:Int;
+	private var _numSegs:Int;
 	
 	// Curve information.
 	private var _updateCurve:Bool;
-	private var _curve:Array<FlxPoint>;
 	private var _curveT:Array<Float>;
 	private var _curveD:Array<Float>;
 	

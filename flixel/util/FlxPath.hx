@@ -330,8 +330,8 @@ class FlxPath
 			{
 				object.velocity.x = (_point.x < node.x) ? speed : -speed;
 				object.velocity.y = (_point.y < node.y) ? speed : -speed;
+				angle = FlxAngle.getAngle(_point, node, true);
 				_point.set(object.velocity.x, object.velocity.y);
-				angle = FlxAngle.getAngle(_point, node);
 				FlxAngle.rotatePoint(0, speed, 0, 0, angle, _point);
 			}
 			
@@ -644,7 +644,7 @@ class FlxPath
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		#else
-		var gfx:Graphics = Camera._debugLayer.graphics;
+		var gfx:Graphics = Camera.debugLayer.graphics;
 		#end
 		
 		//Then fill up the object with node and path graphics

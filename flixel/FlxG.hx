@@ -1,5 +1,6 @@
 package flixel;
 
+import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flixel.system.FlxAssets;
@@ -12,11 +13,11 @@ import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
-import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
+import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
@@ -35,6 +36,12 @@ import flixel.system.input.mouse.FlxMouse;
 #end
 #if !FLX_NO_GAMEPAD
 import flixel.system.input.gamepad.FlxGamepadManager;
+#end
+#if !FLX_NO_SOUND_SYSTEM
+import flixel.system.frontEnds.SoundFrontEnd;
+#end
+#if android
+import flixel.system.input.android.FlxAndroidKeys;
 #end
 
 interface IDestroyable
@@ -64,7 +71,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public var LIBRARY_MINOR_VERSION:String = "0.0-dev";
+	static public var LIBRARY_MINOR_VERSION:String = "0.5-dev";
 	
 	/**
 	 * Internal tracker for game object.
@@ -151,11 +158,18 @@ class FlxG
 	public static var touches(default, null):FlxTouchManager;
 	#end
 	
-	#if (!FLX_NO_GAMEPAD && (cpp||neko))
+	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 	/**
 	 * A reference to a <code>FlxGamepadManager</code> object.
 	 */
 	public static var gamepads(default, null):FlxGamepadManager;
+	#end
+	
+	#if android
+	/**
+	 * A reference to a <code>FlxAndroidKeys</code> object. Useful for tracking Back, Home, etc on Android devices.
+	 */
+	public static var android(default, null):FlxAndroidKeys;
 	#end
 	
 	/**
@@ -218,17 +232,19 @@ class FlxG
 	 */
 	static public var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * sounds and other things to manage or <code>play()</code> sounds.
 	 */
 	static public var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
+	#end
 	
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
 	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
-	inline static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
@@ -252,12 +268,19 @@ class FlxG
 			touches = cast(inputs.add(new FlxTouchManager()), FlxTouchManager);
 		#end
 		
-		#if (!FLX_NO_GAMEPAD && (cpp||neko))
+		#if (!FLX_NO_GAMEPAD && (cpp||neko||js))
 			gamepads = cast(inputs.add(new FlxGamepadManager()), FlxGamepadManager);
 		#end
 		
+		#if android
+			android = cast(inputs.add(new FlxAndroidKeys()), FlxAndroidKeys);
+		#end
+		
 		save.bind("flixel");
+		
+		#if !FLX_NO_SOUND_SYSTEM
 		sound.loadSavedPrefs();
+		#end
 		
 		FlxAssets.init();
 	}
@@ -266,14 +289,16 @@ class FlxG
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
 	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
-	inline static private function reset():Void
+	static private function reset():Void
 	{
 		PxBitmapFont.clearStorage();
 		FlxRandom.globalSeed = Math.random();
 		
 		bitmap.clearCache();
 		inputs.reset();
+		#if !FLX_NO_SOUND_SYSTEM
 		sound.destroySounds(true);
+		#end
 		paused = false;
 		timeScale = 1.0;
 		elapsed = 0;
@@ -374,33 +399,35 @@ class FlxG
 	 */
 	inline static public function resizeGame(Width:Int, Height:Int):Void
 	{
-        camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
-        width = Width;
-        height = Height;
+		camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
+		width = Width;
+		height = Height;
 	}
 	
-	#if flash
 	/**
-	 * Use this to toggle between fullscreen and normal mode.
+	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
+	 * You can easily toggle fullscreen with eg: <code>FlxG.fullscreen = !FlxG.fullscreen;</code>
 	 */
-	static public var fullscreen(default, set):Bool = false;
+	@isVar static public var fullscreen(default, set):Bool = false;
 	 
-	inline static private function set_fullscreen(Value:Bool):Bool
+	static private function set_fullscreen(Value:Bool):Bool
 	{
+
 		if (Value)
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN;
+			#if flash
 			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
 			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
+			#end
 		}
 		else
 		{
 			stage.displayState = StageDisplayState.NORMAL;
 		}
-		
-		return Value;
+
+		return fullscreen = Value;
 	}
-	#end
 	
 	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
@@ -414,7 +441,8 @@ class FlxG
 	}
 	
 	/**
-	 * Read-only: access the current game state from anywhere.
+	 * Read-only: access the current game state from anywhere. Consider using <code>addChildBelowMouse()</code>
+	 * if you want to add a DisplayObject to the stage instead of directly adding it here!
 	 */
 	public static var state(get, never):FlxState;
 	
@@ -459,7 +487,7 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any overlaps were detected.
 	 */
-	inline static public function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
+	static public function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -520,12 +548,40 @@ class FlxG
 	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
 	 * @return	Null
 	 */
-	inline public static function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
+	public static function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
 	{
 		if (Object != null)
 		{
 			Object.destroy(); 
 		}
 		return null;
+	}
+	
+	/**
+	 * Regular DisplayObjects are normally displayed over the flixel cursor and the flixel debugger if simply 
+	 * added to stage. This function simplifies things by adding a DisplayObject directly below mouse level.
+	 * 
+	 * @param 	Child			The DisplayObject to add
+	 * @param 	IndexModifier	Amount to add to the index - makes sure the index stays within bounds!
+	 * @return	The added DisplayObject
+	 */
+	static public function addChildBelowMouse(Child:DisplayObject, IndexModifier:Int = 0):DisplayObject
+	{
+		var index = game.getChildIndex(game.inputContainer);
+		var max = game.numChildren;
+		
+		index = FlxMath.maxAdd(index, IndexModifier, max);
+		return game.addChildAt(Child, index);
+	}
+	
+	/**
+	 * Removes a child from the flixel display list.
+	 * 
+	 * @param 	Child	The DisplayObject to add
+	 * @return	The removed DisplayObject
+	 */
+	inline static public function removeChild(Child:DisplayObject):DisplayObject
+	{
+		return game.removeChild(Child);
 	}
 }
