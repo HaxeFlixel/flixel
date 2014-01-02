@@ -1,5 +1,7 @@
 package flixel.system.debug;
 
+import flash.display.Graphics;
+import flash.display.Shape;
 import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
@@ -9,16 +11,56 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
+import flixel.util.FlxMath;
+
+#if flash
+import flash.text.AntiAliasType;
+import flash.text.GridFitType;
+#end
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
+ * 
+ * @author Adam "Atomic" Saltsman
+ * @author Anton Karlov
  */
 class Stats extends Window
 {
 	private static inline var UPDATE_DELAY:Int = 500;
-	private static inline var WIDTH:Int = 100;
+	private static inline var WIDTH:Int = 450;
 	
-	private var _text:TextField;
+	private var minFps:Float;
+	private var maxFps:Float;
+	private var minMem:Float;
+	private var maxMem:Float;
+	private var history:Int = 60;
+	
+	private var fpsList:Array<Float>;
+	private var memList:Array<Float>;
+	
+	private var _itvTime:Int = 0;
+	private var _initTime:Int;
+	private var _frameCount:Int;
+	private var _totalCount:Int;
+	private var _currentTime:Int;
+	
+	private var _tfMaxFps:TextField;
+	private var _tfMinFps:TextField;
+	private var _tfMaxMem:TextField;
+	private var _tfMinMem:TextField;
+	private var _tfInfo:TextField;
+	
+	private var _fpsBox:Shape;
+	private var _memBox:Shape;
+	private var _display:Shape;
+	
+	private var _defaultFormat:TextFormat;
+	
+	private var flashPlayerFramerate:Float = 0;
+	private var visibleCount:Int = 0;
+	private var activeCount:Int = 0;
+	private var updateTime:Int = 0;
+	private var drawTime:Int = 0;
 	
 	private var _lastTime:Int = 0;
 	private var _updateTimer:Int = 0;
@@ -35,10 +77,8 @@ class Stats extends Window
 	private var _activeObject:Array<Int>;
 	private var _activeObjectMarker:Int = 0;
 	
-	private var _flash:Array<Float>;
-	private var _flashMarker:Int = 0;
-	
 	#if !flash
+	private var drawCallsCount:Int = 0;
 	private var _drawCalls:Array<Int>;
 	private var _drawCallsMarker:Int = 0;
 	#end
@@ -56,20 +96,57 @@ class Stats extends Window
 	{
 		super(Title, IconPath, Width, Height, Resizable, Bounds);
 		
-		// Need to account for the additional drawCalls stat on non-flash targets
-		#if flash
-		resize(WIDTH, 100);
-		#else
-		resize(WIDTH, 118);
-		#end
+		resize(WIDTH, 170);
 		
-		var leftText:TextField = createTextField(TextFormatAlign.LEFT, 0xD8D8D8);
-		leftText.text = "FPS: \n" + "Mem: \n" + "U: \n" + "D: \n" + #if !flash "DrawTiles: \n" + #end "QuadTrees: \n" + "Lists \n";
-		_text = createTextField(TextFormatAlign.RIGHT, 0xffffff);
+		fpsList = [];
+		memList = [];
+		
+		_defaultFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
+		
+		_tfMaxFps = makeLabel(2, 15, _defaultFormat);
+		addChild(_tfMaxFps);
+		
+		_tfMinFps = makeLabel(2, 52, _defaultFormat);
+		addChild(_tfMinFps);
+		
+		_tfMaxMem = makeLabel(2, 78, _defaultFormat);
+		addChild(_tfMaxMem);
+		
+		_tfMinMem = makeLabel(2, 115, _defaultFormat);
+		addChild(_tfMinMem);
+		
+		_tfInfo = makeLabel(57, 132, _defaultFormat);
+		_tfInfo.multiline = true;
+		_tfInfo.height = 32;
+		_tfInfo.width = _width;
+		addChild(_tfInfo);
+		
+		_display = new Shape();
+		_display.y = 10;
+		addChild(_display);
+		
+		_fpsBox = new Shape();
+		_fpsBox.x = 60;
+		_fpsBox.y = 65;
+		addChild(_fpsBox);
+		
+		_memBox = new Shape();
+		_memBox.x = 60;
+		_memBox.y = 128;
+		addChild(_memBox);
+		
+		minFps = FlxMath.MAX_VALUE;
+		maxFps = FlxMath.MIN_VALUE;
+		minMem = FlxMath.MAX_VALUE;
+		maxMem = FlxMath.MIN_VALUE;
+		
+		draw();
+		
+		_initTime = _itvTime = FlxG.game.ticks;
+        _totalCount = _frameCount = 0;
 		
 		_update = new Array();
 		_draw = new Array();
-		_flash = new Array();
 		_activeObject = new Array();
 		_visibleObject = new Array();
 		
@@ -79,23 +156,51 @@ class Stats extends Window
 	}
 	
 	/**
-	 * Helper function to create a new textfield.
-	 * @param	Alignment	The aligment of the textfield
-	 * @return 	The created textfield
+	 * Helper method for label creation.
+	 *
+	 * @param        X         label x position.
+	 * @param        Y         label y position.
+	 * @param        Format         label text format.
+	 * @return                new label text field at specified position and format
 	 */
-	private function createTextField(Alignment:Dynamic, Color:Int):TextField
+	private function makeLabel(X:Float, Y:Float, Format:TextFormat = null):TextField
 	{
-		var text:TextField = new TextField();
-		text.width = WIDTH - 4;
-		text.x = 2;
-		text.y = 15;
-		text.multiline = true;
-		text.wordWrap = true;
-		text.selectable = true;
-		text.embedFonts = true;
-		text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, Color, false, false, false, null, null, Alignment);
-		addChild(text);
-		return text;
+		var tf:TextField = new TextField();
+		tf.x = X;
+		tf.y = Y;
+		tf.height = 16;
+		tf.multiline = false;
+		tf.wordWrap = false;
+		tf.embedFonts = true;
+		tf.selectable = false;
+		#if flash
+		tf.antiAliasType = AntiAliasType.NORMAL;
+		tf.gridFitType = GridFitType.PIXEL;
+		#end
+		tf.defaultTextFormat = Format;
+		tf.text = "";
+		return tf;
+	}
+	
+	/**
+	 * Draw graph axis
+	 */
+	private function draw():Void
+	{
+		_display.graphics.clear();
+		_display.graphics.beginFill(0x000000, 0.5);
+		_display.graphics.lineStyle(1, 0x5e5f5f, 1);
+
+		_display.graphics.moveTo(60, 55);
+		_display.graphics.lineTo(60, 10);
+		_display.graphics.moveTo(60, 55);
+		_display.graphics.lineTo(_width - 7, 55);
+
+		_display.graphics.moveTo(60, 118);
+		_display.graphics.lineTo(60, 73);
+		_display.graphics.moveTo(60, 118);
+		_display.graphics.lineTo(_width - 7, 118);
+		_display.graphics.endFill();
 	}
 	
 	/**
@@ -103,16 +208,62 @@ class Stats extends Window
 	 */
 	override public function destroy():Void
 	{
-		if (_text != null)
+		if (_tfInfo != null)
 		{
-			removeChild(_text);
+			removeChild(_tfInfo);
 		}
-		_text = null;
+		_tfInfo = null;
+		
+		if (_tfMaxFps != null)
+		{
+			removeChild(_tfMaxFps);
+		}
+		_tfMaxFps = null;
+		
+		if (_tfMinFps != null)
+		{
+			removeChild(_tfMinFps);
+		}
+		_tfMinFps = null;
+		
+		if (_tfMaxMem != null)
+		{
+			removeChild(_tfMaxMem);
+		}
+		_tfMaxMem = null;
+		
+		if (_tfMinMem != null)
+		{
+			removeChild(_tfMinMem);
+		}
+		_tfMinMem = null;
+		
+		if (_fpsBox != null)
+		{
+			removeChild(_fpsBox);
+		}
+		_fpsBox = null;
+		
+		if (_memBox != null)
+		{
+			removeChild(_memBox);
+		}
+		_memBox = null;
+		
+		if (_display != null)
+		{
+			removeChild(_display);
+		}
+		_display = null;
+		
+		_defaultFormat = null;
 		_update = null;
 		_draw = null;
-		_flash = null;
 		_activeObject = null;
 		_visibleObject = null;
+		
+		fpsList = null;
+		memList = null;
 		
 		#if !flash
 		_drawCalls = null;
@@ -127,9 +278,8 @@ class Stats extends Window
 	 */
 	public function update():Void
 	{
-		var time:Int = FlxG.game.ticks;
+		var time:Int = _currentTime = FlxG.game.ticks;
 		var elapsed:Int = time - _lastTime;
-		_lastTime = FlxG.game.ticks;
 		
 		if (elapsed > UPDATE_DELAY)
 		{
@@ -139,75 +289,63 @@ class Stats extends Window
 		
 		_updateTimer += elapsed;
 		
+		_frameCount++;
+        _totalCount++;
+		
 		if (_updateTimer > UPDATE_DELAY)
 		{
-			var i:Int = 0;
-			var output:String = "";
+			(visible) ? updateDisplay() : updateMinMax();
+			updateDisplay();
+			fpsList.unshift(currentFps());
+			memList.unshift(currentMem());
 			
-			var flashPlayerFramerate:Float = 0;
-			i = 0;
-			while (i < _flashMarker)
+			if (fpsList.length > history)
 			{
-				flashPlayerFramerate += _flash[i++];
-			}
-			flashPlayerFramerate /= _flashMarker;
-			
-			var updateTime:Int = 0;
-			i = 0;
-			while (i < _updateMarker)
-			{
-				updateTime += _update[i++];
+				fpsList.pop();
 			}
 			
-			var activeCount:Int = 0;
-			i = 0;
-			while(i < _activeObjectMarker)
+			if (memList.length > history)
 			{
-				activeCount += _activeObject[i++];
+				memList.pop();
+			}
+			
+			_frameCount = 0;
+			_itvTime = _currentTime;
+			
+			updateTime = 0;
+			for (i in 0..._updateMarker)
+			{
+				updateTime += _update[i];
+			}
+			
+			for (i in 0..._activeObjectMarker)
+			{
+				activeCount += _activeObject[i];
 			}
 			activeCount = Std.int(activeCount / _activeObjectMarker);
 			
-			var drawTime:Int = 0;
-			i = 0;
-			while (i < _drawMarker)
+			drawTime = 0;
+			for (i in 0..._drawMarker)
 			{
-				drawTime += _draw[i++];
+				drawTime += _draw[i];
 			}
 			
-			var visibleCount:Int = 0;
-			i = 0;
-			while (i < _visibleObjectMarker)
+			for (i in 0..._visibleObjectMarker)
 			{
-				visibleCount += _visibleObject[i++];
+				visibleCount += _visibleObject[i];
 			}
 			visibleCount = Std.int(visibleCount / _visibleObjectMarker);
 			
 			#if !flash
-			var drawCallsCount:Int = 0;
-			i = 0;
-			while (i < _drawCallsMarker)
+			for (i in 0..._drawCallsMarker)
 			{
-				drawCallsCount += _drawCalls[i++];
+				drawCallsCount += _drawCalls[i];
 			}
 			drawCallsCount = Std.int(drawCallsCount / _drawCallsMarker);
 			#end
 			
-			output += Std.int(1 / (flashPlayerFramerate / 1000)) + " / " + FlxG.flashFramerate + " \n";
-			output += Math.round(System.totalMemory * 0.000000954 * 100) / 100 + " MB" + " \n";
-			output += activeCount + " (" + Std.int(updateTime / _updateMarker) + "ms)" + " \n";
-			output += visibleCount + " (" + Std.int(drawTime / _drawMarker) + "ms)" + " \n";
-			#if !flash
-			output += Std.string(drawCallsCount) + " \n";
-			#end
-			output += Std.string(FlxQuadTree._NUM_CACHED_QUAD_TREES) + " \n";
-			output += Std.string(FlxList._NUM_CACHED_FLX_LIST) + " \n";
-			
-			_text.text = output;
-			_text.selectable = false;
-			
 			_updateMarker = 0;
 			_drawMarker = 0;
-			_flashMarker = 0;
 			_activeObjectMarker = 0;
 			_visibleObjectMarker = 0;
 			#if !flash
@@ -215,6 +353,125 @@ class Stats extends Window
 			#end
 			_updateTimer -= UPDATE_DELAY;
 		}
+	}
+	
+	/**
+	 * Update displayable perfomance values.
+	 */
+	private function updateDisplay():Void
+	{
+		updateMinMax();
+		redrawDisplay();
+	}
+	
+	/**
+	 * Update range values for perfomance graph.
+	 */
+	private function updateMinMax():Void
+	{
+		minFps = Math.min(currentFps(), minFps);
+		maxFps = Math.max(currentFps(), maxFps);
+		
+		minMem = Math.min(currentMem(), minMem);
+		maxMem = Math.max(currentMem(), maxMem);
+	}
+	
+	/**
+	 * Redraw perfomance graph and update displayed text info.
+	 */
+	private function redrawDisplay():Void
+	{
+		if (runningTime() >= 1)
+		{
+			_tfMinFps.text = Std.int(10 * minFps) / 10 + " fps";
+			_tfMaxFps.text = Std.int(10 * maxFps) / 10 + " fps";
+			_tfMinMem.text = Std.int(10 * minMem) / 10 + " mb";
+			_tfMaxMem.text = Std.int(10 * maxMem) / 10 + " mb";
+		}
+		
+		var output:String = "Current " + (Std.int(10 * currentFps()) / 10) + " fps : ";
+		output += "Average " + (Std.int(10 * averageFps()) / 10) + " fps : ";
+		output += "Memory Used " + (Std.int(10 * currentMem()) / 10) + "mb\n";
+		
+		output += "Upd " + activeCount + " (" + Std.int(updateTime / _updateMarker) + "ms)" + " : ";
+		output += "Draw " + visibleCount + " (" + Std.int(drawTime / _drawMarker) + "ms)" + " : ";
+		#if !flash
+		output += "DrawTiles " + Std.string(drawCallsCount) + " : ";
+		#end
+		output += "QuadTrees " + Std.string(FlxQuadTree._NUM_CACHED_QUAD_TREES) + " : ";
+		output += "Lists " + Std.string(FlxList._NUM_CACHED_FLX_LIST);
+		
+		_tfInfo.text = output;
+		
+		var vec:Graphics = _fpsBox.graphics;
+		vec.clear();
+		vec.lineStyle(1, 0x96ff00, 1);
+
+		var i:Int = 0;
+		var len:Int = fpsList.length;
+		var height:Int = 45;
+		var width:Int = _width - 67;
+		var inc:Float = width / (history - 1);
+		var rateRange:Float = maxFps - minFps;
+		var value:Float;
+		
+		for (i in 0...len)
+		{
+			value = (fpsList[i] - minFps) / rateRange;
+			(i == 0) ? vec.moveTo(0, -value * height) : vec.lineTo(i * inc, -value * height);
+		}
+		
+		vec = _memBox.graphics;
+		vec.clear();
+		vec.lineStyle(1, 0x009cff, 1);
+		
+		len = memList.length;
+		rateRange = maxMem - minMem;
+		for (i in 0...len)
+		{
+			value = (memList[i] - minMem) / rateRange;
+			(i == 0) ? vec.moveTo(0, -value * height) : vec.lineTo(i * inc, -value * height);
+		}
+	}
+	
+	/**
+	 * Calculates current game fps.
+	 */
+	inline public function currentFps():Float
+	{
+		return _frameCount / intervalTime();
+	}
+	
+	/**
+	 * Calculates average game fps (takes whole time the game is running).
+	 */
+	inline public function averageFps():Float
+	{
+		return _totalCount / runningTime();
+	}
+	
+	/**
+	 * Application life time.
+	 */
+	inline public function runningTime():Float
+	{
+		return (_currentTime - _initTime) / 1000;
+	}
+	
+	/**
+	 * Time since perfomance monitoring started.
+	 */
+	inline public function intervalTime():Float
+	{
+		return (_currentTime - _itvTime) / 1000;
+	}
+	
+	/**
+	 * Current RAM consumtion by this game.
+	 */
+	inline public function currentMem():Float
+	{
+		return (System.totalMemory / 1024) / 1000;
 	}
 	
 	/**
@@ -233,15 +490,6 @@ class Stats extends Window
 	inline public function flixelDraw(Time:Int):Void
 	{
 		_draw[_drawMarker++] = Time;
-	}
-	
-	/**
-	 * Keep track of how long the Flash player and browser take.
-	 * @param 	Time	How long Flash/browser took.
-	 */
-	inline public function flash(Time:Int):Void
-	{
-		_flash[_flashMarker++] = Time;
 	}
 	
 	/**

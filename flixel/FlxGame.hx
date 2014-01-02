@@ -426,11 +426,10 @@ class FlxGame extends Sprite
 			#if !FLX_NO_DEBUG
 			if (FlxG.debugger.visible)
 			{
-				debugger.stats.flash(elapsedMS);
 				debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
-				debugger.stats.update();
 				debugger.watch.update();
 			}
+			debugger.stats.update();
 			#end
 		}
 	}
