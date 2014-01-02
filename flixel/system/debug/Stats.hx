@@ -29,10 +29,10 @@ class Stats extends Window
 	private static inline var UPDATE_DELAY:Int = 500;
 	private static inline var WIDTH:Int = 450;
 	
-	private var minFps:Float;
-	private var maxFps:Float;
-	private var minMem:Float;
-	private var maxMem:Float;
+	public var minFps:Float;
+	public var maxFps:Float;
+	public var minMem:Float;
+	public var maxMem:Float;
 	private var history:Int = 60;
 	
 	private var fpsList:Array<Float>;
