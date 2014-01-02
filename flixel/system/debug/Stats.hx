@@ -27,7 +27,7 @@ import flash.text.GridFitType;
 class Stats extends Window
 {
 	private static inline var UPDATE_DELAY:Int = 500;
-	private static inline var WIDTH:Int = 450;
+	private static inline var WIDTH:Int = 400;
 	
 	public var minFps:Float;
 	public var maxFps:Float;
@@ -115,7 +115,7 @@ class Stats extends Window
 		_tfMinMem = makeLabel(2, 115, _defaultFormat);
 		addChild(_tfMinMem);
 		
-		_tfInfo = makeLabel(57, 132, _defaultFormat);
+		_tfInfo = makeLabel(2, 132, _defaultFormat);
 		_tfInfo.multiline = true;
 		_tfInfo.height = 32;
 		_tfInfo.width = _width;
