@@ -5,8 +5,8 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxMisc;
 import flixel.util.FlxSave;
+import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
 class MenuState extends FlxState
@@ -167,12 +167,12 @@ class MenuState extends FlxState
 	
 	private function onFlixel():Void
 	{
-		FlxMisc.openURL("http://flixel.org");
+		FlxStringUtil.openURL("http://flixel.org");
 	}
 	
 	private function onDanny():Void
 	{
-		FlxMisc.openURL("http://dbsoundworks.com");
+		FlxStringUtil.openURL("http://dbsoundworks.com");
 	}
 	
 	private function onPlay():Void

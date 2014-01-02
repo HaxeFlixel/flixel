@@ -1,11 +1,10 @@
 package;
 
-import openfl.Assets;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.util.FlxMisc;
+import flixel.util.FlxStringUtil;
 
 /**
  * ...
@@ -127,12 +126,12 @@ class MenuState extends FlxState
 	
 	private function onFlixel():Void 
 	{
-		FlxMisc.openURL("http://flixel.org");
+		FlxStringUtil.openURL("http://flixel.org");
 	}
 	
 	private function onURL():Void 
 	{
-		FlxMisc.openURL("http://chipacabra.blogspot.com");
+		FlxStringUtil.openURL("http://chipacabra.blogspot.com");
 	}
 	
 	private function startGame():Void

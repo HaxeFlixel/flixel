@@ -1,18 +1,17 @@
 package;
 
-import flash.utils.ByteArray;
-import flash.display.Sprite;
 import flash.display.BitmapData;
+import flash.display.Sprite;
 import flash.text.TextFieldType;
+import flash.utils.ByteArray;
+import flixel.addons.api.FlxGameJolt;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.ui.FlxButton;
-import flixel.util.FlxMisc;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.text.FlxTextField;
-import flixel.group.FlxGroup;
-import flixel.addons.api.FlxGameJolt;
+import flixel.util.FlxStringUtil;
 
 /**
  * These lines allow embedding of assets as ByteArrays, which helps to minimize the threat of data being compromised.
@@ -332,17 +331,17 @@ class MenuState extends FlxState
 	
 	private function hfCallback( Name:String ):Void
 	{
-		FlxMisc.openURL( "http://www.haxeflixel.com" );
+		FlxStringUtil.openURL( "http://www.haxeflixel.com" );
 	}
 	
 	private function sourceCallback( Name:String ):Void
 	{
-		FlxMisc.openURL( "https://github.com/HaxeFlixel/flixel-addons/blob/master/flixel/addons/api/FlxGameJolt.hx" );
+		FlxStringUtil.openURL( "https://github.com/HaxeFlixel/flixel-addons/blob/master/flixel/addons/api/FlxGameJolt.hx" );
 	}
 	
 	private function docCallback( Name:String ):Void
 	{
-		FlxMisc.openURL( "http://gamejolt.com/api/doc/game/" );
+		FlxStringUtil.openURL( "http://gamejolt.com/api/doc/game/" );
 	}
 	
 	private function scoresCallback( Name:String ):Void
