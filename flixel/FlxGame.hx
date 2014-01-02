@@ -356,6 +356,10 @@ class FlxGame extends Sprite
 			_focusLostScreen.draw();
 		#end
 		
+		#if !FLX_NO_SOUND_TRAY
+			soundTray.screenCenter();
+		#end
+		
 		if (FlxG.autoResize)
 		{
 			FlxG.resizeGame(width, height);
