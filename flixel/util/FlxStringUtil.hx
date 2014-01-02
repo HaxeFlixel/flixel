@@ -224,4 +224,17 @@ class FlxStringUtil
 		}
 		return s;
 	}
+	
+	/**
+	 * Helper function that uses <code>getClassName</code> to compare two objects' class names.
+	 * 
+	 * @param	Obj1	The first object
+	 * @param	Obj2	The second object
+	 * @param	Simple 	Only uses the class name, not the package or packages.
+	 * @return	Whether they have the same class name or not
+	 */
+	inline static public function sameClassName(Obj1:Dynamic, Obj2:Dynamic, Simple:Bool = true):Bool
+	{
+		return (getClassName(Obj1, Simple) == getClassName(Obj2, Simple));
+	}
 }
