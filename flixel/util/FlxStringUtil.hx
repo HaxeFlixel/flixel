@@ -1,6 +1,7 @@
 package flixel.util;
 
-import haxe.ds.StringMap.StringMap;
+import flash.Lib;
+import flash.net.URLRequest;
 
 /**
  * A class primarily containing functions related 
@@ -236,5 +237,15 @@ class FlxStringUtil
 	inline static public function sameClassName(Obj1:Dynamic, Obj2:Dynamic, Simple:Bool = true):Bool
 	{
 		return (getClassName(Obj1, Simple) == getClassName(Obj2, Simple));
+	}
+	
+	/**
+	 * Opens a web page in a new tab or window.
+	 * 
+	 * @param	URL		The address of the web page.
+	 */
+	inline static public function openURL(URL:String):Void
+	{
+		Lib.getURL(new URLRequest(URL), "_blank");
 	}
 }
