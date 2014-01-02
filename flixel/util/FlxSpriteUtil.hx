@@ -235,13 +235,14 @@ class FlxSpriteUtil
 	 * @param	Height		Height of the rectangle
 	 * @param	Color		The rectangle's color.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 * @param	matrix		A transformation matrix (optional)
-	 * @param	matrix		Blending mode (optional)
+	 * @param	blend		Blending mode (optional)
 	 * @param	smooth		Draw smooth or not(optional)
 	 */
-	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?matrix:Matrix, ?blend:BlendMode, smooth:Bool=false):Void
+	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?matrix:Matrix, ?blend:BlendMode, smooth:Bool=false):Void
 	{
-		beginDraw(Color, lineStyle);
+		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawRect(X, Y, Width, Height);
 		endDraw(sprite,matrix,blend,smooth);
 	}
@@ -338,15 +339,16 @@ class FlxSpriteUtil
 	 * @param	Height		Height of the triangle
 	 * @param	Color		Color of the triangle
 	 * @param	?lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 * @param	?matrix		A transformation matrix (optional)
 	 */
-	static public function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:Int, ?lineStyle:LineStyle):Void
+	static public function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?matrix:Matrix):Void
 	{
 		beginDraw(Color, lineStyle);
-		flashGfx.moveTo(Height / 2, Y);
-		flashGfx.lineTo(Height, Height + Y);
+		flashGfx.moveTo(X + Height / 2, Y);
+		flashGfx.lineTo(X + Height, Height + Y);
 		flashGfx.lineTo(X, Height + Y);
-		flashGfx.lineTo(Height / 2, Y);
-		endDraw(sprite);
+		flashGfx.lineTo(X + Height / 2, Y);
+		endDraw(sprite, matrix);
 	}
 	
 	/**
@@ -356,17 +358,19 @@ class FlxSpriteUtil
 	 * @param	Vertices	Array of Vertices to use for drawing the polygon
 	 * @param	Color		Color of the polygon
 	 * @param	?lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 * @param	?fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle();
+	 * @param	?matrix		A transformation matrix (optional)
 	 */
-	static public function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:Int, ?lineStyle:LineStyle):Void
+	static public function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?matrix:Matrix):Void
 	{
-		beginDraw(Color, lineStyle);
+		beginDraw(Color, lineStyle, fillStyle);
 		var p:FlxPoint = Vertices.shift();
 		flashGfx.moveTo(p.x, p.y);
 		for (p in Vertices)
 		{
 			flashGfx.lineTo(p.x, p.y);
 		}
-		endDraw(sprite);
+		endDraw(sprite,matrix);
 	}
 
 	/**
@@ -374,12 +378,23 @@ class FlxSpriteUtil
 	 * 
 	 * @param	Color		The color to use for drawing
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 */
-	inline static public function beginDraw(Color:Int, ?lineStyle:LineStyle):Void
+	inline static public function beginDraw(Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
-		flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		if (fillStyle != null) {
+			if (fillStyle.hasFill == false) {
+				//don't begin a fill
+			}else {
+				//use the fillStyle for color information
+				flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(fillStyle.color), FlxColorUtil.getAlphaFloat(fillStyle.color));
+			}
+		}else {
+			//fillStyle is not defined, use color for fill information instead
+			flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
+		}
 	}
 	
 	/**
@@ -417,7 +432,7 @@ class FlxSpriteUtil
 		if (lineStyle != null)
 		{
 			var color:Int; 
-			var alpha:Float;	
+			var alpha:Float;
 			
 			if (lineStyle.color == null) 
 			{ 

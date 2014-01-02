@@ -1177,35 +1177,6 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object.
-	 * @param	Point			The point in world space you want to check.
-	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-	 * @return	Whether or not the point overlaps this object.
-	 */
-	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
-	{
-		if (_scale.x == 1 && _scale.y == 1)
-		{
-			return super.overlapsPoint(point, InScreenSpace, Camera);
-		}
-		
-		if (!InScreenSpace)
-		{
-			return (point.x > x - 0.5 * width * (_scale.x - 1)) && (point.x < x + width + 0.5 * width * (_scale.x - 1)) && (point.y > y - 0.5 * height * (_scale.y - 1)) && (point.y < y + height + 0.5 * height * (_scale.y - 1));
-		}
-
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		var X:Float = point.x - Camera.scroll.x;
-		var Y:Float = point.y - Camera.scroll.y;
-		getScreenXY(_point, Camera);
-		return (X > _point.x - 0.5 * width * (_scale.x - 1)) && (X < _point.x + width + 0.5 * width * (_scale.x - 1)) && (Y > _point.y - 0.5 * height * (_scale.y - 1)) && (Y < _point.y + height + 0.5 * height * (_scale.y - 1));
-	}
-	
-	/**
 	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
 	 * @param	Point		The point in world space you want to check.
@@ -1224,9 +1195,7 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - _offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
-		#if flash
-		return untyped framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
-		#else
+
 		// 1. Check to see if the point is outside of framePixels rectangle
 		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
 		{
@@ -1239,7 +1208,6 @@ class FlxSprite extends FlxObject
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			return (pixelAlpha * alpha >= Mask);
 		}
-		#end
 	}
 	
 	/**
