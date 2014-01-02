@@ -13,6 +13,14 @@ class FlxFocusLostScreen extends Sprite
 	{
 		super();	
 		draw();
+		
+		var logo:Sprite = new Sprite();
+		FlxAssets.drawLogo(logo.graphics);
+		logo.scaleX = logo.scaleY = 0.2;
+		logo.x = logo.y = 5;
+		logo.alpha = 0.35;
+		addChild(logo);
+		
 		visible = false;
 	}
 	
@@ -45,21 +53,5 @@ class FlxFocusLostScreen extends Sprite
 		gfx.lineTo(halfWidth - helper, halfHeight + helper);
 		gfx.lineTo(halfWidth - helper, halfHeight - helper);
 		gfx.endFill();
-		
-		removeChildren();
-		
-		var logo:Sprite = new Sprite();
-		FlxAssets.drawLogo(logo.graphics);
-		logo.scaleX = helper / 1000;
-		
-		if (logo.scaleX < 0.2)
-		{
-			logo.scaleX = 0.2;
-		}
-		
-		logo.scaleY = logo.scaleX;
-		logo.x = logo.y = 5;
-		logo.alpha = 0.35;
-		addChild(logo);
 	}
 }
