@@ -34,11 +34,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public var length:Int = 0;
 	/**
-	 * Whether <code>revive()</code> also revives all members of this group. 
-	 * False by default.
-	 */
-	public var autoReviveMembers:Bool = false;
-	/**
 	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
 	private var _marker:Int = 0;
@@ -681,31 +676,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		
 		super.kill();
-	}
-	
-	/**
-	 * Revives the group itself (and all of it's members if 
-	 * <code>autoReviveMembers</code> has been set to true.
-	 */
-	override public function revive():Void
-	{
-		super.revive();
-		
-		if (autoReviveMembers)
-		{
-			var i:Int = 0;
-			var basic:FlxBasic = null;
-			
-			while (i < length)
-			{
-				basic = _basics[i++];
-				
-				if ((basic != null) && !basic.exists)
-				{
-					basic.revive();
-				}
-			}
-		}
 	}
 	
 	/**
