@@ -17,6 +17,7 @@ v.3.0.4
 * FlxText: Internal TextField is now accesible via textField
 * FlxTrailArea added, an alternative to FlxTrail which should be more performant
 * FlxBitmapUtil.merge() added
+* Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
 
 v.3.0.3
 ------------------------------
