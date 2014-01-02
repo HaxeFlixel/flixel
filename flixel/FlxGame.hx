@@ -342,13 +342,18 @@ class FlxGame extends Sprite
 		var height:Int = Lib.current.stage.stageHeight;
 
 		#if !flash
-		FlxG.bitmap.onContext();
+			FlxG.bitmap.onContext();
 		#end
 		
 		state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
+		
 		#if !FLX_NO_DEBUG
-		debugger.onResize(width, height);
+			debugger.onResize(width, height);
+		#end
+		
+		#if !FLX_NO_FOCUS_LOST_SCREEN
+			_focusLostScreen.draw();
 		#end
 		
 		if (FlxG.autoResize)
