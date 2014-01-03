@@ -66,6 +66,10 @@ class FlxGame extends Sprite
 	 */
 	public var flashFramerate:Int;
 	/**
+	 * Framerate to use on focus lost. Default = 10.
+	 */
+	public var focusLostFramerate:Int = 10;
+	/**
 	 * Max allowable accumulation (see _accumulator).
 	 * Should always (and automatically) be set to roughly 2x the flash player framerate.
 	 */
@@ -337,7 +341,7 @@ class FlxGame extends Sprite
 			debugger.stats.onFocusLost();
 		#end
 		
-		stage.frameRate = 10;
+		stage.frameRate = focusLostFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
 			FlxG.sound.pauseSounds();
 		#end
