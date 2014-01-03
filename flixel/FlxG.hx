@@ -292,7 +292,7 @@ class FlxG
 	static private function reset():Void
 	{
 		PxBitmapFont.clearStorage();
-		FlxRandom.globalSeed = Math.random();
+		FlxRandom.resetGlobalSeed();
 		
 		bitmap.clearCache();
 		inputs.reset();

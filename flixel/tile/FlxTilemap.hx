@@ -389,7 +389,7 @@ class FlxTilemap extends FlxObject
 		
 		if (_randomIndices != null)
 		{
-			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : Math.random;
+			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : FlxRandom.float;
 			
 			i = 0;
 			while (i < totalTiles)
