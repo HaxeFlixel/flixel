@@ -12,6 +12,7 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 
 class PlayState extends FlxState
 {
@@ -47,6 +48,9 @@ class PlayState extends FlxState
 	
 	// Just to prevent weirdness during level transition
 	private var _fading:Bool;
+	
+	// For creating recordings
+	static private var _recording:Bool = false;
 	
 	override public function create():Void
 	{
@@ -194,6 +198,8 @@ class PlayState extends FlxState
 		FlxG.watch.add(_enemies, "length", "numEnemies");
 		FlxG.watch.add(_enemyBullets, "length", "numEnemyBullets");
 		FlxG.watch.add(FlxG.sound.list, "length", "numSounds");
+		
+		trace( FlxRandom.globalSeed );
 	}
 	
 	override public function destroy():Void
@@ -323,6 +329,20 @@ class PlayState extends FlxState
 		{
 			FlxG.switchState(new MenuState());
 		}
+		
+		if (FlxG.keys.justPressed.R )
+		{
+			if ( !_recording )
+			{
+				FlxG.vcr.startRecording( false );
+				_recording = true;
+			}
+			else
+			{
+				FlxG.vcr.stopRecording();
+				_recording = false;
+			}
+		}
 	}
 
 	/**
@@ -409,12 +429,12 @@ class PlayState extends FlxState
 		
 		if (Spawners)
 		{
-			sx = Math.floor(2 + Math.random() * (rw - 7));
-			sy = Math.floor(2 + Math.random() * (rw - 7));
+			sx = FlxRandom.intRanged( 2, rw - 6 );
+			sy = FlxRandom.intRanged( 2, rw - 6 );
 		}
 		
 		// Then place a bunch of blocks
-		var numBlocks:Int = Math.floor(3 + Math.random() * 4);
+		var numBlocks:Int = FlxRandom.intRanged( 3, 6 );
 		var maxW:Int = 10;
 		var minW:Int = 2;
 		var maxH:Int = 8;
@@ -435,10 +455,10 @@ class PlayState extends FlxState
 			do
 			{
 				// Keep generating different specs if they overlap the spawner
-				bw = Math.floor(minW + Math.random() * (maxW - minW));
-				bh = Math.floor(minH + Math.random() * (maxH - minH));
-				bx = Math.floor( -1 + Math.random() * (rw + 1 - bw));
-				by = Math.floor( -1 + Math.random() * (rw + 1 - bh));
+				bw = FlxRandom.intRanged( minW, maxW );
+				bh = FlxRandom.intRanged( minH, maxH );
+				bx = FlxRandom.intRanged( -1, rw - bw );
+				by = FlxRandom.intRanged( -1, rw - bh );
 				
 				if (Spawners)
 				{
@@ -492,7 +512,7 @@ class PlayState extends FlxState
 		{
 			for (j in 0...numColsToPush)
 			{
-				randomTile = StartTile + Math.floor(Math.random() * (EndTile - StartTile));
+				randomTile = FlxRandom.intRanged( StartTile, EndTile );
 				currentTileIndex = (xStartIndex + j) + (yStartIndex + i) * MapWidth;
 				_map[currentTileIndex] = randomTile;
 			}

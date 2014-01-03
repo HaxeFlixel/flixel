@@ -4,6 +4,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
+import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 class Spawner extends FlxSprite
@@ -25,7 +26,7 @@ class Spawner extends FlxSprite
 		_botBullets = BotBullets;
 		_botGibs = BotGibs;
 		_player = ThePlayer;
-		_timer = Math.random() * 20;
+		_timer = FlxRandom.floatRanged( 0, 20 );
 		_open = false;
 		health = 8;
 
