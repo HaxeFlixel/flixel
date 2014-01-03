@@ -138,8 +138,6 @@ class FlxRandom
 	 */
 	static public function floatRanged( Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float> ):Float
 	{
-		_floatHelper = 0;
-		
 		if ( Min == Max )
 		{
 			_floatHelper = Min;
@@ -226,8 +224,8 @@ class FlxRandom
 	}
 	
 	/**
-	 * Fetch a random entry from the given array from StartIndex to EndIndex. Will return null if random selection is missing, or array has no entries.
-	 * Deterministic and safe for use with replays/recordings.
+	 * Fetch a random entry from the given array from StartIndex to EndIndex.
+	 * Will return null if random selection is missing, or array has no entries.
 	 * 
 	 * @param	Objects			An array from which to select a random entry.
 	 * @param	StartIndex		Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
@@ -265,7 +263,6 @@ class FlxRandom
 		return selected;
 	}
 	
-	
 	/**
 	 * Shuffles the entries in an array into a new pseudorandom order.
 	 * 
@@ -292,7 +289,7 @@ class FlxRandom
 	}
 	
 	/**
-	 * Returns an object pseudorandomly from an array between StartIndex and EndIndex with a weighted chance from WeightsArray.
+	 * Returns a random object from an array between StartIndex and EndIndex with a weighted chance from WeightsArray.
 	 * This function is essentially a combination of weightedPick and getObject.
 	 * 
 	 * @param	Objects			An array from which to return an object.
@@ -331,7 +328,7 @@ class FlxRandom
 				EndIndex = WeightsArray.length - 1;
 			}
 			
-			_arrayFloatHelper = [ for ( i in StartIndex...EndIndex ) WeightsArray[i] ];
+			_arrayFloatHelper = [ for ( i in StartIndex...EndIndex + 1 ) WeightsArray[i] ];
 			selected = Objects[ weightedPick( _arrayFloatHelper ) ];
 		}
 		
@@ -339,7 +336,7 @@ class FlxRandom
 	}
 	
 	/**
-	 * Returns a pseudorandom color value in hex ARGB format.
+	 * Returns a random color value in hex ARGB format.
 	 * 
 	 * @param	Min			The lowest value to use for each channel.
 	 * @param	Max 		The highest value to use for each channel.
