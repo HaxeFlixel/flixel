@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios"],
 	"description": "HaxeFlixel is a 2D game framework built with OpenFL and Haxe that delivers cross platform games.",
-	"version": "3.0.3",
-	"releasenote": "Adding openfl 1.2.1 compatibility, several API improvements, and lots of bug fixes. Fixes the broken 3.0.2 release.",
+	"version": "3.0.4",
+	"releasenote": "Several bugfixes and new features. See CHANGELOG.md for more details.",
 	"contributors": ["haxeflixel"],
 	"dependencies": { "lime": "", "openfl": "" }
 }

@@ -34,11 +34,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public var length:Int = 0;
 	/**
-	 * Whether <code>revive()</code> also revives all members of this group. 
-	 * False by default.
-	 */
-	public var autoReviveMembers:Bool = false;
-	/**
 	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
 	private var _marker:Int = 0;
@@ -257,9 +252,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * @param 	ContructorArgs  An array of arguments passed into a newly object if there aren't any dead members to recycle. 
 	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
+	 * @param	Revive			Whether recycled members should automatically be revived (by calling <code>revive()</code> on them)
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
-	public function recycle(ObjectClass:Class<T> = null, ContructorArgs:Array<Dynamic> = null, Force:Bool = false):T
+	public function recycle(?ObjectClass:Class<T>, ?ContructorArgs:Array<Dynamic>, Force:Bool = false, Revive:Bool = true):T
 	{
 		if (ContructorArgs == null)
 		{
@@ -268,8 +264,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		var basic:T = null;
 		
+		// roatated recycling
 		if (maxSize > 0)
 		{
+			// create new instance
 			if (length < maxSize)
 			{
 				if (ObjectClass == null)
@@ -279,6 +277,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				
 				return add(Type.createInstance(ObjectClass, ContructorArgs));
 			}
+			// get the next member if at capacity
 			else
 			{
 				basic = _members[_marker++];
@@ -288,15 +287,25 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 					_marker = 0;
 				}
 				
+				if (Revive)
+				{
+					basic.revive();
+				}
+				
 				return basic;
 			}
 		}
+		// grow-style recycling - grab a basic with extist == false or create a new one
 		else
 		{
 			basic = getFirstAvailable(ObjectClass, Force);
 			
 			if (basic != null)
 			{
+				if (Revive)
+				{
+					basic.revive();
+				}
 				return basic;
 			}
 			if (ObjectClass == null)
@@ -681,31 +690,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		
 		super.kill();
-	}
-	
-	/**
-	 * Revives the group itself (and all of it's members if 
-	 * <code>autoReviveMembers</code> has been set to true.
-	 */
-	override public function revive():Void
-	{
-		super.revive();
-		
-		if (autoReviveMembers)
-		{
-			var i:Int = 0;
-			var basic:FlxBasic = null;
-			
-			while (i < length)
-			{
-				basic = _basics[i++];
-				
-				if ((basic != null) && !basic.exists)
-				{
-					basic.revive();
-				}
-			}
-		}
 	}
 	
 	/**

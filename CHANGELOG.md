@@ -1,7 +1,30 @@
-v.3.0.3
+v.3.0.5
+------------------------------
+* Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
+
+v.3.0.4
 ------------------------------
 * Removed experimental FLX_THREADING conditional
 * Changes type of CHANGELOG and LICENSE files from .txt to .md - makes it more readable on github
+* FlxSpriteGroup: Default scrollFactor is now (1, 1) and upon adding sprites, their scrollFactor is snychronized
+* Now using the HaxeFlixel logo as an icon for the application by default again
+* FlxAnimationController: Additional null checks to prevent erros with FlxSpriteFilter
+* FlxG: addChildBelowMouse() and removeChild() added
+* FlxG.debugger.removeButton() added
+* Added toString() functions to FlxPoint and FlxRect
+* Console: Refactor which includes removing some commands and making it more flexible
+* FlxColorUtil: Now uses proper terminology (ARGB instead of the misleading RGBA)
+* FlxSprite: setGraphicDimensions() and updateHitbox() helper functions for working with scale added
+* FlxStringUtil: htmlFormat() and filterDigits() added
+* FlxMath: Improvements to sign() and chanceRoll()
+* FlxClickArea: Has been moved to flixel-addons
+* FlxText: Internal TextField is now accesible via textField
+* FlxTrailArea added, an alternative to FlxTrail which should be more performant
+* FlxBitmapUtil.merge() added
+
+v.3.0.3
+------------------------------
+* No changes to 3.0.2, just a fix for the faulty 3.0.2 haxelib release
 
 v.3.0.2
 ------------------------------

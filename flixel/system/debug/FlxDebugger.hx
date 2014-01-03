@@ -2,18 +2,12 @@ package flixel.system.debug;
 
 #if !FLX_NO_DEBUG
 
-import flash.text.TextFieldAutoSize;
-import flash.Lib;
-import flash.text.TextFormatAlign;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
-import flash.display.Bitmap;
-import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.debug.Console;
@@ -23,7 +17,9 @@ import flixel.system.debug.VCR;
 import flixel.system.debug.Watch;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxMisc;
+import flixel.util.FlxArrayUtil;
+import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 
 /**
  * Container for the new debugger overlay.
@@ -458,7 +454,7 @@ class FlxDebugger extends Sprite
 	
 	inline private function openHomepage():Void
 	{
-		FlxMisc.openURL("http://www.haxeflixel.com");
+		FlxStringUtil.openURL("http://www.haxeflixel.com");
 	}
 }
 #end

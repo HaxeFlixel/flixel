@@ -203,12 +203,12 @@ class ConsoleCommands
 		// Prevent setting non "simple" typed properties
 		else if (!Std.is(variable, Float) && !Std.is(variable, Bool) && !Std.is(variable, String))
 		{
-			FlxG.log.error("set: '" + varName + ":" + Std.string(variable) + "' is not of a simple type (number, bool or string)");
+			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' is not of a simple type (number, bool or string)");
 			return;
 		}
 		
 		Reflect.setProperty(object, varName, NewVariableValue);
-		ConsoleUtil.log("set: " + Std.string(object) + "." + varName + " is now " + NewVariableValue);
+		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + " is now " + NewVariableValue);
 		
 		if (WatchName != null) {
 			FlxG.watch.add(object, varName, WatchName);
@@ -233,7 +233,7 @@ class ConsoleCommands
 			
 			if (!Reflect.isObject(object)) 
 			{
-				FlxG.log.error("call: '" + FlxStringUtil.getClassName(object) + "' is not a valid Object to call");
+				FlxG.log.error("call: '" + FlxStringUtil.getClassName(object, true) + "' is not a valid Object to call");
 				return;
 			}
 			
@@ -251,7 +251,7 @@ class ConsoleCommands
 				}
 				catch (e:Dynamic) 
 				{
-					FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj) + " does not have a field '" + tempVarName + "' to call");
+					FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj, true) + " does not have a field '" + tempVarName + "' to call");
 					return;
 				}
 				
@@ -262,7 +262,7 @@ class ConsoleCommands
 			
 			if (func == null)
 			{
-				FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj) + " does not have a method '" + searchArr[l] + "' to call");
+				FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj, true) + " does not have a method '" + searchArr[l] + "' to call");
 				return;
 			}
 		}

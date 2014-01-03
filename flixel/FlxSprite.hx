@@ -88,7 +88,7 @@ class FlxSprite extends FlxObject
 	public var offset(default, set):FlxPoint;
 	/**
 	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use <code>updateHitbox</code> for that
-	 * (or <code>setGraphicDimensions()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
+	 * (or <code>setGraphicSize()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
 	 */
 	public var scale(default, set):FlxPoint;
 	/**
@@ -244,24 +244,25 @@ class FlxSprite extends FlxObject
 		frame = null;
 	}
 	
-	public function clone(NewSprite:FlxSprite = null):FlxSprite
+	public function clone(?NewSprite:FlxSprite):FlxSprite
 	{
 		if (NewSprite == null)
 		{
 			NewSprite = new FlxSprite();
 		}
 		
-		NewSprite.loadfromSprite(this);
+		NewSprite.loadFromSprite(this);
 		return NewSprite;
 	}
 	
 	/**
 	 * Load graphic from another FlxSprite and copy its tileSheet data. 
 	 * This method can useful for non-flash targets (and is used by the FlxTrail effect).
+	 * 
 	 * @param	Sprite	The FlxSprite from which you want to load graphic data
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadfromSprite(Sprite:FlxSprite):FlxSprite
+	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
 	{
 		if (!exists)
 		{
@@ -291,6 +292,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Load an image from an embedded graphic file.
+	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
 	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
@@ -654,7 +656,7 @@ class FlxSprite extends FlxObject
 	 * @param	Height			How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
 	 * @param	UpdateHitbox	Whether or not to update the hitbox dimensions, offset and origin accordingly.
 	 */
-	public function setGraphicDimensions(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
+	public function setGraphicSize(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
 	{
 		if (Width <= 0 && Height <= 0) {
 			return;
@@ -679,7 +681,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
-	 * Also calls setOriginToCenter(). Called by setGraphicDimensions().
+	 * Also calls setOriginToCenter(). Called by setGraphicSize().
 	 */
 	public function updateHitbox():Void
 	{
@@ -1005,6 +1007,7 @@ class FlxSprite extends FlxObject
 		var column:Int;
 		var rows:Int = region.height;
 		var columns:Int = region.width;
+		cachedGraphics.bitmap.lock();
 		while(row < rows)
 		{
 			column = region.startX;
@@ -1023,7 +1026,7 @@ class FlxSprite extends FlxObject
 			}
 			row++;
 		}
-		
+		cachedGraphics.bitmap.unlock();
 		resetFrameBitmapDatas();
 		return positions;
 	}
@@ -1174,35 +1177,6 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object.
-	 * @param	Point			The point in world space you want to check.
-	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-	 * @return	Whether or not the point overlaps this object.
-	 */
-	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
-	{
-		if (_scale.x == 1 && _scale.y == 1)
-		{
-			return super.overlapsPoint(point, InScreenSpace, Camera);
-		}
-		
-		if (!InScreenSpace)
-		{
-			return (point.x > x - 0.5 * width * (_scale.x - 1)) && (point.x < x + width + 0.5 * width * (_scale.x - 1)) && (point.y > y - 0.5 * height * (_scale.y - 1)) && (point.y < y + height + 0.5 * height * (_scale.y - 1));
-		}
-
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		var X:Float = point.x - Camera.scroll.x;
-		var Y:Float = point.y - Camera.scroll.y;
-		getScreenXY(_point, Camera);
-		return (X > _point.x - 0.5 * width * (_scale.x - 1)) && (X < _point.x + width + 0.5 * width * (_scale.x - 1)) && (Y > _point.y - 0.5 * height * (_scale.y - 1)) && (Y < _point.y + height + 0.5 * height * (_scale.y - 1));
-	}
-	
-	/**
 	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
 	 * @param	Point		The point in world space you want to check.
@@ -1221,9 +1195,7 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - _offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
-		#if flash
-		return untyped framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
-		#else
+
 		// 1. Check to see if the point is outside of framePixels rectangle
 		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
 		{
@@ -1236,7 +1208,6 @@ class FlxSprite extends FlxObject
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			return (pixelAlpha * alpha >= Mask);
 		}
-		#end
 	}
 	
 	/**

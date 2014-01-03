@@ -644,7 +644,7 @@ class FlxPath
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		#else
-		var gfx:Graphics = Camera._debugLayer.graphics;
+		var gfx:Graphics = Camera.debugLayer.graphics;
 		#end
 		
 		//Then fill up the object with node and path graphics

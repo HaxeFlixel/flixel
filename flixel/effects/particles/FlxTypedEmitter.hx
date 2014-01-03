@@ -774,6 +774,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		return yPosition.max = Value;
 	}
 	
+	/**
+	 * The x position of this emitter.
+	 */
 	public var x(get, set):Float;
 	
 	private function get_x():Float
@@ -786,6 +789,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		return xPosition.min = Value;
 	}
 	
+	/**
+	 * The y position of this emitter.
+	 */
 	public var y(get, set):Float;
 	
 	private function get_y():Float
@@ -796,6 +802,19 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	private function set_y(Value:Float):Float
 	{
 		return yPosition.min = Value;
+	}
+	
+	/**
+	 * Helper function to set the coordinates of this object.
+	 * Handy since it only requires one line of code.
+	 * 
+	 * @param	X	The new x position
+	 * @param	Y	The new y position
+	 */
+	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	{
+		x = X;
+		y = Y;
 	}
 	
 	/**

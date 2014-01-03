@@ -141,11 +141,13 @@ class FlxAssets
 		return Assets.getBitmapData(id, false);
 	}
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * Sound caching for android target
 	 */
 	static public function cacheSounds():Void
 	{
+		// check this method on the real device
 		#if android
 		Reflect.callMethod(Assets, Reflect.field(Assets, "initialize"), []);
 		
@@ -164,4 +166,5 @@ class FlxAssets
 		}
 		#end
 	}
+	#end
 }

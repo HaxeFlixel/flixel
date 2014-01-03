@@ -22,6 +22,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
+	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY)
 	inline static private var TOTAL:Int = 256;
 	
 	/**
@@ -31,7 +32,8 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * An array of FlxKey objects.
 	 */
-	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY) // Need to access the var there
+	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY)
+	@:allow(flixel.system.input.android.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Array<FlxKey>;
 	
 	public function new()
@@ -64,7 +66,6 @@ class FlxKeyboard implements IFlxInput
 		addKey("SEVEN", i++);
 		addKey("EIGHT", i++);
 		addKey("NINE", i++);
-		#if (flash || js)
 		i = 96;
 		addKey("NUMPADZERO", i++);
 		addKey("NUMPADONE", i++);
@@ -76,7 +77,7 @@ class FlxKeyboard implements IFlxInput
 		addKey("NUMPADSEVEN",i++);
 		addKey("NUMPADEIGHT", i++);
 		addKey("NUMPADNINE", i++);
-		#end
+		
 		addKey("PAGEUP", 33);
 		addKey("PAGEDOWN", 34);
 		addKey("HOME", 36);
@@ -84,13 +85,13 @@ class FlxKeyboard implements IFlxInput
 		addKey("INSERT", 45);
 		
 		// FUNCTION KEYS
-		#if (flash || js)
+#if (flash || js)
 		i = 1;
 		while (i <= 12)
 		{
 			addKey("F" + i, 111 + (i++));
 		}
-		#end
+#end
 		
 		// SPECIAL KEYS + PUNCTUATION
 		addKey("ESCAPE", 27);
@@ -118,13 +119,13 @@ class FlxKeyboard implements IFlxInput
 		addKey("DOWN", 40);
 		addKey("LEFT", 37);
 		addKey("RIGHT", 39);
-		addKey("TAB", 9);	
+		addKey("TAB", 9);
 		
-		#if (flash || js)
+#if (flash || js)
 		addKey("NUMPADMINUS", 109);
 		addKey("NUMPADPLUS", 107);
 		addKey("NUMPADPERIOD", 110);
-		#end
+#end
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -283,6 +284,40 @@ class FlxKeyboard implements IFlxInput
 	}
 	
 	/**
+	 * Helper function to check the status of a single of key
+	 * @param	KeyCode		Index into _keyList array.
+	 * @param	Status		The key state to check for
+	 * @return	Whether the provided key has the specified status
+	 */
+	public function fastCheck(KeyCode:Int, Status:Int):Bool
+	{
+		var k:FlxKey = _keyList[KeyCode];
+		if (k != null)
+		{
+			if (k.current == Status)
+			{
+				return true;
+			}
+			else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
+			{
+				return true;
+			}
+			else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
+			{
+				return true;
+			}
+		}
+		#if !FLX_NO_DEBUG
+		else
+		{
+			FlxG.log.error("Invalid Key: `" + KeyCode + "`. Note that function and numpad keys can only be used in flash and js.");
+		}
+		#end
+		
+		return false;
+	}
+	
+	/**
 	 * If any keys are not "released" (0),
 	 * this function will return an array indicating
 	 * which keys are pressed and what state they are in.
@@ -396,8 +431,8 @@ class FlxKeyboard implements IFlxInput
 			return;
 		}
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		// Sound tray controls
-		
 		// Mute key
 		if (inKeyArray(FlxG.sound.muteKeys, c))
 		{
@@ -441,6 +476,7 @@ class FlxKeyboard implements IFlxInput
 			}
 			#end
 		}
+		#end
 		
 		updateKeyStates(c, false);
 	}

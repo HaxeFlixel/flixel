@@ -13,7 +13,6 @@ import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
-import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.text.pxText.PxBitmapFont;
@@ -37,6 +36,9 @@ import flixel.system.input.mouse.FlxMouse;
 #end
 #if !FLX_NO_GAMEPAD
 import flixel.system.input.gamepad.FlxGamepadManager;
+#end
+#if !FLX_NO_SOUND_SYSTEM
+import flixel.system.frontEnds.SoundFrontEnd;
 #end
 #if android
 import flixel.system.input.android.FlxAndroidKeys;
@@ -69,7 +71,7 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public var LIBRARY_MINOR_VERSION:String = "0.4-dev";
+	static public var LIBRARY_MINOR_VERSION:String = "0.5-dev";
 	
 	/**
 	 * Internal tracker for game object.
@@ -85,9 +87,9 @@ class FlxG
 	 */
 	static public var autoPause:Bool = true;
 	/**
-	 * Whether <code>FlxG.resizeGame()</code> should be called whenever the game is resized. False by default.
+	 * Whether <code>FlxG.resizeGame()</code> should be called whenever the game is resized. True by default.
 	 */
-	static public var autoResize:Bool = false;
+	static public var autoResize:Bool = true;
 	/**
 	 * WARNING: Changing this can lead to issues with physcis and the recording system. Setting this to 
 	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
@@ -230,11 +232,13 @@ class FlxG
 	 */
 	static public var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * sounds and other things to manage or <code>play()</code> sounds.
 	 */
 	static public var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
+	#end
 	
 	/**
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
@@ -273,7 +277,10 @@ class FlxG
 		#end
 		
 		save.bind("flixel");
+		
+		#if !FLX_NO_SOUND_SYSTEM
 		sound.loadSavedPrefs();
+		#end
 		
 		FlxAssets.init();
 	}
@@ -289,7 +296,9 @@ class FlxG
 		
 		bitmap.clearCache();
 		inputs.reset();
+		#if !FLX_NO_SOUND_SYSTEM
 		sound.destroySounds(true);
+		#end
 		paused = false;
 		timeScale = 1.0;
 		elapsed = 0;

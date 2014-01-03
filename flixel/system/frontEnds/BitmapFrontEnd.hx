@@ -289,7 +289,7 @@ class BitmapFrontEnd
 				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
 				
 				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColor.TRANSPARENT);
-				
+				tempBitmap.lock();
 				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 				var tempPoint:Point = new Point();
 				
@@ -305,7 +305,7 @@ class BitmapFrontEnd
 						tempBitmap.copyPixels(bd, tempRect, tempPoint);
 					}
 				}
-				
+				tempBitmap.unlock();
 				bd = tempBitmap;
 			}
 			

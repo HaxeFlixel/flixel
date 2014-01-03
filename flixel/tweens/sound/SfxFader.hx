@@ -1,5 +1,6 @@
 ﻿package flixel.tweens.sound;
 
+#if !FLX_NO_SOUND_SYSTEM
 import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -121,3 +122,4 @@ class SfxFader extends FlxTween
 	private var _crossRange:Float;
 	private var _complete:CompleteCallback;
 }
+#end

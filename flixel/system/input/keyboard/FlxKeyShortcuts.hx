@@ -22,8 +22,8 @@ class FlxKeyShortcuts
 	
 	public function new()
 	{
-		pressed = new FlxKeyList(FlxG.keyboard.pressed);
-		justPressed = new FlxKeyList(FlxG.keyboard.justPressed);
-		justReleased = new FlxKeyList(FlxG.keyboard.justReleased);
+		pressed = new FlxKeyList(FlxKey.PRESSED);
+		justPressed = new FlxKeyList(FlxKey.JUST_PRESSED);
+		justReleased = new FlxKeyList(FlxKey.JUST_RELEASED);
 	}
 }

@@ -1,4 +1,4 @@
-﻿![](http://www.haxeflixel.com/images/haxeflixel-logo-black.png)
+﻿![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/HaxeFlixel.png)
 =
 ###Related:    [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-demos](https://github.com/HaxeFlixel/flixel-demos) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
 ______________________________________________________
@@ -7,7 +7,7 @@ ______________________________________________________
 
 You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
 
-It is recomended to use Haxeflixel via [Haxelib](http://lib.haxe.org/p/flixel). Just run `haxelib install flixel` once you have it installed.
+It is recomended to use Haxeflixel via [haxelib](http://lib.haxe.org/p/flixel). Just run `haxelib install flixel` once you have it installed.
 
 ###Changes for HaxeFlixel 3.0
 
@@ -26,22 +26,22 @@ If you wish to contribute to our documentation, you can edit the [upgrade docs o
 
 ###For Developers
 
-Make sure you're using latest version of [Haxe, HaxeLib and OpenFl](http://haxeflixel.com/comment/2584#comment-2584). You should also read the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
+Make sure you're using latest version of [Haxe, haxelib and OpenFl](http://haxeflixel.com/comment/2584#comment-2584). You should also read the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
 
 Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel dev`.
 
-We recommended that you use a GUI application to manage your changes ([SourceTree](http://www.sourcetreeapp.com/)).
+We recommended that you use a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
 
 ###Current Build Status [![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel)
 
 ______________________________________________________
 ###Links
 
-In case you're looking for ressources, help, or just want to interact with the community:
+In case you're looking for resources, help, or just want to interact with the community:
 
 - [HaxeFlixel.com](http://www.haxeflixel.com/)
 - [Forums](http://www.haxeflixel.com/forum)
-- [Wiki](http://www.haxeflixel.com/wiki)
+- [Documentation](http://www.haxeflixel.com/documentation)
 - [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
 - [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
 
