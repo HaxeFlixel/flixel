@@ -2,6 +2,8 @@ package flixel.system.debug;
 
 import flash.display.Graphics;
 import flash.display.Shape;
+import flash.events.Event;
+import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
@@ -28,6 +30,14 @@ class Stats extends Window
 {
 	private static inline var UPDATE_DELAY:Int = 500;
 	private static inline var WIDTH:Int = 400;
+	private static inline var HEIGHT:Int = 170;
+	
+	private static inline var MINIMIZED_WIDTH:Int = 100;
+	#if flash
+	private static inline var MINIMIZED_HEIGHT:Int = 100;
+	#else
+	private static inline var MINIMIZED_HEIGHT:Int = 118;
+	#end
 	
 	public var minFps:Float;
 	public var maxFps:Float;
@@ -83,6 +93,14 @@ class Stats extends Window
 	private var _drawCallsMarker:Int = 0;
 	#end
 	
+	private static inline var DOUBLE_CLICK_INTERVAL:Int = 800;
+	
+	private var _minimized:Bool = false;
+	private var _lastClick:Int = 0;
+	private var _doubleClicked:Bool = true;
+	private var _text:TextField;
+	private var _leftText:TextField;
+	
 	/**
 	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * @param 	Title		The name of the window, displayed in the header bar.
@@ -96,7 +114,7 @@ class Stats extends Window
 	{
 		super(Title, IconPath, Width, Height, Resizable, Bounds);
 		
-		resize(WIDTH, 170);
+		resize(WIDTH, HEIGHT);
 		
 		fpsList = [];
 		memList = [];
@@ -135,6 +153,11 @@ class Stats extends Window
 		_memBox.y = 128;
 		addChild(_memBox);
 		
+		_leftText = createTextField(TextFormatAlign.LEFT, 0xD8D8D8);
+		_leftText.text = "FPS: \n" + "Mem: \n" + "U: \n" + "D: \n" + #if !flash "DrawTiles: \n" + #end "QuadTrees: \n" + "Lists \n";
+		_text = createTextField(TextFormatAlign.RIGHT, 0xffffff);
+		_leftText.visible = _text.visible = false;
+		
 		minFps = FlxMath.MAX_VALUE;
 		maxFps = FlxMath.MIN_VALUE;
 		minMem = FlxMath.MAX_VALUE;
@@ -153,6 +176,73 @@ class Stats extends Window
 		#if !flash
 		_drawCalls = new Array();
 		#end
+		
+		this.addEventListener(MouseEvent.CLICK, onClick);
+	}
+	
+	/**
+	 * Helper function to create a new textfield.
+	 * @param	Alignment	The aligment of the textfield
+	 * @return 	The created textfield
+	 */
+	private function createTextField(Alignment:Dynamic, Color:Int):TextField
+	{
+		var text:TextField = new TextField();
+		text.width = MINIMIZED_WIDTH - 4;
+		text.x = 2;
+		text.y = 15;
+		text.multiline = true;
+		text.wordWrap = true;
+		text.selectable = true;
+		text.embedFonts = true;
+		text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, Color, false, false, false, null, null, Alignment);
+		addChild(text);
+		return text;
+	}
+	
+	private function onClick(e:MouseEvent):Void 
+	{
+		var clickTime:Int = FlxG.game.ticks;
+		
+		if (_doubleClicked)
+		{
+			_doubleClicked = false;
+			// Now we will just wait for the second click
+		}
+		else
+		{
+			if ((clickTime - _lastClick) < DOUBLE_CLICK_INTERVAL)
+			{
+				_doubleClicked = true;
+				_minimized = !_minimized;
+				
+				if (_minimized)
+				{
+					resize(MINIMIZED_WIDTH, MINIMIZED_HEIGHT);
+				}
+				else
+				{
+					resize(WIDTH, HEIGHT);
+				}
+				
+				_leftText.visible = _text.visible = _minimized;
+				
+				_tfMaxFps.visible = !_minimized;
+				_tfMinFps.visible = !_minimized;
+				_tfMaxMem.visible = !_minimized;
+				_tfMinMem.visible = !_minimized;
+				_tfInfo.visible = !_minimized;
+				_fpsBox.visible = !_minimized;
+				_memBox.visible = !_minimized;
+				_display.visible = !_minimized;
+			}
+			else
+			{
+				_doubleClicked = false;
+			}
+		}
+		
+		_lastClick = clickTime;
 	}
 	
 	/**
@@ -208,6 +298,20 @@ class Stats extends Window
 	 */
 	override public function destroy():Void
 	{
+		this.removeEventListener(MouseEvent.CLICK, onClick);
+		
+		if (_text != null)
+		{
+			removeChild(_text);
+		}
+		_text = null;
+		
+		if (_leftText != null)
+		{
+			removeChild(_leftText);
+		}
+		_leftText = null;
+		
 		if (_tfInfo != null)
 		{
 			removeChild(_tfInfo);
@@ -402,6 +506,20 @@ class Stats extends Window
 		output += "Lists " + Std.string(FlxList._NUM_CACHED_FLX_LIST);
 		
 		_tfInfo.text = output;
+		
+		output = "";
+		output += (Std.int(10 * currentFps()) / 10) + " / " + FlxG.flashFramerate + " \n";
+		output += (Std.int(100 * currentMem()) / 100) + " MB" + " \n";
+		output += activeCount + " (" + Std.int(updateTime / _updateMarker) + "ms)" + " \n";
+		output += visibleCount + " (" + Std.int(drawTime / _drawMarker) + "ms)" + " \n";
+		#if !flash
+		output += Std.string(drawCallsCount) + " \n";
+		#end
+		output += Std.string(FlxQuadTree._NUM_CACHED_QUAD_TREES) + " \n";
+		output += Std.string(FlxList._NUM_CACHED_FLX_LIST) + " \n";
+		
+		_text.text = output;
+		_text.selectable = false;
 		
 		var vec:Graphics = _fpsBox.graphics;
 		vec.clear();
