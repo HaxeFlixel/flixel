@@ -1,3 +1,7 @@
+v.3.0.5
+------------------------------
+* Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
+
 v.3.0.4
 ------------------------------
 * Removed experimental FLX_THREADING conditional
