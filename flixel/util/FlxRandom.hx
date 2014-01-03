@@ -26,7 +26,7 @@ class FlxRandom
 			NewSeed = MODULUS;
 		}
 		
-		internalSeed = NewSeed;
+		_internalSeed = NewSeed;
 		globalSeed = NewSeed;
 		
 		return globalSeed;
@@ -35,7 +35,7 @@ class FlxRandom
 	/**
 	 * Internal seed used to generate new random numbers.
 	 */
-	static private var internalSeed:Int = 1;
+	static private var _internalSeed:Int = 1;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
@@ -46,6 +46,18 @@ class FlxRandom
 	 */
 	inline static private var MULTIPLIER:Int = 48271;
 	inline static private var MODULUS:Int = 2147483647;
+	
+	/**
+	 * Internal helper variables.
+	 */
+	static private var _intHelper:Int = 0;
+	static private var _intHelper2:Int = 0;
+	static private var _floatHelper:Float = 0;
+	static private var _arrayFloatHelper:Array<Float> = null;
+	static private var _red:Int = 0;
+	static private var _green:Int = 0;
+	static private var _blue:Int = 0;
+	static private var _alpha:Int = 0;
 	
 	/**
 	 * Function to easily set the global seed to a new random number. Used primarily by FlxG whenever the game is reset.
@@ -84,11 +96,9 @@ class FlxRandom
 	 */
 	static public function intRanged( Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int> ):Int
 	{
-		var result:Int = 0;
-		
 		if ( Min == Max )
 		{
-			result = Min;
+			_intHelper = Min;
 		}
 		else
 		{
@@ -103,19 +113,19 @@ class FlxRandom
 			
 			if ( Excludes == null )
 			{
-				result = Math.floor( Min + float() * ( Max - Min + 1 ) );
+				_intHelper = Math.floor( Min + float() * ( Max - Min + 1 ) );
 			}
 			else
 			{
 				do
 				{
-					result = Math.floor( Min + float() * ( Max - Min + 1 ) );
+					_intHelper = Math.floor( Min + float() * ( Max - Min + 1 ) );
 				}
-				while ( FlxArrayUtil.indexOf( Excludes, result ) >= 0 );
+				while ( FlxArrayUtil.indexOf( Excludes, _intHelper ) >= 0 );
 			}
 		}
 		
-		return result;
+		return _intHelper;
 	}
 	
 	/**
@@ -128,11 +138,11 @@ class FlxRandom
 	 */
 	static public function floatRanged( Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float> ):Float
 	{
-		var result:Float = 0;
+		_floatHelper = 0;
 		
 		if ( Min == Max )
 		{
-			result = Min;
+			_floatHelper = Min;
 		}
 		else
 		{
@@ -147,19 +157,19 @@ class FlxRandom
 			
 			if ( Excludes == null )
 			{
-				result = Min + float() * ( Max - Min );
+				_floatHelper = Min + float() * ( Max - Min );
 			}
 			else
 			{
 				do
 				{
-					result = Min + float() * ( Max - Min );
+					_floatHelper = Min + float() * ( Max - Min );
 				}
-				while ( FlxArrayUtil.indexOf( Excludes, result ) >= 0 );
+				while ( FlxArrayUtil.indexOf( Excludes, _floatHelper ) >= 0 );
 			}
 		}
 		
-		return result;
+		return _floatHelper;
 	}
 	
 	/**
@@ -194,28 +204,25 @@ class FlxRandom
 	 */
 	static public function weightedPick( WeightsArray:Array<Float> ):Int
 	{
-		var pick:Int = 0;
-		var sumOfWeights:Float = 0;
-		
 		for ( i in WeightsArray )
 		{
-			sumOfWeights += i;
+			_floatHelper += i;
 		}
 		
-		var randSelect:Float = floatRanged( 0, sumOfWeights );
+		_floatHelper = floatRanged( 0, _floatHelper );
 		
 		for ( i in 0...WeightsArray.length )
 		{
-			if ( randSelect < WeightsArray[i] )
+			if ( _floatHelper < WeightsArray[i] )
 			{
-				pick = i;
+				_intHelper = i;
 				break;
 			}
 			
-			randSelect -= WeightsArray[i];
+			_floatHelper -= WeightsArray[i];
 		}
 		
-		return pick;
+		return _intHelper;
 	}
 	
 	/**
@@ -270,17 +277,15 @@ class FlxRandom
 	{
 		HowManyTimes = Std.int( Math.max( HowManyTimes, 0 ) );
 		
-		var index1:Int = 0;
-		var index2:Int = 0;
 		var tempObject:Null<T> = null;
 		
 		for ( i in 0...HowManyTimes )
 		{
-			index1 = intRanged( 0, Objects.length - 1 );
-			index2 = intRanged( 0, Objects.length - 1 );
-			tempObject = Objects[index1];
-			Objects[index1] = Objects[index2];
-			Objects[index2] = tempObject;
+			_intHelper = intRanged( 0, Objects.length - 1 );
+			_intHelper2 = intRanged( 0, Objects.length - 1 );
+			tempObject = Objects[_intHelper];
+			Objects[_intHelper] = Objects[_intHelper2];
+			Objects[_intHelper2] = tempObject;
 		}
 		
 		return Objects;
@@ -326,8 +331,8 @@ class FlxRandom
 				EndIndex = WeightsArray.length - 1;
 			}
 			
-			var weightedSubArray:Array<Float> = [ for ( i in StartIndex...EndIndex ) WeightsArray[i] ];
-			selected = Objects[ weightedPick( weightedSubArray ) ];
+			_arrayFloatHelper = [ for ( i in StartIndex...EndIndex ) WeightsArray[i] ];
+			selected = Objects[ weightedPick( _arrayFloatHelper ) ];
 		}
 		
 		return selected;
@@ -364,6 +369,16 @@ class FlxRandom
 			Max = 255;
 		}
 		
+		if ( Alpha < 0 )
+		{
+			Alpha = 0;
+		}
+		
+		if ( Alpha > 255 )
+		{
+			Alpha = 255;
+		}
+		
 		// Swap values if reversed
 		
 		if ( Max < Min )
@@ -373,11 +388,11 @@ class FlxRandom
 			Min = Min - Max;
 		}
 		
-		var red:Int = intRanged( Min, Max );
-		var green:Int = GreyScale ? red : intRanged( Min, Max );
-		var blue:Int = GreyScale ? red : intRanged( Min, Max );
+		_red = intRanged( Min, Max );
+		_green = GreyScale ? _red : intRanged( Min, Max );
+		_blue = GreyScale ? _red : intRanged( Min, Max );
 		
-		return FlxColorUtil.makeFromARGB( Alpha, red, green, blue );
+		return FlxColorUtil.makeFromARGB( Alpha, _red, _green, _blue );
 	}
 	
 	/**
@@ -414,12 +429,12 @@ class FlxRandom
 		if ( AlphaMaximum < 0 ) AlphaMaximum = 0;
 		if ( AlphaMaximum > 255 ) AlphaMaximum = 255;
 		
-		var red:Int = intRanged( RedMinimum, RedMaximum );
-		var green:Int = intRanged( GreenMinimum, GreenMaximum );
-		var blue:Int = intRanged( BlueMinimum, BlueMaximum );
-		var alpha:Int = intRanged( AlphaMinimum, AlphaMaximum );
+		_red = intRanged( RedMinimum, RedMaximum );
+		_green = intRanged( GreenMinimum, GreenMaximum );
+		_blue = intRanged( BlueMinimum, BlueMaximum );
+		_alpha = intRanged( AlphaMinimum, AlphaMaximum );
 		
-		return FlxColorUtil.makeFromARGB( alpha, red, green, blue );
+		return FlxColorUtil.makeFromARGB( _alpha, _red, _green, _blue );
 	}
 	
 	/**
@@ -430,6 +445,6 @@ class FlxRandom
 	 */
 	inline static private function generate():Int
 	{
-		return internalSeed = ( ( internalSeed * MULTIPLIER ) % MODULUS ) & MODULUS;
+		return _internalSeed = ( ( _internalSeed * MULTIPLIER ) % MODULUS ) & MODULUS;
 	}
 }
