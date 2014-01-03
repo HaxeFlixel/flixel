@@ -26,14 +26,24 @@ import flash.text.GridFitType;
  */
 class Stats extends Window
 {
+	/**
+	 * How often to update the stats, in ms. The lower, the more performance-intense!
+	 */
 	private static inline var UPDATE_DELAY:Int = 500;
-	private static inline var WIDTH:Int = 400;
+	/**
+	 * The initial width of the stats window.
+	 */
+	private static inline var INITIAL_WIDTH:Int = 400;
+	/**
+	 * How many frames to save fps / memory for average calculations.
+	 */
+	private static inline var HISTORY_MAX:Int = 60;
 	
-	public var minFps:Float;
-	public var maxFps:Float;
-	public var minMem:Float;
-	public var maxMem:Float;
-	private var history:Int = 60;
+	public var minFps:Float = FlxMath.MAX_VALUE;
+	public var maxFps:Float = FlxMath.MIN_VALUE;
+	
+	public var minMem:Float = FlxMath.MAX_VALUE;
+	public var maxMem:Float = FlxMath.MIN_VALUE;
 	
 	private var fpsList:Array<Float>;
 	private var memList:Array<Float>;
@@ -77,6 +87,8 @@ class Stats extends Window
 	private var _activeObject:Array<Int>;
 	private var _activeObjectMarker:Int = 0;
 	
+	private var _paused:Bool = false;
+	
 	#if !flash
 	private var drawCallsCount:Int = 0;
 	private var _drawCalls:Array<Int>;
@@ -84,7 +96,9 @@ class Stats extends Window
 	#end
 	
 	/**
-	 * Creates flashPlayerFramerate new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.
+	 * This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * 
 	 * @param 	Title		The name of the window, displayed in the header bar.
 	 * @param	IconPath	Path to the icon to use for the window header.
 	 * @param 	Width		The initial width of the window.
@@ -96,7 +110,7 @@ class Stats extends Window
 	{
 		super(Title, IconPath, Width, Height, Resizable, Bounds);
 		
-		resize(WIDTH, 170);
+		resize(INITIAL_WIDTH, 170);
 		
 		fpsList = [];
 		memList = [];
@@ -135,15 +149,10 @@ class Stats extends Window
 		_memBox.y = 128;
 		addChild(_memBox);
 		
-		minFps = FlxMath.MAX_VALUE;
-		maxFps = FlxMath.MIN_VALUE;
-		minMem = FlxMath.MAX_VALUE;
-		maxMem = FlxMath.MIN_VALUE;
-		
-		draw();
+		drawAxis();
 		
 		_initTime = _itvTime = FlxG.game.ticks;
-        _totalCount = _frameCount = 0;
+		_totalCount = _frameCount = 0;
 		
 		_update = new Array();
 		_draw = new Array();
@@ -158,12 +167,12 @@ class Stats extends Window
 	/**
 	 * Helper method for label creation.
 	 *
-	 * @param        X         label x position.
-	 * @param        Y         label y position.
-	 * @param        Format         label text format.
-	 * @return                new label text field at specified position and format
+	 * @param	X		Label x position.
+	 * @param	Y		Label y position.
+	 * @param	Format	label text format.
+	 * @return	New label text field at specified position and format.
 	 */
-	private function makeLabel(X:Float, Y:Float, Format:TextFormat = null):TextField
+	private function makeLabel(X:Float, Y:Float, ?Format:TextFormat):TextField
 	{
 		var tf:TextField = new TextField();
 		tf.x = X;
@@ -185,17 +194,17 @@ class Stats extends Window
 	/**
 	 * Draw graph axis
 	 */
-	private function draw():Void
+	private function drawAxis():Void
 	{
 		_display.graphics.clear();
 		_display.graphics.beginFill(0x000000, 0.5);
 		_display.graphics.lineStyle(1, 0x5e5f5f, 1);
-
+		
 		_display.graphics.moveTo(60, 55);
 		_display.graphics.lineTo(60, 10);
 		_display.graphics.moveTo(60, 55);
 		_display.graphics.lineTo(_width - 7, 55);
-
+		
 		_display.graphics.moveTo(60, 118);
 		_display.graphics.lineTo(60, 73);
 		_display.graphics.moveTo(60, 118);
@@ -278,6 +287,11 @@ class Stats extends Window
 	 */
 	public function update():Void
 	{
+		if (_paused) 
+		{
+			return;
+		}
+		
 		var time:Int = _currentTime = FlxG.game.ticks;
 		var elapsed:Int = time - _lastTime;
 		
@@ -299,12 +313,12 @@ class Stats extends Window
 			fpsList.unshift(currentFps());
 			memList.unshift(currentMem());
 			
-			if (fpsList.length > history)
+			if (fpsList.length > HISTORY_MAX)
 			{
 				fpsList.pop();
 			}
 			
-			if (memList.length > history)
+			if (memList.length > HISTORY_MAX)
 			{
 				memList.pop();
 			}
@@ -390,8 +404,8 @@ class Stats extends Window
 		}
 		
 		var output:String = "Current " + (Std.int(10 * currentFps()) / 10) + " fps : ";
-		output += "Average " + (Std.int(10 * averageFps()) / 10) + " fps : ";
-		output += "Memory Used " + (Std.int(10 * currentMem()) / 10) + "mb\n";
+		output += "Avg " + (Std.int(10 * averageFps()) / 10) + " fps : ";
+		output += "Mem" + (Std.int(10 * currentMem()) / 10) + "mb\n";
 		
 		output += "Upd " + activeCount + " (" + Std.int(updateTime / _updateMarker) + "ms)" + " : ";
 		output += "Draw " + visibleCount + " (" + Std.int(drawTime / _drawMarker) + "ms)" + " : ";
@@ -411,7 +425,7 @@ class Stats extends Window
 		var len:Int = fpsList.length;
 		var height:Int = 45;
 		var width:Int = _width - 67;
-		var inc:Float = width / (history - 1);
+		var inc:Float = width / (HISTORY_MAX - 1);
 		var rateRange:Float = maxFps - minFps;
 		var value:Float;
 		
@@ -467,7 +481,7 @@ class Stats extends Window
 	}
 	
 	/**
-	 * Current RAM consumtion by this game.
+	 * Current RAM consumtion.
 	 */
 	inline public function currentMem():Float
 	{
@@ -475,7 +489,8 @@ class Stats extends Window
 	}
 	
 	/**
-	 * Keep track of how long updates take.
+	 * How long updates took.
+	 * 
 	 * @param 	Time	How long this update took.
 	 */
 	inline public function flixelUpdate(Time:Int):Void
@@ -484,7 +499,8 @@ class Stats extends Window
 	}
 	
 	/**
-	 * Keep track of how long renders take.
+	 * How long rendering took.
+	 * 
 	 * @param	Time	How long this render took.
 	 */
 	inline public function flixelDraw(Time:Int):Void
@@ -493,7 +509,8 @@ class Stats extends Window
 	}
 	
 	/**
-	 * Keep track of how many objects were updated.
+	 * How many objects were updated.
+	 * 
 	 * @param 	Count	How many objects were updated.
 	 */
 	inline public function activeObjects(Count:Int):Void
@@ -502,8 +519,9 @@ class Stats extends Window
 	}
 	
 	/**
-	 * Keep track of how many objects were updated.
-	 * @param 	Count	How many objects were updated.
+	 * How many objects were rendered.
+	 * 
+	 * @param 	Count	How many objects were rendered.
 	 */
 	inline public function visibleObjects(Count:Int):Void
 	{
@@ -512,7 +530,8 @@ class Stats extends Window
 	
 	#if !flash
 	/**
-	 * Keep track of how many times drawTiles() method was called.
+	 * How many times drawTiles() method was called.
+	 * 
 	 * @param 	Count	How many times drawTiles() method was called.
 	 */
 	inline public function drawCalls(Drawcalls:Int):Void
@@ -520,4 +539,20 @@ class Stats extends Window
 		_drawCalls[_drawCallsMarker++] = Drawcalls;
 	}
 	#end
+	
+	/**
+	 * Re-enables tracking of the stats.
+	 */
+	public function onFocus():Void
+	{
+		_paused = false;
+	}
+	
+	/**
+	 * Pauses tracking of the stats.
+	 */
+	public function onFocusLost():Void
+	{
+		_paused = true;
+	}
 }

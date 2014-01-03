@@ -295,15 +295,19 @@ class FlxGame extends Sprite
 		_lostFocus = false;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-		if (_focusLostScreen != null)
-		{
-			_focusLostScreen.visible = false;
-		}
+			if (_focusLostScreen != null)
+			{
+				_focusLostScreen.visible = false;
+			}
 		#end 
+		
+		#if !FLX_NO_DEBUG
+			debugger.stats.onFocus();
+		#end
 		
 		stage.frameRate = flashFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.resumeSounds();
+			FlxG.sound.resumeSounds();
 		#end
 		FlxG.inputs.onFocus();
 	}
@@ -323,15 +327,19 @@ class FlxGame extends Sprite
 		_lostFocus = true;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-		if (_focusLostScreen != null)
-		{
-			_focusLostScreen.visible = true;
-		}
+			if (_focusLostScreen != null)
+			{
+				_focusLostScreen.visible = true;
+			}
 		#end 
+		
+		#if !FLX_NO_DEBUG
+			debugger.stats.onFocusLost();
+		#end
 		
 		stage.frameRate = 10;
 		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.pauseSounds();
+			FlxG.sound.pauseSounds();
 		#end
 		FlxG.inputs.onFocusLost();
 	}
