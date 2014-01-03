@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.system.input.IFlxInput;
-import flixel.FlxG;
+import flixel.util.FlxStringUtil;
 
 class InputFrontEnd
 {
@@ -26,7 +26,7 @@ class InputFrontEnd
 		// Don't add repeats
 		for (input in list)
 		{
-			if (input.toString() == Input.toString())
+			if (FlxStringUtil.sameClassName(Input, input))
 			{
 				return Input;
 			}

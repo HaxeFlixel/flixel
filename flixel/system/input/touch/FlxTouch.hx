@@ -13,40 +13,46 @@ import flixel.util.FlxPoint;
  * Automatically accounts for parallax scrolling, etc.
  */
 class FlxTouch extends FlxPoint
-{
-	
+{	
 	/**
 	 * A unique identification number (as an Int) assigned to the touch point. 
 	 */
-	private var _touchPointID:Int;
-	
+	public var touchPointID(default, null):Int;
 	/**
 	 * Current X position of the touch point on the screen.
 	 */
-	public var screenX:Int;
+	public var screenX:Int = 0;
 	/**
 	 * Current Y position of the touch point on the screen.
 	 */
-	public var screenY:Int;
+	public var screenY:Int = 0;
 	
 	/**
 	 * Helper variable for tracking whether the touch was just began or just ended.
 	 */
-	public var _current:Int;
+	@:allow(flixel.system.input.touch.FlxTouchManager)
+	private var _current:Int = 0;
 	/**
 	 * Helper variable for tracking whether the touch was just began or just ended.
 	 */
-	public var _last:Int;
+	@:allow(flixel.system.input.touch.FlxTouchManager)
+	private var _last:Int = 0;
 	/**
 	 * Helper variables for recording purposes.
 	 */
 	private var _point:FlxPoint;
+	/**
+	 * Internal helper var storing the global screen position.
+	 */
 	private var _globalScreenPosition:FlxPoint;
-	
-	public var _flashPoint:Point;
+	/**
+	 * Internal helper var for updateTouchPosition().
+	 */
+	private var _flashPoint:Point;
 	
 	/**
 	 * Constructor
+	 * 
 	 * @param	X			stageX touch coordinate
 	 * @param	Y			stageX touch coordinate
 	 * @param	PointID		touchPointID of the touch
@@ -54,16 +60,12 @@ class FlxTouch extends FlxPoint
 	public function new(X:Float = 0, Y:Float = 0, PointID:Int = 0)
 	{
 		super();
-		screenX = 0;
-		screenY = 0;
-		_current = 0;
-		_last = 0;
 		_point = new FlxPoint();
 		_globalScreenPosition = new FlxPoint();
 		
 		_flashPoint = new Point();
 		updateTouchPosition(X, Y);
-		_touchPointID = PointID;
+		touchPointID = PointID;
 	}
 	
 	/**
@@ -74,16 +76,6 @@ class FlxTouch extends FlxPoint
 		_point = null;
 		_globalScreenPosition = null;
 		_flashPoint = null;
-	}
-	
-	/**
-	 * A unique identification number (as an Int) assigned to the touch point. 
-	 */
-	public var touchPointID(get_touchPointID, null):Int;
-	
-	private function get_touchPointID():Int 
-	{
-		return _touchPointID;
 	}
 
 	/**
@@ -104,6 +96,7 @@ class FlxTouch extends FlxPoint
 	
 	/**
 	 * Function for updating touch coordinates. Called by the TouchManager.
+	 * 
 	 * @param	X	stageX touch coordinate
 	 * @param	Y	stageY touch coordinate
 	 */
@@ -126,8 +119,8 @@ class FlxTouch extends FlxPoint
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
 		var camera:FlxCamera = FlxG.camera;
-		screenX = Math.floor((_globalScreenPosition.x - camera.x)/camera.zoom);
-		screenY = Math.floor((_globalScreenPosition.y - camera.y)/camera.zoom);
+		screenX = Math.floor((_globalScreenPosition.x - camera.x) / camera.zoom);
+		screenY = Math.floor((_globalScreenPosition.y - camera.y) / camera.zoom);
 		x = screenX + camera.scroll.x;
 		y = screenY + camera.scroll.y;
 	}
@@ -135,11 +128,12 @@ class FlxTouch extends FlxPoint
 	/**
 	 * Fetch the world position of the touch on any given camera.
 	 * NOTE: Touch.x and Touch.y also store the world position of the touch point on the main camera.
-	 * @param Camera	If unspecified, first/main global camera is used instead.
-	 * @param point		An existing point object to store the results (if you don't want a new one created). 
-	 * @return The touch point's location in world space.
+	 * 
+	 * @param 	Camera	If unspecified, first/main global camera is used instead.
+	 * @param 	point	An existing point object to store the results (if you don't want a new one created). 
+	 * @return 	The touch point's location in world space.
 	 */
-	public function getWorldPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
+	public function getWorldPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
 	{
 		if (Camera == null)
 		{
@@ -158,11 +152,12 @@ class FlxTouch extends FlxPoint
 	/**
 	 * Fetch the screen position of the touch on any given camera.
 	 * NOTE: Touch.screenX and Touch.screenY also store the screen position of the touch point on the main camera.
-	 * @param Camera	If unspecified, first/main global camera is used instead.
-	 * @param point		An existing point object to store the results (if you don't want a new one created). 
-	 * @return The touch point's location in screen space.
+	 * 
+	 * @param 	Camera	If unspecified, first/main global camera is used instead.
+	 * @param 	point		An existing point object to store the results (if you don't want a new one created). 
+	 * @return 	The touch point's location in screen space.
 	 */
-	public function getScreenPosition(Camera:FlxCamera = null, point:FlxPoint = null):FlxPoint
+	public function getScreenPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
 	{
 		if (Camera == null)
 		{
@@ -181,11 +176,12 @@ class FlxTouch extends FlxPoint
 	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> or <code>FlxGroup</code>.
 	 * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
-	 * @param ObjectOrGroup The object or group being tested.
-	 * @param Camera Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
-	 * @return Whether or not the two objects overlap.
+	 * 
+	 * @param 	ObjectOrGroup The object or group being tested.
+	 * @param 	Camera Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+	 * @return 	Whether or not the two objects overlap.
 	*/
-	public function overlaps(ObjectOrGroup:FlxBasic, Camera:FlxCamera = null):Bool
+	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool
 	{
 		if (Std.is(ObjectOrGroup, FlxTypedGroup))
 		{
@@ -214,7 +210,7 @@ class FlxTouch extends FlxPoint
 	public function reset(X:Float, Y:Float, PointID:Int):Void
 	{
 		updateTouchPosition(X, Y);
-		_touchPointID = PointID;
+		touchPointID = PointID;
 		_current = 0;
 		_last = 0;
 	}

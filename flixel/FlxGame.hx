@@ -342,13 +342,22 @@ class FlxGame extends Sprite
 		var height:Int = Lib.current.stage.stageHeight;
 
 		#if !flash
-		FlxG.bitmap.onContext();
+			FlxG.bitmap.onContext();
 		#end
 		
 		state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
+		
 		#if !FLX_NO_DEBUG
-		debugger.onResize(width, height);
+			debugger.onResize(width, height);
+		#end
+		
+		#if !FLX_NO_FOCUS_LOST_SCREEN
+			_focusLostScreen.draw();
+		#end
+		
+		#if !FLX_NO_SOUND_TRAY
+			soundTray.screenCenter();
 		#end
 		
 		if (FlxG.autoResize)
@@ -417,11 +426,10 @@ class FlxGame extends Sprite
 			#if !FLX_NO_DEBUG
 			if (FlxG.debugger.visible)
 			{
-				debugger.stats.flash(elapsedMS);
 				debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
-				debugger.stats.update();
 				debugger.watch.update();
 			}
+			debugger.stats.update();
 			#end
 		}
 	}

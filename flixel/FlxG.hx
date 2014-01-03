@@ -87,9 +87,9 @@ class FlxG
 	 */
 	static public var autoPause:Bool = true;
 	/**
-	 * Whether <code>FlxG.resizeGame()</code> should be called whenever the game is resized. False by default.
+	 * Whether <code>FlxG.resizeGame()</code> should be called whenever the game is resized. True by default.
 	 */
-	static public var autoResize:Bool = false;
+	static public var autoResize:Bool = true;
 	/**
 	 * WARNING: Changing this can lead to issues with physcis and the recording system. Setting this to 
 	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.

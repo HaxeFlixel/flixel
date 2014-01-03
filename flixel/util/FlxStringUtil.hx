@@ -1,6 +1,7 @@
 package flixel.util;
 
-import haxe.ds.StringMap.StringMap;
+import flash.Lib;
+import flash.net.URLRequest;
 
 /**
  * A class primarily containing functions related 
@@ -223,5 +224,28 @@ class FlxStringUtil
 			}
 		}
 		return s;
+	}
+	
+	/**
+	 * Helper function that uses <code>getClassName</code> to compare two objects' class names.
+	 * 
+	 * @param	Obj1	The first object
+	 * @param	Obj2	The second object
+	 * @param	Simple 	Only uses the class name, not the package or packages.
+	 * @return	Whether they have the same class name or not
+	 */
+	inline static public function sameClassName(Obj1:Dynamic, Obj2:Dynamic, Simple:Bool = true):Bool
+	{
+		return (getClassName(Obj1, Simple) == getClassName(Obj2, Simple));
+	}
+	
+	/**
+	 * Opens a web page in a new tab or window.
+	 * 
+	 * @param	URL		The address of the web page.
+	 */
+	inline static public function openURL(URL:String):Void
+	{
+		Lib.getURL(new URLRequest(URL), "_blank");
 	}
 }

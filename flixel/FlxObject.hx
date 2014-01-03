@@ -1063,4 +1063,14 @@ class FlxObject extends FlxBasic
 	
 	private var _boundingBoxColorOverritten:Bool = false;
 	#end
+	
+	/**
+	 * Convert object to readable string name.  Useful for debugging, save games, etc.
+	 */
+	override public function toString():String
+	{
+		var p = FlxG.debugger.precision;
+		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " + FlxMath.roundDecimal(y, p) + " | w: " + FlxMath.roundDecimal(width, p) + " | h: " + FlxMath.roundDecimal(height, p) + 
+				" | visible: " +  visible + " | velocity: " +  Std.string(velocity) + ")"; 
+	}
 }
