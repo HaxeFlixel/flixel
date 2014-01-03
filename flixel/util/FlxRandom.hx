@@ -45,7 +45,6 @@ class FlxRandom
 	 * @see 	Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988). "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
 	 */
 	inline static private var MULTIPLIER:Int = 48271;
-	inline static private var INCREMENT:Int = 0;
 	inline static private var MODULUS:Int = 2147483647;
 	
 	/**
@@ -293,7 +292,7 @@ class FlxRandom
 	 * 
 	 * @param	Objects			An array from which to return an object.
 	 * @param	WeightsArray	An array of weights which will determine the likelihood of returning a given value from Objects. Values in WeightsArray will correspond to objects in Objects exactly.
-	 * @param	StartIndex		Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
+	 * @param	StartIndex		Optional index from which to restrict selection. Default value is 0, or the beginning of the Objects array.
 	 * @param 	EndIndex 		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	A pseudorandomly chosen object from Objects.
 	 */
@@ -322,11 +321,13 @@ class FlxRandom
 				EndIndex = Objects.length - 1;
 			}
 			
+			if ( EndIndex > WeightsArray.length - 1 )
+			{
+				EndIndex = WeightsArray.length - 1;
+			}
+			
 			var weightedSubArray:Array<Float> = [ for ( i in StartIndex...EndIndex ) WeightsArray[i] ];
-			
-			var weightedSelect:Int = weightedPick( weightedSubArray );
-			
-			selected = Objects[ weightedSelect ];
+			selected = Objects[ weightedPick( weightedSubArray ) ];
 		}
 		
 		return selected;
@@ -335,12 +336,13 @@ class FlxRandom
 	/**
 	 * Returns a pseudorandom color value in hex ARGB format.
 	 * 
-	 * @param	Min		The lowest value to use for each channel.
-	 * @param	Max 	The highest value to use for each channel.
-	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
+	 * @param	Min			The lowest value to use for each channel.
+	 * @param	Max 		The highest value to use for each channel.
+	 * @param	Alpha		The alpha value of the returning color (default 255 = fully opaque).
+	 * @param 	GreyScale	Whether or not to create a color that is strictly a shade of grey. False by default.
 	 * @return 	A color value in hex ARGB format.
 	 */
-	static public function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255 ):Int
+	static public function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255, GreyScale:Bool = false ):Int
 	{
 		if ( Min < 0 )
 		{
@@ -372,8 +374,8 @@ class FlxRandom
 		}
 		
 		var red:Int = intRanged( Min, Max );
-		var green:Int = intRanged( Min, Max );
-		var blue:Int = intRanged( Min, Max );
+		var green:Int = GreyScale ? red : intRanged( Min, Max );
+		var blue:Int = GreyScale ? red : intRanged( Min, Max );
 		
 		return FlxColorUtil.makeFromARGB( Alpha, red, green, blue );
 	}
@@ -428,6 +430,6 @@ class FlxRandom
 	 */
 	inline static private function generate():Int
 	{
-		return internalSeed = ( ( internalSeed * MULTIPLIER + INCREMENT ) % MODULUS ) & MODULUS;
+		return internalSeed = ( ( internalSeed * MULTIPLIER ) % MODULUS ) & MODULUS;
 	}
 }
