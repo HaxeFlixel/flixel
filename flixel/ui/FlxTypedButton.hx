@@ -127,7 +127,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		var nextFrame:Int = status;
 		
-		// "Highlight" doesn't make much senes on mobile devices / touchscreens
+		// "Highlight" doesn't make much sense on mobile devices / touchscreens
 		#if mobile
 			if (nextFrame == FlxButton.HIGHLIGHT) {
 				nextFrame = FlxButton.NORMAL;
@@ -159,7 +159,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				if (overlapsPoint(_point, true, camera))
 				{
 					overlapFound = true;
-					updateStatus(true, FlxG.mouse.justPressed);
+					updateStatus(true, FlxG.mouse.justPressed, FlxG.mouse.pressed);
 					break;
 				}
 			#end
@@ -172,7 +172,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 					if (overlapsPoint(_point, true, camera))
 					{
 						overlapFound = true;
-						updateStatus(true, touch.justPressed, touch);
+						updateStatus(true, touch.justPressed, touch.pressed, touch);
 						break;
 					}
 				}
@@ -181,7 +181,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		if (!overlapFound)
 		{
-			updateStatus(false, false);
+			updateStatus(false, false, false);
 		}
 	}
 	
@@ -190,9 +190,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * 
 	 * @param	Overlap			Whether there was any overlap with this button
 	 * @param	JustPressed		Whether the input (touch or mouse) was just pressed
+	 * @param	Pressed			Whether the input (touch or mouse) is pressed
 	 * @param	Touch			A FlxTouch, if this was called from an overlap with one
 	 */
-	private function updateStatus(Overlap:Bool, JustPressed:Bool, ?Touch:FlxTouch):Void
+	private function updateStatus(Overlap:Bool, JustPressed:Bool, Pressed:Bool, ?Touch:FlxTouch):Void
 	{
 		if (Overlap)
 		{
@@ -206,7 +207,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			}
 			else if (status == FlxButton.NORMAL)
 			{
-				onOverHandler();
+				// Allow "swiping" to press a button (dragging it over the button while pressed)
+				if (Pressed) {
+					onDownHandler();
+				}
+				else {
+					onOverHandler();
+				}
 			}
 		}
 		else if (status != FlxButton.NORMAL)
