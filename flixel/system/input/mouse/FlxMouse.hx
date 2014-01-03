@@ -588,6 +588,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		reset();
 		useSystemCursor = useSystemCursor;
+
+		if (!visible)
+		{
+			hide();
+		}
 	}
 
 	/**
