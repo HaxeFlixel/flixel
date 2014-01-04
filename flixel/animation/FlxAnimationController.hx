@@ -438,7 +438,7 @@ class FlxAnimationController
 			_curAnim.stop();
 			_curAnim = null;
 		}
-		frameIndex = Std.int(Math.random() * frames);
+		frameIndex = FlxRandom.intRanged( 0, frames - 1 );
 	}
 	
 	private function set_frameIndex(Frame:Int):Int

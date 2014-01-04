@@ -113,7 +113,7 @@ class WatchEntry
 		// quickWatch is green, normal watch is white
 		var color:Int = 0xffffff;
 		if (quickWatch)
-			color = 0x008000;
+			color = 0xA5F1ED;
 		
 		_whiteText = new TextFormat(fontName, 12, color);
 		_blackText = new TextFormat(fontName, 12, 0);

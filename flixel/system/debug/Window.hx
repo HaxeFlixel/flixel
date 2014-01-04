@@ -27,7 +27,7 @@ class Window extends Sprite
 	/**
 	 * The color used for the "handle" at the top of the window.
 	 */
-	inline static public var TOP_COLOR:Int = 0xAA000000;
+	inline static public var TOP_COLOR:Int = 0xBB000000;
 	/**
 	 * How many windows there are currently in total.
 	 */

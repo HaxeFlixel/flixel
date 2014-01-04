@@ -1,12 +1,12 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxG;
 import flixel.plugin.FlxPlugin;
 import flixel.plugin.PathManager;
 import flixel.plugin.TimerManager;
 import flixel.plugin.TweenManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPath;
+import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 
 class PluginFrontEnd
@@ -40,7 +40,7 @@ class PluginFrontEnd
 		// Don't add repeats
 		for (plugin in list)
 		{
-			if (plugin.toString() == Plugin.toString())
+			if (FlxStringUtil.sameClassName(Plugin, plugin))
 			{
 				return Plugin;
 			}

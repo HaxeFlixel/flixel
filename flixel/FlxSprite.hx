@@ -88,7 +88,7 @@ class FlxSprite extends FlxObject
 	public var offset(default, set):FlxPoint;
 	/**
 	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use <code>updateHitbox</code> for that
-	 * (or <code>setGraphicDimensions()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
+	 * (or <code>setGraphicSize()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
 	 */
 	public var scale(default, set):FlxPoint;
 	/**
@@ -656,7 +656,7 @@ class FlxSprite extends FlxObject
 	 * @param	Height			How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
 	 * @param	UpdateHitbox	Whether or not to update the hitbox dimensions, offset and origin accordingly.
 	 */
-	public function setGraphicDimensions(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
+	public function setGraphicSize(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
 	{
 		if (Width <= 0 && Height <= 0) {
 			return;
@@ -681,7 +681,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
-	 * Also calls setOriginToCenter(). Called by setGraphicDimensions().
+	 * Also calls setOriginToCenter(). Called by setGraphicSize().
 	 */
 	public function updateHitbox():Void
 	{

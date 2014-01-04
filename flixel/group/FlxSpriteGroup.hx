@@ -40,12 +40,6 @@ class FlxSpriteGroup extends FlxSprite
 	public var maxSize(get, set):Int;
 	
 	/**
-	 * Whether <code>revive()</code> also revives all members of this group. 
-	 * False by default.
-	 */
-	public var autoReviveMembers(get, set):Bool;
-	
-	/**
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
 	private var _skipTransformChildren:Bool = false;
@@ -61,7 +55,6 @@ class FlxSpriteGroup extends FlxSprite
 	{
 		super(X, Y);
 		maxSize = MaxSize;
-		autoReviveMembers = false;
 	}
 	
 	/**
@@ -511,8 +504,7 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * Revives the group itself (and all of it's members if 
-	 * <code>autoReviveMembers</code> has been set to true.
+	 * Revives the group.
 	 */
 	override public function revive():Void
 	{
@@ -882,16 +874,6 @@ class FlxSpriteGroup extends FlxSprite
 	inline private function get_members():Array<FlxSprite>
 	{
 		return group.members;
-	}
-	
-	inline private function get_autoReviveMembers():Bool
-	{
-		return group.autoReviveMembers;
-	}
-	
-	inline private function set_autoReviveMembers(Value:Bool):Bool
-	{
-		return group.autoReviveMembers = Value;
 	}
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING

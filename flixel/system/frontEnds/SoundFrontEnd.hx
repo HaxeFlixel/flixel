@@ -38,7 +38,7 @@ class SoundFrontEnd
 	/**
 	 * The keys to decrease volume (see <code>FlxG.keys</code> for the keys available).
 	 * Default keys: - (and numpad -). Set to <code>null</code> to deactivate.
-	 * @default ["MINUS", "NUMPASMINUS"]
+	 * @default ["MINUS", "NUMPADMINUS"]
 	 */
 	public var volumeDownKeys:Array<String>;
 	/**
@@ -54,7 +54,7 @@ class SoundFrontEnd
 		#if !FLX_NO_KEYBOARD
 		// Assign default values to the keys used by core flixel
 		volumeUpKeys = ["PLUS", "NUMPADPLUS"];
-		volumeDownKeys = ["MINUS", "NUMPASMINUS"];
+		volumeDownKeys = ["MINUS", "NUMPADMINUS"];
 		muteKeys = ["ZERO", "NUMPADZERO"]; 
 		#end
 		
