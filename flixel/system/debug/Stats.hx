@@ -3,6 +3,7 @@ package flixel.system.debug;
 import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
+import flixel.FlxG;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
 import flixel.util.FlxColor;
@@ -124,7 +125,7 @@ class Stats extends Window
 		
 		fpsGraph = new StatsGraph(gutter, Std.int(_header.height) + 5, INITIAL_WIDTH - 10, graphHeight, FPS_COLOR, "fps");
 		addChild(fpsGraph);	
-		fpsGraph.maxValue = 60;
+		fpsGraph.maxValue = FlxG.flashFramerate;
 		fpsGraph.minValue = 0;
 		
 		memoryGraph = new StatsGraph(gutter, Std.int(_header.height) +  graphHeight + 20, INITIAL_WIDTH - 10, graphHeight, MEMORY_COLOR, "MB");
@@ -191,8 +192,8 @@ class Stats extends Window
 		{
 			return;
 		}
-		
 		var time:Int = _currentTime = FlxG.game.ticks;
+		
 		var elapsed:Int = time - _lastTime;
 		
 		if (elapsed > UPDATE_DELAY)

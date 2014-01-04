@@ -175,6 +175,11 @@ class StatsGraph extends Sprite
 			removeChild(maxLabel);
 			maxLabel = null;
 		}	
+		if (avgLabel != null)
+		{
+			removeChild(avgLabel);
+			avgLabel = null;
+		}	
 		
 		history = null;
 	}
