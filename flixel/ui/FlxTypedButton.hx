@@ -263,7 +263,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Internal function that handles the onUp event.
 	 */
-	inline private function onUpHandler():Void
+	private function onUpHandler():Void
 	{
 		onUp.fire();
 		_pressedTouch = null;
@@ -277,7 +277,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Internal function that handles the onDown event.
 	 */
-	inline private function onDownHandler():Void
+	private function onDownHandler():Void
 	{
 		onDown.fire();
 		status = FlxButton.PRESSED;
@@ -290,7 +290,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Internal function that handles the onOver event.
 	 */
-	inline private function onOverHandler():Void
+	private function onOverHandler():Void
 	{
 		onOver.fire();
 		status = FlxButton.HIGHLIGHT;
@@ -302,7 +302,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Internal function that handles the onOut event.
 	 */
-	inline private function onOutHandler():Void
+	private function onOutHandler():Void
 	{
 		onOut.fire();
 		status = FlxButton.NORMAL;
