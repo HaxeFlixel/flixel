@@ -196,7 +196,7 @@ class FlxG
 	/**
 	 * A reference to the <code>BmpLogFrontEnd</code> object. Use it to <code>add</code> images to the bmplog window. 
 	 */	
-	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();	
+	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();
 	#end
 	
 	/**
