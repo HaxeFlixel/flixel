@@ -1,22 +1,12 @@
 package flixel.system.debug;
 
-import flash.display.Graphics;
-import flash.display.Shape;
 import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
-import flixel.FlxG;
-import flixel.system.FlxAssets;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
+import flixel.util.FlxColor;
 import flixel.util.FlxMath;
-
-#if flash
-import flash.text.AntiAliasType;
-import flash.text.GridFitType;
-#end
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
@@ -29,24 +19,38 @@ class Stats extends Window
 	/**
 	 * How often to update the stats, in ms. The lower, the more performance-intense!
 	 */
-	private static inline var UPDATE_DELAY:Int = 500;
+	private static inline var UPDATE_DELAY:Int = 250;
 	/**
 	 * The initial width of the stats window.
 	 */
-	private static inline var INITIAL_WIDTH:Int = 400;
+	private static inline var INITIAL_WIDTH:Int = 160;
 	/**
-	 * How many frames to save fps / memory for average calculations.
+	 * The minimal height of the window.
 	 */
-	private static inline var HISTORY_MAX:Int = 60;
+	private static inline var MIN_HEIGHT:Int = #if flash 180 #else 195 #end;
+	/**
+	 * The color of the fps graph.
+	 */
+	private static inline var FPS_COLOR:Int = 0xff96ff00;
+	/**
+	 * The color of the memory graph.
+	 */
+	private static inline var MEMORY_COLOR:Int = 0xff009cff;
+	/**
+	 * The label color.
+	 */
+	public static inline var LABEL_COLOR:Int = 0xaaffffff;
+	/**
+	 * The textfield size color.
+	 */
+	public static inline var TEXT_SIZE:Int = 11;
+	/**
+	 * The amount of decimals to display for the stats.
+	 */
+	public static inline var DECIMALS:Int = 1;
 	
-	public var minFps:Float = FlxMath.MAX_VALUE;
-	public var maxFps:Float = FlxMath.MIN_VALUE;
-	
-	public var minMem:Float = FlxMath.MAX_VALUE;
-	public var maxMem:Float = FlxMath.MIN_VALUE;
-	
-	private var fpsList:Array<Float>;
-	private var memList:Array<Float>;
+	private var _leftTextField:TextField;
+	private var _rightTextField:TextField;
 	
 	private var _itvTime:Int = 0;
 	private var _initTime:Int;
@@ -54,17 +58,8 @@ class Stats extends Window
 	private var _totalCount:Int;
 	private var _currentTime:Int;
 	
-	private var _tfMaxFps:TextField;
-	private var _tfMinFps:TextField;
-	private var _tfMaxMem:TextField;
-	private var _tfMinMem:TextField;
-	private var _tfInfo:TextField;
-	
-	private var _fpsBox:Shape;
-	private var _memBox:Shape;
-	private var _display:Shape;
-	
-	private var _defaultFormat:TextFormat;
+	private var fpsGraph:StatsGraph;
+	private var memoryGraph:StatsGraph;
 	
 	private var flashPlayerFramerate:Float = 0;
 	private var visibleCount:Int = 0;
@@ -109,107 +104,39 @@ class Stats extends Window
 	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
 		super(Title, IconPath, Width, Height, Resizable, Bounds);
-		
-		resize(INITIAL_WIDTH, 170);
-		
-		fpsList = [];
-		memList = [];
-		
-		_defaultFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
-		
-		_tfMaxFps = makeLabel(2, 15, _defaultFormat);
-		addChild(_tfMaxFps);
-		
-		_tfMinFps = makeLabel(2, 52, _defaultFormat);
-		addChild(_tfMinFps);
-		
-		_tfMaxMem = makeLabel(2, 78, _defaultFormat);
-		addChild(_tfMaxMem);
-		
-		_tfMinMem = makeLabel(2, 115, _defaultFormat);
-		addChild(_tfMinMem);
-		
-		_tfInfo = makeLabel(2, 132, _defaultFormat);
-		_tfInfo.multiline = true;
-		_tfInfo.height = 32;
-		_tfInfo.width = _width;
-		addChild(_tfInfo);
-		
-		_display = new Shape();
-		_display.y = 10;
-		addChild(_display);
-		
-		_fpsBox = new Shape();
-		_fpsBox.x = 60;
-		_fpsBox.y = 65;
-		addChild(_fpsBox);
-		
-		_memBox = new Shape();
-		_memBox.x = 60;
-		_memBox.y = 128;
-		addChild(_memBox);
-		
-		drawAxis();
+		minSize.y = MIN_HEIGHT;
+		resize(INITIAL_WIDTH, MIN_HEIGHT);
 		
 		_initTime = _itvTime = FlxG.game.ticks;
 		_totalCount = _frameCount = 0;
 		
-		_update = new Array();
-		_draw = new Array();
-		_activeObject = new Array();
-		_visibleObject = new Array();
+		_update = [];
+		_draw = [];
+		_activeObject = [];
+		_visibleObject = [];
 		
 		#if !flash
-		_drawCalls = new Array();
+		_drawCalls = [];
 		#end
-	}
-	
-	/**
-	 * Helper method for label creation.
-	 *
-	 * @param	X		Label x position.
-	 * @param	Y		Label y position.
-	 * @param	Format	label text format.
-	 * @return	New label text field at specified position and format.
-	 */
-	private function makeLabel(X:Float, Y:Float, ?Format:TextFormat):TextField
-	{
-		var tf:TextField = new TextField();
-		tf.x = X;
-		tf.y = Y;
-		tf.height = 16;
-		tf.multiline = false;
-		tf.wordWrap = false;
-		tf.embedFonts = true;
-		tf.selectable = false;
-		#if flash
-		tf.antiAliasType = AntiAliasType.NORMAL;
-		tf.gridFitType = GridFitType.PIXEL;
-		#end
-		tf.defaultTextFormat = Format;
-		tf.text = "";
-		return tf;
-	}
-	
-	/**
-	 * Draw graph axis
-	 */
-	private function drawAxis():Void
-	{
-		_display.graphics.clear();
-		_display.graphics.beginFill(0x000000, 0.5);
-		_display.graphics.lineStyle(1, 0x5e5f5f, 1);
 		
-		_display.graphics.moveTo(60, 55);
-		_display.graphics.lineTo(60, 10);
-		_display.graphics.moveTo(60, 55);
-		_display.graphics.lineTo(_width - 7, 55);
+		var graphHeight:Int = 40;
+		var gutter:Int = 5;
 		
-		_display.graphics.moveTo(60, 118);
-		_display.graphics.lineTo(60, 73);
-		_display.graphics.moveTo(60, 118);
-		_display.graphics.lineTo(_width - 7, 118);
-		_display.graphics.endFill();
+		fpsGraph = new StatsGraph(gutter, Std.int(_header.height) + 5, INITIAL_WIDTH - 10, graphHeight, FPS_COLOR, "fps");
+		addChild(fpsGraph);	
+		fpsGraph.maxValue = 60;
+		fpsGraph.minValue = 0;
+		
+		memoryGraph = new StatsGraph(gutter, Std.int(_header.height) +  graphHeight + 20, INITIAL_WIDTH - 10, graphHeight, MEMORY_COLOR, "MB");
+		addChild(memoryGraph);
+		
+		addChild(_leftTextField = DebuggerUtil.createTextField(gutter, (graphHeight * 2) + 45, LABEL_COLOR, TEXT_SIZE));
+		addChild(_rightTextField = DebuggerUtil.createTextField(gutter + 70, (graphHeight * 2) + 45, FlxColor.WHITE, TEXT_SIZE));
+		
+		_leftTextField.multiline = _rightTextField.multiline = true;
+		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
+		
+		_leftTextField.text = "Draw: \nUpdate:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
 	}
 	
 	/**
@@ -217,62 +144,35 @@ class Stats extends Window
 	 */
 	override public function destroy():Void
 	{
-		if (_tfInfo != null)
+		if (fpsGraph != null)
 		{
-			removeChild(_tfInfo);
+			fpsGraph.destroy();
+			removeChild(fpsGraph);
 		}
-		_tfInfo = null;
+		fpsGraph = null;
 		
-		if (_tfMaxFps != null)
+		if (memoryGraph != null)
 		{
-			removeChild(_tfMaxFps);
+			removeChild(memoryGraph);
 		}
-		_tfMaxFps = null;
+		memoryGraph = null;
 		
-		if (_tfMinFps != null)
+		if (_leftTextField != null)
 		{
-			removeChild(_tfMinFps);
+			removeChild(_leftTextField);
 		}
-		_tfMinFps = null;
+		_leftTextField = null;
 		
-		if (_tfMaxMem != null)
+		if (_rightTextField != null)
 		{
-			removeChild(_tfMaxMem);
+			removeChild(_rightTextField);
 		}
-		_tfMaxMem = null;
+		_rightTextField = null;
 		
-		if (_tfMinMem != null)
-		{
-			removeChild(_tfMinMem);
-		}
-		_tfMinMem = null;
-		
-		if (_fpsBox != null)
-		{
-			removeChild(_fpsBox);
-		}
-		_fpsBox = null;
-		
-		if (_memBox != null)
-		{
-			removeChild(_memBox);
-		}
-		_memBox = null;
-		
-		if (_display != null)
-		{
-			removeChild(_display);
-		}
-		_display = null;
-		
-		_defaultFormat = null;
 		_update = null;
 		_draw = null;
 		_activeObject = null;
 		_visibleObject = null;
-		
-		fpsList = null;
-		memList = null;
 		
 		#if !flash
 		_drawCalls = null;
@@ -308,20 +208,9 @@ class Stats extends Window
 		
 		if (_updateTimer > UPDATE_DELAY)
 		{
-			(visible) ? updateDisplay() : updateMinMax();
-			updateDisplay();
-			fpsList.unshift(currentFps());
-			memList.unshift(currentMem());
-			
-			if (fpsList.length > HISTORY_MAX)
-			{
-				fpsList.pop();
-			}
-			
-			if (memList.length > HISTORY_MAX)
-			{
-				memList.pop();
-			}
+			fpsGraph.update(currentFps(), averageFps());
+			memoryGraph.update(currentMem());
+			updateTexts();
 			
 			_frameCount = 0;
 			_itvTime = _currentTime;
@@ -365,87 +254,23 @@ class Stats extends Window
 			#if !flash
 			_drawCallsMarker = 0;
 			#end
+			
 			_updateTimer -= UPDATE_DELAY;
 		}
 	}
 	
-	/**
-	 * Update displayable perfomance values.
-	 */
-	private function updateDisplay():Void
+	private function updateTexts():Void
 	{
-		updateMinMax();
-		redrawDisplay();
-	}
-	
-	/**
-	 * Update range values for perfomance graph.
-	 */
-	private function updateMinMax():Void
-	{
-		minFps = Math.min(currentFps(), minFps);
-		maxFps = Math.max(currentFps(), maxFps);
+		var updTime = FlxMath.roundDecimal(updateTime / _updateMarker, DECIMALS);
+		var drwTime = FlxMath.roundDecimal(drawTime / _drawMarker, DECIMALS);
 		
-		minMem = Math.min(currentMem(), minMem);
-		maxMem = Math.max(currentMem(), maxMem);
-	}
-	
-	/**
-	 * Redraw perfomance graph and update displayed text info.
-	 */
-	private function redrawDisplay():Void
-	{
-		if (runningTime() >= 1)
-		{
-			_tfMinFps.text = Std.int(10 * minFps) / 10 + " fps";
-			_tfMaxFps.text = Std.int(10 * maxFps) / 10 + " fps";
-			_tfMinMem.text = Std.int(10 * minMem) / 10 + " mb";
-			_tfMaxMem.text = Std.int(10 * maxMem) / 10 + " mb";
-		}
-		
-		var output:String = "Current " + (Std.int(10 * currentFps()) / 10) + " fps : ";
-		output += "Avg " + (Std.int(10 * averageFps()) / 10) + " fps : ";
-		output += "Mem" + (Std.int(10 * currentMem()) / 10) + "mb\n";
-		
-		output += "Upd " + activeCount + " (" + Std.int(updateTime / _updateMarker) + "ms)" + " : ";
-		output += "Draw " + visibleCount + " (" + Std.int(drawTime / _drawMarker) + "ms)" + " : ";
-		#if !flash
-		output += "DrawTiles " + Std.string(drawCallsCount) + " : ";
-		#end
-		output += "QuadTrees " + Std.string(FlxQuadTree._NUM_CACHED_QUAD_TREES) + " : ";
-		output += "Lists " + Std.string(FlxList._NUM_CACHED_FLX_LIST);
-		
-		_tfInfo.text = output;
-		
-		var vec:Graphics = _fpsBox.graphics;
-		vec.clear();
-		vec.lineStyle(1, 0x96ff00, 1);
-
-		var i:Int = 0;
-		var len:Int = fpsList.length;
-		var height:Int = 45;
-		var width:Int = _width - 67;
-		var inc:Float = width / (HISTORY_MAX - 1);
-		var rateRange:Float = maxFps - minFps;
-		var value:Float;
-		
-		for (i in 0...len)
-		{
-			value = (fpsList[i] - minFps) / rateRange;
-			(i == 0) ? vec.moveTo(0, -value * height) : vec.lineTo(i * inc, -value * height);
-		}
-		
-		vec = _memBox.graphics;
-		vec.clear();
-		vec.lineStyle(1, 0x009cff, 1);
-		
-		len = memList.length;
-		rateRange = maxMem - minMem;
-		for (i in 0...len)
-		{
-			value = (memList[i] - minMem) / rateRange;
-			(i == 0) ? vec.moveTo(0, -value * height) : vec.lineTo(i * inc, -value * height);
-		}
+		_rightTextField.text = 	activeCount + " (" + updTime + "ms)\n"
+								+ visibleCount + " (" + drwTime + "ms)\n" 
+								#if !flash
+								+ drawCallsCount + "\n"
+								#end 
+								+ FlxQuadTree._NUM_CACHED_QUAD_TREES + "\n"
+								+ FlxList._NUM_CACHED_FLX_LIST;
 	}
 	
 	/**
