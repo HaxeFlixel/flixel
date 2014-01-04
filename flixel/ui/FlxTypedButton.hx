@@ -31,7 +31,24 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * Shows the current state of the button, either <code>NORMAL</code>, 
 	 * <code>HIGHLIGHT</code> or <code>PRESSED</code>
 	 */
-	public var status:Int;
+	public var status(default, set):Int;
+	
+	public function set_status(i:Int):Int {
+		/*Update label's alpha whenever status is changed, so we don't have to expensively do it in update()*/
+		status = i;
+		if (status < status_alphas.length) {
+			if (label != null) {
+				label.alpha = status_alphas[status];
+			}
+		}
+		return status;
+	}
+	
+	/**
+	 * Customizable values for what alpha the label should be at for each button state
+	 * default is = [0.8, 1.0, 0.5], for Normal, Hilight, Pressed
+	 */
+	public var status_alphas:Array<Float>;
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
@@ -133,6 +150,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		#end
 		
 		status = FlxButton.NORMAL;
+		status_alphas = [0.8, 1.0, 0.5]
+		
 		_pressed = false;
 		_initialized = false;
 		
@@ -216,7 +235,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			return;
 		}
-		switch (status)
+		
+		/*switch (status)
 		{
 			case FlxButton.HIGHLIGHT:
 				label.alpha = 1.0;
@@ -225,7 +245,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				label.y++;
 			default:
 				label.alpha = 0.8;
-		}
+		}*/
 	}
 	
 	/**
