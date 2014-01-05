@@ -43,6 +43,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 			}
 			label = new FlxText(X + labelOffsets[NORMAL].x, Y + labelOffsets[NORMAL].y, 80, Label);
 			label.setFormat(null, 8, 0x333333, "center");
+			label.alpha = labelAlphas[status];
 		}
 	}
 	

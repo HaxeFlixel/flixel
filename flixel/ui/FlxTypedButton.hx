@@ -74,8 +74,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		loadGraphic(FlxAssets.IMG_BUTTON, true, false, 80, 20);
 		
-		onUp = new FlxButtonEvent();
-		onDown = new FlxButtonEvent(OnClick, OnClickParams);
+		onUp = new FlxButtonEvent(OnClick, OnClickParams);
+		onDown = new FlxButtonEvent();
 		onOver = new FlxButtonEvent();
 		onOut = new FlxButtonEvent();
 		
