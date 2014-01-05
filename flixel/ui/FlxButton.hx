@@ -25,19 +25,23 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 * Creates a new <code>FlxButton</code> object with a gray background
 	 * and a callback function on the UI thread.
 	 * 
-	 * @param	X			The X position of the button.
-	 * @param	Y			The Y position of the button.
-	 * @param	Label		The text that you want to appear on the button.
-	 * @param	OnClick		The function to call whenever the button is clicked.
+	 * @param	X				The X position of the button.
+	 * @param	Y				The Y position of the button.
+	 * @param	Label			The text that you want to appear on the button.
+	 * @param	OnClick			The function to call whenever the button is clicked.
+	 * @param	OnClickParams	The params to call the onClick function with.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic, ?OnClickParams:Array<Dynamic>)
 	{
-		super(X, Y, Label, OnClick);
+		super(X, Y, Label, OnClick, OnClickParams);
 		
 		if (Label != null)
 		{
-			labelOffset = new FlxPoint( -1, 3);
-			label = new FlxText(X + labelOffset.x, Y + labelOffset.y, 80, Label);
+			for (point in labelOffsets)
+			{
+				point.set(point.x -1, point.y + 3);
+			}
+			label = new FlxText(X + labelOffsets[NORMAL].x, Y + labelOffsets[NORMAL].y, 80, Label);
 			label.setFormat(null, 8, 0x333333, "center");
 		}
 	}
@@ -52,7 +56,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 		if (label != null)
 		{
 			label.width = label.frameWidth = Std.int(width);
-			label.size = label.size;
+			label.size = label.size; // Calls set_size(), don't remove!
 		}
 	}
 }

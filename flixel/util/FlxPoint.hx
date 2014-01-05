@@ -6,7 +6,7 @@ import flixel.FlxG;
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint
+class FlxPoint implements IDestroyable
 {
 	/**
 	 * @default 0
@@ -139,7 +139,7 @@ class FlxPoint
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
 	
-	public function destroy() { }
+	public function destroy() { } // Necessary for FlxPointHelper in FlxSpriteGroup!
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.

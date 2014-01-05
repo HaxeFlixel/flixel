@@ -31,7 +31,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 			label.color = 0x333333;
 			label.useTextColor = false;
 			label.alignment = PxTextAlign.CENTER;
-			labelOffset = new FlxPoint(0, 5);
+			labelOffset.set(0, 5);
 			label.x = X + labelOffset.x;
 			label.y = Y + labelOffset.y;
 		}
