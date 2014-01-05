@@ -165,8 +165,19 @@ class FlxGame extends Sprite
 	 */
 	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	#end
-	
+	/**
+	 * Whether the splash screen should be skipped.
+	 */
 	private var _skipSplash:Bool = false;
+	
+	#if flash
+	/**
+	 * Whether the game currently has focus. Hacky solution to prevent onFocus / onFocusLost 
+	 * from firing twice because of a bug in the standalone flash player, versions 11+
+	 * @see http://stackoverflow.com/questions/10889698/why-does-my-event-active-trigger-twice
+	 */ 
+	private var _hasFocus:Bool = true;
+	#end
 	
 	/**
 	 * Instantiate a new game object.
@@ -290,6 +301,13 @@ class FlxGame extends Sprite
 	 */
 	private function onFocus(?FlashEvent:Event):Void
 	{
+		#if flash
+			if (_hasFocus) {
+				return; // Don't run this function twice
+			}
+			_hasFocus = true;
+		#end
+		
 		if (!FlxG.autoPause) 
 		{
 			state.onFocus();
@@ -322,6 +340,13 @@ class FlxGame extends Sprite
 	 */
 	private function onFocusLost(?FlashEvent:Event):Void
 	{
+		#if flash
+			if (!_hasFocus) {
+				return; // Don't run this function twice
+			}
+			_hasFocus = false;
+		#end
+		
 		if (!FlxG.autoPause) 
 		{
 			state.onFocusLost();
