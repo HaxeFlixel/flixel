@@ -134,7 +134,7 @@ class ConsoleUtil
 		
 		if (!Reflect.isObject(object)) 
 		{
-			FlxG.log.error("'" + Std.string(object) + "' is not a valid Object");
+			FlxG.log.error("'" + FlxStringUtil.getClassName(object, true) + "' is not a valid Object");
 			return null;
 		}
 		
@@ -155,7 +155,7 @@ class ConsoleUtil
 			}
 			catch (e:Dynamic) 
 			{
-				FlxG.log.error("'" + Std.string(tempObj) + "' does not have a field '" + tempVarName + "'");
+				FlxG.log.error("'" + FlxStringUtil.getClassName(tempObj, true) + "' does not have a field '" + tempVarName + "'");
 				return null;
 			}
 		}
