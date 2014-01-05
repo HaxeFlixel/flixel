@@ -1,6 +1,6 @@
 Flixel Features
 =======
-These are all the demos that can be found on [flixel.org/features](http://flixel.org/features.html), ported to HaxeFlixel. Some of them have also been slightly improved by [Gama11](https://github.com/Gama11).
+These are all the demos that can be found on [flixel.org/features](http://flixel.org/features.html), ported to HaxeFlixel.
 
 ###[CollisionAndGrouping](http://www.haxeflixel.com/demos/collision-and-grouping)
 
@@ -25,6 +25,10 @@ Shows off the [FlxSave](https://github.com/HaxeFlixel/flixel/blob/dev/flixel/uti
 ###[SplitScreen](http://www.haxeflixel.com/demos/splitscreen)
 
 Shows off the powerful camera system flixel has, allowing you to to create and customize new [FlxCamera](https://github.com/HaxeFlixel/flixel/blob/dev/flixel/FlxCamera.hx)s.
+
+###[TexturePackerAtlas](http://www.haxeflixel.com/demos/texturepackeratlas)
+
+Just a simple example of texture atlas usage in HaxeFlixel.
 
 ###[Tilemap](http://www.haxeflixel.com/demos/tilemap)
 

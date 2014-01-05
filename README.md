@@ -34,6 +34,7 @@ A large set of demos (**currently 40!**) using the HaxeFlixel engine and demonst
   * Replay
   * Save
   * SplitScreen
+  * TexturePackerAtlas
   * Tilemap
 * **Input**
   * GridMovement

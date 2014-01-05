@@ -9,7 +9,7 @@
 	<!--<setenv name="no_console" value="1" />-->
 	
 	<classpath name="source" />
-	<assets path="assets" rename="assets" />
+	<assets path="assets" />
 	
 	<!--<haxedef name="kong"/>-->
 	

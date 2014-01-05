@@ -1,0 +1,36 @@
+{"frames": [
+
+{
+	"filename": "cursor.png",
+	"frame": {"x":996,"y":2,"w":8,"h":10},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":10},
+	"sourceSize": {"w":10,"h":10}
+},
+{
+	"filename": "flash.png",
+	"frame": {"x":2,"y":1028,"w":492,"h":608},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":2,"w":492,"h":608},
+	"sourceSize": {"w":512,"h":640}
+},
+{
+	"filename": "galaxy.png",
+	"frame": {"x":2,"y":2,"w":1024,"h":992},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":992},
+	"sourceSize": {"w":1024,"h":1024}
+}],
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "atlas.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:13cbdd35280dcf282323fea54087c882$"
+}
+}

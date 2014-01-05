@@ -1,0 +1,172 @@
+{"frames": [
+
+{
+	"filename": "tiles-0.png",
+	"frame": {"x":2,"y":2,"w":114,"h":122},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":39,"y":41,"w":114,"h":122},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-1.png",
+	"frame": {"x":118,"y":2,"w":138,"h":156},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":24,"w":138,"h":156},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-10.png",
+	"frame": {"x":258,"y":2,"w":178,"h":188},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":1,"w":178,"h":188},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-11.png",
+	"frame": {"x":438,"y":2,"w":172,"h":186},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":0,"w":172,"h":186},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-12.png",
+	"frame": {"x":612,"y":2,"w":160,"h":182},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":4,"w":160,"h":182},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-13.png",
+	"frame": {"x":774,"y":2,"w":158,"h":180},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":8,"w":158,"h":180},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-14.png",
+	"frame": {"x":2,"y":192,"w":160,"h":174},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":14,"w":160,"h":174},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-15.png",
+	"frame": {"x":164,"y":192,"w":150,"h":154},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":21,"w":150,"h":154},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-16.png",
+	"frame": {"x":316,"y":192,"w":146,"h":146},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":30,"w":146,"h":146},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-17.png",
+	"frame": {"x":464,"y":192,"w":140,"h":150},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":26,"y":28,"w":140,"h":150},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-18.png",
+	"frame": {"x":606,"y":192,"w":142,"h":150},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":29,"w":142,"h":150},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-19.png",
+	"frame": {"x":750,"y":192,"w":142,"h":150},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":29,"w":142,"h":150},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-2.png",
+	"frame": {"x":2,"y":368,"w":172,"h":162},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":16,"w":172,"h":162},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-3.png",
+	"frame": {"x":176,"y":368,"w":178,"h":178},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":4,"w":178,"h":178},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-4.png",
+	"frame": {"x":356,"y":368,"w":174,"h":182},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":3,"w":174,"h":182},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-5.png",
+	"frame": {"x":532,"y":368,"w":170,"h":180},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":4,"w":170,"h":180},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-6.png",
+	"frame": {"x":704,"y":368,"w":172,"h":176},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":5,"w":172,"h":176},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-7.png",
+	"frame": {"x":2,"y":552,"w":180,"h":174},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":6,"w":180,"h":174},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-8.png",
+	"frame": {"x":184,"y":552,"w":186,"h":182},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":6,"w":186,"h":182},
+	"sourceSize": {"w":192,"h":192}
+},
+{
+	"filename": "tiles-9.png",
+	"frame": {"x":372,"y":552,"w":186,"h":186},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":186,"h":186},
+	"sourceSize": {"w":192,"h":192}
+}],
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "anim.png",
+	"format": "RGBA8888",
+	"size": {"w":934,"h":740},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7eff078e0be7ed90edad7bbef671fa5e$"
+}
+}

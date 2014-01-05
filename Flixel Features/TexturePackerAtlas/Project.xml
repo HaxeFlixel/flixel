@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<app title="TexturePackerAtlas" file="TexturePackerAtlas" main="Main" version="0.0.1" company="Zaphod" />
+	
+	<window width="640" height="480" fps="30" orientation="portrait" resizable="true" if="web" />
+	<window width="640" height="480" fps="30" orientation="landscape" fullscreen="false" unless="web" />
+ 	
+	<set name="BUILD_DIR" value="export" />
+	
+	<!--<setenv name="no_console" value="1" />-->
+	
+	<classpath name="source" />
+	
+	<assets path="assets" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="flixel"/>
+	<haxelib name="flixel-addons"/>
+	
+	<!--<haxedef name="thread"/>-->
+	
+	<haxedef name="FLX_NO_DEBUG" unless="debug" />
+	
+	<app preloader="NMEPreloader" unless="html5" />
+</project>

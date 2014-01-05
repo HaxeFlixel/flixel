@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+<g>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#F5274E" points="27.482,16.044 16.11,4.868 23.822,0.836 31.229,0.836 
+		31.229,8.747 	"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#04CDFB" points="16.11,27.264 27.482,16.044 31.229,23.604 31.229,31.098 
+		23.297,31.098 	"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#FFC132" points="16.11,4.868 4.957,15.825 0.771,8.615 0.858,0.902 
+		8.55,0.902 	"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#3B41FF" points="4.957,15.825 16.11,27.264 8.834,31.164 0.924,31.164 
+		0.924,23.889 	"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#00B922" points="4.957,15.825 16.11,4.868 27.482,16.044 16.11,27.264 	
+		"/>
+</g>
+</svg>
