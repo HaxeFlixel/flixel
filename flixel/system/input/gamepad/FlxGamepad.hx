@@ -150,6 +150,40 @@ class FlxGamepad
 		return false;
 	}
 	
+	/**
+	 * Get the first found id of the button which has been just pressed.
+	 * Return -1 if there is no such buttons
+	 */
+	public function firstJustPressedButtonID():Int
+	{
+		for (button in buttons)
+		{
+			if (button.current == 2)
+			{
+				return button.id;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Get the first found id of the button which has been just released.
+	 * Return -1 if there is no such buttons
+	 */
+	public function firstJustReleasedButtonID():Int
+	{
+		for (button in buttons)
+		{
+			if (button.current == -1)
+			{
+				return button.id;
+			}
+		}
+		
+		return -1;
+	}
+	
 	public function getAxis(AxisID:Int):Float
 	{
 		if (AxisID < 0 || AxisID >= axis.length)
