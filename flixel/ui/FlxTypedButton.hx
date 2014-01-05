@@ -25,7 +25,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	public var labelOffsets:Array<FlxPoint>;
 	/**
-	 * What alpha value the label should have for each status. Default is <code>[1.0, 0.8, 0.5]</code>.
+	 * What alpha value the label should have for each status. Default is <code>[0.8, 1.0, 0.5]</code>.
 	 */
 	public var labelAlphas:Array<Float>;
 	/**
@@ -79,7 +79,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		onOver = new FlxButtonEvent();
 		onOut = new FlxButtonEvent();
 		
-		labelAlphas = [1.0, 0.8, 0.5];
+		labelAlphas = [0.8, 1.0, 0.5];
 		labelOffsets = [new FlxPoint(), new FlxPoint(), new FlxPoint(0, 1)];
 		
 		status = FlxButton.NORMAL;
