@@ -83,7 +83,7 @@ class Stats extends Window
 	private var _activeObject:Array<Int>;
 	private var _activeObjectMarker:Int = 0;
 	
-	private var _paused:Bool = false;
+	private var _paused:Bool = true;
 	
 	#if !flash
 	private var drawCallsCount:Int = 0;
@@ -108,8 +108,7 @@ class Stats extends Window
 		minSize.y = MIN_HEIGHT;
 		resize(INITIAL_WIDTH, MIN_HEIGHT);
 		
-		_initTime = _itvTime = FlxG.game.ticks;
-		_totalCount = _frameCount = 0;
+		start();
 		
 		_update = [];
 		_draw = [];
@@ -138,6 +137,27 @@ class Stats extends Window
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
 		_leftTextField.text = "Draw: \nUpdate:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
+	}
+	
+	/**
+	 * Starts Stats window update logic
+	 */
+	public function start():Void
+	{
+		if (_paused)
+		{
+			_paused = false;
+			_initTime = _itvTime = FlxG.game.ticks;
+			_totalCount = _frameCount = 0;
+		}
+	}
+	
+	/**
+	 * Stops Stats window
+	 */
+	public function stop():Void
+	{
+		_paused = true;
 	}
 	
 	/**
@@ -321,6 +341,7 @@ class Stats extends Window
 	 */
 	inline public function flixelUpdate(Time:Int):Void
 	{
+		if (_paused) return;
 		_update[_updateMarker++] = Time;
 	}
 	
@@ -331,6 +352,7 @@ class Stats extends Window
 	 */
 	inline public function flixelDraw(Time:Int):Void
 	{
+		if (_paused) return;
 		_draw[_drawMarker++] = Time;
 	}
 	
@@ -341,6 +363,7 @@ class Stats extends Window
 	 */
 	inline public function activeObjects(Count:Int):Void
 	{
+		if (_paused) return;
 		_activeObject[_activeObjectMarker++] = Count;
 	}
 	
@@ -351,6 +374,7 @@ class Stats extends Window
 	 */
 	inline public function visibleObjects(Count:Int):Void
 	{
+		if (_paused) return;
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
 	
@@ -362,6 +386,7 @@ class Stats extends Window
 	 */
 	inline public function drawCalls(Drawcalls:Int):Void
 	{
+		if (_paused) return;
 		_drawCalls[_drawCallsMarker++] = Drawcalls;
 	}
 	#end

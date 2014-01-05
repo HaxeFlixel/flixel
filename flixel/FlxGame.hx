@@ -438,9 +438,9 @@ class FlxGame extends Sprite
 			#if !FLX_NO_DEBUG
 			if (FlxG.debugger.visible)
 			{
-				debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
 				debugger.watch.update();
 			}
+			debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
 			debugger.stats.update();
 			#end
 		}
@@ -582,10 +582,7 @@ class FlxGame extends Sprite
 		update();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
-		}
+		debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
 		#end
 	}
 	
@@ -628,10 +625,7 @@ class FlxGame extends Sprite
 		FlxG.cameras.update();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
-		}
+		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
 		#end
 	}
 	
@@ -735,20 +729,14 @@ class FlxGame extends Sprite
 		FlxG.cameras.render();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			debugger.stats.drawCalls(TileSheetExt._DRAWCALLS);
-		}
+		debugger.stats.drawCalls(TileSheetExt._DRAWCALLS);
 		#end
 		#end
 		
 		FlxG.cameras.unlock();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			debugger.stats.flixelDraw(Lib.getTimer() - ticks);
-		}
+		debugger.stats.flixelDraw(Lib.getTimer() - ticks);
 		#end
 	}
 }
