@@ -114,6 +114,10 @@ class FlxSound extends FlxBasic
 	 * Internal flag for what to do when the sound is done fading out.
 	 */
 	private var _onFadeComplete:Void->Void;
+	/**
+	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
+	 */
+	private var _alreadyPaused:Bool = false;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -600,6 +604,20 @@ class FlxSound extends FlxBasic
 		name = _sound.id3.songName;
 		artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);
+	}
+	
+	public function onFocus():Void
+	{
+		if (!_alreadyPaused)
+		{
+			resume();
+		}
+	}
+	
+	public function onFocusLost():Void
+	{
+		_alreadyPaused = _paused;
+		pause();
 	}
 }
 #end

@@ -329,7 +329,7 @@ class FlxGame extends Sprite
 		
 		stage.frameRate = flashFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.sound.resumeSounds();
+			FlxG.sound.onFocus();
 		#end
 		FlxG.inputs.onFocus();
 	}
@@ -368,7 +368,7 @@ class FlxGame extends Sprite
 		
 		stage.frameRate = focusLostFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.sound.pauseSounds();
+			FlxG.sound.onFocusLost();
 		#end
 		FlxG.inputs.onFocusLost();
 	}
