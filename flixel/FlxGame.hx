@@ -170,15 +170,6 @@ class FlxGame extends Sprite
 	 */
 	private var _skipSplash:Bool = false;
 	
-	#if flash
-	/**
-	 * Whether the game currently has focus. Hacky solution to prevent onFocus / onFocusLost 
-	 * from firing twice because of a bug in the standalone flash player, versions 11+
-	 * @see http://stackoverflow.com/questions/10889698/why-does-my-event-active-trigger-twice
-	 */ 
-	private var _hasFocus:Bool = true;
-	#end
-	
 	/**
 	 * Instantiate a new game object.
 	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
@@ -302,19 +293,18 @@ class FlxGame extends Sprite
 	private function onFocus(?FlashEvent:Event):Void
 	{
 		#if flash
-			if (_hasFocus) {
-				return; // Don't run this function twice
+			if (!_lostFocus) {
+				return; // Don't run this function twice (bug in standalone flash player)
 			}
-			_hasFocus = true;
 		#end
+		
+		_lostFocus = false;
 		
 		if (!FlxG.autoPause) 
 		{
 			state.onFocus();
 			return;
 		}
-		
-		_lostFocus = false;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
 			if (_focusLostScreen != null)
@@ -341,19 +331,18 @@ class FlxGame extends Sprite
 	private function onFocusLost(?FlashEvent:Event):Void
 	{
 		#if flash
-			if (!_hasFocus) {
-				return; // Don't run this function twice
+			if (_lostFocus) {
+				return; // Don't run this function twice (bug in standalone flash player)
 			}
-			_hasFocus = false;
 		#end
+		
+		_lostFocus = true;
 		
 		if (!FlxG.autoPause) 
 		{
 			state.onFocusLost();
 			return;
 		}
-		
-		_lostFocus = true;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
 			if (_focusLostScreen != null)
@@ -420,9 +409,9 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		if (!_lostFocus)
+		if (!_lostFocus || !FlxG.autoPause)
 		{
-			if(FlxG.vcr.paused)
+			if (FlxG.vcr.paused)
 			{
 				if (FlxG.vcr.stepRequested)
 				{
