@@ -59,60 +59,30 @@ class FlxArrayUtil
 	}
 	
 	/**
+	 * Deprecated; please use FlxRandom.shuffleArray() instead.
 	 * Shuffles the entries in an array into a new random order.
-	 * Deterministic and safe for use with replays/recordings.
 	 * 
-	 * @param	A				A Flash <code>Array</code> object containing...stuff.
-	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
-	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
+	 * @param	Objects			An array to shuffle.
+	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
+	 * @return	The newly shuffled array.
 	 */
-	@:generic static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
+	@:generic inline static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
-		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
-		var i:Int = 0;
-		var index1:Int;
-		var index2:Int;
-		var object:Dynamic;
-		while (i < HowManyTimes)
-		{
-			index1 = Std.int(FlxRandom.float() * Objects.length);
-			index2 = Std.int(FlxRandom.float() * Objects.length);
-			object = Objects[index2];
-			Objects[index2] = Objects[index1];
-			Objects[index1] = object;
-			i++;
-		}
-		return Objects;
+		return FlxRandom.shuffleArray( Objects, HowManyTimes );
 	}
-		
+	
 	/**
-	 * Fetch a random entry from the given array.
-	 * Will return null if random selection is missing, or array has no entries.
-	 * Deterministic and safe for use with replays/recordings.
+	 * Deprecated; please use FlxRandom.getObject() instead.
+	 * Fetch a random entry from the given array from StartIndex to EndIndex.
 	 * 
-	 * @param	Objects		A Flash array of objects.
-	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
+	 * @param	Objects			An array from which to select a random entry.
+	 * @param	StartIndex		Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
+	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, Length:Int = 0):T
+	@:generic inline static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
-		if (Objects != null)
-		{
-			if (StartIndex < 0) StartIndex = 0;
-			if (Length < 0) Length = 0;
-			
-			var l:Int = Length;
-			if ((l == 0) || (l > Objects.length - StartIndex))
-			{
-				l = Objects.length - StartIndex;
-			}
-			if (l > 0)
-			{
-				return Objects[StartIndex + Std.int(FlxRandom.float() * l)];
-			}
-		}
-		return null;
+		return FlxRandom.getObject( Objects, StartIndex, EndIndex );
 	}
 	
 	/**

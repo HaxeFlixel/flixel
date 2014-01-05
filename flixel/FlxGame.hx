@@ -66,6 +66,10 @@ class FlxGame extends Sprite
 	 */
 	public var flashFramerate:Int;
 	/**
+	 * Framerate to use on focus lost. Default = 10.
+	 */
+	public var focusLostFramerate:Int = 10;
+	/**
 	 * Max allowable accumulation (see _accumulator).
 	 * Should always (and automatically) be set to roughly 2x the flash player framerate.
 	 */
@@ -232,7 +236,7 @@ class FlxGame extends Sprite
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG
-		debugger = new FlxDebugger(FlxG.width * FlxCamera.defaultZoom, FlxG.height * FlxCamera.defaultZoom);
+		debugger = new FlxDebugger(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		addChild(debugger);
 		#end
 		
@@ -295,15 +299,19 @@ class FlxGame extends Sprite
 		_lostFocus = false;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-		if (_focusLostScreen != null)
-		{
-			_focusLostScreen.visible = false;
-		}
+			if (_focusLostScreen != null)
+			{
+				_focusLostScreen.visible = false;
+			}
 		#end 
+		
+		#if !FLX_NO_DEBUG
+			debugger.stats.onFocus();
+		#end
 		
 		stage.frameRate = flashFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.resumeSounds();
+			FlxG.sound.resumeSounds();
 		#end
 		FlxG.inputs.onFocus();
 	}
@@ -323,15 +331,19 @@ class FlxGame extends Sprite
 		_lostFocus = true;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-		if (_focusLostScreen != null)
-		{
-			_focusLostScreen.visible = true;
-		}
+			if (_focusLostScreen != null)
+			{
+				_focusLostScreen.visible = true;
+			}
 		#end 
 		
-		stage.frameRate = 10;
+		#if !FLX_NO_DEBUG
+			debugger.stats.onFocusLost();
+		#end
+		
+		stage.frameRate = focusLostFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.pauseSounds();
+			FlxG.sound.pauseSounds();
 		#end
 		FlxG.inputs.onFocusLost();
 	}
@@ -342,13 +354,22 @@ class FlxGame extends Sprite
 		var height:Int = Lib.current.stage.stageHeight;
 
 		#if !flash
-		FlxG.bitmap.onContext();
+			FlxG.bitmap.onContext();
 		#end
 		
 		state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
+		
 		#if !FLX_NO_DEBUG
-		debugger.onResize(width, height);
+			debugger.onResize(width, height);
+		#end
+		
+		#if !FLX_NO_FOCUS_LOST_SCREEN
+			_focusLostScreen.draw();
+		#end
+		
+		#if !FLX_NO_SOUND_TRAY
+			soundTray.screenCenter();
 		#end
 		
 		if (FlxG.autoResize)
@@ -417,11 +438,10 @@ class FlxGame extends Sprite
 			#if !FLX_NO_DEBUG
 			if (FlxG.debugger.visible)
 			{
-				debugger.stats.flash(elapsedMS);
 				debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
-				debugger.stats.update();
 				debugger.watch.update();
 			}
+			debugger.stats.update();
 			#end
 		}
 	}

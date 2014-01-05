@@ -232,35 +232,17 @@ class FlxColorUtil
 	}
 	
 	/**
+	 * Deprecated; please use FlxRandom.color() instead.
 	 * Returns a random color value between black and white
-	 * Set the min value to start each channel from the given offset.
-	 * Set the max value to restrict the maximum color used per channel
 	 * 
-	 * @param	Min		The lowest value to use for the color
-	 * @param	Max 	The highest value to use for the color
-	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque)
-	 * @return	32-bit color value with alpha
+	 * @param	Min		The lowest value to use for each channel.
+	 * @param	Max 	The highest value to use for each channel.
+	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
+	 * @return 	A color value in hex ARGB format.
 	 */
-	static public function getRandomColor(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
+	inline static public function getRandomColor(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
 	{
-		//	Sanity checks
-		if (Max > 255)
-		{
-			FlxG.log.warn("FlxColor: getRandomColor - max value too high");
-			return getColor24(255, 255, 255);
-		}
-		
-		if (Min > Max)
-		{
-			FlxG.log.warn("FlxColor: getRandomColor - min value higher than max");
-			return getColor24(255, 255, 255);
-		}
-		
-		var red:Int = Min + Std.int(Math.random() * (Max - Min));
-		var green:Int = Min + Std.int(Math.random() * (Max - Min));
-		var blue:Int = Min + Std.int(Math.random() * (Max - Min));
-		
-		return getColor32(Alpha, red, green, blue);
+		return FlxRandom.color( Min, Max, Alpha );
 	}
 	
 	/**

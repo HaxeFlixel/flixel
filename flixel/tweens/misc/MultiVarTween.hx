@@ -21,6 +21,7 @@ class MultiVarTween extends FlxTween
 		_vars = new Array<String>();
 		_start = new Array<Float>();
 		_range = new Array<Float>();
+		_isInt = new Array<Bool>();
 		
 		super(0, type, complete);
 	}
@@ -32,6 +33,7 @@ class MultiVarTween extends FlxTween
 		_vars = null;
 		_start = null;
 		_range = null;
+		_isInt = null;
 	}
 	
 	/**
@@ -40,13 +42,15 @@ class MultiVarTween extends FlxTween
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
+	 * @param	areInts		Optional object containing key/value pairs of properties and info about their types (whether they are integers or floats).
 	 */
-	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ease:EaseFunction = null):MultiVarTween
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ease:EaseFunction = null, areInts:Dynamic = null):MultiVarTween
 	{
 		_object = object;
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);
 		FlxArrayUtil.setLength(_range, 0);
+		FlxArrayUtil.setLength(_isInt, 0);
 		_target = duration;
 		_ease = ease;
 		var p:String;
@@ -60,7 +64,7 @@ class MultiVarTween extends FlxTween
 		{
 			throw "Unsupported MultiVar properties container - use Object containing key/value pairs.";
 		}
-
+		
 		for (p in fields)
 		{
 			if (Reflect.getProperty(object, p) == null)
@@ -77,6 +81,16 @@ class MultiVarTween extends FlxTween
 			_vars.push(p);
 			_start.push(a);
 			_range.push(Reflect.getProperty(properties, p) - a);
+			
+			if (areInts != null && Reflect.hasField(areInts, p))
+			{
+				var isInt:Bool = cast Reflect.field(areInts, p);
+				_isInt.push(isInt);
+			}
+			else
+			{
+				_isInt.push(false);
+			}
 		}
 		start();
 		return this;
@@ -89,11 +103,14 @@ class MultiVarTween extends FlxTween
 	{
 		super.update();
 		var i:Int = _vars.length;
+		var isInt:Bool;
+		var value:Float;
 		while (i-- > 0) 
 		{
 			if (_object != null)
 			{
-				Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
+				value = _start[i] + _range[i] * _t;
+				Reflect.setProperty(_object, _vars[i], (_isInt[i]) ? Math.round(value) : value);
 			}
 		}
 	}
@@ -103,4 +120,5 @@ class MultiVarTween extends FlxTween
 	private var _vars:Array<String>;
 	private var _start:Array<Float>;
 	private var _range:Array<Float>;
+	private var _isInt:Array<Bool>;
 }

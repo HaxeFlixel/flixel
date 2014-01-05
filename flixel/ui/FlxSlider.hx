@@ -74,6 +74,10 @@ class FlxSlider extends FlxSpriteGroup
 	 * The current <code>relativePos</code> is passed as an argument.
 	 */
 	public var callback:Float->Void = null;
+	/**
+	 * Whether the slider sets the variable it tracks. Can be useful to deactivate this in conjunction with callbacks.
+	 */
+	public var setVariable:Bool = true;
 
 	/**
 	 * The dragable area for the handle. Is configured automatically.
@@ -265,28 +269,28 @@ class FlxSlider extends FlxSpriteGroup
 			{
 				alpha = 1;
 			}
-				
+			
 			_justHovered = false;
 		}
 		
 		// Update the target value whenever the slider is being used
-		if (FlxG.mouse.pressed && FlxMath.mouseInFlxRect(false, _bounds))
+		if ((FlxG.mouse.pressed) && (FlxMath.mouseInFlxRect(false, _bounds)))
 		{
 			updateValue();
 		}
-			
+		
 		// Update the value variable
-		if (varString != null && Reflect.getProperty(_object, varString) != null)
+		if ((varString != null) && (Reflect.getProperty(_object, varString) != null))
 		{
 			value = Reflect.getProperty(_object, varString);
 		}
-			
+		
 		// Changes to value from outside update the handle pos
-		if (callback == null && handle.x != expectedPos) 
+		if (handle.x != expectedPos) 
 		{
 			handle.x = expectedPos;
 		}
-			
+		
 		// Finally, update the valueLabel
 		valueLabel.text = Std.string(FlxMath.roundDecimal(value, decimals));
 		
@@ -298,17 +302,18 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	private function updateValue():Void
 	{
-		if (callback == null) 
+		if (_lastPos != relativePos) 
 		{
-			if (varString != null)
+			if ((setVariable) && (varString != null)) 
 			{
-				Reflect.setProperty(_object, varString, relativePos * (maxValue - minValue) + minValue);
+				Reflect.setProperty(_object, varString, (relativePos * (maxValue - minValue)) + minValue);
 			}
-		}
-		else if (_lastPos != relativePos) 
-		{
-			callback(relativePos);
+			
 			_lastPos = relativePos;
+			
+			if (callback != null) {
+				callback(relativePos);
+			}
 		}
 	}
 	
@@ -373,12 +378,12 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	override public function destroy():Void
 	{
-		handle = null;
-		body = null;
-		minLabel = null;
-		maxLabel = null;
-		nameLabel = null;
-		valueLabel = null;
+		FlxG.safeDestroy(body);
+		FlxG.safeDestroy(handle);
+		FlxG.safeDestroy(minLabel);
+		FlxG.safeDestroy(maxLabel);
+		FlxG.safeDestroy(nameLabel);
+		FlxG.safeDestroy(valueLabel);
 		
 		_bounds = null;
 		_offset = null;

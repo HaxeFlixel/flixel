@@ -147,21 +147,22 @@ class FlxAssets
 	 */
 	static public function cacheSounds():Void
 	{
-		// check this method on the real device
 		#if android
 		Reflect.callMethod(Assets, Reflect.field(Assets, "initialize"), []);
 		
-		var resourceClasses:Map<String, Dynamic> = cast Reflect.getProperty(Assets, "resourceClasses");
-		var resourceTypes:Map<String, String> = cast Reflect.getProperty(Assets, "resourceTypes");
+		var defaultLibrary = Assets.libraries.get("default");
 		
-		if (resourceTypes != null)
+		if (defaultLibrary == null) return;
+		
+		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
+		
+		if (types == null) return;
+		
+		for (key in types.keys())
 		{
-			for (key in resourceTypes.keys())
+			if (types.get(key) == Reflect.field(AssetType, "sound".toUpperCase()))
 			{
-				if (resourceTypes.get(key) == "sound")
-				{	
-					FlxG.sound.add(key);
-				}
+				FlxG.sound.add(key);
 			}
 		}
 		#end
