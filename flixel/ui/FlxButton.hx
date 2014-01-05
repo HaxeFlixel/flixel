@@ -37,8 +37,11 @@ class FlxButton extends FlxTypedButton<FlxText>
 		
 		if (Label != null)
 		{
-			labelOffset.set( -1, 3);
-			label = new FlxText(X + labelOffset.x, Y + labelOffset.y, 80, Label);
+			for (point in labelOffsets)
+			{
+				point.set(point.x -1, point.y + 3);
+			}
+			label = new FlxText(X + labelOffsets[NORMAL].x, Y + labelOffsets[NORMAL].y, 80, Label);
 			label.setFormat(null, 8, 0x333333, "center");
 		}
 	}
@@ -53,7 +56,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 		if (label != null)
 		{
 			label.width = label.frameWidth = Std.int(width);
-			label.size = label.size;
+			label.size = label.size; // Calls set_size(), don't remove!
 		}
 	}
 }

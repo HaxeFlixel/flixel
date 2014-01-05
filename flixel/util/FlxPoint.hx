@@ -139,7 +139,7 @@ class FlxPoint implements IDestroyable
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
 	
-	public function destroy() { }
+	public function destroy() { } // Necessary for FlxPointHelper in FlxSpriteGroup!
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.

@@ -21,14 +21,18 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	public var label:T;
 	/**
-	 * Controls the offset (from top left) of the text from the button.
+	 * What offsets the label should have for each status.
 	 */
-	public var labelOffset(default, null):FlxPoint;
+	public var labelOffsets:Array<FlxPoint>;
+	/**
+	 * What alpha value the label should have for each status. Default is <code>[1.0, 0.8, 0.5]</code>.
+	 */
+	public var labelAlphas:Array<Float>;
 	/**
 	 * Shows the current state of the button, either <code>FlxButton.NORMAL</code>, 
 	 * <code>FlxButton.HIGHLIGHT</code> or <code>FlxButton.PRESSED</code>.
 	 */
-	public var status:Int = FlxButton.NORMAL;
+	public var status(default, set):Int;
 	/**
 	 * The properties of this button's onUp event (callback function, sound).
 	 */
@@ -75,10 +79,21 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		onOver = new FlxButtonEvent();
 		onOut = new FlxButtonEvent();
 		
-		labelOffset = new FlxPoint();
+		labelAlphas = [1.0, 0.8, 0.5];
+		labelOffsets = [new FlxPoint(), new FlxPoint(), new FlxPoint(0, 1)];
+		
+		status = FlxButton.NORMAL;
 		
 		// Since this is a UI element, the default scrollFactor is (0, 0)
 		scrollFactor.set();
+	}
+	
+	private function set_status(Value:Int):Int
+	{
+		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
+			label.alpha = labelAlphas[Value];
+		}
+		return status = Value;
 	}
 	
 	/**
@@ -86,14 +101,15 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		FlxG.safeDestroy(label);
-		FlxG.safeDestroy(labelOffset);
+		label = FlxG.safeDestroy(label);
 		
-		FlxG.safeDestroy(onUp);
-		FlxG.safeDestroy(onDown);
-		FlxG.safeDestroy(onOver);
-		FlxG.safeDestroy(onOut);
+		onUp = FlxG.safeDestroy(onUp);
+		onDown = FlxG.safeDestroy(onDown);
+		onOver = FlxG.safeDestroy(onOver);
+		onOut = FlxG.safeDestroy(onOut);
 		
+		labelOffsets = null;
+		labelAlphas = null;
 		_pressedTouch = null;
 		
 		super.destroy();
@@ -117,8 +133,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			label.x = x;
 			label.y = y;
 			
-			label.x += labelOffset.x;
-			label.y += labelOffset.y;
+			label.x += labelOffsets[status].x;
+			label.y += labelOffsets[status].y;
 			
 			label.scrollFactor = scrollFactor;
 		}
@@ -269,9 +285,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		_pressedTouch = null;
 		_pressedMouse = false;
 		status = FlxButton.NORMAL;
-		if (label != null) {
-			label.alpha = 0.8;
-		}
 	}
 	
 	/**
@@ -281,10 +294,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		onDown.fire();
 		status = FlxButton.PRESSED;
-		if (label != null) {
-			label.alpha = 0.5;
-			label.y++;
-		}
 	}
 	
 	/**
@@ -294,9 +303,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		onOver.fire();
 		status = FlxButton.HIGHLIGHT;
-		if (label != null) {
-			label.alpha = 1.0;
-		}
 	}
 	
 	/**
@@ -305,10 +311,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	private function onOutHandler():Void
 	{
 		onOut.fire();
-		status = FlxButton.NORMAL;
-		if (label != null) {
-			label.alpha = 0.8;
-		}	
+		status = FlxButton.NORMAL;	
 	}
 }
 
@@ -358,7 +361,7 @@ private class FlxButtonEvent implements IDestroyable
 		callback = null;
 		callbackParams = null;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.safeDestroy(sound);
+			sound = FlxG.safeDestroy(sound);
 		#end
 	}
 	

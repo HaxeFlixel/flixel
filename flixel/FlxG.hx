@@ -548,12 +548,11 @@ class FlxG
 	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
 	 * @return	Null
 	 */
-	inline static public function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
+	static public function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
 	{
 		if (Object != null)
 		{
 			Object.destroy(); 
-			Object = null;
 		}
 		return null;
 	}
