@@ -876,7 +876,7 @@ class PlayState extends FlxState
 		announceWave( true );
 		
 		_towerButton.text = "[R]estart";
-		_towerButton.setOnDownCallback( resetCallback );
+		_towerButton.onDown.callback = resetCallback;
 		
 		#if !js
 		FlxG.sound.play("gameover");
