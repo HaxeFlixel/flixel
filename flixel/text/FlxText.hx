@@ -565,8 +565,8 @@ class FlxText extends FlxSprite
 						updateFormat(_formatAdjusted);
 						
 						var itd:Float = delta;
-						for (iter in 1...iterations + 1)
-						{							
+						for (iter in 0...iterations)
+						{
 							_matrix.translate(-itd, -itd);		//upper-left
 							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
 							_matrix.translate(itd, 0);			//upper-middle
@@ -599,9 +599,9 @@ class FlxText extends FlxSprite
 						updateFormat(_formatAdjusted);
 						
 						var itd:Float = delta;
-						for (iter in 1...iterations + 1)
+						for (iter in 0...iterations)
 						{
-							_matrix.translate(-itd, -itd);		//upper-left
+							_matrix.translate(-itd, -itd);			//upper-left
 							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
 							_matrix.translate(itd*2, 0);			//upper-right
 							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
