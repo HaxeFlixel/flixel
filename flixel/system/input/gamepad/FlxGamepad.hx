@@ -27,7 +27,7 @@ class FlxGamepad
 		buttons = new Map<Int, FlxGamepadButton>();
 		ball = new FlxPoint();
 		axis = new Array<Float>();
-		axis = [for (i in 0...4) 0];
+		axis = [for (i in 0...6) 0];
 		hat = new FlxPoint();
 		id = ID;
 		
