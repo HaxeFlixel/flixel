@@ -15,7 +15,6 @@ v.3.1.0
 * Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
 * FlxTypedGroup: autoReviveMembers flag has been removed, Revive param has been added to recycle()
 * FlxRect, FlxPoint and FlxBasic and FlxObject now have toString() functions used for traces and the flixel debugger
-* FlxRect, FlxPoint and FlxBasic and FlxObjectnow have toString() functions used for traces and the flixel debugger
 * The focus lost screen and the sound tray now react to window resizes
 * Typo in SoundFrontEnd.volumeDownKeys has been fixed, which prevents numpad minus from working
 * FlxStringUtil.sameClassName() added
