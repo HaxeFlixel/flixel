@@ -120,6 +120,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super.update();
 		
+		if (!visible) {
+			return;
+		}
+		
 		// Update the button, but only if at least either mouse or touches are enabled
 		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
 		updateButton();
