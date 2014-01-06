@@ -8,8 +8,8 @@
 	<definition id="grey" src="ui/chrome/dark_grey"/>
 	<definition id="grey_flat" src="ui/chrome/dark_grey_flat_top"/>
 	
-	<definition id="sans10" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>	
-	<definition id="sans10c" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="center"/>	
+	<definition id="sans10" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans10c" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="center"/>
 	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" outline="0x000000" align="left"/>
 	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
 	
