@@ -86,8 +86,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	
 	private function set_status(Value:Int):Int
 	{
-		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
-			label.alpha = labelAlphas[Value];
+		if(labelAlphas != null){
+			if (((labelAlphas.length - 1) >= Value) && (label != null)) {
+				label.alpha = labelAlphas[Value];
+			}
 		}
 		return status = Value;
 	}
@@ -150,7 +152,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			}
 		#end
 		
-		frame = framesData.frames[nextFrame];
+		if(framesData != null){		//null check in case button was destroyed this frame
+			frame = framesData.frames[nextFrame];
+		}
 	}
 	
 	/**
@@ -311,7 +315,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	private function onOutHandler():Void
 	{
 		onOut.fire();
-		status = FlxButton.NORMAL;	
+		status = FlxButton.NORMAL;
 	}
 }
 
