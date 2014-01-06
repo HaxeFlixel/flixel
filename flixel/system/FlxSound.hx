@@ -11,12 +11,14 @@ import flixel.tweens.misc.NumTween;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import openfl.Assets;
+#end
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
  */
 class FlxSound extends FlxBasic
 {
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * The X position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
@@ -619,5 +621,5 @@ class FlxSound extends FlxBasic
 		_alreadyPaused = _paused;
 		pause();
 	}
+	#end
 }
-#end
