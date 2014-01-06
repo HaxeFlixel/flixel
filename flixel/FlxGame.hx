@@ -165,7 +165,9 @@ class FlxGame extends Sprite
 	 */
 	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	#end
-	
+	/**
+	 * Whether the splash screen should be skipped.
+	 */
 	private var _skipSplash:Bool = false;
 	
 	/**
@@ -290,13 +292,19 @@ class FlxGame extends Sprite
 	 */
 	private function onFocus(?FlashEvent:Event):Void
 	{
+		#if flash
+			if (!_lostFocus) {
+				return; // Don't run this function twice (bug in standalone flash player)
+			}
+		#end
+		
+		_lostFocus = false;
+		
 		if (!FlxG.autoPause) 
 		{
 			state.onFocus();
 			return;
 		}
-		
-		_lostFocus = false;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
 			if (_focusLostScreen != null)
@@ -311,7 +319,7 @@ class FlxGame extends Sprite
 		
 		stage.frameRate = flashFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.sound.resumeSounds();
+			FlxG.sound.onFocus();
 		#end
 		FlxG.inputs.onFocus();
 	}
@@ -322,13 +330,19 @@ class FlxGame extends Sprite
 	 */
 	private function onFocusLost(?FlashEvent:Event):Void
 	{
+		#if flash
+			if (_lostFocus) {
+				return; // Don't run this function twice (bug in standalone flash player)
+			}
+		#end
+		
+		_lostFocus = true;
+		
 		if (!FlxG.autoPause) 
 		{
 			state.onFocusLost();
 			return;
 		}
-		
-		_lostFocus = true;
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
 			if (_focusLostScreen != null)
@@ -343,7 +357,7 @@ class FlxGame extends Sprite
 		
 		stage.frameRate = focusLostFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.sound.pauseSounds();
+			FlxG.sound.onFocusLost();
 		#end
 		FlxG.inputs.onFocusLost();
 	}
@@ -395,9 +409,9 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		if (!_lostFocus)
+		if (!_lostFocus || !FlxG.autoPause)
 		{
-			if(FlxG.vcr.paused)
+			if (FlxG.vcr.paused)
 			{
 				if (FlxG.vcr.stepRequested)
 				{
@@ -438,9 +452,9 @@ class FlxGame extends Sprite
 			#if !FLX_NO_DEBUG
 			if (FlxG.debugger.visible)
 			{
-				debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
 				debugger.watch.update();
 			}
+			debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
 			debugger.stats.update();
 			#end
 		}
@@ -582,10 +596,7 @@ class FlxGame extends Sprite
 		update();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
-		}
+		debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
 		#end
 	}
 	
@@ -628,10 +639,7 @@ class FlxGame extends Sprite
 		FlxG.cameras.update();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
-		}
+		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
 		#end
 	}
 	
@@ -735,20 +743,14 @@ class FlxGame extends Sprite
 		FlxG.cameras.render();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			debugger.stats.drawCalls(TileSheetExt._DRAWCALLS);
-		}
+		debugger.stats.drawCalls(TileSheetExt._DRAWCALLS);
 		#end
 		#end
 		
 		FlxG.cameras.unlock();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visible)
-		{
-			debugger.stats.flixelDraw(Lib.getTimer() - ticks);
-		}
+		debugger.stats.flixelDraw(Lib.getTimer() - ticks);
 		#end
 	}
 }

@@ -318,7 +318,7 @@ class SoundFrontEnd
 	{
 		if (music != null && music.exists)
 		{
-			music.play();
+			music.resume();
 		}
 		
 		for (sound in list.members)
@@ -326,6 +326,38 @@ class SoundFrontEnd
 			if (sound != null && sound.exists)
 			{
 				sound.resume();
+			}
+		}
+	}
+	
+	public function onFocusLost():Void
+	{
+		if (music != null)
+		{
+			music.onFocusLost();
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null)
+			{
+				sound.onFocusLost();
+			}
+		}
+	}
+	
+	public function onFocus():Void
+	{
+		if (music != null)
+		{
+			music.onFocus();
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null)
+			{
+				sound.onFocus();
 			}
 		}
 	}
