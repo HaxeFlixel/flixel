@@ -1,6 +1,33 @@
-v.3.0.5
+v.3.1.0
 ------------------------------
+* Refactor of FlxRandom: All functions are now deterministic and safe to use with replays. Due to the use of a new algorithm for pseudo-random number generation (linear congruential generator), old replays are no longer compatible. weightedPick(), weightedGetObject() and colorExt() have been added
+* New FLX_NO_SOUND_SYSTEM conditional
+* FlxTrailArea: Several improvements (can now be resized with setSize()), default delay is now 2
+* FlxMisc has been removed, openURL can now be found in FlxStringUtil
+* FlxCamera: getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
+* AngleTween now accepts FlxSprite as a parameter
+* FlxSpriteGroup: Added forEach(), forEachAlive(), forEachDead() and forEachExists()
+* FlxSpriteUtil: new drawCirlce() and drawPolygon() functions, more control for the drawing functions via FillStyle and DrawStyle
+* FlxTypedButton has been refactored: Callbacks are now set via onUp.setCallback as opposed to setOnUpCallback, new labelAlphas and labelOffsets arrays for more control, the highlight frame is now disabled by default on mobile, "swiping" is now possible
+* FlxTypedEmitter and FlxSound: Added setPosition() methods
+* FlxSlider: New setVariable flag, improvements to inner update logic
+* FlxSprite: pixelsOverlapPoint() has been removed, loadfromSprite() -> loadFromSprite(), setGraphicDimensions() -> setGraphicSize()
 * Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
+* FlxTypedGroup: autoReviveMembers flag has been removed, Revive param has been added to recycle()
+* FlxRect, FlxPoint and FlxBasic and FlxObject now have toString() functions used for traces and the flixel debugger
+* The focus lost screen and the sound tray now react to window resizes
+* Typo in SoundFrontEnd.volumeDownKeys has been fixed, which prevents numpad minus from working
+* FlxStringUtil.sameClassName() added
+* FlxG.autoResize is now true by default
+* The stats window of the debugger has been refactored, now has fancy FPS and memory graphs
+* FlxGame.focusLostFramerate added
+* Fix bug where the flixel cursor would reappear after regaining focus
+* FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
+* FlxGamepad: firstJustPressedButtonID() and firstJustReleasedButtonID() added
+* Android sound caching improvement
+* Fixes for OUYA gamepad combatibility (fixed some button IDs in OUYAButtonID)
+* Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
+* Prevent paused sounds from playing after regaining focus
 
 v.3.0.4
 ------------------------------

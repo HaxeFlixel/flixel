@@ -382,7 +382,7 @@ class FlxGame extends Sprite
 			_focusLostScreen.draw();
 		#end
 		
-		#if !FLX_NO_SOUND_TRAY
+		#if (!FLX_NO_SOUND_TRAY && !FLX_NO_SOUND_SYSTEM)
 			soundTray.screenCenter();
 		#end
 		

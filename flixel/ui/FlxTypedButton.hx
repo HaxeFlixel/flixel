@@ -3,13 +3,9 @@ package flixel.ui;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
+import flixel.system.FlxSound;
 import flixel.system.input.touch.FlxTouch;
 import flixel.util.FlxPoint;
-
-#if !FLX_NO_SOUND_SYSTEM
-import flixel.system.FlxSound;
-import flash.media.Sound;
-#end
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -362,6 +358,7 @@ private class FlxButtonEvent implements IDestroyable
 	{
 		callback = null;
 		callbackParams = null;
+		
 		#if !FLX_NO_SOUND_SYSTEM
 			sound = FlxG.safeDestroy(sound);
 		#end
