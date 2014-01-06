@@ -621,5 +621,18 @@ class FlxSound extends FlxBasic
 		_alreadyPaused = _paused;
 		pause();
 	}
+	
+	/**
+	 * Helper function to set the coordinates of this object.
+	 * Sound positioning is used in conjunction with proximity/panning.
+	 * 
+	 * @param        X        The new x position
+	 * @param        Y        The new y position
+ 	 */
+	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	{
+		x = X;
+		y = Y;
+	}
 	#end
 }
