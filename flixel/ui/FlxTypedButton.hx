@@ -148,7 +148,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			}
 		#end
 		
-		frame = framesData.frames[nextFrame];
+		if(framesData != null){		//null check in case button was destroyed this frame
+			frame = framesData.frames[nextFrame];
+		}
 	}
 	
 	/**

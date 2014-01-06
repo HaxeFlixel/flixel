@@ -111,13 +111,15 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		var i:Int = 0;
 		var basic:FlxBasic = null;
 		
-		while (i < length)
-		{
-			basic = _basics[i++];
-			
-			if ((basic != null) && basic.exists && basic.active)
+		if(_basics != null){
+			while (i < length)
 			{
-				basic.update();
+				basic = _basics[i++];
+				
+				if ((basic != null) && basic.exists && basic.active)
+				{
+					basic.update();
+				}
 			}
 		}
 	}
