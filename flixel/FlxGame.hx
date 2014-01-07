@@ -362,7 +362,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocusLost();
 	}
 	
-	public function onResize(E:Event = null):Void 
+	public function onResize(?E:Event):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
@@ -379,11 +379,17 @@ class FlxGame extends Sprite
 		#end
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-			_focusLostScreen.draw();
+			if (_focusLostScreen != null)
+			{
+				_focusLostScreen.draw();
+			}
 		#end
 		
 		#if (!FLX_NO_SOUND_TRAY && !FLX_NO_SOUND_SYSTEM)
-			soundTray.screenCenter();
+			if (soundTray != null)
+			{
+				soundTray.screenCenter();
+			}
 		#end
 		
 		if (FlxG.autoResize)
