@@ -2,6 +2,7 @@ package flixel.text;
 
 import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
+import flash.geom.ColorTransform;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
@@ -120,11 +121,6 @@ class FlxText extends FlxSprite
 	 * Internal reference to another helper Flash <code>TextFormat</code> object.
 	 */
 	private var _formatAdjusted:TextFormat;
-	/**
-	 * Whether the actual text field needs to be regenerated and stamped again.
-	 * This is NOT the same thing as <code>FlxSprite.dirty</code>.
-	 */
-	private var _regen:Bool = true;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -139,9 +135,6 @@ class FlxText extends FlxSprite
 		super(X, Y);
 		
 		_filters = [];
-		
-		var key:String = FlxG.bitmap.getUniqueKey("text");
-		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
 		
 		if (Text == null)
 		{
@@ -168,12 +161,15 @@ class FlxText extends FlxSprite
 		allowCollisions = FlxObject.NONE;
 		moves = false;
 		
-		#if flash
+		var key:String = FlxG.bitmap.getUniqueKey("text");
+		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
+		
+		#if flash 
 		calcFrame();
 		#else
 		if (Text != "")
 		{
-			calcFrame(true);
+			calcFrame();
 		}
 		#end
 	}
@@ -231,7 +227,7 @@ class FlxText extends FlxSprite
 		updateFormat(_format);
 		borderStyle = BorderStyle;
 		borderColor = BorderColor;
-		_regen = true;
+		dirty = true;
 		
 		return this;
 	}
@@ -245,7 +241,7 @@ class FlxText extends FlxSprite
 			{
 				_textField.width = newWidth;
 			}
-			_regen = true;
+			dirty = true;
 		}
 		
 		return Width;
@@ -263,7 +259,7 @@ class FlxText extends FlxSprite
 		
 		if(_textField.text != ot)
 		{
-			_regen = true;
+			dirty = true;
 		}
 		
 		return _textField.text;
@@ -279,7 +275,7 @@ class FlxText extends FlxSprite
 		_format.size = Size;
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
-		_regen = true;
+		dirty = true;
 		
 		return Size;
 	}
@@ -309,7 +305,7 @@ class FlxText extends FlxSprite
 		_format.font = Assets.getFont(Font).fontName;
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
-		_regen = true;
+		dirty = true;
 		return Font;
 	}
 	
@@ -329,7 +325,7 @@ class FlxText extends FlxSprite
 		_format.font = Font;
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
-		_regen = true;
+		dirty = true;
 		return Font;
 	}
 	
@@ -345,9 +341,8 @@ class FlxText extends FlxSprite
 			_format.bold = value;
 			_textField.defaultTextFormat = _format;
 			updateFormat(_format);
-			_regen = true;
+			dirty = true;
 		}
-		
 		return value;
 	}
 	
@@ -362,7 +357,7 @@ class FlxText extends FlxSprite
 		{
 			_textField.wordWrap = value;
 			_textField.multiline = value;
-			_regen = true;
+			dirty = true;
 		}
 		return value;
 	}
@@ -378,8 +373,6 @@ class FlxText extends FlxSprite
 		_textField.defaultTextFormat = _format;
 		updateFormat(_format);
 		dirty = true;
-		_regen = true;
-		
 		return Alignment;
 	}
 	
@@ -427,7 +420,6 @@ class FlxText extends FlxSprite
 	{
 		if (Value != borderSize && borderStyle != BORDER_NONE)
 		{			
-			_regen = true;
 			dirty = true;
 		}
 		borderSize = Value;
@@ -456,25 +448,56 @@ class FlxText extends FlxSprite
 		return _textField;
 	}
 	
+	override private function updateColorTransform():Void
+	{
+		if (alpha != 1)
+		{
+			if (_colorTransform == null)
+			{
+				_colorTransform = new ColorTransform(1, 1, 1, alpha);
+			}
+			else
+			{
+				_colorTransform.alphaMultiplier = alpha;
+			}
+			useColorTransform = true;
+		}
+		else
+		{
+			if (_colorTransform != null)
+			{
+				_colorTransform.alphaMultiplier = 1;
+			}
+			
+			useColorTransform = false;
+		}
+		
+		dirty = true;
+	}
+	
 	private function regenGraphics():Void
 	{
-		if (_regen)
+		var oldWidth:Float = cachedGraphics.bitmap.width;
+		var oldHeight:Float = cachedGraphics.bitmap.height;
+		
+		var newWidth:Float = _textField.width + _widthInc;
+		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
+		var newHeight:Float = _textField.textHeight + _heightInc + 4;
+		
+		if ((oldWidth != newWidth) || (oldHeight != newHeight))
 		{
 			// Need to generate a new buffer to store the text graphic
-			height = _textField.textHeight;
-			// Account for 2px gutter on top and bottom
-			height += 4;
+			height = newHeight - _heightInc;
 			var key:String = cachedGraphics.key;
 			FlxG.bitmap.remove(key);
 			
-			makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
+			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
 			frameHeight = Std.int(height);
 			_textField.height = height * 1.2;
 			_flashRect.x = 0;
 			_flashRect.y = 0;
-			_flashRect.width = width + _widthInc;
-			_flashRect.height = height + _heightInc;
-			_regen = false;
+			_flashRect.width = newWidth;
+			_flashRect.height = newHeight;
 		}
 		// Else just clear the old buffer before redrawing the text
 		else
@@ -492,155 +515,155 @@ class FlxText extends FlxSprite
 	override private function calcFrame(AreYouSure:Bool = false):Void
 	#end
 	{
-		#if !flash
-		if (AreYouSure)
+		if (_textField == null)
 		{
-		#end
-			if (_filters != null)
-			{
-				_textField.filters = _filters;
-			}
-			
-			regenGraphics();
-			
-			if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
-			{
-				// Now that we've cleared a buffer, we need to actually render the text to it
-				_formatAdjusted.font = _format.font;
-				_formatAdjusted.size = _format.size;
-				_formatAdjusted.color = _format.color;
-				_formatAdjusted.align = _format.align;
-				_matrix.identity();
-				
-				_matrix.translate(Std.int(0.5 * _widthInc), Std.int(0.5 * _heightInc));
-				
-				// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-				#if js
-				if (_format.align == TextFormatAlign.CENTER)
-				#else
-				if ((_format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
-				#end
-				{
-					_formatAdjusted.align = TextFormatAlign.LEFT;
-					updateFormat(_formatAdjusted);	
-					
-					#if flash
-					_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
-					#else
-					_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
-					#end
-				}
-				
-				if (borderStyle != BORDER_NONE)
-				{
-					var iterations:Int = Std.int(borderSize * borderQuality);
-					if (iterations <= 0) 
-					{ 
-						iterations = 1;
-					}
-					var delta:Float = (borderSize / iterations);
-					
-					if (borderStyle == BORDER_SHADOW) 
-					{
-						//Render a shadow beneath the text
-						//(do one lower-right offset draw call)
-						_formatAdjusted.color = borderColor;
-						updateFormat(_formatAdjusted);
-						
-						for (iter in 0...iterations)
-						{
-							_matrix.translate(delta, delta);
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-						}
-						
-						_matrix.translate(-borderSize, -borderSize);
-						_formatAdjusted.color = _format.color;
-						updateFormat(_formatAdjusted);
-					}
-					else if (borderStyle == BORDER_OUTLINE) 
-					{
-						//Render an outline around the text
-						//(do 8 offset draw calls)
-						_formatAdjusted.color = borderColor;
-						updateFormat(_formatAdjusted);
-						
-						var itd:Float = delta;
-						for (iter in 0...iterations)
-						{
-							_matrix.translate(-itd, -itd);		//upper-left
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(itd, 0);			//upper-middle
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(itd, 0);			//upper-right
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(0, itd);			//middle-right
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(0, itd);			//lower-right
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(-itd, 0);			//lower-middle
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(-itd, 0);			//lower-left
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(0, -itd);			//middle-left
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(itd, 0);			//return to center
-							itd += delta;
-						} 
-						
-						_formatAdjusted.color = _format.color;
-						updateFormat(_formatAdjusted);
-					}
-					else if (borderStyle == BORDER_OUTLINE_FAST) 
-					{
-						//Render an outline around the text
-						//(do 4 diagonal offset draw calls)
-						//(this method might not work with certain narrow fonts)
-					    _formatAdjusted.color = borderColor;
-						updateFormat(_formatAdjusted);
-						
-						var itd:Float = delta;
-						for (iter in 0...iterations)
-						{
-							_matrix.translate(-itd, -itd);			//upper-left
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(itd*2, 0);			//upper-right
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(0, itd*2);			//lower-right
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(-itd*2, 0);			//lower-left
-							cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-							_matrix.translate(itd, -itd);			//return to center
-							itd += delta;
-						}
-						
-						_formatAdjusted.color = _format.color;
-						updateFormat(_formatAdjusted);
-					}
-				}
-				
-				//Actually draw the text onto the buffer
-				cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
-				updateFormat(_format);
-			}
-			
-			//Finally, update the visible pixels
-			if ((framePixels == null) || (framePixels.width != cachedGraphics.bitmap.width) || (framePixels.height != cachedGraphics.bitmap.height))
-			{
-				if (framePixels != null)
-					framePixels.dispose();
-				
-				framePixels = new BitmapData(cachedGraphics.bitmap.width, cachedGraphics.bitmap.height, true, 0);
-			}
-			
-			framePixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
-			
-			if (useColorTransform) 
-			{
-				framePixels.colorTransform(_flashRect, _colorTransform);
-			}
-		#if !flash
-			origin.set(frameWidth * 0.5, frameHeight * 0.5);
+			return;
 		}
+		
+		if (_filters != null)
+		{
+			_textField.filters = _filters;
+		}
+		
+		regenGraphics();
+		
+		if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
+		{
+			// Now that we've cleared a buffer, we need to actually render the text to it
+			_formatAdjusted.font = _format.font;
+			_formatAdjusted.size = _format.size;
+			_formatAdjusted.color = _format.color;
+			_formatAdjusted.align = _format.align;
+			_matrix.identity();
+			
+			_matrix.translate(Std.int(0.5 * _widthInc), Std.int(0.5 * _heightInc));
+			
+			// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
+			#if js
+			if (_format.align == TextFormatAlign.CENTER)
+			#else
+			if ((_format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
+			#end
+			{
+				_formatAdjusted.align = TextFormatAlign.LEFT;
+				updateFormat(_formatAdjusted);	
+				
+				#if flash
+				_matrix.translate(Math.floor((width - _textField.getLineMetrics(0).width) / 2), 0);
+				#else
+				_matrix.translate(Math.floor((width - _textField.textWidth) / 2), 0);
+				#end
+			}
+			
+			if (borderStyle != BORDER_NONE)
+			{
+				var iterations:Int = Std.int(borderSize * borderQuality);
+				if (iterations <= 0) 
+				{ 
+					iterations = 1;
+				}
+				var delta:Float = (borderSize / iterations);
+				
+				if (borderStyle == BORDER_SHADOW) 
+				{
+					//Render a shadow beneath the text
+					//(do one lower-right offset draw call)
+					_formatAdjusted.color = borderColor;
+					updateFormat(_formatAdjusted);
+					
+					for (iter in 0...iterations)
+					{
+						_matrix.translate(delta, delta);
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+					}
+					
+					_matrix.translate(-borderSize, -borderSize);
+					_formatAdjusted.color = _format.color;
+					updateFormat(_formatAdjusted);
+				}
+				else if (borderStyle == BORDER_OUTLINE) 
+				{
+					//Render an outline around the text
+					//(do 8 offset draw calls)
+					_formatAdjusted.color = borderColor;
+					updateFormat(_formatAdjusted);
+					
+					var itd:Float = delta;
+					for (iter in 0...iterations)
+					{
+						_matrix.translate(-itd, -itd);		//upper-left
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(itd, 0);			//upper-middle
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(itd, 0);			//upper-right
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(0, itd);			//middle-right
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(0, itd);			//lower-right
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(-itd, 0);			//lower-middle
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(-itd, 0);			//lower-left
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(0, -itd);			//middle-left
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(itd, 0);			//return to center
+						itd += delta;
+					} 
+					
+					_formatAdjusted.color = _format.color;
+					updateFormat(_formatAdjusted);
+				}
+				else if (borderStyle == BORDER_OUTLINE_FAST) 
+				{
+					//Render an outline around the text
+					//(do 4 diagonal offset draw calls)
+					//(this method might not work with certain narrow fonts)
+					_formatAdjusted.color = borderColor;
+					updateFormat(_formatAdjusted);
+					
+					var itd:Float = delta;
+					for (iter in 0...iterations)
+					{
+						_matrix.translate(-itd, -itd);			//upper-left
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(itd*2, 0);			//upper-right
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(0, itd*2);			//lower-right
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(-itd*2, 0);			//lower-left
+						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						_matrix.translate(itd, -itd);			//return to center
+						itd += delta;
+					}
+					
+					_formatAdjusted.color = _format.color;
+					updateFormat(_formatAdjusted);
+				}
+			}
+			
+			//Actually draw the text onto the buffer
+			cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+			updateFormat(_format);
+		}
+		
+		//Finally, update the visible pixels
+		if ((framePixels == null) || (framePixels.width != cachedGraphics.bitmap.width) || (framePixels.height != cachedGraphics.bitmap.height))
+		{
+			if (framePixels != null)
+				framePixels.dispose();
+			
+			framePixels = new BitmapData(cachedGraphics.bitmap.width, cachedGraphics.bitmap.height, true, 0);
+		}
+		
+		framePixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
+		
+		if (useColorTransform) 
+		{
+			framePixels.colorTransform(_flashRect, _colorTransform);
+		}
+		#if !flash
+		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 		#end
 		
 		dirty = false;
@@ -698,18 +721,6 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	override public function draw():Void 
-	{
-		// Rarely
-		#if !flash
-		if (_regen || dirty)	calcFrame(true);
-		#else
-		if (_regen)	calcFrame();
-		#end
-		
-		super.draw();
-	}
-	
 	inline private function updateFormat(Format:TextFormat):Void
 	{
 		#if !flash
@@ -726,11 +737,6 @@ class FlxText extends FlxSprite
 	
 	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
 	{
-		if (_widthInc != widthInc || _heightInc != heightInc)
-		{
-			_regen = true;
-		}
-		
 		_filters.push(filter);
 		dirty = true;
 	}
