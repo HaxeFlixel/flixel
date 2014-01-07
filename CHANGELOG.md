@@ -28,6 +28,7 @@ v.3.1.0
 * Fixes for OUYA gamepad combatibility (fixed some button IDs in OUYAButtonID)
 * Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
 * Prevent paused sounds from playing after regaining focus
+* Several bug fixes and improvements to FlxText and FlxTextField classes
 
 v.3.0.4
 ------------------------------
