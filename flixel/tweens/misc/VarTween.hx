@@ -32,11 +32,10 @@ class VarTween extends FlxTween
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, property:String, to:Float, duration:Float, ease:EaseFunction = null, isInt:Bool = false):VarTween
+	public function tween(object:Dynamic, property:String, to:Float, duration:Float, ease:EaseFunction = null):VarTween
 	{
 		_object = object;
 		_ease = ease;
-		_isInt = isInt;
 		
 		// Check to make sure we have valid parameters
 		if (!Reflect.isObject(object))
@@ -70,8 +69,8 @@ class VarTween extends FlxTween
 	override public function update():Void
 	{
 		super.update();
-		var value = _start + _range * _t;
-		Reflect.setProperty(_object, _property, (_isInt) ? Math.round(value) : value);
+		var value = ;
+		Reflect.setProperty(_object, _property, (_start + _range * _t));
 	}
 	
 	// Tween information.
@@ -79,5 +78,4 @@ class VarTween extends FlxTween
 	private var _property:String;
 	private var _start:Float;
 	private var _range:Float;
-	private var _isInt:Bool;
 }
