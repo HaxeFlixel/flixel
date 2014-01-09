@@ -102,11 +102,11 @@ class FlxSubState extends FlxState
 	 * Use this method to close this substate
 	 * @param	destroy	whether to destroy this state or leave it in memory
 	 */
-	public function close(Destroy:Bool = true):Void
+	public function close():Void
 	{
 		if (_parentState != null) 
 		{ 
-			_parentState.subStateCloseHandler(Destroy); 
+			_parentState.closeSubState(); 
 		}
 		#if !FLX_NO_DEBUG
 		else 

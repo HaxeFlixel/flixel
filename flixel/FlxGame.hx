@@ -81,7 +81,7 @@ class FlxGame extends Sprite
 	/**
 	 * A flag for keeping track of whether a game reset was requested or not.
 	 */
-	public var requestedReset:Bool = true;
+	public var resetState:Bool = false;
 
 	#if desktop
 	/**
@@ -266,12 +266,8 @@ class FlxGame extends Sprite
 		#end
 		
 		// Instantiate the initial state
-		if (requestedReset)
-		{
-			resetGame();
-			switchState();
-			requestedReset = false;
-		}
+		resetGame();
+		switchState();
 		
 		if (FlxG.updateFramerate < FlxG.stageFramerate)
 		{
@@ -473,15 +469,15 @@ class FlxGame extends Sprite
 	private inline function resetGame():Void
 	{
 		#if !FLX_NO_DEBUG
-		requestNewState(Type.createInstance(_iState, []));
+		requestedState = cast (Type.createInstance(_iState, []));
 		#else
 		if (_skipSplash)
 		{
-			requestNewState(Type.createInstance(_iState, []));
+			requestedState = cast (Type.createInstance(_iState, []));
 		}
 		else
 		{
-			requestNewState(new FlxSplash(_iState));
+			requestedState = cast (new FlxSplash(_iState));
 		}
 		#end
 		
@@ -494,15 +490,6 @@ class FlxGame extends Sprite
 		
 		FlxG.reset();
 	}
-	
-	/**
-	 * Notify the game that we're about to switch states. 
-	 * INTERNAL, do not use this, call FlxG.switchState instead.
-	 */
-	public inline function requestNewState(newState:FlxState):Void
-	{
-		requestedState = newState;
-	} 
 
 	/**
 	 * If there is a state change requested during the update loop,
@@ -561,10 +548,10 @@ class FlxGame extends Sprite
 	private function step():Void
 	{
 		// Handle game reset request
-		if (requestedReset)
+		if (resetState)
 		{
 			resetGame();
-			requestedReset = false;
+			resetState = false;
 		}
 		
 		#if FLX_RECORD

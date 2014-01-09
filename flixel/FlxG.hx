@@ -393,7 +393,7 @@ class FlxG
 	 */
 	inline static public function resetGame():Void
 	{
-		game.requestedReset = true;
+		game.resetState = true;
 	}
 	
 	/**
@@ -459,7 +459,7 @@ class FlxG
 	 */
 	inline static public function switchState(State:FlxState):Void
 	{
-		game.requestNewState(State); 
+		game.requestedState = State; 
 	}
 	
 	/**
@@ -467,7 +467,7 @@ class FlxG
 	 */
 	inline static public function resetState():Void
 	{
-		game.requestNewState(Type.createInstance(Type.resolveClass(FlxStringUtil.getClassName(game.state, false)), []));
+		game.resetState = true;
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(game.requestedState, FlxSubState))

@@ -278,40 +278,44 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	
 	/**
 	 * Internal function that handles the onUp event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onUpHandler():Void
 	{
-		onUp.fire();
-		_pressedTouch = null;
-		_pressedMouse = false;
 		status = FlxButton.NORMAL;
+		_pressedMouse = false;
+		_pressedTouch = null;
+		onUp.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onDown event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onDownHandler():Void
 	{
-		onDown.fire();
 		status = FlxButton.PRESSED;
+		onDown.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onOver event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onOverHandler():Void
 	{
-		onOver.fire();
 		status = FlxButton.HIGHLIGHT;
+		onOver.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onOut event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onOutHandler():Void
 	{
+		status = FlxButton.NORMAL;
 		onOut.fire();
-		status = FlxButton.NORMAL;	
 	}
 }
 
