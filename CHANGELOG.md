@@ -30,6 +30,7 @@ v.3.1.0
 * Prevent paused sounds from playing after regaining focus
 * Several bug fixes and improvements to FlxText and FlxTextField classes
 * Cleaned up confusion about _updateFramerate_ and renamed _flashFramerate_ to _stageFramerate_
+* BUG: Fixed order of operations issue that was causing _FlxSubStates_ to crash on close.
 
 v.3.0.4
 ------------------------------
