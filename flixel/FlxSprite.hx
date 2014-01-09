@@ -730,6 +730,9 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		if (alpha == 0)	
+			return;
+		
 		if (dirty)	//rarely 
 		{
 			calcFrame();

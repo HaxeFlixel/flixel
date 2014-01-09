@@ -46,10 +46,9 @@ class FlxTween
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
-	 * @param	IsInt		Whether property to tween is Integer or Float.
 	 * @return	The added MultiVarTween object.
 	 */
-	static public function singleVar(Object:Dynamic, Property:String, To:Float, Duration:Float, ?Options:TweenOptions, isInt:Bool = false):VarTween
+	static public function singleVar(Object:Dynamic, Property:String, To:Float, Duration:Float, ?Options:TweenOptions):VarTween
 	{
 		if (Options == null)
 		{
@@ -57,7 +56,7 @@ class FlxTween
 		}
 		
 		var tween:VarTween = new VarTween(Options.complete, Options.type);
-		tween.tween(Object, Property, To, Duration, Options.ease, isInt);
+		tween.tween(Object, Property, To, Duration, Options.ease);
 		manager.add(tween);
 		
 		return tween;
@@ -74,10 +73,9 @@ class FlxTween
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
-	 * @param	AreInts		Optional object containing key/value pairs of properties and info about their types (whether they are integers or floats).
 	 * @return	The added MultiVarTween object.
 	 */
-	static public function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions, ?AreInts:Dynamic):MultiVarTween
+	static public function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):MultiVarTween
 	{
 		if (Options == null)
 		{
@@ -85,7 +83,7 @@ class FlxTween
 		}
 		
 		var tween:MultiVarTween = new MultiVarTween(Options.complete, Options.type);
-		tween.tween(Object, Values, Duration, Options.ease, AreInts);
+		tween.tween(Object, Values, Duration, Options.ease);
 		manager.add(tween);
 		
 		return tween;
