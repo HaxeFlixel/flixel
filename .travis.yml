@@ -1,7 +1,6 @@
 language: java
 
 before_script:
-  - sudo apt-get install python-software-properties -y --fix-missing
   - sudo add-apt-repository ppa:eyecreate/haxe -y
   - sudo apt-get update
   - sudo apt-get install haxe -y
