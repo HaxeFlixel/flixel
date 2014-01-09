@@ -124,7 +124,7 @@ class Stats extends Window
 		
 		fpsGraph = new StatsGraph(gutter, Std.int(_header.height) + 5, INITIAL_WIDTH - 10, graphHeight, FPS_COLOR, "fps");
 		addChild(fpsGraph);	
-		fpsGraph.maxValue = FlxG.flashFramerate;
+		fpsGraph.maxValue = FlxG.stageFramerate;
 		fpsGraph.minValue = 0;
 		
 		memoryGraph = new StatsGraph(gutter, Std.int(_header.height) +  graphHeight + 20, INITIAL_WIDTH - 10, graphHeight, MEMORY_COLOR, "MB");

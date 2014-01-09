@@ -318,18 +318,19 @@ class FlxG
 	
 	/**
 	 * How many times you want your game to update each second. More updates usually means better collisions and smoother motion.
-	 * NOTE: This is NOT the same thing as the Flash Player framerate!
+	 * NOTE: This is NOT the same thing as the Stage framerate!
+	 * @default 60fps
 	 */
-	static public var framerate(get, set):Int;
+	static public var updateFramerate(get, set):Int;
 	
-	inline static private function get_framerate():Int
+	inline static private function get_updateFramerate():Int
 	{
 		return Std.int(1000 / game.stepMS);
 	}
 		
-	static private function set_framerate(Framerate:Int):Int
+	static private function set_updateFramerate(Framerate:Int):Int
 	{
-		if (Framerate < flashFramerate)
+		if (Framerate < stageFramerate)
 		{
 			log.warn("FlxG.framerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
@@ -346,12 +347,14 @@ class FlxG
 	}
 		
 	/**
-	 * How many times you want your game to update each second. More updates usually means better collisions and smoother motion.
-	 * NOTE: This is NOT the same thing as the Flash Player framerate!
+	 * How many times you want your game to step each second. More steps usually means greater responsiveness, 
+	 * but it can also slowdown your game if the stage can't keep up with the update routine.
+	 * NOTE: This is NOT the same thing as the Update framerate!
+	 * @default 60fps
 	 */
-	public static var flashFramerate(get, set):Int;
+	public static var stageFramerate(get, set):Int;
 		
-	static private function get_flashFramerate():Int
+	static private function get_stageFramerate():Int
 	{
 		if (game.stage != null)
 		{
@@ -361,21 +364,21 @@ class FlxG
 		return 0;
 	}
 		
-	static private function set_flashFramerate(Framerate:Int):Int
+	static private function set_stageFramerate(Framerate:Int):Int
 	{
-		if (Framerate > framerate)
+		if (Framerate > updateFramerate)
 		{
 			log.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
-		game.flashFramerate = Std.int(Math.abs(Framerate));
+		game.stageFramerate = Std.int(Math.abs(Framerate));
 		
 		if (game.stage != null)
 		{
-			game.stage.frameRate = game.flashFramerate;
+			game.stage.frameRate = game.stageFramerate;
 		}
 		
-		game.maxAccumulation = Std.int(2000 / game.flashFramerate) - 1;
+		game.maxAccumulation = Std.int(2000 / game.stageFramerate) - 1;
 		
 		if (game.maxAccumulation < game.stepMS)
 		{
