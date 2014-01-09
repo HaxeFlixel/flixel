@@ -29,6 +29,7 @@ v.3.1.0
 * Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
 * Prevent paused sounds from playing after regaining focus
 * Several bug fixes and improvements to FlxText and FlxTextField classes
+* Cleaned up confusion about _updateFramerate_ and renamed _flashFramerate_ to _stageFramerate_
 
 v.3.0.4
 ------------------------------
