@@ -151,8 +151,25 @@ class FlxGamepad
 	}
 	
 	/**
-	 * Get the first found id of the button which has been just pressed.
-	 * Return -1 if there is no such buttons
+	 * Get the first found ID of the button which is currently pressed.
+	 * Returns -1 if no button is pressed.
+	 */
+	public function firstPressedButtonID():Int
+	{
+		for (button in buttons)
+		{
+			if (button.current > 0)
+			{
+				return button.id;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Get the first found ID of the button which has been just pressed.
+	 * Returns -1 if no button was just pressed.
 	 */
 	public function firstJustPressedButtonID():Int
 	{
@@ -168,8 +185,8 @@ class FlxGamepad
 	}
 	
 	/**
-	 * Get the first found id of the button which has been just released.
-	 * Return -1 if there is no such buttons
+	 * Get the first found ID of the button which has been just released.
+	 * Returns -1 if no button was just released.
 	 */
 	public function firstJustReleasedButtonID():Int
 	{

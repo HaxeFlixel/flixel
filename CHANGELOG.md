@@ -23,7 +23,7 @@ v.3.1.0
 * FlxGame.focusLostFramerate added
 * Fix bug where the flixel cursor would reappear after regaining focus
 * FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
-* FlxGamepad: firstJustPressedButtonID() and firstJustReleasedButtonID() added
+* FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
 * Android sound caching improvement
 * Fixes for OUYA gamepad combatibility (fixed some button IDs in OUYAButtonID)
 * Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
