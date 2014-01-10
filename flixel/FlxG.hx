@@ -91,7 +91,7 @@ class FlxG
 	 */
 	static public var autoResize:Bool = true;
 	/**
-	 * WARNING: Changing this can lead to issues with physcis and the recording system. Setting this to 
+	 * WARNING: Changing this can lead to issues with physics and the recording system. Setting this to 
 	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
 	 */
 	static public var fixedTimestep:Bool = true;
