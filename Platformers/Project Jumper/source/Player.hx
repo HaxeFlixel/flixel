@@ -198,7 +198,6 @@ class Player extends FlxSprite
 				_timesJumped++;
 				_jumpTime = 0;
 				_onLadder = false;
-				trace("jumped");
 			}
 		}
 		
