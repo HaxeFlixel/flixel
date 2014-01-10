@@ -64,7 +64,7 @@ class FlxGame extends Sprite
 	/**
 	 * Framerate of the Flash player (NOT the game loop). Default = 60.
 	 */
-	public var stageFramerate:Int;
+	public var drawFramerate:Int;
 	/**
 	 * Framerate to use on focus lost. Default = 10.
 	 */
@@ -176,12 +176,12 @@ class FlxGame extends Sprite
 	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
 	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
 	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
-	 * @param	StageFramerate	Sets the actual display framerate for the game (default is 60 times per second).
 	 * @param	UpdateFramerate	How frequently the game should update (default is 60 times per second).
+	 * @param	DrawFramerate	Sets the actual display / draw framerate for the game (default is 60 times per second).
 	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
 	 * @param	StartFullscreen	Whether to start the game in fullscreen mode (desktop targets only), false by default
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60, StageFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
+	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
 	{
 		super();
 		
@@ -196,7 +196,7 @@ class FlxGame extends Sprite
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		
 		FlxG.updateFramerate = UpdateFramerate;
-		FlxG.stageFramerate = StageFramerate;
+		FlxG.drawFramerate = DrawFramerate;
 		_accumulator = stepMS;
 		_skipSplash = SkipSplash;
 		
@@ -232,7 +232,7 @@ class FlxGame extends Sprite
 		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
-		stage.frameRate = stageFramerate;
+		stage.frameRate = drawFramerate;
 		
 		addChild(inputContainer);
 		
@@ -269,9 +269,9 @@ class FlxGame extends Sprite
 		resetGame();
 		switchState();
 		
-		if (FlxG.updateFramerate < FlxG.stageFramerate)
+		if (FlxG.updateFramerate < FlxG.drawFramerate)
 		{
-			FlxG.log.warn("FlxG.updateFramerate: The update framerate shouldn't be smaller than the stage framerate, since it can slow down your game.");
+			FlxG.log.warn("FlxG.updateFramerate: The update framerate shouldn't be smaller than the draw framerate, since it can slow down your game.");
 		}
 		
 		// Finally, set up an event for the actual game loop stuff.
@@ -313,7 +313,7 @@ class FlxGame extends Sprite
 			debugger.stats.onFocus();
 		#end
 		
-		stage.frameRate = stageFramerate;
+		stage.frameRate = drawFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
 			FlxG.sound.onFocus();
 		#end
