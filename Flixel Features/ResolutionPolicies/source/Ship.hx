@@ -5,14 +5,12 @@ import flixel.FlxSprite;
 import flixel.util.FlxRandom;
 import flixel.util.FlxVelocity;
 
-
 /**
  * ...
  * @author Zaphod
  */
 class Ship extends FlxSprite
 {
-
 	public function new(Velocity:Float, Angle:Float) 
 	{
 		super(Math.random() * FlxG.width, Math.random() * FlxG.height, "assets/ship.png");
@@ -46,5 +44,4 @@ class Ship extends FlxSprite
 		
 		super.update();
 	}
-	
 }

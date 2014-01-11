@@ -2,8 +2,8 @@
 <project>
 	<app title="ResolutionPolicies" file="ResolutionPolicies" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
-	<window width="640" height="480" fps="60" orientation="portrait" resizable="true" if="web" />
-	<window width="640" height="480" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
+	<window width="640" height="400" fps="60" orientation="portrait" resizable="true" if="web" />
+	<window width="640" height="400" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
 	
 	<!--The flixel preloader gets stuck in Chrome, so it's disabled by default for now. 
 	Safe to use if you embed the swf into a html file!-->
