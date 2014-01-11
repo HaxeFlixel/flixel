@@ -75,6 +75,7 @@ class MouseEventManager extends FlxPlugin
 	* @param 	OnMouseOut 		Callback when mouse moves out of this sprite. Must have Sprite as argument - e.g. onMouseDown(sprite:FlxSprite).
 	* @param 	MouseChildren 	If mouseChildren is enabled, other sprites overlaped by this will still receive mouse events.
 	* @param 	MouseEnabled 	If mouseEnabled this sprite will receive mouse events.
+	* @param	PixelPerfect	If enabled the collision check will be pixel-perfect.
 	*/
 	static public function addSprite(Sprite:FlxSprite, ?OnMouseDown:FlxSprite->Void, ?OnMouseUp:FlxSprite->Void, ?OnMouseOver:FlxSprite->Void, ?OnMouseOut:FlxSprite->Void, MouseChildren = false, MouseEnabled = true, PixelPerfect = true)
 	{
