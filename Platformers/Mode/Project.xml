@@ -16,24 +16,7 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<assets path="assets" if="mobile" >
-		<sound path="asplode.wav" id="Asplode" />
-		<sound path="button.wav" id="Button" />
-		<sound path="countdown.wav" id="Countdown" />
-		<sound path="enemy.wav" id="Enemy" />
-		<sound path="hit.wav" id="Hit" />
-		<sound path="hurt.wav" id="Hurt" />
-		<sound path="jam.wav" id="Jam" />
-		<sound path="jet.wav" id="Jet" />
-		<sound path="jump.wav" id="Jump" />
-		<sound path="land.wav" id="Land" />
-		<sound path="menu_hit.wav" id="MenuHit" />
-		<sound path="menu_hit_2.wav" id="MenuHit2" />
-		<sound path="shoot.wav" id="Shoot" />
-		<music path="mode.mp3" id="Mode" />
-	</assets>
-	
-	<assets path="assets" if="desktop" >
+	<assets path="assets" if="cpp" >
 		<sound path="asplode.wav" id="Asplode" />
 		<sound path="button.wav" id="Button" />
 		<sound path="countdown.wav" id="Countdown" />
@@ -69,6 +52,7 @@
 	
 	<assets path="assets" exclude="*.wav" if="flash" />
 	<assets path="assets" exclude="*.svg" if="html5" />
+	<assets path="assets" exclude="*.mp3" if="cpp" />
 	<assets path="assets" if="desktop" />
 	<assets path="assets" if="mobile" />
 	
@@ -96,10 +80,10 @@
 	<!-- <haxedef name="FLX_NO_NATIVE_CURSOR" /> -->
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-	<!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->
-	<!--<haxedef name="FLX_NO_KEYBOARD" if="mobile" />-->
-	<!--<haxedef name="FLX_NO_TOUCH" if="desktop" />-->
-	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
+	<haxedef name="FLX_NO_MOUSE" if="mobile" />
+	<haxedef name="FLX_NO_TOUCH" if="windows" />
+	<haxedef name="OUYA" if="android" />
+	<!--<haxedef name="FLX_NO_GAMEPAD"/>-->
 	
 	<!--Disable the Flixel core sound tray-->
 	<!--<haxedef name="FLX_NO_SOUND_TRAY" />-->

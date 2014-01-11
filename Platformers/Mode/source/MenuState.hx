@@ -78,7 +78,9 @@ class MenuState extends FlxState
 		_timer = 0;
 		_attractMode = false;
 		
+#if !FLX_NO_MOUSE
 		FlxG.mouse.show(IMG.CURSOR, 2);
+#end
 	}
 	
 	override public function destroy():Void
@@ -159,6 +161,18 @@ class MenuState extends FlxState
 			FlxG.cameras.flash(0xffd8eba2, 0.5);
 			FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
 		}
+		
+#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+		if (FlxG.gamepads.anyButton())
+		{
+	#if OUYA
+			if(FlxG.gamepads.lastActive.justPressed(flixel.system.input.gamepad.OUYAButtonID.O))
+	#else
+			if(FlxG.gamepads.lastActive.justPressed(flixel.system.input.gamepad.XboxButtonID.A))
+	#end 
+				onPlay();
+		}
+#end
 	}
 	
 	// These are all "event handlers", or "callbacks".

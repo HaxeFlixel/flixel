@@ -12,6 +12,9 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxPoint;
+#if cpp
+import flixel.system.input.gamepad.FlxGamepad;
+#end
 
 class PlayState extends FlxState
 {

@@ -5,9 +5,17 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
+import flixel.system.input.gamepad.FlxGamepad;
 import flixel.ui.FlxButton;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
+#if (android && OUYA)
+import flixel.system.input.gamepad.OUYAButtonID;
+#elseif (!FLX_NO_GAMEPAD && (cpp || neko || js))
+import flixel.system.input.gamepad.XboxButtonID;
+#end
+
+
 
 class Player extends FlxSprite
 {
@@ -19,6 +27,15 @@ class Player extends FlxSprite
 	private var _restart:Float = 0;
 	private var _gibs:FlxEmitter;
 	private var _bullets:FlxTypedGroup<Bullet>;
+	
+	// Internal private: accessor to first active gamepad
+	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+	private var gamepad(get, never):FlxGamepad;
+	private inline function get_gamepad():FlxGamepad 
+	{
+		return FlxG.gamepads.firstActive;
+	}
+	#end
 	
 	/**
 	 * This is the player object class.  Most of the comments I would put in here
@@ -88,35 +105,76 @@ class Player extends FlxSprite
 		// MOVEMENT
 		acceleration.x = 0;
 		
-		if (FlxG.keys.pressed.LEFT)
+		if (FlxG.keys.pressed.LEFT
+#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+			 || (gamepad.dpadLeft ||
+	#if OUYA
+				 gamepad.getAxis(OUYAButtonID.LEFT_ANALOGUE_X) < 0))
+	#else
+				 gamepad.getAxis(XboxButtonID.LEFT_ANALOGUE_X) < 0))
+	#end
+#else ) #end
 		{
 			facing = FlxObject.LEFT;
 			acceleration.x -= drag.x;
 		}
-		else if (FlxG.keys.pressed.RIGHT)
+		else if (FlxG.keys.pressed.RIGHT
+#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+			 || (gamepad.dpadRight ||
+	#if OUYA
+				 gamepad.getAxis(OUYAButtonID.LEFT_ANALOGUE_X) > 0))
+	#else
+				 gamepad.getAxis(XboxButtonID.LEFT_ANALOGUE_X) > 0))
+	#end
+#else ) #end
 		{
 			facing = FlxObject.RIGHT;
 			acceleration.x += drag.x;
 		}
 		
-		if (FlxG.keys.justPressed.X && isReadyToJump && velocity.y == 0)
-		{
-			velocity.y = -_jumpPower;
-			FlxG.sound.play("Jump");
-		}
-		
 		// AIMING
-		if (FlxG.keys.pressed.UP)
+		if (FlxG.keys.pressed.UP
+#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+			 || (gamepad.dpadUp ||
+	#if OUYA
+				 gamepad.getAxis(OUYAButtonID.LEFT_ANALOGUE_Y) < 0))
+	#else
+				 gamepad.getAxis(XboxButtonID.LEFT_ANALOGUE_Y) < 0))
+	#end
+#else ) #end
 		{
 			_aim = FlxObject.UP;
 		}
-		else if (FlxG.keys.pressed.DOWN)
+		else if (FlxG.keys.pressed.DOWN
+#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+			 || (gamepad.dpadDown ||
+	#if OUYA
+				 gamepad.getAxis(OUYAButtonID.LEFT_ANALOGUE_Y) > 0))
+	#else
+				 gamepad.getAxis(XboxButtonID.LEFT_ANALOGUE_Y) > 0))
+	#end
+#else ) #end
 		{
 			_aim = FlxObject.DOWN;
 		}
 		else
 		{
 			_aim = facing;
+		}
+		
+		// JUMPING
+		if (FlxG.keys.justPressed.X 
+#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+	#if OUYA
+			|| gamepad.justPressed(OUYAButtonID.O)
+	#else
+			|| gamepad.justPressed(XboxButtonID.A)
+	#end
+#end
+		&& isReadyToJump && velocity.y == 0)
+		{
+			velocity.y = -_jumpPower;
+			FlxG.sound.play("Jump");
 		}
 		
 		// ANIMATION
@@ -159,7 +217,14 @@ class Player extends FlxSprite
 		}
 		
 		// SHOOTING
-		if (FlxG.keys.justPressed.C)
+		if (FlxG.keys.justPressed.C
+#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+	#if OUYA
+			|| gamepad.justPressed(OUYAButtonID.U))
+	#else
+			|| gamepad.justPressed(XboxButtonID.X))
+	#end
+#else ) #end
 		{
 			if (flickering)
 			{
