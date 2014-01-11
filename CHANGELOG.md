@@ -31,6 +31,9 @@ v.3.1.0
 * Several bug fixes and improvements to FlxText and FlxTextField classes
 * Renamed framerates to clear up confusion: gameFramerate -> updateFramerate, flashFramerate -> drawFramerate
 * BUG: Fixed order of operations issue that was causing _FlxSubStates_ to crash on close.
+* BUG: Fixed a splash screen repeating bug when using default splash screen.
+* Improvements and optimizations to gamepad api, now OUYA compatible!
+* Mode demo has been made OUYA compatible!
 
 v.3.0.4
 ------------------------------
