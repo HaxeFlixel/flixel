@@ -12,6 +12,8 @@ class BaseResolutionPolicy implements IFlxResolutionPolicy
 	private var scale:FlxPoint;
 	private var offset:FlxPoint;
 	
+	private static var zoom:FlxPoint = new FlxPoint();
+	
 	public function new()
 	{
 		deviceSize = new FlxPoint();
@@ -44,12 +46,19 @@ class BaseResolutionPolicy implements IFlxResolutionPolicy
 		scale.x = gameSize.x / FlxG.width;
 		scale.y = gameSize.y / FlxG.height;
 		
-		var zoom:Float = FlxCamera.defaultZoom;
+		zoom.set(FlxCamera.defaultZoom, FlxCamera.defaultZoom);
 		
-		if (FlxG.camera != null) zoom = FlxG.camera.zoom;
+		if (FlxG.camera != null) 
+		{
+			zoom.x = FlxG.camera.getScale().x;
+			zoom.y = FlxG.camera.getScale().y;
+		}
 		
-		offset.x = Math.ceil((deviceSize.x - gameSize.x * zoom) * 0.5);
-		offset.y = Math.ceil((deviceSize.y - gameSize.y * zoom) * 0.5);
+		scale.x /= zoom.x;
+		scale.y /= zoom.y;
+		
+		offset.x = Math.ceil((deviceSize.x - gameSize.x) * 0.5);
+		offset.y = Math.ceil((deviceSize.y - gameSize.y) * 0.5);
 	}
 	
 	private function updateGameScale():Void
