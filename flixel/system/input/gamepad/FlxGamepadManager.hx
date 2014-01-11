@@ -15,9 +15,14 @@ import flixel.system.input.IFlxInput;
 class FlxGamepadManager implements IFlxInput
 {
 	/**
-	 * First active gamepad!
+	 * First accessed gamepad
 	 */
-	public var first(get, null):FlxGamepad;
+	public var firstActive:FlxGamepad;
+	/**
+	 * Last accessed gamepad
+	 */
+	public var lastActive:FlxGamepad;
+	
 	/**
 	 * Storage for all connected joysticks
 	 */
@@ -49,6 +54,10 @@ class FlxGamepadManager implements IFlxInput
 		{
 			gamepad = new FlxGamepad(GamepadID, globalDeadZone);
 			_gamepads.set(GamepadID, gamepad);
+			
+			lastActive = gamepad;
+			if (firstActive == null)
+				firstActive = gamepad;
 		}
 		
 		return gamepad;
@@ -108,14 +117,6 @@ class FlxGamepadManager implements IFlxInput
 		}
 		
 		return GamepadArray;
-	}
-	
-	/**
-	 * Get first active gamepad.
-	 */
-	public inline function get_first():FlxGamepad
-	{
-		return get(getFirstActiveGamepadID());
 	}
 	
 	/**
