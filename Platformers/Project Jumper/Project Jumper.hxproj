@@ -21,8 +21,9 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1&#xA;FLX_NO_DEBUG&#xA;openfl_ver=1.0.8&#xA;openfl&#xA;display&#xA;web" />
+    <option directives="tools=1.2.6&#xA;FLX_NO_DEBUG&#xA;display&#xA;web" />
     <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
     <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />

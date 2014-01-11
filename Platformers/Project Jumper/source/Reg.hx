@@ -9,11 +9,7 @@ import flixel.util.FlxSave;
 */
 class Reg
 {
-	#if flash
-	static public var SoundExtension:String = ".mp3";
-	#else
 	static public var SoundExtension:String = ".wav";
-	#end
 	
 	/**
 	 * Generic levels Array that can be used for cross-state stuff.
