@@ -22,8 +22,6 @@ v.3.1.0
 * The stats window of the debugger has been refactored, now has fancy FPS and memory graphs
 * FlxGame.focusLostFramerate added
 * Fix bug where the flixel cursor would reappear after regaining focus
-* FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
-* FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
 * Android sound caching improvement
 * Fixes for OUYA gamepad combatibility (fixed some button IDs in OUYAButtonID)
 * Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
@@ -32,8 +30,11 @@ v.3.1.0
 * Renamed framerates to clear up confusion: gameFramerate -> updateFramerate, flashFramerate -> drawFramerate
 * BUG: Fixed order of operations issue that was causing _FlxSubStates_ to crash on close.
 * BUG: Fixed a splash screen repeating bug when using default splash screen.
-* Improvements and optimizations to gamepad api, now OUYA compatible!
+* Improvements and optimizations to gamepad api, fixed Ouya compatibility!
+* FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
+* FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
 * Mode demo has been made OUYA compatible!
+* Added PS3ButtonID and LogitechButtonID classes
 
 v.3.0.4
 ------------------------------
