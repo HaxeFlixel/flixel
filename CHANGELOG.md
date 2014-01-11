@@ -23,13 +23,13 @@ v.3.1.0
 * FlxGame.focusLostFramerate added
 * Fix bug where the flixel cursor would reappear after regaining focus
 * FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
-* FlxGamepad: firstJustPressedButtonID() and firstJustReleasedButtonID() added
+* FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
 * Android sound caching improvement
 * Fixes for OUYA gamepad combatibility (fixed some button IDs in OUYAButtonID)
 * Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
 * Prevent paused sounds from playing after regaining focus
 * Several bug fixes and improvements to FlxText and FlxTextField classes
-* Cleaned up confusion about _updateFramerate_ and renamed _flashFramerate_ to _stageFramerate_
+* Renamed framerates to clear up confusion: gameFramerate -> updateFramerate, flashFramerate -> drawFramerate
 * BUG: Fixed order of operations issue that was causing _FlxSubStates_ to crash on close.
 
 v.3.0.4
