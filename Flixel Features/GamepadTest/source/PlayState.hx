@@ -40,8 +40,7 @@ class PlayState extends FlxState
 	private var _LB:FlxSprite;
 	private var _RB:FlxSprite;
 	#if cpp
-	public static var GAMEPAD_ID:Int = -1;
-	private var gamePad:FlxGamepad;
+	private var _gamePad:FlxGamepad;
 	#end
 
 	override public function create():Void 
@@ -50,7 +49,7 @@ class PlayState extends FlxState
 
 		#if cpp
 		// Getting first availble gamepad
-		_gamePad = FlxG.gamepads.first;
+		_gamePad = FlxG.gamepads.lastActive;
 		
 		_LB = createSprite(71, LB_Y, "assets/LB.png", 0.8);
 		_RB = createSprite(367, RB_Y, "assets/RB.png", 0.8);
@@ -101,62 +100,48 @@ class PlayState extends FlxState
 		super.update();
 		
 		if (_gamePad.pressed(GamepadIDs.A))
-		{
 			_aButton.alpha = ALPHA_ON;
-		}
 		else
-		{
 			_aButton.alpha = ALPHA_OFF;
-		}
 		
 		if (_gamePad.pressed(GamepadIDs.B))
-		{
 			_bButton.alpha = ALPHA_ON;
-		}
 		else
-		{
 			_bButton.alpha = ALPHA_OFF;
-		}
 		
 		if (_gamePad.pressed(GamepadIDs.X))
-		{
 			_xButton.alpha = ALPHA_ON;
-		}
 		else
-		{
 			_xButton.alpha = ALPHA_OFF;
-		}
 		
 		if (_gamePad.pressed(GamepadIDs.Y))
-		{
 			_yButton.alpha = ALPHA_ON;
-		}
 		else
-		{
 			_yButton.alpha = ALPHA_OFF;
-		}
+		
+		if (_gamePad.pressed(GamepadIDs.START))
+			_startButton.alpha = ALPHA_ON;
+		else
+			_startButton.alpha = ALPHA_OFF;
+		
+		if (_gamePad.pressed(GamepadIDs.SELECT))
+			_backButton.alpha = ALPHA_ON;
+		else
+			_backButton.alpha = ALPHA_OFF;
 		
 		if (_gamePad.pressed(GamepadIDs.LB))
-		{
 			_LB.y = LB_Y + 5;
-		}
 		else
-		{
 			_LB.y = LB_Y;
-		}
 		
 		if (_gamePad.pressed(GamepadIDs.RB))
-		{
 			_RB.y = RB_Y + 5;
-		}
 		else
-		{
 			_RB.y = RB_Y;
-		}
 		
 		var angle:Float = 0;
 		
-		if (_gamePad.getAxis(GamepadIDs.LEFT_ANALOGUE_X) > 0 || _gamePad.getAxis(GamepadIDs.LEFT_ANALOGUE_Y) > 0)
+		if (_gamePad.getAxis(GamepadIDs.LEFT_ANALOGUE_X) != 0 || _gamePad.getAxis(GamepadIDs.LEFT_ANALOGUE_Y) != 0)
 		{
 			angle = Math.atan2(_gamePad.getAxis(GamepadIDs.LEFT_ANALOGUE_Y), _gamePad.getAxis(GamepadIDs.LEFT_ANALOGUE_X));
 			_leftStick.x = LEFT_STICK_POS.x + STICK_MOVEMENT_RANGE * Math.cos(angle);
@@ -170,7 +155,7 @@ class PlayState extends FlxState
 			_leftStick.alpha = ALPHA_OFF;
 		}
 		
-		if (_gamePad.getAxis(GamepadIDs.RIGHT_ANALOGUE_X) > 0 || _gamePad.getAxis(GamepadIDs.RIGHT_ANALOGUE_Y) > 0)
+		if (_gamePad.getAxis(GamepadIDs.RIGHT_ANALOGUE_X) != 0 || _gamePad.getAxis(GamepadIDs.RIGHT_ANALOGUE_Y) != 0)
 		{
 			angle = Math.atan2(_gamePad.getAxis(GamepadIDs.RIGHT_ANALOGUE_Y), _gamePad.getAxis(GamepadIDs.RIGHT_ANALOGUE_X));
 			_rightStick.x = RIGHT_STICK_POS.x + STICK_MOVEMENT_RANGE * Math.cos(angle);

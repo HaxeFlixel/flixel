@@ -27,7 +27,6 @@ class MenuState extends FlxState
 		#if cpp
 		if (FlxG.gamepads.anyButton())
 		{
-			PlayState.GAMEPAD_ID = FlxG.gamepads.getFirstActiveGamepadID();
 			FlxG.switchState(new PlayState());
 		}
 		#end
