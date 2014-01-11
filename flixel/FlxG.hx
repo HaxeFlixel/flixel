@@ -310,6 +310,10 @@ class FlxG
 		worldDivisions = 6;
 	}
 	
+	/**
+	 * The resolution policy the game should use - available policies are <code>FillResolutionPolicy</code>, <code>FixedResolutionPolicy</code>,
+	 * <code>RatioResolutionPolicy</code>, <code>RelativeResolutionPolicy</code> and <code>StageResolutionPolicy</code>.
+	 */
 	static public var resolutionPolicy(default, set):BaseResolutionPolicy;
 	
 	static private var _resolutionPolicy:BaseResolutionPolicy = new StageSizeResolutionPolicy();
