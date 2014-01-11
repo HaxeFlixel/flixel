@@ -4,16 +4,24 @@ import flixel.util.FlxPoint;
 
 class FlxGamepad 
 {
+	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;
 	
-	@:allow(flixel.system.input.gamepad)
-	public var axis(default, null):Array<Float>;
 	/**
-	 * DPAD on Xbox Gamepad
+	 * axis array is read-only, use "getAxis" function for deadZone checking
+	 */
+	@:allow(flixel.system.input.gamepad)
+	private var axis:Array<Float>;
+	
+	/**
+	 * DPAD
 	 */
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
-	public var id:Int;
+	public var dpadUp(get, null):Bool;
+	public var dpadDown(get, null):Bool;
+	public var dpadLeft(get, null):Bool;
+	public var dpadRight(get, null):Bool;
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
@@ -25,9 +33,8 @@ class FlxGamepad
 	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
 		buttons = new Map<Int, FlxGamepadButton>();
-		ball = new FlxPoint();
-		axis = new Array<Float>();
 		axis = [for (i in 0...6) 0];
+		ball = new FlxPoint();
 		hat = new FlxPoint();
 		id = ID;
 		
@@ -261,4 +268,12 @@ class FlxGamepad
 		
 		return false;
 	}
+	
+	/**
+	 * DPAD accessor properties
+	 */
+	inline public function get_dpadUp():Bool { return hat.y < 0; }
+	inline public function get_dpadDown():Bool { return hat.y > 0; }
+	inline public function get_dpadLeft():Bool { return hat.x < 0; }
+	inline public function get_dpadRight():Bool { return hat.x > 0; }
 }

@@ -15,6 +15,10 @@ import flixel.system.input.IFlxInput;
 class FlxGamepadManager implements IFlxInput
 {
 	/**
+	 * First active gamepad!
+	 */
+	public var first(get, null):FlxGamepad;
+	/**
 	 * Storage for all connected joysticks
 	 */
 	private var _gamepads:Map<Int, FlxGamepad>;
@@ -107,6 +111,14 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	/**
+	 * Get first active gamepad.
+	 */
+	public inline function get_first():FlxGamepad
+	{
+		return get(getFirstActiveGamepadID());
+	}
+	
+	/**
 	 * Get first found active gamepad id 
 	 * (with any pressed buttons or moved Axis, Ball and Hat)
 	 * Returns "-1" if no active gamepad has been found
@@ -114,12 +126,13 @@ class FlxGamepadManager implements IFlxInput
 	public function getFirstActiveGamepadID():Int
 	{
 		var it = _gamepads.iterator();
-		var gamepad = it.next();
+		var gamepad:FlxGamepad = it.next();
 		
 		while (gamepad != null)
 		{
 			if (gamepad.anyInput())
 			{
+				trace("firstActiveID=" + gamepad.id);
 				return gamepad.id;
 			}
 			
