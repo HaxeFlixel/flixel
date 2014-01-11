@@ -76,7 +76,7 @@ class MouseEventManager extends FlxPlugin
 	* @param 	MouseChildren 	If mouseChildren is enabled, other sprites overlaped by this will still receive mouse events.
 	* @param 	MouseEnabled 	If mouseEnabled this sprite will receive mouse events.
 	*/
-	static public function addSprite(Sprite:FlxSprite, ?OnMouseDown:FlxSprite->Void, ?OnMouseUp:FlxSprite->Void, ?OnMouseOver:FlxSprite->Void, ?OnMouseOut:FlxSprite->Void, MouseChildren = false, MouseEnabled = true)
+	static public function addSprite(Sprite:FlxSprite, ?OnMouseDown:FlxSprite->Void, ?OnMouseUp:FlxSprite->Void, ?OnMouseOver:FlxSprite->Void, ?OnMouseOut:FlxSprite->Void, MouseChildren = false, MouseEnabled = true, PixelPerfect = true)
 	{
 		init(); // MEManager is initialized and added to pluggins if it was not there already.
 		
@@ -88,6 +88,7 @@ class MouseEventManager extends FlxPlugin
 			onMouseUp: OnMouseUp,
 			onMouseOver: OnMouseOver,
 			onMouseOut: OnMouseOut,
+			pixelPerfect: PixelPerfect
 		}
 		
 		_registeredSprites.unshift(newReg);
@@ -142,7 +143,7 @@ class MouseEventManager extends FlxPlugin
 				continue;
 			}
 
-			if (checkOverlap(reg.sprite))
+			if (checkOverlap(reg.sprite, reg.pixelPerfect))
 			{
 				currentOverSprites.push(reg);
 				
@@ -203,7 +204,7 @@ class MouseEventManager extends FlxPlugin
 		_mouseOverSprites = currentOverSprites;
 	}
 
-	private function checkOverlap(Sprite:FlxSprite):Bool
+	private function checkOverlap(Sprite:FlxSprite, PixelPerfect:Bool):Bool
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.list.length;
@@ -223,11 +224,7 @@ class MouseEventManager extends FlxPlugin
 			
 			if (Sprite.overlapsPoint(_point, true, camera))
 			{
-				#if flash
-				if (Sprite.pixelsOverlapPoint(_point, 0x0, camera))
-				#else
-				if (Sprite.pixelsOverlapPoint(_point, 0x01, camera))
-				#end
+				if (!PixelPerfect || Sprite.pixelsOverlapPoint(_point, 0x01, camera))				
 				{
 					return true;
 				}
@@ -246,7 +243,7 @@ class MouseEventManager extends FlxPlugin
 				
 				if (Sprite.overlapsPoint(_point, true, camera))
 				{
-					if (Sprite.pixelsOverlapPoint(_point, 0x01, camera))
+					if (!PixelPerfect || Sprite.pixelsOverlapPoint(_point, 0x01, camera))
 					{
 						return true;
 					}
@@ -469,5 +466,6 @@ typedef SpriteReg = {
 	var onMouseDown:FlxSprite->Void;
 	var onMouseUp:FlxSprite->Void;
 	var onMouseOver:FlxSprite->Void;
-	var onMouseOut:FlxSprite->Void;
+	var onMouseOut:FlxSprite-> Void;
+	var pixelPerfect:Bool;
 }
