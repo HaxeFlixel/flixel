@@ -317,7 +317,7 @@ class FlxG
 	static private function set_resolutionPolicy(Policy:BaseResolutionPolicy):BaseResolutionPolicy
 	{
 		_resolutionPolicy = Policy;
-		resizeGame(FlxG.width, FlxG.height);
+		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		return Policy;
 	}
 	
