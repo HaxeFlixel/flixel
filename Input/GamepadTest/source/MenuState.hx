@@ -24,7 +24,7 @@ class MenuState extends FlxState
 	
 	override public function update():Void 
 	{
-		#if cpp
+		#if (cpp || neko)
 		if (FlxG.gamepads.anyButton())
 		{
 			FlxG.switchState(new PlayState());
