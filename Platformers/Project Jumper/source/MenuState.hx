@@ -115,23 +115,13 @@ class MenuState extends FlxState
 					FlxG.cameras.fade(0xff969867, 1, false, startGame);
 					FlxG.sound.play("assets/sounds/coin" + Reg.SoundExtension, 1, false);
 				case 1:
-					onURL();
+					FlxG.openURL("http://chipacabra.blogspot.com");
 				case 2:
-					onFlixel();
+					FlxG.openURL("http://flixel.org");
 			}
 		}
 		
 		super.update();
-	}
-	
-	private function onFlixel():Void 
-	{
-		FlxStringUtil.openURL("http://flixel.org");
-	}
-	
-	private function onURL():Void 
-	{
-		FlxStringUtil.openURL("http://chipacabra.blogspot.com");
 	}
 	
 	private function startGame():Void

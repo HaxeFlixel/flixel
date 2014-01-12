@@ -11,7 +11,6 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.text.FlxTextField;
-import flixel.util.FlxStringUtil;
 
 /**
  * These lines allow embedding of assets as ByteArrays, which helps to minimize the threat of data being compromised.
@@ -331,17 +330,17 @@ class MenuState extends FlxState
 	
 	private function hfCallback( Name:String ):Void
 	{
-		FlxStringUtil.openURL( "http://www.haxeflixel.com" );
+		FlxG.openURL( "http://www.haxeflixel.com" );
 	}
 	
 	private function sourceCallback( Name:String ):Void
 	{
-		FlxStringUtil.openURL( "https://github.com/HaxeFlixel/flixel-addons/blob/master/flixel/addons/api/FlxGameJolt.hx" );
+		FlxG.openURL( "https://github.com/HaxeFlixel/flixel-addons/blob/master/flixel/addons/api/FlxGameJolt.hx" );
 	}
 	
 	private function docCallback( Name:String ):Void
 	{
-		FlxStringUtil.openURL( "http://gamejolt.com/api/doc/game/" );
+		FlxG.openURL( "http://gamejolt.com/api/doc/game/" );
 	}
 	
 	private function scoresCallback( Name:String ):Void
