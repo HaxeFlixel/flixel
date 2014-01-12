@@ -1,42 +1,41 @@
-import flixel.addons.ui.shapes.FlxShapeArrow;
-import flixel.addons.ui.shapes.FlxShapeBox;
-import flixel.addons.ui.shapes.FlxShapeCircle;
-import flixel.addons.ui.shapes.FlxShapeCross;
-import flixel.addons.ui.shapes.FlxShapeDonut;
-import flixel.addons.ui.shapes.FlxShapeDoubleCircle;
-import flixel.addons.ui.shapes.FlxShapeGrid;
-import flixel.addons.ui.shapes.FlxShapeLightning;
-import flixel.addons.ui.shapes.FlxShapeLine;
-import flixel.addons.ui.shapes.FlxShapeSquareDonut;
+package;
+
+import flixel.addons.display.shapes.FlxShapeArrow;
+import flixel.addons.display.shapes.FlxShapeBox;
+import flixel.addons.display.shapes.FlxShapeCircle;
+import flixel.addons.display.shapes.FlxShapeCross;
+import flixel.addons.display.shapes.FlxShapeDonut;
+import flixel.addons.display.shapes.FlxShapeDoubleCircle;
+import flixel.addons.display.shapes.FlxShapeGrid;
+import flixel.addons.display.shapes.FlxShapeLightning;
+import flixel.addons.display.shapes.FlxShapeLine;
+import flixel.addons.display.shapes.FlxShapeSquareDonut;
+import flixel.addons.ui.FlxUIState;
+import flixel.FlxG;
 import flixel.util.FlxPoint;
 import flixel.util.FlxSpriteUtil.FillStyle;
 import flixel.util.FlxSpriteUtil.LineStyle;
-import haxe.xml.Fast;
-import flash.Lib;
-import flixel.FlxG;
-import flixel.addons.ui.FlxUIState;
+
 /**
  * @author Lars Doucet
  */
-
 class State_TestShapes extends FlxUIState
 {
-
 	override public function create() 
 	{
 		_xml_id = "state_shapes";
 		super.create();
 		
 		testGrid();
-		//testDoubleCircles();
-		//testSquareDonuts();
-		//testArrow();
-		//testCross();
-		//testLightning();
-		//testDonuts();
-		//testBoxes();
-		//testCircles();
-		//testLines();
+		/*testDoubleCircles();
+		testSquareDonuts();
+		testArrow();
+		testCross();
+		testLightning();
+		testDonuts();
+		testBoxes();
+		testCircles();
+		testLines();*/
 	}
 	
 	private function testGrid():Void {
