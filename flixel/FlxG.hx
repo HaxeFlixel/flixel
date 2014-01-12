@@ -3,6 +3,7 @@ package flixel;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
+import flash.Lib;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
@@ -15,9 +16,12 @@ import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
+import flixel.system.resolution.BaseResolutionPolicy;
+import flixel.system.resolution.StageSizeResolutionPolicy;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
@@ -87,10 +91,6 @@ class FlxG
 	 */
 	static public var autoPause:Bool = true;
 	/**
-	 * Whether <code>FlxG.resizeGame()</code> should be called whenever the game is resized. True by default.
-	 */
-	static public var autoResize:Bool = true;
-	/**
 	 * WARNING: Changing this can lead to issues with physics and the recording system. Setting this to 
 	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
 	 */
@@ -106,10 +106,12 @@ class FlxG
 	/**
 	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
+	@:allow(flixel.system.resolution.StageSizeResolutionPolicy) 
 	static public var width(default, null):Int;
 	/**
 	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
+	@:allow(flixel.system.resolution.StageSizeResolutionPolicy)
 	static public var height(default, null):Int;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
@@ -254,6 +256,8 @@ class FlxG
 		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
+		resizeGame(width, height);
+		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
 			keyboard = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
@@ -304,6 +308,21 @@ class FlxG
 		elapsed = 0;
 		worldBounds.set( -10, -10, width + 20, height + 20);
 		worldDivisions = 6;
+	}
+	
+	/**
+	 * The resolution policy the game should use - available policies are <code>FillResolutionPolicy</code>, <code>FixedResolutionPolicy</code>,
+	 * <code>RatioResolutionPolicy</code>, <code>RelativeResolutionPolicy</code> and <code>StageResolutionPolicy</code>.
+	 */
+	static public var resolutionPolicy(default, set):BaseResolutionPolicy;
+	
+	static private var _resolutionPolicy:BaseResolutionPolicy = new StageSizeResolutionPolicy();
+	
+	static private function set_resolutionPolicy(Policy:BaseResolutionPolicy):BaseResolutionPolicy
+	{
+		_resolutionPolicy = Policy;
+		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+		return Policy;
 	}
 	
 	/**
@@ -396,14 +415,11 @@ class FlxG
 	}
 	
 	/**
-	 * Handy helper functions that takes care of all the things to resize the game. 
-	 * Use <code>FlxG.autoResize</code> to call this function automtically when the window is resized!
+	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
 	inline static public function resizeGame(Width:Int, Height:Int):Void
 	{
-		camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
-		width = Width;
-		height = Height;
+		_resolutionPolicy.onMeasure(Width, Height);
 	}
 	
 	/**

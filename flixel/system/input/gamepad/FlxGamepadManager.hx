@@ -123,9 +123,8 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	/**
-	 * Get first found active gamepad id 
-	 * (with any pressed buttons or moved Axis, Ball and Hat)
-	 * Returns "-1" if no active gamepad has been found
+	 * Get first found active gamepad id (with any pressed buttons or moved Axis, Ball and Hat).
+	 * Returns "-1" if no active gamepad has been found.
 	 */
 	public function getFirstActiveGamepadID():Int
 	{
@@ -136,7 +135,6 @@ class FlxGamepadManager implements IFlxInput
 		{
 			if (gamepad.anyInput())
 			{
-				trace("firstActiveID=" + gamepad.id);
 				return gamepad.id;
 			}
 			
@@ -147,9 +145,8 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	/**
-	 * Get first found active gamepad
-	 * (with any pressed buttons or moved Axis, Ball and Hat)
-	 * Returns null if no active gamepad has been found
+	 * Get first found active gamepad (with any pressed buttons or moved Axis, Ball and Hat).
+	 * Returns null if no active gamepad has been found.
 	 */
 	public function getFirstActiveGamepad():FlxGamepad
 	{

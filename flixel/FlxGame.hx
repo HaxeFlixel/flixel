@@ -388,10 +388,7 @@ class FlxGame extends Sprite
 			}
 		#end
 		
-		if (FlxG.autoResize)
-		{
-			FlxG.resizeGame(width, height);
-		}
+		FlxG.resizeGame(width, height);
 	}
 	
 	/**

@@ -9,7 +9,7 @@ class FlxGamepad implements IDestroyable
 	public var buttons:Map<Int, FlxGamepadButton>;
 	
 	/**
-	 * axis array is read-only, use "getAxis" function for deadZone checking
+	 * Axis array is read-only, use "getAxis" function for deadZone checking.
 	 */
 	@:allow(flixel.system.input.gamepad)
 	private var axis:Array<Float>;
@@ -26,8 +26,7 @@ class FlxGamepad implements IDestroyable
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
-	 * Less this number the more gamepad is sensible.
-	 * Should be between 0.0 and 1.0.
+	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
 	
