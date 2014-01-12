@@ -88,11 +88,7 @@ class FlxTextField extends FlxText
 	 */
 	override private function get_pixels():BitmapData
 	{
-		#if !flash
 		calcFrame(true);
-		#else
-		calcFrame();
-		#end
 		return cachedGraphics.bitmap;
 	}
 	

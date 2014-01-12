@@ -512,12 +512,10 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * Internal function to update the current animation frame.
+	 * 
+	 * @param	CPP		Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	#if flash
-	override private function calcFrame():Void
-	#else
-	override private function calcFrame(AreYouSure:Bool = false):Void
-	#end
+	override private function calcFrame(CPP:Bool = false):Void
 	{
 		if (_textField == null)
 		{
