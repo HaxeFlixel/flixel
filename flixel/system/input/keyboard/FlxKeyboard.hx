@@ -251,23 +251,35 @@ class FlxKeyboard implements IFlxInput
 			return false;
 		}
 		
-		for (key in KeyArray)
+		var canUseFastCheck:Bool = KeyArray.length > 0 && Std.is(KeyArray[0], Int);
+		
+		for (code in KeyArray)
 		{
-			// Also make lowercase keys work, like "space" or "sPaCe"
-			key = Std.string(key).toUpperCase();
+			var key:FlxKey;
 			
-			var k:FlxKey = _keyList[_keyLookup.get(key)];
-			if (k != null)
+			if (canUseFastCheck)
 			{
-				if (k.current == Status)
+				// Use direct array access if they're using an array type. Much faster.
+				key = _keyList[code];
+			}
+			else
+			{
+				// Also make lowercase keys work, like "space" or "sPaCe"
+				code = code.toUpperCase();
+				key = _keyList[_keyLookup.get(code)];
+			}
+			
+			if (key != null)
+			{
+				if (key.current == Status)
 				{
 					return true;
 				}
-				else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
+				else if (Status == FlxKey.PRESSED && key.current == FlxKey.JUST_PRESSED)
 				{
 					return true;
 				}
-				else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
+				else if (Status == FlxKey.RELEASED && key.current == FlxKey.JUST_RELEASED)
 				{
 					return true;
 				}
@@ -275,7 +287,7 @@ class FlxKeyboard implements IFlxInput
 			#if !FLX_NO_DEBUG
 			else
 			{
-				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+				FlxG.log.error("Invalid Key: `" + code + "`. Note that function and numpad keys can only be used in flash and js.");
 			}
 			#end
 		}
