@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-#if cpp
+#if (cpp || neko)
 import flixel.system.input.gamepad.FlxGamepad;
 import flixel.system.input.gamepad.XboxButtonID;
 import flixel.system.input.gamepad.OUYAButtonID;
@@ -39,7 +39,7 @@ class PlayState extends FlxState
 	
 	private var _LB:FlxSprite;
 	private var _RB:FlxSprite;
-	#if cpp
+	#if (cpp || neko)
 	private var _gamePad:FlxGamepad;
 	#end
 
@@ -47,7 +47,7 @@ class PlayState extends FlxState
 	{
 		FlxG.cameras.bgColor = FlxColor.GRAY;
 
-		#if cpp
+		#if (cpp || neko)
 		// Getting first availble gamepad
 		_gamePad = FlxG.gamepads.lastActive;
 		
@@ -80,7 +80,7 @@ class PlayState extends FlxState
 		#end
 	}
 
-	#if cpp
+	#if (cpp || neko)
 	private function createSprite(X:Float, Y:Float, Graphic:String, Alpha:Float = -1):FlxSprite
 	{
 		if (Alpha == -1)
