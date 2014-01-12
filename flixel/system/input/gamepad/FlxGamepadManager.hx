@@ -1,15 +1,16 @@
 package flixel.system.input.gamepad;
 
+import flash.Lib;
+import flixel.FlxG;
+import flixel.system.input.IFlxInput;
+import flixel.system.input.gamepad.FlxGamepad;
 #if (cpp || neko)
 import openfl.events.JoystickEvent;
 #end
 #if (cpp || neko || js)
-import flash.Lib;
-import flixel.system.input.gamepad.FlxGamepad;
-import flixel.system.input.IFlxInput;
 
 /**
- * ...
+ * Manages gamepad input
  * @author Zaphod
  */
 class FlxGamepadManager implements IFlxInput
@@ -33,6 +34,8 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function new() 
 	{
+		firstActive = null;
+		lastActive = null;
 		_gamepads = new Map<Int, FlxGamepad>();
 		#if (cpp || neko)
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
@@ -310,6 +313,8 @@ class FlxGamepadManager implements IFlxInput
 			gamepad.destroy();
 		}
 		
+		firstActive = FlxG.safeDestroy(firstActive);
+		lastActive = FlxG.safeDestroy(lastActive);
 		_gamepads = new Map<Int, FlxGamepad>();
 		numActiveGamepads = 0;
 	}

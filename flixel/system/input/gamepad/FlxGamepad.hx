@@ -1,8 +1,9 @@
 package flixel.system.input.gamepad;
 
+import flixel.FlxG.IDestroyable;
 import flixel.util.FlxPoint;
 
-class FlxGamepad 
+class FlxGamepad implements IDestroyable
 {
 	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;
