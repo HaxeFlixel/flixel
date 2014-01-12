@@ -41,7 +41,7 @@ A large set of demos (**currently 42!**) using the HaxeFlixel engine and demonst
   * GridMovement
   * MouseEventManager
   * Multitouch *(cpp only)*
-  * Xbox-Gamepad *(cpp only)*
+  * GamepadTest *(cpp / neko only)*
 * **Other**
   * FlxBunnyMark
   * FlxCollisions

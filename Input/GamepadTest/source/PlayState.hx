@@ -3,13 +3,14 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
+
 #if (cpp || neko)
 import flixel.system.input.gamepad.FlxGamepad;
 import flixel.system.input.gamepad.XboxButtonID;
 import flixel.system.input.gamepad.OUYAButtonID;
 #end
-import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
 
 class PlayState extends FlxState
 {
@@ -45,7 +46,7 @@ class PlayState extends FlxState
 
 	override public function create():Void 
 	{
-		FlxG.cameras.bgColor = FlxColor.GRAY;
+		FlxG.cameras.bgColor = FlxColor.WHITE;
 
 		#if (cpp || neko)
 		// Getting first availble gamepad
@@ -74,9 +75,6 @@ class PlayState extends FlxState
 		
 		_startButton.alpha = ALPHA_OFF;
 		_backButton.alpha = ALPHA_OFF;
-		
-		#else
-		FlxG.log.add("GamePad is only supported on CPP Targets");
 		#end
 	}
 
