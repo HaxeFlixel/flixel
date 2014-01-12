@@ -1,5 +1,11 @@
 package flixel.util;
 
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.system.FlxAssets;
+import flixel.effects.FlxFlicker;
+import flixel.tweens.FlxTween;
 import flash.display.BitmapData;
 import flash.display.BitmapDataChannel;
 import flash.display.BlendMode;
@@ -9,14 +15,9 @@ import flash.display.JointStyle;
 import flash.display.LineScaleMode;
 import flash.display.Sprite;
 import flash.geom.ColorTransform;
+import flash.geom.Rectangle;
 import flash.geom.Matrix;
 import flash.geom.Point;
-import flash.geom.Rectangle;
-import flixel.effects.FlxFlicker;
-import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.system.FlxAssets;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
 // TODO: flip(): Flip image data horizontally / vertically without changing the angle (mirror / reverse)
@@ -523,6 +524,16 @@ class FlxSpriteUtil
 	inline static public function stopFlickering(Object:FlxObject):Void
 	{
 		FlxFlicker.stopFlickering(Object);
+	}
+	
+	/**
+	* Fade out a sprite.
+	* 
+	* @param  Object The object to stop flickering.
+	*/
+	inline static public function fade(Object:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:Dynamic):Void
+	{
+		FlxTween.color(Object, Duration, 1, FadeToBlack ? 0 : 1, Object.alpha, 0, OnComplete != null ? { complete:OnComplete } : null);
 	}
 }
 

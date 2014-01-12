@@ -15,7 +15,6 @@ import flixel.tweens.motion.CubicMotion;
 import flixel.tweens.motion.LinearMotion;
 import flixel.tweens.motion.LinearPath;
 import flixel.tweens.motion.Motion;
-import flixel.tweens.motion.Motion.Movable;
 import flixel.tweens.motion.MotionType;
 import flixel.tweens.motion.PathType;
 import flixel.tweens.motion.QuadMotion;
@@ -130,7 +129,7 @@ class FlxTween
 	 * 						ease		Optional easer function.
 	 * @return	The added AngleTween object.
 	 */
-	static public function angle(?Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float, ?Options:TweenOptions):AngleTween
+	static public function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float, ?Options:TweenOptions):AngleTween
 	{
 		if (Options == null)
 		{
@@ -160,7 +159,7 @@ class FlxTween
 	 * 						ease		Optional easer function.
 	 * @return	The added ColorTween object.
 	 */
-	static public function color(?Sprite:FlxSprite, Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
+	static public function color(Sprite:FlxSprite, Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
 	{
 		if (Options == null)
 		{
@@ -219,7 +218,7 @@ class FlxTween
 	 * 							ease		Optional easer function.
 	 * @return The LinearMotion object.
 	 */
-	static public function linearMotion(Object:Movable, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
+	static public function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
 	{
 		if (Options == null)
 		{
@@ -253,7 +252,7 @@ class FlxTween
 	 * 							ease		Optional easer function.
 	 * @return The QuadMotion object.
 	 */
-	static public function quadMotion(Object:Movable, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
+	static public function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
 	{
 		if (Options == null)
 		{
@@ -288,7 +287,7 @@ class FlxTween
 	 * 						ease		Optional easer function.
 	 * @return The CubicMotion object.
 	 */
-	static public function cubicMotion(Object:Movable, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float, ?Options:TweenOptions):CubicMotion
+	static public function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float, ?Options:TweenOptions):CubicMotion
 	{
 		if (Options == null)
 		{
@@ -322,7 +321,7 @@ class FlxTween
 	 * 							ease		Optional easer function.
 	 * @return The CircularMotion object.
 	 */
-	static public function circularMotion(Object:Movable, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
+	static public function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
 	{
 		if (Options == null)
 		{
@@ -351,7 +350,7 @@ class FlxTween
 	 * 							ease		Optional easer function.
 	 * @return	The LinearPath object.
 	 */
-	static public function linearPath(Object:Movable, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
+	static public function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
 	{
 		if (Options == null)
 		{
@@ -389,7 +388,7 @@ class FlxTween
 	 * 							ease		Optional easer function.
 	 * @return	The QuadPath object.
 	 */
-	static public function quadPath(Object:Movable, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
+	static public function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
 	{
 		if (Options == null)
 		{
