@@ -286,6 +286,10 @@ class FlxText extends FlxSprite
 	override private function set_color(Color:Int):Int
 	{
 		Color &= 0x00ffffff;
+		if (color == Color)
+		{
+			return Color;
+		}
 		_format.color = Color;
 		color = Color;
 		_textField.defaultTextFormat = _format;
