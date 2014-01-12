@@ -251,13 +251,13 @@ class FlxKeyboard implements IFlxInput
 			return false;
 		}
 		
-		var canUseFastCheck:Bool = KeyArray.length > 0 && Std.is(KeyArray[0], Int);
+		var isIntArray:Bool = KeyArray.length > 0 && Std.is(KeyArray[0], Int);
 		
 		for (code in KeyArray)
 		{
 			var key:FlxKey;
 			
-			if (canUseFastCheck)
+			if (isIntArray)
 			{
 				// Use direct array access if they're using an array type. Much faster.
 				key = _keyList[code];
