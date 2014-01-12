@@ -718,7 +718,7 @@ class FlxGame extends Sprite
 		FlxG.plugins.draw();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visualDebug)
+		if (FlxG.debugger.drawDebug)
 		{
 			FlxG.plugins.drawDebug();
 		}
@@ -727,7 +727,7 @@ class FlxGame extends Sprite
 		state.draw();
 		
 		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.visualDebug)
+		if (FlxG.debugger.drawDebug)
 		{
 			state.drawDebug();
 		}

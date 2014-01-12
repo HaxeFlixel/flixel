@@ -140,6 +140,7 @@ class FlxDebugger extends Sprite
 		
 		stats = new Stats("stats", FlxAssets.IMG_STATS_DEBUG, 0, 0, false);
 		addChild(stats);
+		stats.visible = true;
 		
 		#if FLX_BMP_DEBUG
 		bmpLog = new BmpLog("bmplog", 0, 0, true);
@@ -155,7 +156,7 @@ class FlxDebugger extends Sprite
 		addButton(RIGHT, FlxAssets.IMG_WATCH_DEBUG, watch.toggleVisibility, true).toggled = !watch.visible; 
 		addButton(RIGHT, FlxAssets.IMG_CONSOLE, console.toggleVisibility, true).toggled = !console.visible; 
 		addButton(RIGHT, FlxAssets.IMG_STATS_DEBUG, stats.toggleVisibility, true).toggled = !stats.visible; 
-		addButton(RIGHT, FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, true).toggled = !FlxG.debugger.visualDebug;
+		addButton(RIGHT, FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, true).toggled = !FlxG.debugger.drawDebug;
 		
 		#if FLX_RECORD
 		addButton(MIDDLE).addChild(vcr.runtimeDisplay);
@@ -449,12 +450,12 @@ class FlxDebugger extends Sprite
 
 	inline private function toggleVisualDebug ():Void
 	{
-		FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
+		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 	}
 	
 	inline private function openHomepage():Void
 	{
-		FlxStringUtil.openURL("http://www.haxeflixel.com");
+		FlxG.openURL("http://www.haxeflixel.com");
 	}
 }
 #end

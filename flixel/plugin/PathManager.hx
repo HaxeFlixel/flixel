@@ -53,7 +53,7 @@ class PathManager extends FlxPlugin
 	 */
 	override public function drawDebug():Void
 	{
-		if (!FlxG.debugger.visualDebug || ignoreDrawDebug)
+		if (!FlxG.debugger.drawDebug || ignoreDrawDebug)
 		{
 			return;	
 		}

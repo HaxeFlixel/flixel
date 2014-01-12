@@ -12,7 +12,7 @@ class DebuggerFrontEnd
 	 * Whether to show visual debug displays or not. Doesn't exist in <code>FLX_NO_DEBUG</code> mode.
 	 * @default false
 	 */
-	public var visualDebug:Bool = false;
+	public var drawDebug:Bool = false;
 	#end
 	
 	/**

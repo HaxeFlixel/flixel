@@ -229,7 +229,7 @@ class FlxTilemap extends FlxObject
 		_debugTilePartial = null;
 		_debugTileSolid = null;
 		#end
-		_lastVisualDebug = FlxG.debugger.visualDebug;
+		_lastVisualDebug = FlxG.debugger.drawDebug;
 		#end
 		
 		_startingIndex = 0;
@@ -558,9 +558,9 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function update():Void
 	{
-		if (_lastVisualDebug != FlxG.debugger.visualDebug)
+		if (_lastVisualDebug != FlxG.debugger.drawDebug)
 		{
-			_lastVisualDebug = FlxG.debugger.visualDebug;
+			_lastVisualDebug = FlxG.debugger.drawDebug;
 			setDirty();
 		}
 		
@@ -651,7 +651,7 @@ class FlxTilemap extends FlxObject
 					Buffer.pixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPoint, null, null, true);
 					
 					#if !FLX_NO_DEBUG
-					if (FlxG.debugger.visualDebug && !ignoreDrawDebug) 
+					if (FlxG.debugger.drawDebug && !ignoreDrawDebug) 
 					{
 						tile = _tileObjects[_data[columnIndex]];
 						
