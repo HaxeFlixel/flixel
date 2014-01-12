@@ -196,7 +196,7 @@ class FlxG
 	/**
 	 * A reference to the <code>BmpLogFrontEnd</code> object. Use it to <code>add</code> images to the bmplog window. 
 	 */	
-	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();	
+	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();
 	#end
 	
 	/**
@@ -585,5 +585,15 @@ class FlxG
 	inline static public function removeChild(Child:DisplayObject):DisplayObject
 	{
 		return game.removeChild(Child);
+	}
+	
+	/**
+	 * Opens a web page in a new tab or window.
+	 * 
+	 * @param	URL		The address of the web page.
+	 */
+	inline static public function openURL(URL:String):Void
+	{
+		flash.Lib.getURL(new flash.net.URLRequest(URL), "_blank");
 	}
 }
