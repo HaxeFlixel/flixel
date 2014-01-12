@@ -33,7 +33,7 @@ class Player extends FlxSprite
 	private var gamepad(get, never):FlxGamepad;
 	private inline function get_gamepad():FlxGamepad 
 	{
-		return FlxG.gamepads.firstActive;
+		return FlxG.gamepads.lastActive;
 	}
 	#end
 	

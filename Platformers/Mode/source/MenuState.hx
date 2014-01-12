@@ -21,6 +21,11 @@ class MenuState extends FlxState
 	
 	override public function create():Void
 	{
+#if debug
+		FlxG.debugger.visible = true;
+		FlxG.game.debugger.stats.visible = true;
+#end
+		
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
 		if (FlxG.sound.music != null)
@@ -181,12 +186,12 @@ class MenuState extends FlxState
 	
 	private function onFlixel():Void
 	{
-		FlxStringUtil.openURL("http://flixel.org");
+		FlxG.openURL("http://flixel.org");
 	}
 	
 	private function onDanny():Void
 	{
-		FlxStringUtil.openURL("http://dbsoundworks.com");
+		FlxG.openURL("http://dbsoundworks.com");
 	}
 	
 	private function onPlay():Void
