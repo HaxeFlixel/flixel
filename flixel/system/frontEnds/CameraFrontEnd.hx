@@ -144,7 +144,6 @@ class CameraFrontEnd
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game.inputContainer));
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
-		
 		return NewCamera;
 	}
 	

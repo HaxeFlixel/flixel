@@ -529,9 +529,10 @@ class FlxSpriteUtil
 	/**
 	* Fade out a sprite.
 	* 
-	* @param  Object The object to stop flickering.
+	* @param  Object The object to fade.
+	* @param  Duration How long the fade will take (in seconds).
 	*/
-	inline static public function fade(Object:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:Dynamic):Void
+	inline static public function fade(Object:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):Void
 	{
 		FlxTween.color(Object, Duration, 1, FadeToBlack ? 0 : 1, Object.alpha, 0, OnComplete != null ? { complete:OnComplete } : null);
 	}
