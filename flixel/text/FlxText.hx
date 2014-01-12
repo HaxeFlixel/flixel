@@ -286,7 +286,7 @@ class FlxText extends FlxSprite
 	override private function set_color(Color:Int):Int
 	{
 		Color &= 0x00ffffff;
-		if (color == Color)
+		if (_format.color == Color)
 		{
 			return Color;
 		}
