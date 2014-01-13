@@ -7,13 +7,11 @@ import flixel.system.ui.FlxSystemButton;
 
 class DebuggerFrontEnd
 {	
-	#if !FLX_NO_DEBUG
 	/**
 	 * Whether to show visual debug displays or not. Doesn't exist in <code>FLX_NO_DEBUG</code> mode.
 	 * @default false
 	 */
 	public var drawDebug:Bool = false;
-	#end
 	
 	/**
 	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
