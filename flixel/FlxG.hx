@@ -29,23 +29,23 @@ import flixel.util.FlxStringUtil;
 import flixel.FlxBasic;
 
 #if !FLX_NO_TOUCH
-import flixel.system.input.touch.FlxTouchManager;
+import flixel.input.touch.FlxTouchManager;
 #end
 #if !FLX_NO_KEYBOARD
-import flixel.system.input.keyboard.FlxKeyboard;
-import flixel.system.input.keyboard.FlxKeyShortcuts;
+import flixel.input.keyboard.FlxKeyboard;
+import flixel.input.keyboard.FlxKeyShortcuts;
 #end
 #if !FLX_NO_MOUSE
-import flixel.system.input.mouse.FlxMouse;
+import flixel.input.mouse.FlxMouse;
 #end
 #if !FLX_NO_GAMEPAD
-import flixel.system.input.gamepad.FlxGamepadManager;
+import flixel.input.gamepad.FlxGamepadManager;
 #end
 #if !FLX_NO_SOUND_SYSTEM
 import flixel.system.frontEnds.SoundFrontEnd;
 #end
 #if android
-import flixel.system.input.android.FlxAndroidKeys;
+import flixel.input.android.FlxAndroidKeys;
 #end
 
 interface IDestroyable

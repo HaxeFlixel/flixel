@@ -1,17 +1,23 @@
-package flixel.system.input.gamepad;
+package flixel.input.gamepad;
 
 import flixel.FlxG.IDestroyable;
 import flixel.util.FlxPoint;
 
 class FlxGamepad implements IDestroyable
 {
+	// Button States (mirrors Key States in FlxKey.hx)
+	inline static public var JUST_RELEASED	:Int = -1;
+	inline static public var RELEASED		:Int = 0;
+	inline static public var PRESSED		:Int = 1;
+	inline static public var JUST_PRESSED	:Int = 2;
+	
 	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;
 	
 	/**
 	 * Axis array is read-only, use "getAxis" function for deadZone checking.
 	 */
-	@:allow(flixel.system.input.gamepad)
+	@:allow(flixel.input.gamepad)
 	private var axis:Array<Float>;
 	
 	/**
@@ -105,6 +111,22 @@ class FlxGamepad implements IDestroyable
 	}
 	
 	/**
+	 * Check the status of a button
+	 * 
+	 * @param	ButtonID	Index into _keyList array.
+	 * @param	Status		The key state to check for
+	 * @return	Whether the provided button has the specified status
+	 */
+	public function checkStatus(ButtonID:Int, Status:Int):Bool 
+	{ 
+		if (buttons.exists(ButtonID))
+		{
+			return (buttons.get(ButtonID).current == Status);
+		}
+		return false;
+	}
+	
+	/**
 	 * Check to see if this button is pressed.
 	 * 
 	 * @param	ButtonID	The button id (from 0 to 7).
@@ -115,7 +137,7 @@ class FlxGamepad implements IDestroyable
 		#if (cpp || neko)
 		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(ButtonID).current > 0);
+			return (buttons.get(ButtonID).current > RELEASED);
 		}
 		#elseif js
 			var v = untyped navigator.webkitGetGamepads().item(id).buttons[ButtonID];
@@ -135,7 +157,7 @@ class FlxGamepad implements IDestroyable
 	{ 
 		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(ButtonID).current == 2);
+			return (buttons.get(ButtonID).current == JUST_PRESSED);
 		}
 		
 		return false;
@@ -151,7 +173,7 @@ class FlxGamepad implements IDestroyable
 	{ 
 		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(ButtonID).current == -1);
+			return (buttons.get(ButtonID).current == JUST_RELEASED);
 		}
 		
 		return false;
@@ -165,7 +187,7 @@ class FlxGamepad implements IDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current > 0)
+			if (button.current > RELEASED)
 			{
 				return button.id;
 			}
@@ -182,7 +204,7 @@ class FlxGamepad implements IDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current == 2)
+			if (button.current == JUST_PRESSED)
 			{
 				return button.id;
 			}
@@ -199,7 +221,7 @@ class FlxGamepad implements IDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current == -1)
+			if (button.current == JUST_RELEASED)
 			{
 				return button.id;
 			}
@@ -239,7 +261,7 @@ class FlxGamepad implements IDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current > 0)
+			if (button.current > RELEASED)
 			{
 				return true;
 			}
@@ -255,13 +277,8 @@ class FlxGamepad implements IDestroyable
 	 */
 	public function anyInput():Bool
 	{
-		for (button in buttons)
-		{
-			if (button.current > 0)
-			{
-				return true;
-			}
-		}
+		if (anyButton())
+			return true;
 		
 		var numAxis:Int = axis.length;
 		

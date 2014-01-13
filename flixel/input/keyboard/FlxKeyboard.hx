@@ -1,11 +1,11 @@
-package flixel.system.input.keyboard;
+package flixel.input.keyboard;
 
 #if !FLX_NO_KEYBOARD
 import flash.events.KeyboardEvent;
 import flash.Lib;
 import flixel.FlxG;
-import flixel.system.input.IFlxInput;
-import flixel.system.input.keyboard.FlxKey;
+import flixel.input.IFlxInput;
+import flixel.input.keyboard.FlxKey;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArrayUtil;
 
@@ -22,7 +22,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
-	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY)
+	@:allow(flixel.input.keyboard.FlxKeyList.get_ANY)
 	inline static private var TOTAL:Int = 256;
 	
 	/**
@@ -32,8 +32,8 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * An array of FlxKey objects.
 	 */
-	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY)
-	@:allow(flixel.system.input.android.FlxAndroidKeyList.get_ANY)
+	@:allow(flixel.input.keyboard.FlxKeyList.get_ANY)
+	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Array<FlxKey>;
 	
 	public function new()
@@ -296,12 +296,12 @@ class FlxKeyboard implements IFlxInput
 	}
 	
 	/**
-	 * Helper function to check the status of a single of key
+	 * Check the status of a single of key
 	 * @param	KeyCode		Index into _keyList array.
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided key has the specified status
 	 */
-	public function fastCheck(KeyCode:Int, Status:Int):Bool
+	public function checkStatus(KeyCode:Int, Status:Int):Bool
 	{
 		var k:FlxKey = _keyList[KeyCode];
 		if (k != null)

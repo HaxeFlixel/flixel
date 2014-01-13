@@ -1,4 +1,4 @@
-package flixel.system.input.keyboard;
+package flixel.input.keyboard;
 
 import flixel.FlxG;
 

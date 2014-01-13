@@ -1,4 +1,4 @@
-package flixel.system.input.mouse;
+package flixel.input.mouse;
 
 import flash.events.Event;
 import flash.Lib;
@@ -14,7 +14,7 @@ import flash.ui.MouseCursor;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
-import flixel.system.input.IFlxInput;
+import flixel.input.IFlxInput;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxPoint;
 

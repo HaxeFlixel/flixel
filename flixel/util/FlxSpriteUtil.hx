@@ -527,14 +527,27 @@ class FlxSpriteUtil
 	}
 	
 	/**
+	* Fade in a sprite.
+	* 
+	* @param  Object The object to fade.
+	* @param  Duration How long the fade will take (in seconds).
+	*/
+	inline static public function fadeIn(Object:FlxSprite, Duration:Float, ?ResetAlpha:Bool, ?OnComplete:CompleteCallback):Void
+	{
+		if (ResetAlpha) Object.alpha = 0;
+		FlxTween.color(Object, Duration, Object.color, Object.color, Object.alpha, 1, OnComplete != null ? { complete:OnComplete } : null);
+		//FlxTween.singleVar(Object, "alpha", 1, Duration, OnComplete != null ? { complete:OnComplete } : null);
+	}
+	
+	/**
 	* Fade out a sprite.
 	* 
 	* @param  Object The object to fade.
 	* @param  Duration How long the fade will take (in seconds).
 	*/
-	inline static public function fade(Object:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):Void
+	inline static public function fadeOut(Object:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):Void
 	{
-		FlxTween.color(Object, Duration, 1, FadeToBlack ? 0 : 1, Object.alpha, 0, OnComplete != null ? { complete:OnComplete } : null);
+		FlxTween.color(Object, Duration, Object.color, FadeToBlack ? FlxColor.BLACK : Object.color, Object.alpha, 0, OnComplete != null ? { complete:OnComplete } : null);
 	}
 }
 

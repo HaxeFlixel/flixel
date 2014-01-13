@@ -1,4 +1,4 @@
-package flixel.system.input.gamepad;
+package flixel.input.gamepad;
 
 class FlxGamepadButton
 {

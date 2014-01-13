@@ -1,4 +1,4 @@
-package flixel.system.input.gamepad;
+package flixel.input.gamepad;
 
 /**
  * Button IDs for Logitech controllers (key codes based on Cordless Rumblepad 2)

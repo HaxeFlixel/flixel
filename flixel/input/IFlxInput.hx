@@ -1,4 +1,4 @@
-package flixel.system.input;
+package flixel.input;
 
 interface IFlxInput {
 	function reset():Void;

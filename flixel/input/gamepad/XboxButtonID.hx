@@ -1,4 +1,4 @@
-package flixel.system.input.gamepad;
+package flixel.input.gamepad;
 
 /**
  * Button IDs for Xbox 360 controllers

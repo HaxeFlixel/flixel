@@ -1,4 +1,4 @@
-package flixel.system.input.mouse;
+package flixel.input.mouse;
 
 import flash.events.MouseEvent;
 import flixel.FlxG;

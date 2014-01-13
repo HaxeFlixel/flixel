@@ -2,7 +2,7 @@ package flixel.util;
 
 import flash.geom.Rectangle;
 #if !FLX_NO_TOUCH
-import flixel.system.input.touch.FlxTouch;
+import flixel.input.touch.FlxTouch;
 #end
 
 /**

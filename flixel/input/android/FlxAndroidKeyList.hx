@@ -1,4 +1,4 @@
-package flixel.system.input.android;
+package flixel.input.android;
 
 import flixel.FlxG;
 

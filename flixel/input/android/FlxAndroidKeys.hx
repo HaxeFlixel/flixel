@@ -1,11 +1,11 @@
-package flixel.system.input.android;
+package flixel.input.android;
 
 #if android
 import flash.events.KeyboardEvent;
 import flash.Lib;
 import flixel.FlxG;
-import flixel.system.input.IFlxInput;
-import flixel.system.input.keyboard.FlxKey;
+import flixel.input.IFlxInput;
+import flixel.input.keyboard.FlxKey;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArrayUtil;
 import haxe.ds.HashMap.HashMap;
@@ -35,7 +35,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * And array of FlxKey objects.
 	 */
-	@:allow(flixel.system.input.keyboard.FlxAndroidKeyList.get_ANY) // Need to access the var there
+	@:allow(flixel.input.keyboard.FlxAndroidKeyList.get_ANY) // Need to access the var there
 	private var _keyList:Map<Int, FlxKey>;
 	
 	public var preventDefaultBackAction:Bool = false;
