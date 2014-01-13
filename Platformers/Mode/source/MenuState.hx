@@ -1,12 +1,12 @@
 package;
 
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
+import flixel.effects.particles.FlxEmitter;
 import openfl.Assets;
 
 class MenuState extends FlxState
@@ -171,9 +171,9 @@ class MenuState extends FlxState
 		if (FlxG.gamepads.anyButton())
 		{
 	#if OUYA
-			if(FlxG.gamepads.lastActive.justPressed(flixel.system.input.gamepad.OUYAButtonID.O))
+			if(FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.OUYAButtonID.O))
 	#else
-			if(FlxG.gamepads.lastActive.justPressed(flixel.system.input.gamepad.XboxButtonID.A))
+			if(FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.XboxButtonID.A))
 	#end 
 				onPlay();
 		}

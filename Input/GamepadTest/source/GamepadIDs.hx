@@ -1,7 +1,7 @@
 package ;
 
-import flixel.system.input.gamepad.XboxButtonID;
-import flixel.system.input.gamepad.OUYAButtonID;
+import flixel.input.gamepad.XboxButtonID;
+import flixel.input.gamepad.OUYAButtonID;
 
 /**
  * NOTE: This should probably be inside FlxGamepad.

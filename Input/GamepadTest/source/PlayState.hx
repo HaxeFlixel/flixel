@@ -7,9 +7,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 
 #if (cpp || neko)
-import flixel.system.input.gamepad.FlxGamepad;
-import flixel.system.input.gamepad.XboxButtonID;
-import flixel.system.input.gamepad.OUYAButtonID;
+import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.XboxButtonID;
+import flixel.input.gamepad.OUYAButtonID;
 #end
 
 class PlayState extends FlxState

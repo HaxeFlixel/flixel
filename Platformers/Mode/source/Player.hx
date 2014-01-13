@@ -1,21 +1,19 @@
 package;
 
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
-import flixel.system.input.gamepad.FlxGamepad;
 import flixel.ui.FlxButton;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
+import flixel.group.FlxTypedGroup;
+import flixel.effects.particles.FlxEmitter;
+import flixel.input.gamepad.FlxGamepad;
 #if (android && OUYA)
 import flixel.system.input.gamepad.OUYAButtonID;
 #elseif (!FLX_NO_GAMEPAD && (cpp || neko || js))
-import flixel.system.input.gamepad.XboxButtonID;
+import flixel.input.gamepad.XboxButtonID;
 #end
-
-
 
 class Player extends FlxSprite
 {
@@ -104,6 +102,8 @@ class Player extends FlxSprite
 		
 		// MOVEMENT
 		acceleration.x = 0;
+		
+		// INPUT
 		
 		if (FlxG.keys.pressed.LEFT
 #if (!FLX_NO_GAMEPAD && (cpp || neko || js))

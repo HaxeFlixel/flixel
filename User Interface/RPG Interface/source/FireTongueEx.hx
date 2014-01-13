@@ -1,5 +1,5 @@
 import firetongue.FireTongue;
-import flixel.addons.ui.interfaces.IFireTongue;
+import flixel.addons.ui.IFireTongue;
 
 /**
  * This is a simple wrapper class to solve a dilemma:
