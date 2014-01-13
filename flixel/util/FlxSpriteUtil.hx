@@ -24,9 +24,8 @@ import flash.geom.Point;
 // TODO: rotateClockwise(): Takes the bitmapData from the given source FlxSprite and rotates it 90 degrees clockwise
 
 /**
- * Some handy functions for <code>FlxSprite</code>s manipulation.
+ * Some handy functions for <code>FlxSprite</code> manipulation, mostly drawing-related.
 */
-
 class FlxSpriteUtil
 {
 	/**
@@ -97,7 +96,7 @@ class FlxSpriteUtil
 	 * Note: It assumes the source and mask are the same size. Different sizes may result in undesired results.<br>
 	 * It works by copying the source image (your picture) into the output sprite. Then it removes all areas of it that do not<br>
 	 * have an alpha color value in the mask image. So if you draw a big black circle in your mask with a transparent edge, you'll<br>
-	 * get a circular image appear. Look at the mask PNG files in the assets/pics folder for examples.
+	 * get a circular image appear.
 	 * 
 	 * @param	sprite		The source <code>FlxSprite</code>. Typically the one with the image / picture / texture in it.
 	 * @param	mask		The FlxSprite containing the mask to apply. Remember the non-alpha zero areas are the parts that will display.
@@ -116,88 +115,89 @@ class FlxSpriteUtil
 	}
 	
 	/**
-	 * Checks the x/y coordinates of the source FlxSprite and keeps them within the area of 0, 0, FlxG.width, FlxG.height (i.e. wraps it around the screen)
+	 * Checks the x/y coordinates of the FlxObject and keeps them within the 
+	 * area of 0, 0, FlxG.width, FlxG.height (i.e. wraps it around the screen)
 	 * 
-	 * @param	sprite		The <code>FlxSprite</code> to keep within the screen
+	 * @param	object		The <code>FlxObject</code> to keep within the screen
 	 * @param	Left		Whether to activate screen wrapping on the left side of the screen
 	 * @param	Right		Whether to activate screen wrapping on the right side of the screen
 	 * @param	Top			Whether to activate screen wrapping on the top of the screen
 	 * @param	Bottom		Whether to activate screen wrapping on the bottom of the screen
 	 */
-	static public function screenWrap(sprite:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):Void
+	static public function screenWrap(object:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):Void
 	{
-		if (Left && sprite.x < 0)
+		if (Left && object.x < 0)
 		{
-			sprite.x = FlxG.width;
+			object.x = FlxG.width;
 		}
-		else if (Right && sprite.x > FlxG.width)
+		else if (Right && object.x > FlxG.width)
 		{
-			sprite.x = 0;
+			object.x = 0;
 		}
 		
-		if (Top && sprite.y < 0)
+		if (Top && object.y < 0)
 		{
-			sprite.y = FlxG.height;
+			object.y = FlxG.height;
 		}
-		else if (Bottom && sprite.y > FlxG.height)
+		else if (Bottom && object.y > FlxG.height)
 		{
-			sprite.y = 0;
+			object.y = 0;
 		}
 	}
 	
 	/**
-	 * Aligns a set of FlxSprites so there is equal spacing between them
+	 * Aligns a set of FlxObjects so there is equal spacing between them
 	 * 
-	 * @param	sprites				An Array of FlxSprites
+	 * @param	objects				An Array of FlxObjects
 	 * @param	startX				The base X coordinate to start the spacing from
 	 * @param	startY				The base Y coordinate to start the spacing from
 	 * @param	horizontalSpacing	The amount of pixels between each sprite horizontally (default 0)
 	 * @param	verticalSpacing		The amount of pixels between each sprite vertically (default 0)
 	 * @param	spaceFromBounds		If set to true the h/v spacing values will be added to the width/height of the sprite, if false it will ignore this
 	 */
-	static public function space(sprites:Array<FlxSprite>, startX:Int, startY:Int, horizontalSpacing:Int = 0, verticalSpacing:Int = 0, spaceFromBounds:Bool = false):Void
+	static public function space(objects:Array<FlxObject>, startX:Int, startY:Int, horizontalSpacing:Int = 0, verticalSpacing:Int = 0, spaceFromBounds:Bool = false):Void
 	{
 		var prevWidth:Int = 0;
 		var prevHeight:Int = 0;
 		
-		for (i in 0...(sprites.length))
+		for (i in 0...(objects.length))
 		{
-			var sprite:FlxSprite = sprites[i];
+			var object = objects[i];
 			
 			if (spaceFromBounds)
 			{
-				sprite.x = startX + prevWidth + (i * horizontalSpacing);
-				sprite.y = startY + prevHeight + (i * verticalSpacing);
+				object.x = startX + prevWidth + (i * horizontalSpacing);
+				object.y = startY + prevHeight + (i * verticalSpacing);
 			}
 			else
 			{
-				sprite.x = startX + (i * horizontalSpacing);
-				sprite.y = startY + (i * verticalSpacing);
+				object.x = startX + (i * horizontalSpacing);
+				object.y = startY + (i * verticalSpacing);
 			}
 		}
 	}
 	
 	/**
-	 * Centers the given FlxSprite on the screen, either by the X axis, Y axis, or both
+	 * Centers the given FlxObject on the screen, either by the x axis, y axis, or both
 	 * 
-	 * @param	sprite			The <code>FlxSprite<code> to center
+	 * @param	object			The <code>FlxSprite<code> to center
 	 * @param	Horizontally	Boolean true if you want it centered horizontally
 	 * @param	Vertically		Boolean	true if you want it centered vertically
 	 * @return	The FlxSprite for chaining
 	 */
-	static public function screenCenter(sprite:FlxSprite, xAxis:Bool = true, yAxis:Bool = true):FlxSprite
+	static public function screenCenter(object:FlxObject, xAxis:Bool = true, yAxis:Bool = true):FlxObject
 	{
 		if (xAxis)
 		{
-			sprite.x = (FlxG.width / 2) - (sprite.width / 2);
+			object.x = (FlxG.width / 2) - (object.width / 2);
 		}
 		
 		if (yAxis)
 		{
-			sprite.y = (FlxG.height / 2) - (sprite.height / 2);
+			object.y = (FlxG.height / 2) - (object.height / 2);
 		}
 		
-		return sprite;
+		return object;
 	}
 	
 	/**
