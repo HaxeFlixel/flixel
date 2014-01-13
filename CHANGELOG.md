@@ -86,7 +86,7 @@ v.3.0.1-alpha
 * FlxDebugger: UI improvements, now remembers visibility settings of the windows
 * Compiler fix for Blackberry target.
 * FlxAssets: Fonts are no longer inlined so they can be changed
-* FlxMath: distanceWithin(), distanceToPointWithin(), distanceToMouseWithin() and  distanceToTouchWithin() added
+* FlxMath: isDistanceWithin(), isDistanceToPointWithin(), isDistanceToMouseWithin() and  isDistanceToTouchWithin() added
 * FlxG.fullscreen now works on cpp targets
 * FlxObject.inWorldBounds() added
 * LICENSE.txt cleanup
