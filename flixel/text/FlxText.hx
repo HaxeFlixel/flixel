@@ -576,7 +576,7 @@ class FlxText extends FlxSprite
 					for (iter in 0...iterations)
 					{
 						_matrix.translate(delta, delta);
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 					}
 					
 					_matrix.translate(-borderSize, -borderSize);
@@ -594,21 +594,21 @@ class FlxText extends FlxSprite
 					for (iter in 0...iterations)
 					{
 						_matrix.translate(-itd, -itd);		//upper-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd, 0);			//upper-middle
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd, 0);			//upper-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(0, itd);			//middle-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(0, itd);			//lower-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(-itd, 0);			//lower-middle
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(-itd, 0);			//lower-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(0, -itd);			//middle-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd, 0);			//return to center
 						itd += delta;
 					} 
@@ -628,13 +628,13 @@ class FlxText extends FlxSprite
 					for (iter in 0...iterations)
 					{
 						_matrix.translate(-itd, -itd);			//upper-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd*2, 0);			//upper-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(0, itd*2);			//lower-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(-itd*2, 0);			//lower-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd, -itd);			//return to center
 						itd += delta;
 					}
@@ -645,7 +645,7 @@ class FlxText extends FlxSprite
 			}
 			
 			//Actually draw the text onto the buffer
-			cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+			cachedGraphics.bitmap.draw(_textField, _matrix);
 			updateFormat(_format);
 		}
 		
