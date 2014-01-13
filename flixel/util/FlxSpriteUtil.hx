@@ -124,7 +124,7 @@ class FlxSpriteUtil
 	 * @param	Top			Whether to activate screen wrapping on the top of the screen
 	 * @param	Bottom		Whether to activate screen wrapping on the bottom of the screen
 	 */
-	static public function screenWrap(object:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):Void
+	static public function screenWrap(object:FlxObject, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):Void
 	{
 		if (Left && object.x < 0)
 		{
