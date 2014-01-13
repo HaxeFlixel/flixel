@@ -649,6 +649,15 @@ class FlxText extends FlxSprite
 			updateFormat(_format);
 		}
 		
+		dirty = false;
+		
+		#if !(flash || js)
+		if (!CPP)
+		{
+			return;
+		}
+		#end
+		
 		//Finally, update the visible pixels
 		if ((framePixels == null) || (framePixels.width != cachedGraphics.bitmap.width) || (framePixels.height != cachedGraphics.bitmap.height))
 		{
@@ -664,11 +673,6 @@ class FlxText extends FlxSprite
 		{
 			framePixels.colorTransform(_flashRect, _colorTransform);
 		}
-		#if !flash
-		origin.set(frameWidth * 0.5, frameHeight * 0.5);
-		#end
-		
-		dirty = false;
 	}
 	
 	/**

@@ -1220,7 +1220,7 @@ class FlxSprite extends FlxObject
 	 */
 	private function calcFrame(CPP:Bool = false):Void
 	{
-		#if !flash
+		#if !(flash || js)
 		if (!CPP)
 		{
 			return;
