@@ -471,7 +471,7 @@ class FlxG
 	 */
 	inline static public function resetState():Void
 	{
-		game.resetState = true;
+		switchState(Type.createInstance(Type.getClass(state), []));
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(game.requestedState, FlxSubState))
