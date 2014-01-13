@@ -1216,12 +1216,12 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal function to update the current animation frame.
 	 * 
-	 * @param	CPP		Whether the frame should also be recalculated if we're on a non-flash target
+	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	private function calcFrame(CPP:Bool = false):Void
+	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		#if !(flash || js)
-		if (!CPP)
+		if (!RunOnCpp)
 		{
 			return;
 		}
