@@ -198,9 +198,7 @@ class Watch extends Window
 	 */
 	private function removeEntry(Entry:WatchEntry, Index:Int):Void
 	{
-		// Fast array removal (only do on arrays where order doesn't matter)
-		_watching[Index] = _watching[_watching.length - 1];
-		_watching.pop();
+		FlxArrayUtil.fastSplice(_watching, Entry);
 		
 		_names.removeChild(Entry.nameDisplay);
 		_values.removeChild(Entry.valueDisplay);

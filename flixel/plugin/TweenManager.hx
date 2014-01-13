@@ -99,9 +99,7 @@ class TweenManager extends FlxPlugin
 		
 		Tween.active = false;
 		
-		// Fast array removal (only do on arrays where order doesn't matter)
-		list[FlxArrayUtil.indexOf(list, Tween)] = list[list.length - 1];
-		list.pop();
+		FlxArrayUtil.fastSplice(list, Tween);
 		
 		return Tween;
 	}
