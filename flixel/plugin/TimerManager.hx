@@ -41,11 +41,6 @@ class TimerManager extends FlxPlugin
 	 */
 	override public function update():Void
 	{
-		if (FlxG.paused) 
-		{
-			return;
-		}
-		
 		for (timer in _timers)
 		{
 			if (!timer.paused && !timer.finished && timer.time > 0)

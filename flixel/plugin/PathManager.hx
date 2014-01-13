@@ -32,11 +32,6 @@ class PathManager extends FlxPlugin
 	
 	override public function update():Void
 	{
-		if (FlxG.paused) 
-		{
-			return;
-		}
-		
 		for (path in _paths)
 		{
 			if (!path.paused)

@@ -1215,38 +1215,35 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Internal function to update the current animation frame.
+	 * 
+	 * @param	CPP		Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	#if flash
-	private function calcFrame():Void
-	#else
-	private function calcFrame(AreYouSure:Bool = false):Void
-	#end
+	private function calcFrame(CPP:Bool = false):Void
 	{
-	#if !flash
-		// TODO: Maybe remove 'AreYouSure' parameter
-		if (AreYouSure)
+		#if !(flash || js)
+		if (!CPP)
 		{
-	#end
-			if (frame != null)
-			{
-				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-				{
-					if (framePixels != null)
-						framePixels.dispose();
-					
-					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-				}
-				
-				framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
-			}
-			
-			if (useColorTransform) 
-			{
-				framePixels.colorTransform(_flashRect, _colorTransform);
-			}
-	#if !flash
+			return;
 		}
-	#end
+		#end
+		
+		if (frame != null)
+		{
+			if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
+			{
+				if (framePixels != null)
+					framePixels.dispose();
+					
+				framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
+			}
+				
+			framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
+		}
+			
+		if (useColorTransform) 
+		{
+			framePixels.colorTransform(_flashRect, _colorTransform);
+		}
 		
 		dirty = false;
 	}

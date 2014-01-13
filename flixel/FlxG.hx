@@ -82,10 +82,6 @@ class FlxG
 	 */
 	static public var game(default, null):FlxGame;
 	/**
-	 * Handy shared variable for implementing your own pause behavior.
-	 */
-	static public var paused:Bool = false;
-	/**
 	 * Whether the game should be paused when focus is lost or not. Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
 	 * pause screen. Override onFocus() and onFocusLost() for your own behaviour in your state.
 	 */
@@ -303,7 +299,6 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.destroySounds(true);
 		#end
-		paused = false;
 		timeScale = 1.0;
 		elapsed = 0;
 		worldBounds.set( -10, -10, width + 20, height + 20);

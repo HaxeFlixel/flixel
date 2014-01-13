@@ -286,6 +286,10 @@ class FlxText extends FlxSprite
 	override private function set_color(Color:Int):Int
 	{
 		Color &= 0x00ffffff;
+		if (_format.color == Color)
+		{
+			return Color;
+		}
 		_format.color = Color;
 		color = Color;
 		_textField.defaultTextFormat = _format;
@@ -508,12 +512,10 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * Internal function to update the current animation frame.
+	 * 
+	 * @param	CPP		Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	#if flash
-	override private function calcFrame():Void
-	#else
-	override private function calcFrame(AreYouSure:Bool = false):Void
-	#end
+	override private function calcFrame(CPP:Bool = false):Void
 	{
 		if (_textField == null)
 		{
@@ -574,7 +576,7 @@ class FlxText extends FlxSprite
 					for (iter in 0...iterations)
 					{
 						_matrix.translate(delta, delta);
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 					}
 					
 					_matrix.translate(-borderSize, -borderSize);
@@ -592,21 +594,21 @@ class FlxText extends FlxSprite
 					for (iter in 0...iterations)
 					{
 						_matrix.translate(-itd, -itd);		//upper-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd, 0);			//upper-middle
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd, 0);			//upper-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(0, itd);			//middle-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(0, itd);			//lower-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(-itd, 0);			//lower-middle
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(-itd, 0);			//lower-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(0, -itd);			//middle-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd, 0);			//return to center
 						itd += delta;
 					} 
@@ -626,13 +628,13 @@ class FlxText extends FlxSprite
 					for (iter in 0...iterations)
 					{
 						_matrix.translate(-itd, -itd);			//upper-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd*2, 0);			//upper-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(0, itd*2);			//lower-right
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(-itd*2, 0);			//lower-left
-						cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+						cachedGraphics.bitmap.draw(_textField, _matrix);
 						_matrix.translate(itd, -itd);			//return to center
 						itd += delta;
 					}
@@ -643,9 +645,18 @@ class FlxText extends FlxSprite
 			}
 			
 			//Actually draw the text onto the buffer
-			cachedGraphics.bitmap.draw(_textField, _matrix, _colorTransform);
+			cachedGraphics.bitmap.draw(_textField, _matrix);
 			updateFormat(_format);
 		}
+		
+		dirty = false;
+		
+		#if !(flash || js)
+		if (!CPP)
+		{
+			return;
+		}
+		#end
 		
 		//Finally, update the visible pixels
 		if ((framePixels == null) || (framePixels.width != cachedGraphics.bitmap.width) || (framePixels.height != cachedGraphics.bitmap.height))
@@ -662,11 +673,6 @@ class FlxText extends FlxSprite
 		{
 			framePixels.colorTransform(_flashRect, _colorTransform);
 		}
-		#if !flash
-		origin.set(frameWidth * 0.5, frameHeight * 0.5);
-		#end
-		
-		dirty = false;
 	}
 	
 	/**

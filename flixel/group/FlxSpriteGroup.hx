@@ -1009,11 +1009,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	#if flash
-	inline override private function calcFrame():Void
-	#else
-	inline override private function calcFrame(AreYouSure:Bool = false):Void
-	#end
+	inline override private function calcFrame(CPP:Bool = false):Void
 	{
 		// Nothing to do here
 	}

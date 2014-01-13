@@ -41,6 +41,18 @@ class FlxRect
 		height = Height;
 	}
 	
+	/**
+	 * Shortcut for setting both width and Height.
+	 * 
+	 * @param	Width	The new sprite width.
+	 * @param	Height	The new sprite height.
+	 */
+	inline public function setSize(Width:Float, Height:Float)
+	{
+		width = Width;
+		height = Height;
+	}
+	
 	public var left(get_left, null):Float;
 	
 	/**
