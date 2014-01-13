@@ -1,9 +1,4 @@
-package flixel.effects.particles;
-
-import flixel.FlxCamera;
-import flixel.FlxSprite;
-import flixel.IFlxSprite;
-import flixel.util.FlxPoint;
+package flixel.interfaces;
 
 interface IFlxParticle extends IFlxSprite
 {

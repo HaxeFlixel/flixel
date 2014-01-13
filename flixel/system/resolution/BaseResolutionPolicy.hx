@@ -2,10 +2,9 @@ package flixel.system.resolution;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.system.resolution.IFlxResolutionPolicy;
 import flixel.util.FlxPoint;
 
-class BaseResolutionPolicy implements IFlxResolutionPolicy 
+class BaseResolutionPolicy
 {
 	private var deviceSize:FlxPoint;
 	private var gameSize:FlxPoint;

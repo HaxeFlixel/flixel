@@ -2,8 +2,8 @@ package flixel.input.gamepad;
 
 import flash.Lib;
 import flixel.FlxG;
-import flixel.input.IFlxInput;
 import flixel.input.gamepad.FlxGamepad;
+import flixel.interfaces.IFlxInput;
 #if (cpp || neko)
 import openfl.events.JoystickEvent;
 #end

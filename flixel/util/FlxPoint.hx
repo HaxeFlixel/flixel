@@ -2,11 +2,12 @@ package flixel.util;
 
 import flash.geom.Point;
 import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint implements IDestroyable
+class FlxPoint implements IFlxDestroyable
 {
 	/**
 	 * @default 0

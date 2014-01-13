@@ -2,6 +2,7 @@ package flixel.ui;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.system.FlxSound;
 import flixel.input.touch.FlxTouch;
@@ -324,7 +325,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 /** 
  * Helper function for <code>FlxButton</code> which handles its events.
  */ 
-private class FlxButtonEvent implements IDestroyable
+private class FlxButtonEvent implements IFlxDestroyable
 {
 	/**
 	 * The callback function to call when this even fires.

@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
 
@@ -8,7 +9,7 @@ import flixel.util.FlxStringUtil;
  * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 
  * <code>FlxGroup</code> extend this class. Has no size, position or graphical data.
  */
-class FlxBasic implements IDestroyable
+class FlxBasic implements IFlxDestroyable
 {
 	/**
 	 * IDs seem like they could be pretty useful, huh?

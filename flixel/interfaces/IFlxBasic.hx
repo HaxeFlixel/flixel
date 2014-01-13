@@ -1,4 +1,6 @@
-package flixel;
+package flixel.interfaces;
+
+import flixel.FlxCamera;
 
 interface IFlxBasic
 {

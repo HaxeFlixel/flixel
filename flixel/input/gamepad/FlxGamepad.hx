@@ -1,9 +1,9 @@
 package flixel.input.gamepad;
 
-import flixel.FlxG.IDestroyable;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxPoint;
 
-class FlxGamepad implements IDestroyable
+class FlxGamepad implements IFlxDestroyable
 {
 	// Button States (mirrors Key States in FlxKey.hx)
 	inline static public var JUST_RELEASED	:Int = -1;

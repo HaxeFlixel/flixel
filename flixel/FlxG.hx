@@ -4,6 +4,8 @@ import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flash.Lib;
+import flixel.FlxBasic;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
@@ -21,12 +23,9 @@ import flixel.system.resolution.StageSizeResolutionPolicy;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
-import flixel.util.FlxStringUtil;
-import flixel.FlxBasic;
 
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -47,11 +46,6 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
-
-interface IDestroyable
-{
-	public function destroy():Void;
-}
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -561,7 +555,7 @@ class FlxG
 	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
 	 * @return	Null
 	 */
-	static public function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
+	static public function safeDestroy<T:IFlxDestroyable>(Object:Null<IFlxDestroyable>):T
 	{
 		if (Object != null)
 		{

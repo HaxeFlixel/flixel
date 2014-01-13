@@ -4,7 +4,7 @@ package flixel.input.android;
 import flash.events.KeyboardEvent;
 import flash.Lib;
 import flixel.FlxG;
-import flixel.input.IFlxInput;
+import flixel.interfaces.IFlxInput;
 import flixel.input.keyboard.FlxKey;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArrayUtil;

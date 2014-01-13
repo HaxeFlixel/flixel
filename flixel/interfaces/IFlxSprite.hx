@@ -1,11 +1,11 @@
-package flixel;
+package flixel.interfaces;
 
 import flixel.util.FlxPoint;
 
  /**
- * The interface for properties of <code>FlxSprite</code>
- * It makes possible to add <code>FlxSpriteGroup</code> to <code>FlxSpriteGroup</code>
- */
+  * The interface for properties of <code>FlxSprite</code>
+  * It makes possible to add <code>FlxSpriteGroup</code> to <code>FlxSpriteGroup</code>
+  */
 interface IFlxSprite extends IFlxBasic 
 {
 	public var x(default, set):Float;

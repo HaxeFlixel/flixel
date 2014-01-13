@@ -1,27 +1,27 @@
 package flixel.input.mouse;
 
-import flash.events.Event;
-import flash.Lib;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
+import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
-import flash.Vector;
-import flash.ui.MouseCursorData;
+import flash.Lib;
 import flash.ui.Mouse;
 import flash.ui.MouseCursor;
+import flash.ui.MouseCursorData;
+import flash.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.interfaces.IFlxInput;
 import flixel.system.FlxAssets;
-import flixel.input.IFlxInput;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxPoint;
 
 /**
-* This class helps contain and track the mouse pointer in your game.
-* Automatically accounts for parallax scrolling, etc.
-*/
+ * This class helps contain and track the mouse pointer in your game.
+ * Automatically accounts for parallax scrolling, etc.
+ */
 class FlxMouse extends FlxPoint implements IFlxInput
 {
 	/**
