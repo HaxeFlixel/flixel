@@ -407,13 +407,11 @@ class PlayState extends FlxState
 					}
 					
 					selectedTower = true;
-					
-					break;
 				}
 				
 				// If the user didn't click near any towers, we go back to the general menu
 				
-				if ( !selectedTower && FlxG.mouse.y < FlxG.height - 20 )
+				if ( !selectedTower && (FlxG.mouse.y < FlxG.height - 20) )
 				{
 					toggleMenus( General );
 				}
