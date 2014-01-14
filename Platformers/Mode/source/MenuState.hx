@@ -85,7 +85,7 @@ class MenuState extends FlxState
 		_timer = 0;
 		_attractMode = false;
 		
-		FlxG.mouse.show(Reg.CURSOR, 2);
+		FlxG.mouse.show( Reg.CURSOR, 2 );
 		
 		super.create();
 	}
