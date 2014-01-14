@@ -52,7 +52,7 @@ class MenuState extends FlxState
 		// toggle debug display
 		#if !FLX_NO_DEBUG
 		if ( FlxG.keys.justPressed.SPACE )
-			FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
+			FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 		#end
 		
 		// movement

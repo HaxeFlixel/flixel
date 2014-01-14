@@ -289,7 +289,7 @@ class PlayState extends FlxState
 			#end
 		}
 		
-		_waveCounter = 3 * FlxG.framerate;
+		_waveCounter = 3 * FlxG.updateFramerate;
 		
 		_nextWaveButton.visible = true;
 		_enemyText.visible = false;
@@ -434,7 +434,7 @@ class PlayState extends FlxState
 		if ( enemiesToKill == 0 && _towerGroup.length > 0 )
 		{
 			_waveCounter -= Std.int( FlxG.timeScale );
-			_nextWaveButton.text = "[N]ext Wave in " + Math.ceil( _waveCounter / FlxG.framerate );
+			_nextWaveButton.text = "[N]ext Wave in " + Math.ceil( _waveCounter / FlxG.updateFramerate );
 			
 			if ( _waveCounter <= 0 )
 			{
@@ -445,7 +445,7 @@ class PlayState extends FlxState
 		{
 			_spawnCounter += Std.int( FlxG.timeScale );
 			
-			if ( _spawnCounter > _spawnInterval * FlxG.framerate && enemiesToSpawn > 0 )
+			if ( _spawnCounter > _spawnInterval * FlxG.updateFramerate && enemiesToSpawn > 0 )
 			{
 				spawnEnemy();
 			}
@@ -876,7 +876,7 @@ class PlayState extends FlxState
 		announceWave( true );
 		
 		_towerButton.text = "[R]estart";
-		_towerButton.setOnDownCallback( resetCallback );
+		_towerButton.onDown.callback = resetCallback;
 		
 		#if !js
 		FlxG.sound.play("gameover");

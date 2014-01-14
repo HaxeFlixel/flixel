@@ -5,7 +5,7 @@
 	<window width="640" height="480" fps="60" background="#131C1B" orientation="portrait" resizable="true" if="web" />
 	<window width="640" height="480" fps="60" background="#131C1B" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
 	
-	<!--The flixel preloader is not accurate in Chrome. You can use it regualary if you embed the swf into a html file, or you can set the actual size of your file manually at "Flxpreloader-onUpdate-bytesTotal"!-->
+	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file, or you can set the actual size of your file manually at "Flxpreloader-onUpdate-bytesTotal"!-->
 	<app preloader="flixel.system.FlxPreloader" />
 	
 	<!--The swf version should be at least 11.2 if you want to use the FLX_MOUSE_ADVANCED option-->
@@ -79,7 +79,8 @@
 	<haxedef name="FLX_NO_MOUSE" if="mobile" />
 	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
 	<haxedef name="FLX_NO_TOUCH" if="desktop" />
-	<haxedef name="FLX_NO_GAMEPAD" />
+	<haxedef name="OUYA" if="android" />
+	<!--<haxedef name="FLX_NO_GAMEPAD"/>-->
 	
 	<!--Disable the Flixel core sound tray-->
 	<!--<haxedef name="FLX_NO_SOUND_TRAY" />-->

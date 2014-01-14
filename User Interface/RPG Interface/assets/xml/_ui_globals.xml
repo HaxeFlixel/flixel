@@ -8,7 +8,7 @@
 	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" outline="0x000000" align="left"/>
 	<definition id="sans16c" font="vera" size="16" style="bold" color="0xffffff" outline="0x000000" align="center"/>
 	
-	<definition id="text_button" width="64" height="32" text_x="-3" text_y="-1">
+	<definition id="text_button" width="64" height="32">
 		<graphic blank="true"/>
 		<text use_def="sans16c" color="0xffffff">
 			<color id="up" value="0xffffff"/>
@@ -17,8 +17,8 @@
 		</text>
 	</definition>
 	
-	<definition id="text_button_wide" width="196" height="32" text_x="-3" text_y="-1">
-		<graphic blank="true"/>		
+	<definition id="text_button_wide" width="196" height="32">
+		<graphic blank="true"/>
 		<text use_def="sans16c" color="0xffffff">
 			<color id="over" value="0xffff00"/>
 		</text>

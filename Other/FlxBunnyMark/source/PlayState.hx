@@ -73,14 +73,13 @@ class PlayState extends FlxState
 		
 		var amountSlider:FlxSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, INITIAL_AMOUNT);
 		amountSlider.nameLabel.text = "Change amount by:";
+		amountSlider.decimals = 0;
 		add(amountSlider);
 		
-		var removeButton:FlxButton = new FlxButton(15, 65, "Remove");
-		removeButton.setOnDownCallback(changeBunnyNumber, [false]);
+		var removeButton:FlxButton = new FlxButton(15, 65, "Remove", changeBunnyNumber, [false]);
 		add(removeButton);
 		
-		var addButton:FlxButton = new FlxButton(100, 65, "Add");
-		addButton.setOnDownCallback(changeBunnyNumber, [true]);
+		var addButton:FlxButton = new FlxButton(100, 65, "Add", changeBunnyNumber, [true]);
 		add(addButton);
 		
 		// Right UI

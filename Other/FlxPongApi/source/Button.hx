@@ -15,12 +15,9 @@ class Button extends FlxButton
 	 */
 	override public function new( X:Int, Y:Int, Label:String, ?Callback:Dynamic, Width:Int = 80 )
 	{
-		super( X, Y, Label, Callback );
+		// It's easier to set up one callback function to handle multiple buttons if you can get the button's label in the callback.
+		super( X, Y, Label, Callback, [ Label ]);
 		makeGraphic( Width, Std.int( height ), Reg.med_lite );
 		label.color = Reg.med_dark;
-		
-		// It's easier to set up one callback function to handle multiple buttons if you can get the button's label in the callback.
-		
-		setOnUpCallback( Callback, [ label.text ] );
 	}
 }

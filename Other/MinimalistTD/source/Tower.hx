@@ -64,11 +64,11 @@ class Tower extends FlxSprite
 		else
 		{
 			_indicator.visible = true;
-			_indicator.alpha = _shootCounter / ( _shootInvertall * FlxG.framerate );
+			_indicator.alpha = _shootCounter / ( _shootInvertall * FlxG.updateFramerate );
 			
 			_shootCounter += Std.int( FlxG.timeScale );
 			
-			if ( _shootCounter > ( _shootInvertall * FlxG.framerate ) * fireRate )
+			if ( _shootCounter > ( _shootInvertall * FlxG.updateFramerate ) * fireRate )
 			{
 				shoot();
 			}

@@ -158,7 +158,7 @@ class State_CodeTest extends FlxUIState
 		back_btn.loadGraphicSlice9(null, W, 0, null);
 		back_btn.id = "start";
 		back_btn.x = (FlxG.width - back_btn.width) / 2;
-		back_btn.setOnUpCallback(_onClickButton, [["back"]]);
+		back_btn.onUp.setCallback(_onClickButton, [["back"]]);
 		
 		add(back_btn);
 		

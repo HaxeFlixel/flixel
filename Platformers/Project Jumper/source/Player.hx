@@ -10,12 +10,13 @@ import flixel.FlxSprite;
 /**
  * ...
  * @author David Bell
- **/
+ */
 class Player extends FlxSprite 
 {
 	inline static public var RUN_SPEED:Int = 90;
 	inline static public var GRAVITY:Int = 620;
 	inline static public var JUMP_SPEED:Int = 250;
+	inline static public var JUMPS_ALLOWED:Int = 2;
 	inline static public var BULLET_SPEED:Int = 200;
 	inline static public var GUN_DELAY:Float = 0.4;
 	
@@ -24,15 +25,17 @@ class Player extends FlxSprite
 	private var _blt:Bullet;
 	private var _cooldown:Float;
 	private var _parent:PlayState;
-	private var _onladder:Bool;
 	
-	private var _jump:Float;
-	private var _canDJump:Bool;
-	private var _xgridleft:Int;
-	private var _xgridright:Int;
-	private var _ygrid:Int;
+	private var _jumpTime:Float = -1;
+	private var _timesJumped:Int = 0;
+	private var _jumpKeys:Array<String>;
 	
-	public var climbing:Bool;
+	private var _xgridleft:Int = 0;
+	private var _xgridright:Int = 0;
+	private var _ygrid:Int = 0;
+	
+	public var climbing:Bool = false;
+	private var _onLadder:Bool = false;
 	
 	public function new(X:Int, Y:Int, Parent:PlayState, Gibs:FlxEmitter, Bullets:FlxGroup) 
 	{
@@ -50,8 +53,7 @@ class Player extends FlxSprite
 		drag.set(RUN_SPEED * 8, RUN_SPEED * 8);
 		maxVelocity.set(RUN_SPEED, JUMP_SPEED);
 		acceleration.y = GRAVITY;
-		height = 16;
-		width = 12;
+		setSize(12, 16);
 		offset.set(3, 4);
 		
 		// Initialize the cooldown so that helmutguy can shoot right away.
@@ -59,16 +61,13 @@ class Player extends FlxSprite
 		_gibs = Gibs;
 		// This is so we can look at properties of the playstate's tilemaps
 		_parent = Parent;  
-		_jump = 0;
-		_onladder = false;
 		
-		// just to make sure it never gets caught undefined. That would be embarassing.
-		climbing = false; 	
+		_jumpKeys = ["C", "K", "SPACE"];
 	}
 	
 	public override function update():Void
 	{
-		//^Reset to 0 when no button is pushed
+		// Reset to 0 when no button is pushed
 		acceleration.x = 0; 
 		
 		if (climbing) 
@@ -92,87 +91,12 @@ class Player extends FlxSprite
 			acceleration.x = drag.x;				
 		}
 		
-		// Climbing
-		if (FlxG.keyboard.pressed("UP", "W"))
-		{
-			if (_onladder) 
-			{
-				climbing = true;
-				_canDJump = true;
-			}
-			
-			if (climbing && (_parent.ladders.getTile(_xgridleft, _ygrid - 1)) > 0) 
-			{
-				velocity.y = - RUN_SPEED;
-			}
-		}
+		jump();
 		
-		if (FlxG.keyboard.pressed("DOWN", "S"))
+		// Can only climb when not jumping
+		if (_jumpTime < 0)
 		{
-			if (_onladder) 
-			{
-				climbing = true;
-				_canDJump = true;
-			}
-			
-			if (climbing) 
-			{
-				velocity.y = RUN_SPEED;
-			}
-		}
-		
-		if (FlxG.keyboard.pressed("C", "K"))
-		{
-			if (climbing)
-			{
-				_jump = 0;
-				climbing = false;
-				FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
-			}
-			
-			if (velocity.y == 0)
-			{
-				FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
-			}
-		}
-		
-		if (FlxG.keys.justPressed.C && (velocity.y > 0) && _canDJump == true)
-		{
-			FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
-			_jump = 0;
-			_canDJump = false;
-		}
-		
-		// You can also use space or any other key you want
-		if (_jump >= 0 && FlxG.keyboard.pressed("C", "K")) 
-		{
-			climbing = false;
-			_jump += FlxG.elapsed;
-			
-			// You can't jump for more than 0.25 seconds
-			if (_jump > 0.25) 
-			{
-				_jump = -1;
-			}
-		}
-		else 
-		{
-			_jump = -1;
-		}
-
-		if (_jump > 0)
-		{
-			// this number is how long before a short slow jump shifts to a faster, high jump
-			if (_jump < 0.035)   
-			{
-				// This is the minimum height of the jump
-				velocity.y = -.6 * maxVelocity.y; 
-			}
-				
-			else 
-			{
-				velocity.y = -.8 * maxVelocity.y;
-			}
+			climb();
 		}
 		
 		// Shooting
@@ -208,7 +132,7 @@ class Player extends FlxSprite
 			x = _parent.map.width - width;
 		}
 		
-		// Convert pixel positions to grid positions. int and floor are functionally the same, 
+		// Convert pixel positions to grid positions. Std.int and floor are functionally the same, 
 		_xgridleft = Std.int((x + 3) / 16);   
 		_xgridright = Std.int((x + width - 3) / 16);
 		// but I hear int is faster so let's go with that.
@@ -216,22 +140,83 @@ class Player extends FlxSprite
 		
 		if (_parent.ladders.getTile(_xgridleft, _ygrid) > 0 && _parent.ladders.getTile(_xgridright, _ygrid) > 0) 
 		{
-			_onladder = true;
+			_onLadder = true;
 		}
 		else 
 		{
-			_onladder = false;
+			_onLadder = false;
 			climbing = false;
 		}
 		
-		if (isTouching(FlxObject.FLOOR) && !FlxG.keyboard.pressed("C", "K"))
+		if (isTouching(FlxObject.FLOOR) && !FlxG.keyboard.anyPressed(_jumpKeys))
 		{
-			_jump = 0;
+			_jumpTime = -1;
 			// Reset the double jump flag
-			_canDJump = true;  
+			_timesJumped = 0;  
 		}
 		
 		super.update();
+	}
+	
+	private function climb():Void
+	{
+		if (FlxG.keyboard.pressed("UP", "W"))
+		{
+			if (_onLadder) 
+			{
+				climbing = true;
+				_timesJumped = 0;
+			}
+			
+			if (climbing && (_parent.ladders.getTile(_xgridleft, _ygrid - 1)) > 0) 
+			{
+				velocity.y = - RUN_SPEED;
+			}
+		}
+		else if (FlxG.keyboard.pressed("DOWN", "S"))
+		{
+			if (_onLadder) 
+			{
+				climbing = true;
+				_timesJumped = 0;
+			}
+			
+			if (climbing) 
+			{
+				velocity.y = RUN_SPEED;
+			}
+		}
+	}
+	
+	private function jump():Void
+	{
+		if (FlxG.keyboard.anyJustPressed(_jumpKeys))
+		{
+			if ((velocity.y == 0) || (_timesJumped < JUMPS_ALLOWED)) // Only allow two jumps
+			{
+				FlxG.sound.play("assets/sounds/jump" + Reg.SoundExtension, 1, false);
+				_timesJumped++;
+				_jumpTime = 0;
+				_onLadder = false;
+			}
+		}
+		
+		// You can also use space or any other key you want
+		if ((FlxG.keyboard.anyPressed(_jumpKeys)) && (_jumpTime >= 0)) 
+		{
+			climbing = false;
+			_jumpTime += FlxG.elapsed;
+			
+			// You can't jump for more than 0.25 seconds
+			if (_jumpTime > 0.25)
+			{
+				_jumpTime = -1;
+			}
+			else if (_jumpTime > 0)
+			{
+				velocity.y = - 0.6 * maxVelocity.y;
+			}
+		}
 	}
 	
 	private function shoot():Void 

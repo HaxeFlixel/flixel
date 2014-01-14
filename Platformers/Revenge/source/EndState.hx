@@ -50,8 +50,8 @@ class EndState extends FlxState
 		_startButton = new FlxButton(137, 195, "", onStart);
 		// Load sprites for different button states	
 		_startButton.loadGraphic("assets/ok0.png");
-		_startButton.setOnOverCallback(onStartOver);
-		_startButton.setOnOutCallback(onStartOut);
+		_startButton.onOver.callback = onStartOver;
+		_startButton.onOut.callback = onStartOut;
 		add(_startButton);
 	}
 	

@@ -1,6 +1,5 @@
 package;
 
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
@@ -8,6 +7,7 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
+import flixel.effects.particles.FlxEmitter;
 import openfl.Assets;
 
 /**
@@ -28,6 +28,11 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
+		#if debug
+		FlxG.debugger.visible = true;
+		FlxG.game.debugger.stats.visible = true;
+		#end
+		
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
 		if (FlxG.sound.music != null)
@@ -85,7 +90,9 @@ class MenuState extends FlxState
 		_timer = 0;
 		_attractMode = false;
 		
+		#if !FLX_NO_MOUSE
 		FlxG.mouse.show( Reg.CURSOR, 2 );
+		#end
 		
 		super.create();
 	}
@@ -183,6 +190,18 @@ class MenuState extends FlxState
 				_attractMode = true;
 			}
 		}
+		
+		#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+		if (FlxG.gamepads.anyButton())
+		{
+		#if OUYA
+			if(FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.OUYAButtonID.O))
+		#else
+			if(FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.XboxButtonID.A))
+		#end 
+				onPlay();
+		}
+		#end
 	}
 	
 	// These are all "event handlers", or "callbacks".

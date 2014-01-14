@@ -49,7 +49,7 @@ class MenuState extends FlxState
 		_typeText.setTypingVariation( 0.75, true );
 		_typeText.useDefaultSound = true;
 		_typeText.color = 0x8811EE11;
-		_typeText.setSkipKeys( [ "SPACE" ] );
+		_typeText.skipKeys = [ "SPACE" ];
 		
 		_status = new FlxTypeText( 15, FlxG.height - 102, FlxG.width - 20, "None", 16 );
 		_status.color = 0x8800AA00;

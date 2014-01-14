@@ -14,6 +14,10 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 
+#if cpp
+import flixel.system.input.gamepad.FlxGamepad;
+#end
+
 /**
  * A FlxState which can be used for the actual gameplay.
  */
