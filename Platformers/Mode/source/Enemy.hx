@@ -59,9 +59,9 @@ class Enemy extends FlxSprite
 		super();
 		
 		#if flash
-		loadRotatedGraphic("assets/bot.png", 64, 0, false, false);
+		loadRotatedGraphic(Reg.BOT, 64, 0, false, false);
 		#else
-		loadGraphic("assets/bot.png");
+		loadGraphic(Reg.BOT);
 		#end
 
 		// We want the enemy's "hit box" or actual size to be
@@ -74,7 +74,7 @@ class Enemy extends FlxSprite
 		// that shoot out the back of the ship.
 		_jets = new FlxEmitter();
 		_jets.setRotation();
-		_jets.makeParticles(IMG.JET, 15, 0, false, 0);
+		_jets.makeParticles(Reg.JET, 15, 0, false, 0);
 		
 		// These parameters help control the ship's
 		// speed and direction during the update() loop.

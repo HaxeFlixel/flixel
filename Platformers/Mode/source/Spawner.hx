@@ -4,6 +4,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
+import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 class Spawner extends FlxSprite
@@ -19,13 +20,13 @@ class Spawner extends FlxSprite
 	public function new(X:Int, Y:Int, Gibs:FlxEmitter, Bots:FlxTypedGroup<Enemy>, BotBullets:FlxTypedGroup<EnemyBullet>, BotGibs:FlxEmitter, ThePlayer:Player)
 	{
 		super(X, Y);
-		loadGraphic("assets/spawner.png", true);
+		loadGraphic(Reg.SPAWNER, true);
 		_gibs = Gibs;
 		_bots = Bots;
 		_botBullets = BotBullets;
 		_botGibs = BotGibs;
 		_player = ThePlayer;
-		_timer = Math.random() * 20;
+		_timer = FlxRandom.floatRanged( 0, 20 );
 		_open = false;
 		health = 8;
 

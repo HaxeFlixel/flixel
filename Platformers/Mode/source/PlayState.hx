@@ -12,10 +12,15 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
+
 #if cpp
 import flixel.system.input.gamepad.FlxGamepad;
 #end
 
+/**
+ * A FlxState which can be used for the actual gameplay.
+ */
 class PlayState extends FlxState
 {
 	inline static public var TILE_SIZE:Int = 8;
@@ -51,6 +56,9 @@ class PlayState extends FlxState
 	// Just to prevent weirdness during level transition
 	private var _fading:Bool;
 	
+	/**
+	 * Function that is called up when to state is created to set it up. 
+	 */
 	override public function create():Void
 	{
 		// Here we are creating a pool of 100 little metal bits that can be exploded.
@@ -61,7 +69,7 @@ class PlayState extends FlxState
 		_littleGibs.setRotation( -720, -720);
 		_littleGibs.gravity = 350;
 		_littleGibs.bounce = 0.5;
-		_littleGibs.makeParticles(IMG.GIBS, 100, 10, true, 0.5);
+		_littleGibs.makeParticles(Reg.GIBS, 100, 10, true, 0.5);
 		
 		// Next we create a smaller pool of larger metal bits for exploding.
 		_bigGibs = new FlxEmitter();
@@ -70,7 +78,7 @@ class PlayState extends FlxState
 		_bigGibs.setRotation( -720, -720);
 		_bigGibs.gravity = 350;
 		_bigGibs.bounce = 0.35;
-		_bigGibs.makeParticles(IMG.SPAWNER_GIBS, 50, 20, true, 0.5);
+		_bigGibs.makeParticles(Reg.SPAWNER_GIBS, 50, 20, true, 0.5);
 		
 		// Then we'll set up the rest of our object groups or pools
 		_decorations = new FlxGroup();
@@ -197,8 +205,14 @@ class PlayState extends FlxState
 		FlxG.watch.add(_enemies, "length", "numEnemies");
 		FlxG.watch.add(_enemyBullets, "length", "numEnemyBullets");
 		FlxG.watch.add(FlxG.sound.list, "length", "numSounds");
+		
+		super.create();
 	}
 	
+	/**
+	 * Function that is called when this state is destroyed - you might want to 
+	 * consider setting all objects this state uses to null to help garbage collection.
+	 */
 	override public function destroy():Void
 	{
 		super.destroy();
@@ -224,8 +238,13 @@ class PlayState extends FlxState
 		
 		_map = null;
 		_tileMap = null;
+		
+		super.destroy();
 	}
 
+	/**
+	 * Function that is called once every frame.
+	 */
 	override public function update():Void
 	{
 		// Save off the current score and update the game state
@@ -245,7 +264,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.C && _player.flickering)
 		{
 			_jamTimer = 1;
-			//_gunjam.visible = true;
+			_gunjam.visible = true;
 		}
 		
 		if (_jamTimer > 0)
@@ -259,10 +278,10 @@ class PlayState extends FlxState
 			
 			if (_jamTimer < 0)
 			{
-				//_gunjam.visible = false;
+				_gunjam.visible = false;
 			}
 		}
-
+		
 		if (!_fading)
 		{
 			// Score + countdown stuffs
@@ -324,10 +343,10 @@ class PlayState extends FlxState
 		// Escape to the main menu
 		if (FlxG.keys.pressed.ESCAPE)
 		{
-			FlxG.switchState(new MenuState());
+			FlxG.switchState( new MenuState() );
 		}
 	}
-
+	
 	/**
 	 * This is an overlap callback function, triggered by the calls to FlxU.overlap().
 	 */
@@ -396,7 +415,7 @@ class PlayState extends FlxState
 		
 		_tileMap = new FlxTilemap();
 		_tileMap.tileScaleHack = 1.05;
-		_tileMap.loadMap(FlxTilemap.arrayToCSV(_map, MAP_WIDTH_IN_TILES), "assets/img_tiles.png", 8, 8, FlxTilemap.OFF);
+		_tileMap.loadMap(FlxTilemap.arrayToCSV(_map, MAP_WIDTH_IN_TILES), Reg.IMG_TILES, 8, 8, FlxTilemap.OFF);
 		add(_tileMap);
 	}
 	
@@ -412,12 +431,12 @@ class PlayState extends FlxState
 		
 		if (Spawners)
 		{
-			sx = Math.floor(2 + Math.random() * (rw - 7));
-			sy = Math.floor(2 + Math.random() * (rw - 7));
+			sx = FlxRandom.intRanged( 2, rw - 6 );
+			sy = FlxRandom.intRanged( 2, rw - 6 );
 		}
 		
 		// Then place a bunch of blocks
-		var numBlocks:Int = Math.floor(3 + Math.random() * 4);
+		var numBlocks:Int = FlxRandom.intRanged( 3, 6 );
 		var maxW:Int = 10;
 		var minW:Int = 2;
 		var maxH:Int = 8;
@@ -438,10 +457,10 @@ class PlayState extends FlxState
 			do
 			{
 				// Keep generating different specs if they overlap the spawner
-				bw = Math.floor(minW + Math.random() * (maxW - minW));
-				bh = Math.floor(minH + Math.random() * (maxH - minH));
-				bx = Math.floor( -1 + Math.random() * (rw + 1 - bw));
-				by = Math.floor( -1 + Math.random() * (rw + 1 - bh));
+				bw = FlxRandom.intRanged( minW, maxW );
+				bh = FlxRandom.intRanged( minH, maxH );
+				bx = FlxRandom.intRanged( -1, rw - bw );
+				by = FlxRandom.intRanged( -1, rw - bh );
 				
 				if (Spawners)
 				{
@@ -470,7 +489,7 @@ class PlayState extends FlxState
 			_spawners.add(sp);
 			
 			// Then create a dedicated camera to watch the spawner
-			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, IMG.MINI_FRAME);
+			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, Reg.MINI_FRAME);
 			_hud.add(miniFrame);
 			
 			var ratio:Float = FlxCamera.defaultZoom / 2;
@@ -495,7 +514,8 @@ class PlayState extends FlxState
 		{
 			for (j in 0...numColsToPush)
 			{
-				randomTile = StartTile + Math.floor(Math.random() * (EndTile - StartTile));
+				randomTile = FlxRandom.intRanged( StartTile, EndTile );
+				
 				currentTileIndex = (xStartIndex + j) + (yStartIndex + i) * MapWidth;
 				_map[currentTileIndex] = randomTile;
 			}

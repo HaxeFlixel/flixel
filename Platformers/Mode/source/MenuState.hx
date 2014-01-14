@@ -4,11 +4,15 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.util.FlxRandom;
 import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
 import flixel.effects.particles.FlxEmitter;
 import openfl.Assets;
 
+/**
+ * A FlxState which can be used for the game's menu.
+ */
 class MenuState extends FlxState
 {
 	private var _gibs:FlxEmitter;
@@ -19,12 +23,15 @@ class MenuState extends FlxState
 	private var _timer:Float;
 	private var _attractMode:Bool;
 	
+	/**
+	 * Function that is called up when to state is created to set it up. 
+	 */
 	override public function create():Void
 	{
-#if debug
+		#if debug
 		FlxG.debugger.visible = true;
 		FlxG.game.debugger.stats.visible = true;
-#end
+		#end
 		
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
@@ -58,7 +65,7 @@ class MenuState extends FlxState
 		_gibs.setYSpeed( -200, -20);
 		_gibs.setRotation( -720, 720);
 		_gibs.gravity = 100;
-		_gibs.makeParticles(IMG.SPAWNER_GIBS, 650, 32, true, 0);
+		_gibs.makeParticles(Reg.SPAWNER_GIBS, 650, 32, true, 0);
 		add(_gibs);
 		
 		// The letters "mo"
@@ -83,21 +90,30 @@ class MenuState extends FlxState
 		_timer = 0;
 		_attractMode = false;
 		
-#if !FLX_NO_MOUSE
-		FlxG.mouse.show(IMG.CURSOR, 2);
-#end
+		#if !FLX_NO_MOUSE
+		FlxG.mouse.show( Reg.CURSOR, 2 );
+		#end
+		
+		super.create();
 	}
 	
+	/**
+	 * Function that is called when this state is destroyed - you might want to 
+	 * consider setting all objects this state uses to null to help garbage collection.
+	 */
 	override public function destroy():Void
 	{
-		super.destroy();
-		
 		_gibs = null;
 		_playButton = null;
 		_title1 = null;
 		_title2 = null;
+		
+		super.destroy();
 	}
 
+	/**
+	 * Function that is called once every frame.
+	 */
 	override public function update():Void
 	{
 		super.update();
@@ -116,8 +132,8 @@ class MenuState extends FlxState
 			FlxG.cameras.shake(0.035, 0.5);
 			_title1.color = _title2.color = 0xd8eba2;
 			_gibs.start(true, 5);
-			_title1.angle = Math.random() * 30 - 15;
-			_title2.angle = Math.random() * 30 - 15;
+			_title1.angle = FlxRandom.floatRanged( -15, 15 );
+			_title2.angle = FlxRandom.floatRanged( -15, 15 );
 			
 			// Then we're going to add the text and buttons and things that appear
 			// If we were hip we'd use our own button animations, but we'll just recolor
@@ -158,26 +174,34 @@ class MenuState extends FlxState
 			_attractMode = true;
 		}
 		
-		if (!_fading && ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _attractMode)) 
+		if ( !_fading )
 		{
-			_fading = true;
-			FlxG.sound.play("MenuHit2");
+			if  ( ( FlxG.keys.pressed.X && FlxG.keys.pressed.C ) || _attractMode )
+			{
+				_fading = true;
+				FlxG.sound.play("MenuHit2");
+				
+				FlxG.cameras.flash(0xffd8eba2, 0.5);
+				FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
+			}
 			
-			FlxG.cameras.flash(0xffd8eba2, 0.5);
-			FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
+			if ( FlxG.keys.pressed.R && !_attractMode )
+			{
+				_attractMode = true;
+			}
 		}
 		
-#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+		#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 		if (FlxG.gamepads.anyButton())
 		{
-	#if OUYA
+		#if OUYA
 			if(FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.OUYAButtonID.O))
-	#else
+		#else
 			if(FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.XboxButtonID.A))
-	#end 
+		#end 
 				onPlay();
 		}
-#end
+		#end
 	}
 	
 	// These are all "event handlers", or "callbacks".
@@ -209,7 +233,7 @@ class MenuState extends FlxState
 	{
 		if (_attractMode)
 		{
-			FlxG.vcr.loadReplay((Math.random() < 0.5)?(Assets.getText("assets/attract1.fgr")):(Assets.getText("assets/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
+			FlxG.vcr.loadReplay( FlxRandom.chanceRoll() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
 		{

@@ -3,12 +3,27 @@ package;
 import flixel.util.FlxSave;
 
 /**
-* Handy, pre-built Registry class that can be used to store 
-* references to objects and other things for quick-access. Feel
-* free to simply ignore it or change it in any way you like.
-*/
+ * Handy, pre-built Registry class that can be used to store 
+ * references to objects and other things for quick-access. Feel
+ * free to simply ignore it or change it in any way you like.
+ */
 class Reg
 {
+	inline static public var BULLET:String = "images/bullet.png";
+	inline static public var SPAWNER_GIBS:String = "images/spawner_gibs.png";
+	inline static public var SPAWNER:String = "images/spawner.png";
+	inline static public var SPACEMAN:String = "images/spaceman.png";
+	inline static public var BOT:String = "images/bot.png";
+	inline static public var JET:String = "images/jet.png";
+	inline static public var BOT_BULLET:String = "images/bot_bullet.png";
+	inline static public var TECH_TILES:String = "images/tech_tiles.png";
+	inline static public var IMG_TILES:String = "images/img_tiles.png";
+	inline static public var DIRT_TOP:String = "images/dirt_top.png";
+	inline static public var DIRT:String = "images/dirt.png";
+	inline static public var GIBS:String = "images/gibs.png";
+	inline static public var MINI_FRAME:String = "images/miniframe.png";
+	inline static public var CURSOR:String = "images/cursor.png";
+	
 	/**
 	 * Generic levels Array that can be used for cross-state stuff.
 	 * Example usage: Storing the levels of a platformer.
@@ -34,10 +49,4 @@ class Reg
 	 * Especially useful for setting up multiple save slots.
 	 */
 	static public var saves:Array<FlxSave> = [];
-	/**
-	 * Generic container for a <code>FlxSave</code>. You might want to 
-	 * consider assigning <code>FlxG._game._prefsSave</code> to this in
-	 * your state if you want to use the same save flixel uses internally
-	 */
-	static public var save:FlxSave;
 }
