@@ -68,8 +68,7 @@ class MenuState extends FlxState
 		
 		for ( i in 0...BUTTON_TEXT().length )
 		{
-			var button:FlxButton = new FlxButton( buttonX, buttonY, BUTTON_TEXT()[i] );
-			button.setOnDownCallback( buttonCallback, [ button.label.text ] );
+			var button:FlxButton = new FlxButton( buttonX, buttonY, BUTTON_TEXT()[i], buttonCallback, [ BUTTON_TEXT()[i] ] );
 			button.makeGraphic( 185, 20, 0x88DDDDDD );
 			_buttonGroup.add( button );
 			
