@@ -10,6 +10,9 @@ import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
+/**
+ * A FlxState which can be used for the game's menu.
+ */
 class MenuState extends FlxState
 {
 	private var _gibs:FlxEmitter;
@@ -20,6 +23,9 @@ class MenuState extends FlxState
 	private var _timer:Float;
 	private var _attractMode:Bool;
 	
+	/**
+	 * Function that is called up when to state is created to set it up. 
+	 */
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
@@ -54,7 +60,7 @@ class MenuState extends FlxState
 		_gibs.setYSpeed( -200, -20);
 		_gibs.setRotation( -720, 720);
 		_gibs.gravity = 100;
-		_gibs.makeParticles(IMG.SPAWNER_GIBS, 650, 32, true, 0);
+		_gibs.makeParticles(Reg.SPAWNER_GIBS, 650, 32, true, 0);
 		add(_gibs);
 		
 		// The letters "mo"
@@ -79,19 +85,28 @@ class MenuState extends FlxState
 		_timer = 0;
 		_attractMode = false;
 		
-		FlxG.mouse.show(IMG.CURSOR, 2);
+		FlxG.mouse.show(Reg.CURSOR, 2);
+		
+		super.create();
 	}
 	
+	/**
+	 * Function that is called when this state is destroyed - you might want to 
+	 * consider setting all objects this state uses to null to help garbage collection.
+	 */
 	override public function destroy():Void
 	{
-		super.destroy();
-		
 		_gibs = null;
 		_playButton = null;
 		_title1 = null;
 		_title2 = null;
+		
+		super.destroy();
 	}
 
+	/**
+	 * Function that is called once every frame.
+	 */
 	override public function update():Void
 	{
 		super.update();
@@ -152,13 +167,21 @@ class MenuState extends FlxState
 			_attractMode = true;
 		}
 		
-		if (!_fading && ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _attractMode)) 
+		if ( !_fading )
 		{
-			_fading = true;
-			FlxG.sound.play("MenuHit2");
+			if  ( ( FlxG.keys.pressed.X && FlxG.keys.pressed.C ) || _attractMode )
+			{
+				_fading = true;
+				FlxG.sound.play("MenuHit2");
+				
+				FlxG.cameras.flash(0xffd8eba2, 0.5);
+				FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
+			}
 			
-			FlxG.cameras.flash(0xffd8eba2, 0.5);
-			FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
+			if ( FlxG.keys.pressed.R && !_attractMode )
+			{
+				_attractMode = true;
+			}
 		}
 	}
 	
@@ -168,12 +191,12 @@ class MenuState extends FlxState
 	
 	private function onFlixel():Void
 	{
-		FlxStringUtil.openURL("http://flixel.org");
+		FlxG.openURL("http://flixel.org");
 	}
 	
 	private function onDanny():Void
 	{
-		FlxStringUtil.openURL("http://dbsoundworks.com");
+		FlxG.openURL("http://dbsoundworks.com");
 	}
 	
 	private function onPlay():Void
@@ -191,7 +214,7 @@ class MenuState extends FlxState
 	{
 		if (_attractMode)
 		{
-			FlxG.vcr.loadReplay( FlxRandom.chanceRoll() ? (Assets.getText("assets/attract1.fgr")) : (Assets.getText("assets/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
+			FlxG.vcr.loadReplay( FlxRandom.chanceRoll() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
 		{

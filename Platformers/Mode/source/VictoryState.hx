@@ -1,20 +1,27 @@
 package;
 
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.text.FlxTextField;
+import flixel.ui.FlxButton;
+import flixel.util.FlxMath;
+import flixel.util.FlxSpriteUtil;
+import flixel.effects.particles.FlxEmitter;
 
+/**
+ * A FlxState which is shown when the player wins.
+ */
 class VictoryState extends FlxState
 {
-	private var _timer:Float;
-	private var _fading:Bool;
-
+	private var _timer:Float = 0;
+	private var _fading:Bool = false;
+	
+	/**
+	 * Function that is called up when to state is created to set it up. 
+	 */
 	override public function create():Void
 	{
-		_timer = 0;
-		_fading = false;
 		FlxG.cameras.flash(0xffd8eba2);
 		
 		// Gibs emitted upon death
@@ -24,24 +31,33 @@ class VictoryState extends FlxState
 		gibs.setYSpeed(0, 100);
 		gibs.setRotation( -360, 360);
 		gibs.gravity = 80;
-		gibs.makeParticles(IMG.SPAWNER_GIBS, 800, 32, true, 0);
+		gibs.makeParticles(Reg.SPAWNER_GIBS, 800, 32, true, 0);
 		add(gibs);
 		gibs.start(false, 0, 0.005);
 		
-		#if flash
-		var text:FlxText = new FlxText(0, FlxG.height / 2 - 35, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score);
-		#else
-		var text:FlxTextField = new FlxTextField(0, FlxG.height / 2 - 35, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score);
-		#end
+		var text:FlxText = new FlxText( 0, 0, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score, 16 );
+		text.alignment = "center";
+		text.color = 0xffD8EBA2;
+		FlxSpriteUtil.screenCenter( text, false, true );
+		add( text );
 		
-		text.setFormat(null, 16, 0xd8eba2, "center");
-		add(text);
+		super.create();
+	}
+	
+	/**
+	 * Function that is called when this state is destroyed - you might want to 
+	 * consider setting all objects this state uses to null to help garbage collection.
+	 */
+	override public function destroy():Void
+	{
+		super.destroy();
 	}
 
+	/**
+	 * Function that is called once every frame.
+	 */
 	override public function update():Void
 	{
-		super.update();
-		
 		if (!_fading)
 		{
 			_timer += FlxG.elapsed;
@@ -53,6 +69,8 @@ class VictoryState extends FlxState
 				FlxG.cameras.fade(0xff131c1b, 2, false, onPlay);
 			}
 		}
+		
+		super.update();
 	}
 	
 	private function onPlay():Void 

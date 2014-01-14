@@ -29,7 +29,7 @@ class Player extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic("assets/spaceman.png", true, true, 8);
+		loadGraphic(Reg.SPACEMAN, true, true, 8);
 		
 		// Bounding box tweaks
 		width = 6;
