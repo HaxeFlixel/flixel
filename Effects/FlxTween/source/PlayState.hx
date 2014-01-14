@@ -2,8 +2,8 @@ package;
 
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIDropDownHeader;
-import flixel.addons.ui.FlxUIDropdownMenu;
-import flixel.addons.ui.FlxUITypedButton.FlxUITypedButton;
+import flixel.addons.ui.FlxUIDropDownMenu;
+import flixel.addons.ui.FlxUITypedButton;
 import flixel.addons.ui.StrIdLabel;
 import flixel.effects.FlxTrail;
 import flixel.FlxG;
