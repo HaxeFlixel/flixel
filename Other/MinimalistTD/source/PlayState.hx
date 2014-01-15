@@ -129,9 +129,9 @@ class PlayState extends FlxState
 		_guiGroup = new FlxGroup();
 		
 		var height:Int = FlxG.height - 18;
-		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback, null, 120 );
+		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback, [ false ], 120 );
 		_nextWaveButton = new Button( 100, height, "[N]ext Wave", nextWaveCallback, [ false ], 143 );
-		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback, null, 21 );
+		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback, [ false ], 21 );
 		_sellButton = new Button( 220, height, "[S]ell Mode", sellButtonCallback, [ true ] );
 		_sellButton.visible = false;
 		
