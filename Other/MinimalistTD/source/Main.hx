@@ -7,11 +7,6 @@ import flash.events.Event;
 import flash.Lib;
 import flixel.FlxGame;
 
-#if (cpp || neko)
-import flash.events.KeyboardEvent;
-import flash.ui.Keyboard;
-#end
-
 /**
  * @author Joshua Granick
  */
@@ -48,21 +43,7 @@ class Main extends Sprite
 		
 		var game:FlxGame = new GameClass();
 		addChild(game);
-		
-		#if (cpp || neko)
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUP);
-		#end
 	}
-	
-	#if (cpp || neko)
-	private function onKeyUP(e:KeyboardEvent):Void 
-	{
-		if (e.keyCode == Keyboard.ESCAPE)
-		{
-			Lib.exit();
-		}
-	}
-	#end
 	
 	private function initialize():Void 
 	{

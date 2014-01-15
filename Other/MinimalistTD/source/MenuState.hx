@@ -1,6 +1,7 @@
 package;
 
 import flash.display.BlendMode;
+import flixel.system.resolution.RatioResolutionPolicy;
 import openfl.Assets;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -35,6 +36,7 @@ class MenuState extends FlxState
 		#end
 		#end
 		
+		FlxG.resolutionPolicy = new RatioResolutionPolicy();
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		
 		// Load a map from CSV data; note that the tile graphic does not need to be a file; in this case, it's BitmapData.

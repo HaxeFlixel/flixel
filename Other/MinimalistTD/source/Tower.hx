@@ -110,9 +110,7 @@ class Tower extends FlxSprite
 		getMidpoint( HELPER_POINT );
 		bullet.init( HELPER_POINT.x, HELPER_POINT.y, target, damage );
 		
-		#if !js
 		FlxG.sound.play( "shoot" );
-		#end
 		
 		_shootCounter = 0;
 	}
