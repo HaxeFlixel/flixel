@@ -1,38 +1,20 @@
 package;
 
 import flixel.addons.ui.FlxUIButton;
-import flixel.addons.ui.FlxUIDropDownHeader;
 import flixel.addons.ui.FlxUIDropDownMenu;
-import flixel.addons.ui.FlxUITypedButton;
-import flixel.addons.ui.StrIdLabel;
 import flixel.effects.FlxTrail;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText;
-import flixel.tweens.FlxTween;
-import flixel.tweens.misc.AngleTween;
-import flixel.tweens.misc.ColorTween;
-import flixel.tweens.misc.MultiVarTween;
-import flixel.tweens.misc.NumTween;
-import flixel.tweens.misc.VarTween;
-import flixel.tweens.motion.CircularMotion;
-import flixel.tweens.motion.CubicMotion;
-import flixel.tweens.motion.LinearMotion;
-import flixel.tweens.motion.LinearPath;
-import flixel.tweens.motion.QuadMotion;
-import flixel.tweens.motion.QuadPath;
-import flixel.ui.FlxButton;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
 import flixel.tweens.FlxEase;
-import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxStringUtil;
 import flixel.tweens.FlxEase.EaseFunction;
+import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.TweenOptions;
+import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
+import flixel.util.FlxSpriteUtil;
 
 /**
  * Tweening demo.
