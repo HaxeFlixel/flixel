@@ -3,12 +3,16 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxGroup;
+import flixel.system.resolution.FillResolutionPolicy;
+import flixel.system.resolution.FixedResolutionPolicy;
+import flixel.system.resolution.RatioResolutionPolicy;
+import flixel.system.resolution.RelativeResolutionPolicy;
+import flixel.system.resolution.StageSizeResolutionPolicy;
 import flixel.text.FlxText;
+import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.resolution.FillResolutionPolicy;
-import flixel.util.resolution.FixedResolutionPolicy;
-import flixel.util.resolution.RatioResolutionPolicy;
-import flixel.util.resolution.RelativeResolutionPolicy;
+import flixel.util.FlxRandom;
 
 class PlayState extends FlxState
 {
