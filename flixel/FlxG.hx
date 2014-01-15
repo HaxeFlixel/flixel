@@ -18,14 +18,14 @@ import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
+import flixel.system.resolution.BaseResolutionPolicy;
+import flixel.system.resolution.StageSizeResolutionPolicy;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
-import flixel.util.resolution.BaseResolutionPolicy;
-import flixel.util.resolution.StageSizeResolutionPolicy;
 
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -96,12 +96,12 @@ class FlxG
 	/**
 	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	@:allow(flixel.util.resolution.StageSizeResolutionPolicy) 
+	@:allow(flixel.system.resolution.StageSizeResolutionPolicy) 
 	static public var width(default, null):Int;
 	/**
 	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	@:allow(flixel.util.resolution.StageSizeResolutionPolicy)
+	@:allow(flixel.system.resolution.StageSizeResolutionPolicy)
 	static public var height(default, null):Int;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.

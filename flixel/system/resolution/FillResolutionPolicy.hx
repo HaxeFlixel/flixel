@@ -1,4 +1,4 @@
-package flixel.util.resolution;
+package flixel.system.resolution;
 
 import flixel.FlxG;
 
