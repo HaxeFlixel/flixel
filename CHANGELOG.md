@@ -1,40 +1,70 @@
 v.3.1.0
 ------------------------------
-* Refactor of FlxRandom: All functions are now deterministic and safe to use with replays. Due to the use of a new algorithm for pseudo-random number generation (linear congruential generator), old replays are no longer compatible. weightedPick(), weightedGetObject() and colorExt() have been added
+* Refactor of FlxRandom
+  * All functions are now deterministic and safe to use with replays
+  * Due to the use of a new algorithm for pseudo-random number generation (linear congruential generator), old replays are no longer compatible
+  * weightedPick(), weightedGetObject() and colorExt() have been added
 * New FLX_NO_SOUND_SYSTEM conditional
 * FlxTrailArea: Several improvements (can now be resized with setSize()), default delay is now 2
-* FlxMisc has been removed, openURL can now be found in FlxStringUtil
+* FlxMisc has been removed, openURL() can now be found in FlxG
 * FlxCamera: getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
 * AngleTween now accepts FlxSprite as a parameter
 * FlxSpriteGroup: Added forEach(), forEachAlive(), forEachDead() and forEachExists()
-* FlxSpriteUtil: new drawCirlce() and drawPolygon() functions, more control for the drawing functions via FillStyle and DrawStyle
-* FlxTypedButton has been refactored: Callbacks are now set via onUp.setCallback as opposed to setOnUpCallback, new labelAlphas and labelOffsets arrays for more control, the highlight frame is now disabled by default on mobile, "swiping" is now possible
+* FlxSpriteUtil: 
+  * new drawTriangle() and drawPolygon(), fadeIn() and fadeOut() functions 
+  * more control for the drawing functions via FillStyle and DrawStyle
+  * added convenient default values for drawCircle()
+  * allow FlxObjects in screenWrap() and screenCenter()
+* FlxTypedButton refactor
+  *  Callbacks are now set via onUp.setCallback as opposed to setOnUpCallback
+  *  new labelAlphas and labelOffsets arrays for more control
+  *  the highlight frame is now disabled by default on mobile 
+  *  "swiping" is now possible (enter button area while input is pressed to press it)
 * FlxTypedEmitter and FlxSound: Added setPosition() methods
 * FlxSlider: New setVariable flag, improvements to inner update logic
-* FlxSprite: pixelsOverlapPoint() has been removed, loadfromSprite() -> loadFromSprite(), setGraphicDimensions() -> setGraphicSize()
+* FlxSprite: 
+  * pixelsOverlapPoint() has been removed
+  * loadfromSprite() -> loadFromSprite()
+  * setGraphicDimensions() -> setGraphicSize()
+  * added getGraphicsMidpoint()
 * Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
-* FlxTypedGroup: autoReviveMembers flag has been removed, Revive param has been added to recycle()
+* FlxTypedGroup: 
+  * autoReviveMembers flag has been removed
+  * Revive param has been added to recycle()
 * FlxRect, FlxPoint and FlxBasic and FlxObject now have toString() functions used for traces and the flixel debugger
 * The focus lost screen and the sound tray now react to window resizes
-* Typo in SoundFrontEnd.volumeDownKeys has been fixed, which prevents numpad minus from working
+* BUG: Fixed numpad minus not working as a default volume down key
 * FlxStringUtil.sameClassName() added
-* FlxG.autoResize is now true by default
 * The stats window of the debugger has been refactored, now has fancy FPS and memory graphs
 * FlxGame.focusLostFramerate added
-* Fix bug where the flixel cursor would reappear after regaining focus
+* BUG: Fixed flixel cursor reappearing after regaining focus
 * Android sound caching improvement
 * Fixes for OUYA gamepad combatibility (fixed some button IDs in OUYAButtonID)
 * Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
 * Prevent paused sounds from playing after regaining focus
 * Several bug fixes and improvements to FlxText and FlxTextField classes
-* Renamed framerates to clear up confusion: gameFramerate -> updateFramerate, flashFramerate -> drawFramerate
+* Renamed framerates to clear up confusion: 
+  * gameFramerate -> updateFramerate
+  * flashFramerate -> drawFramerate
 * BUG: Fixed order of operations issue that was causing _FlxSubStates_ to crash on close.
 * BUG: Fixed a splash screen repeating bug when using default splash screen.
-* Improvements and optimizations to gamepad api, fixed Ouya compatibility!
-* FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
-* FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
-* Mode demo has been made OUYA compatible!
-* Added PS3ButtonID and LogitechButtonID classes
+* Gamepad support improvements
+  * Improvements and optimizations to gamepad api, fixed Ouya compatibility!
+  * FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
+  * FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
+  * Added PS3ButtonID and LogitechButtonID classes
+* Ported resolution policies from flixel for moneky (FlxG.resolutionPolicy / flixel.system.resolution) and removed FlxG.autoResize
+* Renamed FlxG.debugger.visualDebug to drawDebug
+* FlxTween optimizations
+* BUG: Fixed jittering movement of FlxObjects following a FlxPath
+* Removed FlxG.paused, it was a container variable without functionality
+* FlxRect: Added setSize()
+* BUG: Fixed changing color or alpha of a FlxText affecting its origin
+* BUG: Fix incompatiblity of FlxText.borderStyle and FlxText.alpha
+* Moved flixel.system.input to flixel.input
+* FlxArrayUtil.fastSplice() added
+* Moved interfaces into a new interfaces package
+* BUG: Fixed crash when using traces on android
 
 v.3.0.4
 ------------------------------
