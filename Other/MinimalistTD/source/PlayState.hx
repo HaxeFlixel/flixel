@@ -27,6 +27,15 @@ enum MenuType
 
 class PlayState extends FlxState
 {
+	/**
+	 * Helper Sprite object to draw tower's range graphic
+	 */
+	private static var RANGE_SPRITE:Sprite = null;
+	
+	#if debug
+	inline private static var MONEY_CHEAT:Bool = true;
+	#end
+	
 	// Public variables
 	public var enemiesToKill:Int = 0;
 	public var enemiesToSpawn:Int = 0;
@@ -91,24 +100,13 @@ class PlayState extends FlxState
 	private var _goalY:Int = 43;
 	
 	/**
-	 * Helper Sprite object to draw tower's range graphic
-	 */
-	private static var RANGE_SPRITE:Sprite = null;
-	
-	#if debug
-	inline private static var MONEY_CHEAT:Bool = true;
-	#end
-	
-	/**
 	 * Create a new playable game state.
 	 */
 	override public function create():Void
 	{
 		Reg.PS = this;
 		
-		#if !js
 		FlxG.sound.playMusic( "td2" );
-		#end
 		
 		FlxG.timeScale = 1;
 		
@@ -147,8 +145,6 @@ class PlayState extends FlxState
 		_guiGroup.add( _sellButton );
 		_guiGroup.add( _tutText );
 		
-		// End GUI setup
-		
 		// Set up upgrade menu, hidden initially, also part of bottom GUI
 		
 		_upgradeMenu = new FlxGroup();
@@ -164,8 +160,6 @@ class PlayState extends FlxState
 		
 		_upgradeMenu.visible = false;
 		
-		// End upgrade setup
-		
 		// Set up the sell mode display
 		
 		_sellMenu = new FlxGroup();
@@ -178,8 +172,6 @@ class PlayState extends FlxState
 		_sellMenu.add( new Button( 2, height, "<", sellMenuCancel, [false], 10 ) );
 		
 		_sellMenu.visible = false;
-		
-		// End sell mode setup
 		
 		// Set up the sell confirmation display
 		
@@ -194,8 +186,6 @@ class PlayState extends FlxState
 		_sellConfirm.add( new Button( 280, height, "[N]o", sellConfirmCallback, [ false ] ) );
 		
 		_sellConfirm.visible = false;
-		
-		// End sell confirmation setup
 		
 		// Set up top GUI
 		
@@ -228,8 +218,6 @@ class PlayState extends FlxState
 			}
 		}
 		
-		// End goal setup
-		
 		// Set up miscellaneous items: center text, buildhelper, and the tower range image
 		
 		_centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16 );
@@ -245,8 +233,6 @@ class PlayState extends FlxState
 		
 		_towerRange = new FlxSprite( 0, 0 );
 		_towerRange.visible = false;
-		
-		// End miscellaneous set up
 		
 		// Add everything to the state
 		
@@ -284,9 +270,7 @@ class PlayState extends FlxState
 	public function killedWave():Void
 	{
 		if ( wave != 0 ) {
-			#if !js
 			FlxG.sound.play( "wavedefeated" );
-			#end
 		}
 		
 		_waveCounter = 3 * FlxG.updateFramerate;
@@ -341,11 +325,13 @@ class PlayState extends FlxState
 		
 		// If needed, updates the grid highlight square buildHelper and the range indicator
 		
+		#if !mobile
 		if ( _buildingMode ) {
 			_buildHelper.x = FlxG.mouse.x - ( FlxG.mouse.x % 8 );
 			_buildHelper.y = FlxG.mouse.y - ( FlxG.mouse.y % 8 );
 			updateRangeSprite( _buildHelper.getMidpoint(), 40 );
 		}
+		#end
 		
 		// Controls mouse clicks, which either build a tower or offer the option to upgrade a tower.
 		
@@ -496,9 +482,7 @@ class PlayState extends FlxState
 			loseGame();
 		}
 		
-		#if !js
 		FlxG.sound.play( "hurt" );
-		#end
 	}
 	
 	/**
@@ -509,9 +493,7 @@ class PlayState extends FlxState
 		enemy.hurt( bullet.damage );
 		bullet.kill();
 		
-		#if !js
 		FlxG.sound.play( "enemyhit" );
-		#end
 	}
 	
 	/**
@@ -557,8 +539,10 @@ class PlayState extends FlxState
 		}
 		
 		_buildingMode = !_buildingMode;
+		#if !mobile
 		_towerRange.visible = !_towerRange.visible;
 		_buildHelper.visible = _buildingMode;
+		#end
 		
 		playSelectSound();
 	}
@@ -720,9 +704,7 @@ class PlayState extends FlxState
 		// Can't buy towers without money
 		
 		if ( money < towerPrice ) {
-			#if !js
 			FlxG.sound.play("deny");
-			#end
 			
 			toggleMenus( General );
 			return;
@@ -737,9 +719,7 @@ class PlayState extends FlxState
 		
 		for ( tower in _towerGroup.members ) {
 			if ( tower.x == xPos && tower.y == yPos ) {
-				#if !js
 				FlxG.sound.play("deny");
-				#end
 				
 				toggleMenus( General );
 				return;
@@ -750,9 +730,7 @@ class PlayState extends FlxState
 		
 		if ( _map.getTile( Std.int( xPos / 8 ), Std.int( yPos / 8 ) ) == 0 )
 		{
-			#if !js
 			FlxG.sound.play("deny");
-			#end
 			
 			toggleMenus( General );
 			return;
@@ -773,9 +751,7 @@ class PlayState extends FlxState
 			_tutText.visible = true;
 		}
 		
-		#if !js
 		FlxG.sound.play( "build" );
-		#end
 		
 		money -= towerPrice;
 		towerPrice += Std.int( towerPrice * 0.3 );
@@ -788,9 +764,7 @@ class PlayState extends FlxState
 	 */
 	private function playSelectSound():Void
 	{
-		#if !js
 		FlxG.sound.play( "select" );
-		#end
 	} 
 	
 	/**
@@ -876,9 +850,7 @@ class PlayState extends FlxState
 		_towerButton.text = "[R]estart";
 		_towerButton.onDown.callback = resetCallback;
 		
-		#if !js
 		FlxG.sound.play("gameover");
-		#end
 	}
 	
 	/**

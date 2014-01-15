@@ -72,9 +72,7 @@ class Enemy extends FlxSprite
 	 */
 	public function explode( GainMoney:Bool ):Void
 	{
-		#if !js
 		FlxG.sound.play("enemykill");
-		#end
 		
 		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle( EnemyGibs );
 		emitter.explode( x, y );
