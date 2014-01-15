@@ -65,8 +65,8 @@ class PlayState extends FlxState
 	private var _easeInfo:Array<EaseInfo>;
 	
 	private var _currentEaseIndex:Int = 0;
-	private var _currentEaseType:String;
-	private var _currentEaseDirection:String;
+	private var _currentEaseType:String = "quad";
+	private var _currentEaseDirection:String = "In";
 	private var _currentTweenIndex:Int = MULTI_VAR; // Start with multiVar tween, it's used most commonly.
 	
 	private var _tween:FlxTween;
@@ -78,7 +78,9 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
+		#if !mobile
 		FlxG.mouse.show();
+		#end
 		FlxG.autoPause = false;
 		
 		// Set up an array containing all the different ease functions there are
@@ -86,30 +88,40 @@ class PlayState extends FlxState
 
 		_easeInfo.push( { name: "quadIn",  		ease: FlxEase.quadIn 		} );
 		_easeInfo.push( { name: "quadOut",  	ease: FlxEase.quadOut 		} );
+		_easeInfo.push( { name: "quadInOut",  	ease: FlxEase.quadInOut 	} );
+		
 		_easeInfo.push( { name: "cubeIn",  		ease: FlxEase.cubeIn 		} );
 		_easeInfo.push( { name: "cubeOut",  	ease: FlxEase.cubeOut 		} );
 		_easeInfo.push( { name: "cubeInOut", 	ease: FlxEase.cubeInOut 	} );
+		
 		_easeInfo.push( { name: "quartIn",  	ease: FlxEase.quartIn 		} );
 		_easeInfo.push( { name: "quartOut",  	ease: FlxEase.quartOut 		} );
 		_easeInfo.push( { name: "quartInOut",  	ease: FlxEase.quartInOut 	} );
+		
 		_easeInfo.push( { name: "quintIn",  	ease: FlxEase.quintIn 		} );
 		_easeInfo.push( { name: "quintOut",  	ease: FlxEase.quintOut 		} );
 		_easeInfo.push( { name: "quintInOut",  	ease: FlxEase.quintInOut 	} );
+		
 		_easeInfo.push( { name: "sineIn", 	 	ease: FlxEase.sineIn 		} );
 		_easeInfo.push( { name: "sineOut",  	ease: FlxEase.sineOut 		} );
 		_easeInfo.push( { name: "sineInOut",  	ease: FlxEase.sineInOut 	} );
+		
 		_easeInfo.push( { name: "bounceIn",  	ease: FlxEase.bounceIn 		} );
 		_easeInfo.push( { name: "bounceOut",  	ease: FlxEase.bounceOut 	} );
 		_easeInfo.push( { name: "bounceInOut",  ease: FlxEase.bounceInOut 	} );
+		
 		_easeInfo.push( { name: "circIn",  		ease: FlxEase.circIn 		} );
 		_easeInfo.push( { name: "circOut",  	ease: FlxEase.circOut 		} );
 		_easeInfo.push( { name: "circInOut",  	ease: FlxEase.circInOut 	} );
+		
 		_easeInfo.push( { name: "expoIn",  		ease: FlxEase.expoIn 		} );
 		_easeInfo.push( { name: "expoOut",  	ease: FlxEase.expoOut 		} );
 		_easeInfo.push( { name: "expoInOut",  	ease: FlxEase.expoInOut 	} );
+		
 		_easeInfo.push( { name: "backIn",  		ease: FlxEase.backIn 		} );
 		_easeInfo.push( { name: "backOut",  	ease: FlxEase.backOut 		} );
 		_easeInfo.push( { name: "backInOut",  	ease: FlxEase.backInOut 	} );
+		
 		_easeInfo.push( { name: "none",  		ease: null 					} );
 		
 		var title = new FlxText(0, 0, FlxG.width, "FlxTween", 64);
@@ -179,6 +191,7 @@ class PlayState extends FlxState
 		
 		var trailToggleButton = new FlxUIButton(xOff, yOff, "Trail", onToggleTrail);
 		trailToggleButton.loadGraphicSlice9(null, headerWidth, 0, null, -1, true);
+		trailToggleButton.toggled = true;
 		
 		// Add stuff in correct order - (lower y values first because of the dropdown menus)
 		
@@ -191,6 +204,13 @@ class PlayState extends FlxState
 		
 		// Start the tween
 		startTween();
+		
+		#if !FLX_NO_DEBUG
+		FlxG.watch.add(this, "_currentEaseIndex");
+		FlxG.watch.add(this, "_currentEaseType");
+		FlxG.watch.add(this, "_currentEaseDirection");
+		FlxG.watch.add(this, "_currentTweenIndex");
+		#end
 	}
 
 	private function startTween():Void
@@ -299,6 +319,7 @@ class PlayState extends FlxState
 	private function updateEaseIndex():Void
 	{
 		var curEase = _currentEaseType + _currentEaseDirection;
+		var foundEase:Bool = false;
 		
 		// Find the ease info in the array with the right name
 		for (i in 0..._easeInfo.length)
@@ -306,7 +327,12 @@ class PlayState extends FlxState
 			if (curEase == _easeInfo[i].name)
 			{
 				_currentEaseIndex = i;
+				foundEase = true;
 			}
+		}
+		
+		if (!foundEase) {
+			_currentEaseIndex = _easeInfo.length - 1; // last entry is "none"
 		}
 		
 		// Need to restart the tween now
