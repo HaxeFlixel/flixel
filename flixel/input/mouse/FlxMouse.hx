@@ -5,6 +5,7 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.Lib;
 import flash.ui.Mouse;
@@ -93,6 +94,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private var _cursorDefaultName:String = "defaultCursor";
 	private var _currentNativeCursor:String;
 	private var _previousNativeCursor:String;
+	private static var matrix:Matrix = new Matrix();
 	#end
 
 	/**
@@ -280,7 +282,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor.scaleY = Scale;
 		
 		#if (flash && !FLX_NO_NATIVE_CURSOR)
-		setSimpleNativeCursorData(_cursorDefaultName, _cursor.bitmapData);
+		var cursorBitmap:BitmapData = new BitmapData(Std.int(Math.abs(Scale * _cursor.bitmapData.width) + Math.abs(XOffset)), Std.int(Math.abs(Scale * _cursor.bitmapData.height) + Math.abs(YOffset)), true, 0x0);
+		matrix.identity();
+		matrix.scale(Math.abs(Scale), Math.abs(Scale));
+		matrix.translate(Math.abs(XOffset), Math.abs(YOffset));
+		cursorBitmap.draw(_cursor.bitmapData, matrix);
+		setSimpleNativeCursorData(_cursorDefaultName, cursorBitmap);
 		#else
 		cursorContainer.addChild(_cursor);
 		#end
@@ -353,8 +360,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		cursorData.hotSpot = new Point(0, 0);
 		cursorData.data = cursorVector;
 		
-		registerNativeCursor( Name, cursorData );
-		setNativeCursor( Name );
+		registerNativeCursor(Name, cursorData);
+		setNativeCursor(Name);
 
 		Mouse.show();
 		
