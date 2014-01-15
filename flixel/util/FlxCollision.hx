@@ -165,85 +165,46 @@ class FlxCollision
 		overlapArea.draw(testB, matrixB, new ColorTransform(1, 1, 1, 1, 255, 255, 255, AlphaTolerance), BlendMode.DIFFERENCE);
 		#else
 		
-		// TODO: try to fix this method for neko target
 		var overlapWidth:Int = overlapArea.width;
 		var overlapHeight:Int = overlapArea.height;
-		var targetX:Int;
-		var targetY:Int;
-		var pixelColor:Int;
-		var pixelAlpha:Int;
-		var transformedAlpha:Int;
-		var maxX:Int = testA.width + 1;
-		var maxY:Int = testA.height + 1;
 		
-		for (i in 0...maxX)
+		// non-Flash target quick replacement for Rectangle.setTo()
+		inline function setTo(rect:Rectangle, x:Float, y:Float, w:Float, h:Float):Void 
 		{
-			targetX = Math.floor(i + matrixA.tx);
-			
-			if (targetX >= 0 && targetX < maxX)
-			{
-				for (j in 0...maxY)
-				{
-					targetY = Math.floor(j + matrixA.ty);
-					
-					if (targetY >= 0 && targetY < maxY)
-					{
-						pixelColor = testA.getPixel32(i, j);
-						pixelAlpha = (pixelColor >> 24) & 0xFF;
-						
-						if (pixelAlpha >= AlphaTolerance)
-						{
-							overlapArea.setPixel32(targetX, targetY, 0xffff0000);
-						}
-						else
-						{
-							overlapArea.setPixel32(targetX, targetY, FlxColor.WHITE);
-						}
-					}
+			rect.x = x;
+			rect.y = y;
+			rect.width = w;
+			rect.height = h;
+		}
+		
+		setTo(boundsA, -matrixA.tx, -matrixA.ty, overlapWidth, overlapHeight);
+		setTo(boundsB, -matrixB.tx, -matrixB.ty, overlapWidth, overlapHeight);
+		var pixelsA = testA.getPixels(boundsA);
+		var pixelsB = testB.getPixels(boundsB);
+		
+		var hit = false;
+		
+		var alphaA:Int = 0;
+		var alphaB:Int = 0;
+		var idx:Int = 0;
+		for (y in 0...overlapHeight) {
+			for (x in 0...overlapWidth) {
+				idx = (y * overlapWidth + x) << 2;
+				alphaA = pixelsA[idx];
+				alphaB = pixelsB[idx];
+				if (alphaA >= AlphaTolerance && alphaB >= AlphaTolerance) {
+					hit = true;
+					break; 
 				}
 			}
+			if (hit) break;
 		}
-
-		maxX = testB.width + 1;
-		maxY = testB.height + 1;
-		var secondColor:Int;
 		
-		for (i in 0...maxX)
-		{
-			targetX = Math.floor(i + matrixB.tx);
-			
-			if (targetX >= 0 && targetX < maxX)
-			{
-				for (j in 0...maxY)
-				{
-					targetY = Math.floor(j + matrixB.ty);
-					
-					if (targetY >= 0 && targetY < maxY)
-					{
-						pixelColor = testB.getPixel32(i, j);
-						pixelAlpha = (pixelColor >> 24) & 0xFF;
-						
-						if (pixelAlpha >= AlphaTolerance)
-						{
-							secondColor = overlapArea.getPixel32(targetX, targetY);
-							
-							if (secondColor == 0xffff0000)
-							{
-								overlapArea.setPixel32(targetX, targetY, 0xff00ffff);
-							}
-							else
-							{
-								overlapArea.setPixel32(targetX, targetY, 0x00000000);
-							}
-						}
-					}
-				}
-			}
-		}
+		return hit;
 		
 		#end
 		
-		// Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere.
+		// Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere (only on Flash target).
 		debug = overlapArea;
 		
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
