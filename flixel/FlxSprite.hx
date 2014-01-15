@@ -1295,6 +1295,21 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
+	 * 
+	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined. Otherwise a new one is created.
+	 * @return	A <code>FlxPoint</code> object containing the midpoint of this sprite's graphic in world coordinates.
+	 */
+	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
+	{
+		if (point == null)
+		{
+			point = new FlxPoint();
+		}
+		return point.set(x + frameWidth * 0.5, y + frameHeight * 0.5);
+	}
+	
+	/**
 	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
 	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
 	 */

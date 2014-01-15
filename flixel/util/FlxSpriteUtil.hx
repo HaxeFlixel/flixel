@@ -295,16 +295,34 @@ class FlxSpriteUtil
 	 * This function draws a circle on a FlxSprite at position X,Y with the specified color.
 	 * 
 	 * @param	sprite		The <code>FlxSprite</code> to manipulate
-	 * @param	X 			X coordinate of the circle's center
-	 * @param	Y 			Y coordinate of the circle's center
-	 * @param	Radius 		Radius of the circle
+	 * @param	X 			X coordinate of the circle's center (automatically centered on the sprite if -1)
+	 * @param	Y 			Y coordinate of the circle's center (automatically centered on the sprite if -1)
+	 * @param	Radius 		Radius of the circle (makes sure the circle fully fits on the sprite's graphic if < 1, assuming and and y are centered)
 	 * @param	Color 		Color of the circle
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 */
-	static public function drawCircle(sprite:FlxSprite, X:Float, Y:Float, Radius:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):Void
+	static public function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, Color:Int = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):Void
 	{
+		if ((X == -1) || (Y == -1)) 
+		{
+			var midPoint = sprite.getGraphicMidpoint();
+			
+			if (X == -1) {
+				X = midPoint.x;
+			}
+			if (Y == -1) {
+				Y = midPoint.y;
+			}
+		}
+		
+		if (Radius < 1) 
+		{
+			var minVal = Math.min(sprite.frameWidth, sprite.frameHeight);
+			Radius = (minVal / 2);
+		}
+		
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawCircle(X, Y, Radius);
 		endDraw(sprite, drawStyle);
