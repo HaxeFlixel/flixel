@@ -25,12 +25,22 @@ class FlxCollision
 	
 	static public var debug:BitmapData = new BitmapData(1, 1, false);
 	
+	// Optimization: Local static vars to reduce allocations
+	static private var pointA:Point = new Point();
+	static private var pointB:Point = new Point();
+	static private var centerA:Point = new Point();
+	static private var centerB:Point = new Point();
+	static private var matrixA:Matrix = new Matrix();
+	static private var matrixB:Matrix = new Matrix();
+	static private var testMatrix:Matrix = new Matrix();
+	static private var boundsA:Rectangle = new Rectangle();
+	static private var boundsB:Rectangle = new Rectangle();
+	
 	/**
 	 * A Pixel Perfect Collision check between two FlxSprites.
 	 * It will do a bounds check first, and if that passes it will run a pixel perfect match on the intersecting area.
 	 * Works with rotated and animated sprites.
-	 * It's extremly slow on cpp targets, so I don't recommend you to use it on them.
-	 * Not working on neko target and awfully slows app down
+	 * May be slow, so use it sparingly.
 	 * 
 	 * @param	Contact			The first FlxSprite to test against
 	 * @param	Target			The second FlxSprite to test again, sprite order is irrelevant
@@ -43,53 +53,55 @@ class FlxCollision
 		//if either of the angles are non-zero, consider the angles of the sprites in the pixel check
 		var considerRotation:Bool = Contact.angle != 0 || Target.angle != 0;
 		
-		var pointA:Point = new Point();
-		var pointB:Point = new Point();
+		Camera = Camera != null ? Camera : FlxG.camera;
 		
-		if (Camera != null)
+		pointA.x = Contact.x - Std.int(Camera.scroll.x * Contact.scrollFactor.x) - Contact.offset.x;
+		pointA.y = Contact.y - Std.int(Camera.scroll.y * Contact.scrollFactor.y) - Contact.offset.y;
+		
+		pointB.x = Target.x - Std.int(Camera.scroll.x * Target.scrollFactor.x) - Target.offset.x;
+		pointB.y = Target.y - Std.int(Camera.scroll.y * Target.scrollFactor.y) - Target.offset.y;
+		
+		// non-Flash target inline replacement for Point.setTo()
+		inline function setPointTo(p:Point, x:Float, y:Float):Void 
 		{
-			pointA.x = Contact.x - Std.int(Camera.scroll.x * Contact.scrollFactor.x) - Contact.offset.x;
-			pointA.y = Contact.y - Std.int(Camera.scroll.y * Contact.scrollFactor.y) - Contact.offset.y;
-			
-			pointB.x = Target.x - Std.int(Camera.scroll.x * Target.scrollFactor.x) - Target.offset.x;
-			pointB.y = Target.y - Std.int(Camera.scroll.y * Target.scrollFactor.y) - Target.offset.y;
-		}
-		else
-		{
-			pointA.x = Contact.x - Std.int(FlxG.camera.scroll.x * Contact.scrollFactor.x) - Contact.offset.x;
-			pointA.y = Contact.y - Std.int(FlxG.camera.scroll.y * Contact.scrollFactor.y) - Contact.offset.y;
-			
-			pointB.x = Target.x - Std.int(FlxG.camera.scroll.x * Target.scrollFactor.x) - Target.offset.x;
-			pointB.y = Target.y - Std.int(FlxG.camera.scroll.y * Target.scrollFactor.y) - Target.offset.y;
+			p.x = x;
+			p.y = y;
 		}
 		
-		var boundsA:Rectangle = null;
-		var boundsB:Rectangle = null;
+		// non-Flash target inline replacement for Rectangle.setTo()
+		inline function setRectTo(r:Rectangle, x:Float, y:Float, w:Float, h:Float):Void 
+		{
+			r.x = x;
+			r.y = y;
+			r.width = w;
+			r.height = h;
+		}
+		
 		if (considerRotation)
 		{
 			// find the center of both sprites
-			var centerA:Point = new Point(Contact.origin.x, Contact.origin.y);
-			var centerB:Point = new Point(Target.origin.x, Target.origin.y);			
+			setPointTo(centerA, Contact.origin.x, Contact.origin.y);
+			setPointTo(centerB, Target.origin.x, Target.origin.y);			
 			
 			// now make a bounding box that allows for the sprite to be rotated in 360 degrees
-			boundsA = new Rectangle(
+			setRectTo(boundsA,
 				(pointA.x + centerA.x - centerA.length), 
 				(pointA.y + centerA.y - centerA.length), 
 				centerA.length*2, centerA.length*2);
-			boundsB = new Rectangle(
+			setRectTo(boundsB,
 				(pointB.x + centerB.x - centerB.length), 
 				(pointB.y + centerB.y - centerB.length), 
 				centerB.length*2, centerB.length*2);			
 		}
 		else
 		{
-			#if flash
-			boundsA = new Rectangle(pointA.x, pointA.y, Contact.framePixels.width, Contact.framePixels.height);
-			boundsB = new Rectangle(pointB.x, pointB.y, Target.framePixels.width, Target.framePixels.height);
-			#else
-			boundsA = new Rectangle(pointA.x, pointA.y, Contact.frameWidth, Contact.frameHeight);
-			boundsB = new Rectangle(pointB.x, pointB.y, Target.frameWidth, Target.frameHeight);
-			#end
+		#if flash
+			setRectTo(boundsA, pointA.x, pointA.y, Contact.framePixels.width, Contact.framePixels.height);
+			setRectTo(boundsB, pointB.x, pointB.y, Target.framePixels.width, Target.framePixels.height);
+		#else
+			setRectTo(boundsA, pointA.x, pointA.y, Contact.frameWidth, Contact.frameHeight);
+			setRectTo(boundsB, pointB.x, pointB.y, Target.frameWidth, Target.frameHeight);
+		#end
 		}
 		
 		var intersect:Rectangle = boundsA.intersection(boundsB);
@@ -111,16 +123,16 @@ class FlxCollision
 		}
 		
 		//	Thanks to Chris Underwood for helping with the translate logic :)
-		var matrixA:Matrix = new Matrix();
+		matrixA.identity();
 		matrixA.translate(-(intersect.x - boundsA.x), -(intersect.y - boundsA.y));
 		
-		var matrixB:Matrix = new Matrix();
+		matrixB.identity();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
-		#if !flash
+	#if !flash
 		Contact.drawFrame();
 		Target.drawFrame();
-		#end
+	#end
 		
 		var testA:BitmapData = Contact.framePixels;
 		var testB:BitmapData = Target.framePixels;
@@ -129,61 +141,54 @@ class FlxCollision
 		// More complicated case, if either of the sprites is rotated
 		if (considerRotation)
 		{
-			var testAMatrix:Matrix = new Matrix();
-			testAMatrix.identity();
+			testMatrix.identity();
 			
 			// translate the matrix to the center of the sprite
-			testAMatrix.translate( -Contact.origin.x, -Contact.origin.y);
+			testMatrix.translate( -Contact.origin.x, -Contact.origin.y);
 			
 			// rotate the matrix according to angle
-			testAMatrix.rotate(Contact.angle * 0.017453293 );  // degrees to rad
+			testMatrix.rotate(Contact.angle * 0.017453293 );  // degrees to rad
 			
 			// translate it back!
-			testAMatrix.translate(boundsA.width / 2, boundsA.height / 2);
+			testMatrix.translate(boundsA.width / 2, boundsA.height / 2);
 			
 			// prepare an empty canvas
 			var testA2:BitmapData = new BitmapData(Math.floor(boundsA.width) , Math.floor(boundsA.height), true, 0x00000000);
 			
 			// plot the sprite using the matrix
-			testA2.draw(testA, testAMatrix, null, null, null, false);
+			testA2.draw(testA, testMatrix, null, null, null, false);
 			testA = testA2;
 			
 			// (same as above)
-			var testBMatrix:Matrix = new Matrix();
-			testBMatrix.identity();
-			testBMatrix.translate(-Target.origin.x,-Target.origin.y);
-			testBMatrix.rotate(Target.angle * 0.017453293 );  // degrees to rad
-			testBMatrix.translate(boundsB.width/2,boundsB.height/2);
+			testMatrix.identity();
+			testMatrix.translate(-Target.origin.x,-Target.origin.y);
+			testMatrix.rotate(Target.angle * 0.017453293 );  // degrees to rad
+			testMatrix.translate(boundsB.width/2,boundsB.height/2);
+			
 			var testB2:BitmapData = new BitmapData(Math.floor(boundsB.width), Math.floor(boundsB.height), true, 0x00000000);
-			testB2.draw(testB, testBMatrix, null, null, null, false);			
+			testB2.draw(testB, testMatrix, null, null, null, false);                        
+			
+			testB2.draw(testB, testMatrix, null, null, null, false);			
 			testB = testB2;
 		}
 		
 		
-		#if flash
+	#if flash
 		overlapArea.draw(testA, matrixA, new ColorTransform(1, 1, 1, 1, 255, -255, -255, AlphaTolerance), BlendMode.NORMAL);
 		overlapArea.draw(testB, matrixB, new ColorTransform(1, 1, 1, 1, 255, 255, 255, AlphaTolerance), BlendMode.DIFFERENCE);
-		#else
+	#else
 		
 		var overlapWidth:Int = overlapArea.width;
 		var overlapHeight:Int = overlapArea.height;
 		
-		// non-Flash target quick replacement for Rectangle.setTo()
-		inline function setTo(rect:Rectangle, x:Float, y:Float, w:Float, h:Float):Void 
-		{
-			rect.x = x;
-			rect.y = y;
-			rect.width = w;
-			rect.height = h;
-		}
-		
-		setTo(boundsA, -matrixA.tx, -matrixA.ty, overlapWidth, overlapHeight);
-		setTo(boundsB, -matrixB.tx, -matrixB.ty, overlapWidth, overlapHeight);
+		setRectTo(boundsA, -matrixA.tx, -matrixA.ty, overlapWidth, overlapHeight);
+		setRectTo(boundsB, -matrixB.tx, -matrixB.ty, overlapWidth, overlapHeight);
 		var pixelsA = testA.getPixels(boundsA);
 		var pixelsB = testB.getPixels(boundsB);
 		
 		var hit = false;
 		
+		// Analyze overlapping area of BitmapDatas to check for a collision (alpha values >= AlphaTolerance)
 		var alphaA:Int = 0;
 		var alphaB:Int = 0;
 		var idx:Int = 0;
@@ -204,7 +209,7 @@ class FlxCollision
 		
 		#end
 		
-		// Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere (only on Flash target).
+		// Developers: If you'd like to see how this works enable the debugger and display it in your game somewhere (only Flash target).
 		debug = overlapArea;
 		
 		var overlap:Rectangle = overlapArea.getColorBoundsRect(0xffffffff, 0xff00ffff);
