@@ -282,7 +282,26 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor.scaleY = Scale;
 		
 		#if (flash && !FLX_NO_NATIVE_CURSOR)
-		var cursorBitmap:BitmapData = new BitmapData(Std.int(Math.abs(Scale * _cursor.bitmapData.width) + Math.abs(XOffset)), Std.int(Math.abs(Scale * _cursor.bitmapData.height) + Math.abs(YOffset)), true, 0x0);
+		if (XOffset < 0 || YOffset < 0)
+		{
+			FlxG.log.warn ("Negative offsets aren't supported with native cursor. Abs values will be used instead.");
+			XOffset = Math.abs(XOffset);
+			YOffset = Math.abs(YOffset);
+		}
+		
+		if (Scale < 0)
+		{
+			FlxG.log.warn ("Negative scale isn't supported with native cursor. Abs value will be used instead.");
+			Scale = Math.abs(Scale);
+		}
+		
+		var scaledWidth:Int = Std.int(Scale * _cursor.bitmapData.width);
+		var scaledHeight:Int = Std.int(Scale * _cursor.bitmapData.height);
+		
+		var bitmapWidth:Int = scaledWidth + Std.int(XOffset);
+		var bitmapHeight:Int = scaledHeight + Std.int(YOffset);
+		
+		var cursorBitmap:BitmapData = new BitmapData(bitmapWidth, bitmapHeight, true, 0x0);
 		matrix.identity();
 		matrix.scale(Math.abs(Scale), Math.abs(Scale));
 		matrix.translate(Math.abs(XOffset), Math.abs(YOffset));
@@ -351,9 +370,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		var cursorVector = new Vector<BitmapData>();
 		cursorVector[0] = CursorBitmap;
 		
-		if(_cursor.bitmapData.width > 32 ||_cursor.bitmapData.height > 32)
+		if (CursorBitmap.width > 32 || CursorBitmap.height > 32)
 		{
-			FlxG.log.warn ("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
+			FlxG.log.warn("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
 		}
 		
 		var cursorData = new MouseCursorData();
