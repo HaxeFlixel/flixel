@@ -109,21 +109,17 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public function draw():Void
 	{
+		#if !FLX_NO_DEBUG
 		if (cameras == null)
 		{
 			cameras = FlxG.cameras.list;
 		}
-		var camera:FlxCamera;
-		var i:Int = 0;
-		var l:Int = cameras.length;
-		while(i < l)
+		
+		for (camera in cameras)
 		{
-			camera = cameras[i++];
-			
-			#if !FLX_NO_DEBUG
 			_VISIBLECOUNT++;
-			#end
 		}
+		#end
 	}
 	
 	#if !FLX_NO_DEBUG
