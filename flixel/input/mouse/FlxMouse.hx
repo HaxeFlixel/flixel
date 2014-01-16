@@ -285,26 +285,26 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		if (XOffset < 0 || YOffset < 0)
 		{
 			FlxG.log.warn ("Negative offsets aren't supported with native cursor. Abs values will be used instead.");
-			XOffset = Std.int(Math.abs(XOffset));
-			YOffset = Std.int(Math.abs(YOffset));
+			XOffset = 0;
+			YOffset = 0;
 		}
 		
 		if (Scale < 0)
 		{
 			FlxG.log.warn ("Negative scale isn't supported with native cursor. Abs value will be used instead.");
-			Scale = Math.abs(Scale);
+			Scale = 1;
 		}
 		
 		var scaledWidth:Int = Std.int(Scale * _cursor.bitmapData.width);
 		var scaledHeight:Int = Std.int(Scale * _cursor.bitmapData.height);
 		
-		var bitmapWidth:Int = scaledWidth + Std.int(XOffset);
-		var bitmapHeight:Int = scaledHeight + Std.int(YOffset);
+		var bitmapWidth:Int = scaledWidth + XOffset;
+		var bitmapHeight:Int = scaledHeight + YOffset;
 		
 		var cursorBitmap:BitmapData = new BitmapData(bitmapWidth, bitmapHeight, true, 0x0);
 		matrix.identity();
-		matrix.scale(Math.abs(Scale), Math.abs(Scale));
-		matrix.translate(Math.abs(XOffset), Math.abs(YOffset));
+		matrix.scale(Scale, Scale);
+		matrix.translate(XOffset, YOffset);
 		cursorBitmap.draw(_cursor.bitmapData, matrix);
 		setSimpleNativeCursorData(_cursorDefaultName, cursorBitmap);
 		#else
