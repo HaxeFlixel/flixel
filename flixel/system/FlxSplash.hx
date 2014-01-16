@@ -62,8 +62,13 @@ class FlxSplash extends FlxState
 			FlxTimer.start(time, timerCallback);
 		}
 		
-		var stageWidth:Int = Lib.current.stage.stageWidth;
-		var stageHeight:Int = Lib.current.stage.stageHeight;
+		#if android
+		var stageWidth:Int = Std.int(Lib.current.stage.width);
+		var stageHeight:Int = Std.int(Lib.current.stage.height);
+		#else 
+		var stageWidth:Int = Std.int(Lib.current.stage.stageWidth);
+		var stageHeight:Int = Std.int(Lib.current.stage.stageHeight);
+		#end
 		
 		_sprite = new Sprite();
 		_sprite.x = (stageWidth / 2) - 50;
