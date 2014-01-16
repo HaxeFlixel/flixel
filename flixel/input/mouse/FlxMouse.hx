@@ -285,8 +285,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		if (XOffset < 0 || YOffset < 0)
 		{
 			FlxG.log.warn ("Negative offsets aren't supported with native cursor. Abs values will be used instead.");
-			XOffset = Math.abs(XOffset);
-			YOffset = Math.abs(YOffset);
+			XOffset = Std.int(Math.abs(XOffset));
+			YOffset = Std.int(Math.abs(YOffset));
 		}
 		
 		if (Scale < 0)
