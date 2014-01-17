@@ -8,6 +8,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
@@ -251,14 +252,14 @@ class Eye extends FlxGroup
 		
 		outerEye = new FlxSprite(0,0);
 		outerEye.makeGraphic(Std.int(eyeRadius * 2), Std.int(eyeRadius * 2), 0x0, true);
-		FlxSpriteUtil.drawCircle(outerEye, eyeRadius, eyeRadius, eyeRadius, 0xFFFFFF);
+		FlxSpriteUtil.drawCircle(outerEye, eyeRadius, eyeRadius, eyeRadius, FlxColor.WHITE);
 		outerEye.offset.x = outerEye.width / 2;
 		outerEye.offset.y = outerEye.height / 2;
 		add(outerEye);
 		
 		innerEye = new FlxSprite(0,0);
 		innerEye.makeGraphic(Std.int(eyeRadius * 2), Std.int(eyeRadius * 2), 0x0, true);
-		FlxSpriteUtil.drawCircle(innerEye, eyeRadius, eyeRadius, eyeRadius / 2, 0x0);
+		FlxSpriteUtil.drawCircle(innerEye, eyeRadius, eyeRadius, eyeRadius / 2, FlxColor.BLACK);
 		innerEye.offset.x = outerEye.width / 2;
 		innerEye.offset.y = outerEye.height / 2;
 		add(innerEye);
