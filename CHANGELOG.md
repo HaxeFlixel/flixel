@@ -8,7 +8,6 @@ v.3.1.0
 * FlxTrailArea: Several improvements (can now be resized with setSize()), default delay is now 2
 * FlxMisc has been removed, openURL() can now be found in FlxG
 * FlxCamera: getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
-* AngleTween now accepts FlxSprite as a parameter
 * FlxSpriteGroup: Added forEach(), forEachAlive(), forEachDead() and forEachExists()
 * FlxSpriteUtil: 
   * new drawTriangle() and drawPolygon(), fadeIn() and fadeOut() functions 
@@ -42,11 +41,15 @@ v.3.1.0
 * Fixes for OUYA gamepad combatibility (fixed some button IDs in OUYAButtonID)
 * Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
 * Prevent paused sounds from playing after regaining focus
-* Several bug fixes and improvements to FlxText and FlxTextField classes
+* FlxText:
+ * BUG: Fix inaccurate text color when setting both color and alpha
+ * BUG: Fix incompatiblity of FlxText.borderStyle and FlxText.alpha
+ * BUG: Fixed changing color or alpha of a FlxText affecting its origin
+ * Internal optimizations for less BitmapData creations
 * Renamed framerates to clear up confusion: 
   * gameFramerate -> updateFramerate
   * flashFramerate -> drawFramerate
-* BUG: Fixed order of operations issue that was causing _FlxSubStates_ to crash on close.
+* BUG: Fixed order of operations issue that was causing FlxSubStates to crash on close.
 * BUG: Fixed a splash screen repeating bug when using default splash screen.
 * Gamepad support improvements
   * Improvements and optimizations to gamepad api, fixed Ouya compatibility!
@@ -55,14 +58,17 @@ v.3.1.0
   * Added PS3ButtonID and LogitechButtonID classes
 * Ported resolution policies from flixel for moneky (FlxG.resolutionPolicy / flixel.system.resolution) and removed FlxG.autoResize
 * Renamed FlxG.debugger.visualDebug to drawDebug
-* FlxTween optimizations
+* FlxTween:
+ * optimizations
+ * AngleTween now accepts FlxSprite as a parameter
+ * Now possible to delay tweens via the TweenOptions typedef 
 * BUG: Fixed jittering movement of FlxObjects following a FlxPath
 * Removed FlxG.paused, it was a container variable without functionality
-* FlxRect: Added setSize()
-* BUG: Fixed changing color or alpha of a FlxText affecting its origin
-* BUG: Fix incompatiblity of FlxText.borderStyle and FlxText.alpha
-* Moved flixel.system.input to flixel.input
+* FlxRect: 
+ * Added setSize()
+ * top / bottom / left / right can now be set
 * FlxArrayUtil.fastSplice() added
+* Moved flixel.system.input to flixel.input
 * Moved interfaces into a new interfaces package
 * BUG: Fixed crash when using traces on android
 
