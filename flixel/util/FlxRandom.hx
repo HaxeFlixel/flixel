@@ -52,6 +52,7 @@ class FlxRandom
 	 */
 	static private var _intHelper:Int = 0;
 	static private var _intHelper2:Int = 0;
+	static private var _intHelper3:Int = 0;
 	static private var _floatHelper:Float = 0;
 	static private var _arrayFloatHelper:Array<Float> = null;
 	static private var _red:Int = 0;
@@ -278,11 +279,11 @@ class FlxRandom
 		
 		for ( i in 0...HowManyTimes )
 		{
-			_intHelper = intRanged( 0, Objects.length - 1 );
 			_intHelper2 = intRanged( 0, Objects.length - 1 );
-			tempObject = Objects[_intHelper];
-			Objects[_intHelper] = Objects[_intHelper2];
-			Objects[_intHelper2] = tempObject;
+			_intHelper3 = intRanged( 0, Objects.length - 1 );
+			tempObject = Objects[_intHelper2];
+			Objects[_intHelper2] = Objects[_intHelper3];
+			Objects[_intHelper3] = tempObject;
 		}
 		
 		return Objects;
