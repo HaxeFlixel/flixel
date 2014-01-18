@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.effects.FlxTrail;
@@ -176,7 +177,7 @@ class PlayState extends FlxState
 		xOff = 80;
 		
 		var trailToggleButton = new FlxUIButton(xOff, yOff, "Trail", onToggleTrail);
-		trailToggleButton.loadGraphicSlice9(null, headerWidth, 0, null, -1, true);
+		trailToggleButton.loadGraphicSlice9(null, headerWidth, 0, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		trailToggleButton.toggled = true;
 		
 		// Add stuff in correct order - (lower y values first because of the dropdown menus)
