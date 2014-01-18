@@ -25,10 +25,10 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
-	public var dpadUp(get, null):Bool;
-	public var dpadDown(get, null):Bool;
-	public var dpadLeft(get, null):Bool;
-	public var dpadRight(get, null):Bool;
+	public var dpadUp(get, null):Bool = false;
+	public var dpadDown(get, null):Bool = false;
+	public var dpadLeft(get, null):Bool = false;
+	public var dpadRight(get, null):Bool = false;
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
