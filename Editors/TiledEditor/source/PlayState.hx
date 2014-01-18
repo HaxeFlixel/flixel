@@ -56,13 +56,14 @@ class PlayState extends FlxState
 		score.borderStyle = FlxText.BORDER_SHADOW;
 		status.alignment = "right";
 		
+		youDied = false;
+		
 		if(youDied == false)
 			status.text = "Collect coins.";
 		else
 			status.text = "Aww, you died!";
 		
 		add(status);
-		youDied = false;
 	}
 	
 	override public function update():Void 
