@@ -19,7 +19,7 @@ class PlayState extends FlxState
 	public var floor:FlxObject;
 	public var exit:FlxSprite;
 	
-	private static var youDied:Bool;
+	private static var youDied:Bool = false;
 	
 	override public function create():Void 
 	{
@@ -55,8 +55,6 @@ class PlayState extends FlxState
 		status.borderColor = 0xff000000;
 		score.borderStyle = FlxText.BORDER_SHADOW;
 		status.alignment = "right";
-		
-		youDied = false;
 		
 		if(youDied == false)
 			status.text = "Collect coins.";
