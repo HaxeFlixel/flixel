@@ -202,7 +202,7 @@ class FlxEase
 	}
 	
 	/** Elastic in and out. */
-	public static function elasticInOunt(t:Float):Float
+	public static function elasticInOut(t:Float):Float
 	{
 		if (t < 0.5)
 		{
