@@ -104,6 +104,10 @@ class PlayState extends FlxState
 		_easeInfo.push( { name: "backOut",  	ease: FlxEase.backOut 		} );
 		_easeInfo.push( { name: "backInOut",  	ease: FlxEase.backInOut 	} );
 		
+		_easeInfo.push( { name: "elasticIn",  	ease: FlxEase.elasticIn 	} );
+		_easeInfo.push( { name: "elasticOut",  	ease: FlxEase.elasticOut 	} );
+		_easeInfo.push( { name: "elasticInOut", ease: FlxEase.elasticInOut 	} );
+		
 		_easeInfo.push( { name: "none",  		ease: null 					} );
 		
 		var title = new FlxText(0, 0, FlxG.width, "FlxTween", 64);
@@ -155,7 +159,7 @@ class PlayState extends FlxState
 		
 		xOff = Std.int(tweenTypeDropDown.x);
 		
-		var easeTypes:Array<String> = [ "quad", "cube", "quart", "quint", "sine", "bounce", "circ", "expo", "back", "none" ];
+		var easeTypes:Array<String> = [ "quad", "cube", "quart", "quint", "sine", "bounce", "circ", "expo", "back", "elastic", "none" ];
 		var header = new FlxUIDropDownHeader(headerWidth);
 		var easeTypeDropDown = new FlxUIDropDownMenu(xOff, yOff, FlxUIDropDownMenu.makeStrIdLabelArray(easeTypes), onEaseTypeChange, header);
 		
