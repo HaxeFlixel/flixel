@@ -260,7 +260,7 @@ class Console extends Window
 				ConsoleUtil.callFunction(func, args); 
 				
 				// Skip to the next step if the game is paused to see the effects of the command
-				#if flash
+				#if (flash && !FLX_NO_DEBUG)
 				if (FlxG.vcr.paused)
 				{
 					FlxG.game.debugger.vcr.onStep();
