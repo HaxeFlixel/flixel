@@ -19,7 +19,7 @@ class PlayState extends FlxState
 	public var floor:FlxObject;
 	public var exit:FlxSprite;
 	
-	private static var youDied:Bool;
+	private static var youDied:Bool = false;
 	
 	override public function create():Void 
 	{
@@ -62,7 +62,6 @@ class PlayState extends FlxState
 			status.text = "Aww, you died!";
 		
 		add(status);
-		youDied = false;
 	}
 	
 	override public function update():Void 
