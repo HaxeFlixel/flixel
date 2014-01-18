@@ -157,7 +157,7 @@ class FlxSoundTray extends Sprite
 	
 	public function screenCenter():Void
 	{
-		x = Std.int((Lib.current.stage.stageWidth / 2) * FlxCamera.defaultZoom - (_width / 2) * scaleX);
+		x = Std.int((Lib.current.stage.stageWidth / 2) - (_width / 2) * scaleX);
 	}
 }
 #end

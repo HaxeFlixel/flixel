@@ -30,7 +30,6 @@ class FlxSplash extends FlxState
 	private var _cachedTimestep:Bool;
 	private var _cachedAutoPause:Bool;
 	
-	
 	public function new(NextState:Class<FlxState>)
 	{
 		_nextState = NextState;

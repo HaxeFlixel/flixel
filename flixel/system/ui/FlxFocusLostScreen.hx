@@ -30,8 +30,8 @@ class FlxFocusLostScreen extends Sprite
 	public function draw():Void
 	{
 		var gfx:Graphics = graphics;
-		var screenWidth:Int = Std.int(Lib.current.stage.stageWidth * FlxCamera.defaultZoom);
-		var screenHeight:Int = Std.int(Lib.current.stage.stageHeight * FlxCamera.defaultZoom);
+		var screenWidth:Int = Std.int(Lib.current.stage.stageWidth);
+		var screenHeight:Int = Std.int(Lib.current.stage.stageHeight);
 		
 		// Draw transparent black backdrop
 		gfx.clear();
