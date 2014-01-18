@@ -8,6 +8,7 @@ import flixel.FlxG;
  */
 class FlxKeyList
 {
+	#if !FLX_NO_KEYBOARD
 	private var checkStatus:Int;
 	
 	public function new(CheckStatus:Int)
@@ -135,4 +136,5 @@ class FlxKeyList
 	{
 		return FlxG.keyboard.checkStatus(keyCode, checkStatus);
 	}
+	#end
 }
