@@ -420,13 +420,7 @@ class BitmapFrontEnd
 	
 	public function inOpenFlAssets(bitmap:BitmapData):Bool
 	{
-		#if !doc
-		// Openfl 1.0 backwards compatibility
-		#if (openfl < 1)
-		var bitmapDataCache = Assets.cachedBitmapData;
-		#else
 		var bitmapDataCache = Assets.cache.bitmapData;
-		#end
 		if (bitmapDataCache != null)
 		{
 			for (bd in bitmapDataCache)
@@ -437,7 +431,6 @@ class BitmapFrontEnd
 				}
 			}
 		}
-		#end
 		return false;
 	}
 }
