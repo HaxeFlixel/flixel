@@ -217,7 +217,7 @@ class FlxGame extends Sprite
 	 */
 	private function create(FlashEvent:Event):Void
 	{
-		if (stage == null)
+		if (Lib.current.stage == null)
 		{
 			return;
 		}
@@ -230,9 +230,9 @@ class FlxGame extends Sprite
 		#end
 
 		// Set up the view window and double buffering
-		stage.scaleMode = StageScaleMode.NO_SCALE;
-		stage.align = StageAlign.TOP_LEFT;
-		stage.frameRate = drawFramerate;
+		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		Lib.current.stage.align = StageAlign.TOP_LEFT;
+		Lib.current.stage.frameRate = drawFramerate;
 		
 		addChild(inputContainer);
 		
@@ -258,11 +258,11 @@ class FlxGame extends Sprite
 		
 		// Focus gained/lost monitoring
 		#if flash
-		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
-		stage.addEventListener(Event.ACTIVATE, onFocus);
+		Lib.current.stage.addEventListener(Event.DEACTIVATE, onFocusLost);
+		Lib.current.stage.addEventListener(Event.ACTIVATE, onFocus);
 		#else
-		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
-		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
+		Lib.current.stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
+		Lib.current.stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		#end
 		
 		// Instantiate the initial state
@@ -275,11 +275,11 @@ class FlxGame extends Sprite
 		}
 		
 		// Finally, set up an event for the actual game loop stuff.
-		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		
 		// We need to listen for resize event which means new context
 		// it means that we need to recreate bitmapdatas of dumped tilesheets
-		stage.addEventListener(Event.RESIZE, onResize);
+		Lib.current.stage.addEventListener(Event.RESIZE, onResize);
 	}
 	
 	/**
@@ -313,7 +313,7 @@ class FlxGame extends Sprite
 			debugger.stats.onFocus();
 		#end
 		
-		stage.frameRate = drawFramerate;
+		Lib.current.stage.frameRate = drawFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
 			FlxG.sound.onFocus();
 		#end
@@ -351,7 +351,7 @@ class FlxGame extends Sprite
 			debugger.stats.onFocusLost();
 		#end
 		
-		stage.frameRate = focusLostFramerate;
+		Lib.current.stage.frameRate = focusLostFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
 			FlxG.sound.onFocusLost();
 		#end
