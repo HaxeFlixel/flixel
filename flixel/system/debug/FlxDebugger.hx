@@ -128,17 +128,11 @@ class FlxDebugger extends Sprite
 		_rightButtons = new Array<FlxSystemButton>();
 		_middleButtons = new Array<FlxSystemButton>();
 		
-		log = new Log("log", FlxAssets.IMG_LOG_DEBUG, 0, 0, true);
-		addChild(log);
+		addChild(log = new Log());
+		addChild(watch = new Watch());
+		addChild(console = new Console());
+		addChild(stats = new Stats());
 		
-		watch = new Watch("watch", FlxAssets.IMG_WATCH_DEBUG, 0, 0, true);
-		addChild(watch);
-		
-		console = new Console("console", FlxAssets.IMG_CONSOLE, 0, 0, false);
-		addChild(console);
-		
-		stats = new Stats("stats", FlxAssets.IMG_STATS_DEBUG, 0, 0, false);
-		addChild(stats);
 		stats.visible = true;
 		
 		#if FLX_BMP_DEBUG

@@ -3,6 +3,7 @@ package flixel.system.debug;
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.system.FlxAssets;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
@@ -28,17 +29,11 @@ class Watch extends Window
 	private var _quickWatchList:Map<String, WatchEntry>;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param 	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param 	Width		The initial width of the window.
-	 * @param 	Height		The initial height of the window.
-	 * @param 	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
+	 * Creates a new watch window object.
 	 */
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("watch", FlxAssets.IMG_WATCH_DEBUG);
 		
 		_names = new Sprite();
 		_names.x = 2;

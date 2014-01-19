@@ -66,17 +66,11 @@ class Console extends Window
 	private var _input:TextField;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param	Width		The initial width of the window.
-	 * @param	Height		The initial height of the window.
-	 * @param	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
+	 * Creates a new console window object.
 	 */	
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{	
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("console", FlxAssets.IMG_CONSOLE, 0, 0, false);
 		
 		commands = new Array<Command>();
 		
