@@ -15,7 +15,6 @@ import flixel.tweens.motion.CubicMotion;
 import flixel.tweens.motion.LinearMotion;
 import flixel.tweens.motion.LinearPath;
 import flixel.tweens.motion.Motion;
-import flixel.tweens.motion.MotionType;
 import flixel.tweens.motion.PathType;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
@@ -550,7 +549,7 @@ class FlxTween
 	/**
 	 * Starts the Tween, or restarts it if it's currently running.
 	 */
-	public function start():Dynamic
+	public function start():FlxTween
 	{
 		_time = 0;
 		if (_target == 0)

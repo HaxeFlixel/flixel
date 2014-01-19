@@ -22,8 +22,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
 /**
- * Container for the new debugger overlay.
- * Most of the functionality is in the debug folder widgets,
+ * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
  * but this class instantiates the widgets and handles their basic formatting and arrangement.
  */
 class FlxDebugger extends Sprite
@@ -79,27 +78,27 @@ class FlxDebugger extends Sprite
 	 */
 	private var _screenBounds:Rectangle;
 	/**
-	* Internal, used to store the middle debugger buttons for laying them out.
-	*/
+	 * Internal, used to store the middle debugger buttons for laying them out.
+	 */
 	private var _middleButtons:Array<FlxSystemButton>;
 	/**
-	* Internal, used to store the left debugger buttons for laying them out.
-	*/
+	 * Internal, used to store the left debugger buttons for laying them out.
+	 */
 	private var _leftButtons:Array<FlxSystemButton>;
 	/**
-	* Internal, used to store the right debugger buttons for laying them out.
-	*/
+	 * Internal, used to store the right debugger buttons for laying them out.
+	 */
 	private var _rightButtons:Array<FlxSystemButton>;
 	/**
-	* The flash Sprite used for the top bar of the debugger ui
-	**/
+	 * The flash Sprite used for the top bar of the debugger ui
+	 **/
 	private var _topBar:Sprite;
 	
 	/**
 	 * Instantiates the debugger overlay.
 	 * 
-	 * @param 	Width	The width of the screen.
-	 * @param 	Height	The height of the screen.
+	 * @param   Width    The width of the screen.
+	 * @param   Height   The height of the screen.
 	 */
 	public function new(Width:Float, Height:Float)
 	{
@@ -233,7 +232,8 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
-	 * @param	E	Flash mouse event.
+	 * 
+	 * @param   E   Flash mouse event.
 	 */
 	inline private function onMouseOver(?E:MouseEvent):Void
 	{
@@ -245,7 +245,8 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
-	 * @param	E	Flash mouse event.
+	 * 
+	 * @param   E   Flash mouse event.
 	 */
 	inline private function onMouseOut(?E:MouseEvent):Void
 	{
@@ -262,7 +263,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Change the way the debugger's windows are laid out.
 	 * 
-	 * @param	Layout	The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
+	 * @param   Layout   The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
 	 */
 	inline public function setLayout(Layout:DebuggerLayout):Void
 	{
@@ -353,7 +354,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Align an array of debugger buttons, used for the middle and right layouts
 	 */
-	public function hAlignSprites(Sprites:Array<Dynamic>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
+	public function hAlignButtons(Sprites:Array<FlxSystemButton>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
 	{
 		var width:Float = 0;
 		var last:Float = LeftOffset;
@@ -376,22 +377,24 @@ class FlxDebugger extends Sprite
 	 */
 	public function resetButtonLayout():Void
 	{
-		hAlignSprites(_leftButtons, 10, true, 10);
+		hAlignButtons(_leftButtons, 10, true, 10);
 		
-		var offset = FlxG.stage.stageWidth * 0.5 - hAlignSprites(_middleButtons, 10, false) * 0.5;
-		hAlignSprites(_middleButtons, 10, true, offset);
+		var offset = FlxG.stage.stageWidth * 0.5 - hAlignButtons(_middleButtons, 10, false) * 0.5;
+		hAlignButtons(_middleButtons, 10, true, offset);
 		
-		var offset = FlxG.stage.stageWidth - hAlignSprites(_rightButtons, 10, false);
-		hAlignSprites(_rightButtons, 10, true, offset);
+		var offset = FlxG.stage.stageWidth - hAlignButtons(_rightButtons, 10, false);
+		hAlignButtons(_rightButtons, 10, true, offset);
 	}
 	
 	/**
 	 * Create and add a new debugger button.
-	 * @param	Position	Either LEFT,  MIDDLE or RIGHT.
-	 * @param	IconPath	The path to the image to use as the icon for the button.
-	 * @param	DownHandler	The function to be called when the button is pressed.
-	 * @param	ToggleMode	Whether this is a toggle button or not.
-	 * @param	UpdateLayout	Whether to update the button layout.
+	 * 
+	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
+	 * @param   IconPath       The path to the image to use as the icon for the button.
+	 * @param   DownHandler    The function to be called when the button is pressed.
+	 * @param   ToggleMode     Whether this is a toggle button or not.
+	 * @param   UpdateLayout   Whether to update the button layout.
+	 * @return  The added button.
 	 */
 	public function addButton(Position:ButtonAlignment, ?IconPath:String, ?DownHandler:Dynamic, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
 	{
@@ -422,8 +425,9 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Removes and destroys a button from the debugger.
-	 * @param	Button			The FlxSystemButton instance to remove.
-	 * @param	UpdateLayout	Whether to update the button layout.
+	 * 
+	 * @param   Button         The FlxSystemButton instance to remove.
+	 * @param   UpdateLayout   Whether to update the button layout.
 	 */
 	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
 	{

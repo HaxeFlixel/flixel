@@ -90,7 +90,7 @@ class QuadPath extends Motion
 	}
 	
 	/** @private Starts the Tween. */
-	override public function start():Dynamic
+	override public function start():QuadPath
 	{
 		if (!_backward)
 		{
