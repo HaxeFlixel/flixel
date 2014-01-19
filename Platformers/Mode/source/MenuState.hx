@@ -29,7 +29,6 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		#if debug
-		FlxG.debugger.visible = true;
 		FlxG.game.debugger.stats.visible = true;
 		#end
 		
