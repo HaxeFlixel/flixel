@@ -14,7 +14,7 @@
 -lib nape
 
 -lib mcover
---macro mcover.MCover.coverage(['flixel'], ['../'], null)
+--macro mcover.MCover.coverage(['flixel'], ['../','~/flixel-addons/'], null)
 
 -D doc
 # -D debug
