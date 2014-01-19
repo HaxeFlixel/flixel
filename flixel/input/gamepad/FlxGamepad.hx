@@ -1,33 +1,46 @@
-package flixel.system.input.gamepad;
+package flixel.input.gamepad;
 
+import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxPoint;
 
-class FlxGamepad 
+class FlxGamepad implements IFlxDestroyable
 {
+	// Button States (mirrors Key States in FlxKey.hx)
+	inline static public var JUST_RELEASED	:Int = -1;
+	inline static public var RELEASED		:Int = 0;
+	inline static public var PRESSED		:Int = 1;
+	inline static public var JUST_PRESSED	:Int = 2;
+	
+	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;
 	
-	@:allow(flixel.system.input.gamepad)
-	public var axis(default, null):Array<Float>;
 	/**
-	 * DPAD on Xbox Gamepad
+	 * Axis array is read-only, use "getAxis" function for deadZone checking.
+	 */
+	@:allow(flixel.input.gamepad)
+	private var axis:Array<Float>;
+	
+	/**
+	 * DPAD
 	 */
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
-	public var id:Int;
+	public var dpadUp(get, null):Bool = false;
+	public var dpadDown(get, null):Bool = false;
+	public var dpadLeft(get, null):Bool = false;
+	public var dpadRight(get, null):Bool = false;
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
-	 * Less this number the more gamepad is sensible.
-	 * Should be between 0.0 and 1.0.
+	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
 		buttons = new Map<Int, FlxGamepadButton>();
+		axis = [for (i in 0...6) 0];
 		ball = new FlxPoint();
-		axis = new Array<Float>();
-		axis = [for (i in 0...4) 0];
 		hat = new FlxPoint();
 		id = ID;
 		
@@ -98,6 +111,22 @@ class FlxGamepad
 	}
 	
 	/**
+	 * Check the status of a button
+	 * 
+	 * @param	ButtonID	Index into _keyList array.
+	 * @param	Status		The key state to check for
+	 * @return	Whether the provided button has the specified status
+	 */
+	public function checkStatus(ButtonID:Int, Status:Int):Bool 
+	{ 
+		if (buttons.exists(ButtonID))
+		{
+			return (buttons.get(ButtonID).current == Status);
+		}
+		return false;
+	}
+	
+	/**
 	 * Check to see if this button is pressed.
 	 * 
 	 * @param	ButtonID	The button id (from 0 to 7).
@@ -108,7 +137,7 @@ class FlxGamepad
 		#if (cpp || neko)
 		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(ButtonID).current > 0);
+			return (buttons.get(ButtonID).current > RELEASED);
 		}
 		#elseif js
 			var v = untyped navigator.webkitGetGamepads().item(id).buttons[ButtonID];
@@ -128,7 +157,7 @@ class FlxGamepad
 	{ 
 		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(ButtonID).current == 2);
+			return (buttons.get(ButtonID).current == JUST_PRESSED);
 		}
 		
 		return false;
@@ -144,10 +173,61 @@ class FlxGamepad
 	{ 
 		if (buttons.exists(ButtonID))
 		{
-			return (buttons.get(ButtonID).current == -1);
+			return (buttons.get(ButtonID).current == JUST_RELEASED);
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Get the first found ID of the button which is currently pressed.
+	 * Returns -1 if no button is pressed.
+	 */
+	public function firstPressedButtonID():Int
+	{
+		for (button in buttons)
+		{
+			if (button.current > RELEASED)
+			{
+				return button.id;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Get the first found ID of the button which has been just pressed.
+	 * Returns -1 if no button was just pressed.
+	 */
+	public function firstJustPressedButtonID():Int
+	{
+		for (button in buttons)
+		{
+			if (button.current == JUST_PRESSED)
+			{
+				return button.id;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Get the first found ID of the button which has been just released.
+	 * Returns -1 if no button was just released.
+	 */
+	public function firstJustReleasedButtonID():Int
+	{
+		for (button in buttons)
+		{
+			if (button.current == JUST_RELEASED)
+			{
+				return button.id;
+			}
+		}
+		
+		return -1;
 	}
 	
 	public function getAxis(AxisID:Int):Float
@@ -181,7 +261,7 @@ class FlxGamepad
 	{
 		for (button in buttons)
 		{
-			if (button.current > 0)
+			if (button.current > RELEASED)
 			{
 				return true;
 			}
@@ -197,13 +277,8 @@ class FlxGamepad
 	 */
 	public function anyInput():Bool
 	{
-		for (button in buttons)
-		{
-			if (button.current > 0)
-			{
-				return true;
-			}
-		}
+		if (anyButton())
+			return true;
 		
 		var numAxis:Int = axis.length;
 		
@@ -227,4 +302,12 @@ class FlxGamepad
 		
 		return false;
 	}
+	
+	/**
+	 * DPAD accessor properties
+	 */
+	inline public function get_dpadUp():Bool { return hat.y < 0; }
+	inline public function get_dpadDown():Bool { return hat.y > 0; }
+	inline public function get_dpadLeft():Bool { return hat.x < 0; }
+	inline public function get_dpadRight():Bool { return hat.x > 0; }
 }

@@ -1,10 +1,11 @@
-package flixel.system.input;
+package flixel.interfaces;
 
-interface IFlxInput {
+interface IFlxInput 
+{
 	function reset():Void;
 	function update():Void;
 	function onFocus():Void;
 	function onFocusLost():Void;
-	function toString() : String;
+	function toString():String;
 	function destroy():Void;
 }

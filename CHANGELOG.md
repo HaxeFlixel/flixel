@@ -1,6 +1,76 @@
-v.3.0.5
+v.3.1.0
 ------------------------------
+* Refactor of FlxRandom
+  * All functions are now deterministic and safe to use with replays
+  * Due to the use of a new algorithm for pseudo-random number generation (linear congruential generator), old replays are no longer compatible
+  * weightedPick(), weightedGetObject() and colorExt() have been added
+* New FLX_NO_SOUND_SYSTEM conditional
+* FlxTrailArea: Several improvements (can now be resized with setSize()), default delay is now 2
+* FlxMisc has been removed, openURL() can now be found in FlxG
+* FlxCamera: getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
+* FlxSpriteGroup: Added forEach(), forEachAlive(), forEachDead() and forEachExists()
+* FlxSpriteUtil: 
+  * new drawTriangle() and drawPolygon(), fadeIn() and fadeOut() functions 
+  * more control for the drawing functions via FillStyle and DrawStyle
+  * added convenient default values for drawCircle()
+  * allow FlxObjects in screenWrap() and screenCenter()
+* FlxTypedButton refactor
+  *  Callbacks are now set via onUp.setCallback as opposed to setOnUpCallback
+  *  new labelAlphas and labelOffsets arrays for more control
+  *  the highlight frame is now disabled by default on mobile 
+  *  "swiping" is now possible (enter button area while input is pressed to press it)
+* FlxTypedEmitter and FlxSound: Added setPosition() methods
+* FlxSlider: New setVariable flag, improvements to inner update logic
+* FlxSprite: 
+  * pixelsOverlapPoint() has been removed
+  * loadfromSprite() -> loadFromSprite()
+  * setGraphicDimensions() -> setGraphicSize()
+  * added getGraphicsMidpoint()
 * Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
+* FlxTypedGroup: 
+  * autoReviveMembers flag has been removed
+  * Revive param has been added to recycle()
+* FlxRect, FlxPoint and FlxBasic and FlxObject now have toString() functions used for traces and the flixel debugger
+* The focus lost screen and the sound tray now react to window resizes
+* BUG: Fixed numpad minus not working as a default volume down key
+* FlxStringUtil.sameClassName() added
+* The stats window of the debugger has been refactored, now has fancy FPS and memory graphs
+* FlxGame.focusLostFramerate added
+* BUG: Fixed flixel cursor reappearing after regaining focus
+* Android sound caching improvement
+* Fixes for OUYA gamepad combatibility (fixed some button IDs in OUYAButtonID)
+* Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
+* Prevent paused sounds from playing after regaining focus
+* FlxText:
+ * BUG: Fix inaccurate text color when setting both color and alpha
+ * BUG: Fix incompatiblity of FlxText.borderStyle and FlxText.alpha
+ * BUG: Fixed changing color or alpha of a FlxText affecting its origin
+ * Internal optimizations for less BitmapData creations
+* Renamed framerates to clear up confusion: 
+  * gameFramerate -> updateFramerate
+  * flashFramerate -> drawFramerate
+* BUG: Fixed order of operations issue that was causing FlxSubStates to crash on close.
+* BUG: Fixed a splash screen repeating bug when using default splash screen.
+* Gamepad support improvements
+  * Improvements and optimizations to gamepad api, fixed Ouya compatibility!
+  * FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
+  * FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
+  * Added PS3ButtonID and LogitechButtonID classes
+* Ported resolution policies from flixel for moneky (FlxG.resolutionPolicy / flixel.system.resolution) and removed FlxG.autoResize
+* Renamed FlxG.debugger.visualDebug to drawDebug
+* FlxTween:
+ * optimizations
+ * AngleTween now accepts FlxSprite as a parameter
+ * Now possible to delay tweens via the TweenOptions typedef 
+* BUG: Fixed jittering movement of FlxObjects following a FlxPath
+* Removed FlxG.paused, it was a container variable without functionality
+* FlxRect: 
+ * Added setSize()
+ * top / bottom / left / right can now be set
+* FlxArrayUtil.fastSplice() added
+* Moved flixel.system.input to flixel.input
+* Moved interfaces into a new interfaces package
+* BUG: Fixed crash when using traces on android
 
 v.3.0.4
 ------------------------------
@@ -52,7 +122,7 @@ v.3.0.1-alpha
 * FlxDebugger: UI improvements, now remembers visibility settings of the windows
 * Compiler fix for Blackberry target.
 * FlxAssets: Fonts are no longer inlined so they can be changed
-* FlxMath: distanceWithin(), distanceToPointWithin(), distanceToMouseWithin() and  distanceToTouchWithin() added
+* FlxMath: isDistanceWithin(), isDistanceToPointWithin(), isDistanceToMouseWithin() and  isDistanceToTouchWithin() added
 * FlxG.fullscreen now works on cpp targets
 * FlxObject.inWorldBounds() added
 * LICENSE.txt cleanup

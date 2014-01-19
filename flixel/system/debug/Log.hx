@@ -46,7 +46,9 @@ class Log extends Window
 		
 		_lines = new Array<String>();
 		
+		#if !android // seems to cause a crash otherwise
 		FlxG.log.redirectTraces = true;
+		#end
 	}
 	
 	/**

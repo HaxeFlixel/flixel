@@ -1,6 +1,6 @@
 package flixel.system.frontEnds;
 
-import flixel.system.input.IFlxInput;
+import flixel.interfaces.IFlxInput;
 import flixel.util.FlxStringUtil;
 
 class InputFrontEnd

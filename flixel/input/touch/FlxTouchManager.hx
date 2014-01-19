@@ -1,10 +1,10 @@
-package flixel.system.input.touch;
+package flixel.input.touch;
 
 import flash.events.TouchEvent;
 import flash.Lib;
 import flash.ui.Multitouch;
 import flash.ui.MultitouchInputMode;
-import flixel.system.input.IFlxInput;
+import flixel.interfaces.IFlxInput;
 
 /**
  * ...

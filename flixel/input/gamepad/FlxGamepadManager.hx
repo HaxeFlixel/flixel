@@ -1,19 +1,29 @@
-package flixel.system.input.gamepad;
+package flixel.input.gamepad;
 
+import flash.Lib;
+import flixel.FlxG;
+import flixel.input.gamepad.FlxGamepad;
+import flixel.interfaces.IFlxInput;
 #if (cpp || neko)
 import openfl.events.JoystickEvent;
 #end
 #if (cpp || neko || js)
-import flash.Lib;
-import flixel.system.input.gamepad.FlxGamepad;
-import flixel.system.input.IFlxInput;
 
 /**
- * ...
+ * Manages gamepad input
  * @author Zaphod
  */
 class FlxGamepadManager implements IFlxInput
 {
+	/**
+	 * First accessed gamepad
+	 */
+	public var firstActive:FlxGamepad;
+	/**
+	 * Last accessed gamepad
+	 */
+	public var lastActive:FlxGamepad;
+	
 	/**
 	 * Storage for all connected joysticks
 	 */
@@ -24,6 +34,8 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function new() 
 	{
+		firstActive = null;
+		lastActive = null;
 		_gamepads = new Map<Int, FlxGamepad>();
 		#if (cpp || neko)
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
@@ -45,6 +57,10 @@ class FlxGamepadManager implements IFlxInput
 		{
 			gamepad = new FlxGamepad(GamepadID, globalDeadZone);
 			_gamepads.set(GamepadID, gamepad);
+			
+			lastActive = gamepad;
+			if (firstActive == null)
+				firstActive = gamepad;
 		}
 		
 		return gamepad;
@@ -107,14 +123,13 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	/**
-	 * Get first found active gamepad id 
-	 * (with any pressed buttons or moved Axis, Ball and Hat)
-	 * Returns "-1" if no active gamepad has been found
+	 * Get first found active gamepad id (with any pressed buttons or moved Axis, Ball and Hat).
+	 * Returns "-1" if no active gamepad has been found.
 	 */
 	public function getFirstActiveGamepadID():Int
 	{
 		var it = _gamepads.iterator();
-		var gamepad = it.next();
+		var gamepad:FlxGamepad = it.next();
 		
 		while (gamepad != null)
 		{
@@ -130,9 +145,8 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	/**
-	 * Get first found active gamepad
-	 * (with any pressed buttons or moved Axis, Ball and Hat)
-	 * Returns null if no active gamepad has been found
+	 * Get first found active gamepad (with any pressed buttons or moved Axis, Ball and Hat).
+	 * Returns null if no active gamepad has been found.
 	 */
 	public function getFirstActiveGamepad():FlxGamepad
 	{
@@ -296,6 +310,8 @@ class FlxGamepadManager implements IFlxInput
 			gamepad.destroy();
 		}
 		
+		firstActive = FlxG.safeDestroy(firstActive);
+		lastActive = FlxG.safeDestroy(lastActive);
 		_gamepads = new Map<Int, FlxGamepad>();
 		numActiveGamepads = 0;
 	}

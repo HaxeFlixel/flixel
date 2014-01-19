@@ -1,11 +1,11 @@
-package flixel.system.input.keyboard;
+package flixel.input.keyboard;
 
 #if !FLX_NO_KEYBOARD
 import flash.events.KeyboardEvent;
 import flash.Lib;
 import flixel.FlxG;
-import flixel.system.input.IFlxInput;
-import flixel.system.input.keyboard.FlxKey;
+import flixel.input.keyboard.FlxKey;
+import flixel.interfaces.IFlxInput;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArrayUtil;
 
@@ -22,7 +22,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
-	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY)
+	@:allow(flixel.input.keyboard.FlxKeyList.get_ANY)
 	inline static private var TOTAL:Int = 256;
 	
 	/**
@@ -32,8 +32,8 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * An array of FlxKey objects.
 	 */
-	@:allow(flixel.system.input.keyboard.FlxKeyList.get_ANY)
-	@:allow(flixel.system.input.android.FlxAndroidKeyList.get_ANY)
+	@:allow(flixel.input.keyboard.FlxKeyList.get_ANY)
+	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Array<FlxKey>;
 	
 	public function new()
@@ -251,23 +251,35 @@ class FlxKeyboard implements IFlxInput
 			return false;
 		}
 		
-		for (key in KeyArray)
+		var isIntArray:Bool = KeyArray.length > 0 && Std.is(KeyArray[0], Int);
+		
+		for (code in KeyArray)
 		{
-			// Also make lowercase keys work, like "space" or "sPaCe"
-			key = Std.string(key).toUpperCase();
+			var key:FlxKey;
 			
-			var k:FlxKey = _keyList[_keyLookup.get(key)];
-			if (k != null)
+			if (isIntArray)
 			{
-				if (k.current == Status)
+				// Use direct array access if they're using an array type. Much faster.
+				key = _keyList[code];
+			}
+			else
+			{
+				// Also make lowercase keys work, like "space" or "sPaCe"
+				code = code.toUpperCase();
+				key = _keyList[_keyLookup.get(code)];
+			}
+			
+			if (key != null)
+			{
+				if (key.current == Status)
 				{
 					return true;
 				}
-				else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
+				else if (Status == FlxKey.PRESSED && key.current == FlxKey.JUST_PRESSED)
 				{
 					return true;
 				}
-				else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
+				else if (Status == FlxKey.RELEASED && key.current == FlxKey.JUST_RELEASED)
 				{
 					return true;
 				}
@@ -275,7 +287,7 @@ class FlxKeyboard implements IFlxInput
 			#if !FLX_NO_DEBUG
 			else
 			{
-				FlxG.log.error("Invalid Key: `" + key + "`. Note that function and numpad keys can only be used in flash and js.");
+				FlxG.log.error("Invalid Key: `" + code + "`. Note that function and numpad keys can only be used in flash and js.");
 			}
 			#end
 		}
@@ -284,12 +296,12 @@ class FlxKeyboard implements IFlxInput
 	}
 	
 	/**
-	 * Helper function to check the status of a single of key
+	 * Check the status of a single of key
 	 * @param	KeyCode		Index into _keyList array.
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided key has the specified status
 	 */
-	public function fastCheck(KeyCode:Int, Status:Int):Bool
+	public function checkStatus(KeyCode:Int, Status:Int):Bool
 	{
 		var k:FlxKey = _keyList[KeyCode];
 		if (k != null)

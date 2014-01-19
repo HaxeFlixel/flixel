@@ -1,4 +1,4 @@
-package flixel.system.input.android;
+package flixel.input.android;
 
 import flixel.FlxG;
 
@@ -7,7 +7,7 @@ import flixel.FlxG;
  */
 class FlxAndroidKeyList
 {
-	
+	#if !FLX_NO_KEYBOARD
 	public function new(CheckFunction:String->Bool)
 	{
 		check = CheckFunction;
@@ -33,4 +33,5 @@ class FlxAndroidKeyList
 		
 		return false;
 	}
+	#end
 }

@@ -730,6 +730,9 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		if (alpha == 0)	
+			return;
+		
 		if (dirty)	//rarely 
 		{
 			calcFrame();
@@ -1212,38 +1215,35 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Internal function to update the current animation frame.
+	 * 
+	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	#if flash
-	private function calcFrame():Void
-	#else
-	private function calcFrame(AreYouSure:Bool = false):Void
-	#end
+	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
-	#if !flash
-		// TODO: Maybe remove 'AreYouSure' parameter
-		if (AreYouSure)
+		#if !(flash || js)
+		if (!RunOnCpp)
 		{
-	#end
-			if (frame != null)
-			{
-				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-				{
-					if (framePixels != null)
-						framePixels.dispose();
-					
-					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-				}
-				
-				framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
-			}
-			
-			if (useColorTransform) 
-			{
-				framePixels.colorTransform(_flashRect, _colorTransform);
-			}
-	#if !flash
+			return;
 		}
-	#end
+		#end
+		
+		if (frame != null)
+		{
+			if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
+			{
+				if (framePixels != null)
+					framePixels.dispose();
+					
+				framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
+			}
+				
+			framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
+		}
+			
+		if (useColorTransform) 
+		{
+			framePixels.colorTransform(_flashRect, _colorTransform);
+		}
 		
 		dirty = false;
 	}
@@ -1292,6 +1292,21 @@ class FlxSprite extends FlxObject
 		}
 		
 		return frameBmd;
+	}
+	
+	/**
+	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
+	 * 
+	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined. Otherwise a new one is created.
+	 * @return	A <code>FlxPoint</code> object containing the midpoint of this sprite's graphic in world coordinates.
+	 */
+	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
+	{
+		if (point == null)
+		{
+			point = new FlxPoint();
+		}
+		return point.set(x + frameWidth * 0.5, y + frameHeight * 0.5);
 	}
 	
 	/**

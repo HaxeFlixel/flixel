@@ -288,6 +288,7 @@ class FlxPath
 			//set velocity based on path mode
 			_point.x = object.x;
 			_point.y = object.y;
+			
 			if (autoCenter)
 			{
 				_point.x += object.width * 0.5;
@@ -330,9 +331,8 @@ class FlxPath
 			{
 				object.velocity.x = (_point.x < node.x) ? speed : -speed;
 				object.velocity.y = (_point.y < node.y) ? speed : -speed;
-				angle = FlxAngle.getAngle(_point, node, true);
-				_point.set(object.velocity.x, object.velocity.y);
-				FlxAngle.rotatePoint(0, speed, 0, 0, angle, _point);
+				angle = FlxAngle.getAngle(_point, node);
+				FlxAngle.rotatePoint(0, speed, 0, 0, angle, object.velocity);
 			}
 			
 			//then set object rotation if necessary

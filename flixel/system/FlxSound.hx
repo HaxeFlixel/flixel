@@ -11,12 +11,14 @@ import flixel.tweens.misc.NumTween;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import openfl.Assets;
+#end
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
  */
 class FlxSound extends FlxBasic
 {
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * The X position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
@@ -114,6 +116,10 @@ class FlxSound extends FlxBasic
 	 * Internal flag for what to do when the sound is done fading out.
 	 */
 	private var _onFadeComplete:Void->Void;
+	/**
+	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
+	 */
+	private var _alreadyPaused:Bool = false;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -601,5 +607,32 @@ class FlxSound extends FlxBasic
 		artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);
 	}
+	
+	public function onFocus():Void
+	{
+		if (!_alreadyPaused)
+		{
+			resume();
+		}
+	}
+	
+	public function onFocusLost():Void
+	{
+		_alreadyPaused = _paused;
+		pause();
+	}
+	
+	/**
+	 * Helper function to set the coordinates of this object.
+	 * Sound positioning is used in conjunction with proximity/panning.
+	 * 
+	 * @param        X        The new x position
+	 * @param        Y        The new y position
+ 	 */
+	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	{
+		x = X;
+		y = Y;
+	}
+	#end
 }
-#end

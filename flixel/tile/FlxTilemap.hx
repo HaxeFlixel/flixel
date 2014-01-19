@@ -229,7 +229,7 @@ class FlxTilemap extends FlxObject
 		_debugTilePartial = null;
 		_debugTileSolid = null;
 		#end
-		_lastVisualDebug = FlxG.debugger.visualDebug;
+		_lastVisualDebug = FlxG.debugger.drawDebug;
 		#end
 		
 		_startingIndex = 0;
@@ -529,7 +529,7 @@ class FlxTilemap extends FlxObject
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if (flash && !FLX_NO_DEBUG)
-	private function makeDebugTile(Color:UInt):BitmapData
+	private function makeDebugTile(Color:Int):BitmapData
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
@@ -558,9 +558,9 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function update():Void
 	{
-		if (_lastVisualDebug != FlxG.debugger.visualDebug)
+		if (_lastVisualDebug != FlxG.debugger.drawDebug)
 		{
-			_lastVisualDebug = FlxG.debugger.visualDebug;
+			_lastVisualDebug = FlxG.debugger.drawDebug;
 			setDirty();
 		}
 		
@@ -651,7 +651,7 @@ class FlxTilemap extends FlxObject
 					Buffer.pixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPoint, null, null, true);
 					
 					#if !FLX_NO_DEBUG
-					if (FlxG.debugger.visualDebug && !ignoreDrawDebug) 
+					if (FlxG.debugger.drawDebug && !ignoreDrawDebug) 
 					{
 						tile = _tileObjects[_data[columnIndex]];
 						
@@ -1664,7 +1664,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	X		The X coordinate of the tile (in tiles, not pixels).
 	 * @param	Y		The Y coordinate of the tile (in tiles, not pixels).
-	 * @return	A uint containing the value of the tile at this spot in the array.
+	 * @return	An integer containing the value of the tile at this spot in the array.
 	 */
 	public function getTile(X:Int, Y:Int):Int
 	{
@@ -1675,7 +1675,7 @@ class FlxTilemap extends FlxObject
 	 * Get the value of a tile in the tilemap by index.
 	 * 
 	 * @param	Index	The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @return	A uint containing the value of the tile at this spot in the array.
+	 * @return	An integer containing the value of the tile at this spot in the array.
 	 */
 	public function getTileByIndex(Index:Int):Int
 	{
@@ -2202,7 +2202,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Bitmap		A Flash <code>BitmapData</code> object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
-	 * @param  	ColorMap  	An array of color values (uint 0xAARRGGBB) in the order they're intended to be assigned as indices
+	 * @param  	ColorMap  	An array of color values (0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
 	static public function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<Int>):String

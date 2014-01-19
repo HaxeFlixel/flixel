@@ -4,6 +4,9 @@ import flash.Lib;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
+import flash.Lib;
+import flixel.FlxBasic;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.frontEnds.BitmapFrontEnd;
@@ -16,39 +19,34 @@ import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
+import flixel.system.resolution.BaseResolutionPolicy;
+import flixel.system.resolution.StageSizeResolutionPolicy;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSave;
-import flixel.util.FlxStringUtil;
-import flixel.FlxBasic;
 
 #if !FLX_NO_TOUCH
-import flixel.system.input.touch.FlxTouchManager;
+import flixel.input.touch.FlxTouchManager;
 #end
 #if !FLX_NO_KEYBOARD
-import flixel.system.input.keyboard.FlxKeyboard;
-import flixel.system.input.keyboard.FlxKeyShortcuts;
+import flixel.input.keyboard.FlxKeyboard;
+import flixel.input.keyboard.FlxKeyShortcuts;
 #end
 #if !FLX_NO_MOUSE
-import flixel.system.input.mouse.FlxMouse;
+import flixel.input.mouse.FlxMouse;
 #end
 #if !FLX_NO_GAMEPAD
-import flixel.system.input.gamepad.FlxGamepadManager;
+import flixel.input.gamepad.FlxGamepadManager;
 #end
 #if !FLX_NO_SOUND_SYSTEM
 import flixel.system.frontEnds.SoundFrontEnd;
 #end
 #if android
-import flixel.system.input.android.FlxAndroidKeys;
+import flixel.input.android.FlxAndroidKeys;
 #end
-
-interface IDestroyable
-{
-	public function destroy():Void;
-}
 
 /**
  * This is a global helper class full of useful functions for audio,
@@ -72,27 +70,19 @@ class FlxG
 	 * Assign a minor version to your library.
 	 * Appears after the decimal in the console.
 	 */
-	static public var LIBRARY_MINOR_VERSION:String = "0.5-dev";
+	static public var LIBRARY_MINOR_VERSION:String = "1.0-dev";
 	
 	/**
 	 * Internal tracker for game object.
 	 */
 	static public var game(default, null):FlxGame;
 	/**
-	 * Handy shared variable for implementing your own pause behavior.
-	 */
-	static public var paused:Bool = false;
-	/**
 	 * Whether the game should be paused when focus is lost or not. Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
 	 * pause screen. Override onFocus() and onFocusLost() for your own behaviour in your state.
 	 */
 	static public var autoPause:Bool = true;
 	/**
-	 * Whether <code>FlxG.resizeGame()</code> should be called whenever the game is resized. True by default.
-	 */
-	static public var autoResize:Bool = true;
-	/**
-	 * WARNING: Changing this can lead to issues with physcis and the recording system. Setting this to 
+	 * WARNING: Changing this can lead to issues with physics and the recording system. Setting this to 
 	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
 	 */
 	static public var fixedTimestep:Bool = true;
@@ -107,10 +97,12 @@ class FlxG
 	/**
 	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
+	@:allow(flixel.system.resolution.StageSizeResolutionPolicy) 
 	static public var width(default, null):Int;
 	/**
 	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
+	@:allow(flixel.system.resolution.StageSizeResolutionPolicy)
 	static public var height(default, null):Int;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
@@ -197,7 +189,7 @@ class FlxG
 	/**
 	 * A reference to the <code>BmpLogFrontEnd</code> object. Use it to <code>add</code> images to the bmplog window. 
 	 */	
-	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();	
+	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();
 	#end
 	
 	/**
@@ -255,6 +247,8 @@ class FlxG
 		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
+		resizeGame(width, height);
+		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
 			keyboard = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
@@ -300,11 +294,25 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.destroySounds(true);
 		#end
-		paused = false;
 		timeScale = 1.0;
 		elapsed = 0;
 		worldBounds.set( -10, -10, width + 20, height + 20);
 		worldDivisions = 6;
+	}
+	
+	/**
+	 * The resolution policy the game should use - available policies are <code>FillResolutionPolicy</code>, <code>FixedResolutionPolicy</code>,
+	 * <code>RatioResolutionPolicy</code>, <code>RelativeResolutionPolicy</code> and <code>StageResolutionPolicy</code>.
+	 */
+	static public var resolutionPolicy(default, set):BaseResolutionPolicy;
+	
+	static private var _resolutionPolicy:BaseResolutionPolicy = new StageSizeResolutionPolicy();
+	
+	static private function set_resolutionPolicy(Policy:BaseResolutionPolicy):BaseResolutionPolicy
+	{
+		_resolutionPolicy = Policy;
+		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+		return Policy;
 	}
 	
 	/**
@@ -319,18 +327,19 @@ class FlxG
 	
 	/**
 	 * How many times you want your game to update each second. More updates usually means better collisions and smoother motion.
-	 * NOTE: This is NOT the same thing as the Flash Player framerate!
+	 * NOTE: This is NOT the same thing as the draw framerate!
+	 * @default 60fps
 	 */
-	static public var framerate(get, set):Int;
+	static public var updateFramerate(get, set):Int;
 	
-	inline static private function get_framerate():Int
+	inline static private function get_updateFramerate():Int
 	{
 		return Std.int(1000 / game.stepMS);
 	}
 		
-	static private function set_framerate(Framerate:Int):Int
+	static private function set_updateFramerate(Framerate:Int):Int
 	{
-		if (Framerate < flashFramerate)
+		if (Framerate < drawFramerate)
 		{
 			log.warn("FlxG.framerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
@@ -347,12 +356,13 @@ class FlxG
 	}
 		
 	/**
-	 * How many times you want your game to update each second. More updates usually means better collisions and smoother motion.
-	 * NOTE: This is NOT the same thing as the Flash Player framerate!
+	 * How many times you want your game to step each second. More steps usually means greater responsiveness, 
+	 * but it can also slowdown your game if the stage can't keep up with the update routine. NOTE: This is NOT the same thing as the Update framerate!
+	 * @default 60fps
 	 */
-	public static var flashFramerate(get, set):Int;
+	public static var drawFramerate(get, set):Int;
 		
-	static private function get_flashFramerate():Int
+	static private function get_drawFramerate():Int
 	{
 		if (game.stage != null)
 		{
@@ -362,21 +372,21 @@ class FlxG
 		return 0;
 	}
 		
-	static private function set_flashFramerate(Framerate:Int):Int
+	static private function set_drawFramerate(Framerate:Int):Int
 	{
-		if (Framerate > framerate)
+		if (Framerate > updateFramerate)
 		{
-			log.warn("FlxG.flashFramerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
+			log.warn("FlxG.drawFramerate: The update framerate shouldn't be smaller than the draw framerate, since it can stop your game from updating.");
 		}
 		
-		game.flashFramerate = Std.int(Math.abs(Framerate));
+		game.drawFramerate = Std.int(Math.abs(Framerate));
 		
 		if (game.stage != null)
 		{
-			game.stage.frameRate = game.flashFramerate;
+			game.stage.frameRate = game.drawFramerate;
 		}
 		
-		game.maxAccumulation = Std.int(2000 / game.flashFramerate) - 1;
+		game.maxAccumulation = Std.int(2000 / game.drawFramerate) - 1;
 		
 		if (game.maxAccumulation < game.stepMS)
 		{
@@ -391,18 +401,15 @@ class FlxG
 	 */
 	inline static public function resetGame():Void
 	{
-		game.requestedReset = true;
+		game.resetState = true;
 	}
 	
 	/**
-	 * Handy helper functions that takes care of all the things to resize the game. 
-	 * Use <code>FlxG.autoResize</code> to call this function automtically when the window is resized!
+	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
 	inline static public function resizeGame(Width:Int, Height:Int):Void
 	{
-		camera.setSize(Math.ceil(Width / camera.zoom), Math.ceil(Height / camera.zoom));
-		width = Width;
-		height = Height;
+		_resolutionPolicy.onMeasure(Width, Height);
 	}
 	
 	/**
@@ -457,7 +464,7 @@ class FlxG
 	 */
 	inline static public function switchState(State:FlxState):Void
 	{
-		game.requestNewState(State); 
+		game.requestedState = State; 
 	}
 	
 	/**
@@ -465,7 +472,7 @@ class FlxG
 	 */
 	inline static public function resetState():Void
 	{
-		game.requestNewState(Type.createInstance(Type.resolveClass(FlxStringUtil.getClassName(game.state, false)), []));
+		switchState(Type.createInstance(Type.getClass(state), []));
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(game.requestedState, FlxSubState))
@@ -549,7 +556,7 @@ class FlxG
 	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
 	 * @return	Null
 	 */
-	public static function safeDestroy<T:IDestroyable>(Object:Null<IDestroyable>):T
+	static public function safeDestroy<T:IFlxDestroyable>(Object:Null<IFlxDestroyable>):T
 	{
 		if (Object != null)
 		{
@@ -584,5 +591,15 @@ class FlxG
 	inline static public function removeChild(Child:DisplayObject):DisplayObject
 	{
 		return game.removeChild(Child);
+	}
+	
+	/**
+	 * Opens a web page in a new tab or window.
+	 * 
+	 * @param	URL		The address of the web page.
+	 */
+	inline static public function openURL(URL:String):Void
+	{
+		flash.Lib.getURL(new flash.net.URLRequest(URL), "_blank");
 	}
 }

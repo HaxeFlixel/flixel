@@ -1,4 +1,4 @@
-package flixel.system.input.keyboard;
+package flixel.input.keyboard;
 
 import flixel.FlxG;
 
@@ -8,11 +8,12 @@ import flixel.FlxG;
  */
 class FlxKeyList
 {
-	private var checkType:Int;
+	#if !FLX_NO_KEYBOARD
+	private var checkStatus:Int;
 	
-	public function new(CheckType:Int)
+	public function new(CheckStatus:Int)
 	{
-		checkType = CheckType;
+		checkStatus = CheckStatus;
 	}
 	
 	public var A			(get, never):Bool;	inline function get_A()				{ return check(FlxKey.A);			}
@@ -133,6 +134,7 @@ class FlxKeyList
 	
 	inline public function check(keyCode:Int):Bool
 	{
-		return FlxG.keyboard.fastCheck(keyCode, checkType);
+		return FlxG.keyboard.checkStatus(keyCode, checkStatus);
 	}
+	#end
 }

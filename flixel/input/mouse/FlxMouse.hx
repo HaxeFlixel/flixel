@@ -1,27 +1,28 @@
-package flixel.system.input.mouse;
+package flixel.input.mouse;
 
-import flash.events.Event;
-import flash.Lib;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
+import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.geom.Matrix;
 import flash.geom.Point;
-import flash.Vector;
-import flash.ui.MouseCursorData;
+import flash.Lib;
 import flash.ui.Mouse;
 import flash.ui.MouseCursor;
+import flash.ui.MouseCursorData;
+import flash.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.interfaces.IFlxInput;
 import flixel.system.FlxAssets;
-import flixel.system.input.IFlxInput;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxPoint;
 
 /**
-* This class helps contain and track the mouse pointer in your game.
-* Automatically accounts for parallax scrolling, etc.
-*/
+ * This class helps contain and track the mouse pointer in your game.
+ * Automatically accounts for parallax scrolling, etc.
+ */
 class FlxMouse extends FlxPoint implements IFlxInput
 {
 	/**
@@ -40,7 +41,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Property to check if the cursor is visible or not.
 	 */
-	public var visible(get_visible, null):Bool;
+	public var visible(get, null):Bool;
 
 	/**
 	 * The left mouse button.
@@ -77,6 +78,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 
 	private var _wheelUsed:Bool = false;
 	
+	private var _visibleWhenFocusLost:Bool = true;
+	
 	/**
 	 * Helper variables for recording purposes.
 	 */
@@ -93,6 +96,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private var _cursorDefaultName:String = "defaultCursor";
 	private var _currentNativeCursor:String;
 	private var _previousNativeCursor:String;
+	private static var matrix:Matrix = new Matrix();
 	#end
 
 	/**
@@ -217,11 +221,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		_updateCursorContainer = false;
 		cursorContainer.visible = false;
-
+		
 		Mouse.hide();
-
+		
 		#if (flash && !FLX_NO_NATIVE_CURSOR)
-		if(Mouse.supportsCursor)
+		if (Mouse.supportsCursor)
 		{
 			_previousNativeCursor = _currentNativeCursor;
 		}
@@ -280,7 +284,31 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor.scaleY = Scale;
 		
 		#if (flash && !FLX_NO_NATIVE_CURSOR)
-		setSimpleNativeCursorData(_cursorDefaultName, _cursor.bitmapData);
+		if (XOffset < 0 || YOffset < 0)
+		{
+			FlxG.log.warn ("Negative offsets aren't supported with native cursor. Abs values will be used instead.");
+			XOffset = 0;
+			YOffset = 0;
+		}
+		
+		if (Scale < 0)
+		{
+			FlxG.log.warn ("Negative scale isn't supported with native cursor. Abs value will be used instead.");
+			Scale = 1;
+		}
+		
+		var scaledWidth:Int = Std.int(Scale * _cursor.bitmapData.width);
+		var scaledHeight:Int = Std.int(Scale * _cursor.bitmapData.height);
+		
+		var bitmapWidth:Int = scaledWidth + XOffset;
+		var bitmapHeight:Int = scaledHeight + YOffset;
+		
+		var cursorBitmap:BitmapData = new BitmapData(bitmapWidth, bitmapHeight, true, 0x0);
+		matrix.identity();
+		matrix.scale(Scale, Scale);
+		matrix.translate(XOffset, YOffset);
+		cursorBitmap.draw(_cursor.bitmapData, matrix);
+		setSimpleNativeCursorData(_cursorDefaultName, cursorBitmap);
 		#else
 		cursorContainer.addChild(_cursor);
 		#end
@@ -316,9 +344,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		_previousNativeCursor = _currentNativeCursor;
 		_currentNativeCursor = Name;
-
+		
 		Mouse.show();
-
+		
 		//Flash requires the use of AUTO before a custom cursor to work
 		Mouse.cursor = MouseCursor.AUTO;
 		Mouse.cursor = _currentNativeCursor;
@@ -344,17 +372,17 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		var cursorVector = new Vector<BitmapData>();
 		cursorVector[0] = CursorBitmap;
 		
-		if(_cursor.bitmapData.width > 32 ||_cursor.bitmapData.height > 32)
+		if (CursorBitmap.width > 32 || CursorBitmap.height > 32)
 		{
-			FlxG.log.warn ("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
+			FlxG.log.warn("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
 		}
 		
 		var cursorData = new MouseCursorData();
 		cursorData.hotSpot = new Point(0, 0);
 		cursorData.data = cursorVector;
 		
-		registerNativeCursor( Name, cursorData );
-		setNativeCursor( Name );
+		registerNativeCursor(Name, cursorData);
+		setNativeCursor(Name);
 
 		Mouse.show();
 		
@@ -407,8 +435,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
 		var camera:FlxCamera = FlxG.camera;
-		screenX = Math.floor((_globalScreenPosition.x - camera.x)/camera.zoom);
-		screenY = Math.floor((_globalScreenPosition.y - camera.y)/camera.zoom);
+		screenX = Math.floor((_globalScreenPosition.x - camera.x) / camera.zoom);
+		screenY = Math.floor((_globalScreenPosition.y - camera.y) / camera.zoom);
 		x = screenX + camera.scroll.x;
 		y = screenY + camera.scroll.y;
 	}
@@ -587,12 +615,19 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	inline public function onFocus():Void
 	{
 		reset();
-		useSystemCursor = useSystemCursor;
-
-		if (!visible)
+		
+		#if (!flash || FLX_NO_NATIVE_CURSOR)
+		set_useSystemCursor(useSystemCursor);
+		
+		if (_visibleWhenFocusLost)
+		{
+			show();
+		}
+		else 
 		{
 			hide();
 		}
+		#end
 	}
 
 	/**
@@ -600,7 +635,15 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	inline public function onFocusLost():Void
 	{
+		#if (!flash || FLX_NO_NATIVE_CURSOR)
+		_visibleWhenFocusLost = visible;
+		if (visible)
+		{
+			hide();
+		}
+		
 		Mouse.show();
+		#end
 	}
 
 	/**
@@ -628,7 +671,10 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		#else
 		Mouse.hide();
-		cursorContainer.visible = true;
+		if (visible)
+		{
+			cursorContainer.visible = true;
+		}
 		#end
 	}
 	

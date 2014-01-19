@@ -1,4 +1,4 @@
-package flixel.system.input.keyboard;
+package flixel.input.keyboard;
 
 /**
  * A helper class for keyboard input.

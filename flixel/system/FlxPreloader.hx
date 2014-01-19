@@ -283,7 +283,7 @@ class FlxPreloader extends NMEPreloader
 	
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
 	{
-		#if !desktop
+		#if !(desktop || mobile)
 		//in case there is a problem with reading the bytesTotal (like on Chrome, or a Gzipped swf)
 		if (root.loaderInfo.bytesTotal == 0) 
 		{

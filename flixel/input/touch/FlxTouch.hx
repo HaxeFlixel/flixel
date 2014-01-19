@@ -1,4 +1,4 @@
-package flixel.system.input.touch;
+package flixel.input.touch;
 
 import flash.geom.Point;
 import flixel.FlxBasic;
@@ -30,12 +30,12 @@ class FlxTouch extends FlxPoint
 	/**
 	 * Helper variable for tracking whether the touch was just began or just ended.
 	 */
-	@:allow(flixel.system.input.touch.FlxTouchManager)
+	@:allow(flixel.input.touch.FlxTouchManager)
 	private var _current:Int = 0;
 	/**
 	 * Helper variable for tracking whether the touch was just began or just ended.
 	 */
-	@:allow(flixel.system.input.touch.FlxTouchManager)
+	@:allow(flixel.input.touch.FlxTouchManager)
 	private var _last:Int = 0;
 	/**
 	 * Helper variables for recording purposes.

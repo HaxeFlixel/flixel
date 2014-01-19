@@ -1,4 +1,4 @@
-package flixel.system.input.keyboard;
+package flixel.input.keyboard;
 
 import flixel.FlxG;
 
@@ -7,6 +7,7 @@ import flixel.FlxG;
  */
 class FlxKeyShortcuts
 {
+	#if !FLX_NO_KEYBOARD
 	/**
 	 * Helper class to check if a keys is pressed.
 	 */
@@ -26,4 +27,5 @@ class FlxKeyShortcuts
 		justPressed = new FlxKeyList(FlxKey.JUST_PRESSED);
 		justReleased = new FlxKeyList(FlxKey.JUST_RELEASED);
 	}
+	#end
 }

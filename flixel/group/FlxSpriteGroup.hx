@@ -1006,14 +1006,11 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * This functionality isn't supported in SpriteGroup
-	 * @return this sprite group
+	 * Internal function to update the current animation frame.
+	 * 
+	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	#if flash
-	inline override private function calcFrame():Void
-	#else
-	inline override private function calcFrame(AreYouSure:Bool = false):Void
-	#end
+	inline override private function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		// Nothing to do here
 	}

@@ -32,11 +32,6 @@ class PathManager extends FlxPlugin
 	
 	override public function update():Void
 	{
-		if (FlxG.paused) 
-		{
-			return;
-		}
-		
 		for (path in _paths)
 		{
 			if (!path.paused)
@@ -53,7 +48,7 @@ class PathManager extends FlxPlugin
 	 */
 	override public function drawDebug():Void
 	{
-		if (!FlxG.debugger.visualDebug || ignoreDrawDebug)
+		if (!FlxG.debugger.drawDebug || ignoreDrawDebug)
 		{
 			return;	
 		}
@@ -123,13 +118,7 @@ class PathManager extends FlxPlugin
 	 */
 	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
 	{
-		var index:Int = FlxArrayUtil.indexOf(_paths, Path);
-		
-		if (index >= 0)
-		{
-			_paths[index] = _paths[_paths.length - 1];
-			_paths.pop();
-		}
+		FlxArrayUtil.fastSplice(_paths, Path);
 		
 		if (ReturnInPool)
 		{

@@ -83,7 +83,7 @@ class Stats extends Window
 	private var _activeObject:Array<Int>;
 	private var _activeObjectMarker:Int = 0;
 	
-	private var _paused:Bool = false;
+	private var _paused:Bool = true;
 	
 	#if !flash
 	private var drawCallsCount:Int = 0;
@@ -108,8 +108,7 @@ class Stats extends Window
 		minSize.y = MIN_HEIGHT;
 		resize(INITIAL_WIDTH, MIN_HEIGHT);
 		
-		_initTime = _itvTime = FlxG.game.ticks;
-		_totalCount = _frameCount = 0;
+		start();
 		
 		_update = [];
 		_draw = [];
@@ -125,7 +124,7 @@ class Stats extends Window
 		
 		fpsGraph = new StatsGraph(gutter, Std.int(_header.height) + 5, INITIAL_WIDTH - 10, graphHeight, FPS_COLOR, "fps");
 		addChild(fpsGraph);	
-		fpsGraph.maxValue = FlxG.flashFramerate;
+		fpsGraph.maxValue = FlxG.drawFramerate;
 		fpsGraph.minValue = 0;
 		
 		memoryGraph = new StatsGraph(gutter, Std.int(_header.height) +  graphHeight + 20, INITIAL_WIDTH - 10, graphHeight, MEMORY_COLOR, "MB");
@@ -138,6 +137,27 @@ class Stats extends Window
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
 		_leftTextField.text = "Draw: \nUpdate:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
+	}
+	
+	/**
+	 * Starts Stats window update logic
+	 */
+	public function start():Void
+	{
+		if (_paused)
+		{
+			_paused = false;
+			_initTime = _itvTime = FlxG.game.ticks;
+			_totalCount = _frameCount = 0;
+		}
+	}
+	
+	/**
+	 * Stops Stats window
+	 */
+	public function stop():Void
+	{
+		_paused = true;
 	}
 	
 	/**
@@ -319,8 +339,9 @@ class Stats extends Window
 	 * 
 	 * @param 	Time	How long this update took.
 	 */
-	inline public function flixelUpdate(Time:Int):Void
+	public function flixelUpdate(Time:Int):Void
 	{
+		if (_paused) return;
 		_update[_updateMarker++] = Time;
 	}
 	
@@ -329,8 +350,9 @@ class Stats extends Window
 	 * 
 	 * @param	Time	How long this render took.
 	 */
-	inline public function flixelDraw(Time:Int):Void
+	public function flixelDraw(Time:Int):Void
 	{
+		if (_paused) return;
 		_draw[_drawMarker++] = Time;
 	}
 	
@@ -339,8 +361,9 @@ class Stats extends Window
 	 * 
 	 * @param 	Count	How many objects were updated.
 	 */
-	inline public function activeObjects(Count:Int):Void
+	public function activeObjects(Count:Int):Void
 	{
+		if (_paused) return;
 		_activeObject[_activeObjectMarker++] = Count;
 	}
 	
@@ -349,8 +372,9 @@ class Stats extends Window
 	 * 
 	 * @param 	Count	How many objects were rendered.
 	 */
-	inline public function visibleObjects(Count:Int):Void
+	public function visibleObjects(Count:Int):Void
 	{
+		if (_paused) return;
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
 	
@@ -360,8 +384,9 @@ class Stats extends Window
 	 * 
 	 * @param 	Count	How many times drawTiles() method was called.
 	 */
-	inline public function drawCalls(Drawcalls:Int):Void
+	public function drawCalls(Drawcalls:Int):Void
 	{
+		if (_paused) return;
 		_drawCalls[_drawCallsMarker++] = Drawcalls;
 	}
 	#end
