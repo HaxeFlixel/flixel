@@ -85,13 +85,13 @@ class FlxKeyboard implements IFlxInput
 		addKey("INSERT", 45);
 		
 		// FUNCTION KEYS
-#if (flash || js)
+		#if (flash || js)
 		i = 1;
 		while (i <= 12)
 		{
 			addKey("F" + i, 111 + (i++));
 		}
-#end
+		#end
 		
 		// SPECIAL KEYS + PUNCTUATION
 		addKey("ESCAPE", 27);
@@ -121,18 +121,14 @@ class FlxKeyboard implements IFlxInput
 		addKey("RIGHT", 39);
 		addKey("TAB", 9);
 		
-#if (flash || js)
+		#if (flash || js)
 		addKey("NUMPADMINUS", 109);
 		addKey("NUMPADPLUS", 107);
 		addKey("NUMPADPERIOD", 110);
-#end
+		#end
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-		
-		pressed = Reflect.makeVarArgs(anyPressed);
-		justPressed = Reflect.makeVarArgs(anyJustPressed);
-		justReleased = Reflect.makeVarArgs(anyJustReleased);
 	}
 	
 	/**
@@ -188,86 +184,62 @@ class FlxKeyboard implements IFlxInput
 	}
 	
 	/**
-	 * Check to see if a key, or one key from a list of mutliple keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.pressed("UP", "W", "SPACE")</code>
-	 */
-	public var pressed:Dynamic;
-	
-	/**
 	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyPressed(["UP", "W", "SPACE"])</code>
+	 * Example: <code>FlxG.keyboard.anyPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	inline public function anyPressed(KeyArray:Array<Dynamic>):Bool 
+	inline public function anyPressed(KeyArray:Array<String>):Bool 
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
 	}
 	
 	/**
-	 * Check to see if a key, or one key from a list of mutliple keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.justPressed("UP", "W", "SPACE")</code>
-	 */
-	public var justPressed:Dynamic;
-	
-	/**
 	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyJustPressed(["UP", "W", "SPACE"])</code>
+	 * Example: <code>FlxG.keyboard.anyJustPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	inline public function anyJustPressed(KeyArray:Array<Dynamic>):Bool 
+	inline public function anyJustPressed(KeyArray:Array<String>):Bool 
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
 	}
 	
 	/**
-	 * Check to see if a key, or one key from a list of mutliple keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.justReleased("UP", "W", "SPACE")</code>
-	 */
-	public var justReleased:Dynamic;
-	
-	/**
 	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyJustReleased(["UP", "W", "SPACE"])</code>
+	 * Example: <code>FlxG.keyboard.anyJustReleased(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	inline public function anyJustReleased(KeyArray:Array<Dynamic>):Bool 
+	inline public function anyJustReleased(KeyArray:Array<String>):Bool 
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
 	}
 	
 	/**
 	 * Helper function to check the status of an array of keys
+	 * 
 	 * @param	KeyArray	An array of keys as Strings
 	 * @param	Status		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
+	private function checkKeyStatus(KeyArray:Array<String>, Status:Int):Bool
 	{
 		if (KeyArray == null)
 		{
 			return false;
 		}
 		
-		var isIntArray:Bool = KeyArray.length > 0 && Std.is(KeyArray[0], Int);
-		
 		for (code in KeyArray)
 		{
 			var key:FlxKey;
 			
-			if (isIntArray)
-			{
-				// Use direct array access if they're using an array type. Much faster.
-				key = _keyList[code];
-			}
-			else
-			{
-				// Also make lowercase keys work, like "space" or "sPaCe"
-				code = code.toUpperCase();
-				key = _keyList[_keyLookup.get(code)];
-			}
+			// Also make lowercase keys work, like "space" or "sPaCe"
+			code = code.toUpperCase();
+			key = _keyList[_keyLookup.get(code)];
 			
 			if (key != null)
 			{
@@ -275,11 +247,11 @@ class FlxKeyboard implements IFlxInput
 				{
 					return true;
 				}
-				else if (Status == FlxKey.PRESSED && key.current == FlxKey.JUST_PRESSED)
+				else if ((Status == FlxKey.PRESSED) && (key.current == FlxKey.JUST_PRESSED))
 				{
 					return true;
 				}
-				else if (Status == FlxKey.RELEASED && key.current == FlxKey.JUST_RELEASED)
+				else if ((Status == FlxKey.RELEASED) && (key.current == FlxKey.JUST_RELEASED))
 				{
 					return true;
 				}
@@ -297,6 +269,7 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Check the status of a single of key
+	 * 
 	 * @param	KeyCode		Index into _keyList array.
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided key has the specified status
