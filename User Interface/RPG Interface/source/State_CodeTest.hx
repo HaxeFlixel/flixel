@@ -81,16 +81,16 @@ class State_CodeTest extends FlxUIState
 		/***Toggle buttons***/
 			
 		var button1 = new FlxUIButton(300, 200, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton, [null]);
-		button1.loadGraphicSlice9(null, 0, 0, null, -1, true);
+		button1.loadGraphicSlice9(null, 0, 0, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		
 		var button2 = new FlxUIButton(300, 230, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton, [null]);
-		button2.loadGraphicSlice9(null, 0, 0, null, -1, true);
+		button2.loadGraphicSlice9(null, 0, 0, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		
 		var button3 = new FlxUIButton(300, 260, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton, [null]);
-		button3.loadGraphicSlice9(null, 0, 0, null, -1, true);
+		button3.loadGraphicSlice9(null, 0, 0, null,FlxUI9SliceSprite.TILE_NONE, -1, true);
 		
 		var button4 = new FlxUIButton(300, 290, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton, [null]);
-		button4.loadGraphicSlice9(null, 0, 0, null, -1, true);		
+		button4.loadGraphicSlice9(null, 0, 0, null, FlxUI9SliceSprite.TILE_NONE, -1, true);		
 		
 		add(button1);
 		add(button2);

@@ -16,11 +16,11 @@ class PlayState extends FlxState
 	{
 		// Title text, nothing crazy here!
 		var text:FlxText;
-		text = new FlxText(FlxG.width / 4, FlxG.height / 2 - 20, Math.floor(FlxG.width / 2), "FlxBlur", true);
+		text = new FlxText(FlxG.width / 4, FlxG.height / 2 - 20, Math.floor(FlxG.width / 2), "FlxBlur");
 		text.setFormat(null, 32, FlxColor.WHITE, "center");
 		add(text);
 		
-		text = new FlxText(FlxG.width / 4, FlxG.height / 2 + 20, Math.floor(FlxG.width / 2), "press space to toggle", true);
+		text = new FlxText(FlxG.width / 4, FlxG.height / 2 + 20, Math.floor(FlxG.width / 2), "press space to toggle");
 		text.setFormat(null, 16, FlxColor.BLUE, "center");
 		add(text);
 		
