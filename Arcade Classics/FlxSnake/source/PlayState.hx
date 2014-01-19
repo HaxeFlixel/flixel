@@ -178,7 +178,7 @@ class PlayState extends FlxState
 	{
 		_snakeHead.alive = false;
 		updateText("Game Over - Space to restart!");
-		FlxG.sound.play("assets/flixel.mp3");
+		FlxG.sound.play("assets/flixel.wav");
 	}
 	
 	private function addSegment():Void
