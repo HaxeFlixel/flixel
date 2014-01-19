@@ -11,6 +11,9 @@ import flixel.FlxG;
 @:font("assets/fonts/arial.ttf") private class FontDebugger extends Font { }
 #end
 
+// Embed the FlxSprite default image for use with munit
+@:bitmap("assets/images/logo/default.png") private class IMG_DEFAULT_EMBED extends BitmapData { }
+
 class FlxAssets
 {
 	// debugger 
@@ -34,8 +37,9 @@ class FlxAssets
 	
 	// logo
 	inline static public var IMG_LOGO:String = "flixel/img/logo/logo.png";
-	inline static public var IMG_DEFAULT:String = "flixel/img/logo/default.png";
-	
+	// FlxSprite default image
+	static public var IMG_DEFAULT:BitmapData;
+
 	// preloader
 	inline static public var IMG_CORNERS:String = "flixel/img/preloader/corners.png";
 	inline static public var IMG_LIGHT:String = "flixel/img/preloader/light.png";
@@ -73,6 +77,8 @@ class FlxAssets
 	
 	static public function init():Void
 	{
+		IMG_DEFAULT = new IMG_DEFAULT_EMBED(16,16);
+
 		Font.registerFont(FontDefault);
 		
 		#if !FLX_NO_DEBUG
