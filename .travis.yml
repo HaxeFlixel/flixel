@@ -26,5 +26,5 @@ before_script:
 
 script:
   - cd ./test
-  - bash test.sh
+  - haxe test.hxml
   - haxelib run flixel-tools testdemos

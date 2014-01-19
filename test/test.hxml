@@ -13,6 +13,9 @@
 -lib spinehx
 -lib nape
 
+-lib mcover
+--macro mcover.MCover.coverage(['flixel'], ['../'], null)
+
 -D doc
 # -D debug
 
