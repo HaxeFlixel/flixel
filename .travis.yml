@@ -7,6 +7,7 @@ before_script:
   - sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   - mkdir ~/haxelib
   - haxelib setup ~/haxelib
+  - haxelib install munit
   - haxelib install lime
   - haxelib install lime-tools
   - haxelib run lime install openfl
@@ -24,4 +25,6 @@ before_script:
   - haxelib dev flixel .
 
 script:
+  - cd ./test
+  - bash test.sh
   - haxelib run flixel-tools testdemos
