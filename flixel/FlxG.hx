@@ -1,5 +1,6 @@
 package flixel;
 
+import flash.Lib;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
@@ -415,15 +416,15 @@ class FlxG
 
 		if (Value)
 		{
-			stage.displayState = StageDisplayState.FULL_SCREEN;
+			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN;
 			#if flash
-			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
-			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
+			camera.x = (Lib.current.stage.fullScreenWidth - width * camera.zoom) / 2;
+			camera.y = (Lib.current.stage.fullScreenHeight - height * camera.zoom) / 2;
 			#end
 		}
 		else
 		{
-			stage.displayState = StageDisplayState.NORMAL;
+			Lib.current.stage.displayState = StageDisplayState.NORMAL;
 		}
 
 		return fullscreen = Value;
@@ -437,7 +438,7 @@ class FlxG
 	
 	inline static private function get_stage():Stage
 	{
-		return game.stage;
+		return Lib.current.stage;
 	}
 	
 	/**

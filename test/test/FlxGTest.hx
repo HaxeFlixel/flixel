@@ -3,9 +3,11 @@ package;
 import massive.munit.Assert;
 
 import flixel.FlxGame;
+import flixel.FlxCamera;
 import flixel.FlxG;
 
 import flash.events.Event;
+import flash.Lib;
 
 class FlxGTest 
 {
@@ -17,7 +19,10 @@ class FlxGTest
 	public function setup():Void
 	{
 		game = new FlxGame(640, 480, TestState, 1, 60, 60);
+
+		// Force dispatch events under unit test
 		game.dispatchEvent(new flash.events.Event(Event.ADDED_TO_STAGE));
+		Lib.current.stage.dispatchEvent(new flash.events.Event(Event.ENTER_FRAME));
 	}
 	
 	@Test
@@ -41,7 +46,7 @@ class FlxGTest
 
 		Assert.isTrue(FlxG.cameras.list.length == 1);
 		
-		var camera = new flixel.FlxCamera();
+		var camera = new FlxCamera();
 		FlxG.cameras.add(camera);
 
 		Assert.isTrue(FlxG.cameras.list.length == 2);
