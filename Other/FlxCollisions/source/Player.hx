@@ -48,7 +48,7 @@ class Player extends FlxSprite
 		if (isTouching(FlxObject.FLOOR))
 		{
 			// Jump controls
-			if (FlxG.keyboard.justPressed.SPACE || FlxG.keyboard.justPressed("UP", "W"))
+			if (FlxG.keyboard.justPressed("UP", "W", "SPACE"))
 			{
 				velocity.y = -acceleration.y*0.51;
 				animation.play("jump");
