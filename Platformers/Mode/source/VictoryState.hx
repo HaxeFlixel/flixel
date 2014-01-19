@@ -62,7 +62,7 @@ class VictoryState extends FlxState
 		{
 			_timer += FlxG.elapsed;
 			
-			if ((_timer > 0.35) && ((_timer > 10) || FlxG.keyboard.justPressed("X", "C")))
+			if ((_timer > 0.35) && ((_timer > 10) || FlxG.keyboard.anyJustPressed(["X", "C"])))
 			{
 				_fading = true;
 				FlxG.sound.play("MenuHit2");
