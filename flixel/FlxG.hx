@@ -4,6 +4,7 @@ import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flash.Lib;
+import flash.net.URLRequest;
 import flixel.FlxBasic;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
@@ -593,12 +594,13 @@ class FlxG
 	}
 	
 	/**
-	 * Opens a web page in a new tab or window.
+	 * Opens a web page, by default a new tab or window.
 	 * 
 	 * @param	URL		The address of the web page.
+	 * @param	Target	<code>"_blank", "_self", "_parent"</code> or <code>"_top"</code>
 	 */
-	inline static public function openURL(URL:String):Void
+	inline static public function openURL(URL:String, Target:String = "_blank"):Void
 	{
-		flash.Lib.getURL(new flash.net.URLRequest(URL), "_blank");
+		Lib.getURL(new URLRequest(URL), Target);
 	}
 }
