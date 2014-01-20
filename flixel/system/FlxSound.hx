@@ -333,7 +333,7 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Call this function if you want this sound's volume to change
-	 * based on distance from a particular FlxCore object.
+	 * based on distance from a particular FlxObject.
 	 * 
 	 * @param	X		The X position of the sound.
 	 * @param	Y		The Y position of the sound.
