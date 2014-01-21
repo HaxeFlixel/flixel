@@ -141,7 +141,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * 
 	 * @param   CursorContainer   The cursor container sprite passed by FlxGame
 	 */
-	@:allow(flixel.FlxG);
+	@:allow(flixel.FlxG)
 	private function new(CursorContainer:Sprite)
 	{
 		super();
