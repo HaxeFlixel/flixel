@@ -141,7 +141,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * 
 	 * @param   CursorContainer   The cursor container sprite passed by FlxGame
 	 */
-	public function new(CursorContainer:Sprite)
+	@:allow(flixel.FlxG);
+	private function new(CursorContainer:Sprite)
 	{
 		super();
 		
@@ -465,7 +466,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	}
 	
 	/**
-	 * Clean up memory.
+	 * Clean up memory. Internal use only.
 	 */
 	@:noCompletion override public function destroy():Void
 	{
@@ -473,6 +474,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor = null;
 		_point = null;
 		_globalScreenPosition = null;
+		_matrix = null;
 		
 		if (_cursorBitmapData != null)
 		{
@@ -483,7 +485,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	
 	/** Recording functions **/
 	
-	@:noCompletion public function record():MouseRecord
+	@:allow(flixel.system.replay.FlxReplay)
+	private function record():MouseRecord
 	{
 		if ((_lastX == _globalScreenPosition.x) && (_lastY == _globalScreenPosition.y) 
 			&& (_leftButton.current == 0) && (_lastWheel == wheel))
@@ -496,7 +499,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		return new MouseRecord(_lastX, _lastY, _leftButton.current, _lastWheel);
 	}
 
-	@:noCompletion public function playback(Record:MouseRecord):Void
+	@:allow(flixel.system.replay.FlxReplay)
+	private function playback(Record:MouseRecord):Void
 	{
 		_leftButton.current = Record.button;
 		wheel = Record.wheel;
@@ -510,11 +514,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	private function updateCursor():Void
 	{
-		getScreenPosition(FlxG.camera, _point);
+		getScreenPosition(null, _point);
 		screenX = _point.x;
 		screenY = _point.y;
 		
-		copyFrom(getWorldPosition());
+		getWorldPosition(null, this);
 	}
 	
 	/**

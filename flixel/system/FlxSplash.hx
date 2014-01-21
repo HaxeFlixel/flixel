@@ -177,7 +177,7 @@ class FlxSplash extends FlxState
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(Type.createInstance(_nextState, []));
 		#if !mobile
-			FlxG.mouse.visible = false;
+			FlxG.mouse.visible = true;
 		#end
 	}
 }
