@@ -16,15 +16,7 @@
 	<haxelib name="hxcpp"/>
 	<haxelib name="actuate"/>
 	
-	<!-- assets -->
-	<icon path="assets/nme.svg" />
-	<!--assets path="assets/img" rename="img" /-->
-	<assets path="assets" include="*"/>
-	
-	<!-- DLLs -->
-	<ndll name="std" />
-	<ndll name="regexp" />
-	<ndll name="zlib" />
+	<assets path="assets" />
 
 	<!-- myflags -->
 	<!--haxedef name="TRUE_ZOOM_OUT" /-->

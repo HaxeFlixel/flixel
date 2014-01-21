@@ -34,11 +34,12 @@
 	<assets unless="flash" exlude="*.mp3" path="assets" />
 	
 	<!--------------------------------LIBRARIES------------------------------------->
-	
-	<icon path="assets/MinimalistTD.svg" />
-	
+
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
+	
+	<!-- This has priority over the icon specified in the flixel include.xml because we embed flixel earlier -->
+	<icon path="assets/MinimalistTD.svg" />
 	
 	<!--In case you want to use the addons package-->
 	<!--<haxelib name="flixel-addons" />-->
