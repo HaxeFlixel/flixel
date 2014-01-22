@@ -9,6 +9,7 @@ import flixel.FlxBasic;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
+import flixel.system.FlxVersion;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.BmpLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
@@ -48,28 +49,15 @@ import flixel.input.android.FlxAndroidKeys;
 #end
 
 /**
- * This is a global helper class full of useful functions for audio,
- * input, basic info, and the camera system among other things.
- * Utilities for maths and color and things can be found in the util package.
- * <code>FlxG</code> is specifically for Flixel-specific properties.
+ * Global helper class for audio, input, the camera system, the debugger and other global properties.
  */
 class FlxG 
 {
 	/**
-	 * If you build and maintain your own version of flixel,
-	 * you can give it your own name here.
-	 */
-	static public var LIBRARY_NAME:String = "HaxeFlixel";
-	/**
-	 * Assign a major version to your library.
-	 * Appears before the decimal in the console.
-	 */
-	static public var LIBRARY_MAJOR_VERSION:String = "3";
-	/**
-	 * Assign a minor version to your library.
-	 * Appears after the decimal in the console.
-	 */
-	static public var LIBRARY_MINOR_VERSION:String = "1.0-dev";
+	 * The HaxeFlixel version, in sematntic versioning syntax. Use <code>Std.string()</code>
+	 * on it to have it formatted in the format "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
+	 */ 
+	static public var VERSION(default, null):FlxVersion = new FlxVersion(3, 1, 0, "dev");
 	
 	/**
 	 * Internal tracker for game object.
@@ -309,16 +297,6 @@ class FlxG
 		_resolutionPolicy = Policy;
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		return Policy;
-	}
-	
-	/**
-	 * The library name, which is "HaxeFlixel v.(major version).(minor version)"
-	 */
-	static public var libraryName(get, never):String;
-	
-	inline static private function get_libraryName():String
-	{
-		return LIBRARY_NAME + " v" + LIBRARY_MAJOR_VERSION + "." + LIBRARY_MINOR_VERSION;
 	}
 	
 	/**
