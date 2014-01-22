@@ -248,23 +248,23 @@ class FlxG
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
-			keys = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
+		keys = inputs.add(new FlxKeyboard());
 		#end
 		
 		#if !FLX_NO_MOUSE
-			mouse = cast(inputs.add(new FlxMouse(game.inputContainer)), FlxMouse);
+		mouse = inputs.add(new FlxMouse(game.inputContainer));
 		#end
 		
 		#if !FLX_NO_TOUCH
-			touches = cast(inputs.add(new FlxTouchManager()), FlxTouchManager);
+		touches = inputs.add(new FlxTouchManager());
 		#end
 		
 		#if (!FLX_NO_GAMEPAD && (cpp||neko||js))
-			gamepads = cast(inputs.add(new FlxGamepadManager()), FlxGamepadManager);
+		gamepads = inputs.add(new FlxGamepadManager());
 		#end
 		
 		#if android
-			android = cast(inputs.add(new FlxAndroidKeys()), FlxAndroidKeys);
+		android = inputs.add(new FlxAndroidKeys());
 		#end
 		
 		save.bind("flixel");
