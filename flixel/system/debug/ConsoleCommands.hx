@@ -188,7 +188,7 @@ class ConsoleCommands
 		}
 		
 		// Prevent from assigning non-boolean values to bools
-		if (Std.is(variable, Bool) && Std.is(NewVariableValue, Bool)) 
+		if (Std.is(variable, Bool) && !Std.is(NewVariableValue, Bool)) 
 		{
 			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
 			return;
