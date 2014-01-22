@@ -54,8 +54,8 @@ import flixel.input.android.FlxAndroidKeys;
 class FlxG 
 {
 	/**
-	 * The HaxeFlixel version, in sematntic versioning syntax. Use <code>Std.string()</code>
-	 * on it to have it formatted in the format "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
+	 * The HaxeFlixel version, in semantic versioning syntax. Use <code>Std.string()</code>
+	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
 	static public var VERSION(default, null):FlxVersion = new FlxVersion(3, 1, 0, "dev");
 	
