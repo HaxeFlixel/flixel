@@ -33,7 +33,6 @@ import flixel.input.touch.FlxTouchManager;
 #end
 #if !FLX_NO_KEYBOARD
 import flixel.input.keyboard.FlxKeyboard;
-import flixel.input.keyboard.FlxKeyShortcuts;
 #end
 #if !FLX_NO_MOUSE
 import flixel.input.mouse.FlxMouse;
@@ -127,26 +126,24 @@ class FlxG
 	
 	#if !FLX_NO_MOUSE
 	/**
-	 * A reference to a <code>FlxMouse</code> object. Important for input!
+	 * A <code>FlxMouse</code> object for mouse input. e.g.: check if the left mouse button 
+	 * is pressed with <code>if (FlxG.mouse.pressed) { }</code>) </code>in <code>update()</code>.
 	 */
 	static public var mouse(default, null):FlxMouse;
 	#end
 
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * A reference to a <code>FlxKeyboard</code> object. Important for input!
+	 * A <code>FlxKeyboard</code> object for keyboard input e.g.: check if the left arrow key is 
+	 * pressed with <code>if (FlxG.keys.pressed.LEFT) { } </code>in <code>update()</code>.
 	 */
-	static public var keyboard(default, null):FlxKeyboard;
-	/**
-	 * A reference to a <code>FlxKeyAccess</code> object. Handy for quickly 
-	 * getting information about keys pressed / just pressed or just released!
-	 */
-	static public var keys(default, null):FlxKeyShortcuts;
+	static public var keys(default, null):FlxKeyboard;
 	#end
 
 	#if !FLX_NO_TOUCH
 	/**
-	 * A reference to a <code>FlxTouchManager</code> object. Useful for devices with multitouch support
+	 * A reference to a <code>FlxTouchManager</code> object. 
+	 * Useful for devices with multitouch support.
 	 */
 	public static var touches(default, null):FlxTouchManager;
 	#end
@@ -251,8 +248,7 @@ class FlxG
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
-			keyboard = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
-			keys = new FlxKeyShortcuts();
+			keys = cast(inputs.add(new FlxKeyboard()), FlxKeyboard);
 		#end
 		
 		#if !FLX_NO_MOUSE

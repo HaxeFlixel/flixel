@@ -218,7 +218,7 @@ class WatchEntry
 	{
 		editing = true;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = false;
+			FlxG.keys.enabled = false;
 		#end
 		oldValue = Reflect.getProperty(object, field);
 		valueDisplay.type = TextFieldType.INPUT;
@@ -294,7 +294,7 @@ class WatchEntry
 		valueDisplay.background = false;
 		editing = false;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = true;
+			FlxG.keys.enabled = true;
 		#end
 	}
 }

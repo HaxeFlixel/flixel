@@ -49,7 +49,7 @@ class FlxSplash extends FlxState
 		FlxG.autoPause = false;
 		
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = false;
+			FlxG.keys.enabled = false;
 		#end
 		
 		_times = [0.041, 0.184, 0.334, 0.495, 0.636];
@@ -170,7 +170,7 @@ class FlxSplash extends FlxState
 		FlxG.fixedTimestep = _cachedTimestep;
 		FlxG.autoPause = _cachedAutoPause;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = true;
+			FlxG.keys.enabled = true;
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);

@@ -18,6 +18,19 @@ class FlxKeyboard implements IFlxInput
 	 * Whether or not keyboard input is currently enabled.
 	 */
 	public var enabled:Bool = true;
+	
+	/**
+	 * Helper class to check if a keys is pressed.
+	 */
+	public var pressed:FlxKeyList;
+	/**
+	 * Helper class to check if a keys was just pressed.
+	 */
+	public var justPressed:FlxKeyList;
+	/**
+	 * Helper class to check if a keys was just released.
+	 */
+	public var justReleased:FlxKeyList;
 
 	/**
 	 * Total amount of keys.
@@ -129,6 +142,10 @@ class FlxKeyboard implements IFlxInput
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		
+		pressed = new FlxKeyList(FlxKey.PRESSED);
+		justPressed = new FlxKeyList(FlxKey.JUST_PRESSED);
+		justReleased = new FlxKeyList(FlxKey.JUST_RELEASED);
 	}
 	
 	/**
@@ -185,7 +202,7 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: <code>FlxG.keys.anyPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
@@ -197,7 +214,7 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyJustPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: <code>FlxG.keys.anyJustPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
@@ -209,7 +226,7 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyJustReleased(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: <code>FlxG.keys.anyJustReleased(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
@@ -300,58 +317,6 @@ class FlxKeyboard implements IFlxInput
 		#end
 		
 		return false;
-	}
-	
-	/**
-	 * If any keys are not "released" (0),
-	 * this function will return an array indicating
-	 * which keys are pressed and what state they are in.
-	 * 
-	 * @return	An array of key state data.  Null if there is no data.
-	 */
-	public function record():Array<CodeValuePair>
-	{
-		var data:Array<CodeValuePair> = null;
-		var i:Int = 0;
-		
-		while (i < TOTAL)
-		{
-			var key:FlxKey = _keyList[i++];
-			
-			if (key == null || key.current == FlxKey.RELEASED)
-			{
-				continue;
-			}
-			
-			if (data == null)
-			{
-				data = new Array<CodeValuePair>();
-			}
-			
-			data.push(new CodeValuePair(i - 1, key.current));
-		}
-		return data;
-	}
-	
-	/**
-	 * Part of the keystroke recording system.
-	 * Takes data about key presses and sets it into array.
-	 * 
-	 * @param	Record	Array of data about key states.
-	 */
-	public function playback(Record:Array<CodeValuePair>):Void
-	{
-		var i:Int = 0;
-		var l:Int = Record.length;
-		var o:CodeValuePair;
-		var o2:FlxKey;
-		
-		while (i < l)
-		{
-			o = Record[i++];
-			o2 = _keyList[o.code];
-			o2.current = o.value;
-		}
 	}
 	
 	/**
@@ -555,14 +520,66 @@ class FlxKeyboard implements IFlxInput
 		}
 	}
 	
-	inline public function onFocus( ):Void { }
+	/**
+	 * If any keys are not "released" (0),
+	 * this function will return an array indicating
+	 * which keys are pressed and what state they are in.
+	 * 
+	 * @return	An array of key state data.  Null if there is no data.
+	 */
+	@:noCompletion public function record():Array<CodeValuePair>
+	{
+		var data:Array<CodeValuePair> = null;
+		var i:Int = 0;
+		
+		while (i < TOTAL)
+		{
+			var key:FlxKey = _keyList[i++];
+			
+			if (key == null || key.current == FlxKey.RELEASED)
+			{
+				continue;
+			}
+			
+			if (data == null)
+			{
+				data = new Array<CodeValuePair>();
+			}
+			
+			data.push(new CodeValuePair(i - 1, key.current));
+		}
+		return data;
+	}
+	
+	/**
+	 * Part of the keystroke recording system.
+	 * Takes data about key presses and sets it into array.
+	 * 
+	 * @param	Record	Array of data about key states.
+	 */
+	@:noCompletion public function playback(Record:Array<CodeValuePair>):Void
+	{
+		var i:Int = 0;
+		var l:Int = Record.length;
+		var o:CodeValuePair;
+		var o2:FlxKey;
+		
+		while (i < l)
+		{
+			o = Record[i++];
+			o2 = _keyList[o.code];
+			o2.current = o.value;
+		}
+	}
+	
+	@:noCompletion inline public function onFocus( ):Void { }
 
-	inline public function onFocusLost():Void
+	@:noCompletion inline public function onFocusLost():Void
 	{
 		reset();
 	}
 
-	inline public function toString():String
+	@:noCompletion inline public function toString():String
 	{
 		return "FlxKeyboard";
 	}

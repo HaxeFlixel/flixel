@@ -20,7 +20,7 @@ class FlxAndroidKeyList
 	
 	private function get_ANY():Bool
 	{
-		for (key in FlxG.keyboard._keyList)
+		for (key in FlxG.keys._keyList)
 		{
 			if (key != null)
 			{
