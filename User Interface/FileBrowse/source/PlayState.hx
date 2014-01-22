@@ -91,7 +91,7 @@ class PlayState extends FlxState
 		}
 		
 		// Reset to a scale of x1
-		if (FlxG.keyboard.anyPressed(["R", "SPACE", "ONE"]))
+		if (FlxG.keys.anyPressed(["R", "SPACE", "ONE"]))
 		{
 			_updateScale(1);
 		}

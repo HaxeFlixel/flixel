@@ -80,12 +80,12 @@ class Player extends FlxSprite
 			acceleration.y = GRAVITY;
 		}
 		
-		if (FlxG.keyboard.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
 			facing = FlxObject.LEFT; 
 			acceleration.x = -drag.x;
 		}
-		else if (FlxG.keyboard.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
 			facing = FlxObject.RIGHT;
 			acceleration.x = drag.x;				
@@ -100,7 +100,7 @@ class Player extends FlxSprite
 		}
 		
 		// Shooting
-		if (FlxG.keyboard.anyPressed(["X", "J"]))
+		if (FlxG.keys.anyPressed(["X", "J"]))
 		{
 			//Let's put the shooting code in its own function to keep things organized
 			shoot();  
@@ -148,7 +148,7 @@ class Player extends FlxSprite
 			climbing = false;
 		}
 		
-		if (isTouching(FlxObject.FLOOR) && !FlxG.keyboard.anyPressed(_jumpKeys))
+		if (isTouching(FlxObject.FLOOR) && !FlxG.keys.anyPressed(_jumpKeys))
 		{
 			_jumpTime = -1;
 			// Reset the double jump flag
@@ -160,7 +160,7 @@ class Player extends FlxSprite
 	
 	private function climb():Void
 	{
-		if (FlxG.keyboard.anyPressed(["UP", "W"]))
+		if (FlxG.keys.anyPressed(["UP", "W"]))
 		{
 			if (_onLadder) 
 			{
@@ -173,7 +173,7 @@ class Player extends FlxSprite
 				velocity.y = - RUN_SPEED;
 			}
 		}
-		else if (FlxG.keyboard.anyPressed(["DOWN", "S"]))
+		else if (FlxG.keys.anyPressed(["DOWN", "S"]))
 		{
 			if (_onLadder) 
 			{
@@ -190,7 +190,7 @@ class Player extends FlxSprite
 	
 	private function jump():Void
 	{
-		if (FlxG.keyboard.anyJustPressed(_jumpKeys))
+		if (FlxG.keys.anyJustPressed(_jumpKeys))
 		{
 			if ((velocity.y == 0) || (_timesJumped < JUMPS_ALLOWED)) // Only allow two jumps
 			{
@@ -202,7 +202,7 @@ class Player extends FlxSprite
 		}
 		
 		// You can also use space or any other key you want
-		if ((FlxG.keyboard.anyPressed(_jumpKeys)) && (_jumpTime >= 0)) 
+		if ((FlxG.keys.anyPressed(_jumpKeys)) && (_jumpTime >= 0)) 
 		{
 			climbing = false;
 			_jumpTime += FlxG.elapsed;

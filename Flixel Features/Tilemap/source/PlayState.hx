@@ -136,17 +136,17 @@ class PlayState extends FlxState
 		// MOVEMENT
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keyboard.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
 			_player.facing = FlxObject.LEFT;
 			_player.acceleration.x -= _player.drag.x;
 		}
-		else if (FlxG.keyboard.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
 			_player.facing = FlxObject.RIGHT;
 			_player.acceleration.x += _player.drag.x;
 		}
-		if (FlxG.keyboard.anyJustPressed(["UP", "W"]) && _player.velocity.y == 0)
+		if (FlxG.keys.anyJustPressed(["UP", "W"]) && _player.velocity.y == 0)
 		{
 			_player.y -= 1;
 			_player.velocity.y = -200;

@@ -73,19 +73,19 @@ class Player extends FlxSprite
 		}
 		
 		// Check for WASD or arrow key presses and move accordingly
-		if (FlxG.keyboard.anyPressed(["DOWN", "S"]))
+		if (FlxG.keys.anyPressed(["DOWN", "S"]))
 		{
 			moveTo(MoveDirection.DOWN);
 		}
-		else if (FlxG.keyboard.anyPressed(["UP", "W"]))
+		else if (FlxG.keys.anyPressed(["UP", "W"]))
 		{
 			moveTo(MoveDirection.UP);
 		}
-		else if (FlxG.keyboard.anyPressed(["LEFT", "A"]))
+		else if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
 			moveTo(MoveDirection.LEFT);
 		}
-		else if (FlxG.keyboard.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
 			moveTo(MoveDirection.RIGHT);
 		}

@@ -41,18 +41,18 @@ class Player extends FlxSprite
 		// MOVEMENT
 		acceleration.x = 0;
 		
-		if (FlxG.keyboard.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
 			facing = FlxObject.LEFT;
 			acceleration.x -= drag.x;
 		}
-		else if (FlxG.keyboard.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
 			facing = FlxObject.RIGHT;
 			acceleration.x += drag.x;
 		}
 		
-		if ((FlxG.keyboard.anyJustPressed(["UP", "W", "SPACE"]) && _isReadyToJump) && velocity.y == 0)
+		if ((FlxG.keys.anyJustPressed(["UP", "W", "SPACE"]) && _isReadyToJump) && velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
 		}

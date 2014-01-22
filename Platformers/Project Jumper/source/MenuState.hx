@@ -72,6 +72,11 @@ class MenuState extends FlxState
 	
 	override public function update():Void 
 	{
+		if (FlxG.mouse.wheel != 0)
+		{
+			FlxG.camera.zoom += (FlxG.mouse.wheel / 10);
+		}
+		
 		// Stop the texts when they reach their designated position
 		if (_text1.x > FlxG.width / 5)	
 		{
@@ -107,7 +112,7 @@ class MenuState extends FlxState
 			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
 		}
 		
-		if (FlxG.keyboard.anyJustPressed(["SPACE", "ENTER", "C"]))
+		if (FlxG.keys.anyJustPressed(["SPACE", "ENTER", "C"]))
 		{
 			switch (_option) 
 			{
