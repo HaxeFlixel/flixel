@@ -139,7 +139,7 @@ class CameraFrontEnd
 	 * @param	NewCamera	The camera you want to add.
 	 * @return	This <code>FlxCamera</code> instance.
 	 */
-	inline public function add(NewCamera:FlxCamera):FlxCamera
+	@:generic inline public function add<T:FlxCamera>(NewCamera:T):T
 	{
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game.inputContainer));
 		FlxG.cameras.list.push(NewCamera);
