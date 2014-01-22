@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="Mode" file="Mode" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="Mode" file="Mo de" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
 	<window width="640" height="480" fps="60" background="#131C1B" orientation="portrait" resizable="true" if="web" />
 	<window width="640" height="480" fps="60" background="#131C1B" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
@@ -77,7 +77,7 @@
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
 	<haxedef name="FLX_NO_MOUSE" if="mobile" />
-	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
+	<!--<haxedef name="FLX_NO_KEYBOARD" if="mobile" />-->
 	<haxedef name="FLX_NO_TOUCH" if="desktop" />
 	<haxedef name="OUYA" if="android" />
 	<!--<haxedef name="FLX_NO_GAMEPAD"/>-->

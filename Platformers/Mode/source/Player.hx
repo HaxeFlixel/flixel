@@ -10,7 +10,7 @@ import flixel.input.gamepad.XboxButtonID;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 #if (android && OUYA)
-import flixel.system.input.gamepad.OUYAButtonID;
+import flixel.input.gamepad.OUYAButtonID;
 #elseif (!FLX_NO_GAMEPAD && (cpp || neko || js))
 #end
 
