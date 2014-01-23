@@ -33,11 +33,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Current X position of the mouse pointer on the screen.
 	 */
-	public var screenX:Float = 0;
+	public var screenX:Int = 0;
 	/**
 	 * Current Y position of the mouse pointer on the screen.
 	 */
-	public var screenY:Float = 0;
+	public var screenY:Int = 0;
 	/**
 	 * A display container for the mouse cursor. It is a child of FlxGame and 
 	 * sits at the right "height". Not used on flash with the native cursor API.
@@ -465,6 +465,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		#end
 	}
 	
+	@:noCompletion public function onStateSwitch():Void
+	{
+		set_visible(visible);
+	}
+	
 	/**
 	 * Clean up memory. Internal use only.
 	 */
@@ -474,7 +479,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor = null;
 		_point = null;
 		_globalScreenPosition = null;
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
 		_matrix = null;
+		#end
 		
 		if (_cursorBitmapData != null)
 		{
@@ -515,8 +522,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private function updateCursor():Void
 	{
 		getScreenPosition(null, _point);
-		screenX = _point.x;
-		screenY = _point.y;
+		screenX = Std.int(_point.x);
+		screenY = Std.int(_point.y);
 		
 		getWorldPosition(null, this);
 	}
