@@ -48,7 +48,7 @@ class FlxSpriteUtil
 	 * @param	mask		The mask to apply. Remember the non-alpha zero areas are the parts that will display.
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function alphaMask<T:FlxSprite>(output:T, source:Dynamic, mask:Dynamic):T
+	static public function alphaMask(output:FlxSprite, source:Dynamic, mask:Dynamic):FlxSprite
 	{
 		var data:BitmapData = null;
 		if (Std.is(source, String))
@@ -121,7 +121,7 @@ class FlxSpriteUtil
 	 * @param	Bottom		Whether to activate screen wrapping on the bottom of the screen
 	 * @return 	The <code>FlxObject</code> for chaining
 	 */
-	static public function screenWrap( object:FlxObject, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):T
+	static public function screenWrap( object:FlxObject, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):FlxObject
 	{
 		if (Left && object.x < -object.width)
 		{
@@ -178,12 +178,12 @@ class FlxSpriteUtil
 	/**
 	 * Centers the given FlxObject on the screen, either by the x axis, y axis, or both
 	 * 
-	 * @param	object			The <code>FlxSprite<code> to center
+	 * @param	object			The <code>FlxObject<code> to center
 	 * @param	Horizontally	Boolean true if you want it centered horizontally
 	 * @param	Vertically		Boolean	true if you want it centered vertically
 	 * @return 	The <code>FlxObject</code> for chaining
 	 */
-	@:generic static public function screenCenter<T:FlxSprite>(object:T, xAxis:Bool = true, yAxis:Bool = true):T
+	static public function screenCenter(object:FlxObject, xAxis:Bool = true, yAxis:Bool = true):FlxObject
 	{
 		if (xAxis)
 		{
@@ -213,7 +213,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function drawLine<T:FlxSprite>(sprite:T, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):T
+	static public function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(0, lineStyle);
 		flashGfx.moveTo(StartX, StartY);
@@ -236,7 +236,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function drawRect<T:FlxSprite>(sprite:T, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):T
+	static public function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawRect(X, Y, Width, Height);
@@ -260,7 +260,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle		A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function drawRoundRect<T:FlxSprite>(sprite:T, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):T
+	static public function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
@@ -288,7 +288,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle			A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function drawRoundRectComplex<T:FlxSprite>(sprite:T, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):T
+	static public function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
@@ -310,7 +310,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function drawCircle<T:FlxSprite>(sprite:T, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, Color:Int = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):T
+	static public function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, Color:Int = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		if ((X == -1) || (Y == -1)) 
 		{
@@ -350,7 +350,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function drawEllipse<T:FlxSprite>(sprite:T, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):T
+	static public function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawEllipse(X, Y, Width, Height);
@@ -371,7 +371,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function drawTriangle<T:FlxSprite>(sprite:T, X:Float, Y:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):T
+	static public function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.moveTo(X + Height / 2, Y);
@@ -393,7 +393,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function drawPolygon<T:FlxSprite>(sprite:T, Vertices:Array<FlxPoint>, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):T
+	static public function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		var p:FlxPoint = Vertices.shift();
@@ -437,7 +437,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic inline static public function endDraw<T:FlxSprite>(sprite:T, ?drawStyle:DrawStyle):T
+	inline static public function endDraw(sprite:FlxSprite, ?drawStyle:DrawStyle):FlxSprite
 	{
 		flashGfx.endFill();
 		updateSpriteGraphic(sprite, drawStyle);
@@ -452,7 +452,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function updateSpriteGraphic<T:FlxSprite>(sprite:T, ?drawStyle:DrawStyle):T
+	static public function updateSpriteGraphic(sprite:FlxSprite, ?drawStyle:DrawStyle):FlxSprite
 	{
 		if (drawStyle == null) 
 		{
@@ -515,7 +515,7 @@ class FlxSpriteUtil
 	 * @param	Color	The color with which to fill the graphic, format 0xAARRGGBB.
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	@:generic static public function fill<T:FlxSprite>(sprite:T, Color:Int):T
+	static public function fill(sprite:FlxSprite, Color:Int):FlxSprite
 	{
 		sprite.pixels.fillRect(sprite.pixels.rect, Color);
 		
@@ -531,7 +531,7 @@ class FlxSpriteUtil
 	/**
 	 * A simple flicker effect for sprites achieved by toggling visibility.
 	 * 
-	 * @param	Object				The sprite.
+	 * @param	Object				The object to flicker.
 	 * @param	Duration			How long to flicker for. 0 means "forever".
 	 * @param	Interval			In what interval to toggle visibility. Set to <code>FlxG.elapsed</code> if <= 0!
 	 * @param	EndVisibility		Force the visible value when the flicker completes, useful with fast repetitive use.
@@ -540,7 +540,7 @@ class FlxSpriteUtil
 	 * @param	ProgressCallback	An optional callback that will be triggered when visibility is toggled.
 	 * @return	The <code>FlxObject</code> for chaining
 	 */
-	@:generic inline static public function flicker<T:FlxObject>(Object:T, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):T
+	inline static public function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxObject
 	{
 		FlxFlicker.flicker(Object, Duration, Interval, EndVisibility, ForceRestart, CompletionCallback, ProgressCallback);
 		return Object;
@@ -562,7 +562,7 @@ class FlxSpriteUtil
 	 * @param  Object 	The object to stop flickering.
 	 * @return The <code>FlxObject</code> for chaining
 	 */
-	@:generic inline static public function stopFlickering<T:FlxObject>(Object:T):T
+	inline static public function stopFlickering(Object:FlxObject):FlxObject
 	{
 		FlxFlicker.stopFlickering(Object);
 		return Object;
@@ -571,11 +571,11 @@ class FlxSpriteUtil
 	/**
 	 * Fade in a sprite.
 	 * 
-	 * @param  sprite 	The object to fade.
+	 * @param  sprite 	The sprite to fade.
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The <code>FlxSprite</code> for chaining
 	 */
-	@:generic inline static public function fadeIn<T:FlxSprite>(sprite:T, Duration:Float, ?ResetAlpha:Bool, ?OnComplete:CompleteCallback):T
+	inline static public function fadeIn(sprite:FlxSprite, Duration:Float, ?ResetAlpha:Bool, ?OnComplete:CompleteCallback):FlxSprite
 	{
 		if (ResetAlpha) {
 			sprite.alpha = 0;
@@ -587,11 +587,11 @@ class FlxSpriteUtil
 	/**
 	 * Fade out a sprite.
 	 * 
-	 * @param  sprite 	The object to fade.
+	 * @param  sprite 	The sprite to fade.
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The <code>FlxSprite</code> for chaining
 	 */
-	@:generic inline static public function fadeOut<T:FlxSprite>(sprite:T, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):T
+	inline static public function fadeOut(sprite:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):FlxSprite
 	{
 		FlxTween.color(sprite, Duration, sprite.color, FadeToBlack ? FlxColor.BLACK : sprite.color, sprite.alpha, 0, OnComplete != null ? { complete:OnComplete } : null);
 		return sprite;

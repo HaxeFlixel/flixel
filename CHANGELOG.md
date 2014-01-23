@@ -16,6 +16,7 @@ v.3.1.0
   * added convenient default values for drawCircle()
   * allow FlxObjects in screenWrap() and screenCenter()
   * adjust screenWrap() to ensure objects are off-screen before moving them
+  * remove generics to improve performance
 * FlxTypedButton refactor
   *  Callbacks are now set via onUp.setCallback as opposed to setOnUpCallback
   *  new labelAlphas and labelOffsets arrays for more control
