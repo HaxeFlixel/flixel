@@ -385,13 +385,14 @@ class FlxG
 	 * @param 	IndexModifier	Amount to add to the index - makes sure the index stays within bounds!
 	 * @return	The added DisplayObject
 	 */
-	static public function addChildBelowMouse(Child:DisplayObject, IndexModifier:Int = 0):DisplayObject
+	@:generic static public function addChildBelowMouse<T:DisplayObject>(Child:T, IndexModifier:Int = 0):T
 	{
 		var index = game.getChildIndex(game.inputContainer);
 		var max = game.numChildren;
 		
 		index = FlxMath.maxAdd(index, IndexModifier, max);
-		return game.addChildAt(Child, index);
+		game.addChildAt(Child, index);
+		return Child;
 	}
 	
 	/**
@@ -400,9 +401,10 @@ class FlxG
 	 * @param 	Child	The DisplayObject to add
 	 * @return	The removed DisplayObject
 	 */
-	inline static public function removeChild(Child:DisplayObject):DisplayObject
+	@:generic inline static public function removeChild<T:DisplayObject>(Child:T):T
 	{
-		return game.removeChild(Child);
+		game.removeChild(Child);
+		return Child;
 	}
 	
 	/**
