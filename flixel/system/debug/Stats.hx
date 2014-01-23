@@ -130,7 +130,7 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
-		_leftTextField.text = "Draw: \nUpdate:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
+		_leftTextField.text = "Update: \nDraw:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
 	}
 	
 	/**

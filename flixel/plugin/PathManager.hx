@@ -15,8 +15,8 @@ class PathManager extends FlxPlugin
 	public function new()
 	{
 		super();
-		
 		_paths = new Array<FlxPath>();
+		visible = false; // No draw-calls needed 
 	}
 	
 	/**
