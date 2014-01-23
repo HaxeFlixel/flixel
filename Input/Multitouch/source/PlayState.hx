@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxColor;
+import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
@@ -41,7 +42,7 @@ class PlayState extends FlxState
 					add(_touchSprite);
 				}
 				
-				_touchSprite.color = Std.int(Math.random() * 0xffffff);
+				_touchSprite.color = FlxRandom.color();
 				_activeSprites.set(touch.touchPointID, _touchSprite);
 			}
 			else if (touch.justReleased && _activeSprites.exists(touch.touchPointID))

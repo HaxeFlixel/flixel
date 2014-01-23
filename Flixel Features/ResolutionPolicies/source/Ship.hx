@@ -13,7 +13,7 @@ class Ship extends FlxSprite
 {
 	public function new(Velocity:Float, Angle:Float) 
 	{
-		super(Math.random() * FlxG.width, Math.random() * FlxG.height, "assets/ship.png");
+		super(FlxRandom.intRanged(0, FlxG.width), FlxRandom.intRanged(0, FlxG.height), "assets/ship.png");
 		angle = Angle;
 		velocity = FlxVelocity.velocityFromAngle(Math.floor(Angle + 270), Math.floor(Velocity));
 	}

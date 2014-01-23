@@ -8,6 +8,7 @@ import flixel.group.FlxGroup;
 import flixel.plugin.MouseEventManager;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
 import nape.callbacks.InteractionCallback;
@@ -82,9 +83,9 @@ class Fight extends FlxNapeState
 			shooter.registerPhysSprite(spr);
 		}
 		
-		songoku.rLArm.body.applyImpulse(new Vec2(2000, -3000 + Math.random() * -100 + 200));
+		songoku.rLArm.body.applyImpulse(new Vec2(2000, FlxRandom.floatRanged(-2700, -2800)));
 		//songoku.rUArm.body.applyImpulse(new Vec2(1500, -2000));
-		vegeta.lLArm.body.applyImpulse(new Vec2(-2000, -3000+ Math.random() * -100 + 200));
+		vegeta.lLArm.body.applyImpulse(new Vec2(-2000, FlxRandom.floatRanged(-2700, -2800)));
 		//vegeta.lUArm.body.applyImpulse(new Vec2(-1500, -2000));
 													 
 		

@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
+import flixel.util.FlxRandom;
 
 /**
  * ...
@@ -29,11 +30,11 @@ class Bunny extends FlxSprite
 			speedMultiplier = 5000;
 		}
 		
-		velocity.x = speedMultiplier * (Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1);
-		velocity.y = speedMultiplier * ((Math.random() * 5) - 2.5) * (Math.random() < 0.5 ? 1 : -1);
+		velocity.x = speedMultiplier * FlxRandom.floatRanged( -5, 5);
+		velocity.y = speedMultiplier * FlxRandom.floatRanged( -7.5, 2.5);
 		acceleration.y = 5;
-		angle = 15 - Math.random() * 30;
-		angularVelocity = 30 * (Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1);
+		angle = FlxRandom.floatRanged(-15, 15);
+		angularVelocity = 30 * FlxRandom.floatRanged( -5, 5);
 		complex = PlayState.complex;
 		elasticity = 1;
 		
@@ -73,9 +74,9 @@ class Bunny extends FlxSprite
 			velocity.y *= -0.8;
 			y = FlxG.height;
 			
-			if (Math.random() > 0.5) 
+			if (FlxRandom.chanceRoll()) 
 			{
-				velocity.y -= 3 + Math.random() * 4;
+				velocity.y -= FlxRandom.floatRanged(3, 7);
 			}
 		}
 		else if (y < 0)
@@ -91,7 +92,7 @@ class Bunny extends FlxSprite
 	{
 		if (Value)
 		{
-			scale.x = scale.y = 0.3 + Math.random();
+			scale.x = scale.y = FlxRandom.floatRanged(0.3, 1.3);
 		}
 		else 
 		{

@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxRandom;
 
 /**
 * Atari 2600 Breakout
@@ -153,7 +154,7 @@ class PlayState extends FlxState
 		{
 			// Ball is perfectly in the middle
 			// A little random X to stop it bouncing up!
-			Ball.velocity.x = 2 + Std.int(Math.random() * 8);
+			Ball.velocity.x = 2 + FlxRandom.intRanged(0, 8);
 		}
 	}
 }

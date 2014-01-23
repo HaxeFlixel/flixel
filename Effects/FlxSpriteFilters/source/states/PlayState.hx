@@ -1,5 +1,6 @@
 package states;
 import flixel.effects.FlxSpriteFilter;
+import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import motion.Actuate;
 import motion.easing.Linear;
@@ -109,7 +110,7 @@ class PlayState extends FlxState
 		// DROP SHADOW
 		spr4 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
 		add(spr4);
-		txt4 = new FlxText(spr4.x, spr4.y + 120, 100, "Drop Shadow", 10);
+		txt4 = new FlxText(spr4.x, spr4.y + 120, 100, "Drop Shadow", 10); 
 		txt4.alignment = "center";
 		add(txt4);
 		filter4 = new DropShadowFilter(10, 45, 0, .75, 10, 10, 1, 1);
@@ -240,8 +241,8 @@ class PlayState extends FlxState
 	function updateDisplaceFilter()
 	{
 		#if flash
-		filter6.scaleX = Math.random() * 20 - 10; // random between -10 and 10;
-		filter6.mapPoint = new Point(0, Math.random() * 30);
+		filter6.scaleX = FlxRandom.floatRanged( -10, 10);
+		filter6.mapPoint = new Point(0, FlxRandom.floatRanged(0, 30));
 		updateFilter(spr6Filter);
 		#end
 	}

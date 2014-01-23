@@ -34,7 +34,7 @@ class PlayState extends FlxState
 		
 		for (i in 0...20)
 		{
-			add(new Ship(Math.random() * 50 + 50, Math.random() * 360));
+			add(new Ship(FlxRandom.intRanged(50, 100), FlxRandom.intRanged(0, 360)));
 		}
 		
 		FlxG.resolutionPolicy = ratioPolicy;
