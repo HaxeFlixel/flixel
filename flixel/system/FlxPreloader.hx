@@ -405,7 +405,7 @@ class FlxPreloader extends NMEPreloader
 	private function update(Percent:Float):Void
 	{
 		_bmpBar.scaleX = Percent * (_width - 8);
-		_text.text = "FLX v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION + " " + Std.int(Percent * 100) + "%";
+		_text.text = "FLX v" + Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		if(Percent < 0.1)
 		{
 			_logoGlow.alpha = 0;

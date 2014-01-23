@@ -122,7 +122,7 @@ class FlxDebugger extends Sprite
 		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
 		txt.defaultTextFormat = format;
 		txt.autoSize = TextFieldAutoSize.LEFT;
-		txt.text = FlxG.libraryName;
+		txt.text = Std.string(FlxG.VERSION);
 		
 		_leftButtons = new Array<FlxSystemButton>();
 		_rightButtons = new Array<FlxSystemButton>();

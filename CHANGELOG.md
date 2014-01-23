@@ -2,7 +2,8 @@ v.3.1.0
 ------------------------------
 * Refactor of FlxRandom
   * All functions are now deterministic and safe to use with replays
-  * Due to the use of a new algorithm for pseudo-random number generation (linear congruential generator), old replays are no longer compatible
+  * Due to the use of a new algorithm for pseudo-random number generation (a linear congruential generator) and a new seed type (integer instead of float values), old replays will have unpredictable results
+  * FlxColorUtil.getRandomColor(), FlxArrayUtil.shuffle(), and FlxArrayUtil.getRandom() have been moved to FlxRandom.color(), FlxRandom.shuffleArray(), and FlxRandom.getObject(), respectively. The old functions are still in place but are marked as deprecated.
   * weightedPick(), weightedGetObject() and colorExt() have been added
 * New FLX_NO_SOUND_SYSTEM conditional
 * FlxTrailArea: Several improvements (can now be resized with setSize()), default delay is now 2

@@ -21,7 +21,7 @@ class InputFrontEnd
 	 * @param	Input 	The input to add
 	 * @return	The input
 	 */
-	public function add(Input:IFlxInput):IFlxInput
+	@:generic public function add<T:IFlxInput>(Input:T):T
 	{
 		// Don't add repeats
 		for (input in list)

@@ -3,6 +3,8 @@
 ###Related:    [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-demos](https://github.com/HaxeFlixel/flixel-demos) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
 ______________________________________________________
 
+[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 ###Getting Started
 
 You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
@@ -31,8 +33,6 @@ Make sure you're using latest version of [Haxe, haxelib and OpenFl](http://haxef
 Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel dev`.
 
 We recommended that you use a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
-
-###Current Build Status [![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel)
 
 ______________________________________________________
 ###Links
