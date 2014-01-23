@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flash.geom.Rectangle;
+import flixel.FlxG;
 
 /**
  * Stores a rectangle.
@@ -40,48 +41,85 @@ class FlxRect
 		height = Height;
 	}
 	
-	public var left(get_left, null):Float;
+	/**
+	 * Shortcut for setting both width and Height.
+	 * 
+	 * @param	Width	The new sprite width.
+	 * @param	Height	The new sprite height.
+	 */
+	inline public function setSize(Width:Float, Height:Float)
+	{
+		width = Width;
+		height = Height;
+	}
 	
 	/**
-	 * The X coordinate of the left side of the rectangle.  Read-only.
+	 * The x coordinate of the left side of the rectangle.
 	 */
+	public var left(get, set):Float;
+	
 	private function get_left():Float
 	{
 		return x;
 	}
 	
-	public var right(get_right, null):Float;
+	private function set_left(Value:Float):Float
+	{
+		width -= Value - x;
+		return x = Value;
+	}
 	
 	/**
-	 * The X coordinate of the right side of the rectangle.  Read-only.
+	 * The x coordinate of the right side of the rectangle.
 	 */
+	public var right(get, set):Float;
+	
 	private function get_right():Float
 	{
 		return x + width;
 	}
 	
-	public var top(get_top, null):Float;
+	private function set_right(Value:Float):Float
+	{
+		width = Value - x;
+		return Value;
+	}
 	
 	/**
-	 * The Y coordinate of the top of the rectangle.  Read-only.
+	 * The x coordinate of the top of the rectangle.
 	 */
+	public var top(get, set):Float;
+	
 	private function get_top():Float
 	{
 		return y;
 	}
 	
-	public var bottom(get_bottom, null):Float;
+	private function set_top(Value:Float):Float
+	{
+		height -= Value - y;
+		return y = Value;
+	}
 	
 	/**
-	 * The Y coordinate of the bottom of the rectangle.  Read-only.
+	 * The y coordinate of the bottom of the rectangle.
 	 */
+	public var bottom(get, set):Float;
+	
 	private function get_bottom():Float
 	{
 		return y + height;
 	}
 	
+	private function set_bottom(Value:Float):Float
+	{
+		height = Value - y;
+		return Value;
+	}
+	
 	/**
 	 * Fill this rectangle with the data provided.
+	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 * @param	Width	Desired width of the rectangle.
@@ -189,5 +227,14 @@ class FlxRect
 		var maxY:Float = Math.max(bottom, Rect.bottom);
 		
 		return set(minX, minY, maxX - minX, maxY - minY);
+	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	inline public function toString():String
+	{
+		var p = FlxG.debugger.precision;
+		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " + FlxMath.roundDecimal(y, p) + " | w: " + FlxMath.roundDecimal(width, p) + " | h: " + FlxMath.roundDecimal(height, p) + ")"; 
 	}
 }

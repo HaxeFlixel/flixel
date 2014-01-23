@@ -27,7 +27,7 @@ class Window extends Sprite
 	/**
 	 * The color used for the "handle" at the top of the window.
 	 */
-	inline static public var TOP_COLOR:Int = 0xAA000000;
+	inline static public var TOP_COLOR:Int = 0xBB000000;
 	/**
 	 * How many windows there are currently in total.
 	 */
@@ -107,14 +107,15 @@ class Window extends Sprite
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param	Width		The initial width of the window.
-	 * @param	Height		The initial height of the window.
-	 * @param	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
+	 * 
+	 * @param   Title       The name of the window, displayed in the header bar.
+	 * @param   IconPath    Path to the icon to use for the window header.
+	 * @param   Width       The initial width of the window.
+	 * @param   Height      The initial height of the window.
+	 * @param   Resizable   Whether you can change the size of the window with a drag handle.
+	 * @param   Bounds      A rectangle indicating the valid screen area for the window.
 	 */
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new(Title:String, ?IconPath:String, Width:Float = 0, Height:Float = 0, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
 		super();
 		

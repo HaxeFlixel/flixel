@@ -15,23 +15,17 @@ import haxe.ds.StringMap;
  */
 class Log extends Window
 {
-	static public var MAX_LOG_LINES:Int = 200;
+	inline static public var MAX_LOG_LINES:Int = 200;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param 	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param 	Width		The initial width of the window.
-	 * @param 	Height		The initial height of the window.
-	 * @param 	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
+	 * Creates a log window object.
 	 */	
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("log", FlxAssets.IMG_LOG_DEBUG);
 		
 		_text = new TextField();
 		_text.x = 2;
@@ -45,7 +39,9 @@ class Log extends Window
 		
 		_lines = new Array<String>();
 		
+		#if !android // seems to cause a crash otherwise
 		FlxG.log.redirectTraces = true;
+		#end
 	}
 	
 	/**
@@ -56,8 +52,9 @@ class Log extends Window
 		if (_text != null)
 		{
 			removeChild(_text);
+			_text = null;
 		}
-		_text = null;
+		
 		_lines = null;
 		super.destroy();
 	}
@@ -80,51 +77,17 @@ class Log extends Window
 		// Format FlxPoints, Arrays, Maps or turn the Data entry into a String
 		for (i in 0...Data.length) 
 		{
-			if (Std.is(Data[i], FlxPoint)) 
-			{
-				texts[i] = FlxStringUtil.formatFlxPoint(Data[i], FlxG.debugger.pointPrecision);
-			}
-			else if (Std.is(Data[i], StringMap))
-			{
-				texts[i] = FlxStringUtil.formatStringMap(Data[i]);
-			}
-			else 
-			{
-				texts[i] = Std.string(Data[i]);
-			}
+			texts[i] = Std.string(Data[i]);
 			
 			// Make sure you can't insert html tags
-			texts[i] = StringTools.replace(texts[i], "<", "");
-			texts[i] = StringTools.replace(texts[i], ">", "");
+			texts[i] = StringTools.htmlEscape(texts[i]);
 		}
 		
-		var text:String = texts.join(" ");
-
+		var text:String = Style.prefix + texts.join(" ");
+		
+		// Apply text formatting
 		#if !js
-		// Create the text and apply color and styles
-		var prefix:String = "<font size='" + Style.size + "' color='#" + Style.color + "'>";
-		var suffix:String = "</font>";
-		
-		if (Style.bold) 
-		{
-			prefix = "<b>" + prefix;
-			suffix = suffix + "</b>";
-		}
-		if (Style.italic) 
-		{
-			prefix = "<i>" + prefix;
-			suffix = suffix + "</i>";
-		}
-		if (Style.underlined) 
-		{
-			prefix = "<u>" + prefix;
-			suffix = suffix + "</u>";
-		}
-		
-		// TODO: Make htmlText on HTML5 target
-		text = prefix + Style.prefix + text + suffix;
-		#else
-		text = Style.prefix + text;
+		text = FlxStringUtil.htmlFormat(text, Style.size, Style.color, Style.bold, Style.italic, Style.underlined);
 		#end
 		
 		// Check if the text has been added yet already
@@ -155,7 +118,7 @@ class Log extends Window
 			{
 				newText += _lines[i] + "<br>";
 			}
-			// TODO: Make htmlText on HTML5 target
+			// TODO: Make htmlText work on HTML5 target
 			#if !js
 			_text.htmlText = newText;
 			#else
@@ -164,7 +127,7 @@ class Log extends Window
 		}
 		else
 		{
-			// TODO: Make htmlText on HTML5 target
+			// TODO: Make htmlText work on HTML5 target
 			#if !js
 			_text.htmlText += (text + "<br>");
 			#else

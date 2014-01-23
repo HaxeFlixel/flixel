@@ -83,12 +83,12 @@ class FlxSprite extends FlxObject
 	public var origin(default, set):FlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
-	 * changing a sprite's <code>width</code> or <code>height</code>.
+	 * changing a sprite's <code>width</code>, <code>height</code> or <code>scale</code>.
 	 */
 	public var offset(default, set):FlxPoint;
 	/**
-	 * Change the size of your sprite's graphic. NOTE: Scale doesn't currently affect collisions automatically, you will need to adjust the width, 
-	 * height and offset manually. WARNING: scaling sprites decreases rendering performance for this sprite by a factor of 10x!
+	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use <code>updateHitbox</code> for that
+	 * (or <code>setGraphicSize()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
 	 */
 	public var scale(default, set):FlxPoint;
 	/**
@@ -244,24 +244,25 @@ class FlxSprite extends FlxObject
 		frame = null;
 	}
 	
-	public function clone(NewSprite:FlxSprite = null):FlxSprite
+	public function clone(?NewSprite:FlxSprite):FlxSprite
 	{
 		if (NewSprite == null)
 		{
 			NewSprite = new FlxSprite();
 		}
 		
-		NewSprite.loadfromSprite(this);
+		NewSprite.loadFromSprite(this);
 		return NewSprite;
 	}
 	
 	/**
 	 * Load graphic from another FlxSprite and copy its tileSheet data. 
 	 * This method can useful for non-flash targets (and is used by the FlxTrail effect).
+	 * 
 	 * @param	Sprite	The FlxSprite from which you want to load graphic data
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadfromSprite(Sprite:FlxSprite):FlxSprite
+	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
 	{
 		if (!exists)
 		{
@@ -285,15 +286,13 @@ class FlxSprite extends FlxObject
 		updateFrameData();
 		resetHelpers();
 		antialiasing = Sprite.antialiasing;
-		
-		animation.destroyAnimations();
 		animation.copyFrom(Sprite.animation);
-		
 		return this;
 	}
 	
 	/**
 	 * Load an image from an embedded graphic file.
+	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
 	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
@@ -499,9 +498,7 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
-		animation.destroyAnimations();
 		animation.createPrerotated();
-		
 		return this;
 	}
 	
@@ -509,7 +506,7 @@ class FlxSprite extends FlxObject
 	 * This function creates a flat colored square image dynamically.
 	 * @param	Width		The width of the sprite you want to generate.
 	 * @param	Height		The height of the sprite you want to generate.
-	 * @param	Color		Specifies the color of the generated block.
+	 * @param	Color		Specifies the color of the generated block (ARGB format).
 	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
@@ -575,6 +572,8 @@ class FlxSprite extends FlxObject
 			animation.frameName = FrameName;
 		}
 		
+		resetSizeFromFrame();
+		setOriginToCenter();
 		return this;
 	}
 	
@@ -640,9 +639,59 @@ class FlxSprite extends FlxObject
 		height = frameHeight;
 	}
 	
+	/**
+	 * Sets the sprite's origin to its center - useful after adjusting 
+	 * <code>scale</code> to make sure rotations work as expected.
+	 */
 	inline public function setOriginToCenter():Void
 	{
 		_origin.set(frameWidth * 0.5, frameHeight * 0.5);
+	}
+	
+	/**
+	 * Helper function to set the graphic's dimensions by using scale, allowing you to keep the current aspect ratio
+	 * should one of the Integers be <= 0. Also updates the sprite's hitbox, offset and origin for you by default!
+	 * 
+	 * @param	Width			How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
+	 * @param	Height			How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
+	 * @param	UpdateHitbox	Whether or not to update the hitbox dimensions, offset and origin accordingly.
+	 */
+	public function setGraphicSize(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
+	{
+		if (Width <= 0 && Height <= 0) {
+			return;
+		}
+		
+		var newScaleX:Float = Width / frameWidth;
+		var newScaleY:Float = Height / frameHeight;
+		scale.set(newScaleX, newScaleY);
+		
+		if (Width <= 0) {
+			scale.x = newScaleY;
+		}
+		else if (Height <= 0) {
+			scale.y = newScaleX;
+		}
+		
+		if (UpdateHitbox) 
+		{
+			updateHitbox();
+		}	
+	}
+	
+	/**
+	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
+	 * Also calls setOriginToCenter(). Called by setGraphicSize().
+	 */
+	public function updateHitbox():Void
+	{
+		var newWidth:Float = scale.x * frameWidth;
+		var newHeight:Float = scale.y * frameHeight;
+		
+		width = newWidth;
+		height = newHeight;
+		offset.set( - ((newWidth - frameWidth) * 0.5), - ((newHeight - frameHeight) * 0.5));
+		setOriginToCenter();
 	}
 	
 	/**
@@ -681,6 +730,9 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		if (alpha == 0)	
+			return;
+		
 		if (dirty)	//rarely 
 		{
 			calcFrame();
@@ -958,6 +1010,7 @@ class FlxSprite extends FlxObject
 		var column:Int;
 		var rows:Int = region.height;
 		var columns:Int = region.width;
+		cachedGraphics.bitmap.lock();
 		while(row < rows)
 		{
 			column = region.startX;
@@ -976,7 +1029,7 @@ class FlxSprite extends FlxObject
 			}
 			row++;
 		}
-		
+		cachedGraphics.bitmap.unlock();
 		resetFrameBitmapDatas();
 		return positions;
 	}
@@ -1127,35 +1180,6 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object.
-	 * @param	Point			The point in world space you want to check.
-	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-	 * @return	Whether or not the point overlaps this object.
-	 */
-	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
-	{
-		if (_scale.x == 1 && _scale.y == 1)
-		{
-			return super.overlapsPoint(point, InScreenSpace, Camera);
-		}
-		
-		if (!InScreenSpace)
-		{
-			return (point.x > x - 0.5 * width * (_scale.x - 1)) && (point.x < x + width + 0.5 * width * (_scale.x - 1)) && (point.y > y - 0.5 * height * (_scale.y - 1)) && (point.y < y + height + 0.5 * height * (_scale.y - 1));
-		}
-
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		var X:Float = point.x - Camera.scroll.x;
-		var Y:Float = point.y - Camera.scroll.y;
-		getScreenXY(_point, Camera);
-		return (X > _point.x - 0.5 * width * (_scale.x - 1)) && (X < _point.x + width + 0.5 * width * (_scale.x - 1)) && (Y > _point.y - 0.5 * height * (_scale.y - 1)) && (Y < _point.y + height + 0.5 * height * (_scale.y - 1));
-	}
-	
-	/**
 	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
 	 * @param	Point		The point in world space you want to check.
@@ -1174,9 +1198,7 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - _offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
-		#if flash
-		return untyped framePixels.hitTest(_flashPointZero, Mask, _flashPoint);
-		#else
+
 		// 1. Check to see if the point is outside of framePixels rectangle
 		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
 		{
@@ -1189,43 +1211,39 @@ class FlxSprite extends FlxObject
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			return (pixelAlpha * alpha >= Mask);
 		}
-		#end
 	}
 	
 	/**
 	 * Internal function to update the current animation frame.
+	 * 
+	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	#if flash
-	private function calcFrame():Void
-	#else
-	private function calcFrame(AreYouSure:Bool = false):Void
-	#end
+	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
-	#if !flash
-		// TODO: Maybe remove 'AreYouSure' parameter
-		if (AreYouSure)
+		#if !(flash || js)
+		if (!RunOnCpp)
 		{
-	#end
-			if (frame != null)
-			{
-				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-				{
-					if (framePixels != null)
-						framePixels.dispose();
-					
-					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-				}
-				
-				framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
-			}
-			
-			if (useColorTransform) 
-			{
-				framePixels.colorTransform(_flashRect, _colorTransform);
-			}
-	#if !flash
+			return;
 		}
-	#end
+		#end
+		
+		if (frame != null)
+		{
+			if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
+			{
+				if (framePixels != null)
+					framePixels.dispose();
+					
+				framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
+			}
+				
+			framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
+		}
+			
+		if (useColorTransform) 
+		{
+			framePixels.colorTransform(_flashRect, _colorTransform);
+		}
 		
 		dirty = false;
 	}
@@ -1274,6 +1292,21 @@ class FlxSprite extends FlxObject
 		}
 		
 		return frameBmd;
+	}
+	
+	/**
+	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
+	 * 
+	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined. Otherwise a new one is created.
+	 * @return	A <code>FlxPoint</code> object containing the midpoint of this sprite's graphic in world coordinates.
+	 */
+	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
+	{
+		if (point == null)
+		{
+			point = new FlxPoint();
+		}
+		return point.set(x + frameWidth * 0.5, y + frameHeight * 0.5);
 	}
 	
 	/**
@@ -1338,6 +1371,8 @@ class FlxSprite extends FlxObject
 		
 		updateFrameData();
 		resetHelpers();
+		// not sure if i should add this line...
+		resetFrameBitmapDatas();
 		
 		return Pixels;
 	}

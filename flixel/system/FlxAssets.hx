@@ -18,7 +18,7 @@ class FlxAssets
 	inline static public var IMG_FLIXEL:String = "flixel/img/debugger/flixel.png";
 	
 	// debugger/buttons
-	inline static public var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/visualDebug.png";
+	inline static public var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/drawDebug.png";
 	inline static public var IMG_WATCH_DEBUG:String = "flixel/img/debugger/buttons/watchDebug.png";
 	inline static public var IMG_STATS_DEBUG:String = "flixel/img/debugger/buttons/statsDebug.png";
 	inline static public var IMG_LOG_DEBUG:String = "flixel/img/debugger/buttons/logDebug.png";
@@ -141,6 +141,7 @@ class FlxAssets
 		return Assets.getBitmapData(id, false);
 	}
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * Sound caching for android target
 	 */
@@ -149,19 +150,22 @@ class FlxAssets
 		#if android
 		Reflect.callMethod(Assets, Reflect.field(Assets, "initialize"), []);
 		
-		var resourceClasses:Map<String, Dynamic> = cast Reflect.getProperty(Assets, "resourceClasses");
-		var resourceTypes:Map<String, String> = cast Reflect.getProperty(Assets, "resourceTypes");
+		var defaultLibrary = Assets.libraries.get("default");
 		
-		if (resourceTypes != null)
+		if (defaultLibrary == null) return;
+		
+		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
+		
+		if (types == null) return;
+		
+		for (key in types.keys())
 		{
-			for (key in resourceTypes.keys())
+			if (types.get(key) == Reflect.field(AssetType, "sound".toUpperCase()))
 			{
-				if (resourceTypes.get(key) == "sound")
-				{	
-					FlxG.sound.add(key);
-				}
+				FlxG.sound.add(key);
 			}
 		}
 		#end
 	}
+	#end
 }

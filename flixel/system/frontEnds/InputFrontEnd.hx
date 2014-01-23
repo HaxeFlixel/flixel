@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
-import flixel.system.input.IFlxInput;
-import flixel.FlxG;
+import flixel.interfaces.IFlxInput;
+import flixel.util.FlxStringUtil;
 
 class InputFrontEnd
 {
@@ -21,12 +21,12 @@ class InputFrontEnd
 	 * @param	Input 	The input to add
 	 * @return	The input
 	 */
-	public function add(Input:IFlxInput):IFlxInput
+	@:generic public function add<T:IFlxInput>(Input:T):T
 	{
 		// Don't add repeats
 		for (input in list)
 		{
-			if (input.toString() == Input.toString())
+			if (FlxStringUtil.sameClassName(Input, input))
 			{
 				return Input;
 			}

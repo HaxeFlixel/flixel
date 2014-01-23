@@ -1,5 +1,6 @@
 ﻿package flixel.tweens.misc;
 
+import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxRandom;
@@ -12,30 +13,39 @@ class AngleTween extends FlxTween
 	/**
 	 * The current value.
 	 */
-	public var angle:Float;
+	public var angle:Float = 0;
+	
+	/**
+	 * Optional sprite object whose angle to tween
+	 */
+	public var sprite:FlxSprite;
+	
+	private var _start:Float;
+	private var _range:Float;
 	
 	/**
 	 * Constructor.
-	 * @param	complete	Optional completion callback.
+	 * 
+	 * @param	Complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0) 
+	public function new(?Complete:CompleteCallback, type:Int = 0) 
 	{
-		angle = 0;
-		super(0, type, complete);
+		super(0, type, Complete);
 	}
 	
 	/**
 	 * Tweens the value from one angle to another.
-	 * @param	fromAngle		Start angle.
-	 * @param	toAngle			End angle.
-	 * @param	duration		Duration of the tween.
-	 * @param	ease			Optional easer function.
+	 * 
+	 * @param	FromAngle		Start angle.
+	 * @param	ToAngle			End angle.
+	 * @param	Duration		Duration of the tween.
+	 * @param	Ease			Optional easer function.
 	 */
-	public function tween(fromAngle:Float, toAngle:Float, duration:Float, ease:EaseFunction = null):AngleTween
+	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Ease:EaseFunction, ?Sprite:FlxSprite):AngleTween
 	{
-		_start = angle = fromAngle;
-		var d:Float = toAngle - angle;
+		_start = angle = FromAngle;
+		var d:Float = ToAngle - angle;
 		var a:Float = Math.abs(d);
 		if (a > 181) 
 		{
@@ -49,24 +59,29 @@ class AngleTween extends FlxTween
 		{
 			_range = FlxRandom.floatRanged(180, -180);
 		}
-		_target = duration;
-		_ease = ease;
+		_target = Duration;
+		_ease = Ease;
+		sprite = Sprite;
 		start();
 		return this;
 	}
 	
-	/** @private Updates the Tween. */
+	/** 
+	 * Updates the Tween. 
+	 */
 	override public function update():Void
 	{
 		super.update();
+		
 		angle = (_start + _range * _t) % 360;
 		if (angle < 0) 
 		{
 			angle += 360;
 		}
+		
+		if (sprite != null)
+		{
+			sprite.angle = angle;
+		}
 	}
-	
-	// Tween information.
-	private var _start:Float;
-	private var _range:Float;
 }

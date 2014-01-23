@@ -1,6 +1,7 @@
 package flixel.util;
 
-import haxe.ds.StringMap.StringMap;
+import flash.Lib;
+import flash.net.URLRequest;
 
 /**
  * A class primarily containing functions related 
@@ -11,6 +12,7 @@ class FlxStringUtil
 	/**
 	 * Takes two "ticks" timestamps and formats them into the number of seconds that passed as a String.
 	 * Useful for logging, debugging, the watch window, or whatever else.
+	 * 
 	 * @param	StartTicks	The first timestamp from the system.
 	 * @param	EndTicks	The second timestamp from the system.
 	 * @return	A <code>String</code> containing the formatted time elapsed information.
@@ -22,6 +24,7 @@ class FlxStringUtil
 	
 	/**
 	 * Format seconds as minutes with a colon, an optionally with milliseconds too.
+	 * 
 	 * @param	Seconds		The number of seconds (for example, time remaining, time spent, etc).
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted <code>String</code>, like "1:03".
@@ -52,6 +55,7 @@ class FlxStringUtil
 	/**
 	 * Generate a comma-separated string from an array.
 	 * Especially useful for tracing or other debug output.
+	 * 
 	 * @param	AnyArray	Any <code>Array</code> object.
 	 * @return	A comma-separated <code>String</code> containing the <code>.toString()</code> output of each element in the array.
 	 */
@@ -70,29 +74,10 @@ class FlxStringUtil
 		}
 		return string;
 	}
-	
-	/**
-	 * Generate a string representation of a FlxPoint.
-	 * @param  Point    A <code>FlxPoint</code> object.
-	 * @param  Precison  To how many decimals x and y should be rounded.
-	 * @return  A <code>String</code> formatted like this: <code>x: Point.x | y: Point.y</code>
-	 */
-	inline static public function formatFlxPoint(Point:FlxPoint, Precision:Int):String
-	{
-		var string:String = "";
-		if (Point != null) 
-		{
-			var xValue:Float = FlxMath.roundDecimal(Point.x, Precision);
-			var yValue:Float = FlxMath.roundDecimal(Point.y, Precision);
-
-			string = "x: " + xValue + " | y: " + yValue;
-		}
-		
-		return string;
-	}
 
 	 /**
 	 * Generate a comma-seperated string representation of the keys of a <code>StringMap</code>.
+	 * 
 	 * @param  AnyMap    A <code>StringMap</code> object.
 	 * @return  A <code>String</code> formatted like this: <code>key1, key2, ..., keyX</code>
 	 */
@@ -112,6 +97,7 @@ class FlxStringUtil
 	 * Does not include a dollar sign or anything, so doesn't really do much
 	 * if you call say <code>var results:String = FlxString.formatMoney(10,false);</code>
 	 * However, very handy for displaying large sums or decimal money values.
+	 * 
 	 * @param	Amount			How much moneys (in dollars, or the equivalent "main" currency - i.e. not cents).
 	 * @param	ShowDecimal		Whether to show the decimals/cents component. Default value is true.
 	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.  Default value is true.
@@ -165,8 +151,63 @@ class FlxStringUtil
 		return string;
 	}
 	
+	/** 
+	 * Takes a string and filters out everything but the digits.
+	 * 
+	 * @param 	Input	The input string
+	 * @return 	The output string, digits-only
+	 */
+	static public function filterDigits(Input:String):String 
+	{
+		var output = new StringBuf();
+		for (i in 0...Input.length) {
+			var c = Input.charCodeAt(i);
+			if (c >= '0'.code && c <= '9'.code) {
+				output.addChar(c);
+			}
+		}
+		return output.toString();
+	}
+	
+	/**
+	 * Format a text with html tags - useful for <code>TextField.htmlText</code>. 
+	 * Used by the log window of the debugger.
+	 * 
+	 * @param	Text		The text to format
+	 * @param	Size		The text size, using <font size>
+	 * @param	Color		The text color, using <font color>
+	 * @param	Bold		Whether the text should be bold (<b> tag)
+	 * @param	Italic		Whether the text should be italic (<i> tag)
+	 * @param	Underlined 	Whether the text should be underlined (<u> tag)
+	 * @return	The html-formatted text.
+	 */
+	static public function htmlFormat(Text:String, Size:Int = 12, Color:String = "FFFFFF", Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false):String
+	{
+		var prefix:String = "<font size='" + Size + "' color='#" + Color + "'>";
+		var suffix:String = "</font>";
+		
+		if (Bold) 
+		{
+			prefix = "<b>" + prefix;
+			suffix = suffix + "</b>";
+		}
+		if (Italic) 
+		{
+			prefix = "<i>" + prefix;
+			suffix = suffix + "</i>";
+		}
+		if (Underlined) 
+		{
+			prefix = "<u>" + prefix;
+			suffix = suffix + "</u>";
+		}
+		
+		return prefix + Text + suffix;
+	}
+	
 	/**
 	 * Get the <code>String</code> name of any <code>Object</code>.
+	 * 
 	 * @param	Obj		The <code>Object</code> object in question.
 	 * @param	Simple	Returns only the class name, not the package or packages.
 	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
@@ -183,5 +224,18 @@ class FlxStringUtil
 			}
 		}
 		return s;
+	}
+	
+	/**
+	 * Helper function that uses <code>getClassName</code> to compare two objects' class names.
+	 * 
+	 * @param	Obj1	The first object
+	 * @param	Obj2	The second object
+	 * @param	Simple 	Only uses the class name, not the package or packages.
+	 * @return	Whether they have the same class name or not
+	 */
+	inline static public function sameClassName(Obj1:Dynamic, Obj2:Dynamic, Simple:Bool = true):Bool
+	{
+		return (getClassName(Obj1, Simple) == getClassName(Obj2, Simple));
 	}
 }

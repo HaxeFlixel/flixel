@@ -96,10 +96,12 @@ class LogFrontEnd
 		
 		if (FlxG.game.debugger.log.add(Data, Style, FireOnce))
 		{
+			#if !FLX_NO_SOUND_SYSTEM
 			if (Style.errorSound != null)
 			{
 				FlxG.sound.play(Style.errorSound);
 			}
+			#end
 			
 			if (Style.openConsole) 
 			{
@@ -126,7 +128,7 @@ class LogFrontEnd
 	
 	/**
 	 * Whether everything you <code>trace()</code> is being redirected into the log window.
-	 * True by default.
+	 * True by default, except on android.
 	 */
 	public var redirectTraces(default, set):Bool = false;
 	/**

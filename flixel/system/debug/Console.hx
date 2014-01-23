@@ -12,20 +12,24 @@ import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.system.FlxAssets;
+import flixel.util.FlxArrayUtil;
+import flixel.util.FlxStringUtil;
 
 /**
- * A powerful console for the flixel debugger screen with supports
- * custom commands, registering objects and functions and saves the 
- * last 25 commands used.
- * Inspired by Eric Smith's "CoolConsole".
+ * A powerful console for the flixel debugger screen with supports custom commands, registering 
+ * objects and functions and saves the last 25 commands used. Inspired by Eric Smith's "CoolConsole".
  * @link http://www.youtube.com/watch?v=QWfpw7elWk8
  */
 class Console extends Window
 {
-	private var _input:TextField;
-	
-	private var cmdFunctions:Map<String, Dynamic>;
-	private var cmdObjects:Map<String, Dynamic>;
+	/**
+	 * The text that is displayed in the console's input field by default.
+	 */
+	inline static private var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
+	/**
+	 * The amount of commands that will be saved.
+	 */
+	inline static private var _HISTORY_MAX:Int = 25;
 	
 	/**
 	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
@@ -47,27 +51,28 @@ class Console extends Window
 	 * Reference to the array containing the command history.
 	 */
 	public var cmdHistory:Array<String>;
-	
-	private var historyIndex:Int = 0;
-	private var historyMax:Int = 25;
-	
-	private var defaultText:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
+	/**
+	 * An array holding all the registered commands.
+	 */
+	public var commands:Array<Command>;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param	Width		The initial width of the window.
-	 * @param	Height		The initial height of the window.
-	 * @param	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
+	 * The history index of the current input.
+	 */
+	private var _historyIndex:Int = 0;
+	/**
+	 * The input textfield used to enter commands.
+	 */
+	private var _input:TextField;
+	
+	/**
+	 * Creates a new console window object.
 	 */	
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{	
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("console", FlxAssets.IMG_CONSOLE, 0, 0, false);
 		
-		cmdFunctions = new Map<String, Dynamic>();
-		cmdObjects = new Map<String, Dynamic>();
+		commands = new Array<Command>();
 		
 		registeredObjects = new Map<String, Dynamic>();
 		registeredFunctions = new Map<String, Dynamic>();
@@ -79,7 +84,7 @@ class Console extends Window
 		// Load old command history if existant
 		if (FlxG.save.data.history != null) {
 			cmdHistory = FlxG.save.data.history;
-			historyIndex = cmdHistory.length;
+			_historyIndex = cmdHistory.length;
 		}
 		else {
 			cmdHistory = new Array<String>();
@@ -91,7 +96,7 @@ class Console extends Window
 		_input.type = TextFieldType.INPUT;
 		_input.embedFonts = true;
 		_input.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 13, 0xFFFFFF, false, false, false);
-		_input.text = defaultText;
+		_input.text = Console._DEFAULT_TEXT;
 		_input.width = _width - 4;
 		_input.height = _height - 15;
 		_input.x = 2;
@@ -104,14 +109,13 @@ class Console extends Window
 		
 		// Install commands
 		#if !FLX_NO_DEBUG
-		var commands:ConsoleCommands = new ConsoleCommands(this);
+		new ConsoleCommands(this);
 		#end
 	}
 	
 	private function onFocus(e:FocusEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		
 		#if flash 
 		// Pause game
 		if (FlxG.console.autoPause)
@@ -122,10 +126,10 @@ class Console extends Window
 		
 		// Block keyboard input
 		#if !FLX_NO_KEYBOARD
-		FlxG.keyboard.enabled = false;
+		FlxG.keys.enabled = false;
 		#end
 		
-		if (_input.text == defaultText) 
+		if (_input.text == Console._DEFAULT_TEXT) 
 		{
 			_input.text = "";
 		}
@@ -135,7 +139,6 @@ class Console extends Window
 	private function onFocusLost(e:FocusEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		
 		#if flash
 		// Unpause game
 		if (FlxG.console.autoPause)
@@ -145,12 +148,12 @@ class Console extends Window
 		#end
 		// Unblock keyboard input
 		#if !FLX_NO_KEYBOARD
-		FlxG.keyboard.enabled = true;
+		FlxG.keys.enabled = true;
 		#end
 		
 		if (_input.text == "") 
 		{
-			_input.text = defaultText;
+			_input.text = Console._DEFAULT_TEXT;
 		}
 		#end
 	}
@@ -158,34 +161,44 @@ class Console extends Window
 	private function onKeyPress(e:KeyboardEvent):Void
 	{
 		// Don't allow spaces at the start, they break commands
-		if (e.keyCode == Keyboard.SPACE && _input.text == " ") 
+		if (e.keyCode == Keyboard.SPACE && _input.text == " ") {
 			_input.text = "";	
+		}
 		
 		// Submitting the command
-		if (e.keyCode == Keyboard.ENTER && _input.text != "") 
+		if (e.keyCode == Keyboard.ENTER && _input.text != "") {
 			processCommand();
+		}
 		
 		// Quick-unfcous
-		else if (e.keyCode == Keyboard.ESCAPE) 
+		else if (e.keyCode == Keyboard.ESCAPE) {
 			FlxG.stage.focus = null;
+		}
 		
 		// Delete the current text
-		else if (e.keyCode == Keyboard.DELETE) 
+		else if (e.keyCode == Keyboard.DELETE) {
 			_input.text = "";
+		}
 		
 		// Show previous command in history
-		else if (e.keyCode == Keyboard.UP) {
-			if (cmdHistory.length == 0) return;
+		else if (e.keyCode == Keyboard.UP) 
+		{
+			if (cmdHistory.length == 0) {
+				return;
+			}
 			
 			_input.text = getPreviousCommand();
 			
 			// Workaround to override default behaviour of selection jumping to 0 when pressing up
-			addEventListener(Event.RENDER, overrideDefaultSelection, false, 0, true);
+			addEventListener(Event.RENDER, overrideDefaultSelection);
 			FlxG.stage.invalidate();
 		}
 		// Show next command in history
-		else if (e.keyCode == Keyboard.DOWN) {
-			if (cmdHistory.length == 0) return;
+		else if (e.keyCode == Keyboard.DOWN) 
+		{
+			if (cmdHistory.length == 0) {
+				return;
+			}
 			
 			_input.text = getNextCommand();
 		}
@@ -194,14 +207,25 @@ class Console extends Window
 	private function processCommand():Void
 	{
 		var args:Array<Dynamic> = StringTools.rtrim(_input.text).split(" ");
-		var command:String = args.shift();
+		var alias:String = args.shift();
+		var command:Command = ConsoleUtil.findCommand(alias, commands);
 		
-		var obj:Dynamic = cmdObjects.get(command);
-		var func:Dynamic = cmdFunctions.get(command);
-		
-		// Check if the commmand exists
-		if (func != null) 
+		// Only if the command exists
+		if (command != null) 
 		{
+			var func:Dynamic = command.processFunction;
+			
+			#if neko
+			/**
+			 * Ugly fix to prevent a crash with optional params on neko - requires padding with nulls. 
+			 * @link https://github.com/HaxeFoundation/haxe/issues/976
+			 */
+			if (command.numParams > 0)
+			{
+				args[command.numParams - 1] = null;
+			}
+			#end
+			
 			// Only save new commands 
 			if (getPreviousCommand() != _input.text) 
 			{
@@ -210,88 +234,40 @@ class Console extends Window
 				FlxG.save.flush();
 				
 				// Set a maximum for commands you can save
-				if (cmdHistory.length > historyMax)
+				if (cmdHistory.length > Console._HISTORY_MAX) {
 					cmdHistory.shift();
+				}
 			}
-				
-			historyIndex = cmdHistory.length;
-				
+			
+			_historyIndex = cmdHistory.length;
+			
 			if (Reflect.isFunction(func)) 
 			{
-				// Push all the strings into one param for the log command
-				if  (command == "log") 
-					args = [args.join(" ")];
-				// Make the second param of call an array of the remaining params to 
-				// be passed to the function you call
-				else if (command == "call") 
-					args[1] = args.slice(1, args.length);
-				// Make the third param of create an array of the remaining params to 
-				// be passed to the constructor of the FlxObject to create
-				else if (command == "create" || command == "cr") 
-					args[2] = args.slice(2, args.length);
-					
-				callFunction(obj, func, args, command); 
+				// Push all the remaining params into an array if a paramCutoff has been set
+				if (command.paramCutoff > 0)
+				{
+					var start:Int = command.paramCutoff - 1;
+					args[start] = args.slice(start, args.length);
+					args = args.slice(0, command.paramCutoff);
+				}
+				
+				ConsoleUtil.callFunction(func, args); 
+				
+				// Skip to the next step if the game is paused to see the effects of the command
+				#if (flash && !FLX_NO_DEBUG)
+				if (FlxG.vcr.paused)
+				{
+					FlxG.game.debugger.vcr.onStep();
+				}
+				#end
 			}
 			
 			_input.text = "";
 		}
-		// In case the command doesn't exist
-		else {
-			FlxG.log.error("Console: Invalid command: '" + command + "'");
-		}
-	}
-	
-	public function callFunction(obj:Dynamic, func:Dynamic, args:Array<Dynamic>, ?cmd:String):Bool
-	{
-		#if neko
-		/**
-		 * Ugly fix to prevent a crash with optional params on neko - requires padding with nulls. 
-		 * @link https://github.com/HaxeFoundation/haxe/issues/976
-		 */
-		if (((cmd == "help" || cmd == "h") && args.length == 0)
-		|| ((cmd == "create" || cmd == "cr") && args.length == 2)
-		|| (cmd == "call" && args.length == 2)
-		|| (cmd == "set" && args.length == 2)
-		|| ((cmd == "unwatch" || cmd == "uw") && args.length == 1)
-		|| ((cmd == "watch" || cmd == "w") && args.length == 1))
+		// Error in case the command doesn't exist
+		else 
 		{
-			args[args.length] = null;	
-		}
-		#end
-		
-		try
-		{
-			Reflect.callMethod(obj, func, args);
-			return true;
-		}
-		catch(e:ArgumentError)
-		{
-			if (e.errorID == 1063)
-			{
-				/* Retrieve the number of expected arguments from the error message
-				The first 4 digits in the message are the error-type (1063), 5th is 
-				the one we are looking for */
-				var expected:Int = Std.parseInt(filterDigits(e.message).charAt(4));
-				
-				// We can deal with too many parameters...
-				if (expected < args.length) 
-				{
-					// Shorten args accordingly
-					var shortenedArgs:Array<Dynamic> = args.slice(0, expected);
-					// Try again
-					Reflect.callMethod(obj, func, shortenedArgs);
-				}
-				// ...but not with too few
-				else 
-				{
-					FlxG.log.error("Console: Invalid number or parameters: " + expected + " expected, " + args.length + " passed");
-					return false;
-				}
-				
-				return true;
-			}
-			
-			return false;
+			FlxG.log.error("Console: Invalid command: '" + alias + "'");
 		}
 	}
 	
@@ -301,71 +277,65 @@ class Console extends Window
 		removeEventListener(Event.RENDER, overrideDefaultSelection);
 	}
 	
-	private function filterDigits(str:String):String 
+	inline private function getPreviousCommand():String
 	{
-		var out = new StringBuf();
-		for (i in 0...str.length) {
-			var c = str.charCodeAt(i);
-			if (c >= '0'.code && c <= '9'.code) out.addChar(c);
+		if (_historyIndex > 0) {
+			_historyIndex --;
 		}
-		return out.toString();
-	}
-	
-	private function getPreviousCommand():String
-	{
-		if (historyIndex > 0) 
-			historyIndex --;
-			
-		return cmdHistory[historyIndex];
-	}
-	
-	private function getNextCommand():String
-	{
-		if (historyIndex < cmdHistory.length) 
-			historyIndex ++;
-			
-		if (cmdHistory[historyIndex] != null) 
-			return cmdHistory[historyIndex];
-		else 
-			return "";
-	}
-	
-	/**
-	 * Add a custom command to the console on the debugging screen.
-	 * @param 	Command		The command's name.
-	 * @param 	AnyObject 	Object containing the function (<code>this</code> if function is within the class you're calling this from).
-	 * @param 	Function	Function to be called with params when the command is entered.
-	 * @param 	Alt			Alternative name for the command, useful as a shortcut.
-	 */
-	public function addCommand(Command:String, AnyObject:Dynamic, Function:Dynamic, Alt:String = ""):Void
-	{
-		cmdFunctions.set(Command, Function);
-		cmdObjects.set(Command, AnyObject);
 		
-		if (Alt != "") {
-			cmdFunctions.set(Alt, Function);
-			cmdObjects.set(Alt, AnyObject);
+		return cmdHistory[_historyIndex];
+	}
+	
+	inline private function getNextCommand():String
+	{
+		if (_historyIndex < cmdHistory.length) {
+			_historyIndex ++;
+		}
+		
+		if (cmdHistory[_historyIndex] != null) {
+			return cmdHistory[_historyIndex];
+		}
+		else {
+			return "";
 		}
 	}
 	
 	/**
 	 * Register a new object to use for the set command.
-	 * @param ObjectAlias	The name with which you want to access the object.
-	 * @param AnyObject		The object to register.
+	 * 
+	 * @param 	ObjectAlias		The name with which you want to access the object.
+	 * @param 	AnyObject		The object to register.
 	 */
-	public function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
+	inline public function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
 		registeredObjects.set(ObjectAlias, AnyObject);
 	}
 	
 	/**
 	 * Register a new function to use for the call command.
-	 * @param FunctionAlias	The name with which you want to access the function.
-	 * @param Function		The function to register.
+	 * 
+	 * @param 	FunctionAlias	The name with which you want to access the function.
+	 * @param 	Function		The function to register.
 	 */
-	public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
+	inline public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
 		registeredFunctions.set(FunctionAlias, Function);
+	}
+	
+	/**
+	 * Add a custom command to the console on the debugging screen.
+	 * 
+	 * @param 	Aliases			An array of accepted aliases for this command.
+	 * @param 	ProcessFunction	Function to be called with params when the command is entered.
+	 * @param	Help			The description of this command shown in the help command.
+	 * @param	ParamHelp		The description of this command's processFunction's params.
+	 * @param 	NumParams		The amount of parameters a function has. Require to prevent crashes on Neko.
+	 * @param	ParamCutoff		At which parameter to put all remaining params into an array
+	 */
+	inline public function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
+	{
+		commands.push( { aliases:Aliases, processFunction:ProcessFunction, help:Help, paramHelp:ParamHelp, 
+						numParams:NumParams, paramCutoff:ParamCutoff });
 	}
 	
 	/**
@@ -379,12 +349,13 @@ class Console extends Window
 		_input.removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		_input.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		
-		if (_input != null)
+		if (_input != null) 
+		{
 			removeChild(_input);
-		_input = null;
+			_input = null;
+		}
 		
-		cmdFunctions = null;
-		cmdObjects = null;
+		commands = null;
 		
 		registeredObjects = null;
 		registeredFunctions = null;
@@ -402,4 +373,13 @@ class Console extends Window
 		_input.width = _width - 4;
 		_input.height = _height - 15;
 	}
+}
+
+typedef Command = {
+	aliases:Array<String>,
+	processFunction:Dynamic,
+	?help:String,
+	?paramHelp:String,
+	?numParams:Int,
+	?paramCutoff:Int
 }

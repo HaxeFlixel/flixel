@@ -398,7 +398,7 @@ class FlxObject extends FlxBasic
 		//draw graphics shape to camera buffer
 		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		#else
-		var gfx:Graphics = Camera._debugLayer.graphics;
+		var gfx:Graphics = Camera.debugLayer.graphics;
 		gfx.lineStyle(1, debugBoundingBoxColor, 0.5);
 		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
 		#end
@@ -598,7 +598,7 @@ class FlxObject extends FlxBasic
 	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined.  Otherwise a new one is created.
 	 * @return	A <code>FlxPoint</code> object containing the midpoint of this object in world coordinates.
 	 */
-	inline public function getMidpoint(?point:FlxPoint):FlxPoint
+	public function getMidpoint(?point:FlxPoint):FlxPoint
 	{
 		if (point == null)
 		{
@@ -921,7 +921,7 @@ class FlxObject extends FlxBasic
 	 * @param	Width	The new sprite width.
 	 * @param	Height	The new sprite height.
 	 */
-	inline public function setSize(Width:Float, Height:Float)
+	public function setSize(Width:Float, Height:Float)
 	{
 		width = Width;
 		height = Height;
@@ -1063,4 +1063,14 @@ class FlxObject extends FlxBasic
 	
 	private var _boundingBoxColorOverritten:Bool = false;
 	#end
+	
+	/**
+	 * Convert object to readable string name.  Useful for debugging, save games, etc.
+	 */
+	override public function toString():String
+	{
+		var p = FlxG.debugger.precision;
+		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " + FlxMath.roundDecimal(y, p) + " | w: " + FlxMath.roundDecimal(width, p) + " | h: " + FlxMath.roundDecimal(height, p) + 
+				" | visible: " +  visible + " | velocity: " +  Std.string(velocity) + ")"; 
+	}
 }

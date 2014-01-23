@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
 
@@ -8,7 +9,7 @@ import flixel.util.FlxStringUtil;
  * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 
  * <code>FlxGroup</code> extend this class. Has no size, position or graphical data.
  */
-class FlxBasic implements IDestroyable
+class FlxBasic implements IFlxDestroyable
 {
 	/**
 	 * IDs seem like they could be pretty useful, huh?
@@ -108,21 +109,17 @@ class FlxBasic implements IDestroyable
 	 */
 	public function draw():Void
 	{
+		#if !FLX_NO_DEBUG
 		if (cameras == null)
 		{
 			cameras = FlxG.cameras.list;
 		}
-		var camera:FlxCamera;
-		var i:Int = 0;
-		var l:Int = cameras.length;
-		while(i < l)
+		
+		for (camera in cameras)
 		{
-			camera = cameras[i++];
-			
-			#if !FLX_NO_DEBUG
 			_VISIBLECOUNT++;
-			#end
 		}
+		#end
 	}
 	
 	#if !FLX_NO_DEBUG
@@ -176,6 +173,6 @@ class FlxBasic implements IDestroyable
 	 */
 	public function toString():String
 	{
-		return FlxStringUtil.getClassName(this, true);
+		return "(active: " + active + " | visible: " +  visible + " | alive: " +  alive + " | exists: " +  exists + ")"; 
 	}
 }

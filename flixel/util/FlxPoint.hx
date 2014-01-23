@@ -1,11 +1,13 @@
 package flixel.util;
 
 import flash.geom.Point;
+import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint
+class FlxPoint implements IFlxDestroyable
 {
 	/**
 	 * @default 0
@@ -103,14 +105,6 @@ class FlxPoint
 	}
 	
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
-	 */
-	public function toString():String
-	{
-		return FlxStringUtil.getClassName(this, true);
-	}
-	
-	/**
 	 * Returns true if this point is within the given rectangular block
 	 * 
 	 * @param	RectX		The X value of the region to test within
@@ -146,5 +140,14 @@ class FlxPoint
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
 	
-	public function destroy() { }
+	public function destroy() { } // Necessary for FlxPointHelper in FlxSpriteGroup!
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	inline public function toString():String
+	{
+		var p = FlxG.debugger.precision;
+		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " +  FlxMath.roundDecimal(y, p) + ")"; 
+	}
 }

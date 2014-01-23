@@ -7,18 +7,17 @@ import flixel.system.ui.FlxSystemButton;
 
 class DebuggerFrontEnd
 {	
-	#if !FLX_NO_DEBUG
 	/**
 	 * Whether to show visual debug displays or not. Doesn't exist in <code>FLX_NO_DEBUG</code> mode.
 	 * @default false
 	 */
-	public var visualDebug:Bool = false;
+	public var drawDebug:Bool = false;
+	
 	/**
-	 * The amount of decimals FlxPoints are rounded to in log / watch.
+	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
 	 * @default 3
 	 */
-	public var pointPrecision:Int = 3; 
-	#end
+	public var precision:Int = 3; 
 	
 	#if !FLX_NO_KEYBOARD
 	/**
@@ -89,6 +88,18 @@ class DebuggerFrontEnd
 		return FlxG.game.debugger.addButton(Alignment, IconPath, DownHandler, ToggleMode, UpdateLayout);
 		#else
 		return null;
+		#end
+	}
+	
+	/**
+	 * Removes and destroys a button from the debugger.
+	 * @param	Button			The FlxSystemButton instance to remove.
+	 * @param	UpdateLayout	Whether to update the button layout.
+	 */
+	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
+	{
+		#if !FLX_NO_DEBUG
+		FlxG.game.debugger.removeButton(Button, UpdateLayout);
 		#end
 	}
 }

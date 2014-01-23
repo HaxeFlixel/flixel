@@ -1,5 +1,6 @@
 package flixel.system.frontEnds;
 
+#if !FLX_NO_SOUND_SYSTEM
 import flash.media.Sound;
 import flash.media.SoundTransform;
 import flixel.FlxG;
@@ -37,7 +38,7 @@ class SoundFrontEnd
 	/**
 	 * The keys to decrease volume (see <code>FlxG.keys</code> for the keys available).
 	 * Default keys: - (and numpad -). Set to <code>null</code> to deactivate.
-	 * @default ["MINUS", "NUMPASMINUS"]
+	 * @default ["MINUS", "NUMPADMINUS"]
 	 */
 	public var volumeDownKeys:Array<String>;
 	/**
@@ -53,7 +54,7 @@ class SoundFrontEnd
 		#if !FLX_NO_KEYBOARD
 		// Assign default values to the keys used by core flixel
 		volumeUpKeys = ["PLUS", "NUMPADPLUS"];
-		volumeDownKeys = ["MINUS", "NUMPASMINUS"];
+		volumeDownKeys = ["MINUS", "NUMPADMINUS"];
 		muteKeys = ["ZERO", "NUMPADZERO"]; 
 		#end
 		
@@ -317,7 +318,7 @@ class SoundFrontEnd
 	{
 		if (music != null && music.exists)
 		{
-			music.play();
+			music.resume();
 		}
 		
 		for (sound in list.members)
@@ -325,6 +326,38 @@ class SoundFrontEnd
 			if (sound != null && sound.exists)
 			{
 				sound.resume();
+			}
+		}
+	}
+	
+	public function onFocusLost():Void
+	{
+		if (music != null)
+		{
+			music.onFocusLost();
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null)
+			{
+				sound.onFocusLost();
+			}
+		}
+	}
+	
+	public function onFocus():Void
+	{
+		if (music != null)
+		{
+			music.onFocus();
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null)
+			{
+				sound.onFocus();
 			}
 		}
 	}
@@ -354,3 +387,4 @@ class SoundFrontEnd
 		}
 	}
 }
+#end

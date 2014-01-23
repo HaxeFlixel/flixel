@@ -1,4 +1,5 @@
 package flixel.util;
+import flixel.FlxG;
 
 /**
  * Class containing a set of functions for color manipulation and color harmony.
@@ -6,27 +7,27 @@ package flixel.util;
 class FlxColorUtil
 {
 	/**
-	 * Generate a Flash <code>uint</code> color from RGBA components.
+	 * Generate a color from ARGB components.
 	 * 
-	 * @param   Red     The red component, between 0 and 255.
-	 * @param   Green   The green component, between 0 and 255.
-	 * @param   Blue    The blue component, between 0 and 255.
-	 * @param   Alpha   How opaque the color should be, either between 0 and 1 or 0 and 255.
-	 * @return  The color as a <code>uint</code>.
+	 * @param	Alpha	How opaque the color should be, either between 0 and 1 or 0 and 255.
+	 * @param	Red		The red component, between 0 and 255.
+	 * @param	Green	The green component, between 0 and 255.
+	 * @param	Blue	The blue component, between 0 and 255.
+	 * @return	The color as an integer
 	 */
-	inline static public function makeFromRGBA(Red:Int, Green:Int, Blue:Int, Alpha:Float = 1.0):Int
+	inline static public function makeFromARGB(Alpha:Float = 1.0, Red:Int, Green:Int, Blue:Int):Int
 	{
 		return (Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
 	}
 	
 	/**
-	 * Generate a Flash <code>uint</code> color from HSBA components.
+	 * Generate a color from HSBA components.
 	 * 
 	 * @param	Hue			A number between 0 and 360, indicating position on a color strip or wheel.
 	 * @param	Saturation	A number between 0 and 1, indicating how colorful or gray the color should be.  0 is gray, 1 is vibrant.
 	 * @param	Brightness	A number between 0 and 1, indicating how bright the color should be.  0 is black, 1 is full bright.
-	 * @param   Alpha   	How opaque the color should be, either between 0 and 1 or 0 and 255.
-	 * @return	The color as a <code>uint</code>.
+	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255.
+	 * @return	The color as an integer
 	 */
 	inline static public function makeFromHSBA(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):Int
 	{
@@ -39,7 +40,7 @@ class FlxColorUtil
 			red   = Brightness;
 			green = Brightness;        
 			blue  = Brightness;
-		}       
+		}
 		else
 		{
 			if (Hue == 360)
@@ -90,28 +91,29 @@ class FlxColorUtil
 	}
 	
 	/**
-	 * Loads an array with the RGBA values of a Flash <code>uint</code> color.
+	 * Loads an array with the ARGB values of a color.
 	 * RGB values are stored 0-255.  Alpha is stored as a floating point number between 0 and 1 rounded to 4 decimals.
 	 * 
 	 * @param	Color	The color you want to break into components.
-	 * @param	Results	An optional parameter, allows you to use an RGBA that already exists in memory to store the result.
-	 * @return	An RGBA object containing the Red, Green, Blue and Alpha values of the given color.
+	 * @param	Results	An optional parameter, allows you to use an ARGB that already exists in memory to store the result.
+	 * @return	An ARGB object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	inline static public function getRGBA(Color:Int, Results:RGBA = null):RGBA
+	inline static public function getARGB(Color:Int, ?Results:ARGB):ARGB
 	{
 		var red:Int = (Color >> 16) & 0xFF;
 		var green:Int = (Color >> 8) & 0xFF;
 		var blue:Int = Color & 0xFF;
 		var alpha:Float = FlxMath.roundDecimal(((Color >> 24) & 0xFF) / 255, 4);
 		
-		if (Results != null)
+		if (Results != null) {
 			Results = { red: red, green: green, blue: blue, alpha: alpha };
+		}
 		
 		return { red: red, green: green, blue: blue, alpha: alpha };
 	}
 	
 	/**
-	 * Loads an array with the HSB values of a Flash <code>uint</code> color.
+	 * Loads an array with the HSB values of a integer color.
 	 * Hue is a value between 0 and 360. Saturation, Brightness and Alpha
 	 * are as floating point numbers between 0 and 1 rounded to 4 decimals.
 	 * 
@@ -119,7 +121,7 @@ class FlxColorUtil
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>HSBA</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	inline static public function getHSBA(Color:Int, Results:HSBA = null):HSBA
+	static public function getHSBA(Color:Int, ?Results:HSBA):HSBA
 	{
 		var hue:Float;
 		var saturation:Float;
@@ -144,7 +146,7 @@ class FlxColorUtil
 		{
 			saturation = FlxMath.roundDecimal(range / dmax, 4);
 		}
-		if(saturation != 0) 
+		if (saturation != 0) 
 		{
 			if (red == dmax)
 			{
@@ -167,8 +169,9 @@ class FlxColorUtil
 		
 		alpha = FlxMath.roundDecimal(((Color >> 24) & 0xFF) / 255, 4);
 		
-		if (Results != null) 
+		if (Results != null) {
 			Results = { hue: Std.int(hue), brightness: brightness, saturation: saturation, alpha: alpha };
+		}
 		return { hue: Std.int(hue), brightness: brightness, saturation: saturation, alpha: alpha };
 	}
 	
@@ -229,39 +232,21 @@ class FlxColorUtil
 	}
 	
 	/**
+	 * Deprecated; please use FlxRandom.color() instead.
 	 * Returns a random color value between black and white
-	 * Set the min value to start each channel from the given offset.
-	 * Set the max value to restrict the maximum color used per channel
 	 * 
-	 * @param	Min		The lowest value to use for the color
-	 * @param	Max 	The highest value to use for the color
-	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque)
-	 * @return	32-bit color value with alpha
+	 * @param	Min		The lowest value to use for each channel.
+	 * @param	Max 	The highest value to use for each channel.
+	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
+	 * @return 	A color value in hex ARGB format.
 	 */
-	static public function getRandomColor(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
+	inline static public function getRandomColor(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
 	{
-		//	Sanity checks
-		if (Max > 255)
-		{
-			FlxG.log.warn("FlxColor: getRandomColor - max value too high");
-			return getColor24(255, 255, 255);
-		}
-		
-		if (Min > Max)
-		{
-			FlxG.log.warn("FlxColor: getRandomColor - min value higher than max");
-			return getColor24(255, 255, 255);
-		}
-		
-		var red:Int = Min + Std.int(Math.random() * (Max - Min));
-		var green:Int = Min + Std.int(Math.random() * (Max - Min));
-		var blue:Int = Min + Std.int(Math.random() * (Max - Min));
-		
-		return getColor32(Alpha, red, green, blue);
+		return FlxRandom.color( Min, Max, Alpha );
 	}
 	
 	/**
-	 * Given an alpha and 3 color values this will return an integer representation of it
+	 * Given an alpha and 3 color values this will return an integer representation of it (ARGB format)
 	 * 
 	 * @param	Alpha	The Alpha value (between 0 and 255)
 	 * @param	Red		The Red channel value (between 0 and 255)
@@ -299,7 +284,7 @@ class FlxColorUtil
 		
 		for (c in 0...360)
 		{
-			colors[c] = HSVtoRGBA(c, 1.0, 1.0, Alpha);
+			colors[c] = HSVtoARGB(c, 1.0, 1.0, Alpha);
 		}
 		
 		return colors;
@@ -316,10 +301,9 @@ class FlxColorUtil
 	inline static public function getComplementHarmony(Color:Int):Int
 	{
 		var hsv:HSV = RGBtoHSV(Color);
-		
 		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
 		
-		return HSVtoRGBA(opposite, 1.0, 1.0);
+		return HSVtoARGB(opposite, 1.0, 1.0);
 	}
 	
 	/**
@@ -343,7 +327,7 @@ class FlxColorUtil
 		var warmer:Int = FlxMath.wrapValue(Std.int(hsv.hue), 359 - Threshold, 359);
 		var colder:Int = FlxMath.wrapValue(Std.int(hsv.hue), Threshold, 359);
 		
-		return { color1: Color, color2: HSVtoRGBA(warmer, 1.0, 1.0), color3: HSVtoRGBA(colder, 1.0, 1.0), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
+		return { color1: Color, color2: HSVtoARGB(warmer, 1.0, 1.0), color3: HSVtoARGB(colder, 1.0, 1.0), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
 	}
 	
 	/**
@@ -371,13 +355,12 @@ class FlxColorUtil
 		
 		FlxG.log.notice("hue: " + hsv.hue + " opposite: " + opposite + " warmer: " + warmer + " colder: " + colder);
 		
-		return { color1: Color, color2: HSVtoRGBA(warmer, hsv.saturation, hsv.value), color3: HSVtoRGBA(colder, hsv.saturation, hsv.value), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
+		return { color1: Color, color2: HSVtoARGB(warmer, hsv.saturation, hsv.value), color3: HSVtoARGB(colder, hsv.saturation, hsv.value), hue1: Std.int(hsv.hue), hue2: warmer, hue3: colder };
 	}
 	
 	/**
-	 * Returns a Triadic Color Harmony for the given color.
-	 * A Triadic harmony are 3 hues equidistant from each other on the color wheel
-	 * Values returned in 0xAARRGGBB format with Alpha set to 255.
+	 * Returns a Triadic Color Harmony for the given color. A Triadic harmony are 3 hues equidistant 
+	 * from each other on the color wheel. Values returned in 0xAARRGGBB format with Alpha set to 255.
 	 * 
 	 * @param	Color 	The color to base the harmony on
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
@@ -389,7 +372,7 @@ class FlxColorUtil
 		var triadic1:Int = FlxMath.wrapValue(Std.int(hsv.hue), 120, 359);
 		var triadic2:Int = FlxMath.wrapValue(triadic1, 120, 359);
 		
-		return { color1: Color, color2: HSVtoRGBA(triadic1, 1.0, 1.0), color3: HSVtoRGBA(triadic2, 1.0, 1.0) };
+		return { color1: Color, color2: HSVtoARGB(triadic1, 1.0, 1.0), color3: HSVtoARGB(triadic2, 1.0, 1.0) };
 	}
 	
 	/**
@@ -401,14 +384,14 @@ class FlxColorUtil
 	 */
 	inline static public function getColorInfo(Color:Int):String
 	{
-		var rgba:RGBA = getRGBA(Color);
+		var argb:ARGB = getARGB(Color);
 		var hsl:HSV = RGBtoHSV(Color);
 		
 		//	Hex format
-		var result:String = RGBAtoHexString(Color) + "\n";
+		var result:String = ARGBtoHexString(Color) + "\n";
 		
 		//	RGB format
-		result += "Alpha: " + rgba.alpha + " Red: " + rgba.red + " Green: " + rgba.green + " Blue: " + rgba.blue + "\n";
+		result += "Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue + "\n";
 		
 		//	HSL info
 		result += "Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness;
@@ -422,11 +405,10 @@ class FlxColorUtil
 	 * @param	Color 	The color to get the String representation for
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	inline static public function RGBAtoHexString(Color:Int):String
+	inline static public function ARGBtoHexString(Color:Int):String
 	{
-		var rgba:RGBA = getRGBA(Color);
-		
-		return "0x" + colorToHexString(Std.int(rgba.alpha)) + colorToHexString(rgba.red) + colorToHexString(rgba.green) + colorToHexString(rgba.blue);
+		var argb:ARGB = getARGB(Color);
+		return "0x" + colorToHexString(Std.int(argb.alpha)) + colorToHexString(argb.red) + colorToHexString(argb.green) + colorToHexString(argb.blue);
 	}
 	
 	/**
@@ -435,11 +417,10 @@ class FlxColorUtil
 	 * @param	Color 	The color to get the String representation for
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	inline static public function RGBAtoWebString(Color:Int):String
+	inline static public function ARGBtoWebString(Color:Int):String
 	{
-		var rgba:RGBA = getRGBA(Color);
-		
-		return "#" + colorToHexString(rgba.red) + colorToHexString(rgba.green) + colorToHexString(rgba.blue);
+		var argb:ARGB = getARGB(Color);
+		return "#" + colorToHexString(argb.red) + colorToHexString(argb.green) + colorToHexString(argb.blue);
 	}
 
 	/**
@@ -459,15 +440,15 @@ class FlxColorUtil
 	}
 	
 	/**
-	 * Convert a HSV (hue, saturation, lightness) color space value to an RGB color
+	 * Convert a HSV (hue, saturation, lightness) color space value to an ARGB color
 	 * 
 	 * @param	H 		Hue degree, between 0 and 359
 	 * @param	S 		Saturation, between 0.0 (grey) and 1.0
 	 * @param	V 		Value, between 0.0 (black) and 1.0
 	 * @param	Alpha	Alpha value to set per color (between 0 and 255)
-	 * @return	32-bit RGBA color value (0xAARRGGBB)
+	 * @return	32-bit ARGB color value (0xAARRGGBB)
 	 */
-	static public function HSVtoRGBA(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
+	static public function HSVtoARGB(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
 	{
 		var result = FlxColor.TRANSPARENT;
 		
@@ -498,7 +479,7 @@ class FlxColorUtil
 				case 5:
 					result = getColor32(Alpha, Std.int(V * 255), Std.int(p * 255), Std.int(q * 255));
 				default:
-					FlxG.log.warn("FlxColor: HSVtoRGB: Unknown color");
+					FlxG.log.warn("FlxColor: HSVtoARGB: Unknown color");
 			}
 		}
 		
@@ -513,7 +494,7 @@ class FlxColorUtil
 	 */
 	static public function RGBtoHSV(Color:Int):HSV
 	{
-		var rgb:RGBA = getRGBA(Color);
+		var rgb:ARGB = getARGB(Color);
 		
 		var red:Float = rgb.red / 255;
 		var green:Float = rgb.green / 255;
@@ -585,7 +566,7 @@ class FlxColorUtil
 	 * @param	Color	The Color to convert
 	 * @return	The color without its alpha component
 	 */
-	inline static public function RGBAtoRGB(Color:Int):Int
+	inline static public function ARGBtoRGB(Color:Int):Int
 	{
 		return getColor24(getRed(Color), getGreen(Color), getBlue(Color));
 	}
@@ -602,8 +583,8 @@ class FlxColorUtil
 	 */
 	inline static public function interpolateColor(Color1:Int, Color2:Int, Steps:Int, CurrentStep:Int, Alpha:Int = 255):Int
 	{
-		var src1:RGBA = getRGBA(Color1);
-		var src2:RGBA = getRGBA(Color2);
+		var src1:ARGB = getARGB(Color1);
+		var src2:ARGB = getARGB(Color2);
 		
 		var r:Int = Std.int((((src2.red - src1.red) * CurrentStep) / Steps) + src1.red);
 		var g:Int = Std.int((((src2.green - src1.green) * CurrentStep) / Steps) + src1.green);
@@ -626,7 +607,7 @@ class FlxColorUtil
 	 */
 	inline static public function interpolateColorWithRGB(Color:Int, R2:Int, G2:Int, B2:Int, Steps:Int, CurrentStep:Int):Int
 	{
-		var src:RGBA = getRGBA(Color);
+		var src:ARGB = getARGB(Color);
 		
 		var r:Int = Std.int((((R2 - src.red) * CurrentStep) / Steps) + src.red);
 		var g:Int = Std.int((((G2 - src.green) * CurrentStep) / Steps) + src.green);
@@ -659,9 +640,9 @@ class FlxColorUtil
 	}
 	
 	/**
-	 * Darken an RGBA color.
+	 * Darken an ARGB color.
 	 * 
-	 * @param	Color	In the format 0xAARRGGBB
+	 * @param	Color	Color in the format 0xAARRGGBB
 	 * @param	Factor	The higher, the darker! Number from 0 to 1.0.
 	 * @return 	The darkened color
 	 */
@@ -680,14 +661,14 @@ class FlxColorUtil
 		g = Std.int(g * Factor);
 		b = Std.int(b * Factor);
 		
-		return makeFromRGBA(r, g, b, a);
+		return makeFromARGB(a, r, g, b);
 	}
 	
 	/**
-	 * Lighten an RGBA color.
+	 * Lighten an ARGB color.
 	 * 
-	 * @param	Color	In the format 0xAARRGGBB
-	 * @param	Factor	The higher, the lighter! Number from 0 to 1.0.
+	 * @param	Color	Color in the format 0xAARRGGBB
+	 * @param	Factor	The higher, the lighter! Number from 0.0 to 1.0.
 	 * @return 	The lightened color
 	 */
 	inline static public function brighten(Color:Int, Factor:Float = 0.2):Int
@@ -703,15 +684,15 @@ class FlxColorUtil
 		g += Std.int((255 - g) * Factor);
 		b += Std.int((255 - b) * Factor);
 		
-		return makeFromRGBA(r, g, b, a);
+		return makeFromARGB(a, r, g, b);
 	}
 }
 
-typedef RGBA = {
+typedef ARGB = {
+	var alpha:Float;
 	var red:Int;
 	var green:Int;
 	var blue:Int;
-	var alpha:Float;
 }
 
 typedef HSBA = {

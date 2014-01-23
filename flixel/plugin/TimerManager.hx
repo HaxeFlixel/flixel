@@ -41,11 +41,6 @@ class TimerManager extends FlxPlugin
 	 */
 	override public function update():Void
 	{
-		if (FlxG.paused) 
-		{
-			return;
-		}
-		
 		for (timer in _timers)
 		{
 			if (!timer.paused && !timer.finished && timer.time > 0)
@@ -78,17 +73,11 @@ class TimerManager extends FlxPlugin
 	 */
 	public function remove(Timer:FlxTimer, ReturnInPool:Bool = true):Void
 	{
+		FlxArrayUtil.fastSplice(_timers, Timer);
+		
 		if (ReturnInPool)
 		{
 			FlxTimer.put(Timer);
-		}
-		
-		var index:Int = FlxArrayUtil.indexOf(_timers, Timer);
-		if (index >= 0)
-		{
-			// Fast array removal (only do on arrays where order doesn't matter)
-			_timers[index] = _timers[_timers.length - 1];
-			_timers.pop();
 		}
 	}
 	

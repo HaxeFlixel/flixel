@@ -145,7 +145,7 @@ class VCRFrontEnd
 		FlxG.game.replayRequested = true;
 
 		#if !FLX_NO_KEYBOARD
-		FlxG.keyboard.enabled = false;
+		FlxG.keys.enabled = false;
 		#end
 
 		#if !FLX_NO_DEBUG
@@ -189,7 +189,7 @@ class VCRFrontEnd
 		#end
 		
 		#if !FLX_NO_KEYBOARD
-		FlxG.keyboard.enabled = true;
+		FlxG.keys.enabled = true;
 		#end
 	}
 		

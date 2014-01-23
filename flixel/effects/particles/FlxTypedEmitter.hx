@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
+import flixel.interfaces.IFlxParticle;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 
@@ -241,7 +242,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			
 			if (Multiple)
 			{
-				randomFrame = Std.int(FlxRandom.float() * totalFrames); 
+				randomFrame = FlxRandom.intRanged( 0, totalFrames - 1 );
 				
 				if (BakedRotations > 0)
 				{
@@ -510,7 +511,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		var particleEndScale:Float = endScale.min;
 		if (endScale.min != endScale.max)
 		{
-			particleEndScale = endScale.min + Std.int(FlxRandom.float() * (endScale.max - endScale.min));
+		particleEndScale = endScale.min + FlxRandom.intRanged( 0, Std.int( endScale.max - endScale.min ) );
 		}
 		
 		if (particleEndScale != particle.startScale)
@@ -774,6 +775,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		return yPosition.max = Value;
 	}
 	
+	/**
+	 * The x position of this emitter.
+	 */
 	public var x(get, set):Float;
 	
 	private function get_x():Float
@@ -786,6 +790,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		return xPosition.min = Value;
 	}
 	
+	/**
+	 * The y position of this emitter.
+	 */
 	public var y(get, set):Float;
 	
 	private function get_y():Float
@@ -796,6 +803,19 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	private function set_y(Value:Float):Float
 	{
 		return yPosition.min = Value;
+	}
+	
+	/**
+	 * Helper function to set the coordinates of this object.
+	 * Handy since it only requires one line of code.
+	 * 
+	 * @param	X	The new x position
+	 * @param	Y	The new y position
+	 */
+	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	{
+		x = X;
+		y = Y;
 	}
 	
 	/**

@@ -18,7 +18,7 @@ class FlxReplay
 	/**
 	 * The random number generator seed value for this recording.
 	 */
-	public var seed:Float;
+	public var seed:Int;
 	/**
 	 * The current frame for this recording.
 	 */
@@ -81,7 +81,7 @@ class FlxReplay
 	 * 
 	 * @param	Seed	The current seed from the random number generator.
 	 */
-	public function create(Seed:Float):Void
+	public function create(Seed:Int):Void
 	{
 		destroy();
 		init();
@@ -101,7 +101,7 @@ class FlxReplay
 		
 		var lines:Array<String> = FileContents.split("\n");
 		
-		seed = Std.parseFloat(lines[0]);
+		seed = Std.parseInt(lines[0]);
 		
 		var line:String;
 		var i:Int = 1;
@@ -162,7 +162,7 @@ class FlxReplay
 		var continueFrame = true;
 		
 		#if !FLX_NO_KEYBOARD
-		var keysRecord:Array<CodeValuePair> = FlxG.keyboard.record();
+		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
 		if (keysRecord == null) continueFrame = false;
 		#end
 		
@@ -216,7 +216,7 @@ class FlxReplay
 		#if !FLX_NO_KEYBOARD
 		if (fr.keys != null)
 		{
-			FlxG.keyboard.playback(fr.keys);
+			FlxG.keys.playback(fr.keys);
 		}
 		#end
 		

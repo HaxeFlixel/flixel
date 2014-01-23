@@ -2,6 +2,7 @@ package flixel.system;
 
 import flash.display.Graphics;
 import flash.display.Sprite;
+import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
@@ -29,7 +30,6 @@ class FlxSplash extends FlxState
 	private var _cachedTimestep:Bool;
 	private var _cachedAutoPause:Bool;
 	
-	
 	public function new(NextState:Class<FlxState>)
 	{
 		_nextState = NextState;
@@ -41,13 +41,15 @@ class FlxSplash extends FlxState
 		_cachedBgColor = FlxG.cameras.bgColor;
 		FlxG.cameras.bgColor = FlxColor.BLACK;
 		
+		// This is required for sound and animation to synch up properly
 		_cachedTimestep = FlxG.fixedTimestep;
-		FlxG.fixedTimestep = false;
+		FlxG.fixedTimestep = false; 
 		
 		_cachedAutoPause = FlxG.autoPause;
 		FlxG.autoPause = false;
+		
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = false;
+			FlxG.keys.enabled = false;
 		#end
 		
 		_times = [0.041, 0.184, 0.334, 0.495, 0.636];
@@ -59,16 +61,19 @@ class FlxSplash extends FlxState
 			FlxTimer.start(time, timerCallback);
 		}
 		
+		var stageWidth:Int = Lib.current.stage.stageWidth;
+		var stageHeight:Int = Lib.current.stage.stageHeight;
+		
 		_sprite = new Sprite();
-		_sprite.x = FlxG.width * FlxCamera.defaultZoom / 2 - 50;
-		_sprite.y = FlxG.height * FlxCamera.defaultZoom / 2 - 70;
+		_sprite.x = (stageWidth / 2) - 50;
+		_sprite.y = (stageHeight / 2) - 70;
 		FlxG.stage.addChild(_sprite);
 		_gfx = _sprite.graphics;
 		
 		_text = new TextField();
 		_text.selectable = false;
 		_text.embedFonts = true;
-		_text.width = FlxG.width * FlxCamera.defaultZoom;
+		_text.width = stageWidth;
 		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 16, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		_text.defaultTextFormat = dtf;
@@ -76,7 +81,9 @@ class FlxSplash extends FlxState
 		_text.y = _sprite.y + 130;
 		FlxG.stage.addChild(_text);
 		
+		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
+		#end
 	}
 	
 	private function timerCallback(Timer:FlxTimer):Void
@@ -88,8 +95,9 @@ class FlxSplash extends FlxState
 		
 		if (_curPart == 5)
 		{
-			FlxTween.multiVar(_sprite, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut, complete: onComplete } );
-			FlxTween.multiVar(_text, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut } );
+			// Make the logo a tad bit longer, so our users fully appreciate our hard work :D
+			FlxTween.multiVar(_sprite, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut, complete: onComplete } );
+			FlxTween.multiVar(_text, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut } );
 		}
 	}
 	
@@ -162,7 +170,7 @@ class FlxSplash extends FlxState
 		FlxG.fixedTimestep = _cachedTimestep;
 		FlxG.autoPause = _cachedAutoPause;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = true;
+			FlxG.keys.enabled = true;
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);

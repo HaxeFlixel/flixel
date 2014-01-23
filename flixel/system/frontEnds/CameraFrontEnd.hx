@@ -53,10 +53,10 @@ class CameraFrontEnd
 			
 		#if !flash
 			camera.clearDrawStack();
-			camera._canvas.graphics.clear();
+			camera.canvas.graphics.clear();
 			// Clearing camera's debug sprite
 			#if !FLX_NO_DEBUG
-			camera._debugLayer.graphics.clear();
+			camera.debugLayer.graphics.clear();
 			#end
 		#end
 			
@@ -123,11 +123,11 @@ class CameraFrontEnd
 				
 				if (camera.target == null) 
 				{
-					camera._flashSprite.x = camera.x + camera._flashOffsetX;
-					camera._flashSprite.y = camera.y + camera._flashOffsetY;
+					camera.flashSprite.x = camera.x + camera.flashOffsetX;
+					camera.flashSprite.y = camera.y + camera.flashOffsetY;
 				}
 				
-				camera._flashSprite.visible = camera.visible;
+				camera.flashSprite.visible = camera.visible;
 			}
 		}
 	}
@@ -139,12 +139,11 @@ class CameraFrontEnd
 	 * @param	NewCamera	The camera you want to add.
 	 * @return	This <code>FlxCamera</code> instance.
 	 */
-	inline public function add(NewCamera:FlxCamera):FlxCamera
+	@:generic inline public function add<T:FlxCamera>(NewCamera:T):T
 	{
-		FlxG.game.addChildAt(NewCamera._flashSprite, FlxG.game.getChildIndex(FlxG.game.inputContainer));
+		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game.inputContainer));
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
-		
 		return NewCamera;
 	}
 	
@@ -156,9 +155,9 @@ class CameraFrontEnd
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
-		if (Camera != null && FlxG.game.contains(Camera._flashSprite))
+		if (Camera != null && FlxG.game.contains(Camera.flashSprite))
 		{
-			FlxG.game.removeChild(Camera._flashSprite);
+			FlxG.game.removeChild(Camera.flashSprite);
 			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
 			
 			if (index >= 0)
@@ -194,7 +193,7 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			FlxG.game.removeChild(camera._flashSprite);
+			FlxG.game.removeChild(camera.flashSprite);
 			camera.destroy();
 		}
 		

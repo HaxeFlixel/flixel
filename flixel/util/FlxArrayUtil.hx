@@ -59,68 +59,58 @@ class FlxArrayUtil
 	}
 	
 	/**
+	 * Deprecated; please use FlxRandom.shuffleArray() instead.
 	 * Shuffles the entries in an array into a new random order.
-	 * Deterministic and safe for use with replays/recordings.
 	 * 
-	 * @param	A				A Flash <code>Array</code> object containing...stuff.
-	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
-	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
+	 * @param	Objects			An array to shuffle.
+	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
+	 * @return	The newly shuffled array.
 	 */
-	@:generic static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
+	@:generic inline static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
-		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
-		var i:Int = 0;
-		var index1:Int;
-		var index2:Int;
-		var object:Dynamic;
-		while (i < HowManyTimes)
-		{
-			index1 = Std.int(FlxRandom.float() * Objects.length);
-			index2 = Std.int(FlxRandom.float() * Objects.length);
-			object = Objects[index2];
-			Objects[index2] = Objects[index1];
-			Objects[index1] = object;
-			i++;
-		}
-		return Objects;
+		return FlxRandom.shuffleArray( Objects, HowManyTimes );
 	}
-		
+	
 	/**
-	 * Fetch a random entry from the given array.
-	 * Will return null if random selection is missing, or array has no entries.
-	 * Deterministic and safe for use with replays/recordings.
+	 * Deprecated; please use FlxRandom.getObject() instead.
+	 * Fetch a random entry from the given array from StartIndex to EndIndex.
 	 * 
-	 * @param	Objects		A Flash array of objects.
-	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
+	 * @param	Objects			An array from which to select a random entry.
+	 * @param	StartIndex		Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
+	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, Length:Int = 0):T
+	@:generic inline static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
-		if (Objects != null)
+		return FlxRandom.getObject( Objects, StartIndex, EndIndex );
+	}
+	
+	/**
+	 * Safely removes an element from an array by swapping it with the last element and calling pop<code>()</code>
+	 * (won't do anything if the array is not part of the array). This is a lot faster than regular <code>splice()</code>, 
+	 * but it can only be used on arrays where order doesn't matter.
+	 * 
+	 * @param	array	The array to remove the element from
+	 * @param 	element	The element to remove from the array
+	 * @return	The array
+	 */
+	@:generic static public function fastSplice<T>(array:Array<T>, element:T):Array<T>
+	{
+		var index = indexOf(array, element);
+		if (index >= 0)
 		{
-			if (StartIndex < 0) StartIndex = 0;
-			if (Length < 0) Length = 0;
-			
-			var l:Int = Length;
-			if ((l == 0) || (l > Objects.length - StartIndex))
-			{
-				l = Objects.length - StartIndex;
-			}
-			if (l > 0)
-			{
-				return Objects[StartIndex + Std.int(FlxRandom.float() * l)];
-			}
+			array[index] = array[array.length - 1]; // swap element to remove and last element
+			array.pop();
 		}
-		return null;
+		return array;
 	}
 	
 	/**
 	 * Split a comma-separated string into an array of ints
+	 * 
 	 * @param	data string formatted like this: "1,2,5,-10,120,27"
 	 * @return	an array of ints
 	 */
-	
 	static public function intFromString(data:String):Array<Int>
 	{
 		if (data != null && data != "") 
@@ -137,6 +127,7 @@ class FlxArrayUtil
 	
 	/**
 	 * Split a comma-separated string into an array of floats
+	 * 
 	 * @param	data string formatted like this: "1.0,2.1,5.6,1245587.9,-0.00354"
 	 * @return
 	 */	

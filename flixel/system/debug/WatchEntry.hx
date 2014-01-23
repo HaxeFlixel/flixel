@@ -113,7 +113,7 @@ class WatchEntry
 		// quickWatch is green, normal watch is white
 		var color:Int = 0xffffff;
 		if (quickWatch)
-			color = 0x008000;
+			color = 0xA5F1ED;
 		
 		_whiteText = new TextFormat(fontName, 12, color);
 		_blackText = new TextFormat(fontName, 12, 0);
@@ -199,15 +199,12 @@ class WatchEntry
 	 */
 	public function updateValue():Bool
 	{
-		if (editing || quickWatch)
+		if (editing || quickWatch) {
 			return false;
+		}
 		
 		var property:Dynamic = Reflect.getProperty(object, field);
-		
-		if (Std.is(property, FlxPoint)) 
-			valueDisplay.text = FlxStringUtil.formatFlxPoint(property, FlxG.debugger.pointPrecision);
-		else
-			valueDisplay.text = Std.string(property); 
+		valueDisplay.text = Std.string(property);
 		
 		return true;
 	}
@@ -221,7 +218,7 @@ class WatchEntry
 	{
 		editing = true;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = false;
+			FlxG.keys.enabled = false;
 		#end
 		oldValue = Reflect.getProperty(object, field);
 		valueDisplay.type = TextFieldType.INPUT;
@@ -297,7 +294,7 @@ class WatchEntry
 		valueDisplay.background = false;
 		editing = false;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = true;
+			FlxG.keys.enabled = true;
 		#end
 	}
 }

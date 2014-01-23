@@ -60,7 +60,7 @@ class MultiVarTween extends FlxTween
 		{
 			throw "Unsupported MultiVar properties container - use Object containing key/value pairs.";
 		}
-
+		
 		for (p in fields)
 		{
 			if (Reflect.getProperty(object, p) == null)
@@ -93,7 +93,7 @@ class MultiVarTween extends FlxTween
 		{
 			if (_object != null)
 			{
-				Reflect.setProperty(_object, _vars[i], _start[i] + _range[i] * _t);
+				Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * _t));
 			}
 		}
 	}

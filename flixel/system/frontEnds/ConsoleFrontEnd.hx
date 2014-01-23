@@ -44,15 +44,17 @@ class ConsoleFrontEnd
 	/**
 	 * Add a custom command to the console on the debugging screen.
 	 * 
-	 * @param 	Command		The command's name.
-	 * @param 	AnyObject 	Object containing the function (<code>this</code> if function is within the class you're calling this from).
-	 * @param 	Function	Function to be called with params when the command is entered.
-	 * @param 	Alt			Alternative name for the command, useful as a shortcut.
+	 * @param 	Aliases			An array of accepted aliases for this command.
+	 * @param 	ProcessFunction	Function to be called with params when the command is entered.
+	 * @param	Help			The description of this command shown in the help command.
+	 * @param	ParamHelp		The description of this command's processFunction's params.
+	 * @param 	NumParams		The amount of parameters a function has. Require to prevent crashes on Neko.
+	 * @param	ParamCutoff		At which parameter to put all remaining params into an array
 	 */
-	inline public function addCommand(Command:String, AnyObject:Dynamic, Function:Dynamic, Alt:String = ""):Void
+	inline public function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.game.debugger.console.addCommand(Command, AnyObject, Function, Alt);
+		FlxG.game.debugger.console.addCommand(Aliases, ProcessFunction, Help, ParamHelp, NumParams, ParamCutoff);
 		#end
 	}
 }

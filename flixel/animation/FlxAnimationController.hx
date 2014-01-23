@@ -93,6 +93,8 @@ class FlxAnimationController
 	
 	public function copyFrom(controller:FlxAnimationController):FlxAnimationController
 	{
+		destroyAnimations();
+		
 		for (anim in controller._animations)
 		{
 			add(anim.name, anim._frames, anim.frameRate, anim.looped);
@@ -103,7 +105,11 @@ class FlxAnimationController
 			createPrerotated();
 		}
 		
-		name = controller.name;
+		if (controller.name != null)
+		{
+			name = controller.name;
+		}
+		
 		frameIndex = controller.frameIndex;
 		
 		return this;
@@ -377,7 +383,7 @@ class FlxAnimationController
 			_curAnim = null;
 		}
 		
-		if (_animations.get(AnimName) == null)
+		if (AnimName == null || _animations.get(AnimName) == null)
 		{
 			FlxG.log.warn("No animation called \"" + AnimName + "\"");
 			return;
@@ -432,7 +438,7 @@ class FlxAnimationController
 			_curAnim.stop();
 			_curAnim = null;
 		}
-		frameIndex = Std.int(Math.random() * frames);
+		frameIndex = FlxRandom.intRanged( 0, frames - 1 );
 	}
 	
 	private function set_frameIndex(Frame:Int):Int
@@ -479,7 +485,7 @@ class FlxAnimationController
 	/**
 	 * Gets the name of the currently playing _animations (warning: can be null)
 	 */
-	inline private function get_name():String
+	private function get_name():String
 	{
 		var animName:String = null;
 		if (_curAnim != null)
@@ -493,7 +499,7 @@ class FlxAnimationController
 	 * Plays a specified _animations (same as calling play)
 	 * @param	AnimName	The name of the _animations you want to play.
 	 */
-	inline private function set_name(AnimName:String):String
+	private function set_name(AnimName:String):String
 	{
 		play(AnimName);
 		return AnimName;

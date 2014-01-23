@@ -48,7 +48,7 @@ class FlxTextField extends FlxText
 		}
 		
 		_camera = Camera;
-		_regen = dirty = false;
+		dirty = false;
 	}
 	
 	/**
@@ -88,11 +88,7 @@ class FlxTextField extends FlxText
 	 */
 	override private function get_pixels():BitmapData
 	{
-		#if !flash
 		calcFrame(true);
-		#else
-		calcFrame();
-		#end
 		return cachedGraphics.bitmap;
 	}
 	
@@ -157,9 +153,9 @@ class FlxTextField extends FlxText
 		if (!_addedToDisplay)
 		{
 			#if !flash
-			_camera._canvas.addChild(_textField);
+			_camera.canvas.addChild(_textField);
 			#else
-			_camera._flashSprite.addChild(_textField);
+			_camera.flashSprite.addChild(_textField);
 			#end
 			
 			_addedToDisplay = true;
@@ -193,18 +189,23 @@ class FlxTextField extends FlxText
 	
 	override private function regenGraphics():Void
 	{
-		if (_regen)
+		var oldWidth:Float = cachedGraphics.bitmap.width;
+		var oldHeight:Float = cachedGraphics.bitmap.height;
+		
+		var newWidth:Float = _textField.width + _widthInc;
+		var newHeight:Float = _textField.height + _heightInc;
+		
+		if ((oldWidth != newWidth) || (oldHeight != newHeight))
 		{
 			var key:String = cachedGraphics.key;
 			FlxG.bitmap.remove(key);
 			
-			makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
+			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
 			frameHeight = Std.int(height);
 			_flashRect.x = 0;
 			_flashRect.y = 0;
-			_flashRect.width = width + _widthInc;
-			_flashRect.height = height + _heightInc;
-			_regen = false;
+			_flashRect.width = newWidth;
+			_flashRect.height = newHeight;
 		}
 		// Else just clear the old buffer before redrawing the text
 		else
@@ -230,9 +231,9 @@ class FlxTextField extends FlxText
 			if (Value != null)
 			{
 				#if !flash
-				Value._canvas.addChild(_textField);
+				Value.canvas.addChild(_textField);
 				#else
-				Value._flashSprite.addChild(_textField);
+				Value.flashSprite.addChild(_textField);
 				#end
 				
 				_addedToDisplay = true;
@@ -250,12 +251,5 @@ class FlxTextField extends FlxText
 			_camera = Value;
 		}
 		return Value;
-	}
-	
-	public var textField(get, never):TextField;
-	
-	private function get_textField():TextField 
-	{
-		return _textField;
 	}
 }

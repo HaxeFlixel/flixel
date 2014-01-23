@@ -69,7 +69,7 @@ class VarTween extends FlxTween
 	override public function update():Void
 	{
 		super.update();
-		Reflect.setProperty(_object, _property, _start + _range * _t);
+		Reflect.setProperty(_object, _property, (_start + _range * _t));
 	}
 	
 	// Tween information.
@@ -77,5 +77,4 @@ class VarTween extends FlxTween
 	private var _property:String;
 	private var _start:Float;
 	private var _range:Float;
-	private var _isInt:Bool;
 }

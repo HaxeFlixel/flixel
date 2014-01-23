@@ -3,6 +3,7 @@ package flixel.effects.particles;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxParticle;
 
 /**
  * This is a simple particle class that extends the default behavior

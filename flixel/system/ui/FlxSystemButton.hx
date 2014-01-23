@@ -53,6 +53,7 @@ class FlxSystemButton extends Sprite
 	
 	/**
 	 * Create a new FlxSystemButton
+	 * 
 	 * @param	IconPath	The path to the icon to use for the button.
 	 * @param	DownHandler	The function to be called when the button is pressed.
 	 * @param	ToggleMode	Whether this is a toggle button or not.
@@ -67,7 +68,9 @@ class FlxSystemButton extends Sprite
 			addChild(icon);
 		}
 		
-		buttonMode = true;
+		#if flash
+		tabEnabled = false;
+		#end
 		downHandler = DownHandler;
 		toggleMode = ToggleMode;
 		
@@ -78,9 +81,10 @@ class FlxSystemButton extends Sprite
 
 	/**
 	 * Change the Icon of the button
+	 * 
 	 * @param	IconPath The path to the icon to use for the button.
  	 */
-	public function changeIcon (IconPath:String):Void
+	public function changeIcon(IconPath:String):Void
 	{
 		if (icon != null)
 		{
