@@ -11,12 +11,12 @@ class FlxVersion
 	public var patch:Int;
 	public var patchVersion:String;
 	
-	public function new(Major:Int, Minor:Int, Patch:Int, PatchVersion:String) 
+	public function new(Major:Int, Minor:Int, Patch:Int, PatchVersion:String = "") 
 	{
 		major = Major;
 		minor = Minor;
 		patch = Patch;
-		patchVersion = PatchVersion;
+		patchVersion = "-" + PatchVersion;
 	}
 	
 	/**
@@ -25,6 +25,6 @@ class FlxVersion
 	 */
 	inline public function toString():String
 	{
-		return "HaxeFlixel " + major + "." + minor + "." + patch + "-" + patchVersion;
+		return "HaxeFlixel " + major + "." + minor + "." + patch + patchVersion;
 	}
 }
