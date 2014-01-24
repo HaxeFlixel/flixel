@@ -82,7 +82,7 @@ class DebuggerFrontEnd
 	 * @param	ToggleMode	Whether this is a toggle button or not.
 	 * @param	UpdateLayout	Whether to update the button layout.
 	 */
-	public function addButton(Alignment:ButtonAlignment, IconPath:String, DownHandler:Dynamic, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
+	public function addButton(Alignment:ButtonAlignment, IconPath:String, DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
 		#if !FLX_NO_DEBUG
 		return FlxG.game.debugger.addButton(Alignment, IconPath, DownHandler, ToggleMode, UpdateLayout);

@@ -343,10 +343,9 @@ private class FlxButtonEvent implements IFlxDestroyable
 	 * Creates a new <code>FlxButtonEvent</code>
 	 * 
 	 * @param	Callback		The callback function to call when this even fires.
-	 * @param	CallbackParams	The callback function parameters.
 	 * @param	sound			The sound to play when this event fires.
 	 */
-	public function new(?Callback:Dynamic, ?CallbackParams:Dynamic, ?sound:FlxSound)
+	public function new(?Callback:Void->Void, ?sound:FlxSound)
 	{
 		callback = Callback;
 		
