@@ -47,7 +47,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Used to toggle the visiblity of the mouse cursor - works on both 
 	 * the flixel and the system cursor, depending on which one is active.
 	 */
-	public var visible(default, set):Bool;
+	public var visible(default, set):Bool = #if mobile false #else true #end;
 	/**
 	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
 	 */
@@ -135,50 +135,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private var _previousNativeCursor:String;
 	static private var _matrix:Matrix = new Matrix();
 	#end
-
-	/**
-	 * Creates a new FlxMouse
-	 * 
-	 * @param   CursorContainer   The cursor container sprite passed by FlxGame
-	 */
-	@:allow(flixel.FlxG)
-	private function new(CursorContainer:Sprite)
-	{
-		super();
-		
-		cursorContainer = CursorContainer;
-		cursorContainer.mouseChildren = false;
-		cursorContainer.mouseEnabled = false;
-		
-		_point = new FlxPoint();
-		_globalScreenPosition = new FlxPoint();
-		
-		_leftButton = new FlxMouseButton(true);
-		
-		var stage = Lib.current.stage;
-		stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
-		stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
-		
-		#if (!FLX_NO_MOUSE_ADVANCED && !js)
-		_middleButton = new FlxMouseButton();
-		_rightButton = new FlxMouseButton();
-		
-		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
-		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
-		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
-		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
-		
-		stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
-		#end
-		
-		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		
-		#if mobile
-		visible = false;
-		#else
-		visible = true;
-		#end
-	}
 	
 	/**
 	 * Load a new mouse cursor graphic - if you're using native cursors on flash, 
@@ -465,11 +421,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		#end
 	}
 	
-	@:noCompletion public function onStateSwitch():Void
-	{
-		set_visible(visible);
-	}
-	
 	/**
 	 * Clean up memory. Internal use only.
 	 */
@@ -488,6 +439,54 @@ class FlxMouse extends FlxPoint implements IFlxInput
 			_cursorBitmapData.dispose();
 			_cursorBitmapData = null;
 		}
+	}
+	
+	/**
+	 * Creates a new FlxMouse
+	 * 
+	 * @param   CursorContainer   The cursor container sprite passed by FlxGame
+	 */
+	@:allow(flixel.FlxG)
+	private function new(CursorContainer:Sprite)
+	{
+		super();
+		
+		cursorContainer = CursorContainer;
+		cursorContainer.mouseChildren = false;
+		cursorContainer.mouseEnabled = false;
+		
+		_point = new FlxPoint();
+		_globalScreenPosition = new FlxPoint();
+		
+		_leftButton = new FlxMouseButton(true);
+		
+		var stage = Lib.current.stage;
+		stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
+		stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
+		
+		#if (!FLX_NO_MOUSE_ADVANCED && !js)
+		_middleButton = new FlxMouseButton();
+		_rightButton = new FlxMouseButton();
+		
+		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
+		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
+		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
+		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
+		
+		stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
+		#end
+		
+		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		
+		Mouse.hide();
+	}
+	
+	@:allow(flixel.FlxGame)
+	private function onGameStart():Void
+	{
+		// Call set_visible with the value visible has been initialized with
+		// (unless set in create() of the initial state)
+		set_visible(visible);
 	}
 	
 	/** Recording functions **/

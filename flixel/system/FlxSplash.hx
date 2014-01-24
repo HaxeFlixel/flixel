@@ -47,7 +47,6 @@ class FlxSplash extends FlxState
 		
 		_cachedAutoPause = FlxG.autoPause;
 		FlxG.autoPause = false;
-		FlxG.mouse.visible = false;
 		
 		#if !FLX_NO_KEYBOARD
 			FlxG.keys.enabled = false;
@@ -176,9 +175,6 @@ class FlxSplash extends FlxState
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(Type.createInstance(_nextState, []));
-		#if !mobile
-		// set visible without calling set_visible()
-		Reflect.setField(FlxG.mouse, "visible", true); 
-		#end
+		FlxG.game._gameJustStarted = true;
 	}
 }

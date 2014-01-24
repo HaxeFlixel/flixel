@@ -128,6 +128,12 @@ class FlxGame extends Sprite
 	#end
 	
 	/**
+	 * A flag for triggering the onGameStart "event".
+	 */
+	@:allow(flixel.system.FlxSplash)
+	private var _gameJustStarted:Bool = false;
+	
+	/**
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
 	private var _iState:Class<FlxState>;
@@ -468,10 +474,12 @@ class FlxGame extends Sprite
 	{
 		#if !FLX_NO_DEBUG
 		requestedState = cast (Type.createInstance(_iState, []));
+		_gameJustStarted = true;
 		#else
 		if (_skipSplash)
 		{
 			requestedState = cast (Type.createInstance(_iState, []));
+			_gameJustStarted = true;
 		}
 		else
 		{
@@ -502,7 +510,6 @@ class FlxGame extends Sprite
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
 		FlxG.inputs.reset();
-		FlxG.mouse.onStateSwitch();
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroySounds();
 		#end
@@ -527,9 +534,20 @@ class FlxGame extends Sprite
 		
 		state.create();
 		
+		if (_gameJustStarted)
+		{
+			gameStart();
+		}
+		
 		#if !FLX_NO_DEBUG
 		debugger.console.registerObject("state", FlxG.state);
 		#end
+	}
+	
+	private function gameStart():Void
+	{
+		FlxG.mouse.onGameStart();
+		_gameJustStarted = false;
 	}
 	
 	/**
