@@ -192,6 +192,8 @@ class VCRFrontEnd
 	 */
 	public function startRecording(StandardMode:Bool = true):Void
 	{
+		FlxRandom.updateRecordingSeed( StandardMode );
+		
 		if (StandardMode)
 		{
 			FlxG.resetGame();
@@ -201,8 +203,6 @@ class VCRFrontEnd
 			FlxG.resetState();
 		}
 		
-		FlxRandom.updateRecordingSeed( StandardMode );
-
 		FlxG.game.recordingRequested = true;
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.vcr.recording();

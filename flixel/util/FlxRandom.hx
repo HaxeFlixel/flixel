@@ -88,6 +88,7 @@ class FlxRandom
 	
 	/**
 	 * Used to store the seed for a requested recording.
+	 * If StandardMode is false, this will also reset the global seed! This ensures that the state is created in the same way as just before the recording was requested.
 	 * 
 	 * @param	StandardMode	If true, entire game will be reset, else just the current state will be reset.
 	 * @return
@@ -95,7 +96,7 @@ class FlxRandom
 	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)// Access to this function is only needed in VCRFrontEnd::startRecording()
 	inline static private function updateRecordingSeed( StandardMode:Bool = true ):Int
 	{
-		return _recordingSeed = StandardMode ? globalSeed : _stateSeed;
+		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
 	}
 	
 	/**
