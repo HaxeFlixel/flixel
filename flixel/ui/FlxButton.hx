@@ -31,9 +31,9 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 * @param	OnClick			The function to call whenever the button is clicked.
 	 * @param	OnClickParams	The params to call the onClick function with.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic, ?OnClickParams:Array<Dynamic>)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
-		super(X, Y, Label, OnClick, OnClickParams);
+		super(X, Y, Label, OnClick);
 		
 		if (Label != null)
 		{
