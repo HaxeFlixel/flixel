@@ -54,7 +54,7 @@ class PlayState extends FlxState
 	public function new() {
 		super();
 		
-		objects =  = new Array<FlxSprite>();
+		objects = new Array<FlxSprite>();
 		
 		// retrieve our assets just once
 		alienBitmapData = FlxAssets.getBitmapData("assets/alien.png");
