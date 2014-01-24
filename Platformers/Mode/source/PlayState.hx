@@ -368,7 +368,7 @@ class PlayState extends FlxState
 	private function onVictory():Void
 	{
 		// Reset the sounds for going inbetween the menu etc
-		FlxG.sound.destroySounds(true);
+		FlxG.sound.destroy(true);
 		FlxG.switchState(new VictoryState());
 	}
 	
