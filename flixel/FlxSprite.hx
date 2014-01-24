@@ -340,8 +340,8 @@ class FlxSprite extends FlxObject
 				region.tileHeight = region.height;
 		}
 		
-		width = frameWidth = Width;
-		height = frameHeight = Height;
+		width = region.tileWidth = frameWidth = Width;
+		height = region.tileHeight = frameHeight = Height;
 		
 		animation.destroyAnimations();
 		
@@ -518,8 +518,8 @@ class FlxSprite extends FlxObject
 		region = new Region();
 		region.width = Width;
 		region.height = Height;
-		width = frameWidth = cachedGraphics.bitmap.width;
-		height = frameHeight = cachedGraphics.bitmap.height;
+		width = region.tileWidth = frameWidth = cachedGraphics.bitmap.width;
+		height = region.tileHeight = frameHeight = cachedGraphics.bitmap.height;
 		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
@@ -1358,12 +1358,10 @@ class FlxSprite extends FlxObject
 		
 		region.startX = 0;
 		region.startY = 0;
-		region.tileWidth = 0;
-		region.tileHeight = 0;
+		region.tileWidth = region.width = cachedGraphics.bitmap.width;
+		region.tileHeight = region.height = cachedGraphics.bitmap.height;
 		region.spacingX = 0;
 		region.spacingY = 0;
-		region.width = cachedGraphics.bitmap.width;
-		region.height = cachedGraphics.bitmap.height;
 		
 		width = frameWidth = cachedGraphics.bitmap.width;
 		height = frameHeight = cachedGraphics.bitmap.height;
