@@ -515,6 +515,10 @@ class FlxGame extends Sprite
 		#end
 		FlxG.plugins.onStateSwitch();
 		
+		#if FLX_RECORD
+		FlxRandom.updateStateSeed();
+		#end
+		
 		#if !FLX_NO_DEBUG
 		// Clear the debugger overlay's Watch window
 		if (debugger != null)
@@ -570,7 +574,7 @@ class FlxGame extends Sprite
 		if (recordingRequested)
 		{
 			recordingRequested = false;
-			replay.create(FlxRandom.globalSeed);
+			replay.create(FlxRandom.getRecordingSeed());
 			recording = true;
 			
 			#if !FLX_NO_DEBUG

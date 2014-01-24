@@ -1,5 +1,9 @@
 package flixel.util;
 
+import flixel.FlxG;
+import flixel.FlxGame;
+import flixel.system.frontEnds.VCRFrontEnd;
+
 /**
  * A class containing a set of functions for random generation.
  */
@@ -59,6 +63,50 @@ class FlxRandom
 	static private var _green:Int = 0;
 	static private var _blue:Int = 0;
 	static private var _alpha:Int = 0;
+	
+	#if FLX_RECORD
+	/**
+	 * Internal storage for the seed used to generate the most recent state.
+	 */
+	static private var _stateSeed:Int = 1;
+	/**
+	 * The seed to be used by the recording requested in FlxGame.
+	 */
+	static private var _recordingSeed:Int = 1;
+	
+	/**
+	 * Update the seed that was used to create the most recent state.
+	 * Called by FlxGame, needed for replays.
+	 * 
+	 * @return	The new value of the state seed.
+	 */
+	@:allow(flixel.FlxGame.switchState) // Access to this function is only needed in FlxGame::switchState()
+	inline static private function updateStateSeed():Int
+	{
+		return _stateSeed = _internalSeed;
+	}
+	
+	/**
+	 * Used to store the seed for a requested recording.
+	 * 
+	 * @param	StandardMode	If true, entire game will be reset, else just the current state will be reset.
+	 * @return
+	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)// Access to this function is only needed in VCRFrontEnd::startRecording()
+	inline static private function updateRecordingSeed( StandardMode:Bool = true ):Int
+	{
+		return _recordingSeed = StandardMode ? globalSeed : _stateSeed;
+	}
+	
+	/**
+	 * Returns the seed to use for the requested recording.
+	 */
+	@:allow(flixel.FlxGame.step) // Access to this function is only needed in FlxGame.step()
+	inline static private function getRecordingSeed():Int
+	{
+		return _recordingSeed;
+	}
+	#end
 	
 	/**
 	 * Function to easily set the global seed to a new random number. Used primarily by FlxG whenever the game is reset.
