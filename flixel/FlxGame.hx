@@ -128,6 +128,12 @@ class FlxGame extends Sprite
 	#end
 	
 	/**
+	 * A flag for triggering the onGameStart "event".
+	 */
+	@:allow(flixel.system.FlxSplash)
+	private var _gameJustStarted:Bool = false;
+	
+	/**
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
 	private var _iState:Class<FlxState>;
@@ -172,6 +178,7 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Instantiate a new game object.
+	 * 
 	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
 	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
 	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
@@ -224,11 +231,11 @@ class FlxGame extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
 		_total = Lib.getTimer();
-
+		
 		#if desktop
 		FlxG.fullscreen = _startFullscreen;
 		#end
-
+		
 		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
@@ -467,10 +474,12 @@ class FlxGame extends Sprite
 	{
 		#if !FLX_NO_DEBUG
 		requestedState = cast (Type.createInstance(_iState, []));
+		_gameJustStarted = true;
 		#else
 		if (_skipSplash)
 		{
 			requestedState = cast (Type.createInstance(_iState, []));
+			_gameJustStarted = true;
 		}
 		else
 		{
@@ -514,9 +523,6 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if !FLX_NO_MOUSE
-		var mouseVisibility:Bool = FlxG.mouse.visible || ((state != null) ? state.useMouse : false);
-		#end
 		// Destroy the old state (if there is an old state)
 		if (state != null)
 		{
@@ -526,15 +532,22 @@ class FlxGame extends Sprite
 		// Finally assign and create the new state
 		state = requestedState;
 		
-		#if !FLX_NO_MOUSE
-		state.useMouse = mouseVisibility;
-		#end
-		
 		state.create();
+		
+		if (_gameJustStarted)
+		{
+			gameStart();
+		}
 		
 		#if !FLX_NO_DEBUG
 		debugger.console.registerObject("state", FlxG.state);
 		#end
+	}
+	
+	private function gameStart():Void
+	{
+		FlxG.mouse.onGameStart();
+		_gameJustStarted = false;
 	}
 	
 	/**

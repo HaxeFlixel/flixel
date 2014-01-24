@@ -170,10 +170,11 @@ class FlxSplash extends FlxState
 		FlxG.fixedTimestep = _cachedTimestep;
 		FlxG.autoPause = _cachedAutoPause;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keys.enabled = true;
+		FlxG.keys.enabled = true;
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(Type.createInstance(_nextState, []));
+		FlxG.game._gameJustStarted = true;
 	}
 }
