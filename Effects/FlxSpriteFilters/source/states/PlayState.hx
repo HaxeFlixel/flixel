@@ -1,5 +1,6 @@
 package states;
 import flixel.effects.FlxSpriteFilter;
+import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import motion.Actuate;
 import motion.easing.Linear;
@@ -68,7 +69,6 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		FlxG.camera.bgColor = 0xFF01355F;
-		FlxG.mouse.show();
 		
 		var txt:FlxText = new FlxText(0, 10, 640, " Sprite filters - click on each sprite to animate or stop animation. ", 8);
 		txt.alignment = "center";
@@ -109,7 +109,7 @@ class PlayState extends FlxState
 		// DROP SHADOW
 		spr4 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
 		add(spr4);
-		txt4 = new FlxText(spr4.x, spr4.y + 120, 100, "Drop Shadow", 10);
+		txt4 = new FlxText(spr4.x, spr4.y + 120, 100, "Drop Shadow", 10); 
 		txt4.alignment = "center";
 		add(txt4);
 		filter4 = new DropShadowFilter(10, 45, 0, .75, 10, 10, 1, 1);
@@ -117,14 +117,13 @@ class PlayState extends FlxState
 		spr4Filter = new FlxSpriteFilter(spr4, 50, 50);
 		spr4Filter.addFilter(filter4);
 		
+		#if flash
 		// BEVEL
 		spr5 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
 		add(spr5);
-		#if flash
 		filter5 = new BevelFilter(6);
 		spr5Filter = new FlxSpriteFilter(spr5, 50, 50);
 		spr5Filter.addFilter(filter5);
-		#end
 		txt5 = new FlxText(spr5.x + 25, spr5.y + 120 + 15, 100, "Bevel\n( flash only )", 10);
 		txt5.alignment = "center";
 		add(txt5);
@@ -132,17 +131,16 @@ class PlayState extends FlxState
 		// DISPLACEMENT MAP
 		spr6 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
 		add(spr6);
-		#if flash
 		filter6 = (new DisplacementMapFilter( Assets.getBitmapData("assets/StaticMap.png"), 
 						new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0 ));
 		spr6Filter = new FlxSpriteFilter(spr6, 50, 50);
 		spr6Filter.addFilter(filter6);
 		
 		updateDisplaceFilter();
-		#end
 		txt6 = new FlxText(spr6.x + 25, spr6.y + 120 + 15, 100, "Displacement\n( flash only )", 10);
 		txt6.alignment = "center";
 		add(txt6);
+		#end
 		
 		// FILTERS
 		
@@ -242,23 +240,16 @@ class PlayState extends FlxState
 	function updateDisplaceFilter()
 	{
 		#if flash
-		filter6.scaleX = Math.random() * 20 - 10; // random between -10 and 10;
-		filter6.mapPoint = new Point(0, Math.random() * 30);
+		filter6.scaleX = FlxRandom.floatRanged( -10, 10);
+		filter6.mapPoint = new Point(0, FlxRandom.floatRanged(0, 30));
 		updateFilter(spr6Filter);
 		#end
 	}
 	
 	function updateDropShadowFilter()
 	{
-		#if flash
 		filter4.angle -= 360 * FlxG.elapsed;
 		updateFilter(spr4Filter);
-		#else 
-		var angle = Reflect.getProperty(filter4, "angle");
-		angle -= Std.int(360 * FlxG.elapsed);
-		Reflect.setProperty(filter4, "angle", angle);
-		spr4.dirty = true;
-		#end
 	}
 	
 	function updateFilter(sprFilter:FlxSpriteFilter)

@@ -165,3 +165,5 @@ pip-log.txt
 # export directories
 export
 bin
+
+*.hash

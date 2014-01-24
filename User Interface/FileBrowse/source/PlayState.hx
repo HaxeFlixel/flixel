@@ -48,7 +48,6 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
-		FlxG.mouse.show();
 		
 		_img = new FlxSprite(0, 0);
 		_img.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -91,7 +90,7 @@ class PlayState extends FlxState
 		}
 		
 		// Reset to a scale of x1
-		if (FlxG.keyboard.justPressed("R", "SPACE", "ONE"))
+		if (FlxG.keys.anyPressed(["R", "SPACE", "ONE"]))
 		{
 			_updateScale(1);
 		}

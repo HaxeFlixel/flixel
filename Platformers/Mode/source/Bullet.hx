@@ -13,7 +13,7 @@ class Bullet extends FlxSprite
 	{
 		super();
 		
-		loadGraphic("assets/bullet.png", true);
+		loadGraphic(Reg.BULLET, true);
 		width = 6;
 		height = 6;
 		offset.set(1, 1);

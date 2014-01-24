@@ -13,7 +13,7 @@ class EnemyBullet extends FlxSprite
 	public function new()
 	{
 		super();
-		loadGraphic("assets/bot_bullet.png", true);
+		loadGraphic(Reg.BOT_BULLET, true);
 		animation.add("idle",[0, 1], 50);
 		animation.add("poof",[2, 3, 4], 50, false);
 		speed = 120;

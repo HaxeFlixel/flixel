@@ -36,7 +36,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.mouse.hide();
+		FlxG.mouse.visible = false;
 		
 		// Set up the TILEMAP
 		_tilemap = new FlxTilemap();
@@ -76,15 +76,15 @@ class PlayState extends FlxState
 		// Update the player
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keyboard.pressed("LEFT", "A"))
+		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
 			_player.acceleration.x -= _player.drag.x;
 		}
-		else if (FlxG.keyboard.pressed("RIGHT", "D"))
+		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
 			_player.acceleration.x += _player.drag.x;
 		}
-		if (FlxG.keyboard.justPressed("UP", "W") && _player.velocity.y == 0)
+		if (FlxG.keys.anyJustPressed(["UP", "W"]) && (_player.velocity.y == 0))
 		{
 			_player.velocity.y = -200;
 		}

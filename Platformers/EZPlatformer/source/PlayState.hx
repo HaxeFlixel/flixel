@@ -27,6 +27,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void 
 	{
+		FlxG.mouse.visible = false;
 		FlxG.cameras.bgColor = 0xffaaaaaa;
 		
 		_level = new FlxTilemap();
@@ -121,17 +122,17 @@ class PlayState extends FlxState
 	{
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keyboard.pressed("LEFT", "A"))
+		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
 			_player.acceleration.x = -_player.maxVelocity.x * 4;
 		}
 		
-		if (FlxG.keyboard.pressed("RIGHT", "D"))
+		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
 			_player.acceleration.x = _player.maxVelocity.x * 4;
 		}
 		
-		if (FlxG.keyboard.justPressed("SPACE", "UP", "W") && _player.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.anyJustPressed(["SPACE", "UP", "W"]) && _player.isTouching(FlxObject.FLOOR))
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}

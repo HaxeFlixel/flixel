@@ -1,5 +1,9 @@
 Showcases the basic widgets in [flixel-ui](https://github.com/HaxeFlixel/flixel-ui).
 
+Requires firetongue lib:
+
+haxelib git firetongue https://github.com/larsiusprime/firetongue
+
 This example project uses free and CC licensed assets:
 
 *FONTS*

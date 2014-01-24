@@ -13,6 +13,8 @@ class PlayState extends FlxState
 {
 	override public function create():Void
 	{			
+		FlxG.mouse.visible = false;
+		
 		// Background
 		FlxG.state.bgColor = 0xffacbcd7;
 		var decoration:FlxSprite = new FlxSprite(256, 159, "assets/bg.png");
@@ -82,7 +84,7 @@ class PlayState extends FlxState
 		
 		// Library label in upper left
 		var tx:FlxText;
-		tx = new FlxText(2, 0, Std.int(FlxG.width / 2), FlxG.libraryName);
+		tx = new FlxText(2, 0, Std.int(FlxG.width / 2), Std.string(FlxG.VERSION));
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
 		tx.color = 0x778ea1;
 		//tx.shadow = 0x233e58;

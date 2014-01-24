@@ -39,7 +39,7 @@ class EndState extends FlxState
 		FlxG.cameras.flash(FlxColor.BLACK, 1);
 		
 		// Show our mouse!
-		FlxG.mouse.show();
+		FlxG.mouse.visible = true;
 		
 		// Add some text to the stage as we did earlier
 		_gameTitle = new FlxText(10, 90, 300, "And so the journey begins!!");

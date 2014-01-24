@@ -45,9 +45,11 @@ class Button extends FlxButton
 		{
 			if (Value == FlxButton.HIGHLIGHT)
 			{
+				#if !mobile // "highlight" doesn't make sense on mobile
 				label.color = FlxColor.WHITE;
 				label.borderStyle = FlxText.BORDER_OUTLINE_FAST;
 				label.borderColor = FlxColor.BLACK;
+				#end
 			}
 			else 
 			{

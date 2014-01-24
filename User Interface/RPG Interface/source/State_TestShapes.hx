@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
 import flixel.addons.ui.shapes.FlxShapeArrow;
 import flixel.addons.ui.shapes.FlxShapeBox;
@@ -22,24 +23,46 @@ import flixel.addons.ui.FlxUIState;
  */
 
  /*
+=======
+package;
+
+import flixel.addons.display.shapes.FlxShapeArrow;
+import flixel.addons.display.shapes.FlxShapeBox;
+import flixel.addons.display.shapes.FlxShapeCircle;
+import flixel.addons.display.shapes.FlxShapeCross;
+import flixel.addons.display.shapes.FlxShapeDonut;
+import flixel.addons.display.shapes.FlxShapeDoubleCircle;
+import flixel.addons.display.shapes.FlxShapeGrid;
+import flixel.addons.display.shapes.FlxShapeLightning;
+import flixel.addons.display.shapes.FlxShapeLine;
+import flixel.addons.display.shapes.FlxShapeSquareDonut;
+import flixel.addons.ui.FlxUIState;
+import flixel.FlxG;
+import flixel.util.FlxPoint;
+import flixel.util.FlxSpriteUtil.FillStyle;
+import flixel.util.FlxSpriteUtil.LineStyle;
+
+/**
+ * @author Lars Doucet
+ */
+>>>>>>> 0c36408119f44c98e161b4338a7cb5b93f906a51
 class State_TestShapes extends FlxUIState
 {
-
 	override public function create() 
 	{
 		_xml_id = "state_shapes";
 		super.create();
 		
 		testGrid();
-		//testDoubleCircles();
-		//testSquareDonuts();
-		//testArrow();
-		//testCross();
-		//testLightning();
-		//testDonuts();
-		//testBoxes();
-		//testCircles();
-		//testLines();
+		/*testDoubleCircles();
+		testSquareDonuts();
+		testArrow();
+		testCross();
+		testLightning();
+		testDonuts();
+		testBoxes();
+		testCircles();
+		testLines();*/
 	}
 	
 	private function testGrid():Void {

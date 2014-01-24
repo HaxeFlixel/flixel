@@ -1,24 +1,16 @@
 package;
 
-import flash.display.Sprite;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.text.FlxText;
 import flixel.util.loaders.TexturePackerData;
-
-import flixel.addons.text.FlxBitmapFont;
 
 class MenuState extends FlxState
 {
-	var text:TypeText;
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
-		FlxG.mouse.show();
-		
-		FlxG.flashFramerate = 60;
 		
 		// TexturePackerData is a helper class to store links to atlas image and atlas data files
 		var tex1 = new TexturePackerData(	"assets/test-trim-rotation.json", 

@@ -46,19 +46,16 @@ class Balloons extends FlxNapeState
 	var wires:Array<Wire>;
 	var box:FlxNapeSprite;
 	
-	
-	
 	override public function create():Void 
 	{
 		super.create();
-		FlxG.mouse.show();
 		
 		add(new FlxSprite(0, 0, "assets/BalloonsBground.jpg"));
 		
 		// Sets gravity.
 		FlxNapeState.space.gravity.setxy(0, 500);
 		napeDebugEnabled = false;
-
+		
 		createWalls();
 		
 		createBalloons();
@@ -74,12 +71,14 @@ class Balloons extends FlxNapeState
 													 Shooter.CB_BULLET,
 													 Balloons.CB_BALLOON,
 													 onBulletColides));
-													 
+	 
 		shooter.registerPhysSprite(box);
 		
 		for (b in listBalloons)
+		{
 			shooter.registerPhysSprite(b);
-	
+		}
+		
 		var txt:FlxText;
 		txt = new FlxText( -10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
 		add(txt);

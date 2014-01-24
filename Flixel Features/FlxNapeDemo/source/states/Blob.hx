@@ -8,6 +8,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
@@ -54,16 +55,14 @@ class Blob extends FlxNapeState
 	override public function create():Void 
 	{
 		super.create();
-		FlxG.mouse.show();
 		
 		add(new FlxSprite(0, 0, "assets/BlobBground.jpg"));
 		
-		startXOffset = Math.random() * 200 * FlxRandom.sign();
-		
+		startXOffset = FlxRandom.floatRanged(-200, 200);	
 		
 		createWalls(0,-1000,0,0,10, new Material(1,1, 2,1,0.001));
 		FlxNapeState.space.gravity.setxy(0, 500);
-
+		
 		shooter = new Shooter();
 		//shooter.disableShooting = true;
 		add(shooter);														 
@@ -251,14 +250,14 @@ class Eye extends FlxGroup
 		
 		outerEye = new FlxSprite(0,0);
 		outerEye.makeGraphic(Std.int(eyeRadius * 2), Std.int(eyeRadius * 2), 0x0, true);
-		FlxSpriteUtil.drawCircle(outerEye, eyeRadius, eyeRadius, eyeRadius, 0xFFFFFF);
+		FlxSpriteUtil.drawCircle(outerEye, eyeRadius, eyeRadius, eyeRadius, FlxColor.WHITE);
 		outerEye.offset.x = outerEye.width / 2;
 		outerEye.offset.y = outerEye.height / 2;
 		add(outerEye);
 		
 		innerEye = new FlxSprite(0,0);
 		innerEye.makeGraphic(Std.int(eyeRadius * 2), Std.int(eyeRadius * 2), 0x0, true);
-		FlxSpriteUtil.drawCircle(innerEye, eyeRadius, eyeRadius, eyeRadius / 2, 0x0);
+		FlxSpriteUtil.drawCircle(innerEye, eyeRadius, eyeRadius, eyeRadius / 2, FlxColor.BLACK);
 		innerEye.offset.x = outerEye.width / 2;
 		innerEye.offset.y = outerEye.height / 2;
 		add(innerEye);
@@ -312,9 +311,8 @@ class Twinkle extends FlxNapeSprite
 			case 4: graphic = "assets/Twinkle5Y.png"; radius = 5;
 		}
 		
-		super(Math.random() * 540 + 50 , Math.random() * 280 + 200, graphic);
+		super(FlxRandom.floatRanged(50, 540), FlxRandom.floatRanged(200, 480), graphic);
 		body.allowRotation = false;
-		//radius = Math.random() * 10 + 6;
 		
 		createCircularBody(radius);
 		
@@ -340,10 +338,10 @@ class Twinkle extends FlxNapeSprite
 		
 		if (destinationTimer <= 0)
 		{
-			destinationTimer = Math.random() * 4 + .6;
+			destinationTimer = FlxRandom.floatRanged(0.6, 4.6);
 			
-			var newX = body.position.x + Math.random() * 100 * FlxRandom.sign();
-			var newY = body.position.y + Math.random() * 100 * FlxRandom.sign();
+			var newX = body.position.x + FlxRandom.floatRanged( -100, 100);
+			var newY = body.position.y + FlxRandom.floatRanged( -100, 100);
 			
 			if (newX > 640 - 50) newX = 640 - 50;
 			if (newX < 50) newX = 50;

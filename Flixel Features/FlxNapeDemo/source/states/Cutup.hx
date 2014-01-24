@@ -1,4 +1,5 @@
 package states;
+import flixel.util.FlxRandom;
 import FlxPhysicsDemo;
 import openfl.Assets;
 import openfl.display.FPS;
@@ -50,7 +51,6 @@ class Cutup extends FlxNapeState
 	override public function create():Void
 	{
 		super.create();
-		FlxG.mouse.show();
 		napeDebugEnabled = false;
 		
 		ground = FlxG.height - 100;
@@ -205,10 +205,10 @@ class Cutup extends FlxNapeState
 				pieces.add(cutPhySpr);
 				
 				// apply small random impulse
-				var pulseAgl:Float = Math.random() * Math.PI * 2;
-				var power:Float = 100 + 150 * Math.random();
+				var pulseAgl:Float = FlxRandom.float() * Math.PI * 2;
+				var power:Float = FlxRandom.floatRanged(100, 250);
 				cutPhySpr.body.applyImpulse(Vec2.weak(
-					power*Math.cos(pulseAgl), power*Math.sin(pulseAgl)
+					power * Math.cos(pulseAgl), power * Math.sin(pulseAgl)
 				));
 				cutBody.userData.flxSprite = cutPhySpr;
 			}

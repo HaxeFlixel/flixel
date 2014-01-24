@@ -1,9 +1,10 @@
 ![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/flixel-demos.png)
-=======
-###Related:   [flixel](https://github.com/HaxeFlixel/flixel) | [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
-=======
 
-A large set of demos (**currently 41!**) using the HaxeFlixel engine and demonstrating its capabilities. Almost all of them can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
+[flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
+
+##About
+
+This is a large set of demos (**currently 43!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
 ![](demoSelection.png)
 
@@ -32,6 +33,7 @@ A large set of demos (**currently 41!**) using the HaxeFlixel engine and demonst
   * Particles
   * Pathfinding
   * Replay
+  * ResolutionPolicies
   * Save
   * SplitScreen
   * TexturePackerAtlas
@@ -40,12 +42,14 @@ A large set of demos (**currently 41!**) using the HaxeFlixel engine and demonst
   * GridMovement
   * MouseEventManager
   * Multitouch *(cpp only)*
-  * Xbox-Gamepad *(cpp only)*
+  * GamepadTest *(cpp / neko only)*
 * **Other**
-  * FlxBunnyMark
   * FlxCollisions
   * FlxPongAPI
   * MinimalistTD
+* **Performance**
+  * FlxBunnyMark
+  * FlxRandom
 * **Platformers**
   * EZPlatformer
   * FlipAnimationRotationTiles
@@ -59,9 +63,6 @@ A large set of demos (**currently 41!**) using the HaxeFlixel engine and demonst
   * FlxTypeText
   * RPG Interface
   
+=
 
-=======
-
-###Current Build Status 
-
-[![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos)
+[![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel-demos/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

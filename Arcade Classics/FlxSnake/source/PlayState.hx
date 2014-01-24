@@ -39,6 +39,8 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+		
 		// Get the head piece from the body For easy later reference, and also visually change the colour a little
 		var screenMiddleX:Int = Math.floor(FlxG.width / 2);
 		var screenMiddleY:Int = Math.floor(FlxG.height / 2);
@@ -95,7 +97,7 @@ class PlayState extends FlxState
 		// Only continue if we're still alive
 		if (!_snakeHead.alive)
 		{
-			if (FlxG.keyboard.justReleased("SPACE", "R"))
+			if (FlxG.keys.anyJustReleased(["SPACE", "R"]))
 			{
 				FlxG.resetState();
 			}
@@ -112,19 +114,19 @@ class PlayState extends FlxState
 		// WASD / arrow keys to control the snake
 		// Also make sure you can't travel in the opposite direction,
 		// because that causes quick and frustrating deaths!
-		if (FlxG.keyboard.pressed("UP", "W") && _snakeHead.facing != FlxObject.DOWN)
+		if (FlxG.keys.anyPressed(["UP", "W"]) && _snakeHead.facing != FlxObject.DOWN)
 		{
 			_snakeHead.facing = FlxObject.UP;
 		}
-		else if (FlxG.keyboard.pressed("DOWN", "S") && _snakeHead.facing != FlxObject.UP)
+		else if (FlxG.keys.anyPressed(["DOWN", "S"]) && _snakeHead.facing != FlxObject.UP)
 		{
 			_snakeHead.facing = FlxObject.DOWN;
 		}
-		else if (FlxG.keyboard.pressed("LEFT", "A") && _snakeHead.facing != FlxObject.RIGHT)
+		else if (FlxG.keys.anyPressed(["LEFT", "A"]) && _snakeHead.facing != FlxObject.RIGHT)
 		{
 			_snakeHead.facing = FlxObject.LEFT;
 		}
-		else if (FlxG.keyboard.pressed("RIGHT", "D") && _snakeHead.facing != FlxObject.LEFT)
+		else if (FlxG.keys.anyPressed(["RIGHT", "D"]) && _snakeHead.facing != FlxObject.LEFT)
 		{
 			_snakeHead.facing = FlxObject.RIGHT;
 		}
@@ -178,7 +180,7 @@ class PlayState extends FlxState
 	{
 		_snakeHead.alive = false;
 		updateText("Game Over - Space to restart!");
-		FlxG.sound.play("assets/flixel.mp3");
+		FlxG.sound.play("assets/flixel.wav");
 	}
 	
 	private function addSegment():Void
@@ -199,7 +201,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		FlxTimer.start(_movementIntervall / FlxG.framerate, resetTimer);
+		FlxTimer.start(_movementIntervall / FlxG.updateFramerate, resetTimer);
 		moveSnake();
 	}
 	

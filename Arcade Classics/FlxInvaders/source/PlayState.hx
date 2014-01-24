@@ -57,6 +57,8 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+		
 		// First we will instantiate the bullets you fire at your enemies.
 		var numPlayerBullets:Int = 8;
 		// Initializing the array is very important and easy to forget!

@@ -29,11 +29,6 @@ class MenuState extends FlxState
 		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
-		// Show the mouse (in case it hasn't been disabled)
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.show();
-		#end
-		
 		var square:FlxSprite = new FlxSprite( 10, 10 );
 		square.makeGraphic( FlxG.width - 20, FlxG.height - 76, 0xff333333 );
 		

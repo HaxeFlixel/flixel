@@ -42,18 +42,18 @@ class Character extends FlxExtendedSprite {
 		if (controllable) {
 			this.acceleration.x = 0;
 			this.acceleration.y = 0;
-			if (FlxG.keyboard.anyPressed(["RIGHT", "D"])) {
+			if (FlxG.keys.anyPressed(["RIGHT", "D"])) {
 				this.acceleration.x = this.drag.x;
 				this.facing = FlxObject.RIGHT;
-			} else if (FlxG.keyboard.anyPressed(["LEFT", "A"])) {
+			} else if (FlxG.keys.anyPressed(["LEFT", "A"])) {
 				this.acceleration.x = -this.drag.x;
 				this.facing = FlxObject.LEFT;
 			}
 			
-			if (FlxG.keyboard.anyPressed(["UP", "W"])) {
+			if (FlxG.keys.anyPressed(["UP", "W"])) {
 				this.acceleration.y = -this.drag.y;
 				this.facing = FlxObject.UP;
-			} else if (FlxG.keyboard.anyPressed(["DOWN", "S"])) {
+			} else if (FlxG.keys.anyPressed(["DOWN", "S"])) {
 				this.acceleration.y = this.drag.y;
 				this.facing = FlxObject.DOWN;
 			}

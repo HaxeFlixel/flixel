@@ -30,6 +30,7 @@ class MenuState extends FlxState
 	
 	override public function create():Void 
 	{
+		FlxG.mouse.visible = false;
 		FlxG.state.bgColor = 0xFF101414;
 		
 		// Each word is its own object so we can position them independantly
@@ -72,6 +73,11 @@ class MenuState extends FlxState
 	
 	override public function update():Void 
 	{
+		if (FlxG.mouse.wheel != 0)
+		{
+			FlxG.camera.zoom += (FlxG.mouse.wheel / 10);
+		}
+		
 		// Stop the texts when they reach their designated position
 		if (_text1.x > FlxG.width / 5)	
 		{
@@ -107,7 +113,7 @@ class MenuState extends FlxState
 			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
 		}
 		
-		if (FlxG.keyboard.justPressed("SPACE", "ENTER", "C"))
+		if (FlxG.keys.anyJustPressed(["SPACE", "ENTER", "C"]))
 		{
 			switch (_option) 
 			{
@@ -115,23 +121,13 @@ class MenuState extends FlxState
 					FlxG.cameras.fade(0xff969867, 1, false, startGame);
 					FlxG.sound.play("assets/sounds/coin" + Reg.SoundExtension, 1, false);
 				case 1:
-					onURL();
+					FlxG.openURL("http://chipacabra.blogspot.com");
 				case 2:
-					onFlixel();
+					FlxG.openURL("http://flixel.org");
 			}
 		}
 		
 		super.update();
-	}
-	
-	private function onFlixel():Void 
-	{
-		FlxStringUtil.openURL("http://flixel.org");
-	}
-	
-	private function onURL():Void 
-	{
-		FlxStringUtil.openURL("http://chipacabra.blogspot.com");
 	}
 	
 	private function startGame():Void

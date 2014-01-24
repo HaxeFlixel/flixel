@@ -19,10 +19,6 @@ class ParticleState extends FlxState
 	 */
 	override public function create():Void
 	{
-		// Set a background color
-		FlxG.cameras.bgColor = FlxColor.BLACK;
-		FlxG.mouse.show();
-		
 		// Sets up the FlxTrail area on the top left of the screen with an area over the whole black part of the screen
 		var trailArea = new FlxTrailArea(0, 0, FlxG.width - 200, FlxG.height);
 		

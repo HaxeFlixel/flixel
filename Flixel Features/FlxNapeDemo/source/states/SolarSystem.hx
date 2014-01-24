@@ -16,10 +16,8 @@ import flixel.util.FlxAngle;
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
-
 class SolarSystem extends FlxNapeState
 {
-
 	private var shooter:Shooter;
 	private var planets:Array<FlxNapeSprite>;
 	private static var halfWidth:Int = Std.int(FlxG.width / 2);
@@ -30,29 +28,24 @@ class SolarSystem extends FlxNapeState
 	override public function create():Void 
 	{	
 		super.create();
-		FlxG.mouse.show();
 		
 		FlxNapeState.space.worldAngularDrag = 0;
 		FlxNapeState.space.worldLinearDrag = 0;
 		FlxNapeState.space.gravity = new Vec2(0, 0);
-
+		
 		createWalls();
 		
 		createSolarSystem();
 		
 		shooter = new Shooter();
 		add(shooter);
-											
 	}
-	
 	
 	private function createSolarSystem() 
 	{
 		planets = new Array<FlxNapeSprite>();
 		
 		var planet:FlxNapeSprite;
-		
-		
 		
 		planet = new FlxNapeSprite(halfWidth, halfHeight + 70);
 		planet.setBodyMaterial(1, 0, 0, 10, 0);

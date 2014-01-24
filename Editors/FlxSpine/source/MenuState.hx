@@ -31,14 +31,10 @@ class MenuState extends FlxState
 	{
 		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
-		// Show the mouse (in case it hasn't been disabled)
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.show();
-		#end
 		
 		super.create();
 		
-		spineSprite = cast new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "assets"), 300, 370);
+		spineSprite = cast new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "assets"), 300, 420);
 		add(spineSprite);
 		
 		FlxG.timeScale = 0.66;
@@ -52,7 +48,7 @@ class MenuState extends FlxState
 		// toggle debug display
 		#if !FLX_NO_DEBUG
 		if ( FlxG.keys.justPressed.SPACE )
-			FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
+			FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 		#end
 		
 		// movement

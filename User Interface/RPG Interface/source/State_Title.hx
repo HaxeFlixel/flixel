@@ -20,9 +20,12 @@ class State_Title extends FlxUIState
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
 		FlxG.log.redirectTraces = false; 
+<<<<<<< HEAD
 		
 		//FlxG.mouse.show();
 		
+=======
+>>>>>>> 0c36408119f44c98e161b4338a7cb5b93f906a51
 		
 		if (Main.tongue == null) {
 			Main.tongue = new FireTongueEx();

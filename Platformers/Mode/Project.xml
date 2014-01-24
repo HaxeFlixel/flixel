@@ -2,13 +2,11 @@
 <project>
 	<app title="Mode" file="Mode" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
-	<window width="640" height="480" fps="60" orientation="portrait" resizable="true" if="web" />
-	<window width="640" height="480" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" if="desktop" />
-	<window width="0" height="0" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" if="mobile" />
+	<window width="640" height="480" fps="60" background="#131C1B" orientation="portrait" resizable="true" if="web" />
+	<window width="640" height="480" fps="60" background="#131C1B" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
 	
-	<!--The flixel preloader gets stuck in Chrome, so it's disabled by default for now. 
-	Safe to use if you embed the swf into a html file!-->
-	<!--<app preloader="flixel.system.FlxPreloader" />-->
+	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file, or you can set the actual size of your file manually at "Flxpreloader-onUpdate-bytesTotal"!-->
+	<app preloader="flixel.system.FlxPreloader" />
 	
 	<!--The swf version should be at least 11.2 if you want to use the FLX_MOUSE_ADVANCED option-->
 	<set name="SWF_VERSION" value="11.2" />
@@ -16,61 +14,43 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<assets path="assets" if="mobile" >
-		<sound path="asplode.wav" id="Asplode" />
-		<sound path="button.wav" id="Button" />
-		<sound path="countdown.wav" id="Countdown" />
-		<sound path="enemy.wav" id="Enemy" />
-		<sound path="hit.wav" id="Hit" />
-		<sound path="hurt.wav" id="Hurt" />
-		<sound path="jam.wav" id="Jam" />
-		<sound path="jet.wav" id="Jet" />
-		<sound path="jump.wav" id="Jump" />
-		<sound path="land.wav" id="Land" />
-		<sound path="menu_hit.wav" id="MenuHit" />
-		<sound path="menu_hit_2.wav" id="MenuHit2" />
-		<sound path="shoot.wav" id="Shoot" />
+	<!--You can use rename="newName" to shorten the paths to the individual subdirectories!-->
+	<assets path="assets/images" rename="images" />
+	<assets path="assets/data" rename="data" />
+	
+	<assets path="assets/sounds" if="flash" >
+		<music path="asplode.mp3" id="Asplode" />
+		<music path="button.mp3" id="Button" />
+		<music path="countdown.mp3" id="Countdown" />
+		<music path="enemy.mp3" id="Enemy" />
+		<music path="hit.mp3" id="Hit" />
+		<music path="hurt.mp3" id="Hurt" />
+		<music path="jam.mp3" id="Jam" />
+		<music path="jet.mp3" id="Jet" />
+		<music path="jump.mp3" id="Jump" />
+		<music path="land.mp3" id="Land" />
+		<music path="menu_hit.mp3" id="MenuHit" />
+		<music path="menu_hit_2.mp3" id="MenuHit2" />
 		<music path="mode.mp3" id="Mode" />
+		<music path="shoot.mp3" id="Shoot" />
 	</assets>
 	
-	<assets path="assets" if="desktop" >
-		<sound path="asplode.wav" id="Asplode" />
-		<sound path="button.wav" id="Button" />
-		<sound path="countdown.wav" id="Countdown" />
-		<sound path="enemy.wav" id="Enemy" />
-		<sound path="hit.wav" id="Hit" />
-		<sound path="hurt.wav" id="Hurt" />
-		<sound path="jam.wav" id="Jam" />
-		<sound path="jet.wav" id="Jet" />
-		<sound path="jump.wav" id="Jump" />
-		<sound path="land.wav" id="Land" />
-		<sound path="menu_hit.wav" id="MenuHit" />
-		<sound path="menu_hit_2.wav" id="MenuHit2" />
-		<sound path="shoot.wav" id="Shoot" />
-		<music path="mode.wav" id="Mode" />
+	<assets path="assets/sounds" unless="flash" >
+		<music path="asplode.ogg" id="Asplode" />
+		<music path="button.ogg" id="Button" />
+		<music path="countdown.ogg" id="Countdown" />
+		<music path="enemy.ogg" id="Enemy" />
+		<music path="hit.ogg" id="Hit" />
+		<music path="hurt.ogg" id="Hurt" />
+		<music path="jam.ogg" id="Jam" />
+		<music path="jet.ogg" id="Jet" />
+		<music path="jump.ogg" id="Jump" />
+		<music path="land.ogg" id="Land" />
+		<music path="menu_hit.ogg" id="MenuHit" />
+		<music path="menu_hit_2.ogg" id="MenuHit2" />
+		<music path="mode.ogg" id="Mode" />
+		<music path="shoot.ogg" id="Shoot" />
 	</assets>
-	
-	<assets path="assets" if="flash" >
-		<sound path="asplode.mp3" id="Asplode" />
-		<sound path="button.mp3" id="Button" />
-		<sound path="countdown.mp3" id="Countdown" />
-		<sound path="enemy.mp3" id="Enemy" />
-		<sound path="hit.mp3" id="Hit" />
-		<sound path="hurt.mp3" id="Hurt" />
-		<sound path="jam.mp3" id="Jam" />
-		<sound path="jet.mp3" id="Jet" />
-		<sound path="jump.mp3" id="Jump" />
-		<sound path="land.mp3" id="Land" />
-		<sound path="menu_hit.mp3" id="MenuHit" />
-		<sound path="menu_hit_2.mp3" id="MenuHit2" />
-		<sound path="shoot.mp3" id="Shoot" />
-		<music path="mode.mp3" id="Mode" />
-	</assets>
-	
-	<assets path="assets" exclude="*.wav" if="flash" />
-	<assets path="assets" exclude="*.svg" if="html5" />
-	<assets path="assets" if="desktop" />
-	<assets path="assets" if="mobile" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
@@ -93,13 +73,14 @@
 	<!--<haxedef name="FLX_MOUSE_ADVANCED" />-->
 	
 	<!--Disable the Native cursor api for Flash target-->
-	<!-- <haxedef name="FLX_NO_NATIVE_CURSOR" /> -->
+	<haxedef name="FLX_NO_NATIVE_CURSOR" />
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-	<!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->
+	<haxedef name="FLX_NO_MOUSE" if="mobile" />
 	<!--<haxedef name="FLX_NO_KEYBOARD" if="mobile" />-->
-	<!--<haxedef name="FLX_NO_TOUCH" if="desktop" />-->
-	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
+	<haxedef name="FLX_NO_TOUCH" if="desktop" />
+	<haxedef name="OUYA" if="android" />
+	<!--<haxedef name="FLX_NO_GAMEPAD"/>-->
 	
 	<!--Disable the Flixel core sound tray-->
 	<!--<haxedef name="FLX_NO_SOUND_TRAY" />-->

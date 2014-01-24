@@ -40,9 +40,7 @@ class MenuState extends FlxState
 	{
 		// Fade in from black
 		FlxG.cameras.flash(FlxColor.BLACK, 3);
-		
-		// Show the mouse
-		FlxG.mouse.show();
+		FlxG.mouse.visible = true;
 		
 		// Add the game text and set some formatting options along with a shadow; you can also
 		// pass in your own font if you have one embedded or it uses Flixel's default one

@@ -7,10 +7,8 @@ import flixel.addons.ui.FlxUIState;
  * ...
  * @author Lars Doucet
  */
-
 class State_SaveMenu extends FlxUIState
 {
-
 	override public function create() 
 	{
 		_xml_id = "state_save";
