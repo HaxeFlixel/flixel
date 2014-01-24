@@ -1,3 +1,4 @@
+/*
 import flixel.addons.ui.shapes.FlxShapeArrow;
 import flixel.addons.ui.shapes.FlxShapeBox;
 import flixel.addons.ui.shapes.FlxShapeCircle;
@@ -15,10 +16,12 @@ import haxe.xml.Fast;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
+*/
 /**
  * @author Lars Doucet
  */
 
+ /*
 class State_TestShapes extends FlxUIState
 {
 
@@ -244,4 +247,4 @@ class State_TestShapes extends FlxUIState
 		super.update();
 	}
 	
-}
+}*/

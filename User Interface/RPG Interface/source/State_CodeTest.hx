@@ -105,7 +105,7 @@ class State_CodeTest extends FlxUIState
 		var tabs = [ { id:"tab_1", label:_tongue.get("$MENU_TAB_1", "ui") },
 					 { id:"tab_2", label:_tongue.get("$MENU_TAB_2", "ui") },
 					 { id:"tab_3", label:_tongue.get("$MENU_TAB_3", "ui") },
-					 { id:"tab_4", label:_tongue.get("$MENU_TAB_4", "ui") }];		
+					 { id:"tab_4", label:_tongue.get("$MENU_TAB_4", "ui") }];
 		
 		//Make the tab menu itself:
 		var tab_menu = new FlxUITabMenu(null, tabs, true);

@@ -1,5 +1,5 @@
 import flixel.addons.ui.FlxUI;
-import flixel.addons.ui.IEventGetter;
+import flixel.addons.ui.interfaces.IEventGetter;
 import flixel.addons.ui.U;
 import haxe.xml.Fast;
 import flash.geom.Point;
