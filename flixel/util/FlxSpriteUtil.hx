@@ -413,7 +413,7 @@ class FlxSpriteUtil
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 */
-	inline static public function beginDraw(Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
+	@:noUsing inline static public function beginDraw(Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
@@ -476,7 +476,7 @@ class FlxSpriteUtil
 	 * 
 	 * @param	lineStyle	The lineStyle typedef
 	 */
-	inline static public function setLineStyle(lineStyle:LineStyle):Void
+	@:noUsing inline static public function setLineStyle(lineStyle:LineStyle):Void
 	{
 		if (lineStyle != null)
 		{
