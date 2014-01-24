@@ -7,6 +7,7 @@ import flash.media.SoundChannel;
 import flash.media.SoundTransform;
 import flash.net.URLRequest;
 import flixel.FlxBasic;
+import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.tweens.misc.NumTween;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
@@ -608,7 +609,8 @@ class FlxSound extends FlxBasic
 		_sound.removeEventListener(Event.ID3, gotID3);
 	}
 	
-	public function onFocus():Void
+	@:allow(flixel.system.frontEnds.SoundFrontEnd)
+	private function onFocus():Void
 	{
 		if (!_alreadyPaused)
 		{
@@ -616,7 +618,8 @@ class FlxSound extends FlxBasic
 		}
 	}
 	
-	public function onFocusLost():Void
+	@:allow(flixel.system.frontEnds.SoundFrontEnd)
+	private function onFocusLost():Void
 	{
 		_alreadyPaused = _paused;
 		pause();

@@ -25,26 +25,20 @@ class FlxGamepadManager implements IFlxInput
 	public var lastActive:FlxGamepad;
 	
 	/**
+	 * A counter for the number of active Joysticks
+	 */
+	public var numActiveGamepads(get, null):Int;
+	
+	/**
+	 * While you can have each joystick use a custom dead zone, setting this will 
+	 * set every gamepad to use this deadzone.
+	 */
+	public var globalDeadZone(default, set):Float;
+	
+	/**
 	 * Storage for all connected joysticks
 	 */
 	private var _gamepads:Map<Int, FlxGamepad>;
-	
-	/**
-	 * Constructor
-	 */
-	public function new() 
-	{
-		firstActive = null;
-		lastActive = null;
-		_gamepads = new Map<Int, FlxGamepad>();
-		#if (cpp || neko)
-		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
-		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
-		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
-		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
-		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
-		#end
-	}
 	
 	/**
 	 * Get a particular Gamepad object
@@ -279,31 +273,9 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	/**
-	 * Updates the key states (for tracking just pressed, just released, etc).
+	 * Clean up memory. Internal use only.
 	 */
-	public function update():Void
-	{
-		for (gamepad in _gamepads)
-		{
-			gamepad.update();
-		}
-	}
-	
-	/**
-	 * Resets all the keys on all joys.
-	 */
-	public function reset():Void
-	{
-		for (gamepad in _gamepads)
-		{
-			gamepad.reset();
-		}
-	}
-	
-	/**
-	 * Clean up memory.
-	 */
-	public function destroy():Void
+	@:noCompletion public function destroy():Void
 	{
 		for (gamepad in _gamepads)
 		{
@@ -314,6 +286,22 @@ class FlxGamepadManager implements IFlxInput
 		lastActive = FlxG.safeDestroy(lastActive);
 		_gamepads = new Map<Int, FlxGamepad>();
 		numActiveGamepads = 0;
+	}
+	
+	@:allow(flixel.FlxG)
+	private function new() 
+	{
+		firstActive = null;
+		lastActive = null;
+		_gamepads = new Map<Int, FlxGamepad>();
+		
+		#if (cpp || neko)
+		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
+		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
+		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
+		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
+		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
+		#end
 	}
 	
 	#if (cpp || neko)
@@ -403,22 +391,34 @@ class FlxGamepadManager implements IFlxInput
 	}
 	#end
 	
-	inline public function onFocus():Void { }
-
-	inline public function onFocusLost():Void
+	/**
+	 * Updates the key states (for tracking just pressed, just released, etc).
+	 */
+	private function update():Void
 	{
-		reset();
-	}
-
-	inline public function toString():String
-	{
-		return 'FlxGamepadManager';
+		for (gamepad in _gamepads)
+		{
+			gamepad.update();
+		}
 	}
 	
 	/**
-	 * A counter for the number of active Joysticks
+	 * Resets all the keys on all joys.
 	 */
-	public var numActiveGamepads(get, null):Int;
+	private function reset():Void
+	{
+		for (gamepad in _gamepads)
+		{
+			gamepad.reset();
+		}
+	}
+	
+	inline private function onFocus():Void { }
+
+	inline private function onFocusLost():Void
+	{
+		reset();
+	}
 
 	private function get_numActiveGamepads():Int
 	{
@@ -431,12 +431,6 @@ class FlxGamepadManager implements IFlxInput
 		
 		return count;
 	}
-	
-	/**
-	 * While you can have each joystick use a custom dead zone, setting this will 
-	 * set every gamepad to use this deadzone.
-	 */
-	public var globalDeadZone(default, set):Float;
 	
 	/**
 	 * Facility function to set the deadzone on every available gamepad.

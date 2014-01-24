@@ -1,11 +1,11 @@
 package flixel.interfaces;
 
+@:allow(flixel.system.frontEnds.InputFrontEnd)
 interface IFlxInput 
 {
-	function reset():Void;
-	function update():Void;
-	function onFocus():Void;
-	function onFocusLost():Void;
-	function toString():String;
-	function destroy():Void;
+	private function reset():Void;
+	private function update():Void;
+	private function onFocus():Void;
+	private function onFocusLost():Void;
+	public function destroy():Void;
 }

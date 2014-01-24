@@ -476,7 +476,7 @@ class FlxG
 		bitmap.clearCache();
 		inputs.reset();
 		#if !FLX_NO_SOUND_SYSTEM
-		sound.destroySounds(true);
+		sound.destroy(true);
 		#end
 		timeScale = 1.0;
 		elapsed = 0;

@@ -11,11 +11,6 @@ class ConsoleFrontEnd
 	public var autoPause:Bool = true;
 	
 	/**
-	 * Just needed to create an instance.
-	 */
-	public function new() { }
-	
-	/**
 	 * Register a new function to use for the call command.
 	 * 
 	 * @param 	FunctionAlias		The name with which you want to access the function.
@@ -57,4 +52,10 @@ class ConsoleFrontEnd
 		FlxG.game.debugger.console.addCommand(Aliases, ProcessFunction, Help, ParamHelp, NumParams, ParamCutoff);
 		#end
 	}
+	
+	/**
+	 * Just needed to create an instance.
+	 */
+	@:allow(flixel.FlxG)
+	private function new() { }
 }

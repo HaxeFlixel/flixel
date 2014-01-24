@@ -6,7 +6,8 @@ import haxe.PosInfos;
 
 class LogFrontEnd
 {
-	public function new() 
+	@:allow(flixel.FlxG)
+	private function new() 
 	{ 
 		// Create functions that take a variable amount of arguments
 		add = Reflect.makeVarArgs(_add);

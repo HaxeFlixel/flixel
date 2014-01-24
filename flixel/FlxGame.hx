@@ -365,11 +365,11 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocusLost();
 	}
 	
-	public function onResize(?E:Event):Void 
+	private function onResize(?E:Event):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
-
+		
 		#if !flash
 			FlxG.bitmap.onContext();
 		#end
@@ -511,7 +511,7 @@ class FlxGame extends Sprite
 		FlxG.cameras.reset();
 		FlxG.inputs.reset();
 		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.destroySounds();
+		FlxG.sound.destroy();
 		#end
 		FlxG.plugins.onStateSwitch();
 		
@@ -634,7 +634,7 @@ class FlxGame extends Sprite
 		updateInput();
 		
 		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.updateSounds();
+		FlxG.sound.update();
 		#end
 		FlxG.plugins.update();
 		

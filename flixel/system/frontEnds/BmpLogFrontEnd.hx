@@ -8,7 +8,8 @@ class BmpLogFrontEnd
 	/**
 	 * Just needed to create an instance.
 	 */
-	public function new() { }
+	@:allow(flixel.FlxG)
+	private function new() { }
 	
 	/**
 	 * Add a variable to the bmpLog list in the debugger.

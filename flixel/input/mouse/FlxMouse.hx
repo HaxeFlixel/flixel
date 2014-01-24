@@ -23,6 +23,7 @@ import flixel.util.FlxPoint;
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
+@:allow(flixel.system.replay.FlxReplay)
 class FlxMouse extends FlxPoint implements IFlxInput
 {
 	/**
@@ -343,12 +344,32 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		return point;
 	}
 	
+	/**
+	 * Clean up memory. Internal use only.
+	 */
+	@:noCompletion override public function destroy():Void
+	{
+		cursorContainer = null;
+		_cursor = null;
+		_point = null;
+		_globalScreenPosition = null;
+		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		_matrix = null;
+		#end
+		
+		if (_cursorBitmapData != null)
+		{
+			_cursorBitmapData.dispose();
+			_cursorBitmapData = null;
+		}
+	}
+	
 	/** IFlxInput functions **/
 	
 	/**
 	 * Resets the just pressed/just released flags and sets mouse to not pressed.
 	 */
-	@:noCompletion public function reset():Void
+	private function reset():Void
 	{
 		_leftButton.reset();
 		
@@ -362,7 +383,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Called by the internal game loop to update the mouse pointer's position in the game world.
 	 * Also updates the just pressed/just released flags.
 	 */
-	@:noCompletion public function update():Void
+	private function update():Void
 	{
 		_globalScreenPosition.x = Math.floor(FlxG.game.mouseX);
 		_globalScreenPosition.y = Math.floor(FlxG.game.mouseY);
@@ -393,7 +414,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Called from the main Event.ACTIVATE that is dispatched in FlxGame
 	 */
-	@:noCompletion public function onFocus():Void
+	private function onFocus():Void
 	{
 		reset();
 		
@@ -407,7 +428,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Called from the main Event.DEACTIVATE that is dispatched in FlxGame
 	 */
-	@:noCompletion public function onFocusLost():Void
+	private function onFocusLost():Void
 	{
 		#if (!flash || FLX_NO_NATIVE_CURSOR)
 		_visibleWhenFocusLost = visible;
@@ -419,26 +440,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		Mouse.show();
 		#end
-	}
-	
-	/**
-	 * Clean up memory. Internal use only.
-	 */
-	@:noCompletion override public function destroy():Void
-	{
-		cursorContainer = null;
-		_cursor = null;
-		_point = null;
-		_globalScreenPosition = null;
-		#if (flash && !FLX_NO_NATIVE_CURSOR)
-		_matrix = null;
-		#end
-		
-		if (_cursorBitmapData != null)
-		{
-			_cursorBitmapData.dispose();
-			_cursorBitmapData = null;
-		}
 	}
 	
 	/**
@@ -487,31 +488,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		// Call set_visible with the value visible has been initialized with
 		// (unless set in create() of the initial state)
 		set_visible(visible);
-	}
-	
-	/** Recording functions **/
-	
-	@:allow(flixel.system.replay.FlxReplay)
-	private function record():MouseRecord
-	{
-		if ((_lastX == _globalScreenPosition.x) && (_lastY == _globalScreenPosition.y) 
-			&& (_leftButton.current == 0) && (_lastWheel == wheel))
-		{
-			return null;
-		}
-		_lastX = Math.floor(_globalScreenPosition.x);
-		_lastY = Math.floor(_globalScreenPosition.y);
-		_lastWheel = wheel;
-		return new MouseRecord(_lastX, _lastY, _leftButton.current, _lastWheel);
-	}
-
-	@:allow(flixel.system.replay.FlxReplay)
-	private function playback(Record:MouseRecord):Void
-	{
-		_leftButton.current = Record.button;
-		wheel = Record.wheel;
-		_globalScreenPosition.copyFrom(Record);
-		updateCursor();
 	}
 	
 	/**
@@ -662,5 +638,28 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		
 		return visible = Value;
+	}
+	
+	/** Replay functions **/
+	
+	private function record():MouseRecord
+	{
+		if ((_lastX == _globalScreenPosition.x) && (_lastY == _globalScreenPosition.y) 
+			&& (_leftButton.current == 0) && (_lastWheel == wheel))
+		{
+			return null;
+		}
+		_lastX = Math.floor(_globalScreenPosition.x);
+		_lastY = Math.floor(_globalScreenPosition.y);
+		_lastWheel = wheel;
+		return new MouseRecord(_lastX, _lastY, _leftButton.current, _lastWheel);
+	}
+	
+	private function playback(Record:MouseRecord):Void
+	{
+		_leftButton.current = Record.button;
+		wheel = Record.wheel;
+		_globalScreenPosition.copyFrom(Record);
+		updateCursor();
 	}
 }

@@ -93,73 +93,6 @@ class FlxDebugger extends Sprite
 	 * The flash Sprite used for the top bar of the debugger ui
 	 **/
 	private var _topBar:Sprite;
-	
-	/**
-	 * Instantiates the debugger overlay.
-	 * 
-	 * @param   Width    The width of the screen.
-	 * @param   Height   The height of the screen.
-	 */
-	public function new(Width:Float, Height:Float)
-	{
-		super();
-		visible = false;
-		_layout = STANDARD;
-		_screen = new Point();
-		
-		_topBar = new Sprite();
-		_topBar.graphics.beginFill(0x000000, 0xAA / 255);
-		_topBar.graphics.drawRect(0, 0, FlxG.stage.stageWidth, TOP_HEIGHT);
-		_topBar.graphics.endFill();
-		addChild(_topBar);
-		
-		var txt = new TextField();
-		txt.height = 20;
-		txt.selectable = false;
-		txt.y = -9;
-		txt.multiline = false;
-		txt.embedFonts = true;
-		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
-		txt.defaultTextFormat = format;
-		txt.autoSize = TextFieldAutoSize.LEFT;
-		txt.text = Std.string(FlxG.VERSION);
-		
-		_leftButtons = new Array<FlxSystemButton>();
-		_rightButtons = new Array<FlxSystemButton>();
-		_middleButtons = new Array<FlxSystemButton>();
-		
-		addChild(log = new Log());
-		addChild(watch = new Watch());
-		addChild(console = new Console());
-		addChild(stats = new Stats());
-		
-		stats.visible = true;
-		
-		#if FLX_BMP_DEBUG
-		bmpLog = new BmpLog("bmplog", 0, 0, true);
-		addChild(bmpLog);
-		#end
-		
-		vcr = new VCR(this);
-		
-		addButton(LEFT, FlxAssets.IMG_FLIXEL, openHomepage);
-		addButton(LEFT, null, openHomepage).addChild(txt);
-		
-		addButton(RIGHT, FlxAssets.IMG_LOG_DEBUG, log.toggleVisibility, true).toggled = !log.visible; 
-		addButton(RIGHT, FlxAssets.IMG_WATCH_DEBUG, watch.toggleVisibility, true).toggled = !watch.visible; 
-		addButton(RIGHT, FlxAssets.IMG_CONSOLE, console.toggleVisibility, true).toggled = !console.visible; 
-		addButton(RIGHT, FlxAssets.IMG_STATS_DEBUG, stats.toggleVisibility, true).toggled = !stats.visible; 
-		addButton(RIGHT, FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, true).toggled = !FlxG.debugger.drawDebug;
-		
-		#if FLX_RECORD
-		addButton(MIDDLE).addChild(vcr.runtimeDisplay);
-		#end
-		
-		onResize(Width, Height);
-		
-		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-	}
 
 	/**
 	 * Clean up memory.
@@ -222,36 +155,6 @@ class FlxDebugger extends Sprite
 		
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-	}
-	
-	/**
-	 * Mouse handler that helps with fake "mouse focus" type behavior.
-	 * 
-	 * @param   E   Flash mouse event.
-	 */
-	inline private function onMouseOver(?E:MouseEvent):Void
-	{
-		hasMouse = true;
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = true;
-		#end
-	}
-	
-	/**
-	 * Mouse handler that helps with fake "mouse focus" type behavior.
-	 * 
-	 * @param   E   Flash mouse event.
-	 */
-	inline private function onMouseOut(?E:MouseEvent):Void
-	{
-		hasMouse = false;
-		
-		#if !FLX_NO_MOUSE
-		if (!FlxG.vcr.paused)
-		{
-			FlxG.mouse.useSystemCursor = false;
-		}
-		#end
 	}
 	
 	/**
@@ -435,6 +338,104 @@ class FlxDebugger extends Sprite
 		{
 			resetButtonLayout();
 		}
+	}
+	
+	/**
+	 * Instantiates the debugger overlay.
+	 * 
+	 * @param   Width    The width of the screen.
+	 * @param   Height   The height of the screen.
+	 */
+	@:allow(flixel.FlxGame)
+	private function new(Width:Float, Height:Float)
+	{
+		super();
+		visible = false;
+		_layout = STANDARD;
+		_screen = new Point();
+		
+		_topBar = new Sprite();
+		_topBar.graphics.beginFill(0x000000, 0xAA / 255);
+		_topBar.graphics.drawRect(0, 0, FlxG.stage.stageWidth, TOP_HEIGHT);
+		_topBar.graphics.endFill();
+		addChild(_topBar);
+		
+		var txt = new TextField();
+		txt.height = 20;
+		txt.selectable = false;
+		txt.y = -9;
+		txt.multiline = false;
+		txt.embedFonts = true;
+		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
+		txt.defaultTextFormat = format;
+		txt.autoSize = TextFieldAutoSize.LEFT;
+		txt.text = Std.string(FlxG.VERSION);
+		
+		_leftButtons = new Array<FlxSystemButton>();
+		_rightButtons = new Array<FlxSystemButton>();
+		_middleButtons = new Array<FlxSystemButton>();
+		
+		addChild(log = new Log());
+		addChild(watch = new Watch());
+		addChild(console = new Console());
+		addChild(stats = new Stats());
+		
+		stats.visible = true;
+		
+		#if FLX_BMP_DEBUG
+		bmpLog = new BmpLog("bmplog", 0, 0, true);
+		addChild(bmpLog);
+		#end
+		
+		vcr = new VCR(this);
+		
+		addButton(LEFT, FlxAssets.IMG_FLIXEL, openHomepage);
+		addButton(LEFT, null, openHomepage).addChild(txt);
+		
+		addButton(RIGHT, FlxAssets.IMG_LOG_DEBUG, log.toggleVisibility, true).toggled = !log.visible; 
+		addButton(RIGHT, FlxAssets.IMG_WATCH_DEBUG, watch.toggleVisibility, true).toggled = !watch.visible; 
+		addButton(RIGHT, FlxAssets.IMG_CONSOLE, console.toggleVisibility, true).toggled = !console.visible; 
+		addButton(RIGHT, FlxAssets.IMG_STATS_DEBUG, stats.toggleVisibility, true).toggled = !stats.visible; 
+		addButton(RIGHT, FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, true).toggled = !FlxG.debugger.drawDebug;
+		
+		#if FLX_RECORD
+		addButton(MIDDLE).addChild(vcr.runtimeDisplay);
+		#end
+		
+		onResize(Width, Height);
+		
+		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+	}
+	
+	/**
+	 * Mouse handler that helps with fake "mouse focus" type behavior.
+	 * 
+	 * @param   E   Flash mouse event.
+	 */
+	inline private function onMouseOver(?E:MouseEvent):Void
+	{
+		hasMouse = true;
+		#if !FLX_NO_MOUSE
+		FlxG.mouse.useSystemCursor = true;
+		#end
+	}
+	
+	/**
+	 * Mouse handler that helps with fake "mouse focus" type behavior.
+	 * 
+	 * @param   E   Flash mouse event.
+	 */
+	inline private function onMouseOut(?E:MouseEvent):Void
+	{
+		hasMouse = false;
+		
+		#if !FLX_NO_MOUSE
+		if (!FlxG.vcr.paused)
+		{
+			FlxG.mouse.useSystemCursor = false;
+		}
+		#end
 	}
 	
 	private function removeButtonFromArray(Arr:Array<FlxSystemButton>, Button:FlxSystemButton):Void
