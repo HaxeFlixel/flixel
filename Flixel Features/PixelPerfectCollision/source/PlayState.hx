@@ -23,7 +23,7 @@ class PlayState extends FlxState
 	var nObjects:Int = 10;
 	
 	// array holding the player and the aliens
-	var objects:Array<FlxSprite> = new Array<FlxSprite>();
+	var objects:Array<FlxSprite>;
 	
 	// the player ship
 	var player:FlxSprite;
@@ -53,6 +53,8 @@ class PlayState extends FlxState
 	
 	public function new() {
 		super();
+		
+		objects =  = new Array<FlxSprite>();
 		
 		// retrieve our assets just once
 		alienBitmapData = FlxAssets.getBitmapData("assets/alien.png");
