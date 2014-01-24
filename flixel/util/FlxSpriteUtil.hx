@@ -123,22 +123,22 @@ class FlxSpriteUtil
 	 */
 	@:generic static public function screenWrap<T:FlxObject>(object:T, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):T
 	{
-		if (Left && object.x < 0)
+		if (Left && object.x < -object.width)
 		{
 			object.x = FlxG.width;
 		}
 		else if (Right && object.x > FlxG.width)
 		{
-			object.x = 0;
+			object.x = -object.width;
 		}
 		
-		if (Top && object.y < 0)
+		if (Top && object.y < -object.height)
 		{
 			object.y = FlxG.height;
 		}
 		else if (Bottom && object.y > FlxG.height)
 		{
-			object.y = 0;
+			object.y = -object.height;
 		}
 		return object;
 	}
