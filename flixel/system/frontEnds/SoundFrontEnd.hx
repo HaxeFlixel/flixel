@@ -253,6 +253,28 @@ class SoundFrontEnd
 		}
 	}
 	
+	/**
+	 * Called by FlxGame on state changes to stop and destroy sounds.
+	 * 
+	 * @param	ForceDestroy		Kill sounds even if they're flagged <code>survive</code>.
+	 */
+	public function destroy(ForceDestroy:Bool = false):Void
+	{
+		if (music != null && (ForceDestroy || !music.survive))
+		{
+			music.destroy();
+			music = null;
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null && (ForceDestroy || !sound.survive))
+			{
+				sound.destroy();
+			}
+		}
+	}
+	
 	private function new() 
 	{
 		#if !FLX_NO_KEYBOARD
@@ -290,29 +312,7 @@ class SoundFrontEnd
 		}
 		return Volume;
 	}
-
-	/**
-	 * Called by FlxGame on state changes to stop and destroy sounds.
-	 * 
-	 * @param	ForceDestroy		Kill sounds even if they're flagged <code>survive</code>.
-	 */
-	private function destroy(ForceDestroy:Bool = false):Void
-	{
-		if (music != null && (ForceDestroy || !music.survive))
-		{
-			music.destroy();
-			music = null;
-		}
-		
-		for (sound in list.members)
-		{
-			if (sound != null && (ForceDestroy || !sound.survive))
-			{
-				sound.destroy();
-			}
-		}
-	}
-		
+	
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
