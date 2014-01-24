@@ -546,7 +546,9 @@ class FlxGame extends Sprite
 	
 	private function gameStart():Void
 	{
+		#if !FLX_NO_MOUSE
 		FlxG.mouse.onGameStart();
+		#end
 		_gameJustStarted = false;
 	}
 	
