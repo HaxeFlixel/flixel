@@ -185,11 +185,10 @@ class FlxSprite extends FlxObject
 		
 		facing = FlxObject.RIGHT;
 		
-		if (SimpleGraphic == null)
+		if (SimpleGraphic != null)
 		{
-			SimpleGraphic = FlxAssets.IMG_DEFAULT;
+			loadGraphic(SimpleGraphic);
 		}
-		loadGraphic(SimpleGraphic);
 	}
 	
 	override private function initVars():Void 
@@ -1220,6 +1219,8 @@ class FlxSprite extends FlxObject
 	 */
 	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
+		if (cachedGraphics == null)	loadGraphic(FlxAssets.IMG_DEFAULT);
+		
 		#if !(flash || js)
 		if (!RunOnCpp)
 		{
