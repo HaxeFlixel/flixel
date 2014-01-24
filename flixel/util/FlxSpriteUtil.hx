@@ -121,11 +121,7 @@ class FlxSpriteUtil
 	 * @param	Bottom		Whether to activate screen wrapping on the bottom of the screen
 	 * @return 	The <code>FlxObject</code> for chaining
 	 */
-<<<<<<< HEAD
 	@:generic static public function screenWrap<T:FlxObject>(object:T, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):T
-=======
-	static public function screenWrap( object:FlxObject, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):T
->>>>>>> parent of 0c76b21... remove ALL generics
 	{
 		if (Left && object.x < -object.width)
 		{
