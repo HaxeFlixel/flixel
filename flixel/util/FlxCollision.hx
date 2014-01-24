@@ -1,7 +1,6 @@
 package flixel.util;
 
 import flash.display.BitmapData;
-import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -34,16 +33,14 @@ class FlxCollision
 	static private var boundsB:Rectangle = new Rectangle();
 	
 	/**
-	 * A Pixel Perfect Collision check between two FlxSprites.
-	 * It will do a bounds check first, and if that passes it will run a pixel perfect match on the intersecting area.
-	 * Works with rotated and animated sprites.
-	 * May be slow, so use it sparingly.
+	 * A Pixel Perfect Collision check between two FlxSprites. It will do a bounds check first, and if that passes it will run a 
+	 * pixel perfect match on the intersecting area. Works with rotated and animated sprites. May be slow, so use it sparingly.
 	 * 
 	 * @param	Contact			The first FlxSprite to test against
 	 * @param	Target			The second FlxSprite to test again, sprite order is irrelevant
 	 * @param	AlphaTolerance	The tolerance value above which alpha pixels are included. Default to 255 (must be fully opaque for collision).
 	 * @param	Camera			If the collision is taking place in a camera other than FlxG.camera (the default/current) then pass it here
-	 * @return	Boolean True if the sprites collide, false if not
+	 * @return	Boolean 		Whether the sprites collide
 	 */
 	static public function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
 	{
@@ -154,7 +151,7 @@ class FlxCollision
 		boundsB.y = Std.int(-matrixB.ty);
 		boundsB.width = overlapWidth;
 		boundsB.height = overlapHeight;
-
+		
 		var pixelsA = testA.getPixels(boundsA);
 		var pixelsB = testB.getPixels(boundsB);
 		
