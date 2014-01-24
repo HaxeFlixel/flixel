@@ -30,6 +30,7 @@ class MenuState extends FlxState
 	
 	override public function create():Void 
 	{
+		FlxG.mouse.visible = false;
 		FlxG.state.bgColor = 0xFF101414;
 		
 		// Each word is its own object so we can position them independantly

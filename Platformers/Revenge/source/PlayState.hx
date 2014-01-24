@@ -51,7 +51,7 @@ class PlayState extends FlxState
 	{
 		// FlxG handles input from many devices and also can control the appearence of the mouse cursor. 
 		// Here we are hiding it since we don't want it visible while we move the character around
-		FlxG.mouse.hide();
+		FlxG.mouse.visible = false;
 		
 		// Fade in from black :P
 		FlxG.cameras.flash(FlxColor.BLACK);

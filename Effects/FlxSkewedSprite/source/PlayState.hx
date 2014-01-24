@@ -12,7 +12,9 @@ class PlayState extends FlxState
 {
 	override public function create():Void 
 	{
-		// Make it look like the sky
+		FlxG.mouse.visible = false;
+		
+		// Sky-colored background
 		FlxG.cameras.bgColor = FlxColor.CYAN;
 		
 		var grassY:Int = FlxG.height - 28;

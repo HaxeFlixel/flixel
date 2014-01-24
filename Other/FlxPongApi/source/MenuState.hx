@@ -65,7 +65,8 @@ class MenuState extends FlxState
 		
 		var mouseData:BitmapData = new BitmapData( 20, 30, true, 0 );
 		mouseData.draw( mouseSprite );
-		FlxG.mouse.show( mouseData );
+		FlxG.mouse.load( mouseData );
+		FlxG.mouse.visible = true;
 		#end
 		
 		// The background emitter, connection info, version, and blurb are always present.

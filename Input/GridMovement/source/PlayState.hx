@@ -16,8 +16,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		// Set the background color
-		bgColor = 0xff000000;
+		FlxG.mouse.visible = false;
 		
 		// Load the level's tilemaps
 		_level = new TiledLevel("assets/data/map.tmx");

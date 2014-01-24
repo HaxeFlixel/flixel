@@ -30,6 +30,8 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+		
 		#if !flash
 		FlxG.log.error("FlxBloom is only supported on Flash target for now.");
 		#else

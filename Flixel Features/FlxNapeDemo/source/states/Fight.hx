@@ -36,7 +36,6 @@ class Fight extends FlxNapeState
 	override public function create():Void 
 	{
 		super.create();
-		FlxG.mouse.show();
 		
 		createWalls(0,-300,FlxG.width, FlxG.height - 30);
 		FlxNapeState.space.gravity.setxy(0, 400);

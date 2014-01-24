@@ -114,10 +114,6 @@ class PlayState extends FlxState
 		add(_fpsCounter);
 		
 		_times = [];
-		
-		#if !mobile
-		FlxG.mouse.show();
-		#end
 	}
 	
 	override public function update():Void

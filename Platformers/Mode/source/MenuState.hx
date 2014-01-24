@@ -90,7 +90,8 @@ class MenuState extends FlxState
 		_attractMode = false;
 		
 		#if !FLX_NO_MOUSE
-		FlxG.mouse.show( Reg.CURSOR, 2 );
+		FlxG.mouse.load( Reg.CURSOR, 2 );
+		FlxG.mouse.visible = true;
 		#end
 		
 		super.create();

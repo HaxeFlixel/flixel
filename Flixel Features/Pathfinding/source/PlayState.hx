@@ -82,9 +82,6 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.cameras.bgColor = FlxColor.BLACK;
-		FlxG.mouse.show();
-		
 		// Load _datamap to _map and add to PlayState
 		_map = new FlxTilemap();
 		_map.loadMap(Assets.getText("assets/pathfinding_map.txt"), "assets/tiles.png", TILE_WIDTH, TILE_HEIGHT, 0, 1);

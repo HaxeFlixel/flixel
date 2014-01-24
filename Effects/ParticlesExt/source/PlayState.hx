@@ -17,9 +17,6 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{			
-		FlxG.cameras.bgColor = FlxColor.BLACK;
-		FlxG.mouse.show();
-		
 		// Add info box
 		_infobox = new FlxGroup();
 		_infobox.add(new FlxText(0, 0, 300, "[G] to toggle gravity"));

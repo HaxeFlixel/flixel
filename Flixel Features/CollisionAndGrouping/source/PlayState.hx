@@ -137,7 +137,6 @@ class PlayState extends FlxState
 		add(_groupCollision);
 		
 		FlxG.cameras.flash();
-		FlxG.mouse.useSystemCursor = true;
 	}
 	
 	override public function update():Void

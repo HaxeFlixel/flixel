@@ -30,7 +30,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void 
 	{
-		FlxG.mouse.hide();
+		FlxG.mouse.visible = false;
 		
 		// Create a starfield
 		FlxG.plugins.add(new FlxSpecialFX());

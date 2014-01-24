@@ -11,7 +11,6 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
-		FlxG.mouse.show();
 		
 		// TexturePackerData is a helper class to store links to atlas image and atlas data files
 		var tex1 = new TexturePackerData(	"assets/test-trim-rotation.json", 

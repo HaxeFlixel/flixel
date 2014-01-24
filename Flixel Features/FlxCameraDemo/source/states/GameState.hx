@@ -51,13 +51,7 @@ class GameState extends FlxNapeState
 		LEVEL_MIN_Y = -Lib.current.stage.stageHeight / 2;
 		LEVEL_MAX_Y = Lib.current.stage.stageHeight * 1.5;
 		
-		
-		
 		super.create();
-		
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.show();
-		#end
 		
 		#if TRUE_ZOOM_OUT
 		FlxG.width = 640; // For 1/2 zoom out

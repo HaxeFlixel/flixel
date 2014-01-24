@@ -51,7 +51,6 @@ class Cutup extends FlxNapeState
 	override public function create():Void
 	{
 		super.create();
-		FlxG.mouse.show();
 		napeDebugEnabled = false;
 		
 		ground = FlxG.height - 100;

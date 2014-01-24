@@ -35,9 +35,6 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		// Let's re show the cursors
-		FlxG.mouse.show();
-		
 		// So here's the core of this demo - the FlxSave you have to instantiate a new one before you can use it
 		_gameSave = new FlxSave();
 		// And then you have to bind it to the save data, you can use different bind strings in different parts of your game
