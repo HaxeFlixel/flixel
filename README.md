@@ -1,17 +1,14 @@
 ﻿![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/HaxeFlixel.png)
-=
-###Related:    [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-demos](https://github.com/HaxeFlixel/flixel-demos) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
-______________________________________________________
 
-[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
-###Getting Started
+##Getting Started
 
 You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
 
 It is recomended to use Haxeflixel via [haxelib](http://lib.haxe.org/p/flixel). Just run `haxelib install flixel` once you have it installed.
 
-###Changes for HaxeFlixel 3.0
+##Changes for HaxeFlixel 3.0
 
 This is the third big update to HaxeFlixel. Here are the biggest changes:
 - New [Front End](https://github.com/HaxeFlixel/flixel/tree/master/flixel/system/frontEnds) classes to better encapsulate FlxG functionality.
@@ -20,32 +17,30 @@ This is the third big update to HaxeFlixel. Here are the biggest changes:
 - Moved lots of stuff into [utility classes](https://github.com/HaxeFlixel/flixel/tree/master/flixel/util) to reduce clutter in core classes.
 - Continued optimizations for cpp targets.
 
-###Upgrading from previous versions
-
 You can find [upgrade instructions here](http://haxeflixel.com/documentation/upgrade-guide/).
 
-If you wish to contribute to our documentation, you can edit the [upgrade docs on github](https://github.com/HaxeFlixel/haxeflixel.com/blob/cfaf4c1b74dbb34b39333ad67a8e0ce9b7fdc203/src/documents/documentation/01_community/11-upgrade-guide.html.md).
+If you wish to contribute to our documentation, you can edit the [upgrade docs on GitHub](https://github.com/HaxeFlixel/haxeflixel.com/blob/cfaf4c1b74dbb34b39333ad67a8e0ce9b7fdc203/src/documents/documentation/01_community/11-upgrade-guide.html.md).
 
-###For Developers
+##For Developers
 
-Make sure you're using latest version of [Haxe, haxelib and OpenFl](http://haxeflixel.com/comment/2584#comment-2584). You should also read the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
+Make sure you're using latest version of [Haxe, haxelib and OpenFL](http://haxeflixel.com/comment/2584#comment-2584). You should also read the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
 
 Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel dev`.
 
 We recommended that you use a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
 
-______________________________________________________
-###Links
+##Links
 
 In case you're looking for resources, help, or just want to interact with the community:
 
 - [HaxeFlixel.com](http://www.haxeflixel.com/)
-- [Forums](http://www.haxeflixel.com/forum)
-- [Documentation](http://www.haxeflixel.com/documentation)
+  - [Forums](http://www.haxeflixel.com/forum)
+  - [Documentation](http://www.haxeflixel.com/documentation)
+  - [API](http://api.haxeflixel.com/)
 - [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
 - [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
 
-______________________________________________________
+##About
 
 HaxeFlixel was created by Alexander Hohlov, also known as [Beeblerox](https://github.com/beeblerox) who continues to be the project lead. The codebase started largely from a Haxe port of the [AS3 version of Flixel](https://github.com/AdamAtomic/flixel) written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) and [Richard Davey's](http://www.photonstorm.com/flixel-power-tools) [Power Tools](https://github.com/photonstorm/Flixel-Power-Tools)
 
@@ -65,7 +60,7 @@ HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
 - A vibrant community that keeps updating the engine and adding new features to it
 
 
-###Runtime Targets
+##Runtime Targets
 The current possible targets are:
 
 <table>
@@ -98,9 +93,7 @@ The current possible targets are:
 
 There's also experimental support for HTML5.
 
-______________________________________________________
-
-###Basic Features
+##Basic Features
 
 - Display thousands of moving objects
 - Basic collisions between objects
@@ -115,3 +108,7 @@ ______________________________________________________
 - Camera system for split screen
 - Pathfinding and following
 - Easy object recycling
+
+=
+
+[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
