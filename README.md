@@ -1,10 +1,10 @@
 ![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/flixel-demos.png)
-=======
-###Related:   [flixel](https://github.com/HaxeFlixel/flixel) | [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
-___________________________________
-[![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel-demos/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
-A large set of demos (**currently 43!**) using the HaxeFlixel engine and demonstrating its capabilities. Almost all of them can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
+[flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
+
+##Contents
+
+This is a large set of demos (**currently 43!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
 ![](demoSelection.png)
 
@@ -62,3 +62,7 @@ A large set of demos (**currently 43!**) using the HaxeFlixel engine and demonst
   * FileBrowse
   * FlxTypeText
   * RPG Interface
+  
+=
+
+[![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel-demos/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
