@@ -18,7 +18,7 @@ class FlxAssets
 	inline static public var IMG_FLIXEL:String = "flixel/img/debugger/flixel.png";
 	
 	// debugger/buttons
-	inline static public var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/visualDebug.png";
+	inline static public var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/drawDebug.png";
 	inline static public var IMG_WATCH_DEBUG:String = "flixel/img/debugger/buttons/watchDebug.png";
 	inline static public var IMG_STATS_DEBUG:String = "flixel/img/debugger/buttons/statsDebug.png";
 	inline static public var IMG_LOG_DEBUG:String = "flixel/img/debugger/buttons/logDebug.png";

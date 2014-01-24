@@ -4,11 +4,6 @@ import flixel.FlxObject;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
-typedef Movable = {
-	public var immovable(default, set):Bool;
-	public function setPosition(X:Float, Y:Float):Void;
-}
-
 /**
  * Base class for motion Tweens.
  */
@@ -23,7 +18,7 @@ class Motion extends FlxTween
 	 */
 	public var y:Float = 0;
 	
-	private var _object:Movable;
+	private var _object:FlxObject;
 	
 	/**
 	 * Constructor.
@@ -43,7 +38,7 @@ class Motion extends FlxTween
 		_object = null;
 	}
 	
-	public function setObject(object:Movable):Dynamic
+	public function setObject(object:FlxObject):Motion
 	{
 		_object = object;
 		_object.immovable = true;

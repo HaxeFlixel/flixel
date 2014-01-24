@@ -86,11 +86,31 @@ class FlxArrayUtil
 	}
 	
 	/**
+	 * Safely removes an element from an array by swapping it with the last element and calling pop<code>()</code>
+	 * (won't do anything if the array is not part of the array). This is a lot faster than regular <code>splice()</code>, 
+	 * but it can only be used on arrays where order doesn't matter.
+	 * 
+	 * @param	array	The array to remove the element from
+	 * @param 	element	The element to remove from the array
+	 * @return	The array
+	 */
+	@:generic static public function fastSplice<T>(array:Array<T>, element:T):Array<T>
+	{
+		var index = indexOf(array, element);
+		if (index >= 0)
+		{
+			array[index] = array[array.length - 1]; // swap element to remove and last element
+			array.pop();
+		}
+		return array;
+	}
+	
+	/**
 	 * Split a comma-separated string into an array of ints
+	 * 
 	 * @param	data string formatted like this: "1,2,5,-10,120,27"
 	 * @return	an array of ints
 	 */
-	
 	static public function intFromString(data:String):Array<Int>
 	{
 		if (data != null && data != "") 
@@ -107,6 +127,7 @@ class FlxArrayUtil
 	
 	/**
 	 * Split a comma-separated string into an array of floats
+	 * 
 	 * @param	data string formatted like this: "1.0,2.1,5.6,1245587.9,-0.00354"
 	 * @return
 	 */	

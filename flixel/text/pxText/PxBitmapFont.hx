@@ -517,7 +517,7 @@ class PxBitmapFont
 	 * @param	PxOffsetY		Y position of thext output.
 	 */
 	#if flash 
-	public function render(PxBitmapData:BitmapData, PxFontData:Array<BitmapData>, PxText:String, PxColor:UInt, PxOffsetX:Int, PxOffsetY:Int, PxLetterSpacing:Int):Void 
+	public function render(PxBitmapData:BitmapData, PxFontData:Array<BitmapData>, PxText:String, PxColor:Int, PxOffsetX:Int, PxOffsetY:Int, PxLetterSpacing:Int):Void 
 	#else
 	public function render(DrawData:Array<Float>, PxText:String, PxColor:Int, PxSecondColor:Int, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
 	#end

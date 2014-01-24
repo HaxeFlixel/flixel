@@ -542,11 +542,6 @@ class FlxCamera extends FlxBasic
 	 */
 	override public function update():Void
 	{
-		if (FlxG.paused)
-		{
-			return;
-		}
-		
 		//Either follow the object closely, 
 		//or doublecheck our deadzone and update accordingly.
 		if (target != null)
@@ -627,7 +622,7 @@ class FlxCamera extends FlxBasic
 				} else 
 				{
 					scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-					scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);	
+					scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
 				}
 				
 			}

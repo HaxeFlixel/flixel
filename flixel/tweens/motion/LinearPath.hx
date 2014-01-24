@@ -94,7 +94,7 @@ class LinearPath extends Motion
 	}
 
 	/** @private Starts the Tween. */
-	override public function start():Dynamic
+	override public function start():LinearPath
 	{
 		if (!_backward)
 		{

@@ -6,7 +6,7 @@ import flash.geom.Rectangle;
 
 class FlxBitmapUtil
 {
-	public static function merge(sourceBitmapData:BitmapData, sourceRect:Rectangle, destBitmapData:BitmapData, destPoint:Point, redMultiplier:UInt, greenMultiplier:UInt, blueMultiplier:UInt, alphaMultiplier:UInt):Void
+	public static function merge(sourceBitmapData:BitmapData, sourceRect:Rectangle, destBitmapData:BitmapData, destPoint:Point, redMultiplier:Int, greenMultiplier:Int, blueMultiplier:Int, alphaMultiplier:Int):Void
 	{
 		#if flash
 		destBitmapData.merge(sourceBitmapData, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
@@ -143,7 +143,7 @@ class FlxBitmapUtil
 		#end
 	}
 	
-	inline static private function mergeColorComponent(source:Int, dest:Int, multiplier:UInt):Int
+	inline static private function mergeColorComponent(source:Int, dest:Int, multiplier:Int):Int
 	{
 		return Std.int(((source * multiplier) + (dest * (256 - multiplier))) / 256);
 	}
@@ -172,7 +172,7 @@ class FlxBitmapUtil
 			var result:BitmapData = new BitmapData(width, height, true, 0x0);
 			var identical:Bool = true;
 			
-			var pixel1:UInt, pixel2:UInt;
+			var pixel1:Int, pixel2:Int;
 			var rgb1:Int, rgb2:Int;
 			var r1:Int, g1:Int, b1:Int;
 			var r2:Int, g2:Int, b2:Int;

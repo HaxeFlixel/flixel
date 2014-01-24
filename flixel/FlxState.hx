@@ -13,14 +13,14 @@ class FlxState extends FlxGroup
 	* if this is set to true, the game state would continue to update in the background. By default this is false, so background states will be "paused" when they are not active.
 	* @default false
 	*/
-	public var persistentUpdate:Bool;
+	public var persistentUpdate:Bool = false;
 
 	/**
 	* Determines whether or not this state is updated even when it is not the active state. For example, if you have your game state first, and then you push a menu state on top of it, if this is set to true, the game state would continue to be drawn behind the pause state.
 	* By default this is true, so background states will continue to be drawn behind the current state. If background states are not visible when you have a different state on top, you should set this to false for improved performance.
 	* @default true
 	*/
-	public var persistentDraw:Bool;
+	public var persistentDraw:Bool = true;
 
 	private var _subState:FlxSubState;
 	/**
@@ -33,11 +33,20 @@ class FlxState extends FlxGroup
 	{
 		return _subState;
 	}
+	/**
+	 * If a state change was requested, the new state object is stored here until we switch to it.
+	 */
+	public var requestedSubState:FlxSubState = null;
 
 	/**
-	 * Background color of this state
+	 * Whether to reset the substate (when it changes, or when it's closed).
 	 */
-	private var _bgColor:Int;
+	public var requestSubStateReset:Bool = false;
+
+	/**
+	 * If substates get destroyed when they are closed, setting this to false might reduce state creation time, at greater memory cost.
+	 */
+	public var destroySubStates:Bool = true;
 	
 	public var bgColor(get, set):Int;
 
@@ -49,47 +58,6 @@ class FlxState extends FlxGroup
 	private function set_bgColor(Value:Int):Int
 	{
 		return FlxG.cameras.bgColor = Value;
-	}
-
-	private var _useMouse:Bool = false;
-
-	/**
-	 * Whether to show mouse pointer or not
-	 */
-	public var useMouse(get, set):Bool;
-	
-	inline private function get_useMouse():Bool { return _useMouse; }
-	
-	inline private function set_useMouse(Value:Bool):Bool
-	{
-		_useMouse = Value;
-		updateMouseVisibility();
-		return Value;
-	}
-	private function updateMouseVisibility():Void
-	{
-		#if !FLX_NO_MOUSE
-			#if mobile
-				FlxG.mouse.hide();
-			#else
-				if (_useMouse) { FlxG.mouse.show(); }
-				else { FlxG.mouse.hide(); }
-			#end
-		#end
-	}
-
-	/**
-	 * State constructor
-	 */
-	public function new()
-	{
-		super();
-
-		persistentUpdate = false;
-		persistentDraw = true;
-		#if !FLX_NO_MOUSE
-			useMouse = FlxG.mouse.visible;
-		#end
 	}
 
 	/**
@@ -133,7 +101,12 @@ class FlxState extends FlxGroup
 			update();
 		}
 		
-		if (_subState != null)
+		if (requestSubStateReset)
+		{
+			resetSubState();
+			requestSubStateReset = false;
+		}
+		else if(_subState != null)
 		{
 			_subState.tryUpdate();
 		}
@@ -142,37 +115,44 @@ class FlxState extends FlxGroup
 	/**
 	 * Manually close the sub-state
 	 */
-	inline public function closeSubState(Destroy:Bool = true):Void
+	inline public function setSubState(subState:FlxSubState):Void
 	{
-		setSubState(null, null, Destroy);
+		requestedSubState = subState;
+		requestSubStateReset = true;
+	}
+	/**
+	 * Manually close the sub-state
+	 */
+	inline public function closeSubState():Void
+	{
+		setSubState(null);
 	}
 
 	/**
-	 * Set substate for this state
-	 * @param	RequestedState		The FlxSubState to add
-	 * @param	CloseCallback		Close callback function, which will be called after closing requestedState
-	 * @param	DestroyPrevious		Whether to destroy previuos substate (if there is one) or not
+	 * Load substate for this state
 	 */
-	public function setSubState(RequestedState:FlxSubState, ?CloseCallback:Void->Void, DestroyPrevious:Bool = true):Void
+	public function resetSubState():Void
 	{
-		if (_subState == RequestedState)	return;
-		
-		//Destroy the old state (if there is an old state)
+		// Close the old state (if there is an old state)
 		if(_subState != null)
 		{
-			_subState.close(DestroyPrevious);
+			if (_subState.closeCallback != null)
+			{
+				_subState.closeCallback();
+			}
+			if (destroySubStates)
+			{
+				_subState.destroy();
+			}
 		}
 		
-		//Finally assign and create the new state (or set it to null)
-		_subState = RequestedState;
+		// Assign the requested state (or set it to null)
+		_subState = requestedSubState;
 		
 		if (_subState != null)
 		{
-			//WARNING: What if the state has already been created?
 			// I'm just copying the code from "FlxGame::switchState" which doesn't check for already craeted states. :/
 			_subState._parentState = this;
-			
-			_subState.closeCallback = CloseCallback;
 			
 			//Reset the input so things like "justPressed" won't interfere
 			if (!persistentUpdate)
@@ -183,38 +163,18 @@ class FlxState extends FlxGroup
 			if (!_subState.initialized)
 			{
 				_subState.initialize();
-				_subState.create();
+ 				_subState.create();
 			}
 		}
-	}
-
-	/**
-	 * Helper method for closing substate
-	 * @param	Destroy		Whether to destroy current substate (by default) or leave it as is, so closed substate can be reused many times
-	 */
-	private function subStateCloseHandler(Destroy:Bool = true):Void
-	{
-		if (_subState.closeCallback != null)
-		{
-			_subState.closeCallback();
-		}
-		
-		if (Destroy)
-		{
-			_subState.destroy();
-		}
-		_subState = null;
-		
-		updateMouseVisibility();
 	}
 
 	override public function destroy():Void
 	{
 		if (_subState != null)
 		{
-			closeSubState();
+			_subState.destroy();
+			_subState = null;
 		}
-		
 		super.destroy();
 	}
 

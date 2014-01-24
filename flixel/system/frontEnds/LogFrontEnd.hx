@@ -6,7 +6,8 @@ import haxe.PosInfos;
 
 class LogFrontEnd
 {
-	public function new() 
+	@:allow(flixel.FlxG)
+	private function new() 
 	{ 
 		// Create functions that take a variable amount of arguments
 		add = Reflect.makeVarArgs(_add);
@@ -128,7 +129,7 @@ class LogFrontEnd
 	
 	/**
 	 * Whether everything you <code>trace()</code> is being redirected into the log window.
-	 * True by default.
+	 * True by default, except on android.
 	 */
 	public var redirectTraces(default, set):Bool = false;
 	/**

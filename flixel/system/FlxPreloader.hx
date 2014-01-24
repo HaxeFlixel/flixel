@@ -29,7 +29,8 @@ class FlxPreloader extends NMEPreloader
 	}
 }
 #else
-@:font("assets/fonts/nokiafc22.ttf") class PreloaderFont extends Font { }
+
+@:font("assets/fonts/nokiafc22.ttf") class PreloaderFont extends Font {}
 
 @:bitmap("assets/images/preloader/light.png") class LogoLight extends BitmapData {}
 @:bitmap("assets/images/preloader/corners.png") class LogoCorners extends BitmapData {}
@@ -42,21 +43,9 @@ class FlxPreloader extends NMEPreloader
 	private static var BlendModeScreen = BlendMode.SCREEN;
 	private static var BlendModeOverlay = BlendMode.OVERLAY;
 
-	/**
-	 * @private
-	 */
 	private var _init:Bool;
-	/**
-	 * @private
-	 */
 	private var _buffer:Sprite;
-	/**
-	 * @private
-	 */
 	private var _bmpBar:Bitmap;
-	/**
-	 * @private
-	 */
 	private var _text:TextField;
 	/**
 	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
@@ -66,22 +55,9 @@ class FlxPreloader extends NMEPreloader
 	 * Useful for storing "real" stage height if you're scaling your preloader graphics.
 	 */
 	private var _height:Int;
-	/**
-	 * @private
-	 */
 	private var _logo:Sprite;
-	/**
-	 * @private
-	 */
 	private var _logoGlow:Sprite;
-	/**
-	 * @private
-	 */
 	private var _min:Int;
-	
-	/**
-	 * @private
-	 */
 	private var _percent:Float;
 
 	/**
@@ -91,10 +67,6 @@ class FlxPreloader extends NMEPreloader
 	 * allowedURLs = ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
 	 */
 	public var allowedURLs:Array<String>;
-	
-	/**
-	 * @private
-	 */
 	private var _urlChecked:Bool;
 	
 	/**
@@ -283,7 +255,7 @@ class FlxPreloader extends NMEPreloader
 	
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
 	{
-		#if !desktop
+		#if !(desktop || mobile)
 		//in case there is a problem with reading the bytesTotal (like on Chrome, or a Gzipped swf)
 		if (root.loaderInfo.bytesTotal == 0) 
 		{
@@ -433,7 +405,7 @@ class FlxPreloader extends NMEPreloader
 	private function update(Percent:Float):Void
 	{
 		_bmpBar.scaleX = Percent * (_width - 8);
-		_text.text = "FLX v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION + " " + Std.int(Percent * 100) + "%";
+		_text.text = "FLX v" + Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		if(Percent < 0.1)
 		{
 			_logoGlow.alpha = 0;

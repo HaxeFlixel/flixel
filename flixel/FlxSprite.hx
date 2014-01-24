@@ -100,7 +100,7 @@ class FlxSprite extends FlxObject
 	 * Set this flag to true to force the sprite to update during the draw() call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
-	public var dirty:Bool;
+	public var dirty:Bool = true;
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 * @default null
@@ -185,11 +185,10 @@ class FlxSprite extends FlxObject
 		
 		facing = FlxObject.RIGHT;
 		
-		if (SimpleGraphic == null)
+		if (SimpleGraphic != null)
 		{
-			SimpleGraphic = FlxAssets.IMG_DEFAULT;
+			loadGraphic(SimpleGraphic);
 		}
-		loadGraphic(SimpleGraphic);
 	}
 	
 	override private function initVars():Void 
@@ -340,8 +339,8 @@ class FlxSprite extends FlxObject
 				region.tileHeight = region.height;
 		}
 		
-		width = frameWidth = Width;
-		height = frameHeight = Height;
+		width = region.tileWidth = frameWidth = Width;
+		height = region.tileHeight = frameHeight = Height;
 		
 		animation.destroyAnimations();
 		
@@ -518,8 +517,8 @@ class FlxSprite extends FlxObject
 		region = new Region();
 		region.width = Width;
 		region.height = Height;
-		width = frameWidth = cachedGraphics.bitmap.width;
-		height = frameHeight = cachedGraphics.bitmap.height;
+		width = region.tileWidth = frameWidth = cachedGraphics.bitmap.width;
+		height = region.tileHeight = frameHeight = cachedGraphics.bitmap.height;
 		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
@@ -730,6 +729,9 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		if (alpha == 0)	
+			return;
+		
 		if (dirty)	//rarely 
 		{
 			calcFrame();
@@ -1212,38 +1214,37 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Internal function to update the current animation frame.
+	 * 
+	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	#if flash
-	private function calcFrame():Void
-	#else
-	private function calcFrame(AreYouSure:Bool = false):Void
-	#end
+	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
-	#if !flash
-		// TODO: Maybe remove 'AreYouSure' parameter
-		if (AreYouSure)
+		if (cachedGraphics == null)	loadGraphic(FlxAssets.IMG_DEFAULT);
+		
+		#if !(flash || js)
+		if (!RunOnCpp)
 		{
-	#end
-			if (frame != null)
-			{
-				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-				{
-					if (framePixels != null)
-						framePixels.dispose();
-					
-					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-				}
-				
-				framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
-			}
-			
-			if (useColorTransform) 
-			{
-				framePixels.colorTransform(_flashRect, _colorTransform);
-			}
-	#if !flash
+			return;
 		}
-	#end
+		#end
+		
+		if (frame != null)
+		{
+			if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
+			{
+				if (framePixels != null)
+					framePixels.dispose();
+					
+				framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
+			}
+				
+			framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
+		}
+			
+		if (useColorTransform) 
+		{
+			framePixels.colorTransform(_flashRect, _colorTransform);
+		}
 		
 		dirty = false;
 	}
@@ -1295,6 +1296,21 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
+	 * 
+	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined. Otherwise a new one is created.
+	 * @return	A <code>FlxPoint</code> object containing the midpoint of this sprite's graphic in world coordinates.
+	 */
+	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
+	{
+		if (point == null)
+		{
+			point = new FlxPoint();
+		}
+		return point.set(x + frameWidth * 0.5, y + frameHeight * 0.5);
+	}
+	
+	/**
 	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
 	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
 	 */
@@ -1343,12 +1359,10 @@ class FlxSprite extends FlxObject
 		
 		region.startX = 0;
 		region.startY = 0;
-		region.tileWidth = 0;
-		region.tileHeight = 0;
+		region.tileWidth = region.width = cachedGraphics.bitmap.width;
+		region.tileHeight = region.height = cachedGraphics.bitmap.height;
 		region.spacingX = 0;
 		region.spacingY = 0;
-		region.width = cachedGraphics.bitmap.width;
-		region.height = cachedGraphics.bitmap.height;
 		
 		width = frameWidth = cachedGraphics.bitmap.width;
 		height = frameHeight = cachedGraphics.bitmap.height;

@@ -5,11 +5,6 @@ import flixel.FlxG;
 class WatchFrontEnd
 {
 	/**
-	 * Just needed to create an instance.
-	 */
-	public function new() { }
-	
-	/**
 	 * Add a variable to the watch list in the debugger.
 	 * This lets you see the value of the variable all the time.
 	 * 
@@ -85,4 +80,10 @@ class WatchFrontEnd
 		remove(FlxG, "mouse");
 		#end
 	}
+	
+	/**
+	 * Just needed to create an instance.
+	 */
+	@:allow(flixel.FlxG)
+	public function new() { }
 }

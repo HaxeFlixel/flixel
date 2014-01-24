@@ -30,7 +30,6 @@ class FlxSplash extends FlxState
 	private var _cachedTimestep:Bool;
 	private var _cachedAutoPause:Bool;
 	
-	
 	public function new(NextState:Class<FlxState>)
 	{
 		_nextState = NextState;
@@ -50,7 +49,7 @@ class FlxSplash extends FlxState
 		FlxG.autoPause = false;
 		
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = false;
+			FlxG.keys.enabled = false;
 		#end
 		
 		_times = [0.041, 0.184, 0.334, 0.495, 0.636];
@@ -96,8 +95,9 @@ class FlxSplash extends FlxState
 		
 		if (_curPart == 5)
 		{
-			FlxTween.multiVar(_sprite, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut, complete: onComplete } );
-			FlxTween.multiVar(_text, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut } );
+			// Make the logo a tad bit longer, so our users fully appreciate our hard work :D
+			FlxTween.multiVar(_sprite, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut, complete: onComplete } );
+			FlxTween.multiVar(_text, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut } );
 		}
 	}
 	
@@ -170,10 +170,11 @@ class FlxSplash extends FlxState
 		FlxG.fixedTimestep = _cachedTimestep;
 		FlxG.autoPause = _cachedAutoPause;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = true;
+		FlxG.keys.enabled = true;
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(Type.createInstance(_nextState, []));
+		FlxG.game._gameJustStarted = true;
 	}
 }

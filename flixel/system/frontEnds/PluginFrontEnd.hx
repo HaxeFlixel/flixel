@@ -9,6 +9,7 @@ import flixel.util.FlxPath;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 
+@:allow(flixel.FlxGame)
 class PluginFrontEnd
 {
 	/**
@@ -17,25 +18,12 @@ class PluginFrontEnd
 	public var list(default, null):Array<FlxPlugin>;
 	
 	/**
-	 * Sets up two plugins: <code>DebugPathDisplay</code> 
-	 * in debugging mode and <code>TimerManager</code>
-	 */
-	public function new() 
-	{
-		list = new Array<FlxPlugin>();
-		
-		add(FlxTimer.manager = new TimerManager());
-		add(FlxTween.manager = new TweenManager());
-		add(FlxPath.manager = new PathManager());
-	}
-	
-	/**
 	 * Adds a new plugin to the global plugin array.
 	 * 
 	 * @param	Plugin	Any object that extends FlxPlugin. Useful for managers and other things. See flixel.plugin for some examples!
 	 * @return	The same <code>FlxPlugin</code>-based plugin you passed in.
 	 */
-	public function add(Plugin:FlxPlugin):FlxPlugin
+	@:generic public function add<T:FlxPlugin>(Plugin:T):T
 	{
 		// Don't add repeats
 		for (plugin in list)
@@ -120,9 +108,23 @@ class PluginFrontEnd
 	}
 	
 	/**
+	 * Sets up two plugins: <code>DebugPathDisplay</code> 
+	 * in debugging mode and <code>TimerManager</code>
+	 */
+	@:allow(flixel.FlxG)
+	private function new() 
+	{
+		list = new Array<FlxPlugin>();
+		
+		add(FlxTimer.manager = new TimerManager());
+		add(FlxTween.manager = new TweenManager());
+		add(FlxPath.manager = new PathManager());
+	}
+	
+	/**
 	 * Used by the game object to call <code>update()</code> on all the plugins.
 	 */
-	inline public function update():Void
+	inline private function update():Void
 	{
 		for (plugin in list)
 		{
@@ -136,7 +138,7 @@ class PluginFrontEnd
 	/**
 	 * Used by the game object to call <code>draw()</code> on all the plugins.
 	 */
-	inline public function draw():Void
+	inline private function draw():Void
 	{
 		for (plugin in list)
 		{
@@ -150,7 +152,7 @@ class PluginFrontEnd
 	/**
 	 * Used by the game object to call <code>onStateSwitch()</code> on all the plugins.
 	 */
-	inline public function onStateSwitch():Void
+	inline private function onStateSwitch():Void
 	{
 		for (plugin in list)
 		{
@@ -166,7 +168,7 @@ class PluginFrontEnd
 	 * @param 	Width	The new window width
 	 * @param 	Height	The new window Height
 	 */
-	inline public function onResize(Width:Int, Height:Int):Void
+	inline private function onResize(Width:Int, Height:Int):Void
 	{
 		for (plugin in list)
 		{
@@ -181,7 +183,7 @@ class PluginFrontEnd
 	/**
 	 * You shouldn't need to call this. Used to draw the debug graphics for any installed plugins.
 	 */
-	inline public function drawDebug():Void
+	inline private function drawDebug():Void
 	{
 		for (plugin in list)
 		{

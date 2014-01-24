@@ -7,7 +7,8 @@ import flash.media.SoundChannel;
 import flash.media.SoundTransform;
 import flash.net.URLRequest;
 import flixel.FlxBasic;
-import flixel.tweens.misc.NumTween;
+import flixel.system.frontEnds.SoundFrontEnd;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import openfl.Assets;
@@ -109,14 +110,6 @@ class FlxSound extends FlxBasic
 	 */
 	private var _pan:Bool;
 	/**
-	 * Internal helper for fading sounds.
-	 */
-	private var _fade:NumTween;
-	/**
-	 * Internal flag for what to do when the sound is done fading out.
-	 */
-	private var _onFadeComplete:Void->Void;
-	/**
 	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
 	 */
 	private var _alreadyPaused:Bool = false;
@@ -148,9 +141,6 @@ class FlxSound extends FlxBasic
 		_target = null;
 		_radius = 0;
 		_pan = false;
-		if (_fade != null)	_fade.destroy();
-		_fade = null;
-		_onFadeComplete = null;
 		visible = false;
 		amplitude = 0;
 		amplitudeLeft = 0;
@@ -230,22 +220,6 @@ class FlxSound extends FlxBasic
 					d = 1;
 				}
 				_transform.pan = d;
-			}
-		}
-		
-		//Cross-fading volume control
-		if (_fade != null)
-		{
-			_fade.update();
-			fadeMultiplier = _fade.value;
-
-			if (_fade.percent >= 1.0)
-			{
-				_fade.destroy();
-				if (_onFadeComplete != null) 
-				{ 
-					_onFadeComplete();
-				}
 			}
 		}
 		
@@ -333,7 +307,7 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Call this function if you want this sound's volume to change
-	 * based on distance from a particular FlxCore object.
+	 * based on distance from a particular FlxObject.
 	 * 
 	 * @param	X		The X position of the sound.
 	 * @param	Y		The Y position of the sound.
@@ -411,50 +385,33 @@ class FlxSound extends FlxBasic
 	/**
 	 * Call this function to stop this sound.
 	 */
-	public function stop():Void
+	inline public function stop():Void
 	{
 		cleanup(autoDestroy, true, true);
 	}
 	
 	/**
-	 * Call this function to make this sound fade out over a certain time interval.
-	 * @param	Seconds			The amount of time the fade out operation should take.
-	 * @param	PauseInstead	Tells the sound to pause on fadeout, instead of stopping.
+	 * Helper function that calls <code>FlxTween.singleVar()</code> on this sound's <code>volume</code>.
+	 * 
+	 * @param	Duration	The amount of time the fade-out operation should take.
+	 * @param	To			The volume to tween to, 0 by default.
 	 */
-	public function fadeOut(Seconds:Float, PauseInstead:Bool = false):Void
+	inline public function fadeOut(Duration:Float, ?To:Float = 0):Void
 	{
-		if (!playing)
-		{
-			return;
-		}
-		
-		var fadeStartVolume:Float = ((_fade != null) ? _fade.value : 1);
-		_fade = new NumTween();
-		_fade.tween(fadeStartVolume, 0, Seconds);
-		_fade.start();
-		_onFadeComplete = (PauseInstead ? pause : stop);
+		FlxTween.singleVar(this, "volume", To, Duration);
 	}
 	
 	/**
-	 * Call this function to make a sound fade in over a certain
-	 * time interval (calls <code>play()</code> automatically).
-	 * @param	Seconds		The amount of time the fade-in operation should take.
+	 * Helper function that calls <code>FlxTween.singleVar()</code> on this sound's <code>volume</code>.
+	 * 
+	 * @param	Duration	The amount of time the fade-in operation should take.
+	 * @param	From		The volume to tween from, 0 by default.
+	 * @param	To			The volume to tween to, 1 by default.
 	 */
-	public function fadeIn(Seconds:Float):Void
+	inline public function fadeIn(Duration:Float, From:Float = 0, To:Float = 1):Void
 	{
-		if (playing && (_fade == null))
-		{
-			return;
-		}
-		
-		var fadeStartVolume:Float = ((_fade != null) ? _fade.value : 0);
-		_fade = new NumTween();
-		_fade.tween(fadeStartVolume, 1, Seconds);
-		_fade.start();
-		_onFadeComplete = null;
-	
-		play();
-		update();	// need to update sound volume immediately
+		volume = From;
+		FlxTween.singleVar(this, "volume", To, Duration);
 	}
 	
 	/**
@@ -587,13 +544,6 @@ class FlxSound extends FlxBasic
 			_position = 0;
 			_paused = false;
 		}
-
-		if (resetFading)
-		{
-			if (_fade != null)	_fade.destroy();
-			_fade = null;
-			_onFadeComplete = null;
-		}
 	}
 	
 	/**
@@ -608,7 +558,8 @@ class FlxSound extends FlxBasic
 		_sound.removeEventListener(Event.ID3, gotID3);
 	}
 	
-	public function onFocus():Void
+	@:allow(flixel.system.frontEnds.SoundFrontEnd)
+	private function onFocus():Void
 	{
 		if (!_alreadyPaused)
 		{
@@ -616,7 +567,8 @@ class FlxSound extends FlxBasic
 		}
 	}
 	
-	public function onFocusLost():Void
+	@:allow(flixel.system.frontEnds.SoundFrontEnd)
+	private function onFocusLost():Void
 	{
 		_alreadyPaused = _paused;
 		pause();

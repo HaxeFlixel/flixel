@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
+import flixel.interfaces.IFlxParticle;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 

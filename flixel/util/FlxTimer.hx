@@ -18,7 +18,7 @@ class FlxTimer
 	 */
 	public var time:Float = 0;
 	/**
-	 * How many loops the timer was set for.
+	 * How many loops the timer was set for. 0 means "looping forever".
 	 */
 	public var loops:Int = 0;
 	/**
@@ -82,7 +82,7 @@ class FlxTimer
 	 * 
 	 * @param	Time		How many seconds it takes for the timer to go off.
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
-	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
+	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
  	 */
 	static public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
@@ -96,7 +96,7 @@ class FlxTimer
 	 * 
 	 * @param	Time		How many seconds it takes for the timer to go off.
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
-	 * @param	Loops		How many times the timer should go off.  Default is 1, or "just count down once."
+	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
 	 * @return	A reference to itself (handy for chaining or whatever).
 	 */
 	public function run(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):Void
@@ -167,7 +167,7 @@ class FlxTimer
 				_callback(this);
 			}
 			
-			if (loops > 0 && _loopsCounter >= loops)
+			if (loops > 0 && (_loopsCounter >= loops))
 			{
 				abort();
 			}

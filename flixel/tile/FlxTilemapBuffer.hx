@@ -91,7 +91,7 @@ class FlxTilemapBuffer
 	 * @param	Color	What color to fill with, in 0xAARRGGBB hex format.
 	 */
 	#if flash
-	public function fill(Color:UInt = 0):Void
+	public function fill(Color:Int = 0):Void
 	{
 		_pixels.fillRect(_flashRect, Color);
 	}

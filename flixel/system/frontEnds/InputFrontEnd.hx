@@ -1,8 +1,13 @@
 package flixel.system.frontEnds;
 
-import flixel.system.input.IFlxInput;
+import flixel.FlxG;
+import flixel.interfaces.IFlxInput;
 import flixel.util.FlxStringUtil;
 
+@:allow(flixel.FlxGame)
+@:allow(flixel.FlxG)
+@:allow(flixel.system.replay.FlxReplay)
+@:allow(flixel.system.frontEnds.VCRFrontEnd)
 class InputFrontEnd
 {
 	/**
@@ -10,18 +15,13 @@ class InputFrontEnd
 	 */
 	public var list(default, null):Array<IFlxInput>;
 	
-	public function new()
-	{
-		list = new Array<IFlxInput>();
-	}
-	
 	/**
 	 * Add an input to the system
 	 * 
 	 * @param	Input 	The input to add
 	 * @return	The input
 	 */
-	public function add(Input:IFlxInput):IFlxInput
+	@:generic public function add<T:IFlxInput>(Input:T):T
 	{
 		// Don't add repeats
 		for (input in list)
@@ -36,10 +36,16 @@ class InputFrontEnd
 		return Input;
 	}
 	
+	private function new()
+	{
+		list = new Array<IFlxInput>();
+	}
+	
 	/**
 	 * Resets the inputs.
 	 */
-	inline public function reset():Void
+	@:allow(flixel.FlxState.resetSubState)
+	inline private function reset():Void
 	{
 		for (input in list)
 		{
@@ -50,7 +56,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs
 	 */
-	inline public function update():Void
+	inline private function update():Void
 	{
 		for (input in list)
 		{
@@ -61,7 +67,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs from FlxGame Focus
 	 */
-	inline public function onFocus():Void 
+	inline private function onFocus():Void 
 	{
 		for (input in list)
 		{
@@ -72,7 +78,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs from FlxGame FocusLost
 	 */	
-	inline public function onFocusLost():Void
+	inline private function onFocusLost():Void
 	{
 		for (input in list)
 		{
@@ -83,7 +89,7 @@ class InputFrontEnd
 	/**
 	 * Clean up memory.
 	 */
-	inline public function destroy():Void
+	inline private function destroy():Void
 	{
 		for (input in list)
 		{

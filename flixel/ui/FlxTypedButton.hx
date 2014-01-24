@@ -2,9 +2,10 @@ package flixel.ui;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.system.FlxSound;
-import flixel.system.input.touch.FlxTouch;
+import flixel.input.touch.FlxTouch;
 import flixel.util.FlxPoint;
 
 /**
@@ -86,10 +87,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	
 	private function set_status(Value:Int):Int
 	{
-		if(labelAlphas != null){
-			if (((labelAlphas.length - 1) >= Value) && (label != null)) {
-				label.alpha = labelAlphas[Value];
-			}
+		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
+			label.alpha = labelAlphas[Value];
 		}
 		return status = Value;
 	}
@@ -152,9 +151,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			}
 		#end
 		
-		if(framesData != null){		//null check in case button was destroyed this frame
-			frame = framesData.frames[nextFrame];
-		}
+		frame = framesData.frames[nextFrame];
 	}
 	
 	/**
@@ -246,10 +243,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			onUpHandler();
 		}
+#if !FLX_NO_MOUSE
 		else if ((_pressedMouse) && (FlxG.mouse.justReleased))
 		{
 			onUpHandler();
 		}
+#end
 	}
 	
 	/**
@@ -282,47 +281,51 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	
 	/**
 	 * Internal function that handles the onUp event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onUpHandler():Void
 	{
-		onUp.fire();
-		_pressedTouch = null;
-		_pressedMouse = false;
 		status = FlxButton.NORMAL;
+		_pressedMouse = false;
+		_pressedTouch = null;
+		onUp.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onDown event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onDownHandler():Void
 	{
-		onDown.fire();
 		status = FlxButton.PRESSED;
+		onDown.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onOver event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onOverHandler():Void
 	{
-		onOver.fire();
 		status = FlxButton.HIGHLIGHT;
+		onOver.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onOut event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onOutHandler():Void
 	{
-		onOut.fire();
 		status = FlxButton.NORMAL;
+		onOut.fire();
 	}
 }
 
 /** 
  * Helper function for <code>FlxButton</code> which handles its events.
  */ 
-private class FlxButtonEvent implements IDestroyable
+private class FlxButtonEvent implements IFlxDestroyable
 {
 	/**
 	 * The callback function to call when this even fires.

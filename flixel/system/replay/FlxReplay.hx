@@ -124,17 +124,6 @@ class FlxReplay
 	}
 	
 	/**
-	 * Common initialization terms used by both <code>create()</code> and <code>load()</code> to set up the replay object.
-	 */
-	private function init():Void
-	{
-		_capacity = 100;
-		_frames = new Array<FrameRecord>(/*_capacity*/);
-		FlxArrayUtil.setLength(_frames, _capacity);
-		frameCount = 0;
-	}
-	
-	/**
 	 * Save the current recording data off to a <code>String</code> object.
 	 * Basically goes through and calls <code>FrameRecord.save()</code> on each frame in the replay.
 	 * return	The gameplay recording in simple ASCII format.
@@ -162,7 +151,7 @@ class FlxReplay
 		var continueFrame = true;
 		
 		#if !FLX_NO_KEYBOARD
-		var keysRecord:Array<CodeValuePair> = FlxG.keyboard.record();
+		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
 		if (keysRecord == null) continueFrame = false;
 		#end
 		
@@ -216,7 +205,7 @@ class FlxReplay
 		#if !FLX_NO_KEYBOARD
 		if (fr.keys != null)
 		{
-			FlxG.keyboard.playback(fr.keys);
+			FlxG.keys.playback(fr.keys);
 		}
 		#end
 		
@@ -236,5 +225,16 @@ class FlxReplay
 		_marker = 0;
 		frame = 0;
 		finished = false;
+	}
+	
+	/**
+	 * Common initialization terms used by both <code>create()</code> and <code>load()</code> to set up the replay object.
+	 */
+	private function init():Void
+	{
+		_capacity = 100;
+		_frames = new Array<FrameRecord>(/*_capacity*/);
+		FlxArrayUtil.setLength(_frames, _capacity);
+		frameCount = 0;
 	}
 }

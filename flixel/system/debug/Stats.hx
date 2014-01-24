@@ -4,6 +4,7 @@ import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
 import flixel.FlxG;
+import flixel.system.FlxAssets;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
 import flixel.util.FlxColor;
@@ -93,18 +94,11 @@ class Stats extends Window
 	
 	/**
 	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.
-	 * This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * 
-	 * @param 	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param 	Width		The initial width of the window.
-	 * @param 	Height		The initial height of the window.
-	 * @param 	Resizable	Whether you can change the size of the window with flashPlayerFramerate drag handle.
-	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
 	 */
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("stats", FlxAssets.IMG_STATS_DEBUG, 0, 0, false);
+		
 		minSize.y = MIN_HEIGHT;
 		resize(INITIAL_WIDTH, MIN_HEIGHT);
 		
@@ -124,7 +118,7 @@ class Stats extends Window
 		
 		fpsGraph = new StatsGraph(gutter, Std.int(_header.height) + 5, INITIAL_WIDTH - 10, graphHeight, FPS_COLOR, "fps");
 		addChild(fpsGraph);	
-		fpsGraph.maxValue = FlxG.flashFramerate;
+		fpsGraph.maxValue = FlxG.drawFramerate;
 		fpsGraph.minValue = 0;
 		
 		memoryGraph = new StatsGraph(gutter, Std.int(_header.height) +  graphHeight + 20, INITIAL_WIDTH - 10, graphHeight, MEMORY_COLOR, "MB");
@@ -136,7 +130,7 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
-		_leftTextField.text = "Draw: \nUpdate:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
+		_leftTextField.text = "Update: \nDraw:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
 	}
 	
 	/**

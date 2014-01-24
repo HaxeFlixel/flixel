@@ -8,16 +8,14 @@ import flixel.group.FlxTypedGroup;
 import flixel.system.FlxSound;
 import openfl.Assets;
 
+@:allow(flixel.FlxGame)
+@:allow(flixel.FlxG)
 class SoundFrontEnd
 {
 	/**
 	 * A handy container for a background music object.
 	 */
 	public var music:FlxSound;
-	/**
-	 * A list of all the sounds being played in the game.
-	 */
-	public var list(default, null):FlxTypedGroup<FlxSound>;
 	/**
 	 * Whether or not the game sounds are muted.
 	 */
@@ -49,22 +47,20 @@ class SoundFrontEnd
 	public var muteKeys:Array<String>; 
 	#end
 	
-	public function new() 
-	{
-		#if !FLX_NO_KEYBOARD
-		// Assign default values to the keys used by core flixel
-		volumeUpKeys = ["PLUS", "NUMPADPLUS"];
-		volumeDownKeys = ["MINUS", "NUMPADMINUS"];
-		muteKeys = ["ZERO", "NUMPADZERO"]; 
-		#end
-		
-		list = new FlxTypedGroup<FlxSound>();
-		
-		#if android
-		_soundCache = new Map<String, Sound>();
-		_soundTransform = new SoundTransform();
-		#end
-	}
+	/**
+	 * A list of all the sounds being played in the game.
+	 */
+	public var list(default, null):FlxTypedGroup<FlxSound>;
+	/**
+	 * Set this to a number between 0 and 1 to change the global volume.
+	 */
+	public var volume(default, set):Float = 0.5;
+	
+	
+	#if android
+	private var _soundCache:Map<String, Sound>;
+	private var _soundTransform:SoundTransform;
+	#end
 	
 	// TODO: Return from Sound -> Class<Sound>
 	/**
@@ -137,9 +133,6 @@ class SoundFrontEnd
 	}
 	
 	#if android
-	private var _soundCache:Map<String, Sound>;
-	private var _soundTransform:SoundTransform;
-	
 	/**
 	 * Method for sound caching on Android target.
 	 * Application may freeze for some time at first try to play sound if you don't use this method
@@ -202,7 +195,7 @@ class SoundFrontEnd
 		#end
 	}
 	#end
-		
+	
 	/**
 	 * Creates a new sound object from a URL.
 	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
@@ -223,16 +216,82 @@ class SoundFrontEnd
 	}
 	
 	/**
-	 * 
-	 * Set <code>volume</code> to a number between 0 and 1 to change the global volume.
-	 * 
-	 * @default 0.5
+	 * Pause all sounds currently playing.
 	 */
-	public var volume(default, set_volume):Float = 0.5;
+	public function pause():Void
+	{
+		if (music != null && music.exists && music.active)
+		{
+			music.pause();
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null && sound.exists && sound.active)
+			{
+				sound.pause();
+			}
+		}
+	}
 	
 	/**
-	 * @private
+	 * Resume playing existing sounds.
 	 */
+	public function resume():Void
+	{
+		if (music != null && music.exists)
+		{
+			music.resume();
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null && sound.exists)
+			{
+				sound.resume();
+			}
+		}
+	}
+	
+	/**
+	 * Called by FlxGame on state changes to stop and destroy sounds.
+	 * 
+	 * @param	ForceDestroy		Kill sounds even if they're flagged <code>survive</code>.
+	 */
+	public function destroy(ForceDestroy:Bool = false):Void
+	{
+		if (music != null && (ForceDestroy || !music.survive))
+		{
+			music.destroy();
+			music = null;
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null && (ForceDestroy || !sound.survive))
+			{
+				sound.destroy();
+			}
+		}
+	}
+	
+	private function new() 
+	{
+		#if !FLX_NO_KEYBOARD
+		// Assign default values to the keys used by core flixel
+		volumeUpKeys = ["PLUS", "NUMPADPLUS"];
+		volumeDownKeys = ["MINUS", "NUMPADMINUS"];
+		muteKeys = ["ZERO", "NUMPADZERO"]; 
+		#end
+		
+		list = new FlxTypedGroup<FlxSound>();
+		
+		#if android
+		_soundCache = new Map<String, Sound>();
+		_soundTransform = new SoundTransform();
+		#end
+	}
+	
 	private function set_volume(Volume:Float):Float
 	{
 		volume = Volume;
@@ -253,33 +312,11 @@ class SoundFrontEnd
 		}
 		return Volume;
 	}
-
-	/**
-	 * Called by FlxGame on state changes to stop and destroy sounds.
-	 * 
-	 * @param	ForceDestroy		Kill sounds even if they're flagged <code>survive</code>.
-	 */
-	public function destroySounds(ForceDestroy:Bool = false):Void
-	{
-		if (music != null && (ForceDestroy || !music.survive))
-		{
-			music.destroy();
-			music = null;
-		}
-		
-		for (sound in list.members)
-		{
-			if (sound != null && (ForceDestroy || !sound.survive))
-			{
-				sound.destroy();
-			}
-		}
-	}
-		
+	
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
-	public function updateSounds():Void
+	private function update():Void
 	{
 		if (music != null && music.active)
 		{
@@ -292,45 +329,7 @@ class SoundFrontEnd
 		}
 	}
 	
-	/**
-	 * Pause all sounds currently playing.
-	 */
-	public function pauseSounds():Void
-	{
-		if (music != null && music.exists && music.active)
-		{
-			music.pause();
-		}
-		
-		for (sound in list.members)
-		{
-			if (sound != null && sound.exists && sound.active)
-			{
-				sound.pause();
-			}
-		}
-	}
-	
-	/**
-	 * Resume playing existing sounds.
-	 */
-	public function resumeSounds():Void
-	{
-		if (music != null && music.exists)
-		{
-			music.resume();
-		}
-		
-		for (sound in list.members)
-		{
-			if (sound != null && sound.exists)
-			{
-				sound.resume();
-			}
-		}
-	}
-	
-	public function onFocusLost():Void
+	private function onFocusLost():Void
 	{
 		if (music != null)
 		{
@@ -346,7 +345,7 @@ class SoundFrontEnd
 		}
 	}
 	
-	public function onFocus():Void
+	private function onFocus():Void
 	{
 		if (music != null)
 		{
@@ -363,10 +362,9 @@ class SoundFrontEnd
 	}
 	
 	/**
-	 * Called by FlxG, you shouldn't need to.
 	 * Loads saved sound preferences if they exist.
 	 */
-	public function loadSavedPrefs():Void
+	private function loadSavedPrefs():Void
 	{
 		if (FlxG.save.data.volume != null)
 		{
