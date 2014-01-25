@@ -1,8 +1,8 @@
-package flixel.system.resolution;
+package flixel.system.scaleMode;
 
 import flixel.FlxG;
 
-class StageSizeResolutionPolicy extends BaseResolutionPolicy
+class StageSizeScaleMode extends BaseScaleMode
 {
 	override public function onMeasure(Width:Int, Height:Int):Void
 	{

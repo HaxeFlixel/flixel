@@ -1,8 +1,8 @@
-package flixel.system.resolution;
+package flixel.system.scaleMode;
 
 import flixel.FlxG;
 
-class FillResolutionPolicy extends BaseResolutionPolicy
+class FillScaleMode extends BaseScaleMode
 {
 	override private function updateGamePosition():Void 
 	{
