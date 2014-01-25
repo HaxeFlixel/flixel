@@ -145,10 +145,12 @@ class FlxAssets
 	/**
 	 * Sound caching for android target
 	 */
+	@:access(openfl.Assets)
+	@:access(openfl.AssetType)
 	static public function cacheSounds():Void
 	{
 		#if android
-		Reflect.callMethod(Assets, Reflect.field(Assets, "initialize"), []);
+		Assets.initialize();
 		
 		var defaultLibrary = Assets.libraries.get("default");
 		
@@ -160,7 +162,7 @@ class FlxAssets
 		
 		for (key in types.keys())
 		{
-			if (types.get(key) == Reflect.field(AssetType, "sound".toUpperCase()))
+			if (types.get(key) == AssetType.SOUND)
 			{
 				FlxG.sound.add(key);
 			}
