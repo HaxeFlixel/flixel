@@ -61,7 +61,9 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		#if !FLX_NO_MOUSE
 		FlxG.mouse.visible = false;
+		#end
 		
 		// Here we are creating a pool of 100 little metal bits that can be exploded.
 		// We will recycle the crap out of these!
