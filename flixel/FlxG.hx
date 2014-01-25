@@ -254,6 +254,7 @@ class FlxG
 	inline static public function resizeGame(Width:Int, Height:Int):Void
 	{
 		_resolutionPolicy.onMeasure(Width, Height);
+		trace("resize");
 	}
 	
 	/**
@@ -425,7 +426,7 @@ class FlxG
 		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
-		resizeGame(width, height);
+		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
