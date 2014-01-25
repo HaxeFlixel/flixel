@@ -52,11 +52,15 @@ class FlxSplash extends FlxState
 	{
 		super.onResize(Width, Height);
 		
-		_sprite.x = (Width / 2) - 50;
-		_sprite.y = (Height / 2) - 70;
+		_sprite.x = (Width / 2);
+		_sprite.y = (Height / 2) - 20 * FlxG.game.scaleY;
 		
-		_text.width = Width;
-		_text.y = _sprite.y + 130;
+		_text.width = Width / FlxG.game.scaleX;
+		_text.x = 0;
+		_text.y = _sprite.y + 80 * FlxG.game.scaleY;
+		
+		_sprite.scaleX = _text.scaleX = FlxG.game.scaleX;
+		_sprite.scaleY = _text.scaleY = FlxG.game.scaleY;
 	}
 	
 	override public function create():Void
@@ -125,63 +129,63 @@ class FlxSplash extends FlxState
 	private function drawGreen():Void
 	{
 		_gfx.beginFill(0x00b922);
-		_gfx.moveTo(50, 13);
-		_gfx.lineTo(51, 13);
-		_gfx.lineTo(87, 50);
-		_gfx.lineTo(87, 51);
-		_gfx.lineTo(51, 87);
-		_gfx.lineTo(50, 87);
-		_gfx.lineTo(13, 51);
-		_gfx.lineTo(13, 50);
-		_gfx.lineTo(50, 13);
+		_gfx.moveTo(0, -37);
+		_gfx.lineTo(1, -37);
+		_gfx.lineTo(37, 0);
+		_gfx.lineTo(37, 1);
+		_gfx.lineTo(1, 37);
+		_gfx.lineTo(0, 37);
+		_gfx.lineTo(-37, 1);
+		_gfx.lineTo(-37, 0);
+		_gfx.lineTo(0, -37);
 		_gfx.endFill();
 	}
 	
 	private function drawYellow():Void
 	{
 		_gfx.beginFill(0xffc132);
-		_gfx.moveTo(0, 0);
-		_gfx.lineTo(25, 0);
-		_gfx.lineTo(50, 13);
-		_gfx.lineTo(13, 50);
-		_gfx.lineTo(0, 25);
-		_gfx.lineTo(0, 0);
+		_gfx.moveTo(-50, -50);
+		_gfx.lineTo(-25, -50);
+		_gfx.lineTo(0, -37);
+		_gfx.lineTo(-37, 0);
+		_gfx.lineTo(-50, -25);
+		_gfx.lineTo(-50, -50);
 		_gfx.endFill();
 	}
 	
 	private function drawRed():Void
 	{
 		_gfx.beginFill(0xf5274e);
-		_gfx.moveTo(100, 0);
-		_gfx.lineTo(75, 0);
-		_gfx.lineTo(51, 13);
-		_gfx.lineTo(87, 50);
-		_gfx.lineTo(100, 25);
-		_gfx.lineTo(100, 0);
+		_gfx.moveTo(50, -50);
+		_gfx.lineTo(25, -50);
+		_gfx.lineTo(1, -37);
+		_gfx.lineTo(37, 0);
+		_gfx.lineTo(50, -25);
+		_gfx.lineTo(50, -50);
 		_gfx.endFill();
 	}
 	
 	private function drawBlue():Void
 	{
 		_gfx.beginFill(0x3641ff);
-		_gfx.moveTo(0, 100);
-		_gfx.lineTo(25, 100);
-		_gfx.lineTo(50, 87);
-		_gfx.lineTo(13, 51);
-		_gfx.lineTo(0, 75);
-		_gfx.lineTo(0, 100);
+		_gfx.moveTo(-50, 50);
+		_gfx.lineTo(-25, 50);
+		_gfx.lineTo(0, 37);
+		_gfx.lineTo(-37, 1);
+		_gfx.lineTo(-50, 25);
+		_gfx.lineTo(-50, 50);
 		_gfx.endFill();
 	}
 	
 	private function drawLightBlue():Void
 	{
 		_gfx.beginFill(0x04cdfb);
-		_gfx.moveTo(100, 100);
-		_gfx.lineTo(75, 100);
-		_gfx.lineTo(51, 87);
-		_gfx.lineTo(87, 51);
-		_gfx.lineTo(100, 75);
-		_gfx.lineTo(100, 100);
+		_gfx.moveTo(50, 50);
+		_gfx.lineTo(25, 50);
+		_gfx.lineTo(1, 37);
+		_gfx.lineTo(37, 1);
+		_gfx.lineTo(50, 25);
+		_gfx.lineTo(50, 50);
 		_gfx.endFill();
 	}
 	
