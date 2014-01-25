@@ -254,7 +254,6 @@ class FlxG
 	inline static public function resizeGame(Width:Int, Height:Int):Void
 	{
 		_resolutionPolicy.onMeasure(Width, Height);
-		trace("resize");
 	}
 	
 	/**
