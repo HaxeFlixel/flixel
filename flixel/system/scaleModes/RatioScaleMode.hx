@@ -1,4 +1,4 @@
-package flixel.system.scaleMode;
+package flixel.system.scaleModes;
 
 import flixel.FlxG;
 
