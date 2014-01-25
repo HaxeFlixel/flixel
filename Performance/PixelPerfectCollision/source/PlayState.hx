@@ -29,7 +29,7 @@ using flixel.util.FlxSpriteUtil;
 class PlayState extends FlxState
 {	
 	// how many aliens are created initially
-	inline static var NUM_ALIENS:Int = 75;
+	inline static var NUM_ALIENS:Int = 50;
 	
 	// How fast the player moves
 	inline static var PLAYER_SPEED:Int = 75;
@@ -90,9 +90,6 @@ class PlayState extends FlxState
 		
 		// don't need the cursor
 		FlxG.mouse.visible = false;
-		
-		FlxG.watch.add(FlxG, "width");
-		FlxG.watch.add(FlxG, "height");
 	}
 	
 	/**
@@ -190,7 +187,12 @@ class PlayState extends FlxState
 			for (i in 0...3) addAlien();
 		}
 		if (FlxG.keys.justReleased.S) {
-			for (i in 0...3) aliens.getFirstAlive().kill();
+			for (i in 0...3) {
+				var alien = aliens.getFirstAlive();
+				if (alien != null) {
+					alien.kill();
+				}
+			}
 		}
 		
 		// increment/decrement alpha tolerance
@@ -225,12 +227,16 @@ class PlayState extends FlxState
 			var obj1 = aliens.members[i];
 			var collides = false;
 			
+			// Only collide alive members
+			if (!obj1.alive) continue;
+			
 			for (j in 0...aliens.length) 
 			{
-				// Don't collide an object with itself
-				if (i == j) continue;
-				
 				var obj2 = aliens.members[j];
+				
+				// Only collide alive members and don't collide an object with itself
+				if (!obj2.alive || (i == j)) continue;
+				
 				// this is how we check if obj1 and obj2 are colliding
 				if (FlxCollision.pixelPerfectCheck(obj1, obj2, alphaTolerance)) 
 				{	
@@ -254,7 +260,7 @@ class PlayState extends FlxState
 	
 	function updateInfo():Void 
 	{
-		infoText.text = INFO.replace("|objects|", Std.string(aliens.countLiving()))
+		infoText.text = INFO.replace("|objects|", Std.string(aliens.countLiving() + 1)) // + 1 for the player that is not in the group
 							.replace("|alpha|", Std.string(alphaTolerance))
 							.replace("|hits|", Std.string(numCollisions))
 							.replace("|fps|", Std.string(fps.text.substr(5)));
