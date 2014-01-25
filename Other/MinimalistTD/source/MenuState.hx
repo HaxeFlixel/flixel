@@ -1,7 +1,6 @@
 package;
 
 import flash.display.BlendMode;
-import flixel.system.resolution.RatioResolutionPolicy;
 import openfl.Assets;
 import flixel.FlxG;
 import flixel.FlxState;

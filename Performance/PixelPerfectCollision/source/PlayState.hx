@@ -1,16 +1,11 @@
 package; 
 
 import flash.system.System;
-import flixel.effects.FlxTrailArea;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxTypedGroup;
-import flixel.system.FlxAssets;
-import flixel.system.resolution.RelativeResolutionPolicy;
 import flixel.text.FlxText;
-import flash.display.BitmapData;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxAngle;

@@ -4,11 +4,10 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.system.resolution.FillResolutionPolicy;
-import flixel.system.resolution.FixedResolutionPolicy;
-import flixel.system.resolution.RatioResolutionPolicy;
-import flixel.system.resolution.RelativeResolutionPolicy;
-import flixel.system.resolution.StageSizeResolutionPolicy;
+import flixel.system.scaleModes.FillScaleMode;
+import flixel.system.scaleModes.FixedScaleMode;
+import flixel.system.scaleModes.RatioScaleMode;
+import flixel.system.scaleModes.RelativeScaleMode;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
@@ -18,17 +17,17 @@ class PlayState extends FlxState
 {
 	private var currentPolicy:FlxText;
 	
-	private var fillPolicy:FillResolutionPolicy;
-	private var ratioPolicy:RatioResolutionPolicy;
-	private var relativePolicy:RelativeResolutionPolicy;
-	private var fixedPolicy:FixedResolutionPolicy;
+	private var fillPolicy:FillScaleMode;
+	private var ratioPolicy:RatioScaleMode;
+	private var relativePolicy:RelativeScaleMode;
+	private var fixedPolicy:FixedScaleMode;
 	
 	override public function create():Void
 	{
-		fillPolicy = new FillResolutionPolicy();
-		ratioPolicy = new RatioResolutionPolicy();
-		relativePolicy = new RelativeResolutionPolicy(0.75, 0.75);
-		fixedPolicy = new FixedResolutionPolicy();
+		fillPolicy = new FillScaleMode();
+		ratioPolicy = new RatioScaleMode();
+		relativePolicy = new RelativeScaleMode(0.75, 0.75);
+		fixedPolicy = new FixedScaleMode();
 		
 		add(new FlxSprite(0, 0, "assets/bg.png"));
 		
@@ -37,7 +36,7 @@ class PlayState extends FlxState
 			add(new Ship(FlxRandom.intRanged(50, 100), FlxRandom.intRanged(0, 360)));
 		}
 		
-		FlxG.resolutionPolicy = ratioPolicy;
+		FlxG.scaleMode = ratioPolicy;
 		currentPolicy = new FlxText(0, 10, FlxG.width, "ratio");
 		currentPolicy.alignment = "center";
 		currentPolicy.size = 16;
@@ -56,19 +55,19 @@ class PlayState extends FlxState
 			switch (currentPolicy.text)
 			{
 				case "fill":
-					FlxG.resolutionPolicy = ratioPolicy;
+					FlxG.scaleMode = ratioPolicy;
 					currentPolicy.text = "ratio";
 				
 				case "ratio":
-					FlxG.resolutionPolicy = fixedPolicy;
+					FlxG.scaleMode = fixedPolicy;
 					currentPolicy.text = "fixed";
 					
 				case "fixed":
-					FlxG.resolutionPolicy = relativePolicy;
+					FlxG.scaleMode = relativePolicy;
 					currentPolicy.text = "relative 75%";
 				
 				default:
-					FlxG.resolutionPolicy = fillPolicy;
+					FlxG.scaleMode = fillPolicy;
 					currentPolicy.text = "fill";
 			}
 		}
