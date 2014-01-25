@@ -4,7 +4,7 @@
 
 ##About
 
-This is a large set of demos (**currently 43!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
+This is a large set of demos (**currently 44!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
 ![](demoSelection.png)
 
@@ -50,6 +50,7 @@ This is a large set of demos (**currently 43!**) using the HaxeFlixel engine and
 * **Performance**
   * FlxBunnyMark
   * FlxRandom
+  * PixelPerfectCollision
 * **Platformers**
   * EZPlatformer
   * FlipAnimationRotationTiles
