@@ -129,10 +129,10 @@ class PlayState extends FlxState
 		_guiGroup = new FlxGroup();
 		
 		var height:Int = FlxG.height - 18;
-		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback, [ false ], 120 );
-		_nextWaveButton = new Button( 100, height, "[N]ext Wave", nextWaveCallback, [ false ], 143 );
-		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback, [ false ], 21 );
-		_sellButton = new Button( 220, height, "[S]ell Mode", sellButtonCallback, [ true ] );
+		_towerButton = new Button( 2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback.bind(false), 120 );
+		_nextWaveButton = new Button( 100, height, "[N]ext Wave", nextWaveCallback.bind(false), 143 );
+		_speedButton = new Button( FlxG.width - 20, height, "x1", speedButtonCallback.bind(false), 21 );
+		_sellButton = new Button( 220, height, "[S]ell Mode", sellButtonCallback.bind(true));
 		_sellButton.visible = false;
 		
 		_tutText = new FlxText( 0, height - 10, FlxG.width, "Click on a Tower to Upgrade it!" );
@@ -153,7 +153,7 @@ class PlayState extends FlxState
 		_damageButton = new Button( 100, height, "Damage (##): $##", upgradeDamageCallback );
 		_firerateButton = new Button( 200, height, "Firerate (##): $##", upgradeFirerateCallback );
 		
-		_upgradeMenu.add( new Button( 2, height, "<", toggleMenus, [ General ], 10 ) );
+		_upgradeMenu.add( new Button( 2, height, "<", toggleMenus.bind(General), 10 ) );
 		_upgradeMenu.add( _rangeButton );
 		_upgradeMenu.add( _damageButton );
 		_upgradeMenu.add( _firerateButton );
@@ -169,7 +169,7 @@ class PlayState extends FlxState
 		sellMessage.alignment = "center";
 		
 		_sellMenu.add( sellMessage );
-		_sellMenu.add( new Button( 2, height, "<", sellMenuCancel, [false], 10 ) );
+		_sellMenu.add( new Button( 2, height, "<", sellMenuCancel.bind(false), 10 ) );
 		
 		_sellMenu.visible = false;
 		
@@ -180,10 +180,10 @@ class PlayState extends FlxState
 		_areYouSure = new FlxText( 20, height + 3, 200, "Tower value $###, really sell?" );
 		_areYouSure.color = FlxColor.BLACK;
 		
-		_sellConfirm.add( new Button( 2, height, "<", sellMenuCancel, [false], 10 ) );
+		_sellConfirm.add( new Button( 2, height, "<", sellMenuCancel.bind(false), 10 ) );
 		_sellConfirm.add( _areYouSure );
-		_sellConfirm.add( new Button( 220, height, "[Y]es", sellConfirmCallback, [ true ] ) );
-		_sellConfirm.add( new Button( 280, height, "[N]o", sellConfirmCallback, [ false ] ) );
+		_sellConfirm.add( new Button( 220, height, "[Y]es", sellConfirmCallback.bind(true) ));
+		_sellConfirm.add( new Button( 280, height, "[N]o", sellConfirmCallback.bind(false) ));
 		
 		_sellConfirm.visible = false;
 		
@@ -848,7 +848,7 @@ class PlayState extends FlxState
 		announceWave( true );
 		
 		_towerButton.text = "[R]estart";
-		_towerButton.onDown.callback = resetCallback;
+		_towerButton.onDown.callback = resetCallback.bind(false);
 		
 		FlxG.sound.play("gameover");
 	}
