@@ -280,7 +280,7 @@ class FlxDebugger extends Sprite
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Position:ButtonAlignment, ?IconPath:String, ?DownHandler:Dynamic, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
+	public function addButton(Position:ButtonAlignment, ?IconPath:String, ?DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
 	{
 		var button = new FlxSystemButton(IconPath, DownHandler, ToggleMode);
 		
