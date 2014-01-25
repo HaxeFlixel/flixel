@@ -486,7 +486,7 @@ class FlxGame extends Sprite
 		}
 		else
 		{
-			requestedState = cast (new FlxSplash(_iState));
+			requestedState = new FlxSplash(_iState);
 			_skipSplash = true; // only show splashscreen once
 		}
 		#end
