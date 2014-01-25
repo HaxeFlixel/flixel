@@ -20,6 +20,7 @@ import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.resolution.BaseResolutionPolicy;
+import flixel.system.resolution.RatioResolutionPolicy;
 import flixel.system.resolution.StageSizeResolutionPolicy;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
@@ -245,7 +246,7 @@ class FlxG
 	static public var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
 	
-	static private var _resolutionPolicy:BaseResolutionPolicy = new StageSizeResolutionPolicy();
+	static private var _resolutionPolicy:BaseResolutionPolicy = new RatioResolutionPolicy();
 	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.

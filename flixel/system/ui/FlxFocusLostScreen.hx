@@ -30,17 +30,15 @@ class FlxFocusLostScreen extends Sprite
 	public function draw():Void
 	{
 		var gfx:Graphics = graphics;
-		var screenWidth:Int = Std.int(Lib.current.stage.stageWidth);
-		var screenHeight:Int = Std.int(Lib.current.stage.stageHeight);
+		
+		var screenWidth:Int = Std.int(FlxCamera.defaultZoom * FlxG.width * FlxG.game.scaleX);
+		var screenHeight:Int = Std.int(FlxCamera.defaultZoom * FlxG.height * FlxG.game.scaleY);
 		
 		// Draw transparent black backdrop
 		gfx.clear();
 		gfx.moveTo(0, 0);
 		gfx.beginFill(0, 0.5);
-		gfx.lineTo(screenWidth, 0);
-		gfx.lineTo(screenWidth, screenHeight);
-		gfx.lineTo(0, screenHeight);
-		gfx.lineTo(0, 0);
+		gfx.drawRect(0, 0, screenWidth, screenHeight);
 		gfx.endFill();
 		
 		// Draw white arrow
@@ -53,5 +51,8 @@ class FlxFocusLostScreen extends Sprite
 		gfx.lineTo(halfWidth - helper, halfHeight + helper);
 		gfx.lineTo(halfWidth - helper, halfHeight - helper);
 		gfx.endFill();
+		
+		scaleX = 1 / FlxG.game.scaleX;
+		scaleY = 1 / FlxG.game.scaleY;
 	}
 }

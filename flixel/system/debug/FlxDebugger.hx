@@ -229,6 +229,10 @@ class FlxDebugger extends Sprite
 		_topBar.width = FlxG.stage.stageWidth;
 		resetButtonLayout();
 		resetLayout();
+		scaleX = 1 / FlxG.game.scaleX;
+		scaleY = 1 / FlxG.game.scaleY;
+		x = -FlxG.game.x * scaleX;
+		y = -FlxG.game.y * scaleY;
 	}
 
 	/**

@@ -374,6 +374,8 @@ class FlxGame extends Sprite
 			FlxG.bitmap.onContext();
 		#end
 		
+		FlxG.resizeGame(width, height);
+		
 		state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
 		
@@ -395,7 +397,8 @@ class FlxGame extends Sprite
 			}
 		#end
 		
-		FlxG.resizeGame(width, height);
+		inputContainer.scaleX = 1 / FlxG.game.scaleX;
+		inputContainer.scaleY = 1 / FlxG.game.scaleY;
 	}
 	
 	/**
