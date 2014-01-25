@@ -36,6 +36,29 @@ class FlxSplash extends FlxState
 		super();
 	}
 	
+	override public function destroy():Void 
+	{
+		_nextState = null;
+		_sprite = null;
+		_gfx = null;
+		_text = null;
+		_times = null;
+		_colors = null;
+		_functions = null;
+		super.destroy();
+	}
+	
+	override public function onResize(Width:Int, Height:Int):Void 
+	{
+		super.onResize(Width, Height);
+		
+		_sprite.x = (Width / 2) - 50;
+		_sprite.y = (Height / 2) - 70;
+		
+		_text.width = Width;
+		_text.y = _sprite.y + 130;
+	}
+	
 	override public function create():Void
 	{
 		_cachedBgColor = FlxG.cameras.bgColor;
@@ -65,21 +88,19 @@ class FlxSplash extends FlxState
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 		
 		_sprite = new Sprite();
-		_sprite.x = (stageWidth / 2) - 50;
-		_sprite.y = (stageHeight / 2) - 70;
 		FlxG.stage.addChild(_sprite);
 		_gfx = _sprite.graphics;
 		
 		_text = new TextField();
 		_text.selectable = false;
 		_text.embedFonts = true;
-		_text.width = stageWidth;
 		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 16, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		_text.defaultTextFormat = dtf;
 		_text.text = "HaxeFlixel";
-		_text.y = _sprite.y + 130;
 		FlxG.stage.addChild(_text);
+		
+		onResize(stageWidth, stageHeight);
 		
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.play(FlxAssets.SND_FLIXEL);
