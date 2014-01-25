@@ -17,17 +17,17 @@ class PlayState extends FlxState
 {
 	private var currentPolicy:FlxText;
 	
-	private var fillPolicy:FillScaleMode;
-	private var ratioPolicy:RatioScaleMode;
-	private var relativePolicy:RelativeScaleMode;
-	private var fixedPolicy:FixedScaleMode;
+	private var fill:FillScaleMode;
+	private var ratio:RatioScaleMode;
+	private var relative:RelativeScaleMode;
+	private var fixed:FixedScaleMode;
 	
 	override public function create():Void
 	{
-		fillPolicy = new FillScaleMode();
-		ratioPolicy = new RatioScaleMode();
-		relativePolicy = new RelativeScaleMode(0.75, 0.75);
-		fixedPolicy = new FixedScaleMode();
+		fill = new FillScaleMode();
+		ratio = new RatioScaleMode();
+		relative = new RelativeScaleMode(0.75, 0.75);
+		fixed = new FixedScaleMode();
 		
 		add(new FlxSprite(0, 0, "assets/bg.png"));
 		
@@ -36,13 +36,13 @@ class PlayState extends FlxState
 			add(new Ship(FlxRandom.intRanged(50, 100), FlxRandom.intRanged(0, 360)));
 		}
 		
-		FlxG.scaleMode = ratioPolicy;
+		FlxG.scaleMode = ratio;
 		currentPolicy = new FlxText(0, 10, FlxG.width, "ratio");
 		currentPolicy.alignment = "center";
 		currentPolicy.size = 16;
 		add(currentPolicy);
 		
-		var info:FlxText = new FlxText(0, FlxG.height - 40, FlxG.width, "press space or click to change the resolution policy");
+		var info:FlxText = new FlxText(0, FlxG.height - 40, FlxG.width, "press space or click to change the scale mode");
 		info.setFormat(null, 14, FlxColor.WHITE, "center");
 		info.alpha = 0.75;
 		add(info);
@@ -55,19 +55,19 @@ class PlayState extends FlxState
 			switch (currentPolicy.text)
 			{
 				case "fill":
-					FlxG.scaleMode = ratioPolicy;
+					FlxG.scaleMode = ratio;
 					currentPolicy.text = "ratio";
 				
 				case "ratio":
-					FlxG.scaleMode = fixedPolicy;
+					FlxG.scaleMode = fixed;
 					currentPolicy.text = "fixed";
 					
 				case "fixed":
-					FlxG.scaleMode = relativePolicy;
+					FlxG.scaleMode = relative;
 					currentPolicy.text = "relative 75%";
 				
 				default:
-					FlxG.scaleMode = fillPolicy;
+					FlxG.scaleMode = fill;
 					currentPolicy.text = "fill";
 			}
 		}

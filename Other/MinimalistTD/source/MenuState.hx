@@ -31,7 +31,6 @@ class MenuState extends FlxState
 		FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT;
 		#end
 		
-		FlxG.resolutionPolicy = new RatioResolutionPolicy();
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		
 		// Load a map from CSV data; note that the tile graphic does not need to be a file; in this case, it's BitmapData.
