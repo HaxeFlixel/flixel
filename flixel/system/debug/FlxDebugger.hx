@@ -41,10 +41,6 @@ class FlxDebugger extends Sprite
 	 */
 	public var stats:Stats;
 	/**
-	 * Container for the bitmap output widget
-	 */
-	public var bmpLog:BmpLog;	
-	/**
 	 * Container for the trace output widget.
 	 */	 
 	public var log:Log;
@@ -100,34 +96,28 @@ class FlxDebugger extends Sprite
 	public function destroy():Void
 	{
 		_screen = null;
-
+		
 		for (o in _rightButtons)
 		{
 			o.destroy();
 		}
 		_rightButtons = null;
-
+		
 		for (o in _leftButtons)
 		{
 			o.destroy();
 		}
 		_leftButtons = null;
-
+		
 		for (o in _middleButtons)
 		{
 			o.destroy();
 		}
 		_middleButtons = null;
-
+		
 		removeChild(_topBar);
 		_topBar = null;
-
-		if (bmpLog != null) 
-		{
-			removeChild(bmpLog);
-			bmpLog.destroy();
-			bmpLog = null;
-		}		
+		
 		if (log != null)
 		{
 			removeChild(log);
@@ -224,10 +214,6 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
-				if (bmpLog != null) {
-					bmpLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-					bmpLog.reposition(_screen.x, _screen.y - watch.height - bmpLog.height - console.height - GUTTER * 1.5);
-				}
 		}
 	}
 	
@@ -240,12 +226,13 @@ class FlxDebugger extends Sprite
 		log.updateBounds(_screenBounds);
 		watch.updateBounds(_screenBounds);
 		console.updateBounds(_screenBounds);
-		if (bmpLog != null) {
-			bmpLog.updateBounds(_screenBounds);
-		}
 		_topBar.width = FlxG.stage.stageWidth;
 		resetButtonLayout();
 		resetLayout();
+		scaleX = 1 / FlxG.game.scaleX;
+		scaleY = 1 / FlxG.game.scaleY;
+		x = -FlxG.game.x * scaleX;
+		y = -FlxG.game.y * scaleY;
 	}
 
 	/**
@@ -381,11 +368,6 @@ class FlxDebugger extends Sprite
 		addChild(stats = new Stats());
 		
 		stats.visible = true;
-		
-		#if FLX_BMP_DEBUG
-		bmpLog = new BmpLog("bmplog", 0, 0, true);
-		addChild(bmpLog);
-		#end
 		
 		vcr = new VCR(this);
 		

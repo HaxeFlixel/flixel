@@ -18,7 +18,7 @@ class CameraFrontEnd
 	/**
 	 * The current (global, applies to all cameras) bgColor.
 	 */
-	public var bgColor(default, set):Int = FlxColor.BLACK;
+	public var bgColor(get, set):Int;
 	
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
@@ -208,7 +208,7 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			if (camera != null && camera.exists && camera.visible)
+			if ((camera != null) && camera.exists && camera.visible)
 			{
 				camera.render();
 			}
@@ -223,7 +223,7 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			if (camera == null || !camera.exists || !camera.visible)
+			if ((camera == null) || !camera.exists || !camera.visible)
 			{
 				continue;
 			}
@@ -248,7 +248,7 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			if (camera != null && camera.exists)
+			if ((camera != null) && camera.exists)
 			{
 				if (camera.active)
 				{
@@ -265,6 +265,11 @@ class CameraFrontEnd
 			}
 		}
 	}
+	
+	private function get_bgColor():Int
+	{
+		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
+	} 
 	
 	private function set_bgColor(Color:Int):Int
 	{

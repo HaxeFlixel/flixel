@@ -159,6 +159,21 @@ class FlxKeyboard implements IFlxInput
 		_keyLookup = null;
 	}
 	
+	/**
+	 * Resets all the keys.
+	 */
+	public function reset():Void
+	{
+		for (key in _keyList)
+		{
+			if (key != null)
+			{
+				key.current = FlxKey.RELEASED;
+				key.last = FlxKey.RELEASED;
+			}
+		}
+	}
+	
 	@:allow(flixel.FlxG)
 	private function new()
 	{
@@ -293,21 +308,6 @@ class FlxKeyboard implements IFlxInput
 			}
 			
 			key.last = key.current;
-		}
-	}
-	
-	/**
-	 * Resets all the keys.
-	 */
-	private function reset():Void
-	{
-		for (key in _keyList)
-		{
-			if (key != null)
-			{
-				key.current = FlxKey.RELEASED;
-				key.last = FlxKey.RELEASED;
-			}
 		}
 	}
 	

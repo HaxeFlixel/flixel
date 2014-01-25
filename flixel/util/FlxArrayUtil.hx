@@ -104,44 +104,4 @@ class FlxArrayUtil
 		}
 		return array;
 	}
-	
-	/**
-	 * Split a comma-separated string into an array of ints
-	 * 
-	 * @param	data string formatted like this: "1,2,5,-10,120,27"
-	 * @return	an array of ints
-	 */
-	static public function intFromString(data:String):Array<Int>
-	{
-		if (data != null && data != "") 
-		{
-			var strArray:Array<String> = data.split(",");
-			var iArray:Array<Int> = new Array<Int>();
-			for (str in strArray) {
-				iArray.push(Std.parseInt(str));
-			}
-			return iArray;
-		}
-		return null;
-	}
-	
-	/**
-	 * Split a comma-separated string into an array of floats
-	 * 
-	 * @param	data string formatted like this: "1.0,2.1,5.6,1245587.9,-0.00354"
-	 * @return
-	 */	
-	static public function floatFromString(data:String):Array<Float>
-	{
-		if (data != null && data != "") 
-		{
-			var strArray:Array<String> = data.split(",");
-			var fArray:Array<Float> = new Array<Float>();
-			for (str in strArray) {
-				fArray.push(Std.parseFloat(str));
-			}
-			return fArray;
-		}
-		return null;
-	}
 }

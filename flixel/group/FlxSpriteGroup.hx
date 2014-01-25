@@ -447,7 +447,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Applies a function to all members
 	 * 
-	 * @param Function A function that modify one element at a time
+	 * @param   Function   A function that modifies one element at a time
 	 */
 	inline public function forEach(Function:FlxSprite->Void):Void
 	{
@@ -457,7 +457,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Applies a function to all alive members
 	 * 
-	 * @param Function A function that modify one element at a time
+	 * @param   Function   A function that modifies one element at a time
 	 */
 	inline public function forEachAlive(Function:FlxSprite->Void):Void
 	{
@@ -467,7 +467,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Applies a function to all dead members
 	 * 
-	 * @param Function A function that modify one element at a time
+	 * @param   Function   A function that modifies one element at a time
 	 */
 	inline public function forEachDead(Function:FlxSprite->Void):Void
 	{
@@ -477,7 +477,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Applies a function to all existing members
 	 * 
-	 * @param Function A function that modify one element at a time
+	 * @param   Function   A function that modifies one element at a time
 	 */
 	public function forEachExists(Function:FlxSprite->Void):Void
 	{

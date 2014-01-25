@@ -11,7 +11,6 @@ import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
 import flixel.system.frontEnds.BitmapFrontEnd;
-import flixel.system.frontEnds.BmpLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
@@ -20,8 +19,8 @@ import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
-import flixel.system.resolution.BaseResolutionPolicy;
-import flixel.system.resolution.StageSizeResolutionPolicy;
+import flixel.system.scaleModes.BaseScaleMode;
+import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxMath;
@@ -118,18 +117,18 @@ class FlxG
 	/**
 	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	@:allow(flixel.system.resolution.StageSizeResolutionPolicy) 
+	@:allow(flixel.system.scaleMode.StageSizeScaleMode) 
 	static public var width(default, null):Int;
 	/**
 	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	@:allow(flixel.system.resolution.StageSizeResolutionPolicy)
+	@:allow(flixel.system.scaleMode.StageSizeScaleMode)
 	static public var height(default, null):Int;
 	/**
-	 * The resolution policy the game should use - available policies are <code>FillResolutionPolicy</code>, <code>FixedResolutionPolicy</code>,
-	 * <code>RatioResolutionPolicy</code>, <code>RelativeResolutionPolicy</code> and <code>StageResolutionPolicy</code>.
+	 * The scale mode the game should use - available policies are <code>FillScaleMode</code>, <code>FixedScaleMode</code>,
+	 * <code>RatioScaleMode</code>, <code>RelativeScaleMode</code> and <code>StageSizeScaleMode</code>.
 	 */
-	static public var resolutionPolicy(default, set):BaseResolutionPolicy;
+	static public var scaleMode(default, set):BaseScaleMode;
 	/**
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
 	 * You can easily toggle fullscreen with eg: <code>FlxG.fullscreen = !FlxG.fullscreen;</code>
@@ -205,13 +204,6 @@ class FlxG
 	 */
 	static public var log(default, null):LogFrontEnd = new LogFrontEnd();
 	
-	#if FLX_BMP_DEBUG
-	/**
-	 * A reference to the <code>BmpLogFrontEnd</code> object. Use it to <code>add</code> images to the bmplog window. 
-	 */	
-	static public var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();
-	#end
-	
 	/**
 	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
 	 * watch window.
@@ -253,14 +245,14 @@ class FlxG
 	static public var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
 	
-	static private var _resolutionPolicy:BaseResolutionPolicy = new StageSizeResolutionPolicy();
+	static private var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
 	inline static public function resizeGame(Width:Int, Height:Int):Void
 	{
-		_resolutionPolicy.onMeasure(Width, Height);
+		_scaleMode.onMeasure(Width, Height);
 	}
 	
 	/**
@@ -432,7 +424,7 @@ class FlxG
 		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
-		resizeGame(width, height);
+		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
@@ -484,11 +476,11 @@ class FlxG
 		worldDivisions = 6;
 	}
 	
-	static private function set_resolutionPolicy(Policy:BaseResolutionPolicy):BaseResolutionPolicy
+	static private function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
-		_resolutionPolicy = Policy;
+		_scaleMode = ScaleMode;
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
-		return Policy;
+		return ScaleMode;
 	}
 	
 	inline static private function get_updateFramerate():Int
@@ -550,7 +542,6 @@ class FlxG
 	
 	static private function set_fullscreen(Value:Bool):Bool
 	{
-
 		if (Value)
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN;

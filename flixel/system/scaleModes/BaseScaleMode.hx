@@ -1,10 +1,10 @@
-package flixel.system.resolution;
+package flixel.system.scaleModes;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxPoint;
 
-class BaseResolutionPolicy
+class BaseScaleMode
 {
 	private var deviceSize:FlxPoint;
 	private var gameSize:FlxPoint;

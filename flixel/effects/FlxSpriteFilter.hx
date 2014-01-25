@@ -52,7 +52,14 @@ class FlxSpriteFilter
 	
 	public var pixels:BitmapData;
 	
-	public function new(Sprite:FlxSprite, WidthInc:Int = 0, HeightInc:Int = 0) 
+	/**
+	 * Create a new filter for a <code>FlxSprite</code>.
+	 * 
+	 * @param   Sprite           The FlxSprite to add the filter to.
+	 * @param   WidthIncrease    How much to increase the graphic's width (useful for things like BlurFilter that need space outside the actual graphic).
+	 * @param   HeightIncrease   How much to increase the graphic's height (useful for things like BlurFilter that need space outside the actual graphic).
+	 */
+	public function new(Sprite:FlxSprite, WidthIncrease:Int = 0, HeightIncrease:Int = 0) 
 	{
 		if (Std.is(Sprite, FlxText))
 		{
@@ -80,7 +87,7 @@ class FlxSpriteFilter
 		var animator:FlxAnimationController = new FlxAnimationController(sprite);
 		animator.copyFrom(sprite.animation);
 		
-		setClipping(sprite.frameWidth + WidthInc, sprite.frameHeight + HeightInc);
+		setClipping((sprite.frameWidth + WidthIncrease), (sprite.frameHeight + HeightIncrease));
 		
 		sprite.animation.destroy();
 		sprite.animation = animator;

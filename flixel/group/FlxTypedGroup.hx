@@ -694,18 +694,20 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	
 	/**
 	 * Iterate through every member
+	 * 
 	 * @return An iterator
 	 */
-	public inline function iterator(?filter : T -> Bool):FlxTypedGroupIterator<T>
+	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
 	{
 		return new FlxTypedGroupIterator<T>(_members, filter == null ? function(m) { return true; } : filter);
 	}
 	
 	/**
 	 * Applies a function to all members
-	 * @param Function A function that modify one element at a time
+	 * 
+	 * @param   Function   A function that modifies one element at a time
 	 */
-	public function forEach(Function : T -> Void)
+	public function forEach(Function:T->Void)
 	{
 		for (member in _members)
 		{
@@ -718,13 +720,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 
 	/**
 	 * Applies a function to all alive members
-	 * @param Function A function that modify one element at a time
+	 * 
+	 * @param   Function   A function that modifies one element at a time
 	 */
-	public function forEachAlive(Function : T -> Void)
+	public function forEachAlive(Function:T->Void)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
-
+		
 		while (i < length)
 		{
 			basic = _basics[i];
@@ -738,13 +741,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 
 	/**
 	 * Applies a function to all dead members
-	 * @param Function A function that modify one element at a time
+	 * 
+	 * @param   Function   A function that modifies one element at a time
 	 */
 	public function forEachDead(Function : T -> Void)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
-
+		
 		while (i < length)
 		{
 			basic = _basics[i];
@@ -758,13 +762,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 
 	/**
 	 * Applies a function to all existing members
-	 * @param Function A function that modify one element at a time
+	 * 
+	 * @param   Function   A function that modifies one element at a time
 	 */
-	public function forEachExists(Function : T -> Void)
+	public function forEachExists(Function:T->Void)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
-
+		
 		while (i < length)
 		{
 			basic = _basics[i];

@@ -16,15 +16,20 @@ class FlxVersion
 		major = Major;
 		minor = Minor;
 		patch = Patch;
-		patchVersion = "-" + PatchVersion;
+		patchVersion = PatchVersion;
 	}
 	
 	/**
 	 * Formats the version in the format "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION", 
 	 * e.g. HaxeFlixel 3.0.4
 	 */
-	inline public function toString():String
+	public function toString():String
 	{
-		return "HaxeFlixel " + major + "." + minor + "." + patch + patchVersion;
+		var patchVer = "";
+		if ((patchVersion != null) && (patchVersion != ""))
+		{
+			patchVer = '-$patchVersion';
+		}
+		return "HaxeFlixel " + major + "." + minor + "." + patch + patchVer;
 	}
 }

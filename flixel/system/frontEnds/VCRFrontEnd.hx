@@ -10,6 +10,7 @@ import flash.ui.Mouse;
 import flash.utils.ByteArray;
 import flash.net.FileReference;
 import flash.net.FileFilter;
+import flixel.util.FlxRandom;
 
 class VCRFrontEnd
 {
@@ -191,6 +192,8 @@ class VCRFrontEnd
 	 */
 	public function startRecording(StandardMode:Bool = true):Void
 	{
+		FlxRandom.updateRecordingSeed( StandardMode );
+		
 		if (StandardMode)
 		{
 			FlxG.resetGame();
@@ -199,7 +202,7 @@ class VCRFrontEnd
 		{
 			FlxG.resetState();
 		}
-
+		
 		FlxG.game.recordingRequested = true;
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.vcr.recording();

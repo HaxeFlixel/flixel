@@ -362,4 +362,46 @@ class FlxAngle
 			return Math.atan2(dy, dx);
 	}
 	#end
+	
+	/**
+	 * Convert polar coordinates (radius + angle) to cartesian coordinates (x + y)
+	 * 
+	 * @param	Radius	The radius
+	 * @param	Angle	The angle, in degrees
+	 * @param	point	Optional FlxPoint if you don't want a new one created
+	 * @return	The point in cartesian coords
+	 */
+	static public function getCartesianCoords(Radius:Float, Angle:Float, ?point:FlxPoint):FlxPoint
+	{
+		var p = point;
+		if (p == null)
+		{
+			p = new FlxPoint();
+		}
+		
+		p.x = Radius * Math.cos(Angle * TO_RAD);
+		p.y = Radius * Math.sin(Angle * TO_RAD);
+		return p;
+	}
+	
+	/**
+	 * Convert cartesian coordinates (x + y) to polar coordinates (radius + angle) 
+	 * 
+	 * @param	X		x position
+	 * @param	Y		y position
+	 * @param	point	Optional FlxPoint if you don't want a new one created
+	 * @return	The point in polar coords (x = Radius (degrees), y = Angle)
+	 */
+	static public function getPolarCoords(X:Float, Y:Float, ?point:FlxPoint):FlxPoint
+	{
+		var p = point;
+		if (p == null)
+		{
+			p = new FlxPoint();
+		}
+		
+		p.x = Math.sqrt((X * X) + (Y * Y));
+		p.y = Math.atan2(Y, X) * TO_DEG;
+		return p;
+	}
 }

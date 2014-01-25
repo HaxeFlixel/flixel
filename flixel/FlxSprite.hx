@@ -100,7 +100,7 @@ class FlxSprite extends FlxObject
 	 * Set this flag to true to force the sprite to update during the draw() call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
-	public var dirty:Bool;
+	public var dirty:Bool = true;
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 * @default null
@@ -185,11 +185,10 @@ class FlxSprite extends FlxObject
 		
 		facing = FlxObject.RIGHT;
 		
-		if (SimpleGraphic == null)
+		if (SimpleGraphic != null)
 		{
-			SimpleGraphic = FlxAssets.IMG_DEFAULT;
+			loadGraphic(SimpleGraphic);
 		}
-		loadGraphic(SimpleGraphic);
 	}
 	
 	override private function initVars():Void 
@@ -518,8 +517,8 @@ class FlxSprite extends FlxObject
 		region = new Region();
 		region.width = Width;
 		region.height = Height;
-		width = frameWidth = cachedGraphics.bitmap.width;
-		height = frameHeight = cachedGraphics.bitmap.height;
+		width = region.tileWidth = frameWidth = cachedGraphics.bitmap.width;
+		height = region.tileHeight = frameHeight = cachedGraphics.bitmap.height;
 		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
@@ -1220,6 +1219,8 @@ class FlxSprite extends FlxObject
 	 */
 	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
+		if (cachedGraphics == null)	loadGraphic(FlxAssets.IMG_DEFAULT);
+		
 		#if !(flash || js)
 		if (!RunOnCpp)
 		{
@@ -1358,12 +1359,10 @@ class FlxSprite extends FlxObject
 		
 		region.startX = 0;
 		region.startY = 0;
-		region.tileWidth = 0;
-		region.tileHeight = 0;
+		region.tileWidth = region.width = cachedGraphics.bitmap.width;
+		region.tileHeight = region.height = cachedGraphics.bitmap.height;
 		region.spacingX = 0;
 		region.spacingY = 0;
-		region.width = cachedGraphics.bitmap.width;
-		region.height = cachedGraphics.bitmap.height;
 		
 		width = frameWidth = cachedGraphics.bitmap.width;
 		height = frameHeight = cachedGraphics.bitmap.height;

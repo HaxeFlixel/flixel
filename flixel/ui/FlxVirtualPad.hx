@@ -1,7 +1,7 @@
 package flixel.ui;
 
 import flixel.FlxG;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxAssets;
 
 /**
@@ -10,50 +10,8 @@ import flixel.system.FlxAssets;
  * 
  * @author Ka Wing Chin
  */
-class FlxVirtualPad extends FlxTypedGroup<FlxButton>
+class FlxVirtualPad extends FlxSpriteGroup
 {	
-	/**
-	 * Don't use any directional button.
-	 */ 
-	inline static public var DPAD_NONE:Int = 0;
-	/**
-	 * Use the UP and DOWN directional buttons.
-	 */ 
-	inline static public var DPAD_UP_DOWN:Int = 1;
-	/**
-	 * Use the LEFT and RIGHT directional buttons.
-	 */ 
-	inline static public var DPAD_LEFT_RIGHT:Int = 2;
-	/**
-	 * Use the UP, LEFT and RIGHT directional buttons.
-	 */
-	inline static public var DPAD_UP_LEFT_RIGHT:Int = 3;
-	/**
-	 * Use all of 4 directional buttons.
-	 */ 
-	inline static public var DPAD_FULL:Int = 4;
-	
-	/**
-	 * Don't use any action buttons.
-	 */ 
-	inline static public var ACTION_NONE:Int = 0;
-	/**
-	 * Use the A button only. 
-	 */ 
-	inline static public var ACTION_A:Int = 1;
-	/**
-	 * Use the A and B buttons.
-	 */ 
-	inline static public var ACTION_A_B:Int = 2;
-	/**
-	 * Use the A, B and C buttons.
-	 */
-	inline static public var ACTION_A_B_C:Int = 3;
-	/**
-	 * Use the A, B, X and Y buttons.
-	 */
-	inline static public var ACTION_A_B_X_Y:Int = 4;
-	
 	/**
 	 * Button A
 	 */
@@ -93,83 +51,82 @@ class FlxVirtualPad extends FlxTypedGroup<FlxButton>
 	/**
 	 * Group of directions buttons.
 	 */ 
-	public var dPad:FlxTypedGroup<FlxButton>;
+	public var dPad:FlxSpriteGroup;
 	/**
 	 * Group of action buttons.
 	 */ 
-	public var actions:FlxTypedGroup<FlxButton>;
-	
-	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the gamepad.
-	 */
-	public var alpha(default, set):Float;
+	public var actions:FlxSpriteGroup;
 	
 	/**
 	 * Create a gamepad which contains 4 directional buttons and 4 action buttons.
 	 * 
-	 * @param 	DPadMode	The D-Pad mode. FlxGamePad.DPAD_FULL for example.
-	 * @param 	ActionMode	The action buttons mode. FlxGamePad.ACTION_A_B_C for example.
+	 * @param 	DPadMode	The D-Pad mode. FULL for example.
+	 * @param 	ActionMode	The action buttons mode. A_B_C for example.
 	 */
-	public function new(DPadMode:Int = DPAD_FULL, ActionMode:Int = ACTION_A_B_C)
+	public function new(?DPad:DPadMode, ?Action:ActionMode)
 	{	
 		super();
+		scrollFactor.set();
 		
-		dPad = new FlxTypedGroup<FlxButton>();
-		actions = new FlxTypedGroup<FlxButton>();
+		if (DPad == null) {
+			DPad = FULL;
+		}
+		if (Action == null) {
+			Action = A_B_C;
+		}
 		
-		switch (DPadMode)
+		dPad = new FlxSpriteGroup();
+		dPad.scrollFactor.set();
+		
+		actions = new FlxSpriteGroup();
+		actions.scrollFactor.set();
+		
+		switch (DPad)
 		{
-			case DPAD_UP_DOWN:
+			case UP_DOWN:
 				dPad.add(add(buttonUp = createButton(0, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_UP)));
 				dPad.add(add(buttonDown = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_DOWN)));
-			case DPAD_LEFT_RIGHT:
+			case LEFT_RIGHT:
 				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_LEFT)));
 				dPad.add(add(buttonRight = createButton(42, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_RIGHT)));
-			case DPAD_UP_LEFT_RIGHT:
+			case UP_LEFT_RIGHT:
 				dPad.add(add(buttonUp = createButton(35, FlxG.height - 81, 44, 45, FlxAssets.IMG_BUTTON_UP)));
 				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_LEFT)));
 				dPad.add(add(buttonRight = createButton(69, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_RIGHT)));
-			case DPAD_FULL:
+			case FULL:
 				dPad.add(add(buttonUp = createButton(35, FlxG.height - 116, 44, 45, FlxAssets.IMG_BUTTON_UP)));	
 				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 81, 44, 45, FlxAssets.IMG_BUTTON_LEFT)));
 				dPad.add(add(buttonRight = createButton(69, FlxG.height - 81, 44, 45, FlxAssets.IMG_BUTTON_RIGHT)));	
 				dPad.add(add(buttonDown = createButton(35, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_DOWN)));
+			case NONE: // do nothing
 		}
 		
-		switch (ActionMode)
+		switch (Action)
 		{
-			case ACTION_A:
+			case A:
 				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
-			case ACTION_A_B:
+			case A_B:
 				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
 				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));
-			case ACTION_A_B_C:
+			case A_B_C:
 				actions.add(add(buttonA = createButton(FlxG.width - 128, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
 				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));
 				actions.add(add(buttonC = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_C)));
-			case ACTION_A_B_X_Y:
+			case A_B_X_Y:
 				actions.add(add(buttonY = createButton(FlxG.width - 86, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_Y)));
 				actions.add(add(buttonX = createButton(FlxG.width - 44, FlxG.height - 85, 44, 45, FlxAssets.IMG_BUTTON_X)));
 				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_B)));
 				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxAssets.IMG_BUTTON_A)));
+			case NONE: // do nothing
 		}
-		
-		alpha = 1;
 	}
 	
 	override public function destroy():Void
 	{
 		super.destroy();
 		
-		if (dPad != null)
-		{
-			dPad.destroy();
-		}
-		
-		if (actions != null)
-		{
-			actions.destroy();
-		}
+		dPad = FlxG.safeDestroy(dPad);
+		actions = FlxG.safeDestroy(actions);
 		
 		dPad = null;
 		actions = null;
@@ -214,19 +171,20 @@ class FlxVirtualPad extends FlxTypedGroup<FlxButton>
 		
 		return button;
 	}
-	
-	private function set_alpha(Alpha:Float):Float
-	{
-		alpha = Alpha;
-		
-		for (member in members)
-		{
-			if (member != null)
-			{
-				member.alpha = Alpha;
-			}
-		}
-		
-		return Alpha;
-	}
+}
+
+enum DPadMode {
+	NONE;
+	UP_DOWN;
+	LEFT_RIGHT;
+	UP_LEFT_RIGHT;
+	FULL;
+}
+
+enum ActionMode {
+	NONE;
+	A;
+	A_B;
+	A_B_C;
+	A_B_X_Y;
 }

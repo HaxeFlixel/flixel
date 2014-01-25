@@ -374,6 +374,8 @@ class FlxGame extends Sprite
 			FlxG.bitmap.onContext();
 		#end
 		
+		FlxG.resizeGame(width, height);
+		
 		state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
 		
@@ -395,7 +397,8 @@ class FlxGame extends Sprite
 			}
 		#end
 		
-		FlxG.resizeGame(width, height);
+		inputContainer.scaleX = 1 / FlxG.game.scaleX;
+		inputContainer.scaleY = 1 / FlxG.game.scaleY;
 	}
 	
 	/**
@@ -483,7 +486,7 @@ class FlxGame extends Sprite
 		}
 		else
 		{
-			requestedState = cast (new FlxSplash(_iState));
+			requestedState = new FlxSplash(_iState);
 			_skipSplash = true; // only show splashscreen once
 		}
 		#end
@@ -514,6 +517,10 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		FlxG.plugins.onStateSwitch();
+		
+		#if FLX_RECORD
+		FlxRandom.updateStateSeed();
+		#end
 		
 		#if !FLX_NO_DEBUG
 		// Clear the debugger overlay's Watch window
@@ -546,7 +553,9 @@ class FlxGame extends Sprite
 	
 	private function gameStart():Void
 	{
+		#if !FLX_NO_MOUSE
 		FlxG.mouse.onGameStart();
+		#end
 		_gameJustStarted = false;
 	}
 	
@@ -570,7 +579,7 @@ class FlxGame extends Sprite
 		if (recordingRequested)
 		{
 			recordingRequested = false;
-			replay.create(FlxRandom.globalSeed);
+			replay.create(FlxRandom.getRecordingSeed());
 			recording = true;
 			
 			#if !FLX_NO_DEBUG
