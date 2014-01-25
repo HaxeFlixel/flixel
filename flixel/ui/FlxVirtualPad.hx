@@ -152,7 +152,7 @@ class FlxVirtualPad extends FlxSpriteGroup
 	 * @param 	Callback	The callback for the button.
 	 * @return	The button
 	 */
-	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Image:String, ?OnClick:Dynamic->Void):FlxButton
+	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Image:String, ?OnClick:Void->Void):FlxButton
 	{
 		var button:FlxButton = new FlxButton(X, Y);
 		button.loadGraphic(Image, true, false, Width, Height);
