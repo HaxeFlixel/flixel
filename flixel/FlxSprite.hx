@@ -339,8 +339,8 @@ class FlxSprite extends FlxObject
 				region.tileHeight = region.height;
 		}
 		
-		width = region.tileWidth = frameWidth = Width;
-		height = region.tileHeight = frameHeight = Height;
+		width = frameWidth = Width;
+		height = frameHeight = Height;
 		
 		animation.destroyAnimations();
 		
