@@ -36,21 +36,20 @@ class InputFrontEnd
 		return Input;
 	}
 	
-	private function new()
-	{
-		list = new Array<IFlxInput>();
-	}
-	
 	/**
 	 * Resets the inputs.
 	 */
-	@:allow(flixel.FlxState.resetSubState)
-	inline private function reset():Void
+	public function reset():Void
 	{
 		for (input in list)
 		{
 			input.reset();
 		}
+	}
+	
+	private function new()
+	{
+		list = new Array<IFlxInput>();
 	}
 	
 	/**

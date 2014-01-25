@@ -288,6 +288,17 @@ class FlxGamepadManager implements IFlxInput
 		numActiveGamepads = 0;
 	}
 	
+	/**
+	 * Resets all the keys on all joys.
+	 */
+	public function reset():Void
+	{
+		for (gamepad in _gamepads)
+		{
+			gamepad.reset();
+		}
+	}
+	
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
@@ -399,17 +410,6 @@ class FlxGamepadManager implements IFlxInput
 		for (gamepad in _gamepads)
 		{
 			gamepad.update();
-		}
-	}
-	
-	/**
-	 * Resets all the keys on all joys.
-	 */
-	private function reset():Void
-	{
-		for (gamepad in _gamepads)
-		{
-			gamepad.reset();
 		}
 	}
 	

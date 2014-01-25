@@ -369,7 +369,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Resets the just pressed/just released flags and sets mouse to not pressed.
 	 */
-	private function reset():Void
+	public function reset():Void
 	{
 		_leftButton.reset();
 		
