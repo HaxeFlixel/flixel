@@ -175,7 +175,7 @@ class PlayState extends FlxState
 		// randomize
 		if (FlxG.keys.justReleased.R) 
 		{
-			for (obj in aliens) 
+			for (obj in aliens.members) 
 			{
 				// Don't randomize the player's position
 				if (obj != player)
