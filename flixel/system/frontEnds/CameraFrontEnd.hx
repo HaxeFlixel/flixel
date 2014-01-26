@@ -49,12 +49,12 @@ class CameraFrontEnd
 	/**
 	 * Remove a camera from the game.
 	 * 
-	 * @param	Camera	The camera you want to remove.
-	 * @param	Destroy	Whether to call destroy() on the camera, default value is true.
+	 * @param   Camera    The camera you want to remove.
+	 * @param   Destroy   Whether to call destroy() on the camera, default value is true.
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
-		if (Camera != null && FlxG.game.contains(Camera.flashSprite))
+		if ((Camera != null) && FlxG.game.contains(Camera.flashSprite))
 		{
 			FlxG.game.removeChild(Camera.flashSprite);
 			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
@@ -66,7 +66,7 @@ class CameraFrontEnd
 		}
 		else
 		{
-			FlxG.log.error("Removing camera, not part of game.");
+			FlxG.log.warn("FlxG.cameras.remove(): The camera you attemped to remove is not a part of the game.");
 		}
 		
 		#if !flash
