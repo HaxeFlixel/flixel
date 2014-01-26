@@ -228,7 +228,7 @@ class FlxG
 	static public var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
 	/**
 	 * A reference to the <code>CameraFrontEnd</code> object. Contains things related to cameras,
-	 * a <code>list</code> of all cameras and the <code>defaultCamera</code> amongst other things.
+	 * a <code>list</code> of all cameras and several effects like <code>flash()</code> or <code>fade()</code>.
 	 */
 	static public var cameras(default, null):CameraFrontEnd = new CameraFrontEnd();
 	/**
