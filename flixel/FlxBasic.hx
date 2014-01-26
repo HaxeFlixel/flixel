@@ -17,8 +17,8 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var ID:Int = -1;
 	/**
-	 * An array of camera objects that this object will use during <code>draw()</code>. This value will initialize itself during the first draw to automatically
-	 * point at the main camera list out in <code>FlxG</code> unless you already set it. You can also change it afterward too, very flexible!
+	 * This determines on which <code>FlxCameras</code> this object will be drawn - by default, 
+	 * it uses <code>FlxG.cameras.list</code>), which means it is drawn on all existing cameras.
 	 */
 	public var cameras:Array<FlxCamera>;
 	/**
@@ -30,12 +30,13 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var visible(default, set):Bool = true;
 	/**
-	 * Useful state for many game objects - "dead" (!alive) vs alive.
-	 * <code>kill()</code> and <code>revive()</code> both flip this switch (along with exists, but you can override that).
+	 * Useful state for many game objects - "dead" (!alive) vs alive. <code>kill()</code> and
+	 * <code>revive()</code> both flip this switch (along with exists, but you can override that).
 	 */
 	public var alive(default, set):Bool = true;
 	/**
-	 * This flag indicates whether this objects has been destroyed or not. Cannot be set, use <code>destroy()</code> and <code>revive()</code>.
+	 * This flag indicates whether this objects has been destroyed or not. 
+	 * Cannot be set, use <code>destroy()</code> and <code>revive()</code>.
 	 */
 	public var exists(default, set):Bool = true;
 	
