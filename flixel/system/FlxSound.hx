@@ -59,9 +59,8 @@ class FlxSound extends FlxBasic
 	 */
 	public var autoDestroy:Bool;
 	/**
-	 * Tracker for sound complete callback. Default is null.
-	 * If assigend, will be called each time when sound reaches its end.
-	 * Works only on flash and desktop targets.
+	 * Tracker for sound complete callback. Default is null. If assigend, will be called 
+	 * each time when sound reaches its end. Works only on flash and desktop targets.
 	 */
 	public var onComplete:Void->Void;
 
