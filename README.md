@@ -63,7 +63,19 @@ This is a large set of demos (**currently 44!**) using the HaxeFlixel engine and
   * FileBrowse
   * FlxTypeText
   * RPG Interface
-  
+
+##For Developers
+
+If you are wanting to contribute code, please review the follwing documentation:
+
+- [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
+- [Code Style](http://haxeflixel.com/documentation/code-style)
+- [Install development flixel](http://haxeflixel.com/documentation/install-development-flixel/)
+
+If you have a question or have not contributed on github before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
+
+For using git with github we recommended using a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
+
 =
 
 [![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel-demos/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
