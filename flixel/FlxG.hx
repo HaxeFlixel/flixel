@@ -117,12 +117,12 @@ class FlxG
 	/**
 	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	@:allow(flixel.system.scaleMode.StageSizeScaleMode) 
+	@:allow(flixel.system.scaleModes.StageSizeScaleMode) 
 	static public var width(default, null):Int;
 	/**
 	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	@:allow(flixel.system.scaleMode.StageSizeScaleMode)
+	@:allow(flixel.system.scaleModes.StageSizeScaleMode)
 	static public var height(default, null):Int;
 	/**
 	 * The scale mode the game should use - available policies are <code>FillScaleMode</code>, <code>FixedScaleMode</code>,
