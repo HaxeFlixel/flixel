@@ -53,7 +53,7 @@ class CachedGraphics
 	/**
 	 * Usage counter for this CachedGraphics object.
 	 */
-	public var useCount(default, set):Int;
+	public var useCount(default, set):Int = 0;
 	
 	private var _tilesheet:TileSheetData;
 	
