@@ -37,12 +37,6 @@ class FlxTrailArea extends FlxSprite
 	public var blendMode:BlendMode = null;
 	
 	/**
-	 * If smoothing should be used for drawing the sprite
-	 * Ignored in simple render mode
-	 */
-	public var smoothing:Bool = false;
-	
-	/**
 	 * Stores all sprites that have a trail.
 	 */
 	public var group:FlxTypedGroup<FlxSprite>;
@@ -114,10 +108,10 @@ class FlxTrailArea extends FlxSprite
 	  * @param	AlphaMultiplier By what the area's alpha is multiplied per update
 	  * @param	Delay			How often to update the trail. 1 updates every frame
 	  * @param	SimpleRender 	If simple rendering should be used. Ignores all sprite transformations
-	  * @param	Smoothing		If sprites should be smoothed when drawn to the area. Ignored when simple rendering is on
+	  * @param	Antialiasing	If sprites should be smoothed when drawn to the area. Ignored when simple rendering is on
 	  * @param	TrailBlendMode 	The blend mode used for the area. Only works in flash
 	  */
-	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, AlphaMultiplier:Float = 0.8, Delay:Int = 2, SimpleRender:Bool = false, Smoothing:Bool = false, ?TrailBlendMode:BlendMode) 
+	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, AlphaMultiplier:Float = 0.8, Delay:Int = 2, SimpleRender:Bool = false, Antialiasing:Bool = false, ?TrailBlendMode:BlendMode) 
 	{
 		super(X, Y);
 		
@@ -131,7 +125,7 @@ class FlxTrailArea extends FlxSprite
 		delay = Delay;
 		simpleRender = SimpleRender;
 		blendMode = TrailBlendMode;
-		smoothing = Smoothing;
+		antialiasing = Antialiasing;
 		alphaMultiplier = AlphaMultiplier;
 	}
 	
@@ -166,7 +160,7 @@ class FlxTrailArea extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		//Count the frame
+		//Count the frames
 		_counter++;
 		
 		if (_counter >= delay) 
@@ -178,28 +172,30 @@ class FlxTrailArea extends FlxSprite
 			framePixels.colorTransform(new Rectangle(0, 0, framePixels.width, framePixels.height), cTrans);
 			
 			//Copy the graphics of all sprites on the renderBitmap
-			var i:Int = 0;
-			while (i < group.members.length) 
+			for (member in group.members)
 			{
-				if (group.members[i].exists) 
+				if (member.exists) 
 				{
 					if (simpleRender) 
 					{
-						framePixels.copyPixels(group.members[i].framePixels, new Rectangle(0, 0, group.members[i].frameWidth, group.members[i].frameHeight), new Point(group.members[i].x - x, group.members[i].y - y), null, null, true);
+						framePixels.copyPixels(member.framePixels, new Rectangle(0, 0, member.frameWidth, member.frameHeight), 
+												new Point(member.x - x, member.y - y), null, null, true);
 					}
 					else 
 					{
 						var matrix = new Matrix();
-						matrix.scale(group.members[i].scale.x, group.members[i].scale.y);
-						matrix.translate(-(group.members[i].frameWidth / 2), -(group.members[i].frameHeight / 2)); 
-						matrix.rotate(group.members[i].angle * FlxAngle.TO_RAD);
-						matrix.translate((group.members[i].frameWidth / 2), (group.members[i].frameHeight / 2)); 
-						matrix.translate(group.members[i].x - x, group.members[i].y - y);
-						framePixels.draw(group.members[i].framePixels, matrix, group.members[i].colorTransform, blendMode, null, smoothing);
+						matrix.scale(member.scale.x, member.scale.y);
+						matrix.translate( -(member.frameWidth / 2), -(member.frameHeight / 2)); 
+						if ((member.angle != 0) && (member.bakedRotation <= 0))
+						{
+							matrix.rotate(member.angle * FlxAngle.TO_RAD);
+						}
+						matrix.translate((member.frameWidth / 2), (member.frameHeight / 2)); 
+						matrix.translate(member.x - x, member.y - y);
+						framePixels.draw(member.framePixels, matrix, member.colorTransform, blendMode, null, antialiasing);
 					}
 					
 				}
-				i++;
 			}
 			
 			framePixels.unlock();
