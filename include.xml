@@ -4,4 +4,8 @@
 	
 	<assets path="assets/images" rename="flixel/img" />
 	<assets path="assets/sounds" rename="flixel/snd" />
+	
+	<!-- Disable shaders by default, HaxeFlixel doesn't support them -->
+	<!-- This can significantly improve performance on some devices, especially iOS -->
+	<window allow-shaders="false" />
 </project>
