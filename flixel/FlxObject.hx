@@ -195,9 +195,9 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal static private variables, for performance reasons.
 	 */
-	static private var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
-	static private var _firstSeparateFlxRect:FlxRect = new FlxRect();
-	static private var _secondSeparateFlxRect:FlxRect = new FlxRect();
+	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
+	private static var _firstSeparateFlxRect:FlxRect = new FlxRect();
+	private static var _secondSeparateFlxRect:FlxRect = new FlxRect();
 	
 	
 	/**
@@ -222,7 +222,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for initialization of some object's variables
 	 */
-	private function initVars():Void
+	function initVars():Void
 	{
 		collisionType = FlxCollisionType.OBJECT;
 		last = new FlxPoint(x, y);
@@ -235,7 +235,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for initialization of some variables that are used in updateMotion()
 	 */
-	inline private function initMotionVars():Void
+	inline function initMotionVars():Void
 	{
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
@@ -292,7 +292,7 @@ class FlxObject extends FlxBasic
 	 * Internal function for updating the position and speed of this object. Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
-	inline private function updateMotion():Void
+	inline function updateMotion():Void
 	{
 		var delta:Float;
 		var velocityDelta:Float;
@@ -937,7 +937,7 @@ class FlxObject extends FlxBasic
 	 * It changes cachedGraphics' useCount also for better memory tracking.
 	 * @param	value
 	 */
-	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
+	function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
 		if (cachedGraphics != null && cachedGraphics != Value)
 		{
@@ -954,17 +954,17 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal
 	 */
-	private function set_x(NewX:Float):Float
+	function set_x(NewX:Float):Float
 	{
 		return x = NewX;
 	}
 	
-	private function set_y(NewY:Float):Float
+	function set_y(NewY:Float):Float
 	{
 		return y = NewY;
 	}
 	
-	private function set_width(Width:Float):Float
+	function set_width(Width:Float):Float
 	{
 		#if !FLX_NO_DEBUG
 		if (Width < 0) 
@@ -982,7 +982,7 @@ class FlxObject extends FlxBasic
 		return Width;
 	}
 	
-	private function set_height(Height:Float):Float
+	function set_height(Height:Float):Float
 	{
 		#if !FLX_NO_DEBUG
 		if (Height < 0) 
@@ -1000,22 +1000,22 @@ class FlxObject extends FlxBasic
 		return Height;
 	}
 	
-	private function get_width():Float
+	function get_width():Float
 	{
 		return width;
 	}
 	
-	private function get_height():Float
+	function get_height():Float
 	{
 		return height;
 	}
 	
-	inline private function get_solid():Bool
+	inline function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}
 	
-	private function set_solid(Solid:Bool):Bool
+	function set_solid(Solid:Bool):Bool
 	{
 		if (Solid)
 		{
@@ -1028,27 +1028,27 @@ class FlxObject extends FlxBasic
 		return Solid;
 	}
 	
-	private function set_angle(Value:Float):Float
+	function set_angle(Value:Float):Float
 	{
 		return angle = Value;
 	}
 	
-	private function set_moves(Value:Bool):Bool
+	function set_moves(Value:Bool):Bool
 	{
 		return moves = Value;
 	}
 	
-	private function set_immovable(Value:Bool):Bool
+	function set_immovable(Value:Bool):Bool
 	{
 		return immovable = Value;
 	}
 	
-	private function set_forceComplexRender(Value:Bool):Bool 
+	function set_forceComplexRender(Value:Bool):Bool
 	{
 		return forceComplexRender = Value;
 	}
 	
-	private function set_scrollFactor(Value:FlxPoint):FlxPoint
+	function set_scrollFactor(Value:FlxPoint):FlxPoint
 	{
 		_scrollFactor = cast Value;
 		return scrollFactor = Value;
@@ -1060,7 +1060,7 @@ class FlxObject extends FlxBasic
 	 */
 	public var debugBoundingBoxColor(default, set):Int;
 	
-	private function set_debugBoundingBoxColor(Value:Int):Int 
+	function set_debugBoundingBoxColor(Value:Int):Int
 	{
 		_boundingBoxColorOverritten = true;
 		return debugBoundingBoxColor = Value; 

@@ -6,10 +6,10 @@ import flixel.util.FlxPoint;
 class FlxGamepad implements IFlxDestroyable
 {
 	// Button States (mirrors Key States in FlxKey.hx)
-	public inline static var JUST_RELEASED	:Int = -1;
-	public inline static var RELEASED		:Int = 0;
-	public inline static var PRESSED		:Int = 1;
-	public inline static var JUST_PRESSED	:Int = 2;
+	public static inline var JUST_RELEASED	:Int = -1;
+	public static inline var RELEASED		:Int = 0;
+	public static inline var PRESSED		:Int = 1;
+	public static inline var JUST_PRESSED	:Int = 2;
 	
 	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;

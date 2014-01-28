@@ -23,11 +23,11 @@ class Window extends Sprite
 	/**
 	 * The background color of the window.
 	 */
-	public inline static var BG_COLOR:Int = 0xDD5F5F5F;
+	public static inline var BG_COLOR:Int = 0xDD5F5F5F;
 	/**
 	 * The color used for the "handle" at the top of the window.
 	 */
-	public inline static var TOP_COLOR:Int = 0xBB000000;
+	public static inline var TOP_COLOR:Int = 0xBB000000;
 	/**
 	 * How many windows there are currently in total.
 	 */

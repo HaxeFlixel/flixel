@@ -25,11 +25,11 @@ class Console extends Window
 	/**
 	 * The text that is displayed in the console's input field by default.
 	 */
-	inline static private var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
+	private static inline var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
 	/**
 	 * The amount of commands that will be saved.
 	 */
-	inline static private var _HISTORY_MAX:Int = 25;
+	private static inline var _HISTORY_MAX:Int = 25;
 	
 	/**
 	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 

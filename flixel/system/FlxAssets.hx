@@ -14,58 +14,58 @@ import flixel.FlxG;
 class FlxAssets
 {
 	// debugger 
-	public inline static var IMG_WINDOW_HANDLE:String = "flixel/img/debugger/windowHandle.png";
-	public inline static var IMG_FLIXEL:String = "flixel/img/debugger/flixel.png";
+	public static inline var IMG_WINDOW_HANDLE:String = "flixel/img/debugger/windowHandle.png";
+	public static inline var IMG_FLIXEL:String = "flixel/img/debugger/flixel.png";
 	
 	// debugger/buttons
-	public inline static var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/drawDebug.png";
-	public inline static var IMG_WATCH_DEBUG:String = "flixel/img/debugger/buttons/watchDebug.png";
-	public inline static var IMG_STATS_DEBUG:String = "flixel/img/debugger/buttons/statsDebug.png";
-	public inline static var IMG_LOG_DEBUG:String = "flixel/img/debugger/buttons/logDebug.png";
-	public inline static var IMG_CONSOLE:String = "flixel/img/debugger/buttons/console.png";
-	public inline static var IMG_OPEN:String = "flixel/img/debugger/buttons/open.png";
-	public inline static var IMG_RECORD_OFF:String = "flixel/img/debugger/buttons/record_off.png";
-	public inline static var IMG_RECORD_ON:String = "flixel/img/debugger/buttons/record_on.png";
-	public inline static var IMG_STOP:String = "flixel/img/debugger/buttons/stop.png";
-	public inline static var IMG_RESTART:String = "flixel/img/debugger/buttons/restart.png";
-	public inline static var IMG_PAUSE:String = "flixel/img/debugger/buttons/pause.png";
-	public inline static var IMG_PLAY:String = "flixel/img/debugger/buttons/play.png";
-	public inline static var IMG_STEP:String = "flixel/img/debugger/buttons/step.png";
+	public static inline var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/drawDebug.png";
+	public static inline var IMG_WATCH_DEBUG:String = "flixel/img/debugger/buttons/watchDebug.png";
+	public static inline var IMG_STATS_DEBUG:String = "flixel/img/debugger/buttons/statsDebug.png";
+	public static inline var IMG_LOG_DEBUG:String = "flixel/img/debugger/buttons/logDebug.png";
+	public static inline var IMG_CONSOLE:String = "flixel/img/debugger/buttons/console.png";
+	public static inline var IMG_OPEN:String = "flixel/img/debugger/buttons/open.png";
+	public static inline var IMG_RECORD_OFF:String = "flixel/img/debugger/buttons/record_off.png";
+	public static inline var IMG_RECORD_ON:String = "flixel/img/debugger/buttons/record_on.png";
+	public static inline var IMG_STOP:String = "flixel/img/debugger/buttons/stop.png";
+	public static inline var IMG_RESTART:String = "flixel/img/debugger/buttons/restart.png";
+	public static inline var IMG_PAUSE:String = "flixel/img/debugger/buttons/pause.png";
+	public static inline var IMG_PLAY:String = "flixel/img/debugger/buttons/play.png";
+	public static inline var IMG_STEP:String = "flixel/img/debugger/buttons/step.png";
 	
 	// logo
-	public inline static var IMG_LOGO:String = "flixel/img/logo/logo.png";
-	public inline static var IMG_DEFAULT:String = "flixel/img/logo/default.png";
+	public static inline var IMG_LOGO:String = "flixel/img/logo/logo.png";
+	public static inline var IMG_DEFAULT:String = "flixel/img/logo/default.png";
 	
 	// preloader
-	public inline static var IMG_CORNERS:String = "flixel/img/preloader/corners.png";
-	public inline static var IMG_LIGHT:String = "flixel/img/preloader/light.png";
+	public static inline var IMG_CORNERS:String = "flixel/img/preloader/corners.png";
+	public static inline var IMG_LIGHT:String = "flixel/img/preloader/light.png";
 	
 	// tile
-	public inline static var IMG_AUTO:String = "flixel/img/tile/autotiles.png";
-	public inline static var IMG_AUTO_ALT:String = "flixel/img/tile/autotiles_alt.png";
+	public static inline var IMG_AUTO:String = "flixel/img/tile/autotiles.png";
+	public static inline var IMG_AUTO_ALT:String = "flixel/img/tile/autotiles_alt.png";
 	
 	// ui
-	public inline static var IMG_BUTTON:String = "flixel/img/ui/button.png";
-	public inline static var IMG_CURSOR:String = "flixel/img/ui/cursor.png";
+	public static inline var IMG_BUTTON:String = "flixel/img/ui/button.png";
+	public static inline var IMG_CURSOR:String = "flixel/img/ui/cursor.png";
 
 	// ui/analog
-	public inline static var IMG_BASE:String = "flixel/img/ui/analog/base.png";
-	public inline static var IMG_THUMB:String = "flixel/img/ui/analog/thumb.png";
+	public static inline var IMG_BASE:String = "flixel/img/ui/analog/base.png";
+	public static inline var IMG_THUMB:String = "flixel/img/ui/analog/thumb.png";
 
 	// ui/virtualpad
-	public inline static var IMG_BUTTON_A:String = "flixel/img/ui/virtualpad/a.png";
-	public inline static var IMG_BUTTON_B:String = "flixel/img/ui/virtualpad/b.png";
-	public inline static var IMG_BUTTON_C:String = "flixel/img/ui/virtualpad/c.png";
-	public inline static var IMG_BUTTON_X:String = "flixel/img/ui/virtualpad/x.png";
-	public inline static var IMG_BUTTON_Y:String = "flixel/img/ui/virtualpad/y.png";
-	public inline static var IMG_BUTTON_UP:String = "flixel/img/ui/virtualpad/up.png";
-	public inline static var IMG_BUTTON_DOWN:String = "flixel/img/ui/virtualpad/down.png";
-	public inline static var IMG_BUTTON_LEFT:String = "flixel/img/ui/virtualpad/left.png";
-	public inline static var IMG_BUTTON_RIGHT:String = "flixel/img/ui/virtualpad/right.png";
+	public static inline var IMG_BUTTON_A:String = "flixel/img/ui/virtualpad/a.png";
+	public static inline var IMG_BUTTON_B:String = "flixel/img/ui/virtualpad/b.png";
+	public static inline var IMG_BUTTON_C:String = "flixel/img/ui/virtualpad/c.png";
+	public static inline var IMG_BUTTON_X:String = "flixel/img/ui/virtualpad/x.png";
+	public static inline var IMG_BUTTON_Y:String = "flixel/img/ui/virtualpad/y.png";
+	public static inline var IMG_BUTTON_UP:String = "flixel/img/ui/virtualpad/up.png";
+	public static inline var IMG_BUTTON_DOWN:String = "flixel/img/ui/virtualpad/down.png";
+	public static inline var IMG_BUTTON_LEFT:String = "flixel/img/ui/virtualpad/left.png";
+	public static inline var IMG_BUTTON_RIGHT:String = "flixel/img/ui/virtualpad/right.png";
 	
 	// sounds
-	public inline static var SND_BEEP:String = "flixel/snd/beep.wav";
-	public inline static var SND_FLIXEL:String = "flixel/snd/flixel.wav";
+	public static inline var SND_BEEP:String = "flixel/snd/beep.wav";
+	public static inline var SND_FLIXEL:String = "flixel/snd/flixel.wav";
 	
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";

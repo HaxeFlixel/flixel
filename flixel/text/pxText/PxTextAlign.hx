@@ -5,7 +5,7 @@ package flixel.text.pxText;
  */
 class PxTextAlign 
 {
-	public inline static var LEFT:Int = 1;
-	public inline static var RIGHT:Int = 2;
-	public inline static var CENTER:Int = 3;
+	public static inline var LEFT:Int = 1;
+	public static inline var RIGHT:Int = 2;
+	public static inline var CENTER:Int = 3;
 }
