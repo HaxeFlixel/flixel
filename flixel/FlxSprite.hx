@@ -60,7 +60,8 @@ class FlxSprite extends FlxObject
 	 */
 	public var frames(default, null):Int;
 	/**
-	 * How many frames of "baked" rotation there are (if any).
+	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
+	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
 	 */
 	public var bakedRotation(default, null):Float;
 	/**
