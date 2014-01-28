@@ -174,7 +174,7 @@ class FlxTrailArea extends FlxSprite
 			_counter = 0;
 			framePixels.lock();
 			//Color transform bitmap
-			var cTrans:ColorTransform = new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
+			var cTrans = new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
 			framePixels.colorTransform(new Rectangle(0, 0, framePixels.width, framePixels.height), cTrans);
 			
 			//Copy the graphics of all sprites on the renderBitmap
@@ -185,17 +185,17 @@ class FlxTrailArea extends FlxSprite
 				{
 					if (simpleRender) 
 					{
-						framePixels.copyPixels(group.members[i].pixels, new Rectangle(0, 0, group.members[i].frameWidth, group.members[i].frameHeight), new Point(group.members[i].x - x, group.members[i].y - y), null, null, true);
+						framePixels.copyPixels(group.members[i].framePixels, new Rectangle(0, 0, group.members[i].frameWidth, group.members[i].frameHeight), new Point(group.members[i].x - x, group.members[i].y - y), null, null, true);
 					}
 					else 
 					{
-						var matrix:Matrix = new Matrix();
+						var matrix = new Matrix();
 						matrix.scale(group.members[i].scale.x, group.members[i].scale.y);
 						matrix.translate(-(group.members[i].frameWidth / 2), -(group.members[i].frameHeight / 2)); 
 						matrix.rotate(group.members[i].angle * FlxAngle.TO_RAD);
 						matrix.translate((group.members[i].frameWidth / 2), (group.members[i].frameHeight / 2)); 
 						matrix.translate(group.members[i].x - x, group.members[i].y - y);
-						framePixels.draw(group.members[i].pixels, matrix, group.members[i].colorTransform, blendMode, null, smoothing);
+						framePixels.draw(group.members[i].framePixels, matrix, group.members[i].colorTransform, blendMode, null, smoothing);
 					}
 					
 				}
