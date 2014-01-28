@@ -127,6 +127,9 @@ class FlxTrailArea extends FlxSprite
 		blendMode = TrailBlendMode;
 		antialiasing = Antialiasing;
 		alphaMultiplier = AlphaMultiplier;
+		
+		// Initialize private fields
+		_matrix = new Matrix();
 	}
 	
 	/**
@@ -183,16 +186,24 @@ class FlxTrailArea extends FlxSprite
 					}
 					else 
 					{
-						var matrix = new Matrix();
-						matrix.scale(member.scale.x, member.scale.y);
-						matrix.translate( -(member.frameWidth / 2), -(member.frameHeight / 2)); 
-						if ((member.angle != 0) && (member.bakedRotation <= 0))
+						var scaled = (member.scale.x != 1) || (member.scale.y != 1);
+						var rotated = (member.angle != 0) && (member.bakedRotation <= 0);
+						_matrix.identity();
+						if (rotated || scaled) 
 						{
-							matrix.rotate(member.angle * FlxAngle.TO_RAD);
+							_matrix.translate( -(member.origin.x), -(member.origin.y));
+							if (scaled)
+							{
+								_matrix.scale(member.scale.x, member.scale.y);
+							}
+							if (rotated)
+							{
+								_matrix.rotate(member.angle * FlxAngle.TO_RAD);
+							}
+							_matrix.translate((member.origin.x), (member.origin.y));
 						}
-						matrix.translate((member.frameWidth / 2), (member.frameHeight / 2)); 
-						matrix.translate(member.x - x, member.y - y);
-						framePixels.draw(member.framePixels, matrix, member.colorTransform, blendMode, null, antialiasing);
+						_matrix.translate(member.x - x, member.y - y);
+						framePixels.draw(member.framePixels, _matrix, member.colorTransform, blendMode, null, antialiasing);
 					}
 					
 				}
