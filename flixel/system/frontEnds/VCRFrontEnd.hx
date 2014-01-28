@@ -171,7 +171,7 @@ class VCRFrontEnd
 	/**
 	 * Stops the current replay.
 	 */
-	inline public function stopReplay():Void
+	public inline function stopReplay():Void
 	{
 		FlxG.game.replaying = false;
 		FlxG.inputs.reset();
@@ -214,7 +214,7 @@ class VCRFrontEnd
 	 * 
 	 * @return	The replay data in simple ASCII format (see <code>FlxReplay.save()</code>).
 	 */
-	inline public function stopRecording():String
+	public inline function stopRecording():String
 	{
 		FlxG.game.recording = false;
 

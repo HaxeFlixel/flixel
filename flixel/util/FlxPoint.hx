@@ -14,7 +14,7 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public var x(default, set):Float = 0;
 	
-	private function set_x(Value:Float):Float
+	function set_x(Value:Float):Float
 	{
 		return x = Value;
 	}
@@ -24,7 +24,7 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public var y(default, set):Float = 0;
 	
-	private function set_y(Value:Float):Float
+	function set_y(Value:Float):Float
 	{
 		return y = Value;
 	}
@@ -113,7 +113,7 @@ class FlxPoint implements IFlxDestroyable
 	 * @param	RectHeight	The height of the region to test within
 	 * @return	True if the point is within the region, otherwise false
 	 */
-	inline public function inCoords(RectX:Float, RectY:Float, RectWidth:Float, RectHeight:Float):Bool
+	public inline function inCoords(RectX:Float, RectY:Float, RectWidth:Float, RectHeight:Float):Bool
 	{
 		return FlxMath.pointInCoordinates(x, y, RectX, RectY, RectWidth, RectHeight);
 	}
@@ -124,7 +124,7 @@ class FlxPoint implements IFlxDestroyable
 	 * @param	Rect	The FlxRect to test within
 	 * @return	True if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	inline public function inFlxRect(Rect:FlxRect):Bool
+	public inline function inFlxRect(Rect:FlxRect):Bool
 	{
 		return FlxMath.pointInFlxRect(x, y, Rect);
 	}
@@ -135,7 +135,7 @@ class FlxPoint implements IFlxDestroyable
 	 * @param 	AnotherPoint	A <code>FlxPoint</code> object to calculate the distance to.
 	 * @return	The distance between the two points as a Float.
 	 */
-	inline public function distanceTo(AnotherPoint:FlxPoint):Float
+	public inline function distanceTo(AnotherPoint:FlxPoint):Float
 	{
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
@@ -145,7 +145,7 @@ class FlxPoint implements IFlxDestroyable
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
-	inline public function toString():String
+	public inline function toString():String
 	{
 		var p = FlxG.debugger.precision;
 		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " +  FlxMath.roundDecimal(y, p) + ")"; 

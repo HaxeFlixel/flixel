@@ -54,8 +54,8 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Static counters for performance tracking.
 	 */
-	static public var _ACTIVECOUNT:Int = 0;
-	static public var _VISIBLECOUNT:Int = 0;
+	public static var _ACTIVECOUNT:Int = 0;
+	public static var _VISIBLECOUNT:Int = 0;
 	#end
 	
 	public function new() 

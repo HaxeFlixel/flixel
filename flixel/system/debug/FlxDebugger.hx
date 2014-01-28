@@ -30,11 +30,11 @@ class FlxDebugger extends Sprite
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
-	inline static public var GUTTER:Int = 2;
+	public inline static var GUTTER:Int = 2;
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
-	inline static public var TOP_HEIGHT:Int = 20;
+	public inline static var TOP_HEIGHT:Int = 20;
 	
 	/**
 	 * Container for the performance monitor widget.
@@ -152,7 +152,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   Layout   The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
 	 */
-	inline public function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:DebuggerLayout):Void
 	{
 		_layout = Layout;
 		resetLayout();
@@ -217,7 +217,7 @@ class FlxDebugger extends Sprite
 		}
 	}
 	
-	inline public function onResize(Width:Float, Height:Float):Void
+	public inline function onResize(Width:Float, Height:Float):Void
 	{
 		_screen.x = Width;
 		_screen.y = Height;
@@ -334,7 +334,7 @@ class FlxDebugger extends Sprite
 	 * @param   Height   The height of the screen.
 	 */
 	@:allow(flixel.FlxGame)
-	private function new(Width:Float, Height:Float)
+	function new(Width:Float, Height:Float)
 	{
 		super();
 		visible = false;
@@ -395,7 +395,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   E   Flash mouse event.
 	 */
-	inline private function onMouseOver(?E:MouseEvent):Void
+	inline function onMouseOver(?E:MouseEvent):Void
 	{
 		hasMouse = true;
 		#if !FLX_NO_MOUSE
@@ -408,7 +408,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   E   Flash mouse event.
 	 */
-	inline private function onMouseOut(?E:MouseEvent):Void
+	inline function onMouseOut(?E:MouseEvent):Void
 	{
 		hasMouse = false;
 		
@@ -420,7 +420,7 @@ class FlxDebugger extends Sprite
 		#end
 	}
 	
-	private function removeButtonFromArray(Arr:Array<FlxSystemButton>, Button:FlxSystemButton):Void
+	function removeButtonFromArray(Arr:Array<FlxSystemButton>, Button:FlxSystemButton):Void
 	{
 		var index = FlxArrayUtil.indexOf(Arr, Button);
 		if (index != -1)
@@ -429,12 +429,12 @@ class FlxDebugger extends Sprite
 		}
 	}
 
-	inline private function toggleVisualDebug ():Void
+	inline function toggleVisualDebug ():Void
 	{
 		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 	}
 	
-	inline private function openHomepage():Void
+	inline function openHomepage():Void
 	{
 		FlxG.openURL("http://www.haxeflixel.com");
 	}

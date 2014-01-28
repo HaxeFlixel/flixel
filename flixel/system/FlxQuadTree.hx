@@ -26,7 +26,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Controls the granularity of the quad tree.  Default is 6 (decent performance on large and small worlds).
 	 */
-	static public var divisions:Int;
+	public static var divisions:Int;
 	
 	public var exists:Bool;
 	
@@ -195,7 +195,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Private, use recycle instead.
 	 */
-	private function new(X:Float, Y:Float, Width:Float, Height:Float, Parent:FlxQuadTree = null)
+	function new(X:Float, Y:Float, Width:Float, Height:Float, Parent:FlxQuadTree = null)
 	{
 		super(X, Y, Width, Height);
 		reset(X, Y, Width, Height, Parent);
@@ -458,7 +458,7 @@ class FlxQuadTree extends FlxRect
 	 * Internal function for recursively navigating and creating the tree
 	 * while adding objects to the appropriate nodes.
 	 */
-	private function addObject():Void
+	function addObject():Void
 	{
 		//If this quad (not its children) lies entirely inside this object, add it here
 		if(!_canSubdivide || ((_leftEdge >= _objectLeftEdge) && (_rightEdge <= _objectRightEdge) && (_topEdge >= _objectTopEdge) && (_bottomEdge <= _objectBottomEdge)))
@@ -549,7 +549,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Internal function for recursively adding objects to leaf lists.
 	 */
-	private function addToList():Void
+	function addToList():Void
 	{
 		var ot:FlxList;
 		if(_list == A_LIST)
@@ -653,7 +653,7 @@ class FlxQuadTree extends FlxRect
 	 * An internal function for comparing an object against the contents of a node.
 	 * @return	Whether or not any overlaps were found.
 	 */
-	private function overlapNode():Bool
+	function overlapNode():Bool
 	{
 		//Walk the list and check for overlaps
 		var overlapProcessed:Bool = false;

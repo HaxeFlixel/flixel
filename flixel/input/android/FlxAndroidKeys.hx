@@ -45,7 +45,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	KeyName		String name of the key (e.g. "BACK" or "MENU")
 	 * @param	KeyCode		The numeric code for this key.
 	 */
-	private function addKey(KeyName:String, KeyCode:Int):Void
+	function addKey(KeyName:String, KeyCode:Int):Void
 	{
 		_keyLookup.set(KeyName, KeyCode);
 		_keyList.set(KeyCode, new FlxKey(KeyName));
@@ -63,7 +63,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	inline public function anyPressed(KeyArray:Array<Dynamic>):Bool
+	public inline function anyPressed(KeyArray:Array<Dynamic>):Bool
 	{
 		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
 	}
@@ -80,7 +80,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	inline public function anyJustPressed(KeyArray:Array<Dynamic>):Bool
+	public inline function anyJustPressed(KeyArray:Array<Dynamic>):Bool
 	{
 		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
 	}
@@ -97,7 +97,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	inline public function anyJustReleased(KeyArray:Array<Dynamic>):Bool
+	public inline function anyJustReleased(KeyArray:Array<Dynamic>):Bool
 	{
 		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
 	}
@@ -109,7 +109,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	KeyName		The <code>String</code> name of the key.
 	 * @return	The key code for that key.
 	 */
-	inline public function getKeyCode(KeyName:String):Int
+	public inline function getKeyCode(KeyName:String):Int
 	{
 		return _keyLookup.get(KeyName);
 	}
@@ -158,7 +158,7 @@ class FlxAndroidKeys implements IFlxInput
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new()
+	function new()
 	{
 		_keyLookup = new Map<String, Int>();
 		
@@ -182,7 +182,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	Status		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
+	function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -220,7 +220,7 @@ class FlxAndroidKeys implements IFlxInput
 	 *
 	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
 	 */
-	private function onKeyUp(FlashEvent:KeyboardEvent):Void
+	function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
 		var c:Int = FlashEvent.keyCode;
 		
@@ -245,7 +245,7 @@ class FlxAndroidKeys implements IFlxInput
 	 *
 	 * @param	FlashEvent	Flash keyboard event.
 	 */
-	private function onKeyDown(FlashEvent:KeyboardEvent):Void
+	function onKeyDown(FlashEvent:KeyboardEvent):Void
 	{
 		var c:Int = FlashEvent.keyCode;
 		
@@ -265,7 +265,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * A Helper function to check whether an array of keycodes contains
 	 * a certain key safely (returns false if the array is null).
 	 */
-	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
+	function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -288,7 +288,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
-	inline private function updateKeyStates(KeyCode:Int, Down:Bool):Void
+	inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
 		var obj:FlxKey = _keyList[KeyCode];
 		
@@ -319,9 +319,9 @@ class FlxAndroidKeys implements IFlxInput
 		}
 	}
 	
-	inline private function onFocus():Void {}
+	inline function onFocus():Void {}
 
-	inline private function onFocusLost():Void
+	inline function onFocusLost():Void
 	{
 		reset();
 	}
@@ -329,7 +329,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
-	private function update():Void
+	function update():Void
 	{
 		for (key in _keyList)
 		{

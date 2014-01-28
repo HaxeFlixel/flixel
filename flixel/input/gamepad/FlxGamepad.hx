@@ -6,10 +6,10 @@ import flixel.util.FlxPoint;
 class FlxGamepad implements IFlxDestroyable
 {
 	// Button States (mirrors Key States in FlxKey.hx)
-	inline static public var JUST_RELEASED	:Int = -1;
-	inline static public var RELEASED		:Int = 0;
-	inline static public var PRESSED		:Int = 1;
-	inline static public var JUST_PRESSED	:Int = 2;
+	public inline static var JUST_RELEASED	:Int = -1;
+	public inline static var RELEASED		:Int = 0;
+	public inline static var PRESSED		:Int = 1;
+	public inline static var JUST_PRESSED	:Int = 2;
 	
 	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;
@@ -306,8 +306,8 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * DPAD accessor properties
 	 */
-	inline public function get_dpadUp():Bool { return hat.y < 0; }
-	inline public function get_dpadDown():Bool { return hat.y > 0; }
-	inline public function get_dpadLeft():Bool { return hat.x < 0; }
-	inline public function get_dpadRight():Bool { return hat.x > 0; }
+	public inline function get_dpadUp():Bool { return hat.y < 0; }
+	public inline function get_dpadDown():Bool { return hat.y > 0; }
+	public inline function get_dpadLeft():Bool { return hat.x < 0; }
+	public inline function get_dpadRight():Bool { return hat.x > 0; }
 }

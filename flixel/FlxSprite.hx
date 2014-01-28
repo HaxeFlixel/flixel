@@ -191,7 +191,7 @@ class FlxSprite extends FlxObject
 		}
 	}
 	
-	override private function initVars():Void 
+	override function initVars():Void
 	{
 		super.initVars();
 		
@@ -611,7 +611,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
 	 */
-	inline public function resetSize():Void
+	public inline function resetSize():Void
 	{
 		_flashRect.x = 0;
 		_flashRect.y = 0;
@@ -622,7 +622,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets frame size to frame dimensions
 	 */
-	inline public function resetFrameSize():Void
+	public inline function resetFrameSize():Void
 	{
 		frameWidth = Std.int(frame.sourceSize.x);
 		frameHeight = Std.int(frame.sourceSize.y);
@@ -632,7 +632,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets sprite's size back to frame size
 	 */
-	inline public function resetSizeFromFrame():Void
+	public inline function resetSizeFromFrame():Void
 	{
 		width = frameWidth;
 		height = frameHeight;
@@ -642,7 +642,7 @@ class FlxSprite extends FlxObject
 	 * Sets the sprite's origin to its center - useful after adjusting 
 	 * <code>scale</code> to make sure rotations work as expected.
 	 */
-	inline public function setOriginToCenter():Void
+	public inline function setOriginToCenter():Void
 	{
 		_origin.set(frameWidth * 0.5, frameHeight * 0.5);
 	}
@@ -696,7 +696,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets some important variables for sprite optimization and rendering.
 	 */
-	private function resetHelpers():Void
+	function resetHelpers():Void
 	{
 		resetSize();
 		_flashRect2.x = 0;
@@ -963,7 +963,7 @@ class FlxSprite extends FlxObject
 	 * Useful if you are doing procedural generation or other weirdness!
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
 	 */
-	inline public function drawFrame(Force:Bool = false):Void
+	public inline function drawFrame(Force:Bool = false):Void
 	{
 		#if flash
 		if (Force || dirty)
@@ -1069,7 +1069,7 @@ class FlxSprite extends FlxObject
 		dirty = true;
 	}
 	
-	private function updateColorTransform():Void
+	function updateColorTransform():Void
 	{
 		if ((alpha != 1) || (color != 0xffffff))
 		{
@@ -1217,7 +1217,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	private function calcFrame(RunOnCpp:Bool = false):Void
+	function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		if (cachedGraphics == null)	loadGraphic(FlxAssets.IMG_DEFAULT);
 		
@@ -1314,7 +1314,7 @@ class FlxSprite extends FlxObject
 	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
 	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
 	 */
-	inline public function resetFrameBitmapDatas():Void
+	public inline function resetFrameBitmapDatas():Void
 	{
 		cachedGraphics.tilesheet.destroyFrameBitmapDatas();
 	}
@@ -1323,7 +1323,7 @@ class FlxSprite extends FlxObject
 	 * Checks if the Sprite is being rendered in "simple mode" (via copyPixels). True for flash when no angle, bakedRotations, 
 	 * scaling or blend modes are used. This enables the sprite to be rendered much faster if true.
 	 */
-	private function simpleRenderSprite():Bool
+	function simpleRenderSprite():Bool
 	{ 
 		#if flash
 		return (((angle == 0) || (bakedRotation > 0)) && (_scale.x == 1) && (_scale.y == 1) && (blend == null) && (forceComplexRender == false));
@@ -1335,12 +1335,12 @@ class FlxSprite extends FlxObject
 	/**
 	 * PROPERTIES
 	 */
-	private function get_pixels():BitmapData
+	function get_pixels():BitmapData
 	{
 		return cachedGraphics.bitmap;
 	}
 	
-	private function set_pixels(Pixels:BitmapData):BitmapData
+	function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		var key:String = FlxG.bitmap.getCacheKeyFor(Pixels);
 		
@@ -1376,7 +1376,7 @@ class FlxSprite extends FlxObject
 		return Pixels;
 	}
 	
-	private function set_frame(Value:FlxFrame):FlxFrame
+	function set_frame(Value:FlxFrame):FlxFrame
 	{
 		frame = Value;
 		if (frame != null)
@@ -1392,7 +1392,7 @@ class FlxSprite extends FlxObject
 		return frame;
 	}
 	
-	private function set_facing(Direction:Int):Int
+	function set_facing(Direction:Int):Int
 	{
 		if (facing != Direction)
 		{
@@ -1405,7 +1405,7 @@ class FlxSprite extends FlxObject
 		return Direction;
 	}
 	
-	private function set_alpha(Alpha:Float):Float
+	function set_alpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{
@@ -1424,7 +1424,7 @@ class FlxSprite extends FlxObject
 		return alpha;
 	}
 	
-	private function set_color(Color:Int):Int
+	function set_color(Color:Int):Int
 	{
 		Color &= 0x00ffffff;
 		if (color == Color)
@@ -1444,41 +1444,41 @@ class FlxSprite extends FlxObject
 		return color;
 	}
 	
-	private function get_colorTransform():ColorTransform 
+	function get_colorTransform():ColorTransform
 	{
 		return _colorTransform;
 	}
 	
-	override private function set_angle(Value:Float):Float
+	override function set_angle(Value:Float):Float
 	{
 		_angleChanged = (angle != Value) || _angleChanged;
 		return super.set_angle(Value);
 	}
 	
-	private function set_origin(Value:FlxPoint):FlxPoint
+	function set_origin(Value:FlxPoint):FlxPoint
 	{
 		_origin = cast Value;
 		return origin = Value;
 	}
 	
-	private function set_offset(Value:FlxPoint):FlxPoint
+	function set_offset(Value:FlxPoint):FlxPoint
 	{
 		_offset = cast Value;
 		return offset = Value;
 	}
 	
-	private function set_scale(Value:FlxPoint):FlxPoint
+	function set_scale(Value:FlxPoint):FlxPoint
 	{
 		_scale = cast Value;
 		return scale = Value;
 	}
 	
-	inline private function get_blend():BlendMode 
+	inline function get_blend():BlendMode
 	{
 		return _blend;
 	}
 	
-	private function set_blend(Value:BlendMode):BlendMode 
+	function set_blend(Value:BlendMode):BlendMode
 	{
 		#if !flash
 		if (Value != null)

@@ -812,7 +812,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;
 		y = Y;

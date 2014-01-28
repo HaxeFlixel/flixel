@@ -186,7 +186,7 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A <code>FlxSound</code> object.
 	 */
-	inline public function play(EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public inline function play(EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		#if !js
 		return load(EmbeddedSound, Volume, Looped, AutoDestroy, true, null, OnComplete);
@@ -206,7 +206,7 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
 	 * @return	A FlxSound object.
 	 */
-	inline public function stream(URL:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		#if !js
 		return load(null, Volume, Looped, AutoDestroy, true, URL, OnComplete);
@@ -275,7 +275,7 @@ class SoundFrontEnd
 		}
 	}
 	
-	private function new() 
+	function new()
 	{
 		#if !FLX_NO_KEYBOARD
 		// Assign default values to the keys used by core flixel
@@ -292,7 +292,7 @@ class SoundFrontEnd
 		#end
 	}
 	
-	private function set_volume(Volume:Float):Float
+	function set_volume(Volume:Float):Float
 	{
 		volume = Volume;
 		
@@ -316,7 +316,7 @@ class SoundFrontEnd
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
-	private function update():Void
+	function update():Void
 	{
 		if (music != null && music.active)
 		{
@@ -329,7 +329,7 @@ class SoundFrontEnd
 		}
 	}
 	
-	private function onFocusLost():Void
+	function onFocusLost():Void
 	{
 		if (music != null)
 		{
@@ -345,7 +345,7 @@ class SoundFrontEnd
 		}
 	}
 	
-	private function onFocus():Void
+	function onFocus():Void
 	{
 		if (music != null)
 		{
@@ -364,7 +364,7 @@ class SoundFrontEnd
 	/**
 	 * Loads saved sound preferences if they exist.
 	 */
-	private function loadSavedPrefs():Void
+	function loadSavedPrefs():Void
 	{
 		if (FlxG.save.data.volume != null)
 		{

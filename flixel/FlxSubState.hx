@@ -34,7 +34,7 @@ class FlxSubState extends FlxState
 	
 	public var initialized(get, null):Bool;
 	
-	inline private function get_initialized():Bool 
+	inline function get_initialized():Bool
 	{ 
 		return _initialized; 
 	}
@@ -42,7 +42,7 @@ class FlxSubState extends FlxState
 	/**
 	 * Internal helper method
 	 */
-	inline public function initialize():Void 
+	public inline function initialize():Void
 	{ 
 		_initialized = true; 
 	}
@@ -63,12 +63,12 @@ class FlxSubState extends FlxState
 		bgColor = BGColor;
 	}
 	
-	override inline private function get_bgColor():Int 
+	override inline function get_bgColor():Int
 	{
 		return _bgColor;
 	}
 	
-	override private function set_bgColor(Value:Int):Int
+	override function set_bgColor(Value:Int):Int
 	{
 		#if !flash
 		if (_bgSprite != null)

@@ -63,7 +63,7 @@ class FlxCamera extends FlxBasic
 	 * While you can alter the zoom of each camera after the fact,
 	 * this variable determines what value the camera will start at when created.
 	 */
-	static public var defaultZoom:Float;
+	public static var defaultZoom:Float;
 	
 	/**
 	 * The X position of this camera's display.  Zoom does NOT affect this number.
@@ -364,7 +364,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private function clearDrawStack():Void
+	function clearDrawStack():Void
 	{	
 		var currItem:DrawStackItem = _headOfDrawStack.next;
 		while (currItem != null)
@@ -390,7 +390,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private function render():Void
+	function render():Void
 	{
 		var currItem:DrawStackItem = _headOfDrawStack;
 		while (currItem != null)
@@ -807,7 +807,7 @@ class FlxCamera extends FlxBasic
 	 * @param	LeadX		Percentage of X velocity to add to the camera's motion.
 	 * @param	LeadY		Percentage of Y velocity to add to the camera's motion.
 	 */
-    inline public function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
+    public inline function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
     {
 	   followLead = new Point(LeadX,LeadY);
     }
@@ -816,7 +816,7 @@ class FlxCamera extends FlxBasic
 	 * Move the camera focus to this location instantly.
 	 * @param	Point		Where you want the camera to focus.
 	 */
-	inline public function focusOn(point:FlxPoint):Void
+	public inline function focusOn(point:FlxPoint):Void
 	{
 		scroll.set(point.x - width * 0.5, point.y - height * 0.5);
 	}
@@ -1053,7 +1053,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Width	The new sprite width.
 	 * @param	Height	The new sprite height.
 	 */
-	inline public function setSize(Width:Int, Height:Int)
+	public inline function setSize(Width:Int, Height:Int)
 	{
 		width = Width;
 		height = Height;
@@ -1066,7 +1066,7 @@ class FlxCamera extends FlxBasic
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;
 		y = Y;
@@ -1109,12 +1109,12 @@ class FlxCamera extends FlxBasic
 	 * The scale of the camera object, irrespective of zoom.
 	 * Currently yields weird display results, since cameras aren't nested in an extra display object yet.
 	 */
-	inline public function getScale():FlxPoint
+	public inline function getScale():FlxPoint
 	{
 		return _point.set(flashSprite.scaleX, flashSprite.scaleY);
 	}
 	
-	private function set_width(Value:Int):Int
+	function set_width(Value:Int):Int
 	{
 		if (Value > 0)
 		{
@@ -1148,7 +1148,7 @@ class FlxCamera extends FlxBasic
 		return Value;
 	}
 	
-	private function set_height(Value:Int):Int
+	function set_height(Value:Int):Int
 	{
 		if (Value > 0)
 		{
@@ -1182,7 +1182,7 @@ class FlxCamera extends FlxBasic
 		return Value;
 	}
 	
-	private function set_zoom(Zoom:Float):Float
+	function set_zoom(Zoom:Float):Float
 	{
 		if (Zoom == 0)
 		{
@@ -1196,7 +1196,7 @@ class FlxCamera extends FlxBasic
 		return zoom;
 	}
 	
-	private function set_alpha(Alpha:Float):Float
+	function set_alpha(Alpha:Float):Float
 	{
 		alpha = FlxMath.bound(Alpha, 0, 1);
 		#if flash
@@ -1207,14 +1207,14 @@ class FlxCamera extends FlxBasic
 		return Alpha;
 	}
 	
-	private function set_angle(Angle:Float):Float
+	function set_angle(Angle:Float):Float
 	{
 		angle = Angle;
 		flashSprite.rotation = Angle;
 		return Angle;
 	}
 	
-	private function set_color(Color:Int):Int
+	function set_color(Color:Int):Int
 	{
 		color = Color & 0x00ffffff;
 		#if flash
@@ -1237,7 +1237,7 @@ class FlxCamera extends FlxBasic
 		return Color;
 	}
 	
-	private function set_antialiasing(Antialiasing:Bool):Bool
+	function set_antialiasing(Antialiasing:Bool):Bool
 	{
 		antialiasing = Antialiasing;
 		#if flash

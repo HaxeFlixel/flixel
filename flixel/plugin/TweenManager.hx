@@ -117,7 +117,7 @@ class TweenManager extends FlxPlugin
 		list = new Array<FlxTween>();
 	}
 	
-	override inline public function onStateSwitch():Void
+	override public inline function onStateSwitch():Void
 	{
 		clear(true);
 	}

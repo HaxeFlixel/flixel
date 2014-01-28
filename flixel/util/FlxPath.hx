@@ -22,12 +22,12 @@ class FlxPath
 	/**
 	 * Returns a recycled path.
 	 */
-	static public function recycle():FlxPath
+	public static function recycle():FlxPath
 	{
 		return pool.get().reset();
 	}
 	
-	static public function put(path:FlxPath):Void
+	public static function put(path:FlxPath):Void
 	{
 		pool.put(path);
 	}
@@ -42,7 +42,7 @@ class FlxPath
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
 	 */
-	static public function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false, UsePooling:Bool = true):FlxPath
+	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false, UsePooling:Bool = true):FlxPath
 	{
 		var path:FlxPath = recycle();
 		path.run(Object, Nodes, Speed, Mode, AutoRotate, UsePooling);
@@ -52,31 +52,31 @@ class FlxPath
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
-	inline static public var FORWARD:Int = 0x000000;
+	public inline static var FORWARD:Int = 0x000000;
 	/**
 	 * Path behavior controls: move from the end of the path to the start then stop.
 	 */
-	inline static public var BACKWARD:Int= 0x000001;
+	public inline static var BACKWARD:Int= 0x000001;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
 	 */
-	inline static public var LOOP_FORWARD:Int = 0x000010;
+	public inline static var LOOP_FORWARD:Int = 0x000010;
 	/**
 	 * Path behavior controls: move from the end of the path to the start then directly back to the end, and start over.
 	 */
-	inline static public var LOOP_BACKWARD:Int = 0x000100;
+	public inline static var LOOP_BACKWARD:Int = 0x000100;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then turn around and go back to the start, over and over.
 	 */
-	inline static public var YOYO:Int = 0x001000;
+	public inline static var YOYO:Int = 0x001000;
 	/**
 	 * Path behavior controls: ignores any vertical component to the path data, only follows side to side.
 	 */
-	inline static public var HORIZONTAL_ONLY:Int = 0x010000;
+	public inline static var HORIZONTAL_ONLY:Int = 0x010000;
 	/**
 	 * Path behavior controls: ignores any horizontal component to the path data, only follows up and down.
 	 */
-	inline static public var VERTICAL_ONLY:Int = 0x100000;
+	public inline static var VERTICAL_ONLY:Int = 0x100000;
 	
 	/**
 	 * The list of <code>FlxPoint</code>s that make up the path data.
@@ -160,7 +160,7 @@ class FlxPath
 	/**
 	 * Instantiate a new path object.
 	 */
-	private function new() {  }
+	function new() {  }
 	
 	/**
 	 * 
@@ -354,7 +354,7 @@ class FlxPath
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
 	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
 	 */
-	private function advancePath(Snap:Bool = true):FlxPoint
+	function advancePath(Snap:Bool = true):FlxPoint
 	{
 		if (Snap)
 		{
@@ -718,5 +718,5 @@ class FlxPath
 	/**
 	 * Read-only: The <code>TimerManager</code> instance.
 	 */
-	static public var manager:PathManager;
+	public static var manager:PathManager;
 }
