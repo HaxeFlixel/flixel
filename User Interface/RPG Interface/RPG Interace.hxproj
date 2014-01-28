@@ -20,7 +20,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="FLX_BMP_DEBUG&#xA;tools=1.1.6&#xA;lime_native&#xA;no-compilation&#xA;openfl=1.2&#xA;display&#xA;windows&#xA;desktop&#xA;no-compilation" />
+    <option directives="FLX_BMP_DEBUG&#xA;tools=1.1.6&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;openfl=1.2&#xA;display&#xA;windows&#xA;desktop&#xA;no-compilation" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />

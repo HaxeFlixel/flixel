@@ -20,21 +20,12 @@ class State_Title extends FlxUIState
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
 		FlxG.log.redirectTraces = false; 
-<<<<<<< HEAD
-		
-		//FlxG.mouse.show();
-		
-=======
->>>>>>> 0c36408119f44c98e161b4338a7cb5b93f906a51
 		
 		if (Main.tongue == null) {
 			Main.tongue = new FireTongueEx();
 			Main.tongue.init("en-US");
 			FlxUIState.static_tongue = Main.tongue;
 		}
-		
-		/*var b:FlxUIButton = cast _ui.getAsset("saves");
-		var t:FlxUIText = cast b.label;*/
 		
 		_xml_id = "state_title";
 		
