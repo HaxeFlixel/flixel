@@ -37,7 +37,7 @@ class CachedGraphics
 	 * Whether we should destroy this CachedGraphics object when useCount become zero.
 	 * Default is false.
 	 */
-	public var destroyOnNoUse:Bool = false;
+	public var destroyOnNoUse(default, set):Bool = false;
 	
 	/**
 	 * Whether the BitmapData of this cached object has been dumped or not.
@@ -192,5 +192,15 @@ class CachedGraphics
 		}
 		
 		return useCount = Value;
+	}
+	
+	private function set_destroyOnNoUse(Value:Bool):Bool
+	{
+		if (Value && useCount == 0 && key != null && !persist)
+		{
+			FlxG.bitmap.remove(key);
+		}
+		
+		return destroyOnNoUse = Value;
 	}
 }

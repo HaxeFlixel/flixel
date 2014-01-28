@@ -455,10 +455,12 @@ class FlxText extends FlxSprite
 	
 	override private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics 
 	{
+		var cached:CachedGraphics = super.set_cachedGraphics(Value);
+		
 		if (Value != null)
 			Value.destroyOnNoUse = true;
 		
-		return super.set_cachedGraphics(Value);
+		return cached;
 	}
 	
 	override private function updateColorTransform():Void
