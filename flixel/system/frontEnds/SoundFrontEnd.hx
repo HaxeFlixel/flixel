@@ -68,8 +68,9 @@ class SoundFrontEnd
 	 * 
 	 * @param	Music		The sound file you want to loop in the background.
 	 * @param	Volume		How loud the sound should be, from 0 to 1.
+	 * @param	Looped		Whether to loop this music.
 	 */
-	public function playMusic(Music:Dynamic, Volume:Float = 1):Void
+	public function playMusic(Music:Dynamic, Volume:Float = 1, Looped:Bool = true):Void
 	{
 		#if !js
 		if (music == null)
@@ -81,7 +82,7 @@ class SoundFrontEnd
 			music.stop();
 		}
 		
-		music.loadEmbedded(Music, true);
+		music.loadEmbedded(Music, Looped);
 		music.volume = Volume;
 		music.survive = true;
 		music.play();
