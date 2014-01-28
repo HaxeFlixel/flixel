@@ -86,6 +86,7 @@ class Player extends FlxSprite
 		
 		#if android
 		virtualPad = new FlxVirtualPad(FULL, A_B);
+		virtualPad.alpha = 0.5;
 		#end
 		
 		// 6 shots per second
