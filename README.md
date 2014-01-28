@@ -3,7 +3,7 @@
 ###Related:   [flixel](https://github.com/HaxeFlixel/flixel) | [flixel-addons](https://github.com/HaxeFlixel/flixel-addons) | [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) | [flixel-ui](https://github.com/HaxeFlixel/flixel-ui)
 =======
 
-A large set of demos (**currently 43!**) using the HaxeFlixel engine and demonstrating its capabilities. Almost all of them can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
+A large set of demos (**currently 45!**) using the HaxeFlixel engine and demonstrating its capabilities. Almost all of them can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
 ![](demoSelection.png)
 
