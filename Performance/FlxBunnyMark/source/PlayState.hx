@@ -76,10 +76,10 @@ class PlayState extends FlxState
 		amountSlider.decimals = 0;
 		add(amountSlider);
 		
-		var removeButton:FlxButton = new FlxButton(15, 65, "Remove", changeBunnyNumber, [false]);
+		var removeButton:FlxButton = new FlxButton(15, 65, "Remove", changeBunnyNumber.bind(false));
 		add(removeButton);
 		
-		var addButton:FlxButton = new FlxButton(100, 65, "Add", changeBunnyNumber, [true]);
+		var addButton:FlxButton = new FlxButton(100, 65, "Add", changeBunnyNumber.bind(true));
 		add(addButton);
 		
 		// Right UI
