@@ -88,11 +88,6 @@ class FlxTrailArea extends FlxSprite
 	public var alphaOffset:Float = 0;
 	
 	/**
-	 * The bitmap used internally for trail rendering.
-	 */
-	private var _renderBitmap:BitmapData;
-	
-	/**
 	 * Counts the frames passed.
 	 */
 	private var _counter:Int = 0;
@@ -120,13 +115,15 @@ class FlxTrailArea extends FlxSprite
 	  * @param	Delay			How often to update the trail. 1 updates every frame
 	  * @param	SimpleRender 	If simple rendering should be used. Ignores all sprite transformations
 	  * @param	Smoothing		If sprites should be smoothed when drawn to the area. Ignored when simple rendering is on
-	  * @param	?TrailBlendMode The blend mode used for the area. Only works in flash
+	  * @param	TrailBlendMode 	The blend mode used for the area. Only works in flash
 	  */
 	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, AlphaMultiplier:Float = 0.8, Delay:Int = 2, SimpleRender:Bool = false, Smoothing:Bool = false, ?TrailBlendMode:BlendMode) 
 	{
 		super(X, Y);
 		
 		setSize(Width, Height);
+		// this sets cachedGraphics, which would cause the default 16x16 image to be loaded if it's null in calcFrame
+		pixels = framePixels; 
 		
 		group = new FlxTypedGroup<FlxSprite>();
 		
@@ -155,7 +152,7 @@ class FlxTrailArea extends FlxSprite
 		if ((Width != _width) || (Height != _height)) {
 			_width = Width;
 			_height = Height;
-			_renderBitmap = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
+			framePixels = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
 		}
 	}
 	
@@ -163,12 +160,6 @@ class FlxTrailArea extends FlxSprite
 	{
 		group = FlxG.safeDestroy(group);
 		blendMode = null;
-		
-		if (_renderBitmap != null)
-		{
-			_renderBitmap.dispose();
-			_renderBitmap = null;
-		}
 		
 		super.destroy();
 	}
@@ -181,10 +172,10 @@ class FlxTrailArea extends FlxSprite
 		if (_counter >= delay) 
 		{
 			_counter = 0;
-			_renderBitmap.lock();
+			framePixels.lock();
 			//Color transform bitmap
 			var cTrans:ColorTransform = new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
-			_renderBitmap.colorTransform(new Rectangle(0, 0, _renderBitmap.width, _renderBitmap.height), cTrans);
+			framePixels.colorTransform(new Rectangle(0, 0, framePixels.width, framePixels.height), cTrans);
 			
 			//Copy the graphics of all sprites on the renderBitmap
 			var i:Int = 0;
@@ -194,7 +185,7 @@ class FlxTrailArea extends FlxSprite
 				{
 					if (simpleRender) 
 					{
-						_renderBitmap.copyPixels(group.members[i].pixels, new Rectangle(0, 0, group.members[i].frameWidth, group.members[i].frameHeight), new Point(group.members[i].x - x, group.members[i].y - y), null, null, true);
+						framePixels.copyPixels(group.members[i].pixels, new Rectangle(0, 0, group.members[i].frameWidth, group.members[i].frameHeight), new Point(group.members[i].x - x, group.members[i].y - y), null, null, true);
 					}
 					else 
 					{
@@ -204,16 +195,16 @@ class FlxTrailArea extends FlxSprite
 						matrix.rotate(group.members[i].angle * FlxAngle.TO_RAD);
 						matrix.translate((group.members[i].frameWidth / 2), (group.members[i].frameHeight / 2)); 
 						matrix.translate(group.members[i].x - x, group.members[i].y - y);
-						_renderBitmap.draw(group.members[i].pixels, matrix, group.members[i].colorTransform, blendMode, null, smoothing);
+						framePixels.draw(group.members[i].pixels, matrix, group.members[i].colorTransform, blendMode, null, smoothing);
 					}
 					
 				}
 				i++;
 			}
 			
-			_renderBitmap.unlock();
+			framePixels.unlock();
 			//Apply the updated bitmap
-			pixels = _renderBitmap;
+			pixels = framePixels;
 		}
 		super.draw();
 	}
@@ -223,7 +214,7 @@ class FlxTrailArea extends FlxSprite
 	 */
 	inline public function resetTrail():Void 
 	{
-		_renderBitmap.fillRect(new Rectangle(0, 0, _renderBitmap.width, _renderBitmap.height), 0x00000000);
+		framePixels.fillRect(new Rectangle(0, 0, framePixels.width, framePixels.height), 0x00000000);
 	}
 	
 	/**
@@ -255,7 +246,7 @@ class FlxTrailArea extends FlxSprite
 			Width = FlxG.width;
 		}
 		if (Width != _width) {
-			_renderBitmap = new BitmapData(Std.int(Width), Std.int(_height), true, FlxColor.TRANSPARENT);
+			framePixels = new BitmapData(Std.int(Width), Std.int(_height), true, FlxColor.TRANSPARENT);
 		}
 		return _width = Width;
 	}
@@ -277,7 +268,7 @@ class FlxTrailArea extends FlxSprite
 			Height = FlxG.height;
 		}
 		if (Height != _height) {
-			_renderBitmap = new BitmapData(Std.int(_width), Std.int(Height), true, FlxColor.TRANSPARENT);
+			framePixels = new BitmapData(Std.int(_width), Std.int(Height), true, FlxColor.TRANSPARENT);
 		}
 		return _height = Height;
 	}
