@@ -259,14 +259,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
 	 * @param   Show         Whether to call setNativeCursor afterwards
 	 */
-	inline public function registerNativeCursor(Name:String, CursorData:MouseCursorData, Show:Bool = true):Void
+	inline public function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
 	{
 		untyped Mouse.registerCursor(Name, CursorData);
-		
-		if (Show)
-		{
-			setNativeCursor(Name);
-		}
 	}
 
 	/**
@@ -369,7 +364,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Resets the just pressed/just released flags and sets mouse to not pressed.
 	 */
-	private function reset():Void
+	public function reset():Void
 	{
 		_leftButton.reset();
 		

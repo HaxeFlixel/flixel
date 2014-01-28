@@ -11,6 +11,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
+import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 
 /**
@@ -450,6 +451,16 @@ class FlxText extends FlxSprite
 	private function get_textField():TextField 
 	{
 		return _textField;
+	}
+	
+	override private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics 
+	{
+		var cached:CachedGraphics = super.set_cachedGraphics(Value);
+		
+		if (Value != null)
+			Value.destroyOnNoUse = true;
+		
+		return cached;
 	}
 	
 	override private function updateColorTransform():Void

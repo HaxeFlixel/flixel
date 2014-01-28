@@ -65,13 +65,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	OnClick			The function to call whenever the button is clicked.
 	 * @param	OnClickParams	The params to call the onClick function with
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic, ?OnClickParams:Array<Dynamic>)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
 		super(X, Y);
 		
 		loadGraphic(FlxAssets.IMG_BUTTON, true, false, 80, 20);
 		
-		onUp = new FlxButtonEvent(OnClick, OnClickParams);
+		onUp = new FlxButtonEvent(OnClick);
 		onDown = new FlxButtonEvent();
 		onOver = new FlxButtonEvent();
 		onOut = new FlxButtonEvent();
@@ -83,14 +83,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		// Since this is a UI element, the default scrollFactor is (0, 0)
 		scrollFactor.set();
-	}
-	
-	private function set_status(Value:Int):Int
-	{
-		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
-			label.alpha = labelAlphas[Value];
-		}
-		return status = Value;
 	}
 	
 	/**
@@ -153,6 +145,34 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		frame = framesData.frames[nextFrame];
 	}
+	
+	/**
+	 * Just draws the button graphic and text label to the screen.
+	 */
+	override public function draw():Void
+	{
+		super.draw();
+		
+		if (label != null)
+		{
+			label.cameras = cameras;
+			label.draw();
+		}
+	}
+	
+	#if !FLX_NO_DEBUG
+	/**
+	 * Helper function to draw the debug graphic for the label as well.
+	 */
+	override public function drawDebug():Void 
+	{
+		super.drawDebug();
+		
+		if (label != null) {
+			label.drawDebug();
+		}
+	}
+	#end
 	
 	/**
 	 * Basic button update logic - searches for overlaps with touches and
@@ -251,33 +271,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 #end
 	}
 	
-	/**
-	 * Just draws the button graphic and text label to the screen.
-	 */
-	override public function draw():Void
+	private function set_status(Value:Int):Int
 	{
-		super.draw();
-		
-		if (label != null)
-		{
-			label.cameras = cameras;
-			label.draw();
+		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
+			label.alpha = labelAlphas[Value];
 		}
+		return status = Value;
 	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Helper function to draw the debug graphic for the label as well.
-	 */
-	override public function drawDebug():Void 
-	{
-		super.drawDebug();
-		
-		if (label != null) {
-			label.drawDebug();
-		}
-	}
-	#end
 	
 	/**
 	 * Internal function that handles the onUp event.
@@ -330,11 +330,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	/**
 	 * The callback function to call when this even fires.
 	 */
-	public var callback:Dynamic;
-	/**
-	 * The callback function parameters.
-	 */
-	public var callbackParams:Array<Dynamic>;
+	public var callback:Void->Void;
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
@@ -347,16 +343,14 @@ private class FlxButtonEvent implements IFlxDestroyable
 	 * Creates a new <code>FlxButtonEvent</code>
 	 * 
 	 * @param	Callback		The callback function to call when this even fires.
-	 * @param	CallbackParams	The callback function parameters.
 	 * @param	sound			The sound to play when this event fires.
 	 */
-	public function new(?Callback:Dynamic, ?CallbackParams:Dynamic, ?sound:FlxSound)
+	public function new(?Callback:Void->Void, ?sound:FlxSound)
 	{
 		callback = Callback;
-		callbackParams = CallbackParams;
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			this.sound = sound;
+		this.sound = sound;
 		#end
 	}
 	
@@ -366,10 +360,9 @@ private class FlxButtonEvent implements IFlxDestroyable
 	inline public function destroy():Void
 	{
 		callback = null;
-		callbackParams = null;
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			sound = FlxG.safeDestroy(sound);
+		sound = FlxG.safeDestroy(sound);
 		#end
 	}
 	
@@ -380,28 +373,14 @@ private class FlxButtonEvent implements IFlxDestroyable
 	{
 		if (callback != null) 
 		{
-			if (callbackParams == null) {
-				callbackParams = [];
-			}
-			Reflect.callMethod(null, callback, callbackParams);
+			callback();
 		}
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			if (sound != null) {
-				sound.play(true);
-			}
+		if (sound != null) 
+		{
+			sound.play(true);
+		}
 		#end
-	}
-	
-	/**
-	 * Sets the callback for this button event.
-	 * 
-	 * @param	Callback		The callback function to call when this even fires.
-	 * @param	CallbackParams	The callback function parameters.
-	 */
-	inline public function setCallback(Callback:Dynamic, ?CallbackParams:Array<Dynamic>):Void
-	{
-		callback = Callback;
-		callbackParams = CallbackParams;
 	}
 }

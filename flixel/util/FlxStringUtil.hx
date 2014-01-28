@@ -238,4 +238,47 @@ class FlxStringUtil
 	{
 		return (getClassName(Obj1, Simple) == getClassName(Obj2, Simple));
 	}
+	
+	
+	/**
+	 * Split a comma-separated string into an array of ints
+	 * 
+	 * @param	Data 	String formatted like this: <code>"1, 2, 5, -10, 120, 27"</code>
+	 * @return	An array of ints
+	 */
+	static public function toIntArray(Data:String):Array<Int>
+	{
+		if ((Data != null) && (Data != "")) 
+		{
+			var strArray:Array<String> = Data.split(",");
+			var iArray:Array<Int> = new Array<Int>();
+			for (str in strArray) 
+			{
+				iArray.push(Std.parseInt(str));
+			}
+			return iArray;
+		}
+		return null;
+	}
+	
+	/**
+	 * Split a comma-separated string into an array of floats
+	 * 
+	 * @param	Data string formatted like this: <code>"1.0,2.1,5.6,1245587.9, -0.00354"</code>
+	 * @return	An array of floats
+	 */	
+	static public function toFloatArray(Data:String):Array<Float>
+	{
+		if ((Data != null) && (Data != "")) 
+		{
+			var strArray:Array<String> = Data.split(",");
+			var fArray:Array<Float> = new Array<Float>();
+			for (str in strArray) 
+			{
+				fArray.push(Std.parseFloat(str));
+			}
+			return fArray;
+		}
+		return null;
+	}
 }

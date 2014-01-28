@@ -15,7 +15,7 @@ class FlxSystemButton extends Sprite
 	/**
 	 * The function to be called when the button is pressed.
 	 */
-	public var downHandler:Dynamic;
+	public var downHandler:Void->Void;
 	/**
 	 * Whether or not the downHandler function will be called when 
 	 * the button is clicked.
@@ -58,7 +58,7 @@ class FlxSystemButton extends Sprite
 	 * @param	DownHandler	The function to be called when the button is pressed.
 	 * @param	ToggleMode	Whether this is a toggle button or not.
 	 */
-	public function new(IconPath:String, ?DownHandler:Dynamic, ToggleMode:Bool = false)
+	public function new(IconPath:String, ?DownHandler:Void->Void, ToggleMode:Bool = false)
 	{
 		super();
 		
@@ -71,6 +71,7 @@ class FlxSystemButton extends Sprite
 		#if flash
 		tabEnabled = false;
 		#end
+		
 		downHandler = DownHandler;
 		toggleMode = ToggleMode;
 		
@@ -100,7 +101,7 @@ class FlxSystemButton extends Sprite
 		if (downHandler != null && enabled)
 		{
 			toggled = !toggled;
-			Reflect.callMethod (null, downHandler, []);
+			downHandler();
 		}
 	}
 

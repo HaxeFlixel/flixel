@@ -1,8 +1,8 @@
-package flixel.system.resolution;
+package flixel.system.scaleModes;
 
 import flixel.FlxG;
 
-class FixedResolutionPolicy extends BaseResolutionPolicy
+class FixedScaleMode extends BaseScaleMode
 {
 	override private function updateGameSize(Width:Int, Height:Int):Void 
 	{

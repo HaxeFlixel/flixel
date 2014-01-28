@@ -1,4 +1,4 @@
-﻿![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/HaxeFlixel.png)
+[![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/HaxeFlixel.png)](http://haxeflixel.com/)
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
@@ -23,11 +23,15 @@ If you wish to contribute to our documentation, you can edit the [upgrade docs o
 
 ##For Developers
 
-Make sure you're using latest version of [Haxe, haxelib and OpenFL](http://haxeflixel.com/comment/2584#comment-2584). You should also read the [haxelib guide](http://haxe.org/doc/haxelib/using_haxelib).
+If you are wanting to contribute code, please review the follwing documentation:
 
-Clone this repository by running `haxelib git flixel https://github.com/HaxeFlixel/flixel dev`.
+- [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
+- [Code Style](http://haxeflixel.com/documentation/code-style)
+- [Install development flixel](http://haxeflixel.com/documentation/install-development-flixel/)
 
-We recommended that you use a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
+If you have a question or have not contributed on github before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
+
+For using git with github we recommended using a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
 
 ##Links
 

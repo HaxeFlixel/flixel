@@ -3,18 +3,19 @@ package flixel.system.layer;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
+import flixel.system.layer.Region;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.TextureAtlasFrame;
-import flixel.system.layer.Region;
 import flixel.util.loaders.TexturePackerData;
 
 /**
  * Object of this class holds information about single Tilesheet
  */
-class TileSheetData
+class TileSheetData implements IFlxDestroyable
 {
 	#if !flash
 	public var tileSheet:TileSheetExt;
@@ -45,18 +46,12 @@ class TileSheetData
 		frameNames = new Array<String>();
 	}
 	
-	public function getFrame(name:String):FlxFrame
+	inline public function getFrame(name:String):FlxFrame
 	{
 		return flxFrames.get(name);
 	}
 	
-	/**
-	 * Adds new ID array for FlxSprite with specific dimensions
-	 * @param	width	sprite width
-	 * @param	height	sprite height
-	 * @return			IDs of tileRectangles for FlxSprite with given dimensions
-	 */
-	public function getSpriteSheetFrames(region:Region, origin:Point = null):FlxSpriteFrames
+	public function getSpriteSheetFrames(region:Region, ?origin:Point):FlxSpriteFrames
 	{
 		var bitmapWidth:Int = region.width;
 		var bitmapHeight:Int = region.height;
@@ -124,7 +119,7 @@ class TileSheetData
 	 * 
 	 * http://stackoverflow.com/questions/892618/create-a-hashcode-of-two-numbers
 	 * http://stackoverflow.com/questions/299304/why-does-javas-hashcode-in-string-use-31-as-a-multiplier
-	*/
+	 */
 	public inline function getSpriteSheetFrameKey(rect:Rectangle, point:Point):String
 	{
 		return rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_" + point.x + "_" + point.y;
@@ -170,13 +165,13 @@ class TileSheetData
 		return frame;
 	}
 	
-	public function containsFrame(key:String):Bool
+	inline public function containsFrame(key:String):Bool
 	{
 		return flxFrames.exists(key);
 	}
 	
 	#if !flash
-	public function addTileRect(tileRect:Rectangle, point:Point = null):Int
+	inline public function addTileRect(tileRect:Rectangle, ?point:Point):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
 	}

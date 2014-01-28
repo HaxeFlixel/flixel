@@ -5,6 +5,7 @@ v.3.1.0
   * Due to the use of a new algorithm for pseudo-random number generation (a linear congruential generator) and a new seed type (integer instead of float values), old replays will have unpredictable results
   * FlxColorUtil.getRandomColor(), FlxArrayUtil.shuffle(), and FlxArrayUtil.getRandom() have been moved to FlxRandom.color(), FlxRandom.shuffleArray(), and FlxRandom.getObject(), respectively. The old functions are still in place but are marked as deprecated.
   * weightedPick(), weightedGetObject() and colorExt() have been added
+  * Replays are now fully deterministic, whether replaying the whole game or just a single state.
 * New FLX_NO_SOUND_SYSTEM conditional
 * FlxTrailArea: Several improvements (can now be resized with setSize()), default delay is now 2
 * FlxMisc has been removed, openURL() can now be found in FlxG

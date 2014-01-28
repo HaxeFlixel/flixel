@@ -35,7 +35,7 @@ class VCR
 	{
 		restartBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_RESTART, FlxG.resetState);
 		#if FLX_RECORD
-		recordBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_RECORD_OFF, FlxG.vcr.startRecording);
+		recordBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_RECORD_OFF, FlxG.vcr.startRecording.bind(true));
 		openBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_OPEN, FlxG.vcr.onOpen);
 		#end
 		playbackToggleBtn = Debugger.addButton(MIDDLE, FlxAssets.IMG_PAUSE, FlxG.vcr.pause);
@@ -76,7 +76,7 @@ class VCR
 	inline public function stoppedRecording():Void
 	{
 		recordBtn.changeIcon(FlxAssets.IMG_RECORD_ON);
-		recordBtn.downHandler = FlxG.vcr.startRecording;
+		recordBtn.downHandler = FlxG.vcr.startRecording.bind(true);
 	}
 	
 	/**
@@ -86,7 +86,7 @@ class VCR
 	inline public function stoppedReplay():Void
 	{
 		recordBtn.changeIcon(FlxAssets.IMG_RECORD_OFF);
-		recordBtn.downHandler = FlxG.vcr.startRecording;
+		recordBtn.downHandler = FlxG.vcr.startRecording.bind(true);
 	}
 	
 	/**

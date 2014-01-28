@@ -15,46 +15,20 @@ import flash.geom.Rectangle;
 @:access(FlxBitmapDataPoolNode)
 class FlxBitmapDataPool
 {
+	/**
+	 * Maximum number of BitmapData to hold in the pool. 
+	 */
+	public static var maxLength(default, set):Int = 8;
+	
+	/** 
+	 * Current number of BitmapData present in the pool. 
+	 */
+	public static var length(default, null):Int = 0;
+	
 	private static var _head:FlxBitmapDataPoolNode = null;
 	private static var _tail:FlxBitmapDataPoolNode = null;
 	
 	private static var _rect:Rectangle = new Rectangle();
-	
-	private static var _length:Int = 0;
-	private static var _maxLength:Int = 8;
-	
-	/** Maximum number of BitmapData to hold in the pool. */
-	public static var maxLength(get, set):Int;
-	
-	static inline function get_maxLength():Int 
-	{
-		return _maxLength;
-	}
-	
-	static function set_maxLength(value:Int):Int 
-	{
-		if (_maxLength != value) 
-		{
-			var node = _tail;
-			while (node != null && _length > value) 
-			{
-				var bmd = node.bmd;
-				bmd.dispose();
-				bmd = null;
-				node = node.prev;
-				_length--;
-			}
-		}
-		return _maxLength = value;
-	}
-	
-	/** Current number of BitmapData present in the pool. */
-	public static var length(get, null):Int;
-	
-	static function get_length():Int 
-	{
-		return _length;
-	}
 	
 	/** 
 	 * Returns a BitmapData with the specified parameters. 
@@ -83,7 +57,7 @@ class FlxBitmapDataPool
 				if (node == _head) _head = node.next;
 				if (node == _tail) _tail = node.prev;
 				node = null;
-				_length--;
+				length--;
 				break;
 			}
 			node = node.next;
@@ -108,10 +82,12 @@ class FlxBitmapDataPool
 		return res;
 	}
 	
-	/** Adds bmd to the pool for future use. */
+	/** 
+	 * Adds bmd to the pool for future use. 
+	 */
 	public static function put(bmd:BitmapData):Void 
 	{
-		if (_length >= maxLength) 
+		if (length >= maxLength) 
 		{
 			var last = _tail;
 			last.bmd.dispose();
@@ -121,7 +97,7 @@ class FlxBitmapDataPool
 				_tail = last.prev;
 			}
 			last = null;
-			_length--;
+			length--;
 		}
 		
 		var node = new FlxBitmapDataPoolNode(bmd);
@@ -135,10 +111,12 @@ class FlxBitmapDataPool
 			_head = node;
 			node.next.prev = node;
 		}
-		_length++;
+		length++;
 	}
 	
-	/** Disposes of all the BitmapData in the pool. */
+	/**
+	 * Disposes of all the BitmapData in the pool. 
+	 */
 	public static function clear():Void 
 	{
 		var node = _head;
@@ -149,18 +127,36 @@ class FlxBitmapDataPool
 			bmd = null;
 			node = node.next;
 		}
-		_length = 0;
+		length = 0;
 		_head = _tail = null;
+	}
+	
+	static function set_maxLength(value:Int):Int 
+	{
+		if (maxLength != value) 
+		{
+			var node = _tail;
+			while ((node != null) && (length > value)) 
+			{
+				var bmd = node.bmd;
+				bmd.dispose();
+				bmd = null;
+				node = node.prev;
+				length--;
+			}
+		}
+		return maxLength = value;
 	}
 }
 
 @:publicFields
-private class FlxBitmapDataPoolNode {
+private class FlxBitmapDataPoolNode 
+{
 	var bmd:BitmapData = null;
 	var prev:FlxBitmapDataPoolNode = null;
 	var next:FlxBitmapDataPoolNode = null;
 	
-	function new(bmd:BitmapData = null, prev:FlxBitmapDataPoolNode = null, next:FlxBitmapDataPoolNode = null):Void 
+	function new(?bmd:BitmapData, ?prev:FlxBitmapDataPoolNode, ?next:FlxBitmapDataPoolNode):Void 
 	{
 		this.bmd = bmd;
 		this.prev = prev;

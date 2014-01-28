@@ -60,7 +60,8 @@ class FlxSprite extends FlxObject
 	 */
 	public var frames(default, null):Int;
 	/**
-	 * How many frames of "baked" rotation there are (if any).
+	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
+	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
 	 */
 	public var bakedRotation(default, null):Float;
 	/**
@@ -111,14 +112,14 @@ class FlxSprite extends FlxObject
 	private var _blendInt:Int = 0;
 	#end
 	/**
-	 * Set <code>color</code> to a number in this format: 0xRRGGBB. <code>color</code> IGNORES ALPHA.  
-	 * To change the opacity use <code>alpha</code>. Tints the whole sprite to be this color (similar to OpenGL vertex colors).
+	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
+	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use <code>alpha</code>. 
 	 */
 	public var color(default, set):Int = 0xffffff;
 	/**
 	 * TODO: Needs docs
 	 */
-	public var colorTransform(get_colorTransform, never):ColorTransform;
+	public var colorTransform(get, never):ColorTransform;
 	/**
 	 * TODO: Needs docs
 	 */
@@ -174,7 +175,9 @@ class FlxSprite extends FlxObject
 	private var _scale:FlxPoint;
 	
 	/**
-	 * Creates a white 8x8 square <code>FlxSprite</code> at the specified position. Optionally can load a simple, one-frame graphic instead.
+	 * Creates a <code>FlxSprite</code> at a specified position with a specified one-frame graphic. 
+	 * If none is provided, a 16x16 image of the HaxeFlixel logo is used.
+	 * 
 	 * @param	X				The initial X position of the sprite.
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
@@ -339,8 +342,8 @@ class FlxSprite extends FlxObject
 				region.tileHeight = region.height;
 		}
 		
-		width = region.tileWidth = frameWidth = Width;
-		height = region.tileHeight = frameHeight = Height;
+		width = frameWidth = Width;
+		height = frameHeight = Height;
 		
 		animation.destroyAnimations();
 		

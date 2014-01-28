@@ -19,8 +19,8 @@ import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
-import flixel.system.resolution.BaseResolutionPolicy;
-import flixel.system.resolution.StageSizeResolutionPolicy;
+import flixel.system.scaleModes.BaseScaleMode;
+import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxMath;
@@ -117,18 +117,18 @@ class FlxG
 	/**
 	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	@:allow(flixel.system.resolution.StageSizeResolutionPolicy) 
+	@:allow(flixel.system.scaleModes.StageSizeScaleMode) 
 	static public var width(default, null):Int;
 	/**
 	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
-	@:allow(flixel.system.resolution.StageSizeResolutionPolicy)
+	@:allow(flixel.system.scaleModes.StageSizeScaleMode)
 	static public var height(default, null):Int;
 	/**
-	 * The resolution policy the game should use - available policies are <code>FillResolutionPolicy</code>, <code>FixedResolutionPolicy</code>,
-	 * <code>RatioResolutionPolicy</code>, <code>RelativeResolutionPolicy</code> and <code>StageResolutionPolicy</code>.
+	 * The scale mode the game should use - available policies are <code>FillScaleMode</code>, <code>FixedScaleMode</code>,
+	 * <code>RatioScaleMode</code>, <code>RelativeScaleMode</code> and <code>StageSizeScaleMode</code>.
 	 */
-	static public var resolutionPolicy(default, set):BaseResolutionPolicy;
+	static public var scaleMode(default, set):BaseScaleMode;
 	/**
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
 	 * You can easily toggle fullscreen with eg: <code>FlxG.fullscreen = !FlxG.fullscreen;</code>
@@ -228,7 +228,7 @@ class FlxG
 	static public var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
 	/**
 	 * A reference to the <code>CameraFrontEnd</code> object. Contains things related to cameras,
-	 * a <code>list</code> of all cameras and the <code>defaultCamera</code> amongst other things.
+	 * a <code>list</code> of all cameras and several effects like <code>flash()</code> or <code>fade()</code>.
 	 */
 	static public var cameras(default, null):CameraFrontEnd = new CameraFrontEnd();
 	/**
@@ -245,14 +245,14 @@ class FlxG
 	static public var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
 	
-	static private var _resolutionPolicy:BaseResolutionPolicy = new StageSizeResolutionPolicy();
+	static private var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
 	inline static public function resizeGame(Width:Int, Height:Int):Void
 	{
-		_resolutionPolicy.onMeasure(Width, Height);
+		_scaleMode.onMeasure(Width, Height);
 	}
 	
 	/**
@@ -424,7 +424,7 @@ class FlxG
 		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
-		resizeGame(width, height);
+		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
@@ -476,11 +476,11 @@ class FlxG
 		worldDivisions = 6;
 	}
 	
-	static private function set_resolutionPolicy(Policy:BaseResolutionPolicy):BaseResolutionPolicy
+	static private function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
-		_resolutionPolicy = Policy;
+		_scaleMode = ScaleMode;
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
-		return Policy;
+		return ScaleMode;
 	}
 	
 	inline static private function get_updateFramerate():Int
@@ -542,7 +542,6 @@ class FlxG
 	
 	static private function set_fullscreen(Value:Bool):Bool
 	{
-
 		if (Value)
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN;

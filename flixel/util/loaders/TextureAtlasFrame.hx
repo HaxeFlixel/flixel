@@ -1,9 +1,10 @@
 package flixel.util.loaders;
 
 import flash.geom.Rectangle;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxPoint;
 
-class TextureAtlasFrame
+class TextureAtlasFrame implements IFlxDestroyable
 {
 	public var name:String = null;
 	public var frame:Rectangle = null;

@@ -383,7 +383,7 @@ class BitmapFrontEnd
 	
 	public function remove(key:String):Void
 	{
-		if (_cache.exists(key))
+		if ((key != null) && _cache.exists(key))
 		{
 			var obj:CachedGraphics = _cache.get(key);
 			if (inOpenFlAssets(obj.bitmap) == false)

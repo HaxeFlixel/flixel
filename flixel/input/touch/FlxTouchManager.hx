@@ -128,6 +128,25 @@ class FlxTouchManager implements IFlxInput
 		return TouchArray;
 	}
 	
+	/**
+	 * Resets all touches to inactive state.
+	 */
+	public function reset():Void
+	{
+		for (key in _touchesCache.keys())
+		{
+			_touchesCache.remove(key);
+		}
+		
+		for (touch in list)
+		{
+			touch.deactivate();
+			_inactiveTouches.push(touch);
+		}
+		
+		list.splice(0, list.length);
+	}
+	
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
@@ -268,25 +287,6 @@ class FlxTouchManager implements IFlxInput
 			
 			i--;
 		}
-	}
-	
-	/**
-	 * Resets all touches to inactive state.
-	 */
-	private function reset():Void
-	{
-		for (key in _touchesCache.keys())
-		{
-			_touchesCache.remove(key);
-		}
-		
-		for (touch in list)
-		{
-			touch.deactivate();
-			_inactiveTouches.push(touch);
-		}
-		
-		list.splice(0, list.length);
 	}
 
 	private function onFocus():Void {}
