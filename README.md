@@ -46,6 +46,7 @@ A large set of demos (**currently 43!**) using the HaxeFlixel engine and demonst
   * FlxCollisions
   * FlxPongAPI
   * MinimalistTD
+  * FlxAsyncLoop
 * **Performance**
   * FlxBunnyMark
   * FlxRandom
