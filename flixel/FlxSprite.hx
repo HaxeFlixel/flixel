@@ -112,14 +112,14 @@ class FlxSprite extends FlxObject
 	private var _blendInt:Int = 0;
 	#end
 	/**
-	 * Set <code>color</code> to a number in this format: 0xRRGGBB. <code>color</code> IGNORES ALPHA.  
-	 * To change the opacity use <code>alpha</code>. Tints the whole sprite to be this color (similar to OpenGL vertex colors).
+	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
+	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use <code>alpha</code>. 
 	 */
 	public var color(default, set):Int = 0xffffff;
 	/**
 	 * TODO: Needs docs
 	 */
-	public var colorTransform(get_colorTransform, never):ColorTransform;
+	public var colorTransform(get, never):ColorTransform;
 	/**
 	 * TODO: Needs docs
 	 */
