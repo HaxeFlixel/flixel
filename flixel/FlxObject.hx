@@ -332,7 +332,7 @@ class FlxObject extends FlxBasic
 		while (i < l)
 		{
 			camera = cameras[i++];
-			if (!camera.visible || !camera.exists || !onScreen(camera))
+			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
 				continue;
 			}
@@ -357,7 +357,7 @@ class FlxObject extends FlxBasic
 			Camera = FlxG.camera;
 		}
 		
-		if (!Camera.visible || !Camera.exists || !onScreen(Camera))
+		if (!Camera.visible || !Camera.exists || !isOnScreen(Camera))
 		{
 			return;
 		}
@@ -556,21 +556,6 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Check and see if this object is currently on screen.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-	 * @return	Whether the object is on screen or not.
-	 */
-	public function onScreen(?Camera:FlxCamera):Bool
-	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		getScreenXY(_point, Camera);
-		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
-	}
-	
-	/**
 	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
 	 * @return	Whether the object is within the Worldbounds or not.
 	 */
@@ -626,6 +611,22 @@ class FlxObject extends FlxBasic
 		setPosition(X, Y);
 		last.set(x, y);
 		velocity.set();
+	}
+	
+	/**
+	 * Check and see if this object is currently on screen.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * 
+	 * @return	Whether the object is on screen or not.
+	 */
+	public function isOnScreen(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		getScreenXY(_point, Camera);
+		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
 	}
 	
 	/**

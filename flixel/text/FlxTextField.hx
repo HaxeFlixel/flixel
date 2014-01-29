@@ -76,7 +76,7 @@ class FlxTextField extends FlxText
 		return false;
 	}
 	
-	override private function simpleRenderSprite():Bool
+	override public function isSimpleRender():Bool
 	{
 		// This class doesn't support this operation
 		return true;
@@ -162,7 +162,7 @@ class FlxTextField extends FlxText
 			updateFormat(_format);
 		}
 		
-		if (!_camera.visible || !_camera.exists || !onScreen(_camera))
+		if (!_camera.visible || !_camera.exists || !isOnScreen(_camera))
 		{
 			_textField.visible = false;
 		}

@@ -127,7 +127,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
-	override public function onScreen(Camera:FlxCamera = null):Bool 
+	override public function isOnScreen(?Camera:FlxCamera):Bool 
 	{
 		if (Camera == null)
 		{
@@ -139,7 +139,7 @@ class FlxSpriteGroup extends FlxSprite
 		{
 			if (sprite != null && sprite.exists && sprite.visible)
 			{
-				result = result || sprite.onScreen(Camera);
+				result = result || sprite.isOnScreen(Camera);
 			}
 		}
 		
