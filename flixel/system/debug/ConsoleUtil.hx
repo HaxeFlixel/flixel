@@ -68,7 +68,7 @@ class ConsoleUtil
 	 */
 	static public function findCommand(Alias:String, Commands:Array<Command>):Command
 	{
-		for (i in 0...(Commands.length - 1))
+		for (i in 0...Commands.length)
 		{
 			if (FlxArrayUtil.indexOf(Commands[i].aliases, Alias) != -1) {
 				return Commands[i];
