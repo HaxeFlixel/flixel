@@ -417,13 +417,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Go through and call the specified function on all members of the group.
-	 * Currently only works on functions that have no required parameters.
+	 * Go through and call the specified function on all members of the group, recursively by default.
 	 * 
 	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
+	 * @param	Args			An array of arguments to call the function with
 	 * @param	Recurse			Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
 	 */ 
-	public function callAll(FunctionName:String, Args:Array<Dynamic> = null, Recurse:Bool = true):Void
+	public function callAll(FunctionName:String, ?Args:Array<Dynamic>, Recurse:Bool = true):Void
 	{
 		if (Args == null) 	
 			Args = [];
