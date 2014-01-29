@@ -68,7 +68,7 @@ class FlxSound extends FlxBasic
 	 */
 	public var pan(get, set):Float;
 
-	private function get_pan(pan:Float):Float
+	private function get_pan():Float
 	{
 		return _transform.pan;
 	}
