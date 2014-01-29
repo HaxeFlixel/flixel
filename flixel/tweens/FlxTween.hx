@@ -491,7 +491,7 @@ class FlxTween
 	 */
 	public function new(duration:Float, type:Int = 0, ?complete:CompleteCallback, ?ease:EaseFunction)
 	{
-		_target = duration;
+		this.duration = duration;
 		if (type == 0) 
 		{
 			type = FlxTween.ONESHOT;
@@ -522,7 +522,7 @@ class FlxTween
 	public function update():Void
 	{
 		_time += FlxG.elapsed;
-		_t = _time / _target;
+		_t = _time / duration;
 		if (_ease != null)
 		{
 			_t = _ease(_t);
@@ -531,7 +531,7 @@ class FlxTween
 		{
 			_t = 1 - _t;
 		}
-		if (_time >= _target)
+		if (_time >= duration)
 		{
 			if (!_backward)
 			{
@@ -552,7 +552,7 @@ class FlxTween
 	public function start():FlxTween
 	{
 		_time = 0;
-		if (_target == 0)
+		if (duration == 0)
 		{
 			active = false;
 			return this;
@@ -585,22 +585,22 @@ class FlxTween
 		switch ((_type & ~ FlxTween.BACKWARD))
 		{
 			case FlxTween.PERSIST:
-				_time = _target;
+				_time = duration;
 				active = false;
 			case FlxTween.LOOPING:
-				_time %= _target;
-				_t = _time / _target;
+				_time %= duration;
+				_t = _time / duration;
 				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
 				start();
 			case FlxTween.PINGPONG:
-				_time %= _target;
-				_t = _time / _target;
+				_time %= duration;
+				_t = _time / duration;
 				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
 				_backward = !_backward;
 				if (_backward) _t = 1 - _t;
 				start();
 			case FlxTween.ONESHOT:
-				_time = _target;
+				_time = duration;
 				active = false;
 				manager.remove(this, true);
 		}
@@ -609,8 +609,8 @@ class FlxTween
 	}
 
 	public var percent(get_percent, set_percent):Float;
-	private function get_percent():Float { return _time / _target; }
-	private function set_percent(value:Float):Float { _time = _target * value; return _time; }
+	private function get_percent():Float { return _time / duration; }
+	private function set_percent(value:Float):Float { _time = duration * value; return _time; }
 
 	public var scale(get_scale, null):Float;
 	private function get_scale():Float { return _t; }
@@ -622,7 +622,8 @@ class FlxTween
 	private var _t:Float;
 
 	private var _time:Float;
-	private var _target:Float;
+	
+	public var duration:Float;
 	
 	private var _backward:Bool;
 }
