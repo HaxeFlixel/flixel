@@ -1,10 +1,11 @@
 ![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/flixel-demos.png)
 
+=======
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
 ##About
 
-This is a large set of demos (**currently 44!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
+This is a large set of demos (**currently 45!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
 ![](demoSelection.png)
 
@@ -47,6 +48,7 @@ This is a large set of demos (**currently 44!**) using the HaxeFlixel engine and
   * FlxCollisions
   * FlxPongAPI
   * MinimalistTD
+  * FlxAsyncLoop
 * **Performance**
   * FlxBunnyMark
   * FlxRandom
