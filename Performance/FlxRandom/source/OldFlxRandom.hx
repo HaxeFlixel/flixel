@@ -118,7 +118,7 @@ class OldFlxRandom
 	 * to use if you want to record replays in random environments.
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	inline static public function float():Float
+	public static inline function float():Float
 	{
 		globalSeed = srand(globalSeed);
 		if (globalSeed <= 0) globalSeed += 1;
@@ -167,7 +167,7 @@ class OldFlxRandom
 	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	inline static public function srand(Seed:Float):Float
+	public static inline function srand(Seed:Float):Float
 	{
 		return ((69621 * Std.int(Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
 	}
@@ -209,7 +209,7 @@ class OldFlxRandom
 	 * 
 	 * @return	1 or -1
 	 */
-	inline static public function sign():Float
+	public static inline function sign():Float
 	{
 		return (Math.random() > 0.5) ? 1 : -1;
 	}
@@ -225,7 +225,7 @@ class OldFlxRandom
 	 * 
 	 * @return 32-bit color value with alpha
 	 */
-	inline static public function color(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
+	public static inline function color(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
 	{
 		//return FlxColorUtil.getRandomColor(min, max, alpha);
 		
