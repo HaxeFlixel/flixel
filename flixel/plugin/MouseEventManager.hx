@@ -274,7 +274,7 @@ class MouseEventManager extends FlxPlugin
 		_registeredSprites = orderedSprites;
 	}
 
-	static private function traverseFlxGroup(Group:FlxGroup, OrderedSprites:Array<SpriteReg>)
+	private static function traverseFlxGroup(Group:FlxGroup, OrderedSprites:Array<SpriteReg>)
 	{
 		for (basic in Group.members)
 		{
@@ -429,7 +429,7 @@ class MouseEventManager extends FlxPlugin
 		}
 	}
 
-	static private function getRegister(Sprite:FlxSprite, ?Register:Array<SpriteReg>):SpriteReg
+	private static function getRegister(Sprite:FlxSprite, ?Register:Array<SpriteReg>):SpriteReg
 	{
 		if (Register == null)
 		{

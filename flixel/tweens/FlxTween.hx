@@ -36,7 +36,7 @@ class FlxTween
 	/**
 	 * Adds a tween to the tween manager, with a delay if specified.
 	 */ 
-	static private function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
+	private static function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
 	{
 		if ((Delay != null) || (Delay > 0))
 		{
@@ -52,7 +52,7 @@ class FlxTween
 	/**
 	 * Helper function for delayed tweens.
 	 */
-	static private function timerCallback(Timer:FlxTimer):Void
+	private static function timerCallback(Timer:FlxTimer):Void
 	{
 		addTween(cast (Timer.userData, FlxTween));
 	}

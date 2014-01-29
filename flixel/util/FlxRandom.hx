@@ -18,7 +18,7 @@ class FlxRandom
 	/**
 	 * Internal function to update the internal seed whenever the global seed is reset, and keep the global seed's value in range.
 	 */
-	static private function set_globalSeed( NewSeed:Int ):Int
+	private static function set_globalSeed( NewSeed:Int ):Int
 	{
 		if ( NewSeed < 1 )
 		{
@@ -81,7 +81,7 @@ class FlxRandom
 	 * @return	The new value of the state seed.
 	 */
 	@:allow(flixel.FlxGame.switchState) // Access to this function is only needed in FlxGame::switchState()
-	inline static private function updateStateSeed():Int
+	inline private static function updateStateSeed():Int
 	{
 		return _stateSeed = _internalSeed;
 	}
@@ -94,7 +94,7 @@ class FlxRandom
 	 * @return
 	 */
 	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)// Access to this function is only needed in VCRFrontEnd::startRecording()
-	inline static private function updateRecordingSeed( StandardMode:Bool = true ):Int
+	inline private static function updateRecordingSeed( StandardMode:Bool = true ):Int
 	{
 		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
 	}
@@ -103,7 +103,7 @@ class FlxRandom
 	 * Returns the seed to use for the requested recording.
 	 */
 	@:allow(flixel.FlxGame.step) // Access to this function is only needed in FlxGame.step()
-	inline static private function getRecordingSeed():Int
+	inline private static function getRecordingSeed():Int
 	{
 		return _recordingSeed;
 	}
@@ -490,7 +490,7 @@ class FlxRandom
 	 * 
 	 * @return	A new pseudorandom number.
 	 */
-	inline static private function generate():Int
+	inline private static function generate():Int
 	{
 		return _internalSeed = ( ( _internalSeed * MULTIPLIER ) % MODULUS ) & MODULUS;
 	}

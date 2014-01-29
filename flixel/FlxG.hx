@@ -414,7 +414,7 @@ class FlxG
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
 	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
-	static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
@@ -460,7 +460,7 @@ class FlxG
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
 	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
-	static private function reset():Void
+	private static function reset():Void
 	{
 		PxBitmapFont.clearStorage();
 		FlxRandom.resetGlobalSeed();
@@ -476,19 +476,19 @@ class FlxG
 		worldDivisions = 6;
 	}
 	
-	static private function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
+	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
 		_scaleMode = ScaleMode;
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		return ScaleMode;
 	}
 	
-	inline static private function get_updateFramerate():Int
+	inline private static function get_updateFramerate():Int
 	{
 		return Std.int(1000 / game.stepMS);
 	}
 	
-	static private function set_updateFramerate(Framerate:Int):Int
+	private static function set_updateFramerate(Framerate:Int):Int
 	{
 		if (Framerate < drawFramerate)
 		{
@@ -506,7 +506,7 @@ class FlxG
 		return Framerate;
 	}
 	
-	static private function get_drawFramerate():Int
+	private static function get_drawFramerate():Int
 	{
 		if (game.stage != null)
 		{
@@ -516,7 +516,7 @@ class FlxG
 		return 0;
 	}
 	
-	static private function set_drawFramerate(Framerate:Int):Int
+	private static function set_drawFramerate(Framerate:Int):Int
 	{
 		if (Framerate > updateFramerate)
 		{
@@ -540,7 +540,7 @@ class FlxG
 		return Framerate;
 	}
 	
-	static private function set_fullscreen(Value:Bool):Bool
+	private static function set_fullscreen(Value:Bool):Bool
 	{
 		if (Value)
 		{
@@ -558,12 +558,12 @@ class FlxG
 		return fullscreen = Value;
 	}
 	
-	inline static private function get_stage():Stage
+	inline private static function get_stage():Stage
 	{
 		return game.stage;
 	}
 	
-	inline static private function get_state():FlxState
+	inline private static function get_state():FlxState
 	{
 		return game.state;
 	}
