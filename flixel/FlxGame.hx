@@ -296,9 +296,10 @@ class FlxGame extends Sprite
 	private function onFocus(?FlashEvent:Event):Void
 	{
 		#if flash
-			if (!_lostFocus) {
-				return; // Don't run this function twice (bug in standalone flash player)
-			}
+		if (!_lostFocus) 
+		{
+			return; // Don't run this function twice (bug in standalone flash player)
+		}
 		#end
 		
 		_lostFocus = false;
@@ -310,19 +311,19 @@ class FlxGame extends Sprite
 		}
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-			if (_focusLostScreen != null)
-			{
-				_focusLostScreen.visible = false;
-			}
+		if (_focusLostScreen != null)
+		{
+			_focusLostScreen.visible = false;
+		}
 		#end 
 		
 		#if !FLX_NO_DEBUG
-			debugger.stats.onFocus();
+		debugger.stats.onFocus();
 		#end
 		
 		stage.frameRate = drawFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.sound.onFocus();
+		FlxG.sound.onFocus();
 		#end
 		FlxG.inputs.onFocus();
 	}
@@ -334,9 +335,10 @@ class FlxGame extends Sprite
 	private function onFocusLost(?FlashEvent:Event):Void
 	{
 		#if flash
-			if (_lostFocus) {
-				return; // Don't run this function twice (bug in standalone flash player)
-			}
+		if (_lostFocus) 
+		{
+			return; // Don't run this function twice (bug in standalone flash player)
+		}
 		#end
 		
 		_lostFocus = true;
@@ -348,19 +350,19 @@ class FlxGame extends Sprite
 		}
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-			if (_focusLostScreen != null)
-			{
-				_focusLostScreen.visible = true;
-			}
+		if (_focusLostScreen != null)
+		{
+			_focusLostScreen.visible = true;
+		}
 		#end 
 		
 		#if !FLX_NO_DEBUG
-			debugger.stats.onFocusLost();
+		debugger.stats.onFocusLost();
 		#end
 		
 		stage.frameRate = focusLostFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.sound.onFocusLost();
+		FlxG.sound.onFocusLost();
 		#end
 		FlxG.inputs.onFocusLost();
 	}
@@ -371,7 +373,7 @@ class FlxGame extends Sprite
 		var height:Int = Lib.current.stage.stageHeight;
 		
 		#if !flash
-			FlxG.bitmap.onContext();
+		FlxG.bitmap.onContext();
 		#end
 		
 		FlxG.resizeGame(width, height);
@@ -380,21 +382,21 @@ class FlxGame extends Sprite
 		FlxG.plugins.onResize(width, height);
 		
 		#if !FLX_NO_DEBUG
-			debugger.onResize(width, height);
+		debugger.onResize(width, height);
 		#end
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-			if (_focusLostScreen != null)
-			{
-				_focusLostScreen.draw();
-			}
+		if (_focusLostScreen != null)
+		{
+			_focusLostScreen.draw();
+		}
 		#end
 		
 		#if (!FLX_NO_SOUND_TRAY && !FLX_NO_SOUND_SYSTEM)
-			if (soundTray != null)
-			{
-				soundTray.screenCenter();
-			}
+		if (soundTray != null)
+		{
+			soundTray.screenCenter();
+		}
 		#end
 		
 		inputContainer.scaleX = 1 / FlxG.game.scaleX;
