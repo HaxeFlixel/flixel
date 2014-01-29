@@ -151,6 +151,14 @@ class FlxGame extends Sprite
 	 */
 	private var _lostFocus:Bool = false;
 	
+	#if cpp
+	/**
+	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
+	 * (the focus event should not fire when the game starts up!)
+	 */ 
+	private var _onFocusFiredOnce:Bool = false;
+	#end
+	
 	#if !FLX_NO_FOCUS_LOST_SCREEN 
 	/**
 	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
@@ -299,6 +307,15 @@ class FlxGame extends Sprite
 		if (!_lostFocus) 
 		{
 			return; // Don't run this function twice (bug in standalone flash player)
+		}
+		#end
+		
+		#if cpp
+		// make sure the on focus event doesn't fire on startup 
+		if (!_onFocusFiredOnce)
+		{
+			_onFocusFiredOnce = true;
+			return;
 		}
 		#end
 		
