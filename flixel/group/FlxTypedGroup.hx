@@ -20,6 +20,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Use with <code>sort()</code> to sort in descending order.
 	 */
 	inline static public var DESCENDING:Int = 1;
+	
 	/**
 	 * Array of all the members in this group.
 	 */
@@ -243,10 +244,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * If you did NOT specify a maximum size for this group,
 	 * then </code>recycle()</code> will employ what we're calling "grow-style" recycling.
 	 * </code>recycle()</code> will return either the first object with </code>exists == false()</code>,
-	 * or, finding none, add a new object to the array,
-	 * doubling the size of the array if necessary.
-	 * WARNING: If this function needs to create a new object,
-	 * and no object class was provided, it will return null
+	 * or, finding none, add a new object to the array, doubling the size of the array if necessary.
+	 * WARNING: If this function needs to create a new object, and no object class was provided, it will return null
 	 * instead of a valid object!
 	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
@@ -319,6 +318,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	
 	/**
 	 * Removes an object from the group.
+	 * 
 	 * @param	Object	The <code>FlxBasic</code> you want to remove.
 	 * @param	Splice	Whether the object should be cut from the array entirely or not.
 	 * @return	The removed object.
@@ -372,14 +372,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Call this function to sort the group according to a particular value and order.
 	 * For example, to sort game objects for Zelda-style overlaps you might call
-	 * <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
+	 * <code>myGroup.sort("y", ASCENDING)</code> at the bottom of your
 	 * <code>FlxState.update()</code> override.  To sort all existing objects after
-	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",DESCENDING)</code>.
+	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists", DESCENDING)</code>.
 	 * 
 	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
 	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.  
 	 */
-	public function sort(Index:String = "y", Order:Int = -1):Void
+	public function sort(Index:String = "y", Order:Int = ASCENDING):Void
 	{
 		_sortIndex = Index;
 		_sortOrder = Order;
@@ -457,7 +457,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
 	 * @return	A <code>FlxBasic</code> currently flagged as not existing.
 	 */
-	public function getFirstAvailable(ObjectClass:Class<T> = null, Force:Bool = false):T
+	public function getFirstAvailable(?ObjectClass:Class<T>, Force:Bool = false):T
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -699,7 +699,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
 	{
-		return new FlxTypedGroupIterator<T>(_members, filter == null ? function(m) { return true; } : filter);
+		return new FlxTypedGroupIterator<T>(_members, (filter == null) ? function(m) { return true; } : filter);
 	}
 	
 	/**
@@ -744,7 +744,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * 
 	 * @param   Function   A function that modifies one element at a time
 	 */
-	public function forEachDead(Function : T -> Void)
+	public function forEachDead(Function:T->Void)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
