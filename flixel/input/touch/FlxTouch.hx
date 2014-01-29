@@ -26,6 +26,18 @@ class FlxTouch extends FlxPoint
 	 * Current Y position of the touch point on the screen.
 	 */
 	public var screenY:Int = 0;
+	/**
+	 * Just pressed X position of the touch point on the screen.
+	 */
+	public var justPressedScreenX:Int;
+	/**
+	 * Just pressed Y position of the touch point on the screen.
+	 */
+	public var justPressedScreenY:Int;
+	/**
+	 * Ticks returned from <code>FlxG.game.ticks</code> when justPressed occurred.
+	 */
+	public var justPressedTicks:Int;
 	
 	/**
 	 * Helper variable for tracking whether the touch was just began or just ended.
@@ -66,6 +78,10 @@ class FlxTouch extends FlxPoint
 		_flashPoint = new Point();
 		updateTouchPosition(X, Y);
 		touchPointID = PointID;
+
+		justPressedScreenX = screenX;
+		justPressedScreenY = screenY;
+		justPressedTicks = FlxG.game.ticks;
 	}
 	
 	/**
@@ -213,6 +229,10 @@ class FlxTouch extends FlxPoint
 		touchPointID = PointID;
 		_current = 0;
 		_last = 0;
+
+		justPressedScreenX = screenX;
+		justPressedScreenY = screenY;
+		justPressedTicks = FlxG.game.ticks;
 	}
 	
 	public function deactivate():Void
@@ -227,7 +247,7 @@ class FlxTouch extends FlxPoint
 	 */
 	public var pressed(get, never):Bool;
 	
-	private inline function get_pressed():Bool { return _current > 0; }
+	inline private function get_pressed():Bool { return _current > 0; }
 	
 	/**
 	 * Check to see if the touch was just began.
@@ -235,7 +255,7 @@ class FlxTouch extends FlxPoint
 	 */
 	public var justPressed(get, never):Bool;
 	
-	private inline function get_justPressed():Bool { return _current == 2; }
+	inline private function get_justPressed():Bool { return _current == 2; }
 	
 	/**
 	 * Check to see if the touch was just ended.
@@ -243,7 +263,7 @@ class FlxTouch extends FlxPoint
 	 */
 	public var justReleased(get, never):Bool;
 	
-	private inline function get_justReleased():Bool { return _current == -1; }
+	inline private function get_justReleased():Bool { return _current == -1; }
 	
 	/**
 	 * Check to see if the touch is active.
@@ -251,5 +271,5 @@ class FlxTouch extends FlxPoint
 	 */
 	public var isActive(get, never):Bool;
 	
-	private inline function get_isActive():Bool { return _current != 0; }
+	inline private function get_isActive():Bool { return _current != 0; }
 }
