@@ -235,7 +235,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for initialization of some variables that are used in updateMotion()
 	 */
-	inline private function initMotionVars():Void
+	private inline function initMotionVars():Void
 	{
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
@@ -292,7 +292,7 @@ class FlxObject extends FlxBasic
 	 * Internal function for updating the position and speed of this object. Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
-	inline private function updateMotion():Void
+	private inline function updateMotion():Void
 	{
 		var delta:Float;
 		var velocityDelta:Float;
@@ -1010,7 +1010,7 @@ class FlxObject extends FlxBasic
 		return height;
 	}
 	
-	inline private function get_solid():Bool
+	private inline function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}

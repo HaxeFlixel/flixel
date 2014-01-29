@@ -1476,7 +1476,7 @@ class FlxSprite extends FlxObject
 		return scale = Value;
 	}
 	
-	inline private function get_blend():BlendMode 
+	private inline function get_blend():BlendMode
 	{
 		return _blend;
 	}

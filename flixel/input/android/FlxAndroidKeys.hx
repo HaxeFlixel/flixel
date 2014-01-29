@@ -288,7 +288,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
-	inline private function updateKeyStates(KeyCode:Int, Down:Bool):Void
+	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
 		var obj:FlxKey = _keyList[KeyCode];
 		
@@ -319,9 +319,9 @@ class FlxAndroidKeys implements IFlxInput
 		}
 	}
 	
-	inline private function onFocus():Void {}
+	private inline function onFocus():Void {}
 
-	inline private function onFocusLost():Void
+	private inline function onFocusLost():Void
 	{
 		reset();
 	}

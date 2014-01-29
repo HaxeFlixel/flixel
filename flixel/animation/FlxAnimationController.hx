@@ -457,7 +457,7 @@ class FlxAnimationController
 		return frameIndex = Frame;
 	}
 	
-	inline private function get_frameName():String
+	private inline function get_frameName():String
 	{
 		return _sprite.frame.name;
 	}
@@ -508,7 +508,7 @@ class FlxAnimationController
 	/**
 	 * Gets the currently playing _animations (warning: can return null).
 	 */
-	inline private function get_curAnim():FlxAnimation
+	private inline function get_curAnim():FlxAnimation
 	{
 		var anim:FlxAnimation = null;
 		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
@@ -522,7 +522,7 @@ class FlxAnimationController
 	 * Plays a specified _animations (same as calling play)
 	 * @param	AnimName	The name of the _animations you want to play.
 	 */
-	inline private function set_curAnim(Anim:FlxAnimation):FlxAnimation
+	private inline function set_curAnim(Anim:FlxAnimation):FlxAnimation
 	{
 		if (Anim != null && Anim != _curAnim)
 		{
@@ -535,7 +535,7 @@ class FlxAnimationController
 		return _curAnim = Anim;
 	}
 	
-	inline private function get_paused():Bool
+	private inline function get_paused():Bool
 	{
 		var paused:Bool = false;
 		if (_curAnim != null)
@@ -545,7 +545,7 @@ class FlxAnimationController
 		return paused;
 	}
 	
-	inline private function set_paused(Value:Bool):Bool
+	private inline function set_paused(Value:Bool):Bool
 	{
 		if (_curAnim != null)
 		{
@@ -554,7 +554,7 @@ class FlxAnimationController
 		return Value;
 	}
 	
-	inline private function get_finished():Bool
+	private inline function get_finished():Bool
 	{
 		var finished:Bool = true;
 		if (_curAnim != null)
@@ -564,7 +564,7 @@ class FlxAnimationController
 		return finished;
 	}
 	
-	inline private function set_finished(Value:Bool):Bool
+	private inline function set_finished(Value:Bool):Bool
 	{
 		if (Value == true && _curAnim != null)
 		{
@@ -574,7 +574,7 @@ class FlxAnimationController
 		return Value;
 	}
 	
-	inline private function get_frames():Int
+	private inline function get_frames():Int
 	{
 		return _sprite.frames;
 	}

@@ -97,19 +97,19 @@ class ConsoleCommands
 		}
 	}
 	
-	inline private function close():Void
+	private inline function close():Void
 	{
 		FlxG.debugger.visible = false;
 	}
 	
-	inline private function clearHistory():Void
+	private inline function clearHistory():Void
 	{
 		_console.cmdHistory = new Array<String>();
 		FlxG.save.flush();
 		ConsoleUtil.log("clearHistory: Command history cleared");
 	}
 	
-	inline private function resetState():Void
+	private inline function resetState():Void
 	{
 		FlxG.resetState();
 		ConsoleUtil.log("resetState: State has been reset");
@@ -126,7 +126,7 @@ class ConsoleCommands
 		ConsoleUtil.log("switchState: New '" + ClassName + "' created");  
 	}
 	
-	inline private function resetGame():Void
+	private inline function resetGame():Void
 	{
 		FlxG.resetGame();
 		ConsoleUtil.log("resetGame: Game has been reset");
@@ -283,12 +283,12 @@ class ConsoleCommands
 		}
 	}
 	
-	inline private function listObjects():Void
+	private inline function listObjects():Void
 	{
 		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
 	}
 	
-	inline private function listFunctions():Void
+	private inline function listFunctions():Void
 	{
 		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
 	}

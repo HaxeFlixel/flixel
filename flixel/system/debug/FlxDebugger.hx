@@ -395,7 +395,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   E   Flash mouse event.
 	 */
-	inline private function onMouseOver(?E:MouseEvent):Void
+	private inline function onMouseOver(?E:MouseEvent):Void
 	{
 		hasMouse = true;
 		#if !FLX_NO_MOUSE
@@ -408,7 +408,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   E   Flash mouse event.
 	 */
-	inline private function onMouseOut(?E:MouseEvent):Void
+	private inline function onMouseOut(?E:MouseEvent):Void
 	{
 		hasMouse = false;
 		
@@ -429,12 +429,12 @@ class FlxDebugger extends Sprite
 		}
 	}
 
-	inline private function toggleVisualDebug ():Void
+	private inline function toggleVisualDebug ():Void
 	{
 		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 	}
 	
-	inline private function openHomepage():Void
+	private inline function openHomepage():Void
 	{
 		FlxG.openURL("http://www.haxeflixel.com");
 	}

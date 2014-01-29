@@ -13,7 +13,7 @@ class RelativeScaleMode extends BaseScaleMode
 		initScale(WidthScale, HeightScale);
 	}
 	
-	inline private function initScale(WidthScale:Float, HeightScale:Float):Void
+	private inline function initScale(WidthScale:Float, HeightScale:Float):Void
 	{
 		_widthScale = WidthScale;
 		_heightScale = HeightScale;

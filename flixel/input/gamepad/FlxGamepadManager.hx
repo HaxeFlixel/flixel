@@ -413,9 +413,9 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	inline private function onFocus():Void { }
+	private inline function onFocus():Void { }
 
-	inline private function onFocusLost():Void
+	private inline function onFocusLost():Void
 	{
 		reset();
 	}

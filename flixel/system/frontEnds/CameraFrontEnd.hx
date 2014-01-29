@@ -38,7 +38,7 @@ class CameraFrontEnd
 	 * @param	NewCamera	The camera you want to add.
 	 * @return	This <code>FlxCamera</code> instance.
 	 */
-	@:generic inline public function add<T:FlxCamera>(NewCamera:T):T
+	@:generic public inline function add<T:FlxCamera>(NewCamera:T):T
 	{
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game.inputContainer));
 		FlxG.cameras.list.push(NewCamera);
@@ -167,7 +167,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
-	inline private function lock():Void
+	private inline function lock():Void
 	{
 		for (camera in list)
 		{
@@ -204,7 +204,7 @@ class CameraFrontEnd
 	}
 	
 	#if !flash
-	inline private function render():Void
+	private inline function render():Void
 	{
 		for (camera in list)
 		{
@@ -219,7 +219,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
 	 */
-	inline private function unlock():Void
+	private inline function unlock():Void
 	{
 		for (camera in list)
 		{
@@ -244,7 +244,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to update the cameras and their tracking/special effects logic.
 	 */
-	inline private function update():Void
+	private inline function update():Void
 	{
 		for (camera in list)
 		{

@@ -34,7 +34,7 @@ class FlxSubState extends FlxState
 	
 	public var initialized(get, null):Bool;
 	
-	inline private function get_initialized():Bool 
+	private inline function get_initialized():Bool
 	{ 
 		return _initialized; 
 	}
@@ -63,7 +63,7 @@ class FlxSubState extends FlxState
 		bgColor = BGColor;
 	}
 	
-	override inline private function get_bgColor():Int 
+	override private inline function get_bgColor():Int
 	{
 		return _bgColor;
 	}

@@ -850,12 +850,12 @@ class FlxSpriteGroup extends FlxSprite
 	
 	// GROUP FUNCTIONS
 	
-	inline private function get_length():Int
+	private inline function get_length():Int
 	{
 		return group.length;
 	}
 	
-	inline private function get_maxSize():Int
+	private inline function get_maxSize():Int
 	{
 		return group.maxSize;
 	}
@@ -871,7 +871,7 @@ class FlxSpriteGroup extends FlxSprite
 		return group.maxSize = Size;
 	}
 	
-	inline private function get_members():Array<FlxSprite>
+	private inline function get_members():Array<FlxSprite>
 	{
 		return group.members;
 	}

@@ -96,7 +96,7 @@ class FlxSystemButton extends Sprite
 		addChild(icon);
 	}
 
-	inline private function onMouseUp(?E:MouseEvent):Void
+	private inline function onMouseUp(?E:MouseEvent):Void
 	{
 		if (downHandler != null && enabled)
 		{
@@ -105,12 +105,12 @@ class FlxSystemButton extends Sprite
 		}
 	}
 
-	inline private function onMouseOver(?E:MouseEvent):Void
+	private inline function onMouseOver(?E:MouseEvent):Void
 	{
 		alpha -= 0.2;
 	}
 
-	inline private function onMouseOut(?E:MouseEvent):Void
+	private inline function onMouseOut(?E:MouseEvent):Void
 	{
 		alpha += 0.2;
 	}

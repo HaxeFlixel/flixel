@@ -29,7 +29,7 @@ class FlxState extends FlxGroup
 	 */
 	public var subState(get, null):FlxSubState;
 
-	inline private function get_subState():FlxSubState
+	private inline function get_subState():FlxSubState
 	{
 		return _subState;
 	}

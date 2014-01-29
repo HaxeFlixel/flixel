@@ -228,7 +228,7 @@ class FlxTrailArea extends FlxSprite
 	/**
 	 * Redirects width to _width
 	 */
-	override inline private function get_width():Float 
+	override private inline function get_width():Float
 	{
 		return _width;
 	}
@@ -250,7 +250,7 @@ class FlxTrailArea extends FlxSprite
 	/**
 	 * Redirects height to _height
 	 */
-	override inline private function get_height():Float 
+	override private inline function get_height():Float
 	{
 		return _height;
 	}
