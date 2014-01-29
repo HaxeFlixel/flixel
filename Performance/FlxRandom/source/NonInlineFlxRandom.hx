@@ -57,7 +57,7 @@ class NonInlineFlxRandom
 	 * 
 	 * @return	The new global seed.
 	 */
-	static public function resetGlobalSeed():Int
+	public static function resetGlobalSeed():Int
 	{
 		return globalSeed = Std.int( Math.random() * MODULUS );
 	}
@@ -65,7 +65,7 @@ class NonInlineFlxRandom
 	/**
 	 * Returns a pseudorandom number between 0 and 2,147,483,647, inclusive.
 	 */
-	static public function int():Int
+	public static function int():Int
 	{
 		return generate();
 	}
@@ -73,7 +73,7 @@ class NonInlineFlxRandom
 	/**
 	 * Returns a pseudorandom number between 0 and 1, inclusive.
 	 */
-	static public function float():Float
+	public static function float():Float
 	{
 		return generate() / MODULUS;
 	}
@@ -86,7 +86,7 @@ class NonInlineFlxRandom
 	 * @param	Max			The maximum value that should be returned. 2,147,483,647 by default.
 	 * @param	?Excludes	An optional array of values that should not be returned.
 	 */
-	static public function intRanged( Min:Int = 0, Max:Int = 2147483647, ?Excludes:Array<Int> ):Int
+	public static function intRanged( Min:Int = 0, Max:Int = 2147483647, ?Excludes:Array<Int> ):Int
 	{
 		var result:Int = 0;
 		
@@ -128,7 +128,7 @@ class NonInlineFlxRandom
 	 * @param	Max			The maximum value that should be returned. 33,554,429 by default.
 	 * @param	?Excludes	An optional array of values that should not be returned.
 	 */
-	static public function floatRanged( Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float> ):Float
+	public static function floatRanged( Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float> ):Float
 	{
 		var result:Float = 0;
 		
@@ -169,7 +169,7 @@ class NonInlineFlxRandom
 	 * @param 	Chance 	The chance of receiving the value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return 	Whether the roll passed or not.
 	 */
-	static public function chanceRoll( Chance:Float = 50 ):Bool
+	public static function chanceRoll( Chance:Float = 50 ):Bool
 	{
 		var result:Bool = false;
 		
@@ -187,7 +187,7 @@ class NonInlineFlxRandom
 	 * @param	Chance	The chance of receiving a positive value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return	1 or -1
 	 */
-	static public function sign( Chance:Float = 50 ):Int
+	public static function sign( Chance:Float = 50 ):Int
 	{
 		return chanceRoll( Chance ) ? 1 : -1;
 	}
@@ -199,7 +199,7 @@ class NonInlineFlxRandom
 	 * @param	WeightsArray		An array of weights.
 	 * @return	A value between 0 and ( SelectionArray.length - 1 ), with a probability equivalent to the values in SelectionArray.
 	 */
-	static public function weightedPick( WeightsArray:Array<Float> ):Int
+	public static function weightedPick( WeightsArray:Array<Float> ):Int
 	{
 		var pick:Int = 0;
 		var sumOfWeights:Float = 0;
@@ -234,7 +234,7 @@ class NonInlineFlxRandom
 	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic static public function getObject<T>( Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
+	@:generic public static function getObject<T>( Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
 	{
 		var selected:Null<T> = null;
 		
@@ -276,7 +276,7 @@ class NonInlineFlxRandom
 	 * @param 	EndIndex 		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	A pseudorandomly chosen object from Objects.
 	 */
-	@:generic static public function weightedGetObject<T>( Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
+	@:generic public static function weightedGetObject<T>( Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
 	{
 		var selected:Null<T> = null;
 		
@@ -331,7 +331,7 @@ class NonInlineFlxRandom
 	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
 	 * @return 	A color value in hex ARGB format.
 	 */
-	static public function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255 ):Int
+	public static function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255 ):Int
 	{
 		var red:Int = intRanged( Min, Max );
 		var green:Int = intRanged( Min, Max );

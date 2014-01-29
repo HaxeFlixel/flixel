@@ -44,7 +44,7 @@ class Reg
 		return colorArray[0];
 	}
 	
-	static public function genColors():Void
+	public static function genColors():Void
 	{
 		var base:Array<Int> = [];
 		base.push( FlxRandom.intRanged( 64, 192 ) ); // red
@@ -69,7 +69,7 @@ class Reg
 	/**
 	 * Returns a random color from the currently active color array.
 	 */
-	static public function randomColor():Int
+	public static function randomColor():Int
 	{
 		return colorArray[ FlxRandom.intRanged( 0, 3 ) ];
 	}
@@ -80,7 +80,7 @@ class Reg
 	 * @param	Object
 	 * @param	Num
 	 */
-	static public function quarterX( Object:FlxObject, Num:Int = 2 ):Void {
+	public static function quarterX( Object:FlxObject, Num:Int = 2 ):Void {
 		Object.x = ( FlxG.width * Num / 2 - Object.width ) / 2;
 	}
 	

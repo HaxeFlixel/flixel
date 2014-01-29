@@ -30,7 +30,7 @@ class OldFlxRandom
 	 * 
 	 * @return A pseudo random value between 0 and 65536 inclusive.
 	 */
-	static public function int():Int
+	public static function int():Int
 	{
 		var result:Int = Std.int(intHelper);
 		
@@ -61,7 +61,7 @@ class OldFlxRandom
 	 * @param 	Excludes 	An Array of integers that will NOT be returned (default: null)
 	 * @return A pseudo-random value between min (or 0) and max (or MAX_RANGE, inclusive)
 	 */
-	static public function intRanged(?Min:Int, ?Max:Int, ?Excludes:Array<Int>):Int
+	public static function intRanged(?Min:Int, ?Max:Int, ?Excludes:Array<Int>):Int
 	{
 		if (Min == null)
 		{
@@ -136,7 +136,7 @@ class OldFlxRandom
 	 * @param 	max 	The highest value to return (default: MAX_RANGE)
 	 * @return A pseudo random value between min (or 0) and max (or MAX_RANGE, inclusive)
 	 */
-	static public function floatRanged(?min:Float, ?max:Float):Float
+	public static function floatRanged(?min:Float, ?max:Float):Float
 	{
 		if (min == null)
 		{
@@ -181,7 +181,7 @@ class OldFlxRandom
 	 * @param 	chance 	The chance of receiving the value. Should be given as a uint between 0 and 100 (effectively 0% to 100%)
 	 * @return true if the roll passed, or false
 	 */
-	static public function chanceRoll(chance:Int = 50):Bool
+	public static function chanceRoll(chance:Int = 50):Bool
 	{
 		if (chance <= 0)
 		{
