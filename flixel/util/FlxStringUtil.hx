@@ -17,7 +17,7 @@ class FlxStringUtil
 	 * @param	EndTicks	The second timestamp from the system.
 	 * @return	A <code>String</code> containing the formatted time elapsed information.
 	 */
-	inline static public function formatTicks(StartTicks:Int, EndTicks:Int):String
+	public static inline function formatTicks(StartTicks:Int, EndTicks:Int):String
 	{
 		return (Math.abs(EndTicks - StartTicks) / 1000) + "s";
 	}
@@ -29,7 +29,7 @@ class FlxStringUtil
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted <code>String</code>, like "1:03".
 	 */
-	inline static public function formatTime(Seconds:Float, ShowMS:Bool = false):String
+	public static inline function formatTime(Seconds:Float, ShowMS:Bool = false):String
 	{
 		var timeString:String = Std.int(Seconds / 60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;
@@ -59,7 +59,7 @@ class FlxStringUtil
 	 * @param	AnyArray	Any <code>Array</code> object.
 	 * @return	A comma-separated <code>String</code> containing the <code>.toString()</code> output of each element in the array.
 	 */
-	inline static public function formatArray(AnyArray:Array<Dynamic>):String
+	public static inline function formatArray(AnyArray:Array<Dynamic>):String
 	{
 		var string:String = "";
 		if ((AnyArray != null) && (AnyArray.length > 0))
@@ -81,7 +81,7 @@ class FlxStringUtil
 	 * @param  AnyMap    A <code>StringMap</code> object.
 	 * @return  A <code>String</code> formatted like this: <code>key1, key2, ..., keyX</code>
 	 */
-	inline static public function formatStringMap(AnyMap:Map<String,Dynamic>):String
+	public static inline function formatStringMap(AnyMap:Map<String,Dynamic>):String
 	{
 		var string:String = "";
 		for (key in AnyMap.keys()) {
@@ -103,7 +103,7 @@ class FlxStringUtil
 	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.  Default value is true.
 	 * @return	A nicely formatted <code>String</code>.  Does not include a dollar sign or anything!
 	 */
-	inline static public function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
+	public static inline function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
 		var helper:Int;
 		var amount:Int = Math.floor(Amount);
@@ -212,7 +212,7 @@ class FlxStringUtil
 	 * @param	Simple	Returns only the class name, not the package or packages.
 	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
 	 */
-	@:extern inline static public function getClassName(Obj:Dynamic, Simple:Bool = false):String
+	@:extern public static inline function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
 		var s:String = Type.getClassName(Type.getClass(Obj));
 		if (s != null)
@@ -234,7 +234,7 @@ class FlxStringUtil
 	 * @param	Simple 	Only uses the class name, not the package or packages.
 	 * @return	Whether they have the same class name or not
 	 */
-	inline static public function sameClassName(Obj1:Dynamic, Obj2:Dynamic, Simple:Bool = true):Bool
+	public static inline function sameClassName(Obj1:Dynamic, Obj2:Dynamic, Simple:Bool = true):Bool
 	{
 		return (getClassName(Obj1, Simple) == getClassName(Obj2, Simple));
 	}

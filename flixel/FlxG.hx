@@ -250,7 +250,7 @@ class FlxG
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
-	inline static public function resizeGame(Width:Int, Height:Int):Void
+	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
 		_scaleMode.onMeasure(Width, Height);
 	}
@@ -258,7 +258,7 @@ class FlxG
 	/**
 	 * Like hitting the reset button a game console, this will re-launch the game as if it just started.
 	 */
-	inline static public function resetGame():Void
+	public static inline function resetGame():Void
 	{
 		game.resetState = true;
 	}
@@ -266,7 +266,7 @@ class FlxG
 	/**
 	 * Switch from the current game state to the one specified here.
 	 */
-	inline static public function switchState(State:FlxState):Void
+	public static inline function switchState(State:FlxState):Void
 	{
 		game.requestedState = State; 
 	}
@@ -274,7 +274,7 @@ class FlxG
 	/**
 	 * Request a reset of the current game state.
 	 */
-	inline static public function resetState():Void
+	public static inline function resetState():Void
 	{
 		switchState(Type.createInstance(Type.getClass(state), []));
 		
@@ -330,7 +330,7 @@ class FlxG
 	 * @param	Camera			If the collision is taking place in a camera other than FlxG.camera (the default/current) then pass it here
 	 * @return	Boolean True if the sprites collide, false if not
 	 */
-	inline static public function pixelPerfectOverlap(Sprite1:FlxSprite, Sprite2:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
+	public static inline function pixelPerfectOverlap(Sprite1:FlxSprite, Sprite2:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
 	{
 		return FlxCollision.pixelPerfectCheck(Sprite1, Sprite2, AlphaTolerance, Camera);
 	}
@@ -349,7 +349,7 @@ class FlxG
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	inline static public function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
+	public static inline function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
 	{
 		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
 	}
@@ -393,7 +393,7 @@ class FlxG
 	 * @param 	Child	The DisplayObject to add
 	 * @return	The removed DisplayObject
 	 */
-	@:generic inline static public function removeChild<T:DisplayObject>(Child:T):T
+	@:generic public static inline function removeChild<T:DisplayObject>(Child:T):T
 	{
 		game.removeChild(Child);
 		return Child;
@@ -405,7 +405,7 @@ class FlxG
 	 * @param	URL		The address of the web page.
 	 * @param	Target	<code>"_blank", "_self", "_parent"</code> or <code>"_top"</code>
 	 */
-	inline static public function openURL(URL:String, Target:String = "_blank"):Void
+	public static inline function openURL(URL:String, Target:String = "_blank"):Void
 	{
 		Lib.getURL(new URLRequest(URL), Target);
 	}

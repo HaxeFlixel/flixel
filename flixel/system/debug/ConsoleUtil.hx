@@ -193,7 +193,7 @@ class ConsoleUtil
 	 * 
 	 * @param	Text	The text to log.
 	 */
-	inline static public function log(Text:Dynamic):Void
+	public static inline function log(Text:Dynamic):Void
 	{
 		FlxG.log.advanced([Text], LogStyle.CONSOLE);
 	}

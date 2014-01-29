@@ -136,7 +136,7 @@ class FlxAssets
 		graph.endFill();
 	}
 	
-	inline static public function getBitmapData(id:String):BitmapData
+	public static inline function getBitmapData(id:String):BitmapData
 	{
 		return Assets.getBitmapData(id, false);
 	}

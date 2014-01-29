@@ -413,7 +413,7 @@ class FlxSpriteUtil
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 */
-	@:noUsing inline static public function beginDraw(Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
+	@:noUsing public static inline function beginDraw(Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
@@ -437,7 +437,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The <code>FlxSprite</code> for chaining
 	 */
-	inline static public function endDraw(sprite:FlxSprite, ?drawStyle:DrawStyle):FlxSprite
+	public static inline function endDraw(sprite:FlxSprite, ?drawStyle:DrawStyle):FlxSprite
 	{
 		flashGfx.endFill();
 		updateSpriteGraphic(sprite, drawStyle);
@@ -476,7 +476,7 @@ class FlxSpriteUtil
 	 * 
 	 * @param	lineStyle	The lineStyle typedef
 	 */
-	@:noUsing inline static public function setLineStyle(lineStyle:LineStyle):Void
+	@:noUsing public static inline function setLineStyle(lineStyle:LineStyle):Void
 	{
 		if (lineStyle != null)
 		{
@@ -540,7 +540,7 @@ class FlxSpriteUtil
 	 * @param	ProgressCallback	An optional callback that will be triggered when visibility is toggled.
 	 * @return	The <code>FlxObject</code> for chaining
 	 */
-	inline static public function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxObject
+	public static inline function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxObject
 	{
 		FlxFlicker.flicker(Object, Duration, Interval, EndVisibility, ForceRestart, CompletionCallback, ProgressCallback);
 		return Object;
@@ -551,7 +551,7 @@ class FlxSpriteUtil
 	 * 
 	 * @param  Object 	The object to check against.
 	 */
-	inline static public function isFlickering(Object:FlxObject):Bool
+	public static inline function isFlickering(Object:FlxObject):Bool
 	{
 		return FlxFlicker.isFlickering(Object);
 	}
@@ -562,7 +562,7 @@ class FlxSpriteUtil
 	 * @param  Object 	The object to stop flickering.
 	 * @return The <code>FlxObject</code> for chaining
 	 */
-	inline static public function stopFlickering(Object:FlxObject):FlxObject
+	public static inline function stopFlickering(Object:FlxObject):FlxObject
 	{
 		FlxFlicker.stopFlickering(Object);
 		return Object;
@@ -575,7 +575,7 @@ class FlxSpriteUtil
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The <code>FlxSprite</code> for chaining
 	 */
-	inline static public function fadeIn(sprite:FlxSprite, Duration:Float, ?ResetAlpha:Bool, ?OnComplete:CompleteCallback):FlxSprite
+	public static inline function fadeIn(sprite:FlxSprite, Duration:Float, ?ResetAlpha:Bool, ?OnComplete:CompleteCallback):FlxSprite
 	{
 		if (ResetAlpha) {
 			sprite.alpha = 0;
@@ -591,7 +591,7 @@ class FlxSpriteUtil
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The <code>FlxSprite</code> for chaining
 	 */
-	inline static public function fadeOut(sprite:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):FlxSprite
+	public static inline function fadeOut(sprite:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):FlxSprite
 	{
 		FlxTween.color(sprite, Duration, sprite.color, FadeToBlack ? FlxColor.BLACK : sprite.color, sprite.alpha, 0, OnComplete != null ? { complete:OnComplete } : null);
 		return sprite;

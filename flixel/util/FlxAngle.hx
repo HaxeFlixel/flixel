@@ -39,7 +39,7 @@ class FlxAngle
 	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
 	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
 	 */
-	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint):FlxPoint
+	public static inline function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint):FlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
@@ -128,7 +128,7 @@ class FlxAngle
 	 * @param	Round		Round x and y coordinates or not.
 	 * @return	The angle in degrees, between -180 and 180.
 	 */
-	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint, Round:Bool = false):Float
+	public static inline function getAngle(Point1:FlxPoint, Point2:FlxPoint, Round:Bool = false):Float
 	{
 		var x:Float = Point2.x - Point1.x;
 		var y:Float = Point2.y - Point1.y;
@@ -254,7 +254,7 @@ class FlxAngle
 	 * @param 	radians 	The value in radians
 	 * @return	Degrees
 	 */
-	inline static public function asDegrees(radians:Float):Float
+	public static inline function asDegrees(radians:Float):Float
 	{
 		return radians * TO_DEG;
 	}
@@ -266,7 +266,7 @@ class FlxAngle
 	 * @param 	degrees The value in degrees
 	 * @return	Radians
 	 */
-	inline static public function asRadians(degrees:Float):Float
+	public static inline function asRadians(degrees:Float):Float
 	{
 		return degrees * TO_RAD;
 	}
@@ -280,7 +280,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless asDegrees is true)
 	 */
-	inline static public function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
+	public static inline function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
 	{
 		var dx:Float = (SpriteB.x + SpriteB.origin.x) - (SpriteA.x + SpriteA.origin.x);
 		var dy:Float = (SpriteB.y + SpriteB.origin.y) - (SpriteA.y + SpriteA.origin.y);
@@ -348,7 +348,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	inline static public function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
+	public static inline function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		var p:FlxPoint = Object.getScreenXY();

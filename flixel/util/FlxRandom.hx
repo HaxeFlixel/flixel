@@ -115,7 +115,7 @@ class FlxRandom
 	 * 
 	 * @return	The new global seed.
 	 */
-	inline static public function resetGlobalSeed():Int
+	public static inline function resetGlobalSeed():Int
 	{
 		return globalSeed = Std.int( Math.random() * MODULUS );
 	}
@@ -123,7 +123,7 @@ class FlxRandom
 	/**
 	 * Returns a pseudorandom number between 0 and 2,147,483,647, inclusive.
 	 */
-	inline static public function int():Int
+	public static inline function int():Int
 	{
 		return generate();
 	}
@@ -131,7 +131,7 @@ class FlxRandom
 	/**
 	 * Returns a pseudorandom number between 0 and 1, inclusive.
 	 */
-	inline static public function float():Float
+	public static inline function float():Float
 	{
 		return generate() / MODULUS;
 	}
@@ -227,7 +227,7 @@ class FlxRandom
 	 * @param 	Chance 	The chance of receiving the value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return 	Whether the roll passed or not.
 	 */
-	inline static public function chanceRoll( Chance:Float = 50 ):Bool
+	public static inline function chanceRoll( Chance:Float = 50 ):Bool
 	{
 		return floatRanged( 0, 100 ) < Chance;
 	}
@@ -238,7 +238,7 @@ class FlxRandom
 	 * @param	Chance	The chance of receiving a positive value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return	1 or -1
 	 */
-	inline static public function sign( Chance:Float = 50 ):Int
+	public static inline function sign( Chance:Float = 50 ):Int
 	{
 		return chanceRoll( Chance ) ? 1 : -1;
 	}
