@@ -66,7 +66,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Pan amount. -1 = full left, 1 = full right. Proximity based panning overrides this.
 	 */
-	public var pan(default, set):Float;
+	public var pan(get, set):Float;
 
 	private function get_pan(pan:Float):Float
 	{
