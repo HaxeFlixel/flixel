@@ -17,7 +17,7 @@ class NonInlineFlxRandom
 	/**
 	 * Internal function to update the internal seed whenever the global seed is reset, and keep the global seed's value in range.
 	 */
-	static private function set_globalSeed( NewSeed:Int ):Int
+	private static function set_globalSeed( NewSeed:Int ):Int
 	{
 		if ( NewSeed < 1 )
 		{
@@ -346,7 +346,7 @@ class NonInlineFlxRandom
 	 * 
 	 * @return	A new pseudorandom number.
 	 */
-	static private function generate():Int
+	private static function generate():Int
 	{
 		return internalSeed = ( ( internalSeed * MULTIPLIER + INCREMENT ) % MODULUS ) & MODULUS;
 	}

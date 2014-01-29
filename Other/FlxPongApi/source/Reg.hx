@@ -18,28 +18,28 @@ class Reg
 	
 	static public var lite(get, null):Int;
 	
-	static private function get_lite():Int
+	private static function get_lite():Int
 	{
 		return colorArray[3];
 	}
 	
 	static public var med_lite(get, null):Int;
 	
-	static private function get_med_lite():Int
+	private static function get_med_lite():Int
 	{
 		return colorArray[2];
 	}
 	
 	static public var med_dark(get, null):Int;
 	
-	static private function get_med_dark():Int
+	private static function get_med_dark():Int
 	{
 		return colorArray[1];
 	}
 	
 	static public var dark(get, null):Int;
 	
-	static private function get_dark():Int
+	private static function get_dark():Int
 	{
 		return colorArray[0];
 	}
