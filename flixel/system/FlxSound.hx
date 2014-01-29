@@ -63,6 +63,19 @@ class FlxSound extends FlxBasic
 	 * each time when sound reaches its end. Works only on flash and desktop targets.
 	 */
 	public var onComplete:Void->Void;
+	/**
+	 * Pan amount. -1 = full left, 1 = full right. Proximity based panning overrides this.
+	 */
+	public var pan(get, set):Float;
+
+	private inline function get_pan():Float
+	{
+		return _transform.pan;
+	}
+	private inline function set_pan(pan:Float):Float
+	{
+		return _transform.pan = pan;
+	}
 
 	/**
 	 * Internal tracker for a Flash sound object.
@@ -107,7 +120,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Internal tracker for whether to pan the sound left and right.  Default is false.
 	 */
-	private var _pan:Bool;
+	private var _proximityPan:Bool;
 	/**
 	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
 	 */
@@ -139,7 +152,7 @@ class FlxSound extends FlxBasic
 		_looped = false;
 		_target = null;
 		_radius = 0;
-		_pan = false;
+		_proximityPan = false;
 		visible = false;
 		amplitude = 0;
 		amplitudeLeft = 0;
@@ -207,7 +220,7 @@ class FlxSound extends FlxBasic
 
 			radialMultiplier = 1 - radialMultiplier;
 
-			if (_pan)
+			if (_proximityPan)
 			{
 				var d:Float = (x - _target.x) / _radius;
 				if (d < -1) 
@@ -307,13 +320,13 @@ class FlxSound extends FlxBasic
 	/**
 	 * Call this function if you want this sound's volume to change
 	 * based on distance from a particular FlxObject.
-	 * 
-	 * @param	X		The X position of the sound.
-	 * @param	Y		The Y position of the sound.
-	 * @param	TargetObject	The object you want to track.
-	 * @param	Radius	The maximum distance this sound can travel.
-	 * @param	Pan		Whether the sound should pan in addition to the volume changes (default: true).
-	 * 
+	 *
+	 * @param	X			The X position of the sound.
+	 * @param	Y			The Y position of the sound.
+	 * @param	TargetObject		The object you want to track.
+	 * @param	Radius			The maximum distance this sound can travel.
+	 * @param	Pan			Whether panning should be used in addition to the volume changes (default: true).
+	 *
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function proximity(X:Float, Y:Float, TargetObject:FlxObject, Radius:Float, Pan:Bool = true):FlxSound
@@ -322,7 +335,7 @@ class FlxSound extends FlxBasic
 		y = Y;
 		_target = TargetObject;
 		_radius = Radius;
-		_pan = Pan;
+		_proximityPan = Pan;
 		return this;
 	}
 	
