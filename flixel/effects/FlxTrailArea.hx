@@ -181,7 +181,8 @@ class FlxTrailArea extends FlxSprite
 				{
 					if (simpleRender) 
 					{
-						framePixels.copyPixels(member.framePixels, new Rectangle(0, 0, member.frameWidth, member.frameHeight), 
+						framePixels.copyPixels(member.getFlxFrameBitmapData(), 
+												new Rectangle(0, 0, member.frameWidth, member.frameHeight), 
 												new Point(member.x - x, member.y - y), null, null, true);
 					}
 					else 
@@ -203,7 +204,7 @@ class FlxTrailArea extends FlxSprite
 							_matrix.translate((member.origin.x), (member.origin.y));
 						}
 						_matrix.translate(member.x - x, member.y - y);
-						framePixels.draw(member.framePixels, _matrix, member.colorTransform, blendMode, null, antialiasing);
+						framePixels.draw(member.getFlxFrameBitmapData(), _matrix, member.colorTransform, blendMode, null, antialiasing);
 					}
 					
 				}
