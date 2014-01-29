@@ -50,20 +50,20 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */ 
-	inline static private var NORMAL:Int = 0;
+	private static inline var NORMAL:Int = 0;
 	/**
 	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
 	 */ 
-	inline static private var HIGHLIGHT:Int = 1;
+	private static inline var HIGHLIGHT:Int = 1;
 	/**
 	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
 	 */ 
-	inline static private var PRESSED:Int = 2;	
+	private static inline var PRESSED:Int = 2;
 	
 	/**
 	 * A list of analogs that are currently active.
 	 */ 
-	static private var _analogs:Array<FlxAnalog>;
+	private static var _analogs:Array<FlxAnalog>;
 	
 	#if !FLX_NO_TOUCH
 	/**
@@ -132,7 +132,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Creates the background of the analog stick.
 	 * Override this to customize the background.
 	 */
-	private function createBase():Void
+	function createBase():Void
 	{
 		base = new FlxSprite(x, y);
 		base.loadGraphic(FlxAssets.IMG_BASE);
@@ -152,7 +152,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Creates the thumb of the analog stick.
 	 * Override this to customize the thumb.
 	 */
-	private function createThumb():Void 
+	function createThumb():Void
 	{
 		thumb = new FlxSprite(x, y);
 		thumb.loadGraphic(FlxAssets.IMG_THUMB);
@@ -171,7 +171,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 * The thumb will react when the mouse is in the zone.
 	 * Override this to customize the zone.
 	 */
-	private function createZone():Void
+	function createZone():Void
 	{
 		if (base != null)			
 		{
@@ -286,7 +286,7 @@ class FlxAnalog extends FlxSpriteGroup
 		super.update();
 	}
 	
-	private function updateAnalog(TouchPoint:FlxPoint, Pressed:Bool, JustPressed:Bool, JustReleased:Bool, ?Touch:FlxTouch):Bool
+	function updateAnalog(TouchPoint:FlxPoint, Pressed:Bool, JustPressed:Bool, JustReleased:Bool, ?Touch:FlxTouch):Bool
 	{
 		var offAll:Bool = true;
 		
@@ -391,7 +391,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var pressed(get, never):Bool;
 	
-	inline private function get_pressed():Bool
+	inline function get_pressed():Bool
 	{
 		return status == PRESSED;
 	}
@@ -401,7 +401,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var justPressed(get, never):Bool;
 	
-	private function get_justPressed():Bool
+	function get_justPressed():Bool
 	{
 		#if !FLX_NO_TOUCH
 		if (_currentTouch != null)
@@ -422,7 +422,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var justReleased(get, never):Bool;
 	
-	private function get_justReleased():Bool
+	function get_justReleased():Bool
 	{
 		#if !FLX_NO_TOUCH
 		if (_currentTouch != null)

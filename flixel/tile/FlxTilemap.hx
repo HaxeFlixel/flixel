@@ -35,24 +35,24 @@ class FlxTilemap extends FlxObject
 	/**
 	 * A set of generic tiles you can use. Useful for protyping.
 	 */
-	inline static public var imgAuto:String = FlxAssets.IMG_AUTO;
+	public static inline var imgAuto:String = FlxAssets.IMG_AUTO;
 	/**
 	 * An alternate set of generic tiles you can use. Useful for protyping.
 	 */
-	inline static public var imgAutoAlt:String = FlxAssets.IMG_AUTO_ALT;
+	public static inline var imgAutoAlt:String = FlxAssets.IMG_AUTO_ALT;
 	
 	/**
 	 * No auto-tiling.
 	 */
-	inline static public var OFF:Int = 0;
+	public static inline var OFF:Int = 0;
 	/**
 	 * Good for levels with thin walls that don'tile need interior corner art.
 	 */
-	inline static public var AUTO:Int = 1;
+	public static inline var AUTO:Int = 1;
 	/**
 	 * Better for levels with thick walls that look better with interior corner art.
 	 */
-	inline static public var ALT:Int = 2;
+	public static inline var ALT:Int = 2;
 	
 	public var scaleX(default, set):Float = 1.0;
 	public var scaleY(default, set):Float = 1.0;
@@ -529,7 +529,7 @@ class FlxTilemap extends FlxObject
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if (flash && !FLX_NO_DEBUG)
-	private function makeDebugTile(Color:Int):BitmapData
+	function makeDebugTile(Color:Int):BitmapData
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
@@ -573,7 +573,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
 	 * @param	Camera		The related <code>FlxCamera</code>, mainly for scroll values.
 	 */
-	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
+	function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
 		#if flash
 		Buffer.fill();
@@ -1034,7 +1034,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Points		An array of <code>FlxPoint</code> nodes.
 	 */
-	private function simplifyPath(Points:Array<FlxPoint>):Void
+	function simplifyPath(Points:Array<FlxPoint>):Void
 	{
 		var deltaPrevious:Float;
 		var deltaNext:Float;
@@ -1067,7 +1067,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Points		An array of <code>FlxPoint</code> nodes.
 	 */
-	private function raySimplifyPath(Points:Array<FlxPoint>):Void
+	function raySimplifyPath(Points:Array<FlxPoint>):Void
 	{
 		var source:FlxPoint = Points[0];
 		var lastIndex:Int = -1;
@@ -1109,7 +1109,7 @@ class FlxTilemap extends FlxObject
 	 * @param   WideDiagonal Whether to require an additional tile to make diagonal movement. Default value is true.
 	 * @return	A Flash <code>Array</code> of <code>FlxPoint</code> nodes.  If the end tile could not be found, then a null <code>Array</code> is returned instead.
 	 */
-	private function computePathDistance(StartIndex:Int, EndIndex:Int, WideDiagonal:Bool):Array<Int>
+	function computePathDistance(StartIndex:Int, EndIndex:Int, WideDiagonal:Bool):Array<Int>
 	{
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
@@ -1289,7 +1289,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Start	The tile we're on in our walk backward.
 	 * @param	Points	A Flash <code>Array</code> of <code>FlxPoint</code> nodes composing the path from the start to the end, compiled in reverse order.
 	 */
-	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
+	function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
 	{
 		Points.push(new FlxPoint(x + Math.floor(Start % widthInTiles) * _scaledTileWidth + _scaledTileWidth * 0.5, y + Math.floor(Start / widthInTiles) * _scaledTileHeight + _scaledTileHeight * 0.5));
 		
@@ -2138,7 +2138,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Invert		Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function arrayToCSV(Data:Array<Int>, Width:Int, Invert:Bool = false):String
+	public static function arrayToCSV(Data:Array<Int>, Width:Int, Invert:Bool = false):String
 	{
 		var row:Int = 0;
 		var column:Int;
@@ -2205,7 +2205,7 @@ class FlxTilemap extends FlxObject
 	 * @param  	ColorMap  	An array of color values (0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<Int>):String
+	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<Int>):String
 	{
 		if (Scale < 1) 
 		{
@@ -2312,7 +2312,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1):String
+	public static function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1):String
 	{
 		var tempBitmapData:BitmapData;
 		
@@ -2333,7 +2333,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Index		The index of the tile you want to analyze.
 	 */
-	private function autoTile(Index:Int):Void
+	function autoTile(Index:Int):Void
 	{
 		if (_data[Index] == 0)
 		{
@@ -2396,7 +2396,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Index		The index of the tile you want to update.
 	 */
-	private function updateTile(Index:Int):Void
+	function updateTile(Index:Int):Void
 	{
 		var tile:FlxTile = _tileObjects[_data[Index]];
 		
@@ -2537,7 +2537,7 @@ class FlxTilemap extends FlxObject
 		_buffers = new Array<FlxTilemapBuffer>();
 	}
 	
-	override private function set_forceComplexRender(Value:Bool):Bool 
+	override function set_forceComplexRender(Value:Bool):Bool
 	{
 		var i:Int = 0;
 		var l:Int;
@@ -2556,7 +2556,7 @@ class FlxTilemap extends FlxObject
 		return super.set_forceComplexRender(Value);
 	}
 	
-	private function set_scaleX(Scale:Float):Float
+	function set_scaleX(Scale:Float):Float
 	{
 		Scale = Math.abs(Scale);
 		scaleX = Scale;
@@ -2580,7 +2580,7 @@ class FlxTilemap extends FlxObject
 		return Scale;
 	}
 	
-	private function set_scaleY(Scale:Float):Float
+	function set_scaleY(Scale:Float):Float
 	{
 		Scale = Math.abs(Scale);
 		scaleY = Scale;

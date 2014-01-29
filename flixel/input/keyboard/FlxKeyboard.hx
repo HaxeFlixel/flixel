@@ -37,7 +37,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
-	inline static private var TOTAL:Int = 256;
+	private static inline var TOTAL:Int = 256;
 	
 	/**
 	 * A map for key lookup.
@@ -56,7 +56,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	inline public function anyPressed(KeyArray:Array<String>):Bool 
+	public inline function anyPressed(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
 	}
@@ -68,7 +68,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	inline public function anyJustPressed(KeyArray:Array<String>):Bool 
+	public inline function anyJustPressed(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
 	}
@@ -80,7 +80,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	inline public function anyJustReleased(KeyArray:Array<String>):Bool 
+	public inline function anyJustReleased(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
 	}
@@ -126,7 +126,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyName		The <code>String</code> name of the key.
 	 * @return	The key code for that key.
 	 */
-	inline public function getKeyCode(KeyName:String):Int
+	public inline function getKeyCode(KeyName:String):Int
 	{
 		return _keyLookup.get(KeyName);
 	}
@@ -175,7 +175,7 @@ class FlxKeyboard implements IFlxInput
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new()
+	function new()
 	{
 		_keyLookup = new Map<String, Int>();
 		
@@ -280,7 +280,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyName		String name of the key (e.g. "LEFT" or "A")
 	 * @param	KeyCode		The numeric Flash code for this key.
 	 */
-	private function addKey(KeyName:String, KeyCode:Int):Void
+	function addKey(KeyName:String, KeyCode:Int):Void
 	{
 		_keyLookup.set(KeyName, KeyCode);
 		_keyList[KeyCode] = new FlxKey(KeyName);
@@ -289,7 +289,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
-	private function update():Void
+	function update():Void
 	{
 		for (key in _keyList)
 		{
@@ -318,7 +318,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	Status		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<String>, Status:Int):Bool
+	function checkKeyStatus(KeyArray:Array<String>, Status:Int):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -364,7 +364,7 @@ class FlxKeyboard implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
 	 */
-	private function onKeyUp(FlashEvent:KeyboardEvent):Void
+	function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
 		var c:Int = FlashEvent.keyCode;
 		
@@ -437,7 +437,7 @@ class FlxKeyboard implements IFlxInput
 	 * 
 	 * @param	FlashEvent	Flash keyboard event.
 	 */
-	private function onKeyDown(FlashEvent:KeyboardEvent):Void
+	function onKeyDown(FlashEvent:KeyboardEvent):Void
 	{
 		var c:Int = FlashEvent.keyCode;
 		
@@ -467,7 +467,7 @@ class FlxKeyboard implements IFlxInput
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */
-	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
+	function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -490,7 +490,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
-	inline private function updateKeyStates(KeyCode:Int, Down:Bool):Void
+	inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
 		var obj:FlxKey = _keyList[KeyCode];
 		
@@ -521,9 +521,9 @@ class FlxKeyboard implements IFlxInput
 		}
 	}
 	
-	inline private function onFocus():Void {}
+	inline function onFocus():Void {}
 
-	inline private function onFocusLost():Void
+	inline function onFocusLost():Void
 	{
 		reset();
 	}
@@ -537,7 +537,7 @@ class FlxKeyboard implements IFlxInput
 	 * 
 	 * @return	An array of key state data.  Null if there is no data.
 	 */
-	private function record():Array<CodeValuePair>
+	function record():Array<CodeValuePair>
 	{
 		var data:Array<CodeValuePair> = null;
 		var i:Int = 0;
@@ -567,7 +567,7 @@ class FlxKeyboard implements IFlxInput
 	 * 
 	 * @param	Record	Array of data about key states.
 	 */
-	private function playback(Record:Array<CodeValuePair>):Void
+	function playback(Record:Array<CodeValuePair>):Void
 	{
 		var i:Int = 0;
 		var l:Int = Record.length;

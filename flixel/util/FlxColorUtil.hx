@@ -15,7 +15,7 @@ class FlxColorUtil
 	 * @param	Blue	The blue component, between 0 and 255.
 	 * @return	The color as an integer
 	 */
-	inline static public function makeFromARGB(Alpha:Float = 1.0, Red:Int, Green:Int, Blue:Int):Int
+	public static inline function makeFromARGB(Alpha:Float = 1.0, Red:Int, Green:Int, Blue:Int):Int
 	{
 		return (Std.int((Alpha > 1) ? Alpha : (Alpha * 255)) & 0xFF) << 24 | (Red & 0xFF) << 16 | (Green & 0xFF) << 8 | (Blue & 0xFF);
 	}
@@ -29,7 +29,7 @@ class FlxColorUtil
 	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * @return	The color as an integer
 	 */
-	inline static public function makeFromHSBA(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):Int
+	public static inline function makeFromHSBA(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float = 1.0):Int
 	{
 		var red:Float;
 		var green:Float;
@@ -98,7 +98,7 @@ class FlxColorUtil
 	 * @param	Results	An optional parameter, allows you to use an ARGB that already exists in memory to store the result.
 	 * @return	An ARGB object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	inline static public function getARGB(Color:Int, ?Results:ARGB):ARGB
+	public static inline function getARGB(Color:Int, ?Results:ARGB):ARGB
 	{
 		var red:Int = (Color >> 16) & 0xFF;
 		var green:Int = (Color >> 8) & 0xFF;
@@ -121,7 +121,7 @@ class FlxColorUtil
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>HSBA</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public function getHSBA(Color:Int, ?Results:HSBA):HSBA
+	public static function getHSBA(Color:Int, ?Results:HSBA):HSBA
 	{
 		var hue:Float;
 		var saturation:Float;
@@ -181,7 +181,7 @@ class FlxColorUtil
 	 * @param	Color	In the format 0xAARRGGBB
 	 * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
 	 */
-	inline static public function getAlpha(Color:Int):Int
+	public static inline function getAlpha(Color:Int):Int
 	{
 		return (Color >> 24) & 0xFF;
 	}
@@ -192,7 +192,7 @@ class FlxColorUtil
 	 * @param	Color	In the format 0xAARRGGBB
 	 * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
 	 */
-	inline static public function getAlphaFloat(Color:Int):Float
+	public static inline function getAlphaFloat(Color:Int):Float
 	{
 		var f:Int = (Color >> 24) & 0xFF;
 		return f / 255;
@@ -204,7 +204,7 @@ class FlxColorUtil
 	 * @param	Color	In the format 0xAARRGGBB
 	 * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
 	 */
-	inline static public function getRed(Color:Int):Int
+	public static inline function getRed(Color:Int):Int
 	{
 		return Color >> 16 & 0xFF;
 	}
@@ -215,7 +215,7 @@ class FlxColorUtil
 	 * @param	Color	In the format 0xAARRGGBB
 	 * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
 	 */
-	inline static public function getGreen(Color:Int):Int
+	public static inline function getGreen(Color:Int):Int
 	{
 		return Color >> 8 & 0xFF;
 	}
@@ -226,7 +226,7 @@ class FlxColorUtil
 	 * @param	Color	In the format 0xAARRGGBB
 	 * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
 	 */
-	inline static public function getBlue(Color:Int):Int
+	public static inline function getBlue(Color:Int):Int
 	{
 		return Color & 0xFF;
 	}
@@ -240,7 +240,7 @@ class FlxColorUtil
 	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
 	 * @return 	A color value in hex ARGB format.
 	 */
-	inline static public function getRandomColor(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
+	public static inline function getRandomColor(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
 	{
 		return FlxRandom.color( Min, Max, Alpha );
 	}
@@ -254,7 +254,7 @@ class FlxColorUtil
 	 * @param	Blue	The Blue channel value (between 0 and 255)
 	 * @return	A native color value integer (format: 0xAARRGGBB)
 	 */
-	inline static public function getColor32(Alpha:Int, Red:Int, Green:Int, Blue:Int):Int
+	public static inline function getColor32(Alpha:Int, Red:Int, Green:Int, Blue:Int):Int
 	{
 		return Alpha << 24 | Red << 16 | Green << 8 | Blue;
 	}
@@ -267,7 +267,7 @@ class FlxColorUtil
 	 * @param	Blue	The Blue channel value (between 0 and 255)
 	 * @return	A native color value integer (format: 0xRRGGBB)
 	 */
-	inline static public function getColor24(Red:Int, Green:Int, Blue:Int):Int
+	public static inline function getColor24(Red:Int, Green:Int, Blue:Int):Int
 	{
 		return Red << 16 | Green << 8 | Blue;
 	}
@@ -278,7 +278,7 @@ class FlxColorUtil
 	 * @param	Alpha	Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
 	 * @return	HSV color wheel as Array of Ints
 	 */
-	static public function getHSVColorWheel(Alpha:Int = 255):Array<Int>
+	public static function getHSVColorWheel(Alpha:Int = 255):Array<Int>
 	{
 		var colors:Array<Int> = new Array<Int>();
 		
@@ -298,7 +298,7 @@ class FlxColorUtil
 	 * @param	Color	The color to base the harmony on
 	 * @return	0xAARRGGBB format color value
 	 */
-	inline static public function getComplementHarmony(Color:Int):Int
+	public static inline function getComplementHarmony(Color:Int):Int
 	{
 		var hsv:HSV = RGBtoHSV(Color);
 		var opposite:Int = FlxMath.wrapValue(Std.int(hsv.hue), 180, 359);
@@ -315,7 +315,7 @@ class FlxColorUtil
 	 * @param	threshold Control how adjacent the colors will be (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
-	static public function getAnalogousHarmony(Color:Int, Threshold:Int = 30):Harmony
+	public static function getAnalogousHarmony(Color:Int, Threshold:Int = 30):Harmony
 	{
 		var hsv:HSV = RGBtoHSV(Color);
 		
@@ -339,7 +339,7 @@ class FlxColorUtil
 	 * @param	Threshold 	Control how adjacent the colors will be to the Complement (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
-	static public function getSplitComplementHarmony(Color:Int, Threshold:Int = 30):Harmony
+	public static function getSplitComplementHarmony(Color:Int, Threshold:Int = 30):Harmony
 	{
 		var hsv:HSV = RGBtoHSV(Color);
 		
@@ -365,7 +365,7 @@ class FlxColorUtil
 	 * @param	Color 	The color to base the harmony on
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
 	 */
-	inline static public function getTriadicHarmony(Color:Int):TriadicHarmony
+	public static inline function getTriadicHarmony(Color:Int):TriadicHarmony
 	{
 		var hsv:HSV = RGBtoHSV(Color);
 		
@@ -382,7 +382,7 @@ class FlxColorUtil
 	 * @param	Color 	A color value in the format 0xAARRGGBB
 	 * @return	String containing the 3 lines of information
 	 */
-	inline static public function getColorInfo(Color:Int):String
+	public static inline function getColorInfo(Color:Int):String
 	{
 		var argb:ARGB = getARGB(Color);
 		var hsl:HSV = RGBtoHSV(Color);
@@ -405,7 +405,7 @@ class FlxColorUtil
 	 * @param	Color 	The color to get the String representation for
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	inline static public function ARGBtoHexString(Color:Int):String
+	public static inline function ARGBtoHexString(Color:Int):String
 	{
 		var argb:ARGB = getARGB(Color);
 		return "0x" + colorToHexString(Std.int(argb.alpha)) + colorToHexString(argb.red) + colorToHexString(argb.green) + colorToHexString(argb.blue);
@@ -417,7 +417,7 @@ class FlxColorUtil
 	 * @param	Color 	The color to get the String representation for
 	 * @return	A string of length 10 characters in the format 0xAARRGGBB
 	 */
-	inline static public function ARGBtoWebString(Color:Int):String
+	public static inline function ARGBtoWebString(Color:Int):String
 	{
 		var argb:ARGB = getARGB(Color);
 		return "#" + colorToHexString(argb.red) + colorToHexString(argb.green) + colorToHexString(argb.blue);
@@ -429,7 +429,7 @@ class FlxColorUtil
 	 * @param	Color	The color channel to get the hex value for, must be a value between 0 and 255)
 	 * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
 	 */
-	inline static public function colorToHexString(Color:Int):String
+	public static inline function colorToHexString(Color:Int):String
 	{
 		var digits:String = "0123456789ABCDEF";
 		
@@ -448,7 +448,7 @@ class FlxColorUtil
 	 * @param	Alpha	Alpha value to set per color (between 0 and 255)
 	 * @return	32-bit ARGB color value (0xAARRGGBB)
 	 */
-	static public function HSVtoARGB(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
+	public static function HSVtoARGB(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
 	{
 		var result = FlxColor.TRANSPARENT;
 		
@@ -492,7 +492,7 @@ class FlxColorUtil
 	 * @param	Color 	The color in format 0xRRGGBB
 	 * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
 	 */
-	static public function RGBtoHSV(Color:Int):HSV
+	public static function RGBtoHSV(Color:Int):HSV
 	{
 		var rgb:ARGB = getARGB(Color);
 		
@@ -566,7 +566,7 @@ class FlxColorUtil
 	 * @param	Color	The Color to convert
 	 * @return	The color without its alpha component
 	 */
-	inline static public function ARGBtoRGB(Color:Int):Int
+	public static inline function ARGBtoRGB(Color:Int):Int
 	{
 		return getColor24(getRed(Color), getGreen(Color), getBlue(Color));
 	}
@@ -581,7 +581,7 @@ class FlxColorUtil
 	 * @param	Alpha			The alpha value you want the interpolated color to have
 	 * @return	The interpolated color
 	 */
-	inline static public function interpolateColor(Color1:Int, Color2:Int, Steps:Int, CurrentStep:Int, Alpha:Int = 255):Int
+	public static inline function interpolateColor(Color1:Int, Color2:Int, Steps:Int, CurrentStep:Int, Alpha:Int = 255):Int
 	{
 		var src1:ARGB = getARGB(Color1);
 		var src2:ARGB = getARGB(Color2);
@@ -605,7 +605,7 @@ class FlxColorUtil
 	 * @param	Alpha			The alpha value you want the interpolated color to have
 	 * @return	The interpolated color
 	 */
-	inline static public function interpolateColorWithRGB(Color:Int, R2:Int, G2:Int, B2:Int, Steps:Int, CurrentStep:Int):Int
+	public static inline function interpolateColorWithRGB(Color:Int, R2:Int, G2:Int, B2:Int, Steps:Int, CurrentStep:Int):Int
 	{
 		var src:ARGB = getARGB(Color);
 		
@@ -630,7 +630,7 @@ class FlxColorUtil
 	 * @param	Alpha			The alpha value you want the interpolated color to have
 	 * @return	The interpolated color
 	 */
-	inline static public function interpolateRGB(R1:Int, G1:Int, B1:Int, R2:Int, G2:Int, B2:Int, Steps:Int, CurrentStep:Int):Int
+	public static inline function interpolateRGB(R1:Int, G1:Int, B1:Int, R2:Int, G2:Int, B2:Int, Steps:Int, CurrentStep:Int):Int
 	{
 		var r:Int = Std.int((((R2 - R1) * CurrentStep) / Steps) + R1);
 		var g:Int = Std.int((((G2 - G1) * CurrentStep) / Steps) + G1);
@@ -646,7 +646,7 @@ class FlxColorUtil
 	 * @param	Factor	The higher, the darker! Number from 0 to 1.0.
 	 * @return 	The darkened color
 	 */
-	inline static public function darken(Color:Int, Factor:Float = 0.2):Int
+	public static inline function darken(Color:Int, Factor:Float = 0.2):Int
 	{
 		FlxMath.bound(Factor, 0, 1);
 		
@@ -671,7 +671,7 @@ class FlxColorUtil
 	 * @param	Factor	The higher, the lighter! Number from 0.0 to 1.0.
 	 * @return 	The lightened color
 	 */
-	inline static public function brighten(Color:Int, Factor:Float = 0.2):Int
+	public static inline function brighten(Color:Int, Factor:Float = 0.2):Int
 	{
 		FlxMath.bound(Factor, 0, 1);
 		

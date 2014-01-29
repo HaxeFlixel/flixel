@@ -18,9 +18,9 @@ import flixel.util.loaders.CachedGraphics;
  */
 class PxBitmapFont 
 {
-	static private var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
+	private static var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
 	
-	static private var ZERO_POINT:Point = new Point();
+	private static var ZERO_POINT:Point = new Point();
 	
 	#if flash
 	private var _glyphs:Array<BitmapData>;
@@ -228,7 +228,7 @@ class PxBitmapFont
 	/**
 	 * Internal function. Resets current font.
 	 */
-	private function reset():Void
+	function reset():Void
 	{
 		dispose();
 		_maxHeight = 0;
@@ -473,7 +473,7 @@ class PxBitmapFont
 	#end
 	
 	#if flash
-	private function setGlyph(PxCharID:Int, PxBitmapData:BitmapData):Void 
+	function setGlyph(PxCharID:Int, PxBitmapData:BitmapData):Void
 	{
 		if (_glyphs[PxCharID] != null) 
 		{
@@ -488,7 +488,7 @@ class PxBitmapFont
 		}
 	}
 	#else
-	private function setGlyph(Tiles:TileSheetData, PxCharID:Int, PxRect:Rectangle, PxOffsetX:Int = 0, PxOffsetY:Int = 0, PxAdvanceX:Int = 0):Void
+	function setGlyph(Tiles:TileSheetData, PxCharID:Int, PxRect:Rectangle, PxOffsetX:Int = 0, PxOffsetY:Int = 0, PxAdvanceX:Int = 0):Void
 	{
 		var tileID:Int = Tiles.addTileRect(PxRect, ZERO_POINT);
 		var symbol:PxFontSymbol = new PxFontSymbol();
@@ -650,7 +650,7 @@ class PxBitmapFont
 	#if !flash
 	public var pixels(get_pixels, null):BitmapData;
 	
-	private function get_pixels():BitmapData 
+	function get_pixels():BitmapData
 	{
 		if (!cachedGraphics.isDumped)
 		{
@@ -676,7 +676,7 @@ class PxBitmapFont
 		#end
 	}
 	
-	private function setCachedGraphics(value:CachedGraphics):Void
+	function setCachedGraphics(value:CachedGraphics):Void
 	{
 		if (cachedGraphics != null && cachedGraphics != value)
 		{
@@ -696,7 +696,7 @@ class PxBitmapFont
 	 * @param	PxHandle	String identifer for the font.
 	 * @param	PxFont		Font to store.
 	 */
-	static public function store(PxHandle:String, PxFont:PxBitmapFont):Void 
+	public static function store(PxHandle:String, PxFont:PxBitmapFont):Void
 	{
 		_storedFonts.set(PxHandle, PxFont);
 	}
@@ -707,14 +707,14 @@ class PxBitmapFont
 	 * @param	PxHandle	Identifier of font to fetch.
 	 * @return	Stored font, or null if no font was found.
 	 */
-	static public function fetch(PxHandle:String):PxBitmapFont 
+	public static function fetch(PxHandle:String):PxBitmapFont
 	{
 		var f:PxBitmapFont = _storedFonts.get(PxHandle);
 		
 		return f;
 	}
 	
-	static public function clearStorage():Void
+	public static function clearStorage():Void
 	{
 		for (font in _storedFonts)
 		{

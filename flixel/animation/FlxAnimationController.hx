@@ -400,7 +400,7 @@ class FlxAnimationController
 	/**
 	 * Pauses current _animations
 	 */
-	inline public function pause():Void
+	public inline function pause():Void
 	{
 		if (_curAnim != null)
 		{
@@ -411,7 +411,7 @@ class FlxAnimationController
 	/**
 	 * Resumes current _animations if it's exist
 	 */
-	inline public function resume():Void
+	public inline function resume():Void
 	{
 		if (_curAnim != null)
 		{
@@ -422,7 +422,7 @@ class FlxAnimationController
 	/**
   	 * Gets the FlxAnim object with the specified name.
 	*/
-	inline public function getByName(Name:String):FlxAnimation
+	public inline function getByName(Name:String):FlxAnimation
 	{
 		return _animations.get(Name); 
 	}
@@ -584,7 +584,7 @@ class FlxAnimationController
 	 * @param	Frame	FlxFrame to find
 	 * @return	position of specified FlxFrame object.
 	 */
-	inline public function getFrameIndex(Frame:FlxFrame):Int
+	public inline function getFrameIndex(Frame:FlxFrame):Int
 	{
 		return FlxArrayUtil.indexOf(_sprite.framesData.frames, Frame);
 	}

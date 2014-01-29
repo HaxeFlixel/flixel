@@ -58,7 +58,7 @@ class FlxFlicker
 	/**
 	* Internal constructor. Just use static methods.
 	*/
-	private function new() {  }
+	function new() {  }
 	
 	/**
 	* Recycles a FlxFlicker instance from pool.
@@ -95,7 +95,7 @@ class FlxFlicker
 	* @param  ?CompletionCallback
 	* @param  ?ProgressCallback
 	*/
-	private function reset(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
+	function reset(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
 	{
 		object = Object;
 		duration = Duration;
@@ -108,7 +108,7 @@ class FlxFlicker
 	/**
 	* Starts flickering.
 	*/
-	private function start():Void
+	function start():Void
 	{
 		timer = FlxTimer.recycle();
 		timer.run(interval, flickerProgress, Std.int(duration / interval));
@@ -117,7 +117,7 @@ class FlxFlicker
 	/**
 	* Prematurely ends flickering.
 	*/
-	private function stop():Void
+	function stop():Void
 	{
 		timer.abort();
 		object.visible = true;
@@ -127,7 +127,7 @@ class FlxFlicker
 	/**
 	* Unbinds the object from flicker and releases it into pool for reuse.
 	*/
-	private function release():Void
+	function release():Void
 	{
 		_boundObjects.remove(object);
 		FlxFlicker.put(this);
@@ -136,7 +136,7 @@ class FlxFlicker
 	/**
 	* Just a helper function for flicker() to update object's visibility.
 	*/
-	private function flickerProgress(Timer:FlxTimer):Void
+	function flickerProgress(Timer:FlxTimer):Void
 	{
 		object.visible = !object.visible;
 		
@@ -180,7 +180,7 @@ class FlxFlicker
 	* @param  ?CompletionCallback An optional callback that will be triggered when a flickering has finished.
 	* @param  ?ProgressCallback   An optional callback that will be triggered when visibility is toggled.
 	*/
-	static public function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
+	public static function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
 	{
 		if (isFlickering(Object))
 		{
@@ -209,7 +209,7 @@ class FlxFlicker
 	* Returns whether the object is flickering or not.
 	* @param  Object The object to test.
 	*/
-	static public function isFlickering(Object:FlxObject):Bool
+	public static function isFlickering(Object:FlxObject):Bool
 	{
 		return _boundObjects.exists(Object);
 	}
@@ -218,7 +218,7 @@ class FlxFlicker
 	* Stops flickering of the object. Also it will make the object visible.
 	* @param  Object The object to stop flickering.
 	*/
-	static public function stopFlickering(Object:FlxObject):Void
+	public static function stopFlickering(Object:FlxObject):Void
 	{
 		var boundFlicker:FlxFlicker = _boundObjects[Object];
 		if (boundFlicker != null)

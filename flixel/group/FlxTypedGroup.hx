@@ -15,11 +15,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Use with <code>sort()</code> to sort in ascending order.
 	 */
-	inline static public var ASCENDING:Int = -1;
+	public static inline var ASCENDING:Int = -1;
 	/**
 	 * Use with <code>sort()</code> to sort in descending order.
 	 */
-	inline static public var DESCENDING:Int = 1;
+	public static inline var DESCENDING:Int = 1;
 	/**
 	 * Array of all the members in this group.
 	 */
@@ -788,7 +788,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @param	Obj2	The second object being sorted.
 	 * @return	An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
 	 */
-	private function sortHandler(Obj1:T, Obj2:T):Int
+	function sortHandler(Obj1:T, Obj2:T):Int
 	{
 		var prop1 = Reflect.getProperty(Obj1, _sortIndex);
 		var prop2 = Reflect.getProperty(Obj2, _sortIndex);
@@ -805,7 +805,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return 0;
 	}
 	
-	private function set_maxSize(Size:Int):Int
+	function set_maxSize(Size:Int):Int
 	{
 		maxSize = Std.int(Math.abs(Size));
 		
@@ -839,7 +839,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return maxSize;
 	}
 	
-	private function get_members():Array<T>
+	function get_members():Array<T>
 	{
 		return _members;
 	}

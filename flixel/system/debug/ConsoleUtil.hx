@@ -19,7 +19,7 @@ class ConsoleUtil
 	 * @param	Args		An array of arguments.
 	 * @return	Whether or not it was possible to safely call the function.
 	 */
-	static public function callFunction(Function:Dynamic, Args:Array<Dynamic>):Bool
+	public static function callFunction(Function:Dynamic, Args:Array<Dynamic>):Bool
 	{
 		Args = parseDataArray(Args);
 		
@@ -66,7 +66,7 @@ class ConsoleUtil
 	 * @param	Commands	The array of commands to search through
 	 * @return	The Command typdef - null if none was found.
 	 */
-	static public function findCommand(Alias:String, Commands:Array<Command>):Command
+	public static function findCommand(Alias:String, Commands:Array<Command>):Command
 	{
 		for (i in 0...(Commands.length - 1))
 		{
@@ -86,7 +86,7 @@ class ConsoleUtil
 	 * @param	Params		An optional array of constructor params
 	 * @return	The created instance, or null
 	 */
-	@:generic static public function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
+	@:generic public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
 	{
 		if (Params == null) {
 			Params = [];
@@ -118,7 +118,7 @@ class ConsoleUtil
 	 * @param	ObjectMap			A Map of registered objects to start the search from
 	 * @return	A PathToVarible typedef, or null.
 	 */
-	static public function resolveObjectAndVariable(ObjectAndVariable:String, ObjectMap:Map<String, Dynamic>):PathToVariable
+	public static function resolveObjectAndVariable(ObjectAndVariable:String, ObjectMap:Map<String, Dynamic>):PathToVariable
 	{
 		var searchArr:Array<String> = ObjectAndVariable.split(".");
 		
@@ -170,7 +170,7 @@ class ConsoleUtil
 	 * @param	Data	The data array to parse
 	 * @return	The parsed Data.
 	 */
-	static public function parseDataArray(Data:Array<Dynamic>):Array<Dynamic>
+	public static function parseDataArray(Data:Array<Dynamic>):Array<Dynamic>
 	{
 		var parsedData:Array<Dynamic> = Data;
 		for (i in 0...parsedData.length)
@@ -193,7 +193,7 @@ class ConsoleUtil
 	 * 
 	 * @param	Text	The text to log.
 	 */
-	inline static public function log(Text:Dynamic):Void
+	public static inline function log(Text:Dynamic):Void
 	{
 		FlxG.log.advanced([Text], LogStyle.CONSOLE);
 	}

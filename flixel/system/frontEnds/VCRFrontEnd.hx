@@ -36,7 +36,7 @@ class VCRFrontEnd
 	public var timeout:Int = 0;
 
 	#if flash
-	static private var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
+	private static var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 
 	static private inline var DEFAULT_FILE_NAME:String = "replay.fgr";
 
@@ -171,7 +171,7 @@ class VCRFrontEnd
 	/**
 	 * Stops the current replay.
 	 */
-	inline public function stopReplay():Void
+	public inline function stopReplay():Void
 	{
 		FlxG.game.replaying = false;
 		FlxG.inputs.reset();
@@ -214,7 +214,7 @@ class VCRFrontEnd
 	 * 
 	 * @return	The replay data in simple ASCII format (see <code>FlxReplay.save()</code>).
 	 */
-	inline public function stopRecording():String
+	public inline function stopRecording():String
 	{
 		FlxG.game.recording = false;
 

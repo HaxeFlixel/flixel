@@ -16,7 +16,7 @@ class FlxTouchManager implements IFlxInput
 	/**
 	 * The maximum number of concurrent touch points supported by the current device.
 	 */
-	static public var maxTouchPoints:Int = 0;
+	public static var maxTouchPoints:Int = 0;
 	
 	/**
 	 * All active touches including just created, moving and just released.

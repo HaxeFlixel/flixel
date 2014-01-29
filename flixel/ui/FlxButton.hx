@@ -11,15 +11,15 @@ class FlxButton extends FlxTypedButton<FlxText>
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */
-	inline static public var NORMAL:Int = 0;
+	public static inline var NORMAL:Int = 0;
 	/**
 	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
 	 */
-	inline static public var HIGHLIGHT:Int = 1;
+	public static inline var HIGHLIGHT:Int = 1;
 	/**
 	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
 	 */
-	inline static public var PRESSED:Int = 2;
+	public static inline var PRESSED:Int = 2;
 	
 	/**
 	 * Creates a new <code>FlxButton</code> object with a gray background

@@ -25,7 +25,7 @@ class FlxObject extends FlxBasic
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
 	 * Don't modify this unless your objects are passing through eachother.
 	 */
-	static public var SEPARATE_BIAS:Float = 4;
+	public static var SEPARATE_BIAS:Float = 4;
 	/**
 	 * Generic value for "left" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
@@ -195,9 +195,9 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal static private variables, for performance reasons.
 	 */
-	static private var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
-	static private var _firstSeparateFlxRect:FlxRect = new FlxRect();
-	static private var _secondSeparateFlxRect:FlxRect = new FlxRect();
+	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
+	private static var _firstSeparateFlxRect:FlxRect = new FlxRect();
+	private static var _secondSeparateFlxRect:FlxRect = new FlxRect();
 	
 	
 	/**
@@ -222,7 +222,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for initialization of some object's variables
 	 */
-	private function initVars():Void
+	function initVars():Void
 	{
 		collisionType = FlxCollisionType.OBJECT;
 		last = new FlxPoint(x, y);
@@ -235,7 +235,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for initialization of some variables that are used in updateMotion()
 	 */
-	inline private function initMotionVars():Void
+	inline function initMotionVars():Void
 	{
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
@@ -292,7 +292,7 @@ class FlxObject extends FlxBasic
 	 * Internal function for updating the position and speed of this object. Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
-	inline private function updateMotion():Void
+	inline function updateMotion():Void
 	{
 		var delta:Float;
 		var velocityDelta:Float;
@@ -574,7 +574,7 @@ class FlxObject extends FlxBasic
 	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
 	 * @return	Whether the object is within the Worldbounds or not.
 	 */
-	inline public function inWorldBounds():Bool
+	public inline function inWorldBounds():Bool
 	{
 		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
 	}
@@ -633,7 +633,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
-	inline public function isTouching(Direction:Int):Bool
+	public inline function isTouching(Direction:Int):Bool
 	{
 		return (touching & Direction) > NONE;
 	}
@@ -643,7 +643,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
-	inline public function justTouched(Direction:Int):Bool
+	public inline function justTouched(Direction:Int):Bool
 	{
 		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
@@ -668,7 +668,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated.
 	 */
-	static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separate(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		var separatedX:Bool = separateX(Object1, Object2);
 		var separatedY:Bool = separateY(Object1, Object2);
@@ -681,7 +681,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated along the X axis.
 	 */
-	static public function separateX(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separateX(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		//can't separate two immovable objects
 		var obj1immovable:Bool = Object1.immovable;
@@ -793,7 +793,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated along the Y axis.
 	 */
-	static public function separateY(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separateY(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		//can't separate two immovable objects
 		var obj1immovable:Bool = Object1.immovable;
@@ -937,7 +937,7 @@ class FlxObject extends FlxBasic
 	 * It changes cachedGraphics' useCount also for better memory tracking.
 	 * @param	value
 	 */
-	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
+	function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
 		if (cachedGraphics != null && cachedGraphics != Value)
 		{
@@ -954,17 +954,17 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal
 	 */
-	private function set_x(NewX:Float):Float
+	function set_x(NewX:Float):Float
 	{
 		return x = NewX;
 	}
 	
-	private function set_y(NewY:Float):Float
+	function set_y(NewY:Float):Float
 	{
 		return y = NewY;
 	}
 	
-	private function set_width(Width:Float):Float
+	function set_width(Width:Float):Float
 	{
 		#if !FLX_NO_DEBUG
 		if (Width < 0) 
@@ -982,7 +982,7 @@ class FlxObject extends FlxBasic
 		return Width;
 	}
 	
-	private function set_height(Height:Float):Float
+	function set_height(Height:Float):Float
 	{
 		#if !FLX_NO_DEBUG
 		if (Height < 0) 
@@ -1000,22 +1000,22 @@ class FlxObject extends FlxBasic
 		return Height;
 	}
 	
-	private function get_width():Float
+	function get_width():Float
 	{
 		return width;
 	}
 	
-	private function get_height():Float
+	function get_height():Float
 	{
 		return height;
 	}
 	
-	inline private function get_solid():Bool
+	inline function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}
 	
-	private function set_solid(Solid:Bool):Bool
+	function set_solid(Solid:Bool):Bool
 	{
 		if (Solid)
 		{
@@ -1028,27 +1028,27 @@ class FlxObject extends FlxBasic
 		return Solid;
 	}
 	
-	private function set_angle(Value:Float):Float
+	function set_angle(Value:Float):Float
 	{
 		return angle = Value;
 	}
 	
-	private function set_moves(Value:Bool):Bool
+	function set_moves(Value:Bool):Bool
 	{
 		return moves = Value;
 	}
 	
-	private function set_immovable(Value:Bool):Bool
+	function set_immovable(Value:Bool):Bool
 	{
 		return immovable = Value;
 	}
 	
-	private function set_forceComplexRender(Value:Bool):Bool 
+	function set_forceComplexRender(Value:Bool):Bool
 	{
 		return forceComplexRender = Value;
 	}
 	
-	private function set_scrollFactor(Value:FlxPoint):FlxPoint
+	function set_scrollFactor(Value:FlxPoint):FlxPoint
 	{
 		_scrollFactor = cast Value;
 		return scrollFactor = Value;
@@ -1060,7 +1060,7 @@ class FlxObject extends FlxBasic
 	 */
 	public var debugBoundingBoxColor(default, set):Int;
 	
-	private function set_debugBoundingBoxColor(Value:Int):Int 
+	function set_debugBoundingBoxColor(Value:Int):Int
 	{
 		_boundingBoxColorOverritten = true;
 		return debugBoundingBoxColor = Value; 

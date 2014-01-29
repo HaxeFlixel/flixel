@@ -46,7 +46,7 @@ class TileSheetData implements IFlxDestroyable
 		frameNames = new Array<String>();
 	}
 	
-	inline public function getFrame(name:String):FlxFrame
+	public inline function getFrame(name:String):FlxFrame
 	{
 		return flxFrames.get(name);
 	}
@@ -165,13 +165,13 @@ class TileSheetData implements IFlxDestroyable
 		return frame;
 	}
 	
-	inline public function containsFrame(key:String):Bool
+	public inline function containsFrame(key:String):Bool
 	{
 		return flxFrames.exists(key);
 	}
 	
 	#if !flash
-	inline public function addTileRect(tileRect:Rectangle, ?point:Point):Int
+	public inline function addTileRect(tileRect:Rectangle, ?point:Point):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
 	}

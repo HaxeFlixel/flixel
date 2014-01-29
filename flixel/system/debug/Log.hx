@@ -15,7 +15,7 @@ import haxe.ds.StringMap;
  */
 class Log extends Window
 {
-	inline static public var MAX_LOG_LINES:Int = 200;
+	public static inline var MAX_LOG_LINES:Int = 200;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -151,7 +151,7 @@ class Log extends Window
 	/**
 	 * Adjusts the width and height of the text field accordingly.
 	 */
-	override private function updateSize():Void
+	override function updateSize():Void
 	{
 		super.updateSize();
 		

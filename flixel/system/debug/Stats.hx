@@ -274,7 +274,7 @@ class Stats extends Window
 		}
 	}
 	
-	private function updateTexts():Void
+	function updateTexts():Void
 	{
 		var updTime = FlxMath.roundDecimal(updateTime / _updateMarker, DECIMALS);
 		var drwTime = FlxMath.roundDecimal(drawTime / _drawMarker, DECIMALS);
@@ -291,7 +291,7 @@ class Stats extends Window
 	/**
 	 * Calculates current game fps.
 	 */
-	inline public function currentFps():Float
+	public inline function currentFps():Float
 	{
 		return _frameCount / intervalTime();
 	}
@@ -299,7 +299,7 @@ class Stats extends Window
 	/**
 	 * Calculates average game fps (takes whole time the game is running).
 	 */
-	inline public function averageFps():Float
+	public inline function averageFps():Float
 	{
 		return _totalCount / runningTime();
 	}
@@ -307,7 +307,7 @@ class Stats extends Window
 	/**
 	 * Application life time.
 	 */
-	inline public function runningTime():Float
+	public inline function runningTime():Float
 	{
 		return (_currentTime - _initTime) / 1000;
 	}
@@ -315,7 +315,7 @@ class Stats extends Window
 	/**
 	 * Time since perfomance monitoring started.
 	 */
-	inline public function intervalTime():Float
+	public inline function intervalTime():Float
 	{
 		return (_currentTime - _itvTime) / 1000;
 	}
@@ -323,7 +323,7 @@ class Stats extends Window
 	/**
 	 * Current RAM consumtion.
 	 */
-	inline public function currentMem():Float
+	public inline function currentMem():Float
 	{
 		return (System.totalMemory / 1024) / 1000;
 	}

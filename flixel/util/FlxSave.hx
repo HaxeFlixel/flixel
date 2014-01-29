@@ -15,9 +15,9 @@ import flash.events.NetStatusEvent;
  */
 class FlxSave
 {
-	static private var SUCCESS:Int = 0;
-	static private var PENDING:Int = 1;
-	static private var ERROR:Int = 2;
+	private static var SUCCESS:Int = 0;
+	private static var PENDING:Int = 1;
+	private static var ERROR:Int = 2;
 	
 	/**
 	 * Allows you to directly access the data container in the local shared object.
@@ -166,7 +166,7 @@ class FlxSave
 	 * @param	E	Flash net status event.
 	 */
 	#if flash
-	private function onFlushStatus(E:NetStatusEvent):Void
+	function onFlushStatus(E:NetStatusEvent):Void
 	{
 		_sharedObject.removeEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
 		onDone((E.info.code == "SharedObject.Flush.Success")?SUCCESS:ERROR);
@@ -179,7 +179,7 @@ class FlxSave
 	 * @param	Result		One of the result codes (PENDING, ERROR, or SUCCESS).
 	 * @return	Whether the operation was a success or not.
 	 */
-	private function onDone(Result:Int):Bool
+	function onDone(Result:Int):Bool
 	{
 		switch(Result)
 		{
@@ -204,7 +204,7 @@ class FlxSave
 	 * Handy utility function for checking and warning if the shared object is bound yet or not.
 	 * @return	Whether the shared object was bound yet.
 	 */
-	private function checkBinding():Bool
+	function checkBinding():Bool
 	{
 		if(_sharedObject == null)
 		{

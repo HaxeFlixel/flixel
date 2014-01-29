@@ -17,7 +17,7 @@ class FlxVelocity
 	 * @param	Speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
 	 * @param	MaxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 	 */
-	static public function moveTowardsObject(Source:FlxSprite, Dest:FlxSprite, Speed:Int = 60, MaxTime:Int = 0):Void
+	public static function moveTowardsObject(Source:FlxSprite, Dest:FlxSprite, Speed:Int = 60, MaxTime:Int = 0):Void
 	{
 		var a:Float = FlxAngle.angleBetween(Source, Dest);
 		
@@ -44,7 +44,7 @@ class FlxVelocity
 	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
 	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
 	 */
-	static public function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
+	public static function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
 	{
 		var a:Float = FlxAngle.angleBetween(Source, Dest);
 		
@@ -69,7 +69,7 @@ class FlxVelocity
 	 * @param	Speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
 	 * @param	MaxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 	 */
-	static public function moveTowardsMouse(Source:FlxSprite, Speed:Int = 60, MaxTime:Int = 0):Void
+	public static function moveTowardsMouse(Source:FlxSprite, Speed:Int = 60, MaxTime:Int = 0):Void
 	{
 		var a:Float = FlxAngle.angleBetweenMouse(Source);
 		
@@ -125,7 +125,7 @@ class FlxVelocity
 	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
 	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
 	 */
-	static public function accelerateTowardsMouse(Source:FlxSprite, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
+	public static function accelerateTowardsMouse(Source:FlxSprite, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
 	{
 		var a:Float = FlxAngle.angleBetweenMouse(Source);
 		
@@ -152,7 +152,7 @@ class FlxVelocity
 	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
 	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
 	 */
-	static public function accelerateTowardsTouch(Source:FlxSprite, Touch:FlxTouch, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
+	public static function accelerateTowardsTouch(Source:FlxSprite, Touch:FlxTouch, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
 	{
 		var a:Float = FlxAngle.angleBetweenTouch(Source, Touch);
 		
@@ -178,7 +178,7 @@ class FlxVelocity
 	 * @param	Speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
 	 * @param	MaxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 	 */
-	static public function moveTowardsPoint(Source:FlxSprite, Target:FlxPoint, Speed:Int = 60, MaxTime:Int = 0):Void
+	public static function moveTowardsPoint(Source:FlxSprite, Target:FlxPoint, Speed:Int = 60, MaxTime:Int = 0):Void
 	{
 		var a:Float = FlxAngle.angleBetweenPoint(Source, Target);
 		
@@ -205,7 +205,7 @@ class FlxVelocity
 	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
 	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
 	 */
-	static public function accelerateTowardsPoint(Source:FlxSprite, Target:FlxPoint, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
+	public static function accelerateTowardsPoint(Source:FlxSprite, Target:FlxPoint, Speed:Int, MaxXSpeed:Int, MaxYSpeed:Int):Void
 	{
 		var a:Float = FlxAngle.angleBetweenPoint(Source, Target);
 		
@@ -245,7 +245,7 @@ class FlxVelocity
 	 * @param	Speed	The speed it will move, in pixels per second
 	 * @return	An FlxPoint where FlxPoint.x contains the velocity x value and FlxPoint.y contains the velocity y value
 	 */
-	static public function velocityFromFacing(Parent:FlxSprite, Speed:Int):FlxPoint
+	public static function velocityFromFacing(Parent:FlxSprite, Speed:Int):FlxPoint
 	{
 		var a:Float = 0;
 		
