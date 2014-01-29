@@ -622,7 +622,12 @@ class FlxTween
 	private var _t:Float;
 
 	private var _time:Float;
+	
 	private var _target:Float;
+
+	public var _duration(get_duraction, set_duration):Float;
+	private function get_duration():Float { return _target; }
+	private function set_duration(value:Float):Float { _target = value; return _target; }
 	
 	private var _backward:Bool;
 }
