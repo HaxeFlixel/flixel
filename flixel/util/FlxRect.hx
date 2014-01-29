@@ -47,7 +47,7 @@ class FlxRect
 	 * @param	Width	The new sprite width.
 	 * @param	Height	The new sprite height.
 	 */
-	inline public function setSize(Width:Float, Height:Float)
+	public inline function setSize(Width:Float, Height:Float)
 	{
 		width = Width;
 		height = Height;
@@ -126,7 +126,7 @@ class FlxRect
 	 * @param	Height	Desired height of the rectangle.
 	 * @return	A reference to itself.
 	 */
-	inline public function set(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	public inline function set(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
 		x = X;
 		y = Y;
@@ -140,7 +140,7 @@ class FlxRect
 	 * @param	Rect	Any <code>FlxRect</code>.
 	 * @return	A reference to itself.
 	 */
-	inline public function copyFrom(Rect:FlxRect):FlxRect
+	public inline function copyFrom(Rect:FlxRect):FlxRect
 	{
 		x = Rect.x;
 		y = Rect.y;
@@ -154,7 +154,7 @@ class FlxRect
 	 * @param	Point	Any <code>FlxRect</code>.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
-	inline public function copyTo(Rect:FlxRect):FlxRect
+	public inline function copyTo(Rect:FlxRect):FlxRect
 	{
 		Rect.x = x;
 		Rect.y = y;
@@ -168,7 +168,7 @@ class FlxRect
 	 * @param	FlashRect	Any <code>Rectangle</code>.
 	 * @return	A reference to itself.
 	 */
-	inline public function copyFromFlash(FlashRect:Rectangle):FlxRect
+	public inline function copyFromFlash(FlashRect:Rectangle):FlxRect
 	{
 		x = FlashRect.x;
 		y = FlashRect.y;
@@ -182,7 +182,7 @@ class FlxRect
 	 * @param	Point	Any <code>Rectangle</code>.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
-	inline public function copyToFlash(FlashRect:Rectangle):Rectangle
+	public inline function copyToFlash(FlashRect:Rectangle):Rectangle
 	{
 		FlashRect.x = x;
 		FlashRect.y = y;
@@ -196,7 +196,7 @@ class FlxRect
 	 * @param	Rect	The rectangle being tested.
 	 * @return	Whether or not the two rectangles overlap.
 	 */
-	inline public function overlaps(Rect:FlxRect):Bool
+	public inline function overlaps(Rect:FlxRect):Bool
 	{
 		return (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
 	}
@@ -207,7 +207,7 @@ class FlxRect
 	 * @param	Point	The FlxPoint to check
 	 * @return	True if the FlxPoint is within this FlxRect, otherwise false
 	 */
-	inline public function containsFlxPoint(Point:FlxPoint):Bool
+	public inline function containsFlxPoint(Point:FlxPoint):Bool
 	{
 		return FlxMath.pointInFlxRect(Point.x, Point.y, this);
 	}
@@ -219,7 +219,7 @@ class FlxRect
 	 * @param	Rect	The second FlxRect to add to this one
 	 * @return	The changed FlxRect
 	 */
-	inline public function union(Rect:FlxRect):FlxRect
+	public inline function union(Rect:FlxRect):FlxRect
 	{
 		var minX:Float = Math.min(x, Rect.x);
 		var minY:Float = Math.min(y, Rect.y);
@@ -232,7 +232,7 @@ class FlxRect
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
-	inline public function toString():String
+	public inline function toString():String
 	{
 		var p = FlxG.debugger.precision;
 		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " + FlxMath.roundDecimal(y, p) + " | w: " + FlxMath.roundDecimal(width, p) + " | h: " + FlxMath.roundDecimal(height, p) + ")"; 

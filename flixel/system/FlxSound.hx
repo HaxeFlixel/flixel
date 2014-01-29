@@ -384,7 +384,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Call this function to stop this sound.
 	 */
-	inline public function stop():Void
+	public inline function stop():Void
 	{
 		cleanup(autoDestroy, true, true);
 	}
@@ -395,7 +395,7 @@ class FlxSound extends FlxBasic
 	 * @param	Duration	The amount of time the fade-out operation should take.
 	 * @param	To			The volume to tween to, 0 by default.
 	 */
-	inline public function fadeOut(Duration:Float, ?To:Float = 0):Void
+	public inline function fadeOut(Duration:Float, ?To:Float = 0):Void
 	{
 		FlxTween.singleVar(this, "volume", To, Duration);
 	}
@@ -407,7 +407,7 @@ class FlxSound extends FlxBasic
 	 * @param	From		The volume to tween from, 0 by default.
 	 * @param	To			The volume to tween to, 1 by default.
 	 */
-	inline public function fadeIn(Duration:Float, From:Float = 0, To:Float = 1):Void
+	public inline function fadeIn(Duration:Float, From:Float = 0, To:Float = 1):Void
 	{
 		volume = From;
 		FlxTween.singleVar(this, "volume", To, Duration);
@@ -580,7 +580,7 @@ class FlxSound extends FlxBasic
 	 * @param        X        The new x position
 	 * @param        Y        The new y position
  	 */
-	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;
 		y = Y;

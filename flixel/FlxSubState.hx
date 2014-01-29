@@ -42,7 +42,7 @@ class FlxSubState extends FlxState
 	/**
 	 * Internal helper method
 	 */
-	inline public function initialize():Void 
+	public inline function initialize():Void
 	{ 
 		_initialized = true; 
 	}

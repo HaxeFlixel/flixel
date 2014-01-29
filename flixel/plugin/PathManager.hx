@@ -138,7 +138,7 @@ class PathManager extends FlxPlugin
 		}
 	}
 	
-	override inline public function onStateSwitch():Void
+	override public inline function onStateSwitch():Void
 	{
 		clear();
 	}

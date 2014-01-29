@@ -42,7 +42,7 @@ class DebuggerFrontEnd
 	 * Change the way the debugger's windows are laid out.
 	 * @param	Layout	The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
 	 */
-	inline public function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:DebuggerLayout):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.setLayout(Layout);
@@ -52,7 +52,7 @@ class DebuggerFrontEnd
 	/**
 	 * Just resets the debugger windows to whatever the last selected layout was (<code>STANDARD</code> by default).
 	 */
-	inline public function resetLayout():Void
+	public inline function resetLayout():Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.resetLayout();

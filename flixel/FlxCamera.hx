@@ -807,7 +807,7 @@ class FlxCamera extends FlxBasic
 	 * @param	LeadX		Percentage of X velocity to add to the camera's motion.
 	 * @param	LeadY		Percentage of Y velocity to add to the camera's motion.
 	 */
-    inline public function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
+    public inline function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
     {
 	   followLead = new Point(LeadX,LeadY);
     }
@@ -816,7 +816,7 @@ class FlxCamera extends FlxBasic
 	 * Move the camera focus to this location instantly.
 	 * @param	Point		Where you want the camera to focus.
 	 */
-	inline public function focusOn(point:FlxPoint):Void
+	public inline function focusOn(point:FlxPoint):Void
 	{
 		scroll.set(point.x - width * 0.5, point.y - height * 0.5);
 	}
@@ -1053,7 +1053,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Width	The new sprite width.
 	 * @param	Height	The new sprite height.
 	 */
-	inline public function setSize(Width:Int, Height:Int)
+	public inline function setSize(Width:Int, Height:Int)
 	{
 		width = Width;
 		height = Height;
@@ -1066,7 +1066,7 @@ class FlxCamera extends FlxBasic
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;
 		y = Y;
@@ -1109,7 +1109,7 @@ class FlxCamera extends FlxBasic
 	 * The scale of the camera object, irrespective of zoom.
 	 * Currently yields weird display results, since cameras aren't nested in an extra display object yet.
 	 */
-	inline public function getScale():FlxPoint
+	public inline function getScale():FlxPoint
 	{
 		return _point.set(flashSprite.scaleX, flashSprite.scaleY);
 	}

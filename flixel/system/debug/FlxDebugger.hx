@@ -152,7 +152,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   Layout   The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
 	 */
-	inline public function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:DebuggerLayout):Void
 	{
 		_layout = Layout;
 		resetLayout();
@@ -217,7 +217,7 @@ class FlxDebugger extends Sprite
 		}
 	}
 	
-	inline public function onResize(Width:Float, Height:Float):Void
+	public inline function onResize(Width:Float, Height:Float):Void
 	{
 		_screen.x = Width;
 		_screen.y = Height;

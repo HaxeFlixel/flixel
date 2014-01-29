@@ -574,7 +574,7 @@ class FlxObject extends FlxBasic
 	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
 	 * @return	Whether the object is within the Worldbounds or not.
 	 */
-	inline public function inWorldBounds():Bool
+	public inline function inWorldBounds():Bool
 	{
 		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
 	}
@@ -633,7 +633,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
-	inline public function isTouching(Direction:Int):Bool
+	public inline function isTouching(Direction:Int):Bool
 	{
 		return (touching & Direction) > NONE;
 	}
@@ -643,7 +643,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
-	inline public function justTouched(Direction:Int):Bool
+	public inline function justTouched(Direction:Int):Bool
 	{
 		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}

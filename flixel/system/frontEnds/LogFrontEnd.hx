@@ -120,7 +120,7 @@ class LogFrontEnd
 	/**
 	 * Clears the log output.
 	 */
-	inline public function clear():Void
+	public inline function clear():Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.log.clear();
