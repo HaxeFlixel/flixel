@@ -247,7 +247,7 @@ class FlxTouch extends FlxPoint
 	 */
 	public var pressed(get, never):Bool;
 	
-	inline private function get_pressed():Bool { return _current > 0; }
+	private inline function get_pressed():Bool { return _current > 0; }
 	
 	/**
 	 * Check to see if the touch was just began.
@@ -255,7 +255,7 @@ class FlxTouch extends FlxPoint
 	 */
 	public var justPressed(get, never):Bool;
 	
-	inline private function get_justPressed():Bool { return _current == 2; }
+	private inline function get_justPressed():Bool { return _current == 2; }
 	
 	/**
 	 * Check to see if the touch was just ended.
@@ -263,7 +263,7 @@ class FlxTouch extends FlxPoint
 	 */
 	public var justReleased(get, never):Bool;
 	
-	inline private function get_justReleased():Bool { return _current == -1; }
+	private inline function get_justReleased():Bool { return _current == -1; }
 	
 	/**
 	 * Check to see if the touch is active.
@@ -271,5 +271,5 @@ class FlxTouch extends FlxPoint
 	 */
 	public var isActive(get, never):Bool;
 	
-	inline private function get_isActive():Bool { return _current != 0; }
+	private inline function get_isActive():Bool { return _current != 0; }
 }
