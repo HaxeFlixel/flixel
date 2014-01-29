@@ -391,7 +391,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var pressed(get, never):Bool;
 	
-	inline private function get_pressed():Bool
+	private inline function get_pressed():Bool
 	{
 		return status == PRESSED;
 	}

@@ -614,7 +614,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
 	 */
-	inline public function resetSize():Void
+	public inline function resetSize():Void
 	{
 		_flashRect.x = 0;
 		_flashRect.y = 0;
@@ -625,7 +625,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets frame size to frame dimensions
 	 */
-	inline public function resetFrameSize():Void
+	public inline function resetFrameSize():Void
 	{
 		frameWidth = Std.int(frame.sourceSize.x);
 		frameHeight = Std.int(frame.sourceSize.y);
@@ -635,7 +635,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets sprite's size back to frame size
 	 */
-	inline public function resetSizeFromFrame():Void
+	public inline function resetSizeFromFrame():Void
 	{
 		width = frameWidth;
 		height = frameHeight;
@@ -645,7 +645,7 @@ class FlxSprite extends FlxObject
 	 * Sets the sprite's origin to its center - useful after adjusting 
 	 * <code>scale</code> to make sure rotations work as expected.
 	 */
-	inline public function setOriginToCenter():Void
+	public inline function setOriginToCenter():Void
 	{
 		_origin.set(frameWidth * 0.5, frameHeight * 0.5);
 	}
@@ -966,7 +966,7 @@ class FlxSprite extends FlxObject
 	 * Useful if you are doing procedural generation or other weirdness!
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
 	 */
-	inline public function drawFrame(Force:Bool = false):Void
+	public inline function drawFrame(Force:Bool = false):Void
 	{
 		#if flash
 		if (Force || dirty)
@@ -1317,7 +1317,7 @@ class FlxSprite extends FlxObject
 	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
 	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
 	 */
-	inline public function resetFrameBitmapDatas():Void
+	public inline function resetFrameBitmapDatas():Void
 	{
 		cachedGraphics.tilesheet.destroyFrameBitmapDatas();
 	}
@@ -1476,7 +1476,7 @@ class FlxSprite extends FlxObject
 		return scale = Value;
 	}
 	
-	inline private function get_blend():BlendMode 
+	private inline function get_blend():BlendMode
 	{
 		return _blend;
 	}

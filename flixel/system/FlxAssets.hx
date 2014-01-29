@@ -71,7 +71,7 @@ class FlxAssets
 	static public var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	static public var FONT_DEBUGGER:String = "Arial";
 	
-	static public function init():Void
+	public static function init():Void
 	{
 		Font.registerFont(FontDefault);
 		
@@ -80,7 +80,7 @@ class FlxAssets
 		#end
 	}
 	
-	static public function drawLogo(graph:Graphics):Void
+	public static function drawLogo(graph:Graphics):Void
 	{
 		// draw green area
 		graph.beginFill(0x00b922);
@@ -136,7 +136,7 @@ class FlxAssets
 		graph.endFill();
 	}
 	
-	inline static public function getBitmapData(id:String):BitmapData
+	public static inline function getBitmapData(id:String):BitmapData
 	{
 		return Assets.getBitmapData(id, false);
 	}
@@ -147,7 +147,7 @@ class FlxAssets
 	 */
 	@:access(openfl.Assets)
 	@:access(openfl.AssetType)
-	static public function cacheSounds():Void
+	public static function cacheSounds():Void
 	{
 		#if android
 		Assets.initialize();

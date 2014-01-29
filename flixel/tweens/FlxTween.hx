@@ -36,7 +36,7 @@ class FlxTween
 	/**
 	 * Adds a tween to the tween manager, with a delay if specified.
 	 */ 
-	static private function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
+	private static function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
 	{
 		if ((Delay != null) || (Delay > 0))
 		{
@@ -52,7 +52,7 @@ class FlxTween
 	/**
 	 * Helper function for delayed tweens.
 	 */
-	static private function timerCallback(Timer:FlxTimer):Void
+	private static function timerCallback(Timer:FlxTimer):Void
 	{
 		addTween(cast (Timer.userData, FlxTween));
 	}
@@ -72,7 +72,7 @@ class FlxTween
 	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added MultiVarTween object.
 	 */
-	static public function singleVar(Object:Dynamic, Property:String, To:Float, Duration:Float, ?Options:TweenOptions):VarTween
+	public static function singleVar(Object:Dynamic, Property:String, To:Float, Duration:Float, ?Options:TweenOptions):VarTween
 	{
 		if (Options == null)
 		{
@@ -100,7 +100,7 @@ class FlxTween
 	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added MultiVarTween object.
 	 */
-	static public function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):MultiVarTween
+	public static function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):MultiVarTween
 	{
 		if (Options == null)
 		{
@@ -128,7 +128,7 @@ class FlxTween
 	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added NumTween object.
 	 */
-	static public function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions):NumTween
+	public static function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions):NumTween
 	{
 		if (Options == null)
 		{
@@ -157,7 +157,7 @@ class FlxTween
 	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added AngleTween object.
 	 */
-	static public function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float, ?Options:TweenOptions):AngleTween
+	public static function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float, ?Options:TweenOptions):AngleTween
 	{
 		if (Options == null)
 		{
@@ -188,7 +188,7 @@ class FlxTween
 	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added ColorTween object.
 	 */
-	static public function color(Sprite:FlxSprite, Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
+	public static function color(Sprite:FlxSprite, Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
 	{
 		if (Options == null)
 		{
@@ -216,7 +216,7 @@ class FlxTween
 	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added Fader object.
 	 */
-	static public function fader(Volume:Float, Duration:Float, ?Options:TweenOptions):Fader
+	public static function fader(Volume:Float, Duration:Float, ?Options:TweenOptions):Fader
 	{
 		if (Options == null)
 		{
@@ -249,7 +249,7 @@ class FlxTween
 	 *  						delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return The LinearMotion object.
 	 */
-	static public function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
+	public static function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
 	{
 		if (Options == null)
 		{
@@ -284,7 +284,7 @@ class FlxTween
 	 *  						delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return The QuadMotion object.
 	 */
-	static public function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
+	public static function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
 	{
 		if (Options == null)
 		{
@@ -320,7 +320,7 @@ class FlxTween
 	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return The CubicMotion object.
 	 */
-	static public function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float, ?Options:TweenOptions):CubicMotion
+	public static function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float, ?Options:TweenOptions):CubicMotion
 	{
 		if (Options == null)
 		{
@@ -355,7 +355,7 @@ class FlxTween
 	 *  						delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return The CircularMotion object.
 	 */
-	static public function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
+	public static function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
 	{
 		if (Options == null)
 		{
@@ -385,7 +385,7 @@ class FlxTween
 	 * 							delay		Seconds to wait until starting this tween, 0 by default
 	 * @return	The LinearPath object.
 	 */
-	static public function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
+	public static function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
 	{
 		if (Options == null)
 		{
@@ -424,7 +424,7 @@ class FlxTween
 	 * 							delay		Seconds to wait until starting this tween, 0 by default
 	 * @return	The QuadPath object.
 	 */
-	static public function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
+	public static function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
 	{
 		if (Options == null)
 		{

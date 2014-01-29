@@ -250,7 +250,7 @@ class FlxG
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
-	inline static public function resizeGame(Width:Int, Height:Int):Void
+	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
 		_scaleMode.onMeasure(Width, Height);
 	}
@@ -258,7 +258,7 @@ class FlxG
 	/**
 	 * Like hitting the reset button a game console, this will re-launch the game as if it just started.
 	 */
-	inline static public function resetGame():Void
+	public static inline function resetGame():Void
 	{
 		game.resetState = true;
 	}
@@ -266,7 +266,7 @@ class FlxG
 	/**
 	 * Switch from the current game state to the one specified here.
 	 */
-	inline static public function switchState(State:FlxState):Void
+	public static inline function switchState(State:FlxState):Void
 	{
 		game.requestedState = State; 
 	}
@@ -274,7 +274,7 @@ class FlxG
 	/**
 	 * Request a reset of the current game state.
 	 */
-	inline static public function resetState():Void
+	public static inline function resetState():Void
 	{
 		switchState(Type.createInstance(Type.getClass(state), []));
 		
@@ -299,7 +299,7 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any overlaps were detected.
 	 */
-	static public function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
+	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -330,7 +330,7 @@ class FlxG
 	 * @param	Camera			If the collision is taking place in a camera other than FlxG.camera (the default/current) then pass it here
 	 * @return	Boolean True if the sprites collide, false if not
 	 */
-	inline static public function pixelPerfectOverlap(Sprite1:FlxSprite, Sprite2:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
+	public static inline function pixelPerfectOverlap(Sprite1:FlxSprite, Sprite2:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
 	{
 		return FlxCollision.pixelPerfectCheck(Sprite1, Sprite2, AlphaTolerance, Camera);
 	}
@@ -349,7 +349,7 @@ class FlxG
 	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
-	inline static public function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
+	public static inline function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
 	{
 		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
 	}
@@ -360,7 +360,7 @@ class FlxG
 	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
 	 * @return	Null
 	 */
-	static public function safeDestroy<T:IFlxDestroyable>(Object:Null<IFlxDestroyable>):T
+	public static function safeDestroy<T:IFlxDestroyable>(Object:Null<IFlxDestroyable>):T
 	{
 		if (Object != null)
 		{
@@ -377,7 +377,7 @@ class FlxG
 	 * @param 	IndexModifier	Amount to add to the index - makes sure the index stays within bounds!
 	 * @return	The added DisplayObject
 	 */
-	@:generic static public function addChildBelowMouse<T:DisplayObject>(Child:T, IndexModifier:Int = 0):T
+	@:generic public static function addChildBelowMouse<T:DisplayObject>(Child:T, IndexModifier:Int = 0):T
 	{
 		var index = game.getChildIndex(game.inputContainer);
 		var max = game.numChildren;
@@ -393,7 +393,7 @@ class FlxG
 	 * @param 	Child	The DisplayObject to add
 	 * @return	The removed DisplayObject
 	 */
-	@:generic inline static public function removeChild<T:DisplayObject>(Child:T):T
+	@:generic public static inline function removeChild<T:DisplayObject>(Child:T):T
 	{
 		game.removeChild(Child);
 		return Child;
@@ -405,7 +405,7 @@ class FlxG
 	 * @param	URL		The address of the web page.
 	 * @param	Target	<code>"_blank", "_self", "_parent"</code> or <code>"_top"</code>
 	 */
-	inline static public function openURL(URL:String, Target:String = "_blank"):Void
+	public static inline function openURL(URL:String, Target:String = "_blank"):Void
 	{
 		Lib.getURL(new URLRequest(URL), Target);
 	}
@@ -414,7 +414,7 @@ class FlxG
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
 	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
-	static private function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
@@ -460,7 +460,7 @@ class FlxG
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
 	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
-	static private function reset():Void
+	private static function reset():Void
 	{
 		PxBitmapFont.clearStorage();
 		FlxRandom.resetGlobalSeed();
@@ -476,19 +476,19 @@ class FlxG
 		worldDivisions = 6;
 	}
 	
-	static private function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
+	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
 		_scaleMode = ScaleMode;
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		return ScaleMode;
 	}
 	
-	inline static private function get_updateFramerate():Int
+	inline private static function get_updateFramerate():Int
 	{
 		return Std.int(1000 / game.stepMS);
 	}
 	
-	static private function set_updateFramerate(Framerate:Int):Int
+	private static function set_updateFramerate(Framerate:Int):Int
 	{
 		if (Framerate < drawFramerate)
 		{
@@ -506,7 +506,7 @@ class FlxG
 		return Framerate;
 	}
 	
-	static private function get_drawFramerate():Int
+	private static function get_drawFramerate():Int
 	{
 		if (game.stage != null)
 		{
@@ -516,7 +516,7 @@ class FlxG
 		return 0;
 	}
 	
-	static private function set_drawFramerate(Framerate:Int):Int
+	private static function set_drawFramerate(Framerate:Int):Int
 	{
 		if (Framerate > updateFramerate)
 		{
@@ -540,7 +540,7 @@ class FlxG
 		return Framerate;
 	}
 	
-	static private function set_fullscreen(Value:Bool):Bool
+	private static function set_fullscreen(Value:Bool):Bool
 	{
 		if (Value)
 		{
@@ -558,12 +558,12 @@ class FlxG
 		return fullscreen = Value;
 	}
 	
-	inline static private function get_stage():Stage
+	inline private static function get_stage():Stage
 	{
 		return game.stage;
 	}
 	
-	inline static private function get_state():FlxState
+	inline private static function get_state():FlxState
 	{
 		return game.state;
 	}

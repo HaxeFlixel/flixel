@@ -25,7 +25,7 @@ class DrawStackItem
 		drawData = new Array<Float>();
 	}
 	
-	inline public function reset():Void
+	public inline function reset():Void
 	{
 		graphics = null;
 		initialized = false;

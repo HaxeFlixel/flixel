@@ -23,7 +23,7 @@ class DebuggerUtil
 	 * @param	Size	Textfield size.
 	 * @return	New label text field at specified position and format.
 	 */
-	static public function createTextField(X:Float = 0, Y:Float = 0, Color:Int = FlxColor.WHITE, Size:Int = 12):TextField
+	public static function createTextField(X:Float = 0, Y:Float = 0, Color:Int = FlxColor.WHITE, Size:Int = 12):TextField
 	{
 		var tf:TextField = new TextField();
 		tf.x = X;

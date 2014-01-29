@@ -39,7 +39,7 @@ class FlxVector extends FlxPoint
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	inline public function scale(k:Float):FlxVector
+	public inline function scale(k:Float):FlxVector
 	{
 		x *= k;
 		y *= k;
@@ -51,7 +51,7 @@ class FlxVector extends FlxPoint
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	inline public function scaleNew(k:Float):FlxVector
+	public inline function scaleNew(k:Float):FlxVector
 	{
 		return clone().scale(k);
 	}
@@ -61,7 +61,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to add
 	 * @return	addition result
 	 */
-	inline public function add(v:FlxVector):FlxVector
+	public inline function add(v:FlxVector):FlxVector
 	{
 		x += v.x;
 		y += v.y;
@@ -73,7 +73,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to add
 	 * @return	addition result
 	 */
-	inline public function addNew(v:FlxVector):FlxVector
+	public inline function addNew(v:FlxVector):FlxVector
 	{
 		return clone().add(v);
 	}
@@ -83,7 +83,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to substract
 	 * @return	substraction result
 	 */
-	inline public function substract(v:FlxVector):FlxVector
+	public inline function substract(v:FlxVector):FlxVector
 	{
 		x -= v.x;
 		y -= v.y;
@@ -95,7 +95,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to substract
 	 * @return	substraction result
 	 */
-	inline public function substractNew(v:FlxVector):FlxVector
+	public inline function substractNew(v:FlxVector):FlxVector
 	{
 		return clone().substract(v);
 	}
@@ -105,7 +105,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to multiply
 	 * @return	dot product of two vectors
 	 */
-	inline public function dotProduct(v:FlxVector):Float
+	public inline function dotProduct(v:FlxVector):Float
 	{
 		return x * v.x + y * v.y;
 	}
@@ -115,7 +115,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to multiply
 	 * @return	dot product of two vectors
 	 */
-	inline public function dotProdWithNormalizing(v:FlxVector):Float
+	public inline function dotProdWithNormalizing(v:FlxVector):Float
 	{
 		var normalized:FlxVector = v.clone(_vector1).normalize();
 		return dotProduct(normalized);
@@ -126,7 +126,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to check
 	 * @return	true - if they are perpendicular
 	 */
-	inline public function isPerpendicular(v:FlxVector):Bool
+	public inline function isPerpendicular(v:FlxVector):Bool
 	{
 		return Math.abs(this.dotProduct(v)) < EPSILON_SQUARED;
 	}
@@ -136,7 +136,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to multiply
 	 * @return	the length of cross product of two vectors
 	 */
-	inline public function crossProductLength(v:FlxVector):Float
+	public inline function crossProductLength(v:FlxVector):Float
 	{
 		return x * v.y - y * v.x;
 	}
@@ -146,7 +146,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	vector to check
 	 * @return	true - if they are parallel
 	 */
-	inline public function isParallel(v:FlxVector):Bool
+	public inline function isParallel(v:FlxVector):Bool
 	{
 		return Math.abs(this.crossProductLength(v)) < EPSILON_SQUARED;
 	}
@@ -155,7 +155,7 @@ class FlxVector extends FlxPoint
 	 * Checking the vector for zero-length
 	 * @return	true - if the vector is zero
 	 */
-	inline public function isZero():Bool
+	public inline function isZero():Bool
 	{
 		return (Math.abs(x) < EPSILON && Math.abs(y) < EPSILON);
 	}
@@ -163,7 +163,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Vector reset
 	 */
-	inline public function zero():FlxVector
+	public inline function zero():FlxVector
 	{
 		x = y = 0;
 		return this;
@@ -187,7 +187,7 @@ class FlxVector extends FlxPoint
 	 */
 	public var dx(get, never):Float;
 	
-	inline private function get_dx():Float
+	private inline function get_dx():Float
 	{
 		if (isZero()) return 0;
 		
@@ -199,7 +199,7 @@ class FlxVector extends FlxPoint
 	 */
 	public var dy(get, never):Float;
 	
-	inline private function get_dy():Float
+	private inline function get_dy():Float
 	{
 		if (isZero()) return 0;
 		
@@ -209,7 +209,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Check the vector for unit length
 	 */
-	inline public function isNormalized():Bool
+	public inline function isNormalized():Bool
 	{
 		return Math.abs(lengthSquared - 1) < EPSILON_SQUARED;
 	}
@@ -218,7 +218,7 @@ class FlxVector extends FlxPoint
 	 * Checking for equality of vectors
 	 * @return	true - if the vectors are equal
 	 */
-	inline public function equals(v:FlxVector):Bool
+	public inline function equals(v:FlxVector):Bool
 	{
 		return (Math.abs(x - v.x) < EPSILON && Math.abs(y - v.y) < EPSILON);
 	}
@@ -228,12 +228,12 @@ class FlxVector extends FlxPoint
 	 */
 	public var length(get, set):Float;
 	
-	inline private function get_length():Float
+	private inline function get_length():Float
 	{
 		return Math.sqrt(lengthSquared);
 	}
 	
-	inline private function set_length(l:Float):Float
+	private inline function set_length(l:Float):Float
 	{
 		var a:Float = this.radians;
 		x = l * Math.cos(a);
@@ -246,7 +246,7 @@ class FlxVector extends FlxPoint
 	 */
 	public var lengthSquared(get, never):Float;
 	
-	inline private function get_lengthSquared():Float
+	private inline function get_lengthSquared():Float
 	{
 		return x * x + y * y;
 	}
@@ -256,12 +256,12 @@ class FlxVector extends FlxPoint
 	 */
 	public var degrees(get, set):Float;
 	
-	inline private function get_degrees():Float
+	private inline function get_degrees():Float
 	{
 		return radians * FlxAngle.TO_DEG;
 	}
 	
-	inline private function set_degrees(degs:Float):Float
+	private inline function set_degrees(degs:Float):Float
 	{
 		radians = degs * FlxAngle.TO_RAD;
 		return degs;
@@ -279,7 +279,7 @@ class FlxVector extends FlxPoint
 		return Math.atan2(y, x);
 	}
 	
-	inline private function set_radians(rads:Float):Float
+	private inline function set_radians(rads:Float):Float
 	{
 		var len:Float = this.length;
 		
@@ -293,7 +293,7 @@ class FlxVector extends FlxPoint
 	 * @param	rads	angle to rotate
 	 * @return	rotated vector
 	 */
-	inline public function rotateByRadians(rads:Float):FlxVector
+	public inline function rotateByRadians(rads:Float):FlxVector
 	{
 		var s:Float = Math.sin(rads);
 		var c:Float = Math.cos(rads);
@@ -310,7 +310,7 @@ class FlxVector extends FlxPoint
 	 * @param	rads	angle to rotate
 	 * @return	rotated vector
 	 */
-	inline public function rotateByDegrees(degs:Float):FlxVector
+	public inline function rotateByDegrees(degs:Float):FlxVector
 	{
 		return rotateByRadians(degs * FlxAngle.TO_RAD);
 	}
@@ -321,7 +321,7 @@ class FlxVector extends FlxPoint
 	 * @param	cos	the value of cosine of the angle of rotation
 	 * @return	rotated vector
 	 */
-	inline public function rotateWithTrig(sin:Float, cos:Float):FlxVector
+	public inline function rotateWithTrig(sin:Float, cos:Float):FlxVector
 	{
 		var tempX:Float = x;
 		x = tempX * cos - y * sin;
@@ -332,7 +332,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Right normal of the vector
 	 */
-	inline public function rightNormal(vec:FlxVector = null):FlxVector 
+	public inline function rightNormal(vec:FlxVector = null):FlxVector
 	{ 
 		if (vec == null)
 		{
@@ -347,7 +347,7 @@ class FlxVector extends FlxPoint
 	 */
 	public var rx(get, never):Float;
 	
-	inline private function get_rx():Float
+	private inline function get_rx():Float
 	{
 		return -y;
 	}
@@ -357,7 +357,7 @@ class FlxVector extends FlxPoint
 	 */
 	public var ry(get, never):Float;
 	
-	inline private function get_ry():Float
+	private inline function get_ry():Float
 	{
 		return x;
 	}
@@ -365,7 +365,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Left normal of the vector
 	 */
-	inline public function leftNormal(vec:FlxVector = null):FlxVector 
+	public inline function leftNormal(vec:FlxVector = null):FlxVector
 	{ 
 		if (vec == null)
 		{
@@ -380,7 +380,7 @@ class FlxVector extends FlxPoint
 	 */
 	public var lx(get, never):Float;
 	
-	inline private function get_lx():Float
+	private inline function get_lx():Float
 	{
 		return y;
 	}
@@ -390,7 +390,7 @@ class FlxVector extends FlxPoint
 	 */
 	public var ly(get, never):Float;
 	
-	inline private function get_ly():Float
+	private inline function get_ly():Float
 	{
 		return -x;
 	}
@@ -398,14 +398,14 @@ class FlxVector extends FlxPoint
 	/**
 	 * Change direction of the vector to opposite
 	 */
-	inline public function negate():FlxVector 
+	public inline function negate():FlxVector
 	{ 
 		x *= -1;
 		y *= -1;
 		return this;
 	}
 	
-	inline public function negateNew():FlxVector
+	public inline function negateNew():FlxVector
 	{
 		return this.clone().negate();
 	}
@@ -417,7 +417,7 @@ class FlxVector extends FlxPoint
 	 * @param	proj	optional argument - result vector
 	 * @return	projection of the vector
 	 */
-	inline public function projectTo(v:FlxVector, proj:FlxVector = null):FlxVector
+	public inline function projectTo(v:FlxVector, proj:FlxVector = null):FlxVector
 	{
 		var dp:Float = this.dotProduct(v);
 		var lenSq:Float = v.lengthSquared;
@@ -436,7 +436,7 @@ class FlxVector extends FlxPoint
 	 * @param	proj	optional argument - result vector
 	 * @return	projection of the vector
 	 */
-	inline public function projectToNormalized(v:FlxVector, proj:FlxVector = null):FlxVector
+	public inline function projectToNormalized(v:FlxVector, proj:FlxVector = null):FlxVector
 	{
 		var dp:Float = this.dotProduct(v);
 		
@@ -451,7 +451,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * perproduct - dot product of left the normal vector and vector v
 	 */
-	inline public function perpProduct(v:FlxVector):Float
+	public inline function perpProduct(v:FlxVector):Float
 	{
 		return this.lx * v.x + this.ly * v.y;
 	}
@@ -526,7 +526,7 @@ class FlxVector extends FlxPoint
 	 * Length limit of the vector
 	 * @param	max	maximum length of this vector
 	 */
-	inline public function truncate(max:Float):FlxVector
+	public inline function truncate(max:Float):FlxVector
 	{
 		this.length = Math.min(max, this.length);
 		return this;
@@ -537,7 +537,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	second vector, which we find the angle
 	 * @return	the angle in radians
 	 */
-	inline public function radiansBetween(v:FlxVector):Float
+	public inline function radiansBetween(v:FlxVector):Float
 	{
 		_vector1 = this.clone(_vector1);
 		_vector2 = this.clone(_vector2);
@@ -558,7 +558,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	second vector, which we find the angle
 	 * @return	the angle in radians
 	 */
-	inline public function degreesBetween(v:FlxVector):Float
+	public inline function degreesBetween(v:FlxVector):Float
 	{
 		return radiansBetween(v) * FlxAngle.TO_DEG;
 	}
@@ -581,7 +581,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * The distance between points
 	 */
-	inline public function dist(v:FlxVector):Float
+	public inline function dist(v:FlxVector):Float
 	{
 		return Math.sqrt(distSquared(v));
 	}
@@ -589,7 +589,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * The squared distance between points
 	 */
-	inline public function distSquared(v:FlxVector):Float
+	public inline function distSquared(v:FlxVector):Float
 	{
 		var dx:Float = v.x - x;
 		var dy:Float = v.y - y;
@@ -602,7 +602,7 @@ class FlxVector extends FlxPoint
 	 * @param bounceCoeff bounce coefficient (0 <= bounceCoeff <= 1)
 	 * @return reflected vector (angle of incidence equals to angle of reflection)
 	 */
-	inline public function bounce(normal:FlxVector, bounceCoeff:Float = 1):FlxVector
+	public inline function bounce(normal:FlxVector, bounceCoeff:Float = 1):FlxVector
 	{
 		var d:Float = (1 + bounceCoeff) * this.dotProduct(normal);
 		x -= d * normal.x;
@@ -617,7 +617,7 @@ class FlxVector extends FlxPoint
 	 * @param friction friction coefficient
 	 * @return reflected vector
 	 */
-	inline public function bounceWithFriction(normal:FlxVector, bounceCoeff:Float = 1, friction:Float = 0):FlxVector
+	public inline function bounceWithFriction(normal:FlxVector, bounceCoeff:Float = 1, friction:Float = 0):FlxVector
 	{
 		var p1:FlxVector = this.projectToNormalized(normal.rightNormal(_vector3), _vector1);
 		var p2:FlxVector = this.projectToNormalized(normal, _vector2);
@@ -634,7 +634,7 @@ class FlxVector extends FlxPoint
 	 * Checking the validity of the vector
 	 * @return	true - if the vector is valid
 	 */
-	inline public function isValid():Bool
+	public inline function isValid():Bool
 	{ 
 		return !Math.isNaN(x) && !Math.isNaN(y) && Math.isFinite(x) && Math.isFinite(y); 
 	}
@@ -644,7 +644,7 @@ class FlxVector extends FlxPoint
 	 * @param	vec		optional vector to copy this vector to
 	 * @return	copy	of this vector
 	 */
-	inline public function clone(vec:FlxVector = null):FlxVector
+	public inline function clone(vec:FlxVector = null):FlxVector
 	{
 		if (vec == null)
 		{

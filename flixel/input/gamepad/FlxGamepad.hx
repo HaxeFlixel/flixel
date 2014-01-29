@@ -306,8 +306,8 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * DPAD accessor properties
 	 */
-	inline public function get_dpadUp():Bool { return hat.y < 0; }
-	inline public function get_dpadDown():Bool { return hat.y > 0; }
-	inline public function get_dpadLeft():Bool { return hat.x < 0; }
-	inline public function get_dpadRight():Bool { return hat.x > 0; }
+	public inline function get_dpadUp():Bool { return hat.y < 0; }
+	public inline function get_dpadDown():Bool { return hat.y > 0; }
+	public inline function get_dpadLeft():Bool { return hat.x < 0; }
+	public inline function get_dpadRight():Bool { return hat.x > 0; }
 }

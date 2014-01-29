@@ -63,7 +63,7 @@ class VCR
 	 * Usually called by FlxGame when a requested recording has begun.
 	 * Just updates the VCR GUI so the buttons are in the right state.
 	 */
-	inline public function recording():Void
+	public inline function recording():Void
 	{
 		recordBtn.changeIcon(FlxAssets.IMG_RECORD_ON);
 		recordBtn.downHandler = FlxG.vcr.stopRecording;
@@ -73,7 +73,7 @@ class VCR
 	 * Usually called by FlxGame when a requested recording has stopped.
 	 * Just updates the VCR GUI so the buttons are in the right state.
 	 */
-	inline public function stoppedRecording():Void
+	public inline function stoppedRecording():Void
 	{
 		recordBtn.changeIcon(FlxAssets.IMG_RECORD_ON);
 		recordBtn.downHandler = FlxG.vcr.startRecording.bind(true);
@@ -83,7 +83,7 @@ class VCR
 	 * Usually called by FlxGame when a replay has been stopped.
 	 * Just updates the VCR GUI so the buttons are in the right state.
 	 */
-	inline public function stoppedReplay():Void
+	public inline function stoppedReplay():Void
 	{
 		recordBtn.changeIcon(FlxAssets.IMG_RECORD_OFF);
 		recordBtn.downHandler = FlxG.vcr.startRecording.bind(true);
@@ -93,7 +93,7 @@ class VCR
 	 * Usually called by FlxGame when a requested replay has begun.
 	 * Just updates the VCR GUI so the buttons are in the right state.
 	 */
-	inline public function playingReplay():Void
+	public inline function playingReplay():Void
 	{
 		recordBtn.changeIcon(FlxAssets.IMG_STOP);
 		recordBtn.downHandler = FlxG.vcr.stopReplay;
@@ -118,7 +118,7 @@ class VCR
 	 * This is different from user-defined pause behavior, or focus lost behavior.
 	 * Does NOT pause music playback!!
 	 */
-	inline public function onPause():Void
+	public inline function onPause():Void
 	{
 		playbackToggleBtn.downHandler = FlxG.vcr.resume;
 		playbackToggleBtn.changeIcon(FlxAssets.IMG_PLAY);
@@ -128,7 +128,7 @@ class VCR
 	 * Called when the user presses the Play button.
 	 * This is different from user-defined unpause behavior, or focus gained behavior.
 	 */
-	inline public function onResume():Void
+	public inline function onResume():Void
 	{
 		playbackToggleBtn.downHandler = FlxG.vcr.pause;
 		playbackToggleBtn.changeIcon(FlxAssets.IMG_PAUSE);

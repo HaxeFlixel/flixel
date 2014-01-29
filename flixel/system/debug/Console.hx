@@ -25,11 +25,11 @@ class Console extends Window
 	/**
 	 * The text that is displayed in the console's input field by default.
 	 */
-	inline static private var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
+	private static inline var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
 	/**
 	 * The amount of commands that will be saved.
 	 */
-	inline static private var _HISTORY_MAX:Int = 25;
+	private static inline var _HISTORY_MAX:Int = 25;
 	
 	/**
 	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
@@ -277,7 +277,7 @@ class Console extends Window
 		removeEventListener(Event.RENDER, overrideDefaultSelection);
 	}
 	
-	inline private function getPreviousCommand():String
+	private inline function getPreviousCommand():String
 	{
 		if (_historyIndex > 0) {
 			_historyIndex --;
@@ -286,7 +286,7 @@ class Console extends Window
 		return cmdHistory[_historyIndex];
 	}
 	
-	inline private function getNextCommand():String
+	private inline function getNextCommand():String
 	{
 		if (_historyIndex < cmdHistory.length) {
 			_historyIndex ++;
@@ -306,7 +306,7 @@ class Console extends Window
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.
 	 */
-	inline public function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
+	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
 		registeredObjects.set(ObjectAlias, AnyObject);
 	}
@@ -317,7 +317,7 @@ class Console extends Window
 	 * @param 	FunctionAlias	The name with which you want to access the function.
 	 * @param 	Function		The function to register.
 	 */
-	inline public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
+	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
 		registeredFunctions.set(FunctionAlias, Function);
 	}
@@ -332,7 +332,7 @@ class Console extends Window
 	 * @param 	NumParams		The amount of parameters a function has. Require to prevent crashes on Neko.
 	 * @param	ParamCutoff		At which parameter to put all remaining params into an array
 	 */
-	inline public function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
+	public inline function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
 	{
 		commands.push( { aliases:Aliases, processFunction:ProcessFunction, help:Help, paramHelp:ParamHelp, 
 						numParams:NumParams, paramCutoff:ParamCutoff });

@@ -14,7 +14,7 @@ class PxDefaultFontGenerator
 	/**
 	 * Creates and stores the default font for later use.
 	 */
-	static public function generateAndStoreDefaultFont():Void 
+	public static function generateAndStoreDefaultFont():Void
 	{
 		var letters:String = "";
 		var bd:BitmapData = new BitmapData(700, 9, true, 0xFF888888);

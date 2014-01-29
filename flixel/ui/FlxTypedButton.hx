@@ -357,7 +357,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	/**
 	 * Cleans up memory.
 	 */
-	inline public function destroy():Void
+	public inline function destroy():Void
 	{
 		callback = null;
 		
@@ -369,7 +369,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	/**
 	 * Fires this event (calls the callback and plays the sound)
 	 */
-	inline public function fire():Void
+	public inline function fire():Void
 	{
 		if (callback != null) 
 		{

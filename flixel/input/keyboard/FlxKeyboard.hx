@@ -56,7 +56,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	inline public function anyPressed(KeyArray:Array<String>):Bool 
+	public inline function anyPressed(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
 	}
@@ -68,7 +68,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	inline public function anyJustPressed(KeyArray:Array<String>):Bool 
+	public inline function anyJustPressed(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
 	}
@@ -80,7 +80,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	inline public function anyJustReleased(KeyArray:Array<String>):Bool 
+	public inline function anyJustReleased(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
 	}
@@ -126,7 +126,7 @@ class FlxKeyboard implements IFlxInput
 	 * @param	KeyName		The <code>String</code> name of the key.
 	 * @return	The key code for that key.
 	 */
-	inline public function getKeyCode(KeyName:String):Int
+	public inline function getKeyCode(KeyName:String):Int
 	{
 		return _keyLookup.get(KeyName);
 	}
@@ -490,7 +490,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
-	inline private function updateKeyStates(KeyCode:Int, Down:Bool):Void
+	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
 		var obj:FlxKey = _keyList[KeyCode];
 		
@@ -521,9 +521,9 @@ class FlxKeyboard implements IFlxInput
 		}
 	}
 	
-	inline private function onFocus():Void {}
+	private inline function onFocus():Void {}
 
-	inline private function onFocusLost():Void
+	private inline function onFocusLost():Void
 	{
 		reset();
 	}

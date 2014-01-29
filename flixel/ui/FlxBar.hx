@@ -1275,7 +1275,7 @@ class FlxBar extends FlxSprite
 	}
 	
 	#if !flash
-	inline private function setCachedGraphics(value:CachedGraphics):Void
+	private inline function setCachedGraphics(value:CachedGraphics):Void
 	{
 		cachedGraphics = value;
 	}

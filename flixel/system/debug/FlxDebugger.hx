@@ -152,7 +152,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   Layout   The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
 	 */
-	inline public function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:DebuggerLayout):Void
 	{
 		_layout = Layout;
 		resetLayout();
@@ -217,7 +217,7 @@ class FlxDebugger extends Sprite
 		}
 	}
 	
-	inline public function onResize(Width:Float, Height:Float):Void
+	public inline function onResize(Width:Float, Height:Float):Void
 	{
 		_screen.x = Width;
 		_screen.y = Height;
@@ -395,7 +395,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   E   Flash mouse event.
 	 */
-	inline private function onMouseOver(?E:MouseEvent):Void
+	private inline function onMouseOver(?E:MouseEvent):Void
 	{
 		hasMouse = true;
 		#if !FLX_NO_MOUSE
@@ -408,7 +408,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   E   Flash mouse event.
 	 */
-	inline private function onMouseOut(?E:MouseEvent):Void
+	private inline function onMouseOut(?E:MouseEvent):Void
 	{
 		hasMouse = false;
 		
@@ -429,12 +429,12 @@ class FlxDebugger extends Sprite
 		}
 	}
 
-	inline private function toggleVisualDebug ():Void
+	private inline function toggleVisualDebug ():Void
 	{
 		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 	}
 	
-	inline private function openHomepage():Void
+	private inline function openHomepage():Void
 	{
 		FlxG.openURL("http://www.haxeflixel.com");
 	}

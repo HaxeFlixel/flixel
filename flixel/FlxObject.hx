@@ -235,7 +235,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for initialization of some variables that are used in updateMotion()
 	 */
-	inline private function initMotionVars():Void
+	private inline function initMotionVars():Void
 	{
 		velocity = new FlxPoint();
 		acceleration = new FlxPoint();
@@ -292,7 +292,7 @@ class FlxObject extends FlxBasic
 	 * Internal function for updating the position and speed of this object. Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
-	inline private function updateMotion():Void
+	private inline function updateMotion():Void
 	{
 		var delta:Float;
 		var velocityDelta:Float;
@@ -574,7 +574,7 @@ class FlxObject extends FlxBasic
 	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
 	 * @return	Whether the object is within the Worldbounds or not.
 	 */
-	inline public function inWorldBounds():Bool
+	public inline function inWorldBounds():Bool
 	{
 		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
 	}
@@ -633,7 +633,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
-	inline public function isTouching(Direction:Int):Bool
+	public inline function isTouching(Direction:Int):Bool
 	{
 		return (touching & Direction) > NONE;
 	}
@@ -643,7 +643,7 @@ class FlxObject extends FlxBasic
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
-	inline public function justTouched(Direction:Int):Bool
+	public inline function justTouched(Direction:Int):Bool
 	{
 		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
@@ -668,7 +668,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated.
 	 */
-	static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separate(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		var separatedX:Bool = separateX(Object1, Object2);
 		var separatedY:Bool = separateY(Object1, Object2);
@@ -681,7 +681,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated along the X axis.
 	 */
-	static public function separateX(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separateX(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		//can't separate two immovable objects
 		var obj1immovable:Bool = Object1.immovable;
@@ -793,7 +793,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated along the Y axis.
 	 */
-	static public function separateY(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separateY(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		//can't separate two immovable objects
 		var obj1immovable:Bool = Object1.immovable;
@@ -1010,7 +1010,7 @@ class FlxObject extends FlxBasic
 		return height;
 	}
 	
-	inline private function get_solid():Bool
+	private inline function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}

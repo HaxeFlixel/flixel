@@ -738,7 +738,7 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	inline private function updateFormat(Format:TextFormat):Void
+	private inline function updateFormat(Format:TextFormat):Void
 	{
 		#if !flash
 		_textField.setTextFormat(Format, 0, _textField.text.length);

@@ -55,7 +55,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs
 	 */
-	inline private function update():Void
+	private inline function update():Void
 	{
 		for (input in list)
 		{
@@ -66,7 +66,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs from FlxGame Focus
 	 */
-	inline private function onFocus():Void 
+	private inline function onFocus():Void
 	{
 		for (input in list)
 		{
@@ -77,7 +77,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs from FlxGame FocusLost
 	 */	
-	inline private function onFocusLost():Void
+	private inline function onFocusLost():Void
 	{
 		for (input in list)
 		{
@@ -88,7 +88,7 @@ class InputFrontEnd
 	/**
 	 * Clean up memory.
 	 */
-	inline private function destroy():Void
+	private inline function destroy():Void
 	{
 		for (input in list)
 		{

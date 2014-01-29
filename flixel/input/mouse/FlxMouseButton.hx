@@ -139,7 +139,7 @@ class FlxMouseButton
 	/**
 	 * Resets the just pressed/just released flags and sets mouse to not pressed.
 	 */
-	inline public function reset():Void
+	public inline function reset():Void
 	{
 		current = RELEASED;
 		last = RELEASED;
@@ -149,17 +149,17 @@ class FlxMouseButton
 	 * Check to see if the button is pressed.
 	 * @return 	Whether the button is pressed.
 	 */
-	inline public function pressed():Bool { return current > RELEASED; }
+	public inline function pressed():Bool { return current > RELEASED; }
 
 	/**
 	 * Check to see if the button was just pressed.
 	 * @return 	Whether the button was just pressed.
 	 */
-	inline public function justPressed():Bool { return (current == JUST_PRESSED || current == FAST_PRESS_RELEASE); }
+	public inline function justPressed():Bool { return (current == JUST_PRESSED || current == FAST_PRESS_RELEASE); }
 
 	/**
 	 * Check to see if the button was just released.
 	 * @return 	Whether the button was just released.
 	 */
-	inline public function justReleased():Bool { return (current == JUST_RELEASED || current == FAST_PRESS_RELEASE); }
+	public inline function justReleased():Bool { return (current == JUST_RELEASED || current == FAST_PRESS_RELEASE); }
 }

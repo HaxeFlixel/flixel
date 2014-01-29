@@ -287,7 +287,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
-	inline public function recycle(ObjectClass:Class<FlxSprite> = null, ContructorArgs:Array<Dynamic> = null, Force:Bool = false):FlxSprite
+	public inline function recycle(ObjectClass:Class<FlxSprite> = null, ContructorArgs:Array<Dynamic> = null, Force:Bool = false):FlxSprite
 	{
 		return group.recycle(ObjectClass, ContructorArgs, Force);
 	}
@@ -311,7 +311,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param	NewObject	The new object you want to use instead.
 	 * @return	The new object.
 	 */
-	inline public function replace(OldObject:FlxSprite, NewObject:FlxSprite):FlxSprite
+	public inline function replace(OldObject:FlxSprite, NewObject:FlxSprite):FlxSprite
 	{
 		return group.replace(OldObject, NewObject);
 	}
@@ -326,7 +326,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
 	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.  
 	 */
-	inline public function sort(Index:String = "y", Order:Int = -1):Void
+	public inline function sort(Index:String = "y", Order:Int = -1):Void
 	{
 		group.sort(Index, Order);
 	}
@@ -338,7 +338,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param	Value			The value you want to assign to that variable.
 	 * @param	Recurse			Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
 	 */
-	inline public function setAll(VariableName:String, Value:Dynamic, Recurse:Bool = true):Void
+	public inline function setAll(VariableName:String, Value:Dynamic, Recurse:Bool = true):Void
 	{
 		group.setAll(VariableName, Value, Recurse);
 	}
@@ -350,7 +350,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
 	 * @param	Recurse			Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
 	 */ 
-	inline public function callAll(FunctionName:String, Args:Array<Dynamic> = null, Recurse:Bool = true):Void
+	public inline function callAll(FunctionName:String, Args:Array<Dynamic> = null, Recurse:Bool = true):Void
 	{
 		group.callAll(FunctionName, Args, Recurse);
 	}
@@ -363,7 +363,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
 	 * @return	A <code>FlxSprite</code> currently flagged as not existing.
 	 */
-	inline public function getFirstAvailable(ObjectClass:Class<FlxSprite> = null, Force:Bool = false):FlxSprite
+	public inline function getFirstAvailable(ObjectClass:Class<FlxSprite> = null, Force:Bool = false):FlxSprite
 	{
 		return group.getFirstAvailable(ObjectClass, Force);
 	}
@@ -374,7 +374,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @return	An <code>Int</code> indicating the first null slot in the group.
 	 */
-	inline public function getFirstNull():Int
+	public inline function getFirstNull():Int
 	{
 		return group.getFirstNull();
 	}
@@ -385,7 +385,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @return	A <code>FlxSprite</code> currently flagged as existing.
 	 */
-	inline public function getFirstExisting():FlxSprite
+	public inline function getFirstExisting():FlxSprite
 	{
 		return group.getFirstExisting();
 	}
@@ -396,7 +396,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @return	A <code>FlxSprite</code> currently flagged as not dead.
 	 */
-	inline public function getFirstAlive():FlxSprite
+	public inline function getFirstAlive():FlxSprite
 	{
 		return group.getFirstAlive();
 	}
@@ -407,7 +407,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @return	A <code>FlxSprite</code> currently flagged as dead.
 	 */
-	inline public function getFirstDead():FlxSprite
+	public inline function getFirstDead():FlxSprite
 	{
 		return group.getFirstDead();
 	}
@@ -417,7 +417,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @return	The number of <code>FlxSprite</code>s flagged as not dead.  Returns -1 if group is empty.
 	 */
-	inline public function countLiving():Int
+	public inline function countLiving():Int
 	{
 		return group.countLiving();
 	}
@@ -427,7 +427,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @return	The number of <code>FlxSprite</code>s flagged as dead.  Returns -1 if group is empty.
 	 */
-	inline public function countDead():Int
+	public inline function countDead():Int
 	{
 		return group.countDead();
 	}
@@ -439,7 +439,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
 	 * @return	A <code>FlxSprite</code> from the members list.
 	 */
-	inline public function getRandom(StartIndex:Int = 0, Length:Int = 0):FlxSprite
+	public inline function getRandom(StartIndex:Int = 0, Length:Int = 0):FlxSprite
 	{
 		return group.getRandom(StartIndex, Length);
 	}
@@ -449,7 +449,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @param   Function   A function that modifies one element at a time
 	 */
-	inline public function forEach(Function:FlxSprite->Void):Void
+	public inline function forEach(Function:FlxSprite->Void):Void
 	{
 		group.forEach(Function);
 	}
@@ -459,7 +459,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @param   Function   A function that modifies one element at a time
 	 */
-	inline public function forEachAlive(Function:FlxSprite->Void):Void
+	public inline function forEachAlive(Function:FlxSprite->Void):Void
 	{
 		group.forEachAlive(Function);
 	}
@@ -469,7 +469,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @param   Function   A function that modifies one element at a time
 	 */
-	inline public function forEachDead(Function:FlxSprite->Void):Void
+	public inline function forEachDead(Function:FlxSprite->Void):Void
 	{
 		group.forEachDead(Function);
 	}
@@ -488,7 +488,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * Remove all instances of <code>FlxSprite</code> from the list.
 	 * WARNING: does not destroy() or kill() any of these objects!
 	 */
-	inline public function clear():Void
+	public inline function clear():Void
 	{
 		group.clear();
 	}
@@ -850,12 +850,12 @@ class FlxSpriteGroup extends FlxSprite
 	
 	// GROUP FUNCTIONS
 	
-	inline private function get_length():Int
+	private inline function get_length():Int
 	{
 		return group.length;
 	}
 	
-	inline private function get_maxSize():Int
+	private inline function get_maxSize():Int
 	{
 		return group.maxSize;
 	}
@@ -871,7 +871,7 @@ class FlxSpriteGroup extends FlxSprite
 		return group.maxSize = Size;
 	}
 	
-	inline private function get_members():Array<FlxSprite>
+	private inline function get_members():Array<FlxSprite>
 	{
 		return group.members;
 	}

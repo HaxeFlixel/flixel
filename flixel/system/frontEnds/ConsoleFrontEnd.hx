@@ -16,7 +16,7 @@ class ConsoleFrontEnd
 	 * @param 	FunctionAlias		The name with which you want to access the function.
 	 * @param 	Function			The function to register.
 	 */
-	inline public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
+	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.console.registerFunction(FunctionAlias, Function);
@@ -29,7 +29,7 @@ class ConsoleFrontEnd
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.
 	 */
-	inline public function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
+	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.console.registerObject(ObjectAlias, AnyObject);
@@ -46,7 +46,7 @@ class ConsoleFrontEnd
 	 * @param 	NumParams		The amount of parameters a function has. Require to prevent crashes on Neko.
 	 * @param	ParamCutoff		At which parameter to put all remaining params into an array
 	 */
-	inline public function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
+	public inline function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.console.addCommand(Aliases, ProcessFunction, Help, ParamHelp, NumParams, ParamCutoff);

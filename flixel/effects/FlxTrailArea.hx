@@ -208,7 +208,7 @@ class FlxTrailArea extends FlxSprite
 	/**
 	 * Wipes the trail area
 	 */
-	inline public function resetTrail():Void 
+	public inline function resetTrail():Void
 	{
 		framePixels.fillRect(new Rectangle(0, 0, framePixels.width, framePixels.height), 0x00000000);
 	}
@@ -220,7 +220,7 @@ class FlxTrailArea extends FlxSprite
 	 * @param	Sprite		The sprite to enable the trail effect for
 	 * @return 	The FlxSprite, useful for chaining stuff together
 	 */
-	inline public function add(Sprite:FlxSprite):FlxSprite 
+	public inline function add(Sprite:FlxSprite):FlxSprite
 	{
 		return group.add(Sprite);
 	}
@@ -228,7 +228,7 @@ class FlxTrailArea extends FlxSprite
 	/**
 	 * Redirects width to _width
 	 */
-	override inline private function get_width():Float 
+	override private inline function get_width():Float
 	{
 		return _width;
 	}
@@ -250,7 +250,7 @@ class FlxTrailArea extends FlxSprite
 	/**
 	 * Redirects height to _height
 	 */
-	override inline private function get_height():Float 
+	override private inline function get_height():Float
 	{
 		return _height;
 	}

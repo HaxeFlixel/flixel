@@ -24,7 +24,7 @@ class LogFrontEnd
 	 */
 	public var add:Dynamic;
 	
-	inline private function _add(Data:Array<Dynamic>):Void
+	private inline function _add(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
 		advanced(Data, LogStyle.NORMAL); 
@@ -37,7 +37,7 @@ class LogFrontEnd
 	 */
 	public var warn:Dynamic;
 	
-	inline private function _warn(Data:Array<Dynamic>):Void
+	private inline function _warn(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
 		advanced(Data, LogStyle.WARNING, true); 
@@ -50,7 +50,7 @@ class LogFrontEnd
 	 */
 	public var error:Dynamic;
 	
-	inline private function _error(Data:Array<Dynamic>):Void
+	private inline function _error(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
 		advanced(Data, LogStyle.ERROR, true); 
@@ -63,7 +63,7 @@ class LogFrontEnd
 	 */
 	public var notice:Dynamic;
 	
-	inline private function _notice(Data:Array<Dynamic>):Void
+	private inline function _notice(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
 		advanced(Data, LogStyle.NOTICE); 
@@ -120,7 +120,7 @@ class LogFrontEnd
 	/**
 	 * Clears the log output.
 	 */
-	inline public function clear():Void
+	public inline function clear():Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.log.clear();

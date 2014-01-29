@@ -259,7 +259,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
 	 * @param   Show         Whether to call setNativeCursor afterwards
 	 */
-	inline public function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
+	public inline function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
 	{
 		untyped Mouse.registerCursor(Name, CursorData);
 	}
@@ -524,25 +524,25 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * 
 	 * @param   E   Flash event.
 	 */
-	inline private function onMouseLeave(E:Event):Void
+	private inline function onMouseLeave(E:Event):Void
 	{
 		_rightButton.onUp();
 		_middleButton.onUp();
 	}
 	#end
 	
-	inline private function get_pressed():Bool            { return _leftButton.pressed();        }
-	inline private function get_justPressed():Bool        { return _leftButton.justPressed();    }
-	inline private function get_justReleased():Bool       { return _leftButton.justReleased();   }
+	private inline function get_pressed():Bool            { return _leftButton.pressed();        }
+	private inline function get_justPressed():Bool        { return _leftButton.justPressed();    }
+	private inline function get_justReleased():Bool       { return _leftButton.justReleased();   }
 
 	#if (!FLX_NO_MOUSE_ADVANCED && !js)
-	inline private function get_pressedRight():Bool       { return _rightButton.pressed();       }
-	inline private function get_justPressedRight():Bool   { return _rightButton.justPressed();   }
-	inline private function get_justReleasedRight():Bool  { return _rightButton.justReleased();  }
+	private inline function get_pressedRight():Bool       { return _rightButton.pressed();       }
+	private inline function get_justPressedRight():Bool   { return _rightButton.justPressed();   }
+	private inline function get_justReleasedRight():Bool  { return _rightButton.justReleased();  }
 	
-	inline private function get_pressedMiddle():Bool      { return _middleButton.pressed();      }
-	inline private function get_justPressedMiddle():Bool  { return _middleButton.justPressed();  }
-	inline private function get_justReleasedMiddle():Bool { return _middleButton.justReleased(); }
+	private inline function get_pressedMiddle():Bool      { return _middleButton.pressed();      }
+	private inline function get_justPressedMiddle():Bool  { return _middleButton.justPressed();  }
+	private inline function get_justReleasedMiddle():Bool { return _middleButton.justReleased(); }
 	#end
 	
 	/**

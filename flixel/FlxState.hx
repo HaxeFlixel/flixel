@@ -29,7 +29,7 @@ class FlxState extends FlxGroup
 	 */
 	public var subState(get, null):FlxSubState;
 
-	inline private function get_subState():FlxSubState
+	private inline function get_subState():FlxSubState
 	{
 		return _subState;
 	}
@@ -115,7 +115,7 @@ class FlxState extends FlxGroup
 	/**
 	 * Manually close the sub-state
 	 */
-	inline public function setSubState(subState:FlxSubState):Void
+	public inline function setSubState(subState:FlxSubState):Void
 	{
 		requestedSubState = subState;
 		requestSubStateReset = true;
@@ -123,7 +123,7 @@ class FlxState extends FlxGroup
 	/**
 	 * Manually close the sub-state
 	 */
-	inline public function closeSubState():Void
+	public inline function closeSubState():Void
 	{
 		setSubState(null);
 	}
