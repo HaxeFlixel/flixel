@@ -19,10 +19,8 @@ class ConsoleUtil
 	 * @param	Args		An array of arguments.
 	 * @return	Whether or not it was possible to safely call the function.
 	 */
-	public static function callFunction(Function:Dynamic, Args:Array<Dynamic>):Bool
+	static public function callFunction(Function:Dynamic, Args:Array<Dynamic>):Bool
 	{
-		Args = parseDataArray(Args);
-		
 		try
 		{
 			Reflect.callMethod(null, Function, Args);
@@ -66,9 +64,9 @@ class ConsoleUtil
 	 * @param	Commands	The array of commands to search through
 	 * @return	The Command typdef - null if none was found.
 	 */
-	public static function findCommand(Alias:String, Commands:Array<Command>):Command
+	static public function findCommand(Alias:String, Commands:Array<Command>):Command
 	{
-		for (i in 0...(Commands.length - 1))
+		for (i in 0...Commands.length)
 		{
 			if (FlxArrayUtil.indexOf(Commands[i].aliases, Alias) != -1) {
 				return Commands[i];
@@ -86,7 +84,7 @@ class ConsoleUtil
 	 * @param	Params		An optional array of constructor params
 	 * @return	The created instance, or null
 	 */
-	@:generic public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
+	@:generic static public function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
 	{
 		if (Params == null) {
 			Params = [];
@@ -118,7 +116,7 @@ class ConsoleUtil
 	 * @param	ObjectMap			A Map of registered objects to start the search from
 	 * @return	A PathToVarible typedef, or null.
 	 */
-	public static function resolveObjectAndVariable(ObjectAndVariable:String, ObjectMap:Map<String, Dynamic>):PathToVariable
+	static public function resolveObjectAndVariable(ObjectAndVariable:String, ObjectMap:Map<String, Dynamic>):PathToVariable
 	{
 		var searchArr:Array<String> = ObjectAndVariable.split(".");
 		
@@ -164,28 +162,26 @@ class ConsoleUtil
 	}
 	
 	/**
-	 * Attempts to parse an array of Strings and Arrays into standard types (mostly needed for Bools -  
-	 * Ints and Floats should work out of the box with Reflect.callMethod()). Used by callFunction().
+	 * Attempts to parse a String into a Boolean, returns 
+	 * true for "true", false for "false", and null otherwise.
 	 * 
-	 * @param	Data	The data array to parse
-	 * @return	The parsed Data.
+	 * @param	s	The String to parse
+	 * @return	The parsed Bool
 	 */
-	public static function parseDataArray(Data:Array<Dynamic>):Array<Dynamic>
+	static public function parseBool(s:String):Null<Bool>
 	{
-		var parsedData:Array<Dynamic> = Data;
-		for (i in 0...parsedData.length)
+		if (s == "true") 
 		{
-			if (parsedData[i] == "true") {
-				parsedData[i] = true;
-			}
-			else if (parsedData[i] == "false") {
-				parsedData[i] = false;
-			}
-			else if (Std.is(parsedData[i], Array)) {
-				parsedData[i] = parseDataArray(parsedData[i]);
-			}
+			return true;
 		}
-		return parsedData;
+		else if (s == "false") 
+		{
+			return false;
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	/**
@@ -193,7 +189,7 @@ class ConsoleUtil
 	 * 
 	 * @param	Text	The text to log.
 	 */
-	public static inline function log(Text:Dynamic):Void
+	inline static public function log(Text:Dynamic):Void
 	{
 		FlxG.log.advanced([Text], LogStyle.CONSOLE);
 	}

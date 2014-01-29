@@ -188,14 +188,20 @@ class ConsoleCommands
 		}
 		
 		// Prevent from assigning non-boolean values to bools
-		if (Std.is(variable, Bool) && !Std.is(NewVariableValue, Bool)) 
+		if (Std.is(variable, Bool)) 
 		{
-			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
-			return;
+			var oldVal = NewVariableValue;
+			NewVariableValue = ConsoleUtil.parseBool(NewVariableValue);
+			
+			if (NewVariableValue == null)
+			{
+				FlxG.log.error("set: '" + oldVal + "' is not a valid value for Bool '" + varName + "'");
+				return;
+			}
 		}
 		
 		// Prevent turning numbers into NaN
-		else if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
+		if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
 		{
 			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for number '" + varName + "'");
 			return;
