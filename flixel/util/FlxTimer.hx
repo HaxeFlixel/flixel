@@ -72,7 +72,7 @@ class FlxTimer
 	/**
 	 * Returns a recycled timer.
 	 */
-	static public function recycle():FlxTimer
+	public static function recycle():FlxTimer
 	{
 		return pool.get();
 	}
@@ -84,7 +84,7 @@ class FlxTimer
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
 	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
  	 */
-	static public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
+	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
 		var timer:FlxTimer = recycle();
 		timer.run(Time, Callback, Loops);
@@ -231,7 +231,7 @@ class FlxTimer
 		}
 	}
 	
-	static public function put(timer:FlxTimer):Void
+	public static function put(timer:FlxTimer):Void
 	{
 		pool.put(timer);
 	}

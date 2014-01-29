@@ -2138,7 +2138,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Invert		Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function arrayToCSV(Data:Array<Int>, Width:Int, Invert:Bool = false):String
+	public static function arrayToCSV(Data:Array<Int>, Width:Int, Invert:Bool = false):String
 	{
 		var row:Int = 0;
 		var column:Int;
@@ -2205,7 +2205,7 @@ class FlxTilemap extends FlxObject
 	 * @param  	ColorMap  	An array of color values (0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<Int>):String
+	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<Int>):String
 	{
 		if (Scale < 1) 
 		{
@@ -2312,7 +2312,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * @return	A comma-separated string containing the level data in a <code>FlxTilemap</code>-friendly format.
 	 */
-	static public function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1):String
+	public static function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1):String
 	{
 		var tempBitmapData:BitmapData;
 		

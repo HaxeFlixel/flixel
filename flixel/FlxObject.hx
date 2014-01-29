@@ -668,7 +668,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated.
 	 */
-	static public function separate(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separate(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		var separatedX:Bool = separateX(Object1, Object2);
 		var separatedY:Bool = separateY(Object1, Object2);
@@ -681,7 +681,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated along the X axis.
 	 */
-	static public function separateX(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separateX(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		//can't separate two immovable objects
 		var obj1immovable:Bool = Object1.immovable;
@@ -793,7 +793,7 @@ class FlxObject extends FlxBasic
 	 * @param	Object2		Any other <code>FlxObject</code>.
 	 * @return	Whether the objects in fact touched and were separated along the Y axis.
 	 */
-	static public function separateY(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separateY(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		//can't separate two immovable objects
 		var obj1immovable:Bool = Object1.immovable;

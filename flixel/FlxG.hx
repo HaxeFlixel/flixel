@@ -299,7 +299,7 @@ class FlxG
 	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any overlaps were detected.
 	 */
-	static public function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
+	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -360,7 +360,7 @@ class FlxG
 	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
 	 * @return	Null
 	 */
-	static public function safeDestroy<T:IFlxDestroyable>(Object:Null<IFlxDestroyable>):T
+	public static function safeDestroy<T:IFlxDestroyable>(Object:Null<IFlxDestroyable>):T
 	{
 		if (Object != null)
 		{
@@ -377,7 +377,7 @@ class FlxG
 	 * @param 	IndexModifier	Amount to add to the index - makes sure the index stays within bounds!
 	 * @return	The added DisplayObject
 	 */
-	@:generic static public function addChildBelowMouse<T:DisplayObject>(Child:T, IndexModifier:Int = 0):T
+	@:generic public static function addChildBelowMouse<T:DisplayObject>(Child:T, IndexModifier:Int = 0):T
 	{
 		var index = game.getChildIndex(game.inputContainer);
 		var max = game.numChildren;

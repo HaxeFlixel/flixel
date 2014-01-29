@@ -121,7 +121,7 @@ class FlxColorUtil
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
 	 * @return	An <code>HSBA</code> object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
-	static public function getHSBA(Color:Int, ?Results:HSBA):HSBA
+	public static function getHSBA(Color:Int, ?Results:HSBA):HSBA
 	{
 		var hue:Float;
 		var saturation:Float;
@@ -278,7 +278,7 @@ class FlxColorUtil
 	 * @param	Alpha	Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
 	 * @return	HSV color wheel as Array of Ints
 	 */
-	static public function getHSVColorWheel(Alpha:Int = 255):Array<Int>
+	public static function getHSVColorWheel(Alpha:Int = 255):Array<Int>
 	{
 		var colors:Array<Int> = new Array<Int>();
 		
@@ -315,7 +315,7 @@ class FlxColorUtil
 	 * @param	threshold Control how adjacent the colors will be (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
-	static public function getAnalogousHarmony(Color:Int, Threshold:Int = 30):Harmony
+	public static function getAnalogousHarmony(Color:Int, Threshold:Int = 30):Harmony
 	{
 		var hsv:HSV = RGBtoHSV(Color);
 		
@@ -339,7 +339,7 @@ class FlxColorUtil
 	 * @param	Threshold 	Control how adjacent the colors will be to the Complement (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 	 */
-	static public function getSplitComplementHarmony(Color:Int, Threshold:Int = 30):Harmony
+	public static function getSplitComplementHarmony(Color:Int, Threshold:Int = 30):Harmony
 	{
 		var hsv:HSV = RGBtoHSV(Color);
 		
@@ -448,7 +448,7 @@ class FlxColorUtil
 	 * @param	Alpha	Alpha value to set per color (between 0 and 255)
 	 * @return	32-bit ARGB color value (0xAARRGGBB)
 	 */
-	static public function HSVtoARGB(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
+	public static function HSVtoARGB(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
 	{
 		var result = FlxColor.TRANSPARENT;
 		
@@ -492,7 +492,7 @@ class FlxColorUtil
 	 * @param	Color 	The color in format 0xRRGGBB
 	 * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
 	 */
-	static public function RGBtoHSV(Color:Int):HSV
+	public static function RGBtoHSV(Color:Int):HSV
 	{
 		var rgb:ARGB = getARGB(Color);
 		

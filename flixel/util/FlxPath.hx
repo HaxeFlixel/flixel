@@ -22,12 +22,12 @@ class FlxPath
 	/**
 	 * Returns a recycled path.
 	 */
-	static public function recycle():FlxPath
+	public static function recycle():FlxPath
 	{
 		return pool.get().reset();
 	}
 	
-	static public function put(path:FlxPath):Void
+	public static function put(path:FlxPath):Void
 	{
 		pool.put(path);
 	}
@@ -42,7 +42,7 @@ class FlxPath
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
 	 */
-	static public function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false, UsePooling:Bool = true):FlxPath
+	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false, UsePooling:Bool = true):FlxPath
 	{
 		var path:FlxPath = recycle();
 		path.run(Object, Nodes, Speed, Mode, AutoRotate, UsePooling);

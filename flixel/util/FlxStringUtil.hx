@@ -157,7 +157,7 @@ class FlxStringUtil
 	 * @param 	Input	The input string
 	 * @return 	The output string, digits-only
 	 */
-	static public function filterDigits(Input:String):String 
+	public static function filterDigits(Input:String):String
 	{
 		var output = new StringBuf();
 		for (i in 0...Input.length) {
@@ -181,7 +181,7 @@ class FlxStringUtil
 	 * @param	Underlined 	Whether the text should be underlined (<u> tag)
 	 * @return	The html-formatted text.
 	 */
-	static public function htmlFormat(Text:String, Size:Int = 12, Color:String = "FFFFFF", Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false):String
+	public static function htmlFormat(Text:String, Size:Int = 12, Color:String = "FFFFFF", Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false):String
 	{
 		var prefix:String = "<font size='" + Size + "' color='#" + Color + "'>";
 		var suffix:String = "</font>";
@@ -246,7 +246,7 @@ class FlxStringUtil
 	 * @param	Data 	String formatted like this: <code>"1, 2, 5, -10, 120, 27"</code>
 	 * @return	An array of ints
 	 */
-	static public function toIntArray(Data:String):Array<Int>
+	public static function toIntArray(Data:String):Array<Int>
 	{
 		if ((Data != null) && (Data != "")) 
 		{
@@ -267,7 +267,7 @@ class FlxStringUtil
 	 * @param	Data string formatted like this: <code>"1.0,2.1,5.6,1245587.9, -0.00354"</code>
 	 * @return	An array of floats
 	 */	
-	static public function toFloatArray(Data:String):Array<Float>
+	public static function toFloatArray(Data:String):Array<Float>
 	{
 		if ((Data != null) && (Data != "")) 
 		{

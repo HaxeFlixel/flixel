@@ -14,7 +14,7 @@ class FlxArrayUtil
 	 * @param 	fromIndex	The index to start the search from (optional, for optimization).
 	 * @return	The index of the element within the array. -1 if it wasn't found.
 	 */
-	@:generic static public function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
+	@:generic public static function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
 	{
 		#if flash
 		return untyped array.indexOf(whatToFind, fromIndex);
@@ -39,7 +39,7 @@ class FlxArrayUtil
 	 * @param	array		The array.
 	 * @param	newLength	The length you want the array to have.
 	 */
-	@:generic static public function setLength<T>(array:Array<T>, newLength:Int):Void
+	@:generic public static function setLength<T>(array:Array<T>, newLength:Int):Void
 	{
 		if (newLength < 0) return;
 		var oldLength:Int = array.length;
@@ -94,7 +94,7 @@ class FlxArrayUtil
 	 * @param 	element	The element to remove from the array
 	 * @return	The array
 	 */
-	@:generic static public function fastSplice<T>(array:Array<T>, element:T):Array<T>
+	@:generic public static function fastSplice<T>(array:Array<T>, element:T):Array<T>
 	{
 		var index = indexOf(array, element);
 		if (index >= 0)

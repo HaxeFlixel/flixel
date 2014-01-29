@@ -696,7 +696,7 @@ class PxBitmapFont
 	 * @param	PxHandle	String identifer for the font.
 	 * @param	PxFont		Font to store.
 	 */
-	static public function store(PxHandle:String, PxFont:PxBitmapFont):Void 
+	public static function store(PxHandle:String, PxFont:PxBitmapFont):Void
 	{
 		_storedFonts.set(PxHandle, PxFont);
 	}
@@ -707,14 +707,14 @@ class PxBitmapFont
 	 * @param	PxHandle	Identifier of font to fetch.
 	 * @return	Stored font, or null if no font was found.
 	 */
-	static public function fetch(PxHandle:String):PxBitmapFont 
+	public static function fetch(PxHandle:String):PxBitmapFont
 	{
 		var f:PxBitmapFont = _storedFonts.get(PxHandle);
 		
 		return f;
 	}
 	
-	static public function clearStorage():Void
+	public static function clearStorage():Void
 	{
 		for (font in _storedFonts)
 		{

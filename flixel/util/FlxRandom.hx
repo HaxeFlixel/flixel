@@ -144,7 +144,7 @@ class FlxRandom
 	 * @param	Max			The maximum value that should be returned. 2,147,483,647 by default.
 	 * @param	?Excludes	An optional array of values that should not be returned.
 	 */
-	static public function intRanged( Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int> ):Int
+	public static function intRanged( Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int> ):Int
 	{
 		if ( Min == Max )
 		{
@@ -186,7 +186,7 @@ class FlxRandom
 	 * @param	Max			The maximum value that should be returned. 33,554,429 by default.
 	 * @param	?Excludes	An optional array of values that should not be returned.
 	 */
-	static public function floatRanged( Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float> ):Float
+	public static function floatRanged( Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float> ):Float
 	{
 		if ( Min == Max )
 		{
@@ -250,7 +250,7 @@ class FlxRandom
 	 * @param	WeightsArray		An array of weights.
 	 * @return	A value between 0 and ( SelectionArray.length - 1 ), with a probability equivalent to the values in SelectionArray.
 	 */
-	static public function weightedPick( WeightsArray:Array<Float> ):Int
+	public static function weightedPick( WeightsArray:Array<Float> ):Int
 	{
 		for ( i in WeightsArray )
 		{
@@ -282,7 +282,7 @@ class FlxRandom
 	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic static public function getObject<T>( Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
+	@:generic public static function getObject<T>( Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
 	{
 		var selected:Null<T> = null;
 		
@@ -320,7 +320,7 @@ class FlxRandom
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
 	 * @return	The newly shuffled array.
 	 */
-	@:generic static public function shuffleArray<T>( Objects:Array<T>, HowManyTimes:Int ):Array<T>
+	@:generic public static function shuffleArray<T>( Objects:Array<T>, HowManyTimes:Int ):Array<T>
 	{
 		HowManyTimes = Std.int( Math.max( HowManyTimes, 0 ) );
 		
@@ -348,7 +348,7 @@ class FlxRandom
 	 * @param 	EndIndex 		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	A pseudorandomly chosen object from Objects.
 	 */
-	@:generic static public function weightedGetObject<T>( Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
+	@:generic public static function weightedGetObject<T>( Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
 	{
 		var selected:Null<T> = null;
 		
@@ -394,7 +394,7 @@ class FlxRandom
 	 * @param 	GreyScale	Whether or not to create a color that is strictly a shade of grey. False by default.
 	 * @return 	A color value in hex ARGB format.
 	 */
-	static public function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255, GreyScale:Bool = false ):Int
+	public static function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255, GreyScale:Bool = false ):Int
 	{
 		if ( Min < 0 )
 		{
@@ -455,7 +455,7 @@ class FlxRandom
 	 * @param	AlphaMaximum	The maximum alpha value for the output color, from 0 (fully transparent) to 255 (fully opaque). Set to -1 or ignore for the output to be always fully opaque.
 	 * @return	A pseudorandomly generated color within the ranges specified.
 	 */
-	static public function colorExt( RedMinimum:Int = 0, RedMaximum:Int = 255, GreenMinimum:Int = 0, GreenMaximum:Int = 255, BlueMinimum:Int = 0, BlueMaximum:Int = 255, AlphaMinimum:Int = -1, AlphaMaximum:Int = -1 ):Int
+	public static function colorExt( RedMinimum:Int = 0, RedMaximum:Int = 255, GreenMinimum:Int = 0, GreenMaximum:Int = 255, BlueMinimum:Int = 0, BlueMaximum:Int = 255, AlphaMinimum:Int = -1, AlphaMaximum:Int = -1 ):Int
 	{
 		if ( RedMinimum < 0 ) RedMinimum = 0;
 		if ( RedMinimum > 255 ) RedMinimum = 255;

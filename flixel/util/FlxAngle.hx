@@ -179,7 +179,7 @@ class FlxAngle
 	 * @see getSinTable
 	 * @see getCosTable
 	 */
-	static public function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Void
+	public static function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Void
 	{
 		var sin:Float = sinAmplitude;
 		var cos:Float = cosAmplitude;
@@ -206,7 +206,7 @@ class FlxAngle
 	 * 
 	 * @return	The new angle value, returns the same as the input angle if it was within bounds
 	 */
-	static public function wrapAngle(angle:Float):Int
+	public static function wrapAngle(angle:Float):Int
 	{
 		var result:Int = Std.int(angle);
 		
@@ -231,7 +231,7 @@ class FlxAngle
 	 * 
 	 * @return	The new angle value, returns the same as the input angle if it was within bounds
 	 */
-	static public function angleLimit(angle:Int, min:Int, max:Int):Int
+	public static function angleLimit(angle:Int, min:Int, max:Int):Int
 	{
 		var result:Int = angle;
 		
@@ -300,7 +300,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	static public function angleBetweenPoint(Sprite:FlxSprite, Target:FlxPoint, AsDegrees:Bool = false):Float
+	public static function angleBetweenPoint(Sprite:FlxSprite, Target:FlxPoint, AsDegrees:Bool = false):Float
 	{
 		var dx:Float = (Target.x) - (Sprite.x + Sprite.origin.x);
 		var dy:Float = (Target.y) - (Sprite.y + Sprite.origin.y);
@@ -320,7 +320,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	static public function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
+	public static function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		if (Object == null)
@@ -371,7 +371,7 @@ class FlxAngle
 	 * @param	point	Optional FlxPoint if you don't want a new one created
 	 * @return	The point in cartesian coords
 	 */
-	static public function getCartesianCoords(Radius:Float, Angle:Float, ?point:FlxPoint):FlxPoint
+	public static function getCartesianCoords(Radius:Float, Angle:Float, ?point:FlxPoint):FlxPoint
 	{
 		var p = point;
 		if (p == null)
@@ -392,7 +392,7 @@ class FlxAngle
 	 * @param	point	Optional FlxPoint if you don't want a new one created
 	 * @return	The point in polar coords (x = Radius (degrees), y = Angle)
 	 */
-	static public function getPolarCoords(X:Float, Y:Float, ?point:FlxPoint):FlxPoint
+	public static function getPolarCoords(X:Float, Y:Float, ?point:FlxPoint):FlxPoint
 	{
 		var p = point;
 		if (p == null)

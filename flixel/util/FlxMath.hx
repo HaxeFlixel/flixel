@@ -18,7 +18,7 @@ class FlxMath
 	 * @param	Precision	Number of decimal points to leave in float. Should be a positive number
 	 * @return	The rounded value of that number.
 	 */
-	static public function roundDecimal(Value:Float, Precision:Int):Float
+	public static function roundDecimal(Value:Float, Precision:Int):Float
 	{
 		var mult:Float = 1;
 		for (i in 0...Precision)
@@ -78,7 +78,7 @@ class FlxMath
 	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
 	 * @return	The altered Velocity value.
 	 */
-	static public function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
+	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
 	{
 		if (Acceleration != 0)
 		{
@@ -121,7 +121,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is odd. False if the given number is even.
 	 */
-	static public function isOdd(n:Float):Bool
+	public static function isOdd(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -140,7 +140,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is even. False if the given number is odd.
 	 */
-	static public function isEven(n:Float):Bool
+	public static function isEven(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -160,7 +160,7 @@ class FlxMath
 	 * 
 	 * @return	-1 if num1 is smaller, 1 if num2 is bigger, 0 if they are equal
 	 */
-	static public function numericComparison(num1:Float, num2:Float):Int
+	public static function numericComparison(num1:Float, num2:Float):Int
 	{
 		if (num2 > num1)
 		{
@@ -185,7 +185,7 @@ class FlxMath
 	 * 
 	 * @return	true if pointX/pointY is within the region, otherwise false
 	 */
-	static public function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
+	public static function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
 	{
 		if (pointX >= rectX && pointX <= (rectX + rectWidth))
 		{
@@ -205,7 +205,7 @@ class FlxMath
 	 * @param	rect		The FlxRect to test within
 	 * @return	true if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	static public function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
+	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
 	{
 		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
 		{
@@ -223,7 +223,7 @@ class FlxMath
 	 * 
 	 * @return	true if mouse is within the FlxRect, otherwise false
 	 */
-	static public function mouseInFlxRect(useWorldCoords:Bool, rect:FlxRect):Bool
+	public static function mouseInFlxRect(useWorldCoords:Bool, rect:FlxRect):Bool
 	{
 		if (rect == null)
 		{
@@ -249,7 +249,7 @@ class FlxMath
 	 * @param	rect		The Rectangle to test within
 	 * @return	true if pointX/pointY is within the Rectangle, otherwise false
 	 */
-	static public function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
+	public static function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
 	{
 		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
 		{
@@ -268,7 +268,7 @@ class FlxMath
 	 * @param 	min 	The minimum the value is allowed to be
 	 * @return The new value
 	 */
-	static public function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
+	public static function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
 	{
 		value += amount;
 		
@@ -293,7 +293,7 @@ class FlxMath
 	 * @param 	max 	The maximum the value is allowed to be
 	 * @return The wrapped value
 	 */
-	static public function wrapValue(value:Int, amount:Int, max:Int):Int
+	public static function wrapValue(value:Int, amount:Int, max:Int):Int
 	{
 		var diff:Int;
 
@@ -497,7 +497,7 @@ class FlxMath
 	 * @param	Number	The floating point number
 	 * @return	Amount of decimals
 	 */
-	static public function getDecimals(Number:Float):Int
+	public static function getDecimals(Number:Float):Int
 	{
 		var helperArray:Array<String> = Std.string(Number).split(".");
 		var decimals:Int = 0;
