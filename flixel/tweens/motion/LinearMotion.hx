@@ -39,11 +39,11 @@ class LinearMotion extends Motion
 		
 		if (UseDuration)
 		{
-			_target = DurationOrSpeed;
+			duration = DurationOrSpeed;
 		}
 		else
 		{
-			_target = distance / DurationOrSpeed;
+			duration = distance / DurationOrSpeed;
 		}
 		
 		_ease = Ease;
@@ -58,7 +58,7 @@ class LinearMotion extends Motion
 		super.update();
 		x = _fromX + _moveX * _t;
 		y = _fromY + _moveY * _t;
-		if (x == _fromX + _moveX && y == _fromY + _moveY && active && (_time >= _target))
+		if (x == _fromX + _moveX && y == _fromY + _moveY && active && (_time >= duration))
 		{
 			finished = true;
 		}

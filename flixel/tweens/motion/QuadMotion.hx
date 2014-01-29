@@ -50,11 +50,11 @@ class QuadMotion extends Motion
 		
 		if (UseDuration)
 		{
-			_target = DurationOrSpeed;
+			duration = DurationOrSpeed;
 		}
 		else
 		{
-			_target = distance / DurationOrSpeed;
+			duration = distance / DurationOrSpeed;
 		}
 		
 		_ease = Ease;

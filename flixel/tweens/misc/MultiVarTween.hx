@@ -47,7 +47,7 @@ class MultiVarTween extends FlxTween
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);
 		FlxArrayUtil.setLength(_range, 0);
-		_target = duration;
+		this.duration = duration;
 		_ease = ease;
 		var p:String;
 		

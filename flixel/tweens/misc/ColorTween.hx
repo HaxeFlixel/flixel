@@ -93,7 +93,7 @@ class ColorTween extends FlxTween
 		_rangeB = ((ToColor & 0xFF) / 255) - _startB;
 		_startA = alpha = FromAlpha;
 		_rangeA = ToAlpha - alpha;
-		_target = Duration;
+		duration = Duration;
 		_ease = Ease;
 		sprite = Sprite;
 		start();

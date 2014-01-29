@@ -31,7 +31,7 @@ class Fader extends FlxTween
 		if (volume < 0) volume = 0;
 		_start = FlxG.sound.volume;
 		_range = volume - _start;
-		_target = duration;
+		this.duration = duration;
 		_ease = ease;
 		start();
 	}

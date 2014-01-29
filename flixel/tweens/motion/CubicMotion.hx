@@ -43,7 +43,7 @@ class CubicMotion extends Motion
 		_bY = bY;
 		_toX = toX;
 		_toY = toY;
-		_target = duration;
+		this.duration = duration;
 		_ease = ease;
 		start();
 		return this;

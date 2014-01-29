@@ -49,12 +49,12 @@ class LinearPath extends Motion
 		
 		if (UseDuration)
 		{
-			_target = DurationOrSpeed;
+			duration = DurationOrSpeed;
 			_speed = distance / DurationOrSpeed;
 		}
 		else
 		{
-			_target = distance / DurationOrSpeed;
+			duration = distance / DurationOrSpeed;
 			_speed = DurationOrSpeed;
 		}
 		

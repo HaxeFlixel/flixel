@@ -60,7 +60,7 @@ class VarTween extends FlxTween
 		
 		_start = a;
 		_range = to - _start;
-		_target = duration;
+		this.duration = duration;
 		start();
 		return this;
 	}
