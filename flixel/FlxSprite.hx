@@ -829,7 +829,7 @@ class FlxSprite extends FlxObject
 			
 			if (!isSimpleRender)
 			{
-				if (_angleChanged)
+				if (_angleChanged && (bakedRotation <= 0))
 				{
 					var radians:Float = -angle * FlxAngle.TO_RAD;
 					_sinAngle = Math.sin(radians);
