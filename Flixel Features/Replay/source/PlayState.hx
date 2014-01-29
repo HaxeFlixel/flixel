@@ -36,7 +36,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.mouse.hide();
+		FlxG.mouse.visible = false;
 		
 		// Set up the TILEMAP
 		_tilemap = new FlxTilemap();

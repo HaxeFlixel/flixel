@@ -20,17 +20,12 @@ class State_Title extends FlxUIState
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
 		FlxG.log.redirectTraces = false; 
-		FlxG.mouse.show();		
-		
 		
 		if (Main.tongue == null) {
 			Main.tongue = new FireTongueEx();
 			Main.tongue.init("en-US");
 			FlxUIState.static_tongue = Main.tongue;
 		}
-		
-		/*var b:FlxUIButton = cast _ui.getAsset("saves");
-		var t:FlxUIText = cast b.label;*/
 		
 		_xml_id = "state_title";
 		
@@ -57,7 +52,6 @@ class State_Title extends FlxUIState
 						case "default_test": FlxG.switchState(new State_DefaultTest());
 						case "code_test": FlxG.switchState(new State_CodeTest());
 						case "popup": setSubState(new Popup_Demo());
-						case "shapes": FlxG.switchState(new State_TestShapes());
 					}
 				}
 			case "click_radio_group":

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="ResolutionPolicies" file="ResolutionPolicies" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="ScaleModes" file="ScaleModes" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
 	<window width="640" height="400" fps="60" orientation="portrait" resizable="true" if="web" />
 	<window width="640" height="400" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" if="desktop" />

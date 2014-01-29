@@ -35,7 +35,6 @@ class Piramid extends FlxNapeState
 	override public function create():Void 
 	{	
 		super.create();
-		FlxG.mouse.show();
 		
 		napeDebugEnabled = false;
 		

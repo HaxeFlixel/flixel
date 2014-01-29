@@ -80,16 +80,16 @@ class State_CodeTest extends FlxUIState
 		
 		/***Toggle buttons***/
 			
-		var button1 = new FlxUIButton(300, 200, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton, [null]);
+		var button1 = new FlxUIButton(300, 200, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton.bind(null));
 		button1.loadGraphicSlice9(null, 0, 0, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		
-		var button2 = new FlxUIButton(300, 230, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton, [null]);
+		var button2 = new FlxUIButton(300, 230, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton.bind(null));
 		button2.loadGraphicSlice9(null, 0, 0, null, FlxUI9SliceSprite.TILE_NONE, -1, true);
 		
-		var button3 = new FlxUIButton(300, 260, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton, [null]);
+		var button3 = new FlxUIButton(300, 260, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton.bind(null));
 		button3.loadGraphicSlice9(null, 0, 0, null,FlxUI9SliceSprite.TILE_NONE, -1, true);
 		
-		var button4 = new FlxUIButton(300, 290, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton, [null]);
+		var button4 = new FlxUIButton(300, 290, _tongue.get("$MENU_TOGGLE", "ui"), _onClickButton.bind(null));
 		button4.loadGraphicSlice9(null, 0, 0, null, FlxUI9SliceSprite.TILE_NONE, -1, true);		
 		
 		add(button1);
@@ -105,7 +105,7 @@ class State_CodeTest extends FlxUIState
 		var tabs = [ { id:"tab_1", label:_tongue.get("$MENU_TAB_1", "ui") },
 					 { id:"tab_2", label:_tongue.get("$MENU_TAB_2", "ui") },
 					 { id:"tab_3", label:_tongue.get("$MENU_TAB_3", "ui") },
-					 { id:"tab_4", label:_tongue.get("$MENU_TAB_4", "ui") }];		
+					 { id:"tab_4", label:_tongue.get("$MENU_TAB_4", "ui") }];
 		
 		//Make the tab menu itself:
 		var tab_menu = new FlxUITabMenu(null, tabs, true);
@@ -158,7 +158,7 @@ class State_CodeTest extends FlxUIState
 		back_btn.loadGraphicSlice9(null, W, 0, null);
 		back_btn.id = "start";
 		back_btn.x = (FlxG.width - back_btn.width) / 2;
-		back_btn.onUp.setCallback(_onClickButton, [["back"]]);
+		back_btn.onUp.callback = _onClickButton.bind(["back"]);
 		
 		add(back_btn);
 		

@@ -69,7 +69,6 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		FlxG.camera.bgColor = 0xFF01355F;
-		FlxG.mouse.show();
 		
 		var txt:FlxText = new FlxText(0, 10, 640, " Sprite filters - click on each sprite to animate or stop animation. ", 8);
 		txt.alignment = "center";

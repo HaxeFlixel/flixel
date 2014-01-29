@@ -55,10 +55,6 @@
 		</locale>
 	</button>
 	
-	<button id="shape" center_x="true" x="-100" y="450" use_def="text_button_wide" group="top" label="$TITLE_SHAPES">
-		<param type="string" value="shapes"/>
-	</button>
-	
 	<button id="popup" center_x="true" x="0" y="450" use_def="text_button" group="top" label="$TITLE_POPUP">
 		<param type="string" value="popup"/>
 	</button>

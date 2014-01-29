@@ -13,6 +13,8 @@ class PlayState extends FlxState
 {
 	override public function create():Void
 	{			
+		FlxG.mouse.visible = false;
+		
 		// Background
 		FlxG.state.bgColor = 0xffacbcd7;
 		var decoration:FlxSprite = new FlxSprite(256, 159, "assets/bg.png");

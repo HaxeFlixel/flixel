@@ -4,41 +4,39 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="project.xml" />
-    <movie fps="30" />
-    <movie width="800" />
-    <movie height="600" />
+    <movie path="Project.xml" />
+    <movie fps="60" />
+    <movie width="640" />
+    <movie height="480" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
     <movie background="FFFFFF" />
+    <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="export\windows\cpp\haxe" />
+    <class path="C:\HaxeToolkit\haxe\lib/openfl/1,0,5/" />
+    <class path="C:\HaxeToolkit\haxe\lib/flixel/git/" />
+    <class path="export/flash/haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="FLX_BMP_DEBUG&#xA;tools=1.1.6&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;openfl=1.2&#xA;display&#xA;windows&#xA;desktop&#xA;no-compilation" />
+    <option directives="tools=1&#xA;FLX_NO_DEBUG&#xA;openfl_ver=1.0.5&#xA;openfl&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;web" />
     <option flashStrict="False" />
-    <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
-    <option enabledebug="True" />
-    <option additional="--no-output&#xA;--macro allowPackage(&quot;flash&quot;)&#xA;--macro keep(&quot;Main&quot;)" />
+    <option enabledebug="False" />
+    <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="flixel" />
-    <library name="flixel-ui" />
-    <library name="flixel-addons" />
     <library name="openfl" />
-    <library name="firetongue" />
-    <library name="task" />
+    <library name="flixel" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\Main.hx" />
+    <compile path="Source\TestDrawRect.hx" />
   </compileTargets>
   <!-- Assets to embed into the output SWF -->
   <library>
@@ -46,7 +44,7 @@
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <hidden path="obj" />
+    <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />

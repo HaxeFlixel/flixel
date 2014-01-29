@@ -31,6 +31,8 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+		
 		_bat = new FlxSprite(180, 220);
 		_bat.makeGraphic(40, 6, FlxColor.HOT_PINK);
 		_bat.immovable = true;

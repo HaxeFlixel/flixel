@@ -24,7 +24,6 @@ class Balls extends FlxNapeState
 	override public function create():Void 
 	{	
 		super.create();
-		FlxG.mouse.show();
 		
 		// Sets gravity.
 		FlxNapeState.space.gravity.setxy(0, 1500);

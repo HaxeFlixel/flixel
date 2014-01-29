@@ -49,8 +49,6 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.mouse.show();
-		
 		// Here we actually initialize out emitter
 		// The parameters are X, Y and Size (Maximum number of particles the emitter can store)
 		_emitter = new FlxEmitter(10, FlxG.height / 2, 200);

@@ -39,7 +39,7 @@ class PlayState extends FlxState
 	{
 		level = new FlxTilemapExt();
 		
-		FlxG.mouse.hide();
+		FlxG.mouse.visible = false;
 		
 		_hud = new FlxGroup();
 

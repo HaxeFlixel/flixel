@@ -61,6 +61,10 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		#if !FLX_NO_MOUSE
+		FlxG.mouse.visible = false;
+		#end
+		
 		// Here we are creating a pool of 100 little metal bits that can be exploded.
 		// We will recycle the crap out of these!
 		_littleGibs = new FlxEmitter();
@@ -205,6 +209,10 @@ class PlayState extends FlxState
 		FlxG.watch.add(_enemies, "length", "numEnemies");
 		FlxG.watch.add(_enemyBullets, "length", "numEnemyBullets");
 		FlxG.watch.add(FlxG.sound.list, "length", "numSounds");
+		
+		#if android
+		add(Player.virtualPad);
+		#end
 		
 		super.create();
 	}
@@ -366,7 +374,7 @@ class PlayState extends FlxState
 	private function onVictory():Void
 	{
 		// Reset the sounds for going inbetween the menu etc
-		FlxG.sound.destroySounds(true);
+		FlxG.sound.destroy(true);
 		FlxG.switchState(new VictoryState());
 	}
 	

@@ -12,16 +12,15 @@ class Button extends FlxButton
 	/**
 	 * Create a new minimalist button that has black and white text and no background.
 	 * 
-	 * @param	X			The X position of the button.
-	 * @param	Y			The Y position of the button.
-	 * @param	Label		The text for this button to display.
-	 * @param	?Callback	An optional function to call when the button is clicked.
-	 * @param	?Params		Optional parameters to pass to the callback function.
-	 * @param	?Width		The width of this button. By default, it's set to seven times the length of the label string.
+	 * @param	X		The X position of the button.
+	 * @param	Y		The Y position of the button.
+	 * @param	Label	The text for this button to display.
+	 * @param	OnDown	An optional function to call when the button is clicked.
+	 * @param	Width	The width of this button. By default, it's set to seven times the length of the label string.
 	 */
-	public function new( X:Int = 0, Y:Int = 0, Label:String, ?Callback:Dynamic, ?Params:Array<Dynamic>, Width:Int = -1 )
+	public function new( X:Int = 0, Y:Int = 0, Label:String, ?OnDown:Void->Void, Width:Int = -1 )
 	{
-		super( X, Y, Label, Callback, Params );
+		super( X, Y, Label, OnDown );
 		
 		if (Width > 0) {
 			width = Width;

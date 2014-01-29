@@ -48,7 +48,6 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
-		FlxG.mouse.show();
 		
 		_img = new FlxSprite(0, 0);
 		_img.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);

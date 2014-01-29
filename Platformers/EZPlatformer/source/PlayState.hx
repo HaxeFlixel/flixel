@@ -27,6 +27,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void 
 	{
+		FlxG.mouse.visible = false;
 		FlxG.cameras.bgColor = 0xffaaaaaa;
 		
 		_level = new FlxTilemap();

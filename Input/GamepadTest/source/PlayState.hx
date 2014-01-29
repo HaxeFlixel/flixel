@@ -46,8 +46,9 @@ class PlayState extends FlxState
 
 	override public function create():Void 
 	{
+		FlxG.mouse.visible = false;
 		FlxG.cameras.bgColor = FlxColor.WHITE;
-
+		
 		#if (cpp || neko)
 		// Getting first availble gamepad
 		_gamePad = FlxG.gamepads.lastActive;

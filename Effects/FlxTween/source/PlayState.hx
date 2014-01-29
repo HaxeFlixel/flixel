@@ -60,10 +60,6 @@ class PlayState extends FlxState
 
 	override public function create():Void
 	{
-		FlxG.cameras.bgColor = FlxColor.BLACK;
-		#if !mobile
-		FlxG.mouse.show();
-		#end
 		FlxG.autoPause = false;
 		
 		// Set up an array containing all the different ease functions there are

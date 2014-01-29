@@ -10,7 +10,7 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff050510;
-		FlxG.mouse.show("assets/cursor.png", 2);
+		FlxG.mouse.load("assets/cursor.png", 2);
 		
 		var text:FlxText;
 		text = new FlxText(FlxG.width / 2 - 100, FlxG.height / 3 - 30, 200, "Slope Demo");

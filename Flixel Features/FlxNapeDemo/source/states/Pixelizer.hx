@@ -13,16 +13,13 @@ import openfl.Assets;
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
-
 class Pixelizer extends FlxNapeState 
 {
-
 	private var shooter:Shooter;
 	
 	override public function create():Void 
 	{	
 		super.create();
-		FlxG.mouse.show();
 		
 		// Sets gravity.
 		//FlxNapeState.space.gravity.setxy(0, 1500);
@@ -32,7 +29,6 @@ class Pixelizer extends FlxNapeState
 		
 		shooter = new Shooter();
 		add(shooter);
-											
 	}
 	
 	private function createPixels() 
@@ -58,5 +54,4 @@ class Pixelizer extends FlxNapeState
 		if (FlxG.keys.justPressed.G)
 			napeDebugEnabled = false;
 	}
-	
 }

@@ -53,12 +53,8 @@ class MenuState extends FlxState
 	{
 		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
-		// Show the mouse (in case it hasn't been disabled)
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.show();
-		#end
 		
-		var area:FlxSprite = new FlxSprite( 5, 5 );
+		var area = new FlxSprite( 5, 5 );
 		area.makeGraphic( FlxG.width - 200, FlxG.height - 10, 0x88000000 );
 		
 		_buttonGroup = new FlxTypedGroup<FlxButton>();
@@ -68,7 +64,7 @@ class MenuState extends FlxState
 		
 		for ( i in 0...BUTTON_TEXT().length )
 		{
-			var button:FlxButton = new FlxButton( buttonX, buttonY, BUTTON_TEXT()[i], buttonCallback, [ BUTTON_TEXT()[i] ] );
+			var button = new FlxButton( buttonX, buttonY, BUTTON_TEXT()[i], buttonCallback.bind(BUTTON_TEXT()[i]));
 			button.makeGraphic( 185, 20, 0x88DDDDDD );
 			_buttonGroup.add( button );
 			

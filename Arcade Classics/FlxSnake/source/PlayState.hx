@@ -39,6 +39,8 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+		
 		// Get the head piece from the body For easy later reference, and also visually change the colour a little
 		var screenMiddleX:Int = Math.floor(FlxG.width / 2);
 		var screenMiddleY:Int = Math.floor(FlxG.height / 2);

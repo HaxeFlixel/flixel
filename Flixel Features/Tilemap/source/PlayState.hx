@@ -43,6 +43,8 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+		
 		// Creates a new tilemap with no arguments
 		_collisionMap = new FlxTilemap();
 		

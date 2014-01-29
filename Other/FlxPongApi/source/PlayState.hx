@@ -35,7 +35,7 @@ class PlayState extends FlxState
 		FlxG.cameras.bgColor = Reg.lite;
 		
 		#if !FLX_NO_MOUSE
-		FlxG.mouse.hide();
+		FlxG.mouse.visible = false;
 		#end
 		
 		_debris = new Emitter(FlxG.width, 0, 2, Reg.med_lite );
