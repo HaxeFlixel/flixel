@@ -80,7 +80,7 @@ class ParticleState extends FlxState
 	/**
 	 * Helper function to start the emtitter. Called from the FlxSliders!
 	 */
-	inline private function startEmitter(?Value:Null<Float>):Void
+	private inline function startEmitter(?Value:Null<Float>):Void
 	{
 		// Prevent emitter from restarting when using a slider before releasing the mouse
 		if (FlxG.mouse.justPressed) 

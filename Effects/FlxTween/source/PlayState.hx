@@ -282,7 +282,7 @@ class PlayState extends FlxState
 
 	private var _currentEase(get, never):EaseFunction;
 
-	inline private function get__currentEase():EaseFunction
+	private inline function get__currentEase():EaseFunction
 	{
 		return _easeInfo[_currentEaseIndex].ease;
 	}

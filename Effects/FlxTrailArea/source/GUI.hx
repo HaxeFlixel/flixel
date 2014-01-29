@@ -78,7 +78,7 @@ class GUI extends FlxSpriteGroup
 		}
 	}
 	
-	inline private function toggleSimpleRender():Void
+	private inline function toggleSimpleRender():Void
 	{
 		_trailArea.simpleRender = !_trailArea.simpleRender; 
 	}
