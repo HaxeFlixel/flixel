@@ -46,6 +46,9 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
+#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+import flixel.input.FlxSwipe;
+#end
 
 /**
  * Global helper class for audio, input, the camera system, the debugger and other global properties.
@@ -153,6 +156,22 @@ class FlxG
 	 */
 	public static var mouse(default, null):FlxMouse;
 	#end
+	
+	#if !FLX_NO_TOUCH
+	/**
+	 * A reference to a <code>FlxTouchManager</code> object. 
+	 * Useful for devices with multitouch support.
+	 */
+	public static var touches(default, null):FlxTouchManager;
+	#end
+	
+	#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+	/**
+	 * Contains all "swipes" from both mouse and touch input that have just ended.
+	 */
+	@:allow(flixel.FlxGame)
+	public static var swipes(default, null):Array<FlxSwipe>;
+	#end
 
 	#if !FLX_NO_KEYBOARD
 	/**
@@ -160,14 +179,6 @@ class FlxG
 	 * pressed with <code>if (FlxG.keys.pressed.LEFT) { } </code>in <code>update()</code>.
 	 */
 	public static var keys(default, null):FlxKeyboard;
-	#end
-
-	#if !FLX_NO_TOUCH
-	/**
-	 * A reference to a <code>FlxTouchManager</code> object. 
-	 * Useful for devices with multitouch support.
-	 */
-	public static var touches(default, null):FlxTouchManager;
 	#end
 	
 	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
@@ -183,10 +194,6 @@ class FlxG
 	 */
 	public static var android(default, null):FlxAndroidKeys;
 	#end
-	
-	/**
-	 * From here on: frontEnd classes.
-	 */ 
 	
 	/**
 	 * A reference to the <code>InputFrontEnd</code> object. Mostly used internally, 
@@ -451,6 +458,10 @@ class FlxG
 		
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.loadSavedPrefs();
+		#end
+		
+		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+		swipes = new Array<FlxSwipe>();
 		#end
 		
 		FlxAssets.init();

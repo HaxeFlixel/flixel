@@ -352,14 +352,16 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_matrix = null;
 		#end
 		
+		_leftButton   = FlxG.safeDestroy(_leftButton);
+		_middleButton = FlxG.safeDestroy(_middleButton);
+		_rightButton  = FlxG.safeDestroy(_rightButton);
+		
 		if (_cursorBitmapData != null)
 		{
 			_cursorBitmapData.dispose();
 			_cursorBitmapData = null;
 		}
 	}
-	
-	/** IFlxInput functions **/
 	
 	/**
 	 * Resets the just pressed/just released flags and sets mouse to not pressed.
@@ -372,6 +374,44 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_middleButton.reset();
 		_rightButton.reset();
 		#end
+	}
+	
+	/**
+	 * @param   CursorContainer   The cursor container sprite passed by FlxGame
+	 */
+	@:allow(flixel.FlxG)
+	private function new(CursorContainer:Sprite)
+	{
+		super();
+		
+		cursorContainer = CursorContainer;
+		cursorContainer.mouseChildren = false;
+		cursorContainer.mouseEnabled = false;
+		
+		_point = new FlxPoint();
+		_globalScreenPosition = new FlxPoint();
+		
+		_leftButton = new FlxMouseButton(FlxMouseButton.LEFT);
+		
+		var stage = Lib.current.stage;
+		stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
+		stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
+		
+		#if (!FLX_NO_MOUSE_ADVANCED && !js)
+		_middleButton = new FlxMouseButton(FlxMouseButton.MIDDLE);
+		_rightButton = new FlxMouseButton(FlxMouseButton.RIGHT);
+		
+		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
+		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
+		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
+		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
+		
+		stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
+		#end
+		
+		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		
+		Mouse.hide();
 	}
 	
 	/**
@@ -435,46 +475,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		Mouse.show();
 		#end
-	}
-	
-	/**
-	 * Creates a new FlxMouse
-	 * 
-	 * @param   CursorContainer   The cursor container sprite passed by FlxGame
-	 */
-	@:allow(flixel.FlxG)
-	private function new(CursorContainer:Sprite)
-	{
-		super();
-		
-		cursorContainer = CursorContainer;
-		cursorContainer.mouseChildren = false;
-		cursorContainer.mouseEnabled = false;
-		
-		_point = new FlxPoint();
-		_globalScreenPosition = new FlxPoint();
-		
-		_leftButton = new FlxMouseButton(true);
-		
-		var stage = Lib.current.stage;
-		stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
-		stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
-		
-		#if (!FLX_NO_MOUSE_ADVANCED && !js)
-		_middleButton = new FlxMouseButton();
-		_rightButton = new FlxMouseButton();
-		
-		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
-		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
-		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
-		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
-		
-		stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
-		#end
-		
-		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		
-		Mouse.hide();
 	}
 	
 	@:allow(flixel.FlxGame)
