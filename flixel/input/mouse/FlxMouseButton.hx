@@ -2,35 +2,34 @@ package flixel.input.mouse;
 
 import flash.events.MouseEvent;
 import flixel.FlxG;
+import flixel.input.FlxSwipe;
+import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxPoint;
 
-/**
- * A helper class for mouse input
- */
-class FlxMouseButton
+class FlxMouseButton implements IFlxDestroyable
 {
+	public static inline var LEFT  :Int = -1;
+	public static inline var MIDDLE:Int = -2;
+	public static inline var RIGHT :Int = -3;
+	
 	public static inline var FAST_PRESS_RELEASE:Int = -2;
 	public static inline var JUST_RELEASED:Int = -1;
 	public static inline var RELEASED:Int = 0;
 	public static inline var PRESSED:Int = 1;
 	public static inline var JUST_PRESSED:Int = 2;
 
-	/**
-	 * The current state of this mouse button.
-	 */
 	public var current:Int = RELEASED;
-	/**
-	 * The last state of this mouse button.
-	 */
 	public var last:Int = RELEASED;
 	
-	/**
-	 * Whether this is the left mouse button.
-	 */
-	private var _isLeftMouse:Bool = false;
+	private var _ID:Int;
 	
-	public function new(IsLeftMouse:Bool = false)
+	private var _justPressedPosition:FlxPoint;
+	private var _justPressedTimeInTicks:Float;
+	
+	public function new(ID:Int)
 	{
-		_isLeftMouse = IsLeftMouse;
+		_ID = ID;
+		_justPressedPosition = new FlxPoint();
 	}
 	
 	/**
@@ -52,16 +51,27 @@ class FlxMouseButton
 		}
 		
 		last = current;
+		
+		if (justPressed())
+		{
+			_justPressedPosition.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
+			_justPressedTimeInTicks = FlxG.game.ticks;
+		}
+		else if (justReleased())
+		{
+			FlxG.swipes.push(new FlxSwipe(_ID, _justPressedPosition, FlxG.mouse.getScreenPosition(), _justPressedTimeInTicks));
+		}
 	}
 	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param 	FlashEvent Flash mouse event.
-	 */
+	public function destroy():Void
+	{
+		_justPressedPosition = null;
+	}
+	
 	public function onDown(FlashEvent:MouseEvent):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (_isLeftMouse && FlxG.debugger.visible)
+		if ((_ID == LEFT) && FlxG.debugger.visible)
 		{
 			if (FlxG.game.debugger.hasMouse)
 			{

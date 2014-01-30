@@ -673,6 +673,14 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
 		#end
+		
+		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+		for (swipe in FlxG.swipes)
+		{
+			swipe = null;
+		}
+		FlxG.swipes = [];
+		#end
 	}
 	
 	private function updateInput():Void
