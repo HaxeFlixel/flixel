@@ -8,9 +8,9 @@ import flixel.util.FlxPoint;
 
 class FlxMouseButton implements IFlxDestroyable
 {
-	public static inline var LEFT  :Int = 0;
-	public static inline var MIDDLE:Int = 1;
-	public static inline var RIGHT :Int = 2;
+	public static inline var LEFT  :Int = -1;
+	public static inline var MIDDLE:Int = -2;
+	public static inline var RIGHT :Int = -3;
 	
 	public static inline var FAST_PRESS_RELEASE:Int = -2;
 	public static inline var JUST_RELEASED:Int = -1;
