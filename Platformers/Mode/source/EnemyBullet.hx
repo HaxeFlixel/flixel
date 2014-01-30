@@ -44,7 +44,7 @@ class EnemyBullet extends FlxSprite
 		}
 		velocity.x = 0;
 		velocity.y = 0;
-		if(onScreen())
+		if (isOnScreen())
 		{
 			FlxG.sound.play("Jump");
 		}

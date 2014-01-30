@@ -89,7 +89,7 @@ class GUI extends FlxSpriteGroup
 	 */
 	override public function destroy():Void
 	{
-		FlxG.safeDestroy(_trailArea);
+		_trailArea = FlxG.safeDestroy(_trailArea);
 		_sliderCallback = null;
 		super.destroy();
 	}

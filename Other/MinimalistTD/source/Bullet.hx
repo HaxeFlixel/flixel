@@ -10,7 +10,7 @@ class Bullet extends FlxSprite
 	/**
 	 * The amount of damage this bullet will do to an enemy. Set only via init().
 	 */
-	public var damage(default,null):Int;
+	public var damage(default, null):Int;
 	
 	/**
 	 * This bullet's targeted enemy. Set via init(), and determines direction of motion.
@@ -38,7 +38,7 @@ class Bullet extends FlxSprite
 	 * @param	Target		The desired target, an Enemy.
 	 * @param	Damage		The amount of damage this bullet can do, usually determined by the upgrade level of the tower.
 	 */
-	public function init( X:Float, Y:Float, Target:Enemy, Damage:Int ):Void
+	public function init(X:Float, Y:Float, Target:Enemy, Damage:Int):Void
 	{
 		reset( X, Y );
 		_target = Target;
@@ -49,14 +49,16 @@ class Bullet extends FlxSprite
 	{
 		// This bullet missed its target and flew off-screen; no reason to keep it around.
 		
-		if ( !onScreen( FlxG.camera ) ) {
+		if (!isOnScreen(FlxG.camera)) 
+		{
 			kill();
 		}
 		
 		// Move toward the target that was assigned in init().
 		
-		if ( _target.alive ) {
-			FlxVelocity.moveTowardsObject( this, _target, 200 );
+		if (_target.alive)
+		{
+			FlxVelocity.moveTowardsObject(this, _target, 200);
 		}
 		
 		super.update();
