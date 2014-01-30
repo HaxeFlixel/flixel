@@ -48,8 +48,8 @@ class FlxRandom
 	 * @see 	http://en.wikipedia.org/wiki/Linear_congruential_generator
 	 * @see 	Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988). "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
 	 */
-	inline static private var MULTIPLIER:Int = 48271;
-	inline static private var MODULUS:Int = 2147483647;
+	private static inline var MULTIPLIER:Int = 48271;
+	private static inline var MODULUS:Int = 2147483647;
 	
 	/**
 	 * Internal helper variables.
