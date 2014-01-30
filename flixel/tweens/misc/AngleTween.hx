@@ -59,7 +59,7 @@ class AngleTween extends FlxTween
 		{
 			_range = FlxRandom.floatRanged(180, -180);
 		}
-		_target = Duration;
+		duration = Duration;
 		_ease = Ease;
 		sprite = Sprite;
 		start();

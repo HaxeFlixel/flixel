@@ -13,7 +13,7 @@ class FlxRandom
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
 	 * If you want, you can set the seed with an integer between 1 and 2,147,483,647 inclusive. However, FlxG automatically sets this with a new random seed when starting your game. Altering this yourself may break recording functionality!
 	 */
-	static public var globalSeed(default, set):Int = 1;
+	public static var globalSeed(default, set):Int = 1;
 	
 	/**
 	 * Internal function to update the internal seed whenever the global seed is reset, and keep the global seed's value in range.
@@ -39,7 +39,7 @@ class FlxRandom
 	/**
 	 * Internal seed used to generate new random numbers.
 	 */
-	static private var _internalSeed:Int = 1;
+	private static var _internalSeed:Int = 1;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
@@ -48,31 +48,31 @@ class FlxRandom
 	 * @see 	http://en.wikipedia.org/wiki/Linear_congruential_generator
 	 * @see 	Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988). "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
 	 */
-	inline static private var MULTIPLIER:Int = 48271;
-	inline static private var MODULUS:Int = 2147483647;
+	private static inline var MULTIPLIER:Int = 48271;
+	private static inline var MODULUS:Int = 2147483647;
 	
 	/**
 	 * Internal helper variables.
 	 */
-	static private var _intHelper:Int = 0;
-	static private var _intHelper2:Int = 0;
-	static private var _intHelper3:Int = 0;
-	static private var _floatHelper:Float = 0;
-	static private var _arrayFloatHelper:Array<Float> = null;
-	static private var _red:Int = 0;
-	static private var _green:Int = 0;
-	static private var _blue:Int = 0;
-	static private var _alpha:Int = 0;
+	private static var _intHelper:Int = 0;
+	private static var _intHelper2:Int = 0;
+	private static var _intHelper3:Int = 0;
+	private static var _floatHelper:Float = 0;
+	private static var _arrayFloatHelper:Array<Float> = null;
+	private static var _red:Int = 0;
+	private static var _green:Int = 0;
+	private static var _blue:Int = 0;
+	private static var _alpha:Int = 0;
 	
 	#if FLX_RECORD
 	/**
 	 * Internal storage for the seed used to generate the most recent state.
 	 */
-	static private var _stateSeed:Int = 1;
+	private static var _stateSeed:Int = 1;
 	/**
 	 * The seed to be used by the recording requested in FlxGame.
 	 */
-	static private var _recordingSeed:Int = 1;
+	private static var _recordingSeed:Int = 1;
 	
 	/**
 	 * Update the seed that was used to create the most recent state.

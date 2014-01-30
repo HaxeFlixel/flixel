@@ -35,7 +35,7 @@ class NumTween extends FlxTween
 	{
 		_start = value = fromValue;
 		_range = toValue - value;
-		_target = duration;
+		this.duration = duration;
 		_ease = ease;
 		start();
 		return this;

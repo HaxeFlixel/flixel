@@ -49,12 +49,12 @@ class QuadPath extends Motion
 		
 		if (UseDuration)
 		{
-			_target = DurationOrSpeed;
+			duration = DurationOrSpeed;
 			_speed = _distance / DurationOrSpeed;
 		}
 		else
 		{
-			_target = _distance / DurationOrSpeed;
+			duration = _distance / DurationOrSpeed;
 			_speed = DurationOrSpeed;
 		}
 		

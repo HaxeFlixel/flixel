@@ -36,7 +36,7 @@ class VCRFrontEnd
 	public var timeout:Int = 0;
 
 	#if flash
-	static private var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
+	private static var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 
 	static private inline var DEFAULT_FILE_NAME:String = "replay.fgr";
 

@@ -15,19 +15,19 @@ class FlxAngle
 	/**
 	 * Use this to access the cos-table generated via <code>sinCosGenerator()</code>.
 	 */
-	static public var cosTable:Array<Float> = new Array<Float>();
+	public static var cosTable:Array<Float> = new Array<Float>();
 	/**
 	 * Use this to access the sin-table generated via <code>sinCosGenerator()</code>.
 	 */
-	static public var sinTable:Array<Float> = new Array<Float>();
+	public static var sinTable:Array<Float> = new Array<Float>();
 	/**
 	 * Convert radians to degrees by multiplying it with this value.
 	 */
-	static public var TO_DEG:Float = 180 / Math.PI;
+	public static var TO_DEG:Float = 180 / Math.PI;
 	/**
 	 * Convert degrees to radians by multiplying it with this value.
 	 */
-	static public var TO_RAD:Float = Math.PI / 180;
+	public static var TO_RAD:Float = Math.PI / 180;
 	
 	/**
 	 * Rotates a point in 2D space around another point by the given angle.
@@ -123,26 +123,23 @@ class FlxAngle
 	
 	/**
 	 * Calculates the angle between two points.  0 degrees points straight up.
+	 * 
 	 * @param	Point1		The X coordinate of the point.
 	 * @param	Point2		The Y coordinate of the point.
-	 * @param	Round		Round x and y coordinates or not.
 	 * @return	The angle in degrees, between -180 and 180.
 	 */
-	public static inline function getAngle(Point1:FlxPoint, Point2:FlxPoint, Round:Bool = false):Float
+	public static inline function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
 	{
 		var x:Float = Point2.x - Point1.x;
 		var y:Float = Point2.y - Point1.y;
-		if(Round)
-		{
-			x = Math.fround(x);
-			y = Math.fround(y);
-		}
 		var angle:Float = 0;
+		
 		if ((x != 0) || (y != 0))
 		{
 			var c1:Float = Math.PI * 0.25;
 			var c2:Float = 3 * c1;
 			var ay:Float = (y < 0) ? -y : y;
+			
 			if (x >= 0)
 			{
 				angle = c1 - c1 * ((x - ay) / (x + ay));
@@ -151,7 +148,8 @@ class FlxAngle
 			{
 				angle = c2 - c1 * ((x + ay) / (ay - x));
 			}
-			angle = ((y < 0)? -angle:angle) * TO_DEG;
+			angle = ((y < 0) ? - angle : angle) * TO_DEG;
+			
 			if (angle > 90)
 			{
 				angle = angle - 270;

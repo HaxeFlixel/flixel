@@ -42,11 +42,11 @@ class CircularMotion extends Motion
 		
 		if (UseDuration)
 		{
-			_target = DurationOrSpeed;
+			duration = DurationOrSpeed;
 		}
 		else
 		{
-			_target = (_radius * _CIRC) / DurationOrSpeed;
+			duration = (_radius * _CIRC) / DurationOrSpeed;
 		}
 		
 		_ease = Ease;
