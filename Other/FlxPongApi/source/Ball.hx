@@ -15,7 +15,7 @@ class Ball extends PongSprite
 	private var _exhaust:Emitter;
 	private var _emitter:Emitter;
 	
-	inline static private function DEFAULT_VELOCITY():FlxPoint
+	inline private static function DEFAULT_VELOCITY():FlxPoint
 	{
 		return new FlxPoint( -128, -128 );
 	}

@@ -23,9 +23,9 @@ import flixel.input.gamepad.FlxGamepad;
  */
 class PlayState extends FlxState
 {
-	inline static public var TILE_SIZE:Int = 8;
-	inline static public var MAP_WIDTH_IN_TILES:Int = 80;
-	inline static public var MAP_HEIGHT_IN_TILES:Int = 80;
+	public static inline var TILE_SIZE:Int = 8;
+	public static inline var MAP_WIDTH_IN_TILES:Int = 80;
+	public static inline var MAP_HEIGHT_IN_TILES:Int = 80;
 	
 	private var _map:Array<Int>;
 	private var _tileMap:FlxTilemap;

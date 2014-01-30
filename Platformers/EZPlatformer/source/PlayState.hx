@@ -16,7 +16,7 @@ import openfl.Assets;
  */
 class PlayState extends FlxState
 {
-	static private var _justDied:Bool = false;
+	private static var _justDied:Bool = false;
 	
 	private var _level:FlxTilemap;
 	private var _player:FlxSprite;

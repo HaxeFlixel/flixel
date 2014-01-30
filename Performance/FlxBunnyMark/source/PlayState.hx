@@ -23,10 +23,10 @@ import openfl.Assets;
  */
 class PlayState extends FlxState
 {
-	inline static public var INITIAL_AMOUNT:Int = 1000;
+	public static inline var INITIAL_AMOUNT:Int = 1000;
 	
-	static public var complex:Bool = false;
-	static public var offScreen:Bool = false;
+	public static var complex:Bool = false;
+	public static var offScreen:Bool = false;
 	
 	private var _changeAmount:Int = Std.int(INITIAL_AMOUNT / 2);
 	private var _times:Array<Float>;

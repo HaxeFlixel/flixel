@@ -29,21 +29,21 @@ class PlayState extends FlxState
 	/**
 	 * The duration of the tween
 	 */
-	inline static private var DURATION:Float = 1;
+	private static inline var DURATION:Float = 1;
 
 	/**
 	 * The tween types
 	 */
-	inline static private var VAR				:Int = 0;
-	inline static private var MULTI_VAR			:Int = 1;
-	inline static private var ANGLE				:Int = 2;
-	inline static private var COLOR				:Int = 3;
-	inline static private var LINEAR_MOTION		:Int = 4;
-	inline static private var LINEAR_PATH		:Int = 5;
-	inline static private var CIRCULAR_MOTION	:Int = 6;
-	inline static private var CUBIC_MOTION		:Int = 7;
-	inline static private var QUAD_MOTION		:Int = 8;
-	inline static private var QUAD_PATH			:Int = 9;
+	private static inline var VAR				:Int = 0;
+	private static inline var MULTI_VAR			:Int = 1;
+	private static inline var ANGLE				:Int = 2;
+	private static inline var COLOR				:Int = 3;
+	private static inline var LINEAR_MOTION		:Int = 4;
+	private static inline var LINEAR_PATH		:Int = 5;
+	private static inline var CIRCULAR_MOTION	:Int = 6;
+	private static inline var CUBIC_MOTION		:Int = 7;
+	private static inline var QUAD_MOTION		:Int = 8;
+	private static inline var QUAD_PATH			:Int = 9;
 
 	private var _easeInfo:Array<EaseInfo>;
 	
@@ -282,7 +282,7 @@ class PlayState extends FlxState
 
 	private var _currentEase(get, never):EaseFunction;
 
-	inline private function get__currentEase():EaseFunction
+	private inline function get__currentEase():EaseFunction
 	{
 		return _easeInfo[_currentEaseIndex].ease;
 	}

@@ -14,8 +14,8 @@ class PlayState extends FlxState
 	/**
 	 * We use these to tell which mode we are at, recording or replaying
 	 */
-	static private var recording:Bool = false;
-	static private var replaying:Bool = false;
+	private static var recording:Bool = false;
+	private static var replaying:Bool = false;
 	
 	/**
 	 * Some intructions

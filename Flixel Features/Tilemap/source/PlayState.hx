@@ -16,8 +16,8 @@ class PlayState extends FlxState
 	/**
 	 * Some static constants for the size of the tilemap tiles
 	 */
-	inline static private var TILE_WIDTH:Int = 16;
-	inline static private var TILE_HEIGHT:Int = 16;
+	private static inline var TILE_WIDTH:Int = 16;
+	private static inline var TILE_HEIGHT:Int = 16;
 	
 	/**
 	 * The FlxTilemap we're using

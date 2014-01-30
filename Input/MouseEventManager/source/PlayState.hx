@@ -15,7 +15,7 @@ import nape.geom.Vec2;
  */
 class PlayState extends FlxNapeState
 {
-	static public var cardJoint:DistanceJoint;
+	public static var cardJoint:DistanceJoint;
 	
 	private var _cardGroup:FlxTypedGroup<Card>;
 	private var _fan:FlxSprite;

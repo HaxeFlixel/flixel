@@ -37,7 +37,7 @@ class MenuState extends FlxState
 	private var _input2:FlxTextField;
 	private var _imageDisplay:FlxSprite;
 	
-	inline static private function API_TEST_BUTTONS():Array<Array<String>> {
+	inline private static function API_TEST_BUTTONS():Array<Array<String>> {
 		return [ 	[ "fetchUser", "authUser", "openSession", "pingSession" ],
 					[ "closeSession", "fetchTrophy", "addTrophy", "fetchScore" ],
 					[ "addScore", "getTables", "fetchData", "setData" ],

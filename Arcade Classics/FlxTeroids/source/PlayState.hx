@@ -20,8 +20,8 @@ import flixel.util.FlxTimer;
  */
 class PlayState extends FlxState
 {
-	static public var asteroids:FlxTypedGroup<Asteroid>;
-	static public var bullets:FlxTypedGroup<FlxSprite>;
+	public static var asteroids:FlxTypedGroup<Asteroid>;
+	public static var bullets:FlxTypedGroup<FlxSprite>;
 	
 	private var _playerShip:PlayerShip;
 	private var _scoreText:FlxText;

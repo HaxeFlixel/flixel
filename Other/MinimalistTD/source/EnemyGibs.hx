@@ -9,8 +9,8 @@ import flixel.util.FlxRandom;
 
 class EnemyGibs extends FlxEmitter
 {
-	inline static private var SPEED:Int = 10;
-	inline static private var SIZE:Int = 10;
+	private static inline var SPEED:Int = 10;
+	private static inline var SIZE:Int = 10;
 	
 	/**
 	 * Creates a FlxEmitter with pre-defined particle size, speed, color, inversion, and so forth.

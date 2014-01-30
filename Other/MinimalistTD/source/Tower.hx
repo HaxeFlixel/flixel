@@ -30,8 +30,8 @@ class Tower extends FlxSprite
 	private static var HELPER_POINT:FlxPoint = new FlxPoint();
 	private static var HELPER_POINT_2:FlxPoint = new FlxPoint();
 	
-	inline private static var COST_INCREASE:Float = 1.5;
-	inline private static var BASE_PRIZE:Int = 10;
+	private static inline var COST_INCREASE:Float = 1.5;
+	private static inline var BASE_PRIZE:Int = 10;
 	
 	/**
 	 * Create a new tower at X and Y with default range, fire rate, and damage; create this tower's indicator.

@@ -16,8 +16,8 @@ import flixel.util.FlxTimer;
 
 class Toast extends FlxSpriteGroup
 {
-	inline static private var WIDTH:Int = 105;
-	inline static private var HEIGHT:Int = 115;
+	private static inline var WIDTH:Int = 105;
+	private static inline var HEIGHT:Int = 115;
 	private var _name:String;
 	private var _id:Int;
 	private var _had:String;

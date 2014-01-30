@@ -25,7 +25,7 @@ import flixel.util.FlxTimer;
 */
 class PlayState extends FlxState
 {
-	inline static private var MIN_INTERVALL:Float = 2;
+	private static inline var MIN_INTERVALL:Float = 2;
 	
 	private var _scoreText:FlxText;
 	private var _fruit:FlxSprite;

@@ -33,7 +33,7 @@ class PlayState extends FlxState
 	private static var RANGE_SPRITE:Sprite = null;
 	
 	#if debug
-	inline private static var MONEY_CHEAT:Bool = true;
+	private static inline var MONEY_CHEAT:Bool = true;
 	#end
 	
 	// Public variables

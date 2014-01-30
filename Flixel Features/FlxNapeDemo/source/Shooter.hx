@@ -33,7 +33,7 @@ import nape.phys.Body;
 class Shooter extends FlxGroup
 {
 
-	static public var CB_BULLET:CbType = new CbType();
+	public static var CB_BULLET:CbType = new CbType();
 	var mouseJoint:DistanceJoint;
 	var impulse = 3000;
 	
