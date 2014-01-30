@@ -21,7 +21,8 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	public var screenY:Int = 0;
 	
 	/**
-	 * A unique identification number. 
+	 * The unique ID of this touch. Example: if there are 3 concurrently active touches 
+	 * (and the device supporst that many), they will have the IDs 0, 1 and 2.
 	 */
 	public var touchPointID(default, null):Int;
 	

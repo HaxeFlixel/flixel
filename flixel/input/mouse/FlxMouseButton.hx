@@ -8,6 +8,9 @@ import flixel.util.FlxPoint;
 
 class FlxMouseButton implements IFlxDestroyable
 {
+	/**
+	 * These IDs are negative to avoid overlaps with possible touch point IDs.
+	 */
 	public static inline var LEFT  :Int = -1;
 	public static inline var MIDDLE:Int = -2;
 	public static inline var RIGHT :Int = -3;
