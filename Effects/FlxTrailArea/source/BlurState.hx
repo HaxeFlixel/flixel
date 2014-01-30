@@ -14,7 +14,7 @@ import flixel.util.FlxRandom;
  */
 class BlurState extends FlxState 
 {
-	inline static public var PARTICLE_AMOUNT:Int = 50;
+	inline public static var PARTICLE_AMOUNT:Int = 50;
 	
 	override public function create():Void 
 	{

@@ -13,8 +13,8 @@ import flixel.util.FlxStringUtil;
 class MenuState extends FlxState 
 {
 	// How many menu options there are.
-	inline static public var OPTIONS:Int = 3; 
-	inline static public var TEXT_SPEED:Float = 600;
+	inline public static var OPTIONS:Int = 3;
+	inline public static var TEXT_SPEED:Float = 600;
 	
 	// Augh, so many text objects. I should make arrays.
 	private var _text1:FlxText;

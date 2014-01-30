@@ -24,7 +24,7 @@ class Card extends FlxNapeSprite
 	 * This is a helper Array to keep track of the cards that have 
 	 * been picked so far, to avoid the same card being shown twice!
 	 */
-	static public var pickedCards:Array<Int> = new Array<Int>();
+	public static var pickedCards:Array<Int> = new Array<Int>();
 	
 	/**
 	 * Whether the card has been turned around yet or not

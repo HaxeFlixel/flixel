@@ -11,33 +11,33 @@ import flixel.util.FlxSave;
 
 class Reg
 {
-	inline static public var VERSION:String = "v 0.3";
+	inline public static var VERSION:String = "v 0.3";
 	
-	static public var PS:PlayState;
-	static public var colorArray:Array<Int> = [];
+	public static var PS:PlayState;
+	public static var colorArray:Array<Int> = [];
 	
-	static public var lite(get, null):Int;
+	public static var lite(get, null):Int;
 	
 	private static function get_lite():Int
 	{
 		return colorArray[3];
 	}
 	
-	static public var med_lite(get, null):Int;
+	public static var med_lite(get, null):Int;
 	
 	private static function get_med_lite():Int
 	{
 		return colorArray[2];
 	}
 	
-	static public var med_dark(get, null):Int;
+	public static var med_dark(get, null):Int;
 	
 	private static function get_med_dark():Int
 	{
 		return colorArray[1];
 	}
 	
-	static public var dark(get, null):Int;
+	public static var dark(get, null):Int;
 	
 	private static function get_dark():Int
 	{
@@ -88,31 +88,31 @@ class Reg
 	 * Generic levels Array that can be used for cross-state stuff.
 	 * Example usage: Storing the levels of a platformer.
 	 */
-	static public var levels:Array<Dynamic> = [];
+	public static var levels:Array<Dynamic> = [];
 	/**
 	 * Generic level variable that can be used for cross-state stuff.
 	 * Example usage: Storing the current level number.
 	 */
-	static public var level:Int = 0;
+	public static var level:Int = 0;
 	/**
 	 * Generic scores Array that can be used for cross-state stuff.
 	 * Example usage: Storing the scores for level.
 	 */
-	static public var scores:Array<Dynamic> = [];
+	public static var scores:Array<Dynamic> = [];
 	/**
 	 * Generic score variable that can be used for cross-state stuff.
 	 * Example usage: Storing the current score.
 	 */
-	static public var score:Int = 0;
+	public static var score:Int = 0;
 	/**
 	 * Generic bucket for storing different <code>FlxSaves</code>.
 	 * Especially useful for setting up multiple save slots.
 	 */
-	static public var saves:Array<FlxSave> = [];
+	public static var saves:Array<FlxSave> = [];
 	/**
 	 * Generic container for a <code>FlxSave</code>. You might want to 
 	 * consider assigning <code>FlxG._game._prefsSave</code> to this in
 	 * your state if you want to use the same save flixel uses internally
 	 */
-	static public var save:FlxSave;
+	public static var save:FlxSave;
 }

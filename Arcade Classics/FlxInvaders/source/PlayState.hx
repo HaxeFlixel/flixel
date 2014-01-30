@@ -16,7 +16,7 @@ class PlayState extends FlxState
 	/**
 	 * The satus message to show. Static so that it carries over to a new PlayState.
 	 */
-	static public var statusMessage:String = "WELCOME TO FLX INVADERS";
+	public static var statusMessage:String = "WELCOME TO FLX INVADERS";
 	
 	/**
 	 * Refers to all the bullets the enemies shoot at you

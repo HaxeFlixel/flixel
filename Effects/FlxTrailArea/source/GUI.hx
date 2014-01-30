@@ -10,7 +10,7 @@ import flixel.ui.FlxSlider;
 
 class GUI extends FlxSpriteGroup
 {
-	inline static public var WIDTH = 200;
+	inline public static var WIDTH = 200;
 	
 	private var _trailArea:FlxTrailArea;
 	private var _sliderCallback:Float->Void;

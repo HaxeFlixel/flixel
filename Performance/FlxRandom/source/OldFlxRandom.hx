@@ -12,7 +12,7 @@ class OldFlxRandom
 	/**
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
 	 */
-	static public var globalSeed:Float;
+	public static var globalSeed:Float;
 	/**
 	 * Internal helper for <code>FlxRandom.int()</code>
 	 */
