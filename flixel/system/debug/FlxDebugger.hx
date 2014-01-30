@@ -30,11 +30,11 @@ class FlxDebugger extends Sprite
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
-	inline static public var GUTTER:Int = 2;
+	inline public static var GUTTER:Int = 2;
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
-	inline static public var TOP_HEIGHT:Int = 20;
+	inline public static var TOP_HEIGHT:Int = 20;
 	
 	/**
 	 * Container for the performance monitor widget.

@@ -18,8 +18,8 @@ import flixel.tile.FlxTileblock;
 */
 class FlxCollision 
 {
-	inline static public var CAMERA_WALL_OUTSIDE:Int = 0;
-	inline static public var CAMERA_WALL_INSIDE:Int = 1;
+	inline public static var CAMERA_WALL_OUTSIDE:Int = 0;
+	inline public static var CAMERA_WALL_INSIDE:Int = 1;
 	
 	// Optimization: Local static vars to reduce allocations
 	static private var pointA:Point = new Point();

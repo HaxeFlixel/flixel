@@ -26,7 +26,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Controls the granularity of the quad tree.  Default is 6 (decent performance on large and small worlds).
 	 */
-	static public var divisions:Int;
+	public static var divisions:Int;
 	
 	public var exists:Bool;
 	

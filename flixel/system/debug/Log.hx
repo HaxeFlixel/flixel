@@ -15,7 +15,7 @@ import haxe.ds.StringMap;
  */
 class Log extends Window
 {
-	inline static public var MAX_LOG_LINES:Int = 200;
+	inline public static var MAX_LOG_LINES:Int = 200;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;

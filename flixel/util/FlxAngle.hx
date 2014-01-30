@@ -15,19 +15,19 @@ class FlxAngle
 	/**
 	 * Use this to access the cos-table generated via <code>sinCosGenerator()</code>.
 	 */
-	static public var cosTable:Array<Float> = new Array<Float>();
+	public static var cosTable:Array<Float> = new Array<Float>();
 	/**
 	 * Use this to access the sin-table generated via <code>sinCosGenerator()</code>.
 	 */
-	static public var sinTable:Array<Float> = new Array<Float>();
+	public static var sinTable:Array<Float> = new Array<Float>();
 	/**
 	 * Convert radians to degrees by multiplying it with this value.
 	 */
-	static public var TO_DEG:Float = 180 / Math.PI;
+	public static var TO_DEG:Float = 180 / Math.PI;
 	/**
 	 * Convert degrees to radians by multiplying it with this value.
 	 */
-	static public var TO_RAD:Float = Math.PI / 180;
+	public static var TO_RAD:Float = Math.PI / 180;
 	
 	/**
 	 * Rotates a point in 2D space around another point by the given angle.

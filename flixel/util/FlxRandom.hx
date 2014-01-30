@@ -13,7 +13,7 @@ class FlxRandom
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
 	 * If you want, you can set the seed with an integer between 1 and 2,147,483,647 inclusive. However, FlxG automatically sets this with a new random seed when starting your game. Altering this yourself may break recording functionality!
 	 */
-	static public var globalSeed(default, set):Int = 1;
+	public static var globalSeed(default, set):Int = 1;
 	
 	/**
 	 * Internal function to update the internal seed whenever the global seed is reset, and keep the global seed's value in range.

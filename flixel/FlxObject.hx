@@ -25,7 +25,7 @@ class FlxObject extends FlxBasic
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
 	 * Don't modify this unless your objects are passing through eachother.
 	 */
-	static public var SEPARATE_BIAS:Float = 4;
+	public static var SEPARATE_BIAS:Float = 4;
 	/**
 	 * Generic value for "left" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
 	 */
