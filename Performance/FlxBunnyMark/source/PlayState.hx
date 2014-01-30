@@ -23,7 +23,7 @@ import openfl.Assets;
  */
 class PlayState extends FlxState
 {
-	inline public static var INITIAL_AMOUNT:Int = 1000;
+	public static inline var INITIAL_AMOUNT:Int = 1000;
 	
 	public static var complex:Bool = false;
 	public static var offScreen:Bool = false;

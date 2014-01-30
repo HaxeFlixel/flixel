@@ -13,11 +13,11 @@ import flixel.FlxSprite;
  */
 class Enemy extends EnemyTemplate 
 {
-	inline public static var RUN_SPEED:Int = 60;
-	inline public static var GRAVITY:Int = 0;
-	inline public static var JUMP_SPEED:Int = 60;
-	inline public static var HEALTH:Int = 1;
-	inline public static var SPAWNTIME:Float = 30;
+	public static inline var RUN_SPEED:Int = 60;
+	public static inline var GRAVITY:Int = 0;
+	public static inline var JUMP_SPEED:Int = 60;
+	public static inline var HEALTH:Int = 1;
+	public static inline var SPAWNTIME:Float = 30;
 	
 	private var _gibs:FlxEmitter;
 	private var _spawntimer:Float;

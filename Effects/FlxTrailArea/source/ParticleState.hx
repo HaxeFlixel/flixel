@@ -10,7 +10,7 @@ import flixel.util.FlxTimer;
 
 class ParticleState extends FlxState
 {
-	inline public static var PARTICLE_AMOUNT:Int = 100;
+	public static inline var PARTICLE_AMOUNT:Int = 100;
 	
 	private var _emitter:FlxEmitter;
 	
