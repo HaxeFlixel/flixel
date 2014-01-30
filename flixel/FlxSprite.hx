@@ -757,11 +757,11 @@ class FlxSprite extends FlxObject
 		var sin:Float;
 	#end
 		
-		var isSimpleRender:Bool = simpleRenderSprite();
+		var simpleRender:Bool = isSimpleRender();
 		
 		for (camera in cameras)
 		{
-			if (!camera.visible || !camera.exists || !onScreen(camera))
+			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
 				continue;
 			}
@@ -790,7 +790,7 @@ class FlxSprite extends FlxObject
 			_point.y = y - (camera.scroll.y * _scrollFactor.y) - (_offset.y);
 		#end
 #if flash
-			if (isSimpleRender)
+			if (simpleRender)
 			{
 				_flashPoint.x = Math.floor(_point.x);
 				_flashPoint.y = Math.floor(_point.y);
@@ -827,7 +827,7 @@ class FlxSprite extends FlxObject
 			var c:Float = ssy;
 			var d:Float = csy;
 			
-			if (!isSimpleRender)
+			if (!simpleRender)
 			{
 				if (_angleChanged && (bakedRotation <= 0))
 				{
@@ -1105,83 +1105,6 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Check and see if this object is currently on screen.
-	 * Differs from <code>FlxObject</code>'s implementation
-	 * in that it takes the actual graphic into account,
-	 * not just the hitbox or bounding box or whatever.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-	 * @return	Whether the object is on screen or not.
-	 */
-	override public function onScreen(Camera:FlxCamera = null):Bool
-	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		
-		var minX:Float = x - _offset.x - Camera.scroll.x * _scrollFactor.x;
-		var minY:Float = y - _offset.y - Camera.scroll.y * _scrollFactor.y;
-		var maxX:Float = 0;
-		var maxY:Float = 0;
-		
-		if ((angle == 0 || bakedRotation > 0) && (_scale.x == 1) && (_scale.y == 1))
-		{
-			maxX = minX + frameWidth;
-			maxY = minY + frameHeight;
-		}
-		else
-		{
-			var radiusX:Float = _halfWidth;
-			var radiusY:Float = _halfHeight;
-			
-			if (_origin.x == _halfWidth)
-			{
-				radiusX = Math.abs(_halfWidth * _scale.x);
-			}
-			else
-			{
-				var sox:Float = _scale.x * _origin.x;
-				var sfw:Float = _scale.x * frameWidth;
-				var x1:Float = Math.abs(sox);
-				var x2:Float = Math.abs(sfw - sox);
-				radiusX = Math.max(x2, x1);
-			}
-			
-			if (_origin.y == _halfHeight)
-			{
-				radiusY = Math.abs(_halfHeight * _scale.y);
-			}
-			else
-			{
-				var soy:Float = _scale.y * _origin.y;
-				var sfh:Float = _scale.y * frameHeight;
-				var y1:Float = Math.abs(soy);
-				var y2:Float = Math.abs(sfh - soy);
-				radiusY = Math.max(y2, y1);
-			}
-			
-			var radius:Float = Math.max(radiusX, radiusY);
-			radius *= 1.415; // Math.sqrt(2);
-			
-			minX += _origin.x;
-			maxX = minX + radius;
-			minX -= radius;
-			
-			minY += _origin.y;
-			maxY = minY + radius;
-			minY -= radius;
-		}
-		
-		if (maxX < 0 || minX > Camera.width)
-			return false;
-		
-		if (maxY < 0 || minY > Camera.height)
-			return false;
-		
-		return true;
-	}
-	
-	/**
 	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
 	 * @param	Point		The point in world space you want to check.
@@ -1323,10 +1246,86 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Check and see if this object is currently on screen. Differs from <code>FlxObject</code>'s implementation
+	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
+	 * 
+	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @return	Whether the object is on screen or not.
+	 */
+	override public function isOnScreen(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		
+		var minX:Float = x - _offset.x - Camera.scroll.x * _scrollFactor.x;
+		var minY:Float = y - _offset.y - Camera.scroll.y * _scrollFactor.y;
+		var maxX:Float = 0;
+		var maxY:Float = 0;
+		
+		if ((angle == 0 || bakedRotation > 0) && (_scale.x == 1) && (_scale.y == 1))
+		{
+			maxX = minX + frameWidth;
+			maxY = minY + frameHeight;
+		}
+		else
+		{
+			var radiusX:Float = _halfWidth;
+			var radiusY:Float = _halfHeight;
+			
+			if (_origin.x == _halfWidth)
+			{
+				radiusX = Math.abs(_halfWidth * _scale.x);
+			}
+			else
+			{
+				var sox:Float = _scale.x * _origin.x;
+				var sfw:Float = _scale.x * frameWidth;
+				var x1:Float = Math.abs(sox);
+				var x2:Float = Math.abs(sfw - sox);
+				radiusX = Math.max(x2, x1);
+			}
+			
+			if (_origin.y == _halfHeight)
+			{
+				radiusY = Math.abs(_halfHeight * _scale.y);
+			}
+			else
+			{
+				var soy:Float = _scale.y * _origin.y;
+				var sfh:Float = _scale.y * frameHeight;
+				var y1:Float = Math.abs(soy);
+				var y2:Float = Math.abs(sfh - soy);
+				radiusY = Math.max(y2, y1);
+			}
+			
+			var radius:Float = Math.max(radiusX, radiusY);
+			radius *= 1.415; // Math.sqrt(2);
+			
+			minX += _origin.x;
+			maxX = minX + radius;
+			minX -= radius;
+			
+			minY += _origin.y;
+			maxY = minY + radius;
+			minY -= radius;
+		}
+		
+		if (maxX < 0 || minX > Camera.width)
+			return false;
+		
+		if (maxY < 0 || minY > Camera.height)
+			return false;
+		
+		return true;
+	}
+	
+	/**
 	 * Checks if the Sprite is being rendered in "simple mode" (via copyPixels). True for flash when no angle, bakedRotations, 
 	 * scaling or blend modes are used. This enables the sprite to be rendered much faster if true.
 	 */
-	private function simpleRenderSprite():Bool
+	public function isSimpleRender():Bool
 	{ 
 		#if flash
 		return (((angle == 0) || (bakedRotation > 0)) && (_scale.x == 1) && (_scale.y == 1) && (blend == null) && (forceComplexRender == false));
