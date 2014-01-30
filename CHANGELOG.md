@@ -73,6 +73,7 @@ v.3.1.0
 * Moved flixel.system.input to flixel.input
 * Moved interfaces into a new interfaces package
 * BUG: Fixed crash when using traces on android
+* Code style change for keyword order, public/private first, see the styleguide for more info http://haxeflixel.com/documentation/code-style/
 
 v.3.0.4
 ------------------------------
