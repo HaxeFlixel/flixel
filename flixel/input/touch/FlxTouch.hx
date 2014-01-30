@@ -26,6 +26,18 @@ class FlxTouch extends FlxPoint
 	 * Current Y position of the touch point on the screen.
 	 */
 	public var screenY:Int = 0;
+	/**
+	 * Just pressed X position of the touch point on the screen.
+	 */
+	public var justPressedScreenX:Int;
+	/**
+	 * Just pressed Y position of the touch point on the screen.
+	 */
+	public var justPressedScreenY:Int;
+	/**
+	 * Ticks returned from <code>FlxG.game.ticks</code> when justPressed occurred.
+	 */
+	public var justPressedTicks:Int;
 	
 	/**
 	 * Helper variable for tracking whether the touch was just began or just ended.
@@ -66,6 +78,10 @@ class FlxTouch extends FlxPoint
 		_flashPoint = new Point();
 		updateTouchPosition(X, Y);
 		touchPointID = PointID;
+
+		justPressedScreenX = screenX;
+		justPressedScreenY = screenY;
+		justPressedTicks = FlxG.game.ticks;
 	}
 	
 	/**
@@ -213,6 +229,10 @@ class FlxTouch extends FlxPoint
 		touchPointID = PointID;
 		_current = 0;
 		_last = 0;
+
+		justPressedScreenX = screenX;
+		justPressedScreenY = screenY;
+		justPressedTicks = FlxG.game.ticks;
 	}
 	
 	public function deactivate():Void
