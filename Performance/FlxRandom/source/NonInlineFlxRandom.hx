@@ -38,7 +38,7 @@ class NonInlineFlxRandom
 	/**
 	 * Internal seed used to generate new random numbers.
 	 */
-	static private var internalSeed:Int = 1;
+	private static var internalSeed:Int = 1;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
@@ -47,9 +47,9 @@ class NonInlineFlxRandom
 	 * @see 	http://en.wikipedia.org/wiki/Linear_congruential_generator
 	 * @see 	Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988). "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
 	 */
-	static private var MULTIPLIER:Int = 48271;
-	static private var INCREMENT:Int = 0;
-	static private var MODULUS:Int = 2147483647;
+	private static var MULTIPLIER:Int = 48271;
+	private static var INCREMENT:Int = 0;
+	private static var MODULUS:Int = 2147483647;
 	
 	/**
 	 * Function to easily set the global seed to a new random number. Used primarily by FlxG whenever the game is reset.

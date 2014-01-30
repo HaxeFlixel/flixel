@@ -22,8 +22,8 @@ class PlayState extends FlxState
 	private static inline var LB_Y:Float = 2;
 	private static inline var RB_Y:Float = 2;
 	
-	static private var LEFT_STICK_POS:FlxPoint = new FlxPoint(80, 48);
-	static private var RIGHT_STICK_POS:FlxPoint = new FlxPoint(304, 136);
+	private static var LEFT_STICK_POS:FlxPoint = new FlxPoint(80, 48);
+	private static var RIGHT_STICK_POS:FlxPoint = new FlxPoint(304, 136);
 	
 	private var _controllerBg:FlxSprite;
 	private var _leftStick:FlxSprite;
