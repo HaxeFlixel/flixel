@@ -40,7 +40,7 @@ class FlxCollision
 	 * @param	Target			The second FlxSprite to test again, sprite order is irrelevant
 	 * @param	AlphaTolerance	The tolerance value above which alpha pixels are included. Default to 255 (must be fully opaque for collision).
 	 * @param	Camera			If the collision is taking place in a camera other than FlxG.camera (the default/current) then pass it here
-	 * @return	Boolean 		Whether the sprites collide
+	 * @return	Whether the sprites collide
 	 */
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
 	{
