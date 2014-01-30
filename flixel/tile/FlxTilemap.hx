@@ -35,24 +35,24 @@ class FlxTilemap extends FlxObject
 	/**
 	 * A set of generic tiles you can use. Useful for protyping.
 	 */
-	inline public static var imgAuto:String = FlxAssets.IMG_AUTO;
+	public static inline var imgAuto:String = FlxAssets.IMG_AUTO;
 	/**
 	 * An alternate set of generic tiles you can use. Useful for protyping.
 	 */
-	inline public static var imgAutoAlt:String = FlxAssets.IMG_AUTO_ALT;
+	public static inline var imgAutoAlt:String = FlxAssets.IMG_AUTO_ALT;
 	
 	/**
 	 * No auto-tiling.
 	 */
-	inline public static var OFF:Int = 0;
+	public static inline var OFF:Int = 0;
 	/**
 	 * Good for levels with thin walls that don'tile need interior corner art.
 	 */
-	inline public static var AUTO:Int = 1;
+	public static inline var AUTO:Int = 1;
 	/**
 	 * Better for levels with thick walls that look better with interior corner art.
 	 */
-	inline public static var ALT:Int = 2;
+	public static inline var ALT:Int = 2;
 	
 	public var scaleX(default, set):Float = 1.0;
 	public var scaleY(default, set):Float = 1.0;

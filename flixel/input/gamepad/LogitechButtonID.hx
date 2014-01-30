@@ -8,63 +8,63 @@ class LogitechButtonID
 	/**
 	 * Placement equivalent to 'X' button on the Xbox 360 controller.
 	 */
-	inline public static var ONE:Int = 0;
+	public static inline var ONE:Int = 0;
 	/**
 	 * Placement equivalent to 'A' button on the Xbox 360 controller.
 	 */
-	inline public static var TWO:Int = 1;
+	public static inline var TWO:Int = 1;
 	/**
 	 * Placement equivalent to 'B' button on the Xbox 360 controller.
 	 */
-	inline public static var THREE:Int = 2;
+	public static inline var THREE:Int = 2;
 	/**
 	 * Placement equivalent to 'Y' button on the Xbox 360 controller.
 	 */
-	inline public static var FOUR:Int = 3;
+	public static inline var FOUR:Int = 3;
 	
 	/**
 	 * Placement equivalent to the left bumper on the Xbox 360 controller.
 	 */
-	inline public static var FIVE:Int = 4;
+	public static inline var FIVE:Int = 4;
 	/**
 	 * Placement equivalent to the right bumper on the Xbox 360 controller.
 	 */
-	inline public static var SIX:Int = 5;
+	public static inline var SIX:Int = 5;
 	/**
 	 * Placement equivalent to the left trigger on the Xbox 360 controller.
 	 * (it is a bumper though)
 	 */
-	inline public static var SEVEN:Int = 6;
+	public static inline var SEVEN:Int = 6;
 	/**
 	 * Placement equivalent to the right trigger on the Xbox 360 controller.
 	 * (it is a bumper though)
 	 */
-	inline public static var EIGHT:Int = 7;
+	public static inline var EIGHT:Int = 7;
 	
 	/**
 	 * Placement equivalent to the 'Back' button on the Xbox 360 controller.
 	 */
-	inline public static var NINE:Int = 8;
+	public static inline var NINE:Int = 8;
 	/**
 	 * Placement equivalent to the 'Menu' button on the Xbox 360 controller.
 	 */
-	inline public static var TEN:Int = 9;
+	public static inline var TEN:Int = 9;
 	
 	/**
 	 * Placement equivalent to the 'left analogue' button on the Xbox 360 controller.
 	 */
-	inline public static var LEFT_ANALOGUE:Int = 10;
+	public static inline var LEFT_ANALOGUE:Int = 10;
 	/**
 	 * Placement equivalent to the 'right analogue' button on the Xbox 360 controller.
 	 */
-	inline public static var RIGHT_ANALOGUE:Int = 11;
+	public static inline var RIGHT_ANALOGUE:Int = 11;
 	
 	/**
 	 * Axis array indicies
 	 */
-	inline public static var LEFT_ANALOGUE_X:Int = 0;
-	inline public static var LEFT_ANALOGUE_Y:Int = 1;
+	public static inline var LEFT_ANALOGUE_X:Int = 0;
+	public static inline var LEFT_ANALOGUE_Y:Int = 1;
 	
-	inline public static var RIGHT_ANALOGUE_X:Int = 2;
-	inline public static var RIGHT_ANALOGUE_Y:Int = 3;
+	public static inline var RIGHT_ANALOGUE_X:Int = 2;
+	public static inline var RIGHT_ANALOGUE_Y:Int = 3;
 }

@@ -519,15 +519,15 @@ class FlxMath
 	/**
 	 * Minimum value of a floating point number.
 	 */
-	inline public static var MIN_VALUE:Float = 0.0000000000000001;
+	public static inline var MIN_VALUE:Float = 0.0000000000000001;
 	#else
 	/**
 	 * Minimum value of a floating point number.
 	 */
-	inline public static var MIN_VALUE:Float = 5e-324;
+	public static inline var MIN_VALUE:Float = 5e-324;
 	#end
 	/**
 	 * Maximum value of a floating point number.
 	 */
-	inline public static var MAX_VALUE:Float = 1.79e+308;
+	public static inline var MAX_VALUE:Float = 1.79e+308;
 }

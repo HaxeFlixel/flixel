@@ -8,11 +8,11 @@ import flixel.FlxG;
  */
 class FlxMouseButton
 {
-	inline public static var FAST_PRESS_RELEASE:Int = -2;
-	inline public static var JUST_RELEASED:Int = -1;
-	inline public static var RELEASED:Int = 0;
-	inline public static var PRESSED:Int = 1;
-	inline public static var JUST_PRESSED:Int = 2;
+	public static inline var FAST_PRESS_RELEASE:Int = -2;
+	public static inline var JUST_RELEASED:Int = -1;
+	public static inline var RELEASED:Int = 0;
+	public static inline var PRESSED:Int = 1;
+	public static inline var JUST_PRESSED:Int = 2;
 
 	/**
 	 * The current state of this mouse button.
