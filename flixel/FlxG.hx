@@ -170,7 +170,7 @@ class FlxG
 	 * Contains all "swipes" from both mouse and touch input that have just ended.
 	 */
 	@:allow(flixel.FlxGame)
-	public static var swipes(default, null):Array<FlxSwipe>;
+	public static var swipes(default, null):Array<FlxSwipe> = [];
 	#end
 
 	#if !FLX_NO_KEYBOARD
@@ -458,10 +458,6 @@ class FlxG
 		
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.loadSavedPrefs();
-		#end
-		
-		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
-		swipes = new Array<FlxSwipe>();
 		#end
 		
 		FlxAssets.init();
