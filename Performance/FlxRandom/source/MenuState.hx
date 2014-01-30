@@ -39,8 +39,8 @@ class MenuState extends FlxState
 	private var _static:Bool = false;
 	private var _staticBitmapdata:BitmapData;
 	
-	inline static private var ONEMIL:Int = 1000000;
-	inline static private var TENMIL:Int = 10000000;
+	private static inline var ONEMIL:Int = 1000000;
+	private static inline var TENMIL:Int = 10000000;
 	
 	inline private static function BUTTON_TEXT():Array<String>
 	{

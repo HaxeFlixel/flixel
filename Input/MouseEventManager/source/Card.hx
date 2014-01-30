@@ -18,7 +18,7 @@ class Card extends FlxNapeSprite
 	/**
 	 * How long the turning animation takes
 	 */
-	inline static private var TURNING_TIME:Float = 0.2;
+	private static inline var TURNING_TIME:Float = 0.2;
 	
 	/**
 	 * This is a helper Array to keep track of the cards that have 
