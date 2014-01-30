@@ -7,8 +7,12 @@ v.3.1.0
   * weightedPick(), weightedGetObject() and colorExt() have been added
   * Replays are now fully deterministic, whether replaying the whole game or just a single state.
 * New FLX_NO_SOUND_SYSTEM conditional
-* FlxTrailArea: Several improvements (can now be resized with setSize()), default delay is now 2
-* FlxMisc has been removed, openURL() can now be found in FlxG
+* FlxTrailArea: 
+ * can now be resized with setSize()
+ * default delay is now 2
+ * removed smoothing, use antialising instead
+ * is now compatible with animated sprites / sprites that have a spritesheet
+* FlxMisc has been removed, openURL() can now be found in FlxG. Added Target param to openURL().
 * FlxCamera: getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
 * FlxSpriteGroup: Added forEach(), forEachAlive(), forEachDead() and forEachExists()
 * FlxSpriteUtil: 
@@ -16,11 +20,13 @@ v.3.1.0
   * more control for the drawing functions via FillStyle and DrawStyle
   * added convenient default values for drawCircle()
   * allow FlxObjects in screenWrap() and screenCenter()
+  * now the functions return the sprite / object to allow chaining
 * FlxTypedButton refactor
-  *  Callbacks are now set via onUp.setCallback as opposed to setOnUpCallback
+  *  Callbacks are now set via the FlxButtonEvent objects, for example button.onDown.callback = someFunction;
+  *  The type of callback has been changed from Dynamic to Void->Void to avoid Reflection. This means you need to bind custom parameters to your callback function like so: callback = someFunction.bind(1); ([more info](https://github.com/HaxeFlixel/flixel/issues/805?source=cc))
   *  new labelAlphas and labelOffsets arrays for more control
   *  the highlight frame is now disabled by default on mobile 
-  *  "swiping" is now possible (enter button area while input is pressed to press it)
+  *  "swiping" is now possible (entering the button area while the input is pressed to press the button)
 * FlxTypedEmitter and FlxSound: Added setPosition() methods
 * FlxSlider: New setVariable flag, improvements to inner update logic
 * FlxSprite: 
@@ -32,6 +38,7 @@ v.3.1.0
 * FlxTypedGroup: 
   * autoReviveMembers flag has been removed
   * Revive param has been added to recycle()
+  * Fixed a bug with callAll()'s Args parameter which would get lost in recursive mode 
 * FlxRect, FlxPoint and FlxBasic and FlxObject now have toString() functions used for traces and the flixel debugger
 * The focus lost screen and the sound tray now react to window resizes
 * BUG: Fixed numpad minus not working as a default volume down key
@@ -58,22 +65,53 @@ v.3.1.0
   * FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
   * FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
   * Added PS3ButtonID and LogitechButtonID classes
-* Ported resolution policies from flixel for moneky (FlxG.resolutionPolicy / flixel.system.resolution) and removed FlxG.autoResize
+* Ported scale modes from flixel for moneky (FlxG.scaleMode / flixel.system.scaleModes) and removed FlxG.autoResize
 * Renamed FlxG.debugger.visualDebug to drawDebug
 * FlxTween:
  * optimizations
  * AngleTween now accepts FlxSprite as a parameter
  * Now possible to delay tweens via the TweenOptions typedef 
+ * FlxEase: Added elastic easing functions
+ * Exposed duration and type of tweens so they can be changed after they have been started
 * BUG: Fixed jittering movement of FlxObjects following a FlxPath
 * Removed FlxG.paused, it was a container variable without functionality
 * FlxRect: 
  * Added setSize()
  * top / bottom / left / right can now be set
-* FlxArrayUtil.fastSplice() added
+* FlxArrayUtil:
+ * added fastSplice() 
+ * moved intFromString() to FlxStringUtil.toIntArray()
+ * moved floatFromString() to FlxStringUtil.toFloatArray()
 * Moved flixel.system.input to flixel.input
 * Moved interfaces into a new interfaces package
 * BUG: Fixed crash when using traces on android
-* Code style change for keyword order, public/private first, see the styleguide for more info http://haxeflixel.com/documentation/code-style/
+* Haxe 3.1.0 compatibility
+* FlxG.keyboard has been merged with Flx.keys again. FlxG.keyboard.pressed(), justPressed() and justReleased() have been removed, anyPressed(), anyJustPressed() and anyJustReleased() should be used instead.
+* Removed dynamic types and casting in some places
+* FlxMouse refactor
+ * Removed show() and hide(), visible should be used instead
+ * load() should be used for loading a cursor graphic, which was previously possible via show()
+ * FLX_MOUSE_ADVANCED has been turned into FLX_NO_MOUSE_ADVANCED, which means the event listeners for middle and right mouse clicks are now available by default / opt-out
+ * FlxState.useMouse has been removed
+ * The mouse cursor is now by default visible on non-mobile targets
+* FlxG.pixelPerfectOverlap() / FlxCollision.pixelPerfectCheck() has been heavily optimized to perform well on cpp targets
+* FlxG.LIBRARY_MINOR_VERSION, LIBRARY_MAJOR_VERSION, LIBRARY_NAME and libraryName have been refactored into a FlxVersion object available via FlxG.VERSION
+* FlxSound:
+ * Made fadeIn() and fadeOut() more intuitive to use
+ * Added pan property to allow non-proximity-based panning
+* FlxAngle:
+ * added getCartesianCoords() and getPolarCoords()
+ * removed the Round parameter from getAngle()
+* FlxVirtualPad now extends FlxSpriteGroups and uses enums for the action and dpad-button-styles
+* Added collisionXDrag flag to FlxObject to allow turning off the default "move-with-horizontally-moving-platform"-behaviour
+* FlxSoundUtil has been removed
+* General improvements to the in-code documentation
+* Added <window allow-shaders="false" /> to the include.xml to boost performance (especially on mobile)
+* Added an option for looping to FlxG.sound.playMusic()
+* BUG: Fix the last command of the console not working
+* BUG: Fix setting a Boolean on cpp not working
+* BUG: Added a workaround for onFocus() firing immediately on startup for cpp targets
+* Code style change for keyword order, public/private first, see the [styleguide](http://haxeflixel.com/documentation/code-style/) for more info
 
 v.3.0.4
 ------------------------------
