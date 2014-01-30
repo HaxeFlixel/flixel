@@ -1,4 +1,5 @@
 package states;
+import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
 import FlxPhysicsDemo;
 import openfl.Assets;
@@ -80,11 +81,10 @@ class Cutup extends FlxNapeState
 		txt = new FlxText( -10, 20, 640, "      'LEFT' & 'RIGHT' - switch demo");
 		add(txt);
 		
-		fps = new FPS(FlxG.width - 100, 5, 0xFFFFFF);
-		FlxG.stage.addChild(fps);
-		
 		if (FlxNapeState.space.gravity.y != 500)
-			FlxNapeState.space.gravity.setxy(0,500);
+			FlxNapeState.space.gravity.setxy(0, 500);
+			
+		FlxG.addChildBelowMouse(fps = new FPS(FlxG.width - 60, 5, FlxColor.WHITE));
 	}
 	
 	override public function update():Void {
