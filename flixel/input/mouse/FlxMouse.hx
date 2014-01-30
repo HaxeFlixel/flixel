@@ -348,13 +348,16 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_cursor = null;
 		_point = null;
 		_globalScreenPosition = null;
+		
 		#if (flash && !FLX_NO_NATIVE_CURSOR)
 		_matrix = null;
 		#end
 		
 		_leftButton   = FlxG.safeDestroy(_leftButton);
+		#if (!FLX_NO_MOUSE_ADVANCED && !js)
 		_middleButton = FlxG.safeDestroy(_middleButton);
 		_rightButton  = FlxG.safeDestroy(_rightButton);
+		#end
 		
 		if (_cursorBitmapData != null)
 		{
