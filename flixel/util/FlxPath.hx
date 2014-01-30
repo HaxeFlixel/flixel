@@ -52,31 +52,31 @@ class FlxPath
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
-	inline static public var FORWARD:Int = 0x000000;
+	public static inline var FORWARD:Int = 0x000000;
 	/**
 	 * Path behavior controls: move from the end of the path to the start then stop.
 	 */
-	inline static public var BACKWARD:Int= 0x000001;
+	public static inline var BACKWARD:Int= 0x000001;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
 	 */
-	inline static public var LOOP_FORWARD:Int = 0x000010;
+	public static inline var LOOP_FORWARD:Int = 0x000010;
 	/**
 	 * Path behavior controls: move from the end of the path to the start then directly back to the end, and start over.
 	 */
-	inline static public var LOOP_BACKWARD:Int = 0x000100;
+	public static inline var LOOP_BACKWARD:Int = 0x000100;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then turn around and go back to the start, over and over.
 	 */
-	inline static public var YOYO:Int = 0x001000;
+	public static inline var YOYO:Int = 0x001000;
 	/**
 	 * Path behavior controls: ignores any vertical component to the path data, only follows side to side.
 	 */
-	inline static public var HORIZONTAL_ONLY:Int = 0x010000;
+	public static inline var HORIZONTAL_ONLY:Int = 0x010000;
 	/**
 	 * Path behavior controls: ignores any horizontal component to the path data, only follows up and down.
 	 */
-	inline static public var VERTICAL_ONLY:Int = 0x100000;
+	public static inline var VERTICAL_ONLY:Int = 0x100000;
 	
 	/**
 	 * The list of <code>FlxPoint</code>s that make up the path data.
@@ -718,5 +718,5 @@ class FlxPath
 	/**
 	 * Read-only: The <code>TimerManager</code> instance.
 	 */
-	static public var manager:PathManager;
+	public static var manager:PathManager;
 }

@@ -239,5 +239,5 @@ class FlxTimer
 	/**
 	 * Read-only: The <code>TimerManager</code> instance.
 	 */
-	static public var manager:TimerManager;
+	public static var manager:TimerManager;
 }

@@ -63,7 +63,7 @@ class FlxCamera extends FlxBasic
 	 * While you can alter the zoom of each camera after the fact,
 	 * this variable determines what value the camera will start at when created.
 	 */
-	static public var defaultZoom:Float;
+	public static var defaultZoom:Float;
 	
 	/**
 	 * The X position of this camera's display.  Zoom does NOT affect this number.

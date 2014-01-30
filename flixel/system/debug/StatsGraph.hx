@@ -13,10 +13,10 @@ import flixel.util.FlxMath;
  */
 class StatsGraph extends Sprite
 {
-	inline static private var AXIS_COLOR:Int = 0xffffff;
-	inline static private var AXIS_ALPHA:Float = 0.5;
-	inline static private var LABEL_WIDTH:Int = 50;
-	inline static private var HISTORY_MAX:Int = 30;
+	private static inline var AXIS_COLOR:Int = 0xffffff;
+	private static inline var AXIS_ALPHA:Float = 0.5;
+	private static inline var LABEL_WIDTH:Int = 50;
+	private static inline var HISTORY_MAX:Int = 30;
 	
 	private var _axis:Shape;
 	private var _axisWidth:Int;

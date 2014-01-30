@@ -31,7 +31,7 @@ class FlxTween
 	/**
 	 * The tweening plugin that handles all the tweens.
 	 */
-	static public var manager:TweenManager;
+	public static var manager:TweenManager;
 	
 	/**
 	 * Adds a tween to the tween manager, with a delay if specified.

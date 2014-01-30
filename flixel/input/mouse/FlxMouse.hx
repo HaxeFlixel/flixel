@@ -134,7 +134,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private var _cursorDefaultName:String = "defaultCursor";
 	private var _currentNativeCursor:String;
 	private var _previousNativeCursor:String;
-	static private var _matrix:Matrix = new Matrix();
+	private static var _matrix:Matrix = new Matrix();
 	#end
 	
 	/**

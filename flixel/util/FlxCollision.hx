@@ -18,19 +18,19 @@ import flixel.tile.FlxTileblock;
 */
 class FlxCollision 
 {
-	inline static public var CAMERA_WALL_OUTSIDE:Int = 0;
-	inline static public var CAMERA_WALL_INSIDE:Int = 1;
+	public static inline var CAMERA_WALL_OUTSIDE:Int = 0;
+	public static inline var CAMERA_WALL_INSIDE:Int = 1;
 	
 	// Optimization: Local static vars to reduce allocations
-	static private var pointA:Point = new Point();
-	static private var pointB:Point = new Point();
-	static private var centerA:Point = new Point();
-	static private var centerB:Point = new Point();
-	static private var matrixA:Matrix = new Matrix();
-	static private var matrixB:Matrix = new Matrix();
-	static private var testMatrix:Matrix = new Matrix();
-	static private var boundsA:Rectangle = new Rectangle();
-	static private var boundsB:Rectangle = new Rectangle();
+	private static var pointA:Point = new Point();
+	private static var pointB:Point = new Point();
+	private static var centerA:Point = new Point();
+	private static var centerB:Point = new Point();
+	private static var matrixA:Matrix = new Matrix();
+	private static var matrixB:Matrix = new Matrix();
+	private static var testMatrix:Matrix = new Matrix();
+	private static var boundsA:Rectangle = new Rectangle();
+	private static var boundsB:Rectangle = new Rectangle();
 	
 	/**
 	 * A Pixel Perfect Collision check between two FlxSprites. It will do a bounds check first, and if that passes it will run a 

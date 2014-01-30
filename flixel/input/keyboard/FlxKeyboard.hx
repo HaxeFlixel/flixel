@@ -37,7 +37,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
-	inline static private var TOTAL:Int = 256;
+	private static inline var TOTAL:Int = 256;
 	
 	/**
 	 * A map for key lookup.

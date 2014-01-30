@@ -32,10 +32,10 @@ import flixel.util.FlxPoint;
 */
 class MouseEventManager extends FlxPlugin
 {
-	static private var _registeredSprites:Array<SpriteReg>;
-	static private var _mouseOverSprites:Array<SpriteReg>;
+	private static var _registeredSprites:Array<SpriteReg>;
+	private static var _mouseOverSprites:Array<SpriteReg>;
 
-	static private var _point:FlxPoint;
+	private static var _point:FlxPoint;
 
 	/**
 	* Call this using FlxG.plugins.add(new MouseEventMgr()).
