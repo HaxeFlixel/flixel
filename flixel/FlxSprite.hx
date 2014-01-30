@@ -253,43 +253,8 @@ class FlxSprite extends FlxObject
 			NewSprite = new FlxSprite();
 		}
 		
-		NewSprite.loadFromSprite(this);
+		NewSprite.loadGraphicFromSprite(this);
 		return NewSprite;
-	}
-	
-	/**
-	 * Load graphic from another FlxSprite and copy its tileSheet data. 
-	 * This method can useful for non-flash targets (and is used by the FlxTrail effect).
-	 * 
-	 * @param	Sprite	The FlxSprite from which you want to load graphic data
-	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
-	 */
-	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
-	{
-		if (!exists)
-		{
-			FlxG.log.warn("Warning, trying to clone " + Type.getClassName(Type.getClass(this)) + " object that doesn't exist.");
-		}
-		
-		region = Sprite.region.clone();
-		flipped = Sprite.flipped;
-		bakedRotation = Sprite.bakedRotation;
-		cachedGraphics = Sprite.cachedGraphics;
-		
-		width = frameWidth = Sprite.frameWidth;
-		height = frameHeight = Sprite.frameHeight;
-		if (bakedRotation > 0)
-		{
-			width = Sprite.width;
-			height = Sprite.height;
-			centerOffsets();
-		}
-		
-		updateFrameData();
-		resetHelpers();
-		antialiasing = Sprite.antialiasing;
-		animation.copyFrom(Sprite.animation);
-		return this;
 	}
 	
 	/**
@@ -356,6 +321,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Create a pre-rotated sprite sheet from a simple sprite.
 	 * This can make a huge difference in graphical performance!
+	 * 
 	 * @param	Graphic			The image you want to rotate and stamp.
 	 * @param	Rotations		The number of rotation frames the final sprite should have.  For small sprites this can be quite a large number (360 even) without any problems.
 	 * @param	Frame			If the Graphic has a single row of square animation frames on it, you can specify which of the frames you want to use here.  Default is -1, or "use whole graphic."
@@ -505,39 +471,15 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * This function creates a flat colored square image dynamically.
-	 * @param	Width		The width of the sprite you want to generate.
-	 * @param	Height		The height of the sprite you want to generate.
-	 * @param	Color		Specifies the color of the generated block (ARGB format).
-	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.  Default is false.
-	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
-	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
-	 */
-	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite
-	{
-		bakedRotation = 0;
-		cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
-		region = new Region();
-		region.width = Width;
-		region.height = Height;
-		width = region.tileWidth = frameWidth = cachedGraphics.bitmap.width;
-		height = region.tileHeight = frameHeight = cachedGraphics.bitmap.height;
-		animation.destroyAnimations();
-		updateFrameData();
-		resetHelpers();
-		return this;
-	}
-	
-	/**
 	 * Loads TexturePacker atlas.
+	 * 
 	 * @param	Data		Atlas data holding links to json-data and atlas image
 	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames. 
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	FrameName	Default frame to show. If null then will be used first available frame.
-	 * 
 	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadImageFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite
+	public function loadGraphicFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite
 	{
 		bakedRotation = 0;
 		
@@ -582,6 +524,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Creates a pre-rotated sprite sheet from provided image in atlas.
 	 * This can make a huge difference in graphical performance on flash target!
+	 * 
 	 * @param	Data			Atlas data holding links to json-data and atlas image
 	 * @param	Image			The image from atlas you want to rotate and stamp.
 	 * @param	Rotations		The number of rotation frames the final sprite should have.  For small sprites this can be quite a large number (360 even) without any problems.
@@ -590,9 +533,9 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedImageFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
+	public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
 	{
-		var temp = loadImageFromTexture(Data);
+		var temp = loadGraphicFromTexture(Data);
 		
 		if (temp == null)
 		{
@@ -608,6 +551,66 @@ class FlxSprite extends FlxObject
 		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, Data.assetName + ":" + Image);
 		#end
 		
+		return this;
+	}
+	
+	/**
+	 * Load graphic from another FlxSprite and copy its tileSheet data. 
+	 * This method can useful for non-flash targets (and is used by the FlxTrail effect).
+	 * 
+	 * @param	Sprite	The FlxSprite from which you want to load graphic data
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
+	public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite
+	{
+		if (!exists)
+		{
+			FlxG.log.warn("Warning, trying to clone " + Type.getClassName(Type.getClass(this)) + " object that doesn't exist.");
+		}
+		
+		region = Sprite.region.clone();
+		flipped = Sprite.flipped;
+		bakedRotation = Sprite.bakedRotation;
+		cachedGraphics = Sprite.cachedGraphics;
+		
+		width = frameWidth = Sprite.frameWidth;
+		height = frameHeight = Sprite.frameHeight;
+		if (bakedRotation > 0)
+		{
+			width = Sprite.width;
+			height = Sprite.height;
+			centerOffsets();
+		}
+		
+		updateFrameData();
+		resetHelpers();
+		antialiasing = Sprite.antialiasing;
+		animation.copyFrom(Sprite.animation);
+		return this;
+	}
+	
+	/**
+	 * This function creates a flat colored square image dynamically.
+	 * 
+	 * @param	Width		The width of the sprite you want to generate.
+	 * @param	Height		The height of the sprite you want to generate.
+	 * @param	Color		Specifies the color of the generated block (ARGB format).
+	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.  Default is false.
+	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
+	public function makeGraphic(Width:Int, Height:Int, Color:Int = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
+	{
+		bakedRotation = 0;
+		cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
+		region = new Region();
+		region.width = Width;
+		region.height = Height;
+		width = region.tileWidth = frameWidth = cachedGraphics.bitmap.width;
+		height = region.tileHeight = frameHeight = cachedGraphics.bitmap.height;
+		animation.destroyAnimations();
+		updateFrameData();
+		resetHelpers();
 		return this;
 	}
 	
