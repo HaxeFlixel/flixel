@@ -39,7 +39,7 @@ class FlxRandom
 	/**
 	 * Internal seed used to generate new random numbers.
 	 */
-	static private var _internalSeed:Int = 1;
+	private static var _internalSeed:Int = 1;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
@@ -54,25 +54,25 @@ class FlxRandom
 	/**
 	 * Internal helper variables.
 	 */
-	static private var _intHelper:Int = 0;
-	static private var _intHelper2:Int = 0;
-	static private var _intHelper3:Int = 0;
-	static private var _floatHelper:Float = 0;
-	static private var _arrayFloatHelper:Array<Float> = null;
-	static private var _red:Int = 0;
-	static private var _green:Int = 0;
-	static private var _blue:Int = 0;
-	static private var _alpha:Int = 0;
+	private static var _intHelper:Int = 0;
+	private static var _intHelper2:Int = 0;
+	private static var _intHelper3:Int = 0;
+	private static var _floatHelper:Float = 0;
+	private static var _arrayFloatHelper:Array<Float> = null;
+	private static var _red:Int = 0;
+	private static var _green:Int = 0;
+	private static var _blue:Int = 0;
+	private static var _alpha:Int = 0;
 	
 	#if FLX_RECORD
 	/**
 	 * Internal storage for the seed used to generate the most recent state.
 	 */
-	static private var _stateSeed:Int = 1;
+	private static var _stateSeed:Int = 1;
 	/**
 	 * The seed to be used by the recording requested in FlxGame.
 	 */
-	static private var _recordingSeed:Int = 1;
+	private static var _recordingSeed:Int = 1;
 	
 	/**
 	 * Update the seed that was used to create the most recent state.

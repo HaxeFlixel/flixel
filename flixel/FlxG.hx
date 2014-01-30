@@ -245,7 +245,7 @@ class FlxG
 	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
 	
-	static private var _scaleMode:BaseScaleMode = new RatioScaleMode();
+	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.

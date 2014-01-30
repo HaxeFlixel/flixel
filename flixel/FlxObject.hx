@@ -195,9 +195,9 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal static private variables, for performance reasons.
 	 */
-	static private var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
-	static private var _firstSeparateFlxRect:FlxRect = new FlxRect();
-	static private var _secondSeparateFlxRect:FlxRect = new FlxRect();
+	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
+	private static var _firstSeparateFlxRect:FlxRect = new FlxRect();
+	private static var _secondSeparateFlxRect:FlxRect = new FlxRect();
 	
 	
 	/**

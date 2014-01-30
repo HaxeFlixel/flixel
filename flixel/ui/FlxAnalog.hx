@@ -63,7 +63,7 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * A list of analogs that are currently active.
 	 */ 
-	static private var _analogs:Array<FlxAnalog>;
+	private static var _analogs:Array<FlxAnalog>;
 	
 	#if !FLX_NO_TOUCH
 	/**
