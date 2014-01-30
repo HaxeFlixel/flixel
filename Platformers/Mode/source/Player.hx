@@ -43,7 +43,7 @@ class Player extends FlxSprite
 		if (gamepad == null)
 		{
 			// Make sure we don't get a crash on neko when no gamepad is active
-			gamepad = FlxG.gamepads.get(0);
+			gamepad = FlxG.gamepads.getByID(0);
 		}
 		return gamepad;
 	}
