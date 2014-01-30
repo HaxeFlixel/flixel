@@ -40,10 +40,7 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	private var _gamepads:Map<Int, FlxGamepad>;
 	
-	/**
-	 * Get a particular Gamepad object
-	 */
-	public function get(GamepadID:Int):FlxGamepad
+	public function getByID(GamepadID:Int):FlxGamepad
 	{
 		var gamepad:FlxGamepad = _gamepads.get(GamepadID);
 		
@@ -316,14 +313,9 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	#if (cpp || neko)
-	/**
-	 * Event handler so FlxGame can toggle buttons.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		var o:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		
 		if (o == null) 
@@ -341,14 +333,9 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	/**
-	 * Event handler so FlxGame can toggle buttons.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		var object:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		
 		if (object == null) 
@@ -366,37 +353,22 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	/**
-	 * Event handler so FlxGame can update joystick.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.axis = FlashEvent.axis;
 	}
 	
-	/**
-	 * Event handler so FlxGame can update joystick.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleBallMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.ball.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.ball.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
 	
-	/**
-	 * Event handler so FlxGame can update joystick.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.hat.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.hat.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}

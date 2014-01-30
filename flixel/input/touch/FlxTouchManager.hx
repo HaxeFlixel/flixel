@@ -33,6 +33,14 @@ class FlxTouchManager implements IFlxInput
 	private var _touchesCache:Map<Int, FlxTouch>;
 	
 	/**
+	 * WARNING: can be null if no active touch with the provided ID could be found
+	 */
+	public inline function getByID(TouchPointID:Int):FlxTouch
+	{
+		return _touchesCache.get(TouchPointID);
+	}
+	
+	/**
 	 * Return the first touch if there is one, beware of null
 	 */
 	public function getFirst():FlxTouch
