@@ -44,8 +44,12 @@ class FlxTilemapBuffer
 	
 	public var forceComplexRender:Bool = false;
 	
+	/**
+	 * Read-only, nab the actual buffer <code>BitmapData</code> object.
+	 */
+	public var graphic(default, null):BitmapData;
+	
 	#if flash
-	private var _pixels:BitmapData;	
 	private var _flashRect:Rectangle;
 	private var _matrix:Matrix;
 	#end
@@ -65,8 +69,8 @@ class FlxTilemapBuffer
 		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
 		
 		#if flash
-		_pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
-		_flashRect = new Rectangle(0, 0, _pixels.width, _pixels.height);
+		graphic = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
+		_flashRect = new Rectangle(0, 0, graphic.width, graphic.height);
 		_matrix = new Matrix();
 		#end
 		
@@ -79,7 +83,7 @@ class FlxTilemapBuffer
 	public function destroy():Void
 	{
 		#if flash
-		_pixels = null;
+		graphic = null;
 		_matrix = null;
 		#end
 	}
@@ -93,19 +97,7 @@ class FlxTilemapBuffer
 	#if flash
 	public function fill(Color:Int = 0):Void
 	{
-		_pixels.fillRect(_flashRect, Color);
-	}
-	
-	public var pixels(get, never):BitmapData;
-	
-	/**
-	 * Read-only, nab the actual buffer <code>BitmapData</code> object.
-	 * 
-	 * @return	The buffer bitmap data.
-	 */
-	private function get_pixels():BitmapData
-	{
-		return _pixels;
+		graphic.fillRect(_flashRect, Color);
 	}
 	
 	/**
@@ -118,14 +110,14 @@ class FlxTilemapBuffer
 	{
 		if (!forceComplexRender && (ScaleX == 1.0 && ScaleY == 1.0))
 		{
-			Camera.buffer.copyPixels(_pixels, _flashRect, FlashPoint, null, null, true);
+			Camera.buffer.copyPixels(graphic, _flashRect, FlashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
-			Camera.buffer.draw(_pixels, _matrix);
+			Camera.buffer.draw(graphic, _matrix);
 		}
 	}
 	#end

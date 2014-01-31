@@ -648,7 +648,7 @@ class FlxTilemap extends FlxObject
 				
 				if (_flashRect != null)
 				{
-					Buffer.pixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPoint, null, null, true);
+					Buffer.graphic.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPoint, null, null, true);
 					
 					#if !FLX_NO_DEBUG
 					if (FlxG.debugger.drawDebug && !ignoreDrawDebug) 
@@ -673,7 +673,7 @@ class FlxTilemap extends FlxObject
 								debugTile = _debugTileSolid; 
 							}
 							
-							Buffer.pixels.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
+							Buffer.graphic.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
 						}
 					}
 					#end
@@ -2499,7 +2499,7 @@ class FlxTilemap extends FlxObject
 		
 		if (rect != null) 
 		{
-			tileSprite.pixels.copyPixels(cachedGraphics.bitmap, rect, pt);
+			tileSprite.graphic.copyPixels(cachedGraphics.bitmap, rect, pt);
 		}
 		
 		tileSprite.dirty = true;

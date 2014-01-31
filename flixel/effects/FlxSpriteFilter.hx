@@ -50,7 +50,7 @@ class FlxSpriteFilter
 	public var width:Int;
 	public var height:Int;
 	
-	public var pixels:BitmapData;
+	public var graphic:BitmapData;
 	
 	/**
 	 * Create a new filter for a <code>FlxSprite</code>.
@@ -108,7 +108,7 @@ class FlxSpriteFilter
 		sprite = null;
 		backupGraphics = null;
 		backupRegion = null;
-		pixels = null;
+		graphic = null;
 	}
 	
 	/**
@@ -132,23 +132,23 @@ class FlxSpriteFilter
 		var newWidth:Int = numCols * width + numCols - 1;
 		var newHeight:Int = numRows * height + numRows - 1;
 		
-		pixels = new BitmapData(newWidth, newHeight, true, 0x0);
+		graphic = new BitmapData(newWidth, newHeight, true, 0x0);
 		regenBitmapData(false);
 		
 		sprite.x -= Std.int(widthInc / 2);
 		sprite.y -= Std.int(heightInc / 2);
 		
-		var cached:CachedGraphics = FlxG.bitmap.add(pixels);
-		var textureReg:TextureRegion = new TextureRegion(cached, 0, 0, width, height, 1, 1, pixels.width, pixels.height);
+		var cached:CachedGraphics = FlxG.bitmap.add(graphic);
+		var textureReg:TextureRegion = new TextureRegion(cached, 0, 0, width, height, 1, 1, graphic.width, graphic.height);
 		sprite.loadGraphic(textureReg, sprite.frames > 1, sprite.flipped > 0, width, height);
 	}
 	
 	private function regenBitmapData(fill:Bool = true):Void
 	{
-		pixels.lock();
+		graphic.lock();
 		if (fill)
 		{
-			pixels.fillRect(pixels.rect, 0x0);
+			graphic.fillRect(graphic.rect, 0x0);
 		}
 		
 		var numRows:Int = backupRegion.numRows;
@@ -170,10 +170,10 @@ class FlxSpriteFilter
 				helperRect.y = j * (backupRegion.tileHeight + backupRegion.spacingY);
 				helperPoint.y = j * (height + 1) + frameOffsetY;
 				
-				pixels.copyPixels(backupGraphics.bitmap, helperRect, helperPoint);
+				graphic.copyPixels(backupGraphics.bitmap, helperRect, helperPoint);
 			}
 		}
-		pixels.unlock();
+		graphic.unlock();
 	}
 	
 	/**
@@ -204,7 +204,7 @@ class FlxSpriteFilter
 		
 		for (filter in filters) 
 		{
-			pixels.applyFilter(pixels, pixels.rect, helperPoint, filter);
+			graphic.applyFilter(graphic, graphic.rect, helperPoint, filter);
 		}
 		
 		sprite.resetFrameBitmapDatas();

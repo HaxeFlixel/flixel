@@ -104,8 +104,8 @@ class FlxCollision
 		Target.drawFrame();
 	#end
 		
-		var testA:BitmapData = Contact.framePixels;
-		var testB:BitmapData = Target.framePixels;
+		var testA:BitmapData = Contact.frameGraphic;
+		var testB:BitmapData = Target.frameGraphic;
 		
 		var overlapWidth:Int = Std.int(intersect.width);
 		var overlapHeight:Int = Std.int(intersect.height);
@@ -219,7 +219,7 @@ class FlxCollision
 		
 		#if flash
 		// How deep is pointX/Y within the rect?
-		var test:BitmapData = Target.framePixels;
+		var test:BitmapData = Target.frameGraphic;
 		#else
 		var test:BitmapData = Target.getFlxFrameBitmapData();
 		#end

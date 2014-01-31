@@ -117,7 +117,7 @@ class FlxTrailArea extends FlxSprite
 		
 		setSize(Width, Height);
 		// this sets cachedGraphics, which would cause the default 16x16 image to be loaded if it's null in calcFrame
-		pixels = framePixels; 
+		graphic = frameGraphic; 
 		
 		group = new FlxTypedGroup<FlxSprite>();
 		
@@ -146,7 +146,7 @@ class FlxTrailArea extends FlxSprite
 		if ((Width != _width) || (Height != _height)) {
 			_width = Width;
 			_height = Height;
-			framePixels = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
+			frameGraphic = new BitmapData(Std.int(_width), Std.int(_height), true, FlxColor.TRANSPARENT);
 		}
 	}
 	
@@ -166,10 +166,10 @@ class FlxTrailArea extends FlxSprite
 		if (_counter >= delay) 
 		{
 			_counter = 0;
-			framePixels.lock();
+			frameGraphic.lock();
 			//Color transform bitmap
 			var cTrans = new ColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
-			framePixels.colorTransform(new Rectangle(0, 0, framePixels.width, framePixels.height), cTrans);
+			frameGraphic.colorTransform(new Rectangle(0, 0, frameGraphic.width, frameGraphic.height), cTrans);
 			
 			//Copy the graphics of all sprites on the renderBitmap
 			for (member in group.members)
@@ -178,7 +178,7 @@ class FlxTrailArea extends FlxSprite
 				{
 					if (simpleRender) 
 					{
-						framePixels.copyPixels(member.framePixels, new Rectangle(0, 0, member.frameWidth, member.frameHeight), 
+						frameGraphic.copyPixels(member.frameGraphic, new Rectangle(0, 0, member.frameWidth, member.frameHeight), 
 												new Point(member.x - x, member.y - y), null, null, true);
 					}
 					else 
@@ -192,15 +192,15 @@ class FlxTrailArea extends FlxSprite
 						}
 						matrix.translate((member.frameWidth / 2), (member.frameHeight / 2)); 
 						matrix.translate(member.x - x, member.y - y);
-						framePixels.draw(member.framePixels, matrix, member.colorTransform, blendMode, null, antialiasing);
+						frameGraphic.draw(member.frameGraphic, matrix, member.colorTransform, blendMode, null, antialiasing);
 					}
 					
 				}
 			}
 			
-			framePixels.unlock();
+			frameGraphic.unlock();
 			//Apply the updated bitmap
-			pixels = framePixels;
+			graphic = frameGraphic;
 		}
 		super.draw();
 	}
@@ -210,7 +210,7 @@ class FlxTrailArea extends FlxSprite
 	 */
 	public inline function resetTrail():Void
 	{
-		framePixels.fillRect(new Rectangle(0, 0, framePixels.width, framePixels.height), 0x00000000);
+		frameGraphic.fillRect(new Rectangle(0, 0, frameGraphic.width, frameGraphic.height), 0x00000000);
 	}
 	
 	/**
@@ -242,7 +242,7 @@ class FlxTrailArea extends FlxSprite
 			Width = FlxG.width;
 		}
 		if (Width != _width) {
-			framePixels = new BitmapData(Std.int(Width), Std.int(_height), true, FlxColor.TRANSPARENT);
+			frameGraphic = new BitmapData(Std.int(Width), Std.int(_height), true, FlxColor.TRANSPARENT);
 		}
 		return _width = Width;
 	}
@@ -264,7 +264,7 @@ class FlxTrailArea extends FlxSprite
 			Height = FlxG.height;
 		}
 		if (Height != _height) {
-			framePixels = new BitmapData(Std.int(_width), Std.int(Height), true, FlxColor.TRANSPARENT);
+			frameGraphic = new BitmapData(Std.int(_width), Std.int(Height), true, FlxColor.TRANSPARENT);
 		}
 		return _height = Height;
 	}

@@ -86,7 +86,7 @@ class FlxSpriteUtil
 		}
 		
 		data.copyChannel(maskData, new Rectangle(0, 0, data.width, data.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
-		output.pixels = data;
+		output.graphic = data;
 		return output;
 	}
 	
@@ -104,9 +104,9 @@ class FlxSpriteUtil
 	 */
 	public static function alphaMaskFlxSprite(sprite:FlxSprite, mask:FlxSprite, output:FlxSprite):FlxSprite
 	{
-		var data:BitmapData = sprite.pixels;
-		data.copyChannel(mask.pixels, new Rectangle(0, 0, sprite.width, sprite.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
-		output.pixels = data;	
+		var data:BitmapData = sprite.graphic;
+		data.copyChannel(mask.graphic, new Rectangle(0, 0, sprite.width, sprite.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
+		output.graphic = data;	
 		return output;
 	}
 	
@@ -463,7 +463,7 @@ class FlxSpriteUtil
 			drawStyle.smoothing = false;
 		}
 		
-		sprite.pixels.draw(flashGfxSprite, drawStyle.matrix, drawStyle.colorTransform, 
+		sprite.graphic.draw(flashGfxSprite, drawStyle.matrix, drawStyle.colorTransform, 
 							drawStyle.blendMode, drawStyle.clipRect, drawStyle.smoothing);
 		sprite.dirty = true;
 		sprite.resetFrameBitmapDatas();
@@ -517,9 +517,9 @@ class FlxSpriteUtil
 	 */
 	public static function fill(sprite:FlxSprite, Color:Int):FlxSprite
 	{
-		sprite.pixels.fillRect(sprite.pixels.rect, Color);
+		sprite.graphic.fillRect(sprite.graphic.rect, Color);
 		
-		if (sprite.pixels != sprite.framePixels)
+		if (sprite.graphic != sprite.frameGraphic)
 		{
 			sprite.dirty = true;
 		}

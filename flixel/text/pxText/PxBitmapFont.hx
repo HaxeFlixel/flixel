@@ -648,7 +648,7 @@ class PxBitmapFont
 	public var numLetters(get, never):Int;
 	
 	#if !flash
-	public var pixels(get_pixels, null):BitmapData;
+	public var graphic(get_pixels, null):BitmapData;
 	
 	private function get_pixels():BitmapData 
 	{

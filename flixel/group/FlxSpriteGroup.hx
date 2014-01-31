@@ -946,7 +946,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return the BitmapData passed in as parameter
 	 */
-	override private function set_pixels(Value:BitmapData):BitmapData 
+	override private inline function set_graphic(Value:BitmapData):BitmapData 
 	{
 		return Value;
 	}
@@ -955,7 +955,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return the FlxFrame passed in as parameter
 	 */
-	override private function set_frame(Value:FlxFrame):FlxFrame 
+	override private inline function set_frame(Value:FlxFrame):FlxFrame 
 	{
 		return Value;
 	}
@@ -964,7 +964,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return WARNING: returns null
 	 */
-	override private function get_pixels():BitmapData 
+	override private inline function get_graphic():BitmapData 
 	{
 		return null;
 	}
@@ -973,7 +973,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return WARNING: returns null
 	 */
-	override private function get_colorTransform():ColorTransform 
+	override private inline function get_colorTransform():ColorTransform 
 	{
 		return null;
 	}
