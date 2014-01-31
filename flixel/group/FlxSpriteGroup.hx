@@ -727,34 +727,6 @@ class FlxSpriteGroup extends FlxSprite
 		return super.set_solid(Value);
 	}
 	
-	override private function set_origin(Value:FlxPoint):FlxPoint
-	{
-		if (exists && origin != Value && Value != null)
-			transformChildren(originTransform, Value);
-		return origin = Value;
-	}
-	
-	override private function set_offset(Value:FlxPoint):FlxPoint
-	{
-		if (exists && offset != Value && Value != null)
-			transformChildren(offsetTransform, Value);
-		return offset = Value;
-	}
-	
-	override private function set_scale(Value:FlxPoint):FlxPoint
-	{
-		if (exists && scale != Value && Value != null)
-			transformChildren(scaleTransform, Value);
-		return scale = Value;
-	}
-	
-	override private function set_scrollFactor(Value:FlxPoint):FlxPoint
-	{
-		if (exists && scrollFactor != Value && Value != null)
-			transformChildren(scrollFactorTransform, Value);
-		return scrollFactor = Value;
-	}
-	
 	override private function set_color(Value:Int):Int 
 	{
 		if (exists && color != Value)

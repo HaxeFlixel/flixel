@@ -181,38 +181,38 @@ class FlxSlider extends FlxSpriteGroup
 	 */
 	private function createSlider():Void
 	{
-		_offset = new FlxPoint(7, 18); 
-		_bounds = new FlxRect(x + _offset.x, y +_offset.y, _width, _height);
+		offset.set(7, 18); 
+		_bounds = new FlxRect(x + offset.x, y +offset.y, _width, _height);
 		
 		// Creating the "body" of the slider
-		body = new FlxSprite(_offset.x, _offset.y);
+		body = new FlxSprite(offset.x, offset.y);
 		body.makeGraphic(_width, _height, 0);
 		body.scrollFactor.set();
 		FlxSpriteUtil.drawLine(body, 0, _height / 2, _width, _height / 2, { color:_color, thickness:_thickness }); 
 		
-		handle = new FlxSprite(_offset.x, _offset.y);
+		handle = new FlxSprite(offset.x, offset.y);
 		handle.makeGraphic(_thickness, _height, _handleColor);
 		handle.scrollFactor.set();
 		
 		// Creating the texts
-		nameLabel = new FlxText(_offset.x, 0, _width, varString);
+		nameLabel = new FlxText(offset.x, 0, _width, varString);
 		nameLabel.alignment = "center";
 		nameLabel.color = _color;
 		nameLabel.scrollFactor.set();
 		
-		var textOffset:Float = _height + _offset.y + 3;
+		var textOffset:Float = _height + offset.y + 3;
 		
-		valueLabel = new FlxText(_offset.x, textOffset, _width);
+		valueLabel = new FlxText(offset.x, textOffset, _width);
 		valueLabel.alignment = "center";
 		valueLabel.color = _handleColor;
 		valueLabel.scrollFactor.set();
 		
-		minLabel = new FlxText( -50 + _offset.x, textOffset, 100, Std.string(minValue));
+		minLabel = new FlxText( -50 + offset.x, textOffset, 100, Std.string(minValue));
 		minLabel.alignment = "center";
 		minLabel.color = _color;
 		minLabel.scrollFactor.set();
 		
-		maxLabel = new FlxText(_width - 50 + _offset.x, textOffset, 100, Std.string(maxValue));
+		maxLabel = new FlxText(_width - 50 + offset.x, textOffset, 100, Std.string(maxValue));
 		maxLabel.alignment = "center";
 		maxLabel.color = _color;
 		maxLabel.scrollFactor.set();
@@ -386,7 +386,7 @@ class FlxSlider extends FlxSpriteGroup
 		FlxG.safeDestroy(valueLabel);
 		
 		_bounds = null;
-		_offset = null;
+		offset = null;
 		
 		super.destroy();
 	}
@@ -398,16 +398,16 @@ class FlxSlider extends FlxSpriteGroup
 	
 	private function get_expectedPos():Float 
 	{ 
-		var pos:Float = x + _offset.x + ((_width - handle.width) * ((value - minValue) / (maxValue - minValue)));
+		var pos:Float = x + offset.x + ((_width - handle.width) * ((value - minValue) / (maxValue - minValue)));
 		
 		// Make sure the pos stays within the bounds
-		if (pos > x + _width + _offset.x)
+		if (pos > x + _width + offset.x)
 		{
-			pos = x + _width + _offset.x;
+			pos = x + _width + offset.x;
 		}
-		else if (pos < x + _offset.x)
+		else if (pos < x + offset.x)
 		{
-			pos = x + _offset.x; 
+			pos = x + offset.x; 
 		}
 		
 		return pos; 
@@ -420,7 +420,7 @@ class FlxSlider extends FlxSpriteGroup
 	
 	private function get_relativePos():Float 
 	{ 
-		var pos:Float = (handle.x - x - _offset.x) / (_width - handle.width); 
+		var pos:Float = (handle.x - x - offset.x) / (_width - handle.width); 
 		
 		// Relative position can't be bigger than 1
 		if (pos > 1) 
