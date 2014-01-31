@@ -16,14 +16,14 @@ interface IFlxSprite extends IFlxBasic
 	public var moves(default, set):Bool;
 	public var immovable(default, set):Bool;
 	
-	public var offset(default, set):FlxPoint;
-	public var origin(default, set):FlxPoint;
-	public var scale(default, set):FlxPoint;
-	public var velocity:FlxPoint;
-	public var maxVelocity:FlxPoint;
-	public var acceleration:FlxPoint;
-	public var drag:FlxPoint;
-	public var scrollFactor(default, set):FlxPoint;
+	public var offset(default, null):FlxPoint;
+	public var origin(default, null):FlxPoint;
+	public var scale(default, null):FlxPoint;
+	public var velocity(default, null):FlxPoint;
+	public var maxVelocity(default, null):FlxPoint;
+	public var acceleration(default, null):FlxPoint;
+	public var drag(default, null):FlxPoint;
+	public var scrollFactor(default, null):FlxPoint;
 
 	public function reset(X:Float, Y:Float):Void;
 	public function setPosition(X:Float = 0, Y:Float = 0):Void;

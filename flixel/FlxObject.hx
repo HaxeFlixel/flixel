@@ -107,26 +107,26 @@ class FlxObject extends FlxBasic
 	 * Controls how much this object is affected by camera scrolling.
 	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
 	 */
-	public var scrollFactor(default, set):FlxPoint;
+	public var scrollFactor(default, null):FlxPoint;
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity:FlxPoint;
+	public var velocity(default, null):FlxPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration:FlxPoint;
+	public var acceleration(default, null):FlxPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
 	 */
-	public var drag:FlxPoint;
+	public var drag(default, null):FlxPoint;
 	/**
 	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity:FlxPoint;
+	public var maxVelocity(default, null):FlxPoint;
 	/**
 	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
@@ -175,7 +175,7 @@ class FlxObject extends FlxBasic
 	 * Important variable for collision processing.
 	 * By default this value is set automatically during <code>preUpdate()</code>.
 	 */
-	public var last:FlxPoint;
+	public var last(default, null):FlxPoint;
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with 
 	 * (makes sense for horizontally-moving platforms in platformers for example).
@@ -190,11 +190,11 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal statically typed FlxPoint vars, for performance reasons.
 	 */
-	private var _point:FlxPoint;
-	private var _scrollFactor:FlxPoint;
+	
 	/**
 	 * Internal static private variables, for performance reasons.
 	 */
+	private var _point:FlxPoint;
 	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
 	private static var _firstSeparateFlxRect:FlxRect = new FlxRect();
 	private static var _secondSeparateFlxRect:FlxRect = new FlxRect();
@@ -259,7 +259,7 @@ class FlxObject extends FlxBasic
 		last = null;
 		cameras = null;
 		_point = null;
-		_scrollFactor = null;
+		scrollFactor = null;
 		
 		framesData = null;
 		cachedGraphics = null;
@@ -363,8 +363,8 @@ class FlxObject extends FlxBasic
 		}
 
 		//get bounding box coordinates
-		var boundingBoxX:Float = x - (Camera.scroll.x * _scrollFactor.x); //copied from getScreenXY()
-		var boundingBoxY:Float = y - (Camera.scroll.y * _scrollFactor.y);
+		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
+		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
 		#if flash
 		var boundingBoxWidth:Int = Std.int(width);
 		var boundingBoxHeight:Int = Std.int(height);
@@ -580,7 +580,7 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		return point.set(x - (Camera.scroll.x * _scrollFactor.x), y - (Camera.scroll.y * _scrollFactor.y));
+		return point.set(x - (Camera.scroll.x * scrollFactor.x), y - (Camera.scroll.y * scrollFactor.y));
 	}
 	
 	/**
@@ -1047,12 +1047,6 @@ class FlxObject extends FlxBasic
 	private function set_forceComplexRender(Value:Bool):Bool 
 	{
 		return forceComplexRender = Value;
-	}
-	
-	private function set_scrollFactor(Value:FlxPoint):FlxPoint
-	{
-		_scrollFactor = cast Value;
-		return scrollFactor = Value;
 	}
 	
 	#if !FLX_NO_DEBUG
