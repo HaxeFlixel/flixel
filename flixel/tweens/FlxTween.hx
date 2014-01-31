@@ -31,7 +31,7 @@ class FlxTween
 	/**
 	 * The tweening plugin that handles all the tweens.
 	 */
-	static public var manager:TweenManager;
+	public static var manager:TweenManager;
 	
 	/**
 	 * Adds a tween to the tween manager, with a delay if specified.
@@ -500,12 +500,12 @@ class FlxTween
 		{
 			type = FlxTween.PERSIST | FlxTween.BACKWARD;
 		}
-		_type = type;
+		this.type = type;
 		this.complete = complete;
 		_ease = ease;
 		_t = 0;
 		
-		_backward = (_type & BACKWARD) > 0;
+		_backward = (this.type & BACKWARD) > 0;
 		userData = { };
 	}
 	
@@ -582,7 +582,7 @@ class FlxTween
 			complete(this);
 		}
 		
-		switch ((_type & ~ FlxTween.BACKWARD))
+		switch ((type & ~ FlxTween.BACKWARD))
 		{
 			case FlxTween.PERSIST:
 				_time = duration;
@@ -617,7 +617,7 @@ class FlxTween
 
 	public var finished(default, null):Bool;
 
-	private var _type:Int;
+	public var type:Int;
 	private var _ease:EaseFunction;
 	private var _t:Float;
 

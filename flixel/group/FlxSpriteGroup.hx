@@ -43,6 +43,13 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	private var _skipTransformChildren:Bool = false;
 	
+	#if !FLX_NO_DEBUG
+	/**
+	 * Just a helper variable to check if this group has already been drawn on debug layer
+	 */
+	private var _isDrawnDebug:Bool = false;
+	#end
+	
 	/**
 	 * Create a new <code>FlxSpriteGroup</code>
 	 * 
@@ -126,7 +133,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
-	override public function onScreen(Camera:FlxCamera = null):Bool 
+	override public function isOnScreen(?Camera:FlxCamera):Bool 
 	{
 		if (Camera == null)
 		{
@@ -138,7 +145,7 @@ class FlxSpriteGroup extends FlxSprite
 		{
 			if (sprite != null && sprite.exists && sprite.visible)
 			{
-				result = result || sprite.onScreen(Camera);
+				result = result || sprite.isOnScreen(Camera);
 			}
 		}
 		
@@ -204,7 +211,7 @@ class FlxSpriteGroup extends FlxSprite
 	{
 		group.draw();
 		#if !FLX_NO_DEBUG
-		isDrawnDebug = false;
+		_isDrawnDebug = false;
 		#end
 	}
 	
@@ -242,11 +249,6 @@ class FlxSpriteGroup extends FlxSprite
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * Just a helper variable to check if this group has already been drawn on debug layer
-	 */
-	private var isDrawnDebug:Bool = false;
-	
-	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
 	 * 
@@ -254,10 +256,10 @@ class FlxSpriteGroup extends FlxSprite
 	 */
 	override public function drawDebugOnCamera(?Camera:FlxCamera):Void
 	{
-		if (!isDrawnDebug)	
+		if (!_isDrawnDebug)	
 		{
 			group.drawDebug();
-			isDrawnDebug = true;
+			_isDrawnDebug = true;
 		}
 	}
 	#end
@@ -761,9 +763,9 @@ class FlxSpriteGroup extends FlxSprite
 	
 	override private function set_blend(Value:BlendMode):BlendMode 
 	{
-		if (exists && _blend != Value)
+		if (exists && (blend != Value))
 			transformChildren(blendTransform, Value);
-		return _blend = Value;
+		return blend = Value;
 	}
 	
 	/**
@@ -1017,22 +1019,22 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override private function resetHelpers():Void {  }
+	inline override private function resetHelpers():Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {  }
+	inline override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override private function updateColorTransform():Void {  }
+	inline override private function updateColorTransform():Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override public function updateFrameData():Void {  }
+	inline override public function updateFrameData():Void {}
 }
 
 /**

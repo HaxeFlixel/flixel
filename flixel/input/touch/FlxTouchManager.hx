@@ -16,7 +16,7 @@ class FlxTouchManager implements IFlxInput
 	/**
 	 * The maximum number of concurrent touch points supported by the current device.
 	 */
-	static public var maxTouchPoints:Int = 0;
+	public static var maxTouchPoints:Int = 0;
 	
 	/**
 	 * All active touches including just created, moving and just released.
@@ -31,6 +31,14 @@ class FlxTouchManager implements IFlxInput
 	 * Helper storage for active touches (for faster access)
 	 */
 	private var _touchesCache:Map<Int, FlxTouch>;
+	
+	/**
+	 * WARNING: can be null if no active touch with the provided ID could be found
+	 */
+	public inline function getByID(TouchPointID:Int):FlxTouch
+	{
+		return _touchesCache.get(TouchPointID);
+	}
 	
 	/**
 	 * Return the first touch if there is one, beware of null
@@ -171,7 +179,7 @@ class FlxTouchManager implements IFlxInput
 		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
 		{
-			touch.updateTouchPosition(FlashEvent.stageX, FlashEvent.stageY); 
+			touch.updatePosition(FlashEvent.stageX, FlashEvent.stageY); 
 			
 			if (touch._current > 0) 
 			{
@@ -222,7 +230,7 @@ class FlxTouchManager implements IFlxInput
 		
 		if (touch != null)
 		{
-			touch.updateTouchPosition(FlashEvent.stageX, FlashEvent.stageY); 
+			touch.updatePosition(FlashEvent.stageX, FlashEvent.stageY); 
 		}
 	}
 	

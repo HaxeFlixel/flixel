@@ -6,67 +6,39 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
+import flixel.input.FlxSwipe;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxPoint;
 
 /**
  * Helper class, contains and track touch points in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
-class FlxTouch extends FlxPoint
+@:allow(flixel.input.touch.FlxTouchManager)
+class FlxTouch extends FlxPoint implements IFlxDestroyable
 {	
-	/**
-	 * A unique identification number (as an Int) assigned to the touch point. 
-	 */
-	public var touchPointID(default, null):Int;
-	/**
-	 * Current X position of the touch point on the screen.
-	 */
 	public var screenX:Int = 0;
-	/**
-	 * Current Y position of the touch point on the screen.
-	 */
 	public var screenY:Int = 0;
 	
 	/**
-	 * Helper variable for tracking whether the touch was just began or just ended.
+	 * The unique ID of this touch. Example: if there are 3 concurrently active touches 
+	 * (and the device supporst that many), they will have the IDs 0, 1 and 2.
 	 */
-	@:allow(flixel.input.touch.FlxTouchManager)
+	public var touchPointID(default, null):Int;
+	
+	public var pressed(get, never):Bool;
+	public var justPressed(get, never):Bool;
+	public var justReleased(get, never):Bool;
+	public var isActive(get, never):Bool;
+	
 	private var _current:Int = 0;
-	/**
-	 * Helper variable for tracking whether the touch was just began or just ended.
-	 */
-	@:allow(flixel.input.touch.FlxTouchManager)
 	private var _last:Int = 0;
-	/**
-	 * Helper variables for recording purposes.
-	 */
 	private var _point:FlxPoint;
-	/**
-	 * Internal helper var storing the global screen position.
-	 */
 	private var _globalScreenPosition:FlxPoint;
-	/**
-	 * Internal helper var for updateTouchPosition().
-	 */
 	private var _flashPoint:Point;
 	
-	/**
-	 * Constructor
-	 * 
-	 * @param	X			stageX touch coordinate
-	 * @param	Y			stageX touch coordinate
-	 * @param	PointID		touchPointID of the touch
-	 */
-	public function new(X:Float = 0, Y:Float = 0, PointID:Int = 0)
-	{
-		super();
-		_point = new FlxPoint();
-		_globalScreenPosition = new FlxPoint();
-		
-		_flashPoint = new Point();
-		updateTouchPosition(X, Y);
-		touchPointID = PointID;
-	}
+	private var _justPressedPosition:FlxPoint;
+	private var _justPressedTimeInTicks:Float;
 	
 	/**
 	 * Clean up memory.
@@ -76,53 +48,7 @@ class FlxTouch extends FlxPoint
 		_point = null;
 		_globalScreenPosition = null;
 		_flashPoint = null;
-	}
-
-	/**
-	 * Called by the internal game loop to update the just pressed/just released flags.
-	 */
-	public function update():Void
-	{
-		if ((_last == -1) && (_current == -1))
-		{
-			_current = 0;
-		}
-		else if ((_last == 2) && (_current == 2))
-		{
-			_current = 1;
-		}
-		_last = _current;
-	}
-	
-	/**
-	 * Function for updating touch coordinates. Called by the TouchManager.
-	 * 
-	 * @param	X	stageX touch coordinate
-	 * @param	Y	stageY touch coordinate
-	 */
-	public function updateTouchPosition(X:Float, Y:Float):Void
-	{
-		_flashPoint.x = X;
-		_flashPoint.y = Y;
-		_flashPoint = FlxG.game.globalToLocal(_flashPoint);
-		
-		_globalScreenPosition.x = _flashPoint.x;
-		_globalScreenPosition.y = _flashPoint.y;
-		updateCursor();
-	}
-	
-	/**
-	 * Internal function for helping to update world coordinates.
-	 */
-	private function updateCursor():Void
-	{
-		//update the x, y, screenX, and screenY variables based on the default camera.
-		//This is basically a combination of getWorldPosition() and getScreenPosition()
-		var camera:FlxCamera = FlxG.camera;
-		screenX = Math.floor((_globalScreenPosition.x - camera.x) / camera.zoom);
-		screenY = Math.floor((_globalScreenPosition.y - camera.y) / camera.zoom);
-		x = screenX + camera.scroll.x;
-		y = screenY + camera.scroll.y;
+		_justPressedPosition = null;
 	}
 	
 	/**
@@ -209,7 +135,7 @@ class FlxTouch extends FlxPoint
 	 */
 	public function reset(X:Float, Y:Float, PointID:Int):Void
 	{
-		updateTouchPosition(X, Y);
+		updatePosition(X, Y);
 		touchPointID = PointID;
 		_current = 0;
 		_last = 0;
@@ -222,34 +148,81 @@ class FlxTouch extends FlxPoint
 	}
 	
 	/**
-	 * Check to see if the touch is pressed.
-	 * @return	Whether the touch is pressed.
+	 * @param	X			stageX touch coordinate
+	 * @param	Y			stageX touch coordinate
+	 * @param	PointID		touchPointID of the touch
 	 */
-	public var pressed(get, never):Bool;
-	
-	private inline function get_pressed():Bool { return _current > 0; }
+	private function new(X:Float = 0, Y:Float = 0, PointID:Int = 0)
+	{
+		super();
+		_point = new FlxPoint();
+		_globalScreenPosition = new FlxPoint();
+		_justPressedPosition = new FlxPoint();
+		
+		_flashPoint = new Point();
+		updatePosition(X, Y);
+		touchPointID = PointID;
+	}
 	
 	/**
-	 * Check to see if the touch was just began.
-	 * @return Whether the touch was just began.
+	 * Called by the internal game loop to update the just pressed/just released flags.
 	 */
-	public var justPressed(get, never):Bool;
-	
-	private inline function get_justPressed():Bool { return _current == 2; }
+	private function update():Void
+	{
+		if ((_last == -1) && (_current == -1))
+		{
+			_current = 0;
+		}
+		else if ((_last == 2) && (_current == 2))
+		{
+			_current = 1;
+		}
+		_last = _current;
+		
+		if (justPressed)
+		{
+			_justPressedPosition.set(screenX, screenY);
+			_justPressedTimeInTicks = FlxG.game.ticks;
+		}
+		else if (justReleased)
+		{
+			FlxG.swipes.push(new FlxSwipe(touchPointID, _justPressedPosition, getScreenPosition(), _justPressedTimeInTicks));
+		}
+	}
 	
 	/**
-	 * Check to see if the touch was just ended.
-	 * @return	Whether the touch was just ended.
+	 * Internal function for helping to update world coordinates.
 	 */
-	public var justReleased(get, never):Bool;
+	private function updateCursor():Void
+	{
+		//update the x, y, screenX, and screenY variables based on the default camera.
+		//This is basically a combination of getWorldPosition() and getScreenPosition()
+		var camera:FlxCamera = FlxG.camera;
+		screenX = Math.floor((_globalScreenPosition.x - camera.x) / camera.zoom);
+		screenY = Math.floor((_globalScreenPosition.y - camera.y) / camera.zoom);
+		x = screenX + camera.scroll.x;
+		y = screenY + camera.scroll.y;
+	}
 	
+	/**
+	 * Function for updating touch coordinates. Called by the TouchManager.
+	 * 
+	 * @param	X	stageX touch coordinate
+	 * @param	Y	stageY touch coordinate
+	 */
+	private function updatePosition(X:Float, Y:Float):Void
+	{
+		_flashPoint.x = X;
+		_flashPoint.y = Y;
+		_flashPoint = FlxG.game.globalToLocal(_flashPoint);
+		
+		_globalScreenPosition.x = _flashPoint.x;
+		_globalScreenPosition.y = _flashPoint.y;
+		updateCursor();
+	}
+	
+	private inline function get_pressed()     :Bool { return _current > 0;   }
+	private inline function get_justPressed() :Bool { return _current == 2;  }
 	private inline function get_justReleased():Bool { return _current == -1; }
-	
-	/**
-	 * Check to see if the touch is active.
-	 * @return	Whether the touch is active.
-	 */
-	public var isActive(get, never):Bool;
-	
-	private inline function get_isActive():Bool { return _current != 0; }
+	private inline function get_isActive()    :Bool { return _current != 0;  }
 }

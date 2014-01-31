@@ -218,7 +218,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
+	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -244,10 +244,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			{
 				randomFrame = FlxRandom.intRanged( 0, totalFrames - 1 );
 				
-				if (BakedRotations > 0)
+				if (bakedRotationAngles > 0)
 				{
 					#if flash
-					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame, false, AutoBuffer);
+					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, randomFrame, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics, true);
 					#end
@@ -260,10 +260,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			}
 			else
 			{
-				if (BakedRotations > 0)
+				if (bakedRotationAngles > 0)
 				{
 					#if flash
-					particle.loadRotatedGraphic(Graphics, BakedRotations, -1, false, AutoBuffer);
+					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, -1, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics);
 					#end

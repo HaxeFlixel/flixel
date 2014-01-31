@@ -46,6 +46,9 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
+#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+import flixel.input.FlxSwipe;
+#end
 
 /**
  * Global helper class for audio, input, the camera system, the debugger and other global properties.
@@ -56,37 +59,37 @@ class FlxG
 	 * Whether the game should be paused when focus is lost or not. Use FLX_NO_FOCUS_LOST_SCREEN if you only want to get rid of the default
 	 * pause screen. Override onFocus() and onFocusLost() for your own behaviour in your state.
 	 */
-	static public var autoPause:Bool = true;
+	public static var autoPause:Bool = true;
 	/**
 	 * WARNING: Changing this can lead to issues with physics and the recording system. Setting this to 
 	 * false might lead to smoother animations (even at lower fps) at the cost of physics accuracy.
 	 */
-	static public var fixedTimestep:Bool = true;
+	public static var fixedTimestep:Bool = true;
 	/**
 	 * How fast or slow time should pass in the game; default is 1.0.
 	 */
-	static public var timeScale:Float = 1;
+	public static var timeScale:Float = 1;
 	/**
 	 * How many times the quad tree should divide the world on each axis. Generally, sparse collisions can have fewer divisons,
 	 * while denser collision activity usually profits from more. Default value is 6.
 	 */
-	static public var worldDivisions:Int;
+	public static var worldDivisions:Int;
 	/**
 	 * By default this just refers to the first entry in the <code>FlxG.cameras.list</code> 
 	 * array but you can do what you like with it.
 	 */
-	static public var camera:FlxCamera;
+	public static var camera:FlxCamera;
 	
 	/**
 	 * The HaxeFlixel version, in semantic versioning syntax. Use <code>Std.string()</code>
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
-	static public var VERSION(default, null):FlxVersion = new FlxVersion(3, 1, 0, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 1, 0, "dev");
 	
 	/**
 	 * Internal tracker for game object.
 	 */
-	static public var game(default, null):FlxGame;
+	public static var game(default, null):FlxGame;
 	/**
 	 * Read-only: retrieves the Flash stage object (required for event listeners)
 	 * Will be null if it's not safe/useful yet.
@@ -101,7 +104,7 @@ class FlxG
 	 * How many times you want your game to update each second. More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the draw framerate!
 	 */
-	static public var updateFramerate(get, set):Int;
+	public static var updateFramerate(get, set):Int;
 	/**
 	 * How many times you want your game to step each second. More steps usually means greater responsiveness, 
 	 * but it can also slowdown your game if the stage can't keep up with the update routine. NOTE: This is NOT the same thing as the Update framerate!
@@ -112,46 +115,62 @@ class FlxG
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
 	@:allow(flixel.FlxGame)
-	static public var elapsed(default, null):Float = 0;
+	public static var elapsed(default, null):Float = 0;
 	
 	/**
 	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
 	@:allow(flixel.system.scaleModes.StageSizeScaleMode) 
-	static public var width(default, null):Int;
+	public static var width(default, null):Int;
 	/**
 	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
 	 */
 	@:allow(flixel.system.scaleModes.StageSizeScaleMode)
-	static public var height(default, null):Int;
+	public static var height(default, null):Int;
 	/**
 	 * The scale mode the game should use - available policies are <code>FillScaleMode</code>, <code>FixedScaleMode</code>,
 	 * <code>RatioScaleMode</code>, <code>RelativeScaleMode</code> and <code>StageSizeScaleMode</code>.
 	 */
-	static public var scaleMode(default, set):BaseScaleMode;
+	public static var scaleMode(default, set):BaseScaleMode;
 	/**
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
 	 * You can easily toggle fullscreen with eg: <code>FlxG.fullscreen = !FlxG.fullscreen;</code>
 	 */
-	@isVar static public var fullscreen(default, set):Bool = false;
+	@isVar public static var fullscreen(default, set):Bool = false;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use <code>.set()</code> instead of creating a new object!
 	 */
-	static public var worldBounds(default, null):FlxRect = new FlxRect();
+	public static var worldBounds(default, null):FlxRect = new FlxRect();
 	
 	/**
 	 * A <code>FlxSave</code> used internally by flixel to save sound preferences and 
 	 * the history of the console window, but no reason you can't use it for your own stuff too!
 	 */
-	static public var save(default, null):FlxSave = new FlxSave();
+	public static var save(default, null):FlxSave = new FlxSave();
 	
 	#if !FLX_NO_MOUSE
 	/**
 	 * A <code>FlxMouse</code> object for mouse input. e.g.: check if the left mouse button 
 	 * is pressed with <code>if (FlxG.mouse.pressed) { }</code>) </code>in <code>update()</code>.
 	 */
-	static public var mouse(default, null):FlxMouse;
+	public static var mouse(default, null):FlxMouse;
+	#end
+	
+	#if !FLX_NO_TOUCH
+	/**
+	 * A reference to a <code>FlxTouchManager</code> object. 
+	 * Useful for devices with multitouch support.
+	 */
+	public static var touches(default, null):FlxTouchManager;
+	#end
+	
+	#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+	/**
+	 * Contains all "swipes" from both mouse and touch input that have just ended.
+	 */
+	@:allow(flixel.FlxGame)
+	public static var swipes(default, null):Array<FlxSwipe> = [];
 	#end
 
 	#if !FLX_NO_KEYBOARD
@@ -159,15 +178,7 @@ class FlxG
 	 * A <code>FlxKeyboard</code> object for keyboard input e.g.: check if the left arrow key is 
 	 * pressed with <code>if (FlxG.keys.pressed.LEFT) { } </code>in <code>update()</code>.
 	 */
-	static public var keys(default, null):FlxKeyboard;
-	#end
-
-	#if !FLX_NO_TOUCH
-	/**
-	 * A reference to a <code>FlxTouchManager</code> object. 
-	 * Useful for devices with multitouch support.
-	 */
-	public static var touches(default, null):FlxTouchManager;
+	public static var keys(default, null):FlxKeyboard;
 	#end
 	
 	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
@@ -185,67 +196,63 @@ class FlxG
 	#end
 	
 	/**
-	 * From here on: frontEnd classes.
-	 */ 
-	
-	/**
 	 * A reference to the <code>InputFrontEnd</code> object. Mostly used internally, 
 	 * but you can use it too to reset inputs and create input classes of your own.
 	 */
-	static public var inputs(default, null):InputFrontEnd = new InputFrontEnd();
+	public static var inputs(default, null):InputFrontEnd = new InputFrontEnd();
 	/**
 	 * A reference to the <code>ConsoleFrontEnd</code> object. Use it to register functions and objects
 	 * or add new commands to the console window.
 	 */
-	static public var console(default, null):ConsoleFrontEnd = new ConsoleFrontEnd();
+	public static var console(default, null):ConsoleFrontEnd = new ConsoleFrontEnd();
 	/**
 	 * A reference to the <code>LogFrontEnd</code> object. Use it to <code>add</code> messages to the log window. It is recommended 
 	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
 	 */
-	static public var log(default, null):LogFrontEnd = new LogFrontEnd();
+	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
 	
 	/**
 	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
 	 * watch window.
 	 */
-	static public var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
+	public static var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
 	/**
 	 * A reference to the <code>DebuggerFrontEnd</code> object. Use it to show / hide / toggle the debguger
 	 * change its layout, activate visual debugging or change the key used to toggle it.
 	 */
-	static public var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
+	public static var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
 
 	/**
 	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
 	 * and replaying.
 	 */
-	static public var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
+	public static var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
 	
 	/**
 	 * A reference to the <code>BitmapFrontEnd</code> object. Contains things related to bimtaps,
 	 * for example regarding the bitmap cache and the cache itself.
 	 */
-	static public var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
+	public static var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
 	/**
 	 * A reference to the <code>CameraFrontEnd</code> object. Contains things related to cameras,
 	 * a <code>list</code> of all cameras and several effects like <code>flash()</code> or <code>fade()</code>.
 	 */
-	static public var cameras(default, null):CameraFrontEnd = new CameraFrontEnd();
+	public static var cameras(default, null):CameraFrontEnd = new CameraFrontEnd();
 	/**
 	 * A reference to the <code>PluginFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
 	 */
-	static public var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
+	public static var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
 	 * sounds and other things to manage or <code>play()</code> sounds.
 	 */
-	static public var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
+	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
 	
-	static private var _scaleMode:BaseScaleMode = new RatioScaleMode();
+	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
@@ -318,17 +325,14 @@ class FlxG
 	}
 	
 	/**
-	 * A Pixel Perfect Collision check between two FlxSprites.
-	 * It will do a bounds check first, and if that passes it will run a pixel perfect match on the intersecting area.
-	 * Works with rotated and animated sprites.
-	 * It's extremly slow on cpp targets, so I don't recommend you to use it on them.
-	 * Not working on neko target and awfully slows app down
+	 * A Pixel Perfect Collision check between two FlxSprites. It will do a bounds check first, and if that passes it will run a 
+	 * pixel perfect match on the intersecting area. Works with rotated and animated sprites. May be slow, so use it sparingly.
 	 * 
 	 * @param	Sprite1			The first FlxSprite to test against
 	 * @param	Sprite2			The second FlxSprite to test again, sprite order is irrelevant
 	 * @param	AlphaTolerance	The tolerance value above which alpha pixels are included. Default to 255 (must be fully opaque for collision).
 	 * @param	Camera			If the collision is taking place in a camera other than FlxG.camera (the default/current) then pass it here
-	 * @return	Boolean True if the sprites collide, false if not
+	 * @return	Whether the sprites collide
 	 */
 	public static inline function pixelPerfectOverlap(Sprite1:FlxSprite, Sprite2:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
 	{

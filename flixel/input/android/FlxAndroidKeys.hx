@@ -24,7 +24,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
-	inline static private var TOTAL:Int = 2;
+	private static inline var TOTAL:Int = 2;
 	
 	/**
 	 * A map for key lookup.

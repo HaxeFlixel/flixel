@@ -186,7 +186,7 @@ class FlxTrailArea extends FlxSprite
 						var matrix = new Matrix();
 						matrix.scale(member.scale.x, member.scale.y);
 						matrix.translate( -(member.frameWidth / 2), -(member.frameHeight / 2)); 
-						if ((member.angle != 0) && (member.bakedRotation <= 0))
+						if ((member.angle != 0) && (member.bakedRotationAngle <= 0))
 						{
 							matrix.rotate(member.angle * FlxAngle.TO_RAD);
 						}

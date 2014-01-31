@@ -18,9 +18,9 @@ import flixel.util.loaders.CachedGraphics;
  */
 class PxBitmapFont 
 {
-	static private var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
+	private static var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
 	
-	static private var ZERO_POINT:Point = new Point();
+	private static var ZERO_POINT:Point = new Point();
 	
 	#if flash
 	private var _glyphs:Array<BitmapData>;

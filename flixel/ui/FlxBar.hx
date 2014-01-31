@@ -1028,7 +1028,7 @@ class FlxBar extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
-			if (!camera.visible || !camera.exists || !onScreen(camera))
+			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
 				continue;
 			}
@@ -1059,7 +1059,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-			if (!simpleRenderSprite())
+			if (!isSimpleRender())
 			{
 				if (_angleChanged)
 				{
@@ -1175,7 +1175,7 @@ class FlxBar extends FlxSprite
 		return Pixels;
 	}
 	
-	override private function simpleRenderSprite():Bool
+	override public function isSimpleRender():Bool
 	{ 
 		return ((angle == 0) && (scale.x == 1) && (scale.y == 1));
 	}

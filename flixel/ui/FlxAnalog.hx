@@ -50,20 +50,20 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */ 
-	inline static private var NORMAL:Int = 0;
+	private static inline var NORMAL:Int = 0;
 	/**
 	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
 	 */ 
-	inline static private var HIGHLIGHT:Int = 1;
+	private static inline var HIGHLIGHT:Int = 1;
 	/**
 	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
 	 */ 
-	inline static private var PRESSED:Int = 2;	
+	private static inline var PRESSED:Int = 2;
 	
 	/**
 	 * A list of analogs that are currently active.
 	 */ 
-	static private var _analogs:Array<FlxAnalog>;
+	private static var _analogs:Array<FlxAnalog>;
 	
 	#if !FLX_NO_TOUCH
 	/**

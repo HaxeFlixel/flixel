@@ -15,9 +15,9 @@ import flash.events.NetStatusEvent;
  */
 class FlxSave
 {
-	static private var SUCCESS:Int = 0;
-	static private var PENDING:Int = 1;
-	static private var ERROR:Int = 2;
+	private static var SUCCESS:Int = 0;
+	private static var PENDING:Int = 1;
+	private static var ERROR:Int = 2;
 	
 	/**
 	 * Allows you to directly access the data container in the local shared object.
