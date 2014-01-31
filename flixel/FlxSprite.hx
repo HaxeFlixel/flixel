@@ -94,7 +94,6 @@ class FlxSprite extends FlxObject
 	public var scale(default, set):FlxPoint;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
-	 * @default false
 	 */
 	public var antialiasing:Bool = false;
 	/**
@@ -104,10 +103,9 @@ class FlxSprite extends FlxObject
 	public var dirty:Bool = true;
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
-	 * @default null
 	 */
-	public var blend(get, set):BlendMode;
-	private var _blend:BlendMode;
+	public var blend(default, set):BlendMode;
+	
 	#if !flash
 	private var _blendInt:Int = 0;
 	#end
@@ -116,13 +114,9 @@ class FlxSprite extends FlxObject
 	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use <code>alpha</code>. 
 	 */
 	public var color(default, set):Int = 0xffffff;
-	/**
-	 * TODO: Needs docs
-	 */
+	
 	public var colorTransform(get, never):ColorTransform;
-	/**
-	 * TODO: Needs docs
-	 */
+	
 	#if !flash
 	public var isColored:Bool;
 	private var _red:Float = 1.0;
@@ -238,11 +232,7 @@ class FlxSprite extends FlxObject
 			framePixels.dispose();
 		}
 		framePixels = null;
-		#if flash
 		blend = null;
-		#else
-		_blend = null;
-		#end
 		frame = null;
 	}
 	
@@ -1475,11 +1465,6 @@ class FlxSprite extends FlxObject
 		return scale = Value;
 	}
 	
-	private inline function get_blend():BlendMode
-	{
-		return _blend;
-	}
-	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
 		#if !flash
@@ -1503,8 +1488,8 @@ class FlxSprite extends FlxObject
 		{
 			_blendInt = 0;
 		}
-		#end
-		_blend = Value;
-		return Value;
+		#end	
+		
+		return blend = Value;
 	}
 }
