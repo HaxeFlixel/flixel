@@ -18,7 +18,7 @@ class MenuState extends FlxState
 		// Create some sprite
 		var x1:FlxSprite = new FlxSprite(20, 20);
 		// and loading atlas in it finally
-		x1.loadImageFromTexture(	tex1, 
+		x1.loadGraphicFromTexture(	tex1, 
 									true, 
 									true, 
 									"100px-1,202,0,200-Scythescraper.png");
@@ -36,7 +36,7 @@ class MenuState extends FlxState
 		// You can provide first frame to show (see last parameter in loadImageFromTexture() method)
 		// Plus you can generate reversed sprites which is useful for animating character in games
 		var x1:FlxSprite = new FlxSprite(20, 20);
-		x1.loadImageFromTexture(tex3, true, false, "100px-1,202,0,200-Scythescraper.png");
+		x1.loadGraphicFromTexture(tex3, true, false, "100px-1,202,0,200-Scythescraper.png");
 		x1.resetSizeFromFrame();
 		x1.setOriginToCenter();
 		x1.angularVelocity = 50;
@@ -44,14 +44,14 @@ class MenuState extends FlxState
 		
 		// You can load rotated image from atlas. It is very useful for flash target where drawing rotated graphics is very expensive
 		var x2:FlxSprite = new FlxSprite(20, 200);
-		x2.loadRotatedImageFromTexture(tex2, "100px-1,202,0,200-Scythescraper.png", 72, true, true);
+		x2.loadRotatedGraphicFromTexture(tex2, "100px-1,202,0,200-Scythescraper.png", 72, true, true);
 		x2.color = 0xff0000;
 		x2.angularVelocity = 50;
 		add(x2);
 		
 		// You can set sprite's frame by using image name in atlas
 		var x3:FlxSprite = new FlxSprite(200, 20);
-		x3.loadImageFromTexture(tex3, true);
+		x3.loadGraphicFromTexture(tex3, true);
 		x3.animation.frameName = "super_element_50px_0.png";
 		x3.resetSizeFromFrame();
 		x3.setOriginToCenter();
@@ -64,7 +64,7 @@ class MenuState extends FlxState
 		
 		// 1. The first one requires array with names of images from the atlas:
 		var x5:FlxSprite = new FlxSprite(300, 20);
-		x5.loadImageFromTexture(tex5);
+		x5.loadGraphicFromTexture(tex5);
 		// Array with frame names in animation
 		var names:Array<String> = new Array<String>();
 		for (i in 0...20)
@@ -78,7 +78,7 @@ class MenuState extends FlxState
 		
 		// 2. The second one requires three additional parameters: image name prefix, array of frame indicies and image name postfix
 		var x6:FlxSprite = new FlxSprite(300, 200);
-		x6.loadImageFromTexture(tex5);
+		x6.loadGraphicFromTexture(tex5);
 		// Array with frame indicies in animation
 		var indicies:Array<Int> = new Array<Int>();
 		for (i in 0...20)
@@ -92,7 +92,7 @@ class MenuState extends FlxState
 		
 		// And the third one requires only image name prefix and it will sort and add all frames with it to animation
 		var x7:FlxSprite = new FlxSprite(120, 200);
-		x7.loadImageFromTexture(tex5);
+		x7.loadGraphicFromTexture(tex5);
 		x7.animation.addByPrefix("ani", "tiles-", 8);
 		x7.animation.play("ani");
 		x7.angle = 45;
