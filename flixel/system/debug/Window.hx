@@ -15,6 +15,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import openfl.Assets;
 
+@:bitmap("assets/images/debugger/windowHandle.png")	private class GraphicWindowHandle extends BitmapData { }
+
 /**
  * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
  */
@@ -158,7 +160,7 @@ class Window extends Sprite
 		
 		if (_resizable)
 		{
-			_handle = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_WINDOW_HANDLE));
+			_handle = new Bitmap(new GraphicWindowHandle(0, 0));
 			addChild(_handle);
 		}
 		

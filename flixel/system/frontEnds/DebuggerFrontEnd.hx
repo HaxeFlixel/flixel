@@ -1,5 +1,6 @@
 package flixel.system.frontEnds;
 
+import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.system.debug.FlxDebugger.ButtonAlignment;
 import flixel.system.debug.FlxDebugger.DebuggerLayout;
@@ -76,16 +77,18 @@ class DebuggerFrontEnd
 	
 	/**
 	 * Create and add a new debugger button.
-	 * @param	Position	Either LEFT,  MIDDLE or RIGHT.
-	 * @param	IconPath	The path to the image to use as the icon for the button.
-	 * @param	DownHandler	The function to be called when the button is pressed.
-	 * @param	ToggleMode	Whether this is a toggle button or not.
-	 * @param	UpdateLayout	Whether to update the button layout.
+	 * 
+	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
+	 * @param   Icon           The icon to use for the button
+	 * @param   DownHandler    The function to be called when the button is pressed.
+	 * @param   ToggleMode     Whether this is a toggle button or not.
+	 * @param   UpdateLayout   Whether to update the button layout.
+	 * @return  The added button.
 	 */
-	public function addButton(Alignment:ButtonAlignment, IconPath:String, DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
+	public function addButton(Alignment:ButtonAlignment, Icon:BitmapData, DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
 		#if !FLX_NO_DEBUG
-		return FlxG.game.debugger.addButton(Alignment, IconPath, DownHandler, ToggleMode, UpdateLayout);
+		return FlxG.game.debugger.addButton(Alignment, Icon, DownHandler, ToggleMode, UpdateLayout);
 		#else
 		return null;
 		#end

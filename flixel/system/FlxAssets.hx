@@ -21,12 +21,10 @@ import flash.media.Sound;
 @:sound("assets/sounds/beep.wav") class BeepSound extends Sound {}
 #end
 
+@:bitmap("assets/images/logo/logo.png") class GraphicLogo extends BitmapData {}
+
 class FlxAssets
 {
-	// debugger 
-	public static inline var IMG_WINDOW_HANDLE:String = "flixel/img/debugger/windowHandle.png";
-	public static inline var IMG_FLIXEL:String = "flixel/img/debugger/flixel.png";
-	
 	// debugger/buttons
 	public static inline var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/drawDebug.png";
 	public static inline var IMG_WATCH_DEBUG:String = "flixel/img/debugger/buttons/watchDebug.png";
@@ -41,37 +39,6 @@ class FlxAssets
 	public static inline var IMG_PAUSE:String = "flixel/img/debugger/buttons/pause.png";
 	public static inline var IMG_PLAY:String = "flixel/img/debugger/buttons/play.png";
 	public static inline var IMG_STEP:String = "flixel/img/debugger/buttons/step.png";
-	
-	// logo
-	public static inline var IMG_LOGO:String = "flixel/img/logo/logo.png";
-	public static inline var IMG_DEFAULT:String = "flixel/img/logo/default.png";
-	
-	// preloader
-	public static inline var IMG_CORNERS:String = "flixel/img/preloader/corners.png";
-	public static inline var IMG_LIGHT:String = "flixel/img/preloader/light.png";
-	
-	// tile
-	public static inline var IMG_AUTO:String = "flixel/img/tile/autotiles.png";
-	public static inline var IMG_AUTO_ALT:String = "flixel/img/tile/autotiles_alt.png";
-	
-	// ui
-	public static inline var IMG_BUTTON:String = "flixel/img/ui/button.png";
-	public static inline var IMG_CURSOR:String = "flixel/img/ui/cursor.png";
-
-	// ui/analog
-	public static inline var IMG_BASE:String = "flixel/img/ui/analog/base.png";
-	public static inline var IMG_THUMB:String = "flixel/img/ui/analog/thumb.png";
-
-	// ui/virtualpad
-	public static inline var IMG_BUTTON_A:String = "flixel/img/ui/virtualpad/a.png";
-	public static inline var IMG_BUTTON_B:String = "flixel/img/ui/virtualpad/b.png";
-	public static inline var IMG_BUTTON_C:String = "flixel/img/ui/virtualpad/c.png";
-	public static inline var IMG_BUTTON_X:String = "flixel/img/ui/virtualpad/x.png";
-	public static inline var IMG_BUTTON_Y:String = "flixel/img/ui/virtualpad/y.png";
-	public static inline var IMG_BUTTON_UP:String = "flixel/img/ui/virtualpad/up.png";
-	public static inline var IMG_BUTTON_DOWN:String = "flixel/img/ui/virtualpad/down.png";
-	public static inline var IMG_BUTTON_LEFT:String = "flixel/img/ui/virtualpad/left.png";
-	public static inline var IMG_BUTTON_RIGHT:String = "flixel/img/ui/virtualpad/right.png";
 	
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";

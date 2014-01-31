@@ -32,8 +32,8 @@ class FlxPreloader extends NMEPreloader
 
 @:font("assets/fonts/nokiafc22.ttf") class PreloaderFont extends Font {}
 
-@:bitmap("assets/images/preloader/light.png") class LogoLight extends BitmapData {}
-@:bitmap("assets/images/preloader/corners.png") class LogoCorners extends BitmapData {}
+@:bitmap("assets/images/preloader/light.png")   private class GraphicLogoLight   extends BitmapData {}
+@:bitmap("assets/images/preloader/corners.png") private class GraphicLogoCorners extends BitmapData {}
 
 /**
  * This class handles the 8-bit style preloader.
@@ -122,7 +122,7 @@ class FlxPreloader extends NMEPreloader
 		_width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
-		var bitmap:Bitmap = new Bitmap(new LogoLight(0, 0));
+		var bitmap:Bitmap = new Bitmap(new GraphicLogoLight(0, 0));
 		bitmap.smoothing = true;
 		bitmap.width = bitmap.height = _height;
 		bitmap.x = (_width - bitmap.width) / 2;
@@ -156,7 +156,7 @@ class FlxPreloader extends NMEPreloader
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
 		_buffer.addChild(_logoGlow);
-		bitmap = new Bitmap(new LogoCorners(0, 0));
+		bitmap = new Bitmap(new GraphicLogoCorners(0, 0));
 		bitmap.smoothing = true;
 		bitmap.width = _width;
 		bitmap.height = _height;

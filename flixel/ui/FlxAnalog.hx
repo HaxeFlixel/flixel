@@ -6,11 +6,13 @@ import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
-import flixel.system.FlxAssets;
 import flixel.input.touch.FlxTouch;
 import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+
+@:bitmap("assets/images/ui/analog/base.png")  private class GraphicBase  extends BitmapData {}
+@:bitmap("assets/images/ui/analog/thumb.png") private class GraphicThumb extends BitmapData {}
 
 /**
  * A virtual thumbstick - useful for input on mobile devices.
@@ -23,9 +25,6 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Shows the current state of the button.
 	 */ 
 	public var status:Int = NORMAL;
-	/**
-	 * The thumb 
-	 */
 	public var thumb:FlxSprite;
 	/**
 	 * The background of the joystick, also known as the base.
@@ -135,7 +134,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createBase():Void
 	{
 		base = new FlxSprite(x, y);
-		base.loadGraphic(FlxAssets.IMG_BASE);
+		base.loadGraphic(GraphicBase);
 		base.x += -base.width * 0.5;
 		base.y += -base.height * 0.5;
 		base.scrollFactor.set();
@@ -155,7 +154,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createThumb():Void 
 	{
 		thumb = new FlxSprite(x, y);
-		thumb.loadGraphic(FlxAssets.IMG_THUMB);
+		thumb.loadGraphic(GraphicThumb);
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		

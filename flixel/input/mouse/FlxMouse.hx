@@ -19,6 +19,8 @@ import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxPoint;
 
+@:bitmap("assets/images/ui/cursor.png")	private class GraphicCursor extends BitmapData {}
+
 /**
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
@@ -157,7 +159,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		if (Graphic == null)
 		{
-			Graphic = FlxAssets.IMG_CURSOR;
+			Graphic = new GraphicCursor(0, 0);
 		}
 		
 		if (Std.is(Graphic, Class))
@@ -174,7 +176,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		else
 		{
-			_cursor = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_CURSOR));
+			_cursor = new Bitmap(new GraphicCursor(0, 0));
 		}
 		
 		_cursor.x = XOffset;

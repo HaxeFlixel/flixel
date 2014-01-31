@@ -54,17 +54,17 @@ class FlxSystemButton extends Sprite
 	/**
 	 * Create a new FlxSystemButton
 	 * 
-	 * @param	IconPath	The path to the icon to use for the button.
+	 * @param	Icon		The icon to use for the button.
 	 * @param	DownHandler	The function to be called when the button is pressed.
 	 * @param	ToggleMode	Whether this is a toggle button or not.
 	 */
-	public function new(IconPath:String, ?DownHandler:Void->Void, ToggleMode:Bool = false)
+	public function new(Icon:BitmapData, ?DownHandler:Void->Void, ToggleMode:Bool = false)
 	{
 		super();
 		
-		if (IconPath != null)
+		if (Icon != null)
 		{
-			icon = new Bitmap(FlxAssets.getBitmapData(IconPath));
+			icon = new Bitmap(Icon);
 			addChild(icon);
 		}
 		

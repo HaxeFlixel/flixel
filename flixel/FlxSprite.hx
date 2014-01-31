@@ -22,6 +22,8 @@ import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
+@:bitmap("assets/images/logo/default.png")	private class GraphicDefault extends BitmapData {}
+
 /**
  * The main "game object" class, the sprite is a <code>FlxObject</code>
  * with a bunch of graphics options and abilities, like animation and stamping.
@@ -1122,7 +1124,10 @@ class FlxSprite extends FlxObject
 	 */
 	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
-		if (cachedGraphics == null)	loadGraphic(FlxAssets.IMG_DEFAULT);
+		if (cachedGraphics == null)	
+		{
+			loadGraphic(GraphicDefault);
+		}
 		
 		#if !(flash || js)
 		if (!RunOnCpp)

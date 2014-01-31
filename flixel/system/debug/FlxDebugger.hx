@@ -2,6 +2,7 @@ package flixel.system.debug;
 
 #if !FLX_NO_DEBUG
 
+import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.geom.Point;
@@ -20,6 +21,13 @@ import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+
+@:bitmap("assets/images/debugger/flixel.png")	           private class GraphicFlixel     extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/drawDebug.png")   private class GraphicDrawDebug  extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/log.png")         private class GraphicLog        extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/stats.png")       private class GraphicStats      extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/watch.png")       private class GraphicWatch      extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/console.png")     private class GraphicConsole    extends BitmapData {}
 
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
@@ -274,15 +282,15 @@ class FlxDebugger extends Sprite
 	 * Create and add a new debugger button.
 	 * 
 	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
-	 * @param   IconPath       The path to the image to use as the icon for the button.
+	 * @param   Icon           The icon to use for the button
 	 * @param   DownHandler    The function to be called when the button is pressed.
 	 * @param   ToggleMode     Whether this is a toggle button or not.
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Position:ButtonAlignment, ?IconPath:String, ?DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
+	public function addButton(Position:ButtonAlignment, ?Icon:BitmapData, ?DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
 	{
-		var button = new FlxSystemButton(IconPath, DownHandler, ToggleMode);
+		var button = new FlxSystemButton(Icon, DownHandler, ToggleMode);
 		
 		var array:Array<FlxSystemButton>; 
 		switch (Position)
@@ -371,14 +379,14 @@ class FlxDebugger extends Sprite
 		
 		vcr = new VCR(this);
 		
-		addButton(LEFT, FlxAssets.IMG_FLIXEL, openHomepage);
+		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
 		addButton(LEFT, null, openHomepage).addChild(txt);
 		
-		addButton(RIGHT, FlxAssets.IMG_LOG_DEBUG, log.toggleVisibility, true).toggled = !log.visible; 
-		addButton(RIGHT, FlxAssets.IMG_WATCH_DEBUG, watch.toggleVisibility, true).toggled = !watch.visible; 
-		addButton(RIGHT, FlxAssets.IMG_CONSOLE, console.toggleVisibility, true).toggled = !console.visible; 
-		addButton(RIGHT, FlxAssets.IMG_STATS_DEBUG, stats.toggleVisibility, true).toggled = !stats.visible; 
-		addButton(RIGHT, FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, true).toggled = !FlxG.debugger.drawDebug;
+		addButton(RIGHT, new GraphicLog(0, 0), log.toggleVisibility, true).toggled = !log.visible; 
+		addButton(RIGHT, new GraphicWatch(0, 0), watch.toggleVisibility, true).toggled = !watch.visible; 
+		addButton(RIGHT, new GraphicConsole(0, 0), console.toggleVisibility, true).toggled = !console.visible; 
+		addButton(RIGHT, new GraphicStats(0, 0), stats.toggleVisibility, true).toggled = !stats.visible; 
+		addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleVisualDebug, true).toggled = !FlxG.debugger.drawDebug;
 		
 		#if FLX_RECORD
 		addButton(MIDDLE).addChild(vcr.runtimeDisplay);

@@ -23,6 +23,9 @@ import flixel.system.layer.Region;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.TextureRegion;
 
+@:bitmap("assets/images/tile/autotiles.png")	 class GraphicAuto    extends BitmapData {}
+@:bitmap("assets/images/tile/autotiles_alt.png") class GraphicAutoAlt extends BitmapData {}
+
 /**
  * This is a traditional tilemap display and collision class.
  * It takes a string of comma-separated numbers and then associates
@@ -32,15 +35,6 @@ import flixel.util.loaders.TextureRegion;
  */
 class FlxTilemap extends FlxObject
 {
-	/**
-	 * A set of generic tiles you can use. Useful for protyping.
-	 */
-	public static inline var imgAuto:String = FlxAssets.IMG_AUTO;
-	/**
-	 * An alternate set of generic tiles you can use. Useful for protyping.
-	 */
-	public static inline var imgAutoAlt:String = FlxAssets.IMG_AUTO_ALT;
-	
 	/**
 	 * No auto-tiling.
 	 */
