@@ -12,9 +12,8 @@ import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxPoint;
 
 /**
- * <code>FlxSpriteGroup</code> is a special <code>FlxGroup</code>
- * that can be treated like a <code>FlxSprite</code> due to having
- * x, y and alpha values. It can only contain <code>FlxSprites</code>.
+ * <code>FlxSpriteGroup</code> is a special <code>FlxGroup</code> that can be treated like 
+ * a single sprite even if it's<code>FlxSprite</code> made up of several member sprites.
  */
 class FlxSpriteGroup extends FlxSprite
 {
@@ -878,10 +877,10 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadFromSprite(Sprite:FlxSprite):FlxSprite 
+	override public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadFromSprite() is not supported in FlxSpriteGroups.");
+		FlxG.log.error("loadGraphicFromSprite() is not supported in FlxSpriteGroups.");
 		#end
 		return this;
 	}
@@ -923,10 +922,10 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadImageFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite 
+	override public function loadGraphicFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadImageFromTexture() is not supported in FlxSpriteGroups.");
+		FlxG.log.error("loadGraphicFromTexture() is not supported in FlxSpriteGroups.");
 		#end
 		return this;
 	}
@@ -935,10 +934,10 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadRotatedImageFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite 
+	override public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadRotatedImageFromTexture() is not supported in FlxSpriteGroups.");
+		FlxG.log.error("loadRotatedGraphicFromTexture() is not supported in FlxSpriteGroups.");
 		#end
 		return this;
 	}
