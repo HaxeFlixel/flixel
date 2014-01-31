@@ -16,7 +16,7 @@ class MultiVarTween extends FlxTween
 	 * @param	complete		Optional completion callback.
 	 * @param	type			Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0)
+	public function new(?complete:CompleteCallback, type:Int = 0)
 	{
 		_vars = new Array<String>();
 		_start = new Array<Float>();
@@ -41,43 +41,17 @@ class MultiVarTween extends FlxTween
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ease:EaseFunction = null):MultiVarTween
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ?ease:EaseFunction):MultiVarTween
 	{
 		_object = object;
+		_properties = properties;
+		this.duration = duration;
+		_ease = ease;
+		
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);
 		FlxArrayUtil.setLength(_range, 0);
-		this.duration = duration;
-		_ease = ease;
-		var p:String;
 		
-		var fields:Array<String> = null;
-		if (Reflect.isObject(properties))
-		{
-			fields = Reflect.fields(properties);
-		}
-		else
-		{
-			throw "Unsupported MultiVar properties container - use Object containing key/value pairs.";
-		}
-		
-		for (p in fields)
-		{
-			if (Reflect.getProperty(object, p) == null)
-			{
-				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
-			}
-			
-			var a:Dynamic = Reflect.getProperty(object, p);
-			
-			if (Math.isNaN(a)) 
-			{
-				throw "The property \"" + p + "\" is not numeric.";
-			}
-			_vars.push(p);
-			_start.push(a);
-			_range.push(Reflect.getProperty(properties, p) - a);
-		}
 		start();
 		return this;
 	}
@@ -87,6 +61,11 @@ class MultiVarTween extends FlxTween
 	 */
 	override public function update():Void
 	{
+		if (_vars.length < 1)
+		{
+			initialize();
+		}
+		
 		super.update();
 		var i:Int = _vars.length;
 		while (i-- > 0) 
@@ -98,8 +77,42 @@ class MultiVarTween extends FlxTween
 		}
 	}
 	
+	private function initialize():Void
+	{
+		var p:String;
+		var fields:Array<String>;
+		
+		if (Reflect.isObject(_properties))
+		{
+			fields = Reflect.fields(_properties);
+		}
+		else
+		{
+			throw "Unsupported MultiVar properties container - use Object containing key/value pairs.";
+		}
+		
+		for (p in fields)
+		{
+			if (Reflect.getProperty(_object, p) == null)
+			{
+				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
+			}
+			
+			var a:Dynamic = Reflect.getProperty(_object, p);
+			
+			if (Math.isNaN(a)) 
+			{
+				throw "The property \"" + p + "\" is not numeric.";
+			}
+			_vars.push(p);
+			_start.push(a);
+			_range.push(Reflect.getProperty(_properties, p) - a);
+		}
+	}
+	
 	// Tween information.
 	private var _object:Dynamic;
+	private var _properties:Dynamic;
 	private var _vars:Array<String>;
 	private var _start:Array<Float>;
 	private var _range:Array<Float>;
