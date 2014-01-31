@@ -109,9 +109,9 @@ class LogFrontEnd
 				FlxG.debugger.visible = true;
 			}
 			
-			if (Reflect.isFunction(Style.callbackFunction))
+			if (Style.callbackFunction = null)
 			{
-				Reflect.callMethod(null, Style.callbackFunction, []);
+				Style.callbackFunction();
 			}
 		}
 		#end

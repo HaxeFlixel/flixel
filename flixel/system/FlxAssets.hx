@@ -6,9 +6,19 @@ import flash.text.Font;
 import openfl.Assets;
 import flixel.FlxG;
 
-@:font("assets/fonts/nokiafc22.ttf") private class FontDefault extends Font { }
+#if !FLX_NO_SOUND_SYSTEM
+import flash.media.Sound;
+#end
+
+/** Fonts **/
+@:font("assets/fonts/nokiafc22.ttf") private class FontDefault extends Font {}
 #if !FLX_NO_DEBUG
-@:font("assets/fonts/arial.ttf") private class FontDebugger extends Font { }
+@:font("assets/fonts/arial.ttf") private class FontDebugger extends Font {}
+#end
+
+/** Sounds **/
+#if !FLX_NO_SOUND_SYSTEM
+@:sound("assets/sounds/beep.wav") class BeepSound extends Sound {}
 #end
 
 class FlxAssets
@@ -62,10 +72,6 @@ class FlxAssets
 	public static inline var IMG_BUTTON_DOWN:String = "flixel/img/ui/virtualpad/down.png";
 	public static inline var IMG_BUTTON_LEFT:String = "flixel/img/ui/virtualpad/left.png";
 	public static inline var IMG_BUTTON_RIGHT:String = "flixel/img/ui/virtualpad/right.png";
-	
-	// sounds
-	public static inline var SND_BEEP:String = "flixel/snd/beep.wav";
-	public static inline var SND_FLIXEL:String = "flixel/snd/flixel.wav";
 	
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
