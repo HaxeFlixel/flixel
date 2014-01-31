@@ -115,11 +115,11 @@ class PlayState extends FlxState
 		
 		// Create the sprite to tween (flixel logo)
 		_sprite = new FlxSprite();
-		_sprite.loadGraphic(FlxAssets.IMG_LOGO, true);
+		_sprite.loadGraphic(GraphicLogo, true);
 		_sprite.antialiasing = true; // subpixel-rendering for smoother movement
 		
 		// Add a trail effect
-		_trail = new FlxTrail(_sprite, FlxAssets.IMG_LOGO, 12, 0, 0.4, 0.02);
+		_trail = new FlxTrail(_sprite, GraphicLogo, 12, 0, 0.4, 0.02);
 		
 		add(_trail);
 		add(_sprite);

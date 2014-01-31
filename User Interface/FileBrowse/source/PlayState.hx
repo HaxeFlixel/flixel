@@ -73,7 +73,7 @@ class PlayState extends FlxState
 		_scaleText.setFormat(null, 16, FlxColor.WHITE, "right");
 		add(_scaleText);
 		
-		_showImage(FlxG.bitmap.add(FlxAssets.IMG_LOGO).bitmap);
+		_showImage(new GraphicLogo(0, 0));
 	}
 	
 	override public function update():Void
