@@ -22,14 +22,14 @@ class FlxState extends FlxGroup
 	*/
 	public var persistentDraw:Bool = true;
 
-	private var _subState:FlxSubState;
+	var _subState:FlxSubState;
 	/**
 	 * Current substate.
 	 * Substates also can have substates
 	 */
 	public var subState(get, null):FlxSubState;
 
-	private inline function get_subState():FlxSubState
+	inline function get_subState():FlxSubState
 	{
 		return _subState;
 	}
@@ -50,12 +50,12 @@ class FlxState extends FlxGroup
 	
 	public var bgColor(get, set):Int;
 
-	private function get_bgColor():Int
+	function get_bgColor():Int
 	{
 		return FlxG.cameras.bgColor;
 	}
 
-	private function set_bgColor(Value:Int):Int
+	function set_bgColor(Value:Int):Int
 	{
 		return FlxG.cameras.bgColor = Value;
 	}

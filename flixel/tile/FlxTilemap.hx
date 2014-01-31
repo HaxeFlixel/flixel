@@ -99,90 +99,90 @@ class FlxTilemap extends FlxObject
 	 * Everywhere the tilemap has a value of 12 it will be replaced by 0, 1, or, 2
 	 * Everywhere the tilemap has a value of 14 it will be replaced by 3, 4, 5, 6, 7
 	 */
-	private var _randomIndices:Array<Int> = null;
-	private var _randomChoices:Array<Array<Int>> = null;
+	var _randomIndices:Array<Int> = null;
+	var _randomChoices:Array<Array<Int>> = null;
 	/**
 	 * Setting this function allows you to control which choice will be selected for each element within _randomIndices array.
 	 * Must return a 0-1 value that gets multiplied by _randomChoices[randIndex].length;
 	 */
-	private var _randomLambda:Void->Float = null;
+	var _randomLambda:Void->Float = null;
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
-	private var _flashPoint:Point;
+	var _flashPoint:Point;
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
-	private var _flashRect:Rectangle;
+	var _flashRect:Rectangle;
 	/**
 	 * Internal list of buffers, one for each camera, used for drawing the tilemaps.
 	 */
-	private var _buffers:Array<FlxTilemapBuffer>;
+	var _buffers:Array<FlxTilemapBuffer>;
 	/**
 	 * Internal representation of the actual tile data, as a large 1D array of integers.
 	 */
-	private var _data:Array<Int>;
+	var _data:Array<Int>;
 	/**
 	 * Internal representation of rectangles, one for each tile in the entire tilemap, used to speed up drawing.
 	 */
 	#if flash
-	private var _rects:Array<Rectangle>;
+	var _rects:Array<Rectangle>;
 	#end
 	/**
 	 * Internal, the width of a single tile.
 	 */
-	private var _tileWidth:Int;
+	var _tileWidth:Int;
 	/**
 	 * Internal, the height of a single tile.
 	 */
-	private var _tileHeight:Int;
+	var _tileHeight:Int;
 	
-	private var _scaledTileWidth:Float;
-	private var _scaledTileHeight:Float;
+	var _scaledTileWidth:Float;
+	var _scaledTileHeight:Float;
 	
 	/**
 	 * Internal collection of tile objects, one for each type of tile in the map (NOTE one for every single tile in the whole map).
 	 */
-	private var _tileObjects:Array<FlxTile>;
+	var _tileObjects:Array<FlxTile>;
 	
 	#if !FLX_NO_DEBUG
 	#if flash
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
-	private var _debugTileNotSolid:BitmapData;
+	var _debugTileNotSolid:BitmapData;
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
-	private var _debugTilePartial:BitmapData;
+	var _debugTilePartial:BitmapData;
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
-	private var _debugTileSolid:BitmapData;
+	var _debugTileSolid:BitmapData;
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
-	private var _debugRect:Rectangle;
+	var _debugRect:Rectangle;
 	#end
 	/**
 	 * Internal flag for checking to see if we need to refresh
 	 * the tilemap display to show or hide the bounding boxes.
 	 */
-	private var _lastVisualDebug:Bool;
+	var _lastVisualDebug:Bool;
 	#end
 	/**
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
-	private var _startingIndex:Int;
+	var _startingIndex:Int;
 	#if !flash
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
 	 */
-	private var _helperPoint:Point;
+	var _helperPoint:Point;
 	/**
 	 * Internal representation of rectangles (actually id of rectangle in tileSheet), one for each tile in the entire tilemap, used to speed up drawing.
 	 */
-	private var _rectIDs:Array<Int>;
+	var _rectIDs:Array<Int>;
 	#end
 	
 	/**
@@ -523,7 +523,7 @@ class FlxTilemap extends FlxObject
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if (flash && !FLX_NO_DEBUG)
-	private function makeDebugTile(Color:Int):BitmapData
+	function makeDebugTile(Color:Int):BitmapData
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
@@ -567,7 +567,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Buffer		The <code>FlxTilemapBuffer</code> you are rendering to.
 	 * @param	Camera		The related <code>FlxCamera</code>, mainly for scroll values.
 	 */
-	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
+	function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
 		#if flash
 		Buffer.fill();
@@ -1028,7 +1028,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Points		An array of <code>FlxPoint</code> nodes.
 	 */
-	private function simplifyPath(Points:Array<FlxPoint>):Void
+	function simplifyPath(Points:Array<FlxPoint>):Void
 	{
 		var deltaPrevious:Float;
 		var deltaNext:Float;
@@ -1061,7 +1061,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Points		An array of <code>FlxPoint</code> nodes.
 	 */
-	private function raySimplifyPath(Points:Array<FlxPoint>):Void
+	function raySimplifyPath(Points:Array<FlxPoint>):Void
 	{
 		var source:FlxPoint = Points[0];
 		var lastIndex:Int = -1;
@@ -1103,7 +1103,7 @@ class FlxTilemap extends FlxObject
 	 * @param   WideDiagonal Whether to require an additional tile to make diagonal movement. Default value is true.
 	 * @return	A Flash <code>Array</code> of <code>FlxPoint</code> nodes.  If the end tile could not be found, then a null <code>Array</code> is returned instead.
 	 */
-	private function computePathDistance(StartIndex:Int, EndIndex:Int, WideDiagonal:Bool):Array<Int>
+	function computePathDistance(StartIndex:Int, EndIndex:Int, WideDiagonal:Bool):Array<Int>
 	{
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
@@ -1283,7 +1283,7 @@ class FlxTilemap extends FlxObject
 	 * @param	Start	The tile we're on in our walk backward.
 	 * @param	Points	A Flash <code>Array</code> of <code>FlxPoint</code> nodes composing the path from the start to the end, compiled in reverse order.
 	 */
-	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
+	function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
 	{
 		Points.push(new FlxPoint(x + Math.floor(Start % widthInTiles) * _scaledTileWidth + _scaledTileWidth * 0.5, y + Math.floor(Start / widthInTiles) * _scaledTileHeight + _scaledTileHeight * 0.5));
 		
@@ -2327,7 +2327,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Index		The index of the tile you want to analyze.
 	 */
-	private function autoTile(Index:Int):Void
+	function autoTile(Index:Int):Void
 	{
 		if (_data[Index] == 0)
 		{
@@ -2390,7 +2390,7 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Index		The index of the tile you want to update.
 	 */
-	private function updateTile(Index:Int):Void
+	function updateTile(Index:Int):Void
 	{
 		var tile:FlxTile = _tileObjects[_data[Index]];
 		
@@ -2531,7 +2531,7 @@ class FlxTilemap extends FlxObject
 		_buffers = new Array<FlxTilemapBuffer>();
 	}
 	
-	override private function set_forceComplexRender(Value:Bool):Bool 
+	override function set_forceComplexRender(Value:Bool):Bool 
 	{
 		var i:Int = 0;
 		var l:Int;
@@ -2550,7 +2550,7 @@ class FlxTilemap extends FlxObject
 		return super.set_forceComplexRender(Value);
 	}
 	
-	private function set_scaleX(Scale:Float):Float
+	function set_scaleX(Scale:Float):Float
 	{
 		Scale = Math.abs(Scale);
 		scaleX = Scale;
@@ -2574,7 +2574,7 @@ class FlxTilemap extends FlxObject
 		return Scale;
 	}
 	
-	private function set_scaleY(Scale:Float):Float
+	function set_scaleY(Scale:Float):Float
 	{
 		Scale = Math.abs(Scale);
 		scaleY = Scale;

@@ -46,8 +46,8 @@ class WatchEntry
 	 */
 	public var oldValue:Dynamic;
 	
-	private var _whiteText:TextFormat;
-	private var _blackText:TextFormat;
+	var _whiteText:TextFormat;
+	var _blackText:TextFormat;
 	
 	/**
 	 * Whether this entry is a quickWatch or not.
@@ -286,7 +286,7 @@ class WatchEntry
 	/**
 	 * Helper function, switches the text field back to display mode.
 	 */
-	private function doneEditing():Void
+	function doneEditing():Void
 	{
 		valueDisplay.type = TextFieldType.DYNAMIC;
 		valueDisplay.setTextFormat(_whiteText);

@@ -187,89 +187,89 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
-	private var _flashRect:Rectangle;
+	var _flashRect:Rectangle;
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
-	private var _flashPoint:Point;
+	var _flashPoint:Point;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashColor:Int = FlxColor.TRANSPARENT;
+	var _fxFlashColor:Int = FlxColor.TRANSPARENT;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashDuration:Float = 0;
+	var _fxFlashDuration:Float = 0;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashComplete:Void->Void = null;
+	var _fxFlashComplete:Void->Void = null;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashAlpha:Float = 0;
+	var _fxFlashAlpha:Float = 0;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeColor:Int = FlxColor.TRANSPARENT;
+	var _fxFadeColor:Int = FlxColor.TRANSPARENT;
 	/**
 	 * Used to calculate the following target current velocity.
 	 */
-	private var _lastTargetPosition:FlxPoint;
+	var _lastTargetPosition:FlxPoint;
 	/**
 	 * Helper to calculate follow target current scroll.
 	 */
-	private var _scrollTarget:FlxPoint;
+	var _scrollTarget:FlxPoint;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeDuration:Float = 0;
+	var _fxFadeDuration:Float = 0;
 	/**
      * Internal, used to control the "fade" special effect.
      */
-    private var _fxFadeIn:Bool = false;
+    var _fxFadeIn:Bool = false;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeComplete:Void->Void = null;
+	var _fxFadeComplete:Void->Void = null;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeAlpha:Float = 0;
+	var _fxFadeAlpha:Float = 0;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeIntensity:Float = 0;
+	var _fxShakeIntensity:Float = 0;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeDuration:Float = 0;
+	var _fxShakeDuration:Float = 0;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeComplete:Void->Void = null;
+	var _fxShakeComplete:Void->Void = null;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeOffset:FlxPoint;
+	var _fxShakeOffset:FlxPoint;
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeDirection:Int = 0;
+	var _fxShakeDirection:Int = 0;
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
-	private var _point:FlxPoint;
+	var _point:FlxPoint;
 	
 	#if flash
 	/**
 	 * Internal helper variable for doing better wipes/fills between renders.
 	 */
-	private var _fill:BitmapData;
+	var _fill:BitmapData;
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
-	private var _flashBitmap:Bitmap;
+	var _flashBitmap:Bitmap;
 	#end
 	
 #if !flash
@@ -288,15 +288,15 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Currently used draw stack item
 	 */
-	private var _currentStackItem:DrawStackItem;
+	var _currentStackItem:DrawStackItem;
 	/**
 	 * Pointer to head of stack with draw items
 	 */
-	private var _headOfDrawStack:DrawStackItem;
+	var _headOfDrawStack:DrawStackItem;
 	/**
 	 * Draw stack items that can be reused
 	 */
-	private static var _storageHead:DrawStackItem;
+	static var _storageHead:DrawStackItem;
 	
 	#if !js
 	@:noCompletion public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
@@ -364,7 +364,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private function clearDrawStack():Void
+	function clearDrawStack():Void
 	{	
 		var currItem:DrawStackItem = _headOfDrawStack.next;
 		while (currItem != null)
@@ -390,7 +390,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private function render():Void
+	function render():Void
 	{
 		var currItem:DrawStackItem = _headOfDrawStack;
 		while (currItem != null)
@@ -1114,7 +1114,7 @@ class FlxCamera extends FlxBasic
 		return _point.set(flashSprite.scaleX, flashSprite.scaleY);
 	}
 	
-	private function set_width(Value:Int):Int
+	function set_width(Value:Int):Int
 	{
 		if (Value > 0)
 		{
@@ -1148,7 +1148,7 @@ class FlxCamera extends FlxBasic
 		return Value;
 	}
 	
-	private function set_height(Value:Int):Int
+	function set_height(Value:Int):Int
 	{
 		if (Value > 0)
 		{
@@ -1182,7 +1182,7 @@ class FlxCamera extends FlxBasic
 		return Value;
 	}
 	
-	private function set_zoom(Zoom:Float):Float
+	function set_zoom(Zoom:Float):Float
 	{
 		if (Zoom == 0)
 		{
@@ -1196,7 +1196,7 @@ class FlxCamera extends FlxBasic
 		return zoom;
 	}
 	
-	private function set_alpha(Alpha:Float):Float
+	function set_alpha(Alpha:Float):Float
 	{
 		alpha = FlxMath.bound(Alpha, 0, 1);
 		#if flash
@@ -1207,14 +1207,14 @@ class FlxCamera extends FlxBasic
 		return Alpha;
 	}
 	
-	private function set_angle(Angle:Float):Float
+	function set_angle(Angle:Float):Float
 	{
 		angle = Angle;
 		flashSprite.rotation = Angle;
 		return Angle;
 	}
 	
-	private function set_color(Color:Int):Int
+	function set_color(Color:Int):Int
 	{
 		color = Color & 0x00ffffff;
 		#if flash
@@ -1237,7 +1237,7 @@ class FlxCamera extends FlxBasic
 		return Color;
 	}
 	
-	private function set_antialiasing(Antialiasing:Bool):Bool
+	function set_antialiasing(Antialiasing:Bool):Bool
 	{
 		antialiasing = Antialiasing;
 		#if flash

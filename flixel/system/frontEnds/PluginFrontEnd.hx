@@ -112,7 +112,7 @@ class PluginFrontEnd
 	 * in debugging mode and <code>TimerManager</code>
 	 */
 	@:allow(flixel.FlxG)
-	private function new() 
+	function new() 
 	{
 		list = new Array<FlxPlugin>();
 		
@@ -124,7 +124,7 @@ class PluginFrontEnd
 	/**
 	 * Used by the game object to call <code>update()</code> on all the plugins.
 	 */
-	private inline function update():Void
+	inline function update():Void
 	{
 		for (plugin in list)
 		{
@@ -138,7 +138,7 @@ class PluginFrontEnd
 	/**
 	 * Used by the game object to call <code>draw()</code> on all the plugins.
 	 */
-	private inline function draw():Void
+	inline function draw():Void
 	{
 		for (plugin in list)
 		{
@@ -152,7 +152,7 @@ class PluginFrontEnd
 	/**
 	 * Used by the game object to call <code>onStateSwitch()</code> on all the plugins.
 	 */
-	private inline function onStateSwitch():Void
+	inline function onStateSwitch():Void
 	{
 		for (plugin in list)
 		{
@@ -168,7 +168,7 @@ class PluginFrontEnd
 	 * @param 	Width	The new window width
 	 * @param 	Height	The new window Height
 	 */
-	private inline function onResize(Width:Int, Height:Int):Void
+	inline function onResize(Width:Int, Height:Int):Void
 	{
 		for (plugin in list)
 		{
@@ -183,7 +183,7 @@ class PluginFrontEnd
 	/**
 	 * You shouldn't need to call this. Used to draw the debug graphics for any installed plugins.
 	 */
-	private inline function drawDebug():Void
+	inline function drawDebug():Void
 	{
 		for (plugin in list)
 		{

@@ -31,14 +31,14 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	public var justReleased(get, never):Bool;
 	public var isActive(get, never):Bool;
 	
-	private var _current:Int = 0;
-	private var _last:Int = 0;
-	private var _point:FlxPoint;
-	private var _globalScreenPosition:FlxPoint;
-	private var _flashPoint:Point;
+	var _current:Int = 0;
+	var _last:Int = 0;
+	var _point:FlxPoint;
+	var _globalScreenPosition:FlxPoint;
+	var _flashPoint:Point;
 	
-	private var _justPressedPosition:FlxPoint;
-	private var _justPressedTimeInTicks:Float;
+	var _justPressedPosition:FlxPoint;
+	var _justPressedTimeInTicks:Float;
 	
 	/**
 	 * Clean up memory.
@@ -152,7 +152,7 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	 * @param	Y			stageX touch coordinate
 	 * @param	PointID		touchPointID of the touch
 	 */
-	private function new(X:Float = 0, Y:Float = 0, PointID:Int = 0)
+	function new(X:Float = 0, Y:Float = 0, PointID:Int = 0)
 	{
 		super();
 		_point = new FlxPoint();
@@ -167,7 +167,7 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	/**
 	 * Called by the internal game loop to update the just pressed/just released flags.
 	 */
-	private function update():Void
+	function update():Void
 	{
 		if ((_last == -1) && (_current == -1))
 		{
@@ -193,7 +193,7 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	/**
 	 * Internal function for helping to update world coordinates.
 	 */
-	private function updateCursor():Void
+	function updateCursor():Void
 	{
 		//update the x, y, screenX, and screenY variables based on the default camera.
 		//This is basically a combination of getWorldPosition() and getScreenPosition()
@@ -210,7 +210,7 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	 * @param	X	stageX touch coordinate
 	 * @param	Y	stageY touch coordinate
 	 */
-	private function updatePosition(X:Float, Y:Float):Void
+	function updatePosition(X:Float, Y:Float):Void
 	{
 		_flashPoint.x = X;
 		_flashPoint.y = Y;
@@ -221,8 +221,8 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 		updateCursor();
 	}
 	
-	private inline function get_pressed()     :Bool { return _current > 0;   }
-	private inline function get_justPressed() :Bool { return _current == 2;  }
-	private inline function get_justReleased():Bool { return _current == -1; }
-	private inline function get_isActive()    :Bool { return _current != 0;  }
+	inline function get_pressed()     :Bool { return _current > 0;   }
+	inline function get_justPressed() :Bool { return _current == 2;  }
+	inline function get_justReleased():Bool { return _current == -1; }
+	inline function get_isActive()    :Bool { return _current != 0;  }
 }

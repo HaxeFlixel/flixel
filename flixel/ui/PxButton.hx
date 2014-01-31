@@ -45,7 +45,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 	/**
 	 * Updates the size of the text field to match the button.
 	 */
-	override private function resetHelpers():Void
+	override function resetHelpers():Void
 	{
 		super.resetHelpers();
 		

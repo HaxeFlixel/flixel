@@ -33,14 +33,14 @@ class Region
 	
 	public var numTiles(get, null):Int;
 	
-	private function get_numTiles():Int
+	function get_numTiles():Int
 	{
 		return numRows * numCols;
 	}
 	
 	public var numRows(get, null):Int;
 	
-	private function get_numRows():Int
+	function get_numRows():Int
 	{
 		var num:Int = 1;
 		
@@ -54,7 +54,7 @@ class Region
 	
 	public var numCols(get, null):Int;
 	
-	private function get_numCols():Int
+	function get_numCols():Int
 	{
 		var num:Int = 1;
 		

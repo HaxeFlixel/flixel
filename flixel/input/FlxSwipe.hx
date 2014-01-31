@@ -26,9 +26,9 @@ class FlxSwipe
 	public var angle   (get, never):Float;
 	public var duration(get, never):Float;
 	
-	private var _startTimeInTicks:Float;
+	var _startTimeInTicks:Float;
 	
-	private function new(ID:Int, StartPosition:FlxPoint, EndPosition:FlxPoint, StartTimeInTicks:Float)
+	function new(ID:Int, StartPosition:FlxPoint, EndPosition:FlxPoint, StartTimeInTicks:Float)
 	{
 		this.ID = ID;
 		startPosition = StartPosition;
@@ -36,7 +36,7 @@ class FlxSwipe
 		_startTimeInTicks = StartTimeInTicks;
 	}
 	
-	private inline function toString():String
+	inline function toString():String
 	{
 		var p = FlxG.debugger.precision;
 		return "(ID: " + ID + 
@@ -47,17 +47,17 @@ class FlxSwipe
 			   " | duration: " + FlxMath.roundDecimal((duration / 1000), p) + "s )";
 	}
 	
-	private inline function get_distance():Float
+	inline function get_distance():Float
 	{
 		return FlxMath.vectorLength(startPosition.x - endPosition.x, startPosition.y - endPosition.y);
 	}
 	
-	private inline function get_angle():Float
+	inline function get_angle():Float
 	{
 		return FlxAngle.getAngle(startPosition, endPosition); 
 	}
 	
-	private inline function get_duration():Float
+	inline function get_duration():Float
 	{
 		return (FlxG.game.ticks - _startTimeInTicks);
 	}

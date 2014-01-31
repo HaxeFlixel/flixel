@@ -25,10 +25,10 @@ class FlxBitmapDataPool
 	 */
 	public static var length(default, null):Int = 0;
 	
-	private static var _head:FlxBitmapDataPoolNode = null;
-	private static var _tail:FlxBitmapDataPoolNode = null;
+	static var _head:FlxBitmapDataPoolNode = null;
+	static var _tail:FlxBitmapDataPoolNode = null;
 	
-	private static var _rect:Rectangle = new Rectangle();
+	static var _rect:Rectangle = new Rectangle();
 	
 	/** 
 	 * Returns a BitmapData with the specified parameters. 
@@ -150,7 +150,7 @@ class FlxBitmapDataPool
 }
 
 @:publicFields
-private class FlxBitmapDataPoolNode 
+class FlxBitmapDataPoolNode 
 {
 	var bmd:BitmapData = null;
 	var prev:FlxBitmapDataPoolNode = null;

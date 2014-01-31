@@ -107,7 +107,7 @@ class FlxSprite extends FlxObject
 	public var blend(default, set):BlendMode;
 	
 	#if !flash
-	private var _blendInt:Int = 0;
+	var _blendInt:Int = 0;
 	#end
 	/**
 	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
@@ -119,31 +119,31 @@ class FlxSprite extends FlxObject
 	
 	#if !flash
 	public var isColored:Bool;
-	private var _red:Float = 1.0;
-	private var _green:Float = 1.0;
-	private var _blue:Float = 1.0;
-	private var _facingMult:Int = 1;
+	var _red:Float = 1.0;
+	var _green:Float = 1.0;
+	var _blue:Float = 1.0;
+	var _facingMult:Int = 1;
 	#end
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
-	private var _flashPoint:Point;
+	var _flashPoint:Point;
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
-	private var _flashRect:Rectangle;
+	var _flashRect:Rectangle;
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
-	private var _flashRect2:Rectangle;
+	var _flashRect2:Rectangle;
 	/**
 	 * Internal, reused frequently during drawing and animating. Always contains (0,0).
 	 */
-	private var _flashPointZero:Point;
+	var _flashPointZero:Point;
 	/**
 	 * Internal, helps with animation, caching and drawing.
 	 */
-	private var _colorTransform:ColorTransform;
+	var _colorTransform:ColorTransform;
 	/**
 	 * Internal, reflects the need to use _colorTransform object
 	 */
@@ -151,16 +151,16 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal, helps with animation, caching and drawing.
 	 */
-	private var _matrix:Matrix;
+	var _matrix:Matrix;
 	/**
 	 * These vars are being used for rendering in some of FlxSprite subclasses (FlxTileblock, FlxBar, 
 	 * FlxBitmapFont and FlxBitmapTextField) and for checks if the sprite is in camera's view.
 	 */
-	private var _halfWidth:Float;
-	private var _halfHeight:Float;
-	private var _sinAngle:Float = 0;
-	private var _cosAngle:Float = 1;
-	private var _angleChanged:Bool = false;
+	var _halfWidth:Float;
+	var _halfHeight:Float;
+	var _sinAngle:Float = 0;
+	var _cosAngle:Float = 1;
+	var _angleChanged:Bool = false;
 	
 	/**
 	 * Creates a <code>FlxSprite</code> at a specified position with a specified one-frame graphic. 
@@ -182,7 +182,7 @@ class FlxSprite extends FlxObject
 		}
 	}
 	
-	override private function initVars():Void 
+	override function initVars():Void 
 	{
 		super.initVars();
 		
@@ -677,7 +677,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets some important variables for sprite optimization and rendering.
 	 */
-	private function resetHelpers():Void
+	function resetHelpers():Void
 	{
 		resetSize();
 		_flashRect2.x = 0;
@@ -1051,7 +1051,7 @@ class FlxSprite extends FlxObject
 		dirty = true;
 	}
 	
-	private function updateColorTransform():Void
+	function updateColorTransform():Void
 	{
 		if ((alpha != 1) || (color != 0xffffff))
 		{
@@ -1122,7 +1122,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	private function calcFrame(RunOnCpp:Bool = false):Void
+	function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		if (cachedGraphics == null)	
 		{
@@ -1319,12 +1319,12 @@ class FlxSprite extends FlxObject
 	/**
 	 * PROPERTIES
 	 */
-	private function get_pixels():BitmapData
+	function get_pixels():BitmapData
 	{
 		return cachedGraphics.bitmap;
 	}
 	
-	private function set_pixels(Pixels:BitmapData):BitmapData
+	function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		var key:String = FlxG.bitmap.getCacheKeyFor(Pixels);
 		
@@ -1360,7 +1360,7 @@ class FlxSprite extends FlxObject
 		return Pixels;
 	}
 	
-	private function set_frame(Value:FlxFrame):FlxFrame
+	function set_frame(Value:FlxFrame):FlxFrame
 	{
 		frame = Value;
 		if (frame != null)
@@ -1376,7 +1376,7 @@ class FlxSprite extends FlxObject
 		return frame;
 	}
 	
-	private function set_facing(Direction:Int):Int
+	function set_facing(Direction:Int):Int
 	{
 		if (facing != Direction)
 		{
@@ -1389,7 +1389,7 @@ class FlxSprite extends FlxObject
 		return Direction;
 	}
 	
-	private function set_alpha(Alpha:Float):Float
+	function set_alpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{
@@ -1408,7 +1408,7 @@ class FlxSprite extends FlxObject
 		return alpha;
 	}
 	
-	private function set_color(Color:Int):Int
+	function set_color(Color:Int):Int
 	{
 		Color &= 0x00ffffff;
 		if (color == Color)
@@ -1428,18 +1428,18 @@ class FlxSprite extends FlxObject
 		return color;
 	}
 	
-	private function get_colorTransform():ColorTransform 
+	function get_colorTransform():ColorTransform 
 	{
 		return _colorTransform;
 	}
 	
-	override private function set_angle(Value:Float):Float
+	override function set_angle(Value:Float):Float
 	{
 		_angleChanged = (angle != Value) || _angleChanged;
 		return super.set_angle(Value);
 	}
 	
-	private function set_blend(Value:BlendMode):BlendMode 
+	function set_blend(Value:BlendMode):BlendMode 
 	{
 		#if !flash
 		if (Value != null)

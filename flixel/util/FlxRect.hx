@@ -58,12 +58,12 @@ class FlxRect
 	 */
 	public var left(get, set):Float;
 	
-	private function get_left():Float
+	function get_left():Float
 	{
 		return x;
 	}
 	
-	private function set_left(Value:Float):Float
+	function set_left(Value:Float):Float
 	{
 		width -= Value - x;
 		return x = Value;
@@ -74,12 +74,12 @@ class FlxRect
 	 */
 	public var right(get, set):Float;
 	
-	private function get_right():Float
+	function get_right():Float
 	{
 		return x + width;
 	}
 	
-	private function set_right(Value:Float):Float
+	function set_right(Value:Float):Float
 	{
 		width = Value - x;
 		return Value;
@@ -90,12 +90,12 @@ class FlxRect
 	 */
 	public var top(get, set):Float;
 	
-	private function get_top():Float
+	function get_top():Float
 	{
 		return y;
 	}
 	
-	private function set_top(Value:Float):Float
+	function set_top(Value:Float):Float
 	{
 		height -= Value - y;
 		return y = Value;
@@ -106,12 +106,12 @@ class FlxRect
 	 */
 	public var bottom(get, set):Float;
 	
-	private function get_bottom():Float
+	function get_bottom():Float
 	{
 		return y + height;
 	}
 	
-	private function set_bottom(Value:Float):Float
+	function set_bottom(Value:Float):Float
 	{
 		height = Value - y;
 		return Value;

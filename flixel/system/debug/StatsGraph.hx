@@ -13,16 +13,16 @@ import flixel.util.FlxMath;
  */
 class StatsGraph extends Sprite
 {
-	private static inline var AXIS_COLOR:Int = 0xffffff;
-	private static inline var AXIS_ALPHA:Float = 0.5;
-	private static inline var LABEL_WIDTH:Int = 50;
-	private static inline var HISTORY_MAX:Int = 30;
+	static inline var AXIS_COLOR:Int = 0xffffff;
+	static inline var AXIS_ALPHA:Float = 0.5;
+	static inline var LABEL_WIDTH:Int = 50;
+	static inline var HISTORY_MAX:Int = 30;
 	
-	private var _axis:Shape;
-	private var _axisWidth:Int;
-	private var _width:Int;
-	private var _height:Int;
-	private var _unit:String;
+	var _axis:Shape;
+	var _axisWidth:Int;
+	var _width:Int;
+	var _height:Int;
+	var _unit:String;
 	
 	public var minLabel:TextField;
 	public var curLabel:TextField;
@@ -80,7 +80,7 @@ class StatsGraph extends Sprite
 	/**
 	 * Redraws the axis of the graph.
 	 */
-	private function drawAxis():Void
+	function drawAxis():Void
 	{
 		var gfx = _axis.graphics;
 		gfx.clear();
@@ -101,7 +101,7 @@ class StatsGraph extends Sprite
 	/**
 	 * Redraws the graph based on the values stored in the history.
 	 */
-	private function drawGraph():Void
+	function drawGraph():Void
 	{
 		var gfx:Graphics = graphics;
 		gfx.clear();

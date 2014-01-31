@@ -114,31 +114,31 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	/**
 	 * Internal variable for tracking the class to create when generating particles.
 	 */
-	private var _particleClass:Class<T>;
+	var _particleClass:Class<T>;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
-	private var _quantity:Int = 0;
+	var _quantity:Int = 0;
 	/**
 	 * Internal helper for the style of particle emission (all at once, or one at a time).
 	 */
-	private var _explode:Bool = true;
+	var _explode:Bool = true;
 	/**
 	 * Internal helper for deciding when to launch particles or kill them.
 	 */
-	private var _timer:Float = 0;
+	var _timer:Float = 0;
 	/**
 	 * Internal counter for figuring out how many particles to launch.
 	 */
-	private var _counter:Int = 0;
+	var _counter:Int = 0;
 	/**
 	 * Internal point object, handy for reusing for memory mgmt purposes.
 	 */
-	private var _point:FlxPoint;
+	var _point:FlxPoint;
 	/**
 	 * Internal helper for automatic call the kill() method
 	 */
-	private var _waitForKill:Bool = false;
+	var _waitForKill:Bool = false;
 	
 	/**
 	 * Creates a new <code>FlxTypedEmitter</code> object at a specific position.
@@ -735,12 +735,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var particleClass(get, set):Class<T>;
 	
-	private function get_particleClass():Class<T> 
+	function get_particleClass():Class<T> 
 	{
 		return _particleClass;
 	}
 	
-	private function set_particleClass(Value:Class<T>):Class<T> 
+	function set_particleClass(Value:Class<T>):Class<T> 
 	{
 		return _particleClass = Value;
 	}
@@ -750,12 +750,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var width(get, set):Float;
 	
-	private function get_width():Float
+	function get_width():Float
 	{
 		return xPosition.max;
 	}
 	
-	private function set_width(Value:Float):Float
+	function set_width(Value:Float):Float
 	{
 		return xPosition.max = Value;
 	}
@@ -765,12 +765,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var height(get, set):Float;
 	
-	private function get_height():Float
+	function get_height():Float
 	{
 		return yPosition.max;
 	}
 	
-	private function set_height(Value:Float):Float
+	function set_height(Value:Float):Float
 	{
 		return yPosition.max = Value;
 	}
@@ -780,12 +780,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var x(get, set):Float;
 	
-	private function get_x():Float
+	function get_x():Float
 	{
 		return xPosition.min;
 	}
 	
-	private function set_x(Value:Float):Float
+	function set_x(Value:Float):Float
 	{
 		return xPosition.min = Value;
 	}
@@ -795,12 +795,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var y(get, set):Float;
 	
-	private function get_y():Float
+	function get_y():Float
 	{
 		return yPosition.min;
 	}
 	
-	private function set_y(Value:Float):Float
+	function set_y(Value:Float):Float
 	{
 		return yPosition.min = Value;
 	}
@@ -823,12 +823,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var gravity(get, set):Float;
 	
-	private function get_gravity():Float
+	function get_gravity():Float
 	{
 		return acceleration.y;
 	}
 	
-	private function set_gravity(Value:Float):Float
+	function set_gravity(Value:Float):Float
 	{
 		return acceleration.y = Value;
 	}
@@ -839,12 +839,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var minRotation(get, set):Float;
 	
-	private function get_minRotation():Float
+	function get_minRotation():Float
 	{
 		return rotation.min;
 	}
 	
-	private function set_minRotation(Value:Float):Float
+	function set_minRotation(Value:Float):Float
 	{
 		return rotation.min = Value;
 	}
@@ -855,12 +855,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var maxRotation(get, set):Float;
 	
-	private function get_maxRotation():Float
+	function get_maxRotation():Float
 	{
 		return rotation.max;
 	}
 	
-	private function set_maxRotation(Value:Float):Float
+	function set_maxRotation(Value:Float):Float
 	{
 		return rotation.max = Value;
 	}
@@ -871,12 +871,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var lifespan(get, set):Float;
 	
-	private function get_lifespan():Float
+	function get_lifespan():Float
 	{
 		return life.min;
 	}
 	
-	private function set_lifespan(Value:Float):Float
+	function set_lifespan(Value:Float):Float
 	{
 		var dl:Float = life.max - life.min;
 		life.min = Value;

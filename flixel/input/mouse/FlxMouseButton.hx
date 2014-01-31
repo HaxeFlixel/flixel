@@ -24,10 +24,10 @@ class FlxMouseButton implements IFlxDestroyable
 	public var current:Int = RELEASED;
 	public var last:Int = RELEASED;
 	
-	private var _ID:Int;
+	var _ID:Int;
 	
-	private var _justPressedPosition:FlxPoint;
-	private var _justPressedTimeInTicks:Float;
+	var _justPressedPosition:FlxPoint;
+	var _justPressedTimeInTicks:Float;
 	
 	public function new(ID:Int)
 	{

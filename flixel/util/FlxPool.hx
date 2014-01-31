@@ -5,7 +5,7 @@ package flixel.util;
  */
 @:generic class FlxPool<T:({ private function new():Void; function destroy():Void; })>
 {
-	private var _pool:Array<T>;
+	var _pool:Array<T>;
 	
 	public var length(get, never):Int;
 	
@@ -47,7 +47,7 @@ package flixel.util;
 		return oldPool;
 	}
 	
-	private inline function get_length():Int
+	inline function get_length():Int
 	{
 		return _pool.length;
 	}

@@ -30,7 +30,7 @@ class FlxNode
 	
 	public var isEmpty(get_isEmpty, null):Bool;
 	
-	private function get_isEmpty():Bool
+	function get_isEmpty():Bool
 	{
 		return (filled == false && left == null && right == null);
 	}
@@ -45,22 +45,22 @@ class FlxNode
 	public var width(get_width, null):Int;
 	public var height(get_height, null):Int;
 	
-	private function get_x():Int
+	function get_x():Int
 	{
 		return Std.int(rect.x);
 	}
 	
-	private function get_y():Int
+	function get_y():Int
 	{
 		return Std.int(rect.y);
 	}
 	
-	private function get_width():Int
+	function get_width():Int
 	{
 		return Std.int(rect.width);
 	}
 	
-	private function get_height():Int
+	function get_height():Int
 	{
 		return Std.int(rect.height);
 	}

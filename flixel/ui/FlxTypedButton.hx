@@ -52,11 +52,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * The touch currently pressing this button, if none, it's null. Needed to check for its release.
 	 */
-	private var _pressedTouch:FlxTouch = null;
+	var _pressedTouch:FlxTouch = null;
 	/**
 	 * Whether this button is currently being pressed by the mouse. Needed to check for its release.
 	 */
-	private var _pressedMouse:Bool = false;
+	var _pressedMouse:Bool = false;
 	
 	/**
 	 * Creates a new <code>FlxTypedButton</code> object with a gray background.
@@ -180,7 +180,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * Basic button update logic - searches for overlaps with touches and
 	 * the mouse cursor and calls <code>updateStatus()</code>
 	 */
-	private function updateButton():Void
+	function updateButton():Void
 	{
 		if (cameras == null) {
 			cameras = FlxG.cameras.list;
@@ -232,7 +232,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	Pressed			Whether the input (touch or mouse) is pressed
 	 * @param	Touch			A FlxTouch, if this was called from an overlap with one
 	 */
-	private function updateStatus(Overlap:Bool, JustPressed:Bool, Pressed:Bool, ?Touch:FlxTouch):Void
+	function updateStatus(Overlap:Bool, JustPressed:Bool, Pressed:Bool, ?Touch:FlxTouch):Void
 	{
 		if (Overlap)
 		{
@@ -273,7 +273,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 #end
 	}
 	
-	private function set_status(Value:Int):Int
+	function set_status(Value:Int):Int
 	{
 		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
 			label.alpha = labelAlphas[Value];
@@ -285,7 +285,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * Internal function that handles the onUp event.
 	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
-	private function onUpHandler():Void
+	function onUpHandler():Void
 	{
 		status = FlxButton.NORMAL;
 		_pressedMouse = false;
@@ -297,7 +297,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * Internal function that handles the onDown event.
 	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
-	private function onDownHandler():Void
+	function onDownHandler():Void
 	{
 		status = FlxButton.PRESSED;
 		onDown.fire();
@@ -307,7 +307,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * Internal function that handles the onOver event.
 	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
-	private function onOverHandler():Void
+	function onOverHandler():Void
 	{
 		status = FlxButton.HIGHLIGHT;
 		onOver.fire();
@@ -317,7 +317,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * Internal function that handles the onOut event.
 	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
-	private function onOutHandler():Void
+	function onOutHandler():Void
 	{
 		status = FlxButton.NORMAL;
 		onOut.fire();
@@ -327,7 +327,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 /** 
  * Helper function for <code>FlxButton</code> which handles its events.
  */ 
-private class FlxButtonEvent implements IFlxDestroyable
+class FlxButtonEvent implements IFlxDestroyable
 {
 	/**
 	 * The callback function to call when this even fires.

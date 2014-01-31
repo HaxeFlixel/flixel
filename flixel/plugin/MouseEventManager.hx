@@ -32,10 +32,10 @@ import flixel.util.FlxPoint;
 */
 class MouseEventManager extends FlxPlugin
 {
-	private static var _registeredSprites:Array<SpriteReg>;
-	private static var _mouseOverSprites:Array<SpriteReg>;
+	static var _registeredSprites:Array<SpriteReg>;
+	static var _mouseOverSprites:Array<SpriteReg>;
 
-	private static var _point:FlxPoint;
+	static var _point:FlxPoint;
 
 	/**
 	* Call this using FlxG.plugins.add(new MouseEventMgr()).
@@ -205,7 +205,7 @@ class MouseEventManager extends FlxPlugin
 		_mouseOverSprites = currentOverSprites;
 	}
 
-	private function checkOverlap(Sprite:FlxSprite, PixelPerfect:Bool):Bool
+	function checkOverlap(Sprite:FlxSprite, PixelPerfect:Bool):Bool
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.list.length;
@@ -274,7 +274,7 @@ class MouseEventManager extends FlxPlugin
 		_registeredSprites = orderedSprites;
 	}
 
-	private static function traverseFlxGroup(Group:FlxGroup, OrderedSprites:Array<SpriteReg>)
+	static function traverseFlxGroup(Group:FlxGroup, OrderedSprites:Array<SpriteReg>)
 	{
 		for (basic in Group.members)
 		{
@@ -429,7 +429,7 @@ class MouseEventManager extends FlxPlugin
 		}
 	}
 
-	private static function getRegister(Sprite:FlxSprite, ?Register:Array<SpriteReg>):SpriteReg
+	static function getRegister(Sprite:FlxSprite, ?Register:Array<SpriteReg>):SpriteReg
 	{
 		if (Register == null)
 		{
@@ -447,7 +447,7 @@ class MouseEventManager extends FlxPlugin
 		return null;
 	}
 
-	private function clearRegistry():Void
+	function clearRegistry():Void
 	{
 		_mouseOverSprites = null;
 		

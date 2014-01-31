@@ -26,11 +26,11 @@ class FlxTouchManager implements IFlxInput
 	/**
 	 * Storage for inactive touches (some sort of cache for them).
 	 */
-	private var _inactiveTouches:Array<FlxTouch>;
+	var _inactiveTouches:Array<FlxTouch>;
 	/**
 	 * Helper storage for active touches (for faster access)
 	 */
-	private var _touchesCache:Map<Int, FlxTouch>;
+	var _touchesCache:Map<Int, FlxTouch>;
 	
 	/**
 	 * WARNING: can be null if no active touch with the provided ID could be found
@@ -156,7 +156,7 @@ class FlxTouchManager implements IFlxInput
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new() 
+	function new() 
 	{
 		list = new Array<FlxTouch>();
 		_inactiveTouches = new Array<FlxTouch>();
@@ -174,7 +174,7 @@ class FlxTouchManager implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>TouchEvent</code> object.
 	 */
-	private function handleTouchBegin(FlashEvent:TouchEvent):Void
+	function handleTouchBegin(FlashEvent:TouchEvent):Void
 	{
 		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
@@ -202,7 +202,7 @@ class FlxTouchManager implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>TouchEvent</code> object.
 	 */
-	private function handleTouchEnd(FlashEvent:TouchEvent):Void
+	function handleTouchEnd(FlashEvent:TouchEvent):Void
 	{
 		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		
@@ -224,7 +224,7 @@ class FlxTouchManager implements IFlxInput
 	 * 
 	 * @param	FlashEvent	A <code>TouchEvent</code> object.
 	 */
-	private function handleTouchMove(FlashEvent:TouchEvent):Void
+	function handleTouchMove(FlashEvent:TouchEvent):Void
 	{
 		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		
@@ -240,7 +240,7 @@ class FlxTouchManager implements IFlxInput
 	 * @param	Touch	A new FlxTouch object
 	 * @return	The added FlxTouch object
 	 */
-	private function add(Touch:FlxTouch):FlxTouch
+	function add(Touch:FlxTouch):FlxTouch
 	{
 		list.push(Touch);
 		_touchesCache.set(Touch.touchPointID, Touch); 
@@ -255,7 +255,7 @@ class FlxTouchManager implements IFlxInput
 	 * @param	PointID		id of the touch
 	 * @return	A recycled touch object
 	 */
-	private function recycle(X:Float, Y:Float, PointID:Int):FlxTouch
+	function recycle(X:Float, Y:Float, PointID:Int):FlxTouch
 	{
 		if (_inactiveTouches.length > 0)
 		{
@@ -271,7 +271,7 @@ class FlxTouchManager implements IFlxInput
 	 * Called by the internal game loop to update the touch position in the game world.
 	 * Also updates the just pressed/just released flags.
 	 */
-	private function update():Void
+	function update():Void
 	{
 		var i:Int = list.length - 1;
 		var touch:FlxTouch;
@@ -297,9 +297,9 @@ class FlxTouchManager implements IFlxInput
 		}
 	}
 
-	private function onFocus():Void {}
+	function onFocus():Void {}
 
-	private function onFocusLost():Void
+	function onFocusLost():Void
 	{
 		reset();
 	}

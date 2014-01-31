@@ -66,7 +66,7 @@ class DebuggerFrontEnd
 	 */
 	public var visible(default, set):Bool = false;
 	
-	private inline function set_visible(Visible:Bool):Bool
+	inline function set_visible(Visible:Bool):Bool
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.visible = Visible;

@@ -113,15 +113,15 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal reference to a Flash <code>TextField</code> object.
 	 */
-	private var _textField:TextField;
+	var _textField:TextField;
 	/**
 	 * Internal reference to a Flash <code>TextFormat</code> object.
 	 */
-	private var _format:TextFormat;
+	var _format:TextFormat;
 	/**
 	 * Internal reference to another helper Flash <code>TextFormat</code> object.
 	 */
-	private var _formatAdjusted:TextFormat;
+	var _formatAdjusted:TextFormat;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -233,7 +233,7 @@ class FlxText extends FlxSprite
 		return this;
 	}
 	
-	override private function set_width(Width:Float):Float
+	override function set_width(Width:Float):Float
 	{
 		if (Width != width)
 		{
@@ -248,12 +248,12 @@ class FlxText extends FlxSprite
 		return Width;
 	}
 	
-	private function get_text():String
+	function get_text():String
 	{
 		return _textField.text;
 	}
 	
-	private function set_text(Text:String):String
+	function set_text(Text:String):String
 	{
 		var ot:String = _textField.text;
 		_textField.text = Text;
@@ -266,12 +266,12 @@ class FlxText extends FlxSprite
 		return _textField.text;
 	}
 	
-	private function get_size():Float
+	function get_size():Float
 	{
 		return _format.size;
 	}
 	
-	private function set_size(Size:Float):Float
+	function set_size(Size:Float):Float
 	{
 		_format.size = Size;
 		_textField.defaultTextFormat = _format;
@@ -284,7 +284,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The color of the text being displayed.
 	 */
-	override private function set_color(Color:Int):Int
+	override function set_color(Color:Int):Int
 	{
 		Color &= 0x00ffffff;
 		if (_format.color == Color)
@@ -299,12 +299,12 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	private function get_font():String
+	function get_font():String
 	{
 		return _format.font;
 	}
 	
-	private function set_font(Font:String):String
+	function set_font(Font:String):String
 	{
 		_textField.embedFonts = true;
 		_format.font = Assets.getFont(Font).fontName;
@@ -314,17 +314,17 @@ class FlxText extends FlxSprite
 		return Font;
 	}
 	
-	private function get_embedded():Bool
+	function get_embedded():Bool
 	{
 		return _textField.embedFonts = true;
 	}
 	
-	private function get_systemFont():String
+	function get_systemFont():String
 	{
 		return _format.font;
 	}
 	
-	private function set_systemFont(Font:String):String
+	function set_systemFont(Font:String):String
 	{
 		_textField.embedFonts = false;
 		_format.font = Font;
@@ -334,12 +334,12 @@ class FlxText extends FlxSprite
 		return Font;
 	}
 	
-	private function get_bold():Bool 
+	function get_bold():Bool 
 	{ 
 		return _format.bold; 
 	}
 	
-	private function set_bold(value:Bool):Bool
+	function set_bold(value:Bool):Bool
 	{
 		if (_format.bold != value)
 		{
@@ -351,12 +351,12 @@ class FlxText extends FlxSprite
 		return value;
 	}
 	
-	private function get_wordWrap():Bool 
+	function get_wordWrap():Bool 
 	{ 
 		return _textField.wordWrap; 
 	}
 	
-	private function set_wordWrap(value:Bool):Bool
+	function set_wordWrap(value:Bool):Bool
 	{
 		if (_textField.wordWrap != value)
 		{
@@ -367,12 +367,12 @@ class FlxText extends FlxSprite
 		return value;
 	}
 	
-	private function get_alignment():String
+	function get_alignment():String
 	{
 		return cast(_format.align, String);
 	}
 	
-	private function set_alignment(Alignment:String):String
+	function set_alignment(Alignment:String):String
 	{
 		_format.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _format;
@@ -397,7 +397,7 @@ class FlxText extends FlxSprite
 		borderQuality = Quality;
 	}
 	
-	private function set_borderStyle(style:Int):Int
+	function set_borderStyle(style:Int):Int
 	{		
 		if (style != borderStyle)
 		{
@@ -408,7 +408,7 @@ class FlxText extends FlxSprite
 		return borderStyle;
 	}
 	
-	private function set_borderColor(Color:Int):Int
+	function set_borderColor(Color:Int):Int
 	{
 		Color &= 0x00ffffff;
 		
@@ -421,7 +421,7 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	private function set_borderSize(Value:Float):Float
+	function set_borderSize(Value:Float):Float
 	{
 		if (Value != borderSize && borderStyle != BORDER_NONE)
 		{			
@@ -432,7 +432,7 @@ class FlxText extends FlxSprite
 		return Value;
 	}
 	
-	private function set_borderQuality(Value:Float):Float
+	function set_borderQuality(Value:Float):Float
 	{
 		if (Value < 0)
 			Value = 0;
@@ -448,12 +448,12 @@ class FlxText extends FlxSprite
 		return Value;
 	}
 	
-	private function get_textField():TextField 
+	function get_textField():TextField 
 	{
 		return _textField;
 	}
 	
-	override private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics 
+	override function set_cachedGraphics(Value:CachedGraphics):CachedGraphics 
 	{
 		var cached:CachedGraphics = super.set_cachedGraphics(Value);
 		
@@ -463,7 +463,7 @@ class FlxText extends FlxSprite
 		return cached;
 	}
 	
-	override private function updateColorTransform():Void
+	override function updateColorTransform():Void
 	{
 		if (alpha != 1)
 		{
@@ -490,7 +490,7 @@ class FlxText extends FlxSprite
 		dirty = true;
 	}
 	
-	private function regenGraphics():Void
+	function regenGraphics():Void
 	{
 		var oldWidth:Float = cachedGraphics.bitmap.width;
 		var oldHeight:Float = cachedGraphics.bitmap.height;
@@ -526,7 +526,7 @@ class FlxText extends FlxSprite
 	 * 
 	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	override private function calcFrame(RunOnCpp:Bool = false):Void
+	override function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		if (_textField == null)
 		{
@@ -691,7 +691,7 @@ class FlxText extends FlxSprite
 	 * 
 	 * @return	A writable copy of <code>TextField.defaultTextFormat</code>.
 	 */
-	private function dtfCopy():TextFormat
+	function dtfCopy():TextFormat
 	{
 		var defaultTextFormat:TextFormat = _textField.defaultTextFormat;
 		
@@ -702,7 +702,7 @@ class FlxText extends FlxSprite
 	 * Method for converting string to TextFormatAlign
 	 */
 	#if (flash || js)
-	private function convertTextAlignmentFromString(StrAlign:String):TextFormatAlign
+	function convertTextAlignmentFromString(StrAlign:String):TextFormatAlign
 	{
 		if (StrAlign == "right")
 		{
@@ -722,7 +722,7 @@ class FlxText extends FlxSprite
 		}
 	}
 	#else
-	private function convertTextAlignmentFromString(StrAlign:String):String
+	function convertTextAlignmentFromString(StrAlign:String):String
 	{
 		return StrAlign;
 	}
@@ -738,7 +738,7 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	private inline function updateFormat(Format:TextFormat):Void
+	inline function updateFormat(Format:TextFormat):Void
 	{
 		#if !flash
 		_textField.setTextFormat(Format, 0, _textField.text.length);
@@ -747,10 +747,10 @@ class FlxText extends FlxSprite
 		#end
 	}
 	
-	private var _filters:Array<BitmapFilter>;
+	var _filters:Array<BitmapFilter>;
 	
-	private var _widthInc:Int = 0;
-	private var _heightInc:Int = 0;
+	var _widthInc:Int = 0;
+	var _heightInc:Int = 0;
 	
 	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
 	{

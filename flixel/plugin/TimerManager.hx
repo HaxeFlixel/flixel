@@ -9,7 +9,7 @@ import flixel.util.FlxTimer;
  */
 class TimerManager extends FlxPlugin
 {
-	private var _timers:Array<FlxTimer>;
+	var _timers:Array<FlxTimer>;
 	
 	/**
 	 * Instantiates a new timer manager.

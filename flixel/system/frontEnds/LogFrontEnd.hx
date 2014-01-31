@@ -7,7 +7,7 @@ import haxe.PosInfos;
 class LogFrontEnd
 {
 	@:allow(flixel.FlxG)
-	private function new() 
+	function new() 
 	{ 
 		// Create functions that take a variable amount of arguments
 		add = Reflect.makeVarArgs(_add);
@@ -24,7 +24,7 @@ class LogFrontEnd
 	 */
 	public var add:Dynamic;
 	
-	private inline function _add(Data:Array<Dynamic>):Void
+	inline function _add(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
 		advanced(Data, LogStyle.NORMAL); 
@@ -37,7 +37,7 @@ class LogFrontEnd
 	 */
 	public var warn:Dynamic;
 	
-	private inline function _warn(Data:Array<Dynamic>):Void
+	inline function _warn(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
 		advanced(Data, LogStyle.WARNING, true); 
@@ -50,7 +50,7 @@ class LogFrontEnd
 	 */
 	public var error:Dynamic;
 	
-	private inline function _error(Data:Array<Dynamic>):Void
+	inline function _error(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
 		advanced(Data, LogStyle.ERROR, true); 
@@ -63,7 +63,7 @@ class LogFrontEnd
 	 */
 	public var notice:Dynamic;
 	
-	private inline function _notice(Data:Array<Dynamic>):Void
+	inline function _notice(Data:Array<Dynamic>):Void
 	{
 		#if !FLX_NO_DEBUG
 		advanced(Data, LogStyle.NOTICE); 
@@ -135,9 +135,9 @@ class LogFrontEnd
 	/**
 	 * Internal var used to undo the redirection of traces.
 	 */
-	private var _oldTrace:Dynamic;	
+	var _oldTrace:Dynamic;	
 	
-	private function set_redirectTraces(Redirect:Bool):Bool
+	function set_redirectTraces(Redirect:Bool):Bool
 	{
 		if (Redirect)
 		{
@@ -156,7 +156,7 @@ class LogFrontEnd
 	 * @param	Data	The data that has been traced
 	 * @param	Inf		Information about the position at which <code>trace()</code> was called
 	 */
-	private function processTraceData(Data:Dynamic, ?Inf:PosInfos):Void
+	function processTraceData(Data:Dynamic, ?Inf:PosInfos):Void
 	{
 		var paramArray:Array<Dynamic> = [Data];
 		

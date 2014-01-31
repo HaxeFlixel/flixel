@@ -57,5 +57,5 @@ class ConsoleFrontEnd
 	 * Just needed to create an instance.
 	 */
 	@:allow(flixel.FlxG)
-	private function new() { }
+	function new() { }
 }

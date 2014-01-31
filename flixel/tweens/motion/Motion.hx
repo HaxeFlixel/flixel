@@ -18,7 +18,7 @@ class Motion extends FlxTween
 	 */
 	public var y:Float = 0;
 	
-	private var _object:FlxObject;
+	var _object:FlxObject;
 	
 	/**
 	 * Constructor.

@@ -165,7 +165,7 @@ class LinearPath extends Motion
 	}
 
 	/** @private Updates the path, preparing it for motion. */
-	private function updatePath():Void
+	function updatePath():Void
 	{
 		if (_points.length < 2)	throw "A LinearPath must have at least 2 points to operate.";
 		if (_pointD.length == _pointT.length) return;
@@ -186,17 +186,17 @@ class LinearPath extends Motion
 	 * How many points are on the path.
 	 */
 	public var pointCount(get_pointCount, never):Float;
-	private function get_pointCount():Float { return _points.length; }
+	function get_pointCount():Float { return _points.length; }
 
 	// Path information.
-	private var _points:Array<FlxPoint>;
-	private var _pointD:Array<Float>;
-	private var _pointT:Array<Float>;
-	private var _speed:Float;
-	private var _index:Int;
+	var _points:Array<FlxPoint>;
+	var _pointD:Array<Float>;
+	var _pointT:Array<Float>;
+	var _speed:Float;
+	var _index:Int;
 
 	// Line information.
-	private var _last:FlxPoint;
-	private var _prevPoint:FlxPoint;
-	private var _nextPoint:FlxPoint;
+	var _last:FlxPoint;
+	var _prevPoint:FlxPoint;
+	var _nextPoint:FlxPoint;
 }

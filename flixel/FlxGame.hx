@@ -87,7 +87,7 @@ class FlxGame extends Sprite
 	/**
 	 * Should we start Fullscreen or not? This is useful if you want to load Fullscreen settings from a FlxSave and set it when the game starts, instead of having it hard-set in your project XML.
 	 */
-	private var _startFullscreen:Bool = false; 
+	var _startFullscreen:Bool = false; 
 	#end
 	
 	#if !FLX_NO_DEBUG
@@ -131,58 +131,58 @@ class FlxGame extends Sprite
 	 * A flag for triggering the onGameStart "event".
 	 */
 	@:allow(flixel.system.FlxSplash)
-	private var _gameJustStarted:Bool = false;
+	var _gameJustStarted:Bool = false;
 	
 	/**
 	 * Class type of the initial/first game state for the game, usually MenuState or something like that.
 	 */
-	private var _iState:Class<FlxState>;
+	var _iState:Class<FlxState>;
 	/**
 	 * Total number of milliseconds elapsed since game start.
 	 */
-	private var _total:Int = 0;
+	var _total:Int = 0;
 	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
 	 */
-	private var _accumulator:Int;
+	var _accumulator:Int;
 	/**
 	 * Whether the Flash player lost focus.
 	 */
-	private var _lostFocus:Bool = false;
+	var _lostFocus:Bool = false;
 	
 	#if cpp
 	/**
 	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
 	 * (the focus event should not fire when the game starts up!)
 	 */ 
-	private var _onFocusFiredOnce:Bool = false;
+	var _onFocusFiredOnce:Bool = false;
 	#end
 	
 	#if !FLX_NO_FOCUS_LOST_SCREEN 
 	/**
 	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
 	 */
-	private var _focusLostScreen:FlxFocusLostScreen;
+	var _focusLostScreen:FlxFocusLostScreen;
 	#end
 	
 	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 	/**
 	 * Change this after calling super() in the FlxGame constructor to use a customized sound tray based on FlxSoundTray.
 	 */
-	private var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
+	var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
 	#end
 	
 	#if !FLX_NO_FOCUS_LOST_SCREEN
 	/**
 	 * Change this after calling super() in the FlxGame constructor to use a customized screen which will be show when the application lost focus.
 	 */
-	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
+	var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	#end
 	/**
 	 * Whether the splash screen should be skipped.
 	 */
-	private var _skipSplash:Bool = false;
+	var _skipSplash:Bool = false;
 	
 	/**
 	 * Instantiate a new game object.
@@ -230,7 +230,7 @@ class FlxGame extends Sprite
 	 * 
 	 * @param	FlashEvent	Just a Flash system event, not too important for our purposes.
 	 */
-	private function create(FlashEvent:Event):Void
+	function create(FlashEvent:Event):Void
 	{
 		if (stage == null)
 		{
@@ -301,7 +301,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onFocus(?FlashEvent:Event):Void
+	function onFocus(?FlashEvent:Event):Void
 	{
 		#if flash
 		if (!_lostFocus) 
@@ -349,7 +349,7 @@ class FlxGame extends Sprite
 	 * Internal event handler for input and focus.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onFocusLost(?FlashEvent:Event):Void
+	function onFocusLost(?FlashEvent:Event):Void
 	{
 		#if flash
 		if (_lostFocus) 
@@ -384,7 +384,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocusLost();
 	}
 	
-	private function onResize(?E:Event):Void 
+	function onResize(?E:Event):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
@@ -424,7 +424,7 @@ class FlxGame extends Sprite
 	 * Handles the onEnterFrame call and figures out how many updates and draw calls to do.
 	 * @param	FlashEvent	Flash event.
 	 */
-	private function onEnterFrame(?FlashEvent:Event):Void
+	function onEnterFrame(?FlashEvent:Event):Void
 	{
 		ticks = Lib.getTimer();
 		elapsedMS = ticks - _total;
@@ -492,7 +492,7 @@ class FlxGame extends Sprite
 	 * Internal method to create a new instance of iState and reset the game.
 	 * This gets called when the game is created, as well as when a new state is requested.
 	 */
-	private inline function resetGame():Void
+	inline function resetGame():Void
 	{
 		#if !FLX_NO_DEBUG
 		requestedState = cast (Type.createInstance(_iState, []));
@@ -525,7 +525,7 @@ class FlxGame extends Sprite
 	 * this function handles actual destroying the old state and related processes,
 	 * and calls creates on the new state and plugs it into the game object.
 	 */
-	private function switchState():Void
+	function switchState():Void
 	{ 
 		// Basic reset stuff
 		PxBitmapFont.clearStorage();
@@ -570,7 +570,7 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	private function gameStart():Void
+	function gameStart():Void
 	{
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.onGameStart();
@@ -584,7 +584,7 @@ class FlxGame extends Sprite
 	 * the appropriate number of times each frame.
 	 * This block handles state changes, replays, all that good stuff.
 	 */
-	private function step():Void
+	function step():Void
 	{
 		// Handle game reset request
 		if (resetState)
@@ -636,7 +636,7 @@ class FlxGame extends Sprite
 	 * This function is called by step() and updates the actual game state.
 	 * May be called multiple times per "frame" or draw call.
 	 */
-	private function update():Void
+	function update():Void
 	{
 		if (state != requestedState)
 		{
@@ -683,7 +683,7 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	private function updateInput():Void
+	function updateInput():Void
 	{
 		#if FLX_RECORD
 		if (replaying)
@@ -745,7 +745,7 @@ class FlxGame extends Sprite
 	/**
 	 * Goes through the game state and draws all the game objects and special effects.
 	 */
-	private function draw():Void
+	function draw():Void
 	{
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)

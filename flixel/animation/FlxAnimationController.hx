@@ -54,24 +54,24 @@ class FlxAnimationController
 	/**
 	 * Internal, reference to owner sprite.
 	 */
-	private var _sprite:FlxSprite;
+	var _sprite:FlxSprite;
 	
 	/**
 	 * Internal, currently playing animation.
 	 */
-	@:allow(flixel.animation) private var _curAnim:FlxAnimation;
+	@:allow(flixel.animation) var _curAnim:FlxAnimation;
 	
 	/**
 	 * Internal, store all the _animations that were added to this sprite.
 	 */
-	private var _animations(default, null):Map<String, FlxAnimation>;
+	var _animations(default, null):Map<String, FlxAnimation>;
 	/**
 	 * Internal helper constants used for _animations's frame sorting.
 	 */
-	private static var prefixLength:Int = 0;
-	private static var postfixLength:Int = 0;
+	static var prefixLength:Int = 0;
+	static var postfixLength:Int = 0;
 	
-	private var _prerotated:FlxPrerotatedAnimation;
+	var _prerotated:FlxPrerotatedAnimation;
 	
 	public function new(Sprite:FlxSprite)
 	{
@@ -136,7 +136,7 @@ class FlxAnimationController
 		_sprite = null;
 	}
 	
-	private function clear_prerotated():Void
+	function clear_prerotated():Void
 	{
 		if (_prerotated != null)
 		{
@@ -145,7 +145,7 @@ class FlxAnimationController
 		_prerotated = null;
 	}
 	
-	private function clear_animations():Void
+	function clear_animations():Void
 	{
 		if (_animations != null)
 		{
@@ -300,7 +300,7 @@ class FlxAnimationController
 	 * to find "file05.png" so allowing 99 frames per animation
 	 * Returns found frame and null if nothing is found
 	 */
-	private function findSpriteFrame(Prefix:String, Index:Int, Postfix:String):Int
+	function findSpriteFrame(Prefix:String, Index:Int, Postfix:String):Int
 	{
 		var numFrames:Int = frames;
 		var flxFrames:Array<FlxFrame> = _sprite.framesData.frames;
@@ -441,7 +441,7 @@ class FlxAnimationController
 		frameIndex = FlxRandom.intRanged( 0, frames - 1 );
 	}
 	
-	private function set_frameIndex(Frame:Int):Int
+	function set_frameIndex(Frame:Int):Int
 	{
 		if (_sprite.framesData != null)
 		{
@@ -457,12 +457,12 @@ class FlxAnimationController
 		return frameIndex = Frame;
 	}
 	
-	private inline function get_frameName():String
+	inline function get_frameName():String
 	{
 		return _sprite.frame.name;
 	}
 	
-	private function set_frameName(Value:String):String
+	function set_frameName(Value:String):String
 	{
 		if (_sprite.framesData != null && _sprite.framesData.framesHash.exists(Value))
 		{
@@ -485,7 +485,7 @@ class FlxAnimationController
 	/**
 	 * Gets the name of the currently playing _animations (warning: can be null)
 	 */
-	private function get_name():String
+	function get_name():String
 	{
 		var animName:String = null;
 		if (_curAnim != null)
@@ -499,7 +499,7 @@ class FlxAnimationController
 	 * Plays a specified _animations (same as calling play)
 	 * @param	AnimName	The name of the _animations you want to play.
 	 */
-	private function set_name(AnimName:String):String
+	function set_name(AnimName:String):String
 	{
 		play(AnimName);
 		return AnimName;
@@ -508,7 +508,7 @@ class FlxAnimationController
 	/**
 	 * Gets the currently playing _animations (warning: can return null).
 	 */
-	private inline function get_curAnim():FlxAnimation
+	inline function get_curAnim():FlxAnimation
 	{
 		var anim:FlxAnimation = null;
 		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
@@ -522,7 +522,7 @@ class FlxAnimationController
 	 * Plays a specified _animations (same as calling play)
 	 * @param	AnimName	The name of the _animations you want to play.
 	 */
-	private inline function set_curAnim(Anim:FlxAnimation):FlxAnimation
+	inline function set_curAnim(Anim:FlxAnimation):FlxAnimation
 	{
 		if (Anim != null && Anim != _curAnim)
 		{
@@ -535,7 +535,7 @@ class FlxAnimationController
 		return _curAnim = Anim;
 	}
 	
-	private inline function get_paused():Bool
+	inline function get_paused():Bool
 	{
 		var paused:Bool = false;
 		if (_curAnim != null)
@@ -545,7 +545,7 @@ class FlxAnimationController
 		return paused;
 	}
 	
-	private inline function set_paused(Value:Bool):Bool
+	inline function set_paused(Value:Bool):Bool
 	{
 		if (_curAnim != null)
 		{
@@ -554,7 +554,7 @@ class FlxAnimationController
 		return Value;
 	}
 	
-	private inline function get_finished():Bool
+	inline function get_finished():Bool
 	{
 		var finished:Bool = true;
 		if (_curAnim != null)
@@ -564,7 +564,7 @@ class FlxAnimationController
 		return finished;
 	}
 	
-	private inline function set_finished(Value:Bool):Bool
+	inline function set_finished(Value:Bool):Bool
 	{
 		if (Value == true && _curAnim != null)
 		{
@@ -574,7 +574,7 @@ class FlxAnimationController
 		return Value;
 	}
 	
-	private inline function get_frames():Int
+	inline function get_frames():Int
 	{
 		return _sprite.frames;
 	}

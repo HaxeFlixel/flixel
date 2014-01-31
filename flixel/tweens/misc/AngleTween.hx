@@ -20,8 +20,8 @@ class AngleTween extends FlxTween
 	 */
 	public var sprite:FlxSprite;
 	
-	private var _start:Float;
-	private var _range:Float;
+	var _start:Float;
+	var _range:Float;
 	
 	/**
 	 * Constructor.

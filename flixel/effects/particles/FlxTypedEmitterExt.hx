@@ -76,7 +76,7 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 	 * @param	DistanceRange	Random amount to add to the particle's distance.
 	 * @param	LifespanRange	Random amount to add to the particle's duration.
 	 */
-	private function setParticleMotion(Particle:T, Angle:Float, Distance:Float, AngleRange:Float = 0, DistanceRange:Float = 0):Void
+	function setParticleMotion(Particle:T, Angle:Float, Distance:Float, AngleRange:Float = 0, DistanceRange:Float = 0):Void
 	{			
 		//set particle direction and speed
 		var a:Float = FlxRandom.floatRanged( Angle, Angle + AngleRange );

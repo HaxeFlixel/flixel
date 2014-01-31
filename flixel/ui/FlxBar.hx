@@ -27,15 +27,15 @@ import flixel.util.loaders.CachedGraphics;
 class FlxBar extends FlxSprite
 {
 	#if flash
-	private var canvas:BitmapData;
+	var canvas:BitmapData;
 	#end
 	
-	private var barType:Int;
-	private var barWidth:Int;
-	private var barHeight:Int;
+	var barType:Int;
+	var barWidth:Int;
+	var barHeight:Int;
 	
-	private var parent:Dynamic;
-	private var parentVariable:String;
+	var parent:Dynamic;
+	var parentVariable:String;
 	
 	/**
 	 * fixedPosition controls if the FlxBar sprite is at a fixed location on screen, or tracking its parent
@@ -50,47 +50,47 @@ class FlxBar extends FlxSprite
 	/**
 	 * The minimum value the bar can be (can never be >= max)
 	 */
-	private var min:Float;
+	var min:Float;
 	
 	/**
 	 * The maximum value the bar can be (can never be <= min)
 	 */
-	private var max:Float;
+	var max:Float;
 	
 	/**
 	 * How wide is the range of this bar? (max - min)
 	 */
-	private var range:Float;
+	var range:Float;
 		
 	/**
 	 * What 1% of the bar is equal to in terms of value (range / 100)
 	 */
-	private var pct:Float;
+	var pct:Float;
 	
 	/**
 	 * The current value - must always be between min and max
 	 */
-	private var value:Float;
+	var value:Float;
 	
 	/**
 	 * How many pixels = 1% of the bar (barWidth (or height) / 100)
 	 */
 	public var pxPerPercent:Float;
 	
-	private var emptyCallback:Void->Void;
-	private var emptyBar:BitmapData;
-	private var emptyBarRect:Rectangle;
-	private var emptyBarPoint:Point;
-	private var emptyKill:Bool;
-	private var zeroOffset:Point;
+	var emptyCallback:Void->Void;
+	var emptyBar:BitmapData;
+	var emptyBarRect:Rectangle;
+	var emptyBarPoint:Point;
+	var emptyKill:Bool;
+	var zeroOffset:Point;
 	
-	private var filledCallback:Void->Void;
-	private var filledBar:BitmapData;
-	private var filledBarRect:Rectangle;
-	private var filledBarPoint:Point;
+	var filledCallback:Void->Void;
+	var filledBar:BitmapData;
+	var filledBarRect:Rectangle;
+	var filledBarPoint:Point;
 	
-	private var fillDirection:Int;
-	private var fillHorizontal:Bool;
+	var fillDirection:Int;
+	var fillHorizontal:Bool;
 	
 	public static inline var FILL_LEFT_TO_RIGHT:Int = 1;
 	public static inline var FILL_RIGHT_TO_LEFT:Int = 2;
@@ -101,20 +101,20 @@ class FlxBar extends FlxSprite
 	public static inline var FILL_VERTICAL_INSIDE_OUT:Int = 7;
 	public static inline var FILL_VERTICAL_OUTSIDE_IN:Int = 8;
 	
-	private static inline var BAR_FILLED:Int = 1;
-	private static inline var BAR_GRADIENT:Int = 2;
-	private static inline var BAR_IMAGE:Int = 3;
+	static inline var BAR_FILLED:Int = 1;
+	static inline var BAR_GRADIENT:Int = 2;
+	static inline var BAR_IMAGE:Int = 3;
 	
 	#if !flash
-	private var _emptyBarFrameID:Int;
-	private var _filledBarFrames:Array<Float>;
+	var _emptyBarFrameID:Int;
+	var _filledBarFrames:Array<Float>;
 	
-	private var _framesPosition:String;
+	var _framesPosition:String;
 	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
 	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
 	
-	private var _cachedFrontGraphics:CachedGraphics;
-	private var _frontRegion:Region;
+	var _cachedFrontGraphics:CachedGraphics;
+	var _frontRegion:Region;
 	#end
 	
 	/**
@@ -304,13 +304,13 @@ class FlxBar extends FlxSprite
 	/**
 	 * If this FlxBar should be killed when its value reaches empty, set to true
 	 */
-	private function set_killOnEmpty(value:Bool):Bool
+	function set_killOnEmpty(value:Bool):Bool
 	{
 		emptyKill = value;
 		return value;
 	}
 	
-	private function get_killOnEmpty():Bool
+	function get_killOnEmpty():Bool
 	{
 		return emptyKill;
 	}
@@ -376,7 +376,7 @@ class FlxBar extends FlxSprite
 	
 	public var stats(get_stats, null):Map<String, Dynamic>;
 	
-	private function get_stats():Map<String, Dynamic>
+	function get_stats():Map<String, Dynamic>
 	{
 		var data = new Map<String, Dynamic>();
 		data.set("min", min);
@@ -831,12 +831,12 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
-	private function updateValueFromParent():Void
+	function updateValueFromParent():Void
 	{
 		updateValue(Reflect.getProperty(parent, parentVariable));
 	}
 	
-	private function updateValue(newValue:Float):Void
+	function updateValue(newValue:Float):Void
 	{
 		if (newValue > max)
 		{
@@ -870,7 +870,7 @@ class FlxBar extends FlxSprite
 	 * Internal
 	 * Called when the health bar detects a change in the health of the parent.
 	 */
-	private function updateBar():Void
+	function updateBar():Void
 	{
 		#if flash
 		if (fillHorizontal)
@@ -953,7 +953,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * The percentage of how full the bar is (a value between 0 and 100)
 	 */
-	private function get_percent():Float
+	function get_percent():Float
 	{
 		#if neko
 		if (value == null) 
@@ -973,7 +973,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * Sets the percentage of how full the bar is (a value between 0 and 100). This changes FlxBar.currentValue
 	 */
-	private function set_percent(newPct:Float):Float
+	function set_percent(newPct:Float):Float
 	{
 		if (newPct >= 0 && newPct <= 100)
 		{
@@ -988,7 +988,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * Set the current value of the bar (must be between min and max range)
 	 */
-	private function set_currentValue(newValue:Float):Float
+	function set_currentValue(newValue:Float):Float
 	{
 		updateValue(newValue);
 		updateBar();
@@ -998,7 +998,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * The current actual value of the bar
 	 */
-	private function get_currentValue():Float
+	function get_currentValue():Float
 	{
 		return value;
 	}
@@ -1170,7 +1170,7 @@ class FlxBar extends FlxSprite
 		}
 	}
 	
-	override private function set_pixels(Pixels:BitmapData):BitmapData
+	override function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		return Pixels;
 	}
@@ -1275,11 +1275,11 @@ class FlxBar extends FlxSprite
 	}
 	
 	#if !flash
-	private inline function setCachedGraphics(value:CachedGraphics):Void
+	inline function setCachedGraphics(value:CachedGraphics):Void
 	{
 		cachedGraphics = value;
 	}
-	private function setCachedFrontGraphics(value:CachedGraphics):Void
+	function setCachedFrontGraphics(value:CachedGraphics):Void
 	{
 		if (_cachedFrontGraphics != null && _cachedFrontGraphics != value)
 		{

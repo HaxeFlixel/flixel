@@ -9,7 +9,7 @@ import flixel.FlxG;
 class FlxKeyList
 {
 	#if !FLX_NO_KEYBOARD
-	private var checkStatus:Int;
+	var checkStatus:Int;
 	
 	public function new(CheckStatus:Int)
 	{
@@ -113,7 +113,7 @@ class FlxKeyList
 	
 	public var ANY(get, never):Bool; 
 	
-	private function get_ANY():Bool
+	function get_ANY():Bool
 	{
 		var key:FlxKey = null;
 		var keyCode:Int = FlxKeyboard.TOTAL;
