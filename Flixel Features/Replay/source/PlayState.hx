@@ -106,11 +106,11 @@ class PlayState extends FlxState
 		}
 		
 		// Update the red block cursor
-		_cursor.scale = new FlxPoint(1, 1);
+		_cursor.scale.set(1, 1);
 		
 		if (FlxG.mouse.pressed) 
 		{
-			_cursor.scale = new FlxPoint(2, 2);
+			_cursor.scale.set(2, 2);
 		}
 		_cursor.x = FlxG.mouse.screenX;
 		_cursor.y = FlxG.mouse.screenY;
