@@ -3,7 +3,7 @@ package flixel.system.debug;
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
@@ -33,7 +33,7 @@ class Watch extends Window
 	 */
 	public function new()
 	{
-		super("watch", FlxAssets.IMG_WATCH_DEBUG);
+		super("watch", new GraphicWatch(0, 0));
 		
 		_names = new Sprite();
 		_names.x = 2;

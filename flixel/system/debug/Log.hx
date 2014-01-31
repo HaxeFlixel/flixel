@@ -5,7 +5,7 @@ import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
@@ -25,7 +25,7 @@ class Log extends Window
 	 */	
 	public function new()
 	{
-		super("log", FlxAssets.IMG_LOG_DEBUG);
+		super("log", new GraphicLog(0, 0));
 		
 		_text = new TextField();
 		_text.x = 2;

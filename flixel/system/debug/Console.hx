@@ -11,7 +11,7 @@ import flash.text.TextFormat;
 import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxStringUtil;
 
@@ -70,7 +70,7 @@ class Console extends Window
 	 */	
 	public function new()
 	{	
-		super("console", FlxAssets.IMG_CONSOLE, 0, 0, false);
+		super("console", new GraphicConsole(0, 0), 0, 0, false);
 		
 		commands = new Array<Command>();
 		

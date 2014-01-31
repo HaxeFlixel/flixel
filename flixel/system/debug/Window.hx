@@ -111,13 +111,13 @@ class Window extends Sprite
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
 	 * 
 	 * @param   Title       The name of the window, displayed in the header bar.
-	 * @param   IconPath    Path to the icon to use for the window header.
+	 * @param   Icon	    The icon to use for the window header.
 	 * @param   Width       The initial width of the window.
 	 * @param   Height      The initial height of the window.
 	 * @param   Resizable   Whether you can change the size of the window with a drag handle.
 	 * @param   Bounds      A rectangle indicating the valid screen area for the window.
 	 */
-	public function new(Title:String, ?IconPath:String, Width:Float = 0, Height:Float = 0, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new(Title:String, ?Icon:BitmapData, Width:Float = 0, Height:Float = 0, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
 		super();
 		
@@ -148,9 +148,9 @@ class Window extends Sprite
 		_title.text = Title;
 		addChild(_title);
 		
-		if (IconPath != null)
+		if (Icon != null)
 		{
-			var _icon = new Bitmap(Assets.getBitmapData(IconPath));
+			var _icon = new Bitmap(Icon);
 			_icon.x = 5;
 			_icon.y = 2;
 			_icon.alpha = 0.8;

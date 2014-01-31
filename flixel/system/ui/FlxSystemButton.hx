@@ -83,16 +83,16 @@ class FlxSystemButton extends Sprite
 	/**
 	 * Change the Icon of the button
 	 * 
-	 * @param	IconPath The path to the icon to use for the button.
+	 * @param	Icon	The new icon to use for the button.
  	 */
-	public function changeIcon(IconPath:String):Void
+	public function changeIcon(Icon:BitmapData):Void
 	{
 		if (icon != null)
 		{
 			removeChild(icon);
 		}
 		
-		icon = new Bitmap(FlxAssets.getBitmapData(IconPath));
+		icon = new Bitmap(Icon);
 		addChild(icon);
 	}
 

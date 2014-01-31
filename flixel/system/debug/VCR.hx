@@ -131,7 +131,7 @@ class VCR
 	public inline function onPause():Void
 	{
 		playbackToggleBtn.downHandler = FlxG.vcr.resume;
-		playbackToggleBtn.changeIcon(FlxAssets.IMG_PLAY);
+		playbackToggleBtn.changeIcon(new GraphicPlay(0, 0));
 	}
 
 	/**
@@ -141,7 +141,7 @@ class VCR
 	public inline function onResume():Void
 	{
 		playbackToggleBtn.downHandler = FlxG.vcr.pause;
-		playbackToggleBtn.changeIcon(FlxAssets.IMG_PAUSE);
+		playbackToggleBtn.changeIcon(new GraphicPause(0, 0));
 	}
 
 	/**

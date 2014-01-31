@@ -4,7 +4,7 @@ import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
 import flixel.util.FlxColor;
@@ -97,7 +97,7 @@ class Stats extends Window
 	 */
 	public function new()
 	{
-		super("stats", FlxAssets.IMG_STATS_DEBUG, 0, 0, false);
+		super("stats", new GraphicStats(0, 0), 0, 0, false);
 		
 		minSize.y = MIN_HEIGHT;
 		resize(INITIAL_WIDTH, MIN_HEIGHT);

@@ -25,21 +25,6 @@ import flash.media.Sound;
 
 class FlxAssets
 {
-	// debugger/buttons
-	public static inline var IMG_VISUAL_DEBUG:String = "flixel/img/debugger/buttons/drawDebug.png";
-	public static inline var IMG_WATCH_DEBUG:String = "flixel/img/debugger/buttons/watchDebug.png";
-	public static inline var IMG_STATS_DEBUG:String = "flixel/img/debugger/buttons/statsDebug.png";
-	public static inline var IMG_LOG_DEBUG:String = "flixel/img/debugger/buttons/logDebug.png";
-	public static inline var IMG_CONSOLE:String = "flixel/img/debugger/buttons/console.png";
-	public static inline var IMG_OPEN:String = "flixel/img/debugger/buttons/open.png";
-	public static inline var IMG_RECORD_OFF:String = "flixel/img/debugger/buttons/record_off.png";
-	public static inline var IMG_RECORD_ON:String = "flixel/img/debugger/buttons/record_on.png";
-	public static inline var IMG_STOP:String = "flixel/img/debugger/buttons/stop.png";
-	public static inline var IMG_RESTART:String = "flixel/img/debugger/buttons/restart.png";
-	public static inline var IMG_PAUSE:String = "flixel/img/debugger/buttons/pause.png";
-	public static inline var IMG_PLAY:String = "flixel/img/debugger/buttons/play.png";
-	public static inline var IMG_STEP:String = "flixel/img/debugger/buttons/step.png";
-	
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Arial";
