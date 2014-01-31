@@ -28,8 +28,8 @@ This is a large set of demos (**currently 45!**) using the HaxeFlixel engine and
   * ParticlesExt
 * **Flixel Features**
   * CollisionAndGrouping
-  * FlxCameraDemo
-  * FlxNapeDemo
+  * FlxCamera
+  * FlxNape
   * Particles
   * Pathfinding
   * Replay
