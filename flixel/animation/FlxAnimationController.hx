@@ -119,7 +119,7 @@ class FlxAnimationController
 	{
 		destroyAnimations();
 		Controller = (Controller != null) ? Controller : this;
-		_prerotated = new FlxPrerotatedAnimation(Controller, Controller._sprite.bakedRotation);
+		_prerotated = new FlxPrerotatedAnimation(Controller, Controller._sprite.bakedRotationAngle);
 	}
 	
 	public function destroyAnimations():Void

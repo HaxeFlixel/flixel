@@ -63,7 +63,7 @@ class FlxSprite extends FlxObject
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
 	 */
-	public var bakedRotation(default, null):Float;
+	public var bakedRotationAngle(default, null):Float;
 	/**
 	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
 	 */
@@ -263,12 +263,12 @@ class FlxSprite extends FlxObject
 		
 		region = Sprite.region.clone();
 		flipped = Sprite.flipped;
-		bakedRotation = Sprite.bakedRotation;
+		bakedRotationAngle = Sprite.bakedRotationAngle;
 		cachedGraphics = Sprite.cachedGraphics;
 		
 		width = frameWidth = Sprite.frameWidth;
 		height = frameHeight = Sprite.frameHeight;
-		if (bakedRotation > 0)
+		if (bakedRotationAngle > 0)
 		{
 			width = Sprite.width;
 			height = Sprite.height;
@@ -296,7 +296,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
-		bakedRotation = 0;
+		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.add(Graphic, Unique, Key);
 		
 		flipped = (Reverse == true) ? cachedGraphics.bitmap.width : 0;
@@ -440,7 +440,7 @@ class FlxSprite extends FlxObject
 		
 		var skipGen:Bool = FlxG.bitmap.checkCache(key);
 		cachedGraphics = FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.TRANSPARENT, true, key);
-		bakedRotation = 360 / Rotations;
+		bakedRotationAngle = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
 		if (!skipGen)
@@ -461,7 +461,7 @@ class FlxSprite extends FlxObject
 					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
 					_matrix.rotate(bakedAngle * FlxAngle.TO_RAD);
 					_matrix.translate(max * column + midpointX + column, midpointY + row);
-					bakedAngle += bakedRotation;
+					bakedAngle += bakedRotationAngle;
 					cachedGraphics.bitmap.draw(brush, _matrix, null, null, null, AntiAliasing);
 					column++;
 				}
@@ -505,7 +505,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite
 	{
-		bakedRotation = 0;
+		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
 		region = new Region();
 		region.width = Width;
@@ -529,7 +529,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadImageFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite
 	{
-		bakedRotation = 0;
+		bakedRotationAngle = 0;
 		
 		if (Std.is(Data, CachedGraphics))
 		{
@@ -792,7 +792,7 @@ class FlxSprite extends FlxObject
 				_matrix.identity();
 				_matrix.translate( -_origin.x, -_origin.y);
 				_matrix.scale(_scale.x, _scale.y);
-				if ((angle != 0) && (bakedRotation <= 0))
+				if ((angle != 0) && (bakedRotationAngle <= 0))
 				{
 					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
@@ -819,7 +819,7 @@ class FlxSprite extends FlxObject
 			
 			if (!simpleRender)
 			{
-				if (_angleChanged && (bakedRotation <= 0))
+				if (_angleChanged && (bakedRotationAngle <= 0))
 				{
 					var radians:Float = -angle * FlxAngle.TO_RAD;
 					_sinAngle = Math.sin(radians);
@@ -916,7 +916,7 @@ class FlxSprite extends FlxObject
 		var bitmapData:BitmapData = Brush.framePixels;
 		
 		//Simple draw
-		if (((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush._scale.x == 1) && (Brush._scale.y == 1) && (Brush.blend == null))
+		if (((Brush.angle == 0) || (Brush.bakedRotationAngle > 0)) && (Brush._scale.x == 1) && (Brush._scale.y == 1) && (Brush.blend == null))
 		{
 			_flashPoint.x = X + region.startX;
 			_flashPoint.y = Y + region.startY;
@@ -1254,7 +1254,7 @@ class FlxSprite extends FlxObject
 		var maxX:Float = 0;
 		var maxY:Float = 0;
 		
-		if ((angle == 0 || bakedRotation > 0) && (_scale.x == 1) && (_scale.y == 1))
+		if ((angle == 0 || bakedRotationAngle > 0) && (_scale.x == 1) && (_scale.y == 1))
 		{
 			maxX = minX + frameWidth;
 			maxY = minY + frameHeight;
@@ -1318,9 +1318,9 @@ class FlxSprite extends FlxObject
 	public function isSimpleRender():Bool
 	{ 
 		#if flash
-		return (((angle == 0) || (bakedRotation > 0)) && (_scale.x == 1) && (_scale.y == 1) && (blend == null) && (forceComplexRender == false));
+		return (((angle == 0) || (bakedRotationAngle > 0)) && (_scale.x == 1) && (_scale.y == 1) && (blend == null) && (forceComplexRender == false));
 		#else
-		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotation > 0)) && (_scale.x == 1) && (_scale.y == 1));
+		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (_scale.x == 1) && (_scale.y == 1));
 		#end
 	}
 	
