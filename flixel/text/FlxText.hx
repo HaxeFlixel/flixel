@@ -697,8 +697,11 @@ class FlxText extends FlxSprite
 					applyFormats(_formatAdjusted, false);
 				}
 			}
+			else
+			{
+				applyFormats(_formatAdjusted, false);
+			}
 			
-			applyFormats(_formatAdjusted, false);
 			//Actually draw the text onto the buffer
 			cachedGraphics.bitmap.draw(_textField, _matrix);
 		}
@@ -842,8 +845,7 @@ class FlxTextFormat
 	public var format(default, null):TextFormat;
 	
 	/**
-	 * Creates a new <code>FlxTextFormat</code> 
-	 * @param	FontSize		(Optional) Set the font size. By default, inherits from the default format.
+	 * Creates a new <code>FlxTextFormat</code>.
 	 * @param	FontColor		(Optional) Set the font  color. By default, inherits from the default format.
 	 * @param	Bold			(Optional) Set the font to bold. The font must support bold. By default, inherits from the default format. 
 	 * @param	Italics			(Optional) Set the font to italics. The font must support italics. By default, inherits from the default format.  
@@ -851,9 +853,9 @@ class FlxTextFormat
 	 * @param	Start			The start index of the string where the format will be applied.
 	 * @param	End				The end index of the string where the format will be applied.
 	 */
-	public function new(?FontSize:Int, ?FontColor:Int, ?Bold:Bool, ?Italics:Bool, ?BorderColor:Int, Start:Int, End:Int)
+	public function new(?FontColor:Int, ?Bold:Bool, ?Italics:Bool, ?BorderColor:Int, Start:Int, End:Int)
 	{
-		format = new TextFormat(null, FontSize, FontColor, Bold, Italics);
+		format = new TextFormat(null, null, FontColor, Bold, Italics);
 		
 		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
 		start = Start;
