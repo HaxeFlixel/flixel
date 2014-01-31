@@ -634,13 +634,12 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Helper function to set the graphic's dimensions by using scale, allowing you to keep the current aspect ratio
-	 * should one of the Integers be <= 0. Also updates the sprite's hitbox, offset and origin for you by default!
+	 * should one of the Integers be <= 0. It might make sense to call updateHitbox() afterwards!
 	 * 
-	 * @param	Width			How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
-	 * @param	Height			How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
-	 * @param	UpdateHitbox	Whether or not to update the hitbox dimensions, offset and origin accordingly.
+	 * @param   Width    How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
+	 * @param   Height   How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
 	 */
-	public function setGraphicSize(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
+	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
 		if (Width <= 0 && Height <= 0) {
 			return;
@@ -655,11 +654,6 @@ class FlxSprite extends FlxObject
 		}
 		else if (Height <= 0) {
 			scale.y = newScaleX;
-		}
-		
-		if (UpdateHitbox) 
-		{
-			updateHitbox();
 		}	
 	}
 	
