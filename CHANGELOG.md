@@ -32,8 +32,13 @@ v.3.1.0
 * FlxSprite: 
   * pixelsOverlapPoint() has been removed
   * loadfromSprite() -> loadFromSprite()
-  * setGraphicDimensions() -> setGraphicSize()
+  * setGraphicDimensions() -> setGraphicSize(), removed the UpdateHitbox flag
   * added getGraphicsMidpoint()
+  * bakedRotation -> bakedRotationAngle
+  * loadFromSprite() -> loadGraphicFromSprite()
+  * loadImageFromTexture() -> loadGraphicFromTexture()
+  * loadRotatedImageFromTexture() -> loadRotatedGraphicFromTexture()
+  * setColorTransformation() -> setColorTransform()
 * Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
 * FlxTypedGroup: 
   * autoReviveMembers flag has been removed
@@ -65,6 +70,7 @@ v.3.1.0
   * FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
   * FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
   * Added PS3ButtonID and LogitechButtonID classes
+  * FlxG.gamepads.get() -> getByID()
 * Ported scale modes from flixel for moneky (FlxG.scaleMode / flixel.system.scaleModes) and removed FlxG.autoResize
 * Renamed FlxG.debugger.visualDebug to drawDebug
 * FlxTween:
@@ -94,7 +100,7 @@ v.3.1.0
  * FLX_MOUSE_ADVANCED has been turned into FLX_NO_MOUSE_ADVANCED, which means the event listeners for middle and right mouse clicks are now available by default / opt-out
  * FlxState.useMouse has been removed
  * The mouse cursor is now by default visible on non-mobile targets
-* FlxG.pixelPerfectOverlap() / FlxCollision.pixelPerfectCheck() has been heavily optimized to perform well on cpp targets
+* FlxG.pixelPerfectOverlap() / FlxCollision.pixelPerfectCheck() has been heavily optimized to perform well on cpp targets, default AlphaTolerance is now 1
 * FlxG.LIBRARY_MINOR_VERSION, LIBRARY_MAJOR_VERSION, LIBRARY_NAME and libraryName have been refactored into a FlxVersion object available via FlxG.VERSION
 * FlxSound:
  * Made fadeIn() and fadeOut() more intuitive to use
@@ -112,6 +118,15 @@ v.3.1.0
 * BUG: Fix setting a Boolean on cpp not working
 * BUG: Added a workaround for onFocus() firing immediately on startup for cpp targets
 * Code style change for keyword order, public/private first, see the [styleguide](http://haxeflixel.com/documentation/code-style/) for more info
+* Added getByID() to FlxG.touches
+* Added FlxG.swipes (contains all the FlxSwipe objects that are active this frame) to allow for better handling of touch inputs. It has the following properties:
+ * startPosition
+ * endPosition
+ * distance
+ * angle
+ * duration
+* All FlxPoints of FlxObject and FlxSprite are now (default, null) / read-only - this means you should now use .set(x, y) if you were previously new()-ing the point.
+* Asset embedding has been optimized to only embed sound / graphic assets when they are needed, as opposed to always including all of them.
 
 v.3.0.4
 ------------------------------
