@@ -11,8 +11,13 @@ import Type;
  */
 class MultiVarTween extends FlxTween
 {
+	private var _object:Dynamic;
+	private var _properties:Dynamic;
+	private var _vars:Array<String>;
+	private var _start:Array<Float>;
+	private var _range:Array<Float>;
+	
 	/**
-	 * Constructor.
 	 * @param	complete		Optional completion callback.
 	 * @param	type			Tween type.
 	 */
@@ -29,6 +34,7 @@ class MultiVarTween extends FlxTween
 	{
 		super.destroy();
 		_object = null;
+		_properties = null;
 		_vars = null;
 		_start = null;
 		_range = null;
@@ -36,6 +42,7 @@ class MultiVarTween extends FlxTween
 	
 	/**
 	 * Tweens multiple numeric public properties.
+	 * 
 	 * @param	object		The object containing the properties.
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
@@ -56,13 +63,12 @@ class MultiVarTween extends FlxTween
 		return this;
 	}
 	
-	/**
-	 * Updates the Tween. 
-	 */
 	override public function update():Void
 	{
 		if (_vars.length < 1)
 		{
+			// We don't initalize() in tween() because otherwise the start values 
+			// will be inaccurate with delays
 			initialize();
 		}
 		
@@ -109,11 +115,4 @@ class MultiVarTween extends FlxTween
 			_range.push(Reflect.getProperty(_properties, p) - a);
 		}
 	}
-	
-	// Tween information.
-	private var _object:Dynamic;
-	private var _properties:Dynamic;
-	private var _vars:Array<String>;
-	private var _start:Array<Float>;
-	private var _range:Array<Float>;
 }
