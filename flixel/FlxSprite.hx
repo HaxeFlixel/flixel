@@ -558,7 +558,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
 	{
-		var temp = loadGraphicFromSprite(Data);
+		var temp = loadGraphicFromTexture(Data);
 		
 		if (temp == null)
 		{
