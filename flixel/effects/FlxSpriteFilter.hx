@@ -118,7 +118,7 @@ class FlxSpriteFilter
 	 * @param	width	The new sprite width.
 	 * @param	height	The new sprite height.
 	 */
-	private function setClipping(Width:Int, Height:Int):Void
+	function setClipping(Width:Int, Height:Int):Void
 	{
 		width = Width;
 		height = Height;
@@ -143,7 +143,7 @@ class FlxSpriteFilter
 		sprite.loadGraphic(textureReg, sprite.frames > 1, sprite.flipped > 0, width, height);
 	}
 	
-	private function regenBitmapData(fill:Bool = true):Void
+	function regenBitmapData(fill:Bool = true):Void
 	{
 		pixels.lock();
 		if (fill)

@@ -72,31 +72,31 @@ class FlxDebugger extends Sprite
 	/**
 	 * Internal, tracks what debugger window layout user has currently selected.
 	 */
-	private var _layout:DebuggerLayout;
+	var _layout:DebuggerLayout;
 	/**
 	 * Internal, stores width and height of the Flash Player window.
 	 */
-	private var _screen:Point;
+	var _screen:Point;
 	/**
 	 * Stores the bounds in which the windows can move.
 	 */
-	private var _screenBounds:Rectangle;
+	var _screenBounds:Rectangle;
 	/**
 	 * Internal, used to store the middle debugger buttons for laying them out.
 	 */
-	private var _middleButtons:Array<FlxSystemButton>;
+	var _middleButtons:Array<FlxSystemButton>;
 	/**
 	 * Internal, used to store the left debugger buttons for laying them out.
 	 */
-	private var _leftButtons:Array<FlxSystemButton>;
+	var _leftButtons:Array<FlxSystemButton>;
 	/**
 	 * Internal, used to store the right debugger buttons for laying them out.
 	 */
-	private var _rightButtons:Array<FlxSystemButton>;
+	var _rightButtons:Array<FlxSystemButton>;
 	/**
 	 * The flash Sprite used for the top bar of the debugger ui
 	 **/
-	private var _topBar:Sprite;
+	var _topBar:Sprite;
 
 	/**
 	 * Clean up memory.
@@ -342,7 +342,7 @@ class FlxDebugger extends Sprite
 	 * @param   Height   The height of the screen.
 	 */
 	@:allow(flixel.FlxGame)
-	private function new(Width:Float, Height:Float)
+	function new(Width:Float, Height:Float)
 	{
 		super();
 		visible = false;
@@ -403,7 +403,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   E   Flash mouse event.
 	 */
-	private inline function onMouseOver(?E:MouseEvent):Void
+	inline function onMouseOver(?E:MouseEvent):Void
 	{
 		hasMouse = true;
 		#if !FLX_NO_MOUSE
@@ -416,7 +416,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   E   Flash mouse event.
 	 */
-	private inline function onMouseOut(?E:MouseEvent):Void
+	inline function onMouseOut(?E:MouseEvent):Void
 	{
 		hasMouse = false;
 		
@@ -428,7 +428,7 @@ class FlxDebugger extends Sprite
 		#end
 	}
 	
-	private function removeButtonFromArray(Arr:Array<FlxSystemButton>, Button:FlxSystemButton):Void
+	function removeButtonFromArray(Arr:Array<FlxSystemButton>, Button:FlxSystemButton):Void
 	{
 		var index = FlxArrayUtil.indexOf(Arr, Button);
 		if (index != -1)
@@ -437,12 +437,12 @@ class FlxDebugger extends Sprite
 		}
 	}
 
-	private inline function toggleVisualDebug ():Void
+	inline function toggleVisualDebug ():Void
 	{
 		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 	}
 	
-	private inline function openHomepage():Void
+	inline function openHomepage():Void
 	{
 		FlxG.openURL("http://www.haxeflixel.com");
 	}

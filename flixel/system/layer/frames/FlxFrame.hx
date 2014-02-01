@@ -26,15 +26,15 @@ class FlxFrame
 	
 	public var additionalAngle:Float = 0;
 	
-	private var _bitmapData:BitmapData;
+	var _bitmapData:BitmapData;
 	
-	private var _hReversedBitmapData:BitmapData;
+	var _hReversedBitmapData:BitmapData;
 	
-	private var _vReversedBitmapData:BitmapData;
+	var _vReversedBitmapData:BitmapData;
 	
-	private var _hvReversedBitmapData:BitmapData;
+	var _hvReversedBitmapData:BitmapData;
 	
-	private var _tileSheet:TileSheetData;
+	var _tileSheet:TileSheetData;
 	
 	public var center:FlxPoint = null;
 	

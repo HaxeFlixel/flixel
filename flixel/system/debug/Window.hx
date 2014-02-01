@@ -33,7 +33,7 @@ class Window extends Sprite
 	/**
 	 * How many windows there are currently in total.
 	 */
-	private static var WINDOW_AMOUNT:Int = 0;
+	static var WINDOW_AMOUNT:Int = 0;
 
 	/**
 	 * Minimum allowed X and Y dimensions for this window.
@@ -47,65 +47,65 @@ class Window extends Sprite
 	/**
 	 * Width of the window.  Using Sprite.width is super unreliable for some reason!
 	 */
-	private var _width:Int;
+	var _width:Int;
 	/**
 	 * Height of the window.  Using Sprite.height is super unreliable for some reason!
 	 */
-	private var _height:Int;
+	var _height:Int;
 	/**
 	 * Controls where the window is allowed to be positioned.
 	 */
-	private var _bounds:Rectangle;
+	var _bounds:Rectangle;
 	
 	/**
 	 * Window display element.
 	 */
-	private var _background:Bitmap;
+	var _background:Bitmap;
 	/**
 	 * Window display element.
 	 */
-	private var _header:Bitmap;
+	var _header:Bitmap;
 	/**
 	 * Window display element.
 	 */
-	private var _shadow:Bitmap;
+	var _shadow:Bitmap;
 	/**
 	 * Window display element.
 	 */
-	private var _title:TextField;
+	var _title:TextField;
 	/**
 	 * Window display element.
 	 */
-	private var _handle:Bitmap;
+	var _handle:Bitmap;
 	
 	/**
 	 * Helper for interaction.
 	 */
-	private var _overHeader:Bool;
+	var _overHeader:Bool;
 	/**
 	 * Helper for interaction.
 	 */
-	private var _overHandle:Bool;
+	var _overHandle:Bool;
 	/**
 	 * Helper for interaction.
 	 */
-	private var _drag:Point;
+	var _drag:Point;
 	/**
 	 * Helper for interaction.
 	 */
-	private var _dragging:Bool;
+	var _dragging:Bool;
 	/**
 	 * Helper for interaction.
 	 */
-	private var _resizing:Bool;
+	var _resizing:Bool;
 	/**
 	 * Helper for interaction.
 	 */
-	private var _resizable:Bool;
+	var _resizable:Bool;
 	/**
 	 * The ID of this window.
 	 */
-	private var _id:Int;
+	var _id:Int;
 	
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
@@ -249,7 +249,7 @@ class Window extends Sprite
 	 * Used to set up basic mouse listeners.
 	 * @param E		Flash event.
 	 */
-	private function init(E:Event = null):Void
+	function init(E:Event = null):Void
 	{
 		#if flash
 		if (root == null)
@@ -270,7 +270,7 @@ class Window extends Sprite
 	 * Mouse movement handler.  Figures out if mouse is over handle or header bar or what.
 	 * @param E		Flash mouse event.
 	 */
-	private function onMouseMove(E:MouseEvent = null):Void
+	function onMouseMove(E:MouseEvent = null):Void
 	{
 		if (!parent.visible)
 		{
@@ -306,7 +306,7 @@ class Window extends Sprite
 	 * Figure out if window is being repositioned (clicked on header) or resized (clicked on handle).
 	 * @param E		Flash mouse event.
 	 */
-	private function onMouseDown(E:MouseEvent = null):Void
+	function onMouseDown(E:MouseEvent = null):Void
 	{
 		if (_overHeader)
 		{
@@ -327,7 +327,7 @@ class Window extends Sprite
 	 * User let go of header bar or handler (or nothing), so turn off drag and resize behaviors.
 	 * @param E		Flash mouse event.
 	 */
-	private function onMouseUp(E:MouseEvent = null):Void
+	function onMouseUp(E:MouseEvent = null):Void
 	{
 		_dragging = false;
 		_resizing = false;
@@ -338,7 +338,7 @@ class Window extends Sprite
 	/**
 	 * Keep the window within the pre-specified bounding rectangle. 
 	 */
-	private function bound():Void
+	function bound():Void
 	{
 		if(_bounds != null)
 		{
@@ -350,7 +350,7 @@ class Window extends Sprite
 	/**
 	 * Update the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
 	 */
-	private function updateSize():Void
+	function updateSize():Void
 	{
 		_width = Std.int(FlxMath.bound(_width, minSize.x, maxSize.x));
 		_height = Std.int(FlxMath.bound(_height, minSize.y, maxSize.y));

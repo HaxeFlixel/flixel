@@ -50,15 +50,15 @@ class FlxFlicker
 	/**
 	* Internal pool for reusing FlxFlicker objects.
 	*/
-	private static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>();
+	static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>();
 	/**
 	* Internal map for looking up which objects are currently flickering and getting their flicker data.
 	*/
-	private static var _boundObjects:Map<FlxObject, FlxFlicker> = new Map<FlxObject, FlxFlicker>();
+	static var _boundObjects:Map<FlxObject, FlxFlicker> = new Map<FlxObject, FlxFlicker>();
 	/**
 	* Internal constructor. Just use static methods.
 	*/
-	private function new() {  }
+	function new() {  }
 	
 	/**
 	* Recycles a FlxFlicker instance from pool.
@@ -70,7 +70,7 @@ class FlxFlicker
 	* @param  ?ProgressCallback
 	* @return The recycled instance.
 	*/
-	private static function recycle(Object:FlxObject, Duration:Float, Interval:Float,  EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxFlicker
+	static function recycle(Object:FlxObject, Duration:Float, Interval:Float,  EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxFlicker
 	{
 		var flicker:FlxFlicker = _pool.get();
 		flicker.reset(Object, Duration, Interval, EndVisibility, CompletionCallback, ProgressCallback);
@@ -81,7 +81,7 @@ class FlxFlicker
 	* Put instance to pool for reuse.
 	* @param  Flicker The flicker instance.
 	*/
-	private static function put(Flicker:FlxFlicker):Void
+	static function put(Flicker:FlxFlicker):Void
 	{
 		_pool.put(Flicker);
 	}
@@ -95,7 +95,7 @@ class FlxFlicker
 	* @param  ?CompletionCallback
 	* @param  ?ProgressCallback
 	*/
-	private function reset(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
+	function reset(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
 	{
 		object = Object;
 		duration = Duration;
@@ -108,7 +108,7 @@ class FlxFlicker
 	/**
 	* Starts flickering.
 	*/
-	private function start():Void
+	function start():Void
 	{
 		timer = FlxTimer.recycle();
 		timer.run(interval, flickerProgress, Std.int(duration / interval));
@@ -117,7 +117,7 @@ class FlxFlicker
 	/**
 	* Prematurely ends flickering.
 	*/
-	private function stop():Void
+	function stop():Void
 	{
 		timer.abort();
 		object.visible = true;
@@ -127,7 +127,7 @@ class FlxFlicker
 	/**
 	* Unbinds the object from flicker and releases it into pool for reuse.
 	*/
-	private function release():Void
+	function release():Void
 	{
 		_boundObjects.remove(object);
 		FlxFlicker.put(this);
@@ -136,7 +136,7 @@ class FlxFlicker
 	/**
 	* Just a helper function for flicker() to update object's visibility.
 	*/
-	private function flickerProgress(Timer:FlxTimer):Void
+	function flickerProgress(Timer:FlxTimer):Void
 	{
 		object.visible = !object.visible;
 		

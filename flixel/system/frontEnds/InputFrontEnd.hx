@@ -47,7 +47,7 @@ class InputFrontEnd
 		}
 	}
 	
-	private function new()
+	function new()
 	{
 		list = new Array<IFlxInput>();
 	}
@@ -55,7 +55,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs
 	 */
-	private inline function update():Void
+	inline function update():Void
 	{
 		for (input in list)
 		{
@@ -66,7 +66,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs from FlxGame Focus
 	 */
-	private inline function onFocus():Void
+	inline function onFocus():Void
 	{
 		for (input in list)
 		{
@@ -77,7 +77,7 @@ class InputFrontEnd
 	/**
 	 * Updates the inputs from FlxGame FocusLost
 	 */	
-	private inline function onFocusLost():Void
+	inline function onFocusLost():Void
 	{
 		for (input in list)
 		{
@@ -88,7 +88,7 @@ class InputFrontEnd
 	/**
 	 * Clean up memory.
 	 */
-	private inline function destroy():Void
+	inline function destroy():Void
 	{
 		for (input in list)
 		{

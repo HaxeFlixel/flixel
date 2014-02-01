@@ -18,7 +18,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * Axis array is read-only, use "getAxis" function for deadZone checking.
 	 */
 	@:allow(flixel.input.gamepad)
-	private var axis:Array<Float>;
+	var axis:Array<Float>;
 	
 	/**
 	 * DPAD

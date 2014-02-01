@@ -49,47 +49,47 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Used with public variable <code>status</code>, means not highlighted or pressed.
 	 */ 
-	private static inline var NORMAL:Int = 0;
+	static inline var NORMAL:Int = 0;
 	/**
 	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
 	 */ 
-	private static inline var HIGHLIGHT:Int = 1;
+	static inline var HIGHLIGHT:Int = 1;
 	/**
 	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
 	 */ 
-	private static inline var PRESSED:Int = 2;
+	static inline var PRESSED:Int = 2;
 	
 	/**
 	 * A list of analogs that are currently active.
 	 */ 
-	private static var _analogs:Array<FlxAnalog>;
+	static var _analogs:Array<FlxAnalog>;
 	
 	#if !FLX_NO_TOUCH
 	/**
 	 * The current pointer that's active on the analog.
 	 */ 
-	private var _currentTouch:FlxTouch;
+	var _currentTouch:FlxTouch;
 	/**
 	 * Helper array for checking touches
 	 */ 
-	private var _tempTouches:Array<FlxTouch>;
+	var _tempTouches:Array<FlxTouch>;
 	#end
 	
 	/**
 	 * The area which the joystick will react.
 	 */
-	private var _zone:FlxRect;
+	var _zone:FlxRect;
 	
 	/**
 	 * The radius in which the stick can move.
 	 */ 
-	private var _radius:Float;
-	private var _direction:Float = 0;
-	private var _amount:Float = 0;		
+	var _radius:Float;
+	var _direction:Float = 0;
+	var _amount:Float = 0;		
 	/**
 	 * The speed of easing when the thumb is released.
 	 */ 
-	private var _ease:Float;
+	var _ease:Float;
 	
 	/**
 	 * Create a virtual thumbstick - useful for input on mobile devices.
@@ -131,7 +131,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Creates the background of the analog stick.
 	 * Override this to customize the background.
 	 */
-	private function createBase():Void
+	function createBase():Void
 	{
 		base = new FlxSprite(x, y);
 		base.loadGraphic(GraphicBase);
@@ -151,7 +151,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Creates the thumb of the analog stick.
 	 * Override this to customize the thumb.
 	 */
-	private function createThumb():Void 
+	function createThumb():Void 
 	{
 		thumb = new FlxSprite(x, y);
 		thumb.loadGraphic(GraphicThumb);
@@ -170,7 +170,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 * The thumb will react when the mouse is in the zone.
 	 * Override this to customize the zone.
 	 */
-	private function createZone():Void
+	function createZone():Void
 	{
 		if (base != null)			
 		{
@@ -285,7 +285,7 @@ class FlxAnalog extends FlxSpriteGroup
 		super.update();
 	}
 	
-	private function updateAnalog(TouchPoint:FlxPoint, Pressed:Bool, JustPressed:Bool, JustReleased:Bool, ?Touch:FlxTouch):Bool
+	function updateAnalog(TouchPoint:FlxPoint, Pressed:Bool, JustPressed:Bool, JustReleased:Bool, ?Touch:FlxTouch):Bool
 	{
 		var offAll:Bool = true;
 		
@@ -390,7 +390,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var pressed(get, never):Bool;
 	
-	private inline function get_pressed():Bool
+	inline function get_pressed():Bool
 	{
 		return status == PRESSED;
 	}
@@ -400,7 +400,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var justPressed(get, never):Bool;
 	
-	private function get_justPressed():Bool
+	function get_justPressed():Bool
 	{
 		#if !FLX_NO_TOUCH
 		if (_currentTouch != null)
@@ -421,7 +421,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var justReleased(get, never):Bool;
 	
-	private function get_justReleased():Bool
+	function get_justReleased():Bool
 	{
 		#if !FLX_NO_TOUCH
 		if (_currentTouch != null)

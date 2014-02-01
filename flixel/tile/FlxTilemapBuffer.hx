@@ -45,9 +45,9 @@ class FlxTilemapBuffer
 	public var forceComplexRender:Bool = false;
 	
 	#if flash
-	private var _pixels:BitmapData;	
-	private var _flashRect:Rectangle;
-	private var _matrix:Matrix;
+	var _pixels:BitmapData;	
+	var _flashRect:Rectangle;
+	var _matrix:Matrix;
 	#end
 
 	/**
@@ -103,7 +103,7 @@ class FlxTilemapBuffer
 	 * 
 	 * @return	The buffer bitmap data.
 	 */
-	private function get_pixels():BitmapData
+	function get_pixels():BitmapData
 	{
 		return _pixels;
 	}

@@ -18,35 +18,35 @@ import flixel.util.loaders.CachedGraphics;
  */
 class PxBitmapFont 
 {
-	private static var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
+	static var _storedFonts:Map<String, PxBitmapFont> = new Map<String, PxBitmapFont>();
 	
-	private static var ZERO_POINT:Point = new Point();
+	static var ZERO_POINT:Point = new Point();
 	
 	#if flash
-	private var _glyphs:Array<BitmapData>;
+	var _glyphs:Array<BitmapData>;
 	#else
-	private var _glyphs:Map<Int, PxFontSymbol>;
-	private var _num_letters:Int = 0;
-	private var _bgTileID:Int = -1;
+	var _glyphs:Map<Int, PxFontSymbol>;
+	var _num_letters:Int = 0;
+	var _bgTileID:Int = -1;
 	#end
 	
-	private var _glyphString:String;
-	private var _maxHeight:Int = 0;
+	var _glyphString:String;
+	var _maxHeight:Int = 0;
 	
 	#if flash
-	private var _matrix:Matrix;
-	private var _colorTransform:ColorTransform;
+	var _matrix:Matrix;
+	var _colorTransform:ColorTransform;
 	#end
 	
-	private var _point:Point;
+	var _point:Point;
 	
 	// Helper for pixelizer format font
-	private var _tileRects:Array<Rectangle>;
+	var _tileRects:Array<Rectangle>;
 	// Helper for angel code format font
-	private var _symbols:Array<HelperSymbol>;
+	var _symbols:Array<HelperSymbol>;
 	// Prepared bitmapData with font glyphsW	
-	private var _region:Region;
-	private var cachedGraphics:CachedGraphics;
+	var _region:Region;
+	var cachedGraphics:CachedGraphics;
 	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
@@ -228,7 +228,7 @@ class PxBitmapFont
 	/**
 	 * Internal function. Resets current font.
 	 */
-	private function reset():Void
+	function reset():Void
 	{
 		dispose();
 		_maxHeight = 0;
@@ -473,7 +473,7 @@ class PxBitmapFont
 	#end
 	
 	#if flash
-	private function setGlyph(PxCharID:Int, PxBitmapData:BitmapData):Void 
+	function setGlyph(PxCharID:Int, PxBitmapData:BitmapData):Void 
 	{
 		if (_glyphs[PxCharID] != null) 
 		{
@@ -488,7 +488,7 @@ class PxBitmapFont
 		}
 	}
 	#else
-	private function setGlyph(Tiles:TileSheetData, PxCharID:Int, PxRect:Rectangle, PxOffsetX:Int = 0, PxOffsetY:Int = 0, PxAdvanceX:Int = 0):Void
+	function setGlyph(Tiles:TileSheetData, PxCharID:Int, PxRect:Rectangle, PxOffsetX:Int = 0, PxOffsetY:Int = 0, PxAdvanceX:Int = 0):Void
 	{
 		var tileID:Int = Tiles.addTileRect(PxRect, ZERO_POINT);
 		var symbol:PxFontSymbol = new PxFontSymbol();
@@ -650,7 +650,7 @@ class PxBitmapFont
 	#if !flash
 	public var pixels(get_pixels, null):BitmapData;
 	
-	private function get_pixels():BitmapData 
+	function get_pixels():BitmapData 
 	{
 		if (!cachedGraphics.isDumped)
 		{
@@ -676,7 +676,7 @@ class PxBitmapFont
 		#end
 	}
 	
-	private function setCachedGraphics(value:CachedGraphics):Void
+	function setCachedGraphics(value:CachedGraphics):Void
 	{
 		if (cachedGraphics != null && cachedGraphics != value)
 		{
@@ -725,7 +725,7 @@ class PxBitmapFont
 	}
 }
 
-private class HelperSymbol
+class HelperSymbol
 {
 	public var x:Int;
 	public var y:Int;

@@ -11,11 +11,11 @@ import Type;
  */
 class MultiVarTween extends FlxTween
 {
-	private var _object:Dynamic;
-	private var _properties:Dynamic;
-	private var _vars:Array<String>;
-	private var _start:Array<Float>;
-	private var _range:Array<Float>;
+	var _object:Dynamic;
+	var _properties:Dynamic;
+	var _vars:Array<String>;
+	var _start:Array<Float>;
+	var _range:Array<Float>;
 	
 	/**
 	 * @param	complete		Optional completion callback.
@@ -83,7 +83,7 @@ class MultiVarTween extends FlxTween
 		}
 	}
 	
-	private function initialize():Void
+	function initialize():Void
 	{
 		var p:String;
 		var fields:Array<String>;

@@ -20,39 +20,39 @@ import flixel.util.FlxAngle;
  */
 class FlxBitmapTextField extends FlxSprite
 {
-	private var _font:PxBitmapFont;
-	private var _text:String = "";
-	private var _textColor:Int = 0x0;
-	private var _useTextColor:Bool = true;
-	private var _outline:Bool = false;
-	private var _outlineColor:Int = 0x0;
-	private var _shadow:Bool = false;
-	private var _shadowColor:Int = 0x0;
-	private var _background:Bool = false;
-	private var _backgroundColor:Int = 0xFFFFFF;
-	private var _alignment:Int = 1;
-	private var _padding:Int = 0;
+	var _font:PxBitmapFont;
+	var _text:String = "";
+	var _textColor:Int = 0x0;
+	var _useTextColor:Bool = true;
+	var _outline:Bool = false;
+	var _outlineColor:Int = 0x0;
+	var _shadow:Bool = false;
+	var _shadowColor:Int = 0x0;
+	var _background:Bool = false;
+	var _backgroundColor:Int = 0xFFFFFF;
+	var _alignment:Int = 1;
+	var _padding:Int = 0;
 	
-	private var _lineSpacing:Int = 0;
-	private var _letterSpacing:Int = 0;
-	private var _fontScale:Float = 1;
-	private var _autoUpperCase:Bool = false;
-	private var _wordWrap:Bool = true;
-	private var _fixedWidth:Bool;
+	var _lineSpacing:Int = 0;
+	var _letterSpacing:Int = 0;
+	var _fontScale:Float = 1;
+	var _autoUpperCase:Bool = false;
+	var _wordWrap:Bool = true;
+	var _fixedWidth:Bool;
 	
-	private var _numSpacesInTab:Int = 4;
-	private var _tabSpaces:String = "    ";
+	var _numSpacesInTab:Int = 4;
+	var _tabSpaces:String = "    ";
 	
-	private var _pendingTextChange:Bool = false;
-	private var _multiLine:Bool = false;
+	var _pendingTextChange:Bool = false;
+	var _multiLine:Bool = false;
 	
 	#if flash
-	private var _preparedTextGlyphs:Array<BitmapData>;
-	private var _preparedShadowGlyphs:Array<BitmapData>;
-	private var _preparedOutlineGlyphs:Array<BitmapData>;
+	var _preparedTextGlyphs:Array<BitmapData>;
+	var _preparedShadowGlyphs:Array<BitmapData>;
+	var _preparedOutlineGlyphs:Array<BitmapData>;
 	#else
-	private var _drawData:Array<Float>;
-	private var _bgDrawData:Array<Float>;
+	var _drawData:Array<Float>;
+	var _bgDrawData:Array<Float>;
 	#end
 	
 	/**
@@ -123,12 +123,12 @@ class FlxBitmapTextField extends FlxSprite
 	
 	public var numSpacesInTab(get, set):Int;
 	
-	private function get_numSpacesInTab():Int 
+	function get_numSpacesInTab():Int 
 	{
 		return _numSpacesInTab;
 	}
 	
-	private function set_numSpacesInTab(Value:Int):Int 
+	function set_numSpacesInTab(Value:Int):Int 
 	{
 		if (_numSpacesInTab != Value && Value > 0)
 		{
@@ -338,7 +338,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 	}
 	
-	override private function set_color(Color:Int):Int
+	override function set_color(Color:Int):Int
 	{
 		super.set_color(Color);
 		_pendingTextChange = true;
@@ -352,12 +352,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var textColor(get, set):Int;
 	
-	private function get_textColor():Int
+	function get_textColor():Int
 	{
 		return _textColor;
 	}
 	
-	private function set_textColor(Value:Int):Int 
+	function set_textColor(Value:Int):Int 
 	{
 		if (_textColor != Value)
 		{
@@ -371,12 +371,12 @@ class FlxBitmapTextField extends FlxSprite
 	
 	public var useTextColor(get, set):Bool;
 	
-	private function get_useTextColor():Bool 
+	function get_useTextColor():Bool 
 	{
 		return _useTextColor;
 	}
 	
-	private function set_useTextColor(Value:Bool):Bool 
+	function set_useTextColor(Value:Bool):Bool 
 	{
 		if (_useTextColor != Value)
 		{
@@ -388,7 +388,7 @@ class FlxBitmapTextField extends FlxSprite
 		return Value;
 	}
 	
-	override private function set_alpha(PxAlpha:Float):Float
+	override function set_alpha(PxAlpha:Float):Float
 	{
 		#if flash
 		super.set_alpha(PxAlpha);
@@ -407,12 +407,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var text(get, set):String;
 	
-	private function get_text():String
+	function get_text():String
 	{
 		return _text;
 	}
 	
-	private function set_text(PxText:String):String 
+	function set_text(PxText:String):String 
 	{
 		if (PxText != _text)
 		{
@@ -426,7 +426,7 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Internal method for updating the view of the text component
 	 */
-	private function updateBitmapData():Void 
+	function updateBitmapData():Void 
 	{
 		if (!_pendingTextChange) 
 		{
@@ -771,12 +771,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var background(get, set):Bool;
 	
-	private function get_background():Bool
+	function get_background():Bool
 	{
 		return _background;
 	}
 	
-	private function set_background(Value:Bool):Bool 
+	function set_background(Value:Bool):Bool 
 	{
 		if (_background != Value)
 		{
@@ -792,12 +792,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var backgroundColor(get, set):Int;
 	
-	private function get_backgroundColor():Int
+	function get_backgroundColor():Int
 	{
 		return _backgroundColor;
 	}
 	
-	private function set_backgroundColor(Value:Int):Int
+	function set_backgroundColor(Value:Int):Int
 	{
 		if (_backgroundColor != Value)
 		{
@@ -816,12 +816,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var shadow(get, set):Bool;
 	
-	private function get_shadow():Bool
+	function get_shadow():Bool
 	{
 		return _shadow;
 	}
 	
-	private function set_shadow(Value:Bool):Bool
+	function set_shadow(Value:Bool):Bool
 	{
 		if (_shadow != Value)
 		{
@@ -839,12 +839,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var shadowColor(get, set):Int;
 	
-	private function get_shadowColor():Int
+	function get_shadowColor():Int
 	{
 		return _shadowColor;
 	}
 	
-	private function set_shadowColor(Value:Int):Int 
+	function set_shadowColor(Value:Int):Int 
 	{
 		if (_shadowColor != Value)
 		{
@@ -861,12 +861,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var padding(get, set):Int;
 	
-	private function get_padding():Int
+	function get_padding():Int
 	{
 		return _padding;
 	}
 	
-	private function set_padding(Value:Int):Int 
+	function set_padding(Value:Int):Int 
 	{
 		if (_padding != Value)
 		{
@@ -880,7 +880,7 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
 	 */
-	override private function set_width(PxWidth:Float):Float
+	override function set_width(PxWidth:Float):Float
 	{
 		PxWidth = Std.int(PxWidth);
 		
@@ -902,12 +902,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var alignment(get, set):Int;
 	
-	private function get_alignment():Int
+	function get_alignment():Int
 	{
 		return _alignment;
 	}
 	
-	private function set_alignment(PxAlignment:Int):Int 
+	function set_alignment(PxAlignment:Int):Int 
 	{
 		if (_alignment != PxAlignment)
 		{
@@ -923,12 +923,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var multiLine(get, set):Bool;
 	
-	private function get_multiLine():Bool
+	function get_multiLine():Bool
 	{
 		return _multiLine;
 	}
 	
-	private function set_multiLine(PxMultiLine:Bool):Bool 
+	function set_multiLine(PxMultiLine:Bool):Bool 
 	{
 		if (_multiLine != PxMultiLine)
 		{
@@ -944,12 +944,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var outline(get, set):Bool;
 	
-	private function get_outline():Bool
+	function get_outline():Bool
 	{
 		return _outline;
 	}
 	
-	private function set_outline(Value:Bool):Bool 
+	function set_outline(Value:Bool):Bool 
 	{
 		if (_outline != Value)
 		{
@@ -967,12 +967,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var outlineColor(get, set):Int;
 	
-	private function get_outlineColor():Int
+	function get_outlineColor():Int
 	{
 		return _outlineColor;
 	}
 	
-	private function set_outlineColor(Value:Int):Int 
+	function set_outlineColor(Value:Int):Int 
 	{
 		if (_outlineColor != Value)
 		{
@@ -989,12 +989,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var font(get, set):PxBitmapFont;
 	
-	private function get_font():PxBitmapFont
+	function get_font():PxBitmapFont
 	{
 		return _font;
 	}
 	
-	private function set_font(PxFont:PxBitmapFont):PxBitmapFont 
+	function set_font(PxFont:PxBitmapFont):PxBitmapFont 
 	{
 		if (_font != PxFont)
 		{
@@ -1015,12 +1015,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var lineSpacing(get, set):Int;
 	
-	private function get_lineSpacing():Int
+	function get_lineSpacing():Int
 	{
 		return _lineSpacing;
 	}
 	
-	private function set_lineSpacing(PxSpacing:Int):Int
+	function set_lineSpacing(PxSpacing:Int):Int
 	{
 		if (_lineSpacing != PxSpacing)
 		{
@@ -1036,12 +1036,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var fontScale(get, set):Float;
 	
-	private function get_fontScale():Float
+	function get_fontScale():Float
 	{
 		return _fontScale;
 	}
 	
-	private function set_fontScale(PxScale:Float):Float
+	function set_fontScale(PxScale:Float):Float
 	{
 		var tmp:Float = Math.abs(PxScale);
 		
@@ -1057,12 +1057,12 @@ class FlxBitmapTextField extends FlxSprite
 	
 	public var letterSpacing(get, set):Int;
 	
-	private function get_letterSpacing():Int
+	function get_letterSpacing():Int
 	{
 		return _letterSpacing;
 	}
 	
-	private function set_letterSpacing(PxSpacing:Int):Int
+	function set_letterSpacing(PxSpacing:Int):Int
 	{
 		var tmp:Int = Std.int(Math.abs(PxSpacing));
 		
@@ -1077,12 +1077,12 @@ class FlxBitmapTextField extends FlxSprite
 	
 	public var autoUpperCase(get, set):Bool;
 	
-	private function get_autoUpperCase():Bool 
+	function get_autoUpperCase():Bool 
 	{
 		return _autoUpperCase;
 	}
 	
-	private function set_autoUpperCase(Value:Bool):Bool 
+	function set_autoUpperCase(Value:Bool):Bool 
 	{
 		if (_autoUpperCase != Value)
 		{
@@ -1095,12 +1095,12 @@ class FlxBitmapTextField extends FlxSprite
 	
 	public var wordWrap(get, set):Bool;
 	
-	private function get_wordWrap():Bool 
+	function get_wordWrap():Bool 
 	{
 		return _wordWrap;
 	}
 	
-	private function set_wordWrap(Value:Bool):Bool 
+	function set_wordWrap(Value:Bool):Bool 
 	{
 		if (_wordWrap != Value)
 		{
@@ -1113,12 +1113,12 @@ class FlxBitmapTextField extends FlxSprite
 	
 	public var fixedWidth(get, set):Bool;
 	
-	private function get_fixedWidth():Bool 
+	function get_fixedWidth():Bool 
 	{
 		return _fixedWidth;
 	}
 	
-	private function set_fixedWidth(Value:Bool):Bool 
+	function set_fixedWidth(Value:Bool):Bool 
 	{
 		if (_fixedWidth != Value)
 		{
@@ -1129,7 +1129,7 @@ class FlxBitmapTextField extends FlxSprite
 		return _fixedWidth;
 	}
 	
-	private function updateGlyphs(TextGlyphs:Bool = false, ShadowGlyphs:Bool = false, OutlineGlyphs:Bool = false):Void
+	function updateGlyphs(TextGlyphs:Bool = false, ShadowGlyphs:Bool = false, OutlineGlyphs:Bool = false):Void
 	{
 		#if flash
 		if (TextGlyphs)
@@ -1153,7 +1153,7 @@ class FlxBitmapTextField extends FlxSprite
 	}
 	
 	#if flash
-	private function clearPreparedGlyphs(PxGlyphs:Array<BitmapData>):Void
+	function clearPreparedGlyphs(PxGlyphs:Array<BitmapData>):Void
 	{
 		if (PxGlyphs != null)
 		{

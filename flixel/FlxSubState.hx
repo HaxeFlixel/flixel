@@ -22,19 +22,19 @@ class FlxSubState extends FlxState
 	/**
 	 * Helper sprite object for non-flash targets. Draws background
 	 */
-	private var _bgSprite:FlxBGSprite;
+	var _bgSprite:FlxBGSprite;
 	#end
 	
 	/**
 	 * Internal helper for substates which can be reused
 	 */
-	private var _initialized:Bool = false;
+	var _initialized:Bool = false;
 	
-	private var _bgColor:Int;
+	var _bgColor:Int;
 	
 	public var initialized(get, null):Bool;
 	
-	private inline function get_initialized():Bool
+	inline function get_initialized():Bool
 	{ 
 		return _initialized; 
 	}
@@ -63,12 +63,12 @@ class FlxSubState extends FlxState
 		bgColor = BGColor;
 	}
 	
-	override private inline function get_bgColor():Int
+	override inline function get_bgColor():Int
 	{
 		return _bgColor;
 	}
 	
-	override private function set_bgColor(Value:Int):Int
+	override function set_bgColor(Value:Int):Int
 	{
 		#if !flash
 		if (_bgSprite != null)

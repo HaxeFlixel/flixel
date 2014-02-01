@@ -22,23 +22,23 @@ class Stats extends Window
 	/**
 	 * How often to update the stats, in ms. The lower, the more performance-intense!
 	 */
-	private static inline var UPDATE_DELAY:Int = 250;
+	static inline var UPDATE_DELAY:Int = 250;
 	/**
 	 * The initial width of the stats window.
 	 */
-	private static inline var INITIAL_WIDTH:Int = 160;
+	static inline var INITIAL_WIDTH:Int = 160;
 	/**
 	 * The minimal height of the window.
 	 */
-	private static inline var MIN_HEIGHT:Int = #if flash 180 #else 195 #end;
+	static inline var MIN_HEIGHT:Int = #if flash 180 #else 195 #end;
 	/**
 	 * The color of the fps graph.
 	 */
-	private static inline var FPS_COLOR:Int = 0xff96ff00;
+	static inline var FPS_COLOR:Int = 0xff96ff00;
 	/**
 	 * The color of the memory graph.
 	 */
-	private static inline var MEMORY_COLOR:Int = 0xff009cff;
+	static inline var MEMORY_COLOR:Int = 0xff009cff;
 	/**
 	 * The label color.
 	 */
@@ -52,45 +52,45 @@ class Stats extends Window
 	 */
 	public static inline var DECIMALS:Int = 1;
 	
-	private var _leftTextField:TextField;
-	private var _rightTextField:TextField;
+	var _leftTextField:TextField;
+	var _rightTextField:TextField;
 	
-	private var _itvTime:Int = 0;
-	private var _initTime:Int;
-	private var _frameCount:Int;
-	private var _totalCount:Int;
-	private var _currentTime:Int;
+	var _itvTime:Int = 0;
+	var _initTime:Int;
+	var _frameCount:Int;
+	var _totalCount:Int;
+	var _currentTime:Int;
 	
-	private var fpsGraph:StatsGraph;
-	private var memoryGraph:StatsGraph;
+	var fpsGraph:StatsGraph;
+	var memoryGraph:StatsGraph;
 	
-	private var flashPlayerFramerate:Float = 0;
-	private var visibleCount:Int = 0;
-	private var activeCount:Int = 0;
-	private var updateTime:Int = 0;
-	private var drawTime:Int = 0;
+	var flashPlayerFramerate:Float = 0;
+	var visibleCount:Int = 0;
+	var activeCount:Int = 0;
+	var updateTime:Int = 0;
+	var drawTime:Int = 0;
 	
-	private var _lastTime:Int = 0;
-	private var _updateTimer:Int = 0;
+	var _lastTime:Int = 0;
+	var _updateTimer:Int = 0;
 	
-	private var _update:Array<Int>;
-	private var _updateMarker:Int = 0;
+	var _update:Array<Int>;
+	var _updateMarker:Int = 0;
 	
-	private var _draw:Array<Int>;
-	private var _drawMarker:Int = 0;
+	var _draw:Array<Int>;
+	var _drawMarker:Int = 0;
 	
-	private var _visibleObject:Array<Int>;
-	private var _visibleObjectMarker:Int = 0;
+	var _visibleObject:Array<Int>;
+	var _visibleObjectMarker:Int = 0;
 	
-	private var _activeObject:Array<Int>;
-	private var _activeObjectMarker:Int = 0;
+	var _activeObject:Array<Int>;
+	var _activeObjectMarker:Int = 0;
 	
-	private var _paused:Bool = true;
+	var _paused:Bool = true;
 	
 	#if !flash
-	private var drawCallsCount:Int = 0;
-	private var _drawCalls:Array<Int>;
-	private var _drawCallsMarker:Int = 0;
+	var drawCallsCount:Int = 0;
+	var _drawCalls:Array<Int>;
+	var _drawCallsMarker:Int = 0;
 	#end
 	
 	/**
@@ -275,7 +275,7 @@ class Stats extends Window
 		}
 	}
 	
-	private function updateTexts():Void
+	function updateTexts():Void
 	{
 		var updTime = FlxMath.roundDecimal(updateTime / _updateMarker, DECIMALS);
 		var drwTime = FlxMath.roundDecimal(drawTime / _drawMarker, DECIMALS);

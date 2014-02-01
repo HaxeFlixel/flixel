@@ -24,7 +24,7 @@ class FlxSystemButton extends Sprite
 	/**
 	 * The icon this button uses.
 	 */
-	private var icon:Bitmap;
+	var icon:Bitmap;
 	/**
 	 * Whether this is a toggle button or not. If so, a Boolean representing the current
 	 * state will be passed to the callback function, and the alpha value will be lowered when toggled.
@@ -35,7 +35,7 @@ class FlxSystemButton extends Sprite
 	 */
 	public var toggled(default, set):Bool = false;
 	
-	private function set_toggled(Value:Bool):Bool
+	function set_toggled(Value:Bool):Bool
 	{
 		if (toggleMode)
 		{
@@ -96,7 +96,7 @@ class FlxSystemButton extends Sprite
 		addChild(icon);
 	}
 
-	private inline function onMouseUp(?E:MouseEvent):Void
+	inline function onMouseUp(?E:MouseEvent):Void
 	{
 		if (downHandler != null && enabled)
 		{
@@ -105,12 +105,12 @@ class FlxSystemButton extends Sprite
 		}
 	}
 
-	private inline function onMouseOver(?E:MouseEvent):Void
+	inline function onMouseOver(?E:MouseEvent):Void
 	{
 		alpha -= 0.2;
 	}
 
-	private inline function onMouseOut(?E:MouseEvent):Void
+	inline function onMouseOut(?E:MouseEvent):Void
 	{
 		alpha += 0.2;
 	}

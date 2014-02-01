@@ -152,19 +152,19 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Property setters, to provide override functionality in sub-classes
 	 */
-	private function set_visible(Value:Bool):Bool
+	function set_visible(Value:Bool):Bool
 	{
 		return visible = Value;
 	}
-	private function set_active(Value:Bool):Bool
+	function set_active(Value:Bool):Bool
 	{
 		return active = Value;
 	}
-	private function set_alive(Value:Bool):Bool
+	function set_alive(Value:Bool):Bool
 	{
 		return alive = Value;
 	}
-	private function set_exists(Value:Bool):Bool
+	function set_exists(Value:Bool):Bool
 	{
 		return exists = Value;
 	}

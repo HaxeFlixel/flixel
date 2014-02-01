@@ -45,47 +45,47 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	/**
 	 *  Counts the frames passed.
 	 */
-	private var _counter:Int = 0;
+	var _counter:Int = 0;
 	/**
 	 *  How long is the trail?
 	 */
-	private var _trailLength:Int = 0;
+	var _trailLength:Int = 0;
 	/**
 	 *  Stores the trailsprite image.
 	 */
-	private var _image:Dynamic;
+	var _image:Dynamic;
 	/**
 	 *  The alpha value for the next trailsprite.
 	 */
-	private var _transp:Float = 1;
+	var _transp:Float = 1;
 	/**
 	 *  How much lower the alpha value of the next trailsprite is.
 	 */
-	private var _difference:Float;
+	var _difference:Float;
 	/**
 	 *  Stores the sprites recent positions.
 	 */
-	private var _recentPositions:Array<FlxPoint>;
+	var _recentPositions:Array<FlxPoint>;
 	/**
 	 *  Stores the sprites recent angles.
 	 */
-	private var _recentAngles:Array<Float>;
+	var _recentAngles:Array<Float>;
 	/**
 	 *  Stores the sprites recent scale.
 	 */
-	private var _recentScales:Array<FlxPoint>;
+	var _recentScales:Array<FlxPoint>;
 	/**
 	 *  Stores the sprites recent frame.
 	 */
-	private var _recentFrames:Array<Int>;
+	var _recentFrames:Array<Int>;
 	/**
 	 *  Stores the sprites recent facing.
 	 */
-	private var _recentFacings:Array<Int>;
+	var _recentFacings:Array<Int>;
 	/**
 	 *  Stores the sprite origin (rotation axis)
 	 */
-	private var _spriteOrigin:FlxPoint;
+	var _spriteOrigin:FlxPoint;
 	
 	/**
 	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
@@ -346,7 +346,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	 */
 	public var solid(default, set):Bool = false;
 	
-	private function set_solid(Value:Bool):Bool
+	function set_solid(Value:Bool):Bool
 	{
 		for (i in 0..._trailLength)
 		{

@@ -47,12 +47,12 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * A list of frames stored as <code>int</code> objects
 	 */
-	@:allow(flixel.animation) private var _frames:Array<Int>;
+	@:allow(flixel.animation) var _frames:Array<Int>;
 	
 	/**
 	 * Internal, used to time each frame of animation.
 	 */
-	private var _frameTimer:Float;
+	var _frameTimer:Float;
 	
 	/**
 	 * Constructor
@@ -152,7 +152,7 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 	}
 	
-	private function set_frameRate(value:Int):Int
+	function set_frameRate(value:Int):Int
 	{
 		delay = 0;
 		frameRate = value;
@@ -163,7 +163,7 @@ class FlxAnimation extends FlxBaseAnimation
 		return value;
 	}
 	
-	private function set_curFrame(Frame:Int):Int
+	function set_curFrame(Frame:Int):Int
 	{
 		if (Frame >= 0)
 		{

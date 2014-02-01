@@ -55,7 +55,7 @@ class CachedGraphics
 	 */
 	public var useCount(default, set):Int = 0;
 	
-	private var _tilesheet:TileSheetData;
+	var _tilesheet:TileSheetData;
 	
 	public function new(Key:String, Bitmap:BitmapData, Persist:Bool = false)
 	{
@@ -149,7 +149,7 @@ class CachedGraphics
 		assetsClass = null;
 	}
 	
-	private function get_tilesheet():TileSheetData 
+	function get_tilesheet():TileSheetData 
 	{
 		if (_tilesheet == null) 
 		{
@@ -164,7 +164,7 @@ class CachedGraphics
 		return _tilesheet;
 	}
 	
-	private function getBitmapFromSystem():BitmapData
+	function getBitmapFromSystem():BitmapData
 	{
 		var newBitmap:BitmapData = null;
 		if (assetsClass != null)
@@ -179,12 +179,12 @@ class CachedGraphics
 		return newBitmap;
 	}
 	
-	private inline function get_canBeDumped():Bool
+	inline function get_canBeDumped():Bool
 	{
 		return ((assetsClass != null) || (assetsKey != null));
 	}
 	
-	private function set_useCount(Value:Int):Int
+	function set_useCount(Value:Int):Int
 	{
 		if ((Value <= 0) && destroyOnNoUse && !persist)
 		{
@@ -194,7 +194,7 @@ class CachedGraphics
 		return useCount = Value;
 	}
 	
-	private function set_destroyOnNoUse(Value:Bool):Bool
+	function set_destroyOnNoUse(Value:Bool):Bool
 	{
 		if (Value && useCount == 0 && key != null && !persist)
 		{

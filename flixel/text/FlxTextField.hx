@@ -21,8 +21,8 @@ import openfl.Assets;
  */
 class FlxTextField extends FlxText
 {
-	private var _camera:FlxCamera;
-	private var _addedToDisplay:Bool = false;
+	var _camera:FlxCamera;
+	var _addedToDisplay:Bool = false;
 	
 	/**
 	 * Creates a new <code>FlxText</code> object at the specified position.
@@ -86,19 +86,19 @@ class FlxTextField extends FlxText
 	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
-	override private function get_pixels():BitmapData
+	override function get_pixels():BitmapData
 	{
 		calcFrame(true);
 		return cachedGraphics.bitmap;
 	}
 	
-	override private function set_pixels(Pixels:BitmapData):BitmapData
+	override function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		// This class doesn't support this operation
 		return Pixels;
 	}
 	
-	override private function set_alpha(Alpha:Float):Float
+	override function set_alpha(Alpha:Float):Float
 	{
 		if (Alpha > 1)
 		{
@@ -115,14 +115,14 @@ class FlxTextField extends FlxText
 		return Alpha;
 	}
 	
-	override private function set_height(Height:Float):Float
+	override function set_height(Height:Float):Float
 	{
 		Height = super.set_height(Height);
 		if (_textField != null)	_textField.height = Height;
 		return Height;
 	}
 	
-	override private function set_visible(Value:Bool):Bool
+	override function set_visible(Value:Bool):Bool
 	{
 		_textField.visible = Value;
 		return super.set_visible(Value);
@@ -187,7 +187,7 @@ class FlxTextField extends FlxText
 		#end
 	}
 	
-	override private function regenGraphics():Void
+	override function regenGraphics():Void
 	{
 		var oldWidth:Float = cachedGraphics.bitmap.width;
 		var oldHeight:Float = cachedGraphics.bitmap.height;
@@ -219,12 +219,12 @@ class FlxTextField extends FlxText
 	 */
 	public var camera(get, set):FlxCamera;
 	
-	private function get_camera():FlxCamera 
+	function get_camera():FlxCamera 
 	{
 		return _camera;
 	}
 	
-	private function set_camera(Value:FlxCamera):FlxCamera 
+	function set_camera(Value:FlxCamera):FlxCamera 
 	{
 		if (_camera != Value)
 		{

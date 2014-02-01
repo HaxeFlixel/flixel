@@ -38,7 +38,7 @@ class FlxGamepadManager implements IFlxInput
 	/**
 	 * Storage for all connected joysticks
 	 */
-	private var _gamepads:Map<Int, FlxGamepad>;
+	var _gamepads:Map<Int, FlxGamepad>;
 	
 	public function getByID(GamepadID:Int):FlxGamepad
 	{
@@ -297,7 +297,7 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new() 
+	function new() 
 	{
 		firstActive = null;
 		lastActive = null;
@@ -313,7 +313,7 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	#if (cpp || neko)
-	private function handleButtonDown(FlashEvent:JoystickEvent):Void
+	function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		var o:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
@@ -333,7 +333,7 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	private function handleButtonUp(FlashEvent:JoystickEvent):Void
+	function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		var object:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
@@ -353,20 +353,20 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	private function handleAxisMove(FlashEvent:JoystickEvent):Void
+	function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.axis = FlashEvent.axis;
 	}
 	
-	private function handleBallMove(FlashEvent:JoystickEvent):Void
+	function handleBallMove(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.ball.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.ball.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
 	
-	private function handleHatMove(FlashEvent:JoystickEvent):Void
+	function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.hat.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
@@ -377,7 +377,7 @@ class FlxGamepadManager implements IFlxInput
 	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
-	private function update():Void
+	function update():Void
 	{
 		for (gamepad in _gamepads)
 		{
@@ -385,14 +385,14 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	private inline function onFocus():Void { }
+	inline function onFocus():Void { }
 
-	private inline function onFocusLost():Void
+	inline function onFocusLost():Void
 	{
 		reset();
 	}
 
-	private function get_numActiveGamepads():Int
+	function get_numActiveGamepads():Int
 	{
 		var count = 0;
 		
@@ -410,7 +410,7 @@ class FlxGamepadManager implements IFlxInput
 	 * 						Less this number the more Joystick is sensible.
 	 * 						Should be between 0.0 and 1.0.
 	 */
-	private function set_globalDeadZone(DeadZone:Float):Float
+	function set_globalDeadZone(DeadZone:Float):Float
 	{
 		globalDeadZone = DeadZone;
 		

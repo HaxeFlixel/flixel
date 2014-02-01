@@ -7,7 +7,7 @@ import flixel.util.FlxPath;
 
 class PathManager extends FlxPlugin
 {
-	private var _paths:Array<FlxPath>;
+	var _paths:Array<FlxPath>;
 	
 	/**
 	 * Instantiates a new debug path display manager.

@@ -26,11 +26,11 @@ class Console extends Window
 	/**
 	 * The text that is displayed in the console's input field by default.
 	 */
-	private static inline var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
+	static inline var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
 	/**
 	 * The amount of commands that will be saved.
 	 */
-	private static inline var _HISTORY_MAX:Int = 25;
+	static inline var _HISTORY_MAX:Int = 25;
 	
 	/**
 	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
@@ -60,11 +60,11 @@ class Console extends Window
 	/**
 	 * The history index of the current input.
 	 */
-	private var _historyIndex:Int = 0;
+	var _historyIndex:Int = 0;
 	/**
 	 * The input textfield used to enter commands.
 	 */
-	private var _input:TextField;
+	var _input:TextField;
 	
 	/**
 	 * Creates a new console window object.
@@ -114,7 +114,7 @@ class Console extends Window
 		#end
 	}
 	
-	private function onFocus(e:FocusEvent):Void
+	function onFocus(e:FocusEvent):Void
 	{
 		#if !FLX_NO_DEBUG
 		#if flash 
@@ -137,7 +137,7 @@ class Console extends Window
 		#end
 	}
 	
-	private function onFocusLost(e:FocusEvent):Void
+	function onFocusLost(e:FocusEvent):Void
 	{
 		#if !FLX_NO_DEBUG
 		#if flash
@@ -159,7 +159,7 @@ class Console extends Window
 		#end
 	}
 	
-	private function onKeyPress(e:KeyboardEvent):Void
+	function onKeyPress(e:KeyboardEvent):Void
 	{
 		// Don't allow spaces at the start, they break commands
 		if (e.keyCode == Keyboard.SPACE && _input.text == " ") {
@@ -205,7 +205,7 @@ class Console extends Window
 		}
 	}
 	
-	private function processCommand():Void
+	function processCommand():Void
 	{
 		var args:Array<Dynamic> = StringTools.rtrim(_input.text).split(" ");
 		var alias:String = args.shift();
@@ -272,13 +272,13 @@ class Console extends Window
 		}
 	}
 	
-	private function overrideDefaultSelection(e:Event):Void
+	function overrideDefaultSelection(e:Event):Void
 	{
 		_input.setSelection(_input.text.length, _input.text.length);
 		removeEventListener(Event.RENDER, overrideDefaultSelection);
 	}
 	
-	private inline function getPreviousCommand():String
+	inline function getPreviousCommand():String
 	{
 		if (_historyIndex > 0) {
 			_historyIndex --;
@@ -287,7 +287,7 @@ class Console extends Window
 		return cmdHistory[_historyIndex];
 	}
 	
-	private inline function getNextCommand():String
+	inline function getNextCommand():String
 	{
 		if (_historyIndex < cmdHistory.length) {
 			_historyIndex ++;
@@ -367,7 +367,7 @@ class Console extends Window
 	/**
 	 * Adjusts the width and height of the text field accordingly.
 	 */
-	override private function updateSize():Void
+	override function updateSize():Void
 	{
 		super.updateSize();
 		

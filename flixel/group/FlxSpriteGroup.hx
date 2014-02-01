@@ -41,13 +41,13 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
-	private var _skipTransformChildren:Bool = false;
+	var _skipTransformChildren:Bool = false;
 	
 	#if !FLX_NO_DEBUG
 	/**
 	 * Just a helper variable to check if this group has already been drawn on debug layer
 	 */
-	private var _isDrawnDebug:Bool = false;
+	var _isDrawnDebug:Bool = false;
 	#end
 	
 	/**
@@ -68,7 +68,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * Don't forget to call super.initVars() if you'll override this method, 
 	 * or you'll get null object error and app will crash
 	 */
-	override private function initVars():Void 
+	override function initVars():Void 
 	{
 		collisionType	= FlxCollisionType.SPRITEGROUP;
 		offset			= new FlxPointHelper(this, offsetTransform);
@@ -619,35 +619,35 @@ class FlxSpriteGroup extends FlxSprite
 	
 	// PROPERTIES GETTERS/SETTERS
 	
-	override private function set_exists(Value:Bool):Bool
+	override function set_exists(Value:Bool):Bool
 	{
 		if (exists != Value)
 			transformChildren(existsTransform, Value);
 		return super.set_exists(Value);
 	}
 	
-	override private function set_visible(Value:Bool):Bool
+	override function set_visible(Value:Bool):Bool
 	{
 		if(exists && visible != Value)
 			transformChildren(visibleTransform, Value);
 		return super.set_visible(Value);
 	}
 	
-	override private function set_active(Value:Bool):Bool
+	override function set_active(Value:Bool):Bool
 	{
 		if(exists && active != Value)
 			transformChildren(activeTransform, Value);
 		return super.set_active(Value);
 	}
 	
-	override private function set_alive(Value:Bool):Bool
+	override function set_alive(Value:Bool):Bool
 	{
 		if(exists && alive != Value)
 			transformChildren(aliveTransform, Value);
 		return super.set_alive(Value);
 	}
 	
-	override private function set_x(Value:Float):Float
+	override function set_x(Value:Float):Float
 	{
 		if (!_skipTransformChildren && exists && x != Value)
 		{
@@ -658,7 +658,7 @@ class FlxSpriteGroup extends FlxSprite
 		return x = Value;
 	}
 	
-	override private function set_y(Value:Float):Float
+	override function set_y(Value:Float):Float
 	{
 		if (!_skipTransformChildren && exists && y != Value)
 		{
@@ -669,7 +669,7 @@ class FlxSpriteGroup extends FlxSprite
 		return y = Value;
 	}
 	
-	override private function set_angle(Value:Float):Float
+	override function set_angle(Value:Float):Float
 	{
 		if (exists && angle != Value)
 		{
@@ -679,7 +679,7 @@ class FlxSpriteGroup extends FlxSprite
 		return angle = Value;
 	}
 	
-	override private function set_alpha(Value:Float):Float 
+	override function set_alpha(Value:Float):Float 
 	{
 		if (Value > 1)  
 		{
@@ -698,42 +698,42 @@ class FlxSpriteGroup extends FlxSprite
 		return alpha = Value;
 	}
 	
-	override private function set_facing(Value:Int):Int
+	override function set_facing(Value:Int):Int
 	{
 		if (exists && facing != Value)
 			transformChildren(facingTransform, Value);
 		return facing = Value;
 	}
 	
-	override private function set_moves(Value:Bool):Bool
+	override function set_moves(Value:Bool):Bool
 	{
 		if (exists && moves != Value)
 			transformChildren(movesTransform, Value);
 		return moves = Value;
 	}
 	
-	override private function set_immovable(Value:Bool):Bool
+	override function set_immovable(Value:Bool):Bool
 	{
 		if (exists && immovable != Value)
 			transformChildren(immovableTransform, Value);
 		return immovable = Value;
 	}
 	
-	override private function set_solid(Value:Bool):Bool 
+	override function set_solid(Value:Bool):Bool 
 	{
 		if (exists && solid != Value)
 			transformChildren(solidTransform, Value);
 		return super.set_solid(Value);
 	}
 	
-	override private function set_color(Value:Int):Int 
+	override function set_color(Value:Int):Int 
 	{
 		if (exists && color != Value)
 			transformChildren(gColorTransform, Value);
 		return color = Value;
 	}
 	
-	override private function set_blend(Value:BlendMode):BlendMode 
+	override function set_blend(Value:BlendMode):BlendMode 
 	{
 		if (exists && (blend != Value))
 			transformChildren(blendTransform, Value);
@@ -744,7 +744,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
 	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
 	 */
-	override private function set_forceComplexRender(Value:Bool):Bool
+	override function set_forceComplexRender(Value:Bool):Bool
 	{
 		if (exists && forceComplexRender != Value)
 			transformChildren(complexRenderTransform, Value);
@@ -823,17 +823,17 @@ class FlxSpriteGroup extends FlxSprite
 	
 	// GROUP FUNCTIONS
 	
-	private inline function get_length():Int
+	inline function get_length():Int
 	{
 		return group.length;
 	}
 	
-	private inline function get_maxSize():Int
+	inline function get_maxSize():Int
 	{
 		return group.maxSize;
 	}
 	
-	private function set_maxSize(Size:Int):Int
+	function set_maxSize(Size:Int):Int
 	{
 		if (group == null)
 		{
@@ -844,32 +844,32 @@ class FlxSpriteGroup extends FlxSprite
 		return group.maxSize = Size;
 	}
 	
-	private inline function get_members():Array<FlxSprite>
+	inline function get_members():Array<FlxSprite>
 	{
 		return group.members;
 	}
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
 	
-	private function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
-	private function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
-	private function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
-	private function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
-	private function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
-	private function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
-	private function complexRenderTransform(Sprite:FlxSprite, Complex:Bool)				{ Sprite.forceComplexRender = Complex; }		// set
-	private function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
-	private function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
-	private function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
-	private function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
-	private function activeTransform(Sprite:FlxSprite, Active:Bool)						{ Sprite.active = Active; }						// set
-	private function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
-	private function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
-	private function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
-	private function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
-	private function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
-	private function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
-	private function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
+	function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
+	function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
+	function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
+	function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
+	function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
+	function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
+	function complexRenderTransform(Sprite:FlxSprite, Complex:Bool)				{ Sprite.forceComplexRender = Complex; }		// set
+	function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
+	function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
+	function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
+	function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
+	function activeTransform(Sprite:FlxSprite, Active:Bool)						{ Sprite.active = Active; }						// set
+	function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
+	function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
+	function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
+	function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
+	function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
+	function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
+	function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
 	// NOT SUPPORTED FUNCTIONALITY
 	// THESE METHODS OVERRIDEN FOR SAFETY PURPOSES
 	
@@ -946,7 +946,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return the BitmapData passed in as parameter
 	 */
-	override private function set_pixels(Value:BitmapData):BitmapData 
+	override function set_pixels(Value:BitmapData):BitmapData 
 	{
 		return Value;
 	}
@@ -955,7 +955,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return the FlxFrame passed in as parameter
 	 */
-	override private function set_frame(Value:FlxFrame):FlxFrame 
+	override function set_frame(Value:FlxFrame):FlxFrame 
 	{
 		return Value;
 	}
@@ -964,7 +964,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return WARNING: returns null
 	 */
-	override private function get_pixels():BitmapData 
+	override function get_pixels():BitmapData 
 	{
 		return null;
 	}
@@ -973,7 +973,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return WARNING: returns null
 	 */
-	override private function get_colorTransform():ColorTransform 
+	override function get_colorTransform():ColorTransform 
 	{
 		return null;
 	}
@@ -983,7 +983,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	inline override private function calcFrame(RunOnCpp:Bool = false):Void
+	inline override function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		// Nothing to do here
 	}
@@ -991,7 +991,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override private function resetHelpers():Void {}
+	inline override function resetHelpers():Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
@@ -1001,7 +1001,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override private function updateColorTransform():Void {}
+	inline override function updateColorTransform():Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
@@ -1014,10 +1014,10 @@ class FlxSpriteGroup extends FlxSprite
  * can be updated when the points of the FlxSpriteGroup are changed.
  * IMPORTANT: Calling set(x, y); is MUCH FASTER than setting x, and y separately.
  */
-private class FlxPointHelper extends FlxPoint
+class FlxPointHelper extends FlxPoint
 {
-	private var _parent:FlxSpriteGroup;
-	private var _transformFunc:FlxSprite->FlxPoint->Void;
+	var _parent:FlxSpriteGroup;
+	var _transformFunc:FlxSprite->FlxPoint->Void;
 	
 	public function new(parent:FlxSpriteGroup, transformFunc:FlxSprite->FlxPoint->Void)
 	{
@@ -1033,14 +1033,14 @@ private class FlxPointHelper extends FlxPoint
 		return this;
 	}
 	
-	override private function set_x(Value:Float):Float
+	override function set_x(Value:Float):Float
 	{
 		super.set_x(Value);
 		_parent.transformChildren(_transformFunc, this);
 		return Value;
 	}
 	
-	override private function set_y(Value:Float):Float
+	override function set_y(Value:Float):Float
 	{
 		super.set_y(Value);
 		_parent.transformChildren(_transformFunc, this);

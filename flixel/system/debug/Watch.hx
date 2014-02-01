@@ -16,18 +16,18 @@ import haxe.ds.StringMap;
  */
 class Watch extends Window
 {
-	static private inline var MAX_LOG_LINES:Int = 1024;
-	static private inline var LINE_HEIGHT:Int = 15;
+	static inline var MAX_LOG_LINES:Int = 1024;
+	static inline var LINE_HEIGHT:Int = 15;
 	
 	/**
 	 * Whether a watch entry is currently being edited or not. 
 	 */		
 	public var editing:Bool;
 	
-	private var _names:Sprite;
-	private var _values:Sprite;
-	private var _watching:Array<WatchEntry>;
-	private var _quickWatchList:Map<String, WatchEntry>;
+	var _names:Sprite;
+	var _values:Sprite;
+	var _watching:Array<WatchEntry>;
+	var _quickWatchList:Map<String, WatchEntry>;
 	
 	/**
 	 * Creates a new watch window object.
@@ -192,7 +192,7 @@ class Watch extends Window
 	/**
 	 * Helper function to acutally remove an entry.
 	 */
-	private function removeEntry(Entry:WatchEntry, Index:Int):Void
+	function removeEntry(Entry:WatchEntry, Index:Int):Void
 	{
 		FlxArrayUtil.fastSplice(_watching, Entry);
 		
@@ -272,7 +272,7 @@ class Watch extends Window
 	 * Update the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
 	 * Also adjusts the width of the entries and stuff, and makes sure there is room for all the entries.
 	 */
-	override private function updateSize():Void
+	override function updateSize():Void
 	{
 		if (Std.int(_height) < _watching.length * LINE_HEIGHT + 17)
 		{

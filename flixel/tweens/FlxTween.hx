@@ -36,7 +36,7 @@ class FlxTween
 	/**
 	 * Adds a tween to the tween manager, with a delay if specified.
 	 */ 
-	private static function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
+	static function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
 	{
 		if ((Delay != null) || (Delay > 0))
 		{
@@ -52,7 +52,7 @@ class FlxTween
 	/**
 	 * Helper function for delayed tweens.
 	 */
-	private static function timerCallback(Timer:FlxTimer):Void
+	static function timerCallback(Timer:FlxTimer):Void
 	{
 		addTween(cast (Timer.userData, FlxTween));
 	}
@@ -609,23 +609,23 @@ class FlxTween
 	}
 
 	public var percent(get_percent, set_percent):Float;
-	private function get_percent():Float { return _time / duration; }
-	private function set_percent(value:Float):Float { _time = duration * value; return _time; }
+	function get_percent():Float { return _time / duration; }
+	function set_percent(value:Float):Float { _time = duration * value; return _time; }
 
 	public var scale(get_scale, null):Float;
-	private function get_scale():Float { return _t; }
+	function get_scale():Float { return _t; }
 
 	public var finished(default, null):Bool;
 
 	public var type:Int;
-	private var _ease:EaseFunction;
-	private var _t:Float;
+	var _ease:EaseFunction;
+	var _t:Float;
 
-	private var _time:Float;
+	var _time:Float;
 	
 	public var duration:Float;
 	
-	private var _backward:Bool;
+	var _backward:Bool;
 }
 
 typedef CompleteCallback = FlxTween->Void;

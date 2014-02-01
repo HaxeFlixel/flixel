@@ -22,15 +22,15 @@ class FlxCollision
 	public static inline var CAMERA_WALL_INSIDE:Int = 1;
 	
 	// Optimization: Local static vars to reduce allocations
-	private static var pointA:Point = new Point();
-	private static var pointB:Point = new Point();
-	private static var centerA:Point = new Point();
-	private static var centerB:Point = new Point();
-	private static var matrixA:Matrix = new Matrix();
-	private static var matrixB:Matrix = new Matrix();
-	private static var testMatrix:Matrix = new Matrix();
-	private static var boundsA:Rectangle = new Rectangle();
-	private static var boundsB:Rectangle = new Rectangle();
+	static var pointA:Point = new Point();
+	static var pointB:Point = new Point();
+	static var centerA:Point = new Point();
+	static var centerB:Point = new Point();
+	static var matrixA:Matrix = new Matrix();
+	static var matrixB:Matrix = new Matrix();
+	static var testMatrix:Matrix = new Matrix();
+	static var boundsA:Rectangle = new Rectangle();
+	static var boundsB:Rectangle = new Rectangle();
 	
 	/**
 	 * A Pixel Perfect Collision check between two FlxSprites. It will do a bounds check first, and if that passes it will run a 

@@ -37,24 +37,24 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
-	private var _marker:Int = 0;
+	var _marker:Int = 0;
 	/**
 	 * Helper for sort.
 	 */
-	private var _sortIndex:String = null;
+	var _sortIndex:String = null;
 	/**
 	 * Helper for sort.
 	 */
-	private var _sortOrder:Int;
+	var _sortOrder:Int;
 	
 	/**
 	 * Array of all the <code>FlxBasic</code>s that exist in this group.
 	 */
-	private var _basics:Array<FlxBasic>;
+	var _basics:Array<FlxBasic>;
 	/**
 	 * Array of all the members in this group.
 	 */
-	private var _members:Array<T>;
+	var _members:Array<T>;
 	
 	/**
 	 * Create a new <code>FlxTypedGroup</code>
@@ -788,7 +788,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @param	Obj2	The second object being sorted.
 	 * @return	An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
 	 */
-	private function sortHandler(Obj1:T, Obj2:T):Int
+	function sortHandler(Obj1:T, Obj2:T):Int
 	{
 		var prop1 = Reflect.getProperty(Obj1, _sortIndex);
 		var prop2 = Reflect.getProperty(Obj2, _sortIndex);
@@ -805,7 +805,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return 0;
 	}
 	
-	private function set_maxSize(Size:Int):Int
+	function set_maxSize(Size:Int):Int
 	{
 		maxSize = Std.int(Math.abs(Size));
 		
@@ -839,7 +839,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return maxSize;
 	}
 	
-	private function get_members():Array<T>
+	function get_members():Array<T>
 	{
 		return _members;
 	}

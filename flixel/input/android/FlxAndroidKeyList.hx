@@ -13,12 +13,12 @@ class FlxAndroidKeyList
 		check = CheckFunction;
 	}
 	
-	private var check:String->Bool;
+	var check:String->Bool;
 	public var BACK		(get, never):Bool;	inline function get_BACK()		{ return check("BACK"); 		}
 	public var MENU		(get, never):Bool;	inline function get_MENU()		{ return check("MENU"); 		}
 	public var ANY(get, never):Bool;
 	
-	private function get_ANY():Bool
+	function get_ANY():Bool
 	{
 		for (key in FlxG.keys._keyList)
 		{

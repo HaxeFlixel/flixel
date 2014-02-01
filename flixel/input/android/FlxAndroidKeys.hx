@@ -24,18 +24,18 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
-	private static inline var TOTAL:Int = 2;
+	static inline var TOTAL:Int = 2;
 	
 	/**
 	 * A map for key lookup.
 	 */
-	private var _keyLookup:Map<String, Int>;
+	var _keyLookup:Map<String, Int>;
 	
 	/**
 	 * And array of FlxKey objects.
 	 */
 	@:allow(flixel.input.keyboard.FlxAndroidKeyList.get_ANY) // Need to access the var there
-	private var _keyList:Map<Int, FlxKey>;
+	var _keyList:Map<Int, FlxKey>;
 	
 	public var preventDefaultBackAction:Bool = false;
 	
@@ -45,7 +45,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	KeyName		String name of the key (e.g. "BACK" or "MENU")
 	 * @param	KeyCode		The numeric code for this key.
 	 */
-	private function addKey(KeyName:String, KeyCode:Int):Void
+	function addKey(KeyName:String, KeyCode:Int):Void
 	{
 		_keyLookup.set(KeyName, KeyCode);
 		_keyList.set(KeyCode, new FlxKey(KeyName));
@@ -158,7 +158,7 @@ class FlxAndroidKeys implements IFlxInput
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new()
+	function new()
 	{
 		_keyLookup = new Map<String, Int>();
 		
@@ -182,7 +182,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	Status		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
+	function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -220,7 +220,7 @@ class FlxAndroidKeys implements IFlxInput
 	 *
 	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
 	 */
-	private function onKeyUp(FlashEvent:KeyboardEvent):Void
+	function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
 		var c:Int = FlashEvent.keyCode;
 		
@@ -245,7 +245,7 @@ class FlxAndroidKeys implements IFlxInput
 	 *
 	 * @param	FlashEvent	Flash keyboard event.
 	 */
-	private function onKeyDown(FlashEvent:KeyboardEvent):Void
+	function onKeyDown(FlashEvent:KeyboardEvent):Void
 	{
 		var c:Int = FlashEvent.keyCode;
 		
@@ -265,7 +265,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * A Helper function to check whether an array of keycodes contains
 	 * a certain key safely (returns false if the array is null).
 	 */
-	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
+	function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -288,7 +288,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
-	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
+	inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
 		var obj:FlxKey = _keyList[KeyCode];
 		
@@ -319,9 +319,9 @@ class FlxAndroidKeys implements IFlxInput
 		}
 	}
 	
-	private inline function onFocus():Void {}
+	inline function onFocus():Void {}
 
-	private inline function onFocusLost():Void
+	inline function onFocusLost():Void
 	{
 		reset();
 	}
@@ -329,7 +329,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
-	private function update():Void
+	function update():Void
 	{
 		for (key in _keyList)
 		{

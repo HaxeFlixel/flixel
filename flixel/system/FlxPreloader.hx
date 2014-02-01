@@ -30,7 +30,7 @@ class FlxPreloader extends NMEPreloader
 }
 #else
 
-@:font("assets/fonts/nokiafc22.ttf") class PreloaderFont extends Font {}
+@:font("assets/fonts/nokiafc22.ttf") private class PreloaderFont extends Font {}
 
 @:bitmap("assets/images/preloader/light.png")   private class GraphicLogoLight   extends BitmapData {}
 @:bitmap("assets/images/preloader/corners.png") private class GraphicLogoCorners extends BitmapData {}
@@ -40,25 +40,25 @@ class FlxPreloader extends NMEPreloader
  */
 class FlxPreloader extends NMEPreloader
 {	
-	private static var BlendModeScreen = BlendMode.SCREEN;
-	private static var BlendModeOverlay = BlendMode.OVERLAY;
+	static var BlendModeScreen = BlendMode.SCREEN;
+	static var BlendModeOverlay = BlendMode.OVERLAY;
 
-	private var _init:Bool;
-	private var _buffer:Sprite;
-	private var _bmpBar:Bitmap;
-	private var _text:TextField;
+	var _init:Bool;
+	var _buffer:Sprite;
+	var _bmpBar:Bitmap;
+	var _text:TextField;
 	/**
 	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
 	 */
-	private var _width:Int;
+	var _width:Int;
 	/**
 	 * Useful for storing "real" stage height if you're scaling your preloader graphics.
 	 */
-	private var _height:Int;
-	private var _logo:Sprite;
-	private var _logoGlow:Sprite;
-	private var _min:Int;
-	private var _percent:Float;
+	var _height:Int;
+	var _logo:Sprite;
+	var _logoGlow:Sprite;
+	var _min:Int;
+	var _percent:Float;
 
 	/**
 	 * List of allowed URLs for built-in site-locking.
@@ -67,7 +67,7 @@ class FlxPreloader extends NMEPreloader
 	 * allowedURLs = ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
 	 */
 	public var allowedURLs:Array<String>;
-	private var _urlChecked:Bool;
+	var _urlChecked:Bool;
 	
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
@@ -95,7 +95,7 @@ class FlxPreloader extends NMEPreloader
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 	
-	private function onAddedToStage(e:Event):Void 
+	function onAddedToStage(e:Event):Void 
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		
@@ -110,7 +110,7 @@ class FlxPreloader extends NMEPreloader
 	 * Override this to create your own preloader objects.
 	 * Highly recommended you also override update()!
 	 */
-	private function create():Void
+	function create():Void
 	{
 		_min = 0;
 		#if FLX_NO_DEBUG
@@ -178,7 +178,7 @@ class FlxPreloader extends NMEPreloader
 		_buffer.addChild(bitmap);
 	}
 	
-	private function drawLogo(graph:Graphics):Void
+	function drawLogo(graph:Graphics):Void
 	{
 		// draw green area
 		graph.beginFill(0x00b922);
@@ -234,7 +234,7 @@ class FlxPreloader extends NMEPreloader
 		graph.endFill();
 	}
 	
-	private function destroy():Void
+	function destroy():Void
 	{
 		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		if (_buffer != null)	
@@ -271,7 +271,7 @@ class FlxPreloader extends NMEPreloader
 		#end
 	}
 	
-	private function onEnterFrame(event:Event):Void
+	function onEnterFrame(event:Event):Void
 	{
 		if(!this._init)
 		{
@@ -303,7 +303,7 @@ class FlxPreloader extends NMEPreloader
 		}
 	}
 	
-	private function checkSiteLock():Void
+	function checkSiteLock():Void
 	{
 		#if flash
 		if (_urlChecked == false && allowedURLs != null)
@@ -345,7 +345,7 @@ class FlxPreloader extends NMEPreloader
 	}
 	
 	#if flash
-	private function goToMyURL(e:MouseEvent = null):Void
+	function goToMyURL(e:MouseEvent = null):Void
 	{
 		Lib.getURL(new URLRequest(allowedURLs[0]));
 	}
@@ -353,12 +353,12 @@ class FlxPreloader extends NMEPreloader
 	/**
 	 * Gets home domain
 	 */
-	private function getHomeDomain():String
+	function getHomeDomain():String
 	{
 		return getDomain(loaderInfo.loaderURL);
 	}
 	
-	private function getDomain(url:String):String
+	function getDomain(url:String):String
 	{
 		var urlStart:Int = url.indexOf("://") + 3;
 		var urlEnd:Int = url.indexOf("/", urlStart);
@@ -373,7 +373,7 @@ class FlxPreloader extends NMEPreloader
 	/**
 	 * Simple site-lock check
 	 */
-	private function atHome():Bool
+	function atHome():Bool
 	{
 		if (allowedURLs.length == 0)
 		{
@@ -402,7 +402,7 @@ class FlxPreloader extends NMEPreloader
 	 * 
 	 * @param	Percent		How much of the program has loaded.
 	 */
-	private function update(Percent:Float):Void
+	function update(Percent:Float):Void
 	{
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";

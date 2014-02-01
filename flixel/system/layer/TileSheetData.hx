@@ -24,14 +24,14 @@ class TileSheetData implements IFlxDestroyable
 	/**
 	 * Storage for all groups of FlxFrames.
 	 */
-	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
+	var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
 	/**
 	 * Storage for all FlxFrames in this TileSheetData object.
 	 */
-	private var flxFrames:Map<String, FlxFrame>;
+	var flxFrames:Map<String, FlxFrame>;
 	
-	private var frameNames:Array<String>;
+	var frameNames:Array<String>;
 	
 	public var bitmap:BitmapData;
 	
@@ -245,7 +245,7 @@ class TileSheetData implements IFlxDestroyable
 	/**
 	 * Parses frame TexturePacker data object and returns it
 	 */
-	private function addTexturePackerFrame(frameData:TextureAtlasFrame, startX:Int = 0, startY:Int = 0):FlxFrame
+	function addTexturePackerFrame(frameData:TextureAtlasFrame, startX:Int = 0, startY:Int = 0):FlxFrame
 	{
 		var key:String = frameData.name;
 		if (containsFrame(key))

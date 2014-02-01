@@ -9,9 +9,9 @@ import flixel.FlxBasic;
  */
 class FlxTypedGroupIterator<T>
 {
-	private var _groupMembers : Array<T>;
-	private var _cursor : Int;
-	private var _filter : T -> Bool;
+	var _groupMembers : Array<T>;
+	var _cursor : Int;
+	var _filter : T -> Bool;
 
 	public function new(GroupMembers : Array<T>, filter : T -> Bool = null)
 	{

@@ -68,11 +68,11 @@ class FlxSound extends FlxBasic
 	 */
 	public var pan(get, set):Float;
 
-	private inline function get_pan():Float
+	inline function get_pan():Float
 	{
 		return _transform.pan;
 	}
-	private inline function set_pan(pan:Float):Float
+	inline function set_pan(pan:Float):Float
 	{
 		return _transform.pan = pan;
 	}
@@ -80,51 +80,51 @@ class FlxSound extends FlxBasic
 	/**
 	 * Internal tracker for a Flash sound object.
 	 */
-	private var _sound:Sound;
+	var _sound:Sound;
 	/**
 	 * Internal tracker for a Flash sound channel object.
 	 */
-	private var _channel:SoundChannel;
+	var _channel:SoundChannel;
 	/**
 	 * Internal tracker for a Flash sound transform object.
 	 */
-	private var _transform:SoundTransform;
+	var _transform:SoundTransform;
 	/**
 	 * Internal tracker for whether the sound is paused or not (not the same as stopped).
 	 */
-	private var _paused:Bool;
+	var _paused:Bool;
 	/**
 	 * Internal tracker for the position in runtime of the music playback.
 	 */
-	private var _position:Float;
+	var _position:Float;
 	/**
 	 * Internal tracker for how loud the sound is.
 	 */
-	private var _volume:Float;
+	var _volume:Float;
 	/**
 	 * Internal tracker for total volume adjustment.
 	 */
-	private var _volumeAdjust:Float = 1.0;
+	var _volumeAdjust:Float = 1.0;
 	/**
 	 * Internal tracker for whether the sound is looping or not.
 	 */
-	private var _looped:Bool;
+	var _looped:Bool;
 	/**
 	 * Internal tracker for the sound's "target" (for proximity and panning).
 	 */
-	private var _target:FlxObject;
+	var _target:FlxObject;
 	/**
 	 * Internal tracker for the maximum effective radius of this sound (for proximity and panning).
 	 */
-	private var _radius:Float;
+	var _radius:Float;
 	/**
 	 * Internal tracker for whether to pan the sound left and right.  Default is false.
 	 */
-	private var _proximityPan:Bool;
+	var _proximityPan:Bool;
 	/**
 	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
 	 */
-	private var _alreadyPaused:Bool = false;
+	var _alreadyPaused:Bool = false;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -138,7 +138,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * An internal function for clearing all the variables used by sounds.
 	 */
-	private function reset():Void
+	function reset():Void
 	{
 		destroy();
 		
@@ -431,7 +431,7 @@ class FlxSound extends FlxBasic
 	 */
 	public var playing(get_playing, null):Bool;
 	
-	private function get_playing():Bool
+	function get_playing():Bool
 	{
 		return (_channel != null);
 	}
@@ -441,14 +441,14 @@ class FlxSound extends FlxBasic
 	 */
 	public var volume(get_volume, set_volume):Float;
 	
-	private function get_volume():Float
+	function get_volume():Float
 	{
 		return _volume;
 	}
 	/**
 	 * @private
 	 */
-	private function set_volume(Volume:Float):Float
+	function set_volume(Volume:Float):Float
 	{
 		_volume = Volume;
 		if (_volume < 0)
@@ -475,7 +475,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Call after adjusting the volume to update the sound channel's settings.
 	 */
-	private function updateTransform():Void
+	function updateTransform():Void
 	{
 		_transform.volume = (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * _volume * _volumeAdjust;
 		if (_channel != null)
@@ -487,7 +487,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * An internal helper function used to attempt to start playing the sound and populate the <code>_channel</code> variable.
 	 */
-	private function startSound(Position:Float):Void
+	function startSound(Position:Float):Void
 	{
 		var numLoops:Int = (_looped && (Position == 0)) ? 9999 : 0;
 		_position = Position;
@@ -509,7 +509,7 @@ class FlxSound extends FlxBasic
 	 * An internal helper function used to help Flash clean up finished sounds or restart looped sounds.
 	 * @param	event		An <code>Event</code> object.
 	 */
-	private function stopped(event:Event = null):Void
+	function stopped(event:Event = null):Void
 	{
 		if (onComplete != null)
 		{
@@ -534,7 +534,7 @@ class FlxSound extends FlxBasic
 	 * @param  resetPosition    Whether or not to reset the position of the sound.
 	 * @param  resetFading    Whether or not to reset the current fading variables of the sound.
 	 */
-	private function cleanup(destroySound:Bool, resetPosition:Bool = true, resetFading:Bool = true):Void
+	function cleanup(destroySound:Bool, resetPosition:Bool = true, resetFading:Bool = true):Void
 	{
 		if (destroySound)
 		{
@@ -562,7 +562,7 @@ class FlxSound extends FlxBasic
 	 * Internal event handler for ID3 info (i.e. fetching the song name).
 	 * @param	event	An <code>Event</code> object.
 	 */
-	private function gotID3(event:Event = null):Void
+	function gotID3(event:Event = null):Void
 	{
 		FlxG.log.notice("Got ID3 info.");
 		name = _sound.id3.songName;
@@ -571,7 +571,7 @@ class FlxSound extends FlxBasic
 	}
 	
 	@:allow(flixel.system.frontEnds.SoundFrontEnd)
-	private function onFocus():Void
+	function onFocus():Void
 	{
 		if (!_alreadyPaused)
 		{
@@ -580,7 +580,7 @@ class FlxSound extends FlxBasic
 	}
 	
 	@:allow(flixel.system.frontEnds.SoundFrontEnd)
-	private function onFocusLost():Void
+	function onFocusLost():Void
 	{
 		_alreadyPaused = _paused;
 		pause();

@@ -13,11 +13,11 @@ class ConsoleCommands
 	/**
 	 * Reference to the console window.
 	 */
-	private var _console:Console;
+	var _console:Console;
 	/**
 	 * Helper variable for toggling the mouse coords in the watch window.
 	 */
-	private var _watchingMouse:Bool = false;
+	var _watchingMouse:Bool = false;
 	
 	public function new(console:Console):Void
 	{
@@ -57,7 +57,7 @@ class ConsoleCommands
 	 */
 	
 	#if !FLX_NO_DEBUG
-	private function help(?Alias:String):Void
+	function help(?Alias:String):Void
 	{
 		if (Alias == null) 
 		{
@@ -98,25 +98,25 @@ class ConsoleCommands
 		}
 	}
 	
-	private inline function close():Void
+	inline function close():Void
 	{
 		FlxG.debugger.visible = false;
 	}
 	
-	private inline function clearHistory():Void
+	inline function clearHistory():Void
 	{
 		_console.cmdHistory = new Array<String>();
 		FlxG.save.flush();
 		ConsoleUtil.log("clearHistory: Command history cleared");
 	}
 	
-	private inline function resetState():Void
+	inline function resetState():Void
 	{
 		FlxG.resetState();
 		ConsoleUtil.log("resetState: State has been reset");
 	}
 	
-	private function switchState(ClassName:String):Void 
+	function switchState(ClassName:String):Void 
 	{
 		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxState);
 		if (instance == null) {
@@ -127,13 +127,13 @@ class ConsoleCommands
 		ConsoleUtil.log("switchState: New '" + ClassName + "' created");  
 	}
 	
-	private inline function resetGame():Void
+	inline function resetGame():Void
 	{
 		FlxG.resetGame();
 		ConsoleUtil.log("resetGame: Game has been reset");
 	}
 	
-	private function create(ClassName:String, MousePos:String = "true", ?Params:Array<String>):Void
+	function create(ClassName:String, MousePos:String = "true", ?Params:Array<String>):Void
 	{	
 		if (Params == null) {
 			Params = [];
@@ -166,7 +166,7 @@ class ConsoleCommands
 		ConsoleUtil.log("create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
 	}
 	
-	private function set(ObjectAndVariable:String, NewVariableValue:Dynamic, ?WatchName:String):Void
+	function set(ObjectAndVariable:String, NewVariableValue:Dynamic, ?WatchName:String):Void
 	{
 		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariable(ObjectAndVariable, _console.registeredObjects);
 		
@@ -222,7 +222,7 @@ class ConsoleCommands
 		}
 	}
 	
-	private function call(FunctionAlias:String, ?Params:Array<String>):Void
+	function call(FunctionAlias:String, ?Params:Array<String>):Void
 	{	
 		if (Params == null) {
 			Params = [];
@@ -290,17 +290,17 @@ class ConsoleCommands
 		}
 	}
 	
-	private inline function listObjects():Void
+	inline function listObjects():Void
 	{
 		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
 	}
 	
-	private inline function listFunctions():Void
+	inline function listFunctions():Void
 	{
 		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
 	}
 	
-	private function watchMouse():Void
+	function watchMouse():Void
 	{
 		if (!_watchingMouse) 
 		{
@@ -316,7 +316,7 @@ class ConsoleCommands
 		_watchingMouse = !_watchingMouse;
 	}
 	
-	private function pause():Void
+	function pause():Void
 	{
 		if (FlxG.vcr.paused) 
 		{

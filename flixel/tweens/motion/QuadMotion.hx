@@ -79,7 +79,7 @@ class QuadMotion extends Motion
 	 * The distance of the entire curve.
 	 */
 	public var distance(get_distance, null):Float;
-	private function get_distance():Float
+	function get_distance():Float
 	{
 		if (_distance >= 0) return _distance;
 		var a:FlxPoint = QuadMotion.point;
@@ -100,11 +100,11 @@ class QuadMotion extends Motion
 	}
 	
 	// Curve information.
-	private var _distance:Float;
-	private var _fromX:Float;
-	private var _fromY:Float;
-	private var _toX:Float;
-	private var _toY:Float;
-	private var _controlX:Float;
-	private var _controlY:Float;
+	var _distance:Float;
+	var _fromX:Float;
+	var _fromY:Float;
+	var _toX:Float;
+	var _toY:Float;
+	var _controlX:Float;
+	var _controlY:Float;
 }

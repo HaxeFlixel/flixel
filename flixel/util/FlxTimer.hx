@@ -11,7 +11,7 @@ import flixel.plugin.TimerManager;
  */
 class FlxTimer
 {
-	private static var pool:FlxPool<FlxTimer> = new FlxPool<FlxTimer>();
+	static var pool:FlxPool<FlxTimer> = new FlxPool<FlxTimer>();
 	
 	/**
 	 * How much time the timer was set for.
@@ -44,21 +44,21 @@ class FlxTimer
 	 * Internal tracker for the time's-up callback function.
 	 * Callback should be formed "onTimer(Timer:FlxTimer);"
 	 */
-	private var _callback:FlxTimer->Void = null;
+	var _callback:FlxTimer->Void = null;
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
-	private var _timeCounter:Float = 0;
+	var _timeCounter:Float = 0;
 	/**
 	 * Internal tracker for the loops counting up.
 	 */
-	private var _loopsCounter:Int = 0;
+	var _loopsCounter:Int = 0;
 	
 	/**
 	 * Internal constructor.
 	 * This is private, use recycle() or start() to get timers instead.
 	 */
-	private function new() { }
+	function new() { }
 	
 	/**
 	 * Clean up memory.
@@ -179,7 +179,7 @@ class FlxTimer
 	 */
 	public var timeLeft(get, never):Float;
 	
-	private inline function get_timeLeft():Float
+	inline function get_timeLeft():Float
 	{
 		return time - _timeCounter;
 	}
@@ -189,7 +189,7 @@ class FlxTimer
 	 */
 	public var elapsedTime(get, never):Float;
 	
-	private inline function get_elapsedTime():Float
+	inline function get_elapsedTime():Float
 	{
 		return _timeCounter;
 	}
@@ -199,7 +199,7 @@ class FlxTimer
 	 */
 	public var loopsLeft(get, never):Int;
 	
-	private inline function get_loopsLeft():Int
+	inline function get_loopsLeft():Int
 	{
 		return loops - _loopsCounter;
 	}
@@ -209,7 +209,7 @@ class FlxTimer
 	 */
 	public var elapsedLoops(get, never):Int;
 	
-	private inline function get_elapsedLoops():Int
+	inline function get_elapsedLoops():Int
 	{
 		return _loopsCounter;
 	}
@@ -219,7 +219,7 @@ class FlxTimer
 	 */
 	public var progress(get_progress, never):Float;
 	
-	private inline function get_progress():Float
+	inline function get_progress():Float
 	{
 		if (time > 0)
 		{

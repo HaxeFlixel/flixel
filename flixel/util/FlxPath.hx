@@ -17,7 +17,7 @@ import flixel.util.FlxPoint;
  */
 class FlxPath
 {
-	private static var pool:FlxPool<FlxPath> = new FlxPool<FlxPath>();
+	static var pool:FlxPool<FlxPath> = new FlxPool<FlxPath>();
 	
 	/**
 	 * Returns a recycled path.
@@ -110,19 +110,19 @@ class FlxPath
 	/**
 	 * Internal helper, tracks which node of the path this object is moving toward.
 	 */
-	private var _nodeIndex:Int = 0;
+	var _nodeIndex:Int = 0;
 	/**
 	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
 	 */
-	private var _mode:Int;
+	var _mode:Int;
 	/**
 	 * Internal helper for node navigation, specifically yo-yo and backwards movement.
 	 */
-	private var _inc:Int = 1;
+	var _inc:Int = 1;
 	/**
 	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
 	 */
-	private var _autoRotate:Bool = false;
+	var _autoRotate:Bool = false;
 	
 	/**
 	 * Pauses or checks the pause state of the timer.
@@ -155,12 +155,12 @@ class FlxPath
 	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
-	private static var _point:FlxPoint = new FlxPoint();
+	static var _point:FlxPoint = new FlxPoint();
 	
 	/**
 	 * Instantiate a new path object.
 	 */
-	private function new() {  }
+	function new() {  }
 	
 	/**
 	 * 
@@ -354,7 +354,7 @@ class FlxPath
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
 	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
 	 */
-	private function advancePath(Snap:Bool = true):FlxPoint
+	function advancePath(Snap:Bool = true):FlxPoint
 	{
 		if (Snap)
 		{

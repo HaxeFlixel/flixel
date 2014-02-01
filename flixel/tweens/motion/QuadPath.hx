@@ -165,7 +165,7 @@ class QuadPath extends Motion
 	
 	/** @private Updates the path, preparing the curve. */
 	// [from, control, to, control, to, control, to, control, to ...]
-	private function updatePath():Void
+	function updatePath():Void
 	{
 		if ((_points.length - 1) % 2 != 0 || _points.length < 3)	
 		{
@@ -205,10 +205,10 @@ class QuadPath extends Motion
 	 * Amount of points on the path.
 	 */
 	public var pointCount(get_pointCount, null):Float;
-	private function get_pointCount():Float { return _points.length; }
+	function get_pointCount():Float { return _points.length; }
 	
 	/** @private Calculates the lenght of the curve. */
-	private function curveLength(start:FlxPoint, control:FlxPoint, finish:FlxPoint):Float
+	function curveLength(start:FlxPoint, control:FlxPoint, finish:FlxPoint):Float
 	{
 		var a:FlxPoint = QuadPath._Point,
 			b:FlxPoint = QuadPath._Point2;
@@ -228,22 +228,22 @@ class QuadPath extends Motion
 	}
 	
 	// Path information.
-	private var _points:Array<FlxPoint>;
-	private var _distance:Float;
-	private var _speed:Float;
-	private var _index:Int;
-	private var _numSegs:Int;
+	var _points:Array<FlxPoint>;
+	var _distance:Float;
+	var _speed:Float;
+	var _index:Int;
+	var _numSegs:Int;
 	
 	// Curve information.
-	private var _updateCurve:Bool;
-	private var _curveT:Array<Float>;
-	private var _curveD:Array<Float>;
+	var _updateCurve:Bool;
+	var _curveT:Array<Float>;
+	var _curveD:Array<Float>;
 	
 	// Curve points.
-	private var _a:FlxPoint;
-	private var _b:FlxPoint;
-	private var _c:FlxPoint;
+	var _a:FlxPoint;
+	var _b:FlxPoint;
+	var _c:FlxPoint;
 	
-	private static var _Point:FlxPoint = new FlxPoint();
-	private static var _Point2:FlxPoint = new FlxPoint();
+	static var _Point:FlxPoint = new FlxPoint();
+	static var _Point2:FlxPoint = new FlxPoint();
 }

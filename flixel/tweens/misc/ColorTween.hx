@@ -39,14 +39,14 @@ class ColorTween extends FlxTween
 	public var blue(default, null):Int;
 
 	// Color information.
-	private var _startA:Float;
-	private var _startR:Float;
-	private var _startG:Float;
-	private var _startB:Float;
-	private var _rangeA:Float;
-	private var _rangeR:Float;
-	private var _rangeG:Float;
-	private var _rangeB:Float;
+	var _startA:Float;
+	var _startR:Float;
+	var _startG:Float;
+	var _startB:Float;
+	var _rangeA:Float;
+	var _rangeR:Float;
+	var _rangeG:Float;
+	var _rangeB:Float;
 	
 	/**
 	 * Constructor.

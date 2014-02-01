@@ -49,7 +49,7 @@ class TileSheetExt extends Tilesheet
 	 * http://stackoverflow.com/questions/892618/create-a-hashcode-of-two-numbers
 	 * http://stackoverflow.com/questions/299304/why-does-javas-hashcode-in-string-use-31-as-a-multiplier
 	*/
-	private function getKey(rect:Rectangle, point:Point = null):String
+	function getKey(rect:Rectangle, point:Point = null):String
 	{
 		var key:String = rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_";
 		if (point != null)
@@ -101,7 +101,7 @@ class TileSheetExt extends Tilesheet
 	#if !(flash || js)
 	public var nmeBitmap(get_nmeBitmap, null):BitmapData;
 	
-	private function get_nmeBitmap():BitmapData
+	function get_nmeBitmap():BitmapData
 	{
 		return __bitmap;
 	}

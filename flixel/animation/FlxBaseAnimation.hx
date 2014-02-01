@@ -24,7 +24,7 @@ class FlxBaseAnimation
 	 */
 	public var curIndex(default, set):Int = 0;
 	
-	private function set_curIndex(Value:Int):Int
+	function set_curIndex(Value:Int):Int
 	{
 		curIndex = Value;
 		

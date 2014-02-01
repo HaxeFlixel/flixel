@@ -88,7 +88,7 @@ class SfxFader extends FlxTween
 		finishCallback(this);
 	}
 	
-	private function finishCallback(tween:FlxTween):Void
+	function finishCallback(tween:FlxTween):Void
 	{
 		if (_crossSfx != null)
 		{
@@ -109,14 +109,14 @@ class SfxFader extends FlxTween
 	 * The current Sfx this object is effecting.
 	 */
 	public var sfx(get_sfx, null):FlxSound;
-	private function get_sfx():FlxSound { return _sfx; }
+	function get_sfx():FlxSound { return _sfx; }
 
 	// Fader information.
-	private var _sfx:FlxSound;
-	private var _start:Float;
-	private var _range:Float;
-	private var _crossSfx:FlxSound;
-	private var _crossRange:Float;
-	private var _complete:CompleteCallback;
+	var _sfx:FlxSound;
+	var _start:Float;
+	var _range:Float;
+	var _crossSfx:FlxSound;
+	var _crossRange:Float;
+	var _complete:CompleteCallback;
 }
 #end

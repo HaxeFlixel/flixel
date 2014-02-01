@@ -20,19 +20,19 @@ import flash.media.Sound;
 
 class FlxSplash extends FlxState
 {
-	private var _nextState:Class<FlxState>;
+	var _nextState:Class<FlxState>;
 
-	private var _sprite:Sprite;
-	private var _gfx:Graphics;
-	private var _text:TextField;
+	var _sprite:Sprite;
+	var _gfx:Graphics;
+	var _text:TextField;
 	
-	private var _times:Array<Float>;
-	private var _colors:Array<Int>;
-	private var _functions:Array<Void->Void>;
-	private var _curPart:Int = 0;
-	private var _cachedBgColor:Int;
-	private var _cachedTimestep:Bool;
-	private var _cachedAutoPause:Bool;
+	var _times:Array<Float>;
+	var _colors:Array<Int>;
+	var _functions:Array<Void->Void>;
+	var _curPart:Int = 0;
+	var _cachedBgColor:Int;
+	var _cachedTimestep:Bool;
+	var _cachedAutoPause:Bool;
 	
 	public function new(NextState:Class<FlxState>)
 	{
@@ -115,7 +115,7 @@ class FlxSplash extends FlxState
 		#end
 	}
 	
-	private function timerCallback(Timer:FlxTimer):Void
+	function timerCallback(Timer:FlxTimer):Void
 	{
 		_functions[_curPart]();
 		_text.textColor = _colors[_curPart];
@@ -130,7 +130,7 @@ class FlxSplash extends FlxState
 		}
 	}
 	
-	private function drawGreen():Void
+	function drawGreen():Void
 	{
 		_gfx.beginFill(0x00b922);
 		_gfx.moveTo(0, -37);
@@ -145,7 +145,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	private function drawYellow():Void
+	function drawYellow():Void
 	{
 		_gfx.beginFill(0xffc132);
 		_gfx.moveTo(-50, -50);
@@ -157,7 +157,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	private function drawRed():Void
+	function drawRed():Void
 	{
 		_gfx.beginFill(0xf5274e);
 		_gfx.moveTo(50, -50);
@@ -169,7 +169,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	private function drawBlue():Void
+	function drawBlue():Void
 	{
 		_gfx.beginFill(0x3641ff);
 		_gfx.moveTo(-50, 50);
@@ -181,7 +181,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	private function drawLightBlue():Void
+	function drawLightBlue():Void
 	{
 		_gfx.beginFill(0x04cdfb);
 		_gfx.moveTo(50, 50);
@@ -193,7 +193,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 	
-	private function onComplete(Tween:FlxTween):Void
+	function onComplete(Tween:FlxTween):Void
 	{
 		FlxG.cameras.bgColor = _cachedBgColor;
 		FlxG.fixedTimestep = _cachedTimestep;

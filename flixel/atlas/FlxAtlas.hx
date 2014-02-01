@@ -35,7 +35,7 @@ class FlxAtlas
 	public var borderX(default, null):Int;
 	public var borderY(default, null):Int;
 	
-	private var _tempStorage:Array<TempAtlasObj>;
+	var _tempStorage:Array<TempAtlasObj>;
 	
 	/**
 	 * Atlas constructor
@@ -166,7 +166,7 @@ class FlxAtlas
 	 */
 	public var width(get_width, null):Int;
 	
-	private function get_width():Int
+	function get_width():Int
 	{
 		return root.width;
 	}
@@ -176,7 +176,7 @@ class FlxAtlas
 	 */
 	public var height(get_height, null):Int;
 	
-	private function get_height():Int
+	function get_height():Int
 	{
 		return root.height;
 	}
@@ -300,7 +300,7 @@ class FlxAtlas
 		return result;
 	}
 	
-	private function indexOf(bitmaps:Array<BitmapData>, bmd:BitmapData):Int
+	function indexOf(bitmaps:Array<BitmapData>, bmd:BitmapData):Int
 	{
 		for (i in 0...(bitmaps.length))
 		{
@@ -313,7 +313,7 @@ class FlxAtlas
 		return -1;
 	}
 	
-	private function bitmapSorter(bmd1:BitmapData, bmd2:BitmapData):Int
+	function bitmapSorter(bmd1:BitmapData, bmd2:BitmapData):Int
 	{
 		if (bmd2.width == bmd1.width)
 		{
@@ -412,7 +412,7 @@ class FlxAtlas
 		nodes = new Map<String, FlxNode>();
 	}
 	
-	private function deleteSubtree(node:FlxNode):Void
+	function deleteSubtree(node:FlxNode):Void
 	{
 		if (node != null)
 		{
@@ -423,7 +423,7 @@ class FlxAtlas
 	}
 	
 	// Internal iteration method
-	private function findNodeToInsert(insertWidth:Int, insertHeight:Int):FlxNode
+	function findNodeToInsert(insertWidth:Int, insertHeight:Int):FlxNode
 	{
 		// Node stack
 		var stack:Array<FlxNode> = new Array<FlxNode>();

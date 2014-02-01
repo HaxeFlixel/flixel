@@ -14,7 +14,7 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public var x(default, set):Float = 0;
 	
-	private function set_x(Value:Float):Float
+	function set_x(Value:Float):Float
 	{
 		return x = Value;
 	}
@@ -24,7 +24,7 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public var y(default, set):Float = 0;
 	
-	private function set_y(Value:Float):Float
+	function set_y(Value:Float):Float
 	{
 		return y = Value;
 	}

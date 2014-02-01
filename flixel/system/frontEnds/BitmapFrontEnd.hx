@@ -14,7 +14,7 @@ import openfl.Assets;
  */
 class BitmapFrontEnd
 {
-	private var _cache:Map<String, CachedGraphics>;
+	var _cache:Map<String, CachedGraphics>;
 	
 	public function new()
 	{
@@ -24,9 +24,9 @@ class BitmapFrontEnd
 	#if !flash
 	public var whitePixel(get, null):CachedGraphics;
 	
-	private var _whitePixel:CachedGraphics;
+	var _whitePixel:CachedGraphics;
 	
-	private function get_whitePixel():CachedGraphics
+	function get_whitePixel():CachedGraphics
 	{
 		if (_whitePixel == null)
 		{

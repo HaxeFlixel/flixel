@@ -252,7 +252,7 @@ class FlxG
 	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
 	
-	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
+	static var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
@@ -418,7 +418,7 @@ class FlxG
 	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
 	 */
 	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
-	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
 		//FlxAssets.cacheSounds();
@@ -464,7 +464,7 @@ class FlxG
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
 	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
-	private static function reset():Void
+	static function reset():Void
 	{
 		PxBitmapFont.clearStorage();
 		FlxRandom.resetGlobalSeed();
@@ -480,19 +480,19 @@ class FlxG
 		worldDivisions = 6;
 	}
 	
-	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
+	static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
 		_scaleMode = ScaleMode;
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		return ScaleMode;
 	}
 	
-	inline private static function get_updateFramerate():Int
+	inline static function get_updateFramerate():Int
 	{
 		return Std.int(1000 / game.stepMS);
 	}
 	
-	private static function set_updateFramerate(Framerate:Int):Int
+	static function set_updateFramerate(Framerate:Int):Int
 	{
 		if (Framerate < drawFramerate)
 		{
@@ -510,7 +510,7 @@ class FlxG
 		return Framerate;
 	}
 	
-	private static function get_drawFramerate():Int
+	static function get_drawFramerate():Int
 	{
 		if (game.stage != null)
 		{
@@ -520,7 +520,7 @@ class FlxG
 		return 0;
 	}
 	
-	private static function set_drawFramerate(Framerate:Int):Int
+	static function set_drawFramerate(Framerate:Int):Int
 	{
 		if (Framerate > updateFramerate)
 		{
@@ -544,7 +544,7 @@ class FlxG
 		return Framerate;
 	}
 	
-	private static function set_fullscreen(Value:Bool):Bool
+	static function set_fullscreen(Value:Bool):Bool
 	{
 		if (Value)
 		{
@@ -562,12 +562,12 @@ class FlxG
 		return fullscreen = Value;
 	}
 	
-	inline private static function get_stage():Stage
+	inline static function get_stage():Stage
 	{
 		return game.stage;
 	}
 	
-	inline private static function get_state():FlxState
+	inline static function get_state():FlxState
 	{
 		return game.state;
 	}
