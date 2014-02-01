@@ -13,15 +13,6 @@ import flixel.util.FlxArrayUtil;
 class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 {
 	/**
-	 * Use with <code>sort()</code> to sort in ascending order.
-	 */
-	public static inline var ASCENDING:Int = -1;
-	/**
-	 * Use with <code>sort()</code> to sort in descending order.
-	 */
-	public static inline var DESCENDING:Int = 1;
-	
-	/**
 	 * Array of all the members in this group.
 	 */
 	public var members(get, never):Array<T>;
@@ -379,7 +370,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
 	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.  
 	 */
-	public function sort(Index:String = "y", Order:Int = ASCENDING):Void
+	public function sort(Index:String = "y", Order:SortOrder = ASCENDING):Void
 	{
 		_sortIndex = Index;
 		_sortOrder = Order;
@@ -843,4 +834,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		return _members;
 	}
+}
+
+enum SortOrder {
+	ASCENDING;
+	DESCENDING;
 }
