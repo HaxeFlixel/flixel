@@ -31,11 +31,10 @@ v.3.1.0
 * FlxSlider: New setVariable flag, improvements to inner update logic
 * FlxSprite: 
   * pixelsOverlapPoint() has been removed
-  * loadfromSprite() -> loadFromSprite()
   * setGraphicDimensions() -> setGraphicSize(), removed the UpdateHitbox flag
   * added getGraphicsMidpoint()
   * bakedRotation -> bakedRotationAngle
-  * loadFromSprite() -> loadGraphicFromSprite()
+  * loadfromSprite() -> loadGraphicFromSprite()
   * loadImageFromTexture() -> loadGraphicFromTexture()
   * loadRotatedImageFromTexture() -> loadRotatedGraphicFromTexture()
   * setColorTransformation() -> setColorTransform()
