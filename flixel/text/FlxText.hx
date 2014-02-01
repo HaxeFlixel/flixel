@@ -9,6 +9,7 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.util.FlxColor;
@@ -831,7 +832,7 @@ class FlxText extends FlxSprite
 	}
 }
 
-class FlxTextFormat
+class FlxTextFormat implements IFlxDestroyable
 {
 	/**
 	 * The border color if <code>FlxText</code> has a shadow or a border
