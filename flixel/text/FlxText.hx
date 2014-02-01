@@ -199,8 +199,16 @@ class FlxText extends FlxSprite
 		super.destroy();
 	}
 	
-	public function addFormat(Format:FlxTextFormat):Void
+	/**
+	 * Adds another format to this <code>FlxText</code>
+	 * @param	Format		The format to be added.
+	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * @param	End			(Default=-1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 */
+	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):Void
 	{
+		Format.start = Start > -1 ? Start : Format.start;
+		Format.end = End > -1 ? End : Format.end;
 		_formats.push(Format);
 		// sort the array using the start value of the format so we can skip formats that can't be applied to the textField
 		_formats.sort(function(left:FlxTextFormat, right:FlxTextFormat) { return left.start < right.start ? -1 : 1; } );
@@ -833,11 +841,11 @@ class FlxTextFormat
 	/**
 	 * The start index of the string where the format will be applied
 	 */
-	public var start:Int;
+	public var start:Int = -1;
 	/**
 	 * The end index of the string where the format will be applied
 	 */
-	public var end:Int;
+	public var end:Int = -1;
 	
 	/**
 	 * Internal <code>TextFormat</code>
@@ -850,16 +858,23 @@ class FlxTextFormat
 	 * @param	Bold			(Optional) Set the font to bold. The font must support bold. By default, inherits from the default format. 
 	 * @param	Italics			(Optional) Set the font to italics. The font must support italics. By default, inherits from the default format.  
 	 * @param	BorderColor		(Optional) Set the border color. By default, no border. The color is <code>TRANSPARENT</code>.
-	 * @param	Start			The start index of the string where the format will be applied.
-	 * @param	End				The end index of the string where the format will be applied.
+	 * @param	Start			(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
+	 * @param	End				(Default=-1) The end index of the string where the format will be applied.
 	 */
-	public function new(?FontColor:Int, ?Bold:Bool, ?Italics:Bool, ?BorderColor:Int, Start:Int, End:Int)
+	public function new(?FontColor:Int, ?Bold:Bool, ?Italics:Bool, ?BorderColor:Int, ?Start:Int = -1, ?End:Int = -1)
 	{
 		format = new TextFormat(null, null, FontColor, Bold, Italics);
 		
+		if (Start > -1)
+		{
+			start = Start;
+		}
+		if (End > -1)
+		{
+			end = End;
+		}
+		
 		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
-		start = Start;
-		end = End;
 	}
 	
 	public function destroy():Void
