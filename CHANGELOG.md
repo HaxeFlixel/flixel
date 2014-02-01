@@ -119,7 +119,7 @@ v.3.1.0
 * BUG: Added a workaround for onFocus() firing immediately on startup for cpp targets
 * Code style change for keyword order, public/private first, see the [styleguide](http://haxeflixel.com/documentation/code-style/) for more info
 * Added getByID() to FlxG.touches
-* Added FlxG.swipes (contains all the FlxSwipe objects that are active this frame) to allow for better handling of touch inputs. It has the following properties:
+* Added FlxG.swipes (contains all the FlxSwipe objects that are active this frame) to allow for better handling of touch inputs. A FlxSwipe has the following properties:
  * startPosition
  * endPosition
  * distance
