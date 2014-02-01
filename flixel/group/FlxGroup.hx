@@ -10,9 +10,16 @@ import flixel.FlxBasic;
 class FlxGroup extends FlxTypedGroup<FlxBasic>
 {
 	/**
-	 * Create a new <code>FlxGroup</code>
-	 * 
-	 * @param	MaxSize		Maximum amount of members allowed
+	 * Use with <code>sort()</code> to sort in ascending order.
+	 */
+	public static inline var ASCENDING:Int = -1;
+	/**
+	 * Use with <code>sort()</code> to sort in descending order.
+	 */
+	public static inline var DESCENDING:Int = 1;
+	
+	/**
+	 * @param	MaxSize		Maximum amount of allowed members
 	 */
 	public function new(MaxSize:Int = 0)
 	{

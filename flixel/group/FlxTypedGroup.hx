@@ -11,16 +11,7 @@ import flixel.util.FlxArrayUtil;
  * add itself to the global collisions quad tree, it will only add its members.
  */
 class FlxTypedGroup<T:FlxBasic> extends FlxBasic
-{
-	/**
-	 * Use with <code>sort()</code> to sort in ascending order.
-	 */
-	public static inline var ASCENDING:Int = -1;
-	/**
-	 * Use with <code>sort()</code> to sort in descending order.
-	 */
-	public static inline var DESCENDING:Int = 1;
-	
+{	
 	/**
 	 * Array of all the members in this group.
 	 */
@@ -38,13 +29,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
 	 */
 	private var _marker:Int = 0;
-	/**
-	 * Helper for sort.
-	 */
+	
 	private var _sortIndex:String = null;
-	/**
-	 * Helper for sort.
-	 */
 	private var _sortOrder:Int;
 	
 	/**
@@ -372,14 +358,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Call this function to sort the group according to a particular value and order.
 	 * For example, to sort game objects for Zelda-style overlaps you might call
-	 * <code>myGroup.sort("y", ASCENDING)</code> at the bottom of your
+	 * <code>myGroup.sort("y", FlxGroup.ASCENDING)</code> at the bottom of your
 	 * <code>FlxState.update()</code> override.  To sort all existing objects after
-	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists", DESCENDING)</code>.
+	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists", FlxGroup.DESCENDING)</code>.
 	 * 
 	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
-	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.  
+	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>FlxGroup.ASCENDING</code> and <code>FlxGroup.DESCENDING</code>.  Default value is <code>FlxGroup.ASCENDING</code>.  
 	 */
-	public function sort(Index:String = "y", Order:Int = ASCENDING):Void
+	public function sort(Index:String = "y", Order:Int = FlxGroup.ASCENDING):Void
 	{
 		_sortIndex = Index;
 		_sortOrder = Order;
