@@ -1,5 +1,6 @@
 package flixel.system.debug;
 
+#if !FLX_NO_DEBUG
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 import flixel.FlxG;
@@ -290,3 +291,4 @@ class Watch extends Window
 		}
 	}
 }
+#end

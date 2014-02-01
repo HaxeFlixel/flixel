@@ -1,5 +1,6 @@
 package flixel.system.debug;
 
+#if !FLX_NO_DEBUG
 import flash.errors.ArgumentError;
 import flash.events.Event;
 import flash.events.FocusEvent;
@@ -374,6 +375,7 @@ class Console extends Window
 		_input.height = _height - 15;
 	}
 }
+#end
 
 typedef Command = {
 	aliases:Array<String>,

@@ -16,6 +16,7 @@ import flixel.util.FlxMath;
  * @author Adam "Atomic" Saltsman
  * @author Anton Karlov
  */
+#if !FLX_NO_DEBUG
 class Stats extends Window
 {
 	/**
@@ -401,3 +402,4 @@ class Stats extends Window
 		_paused = true;
 	}
 }
+#end
