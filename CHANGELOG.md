@@ -111,7 +111,7 @@ v.3.1.0
 * Added collisionXDrag flag to FlxObject to allow turning off the default "move-with-horizontally-moving-platform"-behaviour
 * FlxSoundUtil has been removed
 * General improvements to the in-code documentation
-* Added <window allow-shaders="false" /> to the include.xml to boost performance (especially on mobile)
+* Added `<window allow-shaders="false" />` to the include.xml to boost performance (especially on mobile)
 * Added an option for looping to FlxG.sound.playMusic()
 * BUG: Fix the last command of the console not working
 * BUG: Fix setting a Boolean on cpp not working
