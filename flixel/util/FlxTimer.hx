@@ -5,7 +5,7 @@ import flixel.plugin.TimerManager;
 
 /**
  * A simple timer class, leveraging the new plugins system.
- * Can be used with callbacks or by polling the <code>finished</code> flag.
+ * Can be used with callbacks or by polling the finished flag.
  * Not intended to be added to a game state or group; the timer manager
  * is responsible for actually calling update(), not the user.
  */
@@ -150,8 +150,8 @@ class FlxTimer
 	/**
 	 * Called by the timer manager plugin to update the timer.
 	 * If time runs out, the loop counter is advanced, the timer reset, and the callback called if it exists.
-	 * If the timer runs out of loops, then the timer calls <code>stop()</code>.
-	 * However, callbacks are called AFTER <code>stop()</code> is called.
+	 * If the timer runs out of loops, then the timer calls stop().
+	 * However, callbacks are called AFTER stop() is called.
 	 */
 	public function update():Void
 	{
@@ -237,7 +237,7 @@ class FlxTimer
 	}
 	
 	/**
-	 * Read-only: The <code>TimerManager</code> instance.
+	 * Read-only: The TimerManager instance.
 	 */
 	public static var manager:TimerManager;
 }

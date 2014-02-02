@@ -13,8 +13,8 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxSort;
 
 /**
- * <code>FlxSpriteGroup</code> is a special <code>FlxGroup</code> that can be treated like 
- * a single sprite even if it's<code>FlxSprite</code> made up of several member sprites.
+ * FlxSpriteGroup is a special FlxGroup that can be treated like 
+ * a single sprite even if it'sFlxSprite made up of several member sprites.
  */
 class FlxSpriteGroup extends FlxSprite
 {
@@ -30,7 +30,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * The number of entries in the members array. For performance and safety you should check this 
-	 * variable instead of <code>members.length</code> unless you really know what you're doing!
+	 * variable instead of members.length unless you really know what you're doing!
 	 */
 	public var length(get, null):Int;
 	
@@ -52,7 +52,7 @@ class FlxSpriteGroup extends FlxSprite
 	#end
 	
 	/**
-	 * Create a new <code>FlxSpriteGroup</code>
+	 * Create a new FlxSpriteGroup
 	 * 
 	 * @param	X			The initial X position of the group.
 	 * @param	Y			The initial Y position of the group
@@ -83,7 +83,7 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>reset()</code> it later to revive it.
+	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and reset() it later to revive it.
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
 	override public function destroy():Void
@@ -154,7 +154,7 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * Checks to see if a point in 2D world space overlaps any <code>FlxSprite</code> object from this group.
+	 * Checks to see if a point in 2D world space overlaps any FlxSprite object from this group.
 	 * 
 	 * @param	Point			The point in world space you want to check.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
@@ -176,7 +176,7 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * Checks to see if a point in 2D world space overlaps any of <code>FlxSprite</code> object's current displayed pixels.
+	 * Checks to see if a point in 2D world space overlaps any of FlxSprite object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
 	 * 
 	 * @param	Point		The point in world space you want to check.
@@ -266,7 +266,7 @@ class FlxSpriteGroup extends FlxSprite
 	#end
 	
 	/**
-	 * Adds a new <code>FlxSprite</code> subclass to the group.
+	 * Adds a new FlxSprite subclass to the group.
 	 * 
 	 * @param	Object		The sprite or sprite group you want to add to the group.
 	 * @return	The same object that was passed in.
@@ -297,7 +297,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Removes specified sprite from the group.
 	 * 
-	 * @param	Object	The <code>FlxSprite</code> you want to remove.
+	 * @param	Object	The FlxSprite you want to remove.
 	 * @param	Splice	Whether the object should be cut from the array entirely or not.
 	 * @return	The removed object.
 	 */
@@ -307,7 +307,7 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * Replaces an existing <code>FlxSprite</code> with a new one.
+	 * Replaces an existing FlxSprite with a new one.
 	 * 
 	 * @param	OldObject	The object you want to replace.
 	 * @param	NewObject	The new object you want to use instead.
@@ -320,10 +320,10 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Call this function to sort the group according to a particular value and order. For example, to sort game objects for Zelda-style 
-	 * overlaps you might call <code>myGroup.sort(FlxSort.byY, FlxSort.ASCENDING)</code> at the bottom of your <code>FlxState.update()</code> override.
+	 * overlaps you might call myGroup.sort(FlxSort.byY, FlxSort.ASCENDING) at the bottom of your FlxState.update() override.
 	 * 
 	 * @param	Function	The sorting function to use - you can use one of the premade ones in FlxSort or write your own using FlxSort.byValues() as a backend
-	 * @param	Order		A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>FlxSort.ASCENDING</code> (default) and <code>FlxSort.DESCENDING</code>. 
+	 * @param	Order		A FlxGroup constant that defines the sort order.  Possible values are FlxSort.ASCENDING (default) and FlxSort.DESCENDING. 
 	 */
 	public inline function sort(Function:Int->FlxSprite->FlxSprite->Int, Order:Int = FlxSort.ASCENDING):Void
 	{
@@ -335,7 +335,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
 	 * @param	Value			The value you want to assign to that variable.
-	 * @param	Recurse			Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
+	 * @param	Recurse			Default value is true, meaning if setAll() encounters a member that is a group, it will call setAll() on that group rather than modifying its variable.
 	 */
 	public inline function setAll(VariableName:String, Value:Dynamic, Recurse:Bool = true):Void
 	{
@@ -347,7 +347,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * Currently only works on functions that have no required parameters.
 	 * 
 	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
-	 * @param	Recurse			Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
+	 * @param	Recurse			Default value is true, meaning if callAll() encounters a member that is a group, it will call callAll() on that group rather than calling the group's function.
 	 */ 
 	public inline function callAll(FunctionName:String, Args:Array<Dynamic> = null, Recurse:Bool = true):Void
 	{
@@ -360,7 +360,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @param	ObjectClass		An optional parameter that lets you narrow the results to instances of this particular class.
 	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
-	 * @return	A <code>FlxSprite</code> currently flagged as not existing.
+	 * @return	A FlxSprite currently flagged as not existing.
 	 */
 	public inline function getFirstAvailable(ObjectClass:Class<FlxSprite> = null, Force:Bool = false):FlxSprite
 	{
@@ -371,7 +371,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * Call this function to retrieve the first index set to 'null'.
 	 * Returns -1 if no index stores a null object.
 	 * 
-	 * @return	An <code>Int</code> indicating the first null slot in the group.
+	 * @return	An Int indicating the first null slot in the group.
 	 */
 	public inline function getFirstNull():Int
 	{
@@ -382,7 +382,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * Call this function to retrieve the first object with exists == true in the group.
 	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
 	 * 
-	 * @return	A <code>FlxSprite</code> currently flagged as existing.
+	 * @return	A FlxSprite currently flagged as existing.
 	 */
 	public inline function getFirstExisting():FlxSprite
 	{
@@ -393,7 +393,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * Call this function to retrieve the first object with dead == false in the group.
 	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
 	 * 
-	 * @return	A <code>FlxSprite</code> currently flagged as not dead.
+	 * @return	A FlxSprite currently flagged as not dead.
 	 */
 	public inline function getFirstAlive():FlxSprite
 	{
@@ -404,7 +404,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * Call this function to retrieve the first object with dead == true in the group.
 	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
 	 * 
-	 * @return	A <code>FlxSprite</code> currently flagged as dead.
+	 * @return	A FlxSprite currently flagged as dead.
 	 */
 	public inline function getFirstDead():FlxSprite
 	{
@@ -414,7 +414,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Call this function to find out how many members of the group are not dead.
 	 * 
-	 * @return	The number of <code>FlxSprite</code>s flagged as not dead.  Returns -1 if group is empty.
+	 * @return	The number of FlxSprites flagged as not dead.  Returns -1 if group is empty.
 	 */
 	public inline function countLiving():Int
 	{
@@ -424,7 +424,7 @@ class FlxSpriteGroup extends FlxSprite
 	/**
 	 * Call this function to find out how many members of the group are dead.
 	 * 
-	 * @return	The number of <code>FlxSprite</code>s flagged as dead.  Returns -1 if group is empty.
+	 * @return	The number of FlxSprites flagged as dead.  Returns -1 if group is empty.
 	 */
 	public inline function countDead():Int
 	{
@@ -436,7 +436,7 @@ class FlxSpriteGroup extends FlxSprite
 	 * 
 	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
 	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
-	 * @return	A <code>FlxSprite</code> from the members list.
+	 * @return	A FlxSprite from the members list.
 	 */
 	public inline function getRandom(StartIndex:Int = 0, Length:Int = 0):FlxSprite
 	{
@@ -484,7 +484,7 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * Remove all instances of <code>FlxSprite</code> from the list.
+	 * Remove all instances of FlxSprite from the list.
 	 * WARNING: does not destroy() or kill() any of these objects!
 	 */
 	public inline function clear():Void
@@ -494,7 +494,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Calls kill on the group's members and then on the group itself. 
-	 * You can revive this group later via <code>revive()</code> after this.
+	 * You can revive this group later via revive() after this.
 	 */
 	override public function kill():Void
 	{
@@ -557,7 +557,7 @@ class FlxSpriteGroup extends FlxSprite
 	
 	/**
 	 * Handy function that allows you to quickly transform one property of sprites in this group at a time.
-	 * @param 	Function 	Function to transform the sprites. Example: <code>function(s:IFlxSprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }</code>
+	 * @param 	Function 	Function to transform the sprites. Example: function(s:IFlxSprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }
 	 * @param 	Value  		Value which will passed to lambda function
 	 */
 	@:generic public function transformChildren<T>(Function:FlxSprite->T->Void, Value:T):Void

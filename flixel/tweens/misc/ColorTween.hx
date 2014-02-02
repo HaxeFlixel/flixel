@@ -10,14 +10,7 @@ import flixel.tweens.FlxEase;
  */
 class ColorTween extends FlxTween
 {
-	/**
-	 * The current color.
-	 */
 	public var color:Int;
-
-	/**
-	 * The current alpha.
-	 */
 	public var alpha:Float = 1;
 	
 	/**
@@ -49,8 +42,6 @@ class ColorTween extends FlxTween
 	private var _rangeB:Float;
 	
 	/**
-	 * Constructor.
-	 * 
 	 * @param	Complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
@@ -94,22 +85,19 @@ class ColorTween extends FlxTween
 		_startA = alpha = FromAlpha;
 		_rangeA = ToAlpha - alpha;
 		duration = Duration;
-		_ease = Ease;
+		ease = Ease;
 		sprite = Sprite;
 		start();
 		return this;
 	}
-
-	/** 
-	 * Updates the Tween. 
-	 */
+	
 	override public function update():Void
 	{
 		super.update();
-		alpha = _startA + _rangeA * _t;
-		red = Std.int((_startR + _rangeR * _t) * 255);
-		green = Std.int((_startG + _rangeG * _t) * 255);
-		blue = Std.int((_startB + _rangeB * _t) * 255);
+		alpha = _startA + _rangeA * scale;
+		red = Std.int((_startR + _rangeR * scale) * 255);
+		green = Std.int((_startG + _rangeG * scale) * 255);
+		blue = Std.int((_startB + _rangeB * scale) * 255);
 		color = red << 16 | green << 8 | blue;
 		
 		if (sprite != null)

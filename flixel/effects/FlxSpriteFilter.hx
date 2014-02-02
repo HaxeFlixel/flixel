@@ -53,7 +53,7 @@ class FlxSpriteFilter
 	public var pixels:BitmapData;
 	
 	/**
-	 * Create a new filter for a <code>FlxSprite</code>.
+	 * Create a new filter for a FlxSprite.
 	 * 
 	 * @param   Sprite           The FlxSprite to add the filter to.
 	 * @param   WidthIncrease    How much to increase the graphic's width (useful for things like BlurFilter that need space outside the actual graphic).

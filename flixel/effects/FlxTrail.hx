@@ -88,7 +88,7 @@ class FlxTrail extends FlxTypedGroup<FlxSprite>
 	private var _spriteOrigin:FlxPoint;
 	
 	/**
-	 * Creates a new <code>FlxTrail</code> effect for a specific FlxSprite.
+	 * Creates a new FlxTrail effect for a specific FlxSprite.
 	 * 
 	 * @param	Sprite		The FlxSprite the trail is attached to.
 	 * @param  	Image   	The image to ues for the trailsprites. Optional, uses the sprite's graphic if null.

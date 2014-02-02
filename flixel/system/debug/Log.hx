@@ -62,7 +62,7 @@ class Log extends Window
 	/**
 	 * Adds a new line to the log window.
 	 * @param 	Data		The data being logged.
-	 * @param 	Style		The <code>LogStyle</code> to be used for the log
+	 * @param 	Style		The LogStyle to be used for the log
 	 * @param 	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
 	 */
 	public function add(Data:Array<Dynamic>, Style:LogStyle, FireOnce:Bool = false):Bool

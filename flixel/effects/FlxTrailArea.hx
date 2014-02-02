@@ -99,12 +99,12 @@ class FlxTrailArea extends FlxSprite
 	private var _height:Float = 1;
 	
 	 /**
-	  * Creates a new <code>FlxTrailArea</code>, in which all added sprites get a trail effect.
+	  * Creates a new FlxTrailArea, in which all added sprites get a trail effect.
 	  * 
 	  * @param	X				x position of the trail area
 	  * @param	Y				y position of the trail area
-	  * @param	Width			The width of the area - defaults to <code>FlxG.width</code>
-	  * @param	Height			The height of the area - defaults to <code>FlxG.height</code>
+	  * @param	Width			The width of the area - defaults to FlxG.width
+	  * @param	Height			The height of the area - defaults to FlxG.height
 	  * @param	AlphaMultiplier By what the area's alpha is multiplied per update
 	  * @param	Delay			How often to update the trail. 1 updates every frame
 	  * @param	SimpleRender 	If simple rendering should be used. Ignores all sprite transformations
@@ -130,7 +130,7 @@ class FlxTrailArea extends FlxSprite
 	}
 	
 	/**
-	 * Sets the <code>FlxTrailArea</code> to a new size. Clears the area!
+	 * Sets the FlxTrailArea to a new size. Clears the area!
 	 * 
 	 * @param	Width		The new width
 	 * @param	Height		The new height
@@ -178,21 +178,30 @@ class FlxTrailArea extends FlxSprite
 				{
 					if (simpleRender) 
 					{
-						framePixels.copyPixels(member.framePixels, new Rectangle(0, 0, member.frameWidth, member.frameHeight), 
+						framePixels.copyPixels(member.getFlxFrameBitmapData(), 
+												new Rectangle(0, 0, member.frameWidth, member.frameHeight), 
 												new Point(member.x - x, member.y - y), null, null, true);
 					}
 					else 
 					{
-						var matrix = new Matrix();
-						matrix.scale(member.scale.x, member.scale.y);
-						matrix.translate( -(member.frameWidth / 2), -(member.frameHeight / 2)); 
-						if ((member.angle != 0) && (member.bakedRotationAngle <= 0))
+						var scaled = (member.scale.x != 1) || (member.scale.y != 1);
+						var rotated = (member.angle != 0) && (member.bakedRotationAngle <= 0);
+						_matrix.identity();
+						if (rotated || scaled) 
 						{
-							matrix.rotate(member.angle * FlxAngle.TO_RAD);
+							_matrix.translate( -(member.origin.x), -(member.origin.y));
+							if (scaled)
+							{
+								_matrix.scale(member.scale.x, member.scale.y);
+							}
+							if (rotated)
+							{
+								_matrix.rotate(member.angle * FlxAngle.TO_RAD);
+							}
+							_matrix.translate((member.origin.x), (member.origin.y));
 						}
-						matrix.translate((member.frameWidth / 2), (member.frameHeight / 2)); 
-						matrix.translate(member.x - x, member.y - y);
-						framePixels.draw(member.framePixels, matrix, member.colorTransform, blendMode, null, antialiasing);
+						_matrix.translate(member.x - x, member.y - y);
+						framePixels.draw(member.getFlxFrameBitmapData(), _matrix, member.colorTransform, blendMode, null, antialiasing);
 					}
 					
 				}
@@ -214,7 +223,7 @@ class FlxTrailArea extends FlxSprite
 	}
 	
 	/**
-	 * Adds a <code>FlxSprite</code> to the <code>FlxTrailArea</code>. Not an <code>add()</code> in the traditional sense,
+	 * Adds a FlxSprite to the FlxTrailArea. Not an add() in the traditional sense,
 	 * this just enables the trail effect for the sprite. You still need to add it to your state for it to update!
 	 * 
 	 * @param	Sprite		The sprite to enable the trail effect for

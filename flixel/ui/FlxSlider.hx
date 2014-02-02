@@ -71,7 +71,7 @@ class FlxSlider extends FlxSpriteGroup
 	public var hoverAlpha:Float = 0.5;
 	/**
 	 * A function to be called when the slider was used. 
-	 * The current <code>relativePos</code> is passed as an argument.
+	 * The current relativePos is passed as an argument.
 	 */
 	public var callback:Float->Void = null;
 	/**
@@ -125,7 +125,7 @@ class FlxSlider extends FlxSpriteGroup
 	private var _justHovered:Bool = false;
 	
 	/**
-	 * Creates a new <code>FlxSlider</code>.
+	 * Creates a new FlxSlider.
 	 *
 	 * @param	Object 			Reference to the parent object of the variable
 	 * @param	VarString 		Variable that the slider controls

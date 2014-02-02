@@ -53,13 +53,13 @@ class FlxAndroidKeys implements IFlxInput
 	
 	/**
 	 * Check to see if a key, or one key from a list of mutliple keys is pressed. Pass them in as Strings.
-	 * Example: <code>.pressed("BACK", "MENU")</code>
+	 * Example: .pressed("BACK", "MENU")
 	 */
 	public var pressed:Dynamic;
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed. Pass them in as Strings.
-	 * Example: <code>.anyPressed(["BACK", "MENU"])</code>
+	 * Example: .anyPressed(["BACK", "MENU"])
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
@@ -70,13 +70,13 @@ class FlxAndroidKeys implements IFlxInput
 	
 	/**
 	 * Check to see if a key, or one key from a list of mutliple keys was just pressed. Pass them in as Strings.
-	 * Example: <code>.justPressed("BACK", "MENU")</code>
+	 * Example: .justPressed("BACK", "MENU")
 	 */
 	public var justPressed:Dynamic;
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just pressed. Pass them in as Strings.
-	 * Example: <code>.anyJustPressed(["BACK", "MENU"])</code>
+	 * Example: .anyJustPressed(["BACK", "MENU"])
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
@@ -87,13 +87,13 @@ class FlxAndroidKeys implements IFlxInput
 	
 	/**
 	 * Check to see if a key, or one key from a list of mutliple keys was just released. Pass them in as Strings.
-	 * Example: <code>.justReleased("BACK", "MENU")</code>
+	 * Example: .justReleased("BACK", "MENU")
 	 */
 	public var justReleased:Dynamic;
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just released. Pass them in as Strings.
-	 * Example: <code>.anyJustReleased(["BACK", "MENU"])</code>
+	 * Example: .anyJustReleased(["BACK", "MENU"])
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
@@ -106,7 +106,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * Look up the key code for any given string name of the key or button.
 	 *
-	 * @param	KeyName		The <code>String</code> name of the key.
+	 * @param	KeyName		The String name of the key.
 	 * @return	The key code for that key.
 	 */
 	public inline function getKeyCode(KeyName:String):Int
@@ -218,7 +218,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 *
-	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
+	 * @param	FlashEvent	A KeyboardEvent object.
 	 */
 	private function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{

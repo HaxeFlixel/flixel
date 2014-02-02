@@ -1,19 +1,19 @@
 package flixel.effects.particles;
 
 /**
- * <code>FlxEmitter</code> is a lightweight particle emitter.
+ * FlxEmitter is a lightweight particle emitter.
  * It can be used for one-time explosions or for
- * continuous fx like rain and fire.  <code>FlxEmitter</code>
+ * continuous fx like rain and fire.  FlxEmitter
  * is not optimized or anything; all it does is launch
- * <code>FlxParticle</code> objects out at set intervals
+ * FlxParticle objects out at set intervals
  * by setting their positions and velocities accordingly.
  * It is easy to use and relatively efficient,
- * relying on <code>FlxGroup</code>'s RECYCLE POWERS.
+ * relying on FlxGroup's RECYCLE POWERS.
  */
 class FlxEmitter extends FlxTypedEmitter<FlxParticle>
 {
 	/**
-	 * Creates a new <code>FlxEmitter</code> object at a specific position.
+	 * Creates a new FlxEmitter object at a specific position.
 	 * Does NOT automatically generate or attach particles!
 	 * 
 	 * @param	X		The X position of the emitter.

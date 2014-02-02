@@ -8,7 +8,7 @@ import haxe.PosInfos;
 class LogFrontEnd
 {
 	/**
-	 * Whether everything you <code>trace()</code> is being redirected into the log window.
+	 * Whether everything you trace() is being redirected into the log window.
 	 * True by default, except on android.
 	 */
 	public var redirectTraces(default, set):Bool = false;
@@ -44,10 +44,10 @@ class LogFrontEnd
 	}
 	
 	/**
-	 * Add an advanced log message to the debugger by also specifying a <code>LogStyle</code>. Backend to <code>FlxG.log.add(), FlxG.log.warn(), FlxG.log.error() and FlxG.log.notice()</code>.
+	 * Add an advanced log message to the debugger by also specifying a LogStyle. Backend to FlxG.log.add(), FlxG.log.warn(), FlxG.log.error() and FlxG.log.notice().
 	 * 
 	 * @param	Data  		Any Data to log.
-	 * @param  	Style   	The <code>LogStyle</code> to use, for example <code>LogStyle.WARNING</code>. You can also create your own by importing the <code>LogStyle</code> class.
+	 * @param  	Style   	The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
 	 * @param  	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
 	 */ 
 	public function advanced(Data:Dynamic, ?Style:LogStyle, FireOnce:Bool = false):Void
@@ -114,10 +114,10 @@ class LogFrontEnd
 	}
 	
 	/**
-	 * Internal function used as a interface between <code>trace()</code> and <code>add()</code>.
+	 * Internal function used as a interface between trace() and add().
 	 * 
 	 * @param	Data	The data that has been traced
-	 * @param	Inf		Information about the position at which <code>trace()</code> was called
+	 * @param	Inf		Information about the position at which trace() was called
 	 */
 	private function processTraceData(Data:Dynamic, ?Info:PosInfos):Void
 	{

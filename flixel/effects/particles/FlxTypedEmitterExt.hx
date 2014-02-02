@@ -5,7 +5,7 @@ import flixel.util.FlxRandom;
 import flixel.interfaces.IFlxParticle;
 
 /**
- * Extended <code>FlxEmitter</code> that emits particles in a circle (instead of a square).
+ * Extended FlxEmitter that emits particles in a circle (instead of a square).
  * It also provides a new function setMotion to control particle behavior even more.
  * This was inspired by the way Chevy Ray Johnston implemented his particle emitter in Flashpunk.
  * @author Dirk Bunk
@@ -30,7 +30,7 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 	public var distanceRange:Float;
 	
 	/**
-	 * Creates a new <code>FlxTypedEmitterExt</code> object at a specific position.
+	 * Creates a new FlxTypedEmitterExt object at a specific position.
 	 * Does NOT automatically generate or attach particles!
 	 * 
 	 * @param	X		The X position of the emitter.

@@ -47,15 +47,15 @@ class FlxAnalog extends FlxSpriteGroup
 	 */ 
 	public var onPressed:Void->Void;
 	/**
-	 * Used with public variable <code>status</code>, means not highlighted or pressed.
+	 * Used with public variable status, means not highlighted or pressed.
 	 */ 
 	private static inline var NORMAL:Int = 0;
 	/**
-	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	 * Used with public variable status, means highlighted (usually from mouse over).
 	 */ 
 	private static inline var HIGHLIGHT:Int = 1;
 	/**
-	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	 * Used with public variable status, means pressed (usually from mouse click).
 	 */ 
 	private static inline var PRESSED:Int = 2;
 	

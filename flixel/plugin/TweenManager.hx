@@ -4,12 +4,12 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxArrayUtil;
 
 /**
- * A manager for <code>FlxTween</code>s.
+ * A manager for FlxTweens.
  */
 class TweenManager extends FlxPlugin
 {
 	/**
-	 * A list of all <code>FlxTween</code> objects.
+	 * A list of all FlxTween objects.
 	 */
 	public var list(default, null):Array<FlxTween>;
 	
@@ -51,10 +51,10 @@ class TweenManager extends FlxPlugin
 	}
 	
 	/**
-	 * Add a <code>FlxTween</code>.
-	 * @param	Tween	The <code>FlxTween</code> to add.
+	 * Add a FlxTween.
+	 * @param	Tween	The FlxTween to add.
 	 * @param	Start	Whether you want it to start right away.
-	 * @return	The added <code>FlxTween</code> object.
+	 * @return	The added FlxTween object.
 	 */
 	public function add(Tween:FlxTween, Start:Bool = false):FlxTween
 	{
@@ -80,10 +80,10 @@ class TweenManager extends FlxPlugin
 	}
 
 	/**
-	 * Remove a <code>FlxTween</code>.
-	 * @param	Tween		The <code>FlxTween</code> to remove.
-	 * @param	Destroy		Whether you want to destroy the <code>FlxTween</code>.
-	 * @return	The added <code>FlxTween</code> object.
+	 * Remove a FlxTween.
+	 * @param	Tween		The FlxTween to remove.
+	 * @param	Destroy		Whether you want to destroy the FlxTween.
+	 * @return	The added FlxTween object.
 	 */
 	public function remove(Tween:FlxTween, Destroy:Bool = false):FlxTween
 	{
@@ -105,8 +105,8 @@ class TweenManager extends FlxPlugin
 	}
 
 	/**
-	 * Removes all <code>FlxTween</code>s.
-	 * @param	Destroy		Whether you want to destroy the <code>FlxTween</code>s.
+	 * Removes all FlxTweens.
+	 * @param	Destroy		Whether you want to destroy the FlxTweens.
 	 */
 	public function clear(Destroy:Bool = false):Void
 	{

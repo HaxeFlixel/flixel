@@ -9,20 +9,20 @@ import flixel.util.FlxPoint;
 class FlxButton extends FlxTypedButton<FlxText>
 {
 	/**
-	 * Used with public variable <code>status</code>, means not highlighted or pressed.
+	 * Used with public variable status, means not highlighted or pressed.
 	 */
 	public static inline var NORMAL:Int = 0;
 	/**
-	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	 * Used with public variable status, means highlighted (usually from mouse over).
 	 */
 	public static inline var HIGHLIGHT:Int = 1;
 	/**
-	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	 * Used with public variable status, means pressed (usually from mouse click).
 	 */
 	public static inline var PRESSED:Int = 2;
 	
 	/**
-	 * Creates a new <code>FlxButton</code> object with a gray background
+	 * Creates a new FlxButton object with a gray background
 	 * and a callback function on the UI thread.
 	 * 
 	 * @param	X				The X position of the button.
