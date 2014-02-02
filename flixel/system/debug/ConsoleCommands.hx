@@ -1,5 +1,6 @@
 package flixel.system.debug;
 
+#if !FLX_NO_DEBUG
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
@@ -330,3 +331,4 @@ class ConsoleCommands
 	}
 	#end
 }
+#end

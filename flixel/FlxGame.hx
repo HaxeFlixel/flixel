@@ -122,7 +122,7 @@ class FlxGame extends Sprite
 	
 	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 	/**
-	 * The sound tray display container (see <code>createSoundTray()</code>).
+	 * The sound tray display container (see createSoundTray()).
 	 */
 	public var soundTray(default, null):FlxSoundTray;
 	#end
@@ -161,7 +161,7 @@ class FlxGame extends Sprite
 	
 	#if !FLX_NO_FOCUS_LOST_SCREEN 
 	/**
-	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
+	 * The "focus lost" screen (see createFocusScreen()).
 	 */
 	private var _focusLostScreen:FlxFocusLostScreen;
 	#end

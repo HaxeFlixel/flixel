@@ -99,8 +99,8 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	}
 	
 	/**
-	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> or <code>FlxGroup</code>.
-	 * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
+	 * Checks to see if some FlxObject overlaps this FlxObject or FlxGroup.
+	 * If the group has a LOT of things in it, it might be faster to use FlxG.overlaps().
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 * 
 	 * @param 	ObjectOrGroup The object or group being tested.

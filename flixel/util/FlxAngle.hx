@@ -13,11 +13,11 @@ import flixel.input.touch.FlxTouch;
 class FlxAngle
 {
 	/**
-	 * Use this to access the cos-table generated via <code>sinCosGenerator()</code>.
+	 * Use this to access the cos-table generated via sinCosGenerator().
 	 */
 	public static var cosTable:Array<Float> = new Array<Float>();
 	/**
-	 * Use this to access the sin-table generated via <code>sinCosGenerator()</code>.
+	 * Use this to access the sin-table generated via sinCosGenerator().
 	 */
 	public static var sinTable:Array<Float> = new Array<Float>();
 	/**
@@ -36,8 +36,8 @@ class FlxAngle
 	 * @param	PivotX	The X coordinate of the point you want to rotate around.
 	 * @param	PivotY	The Y coordinate of the point you want to rotate around.
 	 * @param	Angle	Rotate the point by this many degrees.
-	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
-	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
+	 * @param	Point	Optional FlxPoint to store the results in.
+	 * @return	A FlxPoint containing the coordinates of the rotated point.
 	 */
 	public static inline function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint):FlxPoint
 	{
@@ -167,7 +167,7 @@ class FlxAngle
 	 * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
 	 * 
 	 * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
-	 * you should get the results via <code>sinTable</code> and <code>cosTable</code>. This generator is fast enough to be used in real-time.
+	 * you should get the results via sinTable and cosTable. This generator is fast enough to be used in real-time.
 	 * 
 	 * @param length 		The length of the wave
 	 * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value

@@ -22,8 +22,10 @@ import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
+@:bitmap("assets/images/logo/default.png")	private class GraphicDefault extends BitmapData {}
+
 /**
- * The main "game object" class, the sprite is a <code>FlxObject</code>
+ * The main "game object" class, the sprite is a FlxObject
  * with a bunch of graphics options and abilities, like animation and stamping.
  */
 class FlxSprite extends FlxObject
@@ -33,18 +35,17 @@ class FlxSprite extends FlxObject
 	 */
 	public var animation:FlxAnimationController;
 	/**
-	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
-	 */
-	public var frameGraphic:BitmapData;
-	/**
-	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
-	 * Automatically adjust graphic size and render helpers.
+	 * Setting this automatically adjusts graphic size and render helpers.
 	 */
 	public var graphic(get, set):BitmapData;
 	/**
 	 * Link to current FlxFrame from loaded atlas
 	 */
 	public var frame(default, set):FlxFrame;
+	/**
+	 * The actual Flash BitmapData object representing the current display state of the sprite.
+	 */
+	public var frameGraphic:BitmapData;
 	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
@@ -63,16 +64,16 @@ class FlxSprite extends FlxObject
 	 */
 	public var bakedRotationAngle(default, null):Float;
 	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
+	 * Set alpha to a number between 0 and 1 to change the opacity of the sprite.
 	 */
 	public var alpha(default, set):Float = 1.0;
 	/**
-	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>, <code>UP</code>, 
-	 * and <code>DOWN</code> to take advantage of flipped sprites and/or just track player orientation more easily.
+	 * Set facing using FlxObject.LEFT,RIGHT, UP, 
+	 * and DOWN to take advantage of flipped sprites and/or just track player orientation more easily.
 	 */
 	public var facing(default, set):Int;
 	/**
-	 * If the Sprite is flipped. Shouldn't be changed unless you know what are you doing.
+	 * If the Sprite is flipped.
 	 */
 	public var flipped(default, null):Int;
 	/**
@@ -82,12 +83,12 @@ class FlxSprite extends FlxObject
 	public var origin(default, null):FlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
-	 * changing a sprite's <code>width</code>, <code>height</code> or <code>scale</code>.
+	 * changing a sprite's width, height or scale.
 	 */
 	public var offset(default, null):FlxPoint;
 	/**
-	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use <code>updateHitbox</code> for that
-	 * (or <code>setGraphicSize()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
+	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use updateHitbox for that
+	 * (or setGraphicSize(). WARNING: scaling sprites decreases rendering performance by a factor of about x10!
 	 */
 	public var scale(default, null):FlxPoint;
 	/**
@@ -109,7 +110,7 @@ class FlxSprite extends FlxObject
 	#end
 	/**
 	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
-	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use <code>alpha</code>. 
+	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use alpha. 
 	 */
 	public var color(default, set):Int = 0xffffff;
 	
@@ -161,7 +162,7 @@ class FlxSprite extends FlxObject
 	private var _angleChanged:Bool = false;
 	
 	/**
-	 * Creates a <code>FlxSprite</code> at a specified position with a specified one-frame graphic. 
+	 * Creates a FlxSprite at a specified position with a specified one-frame graphic. 
 	 * If none is provided, a 16x16 image of the HaxeFlixel logo is used.
 	 * 
 	 * @param	X				The initial X position of the sprite.
@@ -197,7 +198,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>reset()</code> it later to revive it.
+	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and reset() it later to revive it.
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
 	override public function destroy():Void
@@ -625,7 +626,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Sets the sprite's origin to its center - useful after adjusting 
-	 * <code>scale</code> to make sure rotations work as expected.
+	 * scale to make sure rotations work as expected.
 	 */
 	public inline function setOriginToCenter():Void
 	{
@@ -634,13 +635,12 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Helper function to set the graphic's dimensions by using scale, allowing you to keep the current aspect ratio
-	 * should one of the Integers be <= 0. Also updates the sprite's hitbox, offset and origin for you by default!
+	 * should one of the Integers be <= 0. It might make sense to call updateHitbox() afterwards!
 	 * 
-	 * @param	Width			How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
-	 * @param	Height			How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
-	 * @param	UpdateHitbox	Whether or not to update the hitbox dimensions, offset and origin accordingly.
+	 * @param   Width    How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
+	 * @param   Height   How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
 	 */
-	public function setGraphicSize(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
+	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
 		if (Width <= 0 && Height <= 0) {
 			return;
@@ -655,11 +655,6 @@ class FlxSprite extends FlxObject
 		}
 		else if (Height <= 0) {
 			scale.y = newScaleX;
-		}
-		
-		if (UpdateHitbox) 
-		{
-			updateHitbox();
 		}	
 	}
 	
@@ -897,8 +892,8 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * This function draws or stamps one <code>FlxSprite</code> onto another.
-	 * This function is NOT intended to replace <code>draw()</code>!
+	 * This function draws or stamps one FlxSprite onto another.
+	 * This function is NOT intended to replace draw()!
 	 * @param	Brush		The image you want to use as a brush or stamp or pen or whatever.
 	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
 	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
@@ -1088,7 +1083,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object's current displayed pixels.
+	 * Checks to see if a point in 2D world space overlaps this FlxSprite object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
@@ -1128,7 +1123,10 @@ class FlxSprite extends FlxObject
 	 */
 	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
-		if (cachedGraphics == null)	loadGraphic(FlxAssets.IMG_DEFAULT);
+		if (cachedGraphics == null)	
+		{
+			loadGraphic(GraphicDefault);
+		}
 		
 		#if !(flash || js)
 		if (!RunOnCpp)
@@ -1207,8 +1205,8 @@ class FlxSprite extends FlxObject
 	/**
 	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
 	 * 
-	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined. Otherwise a new one is created.
-	 * @return	A <code>FlxPoint</code> object containing the midpoint of this sprite's graphic in world coordinates.
+	 * @param	point	Allows you to pass in an existing FlxPoint object if you're so inclined. Otherwise a new one is created.
+	 * @return	A FlxPoint object containing the midpoint of this sprite's graphic in world coordinates.
 	 */
 	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
 	{
@@ -1229,7 +1227,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Check and see if this object is currently on screen. Differs from <code>FlxObject</code>'s implementation
+	 * Check and see if this object is currently on screen. Differs from FlxObject's implementation
 	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
 	 * 
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -1325,14 +1323,14 @@ class FlxSprite extends FlxObject
 		return cachedGraphics.bitmap;
 	}
 	
-	private function set_graphic(Pixels:BitmapData):BitmapData
+	private function set_graphic(Value:BitmapData):BitmapData
 	{
-		var key:String = FlxG.bitmap.getCacheKeyFor(Pixels);
+		var key:String = FlxG.bitmap.getCacheKeyFor(Value);
 		
 		if (key == null)
 		{
 			key = FlxG.bitmap.getUniqueKey();
-			FlxG.bitmap.add(Pixels, false, key);
+			FlxG.bitmap.add(Value, false, key);
 		}
 		
 		cachedGraphics = FlxG.bitmap.get(key);
@@ -1358,7 +1356,7 @@ class FlxSprite extends FlxObject
 		// not sure if i should add this line...
 		resetFrameBitmapDatas();
 		
-		return Pixels;
+		return Value;
 	}
 	
 	private function set_frame(Value:FlxFrame):FlxFrame

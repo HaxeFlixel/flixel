@@ -13,6 +13,7 @@ import flash.text.TextFormatAlign;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
+import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 
 /**
@@ -130,7 +131,7 @@ class FlxSoundTray extends Sprite
 	{
 		if (!Silent)
 		{
-			FlxG.sound.play(FlxAssets.SND_BEEP);
+			FlxG.sound.load(BeepSound).play();
 		}
 		
 		_timer = 1;

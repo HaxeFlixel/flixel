@@ -201,7 +201,7 @@ class FlxCollision
 	}
 	
 	/**
-	 * A Pixel Perfect Collision check between a given x/y coordinate and an FlxSprite<br>
+	 * A Pixel Perfect Collision check between a given x/y coordinate and an FlxSprite
 	 * 
 	 * @param	PointX			The x coordinate of the point given in local space (relative to the FlxSprite, not game world coordinates)
 	 * @param	PointY			The y coordinate of the point given in local space (relative to the FlxSprite, not game world coordinates)

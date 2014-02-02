@@ -19,6 +19,8 @@ import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxPoint;
 
+@:bitmap("assets/images/ui/cursor.png")	private class GraphicCursor extends BitmapData {}
+
 /**
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
@@ -139,7 +141,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	
 	/**
 	 * Load a new mouse cursor graphic - if you're using native cursors on flash, 
-	 * check <code>registerNativeCursor()</code> for more control.
+	 * check registerNativeCursor() for more control.
 	 * 
 	 * @param   Graphic   The image you want to use for the cursor.
 	 * @param   Scale     Change the size of the cursor.
@@ -157,7 +159,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		if (Graphic == null)
 		{
-			Graphic = FlxAssets.IMG_CURSOR;
+			Graphic = new GraphicCursor(0, 0);
 		}
 		
 		if (Std.is(Graphic, Class))
@@ -174,7 +176,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		else
 		{
-			_cursor = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_CURSOR));
+			_cursor = new Bitmap(new GraphicCursor(0, 0));
 		}
 		
 		_cursor.x = XOffset;
@@ -236,7 +238,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	#if (flash && !FLX_NO_NATIVE_CURSOR)
 	/**
 	 * Set a Native cursor that has been registered by Name
-	 * Warning, you need to use <code>registerNativeCursor()</code> before you use it here
+	 * Warning, you need to use registerNativeCursor() before you use it here
 	 * 
 	 * @param   Name   The name ID used when registered
 	 */
@@ -265,7 +267,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	}
 
 	/**
-	 * Shortcut to create and set a simple <code>MouseCursorData</code>
+	 * Shortcut to create and set a simple MouseCursorData
 	 * 
 	 * @param   Name         The ID name used for the cursor
 	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
@@ -294,10 +296,10 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	#end
 	
 	/**
-	 * Fetch the world position of the mouse on any given camera. NOTE: <code>FlxG.mouse.x</code> and 
-	 * </code>FlxG.mouse.y</code> store the world position of the mouse cursor on the main camera.
+	 * Fetch the world position of the mouse on any given camera. NOTE: FlxG.mouse.x and 
+	 * FlxG.mouse.y store the world position of the mouse cursor on the main camera.
 	 * 
-	 * @param   Camera  If unspecified, <code>FlxG.camera</code> is used instead.
+	 * @param   Camera  If unspecified, FlxG.camera is used instead.
 	 * @param   point   An existing point object to store the results (if you don't want a new one created).
 	 * @return  The mouse's location in world space.
 	 */
@@ -317,10 +319,10 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	}
 
 	/**
-	 * Fetch the screen position of the mouse on any given camera. NOTE: <code>FlxG.mouse.screenX</code> 
-	 * and <code>Mouse.screenY</code> also store the screen position of the mouse cursor on the main camera.
+	 * Fetch the screen position of the mouse on any given camera. NOTE: FlxG.mouse.screenX 
+	 * and Mouse.screenY also store the screen position of the mouse cursor on the main camera.
 	 * 
-	 * @param   Camera  If unspecified, <code>FlxG.camera</code> is used instead.
+	 * @param   Camera  If unspecified, FlxG.camera is used instead.
 	 * @param   point   An existing point object to store the results (if you don't want a new one created).
 	 * @return  The mouse's location in screen space.
 	 */

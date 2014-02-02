@@ -6,13 +6,17 @@ import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+
+#if (!FLX_NO_SOUND_SYSTEM && FLX_NO_DEBUG)
+import flash.media.Sound;
+@:sound("assets/sounds/flixel.wav") class FlixelSound extends Sound {}
+#end
 
 class FlxSplash extends FlxState
 {
@@ -106,8 +110,8 @@ class FlxSplash extends FlxState
 		
 		onResize(stageWidth, stageHeight);
 		
-		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.play(FlxAssets.SND_FLIXEL);
+		#if (!FLX_NO_SOUND_SYSTEM && FLX_NO_DEBUG)
+		FlxG.sound.load(FlixelSound).play();
 		#end
 	}
 	

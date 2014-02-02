@@ -44,9 +44,6 @@ class FlxTilemapBuffer
 	
 	public var forceComplexRender:Bool = false;
 	
-	/**
-	 * Read-only, nab the actual buffer <code>BitmapData</code> object.
-	 */
 	public var graphic(default, null):BitmapData;
 	
 	#if flash
@@ -83,7 +80,6 @@ class FlxTilemapBuffer
 	public function destroy():Void
 	{
 		#if flash
-		graphic = null;
 		_matrix = null;
 		#end
 	}

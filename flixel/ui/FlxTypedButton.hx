@@ -1,12 +1,14 @@
 package flixel.ui;
 
+import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.system.FlxAssets;
-import flixel.system.FlxSound;
 import flixel.input.touch.FlxTouch;
+import flixel.interfaces.IFlxDestroyable;
+import flixel.system.FlxSound;
 import flixel.util.FlxPoint;
+
+@:bitmap("assets/images/ui/button.png")	private class GraphicButton	extends BitmapData {}
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -22,12 +24,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	public var labelOffsets:Array<FlxPoint>;
 	/**
-	 * What alpha value the label should have for each status. Default is <code>[0.8, 1.0, 0.5]</code>.
+	 * What alpha value the label should have for each status. Default is [0.8, 1.0, 0.5].
 	 */
 	public var labelAlphas:Array<Float>;
 	/**
-	 * Shows the current state of the button, either <code>FlxButton.NORMAL</code>, 
-	 * <code>FlxButton.HIGHLIGHT</code> or <code>FlxButton.PRESSED</code>.
+	 * Shows the current state of the button, either FlxButton.NORMAL, 
+	 * FlxButton.HIGHLIGHT or FlxButton.PRESSED.
 	 */
 	public var status(default, set):Int;
 	/**
@@ -57,7 +59,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	private var _pressedMouse:Bool = false;
 	
 	/**
-	 * Creates a new <code>FlxTypedButton</code> object with a gray background.
+	 * Creates a new FlxTypedButton object with a gray background.
 	 * 
 	 * @param	X				The X position of the button.
 	 * @param	Y				The Y position of the button.
@@ -69,7 +71,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic(FlxAssets.IMG_BUTTON, true, false, 80, 20);
+		loadGraphic(GraphicButton, true, false, 80, 20);
 		
 		onUp = new FlxButtonEvent(OnClick);
 		onDown = new FlxButtonEvent();
@@ -176,7 +178,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	
 	/**
 	 * Basic button update logic - searches for overlaps with touches and
-	 * the mouse cursor and calls <code>updateStatus()</code>
+	 * the mouse cursor and calls updateStatus()
 	 */
 	private function updateButton():Void
 	{
@@ -323,7 +325,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 }
 
 /** 
- * Helper function for <code>FlxButton</code> which handles its events.
+ * Helper function for FlxButton which handles its events.
  */ 
 private class FlxButtonEvent implements IFlxDestroyable
 {
@@ -340,7 +342,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	#end
 	
 	/**
-	 * Creates a new <code>FlxButtonEvent</code>
+	 * Creates a new FlxButtonEvent
 	 * 
 	 * @param	Callback		The callback function to call when this even fires.
 	 * @param	sound			The sound to play when this event fires.

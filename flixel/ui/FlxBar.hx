@@ -273,8 +273,8 @@ class FlxBar extends FlxSprite
 	}
 	
 	/**
-	 * Sets callbacks which will be triggered when the value of this FlxBar reaches min or max.<br>
-	 * Functions will only be called once and not again until the value changes.<br>
+	 * Sets callbacks which will be triggered when the value of this FlxBar reaches min or max.
+	 * Functions will only be called once and not again until the value changes.
 	 * Optionally the FlxBar can be killed if it reaches min, but if will fire the empty callback first (if set)
 	 * 
 	 * @param	onEmpty			The function that is called if the value of this FlxBar reaches min

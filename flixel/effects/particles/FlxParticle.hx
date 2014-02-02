@@ -7,11 +7,11 @@ import flixel.interfaces.IFlxParticle;
 
 /**
  * This is a simple particle class that extends the default behavior
- * of <code>FlxSprite</code> to have slightly more specialized behavior
+ * of FlxSprite to have slightly more specialized behavior
  * common to many game scenarios.  You can override and extend this class
- * just like you would <code>FlxSprite</code>. While <code>FlxEmitter</code>
+ * just like you would FlxSprite. While FlxEmitter
  * used to work with just any old sprite, it now requires a
- * <code>FlxParticle</code> based class.
+ * FlxParticle based class.
 */
 class FlxParticle extends FlxSprite implements IFlxParticle
 {
@@ -89,8 +89,8 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	public var rangeBlue:Float;
 	
 	/**
-	 * Instantiate a new particle. Like <code>FlxSprite</code>, all meaningful creation
-	 * happens during <code>loadGraphic()</code> or <code>makeGraphic()</code> or whatever.
+	 * Instantiate a new particle. Like FlxSprite, all meaningful creation
+	 * happens during loadGraphic() or makeGraphic() or whatever.
 	 */
 	public function new()
 	{
@@ -192,7 +192,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	}
 	
 	/**
-	 * Triggered whenever this object is launched by a <code>FlxEmitter</code>.
+	 * Triggered whenever this object is launched by a FlxEmitter.
 	 * You can override this to add custom behavior like a sound or AI or something.
 	 */
 	public function onEmit():Void { }	

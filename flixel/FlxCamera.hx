@@ -19,7 +19,7 @@ import flixel.util.loaders.CachedGraphics;
 /**
  * The camera class is used to display the game's visuals in the Flash player.
  * By default one camera is created automatically, that is the same size as the Flash player.
- * You can add more cameras or even replace the main camera using utilities in <code>FlxG</code>.
+ * You can add more cameras or even replace the main camera using utilities in FlxG.
  */
 class FlxCamera extends FlxBasic
 {
@@ -80,11 +80,11 @@ class FlxCamera extends FlxBasic
 	 */
 	public var style:Int;
 	/**
-	 * Tells the camera to follow this <code>FlxObject</code> object around.
+	 * Tells the camera to follow this FlxObject object around.
 	 */
 	public var target:FlxObject = null;
 	/**
-	 * Used to force the camera to look ahead of the <code>followTarget</code>.
+	 * Used to force the camera to look ahead of the followTarget.
 	 */
 	public var followLead:Point;
 	/**
@@ -93,7 +93,7 @@ class FlxCamera extends FlxBasic
 	public var followLerp:Float;
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement. The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
-	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels. For rapid prototyping, you can use the preset deadzones (e.g. <code>STYLE_PLATFORMER</code>) with <code>follow()</code>.
+	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels. For rapid prototyping, you can use the preset deadzones (e.g. STYLE_PLATFORMER) with follow().
 	 */
 	public var deadzone:FlxRect = null;
 	/**
@@ -112,7 +112,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public var buffer:BitmapData;
 	/**
-	 * Whether <code>checkResize</code> checks if the camera dimensions have changed to update the buffer dimensions.
+	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
 	 */
 	public var regen:Bool = false;
 	#end
@@ -125,7 +125,7 @@ class FlxCamera extends FlxBasic
 	
 	#if flash
 	/**
-	 * Sometimes it's easier to just work with a <code>FlxSprite</code> than it is to work directly with the <code>BitmapData</code> buffer.  
+	 * Sometimes it's easier to just work with a FlxSprite than it is to work directly with the BitmapData buffer.  
 	 * This sprite reference will allow you to do exactly that.
 	 */
 	public var screen:FlxSprite;
@@ -757,10 +757,10 @@ class FlxCamera extends FlxBasic
 	}
 	
 	/**
-	 * Tells this camera object what <code>FlxObject</code> to track.
+	 * Tells this camera object what FlxObject to track.
 	 * 
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
-	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling <code>follow()</code>.
+	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
 	 * @param	Offset		Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
 	 * @param	Lerp		How much lag the camera should have (can help smooth out the camera movement).
 	 */
@@ -916,7 +916,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Copy the bounds, focus object, and deadzone info from an existing camera.
 	 * @param	Camera	The camera you want to copy from.
-	 * @return	A reference to this <code>FlxCamera</code> object.
+	 * @return	A reference to this FlxCamera object.
 	 */
 	public function copyFrom(Camera:FlxCamera):FlxCamera
 	{

@@ -1,7 +1,7 @@
 package flixel.interfaces;
 
 /**
- * Mainly used for <code>FlxG.safeDestroy()</code>.
+ * Mainly used for FlxG.safeDestroy().
  */
 interface IFlxDestroyable
 {

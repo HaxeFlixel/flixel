@@ -12,7 +12,7 @@ import flixel.text.pxText.PxTextAlign;
 import flixel.util.FlxAngle;
 
 /**
- * Extends <code>FlxSprite</code> to support rendering text.
+ * Extends FlxSprite to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
  * Also does nice pixel-perfect centering on pixel fonts
