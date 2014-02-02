@@ -21,7 +21,7 @@ class PluginFrontEnd
 	 * Adds a new plugin to the global plugin array.
 	 * 
 	 * @param	Plugin	Any object that extends FlxPlugin. Useful for managers and other things. See flixel.plugin for some examples!
-	 * @return	The same <code>FlxPlugin</code>-based plugin you passed in.
+	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
 	@:generic public function add<T:FlxPlugin>(Plugin:T):T
 	{
@@ -42,7 +42,7 @@ class PluginFrontEnd
 	/**
 	 * Retrieves a plugin based on its class name from the global plugin array.
 	 * 
-	 * @param	ClassType	The class name of the plugin you want to retrieve. See the <code>FlxPath</code> or <code>FlxTimer</code> constructors for example usage.
+	 * @param	ClassType	The class name of the plugin you want to retrieve. See the FlxPath or FlxTimer constructors for example usage.
 	 * @return	The plugin object, or null if no matching plugin was found.
 	 */
 	public function get(ClassType:Class<FlxPlugin>):FlxPlugin
@@ -62,7 +62,7 @@ class PluginFrontEnd
 	 * Removes an instance of a plugin from the global plugin array.
 	 * 
 	 * @param	Plugin	The plugin instance you want to remove.
-	 * @return	The same <code>FlxPlugin</code>-based plugin you passed in.
+	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
 	public function remove(Plugin:FlxPlugin):FlxPlugin
 	{
@@ -108,8 +108,8 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Sets up two plugins: <code>DebugPathDisplay</code> 
-	 * in debugging mode and <code>TimerManager</code>
+	 * Sets up two plugins: DebugPathDisplay 
+	 * in debugging mode and TimerManager
 	 */
 	@:allow(flixel.FlxG)
 	private function new() 
@@ -122,7 +122,7 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Used by the game object to call <code>update()</code> on all the plugins.
+	 * Used by the game object to call update() on all the plugins.
 	 */
 	private inline function update():Void
 	{
@@ -136,7 +136,7 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Used by the game object to call <code>draw()</code> on all the plugins.
+	 * Used by the game object to call draw() on all the plugins.
 	 */
 	private inline function draw():Void
 	{
@@ -150,7 +150,7 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Used by the game object to call <code>onStateSwitch()</code> on all the plugins.
+	 * Used by the game object to call onStateSwitch() on all the plugins.
 	 */
 	private inline function onStateSwitch():Void
 	{
@@ -164,7 +164,7 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Used by the game object to call <code>onResize()</code> on all the plugins.
+	 * Used by the game object to call onResize() on all the plugins.
 	 * @param 	Width	The new window width
 	 * @param 	Height	The new window Height
 	 */

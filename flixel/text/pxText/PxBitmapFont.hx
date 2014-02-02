@@ -69,7 +69,7 @@ class PxBitmapFont
 	 * 
 	 * @param	PxBitmapData	Font source image
 	 * @param	PxLetters		All letters contained in this font
-	 * @return	This <code>PxBitmapFont</code>
+	 * @return	This PxBitmapFont
 	 */
 	public function loadPixelizer(PxBitmapData:BitmapData, PxLetters:String):PxBitmapFont
 	{
@@ -111,7 +111,7 @@ class PxBitmapFont
 	 * 
 	 * @param	PxBitmapData	Font image source
 	 * @param	PxXMLData		Font data in XML format
-	 * @return	This <code>PxBitmapFont</code>
+	 * @return	This PxBitmapFont
 	 */
 	public function loadAngelCode(pBitmapData:BitmapData, pXMLData:Xml):PxBitmapFont
 	{

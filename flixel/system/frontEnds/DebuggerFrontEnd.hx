@@ -9,7 +9,7 @@ import flixel.system.ui.FlxSystemButton;
 class DebuggerFrontEnd
 {	
 	/**
-	 * Whether to show visual debug displays or not. Doesn't exist in <code>FLX_NO_DEBUG</code> mode.
+	 * Whether to show visual debug displays or not. Doesn't exist in FLX_NO_DEBUG mode.
 	 * @default false
 	 */
 	public var drawDebug:Bool = false;
@@ -22,15 +22,15 @@ class DebuggerFrontEnd
 	
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * The key codes used to toggle the debugger (see <code>FlxG.keys</code> for the keys available).
-	 * Default keys: ` and \. Set to <code>null</code> to deactivate.
+	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
+	 * Default keys: ` and \. Set to null to deactivate.
 	 * @default ["GRAVEACCENT", "BACKSLASH"]
 	 */
 	public var toggleKeys:Array<String>;
 	#end
 	
 	/**
-	 * Used to instantiate this class and assign a value to <code>toggleKeys</code>
+	 * Used to instantiate this class and assign a value to toggleKeys
 	 */
 	public function new() 
 	{
@@ -41,7 +41,7 @@ class DebuggerFrontEnd
 	
 	/**
 	 * Change the way the debugger's windows are laid out.
-	 * @param	Layout	The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
+	 * @param	Layout	The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
 	 */
 	public inline function setLayout(Layout:DebuggerLayout):Void
 	{
@@ -51,7 +51,7 @@ class DebuggerFrontEnd
 	}
 	
 	/**
-	 * Just resets the debugger windows to whatever the last selected layout was (<code>STANDARD</code> by default).
+	 * Just resets the debugger windows to whatever the last selected layout was (STANDARD by default).
 	 */
 	public inline function resetLayout():Void
 	{

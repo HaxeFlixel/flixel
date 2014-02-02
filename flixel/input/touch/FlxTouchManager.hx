@@ -172,7 +172,7 @@ class FlxTouchManager implements IFlxInput
 	/**
 	 * Event handler so FlxGame can update touches.
 	 * 
-	 * @param	FlashEvent	A <code>TouchEvent</code> object.
+	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchBegin(FlashEvent:TouchEvent):Void
 	{
@@ -200,7 +200,7 @@ class FlxTouchManager implements IFlxInput
 	/**
 	 * Event handler so FlxGame can update touches.
 	 * 
-	 * @param	FlashEvent	A <code>TouchEvent</code> object.
+	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchEnd(FlashEvent:TouchEvent):Void
 	{
@@ -222,7 +222,7 @@ class FlxTouchManager implements IFlxInput
 	/**
 	 * Event handler so FlxGame can update touches.
 	 * 
-	 * @param	FlashEvent	A <code>TouchEvent</code> object.
+	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchMove(FlashEvent:TouchEvent):Void
 	{

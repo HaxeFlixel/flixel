@@ -5,10 +5,10 @@ import flixel.input.touch.FlxTouch;
 class FlxVelocity 
 {	
 	/**
-	 * Sets the source FlxSprite x/y velocity so it will move directly towards the destination FlxSprite at the speed given (in pixels per second)<br>
-	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
-	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
-	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+	 * Sets the source FlxSprite x/y velocity so it will move directly towards the destination FlxSprite at the speed given (in pixels per second)
+	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
+	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.
+	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.
 	 * If you need the object to accelerate, see accelerateTowardsObject() instead
 	 * Note: Doesn't take into account acceleration, maxVelocity or drag (if you set drag or acceleration too high this object may not move at all)
 	 * 
@@ -34,8 +34,8 @@ class FlxVelocity
 	}
 	
 	/**
-	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the destination FlxSprite at the speed given (in pixels per second)<br>
-	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.<br>
+	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the destination FlxSprite at the speed given (in pixels per second)
+	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.
 	 * If you don't need acceleration look at moveTowardsObject() instead.
 	 * 
 	 * @param	Source			The FlxSprite on which the acceleration will be set
@@ -61,9 +61,9 @@ class FlxVelocity
 	#if !FLX_NO_MOUSE
 	/**
 	 * Move the given FlxSprite towards the mouse pointer coordinates at a steady velocity
-	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
-	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
-	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
+	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.
+	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.
 	 * 
 	 * @param	Source		The FlxSprite to move
 	 * @param	Speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
@@ -89,9 +89,9 @@ class FlxVelocity
 	#if !FLX_NO_TOUCH
 	/**
 	 * Move the given FlxSprite towards a FlxTouch point at a steady velocity
-	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
-	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
-	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
+	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.
+	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.
 	 * 
 	 * @param	source			The FlxSprite to move
 	 * @param	speed				The speed it will move, in pixels per second (default is 60 pixels/sec)
@@ -116,8 +116,8 @@ class FlxVelocity
 	
 	#if !FLX_NO_MOUSE
 	/**
-	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the mouse coordinates at the speed given (in pixels per second)<br>
-	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.<br>
+	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the mouse coordinates at the speed given (in pixels per second)
+	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.
 	 * If you don't need acceleration look at moveTowardsMouse() instead.
 	 * 
 	 * @param	Source			The FlxSprite on which the acceleration will be set
@@ -142,8 +142,8 @@ class FlxVelocity
 	
 	#if !FLX_NO_TOUCH
 	/**
-	 * Sets the x/y acceleration on the source FlxSprite so it will move towards a FlxTouch at the speed given (in pixels per second)<br>
-	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.<br>
+	 * Sets the x/y acceleration on the source FlxSprite so it will move towards a FlxTouch at the speed given (in pixels per second)
+	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.
 	 * If you don't need acceleration look at moveTowardsMouse() instead.
 	 * 
 	 * @param	Source			The FlxSprite on which the acceleration will be set
@@ -168,10 +168,10 @@ class FlxVelocity
 	#end
 	
 	/**
-	 * Sets the x/y velocity on the source FlxSprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
-	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
-	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
-	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+	 * Sets the x/y velocity on the source FlxSprite so it will move towards the target coordinates at the speed given (in pixels per second)
+	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
+	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.
+	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.
 	 * 
 	 * @param	Source		The FlxSprite to move
 	 * @param	Target		The FlxPoint coordinates to move the source FlxSprite towards
@@ -195,8 +195,8 @@ class FlxVelocity
 	}
 	
 	/**
-	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
-	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.<br>
+	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the target coordinates at the speed given (in pixels per second)
+	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.
 	 * If you don't need acceleration look at moveTowardsPoint() instead.
 	 * 
 	 * @param	Source			The FlxSprite on which the acceleration will be set

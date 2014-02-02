@@ -286,7 +286,7 @@ class FlxMath
 	
 	/**
 	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-	 * Values must be positive integers, and are passed through <code>Math.abs</code>
+	 * Values must be positive integers, and are passed through Math.abs
 	 * 
 	 * @param 	value 	The value to add the amount to
 	 * @param 	amount 	The amount to add to the value
@@ -337,9 +337,9 @@ class FlxMath
 	/**
 	 * Calculate the distance between two points.
 	 * 
-	 * @param 	Point1		A <code>FlxPoint</code> object referring to the first location.
-	 * @param 	Point2		A <code>FlxPoint</code> object referring to the second location.
-	 * @return	The distance between the two points as a floating point <code>Number</code> object.
+	 * @param 	Point1		A FlxPoint object referring to the first location.
+	 * @param 	Point2		A FlxPoint object referring to the second location.
+	 * @return	The distance between the two points as a floating point Number object.
 	 */
 	public static inline function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
 	{
@@ -369,8 +369,8 @@ class FlxMath
 	 * @param	SpriteA		The first FlxSprite
 	 * @param	SpriteB		The second FlxSprite
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
-	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
 	public static inline function isDistanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
@@ -384,8 +384,8 @@ class FlxMath
 	}
 	
 	/**
-	 * Find the distance (in pixels, rounded) from an <code>FlxSprite</code>
-	 * to the given <code>FlxPoint</code>, taking the source origin into account.
+	 * Find the distance (in pixels, rounded) from an FlxSprite
+	 * to the given FlxPoint, taking the source origin into account.
 	 * 
 	 * @param	Sprite	The FlxSprite
 	 * @param	Target	The FlxPoint
@@ -399,15 +399,15 @@ class FlxMath
 	}
 	
 	/**
-	 * Check if the distance from an <code>FlxSprite</code> to the given
-	 * <code>FlxPoint</code> is within a specified number. 
+	 * Check if the distance from an FlxSprite to the given
+	 * FlxPoint is within a specified number. 
 	 * A faster algoritm than distanceToPoint because the Math.sqrt() is avoided.
 	 * 
 	 * @param	Sprite	The FlxSprite
 	 * @param	Target	The FlxPoint
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
-	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
 	public static inline function isDistanceToPointWithin(Sprite:FlxSprite, Target:FlxPoint, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
@@ -440,8 +440,8 @@ class FlxMath
 	 *
 	 * @param	Sprite		The FlxSprite to test against
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
-	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
 	public static inline function isDistanceToMouseWithin(Sprite:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
@@ -476,8 +476,8 @@ class FlxMath
 	 *
 	 * @param	Sprite	The FlxSprite to test against
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
-	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
 	public static inline function isDistanceToTouchWithin(Sprite:FlxSprite, Touch:FlxTouch, Distance:Float, IncludeEqual:Bool = false):Bool
 	{

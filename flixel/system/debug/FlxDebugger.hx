@@ -158,7 +158,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Change the way the debugger's windows are laid out.
 	 * 
-	 * @param   Layout   The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
+	 * @param   Layout   The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
 	 */
 	public inline function setLayout(Layout:DebuggerLayout):Void
 	{
@@ -168,7 +168,7 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Forces the debugger windows to reset to the last specified layout.
-	 * The default layout is <code>STANDARD</code>.
+	 * The default layout is STANDARD.
 	 */
 	public function resetLayout():Void
 	{

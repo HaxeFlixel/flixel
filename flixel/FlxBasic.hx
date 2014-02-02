@@ -6,8 +6,8 @@ import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
 
 /**
- * This is a useful "generic" Flixel object. Both <code>FlxObject</code> and 
- * <code>FlxGroup</code> extend this class. Has no size, position or graphical data.
+ * This is a useful "generic" Flixel object. Both FlxObject and 
+ * FlxGroup extend this class. Has no size, position or graphical data.
  */
 class FlxBasic implements IFlxDestroyable
 {
@@ -17,26 +17,26 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var ID:Int = -1;
 	/**
-	 * This determines on which <code>FlxCameras</code> this object will be drawn - by default, 
-	 * it uses <code>FlxG.cameras.list</code>), which means it is drawn on all existing cameras.
+	 * This determines on which FlxCameras this object will be drawn - by default, 
+	 * it uses FlxG.cameras.list), which means it is drawn on all existing cameras.
 	 */
 	public var cameras:Array<FlxCamera>;
 	/**
-	 * Controls whether <code>update()</code> is automatically called by FlxState/FlxGroup.
+	 * Controls whether update() is automatically called by FlxState/FlxGroup.
 	 */
 	public var active(default, set):Bool = true;
 	/**
-	 * Controls whether <code>draw()</code> is automatically called by FlxState/FlxGroup.
+	 * Controls whether draw() is automatically called by FlxState/FlxGroup.
 	 */
 	public var visible(default, set):Bool = true;
 	/**
-	 * Useful state for many game objects - "dead" (!alive) vs alive. <code>kill()</code> and
-	 * <code>revive()</code> both flip this switch (along with exists, but you can override that).
+	 * Useful state for many game objects - "dead" (!alive) vs alive. kill() and
+	 * revive() both flip this switch (along with exists, but you can override that).
 	 */
 	public var alive(default, set):Bool = true;
 	/**
 	 * This flag indicates whether this objects has been destroyed or not. 
-	 * Cannot be set, use <code>destroy()</code> and <code>revive()</code>.
+	 * Cannot be set, use destroy() and revive().
 	 */
 	public var exists(default, set):Bool = true;
 	
@@ -64,7 +64,7 @@ class FlxBasic implements IFlxDestroyable
 	}
 	
 	/**
-	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>revive()</code> it later.
+	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and revive() it later.
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
 	public function destroy():Void 
@@ -74,7 +74,7 @@ class FlxBasic implements IFlxDestroyable
 	}
 	
 	/**
-	 * Handy function for "killing" game objects. Use <code>reset()</code> to revive them. Default behavior is to flag them as nonexistent AND dead. However, if you want the 
+	 * Handy function for "killing" game objects. Use reset() to revive them. Default behavior is to flag them as nonexistent AND dead. However, if you want the 
 	 * "corpse" to remain in the game, like to animate an effect or whatever, you should override this, setting only alive to false, and leaving exists true.
 	 */
 	public function kill():Void
@@ -85,7 +85,7 @@ class FlxBasic implements IFlxDestroyable
 	
 	/**
 	 * Handy function for bringing game objects "back to life". Just sets alive and exists back to true.
-	 * In practice, this function is most often called by <code>FlxObject.reset()</code>.
+	 * In practice, this function is most often called by FlxObject.reset().
 	 */
 	public function revive():Void
 	{
@@ -106,7 +106,7 @@ class FlxBasic implements IFlxDestroyable
 	
 	/**
 	 * Override this function to control how the object is drawn.
-	 * Overriding <code>draw()</code> is rarely necessary, but can be very useful.
+	 * Overriding draw() is rarely necessary, but can be very useful.
 	 */
 	public function draw():Void
 	{

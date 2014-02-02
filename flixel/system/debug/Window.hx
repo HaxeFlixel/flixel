@@ -18,7 +18,7 @@ import openfl.Assets;
 @:bitmap("assets/images/debugger/windowHandle.png")	private class GraphicWindowHandle extends BitmapData { }
 
 /**
- * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
+ * A generic, Flash-based window class, created for use in FlxDebugger.
  */
 class Window extends Sprite
 {
@@ -108,7 +108,7 @@ class Window extends Sprite
 	private var _id:Int;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
+	 * Creates a new window object.  This Flash-based class is mainly (only?) used by FlxDebugger.
 	 * 
 	 * @param   Title       The name of the window, displayed in the header bar.
 	 * @param   Icon	    The icon to use for the window header.
