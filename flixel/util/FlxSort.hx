@@ -32,15 +32,17 @@ class FlxSort
 	 */
 	public static inline function byValues(Order:Int, Value1:Float, Value2:Float):Int
 	{
+		var result:Int = 0;
+		
 		if (Value1 < Value2)
 		{
-			return Order;
+			result = Order;
 		}
 		else if (Value1 > Value2)
 		{
-			return - Order;
+			result = -Order;
 		}
 		
-		return 0;
+		return result;
 	}
 }
