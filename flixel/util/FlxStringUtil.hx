@@ -227,6 +227,21 @@ class FlxStringUtil
 	}
 	
 	/**
+	 * Returns the domain of a URL.
+	 */
+	public static function getDomain(url:String):String
+	{
+		var urlStart:Int = url.indexOf("://") + 3;
+		var urlEnd:Int = url.indexOf("/", urlStart);
+		var home:String = url.substring(urlStart, urlEnd);
+		var LastDot:Int = home.lastIndexOf(".") - 1;
+		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
+		home = home.substring(domEnd, home.length);
+		home = home.split(":")[0];
+		return (home == "") ? "local" : home;
+	}
+	
+	/**
 	 * Helper function that uses <code>getClassName</code> to compare two objects' class names.
 	 * 
 	 * @param	Obj1	The first object
