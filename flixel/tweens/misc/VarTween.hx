@@ -8,12 +8,16 @@ import flixel.tweens.FlxEase;
  */
 class VarTween extends FlxTween
 {
+	private var _object:Dynamic;
+	private var _property:String;
+	private var _start:Float;
+	private var _range:Float;
+	
 	/**
-	 * Constructor.
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0) 
+	public function new(?complete:CompleteCallback, type:Int = 0) 
 	{
 		super(0, type, complete);
 	}
@@ -26,16 +30,17 @@ class VarTween extends FlxTween
 	
 	/**
 	 * Tweens a numeric public property.
+	 * 
 	 * @param	object		The object containing the property.
 	 * @param	property	The name of the property (eg. "x").
 	 * @param	to			Value to tween to.
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, property:String, to:Float, duration:Float, ease:EaseFunction = null):VarTween
+	public function tween(object:Dynamic, property:String, to:Float, duration:Float, ?ease:EaseFunction):VarTween
 	{
 		_object = object;
-		_ease = ease;
+		this.ease = ease;
 		
 		// Check to make sure we have valid parameters
 		if (!Reflect.isObject(object))
@@ -65,16 +70,9 @@ class VarTween extends FlxTween
 		return this;
 	}
 	
-	/** @private Updates the Tween. */
 	override public function update():Void
 	{
 		super.update();
-		Reflect.setProperty(_object, _property, (_start + _range * _t));
+		Reflect.setProperty(_object, _property, (_start + _range * scale));
 	}
-	
-	// Tween information.
-	private var _object:Dynamic;
-	private var _property:String;
-	private var _start:Float;
-	private var _range:Float;
 }

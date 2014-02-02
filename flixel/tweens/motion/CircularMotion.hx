@@ -9,7 +9,23 @@ import flixel.tweens.FlxTween.CompleteCallback;
 class CircularMotion extends Motion
 {
 	/**
-	 * Constructor.
+	 * The current position on the circle.
+	 */
+	public var angle(default, null):Float;
+
+	/**
+	 * The circumference of the current circle motion.
+	 */
+	public var circumference(get, never):Float;
+	
+	// Circle information.
+	private var _centerX:Float;
+	private var _centerY:Float;
+	private var _radius:Float;
+	private var _angleStart:Float;
+	private var _angleFinish:Float;
+	
+	/**
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
@@ -23,6 +39,7 @@ class CircularMotion extends Motion
 
 	/**
 	 * Starts moving along a circle.
+	 * 
 	 * @param	CenterX			X position of the circle's center.
 	 * @param	CenterY			Y position of the circle's center.
 	 * @param	Radius			Radius of the circle.
@@ -38,7 +55,7 @@ class CircularMotion extends Motion
 		_centerY = CenterY;
 		_radius = Radius;
 		this.angle = _angleStart = Angle * Math.PI / ( -180);
-		_angleFinish = _CIRC * (Clockwise ? 1 : -1);
+		_angleFinish = (Math.PI * 2) * (Clockwise ? 1 : -1);
 		
 		if (UseDuration)
 		{
@@ -46,19 +63,18 @@ class CircularMotion extends Motion
 		}
 		else
 		{
-			duration = (_radius * _CIRC) / DurationOrSpeed;
+			duration = (_radius * (Math.PI * 2)) / DurationOrSpeed;
 		}
 		
-		_ease = Ease;
+		this.ease = Ease;
 		start();
 		return this;
 	}
 
-	/** @private Updates the Tween. */
 	override public function update():Void
 	{
 		super.update();
-		angle = _angleStart + _angleFinish * _t;
+		angle = _angleStart + _angleFinish * scale;
 		x = _centerX + Math.cos(angle) * _radius;
 		y = _centerY + Math.sin(angle) * _radius;
 		if(finished)
@@ -67,22 +83,8 @@ class CircularMotion extends Motion
 		}
 	}
 
-	/**
-	 * The current position on the circle.
-	 */
-	public var angle(default, null):Float;
-
-	/**
-	 * The circumference of the current circle motion.
-	 */
-	public var circumference(get_circumference, never):Float;
-	private function get_circumference():Float { return _radius * _CIRC; }
-
-	// Circle information.
-	private var _centerX:Float;
-	private var _centerY:Float;
-	private var _radius:Float;
-	private var _angleStart:Float;
-	private var _angleFinish:Float;
-	private static var _CIRC:Float = Math.PI * 2;
+	private function get_circumference():Float 
+	{ 
+		return _radius * (Math.PI * 2); 
+	}
 }

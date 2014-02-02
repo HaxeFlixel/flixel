@@ -1,10 +1,11 @@
 package flixel.tweens;
 
-import flixel.FlxBasic;
-import flixel.FlxObject;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.plugin.TweenManager;
+import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.MultiVarTween;
@@ -14,11 +15,8 @@ import flixel.tweens.motion.CircularMotion;
 import flixel.tweens.motion.CubicMotion;
 import flixel.tweens.motion.LinearMotion;
 import flixel.tweens.motion.LinearPath;
-import flixel.tweens.motion.Motion;
-import flixel.tweens.motion.PathType;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
-import flixel.tweens.FlxEase.EaseFunction;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
 
@@ -26,36 +24,33 @@ import flixel.util.FlxTimer;
 import flixel.tweens.sound.Fader;
 #end
 
-class FlxTween
+class FlxTween implements IFlxDestroyable
 {
+	/**
+	 * Persistent Tween type, will stop when it finishes.
+	 */
+	public static inline var PERSIST:Int = 1;
+	/**
+	 * Looping Tween type, will restart immediately when it finishes.
+	 */
+	public static inline var LOOPING:Int = 2;
+	/**
+	 * "To and from" Tween type, will play tween hither and thither
+	 */
+	public static inline var PINGPONG:Int = 4;
+	/**
+	 * Oneshot Tween type, will stop and remove itself from its core container when it finishes.
+	 */
+	public static inline var ONESHOT:Int = 8;
+	/**
+	 * Backward Tween type, will play tween in reverse direction
+	 */
+	public static inline var BACKWARD:Int = 16;
+	
 	/**
 	 * The tweening plugin that handles all the tweens.
 	 */
 	public static var manager:TweenManager;
-	
-	/**
-	 * Adds a tween to the tween manager, with a delay if specified.
-	 */ 
-	private static function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
-	{
-		if ((Delay != null) || (Delay > 0))
-		{
-			var t = FlxTimer.start(Delay, timerCallback);
-			t.userData = Tween;
-		}
-		else 
-		{
-			manager.add(Tween);
-		}
-	}
-	
-	/**
-	 * Helper function for delayed tweens.
-	 */
-	private static function timerCallback(Timer:FlxTimer):Void
-	{
-		addTween(cast (Timer.userData, FlxTween));
-	}
 	
 	/**
 	 * Tweens numeric public property of an Object. Shorthand for creating a VarTween tween, starting it and adding it to the TweenPlugin.
@@ -448,38 +443,53 @@ class FlxTween
 		return tween;
 	}
 	
+		/**
+	 * Adds a tween to the tween manager, with a delay if specified.
+	 */ 
+	private static function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
+	{
+		if ((Delay != null) || (Delay > 0))
+		{
+			var t = FlxTimer.start(Delay, timerCallback);
+			t.userData = Tween;
+		}
+		else 
+		{
+			manager.add(Tween);
+		}
+	}
+	
 	/**
-	 * Persistent Tween type, will stop when it finishes.
+	 * Helper function for delayed tweens.
 	 */
-	public static inline var PERSIST:Int = 1;
-	/**
-	 * Looping Tween type, will restart immediately when it finishes.
-	 */
-	public static inline var LOOPING:Int = 2;
-	/**
-	 * "To and from" Tween type, will play tween hither and thither
-	 */
-	public static inline var PINGPONG:Int = 4;
-	/**
-	 * Oneshot Tween type, will stop and remove itself from its core container when it finishes.
-	 */
-	public static inline var ONESHOT:Int = 8;
-	/**
-	 * Backward Tween type, will play tween in reverse direction
-	 */
-	public static inline var BACKWARD:Int = 16;
+	private static function timerCallback(Timer:FlxTimer):Void
+	{
+		addTween(cast (Timer.userData, FlxTween));
+	}
 	
 	public var active:Bool;
 	public var complete:CompleteCallback;
+	public var type:Int;
+	public var duration:Float;
+	public var ease:EaseFunction;
+	
+	/**
+	 * Useful to store values you want to access within your callback function.
+	 */
+	public var userData:Dynamic = null;
+	
+	public var percent(get, set):Float;
+	public var finished(default, null):Bool;
+	public var scale(default, null):Float;
+	
 	/**
 	 * How many times this tween has been executed / has finished so far - useful to 
 	 * stop the LOOPING and PINGPONG types after a certain amount of time
 	 */
 	public var executions(default, null):Int = 0;
-	/**
-	 * Useful to store values you want to access within your callback function.
-	 */
-	public var userData:Dynamic = null;
+	
+	private var _secondsSinceStart:Float;
+	private var _backward:Bool;
 
 	/**
 	 * Constructor. Specify basic information about the Tween.
@@ -502,46 +512,35 @@ class FlxTween
 		}
 		this.type = type;
 		this.complete = complete;
-		_ease = ease;
-		_t = 0;
+		this.ease = ease;
 		
 		_backward = (this.type & BACKWARD) > 0;
-		userData = { };
+		userData = {};
 	}
 	
 	public function destroy():Void
 	{
 		complete = null;
-		_ease = null;
+		ease = null;
 		userData = null;
 	}
 
-	/**
-	 * Updates the Tween, called by World.
-	 */
 	public function update():Void
 	{
-		_time += FlxG.elapsed;
-		_t = _time / duration;
-		if (_ease != null)
+		_secondsSinceStart += FlxG.elapsed;
+		scale = _secondsSinceStart / duration;
+		
+		if (ease != null)
 		{
-			_t = _ease(_t);
+			scale = ease(scale);
 		}
 		if (_backward)
 		{
-			_t = 1 - _t;
+			scale = 1 - scale;
 		}
-		if (_time >= duration)
+		if (_secondsSinceStart >= duration)
 		{
-			if (!_backward)
-			{
-				_t = 1;
-			}
-			else
-			{
-				_t = 0;
-			}
-			
+			scale = (_backward) ? 0 : 1;
 			finished = true;
 		}
 	}
@@ -551,7 +550,7 @@ class FlxTween
 	 */
 	public function start():FlxTween
 	{
-		_time = 0;
+		_secondsSinceStart = 0;
 		if (duration == 0)
 		{
 			active = false;
@@ -570,9 +569,6 @@ class FlxTween
 		manager.remove(this);
 	}
 
-	/** 
-	 * Called when the Tween completes. 
-	 */
 	public function finish():Void
 	{
 		executions++;
@@ -585,47 +581,47 @@ class FlxTween
 		switch ((type & ~ FlxTween.BACKWARD))
 		{
 			case FlxTween.PERSIST:
-				_time = duration;
+				_secondsSinceStart = duration;
 				active = false;
+				
 			case FlxTween.LOOPING:
-				_time %= duration;
-				_t = _time / duration;
-				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
+				_secondsSinceStart %= duration;
+				scale = _secondsSinceStart / duration;
+				if ((ease != null) && (scale > 0) && (scale < 1)) {
+					scale = ease(scale);
+				}
 				start();
+				
 			case FlxTween.PINGPONG:
-				_time %= duration;
-				_t = _time / duration;
-				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
+				_secondsSinceStart %= duration;
+				scale = _secondsSinceStart / duration;
+				if ((ease != null) && (scale > 0) && (scale < 1)) {
+					scale = ease(scale);
+				}
 				_backward = !_backward;
-				if (_backward) _t = 1 - _t;
+				if (_backward) {
+					scale = 1 - scale;
+				}
 				start();
+				
 			case FlxTween.ONESHOT:
-				_time = duration;
+				_secondsSinceStart = duration;
 				active = false;
 				manager.remove(this, true);
 		}
 
 		finished = false;
 	}
-
-	public var percent(get_percent, set_percent):Float;
-	private function get_percent():Float { return _time / duration; }
-	private function set_percent(value:Float):Float { _time = duration * value; return _time; }
-
-	public var scale(get_scale, null):Float;
-	private function get_scale():Float { return _t; }
-
-	public var finished(default, null):Bool;
-
-	public var type:Int;
-	private var _ease:EaseFunction;
-	private var _t:Float;
-
-	private var _time:Float;
 	
-	public var duration:Float;
+	private inline function get_percent():Float 
+	{ 
+		return _secondsSinceStart / duration; 
+	}
 	
-	private var _backward:Bool;
+	private function set_percent(value:Float):Float
+	{ 
+		return _secondsSinceStart = duration * value;
+	}
 }
 
 typedef CompleteCallback = FlxTween->Void;

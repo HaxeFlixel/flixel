@@ -11,6 +11,18 @@ import flixel.tweens.FlxEase;
 class SfxFader extends FlxTween
 {
 	/**
+	 * The current Sfx this object is effecting.
+	 */
+	public var sfx(default, null):FlxSound;
+
+	// Fader information.
+	private var _start:Float;
+	private var _range:Float;
+	private var _crossSfx:FlxSound;
+	private var _crossRange:Float;
+	private var _complete:CompleteCallback;
+	
+	/**
 	 * @param	sfx			The Sfx object to alter.
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
@@ -19,19 +31,20 @@ class SfxFader extends FlxTween
 	{
 		super(0, type, finishCallback);
 		_complete = complete;
-		_sfx = sfx;
+		this.sfx = sfx;
 	}
 	
 	override public function destroy():Void 
 	{
 		super.destroy();
-		_sfx = null;
+		sfx = null;
 		_crossSfx = null;
 		_complete = null;
 	}
 
 	/**
 	 * Fades the Sfx to the target volume.
+	 * 
 	 * @param	volume		The volume to fade to.
 	 * @param	duration	Duration of the fade.
 	 * @param	ease		Optional easer function.
@@ -42,7 +55,7 @@ class SfxFader extends FlxTween
 		{
 			volume = 0;
 		}
-		_start = _sfx.volume;
+		_start = sfx.volume;
 		_range = volume - _start;
 		this.duration = duration;
 		_ease = ease;
@@ -52,6 +65,7 @@ class SfxFader extends FlxTween
 
 	/**
 	 * Fades out the Sfx, while also playing and fading in a replacement Sfx.
+	 * 
 	 * @param	play		The Sfx to play and fade in.
 	 * @param	duration	Duration of the crossfade.
 	 * @param	volume		The volume to fade in the new Sfx to.
@@ -61,7 +75,7 @@ class SfxFader extends FlxTween
 	{
 		_crossSfx = play;
 		_crossRange = volume;
-		_start = _sfx.volume;
+		_start = sfx.volume;
 		_range = -_start;
 		this.duration = duration;
 		_ease = ease;
@@ -73,13 +87,13 @@ class SfxFader extends FlxTween
 	override public function update():Void
 	{
 		super.update();
-		if (_sfx != null) 
+		if (sfx != null) 
 		{
-			_sfx.volume = _start + _range * _t;
+			sfx.volume = _start + _range * scale;
 		}
 		if (_crossSfx != null) 
 		{
-			_crossSfx.volume = _crossRange * _t;
+			_crossSfx.volume = _crossRange * scale;
 		}
 	}
 
@@ -92,11 +106,11 @@ class SfxFader extends FlxTween
 	{
 		if (_crossSfx != null)
 		{
-			if (_sfx != null) 
+			if (sfx != null) 
 			{
-				_sfx.stop();
+				sfx.stop();
 			}
-			_sfx = _crossSfx;
+			sfx = _crossSfx;
 			_crossSfx = null;
 		}
 		if (_complete != null) 
@@ -104,19 +118,5 @@ class SfxFader extends FlxTween
 			_complete(this);
 		}
 	}
-
-	/**
-	 * The current Sfx this object is effecting.
-	 */
-	public var sfx(get_sfx, null):FlxSound;
-	private function get_sfx():FlxSound { return _sfx; }
-
-	// Fader information.
-	private var _sfx:FlxSound;
-	private var _start:Float;
-	private var _range:Float;
-	private var _crossSfx:FlxSound;
-	private var _crossRange:Float;
-	private var _complete:CompleteCallback;
 }
 #end
