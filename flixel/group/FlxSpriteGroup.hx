@@ -10,6 +10,7 @@ import flixel.group.FlxTypedGroup;
 import flixel.system.FlxCollisionType;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxPoint;
+import flixel.util.FlxSort;
 
 /**
  * <code>FlxSpriteGroup</code> is a special <code>FlxGroup</code> that can be treated like 
@@ -318,18 +319,15 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * Call this function to sort the group according to a particular value and order.
-	 * For example, to sort game objects for Zelda-style overlaps you might call
-	 * <code>myGroup.sort("y",ASCENDING)</code> at the bottom of your
-	 * <code>FlxState.update()</code> override.  To sort all existing objects after
-	 * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",DESCENDING)</code>.
+	 * Call this function to sort the group according to a particular value and order. For example, to sort game objects for Zelda-style 
+	 * overlaps you might call <code>myGroup.sort(FlxSort.byY, FlxSort.ASCENDING)</code> at the bottom of your <code>FlxState.update()</code> override.
 	 * 
-	 * @param	Index	The <code>String</code> name of the member variable you want to sort on.  Default value is "y".
-	 * @param	Order	A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>ASCENDING</code> and <code>DESCENDING</code>.  Default value is <code>ASCENDING</code>.  
+	 * @param	Function	The sorting function to use - you can use one of the premade ones in FlxSort or write your own using FlxSort.byValues() as a backend
+	 * @param	Order		A <code>FlxGroup</code> constant that defines the sort order.  Possible values are <code>FlxSort.ASCENDING</code> (default) and <code>FlxSort.DESCENDING</code>. 
 	 */
-	public inline function sort(Index:String = "y", Order:Int = -1):Void
+	public inline function sort(Function:Int->FlxSprite->FlxSprite->Int, Order:Int = FlxSort.ASCENDING):Void
 	{
-		group.sort(Index, Order);
+		group.sort(Function, Order);
 	}
 	
 	/**
