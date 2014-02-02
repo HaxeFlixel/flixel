@@ -74,7 +74,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var facing(default, set):Int;
 	/**
-	 * If the Sprite is flipped. Shouldn't be changed unless you know what are you doing.
+	 * If the Sprite is flipped.
 	 */
 	public var flipped(default, null):Int;
 	/**
