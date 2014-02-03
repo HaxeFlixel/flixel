@@ -104,8 +104,8 @@ class FlxObject extends FlxBasic
 	 */
 	public var forceComplexRender(default, set):Bool = false;
 	/**
-	 * Controls how much this object is affected by camera scrolling.
-	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
+	 * Controls how much this object is affected by camera scrolling. 0 = no movement (e.g. a background layer), 
+	 * 1 = same movement speed as the foreground. Default value is (1,1), except for UI elements like FlxButton where it's (0,0).
 	 */
 	public var scrollFactor(default, null):FlxPoint;
 	/**
