@@ -25,7 +25,7 @@ class PlayState extends FlxState
 		level = new Level("maps/test2.tmx", "maps/test2.tanim");
 		
 		add(level.backgroundGroup);
-		add(level.eventsGroup);
+		add(level.characterGroup);
 		add(level.foregroundGroup);
 		
 		add(level.collisionGroup);

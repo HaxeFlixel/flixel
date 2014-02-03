@@ -11,11 +11,11 @@ import flixel.addons.tile.FlxTilemapExt;
 import flixel.addons.tile.FlxTileSpecial;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
+import flixel.util.FlxSort;
 
 /**
  * ...
@@ -25,10 +25,11 @@ class Level extends TiledMap
 {
 	private inline static var PATH_TILESETS = "maps/";
 	
-	public var backgroundGroup:FlxGroup;
-	public var foregroundGroup:FlxGroup;
-	public var collisionGroup:FlxGroup;
-	public var eventsGroup:FlxGroup;
+	public var backgroundGroup:FlxTypedGroup<FlxTilemapExt>;
+	public var foregroundGroup:FlxTypedGroup<FlxTilemapExt>;
+	
+	public var collisionGroup:FlxTypedGroup<FlxObject>;
+	public var characterGroup:FlxTypedGroup<Character>;
 	
 	private var bounds:FlxRect;
 
@@ -37,11 +38,13 @@ class Level extends TiledMap
 		super(level);
 		
 		// background and foreground groups
-		backgroundGroup = new FlxGroup();
-		foregroundGroup = new FlxGroup();
+		backgroundGroup = new FlxTypedGroup<FlxTilemapExt>();
+		foregroundGroup = new FlxTypedGroup<FlxTilemapExt>();
+		
 		// events and collision groups
-		eventsGroup = new FlxGroup();
-		collisionGroup = new FlxGroup();
+		characterGroup = new FlxTypedGroup<Character>();
+		collisionGroup = new FlxTypedGroup<FlxObject>();
+		
 		// The bound of the map for the camera
 		bounds = new FlxRect(0, 0, fullWidth, fullHeight);
 		
@@ -135,12 +138,12 @@ class Level extends TiledMap
 				player.setBoundsMap(this.getBounds());
 				player.controllable = true;
 				FlxG.camera.follow(player);
-				eventsGroup.add(player);
+				characterGroup.add(player);
 				
 			case "npc":
 				var npc:Character = new Character(o.name, x, y, "images/chars/"+o.name+".json");
 				npc.setBoundsMap(this.getBounds());
-				eventsGroup.add(npc);
+				characterGroup.add(npc);
 				
 			case "collision":
 				var coll:FlxObject = new FlxObject(x, y, o.width, o.height);
@@ -158,12 +161,12 @@ class Level extends TiledMap
 	}
 	
 	public function updateEventsOrder():Void {
-		eventsGroup.sort("y", FlxTypedGroup.ASCENDING);
+		characterGroup.sort(FlxSort.byY);
 	}
 	
 	public function updateCollisions():Void {
-		FlxG.collide(eventsGroup, collisionGroup);
-		FlxG.collide(eventsGroup, eventsGroup);
+		FlxG.collide(characterGroup, collisionGroup);
+		FlxG.collide(characterGroup, characterGroup);
 	}
 	
 	public function getBounds():FlxRect 
