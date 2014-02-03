@@ -46,6 +46,9 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
+#if js
+import flixel.system.frontEnds.HTML5FrontEnd;
+#end
 #if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
 import flixel.input.FlxSwipe;
 #end
@@ -193,6 +196,14 @@ class FlxG
 	 * A reference to a FlxAndroidKeys object. Useful for tracking Back, Home, etc on Android devices.
 	 */
 	public static var android(default, null):FlxAndroidKeys;
+	#end
+	
+	#if js
+	/**
+	 * A reference to the HTML5FrontEnd object. Has some HTML5-specific things like
+	 * browser detection, browser dimensions etc...
+	 */
+	public static var html5(default, null):HTML5FrontEnd = new HTML5FrontEnd();
 	#end
 	
 	/**
