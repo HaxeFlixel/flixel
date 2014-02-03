@@ -151,7 +151,7 @@ class FlxGame extends Sprite
 	 */
 	private var _lostFocus:Bool = false;
 	
-	#if cpp
+	#if (cpp || neko)
 	/**
 	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
 	 * (the focus event should not fire when the game starts up!)
@@ -310,7 +310,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if cpp
+		#if (cpp || neko)
 		// make sure the on focus event doesn't fire on startup 
 		if (!_onFocusFiredOnce)
 		{
