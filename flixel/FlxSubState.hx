@@ -73,7 +73,7 @@ class FlxSubState extends FlxState
 		#if !flash
 		if (_bgSprite != null)
 		{
-			_bgSprite.pixels.setPixel32(0, 0, Value);
+			_bgSprite.graphic.setPixel32(0, 0, Value);
 		}
 		#end
 		

@@ -924,7 +924,7 @@ class FlxBar extends FlxSprite
 			canvas.copyPixels(filledBar, filledBarRect, filledBarPoint);
 		}
 		
-		pixels = canvas;
+		graphic = canvas;
 		#end
 	}
 	

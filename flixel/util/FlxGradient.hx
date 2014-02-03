@@ -100,7 +100,7 @@ class FlxGradient
 	{
 		var data:BitmapData = createGradientBitmapData(width, height, colors, chunkSize, rotation, interpolate);
 		var dest:FlxSprite = new FlxSprite();
-		dest.pixels = data;
+		dest.graphic = data;
 		return dest;
 	}
 	

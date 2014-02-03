@@ -452,7 +452,7 @@ class FlxCamera extends FlxBasic
 		#if flash
 		screen = new FlxSprite();
 		buffer = new BitmapData(width, height, true, 0);
-		screen.pixels = buffer;
+		screen.graphic = buffer;
 		screen.origin.set();
 		#end
 		
@@ -1033,7 +1033,7 @@ class FlxCamera extends FlxBasic
 			{
 				FlxG.bitmap.remove(screen.cachedGraphics.key);
 				buffer = new BitmapData(width, height, true, 0);
-				screen.pixels = buffer;
+				screen.graphic = buffer;
 				screen.origin.set();
 				_flashBitmap.bitmapData = buffer;
 				_flashRect.width = width;

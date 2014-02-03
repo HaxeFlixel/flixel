@@ -82,9 +82,9 @@ class FlxBitmapTextField extends FlxSprite
 		
 		#if flash
 		updateGlyphs(true, _shadow, _outline);
-		pixels = new BitmapData(1, 1, true);
+		graphic = new BitmapData(1, 1, true);
 		#else
-		pixels = _font.pixels;
+		graphic = _font.graphic;
 		_drawData = [];
 		_bgDrawData = [];
 		#end
@@ -1003,7 +1003,7 @@ class FlxBitmapTextField extends FlxSprite
 			_pendingTextChange = true;
 			
 			#if !flash
-			pixels = _font.pixels;
+			graphic = _font.graphic;
 			#end
 		}
 		

@@ -670,19 +670,19 @@ class FlxText extends FlxSprite
 		#end
 		
 		//Finally, update the visible pixels
-		if ((framePixels == null) || (framePixels.width != cachedGraphics.bitmap.width) || (framePixels.height != cachedGraphics.bitmap.height))
+		if ((frameGraphic == null) || (frameGraphic.width != cachedGraphics.bitmap.width) || (frameGraphic.height != cachedGraphics.bitmap.height))
 		{
-			if (framePixels != null)
-				framePixels.dispose();
+			if (frameGraphic != null)
+				frameGraphic.dispose();
 			
-			framePixels = new BitmapData(cachedGraphics.bitmap.width, cachedGraphics.bitmap.height, true, 0);
+			frameGraphic = new BitmapData(cachedGraphics.bitmap.width, cachedGraphics.bitmap.height, true, 0);
 		}
 		
-		framePixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
+		frameGraphic.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
 		
 		if (useColorTransform) 
 		{
-			framePixels.colorTransform(_flashRect, _colorTransform);
+			frameGraphic.colorTransform(_flashRect, _colorTransform);
 		}
 	}
 	
