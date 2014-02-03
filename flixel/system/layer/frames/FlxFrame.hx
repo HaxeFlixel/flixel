@@ -14,48 +14,33 @@ class FlxFrame
 	public static var POINT:Point = new Point();
 	public static var MATRIX:Matrix = new Matrix();
 	
-	public var name:String = null;
-	public var frame:Rectangle = null;
+	public var name:String;
+	public var frame:Rectangle;
 	
 	public var rotated:Bool = false;
 	public var trimmed:Bool = false;
-	public var sourceSize:FlxPoint = null;
-	public var offset:FlxPoint = null;
 	
 	public var tileID:Int = -1;
-	
 	public var additionalAngle:Float = 0;
 	
+	public var sourceSize(default, null):FlxPoint;
+	public var offset(default, null):FlxPoint;
+	public var center(default, null):FlxPoint;
+	
 	private var _bitmapData:BitmapData;
-	
 	private var _hReversedBitmapData:BitmapData;
-	
 	private var _vReversedBitmapData:BitmapData;
-	
 	private var _hvReversedBitmapData:BitmapData;
-	
 	private var _tileSheet:TileSheetData;
-	
-	public var center:FlxPoint = null;
 	
 	public function new(tileSheet:TileSheetData)
 	{
 		_tileSheet = tileSheet;
 		additionalAngle = 0;
-	}
-	
-	public function destroy():Void
-	{
-		name = null;
-		frame = null;
-		sourceSize = null;
-		offset = null;
 		
-		center = null;
-		
-		_tileSheet = null;
-		
-		destroyBitmapDatas();
+		sourceSize = new FlxPoint();
+		offset = new FlxPoint();
+		center = new FlxPoint();
 	}
 	
 	public function getBitmap():BitmapData
@@ -140,6 +125,20 @@ class FlxFrame
 		_hvReversedBitmapData.draw(normalFrame, MATRIX);
 		
 		return _hvReversedBitmapData;
+	}
+	
+	public function destroy():Void
+	{
+		name = null;
+		frame = null;
+		
+		sourceSize = null;
+		offset = null;
+		center = null;
+		
+		_tileSheet = null;
+		
+		destroyBitmapDatas();
 	}
 	
 	public function destroyBitmapDatas():Void

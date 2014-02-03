@@ -179,7 +179,7 @@ class CachedGraphics
 		return newBitmap;
 	}
 	
-	inline private function get_canBeDumped():Bool
+	private inline function get_canBeDumped():Bool
 	{
 		return ((assetsClass != null) || (assetsKey != null));
 	}

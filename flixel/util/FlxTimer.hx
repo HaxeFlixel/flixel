@@ -5,7 +5,7 @@ import flixel.plugin.TimerManager;
 
 /**
  * A simple timer class, leveraging the new plugins system.
- * Can be used with callbacks or by polling the <code>finished</code> flag.
+ * Can be used with callbacks or by polling the finished flag.
  * Not intended to be added to a game state or group; the timer manager
  * is responsible for actually calling update(), not the user.
  */
@@ -72,7 +72,7 @@ class FlxTimer
 	/**
 	 * Returns a recycled timer.
 	 */
-	static public function recycle():FlxTimer
+	public static function recycle():FlxTimer
 	{
 		return pool.get();
 	}
@@ -84,7 +84,7 @@ class FlxTimer
 	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
 	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
  	 */
-	static public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
+	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
 		var timer:FlxTimer = recycle();
 		timer.run(Time, Callback, Loops);
@@ -150,8 +150,8 @@ class FlxTimer
 	/**
 	 * Called by the timer manager plugin to update the timer.
 	 * If time runs out, the loop counter is advanced, the timer reset, and the callback called if it exists.
-	 * If the timer runs out of loops, then the timer calls <code>stop()</code>.
-	 * However, callbacks are called AFTER <code>stop()</code> is called.
+	 * If the timer runs out of loops, then the timer calls stop().
+	 * However, callbacks are called AFTER stop() is called.
 	 */
 	public function update():Void
 	{
@@ -179,7 +179,7 @@ class FlxTimer
 	 */
 	public var timeLeft(get, never):Float;
 	
-	inline private function get_timeLeft():Float
+	private inline function get_timeLeft():Float
 	{
 		return time - _timeCounter;
 	}
@@ -189,7 +189,7 @@ class FlxTimer
 	 */
 	public var elapsedTime(get, never):Float;
 	
-	inline private function get_elapsedTime():Float
+	private inline function get_elapsedTime():Float
 	{
 		return _timeCounter;
 	}
@@ -199,7 +199,7 @@ class FlxTimer
 	 */
 	public var loopsLeft(get, never):Int;
 	
-	inline private function get_loopsLeft():Int
+	private inline function get_loopsLeft():Int
 	{
 		return loops - _loopsCounter;
 	}
@@ -209,7 +209,7 @@ class FlxTimer
 	 */
 	public var elapsedLoops(get, never):Int;
 	
-	inline private function get_elapsedLoops():Int
+	private inline function get_elapsedLoops():Int
 	{
 		return _loopsCounter;
 	}
@@ -219,7 +219,7 @@ class FlxTimer
 	 */
 	public var progress(get_progress, never):Float;
 	
-	inline private function get_progress():Float
+	private inline function get_progress():Float
 	{
 		if (time > 0)
 		{
@@ -231,13 +231,13 @@ class FlxTimer
 		}
 	}
 	
-	static public function put(timer:FlxTimer):Void
+	public static function put(timer:FlxTimer):Void
 	{
 		pool.put(timer);
 	}
 	
 	/**
-	 * Read-only: The <code>TimerManager</code> instance.
+	 * Read-only: The TimerManager instance.
 	 */
-	static public var manager:TimerManager;
+	public static var manager:TimerManager;
 }

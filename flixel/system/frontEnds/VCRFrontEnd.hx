@@ -26,7 +26,7 @@ class VCRFrontEnd
 	 */
 	public var replayCallback:Void->Void = null;
 	/**
-	 * The key codes used to toggle the debugger (via <code>flash.ui.Keyboard</code>). 
+	 * The key codes used to toggle the debugger (via flash.ui.Keyboard). 
 	 * "0" means "any key". Handy for skipping cutscenes or getting out of attract modes!
 	 */
 	public var cancelKeys:Array<String> = null;
@@ -36,7 +36,7 @@ class VCRFrontEnd
 	public var timeout:Int = 0;
 
 	#if flash
-	static private var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
+	private static var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 
 	static private inline var DEFAULT_FILE_NAME:String = "replay.fgr";
 
@@ -171,7 +171,7 @@ class VCRFrontEnd
 	/**
 	 * Stops the current replay.
 	 */
-	inline public function stopReplay():Void
+	public inline function stopReplay():Void
 	{
 		FlxG.game.replaying = false;
 		FlxG.inputs.reset();
@@ -212,9 +212,9 @@ class VCRFrontEnd
 	/**
 	 * Stop recording the current replay and return the replay data.
 	 * 
-	 * @return	The replay data in simple ASCII format (see <code>FlxReplay.save()</code>).
+	 * @return	The replay data in simple ASCII format (see FlxReplay.save()).
 	 */
-	inline public function stopRecording():String
+	public inline function stopRecording():String
 	{
 		FlxG.game.recording = false;
 

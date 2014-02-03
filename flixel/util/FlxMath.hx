@@ -18,7 +18,7 @@ class FlxMath
 	 * @param	Precision	Number of decimal points to leave in float. Should be a positive number
 	 * @return	The rounded value of that number.
 	 */
-	static public function roundDecimal(Value:Float, Precision:Int):Float
+	public static function roundDecimal(Value:Float, Precision:Int):Float
 	{
 		var mult:Float = 1;
 		for (i in 0...Precision)
@@ -37,7 +37,7 @@ class FlxMath
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	inline static public function bound(Value:Float, Min:Float, Max:Float):Float
+	public static inline function bound(Value:Float, Min:Float, Max:Float):Float
 	{
 		var lowerBound:Float = (Value < Min) ? Min : Value;
 		return (lowerBound > Max) ? Max : lowerBound;
@@ -51,7 +51,7 @@ class FlxMath
 	 * @param Ratio 	Defines which number is closer to desired value.
 	 * @return 			Interpolated number.
 	 */
-	inline static public function lerp(Min:Float, Max:Float, Ratio:Float):Float
+	public static inline function lerp(Min:Float, Max:Float, Ratio:Float):Float
 	{
 		return Min + Ratio * (Max - Min);
 	}
@@ -64,7 +64,7 @@ class FlxMath
 	 * @param Max 		Higher bound of range.
 	 * @return Returns true if Value is in range.
 	 */
-	inline static public function inBounds(Value:Float, Min:Float, Max:Float):Bool
+	public static inline function inBounds(Value:Float, Min:Float, Max:Float):Bool
 	{
 		return ((Value > Min) && (Value < Max));
 	}
@@ -78,7 +78,7 @@ class FlxMath
 	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
 	 * @return	The altered Velocity value.
 	 */
-	static public function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
+	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
 	{
 		if (Acceleration != 0)
 		{
@@ -121,7 +121,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is odd. False if the given number is even.
 	 */
-	static public function isOdd(n:Float):Bool
+	public static function isOdd(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -140,7 +140,7 @@ class FlxMath
 	 * 
 	 * @return	True if the given number is even. False if the given number is odd.
 	 */
-	static public function isEven(n:Float):Bool
+	public static function isEven(n:Float):Bool
 	{
 		if ((Std.int(n) & 1) != 0)
 		{
@@ -160,7 +160,7 @@ class FlxMath
 	 * 
 	 * @return	-1 if num1 is smaller, 1 if num2 is bigger, 0 if they are equal
 	 */
-	static public function numericComparison(num1:Float, num2:Float):Int
+	public static function numericComparison(num1:Float, num2:Float):Int
 	{
 		if (num2 > num1)
 		{
@@ -185,7 +185,7 @@ class FlxMath
 	 * 
 	 * @return	true if pointX/pointY is within the region, otherwise false
 	 */
-	static public function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
+	public static function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
 	{
 		if (pointX >= rectX && pointX <= (rectX + rectWidth))
 		{
@@ -205,7 +205,7 @@ class FlxMath
 	 * @param	rect		The FlxRect to test within
 	 * @return	true if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	static public function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
+	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
 	{
 		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
 		{
@@ -223,7 +223,7 @@ class FlxMath
 	 * 
 	 * @return	true if mouse is within the FlxRect, otherwise false
 	 */
-	static public function mouseInFlxRect(useWorldCoords:Bool, rect:FlxRect):Bool
+	public static function mouseInFlxRect(useWorldCoords:Bool, rect:FlxRect):Bool
 	{
 		if (rect == null)
 		{
@@ -249,7 +249,7 @@ class FlxMath
 	 * @param	rect		The Rectangle to test within
 	 * @return	true if pointX/pointY is within the Rectangle, otherwise false
 	 */
-	static public function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
+	public static function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
 	{
 		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
 		{
@@ -268,7 +268,7 @@ class FlxMath
 	 * @param 	min 	The minimum the value is allowed to be
 	 * @return The new value
 	 */
-	static public function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
+	public static function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
 	{
 		value += amount;
 		
@@ -286,14 +286,14 @@ class FlxMath
 	
 	/**
 	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-	 * Values must be positive integers, and are passed through <code>Math.abs</code>
+	 * Values must be positive integers, and are passed through Math.abs
 	 * 
 	 * @param 	value 	The value to add the amount to
 	 * @param 	amount 	The amount to add to the value
 	 * @param 	max 	The maximum the value is allowed to be
 	 * @return The wrapped value
 	 */
-	static public function wrapValue(value:Int, amount:Int, max:Int):Int
+	public static function wrapValue(value:Int, amount:Int, max:Int):Int
 	{
 		var diff:Int;
 
@@ -316,7 +316,7 @@ class FlxMath
 	 * 
 	 * @return	Result of the dot product
 	 */
-	inline static public function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
+	public static inline function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
 	{
 		return ax * bx + ay * by;
 	}
@@ -329,7 +329,7 @@ class FlxMath
 	 * 
 	 * @return The length
 	 */
-	inline static public function vectorLength(dx:Float, dy:Float):Float
+	public static inline function vectorLength(dx:Float, dy:Float):Float
 	{
 		return Math.sqrt(dx * dx + dy * dy);
 	}
@@ -337,11 +337,11 @@ class FlxMath
 	/**
 	 * Calculate the distance between two points.
 	 * 
-	 * @param 	Point1		A <code>FlxPoint</code> object referring to the first location.
-	 * @param 	Point2		A <code>FlxPoint</code> object referring to the second location.
-	 * @return	The distance between the two points as a floating point <code>Number</code> object.
+	 * @param 	Point1		A FlxPoint object referring to the first location.
+	 * @param 	Point2		A FlxPoint object referring to the second location.
+	 * @return	The distance between the two points as a floating point Number object.
 	 */
-	inline static public function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
+	public static inline function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
 	{
 		var dx:Float = Point1.x - Point2.x;
 		var dy:Float = Point1.y - Point2.y;
@@ -355,7 +355,7 @@ class FlxMath
 	 * @param	SpriteB		The second FlxSprite
 	 * @return	Distance between the sprites in pixels
 	 */
-	inline static public function distanceBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Int
+	public static inline function distanceBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Int
 	{
 		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
 		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
@@ -369,10 +369,10 @@ class FlxMath
 	 * @param	SpriteA		The first FlxSprite
 	 * @param	SpriteB		The second FlxSprite
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
-	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
-	inline static public function isDistanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
+	public static inline function isDistanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
 		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
 		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
@@ -384,14 +384,14 @@ class FlxMath
 	}
 	
 	/**
-	 * Find the distance (in pixels, rounded) from an <code>FlxSprite</code>
-	 * to the given <code>FlxPoint</code>, taking the source origin into account.
+	 * Find the distance (in pixels, rounded) from an FlxSprite
+	 * to the given FlxPoint, taking the source origin into account.
 	 * 
 	 * @param	Sprite	The FlxSprite
 	 * @param	Target	The FlxPoint
 	 * @return	Distance in pixels
 	 */
-	inline static public function distanceToPoint(Sprite:FlxSprite, Target:FlxPoint):Int
+	public static inline function distanceToPoint(Sprite:FlxSprite, Target:FlxPoint):Int
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
@@ -399,17 +399,17 @@ class FlxMath
 	}
 	
 	/**
-	 * Check if the distance from an <code>FlxSprite</code> to the given
-	 * <code>FlxPoint</code> is within a specified number. 
+	 * Check if the distance from an FlxSprite to the given
+	 * FlxPoint is within a specified number. 
 	 * A faster algoritm than distanceToPoint because the Math.sqrt() is avoided.
 	 * 
 	 * @param	Sprite	The FlxSprite
 	 * @param	Target	The FlxPoint
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
-	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
-	inline static public function isDistanceToPointWithin(Sprite:FlxSprite, Target:FlxPoint, Distance:Float, IncludeEqual:Bool = false):Bool
+	public static inline function isDistanceToPointWithin(Sprite:FlxSprite, Target:FlxPoint, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
@@ -427,7 +427,7 @@ class FlxMath
 	 * @param	Sprite	The FlxSprite to test against
 	 * @return	The distance between the given sprite and the mouse coordinates
 	 */
-	inline static public function distanceToMouse(Sprite:FlxSprite):Int
+	public static inline function distanceToMouse(Sprite:FlxSprite):Int
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
@@ -440,10 +440,10 @@ class FlxMath
 	 *
 	 * @param	Sprite		The FlxSprite to test against
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
-	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
-	inline static public function isDistanceToMouseWithin(Sprite:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
+	public static inline function isDistanceToMouseWithin(Sprite:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
@@ -463,7 +463,7 @@ class FlxMath
 	 * @param	Touch	The FlxTouch to test against
 	 * @return	The distance between the given sprite and the mouse coordinates
 	 */
-	inline static public function distanceToTouch(Sprite:FlxSprite, Touch:FlxTouch):Int
+	public static inline function distanceToTouch(Sprite:FlxSprite, Touch:FlxTouch):Int
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
@@ -476,10 +476,10 @@ class FlxMath
 	 *
 	 * @param	Sprite	The FlxSprite to test against
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given <code>Distance</code>
-	 * @return	True if the distance between the sprites is less than the given <code>Distance</code> 
+	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
-	inline static public function isDistanceToTouchWithin(Sprite:FlxSprite, Touch:FlxTouch, Distance:Float, IncludeEqual:Bool = false):Bool
+	public static inline function isDistanceToTouchWithin(Sprite:FlxSprite, Touch:FlxTouch, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
@@ -497,7 +497,7 @@ class FlxMath
 	 * @param	Number	The floating point number
 	 * @return	Amount of decimals
 	 */
-	static public function getDecimals(Number:Float):Int
+	public static function getDecimals(Number:Float):Int
 	{
 		var helperArray:Array<String> = Std.string(Number).split(".");
 		var decimals:Int = 0;
@@ -510,7 +510,7 @@ class FlxMath
 		return decimals;
 	}
 	
-	inline static public function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
+	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}
@@ -519,15 +519,15 @@ class FlxMath
 	/**
 	 * Minimum value of a floating point number.
 	 */
-	inline public static var MIN_VALUE:Float = 0.0000000000000001;
+	public static inline var MIN_VALUE:Float = 0.0000000000000001;
 	#else
 	/**
 	 * Minimum value of a floating point number.
 	 */
-	inline public static var MIN_VALUE:Float = 5e-324;
+	public static inline var MIN_VALUE:Float = 5e-324;
 	#end
 	/**
 	 * Maximum value of a floating point number.
 	 */
-	inline public static var MAX_VALUE:Float = 1.79e+308;
+	public static inline var MAX_VALUE:Float = 1.79e+308;
 }

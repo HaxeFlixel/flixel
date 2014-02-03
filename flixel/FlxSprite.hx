@@ -1,31 +1,31 @@
 package flixel;
 
-import flixel.FlxG;
-import flixel.FlxBasic;
-import flixel.system.FlxAssets;
-import flixel.system.layer.DrawStackItem;
-import flixel.system.layer.frames.FlxFrame;
-import flixel.system.layer.Region;
+import flash.display.BitmapData;
+import flash.display.BlendMode;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flash.display.BitmapData;
-import flash.display.BlendMode;
 import flixel.animation.FlxAnimationController;
+import flixel.FlxBasic;
+import flixel.FlxG;
+import flixel.system.FlxAssets;
+import flixel.system.layer.DrawStackItem;
+import flixel.system.layer.frames.FlxFrame;
+import flixel.system.layer.Region;
 import flixel.util.FlxAngle;
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
+@:bitmap("assets/images/logo/default.png")	private class GraphicDefault extends BitmapData {}
+
 /**
- * The main "game object" class, the sprite is a <code>FlxObject</code>
+ * The main "game object" class, the sprite is a FlxObject
  * with a bunch of graphics options and abilities, like animation and stamping.
  */
 class FlxSprite extends FlxObject
@@ -35,7 +35,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var animation:FlxAnimationController;
 	/**
-	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
+	 * Set pixels to any BitmapData object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
 	public var pixels(get, set):BitmapData;
@@ -44,7 +44,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var frame(default, set):FlxFrame;
 	/**
-	 * The actual Flash <code>BitmapData</code> object representing the current display state of the sprite.
+	 * The actual Flash BitmapData object representing the current display state of the sprite.
 	 */
 	public var framePixels:BitmapData;
 	/**
@@ -63,38 +63,37 @@ class FlxSprite extends FlxObject
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
 	 */
-	public var bakedRotation(default, null):Float;
+	public var bakedRotationAngle(default, null):Float;
 	/**
-	 * Set <code>alpha</code> to a number between 0 and 1 to change the opacity of the sprite.
+	 * Set alpha to a number between 0 and 1 to change the opacity of the sprite.
 	 */
 	public var alpha(default, set):Float = 1.0;
 	/**
-	 * Set <code>facing</code> using <code>FlxObject.LEFT</code>,<code>RIGHT</code>, <code>UP</code>, 
-	 * and <code>DOWN</code> to take advantage of flipped sprites and/or just track player orientation more easily.
+	 * Set facing using FlxObject.LEFT,RIGHT, UP, 
+	 * and DOWN to take advantage of flipped sprites and/or just track player orientation more easily.
 	 */
 	public var facing(default, set):Int;
 	/**
-	 * If the Sprite is flipped. Shouldn't be changed unless you know what are you doing.
+	 * If the Sprite is flipped.
 	 */
 	public var flipped(default, null):Int;
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
 	 */
-	public var origin(default, set):FlxPoint;
+	public var origin(default, null):FlxPoint;
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
-	 * changing a sprite's <code>width</code>, <code>height</code> or <code>scale</code>.
+	 * changing a sprite's width, height or scale.
 	 */
-	public var offset(default, set):FlxPoint;
+	public var offset(default, null):FlxPoint;
 	/**
-	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use <code>updateHitbox</code> for that
-	 * (or <code>setGraphicSize()</code>. WARNING: scaling sprites decreases rendering performance by a factor of about x10!
+	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use updateHitbox for that
+	 * (or setGraphicSize(). WARNING: scaling sprites decreases rendering performance by a factor of about x10!
 	 */
-	public var scale(default, set):FlxPoint;
+	public var scale(default, null):FlxPoint;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
-	 * @default false
 	 */
 	public var antialiasing:Bool = false;
 	/**
@@ -104,25 +103,20 @@ class FlxSprite extends FlxObject
 	public var dirty:Bool = true;
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
-	 * @default null
 	 */
-	public var blend(get, set):BlendMode;
-	private var _blend:BlendMode;
+	public var blend(default, set):BlendMode;
+	
 	#if !flash
 	private var _blendInt:Int = 0;
 	#end
 	/**
 	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
-	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use <code>alpha</code>. 
+	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use alpha. 
 	 */
 	public var color(default, set):Int = 0xffffff;
-	/**
-	 * TODO: Needs docs
-	 */
+	
 	public var colorTransform(get, never):ColorTransform;
-	/**
-	 * TODO: Needs docs
-	 */
+	
 	#if !flash
 	public var isColored:Bool;
 	private var _red:Float = 1.0;
@@ -167,15 +161,9 @@ class FlxSprite extends FlxObject
 	private var _sinAngle:Float = 0;
 	private var _cosAngle:Float = 1;
 	private var _angleChanged:Bool = false;
-	/**
-	 * Internal statically typed FlxPoint vars, for performance reasons.
-	 */
-	private var _offset:FlxPoint;
-	private var _origin:FlxPoint;
-	private var _scale:FlxPoint;
 	
 	/**
-	 * Creates a <code>FlxSprite</code> at a specified position with a specified one-frame graphic. 
+	 * Creates a FlxSprite at a specified position with a specified one-frame graphic. 
 	 * If none is provided, a 16x16 image of the HaxeFlixel logo is used.
 	 * 
 	 * @param	X				The initial X position of the sprite.
@@ -211,7 +199,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>reset()</code> it later to revive it.
+	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and reset() it later to revive it.
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
 	override public function destroy():Void
@@ -238,11 +226,7 @@ class FlxSprite extends FlxObject
 			framePixels.dispose();
 		}
 		framePixels = null;
-		#if flash
 		blend = null;
-		#else
-		_blend = null;
-		#end
 		frame = null;
 	}
 	
@@ -253,7 +237,7 @@ class FlxSprite extends FlxObject
 			NewSprite = new FlxSprite();
 		}
 		
-		NewSprite.loadFromSprite(this);
+		NewSprite.loadGraphicFromSprite(this);
 		return NewSprite;
 	}
 	
@@ -264,7 +248,7 @@ class FlxSprite extends FlxObject
 	 * @param	Sprite	The FlxSprite from which you want to load graphic data
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadFromSprite(Sprite:FlxSprite):FlxSprite
+	public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite
 	{
 		if (!exists)
 		{
@@ -273,12 +257,12 @@ class FlxSprite extends FlxObject
 		
 		region = Sprite.region.clone();
 		flipped = Sprite.flipped;
-		bakedRotation = Sprite.bakedRotation;
+		bakedRotationAngle = Sprite.bakedRotationAngle;
 		cachedGraphics = Sprite.cachedGraphics;
 		
 		width = frameWidth = Sprite.frameWidth;
 		height = frameHeight = Sprite.frameHeight;
-		if (bakedRotation > 0)
+		if (bakedRotationAngle > 0)
 		{
 			width = Sprite.width;
 			height = Sprite.height;
@@ -306,7 +290,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
-		bakedRotation = 0;
+		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.add(Graphic, Unique, Key);
 		
 		flipped = (Reverse == true) ? cachedGraphics.bitmap.width : 0;
@@ -450,7 +434,7 @@ class FlxSprite extends FlxObject
 		
 		var skipGen:Bool = FlxG.bitmap.checkCache(key);
 		cachedGraphics = FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.TRANSPARENT, true, key);
-		bakedRotation = 360 / Rotations;
+		bakedRotationAngle = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
 		if (!skipGen)
@@ -471,7 +455,7 @@ class FlxSprite extends FlxObject
 					_matrix.translate( -halfBrushWidth, -halfBrushHeight);
 					_matrix.rotate(bakedAngle * FlxAngle.TO_RAD);
 					_matrix.translate(max * column + midpointX + column, midpointY + row);
-					bakedAngle += bakedRotation;
+					bakedAngle += bakedRotationAngle;
 					cachedGraphics.bitmap.draw(brush, _matrix, null, null, null, AntiAliasing);
 					column++;
 				}
@@ -505,30 +489,6 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * This function creates a flat colored square image dynamically.
-	 * @param	Width		The width of the sprite you want to generate.
-	 * @param	Height		The height of the sprite you want to generate.
-	 * @param	Color		Specifies the color of the generated block (ARGB format).
-	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.  Default is false.
-	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
-	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
-	 */
-	public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite
-	{
-		bakedRotation = 0;
-		cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
-		region = new Region();
-		region.width = Width;
-		region.height = Height;
-		width = region.tileWidth = frameWidth = cachedGraphics.bitmap.width;
-		height = region.tileHeight = frameHeight = cachedGraphics.bitmap.height;
-		animation.destroyAnimations();
-		updateFrameData();
-		resetHelpers();
-		return this;
-	}
-	
-	/**
 	 * Loads TexturePacker atlas.
 	 * @param	Data		Atlas data holding links to json-data and atlas image
 	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames. 
@@ -537,9 +497,9 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadImageFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite
+	public function loadGraphicFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite
 	{
-		bakedRotation = 0;
+		bakedRotationAngle = 0;
 		
 		if (Std.is(Data, CachedGraphics))
 		{
@@ -590,9 +550,9 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedImageFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
+	public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
 	{
-		var temp = loadImageFromTexture(Data);
+		var temp = loadGraphicFromTexture(Data);
 		
 		if (temp == null)
 		{
@@ -612,9 +572,33 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * This function creates a flat colored square image dynamically.
+	 * @param	Width		The width of the sprite you want to generate.
+	 * @param	Height		The height of the sprite you want to generate.
+	 * @param	Color		Specifies the color of the generated block (ARGB format).
+	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.  Default is false.
+	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 */
+	public function makeGraphic(Width:Int, Height:Int, Color:Int = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
+	{
+		bakedRotationAngle = 0;
+		cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
+		region = new Region();
+		region.width = Width;
+		region.height = Height;
+		width = region.tileWidth = frameWidth = cachedGraphics.bitmap.width;
+		height = region.tileHeight = frameHeight = cachedGraphics.bitmap.height;
+		animation.destroyAnimations();
+		updateFrameData();
+		resetHelpers();
+		return this;
+	}
+	
+	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
 	 */
-	inline public function resetSize():Void
+	public inline function resetSize():Void
 	{
 		_flashRect.x = 0;
 		_flashRect.y = 0;
@@ -625,7 +609,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets frame size to frame dimensions
 	 */
-	inline public function resetFrameSize():Void
+	public inline function resetFrameSize():Void
 	{
 		frameWidth = Std.int(frame.sourceSize.x);
 		frameHeight = Std.int(frame.sourceSize.y);
@@ -635,7 +619,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets sprite's size back to frame size
 	 */
-	inline public function resetSizeFromFrame():Void
+	public inline function resetSizeFromFrame():Void
 	{
 		width = frameWidth;
 		height = frameHeight;
@@ -643,22 +627,21 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Sets the sprite's origin to its center - useful after adjusting 
-	 * <code>scale</code> to make sure rotations work as expected.
+	 * scale to make sure rotations work as expected.
 	 */
-	inline public function setOriginToCenter():Void
+	public inline function setOriginToCenter():Void
 	{
-		_origin.set(frameWidth * 0.5, frameHeight * 0.5);
+		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 	}
 	
 	/**
 	 * Helper function to set the graphic's dimensions by using scale, allowing you to keep the current aspect ratio
-	 * should one of the Integers be <= 0. Also updates the sprite's hitbox, offset and origin for you by default!
+	 * should one of the Integers be <= 0. It might make sense to call updateHitbox() afterwards!
 	 * 
-	 * @param	Width			How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
-	 * @param	Height			How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
-	 * @param	UpdateHitbox	Whether or not to update the hitbox dimensions, offset and origin accordingly.
+	 * @param   Width    How wide the graphic should be. If <= 0, and a Height is set, the aspect ratio will be kept.
+	 * @param   Height   How high the graphic should be. If <= 0, and a Width is set, the aspect ratio will be kept.
 	 */
-	public function setGraphicSize(Width:Int = 0, Height:Int = 0, UpdateHitbox:Bool = true):Void
+	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
 		if (Width <= 0 && Height <= 0) {
 			return;
@@ -673,11 +656,6 @@ class FlxSprite extends FlxObject
 		}
 		else if (Height <= 0) {
 			scale.y = newScaleX;
-		}
-		
-		if (UpdateHitbox) 
-		{
-			updateHitbox();
 		}	
 	}
 	
@@ -749,19 +727,16 @@ class FlxSprite extends FlxObject
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		#if js
-		var useAlpha:Bool = (alpha < 1);
-		#end
 		
 		var cos:Float;
 		var sin:Float;
 	#end
 		
-		var isSimpleRender:Bool = simpleRenderSprite();
+		var simpleRender:Bool = isSimpleRender();
 		
 		for (camera in cameras)
 		{
-			if (!camera.visible || !camera.exists || !onScreen(camera))
+			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
 				continue;
 			}
@@ -770,27 +745,28 @@ class FlxSprite extends FlxObject
 			#if !js
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
 			#else
+			var useAlpha:Bool = (alpha < 1) || (camera.alpha < 1);
 			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
 			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			_point.x = x - (camera.scroll.x * _scrollFactor.x) - (_offset.x);
-			_point.y = y - (camera.scroll.y * _scrollFactor.y) - (_offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 			
-			_point.x = (_point.x) + _origin.x;
-			_point.y = (_point.y) + _origin.y;
+			_point.x = (_point.x) + origin.x;
+			_point.y = (_point.y) + origin.y;
 			
 			#if js
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
 			#end
 		#else
-			_point.x = x - (camera.scroll.x * _scrollFactor.x) - (_offset.x);
-			_point.y = y - (camera.scroll.y * _scrollFactor.y) - (_offset.y);
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
 #if flash
-			if (isSimpleRender)
+			if (simpleRender)
 			{
 				_flashPoint.x = Math.floor(_point.x);
 				_flashPoint.y = Math.floor(_point.y);
@@ -800,13 +776,14 @@ class FlxSprite extends FlxObject
 			else
 			{
 				_matrix.identity();
-				_matrix.translate( -_origin.x, -_origin.y);
-				_matrix.scale(_scale.x, _scale.y);
-				if ((angle != 0) && (bakedRotation <= 0))
+				_matrix.translate( -origin.x, -origin.y);
+				_matrix.scale(scale.x, scale.y);
+				
+				if ((angle != 0) && (bakedRotationAngle <= 0))
 				{
 					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
-				_matrix.translate(_point.x + _origin.x, _point.y + _origin.y);
+				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
@@ -815,8 +792,8 @@ class FlxSprite extends FlxObject
 			var ssx:Float = 0;
 			var csy:Float = 1;
 			
-			var x1:Float = (_origin.x - frame.center.x);
-			var y1:Float = (_origin.y - frame.center.y);
+			var x1:Float = (origin.x - frame.center.x);
+			var y1:Float = (origin.y - frame.center.y);
 			
 			var x2:Float = x1;
 			var y2:Float = y1;
@@ -827,9 +804,9 @@ class FlxSprite extends FlxObject
 			var c:Float = ssy;
 			var d:Float = csy;
 			
-			if (!isSimpleRender)
+			if (!simpleRender)
 			{
-				if (_angleChanged)
+				if (_angleChanged && (bakedRotationAngle <= 0))
 				{
 					var radians:Float = -angle * FlxAngle.TO_RAD;
 					_sinAngle = Math.sin(radians);
@@ -837,7 +814,7 @@ class FlxSprite extends FlxObject
 					_angleChanged = false;
 				}
 				
-				var sx:Float = _scale.x * _facingMult;
+				var sx:Float = scale.x * _facingMult;
 				
 				if (frame.rotated)
 				{
@@ -845,9 +822,9 @@ class FlxSprite extends FlxObject
 					sin = _cosAngle;
 					
 					csx = cos * sx;
-					ssy = sin * _scale.y;
+					ssy = sin * scale.y;
 					ssx = sin * sx;
-					csy = cos * _scale.y;
+					csy = cos * scale.y;
 					
 					x2 = x1 * ssx - y1 * csy;
 					y2 = x1 * csx + y1 * ssy;
@@ -863,9 +840,9 @@ class FlxSprite extends FlxObject
 					sin = _sinAngle;
 					
 					csx = cos * sx;
-					ssy = sin * _scale.y;
+					ssy = sin * scale.y;
 					ssx = sin * sx;
-					csy = cos * _scale.y;
+					csy = cos * scale.y;
 					
 					x2 = x1 * csx + y1 * ssy;
 					y2 = -x1 * ssx + y1 * csy;
@@ -898,11 +875,11 @@ class FlxSprite extends FlxObject
 				currDrawData[currIndex++] = _green;
 				currDrawData[currIndex++] = _blue;
 			}
-			currDrawData[currIndex++] = alpha;
+			currDrawData[currIndex++] = (alpha * camera.alpha);
 			#else
 			if (useAlpha)
 			{
-				currDrawData[currIndex++] = alpha;
+				currDrawData[currIndex++] = (alpha * camera.alpha);
 			}
 			#end
 			drawItem.position = currIndex;
@@ -914,8 +891,8 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * This function draws or stamps one <code>FlxSprite</code> onto another.
-	 * This function is NOT intended to replace <code>draw()</code>!
+	 * This function draws or stamps one FlxSprite onto another.
+	 * This function is NOT intended to replace draw()!
 	 * @param	Brush		The image you want to use as a brush or stamp or pen or whatever.
 	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
 	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
@@ -926,7 +903,7 @@ class FlxSprite extends FlxObject
 		var bitmapData:BitmapData = Brush.framePixels;
 		
 		//Simple draw
-		if (((Brush.angle == 0) || (Brush.bakedRotation > 0)) && (Brush._scale.x == 1) && (Brush._scale.y == 1) && (Brush.blend == null))
+		if (((Brush.angle == 0) || (Brush.bakedRotationAngle > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
 		{
 			_flashPoint.x = X + region.startX;
 			_flashPoint.y = Y + region.startY;
@@ -946,13 +923,13 @@ class FlxSprite extends FlxObject
 		
 		//Advanced draw
 		_matrix.identity();
-		_matrix.translate(-Brush._origin.x, -Brush._origin.y);
-		_matrix.scale(Brush._scale.x, Brush._scale.y);
+		_matrix.translate(-Brush.origin.x, -Brush.origin.y);
+		_matrix.scale(Brush.scale.x, Brush.scale.y);
 		if (Brush.angle != 0)
 		{
 			_matrix.rotate(Brush.angle * FlxAngle.TO_RAD);
 		}
-		_matrix.translate(X + region.startX + Brush._origin.x, Y + region.startY + Brush._origin.y);
+		_matrix.translate(X + region.startX + Brush.origin.x, Y + region.startY + Brush.origin.y);
 		var brushBlend:BlendMode = Brush.blend;
 		cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		resetFrameBitmapDatas();
@@ -966,7 +943,7 @@ class FlxSprite extends FlxObject
 	 * Useful if you are doing procedural generation or other weirdness!
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
 	 */
-	inline public function drawFrame(Force:Bool = false):Void
+	public inline function drawFrame(Force:Bool = false):Void
 	{
 		#if flash
 		if (Force || dirty)
@@ -984,12 +961,12 @@ class FlxSprite extends FlxObject
 	 */
 	public function centerOffsets(AdjustPosition:Bool = false):Void
 	{
-		_offset.x = (frameWidth - width) * 0.5;
-		_offset.y = (frameHeight - height) * 0.5;
+		offset.x = (frameWidth - width) * 0.5;
+		offset.y = (frameHeight - height) * 0.5;
 		if (AdjustPosition)
 		{
-			x += _offset.x;
-			y += _offset.y;
+			x += offset.x;
+			y += offset.y;
 		}
 	}
 	
@@ -1047,7 +1024,7 @@ class FlxSprite extends FlxObject
 	 * @param	blueOffset			The offset for the blue color channel value, in the range from -255 to 255. 
 	 * @param	alphaOffset			The offset for alpha transparency channel value, in the range from -255 to 255. 
 	 */
-	public function setColorTransformation(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0, alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
+	public function setColorTransform(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0, alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
 	{
 		color = FlxColorUtil.getColor24(Std.int(redMultiplier * 255), Std.int(greenMultiplier * 255), Std.int(blueMultiplier * 255));
 		alpha = alphaMultiplier;
@@ -1105,84 +1082,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Check and see if this object is currently on screen.
-	 * Differs from <code>FlxObject</code>'s implementation
-	 * in that it takes the actual graphic into account,
-	 * not just the hitbox or bounding box or whatever.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-	 * @return	Whether the object is on screen or not.
-	 */
-	override public function onScreen(Camera:FlxCamera = null):Bool
-	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		
-		var minX:Float = x - _offset.x - Camera.scroll.x * _scrollFactor.x;
-		var minY:Float = y - _offset.y - Camera.scroll.y * _scrollFactor.y;
-		var maxX:Float = 0;
-		var maxY:Float = 0;
-		
-		if ((angle == 0 || bakedRotation > 0) && (_scale.x == 1) && (_scale.y == 1))
-		{
-			maxX = minX + frameWidth;
-			maxY = minY + frameHeight;
-		}
-		else
-		{
-			var radiusX:Float = _halfWidth;
-			var radiusY:Float = _halfHeight;
-			
-			if (_origin.x == _halfWidth)
-			{
-				radiusX = Math.abs(_halfWidth * _scale.x);
-			}
-			else
-			{
-				var sox:Float = _scale.x * _origin.x;
-				var sfw:Float = _scale.x * frameWidth;
-				var x1:Float = Math.abs(sox);
-				var x2:Float = Math.abs(sfw - sox);
-				radiusX = Math.max(x2, x1);
-			}
-			
-			if (_origin.y == _halfHeight)
-			{
-				radiusY = Math.abs(_halfHeight * _scale.y);
-			}
-			else
-			{
-				var soy:Float = _scale.y * _origin.y;
-				var sfh:Float = _scale.y * frameHeight;
-				var y1:Float = Math.abs(soy);
-				var y2:Float = Math.abs(sfh - soy);
-				radiusY = Math.max(y2, y1);
-			}
-			
-			var radius:Float = Math.max(radiusX, radiusY);
-			radius *= 1.415; // Math.sqrt(2);
-			
-			minX += _origin.x;
-			maxX = minX + radius;
-			minX -= radius;
-			
-			minY += _origin.y;
-			maxY = minY + radius;
-			minY -= radius;
-		}
-		
-		if (maxX < 0 || minX > Camera.width)
-			return false;
-		
-		if (maxY < 0 || minY > Camera.height)
-			return false;
-		
-		return true;
-	}
-	
-	/**
-	 * Checks to see if a point in 2D world space overlaps this <code>FlxSprite</code> object's current displayed pixels.
+	 * Checks to see if a point in 2D world space overlaps this FlxSprite object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
@@ -1196,8 +1096,8 @@ class FlxSprite extends FlxObject
 			Camera = FlxG.camera;
 		}
 		getScreenXY(_point, Camera);
-		_point.x = _point.x - _offset.x;
-		_point.y = _point.y - _offset.y;
+		_point.x = _point.x - offset.x;
+		_point.y = _point.y - offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
 
@@ -1222,7 +1122,10 @@ class FlxSprite extends FlxObject
 	 */
 	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
-		if (cachedGraphics == null)	loadGraphic(FlxAssets.IMG_DEFAULT);
+		if (cachedGraphics == null)	
+		{
+			loadGraphic(GraphicDefault);
+		}
 		
 		#if !(flash || js)
 		if (!RunOnCpp)
@@ -1301,8 +1204,8 @@ class FlxSprite extends FlxObject
 	/**
 	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
 	 * 
-	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined. Otherwise a new one is created.
-	 * @return	A <code>FlxPoint</code> object containing the midpoint of this sprite's graphic in world coordinates.
+	 * @param	point	Allows you to pass in an existing FlxPoint object if you're so inclined. Otherwise a new one is created.
+	 * @return	A FlxPoint object containing the midpoint of this sprite's graphic in world coordinates.
 	 */
 	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
 	{
@@ -1317,21 +1220,97 @@ class FlxSprite extends FlxObject
 	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
 	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
 	 */
-	inline public function resetFrameBitmapDatas():Void
+	public inline function resetFrameBitmapDatas():Void
 	{
 		cachedGraphics.tilesheet.destroyFrameBitmapDatas();
+	}
+	
+	/**
+	 * Check and see if this object is currently on screen. Differs from FlxObject's implementation
+	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
+	 * 
+	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @return	Whether the object is on screen or not.
+	 */
+	override public function isOnScreen(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		
+		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
+		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
+		var maxX:Float = 0;
+		var maxY:Float = 0;
+		
+		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
+		{
+			maxX = minX + frameWidth;
+			maxY = minY + frameHeight;
+		}
+		else
+		{
+			var radiusX:Float = _halfWidth;
+			var radiusY:Float = _halfHeight;
+			
+			if (origin.x == _halfWidth)
+			{
+				radiusX = Math.abs(_halfWidth * scale.x);
+			}
+			else
+			{
+				var sox:Float = scale.x * origin.x;
+				var sfw:Float = scale.x * frameWidth;
+				var x1:Float = Math.abs(sox);
+				var x2:Float = Math.abs(sfw - sox);
+				radiusX = Math.max(x2, x1);
+			}
+			
+			if (origin.y == _halfHeight)
+			{
+				radiusY = Math.abs(_halfHeight * scale.y);
+			}
+			else
+			{
+				var soy:Float = scale.y * origin.y;
+				var sfh:Float = scale.y * frameHeight;
+				var y1:Float = Math.abs(soy);
+				var y2:Float = Math.abs(sfh - soy);
+				radiusY = Math.max(y2, y1);
+			}
+			
+			var radius:Float = Math.max(radiusX, radiusY);
+			radius *= 1.415; // Math.sqrt(2);
+			
+			minX += origin.x;
+			maxX = minX + radius;
+			minX -= radius;
+			
+			minY += origin.y;
+			maxY = minY + radius;
+			minY -= radius;
+		}
+		
+		if (maxX < 0 || minX > Camera.width)
+			return false;
+		
+		if (maxY < 0 || minY > Camera.height)
+			return false;
+		
+		return true;
 	}
 	
 	/**
 	 * Checks if the Sprite is being rendered in "simple mode" (via copyPixels). True for flash when no angle, bakedRotations, 
 	 * scaling or blend modes are used. This enables the sprite to be rendered much faster if true.
 	 */
-	private function simpleRenderSprite():Bool
+	public function isSimpleRender():Bool
 	{ 
 		#if flash
-		return (((angle == 0) || (bakedRotation > 0)) && (_scale.x == 1) && (_scale.y == 1) && (blend == null) && (forceComplexRender == false));
+		return (((angle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (forceComplexRender == false));
 		#else
-		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotation > 0)) && (_scale.x == 1) && (_scale.y == 1));
+		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
 	}
 	
@@ -1458,29 +1437,6 @@ class FlxSprite extends FlxObject
 		return super.set_angle(Value);
 	}
 	
-	private function set_origin(Value:FlxPoint):FlxPoint
-	{
-		_origin = cast Value;
-		return origin = Value;
-	}
-	
-	private function set_offset(Value:FlxPoint):FlxPoint
-	{
-		_offset = cast Value;
-		return offset = Value;
-	}
-	
-	private function set_scale(Value:FlxPoint):FlxPoint
-	{
-		_scale = cast Value;
-		return scale = Value;
-	}
-	
-	inline private function get_blend():BlendMode 
-	{
-		return _blend;
-	}
-	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
 		#if !flash
@@ -1504,8 +1460,8 @@ class FlxSprite extends FlxObject
 		{
 			_blendInt = 0;
 		}
-		#end
-		_blend = Value;
-		return Value;
+		#end	
+		
+		return blend = Value;
 	}
 }

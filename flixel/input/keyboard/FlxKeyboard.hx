@@ -37,7 +37,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Total amount of keys.
 	 */
-	inline static private var TOTAL:Int = 256;
+	private static inline var TOTAL:Int = 256;
 	
 	/**
 	 * A map for key lookup.
@@ -51,36 +51,36 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keys.anyPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: FlxG.keys.anyPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	inline public function anyPressed(KeyArray:Array<String>):Bool 
+	public inline function anyPressed(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
 	}
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keys.anyJustPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: FlxG.keys.anyJustPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	inline public function anyJustPressed(KeyArray:Array<String>):Bool 
+	public inline function anyJustPressed(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
 	}
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keys.anyJustReleased(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: FlxG.keys.anyJustReleased(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	inline public function anyJustReleased(KeyArray:Array<String>):Bool 
+	public inline function anyJustReleased(KeyArray:Array<String>):Bool
 	{ 
 		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
 	}
@@ -123,10 +123,10 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Look up the key code for any given string name of the key or button.
 	 * 
-	 * @param	KeyName		The <code>String</code> name of the key.
+	 * @param	KeyName		The String name of the key.
 	 * @return	The key code for that key.
 	 */
-	inline public function getKeyCode(KeyName:String):Int
+	public inline function getKeyCode(KeyName:String):Int
 	{
 		return _keyLookup.get(KeyName);
 	}
@@ -362,7 +362,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 * 
-	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
+	 * @param	FlashEvent	A KeyboardEvent object.
 	 */
 	private function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
@@ -490,7 +490,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
-	inline private function updateKeyStates(KeyCode:Int, Down:Bool):Void
+	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
 		var obj:FlxKey = _keyList[KeyCode];
 		
@@ -521,9 +521,9 @@ class FlxKeyboard implements IFlxInput
 		}
 	}
 	
-	inline private function onFocus():Void {}
+	private inline function onFocus():Void {}
 
-	inline private function onFocusLost():Void
+	private inline function onFocusLost():Void
 	{
 		reset();
 	}

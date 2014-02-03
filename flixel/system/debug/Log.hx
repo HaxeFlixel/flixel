@@ -5,7 +5,7 @@ import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
@@ -15,7 +15,7 @@ import haxe.ds.StringMap;
  */
 class Log extends Window
 {
-	inline static public var MAX_LOG_LINES:Int = 200;
+	public static inline var MAX_LOG_LINES:Int = 200;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -25,7 +25,7 @@ class Log extends Window
 	 */	
 	public function new()
 	{
-		super("log", FlxAssets.IMG_LOG_DEBUG);
+		super("log", new GraphicLog(0, 0));
 		
 		_text = new TextField();
 		_text.x = 2;
@@ -62,7 +62,7 @@ class Log extends Window
 	/**
 	 * Adds a new line to the log window.
 	 * @param 	Data		The data being logged.
-	 * @param 	Style		The <code>LogStyle</code> to be used for the log
+	 * @param 	Style		The LogStyle to be used for the log
 	 * @param 	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
 	 */
 	public function add(Data:Array<Dynamic>, Style:LogStyle, FireOnce:Bool = false):Bool

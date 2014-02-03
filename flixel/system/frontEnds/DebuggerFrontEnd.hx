@@ -1,5 +1,6 @@
 package flixel.system.frontEnds;
 
+import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.system.debug.FlxDebugger.ButtonAlignment;
 import flixel.system.debug.FlxDebugger.DebuggerLayout;
@@ -8,7 +9,7 @@ import flixel.system.ui.FlxSystemButton;
 class DebuggerFrontEnd
 {	
 	/**
-	 * Whether to show visual debug displays or not. Doesn't exist in <code>FLX_NO_DEBUG</code> mode.
+	 * Whether to show visual debug displays or not. Doesn't exist in FLX_NO_DEBUG mode.
 	 * @default false
 	 */
 	public var drawDebug:Bool = false;
@@ -21,15 +22,15 @@ class DebuggerFrontEnd
 	
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * The key codes used to toggle the debugger (see <code>FlxG.keys</code> for the keys available).
-	 * Default keys: ` and \. Set to <code>null</code> to deactivate.
+	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
+	 * Default keys: ` and \. Set to null to deactivate.
 	 * @default ["GRAVEACCENT", "BACKSLASH"]
 	 */
 	public var toggleKeys:Array<String>;
 	#end
 	
 	/**
-	 * Used to instantiate this class and assign a value to <code>toggleKeys</code>
+	 * Used to instantiate this class and assign a value to toggleKeys
 	 */
 	public function new() 
 	{
@@ -40,9 +41,9 @@ class DebuggerFrontEnd
 	
 	/**
 	 * Change the way the debugger's windows are laid out.
-	 * @param	Layout	The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
+	 * @param	Layout	The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
 	 */
-	inline public function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:DebuggerLayout):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.setLayout(Layout);
@@ -50,9 +51,9 @@ class DebuggerFrontEnd
 	}
 	
 	/**
-	 * Just resets the debugger windows to whatever the last selected layout was (<code>STANDARD</code> by default).
+	 * Just resets the debugger windows to whatever the last selected layout was (STANDARD by default).
 	 */
-	inline public function resetLayout():Void
+	public inline function resetLayout():Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.resetLayout();
@@ -65,7 +66,7 @@ class DebuggerFrontEnd
 	 */
 	public var visible(default, set):Bool = false;
 	
-	inline private function set_visible(Visible:Bool):Bool
+	private inline function set_visible(Visible:Bool):Bool
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.visible = Visible;
@@ -76,16 +77,18 @@ class DebuggerFrontEnd
 	
 	/**
 	 * Create and add a new debugger button.
-	 * @param	Position	Either LEFT,  MIDDLE or RIGHT.
-	 * @param	IconPath	The path to the image to use as the icon for the button.
-	 * @param	DownHandler	The function to be called when the button is pressed.
-	 * @param	ToggleMode	Whether this is a toggle button or not.
-	 * @param	UpdateLayout	Whether to update the button layout.
+	 * 
+	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
+	 * @param   Icon           The icon to use for the button
+	 * @param   DownHandler    The function to be called when the button is pressed.
+	 * @param   ToggleMode     Whether this is a toggle button or not.
+	 * @param   UpdateLayout   Whether to update the button layout.
+	 * @return  The added button.
 	 */
-	public function addButton(Alignment:ButtonAlignment, IconPath:String, DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
+	public function addButton(Alignment:ButtonAlignment, Icon:BitmapData, DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
 		#if !FLX_NO_DEBUG
-		return FlxG.game.debugger.addButton(Alignment, IconPath, DownHandler, ToggleMode, UpdateLayout);
+		return FlxG.game.debugger.addButton(Alignment, Icon, DownHandler, ToggleMode, UpdateLayout);
 		#else
 		return null;
 		#end

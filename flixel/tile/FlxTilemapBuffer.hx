@@ -99,7 +99,7 @@ class FlxTilemapBuffer
 	public var pixels(get, never):BitmapData;
 	
 	/**
-	 * Read-only, nab the actual buffer <code>BitmapData</code> object.
+	 * Read-only, nab the actual buffer BitmapData object.
 	 * 
 	 * @return	The buffer bitmap data.
 	 */

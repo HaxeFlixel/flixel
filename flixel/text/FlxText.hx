@@ -15,7 +15,7 @@ import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 
 /**
- * Extends <code>FlxSprite</code> to support rendering text.
+ * Extends FlxSprite to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
  * Also does nice pixel-perfect centering on pixel fonts
@@ -79,7 +79,7 @@ class FlxText extends FlxSprite
 	public var borderSize(default, set):Float = 1;
 	
 	/**
-	 * Internal reference to a Flash <code>TextField</code> object.
+	 * Internal reference to a Flash TextField object.
 	 */
 	public var textField(get, never):TextField;
 	
@@ -111,20 +111,20 @@ class FlxText extends FlxSprite
 	public static inline var BORDER_OUTLINE_FAST:Int = 3;
 	
 	/**
-	 * Internal reference to a Flash <code>TextField</code> object.
+	 * Internal reference to a Flash TextField object.
 	 */
 	private var _textField:TextField;
 	/**
-	 * Internal reference to a Flash <code>TextFormat</code> object.
+	 * Internal reference to a Flash TextFormat object.
 	 */
 	private var _format:TextFormat;
 	/**
-	 * Internal reference to another helper Flash <code>TextFormat</code> object.
+	 * Internal reference to another helper Flash TextFormat object.
 	 */
 	private var _formatAdjusted:TextFormat;
 	
 	/**
-	 * Creates a new <code>FlxText</code> object at the specified position.
+	 * Creates a new FlxText object at the specified position.
 	 * @param	X				The X position of the text.
 	 * @param	Y				The Y position of the text.
 	 * @param	Width			The width of the text object (height is determined automatically).
@@ -687,9 +687,9 @@ class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * A helper function for updating the <code>TextField</code> that we use for rendering.
+	 * A helper function for updating the TextField that we use for rendering.
 	 * 
-	 * @return	A writable copy of <code>TextField.defaultTextFormat</code>.
+	 * @return	A writable copy of TextField.defaultTextFormat.
 	 */
 	private function dtfCopy():TextFormat
 	{
@@ -738,7 +738,7 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	inline private function updateFormat(Format:TextFormat):Void
+	private inline function updateFormat(Format:TextFormat):Void
 	{
 		#if !flash
 		_textField.setTextFormat(Format, 0, _textField.text.length);

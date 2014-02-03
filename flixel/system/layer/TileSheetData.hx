@@ -46,7 +46,7 @@ class TileSheetData implements IFlxDestroyable
 		frameNames = new Array<String>();
 	}
 	
-	inline public function getFrame(name:String):FlxFrame
+	public inline function getFrame(name:String):FlxFrame
 	{
 		return flxFrames.get(name);
 	}
@@ -156,22 +156,22 @@ class TileSheetData implements IFlxDestroyable
 		
 		frame.rotated = false;
 		frame.trimmed = false;
-		frame.sourceSize = new FlxPoint(rect.width, rect.height);
-		frame.offset = new FlxPoint(0, 0);
+		frame.sourceSize.set(rect.width, rect.height);
+		frame.offset.set(0, 0);
 		
-		frame.center = new FlxPoint(0.5 * rect.width, 0.5 * rect.height);
+		frame.center.set(0.5 * rect.width, 0.5 * rect.height);
 		flxFrames.set(key, frame);
 		frameNames.push(key);
 		return frame;
 	}
 	
-	inline public function containsFrame(key:String):Bool
+	public inline function containsFrame(key:String):Bool
 	{
 		return flxFrames.exists(key);
 	}
 	
 	#if !flash
-	inline public function addTileRect(tileRect:Rectangle, ?point:Point):Int
+	public inline function addTileRect(tileRect:Rectangle, ?point:Point):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
 	}
@@ -257,9 +257,9 @@ class TileSheetData implements IFlxDestroyable
 		texFrame.trimmed = frameData.trimmed;
 		texFrame.rotated = frameData.rotated;
 		texFrame.name = key;
-		texFrame.sourceSize = new FlxPoint().copyFrom(frameData.sourceSize);
-		texFrame.offset = new FlxPoint().copyFrom(frameData.offset);
-		texFrame.center = new FlxPoint(0, 0);
+		texFrame.sourceSize.copyFrom(frameData.sourceSize);
+		texFrame.offset.copyFrom(frameData.offset);
+		texFrame.center.set(0, 0);
 		texFrame.frame = frameData.frame.clone();
 		
 		if (frameData.rotated)

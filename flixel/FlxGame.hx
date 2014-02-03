@@ -122,7 +122,7 @@ class FlxGame extends Sprite
 	
 	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 	/**
-	 * The sound tray display container (see <code>createSoundTray()</code>).
+	 * The sound tray display container (see createSoundTray()).
 	 */
 	public var soundTray(default, null):FlxSoundTray;
 	#end
@@ -151,9 +151,17 @@ class FlxGame extends Sprite
 	 */
 	private var _lostFocus:Bool = false;
 	
+	#if (cpp || neko)
+	/**
+	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
+	 * (the focus event should not fire when the game starts up!)
+	 */ 
+	private var _onFocusFiredOnce:Bool = false;
+	#end
+	
 	#if !FLX_NO_FOCUS_LOST_SCREEN 
 	/**
-	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
+	 * The "focus lost" screen (see createFocusScreen()).
 	 */
 	private var _focusLostScreen:FlxFocusLostScreen;
 	#end
@@ -296,9 +304,19 @@ class FlxGame extends Sprite
 	private function onFocus(?FlashEvent:Event):Void
 	{
 		#if flash
-			if (!_lostFocus) {
-				return; // Don't run this function twice (bug in standalone flash player)
-			}
+		if (!_lostFocus) 
+		{
+			return; // Don't run this function twice (bug in standalone flash player)
+		}
+		#end
+		
+		#if (cpp || neko)
+		// make sure the on focus event doesn't fire on startup 
+		if (!_onFocusFiredOnce)
+		{
+			_onFocusFiredOnce = true;
+			return;
+		}
 		#end
 		
 		_lostFocus = false;
@@ -310,19 +328,19 @@ class FlxGame extends Sprite
 		}
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-			if (_focusLostScreen != null)
-			{
-				_focusLostScreen.visible = false;
-			}
+		if (_focusLostScreen != null)
+		{
+			_focusLostScreen.visible = false;
+		}
 		#end 
 		
 		#if !FLX_NO_DEBUG
-			debugger.stats.onFocus();
+		debugger.stats.onFocus();
 		#end
 		
 		stage.frameRate = drawFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.sound.onFocus();
+		FlxG.sound.onFocus();
 		#end
 		FlxG.inputs.onFocus();
 	}
@@ -334,9 +352,10 @@ class FlxGame extends Sprite
 	private function onFocusLost(?FlashEvent:Event):Void
 	{
 		#if flash
-			if (_lostFocus) {
-				return; // Don't run this function twice (bug in standalone flash player)
-			}
+		if (_lostFocus) 
+		{
+			return; // Don't run this function twice (bug in standalone flash player)
+		}
 		#end
 		
 		_lostFocus = true;
@@ -348,19 +367,19 @@ class FlxGame extends Sprite
 		}
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-			if (_focusLostScreen != null)
-			{
-				_focusLostScreen.visible = true;
-			}
+		if (_focusLostScreen != null)
+		{
+			_focusLostScreen.visible = true;
+		}
 		#end 
 		
 		#if !FLX_NO_DEBUG
-			debugger.stats.onFocusLost();
+		debugger.stats.onFocusLost();
 		#end
 		
 		stage.frameRate = focusLostFramerate;
 		#if !FLX_NO_SOUND_SYSTEM
-			FlxG.sound.onFocusLost();
+		FlxG.sound.onFocusLost();
 		#end
 		FlxG.inputs.onFocusLost();
 	}
@@ -371,7 +390,7 @@ class FlxGame extends Sprite
 		var height:Int = Lib.current.stage.stageHeight;
 		
 		#if !flash
-			FlxG.bitmap.onContext();
+		FlxG.bitmap.onContext();
 		#end
 		
 		FlxG.resizeGame(width, height);
@@ -380,21 +399,21 @@ class FlxGame extends Sprite
 		FlxG.plugins.onResize(width, height);
 		
 		#if !FLX_NO_DEBUG
-			debugger.onResize(width, height);
+		debugger.onResize(width, height);
 		#end
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
-			if (_focusLostScreen != null)
-			{
-				_focusLostScreen.draw();
-			}
+		if (_focusLostScreen != null)
+		{
+			_focusLostScreen.draw();
+		}
 		#end
 		
 		#if (!FLX_NO_SOUND_TRAY && !FLX_NO_SOUND_SYSTEM)
-			if (soundTray != null)
-			{
-				soundTray.screenCenter();
-			}
+		if (soundTray != null)
+		{
+			soundTray.screenCenter();
+		}
 		#end
 		
 		inputContainer.scaleX = 1 / FlxG.game.scaleX;
@@ -653,6 +672,14 @@ class FlxGame extends Sprite
 		
 		#if !FLX_NO_DEBUG
 		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
+		#end
+		
+		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+		for (swipe in FlxG.swipes)
+		{
+			swipe = null;
+		}
+		FlxG.swipes = [];
 		#end
 	}
 	

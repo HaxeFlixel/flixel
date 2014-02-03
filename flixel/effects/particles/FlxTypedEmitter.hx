@@ -10,14 +10,14 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 
 /**
- * <code>FlxTypedEmitter</code> is a lightweight particle emitter.
+ * FlxTypedEmitter is a lightweight particle emitter.
  * It can be used for one-time explosions or for
- * continuous fx like rain and fire.  <code>FlxEmitter</code>
+ * continuous fx like rain and fire.  FlxEmitter
  * is not optimized or anything; all it does is launch
- * <code>FlxParticle</code> objects out at set intervals
+ * FlxParticle objects out at set intervals
  * by setting their positions and velocities accordingly.
  * It is easy to use and relatively efficient,
- * relying on <code>FlxGroup</code>'s RECYCLE POWERS.
+ * relying on FlxGroup's RECYCLE POWERS.
  */
 class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSprite>
 {
@@ -49,7 +49,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var rotation:Bounds<Float>;
 	/**
-	 * Sets the <code>acceleration</code> member of each particle to this value on launch.
+	 * Sets the acceleration member of each particle to this value on launch.
 	 */
 	public var acceleration:FlxPoint;
 	/**
@@ -141,7 +141,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	private var _waitForKill:Bool = false;
 	
 	/**
-	 * Creates a new <code>FlxTypedEmitter</code> object at a specific position.
+	 * Creates a new FlxTypedEmitter object at a specific position.
 	 * Does NOT automatically generate or attach particles!
 	 * 
 	 * @param	X		The X position of the emitter.
@@ -218,7 +218,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, BakedRotations:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
+	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -244,10 +244,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			{
 				randomFrame = FlxRandom.intRanged( 0, totalFrames - 1 );
 				
-				if (BakedRotations > 0)
+				if (bakedRotationAngles > 0)
 				{
 					#if flash
-					particle.loadRotatedGraphic(Graphics, BakedRotations, randomFrame, false, AutoBuffer);
+					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, randomFrame, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics, true);
 					#end
@@ -260,10 +260,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			}
 			else
 			{
-				if (BakedRotations > 0)
+				if (bakedRotationAngles > 0)
 				{
 					#if flash
-					particle.loadRotatedGraphic(Graphics, BakedRotations, -1, false, AutoBuffer);
+					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, -1, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics);
 					#end
@@ -717,9 +717,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	}
 	
 	/**
-	 * Change the emitter's midpoint to match the midpoint of a <code>FlxObject</code>.
+	 * Change the emitter's midpoint to match the midpoint of a FlxObject.
 	 * 
-	 * @param	Object		The <code>FlxObject</code> that you want to sync up with.
+	 * @param	Object		The FlxObject that you want to sync up with.
 	 */
 	public function at(Object:FlxObject):Void
 	{
@@ -730,8 +730,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	}
 	
 	/**
-	 * Set your own particle class type here. The custom class must extend <code>FlxParticle</code>.
-	 * Default is <code>FlxParticle</code>.
+	 * Set your own particle class type here. The custom class must extend FlxParticle.
+	 * Default is FlxParticle.
 	 */
 	public var particleClass(get, set):Class<T>;
 	
@@ -812,14 +812,14 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
-	inline public function setPosition(X:Float = 0, Y:Float = 0):Void
+	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;
 		y = Y;
 	}
 	
 	/**
-	 * Sets the <code>acceleration.y</code> member of each particle to this value on launch.
+	 * Sets the acceleration.y member of each particle to this value on launch.
 	 */
 	public var gravity(get, set):Float;
 	

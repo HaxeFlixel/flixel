@@ -184,7 +184,7 @@ class FlxGradient
 	}
 	
 	/**
-	 * Creates a new gradient and overlays that on-top of the given FlxSprite at the destX/destY coordinates (default 0,0)<br />
+	 * Creates a new gradient and overlays that on-top of the given FlxSprite at the destX/destY coordinates (default 0,0)
 	 * Use low alpha values in the colours to have the gradient overlay and not destroy the image below
 	 * 
 	 * @param	dest		The FlxSprite to overlay the gradient onto
@@ -216,7 +216,7 @@ class FlxGradient
 	}
 	
 	/**
-	 * Creates a new gradient and overlays that on-top of the given BitmapData at the destX/destY coordinates (default 0,0)<br />
+	 * Creates a new gradient and overlays that on-top of the given BitmapData at the destX/destY coordinates (default 0,0)
 	 * Use low alpha values in the colours to have the gradient overlay and not destroy the image below
 	 * 
 	 * @param	dest		The BitmapData to overlay the gradient onto

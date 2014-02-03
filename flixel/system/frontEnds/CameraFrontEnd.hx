@@ -10,7 +10,7 @@ import flixel.util.FlxColor;
 class CameraFrontEnd
 {
 	/**
-	 * An array listing <code>FlxCamera</code> objects that are used to draw stuff.
+	 * An array listing FlxCamera objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
 	 */
 	public var list(default, null):Array<FlxCamera>;
@@ -22,7 +22,7 @@ class CameraFrontEnd
 	
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
-	 * you are not doing any pre-processing in your game state's <code>draw()</code> call.
+	 * you are not doing any pre-processing in your game state's draw() call.
 	 * @default false
 	 */
 	public var useBufferLocking:Bool = false;
@@ -36,9 +36,9 @@ class CameraFrontEnd
 	 * Handy for PiP, split-screen, etc.
 	 * 
 	 * @param	NewCamera	The camera you want to add.
-	 * @return	This <code>FlxCamera</code> instance.
+	 * @return	This FlxCamera instance.
 	 */
-	@:generic inline public function add<T:FlxCamera>(NewCamera:T):T
+	@:generic public inline function add<T:FlxCamera>(NewCamera:T):T
 	{
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game.inputContainer));
 		FlxG.cameras.list.push(NewCamera);
@@ -167,7 +167,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
-	inline private function lock():Void
+	private inline function lock():Void
 	{
 		for (camera in list)
 		{
@@ -204,7 +204,7 @@ class CameraFrontEnd
 	}
 	
 	#if !flash
-	inline private function render():Void
+	private inline function render():Void
 	{
 		for (camera in list)
 		{
@@ -219,7 +219,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
 	 */
-	inline private function unlock():Void
+	private inline function unlock():Void
 	{
 		for (camera in list)
 		{
@@ -244,7 +244,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to update the cameras and their tracking/special effects logic.
 	 */
-	inline private function update():Void
+	private inline function update():Void
 	{
 		for (camera in list)
 		{

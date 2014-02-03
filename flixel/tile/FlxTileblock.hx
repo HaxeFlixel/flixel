@@ -15,7 +15,7 @@ import flixel.util.FlxSpriteUtil;
 class FlxTileblock extends FlxSprite
 {
 	/**
-	 * Creates a new <code>FlxBlock</code> object with the specified position and size.
+	 * Creates a new FlxBlock object with the specified position and size.
 	 * 
 	 * @param	X			The X position of the block.
 	 * @param	Y			The Y position of the block.
