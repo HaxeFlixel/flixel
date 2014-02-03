@@ -20,14 +20,6 @@ class FlxSort
 	}
 	
 	/**
-	 * You can use this function in FlxTypedGroup.sort() to sort FlxObjects by their x values.
-	 */
-	public static inline function byX(Order:Int, Obj1:FlxObject, Obj2:FlxObject):Int
-	{
-		return byValues(Order, Obj1.x, Obj2.x);
-	}
-	
-	/**
 	 * You can use this function as a backend to write a custom sorting function (see byX() and byY()).
 	 */
 	public static inline function byValues(Order:Int, Value1:Float, Value2:Float):Int
