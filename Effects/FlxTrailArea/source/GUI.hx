@@ -1,12 +1,12 @@
 package;
 
-import flixel.effects.FlxTrailArea;
+import flixel.addons.effects.FlxTrailArea;
+import flixel.addons.ui.FlxSlider;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.ui.FlxSlider;
 
 class GUI extends FlxSpriteGroup
 {

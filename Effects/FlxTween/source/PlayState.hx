@@ -1,13 +1,12 @@
 package;
 
+import flixel.addons.effects.FlxTrail;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIDropDownMenu;
-import flixel.effects.FlxTrail;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxEase.EaseFunction;
@@ -16,6 +15,7 @@ import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxSpriteUtil;
+import flixel.system.FlxAssets;
 
 /**
  * Tweening demo.
@@ -57,6 +57,8 @@ class PlayState extends FlxState
 	private var _trail:FlxTrail;
 	private var _min:FlxPoint;
 	private var _max:FlxPoint;
+	
+	private var _currentEase(get, never):EaseFunction;
 
 	override public function create():Void
 	{
@@ -279,8 +281,6 @@ class PlayState extends FlxState
 		
 		_trail.resetTrail();
 	}
-
-	private var _currentEase(get, never):EaseFunction;
 
 	private inline function get__currentEase():EaseFunction
 	{

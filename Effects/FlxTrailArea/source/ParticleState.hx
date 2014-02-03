@@ -1,11 +1,10 @@
 package;
 
-import flixel.effects.FlxTrailArea;
+import flixel.addons.effects.FlxTrailArea;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
 class ParticleState extends FlxState

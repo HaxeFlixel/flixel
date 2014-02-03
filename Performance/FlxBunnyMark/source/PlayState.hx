@@ -1,21 +1,15 @@
 package;
 
 import flash.Lib;
-import flash.ui.Mouse;
-import flixel.FlxCamera;
+import flixel.addons.ui.FlxSlider;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxTypedGroup;
-import flixel.text.FlxBitmapTextField;
 import flixel.text.FlxText;
-import flixel.text.pxText.PxBitmapFont;
-import flixel.text.pxText.PxTextAlign;
 import flixel.tile.FlxTileblock;
 import flixel.ui.FlxButton;
-import flixel.ui.FlxSlider;
 import flixel.util.FlxColor;
-import openfl.Assets;
 
 /**
  * ...
