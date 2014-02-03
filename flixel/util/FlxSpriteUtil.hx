@@ -111,7 +111,7 @@ class FlxSpriteUtil
 	}
 	
 	/**
-	 * Checks the x/y coordinates of the FlxObject and keeps them within the 
+	 * Checks the x/y coordinates of the FlxSprite and keeps them within the 
 	 * area of 0, 0, FlxG.width, FlxG.height (i.e. wraps it around the screen)
 	 * 
 	 * @param	object		The FlxObject to keep within the screen
@@ -121,26 +121,22 @@ class FlxSpriteUtil
 	 * @param	Bottom		Whether to activate screen wrapping on the bottom of the screen
 	 * @return 	The FlxObject for chaining
 	 */
-	public static function screenWrap(object:FlxObject, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):FlxObject
+	public static function screenWrap(sprite:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):FlxSprite
 	{
-		if (Left && object.x < 0)
-		{
-			object.x = FlxG.width;
+		if (Left && ((sprite.x + sprite.frameWidth) < 0)) {
+			sprite.x = FlxG.width;
 		}
-		else if (Right && object.x > FlxG.width)
-		{
-			object.x = 0;
+		else if (Right && (sprite.x > FlxG.width)) {
+			sprite.x = 0;
 		}
 		
-		if (Top && object.y < 0)
-		{
-			object.y = FlxG.height;
+		if (Top && ((sprite.y + sprite.frameHeight) < 0)) {
+			sprite.y = FlxG.height;
 		}
-		else if (Bottom && object.y > FlxG.height)
-		{
-			object.y = 0;
+		else if (Bottom && (sprite.y > FlxG.height)) {
+			sprite.y = 0;
 		}
-		return object;
+		return sprite;
 	}
 	
 	/**
