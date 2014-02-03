@@ -1,6 +1,5 @@
 package flixel.util;
 
-import flixel.FlxBasic;
 import flixel.FlxObject;
 
 /**
@@ -20,7 +19,7 @@ class FlxSort
 	}
 	
 	/**
-	 * You can use this function as a backend to write a custom sorting function (see byX() and byY()).
+	 * You can use this function as a backend to write a custom sorting function (see byY() for an example).
 	 */
 	public static inline function byValues(Order:Int, Value1:Float, Value2:Float):Int
 	{
