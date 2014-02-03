@@ -1,9 +1,10 @@
 package flixel.group;
 
-import flixel.FlxG;
 import flixel.FlxBasic;
+import flixel.FlxG;
 import flixel.system.FlxCollisionType;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxSort;
 
 /**
  * This is an organizational class that can update and render a bunch of FlxBasics.
@@ -12,15 +13,6 @@ import flixel.util.FlxArrayUtil;
  */
 class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 {
-	/**
-	 * Use with sort() to sort in ascending order.
-	 */
-	public static inline var ASCENDING:Int = -1;
-	/**
-	 * Use with sort() to sort in descending order.
-	 */
-	public static inline var DESCENDING:Int = 1;
-	
 	/**
 	 * Array of all the members in this group.
 	 */
@@ -38,14 +30,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Internal helper variable for recycling objects a la FlxEmitter.
 	 */
 	private var _marker:Int = 0;
-	/**
-	 * Helper for sort.
-	 */
-	private var _sortIndex:String = null;
-	/**
-	 * Helper for sort.
-	 */
-	private var _sortOrder:Int;
 	
 	/**
 	 * Array of all the FlxBasics that exist in this group.
@@ -100,8 +84,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			_basics = null;
 			_members = null;
 		}
-		
-		_sortIndex = null;
 	}
 	
 	/**
@@ -370,20 +352,15 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Call this function to sort the group according to a particular value and order.
-	 * For example, to sort game objects for Zelda-style overlaps you might call
-	 * myGroup.sort("y", ASCENDING) at the bottom of your
-	 * FlxState.update() override.  To sort all existing objects after
-	 * a big explosion or bomb attack, you might call myGroup.sort("exists", DESCENDING).
+	 * Call this function to sort the group according to a particular value and order. For example, to sort game objects for Zelda-style 
+	 * overlaps you might call myGroup.sort(FlxSort.byY, FlxSort.ASCENDING) at the bottom of your FlxState.update() override.
 	 * 
-	 * @param	Index	The String name of the member variable you want to sort on.  Default value is "y".
-	 * @param	Order	A FlxGroup constant that defines the sort order.  Possible values are ASCENDING and DESCENDING.  Default value is ASCENDING.  
+	 * @param	Function	The sorting function to use - you can use one of the premade ones in FlxSort or write your own using FlxSort.byValues() as a backend
+	 * @param	Order		A FlxGroup constant that defines the sort order.  Possible values are FlxSort.ASCENDING (default) and FlxSort.DESCENDING. 
 	 */
-	public function sort(Index:String = "y", Order:Int = ASCENDING):Void
+	public inline function sort(Function:Int->T->T->Int, Order:Int = FlxSort.ASCENDING):Void
 	{
-		_sortIndex = Index;
-		_sortOrder = Order;
-		_members.sort(sortHandler);
+		_members.sort(Function.bind(Order));
 	}
 
 	/**
@@ -779,30 +756,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 			i++;
 		}
-	}
-
-	/**
-	 * Helper function for the sort process.
-	 * 
-	 * @param 	Obj1	The first object being sorted.
-	 * @param	Obj2	The second object being sorted.
-	 * @return	An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
-	 */
-	private function sortHandler(Obj1:T, Obj2:T):Int
-	{
-		var prop1 = Reflect.getProperty(Obj1, _sortIndex);
-		var prop2 = Reflect.getProperty(Obj2, _sortIndex);
-		
-		if (prop1 < prop2)
-		{
-			return _sortOrder;
-		}
-		else if (prop1 > prop2)
-		{
-			return -_sortOrder;
-		}
-		
-		return 0;
 	}
 	
 	private function set_maxSize(Size:Int):Int
