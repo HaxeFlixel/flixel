@@ -167,7 +167,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * The alpha value of this camera display (a Number between 0.0 and 1.0).
 	 */
-	public var alpha(default, set):Float = 0;
+	public var alpha(default, set):Float = 1;
 	/**
 	 * The angle of the camera display (in degrees). Currently yields weird display results,
 	 * since cameras aren't nested in an extra display object yet.
