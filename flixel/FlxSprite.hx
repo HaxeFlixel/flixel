@@ -727,9 +727,6 @@ class FlxSprite extends FlxObject
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		#if js
-		var useAlpha:Bool = (alpha < 1);
-		#end
 		
 		var cos:Float;
 		var sin:Float;
@@ -748,6 +745,7 @@ class FlxSprite extends FlxObject
 			#if !js
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
 			#else
+			var useAlpha:Bool = (alpha < 1) || (camera.alpha < 1);
 			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
 			#end
 			currDrawData = drawItem.drawData;
@@ -877,11 +875,11 @@ class FlxSprite extends FlxObject
 				currDrawData[currIndex++] = _green;
 				currDrawData[currIndex++] = _blue;
 			}
-			currDrawData[currIndex++] = alpha;
+			currDrawData[currIndex++] = (alpha * camera.alpha);
 			#else
 			if (useAlpha)
 			{
-				currDrawData[currIndex++] = alpha;
+				currDrawData[currIndex++] = (alpha * camera.alpha);
 			}
 			#end
 			drawItem.position = currIndex;
