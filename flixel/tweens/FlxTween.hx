@@ -489,7 +489,7 @@ class FlxTween implements IFlxDestroyable
 	public var executions(default, null):Int = 0;
 	
 	private var _secondsSinceStart:Float;
-	private var _backward:Bool;
+	public var backward:Bool;
 
 	/**
 	 * Constructor. Specify basic information about the Tween.
@@ -514,7 +514,7 @@ class FlxTween implements IFlxDestroyable
 		this.complete = complete;
 		this.ease = ease;
 		
-		_backward = (this.type & BACKWARD) > 0;
+		backward = (this.type & BACKWARD) > 0;
 		userData = {};
 	}
 	
@@ -534,13 +534,13 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = ease(scale);
 		}
-		if (_backward)
+		if (backward)
 		{
 			scale = 1 - scale;
 		}
 		if (_secondsSinceStart >= duration)
 		{
-			scale = (_backward) ? 0 : 1;
+			scale = (backward) ? 0 : 1;
 			finished = true;
 		}
 	}
@@ -598,8 +598,8 @@ class FlxTween implements IFlxDestroyable
 				if ((ease != null) && (scale > 0) && (scale < 1)) {
 					scale = ease(scale);
 				}
-				_backward = !_backward;
-				if (_backward) {
+				backward = !backward;
+				if (backward) {
 					scale = 1 - scale;
 				}
 				start();
