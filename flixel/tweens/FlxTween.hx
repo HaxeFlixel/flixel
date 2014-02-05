@@ -469,7 +469,6 @@ class FlxTween implements IFlxDestroyable
 	
 	public var active:Bool;
 	public var complete:CompleteCallback;
-	public var type:Int;
 	public var duration:Float;
 	public var ease:EaseFunction;
 	
@@ -478,6 +477,7 @@ class FlxTween implements IFlxDestroyable
 	 */
 	public var userData:Dynamic = null;
 	
+	public var type(default, set):Int;
 	public var percent(get, set):Float;
 	public var finished(default, null):Bool;
 	public var scale(default, null):Float;
@@ -502,19 +502,10 @@ class FlxTween implements IFlxDestroyable
 	public function new(duration:Float, type:Int = 0, ?complete:CompleteCallback, ?ease:EaseFunction)
 	{
 		this.duration = duration;
-		if (type == 0) 
-		{
-			type = FlxTween.ONESHOT;
-		}
-		else if (type == FlxTween.BACKWARD)
-		{
-			type = FlxTween.PERSIST | FlxTween.BACKWARD;
-		}
 		this.type = type;
 		this.complete = complete;
 		this.ease = ease;
 		
-		_backward = (this.type & BACKWARD) > 0;
 		userData = {};
 	}
 	
@@ -621,6 +612,22 @@ class FlxTween implements IFlxDestroyable
 	private function set_percent(value:Float):Float
 	{ 
 		return _secondsSinceStart = duration * value;
+	}
+	
+	private function set_type(value:Int):Int
+	{
+		if (value == 0) 
+		{
+			value = FlxTween.ONESHOT;
+		}
+		else if (value == FlxTween.BACKWARD)
+		{
+			value = FlxTween.PERSIST | FlxTween.BACKWARD;
+		}
+		
+		_backward = (value & FlxTween.BACKWARD) > 0;
+		
+		return type = value;
 	}
 }
 
