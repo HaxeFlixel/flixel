@@ -6,6 +6,7 @@ import flash.media.SoundTransform;
 import flixel.FlxG;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxSound;
+import flixel.util.FlxMath;
 import openfl.Assets;
 
 @:allow(flixel.FlxGame)
@@ -54,7 +55,7 @@ class SoundFrontEnd
 	/**
 	 * Set this to a number between 0 and 1 to change the global volume.
 	 */
-	public var volume(default, set):Float = 0.5;
+	public var volume(default, set):Float = 1;
 	
 	
 	#if android
@@ -293,27 +294,6 @@ class SoundFrontEnd
 		#end
 	}
 	
-	private function set_volume(Volume:Float):Float
-	{
-		volume = Volume;
-		
-		if (volume < 0)
-		{
-			volume = 0;
-		}
-		else if (volume > 1)
-		{
-			volume = 1;
-		}
-		
-		if (volumeHandler != null)
-		{
-			var param:Float = muted ? 0 : volume;
-			volumeHandler(param);
-		}
-		return Volume;
-	}
-	
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
@@ -384,6 +364,18 @@ class SoundFrontEnd
 		{
 			muted = false; 
 		}
+	}
+	
+	private function set_volume(Volume:Float):Float
+	{
+		Volume = FlxMath.bound(Volume, 0, 1);
+		
+		if (volumeHandler != null)
+		{
+			var param:Float = muted ? 0 : Volume;
+			volumeHandler(param);
+		}
+		return volume = Volume;
 	}
 }
 #end
