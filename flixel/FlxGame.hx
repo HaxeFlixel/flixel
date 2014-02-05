@@ -227,8 +227,6 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
-	 * 
-	 * @param	FlashEvent	Just a Flash system event, not too important for our purposes.
 	 */
 	private function create(FlashEvent:Event):Void
 	{
@@ -272,12 +270,12 @@ class FlxGame extends Sprite
 		#end
 		
 		// Focus gained/lost monitoring
-		#if flash
-		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
-		stage.addEventListener(Event.ACTIVATE, onFocus);
-		#else
+		#if desktop
 		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
+		#else
+		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
+		stage.addEventListener(Event.ACTIVATE, onFocus);
 		#end
 		
 		// Instantiate the initial state
@@ -299,7 +297,6 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash event.
 	 */
 	private function onFocus(?FlashEvent:Event):Void
 	{
@@ -347,7 +344,6 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash event.
 	 */
 	private function onFocusLost(?FlashEvent:Event):Void
 	{
