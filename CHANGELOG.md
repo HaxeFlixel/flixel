@@ -12,7 +12,7 @@ v.3.1.0
  * default delay is now 2
  * removed smoothing, use antialising instead
  * is now compatible with animated sprites / sprites that have a spritesheet
-* Moved FlxSlider, FlxTrail and FlxTrail area to flixel-addons
+* Moved FlxSlider, FlxTrail and FlxTrailArea to flixel-addons
 * FlxMisc has been removed, openURL() can now be found in FlxG. Added Target param to openURL().
 * FlxCamera: 
  * getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
