@@ -12,8 +12,12 @@ v.3.1.0
  * default delay is now 2
  * removed smoothing, use antialising instead
  * is now compatible with animated sprites / sprites that have a spritesheet
+* Moved FlxSlider, FlxTrail and FlxTrail area to flixel-addons
 * FlxMisc has been removed, openURL() can now be found in FlxG. Added Target param to openURL().
-* FlxCamera: getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
+* FlxCamera: 
+ * getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
+ * BUG: fixed alpha being initialized with 0 instead of 1
+ * BUG: fixed FlxSprites not taking camera.alpha into account on cpp targets
 * FlxSpriteGroup: Added forEach(), forEachAlive(), forEachDead() and forEachExists()
 * FlxSpriteUtil: 
   * new drawTriangle() and drawPolygon(), fadeIn() and fadeOut() functions 
@@ -21,6 +25,7 @@ v.3.1.0
   * added convenient default values for drawCircle()
   * allow FlxObjects in screenWrap() and screenCenter()
   * now the functions return the sprite / object to allow chaining
+  * BUG: fixed null error in alphaMaskFlxSprite()
 * FlxTypedButton refactor
   *  Callbacks are now set via the FlxButtonEvent objects, for example button.onDown.callback = someFunction;
   *  The type of callback has been changed from Dynamic to Void->Void to avoid Reflection. This means you need to bind custom parameters to your callback function like so: callback = someFunction.bind(1); ([more info](https://github.com/HaxeFlixel/flixel/issues/805?source=cc))
@@ -46,7 +51,9 @@ v.3.1.0
 * FlxRect, FlxPoint and FlxBasic and FlxObject now have toString() functions used for traces and the flixel debugger
 * The focus lost screen and the sound tray now react to window resizes
 * BUG: Fixed numpad minus not working as a default volume down key
-* FlxStringUtil.sameClassName() added
+* FlxStringUtil:
+ * added sameClassName() 
+ * added getDomain()
 * The stats window of the debugger has been refactored, now has fancy FPS and memory graphs
 * FlxGame.focusLostFramerate added
 * BUG: Fixed flixel cursor reappearing after regaining focus
@@ -77,7 +84,7 @@ v.3.1.0
  * AngleTween now accepts FlxSprite as a parameter
  * Now possible to delay tweens via the TweenOptions typedef 
  * FlxEase: Added elastic easing functions
- * Exposed duration and type of tweens so they can be changed after they have been started
+ * Exposed the duration and the type of tweens so they can be changed after they have been started
 * BUG: Fixed jittering movement of FlxObjects following a FlxPath
 * Removed FlxG.paused, it was a container variable without functionality
 * FlxRect: 
@@ -126,6 +133,9 @@ v.3.1.0
  * duration
 * All FlxPoints of FlxObject and FlxSprite are now (default, null) / read-only - this means you should now use .set(x, y) if you were previously new()-ing the point.
 * Asset embedding has been optimized to only embed sound / graphic assets when they are needed, as opposed to always including all of them.
+* Changed the way FlxTypedGroup.sort() works by adding flixel.util.FlxSort for increased performance
+* BUG: fixed onFocus and onFocusLost not working on mobile
+* Changed default volume from 0.5 to 1
 
 v.3.0.4
 ------------------------------
