@@ -13,7 +13,7 @@ import flixel.FlxGame;
  */
 class Main extends Sprite 
 {
-	static public function main():Void
+	public static function main():Void
 	{	
 		Lib.current.addChild(new Main());
 	}

@@ -12,7 +12,7 @@ import flixel.util.FlxSave;
 
 class PlayState extends FlxState
 {
-	inline static private var NUM_BOXES:Int = 20;
+	private static inline var NUM_BOXES:Int = 20;
 	
 	// Here's the FlxSave variable this is what we're going to be saving to.
 	private var _gameSave:FlxSave;

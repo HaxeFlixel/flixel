@@ -84,8 +84,8 @@ class PlayState extends FlxState
 		
 		// Setting some gravity and speed along with a drag for the player
 		_player.acceleration.y = 420;
-		_player.maxVelocity = new FlxPoint(_playerSpeed, 420);
-		_player.drag = new FlxPoint(_playerSpeed * 4, _playerSpeed * 4);
+		_player.maxVelocity.set(_playerSpeed, 420);
+		_player.drag.set(_playerSpeed * 4, _playerSpeed * 4);
 		
 		// Uncomment FlxG.showBounds = true to see the bounding rect for the player sprite
 		// we resize the player sprite so that the collision is not completely wrong(you

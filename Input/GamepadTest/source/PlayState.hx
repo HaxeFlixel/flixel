@@ -14,16 +14,16 @@ import flixel.input.gamepad.OUYAButtonID;
 
 class PlayState extends FlxState
 {
-	inline static private var STICK_MOVEMENT_RANGE:Float = 10;
+	private static inline var STICK_MOVEMENT_RANGE:Float = 10;
 	
-	inline static private var ALPHA_OFF:Float = 0.5;
-	inline static private var ALPHA_ON:Float = 1;
+	private static inline var ALPHA_OFF:Float = 0.5;
+	private static inline var ALPHA_ON:Float = 1;
 	
-	inline static private var LB_Y:Float = 2;
-	inline static private var RB_Y:Float = 2;
+	private static inline var LB_Y:Float = 2;
+	private static inline var RB_Y:Float = 2;
 	
-	static private var LEFT_STICK_POS:FlxPoint = new FlxPoint(80, 48);
-	static private var RIGHT_STICK_POS:FlxPoint = new FlxPoint(304, 136);
+	private static var LEFT_STICK_POS:FlxPoint = new FlxPoint(80, 48);
+	private static var RIGHT_STICK_POS:FlxPoint = new FlxPoint(304, 136);
 	
 	private var _controllerBg:FlxSprite;
 	private var _leftStick:FlxSprite;

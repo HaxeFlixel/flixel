@@ -4,7 +4,7 @@
 
 ##About
 
-This is a large set of demos (**currently 44!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
+This is a large set of demos (**currently 45!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
 ![](demoSelection.png)
 
@@ -28,8 +28,8 @@ This is a large set of demos (**currently 44!**) using the HaxeFlixel engine and
   * ParticlesExt
 * **Flixel Features**
   * CollisionAndGrouping
-  * FlxCameraDemo
-  * FlxNapeDemo
+  * FlxCamera
+  * FlxNape
   * Particles
   * Pathfinding
   * Replay
@@ -47,6 +47,7 @@ This is a large set of demos (**currently 44!**) using the HaxeFlixel engine and
   * FlxCollisions
   * FlxPongAPI
   * MinimalistTD
+  * FlxAsyncLoop
 * **Performance**
   * FlxBunnyMark
   * FlxRandom

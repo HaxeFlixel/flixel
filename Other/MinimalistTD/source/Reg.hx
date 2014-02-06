@@ -6,14 +6,14 @@ import flixel.util.FlxColor;
 
 class Reg
 {
-	static public var PS:PlayState;
+	public static var PS:PlayState;
 	
 	/**
 	 * Returns a 24px by 8px image that is used as the tileset graphic.
 	 */
-	static public var tileImage(get, null):BitmapData;
+	public static var tileImage(get, null):BitmapData;
 	
-	static public function get_tileImage():BitmapData
+	public static function get_tileImage():BitmapData
 	{
 		var tileset:BitmapData = new BitmapData( 8 * 3, 8, false, FlxColor.WHITE );
 		tileset.draw( new BitmapData( 8, 8, false, FlxColor.BLACK ), new Matrix( 1, 0, 0, 1, 8, 0 ) );
@@ -23,9 +23,9 @@ class Reg
 	/**
 	 * Returns an enemy graphic, just a square with eyes.
 	 */
-	static public var enemyImage(get, null):BitmapData;
+	public static var enemyImage(get, null):BitmapData;
 	
-	static public function get_enemyImage():BitmapData
+	public static function get_enemyImage():BitmapData
 	{
 		var enemy:BitmapData = new BitmapData( 6, 6, false, FlxColor.BLACK );
 		var eye:BitmapData = new BitmapData( 1, 2, false, FlxColor.WHITE );

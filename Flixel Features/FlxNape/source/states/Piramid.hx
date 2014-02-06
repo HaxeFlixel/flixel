@@ -1,5 +1,6 @@
 package states;
 import flixel.text.FlxText;
+import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
 import FlxPhysicsDemo;
 import flixel.addons.nape.FlxNapeSprite;
@@ -60,9 +61,7 @@ class Piramid extends FlxNapeState
 		txt.color = 0;
 		add(txt);
 		
-		
-		fps = new FPS(FlxG.width - 100, 5, 0xFFFFFF);
-		FlxG.stage.addChild(fps);
+		FlxG.addChildBelowMouse(fps = new FPS(FlxG.width - 60, 5, FlxColor.WHITE));
 	}
 	
 	override public function destroy():Void 

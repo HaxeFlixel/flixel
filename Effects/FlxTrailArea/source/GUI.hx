@@ -1,16 +1,16 @@
 package;
 
-import flixel.effects.FlxTrailArea;
+import flixel.addons.effects.FlxTrailArea;
+import flixel.addons.ui.FlxSlider;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.ui.FlxSlider;
 
 class GUI extends FlxSpriteGroup
 {
-	inline static public var WIDTH = 200;
+	public static inline var WIDTH = 200;
 	
 	private var _trailArea:FlxTrailArea;
 	private var _sliderCallback:Float->Void;
@@ -78,7 +78,7 @@ class GUI extends FlxSpriteGroup
 		}
 	}
 	
-	inline private function toggleSimpleRender():Void
+	private inline function toggleSimpleRender():Void
 	{
 		_trailArea.simpleRender = !_trailArea.simpleRender; 
 	}
@@ -89,7 +89,7 @@ class GUI extends FlxSpriteGroup
 	 */
 	override public function destroy():Void
 	{
-		FlxG.safeDestroy(_trailArea);
+		_trailArea = FlxG.safeDestroy(_trailArea);
 		_sliderCallback = null;
 		super.destroy();
 	}

@@ -39,10 +39,10 @@ class MenuState extends FlxState
 	private var _static:Bool = false;
 	private var _staticBitmapdata:BitmapData;
 	
-	inline static private var ONEMIL:Int = 1000000;
-	inline static private var TENMIL:Int = 10000000;
+	private static inline var ONEMIL:Int = 1000000;
+	private static inline var TENMIL:Int = 10000000;
 	
-	inline static private function BUTTON_TEXT():Array<String>
+	inline private static function BUTTON_TEXT():Array<String>
 	{
 		return [ "Reset Seed", "10m Int", "10m Float", "10m IntRanged", "10m FloatRanged", "10m Coin Flips", "10m Weighted Coin Flips",
 					"10m Signs", "1m Weighted Picks", "1m Objects", "1m Weighted Objects", "1m Array Shuffles", "307k Colors",

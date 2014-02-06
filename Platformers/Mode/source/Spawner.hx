@@ -50,7 +50,7 @@ class Spawner extends FlxSprite
 		_timer += FlxG.elapsed;
 		var limit:Int = 20;
 		
-		if (onScreen())
+		if (isOnScreen())
 		{
 			limit = 4;
 		}

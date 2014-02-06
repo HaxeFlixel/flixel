@@ -13,12 +13,12 @@ import flixel.FlxSprite;
  */
 class Player extends FlxSprite 
 {
-	inline static public var RUN_SPEED:Int = 90;
-	inline static public var GRAVITY:Int = 620;
-	inline static public var JUMP_SPEED:Int = 250;
-	inline static public var JUMPS_ALLOWED:Int = 2;
-	inline static public var BULLET_SPEED:Int = 200;
-	inline static public var GUN_DELAY:Float = 0.4;
+	public static inline var RUN_SPEED:Int = 90;
+	public static inline var GRAVITY:Int = 620;
+	public static inline var JUMP_SPEED:Int = 250;
+	public static inline var JUMPS_ALLOWED:Int = 2;
+	public static inline var BULLET_SPEED:Int = 200;
+	public static inline var GUN_DELAY:Float = 0.4;
 	
 	private var _gibs:FlxEmitter;
 	private var _bullets:FlxGroup;

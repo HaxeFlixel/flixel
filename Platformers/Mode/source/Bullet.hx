@@ -52,7 +52,7 @@ class Bullet extends FlxSprite
 		
 		velocity.set(0, 0);
 		
-		if (onScreen())
+		if (isOnScreen())
 		{
 			FlxG.sound.play("Jump");
 		}

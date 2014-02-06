@@ -1,13 +1,12 @@
 package;
 
+import flixel.addons.effects.FlxTrail;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIDropDownMenu;
-import flixel.effects.FlxTrail;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxEase.EaseFunction;
@@ -16,6 +15,7 @@ import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxSpriteUtil;
+import flixel.system.FlxAssets;
 
 /**
  * Tweening demo.
@@ -29,21 +29,21 @@ class PlayState extends FlxState
 	/**
 	 * The duration of the tween
 	 */
-	inline static private var DURATION:Float = 1;
+	private static inline var DURATION:Float = 1;
 
 	/**
 	 * The tween types
 	 */
-	inline static private var VAR				:Int = 0;
-	inline static private var MULTI_VAR			:Int = 1;
-	inline static private var ANGLE				:Int = 2;
-	inline static private var COLOR				:Int = 3;
-	inline static private var LINEAR_MOTION		:Int = 4;
-	inline static private var LINEAR_PATH		:Int = 5;
-	inline static private var CIRCULAR_MOTION	:Int = 6;
-	inline static private var CUBIC_MOTION		:Int = 7;
-	inline static private var QUAD_MOTION		:Int = 8;
-	inline static private var QUAD_PATH			:Int = 9;
+	private static inline var VAR				:Int = 0;
+	private static inline var MULTI_VAR			:Int = 1;
+	private static inline var ANGLE				:Int = 2;
+	private static inline var COLOR				:Int = 3;
+	private static inline var LINEAR_MOTION		:Int = 4;
+	private static inline var LINEAR_PATH		:Int = 5;
+	private static inline var CIRCULAR_MOTION	:Int = 6;
+	private static inline var CUBIC_MOTION		:Int = 7;
+	private static inline var QUAD_MOTION		:Int = 8;
+	private static inline var QUAD_PATH			:Int = 9;
 
 	private var _easeInfo:Array<EaseInfo>;
 	
@@ -57,6 +57,8 @@ class PlayState extends FlxState
 	private var _trail:FlxTrail;
 	private var _min:FlxPoint;
 	private var _max:FlxPoint;
+	
+	private var _currentEase(get, never):EaseFunction;
 
 	override public function create():Void
 	{
@@ -115,11 +117,11 @@ class PlayState extends FlxState
 		
 		// Create the sprite to tween (flixel logo)
 		_sprite = new FlxSprite();
-		_sprite.loadGraphic(FlxAssets.IMG_LOGO, true);
+		_sprite.loadGraphic(GraphicLogo, true);
 		_sprite.antialiasing = true; // subpixel-rendering for smoother movement
 		
 		// Add a trail effect
-		_trail = new FlxTrail(_sprite, FlxAssets.IMG_LOGO, 12, 0, 0.4, 0.02);
+		_trail = new FlxTrail(_sprite, GraphicLogo, 12, 0, 0.4, 0.02);
 		
 		add(_trail);
 		add(_sprite);
@@ -280,9 +282,7 @@ class PlayState extends FlxState
 		_trail.resetTrail();
 	}
 
-	private var _currentEase(get, never):EaseFunction;
-
-	inline private function get__currentEase():EaseFunction
+	private inline function get__currentEase():EaseFunction
 	{
 		return _easeInfo[_currentEaseIndex].ease;
 	}

@@ -1,16 +1,15 @@
 package;
 
-import flixel.effects.FlxTrailArea;
+import flixel.addons.effects.FlxTrailArea;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
 class ParticleState extends FlxState
 {
-	inline static public var PARTICLE_AMOUNT:Int = 100;
+	public static inline var PARTICLE_AMOUNT:Int = 100;
 	
 	private var _emitter:FlxEmitter;
 	
@@ -80,7 +79,7 @@ class ParticleState extends FlxState
 	/**
 	 * Helper function to start the emtitter. Called from the FlxSliders!
 	 */
-	inline private function startEmitter(?Value:Null<Float>):Void
+	private inline function startEmitter(?Value:Null<Float>):Void
 	{
 		// Prevent emitter from restarting when using a slider before releasing the mouse
 		if (FlxG.mouse.justPressed) 

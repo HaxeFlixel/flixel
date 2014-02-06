@@ -8,6 +8,7 @@ import flixel.FlxGame;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
+ * @link https://github.com/ProG4mr
  */
 
 class Main extends Sprite 
@@ -25,14 +26,15 @@ class Main extends Sprite
 
 	private function init(e) 
 	{
-		var game:FlxGame = new FlxCameraDemo();
+		var game:FlxGame = new FlxPhysicsDemo();
 		addChild(game);
+		//FlxG.setDebuggerLayout(FlxG.DEBUGGER_BIG);
 	}
 	
-	static public function main() 
+	public static function main()
 	{
 		#if (flash9 || flash10)
-			//haxe.Log.trace = function(v,?pos) { untyped __global__["trace"](pos.className+"#"+pos.methodName+"("+pos.lineNumber+"):",v); }
+			haxe.Log.trace = function(v,?pos) { untyped __global__["trace"](pos.className+"#"+pos.methodName+"("+pos.lineNumber+"):",v); }
 		#end
 		
 		var stage = Lib.current.stage;

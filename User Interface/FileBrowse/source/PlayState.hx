@@ -34,9 +34,9 @@ import systools.Dialogs;
  */
 class PlayState extends FlxState
 {
-	inline static private var MIN_SCALE:Float = 0.1;
-	inline static private var MAX_SCALE:Float = 5;
-	inline static private var ZOOM_FACTOR:Int = 15;
+	private static inline var MIN_SCALE:Float = 0.1;
+	private static inline var MAX_SCALE:Float = 5;
+	private static inline var ZOOM_FACTOR:Int = 15;
 	
 	private var _text:FlxText;
 	private var _button:FlxButton;
@@ -73,7 +73,7 @@ class PlayState extends FlxState
 		_scaleText.setFormat(null, 16, FlxColor.WHITE, "right");
 		add(_scaleText);
 		
-		_showImage(FlxG.bitmap.add(FlxAssets.IMG_LOGO).bitmap);
+		_showImage(new GraphicLogo(0, 0));
 	}
 	
 	override public function update():Void

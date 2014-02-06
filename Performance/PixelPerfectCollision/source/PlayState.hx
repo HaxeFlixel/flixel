@@ -289,10 +289,18 @@ class PlayState extends FlxState
 	 */ 
 	function getRandomCirclePos():FlxPoint
 	{
+		// choose a random position on our circle, from 1° to 360°
 		var startAngle = FlxRandom.intRanged(1, 360);
-		var startRadius = (FlxG.height > FlxG.width) ? (FlxG.height + 200) : (FlxG.width + 200);
 		
-		return FlxAngle.getCartesianCoords(startRadius, startAngle);
+		// make sure the radius of our circle is 200 px bigger than the game's width / height (whichever is bigger)
+		var startRadius = (FlxG.width > FlxG.height) ? (FlxG.height + 200) : (FlxG.width + 200);
+		
+		var coords:FlxPoint = FlxAngle.getCartesianCoords(startRadius, startAngle);
+		// Currently, the coords represent a circle with its center at (0,0) - let's move them!
+		coords.x += FlxG.width / 2;
+		coords.y += FlxG.height / 2;
+		
+		return coords;
 	}
 }
 

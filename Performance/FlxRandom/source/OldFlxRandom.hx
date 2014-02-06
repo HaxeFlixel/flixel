@@ -12,11 +12,11 @@ class OldFlxRandom
 	/**
 	 * The global random number generator seed (for deterministic behavior in recordings and saves).
 	 */
-	static public var globalSeed:Float;
+	public static var globalSeed:Float;
 	/**
 	 * Internal helper for <code>FlxRandom.int()</code>
 	 */
-	static private var intHelper:Int = 0;
+	private static var intHelper:Int = 0;
 	/**
 	 * Maximum value returned by <code>FlxRandom.intRanged</code> and <code>FlxRandom.floatRanged</code> by default.
 	 */
@@ -30,7 +30,7 @@ class OldFlxRandom
 	 * 
 	 * @return A pseudo random value between 0 and 65536 inclusive.
 	 */
-	static public function int():Int
+	public static function int():Int
 	{
 		var result:Int = Std.int(intHelper);
 		
@@ -61,7 +61,7 @@ class OldFlxRandom
 	 * @param 	Excludes 	An Array of integers that will NOT be returned (default: null)
 	 * @return A pseudo-random value between min (or 0) and max (or MAX_RANGE, inclusive)
 	 */
-	static public function intRanged(?Min:Int, ?Max:Int, ?Excludes:Array<Int>):Int
+	public static function intRanged(?Min:Int, ?Max:Int, ?Excludes:Array<Int>):Int
 	{
 		if (Min == null)
 		{
@@ -118,7 +118,7 @@ class OldFlxRandom
 	 * to use if you want to record replays in random environments.
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	inline static public function float():Float
+	public static inline function float():Float
 	{
 		globalSeed = srand(globalSeed);
 		if (globalSeed <= 0) globalSeed += 1;
@@ -136,7 +136,7 @@ class OldFlxRandom
 	 * @param 	max 	The highest value to return (default: MAX_RANGE)
 	 * @return A pseudo random value between min (or 0) and max (or MAX_RANGE, inclusive)
 	 */
-	static public function floatRanged(?min:Float, ?max:Float):Float
+	public static function floatRanged(?min:Float, ?max:Float):Float
 	{
 		if (min == null)
 		{
@@ -167,7 +167,7 @@ class OldFlxRandom
 	 * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
 	 * @return	A <code>Number</code> between 0 and 1.
 	 */
-	inline static public function srand(Seed:Float):Float
+	public static inline function srand(Seed:Float):Float
 	{
 		return ((69621 * Std.int(Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
 	}
@@ -181,7 +181,7 @@ class OldFlxRandom
 	 * @param 	chance 	The chance of receiving the value. Should be given as a uint between 0 and 100 (effectively 0% to 100%)
 	 * @return true if the roll passed, or false
 	 */
-	static public function chanceRoll(chance:Int = 50):Bool
+	public static function chanceRoll(chance:Int = 50):Bool
 	{
 		if (chance <= 0)
 		{
@@ -209,7 +209,7 @@ class OldFlxRandom
 	 * 
 	 * @return	1 or -1
 	 */
-	inline static public function sign():Float
+	public static inline function sign():Float
 	{
 		return (Math.random() > 0.5) ? 1 : -1;
 	}
@@ -225,7 +225,7 @@ class OldFlxRandom
 	 * 
 	 * @return 32-bit color value with alpha
 	 */
-	inline static public function color(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
+	public static inline function color(min:Int = 0, max:Int = 255, alpha:Int = 255):Int
 	{
 		//return FlxColorUtil.getRandomColor(min, max, alpha);
 		

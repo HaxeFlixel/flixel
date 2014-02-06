@@ -11,11 +11,11 @@ import flixel.tile.FlxTilemap;
 
 class MenuState extends FlxState
 {
-	inline static private var TILE_SIZE:Int = 8;
-	inline static private var START_X:Int = TILE_SIZE * 5 + 1;
-	inline static private var START_Y:Int = 0;
-	inline static private var END_X:Int = 34 * TILE_SIZE + 2;
-	inline static private var END_Y:Int = 29 * TILE_SIZE;
+	private static inline var TILE_SIZE:Int = 8;
+	private static inline var START_X:Int = TILE_SIZE * 5 + 1;
+	private static inline var START_Y:Int = 0;
+	private static inline var END_X:Int = 34 * TILE_SIZE + 2;
+	private static inline var END_Y:Int = 29 * TILE_SIZE;
 	
 	private var _enemy:Enemy;
 	private var _map:FlxTilemap;

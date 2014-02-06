@@ -20,13 +20,13 @@ class Player extends FlxSprite
 	/**
 	 * How big the tiles of the tilemap are.
 	 */
-	inline static private var TILE_SIZE:Int = 16;
+	private static inline var TILE_SIZE:Int = 16;
 	/**
 	 * How many pixels to move each frame. Has to be a divider of TILE_SIZE 
 	 * to work as expected (move one block at a time), because we use the
 	 * modulo-operator to check whether the next block has been reached.
 	 */
-	inline static private var MOVEMENT_SPEED:Int = 2;
+	private static inline var MOVEMENT_SPEED:Int = 2;
 	
 	/**
 	 * Flag used to check if char is moving.

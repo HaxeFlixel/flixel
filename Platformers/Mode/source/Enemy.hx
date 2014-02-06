@@ -160,7 +160,7 @@ class Enemy extends FlxSprite
 		FlxAngle.rotatePoint(0, _thrust, 0, 0, angle, velocity);
 
 		// Shooting - three shots every few seconds
-		if (onScreen())
+		if (isOnScreen())
 		{
 			var shoot:Bool = false;
 			var os:Float = _shotClock;
@@ -205,7 +205,7 @@ class Enemy extends FlxSprite
 				// turn em on and play a little sound.
 				_jets.start(false, 0.5, 0.01);
 				
-				if (onScreen())
+				if (isOnScreen())
 				{
 					FlxG.sound.play("Jet");
 				}

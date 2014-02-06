@@ -16,7 +16,7 @@ import flixel.util.FlxRandom;
 */
 class PlayState extends FlxState
 {
-	inline static private var BAT_SPEED:Int = 350;
+	private static inline var BAT_SPEED:Int = 350;
 	
 	private var _bat:FlxSprite;
 	private var _ball:FlxSprite;

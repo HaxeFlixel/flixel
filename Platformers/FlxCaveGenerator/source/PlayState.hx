@@ -1,21 +1,17 @@
 package;
 
-import flash.events.Event;
-import flash.Lib;
 import flixel.addons.tile.FlxCaveGenerator;
-import flixel.FlxCamera;
+import flixel.addons.ui.FlxSlider;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
-import flixel.ui.FlxSlider;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
-import flixel.util.FlxSave;
 import flixel.util.FlxSpriteUtil;
 import haxe.Timer;
 

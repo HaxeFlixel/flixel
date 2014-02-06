@@ -25,7 +25,7 @@ import flixel.util.FlxTimer;
 */
 class PlayState extends FlxState
 {
-	inline static private var MIN_INTERVALL:Float = 2;
+	private static inline var MIN_INTERVALL:Float = 2;
 	
 	private var _scoreText:FlxText;
 	private var _fruit:FlxSprite;
@@ -157,7 +157,7 @@ class PlayState extends FlxState
 		
 		// Our reward - a new segment! :)
 		addSegment();
-		FlxG.sound.play(FlxAssets.SND_BEEP);
+		FlxG.sound.load(BeepSound).play();
 		
 		// Become faster each pickup - set a max speed though!
 		if (_movementIntervall >= MIN_INTERVALL)

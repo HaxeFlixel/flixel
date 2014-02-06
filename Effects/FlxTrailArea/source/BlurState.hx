@@ -1,11 +1,10 @@
 package;
 
-import flixel.effects.FlxTrailArea;
+import flixel.addons.effects.FlxTrailArea;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
 
@@ -14,13 +13,13 @@ import flixel.util.FlxRandom;
  */
 class BlurState extends FlxState 
 {
-	inline static public var PARTICLE_AMOUNT:Int = 50;
+	public static inline var PARTICLE_AMOUNT:Int = 50;
 	
 	override public function create():Void 
 	{
 		// The first thing to do is setting up the FlxTrailArea
 		var trailArea = new FlxTrailArea(0, 0, FlxG.width - 200, FlxG.height);
-		trailArea.smoothing = true;
+		trailArea.antialiasing = true;
 		
 		// This just sets up an emitter at the bottom of the screen
 		var emitter = new FlxEmitter(0, FlxG.height + 20, 50);
