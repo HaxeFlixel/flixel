@@ -122,7 +122,7 @@ class FlxGame extends Sprite
 	
 	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
 	/**
-	 * The sound tray display container (see <code>createSoundTray()</code>).
+	 * The sound tray display container (see createSoundTray()).
 	 */
 	public var soundTray(default, null):FlxSoundTray;
 	#end
@@ -151,7 +151,7 @@ class FlxGame extends Sprite
 	 */
 	private var _lostFocus:Bool = false;
 	
-	#if cpp
+	#if (cpp || neko)
 	/**
 	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
 	 * (the focus event should not fire when the game starts up!)
@@ -161,7 +161,7 @@ class FlxGame extends Sprite
 	
 	#if !FLX_NO_FOCUS_LOST_SCREEN 
 	/**
-	 * The "focus lost" screen (see <code>createFocusScreen()</code>).
+	 * The "focus lost" screen (see createFocusScreen()).
 	 */
 	private var _focusLostScreen:FlxFocusLostScreen;
 	#end
@@ -227,8 +227,6 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
-	 * 
-	 * @param	FlashEvent	Just a Flash system event, not too important for our purposes.
 	 */
 	private function create(FlashEvent:Event):Void
 	{
@@ -272,12 +270,12 @@ class FlxGame extends Sprite
 		#end
 		
 		// Focus gained/lost monitoring
-		#if flash
-		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
-		stage.addEventListener(Event.ACTIVATE, onFocus);
-		#else
+		#if desktop
 		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
+		#else
+		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
+		stage.addEventListener(Event.ACTIVATE, onFocus);
 		#end
 		
 		// Instantiate the initial state
@@ -299,7 +297,6 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash event.
 	 */
 	private function onFocus(?FlashEvent:Event):Void
 	{
@@ -310,7 +307,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if cpp
+		#if (cpp || neko)
 		// make sure the on focus event doesn't fire on startup 
 		if (!_onFocusFiredOnce)
 		{
@@ -347,7 +344,6 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Internal event handler for input and focus.
-	 * @param	FlashEvent	Flash event.
 	 */
 	private function onFocusLost(?FlashEvent:Event):Void
 	{

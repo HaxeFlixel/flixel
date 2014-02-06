@@ -51,7 +51,7 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keys.anyPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: FlxG.keys.anyPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed in is pressed.
@@ -63,7 +63,7 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keys.anyJustPressed(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: FlxG.keys.anyJustPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just pressed.
@@ -75,7 +75,7 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keys.anyJustReleased(["UP", "W", "SPACE"])</code> - having them in an array is handy for configurable keys!
+	 * Example: FlxG.keys.anyJustReleased(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of keys as Strings
 	 * @return	Whether at least one of the keys passed was just released.
@@ -123,7 +123,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Look up the key code for any given string name of the key or button.
 	 * 
-	 * @param	KeyName		The <code>String</code> name of the key.
+	 * @param	KeyName		The String name of the key.
 	 * @return	The key code for that key.
 	 */
 	public inline function getKeyCode(KeyName:String):Int
@@ -362,7 +362,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 * 
-	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
+	 * @param	FlashEvent	A KeyboardEvent object.
 	 */
 	private function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{

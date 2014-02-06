@@ -53,7 +53,7 @@ class MultiVarTween extends FlxTween
 		_object = object;
 		_properties = properties;
 		this.duration = duration;
-		_ease = ease;
+		this.ease = ease;
 		
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);
@@ -78,7 +78,7 @@ class MultiVarTween extends FlxTween
 		{
 			if (_object != null)
 			{
-				Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * _t));
+				Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * scale));
 			}
 		}
 	}

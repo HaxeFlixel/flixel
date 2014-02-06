@@ -46,6 +46,9 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
+#if js
+import flixel.system.frontEnds.HTML5FrontEnd;
+#end
 #if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
 import flixel.input.FlxSwipe;
 #end
@@ -75,13 +78,13 @@ class FlxG
 	 */
 	public static var worldDivisions:Int;
 	/**
-	 * By default this just refers to the first entry in the <code>FlxG.cameras.list</code> 
+	 * By default this just refers to the first entry in the FlxG.cameras.list 
 	 * array but you can do what you like with it.
 	 */
 	public static var camera:FlxCamera;
 	
 	/**
-	 * The HaxeFlixel version, in semantic versioning syntax. Use <code>Std.string()</code>
+	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
 	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 1, 0, "dev");
@@ -96,7 +99,7 @@ class FlxG
 	 */
 	public static var stage(get, never):Stage;
 	/**
-	 * Read-only: access the current game state from anywhere. Consider using <code>addChildBelowMouse()</code>
+	 * Read-only: access the current game state from anywhere. Consider using addChildBelowMouse()
 	 * if you want to add a DisplayObject to the stage instead of directly adding it here!
 	 */
 	public static var state(get, never):FlxState;
@@ -118,48 +121,48 @@ class FlxG
 	public static var elapsed(default, null):Float = 0;
 	
 	/**
-	 * The width of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
+	 * The width of the screen in game pixels. Read-only, use resizeGame() to change.
 	 */
 	@:allow(flixel.system.scaleModes.StageSizeScaleMode) 
 	public static var width(default, null):Int;
 	/**
-	 * The height of the screen in game pixels. Read-only, use <code>resizeGame()</code> to change.
+	 * The height of the screen in game pixels. Read-only, use resizeGame() to change.
 	 */
 	@:allow(flixel.system.scaleModes.StageSizeScaleMode)
 	public static var height(default, null):Int;
 	/**
-	 * The scale mode the game should use - available policies are <code>FillScaleMode</code>, <code>FixedScaleMode</code>,
-	 * <code>RatioScaleMode</code>, <code>RelativeScaleMode</code> and <code>StageSizeScaleMode</code>.
+	 * The scale mode the game should use - available policies are FillScaleMode, FixedScaleMode,
+	 * RatioScaleMode, RelativeScaleMode and StageSizeScaleMode.
 	 */
 	public static var scaleMode(default, set):BaseScaleMode;
 	/**
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
-	 * You can easily toggle fullscreen with eg: <code>FlxG.fullscreen = !FlxG.fullscreen;</code>
+	 * You can easily toggle fullscreen with eg: FlxG.fullscreen = !FlxG.fullscreen;
 	 */
 	@isVar public static var fullscreen(default, set):Bool = false;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
-	 * Use <code>.set()</code> instead of creating a new object!
+	 * Use .set() instead of creating a new object!
 	 */
 	public static var worldBounds(default, null):FlxRect = new FlxRect();
 	
 	/**
-	 * A <code>FlxSave</code> used internally by flixel to save sound preferences and 
+	 * A FlxSave used internally by flixel to save sound preferences and 
 	 * the history of the console window, but no reason you can't use it for your own stuff too!
 	 */
 	public static var save(default, null):FlxSave = new FlxSave();
 	
 	#if !FLX_NO_MOUSE
 	/**
-	 * A <code>FlxMouse</code> object for mouse input. e.g.: check if the left mouse button 
-	 * is pressed with <code>if (FlxG.mouse.pressed) { }</code>) </code>in <code>update()</code>.
+	 * A FlxMouse object for mouse input. e.g.: check if the left mouse button 
+	 * is pressed with if (FlxG.mouse.pressed) { }) in update().
 	 */
 	public static var mouse(default, null):FlxMouse;
 	#end
 	
 	#if !FLX_NO_TOUCH
 	/**
-	 * A reference to a <code>FlxTouchManager</code> object. 
+	 * A reference to a FlxTouchManager object. 
 	 * Useful for devices with multitouch support.
 	 */
 	public static var touches(default, null):FlxTouchManager;
@@ -175,79 +178,87 @@ class FlxG
 
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * A <code>FlxKeyboard</code> object for keyboard input e.g.: check if the left arrow key is 
-	 * pressed with <code>if (FlxG.keys.pressed.LEFT) { } </code>in <code>update()</code>.
+	 * A FlxKeyboard object for keyboard input e.g.: check if the left arrow key is 
+	 * pressed with if (FlxG.keys.pressed.LEFT) { } in update().
 	 */
 	public static var keys(default, null):FlxKeyboard;
 	#end
 	
 	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 	/**
-	 * A reference to a <code>FlxGamepadManager</code> object.
+	 * A reference to a FlxGamepadManager object.
 	 */
 	public static var gamepads(default, null):FlxGamepadManager;
 	#end
 	
 	#if android
 	/**
-	 * A reference to a <code>FlxAndroidKeys</code> object. Useful for tracking Back, Home, etc on Android devices.
+	 * A reference to a FlxAndroidKeys object. Useful for tracking Back, Home, etc on Android devices.
 	 */
 	public static var android(default, null):FlxAndroidKeys;
 	#end
 	
+	#if js
 	/**
-	 * A reference to the <code>InputFrontEnd</code> object. Mostly used internally, 
+	 * A reference to the HTML5FrontEnd object. Has some HTML5-specific things like
+	 * browser detection, browser dimensions etc...
+	 */
+	public static var html5(default, null):HTML5FrontEnd = new HTML5FrontEnd();
+	#end
+	
+	/**
+	 * A reference to the InputFrontEnd object. Mostly used internally, 
 	 * but you can use it too to reset inputs and create input classes of your own.
 	 */
 	public static var inputs(default, null):InputFrontEnd = new InputFrontEnd();
 	/**
-	 * A reference to the <code>ConsoleFrontEnd</code> object. Use it to register functions and objects
+	 * A reference to the ConsoleFrontEnd object. Use it to register functions and objects
 	 * or add new commands to the console window.
 	 */
 	public static var console(default, null):ConsoleFrontEnd = new ConsoleFrontEnd();
 	/**
-	 * A reference to the <code>LogFrontEnd</code> object. Use it to <code>add</code> messages to the log window. It is recommended 
-	 * to use <code>trace()</code> instead of the old <code>FlxG.log()</code>, since traces will be redirected by default.
+	 * A reference to the LogFrontEnd object. Use it to add messages to the log window. It is recommended 
+	 * to use trace() instead of the old FlxG.log(), since traces will be redirected by default.
 	 */
 	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
 	
 	/**
-	 * A reference to the <code>WatchFrontEnd</code> object. Use it to add or remove things to / from the 
+	 * A reference to the WatchFrontEnd object. Use it to add or remove things to / from the 
 	 * watch window.
 	 */
 	public static var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
 	/**
-	 * A reference to the <code>DebuggerFrontEnd</code> object. Use it to show / hide / toggle the debguger
+	 * A reference to the DebuggerFrontEnd object. Use it to show / hide / toggle the debguger
 	 * change its layout, activate visual debugging or change the key used to toggle it.
 	 */
 	public static var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
 
 	/**
-	 * A reference to the <code>VCRFrontEnd</code> object. Contains all the functions needed for recording
+	 * A reference to the VCRFrontEnd object. Contains all the functions needed for recording
 	 * and replaying.
 	 */
 	public static var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
 	
 	/**
-	 * A reference to the <code>BitmapFrontEnd</code> object. Contains things related to bimtaps,
+	 * A reference to the BitmapFrontEnd object. Contains things related to bimtaps,
 	 * for example regarding the bitmap cache and the cache itself.
 	 */
 	public static var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
 	/**
-	 * A reference to the <code>CameraFrontEnd</code> object. Contains things related to cameras,
-	 * a <code>list</code> of all cameras and several effects like <code>flash()</code> or <code>fade()</code>.
+	 * A reference to the CameraFrontEnd object. Contains things related to cameras,
+	 * a list of all cameras and several effects like flash() or fade().
 	 */
 	public static var cameras(default, null):CameraFrontEnd = new CameraFrontEnd();
 	/**
-	 * A reference to the <code>PluginFrontEnd</code> object. Contains a <code>list</code> of all 
-	 * plugins and the functions required to <code>add()</code>, <code>remove()</code> them etc.
+	 * A reference to the PluginFrontEnd object. Contains a list of all 
+	 * plugins and the functions required to add(), remove() them etc.
 	 */
 	public static var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
-	 * A reference to the <code>SoundFrontEnd</code> object. Contains a <code>list</code> of all 
-	 * sounds and other things to manage or <code>play()</code> sounds.
+	 * A reference to the SoundFrontEnd object. Contains a list of all 
+	 * sounds and other things to manage or play() sounds.
 	 */
 	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
@@ -294,16 +305,16 @@ class FlxG
 	}
 
 	/**
-	 * Call this function to see if one <code>FlxObject</code> overlaps another.
+	 * Call this function to see if one FlxObject overlaps another.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
-	 * together using a <code>FlxGroup</code> (or even bundling groups together!).
+	 * together using a FlxGroup (or even bundling groups together!).
 	 * NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.
 	 * 
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
-	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
-	 * @param	ProcessCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
+	 * @param	NotifyCallback	A function with two FlxObject parameters - e.g. myOverlapFunction(Object1:FlxObject,Object2:FlxObject) - that is called if those two objects overlap.
+	 * @param	ProcessCallback	A function with two FlxObject parameters - e.g. myOverlapFunction(Object1:FlxObject,Object2:FlxObject) - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
 	 * @return	Whether any overlaps were detected.
 	 */
 	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
@@ -340,17 +351,17 @@ class FlxG
 	}
 	
 	/**
-	 * Call this function to see if one <code>FlxObject</code> collides with another.
+	 * Call this function to see if one FlxObject collides with another.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
-	 * together using a <code>FlxGroup</code> (or even bundling groups together!).
+	 * together using a FlxGroup (or even bundling groups together!).
 	 * This function just calls FlxG.overlap and presets the ProcessCallback parameter to FlxObject.separate.
 	 * To create your own collision logic, write your own ProcessCallback and use FlxG.overlap to set it up.
 	 * NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.
 	 * 
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
-	 * @param	NotifyCallback	A function with two <code>FlxObject</code> parameters - e.g. <code>myOverlapFunction(Object1:FlxObject,Object2:FlxObject)</code> - that is called if those two objects overlap.
+	 * @param	NotifyCallback	A function with two FlxObject parameters - e.g. myOverlapFunction(Object1:FlxObject,Object2:FlxObject) - that is called if those two objects overlap.
 	 * @return	Whether any objects were successfully collided/separated.
 	 */
 	public static inline function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
@@ -407,7 +418,7 @@ class FlxG
 	 * Opens a web page, by default a new tab or window.
 	 * 
 	 * @param	URL		The address of the web page.
-	 * @param	Target	<code>"_blank", "_self", "_parent"</code> or <code>"_top"</code>
+	 * @param	Target	"_blank", "_self", "_parent" or "_top"
 	 */
 	public static inline function openURL(URL:String, Target:String = "_blank"):Void
 	{
@@ -415,7 +426,7 @@ class FlxG
 	}
 	
 	/**
-	 * Called by <code>FlxGame</code> to set up <code>FlxG</code> during <code>FlxGame</code>'s constructor.
+	 * Called by FlxGame to set up FlxG during FlxGame's constructor.
 	 */
 	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
 	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void

@@ -137,7 +137,7 @@ class FlxRect
 
 	/**
 	 * Helper function, just copies the values from the specified rectangle.
-	 * @param	Rect	Any <code>FlxRect</code>.
+	 * @param	Rect	Any FlxRect.
 	 * @return	A reference to itself.
 	 */
 	public inline function copyFrom(Rect:FlxRect):FlxRect
@@ -151,7 +151,7 @@ class FlxRect
 	
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified rectangle.
-	 * @param	Point	Any <code>FlxRect</code>.
+	 * @param	Point	Any FlxRect.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
 	public inline function copyTo(Rect:FlxRect):FlxRect
@@ -165,7 +165,7 @@ class FlxRect
 	
 	/**
 	 * Helper function, just copies the values from the specified Flash rectangle.
-	 * @param	FlashRect	Any <code>Rectangle</code>.
+	 * @param	FlashRect	Any Rectangle.
 	 * @return	A reference to itself.
 	 */
 	public inline function copyFromFlash(FlashRect:Rectangle):FlxRect
@@ -179,7 +179,7 @@ class FlxRect
 	
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified Flash rectangle.
-	 * @param	Point	Any <code>Rectangle</code>.
+	 * @param	Point	Any Rectangle.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
 	public inline function copyToFlash(FlashRect:Rectangle):Rectangle
@@ -192,7 +192,7 @@ class FlxRect
 	}
 	
 	/**
-	 * Checks to see if some <code>FlxRect</code> object overlaps this <code>FlxRect</code> object.
+	 * Checks to see if some FlxRect object overlaps this FlxRect object.
 	 * @param	Rect	The rectangle being tested.
 	 * @return	Whether or not the two rectangles overlap.
 	 */

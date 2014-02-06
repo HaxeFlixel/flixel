@@ -119,7 +119,7 @@ class FlxColorUtil
 	 * 
 	 * @param	Color	The color you want to break into components.
 	 * @param	Results	An optional parameter, allows you to use an array that already exists in memory to store the result.
-	 * @return	An <code>HSBA</code> object containing the Red, Green, Blue and Alpha values of the given color.
+	 * @return	An HSBA object containing the Red, Green, Blue and Alpha values of the given color.
 	 */
 	public static function getHSBA(Color:Int, ?Results:HSBA):HSBA
 	{

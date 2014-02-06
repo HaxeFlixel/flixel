@@ -15,7 +15,7 @@ class FlxStringUtil
 	 * 
 	 * @param	StartTicks	The first timestamp from the system.
 	 * @param	EndTicks	The second timestamp from the system.
-	 * @return	A <code>String</code> containing the formatted time elapsed information.
+	 * @return	A String containing the formatted time elapsed information.
 	 */
 	public static inline function formatTicks(StartTicks:Int, EndTicks:Int):String
 	{
@@ -27,7 +27,7 @@ class FlxStringUtil
 	 * 
 	 * @param	Seconds		The number of seconds (for example, time remaining, time spent, etc).
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
-	 * @return	A nicely formatted <code>String</code>, like "1:03".
+	 * @return	A nicely formatted String, like "1:03".
 	 */
 	public static inline function formatTime(Seconds:Float, ShowMS:Bool = false):String
 	{
@@ -56,8 +56,8 @@ class FlxStringUtil
 	 * Generate a comma-separated string from an array.
 	 * Especially useful for tracing or other debug output.
 	 * 
-	 * @param	AnyArray	Any <code>Array</code> object.
-	 * @return	A comma-separated <code>String</code> containing the <code>.toString()</code> output of each element in the array.
+	 * @param	AnyArray	Any Array object.
+	 * @return	A comma-separated String containing the .toString() output of each element in the array.
 	 */
 	public static inline function formatArray(AnyArray:Array<Dynamic>):String
 	{
@@ -76,10 +76,10 @@ class FlxStringUtil
 	}
 
 	 /**
-	 * Generate a comma-seperated string representation of the keys of a <code>StringMap</code>.
+	 * Generate a comma-seperated string representation of the keys of a StringMap.
 	 * 
-	 * @param  AnyMap    A <code>StringMap</code> object.
-	 * @return  A <code>String</code> formatted like this: <code>key1, key2, ..., keyX</code>
+	 * @param  AnyMap    A StringMap object.
+	 * @return  A String formatted like this: key1, key2, ..., keyX
 	 */
 	public static inline function formatStringMap(AnyMap:Map<String,Dynamic>):String
 	{
@@ -95,13 +95,13 @@ class FlxStringUtil
 	/**
 	 * Automatically commas and decimals in the right places for displaying money amounts.
 	 * Does not include a dollar sign or anything, so doesn't really do much
-	 * if you call say <code>var results:String = FlxString.formatMoney(10,false);</code>
+	 * if you call say var results:String = FlxString.formatMoney(10,false);
 	 * However, very handy for displaying large sums or decimal money values.
 	 * 
 	 * @param	Amount			How much moneys (in dollars, or the equivalent "main" currency - i.e. not cents).
 	 * @param	ShowDecimal		Whether to show the decimals/cents component. Default value is true.
 	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.  Default value is true.
-	 * @return	A nicely formatted <code>String</code>.  Does not include a dollar sign or anything!
+	 * @return	A nicely formatted String.  Does not include a dollar sign or anything!
 	 */
 	public static inline function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
@@ -170,15 +170,15 @@ class FlxStringUtil
 	}
 	
 	/**
-	 * Format a text with html tags - useful for <code>TextField.htmlText</code>. 
+	 * Format a text with html tags - useful for TextField.htmlText. 
 	 * Used by the log window of the debugger.
 	 * 
 	 * @param	Text		The text to format
-	 * @param	Size		The text size, using <font size>
-	 * @param	Color		The text color, using <font color>
-	 * @param	Bold		Whether the text should be bold (<b> tag)
-	 * @param	Italic		Whether the text should be italic (<i> tag)
-	 * @param	Underlined 	Whether the text should be underlined (<u> tag)
+	 * @param	Size		The text size, using the font-size-tag
+	 * @param	Color		The text color, using font-color-tag
+	 * @param	Bold		Whether the text should be bold (b-tag)
+	 * @param	Italic		Whether the text should be italic (i-tag)
+	 * @param	Underlined 	Whether the text should be underlined (u-tag)
 	 * @return	The html-formatted text.
 	 */
 	public static function htmlFormat(Text:String, Size:Int = 12, Color:String = "FFFFFF", Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false):String
@@ -206,11 +206,11 @@ class FlxStringUtil
 	}
 	
 	/**
-	 * Get the <code>String</code> name of any <code>Object</code>.
+	 * Get the String name of any Object.
 	 * 
-	 * @param	Obj		The <code>Object</code> object in question.
+	 * @param	Obj		The Object object in question.
 	 * @param	Simple	Returns only the class name, not the package or packages.
-	 * @return	The name of the <code>Class</code> as a <code>String</code> object.
+	 * @return	The name of the Class as a String object.
 	 */
 	@:extern public static inline function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
@@ -227,7 +227,22 @@ class FlxStringUtil
 	}
 	
 	/**
-	 * Helper function that uses <code>getClassName</code> to compare two objects' class names.
+	 * Returns the domain of a URL.
+	 */
+	public static function getDomain(url:String):String
+	{
+		var urlStart:Int = url.indexOf("://") + 3;
+		var urlEnd:Int = url.indexOf("/", urlStart);
+		var home:String = url.substring(urlStart, urlEnd);
+		var LastDot:Int = home.lastIndexOf(".") - 1;
+		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
+		home = home.substring(domEnd, home.length);
+		home = home.split(":")[0];
+		return (home == "") ? "local" : home;
+	}
+	
+	/**
+	 * Helper function that uses getClassName to compare two objects' class names.
 	 * 
 	 * @param	Obj1	The first object
 	 * @param	Obj2	The second object
@@ -243,7 +258,7 @@ class FlxStringUtil
 	/**
 	 * Split a comma-separated string into an array of ints
 	 * 
-	 * @param	Data 	String formatted like this: <code>"1, 2, 5, -10, 120, 27"</code>
+	 * @param	Data 	String formatted like this: "1, 2, 5, -10, 120, 27"
 	 * @return	An array of ints
 	 */
 	public static function toIntArray(Data:String):Array<Int>
@@ -264,7 +279,7 @@ class FlxStringUtil
 	/**
 	 * Split a comma-separated string into an array of floats
 	 * 
-	 * @param	Data string formatted like this: <code>"1.0,2.1,5.6,1245587.9, -0.00354"</code>
+	 * @param	Data string formatted like this: "1.0,2.1,5.6,1245587.9, -0.00354"
 	 * @return	An array of floats
 	 */	
 	public static function toFloatArray(Data:String):Array<Float>

@@ -26,7 +26,7 @@ class VCRFrontEnd
 	 */
 	public var replayCallback:Void->Void = null;
 	/**
-	 * The key codes used to toggle the debugger (via <code>flash.ui.Keyboard</code>). 
+	 * The key codes used to toggle the debugger (via flash.ui.Keyboard). 
 	 * "0" means "any key". Handy for skipping cutscenes or getting out of attract modes!
 	 */
 	public var cancelKeys:Array<String> = null;
@@ -212,7 +212,7 @@ class VCRFrontEnd
 	/**
 	 * Stop recording the current replay and return the replay data.
 	 * 
-	 * @return	The replay data in simple ASCII format (see <code>FlxReplay.save()</code>).
+	 * @return	The replay data in simple ASCII format (see FlxReplay.save()).
 	 */
 	public inline function stopRecording():String
 	{

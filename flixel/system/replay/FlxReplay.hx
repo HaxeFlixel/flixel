@@ -37,11 +37,11 @@ class FlxReplay
 	 */
 	private var _frames:Array<FrameRecord>;
 	/**
-	 * Internal tracker for max number of frames we can fit before growing the <code>_frames</code> again.
+	 * Internal tracker for max number of frames we can fit before growing the _frames again.
 	 */
 	private var _capacity:Int;
 	/**
-	 * Internal helper variable for keeping track of where we are in <code>_frames</code> during recording or replay.
+	 * Internal helper variable for keeping track of where we are in _frames during recording or replay.
 	 */
 	private var _marker:Int;
 	
@@ -90,10 +90,10 @@ class FlxReplay
 	}
 	
 	/**
-	 * Load replay data from a <code>String</code> object.
+	 * Load replay data from a String object.
 	 * Strings can come from embedded assets or external
 	 * files loaded through the debugger overlay. 
-	 * @param	FileContents	A <code>String</code> object containing a gameplay recording.
+	 * @param	FileContents	A String object containing a gameplay recording.
 	 */
 	public function load(FileContents:String):Void
 	{
@@ -124,8 +124,8 @@ class FlxReplay
 	}
 	
 	/**
-	 * Save the current recording data off to a <code>String</code> object.
-	 * Basically goes through and calls <code>FrameRecord.save()</code> on each frame in the replay.
+	 * Save the current recording data off to a String object.
+	 * Basically goes through and calls FrameRecord.save() on each frame in the replay.
 	 * return	The gameplay recording in simple ASCII format.
 	 */
 	public function save():String
@@ -228,7 +228,7 @@ class FlxReplay
 	}
 	
 	/**
-	 * Common initialization terms used by both <code>create()</code> and <code>load()</code> to set up the replay object.
+	 * Common initialization terms used by both create() and load() to set up the replay object.
 	 */
 	private function init():Void
 	{

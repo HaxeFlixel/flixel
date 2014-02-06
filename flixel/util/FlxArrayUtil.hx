@@ -6,8 +6,8 @@ package flixel.util;
 class FlxArrayUtil
 {
 	/**
-	 * Function to search for a specified element in an array. This is faster than <code>Lambda.indexOf()</code>
-	 * on the flash target because it uses the the native array <code>indexOf()</code> method.
+	 * Function to search for a specified element in an array. This is faster than Lambda.indexOf()
+	 * on the flash target because it uses the the native array indexOf() method.
 	 * 
 	 * @param	array		The array.
 	 * @param	whatToFind	The element you're looking for.
@@ -86,8 +86,8 @@ class FlxArrayUtil
 	}
 	
 	/**
-	 * Safely removes an element from an array by swapping it with the last element and calling pop<code>()</code>
-	 * (won't do anything if the array is not part of the array). This is a lot faster than regular <code>splice()</code>, 
+	 * Safely removes an element from an array by swapping it with the last element and calling pop()
+	 * (won't do anything if the array is not part of the array). This is a lot faster than regular splice(), 
 	 * but it can only be used on arrays where order doesn't matter.
 	 * 
 	 * @param	array	The array to remove the element from

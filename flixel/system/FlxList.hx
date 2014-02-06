@@ -5,7 +5,7 @@ import flixel.FlxObject;
 /**
  * A miniature linked list class.
  * Useful for optimizing time-critical or highly repetitive tasks!
- * See <code>FlxQuadTree</code> for how to use it, IF YOU DARE.
+ * See FlxQuadTree for how to use it, IF YOU DARE.
  */
 class FlxList
 {
@@ -16,7 +16,7 @@ class FlxList
 	private static var _cachedListsHead:FlxList;
 	
 	/**
-	 * Stores a reference to a <code>FlxObject</code>.
+	 * Stores a reference to a FlxObject.
 	 */
 	public var object:FlxObject;
 	/**

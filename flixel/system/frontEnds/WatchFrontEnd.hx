@@ -35,11 +35,11 @@ class WatchFrontEnd
 	
 	/**
 	 * Add or update a quickWatch entry to the watch list in the debugger.
-	 * Extremely useful when called in <code>update()</code> functions when there 
+	 * Extremely useful when called in update() functions when there 
 	 * doesn't exist a variable for a value you want to watch - so you won't have to create one.
 	 * 
 	 * @param	Name		The name of the quickWatch entry, for example "mousePressed".
-	 * @param	NewValue	The new value for this entry, for example <code>FlxG.mouse.pressed</code>.
+	 * @param	NewValue	The new value for this entry, for example FlxG.mouse.pressed.
 	 */
 	public inline function addQuick(Name:String, NewValue:Dynamic):Void
 	{

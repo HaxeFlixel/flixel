@@ -15,7 +15,7 @@ import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.CachedGraphics;
 
 /**
- * This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).
+ * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
  * It includes some basic attributes about game objects, basic state information, sizes, scrolling, and basic physics and motion.
  */
 
@@ -27,39 +27,39 @@ class FlxObject extends FlxBasic
 	 */
 	public static var SEPARATE_BIAS:Float = 4;
 	/**
-	 * Generic value for "left" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
+	 * Generic value for "left" Used by facing, allowCollisions, and touching.
 	 */
 	static public inline var LEFT:Int	= 0x0001;
 	/**
-	 * Generic value for "right" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
+	 * Generic value for "right" Used by facing, allowCollisions, and touching.
 	 */
 	static public inline var RIGHT:Int	= 0x0010;
 	/**
-	 * Generic value for "up" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
+	 * Generic value for "up" Used by facing, allowCollisions, and touching.
 	 */
 	static public inline var UP:Int		= 0x0100;
 	/**
-	 * Generic value for "down" Used by <code>facing</code>, <code>allowCollisions</code>, and <code>touching</code>.
+	 * Generic value for "down" Used by facing, allowCollisions, and touching.
 	 */
 	static public inline var DOWN:Int	= 0x1000;
 	/**
-	 * Special-case constant meaning no collisions, used mainly by <code>allowCollisions</code> and <code>touching</code>.
+	 * Special-case constant meaning no collisions, used mainly by allowCollisions and touching.
 	 */
 	static public inline var NONE:Int	= 0;
 	/**
-	 * Special-case constant meaning up, used mainly by <code>allowCollisions</code> and <code>touching</code>.
+	 * Special-case constant meaning up, used mainly by allowCollisions and touching.
 	 */
 	static public inline var CEILING:Int= UP;
 	/**
-	 * Special-case constant meaning down, used mainly by <code>allowCollisions</code> and <code>touching</code>.
+	 * Special-case constant meaning down, used mainly by allowCollisions and touching.
 	 */
 	static public inline var FLOOR:Int	= DOWN;
 	/**
-	 * Special-case constant meaning only the left and right sides, used mainly by <code>allowCollisions</code> and <code>touching</code>.
+	 * Special-case constant meaning only the left and right sides, used mainly by allowCollisions and touching.
 	 */
 	static public inline var WALL:Int	= LEFT | RIGHT;
 	/**
-	 * Special-case constant meaning any direction, used mainly by <code>allowCollisions</code> and <code>touching</code>.
+	 * Special-case constant meaning any direction, used mainly by allowCollisions and touching.
 	 */
 	static public inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
 	/**
@@ -71,11 +71,11 @@ class FlxObject extends FlxBasic
 	 */
 	public var y(default, set):Float = 0;
 	/**
-	 * The width of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
+	 * The width of this object's hitbox. For sprites, use offset to control the hitbox position.
 	 */
 	@:isVar public var width(get, set):Float;
 	/**
-	 * The height of this object's hitbox. For sprites, use <code>offset</code> to control the hitbox position.
+	 * The height of this object's hitbox. For sprites, use offset to control the hitbox position.
 	 */
 	@:isVar public var height(get, set):Float;
 	/**
@@ -84,7 +84,7 @@ class FlxObject extends FlxBasic
 	 */
 	public var angle(default, set):Float = 0;
 	/**
-	 * Set this to false if you want to skip the automatic motion/movement stuff (see <code>updateMotion()</code>).
+	 * Set this to false if you want to skip the automatic motion/movement stuff (see updateMotion()).
 	 * FlxObject and FlxSprite default to true. FlxText, FlxTileblock and FlxTilemap default to false.
 	 */
 	public var moves(default, set):Bool = true;
@@ -104,8 +104,8 @@ class FlxObject extends FlxBasic
 	 */
 	public var forceComplexRender(default, set):Bool = false;
 	/**
-	 * Controls how much this object is affected by camera scrolling.
-	 * 0 = no movement (e.g. a background layer), 1 = same movement speed as the foreground. Default value: 1, 1.
+	 * Controls how much this object is affected by camera scrolling. 0 = no movement (e.g. a background layer), 
+	 * 1 = same movement speed as the foreground. Default value is (1,1), except for UI elements like FlxButton where it's (0,0).
 	 */
 	public var scrollFactor(default, null):FlxPoint;
 	/**
@@ -123,12 +123,12 @@ class FlxObject extends FlxBasic
 	 */
 	public var drag(default, null):FlxPoint;
 	/**
-	 * If you are using <code>acceleration</code>, you can use <code>maxVelocity</code> with it
+	 * If you are using acceleration, you can use maxVelocity with it
 	 * to cap the speed automatically (very useful!).
 	 */
 	public var maxVelocity(default, null):FlxPoint;
 	/**
-	 * The virtual mass of the object. Default value is 1. Currently only used with <code>elasticity</code> 
+	 * The virtual mass of the object. Default value is 1. Currently only used with elasticity 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
 	 */
 	public var mass:Float = 1;
@@ -145,11 +145,11 @@ class FlxObject extends FlxBasic
 	 */
 	public var angularAcceleration:Float = 0;
 	/**
-	 * Like <code>drag</code> but for spinning.
+	 * Like drag but for spinning.
 	 */
 	public var angularDrag:Float = 0;
 	/**
-	 * Use in conjunction with <code>angularAcceleration</code> for fluid spin speed control.
+	 * Use in conjunction with angularAcceleration for fluid spin speed control.
 	 */
 	public var maxAngular:Float = 10000;
 	/**
@@ -173,7 +173,7 @@ class FlxObject extends FlxBasic
 	public var allowCollisions:Int = ANY;
 	/**
 	 * Important variable for collision processing.
-	 * By default this value is set automatically during <code>preUpdate()</code>.
+	 * By default this value is set automatically during preUpdate().
 	 */
 	public var last(default, null):FlxPoint;
 	/**
@@ -195,13 +195,13 @@ class FlxObject extends FlxBasic
 	 * Internal static private variables, for performance reasons.
 	 */
 	private var _point:FlxPoint;
-	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary <code>new</code> calls.
+	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary new calls.
 	private static var _firstSeparateFlxRect:FlxRect = new FlxRect();
 	private static var _secondSeparateFlxRect:FlxRect = new FlxRect();
 	
 	
 	/**
-	 * Instantiates a <code>FlxObject</code>.
+	 * Instantiates a FlxObject.
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 * @param	Width	Desired width of the rectangle.
@@ -244,7 +244,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * WARNING: This will remove this object entirely. Use <code>kill()</code> if you want to disable it temporarily only and <code>reset()</code> it later to revive it.
+	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and reset() it later to revive it.
 	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
 	 */
 	override public function destroy():Void
@@ -318,7 +318,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Rarely called, and in this case just increments the visible objects count and calls <code>drawDebug()</code> if necessary.
+	 * Rarely called, and in this case just increments the visible objects count and calls drawDebug() if necessary.
 	 */
 	override public function draw():Void
 	{
@@ -411,8 +411,8 @@ class FlxObject extends FlxBasic
 	#end
 	
 	/**
-	 * Checks to see if some <code>FlxObject</code> overlaps this <code>FlxObject</code> or <code>FlxGroup</code>. If the group has a LOT of things in it, 
-	 * it might be faster to use <code>FlxG.overlaps()</code>. WARNING: Currently tilemaps do NOT support screen space overlap checks!
+	 * Checks to see if some FlxObject overlaps this FlxObject or FlxGroup. If the group has a LOT of things in it, 
+	 * it might be faster to use FlxG.overlaps(). WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 * @param	ObjectOrGroup	The object or group being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.  Default is false, or "only compare in world space."
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -469,7 +469,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Checks to see if this <code>FlxObject</code> were located at the given position, would it overlap the <code>FlxObject</code> or <code>FlxGroup</code>?
+	 * Checks to see if this FlxObject were located at the given position, would it overlap the FlxObject or FlxGroup?
 	 * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size into account. WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 * @param	X				The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
 	 * @param	Y				The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
@@ -532,7 +532,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Checks to see if a point in 2D world space overlaps this <code>FlxObject</code> object.
+	 * Checks to see if a point in 2D world space overlaps this FlxObject object.
 	 * @param	Point			The point in world space you want to check.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -567,8 +567,8 @@ class FlxObject extends FlxBasic
 	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-	 * @param	Point		Takes a <code>FlxPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
-	 * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
+	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
 	 */
 	public function getScreenXY(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
 	{
@@ -585,8 +585,8 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Retrieve the midpoint of this object in world coordinates.
-	 * @param	point	Allows you to pass in an existing <code>FlxPoint</code> object if you're so inclined.  Otherwise a new one is created.
-	 * @return	A <code>FlxPoint</code> object containing the midpoint of this object in world coordinates.
+	 * @param	point	Allows you to pass in an existing FlxPoint object if you're so inclined.  Otherwise a new one is created.
+	 * @return	A FlxPoint object containing the midpoint of this object in world coordinates.
 	 */
 	public function getMidpoint(?point:FlxPoint):FlxPoint
 	{
@@ -665,8 +665,8 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * The main collision resolution function in flixel.
-	 * @param	Object1 	Any <code>FlxObject</code>.
-	 * @param	Object2		Any other <code>FlxObject</code>.
+	 * @param	Object1 	Any FlxObject.
+	 * @param	Object2		Any other FlxObject.
 	 * @return	Whether the objects in fact touched and were separated.
 	 */
 	public static function separate(Object1:FlxObject, Object2:FlxObject):Bool
@@ -678,8 +678,8 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * The X-axis component of the object separation process.
-	 * @param	Object1 	Any <code>FlxObject</code>.
-	 * @param	Object2		Any other <code>FlxObject</code>.
+	 * @param	Object1 	Any FlxObject.
+	 * @param	Object2		Any other FlxObject.
 	 * @return	Whether the objects in fact touched and were separated along the X axis.
 	 */
 	public static function separateX(Object1:FlxObject, Object2:FlxObject):Bool
@@ -790,8 +790,8 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * The Y-axis component of the object separation process.
-	 * @param	Object1 	Any <code>FlxObject</code>.
-	 * @param	Object2		Any other <code>FlxObject</code>.
+	 * @param	Object1 	Any FlxObject.
+	 * @param	Object2		Any other FlxObject.
 	 * @return	Whether the objects in fact touched and were separated along the Y axis.
 	 */
 	public static function separateY(Object1:FlxObject, Object2:FlxObject):Bool
@@ -940,15 +940,18 @@ class FlxObject extends FlxBasic
 	 */
 	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
-		if (cachedGraphics != null && cachedGraphics != Value)
-		{
-			cachedGraphics.useCount--;
-		}
+		var oldCached:CachedGraphics = cachedGraphics;
 		
 		if (cachedGraphics != Value && Value != null)
 		{
 			Value.useCount++;
 		}
+		
+		if (oldCached != null && oldCached != Value)
+		{
+			oldCached.useCount--;
+		}
+		
 		return cachedGraphics = Value;
 	}
 	

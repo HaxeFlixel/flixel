@@ -13,8 +13,11 @@ class NumTween extends FlxTween
 	 */
 	public var value:Float;
 	
+	// Tween information.
+	private var _start:Float;
+	private var _range:Float;
+	
 	/**
-	 * Constructor.
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
@@ -26,6 +29,7 @@ class NumTween extends FlxTween
 	
 	/**
 	 * Tweens the value from one value to another.
+	 * 
 	 * @param	fromValue		Start value.
 	 * @param	toValue			End value.
 	 * @param	duration		Duration of the tween.
@@ -36,19 +40,14 @@ class NumTween extends FlxTween
 		_start = value = fromValue;
 		_range = toValue - value;
 		this.duration = duration;
-		_ease = ease;
+		this.ease = ease;
 		start();
 		return this;
 	}
 	
-	/** @private Updates the Tween. */
 	override public function update():Void
 	{
 		super.update();
-		value = _start + _range * _t;
+		value = _start + _range * scale;
 	}
-	
-	// Tween information.
-	private var _start:Float;
-	private var _range:Float;
 }

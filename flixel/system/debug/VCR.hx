@@ -75,7 +75,7 @@ class VCR
 	 */
 	public inline function recording():Void
 	{
-		recordBtn.changeIcon(FlxAssets.IMG_RECORD_ON);
+		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
 		recordBtn.downHandler = FlxG.vcr.stopRecording;
 	}
 
@@ -85,7 +85,7 @@ class VCR
 	 */
 	public inline function stoppedRecording():Void
 	{
-		recordBtn.changeIcon(FlxAssets.IMG_RECORD_ON);
+		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
 		recordBtn.downHandler = FlxG.vcr.startRecording.bind(true);
 	}
 	
@@ -95,7 +95,7 @@ class VCR
 	 */
 	public inline function stoppedReplay():Void
 	{
-		recordBtn.changeIcon(FlxAssets.IMG_RECORD_OFF);
+		recordBtn.changeIcon(new GraphicRecordOff(0, 0));
 		recordBtn.downHandler = FlxG.vcr.startRecording.bind(true);
 	}
 	
@@ -105,7 +105,7 @@ class VCR
 	 */
 	public inline function playingReplay():Void
 	{
-		recordBtn.changeIcon(FlxAssets.IMG_STOP);
+		recordBtn.changeIcon(new GraphicStop(0, 0));
 		recordBtn.downHandler = FlxG.vcr.stopReplay;
 	}
 	

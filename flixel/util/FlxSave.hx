@@ -88,12 +88,12 @@ class FlxSave
 	}
 	
 	/**
-	 * A way to safely call <code>flush()</code> and <code>destroy()</code> on your save file.
+	 * A way to safely call flush() and destroy() on your save file.
 	 * Will correctly handle storage size popups and all that good stuff.
-	 * If you don't want to save your changes first, just call <code>destroy()</code> instead.
+	 * If you don't want to save your changes first, just call destroy() instead.
 	 * @param	MinFileSize		If you need X amount of space for your save, specify it here.
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
-	 * @return	The result of result of the <code>flush()</code> call (see below for more details).
+	 * @return	The result of result of the flush() call (see below for more details).
 	 */
 	public function close(MinFileSize:Int = 0, OnComplete:Bool->Void = null):Bool
 	{

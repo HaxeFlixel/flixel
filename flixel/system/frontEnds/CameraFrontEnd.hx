@@ -10,7 +10,7 @@ import flixel.util.FlxColor;
 class CameraFrontEnd
 {
 	/**
-	 * An array listing <code>FlxCamera</code> objects that are used to draw stuff.
+	 * An array listing FlxCamera objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
 	 */
 	public var list(default, null):Array<FlxCamera>;
@@ -22,7 +22,7 @@ class CameraFrontEnd
 	
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
-	 * you are not doing any pre-processing in your game state's <code>draw()</code> call.
+	 * you are not doing any pre-processing in your game state's draw() call.
 	 * @default false
 	 */
 	public var useBufferLocking:Bool = false;
@@ -36,7 +36,7 @@ class CameraFrontEnd
 	 * Handy for PiP, split-screen, etc.
 	 * 
 	 * @param	NewCamera	The camera you want to add.
-	 * @return	This <code>FlxCamera</code> instance.
+	 * @return	This FlxCamera instance.
 	 */
 	@:generic public inline function add<T:FlxCamera>(NewCamera:T):T
 	{

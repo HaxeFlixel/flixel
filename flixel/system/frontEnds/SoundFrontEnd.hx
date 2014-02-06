@@ -6,6 +6,7 @@ import flash.media.SoundTransform;
 import flixel.FlxG;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxSound;
+import flixel.util.FlxMath;
 import openfl.Assets;
 
 @:allow(flixel.FlxGame)
@@ -22,26 +23,26 @@ class SoundFrontEnd
 	public var muted:Bool = false;
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
-	 * Function should take the form <code>myVolumeHandler(Volume:Number)</code>.
+	 * Function should take the form myVolumeHandler(Volume:Number).
 	 */
 	public var volumeHandler:Float->Void = null;
 	
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * The key codes used to increase volume (see <code>FlxG.keys</code> for the keys available).
-	 * Default keys: + (and numpad +). Set to <code>null</code> to deactivate.
+	 * The key codes used to increase volume (see FlxG.keys for the keys available).
+	 * Default keys: + (and numpad +). Set to null to deactivate.
 	 * @default ["PLUS", "NUMPADPLUS"]
 	 */
 	public var volumeUpKeys:Array<String>;
 	/**
-	 * The keys to decrease volume (see <code>FlxG.keys</code> for the keys available).
-	 * Default keys: - (and numpad -). Set to <code>null</code> to deactivate.
+	 * The keys to decrease volume (see FlxG.keys for the keys available).
+	 * Default keys: - (and numpad -). Set to null to deactivate.
 	 * @default ["MINUS", "NUMPADMINUS"]
 	 */
 	public var volumeDownKeys:Array<String>;
 	/**
-	 * The keys used to mute / unmute the game (see <code>FlxG.keys</code> for the keys available).
-	 * Default keys: 0 (and numpad 0). Set to <code>null</code> to deactivate.
+	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
+	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
 	 * @default ["ZERO", "NUMPADZERO"]
 	*/
 	public var muteKeys:Array<String>; 
@@ -54,7 +55,7 @@ class SoundFrontEnd
 	/**
 	 * Set this to a number between 0 and 1 to change the global volume.
 	 */
-	public var volume(default, set):Float = 0.5;
+	public var volume(default, set):Float = 1;
 	
 	
 	#if android
@@ -95,10 +96,10 @@ class SoundFrontEnd
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @param	AutoPlay		Whether to play the sound.
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
-	 * @return	A <code>FlxSound</code> object.
+	 * @return	A FlxSound object.
 	 */
 	public function load(?EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
 	{
@@ -178,14 +179,14 @@ class SoundFrontEnd
 	}
 	#else
 	/**
-	 * Creates a new sound object from an embedded <code>Class</code> object.
+	 * Creates a new sound object from an embedded Class object.
 	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
 	 * 
 	 * @param	EmbeddedSound	The sound you want to play.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
-	 * @return	A <code>FlxSound</code> object.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @return	A FlxSound object.
 	 */
 	public inline function play(EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
@@ -204,7 +205,7 @@ class SoundFrontEnd
 	 * @param	URL		The URL of the sound you want to play.
 	 * @param	Volume	How loud to play it (0 to 1).
 	 * @param	Looped	Whether or not to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @return	A FlxSound object.
 	 */
 	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
@@ -257,7 +258,7 @@ class SoundFrontEnd
 	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
 	 * 
-	 * @param	ForceDestroy		Kill sounds even if they're flagged <code>survive</code>.
+	 * @param	ForceDestroy		Kill sounds even if they're flagged survive.
 	 */
 	public function destroy(ForceDestroy:Bool = false):Void
 	{
@@ -291,27 +292,6 @@ class SoundFrontEnd
 		_soundCache = new Map<String, Sound>();
 		_soundTransform = new SoundTransform();
 		#end
-	}
-	
-	private function set_volume(Volume:Float):Float
-	{
-		volume = Volume;
-		
-		if (volume < 0)
-		{
-			volume = 0;
-		}
-		else if (volume > 1)
-		{
-			volume = 1;
-		}
-		
-		if (volumeHandler != null)
-		{
-			var param:Float = muted ? 0 : volume;
-			volumeHandler(param);
-		}
-		return Volume;
 	}
 	
 	/**
@@ -384,6 +364,18 @@ class SoundFrontEnd
 		{
 			muted = false; 
 		}
+	}
+	
+	private function set_volume(Volume:Float):Float
+	{
+		Volume = FlxMath.bound(Volume, 0, 1);
+		
+		if (volumeHandler != null)
+		{
+			var param:Float = muted ? 0 : Volume;
+			volumeHandler(param);
+		}
+		return volume = Volume;
 	}
 }
 #end

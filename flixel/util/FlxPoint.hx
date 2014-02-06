@@ -54,7 +54,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from the specified point.
-	 * @param	Point	Any <code>FlxPoint</code>.
+	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to itself.
 	 */
 	public function copyFrom(point:FlxPoint):FlxPoint
@@ -66,7 +66,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from this point to the specified point.
-	 * @param	Point	Any <code>FlxPoint</code>.
+	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to the altered point parameter.
 	 */
 	public function copyTo(point:FlxPoint = null):FlxPoint
@@ -82,7 +82,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from the specified Flash point.
-	 * @param	Point	Any <code>Point</code>.
+	 * @param	Point	Any Point.
 	 * @return	A reference to itself.
 	 */
 	public function copyFromFlash(FlashPoint:Point):FlxPoint
@@ -94,7 +94,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from this point to the specified Flash point.
-	 * @param	Point	Any <code>Point</code>.
+	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
 	public function copyToFlash(FlashPoint:Point):Point
@@ -132,7 +132,7 @@ class FlxPoint implements IFlxDestroyable
 	/**
 	 * Calculate the distance to another point.
 	 * 
-	 * @param 	AnotherPoint	A <code>FlxPoint</code> object to calculate the distance to.
+	 * @param 	AnotherPoint	A FlxPoint object to calculate the distance to.
 	 * @return	The distance between the two points as a Float.
 	 */
 	public inline function distanceTo(AnotherPoint:FlxPoint):Float
