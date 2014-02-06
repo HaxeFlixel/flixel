@@ -9,7 +9,10 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
+import flixel.text.FlxText.FlxTextFormat;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
@@ -52,6 +55,11 @@ class FlxText extends FlxSprite
 	 * Whether to use bold text or not (false by default).
 	 */
 	public var bold(get, set):Bool;
+	
+	/**
+	 * Whether to use italic text or not (false by default). It only works in Flash.
+	 */
+	public var italic(get, set):Bool;
 	
 	/**
 	 * Whether to use word wrapping and multiline or not (true by default).
@@ -117,11 +125,15 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal reference to a Flash TextFormat object.
 	 */
-	private var _format:TextFormat;
+	private var _defaultFormat:TextFormat;
 	/**
 	 * Internal reference to another helper Flash TextFormat object.
 	 */
 	private var _formatAdjusted:TextFormat;
+	/**
+	 * Internal reference to an Array of FlxTextFormat
+	 */
+	private var _formats:Array<FlxTextFormat>;
 	
 	/**
 	 * Creates a new FlxText object at the specified position.
@@ -147,11 +159,13 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_format = new TextFormat(FlxAssets.FONT_DEFAULT, size, 0xffffff);
+		_defaultFormat = new TextFormat(FlxAssets.FONT_DEFAULT, size, 0xffffff);
 		_formatAdjusted = new TextFormat();
-		_textField.defaultTextFormat = _format;
+		_textField.defaultTextFormat = _defaultFormat;
 		_textField.text = Text;
 		_textField.embedFonts = EmbeddedFont;
+		
+		_formats = new Array<FlxTextFormat>();
 		
 		#if flash
 		_textField.sharpness = 100;
@@ -181,11 +195,48 @@ class FlxText extends FlxSprite
 	override public function destroy():Void
 	{
 		_textField = null;
-		_format = null;
+		_defaultFormat = null;
 		_formatAdjusted = null;
 		_filters = null;
-		
+		for (format in _formats)
+		{
+			format.destroy();
+		}
+		_formats = null;
 		super.destroy();
+	}
+	
+	/**
+	 * Adds another format to this FlxText
+	 * @param	Format		The format to be added.
+	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * @param	End			(Default=-1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 */
+	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):Void
+	{
+		Format.start = Start > -1 ? Start : Format.start;
+		Format.end = End > -1 ? End : Format.end;
+		_formats.push(Format);
+		// sort the array using the start value of the format so we can skip formats that can't be applied to the textField
+		_formats.sort(function(left:FlxTextFormat, right:FlxTextFormat) { return left.start < right.start ? -1 : 1; } );
+		dirty = true;
+	}
+	
+	/**
+	 * Clears all the formats applied.
+	 */
+	public function clearFormats():Void
+	{
+		for (format in _formats)
+		{
+			format.destroy();
+			format = null;
+		}
+		
+		_formats = [];
+		
+		updateFormat(_defaultFormat);
+		dirty = true;
 	}
 	
 	/**
@@ -206,31 +257,58 @@ class FlxText extends FlxSprite
 		{
 			if (Font == null)
 			{
-				_format.font = FlxAssets.FONT_DEFAULT;
+				_defaultFormat.font = FlxAssets.FONT_DEFAULT;
 			}
 			else 
 			{
-				_format.font = Assets.getFont(Font).fontName;
+				_defaultFormat.font = Assets.getFont(Font).fontName;
 			}
 		}
 		else if (Font != null)
 		{
-			_format.font = Font;
+			_defaultFormat.font = Font;
 		}
 		
 		_textField.embedFonts = Embedded;
 		
-		_format.size = Size;
+		_defaultFormat.size = Size;
 		Color &= 0x00ffffff;
-		_format.color = Color;
-		_format.align = convertTextAlignmentFromString(Alignment);
-		_textField.defaultTextFormat = _format;
-		updateFormat(_format);
+		_defaultFormat.color = Color;
+		_defaultFormat.align = convertTextAlignmentFromString(Alignment);
+		_textField.defaultTextFormat = _defaultFormat;
 		borderStyle = BorderStyle;
 		borderColor = BorderColor;
+		updateFormat(_defaultFormat);
 		dirty = true;
 		
 		return this;
+	}
+	
+	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
+	{
+		// Apply the default format
+		FormatAdjusted.color = UseBorderColor ? borderColor : _defaultFormat.color;
+		updateFormat(FormatAdjusted);
+		
+		// Apply other formats
+		for (format in _formats)
+		{
+			if (_textField.text.length - 1 < format.start) 
+			{
+				// we can break safely because the array is ordered by the format start value
+				break;
+			}
+			else 
+			{
+				FormatAdjusted.font    = format.format.font;
+				FormatAdjusted.bold    = format.format.bold;
+				FormatAdjusted.italic  = format.format.italic;
+				FormatAdjusted.size    = format.format.size;
+				FormatAdjusted.color   = UseBorderColor ? format.borderColor : format.format.color;
+			}
+			
+			_textField.setTextFormat(FormatAdjusted, format.start, Std.int(Math.min(format.end, _textField.text.length)));
+		}
 	}
 	
 	override private function set_width(Width:Float):Float
@@ -268,14 +346,14 @@ class FlxText extends FlxSprite
 	
 	private function get_size():Float
 	{
-		return _format.size;
+		return _defaultFormat.size;
 	}
 	
 	private function set_size(Size:Float):Float
 	{
-		_format.size = Size;
-		_textField.defaultTextFormat = _format;
-		updateFormat(_format);
+		_defaultFormat.size = Size;
+		_textField.defaultTextFormat = _defaultFormat;
+		updateFormat(_defaultFormat);
 		dirty = true;
 		
 		return Size;
@@ -287,29 +365,29 @@ class FlxText extends FlxSprite
 	override private function set_color(Color:Int):Int
 	{
 		Color &= 0x00ffffff;
-		if (_format.color == Color)
+		if (_defaultFormat.color == Color)
 		{
 			return Color;
 		}
-		_format.color = Color;
+		_defaultFormat.color = Color;
 		color = Color;
-		_textField.defaultTextFormat = _format;
-		updateFormat(_format);
+		_textField.defaultTextFormat = _defaultFormat;
+		updateFormat(_defaultFormat);
 		dirty = true;
 		return Color;
 	}
 	
 	private function get_font():String
 	{
-		return _format.font;
+		return _defaultFormat.font;
 	}
 	
 	private function set_font(Font:String):String
 	{
 		_textField.embedFonts = true;
-		_format.font = Assets.getFont(Font).fontName;
-		_textField.defaultTextFormat = _format;
-		updateFormat(_format);
+		_defaultFormat.font = Assets.getFont(Font).fontName;
+		_textField.defaultTextFormat = _defaultFormat;
+		updateFormat(_defaultFormat);
 		dirty = true;
 		return Font;
 	}
@@ -321,31 +399,48 @@ class FlxText extends FlxSprite
 	
 	private function get_systemFont():String
 	{
-		return _format.font;
+		return _defaultFormat.font;
 	}
 	
 	private function set_systemFont(Font:String):String
 	{
 		_textField.embedFonts = false;
-		_format.font = Font;
-		_textField.defaultTextFormat = _format;
-		updateFormat(_format);
+		_defaultFormat.font = Font;
+		_textField.defaultTextFormat = _defaultFormat;
+		updateFormat(_defaultFormat);
 		dirty = true;
 		return Font;
 	}
 	
 	private function get_bold():Bool 
 	{ 
-		return _format.bold; 
+		return _defaultFormat.bold; 
 	}
 	
 	private function set_bold(value:Bool):Bool
 	{
-		if (_format.bold != value)
+		if (_defaultFormat.bold != value)
 		{
-			_format.bold = value;
-			_textField.defaultTextFormat = _format;
-			updateFormat(_format);
+			_defaultFormat.bold = value;
+			_textField.defaultTextFormat = _defaultFormat;
+			updateFormat(_defaultFormat);
+			dirty = true;
+		}
+		return value;
+	}
+	
+	private function get_italic():Bool 
+	{ 
+		return _defaultFormat.italic; 
+	}
+	
+	private function set_italic(value:Bool):Bool
+	{
+		if (_defaultFormat.italic != value)
+		{
+			_defaultFormat.italic = value;
+			_textField.defaultTextFormat = _defaultFormat;
+			updateFormat(_defaultFormat);
 			dirty = true;
 		}
 		return value;
@@ -369,14 +464,14 @@ class FlxText extends FlxSprite
 	
 	private function get_alignment():String
 	{
-		return cast(_format.align, String);
+		return cast(_defaultFormat.align, String);
 	}
 	
 	private function set_alignment(Alignment:String):String
 	{
-		_format.align = convertTextAlignmentFromString(Alignment);
-		_textField.defaultTextFormat = _format;
-		updateFormat(_format);
+		_defaultFormat.align = convertTextAlignmentFromString(Alignment);
+		_textField.defaultTextFormat = _defaultFormat;
+		updateFormat(_defaultFormat);
 		dirty = true;
 		return Alignment;
 	}
@@ -543,19 +638,21 @@ class FlxText extends FlxSprite
 		if ((_textField != null) && (_textField.text != null) && (_textField.text.length > 0))
 		{
 			// Now that we've cleared a buffer, we need to actually render the text to it
-			_formatAdjusted.font = _format.font;
-			_formatAdjusted.size = _format.size;
-			_formatAdjusted.color = _format.color;
-			_formatAdjusted.align = _format.align;
+			_formatAdjusted.font   = _defaultFormat.font;
+			_formatAdjusted.size   = _defaultFormat.size;
+			_formatAdjusted.bold   = _defaultFormat.bold;
+			_formatAdjusted.italic = _defaultFormat.italic;
+			_formatAdjusted.color  = _defaultFormat.color;
+			_formatAdjusted.align  = _defaultFormat.align;
 			_matrix.identity();
 			
 			_matrix.translate(Std.int(0.5 * _widthInc), Std.int(0.5 * _heightInc));
 			
 			// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 			#if js
-			if (_format.align == TextFormatAlign.CENTER)
+			if (_defaultFormat.align == TextFormatAlign.CENTER)
 			#else
-			if ((_format.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
+			if ((_defaultFormat.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
 			#end
 			{
 				_formatAdjusted.align = TextFormatAlign.LEFT;
@@ -581,8 +678,7 @@ class FlxText extends FlxSprite
 				{
 					//Render a shadow beneath the text
 					//(do one lower-right offset draw call)
-					_formatAdjusted.color = borderColor;
-					updateFormat(_formatAdjusted);
+					applyFormats(_formatAdjusted, true);
 					
 					for (iter in 0...iterations)
 					{
@@ -591,15 +687,13 @@ class FlxText extends FlxSprite
 					}
 					
 					_matrix.translate(-borderSize, -borderSize);
-					_formatAdjusted.color = _format.color;
-					updateFormat(_formatAdjusted);
+					applyFormats(_formatAdjusted, false);
 				}
 				else if (borderStyle == BORDER_OUTLINE) 
 				{
 					//Render an outline around the text
 					//(do 8 offset draw calls)
-					_formatAdjusted.color = borderColor;
-					updateFormat(_formatAdjusted);
+					applyFormats(_formatAdjusted, true);
 					
 					var itd:Float = delta;
 					for (iter in 0...iterations)
@@ -624,16 +718,14 @@ class FlxText extends FlxSprite
 						itd += delta;
 					} 
 					
-					_formatAdjusted.color = _format.color;
-					updateFormat(_formatAdjusted);
+					applyFormats(_formatAdjusted, false);
 				}
 				else if (borderStyle == BORDER_OUTLINE_FAST) 
 				{
 					//Render an outline around the text
 					//(do 4 diagonal offset draw calls)
 					//(this method might not work with certain narrow fonts)
-					_formatAdjusted.color = borderColor;
-					updateFormat(_formatAdjusted);
+					applyFormats(_formatAdjusted, true);
 					
 					var itd:Float = delta;
 					for (iter in 0...iterations)
@@ -650,14 +742,16 @@ class FlxText extends FlxSprite
 						itd += delta;
 					}
 					
-					_formatAdjusted.color = _format.color;
-					updateFormat(_formatAdjusted);
+					applyFormats(_formatAdjusted, false);
 				}
+			}
+			else
+			{
+				applyFormats(_formatAdjusted, false);
 			}
 			
 			//Actually draw the text onto the buffer
 			cachedGraphics.bitmap.draw(_textField, _matrix);
-			updateFormat(_format);
 		}
 		
 		dirty = false;
@@ -774,5 +868,65 @@ class FlxText extends FlxSprite
 			dirty = true;
 		}
 		_filters = [];
+	}
+}
+
+class FlxTextFormat implements IFlxDestroyable
+{
+	/**
+	 * The border color if FlxText has a shadow or a border
+	 */
+	public var borderColor:Int;
+	
+	/**
+	 * The start index of the string where the format will be applied
+	 */
+	public var start:Int = -1;
+	/**
+	 * The end index of the string where the format will be applied
+	 */
+	public var end:Int = -1;
+	
+	/**
+	 * Internal TextFormat
+	 */
+	public var format(default, null):TextFormat;
+	
+	/**
+	 * Creates a new FlxTextFormat.
+	 * @param	FontColor		(Optional) Set the font  color. By default, inherits from the default format.
+	 * @param	Bold			(Optional) Set the font to bold. The font must support bold. By default, false. 
+	 * @param	Italic			(Optional) Set the font to italics. The font must support italics. Only works in Flash. By default, false.  
+	 * @param	BorderColor		(Optional) Set the border color. By default, no border (The color is TRANSPARENT)
+	 * @param	Start			(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
+	 * @param	End				(Default=-1) The end index of the string where the format will be applied.
+	 */
+	public function new(?FontColor:Int, ?Bold:Bool, ?Italic:Bool, ?BorderColor:Int, ?Start:Int = -1, ?End:Int = -1)
+	{
+		if (FontColor != null)
+		{
+			FontColor &= 0x00ffffff;
+		}
+		if (BorderColor != null)
+		{
+			BorderColor &= 0x00ffffff;
+		}
+		format = new TextFormat(null, null, FontColor, Bold, Italic);
+		
+		if (Start > -1)
+		{
+			start = Start;
+		}
+		if (End > -1)
+		{
+			end = End;
+		}
+		
+		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
+	}
+	
+	public function destroy():Void
+	{
+		format = null;
 	}
 }
