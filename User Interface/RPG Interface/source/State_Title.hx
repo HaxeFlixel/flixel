@@ -1,4 +1,5 @@
 import flash.text.Font;
+import flixel.addons.ui.FlxUI.NamedBool;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIPopup;
 import flixel.addons.ui.FlxUIText;
@@ -56,12 +57,14 @@ class State_Title extends FlxUIState
 				}
 			case "click_radio_group":
 				if (Std.is(data, Array) && data != null && data.length > 0) {
-					var id:String = ""; if(data[0] != null){ id = cast(data[0], String);}
-					var value:String = ""; if(data[1] != null){value = cast(data[1], String);}
-					if (value == "checked:true") {
-						if(Main.tongue != null){
-							Main.tongue.init(id, reloadState);
-						}
+					var id:String = ""; 
+					if (data[0] != null) 
+					{ 
+						id = cast(data[0], String);
+					}
+					if (Main.tongue != null)
+					{
+						Main.tongue.init(id, reloadState);
 					}
 				}
 		}		

@@ -37,9 +37,10 @@ class SaveSlot extends FlxUI
 		super.update();
 	}
 	
-	private override function _onClickButton(params:Dynamic = null):Void {
-		if (Std.is(params, String)) {
-			var str:String = cast(params, String);
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic):Void {
+		super.getEvent(id, sender, data);
+		if (Std.is(data, String)) {
+			var str:String = cast(data, String);
 			switch(str) {
 				case "play": onPress();
 				case "play+": onPlus();
@@ -55,15 +56,11 @@ class SaveSlot extends FlxUI
 	}
 
 	function onPlus() : Void {
-		#if debug
-		//trace("press plus " + id);
-		#end
+		FlxG.log.add("press plus " + id);
 	}
 
 	function onPress() : Void {
-		#if debug
-		/*trace("press " + id);*/
-		#end
+		FlxG.log.add("press " + id);
 	}
 
 	function cleanSlot() : Void {

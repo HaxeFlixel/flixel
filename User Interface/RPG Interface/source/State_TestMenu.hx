@@ -20,10 +20,13 @@ class State_TestMenu extends FlxUIState
 		return null;
 	}	
 	
-	public override function eventResponse(id:String,target:Dynamic,data:Array<Dynamic>):Void {
+	public override function eventResponse(id:String, target:Dynamic, data:Array<Dynamic>):Void {
 		if (data != null) {
-			switch(cast(data[0], String)) {
-				case "back": FlxG.switchState(new State_Title());
+			switch(id) {
+				case "click_button":
+					switch(cast(data[0], String)) {
+						case "back": FlxG.switchState(new State_Title());
+					}
 			}
 		}
 	}

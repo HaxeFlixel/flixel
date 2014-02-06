@@ -61,8 +61,11 @@ class State_CodeTest extends FlxUIState
 		
 		/***Check boxes***/
 		
-		var check_1 = new FlxUICheckBox(60, 200, null, null, _tongue.get("$MENU_THING_1", "ui"), 100, _onClickCheckBox, ["thing 1"]);
-		var check_2 = new FlxUICheckBox(60, check_1.y+20, null, null, _tongue.get("$MENU_THING_2", "ui"), 100, _onClickCheckBox, ["thing 2"]);
+		var check_1 = new FlxUICheckBox(60, 200, null, null, _tongue.get("$MENU_THING_1", "ui"), 100, ["thing 1"]);
+		check_1.uiEventCallback = getEvent;
+		
+		var check_2 = new FlxUICheckBox(60, check_1.y+20, null, null, _tongue.get("$MENU_THING_2", "ui"), 100, ["thing 2"]);
+		check_2.uiEventCallback = getEvent;
 		
 		add(check_1);
 		add(check_2);
@@ -130,9 +133,11 @@ class State_CodeTest extends FlxUIState
 			tab_group_1.add(tabs_radio_1);
 		
 			/***TAB GROUP 2***/
-			var tabs_check_1 = new FlxUICheckBox(10, 10, null, null, _tongue.get("$MENU_THING_1", "ui"), 100, _onClickCheckBox, ["thing 1"]);
-			var tabs_check_2 = new FlxUICheckBox(10, 40, null, null, _tongue.get("$MENU_THING_2", "ui"), 100, _onClickCheckBox, ["thing 2"]);
-				
+			var tabs_check_1 = new FlxUICheckBox(10, 10, null, null, _tongue.get("$MENU_THING_1", "ui"), 100, ["thing 1"]);
+			var tabs_check_2 = new FlxUICheckBox(10, 40, null, null, _tongue.get("$MENU_THING_2", "ui"), 100, ["thing 2"]);
+			tabs_check_1.uiEventCallback = getEvent;
+			tabs_check_2.uiEventCallback = getEvent;
+			
 			var tab_group_2:FlxUI = new FlxUI(null, tab_menu, null, _tongue);
 			tab_group_2.id = "tab_2";
 			tab_group_2.add(tabs_check_1);
