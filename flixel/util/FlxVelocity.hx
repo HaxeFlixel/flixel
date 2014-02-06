@@ -226,7 +226,7 @@ class FlxVelocity
 	 * @param	Speed	The speed it will move, in pixels per second sq
 	 * @return	A FlxPoint where FlxPoint.x contains the velocity x value and FlxPoint.y contains the velocity y value
 	 */
-	inline public static function velocityFromAngle(Angle:Int, Speed:Int):FlxPoint
+	public static inline function velocityFromAngle(Angle:Int, Speed:Int):FlxPoint
 	{
 		var a:Float = FlxAngle.asRadians(Angle);
 		
