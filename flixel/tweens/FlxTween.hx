@@ -506,7 +506,6 @@ class FlxTween implements IFlxDestroyable
 		this.complete = complete;
 		this.ease = ease;
 		
-		backward = (this.type & BACKWARD) > 0;
 		userData = {};
 	}
 	
