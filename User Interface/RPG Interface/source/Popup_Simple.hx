@@ -13,11 +13,11 @@ class Popup_Simple extends FlxUIPopup
 		_ui.setMode("demo");
 	}
 	
-	public override function eventResponse(id:String, target:Dynamic, data:Array<Dynamic>):Void 
+	public override function getEvent(id:String, target:Dynamic, data:Array<Dynamic>, ?params:Array<Dynamic>):Void 
 	{
-		if (data != null) {
+		if (params != null) {
 			if(id == "click_button"){
-				switch(Std.int(data[0])) {
+				switch(Std.int(params[0])) {
 					case 0: close();
 				}
 			}

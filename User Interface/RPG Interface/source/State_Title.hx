@@ -3,6 +3,7 @@ import flixel.addons.ui.FlxUI.NamedBool;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIPopup;
 import flixel.addons.ui.FlxUIText;
+import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.U;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
@@ -33,7 +34,7 @@ class State_Title extends FlxUIState
 		super.create();
 	}
 	
-	public override function getEvent(id:String, sender:Dynamic, data:Dynamic):Void {
+	public override function getEvent(id:String, sender:IFlxUIWidget, data:Dynamic,?params:Array<Dynamic>):Void {
 		var str:String = "";
 		
 		switch(id) {
@@ -45,8 +46,8 @@ class State_Title extends FlxUIState
 					}
 				}
 			case "click_button":
-				if (Std.is(data, Array) && data != null && data.length > 0) {
-					switch(cast(data[0],String)) {
+				if (params != null && params.length > 0) {
+					switch(cast(params[0],String)) {
 						case "saves": FlxG.switchState(new State_SaveMenu());
 						case "menu": FlxG.switchState(new State_TestMenu());
 						case "battle": FlxG.switchState(new State_Battle());

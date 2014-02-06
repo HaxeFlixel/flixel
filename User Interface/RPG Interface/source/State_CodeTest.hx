@@ -7,6 +7,7 @@ import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.addons.ui.FlxUISprite;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUIText;
+import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.text.FlxText;
 import haxe.xml.Fast;
 import flash.Lib;
@@ -28,13 +29,13 @@ class State_CodeTest extends FlxUIState
 		makeStuffByHand();
 	}
 	
-	public override function getRequest(id:String, target:Dynamic, data:Dynamic):Dynamic {
+	public override function getRequest(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic {
 		return null;
 	}	
 	
-	public override function eventResponse(id:String,target:Dynamic,data:Array<Dynamic>):Void {
-		if (data != null) {
-			switch(cast(data[0], String)) {
+	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
+		if (params != null) {
+			switch(cast(params[0], String)) {
 				case "back": FlxG.switchState(new State_Title());
 			}
 		}
@@ -172,18 +173,18 @@ class State_CodeTest extends FlxUIState
 	
 	private function _onClickRadioGroup(params:Dynamic = null):Void {
 		FlxG.log.add("FlxUI._onClickRadioGroup(" + params + ")");
-		getEvent("click_radio_group", this, params);
+		getEvent("click_radio_group", this, null, params);
 	}
 	
 	
 	private function _onClickButton(params:Array<Dynamic> = null):Void {
 		FlxG.log.add("FlxUI._onClickButton(" + params + ")");
-		getEvent("click_button", this, params);
+		getEvent("click_button", this, null, params);
 	}
 	
 	private function _onClickCheckBox(params:Dynamic = null):Void {
 		FlxG.log.add("FlxUI._onClickCheckBox(" + params + ")");
-		getEvent("click_checkbox", this, params);
+		getEvent("click_checkbox", this, null, params);
 	}
 	
 }

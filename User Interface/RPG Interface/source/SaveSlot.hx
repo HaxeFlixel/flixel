@@ -1,5 +1,7 @@
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.interfaces.IEventGetter;
+import flixel.addons.ui.interfaces.IFlxUIButton;
+import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.U;
 import flixel.FlxG;
 import haxe.xml.Fast;
@@ -37,7 +39,7 @@ class SaveSlot extends FlxUI
 		super.update();
 	}
 	
-	public override function getEvent(id:String, sender:Dynamic, data:Dynamic):Void {
+	public override function getEvent(id:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void {
 		super.getEvent(id, sender, data);
 		if (Std.is(data, String)) {
 			var str:String = cast(data, String);
