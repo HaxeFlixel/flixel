@@ -15,26 +15,27 @@ class FlxGamepad implements IFlxDestroyable
 	public var buttons:Map<Int, FlxGamepadButton>;
 	
 	/**
-	 * Axis array is read-only, use "getAxis" function for deadZone checking.
+	 * Gamepad deadzone. Sets the sensibility. 
+	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
 	 */
-	@:allow(flixel.input.gamepad)
-	private var axis:Array<Float>;
+	public var deadZone:Float = 0.15;
 	
 	/**
 	 * DPAD
 	 */
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
+	
 	public var dpadUp(get, null):Bool = false;
 	public var dpadDown(get, null):Bool = false;
 	public var dpadLeft(get, null):Bool = false;
 	public var dpadRight(get, null):Bool = false;
 	
 	/**
-	 * Gamepad deadzone. Sets the sensibility. 
-	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
+	 * Axis array is read-only, use "getAxis" function for deadZone checking.
 	 */
-	public var deadZone:Float = 0.15;
+	@:allow(flixel.input.gamepad)
+	private var axis:Array<Float>;
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
@@ -254,8 +255,6 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Check to see if any buttons are pressed right now.
-	 * 
-	 * @return	Whether any buttons are currently pressed.
 	 */
 	public function anyButton():Bool
 	{
@@ -272,8 +271,6 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved now.
-	 * 
-	 * @return	Whether any buttons are currently pressed.
 	 */
 	public function anyInput():Bool
 	{
@@ -306,8 +303,8 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * DPAD accessor properties
 	 */
-	public inline function get_dpadUp():Bool { return hat.y < 0; }
-	public inline function get_dpadDown():Bool { return hat.y > 0; }
-	public inline function get_dpadLeft():Bool { return hat.x < 0; }
-	public inline function get_dpadRight():Bool { return hat.x > 0; }
+	private inline function get_dpadUp():Bool { return hat.y < 0; }
+	private inline function get_dpadDown():Bool { return hat.y > 0; }
+	private inline function get_dpadLeft():Bool { return hat.x < 0; }
+	private inline function get_dpadRight():Bool { return hat.x > 0; }
 }
