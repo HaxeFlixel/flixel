@@ -498,7 +498,7 @@ class FlxG
 		return ScaleMode;
 	}
 	
-	inline private static function get_updateFramerate():Int
+	private static inline function get_updateFramerate():Int
 	{
 		return Std.int(1000 / game.stepMS);
 	}
@@ -573,12 +573,12 @@ class FlxG
 		return fullscreen = Value;
 	}
 	
-	inline private static function get_stage():Stage
+	private static inline function get_stage():Stage
 	{
 		return game.stage;
 	}
 	
-	inline private static function get_state():FlxState
+	private static inline function get_state():FlxState
 	{
 		return game.state;
 	}
