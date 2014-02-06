@@ -18,14 +18,25 @@ import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 
 /**
- * Extends FlxSprite to support rendering text.
- * Can tint, fade, rotate and scale just like a sprite.
- * Doesn't really animate though, as far as I know.
- * Also does nice pixel-perfect centering on pixel fonts
- * as long as they are only one liners.
+ * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate 
+ * though, as far as I know. Also does nice pixel-perfect centering on pixel fonts as long as they are only one liners.
  */
 class FlxText extends FlxSprite
 {
+	public static inline var BORDER_NONE:Int = 0;
+	/**
+	 * A simple shadow to the lower-right
+	 */
+	public static inline var BORDER_SHADOW:Int = 1;
+	/**
+	 * Outline on all 8 sides
+	 */
+	public static inline var BORDER_OUTLINE:Int = 2;
+	/**
+	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
+	 */
+	public static inline var BORDER_OUTLINE_FAST:Int = 3;
+	
 	/**
 	 * The text being displayed.
 	 */
@@ -87,11 +98,6 @@ class FlxText extends FlxSprite
 	public var borderSize(default, set):Float = 1;
 	
 	/**
-	 * Internal reference to a Flash TextField object.
-	 */
-	public var textField(get, never):TextField;
-	
-	/**
 	 * How many iterations do use when drawing the border. 0: only 1 iteration, 1: one iteration for every pixel in borderSize
 	 * A value of 1 will have the best quality for large border sizes, but might reduce performance when changing text. 
 	 * NOTE: If the borderSize is 1, borderQuality of 0 or 1 will have the exact same effect (and performance).
@@ -99,24 +105,9 @@ class FlxText extends FlxSprite
 	public var borderQuality(default, set):Float = 1;
 	
 	/**
-	 * No border style
-	 */	
-	public static inline var BORDER_NONE:Int = 0;
-	
-	/**
-	 * A simple shadow to the lower-right
+	 * Internal reference to a Flash TextField object.
 	 */
-	public static inline var BORDER_SHADOW:Int = 1;
-	
-	/**
-	 * Outline on all 8 sides
-	 */
-	public static inline var BORDER_OUTLINE:Int = 2;
-	
-	/**
-	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
-	 */
-	public static inline var BORDER_OUTLINE_FAST:Int = 3;
+	public var textField(get, never):TextField;
 	
 	/**
 	 * Internal reference to a Flash TextField object.
@@ -135,8 +126,13 @@ class FlxText extends FlxSprite
 	 */
 	private var _formats:Array<FlxTextFormat>;
 	
+	private var _filters:Array<BitmapFilter>;
+	private var _widthInc:Int = 0;
+	private var _heightInc:Int = 0;
+	
 	/**
 	 * Creates a new FlxText object at the specified position.
+	 * 
 	 * @param	X				The X position of the text.
 	 * @param	Y				The Y position of the text.
 	 * @param	Width			The width of the text object (height is determined automatically).
@@ -208,17 +204,27 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * Adds another format to this FlxText
-	 * @param	Format		The format to be added.
-	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
-	 * @param	End			(Default=-1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * 
+	 * @param	Format	The format to be added.
+	 * @param	Start	(Default=-1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * @param	End		(Default=-1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
 	 */
 	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):Void
 	{
-		Format.start = Start > -1 ? Start : Format.start;
-		Format.end = End > -1 ? End : Format.end;
+		Format.start = (Start > -1) ? Start : Format.start;
+		Format.end = (End > -1) ? End : Format.end;
 		_formats.push(Format);
 		// sort the array using the start value of the format so we can skip formats that can't be applied to the textField
 		_formats.sort(function(left:FlxTextFormat, right:FlxTextFormat) { return left.start < right.start ? -1 : 1; } );
+		dirty = true;
+	}
+	
+	/**
+	 * Removes a specific FlxTextFormat from this text.
+	 */
+	public inline function removeFormat(Format:FlxTextFormat):Void
+	{
+		FlxArrayUtil.fastSplice(_formats, Format);
 		dirty = true;
 	}
 	
@@ -238,6 +244,7 @@ class FlxText extends FlxSprite
 		updateFormat(_defaultFormat);
 		dirty = true;
 	}
+	
 	
 	/**
 	 * You can use this if you have a lot of text parameters
@@ -282,6 +289,56 @@ class FlxText extends FlxSprite
 		dirty = true;
 		
 		return this;
+	}
+	
+	/**
+	 * Set border's style (shadow, outline, etc), color, and size all in one go!
+	 * 
+	 * @param	Style outline style - FlxText.NONE, SHADOW, OUTLINE, OUTLINE_FAST
+	 * @param	Color outline color in flash 0xRRGGBB format
+	 * @param	Size outline size in pixels
+	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
+	 */
+	public inline function setBorderStyle(Style:Int, Color:Int = 0x000000, Size:Float = 1, Quality:Float = 1):Void 
+	{
+		borderStyle = Style;
+		borderColor = Color;
+		borderSize = Size;
+		borderQuality = Quality;
+	}
+	
+	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
+	{
+		_filters.push(filter);
+		dirty = true;
+	}
+	
+	public function removeFilter(filter:BitmapFilter):Void
+	{
+		var removed:Bool = _filters.remove(filter);
+		if (removed)
+		{
+			dirty = true;
+		}
+	}
+	
+	public function clearFilters():Void
+	{
+		if (_filters.length > 0)
+		{
+			dirty = true;
+		}
+		_filters = [];
+	}
+	
+	override public function updateFrameData():Void
+	{
+		if (cachedGraphics != null)
+		{
+			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region);
+			frame = framesData.frames[0];
+			frames = 1;
+		}
 	}
 	
 	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
@@ -412,7 +469,7 @@ class FlxText extends FlxSprite
 		return Font;
 	}
 	
-	private function get_bold():Bool 
+	private inline function get_bold():Bool 
 	{ 
 		return _defaultFormat.bold; 
 	}
@@ -429,7 +486,7 @@ class FlxText extends FlxSprite
 		return value;
 	}
 	
-	private function get_italic():Bool 
+	private inline function get_italic():Bool 
 	{ 
 		return _defaultFormat.italic; 
 	}
@@ -446,7 +503,7 @@ class FlxText extends FlxSprite
 		return value;
 	}
 	
-	private function get_wordWrap():Bool 
+	private inline function get_wordWrap():Bool 
 	{ 
 		return _textField.wordWrap; 
 	}
@@ -462,7 +519,7 @@ class FlxText extends FlxSprite
 		return value;
 	}
 	
-	private function get_alignment():String
+	private inline function get_alignment():String
 	{
 		return cast(_defaultFormat.align, String);
 	}
@@ -474,22 +531,6 @@ class FlxText extends FlxSprite
 		updateFormat(_defaultFormat);
 		dirty = true;
 		return Alignment;
-	}
-	
-	/**
-	 * Set border's style (shadow, outline, etc), color, and size all in one go!
-	 * @param	Style outline style - FlxText.NONE, SHADOW, OUTLINE, OUTLINE_FAST
-	 * @param	Color outline color in flash 0xRRGGBB format
-	 * @param	Size outline size in pixels
-	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
-	 */
-	
-	public function setBorderStyle(Style:Int, Color:Int = 0x000000, Size:Float = 1, Quality:Float = 1):Void 
-	{
-		borderStyle = Style;
-		borderColor = Color;
-		borderSize = Size;
-		borderQuality = Quality;
 	}
 	
 	private function set_borderStyle(style:Int):Int
@@ -822,16 +863,6 @@ class FlxText extends FlxSprite
 	}
 	#end
 	
-	override public function updateFrameData():Void
-	{
-		if (cachedGraphics != null)
-		{
-			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region);
-			frame = framesData.frames[0];
-			frames = 1;
-		}
-	}
-	
 	private inline function updateFormat(Format:TextFormat):Void
 	{
 		#if !flash
@@ -839,35 +870,6 @@ class FlxText extends FlxSprite
 		#else
 		_textField.setTextFormat(Format);
 		#end
-	}
-	
-	private var _filters:Array<BitmapFilter>;
-	
-	private var _widthInc:Int = 0;
-	private var _heightInc:Int = 0;
-	
-	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
-	{
-		_filters.push(filter);
-		dirty = true;
-	}
-	
-	public function removeFilter(filter:BitmapFilter):Void
-	{
-		var removed:Bool = _filters.remove(filter);
-		if (removed)
-		{
-			dirty = true;
-		}
-	}
-	
-	public function clearFilters():Void
-	{
-		if (_filters.length > 0)
-		{
-			dirty = true;
-		}
-		_filters = [];
 	}
 }
 
@@ -893,13 +895,12 @@ class FlxTextFormat implements IFlxDestroyable
 	public var format(default, null):TextFormat;
 	
 	/**
-	 * Creates a new FlxTextFormat.
-	 * @param	FontColor		(Optional) Set the font  color. By default, inherits from the default format.
-	 * @param	Bold			(Optional) Set the font to bold. The font must support bold. By default, false. 
-	 * @param	Italic			(Optional) Set the font to italics. The font must support italics. Only works in Flash. By default, false.  
-	 * @param	BorderColor		(Optional) Set the border color. By default, no border (The color is TRANSPARENT)
-	 * @param	Start			(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
-	 * @param	End				(Default=-1) The end index of the string where the format will be applied.
+	 * @param	FontColor	(Optional) Set the font  color. By default, inherits from the default format.
+	 * @param	Bold		(Optional) Set the font to bold. The font must support bold. By default, false. 
+	 * @param	Italic		(Optional) Set the font to italics. The font must support italics. Only works in Flash. By default, false.  
+	 * @param	BorderColor	(Optional) Set the border color. By default, no border (The color is TRANSPARENT)
+	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
+	 * @param	End			(Default=-1) The end index of the string where the format will be applied.
 	 */
 	public function new(?FontColor:Int, ?Bold:Bool, ?Italic:Bool, ?BorderColor:Int, ?Start:Int = -1, ?End:Int = -1)
 	{
