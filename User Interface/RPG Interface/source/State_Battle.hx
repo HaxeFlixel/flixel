@@ -1,3 +1,5 @@
+import flixel.addons.ui.FlxUIButton;
+import flixel.addons.ui.FlxUITypedButton.FlxUITypedButton;
 import haxe.xml.Fast;
 import flash.Lib;
 import flixel.FlxG;
@@ -64,10 +66,13 @@ class State_Battle extends FlxUIState
 	}	
 	
 	public override function getEvent(id:String,target:Dynamic,data:Dynamic):Void {
-		if (Std.is(data, Array) && data != null && data.length > 0) {
-			switch(cast(data[0], String)) {
-				case "back": FlxG.switchState(new State_Title());
-			}
+		switch(id) {
+			case FlxUITypedButton.CLICK_EVENT: 
+				if (Std.is(data, Array) && data != null && data.length > 0) {
+					switch(cast(data[0], String)) {
+						case "back": FlxG.switchState(new State_Title());
+					}
+				}
 		}
 	}
 	
