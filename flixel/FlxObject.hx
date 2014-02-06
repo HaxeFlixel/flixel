@@ -940,15 +940,18 @@ class FlxObject extends FlxBasic
 	 */
 	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
-		if (cachedGraphics != null && cachedGraphics != Value)
-		{
-			cachedGraphics.useCount--;
-		}
+		var oldCached:CachedGraphics = cachedGraphics;
 		
 		if (cachedGraphics != Value && Value != null)
 		{
 			Value.useCount++;
 		}
+		
+		if (oldCached != null && oldCached != Value)
+		{
+			oldCached.useCount--;
+		}
+		
 		return cachedGraphics = Value;
 	}
 	

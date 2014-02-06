@@ -6,10 +6,10 @@ package flixel.system;
  */  
 class FlxVersion
 {
-	public var major:Int;
-	public var minor:Int;
-	public var patch:Int;
-	public var patchVersion:String;
+	public var major(default, null):Int;
+	public var minor(default, null):Int;
+	public var patch(default, null):Int;
+	public var patchVersion(default, null):String;
 	
 	public function new(Major:Int, Minor:Int, Patch:Int, PatchVersion:String = "") 
 	{
