@@ -489,7 +489,7 @@ class FlxTween implements IFlxDestroyable
 	public var executions(default, null):Int = 0;
 	
 	private var _secondsSinceStart:Float;
-	public var backward:Bool;
+	public var backward(default,null):Bool;
 
 	/**
 	 * Constructor. Specify basic information about the Tween.
