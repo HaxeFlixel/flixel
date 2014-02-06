@@ -23,7 +23,7 @@ class State_DefaultTest extends FlxUIState
 		return null;
 	}	
 	
-	public override function getEvent(id:String,target:Dynamic,data:Array<Dynamic>,?params:Array<Dynamic>):Void {
+	public override function getEvent(id:String,target:Dynamic,data:Dynamic,?params:Array<Dynamic>):Void {
 		if (params != null) {
 			switch(id) {
 				case "click_button":
@@ -31,13 +31,13 @@ class State_DefaultTest extends FlxUIState
 						case "back": FlxG.switchState(new State_Title());
 						case "popup":var popup:FlxUIPopup = new FlxUIPopup(); //create the popup
 									 popup.quickSetup						  //set it up
-									 (						  
+									 (
 									   Main.tongue.get("$POPUP_DEMO_2_TITLE","ui"), 	//title text
 									   Main.tongue.get("$POPUP_DEMO_2_BODY","ui"), 		//body text
-									   ["<yes>", "<no>", "<cancel>"]	//FlxUI will translate labels to "$POPUP_YES", etc, 
+									   ["<yes>", "<no>", "<cancel>"]	  //FlxUI will translate labels to "$POPUP_YES", etc, 
 									 ); 	  							  //and localize them if possible, 
 																		  //otherwise it will display "YES", "NO", etc
-																		  
+									
 									 setSubState(popup);				  //show the popup
 									 
 									 //you can call quickSetup() before or after setting the subState, it will behave properly either way

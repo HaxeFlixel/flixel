@@ -34,10 +34,10 @@ class State_Title extends FlxUIState
 		super.create();
 	}
 	
-	public override function getEvent(id:String, sender:IFlxUIWidget, data:Dynamic,?params:Array<Dynamic>):Void {
+	public override function getEvent(name:String, sender:IFlxUIWidget, data:Dynamic,?params:Array<Dynamic>):Void {
 		var str:String = "";
 		
-		switch(id) {
+		switch(name) {
 			case "finish_load":
 				var radio:FlxUIRadioGroup = cast _ui.getAsset("locale_radio");
 				if (radio != null) {
@@ -57,16 +57,10 @@ class State_Title extends FlxUIState
 					}
 				}
 			case "click_radio_group":
-				if (Std.is(data, Array) && data != null && data.length > 0) {
-					var id:String = ""; 
-					if (data[0] != null) 
-					{ 
-						id = cast(data[0], String);
-					}
-					if (Main.tongue != null)
-					{
-						Main.tongue.init(id, reloadState);
-					}
+				var id:String = cast data;
+				if (Main.tongue != null)
+				{
+					Main.tongue.init(id, reloadState);
 				}
 		}		
 	}	
