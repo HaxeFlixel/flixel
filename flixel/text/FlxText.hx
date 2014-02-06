@@ -12,12 +12,13 @@ import flixel.FlxSprite;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText.FlxTextFormat;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 
 /**
- * Extends <code>FlxSprite</code> to support rendering text.
+ * Extends FlxSprite to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
  * Also does nice pixel-perfect centering on pixel fonts
@@ -56,6 +57,11 @@ class FlxText extends FlxSprite
 	public var bold(get, set):Bool;
 	
 	/**
+	 * Whether to use italic text or not (false by default). It only works in Flash.
+	 */
+	public var italic(get, set):Bool;
+	
+	/**
 	 * Whether to use word wrapping and multiline or not (true by default).
 	 */
 	public var wordWrap(get, set):Bool;
@@ -81,7 +87,7 @@ class FlxText extends FlxSprite
 	public var borderSize(default, set):Float = 1;
 	
 	/**
-	 * Internal reference to a Flash <code>TextField</code> object.
+	 * Internal reference to a Flash TextField object.
 	 */
 	public var textField(get, never):TextField;
 	
@@ -113,24 +119,24 @@ class FlxText extends FlxSprite
 	public static inline var BORDER_OUTLINE_FAST:Int = 3;
 	
 	/**
-	 * Internal reference to a Flash <code>TextField</code> object.
+	 * Internal reference to a Flash TextField object.
 	 */
 	private var _textField:TextField;
 	/**
-	 * Internal reference to a Flash <code>TextFormat</code> object.
+	 * Internal reference to a Flash TextFormat object.
 	 */
 	private var _defaultFormat:TextFormat;
 	/**
-	 * Internal reference to another helper Flash <code>TextFormat</code> object.
+	 * Internal reference to another helper Flash TextFormat object.
 	 */
 	private var _formatAdjusted:TextFormat;
 	/**
-	 * Internal reference to an Array of <code>FlxTextFormat</code>
+	 * Internal reference to an Array of FlxTextFormat
 	 */
 	private var _formats:Array<FlxTextFormat>;
 	
 	/**
-	 * Creates a new <code>FlxText</code> object at the specified position.
+	 * Creates a new FlxText object at the specified position.
 	 * @param	X				The X position of the text.
 	 * @param	Y				The Y position of the text.
 	 * @param	Width			The width of the text object (height is determined automatically).
@@ -201,7 +207,7 @@ class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * Adds another format to this <code>FlxText</code>
+	 * Adds another format to this FlxText
 	 * @param	Format		The format to be added.
 	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
 	 * @param	End			(Default=-1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
@@ -213,7 +219,25 @@ class FlxText extends FlxSprite
 		_formats.push(Format);
 		// sort the array using the start value of the format so we can skip formats that can't be applied to the textField
 		_formats.sort(function(left:FlxTextFormat, right:FlxTextFormat) { return left.start < right.start ? -1 : 1; } );
-	}	
+		dirty = true;
+	}
+	
+	/**
+	 * Clears all the formats applied.
+	 */
+	public function clearFormats():Void
+	{
+		for (format in _formats)
+		{
+			format.destroy();
+			format = null;
+		}
+		
+		_formats = [];
+		
+		updateFormat(_defaultFormat);
+		dirty = true;
+	}
 	
 	/**
 	 * You can use this if you have a lot of text parameters
@@ -285,8 +309,6 @@ class FlxText extends FlxSprite
 			
 			_textField.setTextFormat(FormatAdjusted, format.start, Std.int(Math.min(format.end, _textField.text.length)));
 		}
-		
-		
 	}
 	
 	override private function set_width(Width:Float):Float
@@ -400,6 +422,23 @@ class FlxText extends FlxSprite
 		if (_defaultFormat.bold != value)
 		{
 			_defaultFormat.bold = value;
+			_textField.defaultTextFormat = _defaultFormat;
+			updateFormat(_defaultFormat);
+			dirty = true;
+		}
+		return value;
+	}
+	
+	private function get_italic():Bool 
+	{ 
+		return _defaultFormat.italic; 
+	}
+	
+	private function set_italic(value:Bool):Bool
+	{
+		if (_defaultFormat.italic != value)
+		{
+			_defaultFormat.italic = value;
 			_textField.defaultTextFormat = _defaultFormat;
 			updateFormat(_defaultFormat);
 			dirty = true;
@@ -742,9 +781,9 @@ class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * A helper function for updating the <code>TextField</code> that we use for rendering.
+	 * A helper function for updating the TextField that we use for rendering.
 	 * 
-	 * @return	A writable copy of <code>TextField.defaultTextFormat</code>.
+	 * @return	A writable copy of TextField.defaultTextFormat.
 	 */
 	private function dtfCopy():TextFormat
 	{
@@ -835,7 +874,7 @@ class FlxText extends FlxSprite
 class FlxTextFormat implements IFlxDestroyable
 {
 	/**
-	 * The border color if <code>FlxText</code> has a shadow or a border
+	 * The border color if FlxText has a shadow or a border
 	 */
 	public var borderColor:Int;
 	
@@ -849,22 +888,30 @@ class FlxTextFormat implements IFlxDestroyable
 	public var end:Int = -1;
 	
 	/**
-	 * Internal <code>TextFormat</code>
+	 * Internal TextFormat
 	 */
 	public var format(default, null):TextFormat;
 	
 	/**
-	 * Creates a new <code>FlxTextFormat</code>.
+	 * Creates a new FlxTextFormat.
 	 * @param	FontColor		(Optional) Set the font  color. By default, inherits from the default format.
-	 * @param	Bold			(Optional) Set the font to bold. The font must support bold. By default, inherits from the default format. 
-	 * @param	Italics			(Optional) Set the font to italics. The font must support italics. By default, inherits from the default format.  
-	 * @param	BorderColor		(Optional) Set the border color. By default, no border. The color is <code>TRANSPARENT</code>.
+	 * @param	Bold			(Optional) Set the font to bold. The font must support bold. By default, false. 
+	 * @param	Italic			(Optional) Set the font to italics. The font must support italics. Only works in Flash. By default, false.  
+	 * @param	BorderColor		(Optional) Set the border color. By default, no border (The color is TRANSPARENT)
 	 * @param	Start			(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
 	 * @param	End				(Default=-1) The end index of the string where the format will be applied.
 	 */
-	public function new(?FontColor:Int, ?Bold:Bool, ?Italics:Bool, ?BorderColor:Int, ?Start:Int = -1, ?End:Int = -1)
+	public function new(?FontColor:Int, ?Bold:Bool, ?Italic:Bool, ?BorderColor:Int, ?Start:Int = -1, ?End:Int = -1)
 	{
-		format = new TextFormat(null, null, FontColor, Bold, Italics);
+		if (FontColor != null)
+		{
+			FontColor &= 0x00ffffff;
+		}
+		if (BorderColor != null)
+		{
+			BorderColor &= 0x00ffffff;
+		}
+		format = new TextFormat(null, null, FontColor, Bold, Italic);
 		
 		if (Start > -1)
 		{
