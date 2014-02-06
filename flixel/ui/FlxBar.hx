@@ -273,8 +273,8 @@ class FlxBar extends FlxSprite
 	}
 	
 	/**
-	 * Sets callbacks which will be triggered when the value of this FlxBar reaches min or max.<br>
-	 * Functions will only be called once and not again until the value changes.<br>
+	 * Sets callbacks which will be triggered when the value of this FlxBar reaches min or max.
+	 * Functions will only be called once and not again until the value changes.
 	 * Optionally the FlxBar can be killed if it reaches min, but if will fire the empty callback first (if set)
 	 * 
 	 * @param	onEmpty			The function that is called if the value of this FlxBar reaches min
@@ -1028,7 +1028,7 @@ class FlxBar extends FlxSprite
 		while (i < l)
 		{
 			camera = cameras[i++];
-			if (!camera.visible || !camera.exists || !onScreen(camera))
+			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
 				continue;
 			}
@@ -1059,7 +1059,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-			if (!simpleRenderSprite())
+			if (!isSimpleRender())
 			{
 				if (_angleChanged)
 				{
@@ -1175,7 +1175,7 @@ class FlxBar extends FlxSprite
 		return Pixels;
 	}
 	
-	override private function simpleRenderSprite():Bool
+	override public function isSimpleRender():Bool
 	{ 
 		return ((angle == 0) && (scale.x == 1) && (scale.y == 1));
 	}
@@ -1275,7 +1275,7 @@ class FlxBar extends FlxSprite
 	}
 	
 	#if !flash
-	inline private function setCachedGraphics(value:CachedGraphics):Void
+	private inline function setCachedGraphics(value:CachedGraphics):Void
 	{
 		cachedGraphics = value;
 	}

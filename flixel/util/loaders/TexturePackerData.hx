@@ -1,18 +1,14 @@
 package flixel.util.loaders;
 
-import flixel.FlxG;
-import flixel.system.FlxAssets;
-import openfl.Assets;
-import flash.geom.Rectangle;
-import flash.geom.Point;
 import flash.display.BitmapData;
-import haxe.Json;
+import flash.geom.Rectangle;
+import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxPoint;
-import flixel.system.layer.frames.FlxFrame;
-import flixel.system.layer.frames.FlxSpriteFrames;
-import flixel.system.layer.TileSheetData;
+import haxe.Json;
+import openfl.Assets;
 
-class TexturePackerData
+class TexturePackerData implements IFlxDestroyable
 {
 	public var frames:Array<TextureAtlasFrame>;
 
@@ -23,15 +19,15 @@ class TexturePackerData
 	/**
 	 * Constructor
 	 * 
-	 * @param	description		name of data file with atlas description
-	 * @param	assetName		name of atlas image file
+	 * @param	Description		Name of the data file with atlas description
+	 * @param	AssetName		Name of the atlas image file
 	 */
-	public function new(description:String, assetName:String)
+	public function new(Description:String, AssetName:String)
 	{
-		this.assetName = assetName;
-		this.description = description;
+		assetName = AssetName;
+		description = Description;
 		
-		this.frames = new Array<TextureAtlasFrame>();
+		frames = new Array<TextureAtlasFrame>();
 		
 		parseData();
 	}
@@ -45,9 +41,9 @@ class TexturePackerData
 		// No need to parse data again
 		if (frames.length != 0)	return;
 		
-		if (assetName == null || description == null)	return;
+		if ((assetName == null) || (description == null)) return;
 		
-		this.asset = FlxG.bitmap.add(this.assetName).bitmap;
+		asset = FlxG.bitmap.add(assetName).bitmap;
 		var data:Dynamic = Json.parse(Assets.getText(description));
 		
 		for (frame in Lambda.array(data.frames))
@@ -79,10 +75,9 @@ class TexturePackerData
 	 */
 	public function destroy():Void
 	{
-		var l:Int = frames.length;
-		for (i in 0...l)
+		for (frame in frames)
 		{
-			frames[i].destroy();
+			frame = FlxG.safeDestroy(frame);
 		}
 		frames = null;
 		assetName = null;

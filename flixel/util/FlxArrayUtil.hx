@@ -6,15 +6,15 @@ package flixel.util;
 class FlxArrayUtil
 {
 	/**
-	 * Function to search for a specified element in an array. This is faster than <code>Lambda.indexOf()</code>
-	 * on the flash target because it uses the the native array <code>indexOf()</code> method.
+	 * Function to search for a specified element in an array. This is faster than Lambda.indexOf()
+	 * on the flash target because it uses the the native array indexOf() method.
 	 * 
 	 * @param	array		The array.
 	 * @param	whatToFind	The element you're looking for.
 	 * @param 	fromIndex	The index to start the search from (optional, for optimization).
 	 * @return	The index of the element within the array. -1 if it wasn't found.
 	 */
-	@:generic static public function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
+	@:generic public static function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
 	{
 		#if flash
 		return untyped array.indexOf(whatToFind, fromIndex);
@@ -39,7 +39,7 @@ class FlxArrayUtil
 	 * @param	array		The array.
 	 * @param	newLength	The length you want the array to have.
 	 */
-	@:generic static public function setLength<T>(array:Array<T>, newLength:Int):Void
+	@:generic public static function setLength<T>(array:Array<T>, newLength:Int):Void
 	{
 		if (newLength < 0) return;
 		var oldLength:Int = array.length;
@@ -59,98 +59,49 @@ class FlxArrayUtil
 	}
 	
 	/**
+	 * Deprecated; please use FlxRandom.shuffleArray() instead.
 	 * Shuffles the entries in an array into a new random order.
-	 * Deterministic and safe for use with replays/recordings.
 	 * 
-	 * @param	A				A Flash <code>Array</code> object containing...stuff.
-	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  Good rule of thumb is 2-4 times as many objects are in the list.
-	 * @return	The same Flash <code>Array</code> object that you passed in in the first place.
+	 * @param	Objects			An array to shuffle.
+	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
+	 * @return	The newly shuffled array.
 	 */
-	@:generic static public function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
+	@:generic public static inline function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
-		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
-		var i:Int = 0;
-		var index1:Int;
-		var index2:Int;
-		var object:Dynamic;
-		while (i < HowManyTimes)
-		{
-			index1 = Std.int(FlxRandom.float() * Objects.length);
-			index2 = Std.int(FlxRandom.float() * Objects.length);
-			object = Objects[index2];
-			Objects[index2] = Objects[index1];
-			Objects[index1] = object;
-			i++;
-		}
-		return Objects;
+		return FlxRandom.shuffleArray( Objects, HowManyTimes );
 	}
-		
+	
 	/**
-	 * Fetch a random entry from the given array.
-	 * Will return null if random selection is missing, or array has no entries.
-	 * Deterministic and safe for use with replays/recordings.
+	 * Deprecated; please use FlxRandom.getObject() instead.
+	 * Fetch a random entry from the given array from StartIndex to EndIndex.
 	 * 
-	 * @param	Objects		A Flash array of objects.
-	 * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	 * @param	Length		Optional restriction on the number of values you want to randomly select from.
+	 * @param	Objects			An array from which to select a random entry.
+	 * @param	StartIndex		Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
+	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic static public function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, Length:Int = 0):T
+	@:generic public static inline function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
-		if (Objects != null)
-		{
-			if (StartIndex < 0) StartIndex = 0;
-			if (Length < 0) Length = 0;
-			
-			var l:Int = Length;
-			if ((l == 0) || (l > Objects.length - StartIndex))
-			{
-				l = Objects.length - StartIndex;
-			}
-			if (l > 0)
-			{
-				return Objects[StartIndex + Std.int(FlxRandom.float() * l)];
-			}
-		}
-		return null;
+		return FlxRandom.getObject( Objects, StartIndex, EndIndex );
 	}
 	
 	/**
-	 * Split a comma-separated string into an array of ints
-	 * @param	data string formatted like this: "1,2,5,-10,120,27"
-	 * @return	an array of ints
+	 * Safely removes an element from an array by swapping it with the last element and calling pop()
+	 * (won't do anything if the array is not part of the array). This is a lot faster than regular splice(), 
+	 * but it can only be used on arrays where order doesn't matter.
+	 * 
+	 * @param	array	The array to remove the element from
+	 * @param 	element	The element to remove from the array
+	 * @return	The array
 	 */
-	
-	static public function intFromString(data:String):Array<Int>
+	@:generic public static function fastSplice<T>(array:Array<T>, element:T):Array<T>
 	{
-		if (data != null && data != "") 
+		var index = indexOf(array, element);
+		if (index >= 0)
 		{
-			var strArray:Array<String> = data.split(",");
-			var iArray:Array<Int> = new Array<Int>();
-			for (str in strArray) {
-				iArray.push(Std.parseInt(str));
-			}
-			return iArray;
+			array[index] = array[array.length - 1]; // swap element to remove and last element
+			array.pop();
 		}
-		return null;
-	}
-	
-	/**
-	 * Split a comma-separated string into an array of floats
-	 * @param	data string formatted like this: "1.0,2.1,5.6,1245587.9,-0.00354"
-	 * @return
-	 */	
-	static public function floatFromString(data:String):Array<Float>
-	{
-		if (data != null && data != "") 
-		{
-			var strArray:Array<String> = data.split(",");
-			var fArray:Array<Float> = new Array<Float>();
-			for (str in strArray) {
-				fArray.push(Std.parseFloat(str));
-			}
-			return fArray;
-		}
-		return null;
+		return array;
 	}
 }

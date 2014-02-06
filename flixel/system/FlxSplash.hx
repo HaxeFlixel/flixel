@@ -6,13 +6,17 @@ import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+
+#if (!FLX_NO_SOUND_SYSTEM && FLX_NO_DEBUG)
+import flash.media.Sound;
+@:sound("assets/sounds/flixel.wav") class FlixelSound extends Sound {}
+#end
 
 class FlxSplash extends FlxState
 {
@@ -30,11 +34,37 @@ class FlxSplash extends FlxState
 	private var _cachedTimestep:Bool;
 	private var _cachedAutoPause:Bool;
 	
-	
 	public function new(NextState:Class<FlxState>)
 	{
 		_nextState = NextState;
 		super();
+	}
+	
+	override public function destroy():Void 
+	{
+		_nextState = null;
+		_sprite = null;
+		_gfx = null;
+		_text = null;
+		_times = null;
+		_colors = null;
+		_functions = null;
+		super.destroy();
+	}
+	
+	override public function onResize(Width:Int, Height:Int):Void 
+	{
+		super.onResize(Width, Height);
+		
+		_sprite.x = (Width / 2);
+		_sprite.y = (Height / 2) - 20 * FlxG.game.scaleY;
+		
+		_text.width = Width / FlxG.game.scaleX;
+		_text.x = 0;
+		_text.y = _sprite.y + 80 * FlxG.game.scaleY;
+		
+		_sprite.scaleX = _text.scaleX = FlxG.game.scaleX;
+		_sprite.scaleY = _text.scaleY = FlxG.game.scaleY;
 	}
 	
 	override public function create():Void
@@ -50,7 +80,7 @@ class FlxSplash extends FlxState
 		FlxG.autoPause = false;
 		
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = false;
+			FlxG.keys.enabled = false;
 		#end
 		
 		_times = [0.041, 0.184, 0.334, 0.495, 0.636];
@@ -66,23 +96,23 @@ class FlxSplash extends FlxState
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 		
 		_sprite = new Sprite();
-		_sprite.x = (stageWidth / 2) - 50;
-		_sprite.y = (stageHeight / 2) - 70;
 		FlxG.stage.addChild(_sprite);
 		_gfx = _sprite.graphics;
 		
 		_text = new TextField();
 		_text.selectable = false;
 		_text.embedFonts = true;
-		_text.width = stageWidth;
 		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 16, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		_text.defaultTextFormat = dtf;
 		_text.text = "HaxeFlixel";
-		_text.y = _sprite.y + 130;
 		FlxG.stage.addChild(_text);
 		
-		FlxG.sound.play(FlxAssets.SND_FLIXEL);
+		onResize(stageWidth, stageHeight);
+		
+		#if (!FLX_NO_SOUND_SYSTEM && FLX_NO_DEBUG)
+		FlxG.sound.load(FlixelSound).play();
+		#end
 	}
 	
 	private function timerCallback(Timer:FlxTimer):Void
@@ -94,71 +124,72 @@ class FlxSplash extends FlxState
 		
 		if (_curPart == 5)
 		{
-			FlxTween.multiVar(_sprite, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut, complete: onComplete } );
-			FlxTween.multiVar(_text, { alpha: 0 }, 2.3, { ease: FlxEase.quadOut } );
+			// Make the logo a tad bit longer, so our users fully appreciate our hard work :D
+			FlxTween.multiVar(_sprite, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut, complete: onComplete } );
+			FlxTween.multiVar(_text, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut } );
 		}
 	}
 	
 	private function drawGreen():Void
 	{
 		_gfx.beginFill(0x00b922);
-		_gfx.moveTo(50, 13);
-		_gfx.lineTo(51, 13);
-		_gfx.lineTo(87, 50);
-		_gfx.lineTo(87, 51);
-		_gfx.lineTo(51, 87);
-		_gfx.lineTo(50, 87);
-		_gfx.lineTo(13, 51);
-		_gfx.lineTo(13, 50);
-		_gfx.lineTo(50, 13);
+		_gfx.moveTo(0, -37);
+		_gfx.lineTo(1, -37);
+		_gfx.lineTo(37, 0);
+		_gfx.lineTo(37, 1);
+		_gfx.lineTo(1, 37);
+		_gfx.lineTo(0, 37);
+		_gfx.lineTo(-37, 1);
+		_gfx.lineTo(-37, 0);
+		_gfx.lineTo(0, -37);
 		_gfx.endFill();
 	}
 	
 	private function drawYellow():Void
 	{
 		_gfx.beginFill(0xffc132);
-		_gfx.moveTo(0, 0);
-		_gfx.lineTo(25, 0);
-		_gfx.lineTo(50, 13);
-		_gfx.lineTo(13, 50);
-		_gfx.lineTo(0, 25);
-		_gfx.lineTo(0, 0);
+		_gfx.moveTo(-50, -50);
+		_gfx.lineTo(-25, -50);
+		_gfx.lineTo(0, -37);
+		_gfx.lineTo(-37, 0);
+		_gfx.lineTo(-50, -25);
+		_gfx.lineTo(-50, -50);
 		_gfx.endFill();
 	}
 	
 	private function drawRed():Void
 	{
 		_gfx.beginFill(0xf5274e);
-		_gfx.moveTo(100, 0);
-		_gfx.lineTo(75, 0);
-		_gfx.lineTo(51, 13);
-		_gfx.lineTo(87, 50);
-		_gfx.lineTo(100, 25);
-		_gfx.lineTo(100, 0);
+		_gfx.moveTo(50, -50);
+		_gfx.lineTo(25, -50);
+		_gfx.lineTo(1, -37);
+		_gfx.lineTo(37, 0);
+		_gfx.lineTo(50, -25);
+		_gfx.lineTo(50, -50);
 		_gfx.endFill();
 	}
 	
 	private function drawBlue():Void
 	{
 		_gfx.beginFill(0x3641ff);
-		_gfx.moveTo(0, 100);
-		_gfx.lineTo(25, 100);
-		_gfx.lineTo(50, 87);
-		_gfx.lineTo(13, 51);
-		_gfx.lineTo(0, 75);
-		_gfx.lineTo(0, 100);
+		_gfx.moveTo(-50, 50);
+		_gfx.lineTo(-25, 50);
+		_gfx.lineTo(0, 37);
+		_gfx.lineTo(-37, 1);
+		_gfx.lineTo(-50, 25);
+		_gfx.lineTo(-50, 50);
 		_gfx.endFill();
 	}
 	
 	private function drawLightBlue():Void
 	{
 		_gfx.beginFill(0x04cdfb);
-		_gfx.moveTo(100, 100);
-		_gfx.lineTo(75, 100);
-		_gfx.lineTo(51, 87);
-		_gfx.lineTo(87, 51);
-		_gfx.lineTo(100, 75);
-		_gfx.lineTo(100, 100);
+		_gfx.moveTo(50, 50);
+		_gfx.lineTo(25, 50);
+		_gfx.lineTo(1, 37);
+		_gfx.lineTo(37, 1);
+		_gfx.lineTo(50, 25);
+		_gfx.lineTo(50, 50);
 		_gfx.endFill();
 	}
 	
@@ -168,10 +199,11 @@ class FlxSplash extends FlxState
 		FlxG.fixedTimestep = _cachedTimestep;
 		FlxG.autoPause = _cachedAutoPause;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = true;
+		FlxG.keys.enabled = true;
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(Type.createInstance(_nextState, []));
+		FlxG.game._gameJustStarted = true;
 	}
 }

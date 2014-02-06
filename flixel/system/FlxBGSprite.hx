@@ -9,7 +9,7 @@ import flixel.FlxG;
 import flixel.util.FlxColor;
 
 /**
- * The main "game object" class, the sprite is a <code>FlxObject</code>
+ * The main "game object" class, the sprite is a FlxObject
  * with a bunch of graphics options and abilities, like animation and stamping.
  */
 class FlxBGSprite extends FlxSprite

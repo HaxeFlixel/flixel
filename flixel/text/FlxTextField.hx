@@ -15,7 +15,7 @@ import flixel.util.FlxPoint;
 import openfl.Assets;
 
 /**
- * Extends <code>FlxText</code> for better support rendering text on cpp target.
+ * Extends FlxText for better support rendering text on cpp target.
  * Doesn't have multicamera support.
  * Displays over all other objects.
  */
@@ -25,7 +25,7 @@ class FlxTextField extends FlxText
 	private var _addedToDisplay:Bool = false;
 	
 	/**
-	 * Creates a new <code>FlxText</code> object at the specified position.
+	 * Creates a new FlxText object at the specified position.
 	 * @param	X				The X position of the text.
 	 * @param	Y				The Y position of the text.
 	 * @param	Width			The width of the text object (height is determined automatically).
@@ -48,7 +48,7 @@ class FlxTextField extends FlxText
 		}
 		
 		_camera = Camera;
-		_regen = dirty = false;
+		dirty = false;
 	}
 	
 	/**
@@ -76,23 +76,19 @@ class FlxTextField extends FlxText
 		return false;
 	}
 	
-	override private function simpleRenderSprite():Bool
+	override public function isSimpleRender():Bool
 	{
 		// This class doesn't support this operation
 		return true;
 	}
 	
 	/**
-	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
+	 * Set pixels to any BitmapData object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
 	override private function get_pixels():BitmapData
 	{
-		#if !flash
 		calcFrame(true);
-		#else
-		calcFrame();
-		#end
 		return cachedGraphics.bitmap;
 	}
 	
@@ -157,16 +153,16 @@ class FlxTextField extends FlxText
 		if (!_addedToDisplay)
 		{
 			#if !flash
-			_camera._canvas.addChild(_textField);
+			_camera.canvas.addChild(_textField);
 			#else
-			_camera._flashSprite.addChild(_textField);
+			_camera.flashSprite.addChild(_textField);
 			#end
 			
 			_addedToDisplay = true;
-			updateFormat(_format);
+			updateFormat(_defaultFormat);
 		}
 		
-		if (!_camera.visible || !_camera.exists || !onScreen(_camera))
+		if (!_camera.visible || !_camera.exists || !isOnScreen(_camera))
 		{
 			_textField.visible = false;
 		}
@@ -193,18 +189,23 @@ class FlxTextField extends FlxText
 	
 	override private function regenGraphics():Void
 	{
-		if (_regen)
+		var oldWidth:Float = cachedGraphics.bitmap.width;
+		var oldHeight:Float = cachedGraphics.bitmap.height;
+		
+		var newWidth:Float = _textField.width + _widthInc;
+		var newHeight:Float = _textField.height + _heightInc;
+		
+		if ((oldWidth != newWidth) || (oldHeight != newHeight))
 		{
 			var key:String = cachedGraphics.key;
 			FlxG.bitmap.remove(key);
 			
-			makeGraphic(Std.int(width + _widthInc), Std.int(height + _heightInc), FlxColor.TRANSPARENT, false, key);
+			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
 			frameHeight = Std.int(height);
 			_flashRect.x = 0;
 			_flashRect.y = 0;
-			_flashRect.width = width + _widthInc;
-			_flashRect.height = height + _heightInc;
-			_regen = false;
+			_flashRect.width = newWidth;
+			_flashRect.height = newHeight;
 		}
 		// Else just clear the old buffer before redrawing the text
 		else
@@ -230,9 +231,9 @@ class FlxTextField extends FlxText
 			if (Value != null)
 			{
 				#if !flash
-				Value._canvas.addChild(_textField);
+				Value.canvas.addChild(_textField);
 				#else
-				Value._flashSprite.addChild(_textField);
+				Value.flashSprite.addChild(_textField);
 				#end
 				
 				_addedToDisplay = true;

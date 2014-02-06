@@ -1,10 +1,11 @@
 package flixel.tweens;
 
-import flixel.FlxBasic;
-import flixel.FlxObject;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.plugin.TweenManager;
+import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.MultiVarTween;
@@ -14,36 +15,87 @@ import flixel.tweens.motion.CircularMotion;
 import flixel.tweens.motion.CubicMotion;
 import flixel.tweens.motion.LinearMotion;
 import flixel.tweens.motion.LinearPath;
-import flixel.tweens.motion.Motion;
-import flixel.tweens.motion.Motion.Movable;
-import flixel.tweens.motion.MotionType;
-import flixel.tweens.motion.PathType;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
-import flixel.tweens.sound.Fader;
-import flixel.tweens.FlxEase.EaseFunction;
 import flixel.util.FlxPoint;
+import flixel.util.FlxTimer;
 
-class FlxTween
+#if !FLX_NO_SOUND_SYSTEM
+import flixel.tweens.sound.Fader;
+#end
+
+class FlxTween implements IFlxDestroyable
 {
+	/**
+	 * Persistent Tween type, will stop when it finishes.
+	 */
+	public static inline var PERSIST:Int = 1;
+	/**
+	 * Looping Tween type, will restart immediately when it finishes.
+	 */
+	public static inline var LOOPING:Int = 2;
+	/**
+	 * "To and from" Tween type, will play tween hither and thither
+	 */
+	public static inline var PINGPONG:Int = 4;
+	/**
+	 * Oneshot Tween type, will stop and remove itself from its core container when it finishes.
+	 */
+	public static inline var ONESHOT:Int = 8;
+	/**
+	 * Backward Tween type, will play tween in reverse direction
+	 */
+	public static inline var BACKWARD:Int = 16;
+	
 	/**
 	 * The tweening plugin that handles all the tweens.
 	 */
-	static public var manager:TweenManager;
+	public static var manager:TweenManager;
 	
 	/**
-	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to the TweenPlugin.
-	 * Example: FlxTween.multiVar(Object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Tweens numeric public property of an Object. Shorthand for creating a VarTween tween, starting it and adding it to the TweenPlugin.
+	 * Example: FlxTween.singleVar(Object, "x", 500, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * 
 	 * @param	Object		The object containing the properties to tween.
-	 * @param	Values		An object containing key/value pairs of properties and target values.
-	 * @param	Duration	Duration of the tween.
+	 * @param	Property	The name of the property (eg. "x").
+	 * @param	To			Value to tween to.
+	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
+	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added MultiVarTween object.
 	 */
-	static public function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):MultiVarTween
+	public static function singleVar(Object:Dynamic, Property:String, To:Float, Duration:Float, ?Options:TweenOptions):VarTween
+	{
+		if (Options == null)
+		{
+			Options = { type : ONESHOT };
+		}
+		
+		var tween:VarTween = new VarTween(Options.complete, Options.type);
+		tween.tween(Object, Property, To, Duration, Options.ease);
+		addTween(tween, Options.delay);
+		
+		return tween;
+	}
+	
+	/**
+	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to the TweenPlugin.
+	 * Example: FlxTween.multiVar(Object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * @param	Object		The object containing the properties to tween.
+	 * @param	Values		An object containing key/value pairs of properties and target values.
+	 * @param	Duration	Duration of the tween in seconds.
+	 * @param	Options		An object containing key/value pairs of the following optional parameters:
+	 * 						type		Tween type.
+	 * 						complete	Optional completion callback function.
+	 * 						ease		Optional easer function.
+	 *  					delay		Seconds to wait until starting this tween, 0 by default.
+	 * @return	The added MultiVarTween object.
+	 */
+	public static function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):MultiVarTween
 	{
 		if (Options == null)
 		{
@@ -52,7 +104,7 @@ class FlxTween
 		
 		var tween:MultiVarTween = new MultiVarTween(Options.complete, Options.type);
 		tween.tween(Object, Values, Duration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
@@ -68,9 +120,10 @@ class FlxTween
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
+	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added NumTween object.
 	 */
-	static public function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions):NumTween
+	public static function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions):NumTween
 	{
 		if (Options == null)
 		{
@@ -79,15 +132,16 @@ class FlxTween
 		
 		var tween:NumTween = new NumTween(Options.complete, Options.type);
 		tween.tween(FromValue, ToValue, Duration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
 	
 	/**
 	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween objects, starting it and adding it to the TweenManager.
-	 * Example: FlxTween.angle(-90, 90, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.angle(Sprite, -90, 90, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
+	 * @param	Sprite		Optional Sprite whose angle should be tweened.
 	 * @param	FromAngle	Start angle.
 	 * @param	ToAngle		End angle.
 	 * @param	Duration	Duration of the tween.
@@ -95,9 +149,10 @@ class FlxTween
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
+	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added AngleTween object.
 	 */
-	static public function angle(FromAngle:Float, ToAngle:Float, Duration:Float, ?Options:TweenOptions):AngleTween
+	public static function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float, ?Options:TweenOptions):AngleTween
 	{
 		if (Options == null)
 		{
@@ -105,28 +160,30 @@ class FlxTween
 		}
 		
 		var tween:AngleTween = new AngleTween(Options.complete, Options.type);
-		tween.tween(FromAngle, ToAngle, Duration, Options.ease);
-		manager.add(tween);
+		tween.tween(FromAngle, ToAngle, Duration, Options.ease, Sprite);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
 	
 	/**
 	 * Tweens numeric value which represents color. Shorthand for creating a ColorTween objects, starting it and adding it to a TweenPlugin.
-	 * Example: FlxTween.color(2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.color(Sprite, 2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
-	 * @param	Duration	Duration of the tween.
+	 * @param	Sprite		Optional Sprite whose color should be tweened.
+	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	FromColor	Start color.
 	 * @param	ToColor		End color.
-	 * @param	FromAlpha	Start alpha
+	 * @param	FromAlpha	Start alpha.
 	 * @param	ToAlpha		End alpha.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
+	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added ColorTween object.
 	 */
-	static public function color(Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions, ?Sprite:FlxSprite):ColorTween
+	public static function color(Sprite:FlxSprite, Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
 	{
 		if (Options == null)
 		{
@@ -135,24 +192,26 @@ class FlxTween
 		
 		var tween:ColorTween = new ColorTween(Options.complete, Options.type);
 		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease, Sprite);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	/**
-	 * Tweens <code>FlxG.sound.volume</code> . Shorthand for creating a Fader tweens, starting it and adding it to the TweenManager.
+	 * Tweens FlxG.sound.volume . Shorthand for creating a Fader tweens, starting it and adding it to the TweenManager.
 	 * Example: FlxTween.fader(0.5, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
-	 * 
+	 *
 	 * @param	Volume		The volume to fade to.
-	 * @param	Duration	Duration of the fade.
+	 * @param	Duration	Duration of the fade in seconds.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
+	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return	The added Fader object.
 	 */
-	static public function fader(Volume:Float, Duration:Float, ?Options:TweenOptions):Fader
+	public static function fader(Volume:Float, Duration:Float, ?Options:TweenOptions):Fader
 	{
 		if (Options == null)
 		{
@@ -161,10 +220,11 @@ class FlxTween
 		
 		var tween:Fader = new Fader(Options.complete, Options.type);
 		tween.fadeTo(Volume, Duration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
+	#end
 	
 	/**
 	 * Create a new LinearMotion tween.
@@ -175,15 +235,16 @@ class FlxTween
 	 * @param	FromY			Y start.
 	 * @param	ToX				X finish.
 	 * @param	ToY				Y finish.
-	 * @param	DurationOrSpeed	Duration or speed of the movement.
+	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
 	 * 							complete	Optional completion callback function.
 	 * 							ease		Optional easer function.
+	 *  						delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return The LinearMotion object.
 	 */
-	static public function linearMotion(Object:Movable, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
+	public static function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
 	{
 		if (Options == null)
 		{
@@ -193,7 +254,7 @@ class FlxTween
 		var tween:LinearMotion = new LinearMotion(Options.complete, Options.type);
 		tween.setObject(Object);
 		tween.setMotion(FromX, FromY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
@@ -209,15 +270,16 @@ class FlxTween
 	 * @param	ControlY		Y control, used to determine the curve.
 	 * @param	ToX				X finish.
 	 * @param	ToY				Y finish.
-	 * @param	DurationOrSpeed	Duration or speed of the movement.
+	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
 	 * 							complete	Optional completion callback function.
 	 * 							ease		Optional easer function.
+	 *  						delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return The QuadMotion object.
 	 */
-	static public function quadMotion(Object:Movable, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
+	public static function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
 	{
 		if (Options == null)
 		{
@@ -227,7 +289,7 @@ class FlxTween
 		var tween:QuadMotion = new QuadMotion(Options.complete, Options.type);
 		tween.setObject(Object);
 		tween.setMotion(FromX, FromY, ControlX, ControlY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
@@ -245,14 +307,15 @@ class FlxTween
 	 * @param	bY			Second control y.
 	 * @param	ToX			X finish.
 	 * @param	ToY			Y finish.
-	 * @param	Duration	Duration of the movement.
+	 * @param	Duration	Duration of the movement in seconds.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
+	 *  					delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return The CubicMotion object.
 	 */
-	static public function cubicMotion(Object:Movable, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float, ?Options:TweenOptions):CubicMotion
+	public static function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float, ?Options:TweenOptions):CubicMotion
 	{
 		if (Options == null)
 		{
@@ -262,7 +325,7 @@ class FlxTween
 		var tween:CubicMotion = new CubicMotion(Options.complete, Options.type);
 		tween.setObject(Object);
 		tween.setMotion(FromX, FromY, aX, aY, bX, bY, ToX, ToY, Duration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
@@ -277,16 +340,17 @@ class FlxTween
 	 * @param	Radius			Radius of the circle.
 	 * @param	Angle			Starting position on the circle.
 	 * @param	Clockwise		If the motion is clockwise.
-	 * @param	DurationOrSpeed	Duration of the movement.
+	 * @param	DurationOrSpeed	Duration of the movement in seconds.
 	 * @param	UseDuration		Duration of the movement.
 	 * @param	Eease			Optional easer function.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
 	 * 							complete	Optional completion callback function.
 	 * 							ease		Optional easer function.
+	 *  						delay		Seconds to wait until starting this tween, 0 by default.
 	 * @return The CircularMotion object.
 	 */
-	static public function circularMotion(Object:Movable, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
+	public static function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
 	{
 		if (Options == null)
 		{
@@ -296,7 +360,7 @@ class FlxTween
 		var tween:CircularMotion = new CircularMotion(Options.complete, Options.type);
 		tween.setObject(Object);
 		tween.setMotion(CenterX, CenterY, Radius, Angle, Clockwise, DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
@@ -307,15 +371,16 @@ class FlxTween
 	 * 
 	 * @param	Object 			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 2 FlxPoints defining the path
-	 * @param	DurationOrSpeed	Duration or speed of the movement.
+	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
 	 * 							complete	Optional completion callback function.
 	 * 							ease		Optional easer function.
+	 * 							delay		Seconds to wait until starting this tween, 0 by default
 	 * @return	The LinearPath object.
 	 */
-	static public function linearPath(Object:Movable, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
+	public static function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
 	{
 		if (Options == null)
 		{
@@ -334,7 +399,7 @@ class FlxTween
 		
 		tween.setObject(Object);
 		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
@@ -345,15 +410,16 @@ class FlxTween
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 3 FlxPoints defining the path
-	 * @param	DurationOrSpeed	Duration or speed of the movement.
+	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
 	 * 							complete	Optional completion callback function.
 	 * 							ease		Optional easer function.
+	 * 							delay		Seconds to wait until starting this tween, 0 by default
 	 * @return	The QuadPath object.
 	 */
-	static public function quadPath(Object:Movable, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
+	public static function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
 	{
 		if (Options == null)
 		{
@@ -372,50 +438,62 @@ class FlxTween
 		
 		tween.setObject(Object);
 		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
+		addTween(tween, Options.delay);
 		
 		return tween;
 	}
 	
-	/**
-	* Persistent Tween type, will stop when it finishes.
-	*/
-	public static inline var PERSIST:Int = 1;
-
-	/**
-	* Looping Tween type, will restart immediately when it finishes.
-	*/
-	public static inline var LOOPING:Int = 2;
+		/**
+	 * Adds a tween to the tween manager, with a delay if specified.
+	 */ 
+	private static function addTween(Tween:FlxTween, ?Delay:Null<Float>):Void
+	{
+		if ((Delay != null) || (Delay > 0))
+		{
+			var t = FlxTimer.start(Delay, timerCallback);
+			t.userData = Tween;
+		}
+		else 
+		{
+			manager.add(Tween);
+		}
+	}
 	
 	/**
-	 * "To and from" Tween type, will play tween hither and thither
+	 * Helper function for delayed tweens.
 	 */
-	public static inline var PINGPONG:Int = 4;
-
-	/**
-	* Oneshot Tween type, will stop and remove itself from its core container when it finishes.
-	*/
-	public static inline var ONESHOT:Int = 8;
-	
-	/**
-	 * Backward Tween type, will play tween in reverse direction
-	 */
-	public static inline var BACKWARD:Int = 16;
+	private static function timerCallback(Timer:FlxTimer):Void
+	{
+		addTween(cast (Timer.userData, FlxTween));
+	}
 	
 	public var active:Bool;
 	public var complete:CompleteCallback;
+	public var duration:Float;
+	public var ease:EaseFunction;
+	
+	/**
+	 * Useful to store values you want to access within your callback function.
+	 */
+	public var userData:Dynamic = null;
+	
+	public var type(default, set):Int;
+	public var percent(get, set):Float;
+	public var finished(default, null):Bool;
+	public var scale(default, null):Float;
+	
 	/**
 	 * How many times this tween has been executed / has finished so far - useful to 
 	 * stop the LOOPING and PINGPONG types after a certain amount of time
 	 */
 	public var executions(default, null):Int = 0;
-	/**
-	 * Useful to store values you want to access within your callback function.
-	 */
-	public var userData:Dynamic = null;
+	
+	private var _secondsSinceStart:Float;
+	private var _backward:Bool;
 
 	/**
 	 * Constructor. Specify basic information about the Tween.
+	 * 
 	 * @param	duration	Duration of the tween (in seconds or frames).
 	 * @param	type		Tween type, one of Tween.PERSIST (default), Tween.LOOPING, or Tween.ONESHOT.
 	 * @param	complete	Optional callback for when the Tween completes.
@@ -423,57 +501,37 @@ class FlxTween
 	 */
 	public function new(duration:Float, type:Int = 0, ?complete:CompleteCallback, ?ease:EaseFunction)
 	{
-		_target = duration;
-		if (type == 0) 
-		{
-			type = FlxTween.ONESHOT;
-		}
-		else if (type == FlxTween.BACKWARD)
-		{
-			type = FlxTween.PERSIST | FlxTween.BACKWARD;
-		}
-		_type = type;
+		this.duration = duration;
+		this.type = type;
 		this.complete = complete;
-		_ease = ease;
-		_t = 0;
+		this.ease = ease;
 		
-		_backward = (_type & BACKWARD) > 0;
-		userData = { };
+		userData = {};
 	}
 	
 	public function destroy():Void
 	{
 		complete = null;
-		_ease = null;
+		ease = null;
 		userData = null;
 	}
 
-	/**
-	 * Updates the Tween, called by World.
-	 */
 	public function update():Void
 	{
-		_time += FlxG.elapsed;
-		_t = _time / _target;
-		if (_ease != null)
+		_secondsSinceStart += FlxG.elapsed;
+		scale = _secondsSinceStart / duration;
+		
+		if (ease != null)
 		{
-			_t = _ease(_t);
+			scale = ease(scale);
 		}
 		if (_backward)
 		{
-			_t = 1 - _t;
+			scale = 1 - scale;
 		}
-		if (_time >= _target)
+		if (_secondsSinceStart >= duration)
 		{
-			if (!_backward)
-			{
-				_t = 1;
-			}
-			else
-			{
-				_t = 0;
-			}
-			
+			scale = (_backward) ? 0 : 1;
 			finished = true;
 		}
 	}
@@ -481,10 +539,10 @@ class FlxTween
 	/**
 	 * Starts the Tween, or restarts it if it's currently running.
 	 */
-	public function start():Dynamic
+	public function start():FlxTween
 	{
-		_time = 0;
-		if (_target == 0)
+		_secondsSinceStart = 0;
+		if (duration == 0)
 		{
 			active = false;
 			return this;
@@ -502,7 +560,6 @@ class FlxTween
 		manager.remove(this);
 	}
 
-	/** @private Called when the Tween completes. */
 	public function finish():Void
 	{
 		executions++;
@@ -512,49 +569,66 @@ class FlxTween
 			complete(this);
 		}
 		
-		switch ((_type & ~ FlxTween.BACKWARD))
+		switch ((type & ~ FlxTween.BACKWARD))
 		{
 			case FlxTween.PERSIST:
-				_time = _target;
+				_secondsSinceStart = duration;
 				active = false;
+				
 			case FlxTween.LOOPING:
-				_time %= _target;
-				_t = _time / _target;
-				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
+				_secondsSinceStart %= duration;
+				scale = _secondsSinceStart / duration;
+				if ((ease != null) && (scale > 0) && (scale < 1)) {
+					scale = ease(scale);
+				}
 				start();
+				
 			case FlxTween.PINGPONG:
-				_time %= _target;
-				_t = _time / _target;
-				if (_ease != null && _t > 0 && _t < 1) _t = _ease(_t);
+				_secondsSinceStart %= duration;
+				scale = _secondsSinceStart / duration;
+				if ((ease != null) && (scale > 0) && (scale < 1)) {
+					scale = ease(scale);
+				}
 				_backward = !_backward;
-				if (_backward) _t = 1 - _t;
+				if (_backward) {
+					scale = 1 - scale;
+				}
 				start();
+				
 			case FlxTween.ONESHOT:
-				_time = _target;
+				_secondsSinceStart = duration;
 				active = false;
 				manager.remove(this, true);
 		}
 
 		finished = false;
 	}
-
-	public var percent(get_percent, set_percent):Float;
-	private function get_percent():Float { return _time / _target; }
-	private function set_percent(value:Float):Float { _time = _target * value; return _time; }
-
-	public var scale(get_scale, null):Float;
-	private function get_scale():Float { return _t; }
-
-	public var finished(default, null):Bool;
-
-	private var _type:Int;
-	private var _ease:EaseFunction;
-	private var _t:Float;
-
-	private var _time:Float;
-	private var _target:Float;
 	
-	private var _backward:Bool;
+	private inline function get_percent():Float 
+	{ 
+		return _secondsSinceStart / duration; 
+	}
+	
+	private function set_percent(value:Float):Float
+	{ 
+		return _secondsSinceStart = duration * value;
+	}
+	
+	private function set_type(value:Int):Int
+	{
+		if (value == 0) 
+		{
+			value = FlxTween.ONESHOT;
+		}
+		else if (value == FlxTween.BACKWARD)
+		{
+			value = FlxTween.PERSIST | FlxTween.BACKWARD;
+		}
+		
+		_backward = (value & FlxTween.BACKWARD) > 0;
+		
+		return type = value;
+	}
 }
 
 typedef CompleteCallback = FlxTween->Void;
@@ -562,5 +636,6 @@ typedef CompleteCallback = FlxTween->Void;
 typedef TweenOptions = {
 	?type:Int,
 	?ease:EaseFunction,
-	?complete:CompleteCallback
+	?complete:CompleteCallback,
+	?delay:Null<Float>
 }

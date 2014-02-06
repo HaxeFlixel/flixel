@@ -4,57 +4,57 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxArrayUtil;
 
 /**
- * A manager for <code>FlxTween</code>s.
+ * A manager for FlxTweens.
  */
 class TweenManager extends FlxPlugin
 {
 	/**
-	 * A list of all <code>FlxTween</code> objects.
+	 * A list of all FlxTween objects.
 	 */
 	public var list(default, null):Array<FlxTween>;
 	
 	public function new():Void
 	{
 		super();
-		
 		list = new Array<FlxTween>();
+		visible = false; // No draw-calls needed 
 	}
-
-    override public function update():Void
-    {
-        super.update();
-
-        // process finished tweens after iterating through main list, since finish() can manipulate FlxTween.list
-        var finishedTweens:Array<FlxTween> = null;
-
-        for (tween in list)
-        {
-            if (tween.active)
-            {
-                tween.update();
-                if(tween.finished)
-                {
-                    if(finishedTweens == null)
-                        finishedTweens = new Array<FlxTween>();
-                    finishedTweens.push(tween);
-                }
-            }
-        }
-
-        if(finishedTweens != null)
-        {
-            while(finishedTweens.length > 0)
-            {
-                finishedTweens.shift().finish();
-            }
-        }
-    }
+	
+	override public function update():Void
+	{
+		// process finished tweens after iterating through main list, since finish() can manipulate FlxTween.list
+		var finishedTweens:Array<FlxTween> = null;
+		
+		for (tween in list)
+		{
+			if (tween.active)
+			{
+				tween.update();
+				if (tween.finished)
+				{
+					if (finishedTweens == null)
+					{
+						finishedTweens = new Array<FlxTween>();
+					} 
+					finishedTweens.push(tween);
+				}
+			}
+		}
+		
+		if (finishedTweens != null)
+		{
+			while(finishedTweens.length > 0)
+			{
+				finishedTweens.shift().finish();
+			}
+		}
+	}
 	
 	/**
-	 * Add a <code>FlxTween</code>.
-	 * @param	Tween	The <code>FlxTween</code> to add.
+	 * Add a FlxTween.
+	 * @param	Tween	The FlxTween to add.
 	 * @param	Start	Whether you want it to start right away.
-	 * @return	The added <code>FlxTween</code> object.
+	 * @return	The added FlxTween object.
 	 */
 	public function add(Tween:FlxTween, Start:Bool = false):FlxTween
 	{
@@ -80,10 +80,10 @@ class TweenManager extends FlxPlugin
 	}
 
 	/**
-	 * Remove a <code>FlxTween</code>.
-	 * @param	Tween		The <code>FlxTween</code> to remove.
-	 * @param	Destroy		Whether you want to destroy the <code>FlxTween</code>.
-	 * @return	The added <code>FlxTween</code> object.
+	 * Remove a FlxTween.
+	 * @param	Tween		The FlxTween to remove.
+	 * @param	Destroy		Whether you want to destroy the FlxTween.
+	 * @return	The added FlxTween object.
 	 */
 	public function remove(Tween:FlxTween, Destroy:Bool = false):FlxTween
 	{
@@ -99,16 +99,14 @@ class TweenManager extends FlxPlugin
 		
 		Tween.active = false;
 		
-		// Fast array removal (only do on arrays where order doesn't matter)
-		list[FlxArrayUtil.indexOf(list, Tween)] = list[list.length - 1];
-		list.pop();
+		FlxArrayUtil.fastSplice(list, Tween);
 		
 		return Tween;
 	}
 
 	/**
-	 * Removes all <code>FlxTween</code>s.
-	 * @param	Destroy		Whether you want to destroy the <code>FlxTween</code>s.
+	 * Removes all FlxTweens.
+	 * @param	Destroy		Whether you want to destroy the FlxTweens.
 	 */
 	public function clear(Destroy:Bool = false):Void
 	{
@@ -119,7 +117,7 @@ class TweenManager extends FlxPlugin
 		list = new Array<FlxTween>();
 	}
 	
-	override inline public function onStateSwitch():Void
+	override public inline function onStateSwitch():Void
 	{
 		clear(true);
 	}

@@ -36,16 +36,11 @@ class TimerManager extends FlxPlugin
 	}
 	
 	/**
-	 * Called by <code>FlxG.plugins.update()</code> before the game state has been updated.
-	 * Cycles through timers and calls <code>update()</code> on each one.
+	 * Called by FlxG.plugins.update() before the game state has been updated.
+	 * Cycles through timers and calls update() on each one.
 	 */
 	override public function update():Void
 	{
-		if (FlxG.paused) 
-		{
-			return;
-		}
-		
 		for (timer in _timers)
 		{
 			if (!timer.paused && !timer.finished && timer.time > 0)
@@ -57,9 +52,9 @@ class TimerManager extends FlxPlugin
 	
 	/**
 	 * Add a new timer to the timer manager.
-	 * Usually called automatically by <code>FlxTimer</code>'s constructor.
+	 * Usually called automatically by FlxTimer's constructor.
 	 * 
-	 * @param	Timer	The <code>FlxTimer</code> you want to add to the manager.
+	 * @param	Timer	The FlxTimer you want to add to the manager.
 	 */
 	public function add(Timer:FlxTimer):Void
 	{
@@ -71,24 +66,18 @@ class TimerManager extends FlxPlugin
 	
 	/**
 	 * Remove a timer from the timer manager.
-	 * Usually called automatically by <code>FlxTimer</code>'s <code>stop()</code> function.
+	 * Usually called automatically by FlxTimer's stop() function.
 	 * 
-	 * @param	Timer	The <code>FlxTimer</code> you want to remove from the manager.
+	 * @param	Timer	The FlxTimer you want to remove from the manager.
 	 * @param	ReturnInPool Whether to reset and put Timer into internal _pool.
 	 */
 	public function remove(Timer:FlxTimer, ReturnInPool:Bool = true):Void
 	{
+		FlxArrayUtil.fastSplice(_timers, Timer);
+		
 		if (ReturnInPool)
 		{
 			FlxTimer.put(Timer);
-		}
-		
-		var index:Int = FlxArrayUtil.indexOf(_timers, Timer);
-		if (index >= 0)
-		{
-			// Fast array removal (only do on arrays where order doesn't matter)
-			_timers[index] = _timers[_timers.length - 1];
-			_timers.pop();
 		}
 	}
 	
@@ -104,7 +93,7 @@ class TimerManager extends FlxPlugin
 		}
 	}
 	
-	override inline public function onStateSwitch():Void
+	override public inline function onStateSwitch():Void
 	{
 		clear();
 	}

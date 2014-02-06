@@ -10,23 +10,15 @@ import flash.ui.Mouse;
 import flash.utils.ByteArray;
 import flash.net.FileReference;
 import flash.net.FileFilter;
+import flixel.util.FlxRandom;
 
 class VCRFrontEnd
 {
 	/**
 	 * Just needed to create an instance.
 	 */
-	public function new() { }
-
-	/**
-	 * Clean up memory.
-	 */
-	public function destroy():Void
-	{
-		#if (flash && FLX_RECORD)
-		_file = null;
-		#end
-	}
+	@:allow(flixel.FlxG)
+	private function new() { }
 
 	#if FLX_RECORD
 	/**
@@ -34,7 +26,7 @@ class VCRFrontEnd
 	 */
 	public var replayCallback:Void->Void = null;
 	/**
-	 * The key codes used to toggle the debugger (via <code>flash.ui.Keyboard</code>). 
+	 * The key codes used to toggle the debugger (via flash.ui.Keyboard). 
 	 * "0" means "any key". Handy for skipping cutscenes or getting out of attract modes!
 	 */
 	public var cancelKeys:Array<String> = null;
@@ -44,7 +36,7 @@ class VCRFrontEnd
 	public var timeout:Int = 0;
 
 	#if flash
-	static private var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
+	private static var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 
 	static private inline var DEFAULT_FILE_NAME:String = "replay.fgr";
 
@@ -145,7 +137,7 @@ class VCRFrontEnd
 		FlxG.game.replayRequested = true;
 
 		#if !FLX_NO_KEYBOARD
-		FlxG.keyboard.enabled = false;
+		FlxG.keys.enabled = false;
 		#end
 
 		#if !FLX_NO_DEBUG
@@ -179,7 +171,7 @@ class VCRFrontEnd
 	/**
 	 * Stops the current replay.
 	 */
-	inline public function stopReplay():Void
+	public inline function stopReplay():Void
 	{
 		FlxG.game.replaying = false;
 		FlxG.inputs.reset();
@@ -189,7 +181,7 @@ class VCRFrontEnd
 		#end
 		
 		#if !FLX_NO_KEYBOARD
-		FlxG.keyboard.enabled = true;
+		FlxG.keys.enabled = true;
 		#end
 	}
 		
@@ -200,6 +192,8 @@ class VCRFrontEnd
 	 */
 	public function startRecording(StandardMode:Bool = true):Void
 	{
+		FlxRandom.updateRecordingSeed( StandardMode );
+		
 		if (StandardMode)
 		{
 			FlxG.resetGame();
@@ -208,7 +202,7 @@ class VCRFrontEnd
 		{
 			FlxG.resetState();
 		}
-
+		
 		FlxG.game.recordingRequested = true;
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.vcr.recording();
@@ -218,9 +212,9 @@ class VCRFrontEnd
 	/**
 	 * Stop recording the current replay and return the replay data.
 	 * 
-	 * @return	The replay data in simple ASCII format (see <code>FlxReplay.save()</code>).
+	 * @return	The replay data in simple ASCII format (see FlxReplay.save()).
 	 */
-	inline public function stopRecording():String
+	public inline function stopRecording():String
 	{
 		FlxG.game.recording = false;
 
@@ -257,13 +251,23 @@ class VCRFrontEnd
 		_file.browse(FILE_TYPES);
 		#end
 	}
+	
+	/**
+	 * Clean up memory.
+	 */
+	private function destroy():Void
+	{
+		#if (flash && FLX_RECORD)
+		_file = null;
+		#end
+	}
 
 	/**
 	 * Called when a file is picked from the file dialog.
 	 * Attempts to load the file and registers file loading event handlers.
 	 * @param	E	Flash event.
 	 */
-	private function onOpenSelect(E:Event = null):Void
+	private function onOpenSelect(?E:Event):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.SELECT, onOpenSelect);
@@ -280,7 +284,7 @@ class VCRFrontEnd
 	 * If there's stuff inside, then the contents are loaded into a new replay.
 	 * @param	E	Flash Event.
 	 */
-	private function onOpenComplete(E:Event = null):Void
+	private function onOpenComplete(?E:Event):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
@@ -308,7 +312,7 @@ class VCRFrontEnd
 	 * Called if the open file dialog is canceled.
 	 * @param	E	Flash Event.
 	 */
-	private function onOpenCancel(E:Event = null):Void
+	private function onOpenCancel(?E:Event):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.SELECT, onOpenSelect);
@@ -321,7 +325,7 @@ class VCRFrontEnd
 	 * Called if there is a file open error.
 	 * @param	E	Flash Event.
 	 */
-	private function onOpenError(E:Event=null):Void
+	private function onOpenError(?E:Event):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
@@ -335,7 +339,7 @@ class VCRFrontEnd
 	 * Called when the file is saved successfully.
 	 * @param	E	Flash Event.
 	 */
-	private function onSaveComplete(E:Event = null):Void
+	private function onSaveComplete(?E:Event):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -350,7 +354,7 @@ class VCRFrontEnd
 	 * Called when the save file dialog is cancelled.
 	 * @param	E	Flash Event.
 	 */
-	private function onSaveCancel(E:Event = null):Void
+	private function onSaveCancel(?E:Event):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -364,7 +368,7 @@ class VCRFrontEnd
 	 * Called if there is an error while saving the gameplay recording.
 	 * @param	E	Flash Event.
 	 */
-	private function onSaveError(E:Event = null):Void
+	private function onSaveError(?E:Event):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);

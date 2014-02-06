@@ -1,14 +1,15 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxG;
 import flixel.plugin.FlxPlugin;
 import flixel.plugin.PathManager;
 import flixel.plugin.TimerManager;
 import flixel.plugin.TweenManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPath;
+import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 
+@:allow(flixel.FlxGame)
 class PluginFrontEnd
 {
 	/**
@@ -17,30 +18,17 @@ class PluginFrontEnd
 	public var list(default, null):Array<FlxPlugin>;
 	
 	/**
-	 * Sets up two plugins: <code>DebugPathDisplay</code> 
-	 * in debugging mode and <code>TimerManager</code>
-	 */
-	public function new() 
-	{
-		list = new Array<FlxPlugin>();
-		
-		add(FlxTimer.manager = new TimerManager());
-		add(FlxTween.manager = new TweenManager());
-		add(FlxPath.manager = new PathManager());
-	}
-	
-	/**
 	 * Adds a new plugin to the global plugin array.
 	 * 
 	 * @param	Plugin	Any object that extends FlxPlugin. Useful for managers and other things. See flixel.plugin for some examples!
-	 * @return	The same <code>FlxPlugin</code>-based plugin you passed in.
+	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
-	public function add(Plugin:FlxPlugin):FlxPlugin
+	@:generic public function add<T:FlxPlugin>(Plugin:T):T
 	{
 		// Don't add repeats
 		for (plugin in list)
 		{
-			if (plugin.toString() == Plugin.toString())
+			if (FlxStringUtil.sameClassName(Plugin, plugin))
 			{
 				return Plugin;
 			}
@@ -54,7 +42,7 @@ class PluginFrontEnd
 	/**
 	 * Retrieves a plugin based on its class name from the global plugin array.
 	 * 
-	 * @param	ClassType	The class name of the plugin you want to retrieve. See the <code>FlxPath</code> or <code>FlxTimer</code> constructors for example usage.
+	 * @param	ClassType	The class name of the plugin you want to retrieve. See the FlxPath or FlxTimer constructors for example usage.
 	 * @return	The plugin object, or null if no matching plugin was found.
 	 */
 	public function get(ClassType:Class<FlxPlugin>):FlxPlugin
@@ -74,7 +62,7 @@ class PluginFrontEnd
 	 * Removes an instance of a plugin from the global plugin array.
 	 * 
 	 * @param	Plugin	The plugin instance you want to remove.
-	 * @return	The same <code>FlxPlugin</code>-based plugin you passed in.
+	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
 	public function remove(Plugin:FlxPlugin):FlxPlugin
 	{
@@ -120,9 +108,23 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Used by the game object to call <code>update()</code> on all the plugins.
+	 * Sets up two plugins: DebugPathDisplay 
+	 * in debugging mode and TimerManager
 	 */
-	inline public function update():Void
+	@:allow(flixel.FlxG)
+	private function new() 
+	{
+		list = new Array<FlxPlugin>();
+		
+		add(FlxTimer.manager = new TimerManager());
+		add(FlxTween.manager = new TweenManager());
+		add(FlxPath.manager = new PathManager());
+	}
+	
+	/**
+	 * Used by the game object to call update() on all the plugins.
+	 */
+	private inline function update():Void
 	{
 		for (plugin in list)
 		{
@@ -134,9 +136,9 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Used by the game object to call <code>draw()</code> on all the plugins.
+	 * Used by the game object to call draw() on all the plugins.
 	 */
-	inline public function draw():Void
+	private inline function draw():Void
 	{
 		for (plugin in list)
 		{
@@ -148,9 +150,9 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Used by the game object to call <code>onStateSwitch()</code> on all the plugins.
+	 * Used by the game object to call onStateSwitch() on all the plugins.
 	 */
-	inline public function onStateSwitch():Void
+	private inline function onStateSwitch():Void
 	{
 		for (plugin in list)
 		{
@@ -162,11 +164,11 @@ class PluginFrontEnd
 	}
 	
 	/**
-	 * Used by the game object to call <code>onResize()</code> on all the plugins.
+	 * Used by the game object to call onResize() on all the plugins.
 	 * @param 	Width	The new window width
 	 * @param 	Height	The new window Height
 	 */
-	inline public function onResize(Width:Int, Height:Int):Void
+	private inline function onResize(Width:Int, Height:Int):Void
 	{
 		for (plugin in list)
 		{
@@ -181,7 +183,7 @@ class PluginFrontEnd
 	/**
 	 * You shouldn't need to call this. Used to draw the debug graphics for any installed plugins.
 	 */
-	inline public function drawDebug():Void
+	private inline function drawDebug():Void
 	{
 		for (plugin in list)
 		{

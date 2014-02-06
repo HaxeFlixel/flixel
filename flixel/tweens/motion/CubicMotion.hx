@@ -8,8 +8,19 @@ import flixel.tweens.FlxTween.CompleteCallback;
  */
 class CubicMotion extends Motion
 {
+	// Curve information.
+	private var _fromX:Float;
+	private var _fromY:Float;
+	private var _toX:Float;
+	private var _toY:Float;
+	private var _aX:Float;
+	private var _aY:Float;
+	private var _bX:Float;
+	private var _bY:Float;
+	private var _ttt:Float;
+	private var _tt:Float;
+	
 	/**
-	 * Constructor.
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
@@ -22,6 +33,7 @@ class CubicMotion extends Motion
 	
 	/**
 	 * Starts moving along the curve.
+	 * 
 	 * @param	fromX		X start.
 	 * @param	fromY		Y start.
 	 * @param	aX			First control x.
@@ -43,33 +55,20 @@ class CubicMotion extends Motion
 		_bY = bY;
 		_toX = toX;
 		_toY = toY;
-		_target = duration;
-		_ease = ease;
+		this.duration = duration;
+		this.ease = ease;
 		start();
 		return this;
 	}
 	
-	/** @private Updates the Tween. */
 	override public function update():Void
 	{
 		super.update();
-		x = _t * _t * _t * (_toX + 3 * (_aX - _bX) - _fromX) + 3 * _t * _t * (_fromX - 2 * _aX + _bX) + 3 * _t * (_aX - _fromX) + _fromX;
-		y = _t * _t * _t * (_toY + 3 * (_aY - _bY) - _fromY) + 3 * _t * _t * (_fromY - 2 * _aY + _bY) + 3 * _t * (_aY - _fromY) + _fromY;
+		x = scale * scale * scale * (_toX + 3 * (_aX - _bX) - _fromX) + 3 * scale * scale * (_fromX - 2 * _aX + _bX) + 3 * scale * (_aX - _fromX) + _fromX;
+		y = scale * scale * scale * (_toY + 3 * (_aY - _bY) - _fromY) + 3 * scale * scale * (_fromY - 2 * _aY + _bY) + 3 * scale * (_aY - _fromY) + _fromY;
 		if(finished)
 		{
 			postUpdate();
 		}
 	}
-	
-	// Curve information.
-	private var _fromX:Float;
-	private var _fromY:Float;
-	private var _toX:Float;
-	private var _toY:Float;
-	private var _aX:Float;
-	private var _aY:Float;
-	private var _bX:Float;
-	private var _bY:Float;
-	private var _ttt:Float;
-	private var _tt:Float;
 }

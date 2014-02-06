@@ -2,18 +2,13 @@ package flixel.system.debug;
 
 #if !FLX_NO_DEBUG
 
-import flash.text.TextFieldAutoSize;
-import flash.Lib;
-import flash.text.TextFormatAlign;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.debug.Console;
@@ -23,11 +18,19 @@ import flixel.system.debug.VCR;
 import flixel.system.debug.Watch;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxMisc;
+import flixel.util.FlxArrayUtil;
+import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
+
+@:bitmap("assets/images/debugger/flixel.png")	           private class GraphicFlixel     extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/drawDebug.png")   private class GraphicDrawDebug  extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/log.png")         class GraphicLog        extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/stats.png")       class GraphicStats      extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/watch.png")       class GraphicWatch      extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/console.png")     class GraphicConsole    extends BitmapData {}
 
 /**
- * Container for the new debugger overlay.
- * Most of the functionality is in the debug folder widgets,
+ * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
  * but this class instantiates the widgets and handles their basic formatting and arrangement.
  */
 class FlxDebugger extends Sprite
@@ -35,20 +38,16 @@ class FlxDebugger extends Sprite
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
-	inline static public var GUTTER:Int = 2;
+	public static inline var GUTTER:Int = 2;
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
-	inline static public var TOP_HEIGHT:Int = 20;
+	public static inline var TOP_HEIGHT:Int = 20;
 	
 	/**
 	 * Container for the performance monitor widget.
 	 */
 	public var stats:Stats;
-	/**
-	 * Container for the bitmap output widget
-	 */
-	public var bmpLog:BmpLog;	
 	/**
 	 * Container for the trace output widget.
 	 */	 
@@ -83,93 +82,21 @@ class FlxDebugger extends Sprite
 	 */
 	private var _screenBounds:Rectangle;
 	/**
-	* Internal, used to store the middle debugger buttons for laying them out.
-	*/
+	 * Internal, used to store the middle debugger buttons for laying them out.
+	 */
 	private var _middleButtons:Array<FlxSystemButton>;
 	/**
-	* Internal, used to store the left debugger buttons for laying them out.
-	*/
+	 * Internal, used to store the left debugger buttons for laying them out.
+	 */
 	private var _leftButtons:Array<FlxSystemButton>;
 	/**
-	* Internal, used to store the right debugger buttons for laying them out.
-	*/
+	 * Internal, used to store the right debugger buttons for laying them out.
+	 */
 	private var _rightButtons:Array<FlxSystemButton>;
 	/**
-	* The flash Sprite used for the top bar of the debugger ui
-	**/
+	 * The flash Sprite used for the top bar of the debugger ui
+	 **/
 	private var _topBar:Sprite;
-	
-	/**
-	 * Instantiates the debugger overlay.
-	 * 
-	 * @param 	Width	The width of the screen.
-	 * @param 	Height	The height of the screen.
-	 */
-	public function new(Width:Float, Height:Float)
-	{
-		super();
-		visible = false;
-		_layout = STANDARD;
-		_screen = new Point();
-		
-		_topBar = new Sprite();
-		_topBar.graphics.beginFill(0x000000, 0xAA / 255);
-		_topBar.graphics.drawRect(0, 0, FlxG.stage.stageWidth, TOP_HEIGHT);
-		_topBar.graphics.endFill();
-		addChild(_topBar);
-		
-		var txt = new TextField();
-		txt.height = 20;
-		txt.selectable = false;
-		txt.y = -9;
-		txt.multiline = false;
-		txt.embedFonts = true;
-		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
-		txt.defaultTextFormat = format;
-		txt.autoSize = TextFieldAutoSize.LEFT;
-		txt.text = FlxG.libraryName;
-		
-		_leftButtons = new Array<FlxSystemButton>();
-		_rightButtons = new Array<FlxSystemButton>();
-		_middleButtons = new Array<FlxSystemButton>();
-		
-		log = new Log("log", FlxAssets.IMG_LOG_DEBUG, 0, 0, true);
-		addChild(log);
-		
-		watch = new Watch("watch", FlxAssets.IMG_WATCH_DEBUG, 0, 0, true);
-		addChild(watch);
-		
-		console = new Console("console", FlxAssets.IMG_CONSOLE, 0, 0, false);
-		addChild(console);
-		
-		stats = new Stats("stats", FlxAssets.IMG_STATS_DEBUG, 0, 0, false);
-		addChild(stats);
-		
-		#if FLX_BMP_DEBUG
-		bmpLog = new BmpLog("bmplog", 0, 0, true);
-		addChild(bmpLog);
-		#end
-		
-		vcr = new VCR(this);
-		
-		addButton(LEFT, FlxAssets.IMG_FLIXEL, openHomepage);
-		addButton(LEFT, null, openHomepage).addChild(txt);
-		
-		addButton(RIGHT, FlxAssets.IMG_LOG_DEBUG, log.toggleVisibility, true).toggled = !log.visible; 
-		addButton(RIGHT, FlxAssets.IMG_WATCH_DEBUG, watch.toggleVisibility, true).toggled = !watch.visible; 
-		addButton(RIGHT, FlxAssets.IMG_CONSOLE, console.toggleVisibility, true).toggled = !console.visible; 
-		addButton(RIGHT, FlxAssets.IMG_STATS_DEBUG, stats.toggleVisibility, true).toggled = !stats.visible; 
-		addButton(RIGHT, FlxAssets.IMG_VISUAL_DEBUG, toggleVisualDebug, true).toggled = !FlxG.debugger.visualDebug;
-		
-		#if FLX_RECORD
-		addButton(MIDDLE).addChild(vcr.runtimeDisplay);
-		#end
-		
-		onResize(Width, Height);
-		
-		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-	}
 
 	/**
 	 * Clean up memory.
@@ -177,34 +104,28 @@ class FlxDebugger extends Sprite
 	public function destroy():Void
 	{
 		_screen = null;
-
+		
 		for (o in _rightButtons)
 		{
 			o.destroy();
 		}
 		_rightButtons = null;
-
+		
 		for (o in _leftButtons)
 		{
 			o.destroy();
 		}
 		_leftButtons = null;
-
+		
 		for (o in _middleButtons)
 		{
 			o.destroy();
 		}
 		_middleButtons = null;
-
+		
 		removeChild(_topBar);
 		_topBar = null;
-
-		if (bmpLog != null) 
-		{
-			removeChild(bmpLog);
-			bmpLog.destroy();
-			bmpLog = null;
-		}		
+		
 		if (log != null)
 		{
 			removeChild(log);
@@ -235,39 +156,11 @@ class FlxDebugger extends Sprite
 	}
 	
 	/**
-	 * Mouse handler that helps with fake "mouse focus" type behavior.
-	 * @param	E	Flash mouse event.
-	 */
-	inline private function onMouseOver(?E:MouseEvent):Void
-	{
-		hasMouse = true;
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = true;
-		#end
-	}
-	
-	/**
-	 * Mouse handler that helps with fake "mouse focus" type behavior.
-	 * @param	E	Flash mouse event.
-	 */
-	inline private function onMouseOut(?E:MouseEvent):Void
-	{
-		hasMouse = false;
-		
-		#if !FLX_NO_MOUSE
-		if (!FlxG.vcr.paused)
-		{
-			FlxG.mouse.useSystemCursor = false;
-		}
-		#end
-	}
-	
-	/**
 	 * Change the way the debugger's windows are laid out.
 	 * 
-	 * @param	Layout	The layout codes can be found in <code>FlxDebugger</code>, for example <code>FlxDebugger.MICRO</code>
+	 * @param   Layout   The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
 	 */
-	inline public function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:DebuggerLayout):Void
 	{
 		_layout = Layout;
 		resetLayout();
@@ -275,7 +168,7 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Forces the debugger windows to reset to the last specified layout.
-	 * The default layout is <code>STANDARD</code>.
+	 * The default layout is STANDARD.
 	 */
 	public function resetLayout():Void
 	{
@@ -329,14 +222,10 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
-				if (bmpLog != null) {
-					bmpLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-					bmpLog.reposition(_screen.x, _screen.y - watch.height - bmpLog.height - console.height - GUTTER * 1.5);
-				}
 		}
 	}
 	
-	inline public function onResize(Width:Float, Height:Float):Void
+	public inline function onResize(Width:Float, Height:Float):Void
 	{
 		_screen.x = Width;
 		_screen.y = Height;
@@ -345,18 +234,19 @@ class FlxDebugger extends Sprite
 		log.updateBounds(_screenBounds);
 		watch.updateBounds(_screenBounds);
 		console.updateBounds(_screenBounds);
-		if (bmpLog != null) {
-			bmpLog.updateBounds(_screenBounds);
-		}
 		_topBar.width = FlxG.stage.stageWidth;
 		resetButtonLayout();
 		resetLayout();
+		scaleX = 1 / FlxG.game.scaleX;
+		scaleY = 1 / FlxG.game.scaleY;
+		x = -FlxG.game.x * scaleX;
+		y = -FlxG.game.y * scaleY;
 	}
 
 	/**
 	 * Align an array of debugger buttons, used for the middle and right layouts
 	 */
-	public function hAlignSprites(Sprites:Array<Dynamic>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
+	public function hAlignButtons(Sprites:Array<FlxSystemButton>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
 	{
 		var width:Float = 0;
 		var last:Float = LeftOffset;
@@ -379,26 +269,28 @@ class FlxDebugger extends Sprite
 	 */
 	public function resetButtonLayout():Void
 	{
-		hAlignSprites(_leftButtons, 10, true, 10);
+		hAlignButtons(_leftButtons, 10, true, 10);
 		
-		var offset = FlxG.stage.stageWidth * 0.5 - hAlignSprites(_middleButtons, 10, false) * 0.5;
-		hAlignSprites(_middleButtons, 10, true, offset);
+		var offset = FlxG.stage.stageWidth * 0.5 - hAlignButtons(_middleButtons, 10, false) * 0.5;
+		hAlignButtons(_middleButtons, 10, true, offset);
 		
-		var offset = FlxG.stage.stageWidth - hAlignSprites(_rightButtons, 10, false);
-		hAlignSprites(_rightButtons, 10, true, offset);
+		var offset = FlxG.stage.stageWidth - hAlignButtons(_rightButtons, 10, false);
+		hAlignButtons(_rightButtons, 10, true, offset);
 	}
 	
 	/**
 	 * Create and add a new debugger button.
-	 * @param	Position	Either LEFT,  MIDDLE or RIGHT.
-	 * @param	IconPath	The path to the image to use as the icon for the button.
-	 * @param	DownHandler	The function to be called when the button is pressed.
-	 * @param	ToggleMode	Whether this is a toggle button or not.
-	 * @param	UpdateLayout	Whether to update the button layout.
+	 * 
+	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
+	 * @param   Icon           The icon to use for the button
+	 * @param   DownHandler    The function to be called when the button is pressed.
+	 * @param   ToggleMode     Whether this is a toggle button or not.
+	 * @param   UpdateLayout   Whether to update the button layout.
+	 * @return  The added button.
 	 */
-	public function addButton(Position:ButtonAlignment, ?IconPath:String, ?DownHandler:Dynamic, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
+	public function addButton(Position:ButtonAlignment, ?Icon:BitmapData, ?DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
 	{
-		var button = new FlxSystemButton(IconPath, DownHandler, ToggleMode);
+		var button = new FlxSystemButton(Icon, DownHandler, ToggleMode);
 		
 		var array:Array<FlxSystemButton>; 
 		switch (Position)
@@ -425,8 +317,9 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Removes and destroys a button from the debugger.
-	 * @param	Button			The FlxSystemButton instance to remove.
-	 * @param	UpdateLayout	Whether to update the button layout.
+	 * 
+	 * @param   Button         The FlxSystemButton instance to remove.
+	 * @param   UpdateLayout   Whether to update the button layout.
 	 */
 	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
 	{
@@ -442,6 +335,99 @@ class FlxDebugger extends Sprite
 		}
 	}
 	
+	/**
+	 * Instantiates the debugger overlay.
+	 * 
+	 * @param   Width    The width of the screen.
+	 * @param   Height   The height of the screen.
+	 */
+	@:allow(flixel.FlxGame)
+	private function new(Width:Float, Height:Float)
+	{
+		super();
+		visible = false;
+		_layout = STANDARD;
+		_screen = new Point();
+		
+		_topBar = new Sprite();
+		_topBar.graphics.beginFill(0x000000, 0xAA / 255);
+		_topBar.graphics.drawRect(0, 0, FlxG.stage.stageWidth, TOP_HEIGHT);
+		_topBar.graphics.endFill();
+		addChild(_topBar);
+		
+		var txt = new TextField();
+		txt.height = 20;
+		txt.selectable = false;
+		txt.y = -9;
+		txt.multiline = false;
+		txt.embedFonts = true;
+		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
+		txt.defaultTextFormat = format;
+		txt.autoSize = TextFieldAutoSize.LEFT;
+		txt.text = Std.string(FlxG.VERSION);
+		
+		_leftButtons = new Array<FlxSystemButton>();
+		_rightButtons = new Array<FlxSystemButton>();
+		_middleButtons = new Array<FlxSystemButton>();
+		
+		addChild(log = new Log());
+		addChild(watch = new Watch());
+		addChild(console = new Console());
+		addChild(stats = new Stats());
+		
+		stats.visible = true;
+		
+		vcr = new VCR(this);
+		
+		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
+		addButton(LEFT, null, openHomepage).addChild(txt);
+		
+		addButton(RIGHT, new GraphicLog(0, 0), log.toggleVisibility, true).toggled = !log.visible; 
+		addButton(RIGHT, new GraphicWatch(0, 0), watch.toggleVisibility, true).toggled = !watch.visible; 
+		addButton(RIGHT, new GraphicConsole(0, 0), console.toggleVisibility, true).toggled = !console.visible; 
+		addButton(RIGHT, new GraphicStats(0, 0), stats.toggleVisibility, true).toggled = !stats.visible; 
+		addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleVisualDebug, true).toggled = !FlxG.debugger.drawDebug;
+		
+		#if FLX_RECORD
+		addButton(MIDDLE).addChild(vcr.runtimeDisplay);
+		#end
+		
+		onResize(Width, Height);
+		
+		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+	}
+	
+	/**
+	 * Mouse handler that helps with fake "mouse focus" type behavior.
+	 * 
+	 * @param   E   Flash mouse event.
+	 */
+	private inline function onMouseOver(?E:MouseEvent):Void
+	{
+		hasMouse = true;
+		#if !FLX_NO_MOUSE
+		FlxG.mouse.useSystemCursor = true;
+		#end
+	}
+	
+	/**
+	 * Mouse handler that helps with fake "mouse focus" type behavior.
+	 * 
+	 * @param   E   Flash mouse event.
+	 */
+	private inline function onMouseOut(?E:MouseEvent):Void
+	{
+		hasMouse = false;
+		
+		#if !FLX_NO_MOUSE
+		if (!FlxG.vcr.paused)
+		{
+			FlxG.mouse.useSystemCursor = false;
+		}
+		#end
+	}
+	
 	private function removeButtonFromArray(Arr:Array<FlxSystemButton>, Button:FlxSystemButton):Void
 	{
 		var index = FlxArrayUtil.indexOf(Arr, Button);
@@ -451,14 +437,14 @@ class FlxDebugger extends Sprite
 		}
 	}
 
-	inline private function toggleVisualDebug ():Void
+	private inline function toggleVisualDebug ():Void
 	{
-		FlxG.debugger.visualDebug = !FlxG.debugger.visualDebug;
+		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 	}
 	
-	inline private function openHomepage():Void
+	private inline function openHomepage():Void
 	{
-		FlxMisc.openURL("http://www.haxeflixel.com");
+		FlxG.openURL("http://www.haxeflixel.com");
 	}
 }
 #end

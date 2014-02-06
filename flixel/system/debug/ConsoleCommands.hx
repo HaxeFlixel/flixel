@@ -1,5 +1,6 @@
 package flixel.system.debug;
 
+#if !FLX_NO_DEBUG
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
@@ -97,19 +98,19 @@ class ConsoleCommands
 		}
 	}
 	
-	inline private function close():Void
+	private inline function close():Void
 	{
 		FlxG.debugger.visible = false;
 	}
 	
-	inline private function clearHistory():Void
+	private inline function clearHistory():Void
 	{
 		_console.cmdHistory = new Array<String>();
 		FlxG.save.flush();
 		ConsoleUtil.log("clearHistory: Command history cleared");
 	}
 	
-	inline private function resetState():Void
+	private inline function resetState():Void
 	{
 		FlxG.resetState();
 		ConsoleUtil.log("resetState: State has been reset");
@@ -126,7 +127,7 @@ class ConsoleCommands
 		ConsoleUtil.log("switchState: New '" + ClassName + "' created");  
 	}
 	
-	inline private function resetGame():Void
+	private inline function resetGame():Void
 	{
 		FlxG.resetGame();
 		ConsoleUtil.log("resetGame: Game has been reset");
@@ -188,14 +189,20 @@ class ConsoleCommands
 		}
 		
 		// Prevent from assigning non-boolean values to bools
-		if (Std.is(variable, Bool) && !Std.is(NewVariableValue, Bool)) 
+		if (Std.is(variable, Bool)) 
 		{
-			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Booelan '" + varName + "'");
-			return;
+			var oldVal = NewVariableValue;
+			NewVariableValue = ConsoleUtil.parseBool(NewVariableValue);
+			
+			if (NewVariableValue == null)
+			{
+				FlxG.log.error("set: '" + oldVal + "' is not a valid value for Bool '" + varName + "'");
+				return;
+			}
 		}
 		
 		// Prevent turning numbers into NaN
-		else if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
+		if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
 		{
 			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for number '" + varName + "'");
 			return;
@@ -203,12 +210,12 @@ class ConsoleCommands
 		// Prevent setting non "simple" typed properties
 		else if (!Std.is(variable, Float) && !Std.is(variable, Bool) && !Std.is(variable, String))
 		{
-			FlxG.log.error("set: '" + varName + ":" + Std.string(variable) + "' is not of a simple type (number, bool or string)");
+			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' is not of a simple type (number, bool or string)");
 			return;
 		}
 		
 		Reflect.setProperty(object, varName, NewVariableValue);
-		ConsoleUtil.log("set: " + Std.string(object) + "." + varName + " is now " + NewVariableValue);
+		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + " is now " + NewVariableValue);
 		
 		if (WatchName != null) {
 			FlxG.watch.add(object, varName, WatchName);
@@ -233,7 +240,7 @@ class ConsoleCommands
 			
 			if (!Reflect.isObject(object)) 
 			{
-				FlxG.log.error("call: '" + FlxStringUtil.getClassName(object) + "' is not a valid Object to call");
+				FlxG.log.error("call: '" + FlxStringUtil.getClassName(object, true) + "' is not a valid Object to call");
 				return;
 			}
 			
@@ -251,7 +258,7 @@ class ConsoleCommands
 				}
 				catch (e:Dynamic) 
 				{
-					FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj) + " does not have a field '" + tempVarName + "' to call");
+					FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj, true) + " does not have a field '" + tempVarName + "' to call");
 					return;
 				}
 				
@@ -262,7 +269,7 @@ class ConsoleCommands
 			
 			if (func == null)
 			{
-				FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj) + " does not have a method '" + searchArr[l] + "' to call");
+				FlxG.log.error("call: " + FlxStringUtil.getClassName(tempObj, true) + " does not have a method '" + searchArr[l] + "' to call");
 				return;
 			}
 		}
@@ -283,12 +290,12 @@ class ConsoleCommands
 		}
 	}
 	
-	inline private function listObjects():Void
+	private inline function listObjects():Void
 	{
 		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
 	}
 	
-	inline private function listFunctions():Void
+	private inline function listFunctions():Void
 	{
 		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
 	}
@@ -324,3 +331,4 @@ class ConsoleCommands
 	}
 	#end
 }
+#end

@@ -1,15 +1,14 @@
 package flixel.ui;
 
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.events.TouchEvent;
-import flash.Lib;
-import flash.media.Sound;
+import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.system.FlxAssets;
+import flixel.input.touch.FlxTouch;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxSound;
 import flixel.util.FlxPoint;
+
+@:bitmap("assets/images/ui/button.png")	private class GraphicButton	extends BitmapData {}
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -17,124 +16,75 @@ import flixel.util.FlxPoint;
 class FlxTypedButton<T:FlxSprite> extends FlxSprite
 {
 	/**
-	 * The text that appears on the button.
+	 * The label that appears on the button. Can be any FlxSprite.
 	 */
 	public var label:T;
 	/**
-	 * Controls the offset (from top left) of the text from the button.
+	 * What offsets the label should have for each status.
 	 */
-	public var labelOffset:FlxPoint;
+	public var labelOffsets:Array<FlxPoint>;
 	/**
-	 * Shows the current state of the button, either <code>NORMAL</code>, 
-	 * <code>HIGHLIGHT</code> or <code>PRESSED</code>
+	 * What alpha value the label should have for each status. Default is [0.8, 1.0, 0.5].
 	 */
-	public var status:Int;
+	public var labelAlphas:Array<Float>;
 	/**
-	 * Set this to play a sound when the mouse goes over the button.
-	 * We recommend using the helper function setSounds()!
+	 * Shows the current state of the button, either FlxButton.NORMAL, 
+	 * FlxButton.HIGHLIGHT or FlxButton.PRESSED.
 	 */
-	public var soundOver:FlxSound;
+	public var status(default, set):Int;
 	/**
-	 * Set this to play a sound when the mouse leaves the button.
-	 * We recommend using the helper function setSounds()!
+	 * The properties of this button's onUp event (callback function, sound).
 	 */
-	public var soundOut:FlxSound;
+	public var onUp(default, null):FlxButtonEvent;
 	/**
-	 * Set this to play a sound when the button is pressed down.
-	 * We recommend using the helper function setSounds()!
+	 * The properties of this button's onDown event (callback function, sound).
 	 */
-	public var soundDown:FlxSound;
+	public var onDown(default, null):FlxButtonEvent;
 	/**
-	 * Set this to play a sound when the button is released.
-	 * We recommend using the helper function setSounds()!
+	 * The properties of this button's onOver event (callback function, sound).
 	 */
-	public var soundUp:FlxSound;
+	public var onOver(default, null):FlxButtonEvent;
+	/**
+	 * The properties of this button's onOut event (callback function, sound).
+	 */
+	public var onOut(default, null):FlxButtonEvent;
+
+	/**
+	 * The touch currently pressing this button, if none, it's null. Needed to check for its release.
+	 */
+	private var _pressedTouch:FlxTouch = null;
+	/**
+	 * Whether this button is currently being pressed by the mouse. Needed to check for its release.
+	 */
+	private var _pressedMouse:Bool = false;
 	
 	/**
-	 * This function is called when the button is released.
-	 * We recommend assigning your main button behavior to this function
-	 * via the <code>FlxButton</code> constructor.
-	 */
-	private var _onUp:Dynamic;
-	/**
-	 * This function is called when the button is pressed down.
-	 */
-	private var _onDown:Dynamic;
-	/**
-	 * This function is called when the mouse goes over the button.
-	 */
-	private var _onOver:Dynamic;
-	/**
-	 * This function is called when the mouse leaves the button area.
-	 */
-	private var _onOut:Dynamic;
-	/**
-	 * The params to pass to the <code>_onUp</code> function
-	 */
-	private var _onUpParams:Array<Dynamic>;
-	/**
-	 * The params to pass to the <code>_onDown</code> function
-	 */
-	private var _onDownParams:Array<Dynamic>;
-	/**
-	 * The params to pass to the <code>_onOver</code> function
-	 */
-	private var _onOverParams:Array<Dynamic>;
-	/**
-	 * The params to pass to the <code>_onOut</code> function
-	 */
-	private var _onOutParams:Array<Dynamic>;
-	/**
-	 * Tracks whether or not the button is currently pressed.
-	 */
-	private var _pressed:Bool;
-	/**
-	 * Whether or not the button has initialized itself yet.
-	 */
-	private var _initialized:Bool;
-	
-	private var _touchPointID:Int;
-	
-	// TODO: Implement checkbox-style behaviour.
-	
-	/**
-	 * Creates a new <code>FlxTypedButton</code> object with a gray background
-	 * and a callback function on the UI thread.
+	 * Creates a new FlxTypedButton object with a gray background.
 	 * 
-	 * @param	X			The X position of the button.
-	 * @param	Y			The Y position of the button.
-	 * @param	Label		The text that you want to appear on the button.
-	 * @param	OnClick		The function to call whenever the button is clicked.
+	 * @param	X				The X position of the button.
+	 * @param	Y				The Y position of the button.
+	 * @param	Label			The text that you want to appear on the button.
+	 * @param	OnClick			The function to call whenever the button is clicked.
+	 * @param	OnClickParams	The params to call the onClick function with
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
 		super(X, Y);
 		
-		loadGraphic(FlxAssets.IMG_BUTTON, true, false, 80, 20);
+		loadGraphic(GraphicButton, true, false, 80, 20);
 		
-		_onUp = OnClick;
-		_onDown = null;
-		_onOut = null;
-		_onOver = null;
+		onUp = new FlxButtonEvent(OnClick);
+		onDown = new FlxButtonEvent();
+		onOver = new FlxButtonEvent();
+		onOut = new FlxButtonEvent();
 		
-		_onUpParams = [];
-		_onDownParams = [];
-		_onOutParams = [];
-		_onOverParams = [];
-		
-		soundOver = null;
-		soundOut = null;
-		soundDown = null;
-		soundUp = null;
+		labelAlphas = [0.8, 1.0, 0.5];
+		labelOffsets = [new FlxPoint(), new FlxPoint(), new FlxPoint(0, 1)];
 		
 		status = FlxButton.NORMAL;
-		_pressed = false;
-		_initialized = false;
 		
-		scrollFactor.x = 0;
-		scrollFactor.y = 0;
-		
-		_touchPointID = -1;
+		// Since this is a UI element, the default scrollFactor is (0, 0)
+		scrollFactor.set();
 	}
 	
 	/**
@@ -142,44 +92,17 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		if (FlxG.stage != null)
-		{
-			#if !FLX_NO_MOUSE
-				Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			#end
-		}
-		if (label != null)
-		{
-			label.destroy();
-			label = null;
-		}
+		label = FlxG.safeDestroy(label);
 		
-		_onUp = null;
-		_onDown = null;
-		_onOut = null;
-		_onOver = null;
+		onUp = FlxG.safeDestroy(onUp);
+		onDown = FlxG.safeDestroy(onDown);
+		onOver = FlxG.safeDestroy(onOver);
+		onOut = FlxG.safeDestroy(onOut);
 		
-		_onUpParams = null;
-		_onDownParams = null;
-		_onOutParams = null;
-		_onOverParams = null;
+		labelOffsets = null;
+		labelAlphas = null;
+		_pressedTouch = null;
 		
-		if (soundOver != null)
-		{
-			soundOver.destroy();
-		}
-		if (soundOut != null)
-		{
-			soundOut.destroy();
-		}
-		if (soundDown != null)
-		{
-			soundDown.destroy();
-		}
-		if (soundUp != null)
-		{
-			soundUp.destroy();
-		}
 		super.destroy();
 	}
 	
@@ -188,179 +111,41 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	override public function update():Void
 	{
-		if (!_initialized)
-		{
-			if (FlxG.stage != null)
-			{
-				#if !FLX_NO_MOUSE
-					Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				#end
-				_initialized = true;
-			}
-		}
 		super.update();
 		
-		updateButton(); //Basic button logic
-
-		// Default button appearance is to simply update
-		// the label appearance based on animation frame.
-		if (label == null)
-		{
+		if (!visible) {
 			return;
 		}
-		switch (status)
-		{
-			case FlxButton.HIGHLIGHT:
-				label.alpha = 1.0;
-			case FlxButton.PRESSED:
-				label.alpha = 0.5;
-				label.y++;
-			default:
-				label.alpha = 0.8;
-		}
-	}
-	
-	/**
-	 * Basic button update logic
-	 */
-	function updateButton():Void
-	{
-		// Figure out if the button is highlighted or pressed or what
-		var continueUpdate = false;
 		
-		#if !FLX_NO_MOUSE
-			continueUpdate = true;
+		// Update the button, but only if at least either mouse or touches are enabled
+		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+		updateButton();
 		#end
 		
-		#if !FLX_NO_TOUCH
-			continueUpdate = true;
-		#end
-		
-		if (continueUpdate)
-		{
-			if (cameras == null)
-			{
-				cameras = FlxG.cameras.list;
-			}
-			var camera:FlxCamera;
-			var i:Int = 0;
-			var l:Int = cameras.length;
-			var offAll:Bool = true;
-			while (i < l)
-			{
-				camera = cameras[i++];
-				#if !FLX_NO_MOUSE
-					FlxG.mouse.getWorldPosition(camera, _point);
-					offAll = (updateButtonStatus(_point, camera, FlxG.mouse.justPressed, 1) == false) ? false : offAll;
-				#end
-				#if !FLX_NO_TOUCH
-					for (touch in FlxG.touches.list)
-					{
-						if (_touchPointID == -1)
-						{
-							if (touch.justPressed)
-							{
-								touch.getWorldPosition(camera, _point);
-								offAll = (updateButtonStatus(_point, camera, touch.justPressed, touch.touchPointID) == false) ? false : offAll;
-							}
-						}
-						else if (touch.touchPointID == _touchPointID)
-						{
-							touch.getWorldPosition(camera, _point);
-							offAll = false;
-							
-							if (touch.justReleased || !overlapsPoint(_point, true, camera))
-							{
-								offAll = true;
-								this.onMouseUp(null);
-							}
-						}
-					}
-				#end
-				
-				if (!offAll)
-				{
-					break;
-				}
-			}
-			if (offAll)
-			{
-				if (status != FlxButton.NORMAL)
-				{
-					if (_onOut != null)
-					{
-						Reflect.callMethod(null, _onOut, _onOutParams);
-					}
-					if (soundOut != null)
-					{
-						soundOut.play(true);
-					}
-				}
-				
-				status = FlxButton.NORMAL;
-			}
-		}
-	
-		// Then if the label and/or the label offset exist,
-		// position them to match the button.
+		// Label positioning
 		if (label != null)
 		{
 			label.x = x;
 			label.y = y;
 			
-			if (labelOffset != null)
-			{	
-				label.x += labelOffset.x;
-				label.y += labelOffset.y;
-			}
+			label.x += labelOffsets[status].x;
+			label.y += labelOffsets[status].y;
 			
 			label.scrollFactor = scrollFactor;
 		}
 		
-		// Then pick the appropriate frame of animation
-		frame = framesData.frames[status];
-	}
-	
-	/**
-	 * Updates status and handles the onDown and onOver logic (callback functions + playing sounds).
-	 */
-	private function updateButtonStatus(Point:FlxPoint, Camera:FlxCamera, JustPressed:Bool, touchID:Int):Bool
-	{
-		var offAll:Bool = true;
+		// Pick the appropriate animation frame
 		
-		if (overlapsPoint(Point, true, Camera))
-		{
-			offAll = false;
-			
-			if (JustPressed)
-			{
-				status = FlxButton.PRESSED;
-				if (_onDown != null)
-				{
-					Reflect.callMethod(null, _onDown, _onDownParams);
-				}
-				if (soundDown != null)
-				{
-					soundDown.play(true);
-				}
-				
-				_touchPointID = touchID;
-			}
-			if (status == FlxButton.NORMAL)
-			{
-				status = FlxButton.HIGHLIGHT;
-				if (_onOver != null)
-				{
-					Reflect.callMethod(null, _onOver, _onOverParams);
-				}
-				if (soundOver != null)
-				{
-					soundOver.play(true);
-				}
-			}
-		}
+		var nextFrame:Int = status;
 		
-		return offAll;
+		// "Highlight" doesn't make much sense on mobile devices / touchscreens
+		#if mobile
+			if (nextFrame == FlxButton.HIGHLIGHT) {
+				nextFrame = FlxButton.NORMAL;
+			}
+		#end
+		
+		frame = framesData.frames[nextFrame];
 	}
 	
 	/**
@@ -385,141 +170,219 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super.drawDebug();
 		
-		if (label != null)
-		{
+		if (label != null) {
 			label.drawDebug();
 		}
 	}
 	#end
 	
-	// TODO: Return from Sound -> Class<Sound>
 	/**
-	 * Set sounds to play during mouse-button interactions.
-	 * These operations can be done manually as well, and the public
-	 * sound variables can be used after this for more fine-tuning,
-	 * such as positional audio, etc.
-	 * 
-	 * @param	SoundOver			What embedded sound effect to play when the mouse goes over the button. Default is null, or no sound.
-	 * @param 	SoundOverVolume		How load the that sound should be.
-	 * @param 	SoundOut			What embedded sound effect to play when the mouse leaves the button area. Default is null, or no sound.
-	 * @param 	SoundOutVolume		How load the that sound should be.
-	 * @param 	SoundDown			What embedded sound effect to play when the mouse presses the button down. Default is null, or no sound.
-	 * @param 	SoundDownVolume		How load the that sound should be.
-	 * @param 	SoundUp				What embedded sound effect to play when the mouse releases the button. Default is null, or no sound.
-	 * @param 	SoundUpVolume		How load the that sound should be.
+	 * Basic button update logic - searches for overlaps with touches and
+	 * the mouse cursor and calls updateStatus()
 	 */
-	public function setSounds(?SoundOver:Sound, SoundOverVolume:Float = 1, ?SoundOut:Sound, SoundOutVolume:Float = 1, ?SoundDown:Sound, SoundDownVolume:Float = 1, ?SoundUp:Sound, SoundUpVolume:Float = 1):Void
+	private function updateButton():Void
 	{
-		if (SoundOver != null)
-		{
-			soundOver = FlxG.sound.load(SoundOver, SoundOverVolume);
+		if (cameras == null) {
+			cameras = FlxG.cameras.list;
 		}
-		if (SoundOut != null)
+		
+		// We're looking for any touch / mouse overlaps with this button
+		var overlapFound = false;
+		
+		// Have a look at all cameras
+		for (camera in cameras)
 		{
-			soundOut = FlxG.sound.load(SoundOut, SoundOutVolume);
+			#if !FLX_NO_MOUSE
+				FlxG.mouse.getWorldPosition(camera, _point);
+				
+				if (overlapsPoint(_point, true, camera))
+				{
+					overlapFound = true;
+					updateStatus(true, FlxG.mouse.justPressed, FlxG.mouse.pressed);
+					break;
+				}
+			#end
+			
+			#if !FLX_NO_TOUCH
+				for (touch in FlxG.touches.list)
+				{
+					touch.getWorldPosition(camera, _point);
+					
+					if (overlapsPoint(_point, true, camera))
+					{
+						overlapFound = true;
+						updateStatus(true, touch.justPressed, touch.pressed, touch);
+						break;
+					}
+				}
+			#end
 		}
-		if (SoundDown != null)
+		
+		if (!overlapFound)
 		{
-			soundDown = FlxG.sound.load(SoundDown, SoundDownVolume);
-		}
-		if (SoundUp != null)
-		{
-			soundUp = FlxG.sound.load(SoundUp, SoundUpVolume);
+			updateStatus(false, false, false);
 		}
 	}
 	
 	/**
-	 * Set the callback function for when the button is released.
+	 * Updates the button status by calling the respective event handler function.
 	 * 
-	 * @param	Callback	The callback function.
-	 * @param	Params		Any params you want to pass to the function. Optional!
+	 * @param	Overlap			Whether there was any overlap with this button
+	 * @param	JustPressed		Whether the input (touch or mouse) was just pressed
+	 * @param	Pressed			Whether the input (touch or mouse) is pressed
+	 * @param	Touch			A FlxTouch, if this was called from an overlap with one
 	 */
-	inline public function setOnUpCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
+	private function updateStatus(Overlap:Bool, JustPressed:Bool, Pressed:Bool, ?Touch:FlxTouch):Void
 	{
-		_onUp = Callback;
-		
-		if (Params == null)
+		if (Overlap)
 		{
-			Params = [];
+			if (JustPressed)
+			{
+				_pressedTouch = Touch;
+				if (Touch == null) {
+					_pressedMouse = true;
+				}
+				onDownHandler();
+			}
+			else if (status == FlxButton.NORMAL)
+			{
+				// Allow "swiping" to press a button (dragging it over the button while pressed)
+				if (Pressed) {
+					onDownHandler();
+				}
+				else {
+					onOverHandler();
+				}
+			}
+		}
+		else if (status != FlxButton.NORMAL)
+		{
+			onOutHandler();
 		}
 		
-		_onUpParams = Params;
+		// onUp
+		if ((_pressedTouch != null) && (_pressedTouch.justReleased))
+		{
+			onUpHandler();
+		}
+#if !FLX_NO_MOUSE
+		else if ((_pressedMouse) && (FlxG.mouse.justReleased))
+		{
+			onUpHandler();
+		}
+#end
+	}
+	
+	private function set_status(Value:Int):Int
+	{
+		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
+			label.alpha = labelAlphas[Value];
+		}
+		return status = Value;
 	}
 	
 	/**
-	 * Set the callback function for when the button is being pressed on.
-	 * 
-	 * @param	Callback	The callback function.
-	 * @param	Params		Any params you want to pass to the function. Optional!
+	 * Internal function that handles the onUp event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
-	inline public function setOnDownCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
+	private function onUpHandler():Void
 	{
-		_onDown = Callback;
-		
-		if (Params == null)
-		{
-			Params = [];
-		}
-		
-		_onDownParams = Params;
-	}
-	
-	/**
-	 * Set the callback function for when the button is being hovered over.
-	 * 
-	 * @param	Callback	The callback function.
-	 * @param	Params		Any params you want to pass to the function. Optional!
-	 */
-	inline public function setOnOverCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
-	{
-		_onOver = Callback;
-		
-		if (Params == null)
-		{
-			Params = [];
-		}
-		
-		_onOverParams = Params;
-	}
-	
-	/**
-	 * Set the callback function for when the button mouse leaves the button area.
-	 * 
-	 * @param	Callback	The callback function.
-	 * @param	Params		Any params you want to pass to the function. Optional!
-	 */
-	inline public function setOnOutCallback(Callback:Dynamic, Params:Array<Dynamic> = null):Void
-	{
-		_onOut = Callback;
-		
-		if (Params == null)
-		{
-			Params = [];
-		}
-		
-		_onOutParams = Params;
-	}
-	
-	/**
-	 * Internal function for handling the actual callback call (for UI thread dependent calls like <code>FlxMisc.openURL()</code>).
-	 */
-	private function onMouseUp(event:Event):Void
-	{
-		if (!exists || !visible || !active || (status != FlxButton.PRESSED))
-		{
-			return;
-		}
-
-		if (_onUp != null)
-		{
-			Reflect.callMethod(null, _onUp, _onUpParams);
-		}
-		if (soundUp != null)
-		{
-			soundUp.play(true);
-		}
-		
-		_touchPointID = -1;
 		status = FlxButton.NORMAL;
+		_pressedMouse = false;
+		_pressedTouch = null;
+		onUp.fire();
+	}
+	
+	/**
+	 * Internal function that handles the onDown event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
+	 */
+	private function onDownHandler():Void
+	{
+		status = FlxButton.PRESSED;
+		onDown.fire();
+	}
+	
+	/**
+	 * Internal function that handles the onOver event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
+	 */
+	private function onOverHandler():Void
+	{
+		status = FlxButton.HIGHLIGHT;
+		onOver.fire();
+	}
+	
+	/**
+	 * Internal function that handles the onOut event.
+	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
+	 */
+	private function onOutHandler():Void
+	{
+		status = FlxButton.NORMAL;
+		onOut.fire();
+	}
+}
+
+/** 
+ * Helper function for FlxButton which handles its events.
+ */ 
+private class FlxButtonEvent implements IFlxDestroyable
+{
+	/**
+	 * The callback function to call when this even fires.
+	 */
+	public var callback:Void->Void;
+	
+	#if !FLX_NO_SOUND_SYSTEM
+	/**
+	 * The sound to play when this event fires.
+	 */
+	public var sound:FlxSound;
+	#end
+	
+	/**
+	 * Creates a new FlxButtonEvent
+	 * 
+	 * @param	Callback		The callback function to call when this even fires.
+	 * @param	sound			The sound to play when this event fires.
+	 */
+	public function new(?Callback:Void->Void, ?sound:FlxSound)
+	{
+		callback = Callback;
+		
+		#if !FLX_NO_SOUND_SYSTEM
+		this.sound = sound;
+		#end
+	}
+	
+	/**
+	 * Cleans up memory.
+	 */
+	public inline function destroy():Void
+	{
+		callback = null;
+		
+		#if !FLX_NO_SOUND_SYSTEM
+		sound = FlxG.safeDestroy(sound);
+		#end
+	}
+	
+	/**
+	 * Fires this event (calls the callback and plays the sound)
+	 */
+	public inline function fire():Void
+	{
+		if (callback != null) 
+		{
+			callback();
+		}
+		
+		#if !FLX_NO_SOUND_SYSTEM
+		if (sound != null) 
+		{
+			sound.play(true);
+		}
+		#end
 	}
 }

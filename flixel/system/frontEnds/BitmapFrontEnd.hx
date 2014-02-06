@@ -91,14 +91,14 @@ class BitmapFrontEnd
 	}
 	
 	/**
-	 * Generates a new <code>BitmapData</code> object (a colored square) and caches it.
+	 * Generates a new BitmapData object (a colored square) and caches it.
 	 * 
 	 * @param	Width	How wide the square should be.
 	 * @param	Height	How high the square should be.
 	 * @param	Color	What color the square should be (0xAARRGGBB)
 	 * @param	Unique	Ensures that the bitmap data uses a new slot in the cache.
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
-	 * @return	The <code>BitmapData</code> we just created.
+	 * @return	The BitmapData we just created.
 	 */
 	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
@@ -125,7 +125,7 @@ class BitmapFrontEnd
 	 * @param	Graphic		The image file that you want to load.
 	 * @param	Unique		Ensures that the bitmap data uses a new slot in the cache.
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
-	 * @return	The <code>CachedGraphics</code> we just created.
+	 * @return	The CachedGraphics we just created.
 	 */
 	public function add(Graphic:Dynamic, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
@@ -143,7 +143,7 @@ class BitmapFrontEnd
 	 * @param	SpacingY		Vertical spaces to insert between frames in image
 	 * @param	Unique			Ensures that the bitmap data uses a new slot in the cache.
 	 * @param	Key				Force the cache to use a specific Key to index the bitmap.
-	 * @return	The <code>CachedGraphics</code> we just created.
+	 * @return	The CachedGraphics we just created.
 	 */
 	public function addWithSpaces(Graphic:Dynamic, FrameWidth:Int, FrameHeight:Int, SpacingX:Int = 1, SpacingY:Int = 1, Unique:Bool = false, Key:String = null):CachedGraphics
 	{
@@ -383,7 +383,7 @@ class BitmapFrontEnd
 	
 	public function remove(key:String):Void
 	{
-		if (_cache.exists(key))
+		if ((key != null) && _cache.exists(key))
 		{
 			var obj:CachedGraphics = _cache.get(key);
 			if (inOpenFlAssets(obj.bitmap) == false)
@@ -420,13 +420,7 @@ class BitmapFrontEnd
 	
 	public function inOpenFlAssets(bitmap:BitmapData):Bool
 	{
-		#if !doc
-		// Openfl 1.0 backwards compatibility
-		#if (openfl < 1)
-		var bitmapDataCache = Assets.cachedBitmapData;
-		#else
 		var bitmapDataCache = Assets.cache.bitmapData;
-		#end
 		if (bitmapDataCache != null)
 		{
 			for (bd in bitmapDataCache)
@@ -437,7 +431,6 @@ class BitmapFrontEnd
 				}
 			}
 		}
-		#end
 		return false;
 	}
 }

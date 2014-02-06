@@ -32,10 +32,10 @@ import flixel.util.FlxPoint;
 */
 class MouseEventManager extends FlxPlugin
 {
-	static private var _registeredSprites:Array<SpriteReg>;
-	static private var _mouseOverSprites:Array<SpriteReg>;
+	private static var _registeredSprites:Array<SpriteReg>;
+	private static var _mouseOverSprites:Array<SpriteReg>;
 
-	static private var _point:FlxPoint;
+	private static var _point:FlxPoint;
 
 	/**
 	* Call this using FlxG.plugins.add(new MouseEventMgr()).
@@ -75,8 +75,9 @@ class MouseEventManager extends FlxPlugin
 	* @param 	OnMouseOut 		Callback when mouse moves out of this sprite. Must have Sprite as argument - e.g. onMouseDown(sprite:FlxSprite).
 	* @param 	MouseChildren 	If mouseChildren is enabled, other sprites overlaped by this will still receive mouse events.
 	* @param 	MouseEnabled 	If mouseEnabled this sprite will receive mouse events.
+	* @param	PixelPerfect	If enabled the collision check will be pixel-perfect.
 	*/
-	static public function addSprite(Sprite:FlxSprite, ?OnMouseDown:FlxSprite->Void, ?OnMouseUp:FlxSprite->Void, ?OnMouseOver:FlxSprite->Void, ?OnMouseOut:FlxSprite->Void, MouseChildren = false, MouseEnabled = true)
+	public static function addSprite(Sprite:FlxSprite, ?OnMouseDown:FlxSprite->Void, ?OnMouseUp:FlxSprite->Void, ?OnMouseOver:FlxSprite->Void, ?OnMouseOut:FlxSprite->Void, MouseChildren = false, MouseEnabled = true, PixelPerfect = true)
 	{
 		init(); // MEManager is initialized and added to pluggins if it was not there already.
 		
@@ -88,6 +89,7 @@ class MouseEventManager extends FlxPlugin
 			onMouseUp: OnMouseUp,
 			onMouseOver: OnMouseOver,
 			onMouseOut: OnMouseOut,
+			pixelPerfect: PixelPerfect
 		}
 		
 		_registeredSprites.unshift(newReg);
@@ -98,7 +100,7 @@ class MouseEventManager extends FlxPlugin
 	* 
 	* @param Sprite
 	*/
-	static public function removeSprite(Sprite:FlxSprite)
+	public static function removeSprite(Sprite:FlxSprite)
 	{
 		for (reg in _registeredSprites)
 		{
@@ -142,7 +144,7 @@ class MouseEventManager extends FlxPlugin
 				continue;
 			}
 
-			if (checkOverlap(reg.sprite))
+			if (checkOverlap(reg.sprite, reg.pixelPerfect))
 			{
 				currentOverSprites.push(reg);
 				
@@ -203,7 +205,7 @@ class MouseEventManager extends FlxPlugin
 		_mouseOverSprites = currentOverSprites;
 	}
 
-	private function checkOverlap(Sprite:FlxSprite):Bool
+	private function checkOverlap(Sprite:FlxSprite, PixelPerfect:Bool):Bool
 	{
 		var i:Int = 0;
 		var l:Int = FlxG.cameras.list.length;
@@ -223,11 +225,7 @@ class MouseEventManager extends FlxPlugin
 			
 			if (Sprite.overlapsPoint(_point, true, camera))
 			{
-				#if flash
-				if (Sprite.pixelsOverlapPoint(_point, 0x0, camera))
-				#else
-				if (Sprite.pixelsOverlapPoint(_point, 0x01, camera))
-				#end
+				if (!PixelPerfect || Sprite.pixelsOverlapPoint(_point, 0x01, camera))				
 				{
 					return true;
 				}
@@ -246,7 +244,7 @@ class MouseEventManager extends FlxPlugin
 				
 				if (Sprite.overlapsPoint(_point, true, camera))
 				{
-					if (Sprite.pixelsOverlapPoint(_point, 0x01, camera))
+					if (!PixelPerfect || Sprite.pixelsOverlapPoint(_point, 0x01, camera))
 					{
 						return true;
 					}
@@ -265,7 +263,7 @@ class MouseEventManager extends FlxPlugin
 	* It may also be called if the sprites are not registered by the same order they are
 	* added to FlxGroup.
 	*/
-	static public function reorderSprites()
+	public static function reorderSprites()
 	{
 		var orderedSprites:Array<SpriteReg> = new Array<SpriteReg>();
 		var group:Array<FlxBasic> = FlxG.state.members;
@@ -276,7 +274,7 @@ class MouseEventManager extends FlxPlugin
 		_registeredSprites = orderedSprites;
 	}
 
-	static private function traverseFlxGroup(Group:FlxGroup, OrderedSprites:Array<SpriteReg>)
+	private static function traverseFlxGroup(Group:FlxGroup, OrderedSprites:Array<SpriteReg>)
 	{
 		for (basic in Group.members)
 		{
@@ -303,7 +301,7 @@ class MouseEventManager extends FlxPlugin
 	* @param 	Sprite 			The sprite to set the callback.
 	* @param 	OnMouseDown 	Callback when mouse is pressed down over this sprite. Must have Sprite as argument - e.g. onMouseDown(sprite:FlxSprite).
 	*/
-	static public function setMouseDownCallback(Sprite:FlxSprite, OnMouseDown:FlxSprite->Void)
+	public static function setMouseDownCallback(Sprite:FlxSprite, OnMouseDown:FlxSprite->Void)
 	{
 		var reg:SpriteReg = getRegister(Sprite);
 		
@@ -319,7 +317,7 @@ class MouseEventManager extends FlxPlugin
 	* @param 	Sprite 		The sprite to set the callback.
 	* @param 	OnMouseUp 	Callback when mouse is released over this sprite. Must have Sprite as argument - e.g. onMouseDown(sprite:FlxSprite).
 	*/
-	static public function setMouseUpCallback(Sprite:FlxSprite, OnMouseUp:FlxSprite->Void)
+	public static function setMouseUpCallback(Sprite:FlxSprite, OnMouseUp:FlxSprite->Void)
 	{
 		var reg:SpriteReg = getRegister(Sprite);
 		
@@ -335,7 +333,7 @@ class MouseEventManager extends FlxPlugin
 	* @param 	Sprite 			The sprite to set the callback.
 	* @param 	OnMouseOver 	Callback when mouse is over this sprite. Must have Sprite as argument - e.g. onMouseDown(sprite:FlxSprite).
 	*/
-	static public function setMouseOverCallback(Sprite:FlxSprite, OnMouseOver:FlxSprite->Void)
+	public static function setMouseOverCallback(Sprite:FlxSprite, OnMouseOver:FlxSprite->Void)
 	{
 		var reg:SpriteReg = getRegister(Sprite);
 		
@@ -351,7 +349,7 @@ class MouseEventManager extends FlxPlugin
 	* @param 	Sprite 			The FlxSprite to set the callback.
 	* @param 	OnMouseOver 	Callback when mouse is moves out of this sprite. Must have Sprite as argument - e.g. onMouseDown(sprite:FlxSprite).
 	*/
-	static public function setMouseOutCallback(Sprite:FlxSprite, OnMouseOut:FlxSprite->Void)
+	public static function setMouseOutCallback(Sprite:FlxSprite, OnMouseOut:FlxSprite->Void)
 	{
 		var reg:SpriteReg = getRegister(Sprite);
 		
@@ -367,7 +365,7 @@ class MouseEventManager extends FlxPlugin
 	* @param 	Sprite 			The FlxSprite.
 	* @param 	MouseEnabled 	Whether this sprite will be tested for mouse events.
 	*/
-	static public function setSpriteMouseEnabled(Sprite:FlxSprite, MouseEnabled:Bool)
+	public static function setSpriteMouseEnabled(Sprite:FlxSprite, MouseEnabled:Bool)
 	{
 		var reg:SpriteReg = getRegister(Sprite);
 		
@@ -382,7 +380,7 @@ class MouseEventManager extends FlxPlugin
 	*
 	* @param 	Sprite 	The FlxSprite.
 	*/
-	static public function isSpriteMouseEnabled(Sprite:FlxSprite):Bool
+	public static function isSpriteMouseEnabled(Sprite:FlxSprite):Bool
 	{
 		var reg:SpriteReg = getRegister(Sprite);
 		
@@ -402,7 +400,7 @@ class MouseEventManager extends FlxPlugin
 	* @param 	Sprite 			The FlxSprite.
 	* @param 	MouseChildren 	Whether this sprite will allow other overlapped sprites to receive mouseEvents.
 	*/
-	static public function setSpriteMouseChildren(Sprite:FlxSprite, MouseChildren:Bool):Void
+	public static function setSpriteMouseChildren(Sprite:FlxSprite, MouseChildren:Bool):Void
 	{
 		var reg:SpriteReg = getRegister(Sprite);
 		
@@ -417,7 +415,7 @@ class MouseEventManager extends FlxPlugin
 	* 
 	* @param 	Sprite 	The FlxSprite.
 	*/
-	static public function isSpriteMouseChildren(Sprite:FlxSprite):Bool
+	public static function isSpriteMouseChildren(Sprite:FlxSprite):Bool
 	{
 		var reg:SpriteReg = getRegister(Sprite);
 		
@@ -431,7 +429,7 @@ class MouseEventManager extends FlxPlugin
 		}
 	}
 
-	static private function getRegister(Sprite:FlxSprite, ?Register:Array<SpriteReg>):SpriteReg
+	private static function getRegister(Sprite:FlxSprite, ?Register:Array<SpriteReg>):SpriteReg
 	{
 		if (Register == null)
 		{
@@ -469,5 +467,6 @@ typedef SpriteReg = {
 	var onMouseDown:FlxSprite->Void;
 	var onMouseUp:FlxSprite->Void;
 	var onMouseOver:FlxSprite->Void;
-	var onMouseOut:FlxSprite->Void;
+	var onMouseOut:FlxSprite-> Void;
+	var pixelPerfect:Bool;
 }

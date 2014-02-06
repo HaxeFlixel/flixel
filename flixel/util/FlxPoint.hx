@@ -2,11 +2,12 @@ package flixel.util;
 
 import flash.geom.Point;
 import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint
+class FlxPoint implements IFlxDestroyable
 {
 	/**
 	 * @default 0
@@ -53,7 +54,7 @@ class FlxPoint
 	
 	/**
 	 * Helper function, just copies the values from the specified point.
-	 * @param	Point	Any <code>FlxPoint</code>.
+	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to itself.
 	 */
 	public function copyFrom(point:FlxPoint):FlxPoint
@@ -65,7 +66,7 @@ class FlxPoint
 	
 	/**
 	 * Helper function, just copies the values from this point to the specified point.
-	 * @param	Point	Any <code>FlxPoint</code>.
+	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to the altered point parameter.
 	 */
 	public function copyTo(point:FlxPoint = null):FlxPoint
@@ -81,7 +82,7 @@ class FlxPoint
 	
 	/**
 	 * Helper function, just copies the values from the specified Flash point.
-	 * @param	Point	Any <code>Point</code>.
+	 * @param	Point	Any Point.
 	 * @return	A reference to itself.
 	 */
 	public function copyFromFlash(FlashPoint:Point):FlxPoint
@@ -93,7 +94,7 @@ class FlxPoint
 	
 	/**
 	 * Helper function, just copies the values from this point to the specified Flash point.
-	 * @param	Point	Any <code>Point</code>.
+	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
 	public function copyToFlash(FlashPoint:Point):Point
@@ -112,7 +113,7 @@ class FlxPoint
 	 * @param	RectHeight	The height of the region to test within
 	 * @return	True if the point is within the region, otherwise false
 	 */
-	inline public function inCoords(RectX:Float, RectY:Float, RectWidth:Float, RectHeight:Float):Bool
+	public inline function inCoords(RectX:Float, RectY:Float, RectWidth:Float, RectHeight:Float):Bool
 	{
 		return FlxMath.pointInCoordinates(x, y, RectX, RectY, RectWidth, RectHeight);
 	}
@@ -123,7 +124,7 @@ class FlxPoint
 	 * @param	Rect	The FlxRect to test within
 	 * @return	True if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	inline public function inFlxRect(Rect:FlxRect):Bool
+	public inline function inFlxRect(Rect:FlxRect):Bool
 	{
 		return FlxMath.pointInFlxRect(x, y, Rect);
 	}
@@ -131,20 +132,20 @@ class FlxPoint
 	/**
 	 * Calculate the distance to another point.
 	 * 
-	 * @param 	AnotherPoint	A <code>FlxPoint</code> object to calculate the distance to.
+	 * @param 	AnotherPoint	A FlxPoint object to calculate the distance to.
 	 * @return	The distance between the two points as a Float.
 	 */
-	inline public function distanceTo(AnotherPoint:FlxPoint):Float
+	public inline function distanceTo(AnotherPoint:FlxPoint):Float
 	{
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
 	
-	public function destroy() { }
+	public function destroy() { } // Necessary for FlxPointHelper in FlxSpriteGroup!
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
-	inline public function toString():String
+	public inline function toString():String
 	{
 		var p = FlxG.debugger.precision;
 		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " +  FlxMath.roundDecimal(y, p) + ")"; 

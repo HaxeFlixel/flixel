@@ -15,8 +15,8 @@ class PathManager extends FlxPlugin
 	public function new()
 	{
 		super();
-		
 		_paths = new Array<FlxPath>();
+		visible = false; // No draw-calls needed 
 	}
 	
 	/**
@@ -32,11 +32,6 @@ class PathManager extends FlxPlugin
 	
 	override public function update():Void
 	{
-		if (FlxG.paused) 
-		{
-			return;
-		}
-		
 		for (path in _paths)
 		{
 			if (!path.paused)
@@ -48,12 +43,12 @@ class PathManager extends FlxPlugin
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * Called by <code>FlxG.plugins.draw()</code> after the game state has been drawn.
-	 * Cycles through cameras and calls <code>drawDebug()</code> on each one.
+	 * Called by FlxG.plugins.draw() after the game state has been drawn.
+	 * Cycles through cameras and calls drawDebug() on each one.
 	 */
 	override public function drawDebug():Void
 	{
-		if (!FlxG.debugger.visualDebug || ignoreDrawDebug)
+		if (!FlxG.debugger.drawDebug || ignoreDrawDebug)
 		{
 			return;	
 		}
@@ -73,11 +68,11 @@ class PathManager extends FlxPlugin
 	}
 	
 	/**
-	 * Similar to <code>FlxObject</code>'s <code>drawDebug()</code> functionality,
-	 * this function calls <code>drawDebug()</code> on each <code>FlxPath</code> for the specified camera.
+	 * Similar to FlxObject's drawDebug() functionality,
+	 * this function calls drawDebug() on each FlxPath for the specified camera.
 	 * Very helpful for debugging!
 	 * 
-	 * @param	Camera	Which <code>FlxCamera</code> object to draw the debug data to.
+	 * @param	Camera	Which FlxCamera object to draw the debug data to.
 	 */
 	override public function drawDebugOnCamera(?Camera:FlxCamera):Void
 	{
@@ -103,9 +98,9 @@ class PathManager extends FlxPlugin
 	
 	/**
 	 * Add a path to the path debug display manager.
-	 * Usually called automatically by <code>FlxPath</code>'s constructor.
+	 * Usually called automatically by FlxPath's constructor.
 	 * 
-	 * @param	Path	The <code>FlxPath</code> you want to add to the manager.
+	 * @param	Path	The FlxPath you want to add to the manager.
 	 */
 	public function add(Path:FlxPath):Void
 	{
@@ -117,19 +112,13 @@ class PathManager extends FlxPlugin
 	
 	/**
 	 * Remove a path from the path debug display manager.
-	 * Usually called automatically by <code>FlxPath</code>'s <code>destroy()</code> function.
+	 * Usually called automatically by FlxPath's destroy() function.
 	 * 
-	 * @param	Path	The <code>FlxPath</code> you want to remove from the manager.
+	 * @param	Path	The FlxPath you want to remove from the manager.
 	 */
 	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
 	{
-		var index:Int = FlxArrayUtil.indexOf(_paths, Path);
-		
-		if (index >= 0)
-		{
-			_paths[index] = _paths[_paths.length - 1];
-			_paths.pop();
-		}
+		FlxArrayUtil.fastSplice(_paths, Path);
 		
 		if (ReturnInPool)
 		{
@@ -149,7 +138,7 @@ class PathManager extends FlxPlugin
 		}
 	}
 	
-	override inline public function onStateSwitch():Void
+	override public inline function onStateSwitch():Void
 	{
 		clear();
 	}

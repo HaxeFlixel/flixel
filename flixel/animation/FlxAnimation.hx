@@ -1,6 +1,7 @@
 package flixel.animation;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxRandom;
 
 /**
  * Just a helper structure for the FlxSprite animation system.
@@ -44,7 +45,7 @@ class FlxAnimation extends FlxBaseAnimation
 	public var numFrames(default, null):Int;
 	
 	/**
-	 * A list of frames stored as <code>int</code> objects
+	 * A list of frames stored as int objects
 	 */
 	@:allow(flixel.animation) private var _frames:Array<Int>;
 	
@@ -108,7 +109,7 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		if (Frame < 0)
 		{
-			curFrame = Std.int(Math.random() * numFrames);
+			curFrame = FlxRandom.intRanged( 0, numFrames - 1 );
 		}
 		else if (numFrames > Frame)
 		{
@@ -178,7 +179,7 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		else
 		{
-			curFrame = Std.int(Math.random() * numFrames);
+			curFrame = FlxRandom.intRanged( 0, numFrames - 1 );
 		}
 		
 		curIndex = _frames[curFrame];

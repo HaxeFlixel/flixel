@@ -5,7 +5,7 @@ import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
@@ -15,24 +15,17 @@ import haxe.ds.StringMap;
  */
 class Log extends Window
 {
-	inline static public var MAX_LOG_LINES:Int = 200;
+	public static inline var MAX_LOG_LINES:Int = 200;
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * 
-	 * @param 	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param 	Width		The initial width of the window.
-	 * @param 	Height		The initial height of the window.
-	 * @param 	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
+	 * Creates a log window object.
 	 */	
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("log", new GraphicLog(0, 0));
 		
 		_text = new TextField();
 		_text.x = 2;
@@ -46,7 +39,9 @@ class Log extends Window
 		
 		_lines = new Array<String>();
 		
+		#if !android // seems to cause a crash otherwise
 		FlxG.log.redirectTraces = true;
+		#end
 	}
 	
 	/**
@@ -67,7 +62,7 @@ class Log extends Window
 	/**
 	 * Adds a new line to the log window.
 	 * @param 	Data		The data being logged.
-	 * @param 	Style		The <code>LogStyle</code> to be used for the log
+	 * @param 	Style		The LogStyle to be used for the log
 	 * @param 	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
 	 */
 	public function add(Data:Array<Dynamic>, Style:LogStyle, FireOnce:Bool = false):Bool
