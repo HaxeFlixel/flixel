@@ -159,7 +159,7 @@ class FlxTextField extends FlxText
 			#end
 			
 			_addedToDisplay = true;
-			updateFormat(_format);
+			updateFormat(_defaultFormat);
 		}
 		
 		if (!_camera.visible || !_camera.exists || !isOnScreen(_camera))

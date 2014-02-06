@@ -104,7 +104,8 @@ class FlxSpriteUtil
 	 */
 	public static function alphaMaskFlxSprite(sprite:FlxSprite, mask:FlxSprite, output:FlxSprite):FlxSprite
 	{
-		var data:BitmapData = sprite.pixels;
+		sprite.drawFrame();
+		var data:BitmapData = sprite.pixels.clone();
 		data.copyChannel(mask.pixels, new Rectangle(0, 0, sprite.width, sprite.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
 		output.pixels = data;	
 		return output;

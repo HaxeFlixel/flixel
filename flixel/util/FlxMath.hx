@@ -29,9 +29,8 @@ class FlxMath
 	}
 	
 	/**
-	 * Bound a number by a minimum and maximum.
-	 * Ensures that this number is no smaller than the minimum,
-	 * and no larger than the maximum.
+	 * Bound a number by a minimum and maximum. Ensures that this number is 
+	 * no smaller than the minimum, and no larger than the maximum.
 	 * @param	Value	Any number.
 	 * @param	Min		Any number.
 	 * @param	Max		Any number.
