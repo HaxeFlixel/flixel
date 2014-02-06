@@ -66,6 +66,8 @@ v.3.1.0
  * BUG: Fix incompatiblity of FlxText.borderStyle and FlxText.alpha
  * BUG: Fixed changing color or alpha of a FlxText affecting its origin
  * Internal optimizations for less BitmapData creations
+ * Added basic text formatting via FlxTextFormat, so different sections of the same FlxText can have different formatting. For this, addFormat(), removeFormat() and clearFormats() have been added.
+ * Added italic property (flash-only for now)
 * Renamed framerates to clear up confusion: 
   * gameFramerate -> updateFramerate
   * flashFramerate -> drawFramerate
