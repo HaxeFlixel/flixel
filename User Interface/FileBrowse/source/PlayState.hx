@@ -11,14 +11,13 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
-import systools.Dialogs;
+import flixel.system.FlxAssets;
 
 #if flash
 import flash.display.Loader;
 import flash.display.LoaderInfo;
 import flash.net.FileReference;
 import flash.net.FileFilter;
-#elseif (cpp || neko)
 #end
 
 /**
@@ -41,7 +40,7 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
-		Dialogs.confirm();
+		
 		_img = new FlxSprite(0, 0);
 		_img.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		_img.antialiasing = true;
