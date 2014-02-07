@@ -13,7 +13,6 @@
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="nape"/>
-	<haxelib name="hxcpp"/>
 	<haxelib name="actuate"/>
 	
 	<assets path="assets" />
