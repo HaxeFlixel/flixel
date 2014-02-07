@@ -7,17 +7,11 @@ import flash.geom.Matrix;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
-import flixel.text.FlxText;
-import flixel.tile.FlxTilemap;
-import flixel.ui.FlxButton;
-import flixel.util.FlxColor;
-import flixel.system.FlxAssets;
-import flixel.util.FlxMath;
+import systools.Dialogs;
 
 #if flash
 import flash.display.Loader;
@@ -25,7 +19,6 @@ import flash.display.LoaderInfo;
 import flash.net.FileReference;
 import flash.net.FileFilter;
 #elseif (cpp || neko)
-import systools.Dialogs;
 #end
 
 /**
@@ -48,7 +41,7 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
-		
+		Dialogs.confirm();
 		_img = new FlxSprite(0, 0);
 		_img.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		_img.antialiasing = true;

@@ -13,15 +13,9 @@
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="nape"/>
-	<haxelib name="actuate"/>
 	
 	<!--assets path="assets/img" rename="img" /-->
-	<assets path="assets" include="*"/>
-	
-	<!-- DLLs -->
-	<ndll name="std" />
-	<ndll name="regexp" />
-	<ndll name="zlib" />
+	<assets path="assets" />
 
 	<!-- myflags -->
 	<!--haxedef name="TRUE_ZOOM_OUT" /-->
