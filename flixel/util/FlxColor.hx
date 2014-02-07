@@ -114,11 +114,16 @@ class FlxColor
      * Azure is a color that is commonly compared to the color of the sky on a clear summer's day. 0xff007fff
      */
     static public inline var AZURE:Int = 0xff007fff;
-
+	
     /** 
      * Cyan is a color between blue and green. 0xff00ffff
      */
     static public inline var CYAN:Int = 0xff00ffff;
+	
+    /**
+     * Magenta is a color between blue and red. 0xffff00ff
+     */
+    static public inline var MAGENTA:Int = 0xffff00ff;
 	
     /** 
      * Aquamarine is a color that is a bluish tint of cerulean toned toward cyan. 0xff7fffd4
