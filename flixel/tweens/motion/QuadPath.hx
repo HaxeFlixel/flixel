@@ -107,7 +107,7 @@ class QuadPath extends Motion
 	
 	override public function start():QuadPath
 	{
-		_index = (_backward) ? (_numSegs - 1) : 0; 
+		_index = (backward) ? (_numSegs - 1) : 0; 
 		super.start();
 		return this;
 	}
@@ -118,7 +118,7 @@ class QuadPath extends Motion
 		var td:Float;
 		var tt:Float;
 		
-		if (!_backward && (_points != null))
+		if (!backward && (_points != null))
 		{
 			if (_index < _numSegs - 1)
 			{
