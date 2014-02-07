@@ -149,12 +149,15 @@ class FlxAnimationController
 	{
 		if (_animations != null)
 		{
-			for (anim in _animations)
+			var anim:FlxAnimation;
+			for (key in _animations.keys())
 			{
+				anim = _animations.get(key);
 				if (anim != null)
 				{
 					anim.destroy();
 				}
+				_animations.remove(key);
 			}
 		}
 		_curAnim = null;
