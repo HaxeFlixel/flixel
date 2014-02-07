@@ -1,33 +1,24 @@
 package states;
+
+import flash.display.BitmapData;
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
-import flixel.util.FlxMath;
-import motion.Actuate;
-import motion.easing.Quad;
-import nape.callbacks.CbEvent;
-import nape.callbacks.CbType;
-import nape.callbacks.InteractionCallback;
-import nape.callbacks.InteractionListener;
-import nape.callbacks.InteractionType;
-import nape.geom.Vec2;
-import nape.phys.Material;
-import flash.display.BitmapData;
-import flash.display.Sprite;
 import flixel.FlxG;
-import flixel.util.FlxPoint;
 import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.util.FlxAngle;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
+import flixel.util.FlxTimer;
+import nape.geom.Vec2;
 import openfl.Assets;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  * @link https://github.com/ProG4mr
  */
-
 class Explosions extends FlxNapeState
 {
-
 	private var shooter:Shooter;
 	public var buildingSprites:Array<FlxNapeSprite>;
 	
@@ -37,7 +28,7 @@ class Explosions extends FlxNapeState
 		
 		// Sets gravity.
 		FlxNapeState.space.gravity.setxy(0, 500);
-
+		
 		//createWalls( -2000, 0, 1640, FlxG.height);
 		createWalls();
 		createBuildings();
@@ -81,7 +72,6 @@ class Explosions extends FlxNapeState
 		if (FlxG.keys.justPressed.R)
 			FlxG.resetState();
 		
-					
 		if (FlxG.keys.justPressed.LEFT)
 			FlxPhysicsDemo.prevState();
 		if (FlxG.keys.justPressed.RIGHT)
@@ -89,17 +79,15 @@ class Explosions extends FlxNapeState
 			
 		if (FlxG.mouse.justPressed) 
 		{
-			
-			Actuate.timer(0.3).onComplete(startBulletTime);
-			
+			FlxTimer.start(0.3, startBulletTime);
 			createExplosion();
 		}
 	}
 	
-	private function startBulletTime() 
+	private function startBulletTime(Timer:FlxTimer) 
 	{
 		FlxG.timeScale = 0.2;
-		Actuate.tween(FlxG, 1, { timeScale:1.0 } ).ease(Quad.easeIn).delay(1);
+		FlxTween.multiVar(FlxG, { timeScale: 1.0 }, 1, { ease: FlxEase.quadIn, delay: 1 } );
 	}
 	
 	private function createExplosion() 
@@ -125,9 +113,7 @@ class Explosions extends FlxNapeState
 		explosion.explosionFire.destroy();
 		explosion.destroy();
 	}
-	
 }
-
 
 class Explosion extends FlxSprite
 {
@@ -138,7 +124,7 @@ class Explosion extends FlxSprite
 	var trueX:Float;
 	var trueY:Float;
 	
-	public function new(X:Float = 0, Y:Float = 0, SimpleGraphic:Dynamic = null, Parent:Explosions)
+	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:Dynamic, Parent:Explosions)
 	{
 		super(X, Y, SimpleGraphic);
 		trueX = x;

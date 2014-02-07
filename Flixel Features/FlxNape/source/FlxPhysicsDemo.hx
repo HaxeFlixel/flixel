@@ -1,19 +1,14 @@
-package ;
+package;
+
 import flash.Lib;
-import flixel.addons.nape.FlxNapeSprite;
 import flixel.FlxG;
 import flixel.FlxGame;
-import flixel.addons.nape.FlxNapeState;
-import states.Balls;
-import states.Cutup;
-import states.Explosions;
-import states.Piramid;
-import states.Pixelizer;
-import states.SolarSystem;
+import FlxPhysicsDemo;
 import states.Balloons;
 import states.Blob;
+import states.Cutup;
 import states.Fight;
-import FlxPhysicsDemo;
+import states.Piramid;
 
 /**
  * Demo for HaxeFlixel nape physics.
