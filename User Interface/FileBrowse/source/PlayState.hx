@@ -18,6 +18,8 @@ import flash.display.Loader;
 import flash.display.LoaderInfo;
 import flash.net.FileReference;
 import flash.net.FileFilter;
+#elseif (cpp || neko)
+import systools.Dialogs;
 #end
 
 /**
