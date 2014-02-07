@@ -1,32 +1,25 @@
 package states;
-import flixel.effects.FlxSpriteFilter;
-import flixel.util.FlxRandom;
-import flixel.util.FlxSpriteUtil;
-import motion.Actuate;
-import motion.easing.Linear;
-#if flash
-import flash.filters.BevelFilter;
-import flash.filters.DisplacementMapFilter;
-import flash.filters.DisplacementMapFilterMode;
-#end
-import openfl.Assets;
-import flash.display.BitmapData;
+
 import flash.filters.BitmapFilter;
 import flash.filters.BlurFilter;
 import flash.filters.DropShadowFilter;
 import flash.filters.GlowFilter;
 import flash.geom.Point;
+import flixel.effects.FlxSpriteFilter;
 import flixel.FlxG;
-import flixel.util.FlxPoint;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxRandom;
+import openfl.Assets;
 
-
-
-/**
- * @author 
- */
+#if flash
+import flash.filters.BevelFilter;
+import flash.filters.DisplacementMapFilter;
+import flash.filters.DisplacementMapFilterMode;
+#end
 
 class PlayState extends FlxState
 {
@@ -60,11 +53,15 @@ class PlayState extends FlxState
 	var isAnimSpr5:Bool;
 	var isAnimSpr6:Bool;
 	
-	var spr2Filter:flixel.effects.FlxSpriteFilter;
-	var spr3Filter:flixel.effects.FlxSpriteFilter;
-	var spr4Filter:flixel.effects.FlxSpriteFilter;
-	var spr5Filter:flixel.effects.FlxSpriteFilter;
-	var spr6Filter:flixel.effects.FlxSpriteFilter;
+	var spr2Filter:FlxSpriteFilter;
+	var spr3Filter:FlxSpriteFilter;
+	var spr4Filter:FlxSpriteFilter;
+	var spr5Filter:FlxSpriteFilter;
+	var spr6Filter:FlxSpriteFilter;
+	
+	var tween2:FlxTween;
+	var tween3:FlxTween;
+	var tween5:FlxTween;
 	
 	override public function create():Void 
 	{
@@ -131,7 +128,7 @@ class PlayState extends FlxState
 		// DISPLACEMENT MAP
 		spr6 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
 		add(spr6);
-		filter6 = (new DisplacementMapFilter( Assets.getBitmapData("assets/StaticMap.png"), 
+		filter6 = (new DisplacementMapFilter(Assets.getBitmapData("assets/StaticMap.png"), 
 						new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0 ));
 		spr6Filter = new FlxSpriteFilter(spr6, 50, 50);
 		spr6Filter.addFilter(filter6);
@@ -145,15 +142,15 @@ class PlayState extends FlxState
 		// FILTERS
 		
 		// Animations
-		Actuate.tween(filter2, 1, { blurX:4, blurY:4 } ).repeat().reflect().onUpdate(updateFilter, [spr2Filter]).ease(Linear.easeNone);
-		Actuate.pause(filter2);
+		tween2 = FlxTween.multiVar(filter2, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG } );
+		tween2.active = false;
 		
-		Actuate.tween(filter3, 1.5, { blurX:50, blurY:50 } ).delay(0.5).repeat().reflect().onUpdate(updateFilter, [spr3Filter]).ease(Linear.easeNone);
-		Actuate.pause(filter3);
+		tween3 = FlxTween.multiVar(filter3, { blurX:50, blurY:50 }, 1.5, { type: FlxTween.PINGPONG } );
+		tween3.active = false;
 		
 		#if flash
-		Actuate.tween(filter5, 1, { distance:-6} ).delay(0.5).repeat().reflect().onUpdate(updateFilter, [spr5Filter]).ease(Linear.easeNone);
-		Actuate.pause(filter5);
+		tween5 = FlxTween.multiVar(filter5, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut } );
+		tween5.active = false;
 		#end
 	}
 	
@@ -163,75 +160,61 @@ class PlayState extends FlxState
 		
 		if (FlxG.mouse.justPressed)
 		{
-			if (spr1.overlapsPoint(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), true))
+			if (spr1.overlapsPoint(FlxG.mouse, true))
 			{
 				isAnimSpr1 = !isAnimSpr1; // Toggle animation.
 			}
 			else
-			if (spr2.overlapsPoint(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), true))
+			if (spr2.overlapsPoint(FlxG.mouse, true))
 			{
 				isAnimSpr2 = !isAnimSpr2; // Toggle animation.
-				if (isAnimSpr2) 
-				{
-					Actuate.resume(filter2);
-				} 
-				else
-				{
-					Actuate.pause(filter2);
-				}
+				tween2.active = isAnimSpr2;
 			}
 			else
-			if (spr3.overlapsPoint(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), true))
+			if (spr3.overlapsPoint(FlxG.mouse, true))
 			{
 				isAnimSpr3 = !isAnimSpr3; // Toggle animation.
-				if (isAnimSpr3) 
-				{
-					Actuate.resume(filter3);
-				} 
-				else
-				{
-					Actuate.pause(filter3);
-				}
+				tween3.active = isAnimSpr3;
 			}
 			else
-			if (spr4.overlapsPoint(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), true))
+			if (spr4.overlapsPoint(FlxG.mouse, true))
 			{
 				isAnimSpr4 = !isAnimSpr4; // Toggle animation.
 			}
 			#if flash
 			else
-			if (spr5.overlapsPoint(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), true))
+			if (spr5.overlapsPoint(FlxG.mouse, true))
 			{
 				isAnimSpr5 = !isAnimSpr5; // Toggle animation.
-				if (isAnimSpr5) 
-				{
-					#if flash
-					Actuate.resume(filter5);
-					#end
-				} 
-				else
-				{
-					#if flash
-					Actuate.pause(filter5);
-					#end
-				}
+				tween5.active = isAnimSpr5;
 			}
 			else
-			if (spr6.overlapsPoint(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), true))
+			if (spr6.overlapsPoint(FlxG.mouse, true))
 			{
 				isAnimSpr6 = !isAnimSpr6; // Toggle animation.
 			} 
 			#end
 		}
 		
-		
 		if (isAnimSpr1)
 		{
 			spr1.angle += 45 * FlxG.elapsed;
 		}
+		if (isAnimSpr2)
+		{
+			updateFilter(spr2Filter);
+		}
+		if (isAnimSpr3)
+		{
+			updateFilter(spr3Filter);
+		}
 		if (isAnimSpr4)
 		{
 			updateDropShadowFilter();
+		}
+		if (isAnimSpr5)
+		{
+			updateFilter(spr5Filter);
 		}
 		if (isAnimSpr6)
 		{
