@@ -481,6 +481,7 @@ class FlxTween implements IFlxDestroyable
 	public var percent(get, set):Float;
 	public var finished(default, null):Bool;
 	public var scale(default, null):Float;
+	public var backward(default, null):Bool;
 	
 	/**
 	 * How many times this tween has been executed / has finished so far - useful to 
@@ -489,7 +490,6 @@ class FlxTween implements IFlxDestroyable
 	public var executions(default, null):Int = 0;
 	
 	private var _secondsSinceStart:Float;
-	public var backward(default, null):Bool;
 
 	/**
 	 * Constructor. Specify basic information about the Tween.
