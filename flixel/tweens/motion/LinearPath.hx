@@ -103,7 +103,7 @@ class LinearPath extends Motion
 
 	override public function start():LinearPath
 	{
-		_index = (_backward) ? (points.length - 1) : 0;
+		_index = (backward) ? (points.length - 1) : 0;
 		super.start();
 		return this;
 	}
@@ -114,7 +114,7 @@ class LinearPath extends Motion
 		var td:Float;
 		var	tt:Float;
 		
-		if (!_backward && points != null)
+		if (!backward && points != null)
 		{
 			if (_index < points.length - 1)
 			{
