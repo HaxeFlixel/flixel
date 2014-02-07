@@ -198,6 +198,7 @@ class PlayState extends FlxState
 			{
 				isAnimSpr4 = !isAnimSpr4; // Toggle animation.
 			}
+			#if flash
 			else
 			if (spr5.overlapsPoint(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), true))
 			{
@@ -220,6 +221,7 @@ class PlayState extends FlxState
 			{
 				isAnimSpr6 = !isAnimSpr6; // Toggle animation.
 			} 
+			#end
 		}
 		
 		
