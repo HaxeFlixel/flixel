@@ -509,7 +509,6 @@ class FlxTween implements IFlxDestroyable
 	{
 		_secondsSinceStart += FlxG.elapsed;
 		scale = Math.max((_secondsSinceStart - delay), 0) / duration;
-		
 		if (ease != null)
 		{
 			scale = ease(scale);
@@ -531,13 +530,18 @@ class FlxTween implements IFlxDestroyable
 	public function start():FlxTween
 	{
 		_secondsSinceStart = 0;
+		restart();
+		return this;
+	}
+	
+	private inline function restart():Void
+	{
 		if (duration == 0)
 		{
 			active = false;
-			return this;
+			return;
 		}
 		active = true;
-		return this;
 	}
 	
 	/**
@@ -565,15 +569,15 @@ class FlxTween implements IFlxDestroyable
 				active = false;
 				
 			case FlxTween.LOOPING:
-				_secondsSinceStart %= duration;
+				_secondsSinceStart = (_secondsSinceStart - delay) % duration + delay;
 				scale = Math.max((_secondsSinceStart - delay), 0) / duration;
 				if ((ease != null) && (scale > 0) && (scale < 1)) {
 					scale = ease(scale);
 				}
-				start();
+				restart();
 				
 			case FlxTween.PINGPONG:
-				_secondsSinceStart %= duration;
+				_secondsSinceStart = (_secondsSinceStart - delay) % duration + delay;
 				scale = Math.max((_secondsSinceStart - delay), 0) / duration;
 				if ((ease != null) && (scale > 0) && (scale < 1)) {
 					scale = ease(scale);
@@ -582,7 +586,7 @@ class FlxTween implements IFlxDestroyable
 				if (backward) {
 					scale = 1 - scale;
 				}
-				start();
+				restart();
 				
 			case FlxTween.ONESHOT:
 				_secondsSinceStart = duration + delay;
@@ -595,7 +599,7 @@ class FlxTween implements IFlxDestroyable
 	
 	private function set_delay(value:Float):Float
 	{
-		_secondsSinceStart = duration * percent + (value - delay);
+		_secondsSinceStart = duration * percent + Math.max((value - delay), 0);
 		return delay = value;
 	}
 	
