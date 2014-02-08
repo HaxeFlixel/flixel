@@ -51,7 +51,7 @@ class QuadMotion extends Motion
 	 * @param	UseDuration		Duration of the movement.
 	 * @param	Ease			Optional easer function.
 	 */
-	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):QuadMotion
+	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction, ?Delay:Float = 0):QuadMotion
 	{
 		_distance = -1;
 		x = _fromX = FromX;
@@ -60,6 +60,7 @@ class QuadMotion extends Motion
 		_controlY = ControlY;
 		_toX = ToX;
 		_toY = ToY;
+		this.delay = Math.abs(Delay);
 		
 		if (UseDuration)
 		{

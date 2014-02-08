@@ -26,7 +26,7 @@ class AngleTween extends FlxTween
 	 */
 	public function new(?Complete:CompleteCallback, type:Int = 0) 
 	{
-		super(0, type, Complete);
+		super(0, type, Complete, null);
 	}
 	
 	/**
@@ -37,7 +37,7 @@ class AngleTween extends FlxTween
 	 * @param	Duration		Duration of the tween.
 	 * @param	Ease			Optional easer function.
 	 */
-	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Ease:EaseFunction, ?Sprite:FlxSprite):AngleTween
+	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Ease:EaseFunction, ?Sprite:FlxSprite, ?Delay:Float = 0):AngleTween
 	{
 		_start = angle = FromAngle;
 		var d:Float = ToAngle - angle;
@@ -57,6 +57,7 @@ class AngleTween extends FlxTween
 		duration = Duration;
 		ease = Ease;
 		sprite = Sprite;
+		this.delay = Math.abs(Delay);
 		start();
 		return this;
 	}

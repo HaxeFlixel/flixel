@@ -35,12 +35,13 @@ class NumTween extends FlxTween
 	 * @param	duration		Duration of the tween.
 	 * @param	ease			Optional easer function.
 	 */
-	public function tween(fromValue:Float, toValue:Float, duration:Float, ease:EaseFunction = null):NumTween
+	public function tween(fromValue:Float, toValue:Float, duration:Float, ease:EaseFunction = null, ?delay:Float = 0):NumTween
 	{
 		_start = value = fromValue;
 		_range = toValue - value;
 		this.duration = duration;
 		this.ease = ease;
+		this.delay = Math.abs(delay);
 		start();
 		return this;
 	}

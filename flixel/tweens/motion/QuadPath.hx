@@ -63,7 +63,7 @@ class QuadPath extends Motion
 	 * @param	UseDuration			Whether to use the previous param as duration or speed.
 	 * @param	Ease				Optional easer function.
 	 */
-	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):QuadPath
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction, ?Delay:Float = 0):QuadPath
 	{
 		updatePath();
 		
@@ -79,6 +79,7 @@ class QuadPath extends Motion
 		}
 		
 		ease = Ease;
+		this.delay = Math.abs(Delay);
 		start();
 		return this;
 	}

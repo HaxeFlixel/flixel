@@ -45,7 +45,7 @@ class CubicMotion extends Motion
 	 * @param	duration	Duration of the movement.
 	 * @param	ease		Optional easer function.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float, ?ease:EaseFunction):CubicMotion
+	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float, ?ease:EaseFunction, ?Delay:Float = 0):CubicMotion
 	{
 		x = _fromX = fromX;
 		y = _fromY = fromY;
@@ -57,6 +57,7 @@ class CubicMotion extends Motion
 		_toY = toY;
 		this.duration = duration;
 		this.ease = ease;
+		this.delay = Math.abs(Delay);
 		start();
 		return this;
 	}

@@ -37,7 +37,7 @@ class VarTween extends FlxTween
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, property:String, to:Float, duration:Float, ?ease:EaseFunction):VarTween
+	public function tween(object:Dynamic, property:String, to:Float, duration:Float, ?ease:EaseFunction, ?Delay):VarTween
 	{
 		_object = object;
 		this.ease = ease;
@@ -65,6 +65,7 @@ class VarTween extends FlxTween
 		
 		_start = a;
 		_range = to - _start;
+		this.delay = Math.abs(Delay);
 		this.duration = duration;
 		start();
 		return this;

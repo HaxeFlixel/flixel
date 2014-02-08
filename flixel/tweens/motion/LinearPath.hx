@@ -61,7 +61,7 @@ class LinearPath extends Motion
 	 * @param	UseDuration			Whether to use the previous param as duration or speed.
 	 * @param	Ease				Optional easer function.
 	 */
-	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):LinearPath
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction, ?Delay:Float = 0):LinearPath
 	{
 		updatePath();
 		
@@ -77,6 +77,7 @@ class LinearPath extends Motion
 		}
 		
 		this.ease = Ease;
+		this.delay = Math.abs(Delay);
 		start();
 		return this;
 	}

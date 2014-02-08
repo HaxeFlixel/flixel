@@ -29,13 +29,14 @@ class Fader extends FlxTween
 	 * @param	duration	Duration of the fade.
 	 * @param	ease		Optional easer function.
 	 */
-	public function fadeTo(volume:Float, duration:Float, ?ease:EaseFunction):Void
+	public function fadeTo(volume:Float, duration:Float, ?ease:EaseFunction, delay:Float = 0):Void
 	{
 		if (volume < 0) volume = 0;
 		_start = FlxG.sound.volume;
 		_range = volume - _start;
 		this.duration = duration;
 		this.ease = ease;
+		this.delay = Math.abs(delay);
 		start();
 	}
 	

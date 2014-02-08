@@ -42,7 +42,7 @@ class LinearMotion extends Motion
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Ease			Optional easer function.
 	 */
-	public function setMotion(FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):LinearMotion
+	public function setMotion(FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction, ?Delay:Float = 0):LinearMotion
 	{
 		_distance = -1;
 		x = _fromX = FromX;
@@ -59,6 +59,7 @@ class LinearMotion extends Motion
 			duration = distance / DurationOrSpeed;
 		}
 		
+		this.delay = Math.abs(Delay);
 		this.ease = Ease;
 		start();
 		
