@@ -48,9 +48,8 @@ class CircularMotion extends Motion
 	 * @param	DurationOrSpeed	Duration of the movement.
 	 * @param	UseDuration		Duration of the movement.
 	 * @param	Eease			Optional easer function.
-	 * @param	Delay			Seconds to wait until starting this tween, 0 by default.
 	 */
-	public function setMotion(CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction, ?Delay:Null<Float> = 0):CircularMotion
+	public function setMotion(CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):CircularMotion
 	{
 		_centerX = CenterX;
 		_centerY = CenterY;
@@ -67,7 +66,6 @@ class CircularMotion extends Motion
 			duration = (_radius * (Math.PI * 2)) / DurationOrSpeed;
 		}
 		
-		this.delay = Delay;
 		this.ease = Ease;
 		start();
 		return this;

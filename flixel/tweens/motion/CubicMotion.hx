@@ -44,9 +44,8 @@ class CubicMotion extends Motion
 	 * @param	toY			Y finish.
 	 * @param	duration	Duration of the movement.
 	 * @param	ease		Optional easer function.
-	 * @param	delay		Seconds to wait until starting this tween, 0 by default.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float, ?ease:EaseFunction, ?delay:Null<Float> = 0):CubicMotion
+	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float, ?ease:EaseFunction):CubicMotion
 	{
 		x = _fromX = fromX;
 		y = _fromY = fromY;
@@ -58,7 +57,6 @@ class CubicMotion extends Motion
 		_toY = toY;
 		this.duration = duration;
 		this.ease = ease;
-		this.delay = delay;
 		start();
 		return this;
 	}

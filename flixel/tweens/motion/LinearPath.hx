@@ -60,9 +60,8 @@ class LinearPath extends Motion
 	 * @param	DurationOrSpeed		Duration or speed of the movement.
 	 * @param	UseDuration			Whether to use the previous param as duration or speed.
 	 * @param	Ease				Optional easer function.
-	 * @param	Delay				Seconds to wait until starting this tween, 0 by default.
 	 */
-	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction, ?Delay:Null<Float> = 0):LinearPath
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):LinearPath
 	{
 		updatePath();
 		
@@ -78,7 +77,6 @@ class LinearPath extends Motion
 		}
 		
 		this.ease = Ease;
-		this.delay = Delay;
 		start();
 		return this;
 	}
@@ -105,14 +103,9 @@ class LinearPath extends Motion
 
 	override public function start():LinearPath
 	{
+		_index = (backward) ? (points.length - 1) : 0;
 		super.start();
 		return this;
-	}
-	
-	override private function restart():Void 
-	{
-		super.restart();
-		_index = (backward) ? (points.length - 1) : 0;
 	}
 
 	override public function update():Void

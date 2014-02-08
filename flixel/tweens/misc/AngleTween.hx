@@ -36,9 +36,8 @@ class AngleTween extends FlxTween
 	 * @param	ToAngle			End angle.
 	 * @param	Duration		Duration of the tween.
 	 * @param	Ease			Optional easer function.
-	 * @param	Delay			Seconds to wait until starting this tween, 0 by default
 	 */
-	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Ease:EaseFunction, ?Sprite:FlxSprite, ?Delay:Null<Float> = 0):AngleTween
+	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Ease:EaseFunction, ?Sprite:FlxSprite):AngleTween
 	{
 		_start = angle = FromAngle;
 		var d:Float = ToAngle - angle;
@@ -58,7 +57,6 @@ class AngleTween extends FlxTween
 		duration = Duration;
 		ease = Ease;
 		sprite = Sprite;
-		this.delay = Delay;
 		start();
 		return this;
 	}
