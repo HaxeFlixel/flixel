@@ -187,7 +187,7 @@ class WatchEntry
 		{
 			nameDisplay.text = "";
 			if (NameWidth > 120)
-				nameDisplay.appendText(FlxStringUtil.getClassName(object, (NameWidth < 240)) + ".");
+				nameDisplay.appendText(FlxStringUtil.getClassName(object, true) + ".");
 			
 			nameDisplay.appendText(field);
 		}
