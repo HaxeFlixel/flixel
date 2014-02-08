@@ -105,9 +105,14 @@ class LinearPath extends Motion
 
 	override public function start():LinearPath
 	{
-		_index = (backward) ? (points.length - 1) : 0;
 		super.start();
 		return this;
+	}
+	
+	override private function restart():Void 
+	{
+		super.restart();
+		_index = (backward) ? (points.length - 1) : 0;
 	}
 
 	override public function update():Void
@@ -116,13 +121,16 @@ class LinearPath extends Motion
 		var td:Float;
 		var	tt:Float;
 		
-		if (!backward && points != null)
+		if (points == null)
+			return;
+		
+		if (!backward)
 		{
 			if (_index < points.length - 1)
 			{
 				while (scale > _pointT[_index + 1]) 
 				{
-					_index ++;
+					_index++;
 					if (_index == points.length - 1)
 					{
 						_index -= 1;
@@ -130,6 +138,7 @@ class LinearPath extends Motion
 					}
 				}
 			}
+			
 			td = _pointT[_index];
 			tt = _pointT[_index + 1] - td;
 			td = (scale - td) / tt;
@@ -138,7 +147,7 @@ class LinearPath extends Motion
 			x = _prevPoint.x + (_nextPoint.x - _prevPoint.x) * td;
 			y = _prevPoint.y + (_nextPoint.y - _prevPoint.y) * td;
 		}
-		else if (points != null)
+		else
 		{
 			if (_index > 0) 
 			{
@@ -152,6 +161,7 @@ class LinearPath extends Motion
 					}
 				}
 			}
+			
 			td = _pointT[_index];
 			tt = _pointT[_index - 1] - td;
 			td = (scale - td) / tt;
