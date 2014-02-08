@@ -525,7 +525,7 @@ class FlxTween implements IFlxDestroyable
 		return this;
 	}
 	
-	private inline function restart():Void
+	private function restart():Void
 	{
 		if (duration == 0)
 		{
