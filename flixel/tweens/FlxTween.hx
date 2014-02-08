@@ -75,8 +75,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		var tween:VarTween = new VarTween(Options.complete, Options.type);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.tween(Object, Property, To, Duration, Options.ease, delay);
+		tween.tween(Object, Property, To, Duration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -104,8 +103,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		var tween:MultiVarTween = new MultiVarTween(Options.complete, Options.type);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.tween(Object, Values, Duration, Options.ease, delay);
+		tween.tween(Object, Values, Duration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -133,8 +131,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		var tween:NumTween = new NumTween(Options.complete, Options.type);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.tween(FromValue, ToValue, Duration, Options.ease, delay);
+		tween.tween(FromValue, ToValue, Duration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -163,8 +160,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		var tween:AngleTween = new AngleTween(Options.complete, Options.type);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.tween(FromAngle, ToAngle, Duration, Options.ease, Sprite, delay);
+		tween.tween(FromAngle, ToAngle, Duration, Options.ease, Sprite, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -195,8 +191,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		var tween:ColorTween = new ColorTween(Options.complete, Options.type);
-		var delay:Float = ((Options.delay != null) && (Options.delay > 0)) ? Options.delay : 0;
-		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease, Sprite, delay);
+		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease, Sprite, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -224,8 +219,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		var tween:Fader = new Fader(Options.complete, Options.type);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.fadeTo(Volume, Duration, Options.ease, delay);
+		tween.fadeTo(Volume, Duration, Options.ease, Options.delay);
 		manager.add(tween);
 		return tween;
 	}
@@ -258,8 +252,7 @@ class FlxTween implements IFlxDestroyable
 		
 		var tween:LinearMotion = new LinearMotion(Options.complete, Options.type);
 		tween.setObject(Object);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.setMotion(FromX, FromY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease, delay);
+		tween.setMotion(FromX, FromY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -294,8 +287,7 @@ class FlxTween implements IFlxDestroyable
 		
 		var tween:QuadMotion = new QuadMotion(Options.complete, Options.type);
 		tween.setObject(Object);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.setMotion(FromX, FromY, ControlX, ControlY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease, delay);
+		tween.setMotion(FromX, FromY, ControlX, ControlY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -331,8 +323,7 @@ class FlxTween implements IFlxDestroyable
 		
 		var tween:CubicMotion = new CubicMotion(Options.complete, Options.type);
 		tween.setObject(Object);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.setMotion(FromX, FromY, aX, aY, bX, bY, ToX, ToY, Duration, Options.ease, delay);
+		tween.setMotion(FromX, FromY, aX, aY, bX, bY, ToX, ToY, Duration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -367,8 +358,7 @@ class FlxTween implements IFlxDestroyable
 		
 		var tween:CircularMotion = new CircularMotion(Options.complete, Options.type);
 		tween.setObject(Object);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.setMotion(CenterX, CenterY, Radius, Angle, Clockwise, DurationOrSpeed, UseDuration, Options.ease, delay);
+		tween.setMotion(CenterX, CenterY, Radius, Angle, Clockwise, DurationOrSpeed, UseDuration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -407,8 +397,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		tween.setObject(Object);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease, delay);
+		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -447,8 +436,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		tween.setObject(Object);
-		var delay:Float = ((Options.delay != null) || (Options.delay > 0)) ? Options.delay : 0;
-		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease, delay);
+		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease, Options.delay);
 		manager.add(tween);
 		
 		return tween;
@@ -476,9 +464,12 @@ class FlxTween implements IFlxDestroyable
 	 */
 	public var executions(default, null):Int = 0;
 	
-	private var _secondsSinceStart:Float = 0;
+	/**
+	 * Seconds to wait until starting this tween, 0 by default
+	 */
+	public var delay(default, set):Null<Float> = 0;
 	
-	public var delay(default, set):Float = 0;
+	private var _secondsSinceStart:Float = 0;
 
 	/**
 	 * Constructor. Specify basic information about the Tween.
@@ -597,10 +588,11 @@ class FlxTween implements IFlxDestroyable
 		finished = false;
 	}
 	
-	private function set_delay(value:Float):Float
+	private function set_delay(value:Null<Float>):Null<Float>
 	{
-		_secondsSinceStart = duration * percent + Math.max((value - delay), 0);
-		return delay = value;
+		var dly:Float = (value != null) ? Math.abs(value) : 0;
+		_secondsSinceStart = duration * percent + Math.max((dly - delay), 0);
+		return delay = dly;
 	}
 	
 	private inline function get_percent():Float 

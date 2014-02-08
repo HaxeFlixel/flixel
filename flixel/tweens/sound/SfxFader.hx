@@ -57,8 +57,8 @@ class SfxFader extends FlxTween
 		}
 		_start = sfx.volume;
 		_range = volume - _start;
-		_delay = 0;
 		this.duration = duration;
+		delay = 0;
 		start();
 		return this;
 	}
@@ -77,8 +77,8 @@ class SfxFader extends FlxTween
 		_crossRange = volume;
 		_start = sfx.volume;
 		_range = -_start;
-		_delay = 0;
 		this.duration = duration;
+		delay = 0;
 		_crossSfx.play(true);
 		start();
 		return this;

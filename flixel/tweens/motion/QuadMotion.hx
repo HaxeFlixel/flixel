@@ -50,8 +50,9 @@ class QuadMotion extends Motion
 	 * @param	DurationOrSpeed	Duration or speed of the movement.
 	 * @param	UseDuration		Duration of the movement.
 	 * @param	Ease			Optional easer function.
+	 * @param	Delay			Seconds to wait until starting this tween, 0 by default.
 	 */
-	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction, ?Delay:Float = 0):QuadMotion
+	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction, ?Delay:Null<Float> = 0):QuadMotion
 	{
 		_distance = -1;
 		x = _fromX = FromX;
@@ -60,7 +61,6 @@ class QuadMotion extends Motion
 		_controlY = ControlY;
 		_toX = ToX;
 		_toY = ToY;
-		this.delay = Math.abs(Delay);
 		
 		if (UseDuration)
 		{
@@ -72,6 +72,7 @@ class QuadMotion extends Motion
 		}
 		
 		this.ease = Ease;
+		this.delay = Delay;
 		start();
 		
 		return this;

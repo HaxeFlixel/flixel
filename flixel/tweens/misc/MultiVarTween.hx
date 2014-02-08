@@ -47,14 +47,15 @@ class MultiVarTween extends FlxTween
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
+	 * @param	delay		Seconds to wait until starting this tween, 0 by default.
 	 */
-	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ?ease:EaseFunction, ?delay:Float = 0):MultiVarTween
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ?ease:EaseFunction, ?delay:Null<Float> = 0):MultiVarTween
 	{
 		_object = object;
 		_properties = properties;
 		this.duration = duration;
 		this.ease = ease;
-		this.delay = Math.abs(delay);
+		this.delay = delay;
 		
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);

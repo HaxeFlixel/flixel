@@ -66,9 +66,10 @@ class ColorTween extends FlxTween
 	 * @param	ToAlpha			End alpha.
 	 * @param	Ease			Optional easer function.
 	 * @param	Sprite			Optional sprite object whose color to tween. 
+	 * @param	Delay			Seconds to wait until starting this tween, 0 by default.
 	 * @return	The ColorTween.
 	 */
-	public function tween(Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Ease:EaseFunction, ?Sprite:FlxSprite, ?Delay:Float = 0):ColorTween
+	public function tween(Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Ease:EaseFunction, ?Sprite:FlxSprite, ?Delay:Null<Float> = 0):ColorTween
 	{
 		FromColor &= 0xFFFFFF;
 		ToColor &= 0xFFFFFF;
@@ -87,7 +88,7 @@ class ColorTween extends FlxTween
 		duration = Duration;
 		ease = Ease;
 		sprite = Sprite;
-		this.delay = Math.abs(Delay);
+		this.delay = Delay;
 		start();
 		return this;
 	}
