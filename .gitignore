@@ -3,3 +3,4 @@
 template-bak/*
 test/report
 test/.temp
+*.log
