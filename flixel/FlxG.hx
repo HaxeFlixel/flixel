@@ -440,7 +440,7 @@ class FlxG
 		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
-		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		resizeGame(stage.stageWidth, stage.stageHeight);
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
@@ -560,15 +560,15 @@ class FlxG
 	{
 		if (Value)
 		{
-			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN;
+			stage.displayState = StageDisplayState.FULL_SCREEN;
 			#if flash
-			camera.x = (Lib.current.stage.fullScreenWidth - width * camera.zoom) / 2;
-			camera.y = (Lib.current.stage.fullScreenHeight - height * camera.zoom) / 2;
+			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
+			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
 			#end
 		}
 		else
 		{
-			Lib.current.stage.displayState = StageDisplayState.NORMAL;
+			stage.displayState = StageDisplayState.NORMAL;
 		}
 		
 		return fullscreen = Value;
