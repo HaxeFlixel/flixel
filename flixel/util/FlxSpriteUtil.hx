@@ -124,17 +124,17 @@ class FlxSpriteUtil
 	 */
 	public static function screenWrap(sprite:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):FlxSprite
 	{
-		if (Left && ((sprite.x + sprite.frameWidth) < 0)) {
+		if (Left && ((sprite.x + sprite.frameWidth) <= 0)) {
 			sprite.x = FlxG.width;
 		}
-		else if (Right && (sprite.x > FlxG.width)) {
+		else if (Right && (sprite.x >= FlxG.width)) {
 			sprite.x = 0;
 		}
 		
-		if (Top && ((sprite.y + sprite.frameHeight) < 0)) {
+		if (Top && ((sprite.y + sprite.frameHeight) <= 0)) {
 			sprite.y = FlxG.height;
 		}
-		else if (Bottom && (sprite.y > FlxG.height)) {
+		else if (Bottom && (sprite.y >= FlxG.height)) {
 			sprite.y = 0;
 		}
 		return sprite;
