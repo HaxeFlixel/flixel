@@ -1,0 +1,77 @@
+## Flash 9+
+-main TestMain
+-lib munit
+-lib hamcrest
+
+# -cp ../flixel
+-cp test
+-cp src
+
+-lib flixel
+-lib flixel-addons
+-lib flixel-ui
+-lib openfl
+-lib spinehx
+-lib nape
+
+-lib mcover
+--macro mcover.MCover.coverage(['flixel'], ['../'], null)
+
+-D doc
+# -D debug
+
+-swf-version 11.2
+-swf build/as3_test.swf
+
+# --next
+
+# ## JavaScript
+# -main TestMain
+# -lib munit
+# -lib hamcrest
+
+# -lib flixel
+# -lib openfl
+# -lib spinehx
+# -lib nape
+
+# -cp src
+# -cp test
+
+# -D doc
+# --remap flash:flash 
+
+# -cp test
+# -js build/js_test.js
+
+# --next
+
+# ## Neko
+# -main TestMain
+# -lib munit
+# -lib hamcrest
+# -cp ../
+
+# -cp test
+# -neko build/neko_test.n
+
+# --next
+
+# ## CPP
+# -main TestMain
+# -lib munit
+# -lib hamcrest
+# -lib flixel
+# -lib openfl
+# -lib spinehx
+# -lib nape
+
+# -cp src
+# -cp test
+
+# -D doc
+# --remap flash:flash 
+# #-D HXCPP_M64
+# -cpp build/cpp_test
+
+
