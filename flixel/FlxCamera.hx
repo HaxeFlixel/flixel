@@ -138,14 +138,6 @@ class FlxCamera extends FlxBasic
 	 * Uses include 3D projection, advanced display list modification, and more.
 	 */
 	public var flashSprite:Sprite;
-	/**
-	 * Internal, used to render buffer to screen space.
-	 */
-	public var flashOffsetX:Float;
-	/**
-	 * Internal, used to render buffer to screen space.
-	 */
-	public var flashOffsetY:Float;
 	
 	/**
 	 * How wide the camera display is, in game pixels.
@@ -192,6 +184,11 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to render buffer to screen space.
 	 */
 	private var _flashPoint:Point;
+	/**
+	 * Internal, used to render buffer to screen space.
+	 */
+	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	private var _flashOffset:FlxPoint;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -448,8 +445,9 @@ class FlxCamera extends FlxBasic
 		height = (Height <= 0) ? FlxG.height : Height;
 		
 		scroll = new FlxPoint();
-		_point = new FlxPoint();
 		followLead = new FlxPoint();
+		_point = new FlxPoint();
+		_flashOffset = new FlxPoint();
 		
 		#if flash
 		screen = new FlxSprite();
@@ -475,11 +473,10 @@ class FlxCamera extends FlxBasic
 		flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		
-		flashOffsetX = width * 0.5 * zoom;
-		flashOffsetY = height * 0.5 * zoom;
+		_flashOffset.set((width * 0.5 * zoom), (height * 0.5 * zoom));
 		
-		flashSprite.x = x + flashOffsetX;
-		flashSprite.y = y + flashOffsetY;
+		flashSprite.x = x + _flashOffset.x;
+		flashSprite.y = y + _flashOffset.y;
 		
 		#if flash
 		flashSprite.addChild(_flashBitmap);
@@ -749,8 +746,8 @@ class FlxCamera extends FlxBasic
 			// Camera shake fix for target follow.
 			if (target != null)
 			{
-				flashSprite.x = x + flashOffsetX;
-				flashSprite.y = y + flashOffsetY;
+				flashSprite.x = x + _flashOffset.x;
+				flashSprite.y = y + _flashOffset.y;
 			}
 		}
 	}
@@ -904,8 +901,8 @@ class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
-		flashSprite.x = x + flashOffsetX;
-		flashSprite.y = y + flashOffsetY;
+		flashSprite.x = x + _flashOffset.x;
+		flashSprite.y = y + _flashOffset.y;
 	}
 	
 	/**
@@ -1098,8 +1095,8 @@ class FlxCamera extends FlxBasic
 		flashSprite.scaleY = Y;
 		
 		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
-		flashOffsetX = width * 0.5 * X;
-		flashOffsetY = height * 0.5 * Y;	
+		_flashOffset.x = width * 0.5 * X;
+		_flashOffset.y = height * 0.5 * Y;	
 	}
 	
 	/**
@@ -1117,10 +1114,10 @@ class FlxCamera extends FlxBasic
 		{
 			width = Value; 
 			#if flash
-			if ( _flashBitmap != null )
+			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.width);
-				flashOffsetX = width * 0.5 * zoom;
+				_flashOffset.x = width * 0.5 * zoom;
 				_flashBitmap.x = -width * 0.5;
 			}
 			#else
@@ -1134,7 +1131,7 @@ class FlxCamera extends FlxBasic
 				#end
 				canvas.scrollRect = rect;
 				
-				flashOffsetX = width * 0.5 * zoom;
+				_flashOffset.x = width * 0.5 * zoom;
 				canvas.x = -width * 0.5;
 				#if !FLX_NO_DEBUG
 				debugLayer.x = canvas.x;
@@ -1154,7 +1151,7 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.height);
-				flashOffsetY = height * 0.5 * zoom;
+				_flashOffset.y = height * 0.5 * zoom;
 				_flashBitmap.y = -height * 0.5;
 			}
 			#else
@@ -1168,7 +1165,7 @@ class FlxCamera extends FlxBasic
 				#end
 				canvas.scrollRect = rect;
 				
-				flashOffsetY = height * 0.5 * zoom;
+				_flashOffset.y = height * 0.5 * zoom;
 				canvas.y = -height * 0.5;
 				#if !FLX_NO_DEBUG
 				debugLayer.y = canvas.y;
