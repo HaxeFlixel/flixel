@@ -194,9 +194,16 @@ class FlxText extends FlxSprite
 		_defaultFormat = null;
 		_formatAdjusted = null;
 		_filters = null;
-		for (format in _formats)
+		if (_formats != null)
 		{
-			format.destroy();
+			for (format in _formats)
+			{
+				if (format != null)
+				{
+					format.destroy();
+					format = null;
+				}
+			}
 		}
 		_formats = null;
 		super.destroy();
