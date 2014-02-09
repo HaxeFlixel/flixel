@@ -106,13 +106,14 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	override public function update():Void
 	{
 		// Lifespan behavior
-		lifespan -= FlxG.elapsed;
-		if (lifespan <= 0)
+		if (lifespan > 0)
 		{
-			kill();
-		}
-		else
-		{
+			lifespan -= FlxG.elapsed;
+			if (lifespan <= 0)
+			{
+				kill();
+			}
+			
 			var lifespanRatio:Float = (1 - lifespan / maxLifespan);
 			
 			// Fading
