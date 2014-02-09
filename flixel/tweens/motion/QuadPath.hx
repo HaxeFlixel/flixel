@@ -165,7 +165,6 @@ class QuadPath extends Motion
 			x = _a.x * (1 - td) * (1 - td) + _b.x * 2 * (1 - td) * td + _c.x * td * td;
 			y = _a.y * (1 - td) * (1 - td) + _b.y * 2 * (1 - td) * td + _c.y * td * td;
 		}
-		
 		super.postUpdate();
 	}
 	
