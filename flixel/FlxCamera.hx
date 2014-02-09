@@ -84,10 +84,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public var target:FlxObject = null;
 	/**
-	 * Used to force the camera to look ahead of the followTarget.
-	 */
-	public var followLead:Point;
-	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
 	public var followLerp:Float;
@@ -183,6 +179,10 @@ class FlxCamera extends FlxBasic
 	 * Default behavior is chunky-style.
 	 */
 	public var antialiasing(default, set):Bool = false;
+	/**
+	 * Used to force the camera to look ahead of the target.
+	 */
+	public var followLead(default, null):FlxPoint;
 	
 	/**
 	 * Internal, used to render buffer to screen space.
@@ -449,6 +449,8 @@ class FlxCamera extends FlxBasic
 		
 		scroll = new FlxPoint();
 		_point = new FlxPoint();
+		followLead = new FlxPoint();
+		
 		#if flash
 		screen = new FlxSprite();
 		buffer = new BitmapData(width, height, true, 0);
@@ -520,11 +522,7 @@ class FlxCamera extends FlxBasic
 	override public function destroy():Void
 	{
 		#if flash
-		if (screen != null)
-		{
-			screen.destroy();
-		}
-		screen = null;
+		screen = FlxG.safeDestroy(screen);
 		#end
 		target = null;
 		scroll = null;
@@ -635,7 +633,7 @@ class FlxCamera extends FlxBasic
 					}
 				}
 				
-				if((followLead != null) && (Std.is(target, FlxSprite)))
+				if (Std.is(target, FlxSprite))
 				{
 					if (_lastTargetPosition == null)  
 					{
@@ -653,7 +651,8 @@ class FlxCamera extends FlxBasic
 				{
 					scroll.x = _scrollTarget.x; // Prevents Camera Jittering with no lerp.
 					scroll.y = _scrollTarget.y; // Prevents Camera Jittering with no lerp.
-				} else 
+				} 
+				else 
 				{
 					scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
 					scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
@@ -773,18 +772,22 @@ class FlxCamera extends FlxBasic
 		var w:Float = 0;
 		var h:Float = 0;
 		_lastTargetPosition = null;
-		switch(Style)
+		
+		switch (Style)
 		{
 			case STYLE_PLATFORMER:
 				var w:Float = (width / 8) + (Offset != null ? Offset.x : 0);
 				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
 				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				
 			case STYLE_TOPDOWN:
 				helper = Math.max(width, height) / 4;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				
 			case STYLE_TOPDOWN_TIGHT:
 				helper = Math.max(width, height) / 8;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				
 			case STYLE_LOCKON:
 				if (target != null) 
 				{	
@@ -792,28 +795,19 @@ class FlxCamera extends FlxBasic
 					h = target.height + (Offset != null ? Offset.y : 0);
 				}
 				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				
 			case STYLE_SCREEN_BY_SCREEN:
 				deadzone = new FlxRect(0, 0, width, height);
+				
 			default:
 				deadzone = null;
 		}
 		
 	}
 	
-    /**
-	 * Specify an additional camera component - the velocity-based "lead",
-	 * or amount the camera should track in front of a sprite.
-	 * 
-	 * @param	LeadX		Percentage of X velocity to add to the camera's motion.
-	 * @param	LeadY		Percentage of Y velocity to add to the camera's motion.
-	 */
-    public inline function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
-    {
-	   followLead = new Point(LeadX,LeadY);
-    }
-	
 	/**
 	 * Move the camera focus to this location instantly.
+	 * 
 	 * @param	Point		Where you want the camera to focus.
 	 */
 	public inline function focusOn(point:FlxPoint):Void
@@ -829,7 +823,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:Int = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -854,7 +848,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(Color:Int = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -882,6 +876,7 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * A simple screen-shake effect.
+	 * 
 	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
@@ -915,6 +910,7 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Copy the bounds, focus object, and deadzone info from an existing camera.
+	 * 
 	 * @param	Camera	The camera you want to copy from.
 	 * @return	A reference to this FlxCamera object.
 	 */
@@ -933,7 +929,8 @@ class FlxCamera extends FlxBasic
 			bounds.copyFrom(Camera.bounds);
 		}
 		target = Camera.target;
-		if(target != null)
+		
+		if (target != null)
 		{
 			if (Camera.deadzone == null)
 			{
@@ -957,7 +954,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, graphics:Graphics = null):Void
+	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
 	#if flash
 		if (BlendAlpha)
