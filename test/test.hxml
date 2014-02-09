@@ -14,12 +14,12 @@
 -lib nape
 
 -lib mcover
---macro mcover.MCover.coverage(['flixel'], ['../','~/flixel-addons/'], null)
+--macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
 # -D debug
 
--swf-version 11
+-swf-version 11.2
 -swf build/as3_test.swf
 
 # --next

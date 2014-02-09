@@ -1,3 +1,6 @@
 *.zip
 *.n
 template-bak/*
+test/build
+test/report
+test/.temp

@@ -1,6 +1,8 @@
 import massive.munit.TestSuite;
 
-import FlxGTest;
+import FlxCameraTest;
+import FlxGameTest;
+import FlxSpriteTest;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -14,6 +16,8 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
-		add(FlxGTest);
+		add(FlxCameraTest);
+		add(FlxGameTest);
+		add(FlxSpriteTest);
 	}
 }

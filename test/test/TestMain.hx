@@ -1,3 +1,5 @@
+import flash.Lib;
+import flixel.FlxGame;
 import massive.munit.client.PrintClient;
 import massive.munit.client.RichPrintClient;
 import massive.munit.client.HTTPClient;
@@ -15,10 +17,16 @@ import js.Lib;
  */
 class TestMain
 {
+	public static var game:FlxGame;
+
 	static function main(){	new TestMain(); }
 
 	public function new()
 	{
+		game = new FlxGame(640, 480, TestState, 1, 60, 60);
+		Lib.current.stage.addChild(game);
+
+
 		var suites = new Array<Class<massive.munit.TestSuite>>();
 		suites.push(TestSuite);
 
