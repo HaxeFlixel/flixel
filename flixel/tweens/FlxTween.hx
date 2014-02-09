@@ -607,6 +607,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Set both type of delays for this tween.
+	 * 
 	 * @param	startDelay		Seconds to wait until starting this tween, 0 by default.
 	 * @param	loopDelay		Seconds to wait between loops of this tween, 0 by default.
 	 */
