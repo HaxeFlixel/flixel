@@ -1,3 +1,4 @@
+import massive.munit.util.Timer;
 import flash.Lib;
 import flixel.FlxGame;
 import massive.munit.client.PrintClient;
@@ -23,9 +24,9 @@ class TestMain
 
 	public function new()
 	{
-		game = new FlxGame(640, 480, TestState, 1, 60, 60);
+		// Flixel was not designed for unit testing so we can only have one instance for now.
+		game = new FlxGame(640, 480, TestState1, 1, 60, 60);
 		Lib.current.stage.addChild(game);
-
 
 		var suites = new Array<Class<massive.munit.TestSuite>>();
 		suites.push(TestSuite);
@@ -67,4 +68,12 @@ class TestMain
 		{
 		}
 	}
+
+	public static function addAsync(handler:Void -> Void, duration:Int):Void
+	{
+		Timer.delay(function() {
+			handler();
+		}, duration);
+	}
+
 }

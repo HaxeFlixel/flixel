@@ -1,6 +1,6 @@
-package;
+package flixel;
 
-import massive.munit.util.Timer;
+import TestMain;
 import flixel.FlxG;
 import flixel.util.FlxArrayUtil;
 import flixel.FlxSprite;
@@ -17,10 +17,16 @@ class FlxSpriteTest
 	@BeforeClass
 	public function setup():Void {
 		sprite1 = new FlxSprite();
-		sprite1.makeGraphic(100,100);
+		sprite1.makeGraphic(100,80);
 
 		sprite2 = new FlxSprite();
-		sprite2.makeGraphic(100,100);
+		sprite2.makeGraphic(100,80);
+	}
+	
+	@Test
+	public function size():Void {
+		Assert.isTrue(sprite1.width == 100);
+		Assert.isTrue(sprite1.height == 80);
 	}
 	
 	@Test
@@ -29,8 +35,15 @@ class FlxSpriteTest
 		Assert.isNotNull(sprite1);
 		Assert.isNotNull(sprite2);
 		
-		Assert.isNotNull(sprite1.active);
-		Assert.isNotNull(sprite2.active);
+		Assert.isTrue(sprite1.active);
+		Assert.isTrue(sprite1.visible);
+		Assert.isTrue(sprite1.alive);
+		Assert.isTrue(sprite1.exists);
+		
+		Assert.isTrue(sprite2.active);
+		Assert.isTrue(sprite2.visible);
+		Assert.isTrue(sprite2.alive);
+		Assert.isTrue(sprite2.exists);
 	}
 	
 	@Test
@@ -69,7 +82,7 @@ class FlxSpriteTest
 		sprite2.velocity.x = -2000;
 		
 		var resultHandler:Dynamic = factory.createHandler(this, testOverlap);
-		addAsync(resultHandler, 100);
+		TestMain.addAsync(resultHandler, 100);
 	}
 
 	function testOverlap(?e:Dynamic):Void
@@ -77,11 +90,12 @@ class FlxSpriteTest
 		Assert.isFalse( FlxG.overlap(sprite1, sprite2) );
 	}
 
-	private function addAsync(handler:Void -> Void, duration:Int):Void
-	{
-		Timer.delay(function() {
-			handler();
-		}, duration);
+	@AfterClass
+	public function cleaup():Void {
+		FlxG.state.remove(sprite1);
+		sprite1.destroy();
+		FlxG.state.remove(sprite2);
+		sprite2.destroy();
 	}
 
 }

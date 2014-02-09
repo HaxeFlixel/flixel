@@ -3,7 +3,7 @@ package;
 import flixel.FlxState;
 import flixel.FlxG;
 
-class TestState extends FlxState
+class TestState1 extends FlxState
 {
 
 	override public function create():Void

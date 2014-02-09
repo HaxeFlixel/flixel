@@ -1,4 +1,4 @@
-package ;
+package flixel;
 
 import massive.munit.Assert;
 
