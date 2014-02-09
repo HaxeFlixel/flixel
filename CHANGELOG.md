@@ -1,12 +1,13 @@
 3.1.1
 ------------------------------
 * Added PixelPerfectScaleMode (scales the game to the highest integer factor possible while maintaning the aspect ratio)
-* FlxParticle: fix behaviour with initial lifespan <= 0
 * FlxTween
  * backward is now a public, read-only property
  * renamed delay to startDelay
  * added loopDelay that controls the delay between loop executions with LOOPING and PINGPONG
 * Added some basic unit tests
+* FlxCamera: removed followAdjust(), the followLead point should be set directly
+* FlxSpriteUtil.screenWrap(): prevent sprite from ever being offscreen
 
 3.1.0
 ------------------------------
