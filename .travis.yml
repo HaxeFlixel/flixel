@@ -16,13 +16,11 @@ before_script:
   - haxelib install nape
   - haxelib install task
   - haxelib git firetongue https://github.com/larsiusprime/firetongue
-  - git clone https://github.com/HaxeFlixel/flixel-addons -b dev
-  - haxelib git flixel-demos https://github.com/HaxeFlixel/flixel-demos
   - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools
+  - haxelib git flixel-demos https://github.com/HaxeFlixel/flixel-demos dev
+  - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons dev
   - haxelib git flixel-ui https://github.com/HaxeFlixel/flixel-ui dev
-  - haxelib dev flixel-addons ./flixel-addons
   - haxelib dev flixel .
-  - ls
 
 script:
   - cd ./test
