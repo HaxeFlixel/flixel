@@ -1,0 +1,7 @@
+version=2.1.0
+src=test
+bin=build
+report=report
+hxml=test.hxml
+classPaths=../
+coveragePackages=flixel
